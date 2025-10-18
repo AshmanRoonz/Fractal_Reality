@@ -268,17 +268,6 @@ Evolves with new evidence and understanding.
 
 ---
 
-## Installation / Usage
-
-This is a theoretical framework, not software. To "use" it:
-
-1. **Study** - Read through the layers
-2. **Test** - Apply [ICE] validation to your decisions
-3. **Practice** - Implement daily cultivation
-4. **Contribute** - Share insights, find gaps, improve
-
----
-
 ## Contributing
 
 This framework is under active development. Contributions welcome:
