@@ -351,21 +351,6 @@ Special thanks to Claude (Anthropic) for collaborative synthesis and refinement.
 **Author:** Ashman Roonz  
 **Email:** email@ashmanroonz.ca  
 **Repository:** https://github.com/AshmanRoonz/Fractal-Reality
----
-
-## Version History
-
-**2.0 - Minimal Ontology (October 2025)**
-- Retired Ω (subsumed by ∞, ∞')
-- Minimal four-entity foundation
-- History as geometry (no separate I(t))
-- Complete 12-layer integration
-
-**1.0 - Unified Synthesis (October 2024)**
-- Original trilogy synthesis
-- Six-entity foundation
-- I(t) as separate ledger
-- Framework establishment
 
 ---
 
