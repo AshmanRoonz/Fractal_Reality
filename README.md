@@ -29,7 +29,7 @@ Reality rests on exactly **four irreducible entities**:
 - **∞** (Infinity) - Unbounded field of potential relations
 - **∞'** (Fractalized Infinity) - Textured field carrying history (fractal dimension ≈ 1.5)
 - **•** (Singularity) - Ultimate attractor and eternal reference center
-- **•'** (Wholes/Souls) - Persistent apertures (you, all patterns)
+- **•'** (Wholes) - Persistent apertures (you, all patterns)
 
 From these four, **everything else derives**: space, time, matter, energy, force, consciousness, memory, identity, change, causation.
 
