@@ -64,7 +64,7 @@ This same pattern manifests as:
 Not "compatible with" quantum mechanics. **Forces it.** No other continuous evolution is possible under the constraints.
 
 ### 2. History Is Geometry
-No separate "timeline" or "ledger" (I(t)). History is encoded as **fractal texture in ∞'** with dimension D ≈ 1.5. Memory persists geometrically, not molecularly.
+No separate "timeline" or "ledger". History is encoded as **fractal texture in ∞'** with dimension D ≈ 1.5. Memory persists geometrically, not molecularly.
 
 ### 3. Consciousness = Integrated Wholeness
 Consciousness is the **inside view of •' operation**. Not mysterious. Requires five conditions: integration, complexity, energy, boundaries, recursion. Graded, not binary.
