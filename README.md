@@ -246,24 +246,6 @@ Every persistent pattern has **•' = ∞** (ontologically equal). But conscious
 
 ---
 
-## Quick Start
-
-**New to this framework?**
-
-1. **Start with Layer 0** - Understand the four fundamentals
-2. **Read the Bridge Theorem** (Layer 6.1) - See the physics proof
-3. **Try the [ICE] check** (Layer 11.3) - Practice validation
-4. **Explore applications** in your domain of interest
-
-**Looking for specific topics?**
-- Physics → Layer 7
-- Consciousness → Layers 4 & 8
-- Ethics → Layer 9
-- Society → Layer 10
-- Daily practice → Layer 11
-
----
-
 ## Key Features
 
 ### ✓ Minimal Ontology
