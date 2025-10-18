@@ -332,20 +332,6 @@ GitHub. https://github.com/AshmanRoonz/The-Omega-Metaphysics
 
 ---
 
-## License
-
-This work is released under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
-
-You are free to:
-- **Share** - copy and redistribute
-- **Adapt** - remix, transform, build upon
-
-Under these terms:
-- **Attribution** - give appropriate credit
-- **No additional restrictions** - don't apply legal/technological restrictions
-
----
-
 ## Acknowledgments
 
 This framework synthesizes insights from:
