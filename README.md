@@ -46,7 +46,7 @@ One validation cycle operates at every scale:
 **[ICE] = Three-part validation check:**
 - **I**nterface: Boundary integrity maintained?
 - **C**enter: Coherent with •' and aligned toward •?
-- **E**vidence: Grounded in actual ∞?
+- **E**vidence: Grounded in actual ∞'?
 
 This same pattern manifests as:
 - Quantum mechanics (physics)
