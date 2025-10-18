@@ -1,6 +1,6 @@
 # Fractal Reality
 
-## A Complete Theory of Everything (A regular everyday normal guy's attempt)
+(A regular everyday normal guy's attempt at) ## A Complete Theory of Everything 
 
 *One pattern. Infinite scales. Total coherence.*
 
