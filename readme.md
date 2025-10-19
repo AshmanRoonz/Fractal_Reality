@@ -24,10 +24,10 @@ This is not metaphysics detached from reality. This framework:
 
 - **[Abstract(s)](abstract.md)**
 - **[Three Papers Summary](papers/three_papers_summary.md)** - Overview of all three papers ready for publication
-- **[Paper 1: Quantum Mechanics from Interface Validation](paper1_qm_gr_unification.md)** - Deriving the Schrödinger equation from first principles
-- **[Paper 2: Cosmological Constant from Texture Backreaction](paper2_cosmological_constant.md)** - Self-consistent 3D simulations of quantum texture creating spacetime backreaction
-- **[Paper 3: Quantum Uncertainty from Stochastic Validation](paper3_quantum_uncertainty.md)** - Structural mechanism for quantum "randomness"
-- **[Cosmic-Scale Tests: CMB Data Comparison](cmb_cosmic_tests.md)**
+- **[Paper 1: Quantum Mechanics from Interface Validation](papers/paper1_qm_gr_unification.md)** - Deriving the Schrödinger equation from first principles
+- **[Paper 2: Cosmological Constant from Texture Backreaction](papers/paper2_cosmological_constant.md)** - Self-consistent 3D simulations of quantum texture creating spacetime backreaction
+- **[Paper 3: Quantum Uncertainty from Stochastic Validation](papers/paper3_quantum_uncertainty.md)** - Structural mechanism for quantum "randomness"
+- **[Cosmic-Scale Tests: CMB Data Comparison](results/cmb_cosmic_tests.md)**
 
 ## The Core Insight
 
