@@ -1,6 +1,6 @@
 # Fractal Reality
 
-**A Complete Framework for Understanding Reality**
+**A Complete Framework for Understanding Reality** *by Ashman Roonz*
 
 > *Reality is infinite possibility (∞) flowing through eternal aperture operators (•') that validate at interfaces creating boundaries, transforming infinite into finite validated patterns (∞'), all expressing the ultimate aperture function (•).*
 
