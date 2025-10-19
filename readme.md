@@ -332,7 +332,7 @@ If you find errors, propose tests, or have insights, open an issue or pull reque
 
 ## License
 
-This work is shared freely for understanding, application, and testing. Attribution appreciated but not required.
+[Steelman License](https://github.com/AshmanRoonz/Fractal_Reality/blob/9dc77aef193af668ca237f2eaef8f8fe8db7a923/LICENSE)
 
 ---
 
