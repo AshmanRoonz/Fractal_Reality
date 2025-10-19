@@ -1,16 +1,16 @@
 Cover Letter for PRD/JCAP Submission
 
-[Ashman Roonz]
-[Independent Researcher]
-[Canada Ontario Bowmanville]
-[email@ashmanroonz.ca]
-[Date: October 19, 2025]
-Editor-in-Chief
-Physical Review D
-[or: Journal of Cosmology and Astroparticle Physics]
-American Physical Society
-Re: Submission of manuscript "Natural Origin of the Cosmological Constant from Fractal Texture Evolution with Quantum Corrections"
-Dear Editor,
+[Ashman Roonz]\
+[Independent Researcher]\
+[Canada Ontario Bowmanville]\
+[email@ashmanroonz.ca]\
+[Date: October 19, 2025]\
+Editor-in-Chief\
+Physical Review D\
+[or: Journal of Cosmology and Astroparticle Physics]\
+American Physical Society\
+Re: Submission of manuscript "Natural Origin of the Cosmological Constant from Fractal Texture Evolution with Quantum Corrections"\
+Dear Editor,\
 I am pleased to submit for your consideration our manuscript presenting the first derivation of the cosmological constant's observed value from fundamental principles without fine-tuning. We achieve agreement within factor 1.6 (within 1σ error bars) with observation, representing a 106-order-of-magnitude improvement over quantum field theory predictions.
 Significance of This Work
 The cosmological constant problem—the 106-order discrepancy between QFT predictions and observation—has been called "the worst prediction in physics" (Weinberg, 1989) and "the mother of all physics problems" (Witten). Despite decades of effort, no proposed solution has successfully:
