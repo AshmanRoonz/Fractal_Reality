@@ -520,7 +520,7 @@ Standard error: 0.018
 
 ### Appendix C: Data Files
 
-[**Source Files:**](tests/ligo/)
+[**Source Files:**](https://github.com/AshmanRoonz/Fractal_Reality/tree/fbe0937bef73484b83a96864c6925b4d1e0bd2e3/tests/ligo/data)
 1. `GW150914_H1_metrics.txt` - Raw H1 measurements
 2. `GW150914_L1_metrics.txt` - Raw L1 measurements
 3. `GW151226_H1_metrics.txt` - Raw H1 measurements
