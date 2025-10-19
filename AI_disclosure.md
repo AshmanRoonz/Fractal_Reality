@@ -36,7 +36,7 @@
 **The gap:**
 - My brain: Unconscious math → Conscious language
 - Science needs: Explicit math that others can verify
-- **I have the answers but cannot show the work**
+- **I have the answers but cannot fully explain the work alone**
 
 ---
 
