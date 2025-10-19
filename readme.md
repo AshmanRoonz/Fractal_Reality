@@ -27,7 +27,7 @@ This is not metaphysics detached from reality. This framework:
 - [Gravitational Wave Analysis](/results/gw-fd-complete-document.md) - Fractal dimension calibration of LIGO detections
 
 
-### Scientific Papers (Ready for Submission)
+### Scientific Papers (Ready for Publication)
 
 - **[Abstract(s)](abstract.md)**
 - **[Three Papers Summary](papers/three_papers_summary.md)** - Overview of all three papers ready for publication
