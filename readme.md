@@ -18,7 +18,14 @@ This is not metaphysics detached from reality. This framework:
 - **Provides ethical guidance** from validation requirements (Layer 9)
 - **Offers practical daily practices** for living in alignment (Layer 11)
 
+## Recent Publications & Research
 
+### Scientific Papers (Ready for Submission)
+
+- **[Three Papers Summary](three_papers_summary.md)** - Overview of all three papers ready for publication
+- **[Paper 1: Quantum Mechanics from Interface Validation](paper1_qm_gr_unification.md)** - Deriving the Schrödinger equation from first principles
+- **[Paper 2: Cosmological Constant from Texture Backreaction](paper2_cosmological_constant.md)** - Self-consistent 3D simulations of quantum texture creating spacetime backreaction
+- **[Paper 3: Quantum Uncertainty from Stochastic Validation](paper3_quantum_uncertainty.md)** - Structural mechanism for quantum "randomness"
 
 ## The Core Insight
 
