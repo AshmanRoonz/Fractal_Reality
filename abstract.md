@@ -1,4 +1,4 @@
-### Abstract
+### Abstract(s)
 ## Natural Origin of the Cosmological Constant from Fractal Texture Evolution with Quantum Corrections
 
 # Version 1: Physical Review D (Emphasis on Fundamental Physics)
