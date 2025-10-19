@@ -391,7 +391,8 @@ This is analogous to:
 
 ## 6. Discussion
 
-### 6.1 Remaining Discrepancy
+### 6.1 Remaining Discrepancy 
+[50 grid results](50_grid_update_summary.md)
 
 Our mechanism improves the prediction by **72 orders of magnitude** (50³ grid), but still underestimates by ~34 orders.
 
