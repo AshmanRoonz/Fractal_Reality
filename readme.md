@@ -19,6 +19,7 @@ This is not metaphysics detached from reality. This framework:
 - **Offers practical daily practices** for living in alignment (Layer 11)
 
 ## Recent Publications & Research
+- **[Abstract(s)](abstract.md)**
 
 ## Scientific Validation
 
@@ -29,7 +30,6 @@ This is not metaphysics detached from reality. This framework:
 
 ### Scientific Papers (Ready for Publication)
 
-- **[Abstract(s)](abstract.md)**
 - **[Three Papers Summary](papers/three_papers_summary.md)** - Overview of all three papers ready for publication
 - **[Paper 1: Quantum Mechanics from Interface Validation](papers/paper1_qm_gr_unification.md)** - Deriving the Schrödinger equation from first principles
 - **[Paper 2: Cosmological Constant from Texture Backreaction](papers/paper2_cosmological_constant.md)** - Self-consistent 3D simulations of quantum texture creating spacetime backreaction
