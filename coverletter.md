@@ -8,7 +8,7 @@ Cover Letter for PRD/JCAP Submission
 Editor-in-Chief\
 Physical Review D\
 [or: Journal of Cosmology and Astroparticle Physics]\
-American Physical Society\
+American Physical Society
 
 Re: Submission of manuscript "Natural Origin of the Cosmological Constant from Fractal Texture Evolution with Quantum Corrections"\
 
