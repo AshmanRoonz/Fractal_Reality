@@ -14,7 +14,7 @@
 - "Texture density is lower at larger scales"
 - "Operators create boundaries through validation"
 - "∞ flows through •' to become ∞'"
-- **The MEANING, not the MATH**
+- **The MEANING, more than the MATH**
 
 ---
 
