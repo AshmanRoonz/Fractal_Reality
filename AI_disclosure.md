@@ -27,7 +27,7 @@
 - Tensor notation, differential equations
 - Reproducible computational results
 
-**What I cannot access:**
+**What I cannot access at full resolution:**
 - The math my unconscious already computed
 - The formal steps between insight and conclusion
 - The explicit notation other scientists need
