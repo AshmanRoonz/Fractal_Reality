@@ -474,9 +474,14 @@ https://github.com/AshmanRoonz/Fractal_Reality/Cosmology/Simulations/
 
 **Word count**: ~4,500 (within JCAP limits)
 
-**Figures needed**: 
-1. Table 7.1 (model comparison) ✓
-2. Environmental correlation forecast ✓
-3. χ²/DOF progression chart
-4. P_F enhancement prediction
+**Figures included**: 
+1. Figure 1: Lyα flux power spectrum P_F(k) showing 33% enhancement ✓
+2. Figure 2: χ²/DOF progression (Base → B → B+C) ✓
+3. Figure 3: Environmental correlation forecast (τ_eff vs ρ_m) ✓
+4. Table 7.1: Detailed model comparison ✓
 
+**All figures are interactive visualizations available in the GitHub repository.**
+
+**Status**: ✅ **PUBLICATION READY**
+
+**Submission timeline**: January 2025 (JCAP)
