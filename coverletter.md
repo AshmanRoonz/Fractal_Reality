@@ -129,7 +129,7 @@ Accessibility to broad physics community
 Thank you for considering our manuscript. We look forward to the review process and welcome the opportunity to refine this work through peer review.
 Sincerely,\
 [Ashman Roonz]\
-[Bsc, I.R.]\
+[BSc, I.R.]\
 [AshmanRoonz.ca]\
 [github.com/AshmanRoonz/Fractal_Reality
 
