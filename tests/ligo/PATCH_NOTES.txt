@@ -1,0 +1,7 @@
+v4.1 changes
+- Fix batch error: 'cannot unpack non-iterable float object' when the 35–350 Hz band
+  is empty for a window. spectral_flatness() now ALWAYS returns a tuple
+  (flatness, f, Pxx) and never a bare float.
+- Adaptive Welch window: nperseg = min(1024, max(256, len(window)//2))
+  to handle very short windows.
+- If 35–350 Hz band is empty, fall back to full spectrum (f > 0).
