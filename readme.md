@@ -18,14 +18,7 @@ This is not metaphysics detached from reality. This framework:
 - **Provides ethical guidance** from validation requirements (Layer 9)
 - **Offers practical daily practices** for living in alignment (Layer 11)
 
-## Recent Publications & Research
 
-### Scientific Papers (Ready for Submission)
-
-- [Three Papers Summary](three_papers_summary.md) - Overview of all three papers ready for publication
-- [Complete Publication Package](Complete%20Publication%20Package%3A%20Three%20Papers%20Ready%20for%20Submission.md) - Full submission details including journals, timelines, and supporting materials
-- [Fractal Reality Validation](fractal_reality_validation.md) - Computational validation results and experimental proposals
-- [Paper 3: Quantum Uncertainty](paper3_quantum_uncertainty.md) - Stochastic validation and the origin of quantum uncertainty
 
 ## The Core Insight
 
