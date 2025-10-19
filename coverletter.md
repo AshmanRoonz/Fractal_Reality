@@ -10,7 +10,7 @@ Physical Review D\
 [or: Journal of Cosmology and Astroparticle Physics]\
 American Physical Society
 
-Re: Submission of manuscript "Natural Origin of the Cosmological Constant from Fractal Texture Evolution with Quantum Corrections"\
+Re: Submission of manuscript "Natural Origin of the Cosmological Constant from Fractal Texture Evolution with Quantum Corrections"
 
 Dear Editor,\
 I am pleased to submit for your consideration our manuscript presenting the first derivation of the cosmological constant's observed value from fundamental principles without fine-tuning. We achieve agreement within factor 1.6 (within 1σ error bars) with observation, representing a 106-order-of-magnitude improvement over quantum field theory predictions.
