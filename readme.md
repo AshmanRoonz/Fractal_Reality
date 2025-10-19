@@ -20,6 +20,13 @@ This is not metaphysics detached from reality. This framework:
 
 ## Recent Publications & Research
 
+## Scientific Validation
+
+### Cosmic-Scale Tests
+- [CMB Data Comparison](/results/cmb_cosmic_tests.md) - Tests against cosmic microwave background
+- [Gravitational Wave Analysis](/results/gw-fd-complete-document.md) - Fractal dimension calibration of LIGO detections
+
+
 ### Scientific Papers (Ready for Submission)
 
 - **[Abstract(s)](abstract.md)**
