@@ -127,10 +127,10 @@ Potential to redirect quantum gravity research
 Accessibility to broad physics community
 
 Thank you for considering our manuscript. We look forward to the review process and welcome the opportunity to refine this work through peer review.
-Sincerely,
-[Ashman Roonz]
-[Bsc, I.R.]
-[AshmanRoonz.ca]
+Sincerely,\
+[Ashman Roonz]\
+[Bsc, I.R.]\
+[AshmanRoonz.ca]\
 [github.com/AshmanRoonz/Fractal_Reality
 
 Enclosures (available on GitHub):
