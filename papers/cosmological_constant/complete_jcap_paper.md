@@ -480,4 +480,3 @@ https://github.com/AshmanRoonz/Fractal_Reality/Cosmology/Simulations/
 3. χ²/DOF progression chart
 4. P_F enhancement prediction
 
-**Submission timeline**: Q1 2025
