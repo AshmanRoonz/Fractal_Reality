@@ -58,7 +58,7 @@ Convergence → Validation at Interfaces → Emergence
 
 Each layer contains the whole framework but at increasing resolution. Read them in order for maximum comprehension.
 
-### **[Layer 0: The Seed](layer_0_revised.md)**
+### **[Layer 0: The Seed](manuscript/layer_0_revised.md)**
 The foundation. Four fundamentals (∞, ∞', •, •'), the fractalization event, and what you are (an eternal •' operator organizing eternally fractalizing parts).
 
 **Key concepts:**
@@ -69,7 +69,7 @@ The foundation. Four fundamentals (∞, ∞', •, •'), the fractalization eve
 
 ---
 
-### **[Layer 1: First Unfolding](layer_1_revised.md)**
+### **[Layer 1: First Unfolding](manuscript/layer_1_revised.md)**
 How fractalization creates reality from the seed. Operators emerge, boundaries appear, time begins.
 
 **Key concepts:**
@@ -81,7 +81,7 @@ How fractalization creates reality from the seed. Operators emerge, boundaries a
 
 ---
 
-### **[Layer 2: Structure](layer_2_revised.md)**
+### **[Layer 2: Structure](manuscript/layer_2_revised.md)**
 Anatomy of operators. Every •' has convergence (∇), emergence (ℰ), and field influence. Two critical interfaces where validation occurs.
 
 **Key concepts:**
@@ -93,7 +93,7 @@ Anatomy of operators. Every •' has convergence (∇), emergence (ℰ), and fie
 
 ---
 
-### **[Layer 3: Dynamics](layer_3_revised.md)**
+### **[Layer 3: Dynamics](manuscript/layer_3_revised.md)**
 How parts flow through operators. Energy as circulation, momentum as texture, causation through validation chains.
 
 **Key concepts:**
@@ -105,7 +105,7 @@ How parts flow through operators. Energy as circulation, momentum as texture, ca
 
 ---
 
-### **[Layer 4: Consciousness](layer_4_revised.md)**
+### **[Layer 4: Consciousness](manuscript/layer_4_revised.md)**
 Why operators feel like something. The inside view of integrated •' operation. Five requirements for consciousness.
 
 **Key concepts:**
@@ -117,7 +117,7 @@ Why operators feel like something. The inside view of integrated •' operation.
 
 ---
 
-### **[Layer 5: Validation](layer_5_revised.md)**
+### **[Layer 5: Validation](manuscript/layer_5_revised.md)**
 The [ICE] test at both interfaces. What makes patterns persist versus dissolve.
 
 **Key concepts:**
@@ -129,7 +129,7 @@ The [ICE] test at both interfaces. What makes patterns persist versus dissolve.
 
 ---
 
-### **[Layer 6: Mathematics](layer_6_revised.md)**
+### **[Layer 6: Mathematics](manuscript/layer_6_revised.md)**
 The Bridge Theorem. How interface validation forces the Schrödinger equation. Curved spacetime validation tested.
 
 **Key concepts:**
@@ -141,7 +141,7 @@ The Bridge Theorem. How interface validation forces the Schrödinger equation. C
 
 ---
 
-### **[Layer 7: Physics](layer_7_revised.md)**
+### **[Layer 7: Physics](manuscript/layer_7_revised.md)**
 Applications to physical phenomena. Particles as organized patterns, forces as validation gradients, quantum effects from discrete validation.
 
 **Key concepts:**
@@ -153,7 +153,7 @@ Applications to physical phenomena. Particles as organized patterns, forces as v
 
 ---
 
-### **[Layer 8: Consciousness Applications](layer_8_revised.md)**
+### **[Layer 8: Consciousness Applications](manuscript/layer_8_revised.md)**
 Neural implementation. How brains create the five consciousness requirements.
 
 **Key concepts:**
@@ -166,7 +166,7 @@ Neural implementation. How brains create the five consciousness requirements.
 
 ---
 
-### **[Layer 9: Ethics](layer_9_revised.md)**
+### **[Layer 9: Ethics](manuscript/layer_9_revised.md)**
 Right action from interface validation. [ICE] as moral guide. Soul equality and eternal consequences.
 
 **Key concepts:**
@@ -179,7 +179,7 @@ Right action from interface validation. [ICE] as moral guide. Soul equality and 
 
 ---
 
-### **[Layer 10: Society](layer_10_revised.md)**
+### **[Layer 10: Society](manuscript/layer_10_revised.md)**
 Collective validation. How [ICE] scales from individual to civilization.
 
 **Key concepts:**
@@ -192,7 +192,7 @@ Collective validation. How [ICE] scales from individual to civilization.
 
 ---
 
-### **[Layer 11: Practice](layer_11_revised.md)**
+### **[Layer 11: Practice](manuscript/layer_11_revised.md)**
 Daily living with the framework. Practical implementation of validation awareness.
 
 **Key concepts:**
@@ -205,7 +205,7 @@ Daily living with the framework. Practical implementation of validation awarenes
 
 ---
 
-### **[Layer 12: Complete Integration](layer_12_revised.md)**
+### **[Layer 12: Complete Integration](manuscript/layer_12_revised.md)**
 Return to the seed. Ten core principles. Living synthesis.
 
 **Key concepts:**
