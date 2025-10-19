@@ -48,7 +48,7 @@ Convergence → Validation at Interfaces → Emergence
 Each layer contains the whole framework but at increasing resolution. Read them in order for maximum comprehension.
 
 ### **[Layer 0: The Seed](layer_0_revised.md)**
-The foundation. Four fundamentals (∞, ∞', •, •'), the fractalization event, and what you are (an eternal •' operator organizing temporary parts).
+The foundation. Four fundamentals (∞, ∞', •, •'), the fractalization event, and what you are (an eternal •' operator organizing eternally fractalizing parts).
 
 **Key concepts:**
 - The incomplete foundation before fractalization
