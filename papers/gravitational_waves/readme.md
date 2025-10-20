@@ -530,8 +530,7 @@ Complete automated pipeline available, including:
 
 **Document Version:** 1.0  
 **Publication Date:** October 19, 2025  
-**License:** [Creative Commons Attribution 4.0]  
-**DOI:** [To be assigned upon publication]
+**License:** [Steelman]  
 
 ---
 
