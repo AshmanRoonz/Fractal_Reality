@@ -1,8 +1,8 @@
 # Fractal Dimension Analysis of Gravitational Wave Signals: Empirical Validation Across LIGO Observing Runs O1-O4
 
-**Authors:** [Your Name]  
+**Authors:** [Ashman Roonz]
 **Date:** October 19, 2025  
-**Institution:** [Your Institution]
+**Institution:** [AshmanRoonz.ca]
 
 ---
 
