@@ -8,3 +8,4 @@ moved_to_docs_simulations
 nbody_beta_sim.tsx
 ice_validation_pattern.tsx
 enhanced-consciousness-fractal.tsx
+molecular-canvas-composer.tsx
