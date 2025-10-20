@@ -6,5 +6,5 @@ fractal_texture_evolution.tsx
 ice_curved_simulation.tsx
 moved_to_docs_simulations
 nbody_beta_sim.tsx
-
+ice_validation_pattern.tsx
 
