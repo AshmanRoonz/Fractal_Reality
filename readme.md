@@ -6,9 +6,19 @@
 
 ---
 
-## What Is This?
+## Two Parts of This Repository
 
+**Part 1: Philosophical Framework** (Layers 0-12)
+Conceptual understanding using symbolic notation. 
+These are NOT formal mathematical papers.
+
+**Part 2: Computational Validation** (Papers 1-3)  
+Rigorous derivations, numerical simulations, testable predictions.
+*Start here if you want the physics.*
+
+```
 Fractal Reality is a comprehensive theoretical framework that reveals the fundamental structure underlying all of reality—from quantum mechanics to consciousness, from ethics to cosmology. It derives physics, mathematics, and phenomenology from a single seed principle through twelve fractal layers of increasing resolution.
+```
 
 This is not metaphysics detached from reality. This framework:
 
