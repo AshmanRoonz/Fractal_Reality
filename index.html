@@ -43,23 +43,81 @@
             useEffect(() => {
                 const fetchSimulations = async () => {
                     try {
-                        // Try to fetch the simulations directory listing
-                        // Note: This requires a server that supports directory listing
-                        // or you can manually list files here
+                        // Try multiple methods to get directory listing
                         
-                        // Manual listing (update this array with your TSX files)
-                        const simFiles = [
+                        // Method 1: Try to fetch directory listing (works with some servers)
+                        try {
+                            const response = await fetch('./simulations/');
+                            const html = await response.text();
+                            
+                            // Parse HTML to extract .tsx files
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const links = Array.from(doc.querySelectorAll('a'));
+                            const tsxFiles = links
+                                .map(link => link.getAttribute('href'))
+                                .filter(href => href && href.endsWith('.tsx'))
+                                .map(href => href.split('/').pop());
+                            
+                            if (tsxFiles.length > 0) {
+                                setSimulations(tsxFiles);
+                                setLoading(false);
+                                return;
+                            }
+                        } catch (e) {
+                            console.log('Directory listing not available, trying manifest...');
+                        }
+
+                        // Method 2: Try to load a manifest.json file
+                        try {
+                            const manifestResponse = await fetch('./simulations/manifest.json');
+                            const manifest = await manifestResponse.json();
+                            if (manifest.files && manifest.files.length > 0) {
+                                setSimulations(manifest.files);
+                                setLoading(false);
+                                return;
+                            }
+                        } catch (e) {
+                            console.log('No manifest.json found, trying auto-discovery...');
+                        }
+
+                        // Method 3: Try to auto-discover by attempting to load common filenames
+                        const commonNames = [
                             'harmonic_chemistry.tsx',
                             'water_molecule.tsx',
                             'validation_synchronization.tsx',
-                            // Add more simulation files here
+                            'fractal_dimension.tsx',
+                            'operator_visualization.tsx',
+                            'consciousness_simulation.tsx',
+                            'quantum_validation.tsx',
+                            'resonance_patterns.tsx',
+                            'ice_validation.tsx',
+                            'texture_accumulation.tsx'
                         ];
 
-                        setSimulations(simFiles);
-                        setLoading(false);
+                        const foundFiles = [];
+                        for (const filename of commonNames) {
+                            try {
+                                const testResponse = await fetch(`./simulations/${filename}`, { method: 'HEAD' });
+                                if (testResponse.ok) {
+                                    foundFiles.push(filename);
+                                }
+                            } catch (e) {
+                                // File doesn't exist, skip
+                            }
+                        }
+
+                        if (foundFiles.length > 0) {
+                            setSimulations(foundFiles);
+                            setLoading(false);
+                            return;
+                        }
+
+                        // If all methods fail, show helpful error
+                        throw new Error('No simulations found. Please create a manifest.json file.');
                     } catch (err) {
                         console.error('Error loading simulations:', err);
-                        setError('Could not load simulations directory');
+                        setError(err.message || 'Could not load simulations directory');
                         setLoading(false);
                     }
                 };
@@ -147,10 +205,25 @@
                                 </div>
                             ) : error ? (
                                 <div className="max-w-2xl mx-auto bg-red-900/30 border border-red-500 rounded-lg p-6">
-                                    <p className="text-red-300">{error}</p>
-                                    <p className="text-gray-400 mt-4 text-sm">
-                                        Make sure your TSX files are in the ./simulations/ directory
-                                    </p>
+                                    <p className="text-red-300 mb-4">{error}</p>
+                                    <div className="text-gray-300 text-sm space-y-2">
+                                        <p className="font-bold">Setup Instructions:</p>
+                                        <ol className="list-decimal list-inside space-y-1 ml-2">
+                                            <li>Create a <code className="bg-black/50 px-2 py-0.5 rounded">simulations/</code> directory</li>
+                                            <li>Add your .tsx simulation files to it</li>
+                                            <li>Create a <code className="bg-black/50 px-2 py-0.5 rounded">simulations/manifest.json</code> file:</li>
+                                        </ol>
+                                        <pre className="bg-black/50 p-3 rounded mt-2 overflow-auto text-xs">
+{`{
+  "files": [
+    "harmonic_chemistry.tsx",
+    "water_molecule.tsx",
+    "your_simulation.tsx"
+  ]
+}`}
+                                        </pre>
+                                        <p className="mt-2 text-gray-400">Or use a local server with directory listing enabled (e.g., <code className="bg-black/50 px-2 py-0.5 rounded">python -m http.server</code>)</p>
+                                    </div>
                                 </div>
                             ) : simulations.length === 0 ? (
                                 <div className="max-w-2xl mx-auto bg-yellow-900/30 border border-yellow-500 rounded-lg p-6">
