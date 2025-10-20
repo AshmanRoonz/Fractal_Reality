@@ -8,6 +8,7 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
             margin: 0;
@@ -141,32 +142,75 @@
                 if (!simCode) return null;
 
                 try {
+                    // Remove import statements and replace with available globals
+                    let processedCode = simCode;
+                    
+                    // Remove React imports (we have it globally)
+                    processedCode = processedCode.replace(/import\s+React.*?from\s+['"]react['"];?\s*/g, '');
+                    processedCode = processedCode.replace(/import\s+\{[^}]*\}\s+from\s+['"]react['"];?\s*/g, '');
+                    
+                    // Remove lucide-react imports and create mock components
+                    const lucideMatch = processedCode.match(/import\s+\{([^}]+)\}\s+from\s+['"]lucide-react['"]/);
+                    if (lucideMatch) {
+                        const icons = lucideMatch[1].split(',').map(i => i.trim());
+                        const mockIcons = icons.map(icon => 
+                            `const ${icon} = (props) => React.createElement('svg', {...props, xmlns: 'http://www.w3.org/2000/svg', width: '24', height: '24', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2'}, React.createElement('circle', {cx: '12', cy: '12', r: '10'}));`
+                        ).join('\n');
+                        processedCode = processedCode.replace(/import\s+\{[^}]+\}\s+from\s+['"]lucide-react['"];?\s*/g, mockIcons);
+                    }
+                    
+                    // Remove any other imports
+                    processedCode = processedCode.replace(/import\s+.*?from\s+['"].*?['"];?\s*/g, '');
+                    
+                    // Remove export statements
+                    processedCode = processedCode.replace(/export\s+default\s+/g, '');
+                    processedCode = processedCode.replace(/export\s+/g, '');
+
                     // Transform TSX to JS
-                    const transformed = Babel.transform(simCode, {
+                    const transformed = Babel.transform(processedCode, {
                         filename: selectedSim || 'simulation.tsx',
                         presets: ['react', 'typescript'],
                         retainLines: false
                     }).code;
 
-                    // Create a function from the code
-                    const SimComponent = new Function(
-                        'React',
-                        'useState',
-                        'useEffect',
-                        `${transformed}; return typeof App !== 'undefined' ? App : typeof default !== 'undefined' ? default : null;`
-                    )(React, useState, useEffect);
+                    // Create a function from the code that returns the component
+                    const componentCode = `
+                        ${transformed}
+                        
+                        // Return the last declared component or function
+                        if (typeof App !== 'undefined') return App;
+                        
+                        // Find the last function/component declaration
+                        const matches = ${JSON.stringify(transformed)}.match(/(?:function|const|let|var)\\s+(\\w+)/g);
+                        if (matches && matches.length > 0) {
+                            const lastComponent = matches[matches.length - 1].split(/\\s+/)[1];
+                            if (typeof eval(lastComponent) !== 'undefined') return eval(lastComponent);
+                        }
+                        
+                        throw new Error('No component found in simulation file');
+                    `;
+
+                    const SimComponent = new Function('React', 'useState', 'useEffect', componentCode)(
+                        React, 
+                        useState, 
+                        useEffect
+                    );
 
                     if (!SimComponent) {
                         throw new Error('No component exported from simulation');
                     }
 
-                    return <SimComponent />;
+                    return React.createElement(SimComponent);
                 } catch (err) {
                     console.error('Error rendering simulation:', err);
                     return (
                         <div className="p-8 bg-red-50 text-red-900">
                             <h3 className="text-xl font-bold mb-2">Rendering Error</h3>
-                            <pre className="text-sm overflow-auto">{err.message}</pre>
+                            <pre className="text-sm overflow-auto whitespace-pre-wrap">{err.message}</pre>
+                            <details className="mt-4">
+                                <summary className="cursor-pointer font-bold">Stack Trace</summary>
+                                <pre className="text-xs mt-2 overflow-auto">{err.stack}</pre>
+                            </details>
                         </div>
                     );
                 }
