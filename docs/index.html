@@ -39,85 +39,73 @@
             const [error, setError] = useState(null);
             const [loading, setLoading] = useState(true);
 
-            // Scan simulations directory for TSX files
+            // Read simulation list from sims.md
             useEffect(() => {
                 const fetchSimulations = async () => {
                     try {
-                        // Try multiple methods to get directory listing
+                        // Fetch the sims.md file
+                        const response = await fetch('./sims.md');
+                        if (!response.ok) {
+                            throw new Error('Could not find sims.md file. Please create it in the root directory.');
+                        }
                         
-                        // Method 1: Try to fetch directory listing (works with some servers)
-                        try {
-                            const response = await fetch('./simulations/');
-                            const html = await response.text();
+                        const markdown = await response.text();
+                        
+                        // Parse the markdown to extract .tsx filenames
+                        // Supports multiple formats:
+                        // - harmonic_chemistry.tsx
+                        // - simulations/harmonic_chemistry.tsx
+                        // - [Link](harmonic_chemistry.tsx)
+                        // - * harmonic_chemistry.tsx
+                        // - - harmonic_chemistry.tsx
+                        
+                        const lines = markdown.split('\n');
+                        const tsxFiles = [];
+                        
+                        for (const line of lines) {
+                            const trimmed = line.trim();
                             
-                            // Parse HTML to extract .tsx files
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(html, 'text/html');
-                            const links = Array.from(doc.querySelectorAll('a'));
-                            const tsxFiles = links
-                                .map(link => link.getAttribute('href'))
-                                .filter(href => href && href.endsWith('.tsx'))
-                                .map(href => href.split('/').pop());
+                            // Skip empty lines, headers, and comments
+                            if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) {
+                                continue;
+                            }
                             
-                            if (tsxFiles.length > 0) {
-                                setSimulations(tsxFiles);
-                                setLoading(false);
-                                return;
+                            // Extract filename from various formats
+                            let filename = null;
+                            
+                            // Markdown link format: [text](filename.tsx)
+                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.tsx)\)/);
+                            if (linkMatch) {
+                                filename = linkMatch[1];
                             }
-                        } catch (e) {
-                            console.log('Directory listing not available, trying manifest...');
-                        }
-
-                        // Method 2: Try to load a manifest.json file
-                        try {
-                            const manifestResponse = await fetch('./simulations/manifest.json');
-                            const manifest = await manifestResponse.json();
-                            if (manifest.files && manifest.files.length > 0) {
-                                setSimulations(manifest.files);
-                                setLoading(false);
-                                return;
-                            }
-                        } catch (e) {
-                            console.log('No manifest.json found, trying auto-discovery...');
-                        }
-
-                        // Method 3: Try to auto-discover by attempting to load common filenames
-                        const commonNames = [
-                            'harmonic_chemistry.tsx',
-                            'water_molecule.tsx',
-                            'validation_synchronization.tsx',
-                            'fractal_dimension.tsx',
-                            'operator_visualization.tsx',
-                            'consciousness_simulation.tsx',
-                            'quantum_validation.tsx',
-                            'resonance_patterns.tsx',
-                            'ice_validation.tsx',
-                            'texture_accumulation.tsx'
-                        ];
-
-                        const foundFiles = [];
-                        for (const filename of commonNames) {
-                            try {
-                                const testResponse = await fetch(`./simulations/${filename}`, { method: 'HEAD' });
-                                if (testResponse.ok) {
-                                    foundFiles.push(filename);
+                            // List format: - filename.tsx or * filename.tsx
+                            else if (trimmed.match(/^[-*]\s+/)) {
+                                const listMatch = trimmed.match(/[-*]\s+(.*?\.tsx)/);
+                                if (listMatch) {
+                                    filename = listMatch[1];
                                 }
-                            } catch (e) {
-                                // File doesn't exist, skip
+                            }
+                            // Plain format: filename.tsx or simulations/filename.tsx
+                            else if (trimmed.endsWith('.tsx')) {
+                                filename = trimmed;
+                            }
+                            
+                            if (filename) {
+                                // Remove 'simulations/' prefix if present
+                                filename = filename.replace(/^simulations\//, '');
+                                tsxFiles.push(filename);
                             }
                         }
-
-                        if (foundFiles.length > 0) {
-                            setSimulations(foundFiles);
-                            setLoading(false);
-                            return;
+                        
+                        if (tsxFiles.length === 0) {
+                            throw new Error('No .tsx files found in sims.md. Please list your simulation files.');
                         }
-
-                        // If all methods fail, show helpful error
-                        throw new Error('No simulations found. Please create a manifest.json file.');
+                        
+                        setSimulations(tsxFiles);
+                        setLoading(false);
                     } catch (err) {
                         console.error('Error loading simulations:', err);
-                        setError(err.message || 'Could not load simulations directory');
+                        setError(err.message || 'Could not load sims.md');
                         setLoading(false);
                     }
                 };
@@ -211,18 +199,24 @@
                                         <ol className="list-decimal list-inside space-y-1 ml-2">
                                             <li>Create a <code className="bg-black/50 px-2 py-0.5 rounded">simulations/</code> directory</li>
                                             <li>Add your .tsx simulation files to it</li>
-                                            <li>Create a <code className="bg-black/50 px-2 py-0.5 rounded">simulations/manifest.json</code> file:</li>
+                                            <li>Create a <code className="bg-black/50 px-2 py-0.5 rounded">sims.md</code> file in the root directory</li>
                                         </ol>
+                                        <p className="mt-3 font-bold">Example sims.md:</p>
                                         <pre className="bg-black/50 p-3 rounded mt-2 overflow-auto text-xs">
-{`{
-  "files": [
-    "harmonic_chemistry.tsx",
-    "water_molecule.tsx",
-    "your_simulation.tsx"
-  ]
-}`}
+{`# Simulations
+
+harmonic_chemistry.tsx
+water_molecule.tsx
+validation_synchronization.tsx
+
+# Or use markdown format:
+- harmonic_chemistry.tsx
+- water_molecule.tsx
+
+# Or with links:
+[Harmonic Chemistry](harmonic_chemistry.tsx)
+[Water Molecule](water_molecule.tsx)`}
                                         </pre>
-                                        <p className="mt-2 text-gray-400">Or use a local server with directory listing enabled (e.g., <code className="bg-black/50 px-2 py-0.5 rounded">python -m http.server</code>)</p>
                                     </div>
                                 </div>
                             ) : simulations.length === 0 ? (
