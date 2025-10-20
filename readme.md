@@ -36,6 +36,7 @@ This is not metaphysics detached from reality. This framework:
 - **[Paper 3: Quantum Uncertainty from Stochastic Validation](papers/paper3_quantum_uncertainty.md)** - Structural mechanism for quantum "randomness"
 - **[Cosmic-Scale Tests: CMB Data Comparison](results/cmb_cosmic_tests.md)**
 
+[### Simulations now available!](https://ashmanroonz.github.io/Fractal_Reality/)
 ## The Core Insight
 
 Reality consists of **four fundamental components**:
