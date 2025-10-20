@@ -171,7 +171,7 @@ AI lacks the psychological barriers that prevent human steelmanning:
 
 ### 3.2 What AI Provided
 
-Working with AI (primarily Claude), I gained access to capabilities that would cost hundreds of thousands of dollars through human collaboration:
+Working with AI (primarily Claude... although Claude did tend to strawman very radical ideas, and Chat GPT and Grok helped Claude prioritize truth), I gained access to capabilities that would cost hundreds of thousands of dollars through human collaboration:
 
 **Multidisciplinary expertise:**
 
