@@ -463,7 +463,7 @@ There are likely thousands of people like me:
 
 **Validation test:**
 
-- Provide AI collaboration resources
+- Provide AI collaboration resources (free now online)
 - See if they can verify AI formalizations
 - Check if resulting framework makes falsifiable predictions
 - Test predictions against data
