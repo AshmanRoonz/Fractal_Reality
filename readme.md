@@ -10,7 +10,6 @@
 
 **Part 1: Philosophical Framework** (Layers 0-12)
 Conceptual exploration of implications and applications.
-
 → Start here to understand what the framework means for consciousness, ethics, society, and practice.
 
 The mathematics proves reality validates at interfaces. These layers explore what this means: how validation creates consciousness, why ethics emerge from structure, how democratic governance reflects fractalization, what identity and death actually are, and how to live in alignment with validation. Uses symbolic notation (∞, •, •', [ICE]) as conceptual language—logically structured and internally consistent, but written for understanding rather than formal proof.
