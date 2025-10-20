@@ -23,3 +23,5 @@ nbody_beta_sim (1).tsx
 
 
 nbody_beta_sim.tsx
+
+harmonic_periodic_table.tsx
