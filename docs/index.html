@@ -143,7 +143,9 @@
                 try {
                     // Transform TSX to JS
                     const transformed = Babel.transform(simCode, {
-                        presets: ['react', 'typescript']
+                        filename: selectedSim || 'simulation.tsx',
+                        presets: ['react', 'typescript'],
+                        retainLines: false
                     }).code;
 
                     // Create a function from the code
