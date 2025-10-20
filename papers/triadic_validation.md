@@ -2,7 +2,7 @@
 
 ## Enhancing the Fractal Reality Framework with Explicit Color-Temporal Mapping
 
-**Primary Author**  
+**Ashman Roonz**  
 *Fractal Reality Research Group*
 
 **Acknowledgment:** Color-temporal mapping concept adapted from M. Cartagena's VQL-Time framework with modifications
