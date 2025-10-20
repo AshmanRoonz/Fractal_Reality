@@ -1,4 +1,5 @@
 # The Bridge Between Science and Spirituality
+*by Ashman Roonz*
 
 ## The Fractal Reality Framework
 
