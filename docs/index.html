@@ -166,51 +166,102 @@
                     processedCode = processedCode.replace(/export\s+default\s+/g, '');
                     processedCode = processedCode.replace(/export\s+/g, '');
 
-                    // Transform TSX to JS
+                    // Transform TSX to JS with proper scope handling
                     const transformed = Babel.transform(processedCode, {
                         filename: selectedSim || 'simulation.tsx',
-                        presets: ['react', 'typescript'],
-                        retainLines: false
+                        presets: [
+                            ['react', { 
+                                runtime: 'classic',
+                                pragma: 'React.createElement'
+                            }],
+                            ['typescript', {
+                                isTSX: true,
+                                allExtensions: true
+                            }]
+                        ]
                     }).code;
 
-                    // Create a function from the code that returns the component
-                    const componentCode = `
-                        ${transformed}
-                        
-                        // Return the last declared component or function
-                        if (typeof App !== 'undefined') return App;
-                        
-                        // Find the last function/component declaration
-                        const matches = ${JSON.stringify(transformed)}.match(/(?:function|const|let|var)\\s+(\\w+)/g);
-                        if (matches && matches.length > 0) {
-                            const lastComponent = matches[matches.length - 1].split(/\\s+/)[1];
-                            if (typeof eval(lastComponent) !== 'undefined') return eval(lastComponent);
-                        }
-                        
-                        throw new Error('No component found in simulation file');
+                    // Extract the component name
+                    const componentMatch = processedCode.match(/(?:const|function|let|var)\s+(\w+)\s*=?\s*\([^)]*\)\s*(?:=>)?\s*{/);
+                    const componentName = componentMatch ? componentMatch[1] : 'App';
+
+                    // Wrap the entire code in an IIFE to create proper scope
+                    const wrappedCode = `
+                        return (function() {
+                            ${transformed}
+                            
+                            // Return the component
+                            if (typeof ${componentName} !== 'undefined') {
+                                return ${componentName};
+                            }
+                            if (typeof App !== 'undefined') {
+                                return App;
+                            }
+                            
+                            // Try to find any function component
+                            const allVars = Object.keys(this).filter(k => typeof this[k] === 'function');
+                            if (allVars.length > 0) {
+                                return this[allVars[allVars.length - 1]];
+                            }
+                            
+                            throw new Error('No component found. Make sure to define a component function.');
+                        }).call({});
                     `;
 
-                    const SimComponent = new Function('React', 'useState', 'useEffect', componentCode)(
-                        React, 
-                        useState, 
-                        useEffect
+                    // Create the component with all necessary globals
+                    const createComponent = new Function(
+                        'React',
+                        'useState', 
+                        'useEffect',
+                        'useRef',
+                        'useMemo',
+                        'useCallback',
+                        'useReducer',
+                        'useContext',
+                        wrappedCode
                     );
 
-                    if (!SimComponent) {
-                        throw new Error('No component exported from simulation');
+                    const SimComponent = createComponent(
+                        React,
+                        React.useState,
+                        React.useEffect,
+                        React.useRef,
+                        React.useMemo,
+                        React.useCallback,
+                        React.useReducer,
+                        React.useContext
+                    );
+
+                    if (!SimComponent || typeof SimComponent !== 'function') {
+                        throw new Error('No valid React component found in simulation file');
                     }
 
                     return React.createElement(SimComponent);
                 } catch (err) {
                     console.error('Error rendering simulation:', err);
                     return (
-                        <div className="p-8 bg-red-50 text-red-900">
-                            <h3 className="text-xl font-bold mb-2">Rendering Error</h3>
-                            <pre className="text-sm overflow-auto whitespace-pre-wrap">{err.message}</pre>
+                        <div className="p-8 bg-red-900 text-red-100 min-h-screen">
+                            <h3 className="text-2xl font-bold mb-4">❌ Rendering Error</h3>
+                            <div className="bg-black/30 p-4 rounded mb-4">
+                                <p className="font-mono text-sm">{err.message}</p>
+                            </div>
                             <details className="mt-4">
-                                <summary className="cursor-pointer font-bold">Stack Trace</summary>
-                                <pre className="text-xs mt-2 overflow-auto">{err.stack}</pre>
+                                <summary className="cursor-pointer font-bold text-lg mb-2">📋 Stack Trace</summary>
+                                <pre className="text-xs overflow-auto bg-black/30 p-4 rounded whitespace-pre-wrap">{err.stack}</pre>
                             </details>
+                            <details className="mt-4">
+                                <summary className="cursor-pointer font-bold text-lg mb-2">📄 Original Code</summary>
+                                <pre className="text-xs overflow-auto bg-black/30 p-4 rounded whitespace-pre-wrap">{simCode}</pre>
+                            </details>
+                            <div className="mt-6 p-4 bg-yellow-900/30 rounded">
+                                <p className="text-yellow-200 font-bold mb-2">💡 Common Issues:</p>
+                                <ul className="text-sm space-y-1 list-disc list-inside">
+                                    <li>Make sure all variables are declared with const/let/var</li>
+                                    <li>Use React.useState, React.useEffect instead of destructured hooks</li>
+                                    <li>Avoid external libraries (only React and Tailwind are available)</li>
+                                    <li>Component should be a simple function that returns JSX</li>
+                                </ul>
+                            </div>
                         </div>
                     );
                 }
