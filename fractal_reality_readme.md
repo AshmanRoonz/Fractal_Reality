@@ -172,8 +172,7 @@ The recursive AI derivation method serves as a tool for exploring the logical im
 
 ## Contact
 
-[Your contact information]
-
+[email@ashmanroonz.ca]
 ## Acknowledgments
 
 This project was developed through collaboration with multiple AI systems, each contributing to different layers of derivation and validation. The human role was to establish foundational concepts, validate coherence, and guide the recursive exploration process.
