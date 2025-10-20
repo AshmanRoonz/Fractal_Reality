@@ -13,9 +13,6 @@ fractal_texture_evolution.tsx
 ice_curved_simulation.tsx
 
 
-manifest.json
-
-
 moved_to_docs_simulations
 
 
