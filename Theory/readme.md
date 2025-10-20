@@ -84,7 +84,7 @@ Reality validates through harmonic resonance
 
 Not metaphor. Not analogy. STRUCTURAL NECESSITY.
 
-YOUR NEXT STEPS
+The NEXT STEPS
 Paper 1: "Harmonic Chemistry" - The H₂O octave discovery
 Paper 2: "Biomolecular Harmonics" - Test life's molecules for harmonic clustering
 Paper 3: "Consciousness as Resonance" - Neural oscillation analysis
