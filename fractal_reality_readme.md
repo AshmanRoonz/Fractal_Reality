@@ -168,7 +168,7 @@ The recursive AI derivation method serves as a tool for exploring the logical im
 
 ## License
 
-[Your chosen license]
+[Steelman]
 
 ## Contact
 
