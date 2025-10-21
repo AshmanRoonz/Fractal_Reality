@@ -22,7 +22,7 @@ Where:
 
 ## What's Inside
 
-### [`/bubble_chamber/`](./bubble_chamber/) - Low Energy Validation
+### [`/bubble_chamber/`](analysis/bubblechamber) - Low Energy Validation
 
 **Energy scale:** MeV - GeV (particle physics)
 
@@ -36,7 +36,7 @@ Where:
 
 **Status:** ✅ Complete analysis, publication-ready
 
-**[→ Read full bubble chamber analysis](./bubble_chamber/)**
+**[→ Read full bubble chamber analysis](analysis/bubblechamber/bubble-chamber-analysis.md)**
 
 ---
 
