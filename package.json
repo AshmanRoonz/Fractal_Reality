@@ -1,0 +1,38 @@
+{
+  "name": "fractal-reality",
+  "version": "1.0.0",
+  "description": "A complete framework bridging physics and metaphysics - deriving quantum mechanics from first principles and validating with LIGO data",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests/run_four_tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AshmanRoonz/Fractal_Reality.git"
+  },
+  "keywords": [
+    "physics",
+    "quantum-mechanics",
+    "fractal",
+    "consciousness",
+    "gravitational-waves",
+    "ligo",
+    "metaphysics"
+  ],
+  "author": "AshmanRoonz",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/AshmanRoonz/Fractal_Reality/issues"
+  },
+  "homepage": "https://ashmanroonz.github.io/Fractal_Reality/",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recharts": "^2.10.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.3.0"
+  }
+}

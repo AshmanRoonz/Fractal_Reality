@@ -1,0 +1,17 @@
+# Fractal Reality - Python Dependencies
+# Core scientific computing
+numpy>=1.24.0
+scipy>=1.10.0
+pandas>=2.0.0
+
+# Visualization
+matplotlib>=3.7.0
+
+# Data handling
+h5py>=3.8.0
+
+# Gravitational wave data access
+gwosc>=0.7.0
+
+# Image processing and fractal analysis
+scikit-image>=0.20.0
