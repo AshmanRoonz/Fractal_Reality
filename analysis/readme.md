@@ -22,7 +22,7 @@ Where:
 
 ## What's Inside
 
-### [`/bubble_chamber/`](analysis/bubblechamber) - Low Energy Validation
+### [`/bubble_chamber/`]([analysis/bubblechamber](https://github.com/AshmanRoonz/Fractal_Reality/tree/f8707fc9f379274ab7284d0a9fcfcafe869ff1f2/analysis/bubblechamber)) - Low Energy Validation
 
 **Energy scale:** MeV - GeV (particle physics)
 
@@ -36,11 +36,11 @@ Where:
 
 **Status:** ✅ Complete analysis, publication-ready
 
-**[→ Read full bubble chamber analysis](analysis/bubblechamber/bubble-chamber-analysis.md)**
+**[→ Read full bubble chamber analysis]([analysis/bubblechamber/bubble-chamber-analysis.md](https://github.com/AshmanRoonz/Fractal_Reality/blob/f8707fc9f379274ab7284d0a9fcfcafe869ff1f2/analysis/bubblechamber/bubble-chamber-analysis.md))**
 
 ---
 
-### [`/phase2_strain_coupling/`](./phase2_strain_coupling/) - Framework Validation
+###[`/phase2_strain_coupling/`]([./phase2_strain_coupling/](https://github.com/AshmanRoonz/Fractal_Reality/blob/96800399c23f2b2e83aff1380f9bddda622ee63a/analysis/%20phase2_strain_coupling/readme.md) - Framework Validation
 
 **Energy scale:** Solar masses (10³⁰ kg × c²)
 
@@ -54,7 +54,7 @@ Where:
 
 **Status:** ✅ Phase 2 baseline complete, Phase 3 (strain coupling) in progress
 
-**[→ Read full Phase 2 analysis](./phase2_strain_coupling/)**
+**[→ Read full Phase 2 analysis]([./phase2_strain_coupling/](https://github.com/AshmanRoonz/Fractal_Reality/blob/96800399c23f2b2e83aff1380f9bddda622ee63a/analysis/%20phase2_strain_coupling/readme.md)**
 
 ---
 
