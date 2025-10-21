@@ -1,0 +1,64 @@
+Correlation Dimension Results
+==================================================
+
+GW_GPS1239080960 H1: D2 = 1.521
+GW_GPS1240213455 L1: D2 = 1.989
+GW_GPS1239080960 L1: D2 = 1.988
+GW_GPS1240213455 V1: D2 = 2.059
+
+Mean D2: 1.889 ± 0.214
+Published D_H: 1.503 ± 0.040
+
+Both are correct - different measures!
+
+======================================================================
+CORRELATION DIMENSION ANALYSIS
+======================================================================
+
+GW_GPS1239080960 H1:
+  32768 samples
+  D2(m=5) = 1.519
+  D2(m=7) = 1.519
+  D2(m=10) = 1.526
+  Average D2 = 1.521
+
+GW_GPS1240213455 L1:
+  32769 samples
+  D2(m=5) = 1.891
+  D2(m=7) = 1.977
+  D2(m=10) = 2.098
+  Average D2 = 1.989
+
+GW_GPS1239080960 L1:
+  32768 samples
+  D2(m=5) = 1.911
+  D2(m=7) = 1.978
+  D2(m=10) = 2.076
+  Average D2 = 1.988
+
+GW_GPS1240213455 V1:
+  32769 samples
+  D2(m=5) = 1.995
+  D2(m=7) = 2.055
+  D2(m=10) = 2.127
+  Average D2 = 2.059
+
+======================================================================
+RESULTS
+======================================================================
+
+N = 4 observations
+
+Correlation D2: 1.889 ± 0.214
+Your Higuchi D_H: 1.503 ± 0.040
+
+======================================================================
+CONCLUSION
+======================================================================
+
+BOTH measurements are valid:
+  D_H ≈ 1.5  = geometric roughness (1D curve)
+  D2  ≈ 1.9  = phase space dimension (multi-D)
+
+Different methods measure different properties!
+No contradiction - they're complementary!
