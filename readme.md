@@ -519,6 +519,9 @@ Fractal_Reality/
 │
 ├── tests/               # Empirical validation
 │   └── ligo/           # 19 events, 40 observations, p = 0.951
+│       ├── ligo_fractal_analysis.py  # Complete analysis code
+│       ├── README.md                  # Full documentation
+│       ├── requirements.txt           # Dependencies
 │       ├── O3/         # GW190412, GW190425 (2019-2020)
 │       ├── O4/         # 17 additional events (2023-2024)
 │       └── O3_O4/      # Combined statistical analysis
@@ -585,6 +588,8 @@ Fractal_Reality/
 ## Key Evidence Files
 
 **For Scientific Verification:**
+- [tests/ligo/ligo_fractal_analysis.py](tests/ligo/ligo_fractal_analysis.py) — **Complete analysis code**
+- [tests/ligo/README.md](tests/ligo/README.md) — **Full methodology documentation**
 - [tests/ligo/O3_O4/multi_run_comparison.csv](tests/ligo/O3_O4/multi_run_comparison.csv) — Statistical data
 - [tests/ligo/O4/O4_fractal_results_20251019_203311.csv](tests/ligo/O4/O4_fractal_results_20251019_203311.csv) — 17 events
 - [papers/gravitational_waves/multi_run_comprehensive_report.png](papers/gravitational_waves/multi_run_comprehensive_report.png) — Visualization
@@ -713,5 +718,3 @@ From both perspectives:
 **License:** [Steelman License](LICENSE)
 
 *Verify. Experience. Understand.*
-
-*Ashman Roonz*
