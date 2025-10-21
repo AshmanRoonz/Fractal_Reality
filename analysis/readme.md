@@ -58,7 +58,7 @@ Where:
 
 ---
 
-### [`/gravitational_waves/`](./gravitational_waves/) - Raw GW Data
+### [`/gravitational_waves/`]([./gravitational_waves/](https://github.com/AshmanRoonz/Fractal_Reality/blob/04592b54e6e78ef0191f343d64188880e7006319/papers/gravitational_waves/readme.md)) - Raw GW Data
 
 **Original LIGO analysis:**
 - Multi-run comparison data
@@ -68,7 +68,7 @@ Where:
 
 **Note:** This is the foundational GW data. Phase 2 builds on these results.
 
-**[→ View GW data and analysis](./gravitational_waves/)**
+**[→ View GW data and analysis](https://github.com/AshmanRoonz/Fractal_Reality/blob/04592b54e6e78ef0191f343d64188880e7006319/papers/gravitational_waves/readme.md)**
 
 ---
 
