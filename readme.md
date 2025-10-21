@@ -559,7 +559,7 @@ Fractal_Reality/
 * ✅ **Bubble Chamber:** D = 1.387 ± 0.232 (N=33, r=-0.65) - energy-dependent
 * ✅ **Cross-Scale Pattern:** Low-E suppressed, baseline confirmed, framework validated
 
-**[→ Read Full Phase 2 Analysis]()**
+**[→ Read Full Phase 2 Analysis](analysis/readme.md)**
 
 ---
 
