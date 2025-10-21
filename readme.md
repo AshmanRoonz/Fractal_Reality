@@ -50,7 +50,7 @@ Conceptual exploration of what the mathematics means for consciousness, identity
 
 Rigorous derivations, numerical simulations, and testable predictions with empirical validation.
 
-**[Interactive Simulations Available](https://ashmanroonz.github.io/Fractal_Reality/)**
+**[Interactive Simulations Available](https://ashmanroonz.github.io/Fractal_Reality/)** - Live 3D demonstrations and visualizations
 
 * * *
 
@@ -133,21 +133,21 @@ Convergence → Validation at Interfaces → Emergence
 
 Each layer contains the complete framework at increasing resolution. Read sequentially for full comprehension.
 
-| Layer | Focus | Key Insight |
-| --- | --- | --- |
-| **[0: The Seed](manuscript/layer_0_revised.md)** | Foundation | Four fundamentals, you as eternal operator |
-| **[1: First Unfolding](manuscript/layer_1_revised.md)** | Fractalization | How boundaries emerge, time begins |
-| **[2: Structure](manuscript/layer_2_revised.md)** | Anatomy | Every operator has ∇, ℰ, and field influence |
-| **[3: Dynamics](manuscript/layer_3_revised.md)** | Flow | Energy, momentum, causation through validation |
-| **[4: Consciousness](manuscript/layer_4_revised.md)** | Experience | Inside view of integrated operator, 5 requirements |
-| **[5: Validation](manuscript/layer_5_revised.md)** | [ICE] Test | Six-fold validation at two interfaces |
-| **[6: Mathematics](manuscript/layer_6_revised.md)** | Bridge Theorem | Schrödinger equation from validation constraints |
-| **[7: Physics](manuscript/layer_7_revised.md)** | Applications | Particles, forces, quantum effects |
-| **[8: Consciousness Applications](manuscript/layer_8_revised.md)** | Neural Implementation | How brains create consciousness requirements |
-| **[9: Ethics](manuscript/layer_9_revised.md)** | Right Action | Morality from validation structure |
-| **[10: Society](manuscript/layer_10_revised.md)** | Collective Validation | Governance, justice, economics |
-| **[11: Practice](manuscript/layer_11_revised.md)** | Daily Living | Practical implementation |
-| **[12: Complete Integration](manuscript/layer_12_revised.md)** | Synthesis | Ten core principles, return to seed |
+| Layer | Focus | Key Insight | File |
+| --- | --- | --- | --- |
+| **[0: The Seed](manuscript/layer_0_revised.md)** | Foundation | Four fundamentals, you as eternal operator | `layer_0_revised.md` |
+| **[1: First Unfolding](manuscript/layer_1_revised.md)** | Fractalization | How boundaries emerge, time begins | `layer_1_revised.md` |
+| **[2: Structure](manuscript/layer_2_revised.md)** | Anatomy | Every operator has ∇, ℰ, and field influence | `layer_2_revised.md` |
+| **[3: Dynamics](manuscript/layer_3_revised.md)** | Flow | Energy, momentum, causation through validation | `layer_3_revised.md` |
+| **[4: Consciousness](manuscript/layer_4_revised.md)** | Experience | Inside view of integrated operator, 5 requirements | `layer_4_revised.md` |
+| **[5: Validation](manuscript/layer_5_revised.md)** | [ICE] Test | Six-fold validation at two interfaces | `layer_5_revised.md` |
+| **[6: Mathematics](manuscript/layer_6_revised.md)** | Bridge Theorem | Schrödinger equation from validation constraints | `layer_6_revised.md` |
+| **[7: Physics](manuscript/layer_7_revised.md)** | Applications | Particles, forces, quantum effects | `layer_7_revised.md` |
+| **[8: Consciousness Applications](manuscript/layer_8_revised.md)** | Neural Implementation | How brains create consciousness requirements | `layer_8_revised.md` |
+| **[9: Ethics](manuscript/layer_9_revised.md)** | Right Action | Morality from validation structure | `layer_9_revised.md` |
+| **[10: Society](manuscript/layer_10_revised.md)** | Collective Validation | Governance, justice, economics | `layer_10_revised.md` |
+| **[11: Practice](manuscript/layer_11_revised.md)** | Daily Living | Practical implementation | `layer_11_revised.md` |
+| **[12: Complete Integration](manuscript/layer_12_revised.md)** | Synthesis | Ten core principles, return to seed | `layer_12_revised.md` |
 
 * * *
 
