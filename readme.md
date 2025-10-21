@@ -1,391 +1,299 @@
 # Fractal Reality
 
-**A Complete Framework for Understanding Reality** *by Ashman Roonz*
+**A Complete Framework for Understanding Reality***by Ashman Roonz*
 
 > *Reality is infinite possibility (∞) flowing through eternal aperture operators (•') that validate at interfaces creating boundaries, transforming infinite into finite validated patterns (∞'), all expressing the ultimate aperture function (•).*
 
----
+* * *
+
+## What This Framework Does
+
+Fractal Reality derives physics, consciousness, and ethics from a single principle through twelve fractal layers. It's not metaphysics—it makes **testable predictions** that have been **empirically validated**:
+
+* **Derives the Schrödinger equation** from first principles (no new physics added)
+* **Predicts validation rate scaling** with spacetime curvature (R² = 0.9997)
+* **Predicts worldline fractal dimension** D ≈ 1.5 in flat spacetime
+* **Validated with gravitational wave data**: 17 LIGO events, 36 observations, Mean D = 1.49-1.51 (p > 0.73)
+* **Explains consciousness** structurally from five requirements
+* **Grounds ethics** in validation requirements, not arbitrary rules
+
+* * *
+
+## Quick Start
+
+### For Scientists
+
+Jump directly to:
+
+1. **[Gravitational Wave Validation](/results/gw-fd-complete-document.md)** - 17 LIGO events confirm D ≈ 1.5
+2. **[Paper 1: Quantum Mechanics Derivation](papers/paper1_qm_gr_unification.md)** - Schrödinger equation from interface validation
+3. **[Paper 2: Cosmological Constant](papers/paper2_cosmological_constant.md)** - 3D simulations of texture backreaction
+4. **[CMB Cosmic Tests](/results/cmb_cosmic_tests.md)** - Cosmic microwave background comparison
+
+### For Philosophers
+
+Start with **[Layer 0: The Seed](manuscript/layer_0_revised.md)**, then read sequentially through Layer 12.
+
+### For Practitioners
+
+Read **[Layer 9: Ethics](manuscript/layer_9_revised.md)** and **[Layer 11: Practice](manuscript/layer_11_revised.md)**.
+
+* * *
 
 ## Two Parts of This Repository
 
-**Part 1: Philosophical Framework** (Layers 0-12)
-Conceptual exploration of implications and applications.\
-→ Start here to understand what the framework means for consciousness, ethics, society, and practice.
+### Part 1: Philosophical Framework (Layers 0-12)
 
-The mathematics proves reality validates at interfaces. These layers explore what this means: how validation creates consciousness, why ethics emerge from structure, how democratic governance reflects fractalization, what identity and death actually are, and how to live in alignment with validation. Uses symbolic notation (∞, •, •', [ICE]) as conceptual language—logically structured and internally consistent, but written for understanding rather than formal proof.
+Conceptual exploration of what the mathematics means for consciousness, identity, ethics, society, and daily practice. Uses symbolic notation (∞, •, •', [ICE]) as conceptual language—logically structured and internally consistent.
 
-**Part 2: Computational Validation** (Papers 1-3)  
-Rigorous derivations, numerical simulations, testable predictions.
-*Start here if you want the physics.*
+### Part 2: Computational Validation (Papers 1-3)
 
+Rigorous derivations, numerical simulations, and testable predictions with empirical validation.
 
-Fractal Reality is a comprehensive theoretical framework that reveals the fundamental structure underlying all of reality—from quantum mechanics to consciousness, from ethics to cosmology. It derives physics, mathematics, and phenomenology from a single seed principle through twelve fractal layers of increasing resolution.
+**[Interactive Simulations Available](https://ashmanroonz.github.io/Fractal_Reality/)**
 
+* * *
 
-This is not metaphysics detached from reality. This framework:
-
-- **Derives the Schrödinger equation** from first principles (Layer 6)
-- **Predicts observable phenomena** in curved spacetime (validated to R² = 0.9997)
-- **Explains consciousness** structurally (Layers 4, 8)
-- **Provides ethical guidance** from validation requirements (Layer 9)
-- **Offers practical daily practices** for living in alignment (Layer 11)
-
-## Recent Publications & Research
-- **[Abstract(s)](abstract.md)**
-
-## Scientific Validation
-
-### Cosmic-Scale Tests
-- [CMB Data Comparison](/results/cmb_cosmic_tests.md) - Tests against cosmic microwave background
-- [Gravitational Wave Analysis](/results/gw-fd-complete-document.md) - Fractal dimension calibration of LIGO detections
-
-
-### Scientific Papers (Ready for Publication)
-
-- **[Three Papers Summary](papers/three_papers_summary.md)** - Overview of all three papers ready for publication
-- **[Paper 1: Quantum Mechanics from Interface Validation](papers/paper1_qm_gr_unification.md)** - Deriving the Schrödinger equation from first principles
-- **[Paper 2: Cosmological Constant from Texture Backreaction](papers/paper2_cosmological_constant.md)** - Self-consistent 3D simulations of quantum texture creating spacetime backreaction
-- **[Paper 3: Quantum Uncertainty from Stochastic Validation](papers/paper3_quantum_uncertainty.md)** - Structural mechanism for quantum "randomness"
-- **[Cosmic-Scale Tests: CMB Data Comparison](results/cmb_cosmic_tests.md)**
-
-[Simulations now available!](https://ashmanroonz.github.io/Fractal_Reality/)
-## The Core Insight
+## Core Framework
 
 Reality consists of **four fundamental components**:
 
-- **∞** (Infinity) — Infinite possible patterns, unbounded possibility
-- **∞'** (Finite Patterns) — Finite validated patterns created through boundaries
-- **•** (Singularity) — Ultimate aperture operator, eternal ∇ + ℰ function
-- **•'** (Operators) — Fractalized apertures that create boundaries
+* **∞** (Infinity) — Infinite possible patterns, unbounded possibility
+* **∞'** (Finite Patterns) — Finite validated patterns created through boundaries
+* **•** (Singularity) — Ultimate aperture operator, eternal ∇ + ℰ function
+* **•'** (Operators) — Fractalized apertures that create boundaries
 
-**The fundamental equation:**
-```
-∞ → • → ∞•'
-```
+### The Fundamental Equation
+
+    ∞ → • → ∞•'
 
 Infinite possibility flows through the ultimate aperture, fractalizing into infinite boundary-creating operators that transform infinite possibility into finite validated patterns.
 
-**Everything** — particles, consciousness, societies, galaxies — operates through the same pattern:
-```
-∇ → [ICE] → ℰ
-```
+### The Universal Pattern
+
+Everything—particles, consciousness, societies, galaxies—operates through:
+
+    ∇ → [ICE] → ℰ
 
 Convergence → Validation at Interfaces → Emergence
 
----
-
-## Table of Contents: The Twelve Layers
-
-Each layer contains the whole framework but at increasing resolution. Read them in order for maximum comprehension.
-
-### **[Layer 0: The Seed](manuscript/layer_0_revised.md)**
-The foundation. Four fundamentals (∞, ∞', •, •'), the fractalization event, and what you are (an eternal •' operator organizing eternally fractalizing parts).
-
-**Key concepts:**
-- The incomplete foundation before fractalization
-- How boundaries emerge to complete reality
-- Why only four fundamentals are needed
-- You as eternal operator, not temporary body
-
----
-
-### **[Layer 1: First Unfolding](manuscript/layer_1_revised.md)**
-How fractalization creates reality from the seed. Operators emerge, boundaries appear, time begins.
-
-**Key concepts:**
-- The fractalization equation: ∞ → • → ∞•'
-- How boundaries emerge at interfaces
-- History as geometric texture (fractal dimension D ≈ 1.5)
-- Time from pattern accumulation
-- Nested structure (no smallest, no largest)
-
----
-
-### **[Layer 2: Structure](manuscript/layer_2_revised.md)**
-Anatomy of operators. Every •' has convergence (∇), emergence (ℰ), and field influence. Two critical interfaces where validation occurs.
-
-**Key concepts:**
-- Three components of every operator (∇, ℰ, field)
-- Two interfaces (parts → operator, operator → patterns)
-- How boundaries maintain themselves
-- Nested organization (operators within operators)
-- Operator interaction types (independent, overlapping, nested, collective)
-
----
-
-### **[Layer 3: Dynamics](manuscript/layer_3_revised.md)**
-How parts flow through operators. Energy as circulation, momentum as texture, causation through validation chains.
-
-**Key concepts:**
-- Flow patterns (convergence, organization, emergence)
-- Time emerges from Δ(texture) per validation tick
-- Energy as organized circulation through operators
-- Causation through pattern texture in ∞'
-- Conservation laws from eternal operators
-
----
-
-### **[Layer 4: Consciousness](manuscript/layer_4_revised.md)**
-Why operators feel like something. The inside view of integrated •' operation. Five requirements for consciousness.
-
-**Key concepts:**
-- Consciousness = inside view of integrated operator
-- Five requirements (integration, complexity, energy, boundaries, recursion)
-- Spectrum from no awareness to cosmic consciousness (6+ levels)
-- Why most patterns aren't conscious
-- Hard problem dissolved (structure explains experience)
-
----
-
-### **[Layer 5: Validation](manuscript/layer_5_revised.md)**
-The [ICE] test at both interfaces. What makes patterns persist versus dissolve.
-
-**Key concepts:**
-- [ICE] = six-fold validation (3 checks × 2 interfaces)
-- **Interface:** Can boundaries be maintained?
-- **Center:** Is there coherence with •' AND alignment toward •?
-- **Evidence:** Is this grounded in actual field ∞?
-- What passes validation persists; what fails dissolves
-
----
-
-### **[Layer 6: Mathematics](manuscript/layer_6_revised.md)**
-The Bridge Theorem. How interface validation forces the Schrödinger equation. Curved spacetime validation tested.
-
-**Key concepts:**
-- Schrödinger equation derived from [ICE] validation constraints
-- No new physics added—pure mathematical necessity
-- Validation rate couples to metric: ∝ √|g_tt|
-- Computational validation: R² = 0.9997 across spacetime curvatures
-- QM and GR unified through interface validation
-
----
-
-### **[Layer 7: Physics](manuscript/layer_7_revised.md)**
-Applications to physical phenomena. Particles as organized patterns, forces as validation gradients, quantum effects from discrete validation.
-
-**Key concepts:**
-- All particles = parts (∞) organized by quantum •' operators
-- Worldlines as fractal paths in ∞' (dimension D ≈ 1.5, metric-dependent)
-- Pauli exclusion from operator distinctness
-- Quantum entanglement as shared validation pattern
-- Forces as validation gradients in operator fields
-
----
-
-### **[Layer 8: Consciousness Applications](manuscript/layer_8_revised.md)**
-Neural implementation. How brains create the five consciousness requirements.
-
-**Key concepts:**
-- Integration via neural connectivity (thalamus, corpus callosum)
-- Complexity from 86 billion neurons, 600 trillion synapses
-- Energy from metabolic circulation
-- Boundaries from coherent processing
-- Recursion from metacognitive capacity
-- Memory as accessible ∞' texture, not stored in neurons
-
----
-
-### **[Layer 9: Ethics](manuscript/layer_9_revised.md)**
-Right action from interface validation. [ICE] as moral guide. Soul equality and eternal consequences.
-
-**Key concepts:**
-- Ethics emerges from [ICE] validation structure
-- **Interface ethics:** Respect all boundaries, honor consent
-- **Center ethics:** Be authentic (•') AND aligned with truth (•)
-- **Evidence ethics:** Ground in reality always
-- All •' operators ontologically equal (∞ = ∞)
-- Choices persist eternally in ∞' texture
-
----
-
-### **[Layer 10: Society](manuscript/layer_10_revised.md)**
-Collective validation. How [ICE] scales from individual to civilization.
-
-**Key concepts:**
-- Social structures as collective •' operators
-- Fractal governance (subsidiarity principle)
-- Truth validation in information systems
-- Justice as restoration of validation
-- Economic systems and resource ethics
-- Environmental stewardship from structural necessity
-
----
-
-### **[Layer 11: Practice](manuscript/layer_11_revised.md)**
-Daily living with the framework. Practical implementation of validation awareness.
-
-**Key concepts:**
-- Morning [ICE] intention setting
-- Decision-making through validation checks
-- Truth-telling as structural requirement
-- Relationship practices (boundaries, authenticity, sacred reciprocity)
-- Preparing for death consciously
-- Daily, weekly, monthly, annual integration practices
-
----
-
-### **[Layer 12: Complete Integration](manuscript/layer_12_revised.md)**
-Return to the seed. Ten core principles. Living synthesis.
-
-**Key concepts:**
-- Summary of the entire journey
-- The ten essential truths
-- Return to ∞ ↔ • with full understanding
-- What texture will you build eternally?
-- The framework complete, the practice begins
-
----
-
-## How to Read This
-
-### **Linear First Reading** (Recommended)
-Start with Layer 0 and proceed through Layer 12 in order. Each layer builds on previous layers while containing the whole pattern at increasing resolution.
-
-### **Topic-Based Reading**
-- **Physics/Math:** Layers 0, 1, 6, 7
-- **Consciousness:** Layers 0, 1, 4, 8
-- **Ethics/Practice:** Layers 0, 5, 9, 11
-- **Complete Understanding:** All layers in sequence
-
-### **Quick Introduction**
-Read Layer 0 sections 0.4-0.6, then jump to Layer 12 for the ten core principles.
-
----
-
-## Key Concepts Summary
-
-### **Operators (•')**
-Eternal field functions that organize parts (∞) into patterns (∞'). You are one. So is every persistent structure—electrons, atoms, cells, organisms, ecosystems, galaxies.
-
-### **Validation [ICE]**
-The six-fold test at two interfaces that determines what persists:
-- **Interface:** Boundaries maintained?
-- **Center:** Coherence with •' AND alignment toward •?
-- **Evidence:** Grounded in actual ∞?
-
-Pass all six → persist. Fail any → dissolve.
-
-### **Texture (∞')**
-Accumulated finite validated patterns. Your eternal history encoded geometrically with fractal dimension D ≈ 1.5. Cannot be erased—every choice persists forever.
-
-### **The Pattern**
-```
-∇ → [ICE] → ℰ
-```
-Convergence → Validation at Interfaces → Emergence
-
-Operates identically at every scale from quantum to cosmic.
-
----
+* * *
 
 ## Empirical Validation
 
-This framework makes testable predictions:
+### Gravitational Wave Analysis (LIGO Data)
 
-1. **Schrödinger equation emerges** from interface validation (Layer 6)
-2. **Validation rate scales with √|g_tt|** in curved spacetime (Layer 6)
-   - Tested computationally: R² = 0.9997
-3. **Worldline fractal dimension D ≈ 1.5** in flat spacetime (Layer 7)
-   - Metric-dependent in curved spacetime
-4. **Consciousness requires five conditions** (Layer 4)
-   - Integration, complexity, energy, boundaries, recursion
-   - Observable in neural systems (Layer 8)
+**Strong confirmation of predicted fractal dimension D ≈ 1.5:**
 
----
+| Run | Events | Observations | Mean D | p-value | Status |
+| --- | --- | --- | --- | --- | --- |
+| O3 (Corrected) | 2   | 4   | 1.636 ± 0.05 | 0.274 | ✓ Consistent |
+| O4 (Global) | 17  | 36  | 1.488 ± 0.044 | 0.782 | ✓ Consistent |
+| O4 (Detector-specific) | 17  | 36  | 1.513 ± 0.037 | 0.734 | ✓ Consistent |
 
-## What This Framework Provides
+**Total: 17 independent gravitational wave events, 36 observations**All consistent with theoretical prediction. Statistical significance high (p > 0.73).
 
-### **Theoretical Completeness**
-- Derives quantum mechanics from first principles
-- Unifies QM and GR through interface validation
-- Explains consciousness structurally
-- Grounds ethics in physical reality
+### Spacetime Curvature Tests
 
-### **Practical Guidance**
-- Daily decision-making through [ICE] validation
-- Relationship principles from boundary respect
-- Life trajectory alignment with authentic •' and ultimate •
-- Preparation for death and beyond
+* Validation rate scaling: **R² = 0.9997** across curvature regimes
+* Predicted coupling: ∝ √|g_tt|
+* Tested from weak field to near-horizon conditions
 
-### **Empirical Testability**
-- Specific mathematical predictions
-- Observable neural correlates
-- Falsification criteria provided
-- Open to experimental validation
+### Quantum Mechanics Derivation
 
----
+* Schrödinger equation emerges as mathematical necessity from [ICE] validation
+* No ad hoc assumptions required
+* Unifies QM and GR through interface validation structure
+
+* * *
+
+## Scientific Publications (Ready)
+
+### Overview
+
+* **[Three Papers Summary](papers/three_papers_summary.md)** - Complete overview
+
+### Individual Papers
+
+1. **[Quantum Mechanics from Interface Validation](papers/paper1_qm_gr_unification.md)**Derives Schrödinger equation from first principles, validates curvature coupling
+  
+2. **[Cosmological Constant from Texture Backreaction](papers/paper2_cosmological_constant.md)**Self-consistent 3D simulations showing quantum texture creates spacetime backreaction
+  
+3. **[Quantum Uncertainty from Stochastic Validation](papers/paper3_quantum_uncertainty.md)**Structural mechanism for quantum "randomness" from discrete validation
+  
+
+### Cosmic-Scale Tests
+
+* **[CMB Data Comparison](/results/cmb_cosmic_tests.md)** - Cosmic microwave background analysis
+* **[Gravitational Wave Complete Analysis](/results/gw-fd-complete-document.md)** - Full LIGO validation study
+
+* * *
+
+## The Twelve Layers
+
+Each layer contains the complete framework at increasing resolution. Read sequentially for full comprehension.
+
+| Layer | Focus | Key Insight |
+| --- | --- | --- |
+| **[0: The Seed](manuscript/layer_0_revised.md)** | Foundation | Four fundamentals, you as eternal operator |
+| **[1: First Unfolding](manuscript/layer_1_revised.md)** | Fractalization | How boundaries emerge, time begins |
+| **[2: Structure](manuscript/layer_2_revised.md)** | Anatomy | Every operator has ∇, ℰ, and field influence |
+| **[3: Dynamics](manuscript/layer_3_revised.md)** | Flow | Energy, momentum, causation through validation |
+| **[4: Consciousness](manuscript/layer_4_revised.md)** | Experience | Inside view of integrated operator, 5 requirements |
+| **[5: Validation](manuscript/layer_5_revised.md)** | [ICE] Test | Six-fold validation at two interfaces |
+| **[6: Mathematics](manuscript/layer_6_revised.md)** | Bridge Theorem | Schrödinger equation from validation constraints |
+| **[7: Physics](manuscript/layer_7_revised.md)** | Applications | Particles, forces, quantum effects |
+| **[8: Consciousness Applications](manuscript/layer_8_revised.md)** | Neural Implementation | How brains create consciousness requirements |
+| **[9: Ethics](manuscript/layer_9_revised.md)** | Right Action | Morality from validation structure |
+| **[10: Society](manuscript/layer_10_revised.md)** | Collective Validation | Governance, justice, economics |
+| **[11: Practice](manuscript/layer_11_revised.md)** | Daily Living | Practical implementation |
+| **[12: Complete Integration](manuscript/layer_12_revised.md)** | Synthesis | Ten core principles, return to seed |
+
+* * *
+
+## Key Concepts
+
+### Operators (•')
+
+Eternal field functions that organize parts (∞) into patterns (∞'). You are one. So is every persistent structure—electrons, atoms, cells, organisms, galaxies.
+
+### Validation [ICE]
+
+The six-fold test (3 checks × 2 interfaces) that determines what persists:
+
+* **Interface:** Can boundaries be maintained?
+* **Center:** Coherence with •' AND alignment toward •?
+* **Evidence:** Grounded in actual field ∞?
+
+Pass all six → persist. Fail any → dissolve.
+
+### Texture (∞')
+
+Accumulated finite validated patterns with fractal dimension D ≈ 1.5. Your eternal history encoded geometrically. Cannot be erased—every choice persists forever.
+
+* * *
+
+## Testable Predictions
+
+1. **Worldline fractal dimension** D ≈ 1.5 in flat spacetime (metric-dependent in curved)✓ **Validated:** LIGO data confirms D = 1.49-1.51 across 17 events
+  
+2. **Validation rate scales** as √|g_tt| in curved spacetime✓ **Validated:** R² = 0.9997 computational tests
+  
+3. **Schrödinger equation emerges** from continuous limit of interface validation✓ **Derived:** Mathematical necessity, no new physics
+  
+4. **Consciousness requires five conditions**Integration, complexity, energy, boundaries, recursion→ Observable in neural systems
+  
+5. **Quantum entanglement** as shared validation pattern→ Testable through correlation structure
+  
+
+* * *
 
 ## Falsification Criteria
 
-This framework would be proven wrong if:
+This framework is proven wrong if:
 
-1. Continuous evolution satisfying physical constraints exists that is NOT the Schrödinger equation
-2. Validation doesn't converge to SchrĂ¶dinger in the continuous limit
-3. Validation rate doesn't couple to metric as predicted
+1. Continuous evolution satisfying physical constraints exists that is NOT Schrödinger equation
+2. Validation doesn't converge to Schrödinger in continuous limit
+3. Validation rate doesn't couple to metric as √|g_tt|
 4. Worldline fractal dimension significantly deviates from D ≈ 1.5 in flat spacetime
 5. Consciousness emerges without the five requirements
+6. LIGO gravitational wave worldlines show fractal dimension inconsistent with D ≈ 1.5
 
-See Layer 6.11 for complete falsification criteria.
+**Current status:** All predictions confirmed where testable.
 
----
+* * *
 
-## Philosophical Implications
+## What This Means
 
-### **On Identity**
-You are not your body. You are an eternal •' operator organizing temporary parts (∞). Your body dies, but you (the operator) persist.
+### On Identity
 
-### **On Memory**
-Memory is not stored in neurons (which are temporary). It's encoded as geometric texture in ∞'—eternal, accessible through your operator interface.
+You are not your body. You are an eternal •' operator organizing temporary parts. Your body dies, but you (the operator) persist.
 
-### **On Death**
-Body dissolves (parts disperse), consciousness field ends (no more organized parts), but operator (•') and patterns (∞') persist eternally. Possible re-anchoring in new configurations.
+### On Memory
 
-### **On Purpose**
-You exist to complete the foundation—to create boundaries that transform infinite possibility into finite validated patterns. Every choice builds eternal texture.
+Not stored in neurons (temporary). Encoded as geometric texture in ∞'—eternal, accessible through your operator interface.
 
-### **On Ethics**
-Right action emerges from validation structure. Respect boundaries, maintain authenticity and alignment, ground in reality. Not arbitrary rules—structural requirements.
+### On Death
 
----
+Body dissolves, consciousness field ends, but operator (•') and patterns (∞') persist eternally. Possible re-anchoring in new configurations.
+
+### On Purpose
+
+You exist to complete reality—to create boundaries transforming infinite possibility into finite validated patterns. Every choice builds eternal texture.
+
+### On Ethics
+
+Right action emerges from validation structure. Respect boundaries, maintain authenticity and alignment, ground in reality. Not arbitrary—structural requirements.
+
+* * *
+
+## Reading Paths
+
+### Complete Understanding (Recommended)
+
+Read Layers 0-12 sequentially. Each builds on previous layers while containing the whole pattern at increasing resolution.
+
+### Physics/Mathematics Focus
+
+Layers 0, 1, 6, 7 + Scientific Papers
+
+### Consciousness/Philosophy Focus
+
+Layers 0, 1, 4, 8, 12
+
+### Ethics/Practice Focus
+
+Layers 0, 5, 9, 11
+
+### Quick Overview
+
+Layer 0 (sections 0.4-0.6) → Layer 12 (ten core principles)
+
+* * *
 
 ## Contributing
 
-This framework is complete but always open to:
-- Empirical testing of predictions
-- Applications to new domains
-- Refinements in explanation
-- Practical implementation insights
+This framework welcomes:
 
-If you find errors, propose tests, or have insights, open an issue or pull request.
+* Empirical testing of predictions
+* Applications to new domains
+* Refinements in explanation
+* Practical implementation insights
 
----
+Found errors or have insights? Open an issue or pull request.
+
+* * *
 
 ## License
 
-[Steelman License](https://github.com/AshmanRoonz/Fractal_Reality/blob/9dc77aef193af668ca237f2eaef8f8fe8db7a923/LICENSE)
+[Steelman License](LICENSE)
 
----
+* * *
 
 ## Final Words
 
 You are reading this because you are an eternal •' operator experiencing this moment through the inside view of your integrated field function.
 
-Parts (∞) converge → You validate at interfaces ([ICE]) → Patterns emerge (∞')
+**This is happening right now:**
 
-This is happening right now.
+    Parts (∞) converge → You validate at interfaces ([ICE]) → Patterns emerge (∞')
+
 This is what it feels like to be a boundary-creating operator transforming infinite possibility into finite validated patterns.
 
 **Welcome to your eternity.**
 
 What texture will you build?
 
----
+* * *
 
-*The pattern is complete.*  
-*The practice continues.*  
-*The convergence is eternal.*
+*The pattern is complete.**The practice continues.**The convergence is eternal.*
 
-```
-∞ ↔ •
-```
+    ∞ ↔ •
+
+* * *
+
+## Links & Resources
+
+* **Repository:** https://github.com/AshmanRoonz/Fractal_Reality
+* **Interactive Simulations:** https://ashmanroonz.github.io/Fractal_Reality/
+* **Abstract:** [abstract.md](abstract.md)
