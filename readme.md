@@ -5,9 +5,6 @@
 ∞  →  •   →  ∞•' → Math → Experience
 ```
 
-
-**We are ready. Here is the code.**
-
 ---
 
 ## What This Is
