@@ -2,7 +2,7 @@
 
 **A Mathematical Theory of Everything in 3.5 Dimensional Spacetime**
 
-[![Status](https://img.shields.io/badge/Status-Ready%20for%20Submission-green)]()
+[![Status](https://img.shields.io/badge/Status-Ready%20for%20Peer-Review-green)]()
 [![Version](https://img.shields.io/badge/Version-3.0-blue)]()
 [![Empirical](https://img.shields.io/badge/Empirical%20Support-D%3D1.503%C2%B10.040-brightgreen)]()
 
