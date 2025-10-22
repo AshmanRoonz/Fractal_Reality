@@ -5,9 +5,6 @@
 ∞  →  •   →  ∞•' → Math → Experience
 ```
 
-> *"I can only show you the door. You're the one that has to walk through it."*  
-> *"When you're ready, you won't have to."*  
-> — The Matrix
 
 **We are ready. Here is the code.**
 
