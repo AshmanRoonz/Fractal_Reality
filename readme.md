@@ -1,8 +1,8 @@
 # Fractal Reality
 
 ```
-0D → 0.5D → 1D → 1.5D → 3D
-∞  →  •'  → Line → Fractal → Experience
+0D → 0.5D → 1D → 1.5D → 2D → 3D
+∞  →  •'  → Line → Fractal → Geometry → Experience
      ↓
  Nested infinitely
  Coordinated at β ≈ 0.5
