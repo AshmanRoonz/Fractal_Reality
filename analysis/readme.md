@@ -58,17 +58,36 @@ Where:
 
 ---
 
-### [`/gravitational_waves/`]([./gravitational_waves/](https://github.com/AshmanRoonz/Fractal_Reality/blob/04592b54e6e78ef0191f343d64188880e7006319/papers/gravitational_waves/readme.md)) - Raw GW Data
+### [`/gravitational-waves/`](./gravitational-waves/) - Gravitational Wave Data
 
-**Original LIGO analysis:**
-- Multi-run comparison data
-- O1, O3, O4 observing runs
-- Calibration evolution
-- Detector systematics
+**Contains:**
+- Fractal dimension measurements (fractal_dimensions.csv)
+- Raw LIGO analysis data
+- Multi-run comparison data (O1, O3, O4)
 
-**Note:** This is the foundational GW data. Phase 2 builds on these results.
+**Note:** Core GW data repository. Phase 2 analysis builds on these results.
 
-**[→ View GW data and analysis](https://github.com/AshmanRoonz/Fractal_Reality/blob/04592b54e6e78ef0191f343d64188880e7006319/papers/gravitational_waves/readme.md)**
+---
+
+### [`/cmb-cosmic/`](./cmb-cosmic/) - Cosmic Microwave Background Analysis
+
+**Contains:**
+- CMB cosmic tests (cmb_cosmic_tests.md)
+- Large-scale structure validation
+- Cosmological constant tests
+
+**Status:** Cosmic-scale framework validation
+
+---
+
+### [`/simulations/`](./simulations/) - Numerical Simulations
+
+**Contains:**
+- 50-grid update summary (50_grid_update_summary.md)
+- Simulation results (simulation_results.md)
+- Computational validation data
+
+**Note:** Numerical tests of framework predictions
 
 ---
 
