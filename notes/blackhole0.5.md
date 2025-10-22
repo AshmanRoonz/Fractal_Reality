@@ -1,6 +1,6 @@
 Normal aperture:    0D ∞ → 0.5D ray (OUTWARD projection)
 Black hole:         0.5D ray → 0D singularity (INWARD contraction)
-```
+
 
 ### The Perfect Symmetry
 
