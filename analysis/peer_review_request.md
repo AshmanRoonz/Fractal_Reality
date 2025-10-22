@@ -252,7 +252,10 @@ This is not about credentials, institutions, or authority.
 
 This is about **rigorous collective validation of testable claims**.
 
-**The data is public.****The code is public.****The framework is public.****The invitation is universal.**
+**The data is public.**
+**The code is public.**
+**The framework is public.**
+**The invitation is universal.**
 
 **Will you help validate—or falsify—this framework?**
 
