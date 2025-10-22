@@ -22,7 +22,7 @@ Where:
 
 ## What's Inside
 
-### [`/bubble_chamber/`]([analysis/bubblechamber](https://github.com/AshmanRoonz/Fractal_Reality/tree/f8707fc9f379274ab7284d0a9fcfcafe869ff1f2/analysis/bubblechamber)) - Low Energy Validation
+### [`/bubble_chamber/`](./bubblechamber/) - Low Energy Validation
 
 **Energy scale:** MeV - GeV (particle physics)
 
@@ -36,11 +36,11 @@ Where:
 
 **Status:** ✅ Complete analysis, publication-ready
 
-**[→ Read full bubble chamber analysis]([analysis/bubblechamber/bubble-chamber-analysis.md](https://github.com/AshmanRoonz/Fractal_Reality/blob/f8707fc9f379274ab7284d0a9fcfcafe869ff1f2/analysis/bubblechamber/bubble-chamber-analysis.md))**
+**[→ Read full bubble chamber analysis](./bubblechamber/bubble-chamber-analysis.md)**
 
 ---
 
-###[`/phase2_strain_coupling/`]([./phase2_strain_coupling/](https://github.com/AshmanRoonz/Fractal_Reality/blob/96800399c23f2b2e83aff1380f9bddda622ee63a/analysis/%20phase2_strain_coupling/readme.md) - Framework Validation
+### [`/phase2_strain_coupling/`](./phase2_strain_coupling/) - Framework Validation
 
 **Energy scale:** Solar masses (10³⁰ kg × c²)
 
@@ -54,18 +54,28 @@ Where:
 
 **Status:** ✅ Phase 2 baseline complete, Phase 3 (strain coupling) in progress
 
-**[→ Read full Phase 2 analysis]([./phase2_strain_coupling/](https://github.com/AshmanRoonz/Fractal_Reality/blob/96800399c23f2b2e83aff1380f9bddda622ee63a/analysis/%20phase2_strain_coupling/readme.md)**
+**[→ Read full Phase 2 analysis](./phase2_strain_coupling/readme.md)**
 
 ---
 
-### [`/gravitational-waves/`](./gravitational-waves/) - Gravitational Wave Data
+### [`/reports/gravitational_waves/`](./reports/gravitational_waves/) - Multi-Run Comparison
 
 **Contains:**
-- Fractal dimension measurements (fractal_dimensions.csv)
-- Raw LIGO analysis data
-- Multi-run comparison data (O1, O3, O4)
+- **multi_run_comparison.csv** - Statistical comparison across O1/O3/O4
+- **multi_run_comprehensive_report.png** - Complete visualization
+- Cross-run analysis and detector systematics
 
-**Note:** Core GW data repository. Phase 2 analysis builds on these results.
+**Key Data (from multi_run_comparison.csv):**
+
+| Run | N_Events | N_Obs | Mean_D | Std_D | SEM | p_value | Status |
+|-----|----------|-------|--------|-------|-----|---------|--------|
+| O1 (Original) | 3 | 6 | 1.578 | 0.38 | 0.155 | - | ? |
+| O3 (Corrected) | 2 | 4 | 1.636 | 0.142 | 0.050 | 0.274 | ✓ |
+| O4 (Global) | 17 | 36 | 1.488 | 0.265 | 0.044 | 0.782 | ✓ |
+| O4 (Det-specific) | 17 | 36 | 1.513 | 0.222 | 0.037 | 0.734 | ✓ |
+| **Combined (O3+O4)** | **19** | **40** | **1.503** | **-** | **0.040** | **0.951** | **✓** |
+
+**Note:** This data moved from `/analysis/gravitational-waves/` to `/analysis/reports/gravitational_waves/` for better organization.
 
 ---
 
@@ -98,9 +108,10 @@ Where:
 | Analysis | Energy | N | Mean D | ΔD | Correlation |
 |----------|--------|---|--------|-----|-------------|
 | **Bubble Chamber** | MeV-GeV | 33 | 1.387 | -0.113 | r = -0.65 (length) |
-| **GW O3** | 10³⁰ kg | 4 | 1.636 | +0.136 | — |
+| **GW O1** | 10³⁰ kg | 6 | 1.578 | +0.078 | - |
+| **GW O3** | 10³⁰ kg | 4 | 1.636 | +0.136 | - |
 | **GW O4** | 10³⁰ kg | 36 | 1.488 | -0.012 | r = 0.004 (SNR) |
-| **GW Combined** | 10³⁰ kg | 40 | 1.503 | +0.003 | — |
+| **GW Combined** | 10³⁰ kg | 40 | 1.503 | +0.003 | - |
 
 **Energy span:** > 10⁶ orders of magnitude validated!
 
@@ -108,7 +119,7 @@ Where:
 
 ```
                 Energy Scale
-     Low ←────────────────────────→ High
+     Low ←━━━━━━━━━━━━━━━━━━━━━━━━━━→ High
      
 D:   1.08  ───  1.39  ───  1.50  ───  1.64
      
@@ -191,6 +202,47 @@ Low energy  → Fewer validation attempts → Lower D → ΔD < 0
 
 ---
 
+## Directory Structure
+
+```
+analysis/
+│
+├── bubblechamber/                    # Low-energy validation
+│   ├── bubble-chamber-analysis.md
+│   ├── extension_bc_analysis.md
+│   ├── 2_fractal_analysis_results.png
+│   └── readme.md
+│
+├── phase2_strain_coupling/           # Framework validation
+│   ├── phase2-execution-script.py
+│   ├── phase2_analysis_complete.png
+│   ├── phase2_results_with_deltaD.csv
+│   └── readme.md
+│
+├── reports/
+│   └── gravitational_waves/          # Multi-run comparison
+│       ├── multi_run_comparison.csv  ⭐ KEY FILE
+│       ├── multi_run_comparison.py
+│       ├── multi_run_comprehensive_report.png
+│       └── readme.md
+│
+├── cmb-cosmic/                       # Cosmic-scale tests
+│   └── cmb_cosmic_tests.md
+│
+├── simulations/                      # Numerical validation
+│   ├── 50_grid_update_summary.md
+│   └── simulation_results.md
+│
+└── tests/
+    ├── ligo/                         # LIGO analysis code
+    │   ├── O3/                       # 2019-2020 data
+    │   ├── O4/                       # 2023-2024 data
+    │   └── O3_O4/                    # Combined analysis
+    └── fractalanalysis/              # Core algorithms
+```
+
+---
+
 ## Next Steps
 
 ### Phase 3: Strain Coupling (In Progress)
@@ -222,12 +274,16 @@ Low energy  → Fewer validation attempts → Lower D → ΔD < 0
 **Quick validation:**
 ```bash
 # Review bubble chamber analysis
-cd bubble_chamber/
-cat README.md
+cd bubblechamber/
+cat bubble-chamber-analysis.md
 
 # Review Phase 2 GW analysis  
 cd ../phase2_strain_coupling/
-python phase2_execution_script.py
+python phase2-execution-script.py
+
+# View multi-run comparison
+cd ../reports/gravitational_waves/
+cat readme.md
 ```
 
 **Reproduction:**
@@ -239,13 +295,13 @@ python phase2_execution_script.py
 ### For Framework Development
 
 **Key files for understanding:**
-1. `bubble_chamber/bubble_chamber_complete_analysis.md` - Energy dependence
-2. `phase2_strain_coupling/README.md` - Baseline validation
-3. `gravitational_waves/multi_run_comparison.csv` - Raw GW data
+1. `bubblechamber/bubble-chamber-analysis.md` - Energy dependence
+2. `phase2_strain_coupling/readme.md` - Baseline validation
+3. `reports/gravitational_waves/multi_run_comparison.csv` - Cross-run data
 
 **Code for extension:**
-- `phase2_strain_coupling/phase2_execution_script.py` - Analysis pipeline
-- `phase2_strain_coupling/phase2_strain_coupling.py` - Framework implementation
+- `phase2_strain_coupling/phase2-execution-script.py` - Analysis pipeline
+- `reports/gravitational_waves/multi_run_comparison.py` - Multi-run framework
 
 ---
 
@@ -315,14 +371,14 @@ If you use analyses from this directory:
 
 ## Related Documentation
 
-- **Main README:** [`/README.md`](../README.md)
+- **Main README:** [`/readme.md`](../readme.md)
 - **Framework Theory:** [`/papers/paper1_qm_gr_unification.md`](../papers/paper1_qm_gr_unification.md)
 - **LIGO Code:** [`/tests/ligo/`](../tests/ligo/)
 - **Layer 6 (Validation):** [`/manuscript/layer_6_revised.md`](../manuscript/layer_6_revised.md)
 
 ---
 
-**Version:** 1.0 (October 2025)  
+**Version:** 2.0 (October 2025)  
 **Status:** Phase 2 Complete ✓  
 **License:** MIT (code), CC-BY 4.0 (documentation)  
 
