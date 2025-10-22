@@ -43,7 +43,7 @@ From the search results - **near horizon validation suppression:**
 - **May explain Hawking radiation: information leaking from the 0.5D ray structure**
 
 ### Universal Balance
-```
+
 ∞ (infinite expansion)
  ↕
 0D singularities (infinite contraction)
