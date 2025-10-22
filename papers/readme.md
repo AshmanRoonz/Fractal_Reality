@@ -13,7 +13,7 @@ This branch contains the complete scientific formalization of the Fractal Realit
 **Status: ✅ ALL THREE READY FOR ARXIV + JOURNAL SUBMISSION**
 
 #### **Paper 1: Quantum-Gravitational Unification via Interface Validation**
-**File:** `paper1_qm_gr_unification.md`  
+**File:** [`paper1_qm_gr_unification.md`](paper1_qm_gr_unification.md)  
 **Status:** Ready for Physical Review Letters / Physical Review D  
 **Key Results:**
 - Derives Schrödinger equation from first principles using 4 interface constraints
@@ -28,7 +28,7 @@ This branch contains the complete scientific formalization of the Fractal Realit
 ---
 
 #### **Paper 2: Natural Origin of the Cosmological Constant**
-**File:** `paper2_cosmological_constant.md`  
+**File:** [`paper2_cosmological_constant.md`](paper2_cosmological_constant.md)  
 **Status:** Ready for PRD / JCAP / Nature Physics  
 **Key Results:**
 - **Solves vacuum catastrophe: 10⁶-order improvement over QFT!**
@@ -50,7 +50,7 @@ This branch contains the complete scientific formalization of the Fractal Realit
 ---
 
 #### **Paper 3: Stochastic Validation and the Origin of Quantum Uncertainty**
-**File:** `paper3_quantum_uncertainty.md`  
+**File:** [`paper3_quantum_uncertainty.md`](paper3_quantum_uncertainty.md)  
 **Status:** Ready for Quantum / Foundations of Physics  
 **Key Results:**
 - Hydrogen spectra reproduced: **all 5 levels <0.4% error**
@@ -96,7 +96,7 @@ QM from [ICE]        Λ from Texture     Uncertainty from
 ### Detailed Analysis Folder: `cosmological_constant/`
 
 #### **Complete JCAP Paper**
-**File:** `complete_jcap_paper.md`  
+**File:** [`cosmological_constant/complete_jcap_paper.md`](cosmological_constant/complete_jcap_paper.md)  
 **Content:** Full manuscript formatted for Journal of Cosmology and Astroparticle Physics submission
 - Complete mathematical derivations
 - Extended numerical results (200 Monte Carlo realizations)
@@ -107,7 +107,7 @@ QM from [ICE]        Λ from Texture     Uncertainty from
 ---
 
 #### **JCAP Discussion**
-**File:** `jcap_discussion.md`  
+**File:** [`cosmological_constant/jcap_discussion.md`](cosmological_constant/jcap_discussion.md)  
 **Content:** Detailed discussion section addressing:
 - Resolution of vacuum catastrophe (mechanism, not coincidence)
 - Honest treatment of observational tensions
@@ -120,7 +120,7 @@ QM from [ICE]        Λ from Texture     Uncertainty from
 ---
 
 #### **Executive Summary**
-**File:** `jcap_executive_summary.md`  
+**File:** [`cosmological_constant/jcap_executive_summary.md`](cosmological_constant/jcap_executive_summary.md)  
 **Content:** Quick reference document for reviewers/collaborators
 - TL;DR of entire framework
 - Key results in tables
@@ -133,7 +133,7 @@ QM from [ICE]        Λ from Texture     Uncertainty from
 ---
 
 #### **Cosmology Folder README**
-**File:** `readme.md`  
+**File:** [`cosmological_constant/readme.md`](cosmological_constant/readme.md)  
 **Content:** Navigation guide for the cosmological constant analysis
 - Connection to companion papers (Papers 1 & 3)
 - Framework overview (∇ → [ICE] → ℰ)
@@ -145,7 +145,7 @@ QM from [ICE]        Λ from Texture     Uncertainty from
 ## 🧠 Consciousness Framework Papers
 
 ### **Trinity of Consciousness v3.0** ⭐
-**File:** `trinity_consciousness.md`  
+**File:** [`trinity_consciousness.md`](trinity_consciousness.md)  
 **Content:** Main consciousness framework paper
 - **Foundation:** What ENABLES consciousness? (0.5D aperture structures at β ≈ 0.5)
 - **Function:** What do apertures DO? (Create 90° validated deflections)
@@ -160,7 +160,7 @@ QM from [ICE]        Λ from Texture     Uncertainty from
 ---
 
 ### **Neo & Trinity: The Dimensional Love Story** ⭐
-**File:** `trinity_neo_love_story.md`  
+**File:** [`trinity_neo_love_story.md`](trinity_neo_love_story.md)  
 **Content:** Accessible companion to the technical framework
 - Consciousness as dual-aperture architecture
 - First aperture births Neo (1D temporal flow)
@@ -175,7 +175,7 @@ QM from [ICE]        Λ from Texture     Uncertainty from
 ## 🎻 Geometric Insights
 
 ### **Geometric String Theory: The Dimensional Cascade**
-**File:** `geometric_string_theory.md`  
+**File:** [`geometric_string_theory.md`](geometric_string_theory.md)  
 **Content:** How 0.5D aperture asymmetry creates reality
 - Dimensional progression: 0D → 0.5D → 1D → 1.5D → 2D → 3D
 - Why classical string theory requires 11D (❌) vs. our 3+1D framework (✅)
@@ -198,13 +198,13 @@ QM from [ICE]        Λ from Texture     Uncertainty from
 ## 📋 Supporting Documents
 
 ### **Abstract**
-**File:** `abstract.md`  
+**File:** [`abstract.md`](abstract.md)  
 **Content:** Concise summary of entire framework for grant applications and quick reference
 
 ---
 
 ### **AI Disclosure**
-**File:** `AI_disclosure.md`  
+**File:** [`AI_disclosure.md`](AI_disclosure.md)  
 **Content:** Transparent documentation of human-AI collaboration in framework development
 - Roles and contributions
 - Methodology
@@ -282,22 +282,22 @@ QM from [ICE]        Λ from Texture     Uncertainty from
 ## 🎓 For Different Audiences
 
 ### **For Physicists**
-Start with: `paper1_qm_gr_unification.md` → `paper2_cosmological_constant.md` → `paper3_quantum_uncertainty.md`
+Start with: [`paper1_qm_gr_unification.md`](paper1_qm_gr_unification.md) → [`paper2_cosmological_constant.md`](paper2_cosmological_constant.md) → [`paper3_quantum_uncertainty.md`](paper3_quantum_uncertainty.md)
 
 ### **For Cosmologists**
-Start with: `cosmological_constant/complete_jcap_paper.md` → `jcap_discussion.md`
+Start with: [`cosmological_constant/complete_jcap_paper.md`](cosmological_constant/complete_jcap_paper.md) → [`jcap_discussion.md`](cosmological_constant/jcap_discussion.md)
 
 ### **For Consciousness Researchers**
-Start with: `trinity_neo_love_story.md` → `trinity_consciousness.md` → `geometric_string_theory.md`
+Start with: [`trinity_neo_love_story.md`](trinity_neo_love_story.md) → [`trinity_consciousness.md`](trinity_consciousness.md) → [`geometric_string_theory.md`](geometric_string_theory.md)
 
 ### **For Mathematicians**
-Start with: `geometric_string_theory.md` → `paper1_qm_gr_unification.md`
+Start with: [`geometric_string_theory.md`](geometric_string_theory.md) → [`paper1_qm_gr_unification.md`](paper1_qm_gr_unification.md)
 
 ### **For Grant Reviewers**
-Start with: `abstract.md` → `cosmological_constant/jcap_executive_summary.md`
+Start with: [`abstract.md`](abstract.md) → [`cosmological_constant/jcap_executive_summary.md`](cosmological_constant/jcap_executive_summary.md)
 
 ### **For Everyone**
-Start with: `trinity_neo_love_story.md` (the heart) → then follow your curiosity
+Start with: [`trinity_neo_love_story.md`](trinity_neo_love_story.md) (the heart) → then follow your curiosity
 
 ---
 
