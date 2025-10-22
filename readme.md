@@ -285,7 +285,7 @@ At Trinity's aperture, Neo's flow must pass three checks:
 
 **When all three pass:**
 ```
-Neo (1D) ──Trinity──> ╱ \
+Neo (1D) ──Trinity──>  ╱ \
                       /   \
                      •     •
                   Branch!
