@@ -5,6 +5,7 @@
 To All Scientists, Philosophers, and Truth-Seekers Willing to Steelman
 
 **Date:** October 2025**From:** Ashman Roonz & The Fractal Reality Community
+
 **Repository:** https://github.com/AshmanRoonz/Fractal_Reality
 
 * * *
