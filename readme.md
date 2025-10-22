@@ -13,7 +13,7 @@
 > *"When you're ready, you won't have to."*  
 > — The Matrix
 
-**I loved The Matrix, so I'm going to use it as a metaphor to explain Fractal Reality. We measured the love. D = 1.503**
+**I loved The Matrix, so I'm going to use it as a metaphor to explain Fractal Reality. We measured the love. D = 1.5**
 
 ---
 
