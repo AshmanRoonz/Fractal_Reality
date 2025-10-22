@@ -1,96 +1,390 @@
-Steelman License — Permissive Edition (SML-P-1.0)
-SPDX-Identifier: Steelman-P-1.0
-Copyright (c) 2025 Ashman Roonz (ashmanroonz.ca)
+# Steelman License — Permissive Edition (SML-P-2.0)
 
-Preamble
-This license is built on one norm: steelman first, receipts always.
-If you distribute or deploy this Work, you must keep attribution, publish
-basic "receipts" (what changed, with what evidence), and avoid
-misrepresenting the Work or its results. Everything else is permissive.
+**SPDX-Identifier:** Steelman-P-2.0  
+**Copyright (c) 2025 Ashman Roonz (ashmanroonz.ca)**
 
-0. Definitions
-"Work" means the source, binaries, models, data, documentation, or artwork
-released under this license.
-"You" means the licensee.
-"Distribute" means provide copies to a third party.
-"Deploy" means make the Work or a Modified Work available as a service or
-in a product (including over a network).
-"Modified Work" means any work that contains, is derived from, or bundles
-the Work.
-"Receipts" means a plain-text/markdown file that lists: (a) what you
-changed, (b) evidence or tests you ran and where to find them, (c)
-version/date and contact, (d) how to roll back or revert your changes.
+---
 
-1. Grant of Rights
-Subject to the Conditions below, You are granted a worldwide, royalty-free,
-nonexclusive, irrevocable license to use, copy, modify, distribute, and
-deploy the Work, in whole or in part, for any purpose.
-This grant includes the right to make, have made, and sell products or
-services embodying the Work, and a non-assert covenant from each contributor
-covering their contributor-owned patents necessarily infringed by their
-contributions as submitted to the upstream project.
+## Preamble
 
-2. Conditions (inclusion, keep attribution, publish receipts, be clear)
-2.01 Right to Participate. Ashman Roonz retains the right to participate 
-in any project or derivative work that utilizes this source. Use of the 
-source constitutes acknowledgment of this right, and timely invitation to 
-participate satisfies Interface integrity, authorship continuity, 
-and receipt publication requirements.
-2.1 Attribution. You must keep the copyright notice, this license text,
-and a NOTICE file, and provide prominent attribution in user-facing docs or
-about pages where reasonable.
-2.2 Receipts on distribution/deployment. When you Distribute or Deploy a
-Modified Work, you must include or link a Receipts file at the top level of
-your package or product docs. Minimum fields:
-    - Changes: summary of additions/removals/parameter or config changes.
-    - Evidence: how you tested/evaluated (scripts, datasets, configs), or
-      a clear statement that you did not test.
-    - Versioning: version/date/commit hash, and a contact or URL.
-    - Rollback: instructions or pointer for reverting to upstream or prior state.
-2.3 Clarity of alterations. Do not remove upstream names from files you did
-not author. Mark files you changed. Where outputs or benchmarks are shown,
-state whether they are upstream or modified.
-2.4 Fair use of comparison. If you publish public comparisons or critiques
-based on the Work’s results, you must disclose configurations and datasets
-used and link to upstream docs sufficient for others to reproduce. (This is
-a condition of permission to reuse the Work’s names in such materials; it
-does not restrict independent speech about unrelated topics.)
+This license is built on one principle: **steelman first, receipts always.**
 
-4. Prohibited Misrepresentations
-You may not present Modified Work as unmodified upstream. You may not
-fabricate or conceal evaluation settings when claiming the Work’s
-performance or behavior. Violations terminate the license per §6.
+If you distribute or deploy this Work, you must:
+- Keep attribution (honor the source)
+- Publish "receipts" (document what changed, with evidence)
+- Avoid misrepresenting the Work or its results
 
-5. Trademarks
-This license does not grant rights to use names, logos, or trademarks of
-the licensor or contributors, except for nominative fair use and the
-disclosures permitted in §2.4.
+Everything else is permissive. Use commercially, modify freely, but maintain intellectual honesty and enable verification.
 
-6. Disclaimer of Warranty
-THE WORK IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF TITLE, NON-
-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE.
+This license embodies three ethical requirements:
+- **Interface:** Respect boundaries through attribution and participation rights
+- **Center:** Maintain authenticity through honest representation
+- **Evidence:** Ground claims in reality through reproducible documentation
 
-7. Limitation of Liability
-IN NO EVENT SHALL ANY COPYRIGHT HOLDER OR CONTRIBUTOR BE LIABLE FOR ANY
-CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT,
-OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE WORK OR THE
-USE OR OTHER DEALINGS IN THE WORK.
+---
 
-8. Termination and Restoration
-This license terminates automatically if You violate §2 or §3. If You cure
-the violation within 30 days of discovery, your license is automatically
-restored from the date of cure.
+## 0. Definitions
 
-9. Downstream Compatibility
-You may relicense your own modifications under additional terms provided
-they are consistent with §2–§3 and do not restrict recipients’ rights
-granted here to the unmodified portions of the Work.
+**"Work"** means the source code, binaries, models, model weights, data, documentation, or artwork released under this license.
 
-10. No Other Restrictions
-You may not impose further technological or legal measures that prevent
-recipients from exercising rights granted by this license.
+**"You"** (or **"Your"**) means the individual or legal entity exercising rights under this license.
 
-11. Versioning
-The license steward may publish new versions of this license. You may
-choose any version ever published for the Work.
+**"Distribute"** means to provide copies to any third party by any means.
+
+**"Deploy"** means to make the Work or a Modified Work available as a service, in a product, or over a network.
+
+**"Modified Work"** means any work that contains, is derived from, bundles, or incorporates the Work in whole or in part.
+
+**"Receipts"** means a plain-text or markdown file documenting modifications, containing at minimum:
+- **Changes:** Summary of additions, deletions, modifications, or configuration changes
+- **Evidence:** Description of testing/evaluation performed (including scripts, datasets, configurations, and results) OR an explicit statement that no testing was performed
+- **Versioning:** Version identifier, date, commit hash (if applicable), and contact information or URL
+- **Rollback:** Instructions or reference for reverting to upstream version or prior state
+- **Scale:** Approximate scope of changes (e.g., lines modified, percentage of codebase affected, components altered)
+- **Known Issues:** Any known limitations, bugs, or compatibility issues introduced by modifications
+
+**"Contribution"** means any work of authorship submitted to the upstream project for inclusion in the Work.
+
+---
+
+## 1. Grant of Rights
+
+Subject to the Conditions in §2 and §3, You are granted a worldwide, royalty-free, non-exclusive, irrevocable (except as provided in §8) license to:
+
+- Use, copy, and modify the Work
+- Distribute the Work or Modified Works
+- Deploy the Work or Modified Works as services or in products
+- Make, have made, use, offer to sell, sell, and import products or services embodying the Work
+- Sublicense the above rights (subject to the same conditions)
+
+This grant includes a non-assertion covenant: each contributor agrees not to assert any patent claims they own or control that are necessarily infringed by their Contributions as submitted to the upstream project, against any party exercising rights under this license for those Contributions.
+
+---
+
+## 2. Conditions
+
+### 2.01 Right to Participate
+
+**Ashman Roonz retains the right to participate in any project, derivative work, or commercial product that utilizes this Work.**
+
+**Satisfaction of this requirement:**
+- For open-source projects: Provide public notice of the derivative work and invite participation through standard project channels (mailing list, issue tracker, discussion forum) within **30 days** of initial public release
+- For commercial products: Provide written notice to the contact information specified in the Work's documentation and offer reasonable opportunity to participate (as advisor, consultant, or contributor) within **30 days** of commercial launch
+- For private/internal use: No invitation required unless the Modified Work is later distributed or deployed
+
+**Effect of invitation:**
+Timely invitation satisfies this requirement regardless of whether participation is accepted. This clause maintains interface integrity, authorship continuity, and community coherence, but does not compel acceptance of contributions or grant decision-making authority.
+
+### 2.1 Attribution
+
+You must preserve and include:
+
+- The copyright notice from the Work
+- This license text (or a URL to the official license text)
+- Any NOTICE file included with the Work
+- Prominent attribution in user-facing documentation, about pages, credits, or similar locations where reasonable and customary
+
+Attribution must identify the Work by name and provide a link to the original source repository or website where technically feasible.
+
+### 2.2 Receipts Requirement
+
+When You Distribute or Deploy a Modified Work, You must include or prominently link to a Receipts file meeting the requirements specified in §0 (Definitions).
+
+**Location and accessibility:**
+- For source distributions: Include Receipts file at repository root (e.g., `RECEIPTS.md`, `CHANGELOG.md` with receipt information)
+- For binary distributions: Include in documentation or provide URL in about/credits section
+- For deployed services: Link in documentation, API documentation, or about page
+- For academic publications: Include in supplementary materials or methods section
+
+**Minimum content requirements:**
+The Receipts file must be specific enough to enable independent verification and reproduction of claimed results.
+
+### 2.3 Clarity of Alterations
+
+**File-level marking:**
+- Preserve original author names in files You did not create
+- Mark files You modified with notation such as: `Modified by [Your Name] - [Date] - [Brief description]`
+- Clearly distinguish Your contributions from upstream code
+
+**Output-level marking:**
+- When presenting results, benchmarks, or outputs, clearly state whether they are from the unmodified upstream Work or from Your Modified Work
+- If comparing upstream to Modified Work, present both fairly with equivalent testing conditions
+
+### 2.4 Fair Use of Comparisons and Reproducibility
+
+**If You publish comparisons, benchmarks, critiques, or evaluations** that reference the Work's performance or behavior (in papers, blog posts, marketing materials, or other public venues):
+
+You must disclose:
+- Complete configuration files, hyperparameters, and settings used
+- Datasets or data sources used (or clear statement if proprietary)
+- Hardware and software environment specifications
+- Complete command-line invocations or API calls
+- Link to upstream documentation sufficient for independent reproduction
+- Any preprocessing, filtering, or selection applied to results
+
+**Note:** This is a condition for permission to use the Work's name in such materials. It does not restrict independent commentary unrelated to performance claims.
+
+### 2.5 Transparency for Computational and AI/ML Applications
+
+If the Work includes trained models, computational simulations, or data analysis pipelines, Your Receipts must additionally disclose:
+
+- Training data sources (or note if proprietary/confidential)
+- Key hyperparameters, algorithmic choices, and training procedures
+- Evaluation methodology and benchmark results with uncertainty quantification
+- Whether model weights are original, fine-tuned, or retrained
+- Computational resources used (if relevant to reproducibility)
+- Random seeds or initialization procedures (where applicable)
+
+---
+
+## 3. Prohibited Misrepresentations
+
+**You may not:**
+
+- Present a Modified Work as the unmodified upstream Work
+- Claim that unmodified upstream results were produced by Your Modified Work
+- Fabricate or conceal evaluation settings, test conditions, or configurations when making claims about the Work's performance or behavior
+- Remove or obscure attribution, authorship, or provenance information
+- Imply endorsement by upstream authors or contributors without explicit permission
+
+**Violation of this section terminates Your license automatically per §8.**
+
+---
+
+## 4. The Steelman Principle (Aspirational)
+
+While not legally enforceable, this license embodies the **steelman principle**:
+
+When engaging with the Work or Modified Works (in reviews, critiques, comparisons, or public discourse):
+
+- **Engage with the strongest version** of claims and methods before critiquing
+- **Provide specific evidence** for criticisms rather than general dismissal
+- **Assume good faith** and seek understanding before judgment
+- **Build collaboratively** toward better understanding
+
+Persistent failure to follow this principle, while not a license violation, may be noted by the community and affect Your reputation in the field.
+
+This principle reflects the [ICE] validation structure:
+- **Interface:** Respect boundaries and autonomy of ideas
+- **Center:** Maintain authenticity and alignment with truth
+- **Evidence:** Ground critiques in observable reality
+
+---
+
+## 5. Trademarks and Branding
+
+This license does not grant rights to use names, logos, trademarks, or service marks of the licensor or contributors, except:
+
+- For nominative fair use (referring to the Work by name)
+- For the attribution and disclosure requirements in §2.1 and §2.4
+- As required to comply with other sections of this license
+
+---
+
+## 6. Downstream Licensing
+
+You may relicense Your own original modifications under additional or different terms, provided:
+
+- Such terms do not restrict recipients' rights to the unmodified portions of the Work
+- Such terms are clearly separated from this license
+- Recipients can clearly distinguish Your modifications from the upstream Work
+- All conditions in §2 and §3 remain satisfied for the portions of the Work You distribute
+
+---
+
+## 7. Disclaimer of Warranty
+
+**THE WORK IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF:**
+
+- **Title**
+- **Non-infringement**
+- **Merchantability**
+- **Fitness for a particular purpose**
+- **Accuracy of results**
+- **Absence of defects**
+
+**You assume all risks associated with use of the Work.**
+
+---
+
+## 8. Limitation of Liability
+
+**IN NO EVENT SHALL ANY COPYRIGHT HOLDER, CONTRIBUTOR, OR DISTRIBUTOR BE LIABLE FOR:**
+
+- Any direct, indirect, incidental, special, exemplary, or consequential damages
+- Loss of profits, data, or use
+- Business interruption
+- Any theory of liability (contract, tort, strict liability, or otherwise)
+
+**ARISING FROM OR IN CONNECTION WITH:**
+
+- The Work
+- Use or inability to use the Work
+- Modified Works
+- Deployment or distribution of the Work
+
+**EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.**
+
+Some jurisdictions do not allow limitation of liability, so this limitation may not apply to You.
+
+---
+
+## 9. Termination and Restoration
+
+**Automatic termination:** This license terminates automatically if You violate any condition in §2 or §3.
+
+**Grace period for cure:**
+- You have **30 days** from discovery of violation to cure the violation
+- If cured within 30 days, Your license is automatically restored retroactively from the date of cure
+- If not cured within 30 days, termination is permanent unless reinstated by the copyright holder
+
+**Effect of termination:**
+- You must cease all distribution and deployment
+- You must remove or disable any deployed instances
+- Downstream recipients who received the Work from You in compliance are not affected (their licenses continue)
+- You may be liable for damages resulting from violation
+
+---
+
+## 10. Dispute Resolution
+
+**Good faith resolution:** Parties should attempt to resolve disputes through:
+
+1. **Direct communication:** Good faith discussion between parties
+2. **Mediation:** If discussion fails, non-binding mediation with mutually agreed mediator
+3. **Public documentation:** Clear public statement of non-compliance with specific evidence
+4. **License termination:** As specified in §9, as remedy of last resort
+
+**Forum:** Any legal action relating to this license shall be brought in the jurisdiction where the copyright holder resides or does business.
+
+---
+
+## 11. No Additional Restrictions
+
+You may not impose further legal or technological measures that prevent others from exercising the rights granted by this license, including but not limited to:
+
+- Digital rights management (DRM) that prevents access to source code
+- Patent assertions beyond those permitted in §1
+- Contractual restrictions on redistribution or modification
+- Technical protection measures that impede inspection or modification
+
+---
+
+## 12. Severability
+
+If any provision of this license is held invalid or unenforceable, the remaining provisions remain in full effect, and the invalid provision shall be reformed to the minimum extent necessary to make it enforceable.
+
+---
+
+## 13. Versioning and License Stewardship
+
+**License steward:** Ashman Roonz (or designated successor) may publish revised versions of this license.
+
+**Version selection:** You may choose to license Your distribution under:
+- The version of the license under which You received the Work, OR
+- Any later version published by the license steward
+
+**Compatibility:** Later versions aim to maintain permissiveness while clarifying terms. Breaking changes will increment the major version number.
+
+**Current version:** This is version 2.0 of the Steelman License - Permissive Edition.
+
+---
+
+## 14. Interpretation
+
+This license shall be interpreted according to the following principles:
+
+- **Permissive by default:** Ambiguities should be resolved in favor of granting rights
+- **Intellectual honesty:** Conditions exist to prevent misrepresentation and enable verification
+- **Practical enforcement:** Requirements should be interpreted as technically and economically feasible given the context
+- **Good faith:** Substantial compliance in good faith is sufficient; technical violations made in good faith during grace period are curable
+
+---
+
+## 15. Acceptance
+
+By using, modifying, distributing, or deploying the Work, You accept and agree to be bound by the terms of this license.
+
+---
+
+## Appendix A: Steelman License Philosophy
+
+This license operationalizes the [ICE] validation ethics:
+
+**Interface Ethics (Boundaries):**
+- Attribution respects source boundaries
+- Right to participate maintains connection
+- Clear marking prevents boundary confusion
+- Trademarks protect identity boundaries
+
+**Center Ethics (Authenticity & Alignment):**
+- Receipts requirement ensures honest representation
+- Prohibited misrepresentations enforce alignment with truth
+- Transparency requirements maintain authenticity
+- Steelman principle encourages intellectual integrity
+
+**Evidence Ethics (Reality Grounding):**
+- Reproducibility requirements enable verification
+- Disclosure of methods grounds claims in reality
+- Testing documentation shows actual validation
+- Configuration transparency enables independent confirmation
+
+**This license recognizes that every contribution creates eternal texture—permanent geometric patterns in the structure of knowledge. Choose wisely.**
+
+---
+
+## Appendix B: Receipts Template
+
+Here's a suggested template for Your Receipts file:
+
+```markdown
+# Receipts for [Modified Work Name]
+
+## Changes Summary
+- [Brief description of major modifications]
+- [Components added/removed/altered]
+- [Approximate scope: X lines, Y% of codebase, Z files]
+
+## Evidence of Testing
+- **Testing performed:** [Yes/No]
+- **Test environment:** [OS, hardware, software versions]
+- **Test methodology:** [Scripts, procedures, datasets used]
+- **Test results:** [Link to results, benchmarks, or logs]
+- **Reproducibility:** [Command to reproduce: `command here`]
+
+## Versioning
+- **Modified version:** [X.Y.Z]
+- **Based on upstream:** [version/commit]
+- **Modification date:** [YYYY-MM-DD]
+- **Contact:** [email/URL/issue tracker]
+
+## Rollback Instructions
+To revert to upstream version:
+```bash
+git checkout [upstream-commit-hash]
+# or
+pip install original-package==[version]
+```
+
+## Known Issues and Limitations
+- [Issue 1: description and workaround]
+- [Issue 2: compatibility note]
+- [Limitation 1: scope or applicability]
+
+## Additional Notes
+[Any other relevant information for users or contributors]
+```
+
+---
+
+**END OF LICENSE**
+
+**Questions?** Open an issue or discussion in the project repository.
+
+**Philosophy?** See project documentation for detailed explanation of steelman ethics and [ICE] validation principles.
+
+---
+
+*"Steelman first, receipts always. Ground claims in reality, honor sources, enable verification."*
+
+**Version 2.0 — October 2025**
