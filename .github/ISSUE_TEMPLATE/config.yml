@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/AshmanRoonz/Fractal_Reality/discussions
+    about: For general discussions, ideas, and community interaction
+  - name: Documentation
+    url: https://github.com/AshmanRoonz/Fractal_Reality/blob/main/readme.md
+    about: Read the comprehensive README and documentation
+  - name: Live Simulations
+    url: https://ashmanroonz.github.io/Fractal_Reality/
+    about: Explore interactive visualizations

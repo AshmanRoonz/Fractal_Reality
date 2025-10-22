@@ -1,0 +1,156 @@
+name: Scientific Contribution
+description: Propose empirical validation, theoretical refinement, or peer review
+title: "[SCIENCE] "
+labels: ["science", "needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing to the scientific development of Fractal Reality!
+
+        This template is for:
+        - New empirical validations
+        - Independent replications
+        - Theoretical refinements or extensions
+        - Critical analysis and peer review
+        - New testable predictions
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Contribution Type
+      description: What type of scientific contribution is this?
+      options:
+        - Empirical Validation (new data analysis)
+        - Independent Replication (verify existing results)
+        - Theoretical Refinement (improve/extend framework)
+        - Critical Review (identify issues or limitations)
+        - New Prediction (testable hypothesis)
+        - Peer Review (comprehensive evaluation)
+        - Alternative Explanation (competing hypothesis)
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Brief overview of your contribution (2-3 sentences)
+      placeholder: I have analyzed... / I propose... / I identified...
+    validations:
+      required: true
+
+  - type: textarea
+    id: methodology
+    attributes:
+      label: Methodology
+      description: Detailed description of your methods
+      placeholder: |
+        - Data source:
+        - Analysis approach:
+        - Statistical methods:
+        - Sample size:
+        - Assumptions:
+    validations:
+      required: true
+
+  - type: textarea
+    id: results
+    attributes:
+      label: Results / Findings
+      description: What did you find? Include quantitative results with uncertainties.
+      placeholder: |
+        - Key finding 1: [with statistics, confidence intervals, p-values]
+        - Key finding 2: ...
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: interpretation
+    attributes:
+      label: Interpretation
+      description: What do these results mean for the Fractal Reality framework?
+      placeholder: These results support/challenge/extend the framework by...
+    validations:
+      required: true
+
+  - type: textarea
+    id: limitations
+    attributes:
+      label: Limitations
+      description: What are the limitations of this work?
+      placeholder: |
+        - Sample size limitations
+        - Assumptions that may not hold
+        - Alternative explanations
+        - Scope limitations
+    validations:
+      required: true
+
+  - type: textarea
+    id: data
+    attributes:
+      label: Data Availability
+      description: Where can others access your data and code?
+      placeholder: |
+        - Data: [URL or description]
+        - Code: [GitHub repo, gist, or attached files]
+        - Reproducibility: [instructions]
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Relevant citations and prior work
+      placeholder: |
+        1. Author et al. (Year). Title. Journal.
+        2. ...
+
+  - type: checkboxes
+    id: scientific_standards
+    attributes:
+      label: Scientific Standards Checklist
+      description: Please confirm your contribution meets these standards
+      options:
+        - label: Methods are clearly described and reproducible
+          required: true
+        - label: Uncertainties are quantified (standard errors, confidence intervals, etc.)
+          required: true
+        - label: Statistical methods are appropriate for the data
+          required: true
+        - label: Alternative explanations are considered
+          required: true
+        - label: Limitations are acknowledged
+          required: true
+        - label: Data and code are available for verification
+          required: true
+        - label: Prior work is cited appropriately
+          required: true
+
+  - type: checkboxes
+    id: ethics
+    attributes:
+      label: Research Ethics
+      options:
+        - label: This work follows appropriate research ethics guidelines
+          required: true
+        - label: All data used is publicly available or properly authorized
+          required: true
+        - label: No conflicts of interest exist (or are disclosed below)
+          required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Any other relevant information
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        **Review Process:** Scientific contributions will undergo peer review by the community and maintainers.
+        Feedback will be provided following the steelman principle: engaging with the strongest version of your work.

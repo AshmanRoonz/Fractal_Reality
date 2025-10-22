@@ -1,0 +1,81 @@
+[flake8]
+# Flake8 configuration for Fractal Reality
+# PEP 8 style checking with scientific code adjustments
+
+# Maximum line length
+max-line-length = 100
+
+# Maximum cyclomatic complexity (relaxed for scientific algorithms)
+max-complexity = 15
+
+# Exclude directories
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    *.egg-info,
+    venv,
+    env,
+    .venv,
+    node_modules,
+    docs,
+    htmlcov,
+    .tox,
+    .pytest_cache
+
+# Ignore specific error codes
+ignore =
+    # Whitespace (handled by black formatter)
+    E203,  # Whitespace before ':'
+    E231,  # Missing whitespace after ','
+    E501,  # Line too long (we set max-line-length instead)
+    W503,  # Line break before binary operator (PEP 8 updated)
+    W504,  # Line break after binary operator
+    # Scientific code patterns
+    E741,  # Ambiguous variable name (l, O, I) - common in math
+    # Other
+    F401,  # Module imported but unused (sometimes needed for __init__.py)
+    F841,  # Local variable assigned but never used (temp during development)
+
+# Enable specific checks
+select =
+    # Errors
+    E,
+    # Warnings
+    W,
+    # Pyflakes (including F)
+    F,
+    # Naming
+    N,
+    # Complexity
+    C
+
+# Inline comments minimum distance
+inline-quotes = double
+
+# Docstring conventions (use numpy style)
+docstring-convention = numpy
+
+# Per-file ignores
+per-file-ignores =
+    __init__.py:F401,F403
+    tests/*:F401,F403,F811
+
+# Show source code for errors
+show-source = True
+
+# Show pep8 violation statistics
+statistics = True
+
+# Count errors and warnings
+count = True
+
+# Format output
+format = default
+
+# Enable checking of TODO/FIXME comments
+enable-extensions = G
+
+# Maximum doc line length
+max-doc-length = 100

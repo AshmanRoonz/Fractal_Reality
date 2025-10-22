@@ -4,7 +4,18 @@
   "description": "A complete framework bridging physics and metaphysics - deriving quantum mechanics from first principles and validating with LIGO data",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/run_four_tests.js"
+    "test": "node tests/run_four_tests.js",
+    "test:watch": "jest --watch",
+    "lint": "eslint docs/simulations/*.tsx --ext .ts,.tsx",
+    "lint:fix": "eslint docs/simulations/*.tsx --ext .ts,.tsx --fix",
+    "format": "prettier --write \"docs/**/*.{ts,tsx,js,jsx,json}\"",
+    "format:check": "prettier --check \"docs/**/*.{ts,tsx,js,jsx,json}\"",
+    "type-check": "tsc --noEmit",
+    "build": "tsc && vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "clean": "rm -rf dist node_modules/.cache",
+    "precommit": "npm run format && npm run lint && npm run type-check"
   },
   "repository": {
     "type": "git",

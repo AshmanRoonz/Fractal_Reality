@@ -149,3 +149,86 @@ Desktop.ini
 *.bak
 *.swp
 *~.nib
+
+# Testing and Coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+*.cover
+.hypothesis/
+.pytest_cache/
+coverage.xml
+*.coveragerc
+.nox/
+junit.xml
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Profiling
+*.prof
+*.lprof
+.prof/
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Documentation builds
+docs/_build/
+docs/_static/
+docs/_templates/
+site/
+
+# Security and secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets.json
+.secrets/
+
+# Project specific
+# LIGO data cache (large files)
+*.gwf
+*.hdf5.cache
+# Analysis outputs
+analysis/output/
+analysis/tmp/
+# Figures and plots (if regeneratable)
+figures/temp/
+plots/temp/
+
+# Lock files (keep for reproducibility)
+# Uncomment if you want to ignore:
+# package-lock.json
+# yarn.lock
+# poetry.lock
+# Pipfile.lock
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Pre-commit
+.pre-commit-config.yaml.backup
+
+# Backup files
+*.backup
+*.old
