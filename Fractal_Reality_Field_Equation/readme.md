@@ -328,7 +328,7 @@ GitHub: https://github.com/AshmanRoonz/Fractal_Reality
 
 **Version**: 3.0 (3.5D Framework)  
 **Date**: October 22, 2025  
-**License**: [To be determined]  
+**License**: [Steelman]  
 
 **The paradigm shift from 3+1 to 3.5 dimensions has begun.**
 
