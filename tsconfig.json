@@ -1,0 +1,68 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "ES2020",                          /* Set the JavaScript language version for emitted JavaScript */
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],    /* Specify library files to be included in the compilation */
+    "jsx": "react",                              /* Specify JSX code generation */
+
+    /* Modules */
+    "module": "ESNext",                          /* Specify what module code is generated */
+    "moduleResolution": "node",                  /* Specify module resolution strategy */
+    "resolveJsonModule": true,                   /* Enable importing .json files */
+    "allowSyntheticDefaultImports": true,        /* Allow default imports from modules with no default export */
+    "esModuleInterop": true,                     /* Emit additional JavaScript for easier CommonJS module interop */
+
+    /* Type Checking */
+    "strict": true,                              /* Enable all strict type-checking options */
+    "noImplicitAny": true,                       /* Error on expressions and declarations with an implied 'any' type */
+    "strictNullChecks": true,                    /* Consider 'null' and 'undefined' in type checking */
+    "strictFunctionTypes": true,                 /* Check function types strictly */
+    "strictBindCallApply": true,                 /* Check 'bind', 'call', and 'apply' methods strictly */
+    "strictPropertyInitialization": true,        /* Check for class properties declared but not initialized */
+    "noImplicitThis": true,                      /* Error when 'this' has type 'any' */
+    "alwaysStrict": true,                        /* Parse in strict mode and emit "use strict" */
+
+    /* Additional Checks */
+    "noUnusedLocals": true,                      /* Report errors on unused local variables */
+    "noUnusedParameters": true,                  /* Report errors on unused parameters */
+    "noImplicitReturns": true,                   /* Report error when not all code paths return a value */
+    "noFallthroughCasesInSwitch": true,         /* Report errors for fallthrough cases in switch statements */
+    "noUncheckedIndexedAccess": true,           /* Add 'undefined' to unverified indexed access results */
+    "noImplicitOverride": true,                  /* Ensure override members are marked with 'override' */
+    "noPropertyAccessFromIndexSignature": false, /* Allow property access from index signatures */
+
+    /* Emit */
+    "declaration": true,                         /* Generate .d.ts files from TypeScript files */
+    "declarationMap": true,                      /* Create sourcemaps for d.ts files */
+    "sourceMap": true,                           /* Create source map files for debugging */
+    "outDir": "./dist",                          /* Specify output directory */
+    "removeComments": true,                      /* Remove comments in emitted JavaScript files */
+    "noEmit": false,                             /* Do not emit output (useful for type checking only) */
+
+    /* Interop Constraints */
+    "isolatedModules": true,                     /* Ensure each file can be safely transpiled without relying on other imports */
+    "allowJs": true,                             /* Allow JavaScript files to be compiled */
+    "checkJs": false,                            /* Report errors in JavaScript files */
+    "forceConsistentCasingInFileNames": true,   /* Ensure correct casing in imports */
+
+    /* Skip Lib Check */
+    "skipLibCheck": true                         /* Skip type checking of declaration files for faster builds */
+  },
+
+  /* Include and Exclude */
+  "include": [
+    "docs/**/*",
+    "src/**/*",
+    "analysis/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "htmlcov",
+    "venv",
+    "env"
+  ]
+}

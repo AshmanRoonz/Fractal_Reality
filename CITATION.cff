@@ -1,0 +1,71 @@
+cff-version: 1.2.0
+message: "If you use this software or framework in your research, please cite it as below."
+type: software
+title: "Fractal Reality: A Unified Framework for Consciousness, Physics, and Reality"
+abstract: >-
+  A comprehensive framework that reveals reality operates through 0.5-dimensional
+  aperture structures with convergence and emergence balanced at β ≈ 0.5.
+  Consciousness emerges as the unified integration of infinite nested apertures
+  coordinated at this balance point. The framework unifies quantum mechanics,
+  general relativity, consciousness studies, and spiritual traditions through
+  empirically validated mathematical formalization. Validated using LIGO
+  gravitational wave data (D = 1.503 ± 0.040, p = 0.951) and cross-scale
+  measurements spanning 6+ orders of magnitude with zero free parameters.
+authors:
+  - family-names: Roonz
+    given-names: Ashman
+    email: ashman@ashmanroonz.ca
+    affiliation: Independent Researcher
+    orcid: "https://orcid.org/0000-0000-0000-0000"  # Update with your ORCID if available
+repository-code: "https://github.com/AshmanRoonz/Fractal_Reality"
+url: "https://ashmanroonz.github.io/Fractal_Reality/"
+license: SEE LICENSE IN LICENSE
+version: "3.0.0"
+date-released: "2025-10-22"
+keywords:
+  - consciousness
+  - quantum mechanics
+  - general relativity
+  - fractal dimension
+  - gravitational waves
+  - LIGO
+  - aperture structures
+  - empirical validation
+  - metaphysics
+  - physics
+  - spirituality
+  - unified theory
+identifiers:
+  - type: url
+    value: "https://github.com/AshmanRoonz/Fractal_Reality"
+    description: GitHub Repository
+references:
+  - type: software
+    title: "Fractal Reality Analysis Pipeline"
+    authors:
+      - family-names: Roonz
+        given-names: Ashman
+    year: 2025
+    repository-code: "https://github.com/AshmanRoonz/Fractal_Reality"
+preferred-citation:
+  type: article
+  title: "The Trinity of Consciousness: Foundation, Function, and Form"
+  authors:
+    - family-names: Roonz
+      given-names: Ashman
+  year: 2025
+  journal: "Preprint"
+  notes: >-
+    Complete unified framework bridging mechanism and phenomenon.
+    Available at: https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/trinity_consciousness.md
+  abstract: >-
+    This paper presents a unified framework that reveals consciousness emerges
+    as the integrated coordination of infinite nested aperture structures
+    operating at optimal balance (β ≈ 0.5). We demonstrate that apertures are
+    the mechanism while consciousness is the emergent phenomenon arising from
+    their coordination. The framework is empirically validated using LIGO
+    gravitational wave data (p = 0.951), bubble chamber particle tracks,
+    black hole horizon measurements, and metric coupling simulations across
+    6+ orders of magnitude with zero free parameters. The work bridges quantum
+    mechanics, general relativity, consciousness studies, ethics, and spiritual
+    traditions into a single coherent mathematical structure.

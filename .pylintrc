@@ -1,0 +1,162 @@
+[MASTER]
+# Python code quality configuration for Fractal Reality
+
+# Use multiple processes to speed up Pylint
+jobs=0
+
+# Pickle collected data for later comparisons
+persistent=yes
+
+# List of plugins (as comma separated values of python module names)
+load-plugins=
+
+# Allow loading of arbitrary C extensions
+unsafe-load-any-extension=no
+
+# Extension files to check
+extension-pkg-whitelist=numpy,scipy,h5py
+
+[MESSAGES CONTROL]
+
+# Disable specific warnings that are too strict for scientific code
+disable=
+    # Design checks (too strict for exploratory scientific code)
+    too-few-public-methods,
+    too-many-locals,
+    too-many-arguments,
+    too-many-branches,
+    too-many-statements,
+    too-many-instance-attributes,
+    # Documentation (will be gradually improved)
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    # Style choices
+    invalid-name,  # Scientific code often uses short variable names like 'x', 'fs', 'D'
+    line-too-long,  # Handled by flake8
+    # Format (handled by black)
+    bad-continuation,
+    bad-whitespace,
+    # Numpy/scientific computing patterns
+    no-member,  # Often false positives with numpy
+    # Other
+    fixme,  # TODO comments are okay during development
+    broad-except,  # Sometimes necessary for robustness
+
+# Enable specific checks
+enable=
+    useless-suppression,
+    deprecated-pragma
+
+[REPORTS]
+
+# Set the output format
+output-format=colorized
+
+# Include message id in output
+msg-template={path}:{line}:{column}: {msg_id}: {msg} ({symbol})
+
+# Reports
+reports=no
+score=yes
+
+[BASIC]
+
+# Good variable names (single letter, or specific scientific conventions)
+good-names=i,j,k,n,m,x,y,z,fs,D,N,f,g,p,q,r,t,a,b,c,h,_
+
+# Regular expressions for names
+variable-rgx=[a-z_][a-z0-9_]{0,30}$
+const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+function-rgx=[a-z_][a-z0-9_]{2,50}$
+method-rgx=[a-z_][a-z0-9_]{2,50}$
+class-rgx=[A-Z_][a-zA-Z0-9]+$
+
+# Minimum line length for functions/classes
+docstring-min-length=10
+
+[FORMAT]
+
+# Maximum line length (same as flake8)
+max-line-length=100
+
+# Maximum lines in a module
+max-module-lines=1500
+
+# String used for indentation
+indent-string='    '
+
+# Expected indent for hanging lines
+indent-after-paren=4
+
+[SIMILARITIES]
+
+# Minimum lines number of a similarity
+min-similarity-lines=10
+
+# Ignore imports when computing similarities
+ignore-imports=yes
+
+# Ignore docstrings when computing similarities
+ignore-docstrings=yes
+
+# Ignore comments when computing similarities
+ignore-comments=yes
+
+[VARIABLES]
+
+# Allow unused variables when underscore-prefixed
+dummy-variables-rgx=_.*
+
+# Callbacks don't need to be called
+callbacks=cb_,_cb
+
+[DESIGN]
+
+# Maximum number of arguments for function/method (relaxed for scientific code)
+max-args=10
+
+# Maximum number of locals for function/method (relaxed)
+max-locals=20
+
+# Maximum number of return/yield for function/method
+max-returns=6
+
+# Maximum number of branch for function/method (relaxed)
+max-branches=15
+
+# Maximum number of statements in function/method (relaxed)
+max-statements=60
+
+# Maximum number of attributes for a class (relaxed)
+max-attributes=15
+
+# Minimum number of public methods for a class
+min-public-methods=1
+
+# Maximum number of public methods for a class
+max-public-methods=25
+
+[IMPORTS]
+
+# Deprecated modules which should not be used
+deprecated-modules=optparse,imp
+
+# Allow wildcard imports from modules
+allow-wildcard-with-all=no
+
+[CLASSES]
+
+# List of method names used to declare instance attributes
+defining-attr-methods=__init__,__new__,setUp
+
+# List of valid names for the first argument in a class method
+valid-classmethod-first-arg=cls
+
+# List of valid names for the first argument in a metaclass class method
+valid-metaclass-classmethod-first-arg=mcs
+
+[EXCEPTIONS]
+
+# Exceptions that will emit a warning when being caught
+overgeneral-exceptions=Exception

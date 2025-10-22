@@ -1,0 +1,78 @@
+name: Question or Discussion
+description: Ask a question about the framework, code, or results
+title: "[QUESTION] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question? We're here to help!
+
+        For general discussions, consider using [GitHub Discussions](https://github.com/AshmanRoonz/Fractal_Reality/discussions) instead.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      description: What is your question about?
+      options:
+        - Understanding the Framework
+        - Interpreting Results
+        - Using the Code
+        - Methodology / Analysis
+        - Theoretical Concepts
+        - Empirical Validation
+        - Comparison to Other Work
+        - Practical Applications
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: I'm trying to understand... / Could you clarify... / How does...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What have you already read or tried? What's your background?
+      placeholder: |
+        - I've read: [Layer 4, Trinity paper, etc.]
+        - My background: [Physics student, software engineer, curious reader, etc.]
+        - What I've tried: ...
+
+  - type: textarea
+    id: specific
+    attributes:
+      label: Specific Confusion
+      description: If your question relates to specific content, please reference it
+      placeholder: |
+        - In [file/section]: "quoted text"
+        - At [line number]: code snippet
+        - In [figure/equation]: description
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues and discussions
+          required: true
+        - label: I have read the relevant documentation
+          required: true
+        - label: This is a genuine question, not a criticism disguised as a question
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        **Response Time:** Questions are typically answered within 3-7 days. Complex questions may take longer.
+
+        **Tip:** The clearer your question, the better the answer you'll receive!

@@ -1,0 +1,104 @@
+name: Bug Report
+description: Report a bug in the code or analysis
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the sections below.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Tell us what went wrong
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Run command '...'
+        2. With data file '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: I expected...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: Instead, I got...
+    validations:
+      required: true
+
+  - type: textarea
+    id: error
+    attributes:
+      label: Error Message
+      description: If applicable, paste the full error message or traceback
+      render: shell
+      placeholder: |
+        Traceback (most recent call last):
+          File "...", line ..., in ...
+        Error: ...
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which component is affected?
+      options:
+        - LIGO Analysis
+        - Fractal Analysis
+        - Visualizations
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Your computing environment
+      value: |
+        - OS: [e.g., Ubuntu 22.04, macOS 14, Windows 11]
+        - Python version: [e.g., 3.11.5]
+        - Node version (if applicable): [e.g., 18.17.0]
+        - Relevant package versions: [e.g., numpy 1.24.3, scipy 1.11.1]
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here (screenshots, data files, etc.)
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: I have read the [CONTRIBUTING.md](https://github.com/AshmanRoonz/Fractal_Reality/blob/main/CONTRIBUTING.md)
+          required: true
+        - label: I can provide a minimal reproducible example if needed
+          required: false
