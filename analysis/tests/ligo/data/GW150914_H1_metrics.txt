@@ -1,0 +1,10 @@
+{
+  "D_inspiral": 0.32610585892319083,
+  "D_ringdown": 0.2796782892366424,
+  "FD_drop_pct": 14.236962757999304,
+  "F_inspiral": 0.8992267065816706,
+  "F_ringdown": 0.8530778010041445,
+  "F_drop_pct": 5.132065722664861,
+  "pass_logic": "FD_drop_pct>=5% OR F_drop_pct>=20%",
+  "passed": true
+}

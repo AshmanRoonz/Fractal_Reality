@@ -1,2 +1,0 @@
-current_calibration,current_mean_D,current_p_value,optimal_calibration,optimal_constant,optimal_mean_D,optimal_p_value,optimal_deviation,n_observations,recommendation
-D = Higuchi - 0.5,1.287679375099175,2.8034856740617116e-05,D = Higuchi -0.300,-0.2999999999999994,1.4876793750991757,0.7815859904714784,0.012320624900824306,36,D = Higuchi -0.300
