@@ -205,11 +205,23 @@ Our Commitments
 
 ### **We Will:**
 
-✅ Respond to all substantive critiques within 1 week✅ Publicly acknowledge all errors immediately✅ Update documentation based on valid feedback✅ Credit all meaningful contributions✅ Maintain version control with full transparency✅ Host regular open Q&A sessions✅ Never hide behind institutional authority✅ Accept falsification if predictions fail
+✅ Respond to all substantive critiques within 1 week
+✅ Publicly acknowledge all errors immediately
+✅ Update documentation based on valid feedback
+✅ Credit all meaningful contributions
+✅ Maintain version control with full transparency
+✅ Host regular open Q&A sessions
+✅ Never hide behind institutional authority
+✅ Accept falsification if predictions fail
 
 ### **We Will Not:**
 
-❌ Dismiss critiques without engaging❌ Attack critics personally❌ Move goalposts when predictions fail❌ Hide data or methods❌ Claim certainty where uncertainty exists❌ Gate-keep access to knowledge
+❌ Dismiss critiques without engaging
+❌ Attack critics personally
+❌ Move goalposts when predictions fail
+❌ Hide data or methods
+❌ Claim certainty where uncertainty exists
+❌ Gate-keep access to knowledge
 
 * * *
 
