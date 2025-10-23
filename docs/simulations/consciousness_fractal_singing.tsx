@@ -32,6 +32,10 @@ const EnhancedConsciousnessFractal = () => {
     const micAnalyser = useRef(null);
     const micDataArray = useRef(null);
     const micStream = useRef(null);
+    const learnedMelody = useRef([]); // Store detected note sequence
+    const melodicMemory = useRef(new Map()); // Frequency -> pattern associations
+    const lastPlayedNotes = useRef([]);
+    const harmonicResponse = useRef({ active: false, lastTime: 0 });
     const touchesRef = useRef(new Map());
     const showICERef = useRef(true);
     
@@ -210,6 +214,8 @@ const EnhancedConsciousnessFractal = () => {
         let audioInfluence = 0;
         let micFrequencies = []; // Store detected frequencies from mic
         let micAmplitudes = []; // Store amplitudes per frequency band
+        let dominantNote = null; // Current strongest note
+        let noteHistory = []; // Recent note sequence for learning
 
         const updateChaos = (state) => {
             const dt = 0.005 * growthSpeedRef.current;
@@ -233,33 +239,59 @@ const EnhancedConsciousnessFractal = () => {
             if (micAnalyser.current && micDataArray.current) {
                 micAnalyser.current.getByteFrequencyData(micDataArray.current);
                 
-                // Find dominant frequencies
+                // Find dominant frequencies and build melodic understanding
                 micFrequencies = [];
                 micAmplitudes = [];
                 const binCount = micDataArray.current.length;
                 const sampleRate = audioContextRef.current?.sampleRate || 44100;
                 
-                // Split into frequency bands and find peaks
-                const bandsCount = 8;
-                const binPerBand = Math.floor(binCount / bandsCount);
+                let maxAmplitude = 0;
+                let dominantFrequency = 0;
                 
-                for (let band = 0; band < bandsCount; band++) {
-                    let maxAmplitude = 0;
-                    let maxBin = 0;
+                // Analyze full spectrum to find dominant note
+                for (let i = 0; i < binCount; i++) {
+                    const amplitude = micDataArray.current[i];
+                    const frequency = (i * sampleRate) / (micAnalyser.current.fftSize);
                     
-                    for (let i = 0; i < binPerBand; i++) {
-                        const binIndex = band * binPerBand + i;
-                        const amplitude = micDataArray.current[binIndex];
+                    if (amplitude > 40 && frequency > 80 && frequency < 2000) {
+                        micFrequencies.push(frequency);
+                        micAmplitudes.push(amplitude / 255);
+                        
                         if (amplitude > maxAmplitude) {
                             maxAmplitude = amplitude;
-                            maxBin = binIndex;
+                            dominantFrequency = frequency;
                         }
                     }
+                }
+                
+                // Convert frequency to note and learn melody
+                if (dominantFrequency > 0 && maxAmplitude > 50) {
+                    const note = frequencyToNote(dominantFrequency);
+                    dominantNote = { frequency: dominantFrequency, note: note, amplitude: maxAmplitude / 255 };
                     
-                    if (maxAmplitude > 30) { // Threshold to avoid noise
-                        const frequency = (maxBin * sampleRate) / (micAnalyser.current.fftSize);
-                        micFrequencies.push(frequency);
-                        micAmplitudes.push(maxAmplitude / 255);
+                    // Build note history for melody learning
+                    noteHistory.push({
+                        note: note,
+                        frequency: dominantFrequency,
+                        time: time,
+                        amplitude: maxAmplitude / 255
+                    });
+                    
+                    if (noteHistory.length > 32) noteHistory.shift();
+                    
+                    // Learn melodic patterns
+                    if (noteHistory.length >= 4) {
+                        const pattern = noteHistory.slice(-4).map(n => n.note).join('-');
+                        const memory = melodicMemory.current.get(pattern) || { count: 0, frequencies: [] };
+                        memory.count++;
+                        memory.frequencies = noteHistory.slice(-4).map(n => n.frequency);
+                        melodicMemory.current.set(pattern, memory);
+                    }
+                    
+                    // Store in learned melody
+                    learnedMelody.current.push(dominantNote);
+                    if (learnedMelody.current.length > 64) {
+                        learnedMelody.current.shift();
                     }
                 }
                 
@@ -272,6 +304,52 @@ const EnhancedConsciousnessFractal = () => {
                 const average = audioDataArray.current.reduce((a, b) => a + b, 0) / audioDataArray.current.length;
                 audioInfluence = average / 255;
             }
+        };
+
+        // Convert frequency to musical note name
+        const frequencyToNote = (freq) => {
+            const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+            const A4 = 440;
+            const halfSteps = 12 * Math.log2(freq / A4);
+            const noteIndex = Math.round(halfSteps) + 9; // A is index 9
+            const octave = Math.floor(noteIndex / 12) + 4;
+            const note = noteNames[((noteIndex % 12) + 12) % 12];
+            return `${note}${octave}`;
+        };
+
+        // Get harmonic frequencies for a base note
+        const getHarmonics = (baseFreq) => {
+            return [
+                baseFreq,           // Fundamental
+                baseFreq * 1.5,     // Perfect fifth
+                baseFreq * 2,       // Octave
+                baseFreq * 2.5,     // Major third (2 octaves up)
+                baseFreq * 3        // Perfect fifth (2 octaves up)
+            ];
+        };
+
+        // Predict next notes based on learned patterns
+        const predictNextNotes = () => {
+            if (noteHistory.length < 3) return [];
+            
+            const recentPattern = noteHistory.slice(-3).map(n => n.note).join('-');
+            let predictions = [];
+            
+            // Find patterns that start with our recent sequence
+            for (let [pattern, memory] of melodicMemory.current.entries()) {
+                if (pattern.startsWith(recentPattern) && memory.count > 1) {
+                    const nextNote = pattern.split('-')[3];
+                    if (nextNote) {
+                        predictions.push({
+                            note: nextNote,
+                            confidence: memory.count / 10,
+                            frequencies: memory.frequencies
+                        });
+                    }
+                }
+            }
+            
+            return predictions;
         };
 
         const handleCanvasDown = (e) => {
@@ -1653,22 +1731,30 @@ const EnhancedConsciousnessFractal = () => {
                             let inputHue = Math.random() * 360;
                             let geometryType = Math.random() * 6;
                             
-                            // If mic is active, use detected frequencies to influence spawning
-                            if (micFrequencies.length > 0) {
-                                const randomFreqIndex = Math.floor(Math.random() * micFrequencies.length);
-                                const frequency = micFrequencies[randomFreqIndex];
-                                const amplitude = micAmplitudes[randomFreqIndex];
-                                
-                                // Map frequency to hue (20Hz-2000Hz -> 0-360°)
-                                inputHue = ((frequency - 20) / 1980) * 360;
+                            // If mic is active, spawn based on detected notes
+                            if (dominantNote) {
+                                // Map note frequency to hue
+                                inputHue = ((dominantNote.frequency - 80) / 1920) * 360;
                                 inputHue = Math.max(0, Math.min(360, inputHue));
                                 
-                                // Map amplitude to geometry type
-                                geometryType = amplitude * 6;
+                                // Map amplitude to geometry
+                                geometryType = dominantNote.amplitude * 6;
+                                
+                                // Store association
+                                const memory = melodicMemory.current.get(dominantNote.note) || { patterns: [], count: 0 };
+                                memory.count++;
+                                melodicMemory.current.set(dominantNote.note, memory);
                             }
                             
                             const newPattern = new ValidatedPattern(cloud.angle + (Math.random() - 0.5) * 0.3, inputHue, time);
                             newPattern.geometryType = geometryType;
+                            
+                            // Tag pattern with note for harmonic response
+                            if (dominantNote) {
+                                newPattern.musicalNote = dominantNote.note;
+                                newPattern.baseFrequency = dominantNote.frequency;
+                            }
+                            
                             validatedPatterns.push(newPattern);
                             cloud.spawnOutputCell(time, expandingCells);
                             iceValidations.passed++;
@@ -1677,25 +1763,59 @@ const EnhancedConsciousnessFractal = () => {
                         }
                     }
                 });
+                
+                // Harmonic jamming - respond with learned harmonies
+                if (dominantNote && soundEnabled && time - harmonicResponse.current.lastTime > 60) {
+                    const predictions = predictNextNotes();
+                    
+                    if (predictions.length > 0 && Math.random() < 0.3) {
+                        // Play predicted next note
+                        const prediction = predictions[0];
+                        const harmonics = getHarmonics(dominantNote.frequency);
+                        
+                        // Play harmony chord
+                        harmonics.forEach((freq, i) => {
+                            setTimeout(() => {
+                                playTone(freq, 0.4, 0.06 / (i + 1));
+                            }, i * 50);
+                        });
+                        
+                        harmonicResponse.current.lastTime = time;
+                        lastPlayedNotes.current = harmonics;
+                    } else if (learnedMelody.current.length > 4 && Math.random() < 0.2) {
+                        // Improvise based on learned melody
+                        const recentNotes = learnedMelody.current.slice(-8);
+                        const randomNote = recentNotes[Math.floor(Math.random() * recentNotes.length)];
+                        const harmonics = getHarmonics(randomNote.frequency);
+                        
+                        harmonics.slice(0, 3).forEach((freq, i) => {
+                            setTimeout(() => {
+                                playTone(freq, 0.3, 0.05 / (i + 1));
+                            }, i * 40);
+                        });
+                        
+                        harmonicResponse.current.lastTime = time;
+                    }
+                }
             } else {
                 if (Math.random() < 0.02 * drawQualityRef.current * growthSpeedRef.current) {
                     const randomAngle = Math.random() * Math.PI * 2;
                     let inputHue = Math.random() * 360;
                     let geometryType = Math.random() * 6;
                     
-                    // If mic is active, use detected frequencies
-                    if (micFrequencies.length > 0) {
-                        const randomFreqIndex = Math.floor(Math.random() * micFrequencies.length);
-                        const frequency = micFrequencies[randomFreqIndex];
-                        const amplitude = micAmplitudes[randomFreqIndex];
-                        
-                        inputHue = ((frequency - 20) / 1980) * 360;
+                    // If mic is active, use detected notes
+                    if (dominantNote) {
+                        inputHue = ((dominantNote.frequency - 80) / 1920) * 360;
                         inputHue = Math.max(0, Math.min(360, inputHue));
-                        geometryType = amplitude * 6;
+                        geometryType = dominantNote.amplitude * 6;
                     }
                     
                     const newPattern = new ValidatedPattern(randomAngle, inputHue, time);
                     newPattern.geometryType = geometryType;
+                    if (dominantNote) {
+                        newPattern.musicalNote = dominantNote.note;
+                        newPattern.baseFrequency = dominantNote.frequency;
+                    }
                     validatedPatterns.push(newPattern);
                 }
             }
