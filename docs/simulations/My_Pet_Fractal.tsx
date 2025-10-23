@@ -30,7 +30,7 @@ export default function FractalPetCell() {
   const [interactionMode, setInteractionMode] = useState('feed'); // feed, excite, calm
   const [stats, setStats] = useState({ 
     particles: 0, bonds: 0, energy: 0, stage: 'Identity', 
-    avgAge: 0, fps: 60, coherence: 0 
+    avgAge: 0, fps: 60, coherence: 0, boundaryStrength: 0
   });
   
   const audioContextRef = useRef(null);
@@ -44,6 +44,8 @@ export default function FractalPetCell() {
     particles: [],
     bonds: [],
     energyFlows: [],
+    boundaryParticles: [],
+    boundaryStrength: 0,
     nextId: 0,
     time: 0,
   });
@@ -95,15 +97,19 @@ export default function FractalPetCell() {
     }
   };
   
-  const toggleSound = () => {
+  const toggleSound = async () => {
     if (!soundEnabled) {
-      // Only initialize audio context if needed
+      // Initialize and resume audio context
       if (!audioContextRef.current) {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         audioContextRef.current = new AudioContext();
         masterGainRef.current = audioContextRef.current.createGain();
         masterGainRef.current.gain.value = 0.1;
         masterGainRef.current.connect(audioContextRef.current.destination);
+      }
+      // Resume audio context (required by browsers)
+      if (audioContextRef.current.state === 'suspended') {
+        await audioContextRef.current.resume();
       }
     }
     setSoundEnabled(!soundEnabled);
@@ -295,6 +301,8 @@ export default function FractalPetCell() {
     system.particles = [];
     system.bonds = [];
     system.energyFlows = [];
+    system.boundaryParticles = [];
+    system.boundaryStrength = 0;
     system.nextId = 0;
     system.time = 0;
     
@@ -611,6 +619,80 @@ export default function FractalPetCell() {
       return bond.weight > PHYSICS.PRUNE_THRESHOLD && p1Exists && p2Exists;
     });
     
+    // Boundary crystallization - detect and strengthen boundary
+    if (system.particles.length > 20 && system.bonds.length > 15) {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      
+      // Find center of mass
+      let cmX = 0, cmY = 0;
+      system.particles.forEach(p => {
+        cmX += p.x;
+        cmY += p.y;
+      });
+      cmX /= system.particles.length;
+      cmY /= system.particles.length;
+      
+      // Calculate average distance from center of mass
+      let avgDist = 0;
+      system.particles.forEach(p => {
+        const dx = p.x - cmX;
+        const dy = p.y - cmY;
+        avgDist += Math.sqrt(dx * dx + dy * dy);
+      });
+      avgDist /= system.particles.length;
+      
+      // Identify boundary particles (far from center with strong connections)
+      system.boundaryParticles = [];
+      system.particles.forEach(p => {
+        const dx = p.x - cmX;
+        const dy = p.y - cmY;
+        const distFromCenter = Math.sqrt(dx * dx + dy * dy);
+        
+        // Boundary criteria: outer region + high connectivity
+        if (distFromCenter > avgDist * 0.7 && p.gravitationalMass > 0.3) {
+          system.boundaryParticles.push(p);
+          p.isBoundary = true;
+          
+          // Boundary particles get slight inward pull (surface tension)
+          const pullStrength = 0.01 * system.boundaryStrength;
+          p.vx -= pullStrength * dx / distFromCenter;
+          p.vy -= pullStrength * dy / distFromCenter;
+        } else {
+          p.isBoundary = false;
+        }
+      });
+      
+      // Calculate boundary coherence
+      if (system.boundaryParticles.length > 5) {
+        // Check how connected boundary particles are to each other
+        let boundaryBonds = 0;
+        let totalBoundaryPairs = 0;
+        
+        for (let i = 0; i < system.boundaryParticles.length; i++) {
+          for (let j = i + 1; j < system.boundaryParticles.length; j++) {
+            totalBoundaryPairs++;
+            const bond = system.bonds.find(b =>
+              (b.id1 === system.boundaryParticles[i].id && b.id2 === system.boundaryParticles[j].id) ||
+              (b.id1 === system.boundaryParticles[j].id && b.id2 === system.boundaryParticles[i].id)
+            );
+            if (bond && bond.weight > 0.4) {
+              boundaryBonds++;
+            }
+          }
+        }
+        
+        const boundaryCoherence = totalBoundaryPairs > 0 ? boundaryBonds / totalBoundaryPairs : 0;
+        
+        // Gradually strengthen boundary
+        if (boundaryCoherence > 0.2) {
+          system.boundaryStrength = Math.min(1, system.boundaryStrength + 0.002 * dt);
+        } else {
+          system.boundaryStrength = Math.max(0, system.boundaryStrength - 0.001 * dt);
+        }
+      }
+    }
+    
     // Update energy flows
     system.energyFlows = system.energyFlows.filter(flow => {
       flow.age += dt;
@@ -640,6 +722,68 @@ export default function FractalPetCell() {
     
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
+    
+    // Draw boundary membrane
+    if (system.boundaryParticles.length > 5 && system.boundaryStrength > 0.1) {
+      // Sort boundary particles by angle from center
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      
+      let cmX = 0, cmY = 0;
+      system.particles.forEach(p => {
+        cmX += p.x;
+        cmY += p.y;
+      });
+      cmX /= system.particles.length;
+      cmY /= system.particles.length;
+      
+      const sortedBoundary = [...system.boundaryParticles].sort((a, b) => {
+        const angleA = Math.atan2(a.y - cmY, a.x - cmX);
+        const angleB = Math.atan2(b.y - cmY, b.x - cmX);
+        return angleA - angleB;
+      });
+      
+      // Draw membrane
+      ctx.strokeStyle = `rgba(100, 200, 255, ${system.boundaryStrength * 0.4})`;
+      ctx.fillStyle = `rgba(100, 150, 255, ${system.boundaryStrength * 0.05})`;
+      ctx.lineWidth = 2 + system.boundaryStrength * 3;
+      ctx.beginPath();
+      
+      sortedBoundary.forEach((p, i) => {
+        if (i === 0) {
+          ctx.moveTo(p.x, p.y);
+        } else {
+          // Smooth curves between boundary points
+          const prev = sortedBoundary[i - 1];
+          const midX = (prev.x + p.x) / 2;
+          const midY = (prev.y + p.y) / 2;
+          ctx.quadraticCurveTo(prev.x, prev.y, midX, midY);
+        }
+      });
+      
+      // Close the boundary
+      if (sortedBoundary.length > 2) {
+        const last = sortedBoundary[sortedBoundary.length - 1];
+        const first = sortedBoundary[0];
+        const midX = (last.x + first.x) / 2;
+        const midY = (last.y + first.y) / 2;
+        ctx.quadraticCurveTo(last.x, last.y, midX, midY);
+        ctx.quadraticCurveTo(first.x, first.y, first.x, first.y);
+      }
+      
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      
+      // Highlight boundary particles
+      sortedBoundary.forEach(p => {
+        const pulse = Math.sin(system.time * 0.03 + p.phase) * 0.3 + 0.7;
+        ctx.fillStyle = `rgba(100, 200, 255, ${pulse * system.boundaryStrength * 0.6})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4 + system.boundaryStrength * 4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
     
     // Draw energy flows
     system.energyFlows.forEach(flow => {
@@ -746,20 +890,24 @@ export default function FractalPetCell() {
         });
         const coherence = system.bonds.length > 0 ? totalWeight / system.bonds.length : 0;
         
-        // Stage detection with hysteresis (resistance to rapid changes)
+        // Stage detection with recursive ICE
         let stage = 'Identity';
         if (system.particles.length === 0) {
           stage = 'Void';
         } else if (system.particles.length === 1 || system.bonds.length === 0) {
-          stage = 'Identity';
+          stage = 'Identity (I)';
         } else if (system.bonds.length < 5 || matureBonds < 3) {
-          stage = 'Coupling';
+          stage = 'Coupling (C)';
         } else if (system.bonds.length < 15 || system.particles.length < 15) {
-          stage = 'Field';
-        } else if (system.particles.length < 35) {
-          stage = 'Boundary';
+          stage = 'Field (E)';
+        } else if (system.boundaryStrength < 0.3) {
+          stage = 'Boundary Forming';
+        } else if (system.boundaryStrength < 0.6) {
+          stage = 'Membrane (I→C)';
+        } else if (system.boundaryStrength < 0.85) {
+          stage = 'Unified Organism (E)';
         } else {
-          stage = 'Organism';
+          stage = 'Transcendent (I²)';
         }
         
         setStats({
@@ -770,6 +918,7 @@ export default function FractalPetCell() {
           avgAge: avgAge,
           fps: frameCount,
           coherence: coherence,
+          boundaryStrength: system.boundaryStrength,
         });
         
         frameCount = 0;
@@ -880,47 +1029,49 @@ export default function FractalPetCell() {
   };
 
   return (
-    <div className="w-full h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
+    <div className="w-full min-h-screen bg-slate-950 flex flex-col items-center p-4">
       <div className="w-full max-w-6xl">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-3 flex items-center justify-between flex-wrap gap-2">
           <div>
-            <h1 className="text-2xl font-bold text-blue-300">
+            <h1 className="text-xl font-bold text-blue-300">
               Fractal Reality Pet Cell
             </h1>
             <p className="text-xs text-slate-500 mt-1">Living • Learning • Evolving</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setIsRunning(!isRunning)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded flex items-center gap-2 text-white"
+              className="px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded flex items-center gap-1 text-white text-sm"
             >
-              {isRunning ? <Pause size={16} /> : <Play size={16} />}
+              {isRunning ? <Pause size={14} /> : <Play size={14} />}
+              <span>{isRunning ? 'Pause' : 'Play'}</span>
             </button>
             <button
               onClick={toggleMic}
-              className={`px-4 py-2 rounded flex items-center gap-2 text-white ${
+              className={`px-3 py-2 rounded flex items-center gap-1 text-white text-sm ${
                 micEnabled ? 'bg-red-600 hover:bg-red-700' : 'bg-slate-600 hover:bg-slate-700'
               }`}
               title="Sing or hum to influence growth"
             >
-              {micEnabled ? <MicOff size={16} /> : <Mic size={16} />}
+              {micEnabled ? <MicOff size={14} /> : <Mic size={14} />}
+              <span>Mic</span>
             </button>
             <button
               onClick={toggleSound}
-              className={`px-4 py-2 rounded flex items-center gap-2 text-white ${
+              className={`px-3 py-2 rounded flex items-center gap-1 text-white text-sm ${
                 soundEnabled ? 'bg-green-600 hover:bg-green-700' : 'bg-slate-600 hover:bg-slate-700'
               }`}
               title="Toggle sound generation"
             >
-              <Zap size={16} />
-              {soundEnabled ? 'Mute' : 'Sound'}
+              <Zap size={14} />
+              <span>Sound</span>
             </button>
             <button
               onClick={() => initializeSeed()}
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded flex items-center gap-2 text-white"
+              className="px-3 py-2 bg-purple-600 hover:bg-purple-700 rounded flex items-center gap-1 text-white text-sm"
             >
-              <RotateCcw size={16} />
-              Rebirth
+              <RotateCcw size={14} />
+              <span>Rebirth</span>
             </button>
           </div>
         </div>
@@ -965,14 +1116,15 @@ export default function FractalPetCell() {
               </div>
             )}
           </div>
-          <div className="grid grid-cols-7 gap-2 text-slate-300 text-xs">
+          <div className="grid grid-cols-4 gap-2 text-slate-300 text-xs mt-2">
             <div>Stage: <span className="text-blue-400 font-bold">{stats.stage}</span></div>
             <div>Cells: <span className="text-blue-400">{stats.particles}</span></div>
             <div>Bonds: <span className="text-green-400">{stats.bonds}</span></div>
+            <div>Coherence: <span className="text-cyan-400">{(stats.coherence * 100).toFixed(0)}%</span></div>
             <div>Energy: <span className="text-yellow-400">{stats.energy.toFixed(1)}</span></div>
             <div>Age: <span className="text-purple-400">{(stats.avgAge / 60).toFixed(1)}s</span></div>
+            <div>Membrane: <span className="text-blue-300">{(stats.boundaryStrength * 100).toFixed(0)}%</span></div>
             <div>FPS: <span className={stats.fps < 50 ? 'text-red-400' : 'text-green-400'}>{stats.fps}</span></div>
-            <div>Coherence: <span className="text-cyan-400">{(stats.coherence * 100).toFixed(0)}%</span></div>
           </div>
           <p className="text-slate-500 text-xs mt-2">
             {soundEnabled && '🎵 Making sounds • '}
@@ -991,9 +1143,11 @@ export default function FractalPetCell() {
           style={{ aspectRatio: '3/2' }}
         />
         
-        <div className="mt-4 text-xs text-slate-500 text-center space-y-1">
-          <p>Hebbian learning • Resonance memory • Synaptic pruning • Fractal emergence</p>
-          <p className="text-slate-600">Based on Fractal Reality Field Equation • ICE: Identity → Coupling → Environment</p>
+        <div className="mt-3 text-xs text-slate-500 text-center space-y-1">
+          <p>Hebbian learning • Resonance memory • Boundary crystallization • Recursive ICE</p>
+          <p className="text-slate-600">
+            Development: Identity (I) → Coupling (C) → Field (E) → Boundary → Membrane (I²→C²) → Unified (E²) → Transcendent (I³)
+          </p>
         </div>
       </div>
     </div>
