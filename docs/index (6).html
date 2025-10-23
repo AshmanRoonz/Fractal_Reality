@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractal Reality - A Unified Framework</title>
+    <meta name="description" content="A complete mathematical framework unifying quantum mechanics, general relativity, and consciousness through validation at interfaces in 3.5D spacetime.">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: #0a0a0a;
+            color: #e8e8e8;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+        
+        .mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .equation {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+        
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+            margin: 3rem 0;
+        }
+        
+        .data-grid {
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.02);
+        }
+        
+        a {
+            color: #e8e8e8;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: rgba(255,255,255,0.6);
+        }
+        
+        .sim-preview-box {
+            width: 100%;
+            height: 300px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.02);
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        
+        .sim-preview-box:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(255,255,255,0.15);
+        }
+        
+        .sim-preview-box iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .sim-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(10,10,10,0.95), transparent);
+            padding: 1rem;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const FractalRealityLanding = () => {
+            const [previewSim, setPreviewSim] = useState(null);
+
+            useEffect(() => {
+                // Load the first simulation for preview
+                const fetchPreviewSim = async () => {
+                    try {
+                        const response = await fetch('./sims.md');
+                        if (!response.ok) return;
+                        
+                        const markdown = await response.text();
+                        const lines = markdown.split('\n');
+                        
+                        for (const line of lines) {
+                            const trimmed = line.trim();
+                            if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) continue;
+                            
+                            let filename = null;
+                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.tsx)\)/);
+                            if (linkMatch) {
+                                filename = linkMatch[1];
+                            } else if (trimmed.match(/^[-*]\s+/)) {
+                                const listMatch = trimmed.match(/[-*]\s+(.*?\.tsx)/);
+                                if (listMatch) filename = listMatch[1];
+                            } else if (trimmed.endsWith('.tsx')) {
+                                filename = trimmed;
+                            }
+                            
+                            if (filename) {
+                                filename = filename.replace(/^simulations\//, '');
+                                setPreviewSim(filename);
+                                break; // Just get the first one
+                            }
+                        }
+                    } catch (err) {
+                        console.log('Preview not loaded');
+                    }
+                };
+
+                fetchPreviewSim();
+            }, []);
+
+            return (
+                <div className="min-h-screen" style={{background: '#0a0a0a'}}>
+                    {/* Header with Preview */}
+                    <div className="container pt-16 pb-12">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                            {/* Left: Title */}
+                            <div>
+                                <h1 className="text-5xl font-light mb-3 tracking-tight" style={{letterSpacing: '-0.02em'}}>
+                                    Fractal Reality
+                                </h1>
+                                <p className="text-lg font-light text-gray-500 mb-6">
+                                    A unified mathematical framework
+                                </p>
+                                <p className="text-base leading-relaxed" style={{color: '#b0b0b0'}}>
+                                    Unifying quantum mechanics, general relativity, and consciousness through the principle of <span style={{fontStyle: 'italic'}}>validation at interfaces</span> in 3.5 dimensional spacetime.
+                                </p>
+                            </div>
+                            
+                            {/* Right: Simulation Preview */}
+                            <div>
+                                <a 
+                                    href="./simulators.html" 
+                                    className="block border-none"
+                                    style={{borderBottom: 'none'}}
+                                >
+                                    <div className="sim-preview-box">
+                                        {previewSim ? (
+                                            <iframe 
+                                                src={`./simulators.html?auto=${previewSim}`}
+                                                title="Simulation Preview"
+                                            />
+                                        ) : (
+                                            <div className="flex items-center justify-center h-full">
+                                                <div className="text-center text-gray-600">
+                                                    <div className="mono text-xs">Loading preview...</div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        <div className="sim-overlay">
+                                            <div className="text-xs mono uppercase tracking-wider text-gray-500 mb-1">Interactive Demonstrations</div>
+                                            <div className="text-sm text-white">Click to explore →</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="divider"></div>
+
+                    {/* Core Equation */}
+                    <div className="container pb-8">
+                        <div className="text-center">
+                            <p className="text-xs mono uppercase tracking-wider text-gray-600 mb-3">Fundamental Pattern</p>
+                            <div className="equation text-4xl mb-3" style={{letterSpacing: '0.1em'}}>
+                                ∇ → [ICE] → ℰ
+                            </div>
+                            <p className="text-sm text-gray-500 mono">
+                                Convergence → Validation at Interfaces → Emergence
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="divider"></div>
+
+                    {/* Empirical Validation */}
+                    <div className="container pb-8">
+                        <h2 className="text-xl font-normal mb-6 tracking-tight">Empirical Validation</h2>
+                        
+                        <div className="data-grid p-6 mb-4">
+                            <div className="grid grid-cols-3 gap-6 text-center text-sm">
+                                <div>
+                                    <div className="text-3xl font-light mb-1">1.503</div>
+                                    <div className="text-xs text-gray-600 mono mb-1">± 0.040</div>
+                                    <div className="text-xs text-gray-500">Fractal dimension <span className="italic">D</span></div>
+                                    <div className="text-xs text-gray-700 mono mt-1">LIGO</div>
+                                </div>
+                                <div>
+                                    <div className="text-3xl font-light mb-1">0.9997</div>
+                                    <div className="text-xs text-gray-600 mono mb-1">R²</div>
+                                    <div className="text-xs text-gray-500">Spacetime coupling</div>
+                                    <div className="text-xs text-gray-700 mono mt-1">Zero parameters</div>
+                                </div>
+                                <div>
+                                    <div className="text-3xl font-light mb-1">10<sup>60</sup></div>
+                                    <div className="text-xs text-gray-600 mono mb-1">orders</div>
+                                    <div className="text-xs text-gray-500">Improvement</div>
+                                    <div className="text-xs text-gray-700 mono mt-1">Λ prediction</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-3 text-xs leading-relaxed" style={{color: '#909090'}}>
+                            <div className="data-grid p-4">
+                                <span className="mono text-white">1.</span> Gravitational waves exhibit predicted fractal dimension <span className="mono">D = 1.503 ± 0.040</span> (<span className="italic">p</span> = 0.957, N = 46)
+                            </div>
+                            <div className="data-grid p-4">
+                                <span className="mono text-white">2.</span> Schrödinger equation derived from interface validation; quantum uncertainty emerges as validation noise
+                            </div>
+                            <div className="data-grid p-4">
+                                <span className="mono text-white">3.</span> Cosmological constant predicted: Λ = (6.9 ± 1.6) × 10<sup>-53</sup> m<sup>-2</sup> (within 1σ of observation)
+                            </div>
+                            <div className="data-grid p-4">
+                                <span className="mono text-white">4.</span> Consciousness emerges at critical balance β ≈ 0.5 through integrated validation density
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="divider"></div>
+
+                    {/* Links */}
+                    <div className="container pb-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <a 
+                                href="https://github.com/AshmanRoonz/Fractal_Reality" 
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="data-grid p-5 block border-none hover:bg-white/5 transition-colors"
+                            >
+                                <div className="mono text-xs uppercase tracking-wider text-gray-600 mb-1">Repository</div>
+                                <div className="text-base">Complete Framework</div>
+                                <div className="text-xs text-gray-600 mt-1 mono">github.com/AshmanRoonz</div>
+                            </a>
+                            <a 
+                                href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/readme.md" 
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="data-grid p-5 block border-none hover:bg-white/5 transition-colors"
+                            >
+                                <div className="mono text-xs uppercase tracking-wider text-gray-600 mb-1">Documentation</div>
+                                <div className="text-base">12-Layer Structure</div>
+                                <div className="text-xs text-gray-600 mt-1">From seed to practice</div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className="divider"></div>
+
+                    {/* Quote */}
+                    <div className="container pb-8">
+                        <div className="text-center">
+                            <blockquote className="text-base italic leading-relaxed text-gray-500 mb-6 max-w-2xl mx-auto">
+                                Reality is infinite possibility flowing through eternal aperture operators that validate at interfaces, creating boundaries that transform infinite into finite validated patterns, all expressing the ultimate aperture function.
+                            </blockquote>
+                            <div className="equation text-4xl font-light" style={{letterSpacing: '0.1em'}}>
+                                ∞ ↔ •
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="container py-8 border-t border-gray-900">
+                        <div className="text-center">
+                            <p className="text-xs text-gray-700 mono">v1.0 · October 2025</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<FractalRealityLanding />);
+    </script>
+</body>
+</html>
