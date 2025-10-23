@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Circle, Triangle, Square, Star, Hexagon, Pentagon, Music, Download, Upload, Volume2, VolumeX } from 'lucide-react';
 
 const EnhancedConsciousnessFractal = () => {
     const canvasRef = useRef(null);
@@ -41,18 +40,19 @@ const EnhancedConsciousnessFractal = () => {
     });
 
     const shapes = [
-        { icon: Circle, name: 'Circle', value: 5 },
-        { icon: Triangle, name: 'Triangle', value: 0 },
-        { icon: Square, name: 'Square', value: 1 },
-        { icon: Pentagon, name: 'Pentagon', value: 2 },
-        { icon: Hexagon, name: 'Hexagon', value: 3 },
-        { icon: Star, name: 'Star', value: 4 }
+        { icon: '⭕', name: 'Circle', value: 5 },
+        { icon: '▲', name: 'Triangle', value: 0 },
+        { icon: '■', name: 'Square', value: 1 },
+        { icon: '⬟', name: 'Pentagon', value: 2 },
+        { icon: '⬢', name: 'Hexagon', value: 3 },
+        { icon: '✦', name: 'Star', value: 4 }
     ];
 
     // Initialize audio context
     const initAudio = useCallback(() => {
         if (!audioContextRef.current) {
-            audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioContextRef.current = new AudioContext();
             
             // Create analyser for audio visualization
             audioAnalyser.current = audioContextRef.current.createAnalyser();
@@ -60,6 +60,7 @@ const EnhancedConsciousnessFractal = () => {
             audioAnalyser.current.connect(audioContextRef.current.destination);
             audioDataArray.current = new Uint8Array(audioAnalyser.current.frequencyBinCount);
         }
+        return audioContextRef.current;
     }, []);
 
     // Play tone based on particle properties
@@ -407,6 +408,11 @@ const EnhancedConsciousnessFractal = () => {
                 this.randomOffsetX = (Math.random() - 0.5) * 30;
                 this.randomOffsetY = (Math.random() - 0.5) * 30;
                 this.probabilityCloud = [];
+                this.resonanceMemory = new Map(); // Learning: remember which patterns resonate well
+                this.harmonicStrength = 0;
+                this.connectionWeights = new Map(); // Synaptic weights to other patterns
+                this.activationHistory = [];
+                this.preferredAngles = []; // Learned preferred growth directions
                 
                 // Create probability cloud
                 for (let i = 0; i < 8; i++) {
@@ -436,6 +442,7 @@ const EnhancedConsciousnessFractal = () => {
                 this.evolutionStage += evolutionSpeed;
                 this.geometryType += Math.sin(this.evolutionStage + chaos.y) * 0.02;
                 
+                // Learning: Find neighbors and update connection strengths
                 this.neighbors = allPatterns.filter(p => {
                     if (p === this || !p.x) return false;
                     const dx = this.x - p.x;
@@ -444,7 +451,56 @@ const EnhancedConsciousnessFractal = () => {
                     return dist < 150 && dist > 10;
                 });
 
-                this.gravitationalMass = this.neighbors.length * 0.1;
+                // Update connection weights based on sustained proximity
+                this.neighbors.forEach(neighbor => {
+                    const currentWeight = this.connectionWeights.get(neighbor.id) || 0;
+                    const resonance = 1 - (Math.sqrt((this.x - neighbor.x) ** 2 + (this.y - neighbor.y) ** 2) / 150);
+                    
+                    // Hebbian learning: "neurons that fire together, wire together"
+                    const learningRate = 0.01;
+                    const newWeight = currentWeight + learningRate * resonance * this.harmonicStrength;
+                    this.connectionWeights.set(neighbor.id, Math.min(1, newWeight));
+                    
+                    // Remember resonance patterns
+                    const memorizedResonance = this.resonanceMemory.get(neighbor.id) || { count: 0, avgResonance: 0 };
+                    memorizedResonance.count++;
+                    memorizedResonance.avgResonance = (memorizedResonance.avgResonance * (memorizedResonance.count - 1) + resonance) / memorizedResonance.count;
+                    this.resonanceMemory.set(neighbor.id, memorizedResonance);
+                    
+                    // Learn preferred angles based on strong connections
+                    if (newWeight > 0.5) {
+                        const angleToNeighbor = Math.atan2(neighbor.y - this.y, neighbor.x - this.x);
+                        this.preferredAngles.push(angleToNeighbor);
+                        if (this.preferredAngles.length > 5) {
+                            this.preferredAngles.shift(); // Keep only recent preferences
+                        }
+                    }
+                });
+                
+                // Prune weak connections (synaptic pruning)
+                for (let [id, weight] of this.connectionWeights.entries()) {
+                    if (weight < 0.1) {
+                        this.connectionWeights.delete(id);
+                        this.resonanceMemory.delete(id);
+                    }
+                }
+
+                // Calculate gravitational mass based on learned connection strengths
+                this.gravitationalMass = Array.from(this.connectionWeights.values()).reduce((sum, w) => sum + w, 0) / 10;
+                
+                // Update activation history for temporal learning
+                this.activationHistory.push(this.scale * this.gravitationalMass);
+                if (this.activationHistory.length > 20) {
+                    this.activationHistory.shift();
+                }
+                
+                // Adjust angle based on learned preferences (restructuring)
+                if (this.preferredAngles.length > 2 && this.age > 100) {
+                    const avgPreferredAngle = this.preferredAngles.reduce((sum, a) => sum + a, 0) / this.preferredAngles.length;
+                    const angleDiff = avgPreferredAngle - this.angle;
+                    this.angle += angleDiff * 0.002; // Slowly restructure toward preferred connections
+                }
+                
                 const chaosInfluence = (chaos.x + chaos.y + chaos.z) / 3;
                 const cloudHueInfluence = this.connectedToCloud ? this.cloudInfluence : this.baseHue;
                 this.hue = (cloudHueInfluence + chaosInfluence * 30 + time * 0.1 + audioInfluence * 60) % 360;
@@ -468,6 +524,35 @@ const EnhancedConsciousnessFractal = () => {
                         ctx.beginPath();
                         ctx.arc(cloudX, cloudY, 3, 0, Math.PI * 2);
                         ctx.fill();
+                    });
+                }
+                
+                // Draw learned connections with variable thickness
+                if (drawQualityRef.current > 0.6 && this.connectionWeights.size > 0) {
+                    this.neighbors.forEach(neighbor => {
+                        const weight = this.connectionWeights.get(neighbor.id);
+                        if (weight && weight > 0.3) {
+                            const memory = this.resonanceMemory.get(neighbor.id);
+                            const alpha = weight * 0.3;
+                            const hueShift = memory ? memory.avgResonance * 60 : 0;
+                            
+                            ctx.strokeStyle = `hsla(${(this.hue + hueShift) % 360}, 70%, 60%, ${alpha})`;
+                            ctx.lineWidth = 1 + weight * 3;
+                            ctx.beginPath();
+                            ctx.moveTo(this.x, this.y);
+                            ctx.lineTo(neighbor.x, neighbor.y);
+                            ctx.stroke();
+                            
+                            // Draw synapse nodes at strong connections
+                            if (weight > 0.7) {
+                                const midX = (this.x + neighbor.x) / 2;
+                                const midY = (this.y + neighbor.y) / 2;
+                                ctx.fillStyle = `hsla(${(this.hue + hueShift) % 360}, 80%, 70%, ${weight * 0.6})`;
+                                ctx.beginPath();
+                                ctx.arc(midX, midY, 2 + weight * 2, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
                     });
                 }
                 
@@ -727,6 +812,8 @@ const EnhancedConsciousnessFractal = () => {
                 this.energyLevel = 0;
                 this.particleCount = 20 + Math.floor(Math.random() * 20);
                 this.lastResonanceTime = 0;
+                this.learningRate = 0.05;
+                this.patternAffinities = new Map(); // Learn which patterns this cloud connects to best
                 
                 for (let i = 0; i < this.particleCount; i++) {
                     this.particles.push({
@@ -742,7 +829,8 @@ const EnhancedConsciousnessFractal = () => {
                         targetShape: 0,
                         rotation: Math.random() * Math.PI * 2,
                         rotationSpeed: (Math.random() - 0.5) * 0.02,
-                        nestingPatterns: []
+                        nestingPatterns: [],
+                        bondStrength: new Map() // Remember bond strengths to patterns
                     });
                 }
             }
@@ -760,6 +848,7 @@ const EnhancedConsciousnessFractal = () => {
                 const audioWave = audioInfluence * 30;
                 this.distance = this.baseDistance + localWave + breathWave + audioWave;
                 
+                // Learn from connection patterns
                 this.connectedPatterns = allPatterns.filter(p => {
                     if (!p || p.x === undefined || p.y === undefined) return false;
                     const angleDiff = Math.abs(this.angle - p.angle);
@@ -767,12 +856,42 @@ const EnhancedConsciousnessFractal = () => {
                     return normalizedDiff < 0.9;
                 });
                 
-                this.energyLevel = this.connectedPatterns.length * 0.1;
+                // Update pattern affinities based on resonance
                 this.connectedPatterns.forEach(pattern => {
+                    const currentAffinity = this.patternAffinities.get(pattern.id) || 0;
+                    const resonance = pattern.harmonicStrength || 0;
+                    const newAffinity = currentAffinity + this.learningRate * resonance;
+                    this.patternAffinities.set(pattern.id, Math.min(1, newAffinity));
+                    
+                    // Strengthen the relationship
+                    const affinityBoost = newAffinity * 0.5;
                     pattern.cloudInfluence = this.hue;
                     pattern.connectedToCloud = true;
-                    pattern.fieldEnergyBoost = this.energyLevel;
+                    pattern.fieldEnergyBoost = this.energyLevel * (1 + affinityBoost);
+                    pattern.harmonicStrength = Math.min(1, pattern.harmonicStrength + resonance * 0.1);
                 });
+                
+                // Restructure: Move toward patterns with highest affinity
+                if (this.patternAffinities.size > 0 && age > 200) {
+                    let maxAffinity = 0;
+                    let targetPattern = null;
+                    
+                    this.connectedPatterns.forEach(pattern => {
+                        const affinity = this.patternAffinities.get(pattern.id) || 0;
+                        if (affinity > maxAffinity) {
+                            maxAffinity = affinity;
+                            targetPattern = pattern;
+                        }
+                    });
+                    
+                    if (targetPattern && maxAffinity > 0.5) {
+                        const targetAngle = Math.atan2(targetPattern.y - centerY, targetPattern.x - centerX);
+                        const angleDiff = targetAngle - this.angle;
+                        this.angle += angleDiff * 0.005 * maxAffinity; // Restructure toward strong connections
+                    }
+                }
+                
+                this.energyLevel = this.connectedPatterns.length * 0.1;
             }
 
             spawnOutputCell(time, expandingCells) {
@@ -872,9 +991,18 @@ const EnhancedConsciousnessFractal = () => {
                             if (dist < 80) {
                                 const resonance = 1 - (dist / 80);
                                 p.nestingPatterns.push({ pattern: pattern, distance: dist, resonance: resonance });
+                                
+                                // Learn bond strength between particle and pattern
+                                const currentBond = p.bondStrength.get(pattern.id) || 0;
+                                const bondGrowth = resonance * 0.02;
+                                p.bondStrength.set(pattern.id, Math.min(1, currentBond + bondGrowth));
+                                
                                 if (resonance > 0.5) {
                                     pattern.nestingPoint = { x: px, y: py };
                                     pattern.tensionStrength = resonance;
+                                    
+                                    // Increase harmonic strength based on nesting
+                                    pattern.harmonicStrength = Math.min(1, (pattern.harmonicStrength || 0) + resonance * 0.05);
                                 }
                                 
                                 // Play harmonic on high resonance
@@ -885,6 +1013,15 @@ const EnhancedConsciousnessFractal = () => {
                                 }
                             }
                         });
+                        
+                        // Prune weak bonds (synaptic pruning at particle level)
+                        for (let [id, strength] of p.bondStrength.entries()) {
+                            if (strength < 0.1) {
+                                p.bondStrength.delete(id);
+                            } else {
+                                p.bondStrength.set(id, strength * 0.99); // Decay over time
+                            }
+                        }
                     }
                     
                     let nearestPattern = null;
@@ -1596,7 +1733,11 @@ const EnhancedConsciousnessFractal = () => {
 
     const toggleSound = () => {
         if (!soundEnabled) {
-            initAudio();
+            const ctx = initAudio();
+            // Resume audio context (required by browsers)
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
         }
         setSoundEnabled(!soundEnabled);
     };
@@ -1690,19 +1831,18 @@ const EnhancedConsciousnessFractal = () => {
                 <div className="text-sm font-bold text-purple-300 mb-3">Feed the Organism</div>
                 <div className="grid grid-cols-3 gap-2">
                     {shapes.map((shape, idx) => {
-                        const Icon = shape.icon;
                         return (
                             <button
                                 key={idx}
                                 onClick={() => setSelectedShape(shape.value)}
-                                className={`p-3 rounded-lg transition-all ${
+                                className={`p-3 rounded-lg transition-all text-2xl ${
                                     selectedShape === shape.value
                                         ? 'bg-purple-600 ring-2 ring-purple-400 scale-110'
                                         : 'bg-gray-700 hover:bg-gray-600'
                                 }`}
                                 title={shape.name}
                             >
-                                <Icon className="w-6 h-6" />
+                                {shape.icon}
                             </button>
                         );
                     })}
@@ -1729,13 +1869,13 @@ const EnhancedConsciousnessFractal = () => {
                 <div className="flex gap-2 pt-3 border-t border-gray-700">
                     <button
                         onClick={exportOrganism}
-                        className="flex-1 px-3 py-2 bg-blue-600/80 hover:bg-blue-500 rounded-lg transition flex items-center justify-center gap-2"
+                        className="flex-1 px-3 py-2 bg-blue-600/80 hover:bg-blue-500 rounded-lg transition flex items-center justify-center gap-2 text-xl"
                         title="Export organism state"
                     >
-                        <Download className="w-4 h-4" />
+                        💾
                     </button>
-                    <label className="flex-1 px-3 py-2 bg-green-600/80 hover:bg-green-500 rounded-lg transition flex items-center justify-center gap-2 cursor-pointer">
-                        <Upload className="w-4 h-4" />
+                    <label className="flex-1 px-3 py-2 bg-green-600/80 hover:bg-green-500 rounded-lg transition flex items-center justify-center gap-2 cursor-pointer text-xl">
+                        📤
                         <input 
                             type="file" 
                             accept=".json" 
@@ -1745,12 +1885,12 @@ const EnhancedConsciousnessFractal = () => {
                     </label>
                     <button
                         onClick={toggleSound}
-                        className={`flex-1 px-3 py-2 rounded-lg transition flex items-center justify-center gap-2 ${
+                        className={`flex-1 px-3 py-2 rounded-lg transition flex items-center justify-center gap-2 text-xl ${
                             soundEnabled ? 'bg-purple-600/80 hover:bg-purple-500' : 'bg-gray-600/80 hover:bg-gray-500'
                         }`}
-                        title={soundEnabled ? 'Mute' : 'Unmute'}
+                        title={soundEnabled ? 'Mute' : 'Enable Sound'}
                     >
-                        {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                        {soundEnabled ? '🔊' : '🔇'}
                     </button>
                 </div>
             </div>
