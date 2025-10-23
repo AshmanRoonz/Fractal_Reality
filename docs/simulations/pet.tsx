@@ -2,30 +2,32 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Play, Pause, RotateCcw, Mic, MicOff, Zap } from 'lucide-react';
 
 const PHYSICS = {
-  ENERGY_DECAY: 0.0005,
-  RESONANCE_GAIN: 0.002,
-  BASELINE_ENERGY: 0.0003,
-  FEED_AMOUNT: 0.3,
-  COUPLING_STRENGTH: 0.8,
-  COUPLING_RANGE: 250,
-  DAMPING: 0.88,
+  ENERGY_DECAY: 0.0002,        
+  RESONANCE_GAIN: 0.004,       
+  BASELINE_ENERGY: 0.0005,     
+  FEED_AMOUNT: 0.4,
+  COUPLING_STRENGTH: 1.2,      
+  COUPLING_RANGE: 300,         
+  DAMPING: 0.85,               
   MIN_SPACING: 30,
-  REPULSION: 250,
-  MITOSIS_ENERGY: 0.75,
-  MITOSIS_STABILITY: 60,
+  REPULSION: 200,
+  MITOSIS_ENERGY: 0.82,        
+  MITOSIS_STABILITY: 120,      
   MAX_PARTICLES: 60,
   AGING_RATE: 0.00001,
-  ELDERLY_AGE: 8000,
-  LEARNING_RATE: 0.02,
-  WEIGHT_DECAY: 0.003,
-  PRUNE_THRESHOLD: 0.15,
-  BOND_THRESHOLD: 0.5,  // Lower threshold for bond formation
+  ELDERLY_AGE: 10000,          
+  LEARNING_RATE: 0.04,         // Even faster learning
+  WEIGHT_DECAY: 0.0002,        // Almost no decay!
+  PRUNE_THRESHOLD: 0.05,       
+  BOND_THRESHOLD: 0.4,        
 };
 
 export default function FractalPetCell() {
   const canvasRef = useRef(null);
   const [isRunning, setIsRunning] = useState(true);
   const [micEnabled, setMicEnabled] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(false);
+  const [interactionMode, setInteractionMode] = useState('feed'); // feed, excite, calm
   const [stats, setStats] = useState({ 
     particles: 0, bonds: 0, energy: 0, stage: 'Identity', 
     avgAge: 0, fps: 60, coherence: 0 
@@ -35,6 +37,8 @@ export default function FractalPetCell() {
   const micAnalyserRef = useRef(null);
   const micStreamRef = useRef(null);
   const audioInfluenceRef = useRef(0);
+  const oscillatorsRef = useRef(new Map());
+  const masterGainRef = useRef(null);
   
   const systemRef = useRef({
     particles: [],
@@ -50,6 +54,11 @@ export default function FractalPetCell() {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!audioContextRef.current) {
         audioContextRef.current = new AudioContext();
+        
+        // Create master gain
+        masterGainRef.current = audioContextRef.current.createGain();
+        masterGainRef.current.gain.value = 0.1;
+        masterGainRef.current.connect(audioContextRef.current.destination);
       }
       
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -57,7 +66,7 @@ export default function FractalPetCell() {
       
       const source = audioContextRef.current.createMediaStreamSource(stream);
       micAnalyserRef.current = audioContextRef.current.createAnalyser();
-      micAnalyserRef.current.fftSize = 512;
+      micAnalyserRef.current.fftSize = 2048;
       micAnalyserRef.current.smoothingTimeConstant = 0.8;
       
       source.connect(micAnalyserRef.current);
@@ -85,7 +94,21 @@ export default function FractalPetCell() {
       setMicEnabled(success);
     }
   };
-
+  
+  const toggleSound = () => {
+    if (!soundEnabled) {
+      // Only initialize audio context if needed
+      if (!audioContextRef.current) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioContextRef.current = new AudioContext();
+        masterGainRef.current = audioContextRef.current.createGain();
+        masterGainRef.current.gain.value = 0.1;
+        masterGainRef.current.connect(audioContextRef.current.destination);
+      }
+    }
+    setSoundEnabled(!soundEnabled);
+  };
+  
   // Particle class with learning
   class Particle {
     constructor(id, x, y, frequency, amplitude, age = 0) {
@@ -304,14 +327,108 @@ export default function FractalPetCell() {
     
     system.time += dt;
     
-    // Get audio influence
+    // Get audio influence with pitch detection
     let audioInfluence = 0;
+    let dominantFreq = 0;
+    let rhythm = 0;
+    
     if (micEnabled && micAnalyserRef.current) {
-      const dataArray = new Uint8Array(micAnalyserRef.current.frequencyBinCount);
+      const bufferLength = micAnalyserRef.current.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      const timeData = new Uint8Array(bufferLength);
+      
       micAnalyserRef.current.getByteFrequencyData(dataArray);
+      micAnalyserRef.current.getByteTimeDomainData(timeData);
+      
+      // Overall volume
       const average = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
       audioInfluence = average / 256;
       audioInfluenceRef.current = audioInfluence;
+      
+      // Find dominant frequency (pitch)
+      let maxVal = 0;
+      let maxIdx = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        if (dataArray[i] > maxVal) {
+          maxVal = dataArray[i];
+          maxIdx = i;
+        }
+      }
+      const nyquist = audioContextRef.current.sampleRate / 2;
+      dominantFreq = (maxIdx / bufferLength) * nyquist;
+      
+      // Detect rhythm (rapid changes in volume)
+      let changeSum = 0;
+      for (let i = 1; i < timeData.length; i++) {
+        changeSum += Math.abs(timeData[i] - timeData[i-1]);
+      }
+      rhythm = Math.min(1, changeSum / (timeData.length * 50));
+      
+      // Apply effects based on detected features
+      if (audioInfluence > 0.2) {
+        // Pitch affects particle frequencies
+        const freqInfluence = dominantFreq / 1000; // normalize
+        system.particles.forEach(p => {
+          if (Math.random() < audioInfluence * 0.1) {
+            p.frequency = p.frequency * 0.95 + freqInfluence * 0.05;
+          }
+        });
+        
+        // Rhythm creates pulses
+        if (rhythm > 0.5) {
+          system.particles.forEach(p => {
+            p.amplitude = Math.min(1, p.amplitude + rhythm * 0.1);
+          });
+        }
+      }
+    }
+    
+    // Update particle sounds directly (no callback dependency)
+    if (soundEnabled && audioContextRef.current && masterGainRef.current) {
+      system.particles.forEach(p => {
+        if (oscillatorsRef.current.has(p.id)) {
+          const sound = oscillatorsRef.current.get(p.id);
+          const baseFreq = 200 + p.frequency * 3000;
+          const volume = (p.amplitude * 0.15 + p.gravitationalMass * 0.1) * 0.02;
+          
+          try {
+            sound.osc.frequency.setTargetAtTime(baseFreq, audioContextRef.current.currentTime, 0.1);
+            sound.gain.gain.setTargetAtTime(volume, audioContextRef.current.currentTime, 0.1);
+          } catch (e) {}
+        } else if (p.amplitude > 0.4) {
+          try {
+            const ctx = audioContextRef.current;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            const baseFreq = 200 + p.frequency * 3000;
+            osc.frequency.value = baseFreq;
+            
+            const volume = (p.amplitude * 0.15 + p.gravitationalMass * 0.1) * 0.02;
+            gain.gain.value = volume;
+            
+            const waveforms = ['sine', 'triangle', 'square', 'sawtooth'];
+            osc.type = waveforms[Math.floor(p.geometryType) % 4];
+            
+            osc.connect(gain);
+            gain.connect(masterGainRef.current);
+            
+            osc.start();
+            oscillatorsRef.current.set(p.id, { osc, gain, freq: baseFreq });
+          } catch (e) {}
+        }
+      });
+      
+      // Clean up dead particle sounds
+      for (let [id, sound] of oscillatorsRef.current.entries()) {
+        if (!system.particles.find(p => p.id === id)) {
+          try {
+            sound.osc.stop();
+            sound.gain.disconnect();
+          } catch (e) {}
+          oscillatorsRef.current.delete(id);
+        }
+      }
     }
     
     // Update particles
@@ -360,14 +477,16 @@ export default function FractalPetCell() {
                 bond = {
                   id1: p1.id,
                   id2: p2.id,
-                  weight: 0.2,
+                  weight: 0.4,           // Start much stronger!
                   age: 0,
                   resonanceHistory: [],
                 };
                 system.bonds.push(bond);
               }
               
-              bond.weight = Math.min(1, bond.weight + PHYSICS.LEARNING_RATE * resonance * (1 + audioInfluence));
+              // Accelerated learning - bonds strengthen quickly
+              const learningBoost = 1 + (bond.age < 50 ? 1 : 0); // Extra boost for young bonds
+              bond.weight = Math.min(1, bond.weight + PHYSICS.LEARNING_RATE * resonance * (1 + audioInfluence) * learningBoost);
               bond.age++;
               bond.resonanceHistory.push(resonance);
               if (bond.resonanceHistory.length > 50) {
@@ -429,13 +548,17 @@ export default function FractalPetCell() {
       if (p1.y > canvas.height - margin) p1.vy -= 0.5;
     }
     
-    // Energy dynamics
+    // Energy dynamics - more forgiving
     system.particles.forEach(p => {
-      p.amplitude += PHYSICS.BASELINE_ENERGY * dt * (1 + audioInfluence * 2);
+      // Baseline energy + audio boost
+      p.amplitude += PHYSICS.BASELINE_ENERGY * dt * (1 + audioInfluence * 3);
       
-      const ageFactor = 1 + (p.age / PHYSICS.ELDERLY_AGE) * 0.5;
+      // Age-based decay - but gentler
+      const ageFactor = 1 + (p.age / PHYSICS.ELDERLY_AGE) * 0.3;
       p.amplitude -= PHYSICS.ENERGY_DECAY * ageFactor * dt;
-      p.amplitude = Math.max(0.1, Math.min(1.0, p.amplitude));
+      
+      // Clamp - but never go below 0.15 (no starvation death)
+      p.amplitude = Math.max(0.15, Math.min(1.0, p.amplitude));
       
       const vel = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
       if (vel < 0.5 && p.amplitude > 0.7) {
@@ -472,12 +595,10 @@ export default function FractalPetCell() {
       system.particles.push(...toAdd);
     }
     
-    // Pruning
+    // Pruning - only remove truly dead particles
     system.particles = system.particles.filter(p => {
-      if (p.age > PHYSICS.ELDERLY_AGE && p.amplitude < 0.2) {
-        return false;
-      }
-      return true;
+      // Only remove if amplitude drops critically low (shouldn't happen now)
+      return p.amplitude > 0.05;
     });
     
     // Bond decay and pruning
@@ -618,16 +739,28 @@ export default function FractalPetCell() {
         
         // Calculate coherence
         let totalWeight = 0;
-        system.bonds.forEach(b => { totalWeight += b.weight; });
+        let matureBonds = 0;
+        system.bonds.forEach(b => { 
+          totalWeight += b.weight; 
+          if (b.weight > 0.6) matureBonds++;
+        });
         const coherence = system.bonds.length > 0 ? totalWeight / system.bonds.length : 0;
         
+        // Stage detection with hysteresis (resistance to rapid changes)
         let stage = 'Identity';
-        if (system.particles.length === 0) stage = 'Void';
-        else if (system.particles.length === 1 || system.bonds.length === 0) stage = 'Identity';
-        else if (system.bonds.length < 10) stage = 'Coupling';
-        else if (system.bonds.length < 30 || system.particles.length < 20) stage = 'Field';
-        else if (system.particles.length < 50) stage = 'Boundary';
-        else stage = 'Organism';
+        if (system.particles.length === 0) {
+          stage = 'Void';
+        } else if (system.particles.length === 1 || system.bonds.length === 0) {
+          stage = 'Identity';
+        } else if (system.bonds.length < 5 || matureBonds < 3) {
+          stage = 'Coupling';
+        } else if (system.bonds.length < 15 || system.particles.length < 15) {
+          stage = 'Field';
+        } else if (system.particles.length < 35) {
+          stage = 'Boundary';
+        } else {
+          stage = 'Organism';
+        }
         
         setStats({
           particles: system.particles.length,
@@ -651,8 +784,17 @@ export default function FractalPetCell() {
     return () => {
       cancelAnimationFrame(animationId);
       stopMicrophone();
+      
+      // Clean up all oscillators
+      for (let [id, sound] of oscillatorsRef.current.entries()) {
+        try {
+          sound.osc.stop();
+          sound.gain.disconnect();
+        } catch (e) {}
+      }
+      oscillatorsRef.current.clear();
     };
-  }, [isRunning]);
+  }, [isRunning, stopMicrophone]);
 
   const handleCanvasInteraction = (e) => {
     const canvas = canvasRef.current;
@@ -676,17 +818,63 @@ export default function FractalPetCell() {
       });
     }
     
-    // Feed nearby particles
+    // Apply effects based on interaction mode
     system.particles.forEach(p => {
       const dx = p.x - x;
       const dy = p.y - y;
       const dist = Math.sqrt(dx * dx + dy * dy);
       
-      if (dist < 120) {
-        p.amplitude = Math.min(1, p.amplitude + PHYSICS.FEED_AMOUNT * (1 - dist / 120));
+      if (dist < 150) {
+        const strength = 1 - dist / 150;
         
-        // Spawn energy burst
-        p.hue = (p.hue + Math.random() * 30) % 360;
+        switch (interactionMode) {
+          case 'feed':
+            // Standard feeding
+            p.amplitude = Math.min(1, p.amplitude + PHYSICS.FEED_AMOUNT * strength);
+            p.hue = (p.hue + Math.random() * 30) % 360;
+            break;
+            
+          case 'excite':
+            // Create chaos and movement
+            p.vx += (Math.random() - 0.5) * 5 * strength;
+            p.vy += (Math.random() - 0.5) * 5 * strength;
+            p.frequency *= (1 + (Math.random() - 0.5) * 0.2 * strength);
+            p.hue = (p.hue + 120) % 360;
+            p.evolutionStage += 0.5 * strength;
+            break;
+            
+          case 'calm':
+            // Smooth and stabilize
+            p.vx *= (1 - 0.5 * strength);
+            p.vy *= (1 - 0.5 * strength);
+            p.amplitude = Math.min(1, p.amplitude + 0.1 * strength);
+            p.hue = (p.hue * 0.9 + 200 * 0.1); // Shift toward blue
+            break;
+        }
+        
+        // Play sound on interaction
+        if (soundEnabled && audioContextRef.current && masterGainRef.current && Math.random() < 0.3) {
+          try {
+            const ctx = audioContextRef.current;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            const baseFreq = 200 + p.frequency * 3000;
+            osc.frequency.value = baseFreq;
+            gain.gain.value = 0.05;
+            
+            osc.connect(gain);
+            gain.connect(masterGainRef.current);
+            
+            osc.start();
+            setTimeout(() => {
+              try {
+                osc.stop();
+                gain.disconnect();
+              } catch (e) {}
+            }, 100);
+          } catch (e) {}
+        }
       }
     });
   };
@@ -707,16 +895,25 @@ export default function FractalPetCell() {
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded flex items-center gap-2 text-white"
             >
               {isRunning ? <Pause size={16} /> : <Play size={16} />}
-              {isRunning ? 'Pause' : 'Play'}
             </button>
             <button
               onClick={toggleMic}
               className={`px-4 py-2 rounded flex items-center gap-2 text-white ${
                 micEnabled ? 'bg-red-600 hover:bg-red-700' : 'bg-slate-600 hover:bg-slate-700'
               }`}
+              title="Sing or hum to influence growth"
             >
               {micEnabled ? <MicOff size={16} /> : <Mic size={16} />}
-              {micEnabled ? 'Mute' : 'Sing'}
+            </button>
+            <button
+              onClick={toggleSound}
+              className={`px-4 py-2 rounded flex items-center gap-2 text-white ${
+                soundEnabled ? 'bg-green-600 hover:bg-green-700' : 'bg-slate-600 hover:bg-slate-700'
+              }`}
+              title="Toggle sound generation"
+            >
+              <Zap size={16} />
+              {soundEnabled ? 'Mute' : 'Sound'}
             </button>
             <button
               onClick={() => initializeSeed()}
@@ -729,14 +926,42 @@ export default function FractalPetCell() {
         </div>
         
         <div className="mb-4 p-4 bg-slate-900 rounded border border-slate-700 text-sm">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-slate-400 text-xs">
-              <strong>Click & drag</strong> to nurture • <strong>Sing</strong> to influence growth • Watch it learn & evolve
-            </p>
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="text-slate-400 text-xs mb-2">
+                <strong>Choose interaction mode:</strong>
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setInteractionMode('feed')}
+                  className={`px-3 py-1 rounded text-xs ${
+                    interactionMode === 'feed' ? 'bg-green-600 text-white' : 'bg-slate-700 text-slate-300'
+                  }`}
+                >
+                  🍃 Feed (nurture)
+                </button>
+                <button
+                  onClick={() => setInteractionMode('excite')}
+                  className={`px-3 py-1 rounded text-xs ${
+                    interactionMode === 'excite' ? 'bg-orange-600 text-white' : 'bg-slate-700 text-slate-300'
+                  }`}
+                >
+                  ⚡ Excite (chaos)
+                </button>
+                <button
+                  onClick={() => setInteractionMode('calm')}
+                  className={`px-3 py-1 rounded text-xs ${
+                    interactionMode === 'calm' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'
+                  }`}
+                >
+                  🌊 Calm (harmony)
+                </button>
+              </div>
+            </div>
             {micEnabled && audioInfluenceRef.current > 0.1 && (
-              <div className="flex items-center gap-2 text-yellow-400">
+              <div className="flex items-center gap-2 text-yellow-400 animate-pulse">
                 <Zap size={14} />
-                <span className="text-xs">Audio detected!</span>
+                <span className="text-xs">Listening...</span>
               </div>
             )}
           </div>
@@ -749,6 +974,11 @@ export default function FractalPetCell() {
             <div>FPS: <span className={stats.fps < 50 ? 'text-red-400' : 'text-green-400'}>{stats.fps}</span></div>
             <div>Coherence: <span className="text-cyan-400">{(stats.coherence * 100).toFixed(0)}%</span></div>
           </div>
+          <p className="text-slate-500 text-xs mt-2">
+            {soundEnabled && '🎵 Making sounds • '}
+            {micEnabled && '🎤 Responds to pitch & rhythm • '}
+            Click & drag to interact
+          </p>
         </div>
         
         <canvas
