@@ -1,12 +1,4 @@
 harmonic_periodic_table.tsx
-environmental_correlation_viz.tsx
-figure_chi_squared.tsx
-figure_pf_enhancement.tsx
-fractal_texture_evolution.tsx
-ice_curved_simulation.tsx
-moved_to_docs_simulations
-nbody_beta_sim.tsx
-ice_validation_pattern.tsx
 enhanced-consciousness-fractal.tsx
 molecular-canvas-composer.tsx
 webcam-fractal-tracker.tsx
