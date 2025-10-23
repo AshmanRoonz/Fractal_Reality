@@ -84,16 +84,6 @@
             height: 100%;
             border: none;
         }
-        
-        .sim-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(10,10,10,0.95), transparent);
-            padding: 1rem;
-            pointer-events: none;
-        }
     </style>
 </head>
 <body>
@@ -164,29 +154,27 @@
                             
                             {/* Right: Simulation Preview */}
                             <div>
+                                <div className="sim-preview-box">
+                                    {previewSim ? (
+                                        <iframe 
+                                            src={`./simulators.html?auto=${previewSim}`}
+                                            title="Simulation Preview"
+                                        />
+                                    ) : (
+                                        <div className="flex items-center justify-center h-full">
+                                            <div className="text-center text-gray-600">
+                                                <div className="mono text-xs">Loading preview...</div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                                 <a 
                                     href="./simulators.html" 
-                                    className="block border-none"
+                                    className="block mt-3 text-center border-none hover:opacity-70 transition-opacity"
                                     style={{borderBottom: 'none'}}
                                 >
-                                    <div className="sim-preview-box">
-                                        {previewSim ? (
-                                            <iframe 
-                                                src={`./simulators.html?auto=${previewSim}`}
-                                                title="Simulation Preview"
-                                            />
-                                        ) : (
-                                            <div className="flex items-center justify-center h-full">
-                                                <div className="text-center text-gray-600">
-                                                    <div className="mono text-xs">Loading preview...</div>
-                                                </div>
-                                            </div>
-                                        )}
-                                        <div className="sim-overlay">
-                                            <div className="text-xs mono uppercase tracking-wider text-gray-500 mb-1">Interactive Demonstrations</div>
-                                            <div className="text-sm text-white">Click to explore →</div>
-                                        </div>
-                                    </div>
+                                    <div className="text-xs mono uppercase tracking-wider text-gray-600">Interactive Demonstrations</div>
+                                    <div className="text-sm text-white">Click to explore →</div>
                                 </a>
                             </div>
                         </div>
