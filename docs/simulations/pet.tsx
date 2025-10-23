@@ -2,21 +2,26 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Play, Pause, RotateCcw } from 'lucide-react';
 
 const PHYSICS = {
-  ENERGY_DECAY: 0.002,
-  FEED_AMOUNT: 0.3,
+  ENERGY_DECAY: 0.0005,        // Much slower decay
+  RESONANCE_GAIN: 0.001,       // Gain energy from resonance
+  BASELINE_ENERGY: 0.0002,     // Ambient energy intake
+  FEED_AMOUNT: 0.2,            // Click bonus
   COUPLING_STRENGTH: 0.5,
   COUPLING_RANGE: 150,
   DAMPING: 0.92,
   MIN_SPACING: 25,
   REPULSION: 200,
-  MITOSIS_ENERGY: 0.85,
-  MAX_PARTICLES: 80,
+  MITOSIS_ENERGY: 0.75,        // Lower threshold
+  MITOSIS_STABILITY: 80,       // Faster mitosis
+  MAX_PARTICLES: 100,
+  AGING_RATE: 0.00001,         // Very slow aging
+  ELDERLY_AGE: 5000,           // Frames until considered old
 };
 
 export default function FractalPetCell() {
   const canvasRef = useRef(null);
   const [isRunning, setIsRunning] = useState(true);
-  const [stats, setStats] = useState({ particles: 0, bonds: 0, energy: 0, stage: 'Identity' });
+  const [stats, setStats] = useState({ particles: 0, bonds: 0, energy: 0, stage: 'Identity', avgAge: 0 });
   
   const systemRef = useRef({
     particles: [],
@@ -57,6 +62,7 @@ export default function FractalPetCell() {
         amplitude: 0.6,
         memory: new Map(),
         stability: 0,
+        age: 0,
       });
     }
   };
@@ -71,15 +77,17 @@ export default function FractalPetCell() {
     
     system.framesSinceInput++;
     
-    // Update phases
+    // Update phases and aging
     system.particles.forEach(p => {
       p.phase += p.frequency * dt;
+      p.age += dt;
     });
     
-    // Calculate forces
+    // Calculate forces and energy gains
     for (let i = 0; i < system.particles.length; i++) {
       const p1 = system.particles[i];
       let fx = 0, fy = 0;
+      let resonanceEnergy = 0;
       
       for (let j = i + 1; j < system.particles.length; j++) {
         const p2 = system.particles[j];
@@ -97,11 +105,34 @@ export default function FractalPetCell() {
           fx += force * dx / dist;
           fy += force * dy / dist;
           
-          // Frequency sync
+          // Gain energy from good resonance
           if (resonance > 0.5) {
+            resonanceEnergy += PHYSICS.RESONANCE_GAIN * resonance * (p2.amplitude);
+            
+            // Frequency sync
             const sync = 0.01 * Math.sin(dPhase);
             p1.frequency += sync * p2.amplitude;
             p2.frequency -= sync * p1.amplitude;
+            
+            // Track strong bonds
+            const bondKey = `${Math.min(p1.id, p2.id)}-${Math.max(p1.id, p2.id)}`;
+            let bond = system.bonds.find(b => 
+              (b.id1 === p1.id && b.id2 === p2.id) || (b.id1 === p2.id && b.id2 === p1.id)
+            );
+            
+            if (resonance > 0.7) {
+              if (!bond) {
+                system.bonds.push({
+                  id1: p1.id,
+                  id2: p2.id,
+                  strength: resonance,
+                  age: 0,
+                });
+              } else {
+                bond.strength = bond.strength * 0.95 + resonance * 0.05;
+                bond.age++;
+              }
+            }
           }
         }
         
@@ -112,6 +143,9 @@ export default function FractalPetCell() {
           fy -= repulsion * dy / dist;
         }
       }
+      
+      // Apply resonance energy gain
+      p1.amplitude += resonanceEnergy;
       
       // Update velocity and position
       p1.vx += fx * dt;
@@ -129,10 +163,17 @@ export default function FractalPetCell() {
       if (p1.y > canvas.height - margin) p1.vy -= 0.5;
     }
     
-    // Energy decay
+    // Energy dynamics - baseline intake, decay with age
     system.particles.forEach(p => {
-      p.amplitude -= PHYSICS.ENERGY_DECAY * dt;
-      p.amplitude = Math.max(0, p.amplitude);
+      // Ambient energy
+      p.amplitude += PHYSICS.BASELINE_ENERGY * dt;
+      
+      // Aging increases decay rate
+      const ageFactor = 1 + (p.age / PHYSICS.ELDERLY_AGE) * 0.5;
+      p.amplitude -= PHYSICS.ENERGY_DECAY * ageFactor * dt;
+      
+      // Clamp amplitude
+      p.amplitude = Math.max(0.1, Math.min(1.0, p.amplitude));
       
       // Stability for mitosis
       const vel = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
@@ -146,7 +187,7 @@ export default function FractalPetCell() {
     // Mitosis
     if (system.particles.length < PHYSICS.MAX_PARTICLES) {
       system.particles.forEach(p => {
-        if (p.amplitude > PHYSICS.MITOSIS_ENERGY && p.stability > 120) {
+        if (p.amplitude > PHYSICS.MITOSIS_ENERGY && p.stability > PHYSICS.MITOSIS_STABILITY) {
           const angle = Math.random() * Math.PI * 2;
           const offset = 20;
           
@@ -158,19 +199,33 @@ export default function FractalPetCell() {
             vy: Math.sin(angle) * 2,
             phase: p.phase + (Math.random() - 0.5) * 0.5,
             frequency: p.frequency * (0.95 + Math.random() * 0.1),
-            amplitude: p.amplitude * 0.6,
+            amplitude: p.amplitude * 0.7,
             memory: new Map(),
             stability: 0,
+            age: 0, // New particle is young
           });
           
-          p.amplitude *= 0.6;
+          p.amplitude *= 0.7;
           p.stability = 0;
         }
       });
     }
     
-    // Remove dead particles
-    system.particles = system.particles.filter(p => p.amplitude > 0.01);
+    // Natural pruning - very old, low energy particles fade
+    system.particles = system.particles.filter(p => {
+      if (p.age > PHYSICS.ELDERLY_AGE && p.amplitude < 0.2) {
+        return false; // Let elderly low-energy particles go
+      }
+      return true;
+    });
+    
+    // Prune weak bonds
+    system.bonds = system.bonds.filter(bond => {
+      bond.strength *= 0.99; // Decay
+      return bond.strength > 0.3 && 
+             system.particles.find(p => p.id === bond.id1) && 
+             system.particles.find(p => p.id === bond.id2);
+    });
   };
 
   // Render
@@ -193,17 +248,35 @@ export default function FractalPetCell() {
       return;
     }
     
+    // Render bonds (Coupling visualization)
+    system.bonds.forEach(bond => {
+      const p1 = system.particles.find(p => p.id === bond.id1);
+      const p2 = system.particles.find(p => p.id === bond.id2);
+      if (!p1 || !p2) return;
+      
+      ctx.strokeStyle = `rgba(100, 255, 150, ${bond.strength * 0.4})`;
+      ctx.lineWidth = 1 + bond.strength * 2;
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.stroke();
+    });
+    
     // Render particles
     system.particles.forEach(p => {
       const radius = 5 + p.amplitude * 10;
       const pulse = Math.sin(p.phase) * 0.3 + 0.7;
       
+      // Color shifts with age: young = blue, old = purple/red
+      const ageFactor = Math.min(1, p.age / PHYSICS.ELDERLY_AGE);
+      const hue = 200 - ageFactor * 80; // 200 (cyan-blue) to 120 (purple) to 40 (orange)
+      const saturation = 70 + ageFactor * 20;
+      
       // Glow
       const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius * 2);
-      const bright = Math.floor(100 + p.amplitude * 155);
-      gradient.addColorStop(0, `rgba(100, 200, 255, ${pulse})`);
-      gradient.addColorStop(0.5, `rgba(100, 150, 255, ${pulse * 0.5})`);
-      gradient.addColorStop(1, 'rgba(100, 150, 255, 0)');
+      gradient.addColorStop(0, `hsla(${hue}, ${saturation}%, 60%, ${pulse})`);
+      gradient.addColorStop(0.5, `hsla(${hue}, ${saturation}%, 50%, ${pulse * 0.5})`);
+      gradient.addColorStop(1, `hsla(${hue}, ${saturation}%, 40%, 0)`);
       
       ctx.fillStyle = gradient;
       ctx.beginPath();
@@ -242,12 +315,32 @@ export default function FractalPetCell() {
       if (currentTime - fpsTime > 1000) {
         const system = systemRef.current;
         const energy = system.particles.reduce((sum, p) => sum + p.amplitude, 0);
+        const avgAge = system.particles.length > 0 
+          ? system.particles.reduce((sum, p) => sum + p.age, 0) / system.particles.length 
+          : 0;
+        
+        // ICE stage detection
+        let stage = 'Identity';
+        if (system.particles.length === 0) {
+          stage = 'Void';
+        } else if (system.particles.length === 1 || system.bonds.length === 0) {
+          stage = 'Identity';
+        } else if (system.bonds.length < 10) {
+          stage = 'Coupling';
+        } else if (system.bonds.length < 30 || system.particles.length < 20) {
+          stage = 'Field';
+        } else if (system.particles.length < 60) {
+          stage = 'Boundary';
+        } else {
+          stage = 'Organism';
+        }
         
         setStats({
           particles: system.particles.length,
-          bonds: 0,
+          bonds: system.bonds.length,
           energy: energy,
-          stage: system.particles.length < 2 ? 'Identity' : 'Coupling',
+          stage: stage,
+          avgAge: avgAge,
         });
         
         frameCount = 0;
@@ -312,11 +405,18 @@ export default function FractalPetCell() {
         </div>
         
         <div className="mb-4 p-4 bg-slate-900 rounded border border-slate-700 text-sm">
-          <div className="grid grid-cols-4 gap-4 text-slate-300">
+          <p className="text-slate-400 mb-2 text-xs">
+            Your cell is self-sustaining! It gains energy from resonance. <strong>Click to give bonus energy</strong> and encourage growth.
+          </p>
+          <div className="grid grid-cols-5 gap-3 text-slate-300">
             <div>Stage: <span className="text-blue-400 font-bold">{stats.stage}</span></div>
             <div>Particles: <span className="text-blue-400">{stats.particles}</span></div>
+            <div>Bonds: <span className="text-green-400">{stats.bonds}</span></div>
             <div>Energy: <span className="text-yellow-400">{stats.energy.toFixed(1)}</span></div>
-            <div className="text-slate-500">Click to feed</div>
+            <div>Avg Age: <span className="text-purple-400">{stats.avgAge.toFixed(0)}</span></div>
+          </div>
+          <div className="mt-2 text-xs text-slate-500">
+            Young = blue • Aging = purple • Elderly = orange • Green lines = bonds
           </div>
         </div>
         
