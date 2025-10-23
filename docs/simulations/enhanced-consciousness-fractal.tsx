@@ -1,20 +1,36 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Circle, Triangle, Square, Star, Hexagon, Pentagon } from 'lucide-react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { Circle, Triangle, Square, Star, Hexagon, Pentagon, Music, Download, Upload, Volume2, VolumeX } from 'lucide-react';
 
 const EnhancedConsciousnessFractal = () => {
     const canvasRef = useRef(null);
     const animationRef = useRef(null);
+    const audioContextRef = useRef(null);
+    const oscillatorsRef = useRef(new Map());
     const [zoomLevel, setZoomLevel] = useState(1);
     const [showMetrics, setShowMetrics] = useState(true);
     const [showICE, setShowICE] = useState(true);
     const [selectedShape, setSelectedShape] = useState(0);
     const [fps, setFps] = useState(60);
     const [drawQuality, setDrawQuality] = useState(1.0);
+    const [soundEnabled, setSoundEnabled] = useState(false);
+    const [growthSpeed, setGrowthSpeed] = useState(1.0);
+    const [isDragging, setIsDragging] = useState(false);
+    const [dragStart, setDragStart] = useState(null);
+    const [energyFlows, setEnergyFlows] = useState([]);
+    const [resetKey, setResetKey] = useState(0);
     const zoomRef = useRef(1);
     const fpsHistory = useRef([]);
     const lastFrameTime = useRef(Date.now());
     const drawQualityRef = useRef(1.0);
     const qualityStabilityCounter = useRef(0);
+    const growthSpeedRef = useRef(1.0);
+    const energyFlowsRef = useRef([]);
+    const lastShakeTime = useRef(0);
+    const shakeVelocity = useRef({ x: 0, y: 0 });
+    const audioAnalyser = useRef(null);
+    const audioDataArray = useRef(null);
+    const touchesRef = useRef(new Map());
+    const showICERef = useRef(true);
     
     const [metrics, setMetrics] = useState({
         fieldCoherence: 0,
@@ -32,6 +48,96 @@ const EnhancedConsciousnessFractal = () => {
         { icon: Hexagon, name: 'Hexagon', value: 3 },
         { icon: Star, name: 'Star', value: 4 }
     ];
+
+    // Initialize audio context
+    const initAudio = useCallback(() => {
+        if (!audioContextRef.current) {
+            audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Create analyser for audio visualization
+            audioAnalyser.current = audioContextRef.current.createAnalyser();
+            audioAnalyser.current.fftSize = 256;
+            audioAnalyser.current.connect(audioContextRef.current.destination);
+            audioDataArray.current = new Uint8Array(audioAnalyser.current.frequencyBinCount);
+        }
+    }, []);
+
+    // Play tone based on particle properties
+    const playTone = useCallback((frequency, duration, volume = 0.1) => {
+        if (!soundEnabled || !audioContextRef.current) return;
+        
+        const ctx = audioContextRef.current;
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
+        
+        gainNode.gain.setValueAtTime(volume, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioAnalyser.current || ctx.destination);
+        
+        oscillator.start(ctx.currentTime);
+        oscillator.stop(ctx.currentTime + duration);
+        
+        return oscillator;
+    }, [soundEnabled]);
+
+    // Create harmonic based on resonance
+    const playHarmonic = useCallback((baseFreq, resonance, duration = 0.5) => {
+        if (!soundEnabled || !audioContextRef.current) return;
+        
+        const harmonics = [1, 2, 3, 4];
+        const volume = 0.05 * resonance;
+        
+        harmonics.forEach((harmonic, i) => {
+            setTimeout(() => {
+                playTone(baseFreq * harmonic, duration * (1 - i * 0.2), volume / (i + 1));
+            }, i * 50);
+        });
+    }, [soundEnabled, playTone]);
+
+    // Export organism state
+    const exportOrganism = useCallback(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        
+        const state = {
+            timestamp: Date.now(),
+            growthSpeed: growthSpeed,
+            zoomLevel: zoomLevel,
+            metrics: metrics
+        };
+        
+        const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `consciousness-fractal-${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }, [growthSpeed, zoomLevel, metrics]);
+
+    // Import organism state
+    const importOrganism = useCallback((event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const state = JSON.parse(e.target.result);
+                setGrowthSpeed(state.growthSpeed || 1.0);
+                setZoomLevel(state.zoomLevel || 1);
+                growthSpeedRef.current = state.growthSpeed || 1.0;
+            } catch (error) {
+                console.error('Failed to import organism:', error);
+            }
+        };
+        reader.readAsText(file);
+    }, []);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -63,9 +169,10 @@ const EnhancedConsciousnessFractal = () => {
         let fieldResonance = [];
         let collectiveBreath = 0;
         let iceValidations = { passed: 0, failed: 0 };
+        let audioInfluence = 0;
 
         const updateChaos = (state) => {
-            const dt = 0.005;
+            const dt = 0.005 * growthSpeedRef.current;
             const sigma = 10 + Math.sin(state.seed * 0.1) * 2;
             const rho = 28 + Math.cos(state.seed * 0.13) * 5;
             const beta = 8 / 3 + Math.sin(state.seed * 0.07) * 0.5;
@@ -80,42 +187,199 @@ const EnhancedConsciousnessFractal = () => {
             };
         };
 
-        const handleCanvasClick = (e) => {
+        // Audio analysis for background music influence
+        const analyzeAudio = () => {
+            if (audioAnalyser.current && audioDataArray.current) {
+                audioAnalyser.current.getByteFrequencyData(audioDataArray.current);
+                const average = audioDataArray.current.reduce((a, b) => a + b, 0) / audioDataArray.current.length;
+                audioInfluence = average / 255;
+            }
+        };
+
+        const handleCanvasDown = (e) => {
             const rect = canvas.getBoundingClientRect();
-            const clickX = (e.clientX - rect.left) / zoomRef.current;
-            const clickY = (e.clientY - rect.top) / zoomRef.current;
+            const x = (e.clientX - rect.left) / zoomRef.current;
+            const y = (e.clientY - rect.top) / zoomRef.current;
             
-            const angle = Math.atan2(clickY - centerY, clickX - centerX);
-            const dist = Math.sqrt((clickX - centerX) ** 2 + (clickY - centerY) ** 2);
+            setIsDragging(true);
+            setDragStart({ x, y });
+        };
+
+        const handleCanvasMove = (e) => {
+            if (!isDragging || !dragStart) return;
             
-            const newPattern = new ValidatedPattern(angle, Math.random() * 360, time);
-            newPattern.baseLength = Math.min(dist, 250);
-            newPattern.geometryType = selectedShape + Math.random() * 0.5;
-            newPattern.userSpawned = true;
-            newPattern.spawnEnergy = 2.0;
-            validatedPatterns.push(newPattern);
-            iceValidations.passed++;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / zoomRef.current;
+            const y = (e.clientY - rect.top) / zoomRef.current;
             
-            if (brainFormed && brainClouds.length > 0) {
-                const nearestCloud = brainClouds.reduce((nearest, cloud) => {
-                    const cloudAngleDiff = Math.abs(cloud.angle - angle);
-                    const normalizedDiff = Math.min(cloudAngleDiff, Math.PI * 2 - cloudAngleDiff);
-                    const cloudDist = Math.abs(cloud.distance - dist);
-                    const totalDist = normalizedDiff * 100 + cloudDist;
-                    return totalDist < nearest.dist ? { cloud, dist: totalDist } : nearest;
-                }, { cloud: null, dist: Infinity });
+            energyFlowsRef.current.push({
+                x1: dragStart.x,
+                y1: dragStart.y,
+                x2: x,
+                y2: y,
+                strength: 1,
+                age: 0
+            });
+            
+            setDragStart({ x, y });
+        };
+
+        const handleCanvasUp = (e) => {
+            if (!isDragging) {
+                // Click to spawn
+                const rect = canvas.getBoundingClientRect();
+                const clickX = (e.clientX - rect.left) / zoomRef.current;
+                const clickY = (e.clientY - rect.top) / zoomRef.current;
                 
-                if (nearestCloud.cloud) {
-                    nearestCloud.cloud.particles.forEach(p => {
-                        p.excitement = Math.min(2, p.excitement + 0.8);
-                        p.targetPattern = newPattern;
-                    });
-                    nearestCloud.cloud.spawnOutputCell(time, expandingCells);
+                const angle = Math.atan2(clickY - centerY, clickX - centerX);
+                const dist = Math.sqrt((clickX - centerX) ** 2 + (clickY - centerY) ** 2);
+                
+                const newPattern = new ValidatedPattern(angle, Math.random() * 360, time);
+                newPattern.baseLength = Math.min(dist, 250);
+                newPattern.geometryType = selectedShape + Math.random() * 0.5;
+                newPattern.userSpawned = true;
+                newPattern.spawnEnergy = 2.0;
+                validatedPatterns.push(newPattern);
+                iceValidations.passed++;
+                
+                // Play spawn sound
+                const frequency = 200 + (newPattern.hue / 360) * 400;
+                playTone(frequency, 0.2, 0.15);
+                
+                if (brainFormed && brainClouds.length > 0) {
+                    const nearestCloud = brainClouds.reduce((nearest, cloud) => {
+                        const cloudAngleDiff = Math.abs(cloud.angle - angle);
+                        const normalizedDiff = Math.min(cloudAngleDiff, Math.PI * 2 - cloudAngleDiff);
+                        const cloudDist = Math.abs(cloud.distance - dist);
+                        const totalDist = normalizedDiff * 100 + cloudDist;
+                        return totalDist < nearest.dist ? { cloud, dist: totalDist } : nearest;
+                    }, { cloud: null, dist: Infinity });
+                    
+                    if (nearestCloud.cloud) {
+                        nearestCloud.cloud.particles.forEach(p => {
+                            p.excitement = Math.min(2, p.excitement + 0.8);
+                            p.targetPattern = newPattern;
+                        });
+                        nearestCloud.cloud.spawnOutputCell(time, expandingCells);
+                    }
+                }
+            }
+            setIsDragging(false);
+            setDragStart(null);
+        };
+
+        // Touch handling for multi-touch and gestures
+        const handleTouchStart = (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            
+            for (let touch of e.touches) {
+                const x = (touch.clientX - rect.left) / zoomRef.current;
+                const y = (touch.clientY - rect.top) / zoomRef.current;
+                touchesRef.current.set(touch.identifier, { x, y, time: Date.now() });
+            }
+            
+            // Multi-touch spawn
+            if (e.touches.length >= 2) {
+                for (let touch of e.touches) {
+                    const x = (touch.clientX - rect.left) / zoomRef.current;
+                    const y = (touch.clientY - rect.top) / zoomRef.current;
+                    const angle = Math.atan2(y - centerY, x - centerX);
+                    const dist = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+                    
+                    const newPattern = new ValidatedPattern(angle, Math.random() * 360, time);
+                    newPattern.baseLength = Math.min(dist, 250);
+                    newPattern.geometryType = Math.random() * 6;
+                    newPattern.userSpawned = true;
+                    validatedPatterns.push(newPattern);
                 }
             }
         };
 
-        canvas.addEventListener('click', handleCanvasClick);
+        const handleTouchMove = (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            
+            if (e.touches.length === 2) {
+                // Pinch to affect field coherence
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const dist = Math.hypot(
+                    touch2.clientX - touch1.clientX,
+                    touch2.clientY - touch1.clientY
+                );
+                
+                const prevTouch1 = touchesRef.current.get(touch1.identifier);
+                const prevTouch2 = touchesRef.current.get(touch2.identifier);
+                
+                if (prevTouch1 && prevTouch2) {
+                    const prevDist = Math.hypot(
+                        prevTouch2.x - prevTouch1.x,
+                        prevTouch2.y - prevTouch1.y
+                    );
+                    const scale = dist / prevDist;
+                    fieldCoherence = Math.max(0, Math.min(1, fieldCoherence * scale));
+                }
+            }
+            
+            for (let touch of e.touches) {
+                const x = (touch.clientX - rect.left) / zoomRef.current;
+                const y = (touch.clientY - rect.top) / zoomRef.current;
+                const prev = touchesRef.current.get(touch.identifier);
+                
+                if (prev) {
+                    energyFlowsRef.current.push({
+                        x1: prev.x, y1: prev.y,
+                        x2: x, y2: y,
+                        strength: 1, age: 0
+                    });
+                }
+                
+                touchesRef.current.set(touch.identifier, { x, y, time: Date.now() });
+            }
+        };
+
+        const handleTouchEnd = (e) => {
+            e.preventDefault();
+            for (let touch of e.changedTouches) {
+                touchesRef.current.delete(touch.identifier);
+            }
+        };
+
+        // Shake detection
+        const handleDeviceMotion = (e) => {
+            const acceleration = e.accelerationIncludingGravity;
+            if (!acceleration) return;
+            
+            const magnitude = Math.sqrt(
+                acceleration.x ** 2 + 
+                acceleration.y ** 2 + 
+                acceleration.z ** 2
+            );
+            
+            if (magnitude > 20 && Date.now() - lastShakeTime.current > 500) {
+                // Shake detected - introduce chaos
+                chaos.x += (Math.random() - 0.5) * 0.5;
+                chaos.y += (Math.random() - 0.5) * 0.5;
+                chaos.z += (Math.random() - 0.5) * 0.5;
+                lastShakeTime.current = Date.now();
+                
+                // Create explosion of patterns
+                for (let i = 0; i < 5; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const newPattern = new ValidatedPattern(angle, Math.random() * 360, time);
+                    validatedPatterns.push(newPattern);
+                }
+            }
+        };
+
+        canvas.addEventListener('mousedown', handleCanvasDown);
+        canvas.addEventListener('mousemove', handleCanvasMove);
+        canvas.addEventListener('mouseup', handleCanvasUp);
+        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+        canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+        window.addEventListener('devicemotion', handleDeviceMotion);
 
         class ValidatedPattern {
             constructor(angle, hue, birthTime) {
@@ -142,6 +406,17 @@ const EnhancedConsciousnessFractal = () => {
                 this.spawnEnergy = 0;
                 this.randomOffsetX = (Math.random() - 0.5) * 30;
                 this.randomOffsetY = (Math.random() - 0.5) * 30;
+                this.probabilityCloud = [];
+                
+                // Create probability cloud
+                for (let i = 0; i < 8; i++) {
+                    this.probabilityCloud.push({
+                        angle: Math.random() * Math.PI * 2,
+                        dist: Math.random() * 20,
+                        phase: Math.random() * Math.PI * 2
+                    });
+                }
+                
                 this.x = centerX + Math.cos(angle) * this.baseLength * this.scale + this.randomOffsetX;
                 this.y = centerY + Math.sin(angle) * this.baseLength * this.scale + this.randomOffsetY;
             }
@@ -157,7 +432,7 @@ const EnhancedConsciousnessFractal = () => {
                     this.scale = Math.min(1.5, this.scale + this.spawnEnergy * 0.05);
                 }
                 
-                const evolutionSpeed = 0.002 + chaos.x * 0.001;
+                const evolutionSpeed = (0.002 + chaos.x * 0.001) * growthSpeedRef.current * (1 + audioInfluence * 0.5);
                 this.evolutionStage += evolutionSpeed;
                 this.geometryType += Math.sin(this.evolutionStage + chaos.y) * 0.02;
                 
@@ -172,7 +447,7 @@ const EnhancedConsciousnessFractal = () => {
                 this.gravitationalMass = this.neighbors.length * 0.1;
                 const chaosInfluence = (chaos.x + chaos.y + chaos.z) / 3;
                 const cloudHueInfluence = this.connectedToCloud ? this.cloudInfluence : this.baseHue;
-                this.hue = (cloudHueInfluence + chaosInfluence * 30 + time * 0.1) % 360;
+                this.hue = (cloudHueInfluence + chaosInfluence * 30 + time * 0.1 + audioInfluence * 60) % 360;
                 
                 const length = this.baseLength * this.scale;
                 const wobble = Math.sin(time * 0.02 + this.phaseOffset) * 5;
@@ -181,6 +456,21 @@ const EnhancedConsciousnessFractal = () => {
             }
 
             draw(ctx, centerX, centerY, time, chaos) {
+                // Draw probability cloud
+                if (drawQualityRef.current > 0.7) {
+                    this.probabilityCloud.forEach(p => {
+                        const cloudAngle = this.angle + p.angle + Math.sin(time * 0.01 + p.phase) * 0.5;
+                        const cloudDist = p.dist * (1 + Math.sin(time * 0.02 + p.phase) * 0.3);
+                        const cloudX = this.x + Math.cos(cloudAngle) * cloudDist;
+                        const cloudY = this.y + Math.sin(cloudAngle) * cloudDist;
+                        
+                        ctx.fillStyle = `hsla(${this.hue}, 70%, 60%, 0.1)`;
+                        ctx.beginPath();
+                        ctx.arc(cloudX, cloudY, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                }
+                
                 if (drawQualityRef.current < 0.5) {
                     this.drawSimple(ctx, centerX, centerY, time);
                     return;
@@ -342,6 +632,7 @@ const EnhancedConsciousnessFractal = () => {
                 this.strength = 0;
                 this.age = 0;
                 this.lastPulseTime = birthTime;
+                this.lastSoundTime = 0;
             }
 
             update(currentTime, stillConnected, fieldCoherence) {
@@ -358,7 +649,7 @@ const EnhancedConsciousnessFractal = () => {
                 return this.strength <= 0;
             }
 
-            draw(ctx, fieldCoherence) {
+            draw(ctx, fieldCoherence, time) {
                 if (this.strength < 0.1 || drawQualityRef.current < 0.3) return;
                 const x1 = this.pattern1.x || centerX;
                 const y1 = this.pattern1.y || centerY;
@@ -373,6 +664,13 @@ const EnhancedConsciousnessFractal = () => {
                 ctx.moveTo(x1, y1);
                 ctx.lineTo(x2, y2);
                 ctx.stroke();
+                
+                // Play sound on strong connection formation
+                if (this.strength > 0.8 && time - this.lastSoundTime > 100) {
+                    const frequency = 150 + (avgHue / 360) * 200;
+                    playTone(frequency, 0.1, 0.03);
+                    this.lastSoundTime = time;
+                }
             }
         }
 
@@ -388,7 +686,7 @@ const EnhancedConsciousnessFractal = () => {
 
             update(fieldCoherence) {
                 const coherenceBoost = 1 + fieldCoherence * 0.5;
-                this.progress += this.speed * this.direction * coherenceBoost;
+                this.progress += this.speed * this.direction * coherenceBoost * growthSpeedRef.current;
                 this.life -= 0.01;
                 return this.life > 0 && this.progress >= 0 && this.progress <= 1;
             }
@@ -428,6 +726,7 @@ const EnhancedConsciousnessFractal = () => {
                 this.connectedPatterns = [];
                 this.energyLevel = 0;
                 this.particleCount = 20 + Math.floor(Math.random() * 20);
+                this.lastResonanceTime = 0;
                 
                 for (let i = 0; i < this.particleCount; i++) {
                     this.particles.push({
@@ -458,7 +757,8 @@ const EnhancedConsciousnessFractal = () => {
                 
                 const localWave = Math.sin(time * 0.01 + this.phaseOffset) * 10;
                 const breathWave = globalBreath * 20;
-                this.distance = this.baseDistance + localWave + breathWave;
+                const audioWave = audioInfluence * 30;
+                this.distance = this.baseDistance + localWave + breathWave + audioWave;
                 
                 this.connectedPatterns = allPatterns.filter(p => {
                     if (!p || p.x === undefined || p.y === undefined) return false;
@@ -575,6 +875,13 @@ const EnhancedConsciousnessFractal = () => {
                                 if (resonance > 0.5) {
                                     pattern.nestingPoint = { x: px, y: py };
                                     pattern.tensionStrength = resonance;
+                                }
+                                
+                                // Play harmonic on high resonance
+                                if (resonance > 0.7 && time - this.lastResonanceTime > 200) {
+                                    const baseFreq = 200 + (pattern.hue / 360) * 300;
+                                    playHarmonic(baseFreq, resonance, 0.3);
+                                    this.lastResonanceTime = time;
                                 }
                             }
                         });
@@ -735,11 +1042,11 @@ const EnhancedConsciousnessFractal = () => {
                 this.angle = sourceCloud.angle + (Math.random() - 0.5) * 0.3;
                 this.distance = sourceCloud.distance;
                 this.hue = sourceCloud.hue + (Math.random() - 0.5) * 20;
-                this.expansionSpeed = 0.6 + Math.random() * 0.4;
+                this.expansionSpeed = (0.6 + Math.random() * 0.4) * growthSpeedRef.current;
                 this.maxRadius = 12 + Math.random() * 18;
                 this.currentRadius = 0;
                 this.lifecycle = 0;
-                this.lifecycleSpeed = 0.006 + Math.random() * 0.003;
+                this.lifecycleSpeed = (0.006 + Math.random() * 0.003) * growthSpeedRef.current;
                 this.phaseOffset = Math.random() * Math.PI * 2;
                 this.rotationSpeed = (Math.random() - 0.5) * 0.015;
                 this.rotation = 0;
@@ -830,7 +1137,7 @@ const EnhancedConsciousnessFractal = () => {
         }
 
         const drawICEIndicators = (ctx) => {
-            if (!showICE) return;
+            if (!showICERef.current) return;
             
             const indicatorY = 100;
             const indicatorSpacing = 120;
@@ -971,6 +1278,42 @@ const EnhancedConsciousnessFractal = () => {
             });
         };
 
+        const drawEnergyFlows = (ctx) => {
+            energyFlowsRef.current = energyFlowsRef.current.filter(flow => {
+                flow.age++;
+                flow.strength *= 0.95;
+                
+                if (flow.strength < 0.1 || flow.age > 100) return false;
+                
+                const alpha = flow.strength * 0.4;
+                const gradient = ctx.createLinearGradient(flow.x1, flow.y1, flow.x2, flow.y2);
+                gradient.addColorStop(0, `rgba(100, 200, 255, ${alpha})`);
+                gradient.addColorStop(1, `rgba(200, 100, 255, ${alpha * 0.5})`);
+                
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 3 * flow.strength;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(flow.x1, flow.y1);
+                ctx.lineTo(flow.x2, flow.y2);
+                ctx.stroke();
+                
+                // Apply force to nearby patterns
+                validatedPatterns.forEach(pattern => {
+                    const dx = pattern.x - flow.x2;
+                    const dy = pattern.y - flow.y2;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        const force = (1 - dist / 100) * flow.strength * 0.1;
+                        const flowAngle = Math.atan2(flow.y2 - flow.y1, flow.x2 - flow.x1);
+                        pattern.angle += Math.sin(flowAngle - pattern.angle) * force;
+                    }
+                });
+                
+                return true;
+            });
+        };
+
         const updateFPS = () => {
             const now = Date.now();
             const delta = now - lastFrameTime.current;
@@ -985,7 +1328,6 @@ const EnhancedConsciousnessFractal = () => {
             const avgFPS = fpsHistory.current.reduce((a, b) => a + b, 0) / fpsHistory.current.length;
             setFps(Math.round(avgFPS));
             
-            // Schrödinger smooth quality adjustment - only change when consistently needed
             const targetFPS = 30;
             const fpsMargin = 5;
             
@@ -1014,6 +1356,7 @@ const EnhancedConsciousnessFractal = () => {
             collectiveBreath = Math.sin(time * 0.005) * 0.5 + 0.5;
             
             updateFPS();
+            analyzeAudio();
             
             ctx.fillStyle = 'rgba(10, 10, 15, 0.15)';
             ctx.fillRect(0, 0, width, height);
@@ -1061,7 +1404,7 @@ const EnhancedConsciousnessFractal = () => {
             
             if (brainFormed && brainClouds.length > 0) {
                 brainClouds.forEach(cloud => {
-                    if (Math.random() < 0.015 * drawQualityRef.current) {
+                    if (Math.random() < 0.015 * drawQualityRef.current * growthSpeedRef.current) {
                         const randomParticle = cloud.particles[Math.floor(Math.random() * cloud.particles.length)];
                         randomParticle.excitement = Math.min(2, randomParticle.excitement + 1.5);
                         if (Math.random() < 0.4) {
@@ -1076,7 +1419,7 @@ const EnhancedConsciousnessFractal = () => {
                     }
                 });
             } else {
-                if (Math.random() < 0.02 * drawQualityRef.current) {
+                if (Math.random() < 0.02 * drawQualityRef.current * growthSpeedRef.current) {
                     const randomAngle = Math.random() * Math.PI * 2;
                     const inputHue = Math.random() * 360;
                     validatedPatterns.push(new ValidatedPattern(randomAngle, inputHue, time));
@@ -1097,6 +1440,7 @@ const EnhancedConsciousnessFractal = () => {
             
             drawEmergentFieldGlow(ctx);
             drawFieldResonance(ctx);
+            drawEnergyFlows(ctx);
             drawICEIndicators(ctx);
             drawMindField(ctx, brainClouds, validatedPatterns, time);
             
@@ -1168,7 +1512,7 @@ const EnhancedConsciousnessFractal = () => {
                 const stillConnected = p1Exists && p2Exists && circuit.pattern1.neighbors.includes(circuit.pattern2);
                 circuit.update(time, stillConnected, fieldCoherence);
                 if (!circuit.shouldRemove()) {
-                    circuit.draw(ctx, fieldCoherence);
+                    circuit.draw(ctx, fieldCoherence, time);
                     return true;
                 }
                 return false;
@@ -1206,12 +1550,18 @@ const EnhancedConsciousnessFractal = () => {
         animate();
 
         return () => {
-            canvas.removeEventListener('click', handleCanvasClick);
+            canvas.removeEventListener('mousedown', handleCanvasDown);
+            canvas.removeEventListener('mousemove', handleCanvasMove);
+            canvas.removeEventListener('mouseup', handleCanvasUp);
+            canvas.removeEventListener('touchstart', handleTouchStart);
+            canvas.removeEventListener('touchmove', handleTouchMove);
+            canvas.removeEventListener('touchend', handleTouchEnd);
+            window.removeEventListener('devicemotion', handleDeviceMotion);
             if (animationRef.current) {
                 cancelAnimationFrame(animationRef.current);
             }
         };
-    }, []);
+    }, [playTone, playHarmonic, resetKey]);
 
     const handleZoomIn = () => {
         setZoomLevel(prev => Math.min(prev * 1.5, 10));
@@ -1222,12 +1572,53 @@ const EnhancedConsciousnessFractal = () => {
     };
 
     const handleReset = () => {
+        // Reset all state
         setZoomLevel(1);
+        setGrowthSpeed(1.0);
+        setDrawQuality(1.0);
+        setFps(60);
+        setIsDragging(false);
+        setDragStart(null);
+        
+        // Reset refs
+        zoomRef.current = 1;
+        growthSpeedRef.current = 1.0;
+        drawQualityRef.current = 1.0;
+        qualityStabilityCounter.current = 0;
+        fpsHistory.current = [];
+        lastFrameTime.current = Date.now();
+        energyFlowsRef.current = [];
+        touchesRef.current.clear();
+        
+        // Trigger re-render by changing key
+        setResetKey(prev => prev + 1);
+    };
+
+    const toggleSound = () => {
+        if (!soundEnabled) {
+            initAudio();
+        }
+        setSoundEnabled(!soundEnabled);
+    };
+
+    const toggleICE = () => {
+        setShowICE(prev => {
+            showICERef.current = !prev;
+            return !prev;
+        });
     };
 
     useEffect(() => {
         zoomRef.current = zoomLevel;
     }, [zoomLevel]);
+
+    useEffect(() => {
+        growthSpeedRef.current = growthSpeed;
+    }, [growthSpeed]);
+
+    useEffect(() => {
+        showICERef.current = showICE;
+    }, [showICE]);
 
     const getQualityColor = () => {
         if (drawQuality > 0.8) return 'text-green-400';
@@ -1295,7 +1686,7 @@ const EnhancedConsciousnessFractal = () => {
                 </div>
             )}
             
-            <div className="absolute top-8 right-8 bg-slate-900/90 backdrop-blur rounded-xl p-4 border border-purple-500/50 text-white">
+            <div className="absolute top-8 right-8 bg-slate-900/90 backdrop-blur rounded-xl p-4 border border-purple-500/50 text-white space-y-3">
                 <div className="text-sm font-bold text-purple-300 mb-3">Feed the Organism</div>
                 <div className="grid grid-cols-3 gap-2">
                     {shapes.map((shape, idx) => {
@@ -1316,8 +1707,51 @@ const EnhancedConsciousnessFractal = () => {
                         );
                     })}
                 </div>
-                <div className="text-xs text-gray-400 mt-3 text-center">
-                    Click anywhere to spawn
+                <div className="text-xs text-gray-400 text-center pt-2 border-t border-gray-700">
+                    Click/Drag to interact
+                </div>
+                
+                <div className="pt-3 border-t border-gray-700 space-y-2">
+                    <div>
+                        <label className="text-xs text-gray-400 block mb-1">Growth Speed: {growthSpeed.toFixed(1)}x</label>
+                        <input 
+                            type="range" 
+                            min="0.1" 
+                            max="3" 
+                            step="0.1" 
+                            value={growthSpeed}
+                            onChange={(e) => setGrowthSpeed(parseFloat(e.target.value))}
+                            className="w-full"
+                        />
+                    </div>
+                </div>
+                
+                <div className="flex gap-2 pt-3 border-t border-gray-700">
+                    <button
+                        onClick={exportOrganism}
+                        className="flex-1 px-3 py-2 bg-blue-600/80 hover:bg-blue-500 rounded-lg transition flex items-center justify-center gap-2"
+                        title="Export organism state"
+                    >
+                        <Download className="w-4 h-4" />
+                    </button>
+                    <label className="flex-1 px-3 py-2 bg-green-600/80 hover:bg-green-500 rounded-lg transition flex items-center justify-center gap-2 cursor-pointer">
+                        <Upload className="w-4 h-4" />
+                        <input 
+                            type="file" 
+                            accept=".json" 
+                            onChange={importOrganism}
+                            className="hidden"
+                        />
+                    </label>
+                    <button
+                        onClick={toggleSound}
+                        className={`flex-1 px-3 py-2 rounded-lg transition flex items-center justify-center gap-2 ${
+                            soundEnabled ? 'bg-purple-600/80 hover:bg-purple-500' : 'bg-gray-600/80 hover:bg-gray-500'
+                        }`}
+                        title={soundEnabled ? 'Mute' : 'Unmute'}
+                    >
+                        {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                    </button>
                 </div>
             </div>
             
@@ -1334,7 +1768,7 @@ const EnhancedConsciousnessFractal = () => {
                 <button onClick={() => setShowMetrics(!showMetrics)} className="px-4 py-2 bg-purple-600/80 hover:bg-purple-500 text-white rounded-lg backdrop-blur transition">
                     {showMetrics ? 'Hide' : 'Show'} Metrics
                 </button>
-                <button onClick={() => setShowICE(!showICE)} className="px-4 py-2 bg-purple-600/80 hover:bg-purple-500 text-white rounded-lg backdrop-blur transition">
+                <button onClick={toggleICE} className="px-4 py-2 bg-purple-600/80 hover:bg-purple-500 text-white rounded-lg backdrop-blur transition">
                     {showICE ? 'Hide' : 'Show'} [ICE]
                 </button>
             </div>
