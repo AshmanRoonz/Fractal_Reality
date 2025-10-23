@@ -3,27 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fractal Reality Simulations - Ashman Roonz</title>
+    <title>Interactive Demonstrations - Fractal Reality</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body {
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+        
+        * {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-                sans-serif;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: #0a0a0a;
+            color: #e8e8e8;
+            line-height: 1.5;
+            font-size: 15px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+        
+        .mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        
         #root {
             min-height: 100vh;
         }
+        
         .simulation-container {
             width: 100%;
             height: 100vh;
+        }
+        
+        .sim-button {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #e8e8e8;
+            padding: 0.75rem 1.5rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+        }
+        
+        .sim-button:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.15);
         }
     </style>
 </head>
@@ -39,6 +71,10 @@
             const [simCode, setSimCode] = useState('');
             const [error, setError] = useState(null);
             const [loading, setLoading] = useState(true);
+
+            // Check for auto-load parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const autoLoad = urlParams.get('auto');
 
             // Read simulation list from sims.md
             useEffect(() => {
@@ -104,6 +140,11 @@
                         
                         setSimulations(tsxFiles);
                         setLoading(false);
+                        
+                        // Auto-load if parameter present
+                        if (autoLoad && tsxFiles.includes(autoLoad)) {
+                            loadSimulation(autoLoad);
+                        }
                     } catch (err) {
                         console.error('Error loading simulations:', err);
                         setError(err.message || 'Could not load sims.md');
@@ -240,22 +281,22 @@
                 } catch (err) {
                     console.error('Error rendering simulation:', err);
                     return (
-                        <div className="p-8 bg-red-900 text-red-100 min-h-screen">
-                            <h3 className="text-2xl font-bold mb-4">❌ Rendering Error</h3>
-                            <div className="bg-black/30 p-4 rounded mb-4">
-                                <p className="font-mono text-sm">{err.message}</p>
+                        <div style={{padding: '3rem', background: '#0a0a0a', color: '#f87171', minHeight: '100vh'}}>
+                            <h3 className="mono" style={{fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem'}}>Rendering Error</h3>
+                            <div style={{background: 'rgba(0,0,0,0.5)', padding: '1rem', marginBottom: '1rem'}}>
+                                <p className="mono" style={{fontSize: '13px'}}>{err.message}</p>
                             </div>
-                            <details className="mt-4">
-                                <summary className="cursor-pointer font-bold text-lg mb-2">📋 Stack Trace</summary>
-                                <pre className="text-xs overflow-auto bg-black/30 p-4 rounded whitespace-pre-wrap">{err.stack}</pre>
+                            <details style={{marginTop: '1.5rem'}}>
+                                <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Stack Trace</summary>
+                                <pre className="mono" style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap'}}>{err.stack}</pre>
                             </details>
-                            <details className="mt-4">
-                                <summary className="cursor-pointer font-bold text-lg mb-2">📄 Original Code</summary>
-                                <pre className="text-xs overflow-auto bg-black/30 p-4 rounded whitespace-pre-wrap">{simCode}</pre>
+                            <details style={{marginTop: '1.5rem'}}>
+                                <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Original Code</summary>
+                                <pre className="mono" style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap'}}>{simCode}</pre>
                             </details>
-                            <div className="mt-6 p-4 bg-yellow-900/30 rounded">
-                                <p className="text-yellow-200 font-bold mb-2">💡 Common Issues:</p>
-                                <ul className="text-sm space-y-1 list-disc list-inside">
+                            <div style={{marginTop: '2rem', padding: '1rem', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)'}}>
+                                <p className="mono" style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '13px'}}>Common Issues:</p>
+                                <ul className="mono" style={{fontSize: '12px', lineHeight: '1.6', paddingLeft: '1.5rem', listStyle: 'disc'}}>
                                     <li>Make sure all variables are declared with const/let/var</li>
                                     <li>Use React.useState, React.useEffect instead of destructured hooks</li>
                                     <li>Avoid external libraries (only React and Tailwind are available)</li>
@@ -271,74 +312,68 @@
                 <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
                     {!selectedSim ? (
                         // Simulation selector
-                        <div className="container mx-auto px-4 py-16">
-                            <div className="text-center mb-12">
-                                <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-4">
-                                    Fractal Reality Simulations
-                                </h1>
-                                <p className="text-xl text-cyan-200">
-                                    Interactive demonstrations by Ashman Roonz
-                                </p>
-                                <p className="text-gray-400 mt-2">
-                                    github.com/AshmanRoonz/Fractal_Reality
-                                </p>
-                            </div>
-
-                            {loading ? (
-                                <div className="text-center text-cyan-300 text-xl">
-                                    Loading simulations...
-                                </div>
-                            ) : error ? (
-                                <div className="max-w-2xl mx-auto bg-red-900/30 border border-red-500 rounded-lg p-6">
-                                    <p className="text-red-300 mb-4">{error}</p>
-                                    <div className="text-gray-300 text-sm space-y-2">
-                                        <p className="font-bold">Setup Instructions:</p>
-                                        <ol className="list-decimal list-inside space-y-1 ml-2">
-                                            <li>Create a <code className="bg-black/50 px-2 py-0.5 rounded">simulations/</code> directory</li>
-                                            <li>Add your .tsx simulation files to it</li>
-                                            <li>Create a <code className="bg-black/50 px-2 py-0.5 rounded">sims.md</code> file in the root directory</li>
-                                        </ol>
-                                        <p className="mt-3 font-bold">Example sims.md:</p>
-                                        <pre className="bg-black/50 p-3 rounded mt-2 overflow-auto text-xs">
-{`# Simulations
-
-harmonic_chemistry.tsx
-water_molecule.tsx
-validation_synchronization.tsx
-
-# Or use markdown format:
-- harmonic_chemistry.tsx
-- water_molecule.tsx
-
-# Or with links:
-[Harmonic Chemistry](harmonic_chemistry.tsx)
-[Water Molecule](water_molecule.tsx)`}
-                                        </pre>
-                                    </div>
-                                </div>
-                            ) : simulations.length === 0 ? (
-                                <div className="max-w-2xl mx-auto bg-yellow-900/30 border border-yellow-500 rounded-lg p-6">
-                                    <p className="text-yellow-300">No simulations found</p>
-                                    <p className="text-gray-400 mt-4 text-sm">
-                                        Add TSX files to the ./simulations/ directory and update the file list
+                        <div style={{background: '#0a0a0a', minHeight: '100vh', padding: '4rem 2rem'}}>
+                            <div style={{maxWidth: '960px', margin: '0 auto'}}>
+                                <div className="mb-12">
+                                    <h1 className="text-5xl font-light mb-3 tracking-tight" style={{letterSpacing: '-0.02em', color: '#e8e8e8'}}>
+                                        Interactive Demonstrations
+                                    </h1>
+                                    <p className="text-sm mono" style={{color: '#808080'}}>
+                                        Fractal Reality Framework
                                     </p>
                                 </div>
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                                    {simulations.map((sim, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => loadSimulation(sim)}
-                                            className="bg-black/40 hover:bg-black/60 border border-cyan-500/30 hover:border-cyan-500 rounded-xl p-6 text-left transition-all transform hover:scale-105"
-                                        >
-                                            <h3 className="text-xl font-bold text-cyan-300 mb-2">
-                                                {sim.replace('.tsx', '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                                            </h3>
-                                            <p className="text-gray-400 text-sm">{sim}</p>
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
+
+                                {loading ? (
+                                    <div className="text-center" style={{color: '#808080'}}>
+                                        <div className="mono text-sm">Loading...</div>
+                                    </div>
+                                ) : error ? (
+                                    <div style={{border: '1px solid rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.05)', padding: '2rem', maxWidth: '600px'}}>
+                                        <p style={{color: '#f87171', marginBottom: '1rem'}}>{error}</p>
+                                        <div style={{color: '#9ca3af', fontSize: '13px'}}>
+                                            <p className="font-bold mb-2">Setup Instructions:</p>
+                                            <ol style={{listStyle: 'decimal', paddingLeft: '1.5rem', lineHeight: '1.8'}}>
+                                                <li>Create a <code style={{background: 'rgba(0,0,0,0.5)', padding: '2px 6px'}}>simulations/</code> directory</li>
+                                                <li>Add your .tsx simulation files to it</li>
+                                                <li>Create a <code style={{background: 'rgba(0,0,0,0.5)', padding: '2px 6px'}}>sims.md</code> file in the root directory</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                ) : simulations.length === 0 ? (
+                                    <div style={{border: '1px solid rgba(234, 179, 8, 0.3)', background: 'rgba(234, 179, 8, 0.05)', padding: '2rem', maxWidth: '600px'}}>
+                                        <p style={{color: '#fbbf24'}}>No simulations found</p>
+                                        <p style={{color: '#9ca3af', marginTop: '1rem', fontSize: '13px'}}>
+                                            Add TSX files to the ./simulations/ directory and update sims.md
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div style={{maxWidth: '600px'}}>
+                                        <p className="text-xs mono uppercase tracking-wider mb-4" style={{color: '#606060'}}>
+                                            Select simulation
+                                        </p>
+                                        <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                                            {simulations.map((sim, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    onClick={() => loadSimulation(sim)}
+                                                    className="sim-button"
+                                                >
+                                                    {sim.replace('.tsx', '')}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <div style={{marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)'}}>
+                                            <a 
+                                                href="./" 
+                                                style={{color: '#e8e8e8', textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.2)', fontSize: '13px'}}
+                                                className="mono"
+                                            >
+                                                ← Back to main page
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     ) : (
                         // Simulation viewer
@@ -349,23 +384,38 @@ validation_synchronization.tsx
                                     setSimCode('');
                                     setError(null);
                                 }}
-                                className="absolute top-4 left-4 z-50 bg-cyan-500 hover:bg-cyan-600 text-black font-bold px-6 py-3 rounded-lg transition-colors"
+                                className="mono"
+                                style={{
+                                    position: 'absolute',
+                                    top: '1.5rem',
+                                    left: '1.5rem',
+                                    zIndex: 50,
+                                    background: 'white',
+                                    color: 'black',
+                                    padding: '0.5rem 1rem',
+                                    fontSize: '11px',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    transition: 'background 0.2s'
+                                }}
+                                onMouseOver={(e) => e.target.style.background = '#ddd'}
+                                onMouseOut={(e) => e.target.style.background = 'white'}
                             >
-                                ← Back to Simulations
+                                ← BACK
                             </button>
                             
                             {loading ? (
-                                <div className="flex items-center justify-center h-screen">
+                                <div className="flex items-center justify-center h-screen" style={{background: '#0a0a0a'}}>
                                     <div className="text-center">
-                                        <div className="text-cyan-300 text-2xl mb-4">Loading simulation...</div>
-                                        <div className="text-gray-400">{selectedSim}</div>
+                                        <div className="mono" style={{color: '#e8e8e8', fontSize: '16px', marginBottom: '1rem'}}>Loading</div>
+                                        <div className="mono" style={{color: '#606060', fontSize: '13px'}}>{selectedSim}</div>
                                     </div>
                                 </div>
                             ) : error ? (
-                                <div className="flex items-center justify-center h-screen p-8">
-                                    <div className="max-w-2xl bg-red-900/30 border border-red-500 rounded-lg p-6">
-                                        <h3 className="text-xl font-bold text-red-300 mb-2">Error</h3>
-                                        <p className="text-red-200">{error}</p>
+                                <div className="flex items-center justify-center h-screen p-8" style={{background: '#0a0a0a'}}>
+                                    <div style={{maxWidth: '600px', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '2rem'}}>
+                                        <h3 style={{fontSize: '18px', fontWeight: 'bold', color: '#f87171', marginBottom: '1rem'}}>Error</h3>
+                                        <p className="mono" style={{color: '#fca5a5', fontSize: '13px'}}>{error}</p>
                                     </div>
                                 </div>
                             ) : (
