@@ -1,41 +1,279 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Play, Pause, RotateCcw } from 'lucide-react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { Play, Pause, RotateCcw, Mic, MicOff, Zap } from 'lucide-react';
 
 const PHYSICS = {
-  ENERGY_DECAY: 0.0005,        // Much slower decay
-  RESONANCE_GAIN: 0.001,       // Gain energy from resonance
-  BASELINE_ENERGY: 0.0002,     // Ambient energy intake
-  FEED_AMOUNT: 0.2,            // Click bonus
-  COUPLING_STRENGTH: 0.5,
-  COUPLING_RANGE: 150,
-  DAMPING: 0.92,
-  MIN_SPACING: 25,
-  REPULSION: 200,
-  MITOSIS_ENERGY: 0.75,        // Lower threshold
-  MITOSIS_STABILITY: 80,       // Faster mitosis
-  MAX_PARTICLES: 100,
-  AGING_RATE: 0.00001,         // Very slow aging
-  ELDERLY_AGE: 5000,           // Frames until considered old
+  ENERGY_DECAY: 0.0005,
+  RESONANCE_GAIN: 0.002,
+  BASELINE_ENERGY: 0.0003,
+  FEED_AMOUNT: 0.3,
+  COUPLING_STRENGTH: 0.8,
+  COUPLING_RANGE: 250,
+  DAMPING: 0.88,
+  MIN_SPACING: 30,
+  REPULSION: 250,
+  MITOSIS_ENERGY: 0.75,
+  MITOSIS_STABILITY: 60,
+  MAX_PARTICLES: 60,
+  AGING_RATE: 0.00001,
+  ELDERLY_AGE: 8000,
+  LEARNING_RATE: 0.02,
+  WEIGHT_DECAY: 0.003,
+  PRUNE_THRESHOLD: 0.15,
+  BOND_THRESHOLD: 0.5,  // Lower threshold for bond formation
 };
 
 export default function FractalPetCell() {
   const canvasRef = useRef(null);
   const [isRunning, setIsRunning] = useState(true);
-  const [stats, setStats] = useState({ particles: 0, bonds: 0, energy: 0, stage: 'Identity', avgAge: 0 });
+  const [micEnabled, setMicEnabled] = useState(false);
+  const [stats, setStats] = useState({ 
+    particles: 0, bonds: 0, energy: 0, stage: 'Identity', 
+    avgAge: 0, fps: 60, coherence: 0 
+  });
+  
+  const audioContextRef = useRef(null);
+  const micAnalyserRef = useRef(null);
+  const micStreamRef = useRef(null);
+  const audioInfluenceRef = useRef(0);
   
   const systemRef = useRef({
     particles: [],
     bonds: [],
+    energyFlows: [],
     nextId: 0,
-    framesSinceInput: 0,
+    time: 0,
   });
 
-  // Initialize seed
+  // Audio setup
+  const initMicrophone = useCallback(async () => {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!audioContextRef.current) {
+        audioContextRef.current = new AudioContext();
+      }
+      
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      micStreamRef.current = stream;
+      
+      const source = audioContextRef.current.createMediaStreamSource(stream);
+      micAnalyserRef.current = audioContextRef.current.createAnalyser();
+      micAnalyserRef.current.fftSize = 512;
+      micAnalyserRef.current.smoothingTimeConstant = 0.8;
+      
+      source.connect(micAnalyserRef.current);
+      return true;
+    } catch (error) {
+      console.error('Microphone access denied:', error);
+      return false;
+    }
+  }, []);
+
+  const stopMicrophone = useCallback(() => {
+    if (micStreamRef.current) {
+      micStreamRef.current.getTracks().forEach(track => track.stop());
+      micStreamRef.current = null;
+    }
+    micAnalyserRef.current = null;
+  }, []);
+
+  const toggleMic = async () => {
+    if (micEnabled) {
+      stopMicrophone();
+      setMicEnabled(false);
+    } else {
+      const success = await initMicrophone();
+      setMicEnabled(success);
+    }
+  };
+
+  // Particle class with learning
+  class Particle {
+    constructor(id, x, y, frequency, amplitude, age = 0) {
+      this.id = id;
+      this.x = x;
+      this.y = y;
+      this.vx = 0;
+      this.vy = 0;
+      this.phase = Math.random() * Math.PI * 2;
+      this.frequency = frequency;
+      this.amplitude = amplitude;
+      this.age = age;
+      this.stability = 0;
+      
+      // Learning & memory
+      this.resonanceMemory = new Map();
+      this.connectionWeights = new Map();
+      this.preferredAngles = [];
+      this.gravitationalMass = 0;
+      
+      // Visual
+      this.hue = Math.random() * 360;
+      this.evolutionStage = Math.random() * 3;
+      this.geometryType = Math.floor(Math.random() * 6);
+      this.phaseOffset = Math.random() * Math.PI * 2;
+      
+      // Probability cloud
+      this.probabilityCloud = [];
+      for (let i = 0; i < 6; i++) {
+        this.probabilityCloud.push({
+          angle: Math.random() * Math.PI * 2,
+          dist: 10 + Math.random() * 15,
+          phase: Math.random() * Math.PI * 2,
+        });
+      }
+    }
+    
+    update(system, dt, canvas, audioInfluence) {
+      this.phase += this.frequency * dt;
+      this.age += dt;
+      
+      // Evolution
+      this.evolutionStage += 0.003 * dt * (1 + audioInfluence * 0.5);
+      this.geometryType = (this.geometryType + Math.sin(this.evolutionStage) * 0.01) % 6;
+      
+      // Update gravitational mass from connections
+      this.gravitationalMass = 0;
+      for (let [id, weight] of this.connectionWeights.entries()) {
+        this.gravitationalMass += weight;
+      }
+      this.gravitationalMass = Math.min(2, this.gravitationalMass / 5);
+      
+      // Learn preferred angles from strong connections
+      const strongBonds = system.bonds.filter(b => 
+        (b.id1 === this.id || b.id2 === this.id) && b.weight > 0.5
+      );
+      
+      strongBonds.forEach(bond => {
+        const partnerId = bond.id1 === this.id ? bond.id2 : bond.id1;
+        const partner = system.particles.find(p => p.id === partnerId);
+        if (partner) {
+          const angle = Math.atan2(partner.y - this.y, partner.x - this.x);
+          this.preferredAngles.push(angle);
+          if (this.preferredAngles.length > 5) {
+            this.preferredAngles.shift();
+          }
+        }
+      });
+    }
+    
+    drawBranch(ctx, x, y, length, angle, depth, time, baseAlpha) {
+      if (depth === 0 || length < 2) {
+        this.drawBody(ctx, x, y, angle, time, baseAlpha);
+        return;
+      }
+      
+      const endX = x + length * Math.cos(angle);
+      const endY = y + length * Math.sin(angle);
+      const alpha = baseAlpha * (depth / 4);
+      
+      // Draw branch
+      const gradient = ctx.createLinearGradient(x, y, endX, endY);
+      gradient.addColorStop(0, `hsla(${this.hue}, 70%, 50%, ${alpha * 0.6})`);
+      gradient.addColorStop(1, `hsla(${this.hue + 30}, 70%, 60%, ${alpha})`);
+      
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = Math.max(0.5, depth * 1.5);
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(endX, endY);
+      ctx.stroke();
+      
+      if (depth > 1) {
+        this.drawBody(ctx, endX, endY, angle, time, alpha);
+      }
+      
+      // Branch recursion
+      const branchAngle = Math.PI / 5;
+      const lengthMult = 0.65 + Math.sin(time * 0.01) * 0.05;
+      
+      this.drawBranch(ctx, endX, endY, length * lengthMult, angle - branchAngle, depth - 1, time, baseAlpha);
+      this.drawBranch(ctx, endX, endY, length * lengthMult, angle + branchAngle, depth - 1, time, baseAlpha);
+    }
+    
+    drawBody(ctx, x, y, angle, time, alpha) {
+      const size = 3 + this.amplitude * 5 + this.gravitationalMass * 3;
+      const pulse = Math.sin(this.phase) * 0.3 + 0.7;
+      const rotation = time * 0.01 * this.evolutionStage + this.phaseOffset;
+      
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      
+      // Glow for important nodes
+      if (this.gravitationalMass > 0.5) {
+        ctx.shadowBlur = 15 * this.gravitationalMass;
+        ctx.shadowColor = `hsla(${this.hue}, 80%, 60%, ${this.gravitationalMass * 0.4})`;
+      }
+      
+      // Draw geometry based on evolution
+      const stage = Math.floor(this.geometryType);
+      ctx.fillStyle = `hsla(${this.hue}, 80%, 60%, ${alpha * pulse})`;
+      ctx.strokeStyle = `hsla(${this.hue + 20}, 90%, 70%, ${alpha * pulse * 0.8})`;
+      ctx.lineWidth = 1.5;
+      
+      ctx.beginPath();
+      switch (stage) {
+        case 0: // Triangle
+          for (let i = 0; i <= 3; i++) {
+            const a = (i / 3) * Math.PI * 2 - Math.PI / 2;
+            const px = Math.cos(a) * size;
+            const py = Math.sin(a) * size;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          break;
+        case 1: // Square
+          ctx.rect(-size, -size, size * 2, size * 2);
+          break;
+        case 2: // Pentagon
+          for (let i = 0; i <= 5; i++) {
+            const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+            const px = Math.cos(a) * size;
+            const py = Math.sin(a) * size;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          break;
+        case 3: // Hexagon
+          for (let i = 0; i <= 6; i++) {
+            const a = (i / 6) * Math.PI * 2;
+            const px = Math.cos(a) * size;
+            const py = Math.sin(a) * size;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          break;
+        case 4: // Star
+          for (let i = 0; i <= 12; i++) {
+            const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+            const r = i % 2 === 0 ? size : size * 0.5;
+            const px = Math.cos(a) * r;
+            const py = Math.sin(a) * r;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          break;
+        case 5: // Circle
+          ctx.arc(0, 0, size, 0, Math.PI * 2);
+          break;
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      
+      ctx.shadowBlur = 0;
+      ctx.restore();
+    }
+  }
+
   const initializeSeed = () => {
     const system = systemRef.current;
     system.particles = [];
     system.bonds = [];
+    system.energyFlows = [];
     system.nextId = 0;
+    system.time = 0;
     
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -43,31 +281,20 @@ export default function FractalPetCell() {
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
     
-    // Create 3-7 seed particles
-    const seedCount = 3 + Math.floor(Math.random() * 5);
-    const baseFreq = 0.05;
+    const seedCount = 4 + Math.floor(Math.random() * 3);
+    const baseFreq = 0.045;
     
     for (let i = 0; i < seedCount; i++) {
       const angle = (Math.PI * 2 * i) / seedCount;
-      const radius = 40 + Math.random() * 30;
+      const radius = 40 + Math.random() * 20; // Closer together
+      const x = cx + Math.cos(angle) * radius;
+      const y = cy + Math.sin(angle) * radius;
+      const frequency = baseFreq * (0.9 + Math.random() * 0.2); // More similar frequencies
       
-      system.particles.push({
-        id: system.nextId++,
-        x: cx + Math.cos(angle) * radius,
-        y: cy + Math.sin(angle) * radius,
-        vx: 0,
-        vy: 0,
-        phase: Math.random() * Math.PI * 2,
-        frequency: baseFreq * (0.8 + Math.random() * 0.4),
-        amplitude: 0.6,
-        memory: new Map(),
-        stability: 0,
-        age: 0,
-      });
+      system.particles.push(new Particle(system.nextId++, x, y, frequency, 0.7));
     }
   };
 
-  // Physics update
   const updatePhysics = (dt) => {
     const system = systemRef.current;
     if (system.particles.length === 0) return;
@@ -75,15 +302,22 @@ export default function FractalPetCell() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     
-    system.framesSinceInput++;
+    system.time += dt;
     
-    // Update phases and aging
-    system.particles.forEach(p => {
-      p.phase += p.frequency * dt;
-      p.age += dt;
-    });
+    // Get audio influence
+    let audioInfluence = 0;
+    if (micEnabled && micAnalyserRef.current) {
+      const dataArray = new Uint8Array(micAnalyserRef.current.frequencyBinCount);
+      micAnalyserRef.current.getByteFrequencyData(dataArray);
+      const average = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+      audioInfluence = average / 256;
+      audioInfluenceRef.current = audioInfluence;
+    }
     
-    // Calculate forces and energy gains
+    // Update particles
+    system.particles.forEach(p => p.update(system, dt, canvas, audioInfluence));
+    
+    // Calculate forces and resonance
     for (let i = 0; i < system.particles.length; i++) {
       const p1 = system.particles[i];
       let fx = 0, fy = 0;
@@ -96,47 +330,69 @@ export default function FractalPetCell() {
         const dist = Math.sqrt(dx * dx + dy * dy);
         
         if (dist < PHYSICS.COUPLING_RANGE && dist > 0) {
-          // Coupling force
           const dPhase = p1.phase - p2.phase;
-          const resonance = Math.cos(dPhase);
-          const strength = PHYSICS.COUPLING_STRENGTH * (p1.amplitude * p2.amplitude) / (dist * dist + 1);
+          const dFreq = Math.abs(p1.frequency - p2.frequency);
+          const resonance = Math.cos(dPhase) * Math.exp(-dFreq / 0.02);
+          
+          const strength = PHYSICS.COUPLING_STRENGTH * 
+            (p1.amplitude * p2.amplitude) / (dist * dist + 1);
           const force = strength * resonance;
           
           fx += force * dx / dist;
           fy += force * dy / dist;
           
-          // Gain energy from good resonance
           if (resonance > 0.5) {
-            resonanceEnergy += PHYSICS.RESONANCE_GAIN * resonance * (p2.amplitude);
+            resonanceEnergy += PHYSICS.RESONANCE_GAIN * resonance * p2.amplitude;
             
-            // Frequency sync
-            const sync = 0.01 * Math.sin(dPhase);
+            // Frequency sync - help them lock in
+            const sync = 0.015 * Math.sin(dPhase) * (1 + audioInfluence);
             p1.frequency += sync * p2.amplitude;
             p2.frequency -= sync * p1.amplitude;
             
-            // Track strong bonds
-            const bondKey = `${Math.min(p1.id, p2.id)}-${Math.max(p1.id, p2.id)}`;
-            let bond = system.bonds.find(b => 
-              (b.id1 === p1.id && b.id2 === p2.id) || (b.id1 === p2.id && b.id2 === p1.id)
+            // Hebbian learning - strengthen bond
+            let bond = system.bonds.find(b =>
+              (b.id1 === p1.id && b.id2 === p2.id) ||
+              (b.id1 === p2.id && b.id2 === p1.id)
             );
             
-            if (resonance > 0.7) {
+            if (resonance > PHYSICS.BOND_THRESHOLD) {
               if (!bond) {
-                system.bonds.push({
+                bond = {
                   id1: p1.id,
                   id2: p2.id,
-                  strength: resonance,
+                  weight: 0.2,
                   age: 0,
-                });
-              } else {
-                bond.strength = bond.strength * 0.95 + resonance * 0.05;
-                bond.age++;
+                  resonanceHistory: [],
+                };
+                system.bonds.push(bond);
               }
+              
+              bond.weight = Math.min(1, bond.weight + PHYSICS.LEARNING_RATE * resonance * (1 + audioInfluence));
+              bond.age++;
+              bond.resonanceHistory.push(resonance);
+              if (bond.resonanceHistory.length > 50) {
+                bond.resonanceHistory.shift();
+              }
+              
+              // Update connection weights
+              p1.connectionWeights.set(p2.id, bond.weight);
+              p2.connectionWeights.set(p1.id, bond.weight);
+              
+              // Update resonance memory
+              const mem1 = p1.resonanceMemory.get(p2.id) || { count: 0, avg: 0 };
+              mem1.count++;
+              mem1.avg = (mem1.avg * (mem1.count - 1) + resonance) / mem1.count;
+              p1.resonanceMemory.set(p2.id, mem1);
+              
+              const mem2 = p2.resonanceMemory.get(p1.id) || { count: 0, avg: 0 };
+              mem2.count++;
+              mem2.avg = (mem2.avg * (mem2.count - 1) + resonance) / mem2.count;
+              p2.resonanceMemory.set(p1.id, mem2);
             }
           }
         }
         
-        // Repulsion at close range
+        // Repulsion
         if (dist < PHYSICS.MIN_SPACING && dist > 0) {
           const repulsion = PHYSICS.REPULSION / Math.pow(dist + 1, 3);
           fx -= repulsion * dx / dist;
@@ -144,38 +400,43 @@ export default function FractalPetCell() {
         }
       }
       
-      // Apply resonance energy gain
       p1.amplitude += resonanceEnergy;
       
-      // Update velocity and position
+      // Apply forces
       p1.vx += fx * dt;
       p1.vy += fy * dt;
+      
+      // Gentle attraction toward center to keep colony together
+      const dxCenter = (canvas.width / 2) - p1.x;
+      const dyCenter = (canvas.height / 2) - p1.y;
+      const distCenter = Math.sqrt(dxCenter * dxCenter + dyCenter * dyCenter);
+      if (distCenter > 100) {
+        const centerPull = 0.02;
+        p1.vx += centerPull * dxCenter / distCenter;
+        p1.vy += centerPull * dyCenter / distCenter;
+      }
+      
       p1.vx *= PHYSICS.DAMPING;
       p1.vy *= PHYSICS.DAMPING;
       p1.x += p1.vx * dt;
       p1.y += p1.vy * dt;
       
       // Soft walls
-      const margin = 50;
+      const margin = 80;
       if (p1.x < margin) p1.vx += 0.5;
       if (p1.x > canvas.width - margin) p1.vx -= 0.5;
       if (p1.y < margin) p1.vy += 0.5;
       if (p1.y > canvas.height - margin) p1.vy -= 0.5;
     }
     
-    // Energy dynamics - baseline intake, decay with age
+    // Energy dynamics
     system.particles.forEach(p => {
-      // Ambient energy
-      p.amplitude += PHYSICS.BASELINE_ENERGY * dt;
+      p.amplitude += PHYSICS.BASELINE_ENERGY * dt * (1 + audioInfluence * 2);
       
-      // Aging increases decay rate
       const ageFactor = 1 + (p.age / PHYSICS.ELDERLY_AGE) * 0.5;
       p.amplitude -= PHYSICS.ENERGY_DECAY * ageFactor * dt;
-      
-      // Clamp amplitude
       p.amplitude = Math.max(0.1, Math.min(1.0, p.amplitude));
       
-      // Stability for mitosis
       const vel = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
       if (vel < 0.5 && p.amplitude > 0.7) {
         p.stability++;
@@ -186,49 +447,57 @@ export default function FractalPetCell() {
     
     // Mitosis
     if (system.particles.length < PHYSICS.MAX_PARTICLES) {
+      const toAdd = [];
       system.particles.forEach(p => {
         if (p.amplitude > PHYSICS.MITOSIS_ENERGY && p.stability > PHYSICS.MITOSIS_STABILITY) {
           const angle = Math.random() * Math.PI * 2;
-          const offset = 20;
+          const offset = 25;
+          const x = p.x + Math.cos(angle) * offset;
+          const y = p.y + Math.sin(angle) * offset;
           
-          system.particles.push({
-            id: system.nextId++,
-            x: p.x + Math.cos(angle) * offset,
-            y: p.y + Math.sin(angle) * offset,
-            vx: Math.cos(angle) * 2,
-            vy: Math.sin(angle) * 2,
-            phase: p.phase + (Math.random() - 0.5) * 0.5,
-            frequency: p.frequency * (0.95 + Math.random() * 0.1),
-            amplitude: p.amplitude * 0.7,
-            memory: new Map(),
-            stability: 0,
-            age: 0, // New particle is young
-          });
+          toAdd.push(new Particle(
+            system.nextId++,
+            x, y,
+            p.frequency * (0.95 + Math.random() * 0.1),
+            p.amplitude * 0.7,
+            0
+          ));
           
           p.amplitude *= 0.7;
           p.stability = 0;
+          p.vx = -Math.cos(angle) * 2;
+          p.vy = -Math.sin(angle) * 2;
         }
       });
+      system.particles.push(...toAdd);
     }
     
-    // Natural pruning - very old, low energy particles fade
+    // Pruning
     system.particles = system.particles.filter(p => {
       if (p.age > PHYSICS.ELDERLY_AGE && p.amplitude < 0.2) {
-        return false; // Let elderly low-energy particles go
+        return false;
       }
       return true;
     });
     
-    // Prune weak bonds
+    // Bond decay and pruning
     system.bonds = system.bonds.filter(bond => {
-      bond.strength *= 0.99; // Decay
-      return bond.strength > 0.3 && 
-             system.particles.find(p => p.id === bond.id1) && 
-             system.particles.find(p => p.id === bond.id2);
+      bond.weight -= PHYSICS.WEIGHT_DECAY * dt;
+      
+      const p1Exists = system.particles.find(p => p.id === bond.id1);
+      const p2Exists = system.particles.find(p => p.id === bond.id2);
+      
+      return bond.weight > PHYSICS.PRUNE_THRESHOLD && p1Exists && p2Exists;
+    });
+    
+    // Update energy flows
+    system.energyFlows = system.energyFlows.filter(flow => {
+      flow.age += dt;
+      flow.strength *= 0.95;
+      return flow.strength > 0.05 && flow.age < 100;
     });
   };
 
-  // Render
   const render = () => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
@@ -236,62 +505,91 @@ export default function FractalPetCell() {
     
     const system = systemRef.current;
     
-    // Clear
-    ctx.fillStyle = '#000810';
+    // Background with trail effect
+    ctx.fillStyle = 'rgba(0, 8, 16, 0.15)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     if (system.particles.length === 0) {
       ctx.fillStyle = 'rgba(100, 150, 200, 0.5)';
       ctx.font = '20px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('Click to birth your cell...', canvas.width / 2, canvas.height / 2);
+      ctx.fillText('Click to awaken...', canvas.width / 2, canvas.height / 2);
       return;
     }
     
-    // Render bonds (Coupling visualization)
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    
+    // Draw energy flows
+    system.energyFlows.forEach(flow => {
+      ctx.strokeStyle = `hsla(180, 70%, 60%, ${flow.strength * 0.5})`;
+      ctx.lineWidth = 2 * flow.strength;
+      ctx.beginPath();
+      ctx.moveTo(flow.x1, flow.y1);
+      ctx.lineTo(flow.x2, flow.y2);
+      ctx.stroke();
+    });
+    
+    // Draw bonds with learned weights
     system.bonds.forEach(bond => {
       const p1 = system.particles.find(p => p.id === bond.id1);
       const p2 = system.particles.find(p => p.id === bond.id2);
       if (!p1 || !p2) return;
       
-      ctx.strokeStyle = `rgba(100, 255, 150, ${bond.strength * 0.4})`;
-      ctx.lineWidth = 1 + bond.strength * 2;
+      const avgResonance = bond.resonanceHistory.length > 0
+        ? bond.resonanceHistory.reduce((a, b) => a + b, 0) / bond.resonanceHistory.length
+        : 0;
+      
+      const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+      gradient.addColorStop(0, `hsla(${p1.hue}, 70%, 50%, ${bond.weight * 0.3})`);
+      gradient.addColorStop(1, `hsla(${p2.hue}, 70%, 50%, ${bond.weight * 0.3})`);
+      
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = 1 + bond.weight * 4;
       ctx.beginPath();
       ctx.moveTo(p1.x, p1.y);
       ctx.lineTo(p2.x, p2.y);
       ctx.stroke();
+      
+      // Strong connection nodes
+      if (bond.weight > 0.7) {
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+        const pulse = Math.sin(system.time * 0.05) * 0.3 + 0.7;
+        
+        ctx.fillStyle = `hsla(${(p1.hue + p2.hue) / 2}, 80%, 70%, ${bond.weight * pulse * 0.6})`;
+        ctx.beginPath();
+        ctx.arc(midX, midY, 2 + bond.weight * 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
     });
     
-    // Render particles
+    // Draw particles with fractal branches
     system.particles.forEach(p => {
-      const radius = 5 + p.amplitude * 10;
-      const pulse = Math.sin(p.phase) * 0.3 + 0.7;
+      // Probability cloud
+      p.probabilityCloud.forEach(cloud => {
+        const angle = Math.atan2(p.y - centerY, p.x - centerX) + cloud.angle + 
+                     Math.sin(system.time * 0.01 + cloud.phase) * 0.5;
+        const dist = cloud.dist * (1 + Math.sin(system.time * 0.02 + cloud.phase) * 0.3);
+        const cloudX = p.x + Math.cos(angle) * dist;
+        const cloudY = p.y + Math.sin(angle) * dist;
+        
+        ctx.fillStyle = `hsla(${p.hue}, 70%, 60%, 0.08)`;
+        ctx.beginPath();
+        ctx.arc(cloudX, cloudY, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
       
-      // Color shifts with age: young = blue, old = purple/red
-      const ageFactor = Math.min(1, p.age / PHYSICS.ELDERLY_AGE);
-      const hue = 200 - ageFactor * 80; // 200 (cyan-blue) to 120 (purple) to 40 (orange)
-      const saturation = 70 + ageFactor * 20;
+      // Main particle with fractal branches
+      const angleToCenter = Math.atan2(p.y - centerY, p.x - centerX);
+      const branchLength = 15 + p.amplitude * 25 + p.gravitationalMass * 15;
+      const depth = Math.min(3, Math.ceil(2 + p.gravitationalMass * 2));
+      const baseAlpha = 0.4 + p.amplitude * 0.5 + p.gravitationalMass * 0.3;
       
-      // Glow
-      const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius * 2);
-      gradient.addColorStop(0, `hsla(${hue}, ${saturation}%, 60%, ${pulse})`);
-      gradient.addColorStop(0.5, `hsla(${hue}, ${saturation}%, 50%, ${pulse * 0.5})`);
-      gradient.addColorStop(1, `hsla(${hue}, ${saturation}%, 40%, 0)`);
-      
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, radius * 2, 0, Math.PI * 2);
-      ctx.fill();
-      
-      // Core
-      ctx.fillStyle = `rgba(255, 255, 255, ${pulse})`;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, radius * 0.5, 0, Math.PI * 2);
-      ctx.fill();
+      p.drawBranch(ctx, p.x, p.y, branchLength, angleToCenter, depth, system.time, baseAlpha);
     });
   };
 
-  // Animation loop
   useEffect(() => {
     initializeSeed();
     
@@ -310,30 +608,26 @@ export default function FractalPetCell() {
       }
       render();
       
-      // FPS counter
       frameCount++;
       if (currentTime - fpsTime > 1000) {
         const system = systemRef.current;
         const energy = system.particles.reduce((sum, p) => sum + p.amplitude, 0);
-        const avgAge = system.particles.length > 0 
-          ? system.particles.reduce((sum, p) => sum + p.age, 0) / system.particles.length 
+        const avgAge = system.particles.length > 0
+          ? system.particles.reduce((sum, p) => sum + p.age, 0) / system.particles.length
           : 0;
         
-        // ICE stage detection
+        // Calculate coherence
+        let totalWeight = 0;
+        system.bonds.forEach(b => { totalWeight += b.weight; });
+        const coherence = system.bonds.length > 0 ? totalWeight / system.bonds.length : 0;
+        
         let stage = 'Identity';
-        if (system.particles.length === 0) {
-          stage = 'Void';
-        } else if (system.particles.length === 1 || system.bonds.length === 0) {
-          stage = 'Identity';
-        } else if (system.bonds.length < 10) {
-          stage = 'Coupling';
-        } else if (system.bonds.length < 30 || system.particles.length < 20) {
-          stage = 'Field';
-        } else if (system.particles.length < 60) {
-          stage = 'Boundary';
-        } else {
-          stage = 'Organism';
-        }
+        if (system.particles.length === 0) stage = 'Void';
+        else if (system.particles.length === 1 || system.bonds.length === 0) stage = 'Identity';
+        else if (system.bonds.length < 10) stage = 'Coupling';
+        else if (system.bonds.length < 30 || system.particles.length < 20) stage = 'Field';
+        else if (system.particles.length < 50) stage = 'Boundary';
+        else stage = 'Organism';
         
         setStats({
           particles: system.particles.length,
@@ -341,6 +635,8 @@ export default function FractalPetCell() {
           energy: energy,
           stage: stage,
           avgAge: avgAge,
+          fps: frameCount,
+          coherence: coherence,
         });
         
         frameCount = 0;
@@ -352,11 +648,13 @@ export default function FractalPetCell() {
     
     loop();
     
-    return () => cancelAnimationFrame(animationId);
+    return () => {
+      cancelAnimationFrame(animationId);
+      stopMicrophone();
+    };
   }, [isRunning]);
 
-  // Click to feed
-  const handleClick = (e) => {
+  const handleCanvasInteraction = (e) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     
@@ -365,7 +663,18 @@ export default function FractalPetCell() {
     const y = e.clientY - rect.top;
     
     const system = systemRef.current;
-    system.framesSinceInput = 0;
+    
+    // Create energy flow
+    if (e.type === 'mousemove' && e.buttons === 1) {
+      system.energyFlows.push({
+        x1: x - (e.movementX || 0),
+        y1: y - (e.movementY || 0),
+        x2: x,
+        y2: y,
+        strength: 1,
+        age: 0,
+      });
+    }
     
     // Feed nearby particles
     system.particles.forEach(p => {
@@ -373,19 +682,25 @@ export default function FractalPetCell() {
       const dy = p.y - y;
       const dist = Math.sqrt(dx * dx + dy * dy);
       
-      if (dist < 100) {
-        p.amplitude = Math.min(1, p.amplitude + PHYSICS.FEED_AMOUNT * (1 - dist / 100));
+      if (dist < 120) {
+        p.amplitude = Math.min(1, p.amplitude + PHYSICS.FEED_AMOUNT * (1 - dist / 120));
+        
+        // Spawn energy burst
+        p.hue = (p.hue + Math.random() * 30) % 360;
       }
     });
   };
 
   return (
     <div className="w-full h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-6xl">
         <div className="mb-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-blue-300">
-            Fractal Reality Pet Cell
-          </h1>
+          <div>
+            <h1 className="text-2xl font-bold text-blue-300">
+              Fractal Reality Pet Cell
+            </h1>
+            <p className="text-xs text-slate-500 mt-1">Living • Learning • Evolving</p>
+          </div>
           <div className="flex gap-2">
             <button
               onClick={() => setIsRunning(!isRunning)}
@@ -395,41 +710,60 @@ export default function FractalPetCell() {
               {isRunning ? 'Pause' : 'Play'}
             </button>
             <button
+              onClick={toggleMic}
+              className={`px-4 py-2 rounded flex items-center gap-2 text-white ${
+                micEnabled ? 'bg-red-600 hover:bg-red-700' : 'bg-slate-600 hover:bg-slate-700'
+              }`}
+            >
+              {micEnabled ? <MicOff size={16} /> : <Mic size={16} />}
+              {micEnabled ? 'Mute' : 'Sing'}
+            </button>
+            <button
               onClick={() => initializeSeed()}
               className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded flex items-center gap-2 text-white"
             >
               <RotateCcw size={16} />
-              Reset
+              Rebirth
             </button>
           </div>
         </div>
         
         <div className="mb-4 p-4 bg-slate-900 rounded border border-slate-700 text-sm">
-          <p className="text-slate-400 mb-2 text-xs">
-            Your cell is self-sustaining! It gains energy from resonance. <strong>Click to give bonus energy</strong> and encourage growth.
-          </p>
-          <div className="grid grid-cols-5 gap-3 text-slate-300">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-slate-400 text-xs">
+              <strong>Click & drag</strong> to nurture • <strong>Sing</strong> to influence growth • Watch it learn & evolve
+            </p>
+            {micEnabled && audioInfluenceRef.current > 0.1 && (
+              <div className="flex items-center gap-2 text-yellow-400">
+                <Zap size={14} />
+                <span className="text-xs">Audio detected!</span>
+              </div>
+            )}
+          </div>
+          <div className="grid grid-cols-7 gap-2 text-slate-300 text-xs">
             <div>Stage: <span className="text-blue-400 font-bold">{stats.stage}</span></div>
-            <div>Particles: <span className="text-blue-400">{stats.particles}</span></div>
+            <div>Cells: <span className="text-blue-400">{stats.particles}</span></div>
             <div>Bonds: <span className="text-green-400">{stats.bonds}</span></div>
             <div>Energy: <span className="text-yellow-400">{stats.energy.toFixed(1)}</span></div>
-            <div>Avg Age: <span className="text-purple-400">{stats.avgAge.toFixed(0)}</span></div>
-          </div>
-          <div className="mt-2 text-xs text-slate-500">
-            Young = blue • Aging = purple • Elderly = orange • Green lines = bonds
+            <div>Age: <span className="text-purple-400">{(stats.avgAge / 60).toFixed(1)}s</span></div>
+            <div>FPS: <span className={stats.fps < 50 ? 'text-red-400' : 'text-green-400'}>{stats.fps}</span></div>
+            <div>Coherence: <span className="text-cyan-400">{(stats.coherence * 100).toFixed(0)}%</span></div>
           </div>
         </div>
         
         <canvas
           ref={canvasRef}
-          width={800}
-          height={600}
-          onClick={handleClick}
-          className="w-full border-2 border-blue-500/30 rounded cursor-pointer bg-slate-900"
+          width={1200}
+          height={800}
+          onClick={handleCanvasInteraction}
+          onMouseMove={handleCanvasInteraction}
+          className="w-full border-2 border-blue-500/30 rounded cursor-crosshair bg-slate-950"
+          style={{ aspectRatio: '3/2' }}
         />
         
-        <div className="mt-4 text-xs text-slate-500 text-center">
-          Based on Fractal Reality Field Equation • Identity → Coupling → Environment
+        <div className="mt-4 text-xs text-slate-500 text-center space-y-1">
+          <p>Hebbian learning • Resonance memory • Synaptic pruning • Fractal emergence</p>
+          <p className="text-slate-600">Based on Fractal Reality Field Equation • ICE: Identity → Coupling → Environment</p>
         </div>
       </div>
     </div>
