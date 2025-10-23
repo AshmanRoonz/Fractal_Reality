@@ -312,9 +312,23 @@ const EnhancedConsciousnessFractal = () => {
                 const angle = Math.atan2(clickY - centerY, clickX - centerX);
                 const dist = Math.sqrt((clickX - centerX) ** 2 + (clickY - centerY) ** 2);
                 
-                const newPattern = new ValidatedPattern(angle, Math.random() * 360, time);
+                let inputHue = Math.random() * 360;
+                let geometryType = Math.random() * 6;
+                
+                // If mic is active, use detected frequencies
+                if (micFrequencies.length > 0) {
+                    const randomFreqIndex = Math.floor(Math.random() * micFrequencies.length);
+                    const frequency = micFrequencies[randomFreqIndex];
+                    const amplitude = micAmplitudes[randomFreqIndex];
+                    
+                    inputHue = ((frequency - 20) / 1980) * 360;
+                    inputHue = Math.max(0, Math.min(360, inputHue));
+                    geometryType = amplitude * 6;
+                }
+                
+                const newPattern = new ValidatedPattern(angle, inputHue, time);
                 newPattern.baseLength = Math.min(dist, 250);
-                newPattern.geometryType = selectedShape + Math.random() * 0.5;
+                newPattern.geometryType = geometryType;
                 newPattern.userSpawned = true;
                 newPattern.spawnEnergy = 2.0;
                 validatedPatterns.push(newPattern);
@@ -365,9 +379,23 @@ const EnhancedConsciousnessFractal = () => {
                     const angle = Math.atan2(y - centerY, x - centerX);
                     const dist = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
                     
-                    const newPattern = new ValidatedPattern(angle, Math.random() * 360, time);
+                    let inputHue = Math.random() * 360;
+                    let geometryType = Math.random() * 6;
+                    
+                    // If mic is active, use detected frequencies
+                    if (micFrequencies.length > 0) {
+                        const randomFreqIndex = Math.floor(Math.random() * micFrequencies.length);
+                        const frequency = micFrequencies[randomFreqIndex];
+                        const amplitude = micAmplitudes[randomFreqIndex];
+                        
+                        inputHue = ((frequency - 20) / 1980) * 360;
+                        inputHue = Math.max(0, Math.min(360, inputHue));
+                        geometryType = amplitude * 6;
+                    }
+                    
+                    const newPattern = new ValidatedPattern(angle, inputHue, time);
                     newPattern.baseLength = Math.min(dist, 250);
-                    newPattern.geometryType = Math.random() * 6;
+                    newPattern.geometryType = geometryType;
                     newPattern.userSpawned = true;
                     validatedPatterns.push(newPattern);
                 }
@@ -1949,30 +1977,7 @@ const EnhancedConsciousnessFractal = () => {
             )}
             
             <div className="absolute top-8 right-8 bg-slate-900/90 backdrop-blur rounded-xl p-4 border border-purple-500/50 text-white space-y-3">
-                <div className="text-sm font-bold text-purple-300 mb-3">Feed the Organism</div>
-                <div className="grid grid-cols-3 gap-2">
-                    {shapes.map((shape, idx) => {
-                        return (
-                            <button
-                                key={idx}
-                                onClick={() => setSelectedShape(shape.value)}
-                                className={`p-3 rounded-lg transition-all text-2xl ${
-                                    selectedShape === shape.value
-                                        ? 'bg-purple-600 ring-2 ring-purple-400 scale-110'
-                                        : 'bg-gray-700 hover:bg-gray-600'
-                                }`}
-                                title={shape.name}
-                            >
-                                {shape.icon}
-                            </button>
-                        );
-                    })}
-                </div>
-                <div className="text-xs text-gray-400 text-center pt-2 border-t border-gray-700">
-                    Click/Drag to interact
-                </div>
-                
-                <div className="pt-3 border-t border-gray-700 space-y-2">
+                <div className="pt-3 space-y-2">
                     <div>
                         <label className="text-xs text-gray-400 block mb-1">Growth Speed: {growthSpeed.toFixed(1)}x</label>
                         <input 
