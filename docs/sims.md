@@ -1,5 +1,5 @@
-pet.tsx
-harmonic_periodic_table.tsx
-molecular-canvas-composer.tsx
-webcam-fractal-tracker.tsx
-consciousness_fractal_singing.tsx
+My_Pet_Fractal.tsx
+Harmonic_Periodic_Table.tsx
+Molecular_Composer.tsx
+Singing_Learning_Fractal.tsx
+Cam_Fractal_Tracker.tsx
