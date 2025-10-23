@@ -1,60 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-interface Point {
+// Types
+interface Particle {
   x: number;
   y: number;
-}
-
-interface Aperture {
-  x: number;
-  y: number;
+  angle: number;
+  speed: number;
   generation: number;
   age: number;
-  signature: {
-    spiralRate: number;      // How fast it spirals
-    waveFreq: number;        // Wave frequency
-    waveAmp: number;         // Wave amplitude
-    curveBias: number;       // Left/right curve bias
-  };
-  color: {
-    hue: number;
-    sat: number;
-    light: number;
-  };
-  active: boolean;
-  id: number;
+  maxAge: number;
+  size: number;
+  hue: number;
+  trail: Array<{ x: number; y: number; age: number }>;
+  branchCooldown: number;
+  hasBranched: boolean;
+  curvature: number;
+  spiral: number;
+  wobble: number;
 }
 
-interface Line {
-  points: Point[];
-  apertureId: number;
-  generation: number;
-  angle: number;
-  length: number;
-  maxLength: number;
-  active: boolean;
-  signature: {
-    spiralRate: number;
-    waveFreq: number;
-    waveAmp: number;
-    curveBias: number;
-  };
-  color: {
-    hue: number;
-    sat: number;
-    light: number;
-  };
-  id: number;
-}
+// Constants
+const PHI = (1 + Math.sqrt(5)) / 2;
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+const ZOOM_DURATION = 900;
 
-const ZOOM_DURATION = 180;
-
-export default function FractalRealityFlagship() {
+export default function FractalFountain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [stats, setStats] = useState({
-    layer: 0,
-    apertures: 0,
-    lines: 0
+    particleCount: 0,
+    branchCount: 0,
+    fractalDim: 1.5
   });
   const [showUI, setShowUI] = useState(false);
 
@@ -65,6 +40,7 @@ export default function FractalRealityFlagship() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Set canvas size
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -75,267 +51,170 @@ export default function FractalRealityFlagship() {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
 
+    // Animation state
     let time = 0;
     let zoomProgress = 0;
     let singularityRadius = Math.max(canvas.width, canvas.height);
-    const finalRadius = 2;
-    let apertures: Aperture[] = [];
-    let lines: Line[] = [];
-    let maxGeneration = 0;
-    let nextId = 0;
+    const finalRadius = 0.5;
+    let particles: Particle[] = [];
+    let spawnIndex = 0;
+    let branchCount = 0;
     let animationFrameId: number;
 
-    // Create unique signature
-    const createSignature = (parent?: Aperture) => {
-      if (!parent) {
-        // Ultimate aperture - the source pattern
-        return {
-          spiralRate: 0.025,
-          waveFreq: 0.12,
-          waveAmp: 0.4,
-          curveBias: 0
-        };
-      }
-      // Inherit and mutate - more variation for distinct patterns
-      return {
-        spiralRate: parent.signature.spiralRate * (0.7 + Math.random() * 0.7),
-        waveFreq: parent.signature.waveFreq * (0.6 + Math.random() * 0.9),
-        waveAmp: parent.signature.waveAmp * (0.7 + Math.random() * 0.6),
-        curveBias: (parent.signature.curveBias + (Math.random() - 0.5) * 0.15)
-      };
-    };
-
-    // Create unique color
-    const createColor = (parent?: Aperture) => {
-      if (!parent) {
-        // Ultimate aperture - starts black
-        return { hue: 0, sat: 0, light: 0 };
-      }
-      if (parent.generation === 0) {
-        // First generation - start with vibrant colors across spectrum
-        return {
-          hue: Math.random() * 360,
-          sat: 75 + Math.random() * 15,
-          light: 50 + Math.random() * 15
-        };
-      }
-      // Inherit and mutate
-      return {
-        hue: (parent.color.hue + 25 + Math.random() * 50) % 360,
-        sat: Math.min(100, Math.max(60, parent.color.sat + (Math.random() - 0.5) * 25)),
-        light: Math.min(70, Math.max(35, parent.color.light + (Math.random() - 0.5) * 20))
-      };
-    };
-
-    // Create aperture
-    const createAperture = (x: number, y: number, gen: number, parent?: Aperture): Aperture => ({
+    // Create particle
+    const createParticle = (
+      x: number,
+      y: number,
+      angle: number,
+      speed: number,
+      generation: number,
+      hue: number
+    ): Particle => ({
       x,
       y,
-      generation: gen,
+      angle,
+      speed,
+      generation,
       age: 0,
-      signature: createSignature(parent),
-      color: createColor(parent),
-      active: true,
-      id: nextId++
+      maxAge: 200 - generation * 20,
+      size: Math.max(1, 3 - generation * 0.3),
+      hue,
+      trail: [],
+      branchCooldown: 20 + Math.random() * 30,
+      hasBranched: false,
+      curvature: (Math.random() - 0.5) * 0.05,
+      spiral: Math.random() * 0.02,
+      wobble: Math.random() * 0.1
     });
 
-    // Create line from aperture
-    const createLine = (aperture: Aperture, angleOffset: number): Line => {
-      const baseAngle = Math.random() * Math.PI * 2 + angleOffset;
-      return {
-        points: [{ x: aperture.x, y: aperture.y }],
-        apertureId: aperture.id,
-        generation: aperture.generation,
-        angle: baseAngle,
-        length: 0,
-        maxLength: 250 - aperture.generation * 20,
-        active: true,
-        signature: { ...aperture.signature },
-        color: { ...aperture.color },
-        id: nextId++
-      };
-    };
+    // Update particle
+    const updateParticle = (p: Particle): boolean => {
+      p.age++;
 
-    // Check if two line segments intersect
-    const linesIntersect = (
-      p1: Point, p2: Point,
-      p3: Point, p4: Point
-    ): Point | null => {
-      const denom = (p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y);
-      if (Math.abs(denom) < 0.001) return null;
+      // Complex curved motion
+      p.angle += p.curvature + Math.sin(p.age * p.wobble) * 0.03;
 
-      const ua = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) / denom;
-      const ub = ((p2.x - p1.x) * (p1.y - p3.y) - (p2.y - p1.y) * (p1.x - p3.x)) / denom;
+      // Spiral outward
+      const spiralFactor = 1 + p.age * p.spiral;
 
-      if (ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1) {
-        return {
-          x: p1.x + ua * (p2.x - p1.x),
-          y: p1.y + ua * (p2.y - p1.y)
-        };
-      }
-      return null;
-    };
+      // Move
+      p.x += Math.cos(p.angle) * p.speed * spiralFactor;
+      p.y += Math.sin(p.angle) * p.speed * spiralFactor;
 
-    // Update line with unique pattern
-    const updateLine = (line: Line): void => {
-      if (!line.active || line.length >= line.maxLength) {
-        line.active = false;
-        return;
+      // Add to trail
+      if (p.age % 2 === 0) {
+        p.trail.push({ x: p.x, y: p.y, age: 0 });
+        if (p.trail.length > 30) p.trail.shift();
       }
 
-      const last = line.points[line.points.length - 1];
-      const sig = line.signature;
+      // Age trail points
+      p.trail.forEach(t => t.age++);
 
-      // Spiral component
-      line.angle += sig.spiralRate;
+      // Branch recursively
+      if (
+        !p.hasBranched &&
+        p.age > p.branchCooldown &&
+        p.generation < 4 &&
+        Math.random() < 0.03
+      ) {
+        p.hasBranched = true;
+        branchCount++;
 
-      // Wave component (unique to this aperture)
-      const wave = Math.sin(line.length * sig.waveFreq) * sig.waveAmp;
-      line.angle += wave;
+        // Create 2-3 child particles
+        const numChildren = 2 + Math.floor(Math.random() * 2);
+        const angleSpread = Math.PI / 3;
 
-      // Curve bias (makes each aperture's lines curve differently)
-      line.angle += sig.curveBias;
+        for (let i = 0; i < numChildren; i++) {
+          const childAngle = p.angle + (Math.random() - 0.5) * angleSpread;
+          const childSpeed = p.speed * (0.8 + Math.random() * 0.4);
+          const childHue = (p.hue + (Math.random() - 0.5) * 30) % 360;
 
-      // Move forward
-      const speed = 2.5 - line.generation * 0.2;
-      const newX = last.x + Math.cos(line.angle) * speed;
-      const newY = last.y + Math.sin(line.angle) * speed;
-
-      // Bounds check
-      if (newX < 0 || newX > canvas.width || newY < 0 || newY > canvas.height) {
-        line.active = false;
-        return;
+          particles.push(
+            createParticle(p.x, p.y, childAngle, childSpeed, p.generation + 1, childHue)
+          );
+        }
       }
 
-      line.points.push({ x: newX, y: newY });
-      line.length++;
+      return p.age < p.maxAge;
     };
 
-    // Check for intersections between lines
-    const checkIntersections = (): Point[] => {
-      const intersections: Point[] = [];
-      
-      // Only check lines from different apertures
-      for (let i = 0; i < lines.length; i++) {
-        const line1 = lines[i];
-        if (!line1.active || line1.points.length < 20) continue;
+    // Draw particle
+    const drawParticle = (p: Particle) => {
+      const alpha = 1 - p.age / p.maxAge;
 
-        for (let j = i + 1; j < lines.length; j++) {
-          const line2 = lines[j];
-          if (!line2.active || line2.points.length < 20) continue;
-          if (line1.apertureId === line2.apertureId) continue; // Same aperture
-          if (line1.generation !== line2.generation) continue; // Different generations
+      // Draw trail
+      if (p.trail.length > 1) {
+        ctx.strokeStyle = `hsla(${p.hue}, 80%, 60%, ${alpha * 0.3})`;
+        ctx.lineWidth = p.size * 0.8;
+        ctx.beginPath();
+        p.trail.forEach((point, i) => {
+          if (i === 0) ctx.moveTo(point.x, point.y);
+          else ctx.lineTo(point.x, point.y);
+        });
+        ctx.stroke();
+      }
 
-          // Check last few segments
-          const checkCount = 3;
-          for (let a = Math.max(0, line1.points.length - checkCount); a < line1.points.length - 1; a++) {
-            for (let b = Math.max(0, line2.points.length - checkCount); b < line2.points.length - 1; b++) {
-              const intersection = linesIntersect(
-                line1.points[a], line1.points[a + 1],
-                line2.points[b], line2.points[b + 1]
-              );
-              
-              if (intersection) {
-                // Check if intersection is far enough from existing apertures
-                let tooClose = false;
-                for (const aperture of apertures) {
-                  const dist = Math.hypot(intersection.x - aperture.x, intersection.y - aperture.y);
-                  if (dist < 35) { // Reduced from 50 to allow more density
-                    tooClose = true;
-                    break;
-                  }
-                }
-                
-                if (!tooClose) {
-                  intersections.push(intersection);
-                  // Mark lines as used
-                  line1.active = false;
-                  line2.active = false;
-                  return intersections; // One intersection per frame
-                }
-              }
+      // Draw particle with glow
+      const glowSize = p.size * 3;
+      const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowSize);
+      gradient.addColorStop(0, `hsla(${p.hue}, 90%, 70%, ${alpha})`);
+      gradient.addColorStop(0.5, `hsla(${p.hue}, 80%, 60%, ${alpha * 0.5})`);
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, glowSize, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    // Spawn particles
+    const spawnParticles = () => {
+      if (zoomProgress < 0.3) return;
+
+      const spawnRate = Math.floor(5 + zoomProgress * 15);
+
+      for (let i = 0; i < spawnRate; i++) {
+        const angle = spawnIndex * GOLDEN_ANGLE;
+        const speed = 1 + Math.random() * 2;
+        const hue = (spawnIndex * 137.5) % 360;
+
+        particles.push(createParticle(centerX, centerY, angle, speed, 0, hue));
+        spawnIndex++;
+      }
+    };
+
+    // Calculate fractal dimension
+    const calculateFractalDimension = (): number => {
+      let totalD = 0;
+      let count = 0;
+
+      particles.forEach(p => {
+        if (p.trail.length > 15) {
+          const first = p.trail[0];
+          const last = p.trail[p.trail.length - 1];
+          const disp = Math.hypot(last.x - first.x, last.y - first.y);
+          let pathLen = 0;
+
+          for (let i = 1; i < p.trail.length; i++) {
+            pathLen += Math.hypot(
+              p.trail[i].x - p.trail[i - 1].x,
+              p.trail[i].y - p.trail[i - 1].y
+            );
+          }
+
+          if (disp > 20 && pathLen > 0) {
+            const D = Math.log(pathLen) / Math.log(disp);
+            if (D > 1.2 && D < 2) {
+              totalD += D;
+              count++;
             }
           }
         }
-      }
-      
-      return intersections;
+      });
+
+      return count > 0 ? totalD / count : 1.5;
     };
 
-    // Draw line
-    const drawLine = (line: Line) => {
-      if (line.points.length < 2) return;
-
-      const alpha = 0.7 - line.generation * 0.05;
-      const c = line.color;
-
-      ctx.save();
-      // Use HSL color with generation-based alpha
-      ctx.strokeStyle = line.generation === 0 
-        ? `rgba(0, 0, 0, ${alpha})` 
-        : `hsla(${c.hue}, ${c.sat}%, ${c.light}%, ${alpha})`;
-      ctx.lineWidth = 1.8 - line.generation * 0.15;
-      ctx.lineCap = 'round';
-      
-      ctx.beginPath();
-      ctx.moveTo(line.points[0].x, line.points[0].y);
-      
-      for (let i = 1; i < line.points.length; i++) {
-        ctx.lineTo(line.points[i].x, line.points[i].y);
-      }
-      
-      ctx.stroke();
-      ctx.restore();
-    };
-
-    // Draw aperture
-    const drawAperture = (aperture: Aperture) => {
-      if (!aperture.active) return;
-
-      const alpha = Math.min(1, aperture.age / 20);
-      const pulse = Math.sin(time * 0.05) * 0.3 + 0.7;
-      const c = aperture.color;
-
-      ctx.save();
-
-      // Glow (using aperture's color)
-      const glowSize = (18 - aperture.generation * 1.5) * pulse;
-      const gradient = ctx.createRadialGradient(
-        aperture.x, aperture.y, 0,
-        aperture.x, aperture.y, glowSize
-      );
-      
-      if (aperture.generation === 0) {
-        // Ultimate aperture - white/blue glow
-        gradient.addColorStop(0, `rgba(255, 255, 255, ${alpha * 0.8})`);
-        gradient.addColorStop(0.5, `rgba(200, 220, 255, ${alpha * 0.4})`);
-      } else {
-        // Use aperture's color
-        gradient.addColorStop(0, `hsla(${c.hue}, ${c.sat}%, ${Math.min(c.light + 20, 90)}%, ${alpha * 0.8})`);
-        gradient.addColorStop(0.5, `hsla(${c.hue}, ${c.sat}%, ${c.light}%, ${alpha * 0.4})`);
-      }
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(aperture.x, aperture.y, glowSize, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Core
-      ctx.globalAlpha = alpha;
-      if (aperture.generation === 0) {
-        ctx.fillStyle = '#000000';
-      } else {
-        ctx.fillStyle = `hsl(${c.hue}, ${c.sat}%, ${c.light}%)`;
-      }
-      ctx.beginPath();
-      ctx.arc(aperture.x, aperture.y, 3.5 - aperture.generation * 0.2, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.restore();
-    };
-
-    // Main animation
+    // Main animation loop
     const animate = () => {
       time++;
 
@@ -343,102 +222,94 @@ export default function FractalRealityFlagship() {
       if (zoomProgress < 1) {
         zoomProgress = Math.min(1, time / ZOOM_DURATION);
         const eased = 1 - Math.pow(1 - zoomProgress, 3);
-        singularityRadius = Math.max(canvas.width, canvas.height) * (1 - eased) + finalRadius * eased;
+        singularityRadius =
+          Math.max(canvas.width, canvas.height) * (1 - eased) + finalRadius * eased;
 
-        if (zoomProgress > 0.9 && !showUI) {
+        // Show UI after zoom
+        if (zoomProgress > 0.95 && !showUI) {
           setShowUI(true);
-        }
-
-        if (zoomProgress >= 1 && apertures.length === 0) {
-          // Spawn ultimate aperture
-          apertures.push(createAperture(centerX, centerY, 0));
         }
       }
 
+      // Spawn and update particles
+      spawnParticles();
+      particles = particles.filter(updateParticle);
+
+      // Update stats (throttled)
+      if (time % 10 === 0) {
+        setStats({
+          particleCount: particles.length,
+          branchCount,
+          fractalDim: calculateFractalDimension()
+        });
+      }
+
       // Clear with fade
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw singularity during zoom
+      // Draw particles
+      particles.forEach(drawParticle);
+
+      // Draw singularity
       if (zoomProgress < 1) {
+        // Black circle
         ctx.fillStyle = '#000000';
         ctx.beginPath();
         ctx.arc(centerX, centerY, singularityRadius, 0, Math.PI * 2);
         ctx.fill();
 
         // Edge glow
-        const pulse = Math.sin(time * 0.05) * 0.3 + 0.7;
+        const pulse = Math.sin(time * 0.05) * 0.2 + 0.8;
+        const glowRadius = singularityRadius + 5;
         const gradient = ctx.createRadialGradient(
-          centerX, centerY, singularityRadius,
-          centerX, centerY, singularityRadius + 10
+          centerX,
+          centerY,
+          singularityRadius,
+          centerX,
+          centerY,
+          glowRadius
         );
-        gradient.addColorStop(0, `rgba(100, 150, 255, ${pulse * 0.4 * (1 - zoomProgress)})`);
+        gradient.addColorStop(0, `rgba(100, 200, 255, ${pulse * 0.6 * (1 - zoomProgress)})`);
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
         ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.arc(centerX, centerY, singularityRadius + 10, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY, glowRadius, 0, Math.PI * 2);
         ctx.fill();
-      }
+      } else {
+        // After zoom: 1px singularity with accretion disk
+        const pulse = Math.sin(time * 0.05) * 0.3 + 1;
 
-      // Post-zoom: fractalization
-      if (zoomProgress >= 1) {
-        // Update apertures
-        for (const aperture of apertures) {
-          aperture.age++;
-          
-          // Spawn lines periodically - faster spawning for continuous expansion
-          if (aperture.active && aperture.age % (aperture.generation === 0 ? 5 : 10) === 0) {
-            const numLines = aperture.generation === 0 ? 6 : 3;
-            for (let i = 0; i < numLines; i++) {
-              lines.push(createLine(aperture, i * (Math.PI * 2 / numLines)));
-            }
-          }
+        // Accretion disk
+        for (let r = 2; r < 30; r += 2) {
+          const alpha = 1 - r / 30;
+          ctx.strokeStyle = `hsla(${200 + r * 3}, 90%, 70%, ${alpha * 0.4 * pulse})`;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, r, 0, Math.PI * 2);
+          ctx.stroke();
         }
 
-        // Update lines
-        lines.forEach(updateLine);
+        // Bright glow
+        const gradient = ctx.createRadialGradient(
+          centerX,
+          centerY,
+          0,
+          centerX,
+          centerY,
+          20 * pulse
+        );
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+        gradient.addColorStop(0.5, 'rgba(200, 220, 255, 0.5)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 20 * pulse, 0, Math.PI * 2);
+        ctx.fill();
 
-        // Check for intersections - no generation limit, continuous expansion
-        const intersections = checkIntersections();
-        
-        for (const pos of intersections) {
-          // Find parent apertures (the two that created this intersection)
-          let parentAperture = apertures[0];
-          let minDist = Infinity;
-          
-          for (const aperture of apertures) {
-            const dist = Math.hypot(pos.x - aperture.x, pos.y - aperture.y);
-            if (dist < minDist && dist < 250) {
-              minDist = dist;
-              parentAperture = aperture;
-            }
-          }
-
-          const newAperture = createAperture(
-            pos.x, 
-            pos.y, 
-            parentAperture.generation + 1,
-            parentAperture
-          );
-          apertures.push(newAperture);
-          maxGeneration = Math.max(maxGeneration, newAperture.generation);
-        }
-
-        // Clean up inactive lines
-        lines = lines.filter(l => l.active);
-
-        // Draw
-        lines.forEach(drawLine);
-        apertures.forEach(drawAperture);
-
-        // Update stats
-        if (time % 15 === 0) {
-          setStats({
-            layer: maxGeneration,
-            apertures: apertures.length,
-            lines: lines.filter(l => l.active).length
-          });
-        }
+        // The singularity (1px)
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(centerX - 0.5, centerY - 0.5, 1, 1);
       }
 
       animationFrameId = requestAnimationFrame(animate);
@@ -446,6 +317,7 @@ export default function FractalRealityFlagship() {
 
     animate();
 
+    // Cleanup
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resizeCanvas);
@@ -453,17 +325,12 @@ export default function FractalRealityFlagship() {
   }, [showUI]);
 
   return (
-    <div style={{ 
-      position: 'relative', 
-      width: '100vw', 
-      height: '100vh', 
-      overflow: 'hidden',
-      background: '#fff'
-    }}>
+    <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
       <canvas
         ref={canvasRef}
         style={{
           display: 'block',
+          background: '#000',
           touchAction: 'none'
         }}
       />
@@ -472,62 +339,32 @@ export default function FractalRealityFlagship() {
       <div
         style={{
           position: 'fixed',
-          top: '20px',
-          left: '20px',
-          fontSize: '13px',
-          color: 'rgba(0, 0, 0, 0.7)',
+          top: '15px',
+          left: '15px',
+          fontSize: '11px',
+          color: 'rgba(100, 200, 255, 0.7)',
           fontFamily: 'monospace',
           pointerEvents: 'none',
-          lineHeight: 2,
+          lineHeight: 1.8,
+          textShadow: '0 0 10px rgba(0, 0, 0, 0.8)',
           opacity: showUI ? 1 : 0,
-          transition: 'opacity 1.5s'
+          transition: 'opacity 1s'
         }}
       >
-        <div style={{ fontSize: '11px', opacity: 0.5, marginBottom: '8px' }}>
-          ∞ → • → ∞•'
-        </div>
-        <div>
-          Layer: <span style={{ fontWeight: 'bold' }}>
-            {stats.layer}
-          </span>
-        </div>
-        <div>
-          Apertures: <span style={{ fontWeight: 'bold' }}>
-            {stats.apertures}
-          </span>
-        </div>
-        <div>
-          Active Lines: <span style={{ fontWeight: 'bold' }}>
-            {stats.lines}
-          </span>
-        </div>
-        <div style={{ marginTop: '8px', fontSize: '11px', opacity: 0.6 }}>
-          D ≈ 1.5 (fractal dimension)
-        </div>
-      </div>
-
-      {/* Title */}
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '30px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          fontSize: '14px',
-          color: 'rgba(0, 0, 0, 0.6)',
-          fontFamily: 'monospace',
-          pointerEvents: 'none',
-          textAlign: 'center',
-          opacity: showUI ? 1 : 0,
-          transition: 'opacity 1.5s'
-        }}
-      >
-        <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '5px' }}>
-          Fractal Reality
-        </div>
-        <div style={{ fontSize: '11px', opacity: 0.7 }}>
-          Lines intersect → Apertures form → Layers emerge infinitely
-        </div>
+        <span style={{ opacity: 0.5 }}>∞ → • → ∞'</span>
+        <br />
+        <br />
+        Particles: <span style={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 'bold' }}>
+          {stats.particleCount}
+        </span>
+        <br />
+        Branches: <span style={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 'bold' }}>
+          {stats.branchCount}
+        </span>
+        <br />
+        D = <span style={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 'bold' }}>
+          {stats.fractalDim.toFixed(3)}
+        </span>
       </div>
 
       {/* GitHub Link */}
@@ -537,32 +374,23 @@ export default function FractalRealityFlagship() {
         rel="noopener noreferrer"
         style={{
           position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          background: 'rgba(255, 255, 255, 0.9)',
-          border: '1px solid rgba(0, 0, 0, 0.2)',
-          borderRadius: '6px',
-          padding: '10px 15px',
-          fontSize: '12px',
-          color: '#333',
+          bottom: '15px',
+          right: '15px',
+          background: 'rgba(10, 10, 30, 0.7)',
+          border: '1px solid rgba(100, 200, 255, 0.3)',
+          borderRadius: '5px',
+          padding: '8px 12px',
+          fontSize: '11px',
+          color: '#64c8ff',
           textDecoration: 'none',
-          opacity: showUI ? 0.7 : 0,
-          transition: 'all 0.3s',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          fontFamily: 'monospace'
+          opacity: showUI ? 0.6 : 0,
+          transition: 'opacity 0.3s',
+          backdropFilter: 'blur(5px)'
         }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.opacity = '1';
-          e.currentTarget.style.transform = 'translateY(-2px)';
-          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.opacity = '0.7';
-          e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-        }}
+        onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+        onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.6')}
       >
-        View on GitHub ↗
+        GitHub ↗
       </a>
     </div>
   );
