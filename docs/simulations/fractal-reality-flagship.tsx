@@ -84,7 +84,12 @@ const CONFIG = {
     maxDistance: 250,             // Maximum distance for spark path recording (increased)
     visibilityThreshold: 0.08,    // Strength needed to become visible (lowered for faster formation)
     growthPerSpark: 0.05,         // How much strength each spark adds (2-3 sparks makes visible)
-    decayRate: 0.9995,            // Very slow decay - pathways persist
+    decayRate: 0.99992,           // Nearly permanent - extremely slow decay
+    decayStartTime: 5000,         // Wait 5 seconds before any decay starts
+    minStrength: 0.001,           // Very low threshold before deletion
+    neuroplasticityBonus: 0.08,   // Bonus strength when pathway is reused (neuroplasticity!)
+    lightningReinforcement: 0.15, // How much lightning strengthens pathways
+    lightningAttractionMultiplier: 1.5, // How much pathways attract lightning (1.5 = 50% more)
   },
   
   performance: {
@@ -94,6 +99,157 @@ const CONFIG = {
     coreModePathwayLimit: 10000,  // No real limit - more pathways = better
   }
 };
+
+// ============================================================================
+// COLOR RESONANCE SYSTEM - Each soul has a unique color identity
+// ============================================================================
+class ColorResonance {
+  // Generate a unique color signature for a soul based on its cosmic position
+  static generateSoulSignature(x, y, width, height) {
+    // Normalize position to 0-1
+    const normX = x / width;
+    const normY = y / height;
+    
+    // Distance from center influences base color
+    const centerX = 0.5;
+    const centerY = 0.5;
+    const distFromCenter = Math.hypot(normX - centerX, normY - centerY);
+    
+    // Angle from center determines color family
+    const angle = Math.atan2(normY - centerY, normX - centerX);
+    const angleHue = ((angle + Math.PI) / (Math.PI * 2)) * 360;
+    
+    // Create a unique harmonic signature
+    const harmonic1 = Math.sin(normX * Math.PI * 3.7) * 0.5 + 0.5;
+    const harmonic2 = Math.cos(normY * Math.PI * 4.3) * 0.5 + 0.5;
+    const harmonic3 = Math.sin((normX + normY) * Math.PI * 2.1) * 0.5 + 0.5;
+    
+    // Primary hue based on position and harmonics
+    const primaryHue = (angleHue + harmonic1 * 60 + distFromCenter * 120) % 360;
+    
+    // Secondary and tertiary hues for triadic harmony
+    const secondaryHue = (primaryHue + 120 + harmonic2 * 40) % 360;
+    const tertiaryHue = (primaryHue + 240 + harmonic3 * 40) % 360;
+    
+    // Resonance signature - unique pattern of frequencies
+    const resonancePattern = [
+      harmonic1,
+      harmonic2,
+      harmonic3,
+      Math.sin(normX * normY * Math.PI * 5) * 0.5 + 0.5,
+      Math.cos(distFromCenter * Math.PI * 3) * 0.5 + 0.5
+    ];
+    
+    return {
+      primaryHue,
+      secondaryHue,
+      tertiaryHue,
+      resonancePattern,
+      distFromCenter,
+      angle,
+      harmonic1,
+      harmonic2,
+      harmonic3
+    };
+  }
+  
+  // Generate sub-soul colors based on parent signature and position in grid
+  static generateSubSoulColors(parentSig, ix, iy) {
+    // Position in 3x3 grid (0-2 for each)
+    const normIx = ix / 2;
+    const normIy = iy / 2;
+    
+    // Each sub-soul position has a unique role in the parent's pattern
+    const subSoulAngle = Math.atan2(iy - 1, ix - 1);
+    const subSoulDist = Math.hypot(ix - 1, iy - 1) / Math.sqrt(2);
+    
+    // Mix parent hues based on position
+    let baseHue;
+    if (subSoulDist < 0.3) {
+      // Center: pure primary
+      baseHue = parentSig.primaryHue;
+    } else if (ix === 1 || iy === 1) {
+      // Cross pattern: blend primary and secondary
+      baseHue = (parentSig.primaryHue * 0.7 + parentSig.secondaryHue * 0.3) % 360;
+    } else {
+      // Corners: use triadic colors
+      const corner = ix + iy * 3;
+      if (corner % 3 === 0) baseHue = parentSig.primaryHue;
+      else if (corner % 3 === 1) baseHue = parentSig.secondaryHue;
+      else baseHue = parentSig.tertiaryHue;
+    }
+    
+    // Add position-based variation
+    const positionShift = (subSoulAngle / Math.PI) * 30 + parentSig.resonancePattern[ix + iy] * 20;
+    baseHue = (baseHue + positionShift) % 360;
+    
+    // Create sub-soul specific resonance
+    const subResonance = parentSig.resonancePattern.map((val, i) => {
+      return (val + Math.sin((ix + iy + i) * Math.PI * 0.5) * 0.3) % 1;
+    });
+    
+    return {
+      baseHue,
+      subResonance,
+      subSoulAngle,
+      subSoulDist
+    };
+  }
+  
+  // Generate pixel colors based on sub-soul and pixel position
+  static generatePixelColor(subSoulColors, parentSig, px, py, role) {
+    const dx = px - 1; // -1, 0, 1
+    const dy = py - 1;
+    const pixelAngle = Math.atan2(dy, dx);
+    const pixelDist = Math.hypot(dx, dy) / Math.sqrt(2);
+    
+    let hue = subSoulColors.baseHue;
+    let saturation = 0.6;
+    
+    // Role-based color variation
+    if (role === 'core') {
+      // Core: brightest, most saturated, true to parent color
+      saturation = 0.8;
+      hue = subSoulColors.baseHue;
+    } else if (role === 'inner') {
+      // Inner: blend with secondary hue
+      const blend = (pixelAngle + Math.PI) / (Math.PI * 2);
+      hue = (subSoulColors.baseHue * (1 - blend * 0.3) + parentSig.secondaryHue * blend * 0.3) % 360;
+      saturation = 0.65;
+    } else {
+      // Outer: use triadic harmony, influenced by angle
+      const angleSegment = Math.floor(((pixelAngle + Math.PI) / (Math.PI * 2)) * 3);
+      if (angleSegment === 0) hue = parentSig.primaryHue;
+      else if (angleSegment === 1) hue = parentSig.secondaryHue;
+      else hue = parentSig.tertiaryHue;
+      
+      // Add pixel-specific resonance
+      hue = (hue + subSoulColors.subResonance[(px + py) % 5] * 25) % 360;
+      saturation = 0.5 + pixelDist * 0.2;
+    }
+    
+    return { hue, saturation };
+  }
+  
+  // Update colors based on activation and life experience
+  static evolveColors(pixel, soul, subSoul, frameCount, waveInfluence) {
+    // Colors shift subtly based on activation history
+    const activationInfluence = subSoul.activation * 15;
+    const lifeInfluence = (frameCount - soul.activationTime) * 0.001;
+    
+    // Wave interference creates temporary color shifts
+    let hueShift = activationInfluence + lifeInfluence;
+    if (waveInfluence) {
+      hueShift += (waveInfluence.hue - pixel.h) * waveInfluence.strength * 0.3;
+    }
+    
+    pixel.h = (pixel.baseHue + hueShift) % 360;
+    
+    // Saturation pulses with activation
+    const satPulse = Math.sin(frameCount * 0.05) * 0.1;
+    pixel.s = Math.min(0.9, pixel.baseSaturation + subSoul.activation * 0.2 + satPulse);
+  }
+}
 
 // ============================================================================
 // WAVE SYSTEM - Smooth trailing wake
@@ -175,9 +331,244 @@ class WaveSystem {
 class SparkSystem {
   constructor() {
     this.sparks = [];
+    this.sparkBonds = []; // Bonds between resonant sparks
   }
   
-  emitFromSoul(soul) {
+  // NEW: Find nearby sparks for braiding
+  findNeighborSparks(spark, maxDistance = 120) {
+    const neighbors = [];
+    const sparkMid = spark.segments[Math.floor(spark.segments.length / 2)];
+    
+    for (const other of this.sparks) {
+      if (other === spark) continue;
+      
+      const otherMid = other.segments[Math.floor(other.segments.length / 2)];
+      const dist = Math.hypot(otherMid.x - sparkMid.x, otherMid.y - sparkMid.y);
+      
+      if (dist < maxDistance) {
+        neighbors.push({ spark: other, distance: dist, midpoint: otherMid });
+      }
+    }
+    
+    return neighbors.sort((a, b) => a.distance - b.distance);
+  }
+  
+  // NEW: Apply attraction to bend sparks toward neighbors (braiding)
+  applyNeighborAttraction(spark) {
+    if (!spark.neighbors || spark.neighbors.length === 0) return;
+    
+    // Attract toward closest 2-3 neighbors
+    for (let i = 0; i < Math.min(3, spark.neighbors.length); i++) {
+      const neighbor = spark.neighbors[i];
+      const attractionStrength = 0.2 * (1 - neighbor.distance / 120);
+      
+      // Bend middle and later segments toward neighbor (creates braiding effect)
+      for (let j = Math.floor(spark.segments.length * 0.3); j < spark.segments.length; j++) {
+        const seg = spark.segments[j];
+        const t = j / spark.segments.length;
+        const bendStrength = attractionStrength * Math.sin(t * Math.PI) * 1.5;
+        
+        const dx = neighbor.midpoint.x - seg.x;
+        const dy = neighbor.midpoint.y - seg.y;
+        const dist = Math.hypot(dx, dy);
+        
+        if (dist > 0) {
+          seg.x += (dx / dist) * bendStrength;
+          seg.y += (dy / dist) * bendStrength;
+        }
+      }
+    }
+  }
+  
+  // NEW: Share colors through braided connections
+  shareColorsAlongBraid(spark1, spark2, strength) {
+    const shareRate = 0.12 * strength;
+    const targetHue = (spark1.hue + spark2.hue) / 2;
+    spark1.hue += (targetHue - spark1.hue) * shareRate;
+    spark2.hue += (targetHue - spark2.hue) * shareRate;
+    spark1.hue = (spark1.hue + 360) % 360;
+    spark2.hue = (spark2.hue + 360) % 360;
+  }
+  
+  // Calculate resonance between two sparks
+  calculateSparkResonance(spark1, spark2) {
+    // Distance between sparks (use midpoints)
+    const mid1 = spark1.segments[Math.floor(spark1.segments.length / 2)];
+    const mid2 = spark2.segments[Math.floor(spark2.segments.length / 2)];
+    const dist = Math.hypot(mid2.x - mid1.x, mid2.y - mid1.y);
+    
+    // Only resonate if close enough
+    if (dist > 100) return 0;
+    
+    // Color similarity - sparks with similar hues resonate
+    const hueDiff = Math.min(
+      Math.abs(spark1.hue - spark2.hue),
+      360 - Math.abs(spark1.hue - spark2.hue)
+    );
+    const colorMatch = 1 - (hueDiff / 60); // Within 60° is good
+    
+    // Also check for complementary colors (opposite on color wheel)
+    const isComplementary = Math.abs(hueDiff - 180) < 30;
+    const colorResonance = isComplementary ? 0.9 : Math.max(0, colorMatch);
+    
+    // Age/phase alignment - sparks at similar life stages resonate
+    const ageDiff = Math.abs(spark1.age - spark2.age);
+    const ageMatch = 1 - Math.min(1, ageDiff / 15);
+    
+    // Lifetime phase - sparks in similar phases of their life cycle resonate more
+    const phase1 = spark1.age / spark1.maxAge;
+    const phase2 = spark2.age / spark2.maxAge;
+    const phaseDiff = Math.abs(phase1 - phase2);
+    const phaseMatch = 1 - phaseDiff;
+    
+    // Shape similarity - compare branch patterns
+    const branch1Count = spark1.branches.length;
+    const branch2Count = spark2.branches.length;
+    const branchMatch = 1 - Math.min(1, Math.abs(branch1Count - branch2Count) / 5);
+    
+    // Combined resonance with distance falloff
+    const distFactor = 1 - (dist / 100);
+    const resonance = (
+      colorResonance * 0.45 + 
+      ageMatch * 0.20 + 
+      phaseMatch * 0.20 + 
+      branchMatch * 0.15
+    ) * distFactor;
+    
+    return Math.max(0, resonance);
+  }
+  
+  // Find and create bonds between resonant sparks
+  updateSparkBonds() {
+    this.sparkBonds = [];
+    
+    // Check all pairs of sparks
+    for (let i = 0; i < this.sparks.length; i++) {
+      for (let j = i + 1; j < this.sparks.length; j++) {
+        const spark1 = this.sparks[i];
+        const spark2 = this.sparks[j];
+        
+        const resonance = this.calculateSparkResonance(spark1, spark2);
+        
+        // Form bond if resonance is strong enough (lowered threshold for more connections)
+        if (resonance > 0.4) {
+          // Find closest points between the sparks
+          let minDist = Infinity;
+          let point1 = null;
+          let point2 = null;
+          
+          for (const seg1 of spark1.segments) {
+            for (const seg2 of spark2.segments) {
+              const d = Math.hypot(seg2.x - seg1.x, seg2.y - seg1.y);
+              if (d < minDist) {
+                minDist = d;
+                point1 = seg1;
+                point2 = seg2;
+              }
+            }
+          }
+          
+          if (point1 && point2 && minDist < 100) {
+            // Blend hues for bond color - weighted by spark alpha
+            const totalAlpha = spark1.alpha + spark2.alpha;
+            let avgHue;
+            
+            // Ensure valid hue values
+            if (!isFinite(spark1.hue) || !isFinite(spark2.hue) || totalAlpha === 0) {
+              avgHue = 180; // Default to cyan if invalid
+            } else {
+              avgHue = (spark1.hue * spark1.alpha + spark2.hue * spark2.alpha) / totalAlpha;
+            }
+            
+            // Ensure hue is in valid range
+            avgHue = Math.max(0, Math.min(360, avgHue));
+            
+            // Calculate bond brightness based on resonance strength
+            const bondAlpha = Math.min(spark1.alpha, spark2.alpha) * Math.pow(resonance, 0.7);
+            
+            this.sparkBonds.push({
+              point1,
+              point2,
+              strength: resonance,
+              hue: avgHue,
+              alpha: bondAlpha,
+              spark1,
+              spark2,
+              distance: minDist
+            });
+            
+            // NEW: Share colors through the bond
+            this.shareColorsAlongBraid(spark1, spark2, resonance);
+          }
+        }
+      }
+    }
+  }
+  
+  // Calculate harmonic resonance between two souls
+  calculateResonance(soul1, soul2) {
+    // HARMONIC COMMUNICATION: Sparks seek souls that resonate harmonically
+    // - Similar frequencies (like tuning forks)
+    // - Phase alignment (synchronized oscillation)
+    // - Color harmony (triadic/complementary relationships)
+    // - Spatial proximity (distance matters)
+    
+    // Frequency matching - souls with similar frequencies resonate
+    const freqDiff = Math.abs(soul1.frequency - soul2.frequency);
+    const freqMatch = 1 - Math.min(1, freqDiff / 0.03); // 0.03 is max frequency range
+    
+    // Phase alignment - souls in phase resonate more
+    const phaseDiff = Math.abs(Math.sin(soul1.phase - soul2.phase));
+    const phaseMatch = 1 - phaseDiff;
+    
+    // Color harmony - souls with harmonic color relationships resonate
+    const hue1 = soul1.colorSignature.primaryHue;
+    const hue2 = soul2.colorSignature.primaryHue;
+    const hueDiff = Math.min(
+      Math.abs(hue1 - hue2),
+      360 - Math.abs(hue1 - hue2)
+    );
+    // Triadic (120°), complementary (180°), or similar (0°) colors resonate
+    const isTriadic = Math.abs(hueDiff - 120) < 30 || Math.abs(hueDiff - 240) < 30;
+    const isComplementary = Math.abs(hueDiff - 180) < 30;
+    const isSimilar = hueDiff < 30;
+    const colorMatch = isTriadic ? 1.0 : (isComplementary ? 0.8 : (isSimilar ? 0.9 : 0.3));
+    
+    // Distance factor - closer souls have stronger potential
+    const dist = Math.hypot(soul2.x - soul1.x, soul2.y - soul1.y);
+    const distFactor = Math.max(0, 1 - dist / 200); // Max range 200px
+    
+    // Combined resonance score
+    return (
+      freqMatch * CONFIG.resonance.frequencyWeight +
+      phaseMatch * CONFIG.resonance.phaseWeight +
+      colorMatch * 0.3 // Color harmony weight
+    ) * distFactor * soul2.activationLevel; // Only seek active souls
+  }
+  
+  // Find the most harmonically resonant target for a spark
+  findResonantTarget(originSoul, soulSystem) {
+    let bestTarget = null;
+    let bestResonance = 0.3; // Minimum threshold
+    
+    for (const soul of soulSystem.souls) {
+      if (soul === originSoul || !soul.activated) continue;
+      
+      const resonance = this.calculateResonance(originSoul, soul);
+      if (resonance > bestResonance) {
+        bestResonance = resonance;
+        bestTarget = soul;
+      }
+    }
+    
+    return bestTarget;
+  }
+  
+  emitFromSoul(soul, soulSystem) {
+    // Find harmonically resonant target
+    const targetSoul = this.findResonantTarget(soul, soulSystem);
+    if (!targetSoul) return; // No resonant target found
+    
     // Sparks follow recursive pattern - emit from active sub-souls!
     // Find the most active sub-souls
     const activeSubSouls = soul.subSouls
@@ -186,35 +577,38 @@ class SparkSystem {
     
     if (activeSubSouls.length === 0) return;
     
-    // Emit from top 3-5 active sub-souls
+    // Emit from top 2-4 active sub-souls toward the resonant target
     const numSparks = Math.min(activeSubSouls.length, 2 + Math.floor(Math.random() * 3));
     
     for (let i = 0; i < numSparks; i++) {
       const subSoul = activeSubSouls[i];
       
-      // Direction based on sub-soul position in parent grid
-      const dx = subSoul.ix - 1; // -1, 0, 1
-      const dy = subSoul.iy - 1;
+      // Calculate angle toward resonant target
+      const dx = targetSoul.x - subSoul.x;
+      const dy = targetSoul.y - subSoul.y;
       let angle = Math.atan2(dy, dx);
       
-      // If center sub-soul, use random angle
-      if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
-        angle = Math.random() * Math.PI * 2;
-      }
+      // Add some variation so not all sparks follow exact same path
+      angle += (Math.random() - 0.5) * 0.6;
       
-      // Add some variation
-      angle += (Math.random() - 0.5) * 0.4;
-      
-      // Emit from sub-soul position
-      this.createFractalSpark(subSoul.x, subSoul.y, angle, subSoul.hue, 0, soul, subSoul);
+      // Emit from sub-soul position toward target
+      this.createFractalSpark(subSoul.x, subSoul.y, angle, subSoul.hue, 0, soul, subSoul, targetSoul);
     }
   }
   
   
-  createFractalSpark(x, y, angle, baseHue, depth, soul, subSoul = null) {
+  createFractalSpark(x, y, angle, baseHue, depth, soul, subSoul = null, targetSoul = null) {
     // Length influenced by subSoul's activation if available, else soul's
     const lengthFactor = subSoul ? subSoul.activation : (soul ? soul.activationLevel : 1.0);
-    const length = CONFIG.sparks.maxRange * (0.3 + Math.random() * 0.3) * lengthFactor * Math.pow(0.7, depth);
+    
+    // If we have a target, aim toward it and adjust length based on distance
+    let targetDistance = CONFIG.sparks.maxRange;
+    if (targetSoul) {
+      targetDistance = Math.hypot(targetSoul.x - x, targetSoul.y - y);
+      targetDistance = Math.min(targetDistance * 0.8, CONFIG.sparks.maxRange); // 80% of distance
+    }
+    
+    const length = targetDistance * (0.3 + Math.random() * 0.3) * lengthFactor * Math.pow(0.7, depth);
     const segments = [];
     const numSegments = Math.floor(length / 8) + 3;
     
@@ -303,24 +697,41 @@ class SparkSystem {
       }
     }
     
+    // Ensure hue is valid
+    const sparkHue = isFinite(baseHue) ? 
+      (baseHue + (Math.random() - 0.5) * 40) % 360 : 
+      Math.random() * 360;
+    
     this.sparks.push({
       segments,
       branches,
-      hue: baseHue + (Math.random() - 0.5) * 40,
+      hue: sparkHue,
       alpha: 1.0,
       age: 0,
       maxAge: CONFIG.sparks.maxAge,
       originX: x,
-      originY: y
+      originY: y,
+      neighbors: [] // NEW: For braiding
     });
   }
   
   update(waveSystem, axionSystem = null, soulSystem = null) {
+    // NEW: First pass - find neighbors for all sparks
+    for (const spark of this.sparks) {
+      spark.neighbors = this.findNeighborSparks(spark);
+    }
+    
+    // Second pass - update sparks and apply braiding
     for (let i = this.sparks.length - 1; i >= 0; i--) {
       const spark = this.sparks[i];
       
       spark.age++;
       spark.alpha = 1.0 - (spark.age / spark.maxAge);
+      
+      // NEW: Apply neighbor attraction to create braiding (after age 5, before 80% of life)
+      if (spark.age > 5 && spark.age < spark.maxAge * 0.8) {
+        this.applyNeighborAttraction(spark);
+      }
       
       // Emit wave at origin periodically
       if (spark.age % 8 === 0 && spark.age < spark.maxAge * 0.7) {
@@ -342,6 +753,19 @@ class SparkSystem {
       if (spark.age > spark.maxAge) {
         waveSystem.emitBurst(spark.originX, spark.originY, CONFIG.sparks.waveStrength * 1.2, spark.hue);
         this.sparks.splice(i, 1);
+      }
+    }
+    
+    // Update bonds between resonant sparks
+    this.updateSparkBonds();
+    
+    // Emit waves from strong spark bonds to show their interaction
+    for (const bond of this.sparkBonds) {
+      if (bond.strength > 0.7 && Math.random() < 0.15) {
+        // Emit wave at the midpoint of the bond
+        const midX = (bond.point1.x + bond.point2.x) / 2;
+        const midY = (bond.point1.y + bond.point2.y) / 2;
+        waveSystem.emitWake(midX, midY, CONFIG.sparks.waveStrength * bond.strength * 0.6, bond.hue);
       }
     }
   }
@@ -383,7 +807,47 @@ class AxionSystem {
     return this.connectedSouls.has(soulIdx);
   }
   
+  // NEW: Get the strength of the pathway between two souls
+  getPathwayStrength(soul1, soul2, soulSystem) {
+    if (!soul1 || !soul2) return 0;
+    
+    const soul1Idx = soulSystem.souls.indexOf(soul1);
+    const soul2Idx = soulSystem.souls.indexOf(soul2);
+    
+    if (soul1Idx === -1 || soul2Idx === -1) return 0;
+    
+    const key = soul1Idx < soul2Idx ? `${soul1Idx}-${soul2Idx}` : `${soul2Idx}-${soul1Idx}`;
+    const trace = this.pathTraces.get(key);
+    
+    return trace ? trace.strength : 0;
+  }
+  
+  // NEW: Strengthen a pathway when lightning travels it (reinforcement learning!)
+  strengthenPathway(soul1, soul2, soulSystem) {
+    if (!soul1 || !soul2 || !this.enabled) return;
+    
+    const soul1Idx = soulSystem.souls.indexOf(soul1);
+    const soul2Idx = soulSystem.souls.indexOf(soul2);
+    
+    if (soul1Idx === -1 || soul2Idx === -1) return;
+    
+    const key = soul1Idx < soul2Idx ? `${soul1Idx}-${soul2Idx}` : `${soul2Idx}-${soul1Idx}`;
+    const trace = this.pathTraces.get(key);
+    
+    if (trace) {
+      // LIGHTNING REINFORCEMENT: Pathways strengthen significantly when lightning travels them!
+      // This creates a powerful feedback loop: strong paths attract lightning, lightning makes them stronger!
+      trace.strength = Math.min(3.0, trace.strength + CONFIG.axions.lightningReinforcement);
+      trace.lastTravel = Date.now();
+    }
+  }
+  
   recordSparkPath(spark, soulSystem) {
+    // PATHWAY FORMATION: When sparks repeatedly travel between the same souls,
+    // they "carve" neural pathways that become permanent communication routes.
+    // The more sparks travel a path, the stronger and more visible it becomes.
+    // This creates an efficient network where harmonic connections strengthen over time.
+    
     // Record the path a spark takes - find which souls it's near
     const originSoul = this.findNearestSoul(spark.originX, spark.originY, soulSystem);
     if (!originSoul) return;
@@ -413,7 +877,11 @@ class AxionSystem {
       // Record this path and store the actual spark segments for organic shape
       const existing = this.pathTraces.get(key);
       if (existing) {
-        existing.strength = Math.min(1.5, existing.strength + CONFIG.axions.growthPerSpark);
+        // NEUROPLASTICITY: Reused pathways strengthen more!
+        // Sparks can push to 2.0, Lightning can push to 2.5 (super-highways!)
+        const baseGrowth = CONFIG.axions.growthPerSpark;
+        const neuroplasticityGrowth = CONFIG.axions.neuroplasticityBonus;
+        existing.strength = Math.min(3.0, existing.strength + baseGrowth + neuroplasticityGrowth);
         existing.lastTravel = Date.now();
         // Keep updating the path shape with latest spark
         existing.recentPaths.push({
@@ -456,12 +924,12 @@ class AxionSystem {
   update(soulSystem, frameCount) {
     if (!this.enabled) return;
     
-    // Decay path traces over time
+    // Decay path traces over time (but very slowly - nearly permanent)
     for (const [key, trace] of this.pathTraces.entries()) {
       const timeSinceTravel = Date.now() - trace.lastTravel;
       
-      // Very slow decay - only after significant time
-      if (timeSinceTravel > 500) {
+      // Only decay after significant time (5 seconds), and very slowly
+      if (timeSinceTravel > CONFIG.axions.decayStartTime) {
         trace.strength *= CONFIG.axions.decayRate;
       }
       
@@ -470,8 +938,8 @@ class AxionSystem {
         path.age++;
       }
       
-      // Remove very weak traces
-      if (trace.strength < 0.005) {
+      // Only remove extremely weak traces (pathways are nearly permanent)
+      if (trace.strength < CONFIG.axions.minStrength) {
         this.pathTraces.delete(key);
       }
     }
@@ -589,7 +1057,10 @@ class PacketSystem {
       dwellCounter: 0,
       mode: 'traveling', // 'traveling' or 'dwelling'
       visible: true, // Visible during zoom phase
-      frameCount: 0
+      frameCount: 0,
+      stuckCounter: 0, // Anti-stuck mechanism
+      lastX: 0,
+      lastY: 0
     };
     
     this.updateAcceleration();
@@ -630,12 +1101,14 @@ class PacketSystem {
       // Skip if this was the last target (avoid ping-pong)
       if (soul === this.packet.targetSoul) continue;
       
-      // Always prefer pathways when they exist (neural routing)
+      // STRONGLY prefer pathways when they exist (neural routing with strength-based attraction)
       let connectionBonus = 0;
-      if (axionSystem && axionSystem.enabled) {
-        const isConnected = axionSystem.isSoulConnected(soul, soulSystem);
-        if (isConnected) {
-          connectionBonus = 2.0; // STRONG preference for pathways
+      if (axionSystem && axionSystem.enabled && this.packet.targetSoul) {
+        const pathwayStrength = axionSystem.getPathwayStrength(this.packet.targetSoul, soul, soulSystem);
+        if (pathwayStrength > 0) {
+          // Bonus scales with pathway strength: stronger pathways = more attraction
+          // Base 2.0 + (strength * multiplier): creates powerful feedback loop!
+          connectionBonus = 2.0 + (pathwayStrength * CONFIG.axions.lightningAttractionMultiplier);
         }
       }
       
@@ -802,6 +1275,32 @@ class PacketSystem {
       this.packet.x += this.packet.vx;
       this.packet.y += this.packet.vy;
       
+      // STUCK DETECTION: If packet hasn't moved much, increment counter
+      const moveDist = Math.hypot(this.packet.x - this.packet.lastX, this.packet.y - this.packet.lastY);
+      if (moveDist < 0.5) {
+        this.packet.stuckCounter++;
+        
+        // If stuck for 60 frames, force a reset
+        if (this.packet.stuckCounter > 60) {
+          const randomSoul = soulSystem.souls[Math.floor(Math.random() * soulSystem.souls.length)];
+          this.packet.x = randomSoul.x;
+          this.packet.y = randomSoul.y;
+          this.packet.targetSoul = randomSoul;
+          this.packet.targetX = randomSoul.x;
+          this.packet.targetY = randomSoul.y;
+          this.packet.vx = 0;
+          this.packet.vy = 0;
+          this.packet.stuckCounter = 0;
+          this.packet.trail = [];
+        }
+      } else {
+        this.packet.stuckCounter = 0;
+      }
+      
+      // Update last position for stuck detection
+      this.packet.lastX = this.packet.x;
+      this.packet.lastY = this.packet.y;
+      
       // Check if reached target
       const distToTarget = Math.hypot(
         this.packet.x - this.packet.targetX,
@@ -823,8 +1322,38 @@ class PacketSystem {
         }
         
         // Find next target immediately (no dwelling)
-        const nextSoul = this.findNextTarget(soulSystem, axionSystem);
+        const previousSoul = soul; // Store current soul
+        let nextSoul = this.findNextTarget(soulSystem, axionSystem);
+        
+        // ANTI-STUCK: If no target found, find ANY activated soul as fallback
+        if (!nextSoul) {
+          const fallbackSouls = soulSystem.souls.filter(s => 
+            s.activated && 
+            s !== previousSoul && 
+            Math.hypot(s.x - this.packet.x, s.y - this.packet.y) < CONFIG.packet.jumpDistance * 1.5
+          );
+          if (fallbackSouls.length > 0) {
+            nextSoul = fallbackSouls[Math.floor(Math.random() * fallbackSouls.length)];
+          }
+        }
+        
+        // LAST RESORT: If still no target, pick ANY soul within extended range
+        if (!nextSoul) {
+          const anySouls = soulSystem.souls.filter(s => 
+            s !== previousSoul && 
+            Math.hypot(s.x - this.packet.x, s.y - this.packet.y) < CONFIG.packet.jumpDistance * 2
+          );
+          if (anySouls.length > 0) {
+            nextSoul = anySouls[Math.floor(Math.random() * anySouls.length)];
+          }
+        }
+        
         if (nextSoul) {
+          // REINFORCE THE PATHWAY: Lightning traveling a pathway strengthens it!
+          if (axionSystem && previousSoul) {
+            axionSystem.strengthenPathway(previousSoul, nextSoul, soulSystem);
+          }
+          
           // Create lightning bolt from current position to next soul
           this.createLightningBolt(this.packet.x, this.packet.y, nextSoul.x, nextSoul.y);
           
@@ -832,9 +1361,19 @@ class PacketSystem {
           this.packet.targetX = nextSoul.x;
           this.packet.targetY = nextSoul.y;
           this.packet.trail = [];
+          this.packet.stuckCounter = 0; // Reset stuck counter
           
           // Slight hue shift
           this.packet.hue = (this.packet.hue + Math.random() * 20 - 10 + 360) % 360;
+        } else {
+          // Truly stuck - teleport to a random soul (emergency reset)
+          const randomSoul = soulSystem.souls[Math.floor(Math.random() * soulSystem.souls.length)];
+          this.packet.x = randomSoul.x;
+          this.packet.y = randomSoul.y;
+          this.packet.targetSoul = randomSoul;
+          this.packet.targetX = randomSoul.x;
+          this.packet.targetY = randomSoul.y;
+          this.packet.stuckCounter = 0;
         }
       }
     }
@@ -868,6 +1407,8 @@ class SoulSystem {
   constructor(width, height, spacing) {
     this.souls = [];
     this.centerSoul = null;
+    this.width = width;
+    this.height = height;
     this.initializeSouls(width, height, spacing);
   }
   
@@ -893,13 +1434,14 @@ class SoulSystem {
   }
   
   createSoul(x, y) {
-    const baseHue = Math.random() * 360;
+    // Generate unique color signature for this soul based on cosmic position
+    const colorSig = ColorResonance.generateSoulSignature(x, y, this.width, this.height);
     
     // Create 3×3 grid of sub-souls (9 total) - RECURSIVE STRUCTURE
     const subSouls = [];
     for (let iy = 0; iy < 3; iy++) {
       for (let ix = 0; ix < 3; ix++) {
-        subSouls.push(this.createSubSoul(x, y, ix, iy, baseHue));
+        subSouls.push(this.createSubSoul(x, y, ix, iy, colorSig));
       }
     }
     
@@ -907,7 +1449,7 @@ class SoulSystem {
       x, y,
       phase: Math.random() * Math.PI * 2,
       frequency: 0.01 + Math.random() * 0.02,
-      baseHue,
+      colorSignature: colorSig,
       activated: false,
       activationLevel: 0,
       activationTime: 0,
@@ -917,7 +1459,7 @@ class SoulSystem {
     };
   }
   
-  createSubSoul(baseX, baseY, ix, iy, soulHue) {
+  createSubSoul(baseX, baseY, ix, iy, parentColorSig) {
     // Each sub-soul is offset within the parent soul (3×3 grid)
     const spacing = CONFIG.souls.subSoulSpacing;
     const offset = spacing * (3 - 1) / 2;
@@ -925,22 +1467,22 @@ class SoulSystem {
     const x = baseX + ix * spacing - offset;
     const y = baseY + iy * spacing - offset;
     
-    // Sub-soul properties influenced by position
-    const positionInfluence = (ix + iy * 3);
-    const hue = (soulHue + positionInfluence * 40) % 360;
+    // Generate sub-soul colors based on parent signature and grid position
+    const colors = ColorResonance.generateSubSoulColors(parentColorSig, ix, iy);
     
     return {
       x, y,
       ix, iy, // Grid position (0-2)
       phase: Math.random() * Math.PI * 2,
       frequency: 0.015 + Math.random() * 0.01,
-      hue,
+      colors,
+      hue: colors.baseHue, // Keep for spark system compatibility
       activation: 0,
-      pixels: this.createPixelsForSubSoul(hue) // 3×3 = 9 pixels
+      pixels: this.createPixelsForSubSoul(colors, parentColorSig) // 3×3 = 9 pixels
     };
   }
   
-  createPixelsForSubSoul(baseHue) {
+  createPixelsForSubSoul(subSoulColors, parentColorSig) {
     // Create 3×3 grid of pixels for a sub-soul (9 pixels)
     const pixels = [];
     
@@ -960,13 +1502,20 @@ class SoulSystem {
           role = 'outer';
         }
         
-        const angle = Math.atan2(dy, dx);
-        const hueOffset = angle * 57.3; // Angle in degrees
+        // Generate unique color for this pixel
+        const pixelColor = ColorResonance.generatePixelColor(
+          subSoulColors, 
+          parentColorSig, 
+          x, y, 
+          role
+        );
         
         pixels.push({
           x, y,
-          h: (baseHue + hueOffset) % 360,
-          s: 0.6,
+          h: pixelColor.hue,
+          baseHue: pixelColor.hue, // Store original for evolution
+          s: pixelColor.saturation,
+          baseSaturation: pixelColor.saturation,
           b: 0,
           role,
           active: false
@@ -1003,9 +1552,18 @@ class SoulSystem {
         const pdy = pixel.y - 1;
         const pAngle = Math.atan2(pdy, pdx);
         
-        // Pattern based on angles
+        // Pattern based on angles and role
         const phaseMatch = Math.cos(angle - pAngle + soul.phase);
-        pixel.b = (0.3 + Math.random() * 0.4) * (0.5 + phaseMatch * 0.5);
+        let baseBrightness = (0.3 + Math.random() * 0.4) * (0.5 + phaseMatch * 0.5);
+        
+        // Roles have different brightness characteristics
+        if (pixel.role === 'core') {
+          baseBrightness *= 1.2;
+        } else if (pixel.role === 'outer') {
+          baseBrightness *= 0.8;
+        }
+        
+        pixel.b = baseBrightness;
         pixel.active = pixel.b > 0.1;
       }
     }
@@ -1036,7 +1594,7 @@ class SoulSystem {
           : CONFIG.sparks.emissionCooldown;
           
         if (timeSinceLastSpark > emissionCooldown) {
-          sparkSystem.emitFromSoul(soul);
+          sparkSystem.emitFromSoul(soul, this);
           soul.lastSparkEmission = frameCount;
           soul.activationLevel = Math.max(0.6, soul.activationLevel - 0.15);
         }
@@ -1088,6 +1646,9 @@ class SoulSystem {
           pixel.h = (pixel.h * (1 - waveInfluence) + interference.hue * waveInfluence) % 360;
         }
         
+        // Evolve pixel colors based on life and activation
+        ColorResonance.evolveColors(pixel, soul, subSoul, frameCount, interference);
+        
         // Add hit boost
         baseBrightness = Math.min(1, baseBrightness + hitRecency * 0.3);
         
@@ -1098,6 +1659,14 @@ class SoulSystem {
       
       // Decay sub-soul activation
       subSoul.activation *= 0.98;
+      
+      // Clamp to reasonable range
+      subSoul.activation = Math.min(1.0, subSoul.activation);
+      
+      // Waves can reactivate sub-souls
+      if (waveBoost > 0.2) {
+        subSoul.activation = Math.min(0.9, subSoul.activation + waveBoost * 0.1);
+      }
     }
     
     // BIDIRECTIONAL INFLUENCE: Sub-souls influence parent
@@ -1125,40 +1694,64 @@ class Renderer {
     this.height = height;
   }
   
-  renderZoomPhase(centerSoul, zoomFrame) {
-    const progress = zoomFrame / CONFIG.zoom.maxFrames;
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const scale = CONFIG.zoom.startScale - ((CONFIG.zoom.startScale - CONFIG.zoom.endScale) * eased);
+  hslToRgb(h, s, l) {
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    const m = l - c / 2;
     
-    this.ctx.fillStyle = 'black';
+    let r, g, b;
+    if (h < 60) { r = c; g = x; b = 0; }
+    else if (h < 120) { r = x; g = c; b = 0; }
+    else if (h < 180) { r = 0; g = c; b = x; }
+    else if (h < 240) { r = 0; g = x; b = c; }
+    else if (h < 300) { r = x; g = 0; b = c; }
+    else { r = c; g = 0; b = x; }
+    
+    return {
+      r: Math.round((r + m) * 255),
+      g: Math.round((g + m) * 255),
+      b: Math.round((b + m) * 255)
+    };
+  }
+  
+  renderZoomPhase(centerSoul, zoomFrame) {
+    // Black background
+    this.ctx.fillStyle = 'rgb(0, 0, 0)';
     this.ctx.fillRect(0, 0, this.width, this.height);
     
-    this.ctx.save();
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(scale, scale);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    // Calculate zoom scale
+    const progress = zoomFrame / CONFIG.zoom.maxFrames;
+    const scale = CONFIG.zoom.startScale - (CONFIG.zoom.startScale - CONFIG.zoom.endScale) * progress;
     
-    const pulse = Math.sin(zoomFrame * 0.1) * 0.3 + 0.7;
-    this.ctx.beginPath();
-    this.ctx.arc(centerSoul.x, centerSoul.y, 3, 0, Math.PI * 2);
-    this.ctx.fillStyle = `hsla(${centerSoul.baseHue}, 90%, 70%, ${pulse})`;
-    this.ctx.fill();
+    // Center on the center soul
+    const centerX = this.width / 2;
+    const centerY = this.height / 2;
     
-    const gradient = this.ctx.createRadialGradient(
-      centerSoul.x, centerSoul.y, 0, 
-      centerSoul.x, centerSoul.y, 15
-    );
-    gradient.addColorStop(0, `hsla(${centerSoul.baseHue}, 80%, 60%, ${0.4 * pulse})`);
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    this.ctx.fillStyle = gradient;
-    this.ctx.fillRect(centerSoul.x - 15, centerSoul.y - 15, 30, 30);
-    
-    this.ctx.restore();
-    
-    this.ctx.fillStyle = `rgba(255, 255, 255, ${0.2 + eased * 0.5})`;
-    this.ctx.font = '32px serif';
-    this.ctx.textAlign = 'center';
-    this.ctx.fillText('∞ = 1', this.width / 2, this.height / 2 - 100);
+    // Render center soul's sub-souls
+    for (const subSoul of centerSoul.subSouls) {
+      const screenX = centerX + (subSoul.x - centerSoul.x) * scale;
+      const screenY = centerY + (subSoul.y - centerSoul.y) * scale;
+      const pixelSize = Math.max(2, scale * CONFIG.souls.pixelSpacing);
+      
+      for (const pixel of subSoul.pixels) {
+        // Render with lower threshold during zoom to ensure visibility
+        if (pixel.b < 0.02) continue;
+        
+        const px = screenX + (pixel.x - 1) * pixelSize;
+        const py = screenY + (pixel.y - 1) * pixelSize;
+        
+        const rgb = this.hslToRgb(pixel.h, pixel.s, pixel.b);
+        this.ctx.fillStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        this.ctx.fillRect(px, py, pixelSize, pixelSize);
+        
+        // Glow for activated pixels
+        if (pixel.b > 0.3) {
+          const glowSize = pixelSize * (1 + pixel.b * 0.5);
+          this.ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${pixel.b * 0.3})`;
+          this.ctx.fillRect(px - (glowSize - pixelSize) / 2, py - (glowSize - pixelSize) / 2, glowSize, glowSize);
+        }
+      }
+    }
   }
   
   renderMainPhase(soulSystem, packetSystem, waveSystem, sparkSystem, axionSystem, frameCount, isZoomPhase = false) {
@@ -1193,7 +1786,7 @@ class Renderer {
       const { segments, strength } = conn;
       
       // Calculate hue from souls
-      const avgHue = (conn.soul1.baseHue + conn.soul2.baseHue) / 2;
+      const avgHue = (conn.soul1.colorSignature.primaryHue + conn.soul2.colorSignature.primaryHue) / 2;
       
       this.ctx.save();
       
@@ -1205,19 +1798,23 @@ class Renderer {
         this.ctx.lineTo(segments[i].x, segments[i].y);
       }
       
-      // Subtle glow
-      this.ctx.shadowBlur = 5;
-      this.ctx.shadowColor = `hsla(${avgHue}, 75%, 65%, ${strength * 0.25})`;
+      // Subtle glow - scales with strength (lightning-reinforced paths glow more)
+      const glowIntensity = Math.min(1, strength / 2.0); // Normalize 0-2.0 to 0-1
+      this.ctx.shadowBlur = 8 + glowIntensity * 12; // 8-20px blur for super-highways
+      this.ctx.shadowColor = `hsla(${avgHue}, 75%, 65%, ${glowIntensity * 0.6})`;
       
-      // Main thin line - 1px like sparks
-      this.ctx.strokeStyle = `hsla(${avgHue}, 85%, 70%, ${strength * 0.6})`;
-      this.ctx.lineWidth = 1;
+      // Main line - thickness increases with strength (shows reinforcement!)
+      // Base 1.5px, up to 5px for heavily lightning-traveled pathways
+      const lineThickness = 1.5 + (glowIntensity * 3.5);
+      this.ctx.strokeStyle = `hsla(${avgHue}, 85%, 70%, ${Math.min(1, glowIntensity * 1.1)})`;
+      this.ctx.lineWidth = lineThickness;
       this.ctx.stroke();
       
-      // Slightly brighter core for stronger connections
+      // Brighter core for stronger connections - these are the neural super-highways!
       if (strength > 0.3) {
-        this.ctx.strokeStyle = `hsla(${avgHue}, 90%, 80%, ${(strength - 0.3) * 0.5})`;
-        this.ctx.lineWidth = 0.5;
+        const coreIntensity = Math.min(1, (strength - 0.3) / 2.0); // 0.3-2.3 → 0-1
+        this.ctx.strokeStyle = `hsla(${avgHue}, 95%, 85%, ${Math.min(1, coreIntensity * 1.1)})`;
+        this.ctx.lineWidth = lineThickness * 0.6; // Core is thinner
         this.ctx.stroke();
       }
       
@@ -1334,6 +1931,70 @@ class Renderer {
       
       this.ctx.restore();
     }
+    
+    // Render bonds between resonant sparks
+    for (const bond of sparkSystem.sparkBonds) {
+      // Validate bond data before rendering
+      if (!bond.point1 || !bond.point2 || 
+          !isFinite(bond.point1.x) || !isFinite(bond.point1.y) ||
+          !isFinite(bond.point2.x) || !isFinite(bond.point2.y) ||
+          !isFinite(bond.hue) || !isFinite(bond.alpha) || !isFinite(bond.strength)) {
+        continue;
+      }
+      
+      this.ctx.save();
+      
+      // Create a subtle, pulsing connection line
+      const pulsePhase = (Date.now() * 0.003) % (Math.PI * 2);
+      const pulse = Math.sin(pulsePhase) * 0.2 + 0.8;
+      
+      // Ensure hue is in valid range
+      const hue = Math.max(0, Math.min(360, bond.hue));
+      const alpha = Math.max(0, Math.min(1, bond.alpha * pulse * 0.6));
+      
+      // Draw bond connection with gradient
+      const gradient = this.ctx.createLinearGradient(
+        bond.point1.x, bond.point1.y,
+        bond.point2.x, bond.point2.y
+      );
+      
+      gradient.addColorStop(0, `hsla(${hue}, 80%, 60%, ${alpha})`);
+      gradient.addColorStop(0.5, `hsla(${hue}, 90%, 70%, ${Math.max(0, Math.min(1, bond.alpha * pulse * 0.9))})`);
+      gradient.addColorStop(1, `hsla(${hue}, 80%, 60%, ${alpha})`);
+      
+      // Draw main bond line
+      this.ctx.beginPath();
+      this.ctx.moveTo(bond.point1.x, bond.point1.y);
+      this.ctx.lineTo(bond.point2.x, bond.point2.y);
+      this.ctx.strokeStyle = gradient;
+      this.ctx.lineWidth = Math.max(0.5, 1.5 * bond.strength);
+      this.ctx.stroke();
+      
+      // Add glow for stronger bonds
+      if (bond.strength > 0.7) {
+        this.ctx.shadowBlur = 8;
+        this.ctx.shadowColor = `hsla(${hue}, 90%, 70%, ${Math.max(0, Math.min(1, bond.alpha * 0.5))})`;
+        this.ctx.strokeStyle = `hsla(${hue}, 100%, 80%, ${Math.max(0, Math.min(1, bond.alpha * bond.strength * 0.4))})`;
+        this.ctx.lineWidth = 3;
+        this.ctx.stroke();
+      }
+      
+      // Draw energy particles flowing along the bond
+      const particleCount = Math.floor(bond.strength * 3);
+      for (let i = 0; i < particleCount; i++) {
+        const t = ((Date.now() * 0.001 + i * 0.3) % 1);
+        const px = bond.point1.x + (bond.point2.x - bond.point1.x) * t;
+        const py = bond.point1.y + (bond.point2.y - bond.point1.y) * t;
+        
+        this.ctx.shadowBlur = 0;
+        this.ctx.beginPath();
+        this.ctx.arc(px, py, 1.5, 0, Math.PI * 2);
+        this.ctx.fillStyle = `hsla(${hue}, 100%, 80%, ${Math.max(0, Math.min(1, bond.alpha * bond.strength))})`;
+        this.ctx.fill();
+      }
+      
+      this.ctx.restore();
+    }
   }
   
   renderSouls(soulSystem, frameCount) {
@@ -1349,7 +2010,7 @@ class Renderer {
   renderInactiveSoul(soul) {
     this.ctx.beginPath();
     this.ctx.arc(soul.x, soul.y, 1.5, 0, Math.PI * 2);
-    this.ctx.fillStyle = `hsla(${soul.baseHue}, 40%, 50%, 0.15)`;
+    this.ctx.fillStyle = `hsla(${soul.colorSignature.primaryHue}, 40%, 50%, 0.15)`;
     this.ctx.fill();
   }
   
@@ -1359,7 +2020,7 @@ class Renderer {
       soul.x, soul.y, 0, 
       soul.x, soul.y, CONFIG.visuals.envGlowRadius
     );
-    envGradient.addColorStop(0, `hsla(${soul.baseHue}, 60%, 50%, ${0.08 * soul.activationLevel})`);
+    envGradient.addColorStop(0, `hsla(${soul.colorSignature.primaryHue}, 60%, 50%, ${0.08 * soul.activationLevel})`);
     envGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
     this.ctx.fillStyle = envGradient;
     this.ctx.fillRect(
@@ -1373,7 +2034,7 @@ class Renderer {
     const pulse = Math.sin(frameCount * CONFIG.physics.pulseSpeed + soul.phase) * 0.3 + 0.7;
     this.ctx.beginPath();
     this.ctx.arc(soul.x, soul.y, 3.5, 0, Math.PI * 2);
-    this.ctx.fillStyle = `hsla(${soul.baseHue}, 90%, 70%, ${pulse * soul.activationLevel})`;
+    this.ctx.fillStyle = `hsla(${soul.colorSignature.primaryHue}, 90%, 70%, ${pulse * soul.activationLevel})`;
     this.ctx.fill();
     
     // Inner glow
@@ -1381,7 +2042,7 @@ class Renderer {
       soul.x, soul.y, 0, 
       soul.x, soul.y, CONFIG.visuals.glowRadius
     );
-    gradient.addColorStop(0, `hsla(${soul.baseHue}, 80%, 60%, ${0.25 * soul.activationLevel})`);
+    gradient.addColorStop(0, `hsla(${soul.colorSignature.primaryHue}, 80%, 60%, ${0.25 * soul.activationLevel})`);
     gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
     this.ctx.fillStyle = gradient;
     this.ctx.fillRect(
@@ -1438,7 +2099,7 @@ class Renderer {
 // ============================================================================
 const FractalSoulArray = () => {
   const canvasRef = useRef(null);
-  const [stats, setStats] = useState({ souls: 0, sparks: 0, frame: 0, axions: 0, traces: 0, axionsEnabled: false, fps: 60, coreMode: false });
+  const [stats, setStats] = useState({ souls: 0, sparks: 0, bonds: 0, frame: 0, axions: 0, traces: 0, axionsEnabled: false, fps: 60, coreMode: false });
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1461,6 +2122,9 @@ const FractalSoulArray = () => {
     const sparkSystem = new SparkSystem();
     const axionSystem = new AxionSystem();
     const renderer = new Renderer(ctx, CONFIG.canvas.width, CONFIG.canvas.height);
+    
+    // Activate center soul for zoom phase
+    soulSystem.activate(soulSystem.centerSoul, 0);
     
     // Set initial target to center soul
     packetSystem.packet.targetSoul = soulSystem.centerSoul;
@@ -1499,6 +2163,13 @@ const FractalSoulArray = () => {
       }
       
       if (zoomPhase) {
+        // Keep center soul fully activated during zoom
+        soulSystem.centerSoul.activationLevel = 1.0;
+        soulSystem.centerSoul.lastHitTime = zoomFrame;
+        
+        // Update center soul during zoom to maintain colors
+        soulSystem.updateSoul(soulSystem.centerSoul, zoomFrame, waveSystem, sparkSystem, axionSystem);
+        
         renderer.renderZoomPhase(soulSystem.centerSoul, zoomFrame);
         
         // Animate packet during zoom phase too
@@ -1535,6 +2206,7 @@ const FractalSoulArray = () => {
         setStats({
           souls: soulSystem.getActiveSoulCount(),
           sparks: sparkSystem.sparks.length,
+          bonds: sparkSystem.sparkBonds.length,
           frame: frameCount,
           axions: axionSystem.connections.length,
           traces: axionSystem.pathTraces.size,
@@ -1585,6 +2257,11 @@ const FractalSoulArray = () => {
       }}>
         <div>Active Souls: {stats.souls}</div>
         <div>Sparks: {stats.sparks}</div>
+        {stats.bonds > 0 && (
+          <div style={{ color: 'rgba(255, 200, 100, 0.8)', fontSize: '12px' }}>
+            🔗 Bonds: {stats.bonds}
+          </div>
+        )}
         <div style={{ color: stats.fps < 30 ? 'rgba(255, 150, 100, 0.9)' : 'rgba(255, 255, 255, 0.6)' }}>
           FPS: {stats.fps}
         </div>
@@ -1612,6 +2289,12 @@ const FractalSoulArray = () => {
         )}
         <div style={{ marginTop: 8, fontSize: '11px', opacity: 0.6 }}>
           Recursive: 9 sub-souls × 9 pixels = 81
+        </div>
+        <div style={{ marginTop: 4, fontSize: '10px', opacity: 0.5, color: 'rgba(200, 150, 255, 0.7)' }}>
+          ✨ Resonant Color Signatures
+        </div>
+        <div style={{ marginTop: 2, fontSize: '10px', opacity: 0.5, color: 'rgba(150, 255, 200, 0.7)' }}>
+          🎵 Harmonic Communication
         </div>
         {!stats.axionsEnabled && stats.souls > 0 && (
           <div style={{ marginTop: 4, fontSize: '11px', opacity: 0.5 }}>
