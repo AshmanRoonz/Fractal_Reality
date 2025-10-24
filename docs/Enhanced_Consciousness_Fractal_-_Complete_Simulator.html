@@ -3,283 +3,433 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fractal Reality Simulators</title>
+    <title>Interactive Demonstrations - Fractal Reality</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: #ffffff;
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: #0a0a0a;
+            color: #e8e8e8;
+            line-height: 1.5;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        
+        #root {
             min-height: 100vh;
-            padding: 2rem;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        
+        .simulation-container {
+            width: 100%;
+            height: 100vh;
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #a78bfa, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header p {
-            color: #c4b5fd;
-            font-size: 1.1rem;
-        }
-
-        .simulator-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .simulator-card {
-            background: rgba(30, 27, 75, 0.6);
-            border: 2px solid #7c3aed;
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
+        
+        .sim-button {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #e8e8e8;
+            padding: 0.75rem 1.5rem;
+            text-align: left;
             cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
         }
-
-        .simulator-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(167, 139, 250, 0.3);
-            border-color: #a78bfa;
-        }
-
-        .simulator-card h3 {
-            color: #fbbf24;
-            margin-bottom: 0.8rem;
-            font-size: 1.3rem;
-        }
-
-        .simulator-card p {
-            color: #9ca3af;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-
-        .simulator-card .features {
-            list-style: none;
-            margin-bottom: 1rem;
-        }
-
-        .simulator-card .features li {
-            color: #c4b5fd;
-            font-size: 0.85rem;
-            padding: 0.3rem 0;
-        }
-
-        .simulator-card .features li:before {
-            content: "→ ";
-            color: #a78bfa;
-            font-weight: bold;
-        }
-
-        .simulator-link {
-            display: inline-block;
-            padding: 0.6rem 1.2rem;
-            background: linear-gradient(135deg, #7c3aed, #a78bfa);
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .simulator-link:hover {
-            background: linear-gradient(135deg, #6d28d9, #8b5cf6);
-            box-shadow: 0 4px 12px rgba(167, 139, 250, 0.4);
-        }
-
-        .back-link {
-            text-align: center;
-            margin-top: 3rem;
-        }
-
-        .back-link a {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.8rem 1.5rem;
-            background: rgba(124, 58, 237, 0.3);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            border: 2px solid #7c3aed;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .back-link a:hover {
-            background: rgba(124, 58, 237, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .category-header {
-            color: #a78bfa;
-            font-size: 1.8rem;
-            margin: 2rem 0 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #4c1d95;
-        }
-
-        @media (max-width: 768px) {
-            .simulator-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
+        
+        .sim-button:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.15);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🌀 Fractal Reality Simulators</h1>
-            <p>Interactive visualizations of the Fractal Reality Framework</p>
-        </div>
+    <div id="root"></div>
 
-        <h2 class="category-header">🎯 Core Framework Visualizations</h2>
-        <div class="simulator-grid">
-            <div class="simulator-card">
-                <h3>Fractal Reality Diagram</h3>
-                <p>Complete interactive framework visualization with five sections exploring the mathematical formalism.</p>
-                <ul class="features">
-                    <li>Complete Framework Overview</li>
-                    <li>Fractalization Event</li>
-                    <li>[ICE] Validation Process</li>
-                    <li>Dimensional Cascade (0D → 3D)</li>
-                    <li>Empirical Validation Data</li>
-                </ul>
-                <a href="simulators/fractal-reality-diagram-dark.html" class="simulator-link">Launch Simulator</a>
-            </div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-            <div class="simulator-card">
-                <h3>Enhanced Consciousness Fractal</h3>
-                <p>Flagship visualization showing the fractal emergence patterns and consciousness dynamics.</p>
-                <ul class="features">
-                    <li>Real-time fractal generation</li>
-                    <li>Dynamic particle system</li>
-                    <li>Consciousness flow patterns</li>
-                    <li>Interactive parameters</li>
-                </ul>
-                <a href="simulators/fractal-reality-flagship.html" class="simulator-link">Launch Simulator</a>
-            </div>
-        </div>
+        const SimulationRunner = () => {
+            const [simulations, setSimulations] = useState([]);
+            const [selectedSim, setSelectedSim] = useState(null);
+            const [simCode, setSimCode] = useState('');
+            const [error, setError] = useState(null);
+            const [loading, setLoading] = useState(true);
 
-        <h2 class="category-header">🔬 Physics & Consciousness Simulators</h2>
-        <div class="simulator-grid">
-            <div class="simulator-card">
-                <h3>Fractal PET Cell Simulator</h3>
-                <p>Visualize the Positron Emission Topology showing how particles emerge from fractal validation boundaries.</p>
-                <ul class="features">
-                    <li>Particle emergence visualization</li>
-                    <li>Boundary validation dynamics</li>
-                    <li>Topology mapping</li>
-                </ul>
-                <a href="simulators/fractal-pet-cell.html" class="simulator-link">Launch Simulator</a>
-            </div>
+            // Check for auto-load parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const autoLoad = urlParams.get('auto');
 
-            <div class="simulator-card">
-                <h3>Molecular Harmony Composer</h3>
-                <p>Explore molecular structures through the lens of harmonic validation patterns.</p>
-                <ul class="features">
-                    <li>Molecular pattern visualization</li>
-                    <li>Harmonic resonance display</li>
-                    <li>Interactive molecular builder</li>
-                </ul>
-                <a href="simulators/molecular-harmony-composer.html" class="simulator-link">Launch Simulator</a>
-            </div>
+            // Read simulation list from sims.md
+            useEffect(() => {
+                const fetchSimulations = async () => {
+                    try {
+                        // Fetch the sims.md file
+                        const response = await fetch('./sims.md');
+                        if (!response.ok) {
+                            throw new Error('Could not find sims.md file. Please create it in the root directory.');
+                        }
+                        
+                        const markdown = await response.text();
+                        
+                        // Parse the markdown to extract .tsx filenames
+                        // Supports multiple formats:
+                        // - harmonic_chemistry.tsx
+                        // - simulations/harmonic_chemistry.tsx
+                        // - [Link](harmonic_chemistry.tsx)
+                        // - * harmonic_chemistry.tsx
+                        // - - harmonic_chemistry.tsx
+                        
+                        const lines = markdown.split('\n');
+                        const tsxFiles = [];
+                        
+                        for (const line of lines) {
+                            const trimmed = line.trim();
+                            
+                            // Skip empty lines, headers, and comments
+                            if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) {
+                                continue;
+                            }
+                            
+                            // Extract filename from various formats
+                            let filename = null;
+                            
+                            // Markdown link format: [text](filename.tsx)
+                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.tsx)\)/);
+                            if (linkMatch) {
+                                filename = linkMatch[1];
+                            }
+                            // List format: - filename.tsx or * filename.tsx
+                            else if (trimmed.match(/^[-*]\s+/)) {
+                                const listMatch = trimmed.match(/[-*]\s+(.*?\.tsx)/);
+                                if (listMatch) {
+                                    filename = listMatch[1];
+                                }
+                            }
+                            // Plain format: filename.tsx or simulations/filename.tsx
+                            else if (trimmed.endsWith('.tsx')) {
+                                filename = trimmed;
+                            }
+                            
+                            if (filename) {
+                                // Remove 'simulations/' prefix if present
+                                filename = filename.replace(/^simulations\//, '');
+                                tsxFiles.push(filename);
+                            }
+                        }
+                        
+                        if (tsxFiles.length === 0) {
+                            throw new Error('No .tsx files found in sims.md. Please list your simulation files.');
+                        }
+                        
+                        setSimulations(tsxFiles);
+                        setLoading(false);
+                        
+                        // Auto-load if parameter present
+                        if (autoLoad && tsxFiles.includes(autoLoad)) {
+                            loadSimulation(autoLoad);
+                        }
+                    } catch (err) {
+                        console.error('Error loading simulations:', err);
+                        setError(err.message || 'Could not load sims.md');
+                        setLoading(false);
+                    }
+                };
 
-            <div class="simulator-card">
-                <h3>Harmonic Periodic Table</h3>
-                <p>Interactive periodic table showing elements organized by harmonic validation principles.</p>
-                <ul class="features">
-                    <li>Harmonic element relationships</li>
-                    <li>Validation pattern display</li>
-                    <li>Interactive element explorer</li>
-                </ul>
-                <a href="simulators/harmonic-periodic-table.html" class="simulator-link">Launch Simulator</a>
-            </div>
-        </div>
+                fetchSimulations();
+            }, []);
 
-        <h2 class="category-header">📊 Data & Analysis</h2>
-        <div class="simulator-grid">
-            <div class="simulator-card">
-                <h3>LIGO Multi-Run Analysis</h3>
-                <p>Comprehensive analysis of gravitational wave data across multiple LIGO observing runs showing D ≈ 1.5 validation.</p>
-                <ul class="features">
-                    <li>40 observations across 19 events</li>
-                    <li>D = 1.503 ± 0.040 (p = 0.951)</li>
-                    <li>Statistical validation</li>
-                </ul>
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/multi_run_comprehensive_report.png" target="_blank" class="simulator-link">View Analysis</a>
-            </div>
+            // Load and execute selected simulation
+            const loadSimulation = async (filename) => {
+                try {
+                    setError(null);
+                    setLoading(true);
+                    
+                    // Fetch the TSX file content
+                    const response = await fetch(`./simulations/${filename}`);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load ${filename}`);
+                    }
+                    
+                    const code = await response.text();
+                    setSimCode(code);
+                    setSelectedSim(filename);
+                    setLoading(false);
+                } catch (err) {
+                    console.error('Error loading simulation:', err);
+                    setError(`Error loading ${filename}: ${err.message}`);
+                    setLoading(false);
+                }
+            };
 
-            <div class="simulator-card">
-                <h3>Bubble Chamber Analysis</h3>
-                <p>Fractal dimension analysis of particle tracks in bubble chambers validating the 1.5D prediction.</p>
-                <ul class="features">
-                    <li>33 particle tracks analyzed</li>
-                    <li>MeV-GeV energy range</li>
-                    <li>Energy correlation studies</li>
-                </ul>
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/bubble-chamber-analysis.md" target="_blank" class="simulator-link">View Analysis</a>
-            </div>
-        </div>
+            // Render the selected simulation
+            const SimulationRenderer = () => {
+                if (!simCode) return null;
 
-        <h2 class="category-header">📚 Documentation & Papers</h2>
-        <div class="simulator-grid">
-            <div class="simulator-card">
-                <h3>Complete Framework Documentation</h3>
-                <p>Full 12-layer documentation of the Fractal Reality Framework from fundamental principles to consciousness.</p>
-                <ul class="features">
-                    <li>Layer 0-12 complete documentation</li>
-                    <li>Mathematical formalism</li>
-                    <li>Validation data</li>
-                </ul>
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/readme.md" target="_blank" class="simulator-link">View Docs</a>
-            </div>
+                try {
+                    // Remove import statements and replace with available globals
+                    let processedCode = simCode;
+                    
+                    // Remove React imports (we have it globally)
+                    processedCode = processedCode.replace(/import\s+React.*?from\s+['"]react['"];?\s*/g, '');
+                    processedCode = processedCode.replace(/import\s+\{[^}]*\}\s+from\s+['"]react['"];?\s*/g, '');
+                    
+                    // Remove lucide-react imports and create mock components
+                    const lucideMatch = processedCode.match(/import\s+\{([^}]+)\}\s+from\s+['"]lucide-react['"]/);
+                    if (lucideMatch) {
+                        const icons = lucideMatch[1].split(',').map(i => i.trim());
+                        const mockIcons = icons.map(icon => 
+                            `const ${icon} = (props) => React.createElement('svg', {...props, xmlns: 'http://www.w3.org/2000/svg', width: '24', height: '24', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2'}, React.createElement('circle', {cx: '12', cy: '12', r: '10'}));`
+                        ).join('\n');
+                        processedCode = processedCode.replace(/import\s+\{[^}]+\}\s+from\s+['"]lucide-react['"];?\s*/g, mockIcons);
+                    }
+                    
+                    // Remove any other imports
+                    processedCode = processedCode.replace(/import\s+.*?from\s+['"].*?['"];?\s*/g, '');
+                    
+                    // Remove export statements
+                    processedCode = processedCode.replace(/export\s+default\s+/g, '');
+                    processedCode = processedCode.replace(/export\s+/g, '');
 
-            <div class="simulator-card">
-                <h3>Three Publication-Ready Papers</h3>
-                <p>Complete set of peer-review ready papers on QM-GR unification, cosmological constant, and quantum uncertainty.</p>
-                <ul class="features">
-                    <li>Paper 1: QM + GR Unification</li>
-                    <li>Paper 2: Cosmological Constant</li>
-                    <li>Paper 3: Quantum Uncertainty Origin</li>
-                </ul>
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/three_papers_summary.md" target="_blank" class="simulator-link">View Papers</a>
-            </div>
-        </div>
+                    // Transform TSX to JS with proper scope handling
+                    const transformed = Babel.transform(processedCode, {
+                        filename: selectedSim || 'simulation.tsx',
+                        presets: [
+                            ['react', { 
+                                runtime: 'classic',
+                                pragma: 'React.createElement'
+                            }],
+                            ['typescript', {
+                                isTSX: true,
+                                allExtensions: true
+                            }]
+                        ]
+                    }).code;
 
-        <div class="back-link">
-            <a href="../index.html">
-                ← Back to Main Page
-            </a>
-        </div>
-    </div>
+                    // Extract the component name
+                    const componentMatch = processedCode.match(/(?:const|function|let|var)\s+(\w+)\s*=?\s*\([^)]*\)\s*(?:=>)?\s*{/);
+                    const componentName = componentMatch ? componentMatch[1] : 'App';
+
+                    // Wrap the entire code in an IIFE to create proper scope
+                    const wrappedCode = `
+                        return (function() {
+                            ${transformed}
+                            
+                            // Return the component
+                            if (typeof ${componentName} !== 'undefined') {
+                                return ${componentName};
+                            }
+                            if (typeof App !== 'undefined') {
+                                return App;
+                            }
+                            
+                            // Try to find any function component
+                            const allVars = Object.keys(this).filter(k => typeof this[k] === 'function');
+                            if (allVars.length > 0) {
+                                return this[allVars[allVars.length - 1]];
+                            }
+                            
+                            throw new Error('No component found. Make sure to define a component function.');
+                        }).call({});
+                    `;
+
+                    // Create the component with all necessary globals
+                    const createComponent = new Function(
+                        'React',
+                        'useState', 
+                        'useEffect',
+                        'useRef',
+                        'useMemo',
+                        'useCallback',
+                        'useReducer',
+                        'useContext',
+                        wrappedCode
+                    );
+
+                    const SimComponent = createComponent(
+                        React,
+                        React.useState,
+                        React.useEffect,
+                        React.useRef,
+                        React.useMemo,
+                        React.useCallback,
+                        React.useReducer,
+                        React.useContext
+                    );
+
+                    if (!SimComponent || typeof SimComponent !== 'function') {
+                        throw new Error('No valid React component found in simulation file');
+                    }
+
+                    return React.createElement(SimComponent);
+                } catch (err) {
+                    console.error('Error rendering simulation:', err);
+                    return (
+                        <div style={{padding: '3rem', background: '#0a0a0a', color: '#f87171', minHeight: '100vh'}}>
+                            <h3 className="mono" style={{fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem'}}>Rendering Error</h3>
+                            <div style={{background: 'rgba(0,0,0,0.5)', padding: '1rem', marginBottom: '1rem'}}>
+                                <p className="mono" style={{fontSize: '13px'}}>{err.message}</p>
+                            </div>
+                            <details style={{marginTop: '1.5rem'}}>
+                                <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Stack Trace</summary>
+                                <pre className="mono" style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap'}}>{err.stack}</pre>
+                            </details>
+                            <details style={{marginTop: '1.5rem'}}>
+                                <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Original Code</summary>
+                                <pre className="mono" style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap'}}>{simCode}</pre>
+                            </details>
+                            <div style={{marginTop: '2rem', padding: '1rem', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)'}}>
+                                <p className="mono" style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '13px'}}>Common Issues:</p>
+                                <ul className="mono" style={{fontSize: '12px', lineHeight: '1.6', paddingLeft: '1.5rem', listStyle: 'disc'}}>
+                                    <li>Make sure all variables are declared with const/let/var</li>
+                                    <li>Use React.useState, React.useEffect instead of destructured hooks</li>
+                                    <li>Avoid external libraries (only React and Tailwind are available)</li>
+                                    <li>Component should be a simple function that returns JSX</li>
+                                </ul>
+                            </div>
+                        </div>
+                    );
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+                    {!selectedSim ? (
+                        // Simulation selector
+                        <div style={{background: '#0a0a0a', minHeight: '100vh', padding: '4rem 2rem'}}>
+                            <div style={{maxWidth: '960px', margin: '0 auto'}}>
+                                <div className="mb-12">
+                                    <h1 className="text-5xl font-light mb-3 tracking-tight" style={{letterSpacing: '-0.02em', color: '#e8e8e8'}}>
+                                        Interactive Demonstrations
+                                    </h1>
+                                    <p className="text-sm mono" style={{color: '#808080'}}>
+                                        Fractal Reality Framework
+                                    </p>
+                                </div>
+
+                                {loading ? (
+                                    <div className="text-center" style={{color: '#808080'}}>
+                                        <div className="mono text-sm">Loading...</div>
+                                    </div>
+                                ) : error ? (
+                                    <div style={{border: '1px solid rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.05)', padding: '2rem', maxWidth: '600px'}}>
+                                        <p style={{color: '#f87171', marginBottom: '1rem'}}>{error}</p>
+                                        <div style={{color: '#9ca3af', fontSize: '13px'}}>
+                                            <p className="font-bold mb-2">Setup Instructions:</p>
+                                            <ol style={{listStyle: 'decimal', paddingLeft: '1.5rem', lineHeight: '1.8'}}>
+                                                <li>Create a <code style={{background: 'rgba(0,0,0,0.5)', padding: '2px 6px'}}>simulations/</code> directory</li>
+                                                <li>Add your .tsx simulation files to it</li>
+                                                <li>Create a <code style={{background: 'rgba(0,0,0,0.5)', padding: '2px 6px'}}>sims.md</code> file in the root directory</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                ) : simulations.length === 0 ? (
+                                    <div style={{border: '1px solid rgba(234, 179, 8, 0.3)', background: 'rgba(234, 179, 8, 0.05)', padding: '2rem', maxWidth: '600px'}}>
+                                        <p style={{color: '#fbbf24'}}>No simulations found</p>
+                                        <p style={{color: '#9ca3af', marginTop: '1rem', fontSize: '13px'}}>
+                                            Add TSX files to the ./simulations/ directory and update sims.md
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div style={{maxWidth: '600px'}}>
+                                        <p className="text-xs mono uppercase tracking-wider mb-4" style={{color: '#606060'}}>
+                                            Select simulation
+                                        </p>
+                                        <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                                            {simulations.map((sim, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    onClick={() => loadSimulation(sim)}
+                                                    className="sim-button"
+                                                >
+                                                    {sim.replace('.tsx', '')}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <div style={{marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)'}}>
+                                            <a 
+                                                href="./" 
+                                                style={{color: '#e8e8e8', textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.2)', fontSize: '13px'}}
+                                                className="mono"
+                                            >
+                                                ← Back to main page
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ) : (
+                        // Simulation viewer
+                        <div className="simulation-container relative">
+                            <button
+                                onClick={() => {
+                                    setSelectedSim(null);
+                                    setSimCode('');
+                                    setError(null);
+                                }}
+                                className="mono"
+                                style={{
+                                    position: 'absolute',
+                                    top: '1.5rem',
+                                    left: '1.5rem',
+                                    zIndex: 50,
+                                    background: 'white',
+                                    color: 'black',
+                                    padding: '0.5rem 1rem',
+                                    fontSize: '11px',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    transition: 'background 0.2s'
+                                }}
+                                onMouseOver={(e) => e.target.style.background = '#ddd'}
+                                onMouseOut={(e) => e.target.style.background = 'white'}
+                            >
+                                ← BACK
+                            </button>
+                            
+                            {loading ? (
+                                <div className="flex items-center justify-center h-screen" style={{background: '#0a0a0a'}}>
+                                    <div className="text-center">
+                                        <div className="mono" style={{color: '#e8e8e8', fontSize: '16px', marginBottom: '1rem'}}>Loading</div>
+                                        <div className="mono" style={{color: '#606060', fontSize: '13px'}}>{selectedSim}</div>
+                                    </div>
+                                </div>
+                            ) : error ? (
+                                <div className="flex items-center justify-center h-screen p-8" style={{background: '#0a0a0a'}}>
+                                    <div style={{maxWidth: '600px', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '2rem'}}>
+                                        <h3 style={{fontSize: '18px', fontWeight: 'bold', color: '#f87171', marginBottom: '1rem'}}>Error</h3>
+                                        <p className="mono" style={{color: '#fca5a5', fontSize: '13px'}}>{error}</p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <SimulationRenderer />
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SimulationRunner />);
+    </script>
 </body>
 </html>
