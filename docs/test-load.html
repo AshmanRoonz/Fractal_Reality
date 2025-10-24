@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <pre id="error" style="color: red; white-space: pre-wrap;"></pre>
+    <pre id="log" style="color: green; white-space: pre-wrap;"></pre>
+
+    <script>
+        const log = (msg) => {
+            document.getElementById('log').textContent += msg + '\n';
+            console.log(msg);
+        };
+
+        const showError = (msg) => {
+            document.getElementById('error').textContent += msg + '\n';
+            console.error(msg);
+        };
+
+        async function testLoad() {
+            try {
+                log('Fetching fractal-reality-flagship.tsx...');
+                const response = await fetch('./simulations/fractal-reality-flagship.tsx');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch: ${response.status}`);
+                }
+
+                const code = await response.text();
+                log(`File loaded: ${code.length} characters`);
+
+                // Remove imports
+                let processedCode = code;
+                processedCode = processedCode.replace(/import\s+React.*?from\s+['"]react['"];?\s*/g, '');
+                processedCode = processedCode.replace(/import\s+\{[^}]*\}\s+from\s+['"]react['"];?\s*/g, '');
+                processedCode = processedCode.replace(/export\s+default\s+/g, '');
+                processedCode = processedCode.replace(/export\s+/g, '');
+
+                log('Transforming with Babel...');
+                const transformed = Babel.transform(processedCode, {
+                    filename: 'test.tsx',
+                    presets: [
+                        ['react', { runtime: 'classic', pragma: 'React.createElement' }],
+                        ['typescript', { isTSX: true, allExtensions: true }]
+                    ]
+                }).code;
+
+                log('Transformation successful');
+                log(`Transformed code length: ${transformed.length} characters`);
+
+                // Try to find component name
+                const componentMatch = processedCode.match(/(?:const|function|let|var)\s+(\w+)\s*=?\s*\([^)]*\)\s*(?:=>)?\s*{/);
+                const componentName = componentMatch ? componentMatch[1] : 'App';
+                log(`Found component: ${componentName}`);
+
+                // Try to execute
+                const wrappedCode = `
+                    return (function() {
+                        ${transformed}
+
+                        if (typeof ${componentName} !== 'undefined') {
+                            return ${componentName};
+                        }
+                        if (typeof App !== 'undefined') {
+                            return App;
+                        }
+
+                        throw new Error('No component found');
+                    }).call({});
+                `;
+
+                log('Creating component function...');
+                const createComponent = new Function(
+                    'React',
+                    'useState',
+                    'useEffect',
+                    'useRef',
+                    'useMemo',
+                    'useCallback',
+                    wrappedCode
+                );
+
+                log('Executing component function...');
+                const SimComponent = createComponent(
+                    React,
+                    React.useState,
+                    React.useEffect,
+                    React.useRef,
+                    React.useMemo,
+                    React.useCallback
+                );
+
+                log('Component created successfully!');
+                log(`Component type: ${typeof SimComponent}`);
+
+                // Try to render
+                log('Attempting to render...');
+                const root = ReactDOM.createRoot(document.getElementById('root'));
+                root.render(React.createElement(SimComponent));
+                log('Render successful!');
+
+            } catch (err) {
+                showError(`ERROR: ${err.message}`);
+                showError(`Stack: ${err.stack}`);
+            }
+        }
+
+        testLoad();
+    </script>
+</body>
+</html>
