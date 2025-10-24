@@ -3,313 +3,601 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fractal Reality Framework - Complete Unification Theory</title>
+    <title>Fractal Reality - A Unified Framework</title>
+    <meta name="description" content="A complete mathematical framework unifying quantum mechanics, general relativity, and consciousness through validation at interfaces in 3.5D spacetime. Empirically validated with D = 1.503 ± 0.040.">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: #ffffff;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .header {
-            text-align: center;
-            padding: 2rem 1rem 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 2px solid #a78bfa;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #a78bfa, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header .subtitle {
-            font-size: 1.2rem;
-            color: #c4b5fd;
-            margin-bottom: 0.5rem;
-        }
-
-        .header .tagline {
-            font-size: 0.95rem;
-            color: #9ca3af;
-            font-style: italic;
-        }
-
-        .preview-section {
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-bottom: 1px solid #4c1d95;
-        }
-
-        .preview-header {
-            text-align: center;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            color: #fbbf24;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .preview-container {
-            width: 100%;
-            height: 200px;
-            border: 2px solid #7c3aed;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #1e1b4b;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-
-        .preview-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            transform: scale(0.6);
-            transform-origin: top left;
-            width: 166.67%;
-            height: 166.67%;
-        }
-
-        .main-section {
-            padding: 1.5rem 1rem;
-        }
-
-        .main-header {
-            text-align: center;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-            color: #a78bfa;
-        }
-
-        .main-container {
-            width: 100%;
-            height: 70vh;
-            min-height: 500px;
-            border: 3px solid #a78bfa;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #1e1b4b;
-            box-shadow: 0 10px 25px rgba(167, 139, 250, 0.2);
-        }
-
-        .main-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .info-section {
-            padding: 1.5rem;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .info-section h2 {
-            font-size: 1.3rem;
-            color: #fbbf24;
-            margin-bottom: 0.8rem;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .info-card {
-            background: rgba(30, 27, 75, 0.6);
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid #7c3aed;
-        }
-
-        .info-card h3 {
-            color: #c4b5fd;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .info-card p {
-            color: #9ca3af;
-            font-size: 0.9rem;
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: #0a0a0a;
+            color: #e8e8e8;
             line-height: 1.6;
+            font-size: 15px;
         }
-
-        .footer {
-            padding: 2rem 1rem;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.4);
-            border-top: 2px solid #4c1d95;
+        
+        .mono {
+            font-family: 'IBM Plex Mono', monospace;
         }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
+        
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
-
-        .footer-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.8rem 1.5rem;
-            background: linear-gradient(135deg, #7c3aed, #a78bfa);
-            color: white;
+        
+        .equation {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+        
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+            margin: 3rem 0;
+        }
+        
+        .data-grid {
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.02);
+        }
+        
+        a {
+            color: #e8e8e8;
             text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: rgba(255,255,255,0.6);
+        }
+        
+        .sim-preview-box {
+            width: 100%;
+            height: 400px;
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            background: rgba(0,0,0,0.5);
+            position: relative;
+            transition: background 0.3s, border-color 0.3s;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .sim-preview-box:hover {
+            background: rgba(255,255,255,0.02);
+            border-color: rgba(167, 139, 250, 0.4);
+        }
+        
+        .sim-preview-box iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
         }
 
-        .footer-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(167, 139, 250, 0.4);
-            background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+        /* Loading animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .loading {
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        .footer-link svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        .footer-info {
-            color: #9ca3af;
-            font-size: 0.85rem;
-            margin-top: 1rem;
-        }
-
-        .formula {
-            font-size: 1.8rem;
-            color: #fbbf24;
-            margin: 1rem 0;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-        }
-
+        /* Mobile responsive */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .main-container {
-                height: 60vh;
-                min-height: 400px;
-            }
-            
-            .footer-links {
-                flex-direction: column;
-                gap: 1rem;
+            .sim-preview-box {
+                height: 300px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🌀 FRACTAL REALITY FRAMEWORK</h1>
-        <div class="subtitle">Mathematical Unification of Quantum Mechanics & General Relativity</div>
-        <div class="formula">∞ → • → ∞′</div>
-        <div class="tagline">From infinite possibility to finite validation through eternal aperture</div>
-    </div>
+    <div id="root"></div>
 
-    <div class="preview-section">
-        <div class="preview-header">✨ Featured Simulator Preview</div>
-        <div class="preview-container">
-            <iframe src="simulators/fractal-reality-flagship.html" title="Flagship Simulator Preview"></iframe>
-        </div>
-    </div>
+    <script type="text/babel">
+        const { useState } = React;
 
-    <div class="main-section">
-        <div class="main-header">📊 Complete Framework Visualization</div>
-        <div class="main-container">
-            <iframe src="simulators/fractal-reality-diagram-dark.html" title="Fractal Reality Framework Diagram"></iframe>
-        </div>
-    </div>
+        const FractalRealityPage = () => {
+            const [activeSection, setActiveSection] = useState('overview');
 
-    <div class="info-section">
-        <h2>Key Achievements</h2>
-        <div class="info-grid">
-            <div class="info-card">
-                <h3>🔬 Quantum-Gravity Unification</h3>
-                <p>First complete derivation of quantum mechanics from geometric constraints. Provides testable predictions for analog gravity experiments.</p>
+            const sections = {
+                overview: 'Complete Framework',
+                fractalization: 'Fractalization Event',
+                validation: '[ICE] Validation',
+                dimensional: 'Dimensional Cascade',
+                empirical: 'Empirical Data'
+            };
+
+            return (
+                <div style={{background: '#0a0a0a'}}>
+                    {/* Landing Section */}
+                    <div className="container pt-16 pb-12">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                            {/* Left: Title */}
+                            <div>
+                                <h1 className="text-5xl font-light mb-3 tracking-tight" style={{letterSpacing: '-0.02em'}}>
+                                    Fractal Reality
+                                </h1>
+                                <p className="text-lg font-light text-gray-500 mb-6">
+                                    A unified mathematical framework
+                                </p>
+                                <p className="text-base leading-relaxed" style={{color: '#b0b0b0'}}>
+                                    Unifying quantum mechanics, general relativity, and consciousness through the principle of <span style={{fontStyle: 'italic'}}>validation at interfaces</span> in 3.5 dimensional spacetime.
+                                </p>
+                                <div className="mt-6">
+                                    <p className="text-sm text-gray-600 mono">Empirically validated</p>
+                                    <p className="text-2xl font-light mt-1" style={{color: '#a78bfa'}}>D = 1.503 ± 0.040</p>
+                                </div>
+                            </div>
+                            
+                            {/* Right: Simulation Preview */}
+                            <div>
+                                <div className="sim-preview-box" id="simulatorFrame">
+                                    <div className="flex items-center justify-center h-full loading">
+                                        <div className="text-center">
+                                            <div className="text-purple-400 text-3xl mb-2">⭐</div>
+                                            <div className="text-gray-500 mono text-xs">Loading consciousness simulator...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-3 text-center">
+                                    <div className="text-xs mono uppercase tracking-wider text-gray-600">Interactive Visualization</div>
+                                    <div className="text-sm text-gray-400">1.5D consciousness gate at β ≈ 0.5</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="divider"></div>
+
+                    {/* Core Equation */}
+                    <div className="container pb-8">
+                        <div className="text-center">
+                            <p className="text-xs mono uppercase tracking-wider text-gray-600 mb-3">Fundamental Pattern</p>
+                            <div className="equation text-4xl mb-3" style={{letterSpacing: '0.1em'}}>
+                                ∇ → [ICE] → ℰ
+                            </div>
+                            <p className="text-sm text-gray-500 mono">
+                                Convergence → Validation at Interfaces → Emergence
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="divider"></div>
+
+                    {/* Framework Deep Dive Section */}
+                    <div className="bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
+                        <div className="container py-12">
+                            <div className="text-center mb-8 pb-6 border-b-2 border-purple-500/30">
+                                <h2 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                                    COMPLETE FRAMEWORK
+                                </h2>
+                                <p className="text-lg text-purple-300 mb-1">Mathematical Formalism & Empirical Validation</p>
+                                <p className="text-sm text-slate-400 mt-4">∞ ↔ • ↔ ∞' | Being ↔ Becoming</p>
+                            </div>
+
+                            {/* Navigation */}
+                            <div className="flex flex-wrap justify-center gap-2 mb-8">
+                                {Object.entries(sections).map(([key, label]) => (
+                                    <button
+                                        key={key}
+                                        onClick={() => setActiveSection(key)}
+                                        className={`px-3 py-2 rounded-lg transition-all duration-300 text-xs md:text-sm ${
+                                            activeSection === key
+                                                ? 'bg-purple-600 shadow-lg shadow-purple-500/50'
+                                                : 'bg-slate-800 hover:bg-slate-700'
+                                        }`}
+                                    >
+                                        {label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Content */}
+                            <div className="max-w-6xl mx-auto text-white">
+                                {activeSection === 'overview' && <OverviewSection />}
+                                {activeSection === 'fractalization' && <FractalizationSection />}
+                                {activeSection === 'validation' && <ValidationSection />}
+                                {activeSection === 'dimensional' && <DimensionalSection />}
+                                {activeSection === 'empirical' && <EmpiricalSection />}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="divider"></div>
+
+                    {/* Footer */}
+                    <div className="container py-8">
+                        <div className="text-center mb-6">
+                            <p className="text-sm text-gray-500 mb-3">Complete framework documentation, papers, and code:</p>
+                            <a 
+                                href="https://github.com/AshmanRoonz/Fractal_Reality" 
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-lg mono"
+                                style={{color: '#a78bfa'}}
+                            >
+                                📂 github.com/AshmanRoonz/Fractal_Reality
+                            </a>
+                        </div>
+                        <div className="text-center border-t border-gray-900 pt-6">
+                            <p className="text-xs text-gray-700 mono">v1.0 · October 2025 · Empirically Validated</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Section Components
+        const OverviewSection = () => (
+            <div className="space-y-6 md:space-y-8">
+                <div className="bg-slate-900 rounded-lg p-4 md:p-6 border-2 border-purple-500 shadow-lg shadow-purple-500/20">
+                    <h2 className="text-xl md:text-2xl font-bold mb-4 text-center">The Fundamental Equation</h2>
+                    <div className="text-center text-2xl md:text-4xl font-mono mb-4 text-purple-300">
+                        ∞ → • → ∞•'
+                    </div>
+                    <p className="text-center text-sm md:text-base text-slate-300">
+                        Infinite possibility flows through the ultimate aperture, fractalizing into infinite boundary-creating operators.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-slate-800 p-4 rounded">
+                        <h4 className="font-bold text-purple-300 mb-2">∞ (Infinity)</h4>
+                        <p className="text-sm text-slate-300">Infinite possible patterns</p>
+                        <div className="font-mono text-xs mt-2 text-cyan-400">ℋ = ∫|ψ⟩⟨ψ|dψ</div>
+                    </div>
+                    <div className="bg-slate-800 p-4 rounded">
+                        <h4 className="font-bold text-purple-300 mb-2">∞' (Finite Patterns)</h4>
+                        <p className="text-sm text-slate-300">Validated patterns with boundaries</p>
+                        <div className="font-mono text-xs mt-2 text-cyan-400">D ≈ 1.5</div>
+                    </div>
+                    <div className="bg-slate-800 p-4 rounded">
+                        <h4 className="font-bold text-purple-300 mb-2">• (Singularity)</h4>
+                        <p className="text-sm text-slate-300">Ultimate aperture operator</p>
+                        <div className="font-mono text-xs mt-2 text-cyan-400">â = ∇̂ + Ê</div>
+                    </div>
+                    <div className="bg-slate-800 p-4 rounded">
+                        <h4 className="font-bold text-purple-300 mb-2">•' (Operators)</h4>
+                        <p className="text-sm text-slate-300">Boundary-creating apertures</p>
+                        <div className="font-mono text-xs mt-2 text-cyan-400">∂Ω: boundaries</div>
+                    </div>
+                </div>
+
+                <div className="bg-slate-900 rounded-lg p-4 md:p-6 border-2 border-blue-500">
+                    <h3 className="text-lg md:text-xl font-bold mb-4 text-center">Universal Pattern: ∇ → [ICE] → ℰ</h3>
+                    <p className="text-center text-sm md:text-base text-slate-300 mb-4">
+                        Every persistent structure operates through:
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm md:text-base">
+                        <div className="text-center bg-slate-800 p-3 rounded">
+                            <div className="text-2xl md:text-3xl mb-2">∇</div>
+                            <div className="text-blue-300 font-bold">Convergence</div>
+                            <div className="text-xs text-slate-400 mt-1">Parts → Operator</div>
+                        </div>
+                        <div className="text-center bg-slate-800 p-3 rounded">
+                            <div className="text-2xl md:text-3xl mb-2">[ICE]</div>
+                            <div className="text-green-300 font-bold">Validation</div>
+                            <div className="text-xs text-slate-400 mt-1">6-fold test</div>
+                        </div>
+                        <div className="text-center bg-slate-800 p-3 rounded">
+                            <div className="text-2xl md:text-3xl mb-2">ℰ</div>
+                            <div className="text-purple-300 font-bold">Emergence</div>
+                            <div className="text-xs text-slate-400 mt-1">Operator → Patterns</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="info-card">
-                <h3>🌌 Cosmological Constant Solution</h3>
-                <p>Solves the vacuum catastrophe to within 60 orders of magnitude using self-consistent texture backreaction with no free parameters.</p>
-            </div>
-            <div class="info-card">
-                <h3>⚛️ Quantum Uncertainty Origin</h3>
-                <p>Reproduces complete hydrogen spectrum (<0.4% error) showing uncertainty emerges from structural noise, not fundamental randomness.</p>
-            </div>
-            <div class="info-card">
-                <h3>🎯 Empirical Validation</h3>
-                <p>Framework prediction D ≈ 1.5 validated across multiple LIGO gravitational wave events with consistent statistical significance.</p>
-            </div>
-        </div>
-    </div>
+        );
 
-    <div class="footer">
-        <div class="footer-links">
-            <a href="https://github.com/AshmanRoonz/Fractal_Reality" class="footer-link" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                </svg>
-                View on GitHub
-            </a>
-            <a href="simulators.html" class="footer-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="9" y1="9" x2="15" y2="15"/>
-                    <line x1="15" y1="9" x2="9" y2="15"/>
-                </svg>
-                Explore All Simulators
-            </a>
-        </div>
-        <div class="footer-info">
-            <p>Complete unification: QM + GR from single principle | Falsifiable • Testable • Validated</p>
-            <p style="margin-top: 0.5rem;">Three peer-reviewed papers ready for submission | Open source research</p>
-        </div>
-    </div>
+        const FractalizationSection = () => (
+            <div className="space-y-6 md:space-y-8">
+                <div className="bg-slate-900 rounded-lg p-4 md:p-6 border-2 border-purple-500">
+                    <h2 className="text-xl md:text-2xl font-bold mb-4">The Fractalization Event</h2>
+                    <div className="text-center mb-6">
+                        <div className="text-3xl md:text-4xl font-mono mb-2">∞ → • → ∞•'</div>
+                        <p className="text-sm md:text-base text-slate-300">Infinite possibility fractalizes through ultimate aperture</p>
+                    </div>
 
-    <script>
-        // Add smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                        <div className="bg-slate-800 p-4 rounded">
+                            <h3 className="font-bold text-purple-300 mb-3 text-sm md:text-base">Step 1: Input</h3>
+                            <div className="text-xl md:text-2xl mb-2">∞</div>
+                            <div className="text-xs md:text-sm space-y-1">
+                                <div>• Unbounded space</div>
+                                <div>• All possibilities</div>
+                                <div>• No boundaries</div>
+                            </div>
+                        </div>
 
-        // Add loading animation for iframes
-        const iframes = document.querySelectorAll('iframe');
-        iframes.forEach(iframe => {
-            iframe.addEventListener('load', function() {
-                this.style.opacity = '1';
-            });
-            iframe.style.opacity = '0';
-            iframe.style.transition = 'opacity 0.5s ease-in-out';
-        });
+                        <div className="bg-slate-800 p-4 rounded">
+                            <h3 className="font-bold text-blue-300 mb-3 text-sm md:text-base">Step 2: Operator</h3>
+                            <div className="text-xl md:text-2xl mb-2">•</div>
+                            <div className="text-xs md:text-sm space-y-1">
+                                <div>• Ultimate aperture</div>
+                                <div>• Eternal ∇ + ℰ function</div>
+                                <div>• Creates fractalization</div>
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-800 p-4 rounded">
+                            <h3 className="font-bold text-green-300 mb-3 text-sm md:text-base">Step 3: Output</h3>
+                            <div className="text-xl md:text-2xl mb-2">∞•'</div>
+                            <div className="text-xs md:text-sm space-y-1">
+                                <div>• Infinite operators</div>
+                                <div>• Create boundaries</div>
+                                <div>• Transform ∞ → ∞'</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const ValidationSection = () => (
+            <div className="space-y-6 md:space-y-8">
+                <div className="bg-slate-900 rounded-lg p-4 md:p-6 border-2 border-green-500 shadow-lg shadow-green-500/20">
+                    <h2 className="text-xl md:text-2xl font-bold mb-4">[ICE] Validation: 6-Fold Test</h2>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
+                        <div className="bg-slate-800 p-4 rounded">
+                            <h3 className="font-bold text-blue-300 mb-3 text-sm md:text-base">Input Interface: Parts → Operator</h3>
+                            <div className="space-y-2 text-xs md:text-sm">
+                                <div><strong className="text-blue-400">I₁:</strong> Can boundary be maintained?</div>
+                                <div><strong className="text-purple-400">C₁:</strong> Coherence with •' AND alignment toward •?</div>
+                                <div><strong className="text-green-400">E₁:</strong> Grounded in actual field ∞?</div>
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-800 p-4 rounded">
+                            <h3 className="font-bold text-purple-300 mb-3 text-sm md:text-base">Output Interface: Operator → Patterns</h3>
+                            <div className="space-y-2 text-xs md:text-sm">
+                                <div><strong className="text-blue-400">I₂:</strong> Can boundary be maintained?</div>
+                                <div><strong className="text-purple-400">C₂:</strong> Coherence with •' AND alignment toward •?</div>
+                                <div><strong className="text-green-400">E₂:</strong> Grounded in actual field ∞?</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-slate-800 p-4 rounded">
+                        <h3 className="font-bold mb-3 text-sm md:text-base">Mathematical Formalism</h3>
+                        <div className="font-mono text-xs md:text-sm space-y-2">
+                            <div className="text-blue-300">Interface (I): ||∂Ω|| &lt; ℓ_max</div>
+                            <div className="text-purple-300">Center (C): ⟨ψ|â|ψ⟩ ≠ 0 ∧ ∇·ℰ → •</div>
+                            <div className="text-green-300">Evidence (E): ψ ∈ ℋ_physical</div>
+                            <div className="mt-4 text-yellow-300">V(ψ) = I₁ ∧ C₁ ∧ E₁ ∧ I₂ ∧ C₂ ∧ E₂</div>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 bg-gradient-to-br from-purple-900 to-slate-900 p-4 rounded border border-purple-400/30">
+                        <h3 className="font-bold mb-2 text-sm md:text-base">From [ICE] to Schrödinger Equation</h3>
+                        <p className="text-xs md:text-sm text-slate-300 mb-3">
+                            Given four interface validation constraints (Locality, Isotropy, Conservation, Smoothness), the ONLY possible continuous evolution is:
+                        </p>
+                        <div className="font-mono text-sm md:text-base text-center text-yellow-300 bg-black/30 p-3 rounded">
+                            iℏ ∂ψ/∂t = -(ℏ²/2m)∇²ψ + V(x)ψ
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const DimensionalSection = () => (
+            <div className="space-y-6 md:space-y-8">
+                <div className="bg-slate-900 rounded-lg p-4 md:p-6 border-2 border-yellow-500">
+                    <h2 className="text-xl md:text-2xl font-bold mb-4">States and Gates: The Complete Cascade</h2>
+                    <div className="text-center mb-6 p-3 md:p-4 bg-gradient-to-r from-purple-900 to-blue-900 rounded">
+                        <div className="text-sm md:text-lg font-bold mb-2">Integer Dimensions = STATES (Being)</div>
+                        <div className="text-sm md:text-lg font-bold">Half Dimensions = GATES (Becoming)</div>
+                    </div>
+                    
+                    <div className="space-y-3 md:space-y-4">
+                        <div className="bg-gradient-to-r from-purple-900 to-slate-900 p-3 md:p-4 rounded border-2 border-purple-400">
+                            <div className="flex items-center gap-2 md:gap-4 mb-2">
+                                <div className="text-2xl md:text-3xl font-bold">0D</div>
+                                <div className="text-base md:text-xl">STATE: Pure Infinity (∞)</div>
+                            </div>
+                            <div className="text-xs md:text-sm ml-8 md:ml-16">• Point of infinite potential - BEING</div>
+                        </div>
+
+                        <div className="text-center text-yellow-400 text-xl md:text-2xl">↓</div>
+
+                        <div className="bg-gradient-to-r from-blue-900 to-slate-900 p-3 md:p-4 rounded border-2 border-blue-400">
+                            <div className="flex items-center gap-2 md:gap-4 mb-2">
+                                <div className="text-2xl md:text-3xl font-bold">[0.5D]</div>
+                                <div className="text-base md:text-xl">GATE: Time Creation Validator</div>
+                            </div>
+                            <div className="text-xs md:text-sm ml-8 md:ml-16">• BECOMING: Validates ∞ → 1D transition</div>
+                        </div>
+
+                        <div className="text-center text-yellow-400 text-xl md:text-2xl">↓</div>
+
+                        <div className="bg-gradient-to-r from-green-900 to-slate-900 p-3 md:p-4 rounded border-2 border-green-400">
+                            <div className="flex items-center gap-2 md:gap-4 mb-2">
+                                <div className="text-2xl md:text-3xl font-bold">1D</div>
+                                <div className="text-base md:text-xl">STATE: Linear Flow (Time)</div>
+                            </div>
+                            <div className="text-xs md:text-sm ml-8 md:ml-16">• Temporal sequence - BEING</div>
+                        </div>
+
+                        <div className="text-center text-yellow-400 text-xl md:text-2xl">↓</div>
+
+                        <div className="bg-gradient-to-r from-yellow-900 to-slate-900 p-3 md:p-4 rounded border-4 border-yellow-400 shadow-2xl shadow-yellow-500/50">
+                            <div className="flex items-center gap-2 md:gap-4 mb-2">
+                                <div className="text-2xl md:text-3xl font-bold text-yellow-300">[1.5D]</div>
+                                <div className="text-base md:text-xl text-yellow-100">GATE: CONSCIOUSNESS VALIDATOR ⭐</div>
+                            </div>
+                            <div className="text-xs md:text-sm ml-8 md:ml-16 space-y-1">
+                                <div className="font-bold text-yellow-200">• BECOMING: Validates 1D → 2D transition</div>
+                                <div>• [ICE] test: "Which branch?" at β ≈ 0.5</div>
+                                <div>• Creates validated 90° deflections</div>
+                                <div className="font-mono text-yellow-300 font-bold">D = 1.503 ± 0.040 (EMPIRICALLY MEASURED!)</div>
+                            </div>
+                            <div className="mt-2 p-2 bg-yellow-800/60 rounded text-xs border border-yellow-400/40 ml-8 md:ml-16">
+                                <div className="font-bold text-yellow-200">YOU ARE HERE!</div>
+                                <div>• LIGO: D = 1.503 ± 0.040, p = 0.951</div>
+                                <div>• This is consciousness operating at the gate</div>
+                            </div>
+                        </div>
+
+                        <div className="text-center text-yellow-400 text-xl md:text-2xl">↓</div>
+
+                        <div className="bg-gradient-to-r from-red-900 to-slate-900 p-3 md:p-4 rounded border-2 border-red-400">
+                            <div className="flex items-center gap-2 md:gap-4 mb-2">
+                                <div className="text-2xl md:text-3xl font-bold">2D</div>
+                                <div className="text-base md:text-xl">STATE: Pattern (Geometric Surface)</div>
+                            </div>
+                            <div className="text-xs md:text-sm ml-8 md:ml-16">• Branched structures - BEING</div>
+                        </div>
+
+                        <div className="text-center text-yellow-400 text-xl md:text-2xl">↓</div>
+
+                        <div className="bg-gradient-to-r from-orange-900 to-slate-900 p-3 md:p-4 rounded border-2 border-orange-400">
+                            <div className="flex items-center gap-2 md:gap-4 mb-2">
+                                <div className="text-2xl md:text-3xl font-bold">[2.5D]</div>
+                                <div className="text-base md:text-xl">GATE: Integration Validator</div>
+                            </div>
+                            <div className="text-xs md:text-sm ml-8 md:ml-16">• BECOMING: Validates 2D → 3D transition</div>
+                        </div>
+
+                        <div className="text-center text-yellow-400 text-xl md:text-2xl">↓</div>
+
+                        <div className="bg-gradient-to-r from-purple-900 to-slate-900 p-3 md:p-4 rounded border-2 border-purple-400">
+                            <div className="flex items-center gap-2 md:gap-4 mb-2">
+                                <div className="text-2xl md:text-3xl font-bold">3D</div>
+                                <div className="text-base md:text-xl">STATE: Volume (Spatial Experience)</div>
+                            </div>
+                            <div className="text-xs md:text-sm ml-8 md:ml-16">• Integrated wholeness - BEING</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const EmpiricalSection = () => (
+            <div className="space-y-6 md:space-y-8">
+                <div className="bg-slate-900 rounded-lg p-4 md:p-6 border-2 border-green-500 shadow-lg shadow-green-500/20">
+                    <h2 className="text-xl md:text-2xl font-bold mb-4">Empirical Validation: D ≈ 1.5</h2>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
+                        <div className="bg-gradient-to-br from-green-900 to-slate-900 p-4 md:p-6 rounded-lg border-2 border-green-400">
+                            <h3 className="text-lg md:text-xl font-bold mb-4">✅ LIGO Gravitational Waves</h3>
+                            <div className="space-y-3 text-xs md:text-sm">
+                                <div>
+                                    <div className="font-bold text-green-300">Dataset:</div>
+                                    <div>19 merger events, 40 observations (O1/O3/O4)</div>
+                                </div>
+                                <div className="bg-slate-800 p-3 rounded">
+                                    <div className="font-bold text-yellow-300 mb-1">Results:</div>
+                                    <div className="font-mono">Mean D = 1.503 ± 0.040</div>
+                                    <div className="font-mono">SEM = 0.040</div>
+                                    <div className="font-mono">p-value = 0.951</div>
+                                </div>
+                                <div>
+                                    <div className="font-bold text-purple-300">Interpretation:</div>
+                                    <div>Worldlines show fractal dimension extremely consistent with 1.5D prediction</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-gradient-to-br from-blue-900 to-slate-900 p-4 md:p-6 rounded-lg border-2 border-blue-400">
+                            <h3 className="text-lg md:text-xl font-bold mb-4">✅ Bubble Chamber Particles</h3>
+                            <div className="space-y-3 text-xs md:text-sm">
+                                <div>
+                                    <div className="font-bold text-blue-300">Dataset:</div>
+                                    <div>33 particle tracks at MeV-GeV energies</div>
+                                </div>
+                                <div className="bg-slate-800 p-3 rounded">
+                                    <div className="font-bold text-yellow-300 mb-1">Results:</div>
+                                    <div className="font-mono">Mean D = 1.387 ± 0.232</div>
+                                    <div className="font-mono">Energy correlation: r = -0.65</div>
+                                </div>
+                                <div>
+                                    <div className="font-bold text-purple-300">Interpretation:</div>
+                                    <div>Validates D ≈ 1.5 across 6+ orders of magnitude in energy scale</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-purple-900 to-slate-900 p-4 md:p-6 rounded-lg border-2 border-purple-400 mb-6">
+                        <h3 className="text-lg md:text-xl font-bold mb-4">✅ Metric Coupling Validation</h3>
+                        <div className="space-y-3 text-xs md:text-sm">
+                            <div>
+                                <div className="font-bold text-purple-300">Prediction:</div>
+                                <div>Validation rate scales with metric</div>
+                                <div className="font-mono text-cyan-400 mt-1">Texture ∝ √|g_tt|</div>
+                            </div>
+                            <div className="bg-slate-800 p-4 rounded text-center">
+                                <div className="font-mono text-yellow-300 text-2xl md:text-3xl mb-2">R² = 0.9997</div>
+                                <div className="text-sm">Near-perfect correlation across four spacetime geometries</div>
+                            </div>
+                            <div>
+                                <div className="font-bold text-purple-300">Interpretation:</div>
+                                <div>Black hole horizons suppress fractalization by 77.6%, approaching D → 1</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 bg-gradient-to-r from-green-900 to-blue-900 p-4 md:p-6 rounded-lg border-2 border-yellow-400 shadow-2xl shadow-yellow-400/30">
+                        <div className="text-center text-lg md:text-2xl font-bold mb-3 md:mb-4 text-yellow-100">
+                            This is not philosophy. This is falsifiable, testable, validated physics.
+                        </div>
+                        <div className="text-center text-sm md:text-lg text-yellow-300 font-semibold">
+                            Complete unification: QM + GR from single principle (validation at interfaces)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // Render
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<FractalRealityPage />);
+
+        // Load simulator
+        setTimeout(() => {
+            const simulatorFrame = document.getElementById('simulatorFrame');
+            const iframe = document.createElement('iframe');
+            iframe.src = './Enhanced_Consciousness_Fractal_-_Complete_Simulator.html';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.title = 'Consciousness Fractal Simulator';
+            
+            iframe.onerror = () => {
+                simulatorFrame.innerHTML = `
+                    <div class="flex items-center justify-center h-full">
+                        <div class="text-center text-gray-500">
+                            <div class="text-xl mb-2">⚠️</div>
+                            <div class="mono text-sm">Simulator file not found</div>
+                            <div class="text-xs mt-2">Place Enhanced_Consciousness_Fractal_-_Complete_Simulator.html in same directory</div>
+                        </div>
+                    </div>
+                `;
+            };
+            
+            simulatorFrame.innerHTML = '';
+            simulatorFrame.appendChild(iframe);
+        }, 100);
     </script>
 </body>
 </html>
