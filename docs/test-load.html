@@ -56,20 +56,21 @@
                 const componentName = componentMatch ? componentMatch[1] : 'App';
                 log(`Found component: ${componentName}`);
 
+                // Expose the component via window object
+                const exposedCode = transformed + `\n; window.__SimComponent__ = ${componentName};`;
+
                 // Try to execute
                 const wrappedCode = `
-                    return (function() {
-                        ${transformed}
+                    ${exposedCode}
 
-                        if (typeof ${componentName} !== 'undefined') {
-                            return ${componentName};
-                        }
-                        if (typeof App !== 'undefined') {
-                            return App;
-                        }
+                    const comp = window.__SimComponent__;
+                    delete window.__SimComponent__;
 
-                        throw new Error('No component found');
-                    }).call({});
+                    if (!comp || typeof comp !== 'function') {
+                        throw new Error('No valid component found: ${componentName}');
+                    }
+
+                    return comp;
                 `;
 
                 log('Creating component function...');

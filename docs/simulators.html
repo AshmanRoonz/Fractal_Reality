@@ -222,31 +222,33 @@
                         ]
                     }).code;
 
-                    // Extract the component name
+                    // Extract the component name for better error messages
                     const componentMatch = processedCode.match(/(?:const|function|let|var)\s+(\w+)\s*=?\s*\([^)]*\)\s*(?:=>)?\s*{/);
                     const componentName = componentMatch ? componentMatch[1] : 'App';
 
-                    // Wrap the entire code in an IIFE to create proper scope
+                    // Modify the transformed code to expose the component
+                    // Replace the last line (which should be "export default ComponentName;" already removed)
+                    // with code that assigns the component to a global variable
+                    const exposedCode = transformed + `\n; window.__SimComponent__ = ${componentName};`;
+
+                    // Wrap the entire code to execute and retrieve the component
                     const wrappedCode = `
-                        return (function() {
-                            ${transformed}
-                            
-                            // Return the component
-                            if (typeof ${componentName} !== 'undefined') {
-                                return ${componentName};
+                        try {
+                            ${exposedCode}
+
+                            // Retrieve the component from where we stored it
+                            const comp = window.__SimComponent__;
+                            delete window.__SimComponent__;
+
+                            if (!comp || typeof comp !== 'function') {
+                                throw new Error('No valid component found: ' + '${componentName}');
                             }
-                            if (typeof App !== 'undefined') {
-                                return App;
-                            }
-                            
-                            // Try to find any function component
-                            const allVars = Object.keys(this).filter(k => typeof this[k] === 'function');
-                            if (allVars.length > 0) {
-                                return this[allVars[allVars.length - 1]];
-                            }
-                            
-                            throw new Error('No component found. Make sure to define a component function.');
-                        }).call({});
+
+                            return comp;
+                        } catch (e) {
+                            console.error('Error extracting component:', e);
+                            throw new Error('Failed to extract component ${componentName}: ' + e.message);
+                        }
                     `;
 
                     // Create the component with all necessary globals
