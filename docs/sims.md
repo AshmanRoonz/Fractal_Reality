@@ -3,5 +3,5 @@ Singing_Learning_Fractal.tsx
 My_Pet_Fractal.tsx
 Harmonic_Periodic_Table.tsx
 Molecular_Composer.tsx
-fractal_fountain.tsx
+Fractal_Fountain.tsx
 Cam_Fractal_Tracker.tsx
