@@ -8,7 +8,6 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
         
@@ -72,77 +71,61 @@
             const [error, setError] = useState(null);
             const [loading, setLoading] = useState(true);
 
-            // Check for auto-load parameter in URL
             const urlParams = new URLSearchParams(window.location.search);
             const autoLoad = urlParams.get('auto');
 
-            // Read simulation list from sims.md
             useEffect(() => {
                 const fetchSimulations = async () => {
                     try {
-                        // Fetch the sims.md file
                         const response = await fetch('./sims.md');
                         if (!response.ok) {
                             throw new Error('Could not find sims.md file. Please create it in the root directory.');
                         }
                         
                         const markdown = await response.text();
-                        
-                        // Parse the markdown to extract .tsx filenames
-                        // Supports multiple formats:
-                        // - harmonic_chemistry.tsx
-                        // - simulations/harmonic_chemistry.tsx
-                        // - [Link](harmonic_chemistry.tsx)
-                        // - * harmonic_chemistry.tsx
-                        // - - harmonic_chemistry.tsx
-                        
                         const lines = markdown.split('\n');
-                        const tsxFiles = [];
+                        const simFiles = [];
                         
                         for (const line of lines) {
                             const trimmed = line.trim();
                             
-                            // Skip empty lines, headers, and comments
                             if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) {
                                 continue;
                             }
                             
-                            // Extract filename from various formats
                             let filename = null;
                             
-                            // Markdown link format: [text](filename.tsx)
-                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.tsx)\)/);
+                            // Markdown link format
+                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.(tsx|jsx))\)/);
                             if (linkMatch) {
                                 filename = linkMatch[1];
                             }
-                            // List format: - filename.tsx or * filename.tsx
+                            // List format
                             else if (trimmed.match(/^[-*]\s+/)) {
-                                const listMatch = trimmed.match(/[-*]\s+(.*?\.tsx)/);
+                                const listMatch = trimmed.match(/[-*]\s+(.*?\.(tsx|jsx))/);
                                 if (listMatch) {
                                     filename = listMatch[1];
                                 }
                             }
-                            // Plain format: filename.tsx or simulations/filename.tsx
-                            else if (trimmed.endsWith('.tsx')) {
+                            // Plain format - UPDATED to support both .tsx and .jsx
+                            else if (trimmed.match(/\.(tsx|jsx)$/)) {
                                 filename = trimmed;
                             }
                             
                             if (filename) {
-                                // Remove 'simulations/' prefix if present
                                 filename = filename.replace(/^simulations\//, '');
-                                tsxFiles.push(filename);
+                                simFiles.push(filename);
                             }
                         }
                         
-                        if (tsxFiles.length === 0) {
-                            throw new Error('No .tsx files found in sims.md. Please list your simulation files.');
+                        if (simFiles.length === 0) {
+                            throw new Error('No .tsx or .jsx files found in sims.md. Please list your simulation files.');
                         }
                         
-                        setSimulations(tsxFiles);
+                        setSimulations(simFiles);
                         setLoading(false);
                         
-                        // Auto-load if parameter present
-                        if (autoLoad && tsxFiles.includes(autoLoad)) {
+                        if (autoLoad && simFiles.includes(autoLoad)) {
                             loadSimulation(autoLoad);
                         }
                     } catch (err) {
@@ -155,13 +138,11 @@
                 fetchSimulations();
             }, []);
 
-            // Load and execute selected simulation
             const loadSimulation = async (filename) => {
                 try {
                     setError(null);
                     setLoading(true);
                     
-                    // Fetch the TSX file content
                     const response = await fetch(`./simulations/${filename}`);
                     if (!response.ok) {
                         throw new Error(`Failed to load ${filename}`);
@@ -178,93 +159,94 @@
                 }
             };
 
-            // Render the selected simulation
             const SimulationRenderer = () => {
                 if (!simCode) return null;
 
                 try {
-                    // Remove import statements and replace with available globals
                     let processedCode = simCode;
                     
-                    // Remove React imports (we have it globally)
-                    processedCode = processedCode.replace(/import\s+React.*?from\s+['"]react['"];?\s*/g, '');
+                    // Remove all import statements and replace with available globals
+                    processedCode = processedCode.replace(/import\s+React\s*,?\s*\{[^}]*\}\s+from\s+['"]react['"];?\s*/g, '');
+                    processedCode = processedCode.replace(/import\s+React\s+from\s+['"]react['"];?\s*/g, '');
                     processedCode = processedCode.replace(/import\s+\{[^}]*\}\s+from\s+['"]react['"];?\s*/g, '');
                     
-                    // Remove lucide-react imports and create mock components
+                    // Remove lucide-react imports (create simple mock icons)
                     const lucideMatch = processedCode.match(/import\s+\{([^}]+)\}\s+from\s+['"]lucide-react['"]/);
                     if (lucideMatch) {
                         const icons = lucideMatch[1].split(',').map(i => i.trim());
                         const mockIcons = icons.map(icon => 
-                            `const ${icon} = (props) => React.createElement('svg', {...props, xmlns: 'http://www.w3.org/2000/svg', width: '24', height: '24', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2'}, React.createElement('circle', {cx: '12', cy: '12', r: '10'}));`
+                            `const ${icon} = () => null;`
                         ).join('\n');
                         processedCode = processedCode.replace(/import\s+\{[^}]+\}\s+from\s+['"]lucide-react['"];?\s*/g, mockIcons);
                     }
                     
-                    // Remove any other imports
                     processedCode = processedCode.replace(/import\s+.*?from\s+['"].*?['"];?\s*/g, '');
                     
                     // Remove export statements
                     processedCode = processedCode.replace(/export\s+default\s+/g, '');
                     processedCode = processedCode.replace(/export\s+/g, '');
 
-                    // Transform TSX to JS with proper scope handling
+                    // Determine if it's JSX or TSX
+                    const isTSX = selectedSim.endsWith('.tsx');
+
+                    // Transform code with appropriate presets
+                    const presets = [
+                        ['react', { 
+                            runtime: 'classic',
+                            pragma: 'React.createElement'
+                        }]
+                    ];
+                    
+                    if (isTSX) {
+                        presets.push(['typescript', {
+                            isTSX: true,
+                            allExtensions: true
+                        }]);
+                    }
+
                     const transformed = Babel.transform(processedCode, {
-                        filename: selectedSim || 'simulation.tsx',
-                        presets: [
-                            ['react', { 
-                                runtime: 'classic',
-                                pragma: 'React.createElement'
-                            }],
-                            ['typescript', {
-                                isTSX: true,
-                                allExtensions: true
-                            }]
-                        ]
+                        filename: selectedSim,
+                        presets: presets
                     }).code;
 
-                    // Extract the component name
-                    const componentMatch = processedCode.match(/(?:const|function|let|var)\s+(\w+)\s*=?\s*\([^)]*\)\s*(?:=>)?\s*{/);
-                    const componentName = componentMatch ? componentMatch[1] : 'App';
+                    // Try to find the main component
+                    // Look for: const X = () => or function X()
+                    const componentMatches = [
+                        ...processedCode.matchAll(/(?:const|let|var)\s+(\w+)\s*=\s*\([^)]*\)\s*=>/g),
+                        ...processedCode.matchAll(/function\s+(\w+)\s*\([^)]*\)/g)
+                    ];
+                    
+                    let componentName = 'App';
+                    if (componentMatches.length > 0) {
+                        // Get the last defined component (usually the main one)
+                        const lastMatch = componentMatches[componentMatches.length - 1];
+                        componentName = lastMatch[1];
+                    }
 
-                // Extract the component name for better error messages
-const componentMatch = processedCode.match(/(?:const|function|let|var)\s+(\w+)\s*=?\s*\([^)]*\)\s*(?:=>)?\s*{/);
-const componentName = componentMatch ? componentMatch[1] : 'App';
+                    // Wrap in IIFE with proper scope
+                    const wrappedCode = `
+                        return (function() {
+                            const React = arguments[0];
+                            const useState = arguments[1];
+                            const useEffect = arguments[2];
+                            const useRef = arguments[3];
+                            const useMemo = arguments[4];
+                            const useCallback = arguments[5];
+                            const useReducer = arguments[6];
+                            const useContext = arguments[7];
+                            
+                            ${transformed}
+                            
+                            // Try to return the component
+                            if (typeof ${componentName} !== 'undefined') {
+                                return ${componentName};
+                            }
+                            
+                            throw new Error('Component "${componentName}" not found');
+                        }).apply(null, arguments);
+                    `;
 
-// Modify the transformed code to expose the component
-const exposedCode = transformed + `\n; window.__SimComponent__ = ${componentName};`;
-
-// Wrap the entire code to execute and retrieve the component
-const wrappedCode = `
-    try {
-        ${exposedCode}
-
-        // Retrieve the component from where we stored it
-        const comp = window.__SimComponent__;
-        delete window.__SimComponent__;
-
-        if (!comp || typeof comp !== 'function') {
-            throw new Error('No valid component found: ' + '${componentName}');
-        }
-
-        return comp;
-    } catch (e) {
-        console.error('Error extracting component:', e);
-        throw new Error('Failed to extract component ${componentName}: ' + e.message);
-    }
-`;
-
-                    // Create the component with all necessary globals
-                    const createComponent = new Function(
-                        'React',
-                        'useState', 
-                        'useEffect',
-                        'useRef',
-                        'useMemo',
-                        'useCallback',
-                        'useReducer',
-                        'useContext',
-                        wrappedCode
-                    );
+                    const createComponent = new Function(wrappedCode);
 
                     const SimComponent = createComponent(
                         React,
@@ -294,17 +276,12 @@ const wrappedCode = `
                                 <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Stack Trace</summary>
                                 <pre className="mono" style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap'}}>{err.stack}</pre>
                             </details>
-                            <details style={{marginTop: '1.5rem'}}>
-                                <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Original Code</summary>
-                                <pre className="mono" style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap'}}>{simCode}</pre>
-                            </details>
                             <div style={{marginTop: '2rem', padding: '1rem', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)'}}>
                                 <p className="mono" style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '13px'}}>Common Issues:</p>
                                 <ul className="mono" style={{fontSize: '12px', lineHeight: '1.6', paddingLeft: '1.5rem', listStyle: 'disc'}}>
-                                    <li>Make sure all variables are declared with const/let/var</li>
-                                    <li>Use React.useState, React.useEffect instead of destructured hooks</li>
-                                    <li>Avoid external libraries (only React and Tailwind are available)</li>
-                                    <li>Component should be a simple function that returns JSX</li>
+                                    <li>Make sure the component is properly defined</li>
+                                    <li>Check that all hooks are used correctly</li>
+                                    <li>Verify there are no syntax errors</li>
                                 </ul>
                             </div>
                         </div>
@@ -315,7 +292,6 @@ const wrappedCode = `
             return (
                 <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
                     {!selectedSim ? (
-                        // Simulation selector
                         <div style={{background: '#0a0a0a', minHeight: '100vh', padding: '4rem 2rem'}}>
                             <div style={{maxWidth: '960px', margin: '0 auto'}}>
                                 <div className="mb-12">
@@ -334,21 +310,10 @@ const wrappedCode = `
                                 ) : error ? (
                                     <div style={{border: '1px solid rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.05)', padding: '2rem', maxWidth: '600px'}}>
                                         <p style={{color: '#f87171', marginBottom: '1rem'}}>{error}</p>
-                                        <div style={{color: '#9ca3af', fontSize: '13px'}}>
-                                            <p className="font-bold mb-2">Setup Instructions:</p>
-                                            <ol style={{listStyle: 'decimal', paddingLeft: '1.5rem', lineHeight: '1.8'}}>
-                                                <li>Create a <code style={{background: 'rgba(0,0,0,0.5)', padding: '2px 6px'}}>simulations/</code> directory</li>
-                                                <li>Add your .tsx simulation files to it</li>
-                                                <li>Create a <code style={{background: 'rgba(0,0,0,0.5)', padding: '2px 6px'}}>sims.md</code> file in the root directory</li>
-                                            </ol>
-                                        </div>
                                     </div>
                                 ) : simulations.length === 0 ? (
                                     <div style={{border: '1px solid rgba(234, 179, 8, 0.3)', background: 'rgba(234, 179, 8, 0.05)', padding: '2rem', maxWidth: '600px'}}>
                                         <p style={{color: '#fbbf24'}}>No simulations found</p>
-                                        <p style={{color: '#9ca3af', marginTop: '1rem', fontSize: '13px'}}>
-                                            Add TSX files to the ./simulations/ directory and update sims.md
-                                        </p>
                                     </div>
                                 ) : (
                                     <div style={{maxWidth: '600px'}}>
@@ -362,25 +327,15 @@ const wrappedCode = `
                                                     onClick={() => loadSimulation(sim)}
                                                     className="sim-button"
                                                 >
-                                                    {sim.replace('.tsx', '')}
+                                                    {sim.replace(/\.(tsx|jsx)$/, '')}
                                                 </button>
                                             ))}
-                                        </div>
-                                        <div style={{marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)'}}>
-                                            <a 
-                                                href="./" 
-                                                style={{color: '#e8e8e8', textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.2)', fontSize: '13px'}}
-                                                className="mono"
-                                            >
-                                                ← Back to main page
-                                            </a>
                                         </div>
                                     </div>
                                 )}
                             </div>
                         </div>
                     ) : (
-                        // Simulation viewer
                         <div className="simulation-container relative">
                             <button
                                 onClick={() => {
@@ -431,7 +386,6 @@ const wrappedCode = `
             );
         };
 
-        // Render the app
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<SimulationRunner />);
     </script>
