@@ -180,13 +180,13 @@
                             if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) continue;
                             
                             let filename = null;
-                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.tsx)\)/);
+                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.(?:tsx|jsx))\)/);
                             if (linkMatch) {
                                 filename = linkMatch[1];
                             } else if (trimmed.match(/^[-*]\s+/)) {
-                                const listMatch = trimmed.match(/[-*]\s+(.*?\.tsx)/);
+                                const listMatch = trimmed.match(/[-*]\s+(.*?\.(?:tsx|jsx))/);
                                 if (listMatch) filename = listMatch[1];
-                            } else if (trimmed.endsWith('.tsx')) {
+                            } else if (/\.(tsx|jsx)$/.test(trimmed)) {
                                 filename = trimmed;
                             }
                             
