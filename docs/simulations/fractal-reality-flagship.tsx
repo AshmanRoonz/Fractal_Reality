@@ -36,8 +36,9 @@ const CONFIG = {
     count: [2, 4],            // Min/max sparks per emission (fewer sparks)
     speed: 3.0,               // Spark movement speed (not used in fractal version)
     maxAge: 50,               // Frames before spark fades out
-    maxRange: 80,             // Max length of fractal sparks (shorter)
+    maxRange: 53,             // Max length of fractal sparks (33% shorter)
     waveStrength: 0.6,        // Strength of waves created by sparks (subtler)
+    branchProbability: 0.55,  // Increased chance of branching for more fractal look
   },
   
   waves: {
@@ -76,6 +77,21 @@ const CONFIG = {
     glowRadius: 15,
     envGlowRadius: 22,
     backgroundAlpha: 0.03,
+  },
+  
+  axions: {
+    activationThreshold: 0.6,     // 60% of souls must be active
+    maxDistance: 250,             // Maximum distance for spark path recording (increased)
+    visibilityThreshold: 0.08,    // Strength needed to become visible (lowered for faster formation)
+    growthPerSpark: 0.05,         // How much strength each spark adds (2-3 sparks makes visible)
+    decayRate: 0.9995,            // Very slow decay - pathways persist
+  },
+  
+  performance: {
+    fpsThreshold: 30,             // FPS below this triggers core mode
+    fpsCheckInterval: 60,         // Check FPS every N frames
+    coreModeSparkReduction: 0.4,  // Reduce spark emission by 60% in core mode
+    coreModePathwayLimit: 500,    // Max pathways in core mode
   }
 };
 
@@ -211,14 +227,17 @@ class SparkSystem {
       const t = i / numSegments;
       const dist = length * t;
       
-      // Jitter influenced by subSoul's phase
+      // Increased jitter influenced by subSoul's phase for more fractal look
       const phaseInfluence = Math.sin(patternPhase + t * Math.PI * 2);
-      const jitter = (Math.random() - 0.5 + phaseInfluence * 0.3) * 6 * (1 - t);
+      const jitter = (Math.random() - 0.5 + phaseInfluence * 0.5) * 10 * (1 - t * 0.7);
       const jitterAngle = angle + Math.PI / 2;
       
+      // Add extra wiggle for fractal appearance
+      const wiggle = Math.sin(t * Math.PI * 6 + patternPhase) * 3;
+      
       segments.push({
-        x: x + Math.cos(angle) * dist + Math.cos(jitterAngle) * jitter,
-        y: y + Math.sin(angle) * dist + Math.sin(jitterAngle) * jitter
+        x: x + Math.cos(angle) * dist + Math.cos(jitterAngle) * jitter + Math.cos(angle + Math.PI / 3) * wiggle,
+        y: y + Math.sin(angle) * dist + Math.sin(jitterAngle) * jitter + Math.sin(angle + Math.PI / 3) * wiggle
       });
     }
     
@@ -236,14 +255,17 @@ class SparkSystem {
         const t = i / branchSteps;
         const dist = branchLength * t;
         
-        // SubSoul-influenced wiggle
+        // SubSoul-influenced wiggle with extra fractal variation
         const freqInfluence = Math.cos(patternFreq * 200 + t * Math.PI * 4);
-        const wiggle = freqInfluence * branchLength * 0.1;
+        const wiggle = freqInfluence * branchLength * 0.15;
         const wiggleAngle = branchAngle + Math.PI / 2;
         
+        // Additional high-frequency jitter for more fractal appearance
+        const jitter = (Math.random() - 0.5) * 2 * (1 - t * 0.5);
+        
         branchSegments.push({
-          x: startSeg.x + Math.cos(branchAngle) * dist + Math.cos(wiggleAngle) * wiggle,
-          y: startSeg.y + Math.sin(branchAngle) * dist + Math.sin(wiggleAngle) * wiggle
+          x: startSeg.x + Math.cos(branchAngle) * dist + Math.cos(wiggleAngle) * wiggle + jitter,
+          y: startSeg.y + Math.sin(branchAngle) * dist + Math.sin(wiggleAngle) * wiggle + jitter
         });
       }
       
@@ -253,18 +275,18 @@ class SparkSystem {
       });
       
       // Recursive sub-branches - probability influenced by subSoul frequency
-      const branchChance = 0.3 + patternFreq * 10;
+      const branchChance = 0.45 + patternFreq * 10;
       if (branchDepth < 2 && branchSteps > 2) {
         const subPoint = Math.floor(branchSteps * (0.4 + Math.random() * 0.4));
-        const subLength = branchLength * (0.4 + Math.random() * 0.3);
+        const subLength = branchLength * (0.4 + Math.random() * 0.35);
         
         if (Math.random() < branchChance) {
-          const leftAngle = branchAngle - Math.PI / 5 - Math.random() * Math.PI / 10;
+          const leftAngle = branchAngle - Math.PI / 5 - Math.random() * Math.PI / 8;
           createBranch(branchSegments, subPoint, leftAngle, subLength, branchDepth + 1);
         }
         
         if (Math.random() < branchChance) {
-          const rightAngle = branchAngle + Math.PI / 5 + Math.random() * Math.PI / 10;
+          const rightAngle = branchAngle + Math.PI / 5 + Math.random() * Math.PI / 8;
           createBranch(branchSegments, subPoint, rightAngle, subLength, branchDepth + 1);
         }
       }
@@ -273,10 +295,10 @@ class SparkSystem {
     // Add initial branches - pattern based on subSoul's frequency
     const branchFrequency = Math.max(2, Math.floor(patternFreq * 150));
     for (let i = 2; i < segments.length - 1; i += branchFrequency) {
-      if (Math.random() < 0.35) {
+      if (Math.random() < CONFIG.sparks.branchProbability) {
         const side = Math.random() < 0.5 ? 1 : -1;
-        const perpAngle = angle + (Math.PI / 2) * side + (Math.random() - 0.5) * 0.3;
-        const branchLength = length * (0.2 + Math.random() * 0.2);
+        const perpAngle = angle + (Math.PI / 2) * side + (Math.random() - 0.5) * 0.5;
+        const branchLength = length * (0.2 + Math.random() * 0.25);
         createBranch(segments, i, perpAngle, branchLength, 0);
       }
     }
@@ -293,7 +315,7 @@ class SparkSystem {
     });
   }
   
-  update(waveSystem) {
+  update(waveSystem, axionSystem = null, soulSystem = null) {
     for (let i = this.sparks.length - 1; i >= 0; i--) {
       const spark = this.sparks[i];
       
@@ -305,12 +327,232 @@ class SparkSystem {
         waveSystem.emitWake(spark.originX, spark.originY, CONFIG.sparks.waveStrength, spark.hue);
       }
       
+      // Record spark path for axion system at multiple points in its life
+      if (axionSystem && soulSystem) {
+        // Record at 30%, 50%, and 70% of spark lifetime
+        const lifePercent = spark.age / spark.maxAge;
+        if (lifePercent >= 0.3 && lifePercent <= 0.31 ||
+            lifePercent >= 0.5 && lifePercent <= 0.51 ||
+            lifePercent >= 0.7 && lifePercent <= 0.71) {
+          axionSystem.recordSparkPath(spark, soulSystem);
+        }
+      }
+      
       // Remove if expired
       if (spark.age > spark.maxAge) {
         waveSystem.emitBurst(spark.originX, spark.originY, CONFIG.sparks.waveStrength * 1.2, spark.hue);
         this.sparks.splice(i, 1);
       }
     }
+  }
+}
+
+// ============================================================================
+// AXION SYSTEM - Neural connections that grow from repeated spark paths
+// ============================================================================
+class AxionSystem {
+  constructor() {
+    this.pathTraces = new Map(); // Map of path keys to trace strength
+    this.connections = []; // Array of visible axion connections
+    this.enabled = false;
+    this.coreMode = false; // Performance optimization mode
+    this.connectedSouls = new Set(); // Souls that are part of the network
+  }
+  
+  updateActivationStatus(soulSystem) {
+    // Enable axions when 60% of souls are active
+    const activeRatio = soulSystem.getActiveSoulCount() / soulSystem.souls.length;
+    this.enabled = activeRatio >= CONFIG.axions.activationThreshold;
+  }
+  
+  checkPerformance(fps) {
+    // Activate core mode if FPS is low and we have many pathways
+    if (fps < CONFIG.performance.fpsThreshold && this.connections.length > 100) {
+      this.coreMode = true;
+    } else if (fps > CONFIG.performance.fpsThreshold + 10 && this.connections.length < 50) {
+      // Deactivate core mode if performance recovers and network is smaller
+      this.coreMode = false;
+    }
+  }
+  
+  isSoulConnected(soul, soulSystem) {
+    // Check if this soul is part of the axion network
+    if (!this.coreMode) return true; // In normal mode, all souls can be active
+    
+    const soulIdx = soulSystem.souls.indexOf(soul);
+    return this.connectedSouls.has(soulIdx);
+  }
+  
+  recordSparkPath(spark, soulSystem) {
+    // Record the path a spark takes - find which souls it's near
+    const originSoul = this.findNearestSoul(spark.originX, spark.originY, soulSystem);
+    if (!originSoul) return;
+    
+    // Check multiple points along the spark path, not just the end
+    const checkPoints = [
+      Math.floor(spark.segments.length * 0.5),  // midpoint
+      spark.segments.length - 1                  // endpoint
+    ];
+    
+    for (const idx of checkPoints) {
+      if (idx < 0 || idx >= spark.segments.length) continue;
+      
+      const seg = spark.segments[idx];
+      const endSoul = this.findNearestSoul(seg.x, seg.y, soulSystem);
+      
+      if (!endSoul || endSoul === originSoul) continue;
+      
+      // Create a key for this path (sorted so direction doesn't matter)
+      const soul1Idx = soulSystem.souls.indexOf(originSoul);
+      const soul2Idx = soulSystem.souls.indexOf(endSoul);
+      
+      if (soul1Idx === -1 || soul2Idx === -1) continue;
+      
+      const key = soul1Idx < soul2Idx ? `${soul1Idx}-${soul2Idx}` : `${soul2Idx}-${soul1Idx}`;
+      
+      // Record this path and store the actual spark segments for organic shape
+      const existing = this.pathTraces.get(key);
+      if (existing) {
+        existing.strength = Math.min(1.5, existing.strength + CONFIG.axions.growthPerSpark);
+        existing.lastTravel = Date.now();
+        // Keep updating the path shape with latest spark
+        existing.recentPaths.push({
+          segments: [...spark.segments],
+          age: 0
+        });
+        if (existing.recentPaths.length > 8) {
+          existing.recentPaths.shift();
+        }
+      } else {
+        this.pathTraces.set(key, {
+          soul1: originSoul,
+          soul2: endSoul,
+          strength: CONFIG.axions.growthPerSpark,
+          lastTravel: Date.now(),
+          recentPaths: [{
+            segments: [...spark.segments],
+            age: 0
+          }]
+        });
+      }
+    }
+  }
+  
+  findNearestSoul(x, y, soulSystem) {
+    let nearest = null;
+    let minDist = CONFIG.axions.maxDistance;
+    
+    for (const soul of soulSystem.souls) {
+      if (!soul.activated) continue;
+      const dist = Math.hypot(soul.x - x, soul.y - y);
+      if (dist < minDist) {
+        minDist = dist;
+        nearest = soul;
+      }
+    }
+    return nearest;
+  }
+  
+  update(soulSystem, frameCount) {
+    if (!this.enabled) return;
+    
+    // Decay path traces over time
+    for (const [key, trace] of this.pathTraces.entries()) {
+      const timeSinceTravel = Date.now() - trace.lastTravel;
+      
+      // Very slow decay - only after significant time
+      if (timeSinceTravel > 500) {
+        trace.strength *= CONFIG.axions.decayRate;
+      }
+      
+      // Age recent paths
+      for (const path of trace.recentPaths) {
+        path.age++;
+      }
+      
+      // Remove very weak traces
+      if (trace.strength < 0.005) {
+        this.pathTraces.delete(key);
+      }
+    }
+    
+    // Convert strong traces into visible connections
+    this.connections = [];
+    this.connectedSouls.clear();
+    
+    // In core mode, limit the number of pathways
+    const maxPathways = this.coreMode ? 500 : 10000;
+    
+    for (const [key, trace] of this.pathTraces.entries()) {
+      if (trace.strength > CONFIG.axions.visibilityThreshold) {
+        // Average the recent paths for organic shape
+        const avgPath = this.averageSparkPaths(trace.recentPaths);
+        
+        this.connections.push({
+          soul1: trace.soul1,
+          soul2: trace.soul2,
+          strength: Math.min(1, trace.strength / 1.5), // Normalize to 0-1 range
+          segments: avgPath
+        });
+        
+        // Track connected souls
+        const soul1Idx = this.pathTraces.get(key) ? soulSystem.souls.indexOf(trace.soul1) : -1;
+        const soul2Idx = this.pathTraces.get(key) ? soulSystem.souls.indexOf(trace.soul2) : -1;
+        if (soul1Idx !== -1) this.connectedSouls.add(soul1Idx);
+        if (soul2Idx !== -1) this.connectedSouls.add(soul2Idx);
+        
+        // Stop if we hit the limit
+        if (this.connections.length >= maxPathways) break;
+      }
+    }
+    
+    // In core mode, aggressively prune weak traces
+    if (this.coreMode && this.pathTraces.size > maxPathways) {
+      // Remove weakest traces
+      const sortedTraces = Array.from(this.pathTraces.entries())
+        .sort((a, b) => a[1].strength - b[1].strength);
+      
+      for (let i = 0; i < sortedTraces.length - maxPathways; i++) {
+        this.pathTraces.delete(sortedTraces[i][0]);
+      }
+    }
+  }
+  
+  averageSparkPaths(recentPaths) {
+    if (!recentPaths || recentPaths.length === 0) return [];
+    
+    // Find the path with most segments as base
+    const basePath = recentPaths.reduce((max, p) => 
+      p.segments.length > max.segments.length ? p : max
+    , recentPaths[0]);
+    
+    const numSegments = basePath.segments.length;
+    const avgSegments = [];
+    
+    // Average positions across all paths
+    for (let i = 0; i < numSegments; i++) {
+      let sumX = 0, sumY = 0, count = 0;
+      
+      for (const path of recentPaths) {
+        if (path.segments[i]) {
+          const weight = 1 / (1 + path.age * 0.1); // Newer paths weighted more
+          sumX += path.segments[i].x * weight;
+          sumY += path.segments[i].y * weight;
+          count += weight;
+        }
+      }
+      
+      avgSegments.push({
+        x: sumX / count,
+        y: sumY / count
+      });
+    }
+    
+    return avgSegments;
+  }
+  
+  getConnections() {
+    return this.connections;
   }
 }
 
@@ -376,7 +618,7 @@ class PacketSystem {
     }
   }
   
-  findNextTarget(soulSystem) {
+  findNextTarget(soulSystem, axionSystem = null) {
     let bestSoul = null;
     let bestScore = -Infinity;
     
@@ -387,6 +629,17 @@ class PacketSystem {
       
       // Skip if this was the last target (avoid ping-pong)
       if (soul === this.packet.targetSoul) continue;
+      
+      // In core mode, strongly prefer connected souls
+      let connectionBonus = 0;
+      if (axionSystem && axionSystem.coreMode) {
+        const isConnected = axionSystem.isSoulConnected(soul, soulSystem);
+        if (isConnected) {
+          connectionBonus = 0.8; // Huge bonus for connected souls
+        } else {
+          connectionBonus = -0.5; // Penalty for non-connected souls
+        }
+      }
       
       // Calculate resonance score with gravity-like attraction
       const freqDiff = Math.abs(soul.frequency - this.packet.frequency);
@@ -406,7 +659,7 @@ class PacketSystem {
       const timeSinceHit = this.packet.frameCount - (soul.lastHitTime || 0);
       const recencyPenalty = timeSinceHit < 50 ? -0.3 : 0;
       
-      const totalScore = freqScore + phaseScore + distScore + activationBonus + recencyPenalty + Math.random() * 0.3;
+      const totalScore = freqScore + phaseScore + distScore + activationBonus + recencyPenalty + connectionBonus + Math.random() * 0.3;
       
       if (totalScore > bestScore) {
         bestScore = totalScore;
@@ -518,7 +771,7 @@ class PacketSystem {
     });
   }
   
-  update(soulSystem, waveSystem, frameCount) {
+  update(soulSystem, waveSystem, frameCount, axionSystem = null) {
     this.packet.phase += this.packet.frequency;
     this.packet.frameCount = frameCount;
     
@@ -572,7 +825,7 @@ class PacketSystem {
         }
         
         // Find next target immediately (no dwelling)
-        const nextSoul = this.findNextTarget(soulSystem);
+        const nextSoul = this.findNextTarget(soulSystem, axionSystem);
         if (nextSoul) {
           // Create lightning bolt from current position to next soul
           this.createLightningBolt(this.packet.x, this.packet.y, nextSoul.x, nextSoul.y);
@@ -726,51 +979,6 @@ class SoulSystem {
     return pixels;
   }
   
-  createPixels(baseHue) {
-    // DEPRECATED - now using createSubSoul instead
-    // Keeping for backwards compatibility during refactor
-    const grid = [];
-    
-    for (let y = 0; y < 9; y++) {
-      for (let x = 0; x < 9; x++) {
-        const dx = x - 4;
-        const dy = y - 4;
-        const distFromCenter = Math.hypot(dx, dy);
-        
-        let role, hueOffset, saturation;
-        
-        if (distFromCenter < 1.5) {
-          role = 'core';
-          hueOffset = 0;
-          saturation = 0.7;
-        } else if (distFromCenter < 2.5) {
-          role = 'inner';
-          hueOffset = (x + y) * 20;
-          saturation = 0.6;
-        } else if (distFromCenter < 3.5) {
-          role = 'field';
-          hueOffset = (x * y) * 10;
-          saturation = 0.5;
-        } else {
-          role = 'environment';
-          hueOffset = Math.atan2(dy, dx) * 57.3;
-          saturation = 0.4;
-        }
-        
-        grid.push({
-          x, y,
-          h: (baseHue + hueOffset) % 360,
-          s: saturation,
-          b: 0,
-          role,
-          active: false
-        });
-      }
-    }
-    
-    return grid;
-  }
-  
   activate(soul, frameCount) {
     if (soul.activated) return;
     
@@ -805,13 +1013,13 @@ class SoulSystem {
     }
   }
   
-  update(frameCount, waveSystem, sparkSystem) {
+  update(frameCount, waveSystem, sparkSystem, axionSystem = null) {
     for (const soul of this.souls) {
-      this.updateSoul(soul, frameCount, waveSystem, sparkSystem);
+      this.updateSoul(soul, frameCount, waveSystem, sparkSystem, axionSystem);
     }
   }
   
-  updateSoul(soul, frameCount, waveSystem, sparkSystem) {
+  updateSoul(soul, frameCount, waveSystem, sparkSystem, axionSystem = null) {
     soul.phase += soul.frequency;
     if (soul.phase > Math.PI * 2) soul.phase -= Math.PI * 2;
     
@@ -819,11 +1027,21 @@ class SoulSystem {
     
     // Check if soul is charged up enough to emit sparks
     if (soul.activationLevel > CONFIG.sparks.emissionThreshold) {
-      const timeSinceLastSpark = frameCount - (soul.lastSparkEmission || 0);
-      if (timeSinceLastSpark > CONFIG.sparks.emissionCooldown) {
-        sparkSystem.emitFromSoul(soul);
-        soul.lastSparkEmission = frameCount;
-        soul.activationLevel = Math.max(0.6, soul.activationLevel - 0.15);
+      // In core mode, only connected souls emit sparks
+      const canEmit = !axionSystem || !axionSystem.coreMode || 
+                      axionSystem.isSoulConnected(soul, this);
+      
+      if (canEmit) {
+        const timeSinceLastSpark = frameCount - (soul.lastSparkEmission || 0);
+        const emissionCooldown = axionSystem && axionSystem.coreMode 
+          ? CONFIG.sparks.emissionCooldown / CONFIG.performance.coreModeSparkReduction
+          : CONFIG.sparks.emissionCooldown;
+          
+        if (timeSinceLastSpark > emissionCooldown) {
+          sparkSystem.emitFromSoul(soul);
+          soul.lastSparkEmission = frameCount;
+          soul.activationLevel = Math.max(0.6, soul.activationLevel - 0.15);
+        }
       }
     }
     
@@ -894,87 +1112,6 @@ class SoulSystem {
     soul.activationLevel = Math.min(1, soul.activationLevel + activationPulse * 0.1 + hitRecency * 0.2);
   }
   
-  calculateEnvironmentInfluence(soul) {
-    const spacing = CONFIG.souls.spacing;
-    const neighbors = {
-      north: null, east: null, south: null, west: null
-    };
-    
-    // Find nearest neighbor in each direction
-    for (const other of this.souls) {
-      if (other === soul || !other.activated) continue;
-      
-      const dx = other.x - soul.x;
-      const dy = other.y - soul.y;
-      const dist = Math.hypot(dx, dy);
-      
-      if (dist > spacing * 2) continue;
-      
-      if (Math.abs(dy) < spacing / 2 && dx > 0) neighbors.east = other;
-      if (Math.abs(dy) < spacing / 2 && dx < 0) neighbors.west = other;
-      if (Math.abs(dx) < spacing / 2 && dy < 0) neighbors.north = other;
-      if (Math.abs(dx) < spacing / 2 && dy > 0) neighbors.south = other;
-    }
-    
-    return {
-      north: neighbors.north ? neighbors.north.activationLevel * 0.7 : 0.1,
-      east: neighbors.east ? neighbors.east.activationLevel * 0.7 : 0.1,
-      south: neighbors.south ? neighbors.south.activationLevel * 0.7 : 0.1,
-      west: neighbors.west ? neighbors.west.activationLevel * 0.7 : 0.1
-    };
-  }
-  
-  calculateInternalCoherence(soul) {
-    // Calculate coherence between sub-souls (recursive structure)
-    if (!soul.subSouls || soul.subSouls.length < 2) return 0;
-    
-    let coherence = 0, count = 0;
-    
-    // Sample pairs of sub-souls to check harmony
-    const sampleSize = Math.min(5, soul.subSouls.length);
-    for (let i = 0; i < sampleSize; i++) {
-      for (let j = i + 1; j < sampleSize; j++) {
-        const ss1 = soul.subSouls[i];
-        const ss2 = soul.subSouls[j];
-        
-        // Check if both have active pixels
-        const active1 = ss1.pixels.filter(p => p.active && p.b > 0.1);
-        const active2 = ss2.pixels.filter(p => p.active && p.b > 0.1);
-        
-        if (active1.length > 0 && active2.length > 0) {
-          // Use first active pixel from each as representative
-          coherence += this.colorHarmony(active1[0], active2[0]) * ss1.activation * ss2.activation;
-          count++;
-        }
-      }
-    }
-    
-    return count > 0 ? coherence / count : 0;
-  }
-  
-  calculateExternalCoherence(soul) {
-    let coherence = 0, count = 0;
-    const searchRadius = CONFIG.souls.spacing * 2.5;
-    
-    for (const other of this.souls) {
-      if (other === soul || !other.activated) continue;
-      
-      const dist = Math.hypot(soul.x - other.x, soul.y - other.y);
-      if (dist < searchRadius) {
-        const proximity = 1 - (dist / searchRadius);
-        coherence += proximity * other.activationLevel * 0.5;
-        count++;
-      }
-    }
-    return count > 0 ? coherence / count : 0;
-  }
-  
-  colorHarmony(p1, p2) {
-    const hueDiff = Math.abs(p1.h - p2.h);
-    const normalized = Math.min(hueDiff, 360 - hueDiff) / 180;
-    return 1 - normalized;
-  }
-  
   getActiveSoulCount() {
     return this.souls.filter(s => s.activated).length;
   }
@@ -1026,10 +1163,13 @@ class Renderer {
     this.ctx.fillText('∞ = 1', this.width / 2, this.height / 2 - 100);
   }
   
-  renderMainPhase(soulSystem, packetSystem, waveSystem, sparkSystem, frameCount, isZoomPhase = false) {
+  renderMainPhase(soulSystem, packetSystem, waveSystem, sparkSystem, axionSystem, frameCount, isZoomPhase = false) {
     // Subtle fade
     this.ctx.fillStyle = `rgba(0, 0, 0, ${CONFIG.visuals.fadeAlpha})`;
     this.ctx.fillRect(0, 0, this.width, this.height);
+    
+    // Render axion connections first (behind everything)
+    this.renderAxions(axionSystem);
     
     // Render waves (wake) - invisible now
     this.renderWaves(waveSystem);
@@ -1042,6 +1182,49 @@ class Renderer {
     
     // Render souls
     this.renderSouls(soulSystem, frameCount);
+  }
+  
+  renderAxions(axionSystem) {
+    if (!axionSystem || !axionSystem.enabled) return;
+    
+    const connections = axionSystem.getConnections();
+    
+    for (const conn of connections) {
+      if (!conn.segments || conn.segments.length < 2) continue;
+      
+      const { segments, strength } = conn;
+      
+      // Calculate hue from souls
+      const avgHue = (conn.soul1.baseHue + conn.soul2.baseHue) / 2;
+      
+      this.ctx.save();
+      
+      // Draw as thin organic line following the spark path
+      this.ctx.beginPath();
+      this.ctx.moveTo(segments[0].x, segments[0].y);
+      
+      for (let i = 1; i < segments.length; i++) {
+        this.ctx.lineTo(segments[i].x, segments[i].y);
+      }
+      
+      // Subtle glow
+      this.ctx.shadowBlur = 5;
+      this.ctx.shadowColor = `hsla(${avgHue}, 75%, 65%, ${strength * 0.25})`;
+      
+      // Main thin line - 1px like sparks
+      this.ctx.strokeStyle = `hsla(${avgHue}, 85%, 70%, ${strength * 0.6})`;
+      this.ctx.lineWidth = 1;
+      this.ctx.stroke();
+      
+      // Slightly brighter core for stronger connections
+      if (strength > 0.3) {
+        this.ctx.strokeStyle = `hsla(${avgHue}, 90%, 80%, ${(strength - 0.3) * 0.5})`;
+        this.ctx.lineWidth = 0.5;
+        this.ctx.stroke();
+      }
+      
+      this.ctx.restore();
+    }
   }
   
   renderWaves(waveSystem) {
@@ -1257,7 +1440,7 @@ class Renderer {
 // ============================================================================
 const FractalSoulArray = () => {
   const canvasRef = useRef(null);
-  const [stats, setStats] = useState({ souls: 0, sparks: 0, frame: 0 });
+  const [stats, setStats] = useState({ souls: 0, sparks: 0, frame: 0, axions: 0, traces: 0, axionsEnabled: false, fps: 60, coreMode: false });
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1278,6 +1461,7 @@ const FractalSoulArray = () => {
     const packetSystem = new PacketSystem(CONFIG.canvas.width, CONFIG.canvas.height);
     const waveSystem = new WaveSystem();
     const sparkSystem = new SparkSystem();
+    const axionSystem = new AxionSystem();
     const renderer = new Renderer(ctx, CONFIG.canvas.width, CONFIG.canvas.height);
     
     // Set initial target to center soul
@@ -1290,7 +1474,32 @@ const FractalSoulArray = () => {
     let zoomPhase = CONFIG.zoom.enabled;
     let zoomFrame = 0;
     
+    // FPS tracking
+    let lastTime = performance.now();
+    let frameTimeSum = 0;
+    let frameTimeCount = 0;
+    let currentFPS = 60;
+    
     const animate = () => {
+      // Calculate FPS
+      const currentTime = performance.now();
+      const deltaTime = currentTime - lastTime;
+      lastTime = currentTime;
+      
+      frameTimeSum += deltaTime;
+      frameTimeCount++;
+      
+      // Update FPS every 60 frames
+      if (frameCount % CONFIG.performance.fpsCheckInterval === 0 && frameTimeCount > 0) {
+        const avgFrameTime = frameTimeSum / frameTimeCount;
+        currentFPS = Math.round(1000 / avgFrameTime);
+        frameTimeSum = 0;
+        frameTimeCount = 0;
+        
+        // Check performance and potentially activate core mode
+        axionSystem.checkPerformance(currentFPS);
+      }
+      
       if (zoomPhase) {
         renderer.renderZoomPhase(soulSystem.centerSoul, zoomFrame);
         
@@ -1313,11 +1522,13 @@ const FractalSoulArray = () => {
           packetSystem.packet.visible = false;
         }
       } else {
-        renderer.renderMainPhase(soulSystem, packetSystem, waveSystem, sparkSystem, frameCount, false);
-        soulSystem.update(frameCount, waveSystem, sparkSystem);
-        packetSystem.update(soulSystem, waveSystem, frameCount);
+        renderer.renderMainPhase(soulSystem, packetSystem, waveSystem, sparkSystem, axionSystem, frameCount, false);
+        soulSystem.update(frameCount, waveSystem, sparkSystem, axionSystem);
+        packetSystem.update(soulSystem, waveSystem, frameCount, axionSystem);
         waveSystem.update();
-        sparkSystem.update(waveSystem);
+        sparkSystem.update(waveSystem, axionSystem, soulSystem);
+        axionSystem.updateActivationStatus(soulSystem);
+        axionSystem.update(soulSystem, frameCount);
       }
       
       frameCount++;
@@ -1326,7 +1537,12 @@ const FractalSoulArray = () => {
         setStats({
           souls: soulSystem.getActiveSoulCount(),
           sparks: sparkSystem.sparks.length,
-          frame: frameCount
+          frame: frameCount,
+          axions: axionSystem.connections.length,
+          traces: axionSystem.pathTraces.size,
+          axionsEnabled: axionSystem.enabled,
+          fps: currentFPS,
+          coreMode: axionSystem.coreMode
         });
       }
       
@@ -1371,10 +1587,49 @@ const FractalSoulArray = () => {
       }}>
         <div>Active Souls: {stats.souls}</div>
         <div>Sparks: {stats.sparks}</div>
-        <div>Frame: {stats.frame}</div>
+        <div style={{ color: stats.fps < 30 ? 'rgba(255, 150, 100, 0.9)' : 'rgba(255, 255, 255, 0.6)' }}>
+          FPS: {stats.fps}
+        </div>
+        {stats.axionsEnabled && (
+          <>
+            <div style={{ color: 'rgba(150, 200, 255, 0.7)', marginTop: 4, fontSize: '11px' }}>
+              Traces: {stats.traces}
+            </div>
+            {stats.axions > 0 && (
+              <div style={{ color: 'rgba(100, 255, 150, 0.95)', fontWeight: 'bold' }}>
+                ⚡ Pathways: {stats.axions}
+              </div>
+            )}
+          </>
+        )}
+        {stats.coreMode && (
+          <div style={{ 
+            marginTop: 4, 
+            fontSize: '11px', 
+            color: 'rgba(255, 200, 50, 0.95)',
+            fontWeight: 'bold'
+          }}>
+            🧠 CORE MODE: Network focused
+          </div>
+        )}
         <div style={{ marginTop: 8, fontSize: '11px', opacity: 0.6 }}>
           Recursive: 9 sub-souls × 9 pixels = 81
         </div>
+        {!stats.axionsEnabled && stats.souls > 0 && (
+          <div style={{ marginTop: 4, fontSize: '11px', opacity: 0.5 }}>
+            Progress: {Math.round((stats.souls / (200 * 0.6)) * 100)}% → Axions at 100%
+          </div>
+        )}
+        {stats.axionsEnabled && stats.traces > 0 && stats.axions === 0 && (
+          <div style={{ marginTop: 4, fontSize: '11px', color: 'rgba(255, 200, 100, 0.8)' }}>
+            Building neural traces...
+          </div>
+        )}
+        {stats.axionsEnabled && stats.axions > 0 && !stats.coreMode && (
+          <div style={{ marginTop: 4, fontSize: '10px', color: 'rgba(100, 255, 150, 0.6)' }}>
+            Neural network active
+          </div>
+        )}
       </div>
       
       <a 
