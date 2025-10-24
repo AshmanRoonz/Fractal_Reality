@@ -209,18 +209,39 @@
                         presets: presets
                     }).code;
 
-                    // Try to find the main component
-                    // Look for: const X = () => or function X()
-                    const componentMatches = [
-                        ...processedCode.matchAll(/(?:const|let|var)\s+(\w+)\s*=\s*\([^)]*\)\s*=>/g),
-                        ...processedCode.matchAll(/function\s+(\w+)\s*\([^)]*\)/g)
-                    ];
+                    // Try to find the main React component
+                    // Look for components that return JSX (contain return and JSX elements)
+                    const componentMatches = [];
                     
-                    let componentName = 'App';
+                    // Pattern 1: const Component = () => { ... return <div>...</div> ... }
+                    const arrowFuncMatches = processedCode.matchAll(/(?:const|let|var)\s+(\w+)\s*=\s*\([^)]*\)\s*=>\s*{[\s\S]*?return[\s\S]*?<[\s\S]*?}/g);
+                    for (const match of arrowFuncMatches) {
+                        // Component names should start with capital letter
+                        if (match[1] && match[1][0] === match[1][0].toUpperCase()) {
+                            componentMatches.push(match[1]);
+                        }
+                    }
+                    
+                    // Pattern 2: const Component = () => (<div>...</div>)
+                    const directReturnMatches = processedCode.matchAll(/(?:const|let|var)\s+(\w+)\s*=\s*\([^)]*\)\s*=>\s*\(/g);
+                    for (const match of directReturnMatches) {
+                        if (match[1] && match[1][0] === match[1][0].toUpperCase()) {
+                            componentMatches.push(match[1]);
+                        }
+                    }
+                    
+                    // Pattern 3: function Component() { ... return <div>...</div> ... }
+                    const funcMatches = processedCode.matchAll(/function\s+(\w+)\s*\([^)]*\)\s*{[\s\S]*?return[\s\S]*?</g);
+                    for (const match of funcMatches) {
+                        if (match[1] && match[1][0] === match[1][0].toUpperCase()) {
+                            componentMatches.push(match[1]);
+                        }
+                    }
+                    
+                    let componentName = 'FractalSoulArray'; // Default for your specific file
                     if (componentMatches.length > 0) {
-                        // Get the last defined component (usually the main one)
-                        const lastMatch = componentMatches[componentMatches.length - 1];
-                        componentName = lastMatch[1];
+                        // Use the last React component found (usually the main export)
+                        componentName = componentMatches[componentMatches.length - 1];
                     }
 
                     // Wrap in IIFE with proper scope
