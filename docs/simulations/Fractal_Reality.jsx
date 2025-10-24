@@ -2548,6 +2548,8 @@ class Renderer {
 const FractalSoulArray = () => {
   const canvasRef = useRef(null);
   const [stats, setStats] = useState({ souls: 0, sparks: 0, bonds: 0, pathways: 0, persistentPathways: 0, frame: 0, axions: 0, traces: 0, axionsEnabled: false, fps: 60, coreMode: false });
+  const zoomRef = useRef(1);
+  const panRef = useRef({ x: 0, y: 0 });
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -2590,6 +2592,31 @@ const FractalSoulArray = () => {
     let frameTimeCount = 0;
     let currentFPS = 60;
     
+    // Wheel event handler for zoom
+    const handleWheel = (e) => {
+      e.preventDefault();
+      
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      
+      // Zoom in or out
+      const zoomDelta = e.deltaY > 0 ? 0.9 : 1.1;
+      const newZoom = Math.max(0.1, Math.min(5, zoomRef.current * zoomDelta));
+      
+      // Adjust pan to zoom towards mouse position
+      const zoomRatio = newZoom / zoomRef.current;
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      
+      panRef.current.x = mouseX - (mouseX - panRef.current.x) * zoomRatio;
+      panRef.current.y = mouseY - (mouseY - panRef.current.y) * zoomRatio;
+      
+      zoomRef.current = newZoom;
+    };
+    
+    canvas.addEventListener('wheel', handleWheel, { passive: false });
+    
     const animate = () => {
       // Calculate FPS
       const currentTime = performance.now();
@@ -2618,6 +2645,13 @@ const FractalSoulArray = () => {
         // Update center soul during zoom to maintain colors
         soulSystem.updateSoul(soulSystem.centerSoul, zoomFrame, waveSystem, sparkSystem, axionSystem, packetSystem);
         
+        // Apply zoom transformation
+        ctx.save();
+        ctx.translate(panRef.current.x, panRef.current.y);
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.scale(zoomRef.current, zoomRef.current);
+        ctx.translate(-canvas.width / 2, -canvas.height / 2);
+        
         renderer.renderZoomPhase(soulSystem.centerSoul, zoomFrame);
         
         // Animate packet during zoom phase too
@@ -2632,6 +2666,8 @@ const FractalSoulArray = () => {
         // Show packet in zoom phase
         renderer.renderPacket(packetSystem, true);
         
+        ctx.restore();
+        
         zoomFrame++;
         if (zoomFrame >= CONFIG.zoom.maxFrames) {
           zoomPhase = false;
@@ -2639,7 +2675,17 @@ const FractalSoulArray = () => {
           packetSystem.packet.visible = false;
         }
       } else {
+        // Apply zoom transformation
+        ctx.save();
+        ctx.translate(panRef.current.x, panRef.current.y);
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.scale(zoomRef.current, zoomRef.current);
+        ctx.translate(-canvas.width / 2, -canvas.height / 2);
+        
         renderer.renderMainPhase(soulSystem, packetSystem, waveSystem, sparkSystem, axionSystem, frameCount, false);
+        
+        ctx.restore();
+        
         soulSystem.update(frameCount, waveSystem, sparkSystem, axionSystem, packetSystem);
         packetSystem.update(soulSystem, waveSystem, frameCount, axionSystem);
         waveSystem.update();
@@ -2688,7 +2734,10 @@ const FractalSoulArray = () => {
     };
     
     let animationId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationId);
+    return () => {
+      cancelAnimationFrame(animationId);
+      canvas.removeEventListener('wheel', handleWheel);
+    };
   }, []);
   
   return (
@@ -2708,152 +2757,10 @@ const FractalSoulArray = () => {
         style={{ 
           maxWidth: '100%',
           maxHeight: '100%',
-          imageRendering: 'crisp-edges'
+          imageRendering: 'crisp-edges',
+          cursor: 'grab'
         }}
       />
-      
-      <div style={{
-        position: 'absolute',
-        bottom: 20,
-        left: 20,
-        color: 'rgba(255, 255, 255, 0.6)',
-        fontSize: '13px',
-        fontFamily: 'monospace',
-        background: 'rgba(0, 0, 0, 0.5)',
-        padding: '10px',
-        borderRadius: '4px'
-      }}>
-        <div>Active Souls: {stats.souls}</div>
-        <div>Sparks: {stats.sparks}</div>
-        {stats.bonds > 0 && (
-          <div style={{ color: 'rgba(255, 200, 100, 0.8)', fontSize: '12px' }}>
-            🔗 Bonds: {stats.bonds}
-          </div>
-        )}
-        {stats.pathways > 0 && (
-          <div style={{ color: 'rgba(150, 255, 200, 0.9)', fontSize: '12px', fontWeight: 'bold' }}>
-            🤝 Pathways: {stats.pathways}
-          </div>
-        )}
-        {stats.persistentPathways > 0 && (
-          <>
-            <div style={{ color: 'rgba(200, 150, 255, 0.95)', fontSize: '12px', fontWeight: 'bold' }}>
-              ✨ Braided: {stats.persistentPathways}
-            </div>
-            {stats.avgPathwayStrength > 0 && (
-              <div style={{ 
-                color: 'rgba(200, 150, 255, 0.75)', 
-                fontSize: '10px',
-                marginLeft: 8,
-                fontStyle: 'italic'
-              }}>
-                🧠 Avg Strength: {stats.avgPathwayStrength.toFixed(2)}
-              </div>
-            )}
-            {stats.maxPathwayStrength > 1.0 && (
-              <div style={{ 
-                color: 'rgba(255, 150, 255, 0.95)', 
-                fontSize: '10px',
-                marginLeft: 8,
-                fontWeight: 'bold'
-              }}>
-                ⚡ Max: {stats.maxPathwayStrength.toFixed(2)}x
-              </div>
-            )}
-            {stats.totalPathwayUsage > 0 && (
-              <div style={{ 
-                color: 'rgba(180, 150, 255, 0.7)', 
-                fontSize: '10px',
-                marginLeft: 8
-              }}>
-                📊 Total Usage: {Math.round(stats.totalPathwayUsage)}
-              </div>
-            )}
-          </>
-        )}
-        <div style={{ color: stats.fps < 30 ? 'rgba(255, 150, 100, 0.9)' : 'rgba(255, 255, 255, 0.6)' }}>
-          FPS: {stats.fps}
-        </div>
-        {stats.axionsEnabled && (
-          <>
-            <div style={{ color: 'rgba(150, 200, 255, 0.7)', marginTop: 4, fontSize: '11px' }}>
-              Traces: {stats.traces}
-            </div>
-            {stats.axions > 0 && (
-              <div style={{ color: 'rgba(100, 255, 150, 0.95)', fontWeight: 'bold' }}>
-                ⚡ Pathways: {stats.axions}
-              </div>
-            )}
-          </>
-        )}
-        {stats.coreMode && (
-          <div style={{ 
-            marginTop: 4, 
-            fontSize: '11px', 
-            color: 'rgba(100, 255, 150, 0.95)',
-            fontWeight: 'bold'
-          }}>
-            🧠 NETWORK MODE: Pathways optimized
-          </div>
-        )}
-        <div style={{ marginTop: 8, fontSize: '11px', opacity: 0.6 }}>
-          Recursive: 9 sub-souls × 9 pixels = 81
-        </div>
-        <div style={{ marginTop: 4, fontSize: '10px', opacity: 0.5, color: 'rgba(200, 150, 255, 0.7)' }}>
-          ✨ Resonant Color Signatures
-        </div>
-        <div style={{ marginTop: 2, fontSize: '10px', opacity: 0.5, color: 'rgba(150, 255, 200, 0.7)' }}>
-          🎵 Harmonic Communication
-        </div>
-        <div style={{ marginTop: 2, fontSize: '10px', opacity: 0.5, color: 'rgba(255, 150, 255, 0.7)' }}>
-          🧠 Neuroplastic Pathways: Strengthen with use
-        </div>
-        {!stats.axionsEnabled && stats.souls > 0 && (
-          <div style={{ marginTop: 4, fontSize: '11px', opacity: 0.5 }}>
-            Progress: {Math.round((stats.souls / (200 * 0.6)) * 100)}% → Axions at 100%
-          </div>
-        )}
-        {stats.axionsEnabled && stats.traces > 0 && stats.axions === 0 && (
-          <div style={{ marginTop: 4, fontSize: '11px', color: 'rgba(255, 200, 100, 0.8)' }}>
-            Building neural traces...
-          </div>
-        )}
-        {stats.axionsEnabled && stats.axions > 0 && !stats.coreMode && (
-          <div style={{ marginTop: 4, fontSize: '10px', color: 'rgba(100, 255, 150, 0.6)' }}>
-            Neural network active
-          </div>
-        )}
-      </div>
-      
-      <a 
-        href="https://github.com/AshmanRoonz/Fractal_Reality"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          position: 'absolute',
-          top: 20,
-          right: 20,
-          color: 'rgba(255, 255, 255, 0.4)',
-          fontSize: '12px',
-          fontFamily: 'monospace',
-          textDecoration: 'none',
-          padding: '8px 12px',
-          background: 'rgba(0, 0, 0, 0.4)',
-          borderRadius: '4px',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          transition: 'all 0.3s ease'
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.color = 'rgba(255, 255, 255, 0.8)';
-          e.target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.color = 'rgba(255, 255, 255, 0.4)';
-          e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-        }}
-      >
-        github.com/AshmanRoonz/Fractal_Reality
-      </a>
     </div>
   );
 };
