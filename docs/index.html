@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fractal Reality - A Unified Framework</title>
+    <title>Fractal Reality - Complete Framework</title>
     <meta name="description" content="A complete mathematical framework unifying quantum mechanics, general relativity, and consciousness through validation at interfaces in 3.5D spacetime.">
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -23,66 +23,82 @@
             background: #0a0a0a;
             color: #e8e8e8;
             line-height: 1.5;
-            font-size: 15px;
+            font-size: 14px;
         }
         
         .mono {
             font-family: 'IBM Plex Mono', monospace;
         }
         
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
+        .section-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
         
-        .equation {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 300;
+        .section-box:hover {
+            background: rgba(255,255,255,0.03);
+        }
+        
+        .tab-button {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #e8e8e8;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
             letter-spacing: 0.05em;
         }
         
-        .divider {
-            height: 1px;
-            background: rgba(255,255,255,0.08);
-            margin: 3rem 0;
+        .tab-button:hover {
+            background: rgba(255,255,255,0.05);
         }
         
-        .data-grid {
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.02);
+        .tab-button.active {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
         }
         
-        a {
-            color: #e8e8e8;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            transition: border-color 0.2s;
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
         
-        a:hover {
-            border-bottom-color: rgba(255,255,255,0.6);
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
         }
         
-        .sim-preview-box {
-            width: 100%;
+        .sim-preview {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            width: 300px;
             height: 300px;
             border: 1px solid rgba(255,255,255,0.08);
             background: rgba(255,255,255,0.02);
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s, border-color 0.3s;
+            z-index: 1000;
         }
         
-        .sim-preview-box:hover {
-            background: rgba(255,255,255,0.04);
-            border-color: rgba(255,255,255,0.15);
-        }
-        
-        .sim-preview-box iframe {
+        .sim-preview iframe {
             width: 100%;
             height: 100%;
             border: none;
+        }
+        
+        @media (max-width: 1400px) {
+            .sim-preview {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 2rem auto;
+            }
         }
     </style>
 </head>
@@ -92,11 +108,11 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        const FractalRealityLanding = () => {
+        const FractalRealityDiagram = () => {
+            const [activeSection, setActiveSection] = useState('overview');
             const [previewSim, setPreviewSim] = useState(null);
 
             useEffect(() => {
-                // Load the first simulation for preview
                 const fetchPreviewSim = async () => {
                     try {
                         const response = await fetch('./sims.md');
@@ -123,7 +139,7 @@
                             if (filename) {
                                 filename = filename.replace(/^simulations\//, '');
                                 setPreviewSim(filename);
-                                break; // Just get the first one
+                                break;
                             }
                         }
                     } catch (err) {
@@ -134,317 +150,527 @@
                 fetchPreviewSim();
             }, []);
 
+            const sections = {
+                overview: 'Overview',
+                fractalization: 'Fractalization',
+                validation: '[ICE] Validation',
+                dimensional: 'Dimensional Cascade',
+                empirical: 'Empirical Data'
+            };
+
             return (
-                <div className="min-h-screen" style={{background: '#0a0a0a'}}>
-                    {/* Header with Preview */}
-                    <div className="container pt-16 pb-12">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                            {/* Left: Title */}
-                            <div>
-                                <h1 className="text-5xl font-light mb-3 tracking-tight" style={{letterSpacing: '-0.02em'}}>
-                                    Fractal Reality
-                                </h1>
-                                <p className="text-lg font-light text-gray-500 mb-6">
-                                    A unified mathematical framework
-                                </p>
-                                <p className="text-base leading-relaxed" style={{color: '#b0b0b0'}}>
-                                    Unifying quantum mechanics, general relativity, and consciousness through the principle of <span style={{fontStyle: 'italic'}}>validation at interfaces</span> in 3.5 dimensional spacetime.
-                                </p>
+                <div style={{background: '#0a0a0a', minHeight: '100vh', padding: '2rem', position: 'relative'}}>
+                    {/* Simulator Preview - Fixed Position */}
+                    <div className="sim-preview">
+                        {previewSim ? (
+                            <iframe 
+                                src={`./simulators.html?auto=${previewSim}`}
+                                title="Simulation Preview"
+                            />
+                        ) : (
+                            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                                <div className="mono" style={{fontSize: '11px', color: '#606060'}}>Loading preview...</div>
                             </div>
-                            
-                            {/* Right: Simulation Preview */}
-                            <div>
-                                <div className="sim-preview-box">
-                                    {previewSim ? (
-                                        <iframe 
-                                            src={`./simulators.html?auto=${previewSim}`}
-                                            title="Simulation Preview"
-                                        />
-                                    ) : (
-                                        <div className="flex items-center justify-center h-full">
-                                            <div className="text-center text-gray-600">
-                                                <div className="mono text-xs">Loading preview...</div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                                <a 
-                                    href="./simulators.html" 
-                                    className="block mt-3 text-center border-none hover:opacity-70 transition-opacity"
-                                    style={{borderBottom: 'none'}}
+                        )}
+                        <div style={{marginTop: '0.5rem', textAlign: 'center'}}>
+                            <a 
+                                href="./simulators.html" 
+                                className="mono"
+                                style={{fontSize: '11px', color: '#e8e8e8', textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.2)'}}
+                            >
+                                Interactive Demonstrations →
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Header */}
+                    <div style={{marginBottom: '2rem', maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto'}}>
+                        <h1 style={{fontSize: '3rem', fontWeight: '300', marginBottom: '0.5rem', letterSpacing: '-0.02em'}}>
+                            Fractal Reality
+                        </h1>
+                        <p style={{fontSize: '1.2rem', color: '#808080', marginBottom: '1.5rem'}}>
+                            Mathematical Formalism & Empirical Validation
+                        </p>
+                        
+                        {/* Tabs */}
+                        <div style={{display: 'flex', gap: '0.5rem', flexWrap: 'wrap'}}>
+                            {Object.entries(sections).map(([key, label]) => (
+                                <button
+                                    key={key}
+                                    onClick={() => setActiveSection(key)}
+                                    className={`tab-button ${activeSection === key ? 'active' : ''}`}
                                 >
-                                    <div className="text-xs mono uppercase tracking-wider text-gray-600">Interactive Demonstrations</div>
-                                    <div className="text-sm text-white">Click to explore →</div>
-                                </a>
-                            </div>
+                                    {label}
+                                </button>
+                            ))}
                         </div>
                     </div>
 
-                    <div className="divider"></div>
-
-                    {/* Core Equation */}
-                    <div className="container pb-8">
-                        <div className="text-center">
-                            <p className="text-xs mono uppercase tracking-wider text-gray-600 mb-3">Fundamental Pattern</p>
-                            <div className="equation text-4xl mb-3" style={{letterSpacing: '0.1em'}}>
-                                ∇ → [ICE] → ℰ
-                            </div>
-                            <p className="text-sm text-gray-500 mono">
-                                Convergence → Validation at Interfaces → Emergence
-                            </p>
-                        </div>
+                    {/* Main Content */}
+                    <div style={{maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto', paddingRight: '340px'}}>
+                        {activeSection === 'overview' && <OverviewSection />}
+                        {activeSection === 'fractalization' && <FractalizationSection />}
+                        {activeSection === 'validation' && <ValidationSection />}
+                        {activeSection === 'dimensional' && <DimensionalSection />}
+                        {activeSection === 'empirical' && <EmpiricalSection />}
                     </div>
 
-                    <div className="divider"></div>
-
-                    {/* Empirical Validation */}
-                    <div className="container pb-8">
-                        <h2 className="text-xl font-normal mb-6 tracking-tight">Empirical Validation</h2>
-                        
-                        <div className="data-grid p-6 mb-4">
-                            <div className="grid grid-cols-3 gap-6 text-center text-sm">
-                                <div>
-                                    <div className="text-3xl font-light mb-1">1.503</div>
-                                    <div className="text-xs text-gray-600 mono mb-1">± 0.040</div>
-                                    <div className="text-xs text-gray-500">Fractal dimension <span className="italic">D</span></div>
-                                    <div className="text-xs text-gray-700 mono mt-1">LIGO</div>
-                                </div>
-                                <div>
-                                    <div className="text-3xl font-light mb-1">0.9997</div>
-                                    <div className="text-xs text-gray-600 mono mb-1">R²</div>
-                                    <div className="text-xs text-gray-500">Spacetime coupling</div>
-                                    <div className="text-xs text-gray-700 mono mt-1">Zero parameters</div>
-                                </div>
-                                <div>
-                                    <div className="text-3xl font-light mb-1">10<sup>60</sup></div>
-                                    <div className="text-xs text-gray-600 mono mb-1">orders</div>
-                                    <div className="text-xs text-gray-500">Improvement</div>
-                                    <div className="text-xs text-gray-700 mono mt-1">Λ prediction</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="space-y-3 text-xs leading-relaxed" style={{color: '#909090'}}>
-                            <div className="data-grid p-4">
-                                <span className="mono text-white">1.</span> Gravitational waves exhibit predicted fractal dimension <span className="mono">D = 1.503 ± 0.040</span> (<span className="italic">p</span> = 0.957, N = 46)
-                            </div>
-                            <div className="data-grid p-4">
-                                <span className="mono text-white">2.</span> Schrödinger equation derived from interface validation; quantum uncertainty emerges as validation noise
-                            </div>
-                            <div className="data-grid p-4">
-                                <span className="mono text-white">3.</span> Cosmological constant predicted: Λ = (6.9 ± 1.6) × 10<sup>-53</sup> m<sup>-2</sup> (within 1σ of observation)
-                            </div>
-                            <div className="data-grid p-4">
-                                <span className="mono text-white">4.</span> Consciousness emerges at critical balance β ≈ 0.5 through integrated validation density
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="divider"></div>
-
-                    {/* The Complete Equation */}
-                    <div className="container pb-8">
-                        <h2 className="text-xl font-normal mb-8 tracking-tight">The Complete Equation</h2>
-                        
-                        {/* Foundation */}
-                        <div className="mb-8">
-                            <p className="text-xs mono uppercase tracking-wider text-gray-600 mb-3">Foundation</p>
-                            <div className="equation text-4xl mb-3 text-center" style={{letterSpacing: '0.15em'}}>
-                                ∞ → • → ∞•'
-                            </div>
-                            <p className="text-sm text-gray-500 text-center leading-relaxed">
-                                Infinite possibility flows through ultimate aperture,<br/>
-                                fractalizing into infinite operators that create boundaries,<br/>
-                                transforming infinite into finite validated patterns
-                            </p>
-                        </div>
-
-                        {/* The Feedback Loop */}
-                        <div className="mb-8 data-grid p-6">
-                            <p className="text-xs mono uppercase tracking-wider text-gray-600 mb-4">Complete Loop (With Feedback)</p>
-                            <div className="mono text-sm leading-loose text-gray-400 text-center">
-                                ∇ (Convergence)<br/>
-                                ↓<br/>
-                                [ICE] (Validation at Interfaces)<br/>
-                                ↓<br/>
-                                ℰ (Emergence)<br/>
-                                ↓<br/>
-                                ∞' (Texture Accumulation)<br/>
-                                ↓<br/>
-                                T<sub>μν</sub> (Stress-Energy)<br/>
-                                ↓<br/>
-                                g<sub>μν</sub> (Spacetime Metric)<br/>
-                                ↓<br/>
-                                √|g<sub>tt</sub>| (Validation Rate)<br/>
-                                ↓<br/>
-                                [LOOPS BACK]
-                            </div>
-                            <p className="text-xs text-gray-600 text-center mt-4 italic">
-                                One cycle. All scales. Complete architecture.
-                            </p>
-                        </div>
-
-                        {/* The Four Fundamentals */}
-                        <div className="mb-8">
-                            <p className="text-xs mono uppercase tracking-wider text-gray-600 mb-4">Four Fundamentals</p>
-                            <div className="grid grid-cols-2 gap-3 text-xs">
-                                <div className="data-grid p-4">
-                                    <div className="equation text-2xl mb-1">∞</div>
-                                    <div className="text-white mb-1">Infinity</div>
-                                    <div className="text-gray-600">Unbounded possibility</div>
-                                </div>
-                                <div className="data-grid p-4">
-                                    <div className="equation text-2xl mb-1">∞'</div>
-                                    <div className="text-white mb-1">Finite Patterns</div>
-                                    <div className="text-gray-600">Validated texture</div>
-                                </div>
-                                <div className="data-grid p-4">
-                                    <div className="equation text-2xl mb-1">•</div>
-                                    <div className="text-white mb-1">Singularity</div>
-                                    <div className="text-gray-600">Ultimate aperture</div>
-                                </div>
-                                <div className="data-grid p-4">
-                                    <div className="equation text-2xl mb-1">•'</div>
-                                    <div className="text-white mb-1">Operators</div>
-                                    <div className="text-gray-600">Fractalized apertures (you!)</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Mathematical Expressions */}
-                        <div className="mb-8">
-                            <p className="text-xs mono uppercase tracking-wider text-gray-600 mb-4">Mathematical Formulation</p>
-                            <div className="space-y-3 text-xs">
-                                <div className="data-grid p-4">
-                                    <div className="text-gray-600 mono mb-2">Discrete Form:</div>
-                                    <div className="mono text-white">Φ(t+Δt) = ℰ ∘ [ICE]<sub>out</sub> ∘ K<sub>β</sub> ∘ [ICE]<sub>in</sub> ∘ ∇[Φ(t)] + ε</div>
-                                </div>
-                                <div className="data-grid p-4">
-                                    <div className="text-gray-600 mono mb-2">Continuous Limit (Schrödinger):</div>
-                                    <div className="mono text-white">iℏ ∂ψ/∂t = -(ℏ²/2m)∇²ψ + V(x)ψ</div>
-                                </div>
-                                <div className="data-grid p-4">
-                                    <div className="text-gray-600 mono mb-2">Metric Coupling:</div>
-                                    <div className="mono text-white">∂ρ/∂t ∝ √|g<sub>tt</sub>|</div>
-                                </div>
-                                <div className="data-grid p-4">
-                                    <div className="text-gray-600 mono mb-2">Unified Expression:</div>
-                                    <div className="mono text-white text-xs">{'{∇ → [ICE] → ℰ → ∞\'} ⊗ {∞\' → T'}<sub>μν</sub> → g<sub>μν</sub> → √|g<sub>tt</sub>|{'}'}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* The [ICE] Validation */}
-                        <div className="mb-8">
-                            <p className="text-xs mono uppercase tracking-wider text-gray-600 mb-4">[ICE] Validation Process</p>
-                            <p className="text-xs text-gray-500 mb-3">At two interfaces (input & output):</p>
-                            <div className="grid grid-cols-3 gap-3 text-xs mb-3">
-                                <div className="data-grid p-4 text-center">
-                                    <div className="text-white font-semibold mb-2">I - Interface</div>
-                                    <div className="text-gray-600">Can boundaries be maintained?</div>
-                                </div>
-                                <div className="data-grid p-4 text-center">
-                                    <div className="text-white font-semibold mb-2">C - Center</div>
-                                    <div className="text-gray-600">Coherence with •' and alignment toward •?</div>
-                                </div>
-                                <div className="data-grid p-4 text-center">
-                                    <div className="text-white font-semibold mb-2">E - Evidence</div>
-                                    <div className="text-gray-600">Grounded in actual field ∞?</div>
-                                </div>
-                            </div>
-                            <div className="text-xs text-gray-500 text-center italic">
-                                All 6 checks pass (3 × 2) → Pattern persists | Any fail → Pattern dissolves
-                            </div>
-                        </div>
-
-                        {/* Predictions */}
-                        <div className="mb-8">
-                            <p className="text-xs mono uppercase tracking-wider text-gray-600 mb-4">What It Predicts</p>
-                            <div className="grid grid-cols-2 gap-2 text-xs">
-                                <div className="data-grid p-3">
-                                    <span className="text-white">✓</span> Quantum Mechanics <span className="text-gray-600">— derived</span>
-                                </div>
-                                <div className="data-grid p-3">
-                                    <span className="text-white">✓</span> Spacetime Curvature <span className="text-gray-600">— texture</span>
-                                </div>
-                                <div className="data-grid p-3">
-                                    <span className="text-white">✓</span> Λ Prediction <span className="text-gray-600">— no tuning</span>
-                                </div>
-                                <div className="data-grid p-3">
-                                    <span className="text-white">✓</span> Consciousness <span className="text-gray-600">— β ≈ 0.5</span>
-                                </div>
-                                <div className="data-grid p-3">
-                                    <span className="text-white">✓</span> Time's Arrow <span className="text-gray-600">— asymmetry</span>
-                                </div>
-                                <div className="data-grid p-3">
-                                    <span className="text-white">✓</span> Free Will <span className="text-gray-600">— [ICE] choice</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Final Quote */}
-                        <div className="text-center mt-8">
-                            <p className="text-xs text-gray-600 mono mb-3">One mechanism. All scales.</p>
-                            <div className="equation text-3xl font-light" style={{letterSpacing: '0.15em'}}>
-                                D ≈ 1.5
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="divider"></div>
-
-                    {/* Links */}
-                    <div className="container pb-8">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    {/* Footer Links */}
+                    <div style={{maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto', marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)', paddingRight: '340px'}}>
+                        <div className="grid-2">
                             <a 
                                 href="https://github.com/AshmanRoonz/Fractal_Reality" 
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="data-grid p-5 block border-none hover:bg-white/5 transition-colors"
+                                className="section-box"
+                                style={{textDecoration: 'none', color: '#e8e8e8', display: 'block'}}
                             >
-                                <div className="mono text-xs uppercase tracking-wider text-gray-600 mb-1">Repository</div>
-                                <div className="text-base">Complete Framework</div>
-                                <div className="text-xs text-gray-600 mt-1 mono">github.com/AshmanRoonz</div>
+                                <div className="mono" style={{fontSize: '10px', color: '#606060', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em'}}>Repository</div>
+                                <div style={{fontSize: '1rem', marginBottom: '0.5rem'}}>Complete Framework</div>
+                                <div className="mono" style={{fontSize: '11px', color: '#808080'}}>github.com/AshmanRoonz</div>
                             </a>
                             <a 
                                 href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/readme.md" 
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="data-grid p-5 block border-none hover:bg-white/5 transition-colors"
+                                className="section-box"
+                                style={{textDecoration: 'none', color: '#e8e8e8', display: 'block'}}
                             >
-                                <div className="mono text-xs uppercase tracking-wider text-gray-600 mb-1">Documentation</div>
-                                <div className="text-base">12-Layer Structure</div>
-                                <div className="text-xs text-gray-600 mt-1">From seed to practice</div>
+                                <div className="mono" style={{fontSize: '10px', color: '#606060', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em'}}>Documentation</div>
+                                <div style={{fontSize: '1rem', marginBottom: '0.5rem'}}>12-Layer Structure</div>
+                                <div style={{fontSize: '11px', color: '#808080'}}>From seed to practice</div>
                             </a>
-                        </div>
-                    </div>
-
-                    <div className="divider"></div>
-
-                    {/* Quote */}
-                    <div className="container pb-8">
-                        <div className="text-center">
-                            <blockquote className="text-sm italic leading-relaxed text-gray-600 mb-6 max-w-2xl mx-auto">
-                                You are an eternal •' operator, organizing temporary parts (∞), creating permanent patterns (∞'), building texture forever at balance β ≈ 0.5, expressing fractal dimension D ≈ 1.5
-                            </blockquote>
-                            <div className="equation text-4xl font-light" style={{letterSpacing: '0.1em'}}>
-                                ∞ ↔ •
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Footer */}
-                    <div className="container py-8 border-t border-gray-900">
-                        <div className="text-center">
-                            <p className="text-xs text-gray-700 mono">v1.0 · October 2025</p>
                         </div>
                     </div>
                 </div>
             );
         };
 
+        const OverviewSection = () => (
+            <div>
+                {/* Core Equation */}
+                <div className="section-box" style={{borderColor: 'rgba(255,255,255,0.15)'}}>
+                    <h2 style={{fontSize: '1.5rem', fontWeight: '400', marginBottom: '1rem'}}>The Fundamental Equation</h2>
+                    <div style={{textAlign: 'center', fontSize: '2.5rem', fontWeight: '300', marginBottom: '1.5rem', letterSpacing: '0.1em'}}>
+                        ∞ → • → ∞•'
+                    </div>
+                    <div className="grid-2">
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <div style={{fontWeight: '600', marginBottom: '0.5rem', color: '#c0c0c0'}}>∞ (Infinity)</div>
+                            <div style={{fontSize: '13px', marginBottom: '0.3rem'}}>Infinite possible patterns</div>
+                            <div style={{fontSize: '12px', color: '#808080'}}>Unbounded possibility space</div>
+                            <div className="mono" style={{marginTop: '0.5rem', fontSize: '11px', color: '#606060'}}>ℋ = ∫|ψ⟩⟨ψ|dψ</div>
+                        </div>
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <div style={{fontWeight: '600', marginBottom: '0.5rem', color: '#c0c0c0'}}>∞' (Finite Patterns)</div>
+                            <div style={{fontSize: '13px', marginBottom: '0.3rem'}}>Finite validated patterns</div>
+                            <div style={{fontSize: '12px', color: '#808080'}}>Geometric texture with boundaries</div>
+                            <div className="mono" style={{marginTop: '0.5rem', fontSize: '11px', color: '#606060'}}>D ≈ 1.5 (fractal dimension)</div>
+                        </div>
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <div style={{fontWeight: '600', marginBottom: '0.5rem', color: '#c0c0c0'}}>• (Singularity)</div>
+                            <div style={{fontSize: '13px', marginBottom: '0.3rem'}}>Ultimate aperture operator</div>
+                            <div style={{fontSize: '12px', color: '#808080'}}>Eternal ∇ + ℰ function</div>
+                            <div className="mono" style={{marginTop: '0.5rem', fontSize: '11px', color: '#606060'}}>â = ∇̂ + Ê</div>
+                        </div>
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <div style={{fontWeight: '600', marginBottom: '0.5rem', color: '#c0c0c0'}}>•' (Operators)</div>
+                            <div style={{fontSize: '13px', marginBottom: '0.3rem'}}>Fractalized apertures</div>
+                            <div style={{fontSize: '12px', color: '#808080'}}>Boundary-creating operators</div>
+                            <div className="mono" style={{marginTop: '0.5rem', fontSize: '11px', color: '#606060'}}>∂Ω: validation boundaries</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Universal Pattern */}
+                <div className="section-box">
+                    <h2 style={{fontSize: '1.5rem', fontWeight: '400', marginBottom: '1rem'}}>Universal Pattern</h2>
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2rem', fontSize: '1.5rem', fontWeight: '300', marginBottom: '1rem'}}>
+                        <div style={{textAlign: 'center'}}>
+                            <div style={{fontSize: '2.5rem', marginBottom: '0.5rem'}}>∇</div>
+                            <div style={{fontSize: '12px', color: '#a0a0a0'}}>Convergence</div>
+                            <div className="mono" style={{fontSize: '10px', color: '#606060', marginTop: '0.3rem'}}>Parts → Operator</div>
+                        </div>
+                        <div style={{fontSize: '2rem', color: '#808080'}}>→</div>
+                        <div style={{textAlign: 'center'}}>
+                            <div style={{fontSize: '2.5rem', marginBottom: '0.5rem'}}>[ICE]</div>
+                            <div style={{fontSize: '12px', color: '#a0a0a0'}}>Validation</div>
+                            <div className="mono" style={{fontSize: '10px', color: '#606060', marginTop: '0.3rem'}}>6-fold test</div>
+                        </div>
+                        <div style={{fontSize: '2rem', color: '#808080'}}>→</div>
+                        <div style={{textAlign: 'center'}}>
+                            <div style={{fontSize: '2.5rem', marginBottom: '0.5rem'}}>ℰ</div>
+                            <div style={{fontSize: '12px', color: '#a0a0a0'}}>Emergence</div>
+                            <div className="mono" style={{fontSize: '10px', color: '#606060', marginTop: '0.3rem'}}>Operator → Patterns</div>
+                        </div>
+                    </div>
+                    <div style={{textAlign: 'center', fontSize: '13px', color: '#909090', marginTop: '1.5rem'}}>
+                        Every persistent structure (particles, atoms, cells, organisms, galaxies) operates through this pattern
+                    </div>
+                </div>
+
+                {/* Before/After Fractalization */}
+                <div className="grid-2">
+                    <div className="section-box">
+                        <h3 style={{fontSize: '1.1rem', fontWeight: '400', marginBottom: '1rem'}}>Before Fractalization</h3>
+                        <div style={{fontSize: '13px', lineHeight: '1.8'}}>
+                            <div style={{marginBottom: '0.8rem'}}>
+                                <span style={{fontWeight: '600'}}>∞</span> <span style={{color: '#808080'}}>Infinity</span>
+                                <div style={{fontSize: '12px', color: '#606060', marginLeft: '1.5rem'}}>Infinite possibility</div>
+                            </div>
+                            <div style={{marginBottom: '0.8rem'}}>
+                                <span style={{fontWeight: '600'}}>•</span> <span style={{color: '#808080'}}>Singularity</span>
+                                <div style={{fontSize: '12px', color: '#606060', marginLeft: '1.5rem'}}>Ultimate operator</div>
+                            </div>
+                        </div>
+                        <div style={{marginTop: '1rem', fontSize: '12px', color: '#707070', fontStyle: 'italic'}}>
+                            Incomplete: potential without boundaries
+                        </div>
+                    </div>
+                    
+                    <div className="section-box">
+                        <h3 style={{fontSize: '1.1rem', fontWeight: '400', marginBottom: '1rem'}}>After Fractalization</h3>
+                        <div style={{fontSize: '13px', lineHeight: '1.8'}}>
+                            <div style={{marginBottom: '0.8rem'}}>
+                                <span style={{fontWeight: '600'}}>∞'</span> <span style={{color: '#808080'}}>Finite Patterns</span>
+                                <div style={{fontSize: '12px', color: '#606060', marginLeft: '1.5rem'}}>Validated texture</div>
+                            </div>
+                            <div style={{marginBottom: '0.8rem'}}>
+                                <span style={{fontWeight: '600'}}>•'</span> <span style={{color: '#808080'}}>Operators</span>
+                                <div style={{fontSize: '12px', color: '#606060', marginLeft: '1.5rem'}}>Boundary creators</div>
+                            </div>
+                        </div>
+                        <div style={{marginTop: '1rem', fontSize: '12px', color: '#707070', fontStyle: 'italic'}}>
+                            Complete: boundaries transform infinite → finite
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const FractalizationSection = () => (
+            <div>
+                <div className="section-box" style={{borderColor: 'rgba(255,255,255,0.15)'}}>
+                    <h2 style={{fontSize: '1.5rem', fontWeight: '400', marginBottom: '1rem'}}>The Fractalization Event</h2>
+                    <div style={{textAlign: 'center', marginBottom: '1.5rem'}}>
+                        <div style={{fontSize: '2.5rem', fontWeight: '300', marginBottom: '0.5rem', letterSpacing: '0.1em'}}>∞ → • → ∞•'</div>
+                        <p style={{fontSize: '14px', color: '#a0a0a0'}}>Infinite possibility fractalizes through ultimate aperture into infinite boundary-creating operators</p>
+                    </div>
+
+                    <div className="grid-3">
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <h3 style={{fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.8rem', color: '#c0c0c0'}}>Step 1: Input</h3>
+                            <div style={{fontSize: '2rem', marginBottom: '0.5rem'}}>∞</div>
+                            <div style={{fontSize: '12px', lineHeight: '1.6'}}>
+                                <div>• Unbounded Hilbert space</div>
+                                <div>• All possible wavefunctions</div>
+                                <div>• No boundaries yet</div>
+                                <div className="mono" style={{fontSize: '10px', marginTop: '0.5rem', color: '#606060'}}>ψ ∈ ℋ, ∫|ψ|²dV = ∞</div>
+                            </div>
+                        </div>
+
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <h3 style={{fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.8rem', color: '#c0c0c0'}}>Step 2: Operator</h3>
+                            <div style={{fontSize: '2rem', marginBottom: '0.5rem'}}>•</div>
+                            <div style={{fontSize: '12px', lineHeight: '1.6'}}>
+                                <div>• Ultimate aperture</div>
+                                <div>• Eternal ∇ + ℰ function</div>
+                                <div>• Creates fractalization</div>
+                                <div className="mono" style={{fontSize: '10px', marginTop: '0.5rem', color: '#606060'}}>â = ∇̂ + Ê</div>
+                            </div>
+                        </div>
+
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <h3 style={{fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.8rem', color: '#c0c0c0'}}>Step 3: Output</h3>
+                            <div style={{fontSize: '2rem', marginBottom: '0.5rem'}}>∞•'</div>
+                            <div style={{fontSize: '12px', lineHeight: '1.6'}}>
+                                <div>• Infinite operators •'</div>
+                                <div>• Each creates boundaries</div>
+                                <div>• Transform ∞ → ∞'</div>
+                                <div className="mono" style={{fontSize: '10px', marginTop: '0.5rem', color: '#606060'}}>∂Ω: ∞ → ∞'</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', marginTop: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                        <h3 style={{fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.8rem'}}>Mathematical Expression</h3>
+                        <div className="mono" style={{fontSize: '12px', lineHeight: '1.8'}}>
+                            <div>Fractalization: <span style={{color: '#c0c0c0'}}>F: ∞ ⊗ • → ∞•'</span></div>
+                            <div>Each operator: <span style={{color: '#c0c0c0'}}>•'ᵢ: ∞ → ∞'</span></div>
+                            <div>Boundary creation: <span style={{color: '#c0c0c0'}}>∂Ωᵢ = {'{x : [ICE](x) = true}'}</span></div>
+                            <div>Validation: <span style={{color: '#c0c0c0'}}>∇ → [I·C·E]ᵢₙ ⊗ [I·C·E]ₒᵤₜ → ℰ</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="section-box">
+                    <h3 style={{fontSize: '1.1rem', fontWeight: '400', marginBottom: '1rem'}}>Nested Operator Structure</h3>
+                    <div style={{textAlign: 'center', fontSize: '13px', color: '#909090'}}>
+                        Reality consists of infinite nested aperture operators, each creating boundaries that transform ∞ → ∞'
+                    </div>
+                </div>
+            </div>
+        );
+
+        const ValidationSection = () => (
+            <div>
+                <div className="section-box" style={{borderColor: 'rgba(255,255,255,0.15)'}}>
+                    <h2 style={{fontSize: '1.5rem', fontWeight: '400', marginBottom: '1rem'}}>[ICE] Validation: 6-Fold Test</h2>
+                    
+                    <div className="grid-2">
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <h3 style={{fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.8rem', color: '#c0c0c0'}}>Input Interface: Parts → Operator</h3>
+                            <div style={{fontSize: '12px', lineHeight: '1.8'}}>
+                                <div style={{display: 'flex', gap: '0.5rem', marginBottom: '0.5rem'}}>
+                                    <span className="mono" style={{fontWeight: '600', color: '#b0b0b0'}}>I₁:</span>
+                                    <span>Can boundary be maintained?</span>
+                                </div>
+                                <div style={{display: 'flex', gap: '0.5rem', marginBottom: '0.5rem'}}>
+                                    <span className="mono" style={{fontWeight: '600', color: '#b0b0b0'}}>C₁:</span>
+                                    <span>Coherence with •' AND alignment toward •?</span>
+                                </div>
+                                <div style={{display: 'flex', gap: '0.5rem'}}>
+                                    <span className="mono" style={{fontWeight: '600', color: '#b0b0b0'}}>E₁:</span>
+                                    <span>Grounded in actual field ∞?</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <h3 style={{fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.8rem', color: '#c0c0c0'}}>Output Interface: Operator → Patterns</h3>
+                            <div style={{fontSize: '12px', lineHeight: '1.8'}}>
+                                <div style={{display: 'flex', gap: '0.5rem', marginBottom: '0.5rem'}}>
+                                    <span className="mono" style={{fontWeight: '600', color: '#b0b0b0'}}>I₂:</span>
+                                    <span>Can boundary be maintained?</span>
+                                </div>
+                                <div style={{display: 'flex', gap: '0.5rem', marginBottom: '0.5rem'}}>
+                                    <span className="mono" style={{fontWeight: '600', color: '#b0b0b0'}}>C₂:</span>
+                                    <span>Coherence with •' AND alignment toward •?</span>
+                                </div>
+                                <div style={{display: 'flex', gap: '0.5rem'}}>
+                                    <span className="mono" style={{fontWeight: '600', color: '#b0b0b0'}}>E₂:</span>
+                                    <span>Grounded in actual field ∞?</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={{background: 'rgba(255,255,255,0.04)', padding: '1rem', marginTop: '1rem', border: '1px solid rgba(255,255,255,0.08)'}}>
+                        <div style={{fontSize: '13px', color: '#c0c0c0', fontWeight: '600', marginBottom: '0.5rem'}}>Pass all 6 tests → persist. Fail any → dissolve.</div>
+                        <div style={{fontSize: '12px', color: '#909090'}}>
+                            This is not arbitrary—it's the geometric requirement for stable boundaries in infinite possibility space.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const DimensionalSection = () => (
+            <div>
+                <div className="section-box" style={{borderColor: 'rgba(255,255,255,0.15)'}}>
+                    <h2 style={{fontSize: '1.5rem', fontWeight: '400', marginBottom: '1.5rem'}}>Dimensional Cascade: 0D → 1.5D → 3D</h2>
+                    
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem'}}>
+                                <div style={{fontSize: '1.8rem', fontWeight: '600'}}>0D</div>
+                                <div style={{fontSize: '1rem'}}>Singularity (Potential)</div>
+                            </div>
+                            <div style={{fontSize: '12px', color: '#909090', marginLeft: '3rem'}}>
+                                <div>• No extension, pure being</div>
+                                <div>• The • before fractalization</div>
+                                <div className="mono" style={{color: '#606060', marginTop: '0.3rem'}}>• : eternal operator</div>
+                            </div>
+                        </div>
+
+                        <div style={{textAlign: 'center', color: '#808080'}}>↓</div>
+
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem'}}>
+                                <div style={{fontSize: '1.8rem', fontWeight: '600'}}>0.5D</div>
+                                <div style={{fontSize: '1rem'}}>Aperture Structure</div>
+                            </div>
+                            <div style={{fontSize: '12px', color: '#909090', marginLeft: '3rem'}}>
+                                <div>• Directional flow emerges</div>
+                                <div>• Asymmetric validation: ∇ ≠ ℰ</div>
+                                <div>• Time's arrow from validation flow</div>
+                                <div className="mono" style={{color: '#606060', marginTop: '0.3rem'}}>β: balance parameter</div>
+                            </div>
+                        </div>
+
+                        <div style={{textAlign: 'center', color: '#808080'}}>↓</div>
+
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem'}}>
+                                <div style={{fontSize: '1.8rem', fontWeight: '600'}}>1D</div>
+                                <div style={{fontSize: '1rem'}}>Linear Flow (Time)</div>
+                            </div>
+                            <div style={{fontSize: '12px', color: '#909090', marginLeft: '3rem'}}>
+                                <div>• Temporal sequence emerges</div>
+                                <div>• Causality becomes possible</div>
+                                <div className="mono" style={{color: '#606060', marginTop: '0.3rem'}}>t: sequence of validation events</div>
+                            </div>
+                        </div>
+
+                        <div style={{textAlign: 'center', color: '#808080'}}>↓</div>
+
+                        <div style={{background: 'rgba(255,255,255,0.05)', padding: '1rem', border: '1px solid rgba(255,255,255,0.15)'}}>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem'}}>
+                                <div style={{fontSize: '1.8rem', fontWeight: '600'}}>1.5D</div>
+                                <div style={{fontSize: '1rem'}}>Branch Point ⭐</div>
+                            </div>
+                            <div style={{fontSize: '12px', color: '#b0b0b0', marginLeft: '3rem'}}>
+                                <div>• Point on line that can FORK</div>
+                                <div>• Validated 90° deflections at β ≈ 0.5</div>
+                                <div>• Fractal dimension D ≈ 1.5</div>
+                                <div className="mono" style={{color: '#c0c0c0', marginTop: '0.5rem', fontWeight: '600'}}>D = 1.503 ± 0.040 (EMPIRICALLY MEASURED!)</div>
+                            </div>
+                            <div style={{background: 'rgba(255,255,255,0.04)', padding: '0.8rem', marginTop: '0.8rem', marginLeft: '3rem', border: '1px solid rgba(255,255,255,0.08)'}}>
+                                <div style={{fontSize: '11px', fontWeight: '600', marginBottom: '0.3rem'}}>EMPIRICAL VALIDATION:</div>
+                                <div style={{fontSize: '11px', lineHeight: '1.6'}}>
+                                    <div>• LIGO gravitational waves: D = 1.503 ± 0.040, p = 0.951</div>
+                                    <div>• 40 observations across 19 merger events</div>
+                                    <div>• This is the signature of validated choice!</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{textAlign: 'center', color: '#808080'}}>↓</div>
+
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem'}}>
+                                <div style={{fontSize: '1.8rem', fontWeight: '600'}}>3D</div>
+                                <div style={{fontSize: '1rem'}}>Volume (Spatial Experience)</div>
+                            </div>
+                            <div style={{fontSize: '12px', color: '#909090', marginLeft: '3rem'}}>
+                                <div>• Integration of all branches</div>
+                                <div>• Full spatial experience</div>
+                                <div>• Consciousness perceives integrated whole</div>
+                                <div className="mono" style={{color: '#606060', marginTop: '0.3rem'}}>β ≈ 0.5: balanced operators create space</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="section-box">
+                    <h3 style={{fontSize: '1.1rem', fontWeight: '400', marginBottom: '1rem'}}>The Critical 1.5D Branching</h3>
+                    <div className="grid-3">
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <h4 style={{fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem', color: '#a0a0a0'}}>D = 1 (Pure Determinism)</h4>
+                            <div style={{fontSize: '12px', lineHeight: '1.6'}}>
+                                <div>• No branches, smooth line</div>
+                                <div>• No choices, purely mechanical</div>
+                                <div>• β = 0 or β = 1 (unbalanced)</div>
+                            </div>
+                        </div>
+                        <div style={{background: 'rgba(255,255,255,0.05)', padding: '1rem', border: '1px solid rgba(255,255,255,0.12)'}}>
+                            <h4 style={{fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem', color: '#c0c0c0'}}>D ≈ 1.5 (CONSCIOUSNESS!) ⭐</h4>
+                            <div style={{fontSize: '12px', lineHeight: '1.6'}}>
+                                <div>• Validated branching at β ≈ 0.5</div>
+                                <div>• Constrained by physics (not pure freedom)</div>
+                                <div>• Not predetermined (genuine branches)</div>
+                                <div>• Optimal adaptive complexity</div>
+                                <div style={{marginTop: '0.5rem', fontWeight: '600'}}>
+                                    Consciousness exists precisely at the dimension where validated choice becomes geometrically possible
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{background: 'rgba(255,255,255,0.03)', padding: '1rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                            <h4 style={{fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem', color: '#a0a0a0'}}>D = 2 (Pure Chaos)</h4>
+                            <div style={{fontSize: '12px', lineHeight: '1.6'}}>
+                                <div>• Too many branches</div>
+                                <div>• No coherence, randomness</div>
+                                <div>• No structure persists</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const EmpiricalSection = () => (
+            <div>
+                <div className="section-box" style={{borderColor: 'rgba(255,255,255,0.15)'}}>
+                    <h2 style={{fontSize: '1.5rem', fontWeight: '400', marginBottom: '1.5rem'}}>Empirical Validation: D ≈ 1.5</h2>
+                    
+                    <div className="grid-2">
+                        <div style={{background: 'rgba(255,255,255,0.04)', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.1)'}}>
+                            <h3 style={{fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem'}}>✓ LIGO Gravitational Waves</h3>
+                            <div style={{fontSize: '12px', lineHeight: '1.8'}}>
+                                <div style={{marginBottom: '0.8rem'}}>
+                                    <div style={{fontWeight: '600', color: '#c0c0c0'}}>Dataset:</div>
+                                    <div>19 merger events, 40 observations</div>
+                                    <div>O1/O3/O4 observing runs</div>
+                                </div>
+                                <div style={{background: 'rgba(255,255,255,0.03)', padding: '0.8rem', marginBottom: '0.8rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                                    <div style={{fontWeight: '600', color: '#c0c0c0', marginBottom: '0.3rem'}}>Results:</div>
+                                    <div className="mono">Mean D = 1.503 ± 0.040</div>
+                                    <div className="mono">SEM = 0.040</div>
+                                    <div className="mono">p-value = 0.951</div>
+                                </div>
+                                <div style={{marginBottom: '0.8rem'}}>
+                                    <div style={{fontWeight: '600', color: '#c0c0c0'}}>Interpretation:</div>
+                                    <div>Worldlines show fractal dimension extremely consistent with 1.5D prediction</div>
+                                </div>
+                                <div style={{background: 'rgba(255,255,255,0.05)', padding: '0.5rem', border: '1px solid rgba(255,255,255,0.1)'}}>
+                                    <div style={{fontWeight: '600'}}>High p-value → Not coincidental, it's structural!</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{background: 'rgba(255,255,255,0.04)', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.1)'}}>
+                            <h3 style={{fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem'}}>✓ Bubble Chamber Particles</h3>
+                            <div style={{fontSize: '12px', lineHeight: '1.8'}}>
+                                <div style={{marginBottom: '0.8rem'}}>
+                                    <div style={{fontWeight: '600', color: '#c0c0c0'}}>Dataset:</div>
+                                    <div>33 particle tracks</div>
+                                    <div>Multiple interaction types</div>
+                                </div>
+                                <div style={{background: 'rgba(255,255,255,0.03)', padding: '0.8rem', marginBottom: '0.8rem', border: '1px solid rgba(255,255,255,0.05)'}}>
+                                    <div style={{fontWeight: '600', color: '#c0c0c0', marginBottom: '0.3rem'}}>Results:</div>
+                                    <div className="mono">Mean D = 1.387 ± 0.232</div>
+                                    <div className="mono">Across 6+ orders of magnitude</div>
+                                </div>
+                                <div style={{marginBottom: '0.8rem'}}>
+                                    <div style={{fontWeight: '600', color: '#c0c0c0'}}>Interpretation:</div>
+                                    <div>Quantum particle paths exhibit fractal structure consistent with validation branching</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="section-box">
+                    <h3 style={{fontSize: '1.1rem', fontWeight: '400', marginBottom: '1rem'}}>Additional Validations</h3>
+                    <div style={{fontSize: '13px', lineHeight: '1.8'}}>
+                        <div style={{marginBottom: '0.8rem'}}>
+                            <span className="mono" style={{fontWeight: '600'}}>1.</span> <span style={{fontWeight: '600'}}>Schrödinger equation derived</span> from interface validation constraints
+                        </div>
+                        <div style={{marginBottom: '0.8rem'}}>
+                            <span className="mono" style={{fontWeight: '600'}}>2.</span> <span style={{fontWeight: '600'}}>Spacetime coupling validated:</span> Texture ∝ √|g_tt| with R² = 0.9997
+                        </div>
+                        <div style={{marginBottom: '0.8rem'}}>
+                            <span className="mono" style={{fontWeight: '600'}}>3.</span> <span style={{fontWeight: '600'}}>Cosmological constant:</span> Λ = (6.9 ± 1.6) × 10⁻⁵³ m⁻² (within 1σ, 10⁶⁰× improvement over QFT)
+                        </div>
+                        <div>
+                            <span className="mono" style={{fontWeight: '600'}}>4.</span> <span style={{fontWeight: '600'}}>Quantum uncertainty:</span> Emerges as validation noise with Var[ε] ∝ |E|
+                        </div>
+                    </div>
+                </div>
+
+                <div className="section-box" style={{background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.15)'}}>
+                    <div style={{fontSize: '14px', fontWeight: '600', marginBottom: '0.8rem', textAlign: 'center'}}>
+                        Zero free parameters. Pure prediction. Empirically confirmed.
+                    </div>
+                    <div style={{fontSize: '13px', color: '#a0a0a0', textAlign: 'center'}}>
+                        This is unification.
+                    </div>
+                </div>
+            </div>
+        );
+
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<FractalRealityLanding />);
+        root.render(<FractalRealityDiagram />);
     </script>
 </body>
 </html>
