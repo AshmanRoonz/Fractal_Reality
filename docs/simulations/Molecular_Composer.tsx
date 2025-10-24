@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Music, Trash2, Play, Volume2, Info, Sparkles, Zap, X, Atom, Radio } from 'lucide-react';
 
-const MolecularComposer = () => {
+const App = () => {
   const [selectedElements, setSelectedElements] = useState([]);
   const [audioContext, setAudioContext] = useState(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
@@ -198,29 +198,34 @@ const MolecularComposer = () => {
       return { ...el, id: Date.now() + idx };
     });
     setSelectedElements(elementList);
-    setCycleSpeed(molecule.vibrationFreq);
   };
 
-  // Calculate frequency for particles
-  const getParticleFrequency = (count, particleType) => {
-    const baseFreq = 261.63;
-    const baseOctaves = {
-      electron: 0,
-      proton: 1,
-      neutron: 0.5
-    };
-    
-    if (count === 0) return null;
-    const octave = Math.log2(count) + baseOctaves[particleType];
-    return baseFreq * Math.pow(2, octave);
-  };
+  const stats = useMemo(() => {
+    const totalE = selectedElements.reduce((sum, el) => sum + el.e, 0);
+    const totalZ = selectedElements.reduce((sum, el) => sum + el.z, 0);
+    const totalN = selectedElements.reduce((sum, el) => sum + el.n, 0);
+    const totalMass = selectedElements.reduce((sum, el) => sum + el.mass, 0);
+    return { e: totalE, z: totalZ, n: totalN, mass: totalMass };
+  }, [selectedElements]);
+
+  const frequencyMap = useMemo(() => {
+    const freqCount = {};
+    selectedElements.forEach(el => {
+      const freq = (el.z / 10) * 440;
+      freqCount[freq] = (freqCount[freq] || 0) + 1;
+    });
+    return Object.entries(freqCount).map(([freq, count]) => ({
+      frequency: parseFloat(freq),
+      count: count
+    }));
+  }, [selectedElements]);
 
   const stopPlaying = () => {
     stopPlayingRef.current = true;
     setIsPlaying(false);
-    oscillatorsRef.current.forEach(({ oscillator }) => {
+    oscillatorsRef.current.forEach(osc => {
       try {
-        oscillator.stop();
+        osc.stop();
       } catch (e) {}
     });
     oscillatorsRef.current = [];
@@ -229,374 +234,246 @@ const MolecularComposer = () => {
     }
   };
 
-  // Continuous play
-  const playMoleculeSong = () => {
-    if (!audioContext || !soundEnabled || selectedElements.length === 0 || isPlaying) return;
-
-    setIsPlaying(true);
+  const playMoleculeSong = async () => {
+    if (!audioContext || selectedElements.length === 0) return;
+    
+    stopPlaying();
     stopPlayingRef.current = false;
-    oscillatorsRef.current = [];
-
-    selectedElements.forEach((el, atomIndex) => {
-      const particles = [
-        { type: 'electron', count: el.e, wave: 'sine', baseVol: 0.08 },
-        { type: 'proton', count: el.z, wave: 'triangle', baseVol: 0.10 },
-        { type: 'neutron', count: el.n, wave: 'square', baseVol: 0.06 }
-      ];
-
-      particles.forEach(({ type, count, wave, baseVol }) => {
-        if (count === 0) return;
-        
-        const freq = getParticleFrequency(count, type);
-        if (!freq) return;
-
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-
-        oscillator.type = wave;
-        oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
-        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-
-        oscillator.start(audioContext.currentTime);
-        
-        oscillatorsRef.current.push({ 
-          oscillator, 
-          gainNode, 
-          atomIndex, 
-          baseVol,
-          type 
-        });
-      });
-    });
-
-    const modulateVolumes = () => {
+    setIsPlaying(true);
+    
+    const masterGain = audioContext.createGain();
+    masterGain.connect(audioContext.destination);
+    masterGain.gain.value = 0.15;
+    
+    const cycleDuration = 4000 / cycleSpeed;
+    const beatsPerCycle = selectedElements.length;
+    const beatDuration = cycleDuration / beatsPerCycle;
+    
+    let currentBeat = 0;
+    
+    const playNextBeat = () => {
       if (stopPlayingRef.current) {
         stopPlaying();
         return;
       }
-
-      const time = audioContext.currentTime;
-
-      oscillatorsRef.current.forEach(({ gainNode, atomIndex, baseVol }) => {
-        const atomPhase = atomIndex / selectedElements.length;
-        const distance = Math.abs(wavePhase - atomPhase);
-        const normalizedDist = Math.min(distance, 1 - distance) * 2;
-        
-        const envelope = Math.pow(Math.cos(normalizedDist * Math.PI / 2), 2);
-        const targetGain = baseVol * envelope;
-
-        gainNode.gain.setTargetAtTime(targetGain, time, 0.01);
-      });
-
-      setTimeout(modulateVolumes, 20);
+      
+      const el = selectedElements[currentBeat % selectedElements.length];
+      const frequency = (el.z / 10) * 440;
+      const duration = beatDuration / 1000;
+      
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      
+      osc.type = el.noble ? 'sine' : 'triangle';
+      osc.frequency.value = frequency;
+      
+      osc.connect(gain);
+      gain.connect(masterGain);
+      
+      gain.gain.setValueAtTime(0, audioContext.currentTime);
+      gain.gain.linearRampToValueAtTime(0.5, audioContext.currentTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+      
+      osc.start(audioContext.currentTime);
+      osc.stop(audioContext.currentTime + duration);
+      
+      oscillatorsRef.current.push(osc);
+      
+      currentBeat++;
+      
+      if (currentBeat < selectedElements.length * 3) {
+        setTimeout(playNextBeat, beatDuration);
+      } else {
+        stopPlaying();
+      }
     };
-
-    modulateVolumes();
+    
+    playNextBeat();
   };
 
-  // Canvas drawing effect - SUPERIMPOSED waves showing emergent pattern
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || selectedElements.length === 0) return;
-
+    if (!canvas) return;
+    
     const ctx = canvas.getContext('2d');
     const width = canvas.width;
     const height = canvas.height;
-
-    const draw = () => {
-      // Clear canvas with dark background
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+    
+    let animationId;
+    let phase = 0;
+    
+    const animate = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
       ctx.fillRect(0, 0, width, height);
-
-      const centerY = height / 2;
-      const elementCount = selectedElements.length;
-
-      // Draw center line
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(60, centerY);
-      ctx.lineTo(width - 20, centerY);
-      ctx.stroke();
-
-      // Draw each atom's waveform SUPERIMPOSED on the same baseline
-      selectedElements.forEach((el, idx) => {
-        const atomPhase = idx / elementCount;
-        const phase = (wavePhase - atomPhase + 1) % 1;
-
-        // Draw waveform
-        ctx.beginPath();
-        ctx.strokeStyle = el.color;
-        ctx.lineWidth = 2;
-        ctx.globalAlpha = 0.6; // Semi-transparent so we can see overlaps
-
-        for (let i = 0; i < width - 80; i++) {
-          const x = 60 + i;
-          const wavePhaseAtX = (phase + i / 50) * Math.PI * 2;
-          const amplitude = 40 * Math.cos(phase * Math.PI * 2); // Larger amplitude
-          const y = centerY + Math.sin(wavePhaseAtX) * Math.abs(amplitude);
-          
-          if (i === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
-        }
-        ctx.stroke();
-        ctx.globalAlpha = 1;
-      });
-
-      // Now draw the EMERGENT PATTERN - sum of all waves
-      ctx.beginPath();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 3;
-      ctx.globalAlpha = 1;
-      ctx.shadowColor = '#ffffff';
-      ctx.shadowBlur = 10;
-
-      for (let i = 0; i < width - 80; i++) {
-        const x = 60 + i;
-        let sumY = 0;
+      
+      if (selectedElements.length > 0) {
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const radius = Math.min(width, height) * 0.35;
         
-        // Sum all waves at this x position
-        selectedElements.forEach((el, idx) => {
-          const atomPhase = idx / elementCount;
-          const phase = (wavePhase - atomPhase + 1) % 1;
-          const wavePhaseAtX = (phase + i / 50) * Math.PI * 2;
-          const amplitude = 40 * Math.cos(phase * Math.PI * 2);
-          sumY += Math.sin(wavePhaseAtX) * Math.abs(amplitude);
+        selectedElements.forEach((el, i) => {
+          const angle = (i / selectedElements.length) * Math.PI * 2 + phase;
+          const x = centerX + Math.cos(angle) * radius;
+          const y = centerY + Math.sin(angle) * radius;
+          
+          const gradient = ctx.createRadialGradient(x, y, 0, x, y, 20);
+          gradient.addColorStop(0, el.color);
+          gradient.addColorStop(1, 'rgba(0,0,0,0)');
+          
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(x, y, 20, 0, Math.PI * 2);
+          ctx.fill();
+          
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 12px monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(el.symbol, x, y);
         });
         
-        const y = centerY + sumY / elementCount; // Average the sum
-        
-        if (i === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
+        for (let i = 0; i < selectedElements.length; i++) {
+          const angle1 = (i / selectedElements.length) * Math.PI * 2 + phase;
+          const angle2 = ((i + 1) / selectedElements.length) * Math.PI * 2 + phase;
+          
+          const x1 = centerX + Math.cos(angle1) * radius;
+          const y1 = centerY + Math.sin(angle1) * radius;
+          const x2 = centerX + Math.cos(angle2) * radius;
+          const y2 = centerY + Math.sin(angle2) * radius;
+          
+          ctx.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
         }
       }
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      // Draw legend on the left
-      const legendX = 10;
-      let legendY = 30;
       
-      selectedElements.forEach((el, idx) => {
-        // Color swatch
-        ctx.fillStyle = el.color;
-        ctx.fillRect(legendX, legendY - 10, 20, 12);
-        
-        // Element info
-        ctx.fillStyle = el.color;
-        ctx.font = 'bold 12px sans-serif';
-        ctx.fillText(el.symbol, legendX + 25, legendY);
-        
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '9px monospace';
-        ctx.fillText(`${el.e}e⁻ ${el.z}p⁺ ${el.n}n⁰`, legendX + 25, legendY + 10);
-        
-        legendY += 35;
-      });
-
-      // Label for emergent pattern
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 14px sans-serif';
-      ctx.fillText('EMERGENT PATTERN', width - 180, 30);
-      ctx.fillRect(width - 200, 35, 30, 3);
+      phase += 0.01 * cycleSpeed;
+      setWavePhase(phase);
+      animationId = requestAnimationFrame(animate);
     };
-
-    draw();
-  }, [selectedElements, wavePhase]);
-
-  // Animate wave phase
-  useEffect(() => {
-    if (!isPlaying) return;
-
-    let lastTime = Date.now();
-    const animate = () => {
-      const now = Date.now();
-      const dt = (now - lastTime) / 1000;
-      lastTime = now;
-
-      setWavePhase(prev => (prev + dt * cycleSpeed) % 1);
-
-      if (isPlaying) {
-        animationRef.current = requestAnimationFrame(animate);
-      }
-    };
-
-    animationRef.current = requestAnimationFrame(animate);
-
+    
+    animate();
+    
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
       }
     };
-  }, [isPlaying, cycleSpeed]);
-
-  // Analyze molecule
-  const analyzeMolecule = useMemo(() => {
-    if (selectedElements.length === 0) return null;
-
-    const totalElectrons = selectedElements.reduce((sum, el) => sum + el.e, 0);
-    const totalProtons = selectedElements.reduce((sum, el) => sum + el.z, 0);
-    const totalNeutrons = selectedElements.reduce((sum, el) => sum + el.n, 0);
-
-    const elementCounts = {};
-    selectedElements.forEach(el => {
-      elementCounts[el.symbol] = (elementCounts[el.symbol] || 0) + 1;
-    });
-
-    const formula = Object.entries(elementCounts)
-      .map(([sym, count]) => {
-        if (count === 1) return sym;
-        const subscripts = '₀₁₂₃₄₅₆₇₈₉';
-        return sym + count.toString().split('').map(d => subscripts[parseInt(d)]).join('');
-      })
-      .join('');
-
-    const epRatio = totalElectrons === totalProtons;
-    const pnRatio = totalProtons === totalNeutrons;
-    const allEqual = epRatio && totalElectrons === totalNeutrons;
-
-    return {
-      formula,
-      totalElectrons,
-      totalProtons,
-      totalNeutrons,
-      elementCount: selectedElements.length,
-      totalMass: selectedElements.reduce((sum, el) => sum + el.mass, 0),
-      epRatio,
-      pnRatio,
-      allEqual,
-      elementCounts
-    };
-  }, [selectedElements]);
+  }, [selectedElements, cycleSpeed]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 text-white p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-8">
       <div className="max-w-7xl mx-auto">
-        
-        {/* Header */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-3">
-            <Radio className="w-10 h-10 text-cyan-400" />
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Molecular Song Composer (Canvas)
+            <Atom className="w-12 h-12 text-purple-400 animate-pulse" />
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Molecular Composer
             </h1>
-            <Sparkles className="w-10 h-10 text-pink-400" />
+            <Music className="w-12 h-12 text-pink-400 animate-pulse" />
           </div>
-          <p className="text-lg text-cyan-200">
-            Molecules are SONGS! Atoms cycle through vibrations.
+          <p className="text-xl text-gray-300 mb-2">
+            Turn molecules into music! Each atom plays a note based on its atomic number.
           </p>
+          <p className="text-sm text-purple-300">
+            🎵 Molecules aren't static - they VIBRATE and CYCLE! 🎵
+          </p>
+          
+          {showInfo && (
+            <div className="mt-4 bg-black/30 rounded-lg p-4 border border-purple-500/30 relative">
+              <button
+                onClick={() => setShowInfo(false)}
+                className="absolute top-2 right-2 text-gray-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <div className="text-left space-y-2 text-sm">
+                <p className="text-cyan-300">
+                  <strong>How it works:</strong> Each element plays a note based on its atomic number (Z). 
+                  Hydrogen (Z=1) plays low, Copper (Z=29) plays high!
+                </p>
+                <p className="text-pink-300">
+                  <strong>Build molecules:</strong> Add atoms from the periodic table, or load famous molecules like H₂O, O₂, or glucose!
+                </p>
+                <p className="text-yellow-300">
+                  <strong>Listen:</strong> Your molecule cycles through its atoms in a repeating pattern - just like real molecular vibrations!
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Info Panel */}
-        {showInfo && (
-          <div className="mb-6 bg-gradient-to-r from-purple-900/50 via-pink-900/50 to-purple-900/50 rounded-xl p-6 border border-purple-500/50 relative">
-            <button
-              onClick={() => setShowInfo(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <div className="flex items-start gap-4">
-              <Info className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-xl font-bold text-pink-300 mb-2">How it works</h3>
-                <p className="text-gray-300 mb-2">
-                  Each atom vibrates with 3 frequencies: electrons (sine), protons (triangle), neutrons (square).
-                  The wave cycles through atoms in sequence—this is molecular breathing!
-                </p>
-                <p className="text-sm text-cyan-300">
-                  Based on real molecular vibrations measured by IR spectroscopy. Reference: <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" rel="noopener noreferrer" className="underline">Fractal Reality Framework</a>
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Analysis Panel */}
-        {analyzeMolecule && (
-          <div className="mb-6 bg-black/40 rounded-xl p-4 border border-yellow-500/30">
-            <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <div className="text-2xl font-bold text-yellow-400">{analyzeMolecule.formula}</div>
-                <div className="text-sm text-gray-400">{analyzeMolecule.elementCount} atoms • {analyzeMolecule.totalMass}u</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-mono">
-                  <span className="text-cyan-400">{analyzeMolecule.totalElectrons}e⁻</span>
-                  {' • '}
-                  <span className="text-pink-400">{analyzeMolecule.totalProtons}p⁺</span>
-                  {' • '}
-                  <span className="text-yellow-400">{analyzeMolecule.totalNeutrons}n⁰</span>
-                </div>
-              </div>
-              <div className="text-right text-sm">
-                {analyzeMolecule.allEqual && (
-                  <div className="text-green-400">✨ Perfect Balance!</div>
-                )}
-                {!analyzeMolecule.allEqual && analyzeMolecule.epRatio && (
-                  <div className="text-blue-400">⚡ Neutral Charge</div>
-                )}
-                <div className="text-gray-400">
-                  Vibration: {cycleSpeed.toFixed(1)} Hz •{' '}
-                  {cycleSpeed < 2 ? '🐌 Very slow' :
-                   cycleSpeed < 4 ? '🎵 Slow' :
-                   cycleSpeed < 6 ? '⚡ Moderate' :
-                   cycleSpeed < 8 ? '🚀 Fast' : '⭐ Very fast'}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           
-          {/* Left: Molecule Builder */}
-          <div className="space-y-6">
-            
-            {/* Current Molecule Display - Canvas Version */}
+          {/* Left: Visualization & Controls */}
+          <div className="md:col-span-2 space-y-6">
+            {/* Visualization */}
             <div className="bg-black/30 rounded-xl p-6 border border-cyan-500/30">
-              <h2 className="text-2xl font-bold text-cyan-300 mb-4 flex items-center gap-2">
-                <Music className="w-6 h-6" />
-                Your Molecular Song
-              </h2>
-              
-              {selectedElements.length === 0 ? (
-                <div className="text-center py-12 text-gray-400">
-                  <Atom className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg">No atoms selected yet</p>
-                  <p className="text-sm mt-2">Load a molecule below or use dropdown to add atoms</p>
-                </div>
-              ) : (
-                <div>
-                  {/* Canvas Visualization */}
-                  <div className="mb-6 bg-slate-900/70 rounded-lg overflow-hidden border border-cyan-500/30">
-                    <canvas
-                      ref={canvasRef}
-                      width={800}
-                      height={300}
-                      className="w-full"
-                      style={{ display: 'block' }}
-                    />
+              <h2 className="text-2xl font-bold text-cyan-300 mb-4">Molecular Visualization</h2>
+              <div className="relative">
+                <canvas
+                  ref={canvasRef}
+                  width={600}
+                  height={400}
+                  className="w-full bg-black/50 rounded-lg border border-purple-500/30"
+                />
+                {selectedElements.length === 0 && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center text-gray-400">
+                      <Sparkles className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                      <p>Add atoms to compose your molecule</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Stats & Controls */}
+            {selectedElements.length > 0 && (
+              <div className="bg-black/30 rounded-xl p-6 border border-purple-500/30">
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Stats */}
+                  <div>
+                    <h3 className="text-xl font-bold text-purple-300 mb-3">Molecule Stats</h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between bg-slate-800/50 rounded p-2">
+                        <span className="text-cyan-300">Total Electrons:</span>
+                        <span className="font-bold">{stats.e}e⁻</span>
+                      </div>
+                      <div className="flex justify-between bg-slate-800/50 rounded p-2">
+                        <span className="text-pink-300">Total Protons:</span>
+                        <span className="font-bold">{stats.z}p⁺</span>
+                      </div>
+                      <div className="flex justify-between bg-slate-800/50 rounded p-2">
+                        <span className="text-yellow-300">Total Neutrons:</span>
+                        <span className="font-bold">{stats.n}n⁰</span>
+                      </div>
+                      <div className="flex justify-between bg-slate-800/50 rounded p-2">
+                        <span className="text-green-300">Molecular Mass:</span>
+                        <span className="font-bold">{stats.mass}u</span>
+                      </div>
+                      <div className="flex justify-between bg-slate-800/50 rounded p-2">
+                        <span className="text-purple-300">Atom Count:</span>
+                        <span className="font-bold">{selectedElements.length}</span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Controls */}
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm text-gray-400 mb-2">
-                        Vibration Speed: {cycleSpeed.toFixed(1)} Hz
+                  <div>
+                    <h3 className="text-xl font-bold text-pink-300 mb-3">Playback Controls</h3>
+                    
+                    <div className="mb-4">
+                      <label className="text-sm text-gray-400 block mb-2">
+                        Cycle Speed: {cycleSpeed.toFixed(1)}x
                       </label>
                       <input
                         type="range"
                         min="0.5"
-                        max="10"
+                        max="4"
                         step="0.1"
                         value={cycleSpeed}
                         onChange={(e) => setCycleSpeed(parseFloat(e.target.value))}
@@ -648,7 +525,7 @@ const MolecularComposer = () => {
                     </div>
 
                     {/* Atom list */}
-                    <div className="max-h-32 overflow-y-auto space-y-2">
+                    <div className="max-h-32 overflow-y-auto space-y-2 mt-4">
                       {selectedElements.map((el) => (
                         <div
                           key={el.id}
@@ -678,10 +555,12 @@ const MolecularComposer = () => {
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
 
-            {/* Famous Molecules */}
+          {/* Famous Molecules */}
+          <div className="space-y-6">
             <div className="bg-black/30 rounded-xl p-6 border border-purple-500/30">
               <h2 className="text-2xl font-bold text-purple-300 mb-4">Load Famous Molecules</h2>
               <div className="space-y-4">
@@ -712,80 +591,79 @@ const MolecularComposer = () => {
               </div>
             </div>
 
-          </div>
-
-          {/* Right: Element Palette */}
-          <div className="bg-black/30 rounded-xl p-6 border border-pink-500/30">
-            <h2 className="text-2xl font-bold text-pink-300 mb-4">Add Atoms</h2>
-            
-            {/* Dropdown */}
-            <div className="mb-6">
-              <label className="block text-sm text-gray-400 mb-2">Select element to add:</label>
-              <select
-                onChange={(e) => {
-                  if (e.target.value) {
-                    addElementBySymbol(e.target.value);
-                    e.target.value = '';
-                  }
-                }}
-                defaultValue=""
-                className="w-full bg-slate-800 text-white border-2 border-purple-500/50 rounded-lg p-3 text-lg font-bold cursor-pointer hover:border-purple-500 transition-all"
-              >
-                <option value="" disabled>Choose an element...</option>
-                {elements.map((el) => (
-                  <option key={el.symbol} value={el.symbol}>
-                    {el.symbol} - {el.name} ({el.e}e⁻ {el.z}p⁺ {el.n}n⁰)
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Quick add */}
-            <div className="mb-6">
-              <p className="text-sm text-gray-400 mb-3">Quick add common atoms:</p>
-              <div className="grid grid-cols-4 gap-2">
-                {elements.slice(0, 12).map((el) => (
-                  <button
-                    key={el.symbol}
-                    onClick={() => addElement(el)}
-                    className="p-3 rounded-lg border-2 transition-all hover:scale-105"
-                    style={{ 
-                      backgroundColor: el.color + '20',
-                      borderColor: el.color
-                    }}
-                    title={el.name}
-                  >
-                    <div className="text-xl font-bold" style={{ color: el.color }}>
-                      {el.symbol}
-                    </div>
-                    <div className="text-[8px] text-gray-400">{el.mass}u</div>
-                  </button>
-                ))}
+            {/* Element Palette */}
+            <div className="bg-black/30 rounded-xl p-6 border border-pink-500/30">
+              <h2 className="text-2xl font-bold text-pink-300 mb-4">Add Atoms</h2>
+              
+              {/* Dropdown */}
+              <div className="mb-6">
+                <label className="block text-sm text-gray-400 mb-2">Select element to add:</label>
+                <select
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      addElementBySymbol(e.target.value);
+                      e.target.value = '';
+                    }
+                  }}
+                  defaultValue=""
+                  className="w-full bg-slate-800 text-white border-2 border-purple-500/50 rounded-lg p-3 text-lg font-bold cursor-pointer hover:border-purple-500 transition-all"
+                >
+                  <option value="" disabled>Choose an element...</option>
+                  {elements.map((el) => (
+                    <option key={el.symbol} value={el.symbol}>
+                      {el.symbol} - {el.name} ({el.e}e⁻ {el.z}p⁺ {el.n}n⁰)
+                    </option>
+                  ))}
+                </select>
               </div>
-            </div>
 
-            <div className="space-y-4">
-              <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg p-4 border border-pink-500/30">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-pink-300 mb-2">🎵 The Molecular Symphony 🎵</div>
-                  <p className="text-sm text-gray-300 mb-2">
-                    A molecule isn't a static chord - it's a SONG that cycles!
-                  </p>
-                  <p className="text-sm text-cyan-300">
-                    Bonds vibrate, atoms oscillate, molecules breathe.
-                  </p>
+              {/* Quick add */}
+              <div className="mb-6">
+                <p className="text-sm text-gray-400 mb-3">Quick add common atoms:</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {elements.slice(0, 12).map((el) => (
+                    <button
+                      key={el.symbol}
+                      onClick={() => addElement(el)}
+                      className="p-3 rounded-lg border-2 transition-all hover:scale-105"
+                      style={{ 
+                        backgroundColor: el.color + '20',
+                        borderColor: el.color
+                      }}
+                      title={el.name}
+                    >
+                      <div className="text-xl font-bold" style={{ color: el.color }}>
+                        {el.symbol}
+                      </div>
+                      <div className="text-[8px] text-gray-400">{el.mass}u</div>
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              <div className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 rounded-lg p-4 border border-cyan-500/30">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-cyan-300 mb-2">⚛️ Real Science!</div>
-                  <p className="text-sm text-gray-300">
-                    This is what <strong>IR spectroscopy</strong> measures - molecular vibrations!
-                  </p>
-                  <p className="text-xs text-gray-400 mt-2">
-                    Framework: <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline">Fractal Reality</a>
-                  </p>
+              <div className="space-y-4">
+                <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg p-4 border border-pink-500/30">
+                  <div className="text-center">
+                    <div className="text-lg font-bold text-pink-300 mb-2">🎵 The Molecular Symphony 🎵</div>
+                    <p className="text-sm text-gray-300 mb-2">
+                      A molecule isn't a static chord - it's a SONG that cycles!
+                    </p>
+                    <p className="text-sm text-cyan-300">
+                      Bonds vibrate, atoms oscillate, molecules breathe.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 rounded-lg p-4 border border-cyan-500/30">
+                  <div className="text-center">
+                    <div className="text-lg font-bold text-cyan-300 mb-2">⚛️ Real Science!</div>
+                    <p className="text-sm text-gray-300">
+                      This is what <strong>IR spectroscopy</strong> measures - molecular vibrations!
+                    </p>
+                    <p className="text-xs text-gray-400 mt-2">
+                      Framework: <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline">Fractal Reality</a>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -797,4 +675,4 @@ const MolecularComposer = () => {
   );
 };
 
-export default MolecularComposer;
+export default App;
