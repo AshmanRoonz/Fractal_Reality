@@ -8,6 +8,7 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
         
@@ -72,7 +73,8 @@
             const [loading, setLoading] = useState(true);
 
             const urlParams = new URLSearchParams(window.location.search);
-            const autoLoad = urlParams.get('auto');
+            const rawAuto = urlParams.get('auto');
+            const autoLoad = rawAuto ? rawAuto.replace(/^\.?\/?/, '').replace(/^simulations\//, '') : null;
 
             useEffect(() => {
                 const fetchSimulations = async () => {
@@ -96,19 +98,19 @@
                             let filename = null;
                             
                             // Markdown link format
-                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.(tsx|jsx))\)/);
+                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.(tsx|jsx))\)/i);
                             if (linkMatch) {
                                 filename = linkMatch[1];
                             }
                             // List format
                             else if (trimmed.match(/^[-*]\s+/)) {
-                                const listMatch = trimmed.match(/[-*]\s+(.*?\.(tsx|jsx))/);
+                                const listMatch = trimmed.match(/[-*]\s+(.*?\.(tsx|jsx))/i);
                                 if (listMatch) {
                                     filename = listMatch[1];
                                 }
                             }
                             // Plain format - UPDATED to support both .tsx and .jsx
-                            else if (trimmed.match(/\.(tsx|jsx)$/)) {
+                            else if (trimmed.match(/\.(tsx|jsx)$/i)) {
                                 filename = trimmed;
                             }
                             
@@ -154,128 +156,68 @@
                     setLoading(false);
                 } catch (err) {
                     console.error('Error loading simulation:', err);
-                    setError(`Error loading ${filename}: ${err.message}`);
+                    setError(err.message);
                     setLoading(false);
                 }
             };
 
-            const SimulationRenderer = () => {
-                if (!simCode) return null;
+            const stopPlaying = () => {
+                setSelectedSim(null);
+                setSimCode('');
+                setError(null);
+            };
 
+            const SimulationRenderer = () => {
                 try {
+                    if (!simCode) return null;
+
+                    // Process TypeScript/JSX to JavaScript
                     let processedCode = simCode;
-                    
-                    // Remove all import statements and replace with available globals
-                    processedCode = processedCode.replace(/import\s+React\s*,?\s*\{[^}]*\}\s+from\s+['"]react['"];?\s*/g, '');
-                    processedCode = processedCode.replace(/import\s+React\s+from\s+['"]react['"];?\s*/g, '');
-                    processedCode = processedCode.replace(/import\s+\{[^}]*\}\s+from\s+['"]react['"];?\s*/g, '');
-                    
-                    // Remove lucide-react imports (create simple mock icons)
-                    const lucideMatch = processedCode.match(/import\s+\{([^}]+)\}\s+from\s+['"]lucide-react['"]/);
-                    if (lucideMatch) {
-                        const icons = lucideMatch[1].split(',').map(i => i.trim());
-                        const mockIcons = icons.map(icon => 
-                            `const ${icon} = () => null;`
-                        ).join('\n');
-                        processedCode = processedCode.replace(/import\s+\{[^}]+\}\s+from\s+['"]lucide-react['"];?\s*/g, mockIcons);
-                    }
-                    
-                    processedCode = processedCode.replace(/import\s+.*?from\s+['"].*?['"];?\s*/g, '');
-                    
-                    // Remove export statements
-                    processedCode = processedCode.replace(/export\s+default\s+/g, '');
+
+                    // Remove import statements and track what was imported from lucide-react
+                    const lucideImports = [];
+                    processedCode = processedCode.replace(/import\s+{([^}]+)}\s+from\s+['"]lucide-react['"];?/g, (match, imports) => {
+                        const importList = imports.split(',').map(i => i.trim());
+                        lucideImports.push(...importList);
+                        return '';
+                    });
+                    processedCode = processedCode.replace(/import\s+.*?\s+from\s+['"].*?['"];?/g, '');
+
+                    // Remove export statements but preserve default export component name
+                    let defaultExportName = null;
+                    processedCode = processedCode.replace(/export\s+default\s+(\w+);?/g, (match, name) => {
+                        defaultExportName = name;
+                        return '';
+                    });
+                    processedCode = processedCode.replace(/export\s+{[^}]+};?/g, '');
                     processedCode = processedCode.replace(/export\s+/g, '');
 
-                    // Determine if it's JSX or TSX
-                    const isTSX = selectedSim.endsWith('.tsx');
-
-                    // Transform code with appropriate presets
-                    const presets = [
-                        ['react', { 
-                            runtime: 'classic',
-                            pragma: 'React.createElement'
-                        }]
-                    ];
-                    
-                    if (isTSX) {
-                        presets.push(['typescript', {
-                            isTSX: true,
-                            allExtensions: true
-                        }]);
-                    }
-
+                    // Transform JSX/TSX to JS using Babel
                     const transformed = Babel.transform(processedCode, {
-                        filename: selectedSim,
-                        presets: presets
+                        presets: ['react'],
+                        filename: 'simulation.jsx'
                     }).code;
 
-                    // Try to find the main React component
-                    // Strategy: Find the last component that starts with capital letter AND contains JSX
-                    const componentMatches = [];
-                    
-                    // Pattern 1: const Component = () => { ... return ( or return <
-                    const arrowPattern = /(?:const|let|var)\s+([A-Z]\w+)\s*=\s*\([^)]*\)\s*=>\s*{/g;
-                    let match;
-                    while ((match = arrowPattern.exec(processedCode)) !== null) {
-                        const name = match[1];
-                        const startPos = match.index;
-                        // Check if this function contains JSX (look for 'return <' or 'return (')
-                        const afterFunc = processedCode.slice(startPos, startPos + 1000);
-                        if (afterFunc.includes('return <') || afterFunc.includes('return (')) {
-                            componentMatches.push({ name, position: startPos });
-                        }
-                    }
-                    
-                    // Pattern 2: function Component() { ... return <
-                    const funcPattern = /function\s+([A-Z]\w+)\s*\([^)]*\)\s*{/g;
-                    while ((match = funcPattern.exec(processedCode)) !== null) {
-                        const name = match[1];
-                        const startPos = match.index;
-                        const afterFunc = processedCode.slice(startPos, startPos + 1000);
-                        if (afterFunc.includes('return <') || afterFunc.includes('return (')) {
-                            componentMatches.push({ name, position: startPos });
-                        }
-                    }
-                    
-                    // Sort by position and take the LAST one (usually the main component)
-                    componentMatches.sort((a, b) => b.position - a.position);
-                    
-                    let componentName = 'App'; // Default fallback
-                    if (componentMatches.length > 0) {
-                        componentName = componentMatches[0].name;
-                    }
-                    
-                    // Additional fallback: if we found nothing, look for common names
-                    if (componentMatches.length === 0) {
-                        const commonNames = ['FractalSoulArray', 'FractalRealityLanding', 'App', 'Main', 'Index'];
-                        for (const name of commonNames) {
-                            if (processedCode.includes(`const ${name}`) || processedCode.includes(`function ${name}`)) {
-                                componentName = name;
-                                break;
-                            }
-                        }
-                    }
+                    console.log('Processed code:', processedCode);
+                    console.log('Transformed code:', transformed);
+                    console.log('Default export name:', defaultExportName);
+                    console.log('Lucide imports:', lucideImports);
 
-                    // Wrap in IIFE with proper scope
+                    // Create a wrapper that provides React and other dependencies
                     const wrappedCode = `
-                        return (function() {
-                            const React = arguments[0];
-                            const useState = arguments[1];
-                            const useEffect = arguments[2];
-                            const useRef = arguments[3];
-                            const useMemo = arguments[4];
-                            const useCallback = arguments[5];
-                            const useReducer = arguments[6];
-                            const useContext = arguments[7];
+                        return (function(React, useState, useEffect, useRef, useMemo, useCallback, useReducer, useContext, lucideReact) {
+                            const { ${lucideImports.join(', ')} } = lucideReact || {};
                             
                             ${transformed}
                             
-                            // Try to return the component
-                            if (typeof ${componentName} !== 'undefined') {
-                                return ${componentName};
+                            // Return the default export or the last defined component
+                            const exportedComponent = ${defaultExportName || 'null'};
+                            if (typeof exportedComponent === 'function') {
+                                return exportedComponent;
                             }
                             
-                            throw new Error('Component "${componentName}" not found');
+                            // If no default export found, throw error
+                            throw new Error('No default export found. Make sure your component has "export default ComponentName"');
                         }).apply(null, arguments);
                     `;
 
@@ -289,7 +231,8 @@
                         React.useMemo,
                         React.useCallback,
                         React.useReducer,
-                        React.useContext
+                        React.useContext,
+                        window.lucideReact
                     );
 
                     if (!SimComponent || typeof SimComponent !== 'function') {
@@ -299,6 +242,7 @@
                     return React.createElement(SimComponent);
                 } catch (err) {
                     console.error('Error rendering simulation:', err);
+                    console.log('Processed code:', processedCode);
                     return (
                         <div style={{padding: '3rem', background: '#0a0a0a', color: '#f87171', minHeight: '100vh'}}>
                             <h3 className="mono" style={{fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem'}}>Rendering Error</h3>
@@ -309,10 +253,15 @@
                                 <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Stack Trace</summary>
                                 <pre className="mono" style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap'}}>{err.stack}</pre>
                             </details>
+                            <details style={{marginTop: '1.5rem'}}>
+                                <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Processed Code (Check Browser Console)</summary>
+                                <p className="mono" style={{fontSize: '12px', color: '#fbbf24'}}>Open browser console (F12) to see the processed code</p>
+                            </details>
                             <div style={{marginTop: '2rem', padding: '1rem', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)'}}>
                                 <p className="mono" style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '13px'}}>Common Issues:</p>
                                 <ul className="mono" style={{fontSize: '12px', lineHeight: '1.6', paddingLeft: '1.5rem', listStyle: 'disc'}}>
-                                    <li>Make sure the component is properly defined</li>
+                                    <li>Make sure component has "export default ComponentName"</li>
+                                    <li>TypeScript syntax not fully stripped (check console logs)</li>
                                     <li>Check that all hooks are used correctly</li>
                                     <li>Verify there are no syntax errors</li>
                                 </ul>
