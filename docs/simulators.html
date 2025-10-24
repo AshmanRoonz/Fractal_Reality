@@ -229,9 +229,21 @@
                         // Remove type declarations
                         processedCode = processedCode.replace(/^(\s*)type\s+\w+\s*=\s*[^;]+;\s*$/gm, '');
                         
+                        // Remove enum declarations
+                        processedCode = processedCode.replace(/^(\s*)enum\s+\w+\s*\{[^}]*\}\s*$/gm, '');
+                        
                         // Remove React.FC and similar type annotations
                         processedCode = processedCode.replace(/:\s*React\.FC\s*<?[^>]*>?/g, '');
                         processedCode = processedCode.replace(/:\s*FC\s*<?[^>]*>?/g, '');
+                        processedCode = processedCode.replace(/:\s*React\.ReactNode/g, '');
+                        processedCode = processedCode.replace(/:\s*ReactNode/g, '');
+                        processedCode = processedCode.replace(/:\s*JSX\.Element/g, '');
+                        
+                        // Remove readonly modifiers
+                        processedCode = processedCode.replace(/\breadonly\s+/g, '');
+                        
+                        // Remove public/private/protected modifiers
+                        processedCode = processedCode.replace(/\b(public|private|protected)\s+/g, '');
                         
                         // Remove generic type parameters from hooks and other calls
                         // useRef<Type>(value) -> useRef(value)
@@ -257,7 +269,10 @@
                         
                         // Remove variable type annotations: const x: Type = but NOT const x = { prop: value }
                         // Only match if the : is followed by a capital letter (type name) or known type keywords
-                        processedCode = processedCode.replace(/(const|let|var)\s+(\w+)\s*:\s*([A-Z]\w+|string|number|boolean|any|void|unknown|never|null|undefined)(\[\])?\s*=/g, '$1 $2 =');
+                        processedCode = processedCode.replace(/(const|let|var)\s+(\w+)\s*:\s*([A-Z]\w+|string|number|boolean|any|void|unknown|never|null|undefined)(\[\]|<[^>]+>)?\s*=/g, '$1 $2 =');
+                        
+                        // Remove type annotations from uninitialized variable declarations: let x: Type;
+                        processedCode = processedCode.replace(/(const|let|var)\s+(\w+)\s*:\s*([A-Z]\w+|string|number|boolean|any|void|unknown|never|null|undefined)(\[\]|<[^>]+>)?\s*;/g, '$1 $2;');
                         
                         // Remove type annotations from destructured variables
                         processedCode = processedCode.replace(/(const|let|var)\s+(\{[^}]+\})\s*:\s*[^=]+=/g, '$1 $2 =');
@@ -287,25 +302,25 @@
                     const componentMatches = [];
                     
                     // Pattern 1: const Component = () => { ... return ( or return <
-                    const arrowPattern = /(?:const|let|var)\s+([A-Z]\w+)\s*=\s*\([^)]*\)\s*=>\s*{/g;
+                    const arrowPattern = /(?:const|let|var)\s+([A-Z]\w+)\s*=\s*\([^)]*\)\s*=>/g;
                     let match;
                     while ((match = arrowPattern.exec(processedCode)) !== null) {
                         const name = match[1];
                         const startPos = match.index;
                         // Check if this function contains JSX (look for 'return <' or 'return (')
-                        const afterFunc = processedCode.slice(startPos, startPos + 1000);
-                        if (afterFunc.includes('return <') || afterFunc.includes('return (')) {
+                        const afterFunc = processedCode.slice(startPos, Math.min(startPos + 2000, processedCode.length));
+                        if (afterFunc.includes('return <') || afterFunc.includes('return (') || afterFunc.includes('React.createElement')) {
                             componentMatches.push({ name, position: startPos });
                         }
                     }
                     
                     // Pattern 2: function Component() { ... return <
-                    const funcPattern = /function\s+([A-Z]\w+)\s*\([^)]*\)\s*{/g;
+                    const funcPattern = /function\s+([A-Z]\w+)\s*\([^)]*\)/g;
                     while ((match = funcPattern.exec(processedCode)) !== null) {
                         const name = match[1];
                         const startPos = match.index;
-                        const afterFunc = processedCode.slice(startPos, startPos + 1000);
-                        if (afterFunc.includes('return <') || afterFunc.includes('return (')) {
+                        const afterFunc = processedCode.slice(startPos, Math.min(startPos + 2000, processedCode.length));
+                        if (afterFunc.includes('return <') || afterFunc.includes('return (') || afterFunc.includes('React.createElement')) {
                             componentMatches.push({ name, position: startPos });
                         }
                     }
@@ -322,8 +337,9 @@
                     if (componentMatches.length === 0) {
                         const commonNames = [
                             'FractalPetCell', 'EnhancedConsciousnessFractal', 'HarmonicPeriodicTable',
-                            'MolecularHarmonyComposer', 'FractalSoulArray', 'FractalRealityLanding', 
-                            'App', 'Main', 'Index', 'Component'
+                            'MolecularHarmonyComposer', 'FractalSoulArray', 'FractalRealityLanding',
+                            'FractalFountain', 'FractalFountainEnhanced',
+                            'App', 'Main', 'Index', 'Component', 'Simulator'
                         ];
                         for (const name of commonNames) {
                             if (processedCode.includes(`const ${name}`) || processedCode.includes(`function ${name}`)) {
