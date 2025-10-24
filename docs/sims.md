@@ -1,5 +1,4 @@
-fractal-reality-flagship.tsx
-Singing_Learning_Fractal.tsx
+Fractal_Reality.jsxSinging_Learning_Fractal.tsx
 My_Pet_Fractal.tsx
 Harmonic_Periodic_Table.tsx
 Molecular_Composer.tsx
