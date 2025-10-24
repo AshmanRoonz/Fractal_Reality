@@ -85,16 +85,6 @@
             border: none;
         }
         
-        .sim-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(10,10,10,0.95), transparent);
-            padding: 1rem;
-            pointer-events: none;
-        }
-        
         .section-box {
             border: 1px solid rgba(255,255,255,0.08);
             background: rgba(255,255,255,0.02);
@@ -264,30 +254,38 @@
                                         </div>
                                     </div>
                                 ) : (
-                                    <a 
-                                        href="./simulators.html" 
-                                        className="block border-none"
-                                        style={{borderBottom: 'none'}}
-                                    >
-                                        <div className="sim-preview-box">
-                                            {previewSim && previewSim !== 'unavailable' ? (
-                                                <iframe 
-                                                    src={`./simulators.html?auto=${previewSim}`}
-                                                    title="Simulation Preview"
-                                                />
-                                            ) : (
-                                                <div className="flex items-center justify-center h-full">
-                                                    <div className="text-center text-gray-600">
-                                                        <div className="mono text-xs">Loading preview...</div>
+                                    <div>
+                                        <a 
+                                            href="./simulators.html" 
+                                            className="block border-none"
+                                            style={{borderBottom: 'none'}}
+                                        >
+                                            <div className="sim-preview-box">
+                                                {previewSim && previewSim !== 'unavailable' ? (
+                                                    <iframe 
+                                                        src={`./simulators.html?auto=${previewSim}`}
+                                                        title="Simulation Preview"
+                                                    />
+                                                ) : (
+                                                    <div className="flex items-center justify-center h-full">
+                                                        <div className="text-center text-gray-600">
+                                                            <div className="mono text-xs">Loading preview...</div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )}
-                                            <div className="sim-overlay">
-                                                <div className="text-xs mono uppercase tracking-wider text-gray-500 mb-1">Interactive Demonstrations</div>
-                                                <div className="text-sm text-white">Click to explore →</div>
+                                                )}
                                             </div>
+                                        </a>
+                                        <div className="mt-3 text-center">
+                                            <div className="text-xs mono uppercase tracking-wider text-gray-600 mb-1">Interactive Demonstrations</div>
+                                            <a 
+                                                href="./simulators.html"
+                                                className="text-sm"
+                                                style={{color: '#e8e8e8', borderBottom: '1px solid rgba(255,255,255,0.2)'}}
+                                            >
+                                                Click to explore →
+                                            </a>
                                         </div>
-                                    </a>
+                                    </div>
                                 )}
                             </div>
                         </div>
