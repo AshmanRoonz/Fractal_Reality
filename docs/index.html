@@ -173,13 +173,16 @@
             const [activeSection, setActiveSection] = useState('overview');
 
             useEffect(() => {
-                // Load the first simulation for preview
-                const fetchPreviewSim = async () => {
+                // Check if simulators.html exists and has content
+                const checkSimulatorsAvailable = async () => {
                     try {
-                        const response = await fetch('./sims.md');
-                        if (!response.ok) return;
+                        const simsResponse = await fetch('./sims.md');
+                        if (!simsResponse.ok) {
+                            setPreviewSim('unavailable');
+                            return;
+                        }
                         
-                        const markdown = await response.text();
+                        const markdown = await simsResponse.text();
                         const lines = markdown.split('\n');
                         
                         for (const line of lines) {
@@ -200,15 +203,16 @@
                             if (filename) {
                                 filename = filename.replace(/^simulations\//, '');
                                 setPreviewSim(filename);
-                                break;
+                                return;
                             }
                         }
+                        setPreviewSim('unavailable');
                     } catch (err) {
-                        console.log('Preview not loaded');
+                        setPreviewSim('unavailable');
                     }
                 };
 
-                fetchPreviewSim();
+                checkSimulatorsAvailable();
             }, []);
 
             const sections = {
@@ -239,30 +243,52 @@
                             
                             {/* Right: Simulation Preview */}
                             <div>
-                                <a 
-                                    href="./simulators.html" 
-                                    className="block border-none"
-                                    style={{borderBottom: 'none'}}
-                                >
-                                    <div className="sim-preview-box">
-                                        {previewSim ? (
-                                            <iframe 
-                                                src={`./simulators.html?auto=${previewSim}`}
-                                                title="Simulation Preview"
-                                            />
-                                        ) : (
-                                            <div className="flex items-center justify-center h-full">
-                                                <div className="text-center text-gray-600">
-                                                    <div className="mono text-xs">Loading preview...</div>
-                                                </div>
+                                {previewSim === 'unavailable' ? (
+                                    <div className="sim-preview-box" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'default'}}>
+                                        <div className="text-center" style={{padding: '2rem'}}>
+                                            <div className="mono text-sm mb-2" style={{color: '#94a3b8'}}>Interactive Demonstrations</div>
+                                            <div className="text-xs" style={{color: '#64748b'}}>
+                                                Simulations available in repository
                                             </div>
-                                        )}
-                                        <div className="sim-overlay">
-                                            <div className="text-xs mono uppercase tracking-wider text-gray-500 mb-1">Interactive Demonstrations</div>
-                                            <div className="text-sm text-white">Click to explore →</div>
+                                            <div className="mt-4">
+                                                <a 
+                                                    href="https://github.com/AshmanRoonz/Fractal_Reality" 
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-xs"
+                                                    style={{color: '#60a5fa', borderBottom: '1px solid rgba(96, 165, 250, 0.3)'}}
+                                                >
+                                                    View on GitHub →
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </a>
+                                ) : (
+                                    <a 
+                                        href="./simulators.html" 
+                                        className="block border-none"
+                                        style={{borderBottom: 'none'}}
+                                    >
+                                        <div className="sim-preview-box">
+                                            {previewSim && previewSim !== 'unavailable' ? (
+                                                <iframe 
+                                                    src={`./simulators.html?auto=${previewSim}`}
+                                                    title="Simulation Preview"
+                                                />
+                                            ) : (
+                                                <div className="flex items-center justify-center h-full">
+                                                    <div className="text-center text-gray-600">
+                                                        <div className="mono text-xs">Loading preview...</div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            <div className="sim-overlay">
+                                                <div className="text-xs mono uppercase tracking-wider text-gray-500 mb-1">Interactive Demonstrations</div>
+                                                <div className="text-sm text-white">Click to explore →</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                )}
                             </div>
                         </div>
                     </div>
