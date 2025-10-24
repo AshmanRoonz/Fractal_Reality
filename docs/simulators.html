@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Demonstrations - Fractal Reality</title>
+    <title>Fractal Reality Simulators</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
@@ -14,72 +12,104 @@
         }
         
         body {
-            font-family: 'Crimson Pro', Georgia, serif;
+            font-family: 'Courier New', monospace;
             background: #0a0a0a;
             color: #e8e8e8;
-            line-height: 1.5;
-            font-size: 15px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
         }
         
-        .mono {
-            font-family: 'IBM Plex Mono', monospace;
-        }
-        
-        #root {
+        #app {
             min-height: 100vh;
         }
         
-        .simulation-container {
-            width: 100%;
-            min-height: 100vh;
+        .menu {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
         }
         
-        .sim-button {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.08);
+        .title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #64c8ff;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            color: #808080;
+            margin-bottom: 3rem;
+        }
+        
+        .sim-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .sim-btn {
+            background: rgba(100, 200, 255, 0.05);
+            border: 1px solid rgba(100, 200, 255, 0.2);
             color: #e8e8e8;
-            padding: 0.75rem 1.5rem;
+            padding: 1rem 1.5rem;
             text-align: left;
             cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
             transition: all 0.2s;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 13px;
-            width: 100%;
         }
         
-        .sim-button:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.15);
+        .sim-btn:hover {
+            background: rgba(100, 200, 255, 0.1);
+            border-color: rgba(100, 200, 255, 0.4);
         }
-
-        .sim-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        
+        .back-btn {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: white;
+            color: black;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            z-index: 10000;
         }
-
-        #loading {
+        
+        .back-btn:hover {
+            background: #ddd;
+        }
+        
+        .loading {
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background: #0a0a0a;
-            color: #e8e8e8;
-            font-family: monospace;
+            font-size: 1.2rem;
+            color: #64c8ff;
+        }
+        
+        .error {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        #sim-container {
+            width: 100%;
+            min-height: 100vh;
         }
     </style>
 </head>
 <body>
-    <div id="loading">
-        <div style="text-align: center;">
-            <div style="font-size: 24px; margin-bottom: 1rem;">⏳</div>
-            <div>Loading libraries...</div>
-        </div>
+    <div id="app">
+        <div class="loading">Loading...</div>
     </div>
-    <div id="root" style="display: none;"></div>
 
-    <!-- Load libraries -->
+    <!-- Load React and dependencies -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -87,298 +117,245 @@
     <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
     <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
 
-    <!-- Wait for libraries and start app -->
     <script>
-        function initApp() {
-            // Check if libraries loaded
+        // Wait for everything to load
+        window.addEventListener('load', function() {
+            console.log('Starting app...');
+            console.log('React:', typeof React);
+            console.log('ReactDOM:', typeof ReactDOM);
+            console.log('Babel:', typeof Babel);
+            
             if (typeof React === 'undefined' || typeof ReactDOM === 'undefined' || typeof Babel === 'undefined') {
-                document.getElementById('loading').innerHTML = `
-                    <div style="text-align: center; color: #ef4444;">
-                        <div style="font-size: 24px; margin-bottom: 1rem;">❌</div>
-                        <div>Failed to load libraries</div>
-                        <button onclick="location.reload()" style="margin-top: 1rem; background: #ef4444; color: white; padding: 0.5rem 1rem; border: none; cursor: pointer; font-family: monospace;">
-                            Retry
-                        </button>
-                    </div>
-                `;
+                document.getElementById('app').innerHTML = '<div class="loading" style="color: #ef4444;">ERROR: Libraries failed to load. Check your internet connection.</div>';
                 return;
             }
 
-            // Hide loading, show app
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('root').style.display = 'block';
+            // Start the app
+            const script = document.createElement('script');
+            script.type = 'text/babel';
+            script.innerHTML = `
+                const { useState, useEffect } = React;
 
-            console.log('✓ Libraries loaded');
+                function App() {
+                    const [simulations, setSimulations] = useState([]);
+                    const [currentSim, setCurrentSim] = useState(null);
+                    const [simCode, setSimCode] = useState('');
+                    const [loading, setLoading] = useState(true);
+                    const [error, setError] = useState(null);
 
-            // Create and run the app script
-            const appScript = document.createElement('script');
-            appScript.type = 'text/babel';
-            appScript.setAttribute('data-type', 'module');
-            appScript.textContent = `
-const { useState, useEffect } = React;
+                    // Load sims.md on mount
+                    useEffect(() => {
+                        loadSimsList();
+                    }, []);
 
-const SIMULATIONS = [
-    { file: 'Fractal_Reality.jsx', name: 'Fractal Reality' },
-    { file: 'Harmonic_Periodic_Table.tsx', name: 'Harmonic Periodic Table' },
-    { file: 'Molecular_Composer.tsx', name: 'Molecular Composer' },
-    { file: 'My_Pet_Fractal.tsx', name: 'My Pet Fractal' },
-    { file: 'Singing_Learning_Fractal.tsx', name: 'Singing Learning Fractal' },
-    { file: 'Cam_Fractal_Tracker.tsx', name: 'Webcam Fractal Tracker' },
-    { file: 'Fractal_Fountain.tsx', name: 'Fractal Fountain' }
-];
+                    async function loadSimsList() {
+                        try {
+                            const response = await fetch('./sims.md');
+                            if (!response.ok) {
+                                throw new Error('sims.md not found. Please create it in the same directory.');
+                            }
+                            
+                            const text = await response.text();
+                            const lines = text.split('\\n');
+                            const sims = [];
+                            
+                            for (const line of lines) {
+                                const trimmed = line.trim();
+                                
+                                // Skip comments and empty lines
+                                if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) {
+                                    continue;
+                                }
+                                
+                                // Extract filename
+                                let filename = null;
+                                
+                                // Check for markdown link: [Name](file.tsx)
+                                const linkMatch = trimmed.match(/\\[.*?\\]\\((.*?\\.(tsx|jsx))\\)/i);
+                                if (linkMatch) {
+                                    filename = linkMatch[1];
+                                }
+                                // Check for list item: - file.tsx or * file.tsx
+                                else if (trimmed.match(/^[-*]\\s+/)) {
+                                    const listMatch = trimmed.match(/[-*]\\s+(.*?\\.(tsx|jsx))/i);
+                                    if (listMatch) {
+                                        filename = listMatch[1];
+                                    }
+                                }
+                                // Plain filename
+                                else if (trimmed.match(/\\.(tsx|jsx)$/i)) {
+                                    filename = trimmed;
+                                }
+                                
+                                if (filename) {
+                                    // Remove simulations/ prefix if present
+                                    filename = filename.replace(/^simulations\\//, '');
+                                    const name = filename.replace(/\\.(tsx|jsx)$/i, '').replace(/_/g, ' ');
+                                    sims.push({ filename, name });
+                                }
+                            }
+                            
+                            if (sims.length === 0) {
+                                throw new Error('No .tsx or .jsx files found in sims.md');
+                            }
+                            
+                            setSimulations(sims);
+                            setLoading(false);
+                        } catch (err) {
+                            console.error('Error loading sims.md:', err);
+                            setError(err.message);
+                            setLoading(false);
+                        }
+                    }
 
-const SimulationRunner = () => {
-    const [selectedSim, setSelectedSim] = useState(null);
-    const [simCode, setSimCode] = useState('');
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+                    async function loadSimulation(sim) {
+                        setLoading(true);
+                        setError(null);
+                        
+                        try {
+                            const response = await fetch('./simulations/' + sim.filename);
+                            if (!response.ok) {
+                                throw new Error('Could not load ./simulations/' + sim.filename);
+                            }
+                            
+                            const code = await response.text();
+                            setSimCode(code);
+                            setCurrentSim(sim);
+                            setLoading(false);
+                        } catch (err) {
+                            console.error('Error loading simulation:', err);
+                            setError(err.message);
+                            setLoading(false);
+                        }
+                    }
 
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const autoLoad = urlParams.get('auto');
-        if (autoLoad) {
-            const sim = SIMULATIONS.find(s => 
-                s.file === autoLoad || 
-                s.file.replace(/\\.(tsx|jsx)$/, '') === autoLoad
-            );
-            if (sim) loadSimulation(sim);
-        }
-    }, []);
+                    function goBack() {
+                        setCurrentSim(null);
+                        setSimCode('');
+                        setError(null);
+                    }
 
-    const loadSimulation = async (sim) => {
-        try {
-            setError(null);
-            setLoading(true);
-            
-            let response = await fetch(\`./simulations/\${sim.file}\`);
-            if (!response.ok) {
-                response = await fetch(\`./\${sim.file}\`);
-            }
-            if (!response.ok) {
-                throw new Error(\`Could not load \${sim.file}\`);
-            }
-            
-            const code = await response.text();
-            setSimCode(code);
-            setSelectedSim(sim);
-            setLoading(false);
-        } catch (err) {
-            console.error('Load error:', err);
-            setError(err.message);
-            setLoading(false);
-        }
-    };
+                    function SimulationRenderer() {
+                        if (!simCode) return null;
 
-    const SimulationRenderer = () => {
-        if (!simCode) return null;
+                        try {
+                            // Strip TypeScript and imports
+                            let code = simCode;
+                            
+                            // Remove imports
+                            code = code.replace(/^import\\s+.*?from\\s+['"].*?['"];?\\s*$/gm, '');
+                            code = code.replace(/^import\\s+['"].*?['"];?\\s*$/gm, '');
+                            
+                            // Remove exports
+                            code = code.replace(/^export\\s+default\\s+/gm, '');
+                            code = code.replace(/^export\\s+/gm, '');
+                            
+                            // Remove type annotations
+                            code = code.replace(/^interface\\s+\\w+\\s*\\{[^}]*\\}/gm, '');
+                            code = code.replace(/^type\\s+\\w+\\s*=\\s*[^;]+;/gm, '');
+                            code = code.replace(/:\\s*\\w+(\\[\\]|<[^>]+>)?(?=\\s*[=,\\)])/g, '');
+                            code = code.replace(/\\):\\s*\\w+(\\[\\]|<[^>]+>)?(?=\\s*[{=>])/g, ')');
+                            code = code.replace(/<[A-Z]\\w*(\\s*,\\s*[A-Z]\\w*)*>/g, '');
+                            code = code.replace(/\\s+as\\s+\\w+/g, '');
+                            
+                            // Transform with Babel
+                            const transformed = Babel.transform(code, {
+                                presets: ['react'],
+                                filename: currentSim.filename
+                            }).code;
+                            
+                            // Find component name
+                            const match = transformed.match(/(?:function|const|class)\\s+([A-Z]\\w*)/);
+                            const componentName = match ? match[1] : 'Component';
+                            
+                            // Create wrapper function
+                            const wrapper = \`
+                                (function(React, useState, useEffect, useRef, useMemo, useCallback, useReducer, useContext, Recharts, LucideReact) {
+                                    const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, BarChart, Bar, ScatterChart, Scatter } = Recharts || {};
+                                    const { Camera, Square, Activity, Play, Pause, RotateCcw, Volume2, VolumeX, ChevronLeft, ChevronRight, Plus, Minus } = LucideReact || {};
+                                    
+                                    \${transformed}
+                                    
+                                    return \${componentName};
+                                })
+                            \`;
+                            
+                            // Execute
+                            const componentFactory = eval(wrapper);
+                            const Component = componentFactory(
+                                React,
+                                React.useState,
+                                React.useEffect,
+                                React.useRef,
+                                React.useMemo,
+                                React.useCallback,
+                                React.useReducer,
+                                React.useContext,
+                                window.Recharts,
+                                window.lucideReact
+                            );
+                            
+                            return React.createElement(Component);
+                        } catch (err) {
+                            console.error('Render error:', err);
+                            return React.createElement('div', {
+                                style: {
+                                    padding: '2rem',
+                                    background: '#0a0a0a',
+                                    color: '#ef4444',
+                                    minHeight: '100vh',
+                                    fontFamily: 'monospace'
+                                }
+                            }, [
+                                React.createElement('h2', { key: 'h', style: { marginBottom: '1rem' }}, 'Render Error'),
+                                React.createElement('div', { key: 'd', style: { background: 'rgba(0,0,0,0.5)', padding: '1rem', marginBottom: '1rem' }}, err.message),
+                                React.createElement('pre', { key: 'p', style: { fontSize: '0.8rem', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem' }}, err.stack),
+                                React.createElement('button', {
+                                    key: 'b',
+                                    onClick: goBack,
+                                    style: { marginTop: '1rem', padding: '0.5rem 1rem', background: '#ef4444', color: 'white', border: 'none', cursor: 'pointer' }
+                                }, '← Back')
+                            ]);
+                        }
+                    }
 
-        let processedCode = '';
-        
-        try {
-            processedCode = simCode;
+                    // Render
+                    if (currentSim && simCode) {
+                        return React.createElement('div', { id: 'sim-container' }, [
+                            React.createElement('button', {
+                                key: 'back',
+                                className: 'back-btn',
+                                onClick: goBack
+                            }, '← BACK'),
+                            React.createElement(SimulationRenderer, { key: 'sim' })
+                        ]);
+                    }
 
-            // Remove imports and exports
-            processedCode = processedCode.replace(/^import\\s+.*?from\\s+['"].*?['"];?\\s*$/gm, '');
-            processedCode = processedCode.replace(/^import\\s+['"].*?['"];?\\s*$/gm, '');
-            processedCode = processedCode.replace(/^export\\s+default\\s+/gm, '');
-            processedCode = processedCode.replace(/^export\\s+/gm, '');
+                    return React.createElement('div', { className: 'menu' }, [
+                        React.createElement('h1', { key: 'title', className: 'title' }, 'Fractal Reality Simulators'),
+                        React.createElement('p', { key: 'subtitle', className: 'subtitle' }, 'https://github.com/AshmanRoonz/Fractal_Reality'),
+                        
+                        error && React.createElement('div', { key: 'error', className: 'error' }, error),
+                        
+                        loading ? 
+                            React.createElement('div', { key: 'loading', className: 'loading' }, 'Loading simulations...') :
+                            React.createElement('div', { key: 'list', className: 'sim-list' },
+                                simulations.map((sim, i) => 
+                                    React.createElement('button', {
+                                        key: i,
+                                        className: 'sim-btn',
+                                        onClick: () => loadSimulation(sim)
+                                    }, sim.name)
+                                )
+                            )
+                    ]);
+                }
 
-            // Remove TypeScript syntax
-            processedCode = processedCode.replace(/^interface\\s+\\w+\\s*\\{[^}]*\\}/gm, '');
-            processedCode = processedCode.replace(/^type\\s+\\w+\\s*=\\s*[^;]+;/gm, '');
-            processedCode = processedCode.replace(/:\\s*\\w+(\\[\\]|\\<[^>]+\\>)?(?=\\s*[=,\\)])/g, '');
-            processedCode = processedCode.replace(/\\):\\s*\\w+(\\[\\]|\\<[^>]+\\>)?(?=\\s*[{=>])/g, ')');
-            processedCode = processedCode.replace(/<[A-Z]\\w*(\\s*,\\s*[A-Z]\\w*)*>/g, '');
-            processedCode = processedCode.replace(/\\s+as\\s+\\w+/g, '');
-
-            // Transform with Babel
-            const transformed = Babel.transform(processedCode, {
-                presets: ['react'],
-                filename: selectedSim.file
-            }).code;
-
-            // Find component name
-            const componentMatch = transformed.match(/(?:function|const|class)\\s+([A-Z]\\w*)/);
-            const componentName = componentMatch ? componentMatch[1] : 'Component';
-
-            // Create wrapped execution
-            const wrappedCode = \`
-                return (function(React, useState, useEffect, useRef, useMemo, useCallback, useReducer, useContext, Recharts, LucideReact) {
-                    const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, BarChart, Bar, ScatterChart, Scatter } = Recharts || {};
-                    const { Camera, Square, Activity, Play, Pause, RotateCcw, Volume2, VolumeX, ChevronLeft, ChevronRight, Plus, Minus } = LucideReact || {};
-                    
-                    \${transformed}
-                    
-                    return \${componentName};
-                }).apply(null, arguments);
-            \`;
-
-            const createComponent = new Function(wrappedCode);
-            const SimComponent = createComponent(
-                React,
-                React.useState,
-                React.useEffect,
-                React.useRef,
-                React.useMemo,
-                React.useCallback,
-                React.useReducer,
-                React.useContext,
-                window.Recharts,
-                window.lucideReact
-            );
-
-            if (!SimComponent || typeof SimComponent !== 'function') {
-                throw new Error('No valid React component found');
-            }
-
-            return React.createElement(SimComponent);
-        } catch (err) {
-            console.error('Render error:', err);
-            console.error('File:', selectedSim.file);
-            if (processedCode) {
-                console.log('First 500 chars:', processedCode.substring(0, 500));
-            }
-            
-            return (
-                <div style={{padding: '3rem', background: '#0a0a0a', color: '#f87171', minHeight: '100vh'}}>
-                    <h3 style={{fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem'}}>
-                        Error Rendering {selectedSim.file}
-                    </h3>
-                    <div style={{background: 'rgba(0,0,0,0.5)', padding: '1rem', marginBottom: '1rem', fontFamily: 'monospace', fontSize: '13px'}}>
-                        {err.message}
-                    </div>
-                    <details style={{marginTop: '1.5rem'}}>
-                        <summary style={{cursor: 'pointer', fontFamily: 'monospace', marginBottom: '0.5rem'}}>
-                            Stack Trace
-                        </summary>
-                        <pre style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap', fontFamily: 'monospace'}}>
-                            {err.stack}
-                        </pre>
-                    </details>
-                    <button 
-                        onClick={() => { setSelectedSim(null); setSimCode(''); setError(null); }}
-                        style={{marginTop: '2rem', background: '#ef4444', color: 'white', padding: '0.5rem 1rem', border: 'none', cursor: 'pointer', fontFamily: 'monospace'}}
-                    >
-                        ← Back to Menu
-                    </button>
-                </div>
-            );
-        }
-    };
-
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-            {!selectedSim ? (
-                <div style={{background: '#0a0a0a', minHeight: '100vh', padding: '4rem 2rem'}}>
-                    <div style={{maxWidth: '960px', margin: '0 auto'}}>
-                        <div style={{marginBottom: '3rem'}}>
-                            <h1 style={{fontSize: '3rem', fontWeight: 300, marginBottom: '0.75rem', color: '#e8e8e8', letterSpacing: '-0.02em'}}>
-                                Interactive Demonstrations
-                            </h1>
-                            <p className="mono" style={{fontSize: '13px', color: '#808080'}}>
-                                Fractal Reality Framework
-                            </p>
-                            <p className="mono" style={{fontSize: '11px', color: '#606060', marginTop: '0.5rem'}}>
-                                <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" style={{color: '#64c8ff', textDecoration: 'underline'}}>
-                                    GitHub →
-                                </a>
-                            </p>
-                        </div>
-
-                        {error && (
-                            <div style={{border: '1px solid rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.05)', padding: '1.5rem', marginBottom: '2rem', maxWidth: '600px'}}>
-                                <p style={{color: '#f87171', fontWeight: 'bold', marginBottom: '0.5rem'}}>Error</p>
-                                <p className="mono" style={{color: '#fca5a5', fontSize: '13px'}}>{error}</p>
-                            </div>
-                        )}
-
-                        <div style={{maxWidth: '600px'}}>
-                            <p className="mono" style={{fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', color: '#606060'}}>
-                                Select Simulation ({SIMULATIONS.length})
-                            </p>
-                            <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-                                {SIMULATIONS.map((sim, idx) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => loadSimulation(sim)}
-                                        className="sim-button"
-                                        disabled={loading}
-                                    >
-                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                            <span>{sim.name}</span>
-                                            <span style={{fontSize: '10px', color: '#606060'}}>{sim.file}</span>
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div style={{marginTop: '3rem', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', maxWidth: '600px'}}>
-                            <p className="mono" style={{fontSize: '12px', color: '#808080', marginBottom: '1rem'}}>
-                                <strong style={{color: '#e8e8e8'}}>Setup:</strong> Place .tsx/.jsx files in ./simulations/ folder
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            ) : (
-                <div className="simulation-container" style={{position: 'relative'}}>
-                    <button
-                        onClick={() => { setSelectedSim(null); setSimCode(''); setError(null); }}
-                        style={{
-                            position: 'fixed',
-                            top: '1.5rem',
-                            left: '1.5rem',
-                            zIndex: 9999,
-                            background: 'white',
-                            color: 'black',
-                            padding: '0.5rem 1rem',
-                            fontSize: '11px',
-                            border: 'none',
-                            cursor: 'pointer',
-                            fontFamily: 'monospace',
-                            fontWeight: 'bold'
-                        }}
-                        onMouseOver={(e) => e.target.style.background = '#ddd'}
-                        onMouseOut={(e) => e.target.style.background = 'white'}
-                    >
-                        ← BACK
-                    </button>
-                    
-                    {loading ? (
-                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#0a0a0a'}}>
-                            <div style={{textAlign: 'center'}}>
-                                <div className="mono" style={{color: '#e8e8e8', fontSize: '16px', marginBottom: '1rem'}}>Loading</div>
-                                <div className="mono" style={{color: '#606060', fontSize: '13px'}}>{selectedSim.name}</div>
-                            </div>
-                        </div>
-                    ) : error ? (
-                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', padding: '2rem', background: '#0a0a0a'}}>
-                            <div style={{maxWidth: '600px', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '2rem'}}>
-                                <h3 style={{fontSize: '18px', fontWeight: 'bold', color: '#f87171', marginBottom: '1rem'}}>Error</h3>
-                                <p className="mono" style={{color: '#fca5a5', fontSize: '13px'}}>{error}</p>
-                            </div>
-                        </div>
-                    ) : (
-                        <SimulationRenderer />
-                    )}
-                </div>
-            )}
-        </div>
-    );
-};
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<SimulationRunner />);
+                const root = ReactDOM.createRoot(document.getElementById('app'));
+                root.render(React.createElement(App));
             `;
-            document.body.appendChild(appScript);
-        }
-
-        // Wait for libraries to load
-        if (document.readyState === 'complete') {
-            initApp();
-        } else {
-            window.addEventListener('load', initApp);
-        }
+            document.body.appendChild(script);
+        });
     </script>
 </body>
 </html>
