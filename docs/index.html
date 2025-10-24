@@ -115,10 +115,10 @@
                         </div>
                     </div>
 
-                    {/* Simulator Preview - Hidden on mobile, shown on larger screens */}
-                    <div className="hidden lg:block fixed top-8 right-8 w-80 z-50">
-                        <div className="section-box p-4">
-                            <div style={{height: '300px'}} className="mb-3">
+                    {/* Simulator Preview - Visible on all screens */}
+                    <div className="mb-8">
+                        <div className="section-box p-4 max-w-md mx-auto lg:max-w-none">
+                            <div style={{height: '300px', maxHeight: '50vh'}} className="mb-3">
                                 {previewSim ? (
                                     <iframe 
                                         src={`./simulators.html?auto=${previewSim}`}
@@ -147,18 +147,6 @@
                         {activeSection === 'validation' && <ValidationSection />}
                         {activeSection === 'dimensional' && <DimensionalSection />}
                         {activeSection === 'empirical' && <EmpiricalSection />}
-                    </div>
-
-                    {/* Footer - Only on mobile when simulator is hidden */}
-                    <div className="lg:hidden mt-12 max-w-6xl mx-auto">
-                        <div className="section-box p-4 text-center">
-                            <a 
-                                href="./simulators.html" 
-                                className="block mono text-sm text-gray-400 hover:text-gray-200 transition-colors"
-                            >
-                                View Interactive Demonstrations →
-                            </a>
-                        </div>
                     </div>
 
                     {/* Footer Links */}
