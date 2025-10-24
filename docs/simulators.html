@@ -190,33 +190,6 @@
                     // Determine if it's JSX or TSX
                     const isTSX = selectedSim.endsWith('.tsx');
 
-                    // Strip TypeScript type annotations for TSX files
-                    if (isTSX) {
-                        // Remove interface and type declarations
-                        processedCode = processedCode.replace(/^(\s*)interface\s+\w+\s*\{[^}]*\}\s*$/gm, '');
-                        processedCode = processedCode.replace(/^(\s*)type\s+\w+\s*=\s*[^;]+;\s*$/gm, '');
-                        
-                        // Remove type annotations from function parameters and variables
-                        // Match patterns like: (param: Type) or (param: Type, param2: Type)
-                        processedCode = processedCode.replace(/(\(|\s)(\w+)\s*:\s*[^,\)=]+/g, '$1$2');
-                        
-                        // Remove return type annotations: ): Type =>
-                        processedCode = processedCode.replace(/\)\s*:\s*[^=>{]+(\s*=>)/g, ')$1');
-                        processedCode = processedCode.replace(/\)\s*:\s*[^{]+(\s*\{)/g, ')$1');
-                        
-                        // Remove type parameters from generics like <Type>
-                        processedCode = processedCode.replace(/\s*<[^>]+>(?=\s*\()/g, '');
-                        
-                        // Remove 'as' type assertions
-                        processedCode = processedCode.replace(/\s+as\s+\w+/g, '');
-                        
-                        // Remove non-null assertions (!)
-                        processedCode = processedCode.replace(/!(?=[\.\[\(;])/g, '');
-                        
-                        // Remove variable type annotations: const x: Type = 
-                        processedCode = processedCode.replace(/(const|let|var)\s+(\w+)\s*:\s*[^=]+=/g, '$1 $2 =');
-                    }
-
                     // Transform code with appropriate presets
                     const presets = [
                         ['react', { 
@@ -224,6 +197,13 @@
                             pragma: 'React.createElement'
                         }]
                     ];
+                    
+                    if (isTSX) {
+                        presets.push(['typescript', {
+                            isTSX: true,
+                            allExtensions: true
+                        }]);
+                    }
 
                     const transformed = Babel.transform(processedCode, {
                         filename: selectedSim,
