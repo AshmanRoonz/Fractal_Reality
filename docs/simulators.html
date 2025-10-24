@@ -210,38 +210,50 @@
                     }).code;
 
                     // Try to find the main React component
-                    // Look for components that return JSX (contain return and JSX elements)
+                    // Strategy: Find the last component that starts with capital letter AND contains JSX
                     const componentMatches = [];
                     
-                    // Pattern 1: const Component = () => { ... return <div>...</div> ... }
-                    const arrowFuncMatches = processedCode.matchAll(/(?:const|let|var)\s+(\w+)\s*=\s*\([^)]*\)\s*=>\s*{[\s\S]*?return[\s\S]*?<[\s\S]*?}/g);
-                    for (const match of arrowFuncMatches) {
-                        // Component names should start with capital letter
-                        if (match[1] && match[1][0] === match[1][0].toUpperCase()) {
-                            componentMatches.push(match[1]);
+                    // Pattern 1: const Component = () => { ... return ( or return <
+                    const arrowPattern = /(?:const|let|var)\s+([A-Z]\w+)\s*=\s*\([^)]*\)\s*=>\s*{/g;
+                    let match;
+                    while ((match = arrowPattern.exec(processedCode)) !== null) {
+                        const name = match[1];
+                        const startPos = match.index;
+                        // Check if this function contains JSX (look for 'return <' or 'return (')
+                        const afterFunc = processedCode.slice(startPos, startPos + 1000);
+                        if (afterFunc.includes('return <') || afterFunc.includes('return (')) {
+                            componentMatches.push({ name, position: startPos });
                         }
                     }
                     
-                    // Pattern 2: const Component = () => (<div>...</div>)
-                    const directReturnMatches = processedCode.matchAll(/(?:const|let|var)\s+(\w+)\s*=\s*\([^)]*\)\s*=>\s*\(/g);
-                    for (const match of directReturnMatches) {
-                        if (match[1] && match[1][0] === match[1][0].toUpperCase()) {
-                            componentMatches.push(match[1]);
+                    // Pattern 2: function Component() { ... return <
+                    const funcPattern = /function\s+([A-Z]\w+)\s*\([^)]*\)\s*{/g;
+                    while ((match = funcPattern.exec(processedCode)) !== null) {
+                        const name = match[1];
+                        const startPos = match.index;
+                        const afterFunc = processedCode.slice(startPos, startPos + 1000);
+                        if (afterFunc.includes('return <') || afterFunc.includes('return (')) {
+                            componentMatches.push({ name, position: startPos });
                         }
                     }
                     
-                    // Pattern 3: function Component() { ... return <div>...</div> ... }
-                    const funcMatches = processedCode.matchAll(/function\s+(\w+)\s*\([^)]*\)\s*{[\s\S]*?return[\s\S]*?</g);
-                    for (const match of funcMatches) {
-                        if (match[1] && match[1][0] === match[1][0].toUpperCase()) {
-                            componentMatches.push(match[1]);
-                        }
-                    }
+                    // Sort by position and take the LAST one (usually the main component)
+                    componentMatches.sort((a, b) => b.position - a.position);
                     
-                    let componentName = 'FractalSoulArray'; // Default for your specific file
+                    let componentName = 'App'; // Default fallback
                     if (componentMatches.length > 0) {
-                        // Use the last React component found (usually the main export)
-                        componentName = componentMatches[componentMatches.length - 1];
+                        componentName = componentMatches[0].name;
+                    }
+                    
+                    // Additional fallback: if we found nothing, look for common names
+                    if (componentMatches.length === 0) {
+                        const commonNames = ['FractalSoulArray', 'FractalRealityLanding', 'App', 'Main', 'Index'];
+                        for (const name of commonNames) {
+                            if (processedCode.includes(`const ${name}`) || processedCode.includes(`function ${name}`)) {
+                                componentName = name;
+                                break;
+                            }
+                        }
                     }
 
                     // Wrap in IIFE with proper scope
