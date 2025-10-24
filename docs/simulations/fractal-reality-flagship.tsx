@@ -90,8 +90,8 @@ const CONFIG = {
   performance: {
     fpsThreshold: 30,             // FPS below this triggers core mode
     fpsCheckInterval: 60,         // Check FPS every N frames
-    coreModeSparkReduction: 0.4,  // Reduce spark emission by 60% in core mode
-    coreModePathwayLimit: 500,    // Max pathways in core mode
+    coreModeSparkReduction: 1.5,  // INCREASE spark emission by 50% in core mode (pathways = efficiency)
+    coreModePathwayLimit: 10000,  // No real limit - more pathways = better
   }
 };
 
@@ -366,13 +366,13 @@ class AxionSystem {
   }
   
   checkPerformance(fps) {
-    // Activate core mode if FPS is low and we have many pathways
-    if (fps < CONFIG.performance.fpsThreshold && this.connections.length > 100) {
-      this.coreMode = true;
-    } else if (fps > CONFIG.performance.fpsThreshold + 10 && this.connections.length < 50) {
-      // Deactivate core mode if performance recovers and network is smaller
-      this.coreMode = false;
+    // Activate core mode when we have a strong network (efficiency mode)
+    if (this.connections.length > 300) {
+      this.coreMode = true;  // Network is strong - use it!
+    } else if (this.connections.length < 150) {
+      this.coreMode = false; // Network too weak - explore freely
     }
+    // FPS is irrelevant - pathways ARE the optimization
   }
   
   isSoulConnected(soul, soulSystem) {
@@ -480,8 +480,8 @@ class AxionSystem {
     this.connections = [];
     this.connectedSouls.clear();
     
-    // In core mode, limit the number of pathways
-    const maxPathways = this.coreMode ? 500 : 10000;
+    // In network mode, focus on strongest pathways
+    const maxPathways = this.coreMode ? CONFIG.performance.coreModePathwayLimit : 10000;
     
     for (const [key, trace] of this.pathTraces.entries()) {
       if (trace.strength > CONFIG.axions.visibilityThreshold) {
@@ -630,14 +630,12 @@ class PacketSystem {
       // Skip if this was the last target (avoid ping-pong)
       if (soul === this.packet.targetSoul) continue;
       
-      // In core mode, strongly prefer connected souls
+      // Always prefer pathways when they exist (neural routing)
       let connectionBonus = 0;
-      if (axionSystem && axionSystem.coreMode) {
+      if (axionSystem && axionSystem.enabled) {
         const isConnected = axionSystem.isSoulConnected(soul, soulSystem);
         if (isConnected) {
-          connectionBonus = 0.8; // Huge bonus for connected souls
-        } else {
-          connectionBonus = -0.5; // Penalty for non-connected souls
+          connectionBonus = 2.0; // STRONG preference for pathways
         }
       }
       
@@ -1027,14 +1025,14 @@ class SoulSystem {
     
     // Check if soul is charged up enough to emit sparks
     if (soul.activationLevel > CONFIG.sparks.emissionThreshold) {
-      // In core mode, only connected souls emit sparks
+      // In core mode, connected souls emit MORE sparks (efficiency!)
       const canEmit = !axionSystem || !axionSystem.coreMode || 
                       axionSystem.isSoulConnected(soul, this);
       
       if (canEmit) {
         const timeSinceLastSpark = frameCount - (soul.lastSparkEmission || 0);
         const emissionCooldown = axionSystem && axionSystem.coreMode 
-          ? CONFIG.sparks.emissionCooldown / CONFIG.performance.coreModeSparkReduction
+          ? CONFIG.sparks.emissionCooldown / CONFIG.performance.coreModeSparkReduction  // Shorter cooldown = MORE sparks
           : CONFIG.sparks.emissionCooldown;
           
         if (timeSinceLastSpark > emissionCooldown) {
@@ -1606,10 +1604,10 @@ const FractalSoulArray = () => {
           <div style={{ 
             marginTop: 4, 
             fontSize: '11px', 
-            color: 'rgba(255, 200, 50, 0.95)',
+            color: 'rgba(100, 255, 150, 0.95)',
             fontWeight: 'bold'
           }}>
-            🧠 CORE MODE: Network focused
+            🧠 NETWORK MODE: Pathways optimized
           </div>
         )}
         <div style={{ marginTop: 8, fontSize: '11px', opacity: 0.6 }}>
