@@ -3,161 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulator Test Suite</title>
+    <title>Fractal Reality Simulator</title>
+    
+    <!-- React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone@7.23.5/babel.min.js"></script>
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Recharts -->
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    
     <style>
         body {
-            font-family: monospace;
-            background: #1a1a1a;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
             color: #e8e8e8;
-            padding: 2rem;
         }
-        .test-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+        .loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            flex-direction: column;
             gap: 1rem;
-            margin-top: 2rem;
         }
-        .test-card {
-            background: #2a2a2a;
-            border: 1px solid #3a3a3a;
-            border-radius: 8px;
+        .spinner {
+            border: 3px solid rgba(100, 200, 255, 0.1);
+            border-top: 3px solid rgba(100, 200, 255, 0.8);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error {
+            color: #ef4444;
+            padding: 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .error pre {
+            background: rgba(0,0,0,0.5);
             padding: 1rem;
-        }
-        .test-card h3 {
-            margin: 0 0 0.5rem 0;
-            color: #64c8ff;
-        }
-        .test-link {
-            display: inline-block;
-            margin-top: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: #3a3a3a;
-            color: #64c8ff;
-            text-decoration: none;
-            border-radius: 4px;
+            text-align: left;
+            overflow: auto;
+            max-height: 400px;
             font-size: 12px;
-        }
-        .test-link:hover {
-            background: #4a4a4a;
-        }
-        .status {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 11px;
-            margin-left: 0.5rem;
-        }
-        .status.pending {
-            background: #4a4a2a;
-            color: #fbbf24;
-        }
-        .instructions {
-            background: #2a2a3a;
-            border: 1px solid #3a3a4a;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-top: 1rem;
         }
     </style>
 </head>
 <body>
-    <h1>🧪 Fractal Reality Simulator Test Suite</h1>
-    
-    <div class="instructions">
-        <h2 style="margin-top: 0;">Testing Instructions:</h2>
-        <ol style="line-height: 1.8;">
-            <li>Click each "Test" link below to open the simulator in a new tab</li>
-            <li>Verify the simulator loads without errors</li>
-            <li>Check the browser console (F12) for any errors</li>
-            <li>Verify interactive features work (if applicable)</li>
-        </ol>
-    </div>
-    
-    <div class="test-grid">
-        <div class="test-card">
-            <h3>Fractal_Reality.jsx</h3>
-            <span class="status pending">TEST REQUIRED</span>
-            <p style="font-size: 12px; color: #a0a0a0; margin: 0.5rem 0;">
-                Component: FractalSoulArray<br>
-                Uses: Canvas, animations<br>
-                Expected: 13-layer visualization
-            </p>
-            <a href="simulator.html?sim=Fractal_Reality.jsx" target="_blank" class="test-link">Test Simulator →</a>
-        </div>
-        
-        <div class="test-card">
-            <h3>Cam_Fractal_Tracker.tsx</h3>
-            <span class="status pending">TEST REQUIRED</span>
-            <p style="font-size: 12px; color: #a0a0a0; margin: 0.5rem 0;">
-                Component: WebcamFractalTracker<br>
-                Uses: Lucide icons, Recharts<br>
-                Expected: Webcam interface
-            </p>
-            <a href="simulator.html?sim=Cam_Fractal_Tracker.tsx" target="_blank" class="test-link">Test Simulator →</a>
-        </div>
-        
-        <div class="test-card">
-            <h3>Fractal_Fountain.tsx</h3>
-            <span class="status pending">TEST REQUIRED</span>
-            <p style="font-size: 12px; color: #a0a0a0; margin: 0.5rem 0;">
-                Component: FractalFountain<br>
-                Uses: Canvas, particles<br>
-                Expected: Zoom animation
-            </p>
-            <a href="simulator.html?sim=Fractal_Fountain.tsx" target="_blank" class="test-link">Test Simulator →</a>
-        </div>
-        
-        <div class="test-card">
-            <h3>Harmonic_Periodic_Table.tsx</h3>
-            <span class="status pending">TEST REQUIRED</span>
-            <p style="font-size: 12px; color: #a0a0a0; margin: 0.5rem 0;">
-                Component: HarmonicPeriodicTable<br>
-                Uses: Audio, Lucide icons<br>
-                Expected: Interactive table
-            </p>
-            <a href="simulator.html?sim=Harmonic_Periodic_Table.tsx" target="_blank" class="test-link">Test Simulator →</a>
-        </div>
-        
-        <div class="test-card">
-            <h3>Molecular_Composer.tsx</h3>
-            <span class="status pending">TEST REQUIRED</span>
-            <p style="font-size: 12px; color: #a0a0a0; margin: 0.5rem 0;">
-                Component: MolecularHarmonyComposer<br>
-                Uses: Canvas, Audio<br>
-                Expected: Molecule builder
-            </p>
-            <a href="simulator.html?sim=Molecular_Composer.tsx" target="_blank" class="test-link">Test Simulator →</a>
-        </div>
-        
-        <div class="test-card">
-            <h3>My_Pet_Fractal.tsx</h3>
-            <span class="status pending">TEST REQUIRED</span>
-            <p style="font-size: 12px; color: #a0a0a0; margin: 0.5rem 0;">
-                Component: FractalPetCell<br>
-                Uses: Canvas, touch events<br>
-                Expected: Interactive pet
-            </p>
-            <a href="simulator.html?sim=My_Pet_Fractal.tsx" target="_blank" class="test-link">Test Simulator →</a>
-        </div>
-        
-        <div class="test-card">
-            <h3>Singing_Learning_Fractal.tsx</h3>
-            <span class="status pending">TEST REQUIRED</span>
-            <p style="font-size: 12px; color: #a0a0a0; margin: 0.5rem 0;">
-                Component: EnhancedConsciousnessFractal<br>
-                Uses: Audio, Canvas<br>
-                Expected: Audio-reactive
-            </p>
-            <a href="simulator.html?sim=Singing_Learning_Fractal.tsx" target="_blank" class="test-link">Test Simulator →</a>
+    <div id="root">
+        <div class="loader">
+            <div class="spinner"></div>
+            <div style="color: #64c8ff;">Loading simulator...</div>
         </div>
     </div>
     
-    <div style="margin-top: 3rem; padding: 1.5rem; background: #2a2a3a; border-radius: 8px;">
-        <h3 style="margin-top: 0;">Quick Links:</h3>
-        <p>
-            <a href="simulators.html" class="test-link">Gallery Page</a>
-            <a href="index.html" class="test-link" style="margin-left: 0.5rem;">Index Page</a>
-        </p>
-    </div>
+    <script>
+        // Get the simulator filename from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const simFile = urlParams.get('sim');
+        
+        if (!simFile) {
+            document.getElementById('root').innerHTML = `
+                <div class="error">
+                    <h2>No simulator specified</h2>
+                    <p>Please provide a simulator file using ?sim=filename.jsx</p>
+                    <p style="margin-top: 1rem;">
+                        <a href="./simulators.html" style="color: #64c8ff;">← Back to simulator gallery</a>
+                    </p>
+                </div>
+            `;
+        } else {
+            loadAndRunSimulator(simFile);
+        }
+        
+        async function loadAndRunSimulator(filename) {
+            try {
+                // Update page title
+                document.title = filename.replace(/\.(jsx|tsx)$/, '').replace(/_/g, ' ') + ' - Fractal Reality';
+                
+                // Fetch the JSX/TSX file
+                const response = await fetch(`./simulations/${filename}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to load ${filename}. Make sure it exists in the simulations/ directory.`);
+                }
+                
+                let jsxCode = await response.text();
+                
+                // Remove all import statements
+                jsxCode = jsxCode.replace(/^import\s+.*?from\s+['"].*?['"];?\s*$/gm, '');
+                
+                // Remove export statements
+                jsxCode = jsxCode.replace(/^export\s+default\s+/gm, '');
+                jsxCode = jsxCode.replace(/^export\s+/gm, '');
+                
+                // Extract component name - look for the main export or last component
+                let componentName = 'App';
+                
+                // Try to find: export default ComponentName or export default function ComponentName
+                const exportMatch = jsxCode.match(/(?:export\s+default\s+(?:function\s+)?(\w+)|^(?:const|let|var|function)\s+([A-Z]\w+))/m);
+                if (exportMatch) {
+                    componentName = exportMatch[1] || exportMatch[2];
+                }
+                
+                // Find all component-like names (capital letter start)
+                const componentMatches = [...jsxCode.matchAll(/(?:const|let|var|function)\s+([A-Z]\w+)/g)];
+                if (componentMatches.length > 0) {
+                    // Use the last one found (usually the main component)
+                    componentName = componentMatches[componentMatches.length - 1][1];
+                }
+                
+                console.log('Detected component name:', componentName);
+                console.log('File:', filename);
+                
+                // Create a script element to hold the transpiled code
+                const script = document.createElement('script');
+                script.type = 'text/babel';
+                script.setAttribute('data-type', 'module');
+                script.setAttribute('data-presets', 'react');
+                
+                // Create the code that will run after Babel transpilation
+                script.textContent = `
+                    // Make Recharts globally available
+                    const {
+                        LineChart, BarChart, PieChart, AreaChart, ScatterChart, RadarChart,
+                        Line, Bar, Pie, Area, Scatter, Radar,
+                        XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, 
+                        ReferenceLine, ReferenceDot, ReferenceArea, Brush, ResponsiveContainer
+                    } = window.Recharts || {};
+                    
+                    // Create Lucide icon components (they render as simple SVG placeholders)
+                    const createIcon = (name) => (props) => {
+                        return React.createElement('svg', {
+                            xmlns: 'http://www.w3.org/2000/svg',
+                            width: props?.size || 24,
+                            height: props?.size || 24,
+                            viewBox: '0 0 24 24',
+                            fill: 'none',
+                            stroke: 'currentColor',
+                            strokeWidth: 2,
+                            strokeLinecap: 'round',
+                            strokeLinejoin: 'round',
+                            className: props?.className,
+                            style: props?.style,
+                            ...props
+                        }, React.createElement('title', null, name));
+                    };
+                    
+                    // Common Lucide icons
+                    const Camera = createIcon('Camera');
+                    const Square = createIcon('Square');
+                    const Activity = createIcon('Activity');
+                    const Circle = createIcon('Circle');
+                    const Play = createIcon('Play');
+                    const Pause = createIcon('Pause');
+                    const Settings = createIcon('Settings');
+                    const Info = createIcon('Info');
+                    const Heart = createIcon('Heart');
+                    const Star = createIcon('Star');
+                    const Music = createIcon('Music');
+                    const Volume2 = createIcon('Volume2');
+                    const Mic = createIcon('Mic');
+                    const Download = createIcon('Download');
+                    const Upload = createIcon('Upload');
+                    const RefreshCw = createIcon('RefreshCw');
+                    const ChevronLeft = createIcon('ChevronLeft');
+                    const ChevronRight = createIcon('ChevronRight');
+                    const Plus = createIcon('Plus');
+                    const Minus = createIcon('Minus');
+                    const X = createIcon('X');
+                    
+                    ${jsxCode}
+                    
+                    // Try to render the component
+                    try {
+                        const ComponentToRender = typeof ${componentName} !== 'undefined' ? ${componentName} : null;
+                        
+                        if (!ComponentToRender) {
+                            throw new Error('Component "${componentName}" not found. Available: ' + 
+                                Object.keys(window).filter(k => k[0] === k[0].toUpperCase()).join(', '));
+                        }
+                        
+                        const root = ReactDOM.createRoot(document.getElementById('root'));
+                        root.render(React.createElement(ComponentToRender));
+                        
+                        console.log('✓ Simulator loaded successfully:', '${filename}');
+                    } catch (error) {
+                        console.error('Rendering error:', error);
+                        document.getElementById('root').innerHTML = \`
+                            <div class="error">
+                                <h2>Failed to render simulator</h2>
+                                <p style="margin-top: 1rem; color: #fca5a5;">\${error.message}</p>
+                                <p style="margin-top: 1rem; font-size: 14px; color: #94a3b8;">
+                                    Component: ${componentName}<br>
+                                    File: ${filename}
+                                </p>
+                                <details style="margin-top: 1.5rem;">
+                                    <summary style="cursor: pointer; color: #60a5fa;">View Error Details</summary>
+                                    <pre>\${error.stack || 'No stack trace available'}</pre>
+                                </details>
+                                <p style="margin-top: 1.5rem;">
+                                    <a href="./simulators.html" style="color: #64c8ff;">← Back to gallery</a>
+                                </p>
+                            </div>
+                        \`;
+                        throw error;
+                    }
+                `;
+                
+                // Append the script to trigger Babel transpilation and execution
+                document.body.appendChild(script);
+                
+            } catch (error) {
+                console.error('Loading error:', error);
+                document.getElementById('root').innerHTML = `
+                    <div class="error">
+                        <h2>Failed to load simulator</h2>
+                        <p style="color: #fca5a5;">${error.message}</p>
+                        <p style="margin-top: 1rem; font-size: 14px; color: #94a3b8;">
+                            File: ${filename}
+                        </p>
+                        <details style="margin-top: 1.5rem;">
+                            <summary style="cursor: pointer; color: #60a5fa;">View Error Details</summary>
+                            <pre>${error.stack || 'No stack trace available'}</pre>
+                        </details>
+                        <p style="margin-top: 1.5rem;">
+                            <a href="./simulators.html" style="color: #64c8ff;">← Back to gallery</a>
+                        </p>
+                    </div>
+                `;
+            }
+        }
+    </script>
 </body>
 </html>
