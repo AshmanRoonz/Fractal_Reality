@@ -5,4 +5,3 @@ Harmonic_Periodic_Table.tsx
 Molecular_Composer.tsx
 Fractal_Fountain.tsx
 Cam_Fractal_Tracker.tsx
-Fractal_Fountain.tsx
