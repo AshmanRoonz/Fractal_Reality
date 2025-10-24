@@ -4,10 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Demonstrations - Fractal Reality</title>
+    
+    <!-- React -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX/TSX transformation -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Recharts for charts -->
+    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
+    
+    <!-- Lucide React Icons -->
+    <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
         
@@ -37,7 +50,7 @@
         
         .simulation-container {
             width: 100%;
-            height: 100vh;
+            min-height: 100vh;
         }
         
         .sim-button {
@@ -50,11 +63,17 @@
             transition: all 0.2s;
             font-family: 'IBM Plex Mono', monospace;
             font-size: 13px;
+            width: 100%;
         }
         
         .sim-button:hover {
             background: rgba(255,255,255,0.05);
             border-color: rgba(255,255,255,0.15);
+        }
+
+        .sim-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -64,97 +83,62 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
+        // List of all available simulations
+        const SIMULATIONS = [
+            { file: 'Fractal_Reality.jsx', name: 'Fractal Reality', needsFiles: false },
+            { file: 'Harmonic_Periodic_Table.tsx', name: 'Harmonic Periodic Table', needsFiles: false },
+            { file: 'Molecular_Composer.tsx', name: 'Molecular Composer', needsFiles: false },
+            { file: 'My_Pet_Fractal.tsx', name: 'My Pet Fractal', needsFiles: false },
+            { file: 'Singing_Learning_Fractal.tsx', name: 'Singing Learning Fractal', needsFiles: false },
+            { file: 'Cam_Fractal_Tracker.tsx', name: 'Webcam Fractal Tracker', needsFiles: false },
+            { file: 'Fractal_Fountain.tsx', name: 'Fractal Fountain', needsFiles: false }
+        ];
+
         const SimulationRunner = () => {
-            const [simulations, setSimulations] = useState([]);
             const [selectedSim, setSelectedSim] = useState(null);
             const [simCode, setSimCode] = useState('');
             const [error, setError] = useState(null);
-            const [loading, setLoading] = useState(true);
+            const [loading, setLoading] = useState(false);
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const autoLoad = urlParams.get('auto');
-
+            // Check for auto-load from URL
             useEffect(() => {
-                const fetchSimulations = async () => {
-                    try {
-                        const response = await fetch('./sims.md');
-                        if (!response.ok) {
-                            throw new Error('Could not find sims.md file. Please create it in the root directory.');
-                        }
-                        
-                        const markdown = await response.text();
-                        const lines = markdown.split('\n');
-                        const simFiles = [];
-                        
-                        for (const line of lines) {
-                            const trimmed = line.trim();
-                            
-                            if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) {
-                                continue;
-                            }
-                            
-                            let filename = null;
-                            
-                            // Markdown link format
-                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.(tsx|jsx))\)/);
-                            if (linkMatch) {
-                                filename = linkMatch[1];
-                            }
-                            // List format
-                            else if (trimmed.match(/^[-*]\s+/)) {
-                                const listMatch = trimmed.match(/[-*]\s+(.*?\.(tsx|jsx))/);
-                                if (listMatch) {
-                                    filename = listMatch[1];
-                                }
-                            }
-                            // Plain format - UPDATED to support both .tsx and .jsx
-                            else if (trimmed.match(/\.(tsx|jsx)$/)) {
-                                filename = trimmed;
-                            }
-                            
-                            if (filename) {
-                                filename = filename.replace(/^simulations\//, '');
-                                simFiles.push(filename);
-                            }
-                        }
-                        
-                        if (simFiles.length === 0) {
-                            throw new Error('No .tsx or .jsx files found in sims.md. Please list your simulation files.');
-                        }
-                        
-                        setSimulations(simFiles);
-                        setLoading(false);
-                        
-                        if (autoLoad && simFiles.includes(autoLoad)) {
-                            loadSimulation(autoLoad);
-                        }
-                    } catch (err) {
-                        console.error('Error loading simulations:', err);
-                        setError(err.message || 'Could not load sims.md');
-                        setLoading(false);
+                const urlParams = new URLSearchParams(window.location.search);
+                const autoLoad = urlParams.get('auto');
+                if (autoLoad) {
+                    const sim = SIMULATIONS.find(s => 
+                        s.file === autoLoad || 
+                        s.file.replace(/\.(tsx|jsx)$/, '') === autoLoad
+                    );
+                    if (sim) {
+                        loadSimulation(sim);
                     }
-                };
-
-                fetchSimulations();
+                }
             }, []);
 
-            const loadSimulation = async (filename) => {
+            const loadSimulation = async (sim) => {
                 try {
                     setError(null);
                     setLoading(true);
                     
-                    const response = await fetch(`./simulations/${filename}`);
+                    // Try to fetch from simulations folder
+                    let response = await fetch(`./simulations/${sim.file}`);
+                    
+                    // If not found, try root directory
                     if (!response.ok) {
-                        throw new Error(`Failed to load ${filename}`);
+                        response = await fetch(`./${sim.file}`);
+                    }
+                    
+                    if (!response.ok) {
+                        throw new Error(`Could not load ${sim.file}. Make sure it's in ./simulations/ or root directory.`);
                     }
                     
                     const code = await response.text();
                     setSimCode(code);
-                    setSelectedSim(filename);
+                    setSelectedSim(sim);
                     setLoading(false);
                 } catch (err) {
                     console.error('Error loading simulation:', err);
-                    setError(`Error loading ${filename}: ${err.message}`);
+                    setError(err.message);
                     setLoading(false);
                 }
             };
@@ -163,124 +147,60 @@
                 if (!simCode) return null;
 
                 try {
+                    // Process TypeScript/JSX code
                     let processedCode = simCode;
-                    
-                    // Remove all import statements and replace with available globals
-                    processedCode = processedCode.replace(/import\s+React\s*,?\s*\{[^}]*\}\s+from\s+['"]react['"];?\s*/g, '');
-                    processedCode = processedCode.replace(/import\s+React\s+from\s+['"]react['"];?\s*/g, '');
-                    processedCode = processedCode.replace(/import\s+\{[^}]*\}\s+from\s+['"]react['"];?\s*/g, '');
-                    
-                    // Remove lucide-react imports (create simple mock icons)
-                    const lucideMatch = processedCode.match(/import\s+\{([^}]+)\}\s+from\s+['"]lucide-react['"]/);
-                    if (lucideMatch) {
-                        const icons = lucideMatch[1].split(',').map(i => i.trim());
-                        const mockIcons = icons.map(icon => 
-                            `const ${icon} = () => null;`
-                        ).join('\n');
-                        processedCode = processedCode.replace(/import\s+\{[^}]+\}\s+from\s+['"]lucide-react['"];?\s*/g, mockIcons);
-                    }
-                    
-                    processedCode = processedCode.replace(/import\s+.*?from\s+['"].*?['"];?\s*/g, '');
-                    
-                    // Remove export statements
-                    processedCode = processedCode.replace(/export\s+default\s+/g, '');
-                    processedCode = processedCode.replace(/export\s+/g, '');
 
-                    // Determine if it's JSX or TSX
-                    const isTSX = selectedSim.endsWith('.tsx');
-
-                    // Transform code with appropriate presets
-                    const presets = [
-                        ['react', { 
-                            runtime: 'classic',
-                            pragma: 'React.createElement'
-                        }]
-                    ];
+                    // Remove all import statements
+                    processedCode = processedCode.replace(/^import\s+.*?from\s+['"].*?['"];?\s*$/gm, '');
+                    processedCode = processedCode.replace(/^import\s+['"].*?['"];?\s*$/gm, '');
                     
-                    if (isTSX) {
-                        presets.push(['typescript', {
-                            isTSX: true,
-                            allExtensions: true
-                        }]);
-                    }
+                    // Remove export statements but keep the declaration
+                    processedCode = processedCode.replace(/^export\s+default\s+/gm, '');
+                    processedCode = processedCode.replace(/^export\s+/gm, '');
 
+                    // Handle TypeScript type annotations
+                    // Remove interface and type definitions
+                    processedCode = processedCode.replace(/^interface\s+\w+\s*{[^}]*}/gm, '');
+                    processedCode = processedCode.replace(/^type\s+\w+\s*=\s*[^;]+;/gm, '');
+                    
+                    // Remove type annotations from variables
+                    processedCode = processedCode.replace(/:\s*\w+(\[\]|\<[^>]+\>)?(?=\s*[=,\)])/g, '');
+                    
+                    // Remove return type annotations from functions
+                    processedCode = processedCode.replace(/\):\s*\w+(\[\]|\<[^>]+\>)?(?=\s*[{=>])/g, ')');
+                    
+                    // Remove generic type parameters
+                    processedCode = processedCode.replace(/<[A-Z]\w*(\s*,\s*[A-Z]\w*)*>/g, '');
+                    
+                    // Remove 'as' type assertions
+                    processedCode = processedCode.replace(/\s+as\s+\w+/g, '');
+
+                    // Transform with Babel
                     const transformed = Babel.transform(processedCode, {
-                        filename: selectedSim,
-                        presets: presets
+                        presets: ['react'],
+                        filename: selectedSim.file
                     }).code;
 
-                    // Try to find the main React component
-                    // Strategy: Find the last component that starts with capital letter AND contains JSX
-                    const componentMatches = [];
-                    
-                    // Pattern 1: const Component = () => { ... return ( or return <
-                    const arrowPattern = /(?:const|let|var)\s+([A-Z]\w+)\s*=\s*\([^)]*\)\s*=>\s*{/g;
-                    let match;
-                    while ((match = arrowPattern.exec(processedCode)) !== null) {
-                        const name = match[1];
-                        const startPos = match.index;
-                        // Check if this function contains JSX (look for 'return <' or 'return (')
-                        const afterFunc = processedCode.slice(startPos, startPos + 1000);
-                        if (afterFunc.includes('return <') || afterFunc.includes('return (')) {
-                            componentMatches.push({ name, position: startPos });
-                        }
-                    }
-                    
-                    // Pattern 2: function Component() { ... return <
-                    const funcPattern = /function\s+([A-Z]\w+)\s*\([^)]*\)\s*{/g;
-                    while ((match = funcPattern.exec(processedCode)) !== null) {
-                        const name = match[1];
-                        const startPos = match.index;
-                        const afterFunc = processedCode.slice(startPos, startPos + 1000);
-                        if (afterFunc.includes('return <') || afterFunc.includes('return (')) {
-                            componentMatches.push({ name, position: startPos });
-                        }
-                    }
-                    
-                    // Sort by position and take the LAST one (usually the main component)
-                    componentMatches.sort((a, b) => b.position - a.position);
-                    
-                    let componentName = 'App'; // Default fallback
-                    if (componentMatches.length > 0) {
-                        componentName = componentMatches[0].name;
-                    }
-                    
-                    // Additional fallback: if we found nothing, look for common names
-                    if (componentMatches.length === 0) {
-                        const commonNames = ['FractalSoulArray', 'FractalRealityLanding', 'App', 'Main', 'Index'];
-                        for (const name of commonNames) {
-                            if (processedCode.includes(`const ${name}`) || processedCode.includes(`function ${name}`)) {
-                                componentName = name;
-                                break;
-                            }
-                        }
-                    }
+                    // Find the component name
+                    const componentMatch = transformed.match(/(?:function|const|class)\s+([A-Z]\w*)/);
+                    const componentName = componentMatch ? componentMatch[1] : 'UnknownComponent';
 
-                    // Wrap in IIFE with proper scope
+                    // Create a safe execution environment with all dependencies
                     const wrappedCode = `
-                        return (function() {
-                            const React = arguments[0];
-                            const useState = arguments[1];
-                            const useEffect = arguments[2];
-                            const useRef = arguments[3];
-                            const useMemo = arguments[4];
-                            const useCallback = arguments[5];
-                            const useReducer = arguments[6];
-                            const useContext = arguments[7];
+                        return (function(React, useState, useEffect, useRef, useMemo, useCallback, useReducer, useContext, Recharts, LucideReact) {
+                            const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, BarChart, Bar, ScatterChart, Scatter } = Recharts || {};
+                            const { Camera, Square, Activity, Play, Pause, RotateCcw, Volume2, VolumeX, ChevronLeft, ChevronRight, Plus, Minus } = LucideReact || {};
                             
                             ${transformed}
                             
-                            // Try to return the component
-                            if (typeof ${componentName} !== 'undefined') {
-                                return ${componentName};
-                            }
-                            
-                            throw new Error('Component "${componentName}" not found');
+                            return ${componentName} || (() => {
+                                throw new Error('Component "${componentName}" not found');
+                            });
                         }).apply(null, arguments);
                     `;
 
+                    // Execute and get component
                     const createComponent = new Function(wrappedCode);
-
                     const SimComponent = createComponent(
                         React,
                         React.useState,
@@ -289,7 +209,9 @@
                         React.useMemo,
                         React.useCallback,
                         React.useReducer,
-                        React.useContext
+                        React.useContext,
+                        window.Recharts,
+                        window.lucideReact
                     );
 
                     if (!SimComponent || typeof SimComponent !== 'function') {
@@ -299,22 +221,32 @@
                     return React.createElement(SimComponent);
                 } catch (err) {
                     console.error('Error rendering simulation:', err);
+                    console.log('Processed code:', processedCode);
                     return (
                         <div style={{padding: '3rem', background: '#0a0a0a', color: '#f87171', minHeight: '100vh'}}>
-                            <h3 className="mono" style={{fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem'}}>Rendering Error</h3>
+                            <h3 className="mono" style={{fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem'}}>
+                                Rendering Error
+                            </h3>
                             <div style={{background: 'rgba(0,0,0,0.5)', padding: '1rem', marginBottom: '1rem'}}>
                                 <p className="mono" style={{fontSize: '13px'}}>{err.message}</p>
                             </div>
                             <details style={{marginTop: '1.5rem'}}>
-                                <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Stack Trace</summary>
-                                <pre className="mono" style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap'}}>{err.stack}</pre>
+                                <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>
+                                    Stack Trace
+                                </summary>
+                                <pre className="mono" style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap'}}>
+                                    {err.stack}
+                                </pre>
                             </details>
                             <div style={{marginTop: '2rem', padding: '1rem', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)'}}>
-                                <p className="mono" style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '13px'}}>Common Issues:</p>
+                                <p className="mono" style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '13px'}}>
+                                    Common Issues:
+                                </p>
                                 <ul className="mono" style={{fontSize: '12px', lineHeight: '1.6', paddingLeft: '1.5rem', listStyle: 'disc'}}>
-                                    <li>Make sure the component is properly defined</li>
-                                    <li>Check that all hooks are used correctly</li>
+                                    <li>Make sure the file is in ./simulations/ or root directory</li>
+                                    <li>Check that all external dependencies are available</li>
                                     <li>Verify there are no syntax errors</li>
+                                    <li>Open browser console (F12) for more details</li>
                                 </ul>
                             </div>
                         </div>
@@ -334,38 +266,50 @@
                                     <p className="text-sm mono" style={{color: '#808080'}}>
                                         Fractal Reality Framework
                                     </p>
+                                    <p className="text-xs mono mt-2" style={{color: '#606060'}}>
+                                        View on <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" rel="noopener" style={{color: '#64c8ff', textDecoration: 'underline'}}>GitHub</a>
+                                    </p>
                                 </div>
 
-                                {loading ? (
-                                    <div className="text-center" style={{color: '#808080'}}>
-                                        <div className="mono text-sm">Loading...</div>
-                                    </div>
-                                ) : error ? (
-                                    <div style={{border: '1px solid rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.05)', padding: '2rem', maxWidth: '600px'}}>
-                                        <p style={{color: '#f87171', marginBottom: '1rem'}}>{error}</p>
-                                    </div>
-                                ) : simulations.length === 0 ? (
-                                    <div style={{border: '1px solid rgba(234, 179, 8, 0.3)', background: 'rgba(234, 179, 8, 0.05)', padding: '2rem', maxWidth: '600px'}}>
-                                        <p style={{color: '#fbbf24'}}>No simulations found</p>
-                                    </div>
-                                ) : (
-                                    <div style={{maxWidth: '600px'}}>
-                                        <p className="text-xs mono uppercase tracking-wider mb-4" style={{color: '#606060'}}>
-                                            Select simulation
-                                        </p>
-                                        <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-                                            {simulations.map((sim, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => loadSimulation(sim)}
-                                                    className="sim-button"
-                                                >
-                                                    {sim.replace(/\.(tsx|jsx)$/, '')}
-                                                </button>
-                                            ))}
-                                        </div>
+                                {error && (
+                                    <div style={{border: '1px solid rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.05)', padding: '2rem', maxWidth: '600px', marginBottom: '2rem'}}>
+                                        <p style={{color: '#f87171', marginBottom: '0.5rem', fontWeight: 'bold'}}>Error</p>
+                                        <p style={{color: '#fca5a5', fontSize: '13px'}} className="mono">{error}</p>
                                     </div>
                                 )}
+
+                                <div style={{maxWidth: '600px'}}>
+                                    <p className="text-xs mono uppercase tracking-wider mb-4" style={{color: '#606060'}}>
+                                        Select Simulation ({SIMULATIONS.length} available)
+                                    </p>
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                                        {SIMULATIONS.map((sim, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => loadSimulation(sim)}
+                                                className="sim-button"
+                                                disabled={loading}
+                                            >
+                                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                                    <span>{sim.name}</span>
+                                                    <span style={{fontSize: '10px', color: '#606060'}}>{sim.file}</span>
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div style={{marginTop: '3rem', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', maxWidth: '600px'}}>
+                                    <p className="mono" style={{fontSize: '12px', color: '#808080', marginBottom: '1rem'}}>
+                                        <strong style={{color: '#e8e8e8'}}>Setup Instructions:</strong>
+                                    </p>
+                                    <ol className="mono" style={{fontSize: '11px', color: '#808080', lineHeight: '1.8', paddingLeft: '1.5rem'}}>
+                                        <li>Place all .tsx and .jsx files in a <code style={{background: 'rgba(255,255,255,0.1)', padding: '2px 6px'}}>./simulations/</code> folder</li>
+                                        <li>Or place them in the same directory as this HTML file</li>
+                                        <li>Open this HTML file in a web browser</li>
+                                        <li>Click on any simulation to run it</li>
+                                    </ol>
+                                </div>
                             </div>
                         </div>
                     ) : (
@@ -378,35 +322,42 @@
                                 }}
                                 className="mono"
                                 style={{
-                                    position: 'absolute',
+                                    position: 'fixed',
                                     top: '1.5rem',
                                     left: '1.5rem',
-                                    zIndex: 50,
+                                    zIndex: 9999,
                                     background: 'white',
                                     color: 'black',
                                     padding: '0.5rem 1rem',
                                     fontSize: '11px',
                                     border: 'none',
                                     cursor: 'pointer',
-                                    transition: 'background 0.2s'
+                                    transition: 'background 0.2s',
+                                    fontWeight: 'bold'
                                 }}
                                 onMouseOver={(e) => e.target.style.background = '#ddd'}
                                 onMouseOut={(e) => e.target.style.background = 'white'}
                             >
-                                ← BACK
+                                ← BACK TO MENU
                             </button>
                             
                             {loading ? (
                                 <div className="flex items-center justify-center h-screen" style={{background: '#0a0a0a'}}>
                                     <div className="text-center">
-                                        <div className="mono" style={{color: '#e8e8e8', fontSize: '16px', marginBottom: '1rem'}}>Loading</div>
-                                        <div className="mono" style={{color: '#606060', fontSize: '13px'}}>{selectedSim}</div>
+                                        <div className="mono" style={{color: '#e8e8e8', fontSize: '16px', marginBottom: '1rem'}}>
+                                            Loading Simulation
+                                        </div>
+                                        <div className="mono" style={{color: '#606060', fontSize: '13px'}}>
+                                            {selectedSim.name}
+                                        </div>
                                     </div>
                                 </div>
                             ) : error ? (
                                 <div className="flex items-center justify-center h-screen p-8" style={{background: '#0a0a0a'}}>
                                     <div style={{maxWidth: '600px', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '2rem'}}>
-                                        <h3 style={{fontSize: '18px', fontWeight: 'bold', color: '#f87171', marginBottom: '1rem'}}>Error</h3>
+                                        <h3 style={{fontSize: '18px', fontWeight: 'bold', color: '#f87171', marginBottom: '1rem'}}>
+                                            Error Loading Simulation
+                                        </h3>
                                         <p className="mono" style={{color: '#fca5a5', fontSize: '13px'}}>{error}</p>
                                     </div>
                                 </div>
