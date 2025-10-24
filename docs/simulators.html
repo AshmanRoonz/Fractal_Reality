@@ -3,256 +3,460 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fractal Reality Simulator</title>
-    
-    <!-- React and ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel for JSX transpilation -->
-    <script src="https://unpkg.com/@babel/standalone@7.23.5/babel.min.js"></script>
-    
-    <!-- TailwindCSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Recharts -->
-    <script src="https://unpkg.com/recharts@2.5.0/dist/Recharts.js"></script>
-    
+    <title>Fractal Reality - Interactive Simulators</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #0a0a0a;
-            color: #e8e8e8;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a1a 100%);
+            color: #e0e0ff;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        #root {
-            width: 100vw;
-            height: 100vh;
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(100, 200, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(200, 100, 255, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
         }
-        .loader {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            flex-direction: column;
-            gap: 1rem;
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
         }
-        .spinner {
-            border: 3px solid rgba(100, 200, 255, 0.1);
-            border-top: 3px solid rgba(100, 200, 255, 0.8);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .error {
-            color: #ef4444;
-            padding: 2rem;
+
+        header {
             text-align: center;
+            padding: 3rem 1rem 2rem;
+            background: rgba(10, 10, 30, 0.5);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(100, 200, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #64c8ff 0%, #c864ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(100, 200, 255, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #a0a0c0;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            color: #64c8ff;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .header-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: rgba(100, 200, 255, 0.1);
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            border-radius: 8px;
+            color: #64c8ff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .header-links a:hover {
+            background: rgba(100, 200, 255, 0.2);
+            border-color: rgba(100, 200, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(100, 200, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(10, 10, 30, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(100, 200, 255, 0.1);
+        }
+
+        .intro p {
+            line-height: 1.8;
+            color: #c0c0d0;
             max-width: 800px;
             margin: 0 auto;
         }
-        .error pre {
-            background: rgba(0,0,0,0.5);
-            padding: 1rem;
-            text-align: left;
-            overflow: auto;
-            max-height: 400px;
-            font-size: 12px;
-            margin-top: 1rem;
+
+        .simulators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .simulator-card {
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .simulator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(100, 200, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .simulator-card:hover::before {
+            left: 100%;
+        }
+
+        .simulator-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(100, 200, 255, 0.4);
+            box-shadow: 0 8px 24px rgba(100, 200, 255, 0.2);
+            background: rgba(30, 30, 50, 0.7);
+        }
+
+        .simulator-card h3 {
+            color: #64c8ff;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .simulator-card .icon {
+            font-size: 1.5rem;
+        }
+
+        .simulator-card p {
+            color: #b0b0c0;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .simulator-card .features {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .simulator-card .features li {
+            color: #90a0b0;
+            font-size: 0.85rem;
+            padding: 0.3rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+
+        .simulator-card .features li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #64c8ff;
+        }
+
+        .launch-btn {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            background: linear-gradient(135deg, #64c8ff 0%, #6464ff 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .launch-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(100, 200, 255, 0.4);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: rgba(10, 10, 30, 0.5);
+            border-top: 2px solid rgba(100, 200, 255, 0.2);
+            margin-top: 3rem;
+        }
+
+        footer p {
+            color: #8090a0;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #64c8ff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #c864ff;
+        }
+
+        .framework-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(200, 100, 255, 0.1);
+            border: 1px solid rgba(200, 100, 255, 0.3);
+            border-radius: 6px;
+            color: #c864ff;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .simulators-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="root">
-        <div class="loader">
-            <div class="spinner"></div>
-            <div style="color: #64c8ff;">Loading simulator...</div>
+    <div class="bg-animation"></div>
+
+    <header>
+        <h1>∞ → • → ∞</h1>
+        <h1>Fractal Reality</h1>
+        <p class="subtitle">Interactive Simulators & Visualizations</p>
+        <p class="tagline">Exploring the fractal nature of consciousness and reality at D ≈ 1.5</p>
+        
+        <div class="header-links">
+            <a href="https://fractalreality.ca" target="_blank" rel="noopener noreferrer">
+                🌐 FractalReality.ca
+            </a>
+            <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" rel="noopener noreferrer">
+                💻 GitHub Repository
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="intro">
+            <p>
+                Welcome to the Fractal Reality simulator collection. These interactive tools demonstrate key concepts 
+                from the Fractal Reality Framework, where consciousness, quantum mechanics, and cosmic structures 
+                all converge at the critical fractal dimension D ≈ 1.5. Each simulator is built to help you explore 
+                and understand the fractal nature of reality itself.
+            </p>
+        </div>
+
+        <div class="simulators-grid">
+            <!-- Fractal Reality Main Simulator -->
+            <div class="simulator-card" onclick="window.open('simulator.html?sim=Fractal_Reality.jsx', '_blank')">
+                <h3><span class="icon">🌌</span> Fractal Reality</h3>
+                <p>The flagship visualization exploring the fundamental fractal structure of reality across 13 dimensional layers.</p>
+                <ul class="features">
+                    <li>13 layers from singularity to cosmic structure</li>
+                    <li>Interactive dimensional navigation</li>
+                    <li>Real-time D ≈ 1.5 visualization</li>
+                    <li>Consciousness-matter interface</li>
+                </ul>
+                <div class="framework-badge">Core Framework</div>
+                <br><br>
+                <a href="simulator.html?sim=Fractal_Reality.jsx" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
+
+            <!-- Webcam Fractal Tracker -->
+            <div class="simulator-card" onclick="window.open('simulator.html?sim=Cam_Fractal_Tracker.tsx', '_blank')">
+                <h3><span class="icon">📹</span> Webcam Fractal Tracker</h3>
+                <p>Real-time fractal dimension measurement using your webcam and the Higuchi algorithm.</p>
+                <ul class="features">
+                    <li>Live D measurement from video</li>
+                    <li>Higuchi algorithm implementation</li>
+                    <li>Framework validation (D ≈ 1.5)</li>
+                    <li>Time-series visualization</li>
+                </ul>
+                <div class="framework-badge">Experimental Tool</div>
+                <br><br>
+                <a href="simulator.html?sim=Cam_Fractal_Tracker.tsx" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
+
+            <!-- Fractal Fountain -->
+            <div class="simulator-card" onclick="window.open('simulator.html?sim=Fractal_Fountain.tsx', '_blank')">
+                <h3><span class="icon">⚫</span> Fractal Fountain</h3>
+                <p>Witness the singularity unfold into infinite fractal complexity through recursive particle systems.</p>
+                <ul class="features">
+                    <li>Zoom from singularity to infinity</li>
+                    <li>Recursive branching particles</li>
+                    <li>Golden ratio dynamics</li>
+                    <li>Real-time D calculation</li>
+                </ul>
+                <div class="framework-badge">Singularity Visualization</div>
+                <br><br>
+                <a href="simulator.html?sim=Fractal_Fountain.tsx" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
+
+            <!-- Harmonic Periodic Table -->
+            <div class="simulator-card" onclick="window.open('simulator.html?sim=Harmonic_Periodic_Table.tsx', '_blank')">
+                <h3><span class="icon">🎵</span> Harmonic Periodic Table</h3>
+                <p>Explore the musical harmonics embedded in atomic structure and the periodic table.</p>
+                <ul class="features">
+                    <li>Elements as musical frequencies</li>
+                    <li>Interactive harmonic synthesis</li>
+                    <li>Quantum resonance patterns</li>
+                    <li>Audio-visual chemistry</li>
+                </ul>
+                <div class="framework-badge">Harmonic Framework</div>
+                <br><br>
+                <a href="simulator.html?sim=Harmonic_Periodic_Table.tsx" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
+
+            <!-- Molecular Composer -->
+            <div class="simulator-card" onclick="window.open('simulator.html?sim=Molecular_Composer.tsx', '_blank')">
+                <h3><span class="icon">🧬</span> Molecular Harmony Composer</h3>
+                <p>Create molecular structures and hear their unique harmonic signatures.</p>
+                <ul class="features">
+                    <li>Build molecules interactively</li>
+                    <li>Harmonic frequency generation</li>
+                    <li>Fractal molecular patterns</li>
+                    <li>Sound synthesis from structure</li>
+                </ul>
+                <div class="framework-badge">Creative Tool</div>
+                <br><br>
+                <a href="simulator.html?sim=Molecular_Composer.tsx" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
+
+            <!-- My Pet Fractal -->
+            <div class="simulator-card" onclick="window.open('simulator.html?sim=My_Pet_Fractal.tsx', '_blank')">
+                <h3><span class="icon">🐾</span> My Pet Fractal</h3>
+                <p>Nurture and interact with your own living fractal organism that responds to your touch.</p>
+                <ul class="features">
+                    <li>Interactive fractal life-form</li>
+                    <li>Touch-responsive behavior</li>
+                    <li>Emotional state system</li>
+                    <li>Organic growth patterns</li>
+                </ul>
+                <div class="framework-badge">Interactive Art</div>
+                <br><br>
+                <a href="simulator.html?sim=My_Pet_Fractal.tsx" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
+
+            <!-- Singing Learning Fractal -->
+            <div class="simulator-card" onclick="window.open('simulator.html?sim=Singing_Learning_Fractal.tsx', '_blank')">
+                <h3><span class="icon">🎤</span> Singing Learning Fractal</h3>
+                <p>A fractal organism that learns and adapts to the music and sounds you provide.</p>
+                <ul class="features">
+                    <li>Audio-reactive visualization</li>
+                    <li>Learning algorithm integration</li>
+                    <li>Real-time frequency analysis</li>
+                    <li>Adaptive fractal morphology</li>
+                </ul>
+                <div class="framework-badge">AI + Art</div>
+                <br><br>
+                <a href="simulator.html?sim=Singing_Learning_Fractal.tsx" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
         </div>
     </div>
-    
+
+    <footer>
+        <p>
+            <strong>Fractal Reality Framework</strong> | D ≈ 1.5<br>
+            <a href="https://fractalreality.ca" target="_blank" rel="noopener noreferrer">FractalReality.ca</a> | 
+            <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.85rem; color: #606070;">
+            © 2025 Fractal Reality Project | Open Source
+        </p>
+    </footer>
+
     <script>
-        // Get the simulator filename from URL parameter
+        // Check for auto-load parameter from index.html
         const urlParams = new URLSearchParams(window.location.search);
-        const simFile = urlParams.get('sim');
+        const autoLoad = urlParams.get('auto');
         
-        if (!simFile) {
-            document.getElementById('root').innerHTML = `
-                <div class="error">
-                    <h2>No simulator specified</h2>
-                    <p>Please provide a simulator file using ?sim=filename.jsx</p>
-                    <p style="margin-top: 1rem;">
-                        <a href="./simulators.html" style="color: #64c8ff;">← Back to simulator gallery</a>
-                    </p>
-                </div>
-            `;
-        } else {
-            loadAndRunSimulator(simFile);
+        if (autoLoad) {
+            // Redirect to the universal simulator loader with the JSX/TSX file
+            window.location.href = `simulator.html?sim=${autoLoad}`;
         }
-        
-        async function loadAndRunSimulator(filename) {
-            try {
-                // Update page title
-                document.title = filename.replace(/\.(jsx|tsx)$/, '').replace(/_/g, ' ') + ' - Fractal Reality';
-                
-                // Fetch the JSX/TSX file
-                const response = await fetch(`./simulations/${filename}`);
-                if (!response.ok) {
-                    throw new Error(`Failed to load ${filename}. Make sure it exists in the simulations/ directory.`);
-                }
-                
-                let jsxCode = await response.text();
-                
-                // Remove all import statements
-                jsxCode = jsxCode.replace(/^import\s+.*?from\s+['"].*?['"];?\s*$/gm, '');
-                
-                // Remove export statements
-                jsxCode = jsxCode.replace(/^export\s+default\s+/gm, '');
-                jsxCode = jsxCode.replace(/^export\s+/gm, '');
-                
-                // Extract component name - look for the main export or last component
-                let componentName = 'App';
-                
-                // Try to find: export default ComponentName or export default function ComponentName
-                const exportMatch = jsxCode.match(/(?:export\s+default\s+(?:function\s+)?(\w+)|^(?:const|let|var|function)\s+([A-Z]\w+))/m);
-                if (exportMatch) {
-                    componentName = exportMatch[1] || exportMatch[2];
-                }
-                
-                // Find all component-like names (capital letter start)
-                const componentMatches = [...jsxCode.matchAll(/(?:const|let|var|function)\s+([A-Z]\w+)/g)];
-                if (componentMatches.length > 0) {
-                    // Use the last one found (usually the main component)
-                    componentName = componentMatches[componentMatches.length - 1][1];
-                }
-                
-                console.log('Detected component name:', componentName);
-                console.log('File:', filename);
-                
-                // Create a script element to hold the transpiled code
-                const script = document.createElement('script');
-                script.type = 'text/babel';
-                script.setAttribute('data-type', 'module');
-                script.setAttribute('data-presets', 'react');
-                
-                // Create the code that will run after Babel transpilation
-                script.textContent = `
-                    // Make Recharts globally available
-                    const {
-                        LineChart, BarChart, PieChart, AreaChart, ScatterChart, RadarChart,
-                        Line, Bar, Pie, Area, Scatter, Radar,
-                        XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, 
-                        ReferenceLine, ReferenceDot, ReferenceArea, Brush, ResponsiveContainer
-                    } = window.Recharts || {};
-                    
-                    // Create Lucide icon components (they render as simple SVG placeholders)
-                    const createIcon = (name) => (props) => {
-                        return React.createElement('svg', {
-                            xmlns: 'http://www.w3.org/2000/svg',
-                            width: props?.size || 24,
-                            height: props?.size || 24,
-                            viewBox: '0 0 24 24',
-                            fill: 'none',
-                            stroke: 'currentColor',
-                            strokeWidth: 2,
-                            strokeLinecap: 'round',
-                            strokeLinejoin: 'round',
-                            className: props?.className,
-                            style: props?.style,
-                            ...props
-                        }, React.createElement('title', null, name));
-                    };
-                    
-                    // Common Lucide icons
-                    const Camera = createIcon('Camera');
-                    const Square = createIcon('Square');
-                    const Activity = createIcon('Activity');
-                    const Circle = createIcon('Circle');
-                    const Play = createIcon('Play');
-                    const Pause = createIcon('Pause');
-                    const Settings = createIcon('Settings');
-                    const Info = createIcon('Info');
-                    const Heart = createIcon('Heart');
-                    const Star = createIcon('Star');
-                    const Music = createIcon('Music');
-                    const Volume2 = createIcon('Volume2');
-                    const Mic = createIcon('Mic');
-                    const Download = createIcon('Download');
-                    const Upload = createIcon('Upload');
-                    const RefreshCw = createIcon('RefreshCw');
-                    const ChevronLeft = createIcon('ChevronLeft');
-                    const ChevronRight = createIcon('ChevronRight');
-                    const Plus = createIcon('Plus');
-                    const Minus = createIcon('Minus');
-                    const X = createIcon('X');
-                    
-                    ${jsxCode}
-                    
-                    // Try to render the component
-                    try {
-                        const ComponentToRender = typeof ${componentName} !== 'undefined' ? ${componentName} : null;
-                        
-                        if (!ComponentToRender) {
-                            throw new Error('Component "${componentName}" not found. Available: ' + 
-                                Object.keys(window).filter(k => k[0] === k[0].toUpperCase()).join(', '));
-                        }
-                        
-                        const root = ReactDOM.createRoot(document.getElementById('root'));
-                        root.render(React.createElement(ComponentToRender));
-                        
-                        console.log('✓ Simulator loaded successfully:', '${filename}');
-                    } catch (error) {
-                        console.error('Rendering error:', error);
-                        document.getElementById('root').innerHTML = \`
-                            <div class="error">
-                                <h2>Failed to render simulator</h2>
-                                <p style="margin-top: 1rem; color: #fca5a5;">\${error.message}</p>
-                                <p style="margin-top: 1rem; font-size: 14px; color: #94a3b8;">
-                                    Component: ${componentName}<br>
-                                    File: ${filename}
-                                </p>
-                                <details style="margin-top: 1.5rem;">
-                                    <summary style="cursor: pointer; color: #60a5fa;">View Error Details</summary>
-                                    <pre>\${error.stack || 'No stack trace available'}</pre>
-                                </details>
-                                <p style="margin-top: 1.5rem;">
-                                    <a href="./simulators.html" style="color: #64c8ff;">← Back to gallery</a>
-                                </p>
-                            </div>
-                        \`;
-                        throw error;
-                    }
-                `;
-                
-                // Append the script to trigger Babel transpilation and execution
-                document.body.appendChild(script);
-                
-            } catch (error) {
-                console.error('Loading error:', error);
-                document.getElementById('root').innerHTML = `
-                    <div class="error">
-                        <h2>Failed to load simulator</h2>
-                        <p style="color: #fca5a5;">${error.message}</p>
-                        <p style="margin-top: 1rem; font-size: 14px; color: #94a3b8;">
-                            File: ${filename}
-                        </p>
-                        <details style="margin-top: 1.5rem;">
-                            <summary style="cursor: pointer; color: #60a5fa;">View Error Details</summary>
-                            <pre>${error.stack || 'No stack trace available'}</pre>
-                        </details>
-                        <p style="margin-top: 1.5rem;">
-                            <a href="./simulators.html" style="color: #64c8ff;">← Back to gallery</a>
-                        </p>
-                    </div>
-                `;
+
+        // Add some sparkle/star effects
+        function createStar() {
+            const star = document.createElement('div');
+            star.style.position = 'fixed';
+            star.style.width = '2px';
+            star.style.height = '2px';
+            star.style.background = 'rgba(100, 200, 255, 0.8)';
+            star.style.borderRadius = '50%';
+            star.style.left = Math.random() * window.innerWidth + 'px';
+            star.style.top = Math.random() * window.innerHeight + 'px';
+            star.style.zIndex = '-1';
+            star.style.animation = `twinkle ${2 + Math.random() * 3}s ease-in-out infinite`;
+            document.body.appendChild(star);
+
+            setTimeout(() => star.remove(), 5000);
+        }
+
+        // Add twinkling animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes twinkle {
+                0%, 100% { opacity: 0; transform: scale(0); }
+                50% { opacity: 1; transform: scale(1); }
             }
-        }
+        `;
+        document.head.appendChild(style);
+
+        // Create stars periodically
+        setInterval(createStar, 300);
     </script>
 </body>
 </html>
