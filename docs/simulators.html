@@ -3,527 +3,451 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Demonstrations - Fractal Reality</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Fractal Reality - Interactive Simulators</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Crimson Pro', Georgia, serif;
-            background: #0a0a0a;
-            color: #e8e8e8;
-            line-height: 1.5;
-            font-size: 15px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        
-        .mono {
-            font-family: 'IBM Plex Mono', monospace;
-        }
-        
-        #root {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a1a 100%);
+            color: #e0e0ff;
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        
-        .simulation-container {
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 100vh;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(100, 200, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(200, 100, 255, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
         }
-        
-        .sim-button {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: #e8e8e8;
-            padding: 0.75rem 1.5rem;
-            text-align: left;
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            background: rgba(10, 10, 30, 0.5);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(100, 200, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #64c8ff 0%, #c864ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(100, 200, 255, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #a0a0c0;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            color: #64c8ff;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .header-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: rgba(100, 200, 255, 0.1);
+            border: 1px solid rgba(100, 200, 255, 0.3);
+            border-radius: 8px;
+            color: #64c8ff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .header-links a:hover {
+            background: rgba(100, 200, 255, 0.2);
+            border-color: rgba(100, 200, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(100, 200, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(10, 10, 30, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(100, 200, 255, 0.1);
+        }
+
+        .intro p {
+            line-height: 1.8;
+            color: #c0c0d0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .simulators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .simulator-card {
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
             cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 13px;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .sim-button:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.15);
+
+        .simulator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(100, 200, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .simulator-card:hover::before {
+            left: 100%;
+        }
+
+        .simulator-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(100, 200, 255, 0.4);
+            box-shadow: 0 8px 24px rgba(100, 200, 255, 0.2);
+            background: rgba(30, 30, 50, 0.7);
+        }
+
+        .simulator-card h3 {
+            color: #64c8ff;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .simulator-card .icon {
+            font-size: 1.5rem;
+        }
+
+        .simulator-card p {
+            color: #b0b0c0;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .simulator-card .features {
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .simulator-card .features li {
+            color: #90a0b0;
+            font-size: 0.85rem;
+            padding: 0.3rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+
+        .simulator-card .features li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #64c8ff;
+        }
+
+        .launch-btn {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            background: linear-gradient(135deg, #64c8ff 0%, #6464ff 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .launch-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(100, 200, 255, 0.4);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: rgba(10, 10, 30, 0.5);
+            border-top: 2px solid rgba(100, 200, 255, 0.2);
+            margin-top: 3rem;
+        }
+
+        footer p {
+            color: #8090a0;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #64c8ff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #c864ff;
+        }
+
+        .framework-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(200, 100, 255, 0.1);
+            border: 1px solid rgba(200, 100, 255, 0.3);
+            border-radius: 6px;
+            color: #c864ff;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .simulators-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="bg-animation"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+    <header>
+        <h1>∞ → • → ∞</h1>
+        <h1>Fractal Reality</h1>
+        <p class="subtitle">Interactive Simulators & Visualizations</p>
+        <p class="tagline">Exploring the fractal nature of consciousness and reality at D ≈ 1.5</p>
+        
+        <div class="header-links">
+            <a href="https://fractalreality.ca" target="_blank" rel="noopener noreferrer">
+                🌐 FractalReality.ca
+            </a>
+            <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" rel="noopener noreferrer">
+                💻 GitHub Repository
+            </a>
+        </div>
+    </header>
 
-        const SimulationRunner = () => {
-            const [simulations, setSimulations] = useState([]);
-            const [selectedSim, setSelectedSim] = useState(null);
-            const [simCode, setSimCode] = useState('');
-            const [error, setError] = useState(null);
-            const [loading, setLoading] = useState(true);
+    <div class="container">
+        <div class="intro">
+            <p>
+                Welcome to the Fractal Reality simulator collection. These interactive tools demonstrate key concepts 
+                from the Fractal Reality Framework, where consciousness, quantum mechanics, and cosmic structures 
+                all converge at the critical fractal dimension D ≈ 1.5. Each simulator is built to help you explore 
+                and understand the fractal nature of reality itself.
+            </p>
+        </div>
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const rawAuto = urlParams.get('auto');
-            const autoLoad = rawAuto ? rawAuto.replace(/^\.?\/?/, '').replace(/^simulations\//, '') : null;
+        <div class="simulators-grid">
+            <!-- Fractal Reality Main Simulator -->
+            <div class="simulator-card" onclick="window.open('simulations/Fractal_Reality.html', '_blank')">
+                <h3><span class="icon">🌌</span> Fractal Reality</h3>
+                <p>The flagship visualization exploring the fundamental fractal structure of reality across 13 dimensional layers.</p>
+                <ul class="features">
+                    <li>13 layers from singularity to cosmic structure</li>
+                    <li>Interactive dimensional navigation</li>
+                    <li>Real-time D ≈ 1.5 visualization</li>
+                    <li>Consciousness-matter interface</li>
+                </ul>
+                <div class="framework-badge">Core Framework</div>
+                <br><br>
+                <a href="simulations/Fractal_Reality.html" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
 
-            useEffect(() => {
-                const fetchSimulations = async () => {
-                    try {
-                        const response = await fetch('./sims.md');
-                        if (!response.ok) {
-                            throw new Error('Could not find sims.md file. Please create it in the root directory.');
-                        }
-                        
-                        const markdown = await response.text();
-                        const lines = markdown.split('\n');
-                        const simFiles = [];
-                        
-                        for (const line of lines) {
-                            const trimmed = line.trim();
-                            
-                            if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) {
-                                continue;
-                            }
-                            
-                            let filename = null;
-                            
-                            // Markdown link format
-                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.(tsx|jsx))\)/i);
-                            if (linkMatch) {
-                                filename = linkMatch[1];
-                            }
-                            // List format
-                            else if (trimmed.match(/^[-*]\s+/)) {
-                                const listMatch = trimmed.match(/[-*]\s+(.*?\.(tsx|jsx))/i);
-                                if (listMatch) {
-                                    filename = listMatch[1];
-                                }
-                            }
-                            // Plain format - UPDATED to support both .tsx and .jsx
-                            else if (trimmed.match(/\.(tsx|jsx)$/i)) {
-                                filename = trimmed;
-                            }
-                            
-                            if (filename) {
-                                filename = filename.replace(/^simulations\//, '');
-                                simFiles.push(filename);
-                            }
-                        }
-                        
-                        if (simFiles.length === 0) {
-                            throw new Error('No .tsx or .jsx files found in sims.md. Please list your simulation files.');
-                        }
-                        
-                        setSimulations(simFiles);
-                        setLoading(false);
-                        
-                        if (autoLoad && simFiles.includes(autoLoad)) {
-                            loadSimulation(autoLoad);
-                        }
-                    } catch (err) {
-                        console.error('Error loading simulations:', err);
-                        setError(err.message || 'Could not load sims.md');
-                        setLoading(false);
-                    }
-                };
+            <!-- Webcam Fractal Tracker -->
+            <div class="simulator-card" onclick="window.open('simulations/Cam_Fractal_Tracker.html', '_blank')">
+                <h3><span class="icon">📹</span> Webcam Fractal Tracker</h3>
+                <p>Real-time fractal dimension measurement using your webcam and the Higuchi algorithm.</p>
+                <ul class="features">
+                    <li>Live D measurement from video</li>
+                    <li>Higuchi algorithm implementation</li>
+                    <li>Framework validation (D ≈ 1.5)</li>
+                    <li>Time-series visualization</li>
+                </ul>
+                <div class="framework-badge">Experimental Tool</div>
+                <br><br>
+                <a href="simulations/Cam_Fractal_Tracker.html" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
 
-                fetchSimulations();
-            }, []);
+            <!-- Fractal Fountain -->
+            <div class="simulator-card" onclick="window.open('simulations/Fractal_Fountain.html', '_blank')">
+                <h3><span class="icon">⚫</span> Fractal Fountain</h3>
+                <p>Witness the singularity unfold into infinite fractal complexity through recursive particle systems.</p>
+                <ul class="features">
+                    <li>Zoom from singularity to infinity</li>
+                    <li>Recursive branching particles</li>
+                    <li>Golden ratio dynamics</li>
+                    <li>Real-time D calculation</li>
+                </ul>
+                <div class="framework-badge">Singularity Visualization</div>
+                <br><br>
+                <a href="simulations/Fractal_Fountain.html" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
 
-            const loadSimulation = async (filename) => {
-                try {
-                    setError(null);
-                    setLoading(true);
-                    
-                    const response = await fetch(`./simulations/${filename}`);
-                    if (!response.ok) {
-                        throw new Error(`Failed to load ${filename}`);
-                    }
-                    
-                    const code = await response.text();
-                    setSimCode(code);
-                    setSelectedSim(filename);
-                    setLoading(false);
-                } catch (err) {
-                    console.error('Error loading simulation:', err);
-                    setError(`Error loading ${filename}: ${err.message}`);
-                    setLoading(false);
-                }
-            };
+            <!-- Harmonic Periodic Table -->
+            <div class="simulator-card" onclick="window.open('simulations/Harmonic_Periodic_Table.html', '_blank')">
+                <h3><span class="icon">🎵</span> Harmonic Periodic Table</h3>
+                <p>Explore the musical harmonics embedded in atomic structure and the periodic table.</p>
+                <ul class="features">
+                    <li>Elements as musical frequencies</li>
+                    <li>Interactive harmonic synthesis</li>
+                    <li>Quantum resonance patterns</li>
+                    <li>Audio-visual chemistry</li>
+                </ul>
+                <div class="framework-badge">Harmonic Framework</div>
+                <br><br>
+                <a href="simulations/Harmonic_Periodic_Table.html" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
 
-            const SimulationRenderer = () => {
-                if (!simCode) return null;
+            <!-- Molecular Composer -->
+            <div class="simulator-card" onclick="window.open('simulations/Molecular_Composer.html', '_blank')">
+                <h3><span class="icon">🧬</span> Molecular Harmony Composer</h3>
+                <p>Create molecular structures and hear their unique harmonic signatures.</p>
+                <ul class="features">
+                    <li>Build molecules interactively</li>
+                    <li>Harmonic frequency generation</li>
+                    <li>Fractal molecular patterns</li>
+                    <li>Sound synthesis from structure</li>
+                </ul>
+                <div class="framework-badge">Creative Tool</div>
+                <br><br>
+                <a href="simulations/Molecular_Composer.html" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
 
-                let processedCode = '';
-                let transformed = '';
-                
-                try {
-                    processedCode = simCode;
-                    
-                    // Remove all import statements and replace with available globals
-                    processedCode = processedCode.replace(/import\s+React\s*,?\s*\{[^}]*\}\s+from\s+['"]react['"];?\s*/g, '');
-                    processedCode = processedCode.replace(/import\s+React\s+from\s+['"]react['"];?\s*/g, '');
-                    processedCode = processedCode.replace(/import\s+\{[^}]*\}\s+from\s+['"]react['"];?\s*/g, '');
-                    
-                    // Remove lucide-react imports (create simple mock icons)
-                    const lucideMatch = processedCode.match(/import\s+\{([^}]+)\}\s+from\s+['"]lucide-react['"]/);
-                    if (lucideMatch) {
-                        const icons = lucideMatch[1].split(',').map(i => i.trim());
-                        const mockIcons = icons.map(icon => 
-                            `const ${icon} = () => null;`
-                        ).join('\n');
-                        processedCode = processedCode.replace(/import\s+\{[^}]+\}\s+from\s+['"]lucide-react['"];?\s*/g, mockIcons);
-                    }
-                    
-                    processedCode = processedCode.replace(/import\s+.*?from\s+['"].*?['"];?\s*/g, '');
-                    
-                    // Remove export statements
-                    processedCode = processedCode.replace(/export\s+default\s+/g, '');
-                    processedCode = processedCode.replace(/export\s+/g, '');
+            <!-- My Pet Fractal -->
+            <div class="simulator-card" onclick="window.open('simulations/My_Pet_Fractal.html', '_blank')">
+                <h3><span class="icon">🐾</span> My Pet Fractal</h3>
+                <p>Nurture and interact with your own living fractal organism that responds to your touch.</p>
+                <ul class="features">
+                    <li>Interactive fractal life-form</li>
+                    <li>Touch-responsive behavior</li>
+                    <li>Emotional state system</li>
+                    <li>Organic growth patterns</li>
+                </ul>
+                <div class="framework-badge">Interactive Art</div>
+                <br><br>
+                <a href="simulations/My_Pet_Fractal.html" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
 
-                    // Determine if it's JSX or TSX
-                    const isTSX = selectedSim.endsWith('.tsx');
+            <!-- Singing Learning Fractal -->
+            <div class="simulator-card" onclick="window.open('simulations/Singing_Learning_Fractal.html', '_blank')">
+                <h3><span class="icon">🎤</span> Singing Learning Fractal</h3>
+                <p>A fractal organism that learns and adapts to the music and sounds you provide.</p>
+                <ul class="features">
+                    <li>Audio-reactive visualization</li>
+                    <li>Learning algorithm integration</li>
+                    <li>Real-time frequency analysis</li>
+                    <li>Adaptive fractal morphology</li>
+                </ul>
+                <div class="framework-badge">AI + Art</div>
+                <br><br>
+                <a href="simulations/Singing_Learning_Fractal.html" class="launch-btn" onclick="event.stopPropagation();">Launch Simulator</a>
+            </div>
+        </div>
+    </div>
 
-                    // Strip TypeScript type annotations for TSX files
-                    if (isTSX) {
-                        // Remove interface declarations (multi-line, handle nested braces)
-                        const lines = processedCode.split('\n');
-                        const filteredLines = [];
-                        let inInterface = false;
-                        let braceDepth = 0;
-                        
-                        for (let i = 0; i < lines.length; i++) {
-                            const line = lines[i];
-                            
-                            if (line.match(/^\s*interface\s+\w+/)) {
-                                inInterface = true;
-                                braceDepth = 0;
-                            }
-                            
-                            if (inInterface) {
-                                for (const char of line) {
-                                    if (char === '{') braceDepth++;
-                                    if (char === '}') braceDepth--;
-                                }
-                                
-                                if (braceDepth === 0 && line.includes('}')) {
-                                    inInterface = false;
-                                }
-                                continue; // Skip all interface lines
-                            }
-                            
-                            filteredLines.push(line);
-                        }
-                        
-                        processedCode = filteredLines.join('\n');
-                        
-                        // Remove type declarations
-                        processedCode = processedCode.replace(/^(\s*)type\s+\w+\s*=\s*[^;]+;\s*$/gm, '');
-                        
-                        // Remove enum declarations
-                        processedCode = processedCode.replace(/^(\s*)enum\s+\w+\s*\{[^}]*\}\s*$/gm, '');
-                        
-                        // Remove React.FC and similar type annotations
-                        processedCode = processedCode.replace(/:\s*React\.FC\s*<?[^>]*>?/g, '');
-                        processedCode = processedCode.replace(/:\s*FC\s*<?[^>]*>?/g, '');
-                        processedCode = processedCode.replace(/:\s*React\.ReactNode/g, '');
-                        processedCode = processedCode.replace(/:\s*ReactNode/g, '');
-                        processedCode = processedCode.replace(/:\s*JSX\.Element/g, '');
-                        
-                        // Remove readonly modifiers
-                        processedCode = processedCode.replace(/\breadonly\s+/g, '');
-                        
-                        // Remove public/private/protected modifiers
-                        processedCode = processedCode.replace(/\b(public|private|protected)\s+/g, '');
-                        
-                        // Remove generic type parameters from hooks and other calls
-                        // useRef<Type>(value) -> useRef(value)
-                        processedCode = processedCode.replace(/\b(useRef|useState|useMemo|useCallback|useContext|useEffect|useReducer|useLayoutEffect)<[^>]+>/g, '$1');
-                        
-                        // Remove generic type parameters from Map, Set, Array etc
-                        processedCode = processedCode.replace(/\b(Map|Set|Array|Promise|WeakMap|WeakSet)<[^>]+>/g, '$1');
-                        
-                        // Remove 'as Type[]' and 'as Type' type assertions
-                        processedCode = processedCode.replace(/\s+as\s+\w+(\[\])?(?=\s*[,;\)\}])/g, '');
-                        processedCode = processedCode.replace(/\s+as\s+[A-Z]\w+<[^>]+>/g, '');
-                        
-                        // Remove type annotations from function parameters - but NOT from object literals
-                        // Match function parameter patterns specifically
-                        // Only remove type annotations where : is followed by a type name, not a value
-                        processedCode = processedCode.replace(/(\w+)\s*:\s*([A-Z]\w+|string|number|boolean|void|any|unknown|never|object|Function|Element|null|undefined)(\[\]|<[^>]+>)?(?=\s*[,\)])/g, '$1');
-                        
-                        // Remove return type annotations: ): Type =>
-                        processedCode = processedCode.replace(/\)\s*:\s*[^=>{]+(\s*=>)/g, ')$1');
-                        
-                        // Remove non-null assertions (!)
-                        processedCode = processedCode.replace(/!(?=[\.\[\(;,])/g, '');
-                        
-                        // Remove variable type annotations: const x: Type = but NOT const x = { prop: value }
-                        // Only match if the : is followed by a capital letter (type name) or known type keywords
-                        processedCode = processedCode.replace(/(const|let|var)\s+(\w+)\s*:\s*([A-Z]\w+|string|number|boolean|any|void|unknown|never|null|undefined)(\[\]|<[^>]+>)?\s*=/g, '$1 $2 =');
-                        
-                        // Remove type annotations from uninitialized variable declarations: let x: Type;
-                        processedCode = processedCode.replace(/(const|let|var)\s+(\w+)\s*:\s*([A-Z]\w+|string|number|boolean|any|void|unknown|never|null|undefined)(\[\]|<[^>]+>)?\s*;/g, '$1 $2;');
-                        
-                        // Remove type annotations from destructured variables
-                        processedCode = processedCode.replace(/(const|let|var)\s+(\{[^}]+\})\s*:\s*[^=]+=/g, '$1 $2 =');
-                    }
+    <footer>
+        <p>
+            <strong>Fractal Reality Framework</strong> | D ≈ 1.5<br>
+            <a href="https://fractalreality.ca" target="_blank" rel="noopener noreferrer">FractalReality.ca</a> | 
+            <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.85rem; color: #606070;">
+            © 2025 Fractal Reality Project | Open Source
+        </p>
+    </footer>
 
-                    // Transform code with appropriate presets
-                    const presets = [
-                        ['react', { 
-                            runtime: 'classic',
-                            pragma: 'React.createElement'
-                        }]
-                    ];
+    <script>
+        // Add some sparkle/star effects
+        function createStar() {
+            const star = document.createElement('div');
+            star.style.position = 'fixed';
+            star.style.width = '2px';
+            star.style.height = '2px';
+            star.style.background = 'rgba(100, 200, 255, 0.8)';
+            star.style.borderRadius = '50%';
+            star.style.left = Math.random() * window.innerWidth + 'px';
+            star.style.top = Math.random() * window.innerHeight + 'px';
+            star.style.zIndex = '-1';
+            star.style.animation = `twinkle ${2 + Math.random() * 3}s ease-in-out infinite`;
+            document.body.appendChild(star);
 
-                    try {
-                        transformed = Babel.transform(processedCode, {
-                            filename: selectedSim,
-                            presets: presets
-                        }).code;
-                    } catch (babelErr) {
-                        console.error('Babel transformation error:', babelErr);
-                        console.log('Code that failed to transform:', processedCode);
-                        throw new Error(`Babel transformation failed: ${babelErr.message}`);
-                    }
+            setTimeout(() => star.remove(), 5000);
+        }
 
-                    // Try to find the main React component
-                    // Strategy: Find the last component that starts with capital letter AND contains JSX
-                    const componentMatches = [];
-                    
-                    // Pattern 1: const Component = () => { ... return ( or return <
-                    const arrowPattern = /(?:const|let|var)\s+([A-Z]\w+)\s*=\s*\([^)]*\)\s*=>/g;
-                    let match;
-                    while ((match = arrowPattern.exec(processedCode)) !== null) {
-                        const name = match[1];
-                        const startPos = match.index;
-                        // Check if this function contains JSX (look for 'return <' or 'return (')
-                        const afterFunc = processedCode.slice(startPos, Math.min(startPos + 2000, processedCode.length));
-                        if (afterFunc.includes('return <') || afterFunc.includes('return (') || afterFunc.includes('React.createElement')) {
-                            componentMatches.push({ name, position: startPos });
-                        }
-                    }
-                    
-                    // Pattern 2: function Component() { ... return <
-                    const funcPattern = /function\s+([A-Z]\w+)\s*\([^)]*\)/g;
-                    while ((match = funcPattern.exec(processedCode)) !== null) {
-                        const name = match[1];
-                        const startPos = match.index;
-                        const afterFunc = processedCode.slice(startPos, Math.min(startPos + 2000, processedCode.length));
-                        if (afterFunc.includes('return <') || afterFunc.includes('return (') || afterFunc.includes('React.createElement')) {
-                            componentMatches.push({ name, position: startPos });
-                        }
-                    }
-                    
-                    // Sort by position and take the LAST one (usually the main component)
-                    componentMatches.sort((a, b) => b.position - a.position);
-                    
-                    let componentName = 'App'; // Default fallback
-                    if (componentMatches.length > 0) {
-                        componentName = componentMatches[0].name;
-                    }
-                    
-                    // Additional fallback: if we found nothing, look for common names
-                    if (componentMatches.length === 0) {
-                        const commonNames = [
-                            'FractalPetCell', 'EnhancedConsciousnessFractal', 'HarmonicPeriodicTable',
-                            'MolecularHarmonyComposer', 'FractalSoulArray', 'FractalRealityLanding',
-                            'FractalFountain', 'FractalFountainEnhanced',
-                            'App', 'Main', 'Index', 'Component', 'Simulator'
-                        ];
-                        for (const name of commonNames) {
-                            if (processedCode.includes(`const ${name}`) || processedCode.includes(`function ${name}`)) {
-                                componentName = name;
-                                break;
-                            }
-                        }
-                    }
+        // Add twinkling animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes twinkle {
+                0%, 100% { opacity: 0; transform: scale(0); }
+                50% { opacity: 1; transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
 
-                    console.log('Component name detected:', componentName);
-                    console.log('Matches found:', componentMatches.map(m => m.name));
-
-                    // Wrap in IIFE with proper scope
-                    const wrappedCode = `
-                        return (function() {
-                            const React = arguments[0];
-                            const useState = arguments[1];
-                            const useEffect = arguments[2];
-                            const useRef = arguments[3];
-                            const useMemo = arguments[4];
-                            const useCallback = arguments[5];
-                            const useReducer = arguments[6];
-                            const useContext = arguments[7];
-                            
-                            ${transformed}
-                            
-                            // Try to return the component
-                            if (typeof ${componentName} !== 'undefined') {
-                                return ${componentName};
-                            }
-                            
-                            throw new Error('Component "${componentName}" not found');
-                        }).apply(null, arguments);
-                    `;
-
-                    const createComponent = new Function(wrappedCode);
-
-                    const SimComponent = createComponent(
-                        React,
-                        React.useState,
-                        React.useEffect,
-                        React.useRef,
-                        React.useMemo,
-                        React.useCallback,
-                        React.useReducer,
-                        React.useContext
-                    );
-
-                    if (!SimComponent || typeof SimComponent !== 'function') {
-                        throw new Error('No valid React component found in simulation file');
-                    }
-
-                    return React.createElement(SimComponent);
-                } catch (err) {
-                    console.error('Error rendering simulation:', err);
-                    console.log('Processed code:', processedCode);
-                    console.log('Transformed code:', transformed);
-                    return (
-                        <div style={{padding: '3rem', background: '#0a0a0a', color: '#f87171', minHeight: '100vh'}}>
-                            <h3 className="mono" style={{fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem'}}>Rendering Error</h3>
-                            <div style={{background: 'rgba(0,0,0,0.5)', padding: '1rem', marginBottom: '1rem'}}>
-                                <p className="mono" style={{fontSize: '13px'}}>{err.message}</p>
-                            </div>
-                            <details style={{marginTop: '1.5rem'}}>
-                                <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Stack Trace</summary>
-                                <pre className="mono" style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap'}}>{err.stack}</pre>
-                            </details>
-                            <details style={{marginTop: '1.5rem'}}>
-                                <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Processed Code (Check Browser Console)</summary>
-                                <p className="mono" style={{fontSize: '12px', color: '#fbbf24'}}>Open browser console (F12) to see the processed code</p>
-                            </details>
-                            <div style={{marginTop: '2rem', padding: '1rem', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)'}}>
-                                <p className="mono" style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '13px'}}>Common Issues:</p>
-                                <ul className="mono" style={{fontSize: '12px', lineHeight: '1.6', paddingLeft: '1.5rem', listStyle: 'disc'}}>
-                                    <li>TypeScript syntax not fully stripped (check console logs)</li>
-                                    <li>Make sure the component is properly defined</li>
-                                    <li>Check that all hooks are used correctly</li>
-                                    <li>Verify there are no syntax errors</li>
-                                </ul>
-                            </div>
-                        </div>
-                    );
-                }
-            };
-
-            return (
-                <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-                    {!selectedSim ? (
-                        <div style={{background: '#0a0a0a', minHeight: '100vh', padding: '4rem 2rem'}}>
-                            <div style={{maxWidth: '960px', margin: '0 auto'}}>
-                                <div className="mb-12">
-                                    <h1 className="text-5xl font-light mb-3 tracking-tight" style={{letterSpacing: '-0.02em', color: '#e8e8e8'}}>
-                                        Interactive Demonstrations
-                                    </h1>
-                                    <p className="text-sm mono" style={{color: '#808080'}}>
-                                        Fractal Reality Framework
-                                    </p>
-                                </div>
-
-                                {loading ? (
-                                    <div className="text-center" style={{color: '#808080'}}>
-                                        <div className="mono text-sm">Loading...</div>
-                                    </div>
-                                ) : error ? (
-                                    <div style={{border: '1px solid rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.05)', padding: '2rem', maxWidth: '600px'}}>
-                                        <p style={{color: '#f87171', marginBottom: '1rem'}}>{error}</p>
-                                    </div>
-                                ) : simulations.length === 0 ? (
-                                    <div style={{border: '1px solid rgba(234, 179, 8, 0.3)', background: 'rgba(234, 179, 8, 0.05)', padding: '2rem', maxWidth: '600px'}}>
-                                        <p style={{color: '#fbbf24'}}>No simulations found</p>
-                                    </div>
-                                ) : (
-                                    <div style={{maxWidth: '600px'}}>
-                                        <p className="text-xs mono uppercase tracking-wider mb-4" style={{color: '#606060'}}>
-                                            Select simulation
-                                        </p>
-                                        <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-                                            {simulations.map((sim, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => loadSimulation(sim)}
-                                                    className="sim-button"
-                                                >
-                                                    {sim.replace(/\.(tsx|jsx)$/, '')}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="simulation-container relative">
-                            <button
-                                onClick={() => {
-                                    setSelectedSim(null);
-                                    setSimCode('');
-                                    setError(null);
-                                }}
-                                className="mono"
-                                style={{
-                                    position: 'absolute',
-                                    top: '1.5rem',
-                                    left: '1.5rem',
-                                    zIndex: 50,
-                                    background: 'white',
-                                    color: 'black',
-                                    padding: '0.5rem 1rem',
-                                    fontSize: '11px',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    transition: 'background 0.2s'
-                                }}
-                                onMouseOver={(e) => e.target.style.background = '#ddd'}
-                                onMouseOut={(e) => e.target.style.background = 'white'}
-                            >
-                                ← BACK
-                            </button>
-                            
-                            {loading ? (
-                                <div className="flex items-center justify-center h-screen" style={{background: '#0a0a0a'}}>
-                                    <div className="text-center">
-                                        <div className="mono" style={{color: '#e8e8e8', fontSize: '16px', marginBottom: '1rem'}}>Loading</div>
-                                        <div className="mono" style={{color: '#606060', fontSize: '13px'}}>{selectedSim}</div>
-                                    </div>
-                                </div>
-                            ) : error ? (
-                                <div className="flex items-center justify-center h-screen p-8" style={{background: '#0a0a0a'}}>
-                                    <div style={{maxWidth: '600px', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '2rem'}}>
-                                        <h3 style={{fontSize: '18px', fontWeight: 'bold', color: '#f87171', marginBottom: '1rem'}}>Error</h3>
-                                        <p className="mono" style={{color: '#fca5a5', fontSize: '13px'}}>{error}</p>
-                                    </div>
-                                </div>
-                            ) : (
-                                <SimulationRenderer />
-                            )}
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<SimulationRunner />);
+        // Create stars periodically
+        setInterval(createStar, 300);
     </script>
 </body>
 </html>
