@@ -192,29 +192,70 @@
 
                     // Strip TypeScript type annotations for TSX files
                     if (isTSX) {
-                        // Remove interface and type declarations
-                        processedCode = processedCode.replace(/^(\s*)interface\s+\w+\s*\{[^}]*\}\s*$/gm, '');
+                        // Remove interface declarations (multi-line, handle nested braces)
+                        const lines = processedCode.split('\n');
+                        const filteredLines = [];
+                        let inInterface = false;
+                        let braceDepth = 0;
+                        
+                        for (let i = 0; i < lines.length; i++) {
+                            const line = lines[i];
+                            
+                            if (line.match(/^\s*interface\s+\w+/)) {
+                                inInterface = true;
+                                braceDepth = 0;
+                            }
+                            
+                            if (inInterface) {
+                                for (const char of line) {
+                                    if (char === '{') braceDepth++;
+                                    if (char === '}') braceDepth--;
+                                }
+                                
+                                if (braceDepth === 0 && line.includes('}')) {
+                                    inInterface = false;
+                                }
+                                continue; // Skip all interface lines
+                            }
+                            
+                            filteredLines.push(line);
+                        }
+                        
+                        processedCode = filteredLines.join('\n');
+                        
+                        // Remove type declarations
                         processedCode = processedCode.replace(/^(\s*)type\s+\w+\s*=\s*[^;]+;\s*$/gm, '');
                         
-                        // Remove type annotations from function parameters and variables
-                        // Match patterns like: (param: Type) or (param: Type, param2: Type)
-                        processedCode = processedCode.replace(/(\(|\s)(\w+)\s*:\s*[^,\)=]+/g, '$1$2');
+                        // Remove React.FC and similar type annotations
+                        processedCode = processedCode.replace(/:\s*React\.FC\s*<?[^>]*>?/g, '');
+                        processedCode = processedCode.replace(/:\s*FC\s*<?[^>]*>?/g, '');
+                        
+                        // Remove generic type parameters from hooks and other calls
+                        // useRef<Type>(value) -> useRef(value)
+                        processedCode = processedCode.replace(/\b(useRef|useState|useMemo|useCallback|useContext)<[^>]+>/g, '$1');
+                        
+                        // Remove generic type parameters from any function call
+                        processedCode = processedCode.replace(/\b(\w+)<[^>]+>(?=\()/g, '$1');
+                        
+                        // Remove 'as Type[]' and 'as Type' type assertions
+                        processedCode = processedCode.replace(/\s+as\s+\w+(\[\])?(\s*[,;\)\}])/g, '$2');
+                        processedCode = processedCode.replace(/\s+as\s+[A-Z]\w+<[^>]+>/g, '');
+                        
+                        // Remove type annotations from function parameters
+                        // Handle complex types with nested angle brackets and objects
+                        processedCode = processedCode.replace(/(\w+)\s*:\s*[^,\)=]+(?=[,\)])/g, '$1');
                         
                         // Remove return type annotations: ): Type =>
                         processedCode = processedCode.replace(/\)\s*:\s*[^=>{]+(\s*=>)/g, ')$1');
-                        processedCode = processedCode.replace(/\)\s*:\s*[^{]+(\s*\{)/g, ')$1');
-                        
-                        // Remove type parameters from generics like <Type>
-                        processedCode = processedCode.replace(/\s*<[^>]+>(?=\s*\()/g, '');
-                        
-                        // Remove 'as' type assertions
-                        processedCode = processedCode.replace(/\s+as\s+\w+/g, '');
                         
                         // Remove non-null assertions (!)
-                        processedCode = processedCode.replace(/!(?=[\.\[\(;])/g, '');
+                        processedCode = processedCode.replace(/!(?=[\.\[\(;,])/g, '');
                         
                         // Remove variable type annotations: const x: Type = 
                         processedCode = processedCode.replace(/(const|let|var)\s+(\w+)\s*:\s*[^=]+=/g, '$1 $2 =');
+                        
+                        // Remove : Type from object destructuring
+                        processedCode = processedCode.replace(/(\{[^}]+\})\s*:\s*[^=]+=/g, '$1 =');
                     }
 
                     // Transform code with appropriate presets
@@ -225,10 +266,17 @@
                         }]
                     ];
 
-                    const transformed = Babel.transform(processedCode, {
-                        filename: selectedSim,
-                        presets: presets
-                    }).code;
+                    let transformed = '';
+                    try {
+                        transformed = Babel.transform(processedCode, {
+                            filename: selectedSim,
+                            presets: presets
+                        }).code;
+                    } catch (babelErr) {
+                        console.error('Babel transformation error:', babelErr);
+                        console.log('Code that failed to transform:', processedCode);
+                        throw new Error(`Babel transformation failed: ${babelErr.message}`);
+                    }
 
                     // Try to find the main React component
                     // Strategy: Find the last component that starts with capital letter AND contains JSX
@@ -268,7 +316,11 @@
                     
                     // Additional fallback: if we found nothing, look for common names
                     if (componentMatches.length === 0) {
-                        const commonNames = ['FractalSoulArray', 'FractalRealityLanding', 'App', 'Main', 'Index'];
+                        const commonNames = [
+                            'FractalPetCell', 'EnhancedConsciousnessFractal', 'HarmonicPeriodicTable',
+                            'MolecularHarmonyComposer', 'FractalSoulArray', 'FractalRealityLanding', 
+                            'App', 'Main', 'Index', 'Component'
+                        ];
                         for (const name of commonNames) {
                             if (processedCode.includes(`const ${name}`) || processedCode.includes(`function ${name}`)) {
                                 componentName = name;
@@ -276,6 +328,9 @@
                             }
                         }
                     }
+
+                    console.log('Component name detected:', componentName);
+                    console.log('Matches found:', componentMatches.map(m => m.name));
 
                     // Wrap in IIFE with proper scope
                     const wrappedCode = `
@@ -320,6 +375,8 @@
                     return React.createElement(SimComponent);
                 } catch (err) {
                     console.error('Error rendering simulation:', err);
+                    console.log('Processed code:', processedCode);
+                    console.log('Transformed code:', transformed);
                     return (
                         <div style={{padding: '3rem', background: '#0a0a0a', color: '#f87171', minHeight: '100vh'}}>
                             <h3 className="mono" style={{fontSize: '18px', fontWeight: 'bold', marginBottom: '1rem'}}>Rendering Error</h3>
@@ -330,9 +387,14 @@
                                 <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Stack Trace</summary>
                                 <pre className="mono" style={{fontSize: '11px', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem', whiteSpace: 'pre-wrap'}}>{err.stack}</pre>
                             </details>
+                            <details style={{marginTop: '1.5rem'}}>
+                                <summary className="mono" style={{cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', marginBottom: '0.5rem'}}>Processed Code (Check Browser Console)</summary>
+                                <p className="mono" style={{fontSize: '12px', color: '#fbbf24'}}>Open browser console (F12) to see the processed code</p>
+                            </details>
                             <div style={{marginTop: '2rem', padding: '1rem', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)'}}>
                                 <p className="mono" style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '13px'}}>Common Issues:</p>
                                 <ul className="mono" style={{fontSize: '12px', lineHeight: '1.6', paddingLeft: '1.5rem', listStyle: 'disc'}}>
+                                    <li>TypeScript syntax not fully stripped (check console logs)</li>
                                     <li>Make sure the component is properly defined</li>
                                     <li>Check that all hooks are used correctly</li>
                                     <li>Verify there are no syntax errors</li>
