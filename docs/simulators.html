@@ -5,21 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fractal Reality Simulators</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Courier New', monospace;
             background: #0a0a0a;
             color: #e8e8e8;
             line-height: 1.6;
-        }
-        
-        #app {
-            min-height: 100vh;
         }
         
         .menu {
@@ -97,19 +89,14 @@
             padding: 1rem;
             margin: 1rem 0;
         }
-        
-        #sim-container {
-            width: 100%;
-            min-height: 100vh;
-        }
     </style>
 </head>
 <body>
-    <div id="app">
+    <div id="root">
         <div class="loading">Loading...</div>
     </div>
 
-    <!-- Load React and dependencies -->
+    <!-- React and dependencies -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -118,244 +105,186 @@
     <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
 
     <script>
-        // Wait for everything to load
-        window.addEventListener('load', function() {
-            console.log('Starting app...');
-            console.log('React:', typeof React);
-            console.log('ReactDOM:', typeof ReactDOM);
-            console.log('Babel:', typeof Babel);
-            
-            if (typeof React === 'undefined' || typeof ReactDOM === 'undefined' || typeof Babel === 'undefined') {
-                document.getElementById('app').innerHTML = '<div class="loading" style="color: #ef4444;">ERROR: Libraries failed to load. Check your internet connection.</div>';
+        // Pure JavaScript - no Babel needed for app code
+        (function() {
+            // Wait for libraries
+            if (typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
+                setTimeout(arguments.callee, 100);
                 return;
             }
 
-            // Start the app
-            const script = document.createElement('script');
-            script.type = 'text/babel';
-            script.innerHTML = `
-                const { useState, useEffect } = React;
+            console.log('✓ Libraries ready');
 
-                function App() {
-                    const [simulations, setSimulations] = useState([]);
-                    const [currentSim, setCurrentSim] = useState(null);
-                    const [simCode, setSimCode] = useState('');
-                    const [loading, setLoading] = useState(true);
-                    const [error, setError] = useState(null);
+            const { useState, useEffect, createElement: h } = React;
 
-                    // Load sims.md on mount
-                    useEffect(() => {
-                        loadSimsList();
-                    }, []);
+            function App() {
+                const [simulations, setSimulations] = useState([]);
+                const [currentSim, setCurrentSim] = useState(null);
+                const [simCode, setSimCode] = useState('');
+                const [loading, setLoading] = useState(true);
+                const [error, setError] = useState(null);
 
-                    async function loadSimsList() {
-                        try {
-                            const response = await fetch('./sims.md');
-                            if (!response.ok) {
-                                throw new Error('sims.md not found. Please create it in the same directory.');
-                            }
-                            
-                            const text = await response.text();
-                            const lines = text.split('\\n');
+                // Load sims.md
+                useEffect(() => {
+                    fetch('./sims.md')
+                        .then(r => r.ok ? r.text() : Promise.reject('sims.md not found'))
+                        .then(text => {
+                            const lines = text.split('\n');
                             const sims = [];
                             
                             for (const line of lines) {
                                 const trimmed = line.trim();
+                                if (!trimmed || trimmed.startsWith('#')) continue;
                                 
-                                // Skip comments and empty lines
-                                if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) {
-                                    continue;
-                                }
-                                
-                                // Extract filename
                                 let filename = null;
-                                
-                                // Check for markdown link: [Name](file.tsx)
-                                const linkMatch = trimmed.match(/\\[.*?\\]\\((.*?\\.(tsx|jsx))\\)/i);
+                                const linkMatch = trimmed.match(/\[.*?\]\((.*?\.(tsx|jsx))\)/i);
                                 if (linkMatch) {
                                     filename = linkMatch[1];
-                                }
-                                // Check for list item: - file.tsx or * file.tsx
-                                else if (trimmed.match(/^[-*]\\s+/)) {
-                                    const listMatch = trimmed.match(/[-*]\\s+(.*?\\.(tsx|jsx))/i);
-                                    if (listMatch) {
-                                        filename = listMatch[1];
-                                    }
-                                }
-                                // Plain filename
-                                else if (trimmed.match(/\\.(tsx|jsx)$/i)) {
+                                } else if (trimmed.match(/^[-*]\s+/)) {
+                                    const listMatch = trimmed.match(/[-*]\s+(.*?\.(tsx|jsx))/i);
+                                    if (listMatch) filename = listMatch[1];
+                                } else if (trimmed.match(/\.(tsx|jsx)$/i)) {
                                     filename = trimmed;
                                 }
                                 
                                 if (filename) {
-                                    // Remove simulations/ prefix if present
-                                    filename = filename.replace(/^simulations\\//, '');
-                                    const name = filename.replace(/\\.(tsx|jsx)$/i, '').replace(/_/g, ' ');
+                                    filename = filename.replace(/^simulations\//, '');
+                                    const name = filename.replace(/\.(tsx|jsx)$/i, '').replace(/_/g, ' ');
                                     sims.push({ filename, name });
                                 }
                             }
                             
-                            if (sims.length === 0) {
-                                throw new Error('No .tsx or .jsx files found in sims.md');
-                            }
-                            
+                            if (sims.length === 0) throw new Error('No files in sims.md');
                             setSimulations(sims);
                             setLoading(false);
-                        } catch (err) {
-                            console.error('Error loading sims.md:', err);
-                            setError(err.message);
+                        })
+                        .catch(err => {
+                            console.error('Error:', err);
+                            setError(err.message || err);
                             setLoading(false);
-                        }
-                    }
+                        });
+                }, []);
 
-                    async function loadSimulation(sim) {
-                        setLoading(true);
-                        setError(null);
-                        
-                        try {
-                            const response = await fetch('./simulations/' + sim.filename);
-                            if (!response.ok) {
-                                throw new Error('Could not load ./simulations/' + sim.filename);
-                            }
-                            
-                            const code = await response.text();
+                // Load simulation
+                function loadSim(sim) {
+                    setLoading(true);
+                    setError(null);
+                    
+                    fetch('./simulations/' + sim.filename)
+                        .then(r => r.ok ? r.text() : Promise.reject('Could not load ' + sim.filename))
+                        .then(code => {
                             setSimCode(code);
                             setCurrentSim(sim);
                             setLoading(false);
-                        } catch (err) {
-                            console.error('Error loading simulation:', err);
-                            setError(err.message);
+                        })
+                        .catch(err => {
+                            console.error('Load error:', err);
+                            setError(err.message || err);
                             setLoading(false);
-                        }
-                    }
+                        });
+                }
 
-                    function goBack() {
-                        setCurrentSim(null);
-                        setSimCode('');
-                        setError(null);
-                    }
+                // Go back
+                function goBack() {
+                    setCurrentSim(null);
+                    setSimCode('');
+                    setError(null);
+                }
 
-                    function SimulationRenderer() {
-                        if (!simCode) return null;
+                // Render simulation
+                function SimRenderer() {
+                    if (!simCode) return null;
 
-                        try {
-                            // Strip TypeScript and imports
-                            let code = simCode;
-                            
-                            // Remove imports
-                            code = code.replace(/^import\\s+.*?from\\s+['"].*?['"];?\\s*$/gm, '');
-                            code = code.replace(/^import\\s+['"].*?['"];?\\s*$/gm, '');
-                            
-                            // Remove exports
-                            code = code.replace(/^export\\s+default\\s+/gm, '');
-                            code = code.replace(/^export\\s+/gm, '');
-                            
-                            // Remove type annotations
-                            code = code.replace(/^interface\\s+\\w+\\s*\\{[^}]*\\}/gm, '');
-                            code = code.replace(/^type\\s+\\w+\\s*=\\s*[^;]+;/gm, '');
-                            code = code.replace(/:\\s*\\w+(\\[\\]|<[^>]+>)?(?=\\s*[=,\\)])/g, '');
-                            code = code.replace(/\\):\\s*\\w+(\\[\\]|<[^>]+>)?(?=\\s*[{=>])/g, ')');
-                            code = code.replace(/<[A-Z]\\w*(\\s*,\\s*[A-Z]\\w*)*>/g, '');
-                            code = code.replace(/\\s+as\\s+\\w+/g, '');
-                            
-                            // Transform with Babel
-                            const transformed = Babel.transform(code, {
-                                presets: ['react'],
-                                filename: currentSim.filename
-                            }).code;
-                            
-                            // Find component name
-                            const match = transformed.match(/(?:function|const|class)\\s+([A-Z]\\w*)/);
-                            const componentName = match ? match[1] : 'Component';
-                            
-                            // Create wrapper function
-                            const wrapper = \`
-                                (function(React, useState, useEffect, useRef, useMemo, useCallback, useReducer, useContext, Recharts, LucideReact) {
-                                    const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, BarChart, Bar, ScatterChart, Scatter } = Recharts || {};
-                                    const { Camera, Square, Activity, Play, Pause, RotateCcw, Volume2, VolumeX, ChevronLeft, ChevronRight, Plus, Minus } = LucideReact || {};
-                                    
-                                    \${transformed}
-                                    
-                                    return \${componentName};
-                                })
-                            \`;
-                            
-                            // Execute
-                            const componentFactory = eval(wrapper);
-                            const Component = componentFactory(
-                                React,
-                                React.useState,
-                                React.useEffect,
-                                React.useRef,
-                                React.useMemo,
-                                React.useCallback,
-                                React.useReducer,
-                                React.useContext,
-                                window.Recharts,
-                                window.lucideReact
-                            );
-                            
-                            return React.createElement(Component);
-                        } catch (err) {
-                            console.error('Render error:', err);
-                            return React.createElement('div', {
-                                style: {
-                                    padding: '2rem',
-                                    background: '#0a0a0a',
-                                    color: '#ef4444',
-                                    minHeight: '100vh',
-                                    fontFamily: 'monospace'
-                                }
-                            }, [
-                                React.createElement('h2', { key: 'h', style: { marginBottom: '1rem' }}, 'Render Error'),
-                                React.createElement('div', { key: 'd', style: { background: 'rgba(0,0,0,0.5)', padding: '1rem', marginBottom: '1rem' }}, err.message),
-                                React.createElement('pre', { key: 'p', style: { fontSize: '0.8rem', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem' }}, err.stack),
-                                React.createElement('button', {
-                                    key: 'b',
-                                    onClick: goBack,
-                                    style: { marginTop: '1rem', padding: '0.5rem 1rem', background: '#ef4444', color: 'white', border: 'none', cursor: 'pointer' }
-                                }, '← Back')
-                            ]);
-                        }
-                    }
+                    try {
+                        // Process code
+                        let code = simCode;
+                        code = code.replace(/^import\s+.*?from\s+['"].*?['"];?\s*$/gm, '');
+                        code = code.replace(/^import\s+['"].*?['"];?\s*$/gm, '');
+                        code = code.replace(/^export\s+default\s+/gm, '');
+                        code = code.replace(/^export\s+/gm, '');
+                        code = code.replace(/^interface\s+\w+\s*\{[^}]*\}/gm, '');
+                        code = code.replace(/^type\s+\w+\s*=\s*[^;]+;/gm, '');
+                        code = code.replace(/:\s*\w+(\[\]|<[^>]+>)?(?=\s*[=,\)])/g, '');
+                        code = code.replace(/\):\s*\w+(\[\]|<[^>]+>)?(?=\s*[{=>])/g, ')');
+                        code = code.replace(/<[A-Z]\w*(\s*,\s*[A-Z]\w*)*>/g, '');
+                        code = code.replace(/\s+as\s+\w+/g, '');
 
-                    // Render
-                    if (currentSim && simCode) {
-                        return React.createElement('div', { id: 'sim-container' }, [
-                            React.createElement('button', {
-                                key: 'back',
-                                className: 'back-btn',
-                                onClick: goBack
-                            }, '← BACK'),
-                            React.createElement(SimulationRenderer, { key: 'sim' })
+                        // Transform
+                        const transformed = Babel.transform(code, {
+                            presets: ['react'],
+                            filename: currentSim.filename
+                        }).code;
+
+                        // Find component
+                        const match = transformed.match(/(?:function|const|class)\s+([A-Z]\w*)/);
+                        const name = match ? match[1] : 'Component';
+
+                        // Execute
+                        const wrapper = `
+                            (function(React, useState, useEffect, useRef, useMemo, useCallback, useReducer, useContext, Recharts, LucideReact) {
+                                const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, BarChart, Bar, ScatterChart, Scatter } = Recharts || {};
+                                const { Camera, Square, Activity, Play, Pause, RotateCcw, Volume2, VolumeX, ChevronLeft, ChevronRight, Plus, Minus } = LucideReact || {};
+                                ${transformed}
+                                return ${name};
+                            })
+                        `;
+
+                        const factory = eval(wrapper);
+                        const Component = factory(
+                            React,
+                            React.useState,
+                            React.useEffect,
+                            React.useRef,
+                            React.useMemo,
+                            React.useCallback,
+                            React.useReducer,
+                            React.useContext,
+                            window.Recharts,
+                            window.lucideReact
+                        );
+
+                        return h(Component);
+                    } catch (err) {
+                        console.error('Render error:', err);
+                        return h('div', { style: { padding: '2rem', background: '#0a0a0a', color: '#ef4444', minHeight: '100vh' }}, [
+                            h('h2', { key: 1, style: { marginBottom: '1rem' }}, 'Error: ' + currentSim.filename),
+                            h('div', { key: 2, style: { background: 'rgba(0,0,0,0.5)', padding: '1rem', marginBottom: '1rem', fontSize: '0.9rem' }}, err.message),
+                            h('pre', { key: 3, style: { fontSize: '0.75rem', overflow: 'auto', background: 'rgba(0,0,0,0.5)', padding: '1rem' }}, err.stack),
+                            h('button', { key: 4, onClick: goBack, style: { marginTop: '1rem', padding: '0.5rem 1rem', background: '#ef4444', color: 'white', border: 'none', cursor: 'pointer' }}, '← Back')
                         ]);
                     }
+                }
 
-                    return React.createElement('div', { className: 'menu' }, [
-                        React.createElement('h1', { key: 'title', className: 'title' }, 'Fractal Reality Simulators'),
-                        React.createElement('p', { key: 'subtitle', className: 'subtitle' }, 'https://github.com/AshmanRoonz/Fractal_Reality'),
-                        
-                        error && React.createElement('div', { key: 'error', className: 'error' }, error),
-                        
-                        loading ? 
-                            React.createElement('div', { key: 'loading', className: 'loading' }, 'Loading simulations...') :
-                            React.createElement('div', { key: 'list', className: 'sim-list' },
-                                simulations.map((sim, i) => 
-                                    React.createElement('button', {
-                                        key: i,
-                                        className: 'sim-btn',
-                                        onClick: () => loadSimulation(sim)
-                                    }, sim.name)
-                                )
-                            )
+                // Main render
+                if (currentSim && simCode) {
+                    return h('div', null, [
+                        h('button', { key: 'back', className: 'back-btn', onClick: goBack }, '← BACK'),
+                        h(SimRenderer, { key: 'sim' })
                     ]);
                 }
 
-                const root = ReactDOM.createRoot(document.getElementById('app'));
-                root.render(React.createElement(App));
-            `;
-            document.body.appendChild(script);
-        });
+                return h('div', { className: 'menu' }, [
+                    h('h1', { key: 'title', className: 'title' }, 'Fractal Reality Simulators'),
+                    h('p', { key: 'subtitle', className: 'subtitle' }, 'https://github.com/AshmanRoonz/Fractal_Reality'),
+                    error && h('div', { key: 'error', className: 'error' }, error),
+                    loading ?
+                        h('div', { key: 'loading', className: 'loading' }, 'Loading simulations...') :
+                        h('div', { key: 'list', className: 'sim-list' },
+                            simulations.map((sim, i) =>
+                                h('button', {
+                                    key: i,
+                                    className: 'sim-btn',
+                                    onClick: () => loadSim(sim)
+                                }, sim.name)
+                            )
+                        )
+                ]);
+            }
+
+            // Mount
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(h(App));
+        })();
     </script>
 </body>
 </html>
