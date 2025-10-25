@@ -9,7 +9,7 @@ const MolecularComposer = () => {
   const [showInfo, setShowInfo] = useState(true);
   const [cycleSpeed, setCycleSpeed] = useState(2);
   const [wavePhase, setWavePhase] = useState(0);
-  const canvasRef = useRef(null);
+  const canvasRef = useRef(nuall);
   const stopPlayingRef = useRef(false);
   const animationRef = useRef(null);
   const oscillatorsRef = useRef([]);
