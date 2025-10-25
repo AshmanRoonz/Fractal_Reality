@@ -18,7 +18,7 @@ This repository contains the complete Fractal Reality framework including theory
 
 ### Main Website
 - **[docs/index.html](docs/index.html)** - Live front page at www.fractalreality.ca with interactive demonstrations
-- **[docs/simulators.html](docs/simulators.html)** - Interactive simulation viewer with 17 React/TypeScript visualizations
+- **[docs/simulators.html](https://www.fractalreality.ca/simulators.html)** - Interactive simulation viewer with 17 React/TypeScript visualizations
 - **[docs/sims.md](docs/sims.md)** - Simulation catalog and descriptions
 
 ### Key Papers
