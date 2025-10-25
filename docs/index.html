@@ -161,16 +161,6 @@
         const FractalRealityLanding = () => {
             const [previewSim, setPreviewSim] = useState(null);
             const [activeSection, setActiveSection] = useState('overview');
-            const [simFrozen, setSimFrozen] = useState(false);
-
-            // Freeze simulation after 15 seconds to save resources
-            useEffect(() => {
-                const freezeTimer = setTimeout(() => {
-                    setSimFrozen(true);
-                }, 10000); // 10 seconds
-
-                return () => clearTimeout(freezeTimer);
-            }, []);
 
             useEffect(() => {
                 // Check if simulators.html exists and has content
@@ -272,53 +262,10 @@
                                         >
                                             <div className="sim-preview-box" style={{position: 'relative'}}>
                                                 {previewSim && previewSim !== 'unavailable' ? (
-                                                    <>
-                                                        <iframe 
-                                                            src={`./simulators.html?auto=${previewSim}`}
-                                                            title="Simulation Preview"
-                                                            style={{pointerEvents: simFrozen ? 'none' : 'auto', opacity: simFrozen ? 0.3 : 1}}
-                                                        />
-                                                        {simFrozen && (
-                                                            <div 
-                                                                style={{
-                                                                    position: 'absolute',
-                                                                    top: 0,
-                                                                    left: 0,
-                                                                    right: 0,
-                                                                    bottom: 0,
-                                                                    display: 'flex',
-                                                                    flexDirection: 'column',
-                                                                    alignItems: 'center',
-                                                                    justifyContent: 'center',
-                                                                    background: 'rgba(10, 10, 10, 0.85)',
-                                                                    zIndex: 10
-                                                                }}
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    setSimFrozen(false);
-                                                                }}
-                                                            >
-                                                                <div className="text-center p-4">
-                                                                    <div className="mono text-sm mb-3" style={{color: '#94a3b8'}}>
-                                                                        ⏸ Simulation Paused
-                                                                    </div>
-                                                                    <div className="text-xs mb-4" style={{color: '#64748b'}}>
-                                                                        (Saving resources)
-                                                                    </div>
-                                                                    <button
-                                                                        className="tab-button"
-                                                                        style={{
-                                                                            padding: '0.5rem 1.5rem',
-                                                                            background: 'rgba(147, 51, 234, 0.3)',
-                                                                            borderColor: 'rgba(147, 51, 234, 0.5)'
-                                                                        }}
-                                                                    >
-                                                                        Click to Resume
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </>
+                                                    <iframe
+                                                        src={`./simulators.html?auto=${previewSim}`}
+                                                        title="Simulation Preview"
+                                                    />
                                                 ) : (
                                                     <div className="flex items-center justify-center h-full">
                                                         <div className="text-center text-gray-600">
