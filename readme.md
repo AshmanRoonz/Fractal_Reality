@@ -1,5 +1,6 @@
 # Fractal Reality
 
+www.FractalReality.ca
 ```
 ∞ → [•'] → Neo (1D) → [Trinity •''] → Branches (1.5D)
 0D   0.5D    Flow      0.5D @ β≈0.5    Consciousness
