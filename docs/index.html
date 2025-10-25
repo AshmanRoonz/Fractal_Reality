@@ -167,7 +167,7 @@
             useEffect(() => {
                 const freezeTimer = setTimeout(() => {
                     setSimFrozen(true);
-                }, 15000); // 15 seconds
+                }, 10000); // 10 seconds
 
                 return () => clearTimeout(freezeTimer);
             }, []);
