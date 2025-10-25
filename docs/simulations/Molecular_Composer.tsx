@@ -9,7 +9,6 @@ const MolecularComposer = () => {
   const [showInfo, setShowInfo] = useState(true);
   const [cycleSpeed, setCycleSpeed] = useState(2);
   const [wavePhase, setWavePhase] = useState(0);
-  const canvasRef = useRef(nuall);
   const stopPlayingRef = useRef(false);
   const animationRef = useRef(null);
   const oscillatorsRef = useRef([]);
@@ -35,7 +34,7 @@ const MolecularComposer = () => {
     { symbol: 'Cu', name: 'Copper', z: 29, n: 34, e: 29, color: '#ec4899', mass: 63 },
   ];
 
-  // Famous molecules database
+  // Comprehensive molecules database organized by category
   const famousMolecules = {
     'Breathable Air': [
       {
@@ -44,121 +43,347 @@ const MolecularComposer = () => {
         elements: ['N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','N','O','O','O','O','O','O','O','O','O','O','Ar'],
         bondType: 'Mixed atmosphere',
         vibrationFreq: 5.5,
-        description: 'What we breathe! 280e⁻ 280p⁺ 296n⁰',
-        tempo: 'Allegro'
-      },
-      {
-        name: 'Oxygen',
-        formula: 'O₂',
-        elements: ['O', 'O'],
-        bondType: 'Double',
-        vibrationFreq: 7.5,
-        description: '16e⁻ 16p⁺ 16n⁰ - Life-giving molecule',
+        description: 'What we breathe! Mostly nitrogen with life-giving oxygen',
         tempo: 'Vivace'
       },
-      {
-        name: 'Nitrogen',
-        formula: 'N₂',
+    ],
+    'Simple Diatomics': [
+      { 
+        name: 'Hydrogen Gas', 
+        formula: 'H₂', 
+        elements: ['H', 'H'],
+        bondType: 'Single Bond',
+        vibrationFreq: 12.5,
+        description: '2e⁻ 2p⁺ 0n⁰ - Very fast! ~4300 cm⁻¹',
+        tempo: 'Prestissimo'
+      },
+      { 
+        name: 'Oxygen Gas', 
+        formula: 'O₂', 
+        elements: ['O', 'O'],
+        bondType: 'Double Bond',
+        vibrationFreq: 4.7,
+        description: '16e⁻ 16p⁺ 16n⁰ - Strong O=O stretch ~1580 cm⁻¹',
+        tempo: 'Vivace'
+      },
+      { 
+        name: 'Nitrogen Gas', 
+        formula: 'N₂', 
         elements: ['N', 'N'],
-        bondType: 'Triple',
-        vibrationFreq: 9.0,
-        description: '14e⁻ 14p⁺ 14n⁰ - 78% of atmosphere',
+        bondType: 'Triple Bond',
+        vibrationFreq: 7.0,
+        description: '14e⁻ 14p⁺ 14n⁰ - Very strong N≡N ~2330 cm⁻¹',
         tempo: 'Presto'
       },
-      {
-        name: 'Carbon Dioxide',
-        formula: 'CO₂',
-        elements: ['C', 'O', 'O'],
-        bondType: 'Linear',
-        vibrationFreq: 4.2,
-        description: '22e⁻ 22p⁺ 22n⁰ - What we exhale',
-        tempo: 'Moderato'
-      },
-    ],
-    'Water & Life': [
-      {
-        name: 'Water',
-        formula: 'H₂O',
-        elements: ['H', 'H', 'O'],
-        bondType: 'Bent',
-        vibrationFreq: 3.5,
-        description: '10e⁻ 10p⁺ 8n⁰ - Universal solvent',
+      { 
+        name: 'Fluorine Gas', 
+        formula: 'F₂', 
+        elements: ['F', 'F'],
+        bondType: 'Single Bond',
+        vibrationFreq: 2.7,
+        description: '18e⁻ 18p⁺ 20n⁰ - Weak F-F bond ~890 cm⁻¹',
         tempo: 'Andante'
       },
-      {
-        name: 'Hydrogen Peroxide',
-        formula: 'H₂O₂',
-        elements: ['H', 'H', 'O', 'O'],
-        bondType: 'Bent-bent',
-        vibrationFreq: 4.0,
-        description: '18e⁻ 18p⁺ 16n⁰ - Disinfectant',
-        tempo: 'Moderato'
-      },
-      {
-        name: 'Ammonia',
-        formula: 'NH₃',
-        elements: ['N', 'H', 'H', 'H'],
-        bondType: 'Pyramidal',
-        vibrationFreq: 4.8,
-        description: '10e⁻ 10p⁺ 7n⁰ - Pungent gas',
-        tempo: 'Allegro'
-      },
-      {
-        name: 'Methane',
-        formula: 'CH₄',
-        elements: ['C', 'H', 'H', 'H', 'H'],
-        bondType: 'Tetrahedral',
-        vibrationFreq: 5.2,
-        description: '10e⁻ 10p⁺ 6n⁰ - Natural gas',
-        tempo: 'Allegro'
+      { 
+        name: 'Chlorine Gas', 
+        formula: 'Cl₂', 
+        elements: ['Cl', 'Cl'],
+        bondType: 'Single Bond',
+        vibrationFreq: 1.7,
+        description: '34e⁻ 34p⁺ 36n⁰ - Heavy Cl-Cl ~560 cm⁻¹',
+        tempo: 'Largo'
       },
     ],
-    'Common Compounds': [
-      {
-        name: 'Table Salt',
-        formula: 'NaCl',
-        elements: ['Na', 'Cl'],
-        bondType: 'Ionic',
-        vibrationFreq: 3.0,
-        description: '28e⁻ 28p⁺ 30n⁰ - Sodium chloride',
+    'Water & Oxides': [
+      { 
+        name: 'Water', 
+        formula: 'H₂O', 
+        elements: ['H', 'H', 'O'],
+        bondType: 'Bent',
+        vibrationFreq: 3.7,
+        description: '10e⁻ 10p⁺ 8n⁰ - Bending vibration ~1595 cm⁻¹',
+        tempo: 'Allegro'
+      },
+      { 
+        name: 'Hydrogen Peroxide', 
+        formula: 'H₂O₂', 
+        elements: ['H', 'H', 'O', 'O'],
+        bondType: 'Non-planar',
+        vibrationFreq: 2.8,
+        description: '18e⁻ 18p⁺ 16n⁰ - O-O peroxide bond',
         tempo: 'Moderato'
       },
-      {
-        name: 'Hydrochloric Acid',
-        formula: 'HCl',
-        elements: ['H', 'Cl'],
-        bondType: 'Polar covalent',
-        vibrationFreq: 8.0,
-        description: '18e⁻ 18p⁺ 18n⁰ - Stomach acid',
+      { 
+        name: 'Carbon Dioxide', 
+        formula: 'CO₂', 
+        elements: ['O', 'C', 'O'],
+        bondType: 'Linear',
+        vibrationFreq: 4.0,
+        description: '22e⁻ 22p⁺ 22n⁰ - Asymmetric stretch ~2349 cm⁻¹',
+        tempo: 'Allegro'
+      },
+      { 
+        name: 'Carbon Monoxide', 
+        formula: 'CO', 
+        elements: ['C', 'O'],
+        bondType: 'Triple Bond',
+        vibrationFreq: 6.4,
+        description: '14e⁻ 14p⁺ 14n⁰ - Strong C≡O ~2143 cm⁻¹',
         tempo: 'Vivace'
       },
-      {
-        name: 'Calcium Carbonate',
-        formula: 'CaCO₃',
+      { 
+        name: 'Nitric Oxide', 
+        formula: 'NO', 
+        elements: ['N', 'O'],
+        bondType: 'Double Bond',
+        vibrationFreq: 5.6,
+        description: '15e⁻ 15p⁺ 15n⁰ - Free radical ~1876 cm⁻¹',
+        tempo: 'Vivace'
+      },
+      { 
+        name: 'Nitrogen Dioxide', 
+        formula: 'NO₂', 
+        elements: ['N', 'O', 'O'],
+        bondType: 'Bent',
+        vibrationFreq: 4.2,
+        description: '23e⁻ 23p⁺ 23n⁰ - Brown gas pollutant',
+        tempo: 'Allegro'
+      },
+      { 
+        name: 'Sulfur Dioxide', 
+        formula: 'SO₂', 
+        elements: ['S', 'O', 'O'],
+        bondType: 'Bent',
+        vibrationFreq: 3.3,
+        description: '32e⁻ 32p⁺ 32n⁰ - Acid rain precursor',
+        tempo: 'Moderato'
+      },
+    ],
+    'Simple Hydrides': [
+      { 
+        name: 'Ammonia', 
+        formula: 'NH₃', 
+        elements: ['N', 'H', 'H', 'H'],
+        bondType: 'Pyramidal',
+        vibrationFreq: 3.2,
+        description: '10e⁻ 10p⁺ 7n⁰ - Umbrella mode ~950 cm⁻¹',
+        tempo: 'Moderato'
+      },
+      { 
+        name: 'Methane', 
+        formula: 'CH₄', 
+        elements: ['C', 'H', 'H', 'H', 'H'],
+        bondType: 'Tetrahedral',
+        vibrationFreq: 2.9,
+        description: '10e⁻ 10p⁺ 6n⁰ - C-H stretch ~3000 cm⁻¹',
+        tempo: 'Andante'
+      },
+      { 
+        name: 'Hydrogen Sulfide', 
+        formula: 'H₂S', 
+        elements: ['H', 'H', 'S'],
+        bondType: 'Bent',
+        vibrationFreq: 2.4,
+        description: '18e⁻ 18p⁺ 16n⁰ - Rotten egg smell',
+        tempo: 'Andante'
+      },
+      { 
+        name: 'Hydrogen Chloride', 
+        formula: 'HCl', 
+        elements: ['H', 'Cl'],
+        bondType: 'Diatomic',
+        vibrationFreq: 8.7,
+        description: '18e⁻ 18p⁺ 18n⁰ - Strong acid ~2886 cm⁻¹',
+        tempo: 'Presto'
+      },
+      { 
+        name: 'Hydrogen Fluoride', 
+        formula: 'HF', 
+        elements: ['H', 'F'],
+        bondType: 'Diatomic',
+        vibrationFreq: 12.1,
+        description: '10e⁻ 10p⁺ 10n⁰ - Very strong bond ~4138 cm⁻¹',
+        tempo: 'Prestissimo'
+      },
+    ],
+    'Organic Molecules': [
+      { 
+        name: 'Ethane', 
+        formula: 'C₂H₆', 
+        elements: ['C', 'C', 'H', 'H', 'H', 'H', 'H', 'H'],
+        bondType: 'Single C-C',
+        vibrationFreq: 2.5,
+        description: '18e⁻ 18p⁺ 12n⁰ - Simplest alkane',
+        tempo: 'Andante'
+      },
+      { 
+        name: 'Ethylene', 
+        formula: 'C₂H₄', 
+        elements: ['C', 'C', 'H', 'H', 'H', 'H'],
+        bondType: 'Double C=C',
+        vibrationFreq: 4.8,
+        description: '16e⁻ 16p⁺ 12n⁰ - Plant hormone ~1623 cm⁻¹',
+        tempo: 'Vivace'
+      },
+      { 
+        name: 'Acetylene', 
+        formula: 'C₂H₂', 
+        elements: ['C', 'C', 'H', 'H'],
+        bondType: 'Triple C≡C',
+        vibrationFreq: 6.1,
+        description: '14e⁻ 14p⁺ 12n⁰ - Welding fuel ~1974 cm⁻¹',
+        tempo: 'Vivace'
+      },
+      { 
+        name: 'Formaldehyde', 
+        formula: 'CH₂O', 
+        elements: ['C', 'H', 'H', 'O'],
+        bondType: 'Planar',
+        vibrationFreq: 4.3,
+        description: '16e⁻ 16p⁺ 14n⁰ - Preservative',
+        tempo: 'Allegro'
+      },
+      { 
+        name: 'Methanol', 
+        formula: 'CH₃OH', 
+        elements: ['C', 'H', 'H', 'H', 'O', 'H'],
+        bondType: 'Tetrahedral',
+        vibrationFreq: 2.7,
+        description: '18e⁻ 18p⁺ 14n⁰ - Wood alcohol',
+        tempo: 'Andante'
+      },
+      { 
+        name: 'Formic Acid', 
+        formula: 'HCOOH', 
+        elements: ['H', 'C', 'O', 'O', 'H'],
+        bondType: 'Carboxylic',
+        vibrationFreq: 3.2,
+        description: '24e⁻ 24p⁺ 22n⁰ - Ant venom',
+        tempo: 'Moderato'
+      },
+      { 
+        name: 'Acetic Acid', 
+        formula: 'CH₃COOH', 
+        elements: ['C', 'H', 'H', 'H', 'C', 'O', 'O', 'H'],
+        bondType: 'Carboxylic',
+        vibrationFreq: 2.3,
+        description: '32e⁻ 32p⁺ 28n⁰ - Vinegar',
+        tempo: 'Andante'
+      },
+    ],
+    'Salts & Ionic': [
+      { 
+        name: 'Sodium Chloride', 
+        formula: 'NaCl', 
+        elements: ['Na', 'Cl'],
+        bondType: 'Ionic',
+        vibrationFreq: 1.1,
+        description: '28e⁻ 28p⁺ 30n⁰ - Table salt',
+        tempo: 'Largo'
+      },
+      { 
+        name: 'Magnesium Oxide', 
+        formula: 'MgO', 
+        elements: ['Mg', 'O'],
+        bondType: 'Ionic',
+        vibrationFreq: 2.0,
+        description: '20e⁻ 20p⁺ 20n⁰ - Refractory material',
+        tempo: 'Lento'
+      },
+      { 
+        name: 'Calcium Carbonate', 
+        formula: 'CaCO₃', 
         elements: ['Ca', 'C', 'O', 'O', 'O'],
-        bondType: 'Ionic/covalent',
+        bondType: 'Ionic/Covalent',
         vibrationFreq: 2.6,
         description: '50e⁻ 50p⁺ 50n⁰ - Limestone, chalk',
         tempo: 'Andante'
       },
     ],
     'Biochemical': [
-      {
-        name: 'Glucose',
-        formula: 'C₆H₁₂O₆',
+      { 
+        name: 'Glucose', 
+        formula: 'C₆H₁₂O₆', 
         elements: ['C','C','C','C','C','C','H','H','H','H','H','H','H','H','H','H','H','H','O','O','O','O','O','O'],
         bondType: 'Ring',
         vibrationFreq: 1.8,
         description: '72e⁻ 72p⁺ 66n⁰ - Blood sugar, energy',
         tempo: 'Lento'
       },
-      {
-        name: 'Ethanol',
-        formula: 'C₂H₅OH',
+      { 
+        name: 'Ethanol', 
+        formula: 'C₂H₅OH', 
         elements: ['C', 'C', 'H', 'H', 'H', 'H', 'H', 'O', 'H'],
         bondType: 'Hydroxyl',
         vibrationFreq: 2.4,
         description: '26e⁻ 26p⁺ 20n⁰ - Alcohol',
+        tempo: 'Andante'
+      },
+      { 
+        name: 'Acetone', 
+        formula: 'C₃H₆O', 
+        elements: ['C','H','H','H','C','O','C','H','H','H'],
+        bondType: 'Carbonyl',
+        vibrationFreq: 2.1,
+        description: '32e⁻ 32p⁺ 26n⁰ - Solvent',
+        tempo: 'Lento'
+      },
+      { 
+        name: 'Glycine', 
+        formula: 'C₂H₅NO₂', 
+        elements: ['C','C','H','H','H','H','H','N','O','O'],
+        bondType: 'Amino acid',
+        vibrationFreq: 2.0,
+        description: '34e⁻ 34p⁺ 29n⁰ - Simplest amino acid',
+        tempo: 'Lento'
+      },
+    ],
+    'Atmospheric': [
+      { 
+        name: 'Ozone', 
+        formula: 'O₃', 
+        elements: ['O', 'O', 'O'],
+        bondType: 'Bent',
+        vibrationFreq: 3.3,
+        description: '24e⁻ 24p⁺ 24n⁰ - UV protection layer',
+        tempo: 'Moderato'
+      },
+      { 
+        name: 'Nitrous Oxide', 
+        formula: 'N₂O', 
+        elements: ['N', 'N', 'O'],
+        bondType: 'Linear',
+        vibrationFreq: 4.5,
+        description: '22e⁻ 22p⁺ 23n⁰ - Laughing gas',
+        tempo: 'Allegro'
+      },
+    ],
+    'Industrial': [
+      { 
+        name: 'Sulfuric Acid', 
+        formula: 'H₂SO₄', 
+        elements: ['H', 'H', 'S', 'O', 'O', 'O', 'O'],
+        bondType: 'Tetrahedral',
+        vibrationFreq: 2.5,
+        description: '50e⁻ 50p⁺ 48n⁰ - Strong acid',
+        tempo: 'Andante'
+      },
+      { 
+        name: 'Nitric Acid', 
+        formula: 'HNO₃', 
+        elements: ['H', 'N', 'O', 'O', 'O'],
+        bondType: 'Planar',
+        vibrationFreq: 3.0,
+        description: '32e⁻ 32p⁺ 31n⁰ - Oxidizing acid',
+        tempo: 'Moderato'
+      },
+      { 
+        name: 'Benzene', 
+        formula: 'C₆H₆', 
+        elements: ['C','C','C','C','C','C','H','H','H','H','H','H'],
+        bondType: 'Aromatic',
+        vibrationFreq: 2.8,
+        description: '42e⁻ 42p⁺ 36n⁰ - Aromatic hydrocarbon',
         tempo: 'Andante'
       },
     ],
@@ -297,121 +522,6 @@ const MolecularComposer = () => {
     modulateVolumes();
   };
 
-  // Canvas drawing effect - SUPERIMPOSED waves showing emergent pattern
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || selectedElements.length === 0) return;
-
-    const ctx = canvas.getContext('2d');
-    const width = canvas.width;
-    const height = canvas.height;
-
-    const draw = () => {
-      // Clear canvas with dark background
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
-      ctx.fillRect(0, 0, width, height);
-
-      const centerY = height / 2;
-      const elementCount = selectedElements.length;
-
-      // Draw center line
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(60, centerY);
-      ctx.lineTo(width - 20, centerY);
-      ctx.stroke();
-
-      // Draw each atom's waveform SUPERIMPOSED on the same baseline
-      selectedElements.forEach((el, idx) => {
-        const atomPhase = idx / elementCount;
-        const phase = (wavePhase - atomPhase + 1) % 1;
-
-        // Draw waveform
-        ctx.beginPath();
-        ctx.strokeStyle = el.color;
-        ctx.lineWidth = 2;
-        ctx.globalAlpha = 0.6; // Semi-transparent so we can see overlaps
-
-        for (let i = 0; i < width - 80; i++) {
-          const x = 60 + i;
-          const wavePhaseAtX = (phase + i / 50) * Math.PI * 2;
-          const amplitude = 40 * Math.cos(phase * Math.PI * 2); // Larger amplitude
-          const y = centerY + Math.sin(wavePhaseAtX) * Math.abs(amplitude);
-          
-          if (i === 0) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
-        }
-        ctx.stroke();
-        ctx.globalAlpha = 1;
-      });
-
-      // Now draw the EMERGENT PATTERN - sum of all waves
-      ctx.beginPath();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 3;
-      ctx.globalAlpha = 1;
-      ctx.shadowColor = '#ffffff';
-      ctx.shadowBlur = 10;
-
-      for (let i = 0; i < width - 80; i++) {
-        const x = 60 + i;
-        let sumY = 0;
-        
-        // Sum all waves at this x position
-        selectedElements.forEach((el, idx) => {
-          const atomPhase = idx / elementCount;
-          const phase = (wavePhase - atomPhase + 1) % 1;
-          const wavePhaseAtX = (phase + i / 50) * Math.PI * 2;
-          const amplitude = 40 * Math.cos(phase * Math.PI * 2);
-          sumY += Math.sin(wavePhaseAtX) * Math.abs(amplitude);
-        });
-        
-        const y = centerY + sumY / elementCount; // Average the sum
-        
-        if (i === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
-      }
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      // Draw legend on the left
-      const legendX = 10;
-      let legendY = 30;
-      
-      selectedElements.forEach((el, idx) => {
-        // Color swatch
-        ctx.fillStyle = el.color;
-        ctx.fillRect(legendX, legendY - 10, 20, 12);
-        
-        // Element info
-        ctx.fillStyle = el.color;
-        ctx.font = 'bold 12px sans-serif';
-        ctx.fillText(el.symbol, legendX + 25, legendY);
-        
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '9px monospace';
-        ctx.fillText(`${el.e}e⁻ ${el.z}p⁺ ${el.n}n⁰`, legendX + 25, legendY + 10);
-        
-        legendY += 35;
-      });
-
-      // Label for emergent pattern
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 14px sans-serif';
-      ctx.fillText('EMERGENT PATTERN', width - 180, 30);
-      ctx.fillRect(width - 200, 35, 30, 3);
-    };
-
-    draw();
-  }, [selectedElements, wavePhase]);
-
   // Animate wave phase
   useEffect(() => {
     if (!isPlaying) return;
@@ -486,82 +596,127 @@ const MolecularComposer = () => {
           <div className="flex items-center justify-center gap-3 mb-3">
             <Radio className="w-10 h-10 text-cyan-400" />
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Molecular Song Composer (Canvas)
+              Molecular Song Composer
             </h1>
             <Sparkles className="w-10 h-10 text-pink-400" />
           </div>
           <p className="text-lg text-cyan-200">
             Molecules are SONGS! Atoms cycle through vibrations.
           </p>
+          <p className="text-sm text-purple-300 mt-1">
+            Fractal Reality Framework • Ashman Roonz • github.com/AshmanRoonz/Fractal_Reality
+          </p>
         </div>
 
-        {/* Info Panel */}
+        {/* Info Banner */}
         {showInfo && (
-          <div className="mb-6 bg-gradient-to-r from-purple-900/50 via-pink-900/50 to-purple-900/50 rounded-xl p-6 border border-purple-500/50 relative">
+          <div className="mb-6 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl p-4 border-2 border-pink-500/50 relative">
             <button
               onClick={() => setShowInfo(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white"
+              className="absolute top-2 right-2 text-gray-400 hover:text-white"
             >
               <X className="w-5 h-5" />
             </button>
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-3">
               <Info className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-xl font-bold text-pink-300 mb-2">How it works</h3>
-                <p className="text-gray-300 mb-2">
-                  Each atom vibrates with 3 frequencies: electrons (sine), protons (triangle), neutrons (square).
-                  The wave cycles through atoms in sequence—this is molecular breathing!
-                </p>
-                <p className="text-sm text-cyan-300">
-                  Based on real molecular vibrations measured by IR spectroscopy. Reference: <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" rel="noopener noreferrer" className="underline">Fractal Reality Framework</a>
-                </p>
+              <div className="text-sm">
+                <p className="text-cyan-200 font-bold mb-2">🎵 Molecules as Songs:</p>
+                <ul className="space-y-1 text-gray-300">
+                  <li>• Each <strong>atom</strong> = a 3-part chord (electrons + protons + neutrons)</li>
+                  <li>• The <strong>molecule</strong> = a cycling song through all atoms</li>
+                  <li>• <strong>Cycle speed</strong> = vibrational frequency (bond oscillations)</li>
+                  <li>• This is what <strong>IR spectroscopy</strong> actually measures!</li>
+                </ul>
               </div>
             </div>
           </div>
         )}
 
-        {/* Analysis Panel */}
-        {analyzeMolecule && (
-          <div className="mb-6 bg-black/40 rounded-xl p-4 border border-yellow-500/30">
-            <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <div className="text-2xl font-bold text-yellow-400">{analyzeMolecule.formula}</div>
-                <div className="text-sm text-gray-400">{analyzeMolecule.elementCount} atoms • {analyzeMolecule.totalMass}u</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-mono">
-                  <span className="text-cyan-400">{analyzeMolecule.totalElectrons}e⁻</span>
-                  {' • '}
-                  <span className="text-pink-400">{analyzeMolecule.totalProtons}p⁺</span>
-                  {' • '}
-                  <span className="text-yellow-400">{analyzeMolecule.totalNeutrons}n⁰</span>
-                </div>
-              </div>
-              <div className="text-right text-sm">
-                {analyzeMolecule.allEqual && (
-                  <div className="text-green-400">✨ Perfect Balance!</div>
+        {/* Controls */}
+        <div className="mb-6 space-y-3">
+          <div className="flex flex-wrap gap-3 justify-center">
+            <button
+              onClick={() => {
+                if (!soundEnabled) initAudio();
+                setSoundEnabled(!soundEnabled);
+              }}
+              className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                soundEnabled ? 'bg-green-500 text-black' : 'bg-slate-700 text-gray-300'
+              }`}
+            >
+              {soundEnabled ? '🔊 Sound ON' : '🔇 Enable Sound'}
+            </button>
+            {soundEnabled && selectedElements.length > 0 && (
+              <>
+                {!isPlaying ? (
+                  <button
+                    onClick={playMoleculeSong}
+                    className="px-4 py-2 rounded-lg font-bold bg-purple-500 text-white hover:bg-purple-600 transition-all flex items-center gap-2"
+                  >
+                    <Play className="w-5 h-5" />
+                    Play Molecular Song
+                  </button>
+                ) : (
+                  <button
+                    onClick={stopPlaying}
+                    className="px-4 py-2 rounded-lg font-bold bg-red-500 text-white hover:bg-red-600 transition-all flex items-center gap-2"
+                  >
+                    <X className="w-5 h-5" />
+                    Stop Playing
+                  </button>
                 )}
-                {!analyzeMolecule.allEqual && analyzeMolecule.epRatio && (
-                  <div className="text-blue-400">⚡ Neutral Charge</div>
-                )}
-                <div className="text-gray-400">
-                  Vibration: {cycleSpeed.toFixed(1)} Hz •{' '}
-                  {cycleSpeed < 2 ? '🐌 Very slow' :
-                   cycleSpeed < 4 ? '🎵 Slow' :
-                   cycleSpeed < 6 ? '⚡ Moderate' :
-                   cycleSpeed < 8 ? '🚀 Fast' : '⭐ Very fast'}
-                </div>
+              </>
+            )}
+            {selectedElements.length > 0 && (
+              <button
+                onClick={clearMolecule}
+                className="px-4 py-2 rounded-lg font-bold bg-slate-600 text-white hover:bg-slate-700 transition-all flex items-center gap-2"
+              >
+                <Trash2 className="w-5 h-5" />
+                Clear
+              </button>
+            )}
+          </div>
+
+          {/* Vibration Speed Control */}
+          {selectedElements.length > 0 && (
+            <div className="bg-black/30 rounded-lg p-4 border border-cyan-500/30 max-w-2xl mx-auto">
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-cyan-300 font-bold">Vibration Frequency:</label>
+                <span className="text-pink-400 text-xl font-bold">{cycleSpeed.toFixed(1)} Hz</span>
+              </div>
+              <input
+                type="range"
+                min="0.5"
+                max="60"
+                step="0.5"
+                value={cycleSpeed}
+                onChange={(e) => setCycleSpeed(parseFloat(e.target.value))}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-gray-400 mt-1">
+                <span>0.5 Hz (Grave)</span>
+                <span>15 Hz (Allegro)</span>
+                <span>30 Hz (Vivace)</span>
+                <span>60 Hz (Presto)</span>
+              </div>
+              <div className="text-center text-sm text-yellow-300 mt-2">
+                {cycleSpeed < 2 ? '🐌 Very slow vibration' :
+                 cycleSpeed < 10 ? '🎵 Moderate vibration' :
+                 cycleSpeed < 30 ? '⚡ Fast vibration' :
+                 cycleSpeed < 50 ? '🚀 Very fast vibration' :
+                 '⭐ Ultra-fast vibration!'}
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
           
           {/* Left: Molecule Builder */}
           <div className="space-y-6">
             
-            {/* Current Molecule Display - Canvas Version */}
+            {/* Current Molecule Display */}
             <div className="bg-black/30 rounded-xl p-6 border border-cyan-500/30">
               <h2 className="text-2xl font-bold text-cyan-300 mb-4 flex items-center gap-2">
                 <Music className="w-6 h-6" />
@@ -576,122 +731,130 @@ const MolecularComposer = () => {
                 </div>
               ) : (
                 <div>
-                  {/* Canvas Visualization */}
-                  <div className="mb-6 bg-slate-900/70 rounded-lg overflow-hidden border border-cyan-500/30">
-                    <canvas
-                      ref={canvasRef}
-                      width={800}
-                      height={300}
-                      className="w-full"
-                      style={{ display: 'block' }}
-                    />
-                  </div>
-
-                  {/* Controls */}
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm text-gray-400 mb-2">
-                        Vibration Speed: {cycleSpeed.toFixed(1)} Hz
-                      </label>
-                      <input
-                        type="range"
-                        min="0.5"
-                        max="10"
-                        step="0.1"
-                        value={cycleSpeed}
-                        onChange={(e) => setCycleSpeed(parseFloat(e.target.value))}
-                        className="w-full"
-                      />
-                    </div>
-
-                    <div className="flex gap-2">
-                      <button
-                        onClick={soundEnabled ? playMoleculeSong : initAudio}
-                        disabled={selectedElements.length === 0}
-                        className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 disabled:from-gray-700 disabled:to-gray-800 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-all"
-                      >
-                        {!soundEnabled ? (
-                          <>
-                            <Volume2 className="w-5 h-5" />
-                            Enable Sound
-                          </>
-                        ) : isPlaying ? (
-                          <>
-                            <Zap className="w-5 h-5 animate-pulse" />
-                            Playing...
-                          </>
-                        ) : (
-                          <>
-                            <Play className="w-5 h-5" />
-                            Play Song
-                          </>
-                        )}
-                      </button>
-                      
-                      {isPlaying && (
-                        <button
-                          onClick={stopPlaying}
-                          className="bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-6 rounded-lg transition-all"
-                        >
-                          Stop
-                        </button>
-                      )}
-                      
-                      <button
-                        onClick={clearMolecule}
-                        disabled={selectedElements.length === 0}
-                        className="bg-red-900/50 hover:bg-red-900/70 disabled:bg-gray-800 text-white p-3 rounded-lg transition-all"
-                        title="Clear all atoms"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
-                    </div>
-
-                    {/* Atom list */}
-                    <div className="max-h-32 overflow-y-auto space-y-2">
-                      {selectedElements.map((el) => (
-                        <div
-                          key={el.id}
-                          className="flex items-center justify-between bg-slate-800/50 rounded p-2 border"
-                          style={{ borderColor: el.color + '40' }}
-                        >
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-8 h-8 rounded-full flex items-center justify-center font-bold"
-                              style={{ backgroundColor: el.color + '30', color: el.color }}
-                            >
+                  {/* Wave Visualization */}
+                  <div className="mb-6 bg-slate-900/70 rounded-lg p-4 h-48 relative overflow-hidden border border-cyan-500/30">
+                    <svg width="100%" height="100%" className="absolute inset-0">
+                      {selectedElements.map((el, idx) => {
+                        const yBase = 24 + (idx * (160 / Math.max(selectedElements.length, 1)));
+                        const atomPhase = idx / selectedElements.length;
+                        const phase = (wavePhase - atomPhase + 1) % 1;
+                        
+                        return (
+                          <g key={el.id}>
+                            <text x="10" y={yBase} fill={el.color} fontSize="14" fontWeight="bold">
                               {el.symbol}
-                            </div>
-                            <div>
-                              <div className="text-sm font-bold">{el.name}</div>
-                              <div className="text-xs text-gray-400">{el.e}e⁻ {el.z}p⁺ {el.n}n⁰</div>
-                            </div>
-                          </div>
-                          <button
-                            onClick={() => removeElement(el.id)}
-                            className="text-red-400 hover:text-red-300"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ))}
+                            </text>
+                            
+                            <path
+                              d={Array.from({ length: 100 }, (_, i) => {
+                                const x = 50 + (i / 100) * (typeof window !== 'undefined' ? window.innerWidth * 0.4 : 400);
+                                const wavePhaseAtX = (phase + i / 20) * Math.PI * 2;
+                                const amplitude = 15 * Math.cos(phase * Math.PI * 2);
+                                const y = yBase + Math.sin(wavePhaseAtX) * Math.abs(amplitude);
+                                return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+                              }).join(' ')}
+                              stroke={el.color}
+                              strokeWidth="2"
+                              fill="none"
+                              opacity="0.8"
+                            />
+                            
+                            <circle
+                              cx={50 + (typeof window !== 'undefined' ? window.innerWidth * 0.2 : 200)}
+                              cy={yBase}
+                              r={8 * (1 - Math.abs(phase - 0.5) * 2)}
+                              fill={el.color}
+                              opacity={0.6 + 0.4 * (1 - Math.abs(phase - 0.5) * 2)}
+                            />
+                          </g>
+                        );
+                      })}
+                    </svg>
+                    <div className="absolute bottom-2 right-2 text-xs text-gray-400">
+                      {cycleSpeed.toFixed(1)} Hz • Phase: {(wavePhase * 100).toFixed(0)}%
                     </div>
                   </div>
+
+                  {/* Atom sequence display */}
+                  <div className="flex flex-wrap gap-2 mb-6 min-h-[80px] bg-slate-900/50 rounded-lg p-4">
+                    {selectedElements.map((el, idx) => (
+                      <div
+                        key={el.id}
+                        onClick={() => removeElement(el.id)}
+                        className="relative group cursor-pointer"
+                        title={`${el.name}: ${el.e}e⁻ ${el.z}p⁺ ${el.n}n⁰`}
+                      >
+                        <div
+                          className="w-14 h-14 rounded-full flex flex-col items-center justify-center border-4 transition-all hover:scale-110"
+                          style={{ 
+                            backgroundColor: el.color + '40',
+                            borderColor: el.color,
+                            opacity: isPlaying && Math.abs(wavePhase - (idx / selectedElements.length)) < 0.15 ? 1 : 0.5
+                          }}
+                        >
+                          <div className="text-lg font-bold">{el.symbol}</div>
+                          <div className="text-[7px] text-gray-300">{idx + 1}</div>
+                        </div>
+                        <div className="absolute inset-0 bg-red-500/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-bold">
+                          ×
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Analysis */}
+                  {analyzeMolecule && (
+                    <div className="space-y-3">
+                      <div className="bg-purple-900/30 rounded-lg p-4">
+                        <div className="text-3xl font-bold text-center mb-3" style={{ fontFamily: 'monospace' }}>
+                          {analyzeMolecule.formula}
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-3 mb-4">
+                          <div className="text-center bg-cyan-900/30 rounded p-3">
+                            <div className="text-xs text-gray-400 mb-1">Electrons</div>
+                            <div className="text-2xl font-bold text-cyan-300">{analyzeMolecule.totalElectrons}</div>
+                          </div>
+                          <div className="text-center bg-red-900/30 rounded p-3">
+                            <div className="text-xs text-gray-400 mb-1">Protons</div>
+                            <div className="text-2xl font-bold text-red-300">{analyzeMolecule.totalProtons}</div>
+                          </div>
+                          <div className="text-center bg-yellow-900/30 rounded p-3">
+                            <div className="text-xs text-gray-400 mb-1">Neutrons</div>
+                            <div className="text-2xl font-bold text-yellow-300">{analyzeMolecule.totalNeutrons}</div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <span className="text-gray-400">Notes in Song:</span>
+                            <span className="text-cyan-300 ml-2 font-bold">{analyzeMolecule.elementCount}</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Total Mass:</span>
+                            <span className="text-pink-300 ml-2 font-bold">{analyzeMolecule.totalMass} u</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
 
             {/* Famous Molecules */}
             <div className="bg-black/30 rounded-xl p-6 border border-purple-500/30">
-              <h2 className="text-2xl font-bold text-purple-300 mb-4">Load Famous Molecules</h2>
-              <div className="space-y-4">
+              <h3 className="text-xl font-bold text-purple-300 mb-4">Molecular Library</h3>
+              <div className="space-y-4 max-h-[500px] overflow-y-auto">
                 {Object.entries(famousMolecules).map(([category, molecules]) => (
                   <div key={category}>
-                    <h3 className="text-lg font-bold text-pink-400 mb-2">{category}</h3>
-                    <div className="grid gap-2">
-                      {molecules.map((mol, idx) => (
+                    <h4 className="text-lg font-bold text-cyan-400 mb-2 sticky top-0 bg-slate-900/90 py-1">
+                      {category}
+                    </h4>
+                    <div className="space-y-2">
+                      {molecules.map((mol, i) => (
                         <button
-                          key={idx}
+                          key={i}
                           onClick={() => loadMolecule(mol)}
                           className="w-full bg-purple-900/20 hover:bg-purple-900/40 rounded-lg p-3 border border-purple-500/30 transition-all text-left"
                         >
@@ -728,8 +891,8 @@ const MolecularComposer = () => {
                     e.target.value = '';
                   }
                 }}
-                defaultValue=""
                 className="w-full bg-slate-800 text-white border-2 border-purple-500/50 rounded-lg p-3 text-lg font-bold cursor-pointer hover:border-purple-500 transition-all"
+                defaultValue=""
               >
                 <option value="" disabled>Choose an element...</option>
                 {elements.map((el) => (
@@ -782,9 +945,6 @@ const MolecularComposer = () => {
                   <div className="text-lg font-bold text-cyan-300 mb-2">⚛️ Real Science!</div>
                   <p className="text-sm text-gray-300">
                     This is what <strong>IR spectroscopy</strong> measures - molecular vibrations!
-                  </p>
-                  <p className="text-xs text-gray-400 mt-2">
-                    Framework: <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline">Fractal Reality</a>
                   </p>
                 </div>
               </div>
