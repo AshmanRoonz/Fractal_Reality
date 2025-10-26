@@ -91,9 +91,9 @@ Why 1.5D texture forces quantum mechanics. The mathematical necessity of wave fu
 
 ---
 
-### [Layer 7: Ethics from Love](layer_7_revised.md)
+### [Layer 7: Math Applications](layer_7_revised.md)
 **Moral Structure**  
-Ethics derived from aperture architecture plus the balance principle. Consent, authenticity, equality—not preferences but geometric necessities. Love as optimal coordination at β ≈ 0.5.
+Math Applications.
 
 **Key insight:** Morality is structural, not arbitrary.
 
@@ -107,7 +107,7 @@ Memory, identity, qualia, free will—all explained through nested aperture coor
 
 ---
 
-### [Layer 9: Practice](layer_9_revised.md)
+### [Layer 9: Ethics](layer_9_revised.md)
 **Maintaining β ≈ 0.5**  
 How to live with aperture awareness. Daily practices for maintaining balanced coordination. Meditation, relationships, creativity, ethics—all as aperture management at the optimal point.
 
