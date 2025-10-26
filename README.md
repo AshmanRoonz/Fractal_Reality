@@ -52,7 +52,7 @@ The complete theoretical framework presented in 12 progressively deeper layers:
 - **[manuscript/layer_6_revised.md](manuscript/layer_6_revised.md)** - Mathematics Emerges
 - **[manuscript/layer_7_revised.md](manuscript/layer_7_revised.md)** - Math Applications
 - **[manuscript/layer_8_revised.md](manuscript/layer_8_revised.md)** - Consciousness Applications
-- **[manuscript/layer_9_revised.md](manuscript/layer_9_revised.md)** - Practice (Maintain β ≈ 0.5)
+- **[manuscript/layer_9_revised.md](manuscript/layer_9_revised.md)** - Ethics
 - **[manuscript/layer_10_revised.md](manuscript/layer_10_revised.md)** - Society Fractalizes
 - **[manuscript/layer_11_revised.md](manuscript/layer_11_revised.md)** - Human-AI Collaboration
 - **[manuscript/layer_12_revised.md](manuscript/layer_12_revised.md)** - Return to Seed
