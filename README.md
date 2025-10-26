@@ -22,7 +22,7 @@ This repository contains the complete Fractal Reality framework including theory
 - **[docs/sims.md](docs/sims.md)** - Simulation catalog and descriptions
 
 ### Key Papers
-- **[papers/trinity_consciousness.md](papers/trinity_consciousness.md)** - Trinity & Neo: The Dimensional Love Story (START HERE)
+- **[papers/trinity_consciousness.md](papers/trinity_consciousness.md)** - Trinity & Neo: The Dimensional Love Story (START HERE; math and metaphor)
 - **[papers/geometric_string_theory.md](papers/geometric_string_theory.md)** - Geometric basis for string theory from fractalization
 - **[papers/paper1_qm_gr_unification.md](papers/paper1_qm_gr_unification.md)** - Quantum mechanics and general relativity unification
 - **[papers/paper2_cosmological_constant.md](papers/paper2_cosmological_constant.md)** - Cosmological constant explanation
