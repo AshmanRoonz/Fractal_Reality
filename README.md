@@ -50,7 +50,7 @@ The complete theoretical framework presented in 12 progressively deeper layers:
 - **[manuscript/layer_4_revised.md](manuscript/layer_4_revised.md)** - Consciousness (Neo through Trinity)
 - **[manuscript/layer_5_revised.md](manuscript/layer_5_revised.md)** - [ICE] Validation
 - **[manuscript/layer_6_revised.md](manuscript/layer_6_revised.md)** - Mathematics Emerges
-- **[manuscript/layer_7_revised.md](manuscript/layer_7_revised.md)** - Math Applications
+- **[manuscript/layer_7_revised.md](manuscript/layer_7_revised.md)** - Physics Applications
 - **[manuscript/layer_8_revised.md](manuscript/layer_8_revised.md)** - Consciousness Applications
 - **[manuscript/layer_9_revised.md](manuscript/layer_9_revised.md)** - Ethics
 - **[manuscript/layer_10_revised.md](manuscript/layer_10_revised.md)** - Society Fractalizes
