@@ -285,6 +285,12 @@ All simulations are React/TypeScript visualizations viewable at www.fractalreali
 
 ---
 
+## Inventions
+
+- **[inventions/Metric-Coupled_Fractal-Analysis.md](inventions/Metric-Coupled_Fractal-Analysis.md)** - Novel framework coupling spacetime metric tensors to fractal box-counting analysis
+
+---
+
 ## Philosophical & Integration Documents
 
 - **[The_Bridge/readme.md](The_Bridge/readme.md)** - Science-spirituality unity
