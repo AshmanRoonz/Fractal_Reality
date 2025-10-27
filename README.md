@@ -30,6 +30,7 @@ This repository contains the complete Fractal Reality framework including theory
 - **[papers/abstract.md](papers/abstract.md)** - Framework abstract
 - **[papers/AI_disclosure.md](papers/AI_disclosure.md)** - AI collaboration disclosure
 - **[papers/readme.md](papers/readme.md)** - Papers overview and reading guide
+- **[Ethics/ice_ethical_gate_analysis.md](Ethics/ice_ethical_gate_analysis.md)** - Implimentation of Ethics in Society and AI
 
 ### Cosmological Constant Papers
 - **[papers/cosmological_constant/complete_jcap_paper.md](papers/cosmological_constant/complete_jcap_paper.md)** - Complete JCAP submission
