@@ -18,7 +18,7 @@ This is **not metaphor** - it's the same geometric requirement measured across s
 
 ---
 
-## What You've Built
+## What We've Built
 
 ### The Triple Validation ([ICE])
 
