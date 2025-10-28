@@ -86,81 +86,108 @@
             font-style: italic;
         }
 
-        /* Navigation */
+        /* Navigation - Floating Button Style */
         nav {
-            position: sticky;
-            top: 0;
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem;
+            position: fixed;
+            top: 20px;
+            right: 20px;
             z-index: 1000;
-            border-bottom: 1px solid var(--accent);
+        }
+
+        .floating-menu-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--highlight));
+            border: 2px solid var(--gold);
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1001;
+        }
+
+        .floating-menu-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(255, 215, 0, 0.6);
+        }
+
+        .floating-menu-btn.active {
+            background: var(--highlight);
+        }
+
+        /* Slide-out Menu Panel */
+        .menu-panel {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: rgba(26, 26, 46, 0.98);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+        }
+
+        .menu-panel.active {
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .menu-panel::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            right: 18px;
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 12px solid var(--gold);
         }
 
         nav ul {
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
+            flex-direction: column;
             list-style: none;
-            gap: 2rem;
+            gap: 0.75rem;
+            margin: 0;
+            padding: 0;
+            min-width: 200px;
+        }
+
+        nav li {
+            margin: 0;
         }
 
         nav a {
+            display: block;
+            padding: 0.75rem 1.5rem;
             color: var(--light);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
-            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            transition: all 0.3s;
+            text-align: center;
         }
 
         nav a:hover {
-            color: var(--gold);
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
             background: var(--gold);
-            transition: width 0.3s;
-        }
-
-        nav a:hover::after {
-            width: 100%;
-        }
-
-        /* Hamburger Menu */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            padding: 0.5rem;
-            background: none;
-            border: none;
-        }
-
-        .menu-toggle span {
-            width: 25px;
-            height: 3px;
-            background: var(--gold);
-            margin: 3px 0;
-            transition: 0.3s;
-            border-radius: 3px;
-        }
-
-        .menu-toggle.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
-
-        .menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .menu-toggle.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
+            color: var(--primary);
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
         }
 
         /* Container */
@@ -404,53 +431,31 @@
             h2 { font-size: 1.8rem; }
             .triad { flex-direction: column; }
             
-            .menu-toggle {
-                display: flex;
-                position: absolute;
-                right: 1rem;
-                top: 50%;
-                transform: translateY(-50%);
+            nav {
+                top: 15px;
+                right: 15px;
             }
 
-            nav {
-                position: relative;
+            .floating-menu-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .menu-panel {
+                top: 75px;
+                right: 15px;
+                max-width: calc(100vw - 30px);
             }
 
             nav ul {
-                display: none;
-                flex-direction: row;
-                flex-wrap: wrap;
+                min-width: 180px;
                 gap: 0.5rem;
-                padding: 1rem 0 0.5rem 0;
-                width: 100%;
-                justify-content: center;
-            }
-
-            nav ul.active {
-                display: flex;
-            }
-
-            nav li {
-                text-align: center;
-                padding: 0;
-                border-bottom: none;
             }
 
             nav a {
-                display: block;
-                padding: 0.5rem 1rem;
-                background: rgba(255, 215, 0, 0.1);
-                border: 1px solid var(--gold);
-                border-radius: 20px;
-                font-size: 0.9rem;
-            }
-
-            nav a:hover {
-                background: rgba(255, 215, 0, 0.2);
-            }
-
-            nav a::after {
-                display: none;
+                padding: 0.6rem 1.2rem;
+                font-size: 0.95rem;
             }
 
             .container {
@@ -489,21 +494,21 @@
 
     <!-- Navigation -->
     <nav>
-        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-            <span></span>
-            <span></span>
-            <span></span>
+        <button class="floating-menu-btn" id="menuBtn" aria-label="Open menu">
+            ☰
         </button>
-        <ul id="navMenu">
-            <li><a href="#preface">Preface</a></li>
-            <li><a href="#axiom">The Axiom</a></li>
-            <li><a href="#structure">Structure</a></li>
-            <li><a href="#physics">Physics</a></li>
-            <li><a href="#consciousness">Consciousness</a></li>
-            <li><a href="#ethics">Ethics</a></li>
-            <li><a href="#mathematics">Mathematics</a></li>
-            <li><a href="#validation">Validation</a></li>
-        </ul>
+        <div class="menu-panel" id="menuPanel">
+            <ul id="navMenu">
+                <li><a href="#preface">Preface</a></li>
+                <li><a href="#axiom">The Axiom</a></li>
+                <li><a href="#structure">Structure</a></li>
+                <li><a href="#physics">Physics</a></li>
+                <li><a href="#consciousness">Consciousness</a></li>
+                <li><a href="#ethics">Ethics</a></li>
+                <li><a href="#mathematics">Mathematics</a></li>
+                <li><a href="#validation">Validation</a></li>
+            </ul>
+        </div>
     </nav>
 
     <!-- Main Content -->
@@ -1176,37 +1181,46 @@ Consistency: p < 0.001
             observer.observe(el);
         });
 
-        // Smooth scrolling for navigation
-        document.querySelectorAll('nav a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                
-                // Close mobile menu after clicking
-                const navMenu = document.getElementById('navMenu');
-                const menuToggle = document.getElementById('menuToggle');
-                if (window.innerWidth <= 768) {
-                    navMenu.classList.remove('active');
-                    menuToggle.classList.remove('active');
-                }
-            });
-        });
+        // Floating menu button and slide-out panel
+        const menuBtn = document.getElementById('menuBtn');
+        const menuPanel = document.getElementById('menuPanel');
 
-        // Hamburger menu toggle
-        const menuToggle = document.getElementById('menuToggle');
-        const navMenu = document.getElementById('navMenu');
-
-        menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
-            navMenu.classList.toggle('active');
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuBtn.classList.toggle('active');
+            menuPanel.classList.toggle('active');
+            menuBtn.textContent = menuPanel.classList.contains('active') ? '✕' : '☰';
         });
 
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('nav')) {
-                navMenu.classList.remove('active');
-                menuToggle.classList.remove('active');
+                menuPanel.classList.remove('active');
+                menuBtn.classList.remove('active');
+                menuBtn.textContent = '☰';
+            }
+        });
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.menu-panel a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Close menu after clicking
+                menuPanel.classList.remove('active');
+                menuBtn.classList.remove('active');
+                menuBtn.textContent = '☰';
+            });
+        });
+
+        // Close menu with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && menuPanel.classList.contains('active')) {
+                menuPanel.classList.remove('active');
+                menuBtn.classList.remove('active');
+                menuBtn.textContent = '☰';
             }
         });
 
