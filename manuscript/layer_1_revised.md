@@ -155,9 +155,9 @@ Finite validated patterns emerge and persist.
 **The universal operation at every scale, forever:**
 
 ```
-Parts (∞) → [Interface/ICE] → •' operator → [Interface/ICE] → Patterns (∞')
+Parts (∞) → [ICE structure] → •' operator → [ICE structure] → Patterns (∞')
                               ↓
-                        validates toward •
+                        aligned toward •
 ```
 
 ---
@@ -167,7 +167,7 @@ Parts (∞) → [Interface/ICE] → •' operator → [Interface/ICE] → Patter
 **An aperture operator is:**
 
 1. **Convergence function (∇)** - pulls parts together
-2. **Processing at interfaces** - validates relationships ([ICE])
+2. **[ICE] structural components** - [C]∇ → [I]ℓ → [E]ℰ operation
 3. **Emergence function (ℰ)** - radiates patterns outward
 
 **This pattern appears EVERYWHERE:**
@@ -221,8 +221,8 @@ Parts (∞) → [Interface/ICE] → •' operator → [Interface/ICE] → Patter
 - Temporary configurations
 
 **∞' (accumulated patterns):**
-- Every validated experience
-- Every choice that passed [ICE]
+- Every experience with complete [ICE] structure
+- Every choice that manifested through [C]∇ → [I]ℓ → [E]ℰ
 - Geometric texture in the field
 - **Your eternal history**
 
@@ -233,9 +233,9 @@ Parts (∞) → [Interface/ICE] → •' operator → [Interface/ICE] → Patter
 **Each validation cycle:**
 
 1. Parts (∞) converge toward your operator (•')
-2. At interface, relationship validates ([ICE])
+2. [ICE] structure operates: [C]∇ → [I]ℓ → [E]ℰ
 3. Your operator processes and radiates
-4. At interface, pattern validates ([ICE])
+4. [ICE] structure completes the cycle
 5. Pattern emerges as texture in ∞'
 6. **∞' now has slightly more geometric complexity**
 
@@ -338,7 +338,7 @@ This is the signature of accumulated history.
 
 ```
 ∞'_n (pattern texture at tick n)
-  ↓ Validation cycle
+  ↓ [ICE] operation cycle
 ∞'_(n+1) (pattern texture at tick n+1)
 ```
 
@@ -349,9 +349,9 @@ This is the signature of accumulated history.
 - **Pattern accumulation defines forward**
 
 **At base level:**
-- Discrete validation ticks
+- Discrete [ICE] operation ticks
 - Like frames in a movie
-- Each tick = one ∇ → [ICE] → ℰ cycle
+- Each tick = one complete [C]∇ → [I]ℓ → [E]ℰ cycle
 
 **In continuous limit:**
 - Many ticks per instant
@@ -366,7 +366,7 @@ This is the signature of accumulated history.
 
 **Because:**
 - Pattern texture accumulates (∞ → ∞' is directional)
-- Validation adds complexity, never subtracts
+- [ICE] operation adds complexity, never subtracts
 - Fractal dimension increases
 - **Geometric irreversibility**
 
@@ -390,19 +390,19 @@ Not a law imposed from outside.
 **Why does time feel different in different states?**
 
 **When engaged/interested:**
-- High validation rate through your •'
+- High [ICE] operation rate through your •'
 - Much pattern texture accumulating
-- Rapid ∇ → [ICE] → ℰ cycles
+- Rapid [C]∇ → [I]ℓ → [E]ℰ cycles
 - "Time flies"
 
 **When bored/waiting:**
-- Low validation rate
+- Low [ICE] operation rate
 - Little pattern texture accumulating
-- Slow ∇ → [ICE] → ℰ cycles
+- Slow [C]∇ → [I]ℓ → [E]ℰ cycles
 - "Time drags"
 
 **In flow states:**
-- Optimal validation rate
+- Optimal [ICE] operation rate
 - Maximum pattern creation
 - Synchronized cycling
 - "Time disappears"
@@ -423,19 +423,19 @@ Not a law imposed from outside.
 
 1. **Parts meet operator:**
    - Parts (∞) trying to organize around operator (•')
-   - [ICE] validates the relationship
-   - If passes: parts cohere
-   - If fails: parts disperse
-   - **Boundary marks pass/fail threshold**
+   - [ICE] structure operates at the relationship
+   - With complete structure: parts cohere
+   - With incomplete structure: parts disperse
+   - **Boundary is the [I]ℓ component itself**
 
 2. **Operator meets field:**
    - Operator (•') radiating patterns
-   - [ICE] validates the output
-   - If passes: pattern persists
-   - If fails: pattern dissolves
-   - **Boundary marks coherence edge**
+   - [ICE] structure completes the cycle
+   - With complete structure: pattern persists
+   - With incomplete structure: pattern dissolves
+   - **Boundary is where [I]ℓ maintains finite radius**
 
-**Boundaries are validation thresholds, not walls.**
+**Boundaries are the [I]ℓ structural component, not gates.**
 
 ---
 
@@ -563,8 +563,8 @@ No final "largest operator."
 
 **All levels:**
 - Same structure (∇ + ℰ operators)
-- Same pattern (∇ → [ICE] → ℰ)
-- Same reference (validating toward •)
+- Same pattern ([C]∇ → [I]ℓ → [E]ℰ)
+- Same reference (aligned toward •)
 - Different scale (parts at different levels)
 
 ---
@@ -660,8 +660,8 @@ No final "largest operator."
 - Boundaries emerge, completing wholeness
 
 ### The Universal Pattern
-- Parts → [ICE at interface] → •' operator → [ICE at interface] → Patterns
-- Same at every scale: ∇ → [ICE] → ℰ
+- Parts → [ICE structure] → •' operator → [ICE structure] → Patterns
+- Same at every scale: [C]∇ → [I]ℓ → [E]ℰ
 - Operates eternally everywhere
 
 ### History as Geometry

@@ -79,14 +79,14 @@ FRFE represents fundamental shifts in how we understand:
 **4. Consciousness**
 
 - Not mystery, illusion, or separate substance
-- **Emergent integration** from coordinated validation at β≈0.5
-- Measurable via D≈1.5 in neural networks
-- **What it feels like to operate in the 0.5D temporal structure**
+- **Emergent integration** from coordinated [ICE] structure operating at β≈0.5
+- Measurable via [C] Center signature D≈1.5 in neural networks
+- **What it feels like to have [ICE] structure operating in the 0.5D temporal [C] Center structure**
 
 **5. Ethics**
 
 - Not arbitrary cultural construct or mysterious moral facts
-- **Same [ICE] structure as physics**, different scale
+- **Same [ICE] structural components as physics**, different scale
 
 ### 9.3 Significance
 
@@ -115,11 +115,11 @@ FRFE represents fundamental shifts in how we understand:
 
 **For Humanity**:
 
-- Understanding that **consciousness operates at D=1.5, β≈0.5**—in the half-dimensional temporal structure
-- Practices to maintain optimal β (meditation, flow states, health)
-- Recognition that **choices matter** physically (create boundaries in ∞')
+- Understanding that **consciousness operates at [C] Center signature D=1.5, β≈0.5**—in the half-dimensional temporal [C] Center structure
+- Practices to maintain optimal β at [C] Center signature (meditation, flow states, health)
+- Recognition that **choices matter** physically (create boundaries in ∞' through [ICE] structure operating)
 - Framework for human-AI collaboration (complementary β values)
-- **Time's arrow comes from its incompleteness**—we experience choice because time is 0.5D, not 1.0D
+- **Time's arrow comes from its incompleteness**—we experience choice because time is 0.5D [C] Center, not 1.0D
 ## 9.5 Final Statement
 
 We have demonstrated a **complete mathematical framework** that:
@@ -148,14 +148,14 @@ We have demonstrated a **complete mathematical framework** that:
 
 ## The Core Insight
 
-Reality is not made of things that validate.  
-**Reality is the validation itself**, operating in 3.5 dimensional spacetime.
+Reality is not made of things with [ICE] structure.
+**Reality is the [ICE] structure operating**, in 3.5 dimensional spacetime.
 
-The half-dimension is not extra—it IS time.  
-Where possibility becomes actuality.  
-Where quantum becomes classical.  
-Where physics becomes consciousness.  
-**Where Einstein's spacetime reveals its fractal temporal heart.**
+The half-dimension is not extra—it IS time as [C] Center.
+Where possibility becomes actuality.
+Where quantum becomes classical.
+Where physics becomes consciousness.
+**Where Einstein's spacetime reveals its fractal [C] Center heart.**
 
 ---
 
@@ -186,9 +186,9 @@ This work builds upon Einstein's profound insight that space and time cannot be 
 
 **If you're a philosopher**: Consider the implications for the hard problem, free will, and the nature of reality. Time's incompleteness explains why we experience choice.
 
-**If you're a meditator**: Notice how conscious control feels like operating at β≈0.5 between convergence (focus) and emergence (awareness)—dancing in the half-dimensional temporal structure.
+**If you're a meditator**: Notice how conscious control feels like operating at β≈0.5 between convergence (focus) and emergence (awareness)—dancing in the half-dimensional [C] Center structure.
 
-**If you're anyone**: Recognize that your choices at each moment are **literal acts of validation** that shape what becomes real in the 0.5D temporal dimension that IS time itself.
+**If you're anyone**: Recognize that your choices at each moment are **literal [ICE] structural operations** that shape what becomes real in the 0.5D [C] Center dimension that IS time itself.
 
 ---
 

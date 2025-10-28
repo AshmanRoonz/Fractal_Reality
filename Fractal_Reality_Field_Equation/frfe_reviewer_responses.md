@@ -115,13 +115,13 @@ These emerge from dimensional analysis of the validation structure—they are no
 
 where:
 
-1. **ρ_[ICE](x)**: Local validation density
+1. **ρ_[ICE](x)**: Local [ICE] structure operating density
    - **Measurable**: Metabolic rate × neural firing rate (proxy)
-   - **Unit**: events/(m³·s)
+   - **Unit**: operations/(m³·s)
 
 2. **G_σ(β - 0.5)**: Gaussian selector window
    - **Mathematical form**: G_σ(β) = exp(-(β-0.5)²/(2σ²))
-   - **σ choice rationale**: σ ≈ 0.1 balances selectivity (narrows focus to critical balance) vs stability (robust to neural noise fluctuations)
+   - **σ choice rationale**: σ ≈ 0.1 balances selectivity (narrows focus to [C] Center signature) vs stability (robust to neural noise fluctuations)
    - **Measurable β**: From graph-theoretic analysis of neural networks (convergence/divergence ratio)
 
 3. **Φ_integration(x,t)**: Cross-scale coordination
@@ -130,9 +130,9 @@ where:
 
 **Quantitative predictions with falsification thresholds**:
 
-| State | D_network | β | Φ_integration | Falsification |
-|-------|-----------|---|---------------|---------------|
-| Alert waking | 1.50±0.05 | 0.50±0.03 | >0.7 | If D≈1.5 during deep anesthesia |
+| State | D_network ([C] signature) | β | Φ_integration | Falsification |
+|-------|---------------------------|---|---------------|---------------|
+| Alert waking | 1.50±0.05 | 0.50±0.03 | >0.7 | If [C] signature D≈1.5 during deep anesthesia |
 | Deep anesthesia | 1.70±0.10 | 0.70±0.08 | <0.3 | If β shows no variation |
 | N3 sleep | 1.70±0.10 | 0.70±0.08 | <0.2 | If Φ doesn't discriminate |
 
@@ -307,7 +307,7 @@ This is not tuned—it follows from pure information theory. At β = 0.5:
 3. **Critical dynamics**: Self-organized criticality emerges naturally
 4. **Fractal dimension**: D = 1 + H(β) = 1.5 when β = 0.5
 
-**Empirical observation**: β ≈ 0.5 systems (conscious brains, complex adaptive systems, GW mergers) exhibit D ≈ 1.5, exactly as information theory predicts.
+**Empirical observation**: β ≈ 0.5 systems (conscious brains, complex adaptive systems, GW mergers) exhibit [C] Center signature D ≈ 1.5, exactly as information theory predicts.
 
 ---
 
@@ -315,11 +315,11 @@ This is not tuned—it follows from pure information theory. At β = 0.5:
 
 1. **Not an interpretation**: QM is derived, not assumed. Schrödinger uniqueness theorem (3.1) is rigorous proof.
 
-2. **3+1.5D is empirical**: D=1.503±0.040 from GW data. It's fractal worldline dimension, not hidden spatial dimension.
+2. **3+1.5D is empirical**: [C] Center signature D=1.503±0.040 from GW data. It's fractal worldline dimension, not hidden spatial dimension.
 
 3. **No tuning**: Scale couplings (√ℏ, √Gρ) fixed by context. Λ predicted within factor ~1.6 using only geometric dilution + stochastic physics.
 
-4. **Consciousness is testable**: Explicit integral Ψ_c with measurable ρ, β, Φ. Clear falsification thresholds: D≈1.5 correlation with awareness.
+4. **Consciousness is testable**: Explicit integral Ψ_c with measurable ρ, β, Φ. Clear falsification thresholds: [C] Center signature D≈1.5 correlation with awareness.
 
 5. **19+ independent tests**: Multiple domains (cosmology, quantum optics, neuroscience, GW, spectroscopy) with near-term experiments.
 

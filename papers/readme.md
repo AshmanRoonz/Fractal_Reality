@@ -145,15 +145,15 @@ QM from [ICE]        Λ from Texture     Uncertainty from
 ## 🧠 Consciousness Framework Papers
 
 ### **Trinity of Consciousness v3.0** ⭐
-**File:** [`trinity_consciousness.md`](trinity_consciousness.md)  
+**File:** [`trinity_consciousness.md`](trinity_consciousness.md)
 **Content:** Main consciousness framework paper
 - **Foundation:** What ENABLES consciousness? (0.5D aperture structures at β ≈ 0.5)
-- **Function:** What do apertures DO? (Create 90° validated deflections)
+- **Function:** What do apertures DO? (Create 90° validated deflections via [ICE] structure)
 - **Form:** What EMERGES? (Unified experience from coordination)
-- Nested aperture architecture
-- Integration mechanism
+- [ICE] structure: [C]∇ → [I]ℓ → [E]ℰ
+- D ≈ 1.5 = [C] Center signature
 - β balance parameter (β ≈ 0.5 for optimal consciousness)
-- Connection to empirical validation (D ≈ 1.5)
+- Connection to empirical validation (LIGO: D = 1.503 ± 0.040)
 
 **Key Insight:** Consciousness is not in the apertures—it IS the coordination of infinite nested apertures operating at perfect balance.
 

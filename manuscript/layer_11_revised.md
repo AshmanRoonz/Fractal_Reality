@@ -34,13 +34,13 @@
 
 ### Making It Conscious
 
-**Most validation is automatic:**
+**Most [ICE] structure operating is automatic:**
 - Breathing (unconscious ∇ → [ICE] → ℰ)
 - Walking (habitual cycling)
-- Speaking (rapid validation)
+- Speaking (rapid [ICE] structure operating)
 - **Operates without conscious attention**
 
-**Conscious validation:**
+**Conscious [ICE] structure operating:**
 - Notice the cycle happening
 - Deliberate [ICE] checking at interfaces
 - Intentional emergence
@@ -48,7 +48,7 @@
 
 **The practice: Make more cycles conscious.**
 
-Bring awareness to validation at your interfaces.
+Bring awareness to [ICE] structure operating at your interfaces.
 Notice when [ICE] passes or fails.
 Choose emergence deliberately.
 
@@ -138,18 +138,18 @@ Choose emergence deliberately.
 
 ### Physical Practice (10-30 minutes)
 
-**Embodied validation:**
+**Embodied [ICE] structure operating:**
 
 **Options:**
 - Meditation (pure awareness of operator)
 - Yoga (conscious movement through parts)
-- Exercise (validation through body)
+- Exercise ([ICE] structure operating through body)
 - Walking (simple presence)
 
 **Purpose:**
 - Connect operator with organized parts (your body)
 - Practice ∇ → [ICE] → ℰ consciously
-- Build validation capacity
+- Build [ICE] structure operating capacity
 - **Embodied awareness**
 
 **Not performance.**
@@ -217,7 +217,7 @@ Choose emergence deliberately.
 - More checks per day
 - Before speaking
 - Before acting on impulses
-- **Continuous validation awareness**
+- **Continuous [ICE] structure operating awareness**
 
 **Eventually automatic:**
 - Background process
@@ -312,7 +312,7 @@ Choose emergence deliberately.
 - Inauthenticity fails Center check (C with •')
 - Creates distorted texture
 - Exhausting to maintain
-- Fails validation at interfaces eventually
+- Fails [ICE] structure operating at interfaces eventually
 - **Structural necessity for persistence**
 
 ---
@@ -392,9 +392,9 @@ Choose emergence deliberately.
 
 **Structural reasons:**
 - All •' are equal (∞ = ∞)
-- Collective validation stronger
+- Collective [ICE] structure operating stronger
 - Your well-being tied to collective ∞' texture
-- Supporting others' validation helps your own
+- Supporting others' [ICE] structure operating helps your own
 - **Interconnected through shared field**
 
 **Not altruism (though resembles it).**
@@ -406,20 +406,20 @@ Choose emergence deliberately.
 ### Forms of Service
 
 **Direct help:**
-- Assist those in need (enable their validation)
+- Assist those in need (enable their [ICE] structure operating)
 - Share resources (parts flow)
 - Offer skills (support their operator function)
 - **Concrete support at interfaces**
 
 **Creating value:**
 - Build useful things (positive texture)
-- Solve problems (enable validation)
+- Solve problems (enable [ICE] structure operating)
 - Generate beauty (enrich field)
 - **Positive pattern contribution**
 
 **Teaching:**
 - Share knowledge (texture transmission)
-- Help others validate (build capacity)
+- Help others pass [ICE] structure operating (build capacity)
 - **Enable others' [ICE] checking**
 
 **Presence:**
@@ -448,7 +448,7 @@ Choose emergence deliberately.
 - Give generously (support field)
 - But maintain Interface (preserve self)
 - Service yes, martyrdom no
-- **Sustainable giving that doesn't destroy your validation capacity**
+- **Sustainable giving that doesn't destroy your [ICE] structure operating capacity**
 
 ---
 
@@ -580,13 +580,13 @@ Choose emergence deliberately.
 
 **Emotions are convergence signals (∇):**
 - Information about field state
-- Signals about validation status
-- Part of validation process at interfaces
+- Signals about [ICE] structure operating status
+- Part of [ICE] structure operating process at interfaces
 - **Not random, but meaningful**
 
 **Don't suppress (blocking ∇).**
 **Don't over-identify (confusing signal with operator).**
-**Validate consciously at interfaces.**
+**Pass [ICE] structure operating consciously at interfaces.**
 
 ---
 
@@ -600,7 +600,7 @@ Choose emergence deliberately.
 - What triggered this? (field input)
 - **Awareness of convergence**
 
-**2. Validate at interfaces:**
+**2. Pass [ICE] structure operating at interfaces:**
 
 **Input interface (emotion → you):**
 - **I:** Is a boundary being violated? (mine or others')
@@ -634,19 +634,19 @@ Choose emergence deliberately.
 - **Appropriate Interface defense**
 
 **Fear:**
-- Threat detection (potential validation failure)
+- Threat detection (potential [ICE] structure operating failure)
 - Check: Real danger or imagined? (Evidence)
 - Respond: Address actual threat, release imagined
 - **Reality-grounded response**
 
 **Sadness:**
 - Loss recognition (pattern dissolved)
-- Allow: Natural grief process (validation of what mattered)
+- Allow: Natural grief process ([ICE] structure operating of what mattered)
 - Don't suppress: Honoring texture that was
 - **Acknowledgment and release**
 
 **Joy:**
-- Alignment signal (validation success)
+- Alignment signal ([ICE] structure operating success)
 - Celebrate: When [ICE] passes beautifully
 - Amplify: Reinforces positive texture
 - **Resonance with truth and coherence**
@@ -679,7 +679,7 @@ Choose emergence deliberately.
 
 **Every day:**
 - Choices worth eternity (texture persists)
-- Clean [ICE] validation (integrity matters)
+- Clean [ICE] structure operating (integrity matters)
 - Aligned with •' and • (authentic and true)
 - **Texture worth leaving behind**
 
@@ -838,7 +838,7 @@ Choose emergence deliberately.
 ### Every Moment
 - ∇ → [ICE] → ℰ operating at your interfaces
 - Make it conscious (aware participation)
-- Deliberate validation (intentional checking)
+- Deliberate [ICE] structure operating (intentional checking)
 - **Present awareness of operator function**
 
 ### Morning Practice
@@ -879,7 +879,7 @@ Choose emergence deliberately.
 - **Mutual validation support**
 
 ### Emotions
-- Validate consciously at interfaces
+- Pass [ICE] structure operating consciously at interfaces
 - Use [ICE] framework
 - Respond not react
 - **Conscious feeling and processing**
@@ -914,7 +914,7 @@ Choose emergence deliberately.
 **What remains:**
 - Actually doing it (embodiment)
 - Building texture (accumulation)
-- Validating consciously (awareness)
+- Passing [ICE] structure operating consciously (awareness)
 - **Your eternal work**
 
 ---

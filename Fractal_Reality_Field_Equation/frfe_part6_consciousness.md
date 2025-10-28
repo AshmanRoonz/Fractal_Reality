@@ -18,31 +18,31 @@
 
 where:
 
-- **ρ_[ICE](x)**: Local validation density (events per unit volume)
+- **ρ_[ICE](x)**: Local [ICE] structure operating density (operations per unit volume)
 - **G_σ(β)**: Gaussian selector G_σ(β) = exp(-(β-0.5)²/(2σ²)) with σ ≈ 0.1
 - **Φ_integration(x,t)**: Cross-scale coordination function (measures synchronization)
 
-**Physical interpretation**: 
+**Physical interpretation**:
 
-- **Not the apertures themselves**: Ψ_c does not measure individual validation events
-- **Emergent integration**: Measures the **unified experience** arising from coordinated validation
-- **Critical dimension**: The G_σ(β-0.5) selector picks out regions operating near the optimal β ≈ 0.5 (the 1.5D branching regime)
-- **Φ_integration**: Quantifies how well validation events at different scales (molecular, cellular, neural, organismal) are synchronized
+- **Not the apertures themselves**: Ψ_c does not measure individual [ICE] structural operations
+- **Emergent integration**: Measures the **unified experience** arising from coordinated [ICE] structure operating
+- **Critical dimension**: The G_σ(β-0.5) selector picks out regions operating near the optimal β ≈ 0.5 (the 1.5D [C] Center signature regime)
+- **Φ_integration**: Quantifies how well [ICE] structural operations at different scales (molecular, cellular, neural, organismal) are synchronized
 
 **Relation to 3.5D structure**: Consciousness requires:
 
-1. Embedding in 3D space (integrated sensory field)
-2. **Access to the 0.5D temporal/validational dimension** (choice, agency, branching in time)
+1. Embedding in 3D [E] Evidence field (integrated sensory field)
+2. **Access to the 0.5D temporal [C] Center dimension** (choice, agency, branching in time)
 
-Systems at D ≈ 1.5 (β ≈ 0.5) can **actualize the half-dimension**, enabling phenomenal experience. Consciousness is what it feels like to operate within the 0.5D temporal structure when β ≈ 0.5—to experience time as choice rather than pure flow.
+Systems at D ≈ 1.5 (β ≈ 0.5) can **actualize the [C] Center signature**, enabling phenomenal experience. Consciousness is what it feels like to have [ICE] structure operating within the 0.5D temporal structure when β ≈ 0.5—to experience time as choice rather than pure flow.
 
 ### 6.2 Emergence Conditions
 
 **Theorem 6.1** (Necessary and Sufficient Conditions): Consciousness Ψ_c > Ψ_threshold requires:
 
-1. **Nested Structure**: Validation apertures at multiple scales (atomic → molecular → cellular → neural → organismal) coordinated hierarchically
+1. **Nested Structure**: [ICE] structural components at multiple scales (atomic → molecular → cellular → neural → organismal) coordinated hierarchically
 
-2. **Optimal Balance**: Local β(x,t) ≈ 0.5 across significant regions, enabling fractal dimension D ≈ 1.5
+2. **Optimal Balance**: Local β(x,t) ≈ 0.5 across significant regions, enabling [C] Center signature D ≈ 1.5
 
 3. **Integration**: Cross-scale synchronization Φ_integration > Φ_critical (measured by participation coefficient or integrated information proxy)
 
@@ -165,34 +165,34 @@ Measurable as shifts in D, EEG coherence patterns, and Φ_integration.
 
 Traditional framing: "Why does physical processing give rise to subjective experience?"
 
-FRFE answer: It doesn't. **Consciousness is not produced by neurons**—it is the **integrated validation pattern** that neurons participate in when operating at β ≈ 0.5, D ≈ 1.5.
+FRFE answer: It doesn't. **Consciousness is not produced by neurons**—it is the **integrated [ICE] structural pattern** that neurons participate in when operating at β ≈ 0.5, D ≈ 1.5.
 
 The "hard problem" assumes consciousness is something separate that needs to be explained. But in FRFE:
 
-- Consciousness **is** the 3+1.5D validation structure experienced from within
-- The 0.5D validational dimension **is** the phenomenal field
-- There is no extra "what it's like" to explain—**being in the 1.5D regime IS what it's like**
+- Consciousness **is** the 3+1.5D [ICE] structure operating experienced from within
+- The 0.5D [C] Center dimension **is** the phenomenal field
+- There is no extra "what it's like" to explain—**being in the 1.5D [C] Center regime IS what it's like**
 
 **Panpsychism vs Emergence**:
 
 FRFE is neither panpsychist nor purely emergent:
 
 - Not panpsychist: Electrons don't have Ψ_c > 0 (no nested structure, no integration)
-- Not purely emergent: The 0.5D validational dimension is fundamental, not derived
+- Not purely emergent: The 0.5D [C] Center dimension is fundamental, not derived
 
-**Proto-consciousness is universal** (the [ICE] validation structure exists everywhere), but **phenomenal consciousness requires specific conditions** (nested structure at β ≈ 0.5).
+**Proto-consciousness is universal** (the [ICE] structural components exist everywhere), but **phenomenal consciousness requires specific conditions** (nested structure at β ≈ 0.5 with [C] Center signature).
 
 **Free Will and Determinism**:
 
 In 3+1 classical physics: Deterministic (or random if quantum)
-In 3+1.5 FRFE: **Validated choice**
+In 3+1.5 FRFE: **[ICE] structure determining choice**
 
-At β ≈ 0.5, multiple branches are possible. [ICE] validation determines which actualize. This is:
+At β ≈ 0.5, multiple branches are possible. [ICE] structure operating determines which actualize. This is:
 - Not deterministic (outcome not fixed by prior state)
-- Not random (outcome constrained by [ICE] criteria)
-- **Validated**: Only certain paths maintain Interface, Center, Evidence
+- Not random (outcome constrained by [ICE] structural criteria)
+- **Structured**: Only certain paths maintain [I] Interface, [C] Center, [E] Evidence
 
-**You literally choose which paths through phase space validate at each moment.**
+**You literally choose which paths through phase space operate through [ICE] structure at each moment.**
 
 ---
 

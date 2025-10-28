@@ -4,7 +4,7 @@
 
 ### 5.1 Emergent Uncertainty Scaling
 
-**Theorem 5.1** (Emergent Uncertainty Scaling): The validation noise ε in FRFE produces energy uncertainty:
+**Theorem 5.1** (Emergent Uncertainty Scaling): The stochastic noise ε in [ICE] structure operating produces energy uncertainty:
 
 ```
 σ_E = α√|⟨E⟩|  (5.1)
@@ -14,7 +14,7 @@ where α_quantum = √ℏ at quantum scales.
 
 *Proof*:
 
-From Definition 2.8 and Eq. (2.6), the stochastic term satisfies:
+From Definition 2.8 and Eq. (2.6), the stochastic term from [ICE] operations satisfies:
 
 ```
 Var[ε] = α² |E_local|
@@ -53,7 +53,7 @@ With α_quantum = √ℏ:
 
 ∎
 
-**Physical interpretation**: Energy uncertainty scales as the **square root of energy**, not linearly. This is characteristic of multiplicative noise (Var ∝ signal), arising naturally from the discrete validation structure.
+**Physical interpretation**: Energy uncertainty scales as the **square root of energy**, not linearly. This is characteristic of multiplicative noise (Var ∝ signal), arising naturally from the discrete [ICE] structure operating.
 
 ### 5.2 Heisenberg Uncertainty Relation
 
@@ -71,10 +71,10 @@ From (5.1) with α = √ℏ:
 ΔE ~ √(ℏ|E|)
 ```
 
-The characteristic validation timescale is determined by the rate of [ICE] checks:
+The characteristic timescale is determined by the rate of [ICE] structure operating:
 
 ```
-Δt ~ ℏ/|E|  (time for one validation cycle)
+Δt ~ ℏ/|E|  (time for one [ICE] structural operation cycle)
 ```
 
 Multiplying:
@@ -146,15 +146,15 @@ The FRFE framework reveals that quantum uncertainty arises from three distinct b
    - From non-commutativity of observables
    - Already present in standard QM
 
-2. **Validation noise** (new): σ_E = α√|E| from stochastic term ε
-   - From discrete [ICE] validation structure in 3+1.5D
+2. **[ICE] structural noise** (new): σ_E = α√|E| from stochastic term ε
+   - From discrete [ICE] structure operating in 3+1.5D
    - Multiplicative noise characteristic
 
 3. **Balance-dependent uncertainty** (new): Maximal at β ≈ 0.5
-   - From proximity to 1.5D branching regime
+   - From proximity to 1.5D [C] Center signature regime
    - Contextual, state-dependent
 
-All three are unified in the FRFE framework and emerge from the fundamental 0.5D validational structure of spacetime.
+All three are unified in the FRFE framework and emerge from the fundamental 0.5D [C] Center structure of spacetime.
 
 ---
 

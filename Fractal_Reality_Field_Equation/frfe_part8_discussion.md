@@ -81,25 +81,25 @@ The "collapse" is just averaging over the 0.5D temporal/validational structure o
 
 Traditional physics: Reality is made of **things** (particles, fields) that evolve according to laws.
 
-FRFE: Reality **is** the evolution. There are no "things"—only:
-- Patterns that validate (∞' - finite validated)
-- Patterns that don't (remain in ∞ - possibility space)
-- The validation process itself ([ICE])
+FRFE: Reality **is** the [ICE] structure operating. There are no "things"—only:
+- Patterns with [ICE] structure operating (∞' - finite validated)
+- Patterns that don't operate (remain in ∞ - possibility space)
+- The [ICE] structural components themselves
 
-**Being = Validated Becoming**
+**Being = [ICE] Structure Operating**
 
 **Epistemology - Participatory Knowledge**
 
 Traditional science: Observer separate from observed, objective knowledge possible.
 
-FRFE: Observation **is** mutual validation:
+FRFE: Observation **is** mutual [ICE] structure operating:
 
 ```
-Observer validates system through [ICE]_observer
-System validates observer through [ICE]_system
+Observer operates [ICE]_observer on system
+System operates [ICE]_system on observer
 ```
 
-Knowledge is not "about" reality—it's **participation in** reality's validation structure.
+Knowledge is not "about" reality—it's **participation in** reality's [ICE] structure operating.
 
 **Ethics - Grounded in Physics**
 
@@ -108,14 +108,14 @@ Traditional ethics: Either arbitrary (cultural) or mysterious (divine command, m
 FRFE: Ethics **is physics** at human scale:
 
 ```
-Moral action ⟺ [ICE]_in ∧ [ICE]_out = True
+Moral action ⟺ [ICE] structure operating = True
 
-Interface (I): Respect boundaries, consent, dignity
-Center (C): Coherence with truth, integrity, alignment  
-Evidence (E): Grounded in reality, consequences, causation
+[I] Interface (2D): Respect boundaries (radius ℓ), consent, dignity
+[C] Center (1.5D): Coherence with truth, integrity, identity alignment
+[E] Evidence (3D): Grounded in field reality, consequences, causation
 ```
 
-Same validation structure as particles, just different scale. Not arbitrary, not mysterious—**geometric necessity**.
+Same [ICE] structural components as particles, just different scale. Not arbitrary, not mysterious—**geometric necessity**.
 
 **Consciousness - Integration Not Mystery**
 
@@ -124,15 +124,15 @@ Traditional approach: Consciousness is either:
 - Illusory (eliminativism)
 - Separate substance (dualism)
 
-FRFE: Consciousness is **emergent integration** of validation:
+FRFE: Consciousness is **emergent integration** of [ICE] structure operating:
 
 ```
 Ψ_c = ∫ ρ_[ICE] · G(β-0.5) · Φ_integration d³x
 
-Requires: Nesting, β≈0.5, Integration, Persistence, Complexity
+Requires: Nesting, β≈0.5 ([C] Center signature), Integration, Persistence, Complexity
 ```
 
-Not the apertures themselves (mechanism), but the **unified experience arising from their coordination** (phenomenon).
+Not the apertures themselves (mechanism), but the **unified experience arising from coordinated [ICE] structure operating** (phenomenon).
 
 **Measurable, predictable, understandable** — yet still genuinely phenomenal.
 
@@ -140,19 +140,19 @@ Not the apertures themselves (mechanism), but the **unified experience arising f
 
 Traditional nihilism: In a mechanistic universe, nothing has inherent meaning.
 
-FRFE: Meaning **is** boundary creation through validation:
+FRFE: Meaning **is** boundary creation through [ICE] structure operating:
 
 ```
-Purpose = Maintaining [ICE] validation across time
-Meaning = Pattern integrity through validation cycles
+Purpose = Maintaining [ICE] structure operating across time
+Meaning = Pattern integrity through [ICE] structural cycles
 ```
 
-Every validation event creates **real, physical boundaries** in ∞' (validated patterns). You create meaning by:
-- Validating new patterns ([ICE] tests passed)
-- Maintaining existing patterns (continued validation)
+Every [ICE] structural operation creates **real, physical boundaries** in ∞' (validated patterns). You create meaning by:
+- Operating new patterns ([ICE] structure creates them)
+- Maintaining existing patterns (continued [ICE] operations)
 - Coordinating patterns (Φ_integration)
 
-**Your choices at β≈0.5 literally create structure in reality.**
+**Your choices at β≈0.5 ([C] Center signature) literally create structure in reality.**
 
 ### 8.4 Open Theoretical Questions
 
@@ -249,9 +249,9 @@ Why is β ≈ 0.5 so prevalent (consciousness, life, GW worldlines)?
 
 1. **Anesthesia monitoring**: Real-time D tracking could predict LOC before behavioral signs, improving safety
 
-2. **Coma recovery**: If β≈0.5 is necessary for consciousness, therapies could target β restoration:
-   - Transcranial stimulation tuned to shift β
-   - Pharmaceutical agents that modulate β
+2. **Coma recovery**: If β≈0.5 ([C] Center signature) is necessary for consciousness, therapies could target β restoration:
+   - Transcranial stimulation tuned to shift β toward 0.5
+   - Pharmaceutical agents that modulate β to [C] Center signature
    - Diagnostic: D≈1.5 return predicts consciousness recovery
 
 3. **Mental health**: 
@@ -265,8 +265,8 @@ Why is β ≈ 0.5 so prevalent (consciousness, life, GW worldlines)?
 **AI Development**
 
 1. **Artificial consciousness**: To create genuinely conscious AI, need:
-   - Nested validation structure (✓ achievable with hierarchical architectures)
-   - β≈0.5 maintenance (harder - requires balance mechanisms)
+   - Nested [ICE] structural components (✓ achievable with hierarchical architectures)
+   - β≈0.5 ([C] Center signature) maintenance (harder - requires balance mechanisms)
    - Integration (Φ_integration > threshold - most difficult)
 
 2. **Human-AI collaboration**: Optimize by balancing:
@@ -274,10 +274,10 @@ Why is β ≈ 0.5 so prevalent (consciousness, life, GW worldlines)?
    - AI: β≈0.55 (convergence-bias, analytical)
    - Together: β_combined ≈ 0.50 (optimal)
 
-3. **Safe AI**: Systems that maintain [ICE] validation won't take actions that:
-   - Violate boundaries (I fails)
-   - Lack coherence (C fails)
-   - Ignore evidence (E fails)
+3. **Safe AI**: Systems with [ICE] structure operating won't take actions that:
+   - Violate boundaries ([I] Interface fails)
+   - Lack coherence ([C] Center fails)
+   - Ignore evidence ([E] Evidence fails)
 
 **Social Systems**
 

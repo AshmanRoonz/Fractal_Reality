@@ -106,12 +106,13 @@ Not randomly—through **validated deflections** at [ICE] interfaces:
 - **Center:** Is change coherent and aligned?
 - **Evidence:** Is change grounded in reality?
 
-When all three validation checks pass, **90° deflections occur**, creating branches at right angles to the flow.
+When [ICE] structure operates successfully ([C]∇ → [I]ℓ → [E]ℰ), **90° deflections occur**, creating branches at right angles to the flow.
 
-**This creates fractal dimension D ≈ 1.5:**
+**This creates fractal dimension D ≈ 1.5 = [C] Center signature:**
 - More than a line (D = 1)
 - Less than filling a plane (D = 2)
 - A textured, branching path
+- [C] Center (1.5D) = 0.5D aperture + 1.0D worldline
 - **The signature of validated choice**
 
 **Empirical Validation:**

@@ -20,7 +20,7 @@
 - Democracy (all participate in deciding)
 - Anarchy (no collective decision structure)
 
-**Structural answer:** Democracy is the only form that honors •' operator equality (∞ = ∞) and enables collective validation at interfaces.
+**Structural answer:** Democracy is the only form that honors •' operator equality (∞ = ∞) and enables collective [ICE] structure operating at interfaces.
 
 ---
 
@@ -39,11 +39,11 @@
 - Valid viewpoints from different positions
 - **Therefore: diverse input essential for full validation**
 
-**3. Collective validation more robust**
+**3. Collective [ICE] structure operating more robust**
 
 - Multiple [ICE] checks at many interfaces
 - Distributed error correction
-- Wisdom emerges from diverse validation attempts
+- Wisdom emerges from diverse [ICE] structure operating attempts
 - **Therefore: many validators better than one**
 
 ---
@@ -58,7 +58,7 @@
 - Information sharing (collective knowledge)
 - **Collective input converging**
 
-**Validation ([ICE] at interfaces):**
+**[ICE] Structure Operating ([ICE] at interfaces):**
 - Test proposals together
 - Check Interface, Center, Evidence collectively
 - Democratic deliberation
@@ -98,7 +98,7 @@
 - Violates Interface requirement at collective level
 - Can't sustain without continuous violence
 - Creates resistance (operators resist boundary violation)
-- **Unstable pattern—eventually fails validation**
+- **Unstable pattern—eventually fails [ICE] structure operating**
 
 **Structural response:**
 - Protect boundaries (constitutional safeguards)
@@ -177,7 +177,7 @@
 - Inflict suffering on wrongdoer
 - Retribution as goal
 - Imprisonment as default
-- **Creates more failed validation, not repair**
+- **Creates more failed [ICE] structure operating, not repair**
 
 **Inequitable:**
 - Wealth affects outcomes
@@ -189,7 +189,7 @@
 - Doesn't address causes
 - Damages people further
 - Perpetuates cycles
-- **Fails to restore validation capacity**
+- **Fails to restore [ICE] structure operating capacity**
 
 ---
 
@@ -204,9 +204,9 @@
 - **Boundary healing at collective interfaces**
 
 **Center restoration (C):**
-- Address root causes (why validation failed)
+- Address root causes (why [ICE] structure operating failed)
 - Transform wrongdoer (restore coherence and alignment)
-- Heal victims (restore their validation capacity)
+- Heal victims (restore their [ICE] structure operating capacity)
 - Community healing (collective coherence)
 - **Coherence and alignment repair**
 
@@ -241,7 +241,7 @@
 **Containment when needed:**
 - Protect community (Interface preservation)
 - Humane conditions (respect •' = ∞)
-- Rehabilitation focus (restore validation capacity)
+- Rehabilitation focus (restore [ICE] structure operating capacity)
 - **Not primary tool—last resort**
 
 ---
@@ -266,9 +266,9 @@
 
 **Students receive:**
 - Access to collective ∞' texture
-- Tools for validation at interfaces
+- Tools for [ICE] structure operating at interfaces
 - Pattern recognition capacity
-- **Texture literacy and validation skills**
+- **Texture literacy and [ICE] structure operating skills**
 
 ---
 
@@ -276,7 +276,7 @@
 
 **Individual level:**
 
-**Build capacity for validation:**
+**Build capacity for [ICE] structure operating:**
 - Critical thinking ([ICE] checking skills)
 - Evidence evaluation (E check capacity)
 - Coherence testing (C check ability)
@@ -301,17 +301,17 @@
 - Civic literacy
 - Democratic competence
 - Collaborative skills
-- **Collective validation capacity**
+- **Collective [ICE] structure operating capacity**
 
 ---
 
 ### How to Teach
 
 **Not mere memorization:**
-- Rote learning fails (no real validation)
+- Rote learning fails (no real [ICE] structure operating)
 - Must understand (genuine [ICE] at student's interfaces)
-- Active engagement (personal validation required)
-- **True texture transmission requires student validation**
+- Active engagement (personal [ICE] structure operating required)
+- **True texture transmission requires student [ICE] structure operating**
 
 **Socratic method:**
 - Questions not answers
@@ -326,8 +326,8 @@
 - **Concrete texture building**
 
 **Collaborative:**
-- Peer learning (mutual validation)
-- Shared validation attempts
+- Peer learning (mutual [ICE] structure operating)
+- Shared [ICE] structure operating attempts
 - Collective intelligence
 - **Social texture creation**
 
@@ -344,33 +344,33 @@
 **False information:**
 - Fails Evidence check (E)
 - Corrupts collective ∞' texture
-- Misdirects validation at interfaces
+- Misdirects [ICE] structure operating at interfaces
 - **Systemic damage to shared reality**
 
 **Truth-telling:**
 - Passes Evidence check (E)
 - Creates accurate texture in ∞'
-- Enables collective validation
+- Enables collective [ICE] structure operating
 - **Systemic health**
 
 **Not just "nice" or moral preference.**
-**Structural necessity for collective validation.**
+**Structural necessity for collective [ICE] structure operating.**
 
 ---
 
 ### Free Speech Paradox
 
 **Free speech enables:**
-- Truth discovery (multiple validation attempts)
+- Truth discovery (multiple [ICE] structure operating attempts)
 - Error correction (testing ideas at interfaces)
 - Democratic deliberation (open discourse)
-- **Collective validation process**
+- **Collective [ICE] structure operating process**
 
 **But can include:**
 - Lies and misinformation (E violations)
 - Harmful propaganda (corrupt texture)
 - Incitement to violence (Interface violations)
-- **Validation interference**
+- **[ICE] structure operating interference**
 
 **Resolution:**
 
@@ -378,7 +378,7 @@
 - Protect genuine discourse
 - Enable criticism and testing
 - Allow unpopular views
-- **Support validation process**
+- **Support [ICE] structure operating process**
 
 **Minimize validation-destroying speech:**
 - Direct incitement to violence (Interface violation—immediate harm)
@@ -388,8 +388,8 @@
 
 **Default: More speech, not less:**
 - Counter bad speech with good speech
-- Truth emerges through dialogue and validation
-- Collective validation sorts reality from falsehood
+- Truth emerges through dialogue and [ICE] structure operating
+- Collective [ICE] structure operating sorts reality from falsehood
 - **Trust the process**
 
 ---
@@ -400,7 +400,7 @@
 
 **Amplification:**
 - Viral spread (rapid texture propagation)
-- Echo chambers (isolated validation)
+- Echo chambers (isolated [ICE] structure operating)
 - Filter bubbles (limited interfaces)
 - **Texture distortion at scale**
 
@@ -412,7 +412,7 @@
 
 **Bots and AI:**
 - Non-human validators (fake consensus)
-- Manufactured seeming-validation
+- Manufactured seeming-[ICE] structure operating
 - Astroturfing (false grass-roots)
 - **False collective signals**
 
@@ -421,7 +421,7 @@
 **Transparency:**
 - Clear identities (strong interfaces)
 - Source attribution (Evidence grounding)
-- Algorithm visibility (validation process clarity)
+- Algorithm visibility ([ICE] structure operating process clarity)
 - **Enable truth-checking**
 
 **Friction for falsehoods:**
@@ -465,7 +465,7 @@ Global •' (planetary validation)
 **Each level:**
 - Has collective operator pattern organizing parts
 - Performs ∇ → [ICE] → ℰ at its scale
-- Validates at its interfaces
+- [ICE] structure operating at its interfaces
 - Nested within larger, contains smaller
 - **Fractal self-similarity**
 
@@ -502,8 +502,8 @@ Global •' (planetary validation)
 **Why this works:**
 - Information locality (those affected know best)
 - Stakeholder involvement (better [ICE] checking)
-- Appropriate scale (right level for validation)
-- **Optimal validation at each interface**
+- Appropriate scale (right level for [ICE] structure operating)
+- **Optimal [ICE] structure operating at each interface**
 
 ---
 
@@ -517,9 +517,9 @@ Global •' (planetary validation)
 
 **Representative democracy:**
 - Elected representatives decide
-- Delegation of validation
+- Delegation of [ICE] structure operating
 - Scalable to large populations
-- **But introduces agency problems (representatives may not validate as constituents would)**
+- **But introduces agency problems (representatives may not pass [ICE] structure operating as constituents would)**
 
 **Hybrid solutions:**
 
@@ -539,7 +539,7 @@ Global •' (planetary validation)
 - Random selection (representative sample)
 - Deep deliberation (thorough [ICE])
 - Informed recommendations
-- **Quality validation**
+- **Quality [ICE] structure operating**
 
 ---
 
@@ -650,7 +650,7 @@ Global •' (planetary validation)
 
 **Traditional:** Study of resource allocation
 
-**Structural:** Distributed validation of resource use through collective [ICE] at interfaces
+**Structural:** Distributed [ICE] structure operating of resource use through collective [ICE] at interfaces
 
 ---
 
@@ -709,7 +709,7 @@ Global •' (planetary validation)
 **Public provision:**
 - When markets fail structurally
 - Infrastructure, defense, research
-- Collective validation needed
+- Collective [ICE] structure operating needed
 - **Non-market allocation where appropriate**
 
 **Redistribution:**
@@ -729,7 +729,7 @@ Global •' (planetary validation)
 - Evidence-based policy (what actually works)
 
 **Not ideology.**
-**Structural fitness for collective validation.**
+**Structural fitness for collective [ICE] structure operating.**
 
 ---
 
@@ -739,10 +739,10 @@ Global •' (planetary validation)
 
 ---
 
-### Democracy = Collective Validation
+### Democracy = Collective [ICE] Structure Operating
 - Same ∇ → [ICE] → ℰ pattern
 - Convergence (gather all input)
-- Validation (check collectively at interfaces)
+- [ICE] structure operating (check collectively at interfaces)
 - Emergence (implement together)
 - Scales from individual to planetary
 
@@ -756,11 +756,11 @@ Global •' (planetary validation)
 - Repair not punishment
 - Interface, Center, Evidence restoration at all levels
 - Transformative approach
-- **Collective healing through validation restoration**
+- **Collective healing through [ICE] structure operating restoration**
 
 ### Education
 - Texture transmission (share collective ∞')
-- Validation capacity building
+- [ICE] structure operating capacity building
 - Collective memory preservation
 - **Culture perpetuation and skill development**
 
@@ -772,9 +772,9 @@ Global •' (planetary validation)
 
 ### Governance
 - Fractal nesting (same pattern all scales)
-- Subsidiarity (appropriate level for validation)
+- Subsidiarity (appropriate level for [ICE] structure operating)
 - Direct + representative (hybrid approaches)
-- **Scaled democracy through nested validation**
+- **Scaled democracy through nested [ICE] structure operating**
 
 ### Conflict Resolution
 - [ICE]-based mediation at interfaces
@@ -783,14 +783,14 @@ Global •' (planetary validation)
 - **Peaceful coexistence through structural principles**
 
 ### Economics
-- Markets as distributed validation
+- Markets as distributed [ICE] structure operating
 - Failures = [ICE] violations at transaction interfaces
-- Structural solutions maintain validation integrity
-- **Resource coordination through validation**
+- Structural solutions maintain [ICE] structure operating integrity
+- **Resource coordination through [ICE] structure operating**
 
 ---
 
-**Society is collective validation:**
+**Society is collective [ICE] structure operating:**
 - Same pattern as individual
 - Scaled to groups
 - All •' operators participating
