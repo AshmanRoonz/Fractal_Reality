@@ -418,10 +418,12 @@
 
             nav ul {
                 display: none;
-                flex-direction: column;
-                gap: 0;
-                padding: 1rem 0 0 0;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                padding: 1rem 0 0.5rem 0;
                 width: 100%;
+                justify-content: center;
             }
 
             nav ul.active {
@@ -430,8 +432,21 @@
 
             nav li {
                 text-align: center;
-                padding: 0.75rem 0;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 0;
+                border-bottom: none;
+            }
+
+            nav a {
+                display: block;
+                padding: 0.5rem 1rem;
+                background: rgba(255, 215, 0, 0.1);
+                border: 1px solid var(--gold);
+                border-radius: 20px;
+                font-size: 0.9rem;
+            }
+
+            nav a:hover {
+                background: rgba(255, 215, 0, 0.2);
             }
 
             nav a::after {
@@ -862,6 +877,15 @@ D = 1.5 ± ε
         <!-- Mathematics Section -->
         <section id="mathematics" class="fade-in">
             <h2>8. Metric-Coupled Fractal Analysis</h2>
+
+            <p style="text-align: center; margin-bottom: 2rem;">
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/Mathematics_Of_Wholeness.md" 
+                   target="_blank" 
+                   class="cta-button" 
+                   style="display: inline-block; padding: 0.75rem 2rem; font-size: 1rem;">
+                    📄 Read the Complete Mathematical Paper
+                </a>
+            </p>
 
             <blockquote>
                 "Reality maintains coherence through the coupling of quantum, thermodynamic, and geometric scales—each a projection of wholeness validating itself through time."
