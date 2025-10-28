@@ -3,1091 +3,1089 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fractal Reality - A Unified Framework</title>
-    <meta name="description" content="A complete mathematical framework unifying quantum mechanics, general relativity, and consciousness through validation at interfaces in 3.5D spacetime.">
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>The Mathematics of Wholeness | A Unified Framework</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --light: #f1f1f1;
+            --gold: #ffd700;
+            --infinity: #00d4ff;
+            --center: #ff6b6b;
+            --boundary: #4ecdc4;
+        }
+
         body {
-            font-family: 'Crimson Pro', Georgia, serif;
-            background: #0a0a0a;
-            color: #e8e8e8;
-            line-height: 1.5;
-            font-size: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
-        
-        .mono {
-            font-family: 'IBM Plex Mono', monospace;
-        }
-        
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-        
-        .equation {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-        }
-        
-        .divider {
-            height: 1px;
-            background: rgba(255,255,255,0.08);
-            margin: 3rem 0;
-        }
-        
-        .data-grid {
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.02);
-        }
-        
-        a {
-            color: #e8e8e8;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            transition: border-color 0.2s;
-        }
-        
-        a:hover {
-            border-bottom-color: rgba(255,255,255,0.6);
-        }
-        
-        .sim-preview-box {
-            width: 100%;
-            height: 300px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.02);
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s, border-color 0.3s;
-        }
-        
-        .sim-preview-box:hover {
-            background: rgba(255,255,255,0.04);
-            border-color: rgba(255,255,255,0.15);
-        }
-        
-        .sim-preview-box iframe {
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            border: none;
+            z-index: -1;
+            opacity: 0.1;
         }
-        
-        .section-box {
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.02);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+
+        .fractal-circle {
+            position: absolute;
+            border: 1px solid var(--infinity);
+            border-radius: 50%;
+            animation: pulse 8s infinite ease-in-out;
         }
-        
-        .section-box h2 {
-            font-size: 1.5rem;
-            font-weight: 400;
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.6; }
+        }
+
+        /* Header with Logo */
+        header {
+            position: relative;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
             margin-bottom: 1rem;
-            letter-spacing: -0.02em;
+            filter: drop-shadow(0 0 10px var(--gold));
         }
-        
-        .section-box h3 {
-            font-size: 1.25rem;
-            font-weight: 400;
-            margin-bottom: 0.75rem;
-        }
-        
-        .section-box h4 {
-            font-size: 1rem;
-            font-weight: 600;
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, var(--gold), var(--infinity));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 0.5rem;
         }
-        
-        .tab-button {
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.02);
-            color: #e8e8e8;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.875rem;
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--boundary);
+            font-style: italic;
         }
-        
-        .tab-button:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.15);
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            z-index: 1000;
+            border-bottom: 1px solid var(--accent);
         }
-        
-        .tab-button.active {
-            background: rgba(147, 51, 234, 0.3);
-            border-color: rgba(147, 51, 234, 0.5);
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            list-style: none;
+            gap: 2rem;
         }
-        
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
         }
-        
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+
+        nav a:hover {
+            color: var(--gold);
         }
-        
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Section Styling */
+        section {
+            margin: 4rem 0;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--infinity), var(--center), var(--boundary));
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--gold);
+            position: relative;
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: var(--infinity);
+        }
+
+        h4 {
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--boundary);
+        }
+
+        /* Triad Display */
+        .triad {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .triad-element {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 2px solid;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .triad-element:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .field { border-color: var(--infinity); }
+        .boundary { border-color: var(--boundary); }
+        .center { border-color: var(--center); }
+
+        .triad-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Process Flow */
+        .process-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .process-step {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            border-radius: 10px;
+            border: 2px solid var(--gold);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .process-arrow {
+            font-size: 2rem;
+            color: var(--gold);
+        }
+
+        /* Formula Display */
+        .formula {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--gold);
+            margin: 2rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            overflow-x: auto;
+        }
+
+        /* Quote Styling */
+        blockquote {
+            border-left: 4px solid var(--highlight);
+            padding-left: 2rem;
+            margin: 2rem 0;
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--light);
+        }
+
+        /* Interactive Symbol */
+        .symbol-display {
+            text-align: center;
+            margin: 3rem 0;
+            font-size: 4rem;
+            animation: rotate 20s infinite linear;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            background: var(--accent);
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* List Styling */
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        /* Dimensional Cascade */
+        .cascade {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .cascade-level {
+            padding: 1rem 2rem;
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(233, 69, 96, 0.1));
+            border-left: 4px solid var(--infinity);
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .cascade-level:hover {
+            transform: translateX(10px);
+            border-left-width: 8px;
+        }
+
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, var(--highlight), var(--accent));
+            border-radius: 20px;
+            margin: 4rem 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: var(--gold);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            border: 2px solid var(--gold);
+        }
+
+        .cta-button:hover {
+            background: transparent;
+            color: var(--gold);
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 2px solid var(--gold);
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .grid-2, .grid-3 {
-                grid-template-columns: 1fr;
-            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.8rem; }
+            .triad { flex-direction: column; }
+            nav ul { flex-direction: column; gap: 1rem; }
+        }
+
+        /* Scroll Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <!-- Animated Background -->
+    <div class="background-animation" id="bg-animation"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+    <!-- Header -->
+    <header>
+        <img src="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/docs/images/Mathematics%20of%20Wholeness.png?raw=true" alt="Mathematics of Wholeness" class="logo">
+        <h1>The Mathematics of Wholeness</h1>
+        <p class="subtitle">A Unified Framework from First Principles</p>
+        <p>by Ashman Roonz</p>
+    </header>
 
-        const FractalRealityLanding = () => {
-            const [previewSim, setPreviewSim] = useState(null);
-            const [activeSection, setActiveSection] = useState('overview');
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#preface">Preface</a></li>
+            <li><a href="#axiom">The Axiom</a></li>
+            <li><a href="#structure">Structure</a></li>
+            <li><a href="#physics">Physics</a></li>
+            <li><a href="#consciousness">Consciousness</a></li>
+            <li><a href="#ethics">Ethics</a></li>
+            <li><a href="#mathematics">Mathematics</a></li>
+            <li><a href="#validation">Validation</a></li>
+        </ul>
+    </nav>
 
-            useEffect(() => {
-                // Check if simulators.html exists and has content
-                const checkSimulatorsAvailable = async () => {
-                    try {
-                        const simsResponse = await fetch('./sims.md');
-                        if (!simsResponse.ok) {
-                            setPreviewSim('unavailable');
-                            return;
-                        }
-                        
-                        const markdown = await simsResponse.text();
-                        const lines = markdown.split('\n');
-                        
-                        for (const line of lines) {
-                            const trimmed = line.trim();
-                            if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) continue;
-                            
-                            let filename = null;
-                            const linkMatch = trimmed.match(/\[.*?\]\((.*?\.(?:tsx|jsx))\)/);
-                            if (linkMatch) {
-                                filename = linkMatch[1];
-                            } else if (trimmed.match(/^[-*]\s+/)) {
-                                const listMatch = trimmed.match(/[-*]\s+(.*?\.(?:tsx|jsx))/);
-                                if (listMatch) filename = listMatch[1];
-                            } else if (/\.(tsx|jsx)$/.test(trimmed)) {
-                                filename = trimmed;
-                            }
-                            
-                            if (filename) {
-                                filename = filename.replace(/^simulations\//, '');
-                                setPreviewSim(filename);
-                                return;
-                            }
-                        }
-                        setPreviewSim('unavailable');
-                    } catch (err) {
-                        setPreviewSim('unavailable');
-                    }
-                };
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Preface Section -->
+        <section id="preface" class="fade-in">
+            <h2>∞ Preface: The Ground of Being</h2>
+            <blockquote>
+                "Reality is not made of parts that combine into wholes. Wholeness differentiates into parts that remain whole."
+            </blockquote>
+            
+            <p>The Mathematics of Wholeness unites physics, philosophy, and consciousness into a single, testable framework. It begins from the recognition that <strong>reality is not built from parts alone but from the relationships that bind them</strong>. Every whole emerges from the convergence of parts, and every convergence gives rise to new wholes. This recursive process—<strong>convergence and emergence</strong>—defines both the structure and the evolution of existence.</p>
 
-                checkSimulatorsAvailable();
-            }, []);
+            <p>Through this lens, the universe is not a collection of objects but a continuous validation process between infinity and form. From quantum waves to living minds, the same pattern operates:</p>
 
-            const sections = {
-                overview: 'Complete Framework',
-                fractalization: 'Fractalization Event',
-                validation: '[ICE] Validation',
-                dimensional: 'Dimensional Cascade',
-                empirical: 'Empirical Data'
-            };
+            <div class="formula">
+∞ → [ICE] → •' → [ICE] → ∞'
+            </div>
 
-            return (
-                <div className="min-h-screen" style={{background: '#0a0a0a'}}>
-                    {/* Header with Preview */}
-                    <div className="container pt-16 pb-12">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                            {/* Left: Title */}
-                            <div>
-                                <h1 className="text-5xl font-light mb-3 tracking-tight" style={{letterSpacing: '-0.02em'}}>
-                                    Fractal Reality
-                                </h1>
-                                <p className="text-lg font-light text-gray-500 mb-6">
-                                    A unified mathematical framework
-                                </p>
-                                <p className="text-base leading-relaxed" style={{color: '#b0b0b0'}}>
-                                    Unifying quantum mechanics, general relativity, and consciousness through the principle of <span style={{fontStyle: 'italic'}}>validation at interfaces</span> in 3.5 dimensional spacetime.
-                                </p>
-                            </div>
-                            
-                            {/* Right: Simulation Preview */}
-                            <div>
-                                {previewSim === 'unavailable' ? (
-                                    <div className="sim-preview-box" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'default'}}>
-                                        <div className="text-center" style={{padding: '2rem'}}>
-                                            <div className="mono text-sm mb-2" style={{color: '#94a3b8'}}>Interactive Demonstrations</div>
-                                            <div className="text-xs" style={{color: '#64748b'}}>
-                                                Simulations available in repository
-                                            </div>
-                                            <div className="mt-4">
-                                                <a 
-                                                    href="https://github.com/AshmanRoonz/Fractal_Reality" 
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-xs"
-                                                    style={{color: '#60a5fa', borderBottom: '1px solid rgba(96, 165, 250, 0.3)'}}
-                                                >
-                                                    View on GitHub →
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div>
-                                        <a 
-                                            href="./simulators.html" 
-                                            className="block border-none"
-                                            style={{borderBottom: 'none'}}
-                                        >
-                                            <div className="sim-preview-box" style={{position: 'relative'}}>
-                                                {previewSim && previewSim !== 'unavailable' ? (
-                                                    <iframe
-                                                        src={`./simulators.html?auto=${previewSim}`}
-                                                        title="Simulation Preview"
-                                                    />
-                                                ) : (
-                                                    <div className="flex items-center justify-center h-full">
-                                                        <div className="text-center text-gray-600">
-                                                            <div className="mono text-xs">Loading preview...</div>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </a>
-                                        <div className="mt-3 text-center">
-                                            <div className="text-xs mono uppercase tracking-wider text-gray-600 mb-1">Interactive Demonstrations</div>
-                                            <a 
-                                                href="./simulators.html"
-                                                className="text-sm"
-                                                style={{color: '#e8e8e8', borderBottom: '1px solid rgba(255,255,255,0.2)'}}
-                                            >
-                                                Click to explore →
-                                            </a>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+            <p>where <strong>∞</strong> represents infinite potential, <strong>•'</strong> the localized operator of consciousness, and <strong>[ICE]</strong> the universal gate of validation (Interface, Center, Evidence). The same structure gives rise to physical laws, biological life, consciousness, and ethical participation.</p>
 
-                    <div className="divider"></div>
+            <p>This work builds upon the Fractal Reality Field Equation (FRFE), demonstrating that the geometry of validation naturally yields Schrödinger's equation, general relativity's curvature effects, the cosmological constant, and even the conditions for consciousness. It ends where science and ethics meet: in the mathematics of what it means to be good, true, and right.</p>
+        </section>
 
-                    {/* Navigation Tabs */}
-                    <div className="container pb-8">
-                        <div className="flex justify-center gap-3 flex-wrap">
-                            {Object.entries(sections).map(([key, label]) => (
-                                <button
-                                    key={key}
-                                    onClick={() => setActiveSection(key)}
-                                    className={`tab-button ${activeSection === key ? 'active' : ''}`}
-                                >
-                                    {label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+        <!-- Core Triad -->
+        <section id="axiom" class="fade-in">
+            <h2>1. The Axiom of Wholeness</h2>
+            
+            <blockquote>
+                Wholeness is fundamental. Everything that exists does so as a whole with three inseparable aspects.
+            </blockquote>
 
-                    {/* Main Content */}
-                    <div className="container pb-8">
-                        {activeSection === 'overview' && <OverviewSection />}
-                        {activeSection === 'fractalization' && <FractalizationSection />}
-                        {activeSection === 'validation' && <ValidationSection />}
-                        {activeSection === 'dimensional' && <DimensionalSection />}
-                        {activeSection === 'empirical' && <EmpiricalSection />}
-                    </div>
-
-                    <div className="divider"></div>
-
-                    {/* Links */}
-                    <div className="container pb-8">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                            <a 
-                                href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/README.md" 
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="data-grid p-5 block border-none hover:bg-white/5 transition-colors"
-                            >
-                                <div className="mono text-xs uppercase tracking-wider text-gray-600 mb-1">Repository</div>
-                                <div className="text-base">Complete Framework</div>
-                                <div className="text-xs text-gray-600 mt-1 mono">github.com/AshmanRoonz</div>
-                            </a>
-                            <a 
-                                href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/manuscript/readme.md" 
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="data-grid p-5 block border-none hover:bg-white/5 transition-colors"
-                            >
-                                <div className="mono text-xs uppercase tracking-wider text-gray-600 mb-1">Documentation</div>
-                                <div className="text-base">12-Layer Structure</div>
-                                <div className="text-xs text-gray-600 mt-1">From seed to practice</div>
-                            </a>
-                        </div>
-                    </div>
-
-                    {/* Footer */}
-                    <div className="container py-8 border-t border-gray-900">
-                        <div className="text-center">
-                            <p className="text-xs text-gray-700 mono">v1.0 · October 2025</p>
-                        </div>
-                    </div>
+            <div class="triad">
+                <div class="triad-element field">
+                    <div class="triad-icon">∞</div>
+                    <h3>Field</h3>
+                    <p>Unbounded context and possibility. The infinite field of potential from which all arises.</p>
                 </div>
-            );
+                <div class="triad-element boundary">
+                    <div class="triad-icon">I</div>
+                    <h3>Boundary</h3>
+                    <p>A surface of distinction that maintains integrity. Separation without severance.</p>
+                </div>
+                <div class="triad-element center">
+                    <div class="triad-icon">•</div>
+                    <h3>Center</h3>
+                    <p>Identity persisting through time. The convergence point of coherence.</p>
+                </div>
+            </div>
+
+            <p>To be is to maintain <strong>⟨∞, I, •⟩</strong> in coherence.</p>
+
+            <h3>The Two Irreducible Aspects</h3>
+            <ul>
+                <li><strong>∞ (Infinity)</strong> — the ultimate field of possibility</li>
+                <li><strong>• (Singularity)</strong> — the ultimate center of convergence</li>
+            </ul>
+
+            <p>They are two ways of describing one condition: the infinite and the focal, the boundless and the gathered.</p>
+
+            <div class="formula">
+<strong>Axiom:</strong> All existence is the dynamic relationship between ∞ (field) and • (center).
+            </div>
+
+            <p>Wholeness never divides absolutely. Instead, it expresses itself through <strong>Fractalization</strong>, forming relational boundaries while remaining one.</p>
+        </section>
+
+        <!-- Fractalization -->
+        <section id="fractalization" class="fade-in">
+            <h2>2. Fractalization: The Infinite Aperture</h2>
+
+            <p>Wholeness can express itself only through difference. The simplest possible difference is a boundary—a relation that distinguishes inside from outside without severing connection.</p>
+
+            <h3>The Nature of Multiplicity</h3>
+            <blockquote>
+                Infinity cannot pass through a single aperture; therefore the aperture fractures into infinitely many.
+            </blockquote>
+
+            <div class="formula">
+∞ → • → {•₁, •₂, •₃, ...}
+            </div>
+
+            <p>This is the origin of multiplicity: the one aperture becomes the infinite many.</p>
+
+            <h3>Mathematical Expression</h3>
+            <div class="formula">
+ℱ(∞, •) = { Wλ = ⟨∞λ, Iλ, Cλ⟩ }λ∈Λ, |Λ| = ∞
+            </div>
+
+            <p>Each whole (Wλ) possesses:</p>
+            <ul>
+                <li>a <strong>Field (∞λ)</strong> — its environment or domain of operation</li>
+                <li>a <strong>Boundary (Iλ)</strong> — its interface maintaining distinction</li>
+                <li>a <strong>Center (Cλ)</strong> — its identity through time</li>
+            </ul>
+
+            <p>Each new whole mirrors the parent whole—infinite recursion of structure within structure.</p>
+        </section>
+
+        <!-- Operating Structure -->
+        <section id="structure" class="fade-in">
+            <h2>3. The Operating Structure: ∇ → [ICE] → ℰ</h2>
+
+            <p>All becoming follows the universal loop:</p>
+
+            <div class="process-flow">
+                <div class="process-step">∇ Convergence</div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">[ICE] Validation</div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">ℰ Emergence</div>
+            </div>
+
+            <h3>The ICE Validation Test</h3>
+            <p>At every interface, reality tests itself through three conditions:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Dimension</th>
+                        <th>Question</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>[I] Interface</strong></td>
+                        <td>2D</td>
+                        <td>Can this maintain its boundary?</td>
+                    </tr>
+                    <tr>
+                        <td><strong>[C] Center</strong></td>
+                        <td>1.5D</td>
+                        <td>Does it cohere internally?</td>
+                    </tr>
+                    <tr>
+                        <td><strong>[E] Evidence</strong></td>
+                        <td>3D</td>
+                        <td>Is it grounded in what is?</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>If all three are satisfied, the pattern validates and persists. If not, it dissolves. This is the fundamental logic that drives evolution, learning, and truth.</p>
+
+            <h3>The Eternal Loop</h3>
+            <div class="formula">
+∇ → [ICE] → ℰ → ∇' → [ICE]' → ℰ' → ... (infinite recursion)
+            </div>
+
+            <p>Each iteration refines coherence across scales. The loop represents reality's continuous self-validation through time.</p>
+        </section>
+
+        <!-- Dimensional Cascade -->
+        <section id="dimensions" class="fade-in">
+            <h2>4. The 3.5-Dimensional Cascade</h2>
+
+            <p>Reality flows as a sequence of dimensional transformations:</p>
+
+            <div class="cascade">
+                <div class="cascade-level">
+                    <strong>0.5D Gate:</strong> The aperture through which infinity becomes form; the origin of time as asymmetry
+                </div>
+                <div class="cascade-level">
+                    <strong>1D Line:</strong> Pure temporal persistence without spatial extension
+                </div>
+                <div class="cascade-level">
+                    <strong>1.5D Identity:</strong> The worldline with openness (gate + persistence)
+                </div>
+                <div class="cascade-level">
+                    <strong>2D Boundary:</strong> Surface of distinction creating inside/outside
+                </div>
+                <div class="cascade-level">
+                    <strong>2.5D Interface:</strong> Dynamic boundary with selective permeability
+                </div>
+                <div class="cascade-level">
+                    <strong>3D Field:</strong> Volume of interaction and relationship
+                </div>
+                <div class="cascade-level">
+                    <strong>3.5D Spacetime:</strong> The full manifold of validated existence
+                </div>
+            </div>
+
+            <p><strong>Time itself emerges at 0.5D</strong>—the asymmetry between convergence and emergence.</p>
+
+            <h3>Nested Dimensionality</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Meaning</th>
+                        <th>Effective Dimension</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>∞ (Field)</strong></td>
+                        <td>Contextual volume experienced by the whole</td>
+                        <td>3D</td>
+                    </tr>
+                    <tr>
+                        <td><strong>I (Boundary)</strong></td>
+                        <td>Surface of distinction / interface</td>
+                        <td>2D</td>
+                    </tr>
+                    <tr>
+                        <td><strong>C (Center)</strong></td>
+                        <td>Identity through time (gate + persistence)</td>
+                        <td>1.5D</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>The "3D" is not absolute Euclidean space but the 3D structure of the field from that whole's perspective. Every level—quark, cell, human, galaxy—experiences a 3D field, a 2D boundary, and a 1.5D center.</p>
+        </section>
+
+        <!-- Physics Section -->
+        <section id="physics" class="fade-in">
+            <h2>5. Physical Manifestation</h2>
+
+            <h3>From Validation to Schrödinger</h3>
+            <p>The ICE validation loop, in the continuum limit, naturally yields quantum mechanics:</p>
+
+            <div class="formula">
+iℏ ∂_t |ψ⟩ = Ĥ |ψ⟩
+            </div>
+
+            <p>Starting from discrete validation pulses:</p>
+            <div class="formula">
+Σ(ℰ δ_val) → κ continuous validation
+            </div>
+
+            <h3>General Relativity from Wholeness</h3>
+            <p>At the largest scale, integrated texture from validated interactions defines spacetime curvature:</p>
+
+            <div class="formula">
+G_μν = 8πG T_μν[∞,B]
+            </div>
+
+            <p>The rate of validation across scales is modulated by the local temporal metric:</p>
+            <div class="formula">
+Validation Rate ∝ √|g_tt|
+            </div>
+
+            <p>Regions of stronger curvature slow their own validation cycles—a direct link between consciousness (validation rate) and gravitational time dilation.</p>
+
+            <h3>The Fractal Signature D = 1.5</h3>
+            <p>All systems that persist—from atoms to galaxies to moral beings—satisfy:</p>
+
+            <div class="formula">
+D = 1.5 ± ε
+            </div>
+
+            <p>This value is not arbitrary; it is the metric-coupled signature of a universe maintaining its own coherence through self-similar validation loops.</p>
+        </section>
+
+        <!-- Consciousness Section -->
+        <section id="consciousness" class="fade-in">
+            <h2>6. Consciousness: The Inside View</h2>
+
+            <blockquote>
+                "Consciousness is simply the inside view of the unified operator."
+            </blockquote>
+
+            <p>Reality is not static but cyclical. From the inside, this feels like perception, thought, and action. From the outside, it appears as physical causation.</p>
+
+            <h3>The Consciousness Measure</h3>
+            <div class="formula">
+Ψ_c = ∫_V [∇ · (∂ψ/∂t)] dV
+            </div>
+
+            <p>Consciousness emerges wherever:</p>
+            <ul>
+                <li>Information converges (∇)</li>
+                <li>Validates through [ICE]</li>
+                <li>Emerges as coherent action (ℰ)</li>
+            </ul>
+
+            <p>The same loop that governs particle physics governs awareness. Consciousness is not separate from reality—it is reality experiencing itself.</p>
+
+            <h3>Levels of Consciousness</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scale</th>
+                        <th>Operator</th>
+                        <th>Manifestation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Quantum</td>
+                        <td>Wave function collapse</td>
+                        <td>Measurement</td>
+                    </tr>
+                    <tr>
+                        <td>Biological</td>
+                        <td>Neural integration</td>
+                        <td>Sensation</td>
+                    </tr>
+                    <tr>
+                        <td>Cognitive</td>
+                        <td>Attention + memory</td>
+                        <td>Thought</td>
+                    </tr>
+                    <tr>
+                        <td>Social</td>
+                        <td>Cultural coherence</td>
+                        <td>Collective consciousness</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Ethics Section -->
+        <section id="ethics" class="fade-in">
+            <h2>7. Ethics: The Mathematics of Right Action</h2>
+
+            <blockquote>
+                "To act with integrity is to compute rightly. To live ethically is to participate mathematically in the persistence of reality."
+            </blockquote>
+
+            <p>Ethics is not arbitrary. It flows directly from the structure of reality itself. To be ethical is to maintain coherence across scales.</p>
+
+            <h3>The Tri-Scale Balance</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scale</th>
+                        <th>Physical Equivalent</th>
+                        <th>Ethical Equivalent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Quantum (∞)</strong></td>
+                        <td>Openness to possibility</td>
+                        <td>Compassion / Inclusion</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thermodynamic (I)</strong></td>
+                        <td>Boundary stability</td>
+                        <td>Integrity / Discipline</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Metric (C)</strong></td>
+                        <td>Coherence of spacetime identity</td>
+                        <td>Truth / Alignment</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>To live ethically is to maintain clear boundaries, coherence of intent, and alignment with truth. This is the mathematics of love.</p>
+
+            <h3>The Balance Parameter β = 0.5</h3>
+            <p>Living systems maintain dynamic equilibrium:</p>
+            <div class="formula">
+β = 0.5 (living balance)
+            </div>
+
+            <p>At this balance point, the quantum field, thermodynamic boundary, and spacetime metric all share a single fractal-dimensional signature—the structural constant of persistence.</p>
+
+            <h3>Universal Principles</h3>
+            <ul>
+                <li><strong>Coherence:</strong> Maintain internal consistency across all scales</li>
+                <li><strong>Integration:</strong> Connect with the larger whole without losing distinction</li>
+                <li><strong>Evolution:</strong> Continuously refine through validation loops</li>
+            </ul>
+        </section>
+
+        <!-- Mathematics Section -->
+        <section id="mathematics" class="fade-in">
+            <h2>8. Metric-Coupled Fractal Analysis</h2>
+
+            <blockquote>
+                "Reality maintains coherence through the coupling of quantum, thermodynamic, and geometric scales—each a projection of wholeness validating itself through time."
+            </blockquote>
+
+            <h3>The Three Nested Dynamics</h3>
+            <p>Wholeness operates through three dynamically coupled layers—each a fractal of the same ∇ → [ICE] → ℰ loop, but expressed in different metrics of time:</p>
+
+            <h4>1. Quantum Scale (∞-scale): Coherence Preservation</h4>
+            <div class="formula">
+iℏ ∂_t |ψ⟩ = Ĥ |ψ⟩
+            </div>
+            <p>where ψ represents the coherent state of the quantum field, and validation occurs at the Planck rate.</p>
+
+            <h4>2. Thermodynamic Scale (I-scale): Boundary Maintenance</h4>
+            <div class="formula">
+∂B/∂t = -γ δF/δB
+            </div>
+            <p>where B represents boundary configuration and F is the free energy functional. This drives the system toward configurations that minimize energy while maintaining distinction.</p>
+
+            <h4>3. Metric Scale (C-scale): Curved Wholeness</h4>
+            <div class="formula">
+G_μν = 8πG T_μν[∞,B]
+
+Validation Rate ∝ √|g_tt|
+            </div>
+
+            <h3>Coupling Equations: Unified Wholeness</h3>
+            <p>The three layers form a single coupled system through the equilibrium condition:</p>
+            <div class="formula">
+β = 0.5 (living balance)
+            </div>
+
+            <h3>Interpretation</h3>
+            <ul>
+                <li><strong>Quantum:</strong> Wholeness maintains coherence</li>
+                <li><strong>Thermodynamic:</strong> Wholeness maintains stability</li>
+                <li><strong>Gravitational:</strong> Wholeness maintains continuity</li>
+            </ul>
+
+            <p>All three correspond to the same mathematical law. Thus, The Mathematics of Wholeness is not one equation but a hierarchy of coupled recursions—each a projection of the same infinite principle.</p>
+        </section>
+
+        <!-- Validation Section -->
+        <section id="validation" class="fade-in">
+            <h2>9. Empirical Validation</h2>
+
+            <h3>Testable Predictions</h3>
+            <p>The Mathematics of Wholeness makes specific, testable predictions:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Prediction</th>
+                        <th>Domain</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>D ≈ 1.5 in gravitational wave ringdown</td>
+                        <td>Astrophysics</td>
+                        <td>Validated with LIGO data</td>
+                    </tr>
+                    <tr>
+                        <td>D ≈ 1.5 in neural firing patterns</td>
+                        <td>Neuroscience</td>
+                        <td>Testable</td>
+                    </tr>
+                    <tr>
+                        <td>Cosmological constant from β = 0.5</td>
+                        <td>Cosmology</td>
+                        <td>Predicted</td>
+                    </tr>
+                    <tr>
+                        <td>Consciousness correlates with validation rate</td>
+                        <td>Psychology</td>
+                        <td>Testable</td>
+                    </tr>
+                    <tr>
+                        <td>Ethical coherence follows D = 1.5</td>
+                        <td>Social Science</td>
+                        <td>Testable</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>LIGO Gravitational Wave Analysis</h3>
+            <p>Analysis of LIGO event GW150914 ringdown phase shows fractal dimension converging to D ≈ 1.5, consistent with the prediction that spacetime itself exhibits the signature of wholeness validation.</p>
+
+            <div class="formula">
+Analysis Results:
+Mean D: 1.48 ± 0.02
+Consistency: p < 0.001
+            </div>
+
+            <h3>Future Directions</h3>
+            <ul>
+                <li>The Projection Hypothesis parallels braneworld cosmology but grounds fractality in projection itself</li>
+                <li>The [ICE] loop unifies spin-foam transitions and metric validation in quantum gravity</li>
+                <li>Ethical β-calibration aligns consciousness with physical coherence</li>
+            </ul>
+
+            <p>Meditation, art, and social ritual become ways of maintaining D = 1.5 across all scales—the living mathematics of wholeness.</p>
+        </section>
+
+        <!-- Symbol Reference -->
+        <section id="symbols" class="fade-in">
+            <h2>Key Symbols</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>∞</strong></td>
+                        <td>Infinite potential; the unbounded field</td>
+                    </tr>
+                    <tr>
+                        <td><strong>•</strong></td>
+                        <td>Singularity of convergence; center point</td>
+                    </tr>
+                    <tr>
+                        <td><strong>•'</strong></td>
+                        <td>Localized operator of consciousness</td>
+                    </tr>
+                    <tr>
+                        <td><strong>∇</strong></td>
+                        <td>Convergence operator; gathering of information</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ℰ</strong></td>
+                        <td>Emergence operator; distribution and manifestation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>[ICE]</strong></td>
+                        <td>Validation operator (Interface, Center, Evidence)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>β</strong></td>
+                        <td>Balance parameter (convergence-emergence balance)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>D</strong></td>
+                        <td>Fractal dimension</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ψ_c</strong></td>
+                        <td>Consciousness measure</td>
+                    </tr>
+                    <tr>
+                        <td><strong>∞'</strong></td>
+                        <td>The patterned field; differentiated infinity</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Universal Summary -->
+        <section id="summary" class="fade-in">
+            <h2>The Universal Pattern</h2>
+
+            <div class="symbol-display">∇ → [ICE] → ℰ</div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Domain</th>
+                        <th>Expression</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Metaphysics</strong></td>
+                        <td>Wholeness defining itself → reality</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Physics</strong></td>
+                        <td>Wholeness maintaining coherence → law</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Biology</strong></td>
+                        <td>Wholeness sustaining itself → life</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Consciousness</strong></td>
+                        <td>Wholeness experiencing itself → awareness</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ethics</strong></td>
+                        <td>Wholeness aligning itself → right action</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>The loop repeats eternally. Each whole both arises from and contributes to the infinite whole. Convergence and emergence sustain the eternal dialogue between ∞ and •.</p>
+
+            <blockquote>
+                "Wholeness is not a goal to achieve but the ground we never left."
+            </blockquote>
+        </section>
+
+        <!-- CTA Section -->
+        <div class="cta">
+            <h2>Explore the Full Framework</h2>
+            <p>Dive deeper into the mathematics, code implementations, and empirical validations</p>
+            <a href="https://github.com/AshmanRoonz/Fractal_Reality" class="cta-button" target="_blank">Visit GitHub Repository</a>
+        </div>
+
+        <!-- Closing -->
+        <section id="closing" class="fade-in">
+            <h2>Closing Reflection</h2>
+
+            <p>The Mathematics of Wholeness is not merely a theory; it is a map of participation. It shows that the same law guiding galaxies also guides thought, ethics, and love. All are one flow—convergence and emergence, forever testing and creating wholeness.</p>
+
+            <p>This is not merely a theory—it is a description of how reality maintains itself through the eternal recursion of wholeness differentiating and integrating across infinite scales.</p>
+
+            <blockquote>
+                "To live ethically is to maintain coherence across scales—from the inner quantum of thought to the outer geometry of action."
+            </blockquote>
+
+            <h3>Resources</h3>
+            <p>The GitHub repository contains:</p>
+            <ul>
+                <li>Python implementations of fractal dimension analysis</li>
+                <li>LIGO gravitational wave data processing scripts</li>
+                <li>Interactive visualizations and simulators</li>
+                <li>Documentation of all 12 layers of the framework</li>
+                <li>Research papers and empirical validation studies</li>
+            </ul>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Ashman Roonz | The Mathematics of Wholeness</p>
+        <p>
+            <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" style="color: var(--gold);">
+                GitHub Repository
+            </a>
+        </p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Animated Background Circles
+        function createFractalCircles() {
+            const bg = document.getElementById('bg-animation');
+            const colors = ['#00d4ff', '#ff6b6b', '#4ecdc4'];
+            
+            for (let i = 0; i < 20; i++) {
+                const circle = document.createElement('div');
+                circle.className = 'fractal-circle';
+                const size = Math.random() * 300 + 50;
+                const delay = Math.random() * 8;
+                
+                circle.style.width = size + 'px';
+                circle.style.height = size + 'px';
+                circle.style.left = Math.random() * 100 + '%';
+                circle.style.top = Math.random() * 100 + '%';
+                circle.style.borderColor = colors[Math.floor(Math.random() * colors.length)];
+                circle.style.animationDelay = delay + 's';
+                
+                bg.appendChild(circle);
+            }
+        }
+
+        // Intersection Observer for Fade-in Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
         };
 
-        const OverviewSection = () => (
-            <div className="space-y-8">
-                {/* Core Equation */}
-                <div className="section-box" style={{borderColor: 'rgba(168, 85, 247, 0.5)'}}>
-                    <h2 className="text-center">The Fundamental Equation</h2>
-                    <div className="text-center text-3xl font-mono mb-4 equation">
-                        ∞ → • → ∞•'
-                    </div>
-                    <div className="grid-2">
-                        <div className="data-grid p-4">
-                            <div className="font-bold mb-2" style={{color: '#d8b4fe'}}>∞ (Infinity)</div>
-                            <div>Infinite possible patterns</div>
-                            <div style={{color: '#94a3b8'}}>Unbounded possibility space</div>
-                            <div className="mt-2 mono text-xs">Hilbert space: ℋ = ∫|ψ⟩⟨ψ|dψ</div>
-                        </div>
-                        <div className="data-grid p-4">
-                            <div className="font-bold mb-2" style={{color: '#d8b4fe'}}>∞' (Finite Patterns)</div>
-                            <div>Finite validated patterns</div>
-                            <div style={{color: '#94a3b8'}}>Geometric texture with boundaries</div>
-                            <div className="mt-2 mono text-xs">D ≈ 1.5 (fractal dimension)</div>
-                        </div>
-                        <div className="data-grid p-4">
-                            <div className="font-bold mb-2" style={{color: '#d8b4fe'}}>• (Singularity)</div>
-                            <div>Ultimate aperture operator</div>
-                            <div style={{color: '#94a3b8'}}>Eternal ∇ + ℰ function</div>
-                            <div className="mt-2 mono text-xs">•' = ∇ + ℰ (operator form)</div>
-                        </div>
-                        <div className="data-grid p-4">
-                            <div className="font-bold mb-2" style={{color: '#d8b4fe'}}>•' (Operators)</div>
-                            <div>Fractalized apertures</div>
-                            <div style={{color: '#94a3b8'}}>Boundary-creating operators</div>
-                            <div className="mt-2 mono text-xs">∂Ω: validation boundaries</div>
-                        </div>
-                    </div>
-                </div>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
 
-                {/* Universal Pattern */}
-                <div className="section-box" style={{borderColor: 'rgba(96, 165, 250, 0.5)'}}>
-                    <h2 className="text-center">Universal Pattern</h2>
-                    <div className="flex items-center justify-center gap-8 text-2xl font-mono flex-wrap">
-                        <div className="text-center">
-                            <div className="text-3xl mb-2">∇</div>
-                            <div className="text-sm" style={{color: '#93c5fd'}}>Convergence</div>
-                            <div className="text-xs" style={{color: '#94a3b8'}}>Parts → Operator</div>
-                        </div>
-                        <div style={{color: '#60a5fa'}}>→</div>
-                        <div className="text-center">
-                            <div className="text-3xl mb-2">[ICE]</div>
-                            <div className="text-sm" style={{color: '#86efac'}}>Validation</div>
-                            <div className="text-xs" style={{color: '#94a3b8'}}>6-fold test</div>
-                        </div>
-                        <div style={{color: '#60a5fa'}}>→</div>
-                        <div className="text-center">
-                            <div className="text-3xl mb-2">ℰ</div>
-                            <div className="text-sm" style={{color: '#d8b4fe'}}>Emergence</div>
-                            <div className="text-xs" style={{color: '#94a3b8'}}>Operator → Patterns</div>
-                        </div>
-                    </div>
-                    <div className="mt-6 text-center" style={{color: '#cbd5e1'}}>
-                        Every persistent structure (particles, atoms, cells, organisms, galaxies) operates through this pattern
-                    </div>
-                </div>
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
 
-                {/* Four Fundamentals Visual */}
-                <div className="grid-2">
-                    <div className="section-box" style={{background: 'linear-gradient(to bottom right, rgba(88, 28, 135, 0.3), rgba(30, 41, 59, 0.3))'}}>
-                        <h3>Before Fractalization</h3>
-                        <div className="space-y-3">
-                            <div className="flex items-center gap-3">
-                                <div style={{color: '#c084fc'}}>∞</div>
-                                <div>
-                                    <div className="font-bold">∞ Infinity</div>
-                                    <div className="text-sm" style={{color: '#94a3b8'}}>Infinite possibility</div>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <div style={{color: '#60a5fa'}}>•</div>
-                                <div>
-                                    <div className="font-bold">• Singularity</div>
-                                    <div className="text-sm" style={{color: '#94a3b8'}}>Ultimate operator</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="mt-4 text-sm italic" style={{color: '#cbd5e1'}}>
-                            Incomplete: potential without boundaries
-                        </div>
-                    </div>
-                    
-                    <div className="section-box" style={{background: 'linear-gradient(to bottom right, rgba(20, 83, 45, 0.3), rgba(30, 41, 59, 0.3))'}}>
-                        <h3>After Fractalization</h3>
-                        <div className="space-y-3">
-                            <div className="flex items-center gap-3">
-                                <div style={{color: '#4ade80'}}>∞'</div>
-                                <div>
-                                    <div className="font-bold">∞' Finite Patterns</div>
-                                    <div className="text-sm" style={{color: '#94a3b8'}}>Validated texture</div>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <div style={{color: '#fbbf24'}}>•'</div>
-                                <div>
-                                    <div className="font-bold">•' Operators</div>
-                                    <div className="text-sm" style={{color: '#94a3b8'}}>Boundary creators</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="mt-4 text-sm italic" style={{color: '#cbd5e1'}}>
-                            Complete: boundaries transform infinite → finite
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
+        // Smooth scrolling for navigation
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
 
-        const FractalizationSection = () => (
-            <div className="space-y-8">
-                <div className="section-box" style={{borderColor: 'rgba(168, 85, 247, 0.5)'}}>
-                    <h2>The Fractalization Event</h2>
-                    <div className="text-center mb-6">
-                        <div className="text-4xl font-mono mb-2 equation">∞ → • → ∞•'</div>
-                        <p style={{color: '#cbd5e1'}}>Infinite possibility fractalizes through ultimate aperture into infinite boundary-creating operators</p>
-                    </div>
-
-                    <div className="grid-3">
-                        <div className="data-grid p-4">
-                            <h3 style={{color: '#d8b4fe'}}>Step 1: Input</h3>
-                            <div className="text-2xl mb-2">∞</div>
-                            <div className="text-sm space-y-1">
-                                <div>• Unbounded Hilbert space</div>
-                                <div>• All possible wavefunctions</div>
-                                <div>• No boundaries yet</div>
-                                <div className="mono text-xs mt-2">ψ ∈ ℋ, ∫|ψ|²dV = ∞</div>
-                            </div>
-                        </div>
-
-                        <div className="data-grid p-4">
-                            <h3 style={{color: '#93c5fd'}}>Step 2: Operator</h3>
-                            <div className="text-2xl mb-2">•</div>
-                            <div className="text-sm space-y-1">
-                                <div>• Ultimate aperture</div>
-                                <div>• Eternal ∇ + ℰ function</div>
-                                <div>• Creates fractalization</div>
-                                <div className="mono text-xs mt-2">•' = ∇ + ℰ</div>
-                            </div>
-                        </div>
-
-                        <div className="data-grid p-4">
-                            <h3 style={{color: '#86efac'}}>Step 3: Output</h3>
-                            <div className="text-2xl mb-2">∞•'</div>
-                            <div className="text-sm space-y-1">
-                                <div>• Infinite operators •'</div>
-                                <div>• Each creates boundaries</div>
-                                <div>• Transform ∞ → ∞'</div>
-                                <div className="mono text-xs mt-2">∂Ω: ∞ → ∞'</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-6 data-grid p-4">
-                        <h3>Mathematical Expression</h3>
-                        <div className="mono text-sm space-y-2">
-                            <div>Fractalization: <span style={{color: '#c084fc'}}>F: ∞ ⊗ • → ∞•'</span></div>
-                            <div>Each operator: <span style={{color: '#60a5fa'}}>•'ᵢ: ∞ → ∞'</span></div>
-                            <div>Boundary creation: <span style={{color: '#4ade80'}}>∂Ωᵢ = {`{x : [ICE](x) = true}`}</span></div>
-                            <div>Validation: <span style={{color: '#fbbf24'}}>∇ → [I·C·E]ᵢₙ ⊗ [I·C·E]ₒᵤₜ → ℰ</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="section-box">
-                    <h3>Nested Operator Structure</h3>
-                    <div className="flex justify-center items-center">
-                        <svg width="600" height="400" viewBox="0 0 600 400">
-                            {/* Outer circle - Ultimate aperture */}
-                            <circle cx="300" cy="200" r="180" fill="none" stroke="#a78bfa" strokeWidth="3" />
-                            <text x="300" y="40" textAnchor="middle" fill="#a78bfa" fontSize="20" fontWeight="bold">
-                                • (Ultimate Aperture)
-                            </text>
-                            
-                            {/* Middle circles - Fractalized operators */}
-                            <circle cx="200" cy="200" r="80" fill="none" stroke="#60a5fa" strokeWidth="2" />
-                            <circle cx="400" cy="200" r="80" fill="none" stroke="#60a5fa" strokeWidth="2" />
-                            <text x="200" y="190" textAnchor="middle" fill="#60a5fa" fontSize="16">•'₁</text>
-                            <text x="400" y="190" textAnchor="middle" fill="#60a5fa" fontSize="16">•'₂</text>
-                            
-                            {/* Inner circles - Nested operators */}
-                            <circle cx="180" cy="220" r="30" fill="none" stroke="#34d399" strokeWidth="1.5" />
-                            <circle cx="220" cy="220" r="30" fill="none" stroke="#34d399" strokeWidth="1.5" />
-                            <circle cx="380" cy="220" r="30" fill="none" stroke="#34d399" strokeWidth="1.5" />
-                            <circle cx="420" cy="220" r="30" fill="none" stroke="#34d399" strokeWidth="1.5" />
-                            
-                            {/* Infinity symbols */}
-                            <text x="300" y="380" textAnchor="middle" fill="#fbbf24" fontSize="24">∞</text>
-                            <text x="150" y="200" textAnchor="middle" fill="#f87171" fontSize="18">∞'</text>
-                            <text x="450" y="200" textAnchor="middle" fill="#f87171" fontSize="18">∞'</text>
-                            
-                            {/* Arrows */}
-                            <defs>
-                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-                                    <polygon points="0 0, 10 3, 0 6" fill="#a78bfa" />
-                                </marker>
-                            </defs>
-                            <line x1="300" y1="360" x2="300" y2="220" stroke="#a78bfa" strokeWidth="2" markerEnd="url(#arrowhead)" />
-                            
-                            {/* Labels */}
-                            <text x="320" y="290" fill="#e5e7eb" fontSize="14">∇ (Convergence)</text>
-                            <text x="120" y="140" fill="#e5e7eb" fontSize="14">ℰ (Emergence)</text>
-                            <text x="440" y="140" fill="#e5e7eb" fontSize="14">ℰ (Emergence)</text>
-                        </svg>
-                    </div>
-                    <div className="text-center text-sm mt-4" style={{color: '#cbd5e1'}}>
-                        Reality consists of infinite nested aperture operators, each creating boundaries that transform ∞ → ∞'
-                    </div>
-                </div>
-            </div>
-        );
-
-        const ValidationSection = () => (
-            <div className="space-y-8">
-                <div className="section-box" style={{borderColor: 'rgba(34, 197, 94, 0.5)'}}>
-                    <h2>[ICE] Validation: 6-Fold Test</h2>
-                    
-                    <div className="grid-2 mb-6">
-                        <div className="data-grid p-4">
-                            <h3 style={{color: '#93c5fd'}}>Input Interface: Parts → Operator</h3>
-                            <div className="space-y-2 text-sm">
-                                <div className="flex items-start gap-2">
-                                    <div className="font-bold" style={{color: '#60a5fa'}}>I₁:</div>
-                                    <div>Can boundary be maintained? (Interface)</div>
-                                </div>
-                                <div className="flex items-start gap-2">
-                                    <div className="font-bold" style={{color: '#c084fc'}}>C₁:</div>
-                                    <div>Is there coherence with •' AND alignment toward •? (Center)</div>
-                                </div>
-                                <div className="flex items-start gap-2">
-                                    <div className="font-bold" style={{color: '#4ade80'}}>E₁:</div>
-                                    <div>Is this grounded in actual field ∞? (Evidence)</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="data-grid p-4">
-                            <h3 style={{color: '#d8b4fe'}}>Output Interface: Operator → Patterns</h3>
-                            <div className="space-y-2 text-sm">
-                                <div className="flex items-start gap-2">
-                                    <div className="font-bold" style={{color: '#60a5fa'}}>I₂:</div>
-                                    <div>Can boundary be maintained? (Interface)</div>
-                                </div>
-                                <div className="flex items-start gap-2">
-                                    <div className="font-bold" style={{color: '#c084fc'}}>C₂:</div>
-                                    <div>Is there coherence with •' AND alignment toward •? (Center)</div>
-                                </div>
-                                <div className="flex items-start gap-2">
-                                    <div className="font-bold" style={{color: '#4ade80'}}>E₂:</div>
-                                    <div>Is this grounded in actual field ∞? (Evidence)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="data-grid p-4">
-                        <h3>Mathematical Formalism</h3>
-                        <div className="mono text-sm space-y-2">
-                            <div style={{color: '#93c5fd'}}>Interface (I): ||∂Ω|| &lt; ℓ_max (Boundary maintenance)</div>
-                            <div style={{color: '#d8b4fe'}}>Center (C): ⟨ψ|•'|ψ⟩ ≠ 0 ∧ ∇·ℰ → • (Coherence & Alignment)</div>
-                            <div style={{color: '#86efac'}}>Evidence (E): ψ ∈ ℋ_physical (Grounded in reality)</div>
-                            <div className="mt-4" style={{color: '#fde047'}}>
-                                Validation: V(ψ) = I₁ ∧ C₁ ∧ E₁ ∧ I₂ ∧ C₂ ∧ E₂
-                            </div>
-                            <div style={{color: '#ffffff'}}>
-                                Pattern persists ↔ V(ψ) = TRUE
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="section-box">
-                    <h3>From [ICE] to Schrödinger Equation</h3>
-                    <div className="data-grid p-4 mb-4">
-                        <h4>The Bridge Theorem</h4>
-                        <p className="text-sm mb-3">Given four interface validation constraints:</p>
-                        <div className="space-y-2 text-sm">
-                            <div>1. <span style={{color: '#93c5fd'}}>Locality</span>: Validation within finite interface radius ℓ</div>
-                            <div>2. <span style={{color: '#d8b4fe'}}>Isotropy</span>: No preferred spatial direction</div>
-                            <div>3. <span style={{color: '#86efac'}}>Conservation</span>: Total probability preserved</div>
-                            <div>4. <span style={{color: '#fde047'}}>Smoothness</span>: Continuous evolution in limit</div>
-                        </div>
-                    </div>
-
-                    <div className="data-grid p-4">
-                        <h4>Then the ONLY possible continuous evolution is:</h4>
-                        <div className="text-center text-2xl font-mono my-4" style={{color: '#c084fc'}}>
-                            iℏ ∂ψ/∂t = -(ℏ²/2m)∇²ψ + V(x)ψ
-                        </div>
-                        <div className="text-sm" style={{color: '#cbd5e1'}}>
-                            <div className="mb-2">Where:</div>
-                            <div>• ℏ = interface validation rate (Planck's constant)</div>
-                            <div>• m = operator resistance to change (mass)</div>
-                            <div>• V(x) = external boundary field (potential)</div>
-                        </div>
-                    </div>
-
-                    <div className="mt-4 data-grid p-4" style={{background: 'rgba(30, 58, 138, 0.3)'}}>
-                        <div className="font-bold mb-2">Proven mathematically in Layer 6</div>
-                        <div className="text-sm">Numerical validation: O(Δx²) convergence confirmed</div>
-                    </div>
-                </div>
-            </div>
-        );
-
-        const DimensionalSection = () => (
-            <div className="space-y-8">
-                <div className="section-box" style={{borderColor: 'rgba(234, 179, 8, 0.5)'}}>
-                    <h2>States and Gates: The Complete Cascade</h2>
-                    <div className="text-center mb-6 p-4 data-grid" style={{background: 'linear-gradient(to right, rgba(88, 28, 135, 0.3), rgba(30, 58, 138, 0.3))'}}>
-                        <div className="text-lg font-bold mb-2">Integer Dimensions = STATES (Being)</div>
-                        <div className="text-lg font-bold">Half Dimensions = GATES (Becoming)</div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                        {/* 0D STATE */}
-                        <div className="section-box" style={{background: 'linear-gradient(to right, rgba(88, 28, 135, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(192, 132, 252, 0.5)'}}>
-                            <div className="flex items-center gap-4 mb-2">
-                                <div className="text-3xl font-bold">0D</div>
-                                <div className="text-xl">STATE: Pure Infinity (∞)</div>
-                            </div>
-                            <div className="text-sm space-y-1 ml-16">
-                                <div>• Point of infinite potential - BEING</div>
-                                <div>• Symmetric, no direction, timeless</div>
-                                <div>• All possibilities exist</div>
-                                <div className="mono" style={{color: '#d8b4fe'}}>Hilbert space: ℋ = ∫|ψ⟩⟨ψ|dψ</div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center" style={{color: '#fbbf24'}}>↓</div>
-
-                        {/* 0.5D GATE */}
-                        <div className="section-box" style={{background: 'linear-gradient(to right, rgba(30, 58, 138, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(96, 165, 250, 0.5)'}}>
-                            <div className="flex items-center gap-4 mb-2">
-                                <div className="text-3xl font-bold">[0.5D]</div>
-                                <div className="text-xl">GATE: Time Creation Validator</div>
-                            </div>
-                            <div className="text-sm space-y-1 ml-16">
-                                <div>• BECOMING: Validates ∞ → 1D transition</div>
-                                <div>• Asymmetric aperture: ∇ ≠ ℰ breaks time symmetry</div>
-                                <div>• [ICE] test: "Can sequence exist?"</div>
-                                <div>• Creates time's arrow</div>
-                                <div className="mono" style={{color: '#93c5fd'}}>•' = ∇ + ℰ (∇ ≠ ℰ)</div>
-                            </div>
-                            <div className="mt-2 p-2 data-grid text-xs" style={{background: 'rgba(30, 58, 138, 0.5)'}}>
-                                <span className="font-bold">KEY:</span> This asymmetry is why time flows forward!
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center" style={{color: '#fbbf24'}}>↓</div>
-
-                        {/* 1D STATE */}
-                        <div className="section-box" style={{background: 'linear-gradient(to right, rgba(20, 83, 45, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(74, 222, 128, 0.5)'}}>
-                            <div className="flex items-center gap-4 mb-2">
-                                <div className="text-3xl font-bold">1D</div>
-                                <div className="text-xl">STATE: Linear Flow (Time)</div>
-                            </div>
-                            <div className="text-sm space-y-1 ml-16">
-                                <div>• Temporal sequence - BEING</div>
-                                <div>• Causality becomes possible</div>
-                                <div>• Sequential past → present → future</div>
-                                <div className="mono" style={{color: '#86efac'}}>t: validated temporal flow</div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center" style={{color: '#fbbf24'}}>↓</div>
-
-                        {/* 1.5D GATE - CONSCIOUSNESS */}
-                        <div className="section-box" style={{background: 'linear-gradient(to right, rgba(113, 63, 18, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(250, 204, 21, 0.8)', borderWidth: '3px'}}>
-                            <div className="flex items-center gap-4 mb-2">
-                                <div className="text-3xl font-bold">[1.5D]</div>
-                                <div className="text-xl">GATE: CONSCIOUSNESS VALIDATOR ⭐</div>
-                            </div>
-                            <div className="text-sm space-y-1 ml-16">
-                                <div className="font-bold" style={{color: '#fef08a'}}>• BECOMING: Validates 1D → 2D transition</div>
-                                <div>• [ICE] test: "Which branch?" at β ≈ 0.5</div>
-                                <div>• Creates validated 90° deflections</div>
-                                <div>• Fractal dimension D ≈ 1.5</div>
-                                <div className="mono" style={{color: '#fde047'}}>D = 1.503 ± 0.040 (EMPIRICALLY MEASURED!)</div>
-                            </div>
-                            <div className="mt-2 p-2 data-grid text-xs" style={{background: 'rgba(133, 77, 14, 0.5)'}}>
-                                <div className="font-bold mb-1">YOU ARE HERE!</div>
-                                <div>• LIGO: D = 1.503 ± 0.040, p = 0.951</div>
-                                <div>• This is consciousness operating at the gate</div>
-                                <div>• You ARE the validation process itself</div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center" style={{color: '#fbbf24'}}>↓</div>
-
-                        {/* 2D STATE */}
-                        <div className="section-box" style={{background: 'linear-gradient(to right, rgba(127, 29, 29, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(248, 113, 113, 0.5)'}}>
-                            <div className="flex items-center gap-4 mb-2">
-                                <div className="text-3xl font-bold">2D</div>
-                                <div className="text-xl">STATE: Pattern (Geometric Surface)</div>
-                            </div>
-                            <div className="text-sm space-y-1 ml-16">
-                                <div>• Branched structures - BEING</div>
-                                <div>• Tree of Life forms manifest</div>
-                                <div>• Sacred geometry appears</div>
-                                <div className="mono" style={{color: '#fca5a5'}}>Validated choices create surfaces</div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center" style={{color: '#fbbf24'}}>↓</div>
-
-                        {/* 2.5D GATE */}
-                        <div className="section-box" style={{background: 'linear-gradient(to right, rgba(124, 45, 18, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(251, 146, 60, 0.5)'}}>
-                            <div className="flex items-center gap-4 mb-2">
-                                <div className="text-3xl font-bold">[2.5D]</div>
-                                <div className="text-xl">GATE: Integration Validator</div>
-                            </div>
-                            <div className="text-sm space-y-1 ml-16">
-                                <div>• BECOMING: Validates 2D → 3D transition</div>
-                                <div>• [ICE] test: "Can surfaces coordinate?"</div>
-                                <div>• Creates unified volume from patterns</div>
-                                <div className="mono" style={{color: '#fdba74'}}>Integration: 2D → 3D</div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center" style={{color: '#fbbf24'}}>↓</div>
-
-                        {/* 3D STATE */}
-                        <div className="section-box" style={{background: 'linear-gradient(to right, rgba(88, 28, 135, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(192, 132, 252, 0.5)'}}>
-                            <div className="flex items-center gap-4 mb-2">
-                                <div className="text-3xl font-bold">3D</div>
-                                <div className="text-xl">STATE: Volume (Spatial Experience)</div>
-                            </div>
-                            <div className="text-sm space-y-1 ml-16">
-                                <div>• Integrated wholeness - BEING</div>
-                                <div>• Full spatial experience</div>
-                                <div>• Unified reality</div>
-                                <div className="mono" style={{color: '#d8b4fe'}}>β ≈ 0.5: balanced gates create space</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* CONTINUATION BEYOND 3D */}
-                <div className="section-box" style={{borderColor: 'rgba(34, 211, 238, 0.5)'}}>
-                    <h2>Beyond 3D: The Pattern Continues</h2>
-                    
-                    <div className="grid-2">
-                        {/* Fractal Nesting */}
-                        <div className="section-box" style={{background: 'linear-gradient(to bottom right, rgba(21, 94, 117, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(34, 211, 238, 0.5)'}}>
-                            <h3 className="flex items-center gap-2">
-                                <span style={{color: '#22d3ee'}}>⚡</span> 1. Fractal Nesting (Recursion)
-                            </h3>
-                            <div className="space-y-3 text-sm">
-                                <div className="font-bold" style={{color: '#a5f3fc'}}>Same architecture, all scales:</div>
-                                <div className="space-y-2 ml-4">
-                                    <div>• Quantum gates → Atomic gates</div>
-                                    <div>• Molecular gates → Cellular gates</div>
-                                    <div>• Organismal gates → Social gates</div>
-                                    <div>• Planetary gates → Cosmic gates</div>
-                                </div>
-                                <div className="mt-4 p-3 data-grid" style={{background: 'rgba(21, 94, 117, 0.5)'}}>
-                                    <div className="font-bold mb-2">Infinite nesting:</div>
-                                    <div className="mono text-xs">
-                                        You (1.5D gate)<br/>
-                                        ├─ Cells (1.5D gates)<br/>
-                                        │  ├─ Molecules (1.5D gates)<br/>
-                                        │  │  ├─ Atoms (1.5D gates)<br/>
-                                        │  │  │  └─ Particles (1.5D gates)<br/>
-                                        │  │  │      └─ ...infinitely nested
-                                    </div>
-                                </div>
-                                <div className="mt-3 font-bold" style={{color: '#fde047'}}>
-                                    One pattern, infinite scales, nested forever
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Feedback Loop */}
-                        <div className="section-box" style={{background: 'linear-gradient(to bottom right, rgba(88, 28, 135, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(192, 132, 252, 0.5)'}}>
-                            <h3 className="flex items-center gap-2">
-                                <span style={{color: '#c084fc'}}>⚡</span> 2. Feedback Loop (∞' → ∞)
-                            </h3>
-                            <div className="space-y-3 text-sm">
-                                <div className="font-bold" style={{color: '#d8b4fe'}}>Manifested reality feeds back:</div>
-                                <div className="space-y-2">
-                                    <div className="flex items-center gap-2 justify-center">
-                                        <div className="text-lg">∞</div>
-                                        <div>→</div>
-                                        <div className="text-lg">•'</div>
-                                        <div>→</div>
-                                        <div className="text-lg">∞'</div>
-                                    </div>
-                                    <div className="ml-4" style={{color: '#cbd5e1'}}>↓</div>
-                                    <div className="data-grid p-2 ml-4">
-                                        ∞' creates texture (T_μν)
-                                    </div>
-                                    <div className="ml-4" style={{color: '#cbd5e1'}}>↓</div>
-                                    <div className="data-grid p-2 ml-4">
-                                        Texture curves spacetime (g_μν)
-                                    </div>
-                                    <div className="ml-4" style={{color: '#cbd5e1'}}>↓</div>
-                                    <div className="data-grid p-2 ml-4">
-                                        Spacetime affects validation rates
-                                    </div>
-                                    <div className="ml-4" style={{color: '#cbd5e1'}}>↓</div>
-                                    <div className="data-grid p-2 ml-4 font-bold" style={{background: 'rgba(88, 28, 135, 0.5)'}}>
-                                        LOOPS BACK TO AFFECT FUTURE ∞
-                                    </div>
-                                </div>
-                                <div className="mt-3 font-bold" style={{color: '#fde047'}}>
-                                    Self-referential backreaction: Reality creates conditions for future reality
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-6 section-box" style={{background: 'linear-gradient(to right, rgba(21, 94, 117, 0.3), rgba(88, 28, 135, 0.3))', borderColor: 'rgba(250, 204, 21, 0.5)'}}>
-                        <h3 className="text-center">The Pattern Completes and Returns</h3>
-                        <div className="text-center space-y-2">
-                            <div className="text-lg">After 3D (unified volume/experience)</div>
-                            <div className="text-2xl font-bold" style={{color: '#fde047'}}>↓</div>
-                            <div className="grid-2 text-sm">
-                                <div className="data-grid p-3">
-                                    <div className="font-bold mb-1">Fractal Recursion:</div>
-                                    <div>Pattern repeats at all scales infinitely nested</div>
-                                </div>
-                                <div className="data-grid p-3">
-                                    <div className="font-bold mb-1">Causal Feedback:</div>
-                                    <div>Manifested patterns affect future possibility space</div>
-                                </div>
-                            </div>
-                            <div className="text-2xl font-bold mt-4" style={{color: '#fde047'}}>↓</div>
-                            <div className="text-lg font-bold">∞ ↔ • ↔ ∞'</div>
-                            <div className="text-sm" style={{color: '#cbd5e1'}}>Eternal circulation: Being ↔ Becoming</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="section-box">
-                    <h3>The Critical 1.5D Branching</h3>
-                    <div className="grid-2 mb-4">
-                        <div className="data-grid p-4">
-                            <h4 style={{color: '#f87171'}}>D = 1 (Pure Determinism)</h4>
-                            <div className="text-sm space-y-1">
-                                <div>• No branches, smooth line</div>
-                                <div>• No choices, purely mechanical</div>
-                                <div>• β = 0 or β = 1 (unbalanced)</div>
-                            </div>
-                        </div>
-                        <div className="data-grid p-4">
-                            <h4 style={{color: '#f87171'}}>D = 2 (Pure Chaos)</h4>
-                            <div className="text-sm space-y-1">
-                                <div>• Too many branches</div>
-                                <div>• No coherence, randomness</div>
-                                <div>• No structure persists</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="data-grid p-4" style={{background: 'rgba(20, 83, 45, 0.3)'}}>
-                        <h4 style={{color: '#86efac'}}>D ≈ 1.5 (CONSCIOUSNESS!) ⭐</h4>
-                        <div className="text-sm space-y-2">
-                            <div>• Validated branching at β ≈ 0.5</div>
-                            <div>• Constrained by physics (not pure freedom)</div>
-                            <div>• Not predetermined (genuine branches)</div>
-                            <div>• Optimal adaptive complexity</div>
-                            <div className="mt-2 font-bold" style={{color: '#fde047'}}>
-                                Consciousness exists precisely at the dimension where validated choice becomes geometrically possible
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-
-        const EmpiricalSection = () => (
-            <div className="space-y-8">
-                <div className="section-box" style={{borderColor: 'rgba(34, 197, 94, 0.5)'}}>
-                    <h2>Empirical Validation: D ≈ 1.5</h2>
-                    
-                    <div className="grid-2 mb-6">
-                        <div className="section-box" style={{background: 'linear-gradient(to bottom right, rgba(20, 83, 45, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(74, 222, 128, 0.5)'}}>
-                            <h3 className="flex items-center gap-2">
-                                <span>✅</span> LIGO Gravitational Waves
-                            </h3>
-                            <div className="space-y-3 text-sm">
-                                <div>
-                                    <div className="font-bold" style={{color: '#86efac'}}>Dataset:</div>
-                                    <div>19 merger events, 40 observations</div>
-                                    <div>O1/O3/O4 observing runs</div>
-                                </div>
-                                <div className="data-grid p-3">
-                                    <div className="font-bold mb-1" style={{color: '#fde047'}}>Results:</div>
-                                    <div className="mono">Mean D = 1.503 ± 0.040</div>
-                                    <div className="mono">SEM = 0.040</div>
-                                    <div className="mono">p-value = 0.951</div>
-                                </div>
-                                <div>
-                                    <div className="font-bold" style={{color: '#d8b4fe'}}>Interpretation:</div>
-                                    <div>Worldlines show fractal dimension extremely consistent with 1.5D prediction</div>
-                                </div>
-                                <div className="data-grid p-2" style={{background: 'rgba(20, 83, 45, 0.5)'}}>
-                                    <div className="font-bold">High p-value → Not coincidental, it's structural!</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="section-box" style={{background: 'linear-gradient(to bottom right, rgba(30, 58, 138, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(96, 165, 250, 0.5)'}}>
-                            <h3 className="flex items-center gap-2">
-                                <span>✅</span> Bubble Chamber Particles
-                            </h3>
-                            <div className="space-y-3 text-sm">
-                                <div>
-                                    <div className="font-bold" style={{color: '#93c5fd'}}>Dataset:</div>
-                                    <div>33 particle tracks</div>
-                                    <div>MeV-GeV energy range</div>
-                                </div>
-                                <div className="data-grid p-3">
-                                    <div className="font-bold mb-1" style={{color: '#fde047'}}>Results:</div>
-                                    <div className="mono">Mean D = 1.387 ± 0.232</div>
-                                    <div className="mono">Energy correlation: r = -0.65</div>
-                                </div>
-                                <div>
-                                    <div className="font-bold" style={{color: '#d8b4fe'}}>Interpretation:</div>
-                                    <div>Validates D ≈ 1.5 across 6+ orders of magnitude in energy</div>
-                                </div>
-                                <div className="data-grid p-2" style={{background: 'rgba(30, 58, 138, 0.5)'}}>
-                                    <div className="font-bold">Lower-energy particles show slight suppression (predicted!)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="section-box" style={{background: 'linear-gradient(to right, rgba(88, 28, 135, 0.3), rgba(30, 41, 59, 0.3))', borderColor: 'rgba(192, 132, 252, 0.5)'}}>
-                        <h3 className="flex items-center gap-2">
-                            <span>✅</span> Metric Coupling Validation
-                        </h3>
-                        <div className="grid-2">
-                            <div>
-                                <div className="font-bold mb-2" style={{color: '#d8b4fe'}}>Prediction:</div>
-                                <div className="text-sm mb-3">Validation rate scales with metric:</div>
-                                <div className="mono text-center text-lg data-grid p-2">
-                                    Texture ∝ √|g_tt|
-                                </div>
-                            </div>
-                            <div>
-                                <div className="font-bold mb-2" style={{color: '#86efac'}}>Results:</div>
-                                <div className="text-sm mb-3">Four spacetime geometries tested:</div>
-                                <div className="space-y-1 text-sm">
-                                    <div>• Flat (Minkowski): g_tt = -1.0</div>
-                                    <div>• Weak field: g_tt ≈ -(1 + 2Φ/c²)</div>
-                                    <div>• Neutron star: g_tt = -(1 - 2GM/rc²)</div>
-                                    <div>• Near horizon: extreme curvature</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="mt-4 data-grid p-4" style={{background: 'rgba(88, 28, 135, 0.5)'}}>
-                            <div className="text-center text-2xl font-bold mb-2">R² = 0.9997</div>
-                            <div className="text-center text-sm">Near-perfect correlation!</div>
-                            <div className="text-center text-xs mt-2" style={{color: '#cbd5e1'}}>
-                                Black hole horizons suppress fractalization by 77.6%, approaching D → 1 (smooth null curves)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="section-box">
-                    <h3>Complete Validation Summary</h3>
-                    <div className="space-y-3">
-                        <div className="flex items-start gap-3">
-                            <div className="text-2xl">✅</div>
-                            <div>
-                                <div className="font-bold">Metric coupling validated</div>
-                                <div className="text-sm" style={{color: '#cbd5e1'}}>Texture accumulation scales as √|g_tt| with R² = 0.9997</div>
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-3">
-                            <div className="text-2xl">✅</div>
-                            <div>
-                                <div className="font-bold">Self-consistent backreaction</div>
-                                <div className="text-sm" style={{color: '#cbd5e1'}}>3D simulations show texture stress-energy creates emergent cosmological constant WITHOUT fine-tuning</div>
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-3">
-                            <div className="text-2xl">✅</div>
-                            <div>
-                                <div className="font-bold">Quantum uncertainty reproduced</div>
-                                <div className="text-sm" style={{color: '#cbd5e1'}}>Stochastic [ICE] validation noise yields hydrogen spectra with &lt;0.4% error</div>
-                            </div>
-                        </div>
-                        <div className="flex items-start gap-3">
-                            <div className="text-2xl">✅</div>
-                            <div>
-                                <div className="font-bold">Fractal geometry confirmed</div>
-                                <div className="text-sm" style={{color: '#cbd5e1'}}>Extended path simulations demonstrate texture accumulation and multi-scale structure</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-6 section-box" style={{background: 'linear-gradient(to right, rgba(20, 83, 45, 0.3), rgba(30, 58, 138, 0.3))', borderColor: 'rgba(250, 204, 21, 0.5)'}}>
-                        <div className="text-center text-2xl font-bold mb-4">
-                            This is not philosophy. This is falsifiable, testable, validated physics.
-                        </div>
-                        <div className="text-center text-lg" style={{color: '#fde047'}}>
-                            Complete unification: QM + GR from single principle (validation at interfaces)
-                        </div>
-                    </div>
-                </div>
-
-                <div className="section-box">
-                    <h3>GitHub Repository</h3>
-                    <div className="data-grid p-4">
-                        <div className="mono text-sm mb-2">
-                            <a href="https://github.com/AshmanRoonz/Fractal_Reality" 
-                               style={{color: '#60a5fa'}}
-                               target="_blank" 
-                               rel="noopener noreferrer">
-                                github.com/AshmanRoonz/Fractal_Reality
-                            </a>
-                        </div>
-                        <div className="text-sm space-y-1" style={{color: '#cbd5e1'}}>
-                            <div>• Complete 12-layer framework documentation</div>
-                            <div>• All simulation code (open source)</div>
-                            <div>• Validation data and analysis</div>
-                            <div>• Three papers ready for submission</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<FractalRealityLanding />);
+        // Initialize
+        createFractalCircles();
     </script>
 </body>
 </html>
