@@ -1,4 +1,4 @@
-# Fractal Reality Repository
+# Fractal Reality Repository (Under re-construction...)
 
 **www.FractalReality.ca**
 
