@@ -99,7 +99,7 @@ These papers are part of a **three-paper series** that unifies quantum mechanics
 - Proves validation ∝ √|g_tt| (metric coupling)
 - Validated numerically: R² = 0.9997
 
-**Connection to this work:** Establishes the validation framework that creates texture
+**Connection to this work:** Establishes the [ICE] structure ([C]∇ → [I]ℓ → [E]ℰ) that creates texture, with D ≈ 1.5 = [C] Center signature
 
 ---
 

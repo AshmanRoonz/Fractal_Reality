@@ -87,10 +87,11 @@ In companion work [1], we showed quantum evolution emerges from discrete validat
 Φ_{n+1} = ℰ ∘ [ICE]_output ∘ Process ∘ [ICE]_input ∘ ∇(Φ_n)
 ```
 
-where [ICE] is a six-fold test (3 checks × 2 interfaces):
-- **I**nterface: Boundary integrity
-- **C**enter: Coherence + alignment
-- **E**vidence: Reality grounding
+where [ICE] structural components:
+- **[E] Evidence (3D)**: Field ∞ grounding
+- **[I] Interface (2D)**: Boundary with radius ℓ integrity
+- **[C] Center (1.5D)**: Identity = 0.5D aperture + 1.0D worldline coherence
+- **Operating**: [C]∇ → [I]ℓ → [E]ℰ (tested at input and output)
 
 This yields Schrödinger equation in continuous limit.
 
@@ -105,13 +106,13 @@ Therefore:
 - Finite interfaces → resolution limits
 - Discrete ticks → timing jitter
 
-**Modification**: Add stochastic noise to validation operator
+**Modification**: Add stochastic noise to [ICE] structure operation
 
 ```
 [ICE]_ℓ(Φ) → [ICE]_ℓ(Φ) + ε(x,t)
 ```
 
-where ε(x,t) is a noise term.
+where ε(x,t) is a noise term affecting [C]∇ → [I]ℓ → [E]ℰ operation.
 
 ### 2.3 Noise Amplitude Scaling
 
@@ -141,8 +142,9 @@ where α is a dimensionless noise parameter (typically α ~ 0.01 - 0.1).
 **Three sources of validation noise**:
 
 **1. Virtual particle fluctuations**:
-- Temporary convergence (∇) toward operator
-- Fails validation at input interface ([ICE]_input)
+- Temporary convergence (∇) toward [C] Center
+- Fails [ICE] structure at input interface
+- [I] Interface cannot hold boundary radius ℓ
 - Energy borrowed via Heisenberg uncertainty: ΔE·Δt ≥ ℏ/2
 - Pattern dissolves within Δt
 - Contributes to noise

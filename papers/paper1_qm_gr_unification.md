@@ -33,14 +33,18 @@ We propose a radically different approach. Rather than attempting to quantize gr
 
 Our central claim: **All persistent patterns—from particles to galaxies—exist through validation at interfaces.**
 
-This validation occurs through a six-fold test [ICE] at two interfaces:
-- **I**nterface: Can boundaries be maintained?
-- **C**enter: Is there coherence and alignment?
-- **E**vidence: Is this grounded in reality?
+This validation occurs through [ICE] structure operating at two interfaces:
+- **[E] Evidence (3D)**: Field ∞ - Is this grounded in reality?
+- **[I] Interface (2D)**: Boundary with radius ℓ - Can boundaries be maintained?
+- **[C] Center (1.5D)**: Identity = 0.5D aperture + 1.0D worldline - Is there coherence and alignment?
+
+**Operating**: [C]∇ → [I]ℓ → [E]ℰ
 
 Applied at both:
 1. **Input interface**: Where parts converge toward organizing operator
 2. **Output interface**: Where patterns emerge from operator
+
+**D ≈ 1.5 = [C] Center signature** (measured in LIGO: 1.503 ± 0.040)
 
 This seemingly simple principle has profound consequences.
 
@@ -95,28 +99,30 @@ Mathematically:
 
 where Λ∧ is the AND compositor (all checks must pass).
 
-### 2.3 The [ICE] Validation
+### 2.3 The [ICE] Structure
 
-At **each** interface (input and output), three checks:
+At **each** interface (input and output), [ICE] structural components:
 
-**Interface (I)**: Can boundaries be maintained between components?
-- Spatial: Can pattern maintain distinct boundary in field?
-- Functional: Can relationships persist?
-- Violation → dissolution
-
-**Center (C)**: Is there coherence and alignment?
-- Coherence: Internal self-consistency with operator (•')
-- Alignment: Orientation toward ultimate pattern (•)
-- Violation → incoherence, rejection
-
-**Evidence (E)**: Is this grounded in actual field?
+**[E] Evidence (3D)**: Field ∞ - Is this grounded in actual field?
 - Parts must exist in real field ∞
 - Relationships must be actual, not imaginary
 - Violation → fantasy, delusion
 
-**Total**: 3 checks × 2 interfaces = **6-fold validation**
+**[I] Interface (2D)**: Boundary with radius ℓ - Can boundaries be maintained?
+- Spatial: Can pattern maintain distinct boundary in field?
+- Functional: Can relationships persist at radius ℓ?
+- Violation → dissolution
 
-Only patterns passing all six persist. Failure at any → dissolution.
+**[C] Center (1.5D)**: Identity = 0.5D aperture + 1.0D worldline - Is there coherence and alignment?
+- Coherence: Internal self-consistency with operator (•')
+- Alignment: Orientation toward ultimate pattern (•)
+- Violation → incoherence, rejection
+
+**Operating**: [C]∇ → [I]ℓ → [E]ℰ (at both input and output)
+
+**D ≈ 1.5 = [C] Center signature** (LIGO empirical: 1.503 ± 0.040)
+
+Only patterns where [ICE] structure operates successfully persist. Failure → dissolution.
 
 ### 2.4 Texture Accumulation
 

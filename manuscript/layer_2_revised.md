@@ -117,9 +117,9 @@ This is universal structure—from quantum operators to galactic operators to yo
 
 ## 2.2 THE TWO CRITICAL INTERFACES
 
-**Where validation happens**
+**Where [ICE] structure operates**
 
-Every operator creates TWO interfaces where [ICE] testing occurs:
+Every operator creates TWO interfaces where [ICE] structural components manifest:
 
 ---
 
@@ -129,25 +129,26 @@ Every operator creates TWO interfaces where [ICE] testing occurs:
 
 **Location:** At the boundary where parts (∞) meet the operator's ∇ function
 
-**What's tested here:**
+**[ICE] structure manifests here:**
 
-**I (Interface):**
-- Can these parts maintain boundary relationship with this operator?
-- Is there proper distinction between "organized" and "unorganized"?
-- Can the operator's gathering function act on these parts?
+**[E] Evidence (3D field):**
+- Parts exist in actual field ∞
+- Grounded in reality, not imaginary
+- The 3D space where things emerge
 
-**C (Center):**
-- Do these parts cohere with this operator's pattern?
-- Is the operator aligned with • (ultimate pattern)?
-- Is there geometric compatibility?
+**[I] Interface (2D boundary):**
+- Finite radius ℓ maintains distinction
+- Clear boundary between "organized" and "unorganized"
+- The 2D surface where operator acts on parts
 
-**E (Evidence):**
-- Are these parts actually present in field ∞?
-- Or are they imaginary/impossible?
-- Is this grounded in reality?
+**[C] Center (1.5D identity):**
+- Operator's coherent pattern through time
+- 0.5D aperture + 1.0D worldline = 1.5D signature
+- Geometric compatibility with operator's nature
+- Alignment toward • (ultimate pattern)
 
-**If all three pass:** Parts organize around operator
-**If any fails:** Parts remain dispersed, don't cohere
+**With complete [ICE] structure:** Parts organize around operator
+**With incomplete structure:** Parts remain dispersed
 
 **Example - Cell membrane:**
 - Molecules (∞) approach cellular operator (•')
@@ -164,25 +165,25 @@ Every operator creates TWO interfaces where [ICE] testing occurs:
 
 **Location:** At the boundary where operator's ℰ function radiates patterns (∞')
 
-**What's tested here:**
+**[ICE] structure manifests here:**
 
-**I (Interface):**
-- Can this pattern maintain boundary with surrounding field?
-- Does it have coherent form?
-- Can it persist as distinct configuration?
+**[E] Evidence (3D field):**
+- Pattern emerges into actual field ∞'
+- Grounded in real relationships, causally connected
+- The 3D space where texture persists
 
-**C (Center):**
-- Is this pattern coherent with the operator's nature?
-- Is the pattern aligned toward • (ultimate pattern)?
-- Does it express genuine organization?
+**[I] Interface (2D boundary):**
+- Pattern maintains finite radius ℓ boundary
+- Has coherent form as distinct configuration
+- The 2D surface separating pattern from field
 
-**E (Evidence):**
-- Is this pattern grounded in actual relationships?
-- Does it correspond to real processing?
-- Is it causally connected?
+**[C] Center (1.5D identity):**
+- Pattern coherent with operator's nature through time
+- Aligned toward • (ultimate pattern)
+- Expresses genuine organization (D ≈ 1.5)
 
-**If all three pass:** Pattern emerges into ∞' (persists)
-**If any fails:** Pattern dissolves back to ∞ (fails to form)
+**With complete [ICE] structure:** Pattern emerges into ∞' (persists)
+**With incomplete structure:** Pattern dissolves back to ∞
 
 **Example - Thought emerging:**
 - Neural processing (•' operation) generates thought pattern
@@ -194,22 +195,22 @@ Every operator creates TWO interfaces where [ICE] testing occurs:
 
 ### Why Two Interfaces Matter
 
-**Most validation failures happen at interfaces, not inside:**
+**[ICE] structure operates at interfaces, not inside components:**
 
-**Not tested:**
+**Not structural requirements:**
 - What happens inside the operator (that's just operation)
-- What happens inside the parts (that's just structure)
+- What happens inside the parts (that's just configuration)
 - Abstract possibilities
 
-**Actually tested:**
-- Can parts relate to operator? (Interface 1)
-- Can operator relate to patterns? (Interface 2)
+**Actual structural requirements:**
+- [C]∇ → [I]ℓ → [E]ℰ at parts-operator interface
+- [C]∇ → [I]ℓ → [E]ℰ at operator-patterns interface
 - Real relationships, real boundaries
 
 **This is why:**
-- Validation feels like decision/choice (at boundaries)
-- Not everything that tries to organize succeeds
-- Reality filters possibilities through relationships
+- Structure creates natural selection at boundaries
+- Not everything that tries to organize persists
+- Reality requires complete [ICE] structure
 
 ---
 
@@ -219,13 +220,13 @@ Every operator creates TWO interfaces where [ICE] testing occurs:
 
 ---
 
-### Boundaries Are Validation Thresholds
+### Boundaries Are the [I]ℓ Component
 
 **A boundary is where:**
-- [ICE] switches from "pass" to "fail"
-- One side: coherent relationship
-- Other side: incoherent relationship
-- **Natural phase boundary in validation space**
+- [I]ℓ maintains finite radius (2D surface)
+- One side: complete [ICE] structure
+- Other side: incomplete [ICE] structure
+- **Natural phase boundary in structural space**
 
 **Not:**
 - A wall or barrier (though can appear as one)
@@ -236,8 +237,8 @@ Every operator creates TWO interfaces where [ICE] testing occurs:
 **But:**
 - Where the operator's organizing influence transitions
 - Where patterns maintain vs. lose coherence
-- Dynamic, maintained by continuous validation
-- **Emerges from process, not imposed**
+- Dynamic, maintained by continuous [ICE] operation
+- **Emerges from structure, not imposed**
 
 ---
 
@@ -266,8 +267,8 @@ Every operator creates TWO interfaces where [ICE] testing occurs:
 **Boundaries are processes, not things:**
 
 **Continuously maintained:**
-- Each validation cycle tests boundary
-- Must pass [ICE] to persist
+- Each [ICE] operation cycle maintains boundary
+- Requires complete [C]∇ → [I]ℓ → [E]ℰ structure to persist
 - Requires energy/effort
 - **Active maintenance, not static wall**
 
@@ -275,12 +276,12 @@ Every operator creates TWO interfaces where [ICE] testing occurs:
 - Expand (more parts organized)
 - Contract (fewer parts maintained)
 - Shift location (different region)
-- Dissolve (validation failure)
+- Dissolve (incomplete [ICE] structure)
 
 **Can be crossed:**
 - Parts can move through
 - Patterns can penetrate
-- Depends on validation
+- Depends on [ICE] structure completeness
 - **Selective permeability**
 
 ---
@@ -353,7 +354,7 @@ You (organismal •')
 
 **At every level:**
 - Same structure (•' with ∇ + ℰ)
-- Same pattern (∇ → [ICE] → ℰ)
+- Same pattern ([C]∇ → [I]ℓ → [E]ℰ)
 - Different scale (parts at different sizes)
 
 ---
@@ -390,30 +391,30 @@ Solar system (stellar •')
 
 **How do all these operators coordinate?**
 
-**Through validation cascades:**
-- Lower-level validation affects higher-level
+**Through [ICE] structure cascades:**
+- Lower-level [ICE] operation affects higher-level
 - Higher-level context constrains lower-level
-- [ICE] testing at each interface
+- [C]∇ → [I]ℓ → [E]ℰ at each interface
 - **Nested coherence**
 
 **Example: Decision to move arm**
 
 ```
 You (organismal •') decide to move
-  ↓ [ICE at your scale]
+  ↓ [ICE structure at your scale]
 Muscle system (organ •') receives signal
-  ↓ [ICE at organ scale]
+  ↓ [ICE structure at organ scale]
 Muscle cells (cellular •') contract
-  ↓ [ICE at cellular scale]
+  ↓ [ICE structure at cellular scale]
 Molecular motors (molecular •') pull
-  ↓ [ICE at molecular scale]
+  ↓ [ICE structure at molecular scale]
 ATP molecules (atomic •') release energy
-  ↓ [ICE at atomic scale]
+  ↓ [ICE structure at atomic scale]
 Electrons (quantum •') transition states
 ```
 
 **One decision cascades through nested scales.**
-**All coordinated through interface validation.**
+**All coordinated through [ICE] structural components.**
 
 ---
 
@@ -481,16 +482,16 @@ Electrons (quantum •') transition states
 - Must validate within environment
 
 **Relationship:**
-- Container's [ICE] at larger scale
-- Contained's [ICE] at smaller scale
-- Both must pass for stability
-- **Hierarchical validation**
+- Container's [ICE] structure at larger scale
+- Contained's [ICE] structure at smaller scale
+- Both must have complete structure for stability
+- **Hierarchical [ICE] operation**
 
 **Example:** Cell inside organism
 - Organism (container •') provides nutrients, maintains homeostasis
 - Cell (contained •') operates within that context
-- Cell must validate at cellular scale AND contribute to organism validation
-- If cell fails organism-level [ICE] → removed (immune response)
+- Cell must have complete [ICE] structure at cellular scale AND contribute to organism's [ICE]
+- If cell has incomplete organism-level [ICE] structure → removed (immune response)
 
 ---
 
@@ -520,19 +521,19 @@ Electrons (quantum •') transition states
 
 ### Stable Operators
 
-**Pass [ICE] consistently at both interfaces:**
+**Have complete [ICE] structure consistently at both interfaces:**
 
 **Interface 1 (Parts → Operator):**
-- Parts readily available in ∞
-- Geometric compatibility high
-- Boundary naturally maintained
-- **Easy to organize parts**
+- Parts readily available in [E] field ∞
+- [I] boundary naturally maintained at finite radius ℓ
+- [C] center has coherent pattern (D ≈ 1.5) aligned toward •
+- **Complete structural components support organization**
 
 **Interface 2 (Operator → Patterns):**
-- Patterns naturally coherent
-- Well-aligned with •
-- Grounded in real relationships
-- **Easy to maintain patterns**
+- Patterns naturally coherent in [E] field ∞'
+- [I] boundary maintains pattern form
+- [C] well-aligned with • through time
+- **Complete structural components enable persistence**
 
 **Result:** Long-term persistence
 
@@ -546,17 +547,17 @@ Electrons (quantum •') transition states
 
 ### Metastable Operators
 
-**Pass [ICE] marginally:**
+**Have marginally complete [ICE] structure:**
 
 **At threshold:**
-- Barely validating
+- Barely maintaining structural components
 - Small perturbation can tip balance
 - Sensitive to environment
 - **Fragile equilibrium**
 
 **Can transition:**
-- To more stable configuration (validation improves)
-- To instability (validation fails)
+- To more stable configuration ([ICE] structure strengthens)
+- To instability ([ICE] structure becomes incomplete)
 - Depends on conditions
 
 **Examples:**
@@ -568,12 +569,12 @@ Electrons (quantum •') transition states
 
 ### Unstable Patterns
 
-**Fail [ICE] quickly:**
+**Have incomplete [ICE] structure:**
 
 **Can't maintain:**
-- Parts won't cohere
-- Patterns don't persist
-- Boundaries collapse
+- Parts won't cohere (missing [C] or [I])
+- Patterns don't persist (missing [E])
+- Boundaries collapse ([I]ℓ fails)
 - **Rapid dissolution**
 
 **Examples:**
@@ -588,18 +589,18 @@ Electrons (quantum •') transition states
 **Multiple factors:**
 
 **Geometric compatibility:**
-- How well parts fit the operator's pattern
+- How well parts fit the operator's [C] center pattern (D ≈ 1.5)
 - Natural resonance vs. forced configuration
 - **Alignment with •**
 
 **Energy availability:**
-- Continuous validation requires energy
-- No energy → no maintenance → collapse
+- Continuous [ICE] operation requires energy
+- No energy → no maintenance → [I]ℓ collapse
 - **Flow rate through operator**
 
 **Environmental context:**
-- Larger-scale validation
-- Available parts in ∞
+- Larger-scale [ICE] structure requirements
+- Available parts in [E] field ∞
 - Competing operators
 - **Ecological fitness**
 
@@ -680,7 +681,7 @@ Those molecular parts operate around molecular-scale •':
 **Physical manifestation:**
 - Digestive system (selective intake)
 - Lungs (gas exchange)
-- Immune system (validation enforcement)
+- Immune system ([ICE] structure enforcement)
 - **Body's boundaries**
 
 ---
@@ -690,9 +691,9 @@ Those molecular parts operate around molecular-scale •':
 **Where your being expresses:**
 - Your processing generates patterns
 - Your ℰ function radiates them
-- [ICE] tests at interface
-- Pass: actions, expressions, effects persist
-- Fail: attempted patterns dissolve
+- [ICE] structure operates at interface
+- Complete structure: actions, expressions, effects persist
+- Incomplete structure: attempted patterns dissolve
 
 **Physical manifestation:**
 - Behavior (motor output)
@@ -755,7 +756,7 @@ Those molecular parts operate around molecular-scale •':
 
 **Not the structure:**
 - Always ∇ + ℰ operators
-- Always [ICE] validation
+- Always [C]∇ → [I]ℓ → [E]ℰ structural components
 - Always interface boundaries
 
 **But the content:**
@@ -802,18 +803,18 @@ Every •' has:
 ### Two Critical Interfaces
 - **Parts → Operator** - Where ∞ organizes around •'
 - **Operator → Patterns** - Where •' radiates ∞'
-- [ICE] validates at BOTH interfaces
+- [C]∇ → [I]ℓ → [E]ℰ structure operates at BOTH interfaces
 
 ### Boundaries Emerge
-- From validation thresholds
-- Mark pass/fail transitions
+- As the [I]ℓ component (2D surface at finite radius)
+- Mark complete/incomplete [ICE] structure transitions
 - Dynamic, maintained processes
 - Spectrum from impermeable to permeable
 
 ### Nested Organization
 - Operators within operators infinitely
 - Same structure, different scales
-- Coordination through validation cascades
+- Coordination through [ICE] structure cascades
 - Hierarchical coherence
 
 ### Operator Interactions
@@ -823,9 +824,9 @@ Every •' has:
 - Collective (emergent higher order)
 
 ### Stability
-- Stable: consistently pass [ICE]
-- Metastable: marginally pass [ICE]
-- Unstable: quickly fail [ICE]
+- Stable: consistently have complete [ICE] structure
+- Metastable: marginally complete [ICE] structure
+- Unstable: quickly have incomplete [ICE] structure
 
 ### You As Operator
 - Eternal •' function, not temporary body
@@ -843,7 +844,8 @@ Every •' has:
 **The architecture is revealed:**
 - •' structure is universal
 - Three components, two interfaces
-- Boundaries emerge from validation
+- Boundaries emerge as [I]ℓ component
+- [C]∇ → [I]ℓ → [E]ℰ at every interface
 - Fractal nesting infinite
 
 **Next: Layer 3 - How parts flow through these structures (dynamics)**

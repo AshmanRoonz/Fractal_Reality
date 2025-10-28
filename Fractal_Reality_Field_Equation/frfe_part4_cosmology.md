@@ -4,47 +4,47 @@
 
 ### 4.1 Metric-Dependent Validation Rate
 
-**Postulate 4.1** (Curved Spacetime Validation): In curved spacetime with metric g_μν, the validation rate per coordinate time depends on proper time dilation:
+**Postulate 4.1** (Curved Spacetime [ICE] Structure): In curved spacetime with metric g_μν, the [ICE] structure operating rate per coordinate time depends on proper time dilation:
 
 ```
-rate([ICE]) ∝ √|g_tt(x)|  (4.1)
+rate([ICE] structure) ∝ √|g_tt(x)|  (4.1)
 ```
 
-**Physical justification**: Validation occurs at fixed intervals of proper time τ. The relationship between proper time and coordinate time is:
+**Physical justification**: [ICE] structure operates at fixed intervals of proper time τ. The relationship between proper time and coordinate time is:
 
 ```
 dτ = √|g_tt| dt
 ```
 
-Therefore, the rate of validation events per coordinate time t scales as √|g_tt|, with suppression near horizons (where g_tt → 0) and enhancement in strong gravitational potentials.
+Therefore, the rate of [ICE] structural operations per coordinate time t scales as √|g_tt|, with suppression near horizons (where g_tt → 0) and enhancement in strong gravitational potentials.
 
 **Empirical validation**: Numerical simulations across metrics (Minkowski, Schwarzschild, Friedmann) confirm texture accumulation ∝ √|g_tt| with R² = 0.9997.
 
 ### 4.2 Texture Density Evolution
 
-**Definition 4.1** (Texture Density): The accumulated validation history at proper time τ is:
+**Definition 4.1** (Texture Density): The accumulated [ICE] structure operating history at proper time τ is:
 
 ```
-ρ_texture(τ) = (1/V) ∫_V n_validations(x,τ) · m_effective dx  (4.2)
+ρ_texture(τ) = (1/V) ∫_V n_operations(x,τ) · m_effective dx  (4.2)
 ```
 
 where:
-- n_validations is the number of validation events per unit proper time
-- m_effective ~ m_Planck is a scaling proxy representing the "information mass" per validation
+- n_operations is the number of [ICE] structural operations per unit proper time
+- m_effective ~ m_Planck is a scaling proxy representing the "information mass" per operation
 - V is a comoving volume
 
 **Theorem 4.1** (Geometric Dilution): In expanding FRW spacetime with scale factor a(t), texture density evolves as:
 
 ```
-dρ_texture/dt = -3H ρ_texture + S_validation(t)  (4.3)
+dρ_texture/dt = -3H ρ_texture + S_structure(t)  (4.3)
 ```
 
-where H = ȧ/a is the Hubble parameter and S_validation is the source term from new validations.
+where H = ȧ/a is the Hubble parameter and S_structure is the source term from new [ICE] structural operations.
 
 *Proof*: In comoving coordinates, proper volume scales as V ∝ a³. By conservation in comoving frame:
 
 ```
-d(ρ_texture · a³)/dt = S_validation · a³
+d(ρ_texture · a³)/dt = S_structure · a³
 ```
 
 Expanding the derivative:
@@ -55,7 +55,7 @@ a³ dρ_texture/dt + ρ_texture · 3a²ȧ = S_validation · a³
 
 Dividing by a³ and using H = ȧ/a gives (4.3). ∎
 
-**Physical interpretation**: Texture dilutes geometrically (∝ a⁻³) due to expansion, while new validations continuously add texture at rate S_validation.
+**Physical interpretation**: Texture dilutes geometrically (∝ a⁻³) due to expansion, while new [ICE] structural operations continuously add texture at rate S_structure.
 
 ### 4.3 Effective Cosmological Constant
 

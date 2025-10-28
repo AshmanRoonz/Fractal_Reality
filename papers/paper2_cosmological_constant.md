@@ -67,12 +67,16 @@ This provides the first natural explanation for the cosmological constant's obse
 ### 2.1 Interface Validation and Texture
 
 In the interface validation framework (see companion Paper 1), reality consists of:
-- **∞**: Infinite possible patterns
+- **∞**: Infinite possible patterns (field)
 - **∞'**: Finite validated patterns (texture)
 - **•**: Ultimate aperture operator
 - **•'**: Fractalized boundary-creating operators
 
-Validation through [ICE] (Interface-Center-Evidence) at operator boundaries creates persistent patterns that accumulate as geometric texture in ∞'.
+[ICE] structure operating at operator boundaries creates persistent patterns that accumulate as geometric texture in ∞':
+- **[E] Evidence (3D)**: Field ∞
+- **[I] Interface (2D)**: Boundary with radius ℓ
+- **[C] Center (1.5D)**: Identity = 0.5D aperture + 1.0D worldline
+- **Operating**: [C]∇ → [I]ℓ → [E]ℰ
 
 **Key coupling**: Validation rate ∝ √|g_tt(x)| (metric-dependent, verified R² = 0.9997)
 

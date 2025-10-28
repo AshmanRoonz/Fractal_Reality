@@ -26,56 +26,60 @@
 
 ```
 Φ(t+Δt) = ℰ ∘ [ICE]_out ∘ K_β ∘ [ICE]_in ∘ ∇[Φ(t)] + ε(Φ,∇Φ,β,scale)  (2.1)
+
+Operating as: [C]∇ → [I]ℓ → [E]ℰ
 ```
 
 where:
 
 - **Φ(x,t)**: Universal state function (complex-valued field in L²)
-- **∇**: Convergence operator (spatial information gathering)
-- **[ICE]_in**: Input validation projection (operator on L²)
-- **K_β**: Balance gate operator (phase space rotation generator)
-- **[ICE]_out**: Output validation projection  
-- **ℰ**: Emergence operator (spatial information distribution)
+- **∇**: Convergence operator (spatial information gathering at [C] Center)
+- **[ICE]_in**: Input [ICE] structural components (operator on L²)
+- **K_β**: Balance gate operator (phase space rotation generator at [C])
+- **[ICE]_out**: Output [ICE] structural components
+- **ℰ**: Emergence operator (spatial information distribution through [E] Evidence field)
 - **ε**: Stochastic term with Var[ε] ∝ |local energy scale|
 
-**Temporal Structure**: The evolution parameter t represents the 0.5-dimensional validation flow. Time's arrow emerges from the asymmetry [ICE]_in → K_β → [ICE]_out, which is not reversible.
+**Temporal Structure**: The evolution parameter t represents the 0.5-dimensional [C] Center flow. Time's arrow emerges from the asymmetry [ICE]_in → K_β → [ICE]_out, which is not reversible.
 
 ### 2.3 Validation Kernel Definition
 
-**Definition 2.5** (Validation Projection): The [ICE] operator is a projection operator (idempotent: [ICE]² = [ICE]) defined by:
+**Definition 2.5** ([ICE] Structural Components): The [ICE] operator is a projection operator (idempotent: [ICE]² = [ICE]) defined by:
 
 ```
-[ICE][Φ] = I[Φ] ∧ C[Φ] ∧ E[Φ]  (2.2)
+[ICE][Φ] = [I][Φ] ∧ [C][Φ] ∧ [E][Φ]  (2.2)
+
+Operating: [C]∇ → [I]ℓ → [E]ℰ
 ```
 
 Implemented as thresholded functionals:
 
-**Interface Check** (Continuity):
+**[I] Interface** (2D Boundary with radius ℓ):
 
 ```
-I[Φ](x) = {1  if sup_{|δx|<ℓ} |Φ(x+δx) - Φ(x)| < ε_I
-          {0  otherwise
+[I][Φ](x) = {1  if sup_{|δx|<ℓ} |Φ(x+δx) - Φ(x)| < ε_I
+            {0  otherwise
 ```
 
-**Center Check** (Phase Coherence):
+**[C] Center** (1.5D Identity: 0.5D aperture + 1.0D worldline):
 
 ```
-C[Φ](x) = {1  if |arg(Φ(x)) - ⟨arg(Φ)⟩_local| < ε_C
-          {0  otherwise
+[C][Φ](x) = {1  if |arg(Φ(x)) - ⟨arg(Φ)⟩_local| < ε_C
+            {0  otherwise
 ```
 
-**Evidence Check** (Laplacian Consistency):
+**[E] Evidence** (3D Field):
 
 ```
-E[Φ](x) = {1  if |∇²Φ(x) - (∇²Φ)_expected| < ε_E  
-          {0  otherwise
+[E][Φ](x) = {1  if |∇²Φ(x) - (∇²Φ)_expected| < ε_E
+            {0  otherwise
 ```
 
-**Physical interpretation**: 
+**Physical interpretation**:
 
-- I ensures continuity in 3+1 sector (no discontinuous jumps)
-- C ensures phase coherence (quantum mechanical alignment)
-- E ensures causality (Laplacian consistency with surroundings)
+- [I] ensures 2D boundary integrity (no discontinuous jumps)
+- [C] ensures 1.5D center coherence (quantum mechanical alignment)
+- [E] ensures 3D field causality (Laplacian consistency with surroundings)
 
 ### 2.4 Balance Gate Operator
 
@@ -93,7 +97,7 @@ K_β = exp(β 𝒥)  (2.4)
 
 where 𝒥 is the generator of orthogonal deflections in phase space (momentum-position plane).
 
-**Theorem 2.1** (Optimal Branching): The balance gate K_β produces maximal adaptive complexity (fractal dimension D ≈ 1.5) when β ≈ 0.5.
+**Theorem 2.1** (Optimal Branching - [C] Center Signature): The balance gate K_β produces maximal adaptive complexity (fractal dimension D ≈ 1.5, the [C] Center signature) when β ≈ 0.5.
 
 *Proof*: At β ≈ 0.5, neither convergence nor emergence dominates. The resulting trajectory is a self-avoiding random walk with Hausdorff dimension:
 
@@ -107,9 +111,9 @@ This information-theoretic entropy H(β) is maximized at β = 0.5:
 H(0.5) = -0.5 log₂(0.5) - 0.5 log₂(0.5) = 1 bit
 ```
 
-giving D_max = 1 + 0.5 = 1.5. ∎
+giving D_max = 1 + 0.5 = 1.5 = **[C] Center signature**. ∎
 
-**Physical interpretation**: The 0.5D comes from maximum information per branching decision (1 bit), distributed across the worldline, creating exactly half a dimension of additional complexity beyond deterministic flow. **This 0.5D IS the temporal dimension**—time's incompleteness (0.5 vs 1.0) is what makes it directional, following Einstein's insight that time cannot be separated from the structure of reality.
+**Physical interpretation**: The 0.5D comes from maximum information per branching decision (1 bit), distributed across the worldline, creating exactly half a dimension of additional complexity beyond deterministic flow. **This 0.5D + 1.0D worldline = 1.5D [C] Center signature IS the temporal dimension**—time's incompleteness (0.5 vs 1.0) is what makes it directional, following Einstein's insight that time cannot be separated from the structure of reality.
 
 ### 2.5 Stochastic Term - Norm-Preserving Formulation
 

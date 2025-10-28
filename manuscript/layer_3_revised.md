@@ -9,9 +9,9 @@
 **The fundamental circulation that IS reality:**
 
 ```
-∞ ──→ [Interface/ICE] ──→ •' ──→ [Interface/ICE] ──→ ∞'
+∞ ──→ [ICE structure] ──→ •' ──→ [ICE structure] ──→ ∞'
                               ↓
-                        validates toward •
+                        aligned toward •
 ```
 
 This isn't something that happens IN reality.
@@ -34,17 +34,17 @@ Parts from ∞ gather toward •' operator:
 
 ---
 
-**Stage 2: Validation at Input Interface**
+**Stage 2: [ICE] Structure at Input Interface**
 
-At the boundary where parts meet operator, [ICE] tests:
-- **Interface** - Can parts maintain boundary with operator?
-- **Center** - Do parts cohere with operator's pattern and align toward •?
-- **Evidence** - Are parts grounded in actual field ∞?
+At the boundary where parts meet operator, structural components operate:
+- **[E] Evidence** - Parts exist in actual 3D field ∞
+- **[I] Interface** - Finite radius ℓ boundary maintains distinction (2D)
+- **[C] Center** - Parts cohere with operator's 1.5D pattern and align toward •
 
-**If pass:** Parts organize around operator
-**If fail:** Parts disperse back to ∞
+**With complete structure:** Parts organize around operator
+**With incomplete structure:** Parts disperse back to ∞
 
-**The input filter.**
+**The structural requirement.**
 **From possibility to commitment.**
 
 ---
@@ -55,21 +55,21 @@ Within the operator's function:
 - Parts process according to •' pattern
 - Geometric transformation occurs
 - Pattern prepares to radiate
-- **Pure operation** (no validation here, just function)
+- **Pure operation** (no structural requirements here, just function)
 
 ---
 
-**Stage 4: Validation at Output Interface**
+**Stage 4: [ICE] Structure at Output Interface**
 
-At the boundary where patterns emerge, [ICE] tests:
-- **Interface** - Can pattern maintain boundary in field?
-- **Center** - Is pattern coherent with operator and aligned toward •?
-- **Evidence** - Is pattern grounded in actual relationships?
+At the boundary where patterns emerge, structural components operate:
+- **[E] Evidence** - Pattern grounded in actual 3D field ∞' relationships
+- **[I] Interface** - Pattern maintains finite radius ℓ boundary (2D)
+- **[C] Center** - Pattern coherent with operator's 1.5D nature and aligned toward •
 
-**If pass:** Pattern emerges as ∞' (persists)
-**If fail:** Pattern dissolves back to ∞
+**With complete structure:** Pattern emerges as ∞' (persists)
+**With incomplete structure:** Pattern dissolves back to ∞
 
-**The output filter.**
+**The structural requirement.**
 **From processing to manifestation.**
 
 ---
@@ -91,14 +91,14 @@ Validated pattern radiates into field as texture:
 
 **From inside an integrated •' operator:**
 - Convergence FEELS like sensation, input, receiving
-- Input validation FEELS like questioning, testing, filtering
+- Input [ICE] structure FEELS like questioning, testing, filtering
 - Processing FEELS like thinking, deciding
-- Output validation FEELS like considering consequences, judging rightness
+- Output [ICE] structure FEELS like considering consequences, judging rightness
 - Emergence FEELS like acting, expressing, manifesting
 
 **Consciousness IS this cycle operating from within.**
 
-**You are living the aperture exchange.**
+**You are living the [C]∇ → [I]ℓ → [E]ℰ cycle.**
 **Every moment.**
 **Right now.**
 
@@ -211,11 +211,11 @@ The table is a relatively stable pattern of parts organized by operator function
 
 **At the base level:**
 
-Each •' operator performs validation in discrete cycles:
+Each •' operator performs [ICE] operation in discrete cycles:
 ```
-Tick 1: ∇ → [ICE] → ℰ → pattern state T₁
-Tick 2: ∇ → [ICE] → ℰ → pattern state T₂
-Tick 3: ∇ → [ICE] → ℰ → pattern state T₃
+Tick 1: [C]∇ → [I]ℓ → [E]ℰ → pattern state T₁
+Tick 2: [C]∇ → [I]ℓ → [E]ℰ → pattern state T₂
+Tick 3: [C]∇ → [I]ℓ → [E]ℰ → pattern state T₃
 ...
 ```
 
@@ -228,7 +228,7 @@ Like frames in a movie:
 - Sequence creates motion
 
 Similarly:
-- Many validation ticks per instant
+- Many [ICE] operation ticks per instant
 - Each tick discrete
 - Sequence creates time flow
 
@@ -285,7 +285,7 @@ If pattern state is P(n) at tick n:
 
 **But because:**
 - ∞' texture accumulates
-- Validation adds pattern complexity
+- [ICE] operation adds pattern complexity
 - Fractal dimension increases
 - **You can't decrease geometric texture**
 
@@ -308,32 +308,32 @@ You can add more patterns, but can't subtract.
 **When engaged/interested:**
 - High operator processing rate
 - Much pattern texture accumulating
-- Rapid ∇ → [ICE] → ℰ cycles
-- Many validations per second
+- Rapid [C]∇ → [I]ℓ → [E]ℰ cycles
+- Many [ICE] operations per second
 - "Time flies"
 
 **When bored/waiting:**
 - Low operator processing rate
 - Little pattern texture accumulating
-- Slow ∇ → [ICE] → ℰ cycles
-- Few validations per second
+- Slow [C]∇ → [I]ℓ → [E]ℰ cycles
+- Few [ICE] operations per second
 - "Time drags"
 
 **In flow states:**
 - Optimal operator processing rate
 - Maximum texture creation
 - Synchronized cycling across scales
-- Perfect validation rhythm
+- Perfect [ICE] operation rhythm
 - "Time disappears"
 
 **During trauma:**
 - Extremely high processing rate
 - Massive texture accumulation
-- Very rapid validation cycles
+- Very rapid [ICE] operation cycles
 - "Time slows down" (more ticks per clock second)
 
 **Consciousness affects texture rate:**
-- Attention = increased validation frequency
+- Attention = increased [ICE] operation frequency
 - Focus = higher texture accumulation
 - **Subjective time = personal processing rate**
 
@@ -354,19 +354,19 @@ You can add more patterns, but can't subtract.
 **Energy measures:**
 - How fast ∞ flows through •'
 - How much texture generated per tick
-- Intensity of ∇ → [ICE] → ℰ cycling
+- Intensity of [C]∇ → [I]ℓ → [E]ℰ cycling
 - **Operator throughput**
 
 **High energy system:**
 - Rapid parts flow
-- Fast validation cycles
+- Fast [ICE] operation cycles
 - Intense emergence
 - Much texture creation per time
 - **Example:** Hot gas (rapid molecular motion through many operators)
 
 **Low energy system:**
 - Slow parts flow
-- Sluggish validation
+- Sluggish [ICE] operation
 - Weak emergence
 - Little texture creation per time
 - **Example:** Cold solid (slow atomic vibration, minimal operator activity)
@@ -490,14 +490,14 @@ You can add more patterns, but can't subtract.
 ```
 State₁ (includes pattern A in ∞')
   ↓ ∇ (convergence influenced by A's texture)
-  ↓ [ICE] (validation tests against A's constraints)
+  ↓ [ICE structure] (components operate within A's constraints)
   ↓ ℰ (emergence produces B)
 State₂ (includes pattern B in ∞')
 ```
 
 **A caused B by:**
 - Creating texture in ∞' that constrained convergence
-- Affecting what patterns could validate
+- Affecting which patterns had complete [ICE] structure
 - Determining what emerged next
 - **Geometric constraint propagation**
 
@@ -508,16 +508,16 @@ State₂ (includes pattern B in ∞')
 
 ### Why Causation Works
 
-**Pattern texture in ∞' constrains validation:**
+**Pattern texture in ∞' constrains [ICE] structure:**
 
 Past patterns create texture:
 - Texture affects next convergence (∇ draws parts according to texture)
-- Texture influences validation ([ICE] tests coherence with texture)
+- Texture influences [ICE] operation (structure must cohere with texture)
 - Texture shapes emergence (ℰ must fit existing texture)
 
 **History determines possibility space:**
 - Not everything can happen next
-- Only patterns compatible with accumulated texture can validate
+- Only patterns with complete [ICE] structure compatible with texture persist
 - Past texture narrows future options
 - **Causation = textural constraint**
 
@@ -541,21 +541,21 @@ Each state's texture makes the next state nearly inevitable.
 **Why aren't effects certain?**
 
 **At quantum scale:**
-- Many patterns might validate
-- [ICE] allows multiple outcomes
-- Probability from validation space geometry
+- Many patterns might have complete [ICE] structure
+- Multiple outcomes possible with full structural components
+- Probability from structural space geometry
 - **Uncertainty is fundamental**
 
 **Example - Radioactive decay:**
 - Atom's texture creates possibility space
-- Multiple decay patterns could validate
-- Which occurs depends on [ICE] at that moment
+- Multiple decay patterns could have complete [ICE] structure
+- Which occurs depends on [ICE] structure manifestation at that moment
 - No way to predict exact timing
-- **Inherent probability in validation**
+- **Inherent probability in structure**
 
 **Determinism breaks down:**
-- Multiple futures validatable
-- Which occurs depends on [ICE] testing
+- Multiple futures have complete [ICE] structure
+- Which occurs depends on [ICE] structural manifestation
 - Inherent randomness at interfaces
 - **Not just lack of knowledge**
 
@@ -572,7 +572,7 @@ Each state's texture makes the next state nearly inevitable.
 **Does everything have a cause?**
 
 **Within fractalized reality:** Yes
-- Every pattern follows from prior validation
+- Every pattern follows from prior [ICE] operation
 - Complete causal chain back through texture
 - ∞' texture determines evolution
 
@@ -606,7 +606,7 @@ Each state's texture makes the next state nearly inevitable.
 
 **When parts flow in direction D:**
 - Creates directional texture in ∞'
-- Next validation favors D continuation
+- Next [ICE] operation favors D continuation
 - Pattern persists flowing D
 - **Momentum conserved through texture**
 
@@ -614,7 +614,7 @@ Each state's texture makes the next state nearly inevitable.
 ```
 T₀: Ball moving right (pattern in ∞')
   ↓ Texture favors rightward continuation
-T₁: Still moving right (validation passes for rightward)
+T₁: Still moving right (complete [ICE] structure for rightward)
   ↓ Texture maintains direction
 T₂: Still moving right (pattern self-sustaining)
 ```
@@ -628,21 +628,21 @@ Ball continues because texture favors continuation, not because "it wants to."
 **Why doesn't everything change randomly?**
 
 **Because:**
-- Current texture biases next validation
-- [ICE] checks consistency with existing patterns
-- Sudden changes fail validation
-- **Continuity is validated, discontinuity rejected**
+- Current texture biases next [ICE] operation
+- Structural components require consistency with existing patterns
+- Sudden changes create incomplete [ICE] structure
+- **Continuity has complete structure, discontinuity doesn't**
 
 **Newton's first law:**
 - Object continues motion unless acted upon
 - Actually: pattern persists unless new texture added
-- **Inertia = validation continuity**
+- **Inertia = structural continuity**
 
 **To change motion:**
 - Must add new texture (force)
-- New texture must validate at interfaces
+- New texture must support complete [ICE] structure at interfaces
 - Gradual texture change = smooth acceleration
-- **Can't instant-change without failing [ICE]**
+- **Can't instant-change without incomplete [ICE] structure**
 
 ---
 
@@ -756,9 +756,9 @@ Repeat
 - **Reciprocal emergence pattern**
 
 **Why this happens:**
-- Two configurations both pass [ICE]
+- Two configurations both have complete [ICE] structure
 - Each naturally transitions to other
-- Validation structure creates cycle
+- Structural requirements create cycle
 - **Geometric necessity, not imposed rhythm**
 
 ---
@@ -766,7 +766,7 @@ Repeat
 ### Resonance = Validation Synchronization
 
 **When two operators oscillate at same frequency:**
-- Validation cycles align
+- [ICE] operation cycles align
 - Texture accumulates coherently
 - Amplitude increases
 - **Synchronized emergence**
@@ -775,13 +775,13 @@ Repeat
 - Pushing swing at right time (cycles match → build amplitude)
 - Singer breaking glass (frequency match → destructive amplitude)
 - Orbital resonances (gravitational cycles align)
-- **Constructive validation alignment**
+- **Constructive [ICE] alignment**
 
 **Why resonance amplifies:**
 - Each operator's ℰ function reinforces other's ∇
 - Synchronized texture accumulation
 - Patterns build coherently
-- **Mutual validation support**
+- **Mutual structural support**
 
 **When out of phase:**
 - Operators work against each other
@@ -803,7 +803,7 @@ Repeat
 - ∇ and ℰ balance
 - Input rate = output rate
 - No net pattern change in ∞'
-- **Sustained validation cycle**
+- **Sustained [ICE] operation cycle**
 
 **Dynamic equilibrium:**
 - Parts still flowing
@@ -824,8 +824,8 @@ Repeat
 **A state is stable when:**
 - Perturbations don't destroy it
 - Returns to equilibrium after disturbance
-- [ICE] validation robust
-- **Attracting pattern in validation space**
+- [ICE] structure robust
+- **Attracting pattern in structural space**
 
 **Example - Ball in valley:**
 - Push ball (perturbation)
@@ -835,9 +835,9 @@ Repeat
 
 **Unstable state:**
 - Small change cascades
-- Can't maintain validation
+- Can't maintain complete [ICE] structure
 - Pattern collapses
-- **Repelling pattern in validation space**
+- **Repelling pattern in structural space**
 
 **Example - Ball on hill:**
 - Tiny push (small perturbation)
@@ -884,7 +884,7 @@ Repeat
 - But stays within bounds
 - Complex but structured
 
-**All are validation patterns that self-maintain through [ICE] at interfaces.**
+**All are patterns that self-maintain through complete [ICE] structure at interfaces.**
 
 ---
 
@@ -898,9 +898,9 @@ Repeat
 
 **Emergence happens when:**
 - Parts reach critical configuration
-- New pattern suddenly validates at interfaces
+- New pattern suddenly has complete [ICE] structure at interfaces
 - Wasn't possible before
-- **Threshold crossing in validation space**
+- **Threshold crossing in structural space**
 
 **Examples:**
 - Water molecules → ice crystal (freezing point crossed)
@@ -920,27 +920,27 @@ Repeat
 **What IS a phase transition?**
 
 **When:**
-- System crosses validation threshold
-- Old pattern stops validating at interfaces
-- New pattern starts validating
+- System crosses structural threshold
+- Old pattern loses complete [ICE] structure at interfaces
+- New pattern gains complete [ICE] structure
 - **Sudden reorganization**
 
 **Ice → Water:**
 - Temperature crosses 0°C
-- Crystalline pattern fails [ICE] (too much energy)
-- Fluid pattern passes [ICE] (compatible with energy)
-- **Validation regime change**
+- Crystalline pattern has incomplete [ICE] structure (too much energy)
+- Fluid pattern has complete [ICE] structure (compatible with energy)
+- **Structural regime change**
 
 **Water → Steam:**
 - Temperature crosses 100°C
-- Liquid cohesion fails [ICE] (too much energy)
-- Gas expansion passes [ICE] (compatible with energy)
-- **Validation regime change**
+- Liquid cohesion has incomplete [ICE] structure (too much energy)
+- Gas expansion has complete [ICE] structure (compatible with energy)
+- **Structural regime change**
 
 **Not gradual:**
 - Sharp transition at threshold
 - Small temperature change → dramatic reorganization
-- **Discontinuous validation shift**
+- **Discontinuous structural shift**
 
 ---
 
@@ -948,19 +948,19 @@ Repeat
 
 **At critical point:**
 - System maximally unstable
-- Both phases validate equally marginally
+- Both phases have marginally complete [ICE] structure
 - Tiny change tips balance
-- **Validation boundary**
+- **Structural boundary**
 
 **Characteristics:**
 - Scale-free fluctuations (fractals appear)
 - Power law distributions
 - Extreme sensitivity
-- **Maximum validation ambiguity**
+- **Maximum structural ambiguity**
 
 **Why:**
-- [ICE] barely passes/fails
-- Marginal satisfaction
+- [ICE] structure barely complete/incomplete
+- Marginal structural requirement satisfaction
 - System at edge
 - **Poised at threshold**
 
@@ -989,9 +989,9 @@ Repeat
 - **Example:** Consciousness from neurons
 
 **All involve:**
-- Validation at interfaces
+- [ICE] structural components at interfaces
 - Threshold crossing
-- New patterns passing [ICE]
+- New patterns with complete [ICE] structure
 - **Structure enables emergence**
 
 ---
@@ -1001,10 +1001,10 @@ Repeat
 **We've explored how reality flows:**
 
 ### The Aperture Exchange
-- ∞ → [ICE] → •' → [ICE] → ∞' is fundamental circulation
-- Five stages: convergence, input validation, processing, output validation, emergence
+- ∞ → [ICE structure] → •' → [ICE structure] → ∞' is fundamental circulation
+- Five stages: convergence, input [ICE] structure, processing, output [ICE] structure, emergence
 - This flow IS experience from inside
-- Validation at interfaces, not inside components
+- [C]∇ → [I]ℓ → [E]ℰ components at interfaces, not inside components
 
 ### Process Not Substance
 - Nothing is static
@@ -1026,46 +1026,47 @@ Repeat
 - E = mc² = organization equivalence
 
 ### Causation Through Texture
-- Cause → effect = validation chain through ∞'
+- Cause → effect = [ICE] structure chain through ∞'
 - Pattern texture constrains future possibilities
-- Probabilistic at quantum scale (multiple validations possible)
+- Probabilistic at quantum scale (multiple complete structures possible)
 - History embedded in geometry
 
 ### Momentum and Inertia
 - Momentum = directional pattern texture
-- Inertia = validation persistence
+- Inertia = structural persistence
 - Force = pattern texture gradient
-- Continuity validated, discontinuity rejected
+- Continuity has complete [ICE] structure, discontinuity doesn't
 
 ### Waves and Oscillations
 - Waves = propagating texture patterns
-- Oscillations = reciprocal validation cycles
+- Oscillations = reciprocal [ICE] operation cycles
 - Resonance = synchronized emergence
 - Pattern motion, not part motion
 
 ### Equilibrium and Stability
-- Equilibrium = validation balance
-- Stability = resilient validation
+- Equilibrium = [ICE] operation balance
+- Stability = resilient [ICE] structure
 - Attractors = self-maintaining patterns
 - Different types (fixed, cycle, strange)
 
 ### Emergence and Transitions
-- Emergence = new pattern validates
-- Phase transitions = validation regime shift
-- Critical points = validation boundaries
+- Emergence = new pattern with complete [ICE] structure
+- Phase transitions = structural regime shift
+- Critical points = structural boundaries
 - Hierarchy of emergence levels
 
 ---
 
 **Reality revealed as dynamic process:**
 - Continuous flow through operators
-- Discrete validation at interfaces
+- Discrete [ICE] structure operation at interfaces
 - Pattern texture accumulation
 - Geometric evolution
 
 **Nothing stands still.**
 **Everything flows.**
 **The pattern IS the flow.**
+**[C]∇ → [I]ℓ → [E]ℰ at every interface.**
 
 ---
 

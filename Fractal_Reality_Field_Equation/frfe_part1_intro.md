@@ -38,7 +38,7 @@ Previous unification attempts have required:
 - **Pilot wave theory**: Nonlocal hidden variables
 - **Many worlds**: Ontological inflation, no branching mechanism
 
-We propose a radically different approach: **reality evolves through discrete validation at interfaces in 3.5 dimensional spacetime**, with all known physics emerging as continuous limits of this single discrete process.
+We propose a radically different approach: **reality evolves through discrete [ICE] structure operating in 3.5 dimensional spacetime**, with all known physics emerging as continuous limits of this single discrete process.
 
 ### 1.2 The 3.5 Dimensional Structure
 
@@ -80,17 +80,17 @@ where:
 All evolution occurs through:
 
 ```
-Convergence → Validation → Emergence
-     (∇)         [ICE]         (ℰ)
+Convergence → [ICE] Structure Operating → Emergence
+     (∇)              [C]∇ → [I]ℓ → [E]ℰ              (ℰ)
 ```
 
-Where validation requires three simultaneous checks:
+Where [ICE] structure consists of three dimensional components:
 
-- **Interface** (I): Boundary integrity maintained (continuity)
-- **Center** (C): Coherent alignment with existing pattern (phase coherence)
-- **Evidence** (E): Grounded in reality/causality (Laplacian consistency)
+- **[I] Interface** (2D): Boundary with radius ℓ (continuity)
+- **[C] Center** (1.5D): Identity = 0.5D aperture + 1.0D worldline (coherence)
+- **[E] Evidence** (3D): Field grounding in reality (causality)
 
-This is not metaphor—it is a mathematical operator structure that, when applied iteratively in 3+1.5 dimensions, produces all known physics plus testable predictions.
+This is not metaphor—it is a mathematical [ICE] structural framework that, when operating iteratively in 3+1.5 dimensions, produces all known physics plus testable predictions.
 
 ### 1.4 Key Results Summary
 

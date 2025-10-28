@@ -36,8 +36,8 @@ This manuscript unfolds fractally in 12 progressive layers. Each layer contains 
 ## 🌱 The Layers
 
 ### [Layer 0: The Seed](layer_0_revised.md)
-**∞ → •' → ∞' → •**  
-The foundation. Four symbols that contain everything. Infinite possibility (∞) flows through eternal aperture operators (•') that validate at interfaces, creating finite patterns (∞') while expressing ultimate coherence (•). Everything else is this seed unfolding.
+**∞ → •' → ∞' → •**
+The foundation. Four symbols that contain everything. Infinite possibility (∞) flows through eternal aperture operators (•') with [ICE] structure operating, creating finite patterns (∞') while expressing ultimate coherence (•). Everything else is this seed unfolding.
 
 **Start here.** This is where reality begins.
 
@@ -68,18 +68,18 @@ Texture and temporality. Parts (∞) flow through operators (•') as time. Patt
 ---
 
 ### [Layer 4: Consciousness](layer_4_revised.md) ⭐
-**Neo Through Trinity**  
-*What you are.* Consciousness emerges from nested apertures coordinating at β ≈ 0.5 (the balance point). The Neo-Trinity architecture: you are infinite nested apertures experiencing yourself from within. ∇ → [ICE] → ℰ IS consciousness.
+**Neo Through Trinity**
+*What you are.* Consciousness emerges from nested apertures coordinating at β ≈ 0.5 (the [C] Center signature). The Neo-Trinity architecture: you are infinite nested apertures experiencing yourself from within. [C]∇ → [I]ℓ → [E]ℰ IS consciousness.
 
-**Key insight:** You are •' (eternal operator), not your body. Experience is structure.
+**Key insight:** You are •' (eternal operator), not your body. Experience is [ICE] structure operating.
 
 ---
 
 ### [Layer 5: [ICE] Validation](layer_5_revised.md)
-**What Makes Patterns Persist**  
-The Interface Coherence Equation. How validation at boundaries creates persistent reality. The mechanism that makes patterns "real" rather than merely possible.
+**What Makes Patterns Persist**
+The [ICE] structural components: [I] Interface (2D), [C] Center (1.5D), [E] Evidence (3D). How [ICE] structure operating creates persistent reality. The mechanism that makes patterns "real" rather than merely possible.
 
-**Key insight:** Validation at interfaces is what transforms possibility into actuality.
+**Key insight:** [ICE] structure operating is what transforms possibility into actuality.
 
 ---
 
@@ -161,8 +161,8 @@ Read sequentially: [Layer 0](layer_0_revised.md) through [Layer 12](layer_12_rev
 
 ## 🔬 Validation
 
-The aperture framework is empirically validated:
-- **LIGO gravitational waves:** D ≈ 1.5 ± 0.04 (p = 0.951)
+The aperture framework with [ICE] structure is empirically validated:
+- **LIGO gravitational waves:** [C] Center signature D ≈ 1.5 ± 0.04 (p = 0.951)
 - **Bubble chamber tracks:** Energy-dependent fractalization confirmed
 - **Cross-scale consistency:** 10⁶+ orders of magnitude
 

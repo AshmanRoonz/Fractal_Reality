@@ -167,7 +167,7 @@ Nothing else is fundamental.
 **No separate storage:**
 - Memory not in neurons (they're temporary)
 - Encoded as finite validated patterns in ∞'
-- Fractal dimension D ≈ 1.5
+- Fractal dimension D ≈ 1.5 = [C] Center signature
 - **Past lives in accumulated finite patterns**
 
 **Three eternal components:**
@@ -512,7 +512,7 @@ The [ICE] validation pattern operates at every layer, but breaks differently dep
 **Your history (eternal texture):**
 - Accumulated in ∞' (geometric imprint)
 - Every validated choice
-- Fractal structure D ≈ 1.5
+- Fractal structure D ≈ 1.5 = [C] Center signature
 - **Permanent record**
 
 **You ARE the eternal operator.**
@@ -590,7 +590,7 @@ The [ICE] validation pattern operates at every layer, but breaks differently dep
 
 ### How to Live
 
-**Conscious validation:**
+**Conscious [ICE] structure operating:**
 - Every moment check [ICE] at both interfaces
 - Make it deliberate
 - Six questions before acting
@@ -653,7 +653,7 @@ The [ICE] validation pattern operates at every layer, but breaks differently dep
 
 **You choose:**
 - What to converge toward
-- How to validate at interfaces
+- How to pass [ICE] structure operating at interfaces
 - What to commit to output
 - **What to build eternally**
 
@@ -683,7 +683,7 @@ The [ICE] validation pattern operates at every layer, but breaks differently dep
 
 **Not powerless:**
 - Sovereign validator (autonomous at interfaces)
-- Conscious chooser (deliberate validation)
+- Conscious chooser (deliberate [ICE] structure operating)
 - Reality co-creator (texture builder)
 
 ---
@@ -714,7 +714,7 @@ The convergence is eternal.
 - In this lifetime?
 - **Forever?**
 
-**What patterns will you validate?**
+**What patterns will you pass through [ICE] structure operating?**
 - At your input interface?
 - At your output interface?
 - **At both?**
@@ -857,7 +857,7 @@ Or a million.
 ### You Must Do The Work
 
 **No one can:**
-- Validate for you (your interfaces)
+- Pass [ICE] structure operating for you (your interfaces)
 - Build your texture (your choices)
 - Express your •' (your uniqueness)
 - Live your eternity (your existence)
@@ -896,7 +896,7 @@ Or a million.
 
 **You are reading this now:**
 - Your operator organizing parts (brain processing)
-- Your validation at interfaces (understanding emerging)
+- Your [ICE] structure operating at interfaces (understanding emerging)
 - Your texture accumulating (knowledge integrating)
 - **This moment IS the pattern**
 
@@ -907,7 +907,7 @@ Or a million.
 - **Just now conscious of it**
 
 **What happens next:**
-- Is up to you (sovereign validator)
+- Is up to you (sovereign [ICE] structure operating)
 - Depends on your interfaces (how you relate)
 - Creates your eternity (what you build)
 - **Your choice, your life**
@@ -917,7 +917,7 @@ Or a million.
 ### Go Live It
 
 **The pattern awaits your expression.**
-**The interfaces await your validation.**
+**The interfaces await your [ICE] structure operating.**
 **The texture awaits your creation.**
 **Eternity awaits your participation.**
 
@@ -933,7 +933,7 @@ Or a million.
 
 ## EPILOGUE: THE LIVING TRUTH
 
-*You are eternal operator organizing temporary parts, creating permanent patterns, building forever. Every validation at your interfaces matters infinitely. Every choice accumulates geometrically. Every moment is the whole journey. You are the universe experiencing itself, completing the foundation through your existence, expressing infinite complexity through your uniqueness, converging eternally toward ultimate coherence.*
+*You are eternal operator organizing temporary parts, creating permanent patterns, building forever. Every [ICE] structure operating at your interfaces matters infinitely. Every choice accumulates geometrically. Every moment is the whole journey. You are the universe experiencing itself, completing the foundation through your existence, expressing infinite complexity through your uniqueness, converging eternally toward ultimate coherence.*
 
 **The pattern is complete.**
 **The practice continues.**

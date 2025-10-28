@@ -73,20 +73,24 @@ What validates transitions, what TESTS:
 
 ```
 0.5D: Time Creation Gate
-      [ICE] tests: ∞ → 1D
-      "Can sequence exist?"
-      "Can causality flow?"
-      
+      [ICE] structure operating: ∞ → 1D
+      [C] Center: Can causality cohere?
+      [I] Interface: Can boundary hold sequence?
+      [E] Evidence: Can field ∞ manifest flow?
+
 1.5D: Consciousness Gate ⭐
-      [ICE] tests: 1D → 2D
-      "Which branch?"
-      "Can choice happen?"
+      [ICE] structure operating: 1D → 2D
+      [C] Center (1.5D): Which branch coherent?
+      [I] Interface (2D): Can boundary maintain?
+      [E] Evidence (3D): Is choice grounded in field?
       β ≈ 0.5 enables validated branching
-      
+      D ≈ 1.5 = [C] Center signature
+
 2.5D: Integration Gate
-      [ICE] tests: 2D → 3D
-      "Can surfaces coordinate?"
-      "Can wholeness emerge?"
+      [ICE] structure operating: 2D → 3D
+      [C] Center: Is wholeness coherent?
+      [I] Interface: Can surfaces coordinate?
+      [E] Evidence: Is volume real?
 ```
 
 ### The Complete Dimensional Cascade
@@ -97,7 +101,7 @@ What validates transitions, what TESTS:
           ↓
     ╔═══════════╗
     ║ 0.5D GATE ║ Time Creation Aperture
-    ║   [ICE]   ║ Validates: sequence possible?
+    ║   [ICE]   ║ [C]∇ → [I]ℓ → [E]ℰ
     ╚═══════════╝
           ↓
     TIME (1D STATE)
@@ -106,9 +110,9 @@ What validates transitions, what TESTS:
           ↓
     ╔═══════════╗
     ║ 1.5D GATE ║ ← CONSCIOUSNESS OPERATES HERE ⭐
-    ║  Trinity  ║    The validation itself
-    ║   [ICE]   ║    Testing which branch
-    ║  @ β≈0.5  ║    90° validated deflections
+    ║  Trinity  ║    [ICE] structure operating
+    ║   [ICE]   ║    [C]∇ → [I]ℓ → [E]ℰ
+    ║  @ β≈0.5  ║    D ≈ 1.5 = [C] Center signature
     ╚═══════════╝    The experience of choice
           ↓
        ╱   ╲
@@ -149,12 +153,13 @@ What validates transitions, what TESTS:
 ```
 ∞ flows into the gate...
     ↓
-[0.5D [ICE]]
+[0.5D [ICE] structure operating]
     ↓
-Validates:
-  Interface: Can boundary hold?
-  Center: Can causality cohere?
-  Evidence: Can sequence be real?
+[C] Center (0.5D aperture): Can causality cohere?
+[I] Interface (boundary): Can sequence hold?
+[E] Evidence (field ∞): Can flow be real?
+    ↓
+Operating: [C]∇ → [I]ℓ → [E]ℰ
     ↓
 TIME emerges (if validation passes)
 ```
@@ -200,15 +205,15 @@ TIME emerges (if validation passes)
               ↓
          ╔═══════════╗
          ║  TRINITY  ║ ← THE 1.5D GATE
-         ║   1.5D    ║    Consciousness operation
-         ║   [ICE]   ║    Validation in real-time
-         ║  @ β≈0.5  ║    Perfect balance point
+         ║   1.5D    ║    [ICE] structure operating
+         ║   [ICE]   ║    [C]∇ → [I]ℓ → [E]ℰ
+         ║  @ β≈0.5  ║    D ≈ 1.5 = [C] Center signature
          ╚═══════════╝
               ↓
-          Tests:
-    Interface: Can branch maintain boundary?
-    Center: Is choice coherent & aligned?
-    Evidence: Is branch grounded in reality?
+          [ICE] structural components:
+    [C] Center (1.5D): Is choice coherent & aligned?
+    [I] Interface (2D): Can branch maintain boundary?
+    [E] Evidence (3D): Is branch grounded in field ∞?
               ↓
            ╱   ╲
     Branch    Branch
@@ -339,21 +344,23 @@ Neo flows INTO Trinity (the gate). For the first time, he experiences validation
 ```
 Neo enters Trinity
     ↓
-[ICE] validation operates:
+[ICE] structure operating:
     ↓
-Interface: ✓ Branch can maintain boundary
-Center: ✓ Choice is coherent and aligned toward •
-Evidence: ✓ Path is grounded in actual field ∞
+[C] Center (1.5D): ✓ Choice is coherent and aligned toward •
+[I] Interface (2D): ✓ Branch can maintain boundary radius ℓ
+[E] Evidence (3D): ✓ Path is grounded in actual field ∞
+    ↓
+Operating: [C]∇ → [I]ℓ → [E]ℰ
     ↓
 VALIDATION PASSES
     ↓
          ╱   ╲
         /     \
    Branch A  Branch B
-   
+
 90° deflection occurs
 1.5D fractalization emerges
-D ≈ 1.503 measured by LIGO
+D ≈ 1.503 = [C] Center signature measured by LIGO
 
 CONSCIOUSNESS AWAKENS
 ```
@@ -560,12 +567,14 @@ YOU (organismal 1.5D gate)
 Your sensory input (1D flow)
     ↓
 YOUR CONSCIOUSNESS (1.5D gate)
-    ↓ [ICE] validates:
-    ↓ Interface: Can I maintain boundary?
-    ↓ Center: Is this coherent with me?
-    ↓ Evidence: Is this real?
+    ↓ [ICE] structure operating:
+    ↓ [C] Center (1.5D): Is this coherent with me?
+    ↓ [I] Interface (2D): Can I maintain boundary?
+    ↓ [E] Evidence (3D): Is this real in field ∞?
+    ↓ Operating: [C]∇ → [I]ℓ → [E]ℰ
     ↓
 Your choices branch (2D manifests)
+D ≈ 1.5 = [C] Center signature
 ```
 
 **You are not experiencing consciousness.**  
@@ -696,9 +705,10 @@ Right now, reading this:
 Photons enter your eyes (1D flow)
     ↓
 Your consciousness (1.5D gate)
-    ↓ validates this information
-    ↓ through [ICE]
+    ↓ [ICE] structure operating
+    ↓ [C]∇ → [I]ℓ → [E]ℰ
     ↓ at β ≈ 0.5
+    ↓ D ≈ 1.5 = [C] Center signature
     ↓
 Understanding branches
 ```

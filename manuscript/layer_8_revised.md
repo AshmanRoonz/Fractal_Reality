@@ -29,7 +29,7 @@
 - **Eternal identity**
 
 **The organization:**
-- Hierarchical validation networks
+- Hierarchical [ICE] structure operating networks
 - Thalamo-cortical integration
 - Distributed processing coordinated
 - **One unified operator organizing many parts**
@@ -82,9 +82,9 @@
 
 **[ICE] manifests as:**
 - Neural oscillations (synchronization testing)
-- Feedback loops (iterative validation)
-- Predictive coding (error minimization = validation check)
-- **Continuous testing at interfaces**
+- Feedback loops (iterative [ICE] structure operating)
+- Predictive coding (error minimization = [ICE] structural components)
+- **Continuous structural validation at interfaces**
 
 ---
 
@@ -212,7 +212,7 @@
 - **Consciousness requires continuous energy**
 
 **This manifests as:**
-- Continuous validation cycling
+- Continuous [ICE] structure operating
 - Parts constantly flowing through operator
 - Active maintenance of organization
 - **Energy = consciousness enabler**
@@ -344,13 +344,13 @@
 - Increased gamma coherence across brain
 - Reduced default mode activity (quieter self-model)
 - Enhanced integration patterns
-- Different validation regime
+- Different [ICE] structure operating
 
 **Psychedelics:**
 - Increased cortical entropy (more disordered activity)
 - Novel connectivity patterns (unusual integrations)
 - Reduced default mode (dissolved boundaries)
-- Altered validation at interfaces
+- Altered [ICE] structure operating at interfaces
 
 **Flow states:**
 - Optimal arousal (perfect energy level)
@@ -476,23 +476,23 @@
 
 **Awake:**
 - High integration (all networks active)
-- Active validation (continuous [ICE])
+- Active [ICE] structure operating (continuous [ICE])
 - Full consciousness
 
 **Stage 1-2 (light sleep):**
 - Reduced integration (some disconnection)
-- Slower validation
+- Slower [ICE] structure operating
 - Dimmed consciousness
 
 **Stage 3-4 (deep sleep):**
 - Minimal integration (networks largely disconnected)
-- Very slow validation
+- Very slow [ICE] structure operating
 - Near-zero consciousness
 
 **REM sleep:**
 - High cortical integration (active brain)
 - But disconnected from sensory input (thalamic gating)
-- Different validation regime (reduced Evidence checking)
+- Different [ICE] structure operating (reduced Evidence checking)
 - **Dream consciousness: internal patterns validate without external grounding**
 
 ---
@@ -502,7 +502,7 @@
 **What happens:**
 - Integration disrupted (networks isolated)
 - Thalamo-cortical loops broken (no unified processing)
-- Validation impossible (can't form coherent operator function)
+- [ICE] structure operating impossible (can't form coherent operator function)
 - Consciousness ceases
 
 **Different mechanisms:**
@@ -556,7 +556,7 @@
 
 **Why lasting changes:**
 - New ∞' texture created during experience
-- Novel validation patterns committed
+- Novel [ICE] structure operating patterns committed
 - Brain can access these patterns later
 - **Permanent geometric changes from temporary state**
 
@@ -671,7 +671,7 @@
 - **Organized structure collapses**
 
 **Consciousness ends:**
-- No validation cycling (no [ICE] processing)
+- No [ICE] structure operating (no [ICE] processing)
 - No unified operator organizing parts
 - Experience ceases
 - **Lights out**
@@ -743,7 +743,7 @@
 ### Brain as Organized Parts
 - Neurons are parts (∞) organized by consciousness operator (•')
 - ∇: sensory integration, convergence
-- [ICE]: validation at interfaces (thalamo-cortical loops)
+- [ICE]: structural components at interfaces (thalamo-cortical loops)
 - ℰ: motor output, memory commitment
 
 ### Five Requirements Met

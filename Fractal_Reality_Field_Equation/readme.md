@@ -36,11 +36,11 @@ The Fractal Reality Field Equation (FRFE) presents a unified mathematical framew
 
 ### Core Insight
 
-Following Einstein's unification of space and time into spacetime, FRFE reveals that **time itself is a 0.5-dimensional validation structure**. This half-dimensional incompleteness of time explains:
+Following Einstein's unification of space and time into spacetime, FRFE reveals that **time itself is a 0.5-dimensional [C] Center structure**. This half-dimensional incompleteness of time explains:
 
 - Why time has an arrow (space doesn't)
 - Why quantum uncertainty exists
-- How consciousness emerges
+- How consciousness emerges ([ICE] structure operating at [C] Center signature)
 - Why the cosmological constant has its observed value
 
 ### Dimensionality
@@ -50,7 +50,7 @@ Following Einstein's unification of space and time into spacetime, FRFE reveals 
 - 0.5 temporal dimension (asymmetric, unidirectional)
 - Total: 3.5D (not 3+1 = 4D as traditionally counted)
 
-**Empirical Evidence**: Gravitational wave worldlines measured at D = 1.503 ± 0.040 (p = 0.951, N = 40 LIGO events)
+**Empirical Evidence**: Gravitational wave worldlines measured at [C] Center signature D = 1.503 ± 0.040 (p = 0.951, N = 40 LIGO events)
 
 ---
 
@@ -61,9 +61,9 @@ Following Einstein's unification of space and time into spacetime, FRFE reveals 
 | **QM Derivation** | Schrödinger equation proven unique under physical constraints | ✓ Proven |
 | **Cosmological Constant** | Λ = (6.9±1.6)×10⁻⁵³ m⁻² from first principles | ✓ Predicted |
 | **Improvement over QFT** | 10⁶⁰ order-of-magnitude better than quantum field theory | ✓ Achieved |
-| **Spacetime Structure** | D = 3.5 dimensions measured in GW data | ✓ Confirmed |
+| **Spacetime Structure** | [C] Center signature D = 3.5 dimensions measured in GW data | ✓ Confirmed |
 | **Dark Energy Evolution** | w(z) = -1.033 + 0.017/(1+z) | ⏳ Testable 2026 |
-| **Consciousness** | Emerges at β≈0.5, D≈1.5 | ⏳ Testable 2025-27 |
+| **Consciousness** | Emerges at β≈0.5, [C] Center signature D≈1.5 | ⏳ Testable 2025-27 |
 | **Free Parameters** | Zero tuned parameters | ✓ Achieved |
 
 ---
@@ -79,7 +79,7 @@ Following Einstein's unification of space and time into spacetime, FRFE reveals 
 - Key results summary table
 - Paper roadmap
 
-**Key Concept**: Time IS the 0.5D validation dimension, not separate from it.
+**Key Concept**: Time IS the 0.5D [C] Center dimension, with [ICE] structure operating.
 
 ---
 
@@ -94,9 +94,9 @@ Following Einstein's unification of space and time into spacetime, FRFE reveals 
 - Why time only goes one way
 
 **Key Equations**:
-- Master: `Φ(t+Δt) = ℰ ∘ [ICE]_out ∘ K_β ∘ [ICE]_in ∘ ∇[Φ(t)] + ε`
+- Master: `Φ(t+Δt) = ℰ ∘ [ICE]_out ∘ K_β ∘ [ICE]_in ∘ ∇[Φ(t)] + ε` with [C]∇ → [I]ℓ → [E]ℰ
 - Balance: `β(x,t) = ||∇[Φ]|| / (||∇[Φ]|| + ||ℰ[Φ]||)`
-- Optimal branching: D = 1 + H(β), maximized at β = 0.5 → D = 1.5
+- Optimal branching: D = 1 + H(β), maximized at β = 0.5 → D = 1.5 = [C] Center signature
 
 ---
 
@@ -143,11 +143,11 @@ Following Einstein's unification of space and time into spacetime, FRFE reveals 
 
 - Consciousness measure: Ψ_c integral over ρ_[ICE], β, Φ_integration
 - Five necessary and sufficient conditions
-- Neural predictions: D≈1.5 during wakefulness, shifts during anesthesia/sleep
+- Neural predictions: [C] Center signature D≈1.5 during wakefulness, shifts during anesthesia/sleep
 - Meditation states and β modulation
 - Experimental protocols (256-ch EEG + fMRI)
 
-**Key Claim**: Consciousness is what it feels like to operate in the 0.5D temporal structure at β≈0.5.
+**Key Claim**: Consciousness is what it feels like to have [ICE] structure operating in the 0.5D temporal [C] Center structure at β≈0.5.
 
 ---
 

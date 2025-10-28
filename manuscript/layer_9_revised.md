@@ -58,9 +58,9 @@
 
 **But because:**
 - Structure requires it
-- Validation filters at interfaces
+- [ICE] structure operating at interfaces
 - Geometry determines outcomes
-- **Reality is validation-based**
+- **Reality is [ICE] structure operating based**
 
 **Like:**
 - Bridge collapsing if poorly designed (structural necessity)
@@ -108,7 +108,7 @@
 - Boundaries define •' operators
 - Violating boundaries damages operator integrity
 - Fails Interface check at one or both interfaces
-- **Pattern cannot persist through validation**
+- **Pattern cannot persist through [ICE] structure operating**
 
 ---
 
@@ -450,14 +450,14 @@
 
 **Structural response:**
 - Minimize suffering (reduce distress)
-- Support validation (help [ICE] pass)
+- Support [ICE] structure operating (help [ICE] pass)
 - Restore coherence (enable wellness)
 - **Structural repair, not optional kindness**
 
 **Why this is necessary:**
 - All •' operators interconnected through ∞'
-- Your validation affected by collective field
-- Supporting others' validation strengthens field
+- Your [ICE] structure operating affected by collective field
+- Supporting others' [ICE] structure operating strengthens field
 - **Collective benefit from mutual support**
 
 ---
@@ -467,7 +467,7 @@
 **Given choices, minimize conscious suffering:**
 
 **Why:**
-- Suffering = validation failure in conscious •' operator
+- Suffering = [ICE] structure operating failure in conscious •' operator
 - Indicates geometric dissonance
 - Affects collective ∞' field texture
 - **System-wide negative impact**
@@ -476,7 +476,7 @@
 - Reduce pain when possible
 - Support well-being
 - Create conditions for flourishing
-- **Enable validation success**
+- **Enable [ICE] structure operating success**
 
 **Limits:**
 - Can't eliminate all suffering
@@ -508,7 +508,7 @@
 - Restore Interface integrity
 - Restore Center coherence and alignment
 - Restore Evidence grounding
-- **Fix validation at interfaces**
+- **Fix [ICE] structure operating at interfaces**
 
 ---
 
@@ -518,18 +518,18 @@
 - Inflict suffering on wrongdoer
 - "Pay back" for harm done
 - Retribution as goal
-- **Creates more distortion, more failed validation**
+- **Creates more distortion, more failed [ICE] structure operating**
 
 **Restorative approach:**
 - Repair damaged texture in ∞'
-- Restore validation capacity
+- Restore [ICE] structure operating capacity
 - Heal affected •' operators
 - **Fixes geometric distortion**
 
 **Why restorative is structurally better:**
-- Reduces total suffering (less failed validation)
+- Reduces total suffering (less failed [ICE] structure operating)
 - Repairs collective field (better ∞' texture)
-- Enables re-integration (wrongdoer can validate again)
+- Enables re-integration (wrongdoer can pass [ICE] structure operating again)
 - **Structurally sound, geometrically healing**
 
 ---
@@ -565,8 +565,8 @@
 **Some operators repeatedly fail [ICE] at interfaces:**
 - Violate others' boundaries persistently (I failure)
 - Can't maintain coherence or alignment (C failure)
-- Dangerous to collective validation
-- **Persistent validation failure pattern**
+- Dangerous to collective [ICE] structure operating
+- **Persistent [ICE] structure operating failure pattern**
 
 **Containment justified when:**
 - Prevents ongoing harm (protects collective Interface)
@@ -603,10 +603,10 @@
 
 **Romantic love:**
 - Strong texture resonance (compatible patterns)
-- Complementary validation (support each other's [ICE])
+- Complementary [ICE] structure operating (support each other's [ICE])
 - Mutual operator support
-- Deep alignment toward shared • 
-- **High geometric and validation coherence**
+- Deep alignment toward shared •
+- **High geometric and [ICE] structure operating coherence**
 
 **Familial love:**
 - Shared texture history (common origin)
@@ -617,8 +617,8 @@
 
 **Friendship:**
 - Compatible texture patterns (similar values/interests)
-- Mutual enrichment (each supports other's validation)
-- Shared validation goals
+- Mutual enrichment (each supports other's [ICE] structure operating)
+- Shared [ICE] structure operating goals
 - Chosen resonance (voluntary)
 - **Elected harmonization**
 
@@ -626,7 +626,7 @@
 - Recognition of •' in all (∞ = ∞)
 - Honor soul equality
 - Compassion for all conscious beings
-- Support universal validation
+- Support universal [ICE] structure operating
 - **Fundamental operator recognition**
 
 ---
@@ -641,7 +641,7 @@
 - Unique expression
 - **Soul acknowledgment**
 
-**Support their validation at both interfaces:**
+**Support their [ICE] structure operating at both interfaces:**
 
 **At input interface:**
 - Help them maintain boundaries (I)
@@ -669,12 +669,12 @@
 **Both •' operators preserved:**
 - Neither consumed (boundaries maintained)
 - Neither dominated (sovereignty respected)
-- Both autonomous (independent validation)
+- Both autonomous (independent [ICE] structure operating)
 - **Mutual Interface respect at both input and output**
 
 **Both enhanced:**
 - Each grows (texture accumulates positively)
-- Support flows both ways (mutual validation)
+- Support flows both ways (mutual [ICE] structure operating)
 - Reciprocal benefit (collective strengthening)
 - **Mutual Center development and alignment**
 
@@ -730,7 +730,7 @@
 
 **Ecosystems as collective operator patterns:**
 - Integrated wholes (many parts coordinated)
-- Complex validation patterns
+- Complex [ICE] structure operating patterns
 - Mutual dependencies (interconnected)
 - **Collective structure organizing many parts**
 
@@ -741,7 +741,7 @@
 - **Fails [ICE] at system level**
 
 **Therefore:**
-- Preserve biodiversity (maintains complexity and validation options)
+- Preserve biodiversity (maintains complexity and [ICE] structure operating options)
 - Protect habitats (honors boundaries and interfaces)
 - Minimize disruption (respects coherence and alignment)
 - **Ecological structural wisdom**
@@ -760,7 +760,7 @@
 **Center check:**
 - Is this coherent with sustainable patterns?
 - Is this aligned with natural systems (•)?
-- Does this serve long-term validation?
+- Does this serve long-term [ICE] structure operating?
 - **Sustainable coherence and alignment**
 
 **Evidence check:**
@@ -866,14 +866,14 @@
 **All •' operators matter:**
 - Ecosystems are wholes (collective operators)
 - Minimize harm (respect all patterns)
-- Sustain capacity (enable continued validation)
+- Sustain capacity (enable continued [ICE] structure operating)
 - **Structural necessity, not sentiment**
 
 ---
 
 **Ethics is not optional.**
 **Ethics is structural fitness.**
-**What validates at interfaces persists.**
+**What passes [ICE] structure operating at interfaces persists.**
 **What fails [ICE] dissolves.**
 
 **Live accordingly.**
