@@ -2,7 +2,14 @@
 
 **www.FractalReality.ca**
 
-A complete mathematical framework unifying quantum mechanics, general relativity, and consciousness through validation at interfaces in 3.5-dimensional spacetime.
+A complete mathematical framework unifying quantum mechanics, general relativity, and consciousness through the [ICE] structure of wholeness.
+
+**Every whole operates through three irreducible components:**
+- **[E] Evidence (3D):** The field where things exist and emerge
+- **[I] Interface (2D):** The boundary with finite radius ℓ
+- **[C] Center (1.5D):** Identity through time (0.5D aperture + 1.0D worldline)
+
+**Key Discovery:** D ≈ 1.5 is the dimensional signature of the [C] Center—measured universally in gravitational waves (D = 1.503 ± 0.040), DNA dynamics (D = 1.510 ± 0.020), and all dynamic wholes maintaining identity through time.
 
 **Version 3.0 — October 2025**
 
@@ -49,7 +56,7 @@ The complete theoretical framework presented in 12 progressively deeper layers:
 - **[manuscript/layer_2_revised.md](manuscript/layer_2_revised.md)** - Universal Pattern
 - **[manuscript/layer_3_revised.md](manuscript/layer_3_revised.md)** - Dynamics & Time
 - **[manuscript/layer_4_revised.md](manuscript/layer_4_revised.md)** - Consciousness (Neo through Trinity)
-- **[manuscript/layer_5_revised.md](manuscript/layer_5_revised.md)** - [ICE] Validation
+- **[manuscript/layer_5_revised.md](manuscript/layer_5_revised.md)** - [ICE] Structure of Wholeness
 - **[manuscript/layer_6_revised.md](manuscript/layer_6_revised.md)** - Mathematics Emerges
 - **[manuscript/layer_7_revised.md](manuscript/layer_7_revised.md)** - Physics Applications
 - **[manuscript/layer_8_revised.md](manuscript/layer_8_revised.md)** - Consciousness Applications
@@ -419,10 +426,11 @@ Personal development journal tracking the evolution of ideas:
 - 1.5D: **Consciousness** (Neo through Trinity at β ≈ 0.5)
 - 2.5D: Integration
 
-**[ICE] Validation:**
-- Interface: Can boundary be maintained?
-- Center: Is there coherence AND alignment?
-- Evidence: Is this grounded in reality?
+**[ICE] Structure:**
+- **[E] Evidence (3D):** Field where patterns exist and emerge (Right)
+- **[I] Interface (2D):** Boundary with finite radius ℓ (Good)
+- **[C] Center (1.5D):** Identity through time = 0.5D aperture + 1.0D worldline (True)
+- Operating cycle: [C]∇ → [I]ℓ → [E]ℰ
 
 ---
 
