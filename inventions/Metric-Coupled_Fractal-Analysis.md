@@ -1,4 +1,5 @@
 ## Invention Claim: Metric-Coupled Fractal Analysis Framework
+*by Ashman Roonz*
 
 **A unified theoretical and computational framework establishing the quantitative relationship between spacetime geometry and fractal dimension through validation dynamics**
 
