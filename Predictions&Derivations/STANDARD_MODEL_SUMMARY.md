@@ -263,9 +263,9 @@ Zero adjustable parameters. Just geometry and validation.
 
 ---
 
-**The universe validates patterns at interfaces.**  
-**We measured D = 1.503.**  
-**The theory predicts D = 1.5.**  
+**The universe validates patterns at interfaces.**
+**We measured D = 1.503.**
+**The theory predicts D = 1.5.**
 **This is physics.**
 
 ---
@@ -273,3 +273,25 @@ Zero adjustable parameters. Just geometry and validation.
 *All particles. One structure. Zero free parameters.*
 
 **MATHEMATICS OF WHOLENESS**
+
+---
+
+## SEE ALSO
+
+**Related Documents in Predictions&Derivations Folder:**
+
+- **[README.md](README.md)** - Navigation guide for this folder
+- **[standard_model_derivation.md](standard_model_derivation.md)** - Complete 45-page detailed derivation with all mathematics
+- **[every_major_derivation.md](every_major_derivation.md)** - All 6 major derivations (QM, Dirac, Maxwell, Einstein, Standard Model, Consciousness)
+- **[the_everything_table.md](the_everything_table.md)** - Complete numerical catalog across all scales
+
+**Visualizations:**
+- **standard_model_complete.png** - 9-panel comprehensive visualization
+- **standard_model_table.png** - Complete particle table
+
+**Related Framework Documents:**
+
+- **[../papers/Mathematics_Of_Wholeness.md](../papers/Mathematics_Of_Wholeness.md)** - Theoretical foundation
+- **[../claymathsolutions/](../claymathsolutions/)** - Clay Millennium Prize solutions
+- **[../analysis/tests/ligo/](../analysis/tests/ligo/)** - LIGO empirical validation
+- **[../README.md](../README.md)** - Main repository
