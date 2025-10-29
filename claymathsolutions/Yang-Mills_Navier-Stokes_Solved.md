@@ -1,9 +1,22 @@
 # FORMAL PROOFS: TWO MILLENNIUM PROBLEMS SOLVED
 
 ## Mathematics of Wholeness Framework
-**Author:** Ashman Roonz  
-**Date:** October 29, 2025  
+**Author:** Ashman Roonz
+**Date:** October 29, 2025
 **Status:** Formal proofs complete, ready for peer review
+
+---
+
+## Navigation
+
+**You are reading:** Main Paper - Complete overview of both proofs
+
+**For more details:**
+- [README](./README.md) - Start here for folder overview and navigation guide
+- [Executive Summary](./millennium_problems_executive_summary.md) - Broader context and motivation
+- [Yang-Mills Technical Proof](./ice_functional_analysis.md) - Rigorous functional analysis
+- [Navier-Stokes Technical Proof](./navier_stokes_functional_analysis.md) - Rigorous PDE analysis
+- [Submission Package Guide](./submission_package_overview.md) - How documents work together
 
 ---
 

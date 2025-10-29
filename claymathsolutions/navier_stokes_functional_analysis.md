@@ -1,9 +1,24 @@
 # Navier-Stokes Global Smoothness: Rigorous Functional-Analytic Formulation
 ## High-Dimensional Projection Framework for Clay Millennium Prize
 
-**Author:** Ashman Roonz  
-**Date:** October 29, 2025  
+**Author:** Ashman Roonz
+**Date:** October 29, 2025
 **Purpose:** Clay Millennium Prize submission requirements
+
+---
+
+## Navigation
+
+**You are reading:** Navier-Stokes Technical Proof - Rigorous PDE and functional analysis
+
+**Related documents:**
+- [README](./README.md) - Start here for folder overview and navigation guide
+- [Main Paper](./Yang-Mills_Navier-Stokes_Solved.md) - Overview with physical intuition (lines 166-324)
+- [Executive Summary](./millennium_problems_executive_summary.md) - Context and motivation (lines 80-137)
+- [Submission Package Guide](./submission_package_overview.md) - How this fits in submission
+- [Yang-Mills Technical Proof](./ice_functional_analysis.md) - Companion problem
+
+**For intuition:** Read Navier-Stokes section in [Main Paper](./Yang-Mills_Navier-Stokes_Solved.md) first
 
 ---
 
