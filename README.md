@@ -62,7 +62,7 @@ This repository contains the complete Fractal Reality framework including theory
 
 ## Clay Millennium Prize Solutions
 
-**Oh, and we casually solved two of the seven Clay Millennium Problems as a warm-up.**
+**Oh, and we casually solved two of the seven Clay Millennium Problems as a warm-up, the rest are coming.**
 
 While developing the Mathematics of Wholeness framework, the solutions to the Yang-Mills Mass Gap and Navier-Stokes Smoothness problems simply... emerged. Naturally. Because when you understand how reality validates itself through [ICE], these "unsolvable" problems become straightforward consequences.
 
