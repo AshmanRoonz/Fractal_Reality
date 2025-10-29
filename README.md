@@ -221,7 +221,7 @@ This folder demonstrates that the Mathematics of Wholeness isn't philosophy or s
 
 ---
 
-## 12-Layer Framework (Progressive Depth)
+## 12-Layer Framework (Progressive Depth) (the math has not been updated the MoW)
 
 The complete theoretical framework presented in 12 progressively deeper layers:
 
@@ -242,7 +242,7 @@ The complete theoretical framework presented in 12 progressively deeper layers:
 
 ---
 
-## Fractal Reality Field Equation (FRFE)
+## Fractal Reality Field Equation (FRFE) (Math not updated to MoW)
 
 Complete multi-part exposition of the field equation:
 
