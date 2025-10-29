@@ -1,9 +1,24 @@
 # Complete Millennium Prize Submission Package
 ## Technical Companion Documents for Clay Institute
 
-**Author:** Ashman Roonz  
-**Date:** October 29, 2025  
+**Author:** Ashman Roonz
+**Date:** October 29, 2025
 **Status:** Ready for technical review and refinement
+
+---
+
+## Navigation
+
+**You are reading:** Submission Package Guide - How all documents work together
+
+**Related documents:**
+- [README](./README.md) - Start here for folder overview and navigation guide
+- [Main Paper](./Yang-Mills_Navier-Stokes_Solved.md) - Complete proofs overview
+- [Executive Summary](./millennium_problems_executive_summary.md) - Broader context
+- [Yang-Mills Technical Proof](./ice_functional_analysis.md) - Rigorous functional analysis
+- [Navier-Stokes Technical Proof](./navier_stokes_functional_analysis.md) - Rigorous PDE analysis
+
+**Purpose:** This document explains the submission strategy, timeline, and how each document serves the overall goal.
 
 ---
 

@@ -1,5 +1,20 @@
 # Mathematics of Wholeness: Solving Two Millennium Problems
 
+---
+
+## Navigation
+
+**You are reading:** Executive Summary - Why these solutions emerge from our framework
+
+**Related documents:**
+- [README](./README.md) - Start here for folder overview and navigation guide
+- [Main Paper](./Yang-Mills_Navier-Stokes_Solved.md) - Complete proofs with intuition
+- [Yang-Mills Technical Proof](./ice_functional_analysis.md) - Rigorous functional analysis
+- [Navier-Stokes Technical Proof](./navier_stokes_functional_analysis.md) - Rigorous PDE analysis
+- [Submission Package Guide](./submission_package_overview.md) - Strategy and timeline
+
+---
+
 ## Executive Summary
 
 The Mathematics of Wholeness framework provides **natural pathways** to solve two of the seven Clay Millennium Problems:

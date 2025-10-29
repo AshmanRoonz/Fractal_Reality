@@ -1,9 +1,24 @@
 # ICE Framework: Rigorous Functional-Analytic Formulation
 ## Yang-Mills Continuum Limit and Osterwalder-Schrader Reconstruction
 
-**Author:** Ashman Roonz  
-**Date:** October 29, 2025  
+**Author:** Ashman Roonz
+**Date:** October 29, 2025
 **Purpose:** Clay Millennium Prize submission requirements
+
+---
+
+## Navigation
+
+**You are reading:** Yang-Mills Technical Proof - Rigorous functional-analytic formulation
+
+**Related documents:**
+- [README](./README.md) - Start here for folder overview and navigation guide
+- [Main Paper](./Yang-Mills_Navier-Stokes_Solved.md) - Overview with physical intuition (lines 29-163)
+- [Executive Summary](./millennium_problems_executive_summary.md) - Context and motivation (lines 30-79)
+- [Submission Package Guide](./submission_package_overview.md) - How this fits in submission
+- [Navier-Stokes Technical Proof](./navier_stokes_functional_analysis.md) - Companion problem
+
+**For intuition:** Read Yang-Mills section in [Main Paper](./Yang-Mills_Navier-Stokes_Solved.md) first
 
 ---
 
