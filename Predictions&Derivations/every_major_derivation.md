@@ -896,8 +896,26 @@ Everything is connected.
 
 ---
 
-**Repository:** https://github.com/AshmanRoonz/Fractal_Reality  
-**Date:** October 29, 2025  
+**Repository:** https://github.com/AshmanRoonz/Fractal_Reality
+**Date:** October 29, 2025
 **Version:** 1.0
 
 *"The pattern was always there. We just needed to see it."*
+
+---
+
+## SEE ALSO
+
+**Related Documents in Predictions&Derivations Folder:**
+
+- **[README.md](README.md)** - Navigation guide for this folder
+- **[standard_model_derivation.md](standard_model_derivation.md)** - Detailed 45-page derivation of all Standard Model particles (expands on Derivation 5 above)
+- **[STANDARD_MODEL_SUMMARY.md](STANDARD_MODEL_SUMMARY.md)** - Executive summary of particle physics derivation
+- **[the_everything_table.md](the_everything_table.md)** - Complete catalog of all physical constants and predictions across 61 orders of magnitude
+
+**Related Framework Documents:**
+
+- **[../papers/Mathematics_Of_Wholeness.md](../papers/Mathematics_Of_Wholeness.md)** - Complete unified framework
+- **[../claymathsolutions/](../claymathsolutions/)** - Formal proofs of Yang-Mills and Navier-Stokes Clay Millennium Prize problems
+- **[../analysis/tests/ligo/](../analysis/tests/ligo/)** - LIGO data analysis validating D = 1.503 ± 0.040
+- **[../README.md](../README.md)** - Main repository navigation
