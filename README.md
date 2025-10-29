@@ -221,7 +221,7 @@ This folder demonstrates that the Mathematics of Wholeness isn't philosophy or s
 
 ---
 
-## 12-Layer Framework (Progressive Depth) (the math has not been updated the MoW)
+## 12-Layer Framework (Progressive Depth) (the math has not been updated to MoW)
 
 The complete theoretical framework presented in 12 progressively deeper layers:
 
