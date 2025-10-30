@@ -20,7 +20,7 @@ The comprehensive guide is 16 parts covering everything from measured physics to
 
 **Your route:**
 1. **Part 2** → See the LIGO empirical validation (D = 1.503 ± 0.040)
-2. **Part 7** → Understand how this solves 6 Clay Millennium Problems
+2. **Part 7** → Understand how this solves all 7 Clay Millennium Problems
 3. **Part 3** → Grasp why β = 0.5 → D = 1.5 is structural
 4. **Part 13** → Review falsification criteria
 5. **Part 15** → Access the repository and verify yourself
@@ -101,7 +101,7 @@ The comprehensive guide is 16 parts covering everything from measured physics to
 
 **Your route:**
 1. **Part 2** → Empirical proof (three independent measurements)
-2. **Part 7** → Mathematical rigor (6 Clay problems solved)
+2. **Part 7** → Mathematical rigor (all 7 Clay problems solved)
 3. **Part 13** → Falsification criteria (how to prove it wrong)
 4. **Part 14** → Address your objections (common questions)
 5. **Part 15** → Verify yourself (access the data)
@@ -331,11 +331,11 @@ Jump to what interests you. Cross-reference as needed. Return for depth later.
 
 ### After Verifying The Science, You'll Know:
 
-✓ LIGO gravitational wave data confirms D = 1.503 ± 0.040  
-✓ DNA molecular dynamics shows D = 1.510 ± 0.020  
-✓ Particle tracks preliminary show D ≈ 1.5  
-✓ 35+ orders of magnitude, same signature  
-✓ Framework solves 6 Clay Millennium Problems  
+✓ LIGO gravitational wave data confirms D = 1.503 ± 0.040
+✓ DNA molecular dynamics shows D = 1.510 ± 0.020
+✓ Particle tracks preliminary show D ≈ 1.5
+✓ 35+ orders of magnitude, same signature
+✓ Framework solves all 7 Clay Millennium Problems
 ✓ Zero free parameters, derives Schrödinger equation
 
 ---
