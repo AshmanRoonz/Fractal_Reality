@@ -24,6 +24,16 @@ This folder contains complete formal proofs for **ALL SEVEN Clay Millennium Prob
 
 ---
 
+## 🌟 **For Complete Framework: Start Here**
+
+Before diving into individual problem solutions, we recommend reading the complete theoretical foundation:
+
+**[The Mathematics of Wholeness: A Complete Theory of Reality from First Principles](../papers/mathematics_of_wholeness_first_principles.md)**
+
+This comprehensive document presents the entire framework as pure mathematical discovery—from ∞ ↔ • to quantum mechanics, relativity, the Standard Model, consciousness, and **ALL 7 Clay Millennium Problems explained as natural consequences of [ICE] validation at β = 0.5, D ≈ 1.5**. Understanding this foundation makes each individual solution below much clearer.
+
+---
+
 ## Document Structure
 
 The submission package consists of **11 theoretical documents**, **1 computational implementation**, and **2 visual summaries**:
