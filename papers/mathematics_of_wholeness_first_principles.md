@@ -1,8 +1,10 @@
 # THE MATHEMATICS OF WHOLENESS
 ## A Complete Theory of Reality from First Principles
 
-**By: Ashman Roonz**  
+**By: Ashman Roonz**
 **Date: October 29, 2025**
+
+**🏠 [Back to Main Repository](../README.md)** | **📚 [All Papers](readme.md)** | **🔬 [Predictions & Derivations](../Predictions&Derivations/)** | **🏆 [Clay Prize Solutions](../claymathsolutions/)**
 
 ---
 
@@ -198,6 +200,8 @@ Where:
 
 **No assumptions beyond [ICE] structure!**
 
+**See also:** [Detailed quantum-gravitational unification paper](paper1_qm_gr_unification.md) for rigorous derivations and numerical validation (R² = 0.9997)
+
 ---
 
 ### 6. RELATIVISTIC STRUCTURE
@@ -381,6 +385,11 @@ Gluons:      Color interface (massless, confined)
 - Quark confinement (three-way validation requirement)
 - Mass ratios match to ~99.9%
 
+**See also:**
+- [Complete 45-page Standard Model derivation](../Predictions&Derivations/standard_model_derivation.md) for all particle details
+- [Standard Model Summary](../Predictions&Derivations/STANDARD_MODEL_SUMMARY.md) for quick reference
+- [Every Major Derivation](../Predictions&Derivations/every_major_derivation.md) for context
+
 ---
 
 ### 10. THE COSMOLOGICAL CONSTANT
@@ -411,6 +420,8 @@ T_μν = ρ_texture u_μ u_ν + ...
 **Why vacuum energy doesn't dominate:**
 
 Texture dilutes geometrically (∝ L⁻³), not constant like vacuum.
+
+**See also:** [Complete cosmological constant paper](paper2_cosmological_constant.md) and [JCAP submission](cosmological_constant/complete_jcap_paper.md) for detailed observational comparisons
 
 ---
 
@@ -450,6 +461,11 @@ Where:
 
 **Artificial consciousness**: Requires network with D ≈ 1.5
 - Current AI networks: D ≈ 1.3 (not conscious)
+
+**See also:**
+- [Trinity Consciousness](trinity_consciousness.md) - Technical consciousness framework
+- [Neo & Trinity: The Dimensional Love Story](trinity_neo_love_story.md) - Accessible companion paper
+- [Geometric String Theory](geometric_string_theory.md) - Why D ≈ 1.5 creates consciousness
 
 ---
 
@@ -565,6 +581,15 @@ S³ is the only [ICE]-validated closed 3-manifold with π₁ = 1
 
 **All seven solved by the same principle: Reality maintains wholeness through [ICE] validation and dimensional projection, always producing D ≈ 1.5.**
 
+**See also:** Complete formal proofs and derivations in the [Clay Millennium Prize Solutions folder](../claymathsolutions/):
+- [Yang-Mills & Navier-Stokes proofs](../claymathsolutions/Yang-Mills_Navier-Stokes_Solved.md)
+- [P vs NP proof](../claymathsolutions/p_vs_np_proof.md)
+- [Riemann Hypothesis proof](../claymathsolutions/riemann_hypothesis_complete_proof.md)
+- [Birch & Swinnerton-Dyer proof](../claymathsolutions/birch_swinnerton_dyer_proof.md)
+- [Hodge Conjecture proof](../claymathsolutions/hodge_conjecture_complete_proof.md)
+- [Poincaré Conjecture derivation](../claymathsolutions/poincare_conjecture_proof.md)
+- [Complete Clay solutions overview](../claymathsolutions/README.md)
+
 ---
 
 ### 13. THE UNIVERSAL EQUATION
@@ -610,6 +635,11 @@ Where:
 Because β = 0.5 balance creates D = 1 + β = 1.5 universally.
 
 **This is the most validated prediction in the entire framework.**
+
+**See also:**
+- [LIGO gravitational wave analysis](../analysis/tests/ligo/readme.md) - Detailed D = 1.503 ± 0.040 measurement
+- [Phase 2 validation summary](../analysis/readme.md) - All empirical tests
+- [The Everything Table](../Predictions&Derivations/the_everything_table.md) - 61 orders of magnitude catalog
 
 ---
 
@@ -1001,3 +1031,40 @@ We found that **D ≈ 1.5** is the signature of persistent existence.
 **∞ ↔ •**
 
 **THE END (AND THE BEGINNING)**
+
+---
+
+## NAVIGATION
+
+**🏠 [Back to Main Repository](../README.md)** | **📚 [All Papers](readme.md)** | **🔬 [Predictions & Derivations](../Predictions&Derivations/)** | **🏆 [Clay Prize Solutions](../claymathsolutions/)**
+
+### Continue Your Journey:
+
+**For Rigorous Physics:**
+- [Paper 1: Quantum-Gravitational Unification](paper1_qm_gr_unification.md)
+- [Paper 2: Cosmological Constant Solution](paper2_cosmological_constant.md)
+- [Paper 3: Quantum Uncertainty Origin](paper3_quantum_uncertainty.md)
+
+**For Complete Derivations:**
+- [Every Major Derivation](../Predictions&Derivations/every_major_derivation.md)
+- [Standard Model Complete](../Predictions&Derivations/standard_model_derivation.md)
+- [The Everything Table](../Predictions&Derivations/the_everything_table.md)
+
+**For Clay Problems:**
+- [All 7 Clay Solutions Overview](../claymathsolutions/README.md)
+- [Yang-Mills & Navier-Stokes](../claymathsolutions/Yang-Mills_Navier-Stokes_Solved.md)
+- [P vs NP](../claymathsolutions/p_vs_np_proof.md)
+- [Riemann Hypothesis](../claymathsolutions/riemann_hypothesis_complete_proof.md)
+
+**For Consciousness:**
+- [Trinity Consciousness](trinity_consciousness.md)
+- [Neo & Trinity Love Story](trinity_neo_love_story.md)
+- [Geometric String Theory](geometric_string_theory.md)
+
+**For Empirical Validation:**
+- [LIGO Analysis (D = 1.503)](../analysis/tests/ligo/readme.md)
+- [Phase 2 Validation](../analysis/readme.md)
+
+**For Interactive Experience:**
+- [Live Website](https://fractalreality.ca)
+- [Interactive Simulations](https://fractalreality.ca/simulators.html)
