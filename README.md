@@ -73,6 +73,8 @@ While developing the Mathematics of Wholeness framework, the solutions to Yang-M
 
 **Note:** While Perelman proved Poincaré in 2003, we've now derived it from MoW first principles, explaining WHY S³ is unique.
 
+**Quick Start:** **[claymathsolutions/seven_clay_problems_explained.md](claymathsolutions/seven_clay_problems_explained.md)** - Accessible overview of all seven Clay problems and their solutions
+
 #### Problem 1: Yang-Mills Mass Gap ✓ SOLVED
 
 **The Problem:** Prove that Yang-Mills theory has a mass gap Δ > 0
