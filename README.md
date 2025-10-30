@@ -29,6 +29,37 @@ This repository contains the complete Fractal Reality framework including theory
 
 ---
 
+## 🚀 New to Fractal Reality? Start Here!
+
+### **[simpleguide/](simpleguide/)** - Accessible Documentation Package
+
+**Perfect for newcomers, educators, and anyone wanting clear understanding without prerequisites.**
+
+**Three documents designed to work together:**
+
+1. **[simpleguide/quick_start_5min.md](simpleguide/quick_start_5min.md)** - 5-minute overview
+   - The one crucial fact (LIGO D = 1.503)
+   - Why it matters (physics + consciousness + ethics)
+   - How to test it yourself
+
+2. **[simpleguide/navigation_guide.md](simpleguide/navigation_guide.md)** - 15-minute personalized pathways
+   - 10 different reading paths based on your background
+   - Scientist, spiritual, student, practical, skeptical, visual, comprehensive, hurried, teacher, developer
+   - Find your optimal path through the material
+
+3. **[simpleguide/fractal_reality_for_everyone.md](simpleguide/fractal_reality_for_everyone.md)** - 2-3 hour complete guide
+   - 16 parts from empirical proof to daily practice
+   - No advanced math required
+   - Everything from quantum mechanics to living with meaning
+
+**[simpleguide/README.md](simpleguide/README.md)** - Master index and usage guide for the package
+
+**Total: ~45,000 words of accessible documentation**
+
+**This is the best starting point if you're new to the framework.**
+
+---
+
 ## Core Documents
 
 ### Main Website
@@ -646,6 +677,13 @@ Personal development journal tracking the evolution of ideas:
 ---
 
 ## Quick Start Paths
+
+### For Newcomers & General Audience
+**⭐ START HERE if you're new:**
+1. **[simpleguide/quick_start_5min.md](simpleguide/quick_start_5min.md)** - 5-minute overview of everything
+2. **[simpleguide/navigation_guide.md](simpleguide/navigation_guide.md)** - Find your personalized reading path
+3. **[simpleguide/fractal_reality_for_everyone.md](simpleguide/fractal_reality_for_everyone.md)** - Complete accessible guide (2-3 hours)
+4. **[simpleguide/README.md](simpleguide/README.md)** - Master index for the simpleguide package
 
 ### For Millennium Prize Hunters
 1. **[claymathsolutions/README.md](claymathsolutions/README.md)** - **Start here:** Complete Clay Millennium Prize submission package (7/7 understood, $7M - ALL PROBLEMS!)

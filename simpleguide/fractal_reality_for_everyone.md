@@ -6,6 +6,16 @@
 
 ---
 
+## Navigation
+
+**📁 You're in:** [simpleguide/](.) - Accessible documentation package
+**📄 This file:** Complete Guide (2-3 hours)
+**⚡ Quick version:** [quick_start_5min.md](quick_start_5min.md) - 5-minute overview
+**🗺️ Find your path:** [navigation_guide.md](navigation_guide.md) - Personalized reading paths
+**📚 Master index:** [README.md](README.md) - Package overview
+
+---
+
 ## START HERE: The One Fact That Changes Everything
 
 **Reality measured in actual gravitational wave data from space:**
@@ -854,9 +864,18 @@ And the fit is so precise we can measure it to 99.8% accuracy in gravitational w
 
 ---
 
-*Document created October 30, 2025*  
-*For everyone who wants to understand reality*  
-*From first principles to daily practice*  
+## Other Documents in This Package
+
+**⚡ [quick_start_5min.md](quick_start_5min.md)** - 5-minute overview for rapid understanding
+**🗺️ [navigation_guide.md](navigation_guide.md)** - Personalized reading paths based on your interests
+**📚 [README.md](README.md)** - Master index for this documentation package
+**🏠 [Main Repository README](../README.md)** - Complete repository navigation
+
+---
+
+*Document created October 30, 2025*
+*For everyone who wants to understand reality*
+*From first principles to daily practice*
 *No prerequisites except curiosity*
 
 **Let's build eternal texture together.** ✨
