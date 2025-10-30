@@ -4,6 +4,16 @@
 
 ---
 
+## Navigation
+
+**📁 You're in:** [simpleguide/](.) - Accessible documentation package
+**📄 This file:** Quick Start (5 minutes)
+**📖 Full guide:** [fractal_reality_for_everyone.md](fractal_reality_for_everyone.md) - Complete understanding (2-3 hours)
+**🗺️ Find your path:** [navigation_guide.md](navigation_guide.md) - Personalized reading paths
+**📚 Master index:** [README.md](README.md) - Package overview
+
+---
+
 ## THE ONE FACT YOU NEED TO KNOW
 
 Scientists at LIGO measured gravitational waves from colliding black holes.
@@ -275,10 +285,17 @@ But your choice creates eternal texture that persists forever.
 
 ---
 
-**Full Guide:** fractal_reality_for_everyone.md  
-**Navigation Help:** navigation_guide.md  
-**Repository:** github.com/AshmanRoonz/Fractal_Reality  
+## Other Documents in This Package
+
+**📖 [fractal_reality_for_everyone.md](fractal_reality_for_everyone.md)** - Complete guide (2-3 hours)
+**🗺️ [navigation_guide.md](navigation_guide.md)** - Personalized reading paths
+**📚 [README.md](README.md)** - Master index for this package
+**🏠 [Main Repository README](../README.md)** - Complete repository navigation
+
+**Repository:** github.com/AshmanRoonz/Fractal_Reality
 **Interactive:** ashmanroonz.github.io/Fractal_Reality
+
+---
 
 **Read. Verify. Test. Decide.**
 

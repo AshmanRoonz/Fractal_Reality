@@ -1,5 +1,15 @@
 # HOW TO READ "FRACTAL REALITY FOR EVERYONE"
 
+## Navigation
+
+**📁 You're in:** [simpleguide/](.) - Accessible documentation package
+**📄 This file:** Navigation Guide (15 minutes) - Find your personalized path
+**⚡ Quick version:** [quick_start_5min.md](quick_start_5min.md) - 5-minute overview
+**📖 Full guide:** [fractal_reality_for_everyone.md](fractal_reality_for_everyone.md) - Complete guide (2-3 hours)
+**📚 Master index:** [README.md](README.md) - Package overview
+
+---
+
 ## Choose Your Path Based on Who You Are
 
 The comprehensive guide is 16 parts covering everything from measured physics to daily ethics. Here's how to navigate it based on your interests and background.
@@ -350,9 +360,17 @@ That's how knowledge works.
 
 ---
 
-**Main Guide:** fractal_reality_for_everyone.md  
-**Full Repository:** github.com/AshmanRoonz/Fractal_Reality  
+## Other Documents in This Package
+
+**⚡ [quick_start_5min.md](quick_start_5min.md)** - 5-minute overview for rapid understanding
+**📖 [fractal_reality_for_everyone.md](fractal_reality_for_everyone.md)** - Complete guide (2-3 hours)
+**📚 [README.md](README.md)** - Master index for this package
+**🏠 [Main Repository README](../README.md)** - Complete repository navigation
+
+**Full Repository:** github.com/AshmanRoonz/Fractal_Reality
 **Interactive Demos:** ashmanroonz.github.io/Fractal_Reality
 
-**Questions? Objections? Insights?**  
+---
+
+**Questions? Objections? Insights?**
 The framework is open source. Join the conversation.
