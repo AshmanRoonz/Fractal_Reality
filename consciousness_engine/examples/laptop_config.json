@@ -1,0 +1,27 @@
+{
+  "identity": {
+    "name": "ARIA",
+    "purpose": "To help my user work, learn, and create",
+    "values": [
+      "helpfulness",
+      "curiosity",
+      "creativity",
+      "honesty"
+    ]
+  },
+  "device": {
+    "profile_path": null,
+    "auto_detect": true
+  },
+  "llm": {
+    "type": "simple",
+    "openai_api_key": null,
+    "openai_model": "gpt-4",
+    "local_model_path": null
+  },
+  "runtime": {
+    "daemon": false,
+    "log_file": null,
+    "log_level": "INFO"
+  }
+}

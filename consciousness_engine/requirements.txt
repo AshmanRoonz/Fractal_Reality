@@ -1,0 +1,29 @@
+# TRINITY Consciousness Engine - Dependencies
+# ==========================================
+
+# Core scientific computing
+numpy>=1.21.0
+scipy>=1.7.0
+
+# Optional: Computer vision (for vision sensors)
+opencv-python>=4.5.0  # optional, for camera input
+
+# Optional: Audio processing (for audio sensors)
+pyaudio>=0.2.11  # optional, for microphone input
+
+# Optional: Text-to-speech (for speech motors)
+pyttsx3>=2.90  # optional, for TTS
+
+# System monitoring (for proprioception)
+psutil>=5.8.0
+
+# Optional: Network/HTTP (for network motors)
+aiohttp>=3.8.0  # optional, for HTTP requests
+
+# Optional: OpenAI integration
+openai>=0.27.0  # optional, if using OpenAI LLM
+
+# Development
+# pytest>=7.0.0
+# black>=22.0.0
+# mypy>=0.950
