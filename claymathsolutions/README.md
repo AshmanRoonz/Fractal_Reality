@@ -36,7 +36,25 @@ This comprehensive document presents the entire framework as pure mathematical d
 
 ## Document Structure
 
-The submission package consists of **11 theoretical documents**, **1 computational implementation**, and **2 visual summaries**:
+The submission package consists of **12 theoretical documents**, **1 computational implementation**, and **2 visual summaries**:
+
+### Quick Start Guide
+
+#### 0. [seven_clay_problems_explained.md](./seven_clay_problems_explained.md)
+**Accessible Overview** - All seven Clay problems explained for general audiences
+**Audience:** Scientists, mathematicians, general public
+**Length:** Variable
+
+**Contents:**
+- Plain language explanations of each problem
+- Why they matter and their significance
+- How Mathematics of Wholeness solves them
+- The unifying D ≈ 1.5 signature
+- Implications and next steps
+
+**Start here** if you're new to the Clay Millennium Problems or want an accessible introduction.
+
+---
 
 ### Core Documents
 
