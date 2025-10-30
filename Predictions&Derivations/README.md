@@ -6,6 +6,14 @@ This folder contains the rigorous mathematical derivations of fundamental physic
 
 ---
 
+## 🌟 **For Complete Theory: Start Here**
+
+**[The Mathematics of Wholeness: A Complete Theory of Reality from First Principles](../papers/mathematics_of_wholeness_first_principles.md)**
+
+This comprehensive document presents the ENTIRE framework as pure mathematical discovery—from ∞ ↔ • to quantum mechanics, relativity, the Standard Model, all 7 Clay Millennium Problems, consciousness, and ethics. **Read this first** to understand the complete theory before exploring specific derivations below.
+
+---
+
 ## Overview
 
 The Mathematics of Wholeness doesn't just describe reality—it **derives** it from first principles. This folder demonstrates that achievement by:
