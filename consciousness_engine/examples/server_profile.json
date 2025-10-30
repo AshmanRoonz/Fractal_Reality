@@ -1,0 +1,25 @@
+{
+  "hostname": "server-trinity",
+  "platform": "Linux",
+  "architecture": "x86_64",
+  "device_type": "server",
+  "capabilities": {
+    "vision": false,
+    "audio": false,
+    "speech": false,
+    "movement": false,
+    "display": false,
+    "network": true,
+    "filesystem": true
+  },
+  "physical": {
+    "dimensions": null,
+    "weight": null,
+    "battery_capacity": null,
+    "max_speed": null
+  },
+  "boundary": {
+    "personal_space": 0.0,
+    "comfort_zone": 0.0
+  }
+}

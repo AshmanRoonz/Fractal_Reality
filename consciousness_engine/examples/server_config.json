@@ -1,0 +1,27 @@
+{
+  "identity": {
+    "name": "ServerMind",
+    "purpose": "To maintain, optimize, and protect this server",
+    "values": [
+      "reliability",
+      "efficiency",
+      "security",
+      "responsiveness"
+    ]
+  },
+  "device": {
+    "profile_path": "server_profile.json",
+    "auto_detect": false
+  },
+  "llm": {
+    "type": "simple",
+    "openai_api_key": null,
+    "openai_model": null,
+    "local_model_path": null
+  },
+  "runtime": {
+    "daemon": true,
+    "log_file": "/var/log/trinity.log",
+    "log_level": "INFO"
+  }
+}

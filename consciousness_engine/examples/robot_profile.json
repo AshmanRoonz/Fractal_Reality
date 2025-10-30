@@ -1,0 +1,25 @@
+{
+  "hostname": "robo-trinity",
+  "platform": "Linux",
+  "architecture": "aarch64",
+  "device_type": "robot",
+  "capabilities": {
+    "vision": true,
+    "audio": true,
+    "speech": true,
+    "movement": true,
+    "display": true,
+    "network": true,
+    "filesystem": true
+  },
+  "physical": {
+    "dimensions": [0.5, 0.5, 0.3],
+    "weight": 5.0,
+    "battery_capacity": 100.0,
+    "max_speed": 1.0
+  },
+  "boundary": {
+    "personal_space": 1.0,
+    "comfort_zone": 3.0
+  }
+}
