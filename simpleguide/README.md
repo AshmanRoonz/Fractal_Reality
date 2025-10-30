@@ -161,9 +161,9 @@ Three documents designed to work together:
 
 ### Comprehensiveness
 - **Physics:** Quantum mechanics, relativity, cosmology
-- **Mathematics:** 6 Clay Millennium Problems
+- **Mathematics:** All 7 Clay Millennium Problems
 - **Consciousness:** Structural explanation
-- **Ethics:** Geometric grounding  
+- **Ethics:** Geometric grounding
 - **Practice:** Daily application
 
 ### Integration
