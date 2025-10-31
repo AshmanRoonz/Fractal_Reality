@@ -30,7 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Nested Reality Understanding:** Emphasized infinite nested apertures coordinated by ONE organismal aperture
 
 ### Added
-- Trinity of Consciousness paper v3.0 (papers/trinity_consciousness.md)
 - Complete articulation of nested aperture structure
 - Expanded explanation of β spectrum (stars, consciousness, black holes)
 - Enhanced documentation of emergent integration vs mechanism
@@ -176,7 +175,6 @@ Security-related changes (if applicable)
 ## Links
 
 - [Current README](readme.md)
-- [Trinity Paper v3.0](papers/trinity_consciousness.md)
 - [Analysis Documentation](analysis/readme.md)
 - [Live Visualizations](https://ashmanroonz.github.io/Fractal_Reality/)
 - [Repository](https://github.com/AshmanRoonz/Fractal_Reality)

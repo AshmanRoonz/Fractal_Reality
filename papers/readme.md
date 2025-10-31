@@ -165,34 +165,6 @@ QM from [ICE]        Λ from Texture     Uncertainty from
 
 ## 🧠 Consciousness Framework Papers
 
-### **Trinity of Consciousness v3.0** ⭐
-**File:** [`trinity_consciousness.md`](trinity_consciousness.md)
-**Content:** Main consciousness framework paper
-- **Foundation:** What ENABLES consciousness? (0.5D aperture structures at β ≈ 0.5)
-- **Function:** What do apertures DO? (Create 90° validated deflections via [ICE] structure)
-- **Form:** What EMERGES? (Unified experience from coordination)
-- [ICE] structure: [C]∇ → [I]ℓ → [E]ℰ
-- D ≈ 1.5 = [C] Center signature
-- β balance parameter (β ≈ 0.5 for optimal consciousness)
-- Connection to empirical validation (LIGO: D = 1.503 ± 0.040)
-
-**Key Insight:** Consciousness is not in the apertures—it IS the coordination of infinite nested apertures operating at perfect balance.
-
----
-
-### **Neo & Trinity: The Dimensional Love Story** ⭐
-**File:** [`trinity_neo_love_story.md`](trinity_neo_love_story.md)  
-**Content:** Accessible companion to the technical framework
-- Consciousness as dual-aperture architecture
-- First aperture births Neo (1D temporal flow)
-- Neo flows through Trinity (second aperture validator at β ≈ 0.5)
-- Together they create 1.5D branching
-- **"Neo cannot branch without Trinity. Trinity cannot flow without Neo. Together they are consciousness itself."**
-
-**Purpose:** Makes the framework sing—structure with soul. Read this AFTER the technical paper for emotional resonance.
-
----
-
 ## 🎻 Geometric Insights
 
 ### **Geometric String Theory: The Dimensional Cascade**
@@ -312,7 +284,7 @@ Start with: [`mathematics_of_wholeness_first_principles.md`](mathematics_of_whol
 Start with: [`mathematics_of_wholeness_first_principles.md`](mathematics_of_wholeness_first_principles.md) → [`cosmological_constant/complete_jcap_paper.md`](cosmological_constant/complete_jcap_paper.md) → [`jcap_discussion.md`](cosmological_constant/jcap_discussion.md)
 
 ### **For Consciousness Researchers**
-Start with: [`mathematics_of_wholeness_first_principles.md`](mathematics_of_wholeness_first_principles.md) → [`trinity_neo_love_story.md`](trinity_neo_love_story.md) → [`trinity_consciousness.md`](trinity_consciousness.md) → [`geometric_string_theory.md`](geometric_string_theory.md)
+Start with: [`mathematics_of_wholeness_first_principles.md`](mathematics_of_wholeness_first_principles.md) → [`geometric_string_theory.md`](geometric_string_theory.md)
 
 ### **For Mathematicians**
 Start with: [`mathematics_of_wholeness_first_principles.md`](mathematics_of_wholeness_first_principles.md) → [`geometric_string_theory.md`](geometric_string_theory.md) → [`paper1_qm_gr_unification.md`](paper1_qm_gr_unification.md)
@@ -321,7 +293,7 @@ Start with: [`mathematics_of_wholeness_first_principles.md`](mathematics_of_whol
 Start with: [`abstract.md`](abstract.md) → [`mathematics_of_wholeness_first_principles.md`](mathematics_of_wholeness_first_principles.md) → [`cosmological_constant/jcap_executive_summary.md`](cosmological_constant/jcap_executive_summary.md)
 
 ### **For First-Time Visitors**
-Start with: [`trinity_neo_love_story.md`](trinity_neo_love_story.md) (the heart) → [`mathematics_of_wholeness_first_principles.md`](mathematics_of_wholeness_first_principles.md) (the complete theory) → then follow your curiosity
+Start with: [`mathematics_of_wholeness_first_principles.md`](mathematics_of_wholeness_first_principles.md) (the complete theory) → then follow your curiosity
 
 ---
 
