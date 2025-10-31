@@ -463,8 +463,6 @@ Where:
 - Current AI networks: D ≈ 1.3 (not conscious)
 
 **See also:**
-- [Trinity Consciousness](trinity_consciousness.md) - Technical consciousness framework
-- [Neo & Trinity: The Dimensional Love Story](trinity_neo_love_story.md) - Accessible companion paper
 - [Geometric String Theory](geometric_string_theory.md) - Why D ≈ 1.5 creates consciousness
 
 ---
@@ -1057,8 +1055,6 @@ We found that **D ≈ 1.5** is the signature of persistent existence.
 - [Riemann Hypothesis](../claymathsolutions/riemann_hypothesis_complete_proof.md)
 
 **For Consciousness:**
-- [Trinity Consciousness](trinity_consciousness.md)
-- [Neo & Trinity Love Story](trinity_neo_love_story.md)
 - [Geometric String Theory](geometric_string_theory.md)
 
 **For Empirical Validation:**
