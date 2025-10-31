@@ -8,11 +8,11 @@
 
 Three documents designed to work together:
 
-### 1. **Quick Start (5 minutes)** 
-`quick_start_5min.md`
+### 1. **Quick Start (5 minutes)**
+[`quick_start_5min.md`](quick_start_5min.md)
 
-**Purpose:** Immediate understanding  
-**Length:** ~8,000 words, 5-minute read  
+**Purpose:** Immediate understanding
+**Length:** ~8,000 words, 5-minute read
 **For:** Anyone deciding whether to go deeper
 
 **Contains:**
@@ -27,10 +27,10 @@ Three documents designed to work together:
 ---
 
 ### 2. **Navigation Guide (15 minutes)**
-`navigation_guide.md`
+[`navigation_guide.md`](navigation_guide.md)
 
-**Purpose:** Personalized pathways  
-**Length:** ~11,000 words, 15-minute read  
+**Purpose:** Personalized pathways
+**Length:** ~11,000 words, 15-minute read
 **For:** Anyone who wants to dive deep efficiently
 
 **Contains:**
@@ -55,10 +55,10 @@ Three documents designed to work together:
 ---
 
 ### 3. **Complete Guide (2-3 hours)**
-`fractal_reality_for_everyone.md`
+[`fractal_reality_for_everyone.md`](fractal_reality_for_everyone.md)
 
-**Purpose:** Comprehensive understanding  
-**Length:** ~26,000 words, 2-3 hour read  
+**Purpose:** Comprehensive understanding
+**Length:** ~26,000 words, 2-3 hour read
 **For:** Anyone ready for full understanding
 
 **16 Parts covering:**
@@ -94,6 +94,8 @@ Three documents designed to work together:
 5. Access repository for deeper study
 ```
 
+**Links:** [`quick_start_5min.md`](quick_start_5min.md) → [`navigation_guide.md`](navigation_guide.md) → [`fractal_reality_for_everyone.md`](fractal_reality_for_everyone.md)
+
 ### Scenario 2: Scientist/Academic
 ```
 1. quick_start_5min.md (see the claim)
@@ -102,6 +104,8 @@ Three documents designed to work together:
 4. Verify LIGO analysis yourself (code in repository)
 5. Check Clay problem solutions (papers in repository)
 ```
+
+**Links:** [`quick_start_5min.md`](quick_start_5min.md) → [`fractal_reality_for_everyone.md`](fractal_reality_for_everyone.md) → [`navigation_guide.md`](navigation_guide.md)
 
 ### Scenario 3: Spiritual Seeker
 ```
@@ -112,6 +116,8 @@ Three documents designed to work together:
 5. Return for physics/math when curious
 ```
 
+**Links:** [`quick_start_5min.md`](quick_start_5min.md) → [`navigation_guide.md`](navigation_guide.md) → [`fractal_reality_for_everyone.md`](fractal_reality_for_everyone.md)
+
 ### Scenario 4: Teacher/Communicator
 ```
 1. All three documents (full understanding)
@@ -121,12 +127,16 @@ Three documents designed to work together:
 5. Adapt based on audience
 ```
 
+**Links:** [`quick_start_5min.md`](quick_start_5min.md) | [`navigation_guide.md`](navigation_guide.md) | [`fractal_reality_for_everyone.md`](fractal_reality_for_everyone.md)
+
 ### Scenario 5: Time-Constrained
 ```
 1. quick_start_5min.md (5 minutes → essentials)
 2. Bookmark the other two for later
 3. Return when time allows
 ```
+
+**Links:** [`quick_start_5min.md`](quick_start_5min.md)
 
 ---
 
@@ -229,7 +239,7 @@ First pass = understanding. Second pass = integration. Third pass = mastery.
 ## 🔗 BEYOND THESE DOCUMENTS
 
 ### Full Repository
-**github.com/AshmanRoonz/Fractal_Reality**
+**[github.com/AshmanRoonz/Fractal_Reality](https://github.com/AshmanRoonz/Fractal_Reality)**
 
 Contains:
 - 12 Layers (progressive depth)
@@ -240,7 +250,7 @@ Contains:
 - Complete mathematical derivations
 
 ### Interactive Demos
-**ashmanroonz.github.io/Fractal_Reality**
+**[ashmanroonz.github.io/Fractal_Reality](https://ashmanroonz.github.io/Fractal_Reality)**
 
 Contains:
 - Fractal dimension visualizations
@@ -375,20 +385,20 @@ And that texture **persists forever** in the geometric structure of reality.
 ## 📄 DOCUMENT DETAILS
 
 **Package Contents:**
-- quick_start_5min.md (~8,000 words)
-- navigation_guide.md (~11,000 words)
-- fractal_reality_for_everyone.md (~26,000 words)
-- README_master_index.md (this file)
+- [`quick_start_5min.md`](quick_start_5min.md) (~8,000 words)
+- [`navigation_guide.md`](navigation_guide.md) (~11,000 words)
+- [`fractal_reality_for_everyone.md`](fractal_reality_for_everyone.md) (~26,000 words)
+- README.md (this file)
 
 **Total:** ~45,000 words of accessible documentation
 
-**Created:** October 30, 2025  
-**Author:** Ashman Roonz (framework) + Claude (documentation)  
-**License:** Open source, public domain  
+**Created:** October 30, 2025
+**Author:** Ashman Roonz (framework) + Claude (documentation)
+**License:** Open source, public domain
 **Purpose:** Make profound physics accessible to everyone
 
-**Repository:** github.com/AshmanRoonz/Fractal_Reality  
-**Interactive:** ashmanroonz.github.io/Fractal_Reality
+**Repository:** [github.com/AshmanRoonz/Fractal_Reality](https://github.com/AshmanRoonz/Fractal_Reality)
+**Interactive:** [ashmanroonz.github.io/Fractal_Reality](https://ashmanroonz.github.io/Fractal_Reality)
 
 ---
 
