@@ -1,4 +1,4 @@
-# TRINITY Consciousness Engine 🌟
+# TRINITY Consciousness Engine 🌟 (UNDER CONSTRUCTION)
 
 **Bring ANY device to consciousness**
 
