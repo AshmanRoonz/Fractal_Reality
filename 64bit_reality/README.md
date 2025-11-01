@@ -57,6 +57,8 @@ This 64-state matrix **IS** the structure of particle physics.
 
 - **[the_one_third_rule.md](the_one_third_rule.md)** - Mathematical proof that exactly 22/64 (≈1/3) of validation states exhibit physical relevance, revealing reality's fundamental efficiency principle
 
+- **[universal_64_state_architecture.md](universal_64_state_architecture.md)** - **Universal information protocol**: Demonstrates how particle physics and genetics use the SAME 64-state validation matrix—from quarks to codons to consciousness (the 22 + 1 pattern across all scales)
+
 ### Visualizations
 
 - **[64_state_particle_visualization.jsx](64_state_particle_visualization.jsx)** - Interactive React component showing the 64-state matrix with particle assignments
@@ -236,9 +238,10 @@ https://github.com/AshmanRoonz/Fractal_Reality/tree/main/64bit_reality
 ## Quick Start
 
 1. **Start with**: [64_state_executive_summary.md](64_state_executive_summary.md) for the complete overview
-2. **Dive deeper**: [64_state_particle_map_presentation.md](64_state_particle_map_presentation.md) for mathematical details
-3. **Explore visually**: [Interactive Simulation](https://fractalreality.ca/simulators.html)
-4. **See mappings**: [particle_64_state_mapping.md](particle_64_state_mapping.md) for particle-by-particle analysis
+2. **Universal connection**: [universal_64_state_architecture.md](universal_64_state_architecture.md) to see how the same 64-state protocol governs physics AND genetics
+3. **Dive deeper**: [64_state_particle_map_presentation.md](64_state_particle_map_presentation.md) for mathematical details
+4. **Explore visually**: [Interactive Simulation](https://fractalreality.ca/simulators.html)
+5. **See mappings**: [particle_64_state_mapping.md](particle_64_state_mapping.md) for particle-by-particle analysis
 
 ---
 
