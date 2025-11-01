@@ -316,12 +316,12 @@ Einstein's 8πG/c⁴ × (2 interfaces) = 8² = 64 complete states
 ```
 
 **What It Explains:**
-- ✓ Why exactly 61 particles exist (64 - 3 forbidden states)
+- ✓ Why exactly 61 particles exist (22 physically relevant states × quantum numbers = 61 particles)
 - ✓ Why three generations (no fourth generation)
 - ✓ Why quarks are confined (geometric necessity)
 - ✓ Particle masses from harmonics (99.9% accuracy)
 - ✓ All charges quantize as n × e/3
-- ✓ Connection to D ≈ 1.5 signature
+- ✓ Connection to D ≈ 1.5 signature (the 1/3 rule: 22/64 ≈ 0.34)
 
 **Documents:**
 - **[64bit_reality/universal_64_state_architecture.md](64bit_reality/universal_64_state_architecture.md)** - **Universal 64-state protocol**: How particle physics and genetics use the same information architecture (the 22 + 1 pattern)
