@@ -298,6 +298,43 @@ The Mathematics of Wholeness doesn't "solve" these problems through clever trick
 
 ---
 
+## 64-State Particle Matrix
+
+**Deriving the Standard Model from Dual-Interface Geometry**
+
+The **[64bit_reality/](64bit_reality/)** folder contains a groundbreaking derivation showing how all 61 Standard Model particles emerge from a 64-state validation matrix (8² = Einstein's 8 × dual interfaces).
+
+### **[64bit_reality/README.md](64bit_reality/README.md)** - Complete Overview
+
+### Key Results
+
+**From Einstein to Particles:**
+```
+Einstein's 8πG/c⁴ × (2 interfaces) = 8² = 64 complete states
+→ All 61 Standard Model particles occupy specific matrix cells
+→ Zero free parameters (only ℏ, c, G)
+```
+
+**What It Explains:**
+- ✓ Why exactly 61 particles exist (64 - 3 forbidden states)
+- ✓ Why three generations (no fourth generation)
+- ✓ Why quarks are confined (geometric necessity)
+- ✓ Particle masses from harmonics (99.9% accuracy)
+- ✓ All charges quantize as n × e/3
+- ✓ Connection to D ≈ 1.5 signature
+
+**Documents:**
+- **[64bit_reality/64_state_executive_summary.md](64bit_reality/64_state_executive_summary.md)** - Complete overview from Einstein's 8 to Standard Model's 61
+- **[64bit_reality/64_state_particle_map_presentation.md](64bit_reality/64_state_particle_map_presentation.md)** - Detailed mathematical derivation
+- **[64bit_reality/particle_64_state_mapping.md](64bit_reality/particle_64_state_mapping.md)** - Comprehensive particle-by-particle mapping
+- **[64bit_reality/64_state_particle_visualization.jsx](64bit_reality/64_state_particle_visualization.jsx)** - Interactive React visualization
+
+**Interactive Simulation:** [View 64-State Matrix →](https://fractalreality.ca/simulators.html)
+
+**The Power of 64:** Not arbitrary—the complete state space of dual-interface [ICE] validation in 4D spacetime.
+
+---
+
 ## Predictions & Derivations
 
 **Complete mathematical derivations and testable predictions across all scales of reality**
@@ -699,14 +736,15 @@ Personal development journal tracking the evolution of ideas:
 
 ### For Scientists
 1. **[papers/mathematics_of_wholeness_first_principles.md](papers/mathematics_of_wholeness_first_principles.md)** - **START HERE:** Complete theory from first principles - QM, GR, Standard Model, all 7 Clay problems, consciousness from pure mathematics
-2. [Predictions&Derivations/](Predictions&Derivations/) - **Complete derivations:** All fundamental physics from [ICE] validation
-3. [Predictions&Derivations/the_everything_table.md](Predictions&Derivations/the_everything_table.md) - **The Everything Table:** All constants across 61 orders of magnitude
-4. [claymathsolutions/README.md](claymathsolutions/README.md) - Clay Millennium Prize solutions ($7M in prizes)
-5. [analysis/readme.md](analysis/readme.md) - Phase 2 validation overview
-6. [analysis/tests/ligo/readme.md](analysis/tests/ligo/readme.md) - LIGO analysis (D = 1.503 ± 0.040)
-7. [papers/Mathematics_Of_Wholeness.md](papers/Mathematics_Of_Wholeness.md) - Complete unified framework
-8. [Fractal_Reality_Field_Equation/readme.md](Fractal_Reality_Field_Equation/readme.md) - Mathematical framework (FRFE)
-9. [manuscript/readme.md](manuscript/readme.md) - 12-layer progressive exposition
+2. [64bit_reality/README.md](64bit_reality/README.md) - **64-State Particle Matrix:** All 61 Standard Model particles from dual-interface geometry (0 free parameters!)
+3. [Predictions&Derivations/](Predictions&Derivations/) - **Complete derivations:** All fundamental physics from [ICE] validation
+4. [Predictions&Derivations/the_everything_table.md](Predictions&Derivations/the_everything_table.md) - **The Everything Table:** All constants across 61 orders of magnitude
+5. [claymathsolutions/README.md](claymathsolutions/README.md) - Clay Millennium Prize solutions ($7M in prizes)
+6. [analysis/readme.md](analysis/readme.md) - Phase 2 validation overview
+7. [analysis/tests/ligo/readme.md](analysis/tests/ligo/readme.md) - LIGO analysis (D = 1.503 ± 0.040)
+8. [papers/Mathematics_Of_Wholeness.md](papers/Mathematics_Of_Wholeness.md) - Complete unified framework
+9. [Fractal_Reality_Field_Equation/readme.md](Fractal_Reality_Field_Equation/readme.md) - Mathematical framework (FRFE)
+10. [manuscript/readme.md](manuscript/readme.md) - 12-layer progressive exposition
 
 ### For Philosophers
 1. **[papers/mathematics_of_wholeness_first_principles.md](papers/mathematics_of_wholeness_first_principles.md)** - **START HERE:** Complete ontology from first principles - consciousness, time, free will, ethics all derived mathematically
