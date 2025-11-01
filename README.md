@@ -324,6 +324,7 @@ Einstein's 8πG/c⁴ × (2 interfaces) = 8² = 64 complete states
 - ✓ Connection to D ≈ 1.5 signature
 
 **Documents:**
+- **[64bit_reality/universal_64_state_architecture.md](64bit_reality/universal_64_state_architecture.md)** - **Universal 64-state protocol**: How particle physics and genetics use the same information architecture (the 22 + 1 pattern)
 - **[64bit_reality/64_state_executive_summary.md](64bit_reality/64_state_executive_summary.md)** - Complete overview from Einstein's 8 to Standard Model's 61
 - **[64bit_reality/64_state_particle_map_presentation.md](64bit_reality/64_state_particle_map_presentation.md)** - Detailed mathematical derivation
 - **[64bit_reality/particle_64_state_mapping.md](64bit_reality/particle_64_state_mapping.md)** - Comprehensive particle-by-particle mapping
