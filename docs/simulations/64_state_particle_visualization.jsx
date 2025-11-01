@@ -47,30 +47,30 @@ const App = () => {
     <div className="w-full h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8 text-white overflow-auto">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+        <div className="text-center mb-6">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
             The 64-State Validation Matrix
           </h1>
-          <p className="text-xl text-cyan-300 mb-1">Standard Model Particles from Dual-Interface Geometry</p>
-          <p className="text-sm text-purple-300">8πG/c⁴ × 2 interfaces = 64 complete states</p>
+          <p className="text-lg text-cyan-300 mb-1">Standard Model Particles from Dual-Interface Geometry</p>
+          <p className="text-xs text-purple-300">8πG/c⁴ × 2 interfaces = 64 complete states</p>
         </div>
 
         {/* Main Matrix */}
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 mb-6 border border-cyan-500/30">
-          <div className="flex items-start gap-4">
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-4 mb-4 border border-cyan-500/30 max-w-2xl mx-auto">
+          <div className="flex items-start gap-2">
             {/* Output label */}
-            <div className="flex flex-col items-center pt-12">
-              <div className="transform -rotate-90 origin-center whitespace-nowrap text-sm font-mono text-cyan-400 mb-4">
+            <div className="flex flex-col items-center pt-6">
+              <div className="transform -rotate-90 origin-center whitespace-nowrap text-xs font-mono text-cyan-400 mb-2">
                 OUTPUT (I,C,E)
               </div>
             </div>
 
             {/* Matrix grid */}
             <div className="flex-1">
-              <div className="text-center text-sm font-mono text-purple-400 mb-2">
+              <div className="text-center text-xs font-mono text-purple-400 mb-1">
                 INPUT (I,C,E) →
               </div>
-              <div className="grid grid-cols-8 gap-1">
+              <div className="grid grid-cols-8 gap-0.5">
                 {Array.from({ length: 64 }, (_, i) => (
                   <div
                     key={i}
@@ -88,7 +88,7 @@ const App = () => {
                     onClick={() => setSelectedState(i === selectedState ? null : i)}
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-xs font-mono font-bold" style={{
+                      <span className="text-[9px] font-mono font-bold" style={{
                         color: particles[i] ? '#fff' : '#64748b',
                         textShadow: particles[i] ? '0 0 4px rgba(0,0,0,0.8)' : 'none'
                       }}>
@@ -96,7 +96,7 @@ const App = () => {
                       </span>
                     </div>
                     {particles[i] && (
-                      <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-white animate-pulse" />
+                      <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-white animate-pulse" />
                     )}
                   </div>
                 ))}
@@ -105,9 +105,9 @@ const App = () => {
           </div>
 
           {/* Axis labels */}
-          <div className="grid grid-cols-8 gap-1 mt-2 ml-8">
+          <div className="grid grid-cols-8 gap-0.5 mt-1 ml-6">
             {['000', '001', '010', '011', '100', '101', '110', '111'].map((label, i) => (
-              <div key={i} className="text-center text-xs font-mono text-cyan-400">
+              <div key={i} className="text-center text-[10px] font-mono text-cyan-400">
                 {label}
               </div>
             ))}
