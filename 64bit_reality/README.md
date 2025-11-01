@@ -55,6 +55,8 @@ This 64-state matrix **IS** the structure of particle physics.
 
 - **[particle_64_state_mapping.md](particle_64_state_mapping.md)** - Comprehensive mapping of all particles to matrix states with predictions and tests
 
+- **[the_one_third_rule.md](the_one_third_rule.md)** - Mathematical proof that exactly 22/64 (≈1/3) of validation states exhibit physical relevance, revealing reality's fundamental efficiency principle
+
 ### Visualizations
 
 - **[64_state_particle_visualization.jsx](64_state_particle_visualization.jsx)** - Interactive React component showing the 64-state matrix with particle assignments
