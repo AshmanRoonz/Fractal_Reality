@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ParticleStateMatrix = () => {
+const App = () => {
   const [selectedState, setSelectedState] = useState(null);
   const [hoveredState, setHoveredState] = useState(null);
 
@@ -254,4 +254,4 @@ const ParticleStateMatrix = () => {
   );
 };
 
-export default ParticleStateMatrix;
+export default App;
