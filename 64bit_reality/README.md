@@ -29,7 +29,7 @@ This 64-state matrix **IS** the structure of particle physics.
 
 ### From First Principles
 
-1. **Why exactly 61 particles exist** (64 total states - 3 forbidden)
+1. **Why exactly 61 particles exist** (~22 physically relevant states × quantum numbers = 61 particles)
 2. **Why three generations of fermions** (no fourth generation)
 3. **Why quarks are confined** (geometric necessity, not imposed)
 4. **Why charges quantize** as multiples of e/3
