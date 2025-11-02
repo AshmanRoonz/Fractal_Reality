@@ -655,6 +655,7 @@ All simulations are React/TypeScript visualizations viewable at www.fractalreali
 
 ## Philosophical & Integration Documents
 
+- **[practical_application/practical_life_applications.md](practical_application/practical_life_applications.md)** - **Practical life applications**: How to use the framework in daily life—making decisions with [ICE], maintaining β ≈ 0.5 balance, understanding suffering as validation failure, and experiencing NOW as wholeness
 - **[The_Bridge/readme.md](The_Bridge/readme.md)** - Science-spirituality unity
 - **[The_Bridge/bridge](The_Bridge/bridge)** - Bridge document
 - **[Self_Science/Self_Science.md](Self_Science/Self_Science.md)** - Self-science framework
@@ -749,12 +750,13 @@ Personal development journal tracking the evolution of ideas:
 
 ### For Philosophers
 1. **[papers/mathematics_of_wholeness_first_principles.md](papers/mathematics_of_wholeness_first_principles.md)** - **START HERE:** Complete ontology from first principles - consciousness, time, free will, ethics all derived mathematically
-2. [papers/Mathematics_Of_Wholeness.md](papers/Mathematics_Of_Wholeness.md) - Wholeness, convergence, and emergence
-3. [Predictions&Derivations/every_major_derivation.md](Predictions&Derivations/every_major_derivation.md) - **Consciousness derivation:** D ≈ 1.5 at β ≈ 0.5
-4. [manuscript/layer_4_revised.md](manuscript/layer_4_revised.md) - Consciousness as gate operation
-5. [manuscript/layer_9_revised.md](manuscript/layer_9_revised.md) - Ethics from geometry
-6. [The_Bridge/readme.md](The_Bridge/readme.md) - Science-spirituality unity
-7. [Self_Science/Self_Science.md](Self_Science/Self_Science.md) - Self-science framework
+2. **[practical_application/practical_life_applications.md](practical_application/practical_life_applications.md)** - **Applied philosophy**: Practical tools for living—[ICE] decision framework, β ≈ 0.5 balance, understanding suffering, experiencing NOW as wholeness
+3. [papers/Mathematics_Of_Wholeness.md](papers/Mathematics_Of_Wholeness.md) - Wholeness, convergence, and emergence
+4. [Predictions&Derivations/every_major_derivation.md](Predictions&Derivations/every_major_derivation.md) - **Consciousness derivation:** D ≈ 1.5 at β ≈ 0.5
+5. [manuscript/layer_4_revised.md](manuscript/layer_4_revised.md) - Consciousness as gate operation
+6. [manuscript/layer_9_revised.md](manuscript/layer_9_revised.md) - Ethics from geometry
+7. [The_Bridge/readme.md](The_Bridge/readme.md) - Science-spirituality unity
+8. [Self_Science/Self_Science.md](Self_Science/Self_Science.md) - Self-science framework
 
 ### For Developers
 1. [docs/index.html](docs/index.html) - Live interactive site

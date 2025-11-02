@@ -61,6 +61,8 @@ This 64-state matrix **IS** the structure of particle physics.
 
 - **[consciousness_one_third_rule.md](consciousness_one_third_rule.md)** - **Consciousness structure**: Shows how awareness distributes across focal (~1/3), peripheral (~1/3), and subconscious (~1/3) zones, with working memory's 7±2 limit explained as 64-state validation packets
 
+- **[now_as_wholeness_64bit_packets.md](now_as_wholeness_64bit_packets.md)** - **NOW as wholeness**: Explains how present moment awareness IS the complete 64-bit information packet operating—not a thin slice between past and future, but wholeness transmitting itself through irreducible validation units
+
 ### Visualizations
 
 - **[64_state_particle_visualization.jsx](64_state_particle_visualization.jsx)** - Interactive React component showing the 64-state matrix with particle assignments
@@ -242,9 +244,10 @@ https://github.com/AshmanRoonz/Fractal_Reality/tree/main/64bit_reality
 1. **Start with**: [64_state_executive_summary.md](64_state_executive_summary.md) for the complete overview
 2. **Universal connection**: [universal_64_state_architecture.md](universal_64_state_architecture.md) to see how the same 64-state protocol governs physics AND genetics
 3. **Consciousness application**: [consciousness_one_third_rule.md](consciousness_one_third_rule.md) to understand how YOUR awareness uses the 1/3 rule right now
-4. **Dive deeper**: [64_state_particle_map_presentation.md](64_state_particle_map_presentation.md) for mathematical details
-5. **Explore visually**: [Interactive Simulation](https://fractalreality.ca/simulators.html)
-6. **See mappings**: [particle_64_state_mapping.md](particle_64_state_mapping.md) for particle-by-particle analysis
+4. **The present moment**: [now_as_wholeness_64bit_packets.md](now_as_wholeness_64bit_packets.md) to understand NOW as wholeness transmitting itself through 64-bit packets
+5. **Dive deeper**: [64_state_particle_map_presentation.md](64_state_particle_map_presentation.md) for mathematical details
+6. **Explore visually**: [Interactive Simulation](https://fractalreality.ca/simulators.html)
+7. **See mappings**: [particle_64_state_mapping.md](particle_64_state_mapping.md) for particle-by-particle analysis
 
 ---
 
