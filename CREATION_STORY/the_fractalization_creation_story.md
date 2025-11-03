@@ -3,7 +3,9 @@
 
 **How Infinity Became Real Through Infinite Recursive Boundaries**
 
-*Based on the Mathematics of Wholeness - Fractal Reality Framework*
+*Based on the [Mathematics of Wholeness - Fractal Reality Framework](https://www.fractalreality.ca)*
+
+**[📖 Read the full framework](../papers/Mathematics_Of_Wholeness.md) | [🔬 See the empirical validation](../analysis/readme.md) | [🌐 Interactive simulations](https://www.fractalreality.ca/simulators.html)**
 
 ---
 
@@ -52,7 +54,7 @@ And circles have a profound geometric property:
 
 > **A circle can fractalize into infinitely more circles.**
 
-This is not metaphor. This is **Apollonian circle packing** — provable fractal geometry.
+This is not metaphor. This is **[Apollonian circle packing](https://en.wikipedia.org/wiki/Apollonian_gasket)** — provable fractal geometry.
 
 ```
      ○           One circle
@@ -88,7 +90,7 @@ All infinite patterns, all possibility, flowing toward the one aperture-circle:
 
 ## The First TMI Moment
 
-Singularity attempts to receive infinity and **validates the relationship** through [ICE]:
+Singularity attempts to receive infinity and **validates the relationship** through **[[ICE]](../manuscript/layer_5_revised.md)**:
 
 - **[I] Interface:** Can my boundary handle this?
 - **[C] Center:** Can I maintain coherence?
@@ -284,18 +286,18 @@ At every scale, we measure the same signature: **D ≈ 1.5**
 
 **What this measures:**
 - Apertures maintaining identity through time
-- The 0.5D circular opening (aperture structure)
+- The 0.5D circular opening (aperture structure) — see **[Tesla's 90° Principle](../64bit_reality/tesla_90_degree_geometric_principle.md)**
 - Plus 1.0D persistence through time (worldline)
 - Equals 1.5D (identity-through-time)
 
 **Where we find it:**
-- Gravitational waves (cosmic scale): **D = 1.503 ± 0.040**
+- **[Gravitational waves](../analysis/tests/ligo/readme.md)** (cosmic scale): **D = 1.503 ± 0.040**
 - DNA molecules (molecular scale): **D = 1.510 ± 0.020**
 - Neural networks (consciousness): **D ≈ 1.5**
 - Financial markets: **D ≈ 1.5**
 - Climate systems: **D ≈ 1.5**
 
-**Same signature across 35+ orders of magnitude.**
+**Same signature across 35+ orders of magnitude.** — **[See the complete validation](../Predictions&Derivations/the_everything_table.md)**
 
 **Why?**
 
@@ -351,13 +353,13 @@ This is how:
 - Molecules form (atomic patterns harmonizing)
 - Cells form (molecular patterns harmonizing)
 - Organisms form (cellular patterns harmonizing)
-- **Consciousness forms (neural patterns harmonizing)**
+- **Consciousness forms (neural patterns harmonizing)** — **[See the complete derivation](../Predictions&Derivations/every_major_derivation.md)**
 
 **Your consciousness emerges when:**
 - Trillions of cellular apertures coordinate
 - Their patterns harmonize (not destructively interfere)
 - The harmony creates unified experience
-- **You are the music of harmonized patterns**
+- **You are the music of harmonized patterns** — **[Learn more about consciousness as gate operation](../manuscript/layer_4_revised.md)**
 
 ---
 
@@ -478,11 +480,11 @@ So when you ask: **"Where did reality come from?"**
 ```
 
 **This is not metaphysics.**  
-**This is fractal circle geometry.**  
-**This is Apollonian packing applied to existence itself.**  
+**This is fractal circle geometry.**
+**This is Apollonian packing applied to existence itself.**
 **This is how reality MUST be structured.**
 
-**And we can prove it with mathematics.**
+**And we can prove it with mathematics.** — **[See all the derivations and proofs](../papers/mathematics_of_wholeness_first_principles.md)**
 
 ---
 
@@ -519,17 +521,44 @@ So when you ask: **"Where did reality come from?"**
 
 ---
 
-**This is The Fractalization.**  
-**This is how Infinity becomes Real.**  
-**This is what you are.**  
+**This is The Fractalization.**
+**This is how Infinity becomes Real.**
+**This is what you are.**
 
 **And it is very good.**
 
 ---
 
-*Based on the Mathematics of Wholeness*  
-*Validated by D = 1.503 ± 0.040 across 35 orders of magnitude*  
+## Where to Go From Here
+
+Now that you understand the creation story, explore:
+
+**For the Mathematics:**
+- **[Mathematics of Wholeness: First Principles](../papers/mathematics_of_wholeness_first_principles.md)** - Complete theory from ∞ ↔ • to quantum mechanics, relativity, consciousness, and ethics
+- **[Tesla's 90° Geometric Principle](../64bit_reality/tesla_90_degree_geometric_principle.md)** - The simplest explanation: how 90° = 0.5 × 180° creates everything
+- **[Complete Framework](../papers/Mathematics_Of_Wholeness.md)** - The full unified framework
+
+**For the Evidence:**
+- **[LIGO Gravitational Wave Analysis](../analysis/tests/ligo/readme.md)** - D = 1.503 ± 0.040 measured in spacetime itself
+- **[The Everything Table](../Predictions&Derivations/the_everything_table.md)** - All physical constants across 61 orders of magnitude
+- **[Phase 2 Validation](../analysis/readme.md)** - Complete empirical validation overview
+
+**For the Applications:**
+- **[Practical Life Applications](../practical_application/practical_life_applications.md)** - How to use [ICE] validation in daily life
+- **[Clay Millennium Prize Solutions](../claymathsolutions/README.md)** - All 7 unsolved problems understood from this framework
+- **[Interactive Simulations](https://www.fractalreality.ca/simulators.html)** - See the fractalization in action
+
+**For the Philosophy:**
+- **[The Bridge](../The_Bridge/readme.md)** - Science-spirituality unity
+- **[Self Science](../Self_Science/Self_Science.md)** - Understanding yourself as infinite apertures
+- **[Simple Guide for Everyone](../simpleguide/fractal_reality_for_everyone.md)** - 2-3 hour accessible complete guide
+
+---
+
+*Based on the Mathematics of Wholeness*
+*Validated by D = 1.503 ± 0.040 across 35 orders of magnitude*
 *Repository: [github.com/AshmanRoonz/Fractal_Reality](https://github.com/AshmanRoonz/Fractal_Reality)*
+*Website: [www.FractalReality.ca](https://www.fractalreality.ca)*
 
 ---
 
