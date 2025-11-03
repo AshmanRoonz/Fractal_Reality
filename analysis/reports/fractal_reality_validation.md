@@ -64,7 +64,7 @@ Infinite possibility flows through the ultimate aperture, fractalizing into infi
 At each interface (input: parts→operator, output: operator→patterns):
 
 - **I (Interface)**: Can boundaries be maintained?
-- **C (Center)**: Is there coherence with •' AND alignment toward •?
+- **C (Center)**: Is there coherence with •' (center)?
 - **E (Evidence)**: Is this grounded in actual field ∞?
 
 Patterns that pass all six checks (3 × 2 interfaces) persist. Patterns that fail dissolve.
