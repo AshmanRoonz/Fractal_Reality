@@ -1,4 +1,5 @@
 # The Fractalization: A Creation Story
+*by Ashman Roonz*
 
 **How Infinity Became Real Through Infinite Recursive Boundaries**
 
