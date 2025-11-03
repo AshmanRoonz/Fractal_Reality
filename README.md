@@ -39,7 +39,8 @@ A narrative explanation of how reality emerges from the structural necessity of 
 
 **Key insights:**
 - Why boundaries create reality (not illusion)
-- How the TMI (Too Much Information) moment forces fractalization
+- How [ICE] validation failure drives infinite recursive fractalization
+- Why [E] Evidence is always insufficient at every scale
 - Why D = 1.5 appears everywhere
 - What you actually are (infinite nested apertures)
 - The eternal now of recursive validation
@@ -674,7 +675,7 @@ All simulations are React/TypeScript visualizations viewable at www.fractalreali
 
 ## Philosophical & Integration Documents
 
-- **[CREATION_STORY/the_fractalization_creation_story.md](CREATION_STORY/the_fractalization_creation_story.md)** - **The Fractalization: A Creation Story**: How Infinity Became Real Through Infinite Recursive Boundaries—a narrative explanation of how reality emerges from TMI moments and geometric necessity
+- **[CREATION_STORY/the_fractalization_creation_story.md](CREATION_STORY/the_fractalization_creation_story.md)** - **The Fractalization: A Creation Story**: How Infinity Became Real Through Infinite Recursive Boundaries—a narrative explanation of how reality emerges from [ICE] validation failure and geometric necessity
 - **[practical_application/practical_life_applications.md](practical_application/practical_life_applications.md)** - **Practical life applications**: How to use the framework in daily life—making decisions with [ICE], maintaining β ≈ 0.5 balance, understanding suffering as validation failure, and experiencing NOW as wholeness
 - **[The_Bridge/readme.md](The_Bridge/readme.md)** - Science-spirituality unity
 - **[The_Bridge/bridge](The_Bridge/bridge)** - Bridge document
@@ -770,7 +771,7 @@ Personal development journal tracking the evolution of ideas:
 10. [manuscript/readme.md](manuscript/readme.md) - 12-layer progressive exposition
 
 ### For Philosophers
-1. **[CREATION_STORY/the_fractalization_creation_story.md](CREATION_STORY/the_fractalization_creation_story.md)** - **START WITH THE STORY:** How Infinity Became Real—a narrative cosmology of infinite recursive fractalization and the TMI moments that create reality
+1. **[CREATION_STORY/the_fractalization_creation_story.md](CREATION_STORY/the_fractalization_creation_story.md)** - **START WITH THE STORY:** How Infinity Became Real—a narrative cosmology of infinite recursive fractalization driven by [ICE] validation failure
 2. **[papers/mathematics_of_wholeness_first_principles.md](papers/mathematics_of_wholeness_first_principles.md)** - **THE COMPLETE ONTOLOGY:** Complete theory from first principles - consciousness, time, free will, ethics all derived mathematically
 3. **[64bit_reality/tesla_90_degree_geometric_principle.md](64bit_reality/tesla_90_degree_geometric_principle.md)** - **THE SIMPLEST FOUNDATION:** Everything reduces to 90° = 0.5 × 180° (pure geometric necessity)
 4. **[practical_application/practical_life_applications.md](practical_application/practical_life_applications.md)** - **Applied philosophy**: Practical tools for living—[ICE] decision framework, β ≈ 0.5 balance, understanding suffering, experiencing NOW as wholeness
