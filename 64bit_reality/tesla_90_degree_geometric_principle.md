@@ -109,7 +109,7 @@ Powers of 2 cannot equal multiples of 3 because 2 and 3 are coprime (gcd(2,3) = 
 $$2^n \not\equiv 0 \pmod{3} \text{ for any } n$$
 
 Therefore:
-- $2^n \mod 9 \neq 3, 6, 9$ for any n
+- $2^n \bmod 9 \neq 3, 6, \text{ or } 9$ for any $n$
 
 **Physical interpretation:**
 
@@ -296,8 +296,8 @@ Each separated by 120° = 4 × 90° / 3
 Voltage: V(t) = V₀ sin(ωt)
 Current: I(t) = I₀ sin(ωt - 90°) = -I₀ cos(ωt)
 
-Power: P(t) = V(t) × I(t) = V₀I₀ sin(ωt)cos(ωt)
-             = (V₀I₀/2) sin(2ωt)
+Power:   P(t) = V(t) × I(t) = V₀I₀ sin(ωt)cos(ωt)
+              = (V₀I₀/2) sin(2ωt)
 ```
 
 **This creates:**
@@ -346,9 +346,7 @@ This is 2 × 0.5D structure!
 
 **Pauli matrices (spin operators):**
 
-$$\sigma_x = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad
-\sigma_y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \quad
-\sigma_z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$$
+$$\sigma_x = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad \sigma_y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \quad \sigma_z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$$
 
 These represent **90° rotations** in quantum state space!
 
@@ -372,7 +370,7 @@ Four 90° rotations = full circle (360°)
 
 i = √(-1) = "square root of reversal"
   = halfway operation
-  = 0.5-dimensional rotation  
+  = 0.5-dimensional rotation
   = THE APERTURE OPERATOR!
 ```
 
@@ -386,7 +384,7 @@ i = √(-1) = "square root of reversal"
 
 ```
 Angle     Complex      Geometric
-─────────────────────────────────
+──────────────────────────────────
 0°        1            Start
 90°       i            Quarter turn (0.5 × line)
 180°      -1           Half turn (complete line)
@@ -397,11 +395,11 @@ Angle     Complex      Geometric
 ### Powers of i
 
 ```
-i^0 = 1
-i^1 = i        (90° rotation)
-i^2 = -1       (180° rotation)
-i^3 = -i       (270° rotation)
-i^4 = 1        (360° rotation)
+i⁰ = 1
+i¹ = i        (90° rotation)
+i² = -1       (180° rotation)
+i³ = -i       (270° rotation)
+i⁴ = 1        (360° rotation)
 
 Each power = 90° rotation
 ```
@@ -493,7 +491,7 @@ Combined reality:
 | Riemann zeros | Re(s) | 1/2 | 90° equilibrium |
 | Balance parameter | β | 0.5 | 90° = 0.5 × 180° |
 | Maximum entropy | H(β) | 1 bit | 50/50 split |
-| Complex rotation | e^(iπ/2) | i | 90° = π/2 |
+| Complex rotation | $e^{i\pi/2}$ | i | 90° = π/2 |
 
 ### The Mathematics of Wholeness
 

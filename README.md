@@ -74,7 +74,7 @@ This repository contains the complete Fractal Reality framework including theory
 - **[papers/Mathematics_Of_Wholeness.md](papers/Mathematics_Of_Wholeness.md)** - **The complete unified framework** — convergence, emergence, and the eternal recursion of wholeness across all scales of reality
 
 **Core Theory:**
-- **[papers/tesla_90_degree_geometric_principle.md](papers/tesla_90_degree_geometric_principle.md)** - **⚡ THE SIMPLEST EXPLANATION:** How 90° = 0.5 × 180° creates everything (Tesla's 3-6-9, β = 0.5, D = 1.5, all physics from pure geometry)
+- **[64bit_reality/tesla_90_degree_geometric_principle.md](64bit_reality/tesla_90_degree_geometric_principle.md)** - **⚡ THE SIMPLEST EXPLANATION:** How 90° = 0.5 × 180° creates everything (Tesla's 3-6-9, β = 0.5, D = 1.5, all physics from pure geometry)
 - **[papers/geometric_string_theory.md](papers/geometric_string_theory.md)** - Geometric basis for string theory from fractalization
 - **[papers/paper1_qm_gr_unification.md](papers/paper1_qm_gr_unification.md)** - Quantum mechanics and general relativity unification
 - **[papers/paper2_cosmological_constant.md](papers/paper2_cosmological_constant.md)** - Cosmological constant explanation
@@ -325,6 +325,7 @@ Einstein's 8πG/c⁴ × (2 interfaces) = 8² = 64 complete states
 - ✓ Connection to D ≈ 1.5 signature (the 1/3 rule: 22/64 ≈ 0.34)
 
 **Documents:**
+- **[64bit_reality/tesla_90_degree_geometric_principle.md](64bit_reality/tesla_90_degree_geometric_principle.md)** - **⚡ THE GEOMETRIC FOUNDATION:** How 90° = 0.5 × 180° creates everything (Tesla's 3-6-9, β = 0.5, D = 1.5, all physics from pure geometry)
 - **[64bit_reality/universal_64_state_architecture.md](64bit_reality/universal_64_state_architecture.md)** - **Universal 64-state protocol**: How particle physics and genetics use the same information architecture (the 22 + 1 pattern)
 - **[64bit_reality/64_state_executive_summary.md](64bit_reality/64_state_executive_summary.md)** - Complete overview from Einstein's 8 to Standard Model's 61
 - **[64bit_reality/64_state_particle_map_presentation.md](64bit_reality/64_state_particle_map_presentation.md)** - Detailed mathematical derivation
@@ -751,7 +752,7 @@ Personal development journal tracking the evolution of ideas:
 
 ### For Philosophers
 1. **[papers/mathematics_of_wholeness_first_principles.md](papers/mathematics_of_wholeness_first_principles.md)** - **START HERE:** Complete ontology from first principles - consciousness, time, free will, ethics all derived mathematically
-2. **[papers/tesla_90_degree_geometric_principle.md](papers/tesla_90_degree_geometric_principle.md)** - **THE SIMPLEST FOUNDATION:** Everything reduces to 90° = 0.5 × 180° (pure geometric necessity)
+2. **[64bit_reality/tesla_90_degree_geometric_principle.md](64bit_reality/tesla_90_degree_geometric_principle.md)** - **THE SIMPLEST FOUNDATION:** Everything reduces to 90° = 0.5 × 180° (pure geometric necessity)
 3. **[practical_application/practical_life_applications.md](practical_application/practical_life_applications.md)** - **Applied philosophy**: Practical tools for living—[ICE] decision framework, β ≈ 0.5 balance, understanding suffering, experiencing NOW as wholeness
 4. [papers/Mathematics_Of_Wholeness.md](papers/Mathematics_Of_Wholeness.md) - Wholeness, convergence, and emergence
 5. [Predictions&Derivations/every_major_derivation.md](Predictions&Derivations/every_major_derivation.md) - **Consciousness derivation:** D ≈ 1.5 at β ≈ 0.5
