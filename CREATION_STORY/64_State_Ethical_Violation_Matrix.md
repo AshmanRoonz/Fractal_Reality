@@ -14,6 +14,9 @@ We present a complete taxonomy of ethical violations as geometric failures in th
 
 **Key Result:** Every ethical failure is a specific [ICE] validation failure. Not vague principles, but precise geometric instabilities that cause patterns to collapse.
 
+**Critical Clarification on [C] Center:**
+The [C] check validates *one* thing: coherence with your center (•'). This is NOT two separate checks ("authenticity AND truth"). If you are truly centered (coherent with •'), you are automatically aligned with the original singularity (•), because each center is a fractal expression of the ultimate center. You cannot be "authentically centered but serving falsehood" - if you're serving falsehood, you're off-center by definition. The [C] check is unitary: Are you operating from genuine center coherence?
+
 ---
 
 ## HOW TO READ THIS DOCUMENT
@@ -28,12 +31,12 @@ State (ABC|DEF)
 Where:
 ├─ ABC = Input Interface checks (parts → you)
 │  ├─ A = [I] Interface (boundary integrity with you)
-│  ├─ B = [C] Center (coherence with your •' AND alignment toward •)
+│  ├─ B = [C] Center (coherence with your •')
 │  └─ C = [E] Evidence (grounded in actual situation)
 │
 └─ DEF = Output Interface checks (you → world)
    ├─ D = [I] Interface (boundary integrity with others)
-   ├─ E = [C] Center (authentic expression AND truth-serving)
+   ├─ E = [C] Center (authentic expression from your •')
    └─ F = [E] Evidence (grounded in real consequences)
 
 1 = Check passes ✓
@@ -66,12 +69,10 @@ State 7 = (000|111)
 
 **What fails:**
 - Input [I]: Violates your boundaries ✗
-- Input [C]: Incoherent with authentic self ✗
-- Input [C]: Misaligned with truth ✗
+- Input [C]: Incoherent with your center (•') ✗
 - Input [E]: Detached from your reality ✗
 - Output [I]: Violates others' boundaries ✗
-- Output [C]: Inauthentic expression ✗
-- Output [C]: Serves falsehood ✗
+- Output [C]: Inauthentic expression (not from •') ✗
 - Output [E]: Ignores real consequences ✗
 
 **Geometric status:** MAXIMALLY UNSTABLE (0/6 checks pass)
@@ -132,22 +133,23 @@ Reality-grounding alone cannot sustain pattern without boundary integrity or tru
 
 ---
 
-#### State 2: (000|010) - Inauthentic Truth-Serving
+#### State 2: (000|010) - Off-Center Expression
 
 **What passes:**
-- Output [C]: Aligned with truth (•) ✓
+- Output [C]: Partial center coherence ✓ (but unstable)
 
 **What fails:**
 - All Input checks ✗
 - Output [I]: Violates boundaries ✗
-- Output [C]: Not coherent with authentic self (•') ✗
 - Output [E]: Not grounded in consequences ✗
 
+**Note:** This state appears to pass [C] but is actually unstable because true center coherence cannot exist with boundary violations and disconnection from reality. This represents claimed authenticity that isn't genuinely centered.
+
 **Ethical manifestation:**
-- "Doing the right thing" inauthentically
-- Following truth without personal coherence
-- Righteous harm
-- Zealotry without integrity
+- "Being yourself" while violating others
+- Claimed authenticity without responsibility
+- Ego-driven behavior disguised as truth
+- Self-expression without grounding
 
 **Examples:**
 - Forcing "help" on someone who doesn't want it
@@ -217,16 +219,17 @@ Cannot maintain self-integrity while knowingly violating own boundaries and valu
 
 ---
 
-#### State 16: (010|000) - Truth-Aligned Self-Destruction
+#### State 16: (010|000) - Claimed Center Without Grounding
 
 **What passes:**
-- Input [C]: Aligned with truth (•) ✓
+- Input [C]: Partial center coherence ✓ (but unstable)
 
 **What fails:**
 - Input [I]: Violates your boundaries ✗
-- Input [C]: Incoherent with authentic self (•') ✗
 - Input [E]: Not grounded in your reality ✗
 - All Output checks ✗
+
+**Note:** This state claims center coherence but violates boundaries and lacks reality grounding, indicating the "centering" is false or ideological rather than genuine.
 
 **Ethical manifestation:**
 - Martyrdom for truth without authenticity
@@ -275,10 +278,10 @@ Boundary maintenance without truth, authenticity, or reality-grounding creates s
 
 ### Category C: Output Only - Partial Success (States 3, 5, 6)
 
-#### State 3: (000|011) - Truth-Grounded Output, Failed Input
+#### State 3: (000|011) - Centered Output, Failed Input
 
 **What passes:**
-- Output [C]: Aligned with truth ✓
+- Output [C]: Centered expression ✓
 - Output [E]: Grounded in consequences ✓
 
 **What fails:**
@@ -333,11 +336,11 @@ Output has 2/3 checks (potentially stable there), but lacks Center coherence. In
 
 ---
 
-#### State 6: (000|110) - Authentic-Truth Output, Failed Input
+#### State 6: (000|110) - Centered Boundary-Respecting Output, Failed Input
 
 **What passes:**
 - Output [I]: Respects boundaries ✓
-- Output [C]: Authentic AND truth-aligned ✓
+- Output [C]: Centered expression ✓
 
 **What fails:**
 - All Input checks ✗
@@ -362,10 +365,10 @@ Output has 2/3 checks at output (boundary + center). But input completely fails 
 
 ### Category D: Input Only - Partial Success (States 12, 24, 48)
 
-#### State 12: (011|000) - Truth-Grounded Self, Failed Output
+#### State 12: (011|000) - Centered and Grounded Self, Failed Output
 
 **What passes:**
-- Input [C]: Aligned with truth ✓
+- Input [C]: Centered ✓
 - Input [E]: Grounded in your reality ✓
 
 **What fails:**
@@ -389,22 +392,23 @@ Input has 2/3 checks (truth + evidence). But boundary fails at input, and all ou
 
 ---
 
-#### State 24: (110|000) - Boundary-Authentic Self, Failed Output
+#### State 24: (110|000) - Bounded Center, Failed Output
 
 **What passes:**
 - Input [I]: Maintains your boundaries ✓
-- Input [C]: Coherent with authentic self ✓
+- Input [C]: Centered ✓
 
 **What fails:**
-- Input [C]: Misaligned with truth ✗
 - Input [E]: Not grounded in reality ✗
 - All Output checks ✗
 
+**Note:** This state has boundaries and claims centering, but lack of reality grounding suggests the "centering" may be delusional or defensive rather than genuine.
+
 **Ethical manifestation:**
-- Protected authenticity serving falsehood
-- Genuine self-expression disconnected from truth
-- Real but wrong
-- Authentic delusion
+- Protected self-image disconnected from reality
+- Defended identity without grounding
+- Isolated coherence
+- Walled-off "authenticity"
 
 **Examples:**
 - Genuinely being yourself while serving lies
@@ -507,21 +511,21 @@ Reality acknowledgment at both interfaces (1 check each) insufficient. Need ≥2
 
 ---
 
-#### State 10: (001|010) - Truth-Serving Self-Betrayal
+#### State 10: (001|010) - Grounded Self, Centered Output
 
 **What passes:**
 - Input [E]: Grounded in your reality ✓
-- Output [C]: Aligned with truth ✓
+- Output [C]: Centered expression ✓
 
 **What fails:**
-- Input [I], [C]: Your boundaries and authenticity violated ✗
+- Input [I], [C]: Your boundaries and centering violated ✗
 - Output [I], [E]: Others' boundaries violated, not grounded ✗
 
 **Ethical manifestation:**
-- Serving truth while betraying yourself
-- Realistic self-sacrifice for truth
-- Martyrdom with awareness
-- "I know what this costs me, but truth matters"
+- Realistic awareness of personal violation
+- Centered output despite compromised input
+- Self-aware martyrdom
+- "I know what this costs me, but I must act from center"
 
 **Examples:**
 - Whistleblowing at personal cost with full awareness
@@ -534,21 +538,23 @@ Split validation (1 input, 1 output) cannot sustain pattern. Either truth-servic
 
 ---
 
-#### State 17: (010|001) - Truth-Aligned Realistic Harm
+#### State 17: (010|001) - Centered Input, Grounded Output Harm
 
 **What passes:**
-- Input [C]: Aligned with truth ✓
+- Input [C]: Centered ✓
 - Output [E]: Grounded in consequences ✓
 
 **What fails:**
 - Input [I], [E]: Your boundaries violated, not grounded ✗
-- Output [I], [C]: Others' boundaries violated, inauthentic ✗
+- Output [I], [C]: Others' boundaries violated, not centered ✗
+
+**Note:** Claims centering at input but violates boundaries and lacks grounding, suggesting false centering.
 
 **Ethical manifestation:**
-- "This serves truth and I know the damage it causes"
-- Calculated harm for "higher purpose"
-- Ends-justify-means thinking
-- Ideological destruction
+- "This is right and I know the damage it causes"
+- Calculated harm for claimed purpose
+- Ideological justification
+- Rationalized destruction
 
 **Examples:**
 - Harming people realistically for abstract truth
@@ -583,7 +589,7 @@ They share:
 
 **What passes:**
 - Output [I]: Respects boundaries ✓
-- Output [C]: Authentic AND truth-aligned ✓
+- Output [C]: Centered expression ✓
 - Output [E]: Grounded in reality ✓
 
 **What fails:**
@@ -614,7 +620,7 @@ Output fully validates (3/3 checks). This can persist and do real good. But inpu
 
 **What passes:**
 - Input [I]: Maintains your boundaries ✓
-- Input [C]: Authentic AND truth-aligned ✓
+- Input [C]: Centered ✓
 - Input [E]: Grounded in your reality ✓
 
 **What fails:**
@@ -625,7 +631,7 @@ Output fully validates (3/3 checks). This can persist and do real good. But inpu
 **Manifestation:**
 - Perfect self-maintenance with no helpful output
 - Enlightened inaction
-- Boundary-protected truth awareness without action
+- Centered awareness without contribution
 - Useless integrity
 
 **Examples:**
@@ -669,23 +675,20 @@ These include states like:
 1. **[I] Boundary:** "Does this respect MY boundaries?"
    - If NO → Input Interface check fails ✗
 
-2. **[C] Authenticity:** "Is this coherent with who I authentically am?"
-   - If NO → Input Center (•') check fails ✗
+2. **[C] Center:** "Is this coherent with my genuine center (•')?"
+   - If NO → Input Center check fails ✗
 
-3. **[C] Truth:** "Is this aligned with truth and reality?"
-   - If NO → Input Center (•) check fails ✗
-
-4. **[E] Reality:** "Am I being realistic about my actual situation?"
+3. **[E] Reality:** "Am I being realistic about my actual situation?"
    - If NO → Input Evidence check fails ✗
 
 **OUTPUT INTERFACE:**
-5. **[I] Boundary:** "Does this respect OTHERS' boundaries?"
+4. **[I] Boundary:** "Does this respect OTHERS' boundaries?"
    - If NO → Output Interface check fails ✗
 
-6. **[C] Expression:** "Am I being authentic AND serving truth?"
-   - If NO → Output Center checks fail ✗
+5. **[C] Center:** "Am I expressing from my genuine center?"
+   - If NO → Output Center check fails ✗
 
-7. **[E] Consequences:** "Am I accepting real effects this will have?"
+6. **[E] Consequences:** "Am I accepting real effects this will have?"
    - If NO → Output Evidence check fails ✗
 
 **Count YES answers:**
@@ -863,22 +866,20 @@ Split validation (evidence only at each interface) cannot sustain. Either person
 ```
 Input Interface:
 [I] Boundaries: Maintains own ✓
-[C] Authentic: Genuinely caring ✓
-[C] Misaligned: Serving falsehood ✗
+[C] Center: Claims genuine care, but lying indicates off-center ✗
 [E] Realistic: Understands situation ✓
 
 Output Interface:
 [I] Violates boundaries: Denies truth access ✗
-[C] Inauthentic: Hiding reality ✗
-[C] Serves falsehood: Active lying ✗
+[C] Center: Not expressing from genuine center (lying) ✗
 [E] Not grounded: Fantasy protection ✗
 
-State: Approximately (1101|0000)
-Validation: 3 input, 0 output = BORDERLINE but degrading
+State: Approximately (101|000)
+Validation: 2 input, 0 output = BORDERLINE but degrading
 ```
 
 **Why it fails:**
-Input is strong (3/4 checks), but complete output failure creates relationship instability. Truth emerges eventually. Trust destroyed. Pattern collapses.
+Input has boundaries and grounding but lacks true centering (genuine care wouldn't manipulate through lies). Complete output failure creates relationship instability. Truth emerges eventually. Trust destroyed. Pattern collapses.
 
 **Path to stability:**
 1. Maintain input validation (keep caring)
@@ -897,29 +898,27 @@ Input is strong (3/4 checks), but complete output failure creates relationship i
 ```
 Input Interface:
 [I] Boundaries: Maintains own ✓
-[C] Authentic: Genuinely expressing ✓
-[C] Misaligned: Serving ego, not truth ✗
+[C] Center: Claims authenticity but cruelty indicates off-center (ego-driven) ✗
 [E] May be realistic ✓
 
 Output Interface:
 [I] Violates boundaries: Cruelty ✗
-[C] Authentic: Genuine expression ✓
-[C] Misaligned: Serving ego ✗
+[C] Center: Not expressing from genuine center (ego, not •') ✗
 [E] Not grounded: Ignoring harm ✗
 
-State: Approximately (1101|0100)
-Validation: 3 input, 1 output = BORDERLINE
+State: Approximately (101|000)
+Validation: 2 input, 0 output = BORDERLINE
 ```
 
 **Why it fails:**
-Strong input validation but output only passes authenticity - violates boundaries and denies consequences. Relationships collapse. Social exclusion. Pattern fails.
+Input has boundaries and some grounding but lacks true centering (genuine center wouldn't express as cruelty). Complete output failure. Relationships collapse. Social exclusion. Pattern fails.
 
 **Path to stability:**
-1. Keep authenticity (good start)
-2. Add truth alignment (serve truth, not ego)
+1. Recognize ego-drivenness (not truly centered)
+2. Find genuine center (•' not ego)
 3. Add boundary respect (don't violate others)
 4. Add consequence awareness (accept effects)
-5. Arrive at: authentic truth-serving kindness
+5. Arrive at: genuinely centered expression
 
 ---
 

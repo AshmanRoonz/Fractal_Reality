@@ -184,7 +184,7 @@ This is OPTIMAL compression with minimal loss.
 | **[ICE] Component** | **Ethical Dimension** | **What It Validates** |
 |---------------------|----------------------|------------------------|
 | **[I] Interface (2D)** | **The GOOD** | Boundary integrity, consent, respect for distinction |
-| **[C] Center (1.5D)** | **The TRUE** | Internal coherence (authentic to •') AND alignment with ultimate truth (•) |
+| **[C] Center (1.5D)** | **The TRUE** | Coherence with your center (•'), which is a fractal expression of ultimate truth |
 | **[E] Evidence (3D)** | **The RIGHT** | Grounded in reality, actual consequences, causal connection |
 
 **Same structure that:**

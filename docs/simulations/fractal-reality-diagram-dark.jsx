@@ -282,7 +282,7 @@ const ValidationSection = () => (
             </div>
             <div className="flex items-start gap-2">
               <div className="font-bold text-purple-400">C₁:</div>
-              <div>Is there coherence with •' AND alignment toward •? (Center)</div>
+              <div>Is there coherence with •' (center)? (Center)</div>
             </div>
             <div className="flex items-start gap-2">
               <div className="font-bold text-green-400">E₁:</div>
@@ -300,7 +300,7 @@ const ValidationSection = () => (
             </div>
             <div className="flex items-start gap-2">
               <div className="font-bold text-purple-400">C₂:</div>
-              <div>Is there coherence with •' AND alignment toward •? (Center)</div>
+              <div>Is there coherence with •' (center)? (Center)</div>
             </div>
             <div className="flex items-start gap-2">
               <div className="font-bold text-green-400">E₂:</div>
