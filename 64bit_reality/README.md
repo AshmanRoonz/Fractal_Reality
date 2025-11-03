@@ -63,6 +63,10 @@ This 64-state matrix **IS** the structure of particle physics.
 
 - **[now_as_wholeness_64bit_packets.md](now_as_wholeness_64bit_packets.md)** - **NOW as wholeness**: Explains how present moment awareness IS the complete 64-bit information packet operating—not a thin slice between past and future, but wholeness transmitting itself through irreducible validation units
 
+- **[Why_c_Squared_Two_Centers.md](Why_c_Squared_Two_Centers.md)** - **Why c² appears in fundamental equations**: Reveals that c² = dual center validation structure (checking against both •' fractal operator AND • ultimate pattern, each at rate c). Explains E = mc², Einstein field equations (c⁴), Schwarzschild metric, and why nothing exceeds c. Shows the same dual validation appears in physics, consciousness, and ethics.
+
+- **[Complete_c_Structure_c2_c4_Architecture.md](Complete_c_Structure_c2_c4_Architecture.md)** - **Complete c^n architecture**: Shows how c = connection speed between • and •' (validation rate), c² = single interface dual validation, c⁴ = dual interface complete validation (input + output). Explains where each power of c appears in physics (E = mc² uses c², Einstein equations use c⁴), why this structure is necessary, and implications for unification of forces and quantum gravity resolution.
+
 ### Visualizations
 
 - **[64_state_particle_visualization.jsx](64_state_particle_visualization.jsx)** - Interactive React component showing the 64-state matrix with particle assignments
