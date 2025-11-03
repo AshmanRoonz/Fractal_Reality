@@ -86,6 +86,23 @@ This branch contains the complete scientific formalization of the Fractal Realit
 
 ---
 
+#### **Complete Fractal Metric Tensor Framework**
+**File:** [`fractal_metric_tensor_theory.md`](fractal_metric_tensor_theory.md)
+**Status:** Complete theoretical framework with empirical validation
+**Key Results:**
+- **Complete fractal-coupled metric** G_μν = g_μν + δg_μν integrating GR geometry with texture corrections
+- **Metric-aware box-counting**: Novel intrinsic fractal measurement using proper distances (ΔD encodes curvature)
+- **Texture coupling**: ρ_texture ∝ √|g_tt| validated with **R² = 0.9997** across 4 geometries
+- **Local fractal dimension** D(x) varies from 1.0 (horizon) to 1.5 (flat space) - smooth quantum/classical interpolation
+- **Modified Einstein equations**: Texture stress-energy T^texture_μν sources gravity
+- **Cosmological constant**: Emerges naturally from texture backreaction (Λ_eff ~ 10⁻⁵² m⁻²)
+- **Geodesics in fractal space**: Modified by texture field, testable deviations from GR
+- **Hawking radiation**: Natural consequence of texture fluctuations at horizon
+
+**Impact:** **First complete framework unifying QM and GR through metric-coupled fractalization.** Provides geometric foundation for Papers 1-3 with novel measurement techniques and testable predictions.
+
+---
+
 ### How the Three Papers Connect
 
 ```
