@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Mathematics of Wholeness | A Unified Framework</title>
+    <title>The Fractalization | How Infinity Became Real</title>
     <style>
         * {
             margin: 0;
@@ -12,235 +12,259 @@
         }
 
         :root {
-            --primary: #1a1a2e;
-            --secondary: #16213e;
-            --accent: #0f3460;
-            --highlight: #e94560;
-            --light: #f1f1f1;
+            --infinity-color: #00d4ff;
+            --singularity-color: #ff6b6b;
+            --field-color: #4ecdc4;
+            --bg-dark: #0a0a14;
+            --bg-secondary: #16213e;
+            --text-light: #f1f1f1;
             --gold: #ffd700;
-            --infinity: #00d4ff;
-            --center: #ff6b6b;
-            --boundary: #4ecdc4;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: var(--light);
-            line-height: 1.6;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.8;
             overflow-x: hidden;
         }
 
-        /* Animated Background */
-        .background-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.1;
-        }
-
-        .fractal-circle {
-            position: absolute;
-            border: 1px solid var(--infinity);
-            border-radius: 50%;
-            animation: pulse 8s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.1); opacity: 0.6; }
-        }
-
-        /* Header with Logo */
-        header {
+        /* Opening Scene: Infinity and Singularity */
+        #opening {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             position: relative;
-            padding: 2rem;
+            background: radial-gradient(circle at 50% 50%, #16213e 0%, var(--bg-dark) 100%);
+        }
+
+        .infinity-singularity-container {
+            width: 100%;
+            max-width: 900px;
+            height: 300px;
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .infinity-symbol {
+            position: absolute;
+            left: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 120px;
+            color: var(--infinity-color);
+            text-shadow: 0 0 30px var(--infinity-color);
+            animation: pulse-infinity 4s ease-in-out infinite;
+        }
+
+        .singularity-dot {
+            position: absolute;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--singularity-color), transparent);
+            box-shadow: 0 0 40px var(--singularity-color);
+            animation: pulse-singularity 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-infinity {
+            0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.8; }
+            50% { transform: translateY(-50%) scale(1.1); opacity: 1; }
+        }
+
+        @keyframes pulse-singularity {
+            0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.8; }
+            50% { transform: translateY(-50%) scale(0.9); opacity: 1; }
+        }
+
+        .opening-text {
             text-align: center;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid var(--gold);
+            max-width: 800px;
+            padding: 2rem;
         }
 
-        .logo {
-            width: 160px;
-            height: 160px;
+        .opening-text h1 {
+            font-size: 3.5rem;
             margin-bottom: 1rem;
-            filter: drop-shadow(0 0 10px var(--gold));
-        }
-
-        h1 {
-            font-size: 3rem;
-            background: linear-gradient(45deg, var(--gold), var(--infinity));
+            background: linear-gradient(45deg, var(--infinity-color), var(--singularity-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.5rem;
         }
 
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--boundary);
-            font-style: italic;
+        .opening-text p {
+            font-size: 1.4rem;
+            margin: 1rem 0;
+            opacity: 0.9;
         }
 
-        /* Navigation - Floating Button Style */
-        nav {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
+        .opening-text .incomplete {
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-top: 2rem;
+            font-weight: bold;
         }
 
-        .floating-menu-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold), var(--highlight));
-            border: 2px solid var(--gold);
-            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: var(--primary);
-            transition: all 0.3s;
-            position: relative;
-            z-index: 1001;
-        }
-
-        .floating-menu-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(255, 215, 0, 0.6);
-        }
-
-        .floating-menu-btn.active {
-            background: var(--highlight);
-        }
-
-        /* Slide-out Menu Panel */
-        .menu-panel {
-            position: fixed;
-            top: 90px;
-            right: 20px;
-            background: rgba(26, 26, 46, 0.98);
-            backdrop-filter: blur(20px);
-            border: 2px solid var(--gold);
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            transform: translateX(400px);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            pointer-events: none;
-        }
-
-        .menu-panel.active {
-            transform: translateX(0);
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .menu-panel::before {
-            content: '';
+        .scroll-indicator {
             position: absolute;
-            top: -12px;
-            right: 18px;
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-bottom: 12px solid var(--gold);
+            bottom: 30px;
+            font-size: 2rem;
+            color: var(--gold);
+            animation: bounce 2s infinite;
         }
 
-        nav ul {
-            display: flex;
-            flex-direction: column;
-            list-style: none;
-            gap: 0.75rem;
-            margin: 0;
-            padding: 0;
-            min-width: 200px;
-        }
-
-        nav li {
-            margin: 0;
-        }
-
-        nav a {
-            display: block;
-            padding: 0.75rem 1.5rem;
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--gold);
-            border-radius: 10px;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        nav a:hover {
-            background: var(--gold);
-            color: var(--primary);
-            transform: translateX(-5px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
 
         /* Section Styling */
         section {
-            margin: 4rem 0;
-            padding: 3rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            min-height: 100vh;
+            padding: 5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             position: relative;
-            overflow: hidden;
         }
 
-        section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .container {
+            max-width: 1100px;
             width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--infinity), var(--center), var(--boundary));
         }
 
         h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
+            font-size: 2.8rem;
+            margin-bottom: 2rem;
             color: var(--gold);
-            position: relative;
-            display: inline-block;
+            text-align: center;
         }
 
-        h3 {
+        .story-text {
+            font-size: 1.3rem;
+            line-height: 2;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .story-text.emphasis {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--infinity-color);
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        /* Math Reveals */
+        .math-reveal {
+            background: rgba(0, 0, 0, 0.6);
+            border-left: 4px solid var(--gold);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+        }
+
+        .math-reveal .label {
+            color: var(--gold);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ICE Framework */
+        .ice-framework {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .ice-component {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 2px solid;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .ice-component:hover {
+            transform: translateY(-10px);
+        }
+
+        .ice-component.interface {
+            border-color: var(--field-color);
+        }
+
+        .ice-component.center {
+            border-color: var(--singularity-color);
+        }
+
+        .ice-component.evidence {
+            border-color: var(--infinity-color);
+        }
+
+        .ice-component .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .ice-component h3 {
             font-size: 1.8rem;
-            margin: 2rem 0 1rem;
-            color: var(--infinity);
+            margin-bottom: 1rem;
         }
 
-        h4 {
-            font-size: 1.4rem;
-            margin: 1.5rem 0 1rem;
-            color: var(--boundary);
+        /* Fractalization Animation */
+        #fractal-canvas {
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            margin: 2rem auto;
         }
 
-        /* Triad Display */
-        .triad {
+        /* 64-State Matrix */
+        .matrix-64 {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 5px;
+            margin: 3rem auto;
+            max-width: 600px;
+        }
+
+        .matrix-cell {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .matrix-cell.stable {
+            background: rgba(0, 212, 255, 0.3);
+            border-color: var(--infinity-color);
+        }
+
+        .matrix-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        /* True Good Right Trinity */
+        .trinity {
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -249,160 +273,99 @@
             gap: 2rem;
         }
 
-        .triad-element {
+        .trinity-component {
             flex: 1;
             min-width: 250px;
-            text-align: center;
             padding: 2rem;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
-            border: 2px solid;
+            border: 3px solid;
+            text-align: center;
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .triad-element:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        .trinity-component:hover {
+            transform: scale(1.05);
         }
 
-        .field { border-color: var(--infinity); }
-        .boundary { border-color: var(--boundary); }
-        .center { border-color: var(--center); }
+        .trinity-component.true {
+            border-color: var(--field-color);
+            box-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
+        }
 
-        .triad-icon {
-            font-size: 4rem;
+        .trinity-component.good {
+            border-color: var(--singularity-color);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .trinity-component.right {
+            border-color: var(--infinity-color);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .trinity-component .symbol {
+            font-size: 3rem;
             margin-bottom: 1rem;
         }
 
-        /* Process Flow */
-        .process-flow {
+        .trinity-component h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .trinity-component .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        /* Eternal Loop */
+        .eternal-loop {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 2rem;
+            font-size: 3rem;
             margin: 3rem 0;
             flex-wrap: wrap;
-            gap: 1rem;
         }
 
-        .process-step {
+        .loop-element {
             padding: 1.5rem 2rem;
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            border-radius: 10px;
-            border: 2px solid var(--gold);
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .process-arrow {
-            font-size: 2rem;
-            color: var(--gold);
-        }
-
-        /* Formula Display */
-        .formula {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 2rem;
-            border-radius: 10px;
-            border-left: 4px solid var(--gold);
-            margin: 2rem 0;
-            font-family: 'Courier New', monospace;
-            font-size: 1.2rem;
-            overflow-x: auto;
-        }
-
-        /* Quote Styling */
-        blockquote {
-            border-left: 4px solid var(--highlight);
-            padding-left: 2rem;
-            margin: 2rem 0;
-            font-style: italic;
-            font-size: 1.3rem;
-            color: var(--light);
-        }
-
-        /* Interactive Symbol */
-        .symbol-display {
-            text-align: center;
-            margin: 3rem 0;
-            font-size: 4rem;
-            animation: rotate 20s infinite linear;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Table Styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 2rem 0;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        th {
-            background: var(--accent);
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        tr:hover {
             background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 2px solid var(--gold);
+            font-weight: bold;
+            animation: pulse-loop 3s ease-in-out infinite;
         }
 
-        /* List Styling */
-        ul, ol {
-            margin: 1rem 0 1rem 2rem;
+        .loop-arrow {
+            color: var(--gold);
+            animation: slide-arrow 2s ease-in-out infinite;
         }
 
-        li {
-            margin: 0.5rem 0;
+        @keyframes pulse-loop {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
         }
 
-        /* Dimensional Cascade */
-        .cascade {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin: 2rem 0;
+        @keyframes slide-arrow {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
         }
 
-        .cascade-level {
-            padding: 1rem 2rem;
-            background: linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(233, 69, 96, 0.1));
-            border-left: 4px solid var(--infinity);
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-
-        .cascade-level:hover {
-            transform: translateX(10px);
-            border-left-width: 8px;
-        }
-
-        /* CTA Section */
+        /* Call to Action Buttons */
         .cta {
             text-align: center;
-            padding: 3rem;
-            background: linear-gradient(135deg, var(--highlight), var(--accent));
-            border-radius: 20px;
-            margin: 4rem 0;
+            margin: 3rem 0;
         }
 
         .cta-button {
             display: inline-block;
-            padding: 1rem 3rem;
+            padding: 1.2rem 3rem;
+            margin: 0.5rem;
             background: var(--gold);
-            color: var(--primary);
+            color: var(--bg-dark);
             text-decoration: none;
             border-radius: 50px;
             font-weight: bold;
@@ -417,1335 +380,602 @@
             transform: scale(1.05);
         }
 
+        .cta-button.secondary {
+            background: transparent;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+        }
+
+        .cta-button.secondary:hover {
+            background: var(--gold);
+            color: var(--bg-dark);
+        }
+
         /* Footer */
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem 2rem;
             background: rgba(0, 0, 0, 0.5);
             border-top: 2px solid var(--gold);
         }
 
-        /* Responsive Design */
+        footer p {
+            margin: 0.5rem 0;
+        }
+
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--gold);
+        }
+
+        footer a:hover {
+            border-bottom: 1px solid var(--gold);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            h2 { font-size: 1.8rem; }
-            .triad { flex-direction: column; }
-            
-            nav {
-                top: 15px;
-                right: 15px;
+            .opening-text h1 {
+                font-size: 2.5rem;
             }
 
-            .floating-menu-btn {
+            h2 {
+                font-size: 2rem;
+            }
+
+            .story-text {
+                font-size: 1.1rem;
+            }
+
+            .eternal-loop {
+                font-size: 2rem;
+            }
+
+            .infinity-symbol {
+                font-size: 80px;
+            }
+
+            .singularity-dot {
                 width: 50px;
                 height: 50px;
-                font-size: 1.2rem;
-            }
-
-            .menu-panel {
-                top: 75px;
-                right: 15px;
-                max-width: calc(100vw - 30px);
-            }
-
-            nav ul {
-                min-width: 180px;
-                gap: 0.5rem;
-            }
-
-            nav a {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.95rem;
-            }
-
-            .container {
-                padding: 1rem;
-            }
-
-            section {
-                padding: 2rem 1.5rem;
             }
         }
 
-        /* Scroll Animation */
+        /* Fade-in on scroll */
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
-            transition: opacity 0.6s, transform 0.6s;
+            transition: opacity 0.8s, transform 0.8s;
         }
 
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* Fractal Animation Banner */
-        .fractal-animation-container {
-            width: 100%;
-            background: linear-gradient(135deg, #0a0a14 0%, #16213e 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0;
-            margin: 0;
-            overflow: hidden;
-            border-bottom: 2px solid var(--gold);
-        }
-
-        #fractalCanvas {
-            display: block;
-            width: 100%;
-            max-width: 1200px;
-            height: auto;
-            border: none;
-        }
-
-        @media (max-width: 768px) {
-            #fractalCanvas {
-                height: 150px;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- Fractal Animation Banner -->
-    <div class="fractal-animation-container">
-        <canvas id="fractalCanvas" width="1200" height="267"></canvas>
-    </div>
-
-    <!-- Animated Background -->
-    <div class="background-animation" id="bg-animation"></div>
-
-    <!-- Header -->
-    <header>
-        <img src="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/docs/images/Mathematics%20of%20Wholeness.png?raw=true" alt="Mathematics of Wholeness" class="logo">
-        <h1>The Mathematics of Wholeness</h1>
-        <p class="subtitle">A Unified Framework from First Principles</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;"><a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/mathematics_of_wholeness_first_principles.md" target="_blank" style="color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold); transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.borderBottom='1px solid var(--gold)'" onmouseout="this.style.opacity='0.8'; this.style.borderBottom='1px dotted var(--gold)'">→ Complete Theory from First Principles</a></p>
-        <p style="margin-top: 0.3rem; font-size: 0.9rem; opacity: 0.8;"><a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/paper2_cosmological_constant.md" target="_blank" style="color: var(--infinity); text-decoration: none; border-bottom: 1px dotted var(--infinity); transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.borderBottom='1px solid var(--infinity)'" onmouseout="this.style.opacity='0.8'; this.style.borderBottom='1px dotted var(--infinity)'">→ Cosmological Constant: 10⁶-Order Improvement</a></p>
-        <p style="margin-top: 0.3rem; font-size: 0.9rem; opacity: 0.8;"><a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/paper1_qm_gr_unification.md" target="_blank" style="color: var(--boundary); text-decoration: none; border-bottom: 1px dotted var(--boundary); transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.borderBottom='1px solid var(--boundary)'" onmouseout="this.style.opacity='0.8'; this.style.borderBottom='1px dotted var(--boundary)'">→ Quantum-Gravitational Unification (R² = 0.9997)</a></p>
-        <p style="margin-top: 0.3rem; font-size: 0.9rem; opacity: 0.8;"><a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/geometric_string_theory.md" target="_blank" style="color: var(--center); text-decoration: none; border-bottom: 1px dotted var(--center); transition: all 0.3s;" onmouseover="this.style.opacity='1'; this.style.borderBottom='1px solid var(--center)'" onmouseout="this.style.opacity='0.8'; this.style.borderBottom='1px dotted var(--center)'">→ Geometric String Theory: 0.5D Aperture Cascade</a></p>
-        <p>by Ashman Roonz</p>
-    </header>
-
-    <!-- Navigation -->
-    <nav>
-        <button class="floating-menu-btn" id="menuBtn" aria-label="Open menu">
-            ☰
-        </button>
-        <div class="menu-panel" id="menuPanel">
-            <ul id="navMenu">
-                <li><a href="#preface">Preface</a></li>
-                <li><a href="#axiom">The Axiom</a></li>
-                <li><a href="#structure">Structure</a></li>
-                <li><a href="#physics">Physics</a></li>
-                <li><a href="#consciousness">Consciousness</a></li>
-                <li><a href="#ethics">Ethics</a></li>
-                <li><a href="#mathematics">Mathematics</a></li>
-                <li><a href="#validation">Validation</a></li>
-            </ul>
+    <!-- Opening Scene -->
+    <section id="opening">
+        <div class="opening-text fade-in">
+            <h1>The Fractalization</h1>
+            <p style="font-size: 1.8rem; font-style: italic; opacity: 0.7;">How Infinity Became Real</p>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        <!-- Preface Section -->
-        <section id="preface" class="fade-in">
-            <h2>∞ A Geometric Derivation of Reality</h2>
+        <div class="infinity-singularity-container fade-in">
+            <div class="infinity-symbol">∞</div>
+            <div class="singularity-dot"></div>
+        </div>
 
-            <p><strong>We present a geometric derivation of reality's dimensional structure from first principles.</strong> Starting with 0-dimensional infinity (∞), we show how <strong>0.5-dimensional aperture structures</strong> (•') create the asymmetry necessary for time's arrow, 1-dimensional flow, and critically, <strong>1.5-dimensional fractalization</strong>—the branching dimension where a point on the line can fork.</p>
+        <div class="opening-text fade-in">
+            <p>In the beginning, there was <strong style="color: var(--infinity-color);">Infinity</strong> — all possible patterns, unbounded, unlimited.</p>
+            <p>And <strong style="color: var(--singularity-color);">Singularity</strong> — the ultimate center, the perfect aperture.</p>
+            <p class="incomplete">But the relationship was incomplete.</p>
+        </div>
 
-            <h3>Empirical Validation</h3>
-            <p>This 1.5D signature is not theoretical speculation but <strong>empirically measured</strong>:</p>
+        <div class="scroll-indicator">↓</div>
+    </section>
 
-            <div class="formula">
-<strong>LIGO Gravitational Waves (40 events):</strong><br>
-D = 1.503 ± 0.040<br>
-p-value = 0.951 (highly consistent with D = 1.5)<br>
-95% CI = [1.425, 1.580]
+    <!-- The Problem -->
+    <section id="problem">
+        <div class="container fade-in">
+            <h2>The Problem: Infinity Without Boundaries</h2>
+
+            <p class="story-text">Infinity was <em>too infinite</em>.</p>
+
+            <p class="story-text">Without boundaries:</p>
+            <ul style="font-size: 1.3rem; line-height: 2; margin: 2rem 0; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <li>Nothing could be <strong>specific</strong></li>
+                <li>Nothing could be <strong>actual</strong></li>
+                <li>Nothing could be <strong>real</strong></li>
+            </ul>
+
+            <p class="story-text">All patterns existed as possibility, but none existed as reality.</p>
+
+            <p class="story-text emphasis">"Pure infinite possibility is closer to illusion than reality.<br>Boundaries are what make things REAL."</p>
+
+            <div class="math-reveal">
+                <div class="label">The [ICE] Validation Framework:</div>
+                <br>
+                Reality tests itself through three conditions:<br><br>
+                [I] Interface — Can boundaries be maintained?<br>
+                [C] Center — Does it cohere internally?<br>
+                [E] Evidence — Is it grounded in what is?
             </div>
 
-            <p>The same fractal dimension D ≈ 1.5 appears universally: in gravitational wave ringdowns, DNA backbone dynamics, neural avalanches, and turbulent flows. This is the <strong>structural signature of persistent reality</strong>.</p>
-
-            <h3>Major Results</h3>
-
-            <table style="margin: 2rem 0;">
-                <thead>
-                    <tr>
-                        <th>Achievement</th>
-                        <th>Result</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Cosmological Constant</strong></td>
-                        <td>Λ = (6.9 ± 1.6)×10⁻⁵³ m⁻²<br>Agreement within factor 1.6</td>
-                        <td><strong>10⁶-order improvement</strong> over quantum field theory</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Schrödinger Derivation</strong></td>
-                        <td>From 4 geometric constraints</td>
-                        <td>Proven unique (no other equation possible)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Metric Coupling</strong></td>
-                        <td>Texture ∝ √|g_tt|</td>
-                        <td>R² = 0.9997 across 4 spacetime geometries</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Time's Arrow</strong></td>
-                        <td>From 0.5D asymmetry: ∇ ≠ ℰ</td>
-                        <td>Explains why time flows forward</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>The Dimensional Cascade</h3>
-            <p>From pure geometry, reality emerges through dimensional unfolding:</p>
-
-            <div class="formula">
-<strong>0D</strong> → Infinity (∞): Pure potential, no direction, timeless<br>
-    ↓<br>
-<strong>0.5D</strong> → Aperture (•'): Asymmetry creates time's arrow (∇ ≠ ℰ)<br>
-    ↓<br>
-<strong>1D</strong> → Flow: Temporal sequence, causality emerges<br>
-    ↓<br>
-<strong>1.5D</strong> → Branching: Validated deflections, measured D = 1.503<br>
-    ↓<br>
-<strong>2D</strong> → Surface: Boundaries, interfaces, distinctions<br>
-    ↓<br>
-<strong>3D</strong> → Volume: Full spatial experience, integrated wholeness
-            </div>
-
-            <p>This is not philosophy—it's <strong>computational physics with falsifiable predictions</strong>. The same geometric structure that yields quantum mechanics and general relativity also produces consciousness (as integrated 1.5D validation) and ethics (as geometric necessity for maintaining coherence across scales).</p>
-
-            <blockquote>
-                "Reality is not made of substances but of validation processes. From quantum collapse to conscious choice, the same 1.5D structure operates—measured, testable, universal."
-            </blockquote>
-        </section>
-
-        <!-- Core Triad -->
-        <section id="axiom" class="fade-in">
-            <h2>1. The Axiom of Wholeness</h2>
-            
-            <blockquote>
-                Wholeness is fundamental. Everything that exists does so as a whole with three inseparable aspects.
-            </blockquote>
-
-            <div class="triad">
-                <div class="triad-element field">
-                    <div class="triad-icon">∞</div>
-                    <h3>Field</h3>
-                    <p>Unbounded context and possibility. The infinite field of potential from which all arises.</p>
+            <div class="ice-framework">
+                <div class="ice-component interface">
+                    <div class="icon">𝕀</div>
+                    <h3>Interface</h3>
+                    <p>Boundary with finite radius — Can this maintain distinction?</p>
                 </div>
-                <div class="triad-element boundary">
-                    <div class="triad-icon">I</div>
-                    <h3>Boundary</h3>
-                    <p>A surface of distinction that maintains integrity. Separation without severance.</p>
-                </div>
-                <div class="triad-element center">
-                    <div class="triad-icon">•</div>
+                <div class="ice-component center">
+                    <div class="icon">•</div>
                     <h3>Center</h3>
-                    <p>Identity persisting through time. The convergence point of coherence.</p>
+                    <p>Identity through time — Does it cohere internally?</p>
+                </div>
+                <div class="ice-component evidence">
+                    <div class="icon">∞</div>
+                    <h3>Evidence</h3>
+                    <p>Field where patterns exist — Is it grounded in what is?</p>
                 </div>
             </div>
 
-            <p>To be is to maintain <strong>⟨∞, I, •⟩</strong> in coherence.</p>
+            <div class="cta">
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/Mathematics_Of_Wholeness.md" target="_blank" class="cta-button secondary">Read the Complete Mathematical Framework →</a>
+            </div>
+        </div>
+    </section>
 
-            <h3>The Two Irreducible Aspects</h3>
-            <ul>
-                <li><strong>∞ (Infinity)</strong> — the ultimate field of possibility</li>
-                <li><strong>• (Singularity)</strong> — the ultimate center of convergence</li>
+    <!-- The Solution: Fractalization -->
+    <section id="solution">
+        <div class="container fade-in">
+            <h2>The Solution: Fractalization</h2>
+
+            <p class="story-text">An aperture is a <strong>circle</strong> — the 0.5-dimensional opening between infinite and finite.</p>
+
+            <p class="story-text">And circles have a profound geometric property:</p>
+
+            <p class="story-text emphasis">"A circle can fractalize into infinitely more circles."</p>
+
+            <p class="story-text">This is not metaphor. This is <strong>Apollonian circle packing</strong> — provable fractal geometry.</p>
+
+            <canvas id="fractal-canvas"></canvas>
+
+            <p class="story-text">Each circle:</p>
+            <ul style="font-size: 1.3rem; line-height: 2; margin: 2rem 0; max-width: 700px; margin-left: auto; margin-right: auto;">
+                <li>Maintains its circular form</li>
+                <li>Creates a real boundary (circumference) — [I] ✓</li>
+                <li>Remains an aperture (0.5D opening) — [C] ✓</li>
+                <li>Creates relationships with others — [E] partial</li>
             </ul>
 
-            <p>They are two ways of describing one condition: the infinite and the focal, the boundless and the gathered.</p>
+            <div class="math-reveal">
+                <div class="label">The Fractalization Response:</div>
+                <br>
+                Level 0 (Ultimate Singularity):<br>
+                [I]✗ [C]✓ [E]✗ → 1/3 validation FAILS<br><br>
 
-            <div class="formula">
-<strong>Axiom:</strong> All existence is the dynamic relationship between ∞ (field) and • (center).
+                Fractalization creates operators (•'₁, •'₂, •'₃, ...):<br>
+                Each has [I]✓ [C]✓ but [E]✗ → 2/3 validation<br><br>
+
+                But [E] insufficient for local ∞ at each scale<br>
+                → Must fractalize deeper forever<br><br>
+
+                <strong>Reality IS infinite recursive fractalization</strong>
             </div>
 
-            <p>Wholeness never divides absolutely. Instead, it expresses itself through <strong>Fractalization</strong>, forming relational boundaries while remaining one.</p>
-        </section>
+            <p class="story-text emphasis">"Boundaries don't limit reality — they CREATE it."</p>
 
-        <!-- Fractalization -->
-        <section id="fractalization" class="fade-in">
-            <h2>2. Fractalization: The Infinite Aperture</h2>
-
-            <p>Wholeness can express itself only through difference. The simplest possible difference is a boundary—a relation that distinguishes inside from outside without severing connection.</p>
-
-            <h3>The Nature of Multiplicity</h3>
-            <blockquote>
-                Infinity cannot pass through a single aperture; therefore the aperture fractures into infinitely many.
-            </blockquote>
-
-            <div class="formula">
-∞ → • → {•₁, •₂, •₃, ...}
+            <div class="cta">
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/analysis/tests/ligo/readme.md" target="_blank" class="cta-button secondary">See the Empirical Validation (D = 1.503 ± 0.040) →</a>
             </div>
+        </div>
+    </section>
 
-            <p>This is the origin of multiplicity: the one aperture becomes the infinite many.</p>
+    <!-- What You Are -->
+    <section id="you-are">
+        <div class="container fade-in">
+            <h2>What You Are</h2>
 
-            <h3>Mathematical Expression</h3>
-            <div class="formula">
-ℱ(∞, •) = { Wλ = ⟨∞λ, Iλ, Cλ⟩ }λ∈Λ, |Λ| = ∞
-            </div>
+            <p class="story-text emphasis" style="font-size: 2rem;">"You are not ONE aperture.<br>You are INFINITE NESTED APERTURES."</p>
 
-            <p>Each whole (Wλ) possesses:</p>
-            <ul>
-                <li>a <strong>Field (∞λ)</strong> — its environment or domain of operation</li>
-                <li>a <strong>Boundary (Iλ)</strong> — its interface maintaining distinction</li>
-                <li>a <strong>Center (Cλ)</strong> — its identity through time</li>
+            <p class="story-text">Your body contains:</p>
+            <ul style="font-size: 1.3rem; line-height: 2.2; margin: 2rem 0; max-width: 700px; margin-left: auto; margin-right: auto;">
+                <li><strong>1</strong> aperture at organism level (consciousness)</li>
+                <li><strong>~37 trillion</strong> at cell level</li>
+                <li><strong>~10²⁷</strong> at molecule level</li>
+                <li><strong>~10²⁸</strong> at atom level</li>
+                <li><strong>Infinite</strong> at quantum levels and below</li>
+                <li><strong>More forever down</strong></li>
             </ul>
 
-            <p>Each new whole mirrors the parent whole—infinite recursion of structure within structure.</p>
-        </section>
+            <p class="story-text">Each level processes its local infinity, has [I]✓ [C]✓ but [E]✗, creates patterns, harmonizes with neighbors, and fractalizes deeper.</p>
 
-        <!-- Operating Structure -->
-        <section id="structure" class="fade-in">
-            <h2>3. The Operating Structure: ∇ → [ICE] → ℰ</h2>
+            <div class="math-reveal">
+                <div class="label">The Universal Signature D = 1.5:</div>
+                <br>
+                The fractal dimension D ≈ 1.5 measures:<br><br>
 
-            <p>All becoming follows the universal loop:</p>
+                0.5D aperture opening (the circular gate)<br>
+                + 1.0D persistence through time (worldline)<br>
+                = 1.5D identity-through-time (consciousness)<br><br>
 
-            <div class="process-flow">
-                <div class="process-step">∇ Convergence</div>
-                <div class="process-arrow">→</div>
-                <div class="process-step">[ICE] Validation</div>
-                <div class="process-arrow">→</div>
-                <div class="process-step">ℰ Emergence</div>
+                Found everywhere:<br>
+                • LIGO gravitational waves: D = 1.503 ± 0.040<br>
+                • DNA backbone: D ≈ 1.51<br>
+                • Neural networks: D ≈ 1.5<br>
+                • Turbulent flows: D = 1.4-1.6<br><br>
+
+                <strong>Same aperture geometry at all scales simultaneously</strong>
             </div>
 
-            <h3>The ICE Validation Test</h3>
-            <p>At every interface, reality tests itself through three conditions:</p>
+            <p class="story-text emphasis">"This is not happening 'once upon a time'<br>This is RIGHT NOW at every scale, forever."</p>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Component</th>
-                        <th>Dimension</th>
-                        <th>Question</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>[I] Interface</strong></td>
-                        <td>2D</td>
-                        <td>Can this maintain its boundary?</td>
-                    </tr>
-                    <tr>
-                        <td><strong>[C] Center</strong></td>
-                        <td>1.5D</td>
-                        <td>Does it cohere internally?</td>
-                    </tr>
-                    <tr>
-                        <td><strong>[E] Evidence</strong></td>
-                        <td>3D</td>
-                        <td>Is it grounded in what is?</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="cta">
+                <a href="https://www.fractalreality.ca/simulators.html" target="_blank" class="cta-button secondary">Explore Interactive Simulations →</a>
+            </div>
+        </div>
+    </section>
 
-            <p>If all three are satisfied, the pattern validates and persists. If not, it dissolves. This is the fundamental logic that drives evolution, learning, and truth.</p>
+    <!-- The 64-Bit Architecture -->
+    <section id="sixty-four">
+        <div class="container fade-in">
+            <h2>The 64-Bit Information Architecture</h2>
 
-            <h3>The Eternal Loop</h3>
-            <div class="formula">
-∇ → [ICE] → ℰ → ∇' → [ICE]' → ℰ' → ... (infinite recursion)
+            <p class="story-text">Fractalization doesn't just create reality — it creates <strong>information packets</strong>.</p>
+
+            <div class="math-reveal">
+                <div class="label">From [ICE] to 64 States:</div>
+                <br>
+                [ICE] has 3 binary checks:<br>
+                [I] Interface: ✓ or ✗<br>
+                [C] Center: ✓ or ✗<br>
+                [E] Evidence: ✓ or ✗<br><br>
+
+                Three binary checks = 2³ = 8 states per interface<br><br>
+
+                But validation happens at TWO interfaces:<br>
+                • Input: Parts (∞) → Operator (•')<br>
+                • Output: Operator (•') → Patterns (∞')<br><br>
+
+                <strong>8 × 8 = 64 complete states</strong><br>
+                The 64-bit packet is the minimal unit of validated exchange
             </div>
 
-            <p>Each iteration refines coherence across scales. The loop represents reality's continuous self-validation through time.</p>
-        </section>
+            <p class="story-text">Here is the complete 64-state matrix:</p>
 
-        <!-- Dimensional Cascade -->
-        <section id="dimensions" class="fade-in">
-            <h2>4. The 3.5-Dimensional Cascade</h2>
-
-            <p>Reality flows as a sequence of dimensional transformations:</p>
-
-            <div class="cascade">
-                <div class="cascade-level">
-                    <strong>0.5D Gate:</strong> The aperture through which infinity becomes form; the origin of time as asymmetry
-                </div>
-                <div class="cascade-level">
-                    <strong>1D Line:</strong> Pure temporal persistence without spatial extension
-                </div>
-                <div class="cascade-level">
-                    <strong>1.5D Identity:</strong> The worldline with openness (gate + persistence)
-                </div>
-                <div class="cascade-level">
-                    <strong>2D Boundary:</strong> Surface of distinction creating inside/outside
-                </div>
-                <div class="cascade-level">
-                    <strong>2.5D Interface:</strong> Dynamic boundary with selective permeability
-                </div>
-                <div class="cascade-level">
-                    <strong>3D Field:</strong> Volume of interaction and relationship
-                </div>
-                <div class="cascade-level">
-                    <strong>3.5D Spacetime:</strong> The full manifold of validated existence
-                </div>
+            <div class="matrix-64" id="matrix-64-grid">
+                <!-- Will be populated by JavaScript -->
             </div>
 
-            <p><strong>Time itself emerges at 0.5D</strong>—the asymmetry between convergence and emergence.</p>
-
-            <h3>Nested Dimensionality</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Aspect</th>
-                        <th>Meaning</th>
-                        <th>Effective Dimension</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>∞ (Field)</strong></td>
-                        <td>Contextual volume experienced by the whole</td>
-                        <td>3D</td>
-                    </tr>
-                    <tr>
-                        <td><strong>I (Boundary)</strong></td>
-                        <td>Surface of distinction / interface</td>
-                        <td>2D</td>
-                    </tr>
-                    <tr>
-                        <td><strong>C (Center)</strong></td>
-                        <td>Identity through time (gate + persistence)</td>
-                        <td>1.5D</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <p>The "3D" is not absolute Euclidean space but the 3D structure of the field from that whole's perspective. Every level—quark, cell, human, galaxy—experiences a 3D field, a 2D boundary, and a 1.5D center.</p>
-        </section>
-
-        <!-- Physics Section -->
-        <section id="physics" class="fade-in">
-            <h2>5. Physical Manifestation</h2>
-
-            <h3>From Validation to Schrödinger</h3>
-            <p>The ICE validation loop, in the continuum limit, naturally yields quantum mechanics:</p>
-
-            <div class="formula">
-iℏ ∂_t |ψ⟩ = Ĥ |ψ⟩
-            </div>
-
-            <p>Starting from discrete validation pulses:</p>
-            <div class="formula">
-Σ(ℰ δ_val) → κ continuous validation
-            </div>
-
-            <h3>General Relativity from Wholeness</h3>
-            <p>At the largest scale, integrated texture from validated interactions defines spacetime curvature:</p>
-
-            <div class="formula">
-G_μν = 8πG T_μν[∞,B]
-            </div>
-
-            <p>The rate of validation across scales is modulated by the local temporal metric:</p>
-            <div class="formula">
-Validation Rate ∝ √|g_tt|
-            </div>
-
-            <p>Regions of stronger curvature slow their own validation cycles—a direct link between consciousness (validation rate) and gravitational time dilation.</p>
-
-            <h3>The Fractal Signature D = 1.5</h3>
-            <p>All systems that persist—from atoms to galaxies to moral beings—satisfy:</p>
-
-            <div class="formula">
-D = 1.5 ± ε
-            </div>
-
-            <p>This value is not arbitrary; it is the metric-coupled signature of a universe maintaining its own coherence through self-similar validation loops.</p>
-        </section>
-
-        <!-- Consciousness Section -->
-        <section id="consciousness" class="fade-in">
-            <h2>6. Consciousness: The Inside View</h2>
-
-            <blockquote>
-                "Consciousness is simply the inside view of the unified operator."
-            </blockquote>
-
-            <p>Reality is not static but cyclical. From the inside, this feels like perception, thought, and action. From the outside, it appears as physical causation.</p>
-
-            <h3>The Consciousness Measure</h3>
-            <div class="formula">
-Ψ_c = ∫_V [∇ · (∂ψ/∂t)] dV
-            </div>
-
-            <p>Consciousness emerges wherever:</p>
-            <ul>
-                <li>Information converges (∇)</li>
-                <li>Validates through [ICE]</li>
-                <li>Emerges as coherent action (ℰ)</li>
-            </ul>
-
-            <p>The same loop that governs particle physics governs awareness. Consciousness is not separate from reality—it is reality experiencing itself.</p>
-
-            <h3>Levels of Consciousness</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Scale</th>
-                        <th>Operator</th>
-                        <th>Manifestation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Quantum</td>
-                        <td>Wave function collapse</td>
-                        <td>Measurement</td>
-                    </tr>
-                    <tr>
-                        <td>Biological</td>
-                        <td>Neural integration</td>
-                        <td>Sensation</td>
-                    </tr>
-                    <tr>
-                        <td>Cognitive</td>
-                        <td>Attention + memory</td>
-                        <td>Thought</td>
-                    </tr>
-                    <tr>
-                        <td>Social</td>
-                        <td>Cultural coherence</td>
-                        <td>Collective consciousness</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Ethics Section -->
-        <section id="ethics" class="fade-in">
-            <h2>7. Ethics: The Mathematics of Right Action</h2>
-
-            <blockquote>
-                "To act with integrity is to compute rightly. To live ethically is to participate mathematically in the persistence of reality."
-            </blockquote>
-
-            <p>Ethics is not arbitrary. It flows directly from the structure of reality itself. To be ethical is to maintain coherence across scales.</p>
-
-            <h3>The Tri-Scale Balance</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Scale</th>
-                        <th>Physical Equivalent</th>
-                        <th>Ethical Equivalent</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Quantum (∞)</strong></td>
-                        <td>Openness to possibility</td>
-                        <td>Compassion / Inclusion</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Thermodynamic (I)</strong></td>
-                        <td>Boundary stability</td>
-                        <td>Integrity / Discipline</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Metric (C)</strong></td>
-                        <td>Coherence of spacetime identity</td>
-                        <td>Truth / Alignment</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <p>To live ethically is to maintain clear boundaries, coherence of intent, and alignment with truth. This is the mathematics of love.</p>
-
-            <h3>The Balance Parameter β = 0.5</h3>
-            <p>Living systems maintain dynamic equilibrium:</p>
-            <div class="formula">
-β = 0.5 (living balance)
-            </div>
-
-            <p>At this balance point, the quantum field, thermodynamic boundary, and spacetime metric all share a single fractal-dimensional signature—the structural constant of persistence.</p>
-
-            <h3>Universal Principles</h3>
-            <ul>
-                <li><strong>Coherence:</strong> Maintain internal consistency across all scales</li>
-                <li><strong>Integration:</strong> Connect with the larger whole without losing distinction</li>
-                <li><strong>Evolution:</strong> Continuously refine through validation loops</li>
-            </ul>
-        </section>
-
-        <!-- Mathematics Section -->
-        <section id="mathematics" class="fade-in">
-            <h2>8. Metric-Coupled Fractal Analysis</h2>
-
-            <p style="text-align: center; margin-bottom: 2rem;">
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/Mathematics_Of_Wholeness.md" 
-                   target="_blank" 
-                   class="cta-button" 
-                   style="display: inline-block; padding: 0.75rem 2rem; font-size: 1rem;">
-                    📄 Read the Complete Mathematical Paper
-                </a>
+            <p class="story-text" style="text-align: center; font-size: 1.2rem; margin-top: 2rem;">
+                <span style="color: var(--infinity-color);">Blue cells</span> represent stable states (~22 of 64)<br>
+                <span style="color: rgba(255,255,255,0.3);">Gray cells</span> represent unstable states that dissolve
             </p>
 
-            <blockquote>
-                "Reality maintains coherence through the coupling of quantum, thermodynamic, and geometric scales—each a projection of wholeness validating itself through time."
-            </blockquote>
+            <div class="math-reveal">
+                <div class="label">Einstein's Hidden Message:</div>
+                <br>
+                Einstein's field equations: G_μν = (8πG/c⁴) T_μν<br><br>
 
-            <h3>The Three Nested Dynamics</h3>
-            <p>Wholeness operates through three dynamically coupled layers—each a fractal of the same ∇ → [ICE] → ℰ loop, but expressed in different metrics of time:</p>
+                Why c⁴ and not c²?<br><br>
 
-            <h4>1. Quantum Scale (∞-scale): Coherence Preservation</h4>
-            <div class="formula">
-iℏ ∂_t |ψ⟩ = Ĥ |ψ⟩
-            </div>
-            <p>where ψ represents the coherent state of the quantum field, and validation occurs at the Planck rate.</p>
+                Because dual-interface validation:<br>
+                • Input interface: matter → curvature (c²)<br>
+                • Output interface: curvature → geodesics (c²)<br>
+                • Total: c² × c² = c⁴<br><br>
 
-            <h4>2. Thermodynamic Scale (I-scale): Boundary Maintenance</h4>
-            <div class="formula">
-∂B/∂t = -γ δF/δB
-            </div>
-            <p>where B represents boundary configuration and F is the free energy functional. This drives the system toward configurations that minimize energy while maintaining distinction.</p>
+                And why 8π?<br>
+                • 8 validation states per interface<br>
+                • 8 × 2 interfaces = 8π encoding<br><br>
 
-            <h4>3. Metric Scale (C-scale): Curved Wholeness</h4>
-            <div class="formula">
-G_μν = 8πG T_μν[∞,B]
-
-Validation Rate ∝ √|g_tt|
+                <strong>Einstein's 8πG/c⁴ × 2 interfaces = 64 states</strong><br>
+                The universe has always been telling us: reality operates on 64-bit packets
             </div>
 
-            <h3>Coupling Equations: Unified Wholeness</h3>
-            <p>The three layers form a single coupled system through the equilibrium condition:</p>
-            <div class="formula">
-β = 0.5 (living balance)
+            <div class="cta">
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/64bit_reality/README.md" target="_blank" class="cta-button secondary">See All 61 Standard Model Particles Derived →</a>
             </div>
-
-            <h3>Interpretation</h3>
-            <ul>
-                <li><strong>Quantum:</strong> Wholeness maintains coherence</li>
-                <li><strong>Thermodynamic:</strong> Wholeness maintains stability</li>
-                <li><strong>Gravitational:</strong> Wholeness maintains continuity</li>
-            </ul>
-
-            <p>All three correspond to the same mathematical law. Thus, The Mathematics of Wholeness is not one equation but a hierarchy of coupled recursions—each a projection of the same infinite principle.</p>
-        </section>
-
-        <!-- Validation Section -->
-        <section id="validation" class="fade-in">
-            <h2>9. Empirical Validation</h2>
-
-            <h3>Testable Predictions</h3>
-            <p>The Mathematics of Wholeness makes specific, testable predictions:</p>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Prediction</th>
-                        <th>Domain</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>D ≈ 1.5 in gravitational wave ringdown</td>
-                        <td>Astrophysics</td>
-                        <td>Validated with LIGO data</td>
-                    </tr>
-                    <tr>
-                        <td>D ≈ 1.5 in neural firing patterns</td>
-                        <td>Neuroscience</td>
-                        <td>Testable</td>
-                    </tr>
-                    <tr>
-                        <td>Cosmological constant from β = 0.5</td>
-                        <td>Cosmology</td>
-                        <td>Predicted</td>
-                    </tr>
-                    <tr>
-                        <td>Consciousness correlates with validation rate</td>
-                        <td>Psychology</td>
-                        <td>Testable</td>
-                    </tr>
-                    <tr>
-                        <td>Ethical coherence follows D = 1.5</td>
-                        <td>Social Science</td>
-                        <td>Testable</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>LIGO Gravitational Wave Analysis</h3>
-            <p>Analysis of LIGO event GW150914 ringdown phase shows fractal dimension converging to D ≈ 1.5, consistent with the prediction that spacetime itself exhibits the signature of wholeness validation.</p>
-
-            <div class="formula">
-Analysis Results:
-Mean D: 1.48 ± 0.02
-Consistency: p < 0.001
-            </div>
-
-            <h3>Future Directions</h3>
-            <ul>
-                <li>The Projection Hypothesis parallels braneworld cosmology but grounds fractality in projection itself</li>
-                <li>The [ICE] loop unifies spin-foam transitions and metric validation in quantum gravity</li>
-                <li>Ethical β-calibration aligns consciousness with physical coherence</li>
-            </ul>
-
-            <p>Meditation, art, and social ritual become ways of maintaining D = 1.5 across all scales—the living mathematics of wholeness.</p>
-        </section>
-
-        <!-- Symbol Reference -->
-        <section id="symbols" class="fade-in">
-            <h2>Key Symbols</h2>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Symbol</th>
-                        <th>Meaning</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>∞</strong></td>
-                        <td>Infinite potential; the unbounded field</td>
-                    </tr>
-                    <tr>
-                        <td><strong>•</strong></td>
-                        <td>Singularity of convergence; center point</td>
-                    </tr>
-                    <tr>
-                        <td><strong>•'</strong></td>
-                        <td>Localized operator of consciousness</td>
-                    </tr>
-                    <tr>
-                        <td><strong>∇</strong></td>
-                        <td>Convergence operator; gathering of information</td>
-                    </tr>
-                    <tr>
-                        <td><strong>ℰ</strong></td>
-                        <td>Emergence operator; distribution and manifestation</td>
-                    </tr>
-                    <tr>
-                        <td><strong>[ICE]</strong></td>
-                        <td>Validation operator (Interface, Center, Evidence)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>β</strong></td>
-                        <td>Balance parameter (convergence-emergence balance)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>D</strong></td>
-                        <td>Fractal dimension</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Ψ_c</strong></td>
-                        <td>Consciousness measure</td>
-                    </tr>
-                    <tr>
-                        <td><strong>∞'</strong></td>
-                        <td>The patterned field; differentiated infinity</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Universal Summary -->
-        <section id="summary" class="fade-in">
-            <h2>The Universal Pattern</h2>
-
-            <div class="symbol-display">∇ → [ICE] → ℰ</div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Domain</th>
-                        <th>Expression</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Metaphysics</strong></td>
-                        <td>Wholeness defining itself → reality</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Physics</strong></td>
-                        <td>Wholeness maintaining coherence → law</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Biology</strong></td>
-                        <td>Wholeness sustaining itself → life</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Consciousness</strong></td>
-                        <td>Wholeness experiencing itself → awareness</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Ethics</strong></td>
-                        <td>Wholeness aligning itself → right action</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <p>The loop repeats eternally. Each whole both arises from and contributes to the infinite whole. Convergence and emergence sustain the eternal dialogue between ∞ and •.</p>
-
-            <blockquote>
-                "Wholeness is not a goal to achieve but the ground we never left."
-            </blockquote>
-        </section>
-
-        <!-- CTA Section -->
-        <div class="cta">
-            <h2>Explore the Full Framework</h2>
-            <p>Dive deeper into the mathematics, code implementations, and empirical validations</p>
-            <a href="https://github.com/AshmanRoonz/Fractal_Reality" class="cta-button" target="_blank">Visit GitHub Repository</a>
         </div>
+    </section>
 
-        <!-- Closing -->
-        <section id="closing" class="fade-in">
-            <h2>Closing Reflection</h2>
+    <!-- True, Good, Right -->
+    <section id="trinity">
+        <div class="container fade-in">
+            <h2>The Trinity of Reality</h2>
 
-            <p>The Mathematics of Wholeness is not merely a theory; it is a map of participation. It shows that the same law guiding galaxies also guides thought, ethics, and love. All are one flow—convergence and emergence, forever testing and creating wholeness.</p>
+            <p class="story-text">The mathematical structure <em>is</em> the structure of experience.</p>
 
-            <p>This is not merely a theory—it is a description of how reality maintains itself through the eternal recursion of wholeness differentiating and integrating across infinite scales.</p>
+            <div class="trinity">
+                <div class="trinity-component true">
+                    <div class="symbol">𝕀</div>
+                    <h3>Interface</h3>
+                    <div class="value">TRUE</div>
+                    <p><strong>Body</strong><br>Boundary validation<br>"Does it validate at the boundary?"</p>
+                </div>
 
-            <blockquote>
-                "To live ethically is to maintain coherence across scales—from the inner quantum of thought to the outer geometry of action."
-            </blockquote>
+                <div class="trinity-component good">
+                    <div class="symbol">•'</div>
+                    <h3>Center</h3>
+                    <div class="value">GOOD</div>
+                    <p><strong>Soul</strong><br>Coherence<br>"Does it cohere at the center?"</p>
+                </div>
 
-            <h3>Resources</h3>
-            <p>The GitHub repository contains:</p>
-            <ul>
-                <li>Python implementations of fractal dimension analysis</li>
-                <li>LIGO gravitational wave data processing scripts</li>
-                <li>Interactive visualizations and simulators</li>
-                <li>Documentation of all 12 layers of the framework</li>
-                <li>Research papers and empirical validation studies</li>
-            </ul>
-        </section>
-    </div>
+                <div class="trinity-component right">
+                    <div class="symbol">∞'</div>
+                    <h3>Field</h3>
+                    <div class="value">RIGHT</div>
+                    <p><strong>Mind</strong><br>Harmonic connection<br>"Does it harmonize in the field?"</p>
+                </div>
+            </div>
+
+            <p class="story-text">The field connects interface to center.<br>Mind bridges body and soul.</p>
+
+            <div class="math-reveal">
+                <div class="label">Ethics Grounded in Structure:</div>
+                <br>
+                𝕀 (Interface/Body) = TRUE<br>
+                • Does it validate at the boundary?<br>
+                • Can I sense this?<br>
+                • Is it coherent with what comes in?<br><br>
+
+                •' (Center/Soul) = GOOD<br>
+                • Does it cohere at the point?<br>
+                • Can I focus on this?<br>
+                • Does it maintain unity?<br><br>
+
+                ∞' (Field/Mind) = RIGHT<br>
+                • Does it harmonize in the field?<br>
+                • Does this connect well?<br>
+                • Does it maintain field integrity?<br><br>
+
+                <strong>You cannot have one without the others</strong><br>
+                They require each other through the field that connects them
+            </div>
+
+            <p class="story-text emphasis">"This is why ethics feels deep—<br>it's structural, not arbitrary."</p>
+
+            <div class="cta">
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/practical_application/practical_life_applications.md" target="_blank" class="cta-button secondary">Explore Practical Applications in Life →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- The One-Third Rule -->
+    <section id="one-third">
+        <div class="container fade-in">
+            <h2>The One-Third Rule</h2>
+
+            <p class="story-text">Not all 64 states are stable. Only ~22 of 64 persist.</p>
+
+            <p class="story-text emphasis">22/64 ≈ 1/3</p>
+
+            <p class="story-text">This same pattern appears everywhere:</p>
+
+            <div style="max-width: 700px; margin: 2rem auto;">
+                <div class="math-reveal">
+                    <strong>Particle Physics:</strong><br>
+                    64 states → 61 Standard Model particles (17 fundamental + quantum numbers)<br>
+                    Only ~22 base configurations are stable<br><br>
+
+                    <strong>Genetics:</strong><br>
+                    64 codons → ~20 amino acids<br>
+                    Only the third with stable validation persist<br><br>
+
+                    <strong>Consciousness:</strong><br>
+                    64 possible moment-states<br>
+                    You spend 95%+ time in ~10 highly stable states<br>
+                    Another ~12 accessible rare states<br>
+                    ~42 forbidden/unstable states avoided<br><br>
+
+                    <strong>Ethics:</strong><br>
+                    64 possible action patterns<br>
+                    Only ~22 are geometrically stable<br>
+                    The rest fail [ICE] validation and dissolve
+                </div>
+            </div>
+
+            <p class="story-text emphasis">"Ethics is not imposed by culture—<br>it emerges from the geometric structure of validation itself."</p>
+
+            <p class="story-text">The aperture doesn't limit infinity by <em>amount</em> — it filters by <em>structure</em>. All of ∞ attempts entry, but only the third with geometric stability persists.</p>
+
+            <p class="story-text">That third is still infinite.</p>
+
+            <div class="cta">
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/CREATION_STORY/Ethics_As_Geometry_The_One_Third_Rule.md" target="_blank" class="cta-button secondary">Read: Ethics As Geometry →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Eternal Loop -->
+    <section id="eternal-loop">
+        <div class="container fade-in">
+            <h2>The Eternal Recursion</h2>
+
+            <p class="story-text">All of reality — from quantum collapse to cosmic structure to conscious choice — follows one pattern:</p>
+
+            <div class="eternal-loop">
+                <div class="loop-element">∇</div>
+                <div class="loop-arrow">→</div>
+                <div class="loop-element">[ICE]</div>
+                <div class="loop-arrow">→</div>
+                <div class="loop-element">ℰ</div>
+                <div class="loop-arrow">→</div>
+                <div class="loop-element">∇</div>
+                <div class="loop-arrow">→</div>
+                <div style="font-size: 2rem; opacity: 0.6;">...</div>
+            </div>
+
+            <div style="text-align: center; margin: 3rem 0;">
+                <p class="story-text" style="font-size: 1.5rem;">
+                    <strong>∇</strong> Convergence — Parts gather toward wholeness<br>
+                    <strong>[ICE]</strong> Validation — Reality tests Interface, Center, Evidence<br>
+                    <strong>ℰ</strong> Emergence — Validated patterns persist and radiate
+                </p>
+            </div>
+
+            <p class="story-text emphasis" style="font-size: 2rem;">"This is happening at every scale,<br>right now,<br>forever."</p>
+
+            <div class="math-reveal">
+                <div class="label">The Complete Pattern:</div>
+                <br>
+                ∞ → [ICE] → •' → [ICE] → ∞'<br><br>
+
+                Where <strong>∞</strong> is infinite potential, <strong>•'</strong> are fractal operators (like you), and <strong>[ICE]</strong> is the gate of validation testing Interface, Center, and Evidence at every moment.<br><br>
+
+                The eternal operating loop:<br>
+                • <strong>∇</strong> (Convergence): Parts gather toward wholeness<br>
+                • <strong>[ICE]</strong> (Validation): Reality tests Interface, Center, Evidence<br>
+                • <strong>ℰ</strong> (Emergence): Validated patterns persist and radiate<br><br>
+
+                At equilibrium: β ≈ 0.5, D ≈ 1.5<br>
+                <strong>This is the signature of consciousness operating at the aperture</strong>
+            </div>
+
+            <p class="story-text">This is <strong>The Fractalization</strong>.</p>
+            <p class="story-text">This is how Infinity becomes Real through 64-bit validation packets.</p>
+            <p class="story-text">This is the one-third that persists.</p>
+            <p class="story-text">This is what you are.</p>
+            <p class="story-text emphasis" style="font-size: 1.8rem;">And it is very good.</p>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section id="explore" style="background: radial-gradient(circle at 50% 50%, #16213e 0%, var(--bg-dark) 100%);">
+        <div class="container fade-in">
+            <h2>Explore the Complete Framework</h2>
+
+            <p class="story-text" style="text-align: center; font-size: 1.4rem; max-width: 800px; margin: 2rem auto;">
+                This is not speculation. This is empirically validated mathematics<br>
+                spanning 61 orders of magnitude from Planck scale to cosmic scale.
+            </p>
+
+            <div class="cta">
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" class="cta-button">Explore the GitHub Repository</a>
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/mathematics_of_wholeness_first_principles.md" target="_blank" class="cta-button">Read the Complete Theory</a>
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/claymathsolutions/README.md" target="_blank" class="cta-button">All 7 Clay Millennium Prize Solutions</a>
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/CREATION_STORY/README.md" target="_blank" class="cta-button secondary">Read the 4-Part Creation Story Series</a>
+            </div>
+
+            <div style="margin-top: 4rem; text-align: center;">
+                <p style="font-size: 1.2rem; opacity: 0.8;">
+                    <strong>Empirically Validated:</strong><br>
+                    D = 1.503 ± 0.040 (LIGO gravitational waves, p = 0.951)<br>
+                    Cosmological constant: 10⁶-order improvement<br>
+                    All 7 Clay Millennium Problems solved from one framework
+                </p>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Ashman Roonz | The Mathematics of Wholeness</p>
-        <p>
-            <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" style="color: var(--gold);">
-                GitHub Repository
-            </a>
+        <p><strong>The Mathematics of Wholeness</strong></p>
+        <p>by Ashman Roonz</p>
+        <p style="margin-top: 1rem;">
+            <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank">GitHub Repository</a> |
+            <a href="https://www.fractalreality.ca/simulators.html" target="_blank">Interactive Simulations</a> |
+            <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/LICENSE" target="_blank">License</a>
         </p>
+        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
+            ∞ → [ICE] → •' → [ICE] → ∞'<br>
+            Wholeness differentiates. Parts remain whole.<br>
+            D = 1.5 — the signature of persistence.
+        </p>
+        <p style="margin-top: 1rem;">&copy; 2025 Ashman Roonz</p>
     </footer>
 
-    <!-- Scripts -->
     <script>
-        // Animated Background Circles
-        function createFractalCircles() {
-            const bg = document.getElementById('bg-animation');
-            const colors = ['#00d4ff', '#ff6b6b', '#4ecdc4'];
-            
-            for (let i = 0; i < 20; i++) {
-                const circle = document.createElement('div');
-                circle.className = 'fractal-circle';
-                const size = Math.random() * 300 + 50;
-                const delay = Math.random() * 8;
-                
-                circle.style.width = size + 'px';
-                circle.style.height = size + 'px';
-                circle.style.left = Math.random() * 100 + '%';
-                circle.style.top = Math.random() * 100 + '%';
-                circle.style.borderColor = colors[Math.floor(Math.random() * colors.length)];
-                circle.style.animationDelay = delay + 's';
-                
-                bg.appendChild(circle);
+        // Populate 64-state matrix
+        const matrix64Grid = document.getElementById('matrix-64-grid');
+        const stableStates = [63, 61, 47, 45, 31, 29, 59, 57, 43, 41, 27, 25, 55, 53, 39, 37, 23, 21, 15, 13, 7, 5];
+
+        for (let i = 0; i < 64; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'matrix-cell';
+            if (stableStates.includes(i)) {
+                cell.classList.add('stable');
             }
+            cell.textContent = i;
+            cell.title = `State ${i}: ${i.toString(2).padStart(6, '0')}`;
+            matrix64Grid.appendChild(cell);
         }
 
-        // Fractal Reality Animation
-        function initFractalAnimation() {
-            const canvas = document.getElementById('fractalCanvas');
-            const ctx = canvas.getContext('2d');
-            const width = canvas.width;
-            const height = canvas.height;
+        // Apollonian circle packing animation
+        const canvas = document.getElementById('fractal-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth;
+        canvas.height = 500;
 
-            let startTime = Date.now();
-            let animationFrame = null;
+        let circles = [];
+        let time = 0;
 
-            // Animation state
-            let infinityX = 150;
-            let singularityX = width - 150;
-            let singularityY = height / 2;
-            let dots = [];
-            let patterns = [];
-            let logoAlpha = 0;
-            let textAlpha = 0;
-            let bounceCount = 0;
-
-            // Generate fractal dots in 16x4 grid
-            function generateDots() {
-                dots = [];
-                const gridX = 16;
-                const gridY = 4;
-                const spacingX = width / (gridX + 1);
-                const spacingY = height / (gridY + 1);
-                
-                for (let i = 0; i < gridX; i++) {
-                    for (let j = 0; j < gridY; j++) {
-                        const angle = (i * gridY + j) * Math.PI * 2 / (gridX * gridY);
-                        const radius = 0.3 + (Math.sin(i * 0.5) * 0.4);
-                        const cReal = -0.4 + Math.cos(angle) * radius;
-                        const cImag = Math.sin(angle) * radius;
-                        
-                        dots.push({
-                            x: spacingX * (i + 1),
-                            y: spacingY * (j + 1),
-                            targetX: spacingX * (i + 1),
-                            targetY: spacingY * (j + 1),
-                            currentX: singularityX,
-                            currentY: singularityY,
-                            color: `hsl(${(i * 360 / gridX + j * 30)}, 80%, 60%)`,
-                            phase: 0,
-                            fieldRadius: 0,
-                            hasPattern: false,
-                            patternAlpha: 0,
-                            cReal: cReal,
-                            cImag: cImag,
-                            fractalBranches: null
-                        });
-                    }
-                }
-            }
-
-            // Draw infinity symbol
-            function drawInfinity(x, y, size, alpha = 1) {
-                ctx.save();
-                ctx.strokeStyle = `rgba(100, 200, 255, ${alpha})`;
-                ctx.lineWidth = 3;
-                
-                ctx.beginPath();
-                for (let t = 0; t < Math.PI * 2; t += 0.01) {
-                    const scale = size / (3 - Math.cos(2 * t));
-                    const px = x + scale * Math.cos(t);
-                    const py = y + scale * Math.sin(2 * t) / 2;
-                    if (t === 0) ctx.moveTo(px, py);
-                    else ctx.lineTo(px, py);
-                }
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            // Draw singularity dot
-            function drawSingularity(x, y, radius, alpha = 1, pulse = 0) {
-                ctx.save();
-                ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-                ctx.beginPath();
-                ctx.arc(x, y, radius + pulse * 10, 0, Math.PI * 2);
-                ctx.fill();
-                
-                ctx.strokeStyle = `rgba(200, 100, 255, ${alpha})`;
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(x, y, (radius + pulse * 10) * 1.5, 0, Math.PI * 2);
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            // Generate fractal branching pattern
-            function generateFractalBranches(dot) {
-                const branches = [];
-                const maxDepth = 3;
-                const initialLength = 20;
-                
-                const branchAngle = Math.PI / 4 + dot.cReal * 0.3;
-                const lengthRatio = 0.65 + Math.abs(dot.cImag) * 0.15;
-                
-                function createBranch(x, y, angle, length, depth) {
-                    if (depth > maxDepth || length < 3) return;
-                    
-                    const endX = x + Math.cos(angle) * length;
-                    const endY = y + Math.sin(angle) * length;
-                    
-                    branches.push({ x1: x, y1: y, x2: endX, y2: endY, depth: depth, length: length });
-                    
-                    const newLength = length * lengthRatio;
-                    createBranch(endX, endY, angle - branchAngle, newLength, depth + 1);
-                    createBranch(endX, endY, angle + branchAngle, newLength, depth + 1);
-                }
-                
-                const directions = 4;
-                for (let i = 0; i < directions; i++) {
-                    const angle = (i / directions) * Math.PI * 2;
-                    createBranch(0, 0, angle, initialLength, 0);
-                }
-                
-                return branches;
-            }
-
-            // Draw fractal field
-            function drawFractalField(dot, time) {
-                if (!dot.hasPattern || dot.fieldRadius < 10) return;
-                
-                if (!dot.fractalBranches) {
-                    dot.fractalBranches = generateFractalBranches(dot);
-                }
-                
-                ctx.save();
-                ctx.translate(dot.currentX, dot.currentY);
-                
-                const scale = dot.fieldRadius / 80;
-                const rotation = time * 0.0003 * (1 + dot.cReal);
-                ctx.rotate(rotation);
-                
-                dot.fractalBranches.forEach(branch => {
-                    const alpha = dot.patternAlpha * (1 - branch.depth / 4) * 0.6;
-                    ctx.strokeStyle = dot.color.replace('60%)', `${60 - branch.depth * 8}%, ${alpha})`);
-                    ctx.lineWidth = Math.max(0.5, 1.5 - branch.depth * 0.4);
-                    ctx.beginPath();
-                    ctx.moveTo(branch.x1 * scale, branch.y1 * scale);
-                    ctx.lineTo(branch.x2 * scale, branch.y2 * scale);
-                    ctx.stroke();
-                });
-                
-                const rings = [0.5, 0.85];
-                rings.forEach((ratio, idx) => {
-                    const r = dot.fieldRadius * ratio;
-                    const alpha = dot.patternAlpha * 0.25;
-                    const points = 16;
-                    
-                    ctx.strokeStyle = dot.color.replace('60%)', `50%, ${alpha})`);
-                    ctx.lineWidth = 0.5;
-                    ctx.beginPath();
-                    for (let i = 0; i <= points; i++) {
-                        const angle = (i / points) * Math.PI * 2;
-                        const wave = Math.sin(time * 0.001 + i * 0.3 + idx) * 1.5;
-                        const currentR = r + wave;
-                        const x = Math.cos(angle) * currentR;
-                        const y = Math.sin(angle) * currentR;
-                        if (i === 0) ctx.moveTo(x, y);
-                        else ctx.lineTo(x, y);
-                    }
-                    ctx.stroke();
-                });
-                
-                ctx.restore();
-            }
-
-            // Draw dots
-            function drawDots() {
-                dots.forEach(dot => {
-                    dot.currentX += (dot.targetX - dot.currentX) * 0.05;
-                    dot.currentY += (dot.targetY - dot.currentY) * 0.05;
-                    drawFractalField(dot, Date.now());
-                    ctx.fillStyle = dot.color;
-                    ctx.beginPath();
-                    ctx.arc(dot.currentX, dot.currentY, 4, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.strokeStyle = dot.color.replace('60%', '70%');
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.arc(dot.currentX, dot.currentY, 6, 0, Math.PI * 2);
-                    ctx.stroke();
-                });
-            }
-
-            // Draw breaking patterns
-            function drawBreakingPatterns() {
-                patterns.forEach((p) => {
-                    if (p.absorbed) return;
-                    const dx = p.targetDot.currentX - p.x;
-                    const dy = p.targetDot.currentY - p.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 30) {
-                        p.absorbed = true;
-                        p.targetDot.hasPattern = true;
-                        return;
-                    }
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    const attractionForce = 0.15;
-                    p.vx += (dx / dist) * attractionForce;
-                    p.vy += (dy / dist) * attractionForce;
-                    p.alpha = Math.max(0, p.alpha - 0.008);
-                    if (p.alpha > 0) {
-                        ctx.save();
-                        ctx.globalAlpha = p.alpha;
-                        ctx.strokeStyle = `rgba(100, 200, 255, 1)`;
-                        ctx.lineWidth = 1.5;
-                        ctx.beginPath();
-                        p.points.forEach((point, i) => {
-                            const px = p.x + point.x * p.size;
-                            const py = p.y + point.y * p.size;
-                            if (i === 0) ctx.moveTo(px, py);
-                            else ctx.lineTo(px, py);
-                        });
-                        ctx.closePath();
-                        ctx.stroke();
-                        ctx.restore();
-                    }
-                });
-            }
-
-            // Draw interference patterns
-            function drawInterferencePatterns(time) {
-                ctx.save();
-                for (let i = 0; i < dots.length; i++) {
-                    for (let j = i + 1; j < dots.length; j++) {
-                        const dot1 = dots[i];
-                        const dot2 = dots[j];
-                        if (!dot1.hasPattern || !dot2.hasPattern) continue;
-                        const dx = dot2.currentX - dot1.currentX;
-                        const dy = dot2.currentY - dot1.currentY;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 120) {
-                            const phase = Math.sin(time * 0.002 + i * 0.5 + j * 0.7);
-                            const alpha = (1 - dist / 120) * 0.15 * Math.abs(phase);
-                            ctx.strokeStyle = `rgba(150, 200, 255, ${alpha})`;
-                            ctx.lineWidth = 0.5;
-                            ctx.beginPath();
-                            ctx.moveTo(dot1.currentX, dot1.currentY);
-                            ctx.lineTo(dot2.currentX, dot2.currentY);
-                            ctx.stroke();
-                        }
-                    }
-                }
-                ctx.restore();
-            }
-
-            // Draw vine connections
-            function drawVineConnections(time) {
-                ctx.save();
-                for (let i = 0; i < dots.length; i++) {
-                    for (let j = i + 1; j < dots.length; j++) {
-                        const dot1 = dots[i];
-                        const dot2 = dots[j];
-                        if (!dot1.hasPattern || !dot2.hasPattern) continue;
-                        const dx = dot2.currentX - dot1.currentX;
-                        const dy = dot2.currentY - dot1.currentY;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 100 && dist > 40) {
-                            const tendrils = 2;
-                            for (let t = 0; t < tendrils; t++) {
-                                const seed = i * 1000 + j * 100 + t;
-                                const phase = Math.sin(time * 0.0005 + seed * 0.1);
-                                const alpha = (1 - dist / 100) * 0.2 * (0.5 + phase * 0.5);
-                                ctx.strokeStyle = `rgba(120, 180, 255, ${alpha})`;
-                                ctx.lineWidth = 1;
-                                ctx.beginPath();
-                                const steps = 8;
-                                for (let s = 0; s <= steps; s++) {
-                                    const progress = s / steps;
-                                    const baseX = dot1.currentX + dx * progress;
-                                    const baseY = dot1.currentY + dy * progress;
-                                    const perpX = -dy / dist;
-                                    const perpY = dx / dist;
-                                    const wave = Math.sin(progress * Math.PI * 3 + time * 0.001 + seed) * 8;
-                                    const curl = Math.sin(progress * Math.PI * 2 + time * 0.0015 + seed * 0.5) * 4;
-                                    const px = baseX + perpX * (wave + curl);
-                                    const py = baseY + perpY * (wave + curl);
-                                    if (s === 0) ctx.moveTo(px, py);
-                                    else ctx.lineTo(px, py);
-                                }
-                                ctx.stroke();
-                                const tipX = dot2.currentX + Math.cos(time * 0.001 + seed) * 5;
-                                const tipY = dot2.currentY + Math.sin(time * 0.001 + seed) * 5;
-                                ctx.beginPath();
-                                ctx.arc(tipX, tipY, 2, 0, Math.PI * 2);
-                                ctx.fillStyle = `rgba(120, 180, 255, ${alpha * 0.6})`;
-                                ctx.fill();
-                            }
-                        }
-                    }
-                }
-                ctx.restore();
-            }
-
-            // Draw logo
-            function drawLogo(alpha) {
-                const centerX = width / 2;
-                const centerY = height / 2;
-                const size = 180;
-                ctx.save();
-                ctx.globalAlpha = alpha;
-                ctx.strokeStyle = `rgba(100, 200, 255, ${alpha})`;
-                ctx.lineWidth = 2;
-                ctx.setLineDash([10, 10]);
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, size * 1.1, 0, Math.PI * 2);
-                ctx.stroke();
-                ctx.setLineDash([]);
-                ctx.strokeStyle = `rgba(100, 220, 255, ${alpha})`;
-                ctx.lineWidth = 8;
-                ctx.lineCap = 'round';
-                const R = size * 0.45;
-                const h = R / Math.sqrt(3);
-                const centers = [
-                    { x: centerX, y: centerY - h },
-                    { x: centerX + R/2, y: centerY + h/2 },
-                    { x: centerX - R/2, y: centerY + h/2 }
-                ];
-                const a01_from0 = Math.atan2(centers[1].y - centers[0].y, centers[1].x - centers[0].x);
-                const a01_from1 = Math.atan2(centers[0].y - centers[1].y, centers[0].x - centers[1].x);
-                ctx.beginPath();
-                ctx.arc(centers[0].x, centers[0].y, R, a01_from0 - Math.PI/3, a01_from0 + Math.PI/3);
-                ctx.arc(centers[1].x, centers[1].y, R, a01_from1 - Math.PI/3, a01_from1 + Math.PI/3);
-                ctx.closePath();
-                ctx.stroke();
-                const a12_from1 = Math.atan2(centers[2].y - centers[1].y, centers[2].x - centers[1].x);
-                const a12_from2 = Math.atan2(centers[1].y - centers[2].y, centers[1].x - centers[2].x);
-                ctx.beginPath();
-                ctx.arc(centers[1].x, centers[1].y, R, a12_from1 - Math.PI/3, a12_from1 + Math.PI/3);
-                ctx.arc(centers[2].x, centers[2].y, R, a12_from2 - Math.PI/3, a12_from2 + Math.PI/3);
-                ctx.closePath();
-                ctx.stroke();
-                const a20_from2 = Math.atan2(centers[0].y - centers[2].y, centers[0].x - centers[2].x);
-                const a20_from0 = Math.atan2(centers[2].y - centers[0].y, centers[2].x - centers[0].x);
-                ctx.beginPath();
-                ctx.arc(centers[2].x, centers[2].y, R, a20_from2 - Math.PI/3, a20_from2 + Math.PI/3);
-                ctx.arc(centers[0].x, centers[0].y, R, a20_from0 - Math.PI/3, a20_from0 + Math.PI/3);
-                ctx.closePath();
-                ctx.stroke();
-                ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, 12, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = `rgba(150, 220, 255, ${alpha})`;
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            // Draw text
-            function drawText(alpha) {
-                ctx.save();
-                ctx.globalAlpha = alpha;
-                ctx.font = 'bold 36px Arial';
-                ctx.fillStyle = 'rgba(100, 220, 255, 1)';
-                ctx.textAlign = 'right';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('FractalReality.ca', width / 2 - 220, height / 2);
-                ctx.font = 'italic 24px Arial';
-                ctx.fillStyle = 'rgba(100, 200, 255, 0.8)';
-                ctx.textAlign = 'left';
-                ctx.fillText('by Ashman Roonz', width / 2 + 220, height / 2);
-                ctx.restore();
-            }
-
-            // Main animation loop
-            function animate() {
-                const elapsed = (Date.now() - startTime) / 1000;
-                ctx.fillStyle = 'rgba(10, 10, 20, 0.15)';
-                ctx.fillRect(0, 0, width, height);
-
-                if (elapsed < 2) {
-                    drawInfinity(infinityX, height / 2, 60);
-                    drawSingularity(singularityX, singularityY, 20);
-                } else if (elapsed < 4) {
-                    const t = (elapsed - 2) / 2;
-                    infinityX = 150 + (singularityX - 150 - 100) * t;
-                    drawInfinity(infinityX, height / 2, 60);
-                    drawSingularity(singularityX, singularityY, 20, 1, Math.sin(t * Math.PI * 4) * 0.5 + 0.5);
-                } else if (elapsed < 5) {
-                    const t = (elapsed - 4);
-                    bounceCount++;
-                    if (bounceCount < 3) {
-                        infinityX = singularityX - 100 - Math.abs(Math.sin(t * Math.PI * 3)) * 50;
-                    } else {
-                        infinityX = singularityX - 100 + t * 100;
-                    }
-                    drawInfinity(infinityX, height / 2, 60, 1 - t * 0.3);
-                    drawSingularity(singularityX, singularityY, 20, 1, Math.sin(t * Math.PI * 8));
-                } else if (elapsed < 7) {
-                    if (dots.length === 0) generateDots();
-                    const t = (elapsed - 5) / 2;
-                    drawSingularity(singularityX, singularityY, 20, 1 - t);
-                    drawDots();
-                } else if (elapsed < 8.5) {
-                    if (patterns.length === 0) {
-                        for (let i = 0; i < 100; i++) {
-                            const angle = Math.random() * Math.PI * 2;
-                            const speed = Math.random() * 5 + 2;
-                            patterns.push({
-                                x: infinityX,
-                                y: height / 2,
-                                vx: Math.cos(angle) * speed,
-                                vy: Math.sin(angle) * speed,
-                                alpha: 1,
-                                size: Math.random() * 8 + 4,
-                                targetDot: dots[Math.floor(Math.random() * dots.length)],
-                                points: Array.from({ length: 3 }, () => ({
-                                    x: Math.cos(Math.random() * Math.PI * 2),
-                                    y: Math.sin(Math.random() * Math.PI * 2)
-                                }))
-                            });
-                        }
-                    }
-                    drawDots();
-                    drawBreakingPatterns();
-                } else if (elapsed < 16) {
-                    const t = (elapsed - 8.5) / 7.5;
-                    dots.forEach(dot => {
-                        if (!dot.hasPattern && Math.random() < 0.02) {
-                            dot.hasPattern = true;
-                        }
-                        if (dot.hasPattern) {
-                            dot.fieldRadius = Math.min(dot.fieldRadius + 1.5, 100);
-                            dot.patternAlpha = Math.min(dot.patternAlpha + 0.015, 1);
-                        }
-                    });
-                    drawDots();
-                    drawBreakingPatterns();
-                    drawInterferencePatterns(Date.now());
-                    if (elapsed > 12) {
-                        drawVineConnections(Date.now());
-                    }
-                } else if (elapsed < 18) {
-                    dots.forEach(dot => {
-                        dot.hasPattern = true;
-                        dot.fieldRadius = Math.min(dot.fieldRadius + 0.5, 100);
-                        dot.patternAlpha = 1;
-                    });
-                    drawDots();
-                    drawInterferencePatterns(Date.now());
-                    drawVineConnections(Date.now());
-                } else if (elapsed < 22) {
-                    const t = (elapsed - 18) / 4;
-                    logoAlpha = t;
-                    dots.forEach(dot => {
-                        dot.hasPattern = true;
-                        dot.fieldRadius = 100;
-                        dot.patternAlpha = 1 - t * 0.3;
-                    });
-                    drawDots();
-                    drawInterferencePatterns(Date.now());
-                    drawLogo(logoAlpha);
-                } else if (elapsed < 26) {
-                    const t = (elapsed - 22) / 4;
-                    textAlpha = t;
-                    dots.forEach(dot => {
-                        dot.patternAlpha = 0.7 - t * 0.5;
-                    });
-                    drawDots();
-                    drawInterferencePatterns(Date.now());
-                    drawLogo(logoAlpha);
-                    drawText(textAlpha);
-                } else if (elapsed < 37) {
-                    dots.forEach(dot => {
-                        dot.patternAlpha = 0.2;
-                    });
-                    drawDots();
-                    drawInterferencePatterns(Date.now());
-                    drawLogo(logoAlpha);
-                    drawText(textAlpha);
-                } else {
-                    startTime = Date.now();
-                    dots = [];
-                    patterns = [];
-                    infinityX = 150;
-                    logoAlpha = 0;
-                    textAlpha = 0;
-                    bounceCount = 0;
-                }
-
-                animationFrame = requestAnimationFrame(animate);
-            }
-
-            animate();
+        function Circle(x, y, r, depth) {
+            this.x = x;
+            this.y = y;
+            this.r = r;
+            this.depth = depth;
+            this.alpha = 1;
         }
 
-        // Intersection Observer for Fade-in Animation
+        function initCircles() {
+            circles = [];
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            circles.push(new Circle(centerX, centerY, 150, 0));
+        }
+
+        function drawCircle(circle) {
+            ctx.strokeStyle = `hsla(${180 + circle.depth * 30}, 70%, 60%, ${circle.alpha})`;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        function fractalize() {
+            if (circles.length > 100) return;
+
+            const newCircles = [];
+            circles.forEach(circle => {
+                if (circle.depth < 4 && circle.r > 10) {
+                    const angles = [0, 2 * Math.PI / 3, 4 * Math.PI / 3];
+                    const newR = circle.r * 0.4;
+                    const dist = circle.r - newR;
+
+                    angles.forEach(angle => {
+                        const x = circle.x + Math.cos(angle) * dist;
+                        const y = circle.y + Math.sin(angle) * dist;
+                        newCircles.push(new Circle(x, y, newR, circle.depth + 1));
+                    });
+                }
+            });
+
+            circles = circles.concat(newCircles);
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 20, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            time++;
+
+            if (time % 60 === 0) {
+                fractalize();
+            }
+
+            circles.forEach(circle => {
+                drawCircle(circle);
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        initCircles();
+        animate();
+
+        // Fade-in on scroll
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
@@ -1759,57 +989,9 @@ Consistency: p < 0.001
             });
         }, observerOptions);
 
-        // Observe all fade-in elements
         document.querySelectorAll('.fade-in').forEach(el => {
             observer.observe(el);
         });
-
-        // Floating menu button and slide-out panel
-        const menuBtn = document.getElementById('menuBtn');
-        const menuPanel = document.getElementById('menuPanel');
-
-        menuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menuBtn.classList.toggle('active');
-            menuPanel.classList.toggle('active');
-            menuBtn.textContent = menuPanel.classList.contains('active') ? '✕' : '☰';
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('nav')) {
-                menuPanel.classList.remove('active');
-                menuBtn.classList.remove('active');
-                menuBtn.textContent = '☰';
-            }
-        });
-
-        // Smooth scrolling for navigation
-        document.querySelectorAll('.menu-panel a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                
-                // Close menu after clicking
-                menuPanel.classList.remove('active');
-                menuBtn.classList.remove('active');
-                menuBtn.textContent = '☰';
-            });
-        });
-
-        // Close menu with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && menuPanel.classList.contains('active')) {
-                menuPanel.classList.remove('active');
-                menuBtn.classList.remove('active');
-                menuBtn.textContent = '☰';
-            }
-        });
-
-        // Initialize
-        createFractalCircles();
-        initFractalAnimation();
     </script>
 </body>
 </html>
