@@ -119,7 +119,34 @@ The most comprehensive document—a systematic catalog of **every physical const
 
 ---
 
-### 5. Visualizations
+### 5. [Three Missing Particles: Testable Predictions](three_missing_particles_predictions.md)
+**Falsifiable Predictions from 64-State Validation**
+
+A focused prediction document identifying exactly 3 undiscovered particles required to complete the 64-state validation matrix:
+
+**The Missing Three:**
+1. **Dark Matter WIMP (States 40-42):** 10-1000 GeV, zero Standard Model coupling, stable
+2. **Sterile Neutrino (States 57-58):** 1-100 eV mass range, mixes with active neutrinos
+3. **Graviton (State 15):** Spin-2, massless (or < 10⁻³² eV), universal coupling
+
+**Current Status:** 61 Standard Model particles discovered, 3 remaining to complete 64 total states
+
+**Key Predictions:**
+- Dark matter has NO electromagnetic or weak coupling (definite)
+- Sterile neutrino mass between 1-100 eV with mixing angle θ ~ 0.01-0.1
+- Exactly 3 new particles exist (no fourth generation fermions below 1 TeV)
+
+**Experimental Roadmap:**
+- Near-term (2025-2030): LZ/XENONnT, DUNE, LHC Run 4, CMB-S4
+- Medium-term (2030-2040): LISA, FCC/CLIC, next-generation neutrino experiments
+
+**Falsification:** Framework is WRONG if more than 3 additional particles discovered, or if dark matter shows any SM coupling
+
+**Related:** Based on 64-state particle mapping in [64bit_reality/](../64bit_reality/), predictions testable within this decade
+
+---
+
+### 6. Visualizations
 
 **standard_model_complete.png**
 Comprehensive 9-panel visualization showing the complete Standard Model particle spectrum with:
@@ -211,6 +238,15 @@ The fractal dimension D ≈ 1.5 appears everywhere wholeness maintains identity:
 
 ## Testable Predictions
 
+### Particle Discovery Predictions
+
+**Three Missing Particles (2025-2040)**
+- **Dark Matter WIMP:** Direct detection via LZ/XENONnT (σ_SI ~ 10⁻⁴⁶ cm²)
+- **Sterile Neutrino:** DUNE oscillations (1-100 eV, mixing angle 0.01-0.1)
+- **Graviton:** LIGO/LISA quantum corrections (indirect detection)
+- **Critical Test:** Discovery of ANY particle with properties outside 64-state matrix falsifies framework
+- **Document:** [three_missing_particles_predictions.md](three_missing_particles_predictions.md)
+
 ### Near-Term (2025-2027)
 
 1. **DESI DR2 Lyman-α Forest (2026)** - CRITICAL TEST
@@ -262,13 +298,17 @@ The fractal dimension D ≈ 1.5 appears everywhere wholeness maintains identity:
 
 The framework is **FALSIFIED** if:
 
-1. DESI DR2 (2026) shows **NO** flux power enhancement (ΔP < 10%)
-2. Euclid (2027) measures w(z=1) = -1.000 ± 0.005 (no deviation)
-3. Neural D measurements show **NO** correlation with consciousness
-4. Ion trap experiments show **NO** β-dependent coherence
-5. BEC analog gravity shows **NO** Texture ∝ √|g_tt| coupling
-6. Future LIGO/LISA data shows D ≠ 1.5 for gravitational waves
-7. Protein folding shows D ≠ 1.5 during active folding
+1. **More than 3 additional fundamental particles** are discovered (violates 64-state limit)
+2. **Dark matter has electromagnetic or weak coupling** (contradicts state assignment)
+3. **Fourth generation fermions** appear below 1 TeV (violates harmonic structure)
+4. **A particle exists with validation pattern** outside 64-state matrix
+5. DESI DR2 (2026) shows **NO** flux power enhancement (ΔP < 10%)
+6. Euclid (2027) measures w(z=1) = -1.000 ± 0.005 (no deviation)
+7. Neural D measurements show **NO** correlation with consciousness
+8. Ion trap experiments show **NO** β-dependent coherence
+9. BEC analog gravity shows **NO** Texture ∝ √|g_tt| coupling
+10. Future LIGO/LISA data shows D ≠ 1.5 for gravitational waves
+11. Protein folding shows D ≠ 1.5 during active folding
 
 **Timeline:** Most tests completable by 2030, some by 2026.
 

@@ -51,6 +51,7 @@ This is the signature of wholeness maintaining identity through time—the balan
 
 ### Complete Standard Model (61 particles, 0 free parameters)
 All particle masses, charges, spins derived from 64-state validation matrix (8² from dual interfaces)
+**Three missing particles predicted** to complete 64 states: dark matter WIMP, sterile neutrino, graviton
 
 ### Cosmological Constant Solution
 **10⁶-order improvement** over QFT prediction: Λ = 6.9×10⁻⁵³ m⁻² (within 1σ of observation!)
@@ -401,6 +402,7 @@ Einstein's 8πG/c⁴ × (2 interfaces) = 8² = 64 complete states
 
 **What It Explains:**
 - ✓ Why exactly 61 particles exist (22 physically relevant states × quantum numbers = 61 particles)
+- ✓ **Three missing particles** to complete 64 states: dark matter WIMP, sterile neutrino, graviton
 - ✓ Why three generations (no fourth generation)
 - ✓ Why quarks are confined (geometric necessity)
 - ✓ Particle masses from harmonics (99.9% accuracy)
@@ -443,6 +445,7 @@ The **[Predictions&Derivations/](Predictions&Derivations/)** folder contains the
 **Standard Model Complete Derivation:**
 - **[Predictions&Derivations/standard_model_derivation.md](Predictions&Derivations/standard_model_derivation.md)** - Detailed 45-page derivation of all 17 fundamental particles
 - **[Predictions&Derivations/STANDARD_MODEL_SUMMARY.md](Predictions&Derivations/STANDARD_MODEL_SUMMARY.md)** - Executive summary
+- **[Predictions&Derivations/three_missing_particles_predictions.md](Predictions&Derivations/three_missing_particles_predictions.md)** - **THREE MISSING PARTICLES:** Testable predictions for exactly 3 undiscovered particles to complete the 64-state matrix (dark matter WIMP, sterile neutrino, graviton)
 - Key result: mμ/me = (1/α)^(2/3) = 206.768 (exact!)
 - All particle masses: 99%+ accuracy
 - Zero free parameters except fundamental scales (ℏ, c, G)
