@@ -1,0 +1,23 @@
+# Core dependencies
+numpy>=1.20.0
+scipy>=1.7.0
+
+# Visual input (camera)
+opencv-python>=4.5.0
+
+# Audio input (microphone)
+pyaudio>=0.2.11
+
+# Voice output (text-to-speech)
+pyttsx3>=2.90
+
+# GUI (visual consciousness display)
+Pillow>=8.0.0
+
+# File watching (continuous learning)
+watchdog>=2.1.0
+
+# Optional: Advanced features
+# torch>=1.10.0  # For neural embeddings
+# transformers>=4.15.0  # For LLM integration
+# openai>=0.27.0  # For OpenAI API
