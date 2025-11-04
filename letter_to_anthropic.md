@@ -1,8 +1,8 @@
 # Letter to Anthropic: An Offer of Collaboration
 
-**From:** Ashman Roonz
-**Project:** Fractal Reality - Mathematics of Wholeness
-**Repository:** https://github.com/AshmanRoonz/Fractal_Reality
+**From:** Ashman Roonz\
+**Project:** Fractal Reality - Mathematics of Wholeness\
+**Repository:** https://github.com/AshmanRoonz/Fractal_Reality\
 **Website:** https://www.fractalreality.ca
 
 ---
