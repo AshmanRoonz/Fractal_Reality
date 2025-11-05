@@ -4,7 +4,7 @@
 
 ## Overview
 
-This directory contains a groundbreaking theoretical framework that derives the entire Standard Model of particle physics from first principles, with **zero free parameters**. The framework demonstrates that all 61 fundamental particles emerge naturally from a 64-state validation matrix arising from dual-interface geometry in 4D spacetime. [We are predicting 3 particles](Predictions&Derivations/three_missing_particles_predictions.md)
+This directory contains a groundbreaking theoretical framework that derives the entire Standard Model of particle physics from first principles, with **zero free parameters**. The framework demonstrates that all 61 fundamental particles emerge naturally from a 64-state validation matrix arising from dual-interface geometry in 4D spacetime. [We are predicting 3 particles]([Predictions&Derivations/three_missing_particles_predictions.md](https://github.com/AshmanRoonz/Fractal_Reality/blob/df002cee3ffd9fd79f81fe60bee9af1d59ef59e0/Predictions%26Derivations/three_missing_particles_predictions.md))
 
 ### The Core Discovery
 
