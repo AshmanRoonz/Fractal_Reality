@@ -8,7 +8,7 @@
 
 ## TL;DR
 
-We've discovered **exact mathematical correspondences** between Fractal Reality and your Bimetric Framework. Despite starting from opposite ontologies (wholeness vs. duality), we've arrived at identical predictions. This suggests deep collaboration potential.
+We've discovered **exact mathematical correspondences** between Fractal Reality and your Bimetric Framework. Despite starting from a different part of the ontology (wholeness vs. duality), we've arrived at identical predictions. This suggests deep collaboration potential.
 
 ---
 
