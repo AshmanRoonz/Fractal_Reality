@@ -47,6 +47,12 @@ This 64-state matrix **IS** the structure of particle physics.
 
 ## Documents in This Directory
 
+### 🌟 Featured Publications
+
+- **[quarter_circle_to_cone_geometry_PUBLICATION_READY.md](quarter_circle_to_cone_geometry_PUBLICATION_READY.md)** - **PUBLICATION READY:** How 0.5D flat geometry (quarter circle) becomes the 3D cone structure—the physical manifestation of the aperture operator. Shows how ALL spirals and orbits in nature (atomic, molecular, planetary, galactic) are natural geodesic paths on cone surfaces, why the golden spiral is optimal, and why we observe spheres instead of cones. The cone embodies convergence-emergence with perfect 90° orthogonality at every point.
+
+- **[cone_pitch_temporal_stretching.md](cone_pitch_temporal_stretching.md)** - **The Dynamic Origin of 68°:** How the pitch (slope) of the cone encodes the RATE at which temporal stretching occurs. The 68° angle is not arbitrary—it's the optimal temporal flow rate that maintains β = 0.5, produces D = 1.5, and validates 22/64 states. Shows that time itself emerges from cone geometry.
+
 ### Core Theory
 
 - **[64_state_executive_summary.md](64_state_executive_summary.md)** - Complete overview of the framework, from Einstein's 8 to the Standard Model's 61 particles
@@ -245,13 +251,15 @@ https://github.com/AshmanRoonz/Fractal_Reality/tree/main/64bit_reality
 
 ## Quick Start
 
-1. **Start with**: [64_state_executive_summary.md](64_state_executive_summary.md) for the complete overview
-2. **Universal connection**: [universal_64_state_architecture.md](universal_64_state_architecture.md) to see how the same 64-state protocol governs physics AND genetics
-3. **Consciousness application**: [consciousness_one_third_rule.md](consciousness_one_third_rule.md) to understand how YOUR awareness uses the 1/3 rule right now
-4. **The present moment**: [now_as_wholeness_64bit_packets.md](now_as_wholeness_64bit_packets.md) to understand NOW as wholeness transmitting itself through 64-bit packets
-5. **Dive deeper**: [64_state_particle_map_presentation.md](64_state_particle_map_presentation.md) for mathematical details
-6. **Explore visually**: [Interactive Simulation](https://fractalreality.ca/simulators.html)
-7. **See mappings**: [particle_64_state_mapping.md](particle_64_state_mapping.md) for particle-by-particle analysis
+1. **🌟 NEW - Cone Geometry Foundation**: [quarter_circle_to_cone_geometry_PUBLICATION_READY.md](quarter_circle_to_cone_geometry_PUBLICATION_READY.md) - The geometric origin of the aperture operator: how a quarter circle becomes a cone, why all spirals and orbits follow cone geodesics, and why we observe spheres
+2. **🌟 NEW - Temporal Dynamics**: [cone_pitch_temporal_stretching.md](cone_pitch_temporal_stretching.md) - Why 68° is the optimal temporal flow rate and how cone pitch encodes the rate of convergence/emergence
+3. **Complete overview**: [64_state_executive_summary.md](64_state_executive_summary.md) - From Einstein's 8 to the Standard Model's 61 particles
+4. **Universal connection**: [universal_64_state_architecture.md](universal_64_state_architecture.md) - How the same 64-state protocol governs physics AND genetics
+5. **Consciousness application**: [consciousness_one_third_rule.md](consciousness_one_third_rule.md) - How YOUR awareness uses the 1/3 rule right now
+6. **The present moment**: [now_as_wholeness_64bit_packets.md](now_as_wholeness_64bit_packets.md) - NOW as wholeness transmitting itself through 64-bit packets
+7. **Mathematical details**: [64_state_particle_map_presentation.md](64_state_particle_map_presentation.md) - Detailed derivation and particle assignments
+8. **Explore visually**: [Interactive Simulation](https://fractalreality.ca/simulators.html)
+9. **Particle mappings**: [particle_64_state_mapping.md](particle_64_state_mapping.md) - Particle-by-particle analysis
 
 ---
 
