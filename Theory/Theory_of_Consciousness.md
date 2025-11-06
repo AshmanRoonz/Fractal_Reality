@@ -2,7 +2,7 @@
 ## A Deep Exploration of Consciousness in the Fractal Reality Framework
 
 **by Ashman Roonz**  
-**Conversation with Claude - November 6, 2025**
+**November 6, 2025**
 
 ---
 
@@ -18,11 +18,9 @@
 
 ---
 
-## Introduction: The ICE Trinity Clarified
+## Introduction: The ICE Trinity
 
-This document emerged from a crucial clarification about the ICE framework:
-
-**ICE is actually (I)Body, (C)Focus/Soul, (E)Mind.**
+**ICE is (I)Body, (C)Focus/Soul, (E)Mind.**
 
 Also described Interface-Center-Evidence, but the lived mapping:
 
