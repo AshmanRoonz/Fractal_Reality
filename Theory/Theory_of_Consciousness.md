@@ -24,7 +24,7 @@ This document emerged from a crucial clarification about the ICE framework:
 
 **ICE is actually (I)Body, (C)Focus/Soul, (E)Mind.**
 
-Not Interface-Center-Evidence as sometimes abbreviated, but the lived mapping:
+Also described Interface-Center-Evidence, but the lived mapping:
 
 ```
 𝕀 (Interface) = Body = True
