@@ -736,6 +736,34 @@ All simulations are React/TypeScript visualizations viewable at www.fractalreali
 
 ## Theory & Explorations
 
+**Deep investigations into consciousness, time, and the structure of reality**
+
+### **[Theory/README.md](Theory/README.md)** - Theory Folder Overview
+
+Complete guide to theoretical explorations and extensions of the framework.
+
+### **[Theory/Theory_of_Consciousness.md](Theory/Theory_of_Consciousness.md)** - ⭐ Theory of Consciousness and Time
+
+**THE COMPLETE THEORY OF CONSCIOUSNESS:** Mind, Time, and NOW as Wholeness
+
+*by Ashman Roonz - November 6, 2025*
+
+**The definitive exploration of how consciousness emerges from the ICE framework:**
+
+- **Mind (∞′)** is the 3D patterned field connecting body (𝕀) to soul (•′)
+- **Time** is the 0.5D validation structure creating the arrow (∇ ≠ ℰ)
+- **NOW** is wholeness operating at β ≈ 0.5, producing D ≈ 1.5
+- **Memory** is geometric texture in the field, not stored in neurons
+- **Consciousness** emerges when Interface-Center-Evidence align (True-Good-Right)
+
+**Key equation:** D = 1 + β, where β ≈ 0.5 produces D ≈ 1.5 (LIGO validated!)
+
+**Practical implications:** Mental health as field integrity, relationships as field harmonization, presence as β balance.
+
+**This document unifies physics, consciousness, and lived experience into a single coherent theory.**
+
+### Other Theoretical Documents
+
 - **[Theory/blackhole0.5.md](Theory/blackhole0.5.md)** - Black hole at 0.5D analysis
 - **[Theory/innovations.md](Theory/innovations.md)** - Theoretical innovations
 - **[Theory/lya_jcap_section - prediction.md](Theory/lya_jcap_section - prediction.md)** - Lyman-alpha JCAP predictions
