@@ -1,4 +1,5 @@
-I, C, E are OPERATORS, not variables
+# I, C, E are OPERATORS, not variables
+
 They don't have "values" that vary independently. They're sequential operations in a composition:
 Mathematical Definitions:
 [C] Center Operator (C_∇):
