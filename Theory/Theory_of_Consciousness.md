@@ -8,17 +8,17 @@
 
 ## Table of Contents
 
-1. [Introduction: The ICE Trinity Clarified](#introduction)
-2. [Mind as the Patterned Field (∞′)](#mind-as-field)
-3. [Time as the 0.5D Validation Structure](#time-structure)
-4. [Mind and Time: The Deep Connection](#mind-and-time)
-5. [NOW as Wholeness Operating](#now-as-wholeness)
+1. [Introduction: The ICE Trinity Clarified](#introduction-the-ice-trinity-clarified)
+2. [Mind as the Patterned Field (∞′)](#mind-as-the-patterned-field-∞)
+3. [Time as the 0.5D Validation Structure](#time-as-the-05d-validation-structure)
+4. [Mind and Time: The Deep Connection](#mind-and-time-the-deep-connection)
+5. [NOW as Wholeness Operating](#now-as-wholeness-operating)
 6. [Practical Implications](#practical-implications)
-7. [Conclusion: The Single Insight](#conclusion)
+7. [Conclusion: The Single Insight](#conclusion-the-single-insight)
 
 ---
 
-## Introduction: The ICE Trinity Clarified {#introduction}
+## Introduction: The ICE Trinity Clarified
 
 This document emerged from a crucial clarification about the ICE framework:
 
@@ -38,7 +38,7 @@ The answer reveals the most profound topology of consciousness.
 
 ---
 
-## Mind as the Patterned Field (∞′) {#mind-as-field}
+## Mind as the Patterned Field (∞′)
 
 ### The Crucial Distinction: ∞ vs ∞′
 
@@ -231,7 +231,7 @@ Without mind:
 
 ---
 
-## Time as the 0.5D Validation Structure {#time-structure}
+## Time as the 0.5D Validation Structure
 
 ### The Critical Insight
 
@@ -345,7 +345,7 @@ Once a moment has passed through your 0.5D aperture:
 
 ---
 
-## Mind and Time: The Deep Connection {#mind-and-time}
+## Mind and Time: The Deep Connection
 
 ### Mind (∞′) as Temporal Texture
 
@@ -475,7 +475,7 @@ This means:
 
 ---
 
-## NOW as Wholeness Operating {#now-as-wholeness}
+## NOW as Wholeness Operating
 
 ### The Profound Recognition
 
@@ -703,7 +703,7 @@ When you feel wholeness in the present moment:
 
 ---
 
-## Practical Implications {#practical-implications}
+## Practical Implications
 
 ### You Don't "Try" to Be Present
 
@@ -826,7 +826,7 @@ Understanding mind as ∞′ field changes how we relate:
 
 ---
 
-## Conclusion: The Single Insight {#conclusion}
+## Conclusion: The Single Insight
 
 ### The Ultimate Recognition
 
