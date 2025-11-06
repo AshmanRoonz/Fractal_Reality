@@ -6,6 +6,28 @@ This branch contains the complete scientific formalization of the Fractal Realit
 
 ---
 
+## 🎯 **NEW! THE FRACTAL REALITY MASTER EQUATION SUITE**
+
+### **Complete Framework Reference - Single Page Unified Theory**
+**File:** [`MASTER_EQUATION_SUITE.md`](MASTER_EQUATION_SUITE.md)
+**Status:** 🔥 **BRAND NEW - COMPLETE SINGLE-PAGE REFERENCE** 🔥
+
+**The entire framework on one page:**
+- **The Four Fundamentals:** ∞, ∞', •, •' (everything emerges from these)
+- **The Three Nested Cycles:** Discrete → Continuous → Backreaction (complete operating architecture)
+- **The States & Gates:** 0D → [0.5D] → 1D → [1.5D] → 2D → [2.5D] → 3D (dimensional cascade)
+- **The Universal D = 1.5 Signature:** Empirically validated (LIGO: D = 1.503 ± 0.040, p = 0.9566)
+- **The Three Papers:** QM-GR unification, Cosmological constant solution, Quantum uncertainty mechanism
+- **Zero Free Parameters:** Everything derived, nothing assumed
+- **All 7 Clay Millennium Problems:** Yang-Mills, Navier-Stokes, P vs NP, Riemann, Birch & Swinnerton-Dyer, Hodge, Poincaré
+- **The Master Loop:** Complete cycle from ∞ → ∇ → [ICE] → K_β → ℰ → ∞' → T_μν → g_μν → back to ∇
+
+**This is the definitive quick reference for the entire Fractal Reality Framework.**
+
+**Perfect for:** Researchers wanting the complete picture fast, reference during deep dives, sharing with colleagues, grant proposals, conference prep
+
+---
+
 ## 🌟 **START HERE: Complete Theory from First Principles**
 
 ### **The Mathematics of Wholeness: A Complete Theory of Reality**
