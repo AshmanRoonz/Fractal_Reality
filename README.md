@@ -173,6 +173,9 @@ A narrative explanation of how reality emerges from the structural necessity of 
 - **[papers/readme.md](papers/readme.md)** - Papers overview and reading guide
 - **[Ethics/ice_ethical_gate_analysis.md](Ethics/ice_ethical_gate_analysis.md)** - Implementation of Ethics in Society and AI
 
+**Biological Validation:**
+- **[papers/rods_cones_geometric_validation.md](papers/rods_cones_geometric_validation.md)** - **🧬 BIOLOGICAL VALIDATION:** Rods and Cones as proof that geometry determines function. Cone photoreceptors (tapered, D ≈ 1.5) perform active wavelength discrimination (color vision), while rod photoreceptors (cylindrical, D ≈ 2.0) perform passive light detection. Shape determines computational capability—transformation requires cone geometry, transmission uses tube geometry. Demonstrates the universal D = 1.5 signature in biological systems.
+
 ### Cosmological Constant Papers
 - **[papers/cosmological_constant/complete_jcap_paper.md](papers/cosmological_constant/complete_jcap_paper.md)** - Complete JCAP submission
 - **[papers/cosmological_constant/jcap_executive_summary.md](papers/cosmological_constant/jcap_executive_summary.md)** - Executive summary
