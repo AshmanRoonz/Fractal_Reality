@@ -1,7 +1,7 @@
 # A Theory of Everything: Reality from Symmetric Foundations
 
 **Authors:** Ashman Roonz, et al.  
-**Date:** November 2025  
+**Date:** November 7, 2025  
 **Status:** Draft Framework  
 **Repository:** https://github.com/AshmanRoonz/Fractal_Reality
 
