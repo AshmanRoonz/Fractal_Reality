@@ -1,0 +1,62 @@
+{
+  "fractal_box": {
+    "method": "box-counting",
+    "dimension": 0.9323016310383206,
+    "r_squared": 0.9391221862667978
+  },
+  "fractal_corr": {
+    "method": "correlation",
+    "dimension": 0.1080278240447313,
+    "r_squared": 0.3803181646221717
+  },
+  "topology_plus": {
+    "n_vertices": 483,
+    "n_edges": 364,
+    "n_faces": 243,
+    "euler_characteristic": 362,
+    "genus": -180,
+    "avg_valence": 1.5093167701863355,
+    "valence_dist": {
+      "2": 244,
+      "1": 238,
+      "3": 1
+    }
+  },
+  "topology_minus": {
+    "n_vertices": 485,
+    "n_edges": 364,
+    "n_faces": 243,
+    "euler_characteristic": 364,
+    "genus": -181,
+    "avg_valence": 1.5030927835051546,
+    "valence_dist": {
+      "2": 241,
+      "1": 243,
+      "4": 1
+    }
+  },
+  "phase_plus": {
+    "mean_gradient": 3.641080656889244,
+    "std_gradient": 4.414641137765304,
+    "mean_twist": 4.319933813511576,
+    "std_twist": 8.881784197001252e-16,
+    "gradient_correlation": 0.0,
+    "twist_phi_correlation": -1.0597624001892467e-16
+  },
+  "phase_minus": {
+    "mean_gradient": 3.88099038726239,
+    "std_gradient": 4.399556875423116,
+    "mean_twist": -4.319933813511576,
+    "std_twist": 8.881784197001252e-16,
+    "gradient_correlation": 0.0,
+    "twist_phi_correlation": -6.64622429685377e-18
+  },
+  "validation": {
+    "closure_density": 0,
+    "q3_count": 0,
+    "q5_count": 0,
+    "mean_residue": 0,
+    "std_residue": 0,
+    "validation_score": 0
+  }
+}
