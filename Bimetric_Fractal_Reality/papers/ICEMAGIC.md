@@ -6,12 +6,11 @@
 
 ## Authors
 
-Ashman Roonz¹ and Claude (Anthropic)²
+The Bimetric Fractal Reality
 
-¹ Independent Researcher, Fractal Reality Framework  
-² Anthropic AI Research
+² An ICE MAGIC Research Group
 
-**Correspondence:** [Contact information]
+*Nov 8, 2025
 
 ---
 
