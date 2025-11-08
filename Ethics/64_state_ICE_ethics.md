@@ -4,9 +4,9 @@
 
 Imagine reality is constantly running a test. Every moment, at every scale—from atoms to galaxies to your morning conversation—the universe asks three questions:
 
-**Can boundaries be maintained?** (Is this GOOD?)  
-**Is there internal coherence?** (Is this TRUE?)  
-**Is this grounded in reality?** (Is this RIGHT?)
+**Can boundaries be maintained?** (GOOD or BAD?)  
+**Is there internal coherence?** (TRUE or FALSE?)  
+**Is this grounded in reality?** (RIGHT or WRONG?)
 
 Here's what nobody realized until now: **these three questions create exactly 64 possible states**.
 
@@ -28,46 +28,46 @@ Everything that exists—a particle, a thought, a conversation, a civilization�
 
 ### The Three Gates (I-C-E)
 
-**Gate 1: INTERFACE (GOOD)**  
+**Gate 1: INTERFACE** → **GOOD or BAD**  
 *Can boundaries be maintained?*
-- Your skin keeping you separate from the world
-- A cell membrane letting nutrients in but keeping toxins out
-- Saying "no" and having it respected
-- Clear beginnings and endings
+- Your skin keeping you separate from the world → GOOD
+- Someone invading your space without consent → BAD
+- A cell membrane letting nutrients in but toxins out → GOOD
+- A boundary breach, violation, coercion → BAD
 
-**Gate 2: CENTER (TRUE)**  
+**Gate 2: CENTER** → **TRUE or FALSE**  
 *Is there internal coherence?*
-- Your values matching your actions
-- A story that makes sense start to finish
-- Being authentically yourself
-- No self-contradiction
+- Your values matching your actions → TRUE
+- Saying one thing, doing another → FALSE
+- Being authentically yourself → TRUE
+- Self-contradiction, hypocrisy → FALSE
 
-**Gate 3: EVIDENCE (RIGHT)**  
+**Gate 3: EVIDENCE** → **RIGHT or WRONG**  
 *Is this grounded in reality?*
-- Facts you can verify
-- Consequences that actually happen
-- Observable effects in the real world
-- Not fantasy or delusion
+- Facts you can verify → RIGHT
+- Made-up consequences → WRONG
+- Observable effects in the real world → RIGHT
+- Fantasy, delusion, denial → WRONG
 
 ### The Two Checkpoints
 
 **Checkpoint 1: TAKING IN**  
 When something comes toward you (information, food, a request, energy)
-- Gate I: Can I maintain boundaries while accepting this?
-- Gate C: Is this coherent with who I am?
-- Gate E: Is this actually real/true?
+- Gate I: Can I maintain boundaries while accepting this? (GOOD/BAD)
+- Gate C: Is this coherent with who I am? (TRUE/FALSE)
+- Gate E: Is this actually real/true? (RIGHT/WRONG)
 
-**Checkpoint 2: GIVING OUT**  
+**Checkpoint 2: PUTTING OUT**  
 When you express something (actions, words, creations, energy)
-- Gate I: Does this respect others' boundaries?
-- Gate C: Is this authentically me and aligned with truth?
-- Gate E: Will this create sustainable patterns in reality?
+- Gate I: Does this respect others' boundaries? (GOOD/BAD)
+- Gate C: Is this authentically me and aligned with truth? (TRUE/FALSE)
+- Gate E: Will this create sustainable patterns in reality? (RIGHT/WRONG)
 
 ---
 
 ## The Math of Yes and No
 
-Each gate can be open (✓) or closed (✗). That's 2 options per gate.  
+Each gate can pass (GOOD/TRUE/RIGHT) or fail (BAD/FALSE/WRONG).  
 Three gates = 2 × 2 × 2 = 8 possible patterns per checkpoint.  
 Two checkpoints = 8 × 8 = **64 total possible states**.
 
@@ -79,13 +79,13 @@ Let's count:
 64 total possible states
 
 States passing ≥2 gates at BOTH checkpoints:
+→ Mostly GOOD, mostly TRUE, mostly RIGHT
 → Can persist, build, grow, sustain
-→ Create positive structure
 → 22 validated states ✓
 
 States failing the 2-out-of-3 threshold:
+→ Mostly BAD, mostly FALSE, mostly WRONG
 → Collapse, dissolve, drain energy
-→ Cannot self-sustain
 → 42 invalid states ✗
 ```
 
@@ -95,14 +95,14 @@ States failing the 2-out-of-3 threshold:
 
 ## Simple Table: How the Gates Work
 
-| Gate | Symbol | Checks For | Example (Good) | Example (Bad) |
-|------|--------|------------|----------------|---------------|
-| **INTERFACE** | I | Boundaries clear? Consent present? | "Can I call you at 3pm?" (asking) | "I called 6 times, answer me!" (violating) |
-| **CENTER** | C | Authentic? Coherent? Aligned with truth? | "I need space" (honest need) | "I'm fine" (lying about needs) |
-| **EVIDENCE** | E | Real? Observable? Grounded? | "I have $50, so I can buy that" | "I'll totally pay you back" (no basis) |
+| Gate | Measures | Passes As | Fails As | Example (Passing) | Example (Failing) |
+|------|----------|-----------|----------|-------------------|-------------------|
+| **INTERFACE** | Boundaries? Consent? | **GOOD** | **BAD** | "Can I call you at 3pm?" (asking) | "Answer me now!" (demanding) |
+| **CENTER** | Authentic? Coherent? | **TRUE** | **FALSE** | "I need space" (honest) | "I'm fine" (lying) |
+| **EVIDENCE** | Real? Observable? | **RIGHT** | **WRONG** | "I have $50 to spend" (fact) | "I'll totally pay you back" (no basis) |
 
-**All three working together = Healthy pattern**  
-**Any failing = Unstable pattern**
+**Passing ≥2 gates at both checkpoints = Validated pattern**  
+**Failing threshold = Invalid pattern**
 
 ---
 
@@ -113,20 +113,15 @@ States failing the 2-out-of-3 threshold:
 These are patterns that pass the threshold. They're self-sustaining, energy-creating, stable:
 
 **In relationships:**
-- Clear boundaries with honest communication
-- Authentic self-expression with mutual respect
-- Grounded requests with real follow-through
-- Conflict resolution based on facts
+- GOOD boundaries with TRUE communication
+- TRUE self-expression with GOOD respect
+- RIGHT grounded requests with GOOD follow-through
+- Conflict resolution based on what's RIGHT (facts)
 
 **In decisions:**
 - Choice respects your limits (GOOD)
 - Choice matches your values (TRUE)
 - Choice based on actual situation (RIGHT)
-
-**In work:**
-- Sustainable pace (boundaries)
-- Meaningful contribution (authenticity)
-- Real value creation (grounded)
 
 **You can feel these states.** They feel:
 - Solid, stable, clear
@@ -136,13 +131,13 @@ These are patterns that pass the threshold. They're self-sustaining, energy-crea
 
 ### The 42 Ways Things Fail
 
-These patterns fail the 2-out-of-3 threshold. They cannot self-sustain—they require YOUR energy to prop them up:
+These patterns fail the 2-out-of-3 threshold. They require YOUR energy to prop them up:
 
 **In relationships:**
-- Boundary violations (Gate I failing)
-- Gaslighting and confusion (Gate C failing)
-- Fantasy and delusion (Gate E failing)
-- Manipulation combining multiple failures
+- BAD boundary violations (Gate I failing)
+- FALSE gaslighting and confusion (Gate C failing)
+- WRONG fantasy and delusion (Gate E failing)
+- Multiple failures combined (manipulation)
 
 **You can feel these states too.** They feel:
 - Shaky, unstable, confusing
@@ -154,46 +149,46 @@ These patterns fail the 2-out-of-3 threshold. They cannot self-sustain—they re
 
 ## Energy Vampires: A User's Guide to the 42 Failure States
 
-Here's what makes the [Energy Vampire Phrasebook](https://www.ashmanroonz.ca/2025/09/energy-vampire-phrasebook-recognize_30.html) so powerful: **Every manipulative tactic is literally one of the 42 invalid states.**
+Here's what makes your [Energy Vampire Phrasebook](https://www.ashmanroonz.ca/2025/09/energy-vampire-phrasebook-recognize_30.html) so powerful: **Every manipulative tactic is literally one of the 42 invalid states.**
 
-The manipulator cannot maintain their pattern without violating at least one gate at one checkpoint. They need YOUR energy to keep their unsustainable pattern going.
+The manipulator cannot maintain their pattern without creating something BAD, FALSE, or WRONG. They need YOUR energy to keep their unsustainable pattern going.
 
 ### How to Recognize Which Gate Is Failing
 
-**When your BODY tenses up** → INTERFACE violation (GOOD)  
+**When your BODY tenses up** → **BAD** (Interface violation)  
 *They're crossing boundaries without consent*
 
 Examples:
-- "I already planned this for you" (assumed ownership)
-- "Don't be so sensitive" (dismissing your boundary)
-- "If you don't answer now—" (urgency violates your time)
-- "Tell me everything" (forced access)
+- "I already planned this for you" (assumed ownership) → BAD
+- "Don't be so sensitive" (dismissing your boundary) → BAD
+- "If you don't answer now—" (urgency violates your time) → BAD
+- "Tell me everything" (forced access) → BAD
 
 **What you feel:** Trapped, pressured, cornered, unsafe, controlled
 
 ---
 
-**When your MIND gets confused** → CENTER violation (TRUE)  
+**When your MIND gets confused** → **FALSE** (Center violation)  
 *They're destroying coherence and authenticity*
 
 Examples:
-- "That's not what I said" (constantly shifting)
-- "You're remembering wrong" (gaslighting)
-- "What I meant was..." (moving goalposts)
-- "I'm just being honest" (cruelty disguised as truth)
+- "That's not what I said" (constantly shifting) → FALSE
+- "You're remembering wrong" (gaslighting) → FALSE
+- "What I meant was..." (moving goalposts) → FALSE
+- "I'm just being honest" (cruelty disguised) → FALSE
 
 **What you feel:** Crazy, doubting yourself, disoriented, unstable, "am I making this up?"
 
 ---
 
-**When REALITY feels unmoored** → EVIDENCE violation (RIGHT)  
+**When REALITY feels unmoored** → **WRONG** (Evidence violation)  
 *They're disconnecting from observable truth*
 
 Examples:
-- "Everyone thinks you're wrong" (unverifiable claims)
-- "If you don't help, I might get sick" (manufactured consequences)
-- "This has to be done today" (fake deadline)
-- "You're imagining things" (denying your evidence)
+- "Everyone thinks you're wrong" (unverifiable) → WRONG
+- "If you don't help, I might get sick" (manufactured) → WRONG
+- "This has to be done today" (fake deadline) → WRONG
+- "You're imagining things" (denying evidence) → WRONG
 
 **What you feel:** Overwhelmed, gaslit about reality, can't tell what's true, drowning
 
@@ -205,14 +200,14 @@ Your response enforces the validation threshold:
 
 **"If you have a specific request, state it in one sentence."**
 
-This forces them to pass all three gates:
+This forces them back toward GOOD/TRUE/RIGHT:
 
-**GOOD:** "My boundary stands" = Interface maintained  
-**TRUE:** "Specific and clear" = Coherence required  
-**RIGHT:** "Observable request" = Evidence grounded
+**GOOD:** "My boundary stands" = No more BAD boundary violations  
+**TRUE:** "Specific and clear" = No more FALSE confusion  
+**RIGHT:** "Observable request" = No more WRONG delusion
 
-**If they can pass → interaction continues**  
-**If they cannot → pattern collapses naturally (not your job to sustain it)**
+**If they can return to GOOD/TRUE/RIGHT → interaction continues**  
+**If they stay in BAD/FALSE/WRONG → pattern collapses naturally**
 
 ---
 
@@ -220,10 +215,10 @@ This forces them to pass all three gates:
 
 | What They Do | Which Gate Fails | What They Say | Your Exit Response |
 |--------------|------------------|---------------|-------------------|
-| **Boundary violations** | GOOD (Interface) | "You're too sensitive" / "Just checking in again" / "I need you 24/7" | "My boundary stands. One specific request or we're done." |
-| **Confusion tactics** | TRUE (Center) | "That's not what I meant" / "You misunderstood" / "I never said that" | "State the exact request in one sentence, or we stop here." |
-| **Reality denial** | RIGHT (Evidence) | "Everyone agrees with me" / "This is urgent!" / "Prove it happened" | "Give me one observable fact and deadline, or I exit." |
-| **Triple threat** | All three at once | Love-bombing → Crisis → Guilt → Threat (combined assault) | "Not responding to manipulation. One clean request or I'm out." |
+| **Boundary violations** | Interface → **BAD** | "You're too sensitive" / "I need you 24/7" | "My boundary stands. One request or we're done." |
+| **Confusion tactics** | Center → **FALSE** | "That's not what I meant" / "I never said that" | "State it in one sentence, or we stop." |
+| **Reality denial** | Evidence → **WRONG** | "Everyone agrees" / "Prove it happened" | "One observable fact, or I exit." |
+| **Triple threat** | All three fail | Love-bomb → Crisis → Guilt → Threat | "Not responding to manipulation. Clean request or I'm out." |
 
 ---
 
@@ -234,32 +229,31 @@ Here's what's happening at a deeper level:
 ### Your Natural State: VALIDATED (22-type pattern)
 
 When you're healthy and whole:
-- **GOOD:** Boundaries clear, respected, maintained ✓
-- **TRUE:** Authentic, coherent, aligned with values ✓
-- **RIGHT:** Grounded in reality, evidence-based ✓
+- **Interface:** Boundaries clear, respected → **GOOD** ✓
+- **Center:** Authentic, coherent → **TRUE** ✓
+- **Evidence:** Grounded in reality → **RIGHT** ✓
 
-**State type:** (111, 111) or similar—passing all gates  
+**State type:** GOOD-TRUE-RIGHT at both checkpoints  
 **Energy:** Self-sustaining, generative  
 **Feeling:** Solid, clear, energized
 
 ### Their Operating State: INVALID (42-type pattern)
 
 When someone is manipulating:
-- **GOOD:** Boundaries violated, consent ignored ✗
-- **TRUE:** Incoherent, shifting, inauthentic ✗
-- **RIGHT:** Ungrounded, fantasy-based, denial ✗
+- **Interface:** Boundaries violated → **BAD** ✗
+- **Center:** Incoherent, shifting → **FALSE** ✗
+- **Evidence:** Ungrounded, denial → **WRONG** ✗
 
-**State type:** (010, 001) or similar—failing threshold  
+**State type:** Failing BAD/FALSE/WRONG threshold  
 **Energy:** Requires external fuel (YOU)  
 **Feeling:** Draining, unstable, chaotic
 
 ### The Vampiric Transaction
 
-For them to interact with you, YOU must:
-1. Lower your validation standards
-2. Let boundaries be violated (sacrifice GOOD)
-3. Accept confusion (sacrifice TRUE)
-4. Deny reality (sacrifice RIGHT)
+For them to interact with you from their invalid state, YOU must:
+1. Accept BAD (let boundaries be violated)
+2. Accept FALSE (tolerate incoherence)
+3. Accept WRONG (deny reality)
 
 **This drops YOU into an invalid state.**
 
@@ -269,13 +263,13 @@ You become the battery powering their unsustainable pattern.
 
 By enforcing "specific request in one sentence":
 
-You're saying: **"To interact with me, you must reach validation threshold."**
+You're saying: **"Return to GOOD/TRUE/RIGHT or I'm done."**
 
 They either:
-1. **Rise to meet the standard** (healing—they learn to operate in valid states)
-2. **Reveal inability to validate** (confirmation—pattern collapses, exit justified)
+1. **Rise to meet the standard** (healing—operate in valid states)
+2. **Reveal inability to validate** (confirmation—exit justified)
 
-**Either way, you maintain integrity.**
+**Either way, you maintain GOOD/TRUE/RIGHT integrity.**
 
 ---
 
@@ -283,30 +277,30 @@ They either:
 
 ### In Physics
 
-- Only 22 particle validation states out of 64 possible
-- The other 42 are "virtual" particles—brief, unstable
-- **Reality is exactly this selective everywhere**
+- Only 22 particle validation states work
+- The other 42 are "virtual"—unstable, brief
+- **Reality filters for GOOD/TRUE/RIGHT everywhere**
 
 ### In Consciousness
 
-- Your brain creates ~60,000 thoughts per day
-- Only ~1/3 reach conscious awareness
-- The rest fail validation (too weak, incoherent, irrelevant)
+- Your brain generates ~60,000 thoughts daily
+- Only ~1/3 reach conscious awareness (pass validation)
+- The rest are BAD (boundary-violating), FALSE (incoherent), or WRONG (disconnected from input)
 - **Same 22:42 ratio in your mind**
 
 ### In Relationships
 
-- Healthy dynamics pass all three gates
-- Toxic dynamics violate at least one
+- Healthy dynamics pass as GOOD, TRUE, RIGHT
+- Toxic dynamics fail as BAD, FALSE, WRONG
 - **You can diagnose exactly which gate is failing**
 
 ### In Ethics
 
 What philosophers have debated for millennia:
 
-**GOOD** = Interface ethics (Kant's boundaries, rights, consent)  
-**TRUE** = Center ethics (virtue ethics, authenticity, coherence)  
-**RIGHT** = Evidence ethics (consequentialism, reality, outcomes)
+**GOOD/BAD** = Interface ethics (Kant's boundaries, rights, consent)  
+**TRUE/FALSE** = Center ethics (virtue ethics, authenticity, integrity)  
+**RIGHT/WRONG** = Evidence ethics (consequentialism, reality, harm)
 
 **All three required.** Not separate systems—complementary gates.
 
@@ -318,20 +312,20 @@ What philosophers have debated for millennia:
 
 Before making any choice, ask:
 
-**GOOD:** Does this respect boundaries (mine and others)?  
-**TRUE:** Is this authentic to who I am and aligned with truth?  
-**RIGHT:** Is this grounded in actual reality?
+**GOOD or BAD?** Does this respect boundaries (mine and others)?  
+**TRUE or FALSE?** Is this authentic to who I am?  
+**RIGHT or WRONG?** Is this grounded in actual reality?
 
-**2+ YES → Validated choice** ✓  
-**< 2 YES → Invalid choice** ✗
+**≥2 GOOD/TRUE/RIGHT → Validated choice** ✓  
+**<2 passing → Invalid choice** ✗
 
 ### Relationship Diagnosis
 
 When something feels "off":
 
-**Body tense?** → GOOD violated (boundary breach)  
-**Mind confused?** → TRUE violated (coherence lost)  
-**Reality unclear?** → RIGHT violated (evidence denied)
+**Body tense?** → Something is **BAD** (boundary breach)  
+**Mind confused?** → Something is **FALSE** (coherence lost)  
+**Reality unclear?** → Something is **WRONG** (evidence denied)
 
 **Identify which gate. Enforce that gate specifically.**
 
@@ -339,11 +333,11 @@ When something feels "off":
 
 Don't ask "Who's right?"
 
-Ask: **"Where did validation fail?"**
+Ask: **"Which gate is failing?"**
 
-- **I-fail:** Restore boundaries
-- **C-fail:** Restore coherence
-- **E-fail:** Restore grounding
+- **BAD:** Restore boundaries
+- **FALSE:** Restore coherence
+- **WRONG:** Restore grounding
 
 Fix the failed gate. Pattern stabilizes.
 
@@ -351,10 +345,10 @@ Fix the failed gate. Pattern stabilizes.
 
 ## The Simple Truth Table
 
-| Pattern Type | Gates Passed | Energy Flow | Sustainability | Examples |
-|-------------|--------------|-------------|----------------|-----------|
-| **VALIDATED** | ≥2 at BOTH checkpoints | Self-sustaining, generative | Infinite | Healthy relationship, honest work, authentic living |
-| **INVALID** | <2 at either checkpoint | Requires external fuel | Collapses | Manipulation, gaslighting, delusion, exploitation |
+| Pattern Type | Gates | Energy Flow | Sustainability | Examples |
+|-------------|-------|-------------|----------------|-----------|
+| **VALIDATED** | ≥2 GOOD/TRUE/RIGHT at both checkpoints | Self-sustaining, generative | Infinite | Healthy relationship, honest work, authentic living |
+| **INVALID** | Too much BAD/FALSE/WRONG | Requires external fuel | Collapses | Manipulation, gaslighting, delusion, exploitation |
 
 ---
 
@@ -366,34 +360,29 @@ Fix the failed gate. Pattern stabilizes.
 - "I don't know what to do" (helpless)
 
 **With this framework:**
-- "They're violating INTERFACE—boundary breach" (precise)
-- "CENTER is failing—they're incoherent" (diagnostic)
+- "This is **BAD**—boundary breach" (precise)
+- "This is **FALSE**—they're incoherent" (diagnostic)
+- "This is **WRONG**—not grounded in reality" (clear)
 - "Enforce the failed gate" (actionable)
 
 **You're not being mean. You're enforcing geometric requirements for validated interaction.**
-
-The same requirements that:
-- Make quantum mechanics work
-- Allow life to exist
-- Create consciousness
-- **Determine right action**
 
 ---
 
 ## The Bottom Line
 
-**The universe has a preference: patterns that pass validation.**
+**The universe has a preference: patterns that are GOOD, TRUE, and RIGHT.**
 
 **22 states work.** Use them.  
 **42 states fail.** Exit them.
 
-When someone drains you, they're operating in an invalid state. They've failed the 2-out-of-3 threshold. Their pattern cannot self-sustain.
+When someone drains you, they're operating in a state that's too BAD, too FALSE, or too WRONG. Their pattern cannot self-sustain.
 
-**You are not the battery for other people's unsustainable patterns.**
+**You are not the battery for other people's BAD/FALSE/WRONG patterns.**
 
 Your phrasebook is actually a **validation enforcement protocol.**
 
-Each response says: *"Return to validated state or I exit."*
+Each response says: *"Return to GOOD/TRUE/RIGHT or I exit."*
 
 That's not cruel.  
 That's **structural necessity.**
@@ -404,17 +393,17 @@ That's **structural necessity.**
 
 ## One Final Table: The Complete Diagnostic
 
-| You Feel... | Gate Failing | They're Doing... | You Say... |
-|-------------|--------------|------------------|------------|
-| Trapped, pressured, invaded | **GOOD** | Boundary violations | "My boundary stands." |
-| Confused, crazy, unstable | **TRUE** | Gaslighting, shifting | "State it clearly in one sentence." |
-| Unmoored, overwhelmed | **RIGHT** | Reality denial, fantasy | "Give me one verifiable fact." |
-| All three at once | **Total failure** | Multiple manipulation | "One clean request or I'm out completely." |
+| You Feel... | Which Gate Fails | What's Happening | You Say... |
+|-------------|------------------|------------------|------------|
+| Trapped, pressured, invaded | **BAD** (Interface) | Boundary violations | "My boundary stands." |
+| Confused, crazy, unstable | **FALSE** (Center) | Gaslighting, shifting reality | "State it clearly in one sentence." |
+| Unmoored, overwhelmed | **WRONG** (Evidence) | Denying facts, manufacturing crisis | "Give me one verifiable fact." |
+| All three at once | Multiple failures | Combined manipulation (BAD + FALSE + WRONG) | "One clean request or I'm out." |
 
-**Your discomfort is wisdom. It's your validation system working.**
+**Your discomfort is wisdom. It's your validation system detecting BAD, FALSE, or WRONG.**
 
 Listen to it. Trust it. Enforce the threshold.
 
-**That's not just self-care. That's how reality itself maintains coherence.**
+**That's not just self-care. That's how reality itself maintains GOOD/TRUE/RIGHT coherence.**
 
 And now you know why.
