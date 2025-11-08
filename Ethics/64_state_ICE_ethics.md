@@ -57,7 +57,7 @@ When something comes toward you (information, food, a request, energy)
 - Gate C: Is this coherent with who I am?
 - Gate E: Is this actually real/true?
 
-**Checkpoint 2: PUTTING OUT**  
+**Checkpoint 2: GIVING OUT**  
 When you express something (actions, words, creations, energy)
 - Gate I: Does this respect others' boundaries?
 - Gate C: Is this authentically me and aligned with truth?
