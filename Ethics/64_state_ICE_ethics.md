@@ -8,7 +8,7 @@ Imagine reality is constantly running a test. Every moment, at every scale—fro
 **Is there internal coherence?** (Is this TRUE?)  
 **Is this grounded in reality?** (Is this RIGHT?)
 
-Here's what nobody realized until now: **these three questions create exactly 64 possible states**, like a combination lock with three dials that each turn eight different ways.
+Here's what nobody realized until now: **these three questions create exactly 64 possible states**.
 
 And here's the profound part: **Only 22 of those 64 states actually work.** The other 42 collapse, dissolve, or require constant energy to maintain.
 
