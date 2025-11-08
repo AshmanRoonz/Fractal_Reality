@@ -6,7 +6,7 @@
 
 ## Authors
 
-The Bimetric Fractal Reality
+Bimetric Fractal Reality
 
 ² An ICE MAGIC Research Group
 
