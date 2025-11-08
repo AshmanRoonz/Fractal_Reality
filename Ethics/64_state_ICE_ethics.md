@@ -154,7 +154,7 @@ These patterns fail the 2-out-of-3 threshold. They cannot self-sustain—they re
 
 ## Energy Vampires: A User's Guide to the 42 Failure States
 
-Here's what makes your [Energy Vampire Phrasebook](https://www.ashmanroonz.ca/2025/09/energy-vampire-phrasebook-recognize_30.html) so powerful: **Every manipulative tactic is literally one of the 42 invalid states.**
+Here's what makes the [Energy Vampire Phrasebook](https://www.ashmanroonz.ca/2025/09/energy-vampire-phrasebook-recognize_30.html) so powerful: **Every manipulative tactic is literally one of the 42 invalid states.**
 
 The manipulator cannot maintain their pattern without violating at least one gate at one checkpoint. They need YOUR energy to keep their unsustainable pattern going.
 
