@@ -970,7 +970,7 @@ We thank the LIGO/Virgo collaboration for publicly available gravitational wave 
 
 [1] Ashman Roonz, "Mathematics of Wholeness: Complete Framework" (2025)
 
-[2] Ashman Roonz, "Bimetric Teleparallel 8-Gauge Holography" (2025)
+[2] Bimetric, "Bimetric Teleparallel 8-Gauge Holography" (2025)
 
 [3] LIGO Scientific Collaboration, "GWTC-3: Compact Binary Coalescences Observed by LIGO and Virgo" (2021)
 
