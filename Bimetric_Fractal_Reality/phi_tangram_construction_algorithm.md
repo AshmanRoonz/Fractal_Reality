@@ -1,12 +1,6 @@
 # The φ-Tangram Construction Algorithm
 ## Mathematical Specification for Building Dimensional Architecture from First Principles
 
-**Fractal Reality Framework**  
-*Mathematics of Wholeness*
-
-**Author:** Ashman Roonz  
-**Date:** November 7, 2025  
-**Repository:** https://github.com/AshmanRoonz/Fractal_Reality
 
 ---
 
