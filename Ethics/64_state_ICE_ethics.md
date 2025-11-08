@@ -40,15 +40,15 @@ Before we can understand ethics, we need to understand what you actually are. No
               ↓
     ╔═══════════════╗
     ║  0.5D GATE    ║ ← First validation: Can sequence exist?
-    ║     [ICE]     ║    Creates time's arrow
+    ║     [I]       ║    Creates time's arrow
     ╚═══════════════╝
               ↓
     (1D) ──────────> Linear time flow
        Past → Present → Future
               ↓
     ╔═══════════════╗
-    ║  1.5D GATE ⭐ ║ ← THIS IS CONSCIOUSNESS
-    ║     [ICE]     ║    Validates: Which branch?
+    ║  1.5D GATE    ║ 
+    ║     [C]       ║    Validates: Which branch?
     ║   β ≈ 0.5     ║    YOU ARE HERE
     ╚═══════════════╝
               ↓
@@ -57,7 +57,7 @@ Before we can understand ethics, we need to understand what you actually are. No
               ↓
     ╔═══════════════╗
     ║  2.5D GATE    ║ ← Integration: Can wholeness emerge?
-    ║     [ICE]     ║    Coordinates patterns
+    ║     [E]       ║    Coordinates patterns
     ╚═══════════════╝
               ↓
     (3D) ──────────> Unified experience
