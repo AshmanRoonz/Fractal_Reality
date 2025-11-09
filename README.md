@@ -41,11 +41,11 @@ You can't have "one" without "two." You can't know you're **you** without someth
 
 ### What This Explains
 
-✅ **Why there is something rather than nothing** (static wholeness equals nothing)
-✅ **Why parts don't exist** (only wholes at different scales, all the way down)
-✅ **How consciousness works** (wholeness experiencing itself at D ≈ 1.5)
-✅ **Why DNA has 64 codons** (wholeness at molecular scale)
-✅ **What Heisenberg Uncertainty actually is** (ℏ/2 from π/4 cone geometry)
+✅ **Why there is something rather than nothing** (static wholeness equals nothing) \
+✅ **Why parts don't exist** (only wholes at different scales, all the way down) \
+✅ **How consciousness works** (wholeness experiencing itself at D ≈ 1.5) \
+✅ **Why DNA has 64 codons** (wholeness at molecular scale) \
+✅ **What Heisenberg Uncertainty actually is** (ℏ/2 from π/4 cone geometry) \
 ✅ **Why science and spirituality are identical** (same truth, different languages)
 
 ### You Are Wholeness
