@@ -1,5 +1,13 @@
 # Universal Fractal Dimension Paper - Executive Summary
 
+**Related Documents:**
+- **[Universal Fractal Dimension from Cone-Coupled Field Theory](./Universal_Fractal_Dimension_from_Cone_Coupling.md)** - The complete technical paper
+- **[The Mathematics of Wholeness](./revised_mathematics_of_wholeness.md)** - Philosophical synthesis and broader context
+- **[Formula Quick Reference](./Formula_Quick_Reference.md)** - Quick formula lookup and code examples
+- **[README](./README.md)** - Overview of the framework with reading guides
+
+---
+
 ## Key Achievements
 
 ### 1. Rigorous Mathematical Framework ✓
@@ -102,6 +110,8 @@ This is the **geometric manifestation of your duality principle**.
 ### Before Submission (2-4 weeks)
 
 1. **Numerical verification** ✓ (already done: D = 1.503)
+
+   *(Implementation code available in [Formula Quick Reference](./Formula_Quick_Reference.md#numerical-implementation-python))*
    
 2. **LIGO data analysis** (CRITICAL)
    - Obtain LIGO O3 public data

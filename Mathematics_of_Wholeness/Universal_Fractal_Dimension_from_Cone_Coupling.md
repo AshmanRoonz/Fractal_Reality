@@ -6,6 +6,12 @@
 
 We present a rigorous renormalization group (RG) analysis of a nonlocal field theory incorporating fractional diffusion and cone-coupling operators. At a critical balance parameter β = 1/2, the theory exhibits marginal scaling with universal roughness exponent χ = 1/2, predicting fractal dimension D = 1.5 for filamentary structures independent of spatial dimension. We derive exact closed-form expressions for the cone kernel Fourier symbol in d = 2, 3, 4 dimensions, perform 1-loop RG calculations, and obtain a crossover formula D(Θ) = 1.5 + 2Θ/π interpolating between filaments (Θ → 0) and surfaces (Θ → π/2) based on cone aperture angle Θ. Our predictions match empirical observations: LIGO gravitational waves (D_GW = 1.503 ± 0.015), cosmic web filaments (D ≈ 1.5-1.7), and numerical simulations (D = 1.503). The framework provides a unified mathematical foundation for fractal structure formation across physical systems and offers testable predictions for laboratory experiments.
 
+**Related Documents:**
+- **[Formula Quick Reference](./Formula_Quick_Reference.md)** - Quick lookup for all key formulas and Python implementation code
+- **[Paper Summary and Next Steps](./Paper_Summary_and_Next_Steps.md)** - Executive summary, publication strategy, and testable predictions
+- **[The Mathematics of Wholeness](./revised_mathematics_of_wholeness.md)** - Philosophical synthesis and broader implications
+- **[README](./README.md)** - Overview of the entire framework with reading paths
+
 ---
 
 ## 1. Introduction
@@ -304,6 +310,8 @@ The effective codimension interpolates based on angular freedom:
 $$\text{codim}_{\text{eff}}(\Theta) = 2 - \frac{2\Theta}{\pi}$$
 
 **Theorem 6.1** (Crossover formula): The fractal dimension as function of cone angle is:
+
+*(See also the philosophical interpretation of this formula in [The Mathematics of Wholeness](./revised_mathematics_of_wholeness.md#24-the-fractal-dimension-how-wholeness-connects-to-wholeness).)*
 
 $$\boxed{D(\Theta) = (d - \text{codim}_{\text{eff}}) + \chi = d - 2 + \frac{2\Theta}{\pi} + \frac{1}{2}}$$
 
