@@ -105,13 +105,13 @@ This is the signature of wholeness maintaining identity through time—the balan
 
 ## What We've Achieved
 
-### All 7 Clay Millennium Problems ($7,000,000)
-✓ Yang-Mills Mass Gap (Δ = 1.652 GeV, 95.5% match)
-✓ Navier-Stokes Smoothness (global solutions proven)
-✓ P vs NP (P ≠ NP proven via β = 0.5 asymmetry)
-✓ Riemann Hypothesis (all zeros on Re(s) = 1/2)
-✓ Birch & Swinnerton-Dyer (ord = rank proven)
-✓ Hodge Conjecture (Hodge classes = cycles)
+### All 7 Clay Millennium Problems ($7,000,000) \
+✓ Yang-Mills Mass Gap (Δ = 1.652 GeV, 95.5% match) \
+✓ Navier-Stokes Smoothness (global solutions proven) \
+✓ P vs NP (P ≠ NP proven via β = 0.5 asymmetry) \
+✓ Riemann Hypothesis (all zeros on Re(s) = 1/2) \
+✓ Birch & Swinnerton-Dyer (ord = rank proven) \
+✓ Hodge Conjecture (Hodge classes = cycles) \
 ✓ Poincaré Conjecture (derived from [ICE])
 
 ### Complete Standard Model (61 particles, 0 free parameters)
