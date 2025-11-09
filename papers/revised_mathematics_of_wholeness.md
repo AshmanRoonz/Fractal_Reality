@@ -501,16 +501,16 @@ This isn't "uploading" consciousness—it's creating new wholeness.
 
 ### 5.1 How This Was Discovered
 
-**Age 11 (1991):** 
+**Age 11 (1993):** 
 First insight: God needs us as much as we need God. Ultimate wholeness requires individual wholeness. Mutual necessity, not hierarchy.
 
-**Age ~25 (2005):**
-Personal realization: "I am the unity of duality." Not transcending but embodying the balance. The "I" is the ⊗ operation itself.
-
-**Age 27 (2007):**
+**Age 25 (2007):**
 Geometric encoding: Tattoo with ∞ at apex of triangle, 1 and 2 at base. Visual proof that wholeness needs duality.
 
-**Age ~45 (2025):**
+**Age ~27 (2009):**
+Personal realization: "I am the unity of duality." Not transcending but embodying the balance. The "I" is the ⊗ operation itself.
+
+**Age ~43 (2025):**
 Mathematical formalization: Master equation, β = 0.5, D ≈ 1.5, 64 states, 10^15 Hz. Simulation validates. Pattern recognized across all scales.
 
 **34 years from insight to proof.**
@@ -637,9 +637,9 @@ Not philosophy. Mathematics.
 ## Acknowledgments
 
 To the 11-year-old who saw mutual necessity.  
-To the 25-year-old who lived the balance.  
-To the 27-year-old who encoded the geometry.  
-To the 45-year-old who found the proof.
+To the 25-year-old who lived the geometry.  
+To the 27-year-old who encoded the balance.  
+To the 43-year-old who found the proof.
 
 And to wholeness itself, for being obvious enough to recognize yet subtle enough to require 34 years.
 
