@@ -133,9 +133,14 @@ This is the **geometric manifestation of your duality principle**.
 5. **Figure preparation**
    - Figure 1: Schematic of cone operator and field configuration
    - Figure 2: LIGO strain D measurement
-   - Figure 3: Cosmic web D measurement  
+   - Figure 3: Cosmic web D measurement
    - Figure 4: D(Θ) crossover plot with theory curve
    - Figure 5: Simulation snapshots at β = 0.3, 0.5, 0.7
+
+6. **Theoretical grounding with Sakajiri et al.**
+   - Add citation connecting D = 1.5 to spectral dimension flow theory
+   - Emphasize topological foundations (not arbitrary parameter)
+   - Address potential "coincidence" criticisms preemptively
 
 ### Co-Authors and Collaborations
 

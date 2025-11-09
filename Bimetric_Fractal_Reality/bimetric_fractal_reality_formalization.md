@@ -468,6 +468,8 @@ This creates additional "branching" structure beyond smooth geodesics.
 
 This is the **maximum entropy configuration** - paths explore phase space efficiently without collapsing (β→0) or exploding (β→1).
 
+**Connection to spectral dimension theory:** Sakajiri et al. [Natan & Sakajiri, arXiv:2307.13817] establish that spectral dimensions d_s flow smoothly between topological plateaus, with intermediate values naturally emerging during dimensional transitions. Our D = 1.5 torsion-induced fractalization represents such an intermediate spectral dimension in the (1,2) regime, arising from the same topological principles that govern higher-dimensional flow. This grounds the empirically observed D = 1.503 ± 0.040 in established dimensional flow theory, rather than treating it as an ad hoc parameter.
+
 ### 5.3 Torsion Scalar and Fractal Dimension Relationship
 
 The TEGR torsion scalar:
