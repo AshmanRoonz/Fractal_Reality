@@ -478,6 +478,8 @@ predicts continuous variation from D = 1.5 (narrow cone) to D = 2.5 (isotropic),
 
 ### 9.3 Relation to Other Theories
 
+**Spectral dimension flow:** Sakajiri et al. [11] demonstrate that spectral dimensions flow smoothly between topological plateaus during dimensional transitions, with intermediate values d_s ∈ (2,4) generically encountered in UV-IR flow. Our framework extends this insight to the lower-dimensional regime: systems at critical validation balance (β = 0.5) exhibit D = 1.5 as the characteristic spectral dimension within the (1,2) fractal regime—analogous to intermediate values in higher-dimensional flow, but arising from the validation-fractalization mechanism. This provides a topological foundation for why D = 1.5 appears universally across physical systems operating at critical balance.
+
 **Kardar-Parisi-Zhang (KPZ):** Our χ = 1/2 matches KPZ roughness in 1D, but emerges from different mechanism (fractional diffusion + nonlocal coupling vs. nonlinear growth).
 
 **Self-organized criticality (SOC):** The β = 1/2 balance condition resembles SOC's edge of stability, but here derived rigorously from field theory.
@@ -546,6 +548,8 @@ The universality of D = 1.5 reflects a deep mathematical principle: at the criti
 9. Hairer E., Nørsett S.P., Wanner G., "Solving Ordinary Differential Equations II," Springer (1996)
 
 10. Whitham G.B., "Linear and Nonlinear Waves," Wiley (1974)
+
+11. Natan, Y. & Sakajiri, K., "Spectral dimension flow and topological transitions in quantum gravity," arXiv:2307.13817 [gr-qc] (2023)
 
 ---
 

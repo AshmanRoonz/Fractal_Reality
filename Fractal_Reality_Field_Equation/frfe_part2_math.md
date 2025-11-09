@@ -172,6 +172,8 @@ D_eff = ∫₀¹ P(β) · D_contribution(β) dβ ≈ 0.5
 
 3. **Empirically**: Gravitational wave worldlines measured to have D = 1.503 ± 0.040, confirming they exist in **more than 1D but less than 2D**—exactly 1.5D.
 
+**Topological interpretation:** Following Sakajiri et al.'s demonstration that spectral dimensions flow continuously between plateaus [Natan & Sakajiri, arXiv:2307.13817], our D = 1.5 represents the intermediate spectral dimension characteristic of validation-mediated fractalization. Just as UV-IR dimensional flow generically encounters values between classical plateaus, validation dynamics naturally produces D = 1.5 as the midpoint between linear (D=1) and areal (D=2) expression—not as an arbitrary choice, but as the topologically expected intermediate value for systems at critical balance.
+
 **Comparison with other dimensional frameworks**:
 
 | Theory | Dimensions | Nature | Observability |

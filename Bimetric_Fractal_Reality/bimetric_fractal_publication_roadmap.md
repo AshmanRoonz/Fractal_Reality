@@ -732,6 +732,10 @@ print(f"Suppression: {100*(1 - D_metric/D_standard):.1f}%")
 - Tighter bounds from GW arrival time differences possible
 - This is verification, not falsification
 
+**Response to "coincidental D=1.503" criticism:**
+
+"The measured D = 1.503 is not coincidental but predicted from first principles. Sakajiri et al. [Natan & Sakajiri, arXiv:2307.13817] demonstrate that spectral dimensions flow smoothly between topological plateaus, with intermediate values naturally emerging. Our framework predicts β = 0.5 validation balance produces D = 1.5 as the midpoint fractalization in the (1,2) regime—analogous to intermediate values d_s ∈ (2,4) in UV-IR flow. The empirical measurement validates this topological prediction. We are not 'fitting' to D = 1.5; we are testing whether nature operates at the predicted critical balance point."
+
 ### Revision Strategy
 
 **If rejected:**

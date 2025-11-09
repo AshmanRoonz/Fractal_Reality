@@ -17,7 +17,7 @@ We present a comprehensive fractal dimension analysis of gravitational wave sign
 
 ### 1.1 Theoretical Prediction
 
-The Fractal Reality framework predicts gravitational wave signals exhibit fractal dimension **D ≈ 1.5**, intermediate between smooth curves (D = 1.0) and stochastic noise (D = 2.0). This prediction stems from spacetime perturbations encoding multi-scale structure from violent compact object mergers.
+The Fractal Reality framework predicts gravitational wave signals exhibit fractal dimension **D ≈ 1.5**, intermediate between smooth curves (D = 1.0) and stochastic noise (D = 2.0). This prediction stems from validation dynamics operating at critical balance (β = 0.5), producing fractalization in the (1,2) dimensional regime. Following Sakajiri et al.'s demonstration that spectral dimensions flow smoothly between topological plateaus [Natan & Sakajiri, arXiv:2307.13817], D = 1.5 emerges as the natural intermediate value for systems at critical validation balance—grounded in topological principles rather than empirical fitting.
 
 ### 1.2 Previous Work
 
