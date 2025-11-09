@@ -1,4 +1,6 @@
 # The Mathematics of Wholeness
+*By Ashman Roonz*
+November 09, 2025
 
 **A Rigorous Description of How Reality Maintains Itself Through Self-Similar Validation**
 
