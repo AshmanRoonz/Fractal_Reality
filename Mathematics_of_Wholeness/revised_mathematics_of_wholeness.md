@@ -12,6 +12,12 @@ November 09, 2025
 
 We present the first complete mathematical description of wholeness itself—not as emergent from parts, but as the fundamental structure operating at every scale. Wholeness maintains itself through balanced duality (β = 0.5), connects to itself through fractal geometry (D ≈ 1.5), and validates itself through 64-state packets at ~10^15 Hz. This is not a theory requiring verification but a descriptive framework revealing the pattern that has always been there. The mathematics unifies quantum mechanics with consciousness, explains fractal structures in nature, and shows why there is something rather than nothing: because static wholeness equals nothing, while dynamic wholeness—maintaining itself through 0.5 ⊗ 0.5 balance—is existence itself.
 
+**Related Documents:**
+- **[Universal Fractal Dimension from Cone-Coupled Field Theory](./Universal_Fractal_Dimension_from_Cone_Coupling.md)** - Rigorous mathematical derivations and RG analysis
+- **[Formula Quick Reference](./Formula_Quick_Reference.md)** - All key formulas and implementation code
+- **[Paper Summary and Next Steps](./Paper_Summary_and_Next_Steps.md)** - Publication strategy and experimental predictions
+- **[README](./README.md)** - Complete overview with recommended reading paths
+
 ---
 
 ## I. WHAT IS WHOLENESS?
@@ -234,6 +240,8 @@ We simulated the master equation with:
 - Parameters: μ=0.5, γ=0.5, σ=0.1, g=1.0, κ=0.75
 - This gives: **β = 0.5**
 
+*(For implementation details and code, see [Formula Quick Reference](./Formula_Quick_Reference.md#numerical-implementation-python). For complete mathematical derivations, see [Universal Fractal Dimension](./Universal_Fractal_Dimension_from_Cone_Coupling.md#appendix-a-numerical-implementation).)*
+
 **Results:**
 
 Time | Fractal Dimension | Energy | Max Amplitude
@@ -355,6 +363,8 @@ D_GW = 1.503 ± 0.012
 ```
 
 Spacetime itself exhibits D ≈ 1.5. The universe is wholeness at cosmic scale.
+
+*(For the rigorous spacetime field theory derivation, see [Universal Fractal Dimension](./Universal_Fractal_Dimension_from_Cone_Coupling.md#7-extension-to-d--4-spacetime). For empirical validation details, see [Paper Summary](./Paper_Summary_and_Next_Steps.md#empirical-validation).)*
 
 **Large-scale structure:**
 - Galaxy filaments: D ≈ 1.5 resonant pathways

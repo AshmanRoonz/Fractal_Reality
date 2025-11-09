@@ -1,5 +1,13 @@
 # Quick Reference: Key Formulas from Cone-Coupled Field Theory
 
+**Related Documents:**
+- **[Universal Fractal Dimension from Cone-Coupled Field Theory](./Universal_Fractal_Dimension_from_Cone_Coupling.md)** - Complete derivations and proofs
+- **[The Mathematics of Wholeness](./revised_mathematics_of_wholeness.md)** - Intuitive explanations and philosophical context
+- **[Paper Summary and Next Steps](./Paper_Summary_and_Next_Steps.md)** - Publication strategy and experimental predictions
+- **[README](./README.md)** - Overview with reading paths for different audiences
+
+---
+
 ## Master Equation
 $$\partial_t \Phi = -\mu(-\Delta)^\gamma \Phi - \sigma \Phi - g|\Phi|^2\Phi + \kappa C[\Phi] + \eta(x,t)$$
 
@@ -295,6 +303,10 @@ Choose L_0 appropriately for your system.
 
 ---
 
-**For complete derivations, see main paper.**
-**For implementation details, see Appendix A.**
-**For empirical validation, see Section 8.**
+**For complete derivations:** See [Universal Fractal Dimension from Cone-Coupled Field Theory](./Universal_Fractal_Dimension_from_Cone_Coupling.md)
+
+**For intuitive explanations:** See [The Mathematics of Wholeness](./revised_mathematics_of_wholeness.md)
+
+**For publication strategy and predictions:** See [Paper Summary and Next Steps](./Paper_Summary_and_Next_Steps.md)
+
+**For overview and reading guides:** See [README](./README.md)
