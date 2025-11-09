@@ -647,38 +647,113 @@ And to wholeness itself, for being obvious enough to recognize yet subtle enough
 
 ## References
 
-[Complete citations to be added for:
-- LIGO O3 data analysis (D_GW = 1.503)
-- Genetic code structure (64 codons)
-- Particle physics Standard Model (64-state mapping)
-- Fractional calculus and nonlocal operators
-- Consciousness studies (IIT, Orch OR)
-- Fractal geometry and scaling theory
-- Simulation code repository]
+### Empirical Validation
+
+**LIGO O3 Data Analysis (D_GW = 1.503 ± 0.040):**
+- [LIGO Analysis README](../analysis/tests/ligo/readme.md) - Complete LIGO gravitational wave analysis methodology
+- [O3 Data Analysis](../analysis/tests/ligo/O3/) - O3 observing run analysis (6 events)
+- [O4 Data Analysis](../analysis/tests/ligo/O4/) - O4 observing run analysis (17 events)
+- [Combined O3+O4 Analysis](../analysis/tests/ligo/O3_O4/) - Complete analysis (19 events, p = 0.951)
+- [Analysis Overview](../analysis/readme.md) - Phase 2 validation summary
+
+**Genetic Code Structure (64 Codons):**
+- [Universal 64-State Architecture](../64bit_reality/universal_64_state_architecture.md) - How particle physics and genetics use the same 64-state protocol
+- [64-State Executive Summary](../64bit_reality/64_state_executive_summary.md) - From Einstein's 8 to Standard Model's 61
+
+**Particle Physics Standard Model (64-State Mapping):**
+- [64-State Particle Matrix](../64bit_reality/README.md) - All 61 Standard Model particles from dual-interface geometry
+- [Particle Mapping Details](../64bit_reality/particle_64_state_mapping.md) - Comprehensive particle-by-particle mapping
+- [64-State Visualization](../64bit_reality/64_state_particle_visualization.jsx) - Interactive React visualization
+- [Standard Model Derivation](../Predictions&Derivations/standard_model_derivation.md) - Complete 45-page derivation
+
+### Theoretical Framework
+
+**Master Equations and Framework:**
+- [Master Equation Suite](MASTER_EQUATION_SUITE.md) - Complete unified theory on one page
+- [Mathematics of Wholeness (First Principles)](mathematics_of_wholeness_first_principles.md) - Complete theory from first principles
+- [Original Mathematics of Wholeness](Mathematics_Of_Wholeness.md) - Complete unified framework
+
+**Clay Millennium Prize Solutions:**
+- [Yang-Mills & Navier-Stokes Solutions](../claymathsolutions/Yang-Mills_Navier-Stokes_Solved.md) - Mass gap (Δ = 1.652 GeV) and global smoothness
+- [All 7 Clay Solutions](../claymathsolutions/README.md) - Complete Clay Millennium Prize submission package
+
+**Consciousness Studies:**
+- [Wholeness: The Loop and Lived Experience](wholeness_the_loop_and_lived_experience.md) - Mathematical structure of consciousness (β ≈ 0.5, D ≈ 1.5)
+- [Theory of Consciousness](../Theory/Theory_of_Consciousness.md) - Complete theory of consciousness and time
+- [Practical Applications](../practical_application/practical_life_applications.md) - How to use the framework in daily life
+
+**Fractal Geometry and Scaling Theory:**
+- [Geometric String Theory](geometric_string_theory.md) - Dimensional cascade from 0.5D aperture
+- [Tesla 90° Geometric Principle](../64bit_reality/tesla_90_degree_geometric_principle.md) - How 90° = 0.5 × 180° creates everything
+- [Quarter Circle to Cone Geometry](../64bit_reality/quarter_circle_to_cone_geometry_PUBLICATION_READY.md) - From 0.5D to 3D cone structure
+- [Rods and Cones Biological Validation](rods_cones_geometric_validation.md) - Biological proof that geometry determines function
+
+**Simulation Code Repository:**
+- [Interactive Simulations](https://www.fractalreality.ca/simulators.html) - 17 React/TypeScript visualizations
+- [Simulation Source Code](../docs/simulations/) - Complete simulation implementations
+- [Analysis Scripts](../analysis/tests/) - Python analysis tools and testing infrastructure
 
 ---
 
 ## Appendices
 
 **Appendix A: Complete Mathematical Derivations**
-- Stability analysis of β = 0.5
-- RG calculation for D ≈ 1.5
-- 64-state necessity proof
+- [Master Equation Suite](MASTER_EQUATION_SUITE.md) - Complete master loop: ∞ → ∇ → [ICE] → K_β → ℰ → ∞' → T_μν → g_μν
+- [Every Major Derivation](../Predictions&Derivations/every_major_derivation.md) - Schrödinger, Dirac, Maxwell, Einstein, Standard Model, Consciousness
+- [The Everything Table](../Predictions&Derivations/the_everything_table.md) - All physical constants across 61 orders of magnitude
+- [Yang-Mills Functional Analysis](../claymathsolutions/ice_functional_analysis.md) - Rigorous stability analysis of β = 0.5
+- [Navier-Stokes PDE Analysis](../claymathsolutions/navier_stokes_functional_analysis.md) - Global smoothness proof
 
 **Appendix B: Simulation Code**
-- Full Python implementation
-- Pseudo-spectral methods
-- Cone operator optimization
+- [Millennium Results Script](../claymathsolutions/millennium_results.py) - Full Python implementation of lattice gauge theory
+- [LIGO Analysis Pipeline](../analysis/tests/ligo/ligo_batch_and_plots.py) - Complete fractal dimension analysis
+- [O4 Analysis Pipeline](../analysis/tests/ligo/O4/o4_pipeline_v2.py) - Updated O4 processing
+- [Phase 2 Strain Coupling](../analysis/phase2_strain_coupling/phase2-execution-script.py) - Metric coupling validation (R² = 0.9997)
+- [Simulation Catalog](../docs/sims.md) - All 17 interactive simulations
 
 **Appendix C: Particle Mapping**
-- Complete 64-state Standard Model mapping
-- Mass ratios and geometric relationships
-- Coupling constant derivations
+- [64-State Particle Matrix](../64bit_reality/README.md) - Complete overview and navigation
+- [Particle 64-State Mapping](../64bit_reality/particle_64_state_mapping.md) - Comprehensive particle-by-particle mapping
+- [64-State Presentation](../64bit_reality/64_state_particle_map_presentation.md) - Detailed mathematical derivation
+- [Standard Model Complete](../Predictions&Derivations/standard_model_derivation.md) - 45-page detailed derivation (mμ/me = (1/α)^(2/3) exact!)
+- [Three Missing Particles](../Predictions&Derivations/three_missing_particles_predictions.md) - Testable predictions for dark matter WIMP, sterile neutrino, graviton
 
 **Appendix D: Experimental Protocols**
-- Neural β measurement procedures
-- Cosmological D measurement methods
-- Biological 64-fold symmetry tests
+- [LIGO Measurement Methods](../analysis/tests/ligo/readme.md) - Fractal dimension measurement in gravitational waves
+- [Bubble Chamber Analysis](../analysis/bubblechamber/bubble-chamber-analysis.md) - Particle track fractal analysis (D = 1.387 ± 0.232)
+- [Phase 2 Protocols](../analysis/phase2_strain_coupling/readme.md) - Strain coupling measurement procedures
+- [CMB and Cosmic Tests](../analysis/cmb-cosmic/cmb_cosmic_tests.md) - Cosmological measurement protocols
+- [Usage Instructions](../analysis/tests/usage_instructions.md) - Complete testing infrastructure guide
+
+---
+
+## Repository and Resources
+
+**Main Repository:**
+- [Fractal Reality GitHub](https://github.com/AshmanRoonz/Fractal_Reality) - Complete codebase, papers, and analysis
+- [Live Website](https://www.fractalreality.ca) - Interactive demonstrations and visualizations
+- [Interactive Simulations](https://www.fractalreality.ca/simulators.html) - 17 React/TypeScript visualizations
+
+**Quick Start Guides:**
+- [5-Minute Quick Start](../simpleguide/quick_start_5min.md) - Everything in 5 minutes
+- [Navigation Guide](../simpleguide/navigation_guide.md) - Find your personalized reading path
+- [Fractal Reality for Everyone](../simpleguide/fractal_reality_for_everyone.md) - Complete accessible guide (2-3 hours)
+
+**Creation Story Series:**
+- [Part 1: The Fractalization](../CREATION_STORY/the_fractalization_creation_story.md) - How Infinity Became Real
+- [Part 2: 64-Bit Packets](../CREATION_STORY/fractalization_to_64bit_packets.md) - Universal information architecture
+- [Part 3: Ethics As Geometry](../CREATION_STORY/Ethics_As_Geometry_The_One_Third_Rule.md) - Moral reality from validation
+- [Part 4: Ethical Violation Matrix](../CREATION_STORY/64_State_Ethical_Violation_Matrix.md) - Practical ethics guide
+
+**Contact:**
+- **Author:** Ashman Roonz
+- **Website:** [AshmanRoonz.ca](https://ashmanroonz.ca)
+- **Repository Issues:** [GitHub Issues](https://github.com/AshmanRoonz/Fractal_Reality/issues)
+
+**License:**
+- Code: MIT License (maximum openness)
+- Documentation: CC-BY 4.0 (attribution required)
+- Papers: See [LICENSE](../LICENSE)
 
 ---
 
