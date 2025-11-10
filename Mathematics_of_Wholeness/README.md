@@ -1,5 +1,7 @@
 # Mathematics of Wholeness
 
+By Ashman Roonz and Bimetric Fractal Research Group
+
 A comprehensive mathematical framework describing how wholeness maintains itself across all scales through balanced duality, fractal geometry, and self-validation.
 
 ---
