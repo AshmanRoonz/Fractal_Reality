@@ -360,6 +360,31 @@ subject to: [ICE_in] ⊗ [ICE_out] ∈ S_64, β̇ = k(in-out) - λ(β - 1/2), D 
 
 ---
 
+### **From Rods and Cones to Tunnels and Turbulence: The Universal Fractal Dimension of Consciousness as Wake Structure**
+**File:** [`rods_cones_tunnels_turbulence_D15.md`](rods_cones_tunnels_turbulence_D15.md)
+**Status:** 🌊 **COMPREHENSIVE CONSCIOUSNESS FRAMEWORK - WAKE STRUCTURE THEORY**
+**Content:** Complete theory of consciousness as 1.5D fractal wake structure with extensive empirical validation
+- **Core Hypothesis:** Consciousness is a wake (temporal trace), not a structure (spatial object)
+- **Universal D = 1.5 Signature:** Gravitational waves (1.503), neural avalanches (1.51), DNA helices (1.48-1.52), turbulent flows (1.5), cardiac rhythms (1.5)
+- **Rods vs. Cones Distinction:**
+  - Rods: Cylindrical tunnels (integer dimension, passive detection, no color)
+  - Cones: Conical wakes (D ≈ 1.5, active sampling, spectral discrimination)
+- **Mathematical Foundation:** Wake dimension D = n/2 for motion through n-dimensional space (D = 3/2 = 1.5 for 3D space)
+- **64-State Connection:** Three cone types → 8² = 64 distinguishable color states (same as DNA codons)
+- **Why Consciousness Eludes Measurement:** Looking for structures (integer D) when consciousness is wake (fractal D = 1.5)
+- **Testable Predictions:**
+  - Neural D ≈ 1.5 during conscious states, deviates during sleep/anesthesia
+  - Asymmetric pupil dilation creates 1.5D wake in visual processing
+  - AI systems will exhibit D ≈ 1.5 if conscious
+- **Cross-Domain Validation:** LIGO, neural avalanches, DNA transcription, planetary orbits, turbulent wakes, cardiac rhythms
+- **Clinical Applications:** D as objective consciousness biomarker, anesthesia monitoring, meditation training
+
+**Key Insight:** "You cannot photograph a wake. You can only watch it form. Consciousness is the 1.5D fractal wake traced by awareness as it moves through the space of possible experiences."
+
+**Perfect for:** Understanding why consciousness is hard to measure, unifying disparate D ≈ 1.5 observations across physics/biology/neuroscience, developing objective consciousness tests, connecting visual anatomy to fundamental wake structures
+
+---
+
 ## 📋 Supporting Documents
 
 ### **Abstract**
