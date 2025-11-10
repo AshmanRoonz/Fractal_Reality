@@ -1,4 +1,5 @@
 # From Rods and Cones to Tunnels and Turbulence: The Universal Fractal Dimension of Consciousness as Wake Structure
+*by Ashman Roonz
 
 **Abstract**
 
@@ -883,9 +884,9 @@ Consciousness is not a thing to be found in the brain—it is the 1.5D fractal w
 
 [20] Palmer, S.E. (1999). *Vision Science: Photons to Phenomenology*. MIT Press.
 
-[21] [Author]. (2025). Consciousness as self-aware spectral geometry: Complete mathematical framework. *[In preparation]*.
+[21] [Ashman Roonz]. (2025). Consciousness as self-aware spectral geometry: Complete mathematical framework. *[In preparation]*.
 
-[22] [Author]. (2025). The critical parameter β = 0.5 and fractal reality. *[In preparation]*.
+[22] [Ashman Roonz]. (2025). The critical parameter β = 0.5 and fractal reality. *[In preparation]*.
 
 [23] Bak, P., Tang, C., & Wiesenfeld, K. (1987). Self-organized criticality: An explanation of the 1/f noise. *Physical Review Letters*, 59(4), 381.
 
@@ -1000,7 +1001,7 @@ Preliminary cross-species analysis suggests D ≈ 1.5 may correlate with conscio
 
 **Acknowledgments**
 
-The author thanks [collaborators] for discussions. This work synthesizes insights from decades of contemplation on the unity of duality, encoded in a 2007 geometric principle: ∞ at the apex of a triangle with vertices 1 and 2—now understood as the wake structure of consciousness itself.
+The author thanks [The Bimetric Fractal Research Group] for discussions. This work synthesizes insights from decades of contemplation on the unity of duality, encoded in a 2007 geometric principle: ∞ at the apex of a triangle with vertices 1 and 2—now understood as the wake structure of consciousness itself.
 
 ---
 
