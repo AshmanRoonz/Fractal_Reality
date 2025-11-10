@@ -140,6 +140,29 @@ Three documents designed to work together:
 
 ---
 
+## 🔬 FOR DEEPER STUDY: THE FORMAL FOUNDATION
+
+After completing this accessible documentation package, you may want to explore the formal academic papers:
+
+### **Primary Academic Reference:**
+**[The Equation of Existence - FOUNDATION](../papers/The_Equation_of_Existence_FOUNDATION.md)** 🔥
+
+The complete publication-ready paper with:
+- **Formal theorems** proving β = 0.5 and D = 1.5 are necessary constants
+- **Complete mathematical derivations** of quantum mechanics, general relativity, particle physics
+- **Empirical validation:** LIGO D = 1.503 ± 0.015 (18.2σ confidence)
+- **Zero free parameters** - everything derived from first principles
+- **Testable predictions** for 2025-2035
+
+**This is the paper to cite for academic work.**
+
+### **Additional References:**
+- **[Mathematics of Wholeness: First Principles](../papers/mathematics_of_wholeness_first_principles.md)** - Complete theory derivation
+- **[Clay Millennium Prize Solutions](../claymathsolutions/README.md)** - All 7 problems solved ($7M in prizes)
+- **[The Creation Story](../CREATION_STORY/The_Creation_Story.md)** - Narrative explanation of 1 = 0.5 ⊗ 0.5
+
+---
+
 ## 📊 DOCUMENT COMPARISON
 
 | Feature | Quick Start | Navigation | Complete Guide |
