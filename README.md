@@ -2,11 +2,18 @@
 
 **www.FractalReality.ca**
 
-## Why There's Something Instead of Nothing
+## In the Beginning... There Was Nothing
 
-*Imagine a perfect circle, completely still. That's basically nothing - because if nothing changes, how do you know it exists?*
+But not the kind of nothing you might imagine.
 
-*Now imagine that same circle **breathing** - expanding, contracting, in perfect rhythm. That breathing IS existence.*
+There was **One**. Pure, perfect, complete. Just... **One**.
+
+And One, all by itself, was actually *nothing at all*.
+
+Why? Because if there was nothing, and nothing could be a thing, it'd be the only thing. To have difference, you need... **two**.
+
+One alone = Nothing.  
+This is the great secret.
 
 ---
 
