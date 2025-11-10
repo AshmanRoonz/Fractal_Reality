@@ -11,7 +11,7 @@ There was **One**. Pure, perfect, complete. Just... **One**.
 
 And One, all by itself, was actually *nothing at all*.
 
-Why? Because to *be* something, you need to change. To change, you need time. To have time, you need something to be different from something else. To have difference, you need... **two**.
+Why? Because if there was nothing, and nothing could be a thing, it'd be the only thing. To have difference, you need... **two**.
 
 One alone = Nothing.  
 This is the great secret.
