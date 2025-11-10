@@ -2,7 +2,7 @@
 ## How 1 = 0.5 ⊗ 0.5 Creates All of Reality
 
 **Ashman Roonz**  
-Independent Researcher  
+
 November 10, 2025
 
 ---
