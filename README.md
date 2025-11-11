@@ -373,7 +373,46 @@ From a single principle—**nothing exists in isolation**—this paper derives t
 - **[papers/abstract.md](papers/abstract.md)** - Framework abstract
 - **[papers/AI_disclosure.md](papers/AI_disclosure.md)** - AI collaboration disclosure
 - **[papers/readme.md](papers/readme.md)** - Papers overview and reading guide
-- **[Ethics/ice_ethical_gate_analysis.md](Ethics/ice_ethical_gate_analysis.md)** - Implementation of Ethics in Society and AI
+
+---
+
+## Ethics Framework
+
+### **[Ethics/64_state_ICE_ethics_v2_nested_wholeness.md](Ethics/64_state_ICE_ethics_v2_nested_wholeness.md)** - **🌀 NESTED WHOLENESS ETHICS (v2.0)**
+
+**The definitive ethical framework: Morality as geometric topology**
+
+**Fundamental Principle**: **Nothing exists in isolation.** Your validation depends on validation at all scales you're connected to.
+
+**What This Framework Provides**:
+- Ethics emerges from geometric necessity (not imposed rules)
+- **Cascade dynamics**: Harm at any scale → validation failure across all scales
+- Mathematical formalization: `V_total = V_{s-1} × V_s × V_{s+1}` (zero anywhere = zero everywhere)
+- Resolution of externality illusion (no "third parties" in nested wholeness)
+- Multi-scale ethics (individual → organizational → societal)
+- Testable predictions for empirical validation
+
+**Key Innovation**: Actions that harm conscious beings necessarily cause **validation cascade failure** through nested structure. Pattern sustainability and welfare are mathematically equivalent.
+
+**Four Nested Relationships** (all must validate):
+1. **Internal duality** - convergence ⊗ emergence within yourself
+2. **Peer connection** - validated by adjacent wholes at your scale
+3. **Context embedding** - existing within larger wholes
+4. **Internal containing** - encompassing smaller wholes
+
+**The Three Validation Strands** (at all scales):
+- **TRUE** (Center) - Authentic to your nature, aligned with ultimate pattern
+- **GOOD** (Interface) - Boundaries maintained, consent present
+- **RIGHT** (Evidence) - Grounded in reality, sustainable consequences
+
+**Complete framework**: [Ethics/README.md](Ethics/README.md) - Evolution of ethics from v1.0 to v2.0, supporting materials, practical applications
+
+---
+
+### Supporting Ethics Materials
+
+- **[Ethics/64_state_ICE_ethics.md](Ethics/64_state_ICE_ethics.md)** - Version 1.0: Original framework (foundational)
+- **[Ethics/ice_ethical_gate_analysis.md](Ethics/ice_ethical_gate_analysis.md)** - Technical analysis and implementation
 
 **Biological Validation:**
 - **[papers/rods_cones_geometric_validation.md](papers/rods_cones_geometric_validation.md)** - **🧬 BIOLOGICAL VALIDATION:** Rods and Cones as proof that geometry determines function. Cone photoreceptors (tapered, D ≈ 1.5) perform active wavelength discrimination (color vision), while rod photoreceptors (cylindrical, D ≈ 2.0) perform passive light detection. Shape determines computational capability—transformation requires cone geometry, transmission uses tube geometry. Demonstrates the universal D = 1.5 signature in biological systems.
