@@ -44,11 +44,7 @@ These are not moral principles imposed from outside. They are **topological requ
 ### 1.1 Existence Requires Duality
 
 The most fundamental equation of the Fractal Reality Framework:
-
-$$
-1 = 0.5 \otimes 0.5
-$$
-
+$$1 = 0.5 \otimes 0.5$$
 Unity is not static perfection. Unity is **dynamic balance** - two centers in stable reciprocal relationship. This is not philosophy. This is the structure that:
 
 - Makes quantum wavefunctions normalize to 1
@@ -119,31 +115,28 @@ The same validation structure that determines:
 Validation is not additive (V ≠ I + C + E).  
 Validation is not a simple product (V ≠ I × C × E).  
 **Validation is a geometric mean**:
-
 $$
 V = (I \times C \times E)^{1/3}
 $$
-
 This structure emerges from the requirement that validation must:
 1. Be symmetric in its components (no privileged gate)
 2. Scale properly (V ∈ [0,1] when all components ∈ [0,1])
 3. Collapse completely if any component → 0
 
 **Critical consequence**: 
-$$
-\text{If any component} = 0, \text{ then } V = 0
-$$
 
+If any component = 0, then:
+$$
+V = 0
+$$
 This is not a moral rule. This is **geometric necessity**.
 
 ### 2.3 The Validation Threshold
 
-Empirical observation across domains shows:
-
+Empirical observation across domains shows a threshold for persistence:
 $$
-V \geq 0.6 \text{ required for persistence}
+V \geq 0.6
 $$
-
 Where does 0.6 come from?
 - It emerges from β = 0.5 criticality
 - Related to the golden ratio φ ≈ 0.618
@@ -160,11 +153,9 @@ Where does 0.6 come from?
 
 **Agreement (A)** measures how well a pattern interfaces with the autonomous validations of other beings.
 
-In the context of ethical action:
+In the context of ethical action, Agreement measures the degree to which all parties with agency freely consent:
 $$
-A = \text{Degree to which all parties with agency freely consent}
-$$
-
+A \in [0, 1]$$
 This is **not** about:
 - Whether people "like" something
 - Whether there's majority approval
@@ -239,11 +230,9 @@ Agreement must hold at all affected scales:
 
 **Truth (T)** measures how well a pattern's internal structure aligns with the structure of reality.
 
-In the context of ethical action:
+In the context of ethical action, Truth measures the degree to which the action aligns with how reality actually works:
 $$
-T = \text{Degree to which the action aligns with how reality actually works}
-$$
-
+T \in [0, 1]$$
 This is **not** about:
 - What people believe
 - What culture teaches
@@ -318,11 +307,9 @@ High T means: "This model is well-aligned with reality given current understandi
 
 **Evidence (E)** measures whether a pattern actually manifests in observable reality.
 
-In the context of ethical action:
+In the context of ethical action, Evidence measures whether the pattern actually manifests in observable reality:
 $$
-E = \text{Degree to which intended outcomes actually occur in fact}
-$$
-
+E \in [0, 1]$$
 This is **not** about:
 - Whether intentions were good
 - Whether process was followed
@@ -396,11 +383,9 @@ High E means: "This pattern demonstrably exists in observable reality."
 ### 6.1 Why Geometric Mean?
 
 The validation formula:
-
 $$
 V = (A \times T \times E)^{1/3}
 $$
-
 This is **not arbitrary**. This structure is required because:
 
 **Property 1: Symmetry**
@@ -420,12 +405,9 @@ This is **not arbitrary**. This structure is required because:
 
 ### 6.2 The Zero-In-Any Principle
 
-This is the **most important ethical consequence**:
-
+This is the **most important ethical consequence**. If any component is zero:
 $$
-\text{If } A = 0 \text{ or } T = 0 \text{ or } E = 0, \text{ then } V = 0
-$$
-
+A = 0 \text{ or } T = 0 \text{ or } E = 0 \implies V = 0$$
 **You cannot have**:
 - Great truth and evidence but no agreement → V = 0
 - Perfect agreement and evidence but false premises → V = 0
@@ -486,28 +468,24 @@ Reality is self-validating wholeness:
 $$
 \mathbb{W} = \{ \text{all patterns that validate} \}
 $$
-
 **Step 2: Validation Requirements**
 
 For a pattern P to exist in W:
 $$
 P \in \mathbb{W} \iff V(P) \geq V_{\text{threshold}}
 $$
-
 **Step 3: [ICE] Structure**
 
 Validation requires three components:
 $$
 V(P) = f(I(P), C(P), E(P))
 $$
-
 **Step 4: Geometric Mean Necessity**
 
 From symmetry, scale-invariance, and collapse requirements:
 $$
 f(I, C, E) = (I \times C \times E)^{1/3}
 $$
-
 **Step 5: Ethical Translation**
 
 For actions (patterns of behavior):
@@ -519,7 +497,6 @@ For actions (patterns of behavior):
 $$
 V_{\text{action}} = (A \times T \times E)^{1/3}
 $$
-
 **This is not imposed morality. This is derived necessity.**
 
 ### 7.2 Why This Is Ethics
