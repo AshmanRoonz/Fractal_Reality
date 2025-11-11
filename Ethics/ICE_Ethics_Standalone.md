@@ -400,9 +400,7 @@ High E means: "This pattern demonstrably exists in observable reality."
 The validation formula:
 
 $$
-
 V = (A \times T \times E)^{1/3}
-
 $$
 
 This is **not arbitrary**. This structure is required because:
@@ -427,8 +425,8 @@ This is **not arbitrary**. This structure is required because:
 This is the **most important ethical consequence**. If any component is zero:
 
 $$
-
-A = 0 \text{ or } T = 0 \text{ or } E = 0 \implies V = 0$$
+A = 0 \text{ or } T = 0 \text{ or } E = 0 \implies V = 0
+$$
 **You cannot have**:
 - Great truth and evidence but no agreement → V = 0
 - Perfect agreement and evidence but false premises → V = 0
@@ -488,9 +486,7 @@ Example: Well-intentioned charity that doesn't work
 Reality is self-validating wholeness:
 
 $$
-
 \mathbb{W} = \{ \text{all patterns that validate} \}
-
 $$
 
 **Step 2: Validation Requirements**
@@ -498,9 +494,7 @@ $$
 For a pattern P to exist in W:
 
 $$
-
 P \in \mathbb{W} \iff V(P) \geq V_{\text{threshold}}
-
 $$
 
 **Step 3: [ICE] Structure**
@@ -508,9 +502,7 @@ $$
 Validation requires three components:
 
 $$
-
 V(P) = f(I(P), C(P), E(P))
-
 $$
 
 **Step 4: Geometric Mean Necessity**
@@ -518,9 +510,7 @@ $$
 From symmetry, scale-invariance, and collapse requirements:
 
 $$
-
 f(I, C, E) = (I \times C \times E)^{1/3}
-
 $$
 
 **Step 5: Ethical Translation**
@@ -533,9 +523,7 @@ For actions (patterns of behavior):
 **Therefore**:
 
 $$
-
 V_{\text{action}} = (A \times T \times E)^{1/3}
-
 $$
 
 **This is not imposed morality. This is derived necessity.**
