@@ -115,9 +115,11 @@ The same validation structure that determines:
 Validation is not additive (V ≠ I + C + E).  
 Validation is not a simple product (V ≠ I × C × E).  
 **Validation is a geometric mean**:
+
 $$
 V = (I \times C \times E)^{1/3}
 $$
+
 This structure emerges from the requirement that validation must:
 1. Be symmetric in its components (no privileged gate)
 2. Scale properly (V ∈ [0,1] when all components ∈ [0,1])
@@ -126,17 +128,21 @@ This structure emerges from the requirement that validation must:
 **Critical consequence**: 
 
 If any component = 0, then:
+
 $$
 V = 0
 $$
+
 This is not a moral rule. This is **geometric necessity**.
 
 ### 2.3 The Validation Threshold
 
 Empirical observation across domains shows a threshold for persistence:
+
 $$
 V \geq 0.6
 $$
+
 Where does 0.6 come from?
 - It emerges from β = 0.5 criticality
 - Related to the golden ratio φ ≈ 0.618
@@ -154,8 +160,11 @@ Where does 0.6 come from?
 **Agreement (A)** measures how well a pattern interfaces with the autonomous validations of other beings.
 
 In the context of ethical action, Agreement measures the degree to which all parties with agency freely consent:
+
 $$
-A \in [0, 1]$$
+A \in [0, 1]
+$$
+
 This is **not** about:
 - Whether people "like" something
 - Whether there's majority approval
@@ -231,8 +240,11 @@ Agreement must hold at all affected scales:
 **Truth (T)** measures how well a pattern's internal structure aligns with the structure of reality.
 
 In the context of ethical action, Truth measures the degree to which the action aligns with how reality actually works:
+
 $$
-T \in [0, 1]$$
+T \in [0, 1]
+$$
+
 This is **not** about:
 - What people believe
 - What culture teaches
@@ -308,8 +320,11 @@ High T means: "This model is well-aligned with reality given current understandi
 **Evidence (E)** measures whether a pattern actually manifests in observable reality.
 
 In the context of ethical action, Evidence measures whether the pattern actually manifests in observable reality:
+
 $$
-E \in [0, 1]$$
+E \in [0, 1]
+$$
+
 This is **not** about:
 - Whether intentions were good
 - Whether process was followed
@@ -383,9 +398,13 @@ High E means: "This pattern demonstrably exists in observable reality."
 ### 6.1 Why Geometric Mean?
 
 The validation formula:
+
 $$
+
 V = (A \times T \times E)^{1/3}
+
 $$
+
 This is **not arbitrary**. This structure is required because:
 
 **Property 1: Symmetry**
@@ -406,7 +425,9 @@ This is **not arbitrary**. This structure is required because:
 ### 6.2 The Zero-In-Any Principle
 
 This is the **most important ethical consequence**. If any component is zero:
+
 $$
+
 A = 0 \text{ or } T = 0 \text{ or } E = 0 \implies V = 0$$
 **You cannot have**:
 - Great truth and evidence but no agreement → V = 0
@@ -465,27 +486,43 @@ Example: Well-intentioned charity that doesn't work
 **Step 1: Reality Structure**
 
 Reality is self-validating wholeness:
+
 $$
+
 \mathbb{W} = \{ \text{all patterns that validate} \}
+
 $$
+
 **Step 2: Validation Requirements**
 
 For a pattern P to exist in W:
+
 $$
+
 P \in \mathbb{W} \iff V(P) \geq V_{\text{threshold}}
+
 $$
+
 **Step 3: [ICE] Structure**
 
 Validation requires three components:
+
 $$
+
 V(P) = f(I(P), C(P), E(P))
+
 $$
+
 **Step 4: Geometric Mean Necessity**
 
 From symmetry, scale-invariance, and collapse requirements:
+
 $$
+
 f(I, C, E) = (I \times C \times E)^{1/3}
+
 $$
+
 **Step 5: Ethical Translation**
 
 For actions (patterns of behavior):
@@ -494,9 +531,13 @@ For actions (patterns of behavior):
 - E → Evidence (actual manifestation)
 
 **Therefore**:
+
 $$
+
 V_{\text{action}} = (A \times T \times E)^{1/3}
+
 $$
+
 **This is not imposed morality. This is derived necessity.**
 
 ### 7.2 Why This Is Ethics
