@@ -24,9 +24,9 @@ We rigorously derive the canonical anticommutation relations {ψ, ψ†} = 1 fro
 
 This creates the infinite nested tensor product:
 
-$$
+```math
 \mathbb{1} = \bigotimes_{i=1}^{\infty} \left(\frac{1}{2} \otimes \frac{1}{2}\right)_i
-$$
+```
 
 ### 1.2 The 64-State Decomposition
 
@@ -44,9 +44,9 @@ For **six levels** of essential nesting:
 
 Define the **⊗-node operator** at position n and level ℓ:
 
-$$
+```math
 \hat{N}_{n,\ell} \in \{0, 1\}
-$$
+```
 
 Where:
 - n indexes spatial/momentum position
@@ -56,11 +56,11 @@ Where:
 
 **Total state space:**
 
-$$
+```math
 \mathcal{H}_{64} = \bigotimes_{\ell=1}^{6} \mathcal{H}_{\ell}
-$$
+```
 
-where $\mathcal{H}_{\ell}$ is the Hilbert space at level ℓ.
+where $`\mathcal{H}_{\ell}`$ is the Hilbert space at level ℓ.
 
 ---
 
@@ -77,9 +77,9 @@ where $\mathcal{H}_{\ell}$ is the Hilbert space at level ℓ.
 
 **Mathematical consequence:** Node operators must satisfy:
 
-$$
+```math
 \hat{N}_{n,\ell}^2 = \hat{N}_{n,\ell}
-$$
+```
 
 (Idempotent: applying twice = applying once, since node is already occupied)
 
@@ -87,64 +87,71 @@ $$
 
 Define:
 
-$$
+```math
 \psi_{n,\ell}^\dagger = \text{creates validation at node } (n,\ell)
-$$
-$$
+```
+
+```math
 \psi_{n,\ell} = \text{destroys validation at node } (n,\ell)
-$$
+```
 
 Such that:
 
-$$
+```math
 \hat{N}_{n,\ell} = \psi_{n,\ell}^\dagger \psi_{n,\ell}
-$$
+```
 
 ### 2.3 Deriving the Anticommutator (Same Node)
 
 **Theorem 2.1:** For the same validation node, the operators must anticommute:
 
-$$
+```math
 \{\psi_{n,\ell}, \psi_{n,\ell}^\dagger\} = \psi_{n,\ell}\psi_{n,\ell}^\dagger + \psi_{n,\ell}^\dagger\psi_{n,\ell} = \mathbb{1}
-$$
+```
 
 **Proof:**
 
 Consider the number operator:
-$$
+
+```math
 \hat{N}_{n,\ell} = \psi_{n,\ell}^\dagger \psi_{n,\ell}
-$$
+```
 
-By the exclusion postulate, $\hat{N}_{n,\ell}^2 = \hat{N}_{n,\ell}$, therefore:
+By the exclusion postulate, $`\hat{N}_{n,\ell}^2 = \hat{N}_{n,\ell}`$, therefore:
 
-$$
+```math
 (\psi_{n,\ell}^\dagger \psi_{n,\ell})^2 = \psi_{n,\ell}^\dagger \psi_{n,\ell}
-$$
+```
 
 Expanding:
-$$
+
+```math
 \psi_{n,\ell}^\dagger \psi_{n,\ell} \psi_{n,\ell}^\dagger \psi_{n,\ell} = \psi_{n,\ell}^\dagger \psi_{n,\ell}
-$$
+```
 
 For this to hold for all states, we require:
-$$
-\psi_{n,\ell} \psi_{n,\ell}^\dagger \psi_{n,\ell} = \psi_{n,\ell}
-$$
 
-Multiply on left by $\psi_{n,\ell}^\dagger$:
-$$
+```math
+\psi_{n,\ell} \psi_{n,\ell}^\dagger \psi_{n,\ell} = \psi_{n,\ell}
+```
+
+Multiply on left by $`\psi_{n,\ell}^\dagger`$:
+
+```math
 \psi_{n,\ell}^\dagger\psi_{n,\ell} \psi_{n,\ell}^\dagger \psi_{n,\ell} = \psi_{n,\ell}^\dagger \psi_{n,\ell}
-$$
+```
 
 This is satisfied if:
-$$
+
+```math
 \psi_{n,\ell} \psi_{n,\ell}^\dagger = \mathbb{1} - \psi_{n,\ell}^\dagger \psi_{n,\ell}
-$$
+```
 
 Therefore:
-$$
+
+```math
 \psi_{n,\ell} \psi_{n,\ell}^\dagger + \psi_{n,\ell}^\dagger \psi_{n,\ell} = \mathbb{1}
-$$
+```
 
 **QED** ∎
 
@@ -152,31 +159,32 @@ $$
 
 **Theorem 2.2:** For different validation nodes at the same level:
 
-$$
+```math
 \{\psi_{n,\ell}, \psi_{m,\ell}^\dagger\} = \delta_{nm} \mathbb{1}
-$$
+```
 
 **Proof:**
 
-If $n \neq m$, the validation nodes are **spatially separated**. By the locality of validation:
+If $`n \neq m`$, the validation nodes are **spatially separated**. By the locality of validation:
 - Creating at node n doesn't affect node m
 - Operations can occur independently
 - No interference between separated validations
 
-Therefore for $n \neq m$:
-$$
+Therefore for $`n \neq m`$:
+
+```math
 [\psi_{n,\ell}, \psi_{m,\ell}^\dagger] = 0 \quad \text{(commutator)}
-$$
+```
 
-But since we've established anticommutation at the same node ($n = m$), continuity requires:
+But since we've established anticommutation at the same node ($`n = m`$), continuity requires:
 
-$$
+```math
 \{\psi_{n,\ell}, \psi_{m,\ell}^\dagger\} = \delta_{nm} \mathbb{1}
-$$
+```
 
 where:
-- $\delta_{nm} = 1$ when $n = m$ (anticommutation from Theorem 2.1)
-- $\delta_{nm} = 0$ when $n \neq m$ (independent nodes)
+- $`\delta_{nm} = 1`$ when $`n = m`$ (anticommutation from Theorem 2.1)
+- $`\delta_{nm} = 0`$ when $`n \neq m`$ (independent nodes)
 
 **QED** ∎
 
@@ -184,25 +192,25 @@ where:
 
 Taking the continuum limit, define the **field operators:**
 
-$$
+```math
 \psi(x) = \sum_{n} \phi_n(x) \psi_n
-$$
+```
 
-where $\phi_n(x)$ are complete orthonormal basis functions.
+where $`\phi_n(x)`$ are complete orthonormal basis functions.
 
 **Corollary 2.1 (Canonical Anticommutation Relations):**
 
-$$
+```math
 \{\psi(x), \psi^\dagger(y)\} = \delta^{(3)}(x - y) \mathbb{1}
-$$
+```
 
-$$
+```math
 \{\psi(x), \psi(y)\} = 0
-$$
+```
 
-$$
+```math
 \{\psi^\dagger(x), \psi^\dagger(y)\} = 0
-$$
+```
 
 **These are the standard fermionic CAR, derived purely from ⊗ topology.** ∎
 
@@ -214,15 +222,15 @@ $$
 
 The nested ⊗ structure has natural **SU(2) symmetry** at each level:
 
-$$
+```math
 \text{Level } \ell: \quad \mathcal{H}_\ell \simeq \mathbb{C}^2 \quad (\text{two-state system})
-$$
+```
 
 Under a 2π rotation in 3D space, the validation state transforms as:
 
-$$
+```math
 |\psi\rangle \to e^{i\pi} |\psi\rangle = -|\psi\rangle
-$$
+```
 
 **This is the spinor property:** 2π rotation → sign flip, requiring 4π for full period.
 
@@ -237,14 +245,16 @@ $$
 - No exclusion principle needed
 
 **Example:** Photons (gauge bosons) are the ⊗ connection operators themselves:
-$$
+
+```math
 A_\mu \sim \frac{\partial}{\partial(\otimes)} \quad \text{(infinitesimal ⊗ transformation)}
-$$
+```
 
 Commutation relations:
-$$
+
+```math
 [a_k, a_p^\dagger] = \delta_{kp} \mathbb{1}
-$$
+```
 
 **Summary:**
 - **Fermions** = exclusive ⊗ occupancy → anticommutation
@@ -281,27 +291,27 @@ For **scattering states** (E > 0):
 
 **Standard Rutherford formula:**
 
-$$
+```math
 \frac{d\sigma}{d\Omega} = \left(\frac{Z\alpha \hbar c}{4E}\right)^2 \frac{1}{\sin^4(\theta/2)}
-$$
+```
 
 **Nested wholeness correction** from β = 0.5 validation:
 
 At small angles (θ → 0), validation dynamics modify the effective potential:
 
-$$
-V_{eff}(r) = -\frac{Ze^2}{r} + \frac{\hbar^2 D(D-1)}{2mr^2}
-$$
+```math
+V_{\text{eff}}(r) = -\frac{Ze^2}{r} + \frac{\hbar^2 D(D-1)}{2mr^2}
+```
 
 where D = 1.5 from fractal validation structure.
 
 **Modified cross-section:**
 
-$$
-\frac{d\sigma}{d\Omega} = \left(\frac{Z\alpha \hbar c}{4E}\right)^2 \frac{1}{\sin^4(\theta/2)} \times \left[1 + \frac{0.75\hbar^2}{2mE r_{min}^2}\right]
-$$
+```math
+\frac{d\sigma}{d\Omega} = \left(\frac{Z\alpha \hbar c}{4E}\right)^2 \frac{1}{\sin^4(\theta/2)} \times \left[1 + \frac{0.75\hbar^2}{2mE r_{\text{min}}^2}\right]
+```
 
-where $r_{min} = \frac{Z\alpha\hbar c}{2E}$ is the distance of closest approach.
+where $`r_{\text{min}} = \frac{Z\alpha\hbar c}{2E}`$ is the distance of closest approach.
 
 **Testable prediction:**
 - Correction is small (~0.1%) for typical energies
@@ -319,9 +329,9 @@ As E → ∞:
 
 Mathematical relation via **analytic continuation:**
 
-$$
+```math
 \text{SO}(4) \xrightarrow{t \to i\tau, E \to -E} \text{SO}(3,1)
-$$
+```
 
 This is a **Wick rotation** connecting bound and scattering regimes through the same β = 0.5 structure.
 
@@ -333,9 +343,9 @@ This is a **Wick rotation** connecting bound and scattering regimes through the 
 
 In standard QFT, the Dirac equation has both **positive and negative energy solutions:**
 
-$$
+```math
 E = \pm\sqrt{p^2c^2 + m^2c^4}
-$$
+```
 
 **Nested wholeness interpretation:**
 
@@ -349,14 +359,16 @@ The "Dirac sea" is the **vacuum state** where all negative energy ⊗ nodes are 
 **Definition:** An antiparticle is a **hole** in the Dirac sea - an empty negative energy ⊗ state.
 
 When a positive energy particle validates:
-$$
+
+```math
 \psi^\dagger_{+E} |0\rangle = |\text{particle}\rangle
-$$
+```
 
 Creating a "hole" (antiparticle) at negative energy:
-$$
+
+```math
 \psi_{-E} |\text{sea}\rangle = |\text{antiparticle}\rangle
-$$
+```
 
 **Physical picture:**
 - Vacuum = all negative ⊗ states filled (complete validation failure pattern)
@@ -367,14 +379,15 @@ $$
 
 **Theorem 5.1:** Charge conjugation C is **⊗ reversal**:
 
-$$
+```math
 C: \quad \psi(x) \leftrightarrow \psi^\dagger(x)
-$$
+```
 
 Geometrically:
-$$
+
+```math
 C: \quad (0.5 \otimes 0.5) \to (0.5 \otimes 0.5)^* \quad \text{(complex conjugate)}
-$$
+```
 
 **This exchanges:**
 - Convergence ↔ Emergence (∇ ↔ ℰ)
@@ -385,9 +398,9 @@ $$
 
 **Pair creation:** A high-energy photon creates particle + antiparticle:
 
-$$
+```math
 \gamma \to e^- + e^+
-$$
+```
 
 **Nested wholeness:**
 - Photon = ⊗ connection operator (gauge boson)
@@ -397,9 +410,9 @@ $$
 
 **Pair annihilation:** Particle + antiparticle → photons:
 
-$$
+```math
 e^- + e^+ \to \gamma + \gamma
-$$
+```
 
 **Nested wholeness:**
 - Particle fills the antiparticle hole
@@ -425,16 +438,18 @@ Negative energy states represent **failed validations** that are already fully o
 **Test 1: Electron-electron scattering with spin correlations**
 
 Measure cross-section for:
-$$
+
+```math
 e^-(s_1) + e^-(s_2) \to e^-(s_3) + e^-(s_4)
-$$
+```
 
 The CAR derived from ⊗ topology predict specific correlations between final spins that differ slightly from standard QFT at high energies.
 
 **Prediction:** At √s > 1 TeV, correction of order:
-$$
-\Delta \sigma / \sigma \sim (D - 1) \times \frac{E}{M_{Pl}} \sim 10^{-16}
-$$
+
+```math
+\Delta \sigma / \sigma \sim (D - 1) \times \frac{E}{M_{\text{Pl}}} \sim 10^{-16}
+```
 
 Extremely small but potentially measurable at future colliders.
 
@@ -442,13 +457,13 @@ Extremely small but potentially measurable at future colliders.
 
 **Test 2: Møller scattering off heavy nuclei**
 
-$$
+```math
 e^- + Z \to e^- + Z
-$$
+```
 
 At small angles (θ < 1°) and Z > 80:
 
-**Standard prediction:** Pure Rutherford
+**Standard prediction:** Pure Rutherford  
 **Nested wholeness:** Additional D = 1.5 term modifies potential
 
 **Measurement:** Precision electron scattering at Jefferson Lab or future facilities could detect ~0.1% deviations in differential cross-section.
@@ -462,9 +477,10 @@ The Dirac sea interpretation predicts subtle shifts in hyperfine structure from:
 - Validation time scales
 
 **Prediction:** Para-positronium ground state shift:
-$$
-\Delta E_{ps} \sim \alpha^3 m_e c^2 \times (D - 1) \sim 10^{-6} \text{ eV}
-$$
+
+```math
+\Delta E_{\text{ps}} \sim \alpha^3 m_e c^2 \times (D - 1) \sim 10^{-6} \text{ eV}
+```
 
 Currently measurable with laser spectroscopy.
 
@@ -545,7 +561,7 @@ This completes the fermionic structure derivation from nested wholeness.
 
 ---
 
-**Appendix: Notation Summary**
+## Appendix: Notation Summary
 
 | Symbol | Meaning |
 |--------|---------|
@@ -553,7 +569,7 @@ This completes the fermionic structure derivation from nested wholeness.
 | β | Balance parameter (always 0.5 for stability) |
 | D | Fractal dimension (always 1.5 from validation) |
 | ψ, ψ† | Fermionic field operators |
-| $\hat{N}_{n,\ell}$ | Validation node occupation operator |
+| $`\hat{N}_{n,\ell}`$ | Validation node occupation operator |
 | [ICE] | Interface-Center-Evidence validation check |
 | ∇ | Convergence (toward center) |
 | ℰ | Emergence (from center) |
