@@ -2,7 +2,7 @@
 
 **Rigorous proof of anticommutation relations from ⊗ topology**
 
-**Author:** Ashman Roonz
+**Author:** Ashman Roonz (with technical development)
 
 ---
 
