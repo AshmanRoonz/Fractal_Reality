@@ -378,39 +378,40 @@ From a single principle—**nothing exists in isolation**—this paper derives t
 
 ## Ethics Framework
 
-### **[Ethics/64_state_ICE_ethics_v2_nested_wholeness.md](Ethics/64_state_ICE_ethics_v2_nested_wholeness.md)** - **🌀 NESTED WHOLENESS ETHICS (v2.0)**
+### **[Ethics/ICE_Ethics_Standalone.md](Ethics/ICE_Ethics_Standalone.md)** - **🌀 ICE ETHICS (v3.0)**
 
-**The definitive ethical framework: Morality as geometric topology**
+**Agreement, Truth, and Evidence: A Geometric Foundation for Moral Action**
 
-**Fundamental Principle**: **Nothing exists in isolation.** Your validation depends on validation at all scales you're connected to.
+**Fundamental Principle**: Ethics is not arbitrary preference nor absolute command. Ethics arises from the structural requirements of reality itself: for patterns to persist, they must achieve **convergence with agreement**—they must be both true and consensual.
+
+**The Three Simultaneous Validations**:
+1. **Agreement [I]**: All affected wholes must participate willingly—no coercion, no unconsented harm
+2. **Truth [C]**: The action must align with reality—both authentic expression and objective accuracy
+3. **Evidence [E]**: The consequences must be verifiable and sustainable in observable reality
+
+**Multiplicative Structure**: **Ethics = (Agreement × Truth × Evidence)^(1/3)**
+
+Zero in any dimension yields zero ethical validation. All three must be present.
 
 **What This Framework Provides**:
-- Ethics emerges from geometric necessity (not imposed rules)
-- **Cascade dynamics**: Harm at any scale → validation failure across all scales
-- Mathematical formalization: `V_total = V_{s-1} × V_s × V_{s+1}` (zero anywhere = zero everywhere)
-- Resolution of externality illusion (no "third parties" in nested wholeness)
-- Multi-scale ethics (individual → organizational → societal)
-- Testable predictions for empirical validation
+- Ethics as Truth + Agreement (both required simultaneously)
+- The Four Quadrants framework (Truth vs Agreement matrix)
+- Knowledge dependency (the more you know, the better you can do)
+- Scale architecture (local to global validation)
+- Practical diagnostics and decision protocols
+- Energy and sustainability analysis
+- Convergence theory and limits
+- Implementation guidelines (individual, relational, organizational, policy)
 
-**Key Innovation**: Actions that harm conscious beings necessarily cause **validation cascade failure** through nested structure. Pattern sustainability and welfare are mathematically equivalent.
+**Key Finding**: What appears as "moral obligation" is actually geometric necessity. Actions that lack agreement, truth, or evidence cannot persist—they require ever-increasing energy to maintain and eventually collapse.
 
-**Four Nested Relationships** (all must validate):
-1. **Internal duality** - convergence ⊗ emergence within yourself
-2. **Peer connection** - validated by adjacent wholes at your scale
-3. **Context embedding** - existing within larger wholes
-4. **Internal containing** - encompassing smaller wholes
-
-**The Three Validation Strands** (at all scales):
-- **TRUE** (Center) - Authentic to your nature, aligned with ultimate pattern
-- **GOOD** (Interface) - Boundaries maintained, consent present
-- **RIGHT** (Evidence) - Grounded in reality, sustainable consequences
-
-**Complete framework**: [Ethics/README.md](Ethics/README.md) - Evolution of ethics from v1.0 to v2.0, supporting materials, practical applications
+**Complete framework**: [Ethics/README.md](Ethics/README.md) - Evolution of ethics from v1.0 to v3.0, supporting materials, practical applications
 
 ---
 
 ### Supporting Ethics Materials
 
+- **[Ethics/64_state_ICE_ethics_v2_nested_wholeness.md](Ethics/64_state_ICE_ethics_v2_nested_wholeness.md)** - Version 2.0: Nested wholeness integration
 - **[Ethics/64_state_ICE_ethics.md](Ethics/64_state_ICE_ethics.md)** - Version 1.0: Original framework (foundational)
 - **[Ethics/ice_ethical_gate_analysis.md](Ethics/ice_ethical_gate_analysis.md)** - Technical analysis and implementation
 
