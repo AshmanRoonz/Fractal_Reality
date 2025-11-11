@@ -697,6 +697,8 @@ The **[Predictions&Derivations/](Predictions&Derivations/)** folder contains the
 **Standard Model Complete Derivation:**
 - **[Predictions&Derivations/standard_model_derivation.md](Predictions&Derivations/standard_model_derivation.md)** - Detailed 45-page derivation of all 17 fundamental particles
 - **[Predictions&Derivations/STANDARD_MODEL_SUMMARY.md](Predictions&Derivations/STANDARD_MODEL_SUMMARY.md)** - Executive summary
+- **[Predictions&Derivations/gauge_groups_from_nested_topology.md](Predictions&Derivations/gauge_groups_from_nested_topology.md)** - **NEW:** Rigorous derivation of SU(3) × SU(2) × U(1) gauge structure from six-level ⊗ topology. Proves 64-state particle content (36+12+12+4) is unique and necessary. All coupling constants (α_s, α_w, α_em) and Weinberg angle (sin²θ_W = 0.231) derived from ⊗ geometry—zero free parameters!
+- **[Predictions&Derivations/fermionic_structure_from_nested_wholeness.md](Predictions&Derivations/fermionic_structure_from_nested_wholeness.md)** - **NEW:** Complete derivation of anticommutation relations {ψ, ψ†} = 1 from exclusive ⊗ occupancy (not axioms!). Derives spin-1/2, SO(3,1) scattering, Dirac sea, and charge conjugation from topological constraints. Includes testable predictions for Coulomb scattering and positronium.
 - **[Predictions&Derivations/three_missing_particles_predictions.md](Predictions&Derivations/three_missing_particles_predictions.md)** - **THREE MISSING PARTICLES:** Testable predictions for exactly 3 undiscovered particles to complete the 64-state matrix (dark matter WIMP, sterile neutrino, graviton)
 - Key result: mμ/me = (1/α)^(2/3) = 206.768 (exact!)
 - All particle masses: 99%+ accuracy
