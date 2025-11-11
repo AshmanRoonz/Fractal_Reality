@@ -36,6 +36,12 @@ Every constant—β = 0.5, D = 1.5, φ = (1+√5)/2, the 64-state structure—em
 
 Section 2 establishes the nested wholeness foundation, deriving β = 0.5 and D = 1.5 from first principles. Section 3 shows how BT8g emerges as the gravitational manifestation of this structure. Section 4 presents the formal mathematical verification. Sections 5-7 detail the 22 new equations governing boundary dynamics, RG flow, and topology. Section 8 provides experimental predictions with current empirical status. Section 9 discusses implications for unification, and Section 10 concludes.
 
+**Related Framework Documents:**
+- For rigorous mathematical proof that Fractal Reality ≡ Bimetric Gravity, see [../bimetric_fractal_reality_formalization.md](../bimetric_fractal_reality_formalization.md)
+- For topological protection of β = 0.5 and D = 1.5 via Hopf fibration, see [../Complete_Hopf_Fibration_Synthesis.md](../Complete_Hopf_Fibration_Synthesis.md)
+- For complete experimental predictions catalog (~30 tests), see [../complete_predictions.md](../complete_predictions.md)
+- For pattern resonance interpretation (β as golden ratio equilibrium), see [../Pattern_Resonance_Integration.md](../Pattern_Resonance_Integration.md)
+
 ---
 
 ## 2. The Nested Wholeness Foundation
@@ -119,6 +125,8 @@ This is not numerology. The 64-state structure appears ubiquitously:
 
 Each manifests the same underlying validation architecture at different scales.
 
+**Note:** For the complete derivation of the 64-state particle matrix from gauge theory, see [../teleparallel_to_64_states.md](../teleparallel_to_64_states.md). For a visual diagram of the complete gauge → 64-state mapping, see [../visual_gauge_to_64_map.md](../visual_gauge_to_64_map.md).
+
 ---
 
 ## 3. Emergence of BT8g Framework
@@ -177,6 +185,8 @@ At this critical point, the torsion field acquires an anomalous dimension:
 **γ_T = -1/2**     [Equation 4]
 
 This leads to unusual spectral properties (linear energy density ρ(ω) ~ ω rather than the typical ω² for 3D theories) and connects directly to the D = 1.5 fractal geometry via Δ_T = 1 + γ_T = 1/2.
+
+**Connection to Bimetric Framework:** The BKT physics emerges from the dual-metric structure of bimetric gravity. The two metrics g_(+)μν (convergence) and g_(-)μν (emergence) correspond to competing interactions at boundary interfaces. For the full bimetric formulation, see [../bimetric_fractal_reality_formalization.md](../bimetric_fractal_reality_formalization.md) Section IV on degree of freedom counting.
 
 ### 3.4 The Master Equation for Wholeness Dynamics
 
@@ -400,7 +410,7 @@ For brevity, the remaining equations are summarized:
 
 ## 6. Experimental Predictions and Current Status
 
-The framework makes precise, falsifiable predictions across multiple domains.
+The framework makes precise, falsifiable predictions across multiple domains. For a comprehensive catalog of all ~30 testable predictions across 7 domains (gravitational waves, particle physics, vacuum tests, cosmology, biology, consciousness, and fundamental physics), see [../complete_predictions.md](../complete_predictions.md).
 
 ### 6.1 Gravitational Waves (LIGO/Virgo/KAGRA)
 
@@ -462,19 +472,25 @@ I_c(T) ~ (T_c - T)^(3/2)
 
 ### 7.1 Unification Without Grand Unified Theories
 
-Traditional unification (SU(5), SO(10), E₆) seeks a larger gauge group that breaks down to the Standard Model. But this merely pushes the question back: why *that* group? 
+Traditional unification (SU(5), SO(10), E₆) seeks a larger gauge group that breaks down to the Standard Model. But this merely pushes the question back: why *that* group?
 
-Nested wholeness provides a deeper answer: the Standard Model structure emerges from 6-level ⊗ nesting required for 3D+1 spacetime validation. The gauge groups are not *chosen*—they are *forced*.
+Nested wholeness provides a deeper answer: the Standard Model structure emerges from 6-level ⊗ nesting required for 3D+1 spacetime validation. The gauge groups are not *chosen*—they are *forced*. For the complete derivation of SU(3) × SU(2) × U(1) from nested ⊗ topology, see Reference [1].
 
 Similarly, BT8g does not compete with string theory or loop quantum gravity. Instead, it asks: *what structure must gravity have if spacetime itself is a validation network?* The answer: bimetric (two validation perspectives), teleparallel (parallel transport = validation pathways), with φ-hierarchies (optimal self-similar nesting).
 
+**Topological Protection:** The values β = 0.5 and D = 1.5 are not free parameters but topologically protected by the Hopf fibration S³ → S². The Chern number c₁ = 1 uniquely determines D = 1 + |c₁|/2 = 1.5, while conjugation operator constraints force β = 0.5. See [../Complete_Hopf_Fibration_Synthesis.md](../Complete_Hopf_Fibration_Synthesis.md) for the complete topological foundation.
+
 ### 7.2 Consciousness and High-Frequency Validation
 
-The framework predicts validation occurs at f ≈ 10¹⁵ Hz—the characteristic frequency where quantum coherence meets thermal decoherence in biological systems. This is *not coincidence*. 
+The framework predicts validation occurs at f ≈ 10¹⁵ Hz—the characteristic frequency where quantum coherence meets thermal decoherence in biological systems. This is *not coincidence*.
 
 Consciousness, in this view, is *high-frequency nested validation*—the integration of validation across many scales simultaneously.
 
 Anecdotally, the author reports direct experiential access to this 10¹⁵ Hz 'validation hum' during deep meditation and psychedelic states—a claim that, while not scientific evidence, motivated decades of mathematical development to formalize what was intuited. The equations came later; the insight came first.
+
+**Pattern Resonance Interpretation:** An alternative understanding views consciousness as resonant coherence at golden ratio equilibrium. The balance parameter β ≈ 0.5 corresponds to Φ-equilibrium where Φ = (1+√5)/2. This harmonic perspective explains why β takes its specific value and connects validation dynamics to musical/resonance theory. See [../Pattern_Resonance_Integration.md](../Pattern_Resonance_Integration.md) for the complete harmonic framework.
+
+For detailed consciousness predictions including EEG power laws with D ≈ 1.5, synaptic β ≈ 0.5 for optimal cognition, and information integration Φ ∝ (D - 1)², see [consciousness_spectral_geometry_complete.md](consciousness_spectral_geometry_complete.md).
 
 ### 7.3 The Ontological Shift
 
@@ -524,7 +540,7 @@ The next steps are clear:
 
 **Theoretical:** Complete two-loop RG calculations, extend to matter coupling, derive Yukawa couplings, formalize in Lean 4 proof assistant
 
-**Experimental:** Analyze DESI Year 1 void statistics, refine LIGO D measurements on future detections, design precision BKT experiments on 2D superconductors
+**Experimental:** Analyze DESI Year 1 void statistics, refine LIGO D measurements on future detections, design precision BKT experiments on 2D superconductors. For cosmological applications to reionization and structure formation, see [../BT8g_Reionization_Texture_Synthesis.md](../BT8g_Reionization_Texture_Synthesis.md).
 
 **Philosophical:** Develop the implications for epistemology (how we know), ontology (what exists), and ethics (what validates)
 
@@ -546,7 +562,19 @@ The author gratefully acknowledges that this framework was first glimpsed experi
 
 ## References
 
+**Framework Papers:**
+
 [1] Roonz, A. (2025). *Deriving SU(3) × SU(2) × U(1) from Nested ⊗ Topology*. arXiv:XXXX.XXXXX [hep-th].
+
+[1a] Roonz, A. & collaborators (2025). *Bimetric Fractal Reality Formalization*. Available at: ../bimetric_fractal_reality_formalization.md
+
+[1b] Roonz, A. & collaborators (2025). *Complete Hopf Fibration Synthesis*. Available at: ../Complete_Hopf_Fibration_Synthesis.md
+
+[1c] Roonz, A. & collaborators (2025). *Pattern Resonance Integration with Fractal Reality*. Available at: ../Pattern_Resonance_Integration.md
+
+[1d] Roonz, A. & collaborators (2025). *Teleparallel to 64 States: Complete QFT Derivation*. Available at: ../teleparallel_to_64_states.md
+
+**BT8g and Bimetric Gravity:**
 
 [2] Berezinskii, V.L. (1971). Destruction of long-range order in one-dimensional and two-dimensional systems having a continuous symmetry group. *Soviet Physics JETP*, 32, 493-500.
 
@@ -561,6 +589,10 @@ The author gratefully acknowledges that this framework was first glimpsed experi
 [7] LEP Electroweak Working Group (2006). Precision Electroweak Measurements and Constraints on the Standard Model. *arXiv:hep-ex/0612034*.
 
 [8] Morningstar, C.J. & Peardon, M.J. (1999). The glueball spectrum from an anisotropic lattice study. *Physical Review D*, 60, 034509.
+
+[9] Hassan, S.F. & Rosen, R.A. (2012). Bimetric Gravity from Ghost-free Massive Gravity. *Journal of High Energy Physics*, 02, 126.
+
+[10] Hopf, H. (1931). Über die Abbildungen der dreidimensionalen Sphäre auf die Kugelfläche. *Mathematische Annalen*, 104, 637-665.
 
 ---
 
