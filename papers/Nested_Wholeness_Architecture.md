@@ -792,7 +792,7 @@ Momentum $p$ corresponds to validation at temporal interface.
 - But D = 1.5 requires breathing room (0.5 excess dimension)
 - **Breathing room = uncertainty**
 
-The "$\geq \hbar/2$" reflects:
+The inequality $\geq \hbar/2$ reflects:
 - $\hbar$ sets the validation energy scale
 - Factor of 1/2 from β = 0.5 balance
 - **Half-quantum is minimum validation unit**
