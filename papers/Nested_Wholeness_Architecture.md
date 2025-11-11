@@ -344,43 +344,53 @@ At scale $\varepsilon_2 = \varepsilon_1/2$: Must resolve next nesting level
 - $2^{1.5}$ boxes needed (each of the 2 has internal structure)
 
 At scale $\varepsilon_n = \varepsilon_0/2^n$:
+
 $$
 N(\varepsilon_n) \sim 2^{1.5n}
 $$
 
+
 Therefore:
+
 $$
 D = \frac{\log(2^{1.5n})}{\log(2^n)} = \frac{1.5n}{n} = 1.5
 $$
+
 
 **Box-counting confirms D = 1.5.** ✓
 
 ### 4.5 Empirical Validation
 
 **Gravitational waves** (LIGO O1-O4 runs, 46 observations):
+
 $$
 D_{\text{measured}} = 1.503 \pm 0.040
 $$
 
 **DNA backbone dynamics** (molecular simulations):
+
 $$
 D_{\text{measured}} = 1.510 \pm 0.020
 $$
 
 **Turbulent vortex filaments** (3D Navier-Stokes):
+
 $$
 D_{\text{measured}} = 1.5 \pm 0.1
 $$
 
 **Neural avalanches** (critical brain dynamics):
+
 $$
 D_{\text{measured}} = 1.48 \pm 0.08
 $$
 
 **Cosmic filaments** (galaxy survey structure):
+
 $$
 D_{\text{measured}} = 1.6 \pm 0.1
 $$
+
 
 **Consistency**: All measurements within 2σ of D = 1.5
 
@@ -405,9 +415,11 @@ Where:
 - **0** = validation failed, connection absent
 
 For n levels of nesting:
+
 $$
 \text{Total states} = 2^n
 $$
+
 
 ### 5.2 Why Six Levels?
 
@@ -444,10 +456,10 @@ where:
 
 **Energy levels**:
 
-Ground state (all ⊗ active): $E_0 = 0$
-First excited (one ⊗ broken): E₁ ≈ 1.65 GeV (Yang-Mills mass gap)
-...
-Fully excited (all ⊗ broken): E₆₃ → ∞ (structure dissolves)
+- Ground state (all ⊗ active): $E_0 = 0$
+- First excited (one ⊗ broken): $E_1 \approx 1.65$ GeV (Yang-Mills mass gap)
+- ...
+- Fully excited (all ⊗ broken): $E_{63} \to \infty$ (structure dissolves)
 
 ### 5.4 Connection to Standard Model
 
@@ -612,8 +624,8 @@ $$
 D_{\text{measured}} = 3 + 0.5 = 3.5
 $$
 
-**3**: The base spatial structure at that scale
-**+0.5**: The nested validation overhead
+- **3**: The base spatial structure at that scale
+- **+0.5**: The nested validation overhead
 
 **This appears as**:
 - Fractal dimension D = 1.5 for filamentary structures within
@@ -671,7 +683,7 @@ A theory with zero free parameters makes **absolute predictions**:
 | Fractal dimension | D = 1.5 exactly | ✓ Measured 1.503 ± 0.040 |
 | State count | 64 exactly | ✓ DNA codons, particle states |
 | Yang-Mills gap | Δ = 1.652 GeV | ✓ Matches lattice QCD |
-| Consciousness frequency | $f \sim 10^{15}$ Hz | ✓ Consistent with neural timing |
+| Consciousness frequency | f ~ 10^15 Hz | ✓ Consistent with neural timing |
 
 **Falsifiability**: A single clear deviation would refute the entire framework.
 
@@ -727,7 +739,7 @@ A theory with zero free parameters makes **absolute predictions**:
 **Nested solution**:
 - Vacuum energy at Planck scale: validated at that scale
 - Must cascade validation to cosmic scale
-- Each nesting level suppresses by factor $\sim(\ell_s/\ell_{s+1})$
+- Each nesting level suppresses by factor ~ $(\ell_s/\ell_{s+1})$
 - After ~120 nesting levels: $\Lambda_{\text{cosmic}} \sim \Lambda_{\text{Planck}} \times 10^{-120}$ ✓
 
 **No fine-tuning needed** - automatic suppression from nested structure.
@@ -758,18 +770,18 @@ A theory with zero free parameters makes **absolute predictions**:
 - $|\psi(x)|^2$ = probability that [ICE] validation succeeds at x
 
 **Evolution**:
-- Unitary (validation conserved): $dQ/dt = 0$ where $Q = \int|\psi|^2dx$
+- Unitary (validation conserved): $dQ/dt = 0$ where $Q = \int|\psi|^2 dx$
 - Schrödinger equation describes validation propagation
 - No collapse - just validation selection at measurement
 
 ### 10.2 Uncertainty Principle from Nested Structure
 
-**Heisenberg uncertainty**: ΔxΔp ≥ ℏ/2
+**Heisenberg uncertainty**: $\Delta x \Delta p \geq \hbar/2$
 
 **Nested derivation**:
 
-Position x corresponds to validation at spatial interface
-Momentum p corresponds to validation at temporal interface
+Position $x$ corresponds to validation at spatial interface.
+Momentum $p$ corresponds to validation at temporal interface.
 
 **These interfaces are dual** (Fourier conjugate):
 - Sharp position ⟹ diffuse momentum
@@ -780,14 +792,14 @@ Momentum p corresponds to validation at temporal interface
 - But D = 1.5 requires breathing room (0.5 excess dimension)
 - **Breathing room = uncertainty**
 
-The "≥ ℏ/2" reflects:
-- ℏ sets the validation energy scale
+The "$\geq \hbar/2$" reflects:
+- $\hbar$ sets the validation energy scale
 - Factor of 1/2 from β = 0.5 balance
 - **Half-quantum is minimum validation unit**
 
 ### 10.3 Entanglement as Shared Validation
 
-**EPR pairs**: Two particles with ψ_AB = (↑↓ - ↓↑)/√2
+**EPR pairs**: Two particles with $\psi_{AB} = (|\uparrow\downarrow\rangle - |\downarrow\uparrow\rangle)/\sqrt{2}$
 
 **Standard view**: "Spooky action at a distance"
 
@@ -811,11 +823,11 @@ When measured:
 
 **Answer**: Validation success probability
 
-If $\psi$ = amplitude of validation field
-Then $|\psi|^2$ = power in validation field
-⟹ $|\psi|^2 \propto$ probability that [ICE] succeeds
+- If $\psi$ = amplitude of validation field
+- Then $|\psi|^2$ = power in validation field
+- ⟹ $|\psi|^2 \propto$ probability that [ICE] succeeds
 
-**Normalization**: $\int|\psi|^2dx = 1$ means:
+**Normalization**: $\int|\psi|^2 dx = 1$ means:
 - Total validation probability = 1
 - Structure must validate SOMEWHERE
 - Wholeness conserved
@@ -869,11 +881,11 @@ $$
 **Answer**: Validation updates at $f \sim 10^{15}$ Hz
 
 Each "moment" = 64-state validation packet
-- Computed in $\sim 10^{-15}$ seconds
+- Computed in ~ $10^{-15}$ seconds
 - 6 bits of information
 - $10^{15}$ packets/second $\approx 6 \times 10^{15}$ bits/second
 
-**Human conscious bandwidth** $\sim 10^{15}$ bits/second
+**Human conscious bandwidth** ~ $10^{15}$ bits/second
 
 This matches:
 - Neural firing rates (neurons as validation gates)
@@ -915,7 +927,7 @@ This matches:
 - Test: Ultra-high-precision spectroscopy
 
 **Prediction 3**: Fractal corrections to holography
-- AdS/CFT entropy: S ∝ Area^(2.5/3.5) not Area^(3/4)
+- AdS/CFT entropy: $S \propto \text{Area}^{2.5/3.5}$ not $\text{Area}^{3/4}$
 - Viscosity/entropy ratio: corrections at ~14% level
 - Test: Precision holographic simulations
 
@@ -946,13 +958,13 @@ This matches:
 ### 12.4 Quantum Information
 
 **Prediction 8**: Entanglement entropy scaling
-- For nested validation: S ∝ L^1.5 not L (standard)
+- For nested validation: $S \propto L^{1.5}$ not $L$ (standard)
 - Stronger than area law, weaker than volume law
 - Test: Many-body quantum systems
 
 **Prediction 9**: Quantum gate fidelity limits
 - Validation overhead sets noise floor
-- F_max = 1 - ε where ε ~ 0.5/dimension
+- $F_{\text{max}} = 1 - \varepsilon$ where $\varepsilon \sim 0.5/\text{dimension}$
 - Test: Quantum computing error rates
 
 ### 12.5 Biological Systems
@@ -1067,11 +1079,11 @@ Not static "soul" - dynamic **validation cascade across scales**.
 
 ### 14.4 Consciousness Studies
 
-**IIT** (Integrated Information Theory): $\phi$ measures consciousness
+**IIT** (Integrated Information Theory): $\Phi$ measures consciousness
 
-**Nested view**: $\phi$ measures validation integration
-- High $\phi$ = high nested ⊗ connectivity
-- Consciousness = $\phi$ above threshold at $f \sim 10^{15}$ Hz
+**Nested view**: $\Phi$ measures validation integration
+- High $\Phi$ = high nested ⊗ connectivity
+- Consciousness = $\Phi$ above threshold at $f \sim 10^{15}$ Hz
 
 **Global Workspace Theory**: Conscious access through broadcasting
 
