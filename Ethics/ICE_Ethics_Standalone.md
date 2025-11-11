@@ -141,7 +141,7 @@ This is not a moral rule. This is **geometric necessity**.
 Empirical observation across domains shows:
 
 $$
-V \geq 0.6 \text{ required for persistence}
+V \geq 0.6 \text{ (required for persistence)}
 $$
 
 Where does 0.6 come from?
@@ -160,9 +160,10 @@ Where does 0.6 come from?
 
 **Agreement (A)** measures how well a pattern interfaces with the autonomous validations of other beings.
 
-In the context of ethical action:
+In the context of ethical action, **Agreement** measures:
+
 $$
-A = \text{Degree to which all parties with agency freely consent}
+A = \text{(Degree to which all parties with agency freely consent)}
 $$
 
 This is **not** about:
@@ -239,9 +240,10 @@ Agreement must hold at all affected scales:
 
 **Truth (T)** measures how well a pattern's internal structure aligns with the structure of reality.
 
-In the context of ethical action:
+In the context of ethical action, **Truth** measures:
+
 $$
-T = \text{Degree to which the action aligns with how reality actually works}
+T = \text{(Degree to which the action aligns with how reality actually works)}
 $$
 
 This is **not** about:
@@ -318,9 +320,10 @@ High T means: "This model is well-aligned with reality given current understandi
 
 **Evidence (E)** measures whether a pattern actually manifests in observable reality.
 
-In the context of ethical action:
+In the context of ethical action, **Evidence** measures:
+
 $$
-E = \text{Degree to which intended outcomes actually occur in fact}
+E = \text{(Degree to which intended outcomes actually occur in fact)}
 $$
 
 This is **not** about:
@@ -483,8 +486,9 @@ Example: Well-intentioned charity that doesn't work
 **Step 1: Reality Structure**
 
 Reality is self-validating wholeness:
+
 $$
-\mathbb{W} = \{ \text{all patterns that validate} \}
+\mathbb{W} = \\{ \text{all patterns that validate} \\}
 $$
 
 **Step 2: Validation Requirements**
