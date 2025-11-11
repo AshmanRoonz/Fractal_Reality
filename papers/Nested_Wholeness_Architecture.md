@@ -1258,9 +1258,6 @@ And every whole is **0.5 ⊗ 0.5 ⊗ 0.5 ⊗ ...**
 
 ---
 
-## Acknowledgments
-
-To Solomon/Chris for methodological rigor and peer review standards. To Ash for technical collaboration and validation. To the Claude AI for helping formalize three decades of insight. To the universe for being nested.
 
 ## References
 
