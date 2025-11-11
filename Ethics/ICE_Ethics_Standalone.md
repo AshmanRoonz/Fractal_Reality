@@ -129,9 +129,9 @@ This structure emerges from the requirement that validation must:
 2. Scale properly (V ∈ [0,1] when all components ∈ [0,1])
 3. Collapse completely if any component → 0
 
-**Critical consequence**: 
+**Critical consequence**:
 $$
-\text{If any component} = 0, \text{ then } V = 0
+\text{If any component } = 0\text{, then } V = 0
 $$
 
 This is not a moral rule. This is **geometric necessity**.
