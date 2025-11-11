@@ -427,6 +427,7 @@ This is the **most important ethical consequence**. If any component is zero:
 $$
 A = 0 \text{ or } T = 0 \text{ or } E = 0 \implies V = 0
 $$
+
 **You cannot have**:
 - Great truth and evidence but no agreement → V = 0
 - Perfect agreement and evidence but false premises → V = 0
