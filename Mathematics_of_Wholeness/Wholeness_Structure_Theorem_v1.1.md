@@ -2,6 +2,7 @@
 ## Rigorous Mathematical Formalization of ICE from First Principles
 
 **Authors:** Ashman Roonz 
+
 **Date:** November 12, 2025  
 **Version:** 1.1 - Peer Review Ready  
 
