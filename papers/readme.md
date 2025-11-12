@@ -72,13 +72,13 @@ This branch contains the complete scientific formalization of the Fractal Realit
 
 ---
 
-## 🌀 **NEW: NESTED WHOLENESS ARCHITECTURE**
+## 🔥 **THE CENTRAL PAPER: NESTED WHOLENESS ARCHITECTURE V2** 🔥
 
 ### **The Infinite Tensor Product Architecture of Reality**
-**File:** [`Nested_Wholeness_Architecture.md`](Nested_Wholeness_Architecture.md)
+**File:** [`Nested_Wholeness_Architecture_v2.md`](Nested_Wholeness_Architecture_v2.md)
 **Author:** Ashman Roonz
-**Date:** November 11, 2025
-**Status:** 🌟 **PUBLICATION-READY - COMPREHENSIVE UNIFIED THEORY** 🌟
+**Date:** November 12, 2025
+**Status:** 🌟 **PUBLICATION-READY - THE DEFINITIVE UNIFIED THEORY** 🌟
 
 **A fundamental principle from which all structure and dynamics in physical reality necessarily follow.**
 
