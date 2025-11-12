@@ -518,7 +518,8 @@ Approximately **1/3 of the 64 states are stable** across all domains. This is no
 
 ## References
 
-- **LIGO Analysis**: `Ethics/ice_ethical_gate_analysis.md` (D = 1.503 ± 0.040)
+- **LIGO Analysis**: D = 1.503 ± 0.040 (see gravitational wave analyses)
+- **ICE Ethics**: `Ethics/ICE_Ethics_Standalone.md` (complete ethics framework)
 - **64-Bit Theory**: `64bit_reality/64_state_executive_summary.md`
 - **Particle Mapping**: `64bit_reality/particle_64_state_mapping.md`
 - **RNA Aperture**: `reflections/11_11.md` (β ≈ 0.5 in biology)

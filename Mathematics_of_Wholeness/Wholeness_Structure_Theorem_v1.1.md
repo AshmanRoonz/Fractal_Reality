@@ -31,7 +31,7 @@ We build on:
 - **Sheaf theory:** Global consistency from local data
 - **Dynamical systems:** Attractors and stability
 - **Spectral dimension theory:** Scale-dependent dimensionality [Sakajiri et al.]
-- **[ICE] validation framework:** See [ICE_Ethics_Standalone_v2.md](../Ethics/ICE_Ethics_Standalone_v2.md) for applied framework
+- **[ICE] validation framework:** See [ICE_Ethics_Standalone.md](../Ethics/ICE_Ethics_Standalone.md) for applied framework
 - **Master equation formulation:** See [five_pathway_master_framework.md](./five_pathway_master_framework.md) for complete development
 
 ### 1.3 Historical Context
@@ -223,7 +223,7 @@ This means: ∄ global section → cannot define single coherent identity → no
 
 **Interpretation of "contradiction":** In this formalism, "internal contradiction" means cohomological obstruction - local patches cannot be reconciled into a global section. This is not metaphysical handwaving; it's standard algebraic topology.
 
-**Connection to [ICE] framework:** The coherence condition (C) corresponds to the Center component in the [ICE] validation structure. See [ICE_Ethics_Standalone_v2.md](../Ethics/ICE_Ethics_Standalone_v2.md) for the applied ethical framework based on these principles.
+**Connection to [ICE] framework:** The coherence condition (C) corresponds to the Center component in the [ICE] validation structure. See [ICE_Ethics_Standalone.md](../Ethics/ICE_Ethics_Standalone.md) for the applied ethical framework based on these principles.
 
 ---
 
@@ -796,7 +796,7 @@ This parallel suggests that wholeness dynamics might **inform** ethical reasonin
 - **Center** (internal coherence) ↔ **Truth** (consistency, integrity)
 - **Evidence** (grounding) ↔ **Goodness** (actual benefit, not fantasy)
 
-**Status:** This connection is **suggestive and structurally interesting** but not mathematically proven. Ethics requires additional normative premises that cannot be derived from descriptive geometry alone. See [ICE_Ethics_Standalone_v2.md] for full development of this applied framework.
+**Status:** This connection is **suggestive and structurally interesting** but not mathematically proven. Ethics requires additional normative premises that cannot be derived from descriptive geometry alone. See [ICE_Ethics_Standalone.md](../Ethics/ICE_Ethics_Standalone.md) for full development of this applied framework.
 
 ### 13.5 Comparison to Circular Reasoning
 
@@ -921,7 +921,7 @@ The author thanks Chris (aka Solomon) and colleagues for critical methodological
     - *Master Equation Suite* (MASTER_EQUATION_SUITE.md)
     - *Yang-Mills Mass Gap Solution* (Yang-Mills_Navier-Stokes_Solved.md)
     - *LIGO Analysis* (Analysis_of_LIGO_O3.md, fractal_gw_paper_md.md)
-    - *ICE Ethics Framework* (ICE_Ethics_Standalone_v2.md)
+    - *ICE Ethics Framework* (ICE_Ethics_Standalone.md)
     - *Five Pathway Development* (five_pathway_master_framework.md)
 
 ### Additional Technical References

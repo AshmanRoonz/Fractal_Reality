@@ -442,17 +442,9 @@ Zero in any dimension yields zero ethical validation. All three must be present.
 
 **Key Finding**: What appears as "moral obligation" is actually geometric necessity. Actions that lack agreement, truth, or evidence cannot persist—they require ever-increasing energy to maintain and eventually collapse.
 
-**Complete framework**: [Ethics/README.md](Ethics/README.md) - Evolution of ethics from v1.0 to v3.0, supporting materials, practical applications
-
 ---
 
-### Supporting Ethics Materials
-
-- **[Ethics/64_state_ICE_ethics_v2_nested_wholeness.md](Ethics/64_state_ICE_ethics_v2_nested_wholeness.md)** - Version 2.0: Nested wholeness integration
-- **[Ethics/64_state_ICE_ethics.md](Ethics/64_state_ICE_ethics.md)** - Version 1.0: Original framework (foundational)
-- **[Ethics/ice_ethical_gate_analysis.md](Ethics/ice_ethical_gate_analysis.md)** - Technical analysis and implementation
-
-**Biological Validation:**
+### Biological Validation
 - **[papers/rods_cones_geometric_validation.md](papers/rods_cones_geometric_validation.md)** - **🧬 BIOLOGICAL VALIDATION:** Rods and Cones as proof that geometry determines function. Cone photoreceptors (tapered, D ≈ 1.5) perform active wavelength discrimination (color vision), while rod photoreceptors (cylindrical, D ≈ 2.0) perform passive light detection. Shape determines computational capability—transformation requires cone geometry, transmission uses tube geometry. Demonstrates the universal D = 1.5 signature in biological systems.
 - **[papers/rods_cones_tunnels_turbulence_D15.md](papers/rods_cones_tunnels_turbulence_D15.md)** - **🌊 CONSCIOUSNESS AS WAKE STRUCTURE:** Complete theory proposing consciousness operates through wake structures with D ≈ 1.5. Unifies gravitational waves (1.503), neural avalanches (1.51), DNA helices (1.48-1.52), turbulent flows (1.5), and cardiac rhythms through the wake principle. Distinguishes rods (cylindrical tunnels, passive) from cones (conical wakes, active). Explains why consciousness eludes materialist measurement—it's a temporal wake (fractal D = 1.5), not a spatial structure (integer D). Provides testable predictions: neural D ≈ 1.5 during consciousness, AI consciousness criterion, clinical biomarker. "You cannot photograph a wake. You can only watch it form."
 
