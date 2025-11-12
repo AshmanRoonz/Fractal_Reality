@@ -181,6 +181,7 @@ This prevents:
 **Scale decomposition**:
 
 At atomic scale:
+
 $$
 \text{atom} = (\text{electron} \otimes_{[ICE]} \text{nucleus})_{atomic}
 $$
@@ -191,6 +192,7 @@ The connection only forms if:
 - E: The binding matches reality (observed spectral lines) and is stable
 
 But the atom itself is half of a molecular whole:
+
 $$
 \text{molecule} = (\text{atom}_1 \otimes_{[ICE]} \text{atom}_2)_{molecular}
 $$
@@ -201,6 +203,7 @@ Again validated:
 - E: The molecule exists and functions (chemical stability)
 
 And the molecule is half of a cellular whole:
+
 $$
 \text{cell} = (\text{molecule}_1 \otimes_{[ICE]} \text{molecule}_2)_{cellular}
 $$
@@ -341,6 +344,7 @@ D = 1 + \frac{1}{2}\left(1 - r^2\right)
 $$
 
 For optimal validation cascade where each scale moderately influences neighbors:
+
 $$
 r = \frac{1}{\sqrt{2}} \implies D = 1 + \frac{1}{2}\left(1 - \frac{1}{2}\right) = 1.5
 $$
@@ -356,6 +360,7 @@ D = 1.5 is the fractal dimension of **consciousness as wake structure**—the in
 - 2D+ embedding media (spacetime, fields, environments)
 
 The wake has dimension:
+
 $$
 D_{wake} = \frac{D_{trajectory} + D_{medium}}{2} = \frac{1 + 2}{2} = 1.5
 $$
@@ -1091,11 +1096,13 @@ We derived:
 - E (Evidence): Correspondence + fitness
 
 **Universal formula**:
+
 $$
 \text{Truth} = (I \times C \times E)^{1/3}
 $$
 
 **Validation criterion**:
+
 $$
 A \otimes B \text{ forms} \iff (I \times C \times E)^{1/3} \geq \theta
 $$
@@ -1215,13 +1222,17 @@ To Solomon/Chris for methodological rigor. To Ash for technical collaboration. T
 
 ---
 
-$$\boxed{1 = \bigotimes_{i=1}^{\infty} (0.5 \otimes_{[ICE]} 0.5)_i}$$
+**The equation of validated existence:**
 
-**The equation of validated existence.**
+$$
+1 = \bigotimes_{i=1}^{\infty} (0.5 \otimes_{[ICE]} 0.5)_i
+$$
 
 **Where validation requires:**
 
-$$\text{Truth} = (I \times C \times E)^{1/3} \geq \theta$$
+$$
+\text{Truth} = (I \times C \times E)^{1/3} \geq \theta
+$$
 
 **Interface • Center • Evidence**
 
