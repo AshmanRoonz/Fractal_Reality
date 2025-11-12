@@ -1,10 +1,9 @@
 # The Wholeness Structure Theorem
 ## Rigorous Mathematical Formalization of ICE from First Principles
 
-**Authors:** Ashman Roonz (framework), with formal mathematical development  
+**Authors:** Ashman Roonz 
 **Date:** November 12, 2025  
 **Version:** 1.1 - Peer Review Ready  
-**Status:** Ready for arXiv submission
 
 ---
 
