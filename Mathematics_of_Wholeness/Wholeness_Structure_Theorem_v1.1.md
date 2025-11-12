@@ -869,7 +869,7 @@ This is not arbitrary - it follows from topology, dynamics, and information theo
 
 **Acknowledgments:**
 
-The author thanks Solomon Drowne and Christopher colleagues for critical methodological guidance, Ash for collaborative development, and the broader physics community for inspiration from renormalization group theory, critical phenomena, and spectral dimension studies.
+The author thanks Chris (aka Solomon) and colleagues for critical methodological guidance, and the broader physics community for inspiration from renormalization group theory, critical phenomena, and spectral dimension studies.
 
 ---
 
