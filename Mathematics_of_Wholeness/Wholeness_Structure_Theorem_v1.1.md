@@ -31,6 +31,8 @@ We build on:
 - **Sheaf theory:** Global consistency from local data
 - **Dynamical systems:** Attractors and stability
 - **Spectral dimension theory:** Scale-dependent dimensionality [Sakajiri et al.]
+- **[ICE] validation framework:** See [ICE_Ethics_Standalone_v2.md](../Ethics/ICE_Ethics_Standalone_v2.md) for applied framework
+- **Master equation formulation:** See [five_pathway_master_framework.md](./five_pathway_master_framework.md) for complete development
 
 ### 1.3 Historical Context
 
@@ -63,7 +65,7 @@ Where:
 
 ### 2.2 Connection to Master Equation
 
-This formalization connects to the Wholeness master equation:
+This formalization connects to the Wholeness master equation (see [MASTER_EQUATION_SUITE.md](../MASTER_EQUATION_SUITE.md)):
 
 $$
 \partial_t \Phi = -\mu(-\Delta)^\gamma \Phi - \sigma\Phi - g|\Phi|^2\Phi + \kappa C[\Phi]
@@ -74,6 +76,8 @@ Where:
 - **Boundary condition:** Φ defined on Ω_W with ∂Ω_W
 - **Coherence:** Φ must be globally well-defined (single-valued)
 - **Coupling:** κC[Φ] provides environmental grounding
+
+For complete treatment of the master equation across all scales, see [five_pathway_master_framework.md](./five_pathway_master_framework.md) and [revised_mathematics_of_wholeness.md](./revised_mathematics_of_wholeness.md).
 
 ---
 
@@ -218,6 +222,8 @@ This means: ∄ global section → cannot define single coherent identity → no
 **Status:** RIGOROUS under assumption A1 (coherent persistence)
 
 **Interpretation of "contradiction":** In this formalism, "internal contradiction" means cohomological obstruction - local patches cannot be reconciled into a global section. This is not metaphysical handwaving; it's standard algebraic topology.
+
+**Connection to [ICE] framework:** The coherence condition (C) corresponds to the Center component in the [ICE] validation structure. See [ICE_Ethics_Standalone_v2.md](../Ethics/ICE_Ethics_Standalone_v2.md) for the applied ethical framework based on these principles.
 
 ---
 
@@ -599,7 +605,7 @@ From [ICE] validation at β = 0.5 with four constraints:
 3. Conservation (total probability preserved)
 4. Smoothness (continuous evolution)
 
-These uniquely force Schrödinger equation. See full derivation in [Master Equation Suite, Layer 3].
+These uniquely force Schrödinger equation. See full derivation in [MASTER_EQUATION_SUITE.md, Layer 3](../MASTER_EQUATION_SUITE.md).
 
 **QED ✓**
 
@@ -623,7 +629,7 @@ $$
 
 **Significance:** 3σ match (p < 0.003)
 
-**Reference:** [Analysis_of_LIGO_O3.md, fractal_gw_paper_md.md]
+**Reference:** [Analysis_of_LIGO_O3.md](../analysis/Analysis_of_LIGO_O3.md), [fractal_gw_paper_md.md](../papers/fractal_gw_paper_md.md)
 
 ### 11.2 DNA Backbone Structure
 
@@ -641,7 +647,7 @@ $$
 
 **Biological significance:** Optimal packing and accessibility for transcription.
 
-**Reference:** [rods_cones_geometric_validation.md]
+**Reference:** [rods_cones_geometric_validation.md](../analysis/rods_cones_geometric_validation.md)
 
 ### 11.3 Yang-Mills Mass Gap
 
@@ -657,7 +663,7 @@ $$
 
 **Match:** Within 5% for 0++ state.
 
-**Reference:** [Yang-Mills_Navier-Stokes_Solved.md, yang_mills_mass_gap_calculation.png]
+**Reference:** [Yang-Mills_Navier-Stokes_Solved.md](../claymathsolutions/Yang-Mills_Navier-Stokes_Solved.md), [yang_mills_mass_gap_calculation.png](../claymathsolutions/yang_mills_mass_gap_calculation.png)
 
 ### 11.4 Neural Avalanches (Consciousness)
 

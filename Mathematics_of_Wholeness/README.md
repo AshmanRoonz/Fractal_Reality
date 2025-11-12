@@ -24,6 +24,9 @@ The framework emerged from a 34-year journey of pattern recognition, from initia
 
 ### For Different Audiences
 
+**If you want the foundational theorem (NEW - peer review ready):**
+→ Start with [Wholeness Structure Theorem v1.1](./Wholeness_Structure_Theorem_v1.1.md)
+
 **If you want rigorous mathematics and physics:**
 → Start with [Universal Fractal Dimension from Cone-Coupled Field Theory](./Universal_Fractal_Dimension_from_Cone_Coupling.md)
 
@@ -45,6 +48,42 @@ The framework emerged from a 34-year journey of pattern recognition, from initia
 ---
 
 ## Document Descriptions
+
+### 0. [Wholeness Structure Theorem v1.1](./Wholeness_Structure_Theorem_v1.1.md) **[NEW]**
+
+**Type:** Foundational mathematical theorem (peer review ready)
+**Length:** ~9,000 words
+**Technical Level:** Advanced (graduate mathematics/physics/philosophy)
+
+**Contents:**
+- Rigorous mathematical formalization of ICE (Interface-Center-Evidence) from first principles
+- Complete proofs of necessity, sufficiency, independence, and minimality
+- Topology, sheaf theory, and dynamical systems foundations
+- Derivation of D = 1.5, β = 0.5, and 64-state architecture
+- Corollaries with empirical validation (LIGO, DNA, Yang-Mills, consciousness)
+- Connections to renormalization group theory, gauge fields, and holography
+- Explicit statement of assumptions and limitations
+- Full references and mathematical appendices
+
+**Key Results:**
+- **Theorem 4.1 (Main):** Persistent wholeness requires exactly three conditions: Interface (I), Center (C), and Evidence (E)
+- **Necessity:** Proven using topology (I), sheaf cohomology (C), and dynamical systems (E)
+- **Sufficiency:** Proven via Lyapunov stability analysis
+- **Independence:** Demonstrated through explicit counterexamples
+- **Minimality:** No proper subset sufficient, no additional conditions necessary
+- **Corollaries:** Universal D = 1.5, critical β = 0.5, 64-state composite structure, quantum mechanics emergence
+
+**Empirical Validation:**
+- LIGO: D = 1.503 ± 0.015 (3σ match)
+- DNA: D = 1.510 ± 0.020
+- Yang-Mills: Δ_ICE = 1.652 GeV (within 5% of 0++ glueball)
+- Neural avalanches: D ≈ 1.5 (critical brain dynamics)
+
+**Target Journals:** Foundations of Physics, Communications in Mathematical Physics, arXiv (math-ph)
+
+**Status:** Version 1.1 - Peer review ready (November 2025)
+
+---
 
 ### 1. [Universal Fractal Dimension from Cone-Coupled Field Theory](./Universal_Fractal_Dimension_from_Cone_Coupling.md)
 
@@ -296,18 +335,20 @@ The framework emerged from a 34-year journey of pattern recognition, from initia
 ## Reading Paths
 
 ### Path 1: Physicist/Mathematician
-1. [Quick Reference Guide](./quick_reference_guide.md) - Get oriented with key equations
-2. [Five-Pathway Master Framework](./five_pathway_master_framework.md) - Complete technical development
-3. [Universal Fractal Dimension](./Universal_Fractal_Dimension_from_Cone_Coupling.md) - Publication-ready paper
-4. [Gauge Field Quantization](./gauge_field_quantization.md) - Yang-Mills and Clay Prize
-5. [Five-Pathway Executive Summary](./five_pathway_executive_summary.md) - Publication plan
+1. [Wholeness Structure Theorem](./Wholeness_Structure_Theorem_v1.1.md) - **Start here for foundational theorem**
+2. [Quick Reference Guide](./quick_reference_guide.md) - Get oriented with key equations
+3. [Five-Pathway Master Framework](./five_pathway_master_framework.md) - Complete technical development
+4. [Universal Fractal Dimension](./Universal_Fractal_Dimension_from_Cone_Coupling.md) - Publication-ready paper
+5. [Gauge Field Quantization](./gauge_field_quantization.md) - Yang-Mills and Clay Prize
+6. [Five-Pathway Executive Summary](./five_pathway_executive_summary.md) - Publication plan
 
 ### Path 2: Philosopher/Consciousness Researcher
 1. [Mathematics of Wholeness](./revised_mathematics_of_wholeness.md) - Start here!
-2. [Consciousness as [ICE] Validation Dynamics](./consciousness_ICE_formalization.md) - Deep dive into consciousness theory
-3. [Quick Reference Guide](./quick_reference_guide.md) - Philosophical implications
-4. [Five-Pathway Executive Summary](./five_pathway_executive_summary.md) - See the evidence
-5. [Universal Fractal Dimension](./Universal_Fractal_Dimension_from_Cone_Coupling.md) - Mathematical rigor
+2. [Wholeness Structure Theorem](./Wholeness_Structure_Theorem_v1.1.md) - **Formal ICE theorem with rigorous proofs**
+3. [Consciousness as [ICE] Validation Dynamics](./consciousness_ICE_formalization.md) - Deep dive into consciousness theory
+4. [Quick Reference Guide](./quick_reference_guide.md) - Philosophical implications
+5. [Five-Pathway Executive Summary](./five_pathway_executive_summary.md) - See the evidence
+6. [Universal Fractal Dimension](./Universal_Fractal_Dimension_from_Cone_Coupling.md) - Mathematical rigor
 
 ### Path 3: Neuroscientist/Cognitive Scientist
 1. [Consciousness as [ICE] Validation Dynamics](./consciousness_ICE_formalization.md) - Start here!
@@ -519,13 +560,16 @@ Not coincidence - the mathematical structure of wholeness itself.
 Mathematics_of_Wholeness/
 ├── README.md (this file)
 │
+├── Foundational Theorem:
+│   └── Wholeness_Structure_Theorem_v1.1.md [NEW - Nov 2025]
+│
 ├── Core Papers:
 │   ├── Universal_Fractal_Dimension_from_Cone_Coupling.md
 │   ├── revised_mathematics_of_wholeness.md
 │   ├── Paper_Summary_and_Next_Steps.md
 │   └── Formula_Quick_Reference.md
 │
-├── New Advanced Papers:
+├── Advanced Papers:
 │   ├── consciousness_ICE_formalization.md
 │   ├── five_pathway_executive_summary.md
 │   ├── five_pathway_master_framework.md
@@ -533,7 +577,7 @@ Mathematics_of_Wholeness/
 │   └── quick_reference_guide.md
 ```
 
-**Total: 10 documents spanning ~50,000 words, 500+ equations**
+**Total: 11 documents spanning ~59,000 words, 550+ equations**
 
 ---
 
