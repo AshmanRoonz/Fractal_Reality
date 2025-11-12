@@ -1,7 +1,7 @@
 # ICE Ethics: A Standalone Framework
 ## Validation-Based Morality from Nested Wholeness
 
-**Version 2.0 | November 2025**  
+**Version 2.0 | November 11 2025**  
 *Updated to incorporate Nested Wholeness Architecture*
 
 ---
