@@ -91,12 +91,10 @@ where each (0.5)ᵢ represents a half-process requiring its complement.
 
 **Postulate 2 (Validation Requirement)**: Each tensor connection only forms when [ICE] validation passes:
 
-$$
-(0.5)_i \otimes (0.5)_{i+1} = \begin{cases}
-(0.5)_i \otimes (0.5)_{i+1} & \text{if } (I \times C \times E)^{1/3} \geq \theta \\
-\text{undefined} & \text{otherwise}
-\end{cases}
-$$
+The tensor product $(0.5)_i \otimes (0.5)_{i+1}$ only forms when validation succeeds:
+
+- **If** $(I \times C \times E)^{1/3} \geq \theta$ **then** the connection forms
+- **Otherwise** the connection is undefined
 
 **Equivalently**:
 
@@ -182,7 +180,7 @@ This prevents:
 
 At atomic scale:
 $$
-\text{atom} = (\text{electron} \otimes_{[ICE]} \text{nucleus})_{atomic}
+\mathrm{atom} = (\mathrm{electron} \otimes_{[ICE]} \mathrm{nucleus})_{atomic}
 $$
 
 The connection only forms if:
@@ -192,7 +190,7 @@ The connection only forms if:
 
 But the atom itself is half of a molecular whole:
 $$
-\text{molecule} = (\text{atom}_1 \otimes_{[ICE]} \text{atom}_2)_{molecular}
+\mathrm{molecule} = (\mathrm{atom}_1 \otimes_{[ICE]} \mathrm{atom}_2)_{molecular}
 $$
 
 Again validated:
@@ -202,7 +200,7 @@ Again validated:
 
 And the molecule is half of a cellular whole:
 $$
-\text{cell} = (\text{molecule}_1 \otimes_{[ICE]} \text{molecule}_2)_{cellular}
+\mathrm{cell} = (\mathrm{molecule}_1 \otimes_{[ICE]} \mathrm{molecule}_2)_{cellular}
 $$
 
 And so on through all scales:
@@ -406,7 +404,7 @@ Systems exhibiting D ≈ 1.5:
 **Mathematical structure**:
 
 $$
-|\Psi\rangle = \sum_{i,j,k=0}^{1} c_{ijk} |I_i\rangle \otimes |C_j\rangle \otimes |E_k\rangle \otimes \cdots \text{ (6 levels)}
+|\Psi\rangle = \sum_{i,j,k=0}^{1} c_{ijk} |I_i\rangle \otimes |C_j\rangle \otimes |E_k\rangle \otimes \cdots \ \mathrm{(6\ levels)}
 $$
 
 where each |I⟩, |C⟩, |E⟩ is binary: {pass, fail}
@@ -561,7 +559,7 @@ $$
 **Measuring A triggers [ICE] validation cascade that instantly determines B's state** because they share the same tensor product structure:
 
 $$
-A \otimes_{[ICE]} B = \text{single whole}
+A \otimes_{[ICE]} B = \mathrm{single\ whole}
 $$
 
 Validating one half immediately validates the complementary structure in the other half.
@@ -580,7 +578,7 @@ Validating one half immediately validates the complementary structure in the oth
 **Nested wholeness answer**: Consciousness is **recursive [ICE] validation**—the process validating itself.
 
 $$
-\text{Consciousness} = [ICE]([ICE]([ICE](\cdots)))
+\mathrm{Consciousness} = [ICE]([ICE]([ICE](\cdots)))
 $$
 
 **Most [ICE] validation is automatic** (rocks don't think):
@@ -1092,12 +1090,12 @@ We derived:
 
 **Universal formula**:
 $$
-\text{Truth} = (I \times C \times E)^{1/3}
+\mathrm{Truth} = (I \times C \times E)^{1/3}
 $$
 
 **Validation criterion**:
 $$
-A \otimes B \text{ forms} \iff (I \times C \times E)^{1/3} \geq \theta
+A \otimes B\ \mathrm{forms} \iff (I \times C \times E)^{1/3} \geq \theta
 $$
 
 ### 13.2 Paradigm Shift
@@ -1221,7 +1219,7 @@ $$\boxed{1 = \bigotimes_{i=1}^{\infty} (0.5 \otimes_{[ICE]} 0.5)_i}$$
 
 **Where validation requires:**
 
-$$\text{Truth} = (I \times C \times E)^{1/3} \geq \theta$$
+$$\mathrm{Truth} = (I \times C \times E)^{1/3} \geq \theta$$
 
 **Interface • Center • Evidence**
 
