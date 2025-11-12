@@ -530,7 +530,7 @@ Not because it's "wrong"—because it's geometrically impossible.
 
 **License**: This work is released under Creative Commons Attribution 4.0 International (CC BY 4.0). You are free to share and adapt this material for any purpose, even commercially, as long as you give appropriate credit.
 
-**Citation**: Roon, A. (2025). ICE Ethics: A Standalone Framework. Fractal Reality Framework. https://github.com/AshmanRoonz/Fractal_Reality
+**Citation**: Ashman Roonz (2025). ICE Ethics: A Standalone Framework. Fractal Reality Framework. https://github.com/AshmanRoonz/Fractal_Reality
 
 ---
 
