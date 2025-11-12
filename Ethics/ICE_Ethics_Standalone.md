@@ -958,10 +958,11 @@ These are active areas for framework development.
 
 1. Wholeness Structure Theorem v1.1 (Wholeness_Structure_Theorem_v1.1.md) - Methodological foundations for descriptive/normative distinction
 2. Nested Wholeness Architecture v2 (Nested_Wholeness_Architecture_v2.md)
-3. Fractal Reality Framework Core Documentation
-4. The One-Third Rule (the_one_third_rule.md)
-5. 64-State Particle Mapping (64_state_particle_map_presentation.md)
-6. Mathematics of Wholeness Complete Derivation
+3. Breaking the Noble Lie Loop v2.1 (breaking_noble_lie_loop_v2.md) - Application of [ICE] framework to self-deception and validation suppression
+4. Fractal Reality Framework Core Documentation
+5. The One-Third Rule (the_one_third_rule.md)
+6. 64-State Particle Mapping (64_state_particle_map_presentation.md)
+7. Mathematics of Wholeness Complete Derivation
 
 ---
 
