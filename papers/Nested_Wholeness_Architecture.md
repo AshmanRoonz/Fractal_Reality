@@ -136,18 +136,21 @@ Or multiplication: 0.5 × 0.5 = 0.25 (wrong magnitude)
 **Scale decomposition**:
 
 At atomic scale:
+
 $$
-\text{atom} = (\text{electron} \otimes \text{nucleus})_{atomic}
+\text{atom} = (\text{electron} \otimes \text{nucleus})_{\text{atomic}}
 $$
 
 But the atom itself is half of a molecular whole:
+
 $$
-\text{molecule} = (\text{atom}_1 \otimes \text{atom}_2)_{molecular}
+\text{molecule} = (\text{atom}_1 \otimes \text{atom}_2)_{\text{molecular}}
 $$
 
 And the molecule is half of a cellular whole:
+
 $$
-\text{cell} = (\text{molecule}_1 \otimes \text{molecule}_2)_{cellular}
+\text{cell} = (\text{molecule}_1 \otimes \text{molecule}_2)_{\text{cellular}}
 $$
 
 **Each whole is simultaneously**:
