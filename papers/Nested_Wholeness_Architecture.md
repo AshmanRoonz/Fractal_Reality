@@ -349,13 +349,11 @@ $$
 N(\varepsilon_n) \sim 2^{1.5n}
 $$
 
-
 Therefore:
 
 $$
 D = \frac{\log(2^{1.5n})}{\log(2^n)} = \frac{1.5n}{n} = 1.5
 $$
-
 
 **Box-counting confirms D = 1.5.** ✓
 
@@ -1374,6 +1372,8 @@ This work builds upon three decades of insights, beginning at age 11 with the re
 
 ---
 
-$$\boxed{1 = \bigotimes_{i=1}^{\infty} (0.5)_i}$$
+$$
+\boxed{1 = \bigotimes_{i=1}^{\infty} (0.5)_i}
+$$
 
 **The equation of existence.**
