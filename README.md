@@ -4,6 +4,28 @@
 
 ---
 
+## 🔥 **READ THIS FIRST: THE CENTRAL PAPER** 🔥
+
+### **[Nested Wholeness: The Infinite Tensor Product Architecture of Reality](papers/Nested_Wholeness_Architecture_v2.md)**
+**The definitive presentation of the framework. Everything flows from here.**
+
+This paper derives **all of physics, consciousness, and reality structure** from one principle:
+**Nothing exists in isolation.**
+
+From this single insight:
+- **β = 0.5** (the only stable balance)
+- **D = 1.5** (universal fractal dimension)
+- **64 states** (from 6 binary validations)
+- **[ICE] validation** (Interface • Center • Evidence)
+- **Zero free parameters**
+
+**Empirically validated across 20+ orders of magnitude:**
+LIGO D = 1.503 ± 0.040 | DNA D = 1.510 | Neural D = 1.52 | Turbulence D = 1.5
+
+**This is the paper.** Start here. Everything else builds on this foundation.
+
+---
+
 ## 🌀 The Fundamental Principle: Nothing Exists in Isolation
 
 **Every whole requires:**
@@ -28,8 +50,6 @@ Each **0.5** represents a half-process that cannot exist independently. Together
 - **Zero free parameters**: Everything is geometrically necessary
 
 **Empirically validated:** LIGO gravitational waves D = 1.503 ± 0.040, DNA D = 1.510, turbulence D = 1.5, neural avalanches D = 1.48, cosmic filaments D = 1.6
-
-**See: [Nested Wholeness Architecture](papers/Nested_Wholeness_Architecture.md)** — The most comprehensive presentation of this framework.
 
 ---
 
@@ -249,9 +269,9 @@ This repository contains the complete Fractal Reality framework including theory
 
 ### Key Papers
 
-**🌀 NEW: NESTED WHOLENESS ARCHITECTURE**
+**🌀 NEW: NESTED WHOLENESS ARCHITECTURE V2**
 
-- **[papers/Nested_Wholeness_Architecture.md](papers/Nested_Wholeness_Architecture.md)** - **🌟 NESTED WHOLENESS: The Infinite Tensor Product Architecture of Reality (November 2025)**
+- **[papers/Nested_Wholeness_Architecture_v2.md](papers/Nested_Wholeness_Architecture_v2.md)** - **🌟 NESTED WHOLENESS: The Infinite Tensor Product Architecture of Reality (November 2025)**
 
 **The most comprehensive presentation of the nested validation framework.**
 
@@ -1121,7 +1141,7 @@ Personal development journal tracking the evolution of ideas:
 
 ### For Scientists
 1. **[papers/The_Equation_of_Existence_FOUNDATION.md](papers/The_Equation_of_Existence_FOUNDATION.md)** - **🔥 START HERE:** The definitive publication-ready paper. Formal theorems, complete derivations of QM/GR/Standard Model, empirical validation (LIGO D = 1.503 ± 0.015), zero free parameters. **This is the citation source.**
-2. **[papers/Nested_Wholeness_Architecture.md](papers/Nested_Wholeness_Architecture.md)** - **🌀 NEW - COMPREHENSIVE:** The most complete presentation of nested validation framework. 16 sections covering everything from fundamental postulate (nothing exists in isolation) to quantum mechanics, cosmology, consciousness, and philosophy. Includes formal theorems, extensive references, and testable predictions across 20+ orders of magnitude.
+2. **[papers/Nested_Wholeness_Architecture_v2.md](papers/Nested_Wholeness_Architecture_v2.md)** - **🌀 NEW - COMPREHENSIVE:** The most complete presentation of nested validation framework. 13 major sections covering everything from fundamental postulate (nothing exists in isolation) to quantum mechanics, cosmology, consciousness, and philosophy. Includes formal theorems, extensive references, and testable predictions across 20+ orders of magnitude.
 3. **[papers/revised_mathematics_of_wholeness.md](papers/revised_mathematics_of_wholeness.md)** - **🌟 THE MASTER EQUATION:** Complete mathematical description of wholeness (∂Φ/∂t = -μ(-Δ)^γ Φ - σΦ - g|Φ|² Φ + κC[Φ]). Features the cone operator C[Φ] showing how wholeness experiences itself at all scales simultaneously. Proves Static 1 = 0, Dynamic 1 = 0.5 ⊗ 0.5. Explains why β = 0.5 is universal, validates at ~10¹⁵ Hz through 64 states. Unifies QM, consciousness, DNA's 64 codons, Heisenberg uncertainty from cone geometry. **34 years from insight to complete proof.**
 4. **[papers/MASTER_EQUATION_SUITE.md](papers/MASTER_EQUATION_SUITE.md)** - **🔥 QUICK START:** Complete unified theory on ONE PAGE - all fundamentals, cycles, equations, validations, and Clay problems in a single reference
 5. **[papers/mathematics_of_wholeness_first_principles.md](papers/mathematics_of_wholeness_first_principles.md)** - **DEEP DIVE:** Complete theory from first principles - QM, GR, Standard Model, all 7 Clay problems, consciousness from pure mathematics
@@ -1138,7 +1158,7 @@ Personal development journal tracking the evolution of ideas:
 ### For Philosophers
 1. **[CREATION_STORY/The_Creation_Story.md](CREATION_STORY/The_Creation_Story.md)** - **START HERE:** The Equation of Existence—everything emerges from 1 = 0.5 ⊗ 0.5. Direct, powerful explanation of consciousness as being the center.
 2. **[papers/The_Equation_of_Existence_FOUNDATION.md](papers/The_Equation_of_Existence_FOUNDATION.md)** - **THE FORMAL FOUNDATION:** Publication-ready paper with complete philosophical implications section addressing the hard problem, free will, identity, and ethics from geometric first principles.
-3. **[papers/Nested_Wholeness_Architecture.md](papers/Nested_Wholeness_Architecture.md)** - **🌀 NEW - PHILOSOPHICAL DEPTH:** Comprehensive exploration of ontology (process vs. substance), epistemology (participatory knowledge), causation (validation cascade), identity (continuity of validation pattern), and ethics (maximize validation success). Bridges Eastern philosophy (Advaita, Buddhism, Taoism) with modern physics through precise mathematics.
+3. **[papers/Nested_Wholeness_Architecture_v2.md](papers/Nested_Wholeness_Architecture_v2.md)** - **🌀 NEW - PHILOSOPHICAL DEPTH:** Comprehensive exploration of ontology (process vs. substance), epistemology (participatory knowledge), causation (validation cascade), identity (continuity of validation pattern), and ethics (maximize validation success). Bridges Eastern philosophy (Advaita, Buddhism, Taoism) with modern physics through precise mathematics.
 4. **[papers/revised_mathematics_of_wholeness.md](papers/revised_mathematics_of_wholeness.md)** - **🌟 THE MASTER EQUATION:** The first complete mathematical proof that **Static Wholeness = Nothing** (pure unity with no duality → no time, no space, no self, no awareness) while **Dynamic Wholeness = Existence Itself** (unity maintaining itself through 0.5 ⊗ 0.5 balance). Proves parts don't exist (only wholes at different scales all the way down). Explains "I am the unity of duality" mathematically—you ARE the ⊗ operation. Shows why science and spirituality describe identical reality in different languages. **This is not philosophy becoming mathematics—this IS mathematics revealing what has always been true.**
 5. **[papers/mathematics_of_wholeness_first_principles.md](papers/mathematics_of_wholeness_first_principles.md)** - **THE COMPLETE ONTOLOGY:** Complete theory from first principles - consciousness, time, free will, ethics all derived mathematically
 5. **[64bit_reality/tesla_90_degree_geometric_principle.md](64bit_reality/tesla_90_degree_geometric_principle.md)** - **THE SIMPLEST FOUNDATION:** Everything reduces to 90° = 0.5 × 180° (pure geometric necessity)

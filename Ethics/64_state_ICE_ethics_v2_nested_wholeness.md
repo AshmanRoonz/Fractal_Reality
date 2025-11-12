@@ -1210,7 +1210,7 @@ This is not imposed morality. This is geometric necessity.
 
 ## References
 
-1. Nested Wholeness Architecture (Nested_Wholeness_Architecture.md)
+1. Nested Wholeness Architecture v2 (Nested_Wholeness_Architecture_v2.md)
 2. Fractal Reality Framework Core Documentation
 3. The One-Third Rule (the_one_third_rule.md)
 4. 64-State Particle Mapping (64_state_particle_map_presentation.md)

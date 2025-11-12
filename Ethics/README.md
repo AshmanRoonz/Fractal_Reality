@@ -74,7 +74,7 @@ Zero in any dimension → zero total validation
 ### Version 2.0: Nested Wholeness Integration (November 2025)
 **File**: [64_state_ICE_ethics_v2_nested_wholeness.md](64_state_ICE_ethics_v2_nested_wholeness.md)
 
-**Major Advancement**: Incorporated the fundamental principle "nothing exists in isolation" from the [Nested Wholeness Architecture](../papers/Nested_Wholeness_Architecture.md).
+**Major Advancement**: Incorporated the fundamental principle "nothing exists in isolation" from the [Nested Wholeness Architecture](../papers/Nested_Wholeness_Architecture_v2.md).
 
 **What Changed**:
 - Added explicit scale architecture (s-1, s, s+1 validation dependencies)
@@ -215,7 +215,7 @@ Approximately **one-third validated** (consistent with nested wholeness architec
 ## Integration with Broader Framework
 
 **Foundation Paper**:
-- [Nested Wholeness Architecture](../papers/Nested_Wholeness_Architecture.md) - The fundamental principle underlying v2.0 ethics
+- [Nested Wholeness Architecture v2](../papers/Nested_Wholeness_Architecture_v2.md) - The fundamental principle underlying v2.0 ethics
 
 **Related Frameworks**:
 - [The Equation of Existence (FOUNDATION)](../papers/The_Equation_of_Existence_FOUNDATION.md) - Complete formal presentation
