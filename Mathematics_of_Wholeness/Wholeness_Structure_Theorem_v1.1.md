@@ -320,7 +320,7 @@ $$
 The dynamics converge to the largest invariant set contained in:
 
 $$
-\left\{\Phi : \frac{dW}{dt} = 0\right\}
+\left\lbrace\Phi : \frac{dW}{dt} = 0\right\rbrace
 $$
 
 This occurs when Accept condition holds and β ≈ 0.5 (balanced state).
