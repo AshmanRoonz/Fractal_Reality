@@ -1689,7 +1689,7 @@ These questions remain open for philosophical investigation.
 
 Ashman Roonz  
 GitHub: https://github.com/AshmanRoonz/Fractal_Reality  
-Email: [to be added]
+Email: email@ashmanroonz.ca
 
 ---
 
