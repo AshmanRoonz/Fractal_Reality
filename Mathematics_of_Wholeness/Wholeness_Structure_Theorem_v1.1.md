@@ -65,7 +65,7 @@ Where:
 
 ### 2.2 Connection to Master Equation
 
-This formalization connects to the Wholeness master equation (see [MASTER_EQUATION_SUITE.md](../MASTER_EQUATION_SUITE.md)):
+This formalization connects to the Wholeness master equation (see [MASTER_EQUATION_SUITE.md](../papers/MASTER_EQUATION_SUITE.md)):
 
 $$
 \partial_t \Phi = -\mu(-\Delta)^\gamma \Phi - \sigma\Phi - g|\Phi|^2\Phi + \kappa C[\Phi]
@@ -605,7 +605,7 @@ From [ICE] validation at β = 0.5 with four constraints:
 3. Conservation (total probability preserved)
 4. Smoothness (continuous evolution)
 
-These uniquely force Schrödinger equation. See full derivation in [MASTER_EQUATION_SUITE.md, Layer 3](../MASTER_EQUATION_SUITE.md).
+These uniquely force Schrödinger equation. See full derivation in [MASTER_EQUATION_SUITE.md, Layer 3](../papers/MASTER_EQUATION_SUITE.md).
 
 **QED ✓**
 
