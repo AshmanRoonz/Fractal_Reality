@@ -1345,12 +1345,21 @@ Always will be
 ## REFERENCES
 
 **Related documents:**
+- [Mathematical Foundations Appendix](./mathematical_foundations_appendix.md) - **Rigorous type theory and operator definitions** ⭐
 - The Fundamental Equation (?(wholeness) ⊗ X(particulars) = ⊙)
 - Why c² Exists (dual center validation at rate c)
 - Complete c Structure (c⁴ architecture)
 - Nested Wholeness Architecture (⊙ within ⊙)
 - Layer 5: [ICE] Validation (the mechanism)
 - The Equation of Existence (1 = 0.5 ⊗ 0.5)
+
+**For rigorous mathematical foundations:**
+See the [Mathematical Foundations Appendix](./mathematical_foundations_appendix.md) for:
+- Precise type theory (what spaces do ∞, X, ⊙ live in?)
+- Operator definitions (what exactly is ⊗?)
+- Quantifiability clarifications (what can and cannot be measured?)
+- Formal mathematical statements with proofs
+- Connection to standard physics (QM, field theory, GR)
 
 **Symbol key:**
 - **∞** = Openness: infinite, unbounded, diffuse aspect
