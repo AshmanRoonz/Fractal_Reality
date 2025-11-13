@@ -7,7 +7,7 @@
 ## Author Consortium
 
 **Fractal Reality Framework:**
-- Ashman Roonz¹* (Lead Theorist)
+- Ashman Roonz¹* (Lead Theorist) lol
 
 **Bimetric Teleparallel Quantum Field Theory:**
 - [Lockwood et al. collaboration]² 
