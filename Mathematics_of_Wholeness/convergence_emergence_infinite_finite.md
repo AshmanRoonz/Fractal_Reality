@@ -1353,12 +1353,12 @@ Always will be
 - The Equation of Existence (1 = 0.5 ⊗ 0.5)
 
 **Symbol key:**
-- **?** = Infinite, unmeasurable, qualitative (wholeness)
-- **X** = Finite, measurable, quantitative (particulars)
-- **⊙** = Complete fractal whole (unified being)
-- **∇** = Convergence (? → X)
-- **ℰ** = Emergence (X → ?)
-- **⊗** = Tensor product (irreducible unity)
+- **∞** = Openness: infinite, unbounded, diffuse aspect
+- **X** = Thing: finite, bounded, localized aspect
+- **⊙** = Complete wholeness: the unified state (∞ ⊗ X)
+- **∇** = Convergence: Gathering Dance (∞ → X)
+- **ℰ** = Emergence: Opening Dance (X → ∞)
+- **⊗** = Validated tensor product: inseparable unity
 - **β** = Balance parameter ∇/(∇ + ℰ)
 - **[ICE]** = Interface-Center-Evidence validation
 
