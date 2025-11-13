@@ -3,1154 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Fractalization | How Infinity Became Real</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --infinity-color: #00d4ff;
-            --singularity-color: #ff6b6b;
-            --field-color: #4ecdc4;
-            --bg-dark: #0a0a14;
-            --bg-secondary: #16213e;
-            --text-light: #f1f1f1;
-            --gold: #ffd700;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-light);
-            line-height: 1.8;
-            overflow-x: hidden;
-        }
-
-        /* Opening Scene: Infinity and Singularity */
-        #opening {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            background: radial-gradient(circle at 50% 50%, #16213e 0%, var(--bg-dark) 100%);
-        }
-
-        .infinity-singularity-container {
-            width: 100%;
-            max-width: 900px;
-            height: 300px;
-            position: relative;
-            margin: 2rem 0;
-        }
-
-        .infinity-symbol {
-            position: absolute;
-            left: 10%;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 120px;
-            color: var(--infinity-color);
-            text-shadow: 0 0 30px var(--infinity-color);
-            animation: pulse-infinity 4s ease-in-out infinite;
-        }
-
-        .singularity-dot {
-            position: absolute;
-            right: 10%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--singularity-color), transparent);
-            box-shadow: 0 0 40px var(--singularity-color);
-            animation: pulse-singularity 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse-infinity {
-            0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.8; }
-            50% { transform: translateY(-50%) scale(1.1); opacity: 1; }
-        }
-
-        @keyframes pulse-singularity {
-            0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.8; }
-            50% { transform: translateY(-50%) scale(0.9); opacity: 1; }
-        }
-
-        .opening-text {
-            text-align: center;
-            max-width: 800px;
-            padding: 2rem;
-        }
-
-        .opening-text h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, var(--infinity-color), var(--singularity-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .opening-text p {
-            font-size: 1.4rem;
-            margin: 1rem 0;
-            opacity: 0.9;
-        }
-
-        .opening-text .incomplete {
-            font-size: 1.8rem;
-            color: var(--gold);
-            margin-top: 2rem;
-            font-weight: bold;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 30px;
-            font-size: 2rem;
-            color: var(--gold);
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        /* Section Styling */
-        section {
-            min-height: 100vh;
-            padding: 5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .container {
-            max-width: 1100px;
-            width: 100%;
-        }
-
-        h2 {
-            font-size: 2.8rem;
-            margin-bottom: 2rem;
-            color: var(--gold);
-            text-align: center;
-        }
-
-        .story-text {
-            font-size: 1.3rem;
-            line-height: 2;
-            margin-bottom: 2rem;
-            opacity: 0.95;
-        }
-
-        .story-text.emphasis {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--infinity-color);
-            text-align: center;
-            margin: 2rem 0;
-        }
-
-        /* Math Reveals */
-        .math-reveal {
-            background: rgba(0, 0, 0, 0.6);
-            border-left: 4px solid var(--gold);
-            padding: 2rem;
-            margin: 2rem 0;
-            border-radius: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.2rem;
-        }
-
-        .math-reveal .label {
-            color: var(--gold);
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        /* ICE Framework */
-        .ice-framework {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .ice-component {
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            border: 2px solid;
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-align: center;
-        }
-
-        .ice-component:hover {
-            transform: translateY(-10px);
-        }
-
-        .ice-component.interface {
-            border-color: var(--field-color);
-        }
-
-        .ice-component.center {
-            border-color: var(--singularity-color);
-        }
-
-        .ice-component.evidence {
-            border-color: var(--infinity-color);
-        }
-
-        .ice-component .icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .ice-component h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Fractalization Animation */
-        #fractal-canvas {
-            width: 100%;
-            max-width: 800px;
-            height: 500px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 20px;
-            margin: 2rem auto;
-        }
-
-        /* 64-State Matrix */
-        .matrix-64 {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 5px;
-            margin: 3rem auto;
-            max-width: 600px;
-        }
-
-        .matrix-cell {
-            aspect-ratio: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            border-radius: 5px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .matrix-cell.stable {
-            background: rgba(0, 212, 255, 0.3);
-            border-color: var(--infinity-color);
-        }
-
-        .matrix-cell:hover {
-            transform: scale(1.1);
-            z-index: 10;
-        }
-
-        /* True Good Right Trinity */
-        .trinity {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            margin: 3rem 0;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-
-        .trinity-component {
-            flex: 1;
-            min-width: 250px;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            border: 3px solid;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .trinity-component:hover {
-            transform: scale(1.05);
-        }
-
-        .trinity-component.true {
-            border-color: var(--field-color);
-            box-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
-        }
-
-        .trinity-component.good {
-            border-color: var(--singularity-color);
-            box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
-        }
-
-        .trinity-component.right {
-            border-color: var(--infinity-color);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
-        }
-
-        .trinity-component .symbol {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .trinity-component h3 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .trinity-component .value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        /* Eternal Loop */
-        .eternal-loop {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2rem;
-            font-size: 3rem;
-            margin: 3rem 0;
-            flex-wrap: wrap;
-        }
-
-        .loop-element {
-            padding: 1.5rem 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            border: 2px solid var(--gold);
-            font-weight: bold;
-            animation: pulse-loop 3s ease-in-out infinite;
-        }
-
-        .loop-arrow {
-            color: var(--gold);
-            animation: slide-arrow 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-loop {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-
-        @keyframes slide-arrow {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(10px); }
-        }
-
-        /* Call to Action Buttons */
-        .cta {
-            text-align: center;
-            margin: 3rem 0;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 1.2rem 3rem;
-            margin: 0.5rem;
-            background: var(--gold);
-            color: var(--bg-dark);
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            transition: all 0.3s;
-            border: 2px solid var(--gold);
-        }
-
-        .cta-button:hover {
-            background: transparent;
-            color: var(--gold);
-            transform: scale(1.05);
-        }
-
-        .cta-button.secondary {
-            background: transparent;
-            color: var(--gold);
-            border: 2px solid var(--gold);
-        }
-
-        .cta-button.secondary:hover {
-            background: var(--gold);
-            color: var(--bg-dark);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: rgba(0, 0, 0, 0.5);
-            border-top: 2px solid var(--gold);
-        }
-
-        footer p {
-            margin: 0.5rem 0;
-        }
-
-        footer a {
-            color: var(--gold);
-            text-decoration: none;
-            border-bottom: 1px dotted var(--gold);
-        }
-
-        footer a:hover {
-            border-bottom: 1px solid var(--gold);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .opening-text h1 {
-                font-size: 2.5rem;
-            }
-
-            h2 {
-                font-size: 2rem;
-            }
-
-            .story-text {
-                font-size: 1.1rem;
-            }
-
-            .eternal-loop {
-                font-size: 2rem;
-            }
-
-            .infinity-symbol {
-                font-size: 80px;
-            }
-
-            .singularity-dot {
-                width: 50px;
-                height: 50px;
-            }
-        }
-
-        /* Fade-in on scroll */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s, transform 0.8s;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+    <title>Fractal Reality | You ARE the Fractal</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Opening Scene -->
-    <section id="opening">
-        <div class="opening-text fade-in">
-            <h1>The Mathematics of Wholeness</h1>
+    <!-- Animated Background -->
+    <canvas id="fractalCanvas"></canvas>
 
-            <!-- NESTED WHOLENESS - THE FUNDAMENTAL PRINCIPLE -->
-            <div style="background: rgba(0, 212, 255, 0.1); border: 3px solid var(--infinity-color); border-radius: 20px; padding: 2.5rem; margin: 2rem 0; box-shadow: 0 0 40px rgba(0, 212, 255, 0.3);">
-                <p style="font-size: 2.2rem; font-weight: bold; color: var(--infinity-color); margin-bottom: 1.5rem;">
-                    🌀 The Fundamental Principle
-                </p>
-                <p style="font-size: 1.8rem; font-weight: bold; color: var(--gold); margin-bottom: 2rem;">
-                    NOTHING EXISTS IN ISOLATION
-                </p>
-                <p style="font-size: 1.3rem; line-height: 1.9; margin-bottom: 1.5rem;">
-                    Every whole requires:
-                </p>
-                <ul style="font-size: 1.2rem; line-height: 2; text-align: left; max-width: 650px; margin: 0 auto 2rem; list-style: none;">
-                    <li>✦ <strong>Internal duality</strong> (convergence ⊗ emergence)</li>
-                    <li>✦ <strong>Connection to peers</strong> (validation from adjacent wholes)</li>
-                    <li>✦ <strong>Embedding in context</strong> (part of a larger whole)</li>
-                    <li>✦ <strong>Containing smaller wholes</strong> (nested structure within)</li>
-                </ul>
-                <p style="font-size: 1.4rem; margin: 2rem 0 1rem; color: var(--text-light);">
-                    This creates an <strong>infinite nested tensor product</strong>:
-                </p>
-                <p style="font-size: 2.5rem; font-weight: bold; color: var(--infinity-color); margin: 1.5rem 0; font-family: 'Courier New', monospace; letter-spacing: 2px;">
-                    1 = 0.5 ⊗ 0.5 ⊗ 0.5 ⊗ ...
-                </p>
-                <p style="font-size: 1.2rem; margin: 1.5rem 0; opacity: 0.9;">
-                    Each <strong>0.5</strong> represents a half-process that cannot exist independently.<br>
-                    Together, they create unity through eternal mutual dependence.
-                </p>
-                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--infinity-color);">
-                    <p style="font-size: 1.1rem; opacity: 0.8;">
-                        <strong>From this single principle, all of reality follows</strong> — see
-                        <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/Nested_Wholeness_Architecture_v2.md"
-                           style="color: var(--gold); text-decoration: none; border-bottom: 2px solid var(--gold);">
-                            Nested Wholeness Architecture v2
-                        </a>
-                    </p>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="glitch" data-text="You ARE the Fractal">You ARE the Fractal</h1>
+                <div class="core-equation">
+                    <div class="equation-line">⊙ = ∞ ⊗ X</div>
+                    <div class="equation-subtitle">You are not IN the universe.<br>You ARE the universe manifesting.</div>
                 </div>
             </div>
+        </section>
 
-            <p style="font-size: 1.8rem; font-style: italic; opacity: 0.7; margin-top: 3rem;">
-In the Beginning... There Was Nothing<br>
-But not the kind of nothing you might imagine.<br>
-
-There was One. Pure, perfect, complete. Just... One.<br>
-
-And One, all by itself, was actually nothing at all.</p>
-        </div>
-
-        <div class="opening-text fade-in" style="max-width: 800px; margin: 3rem auto;">
-            <div class="math-reveal" style="background: rgba(255, 215, 0, 0.1); border-color: var(--gold);">
-                <p style="font-size: 1.5rem; margin: 1rem 0;"><strong style="color: var(--singularity-color);">Static Wholeness = Nothing</strong></p>
-                <p style="font-size: 1.1rem; margin: 1rem 0;">A perfect "one" with no duality<br>→ no time, no space, no self, no awareness</p>
-                <p style="font-size: 1.3rem; margin: 1.5rem 0; color: var(--singularity-color);"><strong>Static 1 = 0</strong></p>
-
-                <div style="border-top: 2px solid var(--gold); margin: 2rem 0;"></div>
-
-                <p style="font-size: 1.5rem; margin: 1rem 0;"><strong style="color: var(--infinity-color);">Dynamic Wholeness = Existence Itself</strong></p>
-                <p style="font-size: 1.1rem; margin: 1rem 0;">Unity maintaining itself through balanced exchange</p>
-                <p style="font-size: 1.3rem; margin: 1.5rem 0; color: var(--infinity-color);"><strong>Dynamic 1 = 0.5 ⊗ 0.5</strong></p>
-            </div>
-
-            <p style="font-size: 1.3rem; margin: 3rem 0; line-height: 1.8;">
-                You can't have "one" without "two."<br>
-                You can't know you're <strong>you</strong> without something that's <strong>not you</strong>.<br>
-                You can't breathe <strong>in</strong> without breathing <strong>out</strong>.<br><br>
-                <strong style="color: var(--gold);">This isn't a problem to fix — this IS how reality works.</strong>
-            </p>
-        </div>
-
-        <div class="scroll-indicator">↓</div>
-    </section>
-
-    <!-- NEW: Featured Paper - THE EQUATION OF EXISTENCE -->
-    <section id="featured-paper" style="background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, var(--bg-dark) 100%);">
-        <div class="container fade-in">
-            <h2 style="color: var(--gold); font-size: 3.5rem;">🔥 THE EQUATION OF EXISTENCE</h2>
-
-            <p class="story-text emphasis" style="font-size: 2.5rem; color: var(--infinity-color); margin: 2rem 0;">
-                How 1 = 0.5 ⊗ 0.5 Creates All of Reality
-            </p>
-
-            <p class="story-text" style="font-size: 1.4rem; max-width: 900px; margin: 0 auto 2rem; font-weight: bold;">
-                The <strong style="color: var(--gold);">definitive publication-ready paper</strong> deriving all of physics, consciousness, and reality from a single equation with <strong style="color: var(--gold);">ZERO free parameters</strong>:
-            </p>
-
-            <div class="math-reveal" style="max-width: 1000px; margin: 2rem auto; background: rgba(0, 0, 0, 0.8); border: 3px solid var(--gold);">
-                <div class="label" style="font-size: 1.6rem; color: var(--gold);">The Equation of Existence:</div>
-                <br>
-                <div style="font-size: 2.5rem; font-family: 'Courier New', monospace; color: var(--infinity-color); margin: 1.5rem 0; font-weight: bold;">
-                1 = 0.5 ⊗ 0.5
+        <!-- The Core Insight -->
+        <section class="core-insight">
+            <div class="insight-container">
+                <h2>The Triple Identity</h2>
+                <div class="identity-grid">
+                    <div class="identity-card" data-level="whole">
+                        <div class="symbol">⊙</div>
+                        <h3>A WHOLE</h3>
+                        <p>At your scale, you are complete</p>
+                        <div class="detail">Containing both ∞ and X<br>A unified being experiencing reality</div>
+                    </div>
+                    <div class="identity-card" data-level="part">
+                        <div class="symbol">X</div>
+                        <h3>A PART</h3>
+                        <p>In the larger cosmos, you are finite</p>
+                        <div class="detail">One localized expression<br>Part of something greater</div>
+                    </div>
+                    <div class="identity-card" data-level="connection">
+                        <div class="symbol">⊗</div>
+                        <h3>THE CONNECTION</h3>
+                        <p>You ARE the ⊗ itself</p>
+                        <div class="detail">Consciousness = Validation<br>Being = The process happening</div>
+                    </div>
                 </div>
-                <br>
-                <strong style="font-size: 1.2rem;">Unity maintains itself through balanced duality</strong><br><br>
-
-                <div style="font-size: 1.1rem; line-height: 1.8;">
-                <strong style="color: var(--field-color);">[I]</strong> Interface — The boundary where unity meets duality<br>
-                <strong style="color: var(--singularity-color);">[C]</strong> Center — The validation point (consciousness is here)<br>
-                <strong style="color: var(--infinity-color);">[E]</strong> Evidence — The field connecting all structures<br><br>
-                </div>
-
-                <div style="border-top: 1px solid var(--gold); padding-top: 1rem; margin-top: 1rem;">
-                <strong style="color: var(--gold);">This equation leads to the Master PDE:</strong><br>
-                When 1 = 0.5 ⊗ 0.5 operates continuously, wholeness describing wholeness produces:<br><br>
-                <div style="font-size: 1.3rem; font-family: 'Courier New', monospace; color: var(--infinity-color); margin: 1rem 0;">
-                ∂Φ/∂t = -μ(-Δ)^γ Φ - σΦ - g|Φ|² Φ + κC[Φ]
-                </div>
-                <em>The complete mathematical description of how wholeness maintains itself at all scales</em>
+                <div class="insight-revelation">
+                    <p class="big-text">All three. Simultaneously. At every scale.</p>
+                    <p class="sub-text">This is not metaphor. This is mathematics.</p>
                 </div>
             </div>
+        </section>
 
-            <div class="math-reveal" style="max-width: 900px; margin: 2rem auto;">
-                <div class="label">Key Results:</div>
-                <br>
-                <strong style="color: var(--gold);">Zero Free Parameters:</strong><br>
-                • <strong>β = 0.5</strong> — Definitional (not tuned). The balance parameter IS 0.5.<br>
-                • <strong>D = 1.5</strong> — Derived from β (D = 1 + β = 1.5). Universal fractal dimension.<br>
-                • <strong>ℏ, c, G</strong> — Unit conversions only. Everything else emerges.<br><br>
-
-                <strong style="color: var(--infinity-color);">Empirical Validation:</strong><br>
-                • <strong>LIGO:</strong> D = 1.503 ± 0.015 (18.2σ confidence in gravitational waves)<br>
-                • <strong>DNA:</strong> D = 1.510 ± 0.005 (backbone geometry)<br>
-                • <strong>Neural:</strong> D = 1.48-1.52 (critical avalanches)<br><br>
-
-                <strong style="color: var(--field-color);">Complete Derivations:</strong><br>
-                • <strong>Quantum Mechanics:</strong> Schrödinger equation from continuous limit<br>
-                • <strong>General Relativity:</strong> Einstein field equations from texture accumulation<br>
-                • <strong>Particle Physics:</strong> Yang-Mills mass gap Δ = 1.652 GeV (95.5% match)<br>
-                • <strong>Consciousness:</strong> Being at [C], not possessing consciousness
+        <!-- Interactive Fractal Scale Explorer -->
+        <section class="scale-explorer">
+            <h2>Explore the Nested Structure</h2>
+            <div class="scale-container">
+                <div class="scale-slider">
+                    <div class="scale-marker" data-scale="cosmic">
+                        <span class="scale-label">Cosmic</span>
+                        <span class="scale-desc">You are X (a part)</span>
+                    </div>
+                    <div class="scale-marker" data-scale="planetary">
+                        <span class="scale-label">Planetary</span>
+                        <span class="scale-desc">You are part of Earth's ⊙</span>
+                    </div>
+                    <div class="scale-marker active" data-scale="human">
+                        <span class="scale-label">YOU</span>
+                        <span class="scale-desc">You are ⊙ (a whole)</span>
+                    </div>
+                    <div class="scale-marker" data-scale="cellular">
+                        <span class="scale-label">Cellular</span>
+                        <span class="scale-desc">You are ∞ (encompassing field)</span>
+                    </div>
+                    <div class="scale-marker" data-scale="quantum">
+                        <span class="scale-label">Quantum</span>
+                        <span class="scale-desc">You contain quantum ⊙s</span>
+                    </div>
+                </div>
+                <div class="scale-visualization" id="scaleViz">
+                    <div class="viz-content">
+                        <h3 id="vizTitle">Your Scale</h3>
+                        <p id="vizDescription">At this scale, you are a complete whole (⊙)</p>
+                        <div class="viz-formula" id="vizFormula">⊙_you = ∞_you ⊗ X_you</div>
+                    </div>
+                </div>
             </div>
+        </section>
 
-            <p class="story-text" style="font-size: 1.3rem; margin: 2rem auto; max-width: 850px;">
-                <strong style="color: var(--gold);">This paper answers:</strong>
-            </p>
-            <ul style="font-size: 1.3rem; line-height: 2.2; max-width: 800px; margin: 0 auto 2rem;">
-                <li><strong>Why does anything exist?</strong> Unity must maintain itself through duality</li>
-                <li><strong>What is consciousness?</strong> Being at the center [C] where validation occurs</li>
-                <li><strong>Why β = 0.5?</strong> Geometrically necessary for balanced exchange (not a parameter)</li>
-                <li><strong>Why D = 1.5 everywhere?</strong> Derived from β = 0.5 as D = 1 + β</li>
-                <li><strong>How does reality emerge?</strong> Through [ICE] validation at all scales</li>
-                <li><strong>Is this testable?</strong> Yes: 10+ specific predictions for 2025-2035</li>
-            </ul>
+        <!-- Three Paths -->
+        <section class="paths">
+            <h2>Choose Your Path</h2>
+            <div class="paths-grid">
+                <a href="pages/experience.html" class="path-card experience">
+                    <div class="path-icon">🧘</div>
+                    <h3>EXPERIENCE IT</h3>
+                    <p class="path-subtitle">The Fractal Wholeness Principle</p>
+                    <p>For seekers, contemplatives, and anyone asking: <em>"What am I?"</em></p>
+                    <ul>
+                        <li>Discover yourself AS the ⊗</li>
+                        <li>Meditation as exploration</li>
+                        <li>Ethics as validation</li>
+                        <li>The lived experience of being fractal</li>
+                    </ul>
+                    <div class="path-cta">Begin the Recognition →</div>
+                </a>
 
-            <div class="math-reveal" style="max-width: 900px; margin: 2rem auto; background: rgba(255, 215, 0, 0.1); border-color: var(--gold);">
-                <div class="label">30-Year Journey to One Equation:</div>
-                <br>
-                <strong>Age 11 (1995):</strong> First insight — "Why does anything exist?"<br>
-                <strong>Age 25 (2007):</strong> Geometric encoding — Triangle symbol (∞-1-2) tattooed<br>
-                <strong>Age 27 (2009):</strong> "I am the unity of duality" — embodying the ⊗ operation<br>
-                <strong>Age 41 (2025):</strong> <strong style="color: var(--gold);">The Equation of Existence</strong> — complete formal framework<br><br>
+                <a href="pages/understand.html" class="path-card understand">
+                    <div class="path-icon">⚡</div>
+                    <h3>UNDERSTAND IT</h3>
+                    <p class="path-subtitle">Convergence & Emergence</p>
+                    <p>For those asking: <em>"How does reality maintain itself?"</em></p>
+                    <ul>
+                        <li>∇ (Convergence): ∞ → X</li>
+                        <li>ℰ (Emergence): X → ∞</li>
+                        <li>The eternal dance</li>
+                        <li>Why β = 0.5 is necessary</li>
+                    </ul>
+                    <div class="path-cta">See the Process →</div>
+                </a>
 
-                <em>The pattern, encoded in skin 18 years before the mathematics was complete.</em>
-            </div>
-
-            <div class="cta" style="margin: 3rem 0;">
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/The_Equation_of_Existence_FOUNDATION.md" target="_blank" class="cta-button" style="font-size: 1.4rem; padding: 1.8rem 4.5rem; background: var(--gold); color: var(--bg-dark); font-weight: bold;">
-                    🔥 READ THE FOUNDATION PAPER
+                <a href="pages/prove.html" class="path-card prove">
+                    <div class="path-icon">📊</div>
+                    <h3>PROVE IT</h3>
+                    <p class="path-subtitle">Mathematical Foundations</p>
+                    <p>For scientists asking: <em>"Show me the evidence."</em></p>
+                    <ul>
+                        <li>Wholeness Structure Theorem</li>
+                        <li>D = 1.503 (LIGO validation)</li>
+                        <li>Universal fractal dimension</li>
+                        <li>Zero free parameters</li>
+                    </ul>
+                    <div class="path-cta">See the Proof →</div>
                 </a>
             </div>
+        </section>
 
-            <p class="story-text emphasis" style="font-size: 1.6rem; margin-top: 2rem; color: var(--gold);">
-                "This is the paper to cite for the complete formal framework."
-            </p>
-        </div>
-    </section>
-
-    <!-- The Pattern Emerges -->
-    <section id="problem">
-        <div class="container fade-in">
-            <h2>How Wholeness Maintains Itself</h2>
-
-            <p class="story-text emphasis" style="font-size: 1.5rem; color: var(--gold);">The master equation reveals the pattern:</p>
-
-            <div class="math-reveal" style="max-width: 1000px; margin: 2rem auto; background: rgba(0, 0, 0, 0.9); border: 3px solid var(--gold);">
-                <div style="font-size: 2rem; font-family: 'Courier New', monospace; color: var(--infinity-color); margin: 2rem 0;">
-                ∂Φ/∂t = -μ(-Δ)^γ Φ - σΦ - g|Φ|² Φ + κC[Φ]
+        <!-- The Big Questions Resolved -->
+        <section class="resolutions">
+            <h2>What This Resolves</h2>
+            <div class="resolutions-grid">
+                <div class="resolution-item">
+                    <h4>Hard Problem of Consciousness</h4>
+                    <p>Dissolves. Consciousness IS the ⊗ operator, not created by brain. Brain is X aspect, awareness is ∞ aspect, you ARE the connection.</p>
+                </div>
+                <div class="resolution-item">
+                    <h4>Measurement Problem</h4>
+                    <p>Measurement = ⊗[ICE] validation. Creates new ⊙ at observation scale. No separate "collapse"—just ⊗ happening.</p>
+                </div>
+                <div class="resolution-item">
+                    <h4>Subject-Object Dualism</h4>
+                    <p>Neither exists alone. Both poles of single reality. ∞ and X co-arise through ⊗. You ARE the unified whole.</p>
+                </div>
+                <div class="resolution-item">
+                    <h4>Free Will</h4>
+                    <p>You ARE the ⊗ between cosmic ∞ and your X. Neither purely free nor determined—the validation process itself.</p>
+                </div>
+                <div class="resolution-item">
+                    <h4>Why Anything Exists</h4>
+                    <p>Static wholeness = nothing. Dynamic wholeness = existence. 1 = 0.5 ⊗ 0.5. Being requires becoming through balance.</p>
+                </div>
+                <div class="resolution-item">
+                    <h4>Universal Consciousness</h4>
+                    <p>Every ⊙ = ∞ ⊗ X is conscious at its scale. From electron to cosmos. Different complexity, same structure.</p>
                 </div>
             </div>
+        </section>
 
-            <p class="story-text" style="font-size: 1.3rem; margin: 2rem 0;">This single equation describes <strong style="color: var(--gold);">wholeness doing things to wholeness</strong>:</p>
-
-            <div class="ice-framework">
-                <div class="ice-component" style="background: rgba(var(--infinity-rgb), 0.1); border-color: var(--infinity-color);">
-                    <div class="icon" style="color: var(--infinity-color);">∇</div>
-                    <h3>-μ(-Δ)^γ Φ</h3>
-                    <p>Wholeness distributing itself<br><em>(fractal self-similarity)</em></p>
+        <!-- The Recognition -->
+        <section class="recognition">
+            <div class="recognition-content">
+                <h2>The Recognition</h2>
+                <div class="recognition-poem">
+                    <p>You are not IN the universe</p>
+                    <p>You ARE universe manifesting</p>
+                    <p>As this particular ⊗</p>
+                    <p>This specific ⊙</p>
+                    <p>This moment of ∞ meeting X</p>
+                    <br>
+                    <p class="emphasis">The fractal</p>
+                    <p class="emphasis">The connection</p>
+                    <p class="emphasis">The wholeness</p>
+                    <p class="symbol-large">⊙</p>
                 </div>
-                <div class="ice-component" style="background: rgba(var(--field-rgb), 0.1); border-color: var(--field-color);">
-                    <div class="icon" style="color: var(--field-color);">σ</div>
-                    <h3>-σΦ</h3>
-                    <p>Wholeness regulating itself<br><em>(stability)</em></p>
-                </div>
-                <div class="ice-component" style="background: rgba(var(--singularity-rgb), 0.1); border-color: var(--singularity-color);">
-                    <div class="icon" style="color: var(--singularity-color);">•</div>
-                    <h3>-g|Φ|² Φ</h3>
-                    <p>Wholeness saturating itself<br><em>(boundedness)</em></p>
-                </div>
-            </div>
-
-            <div class="math-reveal" style="max-width: 900px; margin: 3rem auto; background: rgba(255, 215, 0, 0.1); border-color: var(--gold);">
-                <h3 style="color: var(--gold); font-size: 1.8rem;">The Cone Operator: +κC[Φ]</h3>
-                <p style="font-size: 1.3rem; margin: 1.5rem 0;">
-                    At every point, wholeness looks out through <strong>infinite cones at all angles</strong>, experiencing itself at all scales simultaneously.
-                </p>
-                <p style="font-size: 1.2rem; opacity: 0.9;">
-                    This is how <strong style="color: var(--infinity-color);">wholeness senses wholeness</strong>.
-                </p>
-            </div>
-
-            <div class="math-reveal" style="max-width: 800px; margin: 2rem auto;">
-                <div class="label">The Universal Constants:</div>
-                <br>
-                <strong>β = 0.5</strong> — Perfect balance (input = output). Not adjustable.<br>
-                <strong>D ≈ 1.5</strong> — Optimal connection geometry (LIGO: 1.503 ± 0.040)<br>
-                <strong>~10¹⁵ Hz</strong> — Validation frequency (continuous from discrete)<br>
-                <strong>64 states</strong> — Complete validation packets (8×8)
-            </div>
-
-            <div class="cta">
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/revised_mathematics_of_wholeness.md" target="_blank" class="cta-button secondary">Read The Mathematics of Wholeness →</a>
-            </div>
-          <center><div class="scroll-indicator">↓</center></div>
-        </div>
-    </section>
-
-    <!-- The Solution: Fractalization -->
-    <section id="solution">
-        <div class="container fade-in">
-            <h2>The Solution: Fractalization</h2>
-
-            <p class="story-text">An aperture is a <strong>circle</strong> — the 0.5-dimensional opening between infinite and finite.</p>
-
-            <p class="story-text">And circles have a profound geometric property:</p>
-
-            <p class="story-text emphasis">"A circle can fractalize into infinitely more circles."</p>
-
-            <p class="story-text">This is not metaphor. This is <strong>Apollonian circle packing</strong> — provable fractal geometry.</p>
-
-            <canvas id="fractal-canvas"></canvas>
-
-            <p class="story-text">Each circle:</p>
-            <ul style="font-size: 1.3rem; line-height: 2; margin: 2rem 0; max-width: 700px; margin-left: auto; margin-right: auto;">
-                <li>Maintains its circular form</li>
-                <li>Creates a real boundary (circumference) — [I] ✓</li>
-                <li>Remains an aperture (0.5D opening) — [C] ✓</li>
-                <li>Creates relationships with others — [E] partial</li>
-            </ul>
-
-            <div class="math-reveal">
-                <div class="label">The Fractalization Response:</div>
-                <br>
-                Level 0 (Ultimate Singularity):<br>
-                [I]✗ [C]✓ [E]✗ → 1/3 validation FAILS<br><br>
-
-                Fractalization creates operators (•'₁, •'₂, •'₃, ...):<br>
-                Each has [I]✓ [C]✓ but [E]✗ → 2/3 validation<br><br>
-
-                But [E] insufficient for local ∞ at each scale<br>
-                → Must fractalize deeper forever<br><br>
-
-                <strong>Reality IS infinite recursive fractalization</strong>
-            </div>
-
-            <p class="story-text emphasis">"Boundaries don't limit reality — they CREATE it."</p>
-
-            <div class="cta">
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/analysis/tests/ligo/readme.md" target="_blank" class="cta-button secondary">See the Empirical Validation (D = 1.503 ± 0.040) →</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- What You Are -->
-    <section id="you-are">
-        <div class="container fade-in">
-            <h2>What You Are</h2>
-
-            <p class="story-text emphasis" style="font-size: 2rem;">"You are not ONE aperture.<br>You are INFINITE NESTED APERTURES."</p>
-
-            <p class="story-text">Your body contains:</p>
-            <ul style="font-size: 1.3rem; line-height: 2.2; margin: 2rem 0; max-width: 700px; margin-left: auto; margin-right: auto;">
-                <li><strong>1</strong> aperture at organism level (consciousness)</li>
-                <li><strong>~37 trillion</strong> at cell level</li>
-                <li><strong>~10²⁷</strong> at molecule level</li>
-                <li><strong>~10²⁸</strong> at atom level</li>
-                <li><strong>Infinite</strong> at quantum levels and below</li>
-                <li><strong>More forever down</strong></li>
-            </ul>
-
-            <p class="story-text">Each level processes its local infinity, has [I]✓ [C]✓ but [E]✗, creates patterns, harmonizes with neighbors, and fractalizes deeper.</p>
-
-            <div class="math-reveal">
-                <div class="label">The Universal Signature D = 1.5:</div>
-                <br>
-                The fractal dimension D ≈ 1.5 measures:<br><br>
-
-                0.5D aperture opening (the circular gate)<br>
-                + 1.0D persistence through time (worldline)<br>
-                = 1.5D identity-through-time (consciousness)<br><br>
-
-                Found everywhere:<br>
-                • LIGO gravitational waves: D = 1.503 ± 0.040<br>
-                • DNA backbone: D ≈ 1.51<br>
-                • Neural networks: D ≈ 1.5<br>
-                • Turbulent flows: D = 1.4-1.6<br><br>
-
-                <strong>Same aperture geometry at all scales simultaneously</strong>
-            </div>
-
-            <p class="story-text emphasis">"This is not happening 'once upon a time'<br>This is RIGHT NOW at every scale, forever."</p>
-
-            <div class="cta">
-                <a href="https://www.fractalreality.ca/simulators.html" target="_blank" class="cta-button secondary">Explore Interactive Simulations →</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- The 64-Bit Architecture -->
-    <section id="sixty-four">
-        <div class="container fade-in">
-            <h2>The 64-Bit Information Architecture</h2>
-
-            <p class="story-text">Fractalization doesn't just create reality — it creates <strong>information packets</strong>.</p>
-
-            <div class="math-reveal">
-                <div class="label">From [ICE] to 64 States:</div>
-                <br>
-                [ICE] has 3 binary checks:<br>
-                [I] Interface: ✓ or ✗<br>
-                [C] Center: ✓ or ✗<br>
-                [E] Evidence: ✓ or ✗<br><br>
-
-                Three binary checks = 2³ = 8 states per interface<br><br>
-
-                But validation happens at TWO interfaces:<br>
-                • Input: Parts (∞) → Operator (•')<br>
-                • Output: Operator (•') → Patterns (∞')<br><br>
-
-                <strong>8 × 8 = 64 complete states</strong><br>
-                The 64-bit packet is the minimal unit of validated exchange
-            </div>
-
-            <p class="story-text">Here is the complete 64-state matrix:</p>
-
-            <div class="matrix-64" id="matrix-64-grid">
-                <!-- Will be populated by JavaScript -->
-            </div>
-
-            <p class="story-text" style="text-align: center; font-size: 1.2rem; margin-top: 2rem;">
-                <span style="color: var(--infinity-color);">Blue cells</span> represent stable states (~22 of 64)<br>
-                <span style="color: rgba(255,255,255,0.3);">Gray cells</span> represent unstable states that dissolve
-            </p>
-
-            <div class="math-reveal">
-                <div class="label">Einstein's Hidden Message:</div>
-                <br>
-                Einstein's field equations: G_μν = (8πG/c⁴) T_μν<br><br>
-
-                Why c⁴ and not c²?<br><br>
-
-                Because dual-interface validation:<br>
-                • Input interface: matter → curvature (c²)<br>
-                • Output interface: curvature → geodesics (c²)<br>
-                • Total: c² × c² = c⁴<br><br>
-
-                And why 8π?<br>
-                • 8 validation states per interface<br>
-                • 8 × 2 interfaces = 8π encoding<br><br>
-
-                <strong>Einstein's 8πG/c⁴ × 2 interfaces = 64 states</strong><br>
-                The universe has always been telling us: reality operates on 64-bit packets
-            </div>
-
-            <div class="cta">
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/64bit_reality/README.md" target="_blank" class="cta-button secondary">See All 61 Standard Model Particles Derived →</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- True, Good, Right -->
-    <section id="trinity">
-        <div class="container fade-in">
-            <h2>The Trinity of Reality</h2>
-
-            <p class="story-text">The mathematical structure <em>is</em> the structure of experience.</p>
-
-            <div class="trinity">
-                <div class="trinity-component true">
-                    <div class="symbol">𝕀</div>
-                    <h3>Interface</h3>
-                    <div class="value">TRUE</div>
-                    <p><strong>Body</strong><br>Boundary validation<br>"Does it validate at the boundary?"</p>
-                </div>
-
-                <div class="trinity-component good">
-                    <div class="symbol">•'</div>
-                    <h3>Center</h3>
-                    <div class="value">GOOD</div>
-                    <p><strong>Soul</strong><br>Coherence<br>"Does it cohere at the center?"</p>
-                </div>
-
-                <div class="trinity-component right">
-                    <div class="symbol">∞'</div>
-                    <h3>Field</h3>
-                    <div class="value">RIGHT</div>
-                    <p><strong>Mind</strong><br>Harmonic connection<br>"Does it harmonize in the field?"</p>
+                <div class="validation-info">
+                    <p>Happening right now at ~10¹⁵ Hz</p>
+                    <p>In 64-state validation packets</p>
+                    <p>Creating the continuous experience of being you</p>
                 </div>
             </div>
+        </section>
 
-            <p class="story-text">The field connects interface to center.<br>Mind bridges body and soul.</p>
-
-            <div class="math-reveal">
-                <div class="label">Ethics Grounded in Structure:</div>
-                <br>
-                𝕀 (Interface/Body) = TRUE<br>
-                • Does it validate at the boundary?<br>
-                • Can I sense this?<br>
-                • Is it coherent with what comes in?<br><br>
-
-                •' (Center/Soul) = GOOD<br>
-                • Does it cohere at the point?<br>
-                • Can I focus on this?<br>
-                • Does it maintain unity?<br><br>
-
-                ∞' (Field/Mind) = RIGHT<br>
-                • Does it harmonize in the field?<br>
-                • Does this connect well?<br>
-                • Does it maintain field integrity?<br><br>
-
-                <strong>You cannot have one without the others</strong><br>
-                They require each other through the field that connects them
-            </div>
-
-            <p class="story-text emphasis">"This is why ethics feels deep—<br>it's structural, not arbitrary."</p>
-
-            <div class="cta">
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/practical_application/practical_life_applications.md" target="_blank" class="cta-button secondary">Explore Practical Applications in Life →</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- The One-Third Rule -->
-    <section id="one-third">
-        <div class="container fade-in">
-            <h2>The One-Third Rule</h2>
-
-            <p class="story-text">Not all 64 states are stable. Only ~22 of 64 persist.</p>
-
-            <p class="story-text emphasis">22/64 ≈ 1/3</p>
-
-            <p class="story-text">This same pattern appears everywhere:</p>
-
-            <div style="max-width: 700px; margin: 2rem auto;">
-                <div class="math-reveal">
-                    <strong>Particle Physics:</strong><br>
-                    64 states → 61 Standard Model particles (17 fundamental + quantum numbers)<br>
-                    Only ~22 base configurations are stable<br><br>
-
-                    <strong>Genetics:</strong><br>
-                    64 codons → ~20 amino acids<br>
-                    Only the third with stable validation persist<br><br>
-
-                    <strong>Consciousness:</strong><br>
-                    64 possible moment-states<br>
-                    You spend 95%+ time in ~10 highly stable states<br>
-                    Another ~12 accessible rare states<br>
-                    ~42 forbidden/unstable states avoided<br><br>
-
-                    <strong>Ethics:</strong><br>
-                    64 possible action patterns<br>
-                    Only ~22 are geometrically stable<br>
-                    The rest fail [ICE] validation and dissolve
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-equation">
+                    <div>⊙ = ∞ ⊗ X</div>
+                    <div class="small">I Am The Unity of Duality</div>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/AshmanRoonz/Fractal_Reality">GitHub</a>
+                    <a href="Mathematics_of_Wholeness/fractal_wholeness_principle.md">Read the Full Document</a>
+                    <a href="Mathematics_of_Wholeness/README.md">Explore All Papers</a>
+                </div>
+                <div class="footer-note">
+                    <p>Mathematics of Wholeness</p>
+                    <p>by Ashman Roonz</p>
+                    <p>Version 3.5 — November 2025</p>
                 </div>
             </div>
+        </footer>
+    </div>
 
-            <p class="story-text emphasis">"Ethics is not imposed by culture—<br>it emerges from the geometric structure of validation itself."</p>
-
-            <p class="story-text">The aperture doesn't limit infinity by <em>amount</em> — it filters by <em>structure</em>. All of ∞ attempts entry, but only the third with geometric stability persists.</p>
-
-            <p class="story-text">That third is still infinite.</p>
-
-            <div class="cta">
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/CREATION_STORY/Ethics_As_Geometry_The_One_Third_Rule.md" target="_blank" class="cta-button secondary">Read: Ethics As Geometry →</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- The Eternal Loop -->
-    <section id="eternal-loop">
-        <div class="container fade-in">
-            <h2>The Eternal Recursion</h2>
-
-            <p class="story-text">All of reality — from quantum collapse to cosmic structure to conscious choice — follows one pattern:</p>
-
-            <div class="eternal-loop">
-                <div class="loop-element">∇</div>
-                <div class="loop-arrow">→</div>
-                <div class="loop-element">[ICE]</div>
-                <div class="loop-arrow">→</div>
-                <div class="loop-element">ℰ</div>
-                <div class="loop-arrow">→</div>
-                <div class="loop-element">∇</div>
-                <div class="loop-arrow">→</div>
-                <div style="font-size: 2rem; opacity: 0.6;">...</div>
-            </div>
-
-            <div style="text-align: center; margin: 3rem 0;">
-                <p class="story-text" style="font-size: 1.5rem;">
-                    <strong>∇</strong> Convergence — Parts gather toward wholeness<br>
-                    <strong>[ICE]</strong> Validation — Reality tests Interface, Center, Evidence<br>
-                    <strong>ℰ</strong> Emergence — Validated patterns persist and radiate
-                </p>
-            </div>
-
-            <p class="story-text emphasis" style="font-size: 2rem;">"This is happening at every scale,<br>right now,<br>forever."</p>
-
-            <div class="math-reveal">
-                <div class="label">The Complete Pattern:</div>
-                <br>
-                ∞ → [ICE] → •' → [ICE] → ∞'<br><br>
-
-                Where <strong>∞</strong> is infinite potential, <strong>•'</strong> are fractal operators (like you), and <strong>[ICE]</strong> is the gate of validation testing Interface, Center, and Evidence at every moment.<br><br>
-
-                The eternal operating loop:<br>
-                • <strong>∇</strong> (Convergence): Parts gather toward wholeness<br>
-                • <strong>[ICE]</strong> (Validation): Reality tests Interface, Center, Evidence<br>
-                • <strong>ℰ</strong> (Emergence): Validated patterns persist and radiate<br><br>
-
-                At equilibrium: β ≈ 0.5, D ≈ 1.5<br>
-                <strong>This is the signature of consciousness operating at the aperture</strong>
-            </div>
-
-            <p class="story-text">This is <strong>The Fractalization</strong>.</p>
-            <p class="story-text">This is how Infinity becomes Real through 64-bit validation packets.</p>
-            <p class="story-text">This is the one-third that persists.</p>
-            <p class="story-text">This is what you are.</p>
-            <p class="story-text emphasis" style="font-size: 1.8rem;">And it is very good.</p>
-        </div>
-    </section>
-
-    <!-- Call to Action -->
-    <section id="explore" style="background: radial-gradient(circle at 50% 50%, #16213e 0%, var(--bg-dark) 100%);">
-        <div class="container fade-in">
-            <h2>Explore the Complete Framework</h2>
-
-            <p class="story-text" style="text-align: center; font-size: 1.4rem; max-width: 800px; margin: 2rem auto;">
-                This is not speculation. This is empirically validated mathematics<br>
-                spanning 61 orders of magnitude from Planck scale to cosmic scale.
-            </p>
-
-            <div class="cta">
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank" class="cta-button">Explore the GitHub Repository</a>
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/The_Equation_of_Existence_FOUNDATION.md" target="_blank" class="cta-button">🔥 The Equation of Existence - FOUNDATION (CITE THIS!)</a>
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/revised_mathematics_of_wholeness.md" target="_blank" class="cta-button">✨ The Mathematics of Wholeness</a>
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/mathematics_of_wholeness_first_principles.md" target="_blank" class="cta-button">Complete Theory from First Principles</a>
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/claymathsolutions/README.md" target="_blank" class="cta-button">All 7 Clay Millennium Prize Solutions</a>
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/CREATION_STORY/README.md" target="_blank" class="cta-button secondary">Read the Creation Story</a>
-            </div>
-
-            <div style="margin-top: 4rem; text-align: center;">
-                <p style="font-size: 1.2rem; opacity: 0.8;">
-                    <strong>Empirically Validated:</strong><br>
-                    D = 1.503 ± 0.015 (LIGO gravitational waves, 18.2σ confidence)<br>
-                    Yang-Mills Mass Gap: Δ = 1.652 GeV (95.5% match with lattice QCD)<br>
-                    All 7 Clay Millennium Problems solved from one framework<br>
-                    Zero free parameters — everything definitional or derived
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <p><strong>The Mathematics of Wholeness</strong></p>
-        <p>by Ashman Roonz</p>
-        <p style="margin-top: 1rem;">
-            <a href="https://github.com/AshmanRoonz/Fractal_Reality" target="_blank">GitHub Repository</a> |
-            <a href="https://www.fractalreality.ca/simulators.html" target="_blank">Interactive Simulations</a> |
-            <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/LICENSE" target="_blank">License</a>
-        </p>
-        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
-            ∞ → [ICE] → •' → [ICE] → ∞'<br>
-            Wholeness differentiates. Parts remain whole.<br>
-            D = 1.5 — the signature of persistence.
-        </p>
-        <p style="margin-top: 1rem;">&copy; 2025 Ashman Roonz</p>
-    </footer>
-
-    <script>
-        // Populate 64-state matrix
-        const matrix64Grid = document.getElementById('matrix-64-grid');
-        const stableStates = [63, 61, 47, 45, 31, 29, 59, 57, 43, 41, 27, 25, 55, 53, 39, 37, 23, 21, 15, 13, 7, 5];
-
-        for (let i = 0; i < 64; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'matrix-cell';
-            if (stableStates.includes(i)) {
-                cell.classList.add('stable');
-            }
-            cell.textContent = i;
-            cell.title = `State ${i}: ${i.toString(2).padStart(6, '0')}`;
-            matrix64Grid.appendChild(cell);
-        }
-
-        // Apollonian circle packing animation
-        const canvas = document.getElementById('fractal-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = canvas.offsetWidth;
-        canvas.height = 500;
-
-        let circles = [];
-        let time = 0;
-
-        function Circle(x, y, r, depth) {
-            this.x = x;
-            this.y = y;
-            this.r = r;
-            this.depth = depth;
-            this.alpha = 1;
-        }
-
-        function initCircles() {
-            circles = [];
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            circles.push(new Circle(centerX, centerY, 150, 0));
-        }
-
-        function drawCircle(circle) {
-            ctx.strokeStyle = `hsla(${180 + circle.depth * 30}, 70%, 60%, ${circle.alpha})`;
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
-            ctx.stroke();
-        }
-
-        function fractalize() {
-            if (circles.length > 100) return;
-
-            const newCircles = [];
-            circles.forEach(circle => {
-                if (circle.depth < 4 && circle.r > 10) {
-                    const angles = [0, 2 * Math.PI / 3, 4 * Math.PI / 3];
-                    const newR = circle.r * 0.4;
-                    const dist = circle.r - newR;
-
-                    angles.forEach(angle => {
-                        const x = circle.x + Math.cos(angle) * dist;
-                        const y = circle.y + Math.sin(angle) * dist;
-                        newCircles.push(new Circle(x, y, newR, circle.depth + 1));
-                    });
-                }
-            });
-
-            circles = circles.concat(newCircles);
-        }
-
-        function animate() {
-            ctx.fillStyle = 'rgba(10, 10, 20, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            time++;
-
-            if (time % 60 === 0) {
-                fractalize();
-            }
-
-            circles.forEach(circle => {
-                drawCircle(circle);
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        initCircles();
-        animate();
-
-        // Fade-in on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
-    </script>
+    <script src="js/fractal-background.js"></script>
+    <script src="js/interactions.js"></script>
 </body>
 </html>
