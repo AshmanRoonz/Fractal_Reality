@@ -698,7 +698,7 @@ $$
 The β = 0.5 fixed point is a **marginal RG fixed point**:
 
 $$
-\beta_{*} = \frac{1}{2}, \quad \gamma_{*} = \frac{1}{2}, \quad \alpha_{*} = 0
+\beta_{\star} = \frac{1}{2}, \quad \gamma_{\star} = \frac{1}{2}, \quad \alpha_{\star} = 0
 $$
 
 This connects to:
@@ -1029,11 +1029,11 @@ $$
 **Stability analysis:**
 
 $$
-\frac{\partial}{\partial\beta}\left[\frac{d\beta}{d\ell}\right]\bigg|_{\beta=\beta_{*}} =
+\frac{\partial}{\partial\beta}\left[\frac{d\beta}{d\ell}\right]\bigg|_{\beta=\beta_{\star}} =
 \begin{cases}
--1 & \beta_{*} = 0 \text{ (stable)} \\
-0 & \beta_{*} = 1/2 \text{ (marginal)} \\
--1 & \beta_{*} = 1 \text{ (stable)}
+-1 & \beta_{\star} = 0 \text{ (stable)} \\
+0 & \beta_{\star} = 1/2 \text{ (marginal)} \\
+-1 & \beta_{\star} = 1 \text{ (stable)}
 \end{cases}
 $$
 
