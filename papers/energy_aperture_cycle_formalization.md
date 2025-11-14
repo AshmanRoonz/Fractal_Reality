@@ -1,6 +1,6 @@
 # The Energy-Aperture-Power Cycle: Mathematical Formalization and Experimental Tests
 
-**Ashman Kent**  
+**Ashman Roonz**  
 November 14, 2025
 
 ## Abstract
