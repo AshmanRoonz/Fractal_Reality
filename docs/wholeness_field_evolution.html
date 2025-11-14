@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wholeness Field Evolution - Fractal Reality Framework</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #64b5f6, #ba68c8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .equation {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            color: #64b5f6;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(100, 181, 246, 0.1);
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .visualization-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(100, 200, 255, 0.3);
+        }
+
+        #mainCanvas {
+            width: 100%;
+            border-radius: 8px;
+            background: #000;
+            box-shadow: 0 0 30px rgba(100, 181, 246, 0.3);
+            cursor: crosshair;
+        }
+
+        .controls-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(186, 104, 200, 0.3);
+            height: fit-content;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        .control-group h3 {
+            color: #ba68c8;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            border-bottom: 1px solid rgba(186, 104, 200, 0.3);
+            padding-bottom: 5px;
+        }
+
+        .slider-container {
+            margin: 12px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .slider-name {
+            color: #64b5f6;
+        }
+
+        .slider-value {
+            color: #ba68c8;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, rgba(100, 181, 246, 0.3), rgba(186, 104, 200, 0.3));
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #64b5f6, #ba68c8);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(100, 181, 246, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #64b5f6, #ba68c8);
+            cursor: pointer;
+            border: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #64b5f6, #ba68c8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(100, 181, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(100, 181, 246, 0.2);
+            color: #64b5f6;
+            border: 1px solid #64b5f6;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(100, 181, 246, 0.3);
+        }
+
+        .info-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(100, 200, 255, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            background: rgba(100, 181, 246, 0.1);
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid rgba(100, 181, 246, 0.3);
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #64b5f6;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            color: #ba68c8;
+            font-weight: bold;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+
+        .legend-item {
+            text-align: center;
+        }
+
+        .legend-color {
+            width: 40px;
+            height: 20px;
+            border-radius: 3px;
+            margin: 0 auto 5px;
+        }
+
+        .legend-label {
+            font-size: 0.85em;
+            color: #e0e0e0;
+        }
+
+        .info-text {
+            color: #aaa;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            border-left: 3px solid #64b5f6;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls-panel {
+                order: 2;
+            }
+        }
+
+        .glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚛️ Wholeness Field Evolution ⚛️</h1>
+            <div class="equation">
+                ∂<sub>t</sub>Φ = -μ(-Δ)<sup>γ</sup>Φ - σΦ - g|Φ|²Φ + κC[Φ]
+            </div>
+            <p style="margin-top: 10px; color: #aaa;">
+                Real-time simulation of the Fractal Reality master equation
+            </p>
+        </header>
+
+        <div class="main-content">
+            <div class="visualization-panel">
+                <h2 style="color: #64b5f6; margin-bottom: 15px;">🌀 Field Dynamics</h2>
+                <canvas id="mainCanvas" width="800" height="600"></canvas>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #000080;"></div>
+                        <div class="legend-label">Weak Field</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #0080ff;"></div>
+                        <div class="legend-label">Moderate</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #00ff80;"></div>
+                        <div class="legend-label">Strong</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ffff00;"></div>
+                        <div class="legend-label">Very Strong</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ff0000;"></div>
+                        <div class="legend-label">Maximum</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-panel">
+                <h2 style="color: #ba68c8; margin-bottom: 20px;">⚙️ Controls</h2>
+                
+                <div class="control-group">
+                    <h3>Field Parameters</h3>
+                    
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span class="slider-name">μ (Diffusion)</span>
+                            <span class="slider-value" id="muValue">0.10</span>
+                        </div>
+                        <input type="range" id="muSlider" min="0" max="0.3" step="0.01" value="0.10">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span class="slider-name">γ (Fractal Order)</span>
+                            <span class="slider-value" id="gammaValue">0.75</span>
+                        </div>
+                        <input type="range" id="gammaSlider" min="0.5" max="1.0" step="0.01" value="0.75">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span class="slider-name">σ (Dissipation)</span>
+                            <span class="slider-value" id="sigmaValue">0.05</span>
+                        </div>
+                        <input type="range" id="sigmaSlider" min="0" max="0.2" step="0.01" value="0.05">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span class="slider-name">g (Nonlinearity)</span>
+                            <span class="slider-value" id="gValue">0.15</span>
+                        </div>
+                        <input type="range" id="gSlider" min="0" max="0.5" step="0.01" value="0.15">
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span class="slider-name">κ (Cone Coupling)</span>
+                            <span class="slider-value" id="kappaValue">0.20</span>
+                        </div>
+                        <input type="range" id="kappaSlider" min="0" max="0.5" step="0.01" value="0.20">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>Spacetime Curvature</h3>
+                    
+                    <div class="slider-container">
+                        <div class="slider-label">
+                            <span class="slider-name">g<sub>tt</sub> (Metric)</span>
+                            <span class="slider-value" id="gttValue">1.00</span>
+                        </div>
+                        <input type="range" id="gttSlider" min="0.5" max="2.0" step="0.01" value="1.00">
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="backreactionCheck" checked>
+                        <label for="backreactionCheck">Enable Metric Backreaction</label>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>Visualization</h3>
+                    
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="coneCheck" checked>
+                        <label for="coneCheck">Show Cone Operators</label>
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="textureCheck" checked>
+                        <label for="textureCheck">Highlight Texture Formation</label>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <button class="btn-primary" onclick="simulation.reset()">🔄 Reset Field</button>
+                    <button class="btn-secondary" onclick="simulation.addPerturbation()">⚡ Add Perturbation</button>
+                    <button class="btn-secondary" onclick="simulation.togglePause()">
+                        <span id="pauseText">⏸️ Pause</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h2 style="color: #64b5f6; margin-bottom: 15px;">📊 Field Statistics</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-label">Total Energy</div>
+                    <div class="stat-value" id="energyStat">0.00</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Texture Density</div>
+                    <div class="stat-value" id="textureStat">0.00</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Balance (β)</div>
+                    <div class="stat-value" id="betaStat">0.50</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Dimension (D)</div>
+                    <div class="stat-value" id="dimensionStat">1.50</div>
+                </div>
+            </div>
+
+            <div class="info-text">
+                <strong style="color: #64b5f6;">What you're seeing:</strong><br>
+                This simulation shows the wholeness field Φ evolving according to the master equation. 
+                The field represents validated reality patterns emerging from infinite possibility.
+                <br><br>
+                <strong style="color: #ba68c8;">Cone Operators C[Φ]:</strong> The yellow rings show integration 
+                across all angles, creating the fractal dimension D ≈ 1.5.
+                <br><br>
+                <strong style="color: #64b5f6;">Metric Coupling:</strong> The √|g<sub>tt</sub>| factor modifies 
+                validation rates in curved spacetime. Watch how texture creates backreaction on the metric.
+                <br><br>
+                <strong style="color: #ba68c8;">Click</strong> on the field to add local excitations and watch 
+                them evolve, spread, and interact!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class WholenessFieldSimulation {
+            constructor() {
+                this.canvas = document.getElementById('mainCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                
+                // Grid dimensions
+                this.nx = 200;
+                this.ny = 150;
+                this.dx = this.canvas.width / this.nx;
+                this.dy = this.canvas.height / this.ny;
+                
+                // Field arrays
+                this.phi = new Array(this.nx * this.ny).fill(0);
+                this.phi_new = new Array(this.nx * this.ny).fill(0);
+                this.texture = new Array(this.nx * this.ny).fill(0);
+                this.metric = new Array(this.nx * this.ny).fill(1.0);
+                
+                // Parameters
+                this.params = {
+                    mu: 0.10,
+                    gamma: 0.75,
+                    sigma: 0.05,
+                    g: 0.15,
+                    kappa: 0.20,
+                    g_tt: 1.00,
+                    dt: 0.1,
+                    backreaction: true
+                };
+                
+                // Visualization settings
+                this.showCones = true;
+                this.showTexture = true;
+                this.paused = false;
+                this.time = 0;
+                
+                // Statistics
+                this.stats = {
+                    energy: 0,
+                    texture: 0,
+                    beta: 0.5,
+                    dimension: 1.5
+                };
+                
+                // Initialize
+                this.initializeField();
+                this.setupEventListeners();
+                this.animate();
+            }
+            
+            initializeField() {
+                // Initialize with random small perturbations
+                for (let i = 0; i < this.nx * this.ny; i++) {
+                    this.phi[i] = (Math.random() - 0.5) * 0.1;
+                }
+                
+                // Add some structured features
+                const cx = this.nx / 2;
+                const cy = this.ny / 2;
+                for (let i = 0; i < this.nx; i++) {
+                    for (let j = 0; j < this.ny; j++) {
+                        const idx = i + j * this.nx;
+                        const dx = i - cx;
+                        const dy = j - cy;
+                        const r = Math.sqrt(dx * dx + dy * dy);
+                        
+                        // Add Gaussian bump
+                        this.phi[idx] += 0.5 * Math.exp(-r * r / 400);
+                        
+                        // Initialize metric as flat
+                        this.metric[idx] = this.params.g_tt;
+                    }
+                }
+            }
+            
+            getIndex(i, j) {
+                // Periodic boundary conditions
+                i = (i + this.nx) % this.nx;
+                j = (j + this.ny) % this.ny;
+                return i + j * this.nx;
+            }
+            
+            laplacian(field, i, j) {
+                const idx = this.getIndex(i, j);
+                const idx_xp = this.getIndex(i + 1, j);
+                const idx_xm = this.getIndex(i - 1, j);
+                const idx_yp = this.getIndex(i, j + 1);
+                const idx_ym = this.getIndex(i, j - 1);
+                
+                return (field[idx_xp] + field[idx_xm] + field[idx_yp] + field[idx_ym] - 4 * field[idx]);
+            }
+            
+            coneOperator(field, i, j) {
+                // Integrate field over angular directions (simplified)
+                let sum = 0;
+                const nAngles = 8;
+                const radius = 3;
+                
+                for (let k = 0; k < nAngles; k++) {
+                    const angle = (2 * Math.PI * k) / nAngles;
+                    const di = Math.round(radius * Math.cos(angle));
+                    const dj = Math.round(radius * Math.sin(angle));
+                    const idx = this.getIndex(i + di, j + dj);
+                    sum += field[idx];
+                }
+                
+                return sum / nAngles - field[this.getIndex(i, j)];
+            }
+            
+            updateField() {
+                if (this.paused) return;
+                
+                const { mu, gamma, sigma, g, kappa, dt } = this.params;
+                
+                // Update metric from texture if backreaction enabled
+                if (this.params.backreaction) {
+                    for (let i = 0; i < this.nx; i++) {
+                        for (let j = 0; j < this.ny; j++) {
+                            const idx = this.getIndex(i, j);
+                            const phiSq = this.phi[idx] * this.phi[idx];
+                            // Metric responds to local field energy
+                            this.metric[idx] = this.params.g_tt * (1 + 0.1 * phiSq);
+                        }
+                    }
+                }
+                
+                // Euler step for field evolution
+                for (let i = 0; i < this.nx; i++) {
+                    for (let j = 0; j < this.ny; j++) {
+                        const idx = this.getIndex(i, j);
+                        const phi = this.phi[idx];
+                        
+                        // Laplacian (diffusion-like term)
+                        const lap = this.laplacian(this.phi, i, j);
+                        
+                        // Fractional laplacian approximation
+                        const fracLap = Math.pow(Math.abs(lap) + 1e-6, gamma) * Math.sign(lap);
+                        
+                        // Nonlinear term
+                        const nonlinear = -g * phi * phi * phi;
+                        
+                        // Dissipation
+                        const dissipation = -sigma * phi;
+                        
+                        // Cone operator (validation integration)
+                        const cone = kappa * this.coneOperator(this.phi, i, j);
+                        
+                        // Metric coupling (validation rate modification)
+                        const metricFactor = Math.sqrt(Math.abs(this.metric[idx]));
+                        
+                        // Master equation
+                        const dphi_dt = metricFactor * (-mu * fracLap + nonlinear + dissipation + cone);
+                        
+                        // Update
+                        this.phi_new[idx] = phi + dt * dphi_dt;
+                        
+                        // Calculate texture (gradient magnitude)
+                        const grad_x = (this.phi[this.getIndex(i + 1, j)] - this.phi[this.getIndex(i - 1, j)]) / 2;
+                        const grad_y = (this.phi[this.getIndex(i, j + 1)] - this.phi[this.getIndex(i, j - 1)]) / 2;
+                        this.texture[idx] = Math.sqrt(grad_x * grad_x + grad_y * grad_y);
+                    }
+                }
+                
+                // Swap arrays
+                [this.phi, this.phi_new] = [this.phi_new, this.phi];
+                
+                this.time += dt;
+                this.updateStatistics();
+            }
+            
+            updateStatistics() {
+                let totalEnergy = 0;
+                let totalTexture = 0;
+                let convergence = 0;
+                let emergence = 0;
+                
+                for (let i = 0; i < this.nx * this.ny; i++) {
+                    const phi = this.phi[i];
+                    totalEnergy += phi * phi;
+                    totalTexture += this.texture[i];
+                    
+                    if (phi > 0) convergence += phi;
+                    else emergence += -phi;
+                }
+                
+                totalEnergy /= (this.nx * this.ny);
+                totalTexture /= (this.nx * this.ny);
+                
+                const total = convergence + emergence;
+                this.stats.beta = total > 0 ? convergence / total : 0.5;
+                this.stats.dimension = 1 + (1 - Math.abs(2 * this.stats.beta - 1)) * 0.5;
+                this.stats.energy = totalEnergy;
+                this.stats.texture = totalTexture;
+                
+                // Update display
+                document.getElementById('energyStat').textContent = totalEnergy.toFixed(3);
+                document.getElementById('textureStat').textContent = totalTexture.toFixed(3);
+                document.getElementById('betaStat').textContent = this.stats.beta.toFixed(3);
+                document.getElementById('dimensionStat').textContent = this.stats.dimension.toFixed(3);
+            }
+            
+            draw() {
+                const imageData = this.ctx.createImageData(this.canvas.width, this.canvas.height);
+                const data = imageData.data;
+                
+                // Find min/max for scaling
+                let minPhi = Math.min(...this.phi);
+                let maxPhi = Math.max(...this.phi);
+                const range = Math.max(Math.abs(minPhi), Math.abs(maxPhi), 0.1);
+                
+                // Draw field
+                for (let i = 0; i < this.nx; i++) {
+                    for (let j = 0; j < this.ny; j++) {
+                        const idx = this.getIndex(i, j);
+                        const phi = this.phi[idx];
+                        const normalized = (phi + range) / (2 * range);
+                        
+                        // Color mapping
+                        let r, g, b;
+                        if (this.showTexture && this.texture[idx] > 0.05) {
+                            // Highlight high-texture regions
+                            const texIntensity = Math.min(this.texture[idx] * 5, 1);
+                            r = 255 * texIntensity;
+                            g = 255 * (1 - texIntensity);
+                            b = 0;
+                        } else {
+                            // Standard field visualization
+                            const hue = normalized * 270; // Blue to red
+                            const rgb = this.hslToRgb(hue / 360, 0.8, 0.5);
+                            r = rgb[0];
+                            g = rgb[1];
+                            b = rgb[2];
+                        }
+                        
+                        // Draw to multiple pixels for scaling
+                        for (let di = 0; di < this.dx; di++) {
+                            for (let dj = 0; dj < this.dy; dj++) {
+                                const px = Math.floor(i * this.dx + di);
+                                const py = Math.floor(j * this.dy + dj);
+                                const pidx = (px + py * this.canvas.width) * 4;
+                                
+                                if (pidx >= 0 && pidx < data.length - 3) {
+                                    data[pidx] = r;
+                                    data[pidx + 1] = g;
+                                    data[pidx + 2] = b;
+                                    data[pidx + 3] = 255;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                this.ctx.putImageData(imageData, 0, 0);
+                
+                // Draw cone operator visualization
+                if (this.showCones) {
+                    this.drawCones();
+                }
+            }
+            
+            drawCones() {
+                this.ctx.strokeStyle = 'rgba(255, 255, 0, 0.3)';
+                this.ctx.lineWidth = 1;
+                
+                // Draw sample cone operators
+                const spacing = 40;
+                for (let i = spacing; i < this.nx - spacing; i += spacing) {
+                    for (let j = spacing; j < this.ny - spacing; j += spacing) {
+                        const x = i * this.dx;
+                        const y = j * this.dy;
+                        const radius = 20;
+                        
+                        // Draw circle representing angular integration
+                        this.ctx.beginPath();
+                        this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
+                        this.ctx.stroke();
+                        
+                        // Draw radial lines
+                        const nLines = 8;
+                        for (let k = 0; k < nLines; k++) {
+                            const angle = (2 * Math.PI * k) / nLines;
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(x, y);
+                            this.ctx.lineTo(
+                                x + radius * Math.cos(angle),
+                                y + radius * Math.sin(angle)
+                            );
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+            }
+            
+            hslToRgb(h, s, l) {
+                let r, g, b;
+                
+                if (s === 0) {
+                    r = g = b = l;
+                } else {
+                    const hue2rgb = (p, q, t) => {
+                        if (t < 0) t += 1;
+                        if (t > 1) t -= 1;
+                        if (t < 1/6) return p + (q - p) * 6 * t;
+                        if (t < 1/2) return q;
+                        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                        return p;
+                    };
+                    
+                    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                    const p = 2 * l - q;
+                    r = hue2rgb(p, q, h + 1/3);
+                    g = hue2rgb(p, q, h);
+                    b = hue2rgb(p, q, h - 1/3);
+                }
+                
+                return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+            }
+            
+            setupEventListeners() {
+                // Parameter sliders
+                document.getElementById('muSlider').addEventListener('input', (e) => {
+                    this.params.mu = parseFloat(e.target.value);
+                    document.getElementById('muValue').textContent = this.params.mu.toFixed(2);
+                });
+                
+                document.getElementById('gammaSlider').addEventListener('input', (e) => {
+                    this.params.gamma = parseFloat(e.target.value);
+                    document.getElementById('gammaValue').textContent = this.params.gamma.toFixed(2);
+                });
+                
+                document.getElementById('sigmaSlider').addEventListener('input', (e) => {
+                    this.params.sigma = parseFloat(e.target.value);
+                    document.getElementById('sigmaValue').textContent = this.params.sigma.toFixed(2);
+                });
+                
+                document.getElementById('gSlider').addEventListener('input', (e) => {
+                    this.params.g = parseFloat(e.target.value);
+                    document.getElementById('gValue').textContent = this.params.g.toFixed(2);
+                });
+                
+                document.getElementById('kappaSlider').addEventListener('input', (e) => {
+                    this.params.kappa = parseFloat(e.target.value);
+                    document.getElementById('kappaValue').textContent = this.params.kappa.toFixed(2);
+                });
+                
+                document.getElementById('gttSlider').addEventListener('input', (e) => {
+                    this.params.g_tt = parseFloat(e.target.value);
+                    document.getElementById('gttValue').textContent = this.params.g_tt.toFixed(2);
+                });
+                
+                // Checkboxes
+                document.getElementById('backreactionCheck').addEventListener('change', (e) => {
+                    this.params.backreaction = e.target.checked;
+                });
+                
+                document.getElementById('coneCheck').addEventListener('change', (e) => {
+                    this.showCones = e.target.checked;
+                });
+                
+                document.getElementById('textureCheck').addEventListener('change', (e) => {
+                    this.showTexture = e.target.checked;
+                });
+                
+                // Canvas click to add perturbations
+                this.canvas.addEventListener('click', (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / this.dx;
+                    const y = (e.clientY - rect.top) / this.dy;
+                    
+                    const i = Math.floor(x);
+                    const j = Math.floor(y);
+                    
+                    // Add Gaussian perturbation
+                    for (let di = -10; di <= 10; di++) {
+                        for (let dj = -10; dj <= 10; dj++) {
+                            const idx = this.getIndex(i + di, j + dj);
+                            const r = Math.sqrt(di * di + dj * dj);
+                            this.phi[idx] += 0.5 * Math.exp(-r * r / 20);
+                        }
+                    }
+                });
+            }
+            
+            reset() {
+                this.initializeField();
+                this.time = 0;
+            }
+            
+            addPerturbation() {
+                const i = Math.floor(Math.random() * this.nx);
+                const j = Math.floor(Math.random() * this.ny);
+                
+                for (let di = -5; di <= 5; di++) {
+                    for (let dj = -5; dj <= 5; dj++) {
+                        const idx = this.getIndex(i + di, j + dj);
+                        const r = Math.sqrt(di * di + dj * dj);
+                        this.phi[idx] += (Math.random() - 0.5) * Math.exp(-r * r / 10);
+                    }
+                }
+            }
+            
+            togglePause() {
+                this.paused = !this.paused;
+                document.getElementById('pauseText').textContent = this.paused ? '▶️ Play' : '⏸️ Pause';
+            }
+            
+            animate() {
+                this.updateField();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        
+        // Initialize simulation
+        let simulation;
+        window.addEventListener('load', () => {
+            simulation = new WholenessFieldSimulation();
+        });
+    </script>
+</body>
+</html>
