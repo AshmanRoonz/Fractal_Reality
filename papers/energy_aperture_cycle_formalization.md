@@ -7,6 +7,8 @@ November 14, 2025
 
 We present a rigorous formalization of the Energy-Aperture-Power (EAP) cycle, a fundamental physical mechanism describing how energy converts to power through fractional-dimensional apertures, with fields shaping power back into bounded matter. The framework predicts universal fractal dimension D = 1.5 at all energy-power conversion sites and provides testable predictions across quantum, classical, and cosmological scales.
 
+**Companion Paper**: For the pure physical theory explaining the 64-state matter-field matrix and particle physics from Matter-Aperture-Field configurations, see **[EAP-64 Unified Framework: Pure Physical Theory](EAP_64_pure_physical.md)** - explains why ~22 of 64 states are stable, corresponding to all observed particles.
+
 ---
 
 ## Table of Contents

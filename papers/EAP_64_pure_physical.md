@@ -13,6 +13,99 @@ We present a complete physical theory of reality based on the Energy-Aperture-Po
 
 **Key Innovation**: Replacing abstract validation language with concrete physical quantities reveals that particle physics, quantum mechanics, biology, and consciousness all operate through the same matter-aperture-field transformation mechanism.
 
+**Companion Paper**: For complete experimental protocols, detailed derivations, and computational tools, see **[Energy-Aperture-Power Cycle Formalization](energy_aperture_cycle_formalization.md)** - the full experimental validation framework with Python code and 10 testable predictions.
+
+---
+
+## Table of Contents
+
+### Core Framework
+- [I. The Physical Mechanism](#i-the-physical-mechanism)
+  - [1.1 The EAP Cycle](#11-the-eap-cycle)
+  - [1.2 Physical Quantities at Each Aperture](#12-physical-quantities-at-each-aperture)
+  - [1.3 Why Three Physical Quantities](#13-why-three-physical-quantities)
+  - [1.4 Binary Thresholds](#14-binary-thresholds)
+  - [1.5 The 64 States Emerge](#15-the-64-states-emerge)
+
+- [II. Mathematical Formalization](#ii-mathematical-formalization)
+  - [2.1 State Space Definition](#21-state-space-definition)
+  - [2.2 Aperture Operators](#22-aperture-operators)
+  - [2.3 Physical State Function](#23-physical-state-function)
+  - [2.4 The 64-State Hamiltonian](#24-the-64-state-hamiltonian)
+  - [2.5 Mass Formula from Physical Configuration](#25-mass-formula-from-physical-configuration)
+  - [2.6 Charge from Matter Asymmetry](#26-charge-from-matter-asymmetry)
+  - [2.7 Spin from Aperture Geometry](#27-spin-from-aperture-geometry)
+
+### 64-State Matrix
+- [III. The 64-State Matrix Detailed](#iii-the-64-state-matrix-detailed)
+  - [3.1 Complete Physical State Classification](#31-complete-physical-state-classification)
+  - [3.2 Key Physical States and Particles](#32-key-physical-states-and-particles)
+  - [3.3 Why Only ~22 States are Physical](#33-why-only-22-states-are-physical)
+  - [3.4 Multi-Generation Structure](#34-multi-generation-structure)
+  - [3.5 Physical Transition Rules](#35-physical-transition-rules)
+
+### Physical Processes
+- [IV. Physical Process Details](#iv-physical-process-details)
+  - [4.1 Energy → Power Conversion (Aperture 1)](#41-energy--power-conversion-aperture-1)
+  - [4.2 Power → Matter Conversion (Aperture 2)](#42-power--matter-conversion-aperture-2)
+  - [4.3 Field Formation is Physical Necessity](#43-field-formation-is-physical-necessity)
+  - [4.4 Matter Boundaries from Field-Power Resonance](#44-matter-boundaries-from-field-power-resonance)
+  - [4.5 The Complete Physical Cycle](#45-the-complete-physical-cycle)
+
+### Predictions & Experiments
+- [V. Universal Physical Predictions](#v-universal-physical-predictions)
+  - [5.1 Core Prediction: D = 1.5 at All Conversion Sites](#51-core-prediction-d--15-at-all-conversion-sites)
+  - [5.2 Configuration-Specific Predictions](#52-configuration-specific-predictions)
+  - [5.3 Field Structure Predictions](#53-field-structure-predictions)
+  - [5.4 Temporal Predictions](#54-temporal-predictions)
+  - [5.5 Cross-Scale Physical Predictions](#55-cross-scale-physical-predictions)
+
+- [VI. Experimental Measurement Protocols](#vi-experimental-measurement-protocols)
+  - [6.1 LHC Collision Vertex Analysis](#61-lhc-collision-vertex-analysis)
+  - [6.2 Gravitational Wave Temporal Structure](#62-gravitational-wave-temporal-structure)
+  - [6.3 DNA Replication Fractal Dynamics](#63-dna-replication-fractal-dynamics)
+  - [6.4 Neural Integration Measurement](#64-neural-integration-measurement)
+  - [6.5 Turbulence Energy Dissipation](#65-turbulence-energy-dissipation)
+  - [6.6 Plasma Magnetic Reconnection](#66-plasma-magnetic-reconnection)
+  - [6.7 Dark Matter Direct Detection](#67-dark-matter-direct-detection)
+  - [6.8 Quark Confinement Lattice QCD](#68-quark-confinement-lattice-qcd)
+  - [6.9 Consciousness State Manipulation](#69-consciousness-state-manipulation)
+  - [6.10 Multi-Scale Validation Campaign](#610-multi-scale-validation-campaign)
+
+### Theoretical Context
+- [VII. Comparison to Existing Frameworks](#vii-comparison-to-existing-frameworks)
+  - [7.1 vs. Standard Model](#71-vs-standard-model)
+  - [7.2 vs. String Theory](#72-vs-string-theory)
+  - [7.3 vs. Loop Quantum Gravity](#73-vs-loop-quantum-gravity)
+
+- [VIII. Philosophical Clarity](#viii-philosophical-clarity)
+  - [8.1 Reality is Physical Process](#81-reality-is-physical-process)
+  - [8.2 Wholeness Through Physical Cycle](#82-wholeness-through-physical-cycle)
+  - [8.3 Consciousness as Physical Integration](#83-consciousness-as-physical-integration)
+  - [8.4 Time as Physical Flow](#84-time-as-physical-flow)
+  - [8.5 Ethics from Physical Stability](#85-ethics-from-physical-stability)
+
+- [IX. Conclusion](#ix-conclusion)
+  - [9.1 Summary](#91-summary)
+  - [9.2 Empirical Status](#92-empirical-status)
+  - [9.3 The Physical Picture](#93-the-physical-picture)
+
+### Appendices
+- [Appendix A: Physical Measurement Guide](#appendix-a-physical-measurement-guide)
+  - [A.1 Measuring M (Matter)](#a1-measuring-m-matter)
+  - [A.2 Measuring Â (Aperture)](#a2-measuring-â-aperture)
+  - [A.3 Measuring φ (Field)](#a3-measuring-φ-field)
+  - [A.4 Computing D (Fractal Dimension)](#a4-computing-d-fractal-dimension)
+
+- [Appendix B: State Quick Reference](#appendix-b-state-quick-reference)
+
+**For Complete Experimental Implementation**: See [energy_aperture_cycle_formalization.md](energy_aperture_cycle_formalization.md) for:
+- Full Python computational toolkit (Appendix A)
+- Complete mathematical derivations (Appendix B)
+- Step-by-step experimental protocols (Appendix C)
+- Detailed falsification criteria
+- Budget estimates and timelines
+
 ---
 
 ## I. The Physical Mechanism
