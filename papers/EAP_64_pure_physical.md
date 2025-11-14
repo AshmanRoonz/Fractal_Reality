@@ -2,7 +2,7 @@
 
 **Energy-Aperture-Power Cycle Generates 64-State Matter-Field Matrix**
 
-**Ashman Kent**  
+**Ashman Roonz**  
 November 14, 2025
 
 ---
