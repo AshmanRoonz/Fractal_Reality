@@ -2,7 +2,7 @@
 
 **A First-Principles Foundation for Universal Fractal Dimension**
 
-**Authors:** [To be completed]  
+**Authors:** [Ashman Roonz]  
 **Date:** November 2025  
 **Status:** Draft for review
 
@@ -1025,7 +1025,7 @@ The convergence of information theory, topology, and stability analysis on β = 
 
 ## Acknowledgments
 
-We thank J and Solomon for critical feedback that identified the metric signature catastrophe and pushed for rigorous, non-circular reasoning. The golden ratio insight emerged from collaborative dialogue.
+We thank J and Solomon for critical feedback that identified the metric signature catastrophe and pushed for rigorous, non-circular reasoning.
 
 ---
 
