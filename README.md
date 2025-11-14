@@ -508,7 +508,7 @@ Two papers providing complete Energy-Aperture-Power framework from physical foun
 **📚 EAP-64: Pure Physical Theory** - **[papers/EAP_64_pure_physical.md](papers/EAP_64_pure_physical.md)**
 
 **Matter [M] · Aperture [Â] · Field [φ] = All of Reality**
-- Three measurable physical quantities at two apertures = 2³ × 2³ = 64 configurations
+- Three measurable physical quantities at the aperture's input and output sides = 2³ × 2³ = 64 configurations
 - Only ~22 achieve stable resonance = all observed particles (electrons, quarks, photons, Higgs...)
 - **Zero free parameters** - only β = 0.5 critical balance
 - Complete particle physics from pure physical quantities
