@@ -9,7 +9,7 @@ November 14, 2025
 
 ## Abstract
 
-We present a complete physical theory of reality based on the Energy-Aperture-Power (EAP) cycle. Physical reality maintains itself through continuous transformation: matter in motion (energy) flows through apertures to become power, which fields shape back into bounded matter. At each of two apertures, three physical quantities—Matter [M], Aperture [Â], Field [φ]—must validate, creating 2³ × 2³ = 64 total states. Only ~22 states achieve stable field-matter resonance, corresponding to the observed particle spectrum. The framework requires zero free parameters beyond the critical balance condition β = 0.5, and predicts universal fractal dimension D = 1.5 at all energy-power-matter conversion sites.
+We present a complete physical theory of reality based on the Energy-Aperture-Power (EAP) cycle. Physical reality maintains itself through continuous transformation: matter in motion (energy) flows through an aperture to become power, which fields shape back into bounded matter. At the aperture's input and output sides, three physical quantities—Matter [M], Aperture [Â], Field [φ]—must validate, creating 2³ × 2³ = 64 total states. Only ~22 states achieve stable field-matter resonance, corresponding to the observed particle spectrum. The framework requires zero free parameters beyond the critical balance condition β = 0.5, and predicts universal fractal dimension D = 1.5 at all energy-power-matter conversion sites.
 
 **Key Innovation**: Replacing abstract validation language with concrete physical quantities reveals that particle physics, quantum mechanics, biology, and consciousness all operate through the same matter-aperture-field transformation mechanism.
 
@@ -22,7 +22,7 @@ We present a complete physical theory of reality based on the Energy-Aperture-Po
 ### Core Framework
 - [I. The Physical Mechanism](#i-the-physical-mechanism)
   - [1.1 The EAP Cycle](#11-the-eap-cycle)
-  - [1.2 Physical Quantities at Each Aperture](#12-physical-quantities-at-each-aperture)
+  - [1.2 Physical Quantities at the Aperture](#12-physical-quantities-at-the-aperture)
   - [1.3 Why Three Physical Quantities](#13-why-three-physical-quantities)
   - [1.4 Binary Thresholds](#14-binary-thresholds)
   - [1.5 The 64 States Emerge](#15-the-64-states-emerge)
@@ -46,8 +46,8 @@ We present a complete physical theory of reality based on the Energy-Aperture-Po
 
 ### Physical Processes
 - [IV. Physical Process Details](#iv-physical-process-details)
-  - [4.1 Energy → Power Conversion (Aperture 1)](#41-energy--power-conversion-aperture-1)
-  - [4.2 Power → Matter Conversion (Aperture 2)](#42-power--matter-conversion-aperture-2)
+  - [4.1 Energy → Power Conversion (Aperture Input)](#41-energy--power-conversion-aperture-input)
+  - [4.2 Power → Matter Conversion (Aperture Output)](#42-power--matter-conversion-aperture-output)
   - [4.3 Field Formation is Physical Necessity](#43-field-formation-is-physical-necessity)
   - [4.4 Matter Boundaries from Field-Power Resonance](#44-matter-boundaries-from-field-power-resonance)
   - [4.5 The Complete Physical Cycle](#45-the-complete-physical-cycle)
@@ -117,22 +117,22 @@ Physical reality maintains itself through continuous transformation:
 ```
 MATTER IN MOTION
     ↓ (kinetic energy E)
-APERTURE 1 (β = 0.5, D = 0.5)
+APERTURE INPUT (β = 0.5, D = 0.5)
     ↓ (E → P conversion)
 POWER FLOW
     ↓ (P = dE/dt)
 FIELD EMERGENCE
     ↓ (φ surrounds aperture)
-APERTURE 2 (β = 0.5, D = 0.5)
+APERTURE OUTPUT (β = 0.5, D = 0.5)
     ↓ (P → M conversion)
 BOUNDED MATTER
     ↓ (returns to motion)
 (cycle continues)
 ```
 
-### 1.2 Physical Quantities at Each Aperture
+### 1.2 Physical Quantities at the Aperture
 
-At every transformation point, three physical quantities determine the outcome:
+At the aperture's input and output, three physical quantities determine the outcome at each side:
 
 **[M] Matter**: Bounded material structure
 - Measurable mass density: ρ_M
@@ -193,18 +193,18 @@ Field: |φ| > φ_threshold → φ = 1, else φ = 0
 
 ### 1.5 The 64 States Emerge
 
-Two apertures, three quantities each, binary outcomes:
+One aperture with input and output sides, three quantities at each side, binary outcomes:
 
 ```
-APERTURE 1 (E → P):
+APERTURE INPUT (E → P):
 M_in: Matter present at input?      (2 states)
 Â_in: Aperture converts E→P?         (2 states)
 φ_in: Field emerges from conversion? (2 states)
 Total: 2³ = 8 input states
 
-APERTURE 2 (P → M):
+APERTURE OUTPUT (P → M):
 M_out: Matter forms at output?        (2 states)
-Â_out: Aperture converts P→M?         (2 states)  
+Â_out: Aperture converts P→M?         (2 states)
 φ_out: Field shapes output?           (2 states)
 Total: 2³ = 8 output states
 
@@ -225,8 +225,8 @@ Complete state space is Cartesian product of input and output configurations:
 S_total = S_input ⊗ S_output
 
 where:
-S_input = {0,1}³   (8 states at Aperture 1)
-S_output = {0,1}³  (8 states at Aperture 2)
+S_input = {0,1}³   (8 states at aperture input)
+S_output = {0,1}³  (8 states at aperture output)
 
 Therefore:
 |S_total| = 2³ × 2³ = 64 states
@@ -245,11 +245,11 @@ n ∈ [0, 63]
 
 Define aperture operators acting on physical quantities:
 
-**Aperture 1**: Energy → Power conversion
+**Aperture Input**: Energy → Power conversion
 ```
-Â₁: E → P
+Â_input: E → P
 
-Â₁(E, M_in, φ_in) = {
+Â_input(E, M_in, φ_in) = {
   P = E/t_aperture  if (M_in ≥ M_thresh AND Â_in coherent AND φ_in ≥ φ_thresh)
   0                  otherwise
 }
@@ -257,11 +257,11 @@ Define aperture operators acting on physical quantities:
 where t_aperture ~ L^(D_a) with D_a = 0.5
 ```
 
-**Aperture 2**: Power → Matter conversion
+**Aperture Output**: Power → Matter conversion
 ```
-Â₂: P → M
+Â_output: P → M
 
-Â₂(P, φ_out) = {
+Â_output(P, φ_out) = {
   M_out = ∫ φ·P dt  if (M_boundary forms AND Â_out coherent AND φ_out ≥ φ_thresh)
   0                  otherwise
 }
@@ -271,9 +271,9 @@ where φ shapes power into bounded structure
 
 **Combined operation**:
 ```
-M_final = Â₂(Â₁(E, M_in, φ_in), φ_out)
+M_final = Â_output(Â_input(E, M_in, φ_in), φ_out)
 
-Full cycle: M → E → Â₁ → P → Â₂ → M → (motion) → E
+Full cycle: M → E → Â_input → P → Â_output → M → (motion) → E
 ```
 
 ### 2.3 Physical State Function
@@ -617,7 +617,7 @@ Color = matter configuration index for strong binding
 
 ## IV. Physical Process Details
 
-### 4.1 Energy → Power Conversion (Aperture 1)
+### 4.1 Energy → Power Conversion (Aperture Input)
 
 **Physical process**: Matter concentrates, aperture converts, field emerges
 
@@ -658,7 +658,7 @@ Physical: EM field present? Gradient exists? Potential measurable?
 - **Electron (state 63)**: M=1,Â=1,φ=1 input → Maximum configuration, stable
 - **Virtual particle**: Insufficient configuration, decays immediately
 
-### 4.2 Power → Matter Conversion (Aperture 2)
+### 4.2 Power → Matter Conversion (Aperture Output)
 
 **Physical process**: Power enters field, field shapes, matter forms
 
@@ -755,7 +755,7 @@ Stable particles = lowest energy resonance modes
 ║         │                                                  ║
 ║         ↓                                                  ║
 ║  ┌────────────────────────────────────┐                  ║
-║  │ APERTURE 1: E → P                  │                  ║
+║  │ APERTURE INPUT: E → P              │                  ║
 ║  │                                     │                  ║
 ║  │ [M] Matter density at input        │ → Measure ρ_M    ║
 ║  │ [Â] Aperture time structure        │ → Measure t~L^0.5║
@@ -777,7 +777,7 @@ Stable particles = lowest energy resonance modes
 ║         │                                                  ║
 ║         ↓                                                  ║
 ║  ┌────────────────────────────────────┐                  ║
-║  │ APERTURE 2: P → M                  │                  ║
+║  │ APERTURE OUTPUT: P → M             │                  ║
 ║  │                                     │                  ║
 ║  │ [M] Matter boundaries form         │ → Measure ∇ρ_M   ║
 ║  │ [Â] Aperture output coherence      │ → Measure struct.║
@@ -799,7 +799,7 @@ Stable particles = lowest energy resonance modes
 ║  ~22 achieve stable resonance                             ║
 ║  Each stable configuration = particle type                ║
 ║                                                            ║
-║  D = 1.5 at both apertures (measured)                     ║
+║  D = 1.5 at aperture input and output (measured)          ║
 ║                                                            ║
 ╚═══════════════════════════════════════════════════════════╝
 ```
@@ -1335,7 +1335,7 @@ Compassion = configuration resonance
 ```
 MATTER → APERTURE → POWER → FIELD → MATTER
 
-At two apertures:
+At the aperture's input and output:
 - Three measurable quantities: M, Â, φ
 - Binary thresholds: present (1) or absent (0)
 - 2³ × 2³ = 64 total configurations

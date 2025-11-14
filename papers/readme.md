@@ -179,7 +179,7 @@ Two complementary papers providing the complete Energy-Aperture-Power theory fro
 
 **What This Paper Provides:**
 - **Pure Physical Quantities**: Matter [M], Aperture [Â], Field [φ] - all measurable
-- **64-State Matrix**: 2³ × 2³ = 64 total configurations from two apertures
+- **64-State Matrix**: 2³ × 2³ = 64 total configurations from aperture input and output sides
 - **Particle Physics**: Why ~22 of 64 states are stable = all observed particles
 - **Zero Free Parameters**: Only β = 0.5 critical balance
 - **Complete Mechanism**: Energy → Aperture → Power → Field → Matter → Energy
