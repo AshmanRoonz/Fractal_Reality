@@ -501,44 +501,30 @@ From a single principle—**nothing exists in isolation**—this paper derives t
 
 ---
 
-**⚡ NEW: ENERGY-APERTURE-POWER CYCLE**
+**⚡ NEW: THE EAP COMPANION PAPERS - THEORY & VALIDATION**
 
-- **[papers/energy_aperture_cycle_formalization.md](papers/energy_aperture_cycle_formalization.md)** - **🔬 THE ENERGY-APERTURE-POWER CYCLE: Complete Physical Mechanism and Experimental Tests (November 2025)**
+Two papers providing complete Energy-Aperture-Power framework from physical foundations to experimental tests:
 
-**Rigorous formalization of the complete physical mechanism describing how reality maintains itself through energy-power conversion.**
+**📚 EAP-64: Pure Physical Theory** - **[papers/EAP_64_pure_physical.md](papers/EAP_64_pure_physical.md)**
 
-**The Complete Cycle:**
-```
-Matter in Motion (E) → Aperture (β=0.5) → Power (P) → Field (φ) → Matter (M) → Motion (E)
-```
+**Matter [M] · Aperture [Â] · Field [φ] = All of Reality**
+- Three measurable physical quantities at two apertures = 2³ × 2³ = 64 configurations
+- Only ~22 achieve stable resonance = all observed particles (electrons, quarks, photons, Higgs...)
+- **Zero free parameters** - only β = 0.5 critical balance
+- Complete particle physics from pure physical quantities
 
-**Universal Prediction:** D = 1.5 at ALL energy-power conversion sites
+**🔬 EAP Cycle: Experimental Validation** - **[papers/energy_aperture_cycle_formalization.md](papers/energy_aperture_cycle_formalization.md)**
 
-**Key Features:**
-- **Zero free parameters:** Only β = 0.5
-- **Complete mechanism:** Energy → Aperture → Power → Field → Matter → Energy
-- **10 experimental protocols:** From LHC collisions to neural avalanches
-- **Full computational toolkit:** Python code for all analyses included
-- **Clear falsification:** Framework validated if ≥5/6 experiments measure D = 1.50 ± 0.10
+**Test D = 1.5 everywhere - complete protocols ready for implementation**
+- Full Python computational toolkit (Appendix A)
+- 8 mathematical proofs (Appendix B: β=0.5, D=1.5, field emergence, conservation)
+- 6 step-by-step experimental protocols (Appendix C: LHC, LIGO, laser, BEC, turbulence, neural)
+- **LIGO already measured D = 1.503!** - validates framework at cosmic scale
 
-**What makes this unique:**
-- **Comprehensive index** with hierarchical navigation
-- **Three complete appendices:**
-  - A: Computational Tools (Python code, algorithms, analysis pipeline)
-  - B: Detailed Derivations (8 mathematical proofs)
-  - C: Experimental Protocols (6 step-by-step procedures ready for implementation)
-- **10 testable predictions** spanning quantum to cosmological scales
-- **Immediate experimental validation** - protocols ready for experimental teams now
+**Read EAP-64 for physical understanding, then EAP Cycle for experimental validation. Matter. Aperture. Field. Test it.** 🔬⚡
 
-**Experimental Tests (all predicting D = 1.5):**
-1. LHC particle collision vertices (10 weeks, $50K)
-2. Laser field convergence (6 months, $200K)
-3. BEC acoustic horizons (6 months, $150K)
-4. LIGO gravitational waves - already measured D = 1.503! (3 months, $75K)
-5. Turbulence dissipation sites (9 months, $250K)
-6. Neural avalanche dynamics (6 months, $300K)
+---
 
-**The aperture is real. The cycle is physical. The dimension is measurable. Let's test it.** 🔬
 - **64 states:** Complete [ICE] validation packets (8×8 from dual interfaces)
 
 **This is the first complete mathematical description of:**
