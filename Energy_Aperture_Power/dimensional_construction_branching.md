@@ -11,6 +11,12 @@ We present a rigorous geometric framework showing that fractal dimension D ≈ 1
 
 **Keywords:** Fractal dimension, dimensional construction, branching topology, Morse theory, aperture mechanism, critical phenomena
 
+**Companion Papers:**
+- **[EAP-64 Unified Framework: Pure Physical Theory](EAP_64_pure_physical.md)** - The complete physical theory showing how the 64-state matter-field matrix generates all observed particles
+- **[Energy-Aperture-Power Cycle: Mathematical Formalization](energy_aperture_cycle_formalization.md)** - Experimental protocols and testable predictions for validating the framework
+
+**Note:** This paper provides the geometric and topological foundation explaining WHY D = 1.5 appears universally. The EAP-64 paper explains WHAT this means physically (particle spectrum), and the Mathematical Formalization shows HOW to test it experimentally.
+
 ---
 
 ## Table of Contents
