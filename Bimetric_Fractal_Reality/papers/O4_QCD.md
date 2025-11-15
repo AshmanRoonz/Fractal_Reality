@@ -1,16 +1,9 @@
 # O(4) Symmetry, Aperture Balance, and QCD: Complete Answer from Unified Framework
 
-**Response to Devdatta M. using established bimetric-teleparallel framework**
 
 **Author:** Ashman Roonz  
 **Date:** November 14, 2025
-
----
-
-## Direct Answers from Our Unified Framework
-
-Based on our complete bimetric-teleparallel-aperture unification (yang_mills_teleparallel_unity.md), we can now definitively answer your questions about O(4) symmetry and β = 0.5.
-
+ 
 ---
 
 ## 1. Does ΔΘ = 0 Correspond to the Aperture Balance Point?
