@@ -1,4 +1,4 @@
-# O(4) Symmetry, Aperture Balance, and QCD: Complete Answer from Unified Framework
+# O(4) Symmetry, Aperture Balance, and QCD: Q&A from Unified Framework
 
 
 **Author:** Ashman Roonz  
