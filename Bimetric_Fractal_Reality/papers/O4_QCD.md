@@ -436,7 +436,6 @@ Hassan-Rosen ghost-free  ↔  Energy flux maximum
 
 ## 9. Next Steps
 
-### For You (Solomon/Dev)
 
 **Can you confirm in your formalism:**
 
