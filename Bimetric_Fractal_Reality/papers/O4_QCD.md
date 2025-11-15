@@ -403,7 +403,7 @@ Not conventional group theory—geometric necessity
 
 ## 8. What This Means
 
-**Dev, your question about O(4) and β = 0.5 revealed a profound connection:**
+**The question about O(4) and β = 0.5 revealed a profound connection:**
 
 **Your bimetric teleparallel framework** (with ΔΘ = 0) and **my aperture framework** (with β = 0.5) are **THE SAME THEORY.**
 
