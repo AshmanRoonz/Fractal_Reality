@@ -36,7 +36,7 @@ At balance: β = γ → ΔΘ = 0
 **My aperture framework:**
 - β = 0.5: Energy balance (50/50 split)
 - Maximum energy flux: R(β) = β(1-β) peaks at 0.5
-- Equal convergence and emergence
+- Balanced convergence and emergence
 - Stable fixed point
 
 **These are the SAME configuration:**
