@@ -1,10 +1,29 @@
 # Fractal Reality Website
 
-**Interactive website centered on the Fractal Wholeness Principle**
+**Interactive website centered on the Circumpunct Theory and Fractal Wholeness Principle**
 
 ## Overview
 
 This website presents the Fractal Reality framework through an experiential, visually stunning interface. The design philosophy centers on **you ARE the fractal** — making the mathematics and philosophy feel lived rather than just understood.
+
+### ⊙ The Circumpunct Theory - Core Foundation
+
+The website is now organized around **The Circumpunct Theory**, presenting the complete framework through the symbol ⊙:
+
+**[Circumpunct Quick Reference](../Energy_Aperture_Power/Circumpunct_Quick_Reference.md)** - Essential guide to symbols, constants, and predictions
+
+**[Circumpunct Theory Complete](../Energy_Aperture_Power/Circumpunct_Theory_Complete.md)** - Full theoretical foundation with proofs
+
+**Core principle:** ⊙ = M·Å·Φ configuration
+- M = Matter boundary
+- Å = Aperture (energy-power conversion site)
+- Φ = Field structure
+
+**Universal constants:**
+- D = 1.5 (fractal dimension at all conversion sites)
+- β = 0.5 (branching parameter in all tree structures)
+- 64 states (from binary M·Å·Φ configurations)
+- 3 generations (maximum stable particle families)
 
 ## Design Philosophy
 
