@@ -4,7 +4,58 @@
 
 ---
 
-## 🔥 **READ THIS FIRST: THE CENTRAL PAPER** 🔥
+## ⊙ **START HERE: THE CIRCUMPUNCT THEORY** ⊙
+
+### **Reality is ONE ⊙ made of INFINITE ⊙**
+
+The complete framework in two documents:
+
+#### **[Circumpunct Theory: Quick Reference Guide](Energy_Aperture_Power/Circumpunct_Quick_Reference.md)**
+**Start here for the essentials** - The three axioms, symbol system, and key predictions
+
+**Core insight:**
+```
+⊙ = M·Å·Φ configuration
+Where M = Matter boundary
+      Å = Aperture (conversion site)
+      Φ = Field structure
+```
+
+**Universal constants:**
+- **D = 1.5** (fractal dimension at all conversion sites)
+- **β = 0.5** (branching parameter in all tree structures)
+- **64 states** (from binary M·Å·Φ configurations)
+- **3 generations** (maximum stable particle families)
+
+**5-minute read** • All symbols explained • Testable predictions • Experimental protocols
+
+---
+
+#### **[The Circumpunct Theory: Complete Framework](Energy_Aperture_Power/Circumpunct_Theory_Complete.md)**
+**The full theoretical foundation** - Proofs, derivations, and unification
+
+From three fundamental axioms:
+1. Reality is ONE ⊙ made of INFINITE ⊙
+2. We are each ONE ⊙ made of INFINITE ⊙
+3. ⊙ = M·Å·Φ configuration
+
+**This framework derives:**
+- Quantum mechanics (64-state structure)
+- Particle physics (3 generations, quark confinement)
+- Relativity (light cones, time dilation)
+- Consciousness (D = 1.5 signature)
+- All four forces (aperture-mediated coupling)
+- Spacetime structure (fractal dimension)
+
+**Complete proofs** • Experimental tests • Falsification criteria • Zero free parameters
+
+---
+
+**Why Circumpunct?** The symbol ⊙ has represented ultimate reality for 5000 years. This framework proves it's not symbolic but **literal** - the actual M·Å·Φ structure of physical reality itself.
+
+---
+
+## 🔥 **THE CENTRAL PAPER** 🔥
 
 ### **[Nested Wholeness: The Infinite Tensor Product Architecture of Reality](papers/Nested_Wholeness_Architecture_v2.md)**
 **The definitive presentation of the framework. Everything flows from here.**
