@@ -17,8 +17,8 @@
 | Symbol | Name | Meaning |
 |--------|------|---------|
 | ⊙ | Circumpunct | Complete structure: M·Å·Φ all present |
-| • | Aperture | Center point, singularity, conversion site |
-| ○ | Boundary | Matter circle, spatial limit |
+| • | Aperture (Å)| Center point, singularity, conversion site |
+| ○ | Boundary (M)| Matter circle, spatial limit |
 | Φ | Field | Structure filling/surrounding space |
 | — | Connection | Temporal link, causal relationship |
 | ⊸ | Lineage | Aperture + temporal tunnel to past |
