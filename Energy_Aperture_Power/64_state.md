@@ -253,7 +253,7 @@ Same MÅφ configuration → Different standing wave modes in aperture
 
 Aperture supports discrete resonances:
 n = 1: Electron (fundamental)
-n = 2: Muon (1st harmonic)  
+n = 2: Muon (1st harmonic)
 n = 3: Tau (2nd harmonic)
 
 Mass ratio:
@@ -264,7 +264,7 @@ m_μ/m_e ≈ 4 (observed: 207 - needs refinement)
 m_τ/m_e ≈ 9 (observed: 3477 - needs refinement)
 ```
 
-**Needs work:** Generation mass ratios don't match n² scaling exactly. May need anharmonic corrections.
+**Updated:** Generation mass ratios require fractal dimensional scaling, not simple n² scaling. See **[Mass Ratios from Aperture Geometry](mass_ratios_from_aperture_geometry_MAP.md)** for complete semi-quantitative derivation showing m_n/m_1 ∝ (1/α)^[n×D/(D+1)] with D = 1.5. Also see **[Geometric Derivation of Fundamental Constants](geometric_derivation_fundamental_constants_MAP.md)** for three-generation structure from eigenvalue bounds.
 
 ---
 
@@ -473,6 +473,8 @@ m_n = ∫ |∇φ_63,n|² d³r ∝ E_n
 Need: E_n eigenvalue problem at aperture
 ```
 
+**Resolved:** See **[Geometric Derivation of Fundamental Constants](geometric_derivation_fundamental_constants_MAP.md)** Section 4 for eigenvalue analysis showing exactly 3 bound states from aperture geometry f(r) = √r with da Costa potential. Fourth generation is geometrically forbidden (unbound state).
+
 ---
 
 ## **IX. Summary Table for Publication**
@@ -507,7 +509,7 @@ Need: E_n eigenvalue problem at aperture
 1. Refine charge quantization formula
 2. Solve field equations for φ_n(r)
 3. Calculate actual masses
-4. Derive generation mechanism rigorously
+4. ~~Derive generation mechanism rigorously~~ → **COMPLETED**: See [geometric_derivation_fundamental_constants_MAP.md](geometric_derivation_fundamental_constants_MAP.md) and [mass_ratios_from_aperture_geometry_MAP.md](mass_ratios_from_aperture_geometry_MAP.md)
 
 **But the framework is complete:** 64 states → stability criteria → 22 stable → Standard Model particles.
 

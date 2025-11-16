@@ -19,6 +19,26 @@ We present a complete geometric derivation of fundamental physical constants fro
 
 ---
 
+## Related Documents
+
+**Core Framework:**
+- **[Energy-Aperture-Power Framework README](README.md)** - Overview and document navigation
+- **[EAP-64 Pure Physical Theory](EAP_64_pure_physical.md)** - Complete physical framework
+- **[Circumpunct Theory Complete](Circumpunct_Theory_Complete.md)** - Philosophical foundations
+
+**Mathematical Foundations:**
+- **[Binary Thresholds](binary_thresholds.md)** - Proof of 64-state necessity
+- **[Dimensional Construction & Branching](dimensional_construction_branching.md)** - D = 1.5 and β = 0.5 derivation
+
+**Particle Physics:**
+- **[Complete 64→22 Particle Table](64_state.md)** - Full state classification
+- **[Mass Ratios from Aperture Geometry](mass_ratios_from_aperture_geometry_MAP.md)** - Detailed mass hierarchy analysis
+
+**Experimental Validation:**
+- **[Energy-Aperture-Power Cycle Formalization](energy_aperture_cycle_formalization.md)** - Experimental protocols
+
+---
+
 ## 1. Introduction
 
 ### 1.1 The Problem of Fundamental Constants
@@ -180,9 +200,9 @@ Complete System: 8 × 8 = 64 total states
 
 This is NOT arbitrary—it's the minimal complete information architecture for dual-interface transformation.
 
-**Why binary?** Quantum measurement collapse and thermodynamic stability both impose threshold behavior. A quantity either exceeds threshold (1) or doesn't (0).
+**Why binary?** Quantum measurement collapse and thermodynamic stability both impose threshold behavior. A quantity either exceeds threshold (1) or doesn't (0). See **[Binary Thresholds](binary_thresholds.md)** for complete proof.
 
-**Why 64 specifically?** This appears universally:
+**Why 64 specifically?** This appears universally (see **[64-State Table](64_state.md)** for full classification):
 - DNA codons: 4³ = 64
 - Standard Model particles: 36 + 12 + 12 + 4 = 64
 - I Ching hexagrams: 2⁶ = 64
@@ -440,6 +460,8 @@ This is NOT fine-tuning—it's geometric necessity from f(r) = √r.
 ---
 
 ## 5. Derivation III: Mass Ratios from Fractal Scaling
+
+**Note:** For detailed semi-quantitative analysis of mass ratios, see **[Mass Ratios from Aperture Geometry](mass_ratios_from_aperture_geometry_MAP.md)**.
 
 ### 5.1 Observed Mass Ratios
 

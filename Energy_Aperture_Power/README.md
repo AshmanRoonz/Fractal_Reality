@@ -94,6 +94,24 @@ A complete theoretical framework for understanding physical reality through the 
 - Validation against Standard Model
 - Why only ~22 are physical
 
+### Fundamental Constants & Mass Ratios
+
+**[Geometric Derivation of Fundamental Constants](geometric_derivation_fundamental_constants_MAP.md)**
+- Complete derivation of α ≈ 1/137.036 from pure geometry
+- Fine structure constant from 64-state information architecture
+- Golden ratio correction (Θ_φ = 137.508°)
+- Three-generation structure from aperture eigenvalues
+- Zero free parameters beyond β = 0.5
+- Experimental validation to 0.23% accuracy
+
+**[Mass Ratios from Aperture Geometry](mass_ratios_from_aperture_geometry_MAP.md)**
+- Lepton mass hierarchy from fractal dimension D = 1.5
+- Mass ratio pattern: m_n/m_1 ∝ (1/α)^[p(n)]
+- Three-generation structure from eigenvalue bounds
+- Fourth generation geometrically forbidden
+- Semi-quantitative predictions (10-80% accuracy)
+- Connection to M·Å·Φ validation architecture
+
 ### Force Unification
 
 **[Unified Theory: Field Maintenance](Unified_Theory.md)**
@@ -165,15 +183,18 @@ Detailed measurement protocols in:
 
 1. [Binary Thresholds](binary_thresholds.md) - Mathematical necessity
 2. [64-State Table](64_state.md) - Particle classification
-3. [Unified Theory](Unified_Theory.md) - Force derivation
-4. [EAP Formalization](energy_aperture_cycle_formalization.md) - Experiments
+3. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - α derivation
+4. [Mass Ratios](mass_ratios_from_aperture_geometry_MAP.md) - Generation structure
+5. [Unified Theory](Unified_Theory.md) - Force derivation
+6. [EAP Formalization](energy_aperture_cycle_formalization.md) - Experiments
 
 ### For Experimentalists
 
 1. [Quick Reference](Circumpunct_Quick_Reference.md) - Overview
 2. [EAP-64 Pure Physical](EAP_64_pure_physical.md) - Complete framework
 3. [EAP Formalization](energy_aperture_cycle_formalization.md) - Protocols
-4. [Toroidal Mapping](toroidal_mode_mapping_and_predictions.md) - Signatures
+4. [Geometric Constants](geometric_derivation_fundamental_constants_MAP.md) - Testable predictions
+5. [Toroidal Mapping](toroidal_mode_mapping_and_predictions.md) - Signatures
 
 ### For Philosophers/General Readers
 
@@ -185,8 +206,10 @@ Detailed measurement protocols in:
 
 1. [Dimensional Construction](dimensional_construction_branching.md) - D = 1.5 proof
 2. [Binary Thresholds](binary_thresholds.md) - 64-state necessity
-3. [Unified Theory](Unified_Theory.md) - Field dynamics
-4. [Charge Quantization](charge_quantization_paper.md) - EM structure
+3. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - Complete α derivation
+4. [Mass Ratios from Geometry](mass_ratios_from_aperture_geometry_MAP.md) - Generation hierarchy
+5. [Unified Theory](Unified_Theory.md) - Field dynamics
+6. [Charge Quantization](charge_quantization_paper.md) - EM structure
 
 ---
 
@@ -216,14 +239,17 @@ EAP-64 Pure Physical ────→ Main reference (most comprehensive)
 | Concept | Primary Document | Supporting Documents |
 |---------|-----------------|---------------------|
 | **⊙ = M·Å·Φ** | Circumpunct_Theory_Complete.md | All documents |
-| **D = 1.5** | dimensional_construction_branching.md | EAP_64_pure_physical.md |
-| **β = 0.5** | dimensional_construction_branching.md | binary_thresholds.md |
-| **64 states** | binary_thresholds.md, 64_state.md | EAP_64_pure_physical.md |
+| **D = 1.5** | dimensional_construction_branching.md | EAP_64_pure_physical.md, mass_ratios_from_aperture_geometry_MAP.md |
+| **β = 0.5** | dimensional_construction_branching.md | binary_thresholds.md, geometric_derivation_fundamental_constants_MAP.md |
+| **64 states** | binary_thresholds.md, 64_state.md | EAP_64_pure_physical.md, geometric_derivation_fundamental_constants_MAP.md |
 | **E_* ≈ 50 MeV** | binary_thresholds.md | why_binary.md |
+| **Fine structure constant α** | geometric_derivation_fundamental_constants_MAP.md | mass_ratios_from_aperture_geometry_MAP.md |
+| **Mass ratios** | mass_ratios_from_aperture_geometry_MAP.md | geometric_derivation_fundamental_constants_MAP.md |
+| **Golden ratio φ** | geometric_derivation_fundamental_constants_MAP.md | Circumpunct_Theory_Complete.md |
 | **Strong force** | Unified_Theory.md | 64_state.md |
 | **Weak force** | Unified_Theory.md | 64_state.md |
 | **Quark confinement** | Unified_Theory.md, 64_state.md | EAP_64_pure_physical.md |
-| **3 generations** | 64_state.md | Circumpunct_Theory_Complete.md |
+| **3 generations** | 64_state.md, geometric_derivation_fundamental_constants_MAP.md | mass_ratios_from_aperture_geometry_MAP.md |
 | **Consciousness** | EAP_64_pure_physical.md | Circumpunct_Theory_Complete.md |
 | **Charge quantization** | charge_quantization_paper.md | EAP_64_pure_physical.md |
 | **Experimental tests** | energy_aperture_cycle_formalization.md | EAP_64_pure_physical.md |
