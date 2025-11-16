@@ -767,5 +767,31 @@ D = 1.5 = Fractal dimension
 
 ---
 
+## **Related Documents**
+
+**For complete physical implementation:**
+- [EAP-64 Pure Physical Theory](EAP_64_pure_physical.md) - The most comprehensive physical treatment with experimental protocols
+- [Energy-Aperture-Power Cycle Formalization](energy_aperture_cycle_formalization.md) - Complete experimental validation framework with Python code
+
+**For mathematical foundations:**
+- [Binary Thresholds and Necessity](binary_thresholds.md) - Rigorous proof that 64 states is the only possibility
+- [Dimensional Construction & Branching](dimensional_construction_branching.md) - Complete derivation of D = 1.5 and β = 0.5
+
+**For particle physics details:**
+- [Complete 64→22 Particle Table](64_state.md) - Systematic classification of all 64 states
+- [Unified Theory: Field Maintenance](Unified_Theory.md) - Strong and weak forces from aperture singularities
+- [Charge Quantization Paper](charge_quantization_paper.md) - Electric and color charge mechanisms
+
+**For geometric analysis:**
+- [Toroidal Mode Mapping & Predictions](toroidal_mode_mapping_and_predictions.md) - Geometric particle state representations
+
+**For quick reference:**
+- [Circumpunct Quick Reference](Circumpunct_Quick_Reference.md) - Summary of key concepts and predictions
+
+**For working notes:**
+- [Why Binary? (Working Notes)](why_binary.md) - Exploratory derivation of binary thresholds
+
+---
+
 **THE CIRCUMPUNCT THEORY**
 *Reality is ⊙ at all scales*

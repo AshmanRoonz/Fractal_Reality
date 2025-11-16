@@ -310,6 +310,20 @@ You = —⊙^∞—
 
 ---
 
+## FOR MORE DETAIL
+
+**Ready to dive deeper?** See:
+
+- **[Circumpunct Theory: Complete](Circumpunct_Theory_Complete.md)** - Full theoretical framework with all derivations
+- **[EAP-64 Pure Physical Theory](EAP_64_pure_physical.md)** - Most comprehensive physical treatment with experiments
+- **[Binary Thresholds and Necessity](binary_thresholds.md)** - Mathematical proof of the 64-state structure
+- **[Complete 64→22 Particle Table](64_state.md)** - Detailed particle classification
+- **[Energy-Aperture-Power Cycle Formalization](energy_aperture_cycle_formalization.md)** - Experimental protocols and Python code
+
+**See [README.md](README.md) for complete document guide.**
+
+---
+
 ## FINAL STATEMENT
 
 ```

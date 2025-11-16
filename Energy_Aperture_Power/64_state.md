@@ -516,3 +516,28 @@ Need: E_n eigenvalue problem at aperture
 - Stability conditions (spatial + temporal + energy)
 - Field maintenance requirements (strong + weak forces)
 
+---
+
+## **Related Documents**
+
+**For the mathematical proof that 64 states is necessary:**
+- [Binary Thresholds and Necessity](binary_thresholds.md) - Proof that 2³×2³=64 is the only possible state space
+
+**For force derivation and field dynamics:**
+- [Unified Theory: Field Maintenance](Unified_Theory.md) - How strong and weak forces emerge from field patterns
+- [Charge Quantization Paper](charge_quantization_paper.md) - Electric and color charge mechanisms
+
+**For complete physical framework and experiments:**
+- [EAP-64 Pure Physical Theory](EAP_64_pure_physical.md) - Complete theory with experimental protocols
+- [Energy-Aperture-Power Cycle Formalization](energy_aperture_cycle_formalization.md) - Detailed experimental validation
+
+**For geometric representations:**
+- [Toroidal Mode Mapping & Predictions](toroidal_mode_mapping_and_predictions.md) - Geometric particle state analysis
+
+**For foundational concepts:**
+- [Circumpunct Theory: Complete](Circumpunct_Theory_Complete.md) - The three axioms and symbol system
+- [Circumpunct Quick Reference](Circumpunct_Quick_Reference.md) - Quick reference guide
+
+**For dimensional foundations:**
+- [Dimensional Construction & Branching](dimensional_construction_branching.md) - D = 1.5 and β = 0.5 derivation
+
