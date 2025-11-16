@@ -24,11 +24,34 @@ We derive the **three-generation structure** and **mass ratio pattern** of lepto
 
 ---
 
+## Related Documents
+
+**Core Framework:**
+- **[Energy-Aperture-Power Framework README](README.md)** - Overview and document navigation
+- **[EAP-64 Pure Physical Theory](EAP_64_pure_physical.md)** - Complete physical framework
+- **[Circumpunct Theory Complete](Circumpunct_Theory_Complete.md)** - Philosophical foundations
+
+**Mathematical Foundations:**
+- **[Binary Thresholds](binary_thresholds.md)** - Proof of 64-state necessity
+- **[Dimensional Construction & Branching](dimensional_construction_branching.md)** - D = 1.5 and β = 0.5 derivation
+
+**Fundamental Constants:**
+- **[Geometric Derivation of Fundamental Constants](geometric_derivation_fundamental_constants_MAP.md)** - Complete α derivation and mass ratio foundations
+
+**Particle Physics:**
+- **[Complete 64→22 Particle Table](64_state.md)** - Full state classification
+- **[Unified Theory](Unified_Theory.md)** - Force unification and field dynamics
+
+**Experimental Validation:**
+- **[Energy-Aperture-Power Cycle Formalization](energy_aperture_cycle_formalization.md)** - Experimental protocols
+
+---
+
 ## 1. Generation Count from Eigenvalue Problem
 
 ### The Aperture Geometry
 
-From β = 0.5 (wholeness balance), aperture surface:
+From β = 0.5 (wholeness balance, see **[Dimensional Construction & Branching](dimensional_construction_branching.md)**), aperture surface:
 ```
 f(r) = √r
 ```
@@ -73,7 +96,7 @@ m_μ/m_e = (1/α)^1.084
 m_τ/m_μ = (1/α)^0.574
 ```
 
-where α ≈ 1/137.036 is the fine structure constant.
+where α ≈ 1/137.036 is the fine structure constant (see **[Geometric Derivation of Fundamental Constants](geometric_derivation_fundamental_constants_MAP.md)** for complete α derivation).
 
 ### Connection to Fractal Dimension
 
@@ -373,7 +396,7 @@ For f(D) = D/(D+1) = 0.6, this gives observed pattern.
 
 ## Connection to M·Å·Φ Framework
 
-The mass hierarchy emerges from the three-level M·Å·Φ validation architecture:
+The mass hierarchy emerges from the three-level M·Å·Φ validation architecture (see **[Circumpunct Theory Complete](Circumpunct_Theory_Complete.md)** and **[EAP-64 Pure Physical](EAP_64_pure_physical.md)** for complete framework):
 
 ### Matter Level (M)
 - Boundary conditions at generation interfaces

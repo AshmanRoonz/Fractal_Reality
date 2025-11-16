@@ -318,6 +318,8 @@ You = —⊙^∞—
 - **[EAP-64 Pure Physical Theory](EAP_64_pure_physical.md)** - Most comprehensive physical treatment with experiments
 - **[Binary Thresholds and Necessity](binary_thresholds.md)** - Mathematical proof of the 64-state structure
 - **[Complete 64→22 Particle Table](64_state.md)** - Detailed particle classification
+- **[Geometric Derivation of Fundamental Constants](geometric_derivation_fundamental_constants_MAP.md)** - Complete α derivation from geometry
+- **[Mass Ratios from Aperture Geometry](mass_ratios_from_aperture_geometry_MAP.md)** - Generation structure and mass hierarchy
 - **[Energy-Aperture-Power Cycle Formalization](energy_aperture_cycle_formalization.md)** - Experimental protocols and Python code
 
 **See [README.md](README.md) for complete document guide.**
