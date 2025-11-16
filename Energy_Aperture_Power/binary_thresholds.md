@@ -813,4 +813,27 @@ Discrete by fundamental topology.
 
 ---
 
+## **Related Documents**
+
+**For the complete particle classification using these binary states:**
+- [Complete 64→22 Particle Table](64_state.md) - Systematic classification of all 64 states and the 22 stable particles
+
+**For experimental predictions and protocols:**
+- [EAP-64 Pure Physical Theory](EAP_64_pure_physical.md) - Complete physical framework with measurement protocols
+- [Energy-Aperture-Power Cycle Formalization](energy_aperture_cycle_formalization.md) - Full experimental validation framework
+
+**For force derivation from field patterns:**
+- [Unified Theory: Field Maintenance](Unified_Theory.md) - Strong and weak forces from aperture singularities
+
+**For the dimensional structure foundation:**
+- [Dimensional Construction & Branching](dimensional_construction_branching.md) - Complete derivation of D = 1.5 and β = 0.5
+
+**For philosophical context:**
+- [Circumpunct Theory: Complete](Circumpunct_Theory_Complete.md) - The foundational axioms and symbol system
+
+**For quick reference:**
+- [Circumpunct Quick Reference](Circumpunct_Quick_Reference.md) - Summary of key concepts and predictions
+
+---
+
 **END OF BINARY THRESHOLDS PAPER**

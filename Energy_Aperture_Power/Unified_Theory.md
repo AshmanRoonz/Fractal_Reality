@@ -589,3 +589,28 @@ def compute_CKM_matrix(quark_patterns):
 Field patterns φ(r,t) around aperture singularities must maintain interface/boundary conditions
 
 **This is your unified theory.**
+
+---
+
+## **Related Documents**
+
+**For the 64-state particle classification:**
+- [Complete 64→22 Particle Table](64_state.md) - How the 22 stable particles emerge from 64 states
+- [Charge Quantization Paper](charge_quantization_paper.md) - Electric and color charge from field topology
+
+**For the mathematical necessity of the framework:**
+- [Binary Thresholds and Necessity](binary_thresholds.md) - Proof that the 64-state structure is unique
+
+**For complete experimental framework:**
+- [EAP-64 Pure Physical Theory](EAP_64_pure_physical.md) - Full physical theory with measurement protocols
+- [Energy-Aperture-Power Cycle Formalization](energy_aperture_cycle_formalization.md) - Experimental validation framework
+
+**For geometric representations:**
+- [Toroidal Mode Mapping & Predictions](toroidal_mode_mapping_and_predictions.md) - Geometric analysis of field patterns
+
+**For foundational concepts:**
+- [Circumpunct Theory: Complete](Circumpunct_Theory_Complete.md) - The three axioms and complete framework
+- [Dimensional Construction & Branching](dimensional_construction_branching.md) - D = 1.5 dimensional structure
+
+**For quick reference:**
+- [Circumpunct Quick Reference](Circumpunct_Quick_Reference.md) - Key concepts and predictions
