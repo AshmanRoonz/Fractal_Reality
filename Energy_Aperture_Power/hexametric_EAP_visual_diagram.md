@@ -713,6 +713,8 @@ This document should be viewed in monospace font for proper alignment.
 
 **📖 Mathematical Companion:** [Hexa-Metric EAP Theory](hexametric_EAP_theory.md) - Complete field equations, derivations, and proofs
 
+**🔬 Experimental Predictions:** [Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md) - ~50 specific, falsifiable predictions with experimental protocols
+
 **🔗 See also:**
 - [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - QCD calibration and emergence hierarchy
 - [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md) - Geometric necessity proofs

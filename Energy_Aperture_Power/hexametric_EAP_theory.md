@@ -835,6 +835,8 @@ Hexa-metric is the FULL nonperturbative theory
 
 **💡 Complete experimental guide:** See [Diagram 10: Experimental Signatures](hexametric_EAP_visual_diagram.md#diagram-10-experimental-signatures) for all testable predictions and measurement protocols.
 
+**🔬 DETAILED PREDICTIONS:** For ~50 specific, falsifiable predictions with experimental protocols, see **[Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md)** - includes laboratory tests, astrophysical signatures, and precision measurements.
+
 ### 9.1 Universal D=1.5 Signature
 
 **Prediction:** All aperture activity exhibits fractal dimension D=1.5 ± 0.05
@@ -1210,6 +1212,8 @@ Ashman Roonz
 ## Related Documents
 
 **📊 Visual Companion:** [Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md) - Complete visual reference with 10 comprehensive diagrams
+
+**🔬 Experimental Predictions:** [Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md) - ~50 specific, falsifiable predictions with experimental protocols
 
 **🔗 See also:**
 - [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - QCD calibration and emergence hierarchy
