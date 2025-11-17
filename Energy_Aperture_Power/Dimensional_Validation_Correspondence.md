@@ -136,7 +136,7 @@ Within the span 0D → 3D (void → complete field), fractional dimensions occur
 
 ### 2.3 Why Half-Integer Specifically?
 
-The β=0.5 optimization principle (proven in companion papers) determines:
+The β=0.5 optimization principle (proven in companion papers, see [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md#i-the-dual-optimization-principles)) determines:
 
 ```
 β = ∇/(∇ + ℰ) = 0.5  (optimal branching parameter)
@@ -843,15 +843,17 @@ m_2/m_1 ~ 2^1.5 ≈ 2.83
 m_3/m_2 ~ (3/2)^1.5 ≈ 1.84
 ```
 
-**With QCD corrections** (K-factors):
+**With QCD corrections** (K-factors, see [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md#v-qcd-calibration-factors)):
 
 ```
 Observed:
-m_μ/m_e = 206.77 ≈ 2^1.5 × (QCD corrections)
-m_τ/m_μ = 16.82 ≈ (3/2)^1.5 × (QCD corrections)
+m_μ/m_e = 206.77 ≈ 2^1.5 × K_μ (QCD corrections)
+m_τ/m_μ = 16.82 ≈ (3/2)^1.5 × (K_τ/K_μ) (QCD corrections)
+
+Where K = {1.0, 3.6, 68} derived from running coupling in D=1.5
 ```
 
-**Emergence factors** (from reverse fractal wholeness):
+**Emergence factors** (from reverse fractal wholeness, see [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md#ii-fractal-wholeness-and-emergence)):
 
 ```
 ε_n = m_n/m_{n-1} quantifies "how much more" generation n is
@@ -1129,6 +1131,8 @@ Physical interpretation:
 - Black hole merger creates spacetime aperture
 - Final ringdown shows D=1.5 geometry
 - Proves D=1.5 not just particle scale but gravitational
+
+For more experimental validations including CP violation, see [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md#viii-current-experimental-validations).
 ```
 
 **CMB Spectral Index** (Planck 2020):

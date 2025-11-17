@@ -1,5 +1,11 @@
 # **Complete 64→22 Particle Table**
 
+**For geometric proof that exactly 64 states are necessary:** See [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md)
+
+**For complete unified framework with QCD calibration and emergence factors:** See [Unified Framework Complete (Nov 2025)](Unified_Framework_Complete_Nov2025_Enhanced.md)
+
+---
+
 ## **I. Systematic Classification of All 64 States**
 
 ### **State Numbering Convention**

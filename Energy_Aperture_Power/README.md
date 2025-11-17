@@ -50,6 +50,22 @@ A complete theoretical framework for understanding physical reality through the 
 - Detailed falsification criteria
 - Budget estimates and timelines
 
+**[Unified Framework Complete (Nov 2025 Enhanced)](Unified_Framework_Complete_Nov2025_Enhanced.md)**
+- Complete synthesis from β=0.5 and reverse fractal wholeness
+- QCD calibration factors K = {1.0, 3.6, 68} from first principles
+- Generation structure as emergence hierarchy (ε factors)
+- CP violation δ_CP = 2.5% from D=1.5 geometric asymmetry
+- Lepton mass predictions with <4% error
+- Zero new physics parameters
+
+**[Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md)**
+- Proof that three validations (M, Å, Φ) are geometrically necessary
+- Three fractional dimensions (0.5D, 1.5D, 2.5D) force binary validation
+- Why exactly 64 states (not 63 or 65)
+- Why three generations maximum
+- Why three color charges (RGB)
+- Why fourth generation is impossible
+
 ---
 
 ## Mathematical Foundations
@@ -181,20 +197,23 @@ Detailed measurement protocols in:
 
 ### For Physicists
 
-1. [Binary Thresholds](binary_thresholds.md) - Mathematical necessity
-2. [64-State Table](64_state.md) - Particle classification
-3. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - α derivation
-4. [Mass Ratios](mass_ratios_from_aperture_geometry_MAP.md) - Generation structure
-5. [Unified Theory](Unified_Theory.md) - Force derivation
-6. [EAP Formalization](energy_aperture_cycle_formalization.md) - Experiments
+1. [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md) - Why three validations are necessary
+2. [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - Complete synthesis with emergence
+3. [Binary Thresholds](binary_thresholds.md) - Mathematical necessity
+4. [64-State Table](64_state.md) - Particle classification
+5. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - α derivation
+6. [Mass Ratios](mass_ratios_from_aperture_geometry_MAP.md) - Generation structure
+7. [Unified Theory](Unified_Theory.md) - Force derivation
+8. [EAP Formalization](energy_aperture_cycle_formalization.md) - Experiments
 
 ### For Experimentalists
 
 1. [Quick Reference](Circumpunct_Quick_Reference.md) - Overview
-2. [EAP-64 Pure Physical](EAP_64_pure_physical.md) - Complete framework
-3. [EAP Formalization](energy_aperture_cycle_formalization.md) - Protocols
-4. [Geometric Constants](geometric_derivation_fundamental_constants_MAP.md) - Testable predictions
-5. [Toroidal Mapping](toroidal_mode_mapping_and_predictions.md) - Signatures
+2. [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - Complete theory with predictions
+3. [EAP-64 Pure Physical](EAP_64_pure_physical.md) - Complete framework
+4. [EAP Formalization](energy_aperture_cycle_formalization.md) - Protocols
+5. [Geometric Constants](geometric_derivation_fundamental_constants_MAP.md) - Testable predictions
+6. [Toroidal Mapping](toroidal_mode_mapping_and_predictions.md) - Signatures
 
 ### For Philosophers/General Readers
 
@@ -204,12 +223,14 @@ Detailed measurement protocols in:
 
 ### For Theorists
 
-1. [Dimensional Construction](dimensional_construction_branching.md) - D = 1.5 proof
-2. [Binary Thresholds](binary_thresholds.md) - 64-state necessity
-3. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - Complete α derivation
-4. [Mass Ratios from Geometry](mass_ratios_from_aperture_geometry_MAP.md) - Generation hierarchy
-5. [Unified Theory](Unified_Theory.md) - Field dynamics
-6. [Charge Quantization](charge_quantization_paper.md) - EM structure
+1. [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md) - Geometric necessity proof
+2. [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - QCD calibration and emergence
+3. [Dimensional Construction](dimensional_construction_branching.md) - D = 1.5 proof
+4. [Binary Thresholds](binary_thresholds.md) - 64-state necessity
+5. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - Complete α derivation
+6. [Mass Ratios from Geometry](mass_ratios_from_aperture_geometry_MAP.md) - Generation hierarchy
+7. [Unified Theory](Unified_Theory.md) - Field dynamics
+8. [Charge Quantization](charge_quantization_paper.md) - EM structure
 
 ---
 
@@ -239,20 +260,26 @@ EAP-64 Pure Physical ────→ Main reference (most comprehensive)
 | Concept | Primary Document | Supporting Documents |
 |---------|-----------------|---------------------|
 | **⊙ = M·Å·Φ** | Circumpunct_Theory_Complete.md | All documents |
-| **D = 1.5** | dimensional_construction_branching.md | EAP_64_pure_physical.md, mass_ratios_from_aperture_geometry_MAP.md |
-| **β = 0.5** | dimensional_construction_branching.md | binary_thresholds.md, geometric_derivation_fundamental_constants_MAP.md |
-| **64 states** | binary_thresholds.md, 64_state.md | EAP_64_pure_physical.md, geometric_derivation_fundamental_constants_MAP.md |
+| **D = 1.5** | dimensional_construction_branching.md | Dimensional_Validation_Correspondence.md, Unified_Framework_Complete_Nov2025_Enhanced.md, EAP_64_pure_physical.md |
+| **β = 0.5** | dimensional_construction_branching.md | Unified_Framework_Complete_Nov2025_Enhanced.md, binary_thresholds.md, geometric_derivation_fundamental_constants_MAP.md |
+| **64 states** | Dimensional_Validation_Correspondence.md | binary_thresholds.md, 64_state.md, Unified_Framework_Complete_Nov2025_Enhanced.md |
+| **Three fractional dimensions** | Dimensional_Validation_Correspondence.md | Unified_Framework_Complete_Nov2025_Enhanced.md, dimensional_construction_branching.md |
+| **Binary validation** | Dimensional_Validation_Correspondence.md | binary_thresholds.md, Unified_Framework_Complete_Nov2025_Enhanced.md |
+| **QCD calibration K factors** | Unified_Framework_Complete_Nov2025_Enhanced.md | mass_ratios_from_aperture_geometry_MAP.md |
+| **Emergence factors ε** | Unified_Framework_Complete_Nov2025_Enhanced.md | mass_ratios_from_aperture_geometry_MAP.md |
+| **CP violation** | Unified_Framework_Complete_Nov2025_Enhanced.md | - |
 | **E_* ≈ 50 MeV** | binary_thresholds.md | why_binary.md |
-| **Fine structure constant α** | geometric_derivation_fundamental_constants_MAP.md | mass_ratios_from_aperture_geometry_MAP.md |
-| **Mass ratios** | mass_ratios_from_aperture_geometry_MAP.md | geometric_derivation_fundamental_constants_MAP.md |
+| **Fine structure constant α** | geometric_derivation_fundamental_constants_MAP.md | Unified_Framework_Complete_Nov2025_Enhanced.md, mass_ratios_from_aperture_geometry_MAP.md |
+| **Mass ratios** | mass_ratios_from_aperture_geometry_MAP.md | Unified_Framework_Complete_Nov2025_Enhanced.md, geometric_derivation_fundamental_constants_MAP.md |
 | **Golden ratio φ** | geometric_derivation_fundamental_constants_MAP.md | Circumpunct_Theory_Complete.md |
-| **Strong force** | Unified_Theory.md | 64_state.md |
+| **Strong force** | Unified_Theory.md | 64_state.md, Unified_Framework_Complete_Nov2025_Enhanced.md |
 | **Weak force** | Unified_Theory.md | 64_state.md |
-| **Quark confinement** | Unified_Theory.md, 64_state.md | EAP_64_pure_physical.md |
-| **3 generations** | 64_state.md, geometric_derivation_fundamental_constants_MAP.md | mass_ratios_from_aperture_geometry_MAP.md |
-| **Consciousness** | EAP_64_pure_physical.md | Circumpunct_Theory_Complete.md |
-| **Charge quantization** | charge_quantization_paper.md | EAP_64_pure_physical.md |
-| **Experimental tests** | energy_aperture_cycle_formalization.md | EAP_64_pure_physical.md |
+| **Quark confinement** | Unified_Theory.md, 64_state.md | Dimensional_Validation_Correspondence.md, EAP_64_pure_physical.md |
+| **3 generations** | Dimensional_Validation_Correspondence.md | Unified_Framework_Complete_Nov2025_Enhanced.md, 64_state.md, geometric_derivation_fundamental_constants_MAP.md |
+| **3 colors (RGB)** | Dimensional_Validation_Correspondence.md | Unified_Theory.md, 64_state.md |
+| **Consciousness** | EAP_64_pure_physical.md | Circumpunct_Theory_Complete.md, Unified_Framework_Complete_Nov2025_Enhanced.md |
+| **Charge quantization** | charge_quantization_paper.md | Dimensional_Validation_Correspondence.md, EAP_64_pure_physical.md |
+| **Experimental tests** | energy_aperture_cycle_formalization.md | Unified_Framework_Complete_Nov2025_Enhanced.md, EAP_64_pure_physical.md |
 
 ---
 
