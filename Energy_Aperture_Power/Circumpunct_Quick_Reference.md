@@ -33,8 +33,8 @@ Not a static symbol, but active reality:
 | Component | Fractal D | Transition | Physical | Conscious | Process |
 |-----------|-----------|------------|----------|-----------|---------|
 | **Å** | ≈ 0.5 | Point → Line | Singularities | Focus/attention | Energy converges |
-| **Φ** | ≈ 1.5 | Line → Surface | Field branching | Awareness/experience | Energy flows |
-| **M** | ≈ 2.5 | Surface → Volume | Matter organs | Embodiment/action | Energy validates |
+| **Φ** | ≈ 1.5 | Line → Surface | Field branching | Awareness/mind/experience | Energy flows |
+| **M** | ≈ 2.5 | Surface → Volume | Matter organs | Embodiment/action/fractal-lensing | Energy validates |
 
 ```
 0 → 0.5 → 1 → 1.5 → 2 → 2.5 → 3
@@ -117,6 +117,7 @@ But BEING the process itself
 Field (D ≈ 1.5):
   - My experiencing, my awareness
   - Exploring possibilities
+  - My mind
   - The act of consciousness
   - Energy FLOWS through me
 
@@ -188,7 +189,7 @@ Space-filling curve: D → 2.0
 
 ---
 
-## CONSCIOUSNESS & MEDITATION STATES (These are guesses and they need experimentation)
+## CONSCIOUSNESS & MEDITATION STATES (These are guesses and they need experimentation, also this section is messy and wrong and needs re-doing)
 
 ### Dimensional Navigation Map
 
