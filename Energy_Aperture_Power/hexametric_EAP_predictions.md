@@ -2,14 +2,18 @@
 
 **Falsifiable Predictions That Distinguish From All Other Theories**
 
-Ashman Roonz  
+Ashman Roonz
 November 16, 2025
+
+**📖 THEORY FOUNDATION:** This document presents testable predictions from the complete hexa-metric framework. For mathematical foundations, see **[Hexa-Metric EAP Theory](hexametric_EAP_theory.md)** | For visual explanations, see **[Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md)**
 
 ---
 
 ## Category 1: METRIC INTERFERENCE EFFECTS
 
 ### Prediction 1.1: Triple-Metric Resonance at LHC
+
+**📖 Theory background:** See [Part I: The Six Metrics](hexametric_EAP_theory.md#11-the-six-metrics) and [Diagram 1](hexametric_EAP_visual_diagram.md#diagram-1-the-six-metrics-at-every-spacetime-point)
 
 **What:** When all three metric components (M, Å, Φ) are simultaneously active, interference creates narrow resonances at specific energies.
 
@@ -135,6 +139,8 @@ A_Φ/A_M ≈ 0.01 (1% of main signal)
 ## Category 2: CONFIGURATION TRANSITION RATES
 
 ### Prediction 2.1: Forbidden Transitions Between States
+
+**📖 Theory background:** See [Part IV: The 64 States](hexametric_EAP_theory.md#part-iv-the-64-states-in-detail) and [Diagram 5](hexametric_EAP_visual_diagram.md#diagram-5-the-64-state-configuration-space)
 
 **What:** Certain state transitions are geometrically impossible, even if energy/momentum conserved.
 
@@ -738,6 +744,8 @@ Refined prediction needed based on detector coupling...
 
 ### Prediction 5.4: Lepton Mass Generation from Golden Ratio Scaling
 
+**📖 Theory background:** See [Section 7.4: Generation Mass Ratios](hexametric_EAP_theory.md#74-generation-mass-ratios) and [Diagram 8](hexametric_EAP_visual_diagram.md#diagram-8-particle-mass-generation) for complete derivation.
+
 **What:** Lepton masses follow exact formula with golden ratio φ appearing in generation scaling.
 
 **Mechanism:**
@@ -1110,6 +1118,22 @@ The theory stands or falls on these predictions.
 
 ---
 
-Ashman Roonz | November 16, 2025  
-Hexa-Metric Energy-Aperture-Power Theory  
+## Related Documents
+
+**📖 Theoretical Foundation:**
+- [Hexa-Metric EAP Theory](hexametric_EAP_theory.md) - Complete mathematical formulation with field equations
+- [Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md) - Visual explanations of all concepts
+
+**🔗 Supporting Documents:**
+- [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - QCD calibration and emergence hierarchy
+- [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md) - Geometric necessity proofs
+- [64-State Table](64_state.md) - Complete particle classification
+- [QCD, CP, Masses Index](QCD_CP_Masses_Index.md) - Latest experimental validations
+- [Toroidal Mode Mapping](toroidal_mode_mapping_and_predictions.md) - Additional geometric predictions
+- [Energy-Aperture-Power README](README.md) - Complete framework overview
+
+---
+
+Ashman Roonz | November 16, 2025
+Hexa-Metric Energy-Aperture-Power Theory
 Contact: [institution/email]

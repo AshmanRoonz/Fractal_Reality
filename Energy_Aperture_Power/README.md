@@ -40,6 +40,14 @@ A complete theoretical framework for understanding physical reality through the 
    - Complete experimental signature guide
    - Perfect visual companion to the theory document
 
+3. **[HEXA-METRIC EAP PREDICTIONS](hexametric_EAP_predictions.md)** (45 min read) **← EXPERIMENTAL TESTS**
+   - **~50 specific, falsifiable predictions** that distinguish from all other theories
+   - Laboratory experiments (toroidal cavity thrust, gravitational birefringence)
+   - Astrophysical signatures (neutron stars, black holes, dark matter)
+   - Precision tests (g-2 anomaly, proton radius, neutrino oscillations)
+   - **Already confirmed:** Lepton masses to 0.001% accuracy ✓✓✓
+   - **Make-or-break tests** that will prove or disprove the theory
+
 **Why this is revolutionary:**
 - Physics IS geometry (literally - every particle is a metric configuration)
 - Six metrics (M_g, Å_g, Φ_g) on INPUT and OUTPUT sides
@@ -57,7 +65,8 @@ A complete theoretical framework for understanding physical reality through the 
 ### Path 1: Visual First (Recommended for most readers)
 1. **[Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md)** (30 min)
 2. **[Hexa-Metric Theory Complete](hexametric_EAP_theory.md)** (60 min)
-3. **[QCD, CP Violation & Mass Predictions Index](QCD_CP_Masses_Index.md)** (20 min)
+3. **[Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md)** (45 min)
+4. **[QCD, CP Violation & Mass Predictions Index](QCD_CP_Masses_Index.md)** (20 min)
 
 ### Path 2: Quick Overview
 1. **[Circumpunct Quick Reference](Circumpunct_Quick_Reference.md)** (5 min read)
@@ -109,6 +118,19 @@ A complete theoretical framework for understanding physical reality through the 
 - Particle mass generation mechanism
 - Complete unification picture
 - Experimental signature guide
+
+**[Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md)** ⭐⭐⭐ **NEW - EXPERIMENTAL TESTS**
+- ~50 specific, falsifiable predictions distinguishing from all other theories
+- Category 1: Metric interference effects (triple-frequency GW, metric beating)
+- Category 2: Configuration transition rates (forbidden transitions, neutrino oscillations)
+- Category 3: Laboratory experiments (toroidal cavity thrust, gravitational birefringence, vacuum metastability)
+- Category 4: Astrophysical predictions (neutron star M/R, black hole information, dark matter r^(-1.5) profile)
+- Category 5: Precision tests (g-2 correction, proton radius 0.78 fm, lepton masses φ^(4ℓ/3))
+- Category 6: Quantum gravity effects (E* = 50 MeV accessible scale)
+- Category 7: Cosmological signatures (CMB distortion, GW tensor tilt)
+- **Already confirmed:** Lepton mass formula perfect to 0.001% ✓✓✓
+- **Smoking gun tests:** φ-spacing resonances, g-2 anomaly, GW triple-frequency
+- Complete experimental protocols and distinguishing signatures
 
 **[Circumpunct Theory: Complete](Circumpunct_Theory_Complete.md)**
 - The three fundamental axioms
@@ -302,28 +324,30 @@ Detailed measurement protocols in:
 
 1. [Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md) - Visual overview of 6-metric structure ⭐⭐⭐
 2. [Hexa-Metric EAP Theory](hexametric_EAP_theory.md) - Complete field-theoretic formulation ⭐⭐⭐
-3. [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md) - Why three validations are necessary
-4. [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - Complete synthesis with emergence
-5. [Binary Thresholds](binary_thresholds.md) - Mathematical necessity
-6. [64-State Table](64_state.md) - Particle classification
-7. [QCD Calibration Derivation](QCD_calibration_derivation.md) - K-factors from first principles ⭐
-8. [Refined Generation Masses](refined_generation_masses.md) - Improved predictions ⭐
-9. [CP Violation from Aperture Asymmetry](CP_violation_aperture_asymmetry.md) - Matter-antimatter asymmetry ⭐
-10. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - α derivation
-11. [Mass Ratios](mass_ratios_from_aperture_geometry_MAP.md) - Generation structure
-12. [Unified Theory](Unified_Theory.md) - Force derivation
-13. [EAP Formalization](energy_aperture_cycle_formalization.md) - Experiments
+3. [Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md) - ~50 falsifiable predictions ⭐⭐⭐
+4. [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md) - Why three validations are necessary
+5. [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - Complete synthesis with emergence
+6. [Binary Thresholds](binary_thresholds.md) - Mathematical necessity
+7. [64-State Table](64_state.md) - Particle classification
+8. [QCD Calibration Derivation](QCD_calibration_derivation.md) - K-factors from first principles ⭐
+9. [Refined Generation Masses](refined_generation_masses.md) - Improved predictions ⭐
+10. [CP Violation from Aperture Asymmetry](CP_violation_aperture_asymmetry.md) - Matter-antimatter asymmetry ⭐
+11. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - α derivation
+12. [Mass Ratios](mass_ratios_from_aperture_geometry_MAP.md) - Generation structure
+13. [Unified Theory](Unified_Theory.md) - Force derivation
+14. [EAP Formalization](energy_aperture_cycle_formalization.md) - Experiments
 
 ### For Experimentalists
 
-1. [Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md) - Experimental signatures ⭐⭐⭐
-2. [Hexa-Metric EAP Theory](hexametric_EAP_theory.md) - Complete predictions ⭐⭐⭐
-3. [Quick Reference](Circumpunct_Quick_Reference.md) - Overview
-4. [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - Complete theory with predictions
-5. [EAP-64 Pure Physical](EAP_64_pure_physical.md) - Complete framework
-6. [EAP Formalization](energy_aperture_cycle_formalization.md) - Protocols
-7. [Geometric Constants](geometric_derivation_fundamental_constants_MAP.md) - Testable predictions
-8. [Toroidal Mapping](toroidal_mode_mapping_and_predictions.md) - Signatures
+1. [Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md) - ~50 testable predictions ⭐⭐⭐
+2. [Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md) - Experimental signatures ⭐⭐⭐
+3. [Hexa-Metric EAP Theory](hexametric_EAP_theory.md) - Complete predictions ⭐⭐⭐
+4. [Quick Reference](Circumpunct_Quick_Reference.md) - Overview
+5. [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - Complete theory with predictions
+6. [EAP-64 Pure Physical](EAP_64_pure_physical.md) - Complete framework
+7. [EAP Formalization](energy_aperture_cycle_formalization.md) - Protocols
+8. [Geometric Constants](geometric_derivation_fundamental_constants_MAP.md) - Testable predictions
+9. [Toroidal Mapping](toroidal_mode_mapping_and_predictions.md) - Signatures
 
 ### For Philosophers/General Readers
 
@@ -331,7 +355,8 @@ Detailed measurement protocols in:
 2. [Quick Reference](Circumpunct_Quick_Reference.md) - Core ideas
 3. [Circumpunct Theory Complete](Circumpunct_Theory_Complete.md) - Full framework
 4. [Hexa-Metric EAP Theory](hexametric_EAP_theory.md) - Philosophical implications (Part X)
-5. [EAP-64 Pure Physical](EAP_64_pure_physical.md#viii-philosophical-clarity) - Implications
+5. [Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md) - What can be tested
+6. [EAP-64 Pure Physical](EAP_64_pure_physical.md#viii-philosophical-clarity) - Implications
 
 ### For Theorists
 
@@ -339,17 +364,18 @@ Detailed measurement protocols in:
 
 1. [Hexa-Metric EAP Theory](hexametric_EAP_theory.md) - Complete mathematical structure ⭐⭐⭐
 2. [Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md) - Structure diagrams ⭐⭐⭐
-3. [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md) - Geometric necessity proof
-4. [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - QCD calibration and emergence
-5. [QCD Calibration Derivation](QCD_calibration_derivation.md) - First-principles K-factors ⭐
-6. [Dimensional Construction](dimensional_construction_branching.md) - D = 1.5 proof
-7. [Binary Thresholds](binary_thresholds.md) - 64-state necessity
-8. [CP Violation from Aperture Asymmetry](CP_violation_aperture_asymmetry.md) - Geometric CP violation ⭐
-9. [Refined Generation Masses](refined_generation_masses.md) - QCD-corrected predictions ⭐
-10. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - Complete α derivation
-11. [Mass Ratios from Geometry](mass_ratios_from_aperture_geometry_MAP.md) - Generation hierarchy
-12. [Unified Theory](Unified_Theory.md) - Field dynamics
-13. [Charge Quantization](charge_quantization_paper.md) - EM structure
+3. [Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md) - Falsification tests ⭐⭐⭐
+4. [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md) - Geometric necessity proof
+5. [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - QCD calibration and emergence
+6. [QCD Calibration Derivation](QCD_calibration_derivation.md) - First-principles K-factors ⭐
+7. [Dimensional Construction](dimensional_construction_branching.md) - D = 1.5 proof
+8. [Binary Thresholds](binary_thresholds.md) - 64-state necessity
+9. [CP Violation from Aperture Asymmetry](CP_violation_aperture_asymmetry.md) - Geometric CP violation ⭐
+10. [Refined Generation Masses](refined_generation_masses.md) - QCD-corrected predictions ⭐
+11. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - Complete α derivation
+12. [Mass Ratios from Geometry](mass_ratios_from_aperture_geometry_MAP.md) - Generation hierarchy
+13. [Unified Theory](Unified_Theory.md) - Field dynamics
+14. [Charge Quantization](charge_quantization_paper.md) - EM structure
 
 ---
 
