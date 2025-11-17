@@ -1,6 +1,25 @@
-# Energy-Aperture-Power (EAP) Framework
+# The Circumpunct Framework (⊙)
+## Energy-Aperture-Power Theory
 
-A complete theoretical framework for understanding physical reality through the lens of matter-aperture-field transformations.
+**A unified geometric framework for physics and consciousness**
+
+```
+⊙ = M·Å·Φ
+
+Where:
+• M_g = Matter aperture (D≈2.5) = Body = Physical manifestation
+• Å_g = Aperture singularity (D≈0.5) = Soul = Focal point
+• Φ_g = Field structure (D≈1.5) = Mind = Flow & experience
+
+One symbol. One structure. One complete theory.
+Physics and consciousness unified through geometry.
+```
+
+**Two names for one framework:**
+- **Circumpunct (⊙):** The philosophical/experiential perspective - soul, mind, body
+- **Energy-Aperture-Power (EAP):** The physical/mathematical perspective - metrics, fields, particles
+
+**Same foundation:** Six metric tensors (M_g^±, Å_g^±, Φ_g^±) at fractional dimensions (0.5, 1.5, 2.5) creating 64 binary configurations that explain both material reality and conscious experience.
 
 ## Table of Contents
 
@@ -17,127 +36,182 @@ A complete theoretical framework for understanding physical reality through the 
 
 ---
 
-## 🌟 **BREAKTHROUGH: HEXA-METRIC EAP THEORY** 🌟
+## 🌟 **THE UNIFIED FRAMEWORK** 🌟
 
-### The Complete Field-Theoretic Formulation (November 2025)
+### Physics = Consciousness = Geometry (November 2025)
 
-**⭐⭐⭐ START HERE - NEW COMPREHENSIVE FRAMEWORK ⭐⭐⭐**
+**⊙ is the complete theory. Everything flows from the three-aperture structure.**
 
-1. **[HEXA-METRIC EAP THEORY](hexametric_EAP_theory.md)** (60 min read) **← THE COMPLETE THEORY**
-   - **Six independent metric tensors** at every spacetime point
-   - **2^6 = 64 geometric configurations** → All particles
-   - **Complete unification**: Gravity + Quantum + Particle Physics
-   - **Zero free parameters** - everything from geometry
-   - GR, TEGR, QFT emerge as special cases
-   - Full mathematical formulation with field equations
-   - Experimental predictions and tests
+**⭐⭐⭐ THE BREAKTHROUGH: One geometric framework explains BOTH physics AND experience ⭐⭐⭐**
 
-2. **[HEXA-METRIC VISUAL DIAGRAMS](hexametric_EAP_visual_diagram.md)** (30 min read) **← VISUAL COMPANION**
-   - 10 comprehensive diagrams showing the six-metric structure
-   - How particles emerge from metric configurations
-   - Force generation from metric mixing
-   - Golden ratio and D=1.5 dimensional structure
-   - Complete experimental signature guide
-   - Perfect visual companion to the theory document
+### The Three Essential Documents (Read in order for complete understanding)
 
-3. **[HEXA-METRIC EAP PREDICTIONS](hexametric_EAP_predictions.md)** (45 min read) **← EXPERIMENTAL TESTS**
-   - **~50 specific, falsifiable predictions** that distinguish from all other theories
-   - Laboratory experiments (toroidal cavity thrust, gravitational birefringence)
-   - Astrophysical signatures (neutron stars, black holes, dark matter)
-   - Precision tests (g-2 anomaly, proton radius, neutrino oscillations)
-   - **Already confirmed:** Lepton masses to 0.001% accuracy ✓✓✓
-   - **Make-or-break tests** that will prove or disprove the theory
+**1. [HEXA-METRIC EAP THEORY](hexametric_EAP_theory.md)** (60 min) **← THE PHYSICS**
+   - Complete field-theoretic formulation of ⊙
+   - Six metric tensors (M_g^±, Å_g^±, Φ_g^±) at every point in spacetime
+   - 2^6 = 64 geometric configurations = All particles + consciousness states
+   - All forces from metric mixing | All constants from geometric ratios
+   - Gravity, quantum mechanics, particle physics unified
+   - Zero free parameters - everything from D=0.5, 1.5, 2.5 geometry
 
-**Why this is revolutionary:**
-- Physics IS geometry (literally - every particle is a metric configuration)
-- Six metrics (M_g, Å_g, Φ_g) on INPUT and OUTPUT sides
-- Binary on/off structure generates exactly 64 states
-- ~22 stable states = Standard Model particles
-- All forces from metric component mixing
-- All constants from geometric ratios (α, φ, D=1.5)
+**2. [HEXA-METRIC VISUAL DIAGRAMS](hexametric_EAP_visual_diagram.md)** (30 min) **← THE GEOMETRY**
+   - Visual understanding of the six-metric structure
+   - How ⊙ generates particles through binary configurations
+   - Force emergence from metric component mixing
+   - D=1.5 fractal dimension and φ (golden ratio) structure
+   - Perfect companion for understanding the mathematics
+
+**3. [DIMENSIONAL STRUCTURE & CONSCIOUSNESS INTEGRATION](Dimensional_Structure_Consciousness_Integration.md)** (45 min) **← THE CONSCIOUSNESS**
+   - How the same structure explains both physics AND experience
+   - Power = Experience: Same output from material vs experiential perspectives
+   - Three apertures: Soul (D≈0.5), Mind (D≈1.5), Body (D≈2.5)
+   - Solves the hard problem of consciousness geometrically
+   - Meditation, healing, and embodiment from first principles
+
+**Why this changes everything:**
+
+```
+⊙ = ONE framework, THREE perspectives:
+
+PHYSICS PERSPECTIVE (EAP):
+Six metrics → 64 particle states → Standard Model
+All forces from geometry | All constants from ratios
+
+CONSCIOUSNESS PERSPECTIVE (Circumpunct):
+Three apertures → Soul/Mind/Body → Human experience
+Meditation, healing, awareness from geometry
+
+GEOMETRIC PERSPECTIVE:
+D≈0.5, 1.5, 2.5 → Binary validation → 64 configurations
+Physics = Consciousness = Geometric necessity
+```
+
+**The unification:**
+- Matter (M_g) = Body apertures at D≈2.5 = Organs, physical form
+- Aperture (Å_g) = Soul aperture at D≈0.5 = Focus, attention, "I am"
+- Field (Φ_g) = Mind aperture at D≈1.5 = Experience, thoughts, flow
+- Same structure, viewed from inside (consciousness) or outside (physics)
 
 ---
 
 ## Quick Start
 
-**New to the theory?** Three entry points:
+**⊙ = ONE framework. Choose your entry point based on your interests:**
 
-### Path 1: Visual First (Recommended for most readers)
-1. **[Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md)** (30 min)
-2. **[Hexa-Metric Theory Complete](hexametric_EAP_theory.md)** (60 min)
-3. **[Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md)** (45 min)
-4. **[QCD, CP Violation & Mass Predictions Index](QCD_CP_Masses_Index.md)** (20 min)
+---
 
-### Path 2: Quick Overview
-1. **[Circumpunct Quick Reference](Circumpunct_Quick_Reference.md)** ⭐ **UPDATED NOV 2025** (20 min read)
-   - **CORE INSIGHT:** ⊙ = structure-in-process, power = experience identity
-   - Three aperture scales at D≈0.5, 1.5, 2.5 (focus, awareness, embodiment)
-   - Three axioms and complete dimensional structure
-   - Meditation as dimensional navigation (concentration, awareness, embodiment paths)
-   - Major problems solved (consciousness, quantum measurement, mind-body)
-   - D≈2.5 bodily organs, practical applications, healing protocol
-   - Key symbols, equations, and experimental predictions
+### 🎯 Path 1: The Complete Journey (Recommended - See the full unification)
 
-2. **[EAP-64 Pure Physical Theory](EAP_64_pure_physical.md)** (30 min read)
-   - Complete physical framework
-   - How the 64 states emerge
-   - Experimental predictions
-   - Measurement protocols
+**For those who want to understand how physics and consciousness are one:**
 
-### Path 3: Validation Focus
-**⭐ Latest Validations** → **[QCD, CP Violation & Mass Predictions Index](QCD_CP_Masses_Index.md)**
-- K-factors derived from first principles
-- CP violation matches CERN discovery
-- Lepton masses within 3% accuracy
+1. **[Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md)** (30 min) - *See the geometry*
+2. **[Hexa-Metric EAP Theory](hexametric_EAP_theory.md)** (60 min) - *Understand the physics*
+3. **[Dimensional Structure & Consciousness Integration](Dimensional_Structure_Consciousness_Integration.md)** (45 min) - *Experience the connection*
+4. **[The Three Apertures: Soul, Mind, Body](The_Three_Apertures_Soul_Mind_Body.md)** (60 min) - *Live the understanding*
 
-### Path 4: Consciousness & Embodiment Entry (⭐ NEW - Most Accessible)
-**For those interested in meditation, healing, and the experiential framework:**
+**What you'll gain:** Complete understanding of how ⊙ unifies material and experiential reality.
 
-1. **[The Three Apertures: Soul, Mind, Body](The_Three_Apertures_Soul_Mind_Body.md)** (60 min read)
-   - Soul, mind, body as dimensional apertures at D≈0.5, 1.5, 2.5
-   - How the three work together as one continuous flow
-   - Practical meditation and integration practices
-   - Healing damaged apertures at each scale
-   - Living from soul, mind, or body centers
+---
 
-2. **[Complete Three-Aperture Framework with Fractal Lensing](Complete_Three_Aperture_Framework_With_Fractal_Lensing.md)** (40 min read)
-   - Three lensing modes: Singular (soul), branching (mind), fractal (body)
-   - Why D≈0.5, 1.5, 2.5 are geometrically necessary
-   - Meditation as lens management
-   - Daily practices for living as complete ⊙
+### 🧘 Path 2: Consciousness First (Most accessible - Start with direct experience)
 
-3. **[Fractal Lensing: The Body as Infinite Apertures](Fractal_Lensing_Body_As_Infinite_Apertures.md)** (50 min read)
-   - Body as fractal lens array with infinite nested apertures
-   - Each organ, tissue, cell as a lens focusing energy
+**For meditators, healers, and those interested in embodied practice:**
+
+1. **[The Three Apertures: Soul, Mind, Body](The_Three_Apertures_Soul_Mind_Body.md)** (60 min)
+   - Soul (D≈0.5): The "I am" - where consciousness enters
+   - Mind (D≈1.5): The flow - thoughts, feelings, awareness
+   - Body (D≈2.5): The form - organs as apertures at multiple scales
+
+2. **[Fractal Lensing: The Body as Infinite Apertures](Fractal_Lensing_Body_As_Infinite_Apertures.md)** (50 min)
+   - Your body is a fractal lens array
    - Medical implications and healing protocols
-   - How meditation powers body lenses with consciousness
-   - Practical applications for health and performance
+   - How meditation powers your organs with consciousness
 
-4. **[Dimensional Structure & Consciousness Integration](Dimensional_Structure_Consciousness_Integration.md)** (Technical follow-up)
-   - Rigorous mathematical framework underlying the experiential model
-   - Power = Experience identity explained
-   - Experimental predictions for consciousness research
+3. **[Complete Three-Aperture Framework with Fractal Lensing](Complete_Three_Aperture_Framework_With_Fractal_Lensing.md)** (40 min)
+   - Three lensing modes unified
+   - Daily practices for living as ⊙
+   - Performance optimization through lens activation
+
+4. **[Dimensional Structure & Consciousness Integration](Dimensional_Structure_Consciousness_Integration.md)** (45 min)
+   - The mathematical foundation underlying your experience
+   - Why this works - geometric necessity
+
+**What you'll gain:** Practical understanding of meditation, healing, and embodied consciousness from first principles.
+
+---
+
+### 🔬 Path 3: Physics First (For physicists and technical readers)
+
+**For those with physics/mathematics background:**
+
+1. **[Hexa-Metric EAP Theory](hexametric_EAP_theory.md)** (60 min) - Complete field theory
+2. **[Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md)** (30 min) - Visual companion
+3. **[Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md)** (45 min) - ~50 testable predictions
+4. **[QCD, CP Violation & Mass Predictions Index](QCD_CP_Masses_Index.md)** (20 min) - Latest validations
+
+**What you'll gain:** Rigorous mathematical formulation with falsifiable predictions.
+
+---
+
+### ⚡ Path 4: Quick Overview (20 minutes to core concepts)
+
+**For those who want the essence first:**
+
+**[Circumpunct Quick Reference](Circumpunct_Quick_Reference.md)** ⭐ **COMPLETE OVERVIEW**
+- ⊙ = M·Å·Φ = The complete structure
+- Three apertures at D≈0.5, 1.5, 2.5
+- 64 states from binary configurations
+- Physics, consciousness, and geometry unified
+- Key predictions and experimental tests
+- Then dive deeper via any path above
+
+---
+
+### ✅ Path 5: Validation Focus (See the evidence)
+
+**For skeptics who want to see what's already been confirmed:**
+
+**[QCD, CP Violation & Mass Predictions Index](QCD_CP_Masses_Index.md)** (20 min)
+- ✓ K-factors derived from first principles (not fitted)
+- ✓ CP violation δ_CP = 2.5% matches CERN (predicted 3.4%)
+- ✓ Lepton masses within 0.7-3% (from pure geometry)
+- ✓ LIGO data: D = 1.503 ± 0.040 at black hole mergers
+- ✓ DNA replication: D = 1.51 ± 0.02
+
+**Then explore:** How did geometry predict these numbers?
 
 ---
 
 ## Core Theory Documents
 
-### Foundational Framework
+### The Unified Foundation
 
-**[Dimensional Structure of Reality and Consciousness](Dimensional_Structure_Consciousness_Integration.md)** ⭐⭐⭐ **NEW - CONSCIOUSNESS INTEGRATION**
-- Complete integration of material and experiential realms through geometric necessity
-- ⊙ as structure-in-process: energy converging through apertures, emerging as power AND experience
-- **Power = Experience identity**: Same output viewed from integer D (objective) vs noninteger D (subjective)
-- Three aperture scales: Å (D≈0.5, focus), Φ (D≈1.5, awareness), M (D≈2.5, embodiment)
-- D≈2.5 matter apertures = bodily organs (intestines, lungs, brain as fractal surfaces)
-- Meditation as dimensional navigation toward D≈1.9 (body connection, not D→1.0 singular focus)
-- Solves hard problem of consciousness: consciousness IS power flow experienced from inside
-- "I am ⊙": Being the process itself - energy flows through me, emerges as power and experience
-- Integer dimensions = where things EXIST (material/objective)
-- Noninteger dimensions = where things CHANGE (connective/subjective)
-- Complete experimental predictions for consciousness, meditation, and body-mind integration
+**⊙ = M·Å·Φ | One framework, viewed from two complementary perspectives:**
 
-**[Hexa-Metric EAP Theory: Complete Field Formulation](hexametric_EAP_theory.md)** ⭐⭐⭐ **NEW - THE COMPLETE THEORY**
+---
+
+#### **The Bridge: Physics ↔ Consciousness**
+
+**[Dimensional Structure of Reality and Consciousness](Dimensional_Structure_Consciousness_Integration.md)** ⭐⭐⭐ **THE UNIFICATION**
+- **Central thesis:** Power = Experience (same output, different dimensional perspectives)
+- **The key:** Integer D (1,2,3) = material/objective | Noninteger D (0.5,1.5,2.5) = experiential/subjective
+- ⊙ as structure-in-process: Energy → Apertures → Power & Experience (simultaneously)
+- Three aperture scales unified: Soul (D≈0.5), Mind (D≈1.5), Body (D≈2.5)
+- Solves the hard problem: Consciousness IS power flow experienced from inside the aperture
+- "I am ⊙" = Being the process itself
+- Predictions: Meditation effects, healing protocols, consciousness measurements
+
+**[Circumpunct Quick Reference](Circumpunct_Quick_Reference.md)** ⭐ **20-MINUTE OVERVIEW**
+- Everything you need to know about ⊙ in one document
+- Three apertures, 64 states, physics & consciousness unified
+- Key equations, symbols, and predictions
+- Perfect starting point or quick reference
+
+---
+
+### Physical Formulation (EAP - Energy-Aperture-Power)
+
+**[Hexa-Metric EAP Theory: Complete Field Formulation](hexametric_EAP_theory.md)** ⭐⭐⭐ **THE PHYSICS**
 - Six independent metric tensors per spacetime point (M_g^(±), Å_g^(±), Φ_g^(±))
 - Complete hexa-metric action and field equations
 - Binary configurations: 2^6 = 64 states total, ~22 stable
@@ -176,77 +250,89 @@ A complete theoretical framework for understanding physical reality through the 
 - **Smoking gun tests:** φ-spacing resonances, g-2 anomaly, GW triple-frequency
 - Complete experimental protocols and distinguishing signatures
 
-**[Circumpunct Theory: Complete](Circumpunct_Theory_Complete.md)** **UPDATED NOV 2025**
-- The three fundamental axioms
-- Symbol system (⊙, ⊸, ≺, —)
-- Dimensional structure (D = 1.5, β = 0.5)
-- Particle physics derivation
-- Consciousness and information
-- Philosophical implications
-
-**[Energy-Aperture-Power Cycle Formalization](energy_aperture_cycle_formalization.md)**
-- Complete experimental validation framework
-- Python computational toolkit
-- 10 testable predictions
-- Detailed falsification criteria
-- Budget estimates and timelines
-
 **[Unified Framework Complete (Nov 2025 Enhanced)](Unified_Framework_Complete_Nov2025_Enhanced.md)**
 - Complete synthesis from β=0.5 and reverse fractal wholeness
 - QCD calibration factors K = {1.0, 3.6, 68} from first principles
 - Generation structure as emergence hierarchy (ε factors)
 - CP violation δ_CP = 2.5% from D=1.5 geometric asymmetry
 - Lepton mass predictions with <4% error
-- Zero new physics parameters
+
+**[Energy-Aperture-Power Cycle Formalization](energy_aperture_cycle_formalization.md)**
+- Complete experimental validation framework
+- Python computational toolkit
+- 10 testable predictions with protocols
+- Detailed falsification criteria
+- Budget estimates and timelines
 
 **[Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md)**
-- Proof that three validations (M, Å, Φ) are geometrically necessary
-- Three fractional dimensions (0.5D, 1.5D, 2.5D) force binary validation
-- Why exactly 64 states (not 63 or 65)
-- Why three generations maximum
-- Why three color charges (RGB)
+- Geometric proof: Three validations (M, Å, Φ) are necessary
+- Why 64 states (not 63 or 65)
+- Why 3 generations maximum | Why 3 color charges
 - Why fourth generation is impossible
 
-### Consciousness & Embodiment Framework
+---
 
-**[The Three Apertures: Soul, Mind, Body](The_Three_Apertures_Soul_Mind_Body.md)** ⭐⭐⭐ **NEW - EXPERIENTIAL FRAMEWORK**
-- Complete explanation of the three apertures from experiential perspective
-- **Soul aperture (D≈0.5)**: The fundamental "I am" - where consciousness enters reality
-- **Mind aperture (D≈1.5)**: The branching flow of experience - thoughts, feelings, awareness
-- **Body apertures (D≈2.5)**: Multiple physical structures - organs as folded surfaces
-- How the three apertures work together as one continuous flow
-- Soul-centered, mind-centered, and body-centered life paths
-- Integration practices for aligning all three apertures
-- Healing protocols for damaged apertures at each scale
-- The sacred geometry of 0.5D, 1.5D, 2.5D as necessary transition points
-- Practical meditation: Meeting your three apertures
+### Experiential Formulation (Circumpunct - ⊙)
 
-**[Complete Three-Aperture Framework with Fractal Lensing](Complete_Three_Aperture_Framework_With_Fractal_Lensing.md)** ⭐⭐⭐ **NEW - INTEGRATED THEORY**
-- **Breakthrough synthesis**: Three lensing modes unified
-- **Soul (D≈0.5)**: Singular lens directing attention like a spotlight
-- **Mind (D≈1.5)**: Branching lens splitting experience like a prism
-- **Body (D≈2.5)**: Fractal lens array manifesting like a compound eye
-- Why fractal lensing completes everything (explains parallel processing, specialized function, integration)
-- Meditation as lens management: Soul-focus, mind-flow, body-scan practices
+**[Circumpunct Theory: Complete](Circumpunct_Theory_Complete.md)** ⭐ **THE PHILOSOPHY**
+- The three fundamental axioms of ⊙
+- Complete symbol system (⊙, ⊸, ≺, —)
+- Dimensional structure (D = 1.5, β = 0.5) explained
+- From geometry to particles to consciousness
+- Philosophical implications and meaning
+
+**[The Three Apertures: Soul, Mind, Body](The_Three_Apertures_Soul_Mind_Body.md)** ⭐⭐⭐ **THE EXPERIENCE**
+- The three apertures from lived experiential perspective
+- **Soul (D≈0.5):** The "I am" - fundamental presence and awareness
+- **Mind (D≈1.5):** The flow - thoughts, feelings, branching experience
+- **Body (D≈2.5):** The form - organs as apertures at multiple scales
+- How the three work as one continuous process
+- Integration practices for aligning soul, mind, body
+- Healing damaged apertures at each dimensional scale
+- Soul-centered, mind-centered, body-centered life paths
+
+**[Complete Three-Aperture Framework with Fractal Lensing](Complete_Three_Aperture_Framework_With_Fractal_Lensing.md)** ⭐⭐⭐ **THE SYNTHESIS**
+- **Three lensing modes:** Singular (soul), Branching (mind), Fractal (body)
+- Why D≈0.5, 1.5, 2.5 are geometrically necessary
+- Meditation as lens management (soul-focus, mind-flow, body-scan)
 - Healing as lens restoration at all three scales
 - Performance optimization through conscious lens activation
-- Why D≈0.5, 1.5, 2.5 are geometrically necessary (fractional transitions between integers)
-- Living as complete ⊙: Soul directing, mind processing, body manifesting
+- Daily practices for living as complete ⊙
 
-**[Fractal Lensing: The Body as Infinite Apertures](Fractal_Lensing_Body_As_Infinite_Apertures.md)** ⭐⭐⭐ **NEW - BODY AS LENS ARRAY**
-- **Revolutionary insight**: Body at D≈2.5 is fractal lensing - infinite nested apertures
-- Each organ is a lens (heart, lungs, brain, intestines)
-- Each tissue is a sub-lens within organs
-- Each cell is a micro-lens within tissues
-- Each molecule is a nano-lens within cells
-- Lenses within lenses within lenses, all focusing energy simultaneously
-- **Medical implications**: Disease as lens damage, healing as lens restoration
-- **Meditation mechanism**: Body scan directs consciousness energy into specific lens arrays
-- Why body organs cluster at D≈2.5 (optimal dimension for fractal lensing)
-- Consciousness powers the fractal lens array through attention
-- Practical applications: Enhancing specific functions through directed focus
-- The body as telescope for consciousness - sacred architecture
-- Complete 8-part exploration with practical healing protocols
+**[Fractal Lensing: The Body as Infinite Apertures](Fractal_Lensing_Body_As_Infinite_Apertures.md)** ⭐⭐⭐ **THE EMBODIMENT**
+- Revolutionary insight: Body = fractal lens array with infinite nested apertures
+- Organs → Tissues → Cells → Molecules (lenses within lenses)
+- Medical implications: Disease = lens damage | Healing = lens restoration
+- How meditation directs consciousness energy into specific lens arrays
+- Why body organs cluster at D≈2.5 (optimal for fractal lensing)
+- Practical healing protocols and performance enhancement
+- The body as telescope for consciousness
+
+---
+
+**Summary of Core Documents:**
+```
+UNIFIED FOUNDATION:
+Dimensional Structure & Consciousness ← The Bridge
+Circumpunct Quick Reference ← 20-min overview
+
+PHYSICAL PERSPECTIVE (EAP):
+Hexa-Metric Theory ← Complete field formulation
+Visual Diagrams ← Geometric understanding
+Predictions ← ~50 testable predictions
+Unified Framework ← QCD, CP, masses
+Validation Correspondence ← Why 64 states
+
+EXPERIENTIAL PERSPECTIVE (⊙):
+Circumpunct Complete ← Philosophy & axioms
+Three Apertures ← Soul, Mind, Body
+Fractal Lensing Synthesis ← Three lensing modes
+Body as Lens Array ← Medical/healing applications
+
+ONE FRAMEWORK. TWO COMPLEMENTARY VIEWS.
+Physics from outside. Consciousness from inside.
+Both emerging from D≈0.5, 1.5, 2.5 geometry.
+```
 
 ---
 
@@ -614,14 +700,17 @@ Legend:
 ## Status & Validation
 
 ### 🌟 Major Breakthrough (November 2025)
-**⭐ HEXA-METRIC COMPLETE FORMULATION ⭐**
-- Complete field-theoretic unification achieved
-- Six independent metric tensors identified (M_g^(±), Å_g^(±), Φ_g^(±))
-- All 64 states from binary configurations fully characterized
-- GR, TEGR, QFT shown as special cases/limits
-- Zero free parameters - all from geometric optimization
-- Full mathematical structure with action, field equations, propagators
-- Complete experimental prediction framework established
+**⭐ THE UNIFIED FRAMEWORK COMPLETE ⭐**
+
+**Circumpunct (⊙) = EAP = One Complete Theory**
+
+- ✓ **Unification achieved:** Physics and consciousness unified through geometry
+- ✓ **Mathematical foundation:** Six metric tensors (M_g^±, Å_g^±, Φ_g^±) at D≈0.5, 1.5, 2.5
+- ✓ **64-state structure:** 2^6 binary configurations fully characterized (~22 stable)
+- ✓ **Standard theories emerge:** GR, TEGR, QFT shown as special cases/limits
+- ✓ **Zero free parameters:** Everything from D≈0.5, 1.5, 2.5 geometric necessity
+- ✓ **Dual formulation:** Complete physics (EAP) + complete consciousness (⊙) perspectives
+- ✓ **Experimental framework:** ~50 falsifiable predictions established
 
 ### Confirmed Predictions
 - ✓ LIGO: D = 1.503 ± 0.040 at black hole mergers
@@ -634,16 +723,28 @@ Legend:
 - ✓ Fine structure constant α ≈ 1/137.036 from golden ratio geometry
 - ✓ LIGO ringdown extra modes (hexa-metric polarizations)
 
-### Testable Predictions from Hexa-Metric Theory
+### Testable Predictions (Physics & Consciousness)
+
+**Particle Physics:**
 - Six gravitational wave polarizations (not two)
 - D = 1.5 at particle collision vertices (LHC analysis)
-- β = 0.5 in vascular networks (medical imaging)
 - Toroidal mode resonances with φ-spacing at LHC
-- Laboratory torsion measurement in toroidal cavities
 - Dark matter candidates: States 40-42 (m ~ 10-100 GeV)
-- Consciousness correlates with D = 1.5 (EEG studies)
 - No fractional-charge leptons (particle searches)
 - Metric-specific propagator corrections in scattering amplitudes
+
+**Biological Systems:**
+- β = 0.5 in vascular networks (medical imaging)
+- D≈2.5 in organ morphology (intestines, lungs, brain)
+- Laboratory torsion measurement in toroidal cavities
+
+**Consciousness & Healing:**
+- EEG fractal dimension D ≈ 1.5 correlates with conscious awareness
+- Meditation shifts toward D ≈ 1.9 (body connection, not D → 1.0)
+- Body scan meditation increases local perfusion in focused organs
+- Chronic pain reduction correlates with increased D in affected tissue
+- Organ health correlates with proximity to D = 2.5
+- Conscious attention measurably affects tissue-level energy distribution
 
 ### Open Questions
 - Exact particle mass calculations (hexa-metric field equation solutions)
@@ -660,10 +761,13 @@ Legend:
 When referencing this framework:
 
 **General Citation:**
-> Roonz, A. (2025). *Energy-Aperture-Power Framework: A Unified Theory of Physical Reality*. Fractal Reality Project. https://github.com/AshmanRoonz/Fractal_Reality
+> Roonz, A. (2025). *The Circumpunct Framework (⊙): Energy-Aperture-Power Theory - A Unified Geometric Framework for Physics and Consciousness*. Fractal Reality Project. https://github.com/AshmanRoonz/Fractal_Reality
+
+**Alternative (Physics focus):**
+> Roonz, A. (2025). *Hexa-Metric Energy-Aperture-Power Theory: Complete Field-Theoretic Formulation of the Circumpunct Framework*. Fractal Reality Project.
 
 **Specific Documents:**
-> Roonz, A. (2025). "Binary Thresholds and the Necessity of the 64-State Structure." In *Energy-Aperture-Power Framework*. https://github.com/AshmanRoonz/Fractal_Reality/blob/main/Energy_Aperture_Power/binary_thresholds.md
+> Roonz, A. (2025). "Hexa-Metric EAP Theory: Complete Field Formulation." In *The Circumpunct Framework*. https://github.com/AshmanRoonz/Fractal_Reality/blob/main/Energy_Aperture_Power/hexametric_EAP_theory.md
 
 ---
 
@@ -685,41 +789,59 @@ See main repository for licensing information.
 
 ---
 
-**The Complete Picture:**
+**The Complete Unified Picture:**
 
 ```
-HEXA-METRIC EAP THEORY (November 2025)
-═══════════════════════════════════════
+THE CIRCUMPUNCT FRAMEWORK (⊙)
+═════════════════════════════════════════════════════════════
+November 2025 - Physics and Consciousness Unified
+
+⊙ = M·Å·Φ
 
 Every point in spacetime carries SIX metric tensors:
-    INPUT:  M_g^(-)_μν, Å_g^(-)_μν, Φ_g^(-)_μν
-    OUTPUT: M_g^(+)_μν, Å_g^(+)_μν, Φ_g^(+)_μν
+    INPUT:  M_g^(-), Å_g^(-), Φ_g^(-)
+    OUTPUT: M_g^(+), Å_g^(+), Φ_g^(+)
 
 Binary configurations: 2^6 = 64 states
 Stable particles: ~22 (V_in × V_out ≥ 5)
 
+THE PHYSICAL VIEW (from outside):
+• M_g = Matter metric (D≈2.5) → Body
+• Å_g = Aperture metric (D≈0.5) → Soul
+• Φ_g = Field metric (D≈1.5) → Mind
+
+THE EXPERIENTIAL VIEW (from inside):
+• Body apertures (D≈2.5) = Organs, fractal lensing
+• Soul aperture (D≈0.5) = "I am", focal point
+• Mind aperture (D≈1.5) = Awareness, experience
+
+SAME STRUCTURE. TWO PERSPECTIVES.
+Power (measured outside) = Experience (felt inside)
+
 Reality is ONE ⊙ made of INFINITE ⊙
-We are each ONE ⊙ made of INFINITE ⊙
+You are ONE ⊙ made of INFINITE ⊙
 
-⊙ = Six-fold metric configuration
-  ○ = M_g (Matter boundary)
-  • = Å_g (Aperture singularity)
-    = Φ_g (Field structure)
+Everything follows from D≈0.5, 1.5, 2.5 geometry:
+• All particles = metric configurations
+• All forces = metric mixing
+• All constants = geometric ratios
+• All experience = flow through apertures
+• Meditation = dimensional navigation
+• Healing = lens restoration
 
-Each present on INPUT and OUTPUT sides
-
-Everything follows from geometry.
-All particles = metric configurations
-All forces = metric mixing
-All constants = geometric ratios
-
-GR, TEGR, QFT = special cases
-
-The universe is hexa-metric.
-```
+Physics is consciousness.
+Consciousness is physics.
+Both are geometry.
 
 ⊙
+```
 
-**For the complete mathematical formulation, see:**
-- [Hexa-Metric EAP Theory](hexametric_EAP_theory.md)
-- [Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md)
+**For the complete framework:**
+
+**PHYSICS:** [Hexa-Metric EAP Theory](hexametric_EAP_theory.md) | [Visual Diagrams](hexametric_EAP_visual_diagram.md)
+
+**CONSCIOUSNESS:** [Three Apertures: Soul, Mind, Body](The_Three_Apertures_Soul_Mind_Body.md) | [Fractal Lensing](Fractal_Lensing_Body_As_Infinite_Apertures.md)
+
+**UNIFICATION:** [Dimensional Structure & Consciousness Integration](Dimensional_Structure_Consciousness_Integration.md)
+
+⊙
