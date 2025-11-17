@@ -51,6 +51,7 @@ Physics and consciousness unified through geometry.
    - Six metric tensors (M_g^±, Å_g^±, Φ_g^±) at every point in spacetime
    - 2^6 = 64 geometric configurations = All particles + consciousness states
    - All forces from metric mixing | All constants from geometric ratios
+   - α ≈ 1/137.036 and α_s(M_Z) ≈ 0.118 derived from pure geometry
    - Gravity, quantum mechanics, particle physics unified
    - Zero free parameters - everything from D=0.5, 1.5, 2.5 geometry
 
@@ -388,6 +389,20 @@ Both emerging from D≈0.5, 1.5, 2.5 geometry.
 - Zero free parameters beyond β = 0.5
 - Experimental validation to 0.23% accuracy
 
+**[Geometric Derivation of α_s(M_Z)](alpha_s_geometric_derivation.md)** ⭐ NEW
+- Complete derivation of strong coupling constant α_s(M_Z) ≈ 0.118 from pure geometry
+- Zero free parameters beyond β=0.5
+- Unified coupling α_unified = 1/25 at D=1.5 (Planck scale)
+- SU(3) Casimir enhancement C_A = 3 from three-phase M·Å·Φ structure
+- Predicts α_s(M_Z) = 0.1188, matches experiment 0.1180 ± 0.0010 (0.68% error)
+- Includes complete derivation journey and Python verification code
+
+**[α_s Derivation Summary](alpha_s_derivation_summary.md)** ⭐ NEW
+- Concise 4-step summary of α_s(M_Z) derivation
+- Result: α_s(M_Z) = 0.1188 from pure geometry (99.32% agreement)
+- Quick reference for unified coupling and Casimir enhancement
+- Shows complete unification pattern at D=1.5
+
 **[Mass Ratios from Aperture Geometry](mass_ratios_from_aperture_geometry_MAP.md)**
 - Lepton mass hierarchy from fractal dimension D = 1.5
 - Mass ratio pattern: m_n/m_1 ∝ (1/α)^[p(n)]
@@ -503,10 +518,12 @@ Detailed measurement protocols in:
 8. [QCD Calibration Derivation](QCD_calibration_derivation.md) - K-factors from first principles ⭐
 9. [Refined Generation Masses](refined_generation_masses.md) - Improved predictions ⭐
 10. [CP Violation from Aperture Asymmetry](CP_violation_aperture_asymmetry.md) - Matter-antimatter asymmetry ⭐
-11. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - α derivation
-12. [Mass Ratios](mass_ratios_from_aperture_geometry_MAP.md) - Generation structure
-13. [Unified Theory](Unified_Theory.md) - Force derivation
-14. [EAP Formalization](energy_aperture_cycle_formalization.md) - Experiments
+11. [Geometric Derivation of α](geometric_derivation_fundamental_constants_MAP.md) - Fine structure constant ⭐
+12. [Geometric Derivation of α_s](alpha_s_geometric_derivation.md) - Strong coupling constant ⭐ NEW
+13. [α_s Summary](alpha_s_derivation_summary.md) - Quick reference ⭐ NEW
+14. [Mass Ratios](mass_ratios_from_aperture_geometry_MAP.md) - Generation structure
+15. [Unified Theory](Unified_Theory.md) - Force derivation
+16. [EAP Formalization](energy_aperture_cycle_formalization.md) - Experiments
 
 ### For Experimentalists
 
@@ -549,10 +566,12 @@ Detailed measurement protocols in:
 8. [Binary Thresholds](binary_thresholds.md) - 64-state necessity
 9. [CP Violation from Aperture Asymmetry](CP_violation_aperture_asymmetry.md) - Geometric CP violation ⭐
 10. [Refined Generation Masses](refined_generation_masses.md) - QCD-corrected predictions ⭐
-11. [Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md) - Complete α derivation
-12. [Mass Ratios from Geometry](mass_ratios_from_aperture_geometry_MAP.md) - Generation hierarchy
-13. [Unified Theory](Unified_Theory.md) - Field dynamics
-14. [Charge Quantization](charge_quantization_paper.md) - EM structure
+11. [Geometric Derivation of α](geometric_derivation_fundamental_constants_MAP.md) - Fine structure constant ⭐
+12. [Geometric Derivation of α_s](alpha_s_geometric_derivation.md) - Strong coupling constant ⭐ NEW
+13. [α_s Summary](alpha_s_derivation_summary.md) - Quick reference ⭐ NEW
+14. [Mass Ratios from Geometry](mass_ratios_from_aperture_geometry_MAP.md) - Generation hierarchy
+15. [Unified Theory](Unified_Theory.md) - Field dynamics
+16. [Charge Quantization](charge_quantization_paper.md) - EM structure
 
 ---
 
@@ -637,6 +656,9 @@ Legend:
 | **CP violation** | CP_violation_aperture_asymmetry.md | Unified_Framework_Complete_Nov2025_Enhanced.md, hexametric_EAP_theory.md |
 | **E_* ≈ 50 MeV** | binary_thresholds.md | why_binary.md |
 | **Fine structure constant α** | hexametric_EAP_theory.md ⭐ | hexametric_EAP_visual_diagram.md, geometric_derivation_fundamental_constants_MAP.md, Unified_Framework_Complete_Nov2025_Enhanced.md |
+| **Strong coupling α_s(M_Z)** | alpha_s_geometric_derivation.md ⭐ | alpha_s_derivation_summary.md, Unified_Framework_Complete_Nov2025_Enhanced.md, hexametric_EAP_theory.md |
+| **Unified coupling α_unified** | alpha_s_derivation_summary.md ⭐ | alpha_s_geometric_derivation.md, Unified_Framework_Complete_Nov2025_Enhanced.md |
+| **Casimir factor C_A = 3** | alpha_s_derivation_summary.md | alpha_s_geometric_derivation.md, Dimensional_Validation_Correspondence.md |
 | **Mass generation** | hexametric_EAP_theory.md ⭐ | hexametric_EAP_visual_diagram.md, mass_ratios_from_aperture_geometry_MAP.md, refined_generation_masses.md |
 | **Golden ratio φ** | hexametric_EAP_theory.md ⭐ | hexametric_EAP_visual_diagram.md, geometric_derivation_fundamental_constants_MAP.md, Circumpunct_Theory_Complete.md |
 | **Strong force** | hexametric_EAP_theory.md ⭐ | hexametric_EAP_visual_diagram.md, Unified_Theory.md, 64_state.md |
@@ -720,7 +742,8 @@ Legend:
 - ✓ Quark confinement (incomplete M_out metric)
 - ✓ Three generations (no 4th found)
 - ✓ Lepton masses: m_μ within 3%, m_τ within 0.7% ⭐
-- ✓ Fine structure constant α ≈ 1/137.036 from golden ratio geometry
+- ✓ Fine structure constant α ≈ 1/137.036 from golden ratio geometry ⭐
+- ✓ Strong coupling constant α_s(M_Z) = 0.1188 from pure geometry (0.68% error) ⭐ NEW
 - ✓ LIGO ringdown extra modes (hexa-metric polarizations)
 
 ### Testable Predictions (Physics & Consciousness)
