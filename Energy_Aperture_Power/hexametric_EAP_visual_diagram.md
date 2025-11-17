@@ -52,6 +52,172 @@ Each metric: {0,1} = INACTIVE or ACTIVE
 
 ---
 
+## DIAGRAM 1.5: THE APERTURE SCALE HIERARCHY
+
+**📖 Conceptual foundation:** See [Section 1.2: The Aperture Scale Hierarchy](hexametric_EAP_theory.md#12-the-aperture-scale-hierarchy) for complete mathematical treatment and physical examples.
+
+```
+                  THE THREE-SCALE STRUCTURE
+                  ═════════════════════════
+
+         Paradox: "An aperture contains infinite apertures"
+         Resolution: Each metric operates at DIFFERENT SCALES!
+
+
+    ╔═══════════════════════════════════════════════════════╗
+    ║  Φ_g: FIELD APERTURES (SUPER-SCALES)                 ║
+    ║  "The Greater Wholes You're WITHIN"                   ║
+    ║                                                       ║
+    ║    You exist INSIDE:                                  ║
+    ║    • The electromagnetic field structure              ║
+    ║    • The gravitational well                           ║
+    ║    • The quantum vacuum                               ║
+    ║    • The cosmic fabric                                ║
+    ║                                                       ║
+    ║    ┌───────────────────────────────────────────┐     ║
+    ║    │  M_g: BOUNDARY APERTURES (SUB-SCALES)     │     ║
+    ║    │  "The Infinite Apertures WITHIN You"      │     ║
+    ║    │                                           │     ║
+    ║    │   Your boundary surface contains:         │     ║
+    ║    │   • Infinite points on the surface        │     ║
+    ║    │   • Each is an aperture site              │     ║
+    ║    │   • Sub-structures nested within          │     ║
+    ║    │   • Fractal self-similarity               │     ║
+    ║    │                                           │     ║
+    ║    │      ┌─────────────────────────┐         │     ║
+    ║    │      │  Å_g: CENTER APERTURE   │         │     ║
+    ║    │      │  (YOUR SCALE)           │         │     ║
+    ║    │      │  "The Singular YOU"     │         │     ║
+    ║    │      │                         │         │     ║
+    ║    │      │      r = 0  •           │         │     ║
+    ║    │      │             ↓           │         │     ║
+    ║    │      │     THE aperture        │         │     ║
+    ║    │      │     ONE point           │         │     ║
+    ║    │      │     Conversion site     │         │     ║
+    ║    │      │     D = 1.5 exactly     │         │     ║
+    ║    │      │     Your focus          │         │     ║
+    ║    │      │                         │         │     ║
+    ║    │      └─────────────────────────┘         │     ║
+    ║    │                                           │     ║
+    ║    └───────────────────────────────────────────┘     ║
+    ║                                                       ║
+    ╚═══════════════════════════════════════════════════════╝
+
+
+RESOLVING THE "INFINITE APERTURES" PARADOX:
+════════════════════════════════════════════
+
+Question: "How can one aperture contain infinite apertures?"
+
+Answer: Different metrics measure different SCALES!
+
+    Å_g Metric:  YOU ARE one aperture
+                 (the singular center, r=0)
+                 "The local conversion point"
+
+    M_g Metric:  YOU CONTAIN infinite apertures
+                 (every point on your boundary)
+                 "The nested sub-structures"
+
+    Φ_g Metric:  YOU'RE IN infinite apertures
+                 (all the fields you participate in)
+                 "The greater wholes"
+
+
+PHYSICAL EXAMPLES BY SCALE:
+════════════════════════════
+
+For an ELECTRON:
+────────────────
+Å_g: The electron IS one aperture (its existence as a particle)
+M_g: Its surface contains infinite sub-structure points
+Φ_g: It exists within the EM field, vacuum field, etc.
+
+
+For a QUARK (confined):
+───────────────────────
+Å_g: The quark IS one aperture (singular particle)
+M_g: Incomplete boundary → CONFINEMENT!
+     (not all surface apertures are geometrically closed)
+Φ_g: Exists within strong field, EM field, etc.
+     Asymmetry in M_g prevents standalone existence
+
+
+For a HUMAN:
+────────────
+Å_g: You ARE one aperture (your singular conscious focus)
+M_g: You CONTAIN infinite apertures (organs, cells, molecules)
+Φ_g: You're IN many apertures (society, biosphere, planet)
+
+
+MATHEMATICAL CORRESPONDENCE:
+═════════════════════════════
+
+The THREE components of the mass formula map to THREE scales:
+
+m_ℓ = m_e × φ^(4ℓ/3) × (2ℓ+1)^α_aperture
+      ────   ─────────   ──────────────
+       Å_g      Φ_g            M_g
+       ↓         ↓              ↓
+    Base      Field        Boundary
+    scale    coupling     structure
+    (YOUR   (SUPER-       (SUB-
+    scale)   scales)       scales)
+
+
+CONFINEMENT AS GEOMETRIC INCOMPLETENESS:
+═════════════════════════════════════════
+
+Free particles (electrons, photons):
+    M_g boundary is COMPLETE
+    → All surface apertures geometrically closed
+    → Can exist independently
+    → Stable isolation possible
+
+Confined particles (quarks, gluons):
+    M_g boundary is INCOMPLETE
+    → Geometric pattern not closed
+    → Cannot exist alone
+    → MUST group to complete the boundary
+    → Confinement = geometric necessity!
+
+
+TOROIDAL GEOMETRY AND SCALE HIERARCHY:
+═══════════════════════════════════════
+
+        ╭─────────────────╮
+     ╱                       ╲
+    │    Φ_g: Field          │  ← SUPER-scale
+    │    (external forces)    │    (greater whole)
+    │                         │
+    │   ╭───────────────╮    │
+    │  │  M_g: Boundary │    │  ← SUB-scales
+    │  │  (infinite pts) │    │    (surface structure)
+    │  │                 │    │
+    │  │    • Å_g        │    │  ← YOUR scale
+    │  │   (r=0)         │    │    (center focus)
+    │  │                 │    │
+    │   ╰───────────────╯    │
+    │                         │
+     ╲                       ╱
+        ╰─────────────────╯
+
+
+THREE METRICS, THREE SCALES, ONE REALITY:
+══════════════════════════════════════════
+
+The hexa-metric structure is not six SEPARATE things.
+It's ONE reality measured at THREE scales:
+
+    CENTER     (Å_g): Where you ARE (singular)
+    BOUNDARY   (M_g): What you CONTAIN (infinite)
+    FIELD      (Φ_g): What CONTAINS you (infinite)
+
+All three present simultaneously at every spacetime point!
+```
+
+---
+
 ## DIAGRAM 2: METRIC CONFIGURATION FOR KEY PARTICLES
 
 **📖 Complete state analysis:** See [Part IV: The 64 States in Detail](hexametric_EAP_theory.md#part-iv-the-64-states-in-detail) for mathematical treatment and stability criteria.
