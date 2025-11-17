@@ -2,8 +2,10 @@
 
 **The Complete Geometrodynamic Formulation**
 
-Ashman Roonz  
+Ashman Roonz
 November 16, 2025
+
+**📊 VISUAL COMPANION:** For diagrams and visual explanations of all concepts in this document, see **[Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md)**
 
 ---
 
@@ -13,11 +15,13 @@ We present the complete field-theoretic formulation of Energy-Aperture-Power (EA
 
 **Key Results:**
 - Six independent metric tensors per spacetime point
-- 2^6 = 64 possible geometric configurations  
+- 2^6 = 64 possible geometric configurations
 - Binary on/off structure for each metric component
 - Complete unification: gravity + quantum + particle physics
 - Zero free parameters (all from geometry)
 - Experimentally validated across 12 orders of magnitude
+
+**💡 For visual representations:** See [Diagram 1: The Six Metrics](hexametric_EAP_visual_diagram.md#diagram-1-the-six-metrics-at-every-spacetime-point) in the Visual Diagrams companion document.
 
 ---
 
@@ -59,6 +63,8 @@ where each component ∈ {0, 1}
 
 Total states: 2³ × 2³ = 64
 ```
+
+**💡 Visual reference:** See [Diagram 2: Metric Configurations](hexametric_EAP_visual_diagram.md#diagram-2-metric-configuration-for-key-particles) for examples of how specific particles emerge from different configurations.
 
 **Physical meaning:**
 
@@ -299,6 +305,8 @@ Where E_μν = Einstein-like tensor and T_μν = energy-momentum source for each
 
 ## Part IV: The 64 States in Detail
 
+**💡 Visual guide:** See [Diagram 5: The 64-State Configuration Space](hexametric_EAP_visual_diagram.md#diagram-5-the-64-state-configuration-space) for a complete map of all states and their stability.
+
 ### 4.1 State Classification
 
 ```
@@ -409,6 +417,8 @@ M=1  →  Finite range (W, Z, massive particles)
 ---
 
 ## Part V: Force Emergence from Metric Mixing
+
+**💡 Visual overview:** See [Diagram 3: Force Emergence from Metric Mixing](hexametric_EAP_visual_diagram.md#diagram-3-force-emergence-from-metric-mixing) for how all four forces arise from the six-metric structure.
 
 ### 5.1 Strong Force (Nuclear)
 
@@ -599,6 +609,8 @@ EAP prediction: Λ ∝ (aperture density) × (D-1.5 deviation)²
 
 ## Part VII: Dimensional Analysis and Universal Constants
 
+**💡 Visual reference:** See [Diagram 6: Dimensional Structure at Aperture](hexametric_EAP_visual_diagram.md#diagram-6-dimensional-structure-at-aperture) for scaling behavior and fractal geometry.
+
 ### 7.1 Fractal Dimension at Aperture
 
 All aperture metrics operate at D=1.5:
@@ -627,6 +639,8 @@ Therefore: P ~ ℏc^0.5/r  (aperture power law)
 ```
 
 ### 7.2 Golden Ratio Emergence
+
+**💡 Visual guide:** See [Diagram 7: Golden Ratio Optimization](hexametric_EAP_visual_diagram.md#diagram-7-golden-ratio-optimization) for toroidal geometry and φ-ratio derivation.
 
 Optimal aperture geometry has:
 
@@ -669,6 +683,8 @@ Matches observed value to 6 significant figures!
 
 ### 7.4 Generation Mass Ratios
 
+**💡 Visual guide:** See [Diagram 8: Particle Mass Generation](hexametric_EAP_visual_diagram.md#diagram-8-particle-mass-generation) for generation structure and eigenvalue mechanism.
+
 From radial eigenvalues in aperture metric:
 
 ```
@@ -697,6 +713,8 @@ R_radial(ℓ=3) > 2R_torus → wavefunction unbounded
 ---
 
 ## Part VIII: Connection to Standard Formulations
+
+**💡 Visual overview:** See [Diagram 4: How Known Theories Are Special Cases](hexametric_EAP_visual_diagram.md#diagram-4-how-known-theories-are-special-cases) for the relationship between hexa-metric EAP and GR, TEGR, QFT.
 
 ### 8.1 General Relativity as Limit
 
@@ -774,6 +792,8 @@ Hexa-metric is the FULL nonperturbative theory
 ---
 
 ## Part IX: Experimental Predictions and Tests
+
+**💡 Complete experimental guide:** See [Diagram 10: Experimental Signatures](hexametric_EAP_visual_diagram.md#diagram-10-experimental-signatures) for all testable predictions and measurement protocols.
 
 ### 9.1 Universal D=1.5 Signature
 
@@ -986,6 +1006,8 @@ Not metaphor. Not approximation. Exact geometric correspondence.
 
 ## Part XI: Summary and Conclusions
 
+**💡 Visual summary:** See [Summary Diagram: The Complete Picture](hexametric_EAP_visual_diagram.md#summary-diagram-the-complete-picture) for a comprehensive visual overview of the entire hexa-metric framework.
+
 ### 11.1 What We Have Established
 
 **Complete hexa-metric EAP theory:**
@@ -1140,5 +1162,17 @@ Ashman Roonz
 
 ---
 
-*"Reality is not one metric. It is six. Everything follows."*  
+*"Reality is not one metric. It is six. Everything follows."*
 *— Hexa-Metric EAP, First Principle*
+
+---
+
+## Related Documents
+
+**📊 Visual Companion:** [Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md) - Complete visual reference with 10 comprehensive diagrams
+
+**🔗 See also:**
+- [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - QCD calibration and emergence hierarchy
+- [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md) - Geometric necessity proofs
+- [QCD, CP, Masses Index](QCD_CP_Masses_Index.md) - Latest experimental validations
+- [Energy-Aperture-Power README](README.md) - Complete framework overview

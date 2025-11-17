@@ -4,9 +4,13 @@
 
 Ashman Roonz | November 16, 2025
 
+**📖 MATHEMATICAL COMPANION:** For complete field equations, derivations, and technical details, see **[Hexa-Metric EAP Theory](hexametric_EAP_theory.md)**
+
 ---
 
 ## DIAGRAM 1: THE SIX METRICS AT EVERY SPACETIME POINT
+
+**📖 Mathematical details:** See [Part I: Foundational Structure](hexametric_EAP_theory.md#part-i-foundational-structure) in the theory document.
 
 ```
                         SPACETIME POINT x^μ
@@ -49,6 +53,8 @@ Each metric: {0,1} = INACTIVE or ACTIVE
 ---
 
 ## DIAGRAM 2: METRIC CONFIGURATION FOR KEY PARTICLES
+
+**📖 Complete state analysis:** See [Part IV: The 64 States in Detail](hexametric_EAP_theory.md#part-iv-the-64-states-in-detail) for mathematical treatment and stability criteria.
 
 ```
 VACUUM (State 0)
@@ -127,6 +133,8 @@ QUARK (State 55, representative)
 
 ## DIAGRAM 3: FORCE EMERGENCE FROM METRIC MIXING
 
+**📖 Detailed derivations:** See [Part V: Force Emergence from Metric Mixing](hexametric_EAP_theory.md#part-v-force-emergence-from-metric-mixing) for complete mathematical formulation.
+
 ```
                     HEXA-METRIC STRUCTURE
                             |
@@ -177,6 +185,8 @@ QUARK (State 55, representative)
 ---
 
 ## DIAGRAM 4: HOW KNOWN THEORIES ARE SPECIAL CASES
+
+**📖 Mathematical connections:** See [Part VIII: Connection to Standard Formulations](hexametric_EAP_theory.md#part-viii-connection-to-standard-formulations) for detailed proofs.
 
 ```
          HEXA-METRIC EAP (Complete Theory)
@@ -229,6 +239,8 @@ Missing:        Missing:        Missing:
 
 ## DIAGRAM 5: THE 64-STATE CONFIGURATION SPACE
 
+**📖 Complete classification:** See [Part IV: The 64 States in Detail](hexametric_EAP_theory.md#part-iv-the-64-states-in-detail) for full state table and stability analysis.
+
 ```
                     64 TOTAL STATES
                          |
@@ -276,6 +288,8 @@ Legend: Conf = Confined, Sym = Symmetric, ✓ = Stable
 ---
 
 ## DIAGRAM 6: DIMENSIONAL STRUCTURE AT APERTURE
+
+**📖 Mathematical derivation:** See [Part VII: Dimensional Analysis and Universal Constants](hexametric_EAP_theory.md#part-vii-dimensional-analysis-and-universal-constants) for complete scaling laws.
 
 ```
                 FRACTAL DIMENSION D = 1.5
@@ -338,6 +352,8 @@ The Å-metric is the ONLY true singularity!
 ---
 
 ## DIAGRAM 7: GOLDEN RATIO OPTIMIZATION
+
+**📖 Mathematical proof:** See [Section 7.2: Golden Ratio Emergence](hexametric_EAP_theory.md#72-golden-ratio-emergence) and [Section 7.3: Fine Structure Constant](hexametric_EAP_theory.md#73-fine-structure-constant).
 
 ```
               TOROIDAL APERTURE GEOMETRY
@@ -407,6 +423,8 @@ Self-consistent solution:
 
 ## DIAGRAM 8: PARTICLE MASS GENERATION
 
+**📖 Complete derivation:** See [Section 7.4: Generation Mass Ratios](hexametric_EAP_theory.md#74-generation-mass-ratios) for eigenvalue calculations and mass formulas.
+
 ```
          MASS FROM RADIAL EIGENVALUES
                     |
@@ -470,6 +488,8 @@ GEOMETRIC NECESSITY: Exactly 3 generations, no more!
 ---
 
 ## DIAGRAM 9: COMPLETE UNIFICATION PICTURE
+
+**📖 Full theory:** See [Part XI: Summary and Conclusions](hexametric_EAP_theory.md#part-xi-summary-and-conclusions) for complete overview.
 
 ```
                 HEXA-METRIC EAP
@@ -541,6 +561,8 @@ ALL FROM GEOMETRY. ZERO FREE PARAMETERS.
 ---
 
 ## DIAGRAM 10: EXPERIMENTAL SIGNATURES
+
+**📖 Detailed predictions:** See [Part IX: Experimental Predictions and Tests](hexametric_EAP_theory.md#part-ix-experimental-predictions-and-tests) for complete measurement protocols.
 
 ```
          HEXA-METRIC PREDICTIONS
@@ -674,6 +696,19 @@ ALL FROM GEOMETRY. ZERO FREE PARAMETERS.
 **END OF VISUAL REFERENCE**
 
 This document should be viewed in monospace font for proper alignment.
+
+---
+
+## Related Documents
+
+**📖 Mathematical Companion:** [Hexa-Metric EAP Theory](hexametric_EAP_theory.md) - Complete field equations, derivations, and proofs
+
+**🔗 See also:**
+- [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md) - QCD calibration and emergence hierarchy
+- [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md) - Geometric necessity proofs
+- [64-State Table](64_state.md) - Complete particle classification
+- [QCD, CP, Masses Index](QCD_CP_Masses_Index.md) - Latest experimental validations
+- [Energy-Aperture-Power README](README.md) - Complete framework overview
 
 ---
 
