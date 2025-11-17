@@ -188,7 +188,7 @@ Space-filling curve: D → 2.0
 
 ---
 
-## CONSCIOUSNESS & MEDITATION STATES
+## CONSCIOUSNESS & MEDITATION STATES (These are guesses and they need experimentation)
 
 ### Dimensional Navigation Map
 
