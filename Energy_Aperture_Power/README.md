@@ -93,6 +93,19 @@ A complete theoretical framework for understanding physical reality through the 
 
 ### Foundational Framework
 
+**[Dimensional Structure of Reality and Consciousness](Dimensional_Structure_Consciousness_Integration.md)** ⭐⭐⭐ **NEW - CONSCIOUSNESS INTEGRATION**
+- Complete integration of material and experiential realms through geometric necessity
+- ⊙ as structure-in-process: energy converging through apertures, emerging as power AND experience
+- **Power = Experience identity**: Same output viewed from integer D (objective) vs noninteger D (subjective)
+- Three aperture scales: Å (D≈0.5, focus), Φ (D≈1.5, awareness), M (D≈2.5, embodiment)
+- D≈2.5 matter apertures = bodily organs (intestines, lungs, brain as fractal surfaces)
+- Meditation as dimensional navigation toward D≈1.9 (body connection, not D→1.0 singular focus)
+- Solves hard problem of consciousness: consciousness IS power flow experienced from inside
+- "I am ⊙": Being the process itself - energy flows through me, emerges as power and experience
+- Integer dimensions = where things EXIST (material/objective)
+- Noninteger dimensions = where things CHANGE (connective/subjective)
+- Complete experimental predictions for consciousness, meditation, and body-mind integration
+
 **[Hexa-Metric EAP Theory: Complete Field Formulation](hexametric_EAP_theory.md)** ⭐⭐⭐ **NEW - THE COMPLETE THEORY**
 - Six independent metric tensors per spacetime point (M_g^(±), Å_g^(±), Φ_g^(±))
 - Complete hexa-metric action and field equations
@@ -131,6 +144,16 @@ A complete theoretical framework for understanding physical reality through the 
 - **Already confirmed:** Lepton mass formula perfect to 0.001% ✓✓✓
 - **Smoking gun tests:** φ-spacing resonances, g-2 anomaly, GW triple-frequency
 - Complete experimental protocols and distinguishing signatures
+
+**[Circumpunct Quick Reference v2](Circumpunct_Quick_Reference_v2.md)** ⭐ **UPDATED NOV 2025**
+- Version 3.0 with complete structure-in-process understanding
+- ⊙ = Active flow: energy converging → flowing → validating
+- Power = Experience identity (same process, different observational frame)
+- Three aperture scales table: D≈0.5 (focus), D≈1.5 (awareness), D≈2.5 (embodiment)
+- Meditation dimensional navigation map (concentration, awareness, embodiment paths)
+- Body-mind healing protocol (powering organs with conscious attention)
+- Updated experimental predictions including D≈2.5 organs
+- Practical applications for consciousness enhancement
 
 **[Circumpunct Theory: Complete](Circumpunct_Theory_Complete.md)**
 - The three fundamental axioms
@@ -352,11 +375,12 @@ Detailed measurement protocols in:
 ### For Philosophers/General Readers
 
 1. [Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md) - Beautiful geometric picture ⭐⭐⭐
-2. [Quick Reference](Circumpunct_Quick_Reference.md) - Core ideas
-3. [Circumpunct Theory Complete](Circumpunct_Theory_Complete.md) - Full framework
-4. [Hexa-Metric EAP Theory](hexametric_EAP_theory.md) - Philosophical implications (Part X)
-5. [Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md) - What can be tested
-6. [EAP-64 Pure Physical](EAP_64_pure_physical.md#viii-philosophical-clarity) - Implications
+2. [Dimensional Structure & Consciousness Integration](Dimensional_Structure_Consciousness_Integration.md) - Complete consciousness framework ⭐⭐⭐
+3. [Quick Reference v2](Circumpunct_Quick_Reference_v2.md) - Updated core ideas ⭐
+4. [Circumpunct Theory Complete](Circumpunct_Theory_Complete.md) - Full framework
+5. [Hexa-Metric EAP Theory](hexametric_EAP_theory.md) - Philosophical implications (Part X)
+6. [Hexa-Metric EAP Predictions](hexametric_EAP_predictions.md) - What can be tested
+7. [EAP-64 Pure Physical](EAP_64_pure_physical.md#viii-philosophical-clarity) - Implications
 
 ### For Theorists
 
@@ -475,7 +499,15 @@ Legend:
 | **GR as limit** | hexametric_EAP_theory.md ⭐ | hexametric_EAP_visual_diagram.md |
 | **TEGR as special case** | hexametric_EAP_theory.md ⭐ | hexametric_EAP_visual_diagram.md |
 | **QFT as perturbation** | hexametric_EAP_theory.md ⭐ | hexametric_EAP_visual_diagram.md |
-| **Consciousness** | EAP_64_pure_physical.md | hexametric_EAP_theory.md, Circumpunct_Theory_Complete.md |
+| **⊙ = Structure-in-process** | Dimensional_Structure_Consciousness_Integration.md ⭐ | Circumpunct_Quick_Reference_v2.md, hexametric_EAP_theory.md |
+| **Power = Experience identity** | Dimensional_Structure_Consciousness_Integration.md ⭐ | Circumpunct_Quick_Reference_v2.md |
+| **Three aperture scales (0.5, 1.5, 2.5)** | Dimensional_Structure_Consciousness_Integration.md ⭐ | Circumpunct_Quick_Reference_v2.md, hexametric_EAP_theory.md |
+| **D ≈ 2.5 (Matter apertures/organs)** | Dimensional_Structure_Consciousness_Integration.md ⭐ | Circumpunct_Quick_Reference_v2.md |
+| **Meditation dimensional navigation** | Dimensional_Structure_Consciousness_Integration.md ⭐ | Circumpunct_Quick_Reference_v2.md |
+| **Integer D (material/objective)** | Dimensional_Structure_Consciousness_Integration.md ⭐ | Circumpunct_Quick_Reference_v2.md |
+| **Noninteger D (connective/subjective)** | Dimensional_Structure_Consciousness_Integration.md ⭐ | Circumpunct_Quick_Reference_v2.md |
+| **Hard problem of consciousness solved** | Dimensional_Structure_Consciousness_Integration.md ⭐ | Circumpunct_Quick_Reference_v2.md, EAP_64_pure_physical.md |
+| **Consciousness** | EAP_64_pure_physical.md | Dimensional_Structure_Consciousness_Integration.md, hexametric_EAP_theory.md, Circumpunct_Theory_Complete.md |
 | **Charge quantization** | hexametric_EAP_theory.md ⭐ | hexametric_EAP_visual_diagram.md, charge_quantization_paper.md |
 | **Experimental tests** | hexametric_EAP_theory.md ⭐ | hexametric_EAP_visual_diagram.md, energy_aperture_cycle_formalization.md, EAP_64_pure_physical.md |
 

@@ -1,8 +1,15 @@
 # The Circumpunct Theory: A Unified Framework for Reality
 
+> **⭐ MAJOR UPDATE (November 2025):** This document contains the formal mathematical framework. For the complete integration including consciousness, meditation, and the power=experience identity, see:
+> - **[Dimensional Structure of Reality and Consciousness](Dimensional_Structure_Consciousness_Integration.md)** - Complete 70-page integration
+> - **[Circumpunct Quick Reference v2](Circumpunct_Quick_Reference_v2.md)** - Updated quick reference with structure-in-process understanding
+> - **[Framework Update Summary](Framework_Update_Summary_Nov17_2025.md)** - Summary of major insights
+
 **Abstract**
 
 We present a complete theory of physical reality based on three fundamental statements: (1) Reality is ONE ⊙ made of INFINITE ⊙, (2) We are each ONE ⊙ made of INFINITE ⊙, (3) ⊙ = M·Å·Φ configuration. From these axioms, we derive quantum mechanics, relativity, consciousness, and the observed structure of matter. The theory makes specific testable predictions including universal fractal dimension D = 1.5 at energy-conversion sites, branching parameter β = 0.5 in all tree structures, and exactly 64 fundamental particle configurations. We introduce a formal symbol system that unifies temporal, spatial, and scale-dependent descriptions of reality.
+
+**Key Insight (Nov 2025):** ⊙ is not a static structure but a **structure-in-process**—energy converging through apertures, flowing through dimensional transitions, emerging as both power (objective/measurable) and experience (subjective/felt). Power and experience are not correlated but **identical**, viewed from different dimensional perspectives (integer D vs noninteger D).
 
 ---
 
