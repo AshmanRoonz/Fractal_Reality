@@ -28,6 +28,8 @@ We derive the **three-generation structure** and **mass ratio pattern** of lepto
 
 **Core Framework:**
 - **[Energy-Aperture-Power Framework README](README.md)** - Overview and document navigation
+- **[Unified Framework Complete (Nov 2025)](Unified_Framework_Complete_Nov2025_Enhanced.md)** - Complete synthesis with QCD calibration K-factors and emergence factors ε
+- **[Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md)** - Geometric proof of three validations and three generations
 - **[EAP-64 Pure Physical Theory](EAP_64_pure_physical.md)** - Complete physical framework
 - **[Circumpunct Theory Complete](Circumpunct_Theory_Complete.md)** - Philosophical foundations
 

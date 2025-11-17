@@ -190,6 +190,8 @@ M ∈ {0,1}: Matter boundary present?
 
 Partial states (e.g., M=0.5) cannot maintain informational completeness. The aperture forces binary validation because wholeness is indivisible.
 
+**For rigorous geometric proof** that fractional dimensions force binary validation, see [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md#4-proof-of-binary-validation).
+
 ---
 
 ## II. Fractal Wholeness and Emergence
@@ -383,6 +385,8 @@ Two complete interfaces: 2³ × 2³ = 64
 
 The number 64 emerges from wholeness preservation, not enumeration.
 
+**For complete geometric proof** that there are exactly three fractional dimensions yielding exactly 64 states, see [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md#5-the-64-state-architecture).
+
 ### 3.3 The 64 States Enumerated
 
 Each state labeled as: (M_in, Å_in, Φ_in | M_out, Å_out, Φ_out)
@@ -524,6 +528,8 @@ Photon: Symmetric → Q = 0
 **Why these exact values?**
 
 The fractional charges emerge from incomplete color patterns attempting to achieve wholeness. The 1/3 and 2/3 reflect the number of color channels that must wind to complete the pattern.
+
+**For geometric proof** that exactly three color charges are necessary, see [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md#63-third-validation-φ-field-at-25d).
 
 ### 4.4 Spin and Statistics
 
@@ -673,6 +679,8 @@ m_4th ≈ 1.78 GeV × ε(3→4) × (field corrections)
 The system energy would exceed √s_max. The configuration cannot maintain wholeness → unstable → **no fourth generation**.
 
 **Measured data confirms**: No stable 4th generation found up to LHC energies ✓
+
+**For complete proof** that three generations is the geometric maximum, see [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md#7-why-exactly-three-generations).
 
 ### 6.3 Eigenvalue Bound on Generations
 

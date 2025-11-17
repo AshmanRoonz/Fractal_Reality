@@ -24,6 +24,8 @@ Total states: 2⁶ = 64
 
 **Answer:** These are not choices—they are **necessary consequences** of physics at fractional-dimensional singularities.
 
+**For complete geometric proof:** See [Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md) for rigorous proof that three fractional dimensions (0.5D, 1.5D, 2.5D) force binary validation and yield exactly 64 states.
+
 ### **1.2 The Standard Model Comparison**
 
 The Standard Model has ~61 particles (counting all states):
