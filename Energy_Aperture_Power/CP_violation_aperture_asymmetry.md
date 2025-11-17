@@ -1,9 +1,20 @@
 # CP Violation from Aperture Asymmetry: Quantitative Derivation
 
-**Ashman Roonz**  
+**Ashman Roonz**
 November 16, 2025
 
 **CERN Discovery Context**: Observation of CP violation in baryon (Λ_b) decays with 2.5% asymmetry and 5.2σ significance validates core framework predictions.
+
+---
+
+## Related Documents
+
+📖 **Core Framework**: [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md)
+🔧 **QCD Theory**: [QCD Calibration Derivation](QCD_calibration_derivation.md)
+📊 **Mass Predictions**: [Refined Generation Mass Predictions](refined_generation_masses.md)
+📐 **Foundation**: [Dimensional Validation Correspondence](Dimensional_Validation_Correspondence.md)
+⚛️ **CKM Matrix**: [CKM Complete Assessment](CKM/CKM_Complete_Assessment.md)
+📚 **Quick Start**: [README](README.md)
 
 ---
 
@@ -709,3 +720,12 @@ And D=1.5 follows necessarily from β=0.5 optimal branching parameter.
 **Falsifiability**: Clear predictions for future measurements
 
 This is not curve-fitting - it's **prediction from first principles** that matches discovery within uncertainties. The CERN result is independent validation of the D=1.5 geometric structure at the heart of physical reality.
+
+---
+
+## See Also
+
+- **[QCD Calibration Derivation](QCD_calibration_derivation.md)** - Derives K-factors that provide independent D=1.5 validation
+- **[Refined Generation Masses](refined_generation_masses.md)** - Uses same geometric principles for mass predictions
+- **[Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md)** - Complete theoretical synthesis
+- **[CKM Matrix First Principles](CKM/CKM_matrix_first_principles_derivation.md)** - Related weak interaction physics

@@ -1,9 +1,20 @@
 # Refined Generation Mass Predictions Using Derived QCD Calibration
 
-**Ashman Roonz**  
+**Ashman Roonz**
 November 16, 2025
 
 **Context**: With QCD calibration factors now derived from first principles (K_light=1.0, K_medium=3.6, K_heavy=68), we can refine generation mass predictions to improve agreement with observations.
+
+---
+
+## Related Documents
+
+📖 **Core Framework**: [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md)
+🔧 **K-Factor Derivation**: [QCD Calibration from First Principles](QCD_calibration_derivation.md) ⚠️ **READ THIS FIRST**
+🔬 **CP Violation**: [CP Violation from Aperture Asymmetry](CP_violation_aperture_asymmetry.md)
+📐 **Foundation**: [Dimensional Validation Correspondence](Dimensional_Validation_Correspondence.md)
+📊 **Earlier Version**: [Mass Ratios from Aperture Geometry](mass_ratios_from_aperture_geometry_MAP.md)
+📚 **Quick Start**: [README](README.md)
 
 ---
 
@@ -1172,3 +1183,13 @@ ERROR SOURCES:
 The key insight: **Generation structure and QCD corrections are not separate** - they're unified through the energy-dependent enhancement factor ξ(μ) = 1 + C·α_s(μ)/(2π), which decreases as we climb the mass ladder, naturally limiting the number of generations while producing the observed mass hierarchy.
 
 This is not numerology - it's **physics**.
+
+---
+
+## See Also
+
+- **[QCD Calibration Derivation](QCD_calibration_derivation.md)** - Derives the K-factors used in this analysis (prerequisite reading)
+- **[CP Violation from Aperture Asymmetry](CP_violation_aperture_asymmetry.md)** - Independent confirmation of D=1.5 geometry
+- **[Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md)** - Complete theoretical context
+- **[Mass Ratios from Aperture Geometry](mass_ratios_from_aperture_geometry_MAP.md)** - Original formulation (before QCD corrections)
+- **[Geometric Derivation of Constants](geometric_derivation_fundamental_constants_MAP.md)** - Fine structure constant derivation

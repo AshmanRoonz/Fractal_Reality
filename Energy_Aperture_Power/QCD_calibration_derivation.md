@@ -1,10 +1,20 @@
-# QCD Calibration Factors from Fractal Geometry: 
+# QCD Calibration Factors from Fractal Geometry:
 ## Deriving Mass Formula Corrections from Running Coupling in D=1.5
 
-**Ashman Roonz**  
+**Ashman Roonz**
 November 16, 2025
 
 **For submission to**: Physical Review D
+
+---
+
+## Related Documents
+
+📖 **Core Framework**: [Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md)
+📊 **Application**: [Refined Generation Mass Predictions](refined_generation_masses.md)
+🔬 **Experimental**: [CP Violation from Aperture Asymmetry](CP_violation_aperture_asymmetry.md)
+📐 **Foundation**: [Dimensional Validation Correspondence](Dimensional_Validation_Correspondence.md)
+📚 **Quick Start**: [README](README.md)
 
 ---
 
@@ -1111,3 +1121,12 @@ Option 3 is cleanest.
 **For Publication**: Ready for peer review with Appendix calculations verified
 **Next Steps**: Lattice QCD comparison, experimental tests of μ-dependence
 **Confidence**: High - all formulas from Standard Model QCD + D=1.5 geometry
+
+---
+
+## See Also
+
+- **[Refined Generation Masses](refined_generation_masses.md)** - Uses these K-factors to improve mass predictions from 77% error to 3%
+- **[CP Violation from Aperture Asymmetry](CP_violation_aperture_asymmetry.md)** - Independent validation of D=1.5 geometry
+- **[Unified Framework Complete](Unified_Framework_Complete_Nov2025_Enhanced.md)** - Complete theory synthesis
+- **[Mass Ratios from Aperture Geometry](mass_ratios_from_aperture_geometry_MAP.md)** - Earlier mass predictions (before QCD corrections)
