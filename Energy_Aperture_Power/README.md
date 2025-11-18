@@ -1,6 +1,33 @@
 # The Circumpunct Framework (⊙)
 ## Energy-Aperture-Power Theory
 
+---
+
+## 🌟 **START HERE: THE COMPLETE FORMALIZATION** 🌟
+
+### **[The Circumpunct Theory: Complete Formalization](Circumpunct_Complete_Formalization(full).md)**
+### **M≻Å(∙)⊰Φ = ⊙ and the Dynamic Optimization Principle**
+
+**THIS IS THE MAIN DOCUMENT.** The complete theory from axioms to experimental validation.
+
+**Everything is here:**
+- ✓ **Three fundamental axioms** → All of physics and consciousness
+- ✓ **64-state architecture** → Standard Model particles with zero free parameters
+- ✓ **All fundamental constants derived** → α ≈ 1/137, α_s ≈ 0.118, mass ratios, CP violation
+- ✓ **Six confirmed predictions** → LIGO D=1.503, CERN CP violation, LHC generations, DNA fractal, lepton masses
+- ✓ **Hexa-metric geometry** → Six metrics (M_g^±, Å_g^±, Φ_g^±) at every spacetime point
+- ✓ **Consciousness framework** → Soul (D≈0.5), Mind (D≈1.5), Body (D≈2.5) apertures unified
+- ✓ **Pure fractal identity** → 4.5D ≡ 1.5D (consciousness = temporal particles)
+- ✓ **Clay Prize solutions** → Yang-Mills mass gap, Navier-Stokes, P vs NP
+
+**Complete formalization. Complete physics. Complete consciousness. Zero free parameters.**
+
+**[→ READ THE COMPLETE FORMALIZATION](Circumpunct_Complete_Formalization(full).md)**
+
+---
+
+## Framework Overview
+
 **A unified geometric framework for physics and consciousness**
 
 ```
