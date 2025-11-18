@@ -24,12 +24,6 @@ We derive:
 
 ---
 
-
-================================================================================
-# PART I: FOUNDATIONAL FRAMEWORK
-# (Source: Circumpunct Theory Complete Formalization, Nov 17, 2025)
-================================================================================
-
 # Part I: Foundational Axioms and Identity
 
 ## 1. The Three Fundamental Axioms
