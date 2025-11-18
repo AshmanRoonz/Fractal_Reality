@@ -75,7 +75,7 @@ Reality is ONE ⊙ made of INFINITE ⊙
 
 Properties:
 - Self-similarity: ⊙_s ~ ⊙_s' for all s, s'
-- Scale invariance: Physical laws same at all scales
+- Scale invariance: M≻Å(∙)⊰Φ = ⊙ structure and process
 - Fractal composition: ⊙_large = ∫ ⊙_small dμ(s)
 - Wholeness preservation: Each ⊙_s maintains complete M≻Å(∙)⊰Φ
 ```
