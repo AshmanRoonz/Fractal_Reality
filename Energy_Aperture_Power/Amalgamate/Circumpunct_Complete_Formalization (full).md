@@ -2348,8 +2348,8 @@ Our Framework         ↔   Lockwood et al.
 A^(in)_μ              ↔   A^(+)_μ (Convergence sheet)
 A^(out)_μ             ↔   A^(−)_μ (Emergence sheet)
 β parameter           ↔   θ-Josephson phase
-Input validation      ↔   [ICE] on g₊
-Output validation     ↔   [ICE] on g₋
+Input validation      ↔   [MÅΦ] on g₊
+Output validation     ↔   [MÅΦ] on g₋
 
 8-component structure ↔   8-component gauge field
 ```
@@ -3358,14 +3358,14 @@ For compact simple gauge group G (e.g., SU(3) for QCD), prove:
 2. Spectrum has mass gap Δ > 0 above vacuum
 3. Δ is independent of spacetime volume
 
-**Our Solution: ICE Validation Mechanism**
+**Our Solution: MÅΦ Validation Mechanism**
 
 **Key Innovation**: Physical gauge configurations must pass three validation checks at aperture interfaces:
 
 ```
-[I] Interface: Gauge covariance (D_μ = ∂_μ + igA_μ)
-[C] Center: Field coherence (F_μν organized structure)
-[E] Evidence: Reality grounding (finite action)
+[M] Matter: Gauge covariance (D_μ = ∂_μ + igA_μ)
+[Å] Aperture: Field coherence (F_μν organized structure)
+[Φ] Field: Reality grounding (finite action)
 ```
 
 **Configuration Space**:
@@ -3375,8 +3375,8 @@ A = {A_μ : ℝ⁴ → g | smooth, finite action}
 Field Strength:
 F_μν = ∂_μA_ν - ∂_νA_μ + ig[A_μ, A_ν]
 
-ICE Validation Operator:
-V_ICE[A] = V_I[A] ∧ V_C[A] ∧ V_E[A] ∈ {0,1}
+MÅΦ Validation Operator:
+V_MÅΦ[A] = V_M[A] ∧ V_Å[A] ∧ V_Φ[A] ∈ {0,1}
 ```
 
 **Stochastic Noise Creates Gap**:
@@ -3408,7 +3408,7 @@ E₀ = vacuum energy
 
 **Proof Outline**:
 
-1. **[ICE] creates energy threshold**: Validation noise forces minimum E > Δ
+1. **[MÅΦ] creates energy threshold**: Validation noise forces minimum E > Δ
 2. **Δ is volume-independent**: Depends on local aperture geometry, not global volume
 3. **Spectrum is discrete**: Only validated configurations contribute to σ(H)
 
@@ -3431,7 +3431,7 @@ Agreement: 95.5% ✓
 The 18-page formal proof includes:
 - Hilbert space construction for YM theory
 - Existence and uniqueness of vacuum |0⟩
-- Spectral gap theorem using [ICE] operator
+- Spectral gap theorem using [MÅΦ] operator
 - Volume independence via localization
 - Haag-Kastler axioms verification
 
@@ -3634,7 +3634,7 @@ Perelman's Ricci flow = gradient flow toward β = 0.5 equilibrium
 2. **Finite projection**: Observable complexity from π: M^∞ → M^d
 3. **β = 0.5 balance**: Appears in critical lines, balance conditions
 4. **D = 1.5 fractal**: Signature of projected smooth structures
-5. **[ICE] validation**: Creates thresholds, gaps, quantization
+5. **[MÅΦ] validation**: Creates thresholds, gaps, quantization
 
 **Empirical validation**:
 
@@ -3681,7 +3681,7 @@ and acceptance by Clay Mathematics Institute
 **Scientific impact** (regardless of prize acceptance):
 
 1. **Unified framework** for quantum field theory, fluid dynamics
-2. **New mathematical techniques** (dimensional projection, [ICE] validation)
+2. **New mathematical techniques** (dimensional projection, [MÅΦ] validation)
 3. **Testable predictions** across multiple domains
 4. **Bridge** between pure mathematics and physical reality
 
