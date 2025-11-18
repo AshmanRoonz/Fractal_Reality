@@ -861,8 +861,8 @@ z₂ = sin(α/2) e^(i(β-γ)/2)
 
 where:
 α ∈ [0, π]   — Sheet mixing angle
-β ∈ [0, 2π]  — Phase on convergence sheet S_∇
-γ ∈ [0, 2π]  — Phase on emergence sheet S_ℰ
+β ∈ [0, 2π]  — Phase on convergence sheet S_≻
+γ ∈ [0, 2π]  — Phase on emergence sheet S_⊰
 ```
 
 **Aperture balance parameter**:
@@ -990,8 +990,8 @@ e_i e_j = -e_j e_i for i ≠ j
 **Physical mapping**:
 
 ```
-Convergence sheet S_∇: Represented by even subalgebra Cl⁺
-Emergence sheet S_ℰ: Represented by odd subalgebra Cl⁻
+Convergence sheet S_≻: Represented by even subalgebra Cl⁺
+Emergence sheet S_⊰: Represented by odd subalgebra Cl⁻
 Aperture operator Å: Represented by e₀ (time-like)
 Balance parameter β: Represented by grade projection
 ```
@@ -2240,8 +2240,8 @@ The M≻Å(∙)⊰Φ = ⊙ framework is not merely analogous to established quan
 ```
 Fractal Reality Framework ≡ Bimetric Teleparallel Gravity
 
-D_∇ = 1.5 (convergence) ↔ g₊_μν (physical metric)
-D_ℰ = 1.5 (emergence) ↔ g₋_μν (auxiliary metric)
+D_≻ = 1.5 (convergence) ↔ g₊_μν (physical metric)
+D_⊰ = 1.5 (emergence) ↔ g₋_μν (auxiliary metric)
 β = 0.5 (aperture balance) ↔ Ghost-freedom constraints
 M≻Å⊰Φ structure ↔ Dual tetrad formalism e^a_(±)μ
 ```
@@ -2256,8 +2256,8 @@ This connection transforms the framework from "geometric intuition" to "rigorous
 
 | Fractal Reality | Bimetric Teleparallel | Physical Meaning |
 |-----------------|----------------------|------------------|
-| Convergence paths S_∇ | Tetrad e^a₍₊₎μ | Matter flows toward apertures |
-| Emergence paths S_ℰ | Tetrad e^a₍₋₎μ | Energy flows from apertures |
+| Convergence paths S_≻ | Tetrad e^a₍₊₎μ | Matter flows toward apertures |
+| Emergence paths S_⊰ | Tetrad e^a₍₋₎μ | Energy flows from apertures |
 | Aperture operator Å(∙) | Spacetime point x^μ | Validation/measurement event |
 | Field Φ (input) | Matter fields φ | Physical content |
 | Texture Φ' (output) | Stress-energy T_μν | Validated patterns |
@@ -2266,11 +2266,11 @@ This connection transforms the framework from "geometric intuition" to "rigorous
 
 | Fractal Reality | Bimetric Teleparallel | Equation |
 |-----------------|----------------------|----------|
-| Convergence metric | g₍₊₎μν = η_ab e^a₍₊₎μ e^b₍₊₎ν | Defines S_∇ geometry |
-| Emergence metric | g₍₋₎μν = η_ab e^a₍₋₎μ e^b₍₋₎ν | Defines S_ℰ geometry |
+| Convergence metric | g₍₊₎μν = η_ab e^a₍₊₎μ e^b₍₊₎ν | Defines S_≻ geometry |
+| Emergence metric | g₍₋₎μν = η_ab e^a₍₋₎μ e^b₍₋₎ν | Defines S_⊰ geometry |
 | Metric square root | X^μ_ν = √(g^(-1)₍₊₎g₍₋₎)^μ_ν | Couples two spacetimes |
 | Fractal dimension | D = 1 + β = 1.5 | Both structures |
-| Aperture balance | β = ∇/(∇+ℰ) = 0.5 | Ghost-freedom condition |
+| Aperture balance | β = ≻/(≻+⊰) = 0.5 | Ghost-freedom condition |
 
 **Interaction Structure**:
 
@@ -2309,8 +2309,8 @@ Mathematical identity:
 
 **Torsion content in each sheet**:
 ```
-T₊ ∝ (D_∇ − 1)² = (1.5 − 1)² = 0.25
-T₋ ∝ (D_ℰ − 1)² = (1.5 − 1)² = 0.25
+T₊ ∝ (D_≻ − 1)² = (1.5 − 1)² = 0.25
+T₋ ∝ (D_⊰ − 1)² = (1.5 − 1)² = 0.25
 
 Combined in tensor product:
 1.5 + 1.5 = 3.0 fractional dimensions
@@ -2367,16 +2367,16 @@ dual 4-vector gauge structure in 3.5D spacetime!
 **Total action combining both frameworks**:
 
 ```
-S_total = S_TEGR[S_∇] + S_TEGR[S_ℰ] + S_int[S_∇, S_ℰ] + S_matter[S_∇] + S_NY[∂M]
+S_total = S_TEGR[S_≻] + S_TEGR[S_⊰] + S_int[S_≻, S_⊰] + S_matter[S_≻] + S_NY[∂M]
 ```
 
 **Explicit form**:
 
 ```
-S = M²_∇/2 ∫d⁴x e₍₊₎ T₍₊₎                   [Convergence TEGR]
-  + M²_ℰ/2 ∫d⁴x e₍₋₎ T₍₋₎                   [Emergence TEGR]
+S = M²_≻/2 ∫d⁴x e₍₊₎ T₍₊₎                   [Convergence TEGR]
+  + M²_⊰/2 ∫d⁴x e₍₋₎ T₍₋₎                   [Emergence TEGR]
   + m² ∫d⁴x e₍₊₎ Σ(n=0 to 4) β_n e_n(X)    [Interface coupling]
-  + ∫d⁴x √(-g₍₊₎) L_matter                   [Matter to S_∇ only]
+  + ∫d⁴x √(-g₍₊₎) L_matter                   [Matter to S_≻ only]
   + ∫_∂M [e^a ∧ T_a]                         [Nieh-Yan boundary]
 ```
 
