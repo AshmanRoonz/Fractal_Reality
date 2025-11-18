@@ -422,7 +422,7 @@ Pure geometry
 
 **Pattern**: All forces are different manifestations of the M≻Å(∙)⊰Φ = ⊙ identity with different coupling efficiencies.
 
-### 10.5 QCD Calibration Factors: K-Factors from Running Coupling
+### 3.5 QCD Calibration Factors: K-Factors from Running Coupling
 
 **The calibration challenge:**
 
@@ -555,7 +555,7 @@ This is testable via mass extractions at different energy scales!
 
 **Source**: QCD β-function, operator mixing in D=1.5, Sudakov form factors
 
-### 10.6 CKM Matrix Elements from Aperture Overlap
+### 3.6 CKM Matrix Elements from Aperture Overlap
 
 **The quark mixing problem:**
 
