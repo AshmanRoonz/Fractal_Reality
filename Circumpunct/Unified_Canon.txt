@@ -1,0 +1,105 @@
+──────────────────────────────────────────────
+I. AXIOMATIC SET-THEORETIC FOUNDATION
+──────────────────────────────────────────────
+
+Axiom 1.  D = { n, n+1/2 | n ∈ ℕ }.
+
+Axiom 2.  ∀D∈{1/2,3/2,5/2}, ∃ Å_D : E_D → E_{D+1}.
+
+Axiom 3.  ≻ : E_n × Å_{n+1/2} → E_{n+1}.
+          ⊰ : E_{n+1} × Å_{n+3/2} → E_{n+2}.
+
+Axiom 4.  E_0 = ∅;  E_1 = {x∈ℝ | x≠0}.
+           M = E_2;  Φ = E_3.
+
+Axiom 5.  ⊙ = ⋂_{k∈ℕ} (Å_{1/2} ∘ Å_{3/2} ∘ Å_{5/2})^k(E_0).
+
+Axiom 6.  Topological constraint: Hopf(Φ) = 1.
+
+
+──────────────────────────────────────────────
+II. CATEGORY-THEORETIC FORMULATION
+──────────────────────────────────────────────
+
+Objects:
+   E_0, E_1, E_{3/2}, M, Φ, ⊙.
+
+Morphisms:
+   Å_{1/2} : E_0 → E_1
+   Å_{3/2} : E_1 → E_2
+   Å_{5/2} : E_2 → E_3
+
+   ≻ : E_n → E_{n+1}
+   ⊰ : E_{n+1} → E_{n+2}
+
+Commutative diagram:
+   E_0 --≻--> Å_{1/2} --⊰--> E_1 --≻--> Å_{3/2} --⊰--> M
+                                          |
+                                          v
+                                        Å_{5/2}
+                                          |
+                                          v
+                                         Φ
+
+Wholeness:
+   Φ --π--> E_0
+   such that:
+   Å_{1/2} ∘ Å_{3/2} ∘ Å_{5/2} ∘ π = Id_Φ.
+
+
+──────────────────────────────────────────────
+III. COMPUTATIONAL / LAMBDA-CALCULUS FORM
+──────────────────────────────────────────────
+
+Å := λD. λs. T_D(s)
+T_D := encode64 ∘ fractal_map_D
+
+UniverseStep :=
+   λΦ. Σ_{D∈{1/2,3/2,5/2}} Å(D)(Φ)
+
+⊙ := Fix(UniverseStep)
+
+Universe := Y(UniverseStep)(Seed)
+
+
+──────────────────────────────────────────────
+IV. FIELD / TENSOR / DIFFERENTIAL FORMULATION
+──────────────────────────────────────────────
+
+Field:        Φ : ℝ³ → ℂ
+Energy:       E = ∂ₜΦ
+Matter:       M = ∇Φ
+
+Fractal gradient equation:
+   ∇^{D+1/2} Φ = β Å_D(Φ),      β = 1/2.
+
+Lagrangian:
+   ℒ = Σ_{D∈{1/2,3/2,5/2}} α_D |∇^{D+1/2} Φ|² + J·Å_D(Φ) + V(Φ)
+
+Euler–Lagrange:
+   δℒ/δΦ = 0  →  ∂ₜ²Φ = F(Å_{1/2}, Å_{3/2}, Å_{5/2})
+
+Wholeness:
+   ⊙ = argmin ℒ   subject to Hopf(Φ)=1.
+
+
+──────────────────────────────────────────────
+V. PURE ALGEBRAIC NARRATIVE
+──────────────────────────────────────────────
+
+E ≻ Å_{1/2} = V
+V ⊰ Å_{3/2} = M
+M ≻ Å_{5/2} = Φ
+Φ ∘ E = ⊙
+
+Let:
+  S_0 = E
+  S_1 = S_0 ≻ Å_{1/2}
+  S_2 = S_1 ⊰ Å_{3/2}
+  S_3 = S_2 ≻ Å_{5/2}
+
+Then:
+  ⊙ = S_3 ∘ S_0
+
+Invariant:
+  S_{n+3} = S_n
