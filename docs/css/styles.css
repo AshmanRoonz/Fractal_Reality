@@ -372,7 +372,7 @@ body {
 
 .path-card {
     background: rgba(30, 39, 66, 0.5);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     border-radius: 20px;
     border: 2px solid transparent;
     transition: all 0.4s ease;
