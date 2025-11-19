@@ -1,7 +1,9 @@
 # Circumpunct Theory: Critical Supplements
 ## Limitations, Failures, Experimental Protocols, and Methodological Guidance
 
-**Ashman Roonz**  
+**[← Back to Circumpunct README](README.md)** | **[← Main Theory](The_Circumpunct_Theory.md)** | **[Reality.exe →](Reality.exe.md)**
+
+**Ashman Roonz**
 November 18, 2025
 
 ---
@@ -3633,8 +3635,20 @@ Meanwhile, six major experimental confirmations and convergence with independent
 
 ---
 
-**Document Status**: Supplementary material to complete formalization  
-**Date**: November 18, 2025  
+**Document Status**: Supplementary material to complete formalization
+**Date**: November 18, 2025
 **Author**: Ashman Roonz
 
 ⊙
+
+---
+
+## Navigation
+
+**[← Back to Circumpunct README](README.md)**
+
+### Related Documents:
+- **[The_Story_of_Everything.md](The_Story_of_Everything.md)** - Accessible narrative introduction for everyone
+- **[The_Circumpunct_Theory.md](The_Circumpunct_Theory.md)** - The complete formalization
+- **[Reality.exe.md](Reality.exe.md)** - The universe as a running computational process
+- **[System_Primatives.pseudo](System_Primatives.pseudo)** - Lambda-calculus formalization
