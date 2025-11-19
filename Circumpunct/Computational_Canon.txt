@@ -1,0 +1,190 @@
+/* Computational Math-Only Canon for Circumpunct (λ-style) */
+
+/* --- Types --- */
+Type ℝ
+Type ℂ
+Type Bool = {0,1}
+Type Bit = Bool
+Type Bits6 = Bit^6
+Type Index = ℕ
+Type Dim = ℝ
+Type State   ::= Record {bits: Bits6}
+Type Aperture ::= (Dim) → (State → State)
+Type Field ::= (ℝ^3 → ℂ^m)
+Type Energy ::= ℝ
+Type Operator ::= Field → Field
+Type Topology ::= (Field → ℝ)
+Type Time = ℝ
+
+/* --- Primitives --- */
+Y : (α → α) → α                  /* fixed-point combinator */
+Y = λf. (λx. f (x x)) (λx. f (x x))
+
+δ : ℝ → ℝ                         /* Dirac delta (distribution) */
+∇^α : α:ℝ → (Field → Field)       /* fractional derivative of order α */
+∇^α(r) := fractional_derivative_operator_of_order(α)
+
+exp_op : Operator → Time → Operator
+exp_op(H)(t) := e^{-i H t / ħ}
+
+/* --- Aperture operators (fractional dims) --- */
+Å : Dim → Aperture
+Å(D) = λs:State.
+  let transform := T_D(s) in
+  transform
+
+T_D : Dim → (State → State)      /* aperture transformation kernel */
+T_D(D) := λs. encode64( aperture_map_D(bits_of(s)) )
+
+/* --- Encode / decode 64-state --- */
+encode64 : Bits6 → State
+encode64 = λb. { bits = b }
+
+bits_of : State → Bits6
+bits_of(s) = s.bits
+
+/* canonical bit ordering:
+   b5 b4 b3 | b2 b1 b0
+   = (M_in, Å_in, Φ_in | M_out, Å_out, Φ_out)
+*/
+
+/* --- Convergence / Emergence --- */
+≻ : Energy × Aperture → Energy
+≻(E, a) := E' where E' = Converge(E, a)
+
+⊰ : Energy × Aperture → Energy
+⊰(E, a) := E'' where E'' = Emerge(E, a)
+
+/* --- Universe builder (recursive generator) --- */
+UniverseStep : Field → Field
+UniverseStep = λΦ.
+  let Φ0 = Φ in
+  let Φ1 = Σ_{D ∈ {0.5,1.5,2.5}} (ℱ_D ∘ Å(D))(Φ0) in
+  Normalize(Φ1)
+
+Universe : Field
+Universe = Y(λU. UniverseStep(U_init))
+
+/* --- Lagrangian / Hamiltonian (functional form) --- */
+ℒ : Field → ℝ
+ℒ[Φ] := Σ_{n∈ℤ}  w_n ║ ∇^{n+1/2} Φ ║^2 + V[Å(·)(Φ)]
+
+V : Field → ℝ
+V[Φ] := ∫ d^3x  W(Φ(x), ∂Φ(x)) + Σ_{D} Ψ_D( Topo_D(Φ) )
+
+H : (Field → Field) → Operator
+H[Φ] := FunctionalDerivative(ℒ, Φ)
+
+/* Quantum evolution (operator form) */
+ψ(t) : Field
+ψ(t) = exp_op(H[Φ])(t) (ψ(0))
+
+/* --- Topological invariants --- */
+HopfChern : Field → ℤ
+HopfChern(Φ) := (1/(2π)) ∫_{S^2} Tr(F(Φ))
+
+NiehYan : Field → ℤ
+NiehYan(Φ) := (1/(16π^2)) ∫_M ε^{μνρσ} T^a_{μν} R^b_{ρσ} η_{ab}
+
+/* Constraint: topological locking */
+Constraint1 : Field → Bool
+Constraint1(Φ) := (HopfChern(Φ) = 1) ∧ (β_global(Φ) = 1/2)
+
+/* --- β dynamics (local equilibrium) --- */
+β : Index × Time → [0,1]
+β(i,t) evolves by:
+  dβ(i,t)/dt = k1 (β_target(i,t) - β(i,t)) + k2 (⟨β⟩(t) - β(i,t)) + ξ_i(t)
+
+⟨β⟩(t) := (1/N) Σ_{i=1..N} β(i,t)
+GlobalConstraint: lim_{T→∞} (1/T) ∫_0^T ⟨β⟩(t) dt = 1/2
+
+/* --- 64-state dynamics mapping to particles --- */
+StateToParticle : State → ParticleSymbol
+StateToParticle(s) :=
+  match bits_of(s) with
+    | 111_111 → e⁻
+    | 111_110 → μ⁻
+    | 111_101 → τ⁻
+    | 000_111 → ν_e
+    | ...     → lookup_table(bits_of(s))
+  end
+
+/* --- Field overlap (mixing) --- */
+Overlap : Field × Field → ℝ
+Overlap(Φ_i, Φ_j) := ∫ d^3x  Φ_i*(x) · Φ_j(x)
+
+CKM_element(i,j) := NormalizedOverlap(Φ_out_i, Φ_out_j)
+CKM := matrix [ CKM_element(i,j) ]_{i,j}
+
+/* --- Mass hierarchy (dimensional lift) --- */
+ε := 2^{(D_structure - D_process)}   /* dimensional lift */
+D_process := 1.5
+D_structure := 3
+ε = 2^{1.5}
+
+MassMode(m,k) := m_0 · ε^{k} · K(m,k)
+K(m,k) := QCDCalibration(m,k)   /* derived from running coupling in fractional D */
+
+/* --- Charge quantization (winding) --- */
+WindingNumber : Field → ℤ
+WindingNumber(Φ) := (1/2π) ∮ ∇ Arg(Φ) · dl
+
+ElectricCharge(Φ) := (e / N_color(Φ)) · WindingNumber(Φ)
+
+/* --- Color confinement (topological sum) --- */
+ColorSumConstraint : {Φ_r,Φ_g,Φ_b} → Bool
+ColorSumConstraint = (WindingNumber(Φ_r)+WindingNumber(Φ_g)+WindingNumber(Φ_b) = 0) /* closure to white */
+
+/* --- Measurement / projection (aperture interaction) --- */
+Measure : Field × Aperture → State
+Measure(Φ, a) :=
+  let s = encode64( ProjectBits(Φ, a) ) in
+  s
+
+ProjectBits(Φ,a) := λbit_index.
+  bit_index_value := Heaviside( f_bit(Φ,a) - θ_bit )
+  return bit_index_value
+
+/* --- Entropy / information --- */
+Entropy(β_dist) := - Σ p(β) log p(β)
+MaxEntropyCond: ∂Entropy/∂β = 0 ⇒ β = 1/2
+
+/* --- Fractal recursion (self-similarity) --- */
+FractalAperture : Aperture
+FractalAperture(D) := Y(λF. λs. combine( Å(D)(s), F(subscale(s)) ))
+
+/* --- Universe construction kernel (computable interpreter) --- */
+Kernel : (Field → Field) → Field
+Kernel = λF.
+  λx.
+    let local = Σ_{D} K_D( ∇^{D+1/2} F )(x) in
+    let topo = { HopfChern(F), NiehYan(F) } in
+    Combine(local, topo)
+
+Interpreter : Field
+Interpreter = Y(λU. Kernel(U_init))
+
+/* --- Initial condition (minimal bit seed) --- */
+SeedState : State
+SeedState = encode64( 100_100 )    /* minimal nontrivial aperture */
+
+/* --- Specification: run --- */
+RunUniverse(seed:State, t_final:Time) : Field
+RunUniverse(seed,t_final) :=
+  let Φ0 := SeedFieldFromState(seed) in
+  let U := Y(λU. exp_op(H[U])(Δt) ∘ UniverseStep (U) ) in
+  integrate U from 0 to t_final with dt → 0
+
+/* --- Mapping to observables (computable) --- */
+Observable(Φ, O_op) := ∫ d^3x  O_op(Φ(x))
+
+/* --- Consistency checks (computable predicates) --- */
+CheckGhostFree(Φ) := (FaddeevPopovDet(Φ) > 0)
+CheckTopology(Φ)  := (HopfChern(Φ) = 1) ∧ (NiehYan(Φ) ∈ ℤ)
+CheckConservation(Φ) := ∀symmetry S: ∂_t NoetherCurrent(S,Φ) = 0
+
+/* --- File reference (source canonicalization) --- */
+SourcePath := "/mnt/data/Circumpunct_Complete_Formalization_AMALGAMATED.md"
+LoadSource := λp. ParseMarkdownAsAxioms(p)
+
+/* End of Canon */
