@@ -1,6 +1,6 @@
 # Reality Executing Itself: Computational Trace
 
-Shows exactly what happens when universe runs:
+What happens when universe runs?
 
 Cycle 1: E → V (0D → 1D via Å₀.₅) \
 Cycle 2: V → M (1D → 2D via Å₁.₅, β=0.5 emerges) \
