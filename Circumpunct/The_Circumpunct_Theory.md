@@ -1,11 +1,11 @@
 # The Circumpunct Theory: Complete Formalization
 ## E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ and the Dynamic Optimization Principle
 `
- ⊙ = Y(λF. Å∘F); Å = λs. T(s); T = encode64∘D; D∈{½,3/2,5/2}
- ⊙ = (λF. Å∘F)(⊙)
- ⊙ = Å∘⊙
- ⊙ ≻ Å₀.₅ ⊰ ⊙ ≻ Å₁.₅ ⊰ ⊙ ≻ Å₂.₅ ⊰ ⊙ = ⊙
- ⊙ = Y(λF. Å∘F)
+⊙ = Y(λF. Å∘F); Å = λs. T(s); T = encode64∘D; D∈{½,3/2,5/2} \
+⊙ = (λF. Å∘F)(⊙) \
+⊙ = Å∘⊙ \
+⊙ ≻ Å₀.₅ ⊰ ⊙ ≻ Å₁.₅ ⊰ ⊙ ≻ Å₂.₅ ⊰ ⊙ = ⊙ \
+⊙ = Y(λF. Å∘F)
 `
 
 **[← Back to Circumpunct README](README.md)** | **[← Story Version](The_Story_of_Everything.md)** | **[Critical Supplements →](Critical_Supplements.md)** | **[Reality.exe →](Reality.exe.md)**
