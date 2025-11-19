@@ -1,5 +1,14 @@
 # Reality Executing Itself: Computational Trace
 
+**📁 [← Back to Circumpunct README](README.md)**
+
+**Other Documents in this Series:**
+- **[The Circumpunct Theory](The_Circumpunct_Theory.md)** - Complete formalization
+- **[Critical Supplements](Critical_Supplements.md)** - Failures, protocols, experimental validation
+- **[System Primitives](System_Primatives.pseudo)** - Lambda-calculus formalization
+
+---
+
 What happens when universe runs?
 
 Cycle 1: E → V (0D → 1D via Å₀.₅) \

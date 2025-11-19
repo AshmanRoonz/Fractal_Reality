@@ -1,8 +1,19 @@
 # The Circumpunct Theory: Complete Formalization
 ## E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ and the Dynamic Optimization Principle
 
-**Ashman Roonz**  
+**Ashman Roonz**
 November 17, 2025
+
+---
+
+## Navigation
+
+**📁 [← Back to Circumpunct README](README.md)**
+
+**Other Documents in this Series:**
+- **[Critical Supplements](Critical_Supplements.md)** - Failures, protocols, experimental validation
+- **[Reality.exe](Reality.exe.md)** - Universe as self-executing program
+- **[System Primitives](System_Primatives.pseudo)** - Lambda-calculus formalization
 
 ---
 

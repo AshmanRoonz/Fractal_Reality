@@ -1,8 +1,19 @@
 # Circumpunct Theory: Critical Supplements
 ## Limitations, Failures, Experimental Protocols, and Methodological Guidance
 
-**Ashman Roonz**  
+**Ashman Roonz**
 November 18, 2025
+
+---
+
+## Navigation
+
+**📁 [← Back to Circumpunct README](README.md)**
+
+**Other Documents in this Series:**
+- **[The Circumpunct Theory](The_Circumpunct_Theory.md)** - Complete formalization
+- **[Reality.exe](Reality.exe.md)** - Universe as self-executing program
+- **[System Primitives](System_Primatives.pseudo)** - Lambda-calculus formalization
 
 ---
 

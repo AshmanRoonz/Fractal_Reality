@@ -2,6 +2,18 @@
 /* Enhanced with Execution Semantics & Proof System */
 
 /* ============================================ */
+/* NAVIGATION                                   */
+/* ============================================ */
+/*
+ * 📁 Back to Circumpunct README: README.md
+ *
+ * Other Documents in this Series:
+ * - The_Circumpunct_Theory.md - Complete formalization
+ * - Critical_Supplements.md - Failures, protocols, experimental validation
+ * - Reality.exe.md - Universe as self-executing program
+ */
+
+/* ============================================ */
 /* PART I: TYPE SYSTEM & PRIMITIVES (as given) */
 /* ============================================ */
 
