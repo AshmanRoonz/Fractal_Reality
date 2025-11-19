@@ -216,6 +216,91 @@ Type Operator ::= Field → Field
 
 ---
 
+### 📜 **[Computational_Canon.txt](Computational_Canon.txt)** 📜
+**Lambda-Calculus Math-Only Formalization**
+
+The complete Circumpunct framework expressed in pure computational mathematics using lambda calculus notation.
+
+**Contents:**
+- Complete type system (ℝ, ℂ, State, Aperture, Field, Operator)
+- Y-combinator for recursive self-reference
+- Aperture operators for fractional dimensions
+- 64-state encoding/decoding primitives
+- Convergence (≻) and emergence (⊰) operators
+- Universe construction as fixed-point combinator
+- Lagrangian and Hamiltonian functionals
+- Topological invariants (Hopf-Chern, Nieh-Yan)
+- β dynamics with global constraint ⟨β⟩ = 1/2
+- Particle mapping from 64-state architecture
+- CKM matrix from field overlap
+- Mass hierarchy from dimensional lift
+- Charge quantization from winding numbers
+- Color confinement from topological closure
+
+**Key features:**
+```
+Y : (α → α) → α                  # Fixed-point combinator
+Å : Dim → Aperture               # Aperture operator
+⊙ := Fix(UniverseStep)           # Universe as fixed point
+Universe := Y(UniverseStep)(Seed)
+```
+
+**191 lines of pure lambda-calculus mathematics.**
+
+---
+
+### 📐 **[Unified_Canon.txt](Unified_Canon.txt)** 📐
+**Five Mathematical Perspectives on One Truth**
+
+The Circumpunct identity expressed in five complementary formalisms, demonstrating that the same reality can be approached through different mathematical languages.
+
+**I. Axiomatic Set-Theoretic Foundation:**
+```
+Axiom 1: D = { n, n+1/2 | n ∈ ℕ }
+Axiom 2: ∀D∈{1/2,3/2,5/2}, ∃ Å_D : E_D → E_{D+1}
+...
+Axiom 6: Topological constraint: Hopf(Φ) = 1
+```
+
+**II. Category-Theoretic Formulation:**
+- Objects: E_0, E_1, E_{3/2}, M, Φ, ⊙
+- Morphisms: Å_{1/2}, Å_{3/2}, Å_{5/2}, ≻, ⊰
+- Commutative diagrams showing dimensional flow
+- Wholeness as topological closure: Φ → E_0 → Φ
+
+**III. Computational / Lambda-Calculus Form:**
+```
+Å := λD. λs. T_D(s)
+⊙ := Fix(UniverseStep)
+Universe := Y(UniverseStep)(Seed)
+```
+
+**IV. Field / Tensor / Differential Formulation:**
+```
+∇^{D+1/2} Φ = β Å_D(Φ),  β = 1/2
+ℒ = Σ_{D} α_D |∇^{D+1/2} Φ|² + V(Φ)
+⊙ = argmin ℒ subject to Hopf(Φ)=1
+```
+
+**V. Pure Algebraic Narrative:**
+```
+E ≻ Å_{1/2} = V
+V ⊰ Å_{3/2} = M
+M ≻ Å_{5/2} = Φ
+Φ ∘ E = ⊙
+```
+
+**What this demonstrates:**
+- Mathematics is the language of reality, but reality speaks many dialects
+- Each formalism reveals different aspects of the same truth
+- Set theory shows existence, categories show structure, lambda calculus shows computation
+- Fields show dynamics, algebra shows essence
+- All five perspectives are equivalent - choose the language that suits your question
+
+**106 lines expressing one truth five ways.**
+
+---
+
 ## The Research Journey Leading Here
 
 This repository chronicles the path to the Circumpunct Theory:
@@ -258,14 +343,16 @@ This repository chronicles the path to the Circumpunct Theory:
 **For mathematicians:**
 1. Read the three axioms in [The_Circumpunct_Theory.md](The_Circumpunct_Theory.md)
 2. Follow the derivations in Parts VII-VIII
-3. Study the lambda-calculus formalization in [System_Primatives.pseudo](System_Primatives.pseudo)
-4. Review the Clay Prize solutions (Part IV, Section 15.5)
+3. Study the lambda-calculus formalization in [System_Primatives.pseudo](System_Primatives.pseudo) or [Computational_Canon.txt](Computational_Canon.txt)
+4. Review all five mathematical perspectives in [Unified_Canon.txt](Unified_Canon.txt)
+5. Review the Clay Prize solutions (Part IV, Section 15.5)
 
 **For computer scientists:**
 1. Start with [Reality.exe.md](Reality.exe.md) to see reality as computation
-2. Study [System_Primatives.pseudo](System_Primatives.pseudo) for the type system
-3. Examine the 64-state architecture as a state machine
-4. Consider implementations and simulations
+2. Study [System_Primatives.pseudo](System_Primatives.pseudo) or [Computational_Canon.txt](Computational_Canon.txt) for the type system
+3. Review [Unified_Canon.txt](Unified_Canon.txt) for the lambda-calculus perspective
+4. Examine the 64-state architecture as a state machine
+5. Consider implementations and simulations
 
 **For biologists:**
 1. Focus on the DNA connection in [The_Circumpunct_Theory.md](The_Circumpunct_Theory.md) Part IV
