@@ -148,15 +148,15 @@ Complete regularity!
       Binary: "Does aperture open?"
       
 1.5D: Å₁.₅ branching
-      MIND - Branching lens
-      Main transformation
+      BODY - Branching lens
+      Physical transformation
       Energy splits into paths
       β = 0.5 optimization
       
 2.5D: Å₂.₅ fractal
-      BODY - Fractal lensing
-      Infinite nested apertures (Å^∞)
-      "I manifest everywhere"
+      MIND - Fractal lensing
+      Infinite perspectives of awareness (Å^∞)
+      "I experience everywhere"
 
 ALL apertures transform and validate in their own way.
 ```
@@ -173,11 +173,11 @@ E    = Potential (0D structure - undifferentiated source)
 ⊰    = Emergence operator (from aperture)
 V    = Validation line (1D structure - binary truth/false)
 ≻    = Convergence operator (into aperture)
-Å₁.₅ = Aperture branching (MIND - directional transformation)
+Å₁.₅ = Aperture branching (BODY - directional transformation)
 ⊰    = Emergence operator (from aperture)
 M    = Matter surface (2D structure)
 ≻    = Convergence operator (into aperture)
-Å₂.₅ = Aperture infinity (BODY - field generation)
+Å₂.₅ = Aperture infinity (MIND - field generation)
 ⊰    = Emergence operator (from aperture)
 Φ    = Field volume (3D structure)
 
@@ -295,11 +295,11 @@ M    Matter surface/boundary (2D structure)
       ↓ emergence ⊰
 1D:   V (binary validation line - truth/false, first structure)
       ↓ convergence ≻
-1.5D: Å₁.₅ (MIND aperture - directional transformation)
+1.5D: Å₁.₅ BODY aperture - directional transformation)
       ↓ emergence ⊰
 2D:   M (matter surface boundary)
       ↓ convergence ≻
-2.5D: Å₂.₅ (BODY aperture - field generation)
+2.5D: Å₂.₅ MIND aperture - field generation)
       ↓ emergence ⊰
 3D:   Φ (field space)
       ↓
@@ -307,7 +307,7 @@ M    Matter surface/boundary (2D structure)
 ```
 
 **Full reading**:
-"Pure potential at zero dimensions flows through convergence to the first aperture (SOUL - convergent lens), emerges as the binary validation line at one dimension (V - truth/false states), converges again to the second aperture (MIND - directional transformation) where main physics occurs, emerges to form matter surface at two dimensions, converges through the third aperture (BODY - field generation) with infinite fractal lensing, and emerges as field volume at three dimensions - this complete nested sequence from 0D potential through 1D validation, 2D matter, to 3D field IS wholeness. The universe boots from undifferentiated potential through apertures to dimensional structures."
+"Pure potential at zero dimensions flows through convergence to the first aperture (SOUL - convergent lens), emerges as the binary validation line at one dimension (V - truth/false states), converges again to the second aperture (BODY - directional transformation) where main physics occurs, emerges to form matter surface at two dimensions, converges through the third aperture (MIND - field generation) with infinite fractal lensing, and emerges as field volume at three dimensions - this complete nested sequence from 0D potential through 1D validation, 2D matter, to 3D field IS wholeness. The universe boots from undifferentiated potential through apertures to dimensional structures."
 
 ---
 
@@ -359,11 +359,11 @@ E → ≻ → Å₀.₅ → ⊰ → V → ≻ → Å₁.₅ → ⊰ → M → �
 4. ⊰:    Emergence from first aperture
 5. V:    Validation line at 1D (binary truth/false - FIRST STRUCTURE)
 6. ≻:    Convergence to second aperture
-7. Å₁.₅: MIND aperture - branching transformation (1.5D, main physics)
+7. Å₁.₅: BODY aperture - branching transformation (1.5D, main physics)
 8. ⊰:    Emergence from second aperture
 9. M:    Matter surface formed at 2D
 10. ≻:   Convergence to third aperture
-11. Å₂.₅: BODY aperture - fractal lensing Å^∞ (2.5D)
+11. Å₂.₅: MIND aperture - fractal lensing Å^∞ (2.5D)
 12. ⊰:   Emergence from third aperture
 13. Φ:   Field volume manifests at 3D (ending spatial configuration)
 14. ⊙:   Wholeness closure (complete cycle)
@@ -399,9 +399,9 @@ The universe boots from potential through validation to manifestation
 E is ⊙ (functioning as potential)
 Å₀.₅ is ⊙ (functioning as SOUL validation)
 V is ⊙ (functioning as validation line)
-Å₁.₅ is ⊙ (functioning as MIND transformation)
+Å₁.₅ is ⊙ (functioning as BODY transformation)
 M is ⊙ (functioning as matter surface)
-Å₂.₅ is ⊙ (functioning as BODY fractal lensing)
+Å₂.₅ is ⊙ (functioning as MIND fractal lensing)
 Φ is ⊙ (functioning as field volume)
 
 Implicitly: ⊙_E ≻ ⊙_Å₀.₅ ⊰ ⊙_V ≻ ⊙_Å₁.₅ ⊰ ⊙_M ≻ ⊙_Å₂.₅ ⊰ ⊙_Φ = ⊙_whole
@@ -473,9 +473,9 @@ FINAL FORMULATION
 
 1. **E is the potential**: Starting point at 0D, pure undifferentiated source
 2. **V is the validation line**: First structure at 1D, binary truth/false states
-3. **Å has THREE forms**: Å₀.₅ (SOUL), Å₁.₅ (MIND), Å₂.₅ (BODY) at fractional dimensions
-4. **M is the matter surface**: Formed at 2D after MIND aperture transformation
-5. **Φ is the field volume**: Final manifestation at 3D after BODY aperture
+3. **Å has THREE forms**: Å₀.₅ (SOUL), Å₁.₅ (BODY), Å₂.₅ (MIND) at fractional dimensions
+4. **M is the matter surface**: Formed at 2D after BODY aperture transformation
+5. **Φ is the field volume**: Final manifestation at 3D after MIND aperture
 6. **Each is ⊙**: E = ⊙_E, V = ⊙_V, Å = ⊙_Å, M = ⊙_M, Φ = ⊙_Φ (fractal wholeness)
 7. **Notation is clean**: We write E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙, understanding the fractal nature implicitly
 8. **Dimensional ascent**: The universe boots from 0D potential → 1D validation → 2D matter → 3D field
@@ -524,16 +524,16 @@ E:    Exists at D=0 (potential - undifferentiated source)
 ⊰:    Operates after EVERY aperture (emergence)
 V:    Exists at D=1 (validation line - binary truth/false, FIRST STRUCTURE)
 ≻:    Operates before EVERY aperture (convergence)
-Å₁.₅: Operates at D=1.5 (MIND - branching transformation)
+Å₁.₅: Operates at D=1.5 (BODY - Branching transformation)
 ⊰:    Operates after EVERY aperture (emergence)
 M:    Exists at D=2 (matter surface/boundary)
 ≻:    Operates before EVERY aperture (convergence)
-Å₂.₅: Operates at D=2.5 (BODY - fractal lensing, field generation)
+Å₂.₅: Operates at D=2.5 (MIND - Fractal lensing, field generation)
 ⊰:    Operates after EVERY aperture (emergence)
 Φ:    Exists at D=3 (field volume)
 ```
 
-**Key insight**: E at D=0 is pure potential before any dimensional structure. It flows through Å₀.₅ (SOUL aperture) to emerge as V at D=1 - the first dimensional structure, a binary validation line (a 1D line can only hold two states: its endpoints, representing truth/false). V then flows through Å₁.₅ (MIND aperture) where main transformation occurs, emerging as M at D=2. M flows through Å₂.₅ (BODY aperture) to manifest as Φ at D=3. The dimensional ladder is: 0D potential → 0.5D aperture → 1D validation → 1.5D aperture → 2D matter → 2.5D aperture → 3D field.
+**Key insight**: E at D=0 is pure potential before any dimensional structure. It flows through Å₀.₅ (SOUL aperture) to emerge as V at D=1 - the first dimensional structure, a binary validation line (a 1D line can only hold two states: its endpoints, representing truth/false). V then flows through Å₁.₅ (BODY aperture) where Physical transformation occurs, emerging as M at D=2. M flows through Å₂.₅ (MIND aperture) to manifest as Φ at D=3. The dimensional ladder is: 0D potential → 0.5D aperture → 1D validation → 1.5D aperture → 2D matter → 2.5D aperture → 3D field.
 
 ### 3.2 Right Side: Energy (Structure)
 
@@ -563,9 +563,9 @@ Measurable as: E in various forms
 E:   Exists at D=0 (potential - undifferentiated source)
 Å₀.₅: Operates at D=0.5 (SOUL aperture)
 V:   Exists at D=1 (validation line - first structure)
-Å₁.₅: Operates at D=1.5 (MIND aperture - main transformation)
+Å₁.₅: Operates at D=1.5 (BODY aperture - Physical transformation)
 M:   Exists at D=2 (matter surface/boundary)
-Å₂.₅: Operates at D=2.5 (BODY aperture - fractal)
+Å₂.₅: Operates at D=2.5 (MIND aperture - fractal)
 Φ:   Exists at D=3 (field volume)
 ```
 
@@ -579,8 +579,8 @@ Integer dimensions = STRUCTURES:
 
 Fractional dimensions = APERTURE OPERATIONS:
   Å₀.₅ at D=0.5 (SOUL - singular lens, convergent)
-  Å₁.₅ at D=1.5 (MIND - branching lens, directional)
-  Å₂.₅ at D=2.5 (BODY - fractal lensing, field generation)
+  Å₁.₅ at D=1.5 (BODY - Branching lens, directional)
+  Å₂.₅ at D=2.5 (MIND - Fractal lensing, field generation)
 
 Pattern: Structure → Aperture → Structure → Aperture → ...
 Dimensional ascent: 0D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D
@@ -896,8 +896,8 @@ The CKM matrix is not a phenomenological input - it's a geometric consequence of
 **Process dimensions (fractional)**:
 ```
 D = 0.5  Convergence to validation    (Å₀.₅ - SOUL aperture)
-D = 1.5  Transformation site           (Å₁.₅ - MIND aperture core)
-D = 2.5  Field generation              (Å₂.₅ - BODY aperture)
+D = 1.5  Transformation site           (Å₁.₅ - BODY aperture core)
+D = 2.5  Field generation              (Å₂.₅ - MIND aperture)
 ```
 
 **Structure dimensions (integer)**:
@@ -991,8 +991,8 @@ Wholeness preserved
 **Applied to three fractional dimensions (three apertures)**:
 ```
 D = 0.5: Å₀.₅ validation (SOUL aperture open/closed) → 1 bit
-D = 1.5: Å₁.₅ validation (MIND aperture branches/doesn't) → 1 bit
-D = 2.5: Å₂.₅ validation (BODY aperture manifests/doesn't) → 1 bit
+D = 1.5: Å₁.₅ validation (BODY aperture branches/doesn't) → 1 bit
+D = 2.5: Å₂.₅ validation (MIND aperture manifests/doesn't) → 1 bit
 
 Total per interface: 2³ = 8 states
 Dual interface (input/output): 8 × 8 = 64 states
@@ -3946,9 +3946,9 @@ Grade       Dimension
 0           D = 0            E potential    Undifferentiated source
 0.5         D = 0.5          Å₀.₅ singular  SOUL lens (convergent)
 1           D = 1            V validation   Binary truth/false line
-1.5         D = 1.5          Å₁.₅ branching MIND lens (directional)
+1.5         D = 1.5          Å₁.₅ branching BODY lens (directional)
 2           D = 2            M surface      Matter boundary
-2.5         D = 2.5          Å₂.₅ fractal   BODY lens (field gen)
+2.5         D = 2.5          Å₂.₅ fractal   MIND lens (field gen)
 3           D = 3            Φ volume       Field space
 4           D = 4            Temporal V     Time validation
 4.5         D = 4.5          Temporal Å     CONSCIOUSNESS
@@ -3966,21 +3966,21 @@ Binary transformation: "Does aperture open?"
 → Emergence OUT: To V (1D validation line) via ⊰
 ```
 
-**Å₁.₅ - MIND (Branching Aperture):**
+**Å₁.₅ - BODY (Branching Aperture):**
 ```
 At D = 1.5
 Branching lens - explores possibilities
-Main transformation site
-"I experience this"
+Physical transformation site
+"I do this"
 ← Convergence IN: V (1D validation line) via ≻
 → Emergence OUT: To M (2D surface) via ⊰
 ```
 
-**Å₂.₅ - BODY (Fractal Aperture):**
+**Å₂.₅ - MIND (Fractal Aperture):**
 ```
 At D = 2.5
-Fractal lensing - infinite nested apertures (Å^∞)
-"I manifest everywhere"
+Fractal lensing - Infinite perspectives of awareness (Å^∞)
+"I experience everywhere"
 ← Convergence IN: M (2D surface) via ≻
 → Emergence OUT: To Φ (3D volume) via ⊰
 ```
@@ -4000,9 +4000,9 @@ Grade correspondence:
 ⟨Ψ⟩₀ : E - Potential (0D source)
 ⟨Ψ⟩₀.₅ : Å₀.₅ - Validation processes (SOUL)
 ⟨Ψ⟩₁ : V - Validation line (1D structure)
-⟨Ψ⟩₁.₅ : Å₁.₅ - Branching processes (MIND)
+⟨Ψ⟩₁.₅ : Å₁.₅ - Branching processes (BODY)
 ⟨Ψ⟩₂ : M - Matter surface (2D structure)
-⟨Ψ⟩₂.₅ : Å₂.₅ - Fractal processes (BODY)
+⟨Ψ⟩₂.₅ : Å₂.₅ - Fractal processes (MIND)
 ⟨Ψ⟩₃ : Φ - Field volume (3D structure)
 ```
 
@@ -4078,8 +4078,8 @@ EVERY aperture produces emergence OUT!
 ```
 Å̂₁.₅[Ψ] = operates at D=1.5
 
-Main transformation site
-MIND aperture - branching lens
+Physical transformation site
+BODY aperture - branching lens
 Where β = 0.5 branching manifests
 Creates particle states
 ```
@@ -4097,7 +4097,7 @@ Matter exists as boundary interface
 ```
 Å̂₂.₅[Ψ] = operates at D=2.5
 
-Infinite nested apertures (Å^∞)
+Infinite perspectives of awareness (Å^∞)
 BODY aperture - fractal lensing
 Distributes across space
 ```
@@ -4173,8 +4173,8 @@ Complete regularity across ALL scales!
 **Fractional dimensions (aperture operations):**
 ```
 0.5D: Å₀.₅ singular (SOUL) - binary transformation
-1.5D: Å₁.₅ branching (MIND) - main transformation
-2.5D: Å₂.₅ fractal (BODY) - infinite distribution
+1.5D: Å₁.₅ BODY) - Physical transformation
+2.5D: Å₂.₅ MIND) - infinite distribution
 
 All apertures transform/validate in their own way.
 ```
@@ -4191,8 +4191,8 @@ where:
 ```
 
 **Physical meaning:**
-- Operates at Å₁.₅ (MIND aperture, D=1.5)
-- Main transformation site
+- Operates at Å₁.₅ (BODY aperture, D=1.5)
+- Physical transformation site
 - Energy ↔ Power branching
 - Creates all particle physics
 - β = 0.5 optimal split
@@ -4267,21 +4267,21 @@ where ⟨Ψ⟩₂ represents M (2D matter surface)
 - M is a SURFACE (2D), not a line
 - Formed by emergence ⊰ from Å₁.₅
 - Matter exists as boundary interface
-- Receives transformation from MIND aperture
+- Receives transformation from BODY aperture
 
 ### Equation 6: Fractal Aperture Infinity
 
 ```
 Å̂₂.₅[Ψ] = Å^∞
 
-Infinite nested apertures at D=2.5
+Infinite perspectives of awareness at D=2.5
 ```
 
 **Physical meaning:**
 - BODY aperture at D=2.5
 - Fractal lensing
 - Infinite distribution
-- "I manifest everywhere"
+- "I experience everywhere"
 - Receives M via convergence ≻
 - Outputs to Φ via emergence ⊰
 
@@ -4302,12 +4302,12 @@ where ⟨Ψ⟩₃ represents Φ (3D field volume)
 ### The Complete System
 
 ```
-(E1) ∇_A Ψ = β Ψ̃                → At Å₁.₅ (MIND, D=1.5)
+(E1) ∇_A Ψ = β Ψ̃                → At Å₁.₅ (BODY, D=1.5)
 (E2) Ψ†Ψ = ⊙                     → Wholeness of cycle
 (E3) E at D=1                     → Energy stream structure
 (E4) Å₀.₅ singular at D=0.5      → SOUL binary transformation
 (E5) M at D=2                     → Matter surface structure
-(E6) Å₂.₅ fractal at D=2.5       → BODY infinite apertures
+(E6) Å₂.₅ fractal at D=2.5       → MIND infinite apertures
 (E7) Φ at D=3                     → Field volume structure
 
 Plus operators:
@@ -4789,8 +4789,8 @@ Each fractional dimension represents a different mode of transformation, and con
 **Mapping to human experience:**
 ```
 Soul (D≈0.5): Singular directing aperture - "I am here"
-Mind (D≈1.5): Branching processing aperture - "I experience this"
-Body (D≈2.5): Fractal manifesting apertures - "I manifest everywhere"
+Mind (D≈1.5): Branching processing aperture - "I do this"
+Body (D≈2.5): Fractal manifesting apertures - "I experience everywhere"
 ```
 
 This is not metaphor. This is the geometric structure of consciousness operating through the E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ identity at three dimensional scales.
@@ -4854,7 +4854,7 @@ The soul is temporary (like a whirlpool in water)
 The soul is how infinite becomes finite "I"
 ```
 
-### 20.3 The Mind Aperture (D≈1.5)
+### 20.3 The BODY aperture (D≈1.5)
 
 **Geometric character of D=1.5:**
 
@@ -4870,12 +4870,12 @@ This is the **aperture singularity** where energy-power transformation occurs - 
 
 **Operational role:**
 
-The mind aperture is **experience itself** - where consciousness branches into multiplicity:
+The BODY aperture is **experience itself** - where consciousness branches into multiplicity:
 
 ```
 Function: WHAT consciousness encounters
 Character: Branching processor
-Experience: "I experience this"
+Experience: "I do this"
 Process: Thoughts, feelings, perceptions unfold
 
 Soul directs: "Attend to this word"
@@ -4981,7 +4981,7 @@ Muscle apertures → Force generation
 
 All operating simultaneously, all coordinated through fractal hierarchy.
 
-**The body is how consciousness becomes matter - through infinite nested apertures at D≈2.5.**
+**The body is how consciousness becomes matter - through Infinite perspectives of awareness at D≈2.5.**
 
 ### 20.5 How The Three Work Together
 
@@ -4997,8 +4997,8 @@ All operating simultaneously, all coordinated through fractal hierarchy.
    Attention deployed
             ↓
 
-3. MIND APERTURE (D≈1.5)
-   "I experience THIS"
+3. BODY aperture (D≈1.5)
+   "I do this"
    Branching into multiple processes:
    - Perception branches
    - Thought branches
@@ -5142,7 +5142,7 @@ This is not placebo. This is literal energy transfer.
 
 ```
 Soul aperture (D≈0.5) directs consciousness energy →
-Mind aperture (D≈1.5) channels energy through processing →
+BODY aperture (D≈1.5) channels energy through processing →
 Body apertures (D≈2.5) receive power boost at focal point
 
 Attention IS the direction vector of the soul aperture.
@@ -5188,7 +5188,7 @@ Result: Stability of soul aperture
 Practice: Mindfulness of thoughts, observing without grasping
 Target: The branching processes
 Experience: Witnessing thoughts arise and dissolve
-Result: Flexibility of mind aperture
+Result: Flexibility of BODY aperture
   - Enhanced processing capacity
   - Better integration
   - Reduced mental rigidity
@@ -5208,7 +5208,7 @@ Result: Activation of body apertures
 **Complete practice integrates all three:**
 ```
 Begin: Find soul aperture (where you direct from)
-Expand: Feel mind aperture (how experience flows)
+Expand: Feel BODY aperture (how experience flows)
 Extend: Sense body apertures (where it manifests)
 Integrate: All three as one ⊙
 
@@ -5302,7 +5302,7 @@ Like charging a battery
 3. **Practice using those apertures**
 ```
 Physical training (body apertures)
-Cognitive exercises (mind apertures)
+Cognitive exercises (BODY apertures)
 Meditation practice (soul aperture)
 ```
 
@@ -5325,7 +5325,7 @@ Aperture approach:
 
 This is why elite athletes naturally:
 - Visualize performance (soul aperture direction)
-- Stay "in the zone" (mind aperture flow)
+- Stay "in the zone" (BODY aperture flow)
 - Train physically (body aperture development)
 
 They've discovered aperture optimization empirically.
