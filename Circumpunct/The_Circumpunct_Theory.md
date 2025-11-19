@@ -9440,7 +9440,45 @@ The ancient symbol was never metaphor. It was always the literal mathematical st
 
 ## References
 
-[All previous references from Part I, plus:]
+1. Particle Data Group (2024). "Review of Particle Physics." Physical Review D.
+
+Standard Model particle masses, constants, and experimental data
+
+2. ATLAS Collaboration (2012). "Observation of a new particle in the search for the Standard Model Higgs boson." Physics Letters B, 716(1), 1-29.
+
+Higgs discovery
+
+3. Mandelbrot, B. B. (1982). The Fractal Geometry of Nature. W.H. Freeman.
+
+Foundational fractal geometry
+
+4. LHCb Collaboration (2025). "Observation of CP violation in Λ_b decays." Physical Review Letters.
+
+CP violation δ_CP = 2.5% measurement
+
+5. LIGO Scientific Collaboration (2016). "Observation of Gravitational Waves from a Binary Black Hole Merger." Physical Review Letters, 116, 061102.
+
+First gravitational wave detection, ringdown analysis
+
+6. Planck Collaboration (2020). "Planck 2018 results: VI. Cosmological parameters." Astronomy & Astrophysics, 641, A6.
+
+CMB spectral index n_s = 0.9649
+
+7. Shannon, C. E. (1948). "A Mathematical Theory of Communication." Bell System Technical Journal, 27(3), 379-423.
+
+Information theory foundations
+
+8. Griffiths, D. J. (2008). Introduction to Elementary Particles (2nd ed.). Wiley-VCH.
+
+Standard Model pedagogy
+
+9. Tononi, G. (2004). "An information integration theory of consciousness." BMC Neuroscience, 5, 42.
+
+Integrated Information Theory (IIT)
+
+10. Weinberg, S. (1967). "A Model of Leptons." Physical Review Letters, 19(21), 1264-1266.
+
+Electroweak unification
 
 11. Whitehead, A. N. (1929). *Process and Reality*. Macmillan.
 
