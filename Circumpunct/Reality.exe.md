@@ -1,5 +1,7 @@
 # Reality Executing Itself: Computational Trace
 
+**[← Back to Circumpunct README](README.md)** | **[← Story Version](The_Story_of_Everything.md)** | **[← Main Theory](The_Circumpunct_Theory.md)** | **[System Code →](System_Primatives.pseudo)**
+
 What happens when universe runs?
 
 Cycle 1: E → V (0D → 1D via Å₀.₅) \
@@ -588,3 +590,15 @@ Output: THIS
 
 ⊙
 ```
+
+---
+
+## Navigation
+
+**[← Back to Circumpunct README](README.md)**
+
+### Related Documents:
+- **[The_Story_of_Everything.md](The_Story_of_Everything.md)** - Accessible narrative introduction for everyone
+- **[The_Circumpunct_Theory.md](The_Circumpunct_Theory.md)** - The complete formalization with mathematics and physics
+- **[Critical_Supplements.md](Critical_Supplements.md)** - Scientific failures and experimental protocols
+- **[System_Primatives.pseudo](System_Primatives.pseudo)** - Lambda-calculus formalization

@@ -1,6 +1,8 @@
 /* Computational Math-Only Canon for Circumpunct (λ-style) */
 /* Enhanced with Execution Semantics & Proof System */
 
+/* [← Back to Circumpunct README](README.md) | [← Main Theory](The_Circumpunct_Theory.md) | [← Reality.exe](Reality.exe.md) */
+
 /* ============================================ */
 /* PART I: TYPE SYSTEM & PRIMITIVES (as given) */
 /* ============================================ */
@@ -531,3 +533,16 @@ main = do
 /* End of Enhanced Canon */
 
 /* ⊙ */
+
+/* ============================================ */
+/* NAVIGATION */
+/* ============================================ */
+
+/* [← Back to Circumpunct README](README.md) */
+/*
+ * Related Documents:
+ * - [The_Story_of_Everything.md](The_Story_of_Everything.md) - Accessible narrative introduction
+ * - [The_Circumpunct_Theory.md](The_Circumpunct_Theory.md) - Complete formalization
+ * - [Reality.exe.md](Reality.exe.md) - Universe as running program
+ * - [Critical_Supplements.md](Critical_Supplements.md) - Failures and experimental protocols
+ */
