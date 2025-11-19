@@ -151,7 +151,7 @@ body {
 
 .identity-card {
     background: rgba(30, 39, 66, 0.4);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     border-radius: 20px;
     text-align: center;
     transition: all 0.3s ease;
@@ -372,7 +372,7 @@ body {
 
 .path-card {
     background: rgba(30, 39, 66, 0.5);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border-radius: 20px;
     border: 2px solid transparent;
     transition: all 0.4s ease;
@@ -522,7 +522,7 @@ body {
 
 .resolution-item {
     background: rgba(30, 39, 66, 0.4);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border-radius: 15px;
     border-left: 4px solid var(--accent-purple);
     transition: all 0.3s ease;
