@@ -29,14 +29,6 @@
 
 ## Chapter 1 — Overview
 
-### What This Document Is
-
-This is a clean, conceptually clear presentation of the Circumpunct Framework. It synthesizes the core ideas of a complete physical theory into an elegant, readable form without excessive technical derivations.
-
-**The goal**: Present a unified worldview—expressed mathematically, physically, and philosophically—in its minimal, essential form.
-
-This document describes how the universe emerges from pure potential through a series of dimensional transformations, creating all of physical reality, consciousness, and wholeness through a single repeating pattern.
-
 ### The Three Fundamental Axioms
 
 The entire framework rests on three axioms:
