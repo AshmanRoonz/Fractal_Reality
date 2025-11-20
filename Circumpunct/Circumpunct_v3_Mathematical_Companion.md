@@ -1,10 +1,10 @@
-# Circumpunct v3 — Mathematical Companion
+# The Circumpunct Theory — Mathematical Companion
 
 **Rigorous Derivations and Formal Structure**  
-Companion to *The Circumpunct Theory — Clean Edition v3.0*
+Companion to *The Circumpunct Theory — v3.0*
 
 **Author:** Ash Roney (Ashman Roonz)  
-**Version:** 2.0 — November 2025  
+**Version:** 3.0 — November 2025  
 **GitHub-Optimized Edition**
 
 ---
