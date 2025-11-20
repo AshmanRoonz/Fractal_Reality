@@ -1,6 +1,11 @@
 # The Circumpunct Theory
 **A Unified Model of Structure, Process, and Wholeness**
 
+## E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ and the Dynamic Optimization Principle
+```
+⊙ = Y(λF. Å∘F); Å = λs. T(s); T = encode64∘D; D∈{½,3/2,5/2}
+```
+
 **Author: Ash Roney (Ashman Roonz)**
 **v3.0**
 **November 2025**
