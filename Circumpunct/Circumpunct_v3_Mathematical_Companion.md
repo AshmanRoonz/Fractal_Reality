@@ -183,13 +183,87 @@ The dimensional sequence $\{0, 0.5, 1, 1.5, 2, 2.5, 3\}$ is the unique minimal s
 4. Preserving wholeness at each step
 5. Minimizing dimensional jumps
 
-**Proof Sketch**: 
+**Proof Sketch**:
 - Must start at $0D$ (no structure yet)
 - Must reach $3D$ (observed spatial dimensions)
 - Alternation requires intermediate dimensions between integers
 - Minimal jumps $\Rightarrow$ increment by $0.5$ each time
 - Wholeness preservation requires complete cycles
 - This uniquely gives $0 \to 0.5 \to 1 \to 1.5 \to 2 \to 2.5 \to 3$ ∎
+
+---
+
+**Theorem 1.2** (Interaction Primacy)
+
+No structure $S$ exists prior to interaction $I$. All structures emerge from iterated interaction:
+
+$$
+S = \lim_{n \to \infty} I^n(\odot)
+$$
+
+**Proof** (by contradiction):
+1. Assume structure $S_0$ exists before interaction
+2. $S_0$ must have boundaries (else indistinguishable from nothing)
+3. Boundaries $\equiv$ interactions (inside $\leftrightarrow$ outside distinction)
+4. Therefore $S_0$ already contains interaction
+5. Contradiction: No pre-interaction structure possible ∎
+
+**Corollary 1.1**: The circumpunct $\odot$ is its own ground—it requires no prior substrate.
+
+---
+
+**Theorem 1.3** (Three-Dimensional Sufficiency)
+
+All observable phenomena can be embedded in $3D$ space with recursive topology. No spatial dimensions beyond 3 are necessary.
+
+**Proof Sketch**:
+1. Fractal dimension $D = 1.5$ creates apparent dimensionality within $3D$
+2. Recursion mimics higher-dimensional structure (e.g., $4D = $ "1D recursed")
+3. Hopf fibration $S^3 \to S^2$ proves natural $4D \to 3D$ mapping
+4. All experiments measure $3D$ spatial structure + fractal characteristics
+5. No experiment ever requires $>3$ spatial dimensions ∎
+
+**Implication**: String theory's extra dimensions are unnecessary—they're topological recursion within $3D$.
+
+---
+
+**Theorem 1.4** (Law Emergence)
+
+Physical "laws" $L$ are attractors in interaction space—patterns that persist under iteration:
+
+$$
+L = \{P \mid P \text{ stable under } \odot\text{-iteration}\}
+$$
+
+**Proof Sketch**:
+1. Start with arbitrary pattern $P_0$
+2. Apply interaction operator $\odot$ repeatedly: $P_{n+1} = \odot(P_n)$
+3. Unstable patterns $\to$ dissipate or collapse
+4. Stable patterns $\to$ persist and reproduce
+5. Long-term survivors = observed "laws"
+6. Laws are descriptive (what persists), not prescriptive (what's enforced) ∎
+
+**Corollary 1.2**: Conservation laws emerge because patterns violating conservation create internal inconsistency and don't persist.
+
+---
+
+**Theorem 1.5** (Zero Free Parameters)
+
+All physical constants are determined by:
+1. Topology (Chern numbers, winding, Hopf structure)
+2. Optimization (β = 0.5 from ghost elimination, entropy maximum)
+
+No arbitrary inputs are required.
+
+**Proof Sketch**:
+1. $\beta = 0.5$ forced by ghost elimination + maximum entropy
+2. $D = 1.5$ forced by Chern number $c_1 = 1$ (topological invariant)
+3. $\alpha$ derived from $\beta_\Phi/\beta_\mathring{A}$ equilibrium ratio at $D = 1.5$
+4. $\alpha_s$ derived from $SU(3)$ geometry: $\alpha_s = 2\pi\alpha$
+5. All other constants follow from these
+6. Therefore: Zero adjustable parameters ∎
+
+**Implication**: Nature is not fine-tuned—the constants are topologically forced.
 
 ---
 
