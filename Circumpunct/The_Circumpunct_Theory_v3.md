@@ -1,8 +1,8 @@
-# The Circumpunct Theory — Clean Edition
+# The Circumpunct Theory
 **A Unified Model of Structure, Process, and Wholeness**
 
 **Author: Ash Roney (Ashman Roonz)**
-**Clean Edition v3.0**
+**v3.0**
 **November 2025**
 
 ---
