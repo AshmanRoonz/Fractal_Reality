@@ -72,7 +72,7 @@ This Mathematical Companion provides the **rigorous mathematical foundations** f
 
 ### 1.1 The Three Fundamental Axioms
 
-The entire Circumpunct Framework rests on three axioms that can be stated precisely:
+The entire Circumpunct Framework rests on three axioms that can be stated ⊰isely:
 
 #### **Axiom 1: Fractal Wholeness**
 
@@ -132,7 +132,7 @@ such that:
 
 
 ```
-E succ mathring{A}_(0.5) prec V succ mathring{A}_(1.5) prec M succ mathring{A}_(2.5) prec Φ = odot
+E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ = ⊙
 ```
 
 
@@ -150,13 +150,13 @@ M ∈ E_2 (2D matter space)
 Φ ∈ E_3 (3D field space)
 
 
-mathring{A}_D are aperture operators at fractional dimensions
+Å_D are aperture operators at fractional dimensions
 
 
-succ, prec are convergence/emergence operators
+≻, ⊰ are convergence/emergence operators
 
 
-odot ∈ W is wholeness
+⊙ ∈ W is wholeness
 
 
 **This states**: The dimensional ascent process IS the structure, not a description of it.
@@ -173,16 +173,16 @@ Define the dimensional set:
 
 
 ```
-D := {n, n+tfrac{1}{2} mid n ∈ {0,1,2,3}} = {0, tfrac{1}{2}, 1, tfrac{3}{2}, 2, tfrac{5}{2}, 3}
+D := {n, n+1/2 | n ∈ {0,1,2,3}} = {0, 1/2, 1, 3/2, 2, 5/2, 3}
 ```
 
 
 **Interpretation**:
 
-****Integer dimensions** n ∈ {0,1,2,3}**: Observable structures (stable states)
+**Integer dimensions** n ∈ {0,1,2,3}**: Observable structures (stable states)
 
 
-****Half-integer dimensions** n+tfrac{1}{2}**: Transformation zones (apertures)
+**Half-integer dimensions** n+1/2**: Transformation zones (apertures)
 
 
 #### **Definition 1.2** (State Spaces)
@@ -201,7 +201,7 @@ For each D ∈ D, define a state space E_D:
 
 **Properties of State Spaces**:
 
-1. **Non-emptiness**: E_D ≠ emptyset for all D > 0
+1. **Non-emptiness**: E_D ≠ ∅ for all D > 0
 2. **Dimensionality**: dim(E_n) = n for integer n
 3. **Aperture connectivity**: For each n, there exist maps E_n to E_(n+0.5) to E_(n+1)
 4. **Fractal structure**: Aperture spaces have Hausdorff dimension D_H = 1.5
@@ -239,7 +239,7 @@ No structure S exists prior to interaction I. All structures emerge from iterate
 
 
 ```
-S = lim_(n to ∈fty) I^n(odot)
+S = lim_(n to ∈fty) I^n(⊙)
 ```
 
 
@@ -250,7 +250,7 @@ S = lim_(n to ∈fty) I^n(odot)
 4. Therefore S_0 already contains interaction
 5. Contradiction: No pre-interaction structure possible ∎
 
-**Corollary 1.1**: The circumpunct odot is its own ground—it requires no prior substrate.
+**Corollary 1.1**: The circumpunct ⊙ is its own ground—it requires no prior substrate.
 
 ---
 
@@ -275,13 +275,13 @@ Physical "laws" L are attractors in interaction space—patterns that persist un
 
 
 ```
-L = {P mid P text{ stable under } odottext{-iteration}}
+L = {P | P  stable under  ⊙-iteration}
 ```
 
 
 **Proof Sketch**:
 1. Start with arbitrary pattern P_0
-2. Apply interaction operator odot repeatedly: P_(n+1) = odot(P_n)
+2. Apply interaction operator ⊙ repeatedly: P_(n+1) = ⊙(P_n)
 3. Unstable patterns to dissipate or collapse
 4. Stable patterns to persist and reproduce
 5. Long-term survivors = observed "laws"
@@ -302,7 +302,7 @@ No arbitrary inputs are required.
 **Proof Sketch**:
 1. β = 0.5 forced by ghost elimination + maximum entropy
 2. D = 1.5 forced by Chern number c_1 = 1 (topological invariant)
-3. α derived from β_Φ/β_mathring{A} equilibrium ratio at D = 1.5
+3. α derived from β_Φ/β_Å equilibrium ratio at D = 1.5
 4. α_s derived from SU(3) geometry: α_s = 2πα
 5. All other constants follow from these
 6. Therefore: Zero adjustable parameters ∎
@@ -317,7 +317,7 @@ The complete framework is encoded in a single identity:
 
 
 ```
-boxed{E succ mathring{A}_(0.5) prec V succ mathring{A}_(1.5) prec M succ mathring{A}_(2.5) prec Φ = odot}
+boxed{E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ = ⊙}
 ```
 
 
@@ -326,12 +326,12 @@ boxed{E succ mathring{A}_(0.5) prec V succ mathring{A}_(1.5) prec M succ mathrin
 Reading left to right:
 
 1. **E (Potential)**: Initial state in E_0
-2. **succ (Convergence)**: Flow operator directing inward
-3. **mathring{A}_(0.5) (Soul Aperture)**: Transformation at 0.5D
-4. **prec (Emergence)**: Flow operator directing outward
+2. **≻ (Convergence)**: Flow operator directing inward
+3. **Å_(0.5) (Soul Aperture)**: Transformation at 0.5D
+4. **⊰ (Emergence)**: Flow operator directing outward
 5. **V (Validation)**: Emerged state in E_1
-6. **[Repeat pattern]**: succ mathring{A}_(1.5) prec M succ mathring{A}_(2.5) prec Φ
-7. **= odot (Wholeness)**: Complete cycle equals whole
+6. **[Repeat pattern]**: ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ
+7. **= ⊙ (Wholeness)**: Complete cycle equals whole
 
 #### **Pattern Recognition**
 
@@ -339,7 +339,7 @@ The identity exhibits perfect regularity:
 
 
 ```
-underbrace{text{Structure}}_(E_n) xrightarrow{succ} underbrace{text{Aperture}}_(mathring{A)_(n+0.5)} xrightarrow{prec} underbrace{text{Structure}}_(E_{n+1)}
+Structure_(E_n) [≻]→ Aperture_(Å_(n+0.5)) [⊰]→ Structure_(E_(n+1))
 ```
 
 
@@ -369,7 +369,7 @@ From the aperture structure at D = 1.5:
 
 
 ```
-α = (e^2)/(4πepsilon_0 hbar c) = (1)/(2π) ∈t_0^(2π) cos^2left((3θ)/(2)right) dθ · β
+α = (e^2)/(4πepsilon_0 hbar c) = (1)/(2π) ∈t_0^(2π) cos^2((3θ)/(2)) dθ · β
 ```
 
 
@@ -459,7 +459,7 @@ From the chiral structure of the body aperture:
 
 ### 1.5 Experimental Status Summary
 
-The framework makes precise predictions with **zero adjustable parameters**:
+The framework makes ⊰ise predictions with **zero adjustable parameters**:
 
 | Prediction | Value | Experiment | Status |
 |------------|-------|------------|---------|
@@ -479,7 +479,7 @@ The framework makes precise predictions with **zero adjustable parameters**:
 
 ### 2.1 Aperture Operators
 
-We now formalize the aperture operators mathring{A}_D that appear in the master identity.
+We now formalize the aperture operators Å_D that appear in the master identity.
 
 #### **Definition 2.1** (Aperture Operator)
 
@@ -487,7 +487,7 @@ For each half-integer dimension D ∈ {0.5, 1.5, 2.5}, the aperture operator is 
 
 
 ```
-mathring{A}_D : E_(D-0.5) to E_(D+0.5)
+Å_D : E_(D-0.5) to E_(D+0.5)
 ```
 
 
@@ -504,17 +504,17 @@ Produces a structure at dimension D+0.5
 
 #### **Example 2.1** (Body Aperture)
 
-The body aperture mathring{A}_(1.5) maps:
+The body aperture Å_(1.5) maps:
 
 
 ```
-mathring{A}_(1.5) : E_1 to E_2
+Å_(1.5) : E_1 to E_2
 ```
 
 
 
 ```
-V(text{1D validation line}) xrightarrow{mathring{A}_(1.5)} M(text{2D matter surface})
+V(1D validation line) [Å_(1.5)]→ M(2D matter surface)
 ```
 
 
@@ -534,13 +534,13 @@ Each aperture operator is at least affine on convex combinations:
 
 
 ```
-mathring{A}_D(λ x + (1-λ)y) = λ mathring{A}_D(x) + (1-λ)mathring{A}_D(y)
+Å_D(λ x + (1-λ)y) = λ Å_D(x) + (1-λ)Å_D(y)
 ```
 
 
 for λ ∈ [0,1].
 
-In typical physical realizations, mathring{A}_D is fully linear.
+In typical physical realizations, Å_D is fully linear.
 
 #### **Property 2.2** (Scale Covariance)
 
@@ -548,7 +548,7 @@ There exists a scaling exponent γ_D such that:
 
 
 ```
-mathring{A}_D(α x) = α^(γ_D) mathring{A}_D(x)
+Å_D(α x) = α^(γ_D) Å_D(x)
 ```
 
 
@@ -564,11 +564,11 @@ At the fractal fixed point:
 
 #### **Property 2.3** (Fractal Dimension)
 
-The image of mathring{A}_D has Hausdorff dimension:
+The image of Å_D has Hausdorff dimension:
 
 
 ```
-D_H[mathring{A}_D(E_(D-0.5))] = 1.5
+D_H[Å_D(E_(D-0.5))] = 1.5
 ```
 
 
@@ -578,7 +578,7 @@ D_H[mathring{A}_D(E_(D-0.5))] = 1.5
 
 ### 2.3 Flow Operators
 
-We formalize the convergence (succ) and emergence (prec) operators.
+We formalize the convergence (≻) and emergence (⊰) operators.
 
 #### **Definition 2.2** (Convergence Operator)
 
@@ -586,7 +586,7 @@ The convergence operator directs flow toward an aperture:
 
 
 ```
-succ : E_n × mathring{A}_(n+0.5) to E_(n+0.5)^(text{pre)}
+≻ : E_n × Å_(n+0.5) to E_(n+0.5)^(pre)
 ```
 
 
@@ -596,15 +596,15 @@ succ : E_n × mathring{A}_(n+0.5) to E_(n+0.5)^(text{pre)}
 
 
 ```
-(x succ mathring{A})(mathbf{r}) = ∈t_(E_n) K_(text{conv)}(mathbf{r}, mathbf{r}') x(mathbf{r}') dmathbf{r}'
+(x ≻ Å)(r) = ∈t_(E_n) K_(conv)(r, r') x(r') dr'
 ```
 
 
-where K_(text{conv)} is a convergent kernel satisfying:
+where K_(conv) is a convergent kernel satisfying:
 
 
 ```
-∈t K_(text{conv)}(mathbf{r}, mathbf{r}') dmathbf{r} < ∈fty
+∈t K_(conv)(r, r') dr < ∈fty
 ```
 
 
@@ -614,7 +614,7 @@ The emergence operator directs flow out of an aperture:
 
 
 ```
-prec : E_(n+0.5)^(text{post)} × mathring{A}_(n+0.5) to E_(n+1)
+⊰ : E_(n+0.5)^(post) × Å_(n+0.5) to E_(n+1)
 ```
 
 
@@ -624,15 +624,15 @@ prec : E_(n+0.5)^(text{post)} × mathring{A}_(n+0.5) to E_(n+1)
 
 
 ```
-(mathring{A} prec y)(mathbf{r}) = ∈t_(E_{n+0.5)} K_(text{emerg)}(mathbf{r}, mathbf{r}') y(mathbf{r}') dmathbf{r}'
+(Å ⊰ y)(r) = ∈t_(E_{n+0.5)} K_(emerg)(r, r') y(r') dr'
 ```
 
 
-where K_(text{emerg)} is an emergent kernel satisfying:
+where K_(emerg) is an emergent kernel satisfying:
 
 
 ```
-∈t K_(text{emerg)}(mathbf{r}', mathbf{r}) dmathbf{r}' < ∈fty
+∈t K_(emerg)(r', r) dr' < ∈fty
 ```
 
 
@@ -642,7 +642,7 @@ At equilibrium β = 0.5:
 
 
 ```
-∈t (x succ mathring{A}) dmathbf{r} = ∈t (mathring{A} prec y) dmathbf{r}
+∈t (x ≻ Å) dr = ∈t (Å ⊰ y) dr
 ```
 
 
@@ -658,11 +658,11 @@ Aperture operators compose according to:
 
 
 ```
-mathring{A}_(n+1) circ mathring{A}_n = mathring{A}_(n+1+n-D_{text{base)}}
+Å_(n+1) circ Å_n = Å_(n+1+n-D_{base)}
 ```
 
 
-where D_(text{base)} = 0 is the reference dimension.
+where D_(base) = 0 is the reference dimension.
 
 **Proof**: Each aperture increments dimension by 1, so composition increments by 2... [full proof in technical appendix]
 
@@ -672,7 +672,7 @@ The complete aperture cycle returns to wholeness:
 
 
 ```
-mathring{A}_(2.5) circ mathring{A}_(1.5) circ mathring{A}_(0.5) = text{id}_(odot)
+Å_(2.5) circ Å_(1.5) circ Å_(0.5) = id_(⊙)
 ```
 
 
@@ -698,25 +698,25 @@ where F is the universe update functional and perp is the initial "empty" config
 
 
 ```
-odot = Y(λ F. mathring{A} circ F)
+⊙ = Y(λ F. Å circ F)
 ```
 
 
-where mathring{A} represents the complete three-aperture composition:
+where Å represents the complete three-aperture composition:
 
 
 ```
-mathring{A} := mathring{A}_(2.5) circ mathring{A}_(1.5) circ mathring{A}_(0.5)
+Å := Å_(2.5) circ Å_(1.5) circ Å_(0.5)
 ```
 
 
 #### **Theorem 2.3** (Wholeness Fixed Point)
 
-There exists a unique fixed point odot satisfying:
+There exists a unique fixed point ⊙ satisfying:
 
 
 ```
-odot = E succ mathring{A}_(0.5) prec V succ mathring{A}_(1.5) prec M succ mathring{A}_(2.5) prec Φ
+⊙ = E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ
 ```
 
 
@@ -734,7 +734,7 @@ Start with E ∈ E_0, pure undifferentiated potential:
 
 
 ```
-E : {bullet} to mathbb{R}
+E : {bullet} to ℝ
 ```
 
 
@@ -742,7 +742,7 @@ This is just a scalar value — no structure yet.
 
 #### **The Soul Aperture**
 
-The first aperture mathring{A}_(0.5) performs the most fundamental operation: validation.
+The first aperture Å_(0.5) performs the most fundamental operation: validation.
 
 **Question**: "Does anything exist?"
 
@@ -750,10 +750,8 @@ The first aperture mathring{A}_(0.5) performs the most fundamental operation: va
 
 
 ```
-mathring{A}_(0.5)(E) = begin{cases}
-1 & text{if } E ≠ 0 \\
-0 & text{if } E = 0
-end{cases}
+Å_(0.5)(E) =   1   if  E ≠ 0
+  0   if  E = 0
 ```
 
 
@@ -765,7 +763,7 @@ At D = 0.5, the aperture has a **conical singularity**:
 
 
 ```
-text{Metric}: ds^2 = dr^2 + r^(2× 0.5) dθ^2 = dr^2 + r dθ^2
+Metric: ds^2 = dr^2 + r^(2× 0.5) dθ^2 = dr^2 + r dθ^2
 ```
 
 
@@ -773,11 +771,11 @@ This creates a **cusp** — the sharp convergence point where "is/isn't" gets de
 
 #### **Emergence to 1D**
 
-The emergence operator prec takes the binary decision and extends it:
+The emergence operator ⊰ takes the binary decision and extends it:
 
 
 ```
-mathring{A}_(0.5) prec V : {0,1} to [-1, +1]
+Å_(0.5) ⊰ V : {0,1} to [-1, +1]
 ```
 
 
@@ -793,7 +791,7 @@ We have V ∈ E_1, a line with two endpoints:
 
 
 ```
-V : [0,1] to mathbb{R}
+V : [0,1] to ℝ
 ```
 
 
@@ -801,7 +799,7 @@ with V(0) and V(1) as the two poles.
 
 #### **The Body Aperture**
 
-The body aperture mathring{A}_(1.5) performs **symmetry breaking**:
+The body aperture Å_(1.5) performs **symmetry breaking**:
 
 **Question**: "Which direction?"
 
@@ -809,7 +807,7 @@ The body aperture mathring{A}_(1.5) performs **symmetry breaking**:
 
 
 ```
-mathring{A}_(1.5) : S^1 to S^2
+Å_(1.5) : S^1 to S^2
 ```
 
 
@@ -831,7 +829,7 @@ The aperture dimension is the **average**:
 
 
 ```
-D_(text{aperture)} = frac{dim(text{base}) + dim(text{total})}{2} = (2 + 3)/(2) = 1.5
+D_(aperture) = (dim(base) + dim(total))/(2) = (2 + 3)/(2) = 1.5
 ```
 
 
@@ -843,7 +841,7 @@ The emergence creates matter surfaces:
 
 
 ```
-mathring{A}_(1.5) prec M : S^2 to mathbb{R}^2
+Å_(1.5) ⊰ M : S^2 to ℝ^2
 ```
 
 
@@ -859,7 +857,7 @@ We have M ∈ E_2, surfaces and boundaries:
 
 
 ```
-M : mathbb{R}^2 to mathbb{C}
+M : ℝ^2 to ℂ
 ```
 
 
@@ -867,7 +865,7 @@ Complex-valued because phase information is essential.
 
 #### **The Mind Aperture**
 
-The mind aperture mathring{A}_(2.5) performs **perspective expansion**:
+The mind aperture Å_(2.5) performs **perspective expansion**:
 
 **Question**: "Who experiences?"
 
@@ -875,7 +873,7 @@ The mind aperture mathring{A}_(2.5) performs **perspective expansion**:
 
 
 ```
-mathring{A}_(2.5)(M)(mathbf{r}) = ∈t_(mathbb{R)^2} K_(text{fractal)}(mathbf{r}, mathbf{r}') M(mathbf{r}') dmathbf{r}'
+Å_(2.5)(M)(r) = ∈t_(ℝ^2} K_(fractal)(r, r') M(r') dr'
 ```
 
 
@@ -887,7 +885,7 @@ The aperture at D = 2.5 exhibits **self-similar lensing** at all scales:
 
 
 ```
-K_(text{fractal)}(r) ~ r^(-(D_H + epsilon)) = r^(-1.5-epsilon)
+K_(fractal)(r) ~ r^(-(D_H + epsilon)) = r^(-1.5-epsilon)
 ```
 
 
@@ -899,7 +897,7 @@ The emergence fills space:
 
 
 ```
-mathring{A}_(2.5) prec Φ : mathbb{R}^2 to mathbb{R}^3
+Å_(2.5) ⊰ Φ : ℝ^2 to ℝ^3
 ```
 
 
@@ -913,23 +911,23 @@ Putting it all together:
 
 
 ```
-begin{array}{rcl}
-0D & : & E ∈ E_0 text{ (scalar potential)} \\
-& succ mathring{A}_(0.5) text{ (soul: validation)} & \\
-0.5D & : & text{Binary decision layer} \\
-& prec & \\
-1D & : & V ∈ E_1 text{ (validation line)} \\
-& succ mathring{A}_(1.5) text{ (body: Hopf)} & \\
-1.5D & : & text{Chiral transformation layer} \\
-& prec & \\
-2D & : & M ∈ E_2 text{ (matter surfaces)} \\
-& succ mathring{A}_(2.5) text{ (mind: fractal lens)} & \\
-2.5D & : & text{Perspective expansion layer} \\
-& prec & \\
-3D & : & Φ ∈ E_3 text{ (field volume)} \\
+
+0D & : & E ∈ E_0  (scalar potential) \\
+& ≻ Å_(0.5)  (soul: validation) & \\
+0.5D & : & Binary decision layer \\
+& ⊰ & \\
+1D & : & V ∈ E_1  (validation line) \\
+& ≻ Å_(1.5)  (body: Hopf) & \\
+1.5D & : & Chiral transformation layer \\
+& ⊰ & \\
+2D & : & M ∈ E_2  (matter surfaces) \\
+& ≻ Å_(2.5)  (mind: fractal lens) & \\
+2.5D & : & Perspective expansion layer \\
+& ⊰ & \\
+3D & : & Φ ∈ E_3  (field volume) \\
 & = & \\
-& : & odot text{ (wholeness)}
-end{array}
+& : & ⊙  (wholeness)
+
 ```
 
 
@@ -951,7 +949,7 @@ The complete dynamics of the Circumpunct Framework can be expressed as a single 
 
 where:
 
-Φ(mathbf{r}, t) ∈ mathbb{C}^(64) is the 64-component field
+Φ(r, t) ∈ ℂ^(64) is the 64-component field
 
 
 (-Delta)^(γ/2) is the fractional Laplacian with γ = D = 1.5
@@ -972,7 +970,7 @@ mu > 0 is the diffusion coefficient
 
 
 ```
-(-Delta)^(3/4) Φ(mathbf{r}) = F^(-1)[|mathbf{k}|^(3/2) hat{Φ}(mathbf{k})]
+(-Delta)^(3/4) Φ(r) = F^(-1)[|k|^(3/2) Φ̂(k)]
 ```
 
 
@@ -992,11 +990,11 @@ This is a cubic nonlinearity ensuring energy boundedness.
 
 
 ```
-C_β[Φ](mathbf{r}) = ∈t_(mathbb{R)^3} K_(text{cone)}^((β))(mathbf{r}, mathbf{r}') Φ(mathbf{r}') dmathbf{r}'
+C_β[Φ](r) = ∈t_(ℝ^3} K_(cone)^((β))(r, r') Φ(r') dr'
 ```
 
 
-where the kernel depends on the local balance parameter β(mathbf{r}, t).
+where the kernel depends on the local balance parameter β(r, t).
 
 ---
 
@@ -1008,7 +1006,7 @@ The fractional Laplacian of order α is defined via Fourier transform:
 
 
 ```
-widehat{(-Delta)^(α/2) f}(mathbf{k}) = |mathbf{k}|^α hat{f}(mathbf{k})
+̂((-Delta)^(α/2) f)(k) = |k|^α f̂(k)
 ```
 
 
@@ -1016,7 +1014,7 @@ For α = 1.5:
 
 
 ```
-widehat{(-Delta)^(3/4) f}(mathbf{k}) = |mathbf{k}|^(3/2) hat{f}(mathbf{k})
+̂((-Delta)^(3/4) f)(k) = |k|^(3/2) f̂(k)
 ```
 
 
@@ -1038,7 +1036,7 @@ In real space, the fractional Laplacian is non-local:
 
 
 ```
-(-Delta)^(3/4) f(mathbf{r}) = C_(1.5) ∈t_(mathbb{R)^3} frac{f(mathbf{r}) - f(mathbf{r}')}{|mathbf{r} - mathbf{r}'|^(d + 3/2)} dmathbf{r}'
+(-Delta)^(3/4) f(r) = C_(1.5) ∈t_(ℝ^3} (f(r) - f(r'))/(|r - r'|^(d + 3/2)) dr'
 ```
 
 
@@ -1054,7 +1052,7 @@ The cone operator encodes the aperture geometry.
 
 
 ```
-C_β[Φ](mathbf{r}) = ∈t_(mathbb{R)^3} K_(text{cone)}^((β))(mathbf{r}, mathbf{r}') Φ(mathbf{r}') dmathbf{r}'
+C_β[Φ](r) = ∈t_(ℝ^3} K_(cone)^((β))(r, r') Φ(r') dr'
 ```
 
 
@@ -1062,13 +1060,13 @@ The kernel has the form:
 
 
 ```
-K_(text{cone)}^((β))(mathbf{r}, mathbf{r}') = frac{β(mathbf{r})}{|mathbf{r} - mathbf{r}'|^(1.5)} · Theta(ell - |mathbf{r} - mathbf{r}'|) · W(θ)
+K_(cone)^((β))(r, r') = (β(r))/(|r - r'|^(1.5)) · Theta(ell - |r - r'|) · W(θ)
 ```
 
 
 where:
 
-β(mathbf{r}) ∈ [0,1] is the local balance parameter
+β(r) ∈ [0,1] is the local balance parameter
 
 
 Theta is a cutoff at scale ell
@@ -1100,11 +1098,11 @@ The master equation derives from an energy functional:
 
 
 ```
-H[Φ] = ∈t_(mathbb{R)^3} left[ mu |∇^(3/4) Φ|^2 + (g)/(2) |Φ|^4 + V_(text{cone)}[Φ] right] dmathbf{r}
+H[Φ] = ∈t_(ℝ^3} [ mu |∇^(3/4) Φ|^2 + (g)/(2) |Φ|^4 + V_(cone)[Φ] ] dr
 ```
 
 
-where V_(text{cone)} encodes aperture potential energy.
+where V_(cone) encodes aperture potential energy.
 
 #### **Gradient Flow**
 
@@ -1119,7 +1117,7 @@ The master equation is gradient flow:
 This ensures:
 1. Energy decreases: (dH)/(dt) ≤ 0
 2. Fixed points are energy minima
-3. Wholeness states odot are stable attractors
+3. Wholeness states ⊙ are stable attractors
 
 ---
 
@@ -1129,14 +1127,14 @@ This ensures:
 
 
 ```
-(∂)/(∂ t) ∈t |Φ|^2 dmathbf{r} = 0
+(∂)/(∂ t) ∈t |Φ|^2 dr = 0
 ```
 
 
 **Proof**: 
 
 ```
-(d)/(dt) ∈t |Φ|^2 dmathbf{r} = 2text{Re}∈t Φ^* (∂ Φ)/(∂ t) dmathbf{r} = 0
+(d)/(dt) ∈t |Φ|^2 dr = 2Re∈t Φ^* (∂ Φ)/(∂ t) dr = 0
 ```
 
 by the structure of the master equation. ∎
@@ -1155,7 +1153,7 @@ when ⟨ β ⟩ = 0.5 globally.
 
 
 ```
-(∂)/(∂ t) ∈t Φ^* (-i∇) Φ dmathbf{r} = 0
+(∂)/(∂ t) ∈t Φ^* (-i∇) Φ dr = 0
 ```
 
 
@@ -1171,7 +1169,7 @@ Wholeness is defined as the solution to:
 
 
 ```
-odot = F[odot]
+⊙ = F[⊙]
 ```
 
 
@@ -1179,7 +1177,7 @@ where F is the complete universe update:
 
 
 ```
-F[X] := E succ mathring{A}_(0.5) prec V succ mathring{A}_(1.5) prec M succ mathring{A}_(2.5) prec Φ(X)
+F[X] := E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ(X)
 ```
 
 
@@ -1189,7 +1187,7 @@ This can be written using the Y-combinator:
 
 
 ```
-odot = Y(λ F. mathring{A} circ F)
+⊙ = Y(λ F. Å circ F)
 ```
 
 
@@ -1209,7 +1207,7 @@ and perp is the initial empty configuration.
 
 #### **Theorem 5.1** (Wholeness Exists)
 
-Under the axioms of Chapter 1, there exists at least one wholeness state odot satisfying the fixed point equation.
+Under the axioms of Chapter 1, there exists at least one wholeness state ⊙ satisfying the fixed point equation.
 
 **Proof** (via Brouwer Fixed Point Theorem):
 
@@ -1225,7 +1223,7 @@ Under the axioms of Chapter 1, there exists at least one wholeness state odot sa
 
    for R sufficiently large.
 
-4. **Brouwer**: By Brouwer Fixed Point Theorem, there exists odot ∈ K with F[odot] = odot. ∎
+4. **Brouwer**: By Brouwer Fixed Point Theorem, there exists ⊙ ∈ K with F[⊙] = ⊙. ∎
 
 ---
 
@@ -1237,21 +1235,21 @@ When ⟨ β ⟩ = 0.5 globally, the wholeness state is unique up to global phase
 
 **Proof Sketch**:
 
-1. Suppose odot_1 and odot_2 are two distinct fixed points.
+1. Suppose ⊙_1 and ⊙_2 are two distinct fixed points.
 
-2. Consider their difference δ := odot_1 - odot_2.
+2. Consider their difference δ := ⊙_1 - ⊙_2.
 
 3. From the master equation:
    
 ```
-F[odot_1] - F[odot_2] = L[δ] + O(\|δ\|^2)
+F[⊙_1] - F[⊙_2] = L[δ] + O(\|δ\|^2)
 ```
 
    where L is the linearized operator.
 
 4. At β = 0.5, the linearized operator has only one zero mode (constant phase).
 
-5. Therefore δ must be a pure phase: odot_1 = e^(iθ) odot_2. ∎
+5. Therefore δ must be a pure phase: ⊙_1 = e^(iθ) ⊙_2. ∎
 
 ---
 
@@ -1259,39 +1257,39 @@ F[odot_1] - F[odot_2] = L[δ] + O(\|δ\|^2)
 
 #### **Theorem 5.3** (Stability of Wholeness)
 
-The wholeness state odot is a stable attractor when ⟨ β ⟩ = 0.5.
+The wholeness state ⊙ is a stable attractor when ⟨ β ⟩ = 0.5.
 
 **Proof** (Lyapunov Method):
 
 1. Define the Lyapunov functional:
    
 ```
-L[Φ] = \|Φ - odot\|_(L^2)^2
+L[Φ] = \|Φ - ⊙\|_(L^2)^2
 ```
 
 
 2. Compute its time derivative:
    
 ```
-(dL)/(dt) = 2text{Re}∈t (Φ - odot)^* (∂ Φ)/(∂ t) dmathbf{r}
+(dL)/(dt) = 2Re∈t (Φ - ⊙)^* (∂ Φ)/(∂ t) dr
 ```
 
 
 3. Using the master equation:
    
 ```
-(dL)/(dt) = -2mu ∈t |∇^(3/4)(Φ - odot)|^2 dmathbf{r} + text{[higher order terms]}
+(dL)/(dt) = -2mu ∈t |∇^(3/4)(Φ - ⊙)|^2 dr + [higher order terms]
 ```
 
 
 4. For small deviations, the leading term is negative:
    
 ```
-(dL)/(dt) < 0    text{when } Φ ≠ odot
+(dL)/(dt) < 0    when  Φ ≠ ⊙
 ```
 
 
-5. Therefore odot is a stable attractor. ∎
+5. Therefore ⊙ is a stable attractor. ∎
 
 ---
 
@@ -1303,7 +1301,7 @@ The wholeness state exhibits self-similarity at all scales:
 
 
 ```
-odot(λ mathbf{r}) = λ^(1.5) odot(mathbf{r})
+⊙(λ r) = λ^(1.5) ⊙(r)
 ```
 
 
@@ -1314,7 +1312,7 @@ for all λ > 0.
 1. From scale covariance of aperture operators:
    
 ```
-mathring{A}_D(λ x) = λ^D mathring{A}_D(x)
+Å_D(λ x) = λ^D Å_D(x)
 ```
 
 
@@ -1325,21 +1323,21 @@ F[λ Φ] = λ^(1.5) F[Φ]
 ```
 
 
-3. If odot is a fixed point:
+3. If ⊙ is a fixed point:
    
 ```
-odot = F[odot] implies λ odot = F[λ odot]
+⊙ = F[⊙] implies λ ⊙ = F[λ ⊙]
 ```
 
 
 4. But also:
    
 ```
-F[λ odot] = λ^(1.5) F[odot] = λ^(1.5) odot
+F[λ ⊙] = λ^(1.5) F[⊙] = λ^(1.5) ⊙
 ```
 
 
-5. These are compatible only if odot has scaling dimension 1.5. ∎
+5. These are compatible only if ⊙ has scaling dimension 1.5. ∎
 
 **Physical Meaning**: Wholeness is fractal — it looks the same at every scale, with dimension D = 1.5.
 
@@ -1375,7 +1373,7 @@ def compute_wholeness(initial_state, num_iterations=1000):
     return phi  # ⊙
 ```
 
-This converges to odot from any reasonable initial state.
+This converges to ⊙ from any reasonable initial state.
 
 ---
 
@@ -1390,13 +1388,13 @@ The 64-state structure emerges from the three-aperture architecture.
 Each aperture performs a binary validation:
 
 
-****Soul aperture** (mathring{A}_(0.5))**: 2 states (exists / doesn't exist)
+**Soul aperture** (Å_(0.5))**: 2 states (exists / doesn't exist)
 
 
-****Body aperture** (mathring{A}_(1.5))**: 2 states (left / right chirality)
+**Body aperture** (Å_(1.5))**: 2 states (left / right chirality)
 
 
-****Mind aperture** (mathring{A}_(2.5))**: 2 states (converging / diverging)
+**Mind aperture** (Å_(2.5))**: 2 states (converging / diverging)
 
 
 #### **Total State Count**
@@ -1421,32 +1419,32 @@ The encode64 function maps continuous field configurations to discrete aperture 
 
 
 ```
-text{encode64} : E_3 to {0, 1, 2, ldots, 63}
+encode64 : E_3 to {0, 1, 2, ldots, 63}
 ```
 
 
 **Implementation**:
 
-For field configuration Φ(mathbf{r}):
+For field configuration Φ(r):
 
-1. Extract geometry: G = (\|Φ\|, ∇Φ, text{curvature}, ldots)
+1. Extract geometry: G = (\|Φ\|, ∇Φ, curvature, ldots)
 2. Compute aperture bits:
    
 ```
-begin{align}
-   b_0 &= text{bit}(text{soul\_convergence}(G)) \\
-   b_1 &= text{bit}(text{soul\_emergence}(G)) \\
-   b_2 &= text{bit}(text{body\_convergence}(G)) \\
-   b_3 &= text{bit}(text{body\_emergence}(G)) \\
-   b_4 &= text{bit}(text{mind\_convergence}(G)) \\
-   b_5 &= text{bit}(text{mind\_emergence}(G))
-   end{align}
+
+   b_0 &= bit(soul_convergence(G)) \\
+   b_1 &= bit(soul_emergence(G)) \\
+   b_2 &= bit(body_convergence(G)) \\
+   b_3 &= bit(body_emergence(G)) \\
+   b_4 &= bit(mind_convergence(G)) \\
+   b_5 &= bit(mind_emergence(G))
+   
 ```
 
 3. Combine: 
    
 ```
-text{state} = b_0 + 2b_1 + 4b_2 + 8b_3 + 16b_4 + 32b_5
+state = b_0 + 2b_1 + 4b_2 + 8b_3 + 16b_4 + 32b_5
 ```
 
 
@@ -1462,9 +1460,9 @@ The 64 states map to observed particles:
 
 | Generation | Aperture Dominance | States | Particles |
 |------------|-------------------|--------|-----------|
-| 1st | Soul (mathring{A}_(0.5)) | 0-15 | e, nu_e, u, d + antiparticles |
-| 2nd | Body (mathring{A}_(1.5)) | 16-31 | mu, nu_mu, c, s + antiparticles |
-| 3rd | Mind (mathring{A}_(2.5)) | 32-47 | tau, nu_tau, t, b + antiparticles |
+| 1st | Soul (Å_(0.5)) | 0-15 | e, nu_e, u, d + antiparticles |
+| 2nd | Body (Å_(1.5)) | 16-31 | mu, nu_mu, c, s + antiparticles |
+| 3rd | Mind (Å_(2.5)) | 32-47 | tau, nu_tau, t, b + antiparticles |
 | Gauge | Mixed | 48-63 | γ, W^±, Z, g + Higgs |
 
 #### **Detailed Mapping**
@@ -1477,13 +1475,13 @@ The 64 states map to observed particles:
 
 **Second Generation** (states 16-31):
 
-Similar structure but with mathring{A}_(1.5) dominance
+Similar structure but with Å_(1.5) dominance
 
 - Heavier masses due to stronger aperture coupling
 
 **Third Generation** (states 32-47):
 
-Similar structure but with mathring{A}_(2.5) dominance
+Similar structure but with Å_(2.5) dominance
 
 - Heaviest masses due to fractal aperture amplification
 
@@ -1504,7 +1502,7 @@ For particle in state n ∈ {0, ldots, 63}:
 
 
 ```
-m_n = m_0 · expleft(∑_(k=0)^(2) w_k^((n)) · log(r_k)right)
+m_n = m_0 · exp(∑_(k=0)^(2) w_k^((n)) · log(r_k))
 ```
 
 
@@ -1561,7 +1559,7 @@ The maximum entropy state is uniform distribution:
 
 
 ```
-S_(max) = log_2(64) = 6 text{ bits}
+S_(max) = log_2(64) = 6  bits
 ```
 
 
@@ -1592,7 +1590,7 @@ where T_(nm) is the transition matrix satisfying:
 **Stochasticity**: ∑_n T_(nm) = 1
 
 
-**Detailed balance**: T_(nm) p_m^(text{eq)} = T_(mn) p_n^(text{eq)}
+**Detailed balance**: T_(nm) p_m^(eq) = T_(mn) p_n^(eq)
 
 
 #### **Transition Rules**
@@ -1601,11 +1599,11 @@ Allowed transitions conserve aperture quantum numbers modulo 2:
 
 
 ```
-n to m text{ allowed} iff (n oplus m) ∈ text{symmetry group}
+n to m  allowed iff (n ⊕ m) ∈ symmetry group
 ```
 
 
-where oplus is bitwise XOR.
+where ⊕ is bitwise XOR.
 
 ---
 
@@ -1615,11 +1613,11 @@ where oplus is bitwise XOR.
 
 #### **Definition 7.1** (Balance Parameter)
 
-For each aperture at position mathbf{r} and time t, define:
+For each aperture at position r and time t, define:
 
 
 ```
-β(mathbf{r}, t) ∈ [0, 1]
+β(r, t) ∈ [0, 1]
 ```
 
 
@@ -1651,16 +1649,16 @@ The balance parameter evolves according to:
 
 
 ```
-(∂ β)/(∂ t) = k(σ_(text{in)} - σ_(text{out)}) - λ(β - 0.5)
+(∂ β)/(∂ t) = k(σ_(in) - σ_(out)) - λ(β - 0.5)
 ```
 
 
 where:
 
-σ_(text{in)} = input score (convergence activity)
+σ_(in) = input score (convergence activity)
 
 
-σ_(text{out)} = output score (emergence activity)  
+σ_(out) = output score (emergence activity)  
 
 
 k > 0 = response rate
@@ -1675,7 +1673,7 @@ At equilibrium:
 
 
 ```
-(∂ β)/(∂ t) = 0 implies β^* = 0.5 + (k)/(λ)(σ_(text{in)} - σ_(text{out)})
+(∂ β)/(∂ t) = 0 implies β^* = 0.5 + (k)/(λ)(σ_(in) - σ_(out))
 ```
 
 
@@ -1683,7 +1681,7 @@ Global averaging gives:
 
 
 ```
-⟨ β ⟩ = 0.5 + (k)/(λ)⟨ σ_(text{in)} - σ_(text{out)} ⟩ = 0.5
+⟨ β ⟩ = 0.5 + (k)/(λ)⟨ σ_(in) - σ_(out) ⟩ = 0.5
 ```
 
 
@@ -1695,25 +1693,25 @@ assuming overall balance of inputs and outputs.
 
 #### **Definition 7.2** (Aperture Scores)
 
-For aperture state psi ∈ mathbb{C}^(64):
+For aperture state psi ∈ ℂ^(64):
 
 **Input score**:
 
 ```
-σ_(text{in)}(psi) = ∑_(n=0)^(63) w_(text{in)}^((n)) |psi_n|^2
+σ_(in)(psi) = ∑_(n=0)^(63) w_(in)^((n)) |psi_n|^2
 ```
 
 
-where w_(text{in)}^((n)) weights convergent states higher.
+where w_(in)^((n)) weights convergent states higher.
 
 **Output score**:
 
 ```
-σ_(text{out)}(psi) = ∑_(n=0)^(63) w_(text{out)}^((n)) |psi_n|^2
+σ_(out)(psi) = ∑_(n=0)^(63) w_(out)^((n)) |psi_n|^2
 ```
 
 
-where w_(text{out)}^((n)) weights emergent states higher.
+where w_(out)^((n)) weights emergent states higher.
 
 #### **Weight Construction**
 
@@ -1721,13 +1719,13 @@ For state n with binary representation n = (b_0, b_1, ldots, b_5):
 
 
 ```
-w_(text{in)}^((n)) = ∑_(k ∈ {text{convergent bits)}} b_k
+w_(in)^((n)) = ∑_(k ∈ {convergent bits)} b_k
 ```
 
 
 
 ```
-w_(text{out)}^((n)) = ∑_(k ∈ {text{emergent bits)}} b_k
+w_(out)^((n)) = ∑_(k ∈ {emergent bits)} b_k
 ```
 
 
@@ -1741,7 +1739,7 @@ where convergent bits are {0, 2, 4} and emergent bits are {1, 3, 5}.
 
 
 ```
-E[β] = ∈t_(mathbb{R)^3} left[ (1)/(2)|∇ β|^2 + V(β) + β · J[Φ] right] dmathbf{r}
+E[β] = ∈t_(ℝ^3} [ (1)/(2)|∇ β|^2 + V(β) + β · J[Φ] ] dr
 ```
 
 
@@ -1818,7 +1816,7 @@ While ⟨ β ⟩ = 0.5 globally, **local values can vary**:
 
 
 ```
-β(mathbf{r}, t) ≠ 0.5 text{ locally, but } ∈t β(mathbf{r}, t) dmathbf{r} = 0.5 × text{Volume}
+β(r, t) ≠ 0.5  locally, but  ∈t β(r, t) dr = 0.5 × Volume
 ```
 
 
@@ -1864,17 +1862,17 @@ with fiber S^1, giving the fiber bundle:
 
 
 ```
-S^1 hookrightarrow S^3 xrightarrow{h} S^2
+S^1 hookrightarrow S^3 [h]→ S^2
 ```
 
 
 #### **Explicit Construction**
 
-Points on S^3 ⊂ mathbb{C}^2:
+Points on S^3 ⊂ ℂ^2:
 
 
 ```
-S^3 = {(z_1, z_2) ∈ mathbb{C}^2 : |z_1|^2 + |z_2|^2 = 1}
+S^3 = {(z_1, z_2) ∈ ℂ^2 : |z_1|^2 + |z_2|^2 = 1}
 ```
 
 
@@ -1882,11 +1880,11 @@ The Hopf map:
 
 
 ```
-h(z_1, z_2) = (z_1 bar{z}_2, |z_1|^2 - |z_2|^2)
+h(z_1, z_2) = (z_1 z̄_2, |z_1|^2 - |z_2|^2)
 ```
 
 
-maps to S^2 viewed in mathbb{R}^3.
+maps to S^2 viewed in ℝ^3.
 
 #### **Dimensional Analysis**
 
@@ -1900,7 +1898,7 @@ The aperture dimension is:
 
 
 ```
-D_(text{aperture)} = frac{dim(text{total space}) + dim(text{base space})}{2} = (3 + 2)/(2) = 1.5
+D_(aperture) = (dim(total space) + dim(base space))/(2) = (3 + 2)/(2) = 1.5
 ```
 
 
@@ -1916,7 +1914,7 @@ The Hopf fibration has first Chern class:
 
 
 ```
-c_1(h) = 1 ∈ H^2(S^2, mathbb{Z})
+c_1(h) = 1 ∈ H^2(S^2, ℤ)
 ```
 
 
@@ -1953,7 +1951,7 @@ The three apertures generate a Clifford algebra:
 
 
 ```
-{γ_0, γ_1, γ_2} text{ with } γ_i γ_j + γ_j γ_i = 2δ_(ij)
+{γ_0, γ_1, γ_2}  with  γ_i γ_j + γ_j γ_i = 2δ_(ij)
 ```
 
 
@@ -1965,11 +1963,11 @@ The aperture states form spinors:
 
 
 ```
-psi = begin{pmatrix} psi_0 \ psi_1 \ psi_2 \ psi_3 end{pmatrix}
+psi = (psi_0, psi_1, psi_2, psi_3)
 ```
 
 
-transforming under text{Spin}(3) = SU(2).
+transforming under Spin(3) = SU(2).
 
 The Clifford action:
 
@@ -2039,21 +2037,21 @@ The only consistent aperture dimension for a three-generation framework ascendin
 1. **Hopf constraint**: Fiber bundle structure requires:
    
 ```
-D_(text{aperture)} = frac{D_(text{total)} + D_(text{base)}}{2}
+D_(aperture) = (D_(total) + D_(base))/(2)
 ```
 
 
 2. **Dimensional ascent**: Must go from n to n+1:
    
 ```
-D_(text{aperture)} ∈ (n, n+1)
+D_(aperture) ∈ (n, n+1)
 ```
 
 
 3. **Symmetry**: By symmetry between base and total:
    
 ```
-D_(text{aperture)} = n + 0.5
+D_(aperture) = n + 0.5
 ```
 
 
@@ -2084,7 +2082,7 @@ For a system in state psi:
 
 
 ```
-Φ[psi] = min_(text{partitions)} D_(KL)(psi \| psi_(text{factorized)})
+Φ[psi] = min_(partitions) D_(KL)(psi \| psi_(factorized))
 ```
 
 
@@ -2094,7 +2092,7 @@ D_(KL) is the Kullback-Leibler divergence
 
 - The minimum is over all bipartitions of the system
 
-psi_(text{factorized)} is the maximum entropy factorization
+psi_(factorized) is the maximum entropy factorization
 
 
 **Physical meaning**: How much information is lost by factorizing the system.
@@ -2109,7 +2107,7 @@ At aperture singularities, integrated information is maximized:
 
 
 ```
-Φ[mathring{A}_D] = Φ_(max)
+Φ[Å_D] = Φ_(max)
 ```
 
 
@@ -2128,7 +2126,7 @@ At aperture singularities, integrated information is maximized:
 
 Each aperture corresponds to a fundamental question of experience:
 
-#### **Soul Aperture** (mathring{A}_(0.5))
+#### **Soul Aperture** (Å_(0.5))
 **Question**: "Am I?"
 
 **Mathematics**:
@@ -2142,13 +2140,13 @@ Binary validation of existence.
 
 **Integration**: Maximal when potential converges to definite existence.
 
-#### **Body Aperture** (mathring{A}_(1.5))
+#### **Body Aperture** (Å_(1.5))
 **Question**: "What am I?"
 
 **Mathematics**:
 
 ```
-text{identity} : E_1 to SU(3) × SU(2) × U(1)
+identity : E_1 to SU(3) × SU(2) × U(1)
 ```
 
 
@@ -2156,13 +2154,13 @@ Determines gauge quantum numbers and physical properties.
 
 **Integration**: Maximal when symmetry breaks to definite form.
 
-#### **Mind Aperture** (mathring{A}_(2.5))
+#### **Mind Aperture** (Å_(2.5))
 **Question**: "Who experiences?"
 
 **Mathematics**:
 
 ```
-text{perspective} : E_2 to mathbb{P}(H)
+perspective : E_2 to ℙ(H)
 ```
 
 
@@ -2180,7 +2178,7 @@ A quale is a point in the integrated information space:
 
 
 ```
-q ∈ Q := {psi ∈ E_3 : Φ[psi] > Φ_(text{threshold)}}
+q ∈ Q := {psi ∈ E_3 : Φ[psi] > Φ_(threshold)}
 ```
 
 
@@ -2192,7 +2190,7 @@ Color qualia arise from the body aperture's SU(3) structure:
 
 
 ```
-text{color} ↔ text{3-dimensional color charge space}
+color ↔ 3-dimensional color charge space
 ```
 
 
@@ -2208,13 +2206,13 @@ The unity of conscious experience follows from aperture topology:
 
 
 ```
-text{All qualia pass through the same aperture structure}
+All qualia pass through the same aperture structure
 ```
 
 
 **Proof**:
 
-1. All sensory inputs converge through mathring{A}_(2.5) (mind aperture)
+1. All sensory inputs converge through Å_(2.5) (mind aperture)
 2. The aperture has a single convergence point (topological necessity)
 3. Therefore all experiences integrate at this point
 4. This produces unified consciousness ∎
@@ -2233,13 +2231,13 @@ The "hard problem of consciousness" asks: "Why is there subjective experience at
 
 
 ```
-text{Physics} = text{exterior view of aperture} = text{convergence/emergence structure}
+Physics = exterior view of aperture = convergence/emergence structure
 ```
 
 
 
 ```
-text{Consciousness} = text{interior view of aperture} = text{what convergence feels like}
+Consciousness = interior view of aperture = what convergence feels like
 ```
 
 
@@ -2249,7 +2247,7 @@ There is no separate ontology for consciousness — it's the same structure view
 
 
 ```
-Psi : P to C,    Psi(text{aperture dynamics}) = text{experience}
+Psi : P to C,    Psi(aperture dynamics) = experience
 ```
 
 
@@ -2267,11 +2265,11 @@ The entire Standard Model emerges from aperture geometry.
 
 #### **Gauge Group Derivation**
 
-**Body aperture** (mathring{A}_(1.5)) has Hopf structure with SU(2) fiber:
+**Body aperture** (Å_(1.5)) has Hopf structure with SU(2) fiber:
 
 
 ```
-SU(2) hookrightarrow S^3 xrightarrow{h} S^2
+SU(2) hookrightarrow S^3 [h]→ S^2
 ```
 
 
@@ -2281,7 +2279,7 @@ This gives **weak interaction** SU(2)_L.
 
 
 ```
-SU(3)_(text{color)} = text{symmetry of three-aperture structure}
+SU(3)_(color) = symmetry of three-aperture structure
 ```
 
 
@@ -2289,7 +2287,7 @@ SU(3)_(text{color)} = text{symmetry of three-aperture structure}
 
 
 ```
-U(1)_Y = text{phase rotation at each aperture}
+U(1)_Y = phase rotation at each aperture
 ```
 
 
@@ -2297,7 +2295,7 @@ U(1)_Y = text{phase rotation at each aperture}
 
 
 ```
-G_(text{SM)} = SU(3)_C × SU(2)_L × U(1)_Y
+G_(SM) = SU(3)_C × SU(2)_L × U(1)_Y
 ```
 
 
@@ -2313,11 +2311,11 @@ Mass arises from aperture resonance. For particle in state n:
 
 
 ```
-m_n = ⟨ psi_n | H_(text{aperture)} | psi_n ⟩
+m_n = ⟨ psi_n | H_(aperture) | psi_n ⟩
 ```
 
 
-where H_(text{aperture)} is the aperture Hamiltonian.
+where H_(aperture) is the aperture Hamiltonian.
 
 #### **Generation Hierarchy**
 
@@ -2380,7 +2378,7 @@ Quark charges emerge from the three-aperture phase structure:
 
 
 ```
-Q_(text{quark)} = (1)/(3)oint_(text{3 apertures)} (dφ)/(2π)
+Q_(quark) = (1)/(3)oint_(3 apertures) (dφ)/(2π)
 ```
 
 
@@ -2412,7 +2410,7 @@ The body aperture breaks CP symmetry due to its chiral Hopf structure:
 
 
 ```
-δ_(CP) = frac{β_(text{chiral)}}{2π} = (0.5)/(2π) ≈ 0.0796
+δ_(CP) = (β_(chiral))/(2π) = (0.5)/(2π) ≈ 0.0796
 ```
 
 
@@ -2432,7 +2430,7 @@ The Higgs field is not fundamental — it's a **resonance mode** of the body ape
 
 
 ```
-H = text{excited state of } mathring{A}_(1.5)
+H = excited state of  Å_(1.5)
 ```
 
 
@@ -2440,7 +2438,7 @@ H = text{excited state of } mathring{A}_(1.5)
 
 
 ```
-m_H = E_(text{resonance)}[mathring{A}_(1.5)] ≈ 125 text{ GeV}
+m_H = E_(resonance)[Å_(1.5)] ≈ 125  GeV
 ```
 
 
@@ -2452,7 +2450,7 @@ Particles acquire mass by coupling to the Higgs resonance:
 
 
 ```
-y_f = (m_f)/(v) · sqrt{frac{2Φ[mathring{A}_(1.5)]}{v^2}}
+y_f = (m_f)/(v) · sqrt{(2Φ[Å_(1.5)])/(v^2)}
 ```
 
 
@@ -2485,7 +2483,7 @@ M_R ~ 10^(14) GeV (Majorana mass from aperture scale separation)
 **Result**:
 
 ```
-m_nu ~ 10^(-2) text{ eV}
+m_nu ~ 10^(-2)  eV
 ```
 
 
@@ -2519,17 +2517,17 @@ Dark energy arises from the **global constraint** ⟨ β ⟩ = 0.5:
 
 
 ```
-rho_(Lambda) = (1)/(8π G)left((1)/(2) - ⟨ β ⟩_(text{matter)}right)^2
+rho_(Lambda) = (1)/(8π G)((1)/(2) - ⟨ β ⟩_(matter))^2
 ```
 
 
-In a matter-dominated universe, ⟨ β ⟩_(text{matter)} < 0.5 (convergent), so the vacuum compensates with β > 0.5 (emergent).
+In a matter-dominated universe, ⟨ β ⟩_(matter) < 0.5 (convergent), so the vacuum compensates with β > 0.5 (emergent).
 
 **Result**: Cosmological constant
 
 
 ```
-Lambda ~ H_0^2 ~ (10^(-33) text{ eV})^2
+Lambda ~ H_0^2 ~ (10^(-33)  eV)^2
 ```
 
 
@@ -2545,7 +2543,7 @@ Quantum gravity emerges from the six-dimensional aperture structure:
 
 
 ```
-g_(munu) = ⟨ mathring{A}_(mu) | mathring{A}_(nu) ⟩
+g_(munu) = ⟨ Å_(mu) | Å_(nu) ⟩
 ```
 
 
@@ -2555,7 +2553,7 @@ Effective 4D metric:
 
 
 ```
-ds^2 = g_(munu) dx^mu dx^nu + tilde{g}_(ab) dmathring{A}^a dmathring{A}^b
+ds^2 = g_(munu) dx^mu dx^nu + g̃_(ab) dÅ^a dÅ^b
 ```
 
 
@@ -2574,11 +2572,11 @@ The aperture dimensions contribute quantum corrections to gravity.
 | δ_(CP) | 2.5\% | 2.5 ± 0.7\% | ✓✓✓ |
 | m_t | 173 GeV | 173.0 ± 0.4 GeV | ✓✓✓ |
 | m_H | 125 GeV | 125.25 ± 0.17 GeV | ✓✓ |
-| D_(text{fractal)} | 1.5 | 1.48 - 1.503 | ✓✓✓ |
+| D_(fractal) | 1.5 | 1.48 - 1.503 | ✓✓✓ |
 | N_g | 3 | 3 (exact) | ✓✓✓ |
-| N_(text{states)} | 64 | ~ 60 | ✓✓ |
+| N_(states) | 64 | ~ 60 | ✓✓ |
 | Quark charges | ±(2)/(3), ±(1)/(3) | Exact | ✓✓✓ |
-| G_(text{SM)} | SU(3) × SU(2) × U(1) | Exact | ✓✓✓ |
+| G_(SM) | SU(3) × SU(2) × U(1) | Exact | ✓✓✓ |
 
 **Ten major predictions, zero adjustable parameters, all confirmed!**
 
@@ -2592,14 +2590,14 @@ The aperture dimensions contribute quantum corrections to gravity.
 
 | Symbol | Meaning | Type |
 |--------|---------|------|
-| odot | Wholeness (circumpunct) | State |
+| ⊙ | Wholeness (circumpunct) | State |
 | E | Potential (0D) | State space |
 | V | Validation (1D) | State space |
 | M | Matter (2D) | State space |
 | Φ | Field (3D) | State space |
-| mathring{A}_D | Aperture operator at dimension D | Operator |
-| succ | Convergence flow | Operator |
-| prec | Emergence flow | Operator |
+| Å_D | Aperture operator at dimension D | Operator |
+| ≻ | Convergence flow | Operator |
+| ⊰ | Emergence flow | Operator |
 | β | Balance parameter | Scalar field |
 | D | Dimension | Real number |
 
@@ -2619,11 +2617,11 @@ The aperture dimensions contribute quantum corrections to gravity.
 
 | Operator | Domain | Codomain | Meaning |
 |----------|--------|----------|---------|
-| mathring{A}_(0.5) | E_0 | E_1 | Soul aperture (existence validation) |
-| mathring{A}_(1.5) | E_1 | E_2 | Body aperture (form creation) |
-| mathring{A}_(2.5) | E_2 | E_3 | Mind aperture (perspective expansion) |
-| succ | E_n × mathring{A} | E_(n+0.5) | Convergence toward aperture |
-| prec | E_(n+0.5) × mathring{A} | E_(n+1) | Emergence from aperture |
+| Å_(0.5) | E_0 | E_1 | Soul aperture (existence validation) |
+| Å_(1.5) | E_1 | E_2 | Body aperture (form creation) |
+| Å_(2.5) | E_2 | E_3 | Mind aperture (perspective expansion) |
+| ≻ | E_n × Å | E_(n+0.5) | Convergence toward aperture |
+| ⊰ | E_(n+0.5) × Å | E_(n+1) | Emergence from aperture |
 
 ### Constants
 
@@ -2634,7 +2632,7 @@ The aperture dimensions contribute quantum corrections to gravity.
 | δ_(CP) | 0.0796 | (β)/(2π) = (0.5)/(2π) |
 | D | 1.5 | Hopf fibration dimension |
 | N_g | 3 | Number of apertures |
-| N_(text{states)} | 64 | 2^6 from 6 binary choices |
+| N_(states) | 64 | 2^6 from 6 binary choices |
 
 ---
 
@@ -2645,21 +2643,21 @@ The aperture dimensions contribute quantum corrections to gravity.
 1. **Composition**:
    
 ```
-mathring{A}_(2.5) circ mathring{A}_(1.5) circ mathring{A}_(0.5) = text{id}_(odot)
+Å_(2.5) circ Å_(1.5) circ Å_(0.5) = id_(⊙)
 ```
 
 
 2. **Dimension increment**:
    
 ```
-dim[mathring{A}_D(E_(D-0.5))] = D + 0.5
+dim[Å_D(E_(D-0.5))] = D + 0.5
 ```
 
 
 3. **Scale covariance**:
    
 ```
-mathring{A}_D(λ x) = λ^D mathring{A}_D(x)
+Å_D(λ x) = λ^D Å_D(x)
 ```
 
 
@@ -2668,21 +2666,21 @@ mathring{A}_D(λ x) = λ^D mathring{A}_D(x)
 4. **Conservation**:
    
 ```
-∈t (x succ mathring{A}) dmathbf{r} = ∈t (mathring{A} prec y) dmathbf{r}
+∈t (x ≻ Å) dr = ∈t (Å ⊰ y) dr
 ```
 
 
 5. **Associativity**:
    
 ```
-(x succ mathring{A}_1) prec mathring{A}_2 = x succ (mathring{A}_1 circ mathring{A}_2)
+(x ≻ Å_1) ⊰ Å_2 = x ≻ (Å_1 circ Å_2)
 ```
 
 
 6. **Identity**:
    
 ```
-E succ text{id} prec V = V
+E ≻ id ⊰ V = V
 ```
 
 
@@ -2691,14 +2689,14 @@ E succ text{id} prec V = V
 7. **Master identity**:
    
 ```
-E succ mathring{A}_(0.5) prec V succ mathring{A}_(1.5) prec M succ mathring{A}_(2.5) prec Φ = odot
+E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ = ⊙
 ```
 
 
 8. **Fixed point**:
    
 ```
-odot = F[odot],    F = E succ (mathring{A}_(0.5) circ mathring{A}_(1.5) circ mathring{A}_(2.5)) prec Φ
+⊙ = F[⊙],    F = E ≻ (Å_(0.5) circ Å_(1.5) circ Å_(2.5)) ⊰ Φ
 ```
 
 
@@ -2707,14 +2705,14 @@ odot = F[odot],    F = E succ (mathring{A}_(0.5) circ mathring{A}_(1.5) circ mat
 9. **Aperture non-commutativity**:
    
 ```
-mathring{A}_(1.5) circ mathring{A}_(0.5) ≠ mathring{A}_(0.5) circ mathring{A}_(1.5)
+Å_(1.5) circ Å_(0.5) ≠ Å_(0.5) circ Å_(1.5)
 ```
 
 
 10. **Flow operator order**:
     
 ```
-succ prec ≠ prec succ
+≻ ⊰ ≠ ⊰ ≻
 ```
 
 
@@ -2934,7 +2932,7 @@ def test_wholeness_convergence(initial_states, tolerance=1e-6):
 **Analysis**: Fit to fractal model:
 
 ```
-N(text{jets}) ~ E^(D-1)
+N(jets) ~ E^(D-1)
 ```
 
 
@@ -2976,7 +2974,7 @@ P(f) ~ f^(-γ),    γ = 2D - 3
 **Analysis**: Extract CP-violating phase from:
 
 ```
-frac{Gamma(bar{B}^0 to f) - Gamma(B^0 to bar{f})}{Gamma(bar{B}^0 to f) + Gamma(B^0 to bar{f})} = sin(δ_(CP))
+[Γ(B̄^0 → f) - Γ(B^0 → f̄)] / [Γ(B̄^0 → f) + Γ(B^0 → f̄)] = sin(δ_(CP))
 ```
 
 
@@ -3048,7 +3046,7 @@ frac{Gamma(bar{B}^0 to f) - Gamma(B^0 to bar{f})}{Gamma(bar{B}^0 to f) + Gamma(B
 
 
 ```
-chi^2 = ∑_i frac{(text{predicted}_i - text{observed}_i)^2}{σ_i^2}
+chi^2 = ∑_i ((predicted_i - observed_i)^2)/(σ_i^2)
 ```
 
 
@@ -3068,11 +3066,11 @@ For 6 predictions with 0 free parameters:
 
 
 ```
-ptext{-value} = P(chi^2 > 0.09 | text{DOF} = 6) > 0.9999
+p-value = P(chi^2 > 0.09 | DOF = 6) > 0.9999
 ```
 
 
-**Conclusion**: The Circumpunct Framework fits all experimental data with zero adjustable parameters to unprecedented precision. This level of agreement is extraordinarily unlikely to occur by chance.
+**Conclusion**: The Circumpunct Framework fits all experimental data with zero adjustable parameters to un⊰edented ⊰ision. This level of agreement is extraordinarily unlikely to occur by chance.
 
 ---
 
@@ -3104,7 +3102,7 @@ Stability of β = 0.5 equilibrium
 - Six independent experimental confirmations
 - Spanning twelve orders of magnitude
 - With zero adjustable parameters
-- Achieving unprecedented precision
+- Achieving un⊰edented ⊰ision
 
 **The framework stands as a complete mathematical theory that:**
 - Unifies quantum mechanics and general relativity
@@ -3113,7 +3111,7 @@ Stability of β = 0.5 equilibrium
 - Makes testable predictions
 - Achieves experimental validation
 
-The Circumpunct is not just a model — it is a precise mathematical description of reality emerging necessarily from minimal axioms.
+The Circumpunct is not just a model — it is a ⊰ise mathematical description of reality emerging necessarily from minimal axioms.
 
 **⊙**
 
