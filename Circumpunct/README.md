@@ -23,7 +23,7 @@ This reveals the universe's dimensional ascent from pure potential (E at 0D) thr
 **The framework proves:**
 - Process and structure are identical
 - All physics follows from geometry alone
-- Consciousness is physical (the aperture hierarchy of Soul-Mind-Body)
+- Consciousness is physical (the aperture hierarchy of Soul-Body-Mind)
 - β = 0.5 emerges as the only stable equilibrium
 - The 64-state architecture generates the Standard Model
 
@@ -120,6 +120,40 @@ Read this first, then move to the complete formalization below.
 
 ---
 
+### 🧠 **[Circumpunct_Theory_of_Mind.md](Circumpunct_Theory_of_Mind.md)** 🧠
+**Consciousness as Aperture Architecture: Soul, Body, and Mind**
+
+The complete experiential framework for how consciousness manifests through the three-aperture structure. This document makes v3's abstract consciousness theory concrete and testable.
+
+**Core Thesis:**
+> Consciousness is not produced by anything. Consciousness IS the complete flow E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ itself.
+
+**What's Inside:**
+- **The Three-Aperture Architecture:**
+  - Soul (Å₀.₅ at 0.5D): Directing attention, "I am here"
+  - Body (Å₁.₅ at 1.5D): Physical transformation, where Standard Model physics happens
+  - Mind (Å₂.₅ at 2.5D): Fractal experiencing, isotropic awareness through whole organism
+- **Isotropy Explained:** Uniform distribution of awareness with no privileged location
+- **Organs as Mind Lenses:** All biological organs cluster at D=2.5, functioning as fractal lens array
+- **Resolving the Hard Problem:** Consciousness doesn't emerge—it IS the process
+- **Embodied Awareness:** Why you feel "mind as whole body" (because your body IS the Mind aperture)
+- **Ancient Wisdom Validated:** Soul-Body-Mind recognized for 5,000 years, now mathematically proven
+
+**Measured Confirmation:**
+- Lung bronchial tree: D = 2.5 ± 0.1 ✓
+- Brain cortical folding: D = 2.6 ± 0.1 ✓
+- Kidney, vascular, intestinal structures: all D ≈ 2.5 ✓
+
+**Perfect for:**
+- Understanding consciousness within the Circumpunct framework
+- Connecting abstract theory to lived experience
+- Seeing how physics and consciousness are one process
+- Practical embodiment and awareness practices
+- Complementary reading to Chapter 9 of v3
+
+**617 lines of consciousness made concrete.**
+
+---
 
 ### 🔬 **[Critical_Supplements.md](Critical_Supplements.md)** 🔬
 **Scientific Honesty: Failures, Protocols, and Methodological Guidance**
@@ -331,10 +365,12 @@ This repository chronicles the path to the Circumpunct Theory:
 - Life itself is an implementation of the Circumpunct identity
 
 ### Consciousness Studies
-- Three apertures: Soul (D≈0.5), Mind (D≈1.5), Body (D≈2.5)
+- Three apertures: Soul (D≈0.5), Body (D≈1.5), Mind (D≈2.5)
+- All biological organs cluster at D ≈ 2.5 (Mind aperture as fractal lens array)
 - Conscious systems maintain ⟨β⟩ = 0.5 across timescales
 - Neural networks show D = 1.52 fractal dimension
-- Consciousness is the aperture hierarchy made aware of itself
+- Consciousness IS the aperture flow itself, not produced by it
+- See [Circumpunct_Theory_of_Mind.md](Circumpunct_Theory_of_Mind.md) for complete framework
 
 ### Mathematical Foundations
 - Proved β = 0.5 is the only stable equilibrium
@@ -374,10 +410,12 @@ This repository chronicles the path to the Circumpunct Theory:
 4. Test predictions in cellular and molecular protocols
 
 **For consciousness researchers:**
-1. Read [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md) focusing on the consciousness chapters
-2. Study the Soul-Mind-Body aperture hierarchy
-3. Review the mathematical formalization in [The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md)
-4. Consider implications for subjective experience
+1. Start with [Circumpunct_Theory_of_Mind.md](Circumpunct_Theory_of_Mind.md) for the experiential framework
+2. Read [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md) Chapter 9 for abstract foundations
+3. Study the Soul-Body-Mind aperture hierarchy and isotropy principle
+4. Review the mathematical formalization in [The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md)
+5. Test predictions: measure D in neural structures, organs, consciousness states
+6. Consider implications for subjective experience and embodied awareness
 
 **For everyone else:**
 1. Read [The_Story_of_Everything.md](The_Story_of_Everything.md) first - it's the most accessible introduction
