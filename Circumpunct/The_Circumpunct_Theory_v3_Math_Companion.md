@@ -91,9 +91,7 @@ where $\bigoplus$ is a composition operation preserving wholeness, and each $w_i
 
 **Self-similarity**: $w \sim w_i$ for all $i$ (same structural pattern)
 
-
 **Scale invariance**: $\mathcal{T}_\lambda(w) \sim w$ for scale transformations $\mathcal{T}_\lambda$
-
 
 **Fractal dimension**: Hausdorff dimension $D_H = 1.5$ at aperture singularities
 
@@ -134,24 +132,17 @@ where:
 
 $E \in \mathcal{E}_0$ (0D potential space)
 
-
 $V \in \mathcal{E}_1$ (1D validation space)
-
 
 $M \in \mathcal{E}_2$ (2D matter space)
 
-
 $\Phi \in \mathcal{E}_3$ (3D field space)
-
 
 $\mathring{A}_D$ are aperture operators at fractional dimensions
 
-
 $\succ, \prec$ are convergence/emergence operators
 
-
 $\odot \in \mathcal{W}$ is wholeness
-
 
 **This states**: The dimensional ascent process IS the structure, not a description of it.
 
@@ -173,9 +164,7 @@ $$
 
 ****Integer dimensions** $n \in \{0,1,2,3\}$**: Observable structures (stable states)
 
-
 ****Half-integer dimensions** $n+\tfrac{1}{2}$**: Transformation zones (apertures)
-
 
 #### **Definition 1.2** (State Spaces)
 
@@ -211,7 +200,6 @@ The dimensional sequence $\{0, 0.5, 1, 1.5, 2, 2.5, 3\}$ is the unique minimal s
 
 Must start at $0D$ (no structure yet)
 
-
 Must reach $3D$ (observed spatial dimensions)
 
 - Alternation requires intermediate dimensions between integers
@@ -221,7 +209,6 @@ Minimal jumps $\Rightarrow$ increment by $0.5$ each time
 - Wholeness preservation requires complete cycles
 
 This uniquely gives $0 \to 0.5 \to 1 \to 1.5 \to 2 \to 2.5 \to 3$ ∎
-
 
 ---
 
@@ -359,7 +346,6 @@ where:
 
 The integral evaluates the $S^3 \to S^2$ Hopf fibration winding
 
-
 $\beta = 0.5$ is the equilibrium aperture balance
 
 - The factor of 3 comes from three apertures
@@ -374,12 +360,9 @@ $$
 
 **Predicted**: $1/137.036$
 
-
 **Measured**: $1/137.035999084(21)$
 
-
 **Error**: $< 0.0001\%$ ✓
-
 
 #### **The Strong Coupling Constant**
 
@@ -403,12 +386,9 @@ $$
 
 **Predicted**: $0.1181$
 
-
 **Measured**: $0.1179 \pm 0.0009$
 
-
 **Agreement**: Within $1\sigma$ ✓
-
 
 #### **CP Violation Phase**
 
@@ -423,7 +403,6 @@ $$
 **Comparison**:
 
 **Predicted**: $2.5\%$ phase
-
 
 **CERN measured**: $2.5 \pm 0.7\%$ phase
 
@@ -467,12 +446,9 @@ $$
 
 Takes a structure from dimension $D-0.5$
 
-
 Transforms it through the aperture at dimension $D$
 
-
 Produces a structure at dimension $D+0.5$
-
 
 #### **Example 2.1** (Body Aperture)
 
@@ -857,18 +833,13 @@ where:
 
 $\Phi(\mathbf{r}, t) \in \mathbb{C}^{64}$ is the 64-component field
 
-
 $(-\Delta)^{\gamma/2}$ is the fractional Laplacian with $\gamma = D = 1.5$
-
 
 $\mathcal{N}[\Phi]$ is the nonlinear self-interaction term
 
-
 $\mathcal{C}_\beta[\Phi]$ is the cone operator encoding aperture geometry
 
-
 $\mu > 0$ is the diffusion coefficient
-
 
 #### **Component by Component**
 
@@ -918,9 +889,7 @@ $$
 
 The fractional Laplacian encodes **long-range interactions** and **fractal geometry**:
 
-
 **Standard Laplacian ($\alpha = 2$)**: Local diffusion
-
 
 **Fractional ($\alpha = 1.5$)**: Non-local, scale-invariant propagation
 
@@ -958,15 +927,11 @@ where:
 
 $\beta(\mathbf{r}) \in [0,1]$ is the local balance parameter
 
-
 $\Theta$ is a cutoff at scale $\ell$
-
 
 $W(\theta)$ encodes angular dependence
 
-
 The $r^{-1.5}$ decay reflects fractal dimension
-
 
 #### **Angular Structure**
 
@@ -1233,15 +1198,11 @@ The 64-state structure emerges from the three-aperture architecture.
 
 Each aperture performs a binary validation:
 
-
 ****Soul aperture** ($\mathring{A}_{0.5}$)**: 2 states (exists / doesn't exist)
-
 
 ****Body aperture** ($\mathring{A}_{1.5}$)**: 2 states (left / right chirality)
 
-
 ****Mind aperture** ($\mathring{A}_{2.5}$)**: 2 states (converging / diverging)
-
 
 #### **Total State Count**
 
@@ -1348,12 +1309,9 @@ where:
 
 $m_0$ is a reference mass scale
 
-
 $w_k^{(n)}$ are aperture weights for state $n$ (how strongly it couples to aperture $k$)
 
-
 $r_k$ are aperture amplification ratios
-
 
 #### **Generation Ratios**
 
@@ -1417,9 +1375,7 @@ where $T_{nm}$ is the transition matrix satisfying:
 
 **Stochasticity**: $\sum_n T_{nm} = 1$
 
-
 **Detailed balance**: $T_{nm} p_m^{\text{eq}} = T_{mn} p_n^{\text{eq}}$
-
 
 #### **Transition Rules**
 
@@ -1449,12 +1405,9 @@ $$
 
 **$\beta = 0$**: Pure convergence (input only)
 
-
 **$\beta = 0.5$**: Perfect balance (equilibrium)
 
-
 **$\beta = 1$**: Pure emergence (output only)
-
 
 #### **Why β = 0.5 is Special**
 
@@ -1479,15 +1432,11 @@ where:
 
 $\sigma_{\text{in}}$ = input score (convergence activity)
 
-
 $\sigma_{\text{out}}$ = output score (emergence activity)  
-
 
 $k > 0$ = response rate
 
-
 $\lambda > 0$ = restoring force toward $0.5$
-
 
 #### **Equilibrium Condition**
 
@@ -1555,12 +1504,9 @@ where:
 
 $|\nabla \beta|^2$ penalizes rapid variation
 
-
 $V(\beta) = \frac{\lambda}{2}(\beta - 0.5)^2$ is the restoring potential
 
-
 $J[\Phi]$ is the current from the field
-
 
 #### **Gradient Descent**
 
@@ -1622,17 +1568,13 @@ $$
 
 **Inside a black hole**: $\beta \to 0$ (pure convergence)
 
-
 **In an expanding region**: $\beta \to 1$ (pure emergence)
 
-
 **In equilibrium matter**: $\beta \approx 0.5$ (balance)
-
 
 This explains:
 
 **LIGO measurement**: $D = 1.503 \pm 0.040$ (slightly higher due to gravitational wave emergence)
-
 
 **LHC measurement**: $D = 1.48 \pm 0.12$ (slightly lower due to collision convergence)
 
@@ -1769,12 +1711,9 @@ where:
 
 $T^a$ is the torsion 2-form
 
-
 $R^{ab}$ is the curvature 2-form
 
-
 $e_a$ are the vierbein (tetrad fields)
-
 
 #### **Integration and Constant Derivation**
 
@@ -1851,7 +1790,6 @@ $D_{KL}$ is the Kullback-Leibler divergence
 - The minimum is over all bipartitions of the system
 
 $\psi_{\text{factorized}}$ is the maximum entropy factorization
-
 
 **Physical meaning**: How much information is lost by factorizing the system.
 
@@ -2052,33 +1990,25 @@ where $\mathcal{H}_{\text{aperture}}$ is the aperture Hamiltonian.
 
 States near $\beta = 0.5$ equilibrium
 
-
 $m_e = 0.511$ MeV (measured)
-
 
 **Second generation** (medium):
 - Moderate aperture coupling
 
 States with $|\beta - 0.5| \sim 0.1$
 
-
 $m_\mu = 105.7$ MeV (measured)
 
-
 **Ratio**: $m_\mu/m_e = 206.8$ ✓
-
 
 **Third generation** (heaviest):
 - Strong aperture coupling
 
 States with $|\beta - 0.5| \sim 0.2$
 
-
 $m_\tau = 1777$ MeV (measured)
 
-
 $m_t = 173$ GeV (measured, previously 174 GeV predicted)
-
 
 #### **Top Quark Resolution**
 
@@ -2186,9 +2116,7 @@ where:
 
 $m_D \sim 1$ eV (Dirac mass from soul aperture)
 
-
 $M_R \sim 10^{14}$ GeV (Majorana mass from aperture scale separation)
-
 
 **Result**:
 $$
@@ -2211,7 +2139,6 @@ Likely candidates:
 - Stable due to conservation laws
 
 Mass $\sim 100$ GeV (WIMP-like)
-
 
 **Prediction**: Should be detected as WIMP with specific scattering cross-section determined by aperture geometry.
 
@@ -2704,9 +2631,7 @@ $$
 
 **Original prediction**: $174$ GeV (Higgs resonance)
 
-
 **With dynamic β**: $173$ GeV (accounting for collision environment)
-
 
 **Status**: ✓✓✓ Exact after β correction!
 
