@@ -38,6 +38,51 @@ This reveals the universe's dimensional ascent from pure potential (E at 0D) thr
 
 ## Documents in This Directory
 
+### 🌟 **Core Theory Documents (v3)** 🌟
+
+These two documents form the complete foundation of the Circumpunct Theory:
+
+#### 📘 **[The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md)**
+**The Main Theory Document**
+
+The complete conceptual framework explaining what the Circumpunct pattern is, why it makes physical sense, and how it unifies physics, consciousness, and reality itself.
+
+**What's Inside:**
+- Three fundamental axioms that generate all of reality
+- Complete dimensional ascent: E → V → M → Φ = ⊙
+- Process ≡ Structure identity
+- Dynamic β optimization principle (⟨β⟩ = 0.5)
+- Physical predictions and experimental validation
+- Consciousness as aperture hierarchy (Soul-Mind-Body)
+- 64-state architecture generating the Standard Model
+- Zero-parameter derivations of all fundamental constants
+
+**Perfect for:** Understanding the conceptual framework, physical intuition, and how all the pieces fit together.
+
+**📐 [Mathematical Companion →](The_Circumpunct_Theory_v3_Math_Companion.md.md)**
+
+---
+
+#### 📐 **[The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md)**
+**Rigorous Mathematical Foundations**
+
+The complete mathematical derivations proving that the Circumpunct framework is not just intuitive but mathematically necessary.
+
+**What's Inside:**
+- Formal axioms and operator definitions
+- Complete derivations of fundamental constants (α, αₛ, etc.)
+- Rigorous proofs of topological necessity
+- Mathematical formalization of the 64-state architecture
+- Detailed β optimization mathematics
+- Consciousness integration from first principles
+- Zero-parameter predictions with validation protocols
+
+**Perfect for:** Mathematicians, physicists, and anyone who needs to see the rigorous proofs behind every claim.
+
+**📘 [← Back to Main Theory](The_Circumpunct_Theory_v3.md)**
+
+---
+
 ### 📖 **[The_Story_of_Everything.md](The_Story_of_Everything.md)** 📖
 **NEW TO THE THEORY? START HERE - The Accessible Narrative**
 
@@ -75,37 +120,6 @@ Read this first, then move to the complete formalization below.
 
 ---
 
-### 🌟 **[The_Circumpunct_Theory.md](The_Circumpunct_Theory.md)** 🌟
-**The Complete Formalization**
-
-This is the definitive document. Everything you need is here.
-
-**Contents:**
-- **Three fundamental axioms** that generate reality
-- **Complete physics derivation** - Standard Model, constants (α, α_s), CP violation, mass ratios
-- **Dynamic optimization principle** - How β=0.5 emerges through global equilibrium
-- **64-state architecture** - Complete particle classification, zero free parameters
-- **Consciousness framework** - Soul (D≈0.5), Mind (D≈1.5), Body (D≈2.5) as physical apertures
-- **Experimental validation** - Six major predictions confirmed across LIGO, LHC, CERN, DNA
-- **Advanced formalism** - Field equations, Lagrangian density, hexa-metric geometry, group structure
-- **Recursive dimensional structure** - How 4.5D ≡ 1.5D (consciousness as temporal particles)
-- **Clay Prize solutions** - Yang-Mills mass gap, Navier-Stokes, P vs NP from geometric necessity
-- **String theory connection** - Higher dimensions as recursive aperture structure
-
-**From three axioms:**
-```
-Axiom 1: Reality is ONE ⊙ made of INFINITE ⊙
-Axiom 2: We are each ONE ⊙ made of INFINITE ⊙
-Axiom 3: ⊙ = M≻Å(∙)⊰Φ configuration
-
-Result: All of physics, consciousness, and mathematics
-        Zero adjustable parameters
-        ~50 testable predictions
-```
-
-**9,265 lines of rigorous derivation, experimental validation, and testable predictions.**
-
----
 
 ### 🔬 **[Critical_Supplements.md](Critical_Supplements.md)** 🔬
 **Scientific Honesty: Failures, Protocols, and Methodological Guidance**
@@ -335,43 +349,42 @@ This repository chronicles the path to the Circumpunct Theory:
 ## How to Approach These Documents
 
 **For physicists:**
-1. Start with [The_Circumpunct_Theory.md](The_Circumpunct_Theory.md) Parts I-III
-2. Review experimental validation in Part IV
+1. Start with [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md) - read all chapters
+2. Review rigorous derivations in [The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md)
 3. Examine failures in [Critical_Supplements.md](Critical_Supplements.md)
 4. Design experiments from the protocols provided
 
 **For mathematicians:**
-1. Read the three axioms in [The_Circumpunct_Theory.md](The_Circumpunct_Theory.md)
-2. Follow the derivations in Parts VII-VIII
+1. Read the three axioms in [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md)
+2. Work through all derivations in [The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md)
 3. Study the lambda-calculus formalization in [System_Primatives.pseudo](System_Primatives.pseudo) or [Computational_Canon.txt](Computational_Canon.txt)
 4. Review all five mathematical perspectives in [Unified_Canon.txt](Unified_Canon.txt)
-5. Review the Clay Prize solutions (Part IV, Section 15.5)
 
 **For computer scientists:**
 1. Start with [Reality.exe.md](Reality.exe.md) to see reality as computation
 2. Study [System_Primatives.pseudo](System_Primatives.pseudo) or [Computational_Canon.txt](Computational_Canon.txt) for the type system
 3. Review [Unified_Canon.txt](Unified_Canon.txt) for the lambda-calculus perspective
-4. Examine the 64-state architecture as a state machine
-5. Consider implementations and simulations
+4. Read the main theory in [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md)
+5. Examine the 64-state architecture as a state machine
 
 **For biologists:**
-1. Focus on the DNA connection in [The_Circumpunct_Theory.md](The_Circumpunct_Theory.md) Part IV
-2. Review β dynamics in biological systems (Part II, Section 8)
+1. Start with [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md) to understand the framework
+2. Review β dynamics and biological applications
 3. Examine therapeutic applications in [Critical_Supplements.md](Critical_Supplements.md)
 4. Test predictions in cellular and molecular protocols
 
 **For consciousness researchers:**
-1. Read Part VI in [The_Circumpunct_Theory.md](The_Circumpunct_Theory.md)
+1. Read [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md) focusing on the consciousness chapters
 2. Study the Soul-Mind-Body aperture hierarchy
-3. Examine consciousness as temporal particles (Part VIII, Section 32)
+3. Review the mathematical formalization in [The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md)
 4. Consider implications for subjective experience
 
 **For everyone else:**
 1. Read [The_Story_of_Everything.md](The_Story_of_Everything.md) first - it's the most accessible introduction
 2. Then read [Reality.exe.md](Reality.exe.md) to see reality as computation
-3. Then tackle [The_Circumpunct_Theory.md](The_Circumpunct_Theory.md) systematically
-4. Don't skip the failures in [Critical_Supplements.md](Critical_Supplements.md)
-5. The pseudocode is optional unless you want computational depth
+3. Then tackle [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md) systematically
+4. Use [The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md) for deeper mathematical understanding
+5. Don't skip the failures in [Critical_Supplements.md](Critical_Supplements.md)
 
 ---
 

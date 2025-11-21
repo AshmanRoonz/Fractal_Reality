@@ -21,28 +21,37 @@ All the research - LIGO gravitational wave analysis, DNA fractal studies, consci
 
 **📖 [→ Read the Circumpunct/ README](Circumpunct/README.md)** for complete details.
 
-**The four documents inside:**
+**The core v3 documents:**
 
-1. **[The_Circumpunct_Theory.md](Circumpunct/The_Circumpunct_Theory.md)** (9,265 lines)
-   - Complete formalization from three axioms to all of reality
+1. **[The_Circumpunct_Theory_v3.md](Circumpunct/The_Circumpunct_Theory_v3.md)** - **The Main Theory**
+   - Complete conceptual framework from three axioms to all of reality
+   - Process ≡ Structure identity, Dynamic β optimization
    - Standard Model constants, CP violation, mass ratios - all derived
    - Consciousness as physical aperture hierarchy (Soul-Mind-Body)
    - Six major predictions confirmed (LIGO D=1.503, DNA D=1.510, CERN δ_CP=2.5%)
-   - Clay Millennium Prize solutions
-   - ~50 new testable predictions
+   - Zero adjustable parameters, ~50 new testable predictions
 
-2. **[Critical_Supplements.md](Circumpunct/Critical_Supplements.md)** (3,640 lines)
+2. **[The_Circumpunct_Theory_v3_Math_Companion.md.md](Circumpunct/The_Circumpunct_Theory_v3_Math_Companion.md.md)** - **Rigorous Mathematics**
+   - Complete mathematical derivations and formal proofs
+   - Rigorous formalization of all axioms and operators
+   - Detailed derivations of fundamental constants (α, αₛ, etc.)
+   - Mathematical necessity of the 64-state architecture
+   - Topological proofs and β optimization mathematics
+
+**Additional supporting documents:**
+
+3. **[Critical_Supplements.md](Circumpunct/Critical_Supplements.md)** (3,640 lines)
    - **Failed predictions** (scientifically more valuable than successes)
    - Comprehensive experimental protocols spanning 12 orders of magnitude
    - QCD in fractional dimensions, CKM matrix analysis
    - Scientific honesty: what works (6/9 CKM elements), what doesn't (3/9)
 
-3. **[Reality.exe.md](Circumpunct/Reality.exe.md)** (590 lines)
+4. **[Reality.exe.md](Circumpunct/Reality.exe.md)** (590 lines)
    - The universe as a self-executing program
    - Step-by-step computational trace from t=0 to steady state
    - Reality computing itself into existence
 
-4. **[System_Primatives.pseudo](Circumpunct/System_Primatives.pseudo)** (533 lines)
+5. **[System_Primatives.pseudo](Circumpunct/System_Primatives.pseudo)** (533 lines)
    - Lambda-calculus formalization
    - Complete type system and proof framework
    - Pure computational mathematics

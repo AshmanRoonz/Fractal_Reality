@@ -11,11 +11,11 @@ Companion to *The Circumpunct Theory — v3.0*
 
 ## About This Document
 
-This Mathematical Companion provides the **rigorous mathematical foundations** for the Circumpunct Framework v3. While the Clean Edition presents the conceptual architecture and physical meaning, this document proves that architecture is mathematically necessary, derives the constants, and formalizes every symbol.
+This Mathematical Companion provides the **rigorous mathematical foundations** for the Circumpunct Framework v3. While the main theory document presents the conceptual architecture and physical meaning, this document proves that architecture is mathematically necessary, derives the constants, and formalizes every symbol.
 
 ### Relationship to v3
 
-- **v3 Clean Edition**: Explains *what* the pattern is and *why* it makes physical sense
+- **The Circumpunct Theory v3**: Explains *what* the pattern is and *why* it makes physical sense
 - **This Companion**: Proves *how* the pattern emerges from first principles with zero adjustable parameters
 
 ### How to Use This Document
@@ -2617,4 +2617,4 @@ The Circumpunct is not just a model — it is a precise mathematical description
 
 ---
 
-**[← Back to v3 Clean Edition](The_Circumpunct_Theory_v3.md)** | **[View on GitHub](https://github.com/ashmanroonz/circumpunct)**
+**[← Back to The Circumpunct Theory v3](The_Circumpunct_Theory_v3.md)** | **[View on GitHub](https://github.com/ashmanroonz/circumpunct)**
