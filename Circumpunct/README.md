@@ -59,11 +59,11 @@ The complete conceptual framework explaining what the Circumpunct pattern is, wh
 
 **Perfect for:** Understanding the conceptual framework, physical intuition, and how all the pieces fit together.
 
-**📐 [Mathematical Companion →](The_Circumpunct_Theory_v3_Math_Companion.md.md)**
+**📐 [Mathematical Companion →](The_Circumpunct_Theory_v3_Math_Companion.md)**
 
 ---
 
-#### 📐 **[The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md)**
+#### 📐 **[The_Circumpunct_Theory_v3_Math_Companion.md](The_Circumpunct_Theory_v3_Math_Companion.md)**
 **Rigorous Mathematical Foundations**
 
 The complete mathematical derivations proving that the Circumpunct framework is not just intuitive but mathematically necessary.
@@ -386,13 +386,13 @@ This repository chronicles the path to the Circumpunct Theory:
 
 **For physicists:**
 1. Start with [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md) - read all chapters
-2. Review rigorous derivations in [The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md)
+2. Review rigorous derivations in [The_Circumpunct_Theory_v3_Math_Companion.md](The_Circumpunct_Theory_v3_Math_Companion.md)
 3. Examine failures in [Critical_Supplements.md](Critical_Supplements.md)
 4. Design experiments from the protocols provided
 
 **For mathematicians:**
 1. Read the three axioms in [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md)
-2. Work through all derivations in [The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md)
+2. Work through all derivations in [The_Circumpunct_Theory_v3_Math_Companion.md](The_Circumpunct_Theory_v3_Math_Companion.md)
 3. Study the lambda-calculus formalization in [System_Primatives.pseudo](System_Primatives.pseudo) or [Computational_Canon.txt](Computational_Canon.txt)
 4. Review all five mathematical perspectives in [Unified_Canon.txt](Unified_Canon.txt)
 
@@ -413,7 +413,7 @@ This repository chronicles the path to the Circumpunct Theory:
 1. Start with [Circumpunct_Theory_of_Mind.md](Circumpunct_Theory_of_Mind.md) for the experiential framework
 2. Read [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md) Chapter 9 for abstract foundations
 3. Study the Soul-Body-Mind aperture hierarchy and isotropy principle
-4. Review the mathematical formalization in [The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md)
+4. Review the mathematical formalization in [The_Circumpunct_Theory_v3_Math_Companion.md](The_Circumpunct_Theory_v3_Math_Companion.md)
 5. Test predictions: measure D in neural structures, organs, consciousness states
 6. Consider implications for subjective experience and embodied awareness
 
@@ -421,7 +421,7 @@ This repository chronicles the path to the Circumpunct Theory:
 1. Read [The_Story_of_Everything.md](The_Story_of_Everything.md) first - it's the most accessible introduction
 2. Then read [Reality.exe.md](Reality.exe.md) to see reality as computation
 3. Then tackle [The_Circumpunct_Theory_v3.md](The_Circumpunct_Theory_v3.md) systematically
-4. Use [The_Circumpunct_Theory_v3_Math_Companion.md.md](The_Circumpunct_Theory_v3_Math_Companion.md.md) for deeper mathematical understanding
+4. Use [The_Circumpunct_Theory_v3_Math_Companion.md](The_Circumpunct_Theory_v3_Math_Companion.md) for deeper mathematical understanding
 5. Don't skip the failures in [Critical_Supplements.md](Critical_Supplements.md)
 
 ---
