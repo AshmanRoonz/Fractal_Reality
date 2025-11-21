@@ -247,6 +247,17 @@ body {
     font-style: italic;
 }
 
+/* Universal Constants Section */
+.universal-constants {
+    background: rgba(0, 245, 255, 0.03);
+    border-top: 1px solid rgba(0, 245, 255, 0.2);
+    border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+}
+
+.universal-constants h2 {
+    color: var(--neon-cyan);
+}
+
 /* ===================================
    Paths Section
    =================================== */
