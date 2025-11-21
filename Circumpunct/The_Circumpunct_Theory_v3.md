@@ -10,7 +10,7 @@
 **v3.0**
 **November 2025**
 
-**📐 [Mathematical Companion →](The_Circumpunct_Theory_v3_Math_Companion.md.md)** — *Rigorous derivations, formal proofs, and complete mathematical foundations*
+**📐 [Mathematical Companion →](The_Circumpunct_Theory_v3_Math_Companion.md)** — *Rigorous derivations, formal proofs, and complete mathematical foundations*
 
 ---
 
