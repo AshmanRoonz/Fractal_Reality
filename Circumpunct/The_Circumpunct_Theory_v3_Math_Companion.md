@@ -1,4 +1,4 @@
-# The Circumpunct Theory — Mathematical Companion
+# The Circumpunct Theory — Mathematical Companion _ Under Contstruction, math display glitches
 
 **Rigorous Derivations and Formal Structure**  
 Companion to *The Circumpunct Theory — v3.0*
