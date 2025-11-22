@@ -22,10 +22,11 @@
 4. [Chapter 4 — Flow of Reality](#chapter-4--flow-of-reality)
 5. [Chapter 5 — Wholeness (⊙)](#chapter-5--wholeness-)
 6. [Chapter 6 — The 64-State Architecture](#chapter-6--the-64-state-architecture)
-7. [Chapter 7 — Dynamic β (Balance Parameter)](#chapter-7--dynamic-β-balance-parameter)
-8. [Chapter 8 — Topological Foundations](#chapter-8--topological-foundations)
-9. [Chapter 9 — Consciousness Interpretation](#chapter-9--consciousness-interpretation)
-10. [Chapter 10 — The Unified View](#chapter-10--the-unified-view)
+7. [Chapter 6.5 — String Theory Emergence ⭐ NEW](#chapter-65--string-theory-emergence--new)
+8. [Chapter 7 — Dynamic β (Balance Parameter)](#chapter-7--dynamic-β-balance-parameter)
+9. [Chapter 8 — Topological Foundations](#chapter-8--topological-foundations)
+10. [Chapter 9 — Consciousness Interpretation](#chapter-9--consciousness-interpretation)
+11. [Chapter 10 — The Unified View](#chapter-10--the-unified-view)
 
 ---
 

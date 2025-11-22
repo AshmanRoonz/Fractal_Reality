@@ -57,6 +57,7 @@ This Mathematical Companion provides the **rigorous mathematical foundations** f
 ### Part V — Unification
 9. [Chapter 9 — Consciousness Mathematics](#chapter-9--consciousness-mathematics)
 10. [Chapter 10 — Complete Derivations](#chapter-10--complete-derivations)
+11. [Chapter 11 — String Theory Derivation from Aperture Geometry ⭐ NEW](#chapter-11--string-theory-derivation-from-aperture-geometry--new)
 
 ### Appendices
 - [Appendix A — Notation Reference](#appendix-a--notation-reference)
