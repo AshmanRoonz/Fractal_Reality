@@ -20,7 +20,7 @@ We present a unified framework for physical reality built on three fundamental a
 
 The framework demonstrates that:
 
-1. **Process ≡ Structure Identity** — Power flow (≻∙⊰) at fractional dimensions equals energy configuration (⊙) at integer dimensions. The apertures contain transformation, not just boundaries between states.
+1. **Process ≡ Structure Identity** — Power flow (≻Å⊰) at fractional dimensions equals energy configuration (⊙) at integer dimensions. The apertures contain transformation, not just boundaries between states.
 
 2. **Primacy of Interaction** — Nothing exists prior to interaction: not spacetime, not laws, not constants, not dimensionality itself. The circumpunct ⊙ represents the minimal interaction that bootstraps all of reality, eliminating infinite regress.
 
@@ -3757,4 +3757,5 @@ This is reality.
 ---
 
 **[← Back to Circumpunct README](README.md)** | **[Full Technical Version →](The_Circumpunct_Theory.md)** | **[Story Version →](The_Story_of_Everything.md)**
+
 
