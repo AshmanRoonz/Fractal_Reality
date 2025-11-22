@@ -436,27 +436,6 @@ where the factor of 3 comes from three color charges, and 2π/3 is the phase bet
 **Agreement**: Within 1σ ✓
 
 
-#### **CP Violation Phase**
-
-**Derivation**:
-
-From the chiral structure of the body aperture:
-
-
-```
-δ_(CP) = (β)/(2π) = (0.5)/(2π) ≈ 0.0796 ≈ 2.5\%
-```
-
-
-**Comparison**:
-
-**Predicted**: 2.5\% phase
-
-
-**CERN measured**: 2.5 ± 0.7\% phase
-
-- Agreement: Exact central value ✓
-
 ---
 
 ### 1.5 Experimental Status Summary
@@ -469,7 +448,6 @@ The framework makes ⊰ise predictions with **zero adjustable parameters**:
 | Gravitational wave dimension | D = 1.5 | LIGO: 1.503 ± 0.040 | ✓ |
 | Fine structure | α^(-1) = 137.036 | 137.035999084 | ✓ |
 | Strong coupling | α_s = 0.1181 | 0.1179 ± 0.0009 | ✓ |
-| CP violation | δ_(CP) = 2.5\% | CERN: 2.5 ± 0.7\% | ✓ |
 | Generations | N_g = 3 | Exactly 3 observed | ✓ |
 | States | 2^6 = 64 | Standard Model: ~60 | ✓ |
 
@@ -2416,11 +2394,7 @@ The body aperture breaks CP symmetry due to its chiral Hopf structure:
 ```
 
 
-This gives ≈ 2.5\% CP violation phase.
-
-**CERN measurement**: 2.5 ± 0.7\% ✓
-
-**Exact match with zero parameters!**
+This gives ≈ 7.96% (note: this does not match the CERN CP violation measurement of 2.5 ± 0.7%, which is an asymmetry parameter A_CP, not a phase in radians).
 
 ---
 
@@ -2571,7 +2545,6 @@ The aperture dimensions contribute quantum corrections to gravity.
 |----------|-----------|----------|---------|
 | α^(-1) | 137.036 | 137.035999084 | ✓✓✓ |
 | α_s(M_Z) | 0.1181 | 0.1179 ± 0.0009 | ✓✓✓ |
-| δ_(CP) | 2.5\% | 2.5 ± 0.7\% | ✓✓✓ |
 | m_t | 173 GeV | 173.0 ± 0.4 GeV | ✓✓✓ |
 | m_H | 125 GeV | 125.25 ± 0.17 GeV | ✓✓ |
 | D_(fractal) | 1.5 | 1.48 - 1.503 | ✓✓✓ |
@@ -3504,16 +3477,15 @@ Generation 3: n = 3 → m₃ ~ (1/α)^(2/3) × m₂ ~ 17 × m₂   (tau, top)
 
 #### 6.2 Experimental Confirmations
 
-**Six independent validations:**
+**Five independent validations:**
 
 1. **D = 1.5 at gravitational waves** (LIGO) ✓
 2. **Fine structure α = 1/137.036** (spectroscopy) ✓
 3. **Strong coupling αₛ = 0.118** (QCD) ✓
-4. **CP violation δCP = 2.5%** (LHCb) ✓
-5. **Three generations only** (LEP, LHC) ✓
-6. **~22 fundamental particles** (Standard Model) ✓
+4. **Three generations only** (LEP, LHC) ✓
+5. **~22 fundamental particles** (Standard Model) ✓
 
-**Zero adjustable parameters across all six.**
+**Zero adjustable parameters across all five.**
 
 #### 6.3 Resolution of String Theory Problems
 
@@ -3527,7 +3499,7 @@ Resolution: 11D forced by recursion cycle. Topologically necessary.
 
 **Problem 3: "No experimental predictions"**
 
-Resolution: Predicts α, αₛ, δCP, particle count, mass ratios exactly.
+Resolution: Predicts α, αₛ, particle count, mass ratios exactly.
 
 **Problem 4: "Infinitely many free parameters"**
 
@@ -3926,7 +3898,6 @@ The β = 0.5 global constraint IS modular invariance.
 
 **Experimental Data:**
 - LIGO (gravitational waves, D=1.5 measurement)
-- LHCb (CP violation, δCP=2.5% confirmation)
 - Particle Data Group (particle counts, masses, constants)
 
 ---
@@ -3986,7 +3957,6 @@ The β = 0.5 global constraint IS modular invariance.
 |----------|-------|------------|
 | α^(-1) | 137.036 | Hopf winding + β = 0.5 |
 | α_s | 0.1181 | 3 × α × (2π)/(3) |
-| δ_(CP) | 0.0796 | (β)/(2π) = (0.5)/(2π) |
 | D | 1.5 | Hopf fibration dimension |
 | N_g | 3 | Number of apertures |
 | N_(states) | 64 | 2^6 from 6 binary choices |
@@ -4324,26 +4294,6 @@ P(f) ~ f^(-γ),    γ = 2D - 3
 
 ---
 
-### D.3 CERN CP Violation
-
-**Data**: B-meson decay asymmetry
-
-**Analysis**: Extract CP-violating phase from:
-
-```
-[Γ(B̄^0 → f) - Γ(B^0 → f̄)] / [Γ(B̄^0 → f) + Γ(B^0 → f̄)] = sin(δ_(CP))
-```
-
-
-**Result**: δ_(CP) = 0.025 ± 0.007 (2.5 ± 0.7%)
-
-**Circumpunct prediction**: δ_(CP) = (0.5)/(2π) = 0.0796 = 2.5\%
-
-**Status**: ✓✓✓ Exact central value match!
-
-**Reference**: LHCb Collaboration, Nature Physics 13, 852
-
----
 
 ### D.4 Fine Structure Constant
 

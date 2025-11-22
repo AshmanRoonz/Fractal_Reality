@@ -92,7 +92,7 @@ This means:
 
 **3. Zero-Parameter Derivation**
 - All fundamental constants emerge from geometry
-- α (fine structure), α_s (strong coupling), mass ratios, CP violation
+- α (fine structure), α_s (strong coupling), mass ratios
 - 64-state architecture from aperture bits
 - Three-generation limit
 - Standard Model structure—all without adjustable parameters
@@ -149,13 +149,12 @@ This is not philosophy—it's the mathematical structure: the master identity E�
 
 The framework has achieved remarkable experimental validation:
 
-**Six Major Predictions Confirmed:**
+**Five Major Predictions Confirmed:**
 1. **LHC measurements**: D = 1.48 ± 0.12 (predicted 1.5)
 2. **LIGO gravitational waves**: D = 1.503 ± 0.040 (predicted 1.5)
-3. **CERN CP violation**: δ_CP = 2.5% (predicted from aperture geometry)
-4. **No fourth generation**: Exactly three generations (topologically forced)
-5. **Mass ratios**: Quark/lepton mass hierarchies match predictions
-6. **Maximal entanglement**: Quantum systems show predicted coherence patterns
+3. **No fourth generation**: Exactly three generations (topologically forced)
+4. **Mass ratios**: Quark/lepton mass hierarchies match predictions
+5. **Maximal entanglement**: Quantum systems show predicted coherence patterns
 
 **Understanding Variation:**
 Variations around predicted values are now understood as context-dependent β adjustment rather than measurement error. The framework allows for local adaptation while maintaining global equilibrium—this is a feature, not a bug.
@@ -1493,18 +1492,17 @@ Mass ratios emerge from fractal amplification at D = 1.5.
 - 10D/11D count is **exact from recursion**, not arbitrary
 - **All free parameters eliminated** (replaced by aperture geometry)
 
-**Six independent experimental validations:**
+**Five independent experimental validations:**
 
 | Prediction | Value | Experiment | Status |
 |------------|-------|------------|---------|
 | Fractal dimension D | 1.5 | LIGO: 1.503 ± 0.040 | ✓ |
 | Fine structure α⁻¹ | 137.036 | 137.035999084 | ✓ |
 | Strong coupling αₛ | 0.1181 | 0.1179 ± 0.0009 | ✓ |
-| CP violation δCP | 2.5% | CERN: 2.5 ± 0.7% | ✓ |
 | Three generations | 3 | Exactly 3 | ✓ |
 | Particle states | ~22 | Standard Model ~20-25 | ✓ |
 
-**Zero adjustable parameters across all six.**
+**Zero adjustable parameters across all five.**
 
 **String theory problems resolved:**
 
@@ -1515,7 +1513,7 @@ Mass ratios emerge from fractal amplification at D = 1.5.
 → **Resolution**: 11D forced by recursion cycle. Topologically necessary.
 
 **Problem 3**: "No experimental predictions"
-→ **Resolution**: Predicts α, αₛ, δCP, particle count, mass ratios exactly.
+→ **Resolution**: Predicts α, αₛ, particle count, mass ratios exactly.
 
 **Problem 4**: "Infinitely many free parameters"
 → **Resolution**: Zero free parameters. All from aperture geometry.
@@ -3233,7 +3231,7 @@ We began with three axioms:
 From these, we derived:
 - The dimensional ladder (0D → 3D through 0.5D, 1.5D, 2.5D)
 - The 64-state architecture (2⁶ from six aperture bits)
-- All fundamental constants (α, α_s, mass ratios, CP violation)
+- All fundamental constants (α, α_s, mass ratios)
 - Three generations of matter (three apertures)
 - Dynamic balance (⟨β⟩ = 0.5 globally, β varies locally)
 - Topological necessity (Hopf, Chern, Clifford, Nieh-Yan)
