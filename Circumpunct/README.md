@@ -31,7 +31,6 @@ This reveals the universe's dimensional ascent from pure potential (E at 0D) thr
 - LIGO: D = 1.503 ± 0.040 (predicted D = 1.5)
 - LHC: D = 1.48 ± 0.12 (predicted D = 1.5)
 - DNA: D = 1.510 (predicted D = 1.5)
-- CERN: δ_CP = 2.5% (predicted ~2.5%)
 - Mass ratios, coupling constants, no 4th generation - all confirmed
 
 ---
