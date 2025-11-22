@@ -56,6 +56,7 @@ The complete conceptual framework explaining what the Circumpunct pattern is, wh
 - Consciousness as aperture hierarchy (Soul-Mind-Body)
 - 64-state architecture generating the Standard Model
 - Zero-parameter derivations of all fundamental constants
+- **⭐ NEW: Chapter 6.5 — String Theory Emergence** - How strings emerge as validation lines extended through time, explaining M-theory's 11 dimensions, 2-string structure, and 22 stable particles from aperture geometry
 
 **Perfect for:** Understanding the conceptual framework, physical intuition, and how all the pieces fit together.
 
@@ -76,6 +77,7 @@ The complete mathematical derivations proving that the Circumpunct framework is 
 - Detailed β optimization mathematics
 - Consciousness integration from first principles
 - Zero-parameter predictions with validation protocols
+- **⭐ NEW: Chapter 11 — String Theory Derivation** - Complete mathematical derivation showing strings as validation lines, Virasoro constraints from β-optimization, critical dimension from 64-state structure, and partition functions with full technical appendices
 
 **Perfect for:** Mathematicians, physicists, and anyone who needs to see the rigorous proofs behind every claim.
 
