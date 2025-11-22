@@ -16,7 +16,7 @@
 
 ## Abstract
 
-We present a unified framework for physical reality built on three fundamental axioms, culminating in the master identity **E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙**, which reveals process and structure as identical aspects of wholeness. This identity describes reality's dimensional ascent: from pure potential (E at 0D) through three successive aperture transformations at half-integer dimensions {0.5, 1.5, 2.5}, emerging as stable structures at integer dimensions {1, 2, 3}—validation line (V), matter surface (M), and field volume (Φ).
+We present a unified framework for physical reality built on three fundamental axioms, culminating in the master identity **E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙**, which reveals process and structure as identical aspects of wholeness. This identity describes reality's dimensional ascent: from pure potential (E at 0D) through three successive aperture transformations at half-integer dimensions {0.5, 1.5, 2.5}, emerging as stable structures at integer dimensions {1, 2, 3}—validation line/string (V), matter surface (M), and field volume (Φ).
 
 The framework demonstrates that:
 
@@ -3757,3 +3757,4 @@ This is reality.
 ---
 
 **[← Back to Circumpunct README](README.md)** | **[Full Technical Version →](The_Circumpunct_Theory.md)** | **[Story Version →](The_Story_of_Everything.md)**
+
