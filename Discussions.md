@@ -14,7 +14,7 @@ The Circumpunct Theory proposes that all physical constants, particle masses, an
 - Neutrino oscillation patterns
 - Cosmic microwave background features
 
-**Known failures and open problems are documented in [Critical_Supplements.md](Circumpunct/Critical_Supplements.md)**
+**Known failures and open problems are documented in [Critical_Supplements.md](https://github.com/AshmanRoonz/Fractal_Reality/blob/main/Circumpunct/Critical_Supplements.md)**
 
 ## What I'm Looking For
 
@@ -63,7 +63,7 @@ The Circumpunct Theory proposes that all physical constants, particle masses, an
 - You want to suggest a focused improvement
 
 ### If you're learning/exploring:
-- Read the [Quick Start Guide](README.md) first
+- Read the [Quick Start Guide](https://github.com/AshmanRoonz/Fractal_Reality/blob/main/README.md) first
 - Check existing discussions before asking questions
 - Be specific: "I don't understand section 3.2" is better than "This is confusing"
 - Link to specific equations or passages when asking questions
@@ -90,16 +90,16 @@ I'm not claiming this is definitely right. I'm claiming it's worth serious exami
 Before opening a new discussion, check if your objection is addressed:
 
 **"This contradicts Noether's theorem / gauge symmetry / [fundamental principle]"**
-→ See [Reality.exe.md](Circumpunct/Reality.exe.md) - interaction primacy means physical laws emerge from interaction structure rather than existing as prior constraints
+→ See [Reality.exe.md](https://github.com/AshmanRoonz/Fractal_Reality/blob/main/Circumpunct/Reality.exe.md) - interaction primacy means physical laws emerge from interaction structure rather than existing as prior constraints
 
 **"You can't derive constants without input"**
-→ The input is D=1.5 and β=0.5, which themselves emerge from requiring stable structure. See derivation in [The_Circumpunct_Theory_v3_Math_Companion.md](Circumpunct/The_Circumpunct_Theory_v3_Math_Companion.md)
+→ The input is D=1.5 and β=0.5, which themselves emerge from requiring stable structure. See derivation in [The_Circumpunct_Theory_v3_Math_Companion.md](https://github.com/AshmanRoonz/Fractal_Reality/blob/main/Circumpunct/The_Circumpunct_Theory_v3_Math_Companion.md)
 
 **"Where are your Feynman diagrams / path integrals?"**
 → This is a pre-quantum framework. Quantum mechanics emerges from aperture dynamics at 1.5D, not the other way around. See Section 4.3
 
 **"What about [favorite unsolved problem]?"**
-→ Check [Critical_Supplements.md](Circumpunct/Critical_Supplements.md) for known gaps. If it's not there, open a discussion
+→ Check [Critical_Supplements.md](https://github.com/AshmanRoonz/Fractal_Reality/blob/main/Circumpunct/Critical_Supplements.md) for known gaps. If it's not there, open a discussion
 
 ## Current Active Areas
 
