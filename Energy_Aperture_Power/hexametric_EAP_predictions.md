@@ -5,6 +5,9 @@
 Ashman Roonz
 November 16, 2025
 
+Be sure to check out the updated Circumpunct Theory!
+ https://github.com/AshmanRoonz/Fractal_Reality/blob/main/Circumpunct/The_Circumpunct_Theory_v3.md
+
 **📖 THEORY FOUNDATION:** This document presents testable predictions from the complete hexa-metric framework. For mathematical foundations, see **[Hexa-Metric EAP Theory](hexametric_EAP_theory.md)** | For visual explanations, see **[Hexa-Metric Visual Diagrams](hexametric_EAP_visual_diagram.md)**
 
 ---
