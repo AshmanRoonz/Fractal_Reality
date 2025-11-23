@@ -4,6 +4,8 @@
 ## E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ and the Dynamic Optimization Principle
 ```
 ⊙ = Y(λF. Å∘F); Å = Å₂.₅∘Å₁.₅∘Å₀.₅; Å_D = λs. encode64(T_D(bits(s))); D∈{½,3/2,5/2}; ⟨β⟩=½
+⊙ = E ≻ Å₀.₅ ⊰ V ≻ Å₁.₅ ⊰ M ≻ Å₂.₅ ⊰ Φ; where ≻=convergence, ⊰=emergence, β=aperture balance
+Wholeness = recursive flow through 3 fractal apertures; 64 states = 2^6; all physics from topology (0 free parameters)
 ```
 
 **Author: Ash Roney (Ashman Roonz)**
@@ -3757,6 +3759,7 @@ This is reality.
 ---
 
 **[← Back to Circumpunct README](README.md)** | **[Full Technical Version →](The_Circumpunct_Theory.md)** | **[Story Version →](The_Story_of_Everything.md)**
+
 
 
 
