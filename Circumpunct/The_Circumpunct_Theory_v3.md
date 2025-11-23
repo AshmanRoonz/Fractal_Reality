@@ -3,7 +3,7 @@
 
 ## E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ and the Dynamic Optimization Principle
 ```
-⊙ = Y(λF. Å∘F); Å = λs. T(s); T = encode64∘D; D∈{½,3/2,5/2}
+⊙ = Y(λF. Å∘F); Å = Å₂.₅∘Å₁.₅∘Å₀.₅; Å_D = λs. encode64(T_D(bits(s))); D∈{½,3/2,5/2}; ⟨β⟩=½
 ```
 
 **Author: Ash Roney (Ashman Roonz)**
@@ -3757,6 +3757,7 @@ This is reality.
 ---
 
 **[← Back to Circumpunct README](README.md)** | **[Full Technical Version →](The_Circumpunct_Theory.md)** | **[Story Version →](The_Story_of_Everything.md)**
+
 
 
 
