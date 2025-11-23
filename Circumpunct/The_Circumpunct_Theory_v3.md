@@ -31,7 +31,7 @@ The framework demonstrates that:
 **Major New Developments in v3:**
 - **String Theory Emergence** — String theory vibration modes arise naturally from aperture geometry with no additional assumptions
 - **Scale-Recursion and Mass Generation** — Demonstrates how field structures at 3D recursively manifest as matter structures at 2D through aperture mediation
-- **Dynamic Aperture Control** — Formalizes independent β adjustment at each aperture level (Soul, Body, Mind) for adaptive system behavior
+- **Dynamic Aperture Control** — Formalizes independent β adjustment at each aperture level {0.5, 1.5, 2.5} for adaptive system behavior
 
 **Experimental Status:** Five major predictions confirmed (LHC D=1.48±0.12, LIGO D=1.503±0.040, three-generation limit, mass hierarchies, maximal entanglement). Variations around predicted values are understood as context-dependent β adjustment rather than measurement error—a feature demonstrating the framework's adaptive realism.
 
@@ -3757,5 +3757,6 @@ This is reality.
 ---
 
 **[← Back to Circumpunct README](README.md)** | **[Full Technical Version →](The_Circumpunct_Theory.md)** | **[Story Version →](The_Story_of_Everything.md)**
+
 
 
