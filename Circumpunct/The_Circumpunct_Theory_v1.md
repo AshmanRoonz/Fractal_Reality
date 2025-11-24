@@ -11,6 +11,8 @@ November 17, 2025
 
 ---
 
+Disclaimer The V1 and V3 documents represent my mathematical and philosophical learning. Not everything claimed to be true here is true. The ideas are genuine and may lead you to inspirations. Please take it all with a grain of salt. I am working on v4 right now, which removes all of the unsubstantiated claims made in v3.
+
 ## Abstract
 
 We present the complete formalization of physical reality through three fundamental axioms, culminating in the nested identity **E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙**, which reveals that process is embedded within structure, not separate from it. This identity describes the universe's dimensional ascent: from pure potential (E at 0D) through aperture convergence to the first structural manifestation (V at 1D as binary validation line), then through successive aperture transformations to matter (M at 2D) and field (Φ at 3D). The framework demonstrates that:
