@@ -1,7 +1,7 @@
 # The Circumpunct Framework
 **Wholeness First: The Mathematics of Being Both Whole and Part**
 
-## Version 4.1 — Restructured Around Mereological Foundation
+## Version 4.2 — Six Parameters; Whole Responsible for Process
 
 **Author:** Ash Roney (Ashman Roonz)
 **Date:** November 2025
@@ -29,7 +29,7 @@ Most frameworks start with parts and ask: "How do parts combine into wholes?"
 
 This framework starts differently: **Wholeness is primary. Parts emerge from wholes.**
 
-The circumpunct ⊙ is not just a pattern that "fits" things — it is the **minimal structure of any whole**. Every complete system **must** have exactly five components. If you cannot find all five, you have not yet fully understood the system.
+The circumpunct ⊙ is not just a pattern that "fits" things — it is the **minimal structure of any whole**. Every complete system **must** have exactly six components. If you cannot find all six, you have not yet fully understood the system.
 
 This is not description. It is **diagnosis**.
 
@@ -39,7 +39,7 @@ This is not description. It is **diagnosis**.
 
 ### Part I — The Mereological Foundation
 1. [Wholeness Before Parts](#chapter-1--wholeness-before-parts)
-2. [The Five Necessary Parameters](#chapter-2--the-five-necessary-parameters)
+2. [The Six Necessary Parameters](#chapter-2--the-six-necessary-parameters)
 3. [The Circumpunct as Diagnostic Tool](#chapter-3--the-circumpunct-as-diagnostic-tool)
 
 ### Part II — The Balance of Whole and Part
@@ -119,67 +119,78 @@ This inverts the standard ontology.
 
 ---
 
-## Chapter 2 — The Five Necessary Parameters
+## Chapter 2 — The Six Necessary Parameters
 
 ### 2.1 The Minimal Structure of Any Whole
 
-Every complete whole **must** have exactly five components:
+Every complete whole **must** have exactly six components:
 
 ```
 ┌─────────────────────────────────────────────────────┐
 │                                                     │
-│   THE FIVE NECESSARY PARAMETERS                     │
+│   THE SIX NECESSARY PARAMETERS                      │
 │                                                     │
 │   STRUCTURE (what it IS):                           │
 │   ─────────────────────────                         │
-│   1. CENTER (·)    — Where transformation occurs    │
+│   1. CENTER (·)    — The core, the locus            │
 │   2. BOUNDARY (○)  — What separates inside/outside  │
 │   3. FIELD (Φ)     — What permeates inside & out    │
 │                                                     │
 │   PROCESS (what it DOES):                           │
 │   ─────────────────────────                         │
 │   4. INPUT (≻)     — What flows in                  │
-│   5. OUTPUT (⊰)    — What flows out                 │
+│   5. TRANSFORM (Å) — What changes                   │
+│   6. OUTPUT (⊰)    — What flows out                 │
 │                                                     │
 └─────────────────────────────────────────────────────┘
 ```
 
-### 2.2 Why Exactly Five?
+### 2.2 Why Exactly Six?
 
-**Not four:** Without input, the system is isolated and dies.
+**Structure requires three:**
+- Without **center**, there is no core identity
+- Without **boundary**, there is no inside/outside
+- Without **field**, there is nothing to permeate
 
-**Not four:** Without output, the system accumulates and explodes.
+**Process requires three:**
+- Without **input**, the system is isolated
+- Without **transform**, nothing changes
+- Without **output**, the system accumulates
 
-**Not four:** Without center, there is no locus of transformation.
+**Exactly six** because fewer is incomplete, more is redundant.
 
-**Not four:** Without boundary, there is no distinction of inside/outside.
+### 2.3 The Whole is Responsible for Process
 
-**Not four:** Without field, there is nothing to flow.
-
-**Exactly five** because fewer is incomplete, more is redundant.
-
-### 2.3 The Identity of Structure and Process
-
-These five are not two separate lists. They are **one thing seen two ways**:
+**Critical insight:** The process is not localized to parts of the structure.
 
 ```
-STRUCTURE          ≡          PROCESS
-─────────────────────────────────────────
-Center (·)         ≡     Transformation locus
-Boundary (○)       ≡     Exchange interface
-Field (Φ)          ≡     Flow medium
-                   +
-                Input (≻) + Output (⊰)
+STRUCTURE (the parts):       PROCESS (of the whole):
+──────────────────────       ──────────────────────────
+1. Center (·)                4. Input (≻)
+2. Boundary (○)       ⊙      5. Transform (Å)
+3. Field (Φ)                 6. Output (⊰)
+                     │
+                     └── The WHOLE does the process
 ```
 
-**A center that doesn't transform is not a center.**
-**A boundary that doesn't exchange is not a boundary.**
-**A field that doesn't flow is not a field.**
+You cannot say "the center does the transform" or "the boundary does the input."
 
-Structure without process is dead.
-Process without structure is nothing.
+**The whole ⊙ is responsible for the entire process.**
 
-They are identical: **⊙**
+The structure provides the *capacity* for process.
+The process is what the *whole* does.
+
+### 2.4 Structure Enables, Whole Acts
+
+```
+Structure alone = Dead (capacity without action)
+Process alone = Nothing (action without substrate)
+Structure + Process = ⊙ (living whole)
+```
+
+**The parts don't act. The whole acts through its parts.**
+
+This is why you need all six: three to BE something, three to DO something.
 
 ---
 
@@ -194,8 +205,9 @@ It **prescribes** what must be found:
 ```
 For ANY system you are analyzing:
 
+STRUCTURE:
 □ Can you identify the CENTER?
-  → Where does transformation occur?
+  → What is the core, the locus?
 
 □ Can you identify the BOUNDARY?
   → What separates inside from outside?
@@ -203,66 +215,88 @@ For ANY system you are analyzing:
 □ Can you identify the FIELD?
   → What permeates the interior and exterior?
 
+PROCESS:
 □ Can you identify the INPUT?
   → What flows in?
+
+□ Can you identify the TRANSFORM?
+  → What changes? What does the whole DO?
 
 □ Can you identify the OUTPUT?
   → What flows out?
 
-If you cannot find all five: YOU ARE NOT DONE.
+If you cannot find all six: YOU ARE NOT DONE.
 ```
 
 ### 3.2 Diagnostic Examples
 
 **Example 1: Atom**
 ```
+STRUCTURE:
 · Center:    Nucleus
 ○ Boundary:  Electron shell
 Φ Field:     Electromagnetic field
+
+PROCESS (of the whole atom):
 ≻ Input:     Absorbed photons, incoming particles
+Å Transform: Energy level transitions, bonding
 ⊰ Output:    Emitted photons, radiation
 
-✓ All five found — analysis complete
+✓ All six found — analysis complete
 ```
 
 **Example 2: Cell**
 ```
+STRUCTURE:
 · Center:    Nucleus (genetic control)
 ○ Boundary:  Cell membrane
 Φ Field:     Cytoplasm
+
+PROCESS (of the whole cell):
 ≻ Input:     Nutrients, signals, oxygen
+Å Transform: Metabolism, protein synthesis
 ⊰ Output:    Waste, signals, products
 
-✓ All five found — analysis complete
+✓ All six found — analysis complete
 ```
 
 **Example 3: Black Hole**
 ```
+STRUCTURE:
 · Center:    Singularity
 ○ Boundary:  Event horizon
-Φ Field:     Gravitational field (interior: unknown, exterior: Schwarzschild)
+Φ Field:     Gravitational field
+
+PROCESS (of the whole black hole):
 ≻ Input:     Infalling matter/energy
+Å Transform: Compression, information encoding
 ⊰ Output:    Hawking radiation, jets
 
-✓ All five found — analysis complete
+✓ All six found — analysis complete
 ```
 
 **Example 4: Incomplete Analysis**
 ```
 "An electron is a point particle with charge -e"
 
+STRUCTURE:
 · Center:    The point?
 ○ Boundary:  ? (point has no boundary)
 Φ Field:     EM field? (but where is "inside"?)
+
+PROCESS:
 ≻ Input:     ?
+Å Transform: ?
 ⊰ Output:    ?
 
 ✗ Missing components — analysis INCOMPLETE
+  (Perhaps the electron is not a complete whole,
+   but a part of a larger whole?)
 ```
 
 ### 3.3 What This Reveals
 
-When you cannot find all five parameters, either:
+When you cannot find all six parameters, either:
 
 1. **The system is not a complete whole** (it's a part of something larger)
 2. **Your analysis is incomplete** (keep looking)
@@ -609,9 +643,9 @@ Every ⊙ contains smaller ⊙s:
 ```
 
 At every level:
-- Same five parameters (center, boundary, field, input, output)
+- Same six parameters (center, boundary, field, input, transform, output)
 - Same balance principle (β = 0.5 optimal)
-- Same structure-process identity
+- Same structure-process relationship
 
 ### 9.2 Scale Invariance
 
@@ -643,15 +677,15 @@ But because they are **wholes** — and all wholes have the same minimal structu
 
 ### 10.1 Strong Claims (Defended)
 
-**✓ Every complete system has exactly five parameters:**
+**✓ Every complete system has exactly six parameters:**
 - Center, Boundary, Field (structure)
-- Input, Output (process)
-- If you can't find all five, your analysis is incomplete
+- Input, Transform, Output (process)
+- If you can't find all six, your analysis is incomplete
 
-**✓ Structure and Process are identical:**
-- A center is a transformation locus
-- A boundary is an exchange interface
-- A field is a flow medium
+**✓ The whole is responsible for process:**
+- Structure provides capacity (center, boundary, field)
+- Process is what the whole does (input, transform, output)
+- Parts don't act; the whole acts through its parts
 
 **✓ β = 0.5 is mathematically optimal:**
 - Maximizes entropy (proven)
@@ -780,16 +814,21 @@ The circumpunct ⊙ is the minimal structure of any whole:
          STRUCTURE                        PROCESS
 ```
 
-### The Five Necessary Parameters
+### The Six Necessary Parameters
 
 Every complete system **must** have:
-1. **Center (·)** — Where transformation occurs
+
+**STRUCTURE (what it IS):**
+1. **Center (·)** — The core, the locus
 2. **Boundary (○)** — What separates inside/outside
 3. **Field (Φ)** — What permeates the system
-4. **Input (≻)** — What flows in
-5. **Output (⊰)** — What flows out
 
-**If you cannot find all five, you are not done analyzing.**
+**PROCESS (what the whole DOES):**
+4. **Input (≻)** — What flows in
+5. **Transform (Å)** — What changes
+6. **Output (⊰)** — What flows out
+
+**If you cannot find all six, you are not done analyzing.**
 
 ### The Balance Principle
 
@@ -811,15 +850,18 @@ They were never apart.
 
 ---
 
-## Appendix A: The Five Parameters Reference
+## Appendix A: The Six Parameters Reference
 
-| Parameter | Symbol | Structure View | Process View |
-|-----------|--------|---------------|--------------|
-| Center | · | Transformation locus | Where change happens |
-| Boundary | ○ | Inside/outside divide | Exchange interface |
-| Field | Φ | Permeating medium | Flow substrate |
-| Input | ≻ | — | Convergent flow |
-| Output | ⊰ | — | Emergent flow |
+| # | Parameter | Symbol | Description |
+|---|-----------|--------|-------------|
+| | **STRUCTURE** | | *What it IS* |
+| 1 | Center | · | The core, the locus |
+| 2 | Boundary | ○ | What separates inside/outside |
+| 3 | Field | Φ | What permeates the system |
+| | **PROCESS** | | *What the whole DOES* |
+| 4 | Input | ≻ | What flows in |
+| 5 | Transform | Å | What changes |
+| 6 | Output | ⊰ | What flows out |
 
 ---
 
@@ -862,7 +904,8 @@ They were never apart.
 | V2 | Deprecated | Attempted fixes, still issues |
 | V3 | Deprecated | More errors identified |
 | V4.0 | Previous | Honest rebuild, physics-first |
-| **V4.1** | **Current** | **Wholeness-first, mereological foundation** |
+| V4.1 | Previous | Wholeness-first, mereological foundation |
+| **V4.2** | **Current** | **Six parameters; whole responsible for process** |
 
 ---
 
@@ -870,8 +913,8 @@ They were never apart.
 
 ---
 
-**Version:** 4.1
+**Version:** 4.2
 **Foundation:** Mereology (whole-part relations), established physics
-**Key Insight:** Wholeness is primary; separation needs explaining, not connection
+**Key Insight:** Wholeness is primary; the whole is responsible for process
 **Status:** Framework for understanding systems as wholes
 
