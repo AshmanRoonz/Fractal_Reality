@@ -1,814 +1,811 @@
 # The Circumpunct Framework
-**Energy → Power → Surface → Field: The Universal Pattern**
+**Wholeness First: The Mathematics of Being Both Whole and Part**
 
-## Version 4.0 — Honest Rebuild from First Principles
+## Version 4.1 — Restructured Around Mereological Foundation
 
 **Author:** Ash Roney (Ashman Roonz)
 **Date:** November 2025
-**Status:** Physical Framework Grounded in E=mc² and P=dE/dt
+**Status:** Framework grounded in wholeness, mereology, and established physics
 
 ---
 
-## Preface: Starting from Real Physics
+## Preface: Wholeness is Primary
 
-This version rebuilds from the ground up, starting with two equations everyone accepts:
+Most frameworks start with parts and ask: "How do parts combine into wholes?"
 
-```
-E = mc²        (Energy)
-P = dE/dt      (Power = Energy per Time)
-```
+This framework starts differently: **Wholeness is primary. Parts emerge from wholes.**
 
-**The core insight:** The circumpunct pattern describes how concentrated Energy (0D point) transforms into Power flow (1D), branches into Surfaces (2D), and assembles into complete Volumes with fields (3D).
+The circumpunct ⊙ is not just a pattern that "fits" things — it is the **minimal structure of any whole**. Every complete system **must** have exactly five components. If you cannot find all five, you have not yet fully understood the system.
 
-**What's different in V4:**
-- Starts from established physics (E, P = dE/dt)
-- Clearly distinguishes what's physics vs. philosophy vs. speculation
-- Removes all incorrect derivations from previous versions
-- Keeps only what can be honestly defended
+This is not description. It is **diagnosis**.
 
 ---
 
 ## Table of Contents
 
-### Part I — The Physical Foundation
-1. [Energy and Power: The Core Relationship](#chapter-1--energy-and-power-the-core-relationship)
-2. [The Dimensional Ascent](#chapter-2--the-dimensional-ascent)
-3. [The Aperture as Transformation](#chapter-3--the-aperture-as-transformation)
+### Part I — The Mereological Foundation
+1. [Wholeness Before Parts](#chapter-1--wholeness-before-parts)
+2. [The Five Necessary Parameters](#chapter-2--the-five-necessary-parameters)
+3. [The Circumpunct as Diagnostic Tool](#chapter-3--the-circumpunct-as-diagnostic-tool)
 
-### Part II — The Complete Pattern
-4. [From Energy to Field: The Full Sequence](#chapter-4--from-energy-to-field-the-full-sequence)
-5. [The Circumpunct as Universal Pattern](#chapter-5--the-circumpunct-as-universal-pattern)
-6. [Internal and External Fields](#chapter-6--internal-and-external-fields)
+### Part II — The Balance of Whole and Part
+4. [Every Whole is Also a Part](#chapter-4--every-whole-is-also-a-part)
+5. [β = 0.5: Half Whole, Half Part](#chapter-5--β--05-half-whole-half-part)
+6. [Entanglement as Shared Wholeness](#chapter-6--entanglement-as-shared-wholeness)
 
-### Part III — Mathematical Structure
-7. [Fractional Dimensions and Branching](#chapter-7--fractional-dimensions-and-branching)
-8. [The Balance Principle](#chapter-8--the-balance-principle)
-9. [The Master Expression](#chapter-9--the-master-expression)
+### Part III — Physical Grounding
+7. [Energy, Power, and Dimensional Flow](#chapter-7--energy-power-and-dimensional-flow)
+8. [The Aperture as Transformation](#chapter-8--the-aperture-as-transformation)
+9. [Fractal Nesting: Wholes Within Wholes](#chapter-9--fractal-nesting-wholes-within-wholes)
 
 ### Part IV — Honest Assessment
-10. [What We Can Claim](#chapter-10--what-we-can-claim)
-11. [What We Cannot Claim](#chapter-11--what-we-cannot-claim)
-12. [Open Questions and Future Directions](#chapter-12--open-questions-and-future-directions)
+10. [What the Framework Claims](#chapter-10--what-the-framework-claims)
+11. [What the Framework Does Not Claim](#chapter-11--what-the-framework-does-not-claim)
+12. [Open Questions](#chapter-12--open-questions)
 
 ---
 
-# Part I — The Physical Foundation
+# Part I — The Mereological Foundation
 
-## Chapter 1 — Energy and Power: The Core Relationship
+## Chapter 1 — Wholeness Before Parts
 
-### 1.1 Starting Point: Established Physics
+### 1.1 The Standard Approach (Bottom-Up)
 
-We begin with what physics has firmly established:
-
-**Energy (E):**
+Most of physics builds from parts to wholes:
 ```
-E = mc²
-
-Energy is:
-- Scalar (a single number, no direction)
-- Conserved (cannot be created or destroyed)
-- Concentrated at a point (in the limit)
-- Measured in Joules
+Particles → Atoms → Molecules → Cells → Organisms → Ecosystems
 ```
 
-**Power (P):**
-```
-P = dE/dt = E/t
+This approach asks: "Given parts, how do they combine?"
 
-Power is:
-- The rate of energy flow
-- Energy per unit time
-- Has direction (flows from source to sink)
-- Measured in Watts = Joules/second
-```
+But this creates a problem: **Where does connection come from?**
 
-### 1.2 The Dimensional Relationship
+If particles are fundamentally separate, why do they interact? Why do entangled particles correlate? Why does anything cohere at all?
 
-**Key observation:** Energy and Power have different dimensional character:
+### 1.2 The Circumpunct Approach (Top-Down)
+
+We propose the inverse: **Wholeness is primary.**
 
 ```
-Energy (E):
-- 0-dimensional in the limit (can be concentrated at a point)
-- No inherent direction
-- "Stored" or "contained"
-- Structure-like
-
-Power (P):
-- 1-dimensional (flows along a path)
-- Has direction (from → to)
-- "Flowing" or "transmitting"
-- Process-like
+WHOLENESS → differentiation → PARTS
+    ⊙     →    boundary    →  ⊙ ⊙ ⊙
 ```
 
-**The transformation E → P adds a dimension:**
+Parts are not fundamental. Parts are **how wholes express themselves**.
+
+**Key insight:** Separation is what needs explaining, not connection.
+
+### 1.3 What is a Whole?
+
+A **whole** is anything that:
+- Has an inside and an outside
+- Maintains identity through change
+- Exchanges with its environment
+- Transforms what passes through it
+- Contains structure and exhibits process
+
+The simplest symbol for this is: **⊙**
+
 ```
-E (0D, point-like) → P = dE/dt (1D, line-like flow)
-
-Differentiating with respect to time
-converts stored energy into flowing power
+⊙ = Whole = {Center + Boundary + Field}
+                     AND
+           {Input + Transform + Output}
 ```
 
-### 1.3 Physical Examples
+### 1.4 The Primacy Claim
 
-| System | Energy (E) | Power (P = dE/dt) |
-|--------|-----------|-------------------|
-| Battery | Chemical potential | Current × Voltage |
-| Spring | Elastic potential | Force × Velocity |
-| Capacitor | Electrostatic | Discharge rate |
-| Mass | mc² rest energy | Momentum flow |
-| Heat reservoir | Thermal energy | Heat flow rate |
+**Claim:** Wholeness is ontologically prior to parthood.
 
-**In every case:** Concentrated energy (E) flows as power (P) through some path.
+- Particles are not "things that sometimes connect"
+- Particles are "aspects of wholes that sometimes appear separate"
+- Connection is the default state
+- Separation requires explanation
+
+This inverts the standard ontology.
 
 ---
 
-## Chapter 2 — The Dimensional Ascent
+## Chapter 2 — The Five Necessary Parameters
 
-### 2.1 The Pattern: 0D → 1D → 2D → 3D
+### 2.1 The Minimal Structure of Any Whole
 
-**The claim:** Reality builds structure through dimensional progression:
-
-```
-0D: Energy (E)      — Concentrated at a point
-         ↓ transformation (aperture)
-1D: Power (P)       — Flows as a line/string
-         ↓ branching
-2D: Surface         — Branches spread into surfaces
-         ↓ enclosure
-3D: Volume          — Surfaces enclose a volume
-         = ⊙ Complete circumpunct (with internal/external fields)
-```
-
-### 2.2 Why This Sequence?
-
-**Geometric necessity:**
-- You cannot have a surface without lines (surfaces are made of curves)
-- You cannot have a volume without surfaces (volumes are bounded by surfaces)
-- Structure builds from lower to higher dimensions
-
-**Physical motivation:**
-- Energy concentrates (0D)
-- Power flows (1D)
-- Flow spreads (2D)
-- Spreading encloses (3D)
-
-### 2.3 The Role of Time
-
-**Critical insight:** The aperture transformation is differentiation with respect to time:
+Every complete whole **must** have exactly five components:
 
 ```
-E (energy) → P = dE/dt (power)
-
-The aperture IS the d/dt operator!
+┌─────────────────────────────────────────────────────┐
+│                                                     │
+│   THE FIVE NECESSARY PARAMETERS                     │
+│                                                     │
+│   STRUCTURE (what it IS):                           │
+│   ─────────────────────────                         │
+│   1. CENTER (·)    — Where transformation occurs    │
+│   2. BOUNDARY (○)  — What separates inside/outside  │
+│   3. FIELD (Φ)     — What permeates inside & out    │
+│                                                     │
+│   PROCESS (what it DOES):                           │
+│   ─────────────────────────                         │
+│   4. INPUT (≻)     — What flows in                  │
+│   5. OUTPUT (⊰)    — What flows out                 │
+│                                                     │
+└─────────────────────────────────────────────────────┘
 ```
 
-This is not metaphor—it's the actual mathematical relationship between energy and power.
+### 2.2 Why Exactly Five?
 
-**What this means:**
-- Energy exists "outside of time" (stored, static)
-- Power exists "in time" (flowing, dynamic)
-- The aperture connects timeless to temporal
+**Not four:** Without input, the system is isolated and dies.
 
----
+**Not four:** Without output, the system accumulates and explodes.
 
-## Chapter 3 — The Aperture as Transformation
+**Not four:** Without center, there is no locus of transformation.
 
-### 3.1 Definition
+**Not four:** Without boundary, there is no distinction of inside/outside.
 
-**Aperture (Å):** The transformation zone where energy becomes power.
+**Not four:** Without field, there is nothing to flow.
 
-```
-Å: E → P
-Å: 0D → 1D
-Å: d/dt operation
-Å: The center point where transformation occurs
-```
+**Exactly five** because fewer is incomplete, more is redundant.
 
-**In the circumpunct symbol ⊙:**
-- The dot (·) IS the aperture
-- It's where energy (inside) becomes power (radiating outward)
-- It's the center that connects interior to exterior
+### 2.3 The Identity of Structure and Process
 
-### 3.2 Physical Interpretation
-
-The aperture represents:
-
-**In physics:**
-- The point where stored energy begins to flow
-- The source of radiation
-- The origin of a field
-
-**In a battery:**
-- The terminal where chemical energy becomes electrical current
-
-**In a star:**
-- The core where nuclear energy becomes radiating power
-
-**In a system:**
-- The center where potential becomes actual
-
-### 3.3 The Convergence-Emergence Pattern
-
-Energy flows TO the aperture, power flows FROM it:
+These five are not two separate lists. They are **one thing seen two ways**:
 
 ```
-≻ — Convergence (energy gathering toward center)
-Å — Aperture (transformation: E → P = dE/dt)
-⊰ — Emergence (power radiating from center)
-```
-
-**The minimal expression:**
-```
-≻ Å ⊰
-
-Read: "Converge to aperture, emerge as flow"
-```
-
----
-
-# Part II — The Complete Pattern
-
-## Chapter 4 — From Energy to Field: The Full Sequence
-
-### 4.1 The Complete Dimensional Ladder
-
-```
-DIMENSION    PHYSICAL         TRANSFORMATION
-─────────────────────────────────────────────────────
-0D           Energy (E)       Concentrated, scalar
-             │
-             ↓ Å (aperture: d/dt)
-             │
-1D           Power (P)        Flow, vector, string
-             │
-             ↓ Branching (D ≈ 1.5)
-             │
-2D           Surface          Spread, boundary
-             │
-             ↓ Enclosure (D ≈ 2.5)
-             │
-3D           Volume           Complete, field
-             =
-⊙            Circumpunct      Internal + External field
-```
-
-### 4.2 Stage by Stage
-
-**Stage 1: Energy (0D)**
-```
-E = mc²
-
-Pure energy concentrated at a point
-No spatial extension
-Scalar quantity (magnitude only)
-The "source" before any manifestation
-```
-
-**Stage 2: Power Flow (1D)**
-```
-P = dE/dt
-
-Energy flows as power along a path
-1-dimensional string/trajectory
-Vector quantity (magnitude + direction)
-The "current" or "ray" from the source
-```
-
-**Stage 3: Branching (1D → 2D)**
-```
-The power flow branches
-
-One line becomes many
-Like a tree branching, or lightning forking
-Creates a structure between 1D and 2D
-Fractal dimension D ≈ 1.5
-```
-
-**Stage 4: Surface (2D)**
-```
-Branches spread to form surfaces
-
-The branching structure fills out into sheets
-Boundaries and interfaces form
-2-dimensional extent
-```
-
-**Stage 5: Surface Connection (2D → 3D)**
-```
-Surfaces branch and connect
-
-Like soap bubbles joining
-Creates structure between 2D and 3D
-Fractal dimension D ≈ 2.5
-```
-
-**Stage 6: Volume (3D)**
-```
-Surfaces enclose a volume
-
-Complete 3D structure
-Interior and exterior now defined
-Field permeates the volume
-```
-
-### 4.3 The Result: Complete Circumpunct
-
-The final structure is a **circumpunct (⊙)**:
-```
-○ — The boundary (surface enclosing volume)
-· — The center (aperture, source)
-⊙ — Complete whole with internal and external field
-```
-
----
-
-## Chapter 5 — The Circumpunct as Universal Pattern
-
-### 5.1 The Core Insight: Structure AND Process
-
-**The circumpunct (⊙) represents both STRUCTURE and PROCESS simultaneously.**
-
-This is not two things that happen to correlate — they are **one thing seen two ways**.
-
-**AS STRUCTURE (what it IS):**
-```
-⊙ = · + ○ + Φ
-
-·  = Center (aperture, source)
-○  = Boundary (surface, interface)
-Φ  = Field (internal and external)
-```
-
-**AS PROCESS (what it DOES):**
-```
-⊙ = ≻ + Å + ⊰
-
-≻  = Input (convergence, absorption)
-Å  = Transformation (at the center)
-⊰  = Output (emergence, radiation)
-```
-
-**THE IDENTITY:**
-```
-STRUCTURE          =          PROCESS
+STRUCTURE          ≡          PROCESS
 ─────────────────────────────────────────
-Center (·)         =     Transformation (Å)
-Boundary (○)       =     Interface (where ≻ and ⊰ meet)
-Field (Φ)          =     Flow (what ≻ brings in, what ⊰ sends out)
+Center (·)         ≡     Transformation locus
+Boundary (○)       ≡     Exchange interface
+Field (Φ)          ≡     Flow medium
+                   +
+                Input (≻) + Output (⊰)
 ```
 
-**This is why ⊙ is the symbol of everything:**
-- Every THING (structure) is also a PROCESS
-- Every PROCESS (flow) creates STRUCTURE
-- They are identical — two views of one reality
+**A center that doesn't transform is not a center.**
+**A boundary that doesn't exchange is not a boundary.**
+**A field that doesn't flow is not a field.**
 
-### 5.2 The Claim
+Structure without process is dead.
+Process without structure is nothing.
 
-**Every complete system exhibits the circumpunct pattern:**
-
-```
-⊙ = {Center + Boundary + Field} = {Input + Transform + Output}
-     ─────────────────────────   ─────────────────────────────
-           STRUCTURE                      PROCESS
-```
-
-### 5.3 Examples Across Scales
-
-**Every system has STRUCTURE (what it is) and PROCESS (what it does):**
-
-| Scale | STRUCTURE ||| PROCESS |||
-|-------|-----------|----------|--------|---------|------------|--------|
-| | Center (·) | Boundary (○) | Field (Φ) | Input (≻) | Transform (Å) | Output (⊰) |
-|-------|-----------|----------|--------|---------|------------|--------|
-| **Atom** | Nucleus | Electron shell | EM field | Absorb photon | Energy state change | Emit photon |
-| **Cell** | Nucleus | Membrane | Cytoplasm | Nutrients in | Metabolism | Waste out |
-| **Heart** | Valves | Muscle wall | Blood | Diastole (fill) | Contraction | Systole (pump) |
-| **Lung** | Alveoli | Lung tissue | Air/blood | Inhale | Gas exchange | Exhale |
-| **Star** | Core | Photosphere | Radiation | Gravity (in) | Fusion | Light (out) |
-| **Planet** | Core | Crust | Atmosphere | Accretion | Geological process | Radiation |
-| **Galaxy** | Black hole | Disk | Dark matter halo | Matter infall | Orbit/process | Jets/radiation |
-| **Economy** | Banks | Markets | Money flow | Savings | Investment | Spending |
-| **Mind** | Attention | Awareness | Thoughts | Perception | Processing | Action |
-
-### 5.4 The Universal Pattern
-
-**In every case, STRUCTURE and PROCESS are the same thing:**
-
-| STRUCTURE | = | PROCESS |
-|-----------|---|---------|
-| Center exists | ↔ | Transformation happens there |
-| Boundary exists | ↔ | Input/output exchange happens there |
-| Field exists | ↔ | Flow moves through it |
-
-**You cannot have structure without process.** A center that doesn't transform isn't a center.
-
-**You cannot have process without structure.** Transformation that doesn't happen somewhere isn't transformation.
-
-**They are identical:** ⊙
+They are identical: **⊙**
 
 ---
 
-## Chapter 6 — Internal and External Fields
+## Chapter 3 — The Circumpunct as Diagnostic Tool
 
-### 6.1 The Complete Structure
+### 3.1 Prescriptive, Not Just Descriptive
 
-A circumpunct has THREE regions:
+The circumpunct framework does not merely describe systems.
 
-```
-        External Field (Φ_ext)
-              ↑
-    ┌─────────────────────┐
-    │         ○           │  ← Boundary (Surface)
-    │    ┌─────────┐      │
-    │    │    ·    │      │  ← Center (Aperture)
-    │    │  Φ_int  │      │  ← Internal Field
-    │    └─────────┘      │
-    │                     │
-    └─────────────────────┘
-              ↓
-        External Field (Φ_ext)
-```
-
-### 6.2 Field Flow
-
-**The aperture mediates between internal and external:**
+It **prescribes** what must be found:
 
 ```
-E (energy at center)
-    ↓ d/dt
-P (power flows outward)
-    ↓ branches
-S (surfaces form boundary)
-    ↓ encloses
-Φ_int (internal field) ←→ Φ_ext (external field)
+For ANY system you are analyzing:
+
+□ Can you identify the CENTER?
+  → Where does transformation occur?
+
+□ Can you identify the BOUNDARY?
+  → What separates inside from outside?
+
+□ Can you identify the FIELD?
+  → What permeates the interior and exterior?
+
+□ Can you identify the INPUT?
+  → What flows in?
+
+□ Can you identify the OUTPUT?
+  → What flows out?
+
+If you cannot find all five: YOU ARE NOT DONE.
 ```
 
-**Power flows both ways:**
-- Outward: System radiates energy to environment
-- Inward: System absorbs energy from environment
-- Balance (β = 0.5): System in equilibrium
+### 3.2 Diagnostic Examples
 
-### 6.3 The Boundary as Interface
+**Example 1: Atom**
+```
+· Center:    Nucleus
+○ Boundary:  Electron shell
+Φ Field:     Electromagnetic field
+≻ Input:     Absorbed photons, incoming particles
+⊰ Output:    Emitted photons, radiation
 
-The surface (○) is not a barrier but an **interface**:
-- It separates inside from outside
-- It connects inside to outside
-- It's where internal and external fields meet
-- It's where exchange happens
+✓ All five found — analysis complete
+```
+
+**Example 2: Cell**
+```
+· Center:    Nucleus (genetic control)
+○ Boundary:  Cell membrane
+Φ Field:     Cytoplasm
+≻ Input:     Nutrients, signals, oxygen
+⊰ Output:    Waste, signals, products
+
+✓ All five found — analysis complete
+```
+
+**Example 3: Black Hole**
+```
+· Center:    Singularity
+○ Boundary:  Event horizon
+Φ Field:     Gravitational field (interior: unknown, exterior: Schwarzschild)
+≻ Input:     Infalling matter/energy
+⊰ Output:    Hawking radiation, jets
+
+✓ All five found — analysis complete
+```
+
+**Example 4: Incomplete Analysis**
+```
+"An electron is a point particle with charge -e"
+
+· Center:    The point?
+○ Boundary:  ? (point has no boundary)
+Φ Field:     EM field? (but where is "inside"?)
+≻ Input:     ?
+⊰ Output:    ?
+
+✗ Missing components — analysis INCOMPLETE
+```
+
+### 3.3 What This Reveals
+
+When you cannot find all five parameters, either:
+
+1. **The system is not a complete whole** (it's a part of something larger)
+2. **Your analysis is incomplete** (keep looking)
+3. **Your model is inadequate** (need better framework)
+
+The circumpunct forces you to ask: **What am I missing?**
 
 ---
 
-# Part III — Mathematical Structure
+# Part II — The Balance of Whole and Part
 
-## Chapter 7 — Fractional Dimensions and Branching
+## Chapter 4 — Every Whole is Also a Part
 
-### 7.1 Why Fractional Dimensions?
+### 4.1 The Fractal Principle
 
-**The branching process doesn't jump directly from 1D to 2D.**
-
-When a line branches:
-- It's more than a single line (> 1D)
-- It's not yet a filled surface (< 2D)
-- It has dimension between 1 and 2
-
-**This is called fractal dimension.**
-
-### 7.2 Fractal Dimension in Nature
-
-| Structure | Dimension | Description |
-|-----------|-----------|-------------|
-| Straight line | 1.0 | No branching |
-| Koch curve | 1.26 | Simple branching |
-| **Bronchial tree** | **~1.5** | Moderate branching |
-| **Lightning** | **~1.5** | Natural branching |
-| **River networks** | ~1.7 | Extensive branching |
-| Filled surface | 2.0 | Complete coverage |
-
-**Observation:** D ≈ 1.5 appears frequently in natural branching structures.
-
-### 7.3 The Two Transition Zones
-
-**Transition 1: Line → Surface (D ≈ 1.5)**
-```
-1D line → branching → 2D surface
-         (D ≈ 1.5)
-```
-This is where power flow branches into a surface structure.
-
-**Transition 2: Surface → Volume (D ≈ 2.5)**
-```
-2D surface → connection → 3D volume
-            (D ≈ 2.5)
-```
-This is where surfaces connect to enclose a volume.
-
-### 7.4 Honest Statement About D = 1.5
-
-**What we CAN say:**
-- Fractal dimensions between integers are mathematically well-defined
-- D ≈ 1.5 appears in many natural branching structures
-- It represents a "halfway" between line and surface
-
-**What we CANNOT say:**
-- That D = 1.5 is "topologically necessary"
-- That it derives from the Hopf fibration
-- That it determines fundamental constants
-
----
-
-## Chapter 8 — The Balance Principle
-
-### 8.1 The Balance Parameter β
-
-**Definition:** β measures the balance between inward and outward flow:
+Every ⊙ has a dual nature:
 
 ```
-β = (inward flow) / (total flow)
-β ∈ [0, 1]
-
-β = 0:   All flow outward (pure emission)
-β = 0.5: Balanced (inward = outward)
-β = 1:   All flow inward (pure absorption)
+As a WHOLE:                    As a PART:
+─────────────                  ─────────────
+Contains smaller ⊙s            Contained in larger ⊙
+Has its own center             Is part of larger field
+Has its own boundary           Is within larger boundary
+Transforms internally          Contributes to larger process
 ```
 
-### 8.2 Why β = 0.5 is Optimal
+**There is no ultimate whole** (that contains all and is contained by none).
+**There is no ultimate part** (that is contained by all and contains none).
 
-**Mathematical proof (valid):**
+Reality is **wholes within wholes within wholes** — infinitely nested.
 
-**Entropy Maximization:**
-```
-H(β) = -β log β - (1-β) log(1-β)
-
-dH/dβ = -log β + log(1-β) = 0
-∴ β = 0.5
-
-H(0.5) = log(2) = 1 bit (maximum)
-```
-
-**Efficiency Maximization:**
-```
-η(β) = β × (1-β)    (product of in and out)
-
-dη/dβ = 1 - 2β = 0
-∴ β = 0.5
-
-η(0.5) = 0.25 (maximum)
-```
-
-**These are genuine mathematical theorems.**
-
-### 8.3 Physical Interpretation
-
-**At β = 0.5:**
-- System is in dynamic equilibrium
-- Energy in = Energy out (on average)
-- Maximum entropy (least constrained)
-- Maximum efficiency (optimal exchange)
-
-**Deviation from β = 0.5:**
-- β > 0.5: System absorbing (growing)
-- β < 0.5: System emitting (shrinking)
-- Sustained deviation requires external driving
-
-### 8.4 The Deeper Meaning: Half Whole, Half Part
-
-**β = 0.5 also represents the balance between WHOLE and PART.**
-
-Every circumpunct ⊙ is simultaneously:
-- A **WHOLE** unto itself (complete, self-contained)
-- A **PART** of something larger (connected, contributing)
-
-```
-β = 0:    Pure PART    (no self-identity, absorbed into larger system)
-β = 0.5:  WHOLE/PART   (balanced identity and connection)
-β = 1:    Pure WHOLE   (isolated, no connection to larger system)
-```
-
-**This is the fractal principle:**
-```
-Every ⊙ contains smaller ⊙s (it is a WHOLE containing parts)
-Every ⊙ is within larger ⊙s (it is a PART of a whole)
-
-At β = 0.5: Half of its identity comes from BEING a whole
-            Half of its identity comes from BELONGING to a whole
-```
-
-**Examples:**
+### 4.2 Examples of Dual Nature
 
 | System | As WHOLE | As PART |
 |--------|----------|---------|
-| **Cell** | Complete organism with metabolism | Part of tissue/organ |
-| **Person** | Complete individual with identity | Part of family/society |
-| **Planet** | Complete world with ecosystems | Part of solar system |
-| **Atom** | Complete system with electron shells | Part of molecule |
+| Atom | Complete system with nucleus, shells, field | Part of molecule |
+| Cell | Complete organism with metabolism | Part of tissue |
+| Person | Complete individual with identity | Part of family/society |
+| Planet | Complete world with ecosystems | Part of solar system |
+| Galaxy | Complete system with billions of stars | Part of cluster |
 
-**At β = 0.5, the system perfectly balances:**
-- Self-maintenance (being a whole)
-- Contribution/reception (being a part)
+### 4.3 The Question of Identity
 
-**This is why β = 0.5 is optimal:**
-- Too much "whole" (β → 1): Isolation, stagnation, death
-- Too much "part" (β → 0): Dissolution, loss of identity
-- Balance (β = 0.5): Healthy existence as both whole AND part
+If everything is both whole and part, what determines identity?
+
+**Answer:** The **balance** between whole-ness and part-ness.
+
+This balance is captured by the parameter **β**.
 
 ---
 
-## Chapter 9 — The Master Expression
+## Chapter 5 — β = 0.5: Half Whole, Half Part
 
-### 9.1 The Complete Flow
+### 5.1 The Balance Parameter
 
-Putting it all together:
+**Definition:** β measures where a system sits on the whole-part spectrum:
 
 ```
-E ≻ Å ⊰ P → [branch] → S → [enclose] → Φ = ⊙
+β ∈ [0, 1]
+
+β = 0:    Pure PART
+          No self-identity
+          Completely absorbed into larger whole
+          Cannot maintain boundaries
+
+β = 0.5:  BALANCED
+          Half whole, half part
+          Maintains identity AND connects
+          Optimal existence
+
+β = 1:    Pure WHOLE
+          Complete isolation
+          No connection to larger context
+          Cannot exchange
 ```
 
-**Reading:**
+### 5.2 Why β = 0.5 is Optimal
+
+**Mathematical proof:**
+
+**Entropy (information capacity):**
 ```
-Energy (E) converges (≻) to aperture (Å),
-emerges (⊰) as Power (P),
-branches into Surface (S),
-encloses to form Field volume (Φ),
-completing the circumpunct (⊙).
+H(β) = -β log₂(β) - (1-β) log₂(1-β)
+
+Maximum at β = 0.5:
+H(0.5) = -0.5 log₂(0.5) - 0.5 log₂(0.5) = 1 bit
 ```
 
-### 9.2 The Three Apertures (Extended Model)
+**Efficiency (exchange capacity):**
+```
+η(β) = β × (1-β)
 
-If we track the dimensional transitions explicitly:
+Maximum at β = 0.5:
+η(0.5) = 0.5 × 0.5 = 0.25
+```
 
+**Thermodynamic interpretation:**
+```
+At β = 0.5:
+- Input = Output (dynamic equilibrium)
+- Energy in = Energy out (steady state)
+- Maximum entropy (least constrained)
+```
+
+### 5.3 Physical Meaning
+
+```
+β < 0.5:  System is dissolving into environment
+          Losing identity
+          Becoming pure part
+          → Death by dissolution
+
+β = 0.5:  System is balanced
+          Maintaining identity while connecting
+          Being both whole AND part
+          → Healthy existence
+
+β > 0.5:  System is isolating from environment
+          Cutting off exchange
+          Becoming pure whole
+          → Death by stagnation
+```
+
+### 5.4 The Profound Implication
+
+**At β = 0.5:**
+- Half of your identity comes from **being** a whole
+- Half of your identity comes from **belonging** to a whole
+
+You are neither purely yourself nor purely part of something else.
+
+You are **both, equally**.
+
+This is the mathematics of healthy existence.
+
+---
+
+## Chapter 6 — Entanglement as Shared Wholeness
+
+### 6.1 The Standard Puzzle
+
+**Quantum entanglement:**
+```
+Two particles A and B, spatially separated.
+Measure A → instantly know B's state.
+No signal passes between them.
+"Spooky action at a distance" — Einstein
+```
+
+**The mystery:** How can separated particles be correlated without communication?
+
+### 6.2 The Mereological Resolution
+
+**Standard view:**
+```
+A and B are SEPARATE PARTS that are mysteriously CONNECTED.
+
+    A ←---?---→ B
+       (how?)
+```
+
+**Circumpunct view:**
+```
+A and B are PARTS of the SAME WHOLE that appear separate.
+
+        ⊙ (the whole)
+       / \
+      A   B
+
+A and B were never separate.
+"Connection" is not needed because separation never occurred.
+```
+
+### 6.3 What This Explains
+
+| Quantum Mystery | Mereological Explanation |
+|-----------------|-------------------------|
+| Why instant correlation? | No signal needed — same whole expressing itself |
+| Why no information transfer? | Parts don't "send" to themselves |
+| Why measurement "breaks" entanglement? | Measurement forces individuation (increases separation) |
+| Why entanglement is fragile? | Environmental interaction → becoming separate wholes |
+| Why maximum entanglement at β=0.5? | Perfect balance of whole-part = maximum correlation |
+
+### 6.4 Prediction
+
+**If entanglement = shared wholeness, then:**
+
+1. **Entanglement strength** should correlate with degree of "shared whole-ness"
+2. **Decoherence** = process of parts becoming separate wholes
+3. **Maximum entanglement** = β = 0.5 for the shared whole
+4. **Zero entanglement** = β → 0 or β → 1 (pure part or pure whole)
+
+**Testable:** Is there a measurable correlate of "wholeness" that predicts entanglement strength?
+
+### 6.5 Philosophical Implication
+
+The question changes from:
+> "How do separate things become connected?"
+
+To:
+> "How does one whole appear as separate parts?"
+
+**Separation, not connection, is the mystery.**
+
+---
+
+# Part III — Physical Grounding
+
+## Chapter 7 — Energy, Power, and Dimensional Flow
+
+### 7.1 Physical Foundation
+
+The framework is grounded in established physics:
+
+```
+E = mc²        (Energy — established)
+P = dE/dt      (Power — definition)
+```
+
+### 7.2 Dimensional Interpretation
+
+**Energy (E):** 0-dimensional
+```
+- Concentrated at a point (in the limit)
+- Scalar (no direction)
+- "Stored" potential
+- The CENTER of a whole
+```
+
+**Power (P):** 1-dimensional
+```
+- Flows along a path
+- Vector (has direction)
+- "Moving" energy
+- The FLOW through a whole
+```
+
+**Surface (S):** 2-dimensional
+```
+- Spreads across area
+- Creates boundaries
+- The BOUNDARY of a whole
+```
+
+**Field (Φ):** 3-dimensional
+```
+- Fills volume
+- Permeates space
+- The FIELD of a whole
+```
+
+### 7.3 The Dimensional Ladder
+
+```
+0D: E (Energy)          — Center, source, potential
+    ↓ Å = d/dt
+1D: P (Power)           — Flow, current, string
+    ↓ Branching (D ≈ 1.5)
+2D: S (Surface)         — Boundary, interface, membrane
+    ↓ Enclosure (D ≈ 2.5)
+3D: Φ (Field)           — Volume, field, whole
+    = ⊙ (Circumpunct)
+```
+
+### 7.4 Why This Sequence?
+
+**Geometric necessity:**
+- Cannot have surface without lines (surfaces are bounded by curves)
+- Cannot have volume without surfaces (volumes are bounded by surfaces)
+- Cannot have field without boundary (no inside/outside distinction)
+
+**Physical necessity:**
+- Energy must flow to do anything (E → P)
+- Flow must spread to fill space (P → S)
+- Spread must enclose to create identity (S → Φ)
+
+---
+
+## Chapter 8 — The Aperture as Transformation
+
+### 8.1 Definition
+
+**Aperture (Å):** The locus of transformation — where one becomes another.
+
+```
+Å = d/dt    (The aperture IS the time derivative operator)
+```
+
+In the circumpunct symbol ⊙:
+- The dot (·) is the aperture
+- It's where energy becomes power
+- It's where potential becomes actual
+- It's where inside meets outside
+
+### 8.2 The Three Apertures
+
+The dimensional ladder involves three transformations:
+
+```
+Å₀.₅:  0D → 1D    Energy → Power       (d/dt operation)
+Å₁.₅:  1D → 2D    Power → Surface      (branching)
+Å₂.₅:  2D → 3D    Surface → Volume     (enclosure)
+```
+
+**Full expression:**
 ```
 E ≻ Å₀.₅ ⊰ P ≻ Å₁.₅ ⊰ S ≻ Å₂.₅ ⊰ Φ = ⊙
-
-Where:
-E     = Energy (0D)
-Å₀.₅  = First aperture (0D → 1D transformation)
-P     = Power (1D)
-Å₁.₅  = Second aperture (branching, D ≈ 1.5)
-S     = Surface (2D)
-Å₂.₅  = Third aperture (enclosure, D ≈ 2.5)
-Φ     = Field (3D)
-⊙     = Complete circumpunct
 ```
 
-### 9.3 Symbolic Summary
+### 8.3 Fractal Dimensions in Transitions
+
+The transitions don't jump between integers:
+
+| Transition | From | To | Intermediate D |
+|------------|------|-----|----------------|
+| Branching | 1D (line) | 2D (surface) | D ≈ 1.5 |
+| Enclosure | 2D (surface) | 3D (volume) | D ≈ 2.5 |
+
+**Observation:** D ≈ 1.5 appears in many natural systems:
+- Bronchial trees: D ≈ 1.5
+- Lightning: D ≈ 1.5
+- River networks: D ≈ 1.5-1.7
+- Coastlines: D ≈ 1.2-1.4
+
+---
+
+## Chapter 9 — Fractal Nesting: Wholes Within Wholes
+
+### 9.1 The Recursive Structure
+
+Every ⊙ contains smaller ⊙s:
 
 ```
-⊙ = ○ + · + Φ
-
-Where:
-·  = Aperture (center, transformation point)
-○  = Boundary (surface, interface)
-Φ  = Field (internal and external)
-⊙  = Wholeness (complete system)
+          ⊙ (universe)
+         /|\
+        ⊙ ⊙ ⊙ (galaxies)
+       /|\
+      ⊙ ⊙ ⊙ (stars)
+     /|\
+    ⊙ ⊙ ⊙ (atoms)
+   /|\
+  ⊙ ⊙ ⊙ (quarks?)
+  ...
 ```
+
+At every level:
+- Same five parameters (center, boundary, field, input, output)
+- Same balance principle (β = 0.5 optimal)
+- Same structure-process identity
+
+### 9.2 Scale Invariance
+
+The circumpunct pattern is **scale-invariant**:
+
+| Scale | Example | Center | Boundary | Field | Input | Output |
+|-------|---------|--------|----------|-------|-------|--------|
+| 10⁻¹⁵ m | Nucleus | Dense core | Nuclear surface | Strong field | Particles | Radiation |
+| 10⁻¹⁰ m | Atom | Nucleus | Electron shell | EM field | Photons | Photons |
+| 10⁻⁵ m | Cell | Nucleus | Membrane | Cytoplasm | Nutrients | Waste |
+| 10⁰ m | Human | Brain/heart | Skin | Body | Food/air | Actions |
+| 10⁷ m | Planet | Core | Crust | Atmosphere | Sunlight | Radiation |
+| 10²¹ m | Galaxy | Black hole | Disk edge | Halo | Matter | Jets |
+
+**Same pattern, 36 orders of magnitude.**
+
+### 9.3 The Self-Similarity Principle
+
+Each level recapitulates the pattern of every other level.
+
+Not because they are "made of the same stuff."
+But because they are **wholes** — and all wholes have the same minimal structure.
 
 ---
 
 # Part IV — Honest Assessment
 
-## Chapter 10 — What We Can Claim
+## Chapter 10 — What the Framework Claims
 
-### 10.1 Established Physics (Solid)
+### 10.1 Strong Claims (Defended)
 
-✓ **E = mc²** — Energy-mass equivalence (Einstein, verified)
+**✓ Every complete system has exactly five parameters:**
+- Center, Boundary, Field (structure)
+- Input, Output (process)
+- If you can't find all five, your analysis is incomplete
 
-✓ **P = dE/dt** — Power is rate of energy change (definition)
+**✓ Structure and Process are identical:**
+- A center is a transformation locus
+- A boundary is an exchange interface
+- A field is a flow medium
 
-✓ **Dimensional progression** — 0D→1D→2D→3D is geometrically coherent
+**✓ β = 0.5 is mathematically optimal:**
+- Maximizes entropy (proven)
+- Maximizes exchange efficiency (proven)
+- Represents balance of whole and part
 
-✓ **Fractal dimensions** — Well-defined mathematically (Hausdorff)
+**✓ The pattern is scale-invariant:**
+- Same structure from atoms to galaxies (observed)
+- Fractal nesting of wholes within wholes
 
-✓ **D ≈ 1.5 in nature** — Observed in bronchial trees, lightning, etc.
+### 10.2 Moderate Claims (Supported but not proven)
 
-✓ **β = 0.5 optimal** — Maximizes entropy and efficiency (proven)
+**? Wholeness is ontologically primary:**
+- Philosophical claim with physical support
+- Explains entanglement naturally
+- Not directly testable
 
-### 10.2 Reasonable Claims (Defensible)
+**? Entanglement = shared wholeness:**
+- Explains known phenomena
+- Makes predictions (testable in principle)
+- Not yet experimentally verified
 
-✓ **Aperture as d/dt** — The transformation E→P is differentiation
+**? D ≈ 1.5 is significant:**
+- Observed in many systems
+- May indicate universal branching dynamics
+- Not derived from first principles
 
-✓ **Branching creates intermediate dimensions** — Mathematical fact
+### 10.3 Grounding in Established Physics
 
-✓ **Systems have center + boundary + field** — Observational
-
-✓ **Circumpunct as universal pattern** — Appears across scales
-
-### 10.3 Interesting Conjectures (Not Proven)
-
-? **Three apertures map to three particle generations** — Suggestive
-
-? **64 states from aperture bits** — Numerologically interesting
-
-? **β oscillation relates to quantum mechanics** — Speculative
-
----
-
-## Chapter 11 — What We Cannot Claim
-
-### 11.1 Previous Claims Removed
-
-❌ **α = 1/137 from geometry** — The calculation was wrong
-
-❌ **D = 1.5 is topologically necessary** — Not proven
-
-❌ **Zero free parameters** — Framework has choices
-
-❌ **Mass ratios predicted** — Failed by factors of 100×
-
-❌ **Millennium Prize solutions** — Not rigorous proofs
-
-❌ **String theory emergence** — Speculation, not derivation
-
-### 11.2 Limitations We Acknowledge
-
-- Cannot derive Standard Model from this framework
-- Cannot predict specific particle masses
-- Cannot explain why 3 spatial dimensions
-- Cannot solve quantum measurement problem
-- Cannot derive consciousness from physics
+**✓ E = mc²** — Einstein, verified
+**✓ P = dE/dt** — Definition of power
+**✓ Fractal dimension** — Hausdorff, well-defined
+**✓ Entropy optimization** — Shannon, rigorous
 
 ---
 
-## Chapter 12 — Open Questions and Future Directions
+## Chapter 11 — What the Framework Does Not Claim
 
-### 12.1 Questions This Framework Raises
+### 11.1 Removed from Previous Versions
 
-1. **Why does D ≈ 1.5 appear in branching structures?**
-   - Is there a deeper reason, or just geometry?
+**❌ α = 1/137 derived from geometry** — Calculation was wrong
+**❌ D = 1.5 is topologically necessary** — Not proven
+**❌ Zero free parameters** — Framework has choices
+**❌ Particle masses predicted** — Failed by 100×
+**❌ Schrödinger equation derived from apertures** — Standard physics
+**❌ Cosmological constant predicted** — Curve-fitting
 
-2. **Can aperture operators be made rigorous?**
-   - Define Å as a proper mathematical operator
+### 11.2 Explicit Limitations
 
-3. **Does the E→P→S→Φ sequence relate to physics?**
-   - Could this connect to field theory formalism?
+The framework **does not**:
+- Replace the Standard Model
+- Predict specific constants
+- Solve the measurement problem
+- Derive consciousness from physics
+- Prove anything about quantum gravity
 
-4. **What determines the number of apertures?**
-   - Why three? Is this connected to 3D space?
+### 11.3 Epistemic Honesty
 
-### 12.2 Research Directions
-
-**Direction 1: Formalize the Operators**
-- Define Å₀.₅, Å₁.₅, Å₂.₅ as operators on function spaces
-- Determine their algebraic properties
-
-**Direction 2: Connect to Field Theory**
-- Does E→P→S→Φ map to any QFT structure?
-- Is there a Lagrangian formulation?
-
-**Direction 3: Explore Fractal Transitions**
-- Why do branching structures have D ≈ 1.5?
-- Is there universality in dimensional transitions?
-
-**Direction 4: Test the Pattern Empirically**
-- Measure fractal dimensions of more systems
-- Look for β ≈ 0.5 in physical equilibria
+**What we know:** The pattern is universal.
+**What we don't know:** Why this pattern and not another.
+**What we claim:** This is a useful diagnostic framework.
+**What we don't claim:** This is a complete theory of everything.
 
 ---
 
-## Conclusion: The Core Framework
+## Chapter 12 — Open Questions
 
-**The Honest Core:**
+### 12.1 Foundational Questions
 
-1. **Energy (E)** concentrates at a point (0D)
+1. **Why these five parameters and not others?**
+   - Is there a derivation from deeper principles?
+   - Or is this the rock-bottom structure of "wholeness"?
 
-2. **The aperture** transforms E → P = dE/dt
+2. **What makes something a "complete whole"?**
+   - Are there partial wholes?
+   - What distinguishes whole from part?
 
-3. **Power (P)** flows as a 1D string
+3. **Why is β = 0.5 optimal in nature, not just mathematics?**
+   - Is there a physical selection mechanism?
+   - Do systems evolve toward β = 0.5?
 
-4. **Branching** (D ≈ 1.5) spreads power into surfaces
+### 12.2 Physical Questions
 
-5. **Surfaces (2D)** connect and enclose
+4. **Can "shared wholeness" be measured?**
+   - Is there a physical correlate?
+   - Would this predict entanglement strength?
 
-6. **Enclosure** (D ≈ 2.5) creates volume with field
+5. **Why does D ≈ 1.5 appear in branching structures?**
+   - Is there a universal branching law?
+   - Does this connect to the framework?
 
-7. **The result** is a complete circumpunct ⊙:
-   - Center (aperture)
-   - Boundary (surface)
-   - Fields (internal and external)
+6. **How do wholes differentiate into parts?**
+   - What is the physical mechanism?
+   - When does separation occur?
 
-**The Symbol:**
+### 12.3 Research Directions
+
+**Direction 1:** Formalize "wholeness" mathematically
+- Category theory? Mereology? Topology?
+- Define the five parameters rigorously
+
+**Direction 2:** Test entanglement-wholeness connection
+- Design experiments measuring "degree of wholeness"
+- Correlate with entanglement measures
+
+**Direction 3:** Investigate β dynamics
+- Do systems evolve toward β = 0.5?
+- What drives deviation from balance?
+
+**Direction 4:** Explore fractal nesting
+- How many levels of nesting?
+- Is there a minimum or maximum scale?
+
+---
+
+## Conclusion: The Core of the Framework
+
+### The Fundamental Claim
+
+**Wholeness is primary. Parts emerge from wholes.**
+
+The circumpunct ⊙ is the minimal structure of any whole:
+
 ```
-⊙ = E ≻ Å ⊰ Φ
-
-Energy through Aperture to Field equals Wholeness
+⊙ = {Center + Boundary + Field} ≡ {Input + Transform + Output}
+         STRUCTURE                        PROCESS
 ```
 
-**This pattern appears at every scale** — from atoms to galaxies.
+### The Five Necessary Parameters
 
-**What this IS:** A coherent framework connecting energy, power, and structure through dimensional transformation.
+Every complete system **must** have:
+1. **Center (·)** — Where transformation occurs
+2. **Boundary (○)** — What separates inside/outside
+3. **Field (Φ)** — What permeates the system
+4. **Input (≻)** — What flows in
+5. **Output (⊰)** — What flows out
 
-**What this is NOT:** A complete physics theory that derives constants or replaces the Standard Model.
+**If you cannot find all five, you are not done analyzing.**
+
+### The Balance Principle
+
+**β = 0.5: Half whole, half part**
+
+Every ⊙ is simultaneously:
+- A whole unto itself
+- A part of something larger
+
+Optimal existence is balance between these.
+
+### The Mereological Insight
+
+**Entanglement is not mysterious connection.**
+**It is incomplete separation.**
+
+Parts of the same whole don't need to "communicate."
+They were never apart.
 
 ---
 
-## Appendix A: Key Equations
+## Appendix A: The Five Parameters Reference
 
-| Equation | Status | Meaning |
-|----------|--------|---------|
-| E = mc² | Established | Energy-mass equivalence |
-| P = dE/dt | Definition | Power is energy rate |
-| H(β) max at β=0.5 | Theorem | Entropy maximized at balance |
-| D_branch ≈ 1.5 | Observation | Typical branching dimension |
-| ⊙ = E≻Å⊰Φ | Framework | Symbolic expression |
+| Parameter | Symbol | Structure View | Process View |
+|-----------|--------|---------------|--------------|
+| Center | · | Transformation locus | Where change happens |
+| Boundary | ○ | Inside/outside divide | Exchange interface |
+| Field | Φ | Permeating medium | Flow substrate |
+| Input | ≻ | — | Convergent flow |
+| Output | ⊰ | — | Emergent flow |
 
 ---
 
@@ -816,38 +813,51 @@ Energy through Aperture to Field equals Wholeness
 
 | Symbol | Meaning |
 |--------|---------|
-| E | Energy (0D) |
-| P | Power = dE/dt (1D) |
-| S | Surface (2D) |
-| Φ | Field (3D) |
-| Å | Aperture (transformation zone) |
-| ≻ | Convergence (inward) |
-| ⊰ | Emergence (outward) |
-| ⊙ | Circumpunct (wholeness) |
+| ⊙ | Circumpunct — wholeness |
+| · | Center / aperture |
+| ○ | Boundary / surface |
+| Φ | Field |
+| ≻ | Convergence / input |
+| ⊰ | Emergence / output |
+| Å | Aperture operator (= d/dt) |
 | β | Balance parameter ∈ [0,1] |
+| E | Energy (0D) |
+| P | Power (1D) |
+| S | Surface (2D) |
 | D | Dimension |
 
 ---
 
-## Appendix C: What Changed from V3
+## Appendix C: Key Equations
 
-| V3 Claim | V4 Status | Reason |
-|----------|-----------|--------|
-| α derived | Removed | Math error |
-| D=1.5 necessary | Removed | Not proven |
-| Zero parameters | Removed | False |
-| Mass predictions | Removed | 100× error |
-| E as "potential" | Clarified | E = mc² (actual physics) |
-| P as "validation" | Clarified | P = dE/dt (actual physics) |
-| Aperture metaphor | Clarified | Å = d/dt operation |
+| Equation | Status | Meaning |
+|----------|--------|---------|
+| E = mc² | Established | Energy-mass equivalence |
+| P = dE/dt | Definition | Power is energy rate |
+| H(β) max at β=0.5 | Theorem | Entropy maximized at balance |
+| η(β) max at β=0.5 | Theorem | Efficiency maximized at balance |
+| ⊙ = E≻Å⊰Φ | Framework | Symbolic expression of wholeness |
 
 ---
 
-*"Start with what you know for certain. Build from there. Acknowledge what you don't know."*
+## Appendix D: Version History
+
+| Version | Status | Key Changes |
+|---------|--------|-------------|
+| V1 | Deprecated | Overclaimed, math errors |
+| V2 | Deprecated | Attempted fixes, still issues |
+| V3 | Deprecated | More errors identified |
+| V4.0 | Previous | Honest rebuild, physics-first |
+| **V4.1** | **Current** | **Wholeness-first, mereological foundation** |
 
 ---
 
-**Version:** 4.0
-**Foundation:** E=mc², P=dE/dt
-**Status:** Honest framework grounded in real physics
-**Next:** Rigorous mathematical formalization
+*"Every whole contains parts. Every part belongs to wholes. The wisdom is in finding the balance."*
+
+---
+
+**Version:** 4.1
+**Foundation:** Mereology (whole-part relations), established physics
+**Key Insight:** Wholeness is primary; separation needs explaining, not connection
+**Status:** Framework for understanding systems as wholes
+
