@@ -8,6 +8,20 @@
 **Status:** Physical Framework Grounded in E=mc² and P=dE/dt
 
 ---
+```
+⊙ = Y(λF. Å∘F)                    — Wholeness is the fixed point of transformation
+Å = Å₂.₅ ∘ Å₁.₅ ∘ Å₀.₅            — Three apertures compose
+⊙ = E ≻ Å₀.₅ ⊰ P ≻ Å₁.₅ ⊰ S ≻ Å₂.₅ ⊰ Φ   — Energy → Power → Surface → Field
+⟨β⟩ = ½                           — Balance between whole and part
+
+Where:
+- ≻ = convergence (input)
+- ⊰ = emergence (output)  
+- β = balance parameter (half whole, half part)
+- Å₀.₅ = d/dt transformation (E→P)
+- Å₁.₅ = branching (P→S, D≈1.5)
+- Å₂.₅ = enclosure (S→Φ, D≈2.5)
+```
 
 ## Preface: Starting from Real Physics
 
