@@ -14,6 +14,8 @@ Wholeness = recursive flow through 3 fractal apertures; 64 states = 2^6; all phy
 
 **📐 [Mathematical Companion →](The_Circumpunct_Theory_v3_Math_Companion.md)** — *Rigorous derivations, formal proofs, and complete mathematical foundations*
 
+The V3 documents represent my mathematical and philosophical learning. Not everything claimed to be true here is true. The ideas are genuine and may lead you to inspirations. Please take it all with a grain of salt. I am working on v4 right now, which removes all of the unsubstantiated claims made in v3.
+
 ---
 
 ## Abstract
@@ -4051,6 +4053,7 @@ This is reality.
 ---
 
 **[← Back to Circumpunct README](README.md)** | **[Full Technical Version →](The_Circumpunct_Theory.md)** | **[Story Version →](The_Story_of_Everything.md)**
+
 
 
 
