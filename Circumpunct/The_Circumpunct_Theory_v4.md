@@ -923,14 +923,15 @@ From 3D perspective:  Surface = part of Å (aspect of higher aperture)
 
 The "infinite apertures" is how the one aperture **looks** when you zoom in. Like a hologram — each part contains the whole, at different resolution.
 
-### 8.6 All Apertures Process as One
+### 8.6 Many Apertures, Phase-Locked as One
 
 This resolves a fundamental question: how do nested systems maintain coherence?
 
 **Example: The human body**
 ```
 37 trillion cells, each with its own ⊙
-How do they synchronize to produce ONE experience?
+Each cell has its own COMPLETE aperture
+How do they produce ONE coherent experience?
 ```
 
 **Old framing (parts-first):**
@@ -939,23 +940,37 @@ How do they synchronize to produce ONE experience?
 - Synchronization requires coordination between parts
 
 **New framing (wholeness-first):**
-- There is ONE aperture, fractally distributed
-- Each cell's Å IS the body's Å at cellular resolution
-- No synchronization needed — it was never separate
+- Each cell has its own COMPLETE aperture (not a fragment)
+- All apertures share the same PATTERN (0.5D transformation)
+- Coherence through PHASE-LOCKING, not hierarchy
 
+**Both framings are true:**
 ```
-Not:  Cell Å → Organ Å → Body Å → Experience
-           (sequential handoff)
+Parts-first:   Cells communicate (what it looks like from inside)
+Wholeness-first: Apertures phase-lock (what it IS)
 
-But:  ┌─────────────────────┐
-      │  Cell Å             │
-      │      Organ Å        │  ═══►  ONE experience
-      │          Body Å     │
-      └─────────────────────┘
-         (simultaneous, one process)
+The communication IS the phase-locking.
+The signals ARE how phase-lock feels from the cell's perspective.
 ```
 
-**The binding problem dissolves.** The question "how do many processes become one experience?" assumes the processes were ever separate. They weren't. One aperture, appearing as many at finer scales, always processing as one whole.
+```
+Not:  One aperture appearing as many
+      (denies the reality of each cell's wholeness)
+
+Not:  Many separate apertures coordinating
+      (makes coherence mysterious)
+
+But:  Many complete apertures, phase-locked into one coherent process
+      (each is real AND they resonate as one)
+```
+
+**The binding problem reframes.** The question isn't "how do many become one?" (they don't — each stays itself). The question is "how do many stay in phase?" Answer: same pattern (Å), same language, natural resonance.
+
+Like musicians in an orchestra:
+- Each plays their own instrument (complete, not a fragment)
+- All follow the same score (shared pattern)
+- Coherence through phase-locking (playing together)
+- The music is ONE, the musicians are MANY
 
 ### 8.7 Holographic Structure
 
