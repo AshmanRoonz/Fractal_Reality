@@ -1275,15 +1275,6 @@ This holographic structure explains why:
 
 ## Chapter 11 — What the Framework Does Not Claim
 
-### 11.1 Removed from Previous Versions
-
-**❌ α = 1/137 derived from geometry** — Calculation was wrong
-**❌ D = 1.5 is topologically necessary** — Not proven
-**❌ Zero free parameters** — Framework has choices
-**❌ Particle masses predicted** — Failed by 100×
-**❌ Schrödinger equation derived from apertures** — Standard physics
-**❌ Cosmological constant predicted** — Curve-fitting
-
 ### 11.2 Explicit Limitations
 
 The framework **does not**:
