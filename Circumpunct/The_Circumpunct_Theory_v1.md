@@ -1,3 +1,6 @@
+Version 4 available here:
+https://github.com/AshmanRoonz/Fractal_Reality/blob/main/Circumpunct/The_Circumpunct_Theory_v4.md
+
 # The Circumpunct Theory: Complete Formalization
 ## E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ and the Dynamic Optimization Principle
 ```
