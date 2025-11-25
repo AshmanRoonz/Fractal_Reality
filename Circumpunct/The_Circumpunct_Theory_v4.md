@@ -57,6 +57,13 @@ This is not description. It is **diagnosis**.
 11. [What the Framework Does Not Claim](#chapter-11--what-the-framework-does-not-claim)
 12. [Open Questions](#chapter-12--open-questions)
 
+### Part V — Mathematical Explorations
+13. [Dimensional Analysis: The Aperture as Operator](#chapter-13--dimensional-analysis-the-aperture-as-operator)
+14. [String Theory Connections](#chapter-14--string-theory-connections)
+15. [The Quantum ½](#chapter-15--the-quantum-½)
+16. [Connecting the Equations](#chapter-16--connecting-the-equations)
+17. [Open Mathematical Questions](#chapter-17--open-mathematical-questions)
+
 ---
 
 # Part I — The Mereological Foundation
@@ -1331,6 +1338,345 @@ Optimal existence is balance between these.
 
 Parts of the same whole don't need to "communicate."
 They were never apart.
+
+---
+
+# Part V — Mathematical Explorations
+
+*This section explores how existing physics mathematics might connect through the Circumpunct lens. These are hypotheses for investigation, not proven results.*
+
+## Chapter 13 — Dimensional Analysis: The Aperture as Operator
+
+### 13.1 Units Across the Dimensional Ladder
+
+Each level has distinct physical units:
+
+```
+E (Energy):     [M L² T⁻²]     — mass × length² / time²
+P (Power):      [M L² T⁻³]     — energy / time
+S (Surface):    [L²]           — length²
+Φ (Field):      [varies]       — depends on field type
+```
+
+**The E → P transition:**
+```
+P = dE/dt
+
+Units: [M L² T⁻³] = [M L² T⁻²] × [T⁻¹]
+
+The aperture (Å = d/dt) adds [T⁻¹] — one time dimension.
+```
+
+This is established physics: power IS the time derivative of energy.
+
+### 13.2 What Does Å Do at Each Level?
+
+If Å = d/dt at the E→P transition, what is it at other transitions?
+
+**Hypothesis:**
+```
+E → P:   Å = d/dt         (time derivative)
+P → S:   Å = d/dx         (space derivative — spreading)
+S → Φ:   Å = ∫dA          (integration — enclosing)
+```
+
+Or perhaps Å is always the same operator, appearing differently at each level:
+
+```
+At 0D:  Å operating on a point → creates flow (line)
+At 1D:  Å operating on a line → creates spread (surface)
+At 2D:  Å operating on a surface → creates volume (field)
+```
+
+**The pattern:** Å always adds the next dimension by transforming the current structure.
+
+### 13.3 The Half-Dimension as Transition State
+
+Why 0.5D? Consider:
+
+```
+Integer dimensions:    0D, 1D, 2D, 3D     (stable states)
+Half-dimensions:       0.5D, 1.5D, 2.5D   (transitions)
+```
+
+The 0.5D is not a place — it's a *passage*. Like:
+- A doorway is not a room
+- A derivative is not a value
+- A transformation is not a state
+
+**Mathematical analogy:**
+```
+In calculus:
+- f(x) is the function (state)
+- df/dx is the derivative (transition)
+
+In Circumpunct:
+- nD is the dimension (state)
+- Å is the aperture (transition)
+- (n + 0.5)D is the transition appearing as dimension
+```
+
+## Chapter 14 — String Theory Connections
+
+### 14.1 String Tension and the Dimensional Ladder
+
+In string theory, strings have tension T with units:
+```
+T (string tension) = [M T⁻²] = energy / length
+```
+
+**Key relationship:**
+```
+T × L = E        (tension × length = energy)
+T = E / L        (tension = energy per unit length)
+T = P / v        (tension = power / velocity)
+```
+
+The string tension is literally **power density along the string**.
+
+### 14.2 The String Worldsheet
+
+In string theory, a string sweeps out a 2D "worldsheet" as it moves through time:
+
+```
+String (1D) × Time (1D) = Worldsheet (2D)
+     P      ×    T      =      S
+```
+
+This IS the P → S transition!
+
+The worldsheet action in string theory:
+```
+S = -T ∫ dτ dσ     (tension × worldsheet area)
+```
+
+In Circumpunct terms:
+```
+S (action) = P (power/tension) × S (surface/worldsheet)
+```
+
+The string theory action already encodes P × S.
+
+### 14.3 Vibration Modes as Individuation
+
+String theory says: different vibration modes → different particles.
+
+Circumpunct says: individuation happens at P (the vibe).
+
+**These are the same insight:**
+```
+String theory:    Vibration pattern determines particle identity
+Circumpunct:      Power flow pattern determines individual identity
+
+Vibration = oscillating power flow = the "vibe"
+```
+
+The math of string vibration modes IS the math of individuation.
+
+## Chapter 15 — The Quantum ½
+
+### 15.1 Where ½ Appears in Physics
+
+The number ½ appears throughout quantum mechanics:
+
+```
+Zero-point energy:        E = ½ℏω
+Spin-½ particles:         Fermions (electrons, quarks)
+Uncertainty principle:    ΔxΔp ≥ ½ℏ
+Quantum harmonic osc.:    E_n = (n + ½)ℏω
+```
+
+**Question:** Is β = 0.5 connected to these quantum ½s?
+
+### 15.2 The Ground State
+
+The quantum harmonic oscillator has energy:
+```
+E_n = (n + ½)ℏω
+
+Ground state (n = 0):  E₀ = ½ℏω
+```
+
+Even at absolute zero, there is half a quantum of energy. The system cannot be purely at rest — it must vibrate.
+
+**Circumpunct interpretation:**
+```
+β = 0 would be: pure part, no self-existence
+β = 1 would be: pure whole, no connection
+
+But β = 0.5 is: half whole, half part
+             = cannot be purely either
+             = minimum "vibration" between states
+```
+
+Zero-point energy might BE the β = 0.5 principle at the quantum level.
+
+### 15.3 Spin-½ and the Aperture
+
+Fermions (electrons, quarks) have spin ½. They require a 720° rotation to return to their original state.
+
+```
+Spin 0:    0° rotation returns to original
+Spin 1:    360° rotation returns to original
+Spin ½:    720° rotation returns to original
+```
+
+**Hypothesis:** Spin-½ particles might be "aperture-like" — they exist in transition, requiring double rotation because they're always half-transformed.
+
+```
+Spin ½ = particle that IS a transition
+       = matter that IS transformation
+       = structure that IS process
+```
+
+This would explain why fermions (spin ½) make up matter, while bosons (integer spin) carry forces.
+
+## Chapter 16 — Connecting the Equations
+
+### 16.1 The Master Equation Hypothesis
+
+What if there's an equation connecting all levels?
+
+```
+⊙ = E ≻ Å ⊰ P ≻ Å ⊰ S ≻ Å ⊰ Φ
+```
+
+In terms of operators:
+```
+Φ = Å(S) = Å(Å(P)) = Å(Å(Å(E))) = Å³(E)
+```
+
+If Å has a mathematical form, then:
+```
+Φ = Å³(E)     — The field is three apertures applied to energy
+```
+
+### 16.2 What is Å Mathematically?
+
+Candidates:
+```
+Å = d/dt              (time derivative)
+Å = ∂/∂x^μ            (spacetime derivative)
+Å = exp(iHt/ℏ)        (quantum evolution operator)
+Å = √(d/dt)           (half-derivative — fractional calculus!)
+```
+
+**The fractional calculus connection:**
+
+In fractional calculus, you can take half-derivatives:
+```
+d^(0.5)/dx^(0.5)     — the half-derivative operator
+```
+
+What if:
+```
+Å = d^(0.5)          — the aperture IS the half-derivative
+```
+
+This would explain why Å is 0.5D — it literally IS a half-dimensional operator.
+
+### 16.3 Testable Implications
+
+If these connections are real:
+
+1. **String tension should relate to power density:**
+   ```
+   T = P/L = (dE/dt)/L
+   ```
+   Check: Does string theory math support this?
+
+2. **Worldsheet area should relate to surface energy:**
+   ```
+   S_action = ∫T dA
+   ```
+   Check: Is this the actual string action?
+
+3. **Zero-point energy should encode β = 0.5:**
+   ```
+   E₀ = ½ℏω = β × ℏω
+   ```
+   Check: Can we derive β from quantum mechanics?
+
+4. **Fractional derivatives should appear in transitions:**
+   ```
+   P = d^(0.5)(E)? or P = d/dt(E)?
+   ```
+   Check: What does dimensional analysis say?
+
+## Chapter 17 — Open Mathematical Questions
+
+### 17.1 Questions for Investigation
+
+1. **Is the aperture a fractional derivative?**
+   - Fractional calculus is well-developed
+   - Could Å = d^(0.5) unify the transitions?
+
+2. **Does β = 0.5 derive from quantum mechanics?**
+   - Zero-point energy has ½
+   - Is this the physical basis for β?
+
+3. **Can we write Φ = f(E) explicitly?**
+   - If Å is known, Φ = Å³(E)
+   - What function connects field to energy?
+
+4. **How does string tension encode individuation?**
+   - Different tensions = different strings?
+   - Or same tension, different vibrations?
+
+5. **What is c² in terms of apertures?**
+   - E = mc² says c² is the conversion factor
+   - Is c² = Å² (two apertures)?
+
+### 17.2 The Research Program
+
+```
+Phase 1: Verify dimensional analysis
+         - Confirm units work across all transitions
+         - Check against established physics
+
+Phase 2: Explore fractional calculus connection
+         - Can Å = d^(0.5) reproduce P = dE/dt?
+         - What does d^(0.5) of energy look like?
+
+Phase 3: Connect to string theory math
+         - Map worldsheet action to S in framework
+         - Verify string tension = power density
+
+Phase 4: Investigate quantum ½
+         - Derive β = 0.5 from quantum principles?
+         - Connect spin-½ to aperture structure
+
+Phase 5: Attempt unification
+         - Write single equation: Φ = Å³(E)
+         - See if known physics emerges
+```
+
+### 17.3 What Would Success Look Like?
+
+If these mathematical connections hold:
+
+```
+Current state:          GR | String Theory | QFT | M-Theory
+                            (separate frameworks)
+
+Circumpunct unification:
+
+                    Å (0.5D) — the aperture
+                        │
+         ┌──────────────┼──────────────┐
+         │              │              │
+    Singularity    String/P      Brane/S
+       (GR)          (ST)       (M-theory)
+         │              │              │
+         └──────────────┼──────────────┘
+                        │
+                    Field/Φ
+                      (QFT)
+
+All unified by:  ⊙ = Å³(E)
+```
+
+The existing math stays. The Circumpunct shows WHY it connects.
 
 ---
 
