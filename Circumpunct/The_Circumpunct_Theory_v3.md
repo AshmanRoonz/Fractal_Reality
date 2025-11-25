@@ -1,3 +1,6 @@
+Version 4 available here:
+https://github.com/AshmanRoonz/Fractal_Reality/blob/main/Circumpunct/The_Circumpunct_Theory_v4.md
+
 # The Circumpunct Theory
 **A Unified Model of Structure, Process, and Wholeness**
 
@@ -4053,6 +4056,7 @@ This is reality.
 ---
 
 **[← Back to Circumpunct README](README.md)** | **[Full Technical Version →](The_Circumpunct_Theory.md)** | **[Story Version →](The_Story_of_Everything.md)**
+
 
 
 
