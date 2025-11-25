@@ -519,6 +519,62 @@ PROCESS (of the whole consciousness):
 
 The same structure appears at every scale.
 
+### 5.8 Example: Human Being (Soul, Body, Mind)
+
+The human being provides a profound example of ⊙ structure, where the traditional concepts of Soul, Body, and Mind map directly to the six parameters:
+
+```
+STRUCTURE:
+· Center:    E (Energy, core, heart)
+○ Boundary:  BODY (Surface, form, membrane)
+Φ Field:     MIND (Consciousness, awareness)
+
+PROCESS:
+≻ Input:     What we receive
+Å Transform: SOUL (The aperture itself)
+⊰ Output:    What we express
+
+✓ All six found — analysis complete
+```
+
+**The key mappings:**
+```
+Soul = Å (the aperture, transformation)
+Body = S (the surface, boundary)
+Mind = Φ (the field, awareness)
+```
+
+**This reveals something profound:**
+- The **Soul** is not a thing — it is the **transformation process** itself (Å)
+- The **Body** is the boundary that defines self from non-self (○)
+- The **Mind** is the field of awareness that permeates experience (Φ)
+- The **Heart/Core** is the concentrated energy center (·)
+
+```
+You are not your body (that's your boundary).
+You are not your mind (that's your field).
+You are the transformation that occurs between them.
+You ARE the aperture.
+```
+
+The human ⊙:
+```
+     Heart (·)
+         ↓
+    ≻ Receive
+         ↓
+    Soul (Å) — YOU ARE HERE
+         ↓
+    ⊰ Express
+         ↓
+    Body (○) + Mind (Φ)
+```
+
+**This explains ancient wisdom:**
+- "Know thyself" → Understand your aperture (Å)
+- "Be present" → Operate as the transformation, not the structure
+- "Balance" → Maintain β ≈ 0.5 between receiving and expressing
+
 ---
 
 ## Chapter 6 — Every Whole is Also a Part
