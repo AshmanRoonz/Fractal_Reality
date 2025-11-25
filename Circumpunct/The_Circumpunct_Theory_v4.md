@@ -1,7 +1,7 @@
 # The Circumpunct Framework
 **Wholeness First: The Mathematics of Being Both Whole and Part**
 
-## Version 4.4 — ⊙ = E; Individuation at P; β = 0.5 All the Way Down
+## Version 4.5 — Operator Formalism; Mathematical Apertures; Research Programs
 
 **Author:** Ash Roney (Ashman Roonz)
 **Date:** November 2025
@@ -56,13 +56,6 @@ This is not description. It is **diagnosis**.
 10. [What the Framework Claims](#chapter-10--what-the-framework-claims)
 11. [What the Framework Does Not Claim](#chapter-11--what-the-framework-does-not-claim)
 12. [Open Questions](#chapter-12--open-questions)
-
-### Part V — Mathematical Explorations
-13. [Dimensional Analysis: The Aperture as Operator](#chapter-13--dimensional-analysis-the-aperture-as-operator)
-14. [String Theory Connections](#chapter-14--string-theory-connections)
-15. [The Quantum ½](#chapter-15--the-quantum-½)
-16. [Connecting the Equations](#chapter-16--connecting-the-equations)
-17. [Open Mathematical Questions](#chapter-17--open-mathematical-questions)
 
 ---
 
@@ -911,7 +904,41 @@ There is only **one aperture** — the half-dimensional transformation operator 
 
 The subscript notation (Å₀.₅, Å₁.₅, Å₂.₅) describes where the aperture is operating, not different apertures.
 
-### 8.5 Perspectival Infinity
+### 8.5 The First Aperture: Energy → Power (Mathematical)
+
+The transition from energy to power is explicit and non-speculative:
+
+```
+P(x,t) = ∂E/∂t
+
+Where:
+- E(x,t) = energy density at spacetime point (x,t)
+- P(x,t) = power density (energy flux)
+- ∂/∂t = partial derivative with respect to time
+
+Units:
+[E] = [M L² T⁻²]  (Joules/volume)
+[P] = [M L² T⁻³]  (Watts/volume)
+[∂/∂t] = [T⁻¹]
+
+This is not approximate — it's definitional in physics.
+Power IS the rate of energy change.
+
+The aperture Å₀.₅ implements this transformation:
+├─ Input:     E (stored capacity, 0D wholeness)
+├─ Transform: ∂/∂t (temporal change operator)
+└─ Output:    P (active flow, 1D wholeness)
+
+This explains why:
+- Energy can be "stored" (E is a state)
+- Power is always "happening" (P is a rate)
+- The aperture is temporal differentiation (transformation IS time)
+
+The subsequent apertures (Å₁.₅, Å₂.₅) are more complex geometric operations,
+but the first aperture has this simple, precise mathematical form.
+```
+
+### 8.6 Perspectival Infinity
 
 A surface appears to be made of infinitely many apertures when viewed from the 1D level. But this infinity is **perspectival**, not actual.
 
@@ -923,15 +950,14 @@ From 3D perspective:  Surface = part of Å (aspect of higher aperture)
 
 The "infinite apertures" is how the one aperture **looks** when you zoom in. Like a hologram — each part contains the whole, at different resolution.
 
-### 8.6 Many Apertures, Phase-Locked as One
+### 8.7 All Apertures Process as One
 
 This resolves a fundamental question: how do nested systems maintain coherence?
 
 **Example: The human body**
 ```
 37 trillion cells, each with its own ⊙
-Each cell has its own COMPLETE aperture
-How do they produce ONE coherent experience?
+How do they synchronize to produce ONE experience?
 ```
 
 **Old framing (parts-first):**
@@ -940,39 +966,25 @@ How do they produce ONE coherent experience?
 - Synchronization requires coordination between parts
 
 **New framing (wholeness-first):**
-- Each cell has its own COMPLETE aperture (not a fragment)
-- All apertures share the same PATTERN (0.5D transformation)
-- Coherence through PHASE-LOCKING, not hierarchy
-
-**Both framings are true:**
-```
-Parts-first:   Cells communicate (what it looks like from inside)
-Wholeness-first: Apertures phase-lock (what it IS)
-
-The communication IS the phase-locking.
-The signals ARE how phase-lock feels from the cell's perspective.
-```
+- There is ONE aperture, fractally distributed
+- Each cell's Å IS the body's Å at cellular resolution
+- No synchronization needed — it was never separate
 
 ```
-Not:  One aperture appearing as many
-      (denies the reality of each cell's wholeness)
+Not:  Cell Å → Organ Å → Body Å → Experience
+           (sequential handoff)
 
-Not:  Many separate apertures coordinating
-      (makes coherence mysterious)
-
-But:  Many complete apertures, phase-locked into one coherent process
-      (each is real AND they resonate as one)
+But:  ┌─────────────────────┐
+      │  Cell Å             │
+      │      Organ Å        │  ═══►  ONE experience
+      │          Body Å     │
+      └─────────────────────┘
+         (simultaneous, one process)
 ```
 
-**The binding problem reframes.** The question isn't "how do many become one?" (they don't — each stays itself). The question is "how do many stay in phase?" Answer: same pattern (Å), same language, natural resonance.
+**The binding problem dissolves.** The question "how do many processes become one experience?" assumes the processes were ever separate. They weren't. One aperture, appearing as many at finer scales, always processing as one whole.
 
-Like musicians in an orchestra:
-- Each plays their own instrument (complete, not a fragment)
-- All follow the same score (shared pattern)
-- Coherence through phase-locking (playing together)
-- The music is ONE, the musicians are MANY
-
-### 8.7 Holographic Structure
+### 8.8 Holographic Structure
 
 Each level's aperture is not a *piece* of the whole aperture. Each level's aperture **is** the whole aperture at that resolution.
 
@@ -991,7 +1003,7 @@ The parts *are* the whole, viewed at higher resolution.
 The aperture doesn't *synchronize* across levels.
 The aperture *is* the synchronization — one transformation, fractally expressed.
 
-### 8.8 The DNA Principle: Same Pattern, Complete Copies
+### 8.9 The DNA Principle: Same Pattern, Complete Copies
 
 The holographic framing can be misleading if taken to mean hierarchy — as if cells are "contained in" a body-aperture that controls them.
 
@@ -1028,7 +1040,7 @@ This is why 37 trillion cells can be "you" without being controlled from above. 
 
 The signals, hormones, nerves — these are how **wholes with the same pattern communicate**. Whole to whole. Same language. Same transformation structure.
 
-### 8.9 Individuation: Where Does "I" Emerge?
+### 8.10 Individuation: Where Does "I" Emerge?
 
 If the aperture pattern (Å = 0.5D) is universal — the same for all wholes — what makes you *you*?
 
@@ -1072,6 +1084,39 @@ Individuation happens at the P level:
 - The atoms become available for other patterns
 
 The self isn't made of special stuff. The self IS a pattern — specifically, a pattern at the P level — through which universal energy (E) flows via universal transformation (Å).
+
+**Mathematical Interpretation:**
+
+```
+Why individuation happens at P, not E:
+
+E-level (Energy):
+- Universal, conserved quantity
+- ⊙ = E applies to all systems equally
+- "Energy is energy" — no inherent differentiation
+
+P-level (Power):
+- Specific flow patterns through time
+- P(x,t) = ∂E/∂t captures HOW energy moves
+- Different systems have different P(x,t) signatures
+
+Example — Two Identical Atoms:
+- Same E (mass-energy content): ✓ identical
+- Same Å (aperture structure): ✓ identical
+- Same P (flow pattern)?: ✗ different if in different states
+
+The P-pattern IS the "vibe":
+- Oscillation frequency (string theory vibrations)
+- Flow signature (how energy circulates)
+- Temporal rhythm (when energy transforms)
+
+Identity = persistent P-pattern channeling universal E through universal Å.
+
+When something "dies":
+- E remains (energy conserved)
+- Å remains (pattern is universal)
+- P-pattern dissipates (the specific flow stops)
+```
 
 ---
 
@@ -1356,345 +1401,6 @@ They were never apart.
 
 ---
 
-# Part V — Mathematical Explorations
-
-*This section explores how existing physics mathematics might connect through the Circumpunct lens. These are hypotheses for investigation, not proven results.*
-
-## Chapter 13 — Dimensional Analysis: The Aperture as Operator
-
-### 13.1 Units Across the Dimensional Ladder
-
-Each level has distinct physical units:
-
-```
-E (Energy):     [M L² T⁻²]     — mass × length² / time²
-P (Power):      [M L² T⁻³]     — energy / time
-S (Surface):    [L²]           — length²
-Φ (Field):      [varies]       — depends on field type
-```
-
-**The E → P transition:**
-```
-P = dE/dt
-
-Units: [M L² T⁻³] = [M L² T⁻²] × [T⁻¹]
-
-The aperture (Å = d/dt) adds [T⁻¹] — one time dimension.
-```
-
-This is established physics: power IS the time derivative of energy.
-
-### 13.2 What Does Å Do at Each Level?
-
-If Å = d/dt at the E→P transition, what is it at other transitions?
-
-**Hypothesis:**
-```
-E → P:   Å = d/dt         (time derivative)
-P → S:   Å = d/dx         (space derivative — spreading)
-S → Φ:   Å = ∫dA          (integration — enclosing)
-```
-
-Or perhaps Å is always the same operator, appearing differently at each level:
-
-```
-At 0D:  Å operating on a point → creates flow (line)
-At 1D:  Å operating on a line → creates spread (surface)
-At 2D:  Å operating on a surface → creates volume (field)
-```
-
-**The pattern:** Å always adds the next dimension by transforming the current structure.
-
-### 13.3 The Half-Dimension as Transition State
-
-Why 0.5D? Consider:
-
-```
-Integer dimensions:    0D, 1D, 2D, 3D     (stable states)
-Half-dimensions:       0.5D, 1.5D, 2.5D   (transitions)
-```
-
-The 0.5D is not a place — it's a *passage*. Like:
-- A doorway is not a room
-- A derivative is not a value
-- A transformation is not a state
-
-**Mathematical analogy:**
-```
-In calculus:
-- f(x) is the function (state)
-- df/dx is the derivative (transition)
-
-In Circumpunct:
-- nD is the dimension (state)
-- Å is the aperture (transition)
-- (n + 0.5)D is the transition appearing as dimension
-```
-
-## Chapter 14 — String Theory Connections
-
-### 14.1 String Tension and the Dimensional Ladder
-
-In string theory, strings have tension T with units:
-```
-T (string tension) = [M T⁻²] = energy / length
-```
-
-**Key relationship:**
-```
-T × L = E        (tension × length = energy)
-T = E / L        (tension = energy per unit length)
-T = P / v        (tension = power / velocity)
-```
-
-The string tension is literally **power density along the string**.
-
-### 14.2 The String Worldsheet
-
-In string theory, a string sweeps out a 2D "worldsheet" as it moves through time:
-
-```
-String (1D) × Time (1D) = Worldsheet (2D)
-     P      ×    T      =      S
-```
-
-This IS the P → S transition!
-
-The worldsheet action in string theory:
-```
-S = -T ∫ dτ dσ     (tension × worldsheet area)
-```
-
-In Circumpunct terms:
-```
-S (action) = P (power/tension) × S (surface/worldsheet)
-```
-
-The string theory action already encodes P × S.
-
-### 14.3 Vibration Modes as Individuation
-
-String theory says: different vibration modes → different particles.
-
-Circumpunct says: individuation happens at P (the vibe).
-
-**These are the same insight:**
-```
-String theory:    Vibration pattern determines particle identity
-Circumpunct:      Power flow pattern determines individual identity
-
-Vibration = oscillating power flow = the "vibe"
-```
-
-The math of string vibration modes IS the math of individuation.
-
-## Chapter 15 — The Quantum ½
-
-### 15.1 Where ½ Appears in Physics
-
-The number ½ appears throughout quantum mechanics:
-
-```
-Zero-point energy:        E = ½ℏω
-Spin-½ particles:         Fermions (electrons, quarks)
-Uncertainty principle:    ΔxΔp ≥ ½ℏ
-Quantum harmonic osc.:    E_n = (n + ½)ℏω
-```
-
-**Question:** Is β = 0.5 connected to these quantum ½s?
-
-### 15.2 The Ground State
-
-The quantum harmonic oscillator has energy:
-```
-E_n = (n + ½)ℏω
-
-Ground state (n = 0):  E₀ = ½ℏω
-```
-
-Even at absolute zero, there is half a quantum of energy. The system cannot be purely at rest — it must vibrate.
-
-**Circumpunct interpretation:**
-```
-β = 0 would be: pure part, no self-existence
-β = 1 would be: pure whole, no connection
-
-But β = 0.5 is: half whole, half part
-             = cannot be purely either
-             = minimum "vibration" between states
-```
-
-Zero-point energy might BE the β = 0.5 principle at the quantum level.
-
-### 15.3 Spin-½ and the Aperture
-
-Fermions (electrons, quarks) have spin ½. They require a 720° rotation to return to their original state.
-
-```
-Spin 0:    0° rotation returns to original
-Spin 1:    360° rotation returns to original
-Spin ½:    720° rotation returns to original
-```
-
-**Hypothesis:** Spin-½ particles might be "aperture-like" — they exist in transition, requiring double rotation because they're always half-transformed.
-
-```
-Spin ½ = particle that IS a transition
-       = matter that IS transformation
-       = structure that IS process
-```
-
-This would explain why fermions (spin ½) make up matter, while bosons (integer spin) carry forces.
-
-## Chapter 16 — Connecting the Equations
-
-### 16.1 The Master Equation Hypothesis
-
-What if there's an equation connecting all levels?
-
-```
-⊙ = E ≻ Å ⊰ P ≻ Å ⊰ S ≻ Å ⊰ Φ
-```
-
-In terms of operators:
-```
-Φ = Å(S) = Å(Å(P)) = Å(Å(Å(E))) = Å³(E)
-```
-
-If Å has a mathematical form, then:
-```
-Φ = Å³(E)     — The field is three apertures applied to energy
-```
-
-### 16.2 What is Å Mathematically?
-
-Candidates:
-```
-Å = d/dt              (time derivative)
-Å = ∂/∂x^μ            (spacetime derivative)
-Å = exp(iHt/ℏ)        (quantum evolution operator)
-Å = √(d/dt)           (half-derivative — fractional calculus!)
-```
-
-**The fractional calculus connection:**
-
-In fractional calculus, you can take half-derivatives:
-```
-d^(0.5)/dx^(0.5)     — the half-derivative operator
-```
-
-What if:
-```
-Å = d^(0.5)          — the aperture IS the half-derivative
-```
-
-This would explain why Å is 0.5D — it literally IS a half-dimensional operator.
-
-### 16.3 Testable Implications
-
-If these connections are real:
-
-1. **String tension should relate to power density:**
-   ```
-   T = P/L = (dE/dt)/L
-   ```
-   Check: Does string theory math support this?
-
-2. **Worldsheet area should relate to surface energy:**
-   ```
-   S_action = ∫T dA
-   ```
-   Check: Is this the actual string action?
-
-3. **Zero-point energy should encode β = 0.5:**
-   ```
-   E₀ = ½ℏω = β × ℏω
-   ```
-   Check: Can we derive β from quantum mechanics?
-
-4. **Fractional derivatives should appear in transitions:**
-   ```
-   P = d^(0.5)(E)? or P = d/dt(E)?
-   ```
-   Check: What does dimensional analysis say?
-
-## Chapter 17 — Open Mathematical Questions
-
-### 17.1 Questions for Investigation
-
-1. **Is the aperture a fractional derivative?**
-   - Fractional calculus is well-developed
-   - Could Å = d^(0.5) unify the transitions?
-
-2. **Does β = 0.5 derive from quantum mechanics?**
-   - Zero-point energy has ½
-   - Is this the physical basis for β?
-
-3. **Can we write Φ = f(E) explicitly?**
-   - If Å is known, Φ = Å³(E)
-   - What function connects field to energy?
-
-4. **How does string tension encode individuation?**
-   - Different tensions = different strings?
-   - Or same tension, different vibrations?
-
-5. **What is c² in terms of apertures?**
-   - E = mc² says c² is the conversion factor
-   - Is c² = Å² (two apertures)?
-
-### 17.2 The Research Program
-
-```
-Phase 1: Verify dimensional analysis
-         - Confirm units work across all transitions
-         - Check against established physics
-
-Phase 2: Explore fractional calculus connection
-         - Can Å = d^(0.5) reproduce P = dE/dt?
-         - What does d^(0.5) of energy look like?
-
-Phase 3: Connect to string theory math
-         - Map worldsheet action to S in framework
-         - Verify string tension = power density
-
-Phase 4: Investigate quantum ½
-         - Derive β = 0.5 from quantum principles?
-         - Connect spin-½ to aperture structure
-
-Phase 5: Attempt unification
-         - Write single equation: Φ = Å³(E)
-         - See if known physics emerges
-```
-
-### 17.3 What Would Success Look Like?
-
-If these mathematical connections hold:
-
-```
-Current state:          GR | String Theory | QFT | M-Theory
-                            (separate frameworks)
-
-Circumpunct unification:
-
-                    Å (0.5D) — the aperture
-                        │
-         ┌──────────────┼──────────────┐
-         │              │              │
-    Singularity    String/P      Brane/S
-       (GR)          (ST)       (M-theory)
-         │              │              │
-         └──────────────┼──────────────┘
-                        │
-                    Field/Φ
-                      (QFT)
-
-All unified by:  ⊙ = Å³(E)
-```
-
-The existing math stays. The Circumpunct shows WHY it connects.
-
----
-
 ## Appendix A: The Six Parameters Reference
 
 | # | Parameter | Symbol | Description |
@@ -1740,9 +1446,181 @@ The existing math stays. The Circumpunct shows WHY it connects.
 | η(β) max at β=0.5 | Theorem | Efficiency maximized at balance |
 | ⊙ = E≻Å⊰Φ | Framework | Symbolic expression of wholeness |
 
+**Dimensional ladder:**
+```
+E: [M L² T⁻²]  (energy)
+P: [M L² T⁻³]  (power)
+S: [L²]        (surface)
+Φ: [varies]    (field)
+```
+
+**Operator chain:**
+```
+𝓐 = 𝓐_SΦ ∘ 𝓐_PS ∘ 𝓐_EP
+⊙ = 𝓐³[E]
+```
+
+**First aperture (exact):**
+```
+P = 𝓐_EP[E] = ∂E/∂t
+```
+
 ---
 
-## Appendix D: Version History
+## Appendix D: Operator Formalism
+
+### D.1 Field Spaces
+
+We model each dimensional level as a space of fields over spacetime:
+
+```
+𝓔 = {E(x,t)} - energy density fields, [M L² T⁻²]
+𝓟 = {P(x,t)} - power density fields, [M L² T⁻³]
+𝓢 = {S(x,t)} - surface activation fields, [L²]
+𝓕 = {Φ(x,t)} - field expression fields, [context-dependent]
+```
+
+### D.2 Aperture as Operators
+
+The three apertures are operators mapping between these spaces:
+
+```
+𝓐_EP: 𝓔 → 𝓟  (energy to power)
+𝓐_PS: 𝓟 → 𝓢  (power to surface)
+𝓐_SΦ: 𝓢 → 𝓕  (surface to field)
+
+Full aperture: 𝓐 = 𝓐_SΦ ∘ 𝓐_PS ∘ 𝓐_EP
+
+Wholeness as transformed energy:
+⊙(x,t) = 𝓐³[E](x,t) = (𝓐_SΦ ∘ 𝓐_PS ∘ 𝓐_EP)[E](x,t)
+```
+
+### D.3 Explicit Form of 𝓐_EP
+
+The first aperture has a known, exact form:
+
+```
+𝓐_EP[E](x,t) := ∂E/∂t = P(x,t)
+```
+
+This is not a model — it's the definition of power in physics.
+
+### D.4 Forms of 𝓐_PS and 𝓐_SΦ (Research Program)
+
+The subsequent apertures likely involve spatial operators.
+
+**Hypothesis 1 (Convolution):**
+```
+𝓐_PS[P](x,t) = ∫ K_PS(x-y) P(y,t) d³y
+```
+
+**Hypothesis 2 (Geometric sweep):**
+𝓐_PS maps 1D flow lines to 2D surfaces by tracking their motion
+
+**Hypothesis 3 (Divergence-based):**
+```
+𝓐_PS[P](x,t) = ∇·P(x,t) or related differential operator
+```
+
+**These are research directions, not established results.**
+
+### D.5 Dimensional Verification
+
+Any proposed operator must satisfy dimensional analysis:
+
+```
+𝓐_EP: [M L² T⁻²] → [M L² T⁻³] ✓ (time derivative adds T⁻¹)
+𝓐_PS: [M L² T⁻³] → [L²] (must eliminate M and T, add L²)
+𝓐_SΦ: [L²] → [varies] (context-dependent)
+```
+
+This constrains possible forms significantly.
+
+---
+
+## Appendix E: Research Programs
+
+These are testable research directions, not proven results.
+
+### Program E.1: Lattice Aperture Simulation
+
+**Objective:** Test if discrete aperture dynamics self-organize to β ≈ 0.5
+
+**Method:**
+1. Create lattice with energy values E_i at each node
+2. Define discrete aperture operations:
+   - P_i(t) = (E_i(t) - E_i(t-1))/Δt
+   - S_i(t) = Σ_neighbors f(P_j(t))
+   - Φ_i(t) = g(S_neighbors)
+3. Iterate with random initial conditions
+4. Measure:
+   - Distribution of β values across nodes
+   - Fractal dimension of emergent boundaries
+   - Formation of stable wholes (⊙ structures)
+
+**Prediction:** Systems will self-organize toward ⟨β⟩ ≈ 0.5
+
+### Program E.2: Fractal Dimension in Physical Systems
+
+**Objective:** Look for D ≈ 1.5 signatures in aperture transitions
+
+**Systems to test:**
+- Turbulent flow boundaries
+- Phase transition interfaces
+- Quantum wavefunction collapse regions
+- Neural avalanche propagation
+- Ecosystem boundaries
+
+**Method:** Measure fractal dimensions of transition zones
+
+**Prediction:** Stable wholes show D ≈ 1.5 at aperture regions
+
+### Program E.3: β-Dynamics in Living Systems
+
+**Objective:** Track β parameter changes in health/disease
+
+**Examples:**
+- Cell β: ratio of internal coherence to external signaling
+- Organ β: autonomy vs integration in body
+- Organism β: independence vs ecosystem embedding
+
+**Method:** Define operational measures of β for each system
+
+**Predictions:**
+- Healthy systems maintain ⟨β⟩ ≈ 0.5
+- Disease shows β drift toward 0 (loss of identity) or 1 (isolation)
+- Recovery is return to β ≈ 0.5
+
+### Program E.4: Power Pattern Recognition
+
+**Objective:** Test if P-level patterns differentiate systems with identical E
+
+**Method:**
+1. Take systems with same energy content
+2. Measure P(x,t) signatures
+3. Check if P patterns predict:
+   - System identity persistence
+   - Behavioral differences
+   - Response to perturbations
+
+**Example:** Two cells with same ATP content but different metabolic rhythms
+
+### Program E.5: Aperture Operators in Known Physics
+
+**Objective:** Express known physics equations as aperture operations
+
+**Examples to formalize:**
+- Schrödinger equation as 𝓐-preserving unitary flow
+- Maxwell equations as 𝓐[charge distribution] = fields
+- Einstein equations as 𝓐³[stress-energy] = curvature
+
+**Method:** Show which 𝓐 operators (if any) reproduce these equations
+
+**Status:** Exploratory — connections are suggestive, not proven
+
+---
+
+## Appendix F: Version History
 
 | Version | Status | Key Changes |
 |---------|--------|-------------|
@@ -1753,7 +1631,8 @@ The existing math stays. The Circumpunct shows WHY it connects.
 | V4.1 | Previous | Wholeness-first, mereological foundation |
 | V4.2 | Previous | Six parameters; whole responsible for process |
 | V4.3 | Previous | Holographic aperture; one Å fractally expressed |
-| **V4.4** | **Current** | **⊙ = E; individuation at P; β = 0.5 all the way down** |
+| V4.4 | Previous | ⊙ = E; individuation at P; β = 0.5 all the way down |
+| **V4.5** | **Current** | **Operator formalism; mathematical apertures; research programs** |
 
 ---
 
@@ -1761,8 +1640,7 @@ The existing math stays. The Circumpunct shows WHY it connects.
 
 ---
 
-**Version:** 4.4
-**Foundation:** Mereology (whole-part relations), established physics
-**Key Insight:** ⊙ = E = mc²; individuation happens at P (the vibe); β = 0.5 applies to energy itself
-**Status:** Framework for understanding systems as wholes
-
+**Version:** 4.5
+**Foundation:** Mereology (whole-part relations), established physics, operator formalism
+**Key Insight:** ⊙ = 𝓐³[E]; apertures as explicit operators between field spaces; P = ∂E/∂t
+**Status:** Framework for understanding systems as wholes with testable research programs
