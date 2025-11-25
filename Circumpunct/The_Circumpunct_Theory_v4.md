@@ -573,6 +573,127 @@ P = dE/dt      (Power — definition)
 - Flow must spread to fill space (P → S)
 - Spread must enclose to create identity (S → Φ)
 
+### 7.5 Correspondence with Established Physics
+
+The dimensional ladder maps directly onto established physics. The mathematics already exists — separately. The Circumpunct provides a unifying structure.
+
+**The correspondences:**
+
+| Circumpunct | Dimension | Established Physics | Mathematical Framework |
+|-------------|-----------|---------------------|------------------------|
+| Å (Aperture) | 0.5D | Singularity | General Relativity (Schwarzschild, Penrose) |
+| E (Energy) | 0D | Point source | E = mc², quantum mechanics |
+| P (Power) | 1D | String | String Theory (Veneziano, Witten) |
+| S (Surface) | 2D | Brane / Membrane | M-Theory (D-branes) |
+| Φ (Field) | 3D | Bulk spacetime | Quantum Field Theory, GR |
+
+**Singularity as Aperture (Å = 0.5D):**
+```
+General Relativity describes singularities as:
+- Points of infinite density
+- Where spacetime curvature diverges
+- Loci of transformation (matter → ?)
+
+The aperture IS the singularity:
+- 0.5D = point in the act of becoming line
+- Not static (0D) but transforming (+0.5D)
+- The "half dimension" is the transformation itself
+```
+
+**String as Power (P = 1D):**
+```
+String Theory describes fundamental entities as:
+- 1-dimensional vibrating strings
+- Different vibration modes → different particles
+- Strings carry energy along their length
+
+Power IS vibrating string:
+- P = dE/dt (energy flow rate)
+- Vibration = oscillating energy transfer
+- The string is energy-in-motion
+```
+
+**Brane as Surface (S = 2D):**
+```
+M-Theory describes:
+- D-branes as surfaces where strings attach
+- Membranes as 2D extended objects
+- Boundaries between bulk regions
+
+Surface IS brane:
+- Where flow spreads into area
+- Creates inside/outside distinction
+- The membrane is power-spread-out
+```
+
+**Bulk as Field (Φ = 3D):**
+```
+Quantum Field Theory describes:
+- Fields permeating spacetime
+- Particles as field excitations
+- Volume-filling entities
+
+Field IS bulk:
+- Where surface encloses into volume
+- Permeates the whole
+- The bulk is surface-enclosed
+```
+
+### 7.6 The Unification Insight
+
+Current physics has these frameworks largely separate:
+
+```
+General Relativity ←――――?――――→ String Theory
+        ↑                            ↑
+        ?                            ?
+        ↓                            ↓
+Quantum Field Theory ←――――?――――→ M-Theory
+```
+
+The Circumpunct proposes they describe **the same structure at different dimensional levels**:
+
+```
+        Singularity (GR)
+             │
+             ↓  Å opens into...
+        String (ST)
+             │
+             ↓  Å spreads into...
+        Brane (M-theory)
+             │
+             ↓  Å encloses into...
+        Field (QFT)
+```
+
+**Key insight:** The transitions between these levels are all the **same aperture** (0.5D) operating at different dimensional contexts:
+
+```
+0D → 1D:  Å at 0D  →  appears as 0.5D transition
+1D → 2D:  Å at 1D  →  appears as 1.5D transition
+2D → 3D:  Å at 2D  →  appears as 2.5D transition
+```
+
+The mathematics of each domain is correct. What's been missing is seeing them as **one process**, fractally expressed at each dimensional level.
+
+### 7.7 What This Does NOT Claim
+
+**This is a structural correspondence, not a derivation.**
+
+The framework does NOT:
+- Derive string theory from first principles
+- Solve quantum gravity
+- Predict new particles or constants
+- Replace any established physics
+
+The framework DOES:
+- Propose a unifying conceptual structure
+- Suggest why these frameworks might connect
+- Offer a lens for seeing relationships
+- Identify where the mathematics might join
+
+**Epistemic status:** This is a hypothesis about structure, not a proven theory. The correspondences are suggestive, not definitive.
+
 ---
 
 ## Chapter 8 — The Aperture as Transformation
