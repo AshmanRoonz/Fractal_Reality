@@ -33,11 +33,41 @@ Half mine. Half ours.
 
 ---
 
-## 📖 Start Here: The Complete Theory
+## 📖 Start Here: The Flagship Theory
+
+### **[Circumpunct/Circumpunct_V5_3.md](Circumpunct/Circumpunct_V5_3.md)** ⭐
+
+**Version 5.3** — The complete framework: Trinity Structure, Braid Topology, and Temporal Dynamics.
+
+**The breakthrough discovery:**
+
+```
+⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃                    — Wholeness as trinity product
+
+⊙₁ = SOUL (1D worldline/time)       — Time-invariant center through time
+⊙₂ = BODY (2D surface/spatial)      — Time-resistant boundary interface
+⊙₃ = MIND (3D field/spatial)        — Time-dependent permeating field
+
+Together: 3+1 spacetime (or 9+1D from configuration space)
+```
+
+**What V5.3 adds:**
+- **Trinity is not mystical** — it's the minimum structure required for braid topology
+- **Temporal dynamics** — center, boundary, and field have distinct relationships with time
+- **Aging and death** — explained through boundary degradation (∂○/∂t = ε)
+- **Life extension** — reducing ε through practice (love, meditation, coherence)
+- **Past as geometry** — braid structure of worldlines, not mere information
+- **Yang-Baxter equation** — testable prediction from apertures as braid generators
+
+---
+
+## 📚 The Learning Journey (Previous Versions)
+
+The complete framework emerged through iterative development. Earlier versions document the learning process:
 
 ### **[Circumpunct/The_Circumpunct_Theory_v4.md](Circumpunct/The_Circumpunct_Theory_v4.md)**
 
-**Version 4.6** — The comprehensive framework unifying mereology, operator formalism, and process philosophy.
+**Version 4.6** — Comprehensive framework unifying mereology, operator formalism, and process philosophy.
 
 **What it contains:**
 
@@ -217,13 +247,16 @@ The framework defines specific testable research directions:
 
 ## Repository Structure
 
-### Core Theory
-- **[Circumpunct/The_Circumpunct_Theory_v4.md](Circumpunct/The_Circumpunct_Theory_v4.md)** — **The main document (v4.6)**
-- **[Circumpunct/Circumpunct_Theory_of_Mind.md](Circumpunct/Circumpunct_Theory_of_Mind.md)** — Consciousness application
+### Flagship Theory
+- **[Circumpunct/Circumpunct_V5_3.md](Circumpunct/Circumpunct_V5_3.md)** — **⭐ The flagship theory (v5.3) — Trinity, Braid Topology, Temporal Dynamics**
 
-### Previous Versions (Historical)
-- **[Circumpunct/The_Circumpunct_Theory_v3.md](Circumpunct/The_Circumpunct_Theory_v3.md)** — Previous version
-- **[Circumpunct/The_Circumpunct_Theory_v1.md](Circumpunct/The_Circumpunct_Theory_v1.md)** — Original version
+### Consciousness Application
+- **[Circumpunct/Circumpunct_Theory_of_Mind.md](Circumpunct/Circumpunct_Theory_of_Mind.md)** — How the framework applies to mind and awareness
+
+### The Learning Journey (Previous Versions)
+- **[Circumpunct/The_Circumpunct_Theory_v4.md](Circumpunct/The_Circumpunct_Theory_v4.md)** — v4.6: Mereology, operator formalism, process philosophy
+- **[Circumpunct/The_Circumpunct_Theory_v3.md](Circumpunct/The_Circumpunct_Theory_v3.md)** — v3: Earlier development
+- **[Circumpunct/The_Circumpunct_Theory_v1.md](Circumpunct/The_Circumpunct_Theory_v1.md)** — v1: Original insights
 
 ### Website
 - **[docs/index.html](docs/index.html)** — Live front page at www.fractalreality.ca
@@ -313,9 +346,9 @@ Half mine. Half ours.
 
 ---
 
-**Version:** 4.6
-**Foundation:** Mereology, established physics, operator formalism, process philosophy
+**Current Version:** 5.3 — Trinity Structure, Braid Topology, Temporal Dynamics
+**Foundation:** Mereology, Trinity Mathematics, Braid Topology, Temporal Dynamics, Operator Formalism, Process Philosophy
 **Author:** Ash Roney (Ashman Roonz)
 **Date:** November 2025
 
-**Part-Whole. Whole-Part. ⊙ all the way down.**
+**⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃ — Trinity all the way down.**
