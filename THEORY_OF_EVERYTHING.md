@@ -63,6 +63,13 @@ WHERE:
   Φ  = Field (3D, evidence, medium)
   ⊗  = Tensor product (entanglement)
 
+COMPONENT EXPRESSIONS:
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │   •  :  ≻•⊰           Soul    — convergence through aperture       │
+  │   ○  :  ∂○/∂t = ε     Body    — boundary changes slowly            │
+  │   Φ  :  •β○           Mind    — balance operator, the medium       │
+  └─────────────────────────────────────────────────────────────────────┘
+
 THIS IS NOT:
   - Monism (just one thing)
   - Atomism (just many things)
