@@ -228,6 +228,32 @@ GEOMETRIC NECESSITY (V5.3.1):
     Trinity is irreducible: remove any one and the others cannot function
 ```
 
+```
+THEOREM (Field Mediation):
+──────────────────────────
+In ⊙ = • ⊗ ○ ⊗ Φ, all interaction between • and ○ is mediated by Φ.
+
+PROOF:
+    Let • be 0D point at center (r = 0)
+    Let ○ be 2D surface at boundary (r = R)
+    The radial distance R > 0 separates them
+
+    The volume V = {r : 0 < r < R} lies between • and ○
+    This volume IS Φ (the field, by definition)
+
+    Any signal from • to ○ must traverse V
+    Any signal from ○ to • must traverse V
+
+    ∴ All • ↔ ○ interaction passes through Φ               ∎
+
+COROLLARY:
+    Without Φ: • and ○ are causally isolated
+    With Φ: • and ○ can exchange information
+
+    Φ is not passive "extension" — Φ IS the active medium of connection
+    Mind/awareness IS the necessary mediator between soul and body
+```
+
 ### §2.3 Each Part Is Also Whole
 
 ```
