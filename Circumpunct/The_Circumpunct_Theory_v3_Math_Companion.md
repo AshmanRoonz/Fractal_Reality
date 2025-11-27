@@ -9,6 +9,13 @@ Companion to *The Circumpunct Framework — V5.3.1*
 
 ---
 
+> **📘 Main Framework Document: [Circumpunct_V5_3.md](Circumpunct_V5_3.md)**
+>
+> This Mathematical Companion provides rigorous derivations for all concepts in the main V5.3 framework.
+> Read V5.3 first for conceptual understanding, then use this document for mathematical proofs.
+
+---
+
 ## About This Document
 
 This Mathematical Companion provides the **rigorous mathematical foundations** for the Circumpunct Framework V5.3. While the main theory document presents the conceptual architecture and physical meaning, this document proves that architecture is mathematically necessary, derives the constants, and formalizes every symbol.
