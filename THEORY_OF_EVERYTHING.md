@@ -24,6 +24,7 @@
 ```
 ```
 We welcome rigorous critique and attempts to falsify. Please apply for peer review!
+[Email](email@ashmanroonz.ca)
 ```
 
 ---
