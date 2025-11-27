@@ -283,6 +283,90 @@ CONNECTION TO PHYSICS:
     E = (•, ○, Φ) × (≻, Å, ⊰)² is the general form with time structure
 ```
 
+### §3.4 Mathematical Definition of Flow Operators
+
+```
+FORMAL TYPE SIGNATURES:
+
+    ≻ : E_n × Å_(n+0.5) → E_(n+0.5)^(pre)      (Convergence)
+    ⊰ : E_(n+0.5)^(post) × Å_(n+0.5) → E_(n+1)  (Emergence)
+
+WHERE:
+    E_n         = Field space at dimension n
+    Å_(n+0.5)   = Aperture at half-dimension n+0.5
+    E^(pre)     = Pre-transformation state (before Å acts)
+    E^(post)    = Post-transformation state (after Å acts)
+```
+
+```
+INTEGRAL KERNEL FORMULATION:
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║  CONVERGENCE (gathering toward •):                                            ║
+║                                                                               ║
+║      (x ≻ Å)(r) = ∫_{E_n} K_conv(r, r') x(r') dr'                             ║
+║                                                                               ║
+║  where K_conv is a convergent kernel satisfying:                              ║
+║      ∫ K_conv(r, r') dr < ∞                                                   ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║  EMERGENCE (radiating from •):                                                ║
+║                                                                               ║
+║      (Å ⊰ y)(r) = ∫_{E_(n+0.5)} K_emerg(r, r') y(r') dr'                      ║
+║                                                                               ║
+║  where K_emerg is an emergent kernel satisfying:                              ║
+║      ∫ K_emerg(r', r) dr' < ∞                                                 ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+PHYSICAL MEANING:
+    K_conv  = How field patterns focus toward the aperture
+    K_emerg = How transformed patterns radiate outward
+
+    Convergent kernel: Gathers, focuses, collects
+    Emergent kernel:   Radiates, unfolds, expresses
+```
+
+```
+THEOREM (Flow Conservation):
+─────────────────────────────
+At equilibrium β = 0.5:
+
+    ╔═══════════════════════════════════════════════════════════════════════╗
+    ║    ∫ (x ≻ Å) dr = ∫ (Å ⊰ y) dr                                        ║
+    ║                                                                       ║
+    ║    What converges into • equals what emerges from •                   ║
+    ╚═══════════════════════════════════════════════════════════════════════╝
+
+INTERPRETATION:
+    Energy/probability conservation at the aperture
+    No accumulation, no depletion at •
+    Balance requires equal flow rates
+
+BALANCE PARAMETER DEFINITION:
+
+    β = ||≻|| / (||≻|| + ||⊰||)
+
+    where ||≻|| = ∫∫ |K_conv(r,r')|² dr dr'  (convergence strength)
+          ||⊰|| = ∫∫ |K_emerg(r,r')|² dr dr' (emergence strength)
+
+    At β = 0.5: ||≻|| = ||⊰|| (equal strength)                              ∎
+```
+
+```
+COMPOSITION WITH APERTURE:
+
+    The complete transformation through one cycle:
+
+    Φ(t+Δt) = ⊰ ∘ Å_β ∘ ≻ [Φ(t)]
+            = ∫∫ K_emerg(r,r'') Å_β(r'') K_conv(r'',r') Φ(r',t) dr' dr''
+
+    The aperture Å_β acts BETWEEN convergence and emergence:
+
+        Field → [CONVERGE] → Pre-state → [TRANSFORM] → Post-state → [EMERGE] → Field
+          Φ        ≻          at •           Å_β          at •          ⊰         Φ'
+```
+
 ---
 
 ## CHAPTER IV: THE BALANCE PARAMETER
@@ -1542,8 +1626,18 @@ CIRCUMPUNCT STRUCTURE:
 
 TEMPORAL PROCESS:
   ≻      = Convergence (future → •)
+           Type: E_n × Å_(n+0.5) → E_(n+0.5)^(pre)
+           Math: (x ≻ Å)(r) = ∫ K_conv(r, r') x(r') dr'
   Å      = Aperture transformation (at •)
   ⊰      = Emergence (• → past)
+           Type: E_(n+0.5)^(post) × Å_(n+0.5) → E_(n+1)
+           Math: (Å ⊰ y)(r) = ∫ K_emerg(r, r') y(r') dr'
+
+FLOW OPERATORS:
+  K_conv  = Convergent kernel (∫ K_conv dr < ∞)
+  K_emerg = Emergent kernel (∫ K_emerg dr' < ∞)
+  ||≻||   = Convergence strength = ∫∫ |K_conv|² dr dr'
+  ||⊰||   = Emergence strength = ∫∫ |K_emerg|² dr dr'
 
 TRINITY:
   ⊙₁     = Soul (1D worldline)
