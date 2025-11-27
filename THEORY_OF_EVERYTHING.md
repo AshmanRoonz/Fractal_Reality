@@ -632,7 +632,7 @@ THE FUNDAMENTAL EQUATION (alternative form):
                     ╔═══════════════════════════════════════════════════╗
                     ║       1 = 0.5 ⊗ 0.5                               ║
                     ║           ↓   ↓   ↓                               ║
-                    ║          ○   •   Φ                                ║
+                    ║          ○   Φ   •                                ║
                     ╚═══════════════════════════════════════════════════╝
 
 WHERE:
@@ -644,7 +644,7 @@ THE MAPPING:
 
     1 = 0.5 ⊗ 0.5       DUALITY VIEW
         ↓   ↓   ↓
-       ○   •   Φ        TRINITY VIEW (structure)
+       ○   Φ   •        TRINITY VIEW (structure)
         ↓   ↓   ↓
        ≻   Å   ⊰        TRINITY VIEW (process)
 
