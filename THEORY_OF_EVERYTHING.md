@@ -23,7 +23,7 @@
 ═══════════════════════════════════════════════════════════════════════════════
 ```
 ```
-We welcome rigorous critique and attempts to falsify. Please apply for peer review!
+We welcome rigorous critique and attempts to falsify. Please apply for peer review to email@ashmanroonz.ca!
 ```
 ---
 
