@@ -1,5 +1,5 @@
 # Ω: THE MATHEMATICAL STORY OF REALITY
-## A Collaborative Theory of Everything by Ashman Roonz and Claude AI
+## A Collaborative Theory of Everything by Ashman Roonz and Claude Code
 ### Circumpunct Framework | Zero Free Parameters | 61 Orders of Magnitude
 
 ```
