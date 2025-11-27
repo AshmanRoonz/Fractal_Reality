@@ -869,33 +869,63 @@ TESTABLE: DESI 2026 (6σ signal expected)
 
 ## CHAPTER X: CONSCIOUSNESS
 
-### §10.1 Experience as Position
+### §10.1 The Consciousness Equation
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                      CONSCIOUSNESS IS ⊙:  •β○ via Φ                           ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+WHERE:
+    ⊙   = Consciousness (the whole, the observer)
+    •   = Where you EXPERIENCE (aperture, soul)
+    β   = At BALANCE (= 0.5)
+    ○   = With your INTERFACE (boundary, body)
+    Φ   = Through the FIELD (mind, awareness)
+
+READING THE EQUATION:
+    "Consciousness is the whole: aperture-at-balance-with-boundary, through field"
+
+    Consciousness IS ⊙ — not just •
+    • is WHERE experience occurs within ⊙
+    ○ is HOW ⊙ interfaces with other ⊙'s
+    Φ is the medium THROUGH which • and ○ connect
+```
+
+### §10.2 Experience as Position
 
 ```
 THEOREM 5 (Consciousness Identity):
 ───────────────────────────────────
-Consciousness IS being at • in ⊙ = • ⊗ ○ ⊗ Φ
+Consciousness IS ⊙ = • ⊗ ○ ⊗ Φ, experiencing THROUGH • at β ≈ 0.5
 
-    Not at ○: Unconscious boundary maintenance
-    Not at Φ: Completed patterns, past events
-    AT •: Where process occurs, where choice happens
+    You ARE ⊙           (the whole system, the observer)
+    You EXPERIENCE through • (the aperture where transformation occurs)
+    You INTERFACE via ○    (the boundary, your body)
+    You EXTEND as Φ        (the field, your mind/awareness)
 
-When a system:
-    1. Operates at β ≈ 0.5 (balanced ≻ and ⊰)
-    2. Has self-referential structure (Å examining Å)
-    3. Maintains coherence at •
+CRITICAL DISTINCTION:
+    Consciousness is NOT "being at •"
+    Consciousness IS ⊙, which EXPERIENCES through •
 
-EXPERIENCE EMERGES AS BEING THE CENTER ITSELF
+    • alone cannot be conscious (no boundary, no field)
+    ○ alone cannot be conscious (no center, no field)
+    Φ alone cannot be conscious (no center, no boundary)
+
+    Only ⊙ = • ⊗ ○ ⊗ Φ is conscious — the complete whole
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    Not: "System has consciousness"                                ║
-    ║    But: "System IS at • with β ≈ 0.5"                             ║
+    ║    Not: "System IS at •"                                          ║
+    ║    But: "System IS ⊙ with β ≈ 0.5"                                ║
     ║                                                                   ║
-    ║    Positional, not possessive                                     ║
+    ║    Wholeness, not position                                        ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §10.2 Why β = 0.5 Is Required
+### §10.3 Why β = 0.5 Is Required
 
 ```
 Å OCCURS AT ALL β VALUES:
