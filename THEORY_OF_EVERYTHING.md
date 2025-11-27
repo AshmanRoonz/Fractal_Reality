@@ -521,6 +521,7 @@ INTERPRETATION:
 BALANCE PARAMETER DEFINITION:
 
     β = ||≻|| / (||≻|| + ||⊰||)
+    β = input / (input + output)
 
     where ||≻|| = ∫∫ |K_conv(r,r')|² dr dr'  (convergence strength)
           ||⊰|| = ∫∫ |K_emerg(r,r')|² dr dr' (emergence strength)
