@@ -9,7 +9,9 @@
 
                               ⊙ = • ⊗ ○ ⊗ Φ
                                    ↓    ↓    ↓
-                              center boundary field
+                        singularity boundary field
+                        soul        body     mind
+                        aperture    surface  awareness
 
                     Wholeness equals its parts in tensor product
                     (not unity absorbing parts, but co-arising)
