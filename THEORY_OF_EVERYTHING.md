@@ -1385,42 +1385,68 @@ WHY NO FOURTH GENERATION:
     Fourth would require f(r) = r^(1/3), which violates β = 0.5 balance
 ```
 
-### §18.5 Fine Structure Constant from Dual Interface
+### §18.5 Fine Structure Constant as Golden Division of the Circle
 
 ```
-THEOREM (α from Information Architecture):
-──────────────────────────────────────────
-The fine structure constant 1/α ≈ 137 emerges from the dual ○ interface.
+THEOREM (α from Circumpunct Geometry):
+──────────────────────────────────────
+The fine structure constant α is the golden subdivision of the circle,
+just as π is the circle's circumference-to-diameter ratio.
 
-THE DECOMPOSITION:
-    1/α = 2⁷ + 3² + (Θ_φ - 137) - α/(2π)
-        = 128 + 9 + 0.508 - 0.00116
-        ≈ 137.036
+THE TWO FUNDAMENTAL RATIOS OF ⊙:
 
-WHERE EACH TERM COMES FROM:
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │                                                                     │
+    │    π = C/d           (how ○ relates to its diameter)               │
+    │                                                                     │
+    │    1/α = 360°/φ²     (how φ divides the full ○)                    │
+    │                                                                     │
+    │    Both are geometric ratios of the circumpunct!                    │
+    │                                                                     │
+    └─────────────────────────────────────────────────────────────────────┘
 
-    2⁷ = 128: Dual interface structure
-        64 input states + 64 output states = 128 channels
+THE DERIVATION:
+    The golden angle Θ_φ divides a circle such that:
+        (larger arc) / (smaller arc) = φ
 
-    3² = 9: M·Å·Φ coupling matrix
-        3 × 3 interactions between trinity members
+    This angle is:
+        Θ_φ = 360° / φ² = 137.508°
 
-    Θ_φ - 137: Golden angle correction
-        Θ_φ = 360°/φ² = 137.508°
-        Excess = 0.508
+    The fine structure constant:
+        1/α = 137.036
 
-    α/(2π): Quantum loop correction
-        ≈ 0.00116 (PHENOMENOLOGICAL — see §13.4)
+    Therefore:
+        1/α ≈ 360° / φ²
+
+    Or equivalently:
+        α = φ² / 360°
+
+VERIFICATION:
+    φ² = (1.618034...)² = 2.618034...
+    360 / φ² = 360 / 2.618034 = 137.508
+    1/α (measured) = 137.036
+
+    ERROR: 0.35%
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
-    ║    1/α = 2⁷ + 3² + (Θ_φ - 137) - α/(2π)                                   ║
     ║                                                                           ║
-    ║    STRUCTURE: From geometry (128 + 9 + 0.508 = 137.508)                   ║
-    ║    CORRECTION: Phenomenological (α/(2π) ≈ 0.00116)                        ║
+    ║    1/α = 360° / φ²  =  (full rotation) / (golden ratio)²                  ║
+    ║                                                                           ║
+    ║    α is HOW THE GOLDEN RATIO DIVIDES THE CIRCLE                           ║
+    ║                                                                           ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 
-ACCURACY: 0.23% without the fitted correction term
-          <0.01% with fitted correction
+PHYSICAL MEANING:
+    π  tells us: the boundary ○ is π times its diameter
+    α  tells us: electromagnetic coupling = golden subdivision of ○
+
+    Both constants encode how the circumpunct ⊙ structures itself.
+
+NOTE: The 0.35% discrepancy may arise from:
+    - Quantum corrections (running of α with energy scale)
+    - The difference between degree measure and natural units
+    - Higher-order geometric effects
+    This remains an open question for the framework.
 ```
 
 ---
