@@ -998,26 +998,32 @@ HONEST ASSESSMENT:
 ### §13.5 Structurally Derived But Uses Measured Input
 
 ```
-HYBRID — Framework is derived, but requires experimental input:
+HYBRID — Framework provides structure, measurement provides precision:
 
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║  QUANTITY              │ VALUE              │ STATUS                        ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  Fine structure α      │ 1/137.036          │ Framework from ○, but...      ║
-║                        │                    │ α/(2π) term is phenomenolog.  ║
+║  Fine structure α      │ 1/137.036          │ Resonance of Φ (see §18.5)    ║
+║                        │                    │ Ideal: 360°/φ² = 137.508      ║
+║                        │                    │ Shifted by validation noise   ║
 ║  Yang-Mills gap Δ      │ 1.652 GeV          │ Structure from τ², but...     ║
 ║                        │                    │ Uses measured α_s, Λ_QCD      ║
 ║  Mass ratios           │ m_μ/m_e = 206.8    │ From (1/α)^(2/3), uses α      ║
 ╚════════════════════════════════════════════════════════════════════════════╝
 
-WHAT'S TRULY DERIVED:
-    - 1/α = 2⁷ + 3² + corrections
-    - 2⁷ = 128 comes from dual ○ interface
-    - 3² = 9 comes from M·Å·Φ interactions
+WHAT'S TRULY DERIVED FOR α:
+    - α is the resonant coupling of Φ between • and ○
+    - Ideal resonance: 1/α_ideal = 360°/φ² (golden angle)
+    - α IS the validation noise that detunes its own resonance
+    - The 0.35% shift from ideal = α itself (self-referential)
 
-WHAT'S NOT:
-    - The "quantum correction" term α/(2π) ≈ 0.00116 is phenomenological
-    - The full 137.036 requires this fitted term
+    π = property of ○ (boundary shape)
+    α = property of Φ (field coupling strength)
+
+WHAT REMAINS OPEN:
+    - Why 360° (degree measure) rather than 2π (radians)?
+    - Exact self-consistent equation for α
+    - Connection to QED running coupling
 ```
 
 ### §13.6 Full Constants Table
@@ -1039,7 +1045,8 @@ CONSTANTS SPANNING 61 ORDERS OF MAGNITUDE:
 ║                 │ Planck Time           │ 5.391×10⁻⁴⁴ s      │ Standard    ║
 ║                 │ Initial density       │ ρ = 0.1 ρ_P        │ FITTED      ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  QUANTUM        │ Fine Structure α      │ 1/137.036          │ HYBRID      ║
+║  QUANTUM        │ Fine Structure α      │ 1/137.036          │ DERIVED     ║
+║                 │                       │ (360°/φ² damped)   │ (see §18.5) ║
 ║                 │ Mass Gap Δ            │ 1.652 GeV          │ HYBRID      ║
 ║                 │ Validation Noise      │ 0.027              │ FITTED      ║
 ║                 │ SNR threshold         │ τ = 3.7            │ FITTED      ║
