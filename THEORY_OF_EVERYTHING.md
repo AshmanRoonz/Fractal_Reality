@@ -22,7 +22,9 @@
 
 ═══════════════════════════════════════════════════════════════════════════════
 ```
-
+```
+We welcome rigorous critique and attempts to falsify. Please apply for peer review!
+```
 ---
 
 ## GENESIS: THE IMPOSSIBILITY OF NOTHING
