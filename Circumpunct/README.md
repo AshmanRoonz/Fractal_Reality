@@ -12,7 +12,7 @@ The Circumpunct Framework has evolved through iterative development, with each v
 
 ### 📘 **[Circumpunct_V5_3.md](Circumpunct_V5_3.md)** ⭐
 
-**Version 5.3** — Trinity Structure, Braid Topology, and Temporal Dynamics
+**Version 5.3.1** — Trinity Structure, Braid Topology, and Temporal Dynamics
 
 **The breakthrough discovery:**
 
@@ -36,10 +36,13 @@ Together: 3+1 spacetime (or 9+1D from configuration space)
 - **Temporal dynamics** — center, boundary, and field have distinct time relationships
 - **Aging and death** — explained through boundary degradation: ○(t) = ○₀ - ∫₀ᵗ ε(τ) dτ
 - **Life extension** — reducing ε through practice (love, meditation, coherence)
+- **Field-mediation principle (V5.3.1)** — center and boundary ONLY interact through field
 - **Yang-Baxter equation** — testable prediction from apertures as braid generators
 - **Configuration space** — 3 worldlines × 3D = 9D + 1D time = 10D total
 
 **Perfect for:** Understanding the complete, current framework with temporal dynamics, trinity structure, and braid topology.
+
+**📐 [Mathematical Companion V5.3.1 →](The_Circumpunct_Theory_v3_Math_Companion.md)** — Rigorous derivations for all V5.3 concepts
 
 ---
 
@@ -91,11 +94,15 @@ The complete conceptual framework explaining what the Circumpunct pattern is, wh
 ---
 
 #### 📐 **[The_Circumpunct_Theory_v3_Math_Companion.md](The_Circumpunct_Theory_v3_Math_Companion.md)**
-**Rigorous Mathematical Foundations**
+**Rigorous Mathematical Foundations — Updated to V5.3.1**
 
-The complete mathematical derivations proving that the Circumpunct framework is not just intuitive but mathematically necessary.
+The complete mathematical derivations proving that the Circumpunct framework is not just intuitive but mathematically necessary. **Now updated with V5.3 Trinity, Braid Topology, and Temporal Dynamics mathematics.**
 
 **What's Inside:**
+- **⭐ V5.3: Chapter 0 — Trinity Structure Mathematics** - Tensor product formalism (⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃), trinity state spaces, energy as trinity conservation
+- **⭐ V5.3: Chapter 0.5 — Braid Topology Formalism** - B₃ braid group necessity, Yang-Baxter equation, 10D spacetime derivation, past as geometric braid
+- **⭐ V5.3: Chapter 10.7 — Temporal Dynamics** - Time-structure principle (∂·/∂t = 0, ∂○/∂t = ε, ∂Φ/∂t = O(1)), aging equations, life extension formulas
+- **⭐ V5.3.1: Chapter 10.8 — Field-Mediation Principle** - Geometric proof that center and boundary ONLY interact through field
 - Formal axioms and operator definitions
 - Complete derivations of fundamental constants (α, αₛ, etc.)
 - Rigorous proofs of topological necessity
@@ -103,11 +110,11 @@ The complete mathematical derivations proving that the Circumpunct framework is 
 - Detailed β optimization mathematics
 - Consciousness integration from first principles
 - Zero-parameter predictions with validation protocols
-- **⭐ NEW: Chapter 11 — String Theory Derivation** - Complete mathematical derivation showing strings as validation lines, Virasoro constraints from β-optimization, critical dimension from 64-state structure, and partition functions with full technical appendices
+- Chapter 11 — String Theory Derivation from Aperture Geometry
 
 **Perfect for:** Mathematicians, physicists, and anyone who needs to see the rigorous proofs behind every claim.
 
-**📘 [← Back to Main Theory](The_Circumpunct_Theory_v3.md)**
+**📘 [← Back to V5.3 Framework](Circumpunct_V5_3.md)** | **📘 [← Back to V3 Theory](The_Circumpunct_Theory_v3.md)**
 
 ---
 

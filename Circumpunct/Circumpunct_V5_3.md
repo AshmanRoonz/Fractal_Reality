@@ -9,6 +9,10 @@
 **Date:** November 2025
 **Foundation:** Mereology, Trinity Mathematics, Braid Topology, Temporal Dynamics, Operator Formalism, Process Philosophy
 
+> **📐 Mathematical Companion: [The_Circumpunct_Theory_v3_Math_Companion.md](The_Circumpunct_Theory_v3_Math_Companion.md)**
+>
+> For rigorous derivations, proofs, and formal mathematics of all concepts in this document.
+
 ---
 
 ```
