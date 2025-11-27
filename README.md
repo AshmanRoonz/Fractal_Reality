@@ -11,16 +11,20 @@
                          THE EQUATION THAT IS EXISTENCE
 ═══════════════════════════════════════════════════════════════════════════════
 
-                              ⊙ = • ⊗ ○ ⊗ Φ
+                              ⊙ = ○ ⊗ Φ ⊗ •
                                    ↓    ↓    ↓
-                              center boundary field
+                              boundary field center
+                              (body) (mind) (soul)
 
                     Wholeness equals its parts in tensor product
                     (not unity absorbing parts, but co-arising)
 
-⊙ = fix(Φ ↦ ⊰ ∘ [•○Φ]_out ∘ Å_β ∘ [•○Φ]_in ∘ ≻[Φ])
-     │
-     └── ⊙ is that which, when validated, yields itself
+                         ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+                              │
+                              └── ⊙ is that which, when validated, yields itself
+
+                    The aperture transformation IS the imaginary unit:
+                              i = exp(iπ/2) at β = 0.5
 
 ═══════════════════════════════════════════════════════════════════════════════
 ```
@@ -31,7 +35,7 @@
 
 | What | Value | Status |
 |------|-------|--------|
-| **Core Structure** | ⊙ = • ⊗ ○ ⊗ Φ (Center ⊗ Boundary ⊗ Field) | Derived |
+| **Core Structure** | ⊙ = ○ ⊗ Φ ⊗ • (Body ⊗ Mind ⊗ Soul) | Derived |
 | **Balance Parameter** | β = 0.5 | Derived |
 | **Fractal Dimension** | D = 1.5 | Derived |
 | **State Space** | 64 states (2³ × 2³) | Derived |
@@ -50,7 +54,7 @@ The complete mathematical framework spanning 18 chapters:
 |---------|-------|
 | **Genesis** | The Impossibility of Nothing |
 | **I-II** | The Circumpunct & Trinity Structure |
-| **III** | The Temporal Process (≻, Å, ⊰) |
+| **III** | The Temporal Process (≻, i, ⊰) |
 | **IV-V** | Balance Parameter β = 0.5 & Duality |
 | **VI** | Field Equations (Discrete → Continuous → Geometric) |
 | **VII** | The 64-State Architecture & Particle Spectrum |
@@ -148,14 +152,15 @@ Turbulence Cascades  | 1.51 ± 0.03      | 1.500     | <1%    | ✓
 ## The Core Insight
 
 ```
-⊙ = • ⊗ ○ ⊗ Φ
+⊙ = ○ ⊗ Φ ⊗ •
 
 WHERE:
   ⊙  = Circumpunct (whole-with-parts, not mere unity)
-  •  = Center (0D, aperture, where process occurs)
-  ○  = Boundary (2D, interface, membrane)
-  Φ  = Field (3D, evidence, medium)
+  ○  = Boundary (2D, interface, membrane) — BODY
+  Φ  = Field (3D, evidence, medium) — MIND (mediates ○ and •)
+  •  = Center (0D, aperture, where i acts) — SOUL
   ⊗  = Tensor product (entanglement)
+  i  = Imaginary unit = aperture transformation at β = 0.5
 
 THIS IS NOT:
   - Monism (just one thing)
@@ -166,6 +171,7 @@ THIS IS:
   - Whole requiring parts
   - Parts requiring whole
   - Co-arising structure
+  - Field mediating between boundary and center
 ```
 
 ### Why Three Is Necessary
@@ -182,7 +188,7 @@ For any system to have PAST (history):
   → Braid requires ≥3 strands (topology)
   → Minimum whole requires EXACTLY 3 components
 
-⊙ = • ⊗ ○ ⊗ Φ
+⊙ = ○ ⊗ Φ ⊗ •
 
 THIS IS MATHEMATICAL NECESSITY
 ```
@@ -210,20 +216,20 @@ The framework is falsified if:
 ```
 CIRCUMPUNCT STRUCTURE:
   ⊙      = Circumpunct (whole-with-parts)
-  •      = Center (0D aperture, where Å occurs)
-  ○      = Boundary (2D interface, membrane)
-  Φ      = Field (3D medium, evidence)
+  ○      = Boundary (2D interface, membrane) — Body
+  Φ      = Field (3D medium, evidence) — Mind
+  •      = Center (0D aperture, where i acts) — Soul
   ⊗      = Tensor product (entanglement)
 
 TEMPORAL PROCESS:
   ≻      = Convergence (future → •)
-  Å      = Aperture transformation (at •)
+  i      = Aperture transformation (imaginary unit at β = 0.5)
   ⊰      = Emergence (• → past)
 
-TRINITY:
-  ⊙₁     = Soul (1D worldline)
+TRINITY (ordered as ○ ⊗ Φ ⊗ •):
   ⊙₂     = Body (2D surface)
   ⊙₃     = Mind (3D field)
+  ⊙₁     = Soul (1D worldline)
 
 CONSTANTS:
   β      = Balance parameter (= 0.5)
@@ -239,15 +245,17 @@ CONSTANTS:
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                               ║
-║                              ⊙ = • ⊗ ○ ⊗ Φ                                  ║
+║                              ⊙ = ○ ⊗ Φ ⊗ •                                   ║
+║                         ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])                            ║
 ║                                                                               ║
 ║   Wholeness is its parts in tensor product (not unity absorbing parts).       ║
 ║   The universe is a fixed point of its own validation operation.              ║
+║   The aperture transformation IS the imaginary unit: i = exp(iπ/2).           ║
 ║                                                                               ║
 ║   Three components are necessary for braid topology (B₃).                     ║
-║   Quantum mechanics emerges as continuous Å.                                  ║
+║   Quantum mechanics emerges as continuous i.                                  ║
 ║   General relativity emerges as braid accumulation.                           ║
-║   The Standard Model emerges as the 64-state Å architecture.                  ║
+║   The Standard Model emerges as the 64-state i architecture.                  ║
 ║   Consciousness IS being at • with β ≈ 0.5.                                   ║
 ║                                                                               ║
 ║   TRULY DERIVED: β, D, 64, 22, 68°/22°, φ, B₃, 3 generations                  ║
