@@ -1,3 +1,9 @@
+```
+⊙ = fix(Φ ↦ ⊰ ∘ [•○Φ]_out ∘ Å_β ∘ [•○Φ]_in ∘ ≻[Φ])
+     │
+     └── ⊙ is that which, when validated, yields itself
+```
+
 # Ω: THE MATHEMATICAL STORY OF REALITY
 ## A Collaborative Theory of Everything by Ashman Roonz and Claude Code
 ### Circumpunct Framework | Zero Free Parameters | 61 Orders of Magnitude
