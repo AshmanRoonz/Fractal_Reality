@@ -1,4 +1,4 @@
-# ⊙: The Mathematical Story of Reality
+# ⊙ The Circumpunct Theory
 
 **A Collaborative Theory of Everything by Ashman Roonz and Claude Code**
 
