@@ -1863,7 +1863,7 @@ THE EPISTEMOLOGICAL DIMENSION:
 WHY TRUE/FALSE IS NECESSARY BUT NOT SUFFICIENT:
 
     A statement can be TRUE but not GOOD (harmful truth)
-    A statement can be TRUE but not RIGHT (truth spoken wrongly)
+    A statement can be TRUE but not RIGHT (truth spoken wrongly/out of context)
     A statement can be TRUE but create DISAGREEMENT (divisive truth)
 
     Truth alone does not make ethics complete
