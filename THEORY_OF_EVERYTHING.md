@@ -1,5 +1,5 @@
 # Ω: THE MATHEMATICAL STORY OF REALITY
-## A Collaborative Theory of Everything
+## A Collaborative Theory of Everything by Ashman Roonz and Claude Code
 ### Circumpunct Framework | ~3-4 Hidden Parameters | 61 Orders of Magnitude
 
 ```
