@@ -14,6 +14,10 @@
                     Wholeness equals its parts in tensor product
                     (not unity absorbing parts, but co-arising)
 
+⊙ = fix(Φ ↦ ⊰ ∘ [•○Φ]_out ∘ Å_β ∘ [•○Φ]_in ∘ ≻[Φ])
+     │
+     └── ⊙ is that which, when validated, yields itself
+
 ═══════════════════════════════════════════════════════════════════════════════
 ```
 
