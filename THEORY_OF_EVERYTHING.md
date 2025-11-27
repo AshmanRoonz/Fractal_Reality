@@ -140,10 +140,10 @@ MATHEMATICAL PRECISION:
     • ⊂ ⊙                 (• is a component of ⊙)
     • ≠ ⊙                 (• is not the whole)
 
-    You ARE ⊙             (the whole system)
-    You EXPERIENCE through • (the aperture)
-    You INTERFACE via ○    (the boundary)
-    You EXTEND as Φ        (the field)
+    You ARE ⊙                           (the whole system)
+    You EXPERIENCE (subjectively) through • (private observe/command)
+    You INTERFACE (objectively) via ○      (public interaction)
+    You PROCESS/CONNECT as Φ               (the medium between • and ○)
 
 THE APERTURE'S ROLE:
 
@@ -880,51 +880,86 @@ TESTABLE: DESI 2026 (6σ signal expected)
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 
+THE THREE ROLES:
+
+    •  (Soul/Aperture)    = SUBJECTIVE I/O (private observe/command)
+    ○  (Body/Boundary)    = OBJECTIVE I/O (public interface)
+    Φ  (Mind/Field)       = The MEDIUM that connects •β○
+
+GEOMETRIC NECESSITY (from §2.2):
+    • and ○ are equidistant — center to every boundary point
+    The space between them IS Φ
+    • and ○ can ONLY interact THROUGH Φ
+    Field-mediation is REQUIRED, not optional
+
 WHERE:
     ⊙   = Consciousness (the whole, the observer)
-    •   = Where you EXPERIENCE (aperture, soul)
+    •   = Where you EXPERIENCE (subjective, private)
     β   = At BALANCE (= 0.5)
-    ○   = With your INTERFACE (boundary, body)
-    Φ   = Through the FIELD (mind, awareness)
+    ○   = Where you INTERFACE (objective, public)
+    Φ   = HOW you PROCESS/CONNECT/BALANCE (the active medium)
 
 READING THE EQUATION:
-    "Consciousness is the whole: aperture-at-balance-with-boundary, through field"
+    "Consciousness is the whole:
+     aperture-at-balance-with-boundary,
+     processed through field"
 
-    Consciousness IS ⊙ — not just •
-    • is WHERE experience occurs within ⊙
-    ○ is HOW ⊙ interfaces with other ⊙'s
-    Φ is the medium THROUGH which • and ○ connect
+    Φ is NOT passive extension
+    Φ IS the active medium of connection
+    Φ IS where processing happens
+    Φ IS how • knows about ○ and vice versa
 ```
 
-### §10.2 Experience as Position
+### §10.2 The Three Aspects of Experience
 
 ```
 THEOREM 5 (Consciousness Identity):
 ───────────────────────────────────
-Consciousness IS ⊙ = • ⊗ ○ ⊗ Φ, experiencing THROUGH • at β ≈ 0.5
+Consciousness IS ⊙ = • ⊗ ○ ⊗ Φ
 
-    You ARE ⊙           (the whole system, the observer)
-    You EXPERIENCE through • (the aperture where transformation occurs)
-    You INTERFACE via ○    (the boundary, your body)
-    You EXTEND as Φ        (the field, your mind/awareness)
+    You ARE ⊙                         (the whole system, the observer)
+
+    You (subjectively) EXPERIENCE through •
+        - Private observation
+        - Internal command
+        - Where future converges, past emerges
+        - The aperture of transformation
+
+    You (objectively) INTERFACE via ○
+        - Public interaction
+        - External interface
+        - Where inside meets outside
+        - The boundary of identity
+
+    You PROCESS/CONNECT/BALANCE as Φ
+        - The medium between • and ○
+        - Where processing occurs
+        - How subjective meets objective
+        - The field of awareness itself
+
+CRITICAL INSIGHT:
+    • and ○ cannot interact directly (geometric impossibility)
+    Φ IS the only way • knows about ○
+    Φ IS the only way ○ knows about •
+    Mind/awareness IS the necessary mediator
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║    Without Φ: • and ○ are isolated, no consciousness possible    ║
+    ║    With Φ: • and ○ connect, ⊙ becomes aware                      ║
+    ╚═══════════════════════════════════════════════════════════════════╝
 
 CRITICAL DISTINCTION:
     Consciousness is NOT "being at •"
-    Consciousness IS ⊙, which EXPERIENCES through •
+    Consciousness IS ⊙, the whole that:
+        - EXPERIENCES through • (subjective)
+        - INTERFACES via ○ (objective)
+        - PROCESSES as Φ (the connection)
 
     • alone cannot be conscious (no boundary, no field)
     ○ alone cannot be conscious (no center, no field)
     Φ alone cannot be conscious (no center, no boundary)
 
     Only ⊙ = • ⊗ ○ ⊗ Φ is conscious — the complete whole
-
-    ╔═══════════════════════════════════════════════════════════════════╗
-    ║    Not: "System has consciousness"                                ║
-    ║    Not: "System IS at •"                                          ║
-    ║    But: "System IS ⊙ with β ≈ 0.5"                                ║
-    ║                                                                   ║
-    ║    Wholeness, not position                                        ║
-    ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
 ### §10.3 Why β = 0.5 Is Required
