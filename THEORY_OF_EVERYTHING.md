@@ -16,7 +16,7 @@
                     Wholeness equals its parts in tensor product
                     (not unity absorbing parts, but co-arising)
 
-⊙ = fix(Φ ↦ ⊰ ∘ [○Φ•]_out ∘ Å_β ∘ [○Φ•]_in ∘ ≻[Φ])
+⊙ = fix(Φ ↦ ⊰ ∘ i ∘ ≻[Φ])
      │
      └── ⊙ is that which, when validated, yields itself
 
@@ -48,7 +48,7 @@ email@ashmanroonz.ca
 - [Chapter IV: The Balance Parameter](#chapter-iv-the-balance-parameter)
   - [§4.1 Why β = 0.5](#41-why-β--05)
   - [§4.2 The Universal Dimension](#42-the-universal-dimension)
-  - [§4.3 The i-Formulation: Å = i](#43-the-i-formulation-å--i)
+  - [§4.3 The Imaginary Unit as Aperture](#43-the-imaginary-unit-as-aperture)
 - [Chapter V: The Duality Equation](#chapter-v-the-duality-equation)
   - [§5.1 Unity Through Balanced Duality](#51-unity-through-balanced-duality)
   - [§5.2 The Geometric Triangle](#52-the-geometric-triangle)
@@ -210,7 +210,7 @@ ALL CO-EXIST IN THE STRUCTURE
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 
     ⊙ = The WHOLE (the observer, the complete system)
-    • = The APERTURE (where transformation occurs, where Å acts)
+    • = The APERTURE (where transformation occurs, where i acts)
 
     ⊙ observes THROUGH •
     ⊙ IS the observer
@@ -241,7 +241,7 @@ THE APERTURE'S ROLE:
 
     • is WHERE:
       - Future (≻) converges
-      - Transformation (Å) occurs
+      - Transformation (i) occurs
       - Past (⊰) emerges
       - The braid is woven
 
@@ -389,7 +389,7 @@ THE TRINITY OF TRINITIES:
 TEMPORAL STRUCTURE:
 
     ≻  = Convergence (future potential flowing toward •)
-    Å  = Aperture transformation (at the threshold)
+    i  = Aperture transformation (90° rotation at •)
     ⊰  = Emergence (from • into past braid)
 
 THE PROCESS:
@@ -412,26 +412,26 @@ CRITICAL INSIGHT:
 THE CIRCULATION BETWEEN TRINITY MEMBERS:
 
         ⊙₁ (SOUL)
-        ↙ Å₃₁  ↘ Å₁₂
+        ↙ i₃₁  ↘ i₁₂
        ⊙₃        ⊙₂
      (MIND) ←  (BODY)
-          Å₂₃
+          i₂₃
 
 Circulation:
-    ⊙₁ ≻ Å₁₂ ⊰ ⊙₂:  Soul flows into embodiment
-    ⊙₂ ≻ Å₂₃ ⊰ ⊙₃:  Body radiates into awareness
-    ⊙₃ ≻ Å₃₁ ⊰ ⊙₁:  Mind returns to source
+    ⊙₁ ≻ i₁₂ ⊰ ⊙₂:  Soul flows into embodiment
+    ⊙₂ ≻ i₂₃ ⊰ ⊙₃:  Body radiates into awareness
+    ⊙₃ ≻ i₃₁ ⊰ ⊙₁:  Mind returns to source
 
-THE APERTURES ARE BRAID GENERATORS:
+THE i-ROTATIONS ARE BRAID GENERATORS:
 
-    Å₁₂: ⊙₁ crosses ⊙₂ → Generator σ₁
-    Å₂₃: ⊙₂ crosses ⊙₃ → Generator σ₂
-    Å₃₁: ⊙₃ crosses ⊙₁ → Completing the cycle
+    i₁₂: ⊙₁ crosses ⊙₂ → Generator σ₁
+    i₂₃: ⊙₂ crosses ⊙₃ → Generator σ₂
+    i₃₁: ⊙₃ crosses ⊙₁ → Completing the cycle
 
 YANG-BAXTER EQUATION (testable!):
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    Å₁₂ ∘ Å₂₃ ∘ Å₁₂ = Å₂₃ ∘ Å₁₂ ∘ Å₂₃                               ║
+    ║    i₁₂ ∘ i₂₃ ∘ i₁₂ = i₂₃ ∘ i₁₂ ∘ i₂₃                               ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -441,14 +441,14 @@ YANG-BAXTER EQUATION (testable!):
 THE CIRCUMPUNCT MASTER EQUATION:
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║    E = ⊙ = (○, Φ, •) × (≻, Å, ⊰)²                                        ║
+║    E = ⊙ = (○, Φ, •) × (≻, i, ⊰)²                                        ║
 ║                                                                           ║
 ║    Energy = Structure × Process²                                          ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
 EXPANDED:
     (○, Φ, •) = Spatial structure with temporal properties
-    (≻, Å, ⊰) = Temporal process (HOW future becomes past)
+    (≻, i, ⊰) = Temporal process (HOW future becomes past)
 
     Process squared because:
     - First power: the process itself
@@ -456,7 +456,7 @@ EXPANDED:
 
 CONNECTION TO PHYSICS:
     E = mc² is the special case where c = constant
-    E = (○, Φ, •) × (≻, Å, ⊰)² is the general form with time structure
+    E = (○, Φ, •) × (≻, i, ⊰)² is the general form with time structure
 ```
 
 ### §3.4 Mathematical Definition of Flow Operators
@@ -464,14 +464,14 @@ CONNECTION TO PHYSICS:
 ```
 FORMAL TYPE SIGNATURES:
 
-    ≻ : E_n × Å_(n+0.5) → E_(n+0.5)^(pre)      (Convergence)
-    ⊰ : E_(n+0.5)^(post) × Å_(n+0.5) → E_(n+1)  (Emergence)
+    ≻ : E_n × i_(n+0.5) → E_(n+0.5)^(pre)      (Convergence)
+    ⊰ : E_(n+0.5)^(post) × i_(n+0.5) → E_(n+1)  (Emergence)
 
 WHERE:
     E_n         = Field space at dimension n
-    Å_(n+0.5)   = Aperture at half-dimension n+0.5
-    E^(pre)     = Pre-transformation state (before Å acts)
-    E^(post)    = Post-transformation state (after Å acts)
+    i_(n+0.5)   = i-rotation at half-dimension n+0.5
+    E^(pre)     = Pre-transformation state (before i acts)
+    E^(post)    = Post-transformation state (after i acts)
 ```
 
 ```
@@ -480,7 +480,7 @@ INTEGRAL KERNEL FORMULATION:
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║  CONVERGENCE (gathering toward •):                                            ║
 ║                                                                               ║
-║      (x ≻ Å)(r) = ∫_{E_n} K_conv(r, r') x(r') dr'                             ║
+║      (x ≻ i)(r) = ∫_{E_n} K_conv(r, r') x(r') dr'                             ║
 ║                                                                               ║
 ║  where K_conv is a convergent kernel satisfying:                              ║
 ║      ∫ K_conv(r, r') dr < ∞                                                   ║
@@ -489,7 +489,7 @@ INTEGRAL KERNEL FORMULATION:
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║  EMERGENCE (radiating from •):                                                ║
 ║                                                                               ║
-║      (Å ⊰ y)(r) = ∫_{E_(n+0.5)} K_emerg(r, r') y(r') dr'                      ║
+║      (i ⊰ y)(r) = ∫_{E_(n+0.5)} K_emerg(r, r') y(r') dr'                      ║
 ║                                                                               ║
 ║  where K_emerg is an emergent kernel satisfying:                              ║
 ║      ∫ K_emerg(r', r) dr' < ∞                                                 ║
@@ -509,7 +509,7 @@ THEOREM (Flow Conservation):
 At equilibrium β = 0.5:
 
     ╔═══════════════════════════════════════════════════════════════════════╗
-    ║    ∫ (x ≻ Å) dr = ∫ (Å ⊰ y) dr                                        ║
+    ║    ∫ (x ≻ i) dr = ∫ (i ⊰ y) dr                                        ║
     ║                                                                       ║
     ║    What converges into • equals what emerges from •                   ║
     ╚═══════════════════════════════════════════════════════════════════════╝
@@ -535,13 +535,13 @@ COMPOSITION WITH APERTURE:
 
     The complete transformation through one cycle:
 
-    Φ(t+Δt) = ⊰ ∘ Å_β ∘ ≻ [Φ(t)]
-            = ∫∫ K_emerg(r,r'') Å_β(r'') K_conv(r'',r') Φ(r',t) dr' dr''
+    Φ(t+Δt) = ⊰ ∘ i ∘ ≻ [Φ(t)]
+            = ∫∫ K_emerg(r,r'') i(r'') K_conv(r'',r') Φ(r',t) dr' dr''
 
-    The aperture Å_β acts BETWEEN convergence and emergence:
+    The i-rotation acts BETWEEN convergence and emergence:
 
         Field → [CONVERGE] → Pre-state → [TRANSFORM] → Post-state → [EMERGE] → Field
-          Φ        ≻          at •           Å_β          at •          ⊰         Φ'
+          Φ        ≻          at •           i            at •          ⊰         Φ'
 ```
 
 ---
@@ -612,7 +612,7 @@ PHYSICAL MEANING:
 
     1.5 = [1.0D worldline] + [0.5D aperture branching]
 
-The ½ factor arises from the 90° rotation at Å:
+The ½ factor arises from the 90° rotation (i):
     0°   = point (0D)
     90°  = quarter turn (0.5D) ← Maximum entropy at •
     180° = line (1D)
@@ -621,37 +621,36 @@ The ½ factor arises from the 90° rotation at Å:
     1 bit of binary choice → ½ dimensional branching
 ```
 
-### §4.3 The i-Formulation: Å = i
+### §4.3 The Imaginary Unit as Aperture
 
 ```
-THE FUNDAMENTAL TRANSFORMATION:
+THE TRANSFORMATION AT •:
 
-The aperture operator has always been defined as:
-
-    Å_β = exp(β π 𝕁)
-
-At the critical balance point β = 0.5:
+At the center •, the transformation between convergence and emergence
+is a 90° rotation in the complex plane:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║    Å₀.₅ = exp(0.5 × π × 𝕁) = exp(iπ/2) = i                        ║
+    ║    THE TRANSFORMATION AT • IS i                                   ║
     ║                                                                   ║
-    ║    THE APERTURE IS THE IMAGINARY UNIT                             ║
+    ║    exp(iπ/2) = i = 90° rotation                                   ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 This is not metaphor. The transformation at • is literally multiplication
 by i — a 90° rotation in the complex plane between the real axis (○)
 and the imaginary axis (Φ).
+
+HISTORICAL NOTE:
+    Earlier formulations used "Å" for this transformation.
+    Old: ≻ → Å → ⊰
+    New: ≻ → i → ⊰
+    The notation changed; the mathematics is the same.
 ```
 
 ```
-THE MASTER EQUATION IN i-FORM:
+THE MASTER EQUATION:
 
-Original:
-    Φ(t+Δt) = ⊰ ∘ [○Φ•]_out ∘ Å_β ∘ [○Φ•]_in ∘ ≻[Φ(t)] + ε
-
-i-Form (at β = 0.5):
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
     ║              Φ(t+Δt) = ⊰ ∘ i ∘ ≻[Φ(t)]                            ║
@@ -664,8 +663,7 @@ i-Form (at β = 0.5):
     ╚═══════════════════════════════════════════════════════════════════╝
 
 Fixed-point formulation:
-    Original:  ⊙ = fix(λΦ. ⊰(V_out(Å_β(V_in(≻(Φ))))))
-    i-Form:    ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+    ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
 
 THE UNIVERSE IS WHAT REMAINS INVARIANT UNDER IMAGINARY ROTATION.
 ```
@@ -779,23 +777,19 @@ THE FINE STRUCTURE CONSTANT:
 ```
 
 ```
-SUMMARY: OPERATOR SUBSTITUTION
+SUMMARY: THE APERTURE IS i
 
-    ┌──────────────────┬────────────┬─────────────────────────────────┐
-    │ Original         │ i-Form     │ Meaning                         │
-    ├──────────────────┼────────────┼─────────────────────────────────┤
-    │ Å                │ i          │ Aperture transformation         │
-    │ Å_β at β=0.5     │ i          │ Pure 90° rotation               │
-    │ exp(βπ𝕁)         │ e^(iπ/2)   │ Exponential form                │
-    │ "aperture gate"  │ "i"        │ Conceptual frame                │
-    │ "transformation" │ "90° rot"  │ Geometric action                │
-    │ Å²               │ i² = -1    │ Inversion (time signature)      │
-    │ Å⁴               │ i⁴ = 1     │ Complete cycle                  │
-    └──────────────────┴────────────┴─────────────────────────────────┘
+    i⁰ = 1     Identity
+    i¹ = i     90° rotation (one pass through •)
+    i² = -1    Inversion (time reversal signature)
+    i³ = -i    270° rotation
+    i⁴ = 1     Complete cycle (return)
 
 THE APERTURE IS NOT A GATE YOU PASS THROUGH.
 IT IS A ROTATION YOU MAKE AROUND.
 THE ROTATION IS i.
+
+You are ⊙. The i-rotation happens at your center •.
 ```
 
 ---
@@ -824,7 +818,7 @@ THE MAPPING:
         ↓   ↓   ↓
        ○   Φ   •        TRINITY VIEW (structure)
         ↓   ↓   ↓
-       ≻   Å   ⊰        TRINITY VIEW (process)
+       ≻   i   ⊰        TRINITY VIEW (process)
 
 BOTH VIEWS ARE VALID — they describe the same ⊙
 ```
@@ -861,7 +855,7 @@ THIS TRIANGLE IS THE FUNDAMENTAL GEOMETRY OF EXISTENCE
 THE FUNDAMENTAL OPERATING CYCLE:
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║  Φ(t+Δt) = ⊰ ∘ [○Φ•]_out ∘ Å_β ∘ [○Φ•]_in ∘ ≻[Φ(t)] + ε                   ║
+║  Φ(t+Δt) = ⊰ ∘ [○Φ•]_out ∘ i ∘ [○Φ•]_in ∘ ≻[Φ(t)] + ε                      ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
 WHERE:
@@ -870,8 +864,8 @@ WHERE:
               ○ : Can boundary be maintained?
               Φ : Is it grounded in actual field?
               • : Does it have coherent center?
-  Å_β       = Aperture gate = exp(β π 𝕏)
-              where 𝕏 is normalized so β=0.5 → π/2 rotation (90°)
+  i         = 90° rotation at • (the aperture transformation)
+              exp(iπ/2) = i
   [○Φ•]_out = Output validation (same three tests)
   ⊰         = Emergence (releases validated patterns)
   ε         = Stochastic noise ~ N(0, α√|⟨E⟩|)
@@ -904,7 +898,7 @@ THESE CONSTRAINTS UNIQUELY FORCE:
 THIS IS THE SCHRÖDINGER EQUATION—DERIVED, NOT ASSUMED                       ∎
 
 WHERE:
-  ℏ      = Å rate scale (Planck's constant)
+  ℏ      = i-rotation rate scale (Planck's constant)
   m      = Resistance to change at •
   V(x)   = External ○ field (potential)
   ε(x,t) = Stochastic noise from validation
@@ -915,7 +909,7 @@ WHERE:
 ```
 BRAID ACCUMULATION AND BACKREACTION:
 
-    Braid → T_μν → g_μν → √|g_tt| → [Å rate] → back to Braid
+    Braid → T_μν → g_μν → √|g_tt| → [i rate] → back to Braid
 
 STEP 1: Braid Creates Stress-Energy
     T_μν^(braid) = ρ_braid u_μ u_ν + quantum corrections
@@ -923,14 +917,14 @@ STEP 1: Braid Creates Stress-Energy
 STEP 2: Stress-Energy Curves Spacetime
     G_μν = R_μν - ½g_μν R = (8πG/c⁴)T_μν
 
-STEP 3: Metric Affects Å Rate
+STEP 3: Metric Affects i-Rotation Rate
     ∂ρ_braid/∂t ∝ √|g_tt(x)|
 
 STEP 4: Loop Closes
-    Slower time → slower Å → less braid accumulation → feedback
+    Slower time → slower i → less braid accumulation → feedback
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║        GRAVITY IS Å RATE MODULATION                               ║
+    ║        GRAVITY IS i-ROTATION RATE MODULATION                      ║
     ║        SPACETIME CURVATURE IS BRAID ACCUMULATION                  ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
@@ -983,7 +977,7 @@ ANGULAR CROSSOVER FORMULA:
 THE GEOMETRIC NECESSITY:
 
     1. Four-dimensional spacetime (t, x, y, z)
-    2. Dual Å (input ≻ → • and • → ⊰ output)
+    2. Dual i (input ≻ → • and • → ⊰ output)
     3. Binary validation (pass/fail)
     4. Triple test (○, Φ, •)
 
@@ -992,18 +986,18 @@ CALCULATION:
     │  2³ input states × 2³ output states = 8 × 8 = 64 TOTAL STATES       │
     └─────────────────────────────────────────────────────────────────────┘
 
-THIS IS THE COMPLETE STATE SPACE FOR DUAL-Å VALIDATION IN 4D
+THIS IS THE COMPLETE STATE SPACE FOR DUAL-i VALIDATION IN 4D
 ```
 
 ### §7.2 Connection to Einstein
 
 ```
-EINSTEIN'S FIELD EQUATIONS (Single Å):
+EINSTEIN'S FIELD EQUATIONS (Single i):
 
     Geometry ←(8πG)→ Matter/Energy
               └─ 8 components
 
-CIRCUMPUNCT FRAMEWORK (Dual Å):
+CIRCUMPUNCT FRAMEWORK (Dual i):
 
     ≻ ←(8)→ • ←(8)→ ⊰
     Input      Output
@@ -1035,12 +1029,12 @@ REGION 3: QUARKS — States 38-47, 54-55 (111, 101)
     Must bind with other quarks to complete validation
 
 REGION 4: GAUGE BOSONS — States 7, 15, 23, 31 (111, 0XX)
-    Live "at the Å" as connections
+    Live "at the i" as connections
     • Photon, W±, Z, Gluons
 
 REGION 5: HIGGS BOSON — State 48 (110, 111)
     Sets validation thresholds
-    Gives mass by modifying Å rules
+    Gives mass by modifying i rules
 
 THE 1/3 RULE:
     ~22 states (~1/3 of 64) are physically relevant
@@ -1261,7 +1255,7 @@ CRITICAL DISTINCTION:
 ### §10.3 Why β = 0.5 Is Required
 
 ```
-Å OCCURS AT ALL β VALUES:
+i OCCURS AT ALL β VALUES:
 
     β ≈ 0.0: Pure ⊰, no • (photons)
     β ≈ 0.1: Minimal • (rocks)
@@ -1272,7 +1266,7 @@ CRITICAL DISTINCTION:
 CONSCIOUSNESS REQUIRES β ≈ 0.5 BECAUSE:
     1. • must be stable (not chaotic)
     2. • must be dynamic (not frozen)
-    3. • must be self-examining (Å aware of Å)
+    3. • must be self-examining (i aware of i)
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    ONLY AT β = 0.5 CAN • KNOW IT'S •                              ║
@@ -1590,7 +1584,7 @@ REALITY ALTERNATES BETWEEN BEING (integer D) AND BECOMING (half D):
               │ All possibilities exist
               │ No boundaries, no time
               ↓
-    [0.5D GATE: Time Creation via Å]
+    [0.5D GATE: Time Creation via i]
               │ Asymmetry breaks symmetry
               │ Creates time's arrow
               ↓
@@ -1615,7 +1609,7 @@ REALITY ALTERNATES BETWEEN BEING (integer D) AND BECOMING (half D):
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    INTEGER DIMENSIONS = STATES (stable being)                     ║
-    ║    HALF DIMENSIONS = GATES (transformation at Å)                  ║
+    ║    HALF DIMENSIONS = GATES (transformation at i)                  ║
     ║    CONSCIOUSNESS = Being at • in the 1.5D gate                    ║
     ║    TIME = The 0.5D aperture structure (why it has an arrow)       ║
     ╚═══════════════════════════════════════════════════════════════════╝
@@ -1646,7 +1640,7 @@ THE FRAMEWORK IS FALSIFIED IF:
 
 9. Yang-Mills mass gap ≠ 1.65 GeV (>10% deviation)
 
-10. Yang-Baxter equation violated: Å₁₂ ∘ Å₂₃ ∘ Å₁₂ ≠ Å₂₃ ∘ Å₁₂ ∘ Å₂₃
+10. Yang-Baxter equation violated: i₁₂ ∘ i₂₃ ∘ i₁₂ ≠ i₂₃ ∘ i₁₂ ∘ i₂₃
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    WE WELCOME ATTEMPTS TO FALSIFY                                 ║
@@ -1669,7 +1663,7 @@ THE ETERNAL CYCLE:
            │  Φ : Grounded in field?
            │  • : Coherent center?
                     ↓
-           Å_β (Aperture Gate at β ≈ 0.5)
+           i_β (Aperture Gate at β ≈ 0.5)
                     ↓
          [○Φ•]_out (Output Validation)
            │  ○ : Boundary maintained?
@@ -1684,7 +1678,7 @@ THE ETERNAL CYCLE:
                     ↓
               g_μν (Curved Metric)
                     ↓
-          √|g_tt| (Å Rate Modifier)
+          √|g_tt| (i Rate Modifier)
                     ↓
               [LOOP BACK TO ≻]
 
@@ -1705,7 +1699,7 @@ THE FIXED-POINT FORMULATION:
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
     ║                                                                           ║
-    ║    ⊙ = fix(λΦ. ⊰(V_out(Å_β(V_in(≻(Φ))))))                                 ║
+    ║    ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                                  ║
     ║                                                                           ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 
@@ -1714,7 +1708,7 @@ READING THIS:
     λΦ      = Lambda abstraction over field state
     ≻(Φ)    = Convergence gathers from field
     V_in    = Input validation [○Φ•]_in
-    Å_β     = Aperture transformation at β = 0.5
+    i_β     = Aperture transformation at β = 0.5
     V_out   = Output validation [○Φ•]_out
     ⊰       = Emergence releases to field
 
@@ -2204,7 +2198,7 @@ THE NESTED STRUCTURE:
 
 THE YANG-BAXTER OF ETHICS:
 
-    Å₁₂ ∘ Å₂₃ ∘ Å₁₂ = Å₂₃ ∘ Å₁₂ ∘ Å₂₃
+    i₁₂ ∘ i₂₃ ∘ i₁₂ = i₂₃ ∘ i₁₂ ∘ i₂₃
 
     The order of ethical encounters can be exchanged
     True agreement is PATH-INDEPENDENT
@@ -2349,7 +2343,7 @@ THE ETHICAL MASTER EQUATION:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║    Ethics = ⊙ = (○, Φ, •, ⊙) × (≻, Å, ⊰)²                        ║
+    ║    Ethics = ⊙ = (○, Φ, •, ⊙) × (≻, i, ⊰)²                        ║
     ║                                                                   ║
     ║    Complete Ethics = Structure × Process²                         ║
     ║                                                                   ║
@@ -2360,7 +2354,7 @@ THE ETHICAL MASTER EQUATION:
 
 THE FIXED-POINT OF ETHICS:
 
-    ⊙_ethics = fix(λE. ⊰(V_out(Å_β(V_in(≻(E))))))
+    ⊙_ethics = fix(λE. ⊰(V_out(i_β(V_in(≻(E))))))
 
     Ethical wholeness is a FIXED POINT:
         When validated, it returns itself
@@ -2521,7 +2515,7 @@ STEP 1: RECEIVE (≻)
     Don't interrupt, don't prepare rebuttals
     Let their complete view converge into your understanding
 
-STEP 2: TRANSFORM (Å at β = 0.5)
+STEP 2: TRANSFORM (i at β = 0.5)
     Process their view through balanced aperture
     Neither over-accept (blind agreement) nor over-reject (dismissal)
     Ask: "What is the STRONGEST version of this?"
@@ -2551,7 +2545,7 @@ THE TEST OF GENUINE STEELMAN:
 
 STEELMAN AS THE YANG-BAXTER OF DIALOGUE:
 
-    Å₁₂ ∘ Å₂₃ ∘ Å₁₂ = Å₂₃ ∘ Å₁₂ ∘ Å₂₃
+    i₁₂ ∘ i₂₃ ∘ i₁₂ = i₂₃ ∘ i₁₂ ∘ i₂₃
 
     When both parties steelman each other:
         The order of who speaks first doesn't matter
@@ -2654,7 +2648,7 @@ SUMMARY: THE ETHICAL CIRCUMPUNCT
 ║                                                                               ║
 ║                              ⊙ = ○ ⊗ Φ ⊗ •                                  ║
 ║                                                                               ║
-║                  ⊙ = fix(λΦ. ⊰(V_out(Å_β(V_in(≻(Φ))))))                       ║
+║                  ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                        ║
 ║                  ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])                 (i-Form)           ║
 ║                                                                               ║
 ║   Wholeness is its parts in tensor product (not unity absorbing parts).       ║
@@ -2665,14 +2659,14 @@ SUMMARY: THE ETHICAL CIRCUMPUNCT
 ║   Braid topology is necessary for history/past.                               ║
 ║   Therefore trinity is mathematically required.                               ║
 ║                                                                               ║
-║   The temporal process (≻, Å, ⊰) circulates through the trinity.              ║
-║   At Å, balance β = 0.5 is forced by symmetry, entropy, and energy.           ║
-║   At β = 0.5: Å = exp(iπ/2) = i. The aperture IS the imaginary unit.          ║
+║   The temporal process (≻, i, ⊰) circulates through the trinity.              ║
+║   At i, balance β = 0.5 is forced by symmetry, entropy, and energy.           ║
+║   At β = 0.5: exp(iπ/2) = i. The aperture IS the imaginary unit.              ║
 ║   This produces D = 1.5, which is topologically protected (Hopf c₁ = 1).      ║
 ║                                                                               ║
-║   Quantum mechanics emerges as continuous Å.                                  ║
+║   Quantum mechanics emerges as continuous i.                                  ║
 ║   General relativity emerges as braid accumulation.                           ║
-║   The Standard Model emerges as the 64-state Å architecture.                  ║
+║   The Standard Model emerges as the 64-state i architecture.                  ║
 ║   The cosmological constant follows geometric dilution.                       ║
 ║   Consciousness IS being at • with β ≈ 0.5.                                   ║
 ║                                                                               ║
@@ -2700,7 +2694,7 @@ SUMMARY: THE ETHICAL CIRCUMPUNCT
     ║                                                                   ║
     ║    You—reading this—are at • with β ≈ 0.5                         ║
     ║                                                                   ║
-    ║    You ARE i — the rotation between real and imaginary            ║
+    ║    You are ⊙ — i acts at your center •                            ║
     ║    Between what is (○) and what could be (Φ)                      ║
     ║    The aperture where existence transforms itself                 ║
     ║                                                                   ║
@@ -2721,25 +2715,24 @@ SUMMARY: THE ETHICAL CIRCUMPUNCT
 ```
 CIRCUMPUNCT STRUCTURE:
   ⊙      = Circumpunct (whole-with-parts)
-  •      = Center (0D aperture, where Å occurs)
+  •      = Center (0D aperture, where i acts)
   ○      = Boundary (2D interface, membrane)
   Φ      = Field (3D medium, evidence)
   ⊗      = Tensor product (entanglement)
 
 TEMPORAL PROCESS:
   ≻      = Convergence (future → •)
-           Type: E_n × Å_(n+0.5) → E_(n+0.5)^(pre)
-           Math: (x ≻ Å)(r) = ∫ K_conv(r, r') x(r') dr'
-  Å      = Aperture transformation (at •)
-           At β = 0.5: Å = exp(iπ/2) = i (the imaginary unit)
+           Type: E_n × i_(n+0.5) → E_(n+0.5)^(pre)
+           Math: (x ≻ i)(r) = ∫ K_conv(r, r') x(r') dr'
+  i      = Aperture transformation (at •) = imaginary unit
+           At β = 0.5: exp(iπ/2) = i
            The aperture IS 90° rotation in the complex plane
-  i      = The imaginary unit = Å at β = 0.5
            Real axis (○) ↔ Imaginary axis (Φ) transformation
            i² = -1 (time reversal signature)
            i⁴ = 1 (complete cycle)
   ⊰      = Emergence (• → past)
-           Type: E_(n+0.5)^(post) × Å_(n+0.5) → E_(n+1)
-           Math: (Å ⊰ y)(r) = ∫ K_emerg(r, r') y(r') dr'
+           Type: E_(n+0.5)^(post) × i_(n+0.5) → E_(n+1)
+           Math: (i ⊰ y)(r) = ∫ K_emerg(r, r') y(r') dr'
 
 FLOW OPERATORS:
   K_conv  = Convergent kernel (∫ K_conv dr < ∞)
@@ -2761,7 +2754,7 @@ VALIDATION:
 CONSTANTS:
   φ      = Golden ratio (≈ 1.618)
   α      = Fine structure (≈ 1/137)
-  ℏ      = Å rate scale (Planck's constant)
+  ℏ      = i-rotation rate scale (Planck's constant)
 
 ETHICS (Chapter XIX):
   ○      = GOOD/BAD     (Axiological - what MATTERS)
