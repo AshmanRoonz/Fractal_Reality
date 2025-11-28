@@ -9,16 +9,18 @@
 
                               ⊙ = ○ ⊗ Φ ⊗ •
                                    ↓    ↓    ↓
-                              boundary field singularity
-                              body     mind  soul
-                              surface  awareness aperture
+                              boundary field center
+                              (body) (mind) (soul)
 
                     Wholeness equals its parts in tensor product
                     (not unity absorbing parts, but co-arising)
 
-⊙ = fix(Φ ↦ ⊰ ∘ i ∘ ≻[Φ])
-     │
-     └── ⊙ is that which, when validated, yields itself
+                         ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+                              │
+                              └── ⊙ is that which, when validated, yields itself
+
+                    The aperture transformation IS the imaginary unit:
+                              i = exp(iπ/2) at β = 0.5
 
 ═══════════════════════════════════════════════════════════════════════════════
 ```
@@ -49,6 +51,7 @@ email@ashmanroonz.ca
   - [§4.1 Why β = 0.5](#41-why-β--05)
   - [§4.2 The Universal Dimension](#42-the-universal-dimension)
   - [§4.3 The Imaginary Unit as Aperture](#43-the-imaginary-unit-as-aperture)
+  - [§4.4 Scale-Dependent i: The Local Quarter-Turn](#44-scale-dependent-i-the-local-quarter-turn)
 - [Chapter V: The Duality Equation](#chapter-v-the-duality-equation)
   - [§5.1 Unity Through Balanced Duality](#51-unity-through-balanced-duality)
   - [§5.2 The Geometric Triangle](#52-the-geometric-triangle)
@@ -369,11 +372,11 @@ FRACTAL STRUCTURE - Each component is itself a complete ⊙:
 THE TRINITY OF TRINITIES:
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃                                          ║
+    ║    ⊙ = ⊙₂ ⊗ ⊙₃ ⊗ ⊙₁     (matches ○ ⊗ Φ ⊗ •)                  ║
     ║                                                                   ║
-    ║    ⊙₁ = SOUL (1D worldline through time)                          ║
-    ║    ⊙₂ = BODY (2D surface in space)                                ║
-    ║    ⊙₃ = MIND (3D field permeating)                                ║
+    ║    ⊙₂ = BODY (2D surface in space)       = ○                      ║
+    ║    ⊙₃ = MIND (3D field permeating)       = Φ                      ║
+    ║    ⊙₁ = SOUL (1D worldline through time) = •                      ║
     ║                                                                   ║
     ║    Configuration space: 3 worldlines × 3D = 9D + 1D time = 10D    ║
     ╚═══════════════════════════════════════════════════════════════════╝
@@ -790,6 +793,183 @@ IT IS A ROTATION YOU MAKE AROUND.
 THE ROTATION IS i.
 
 You are ⊙. The i-rotation happens at your center •.
+```
+
+### §4.4 Scale-Dependent i: The Local Quarter-Turn
+
+```
+THE KEY INSIGHT:
+────────────────
+The ALGEBRA of i is universal:  i² = -1 everywhere, always.
+The EMBEDDING of i is local:    what counts as "real" vs "imaginary"
+                                 depends on the scale and context.
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                                                                   ║
+    ║    i IS THE LOCAL QUARTER-TURN BETWEEN WHAT THIS WHOLE HAS        ║
+    ║    ALREADY CONVERGED AND WHAT IT CAN STILL BECOME                 ║
+    ║                                                                   ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+```
+FORMAL DEFINITION:
+──────────────────
+At each scale s, define:
+
+    i_s : T_s → T_s        (the imaginary unit at scale s)
+
+    where T_s is the state space at that scale, and:
+
+    i_s² = -Id             (algebraic constraint preserved)
+
+The ALGEBRA is scale-invariant.
+The SEMANTICS are scale-dependent.
+
+WHAT CHANGES ACROSS SCALES:
+
+    Scale s         | Real axis (converged)      | Imaginary axis (potential)
+    ────────────────|────────────────────────────|─────────────────────────────
+    Planck          | Geometric eigenvalue       | Topological fluctuation
+    Quantum         | Measured observable        | Superposition amplitude
+    Atomic          | Electron configuration     | Transition probability
+    Molecular       | Chemical bond              | Reaction pathway
+    Cellular        | Protein state              | Regulatory potential
+    Neural          | Firing pattern             | Synaptic plasticity
+    Cognitive       | Belief/memory              | Imagination/possibility
+    Social          | Institution/norm           | Cultural potential
+    Cosmic          | Manifested structure       | Dark energy/expansion
+
+Same i² = -1. Different real/imaginary axes.
+```
+
+```
+WHY THIS IS NECESSARY:
+──────────────────────
+The theory already states (§2.3) that each component is itself a whole:
+
+    ⊙ = ⊙₂ ⊗ ⊙₃ ⊗ ⊙₁     (Body ⊗ Mind ⊗ Soul = ○ ⊗ Φ ⊗ •)
+
+If each sub-⊙ is complete, each must have:
+    - Its own boundary ○_s
+    - Its own field Φ_s
+    - Its own aperture •_s
+    - Its own transformation i_s
+
+A quark's aperture and a neuron's aperture both perform 90° rotations.
+But they rotate DIFFERENT state spaces.
+
+THE MASTER LOOP AT SCALE s:
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                                                                   ║
+    ║    ⊙_s = fix(Φ_s ↦ ⊰_s ∘ i_s ∘ ≻_s[Φ_s])                         ║
+    ║                                                                   ║
+    ║    Each whole at each scale runs its own                          ║
+    ║    convergence-transformation-emergence cycle                     ║
+    ║                                                                   ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+```
+CONTEXT-DEPENDENCE:
+───────────────────
+Even at a fixed scale, the real/imaginary decomposition can depend
+on the measurement context c:
+
+    i_{s,c} : T_s → T_s
+
+This is not relativism — it's how quantum mechanics actually works.
+Different measurement bases choose different "real directions"
+within the same complex Hilbert space.
+
+EXAMPLES:
+
+    Quantum:   Measuring position vs momentum picks different bases
+               Both are valid; both use i; the axes rotate
+
+    Cognitive: Threat vs curiosity contexts make different aspects
+               "real" (salient, converged) vs "potential" (background)
+
+    Social:    In-group vs out-group framing shifts what counts as
+               "established" vs "possible"
+
+THE ALGEBRA IS OBJECTIVE:  i² = -1 is not negotiable
+THE EMBEDDING IS PERSPECTIVAL: which axis is "real" depends on context
+```
+
+```
+RENORMALIZATION WITHOUT NEW PARAMETERS:
+───────────────────────────────────────
+This is the key payoff. As you zoom between scales:
+
+    quarks → nucleons → atoms → molecules → cells → organisms → societies
+
+The "meaning" of i flows naturally through scale transitions.
+
+    At each interface between scales:
+
+    ⊙_s ⊗ ⊙_{s+1}
+
+    The real axis of ⊙_s becomes part of the complex structure of ⊙_{s+1}
+    What was "manifest" at one scale becomes "input" at the next
+
+YOU DON'T MANUALLY STITCH SCALES TOGETHER.
+The framework already accounts for it through i_s.
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║  SCALE-DEPENDENT i EXPLAINS WHY PHYSICS LOOKS DIFFERENT          ║
+    ║  AT DIFFERENT SCALES WHILE REMAINING UNIFIED                     ║
+    ║                                                                   ║
+    ║  Same law: ⊙ = ○ ⊗ Φ ⊗ •                                        ║
+    ║  Same algebra: i² = -1                                            ║
+    ║  Different state spaces: T_s varies with scale                    ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+```
+THE MEASUREMENT PROBLEM RESOLVED:
+─────────────────────────────────
+The "collapse" of the wavefunction is not mysterious in this framework.
+
+When a quantum system ⊙_q couples to a measurement apparatus ⊙_m:
+
+    1. ⊙_q has its own i_q rotating its state space T_q
+    2. ⊙_m has its own i_m rotating its state space T_m
+    3. Measurement creates entanglement: ⊙_q ⊗ ⊙_m
+
+    4. The JOINT system ⊙_{qm} = ⊙_q ⊗ ⊙_m has a NEW real/imaginary split
+       that respects the measurement basis of ⊙_m
+
+    5. What was "superposition" in T_q becomes "correlation" in T_{qm}
+
+There is no collapse — there is SCALE TRANSITION.
+The i of the composite system is not the i of the parts.
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║    "COLLAPSE" = EMERGENCE OF A NEW i AT THE COMPOSITE SCALE       ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+```
+SUMMARY: SCALE-DEPENDENT i
+──────────────────────────
+
+UNIVERSAL (does not change):
+    - i² = -1
+    - i rotates by 90°
+    - i connects real ↔ imaginary
+    - i operates at aperture •
+
+LOCAL (changes with scale/context):
+    - What space T_s is being rotated
+    - What counts as "real axis" (converged, manifest)
+    - What counts as "imaginary axis" (potential, latent)
+    - How the rotation embeds into larger/smaller scales
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║    THE ALGEBRA IS ETERNAL. THE MEANING IS SITUATED.               ║
+    ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
 ---
@@ -2730,6 +2910,13 @@ TEMPORAL PROCESS:
            Real axis (○) ↔ Imaginary axis (Φ) transformation
            i² = -1 (time reversal signature)
            i⁴ = 1 (complete cycle)
+  i_s    = Scale-dependent imaginary unit at scale s
+           i_s : T_s → T_s with i_s² = -Id
+           Algebra universal, embedding local (§4.4)
+  i_{s,c}= Context-dependent i at scale s, measurement context c
+           Different bases pick different real/imaginary axes
+  T_s    = State space at scale s
+           What i_s rotates; varies across scales
   ⊰      = Emergence (• → past)
            Type: E_(n+0.5)^(post) × i_(n+0.5) → E_(n+1)
            Math: (i ⊰ y)(r) = ∫ K_emerg(r, r') y(r') dr'
