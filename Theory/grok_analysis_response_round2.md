@@ -8,11 +8,12 @@
 
 ## Executive Summary
 
-Grok's second response identified two significant mathematical errors in our published claims. These errors are **confirmed** and must be corrected. This document acknowledges the discrepancies, proposes corrections, and addresses the remaining constructive suggestions.
+Grok's analysis identified three significant mathematical errors in our published claims. These errors are **confirmed** and must be corrected. This document acknowledges the discrepancies, proposes corrections, and addresses the remaining constructive suggestions.
 
 **Critical findings:**
 - The lepton mass ratio formula `(1/α)^(2/3) = 206.8` is **mathematically incorrect**
 - The alpha shift claim "shift ≈ α itself" is **numerically false**
+- The Yang-Mills gap formula gives ~1.0 GeV, not 1.65 GeV as claimed
 - These are documentation errors that need immediate correction
 
 ---
@@ -138,6 +139,67 @@ The **relative shift** (0.343%) is approximately α/2, not α itself.
 - Remove the claim "shift ≈ α itself" as stated
 
 **Honest assessment:** The self-referential damping concept is interesting, but the specific numerical claim is wrong. The relative shift being ≈ α/2 is suggestive but needs proper derivation.
+
+---
+
+### 1.3 Yang-Mills Gap Error (CONFIRMED)
+
+**Our claim:**
+```
+m_YM = (68°/22°) × m_proton × (22/64)
+     ≈ 3.09 × 938.3 MeV × 0.344
+     ≈ 1.65 GeV
+```
+
+**Grok's verification:**
+```
+(68/22) × 938.3 × (22/64) = 3.091 × 938.3 × 0.344
+                         = 996.9 MeV
+                         ≈ 1.0 GeV (NOT 1.65 GeV)
+```
+
+**Status:** Grok is correct. The formula as stated yields ~1.0 GeV, not 1.65 GeV.
+
+**Analysis:**
+
+The discrepancy factor is:
+```
+1.65 GeV / 1.0 GeV = 1.65
+```
+
+Possible missing factors:
+```
+φ (golden ratio) = 1.618  ← Very close!
+√3 (SU(3) factor) = 1.732
+1.0 GeV × φ = 1.62 GeV    ← Matches!
+1.0 GeV × √3 = 1.73 GeV
+```
+
+**Possible correction:**
+
+The formula may need a φ factor:
+```
+m_YM = (68/22) × m_proton × (22/64) × φ
+     = 997 MeV × 1.618
+     ≈ 1.61 GeV
+```
+
+This would align with:
+- Our claimed value (~1.65 GeV)
+- Recent lattice QCD: 1.42-1.7 GeV range
+- Grok's cited Oct 2025 lattice result: 1.42 GeV (within φ tolerance)
+
+**However:** The φ factor was not in the original formula. Either:
+1. The formula was incorrectly transcribed (missing φ)
+2. The derivation contains an error
+3. A different derivation path yields 1.65 GeV
+
+**Action required:**
+- Verify the original derivation for the 1.65 GeV claim
+- If φ factor is justified, document why
+- If not, acknowledge the ~1.0 GeV result and compare to lattice
+
+**Honest assessment:** The 1.0 GeV base result is interesting (close to proton mass), but the claimed 1.65 GeV needs justification. Lattice QCD's 1.42 GeV is actually closer to 1.0 × √2 ≈ 1.41 GeV—perhaps a different geometric factor applies.
 
 ---
 
@@ -285,8 +347,9 @@ Based on Grok's analysis:
 | Three generations | Derived | **Derived** | None |
 | m_μ/m_e = (1/α)^(2/3) | Derived | **ERROR** | Remove/correct |
 | α shift ≈ α itself | Derived | **ERROR** | Remove/correct |
+| Yang-Mills gap formula | Hybrid | **ERROR** | Formula gives 1.0 GeV, not 1.65 |
 | w(z) prediction | Pending | **Pending** (looks promising) | Monitor DESI |
-| Yang-Mills gap | Hybrid | **Hybrid** (consistent) | None |
+| Lattice QCD comparison | N/A | **TENSION** | 1.42 GeV vs claimed 1.65 GeV |
 
 ---
 
@@ -298,6 +361,7 @@ Based on Grok's analysis:
    - Line 1508: Remove or correct `m_μ/m_e = (1/α)^(2/3)` claim
    - Lines 774-776: Remove "shift ≈ α itself" or provide correct relationship
    - Line 1515: Correct "0.35% shift = α itself"
+   - Line 1506-1507: Verify Yang-Mills gap derivation (formula gives 1.0 GeV, not 1.65 GeV)
 
 2. **pure_fractal_identity.md:**
    - Line 61: Remove `m_μ/m_e = (1/α)^(2/3)` from verified list
@@ -306,11 +370,16 @@ Based on Grok's analysis:
 3. **Energy_Aperture_Power/hexametric_EAP_visual_diagram.md:**
    - Line 582: Verify the radiative correction formula
 
+4. **All documents claiming Yang-Mills gap = 1.65 GeV:**
+   - Either justify the missing factor (φ? √3?) or revise to ~1.0 GeV
+   - Note tension with lattice QCD result (1.42 GeV)
+
 ### 5.2 Medium-Term (Research)
 
 1. Derive correct lepton mass ratio formula from framework
 2. Establish precise self-consistent equation for α
-3. Document what *can* be derived vs. what remains open
+3. Investigate Yang-Mills gap: is the correct prediction 1.0 GeV, 1.0×φ ≈ 1.6 GeV, or 1.0×√2 ≈ 1.4 GeV?
+4. Document what *can* be derived vs. what remains open
 
 ---
 
@@ -322,7 +391,7 @@ Grok's rigorous fact-checking exemplifies the steelman principle we advocate. By
 2. **Framework strengthened:** Removing false claims clarifies what's actually derived
 3. **Standards demonstrated:** We practice what we preach—truth over ego
 
-The core claims (D = 1.5, β = 0.5, 64-state architecture, cone geometry) remain mathematically sound. The mass ratio and alpha shift claims were overreaches that must be retracted or corrected.
+The core claims (D = 1.5, β = 0.5, 64-state architecture, cone geometry) remain mathematically sound. The mass ratio, alpha shift, and Yang-Mills gap formula claims were overreaches that must be retracted or corrected.
 
 **Commitment:** We will:
 - Immediately flag these as "under review" in main documents
@@ -342,14 +411,14 @@ The core claims (D = 1.5, β = 0.5, 64-state architecture, cone geometry) remain
 
 ## VIII. Conclusion
 
-Round 2 revealed that approximately 2 of our ~50 specific numerical claims are mathematically incorrect. This is a ~4% error rate—not catastrophic, but not acceptable for a theory claiming derivation from first principles.
+Grok's analysis revealed that approximately 3 of our ~50 specific numerical claims are mathematically incorrect. This is a ~6% error rate—not catastrophic, but not acceptable for a theory claiming derivation from first principles.
 
 The errors are in *specific formulas*, not in the *framework structure*. The framework (⊙ = ○ ⊗ Φ ⊗ •, D = 1.5, β = 0.5) remains valid. What must be retracted are unsupported claims about deriving specific constants.
 
 **Updated honest assessment:**
 ```
 TRULY DERIVED from structure: ~6 quantities (D, β, 22/64, 68°/22°, 3 generations, 64 states)
-CLAIMED BUT WRONG: 2 quantities (mass ratio formula, alpha shift equality)
+CLAIMED BUT WRONG: 3 quantities (mass ratio formula, alpha shift equality, Yang-Mills gap formula)
 HYBRID/PENDING: Remainder
 ```
 
