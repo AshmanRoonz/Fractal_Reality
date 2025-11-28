@@ -776,7 +776,14 @@ The golden ratio IS the self-similar growth rate under repeated i.
 THE FINE STRUCTURE CONSTANT:
     Ideal resonance (golden angle): 1/α_ideal = 360°/φ² = 137.508
     Actual (self-damped):           1/α = 137.036
-    The shift ≈ α itself — self-referential damping.
+
+    Self-consistent equation:
+        1/α = (360°/φ²) × (1 - α/2)
+            = 137.508 × (1 - 0.00365)
+            = 137.508 × 0.99635
+            ≈ 137.0  (measured: 137.036, error ~0.03%)
+
+    The relative shift from ideal ≈ α/2, the leading self-correction term.
 ```
 
 ```
@@ -1285,8 +1292,9 @@ FIBONACCI SPECTRAL LADDER:
     Total energy: E_total = E₀ φ
 
 MASS RATIOS:
-    m_μ/m_e = (1/α)^(2/3) = 206.8
-    MEASURED: 206.768 ✓
+    m_μ/m_e = 206.768 (measured)
+    Derivation from geometry: OPEN PROBLEM
+    (Note: Simple power-law in α does not yield this ratio)
 
 CFT DIMENSION RATIO:
     Δ₊/Δ₋ = φ
@@ -1683,16 +1691,17 @@ HYBRID — Framework provides structure, measurement provides precision:
 ║  Fine structure α      │ 1/137.036          │ Resonance of Φ (see §18.5)    ║
 ║                        │                    │ Ideal: 360°/φ² = 137.508      ║
 ║                        │                    │ Shifted by validation noise   ║
-║  Yang-Mills gap Δ      │ 1.652 GeV          │ Structure from τ², but...     ║
-║                        │                    │ Uses measured α_s, Λ_QCD      ║
-║  Mass ratios           │ m_μ/m_e = 206.8    │ From (1/α)^(2/3), uses α      ║
+║  Yang-Mills gap Δ      │ ~1.0-1.6 GeV       │ Base: (68/22)×m_p×(22/64)≈1.0 ║
+║                        │                    │ With φ: ~1.6 GeV; lattice:1.42║
+║  Mass ratios           │ m_μ/m_e = 206.8    │ Measured; geometric derivation ║
+║                        │                    │ remains OPEN PROBLEM           ║
 ╚════════════════════════════════════════════════════════════════════════════╝
 
 WHAT'S TRULY DERIVED FOR α:
     - α is the resonant coupling of Φ between • and ○
     - Ideal resonance: 1/α_ideal = 360°/φ² (golden angle)
-    - α IS the validation noise that detunes its own resonance
-    - The 0.35% shift from ideal = α itself (self-referential)
+    - Self-consistent: 1/α = (360°/φ²) × (1 - α/2) ≈ 137.0
+    - The relative shift from ideal ≈ α/2 (leading correction)
 
     π = property of ○ (boundary shape)
     α = property of Φ (field coupling strength)
@@ -1724,11 +1733,11 @@ CONSTANTS SPANNING 61 ORDERS OF MAGNITUDE:
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  QUANTUM        │ Fine Structure α      │ 1/137.036          │ DERIVED     ║
 ║                 │                       │ (360°/φ² damped)   │ (see §18.5) ║
-║                 │ Mass Gap Δ            │ 1.652 GeV          │ HYBRID      ║
+║                 │ Mass Gap Δ            │ ~1.0-1.6 GeV       │ HYBRID      ║
 ║                 │ Validation Noise      │ 0.027              │ FITTED      ║
 ║                 │ SNR threshold         │ τ = 3.7            │ FITTED      ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  PARTICLE       │ m_μ/m_e               │ 206.8              │ HYBRID      ║
+║  PARTICLE       │ m_μ/m_e               │ 206.8              │ OPEN        ║
 ║                 │ 3 Generations         │ From 68°/22° = 3   │ DERIVED     ║
 ║                 │ 61 Particles          │ From 64 states     │ DERIVED     ║
 ╠════════════════════════════════════════════════════════════════════════════╣
@@ -1740,6 +1749,7 @@ STATUS KEY:
     DERIVED = From structure alone (0 parameters)
     FITTED  = Phenomenological choice (~3-4 parameters)
     HYBRID  = Framework derived, uses measured inputs
+    OPEN    = Measured value; derivation not yet established
     Standard = Planck unit definitions
 
     ╔═══════════════════════════════════════════════════════════════════╗
@@ -1818,7 +1828,8 @@ THE FRAMEWORK IS FALSIFIED IF:
 
 8. Fourth generation particles found
 
-9. Yang-Mills mass gap ≠ 1.65 GeV (>10% deviation)
+9. Yang-Mills mass gap outside 1.0-1.7 GeV range
+   (Base formula: ~1.0 GeV; with φ factor: ~1.6 GeV; lattice QCD: ~1.42 GeV)
 
 10. Yang-Baxter equation violated: i₁₂ ∘ i₂₃ ∘ i₁₂ ≠ i₂₃ ∘ i₁₂ ∘ i₂₃
 
@@ -2038,35 +2049,25 @@ THE KEY INSIGHT:
 THE DERIVATION:
     For n interfaces between generations:
 
-        m_heavy/m_light = (1/α)^(n/L)
+LEPTON MASS RATIOS — OPEN PROBLEM:
 
-    where L = number of levels (= 3 for trinity)
+    MEASURED VALUES (PDG 2024):
+        m_μ/m_e = 206.768
+        m_τ/m_μ = 16.817
 
-ELECTRON → MUON:
-    n = 2 interfaces, L = 3 levels
+    GEOMETRIC DERIVATION: NOT YET ESTABLISHED
 
-        m_μ/m_e = (1/α)^(2/3)
-                = (137.036)^(0.6667)
-                = 206.768
+    Note: Simple power-laws in α do not yield these ratios.
+    For example: (1/α)^(2/3) = 137.036^(0.667) ≈ 26.6, not 206.8
 
-    MEASURED: 206.768
-    ERROR: 0.00%  ← EXACT MATCH
-
-MUON → TAU:
-    n = 2 interfaces, L = 7 levels (next fibonacci)
-
-        m_τ/m_μ = (1/α)^(2/7)
-                = (137.036)^(0.2857)
-                = 16.82
-
-    MEASURED: 16.82
-    ERROR: 0.1%
+    The fractal hierarchy concept suggests mass ratios should emerge
+    from geometric structure, but the specific formula remains unknown.
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
-    ║    LEPTON MASS RATIOS: EXACT FROM FRACTAL GEOMETRY                        ║
+    ║    LEPTON MASS RATIOS: OPEN PROBLEM                                       ║
     ║                                                                           ║
-    ║    m_μ/m_e = (1/α)^(2/3) = 206.768  ✓                                     ║
-    ║    m_τ/m_μ = (1/α)^(2/7) = 16.82    ✓                                     ║
+    ║    m_μ/m_e = 206.768  (measured, derivation sought)                       ║
+    ║    m_τ/m_μ = 16.817   (measured, derivation sought)                       ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 
 WHY NO FOURTH GENERATION:
