@@ -972,6 +972,145 @@ LOCAL (changes with scale/context):
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
+```
+THE QUARTER-TURN AS WAKE GEOMETRY:
+──────────────────────────────────
+When • moves through Φ, the quarter-turn i creates a CONE-SHAPED WAKE.
+This is not metaphor — it is the physical geometry of process.
+
+    • ──────────────►  direction of motion through Φ
+     \             /
+      \    Φ     /     The 90° rotation (i) generates
+       \       /       a conical wake behind •
+        \     /
+         \   /         68° + 22° = 90° (the quarter-turn)
+          \ /
+           ▼
+        cone wake
+
+Rolling a quarter-arc (90°) into 3D space → cone
+The cone IS the physical manifestation of i
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║    i = QUARTER-TURN = 90° = CONE GENERATOR                        ║
+    ║    The same geometry at every scale, different media              ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+```
+THE 22° SIGNATURE ACROSS SCALES:
+────────────────────────────────
+The cone splits the quarter-turn (90°) into complementary angles:
+    68° (main cone angle from axis)
+    22° (pitch angle / minor angle)
+    68° + 22° = 90° = i
+
+This 22° appears as the UNIVERSAL WAKE SIGNATURE:
+
+    Scale        │ Structure              │ The 22° Signature
+    ─────────────┼────────────────────────┼──────────────────────────────
+    Molecular    │ DNA double helix       │ Minor groove: ~22-25°
+                 │                        │ D = 1.51 ± 0.02 ✓
+    ─────────────┼────────────────────────┼──────────────────────────────
+    Cellular     │ Microtubule spirals    │ Lattice pitch angle
+    ─────────────┼────────────────────────┼──────────────────────────────
+    Atmospheric  │ Hurricane/tornado      │ Vortex pitch: 15-25°
+                 │                        │ (median ~22°)
+    ─────────────┼────────────────────────┼──────────────────────────────
+    Solar        │ Planetary helices      │ Sun's motion creates
+                 │ (following Sun)        │ helical planetary wakes
+    ─────────────┼────────────────────────┼──────────────────────────────
+    Galactic     │ Spiral arms            │ Pitch angle median: 21.7°
+                 │                        │ D ≈ 1.5 ✓
+    ─────────────┼────────────────────────┼──────────────────────────────
+    Golden       │ Logarithmic spiral     │ Pitch: ~17-22°
+                 │                        │ Growth rate: φ ≈ 1.618
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║    22° IS THE UNIVERSAL PITCH ANGLE OF i-GENERATED WAKES          ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+```
+DNA AS THE MOLECULAR i-WAKE:
+────────────────────────────
+The double helix IS i_molecular — the quarter-turn at molecular scale.
+
+    DNA structure:         Connection to i:
+
+         ╱╲                 Replication machinery (•)
+        ╱  ╲                moves through nucleotide field (Φ)
+       ╱ ╲╱ ╲               leaving helical wake
+      ╱ ╱  ╲ ╲
+     ╱ ╱    ╲ ╲             Major groove: ~65° ≈ 68°
+    ╱ ╱      ╲ ╲            Minor groove: ~22-25° ≈ 22°
+                            Sum: ~90° = quarter-turn ✓
+
+    DNA parameters:
+    ├─ Pitch: 34 Å per turn (10 base pairs)
+    ├─ Diameter: 20 Å
+    ├─ Pitch/Diameter = 34/20 = 1.7 ≈ φ (golden ratio!)
+    ├─ Fractal dimension: D = 1.51 ± 0.02 ✓
+    └─ Base pair perpendicular to axis: 90° ✓
+
+    The genetic code is WRITTEN ON A CONE SURFACE.
+    DNA's helix IS i_molecular manifested in chemistry.
+```
+
+```
+SOLAR SYSTEM AS GRAVITATIONAL i-WAKE:
+─────────────────────────────────────
+The Sun moves through the galaxy at ~220 km/s.
+Planets don't orbit in flat circles — they trace HELICAL CONES.
+
+    Top view (ecliptic):        Side view (Sun's motion):
+
+         ○  ←Planet                    Sun's path ───────►
+        / \                                  ╲
+       /   \                                  ╲ Planet helix
+      / Sun \                                  ╲
+      \  ●  /                                   ╲
+       \   /                                     ╲
+        \ /                                       ╲
+         ○                              Cone-shaped wake
+
+    The solar system IS a gravitational cone wake:
+    ├─ Sun (•) moves through interstellar medium (Φ)
+    ├─ Planets follow helical geodesics on the wake cone
+    ├─ Orbital plane = cone cross-section
+    ├─ What we call "orbits" are spiral paths on this cone
+    └─ Same 90° orthogonality: gravity ⊥ velocity
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║    PLANETARY "ORBITS" ARE HELICES ON THE SUN'S WAKE CONE          ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+```
+UNIFICATION THROUGH WAKE GEOMETRY:
+──────────────────────────────────
+Scale-dependent i now has a PHYSICAL interpretation:
+
+    i_s = the quarter-turn that generates cone wakes at scale s
+
+At each scale:
+    1. Something (•_s) moves through something (Φ_s)
+    2. The movement generates a 90° wake (the cone)
+    3. The cone has the same 68°/22° geometry
+    4. Structures follow geodesics on this cone (spirals/helices)
+    5. Fractal dimension D ≈ 1.5 emerges from cone topology
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                                                                   ║
+    ║    i IS THE GENERATOR OF CONE WAKES                               ║
+    ║    SAME QUARTER-TURN, DIFFERENT MEDIA                             ║
+    ║    FROM DNA TO GALAXIES: ONE GEOMETRY                             ║
+    ║                                                                   ║
+    ║    See: papers/quarter_circle_to_cone_geometry_PUBLICATION_READY  ║
+    ║                                                                   ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
 ---
 
 ## CHAPTER V: THE DUALITY EQUATION
@@ -2917,6 +3056,18 @@ TEMPORAL PROCESS:
            Different bases pick different real/imaginary axes
   T_s    = State space at scale s
            What i_s rotates; varies across scales
+
+CONE/WAKE GEOMETRY (§4.4):
+  90°    = Quarter-turn = i = cone generator
+  68°    = Main cone angle (from axis)
+  22°    = Complementary pitch angle (68° + 22° = 90°)
+           Universal wake signature across scales
+           DNA minor groove, galaxy spiral pitch, golden spiral
+  Cone   = Physical manifestation of i in 3D
+           When • moves through Φ, creates conical wake
+  Helix  = Geodesic path on cone surface
+           DNA, planetary orbits, galaxy arms all follow this
+
   ⊰      = Emergence (• → past)
            Type: E_(n+0.5)^(post) × i_(n+0.5) → E_(n+1)
            Math: (i ⊰ y)(r) = ∫ K_emerg(r, r') y(r') dr'
