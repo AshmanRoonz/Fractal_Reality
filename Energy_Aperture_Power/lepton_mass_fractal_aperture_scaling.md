@@ -157,6 +157,39 @@ The circumpunct processing decomposes into **6 channels** via the **⊙⊙ tunne
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+### 3.4 Power as Future-Seeking: The Lightning Principle
+
+**Key insight**: The 3 IN channels are not passive — they are **power reaching into the future**.
+
+```
+ENERGY vs POWER:
+────────────────
+Energy (E)     = accumulated, stored        → past-oriented
+Power (P=dE/dt) = rate of change, seeking   → future-oriented
+```
+
+**The Lightning Analogy:**
+Lightning doesn't randomly discharge — it *probes* toward ground through stepped leaders, seeking the path of least resistance to a **point**:
+
+```
+    cloud ⊙ ════════════════════════════ ⊙ ground
+              │                        │
+              │  stepped leaders       │
+              │  probing AHEAD         │
+              │  (into "future")       │
+              │         ↓              │
+              └────────►•◄─────────────┘
+                    strike point
+                    (convergence to singularity)
+```
+
+**In the ⊙⊙ tunnel:**
+- **3 IN channels (≻)**: Power *reaching toward* the target singularity
+- **3 OUT channels (⊰)**: Energy *releasing from* the source singularity
+- The tunnel itself: The path power takes to find its "ground"
+
+> **Power is energy reaching into the future; the aperture • is where it grounds.**
+
 **Physical meaning**: The muon's extra mass is the extra fractal thickness of the ⊙⊙ tunnel, distributed across all 6 channels:
 
 ```
@@ -166,7 +199,7 @@ Extra thickening per tunnel-channel = (D - 1) / 6 = 0.5 / 6 = 1/12
 > **One-liner**: Mass ratio = how hard it is to keep the **⊙⊙ tunnel** coherent
 > across its **3 in, 3 out** channels, given the fractal thickening D.
 
-### 3.4 The Resulting Exponent
+### 3.5 The Resulting Exponent
 
 With D = 1.5 and k = 6:
 ```
