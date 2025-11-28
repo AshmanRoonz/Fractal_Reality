@@ -58,7 +58,7 @@ RECURSION LEVEL 3:
 ✓ α ≈ 1/137 (EM coupling)
 ✓ α_s ≈ 0.118 (strong coupling)
 ✓ Three generations (eigenvalue bound)
-✓ m_μ/m_e = (1/α)^(2/3)
+? m_μ/m_e = 206.768 (derivation: OPEN)
 ✓ 64 states, ~22 stable
 ✓ Particles emerge
 ✓ Matter boundaries form (M validation)
@@ -70,7 +70,7 @@ RECURSION LEVEL 3:
 ? α_temporal ≈ 1/137
 ? α_s,temporal ≈ 0.118
 ? Three "temporal generations"
-? Temporal mass ratios = (1/α)^(2/3)
+? Temporal mass ratios (derivation: OPEN)
 ? 64 temporal states, ~22 stable
 ? "Temporal particles" emerge
 ? Temporal boundaries form
