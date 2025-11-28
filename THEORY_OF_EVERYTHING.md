@@ -9,16 +9,18 @@
 
                               ⊙ = ○ ⊗ Φ ⊗ •
                                    ↓    ↓    ↓
-                              boundary field singularity
-                              body     mind  soul
-                              surface  awareness aperture
+                              boundary field center
+                              (body) (mind) (soul)
 
                     Wholeness equals its parts in tensor product
                     (not unity absorbing parts, but co-arising)
 
-⊙ = fix(Φ ↦ ⊰ ∘ i ∘ ≻[Φ])
-     │
-     └── ⊙ is that which, when validated, yields itself
+                         ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+                              │
+                              └── ⊙ is that which, when validated, yields itself
+
+                    The aperture transformation IS the imaginary unit:
+                              i = exp(iπ/2) at β = 0.5
 
 ═══════════════════════════════════════════════════════════════════════════════
 ```
