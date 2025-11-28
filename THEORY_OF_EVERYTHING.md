@@ -2183,19 +2183,64 @@ THEOREM (Mass Hierarchy from D = 1.5):
 ──────────────────────────────────────
 Generation mass ratios follow from fractal aperture scaling at D = 1.5.
 
-THE KEY INSIGHT:
-    Mass ~ resistance to validation at •
-    More massive = more interfaces to traverse
-    The aperture dimension D determines the scaling exponent
+PHYSICAL MECHANISM — MASS AS VALIDATION RESISTANCE:
+
+    In this framework, MASS is not an intrinsic property but a measure of:
+
+        "How hard it is for Φ to reconfigure the worldline at the aperture."
+
+    This is VALIDATION RESISTANCE — the difficulty the field encounters
+    when updating a particle's state through the M·Å·Φ cycle.
+
+WORLDLINE THICKENING:
+
+    Electron and muon have same charge, spin, quantum numbers — only mass differs.
+    The difference is in WORLDLINE GEOMETRY:
+
+    ELECTRON: One stable fractal worldline anchored at ⊙
+              ────────────────────────────────────────────
+              Thin, minimal validation load
+
+    MUON:     Same core structure, but THICKER / MORE BRAIDED worldline
+              ═══════════════════════════════════════════════════════
+              More stuff for Φ to update each tick
+              Higher validation resistance → more mass
+
+WHY α SETS THE SCALE:
+
+    Φ-coupling strength is governed by α:
+    • Stronger coupling → easier validation → less mass
+    • Weaker coupling → harder validation → more mass
+
+    At fixed charge/spin, m_μ/m_e measures RELATIVE VALIDATION LOAD:
+
+        m_μ/m_e ~ (1/α)^γ
+
+    where γ counts how much EXTRA APERTURE WORK the muon demands.
 
 THE DERIVATION (Conjectural):
+
     Define the effective exponent:
         γ_μ = 1 + (D - 1)/6
 
     Where:
-        1       = baseline 1D coupling through the aperture
-        (D - 1) = fractal departure from pure line (0.5 for D = 1.5)
-        6       = 3 spatial directions × 2 complementary flows (M·Å·Φ dual interface)
+        1       = baseline 1D coupling (if worldline were a pure line)
+        (D - 1) = excess dimension from fractal thickening (0.5 for D = 1.5)
+        6       = validation channels = 3 spatial axes × 2 directional flows
+
+THE SIX VALIDATION CHANNELS:
+
+    ┌─────────────────────────────────────────────────────────────────┐
+    │   3 SPATIAL AXES        ×    2 DIRECTIONAL FLOWS                │
+    │   ───────────────            ─────────────────────              │
+    │   • x-direction              • Convergence ≻ (inward)           │
+    │   • y-direction              • Emergence ⊰ (outward)            │
+    │   • z-direction                                                 │
+    │                                                                 │
+    │   TOTAL: 3 × 2 = 6 channels                                     │
+    └─────────────────────────────────────────────────────────────────┘
+
+    Each channel receives portion of thickening: (D - 1)/6 = 0.5/6 = 1/12
 
     For D = 1.5:
         γ_μ = 1 + (1.5 - 1)/6
@@ -2219,12 +2264,17 @@ LEPTON MASS SCALING LAW (Conjecture):
     │                                                                 │
     └─────────────────────────────────────────────────────────────────┘
 
-GEOMETRIC INTERPRETATION:
-    - Baseline exponent 1: One full unit of dimensional coupling (1D line)
-    - Correction (D-1)/6: Small fractal thickening from 1D to 1.5D
-    - Division by 6: Distributes extra half-dimension across:
-        • 3 spatial directions (x, y, z)
-        • 2 complementary flows (convergence/emergence)
+PHYSICAL INTERPRETATION:
+    - Baseline exponent 1: Linear worldline → minimal validation load
+    - Correction (D-1)/6 = 1/12: Extra validation resistance per channel
+    - Division by 6: 3 spatial × 2 flows (≻ convergence / ⊰ emergence)
+    - Result: Muon worldline is 1/12 "thicker" per channel than electron's
+
+SUMMARY OF MECHANISM:
+    Electron: baseline worldline          → validation load = 1
+    Muon:     thicker/braided worldline   → validation load = 1 + (D-1)/6
+                                          → extra work across 6 channels
+                                          → mass scales as (1/α)^(13/12)
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
     ║    LEPTON MASS RATIO: CONJECTURAL DERIVATION                              ║
