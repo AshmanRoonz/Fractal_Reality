@@ -88,6 +88,7 @@ The complete mathematical framework spanning 18 chapters:
 ║  Spectral ratio        │ φ = 1.618...       │ Entropy + Ghost-freedom       ║
 ║  Braid group           │ B₃                 │ Topology (min for history)    ║
 ║  Generations           │ 3                  │ 68°/22° ≈ 3.09                ║
+║  Mass ratio m_μ/m_e    │ 206.49 (0.13% err) │ (1/α)^(13/12) via ⊙⊙ tunnel   ║
 ╚════════════════════════════════════════════════════════════════════════════╝
 ```
 
