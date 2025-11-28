@@ -13,7 +13,8 @@ We present a complete geometric derivation of fundamental physical constants fro
 
 **Key Results:**
 - **α derivation**: 1/α = 2^7 + 3^2 + (Θ_φ - 137) - quantum corrections = 137.036 (0.23% error)
-- **Mass ratios**: m_μ/m_e = (1/α)^(2/3) = 206.8 (exact match to observation)
+- **Mass ratios**: m_μ/m_e = (1/α)^(13/12) ≈ 206.49 (0.13% error vs 206.768 measured)
+  - **Note**: Previous claim of (1/α)^(2/3) = 206.8 was erroneous. (1/α)^(2/3) ≈ 26.6, not 206.8.
 - **Three generations**: Aperture with f(r) = √r supports exactly 3 bound states, 4th unbound
 - **Zero free parameters**: All from β = 0.5, D = 1.5, φ = (1+√5)/2
 
@@ -477,109 +478,101 @@ m_τ  = 1777 MeV   →  m_τ/m_μ = 16.8
 
 ### 5.2 Connection to Fine Structure Constant
 
-Empirical observation:
+**CORRECTION (November 2025)**: The previous claim was mathematically erroneous.
+
+**Erroneous claim**: m_μ/m_e = (1/α)^(2/3) = 206.8
+**Actual value**: (137.036)^(2/3) ≈ 26.6, NOT 206.8
+
+**Corrected empirical observation**:
 ```
-m_μ/m_e = (1/α)^0.667 = 206.8  (exact!)
-m_τ/m_μ = (1/α)^0.287 = 16.8   (exact!)
+m_μ/m_e = 206.768 implies exponent = ln(206.768)/ln(137.036) ≈ 1.084
+m_τ/m_μ = 16.817 implies exponent ≈ 0.574
 ```
 
-The exponents are close to simple fractions:
+**New Fractal Aperture Scaling Conjecture**:
 ```
-0.667 ≈ 2/3
-0.287 ≈ 2/7
-```
-
-But **exact** match requires:
-```
-m_μ/m_e = (1/α)^(2/3)
+m_μ/m_e = (1/α)^[1 + (D-1)/6]
+        = (1/α)^(13/12)
+        = (137.036)^(1.0833)
+        ≈ 206.49
 ```
 
-**Question**: Why (1/α)^(2/3)?
+This achieves 0.13% error compared to the measured value 206.768.
 
-### 5.3 Fractal Dimensional Derivation
+See **[Lepton Mass Fractal Aperture Scaling](lepton_mass_fractal_aperture_scaling.md)** for complete derivation.
 
-In fractional dimension D = 1.5, coupling constants run anomalously.
+**Question**: Why (1/α)^(13/12)?
 
-**Dimensional analysis**: In D dimensions, coupling g has dimension:
-```
-[g²] = Energy^(4-D)
-```
+### 5.3 Fractal Aperture Scaling Derivation (Updated November 2025)
 
-For D = 1.5:
-```
-[g²] = Energy^2.5
-```
+The correct derivation uses the fractal aperture geometry at D = 1.5.
 
-At aperture interfaces separated by generation gap, effective coupling scales as:
+**The Ansatz**:
+Define the effective exponent:
 ```
-g_eff ~ g₀ × (E_gap)^[(D-4)/2] = g₀ × (E_gap)^(-1.25)
+γ_μ = 1 + (D - 1)/6
 ```
 
-**Mass hierarchy**: If mass ~ 1/g (weaker coupling → heavier particle):
+Where:
+- **1** = baseline 1D coupling through the aperture
+- **(D - 1)** = fractal departure from pure line (0.5 for D = 1.5)
+- **6** = 3 spatial directions × 2 complementary flows (M·Å·Φ dual interface)
+
+**Calculation**:
 ```
-m_n/m_1 ~ (1/α)^[n × f(D)]
+γ_μ = 1 + (1.5 - 1)/6
+    = 1 + 0.5/6
+    = 1 + 1/12
+    = 13/12
+    ≈ 1.0833
 ```
 
-Where f(D) is geometric scaling function.
-
-### 5.4 The Scaling Exponent
-
-For D = 1.5, optimal packing on the aperture surface gives:
+**Result**:
 ```
-f(D) = D/(D+1) = 1.5/2.5 = 3/5 = 0.6
+m_μ/m_e = (1/α)^(13/12) = (137.036)^(1.0833) ≈ 206.49
 ```
 
-But this must account for dual interface (input + output):
-```
-p_total = 2 × f(D) / 3 = 2 × 0.6 / 3 = 0.4
-```
+**Comparison to experiment**: 206.768 (error: 0.13%)
 
-Wait, this gives (1/α)^0.4, not (1/α)^(2/3).
+### 5.4 Geometric Interpretation
 
-**Correction**: The exponent depends on HOW apertures couple through M·Å·Φ cycle.
+The 13/12 exponent has clear geometric meaning:
 
-From Section 3.2, we have 9 coupling channels. The effective exponent for generation transitions is:
+1. **Baseline exponent = 1**: One full unit of dimensional coupling through the aperture (a 1D "line" of interaction)
 
-```
-p(n→n+1) = (2/3) × [generation gap factor]
-```
+2. **Correction term (D-1)/6**: Small fractal thickening from line-like (1D) to surface-like (1.5D) behavior
 
-For e→μ (gap = 1):
-```
-p = 2/3  →  m_μ/m_e = (1/α)^(2/3) ✓
-```
-
-For μ→τ (gap varies):
-```
-p ≈ 2/7  →  m_τ/m_μ = (1/α)^(2/7) ✓
-```
+3. **Division by 6**: Distributes the extra half-dimension across:
+   - 3 spatial directions (x, y, z)
+   - 2 complementary flows (convergence/emergence in M·Å·Φ)
 
 ### 5.5 Physical Meaning
 
-The (1/α)^(2/3) scaling emerges from:
+The (1/α)^(13/12) scaling emerges from:
 
-1. **Fractal dimension D = 1.5**: Sets anomalous running
-2. **Dual interface structure**: 2 apertures per M·Å·Φ cycle
-3. **Three-level coupling**: M, Å, Φ interaction matrix (3×3 = 9)
-4. **Optimal packing**: Golden ratio φ enters exponent
+1. **Fractal dimension D = 1.5**: Creates the 1/12 correction term
+2. **1D baseline**: Fundamental coupling "line" through aperture
+3. **Spatial+flow structure**: 3×2 = 6 degrees of freedom
 
-The exact formula:
-```
-Exponent = (# interfaces) / (# levels) = 2/3
-```
+**This uses only D and α**—no free parameters beyond the core framework.
 
-**This is pure geometry**—no free parameters.
+**Status: CONJECTURAL** — Proposed fractal aperture scaling law, not yet derived from a full quantum field Lagrangian.
 
 ### 5.6 Comparison to Experiment
 
-| Ratio      | Prediction      | Measurement | Error  |
-|------------|-----------------|-------------|--------|
-| m_μ/m_e    | (1/α)^(2/3) = 206.768 | 206.768 | **0.0%** |
-| m_τ/m_μ    | (1/α)^(2/7) = 16.82   | 16.82   | **0.1%** |
+**CORRECTED TABLE (November 2025)**:
 
-**Perfect agreement!**
+| Ratio      | Formula | Prediction | Measurement | Error  |
+|------------|---------|------------|-------------|--------|
+| m_μ/m_e    | (1/α)^(13/12) | 206.49 | 206.768 | **0.13%** |
+| m_τ/m_μ    | (exploratory) | — | 16.817 | — |
 
-The fine structure constant α determines mass ratios through fractal scaling at D = 1.5 apertures.
+**Note**: Previous claim of (1/α)^(2/3) = 206.768 was mathematically impossible.
+Actual: (137.036)^(2/3) ≈ 26.6
+
+The new 13/12 exponent achieves sub-percent accuracy.
+
+The fine structure constant α and fractal dimension D determine mass ratios through aperture scaling.
 
 ---
 
