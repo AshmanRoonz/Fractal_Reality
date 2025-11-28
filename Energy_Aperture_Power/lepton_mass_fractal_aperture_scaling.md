@@ -132,27 +132,39 @@ Where:
 
 ### 3.3 The Six Validation Channels (k = 6)
 
-The circumpunct processing decomposes into **6 channels**:
+The circumpunct processing decomposes into **6 channels** via the **⊙⊙ tunnel**:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
-│   3 SPATIAL AXES          ×    2 DIRECTIONAL FLOWS              │
-│   ───────────────              ─────────────────────            │
-│   • x-direction                • Convergence ≻ (inward)         │
-│   • y-direction                • Emergence ⊰ (outward)          │
-│   • z-direction                                                 │
+│   THE CIRCUMPUNCT TUNNEL: ⊙⊙                                    │
+│   ══════════════════════════                                    │
 │                                                                 │
-│   TOTAL: 3 × 2 = 6 channels                                     │
+│   Two singularities linked by a worldline that must stay        │
+│   coherent across 3 convergent and 3 emergent channels:         │
+│                                                                 │
+│        ⊙ ─────────────────────────────────────────── ⊙          │
+│     source                tunnel                  target        │
+│                                                                 │
+│   3 IN (convergence ≻)      ×      3 OUT (emergence ⊰)          │
+│   ────────────────────             ─────────────────────        │
+│   • x-direction in                 • x-direction out            │
+│   • y-direction in                 • y-direction out            │
+│   • z-direction in                 • z-direction out            │
+│                                                                 │
+│   TOTAL: 3 in + 3 out = 6 channels                              │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Physical meaning**: The extra fractal mass (validation resistance) of the muon must be maintained consistently across all 6 channels. Each channel receives a portion of the thickening:
+**Physical meaning**: The muon's extra mass is the extra fractal thickness of the ⊙⊙ tunnel, distributed across all 6 channels:
 
 ```
-Extra mass per channel = (D - 1) / 6 = 0.5 / 6 = 1/12
+Extra thickening per tunnel-channel = (D - 1) / 6 = 0.5 / 6 = 1/12
 ```
+
+> **One-liner**: Mass ratio = how hard it is to keep the **⊙⊙ tunnel** coherent
+> across its **3 in, 3 out** channels, given the fractal thickening D.
 
 ### 3.4 The Resulting Exponent
 
