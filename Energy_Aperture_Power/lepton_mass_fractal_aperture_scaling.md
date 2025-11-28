@@ -60,13 +60,65 @@ So we need an exponent γ ≈ 1.084. Can we derive this from D and β?
 
 ---
 
-## 2. The Fractal Aperture Scaling Ansatz
+## 2. Physical Mechanism: Mass as Validation Resistance
 
-### 2.1 Physical Interpretation
+### 2.1 The Core Insight
 
-The aperture at D = 1.5 represents:
+In the Circumpunct framework, **mass** is not an intrinsic property but a measure of:
+
+> **How hard it is for Φ to reconfigure the worldline at the aperture.**
+
+This is "validation resistance" — the difficulty the field encounters when updating a particle's state through the M·Å·Φ cycle.
+
+### 2.2 Electron vs Muon: Worldline Thickness
+
+Both particles have:
+- Same electric charge
+- Same spin
+- Same quantum numbers (except mass)
+
+The difference is in their **worldline geometry**:
+
+```
+ELECTRON: One stable fractal worldline anchored at the circumpunct
+          ────────────────────────────────────────────────────
+          Thin, minimal "validation load"
+
+MUON:     Same core structure, but THICKER / MORE BRAIDED worldline
+          ═══════════════════════════════════════════════════════
+          More stuff for Φ to update each tick
+          Higher "validation resistance" → more mass
+```
+
+**Key insight**: The muon's worldline has additional fractal thickening that must be maintained across all validation channels. This extra work manifests as higher mass.
+
+### 2.3 Why α Sets the Scale
+
+Since Φ-coupling strength is governed by the fine structure constant α:
+- Stronger coupling (larger α) → easier validation → less mass
+- Weaker coupling (smaller α) → harder validation → more mass
+
+At fixed charge/spin, the ratio m_μ/m_e measures the **relative validation load**:
+
+```
+m_μ/m_e ~ (1/α)^γ
+```
+
+where γ counts **how much extra aperture work** the muon demands relative to the electron.
+
+---
+
+## 3. The Fractal Aperture Scaling Ansatz
+
+### 3.1 Worldline Geometry
+
+The aperture at D = 1.5 creates a specific worldline geometry:
 - **1D component**: A "line" of interaction through the aperture (baseline coupling)
-- **0.5D component**: The fractal departure from pure 1D (surface roughness, dimensional thickness)
+- **0.5D component**: The fractal departure from pure 1D (thickening, braiding)
+
+The "track" of a charged particle in spacetime isn't a 1D line. Under repeated validation through the M·Å·Φ cycle, it thickens into a fractal curve with dimension D = 1.5.
+
+### 3.2 The Exponent Ansatz
 
 We propose the effective exponent:
 ```
@@ -74,26 +126,35 @@ We propose the effective exponent:
 ```
 
 Where:
-- **1** = baseline 1D coupling through the aperture
-- **(D - 1)** = departure from a line (1D) into fractal territory
-- **k** = distribution factor (how the extra dimension spreads across degrees of freedom)
+- **1** = baseline 1D coupling (if worldline were a pure line)
+- **(D - 1)** = excess dimension from fractal thickening (0.5 for D = 1.5)
+- **k** = number of validation channels the thickening must be maintained across
 
-### 2.2 Determining k = 6
+### 3.3 The Six Validation Channels (k = 6)
 
-The division by k = 6 has geometric meaning:
+The circumpunct processing decomposes into **6 channels**:
+
 ```
-6 = 3 spatial dimensions × 2 complementary flows
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│   3 SPATIAL AXES          ×    2 DIRECTIONAL FLOWS              │
+│   ───────────────              ─────────────────────            │
+│   • x-direction                • Convergence ≻ (inward)         │
+│   • y-direction                • Emergence ⊰ (outward)          │
+│   • z-direction                                                 │
+│                                                                 │
+│   TOTAL: 3 × 2 = 6 channels                                     │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-Where:
-- **3 spatial directions** (x, y, z) each receive a portion of the fractal correction
-- **2 complementary flows** represent the M·Å·Φ dual interface (convergence/emergence)
+**Physical meaning**: The extra fractal mass (validation resistance) of the muon must be maintained consistently across all 6 channels. Each channel receives a portion of the thickening:
 
-This is consistent with the framework's structure:
-- Matter-Aperture-Power operates across 3 hierarchical levels
-- Each level has input and output (×2 interfaces)
+```
+Extra mass per channel = (D - 1) / 6 = 0.5 / 6 = 1/12
+```
 
-### 2.3 The Resulting Exponent
+### 3.4 The Resulting Exponent
 
 With D = 1.5 and k = 6:
 ```
@@ -107,9 +168,9 @@ With D = 1.5 and k = 6:
 
 ---
 
-## 3. Numerical Verification
+## 4. Numerical Verification
 
-### 3.1 Computing the Mass Ratio
+### 4.1 Computing the Mass Ratio
 
 Using 1/α = 137.036 (2024+ PDG value):
 ```
@@ -118,7 +179,7 @@ Using 1/α = 137.036 (2024+ PDG value):
         ≈ 206.49
 ```
 
-### 3.2 Comparison to Experiment
+### 4.2 Comparison to Experiment
 
 ```
 Predicted:    (1/α)^(13/12)  = 206.49
@@ -133,9 +194,9 @@ Relative error = (206.49 - 206.768) / 206.768
 
 ---
 
-## 4. The Complete Scaling Law
+## 5. The Complete Scaling Law
 
-### 4.1 Formula
+### 5.1 Formula
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -155,21 +216,29 @@ Relative error = (206.49 - 206.768) / 206.768
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 4.2 Geometric Interpretation
+### 5.2 Physical & Geometric Interpretation
 
 | Component | Physical Meaning |
 |-----------|------------------|
-| Baseline exponent = 1 | One full unit of dimensional coupling through the aperture (1D "line" of interaction) |
-| Correction (D-1)/6 | Small fractal thickening from line-like (1D) to surface-like (1.5D) behavior |
-| D - 1 = 0.5 | How far the aperture's effective geometry departs from a pure line |
-| Division by 6 | Distribution across 3 spatial directions × 2 complementary flows |
-| Result: 13/12 | Effective exponent combining baseline + fractal correction |
+| Baseline exponent = 1 | Linear worldline coupling (if no fractal thickening) |
+| Correction (D-1)/6 = 1/12 | Extra validation resistance from fractal thickening per channel |
+| D - 1 = 0.5 | Excess dimension of muon's braided worldline over electron's |
+| Division by 6 | 3 spatial axes × 2 flows (convergence ≻ / emergence ⊰) |
+| Result: γ = 13/12 | Total validation load ratio → mass ratio scaling exponent |
+
+**Summary of Physical Mechanism:**
+```
+Electron: baseline worldline          → validation load = 1
+Muon:     thicker/braided worldline   → validation load = 1 + (D-1)/6
+                                      → extra work across 6 channels
+                                      → mass scales as (1/α)^(13/12)
+```
 
 ---
 
-## 5. Extension to τ/μ Ratio (Exploratory)
+## 6. Extension to τ/μ Ratio (Exploratory)
 
-### 5.1 Applying the Same Pattern
+### 6.1 Applying the Same Pattern
 
 If the μ→τ transition follows similar geometry with a different distribution:
 ```
@@ -185,7 +254,7 @@ y = ln(16.817) / ln(137.036)
 y ≈ 0.574
 ```
 
-### 5.2 Possible Interpretation
+### 6.2 Possible Interpretation
 
 If we use:
 ```
@@ -201,9 +270,9 @@ This could represent:
 
 ---
 
-## 6. What This Is and Is Not
+## 7. What This Is and Is Not
 
-### 6.1 What This IS
+### 7.1 What This IS
 
 - A simple, elegant scaling law tying m_μ/m_e to α and D
 - Numerically accurate (0.13% error)
@@ -211,7 +280,7 @@ This could represent:
 - Uses only core parameters (α, D = 1.5)
 - No extra free parameters or fitting
 
-### 6.2 What This Is NOT
+### 7.2 What This Is NOT
 
 - A proven derivation from first principles of QFT
 - A claim of "exact match" — we learned that lesson
@@ -220,9 +289,9 @@ This could represent:
 
 ---
 
-## 7. Mathematical Details
+## 8. Mathematical Details
 
-### 7.1 Derivation Steps
+### 8.1 Derivation Steps
 
 1. **Identify target**: m_μ/m_e = 206.768
 
@@ -243,7 +312,7 @@ This could represent:
 
 6. **Verify**: Error = 0.13% ✓
 
-### 7.2 Sensitivity Analysis
+### 8.2 Sensitivity Analysis
 
 How sensitive is the prediction to D?
 
@@ -259,16 +328,16 @@ How sensitive is the prediction to D?
 
 ---
 
-## 8. Connection to M·Å·Φ Framework
+## 9. Connection to M·Å·Φ Framework
 
-### 8.1 Aperture Role
+### 9.1 Aperture Role
 
 The aperture (Å) at D = 1.5:
 - Mediates energy-to-power conversion
 - Operates at fractional dimension between 1D (line) and 2D (surface)
 - Creates the "thickened line" geometry that determines γ
 
-### 8.2 Why α Enters
+### 9.2 Why α Enters
 
 The fine structure constant α encodes:
 - Electromagnetic coupling strength at the aperture interface
@@ -279,7 +348,7 @@ Mass ratios inherit α-dependence because:
 - Generations couple at different "depths" through the aperture
 - Each depth transition involves α-scaled energy barriers
 
-### 8.3 Why D = 1.5 is Special
+### 9.3 Why D = 1.5 is Special
 
 D = 1.5 is the unique stable fractal dimension because:
 - β = 0.5 (the only stable balance point)
@@ -288,7 +357,7 @@ D = 1.5 is the unique stable fractal dimension because:
 
 ---
 
-## 9. Comparison Table
+## 10. Comparison Table
 
 | Formula | Predicted m_μ/m_e | Error | Status |
 |---------|-------------------|-------|--------|
@@ -299,7 +368,7 @@ D = 1.5 is the unique stable fractal dimension because:
 
 ---
 
-## 10. Summary and Status
+## 11. Summary and Status
 
 ### The Lepton Mass Scaling Conjecture
 
