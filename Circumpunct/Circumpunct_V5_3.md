@@ -1881,6 +1881,72 @@ Returns to starting point (possibly scaled)
 This would express conservation of wholeness
 ```
 
+### 8.5 Operator Composition System (V5.3.2)
+
+**Compact notation for the complete Circumpunct dynamics:**
+
+```
+⊙ = (○, Φ, •) × (≻, i, ⊰)³
+```
+
+**Where the structural triad has explicit dynamics:**
+
+```
+○:  ∂○/∂t = ε,      ○ = {r : |r| = R}      (boundary, slow evolution)
+Φ:  ∂Φ/∂t = O(1),   Φ: {r : |r| ≤ R}×ℝ → ℂ (field, moderate dynamics)
+•:  ∂•/∂t = 0,      • ≡ r = 0              (center, invariant)
+```
+
+**And the process triad operates as composition:**
+
+```
+≻[Φ]      = ∫_{|r'|≤R} K_conv(0,r') Φ(r') d³r'    (convergence)
+i(a)      = exp(iπ/2) · a                          (90° rotation)
+⊰[b₀](r)  = K_emerg(r,0) · b₀                      (emergence)
+```
+
+**The dynamics unfold through operator composition:**
+
+```
+Φ_{t+Δt}(r) = (⊰ ∘ i ∘ ≻)[Φ_t](r)
+
+Reading right-to-left:
+  ≻  : Field → converges to center (integration over volume)
+  i  : Rotates by π/2 (quarter turn in complex plane)
+  ⊰  : Emerges back out (kernel broadcasting from center)
+```
+
+**The superscript ³ indicates:**
+
+```
+(≻, i, ⊰)³ = one such loop defined at each structural level (○, Φ, •)
+
+Level •:  Process operates at the invariant center (fastest)
+Level Φ:  Process operates through the field (moderate)
+Level ○:  Process operates at the boundary (slowest)
+
+This gives the timescale separation:
+  τ_• → 0    (instantaneous at center)
+  τ_Φ ~ 1    (unit timescale for field)
+  τ_○ ~ 1/ε  (slow boundary evolution)
+```
+
+**Physical interpretation:**
+
+```
+The notation ⊙ = (○, Φ, •) × (≻, i, ⊰)³ reads:
+
+  "The Circumpunct IS the structural triad (boundary, field, center)
+   CROSSED WITH the process triad (converge, rotate, emerge)
+   operating at THREE nested levels"
+
+This captures:
+  • Structure × Process duality
+  • Self-similar nesting (the ³)
+  • Timescale hierarchy (ε, O(1), 0)
+  • The fundamental cycle: converge → turn → emerge
+```
+
 ---
 
 ## Chapter 9 — Energy, Power, and Dimensional Flow
@@ -1937,7 +2003,7 @@ What flows out of ⊙₃ = What flows into ⊙₁
 **Because P = ⊙_string = your worldline:**
 
 ```
-E = ⊙ = (·, ○, Φ) × (≻, Å, ⊰)²     [Universal form]
+E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³     [Universal form, see §8.5]
   What you ARE at a moment
   Same structure for all
 
