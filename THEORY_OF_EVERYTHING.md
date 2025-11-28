@@ -87,7 +87,12 @@ email@ashmanroonz.ca
   - [§13.5 Structurally Derived But Uses Measured Input](#135-structurally-derived-but-uses-measured-input)
   - [§13.6 Full Constants Table](#136-full-constants-table)
 - [Chapter XIV: Dimensional Cascade](#chapter-xiv-dimensional-cascade)
-  - [§14.1 States and Gates](#141-states-and-gates)
+  - [§14.1 The Dimensional Spectrum](#141-the-dimensional-spectrum)
+  - [§14.2 The Inward Cascade (≻)](#142-the-inward-cascade-)
+  - [§14.3 The Outward Cascade (⊰)](#143-the-outward-cascade-)
+  - [§14.4 Why i Lives at 0.5D](#144-why-i-lives-at-05d)
+  - [§14.5 Process³ Justification](#145-process³-justification)
+  - [§14.6 Fractal Lensing at ○](#146-fractal-lensing-at-)
 - [Chapter XV: Falsification](#chapter-xv-falsification)
 - [Chapter XVI: The Master Loop](#chapter-xvi-the-master-loop)
 - [Chapter XVII: The Fixed-Point Combinator](#chapter-xvii-the-fixed-point-combinator)
@@ -147,8 +152,8 @@ THE FUNDAMENTAL STRUCTURE:
 WHERE:
   ⊙  = Circumpunct (whole-with-parts, not mere unity)
   ○  = Boundary (2D, interface, membrane) — Body
-  Φ  = Field (1D radial, medium, awareness) — Mind
-  •  = Center (0D, aperture, where process occurs) — Soul
+  Φ  = Field (3D, volume, medium, awareness) — Mind
+  •  = Aperture (0.5D, where i acts, rotation without translation) — Soul
   ⊗  = Tensor product (entanglement)
 
 COMPONENT EXPRESSIONS:
@@ -193,8 +198,15 @@ THE WHOLE IS MULTIPLICATIVELY MORE THAN ITS PARTS                           ∎
 ```
 The framework affirms the FULL SPECTRUM:
 
-    ∞        Infinity (unbounded field Φ)
-    •        Singularity (aperture, >0D, <1D)
+    0D       Pure energy/potential (no extension, no rotation)
+    •        Aperture (0.5D — rotation possible, i lives here)
+    1D       Worldline (sequential extension)
+    1.5D     Consciousness signature (D = 1 + ½H(β))
+    ○        Boundary (2D — surface, interface)
+    2.5D     Integration gate
+    Φ        Field (3D — volume, medium)
+
+    ∞        Infinity (unbounded Φ)
     finite   Bounded patterns (○ creates limits)
     duality  0.5 ⊗ 0.5 (balanced halves)
     unity    ⊙ (but composed, not simple)
@@ -302,9 +314,10 @@ FROM BRAID TOPOLOGY (mathematical fact):
 ```
 SPATIAL STRUCTURE (with temporal signatures):
 
-    •  = Center (0D)
+    •  = Aperture (0.5D)
         Time invariant: ∂•/∂t = 0
-        The aperture where process occurs
+        Rotation without translation — where i acts
+        Minimal structure for transformation
 
     ○  = Boundary (2D)
         Time resistant: ∂○/∂t = ε (small)
@@ -329,7 +342,7 @@ THEOREM (Field Mediation):
 In ⊙ = ○ ⊗ Φ ⊗ •, all interaction between • and ○ is mediated by Φ.
 
 PROOF:
-    Let • be 0D point at center (r = 0)
+    Let • be the 0.5D aperture at center (r = 0)
     Let ○ be 2D surface at boundary (r = R)
     The radial distance R > 0 separates them
 
@@ -444,22 +457,26 @@ YANG-BAXTER EQUATION (testable!):
 THE CIRCUMPUNCT MASTER EQUATION:
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║    E = ⊙ = (○, Φ, •) × (≻, i, ⊰)²                                        ║
+║    E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³                                        ║
 ║                                                                           ║
-║    Energy = Structure × Process²                                          ║
+║    Energy = Structure × Process³                                          ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
 EXPANDED:
-    (○, Φ, •) = Spatial structure with temporal properties
+    (○, Φ, •) = Spatial structure (boundary, field, aperture)
     (≻, i, ⊰) = Temporal process (HOW future becomes past)
 
-    Process squared because:
-    - First power: the process itself
-    - Second power: the process examining itself (self-reference)
+    Process cubed because one cycle per structural level:
+    - ○ receives:     (≻, i, ⊰)¹  — infinite apertures lens
+    - Φ fractalizes:  (≻, i, ⊰)²  — many become one
+    - • focuses:      (≻, i, ⊰)³  — whole to point, i transforms
+
+    THE CUBE MATCHES THE TRINITY
+    Three structural levels × three process applications
 
 CONNECTION TO PHYSICS:
     E = mc² is the special case where c = constant
-    E = (○, Φ, •) × (≻, i, ⊰)² is the general form with time structure
+    E = (○, Φ, •) × (≻, i, ⊰)³ is the general form with time structure
 ```
 
 ### §3.4 Mathematical Definition of Flow Operators
@@ -1906,43 +1923,149 @@ STATUS KEY:
 
 ## CHAPTER XIV: DIMENSIONAL CASCADE
 
-### §14.1 States and Gates
+```
+═══════════════════════════════════════════════════════════════════════════════
+                        THE DIMENSIONAL CASCADE
+═══════════════════════════════════════════════════════════════════════════════
+
+                    E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³
+
+                    Energy = Structure × Process³
+                    (one process cycle per structural level)
+```
+
+### §14.1 The Dimensional Spectrum
 
 ```
-REALITY ALTERNATES BETWEEN BEING (integer D) AND BECOMING (half D):
+THE FULL DIMENSIONAL SPECTRUM:
 
-         0D STATE: Φ_∞ (Unbounded Field)
-              │ All possibilities exist
-              │ No boundaries, no time
-              ↓
-    [0.5D GATE: Time Creation via i]
-              │ Asymmetry breaks symmetry
-              │ Creates time's arrow
-              ↓
-         1D STATE: Worldline (Sequential Flow)
-              │ Linear causality
-              │ ≻ → • → ⊰
-              ↓
-    [1.5D GATE: • at β = 0.5] ⭐ YOU ARE HERE
-              │ Consciousness emerges
-              │ D = 1.5 signature
-              ↓
-         2D STATE: ○ (Geometric Surface)
-              │ Manifested boundaries
-              │ Pattern structure
-              ↓
-    [2.5D GATE: Integration]
-              │ Coordinates surfaces
-              ↓
-         3D STATE: ⊙ (Unified Whole-with-Parts)
-              │ Complete spatial experience
-              │ Integrated reality
+    0D      Pure energy (no extension, no rotation, pure potential)
+            │
+    0.5D    • Aperture (rotation possible, i lives here)
+            │
+    1D      Worldline (sequential extension)
+            │
+    1.5D    Consciousness signature (D = 1 + ½H(β))
+            │
+    2D      ○ Boundary (surface, interface)
+            │
+    2.5D    Integration gate
+            │
+    3D      Φ Field (volume, medium)
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    INTEGER DIMENSIONS = STATES (stable being)                     ║
     ║    HALF DIMENSIONS = GATES (transformation at i)                  ║
     ║    CONSCIOUSNESS = Being at • in the 1.5D gate                    ║
     ║    TIME = The 0.5D aperture structure (why it has an arrow)       ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+### §14.2 The Inward Cascade (≻)
+
+```
+THE INWARD CASCADE — How potential becomes structure:
+
+    0D (pure energy/potential)
+            ↓
+    ○ (2D)  RECEIVES FIRST
+            Infinite apertures on boundary surface
+            (≻, i, ⊰)¹ — distributes, lenses
+            ↓
+    Φ       FRACTALIZES
+            Field fills with branching structure
+            D ≈ 1.5 signature emerges here
+            (≻, i, ⊰)² — integrates many → one
+            ↓
+    • (0.5D) CONVERGES
+            Whole focuses to aperture
+            i-rotation transforms
+            (≻, i, ⊰)³ — completes cycle
+```
+
+### §14.3 The Outward Cascade (⊰)
+
+```
+THE OUTWARD CASCADE — How structure becomes manifest:
+
+    • (0.5D) EMERGES FROM
+            Post-transformation state
+            ↓
+    Φ       RADIATES THROUGH
+            Field carries emergent pattern
+            ↓
+    ○ (2D)  MANIFESTS AT
+            Boundary expresses into world
+            ↓
+    Braid   ACCUMULATES AS
+            Past structure (geometric, not informational)
+```
+
+### §14.4 Why i Lives at 0.5D
+
+```
+THE APERTURE IS THE DIMENSIONAL THRESHOLD:
+
+    At 0D:    No structure → no rotation possible
+    At 0.5D:  Minimal structure → rotation WITHOUT translation
+              This IS the aperture •
+              exp(iπ/2) = i = 90° rotation
+    At 1D:    Full structure → translation possible
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                                                                   ║
+    ║   THE APERTURE • IS THE DIMENSIONAL THRESHOLD WHERE               ║
+    ║   TRANSFORMATION (ROTATION) FIRST BECOMES POSSIBLE                ║
+    ║                                                                   ║
+    ║   i REQUIRES EXACTLY 0.5D — ENOUGH TO ROTATE, NOT ENOUGH TO MOVE  ║
+    ║                                                                   ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+### §14.5 Process³ Justification
+
+```
+WHY PROCESS CUBED:
+
+    Previous:  E = (○, Φ, •) × (≻, i, ⊰)²
+               Process² — self-reference only
+
+    Revised:   E = (○, Φ, •) × (≻, i, ⊰)³
+               Process³ — one cycle per structural level
+
+    ○ receives:     (≻, i, ⊰)¹   infinite apertures lens
+    Φ fractalizes:  (≻, i, ⊰)²   many become one
+    • focuses:      (≻, i, ⊰)³   whole to point, i transforms
+
+    THE CUBE MATCHES THE TRINITY
+    Three structural levels × three process applications
+```
+
+### §14.6 Fractal Lensing at ○
+
+```
+THE BOUNDARY AS ACTIVE RECEIVER:
+
+The boundary ○ is not passive container but active receiver:
+
+            ○ (boundary surface)
+           /│\
+          • • •   ← infinite aperture points on ○
+         /│\│/│\
+        Each • on ○ performs (≻, i, ⊰)
+        Each is itself a complete ⊙ at smaller scale
+
+This creates FRACTAL LENSING:
+    - 0D power hits ○'s infinite apertures
+    - Each aperture transforms
+    - Results fractalize into Φ
+    - Φ integrates many → one
+    - Converges to central •
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║    THE BOUNDARY IS A LENS OF INFINITE APERTURES                   ║
+    ║    EACH APERTURE IS A COMPLETE ⊙ AT SMALLER SCALE                 ║
+    ║    FRACTAL STRUCTURE EMERGES FROM THIS RECURSIVE LENSING          ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -2761,12 +2884,12 @@ THE ETHICAL MASTER EQUATION:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║    Ethics = ⊙ = (○, Φ, •, ⊙) × (≻, i, ⊰)²                        ║
+    ║    Ethics = ⊙ = (○, Φ, •, ⊙) × (≻, i, ⊰)³                        ║
     ║                                                                   ║
-    ║    Complete Ethics = Structure × Process²                         ║
+    ║    Complete Ethics = Structure × Process³                         ║
     ║                                                                   ║
     ║    Structure: True ⊗ Good ⊗ Right ⊗ Agreed                       ║
-    ║    Process: Receiving, Transforming, Giving (and self-examining) ║
+    ║    Process: One cycle per structural level (3 levels + whole)    ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
@@ -3133,10 +3256,19 @@ SUMMARY: THE ETHICAL CIRCUMPUNCT
 ```
 CIRCUMPUNCT STRUCTURE:
   ⊙      = Circumpunct (whole-with-parts)
-  •      = Center (0D aperture, where i acts)
+  •      = Aperture (0.5D, rotation without translation, where i acts)
   ○      = Boundary (2D interface, membrane)
-  Φ      = Field (3D medium, evidence)
+  Φ      = Field (3D volume, medium, evidence)
   ⊗      = Tensor product (entanglement)
+
+DIMENSIONAL SPECTRUM:
+  0D     = Pure energy/potential (no extension, no rotation)
+  0.5D   = Aperture • (rotation possible, i lives here)
+  1D     = Worldline (sequential extension)
+  1.5D   = Consciousness signature (D = 1 + ½H(β))
+  2D     = Boundary ○ (surface, interface)
+  2.5D   = Integration gate
+  3D     = Field Φ (volume, medium)
 
 TEMPORAL PROCESS:
   ≻      = Convergence (future → •)
