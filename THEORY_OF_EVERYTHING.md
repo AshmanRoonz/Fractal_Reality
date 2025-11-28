@@ -370,11 +370,11 @@ FRACTAL STRUCTURE - Each component is itself a complete ⊙:
 THE TRINITY OF TRINITIES:
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃                                          ║
+    ║    ⊙ = ⊙₂ ⊗ ⊙₃ ⊗ ⊙₁     (matches ○ ⊗ Φ ⊗ •)                  ║
     ║                                                                   ║
-    ║    ⊙₁ = SOUL (1D worldline through time)                          ║
-    ║    ⊙₂ = BODY (2D surface in space)                                ║
-    ║    ⊙₃ = MIND (3D field permeating)                                ║
+    ║    ⊙₂ = BODY (2D surface in space)       = ○                      ║
+    ║    ⊙₃ = MIND (3D field permeating)       = Φ                      ║
+    ║    ⊙₁ = SOUL (1D worldline through time) = •                      ║
     ║                                                                   ║
     ║    Configuration space: 3 worldlines × 3D = 9D + 1D time = 10D    ║
     ╚═══════════════════════════════════════════════════════════════════╝
@@ -846,7 +846,7 @@ WHY THIS IS NECESSARY:
 ──────────────────────
 The theory already states (§2.3) that each component is itself a whole:
 
-    ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃
+    ⊙ = ⊙₂ ⊗ ⊙₃ ⊗ ⊙₁     (Body ⊗ Mind ⊗ Soul = ○ ⊗ Φ ⊗ •)
 
 If each sub-⊙ is complete, each must have:
     - Its own boundary ○_s
