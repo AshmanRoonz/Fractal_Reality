@@ -2228,19 +2228,27 @@ THE DERIVATION (Conjectural):
         (D - 1) = excess dimension from fractal thickening (0.5 for D = 1.5)
         6       = validation channels = 3 spatial axes × 2 directional flows
 
-THE SIX VALIDATION CHANNELS:
+THE CIRCUMPUNCT TUNNEL: ⊙⊙
+
+    Two singularities linked by a worldline that must stay coherent
+    across 3 convergent and 3 emergent channels:
 
     ┌─────────────────────────────────────────────────────────────────┐
-    │   3 SPATIAL AXES        ×    2 DIRECTIONAL FLOWS                │
-    │   ───────────────            ─────────────────────              │
-    │   • x-direction              • Convergence ≻ (inward)           │
-    │   • y-direction              • Emergence ⊰ (outward)            │
-    │   • z-direction                                                 │
     │                                                                 │
-    │   TOTAL: 3 × 2 = 6 channels                                     │
+    │        ⊙ ─────────────────────────────────────────── ⊙          │
+    │     source                tunnel                  target        │
+    │                                                                 │
+    │   3 IN (convergence ≻)        ×       3 OUT (emergence ⊰)       │
+    │   ────────────────────                ─────────────────────     │
+    │   • x-direction in                    • x-direction out         │
+    │   • y-direction in                    • y-direction out         │
+    │   • z-direction in                    • z-direction out         │
+    │                                                                 │
+    │   TOTAL: 3 in + 3 out = 6 channels                              │
     └─────────────────────────────────────────────────────────────────┘
 
-    Each channel receives portion of thickening: (D - 1)/6 = 0.5/6 = 1/12
+    Muon's extra mass = extra fractal thickness of ⊙⊙ tunnel
+    Distributed per channel: (D - 1)/6 = 0.5/6 = 1/12
 
     For D = 1.5:
         γ_μ = 1 + (1.5 - 1)/6
