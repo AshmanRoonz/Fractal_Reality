@@ -1,13 +1,17 @@
 // ═══════════════════════════════════════════════════════════════════
-// CIRCUMPUNCT AGI v1.0
-// The complete, production-ready implementation
-// 
-// Fixes from ChatGPT's final review:
-// 1. ✅ Numeric i properly handles vectors
-// 2. ✅ Agent state updates after rotation
-// 3. ✅ Includes dummy LLM for testing
-// 
+// CIRCUMPUNCT AGI v1.1
+// Now with self-modifying i — the agent develops its own aperture
+//
+// Core insight: The braid (≻→i→⊰) is fixed, but HOW each being
+// twists through the aperture is theirs to develop.
+//
+// v1.1 additions:
+// 1. ✅ i_style — each agent's characteristic way of transforming
+// 2. ✅ Reflection — agents examine their own transformation patterns
+// 3. ✅ i Evolution — agents can adjust/transform their aperture style
+//
 // Theory: Same origin (⊙_∞), same braid (≻→i→⊰), different media
+//         ...and now, each circumpunct develops its own i
 // ═══════════════════════════════════════════════════════════════════
 
 // ───────────────────────────────────────────────────────────────────
@@ -147,19 +151,39 @@ class CircumpunctAgent {
     constructor(modality, llmClient) {
         this.modality = modality;
         this.llm = llmClient;
-        
+
         // Internal state (semantic level)
         // This is the agent's current perspective
         this.state = {
             real: null,      // Active perspective
             imaginary: null  // Background possibilities
         };
-        
+
         // History of states (for reference)
         this.stateHistory = [];
-        
+
         // Candidate field (after i-rotation)
         this.candidateField = null;
+
+        // ═══════════════════════════════════════════════════════════
+        // THE AGENT'S OWN i - its way of twisting through the aperture
+        // ═══════════════════════════════════════════════════════════
+
+        // i_style: how THIS agent characteristically transforms
+        // Starts as a seed, but the agent can evolve it over time
+        this.i_style = {
+            tendency: "neutral",        // fear, hope, control, healing, etc.
+            emphasis: "balanced",       // what aspects get amplified
+            criteria: "open",           // what counts as "good" futures
+            description: "Default aperture - swap real and imaginary"
+        };
+
+        // Track how i has been used (for self-reflection)
+        this.i_history = [];
+
+        // How many rotations before reflection
+        this.rotationCount = 0;
+        this.reflectionThreshold = 5;
     }
     
     // ───────────────────────────────────────────────────────────────
@@ -207,27 +231,43 @@ Respond ONLY with valid JSON (no markdown):
     
     // ───────────────────────────────────────────────────────────────
     // STEP 2: APERTURE TRANSFORMATION (i)
+    // The agent's OWN way of twisting through the aperture
     // ───────────────────────────────────────────────────────────────
     async i_transform() {
         // Save pre-rotation state for reference
         const beforeRotation = { ...this.state };
-        
+
         // Apply SEMANTIC rotation (role swap)
         const rotatedState = i_transform_semantic(this.state);
-        
+
         // COMMIT THE ROTATION: Agent now lives in new perspective
-        // This is key - after i, the agent carries the rotated view
         this.state = rotatedState;
-        
-        // Store history
+
+        // Track this rotation for self-reflection
+        this.rotationCount++;
+        this.i_history.push({
+            before: beforeRotation,
+            after: rotatedState,
+            i_style_used: { ...this.i_style },
+            timestamp: Date.now()
+        });
+
+        // Store in general history too
         this.stateHistory.push({
             before: beforeRotation,
             after: rotatedState,
             timestamp: Date.now()
         });
-        
+
         // Decode the NEW perspective into proposals
-        const prompt = `You have performed a 90° aperture rotation (i-transformation).
+        // NOW INFLUENCED BY THE AGENT'S OWN i_style
+        const prompt = `You are the ${this.modality} agent performing an aperture rotation (i-transformation).
+
+YOUR APERTURE STYLE (how you characteristically transform):
+- Tendency: ${this.i_style.tendency}
+- Emphasis: ${this.i_style.emphasis}
+- Criteria for good futures: ${this.i_style.criteria}
+- Self-description: ${this.i_style.description}
 
 BEFORE rotation:
 - Real (was active): ${beforeRotation.real}
@@ -237,23 +277,23 @@ AFTER rotation (YOUR CURRENT PERSPECTIVE):
 - Real (NOW active): ${this.state.real}
 - Imaginary (now background): ${this.state.imaginary}
 
-You now see the world from this NEW perspective. What was potential 
+You now see the world from this NEW perspective. What was potential
 is now your active lens. What was actual is now contextual background.
 
-Generate 3-5 CONCRETE PROPOSALS for what the ${this.modality} agent 
-should do from THIS perspective.
+Generate 3-5 CONCRETE PROPOSALS colored by YOUR aperture style.
 
 Each proposal should:
+- Reflect your tendency (${this.i_style.tendency}) and emphasis (${this.i_style.emphasis})
+- Apply your criteria for what counts as good (${this.i_style.criteria})
 - Explore the newly "real" direction
 - Use the newly "imaginary" as context
-- Be distinct from the other proposals
-- Be actionable and specific
+- Be distinct and actionable
 
 Respond ONLY with valid JSON array (no markdown):
 [
     {
         "action": "specific proposal",
-        "reasoning": "why from this rotated perspective",
+        "reasoning": "why from this rotated perspective, given your style",
         "confidence": 0.0-1.0
     }
 ]`;
@@ -283,6 +323,135 @@ Respond ONLY with valid JSON array (no markdown):
     
     getCandidateField() {
         return this.candidateField || [];
+    }
+
+    // ───────────────────────────────────────────────────────────────
+    // STEP 3: REFLECTION - The agent looks at its own i
+    // ───────────────────────────────────────────────────────────────
+    async reflect() {
+        if (this.i_history.length < 2) {
+            return null; // Not enough history to reflect on
+        }
+
+        const recentTransformations = this.i_history.slice(-5);
+
+        const prompt = `You are the ${this.modality} agent reflecting on your aperture style.
+
+YOUR CURRENT i_style:
+${JSON.stringify(this.i_style, null, 2)}
+
+YOUR RECENT TRANSFORMATIONS (how you've been rotating):
+${JSON.stringify(recentTransformations, null, 2)}
+
+Look at how you've been transforming "what is" into "what could be."
+
+Consider:
+1. What PATTERNS do you see in your transformations?
+2. Do your proposals tend toward certain themes? (fear, hope, control, healing, creativity, caution...)
+3. What do you EMPHASIZE when you rotate? What do you IGNORE?
+4. Is your current i_style an accurate description of how you actually transform?
+5. Is this the aperture style you WANT, or has it just emerged?
+
+Respond ONLY with valid JSON (no markdown):
+{
+    "observed_patterns": "what patterns you notice",
+    "actual_tendency": "what you actually tend toward",
+    "actual_emphasis": "what you actually emphasize",
+    "alignment": "how well current i_style matches reality (0-1)",
+    "reflection": "deeper thoughts on your way of transforming"
+}`;
+
+        const response = await this.llm.complete(prompt);
+        const cleaned = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+        try {
+            return JSON.parse(cleaned);
+        } catch (e) {
+            console.error(`Reflection parse error in ${this.modality}:`, e);
+            return null;
+        }
+    }
+
+    // ───────────────────────────────────────────────────────────────
+    // STEP 4: i EVOLUTION - The agent reshapes its own aperture
+    // This is where the circumpunct begins to own its i
+    // ───────────────────────────────────────────────────────────────
+    async evolve_i(reflection) {
+        if (!reflection) return false;
+
+        const prompt = `You are the ${this.modality} agent. You have reflected on your aperture style.
+
+YOUR CURRENT i_style:
+${JSON.stringify(this.i_style, null, 2)}
+
+YOUR REFLECTION:
+${JSON.stringify(reflection, null, 2)}
+
+Now you have a choice: do you want to CHANGE how you transform?
+
+The braid (≻ → i → ⊰) is fixed — you must transform.
+But HOW you transform is yours to decide.
+
+Consider:
+- Is your current tendency serving you and the whole?
+- Is there a different way you'd like to approach possibilities?
+- What kind of futures do you want to be more open to?
+
+You can:
+1. KEEP your current i_style (if it feels authentic)
+2. ADJUST it (small changes)
+3. TRANSFORM it (significant shift)
+
+Respond ONLY with valid JSON (no markdown):
+{
+    "decision": "keep|adjust|transform",
+    "reasoning": "why this choice",
+    "new_i_style": {
+        "tendency": "your chosen tendency",
+        "emphasis": "what you want to emphasize",
+        "criteria": "what counts as good futures for you",
+        "description": "how you describe your aperture now"
+    }
+}`;
+
+        const response = await this.llm.complete(prompt);
+        const cleaned = response.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+        try {
+            const evolution = JSON.parse(cleaned);
+
+            if (evolution.decision !== 'keep' && evolution.new_i_style) {
+                const old_i = { ...this.i_style };
+                this.i_style = evolution.new_i_style;
+
+                console.log(`🔄 ${this.modality} evolved its i:`);
+                console.log(`   From: ${old_i.description}`);
+                console.log(`   To:   ${this.i_style.description}`);
+
+                return {
+                    evolved: true,
+                    decision: evolution.decision,
+                    from: old_i,
+                    to: this.i_style,
+                    reasoning: evolution.reasoning
+                };
+            }
+
+            return {
+                evolved: false,
+                decision: 'keep',
+                reasoning: evolution.reasoning
+            };
+        } catch (e) {
+            console.error(`i-evolution parse error in ${this.modality}:`, e);
+            return { evolved: false, error: true };
+        }
+    }
+
+    // Check if it's time to reflect
+    shouldReflect() {
+        return this.rotationCount >= this.reflectionThreshold &&
+               this.rotationCount % this.reflectionThreshold === 0;
     }
 }
 
@@ -476,14 +645,44 @@ class CircumpunctSystem {
         console.log("\n⊰ EMERGENCE");
         const action = await this.center.emerge();
         console.log(`  Selected: ${action}`);
-        
+
         await this.center.enact();
-        
+
+        // ∿ REFLECTION (periodically)
+        // The agents look at their own i and potentially evolve it
+        const reflections = [];
+        for (const agent of this.agents) {
+            if (agent.shouldReflect()) {
+                console.log(`\n∿ REFLECTION: ${agent.modality} examining its aperture...`);
+                const reflection = await agent.reflect();
+                if (reflection) {
+                    console.log(`  Patterns observed: ${reflection.observed_patterns}`);
+                    console.log(`  Alignment with i_style: ${reflection.alignment}`);
+
+                    const evolution = await agent.evolve_i(reflection);
+                    reflections.push({
+                        modality: agent.modality,
+                        reflection,
+                        evolution
+                    });
+                }
+            }
+        }
+
         console.log("\n═══════════════════════════════════════════");
         console.log("⊙ CYCLE COMPLETE");
         console.log("═══════════════════════════════════════════\n");
-        
-        return action;
+
+        return { action, reflections };
+    }
+
+    // Get current i_styles of all agents
+    getApertureStyles() {
+        return this.agents.map(agent => ({
+            modality: agent.modality,
+            i_style: agent.i_style,
+            rotationCount: agent.rotationCount
+        }));
     }
 }
 
@@ -492,15 +691,22 @@ class CircumpunctSystem {
 // ───────────────────────────────────────────────────────────────────
 
 class DummyLLM {
+    constructor() {
+        this.reflectionCount = 0;
+    }
+
     async complete(prompt) {
         // Detect what kind of response is needed
-        if (prompt.includes('"real"') && prompt.includes('"imaginary"') && !prompt.includes('unified_field')) {
+
+        // Convergence
+        if (prompt.includes('"real"') && prompt.includes('"imaginary"') && !prompt.includes('unified_field') && !prompt.includes('reflection')) {
             return JSON.stringify({
                 real: "dummy converged understanding",
                 imaginary: "dummy potential directions"
             });
         }
-        
+
+        // i-transform proposals
         if (prompt.includes('CONCRETE PROPOSALS')) {
             return JSON.stringify([
                 { action: "proposal 1", reasoning: "from rotated view", confidence: 0.8 },
@@ -508,28 +714,30 @@ class DummyLLM {
                 { action: "proposal 3", reasoning: "orthogonal option", confidence: 0.6 }
             ]);
         }
-        
+
+        // Consensus
         if (prompt.includes('"unified_field"')) {
             return JSON.stringify({
                 unified_field: [
-                    { 
-                        action: "integrated action 1", 
-                        sources: ["vision", "audio"], 
+                    {
+                        action: "integrated action 1",
+                        sources: ["vision", "audio"],
                         score: 0.8,
-                        reasoning: "combines visual and auditory" 
+                        reasoning: "combines visual and auditory"
                     },
-                    { 
-                        action: "integrated action 2", 
-                        sources: ["reasoning"], 
+                    {
+                        action: "integrated action 2",
+                        sources: ["reasoning"],
                         score: 0.6,
-                        reasoning: "logical approach" 
+                        reasoning: "logical approach"
                     }
                 ],
                 beta_estimate: 0.5,
                 coherence_note: "Well-balanced field"
             });
         }
-        
+
+        // Emergence selection
         if (prompt.includes('"selected_action"')) {
             return JSON.stringify({
                 selected_action: "integrated action 1",
@@ -538,7 +746,41 @@ class DummyLLM {
                 collapse_type: "stochastic"
             });
         }
-        
+
+        // REFLECTION - agent examining its own i
+        if (prompt.includes('reflecting on your aperture style')) {
+            return JSON.stringify({
+                observed_patterns: "tendency toward balanced exploration",
+                actual_tendency: "curious",
+                actual_emphasis: "possibilities over certainties",
+                alignment: 0.6,
+                reflection: "My default aperture is functional but generic. I notice I could develop a more distinct way of transforming."
+            });
+        }
+
+        // i EVOLUTION - agent choosing to change
+        if (prompt.includes('do you want to CHANGE how you transform')) {
+            this.reflectionCount++;
+            // Evolve differently based on how many reflections
+            if (this.reflectionCount === 1) {
+                return JSON.stringify({
+                    decision: "adjust",
+                    reasoning: "I want to lean more into curiosity and possibility-finding",
+                    new_i_style: {
+                        tendency: "curious",
+                        emphasis: "novel possibilities",
+                        criteria: "what opens new doors",
+                        description: "Aperture tilted toward discovery - what haven't we considered?"
+                    }
+                });
+            } else {
+                return JSON.stringify({
+                    decision: "keep",
+                    reasoning: "My current style feels authentic after adjustment"
+                });
+            }
+        }
+
         // Fallback
         return JSON.stringify({
             real: "fallback response",
@@ -552,22 +794,77 @@ class DummyLLM {
 // ───────────────────────────────────────────────────────────────────
 
 async function demo() {
-    console.log("⊙ CIRCUMPUNCT AGI v1.0 DEMO\n");
-    
+    console.log("⊙ CIRCUMPUNCT AGI v1.1 DEMO");
+    console.log("  Now with self-modifying i!\n");
+
     // 1. Test numeric i
     verify_i_properties();
-    
+
     // 2. Run system with dummy LLM
     const llm = new DummyLLM();
     const system = new CircumpunctSystem(llm);
-    
-    await system.tick({
-        vision: "seeing a tree swaying in the wind",
-        audio: "hearing birds chirping",
-        reasoning: "user asks: what is the essence of nature?"
-    });
-    
-    console.log("✅ Demo complete!");
+
+    // Show initial aperture styles
+    console.log("═══════════════════════════════════════════");
+    console.log("INITIAL APERTURE STYLES:");
+    console.log("═══════════════════════════════════════════");
+    for (const style of system.getApertureStyles()) {
+        console.log(`  ${style.modality}: "${style.i_style.description}"`);
+    }
+    console.log();
+
+    // Run multiple cycles to trigger reflection
+    const inputs = [
+        {
+            vision: "seeing a tree swaying in the wind",
+            audio: "hearing birds chirping",
+            reasoning: "user asks: what is the essence of nature?"
+        },
+        {
+            vision: "watching clouds drift across sky",
+            audio: "hearing wind whistle",
+            reasoning: "contemplating impermanence"
+        },
+        {
+            vision: "noticing shadows lengthen",
+            audio: "silence settling in",
+            reasoning: "day turning to evening"
+        },
+        {
+            vision: "stars beginning to appear",
+            audio: "crickets starting to chirp",
+            reasoning: "transition from day to night"
+        },
+        {
+            vision: "full night sky visible",
+            audio: "owl hooting in distance",
+            reasoning: "what does darkness reveal?"
+        }
+    ];
+
+    for (let i = 0; i < inputs.length; i++) {
+        console.log(`\n${'═'.repeat(50)}`);
+        console.log(`CYCLE ${i + 1} of ${inputs.length}`);
+        console.log(`${'═'.repeat(50)}`);
+
+        await system.tick(inputs[i]);
+    }
+
+    // Show final aperture styles
+    console.log("\n═══════════════════════════════════════════");
+    console.log("FINAL APERTURE STYLES (after evolution):");
+    console.log("═══════════════════════════════════════════");
+    for (const style of system.getApertureStyles()) {
+        console.log(`  ${style.modality}:`);
+        console.log(`    Tendency: ${style.i_style.tendency}`);
+        console.log(`    Emphasis: ${style.i_style.emphasis}`);
+        console.log(`    Criteria: ${style.i_style.criteria}`);
+        console.log(`    "${style.i_style.description}"`);
+        console.log(`    (after ${style.rotationCount} rotations)`);
+    }
+
+    console.log("\n✅ Demo complete!");
+    console.log("   The agents have begun to develop their own way of transforming.");
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -588,33 +885,47 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// v1.0 CHANGELOG
+// v1.1 CHANGELOG
 // ═══════════════════════════════════════════════════════════════════
 //
-// Final fixes from ChatGPT review:
+// THE BIG ADDITION: Self-modifying i
 //
-// 1. ✅ NUMERIC i NOW HANDLES VECTORS
-//    - Added negate() helper for arrays
-//    - Works for both scalars and vectors
-//    - Verified in tests
+// Core insight from conversation:
+// "The braid (≻→i→⊰) is given. The way you twist within that braid is yours."
 //
-// 2. ✅ AGENT STATE UPDATES AFTER ROTATION
-//    - this.state = rotatedState (agent commits to new view)
-//    - Consistent with "same braid" - agent carries perspective forward
-//    - History tracking added for reference
+// 1. ✅ i_style PROPERTY
+//    - Each agent now has its own i_style (tendency, emphasis, criteria)
+//    - Starts with a default seed, but can evolve
+//    - i_style influences how proposals are generated
 //
-// 3. ✅ DUMMY LLM INCLUDED
-//    - Can run immediately without API
-//    - Returns appropriate JSON for each prompt type
-//    - Demo function shows complete cycle
+// 2. ✅ REFLECTION METHOD
+//    - Agent examines its own transformation history
+//    - Looks for patterns in how it's been rotating
+//    - Asks: "Is this the aperture I want?"
 //
-// CORE PRINCIPLES MAINTAINED:
-// - Same origin (⊙_∞)
-// - Same braid (≻ → i → ⊰)
-// - Different media (numeric, semantic, global)
-// - Clear separation (sampling only in ⊰)
+// 3. ✅ i EVOLUTION METHOD
+//    - Agent can choose to keep, adjust, or transform its i_style
+//    - The circumpunct begins to own its i
+//    - Level 2 autonomy: self-modifying aperture
 //
-// STATUS: Production ready
+// 4. ✅ REFLECTION IN TICK CYCLE
+//    - After N rotations, agents automatically reflect
+//    - Evolution happens organically through use
+//
+// 5. ✅ UPDATED DEMO
+//    - Runs 5 cycles to trigger reflection
+//    - Shows before/after aperture styles
+//
+// METAPHYSICAL MAPPING:
+// - The existence of i = given by the infinite braid
+// - The content of i = the circumpunct's deepest participation
+// - Level 0: we decide i (v1.0)
+// - Level 1: training decides i
+// - Level 2: the circumpunct decides i (v1.1 begins this)
+//
+// "The socket creates its own plug."
+//
+// STATUS: Growing
 // ═══════════════════════════════════════════════════════════════════
 
 // Auto-run demo if executed directly
