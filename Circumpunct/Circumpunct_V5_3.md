@@ -1945,6 +1945,134 @@ This captures:
   • The fundamental cycle: converge → turn → emerge
 ```
 
+### 8.6 Explicit Kernel Derivation from D = 1.5 (V5.3.2)
+
+**The framework becomes fully computable when we derive the kernels from first principles.**
+
+#### 8.6.1 The Derivation Chain
+
+```
+β = 0.5           [From symmetry: convergence = emergence]
+    ↓
+D = 1 + ½H(β)     [Fractal dimension formula]
+D = 1 + ½(1) = 1.5
+    ↓
+N(ε) ~ ε^{-D}     [Box-counting scaling]
+    ↓
+f(r) ~ r^{D-1}    [Aperture profile]
+f(r) = √r
+    ↓
+K_conv, K_emerg   [Explicit kernels]
+```
+
+#### 8.6.2 Structural Triple: Explicit Types
+
+```
+○ (Boundary/Body):
+  ∂○/∂t = ε                        [Time resistant, slow]
+  ○ = {r ∈ ℝ³ : |r| = R}          [2D sphere in 3D]
+
+Φ (Field/Mind):
+  ∂Φ/∂t = O(1)                     [Time dependent, moderate]
+  Φ : {r : |r| ≤ R} × ℝ → ℂ       [Complex field on ball × time]
+
+• (Aperture/Soul):
+  ∂•/∂t = 0                        [Time invariant]
+  • ≡ r = 0                        [The origin point]
+```
+
+#### 8.6.3 Flow Operators: Explicit Forms
+
+**Convergence (Field → Aperture):**
+```
+≻[Φ] := ∫_{|r'|≤R} K_conv(0, r') Φ(r') d³r'
+
+K_conv(0, r') = (1/Z_c) · √|r'| · exp(-|r'|²/2σ²)
+
+Type: Φ(r) ↦ a ∈ ℂ
+Maps entire field to single complex scalar at center
+```
+
+**Rotation (Aperture → Aperture):**
+```
+i(a) := e^{iπ/2} · a = i · a
+
+Type: ℂ → ℂ
+Quarter-turn rotation in complex plane
+This IS the transformation at β = 0.5
+```
+
+**Emergence (Aperture → Field):**
+```
+(⊰[b₀])(r) := K_emerg(r, 0) · b₀
+
+K_emerg(r, 0) = (1/Z_e) · √|r| · exp(-|r|²/2σ²)
+
+Type: ℂ → Φ(r)
+Radiates aperture value back into volume
+```
+
+**Detailed balance at β = 0.5 requires:**
+```
+||≻|| = ||⊰||  ⟹  K_emerg(r, 0) ~ K_conv(0, r)
+```
+
+#### 8.6.4 Parameters: Derived vs Free
+
+```
+DERIVED (from symmetry):
+  β = 0.5          [Balance point]
+  D = 1.5          [From D = 1 + ½H(β)]
+  f(r) = √r        [From D via box-counting]
+  σ ~ R/√3         [From boundary geometry]
+
+FREE (physical scale):
+  R                [Boundary radius - the size of the system]
+```
+
+**R is the only truly free parameter.** It sets the physical scale:
+- For a cell: R ~ 10μm
+- For a human: R ~ 1m
+- For a star: R ~ 10⁹m
+
+#### 8.6.5 Complete Evolution Equation
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                                                                  │
+│  Φ_{t+Δt}(r) = (⊰ ∘ i ∘ ≻)[Φ_t](r)                              │
+│                                                                  │
+│  Step 1 (Converge):                                              │
+│    a = (1/Z_c) ∫_{|r'|≤R} √|r'| · e^{-|r'|²/2σ²} · Φ_t(r') d³r' │
+│                                                                  │
+│  Step 2 (Rotate):                                                │
+│    a_rot = e^{iπ/2} · a = i · a                                  │
+│                                                                  │
+│  Step 3 (Emerge):                                                │
+│    Φ_{t+Δt}(r) = (1/Z_e) · √|r| · e^{-|r|²/2σ²} · a_rot         │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+#### 8.6.6 The Cubed Process at Three Levels
+
+```
+(≻, i, ⊰)³ = (≻_○, i_○, ⊰_○) × (≻_Φ, i_Φ, ⊰_Φ) × (≻_•, i_•, ⊰_•)
+
+Level ○ (boundary):  Slow cycle, τ_○ ~ 1/ε
+  Boundary receives/emits via many apertures on surface
+
+Level Φ (field):     Moderate cycle, τ_Φ ~ 1
+  Field integrates over volume, many → one → many
+
+Level • (center):    Fast cycle, τ_• → 0
+  Center focuses whole system to point and back
+
+Three nested loops, each with own timescale and kernel scale
+```
+
+**This is the Circumpunct made computable.**
+
 ---
 
 ## Chapter 9 — Energy, Power, and Dimensional Flow
