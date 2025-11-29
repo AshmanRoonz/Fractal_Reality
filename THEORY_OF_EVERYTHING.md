@@ -3814,7 +3814,7 @@ Therefore:
 ║                                                              ║
 ║  The √r circumpunct kernel INDUCES an inverse-square term:   ║
 ║                                                              ║
-║    V_eff(r) = -(3/4) · (1/r²)                               ║
+║    V_eff(r) = -(3/4) · (1/r²)                                ║
 ║                                                              ║
 ║  This attractive potential is DERIVED, not assumed.          ║
 ║  It emerges from the geometry of the aperture itself.        ║
@@ -3847,7 +3847,7 @@ i.e. an attractive 1/r²-type potential directly induced by the circumpunct's �
 
 The **exact radial eigenvalue problem** that emerges from the circumpunct kernel combines:
 
-1. The transformed Laplacian with the -3/4·(1/r²) term (derived above)
+1. The transformed Laplacian with the -(3/4)·(1/r²) term (derived above)
 2. The centrifugal barrier ℓ(ℓ+1)/r² for angular momentum ℓ
 3. A finite-radius boundary at r = R
 4. The full nonlocal correction from the circumpunct kernel
@@ -3857,7 +3857,7 @@ The **exact radial eigenvalue problem** that emerges from the circumpunct kernel
 ```
 ┌───────────────────────────────────────────────────────────────┐
 │                                                               │
-│  -d²u_n/dr² + [ℓ(ℓ+1)/r² - (3/4)/r² - W(r;R)] u_n = E_n·u_n │
+│  -d²u_n/dr² + [ℓ(ℓ+1)/r² - (3/4)/r² + W(r;R)] u_n = E_n·u_n │
 │                                                               │
 │  for 0 < r < R                                                │
 │                                                               │
@@ -3869,10 +3869,19 @@ The **exact radial eigenvalue problem** that emerges from the circumpunct kernel
 
 where:
   • W(r;R) encodes the smooth, finite-range correction induced by
-    the full circumpunct kernel K(r) = A√r
+    the full circumpunct kernel K(r) = A√r (negative/attractive
+    for bound states)
   • ℓ = 0, 1, 2, ... labels angular momentum sectors
   • The boundary conditions ensure normalizable states
 ```
+
+**Note on the inverse-square term:** For general ℓ, the net inverse-square coefficient is:
+
+```
+V_inv(r) = [ℓ(ℓ+1) - 3/4] / r²
+```
+
+So only the **s-wave (ℓ=0)** sees the fully attractive -(3/4)/r² behaviour. Higher ℓ sectors are less attractive or repulsive due to the centrifugal barrier. This is why the generational structure lives in the ℓ=0 channel.
 
 #### The Core Conjecture
 
@@ -3979,8 +3988,8 @@ Using the optimal strength A = 3.00 (center of the three-state window):
 ```
 ┌───────────────────────────────────────────────────────────┐
 │                                                           │
-│  BOUND STATE ENERGIES:                                    │
-│  ─────────────────────                                    │
+│  BOUND STATE ENERGIES (arbitrary units):                  │
+│  ────────────────────────────────────────                 │
 │                                                           │
 │    Generation 1:  E₁ = -1.415305  (ground state)         │
 │    Generation 2:  E₂ = -0.938202  (1st excited)          │
@@ -3988,14 +3997,14 @@ Using the optimal strength A = 3.00 (center of the three-state window):
 │                                                           │
 │    Generation 4:  E₄ > 0          (UNBOUND)              │
 │                                                           │
-│  ─────────────────────                                    │
+│  ────────────────────────────────────────                 │
 │                                                           │
 │  LEVEL SPACINGS:                                          │
 │    ΔE₂₁ = E₂ - E₁ = 0.477                                │
 │    ΔE₃₂ = E₃ - E₂ = 0.494                                │
 │    Ratio: ΔE₃₂/ΔE₂₁ ≈ 1.03 (nearly equal)                │
 │                                                           │
-│  ─────────────────────                                    │
+│  ────────────────────────────────────────                 │
 │                                                           │
 │  BINDING ENERGIES:                                        │
 │    B₁ = |E₁| = 1.415 (deepest → most stable)             │
@@ -4239,7 +4248,7 @@ Status: Empirical fit, not derived from first principles
 
    The complete eigenproblem from §20.7:
 
-     -u'' + [ℓ(ℓ+1)/r² - (3/4)/r² - W(r;R)]u = E_n u
+     -u'' + [ℓ(ℓ+1)/r² - (3/4)/r² + W(r;R)]u = E_n u
 
    with exact W(r;R) from full circumpunct kernel K(r).
 
@@ -4285,7 +4294,7 @@ Status: Empirical fit, not derived from first principles
 ║      ↓                                                       ║
 ║    f(r) = √r                  [Geometric necessity]          ║
 ║      ↓                                                       ║
-║    V_eff = -(3/4)·(1/r²)      [Analytical derivation]        ║
+║    V_eff = -(3/4)·(1/r²) [§20.6] [Analytical derivation]     ║
 ║      ↓                                                       ║
 ║    3 bound states             [Numerical validation]         ║
 ║      ↓                                                       ║
@@ -4315,7 +4324,7 @@ This framework maintains clear distinction between:
 PROVEN:
   • D = 1.5 from information theory
   • √r kernel from geometric necessity
-  • V_eff = -(3/4)·(1/r²) from analytical derivation
+  • V_eff = -(3/4)·(1/r²) from analytical derivation [§20.6]
   • 3 bound states from numerical calculation
 
 CONJECTURAL:
@@ -4409,6 +4418,93 @@ Number of bound states: 3
   E_2 = -0.938202
   E_3 = -0.444659
 ```
+
+#### Visualization
+
+Generate plots showing potential, wavefunctions, and bound state count:
+
+```python
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+
+# Plot 1: Potential with energy levels
+ax = axes[0,0]
+ax.plot(r, V, 'k-', linewidth=2, label='V(r) = -A/√r')
+for i in range(n_bound):
+    ax.axhline(E_n[i], color=f'C{i}', linestyle='--',
+               label=f'E_{i+1} = {E_n[i]:.3f}')
+ax.axhline(0, color='gray', linestyle=':')
+ax.set_xlabel('r')
+ax.set_ylabel('Energy')
+ax.set_title('Potential and Bound States')
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+# Plot 2: Wavefunctions
+ax = axes[0,1]
+for i in range(n_bound):
+    ax.plot(r, psi_n[:, i], label=f'ψ_{i+1}(r)')
+ax.set_xlabel('r')
+ax.set_ylabel('ψ(r)')
+ax.set_title('Bound State Wavefunctions')
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+# Plot 3: Probability densities
+ax = axes[1,0]
+for i in range(n_bound):
+    ax.plot(r, psi_n[:, i]**2, label=f'|ψ_{i+1}|²')
+ax.set_xlabel('r')
+ax.set_ylabel('|ψ(r)|²')
+ax.set_title('Probability Densities')
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+# Plot 4: Bound state count vs potential strength
+ax = axes[1,1]
+A_values = np.linspace(0.5, 15, 30)
+counts = []
+for A in A_values:
+    n, _, _, _, _ = solve_aperture_eigenvalues(R=10.0, N=2000, A=A)
+    counts.append(n)
+ax.plot(A_values, counts, 'o-', markersize=6)
+ax.axhline(3, color='red', linestyle='--', alpha=0.5)
+ax.axvspan(2.5, 3.5, color='green', alpha=0.2,
+           label='3-state window')
+ax.set_xlabel('Potential Strength A')
+ax.set_ylabel('Number of Bound States')
+ax.set_title('Bound States vs Potential Strength')
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig('three_generations_validated.png', dpi=300)
+```
+
+#### Future Work
+
+**Immediate next steps:**
+
+1. **Solve the exact eigenproblem** (§20.7)
+   - Determine W(r;R) from full circumpunct kernel
+   - Use high-precision numerical or analytical methods
+   - Prove rigorously that n_max = 3
+
+2. **Derive mass exponents** from worldline action
+   - Write full action S[x^μ] for particle worldline
+   - Quantize to extract validation work γ(n)
+   - Show γ(2) = 13/12 emerges from 6-channel geometry
+
+3. **Connect node structure to masses**
+   - Investigate if radial node count directly determines γ(n)
+   - Find precise bridge between eigenfunction structure and mass
+
+**Long-term goals:**
+
+- Extend to quark sector (require 3-component color structure)
+- Derive running coupling α(E) from circumpunct dynamics
+- Connect to experimental searches for 4th generation (should find nothing)
 
 ---
 
