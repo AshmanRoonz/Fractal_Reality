@@ -1146,6 +1146,114 @@ At each scale:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
+### §4.5 Solar System Helical Geometry: From 22° to 1/12
+
+Initial speculation suggested that the Solar System's helical motion through the Galaxy might manifest the same 22° angle that appears in the internal aperture geometry (22/64 states). This turns out to be **false**.
+
+#### §4.5.1 Negative Result: No 22° Pitch
+
+Using standard kinematic estimates:
+
+- Sun's orbital velocity in the Galactic plane: v_R ≈ 220 km/s
+- Sun's vertical velocity: v_Z ≈ 7 km/s
+
+The instantaneous helical pitch angle is
+
+```
+θ_inst ≈ arctan(v_Z / v_R) ≈ arctan(7/220) ≈ 1.8°
+```
+
+which is **nowhere near 22°**.
+
+Even when we consider the vertical oscillation as a separate timescale:
+
+- Vertical oscillation period: T_Z ≈ 30 Myr
+- Orbital period around the Galaxy: T_R ≈ 225 Myr
+
+we obtain a ratio
+
+```
+T_Z / T_R ≈ 30/225 ≈ 1/7.5
+```
+
+and an effective geometric pitch
+
+```
+θ_eff ≈ arctan(1/7.5) ≈ 7.6°
+```
+
+still **not** 22°. So the Solar System does **not** provide a macroscopic 22° helical angle.
+
+```
+╔═══════════════════════════════════════════════════════════════════╗
+║  CONCLUSION: The 22° angle is an INTERNAL APERTURE GEOMETRY       ║
+║  feature (22/64 states), NOT a direct macroscopic kinematic       ║
+║  angle in the Solar System.                                       ║
+╚═══════════════════════════════════════════════════════════════════╝
+```
+
+#### §4.5.2 A Different Pattern: 1/12 and D = 1.5
+
+Although the 22° prediction fails at Solar System scale, the actual angle still aligns with a core parameter of the framework.
+
+Take the effective pitch angle:
+
+```
+θ_eff ≈ 7.6°
+```
+
+As a fraction of a right angle:
+
+```
+θ_eff / 90° ≈ 0.084 ≈ 1/12
+```
+
+In the circumpunct framework with fractal dimension D = 1.5:
+
+```
+(D - 1) / 6 = 0.5 / 6 = 1/12
+```
+
+This same factor appears in the **lepton mass exponent** (§18.4):
+
+```
+γ = 1 + (D - 1)/6 = 1 + 1/12 = 13/12
+```
+
+So we have a **cross-scale echo**:
+
+```
+╔═══════════════════════════════════════════════════════════════════╗
+║                     THE 1/12 PATTERN                              ║
+╠═══════════════════════════════════════════════════════════════════╣
+║                                                                   ║
+║  Solar System helical pitch (in units of 90°):                    ║
+║       θ_eff / 90° ≈ 1/12                                          ║
+║                                                                   ║
+║  Fractal correction factor in mass exponent:                      ║
+║       ε = (D - 1) / 6 = 1/12                                      ║
+║                                                                   ║
+║  Lepton mass exponent:                                            ║
+║       γ = 1 + ε = 13/12                                           ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+```
+
+At this stage, this is **not** a proof of anything—only a **geometric resonance** between:
+
+- The Solar System's large-scale helical geometry, and
+- The internal fractal structure used in the lepton sector.
+
+```
+STATUS:
+────────
+• The original 22° Solar System claim is REJECTED (negative result).
+• The 1/12 relationship is a SOFT CONJECTURE and a TARGET FOR
+  FURTHER TESTING, not a confirmed prediction.
+• If future measurements refine T_Z and T_R, test whether
+  arctan(T_Z/T_R) / 90° remains ≈ 1/12.
+```
+
 ---
 
 ## CHAPTER V: THE DUALITY EQUATION

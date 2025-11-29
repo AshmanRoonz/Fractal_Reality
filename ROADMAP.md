@@ -38,6 +38,42 @@ This document outlines promising research directions for the Circumpunct Theory,
 
 ---
 
+## 2.2 Conjectural Geometric Echoes
+
+### The 1/12 Ratio: Cross-Scale Resonance
+
+Although the 22° prediction fails at Solar System scale, the **actual** pitch angle reveals a different pattern.
+
+**The observation:**
+Using the effective pitch from period ratios:
+- θ_eff ≈ 7.6°
+- θ_eff / 90° ≈ 0.084 ≈ **1/12**
+
+**Connection to framework:**
+With fractal dimension D = 1.5:
+- (D − 1)/6 = 0.5/6 = **1/12**
+
+**Where 1/12 appears:**
+
+| Context | Expression | Value |
+|---------|------------|-------|
+| Solar System helical pitch | θ_eff / 90° | ≈ 1/12 |
+| Fractal correction factor | (D − 1)/6 | = 1/12 |
+| Lepton mass exponent | γ = 1 + (D−1)/6 | = 13/12 |
+
+**Interpretation:**
+This suggests a possible cross-scale echo between:
+- Solar System's large-scale helical geometry
+- The internal fractal structure used in the lepton mass sector
+
+**Status: SPECULATIVE**
+- This is a **soft conjecture**, not a core claim
+- Keep as a target for future tests
+- If measurements of T_Z and T_R are refined, check if arctan(T_Z/T_R)/90° remains ≈ 1/12
+- Search for similar 1/12 patterns in other hierarchical systems
+
+---
+
 ## 3. Lagrangian Formulation (Sketch)
 
 ### 3.1 The Goal
@@ -303,12 +339,19 @@ where ≻, i, ⊰ are morphisms in category of aperture-states
 
 | Priority | Direction | Estimated Difficulty | Potential Impact |
 |----------|-----------|---------------------|------------------|
-| 1 | τ/μ ratio derivation | Medium | High — completes lepton sector |
-| 2 | Quark mass extension | Medium | High — unifies matter sector |
-| 3 | Rigorous Lagrangian | Hard | Very High — enables predictions |
-| 4 | CDT/LQG connection | Hard | High — links to QG community |
-| 5 | Neutrino mechanism | Hard | Medium — explains mass puzzle |
-| 6 | Lattice simulation | Medium | Medium — numerical validation |
+| 1 | Rigorous Lagrangian + mass generation | Hard | Very High — enables predictions |
+| 2 | α / lepton sector rigor | Medium | High — tighten γ = 13/12 derivation |
+| 3 | Geometry–cosmology bridge (1/12 test) | Medium | Medium — test cross-scale echo |
+| 4 | τ/μ ratio derivation | Medium | High — completes lepton sector |
+| 5 | Quark mass extension | Medium | High — unifies matter sector |
+| 6 | CDT/LQG connection | Hard | High — links to QG community |
+| 7 | Neutrino mechanism | Hard | Medium — explains mass puzzle |
+| 8 | Lattice simulation | Medium | Medium — numerical validation |
+
+**Priority 3 details (Geometry–cosmology bridge):**
+- Revisit Solar System and galactic kinematics with better data and error bars
+- Test whether 1/12 ratio persists under updated parameters (T_Z, T_R, v_Z, v_R)
+- Search for similar 1/12 patterns in other hierarchical systems (galactic arms, ring systems, etc.)
 
 ---
 
@@ -320,6 +363,7 @@ where ≻, i, ⊰ are morphisms in category of aperture-states
 - 22/64 physical states (derived)
 - m_μ/m_e = (1/α)^(13/12) with 0.13% error (conjectural, well-motivated)
 - ⊙⊙ tunnel interpretation (conceptual)
+- 1/12 cross-scale echo: Solar System pitch ↔ lepton exponent (speculative)
 
 ### What We Need
 - Rigorous Lagrangian formulation
@@ -327,11 +371,22 @@ where ≻, i, ⊰ are morphisms in category of aperture-states
 - First-principles calculation of α (not just consistency checks)
 - Connection to quantum gravity frameworks
 - More experimental tests of D = 1.5
+- Verification of 1/12 pattern in other systems
 
 ### What Didn't Work
-- Solar System helical pitch ≠ 22° (actual ~2°)
+- Solar System helical pitch ≠ 22° (actual ~7.6° effective, ~1.8° instantaneous)
 - Simple D/(D+1) formula for mass ratios (~10-80% errors)
 - Previous (1/α)^(2/3) claim (mathematical error, now corrected)
+
+### Numerology Disclaimer
+The 1/12 = (D-1)/6 pattern appearing in both:
+- Solar System helical pitch (θ_eff/90° ≈ 1/12)
+- Lepton mass exponent (γ = 1 + 1/12)
+
+could be **coincidence**. We document it transparently but do not claim it as evidence. Further tests needed:
+- Check if pattern persists with improved astronomical measurements
+- Search for 1/12 in other hierarchical/oscillatory systems
+- Derive 1/12 from first principles (not just observe it)
 
 ---
 
