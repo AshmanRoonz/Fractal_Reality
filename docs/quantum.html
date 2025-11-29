@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Living Mandelbrot – Boundary Walker</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #050510;
+      color: #eee;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #ui {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      z-index: 10;
+    }
+
+    #ui h1 {
+      margin: 0 0 6px 0;
+      font-size: 16px;
+    }
+
+    #ui code {
+      background: rgba(255,255,255,0.05);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    #stats {
+      margin-top: 6px;
+      font-size: 12px;
+      opacity: 0.85;
+    }
+
+    canvas {
+      display: block;
+      image-rendering: pixelated;
+    }
+  </style>
+</head>
+<body>
+  <div id="ui">
+    <h1>Living Mandelbrot – Boundary Walker</h1>
+    <div>
+      Move along the living edge: <code>W/A/S/D</code> &nbsp; Zoom: <code>Q/E</code><br/>
+      Center patch → emergent <code>i_eff</code> (imag axis scale).<br/>
+      You are snapped to the boundary between void and fire.
+    </div>
+    <div id="stats"></div>
+  </div>
+  <canvas id="main"></canvas>
+
+  <script>
+    const canvas = document.getElementById("main");
+    const ctx = canvas.getContext("2d");
+    const statsEl = document.getElementById("stats");
+
+    // ===== View state =====
+    let centerX = -0.5;
+    let centerY = 0.0;
+    let scale = 3.0;      // vertical complex span
+    let pixelsPerUnit = 1;
+    let maxIter = 80;
+    let iScale = 1.0;
+    let needRedraw = true;
+    let lastRenderTime = 0;
+
+    // "B on the edge": target iteration for boundary (near void edge)
+    function boundaryTargetIter() {
+      return maxIter * 0.8; // ~80% of maxIter: near interior boundary
+    }
+
+    function updatePixelScale() {
+      pixelsPerUnit = canvas.height / scale;
+    }
+
+    function resizeCanvas() {
+      const targetW = Math.floor(window.innerWidth * 0.7);
+      const targetH = Math.floor(window.innerHeight * 0.7);
+      canvas.width = targetW;
+      canvas.height = targetH;
+      updatePixelScale();
+      needRedraw = true;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    // ===== Input =====
+    const keys = new Set();
+    window.addEventListener("keydown", (e) => {
+      if (["KeyW","KeyA","KeyS","KeyD","KeyQ","KeyE"].includes(e.code)) {
+        e.preventDefault();
+      }
+      if (!keys.has(e.code)) {
+        keys.add(e.code);
+        handleKeyInstant(e.code);
+      }
+    });
+    window.addEventListener("keyup", (e) => keys.delete(e.code));
+
+    // ===== Schrödinger-ish prediction (just for vibe) =====
+    const directions = [
+      { name: "up",    dx: 0,  dy: -1, psi: 0.5 },
+      { name: "down",  dx: 0,  dy:  1, psi: 0.0 },
+      { name: "left",  dx: -1, dy:  0, psi: 0.0 },
+      { name: "right", dx: 1,  dy:  0, psi: 0.5 },
+    ];
+    const psiDecay = 0.97;
+    const psiBoost = 0.5;
+
+    function normalizePsi() {
+      let norm = Math.sqrt(directions.reduce((s,d)=>s+d.psi*d.psi,0));
+      if (norm < 1e-6) {
+        directions.forEach(d => d.psi = 0.5);
+        norm = Math.sqrt(directions.reduce((s,d)=>s+d.psi*d.psi,0));
+      }
+      directions.forEach(d => d.psi /= norm);
+    }
+
+    function boostDirection(name) {
+      directions.forEach(d => {
+        if (d.name === name) {
+          d.psi = Math.min(2.0, d.psi + psiBoost);
+        } else {
+          d.psi *= psiDecay;
+        }
+      });
+      normalizePsi();
+    }
+
+    // ===== Mandelbrot iteration at a point (for snapping) =====
+    function mandelbrotIterAt(cx, cy) {
+      const escapeRadiusSq = 4.0;
+      let zr = 0.0, zi = 0.0;
+      let iter = 0;
+      const real = cx;
+      const imag = cy * iScale; // same i-scale as render
+
+      while (zr*zr + zi*zi <= escapeRadiusSq && iter < maxIter) {
+        const zr2 = zr*zr - zi*zi + real;
+        const zi2 = 2*zr*zi + imag;
+        zr = zr2;
+        zi = zi2;
+        iter++;
+      }
+      return iter;
+    }
+
+    // Snap movement so center hugs the boundary between void and outside
+    function moveAlongBoundary(dx, dy) {
+      // distance to search in complex plane
+      const moveRange = scale * 0.6;
+      const steps = 18;
+      const target = boundaryTargetIter();
+
+      let bestX = centerX;
+      let bestY = centerY;
+      let bestDiff = Infinity;
+
+      for (let k = 1; k <= steps; k++) {
+        const t = (k / steps) * moveRange;
+        const cx = centerX + dx * t;
+        const cy = centerY + dy * t;
+        const iter = mandelbrotIterAt(cx, cy);
+        const diff = Math.abs(iter - target);
+        if (diff < bestDiff) {
+          bestDiff = diff;
+          bestX = cx;
+          bestY = cy;
+        }
+      }
+
+      centerX = bestX;
+      centerY = bestY;
+    }
+
+    // ===== Movement & zoom =====
+    function handleKeyInstant(code) {
+      if (code === "KeyW") {
+        moveAlongBoundary(0, -1);
+        boostDirection("up");
+        needRedraw = true;
+      } else if (code === "KeyS") {
+        moveAlongBoundary(0, 1);
+        boostDirection("down");
+        needRedraw = true;
+      } else if (code === "KeyA") {
+        moveAlongBoundary(-1, 0);
+        boostDirection("left");
+        needRedraw = true;
+      } else if (code === "KeyD") {
+        moveAlongBoundary(1, 0);
+        boostDirection("right");
+        needRedraw = true;
+      } else if (code === "KeyQ") {
+        // zoom in
+        scale *= 0.8;
+        maxIter = Math.min(260, Math.floor(maxIter * 1.08));
+        updatePixelScale();
+        needRedraw = true;
+      } else if (code === "KeyE") {
+        // zoom out
+        scale /= 0.8;
+        maxIter = Math.max(40, Math.floor(maxIter * 0.96));
+        updatePixelScale();
+        needRedraw = true;
+      }
+    }
+
+    // ===== Mandelbrot rendering =====
+    let colorPhase = 0.0;
+
+    function renderMandelbrot() {
+      const w = canvas.width;
+      const h = canvas.height;
+      const img = ctx.createImageData(w, h);
+      const data = img.data;
+
+      const escapeRadiusSq = 4.0;
+      const iEff = iScale;
+
+      let centerIterSum = 0;
+      let centerCount = 0;
+      const centerRadius = Math.floor(Math.min(w, h) * 0.05);
+
+      const t0 = performance.now();
+
+      for (let y = 0; y < h; y++) {
+        const imag = centerY + (y - h/2) / pixelsPerUnit * iEff;
+        for (let x = 0; x < w; x++) {
+          const real = centerX + (x - w/2) / pixelsPerUnit;
+          let zr = 0.0, zi = 0.0;
+          let iter = 0;
+
+          while (zr*zr + zi*zi <= escapeRadiusSq && iter < maxIter) {
+            const zr2 = zr*zr - zi*zi + real;
+            const zi2 = 2*zr*zi + imag;
+            zr = zr2;
+            zi = zi2;
+            iter++;
+          }
+
+          const dx = x - w/2;
+          const dy = y - h/2;
+          if (dx*dx + dy*dy <= centerRadius*centerRadius) {
+            centerIterSum += iter;
+            centerCount++;
+          }
+
+          let t = iter / maxIter;
+          if (iter < maxIter) {
+            const log_zn = Math.log(zr*zr + zi*zi)/2;
+            const nu = Math.log(log_zn/Math.log(2))/Math.log(2);
+            t = (iter + 1 - nu) / maxIter;
+          }
+
+          const col = colorPsy(t);
+          const idx = (y*w + x) * 4;
+          data[idx]   = col.r;
+          data[idx+1] = col.g;
+          data[idx+2] = col.b;
+          data[idx+3] = 255;
+        }
+      }
+
+      ctx.putImageData(img, 0, 0);
+
+      if (centerCount > 0) {
+        const avgIter = centerIterSum / centerCount;
+        const kappa = 0.6 + (avgIter / maxIter) * 1.2;
+        iScale = 0.85 * iScale + 0.15 * kappa;
+      }
+
+      const t1 = performance.now();
+      lastRenderTime = t1 - t0;
+    }
+
+    function colorPsy(t) {
+      t = Math.min(1, Math.max(0, t));
+      const a = 0.5, b = 0.5, c = 1.0;
+      const phase = colorPhase;
+
+      const r = Math.floor(255*(a + b*Math.cos(2*Math.PI*(c*t) + phase)));
+      const g = Math.floor(255*(a + b*Math.cos(2*Math.PI*(c*t) + phase + 2.1)));
+      const bcol = Math.floor(255*(a + b*Math.cos(2*Math.PI*(c*t) + phase + 4.2)));
+
+      return {
+        r: Math.max(0, Math.min(255, r)),
+        g: Math.max(0, Math.min(255, g)),
+        b: Math.max(0, Math.min(255, bcol))
+      };
+    }
+
+    function drawPredictionOverlay() {
+      const w = canvas.width;
+      const h = canvas.height;
+      const baseR = Math.min(w, h) * 0.06;
+      const baseOff = Math.min(w, h) * 0.18;
+
+      ctx.save();
+      ctx.translate(w/2, h/2);
+
+      directions.forEach(d => {
+        const amp = Math.abs(d.psi);
+        const sx = d.dx * baseOff;
+        const sy = d.dy * baseOff;
+        const R = baseR * amp;
+
+        ctx.beginPath();
+        ctx.arc(sx, sy, R, 0, Math.PI*2);
+        ctx.strokeStyle = "rgba(255,255,255,0.35)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(sx, sy, R*0.4, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(0,255,255,0.12)";
+        ctx.fill();
+      });
+
+      ctx.restore();
+    }
+
+    function updateStats() {
+      statsEl.textContent =
+        `center ≈ (${centerX.toFixed(4)} + ${centerY.toFixed(4)} i)  |  ` +
+        `height = ${scale.toFixed(3)}  |  ` +
+        `i_eff ≈ ${iScale.toFixed(3)}·i  |  ` +
+        `β-edge target ≈ ${boundaryTargetIter().toFixed(1)} iter  |  ` +
+        `maxIter = ${maxIter}  |  ` +
+        `render = ${lastRenderTime.toFixed(0)} ms`;
+    }
+
+    function loop() {
+      if (needRedraw) {
+        renderMandelbrot();
+        needRedraw = false;
+      }
+
+      // color breathing
+      colorPhase += 0.01;
+
+      // diffuse prediction field
+      directions.forEach(d => d.psi *= psiDecay);
+      normalizePsi();
+
+      drawPredictionOverlay();
+      updateStats();
+
+      requestAnimationFrame(loop);
+    }
+
+    normalizePsi();
+    renderMandelbrot();
+    loop();
+  </script>
+</body>
+</html>
