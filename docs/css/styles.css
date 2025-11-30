@@ -1,432 +1,420 @@
 /* ===================================
-   Circumpunct Theory - Clean & Readable
+   Circumpunct - Interactive Demo
    =================================== */
 
 :root {
     --bg: #0a0a0f;
+    --body-color: #a371f7;
+    --mind-color: #f0b429;
+    --soul-color: #58a6ff;
     --text: #e6edf3;
     --text-dim: #8b949e;
-    --accent: #58a6ff;
-    --accent-purple: #a371f7;
-    --accent-gold: #f0b429;
+    --panel-bg: #161b22;
     --border: #30363d;
-    --card-bg: #161b22;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
-html {
-    scroll-behavior: smooth;
+html, body {
+    height: 100%;
 }
 
 body {
     font-family: 'Space Grotesk', -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
-    line-height: 1.7;
-    font-size: 17px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-#bg {
+/* Particle Background */
+#particles {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: 0;
-    opacity: 0.3;
-    pointer-events: none;
+    opacity: 0.4;
 }
 
-main {
+/* Main Container */
+.container {
     position: relative;
     z-index: 1;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem;
-}
-
-/* ===================================
-   Hero
-   =================================== */
-.hero {
-    min-height: 90vh;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
+    padding: 1rem;
     text-align: center;
-    padding: 2rem 0;
+    width: 100%;
+    max-width: 400px;
 }
 
-.hero h1 {
-    font-size: 5rem;
-    font-weight: 300;
-    color: var(--accent);
-    margin-bottom: 2rem;
-    text-shadow: 0 0 60px rgba(88, 166, 255, 0.5);
+/* Header */
+.header {
+    margin-bottom: 1rem;
 }
 
-.intro {
-    margin-bottom: 2.5rem;
+.intro-text {
+    margin-bottom: 1rem;
 }
 
-.intro p {
-    font-size: 1.1rem;
-    margin-bottom: 0.75rem;
+.intro-text p {
+    font-size: 1rem;
     color: var(--text-dim);
+    margin-bottom: 0.25rem;
 }
 
-.intro strong {
+.intro-text strong {
     color: var(--text);
 }
 
+.tagline {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    font-weight: 300;
+}
+
+/* ===================================
+   THE BIG CIRCUMPUNCT
+   =================================== */
+.circumpunct-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 1rem 0;
+}
+
+.circumpunct {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* Zones */
+.zone {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.zone-body { filter: url(#glow-purple); }
+.zone-mind { filter: url(#glow-gold); }
+.zone-soul { filter: url(#glow-cyan); }
+
+/* Hover/Active states */
+.zone-body:hover, .zone-body.active {
+    stroke: rgba(163, 113, 247, 1);
+    stroke-width: 28;
+}
+
+.zone-mind:hover, .zone-mind.active {
+    fill: rgba(240, 180, 41, 0.3);
+    stroke: rgba(240, 180, 41, 0.8);
+}
+
+.zone-soul:hover, .zone-soul.active {
+    fill: rgba(88, 166, 255, 1);
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+@keyframes breathe {
+    0%, 100% { stroke-opacity: 0.6; }
+    50% { stroke-opacity: 0.9; }
+}
+
+@keyframes shimmer {
+    0%, 100% { fill-opacity: 0.15; }
+    50% { fill-opacity: 0.25; }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.zone-soul { animation: pulse 4s ease-in-out infinite; }
+.zone-body { animation: breathe 5s ease-in-out infinite; }
+.zone-mind { animation: shimmer 4s ease-in-out infinite; }
+
+.decorative {
+    transform-origin: 150px 150px;
+    animation: rotate 60s linear infinite;
+    stroke-dasharray: 4 8;
+}
+
+/* Zone Labels - Always visible */
+.zone-labels {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    width: 300px;
+    height: 300px;
+}
+
+.label {
+    position: absolute;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-shadow: 0 0 15px currentColor;
+}
+
+.label-body {
+    color: var(--body-color);
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.label-mind {
+    color: var(--mind-color);
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.label-soul {
+    color: var(--soul-color);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.85rem;
+}
+
+.circumpunct-container:hover .label {
+    opacity: 1;
+    text-shadow: 0 0 25px currentColor, 0 0 50px currentColor;
+}
+
+/* Equation */
 .equation {
-    margin-bottom: 2.5rem;
+    margin: 1rem 0;
 }
 
 .equation code {
-    display: block;
     font-family: 'Space Grotesk', monospace;
-    font-size: 1.8rem;
-    color: var(--accent);
-    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+    color: var(--soul-color);
+    letter-spacing: 0.05em;
 }
 
-.equation span {
-    font-size: 0.9rem;
-    color: var(--text-dim);
-}
-
+/* CTA */
 .cta {
     margin-top: 1rem;
 }
 
-.btn-primary {
-    display: inline-block;
-    padding: 0.9rem 1.8rem;
-    background: transparent;
-    border: 2px solid var(--accent);
-    color: var(--accent);
+.theory-link {
+    font-size: 0.85rem;
+    color: var(--text-dim);
     text-decoration: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 20px;
     transition: all 0.2s ease;
 }
 
-.btn-primary:hover {
-    background: var(--accent);
-    color: var(--bg);
-}
-
-.scroll-hint {
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
-    color: var(--text-dim);
+.theory-link:hover {
+    color: var(--text);
+    border-color: var(--soul-color);
 }
 
 /* ===================================
-   Sections
+   PANELS - Slide up from bottom
    =================================== */
-.section {
-    padding: 4rem 0;
-    border-top: 1px solid var(--border);
+.panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 85vh;
+    background: var(--panel-bg);
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    z-index: 100;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
-.section h2 {
-    font-size: 1.8rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
+.panel.open {
+    transform: translateY(0);
+}
+
+.panel-close {
+    position: sticky;
+    top: 0;
+    right: 0;
+    float: right;
+    margin: 1rem;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: rgba(255,255,255,0.1);
     color: var(--text);
-}
-
-.section-subtitle {
-    font-size: 1rem;
-    color: var(--text-dim);
-    margin-bottom: 2rem;
-}
-
-.content {
-    color: var(--text-dim);
-}
-
-.content p {
-    margin-bottom: 1.25rem;
-}
-
-.content strong {
-    color: var(--text);
-}
-
-.content em {
-    color: var(--accent);
-    font-style: normal;
-}
-
-.content h3 {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: var(--text);
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-}
-
-/* Trinity List */
-.trinity-list {
-    list-style: none;
-    margin: 1.5rem 0;
-}
-
-.trinity-list li {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    margin-bottom: 0.75rem;
-    background: var(--card-bg);
-    border-radius: 8px;
-    border-left: 3px solid var(--border);
-}
-
-.trinity-list li:nth-child(1) { border-left-color: var(--accent-purple); }
-.trinity-list li:nth-child(2) { border-left-color: var(--accent-gold); }
-.trinity-list li:nth-child(3) { border-left-color: var(--accent); }
-
-.trinity-list .symbol {
     font-size: 1.5rem;
-    width: 2rem;
-    flex-shrink: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
 }
 
-.trinity-list li:nth-child(1) .symbol { color: var(--accent-purple); }
-.trinity-list li:nth-child(2) .symbol { color: var(--accent-gold); }
-.trinity-list li:nth-child(3) .symbol { color: var(--accent); }
+.panel-content {
+    padding: 0 1.5rem 2rem;
+}
 
-.trinity-list strong {
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+.panel-symbol {
+    font-size: 2rem;
+}
+
+.panel-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.panel-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+}
+
+.panel-section {
+    margin-bottom: 1.5rem;
+}
+
+.panel-section h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
     color: var(--text);
 }
 
-/* Physics List */
-.physics-list {
-    list-style: none;
-    margin: 1.5rem 0;
-}
-
-.physics-list li {
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border);
-}
-
-.physics-list li:last-child {
-    border-bottom: none;
-}
-
-.physics-list strong {
-    color: var(--accent);
-}
-
-/* Numbers Grid */
-.numbers-grid {
-    display: grid;
-    gap: 1rem;
-    margin: 1.5rem 0;
-}
-
-.number-item {
-    background: var(--card-bg);
-    padding: 1.25rem;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-}
-
-.number-item .value {
-    display: block;
-    font-family: 'Space Grotesk', monospace;
-    font-size: 1.3rem;
-    color: var(--accent-gold);
-    margin-bottom: 0.5rem;
-}
-
-.number-item .label {
+.panel-section p {
     font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.panel-section ul {
+    list-style: none;
+    font-size: 0.85rem;
     color: var(--text-dim);
 }
 
-/* Ethics List */
-.ethics-list {
-    list-style: none;
-    margin: 1.5rem 0;
-}
-
-.ethics-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 0.75rem 0;
+.panel-section li {
+    padding: 0.4rem 0;
     border-bottom: 1px solid var(--border);
 }
 
-.ethics-list li:last-child {
+.panel-section li:last-child {
     border-bottom: none;
 }
 
-.ethics-list .symbol {
-    font-size: 1.2rem;
-    width: 1.5rem;
-    flex-shrink: 0;
-    color: var(--accent);
-}
-
-.ethics-list strong {
+.panel-section strong {
     color: var(--text);
 }
 
-/* Key Insight */
-.key-insight {
-    background: rgba(88, 166, 255, 0.1);
-    border: 1px solid rgba(88, 166, 255, 0.3);
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin: 2rem 0;
-    text-align: center;
+/* Panel Colors */
+.panel-body .panel-symbol { color: var(--body-color); }
+.panel-body { border-top: 3px solid var(--body-color); }
+
+.panel-mind .panel-symbol { color: var(--mind-color); }
+.panel-mind { border-top: 3px solid var(--mind-color); }
+
+.panel-soul .panel-symbol { color: var(--soul-color); }
+.panel-soul { border-top: 3px solid var(--soul-color); }
+
+/* Backdrop */
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
 }
 
-.key-insight p:first-child {
-    font-size: 1.2rem;
-    color: var(--accent);
-    margin-bottom: 0.75rem;
-}
-
-.key-insight p:last-child {
-    margin-bottom: 0;
-}
-
-/* Principles List */
-.principles-list {
-    list-style: none;
-    margin: 1.5rem 0;
-}
-
-.principles-list li {
-    padding: 0.75rem 0;
-    padding-left: 1rem;
-    border-left: 2px solid var(--accent-gold);
-    margin-bottom: 0.75rem;
-}
-
-.principles-list strong {
-    color: var(--accent-gold);
-}
-
-/* ===================================
-   Footer
-   =================================== */
-footer {
-    text-align: center;
-    padding: 4rem 0 2rem;
-    border-top: 1px solid var(--border);
-}
-
-.footer-symbol {
-    font-size: 2.5rem;
-    color: var(--accent);
-    margin-bottom: 1rem;
-}
-
-footer p {
-    color: var(--text-dim);
-    margin-bottom: 0.5rem;
-}
-
-.collab {
-    font-size: 0.9rem;
-}
-
-.footer-links {
-    margin: 1.5rem 0;
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-}
-
-.footer-links a {
-    color: var(--accent);
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-.footer-links a:hover {
-    text-decoration: underline;
-}
-
-.footer-note {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    opacity: 0.7;
+.backdrop.show {
+    opacity: 1;
+    visibility: visible;
 }
 
 /* ===================================
    Responsive
    =================================== */
-@media (max-width: 600px) {
-    body {
-        font-size: 16px;
+@media (min-width: 768px) {
+    .circumpunct-container {
+        width: 340px;
+        height: 340px;
     }
 
-    .hero h1 {
-        font-size: 4rem;
-    }
-
-    .intro p {
-        font-size: 1rem;
+    .zone-labels {
+        width: 340px;
+        height: 340px;
     }
 
     .equation code {
-        font-size: 1.4rem;
+        font-size: 1.8rem;
     }
 
-    .section {
-        padding: 3rem 0;
+    .panel {
+        max-width: 500px;
+        left: 50%;
+        transform: translate(-50%, 100%);
+        border-radius: 24px 24px 0 0;
     }
 
-    .trinity-list li {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .trinity-list .symbol {
-        width: auto;
-    }
-
-    .footer-links {
-        flex-direction: column;
-        gap: 1rem;
+    .panel.open {
+        transform: translate(-50%, 0);
     }
 }
 
-/* ===================================
-   Subtle animations
-   =================================== */
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
-.hero h1 {
-    animation: float 6s ease-in-out infinite;
+.zone:focus {
+    outline: 2px solid var(--soul-color);
+    outline-offset: 4px;
 }
 
-/* Fade in on scroll */
-.section {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.section.visible {
-    opacity: 1;
-    transform: translateY(0);
+.panel-close:focus {
+    outline: 2px solid var(--soul-color);
 }
