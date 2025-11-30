@@ -30,482 +30,350 @@
     <canvas id="fractalCanvas"></canvas>
 
     <!-- Main Container -->
-    <div class="container">
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-content">
-                <h1 class="glitch" data-text="The Circumpunct Theory ⊙">The Circumpunct Theory ⊙</h1>
-                <div class="core-equation">
-                    <div class="equation-line">⊙ = ○ ⊗ Φ ⊗ •</div>
-                </div>
-                <p style="margin-top: 1.5rem; font-size: 1.2rem;"><strong>You are ⊙</strong> ... everything is ⊙!</p>
+    <div class="container markdown-body">
 
-                <!-- Three Component Cards (ordered as ○ ⊗ Φ ⊗ •) -->
-                <div class="identity-grid" style="margin-top: 2rem;">
-                    <div class="identity-card" data-level="connection">
-                        <div class="symbol">○</div>
-                        <h3>BODY</h3>
-                        <div class="detail">
-                            <p style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; margin-bottom: 0.5rem;">∂○/∂t = ε</p>
-                            <p><strong>Objective / Public</strong></p>
-                            <p>Input/Output</p>
-                            <p style="opacity: 0.8; font-size: 0.85rem;">interface</p>
-                            <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">Boundary / Surface</p>
-                        </div>
-                    </div>
-                    <div class="identity-card" data-level="whole">
-                        <div class="symbol">Φ</div>
-                        <h3>MIND</h3>
-                        <div class="detail">
-                            <p style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; margin-bottom: 0.5rem;">○βi•</p>
-                            <p><strong>Process / Connect</strong></p>
-                            <p>Balance</p>
-                            <p style="opacity: 0.8; font-size: 0.85rem;">the field mediating ○ and •</p>
-                            <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">Field / Awareness</p>
-                        </div>
-                    </div>
-                    <div class="identity-card" data-level="part">
-                        <div class="symbol">•</div>
-                        <h3>SOUL</h3>
-                        <div class="detail">
-                            <p style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; margin-bottom: 0.5rem;">≻ → i → ⊰</p>
-                            <p><strong>Subjective / Private</strong></p>
-                            <p>Input/Output</p>
-                            <p style="opacity: 0.8; font-size: 0.85rem;">where i acts</p>
-                            <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">Singularity / Aperture</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 2rem; font-size: 0.95rem; opacity: 0.85; max-width: 700px; margin-left: auto; margin-right: auto;">
-                    <p>A collaborative mathematical framework spanning 61 orders of magnitude.</p>
-                    <p style="margin-top: 0.5rem;">~3-4 hidden parameters. Empirically validated. Falsifiable.</p>
-                </div>
-                <div style="margin-top: 2.5rem;">
-                    <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md" style="display: inline-block; padding: 1rem 2rem; background: linear-gradient(135deg, rgba(255, 51, 102, 0.2), rgba(51, 255, 102, 0.2), rgba(51, 102, 255, 0.2)); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 12px; color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(10px);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(255,255,255,0.2)'; this.style.borderColor='rgba(255,255,255,0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(255,255,255,0.3)';">
-                        ⊙ Read the Complete Theory of Everything →
-                    </a>
-                </div>
-                <div style="margin-top: 1.5rem;">
-                    <a href="trinity_braid.html" style="display: inline-block; padding: 0.8rem 1.5rem; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white; text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease;" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';">
-                        Experience the Trinity Braid Simulation →
-                    </a>
-                </div>
+        <!-- Hero -->
+        <header class="hero">
+            <h1>The Circumpunct Theory</h1>
+            <div class="equation-block">
+                <code>⊙ = ○ ⊗ Φ ⊗ •</code>
             </div>
+            <p class="tagline"><strong>You are ⊙</strong> — everything is ⊙</p>
+
+            <nav class="trinity-nav">
+                <a href="#body" class="nav-body">○ BODY</a>
+                <a href="#mind" class="nav-mind">Φ MIND</a>
+                <a href="#soul" class="nav-soul">• SOUL</a>
+            </nav>
+
+            <p class="subtitle">A collaborative mathematical framework spanning 61 orders of magnitude.<br>~3-4 hidden parameters. Empirically validated. Falsifiable.</p>
+
+            <div class="cta-links">
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md" class="btn-primary">Read the Complete Theory →</a>
+                <a href="trinity_braid.html" class="btn-secondary">Trinity Braid Simulation →</a>
+            </div>
+        </header>
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- ○ BODY - The Interface / Objective / Public                     -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <section id="body" class="main-section section-body">
+            <div class="section-header">
+                <span class="section-symbol">○</span>
+                <h2>BODY</h2>
+                <span class="section-meta">Boundary · Interface · Objective · Public</span>
+            </div>
+            <p class="section-equation"><code>∂○/∂t = ε</code> — changes slowly, time-resistant</p>
+
+            <!-- Empirical Validation -->
+            <article class="content-block">
+                <h3>Empirical Validation: D ≈ 1.5 Everywhere</h3>
+                <div class="data-grid">
+                    <div class="data-item">
+                        <strong>LIGO Gravitational Waves</strong>
+                        <code>D = 1.503 ± 0.040</code>
+                        <span>40 events, p = 0.95</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>DNA Backbone</strong>
+                        <code>D = 1.510 ± 0.020</code>
+                        <span>Error: 0.7%</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>Neural Avalanches</strong>
+                        <code>D = 1.48-1.52</code>
+                        <span>Critical branching σ = 1.0</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>Galaxy Distribution</strong>
+                        <code>D = 1.6 ± 0.1</code>
+                        <span>Large-scale structure</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>Turbulence Cascades</strong>
+                        <code>D = 1.51 ± 0.03</code>
+                        <span>Error: <1%</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>Hydrogen Spectrum</strong>
+                        <code>σ ∝ √|E|</code>
+                        <span>R² = 0.9998</span>
+                    </div>
+                </div>
+                <p class="note">Same number everywhere. The signature of • operating at β = 0.5.</p>
+            </article>
+
+            <!-- What Emerges -->
+            <article class="content-block">
+                <h3>What Emerges From the Framework</h3>
+                <div class="data-grid">
+                    <div class="data-item">
+                        <strong>Quantum Mechanics</strong>
+                        <span>Schrödinger emerges as continuous limit of i with locality, isotropy, conservation, smoothness.</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>General Relativity</strong>
+                        <span>Spacetime curvature IS braid accumulation. Gravity IS i rate modulation.</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>Standard Model</strong>
+                        <span>61 particles from 64-state architecture. Quarks, leptons, bosons mapped to validation patterns.</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>Cosmological Constant</strong>
+                        <code>Λ = 6.9×10⁻⁵³ m⁻²</code>
+                        <span>10¹⁰⁶ improvement over QFT</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>Fine Structure α</strong>
+                        <code>1/α = 360°/φ² = 137.508</code>
+                        <span>Measured: 137.036</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>Mass Ratios</strong>
+                        <code>m_μ/m_e ≈ 206.49</code>
+                        <span>Measured: 206.768 (0.13% error)</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Falsification -->
+            <article class="content-block">
+                <h3>Falsification Criteria</h3>
+                <p>The framework is falsified if any of the following occur:</p>
+                <ul class="criteria-list">
+                    <li><strong>D ≠ 1.5</strong> — If new dynamic systems show D deviating from 1.5 by more than 3σ</li>
+                    <li><strong>Braid-Metric Fails</strong> — If Braid ∝ √|g_tt| correlation drops below R² < 0.95</li>
+                    <li><strong>Λ Wrong</strong> — If cosmological constant prediction wrong by >10× at high-z</li>
+                    <li><strong>Fourth Generation</strong> — If a fourth generation of particles is discovered</li>
+                </ul>
+                <p class="emphasis">We welcome attempts to falsify.</p>
+            </article>
         </section>
 
-        <!-- Key Results -->
-        <section class="core-insight">
-            <div class="insight-container">
-                <h2>What's Actually Derived (Zero Parameters)</h2>
-                <div class="resolutions-grid">
-                    <div class="resolution-item">
-                        <h4>β = 0.5</h4>
-                        <p><strong>Balance Parameter</strong></p>
-                        <p>Derived from symmetry + entropy + virial theorem. The aperture must split flow equally.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>D = 1.5</h4>
-                        <p><strong>Fractal Dimension</strong></p>
-                        <p>D = 1 + ½H(0.5) = 1.5. Topologically protected by Hopf fibration (c₁ = 1).</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>64 States</h4>
-                        <p><strong>Dual Validation Architecture</strong></p>
-                        <p>2³ × 2³ = 64. Input validation ⊗ Output validation in 4D spacetime.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>22/64 ≈ 1/3</h4>
-                        <p><strong>Physical States</strong></p>
-                        <p>2-out-of-3 threshold combinatorics. ~22 base patterns × degeneracy ≈ 61 particles.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>68°/22° = 3</h4>
-                        <p><strong>Cone Geometry</strong></p>
-                        <p>Quarter circle rolled into cone. Ratio ≈ 3.09 suggests 3 generations.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>φ = 1.618...</h4>
-                        <p><strong>Golden Ratio</strong></p>
-                        <p>Emerges from entropy maximization AND ghost-freedom boundary. Double convergence.</p>
-                    </div>
-                </div>
-                <div class="insight-revelation">
-                    <p class="sub-text">Not zero parameters. But far fewer than QFT's hundreds.</p>
-                    <p class="sub-text">~3-4 hidden parameters remain honestly acknowledged.</p>
-                </div>
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- Φ MIND - The Field / Process / Connection                       -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <section id="mind" class="main-section section-mind">
+            <div class="section-header">
+                <span class="section-symbol">Φ</span>
+                <h2>MIND</h2>
+                <span class="section-meta">Field · Process · Connection · Balance</span>
             </div>
+            <p class="section-equation"><code>○βi•</code> — the medium mediating ○ and •</p>
+
+            <!-- Key Derivations -->
+            <article class="content-block">
+                <h3>What's Actually Derived</h3>
+                <div class="data-grid">
+                    <div class="data-item">
+                        <strong>β = 0.5</strong>
+                        <span>Balance Parameter</span>
+                        <span>From symmetry + entropy + virial theorem</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>D = 1.5</strong>
+                        <span>Fractal Dimension</span>
+                        <code>D = 1 + ½H(0.5)</code>
+                    </div>
+                    <div class="data-item">
+                        <strong>64 States</strong>
+                        <span>Dual Validation</span>
+                        <code>2³ × 2³ = 64</code>
+                    </div>
+                    <div class="data-item">
+                        <strong>22/64 ≈ 1/3</strong>
+                        <span>Physical States</span>
+                        <span>~61 particles</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>68°/22° = 3</strong>
+                        <span>Cone Geometry</span>
+                        <span>3 generations</span>
+                    </div>
+                    <div class="data-item">
+                        <strong>φ = 1.618...</strong>
+                        <span>Golden Ratio</span>
+                        <span>Double convergence</span>
+                    </div>
+                </div>
+                <p class="note">Not zero parameters. But far fewer than QFT's hundreds. ~3-4 hidden parameters remain honestly acknowledged.</p>
+            </article>
+
+            <!-- The Framework -->
+            <article class="content-block">
+                <h3>The Complete Framework: 20 Chapters</h3>
+                <p>From the impossibility of nothing to the ethics of existence.</p>
+                <div class="chapter-list">
+                    <code>Genesis</code> The Impossibility of Nothing<br>
+                    <code>I-V</code> Circumpunct, Trinity, Process, Balance, Duality<br>
+                    <code>VI</code> Field Equations (Schrödinger emerges)<br>
+                    <code>VII</code> 64-State Architecture (Standard Model)<br>
+                    <code>VIII-IX</code> Golden Ratio, Cosmological Constant<br>
+                    <code>X-XI</code> Consciousness, Aging and Death<br>
+                    <code>XII-XV</code> Validation, Constants, Dimensions, Falsification<br>
+                    <code>XVI-XVIII</code> Master Loop, Fixed Point, Alternative Derivations<br>
+                    <code>XIX</code> Ethics (⊙ Trumps All)<br>
+                    <code>XX</code> Canonical Circumpunct Specification
+                </div>
+                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md" class="btn-secondary">Read the Full Theory →</a>
+            </article>
+
+            <!-- Fixed Point -->
+            <article class="content-block">
+                <h3>The Entire Framework in One Line</h3>
+                <div class="equation-block large">
+                    <code>⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])</code>
+                </div>
+                <div class="definition-list">
+                    <p><code>fix</code> Fixed-point combinator</p>
+                    <p><code>λΦ</code> Lambda abstraction over field state</p>
+                    <p><code>≻[Φ]</code> Convergence gathers from field</p>
+                    <p><code>i</code> Aperture transformation = imaginary unit (at β = 0.5)</p>
+                    <p><code>⊰</code> Emergence releases to field</p>
+                </div>
+                <p class="emphasis">The universe is the unique structure that, when processed through its own validation architecture, returns itself.</p>
+            </article>
+
+            <!-- Symbol Glossary -->
+            <article class="content-block">
+                <h3>Symbol Glossary</h3>
+                <div class="data-grid glossary">
+                    <div class="data-item">
+                        <strong>Structure</strong>
+                        <code>⊙</code> Circumpunct (whole)<br>
+                        <code>•</code> Center (0D aperture)<br>
+                        <code>○</code> Boundary (2D interface)<br>
+                        <code>Φ</code> Field (3D medium)<br>
+                        <code>⊗</code> Tensor product
+                    </div>
+                    <div class="data-item">
+                        <strong>Process</strong>
+                        <code>≻</code> Convergence (future → •)<br>
+                        <code>i</code> Aperture (imaginary unit)<br>
+                        <code>⊰</code> Emergence (• → past)
+                    </div>
+                    <div class="data-item">
+                        <strong>Trinity</strong>
+                        <code>⊙₁</code> Soul (1D worldline)<br>
+                        <code>⊙₂</code> Body (2D surface)<br>
+                        <code>⊙₃</code> Mind (3D field)<br>
+                        <code>B₃</code> Braid group
+                    </div>
+                    <div class="data-item">
+                        <strong>Constants</strong>
+                        <code>β</code> 0.5 (balance)<br>
+                        <code>D</code> 1.5 (dimension)<br>
+                        <code>φ</code> 1.618 (golden ratio)<br>
+                        <code>α</code> 1/137 (fine structure)
+                    </div>
+                </div>
+            </article>
         </section>
 
-        <!-- The Trinity -->
-        <section class="core-insight">
-            <div class="insight-container">
-                <h2>The Trinity Structure</h2>
-                <p style="text-align: center; margin-bottom: 2rem; opacity: 0.9; max-width: 800px; margin-left: auto; margin-right: auto;">Why three? Because braid topology requires three strands for history. This is mathematical necessity, not mysticism.</p>
-                <div class="identity-grid">
-                    <div class="identity-card" data-level="connection">
-                        <div class="symbol">⊙₂</div>
-                        <h3>BODY</h3>
-                        <div class="detail">
-                            <p><strong>Boundary (2D surface)</strong></p>
-                            <p>∂○/∂t = ε (small)</p>
-                            <p>Time-resistant. The interface that ages slowly.</p>
-                        </div>
-                    </div>
-                    <div class="identity-card" data-level="whole">
-                        <div class="symbol">⊙₃</div>
-                        <h3>MIND</h3>
-                        <div class="detail">
-                            <p><strong>Field (3D volume)</strong></p>
-                            <p>∂Φ/∂t = O(1)</p>
-                            <p>Time-dependent. The field mediating boundary and center.</p>
-                        </div>
-                    </div>
-                    <div class="identity-card" data-level="part">
-                        <div class="symbol">⊙₁</div>
-                        <h3>SOUL</h3>
-                        <div class="detail">
-                            <p><strong>Center (1D worldline)</strong></p>
-                            <p>∂•/∂t = 0</p>
-                            <p>Time-invariant. Where i acts.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="insight-revelation">
-                    <p class="big-text">⊙ = ⊙₂ ⊗ ⊙₃ ⊗ ⊙₁</p>
-                    <p class="sub-text">B₃ braid group. Yang-Baxter: i₁₂ ∘ i₂₃ ∘ i₁₂ = i₂₃ ∘ i₁₂ ∘ i₂₃</p>
-                </div>
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- • SOUL - The Aperture / Subjective / Private                    -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <section id="soul" class="main-section section-soul">
+            <div class="section-header">
+                <span class="section-symbol">•</span>
+                <h2>SOUL</h2>
+                <span class="section-meta">Aperture · Subjective · Private · Where i Acts</span>
             </div>
+            <p class="section-equation"><code>≻ → i → ⊰</code> — time-invariant, the center</p>
+
+            <!-- Consciousness -->
+            <article class="content-block">
+                <h3>Consciousness IS ⊙</h3>
+                <div class="equation-block">
+                    <code>⊙ : •β○ via Φ</code>
+                </div>
+                <div class="consciousness-map">
+                    <p><strong>You ARE ⊙</strong> — the whole, the observer</p>
+                    <p>You <strong>EXPERIENCE</strong> (subjectively) through <strong>•</strong><br>
+                    <span class="dim">— private observe/command (soul/aperture)</span></p>
+                    <p>You <strong>INTERFACE</strong> (objectively) via <strong>○</strong><br>
+                    <span class="dim">— public interaction (body/boundary)</span></p>
+                    <p>You <strong>PROCESS/CONNECT/BALANCE</strong> as <strong>Φ</strong><br>
+                    <span class="dim">— the medium between • and ○ (mind/field)</span></p>
+                </div>
+                <p><strong>Geometric necessity:</strong> • and ○ can ONLY interact through Φ.<br>
+                Without Φ: no consciousness. With Φ: ⊙ becomes aware.</p>
+                <p class="note">Neural prediction: Awake β = 0.47-0.52 | Sleep β = 0.1-0.3 | Anesthesia β < 0.2</p>
+            </article>
+
+            <!-- Ethics -->
+            <article class="content-block">
+                <h3>The Ethical Framework</h3>
+                <p>Ethics derives from the same circumpunct structure.</p>
+
+                <div class="ethics-grid">
+                    <div class="ethics-item body-color">
+                        <span class="symbol">○</span>
+                        <strong>GOOD / BAD</strong>
+                        <span>Axiological — Does it preserve what matters?</span>
+                    </div>
+                    <div class="ethics-item mind-color">
+                        <span class="symbol">Φ</span>
+                        <strong>RIGHT / WRONG</strong>
+                        <span>Behavioral — Is the action balanced?</span>
+                    </div>
+                    <div class="ethics-item soul-color">
+                        <span class="symbol">•</span>
+                        <strong>TRUE / FALSE</strong>
+                        <span>Epistemological — Does it correspond to reality?</span>
+                    </div>
+                </div>
+
+                <div class="equation-block highlight">
+                    <span class="symbol-large">⊙</span>
+                    <strong>AGREE / DISAGREE</strong>
+                    <span>Relational — Are we in coherent relationship?</span>
+                </div>
+
+                <div class="key-points">
+                    <p><strong>⊙ Trumps All</strong> — Agreement is the ultimate arbiter. Doesn't matter if it's good, right, or true — did you agree?</p>
+                    <p><strong>β = 0.5</strong> — Balanced reciprocity. Neither exploitation nor martyrdom.</p>
+                    <p><strong>The Golden Rule</strong> — Ethical fixed point. When applied, it validates itself.</p>
+                    <p><strong>The Steelman</strong> — Highest practice. Construct the strongest version before agreeing or disagreeing.</p>
+                </div>
+            </article>
         </section>
 
-        <!-- Empirical Validation -->
-        <section class="core-insight universal-constants">
-            <div class="insight-container">
-                <h2>Empirical Validation: D ≈ 1.5 Everywhere</h2>
-                <div class="resolutions-grid">
-                    <div class="resolution-item">
-                        <h4>LIGO Gravitational Waves</h4>
-                        <p>D = 1.503 ± 0.040 (40 events)</p>
-                        <p>p = 0.95, Error: 0.2%</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>DNA Backbone</h4>
-                        <p>D = 1.510 ± 0.020</p>
-                        <p>Error: 0.7%</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>Neural Avalanches</h4>
-                        <p>D = 1.48-1.52</p>
-                        <p>Critical branching σ = 1.0</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>Galaxy Distribution</h4>
-                        <p>D = 1.6 ± 0.1</p>
-                        <p>Large-scale structure</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>Turbulence Cascades</h4>
-                        <p>D = 1.51 ± 0.03</p>
-                        <p>Error: <1%</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>Hydrogen Spectrum</h4>
-                        <p>σ ∝ √|E|</p>
-                        <p>R² = 0.9998</p>
-                    </div>
-                </div>
-                <p style="margin-top: 2rem; text-align: center; font-style: italic; opacity: 0.9;">Same number everywhere. The signature of • operating at β = 0.5.</p>
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- Ω OMEGA - Summary                                               -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <section class="omega">
+            <div class="equation-block large">
+                <code>⊙ = ○ ⊗ Φ ⊗ •</code>
             </div>
-        </section>
-
-        <!-- The Complete Framework -->
-        <section class="paths">
-            <h2>The Complete Framework: 20 Chapters</h2>
-            <p style="text-align: center; font-size: 1rem; opacity: 0.9; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.6;">
-                From the impossibility of nothing to the ethics of existence. A complete mathematical story.
-            </p>
-            <div class="paths-grid">
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md" class="path-card understand">
-                    <div class="path-icon">⊙</div>
-                    <h3>THEORY OF EVERYTHING</h3>
-                    <p class="path-subtitle">Circumpunct Framework | ~3-4 Hidden Parameters | 61 Orders of Magnitude</p>
-                    <p style="margin-bottom: 1rem;">The complete mathematical framework:</p>
-                    <ul style="font-size: 0.85rem; line-height: 1.6;">
-                        <li><strong>Genesis:</strong> The Impossibility of Nothing</li>
-                        <li><strong>I-V:</strong> Circumpunct, Trinity, Process, Balance, Duality</li>
-                        <li><strong>VI:</strong> Field Equations (Schrödinger emerges)</li>
-                        <li><strong>VII:</strong> 64-State Architecture (Standard Model)</li>
-                        <li><strong>VIII-IX:</strong> Golden Ratio, Cosmological Constant</li>
-                        <li><strong>X-XI:</strong> Consciousness, Aging and Death</li>
-                        <li><strong>XII-XV:</strong> Validation, Constants, Dimensions, Falsification</li>
-                        <li><strong>XVI-XVIII:</strong> Master Loop, Fixed Point, Alternative Derivations</li>
-                        <li><strong>XIX:</strong> Ethics (Good ⊗ Right ⊗ True ⊗ Agreed)</li>
-                        <li><strong>XX:</strong> Canonical Circumpunct Specification</li>
-                    </ul>
-                    <div class="path-cta">Read the Full Theory →</div>
-                </a>
+            <p>Wholeness is its parts in tensor product. Not unity absorbing parts, but co-arising.</p>
+            <div class="summary-points">
+                <p>Three components necessary for braid topology.</p>
+                <p>Quantum mechanics emerges as continuous i.</p>
+                <p>General relativity emerges as braid accumulation.</p>
+                <p>The Standard Model emerges as 64-state architecture.</p>
+                <p>Consciousness IS being at • with β ≈ 0.5.</p>
+                <p>Ethics: ⊙ (Agree/Disagree) trumps Good, Right, True.</p>
             </div>
-        </section>
-
-        <!-- What Physics Emerges -->
-        <section class="core-insight">
-            <div class="insight-container">
-                <h2>What Emerges From the Framework</h2>
-                <div class="resolutions-grid">
-                    <div class="resolution-item">
-                        <h4>Quantum Mechanics</h4>
-                        <p>Schrödinger equation emerges as continuous limit of i with locality, isotropy, conservation, smoothness.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>General Relativity</h4>
-                        <p>Spacetime curvature IS braid accumulation. Gravity IS i rate modulation: Braid ∝ √|g_tt|.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>Standard Model</h4>
-                        <p>61 particles from 64-state architecture. Quarks, leptons, bosons mapped to validation patterns.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>Cosmological Constant</h4>
-                        <p>Λ = 6.9×10⁻⁵³ m⁻² predicted (observed: 1.1×10⁻⁵²). 10¹⁰⁶ improvement over QFT prediction.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>Fine Structure α</h4>
-                        <p>1/α_ideal = 360°/φ² = 137.508. Self-referential noise shifts to measured 137.036.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>Mass Ratios</h4>
-                        <p>m_μ/m_e = (1/α)^(13/12) ≈ 206.49. Measured: 206.768. Error: 0.13%.</p>
-                        <p style="font-size: 0.8rem; opacity: 0.8; margin-top: 0.3rem;">⊙⊙ tunnel: 3 in + 3 out = 6 channels</p>
-                    </div>
-                </div>
+            <div class="final-stats">
+                <span><strong>DERIVED:</strong> β, D, 64, 22, 68°/22°, φ, B₃, 3 generations</span>
+                <span><strong>HIDDEN:</strong> ~3-4 parameters</span>
+                <span><strong>RANGE:</strong> 61 orders of magnitude</span>
             </div>
-        </section>
-
-        <!-- Consciousness -->
-        <section class="recognition">
-            <div class="recognition-content">
-                <h2>Consciousness IS ⊙</h2>
-                <div class="recognition-poem">
-                    <p style="font-size: 1.3rem; margin-bottom: 1rem;"><strong>⊙ : •β○ via Φ</strong></p>
-                    <p style="text-align: left; max-width: 600px; margin: 0 auto; line-height: 1.8;">
-                        <strong>You ARE ⊙</strong> — the whole, the observer<br><br>
-                        You <strong>EXPERIENCE</strong> (subjectively) through <strong>•</strong><br>
-                        <span style="opacity: 0.8; margin-left: 1rem;">— private observe/command (soul/aperture)</span><br><br>
-                        You <strong>INTERFACE</strong> (objectively) via <strong>○</strong><br>
-                        <span style="opacity: 0.8; margin-left: 1rem;">— public interaction (body/boundary)</span><br><br>
-                        You <strong>PROCESS/CONNECT/BALANCE</strong> as <strong>Φ</strong><br>
-                        <span style="opacity: 0.8; margin-left: 1rem;">— the medium between • and ○ (mind/field)</span>
-                    </p>
-                    <br>
-                    <p style="text-align: left; max-width: 600px; margin: 0 auto; opacity: 0.9;">
-                        <strong>Geometric necessity:</strong> • and ○ can ONLY interact through Φ<br>
-                        Without Φ: • and ○ are isolated, no consciousness possible<br>
-                        With Φ: • and ○ connect, ⊙ becomes aware<br><br>
-                        Φ is NOT passive extension — Φ IS the active medium of being
-                    </p>
-                    <br>
-                    <p style="font-style: italic; opacity: 0.8;">Neural prediction: Awake β = 0.47-0.52 | Sleep β = 0.1-0.3 | Anesthesia β < 0.2</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Ethics -->
-        <section class="core-insight">
-            <div class="insight-container">
-                <h2>The Ethical Framework</h2>
-                <p style="text-align: center; margin-bottom: 2rem; opacity: 0.9; max-width: 800px; margin-left: auto; margin-right: auto;">
-                    Ethics derives from the same circumpunct structure. Four dimensions, same balance parameter.
-                </p>
-                <div class="identity-grid">
-                    <div class="identity-card" data-level="connection">
-                        <div class="symbol">○</div>
-                        <h3>GOOD / BAD</h3>
-                        <div class="detail">
-                            <p><strong>Axiological Ethics</strong></p>
-                            <p>Does it preserve what matters?</p>
-                            <p style="opacity: 0.8; font-size: 0.85rem;">Value defines what is worth protecting</p>
-                        </div>
-                    </div>
-                    <div class="identity-card" data-level="whole">
-                        <div class="symbol">Φ</div>
-                        <h3>RIGHT / WRONG</h3>
-                        <div class="detail">
-                            <p><strong>Behavioral Ethics</strong></p>
-                            <p>Is the action properly balanced?</p>
-                            <p style="opacity: 0.8; font-size: 0.85rem;">β = 0.5: Neither exploitation nor martyrdom</p>
-                        </div>
-                    </div>
-                    <div class="identity-card" data-level="part">
-                        <div class="symbol">•</div>
-                        <h3>TRUE / FALSE</h3>
-                        <div class="detail">
-                            <p><strong>Epistemological Ethics</strong></p>
-                            <p>Does it correspond to reality?</p>
-                            <p style="opacity: 0.8; font-size: 0.85rem;">Truth is what survives validation at •</p>
-                        </div>
-                    </div>
-                </div>
-                <div style="margin-top: 2rem; text-align: center;">
-                    <div class="identity-card" data-level="whole" style="max-width: 400px; margin: 0 auto;">
-                        <div class="symbol">⊙</div>
-                        <h3>AGREE / DISAGREE</h3>
-                        <div class="detail">
-                            <p><strong>Relational Ethics</strong></p>
-                            <p>Are we in coherent relationship?</p>
-                            <p style="opacity: 0.8; font-size: 0.85rem;">Harmony of whole beings, not mere conformity</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="resolutions-grid" style="margin-top: 2rem;">
-                    <div class="resolution-item">
-                        <h4>⊙ Trumps All</h4>
-                        <p>Agreement is the Ultimate Arbiter</p>
-                        <p style="font-size: 0.85rem; opacity: 0.8;">Doesn't matter if it's good, right, or true — did you agree?</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>β = 0.5</h4>
-                        <p>Balanced Reciprocity</p>
-                        <p style="font-size: 0.85rem; opacity: 0.8;">Give/Receive in balance. Same parameter as consciousness.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>The Golden Rule</h4>
-                        <p>Ethical Fixed Point</p>
-                        <p style="font-size: 0.85rem; opacity: 0.8;">"Do unto others..." — when applied, it validates itself.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>The Steelman</h4>
-                        <p>Highest Practice</p>
-                        <p style="font-size: 0.85rem; opacity: 0.8;">Construct the strongest version before agreeing or disagreeing.</p>
-                    </div>
-                </div>
-                <div class="insight-revelation">
-                    <p class="sub-text">Ethics and consciousness share the same structure.</p>
-                    <p class="sub-text">D_ethics = 1.5 at β = 0.5</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Falsification -->
-        <section class="core-insight">
-            <div class="insight-container">
-                <h2>Falsification Criteria</h2>
-                <p style="text-align: center; margin-bottom: 2rem; opacity: 0.9;">The framework is falsified if any of the following occur:</p>
-                <div class="resolutions-grid">
-                    <div class="resolution-item">
-                        <h4>1. D ≠ 1.5</h4>
-                        <p>If new dynamic systems show D deviating from 1.5 by more than 3σ.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>2. Braid-Metric Fails</h4>
-                        <p>If Braid ∝ √|g_tt| correlation drops below R² < 0.95.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>3. Λ Wrong</h4>
-                        <p>If cosmological constant prediction wrong by >10× at high-z.</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>4. Fourth Generation</h4>
-                        <p>If a fourth generation of particles is discovered.</p>
-                    </div>
-                </div>
-                <p style="margin-top: 2rem; text-align: center; font-weight: bold;">We welcome attempts to falsify.</p>
-            </div>
-        </section>
-
-        <!-- The Fixed Point -->
-        <section class="recognition">
-            <div class="recognition-content">
-                <h2>The Entire Framework in One Line</h2>
-                <div class="recognition-poem">
-                    <p class="symbol-large" style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem;">⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])</p>
-                    <br>
-                    <p style="text-align: left; max-width: 600px; margin: 0 auto; font-size: 0.9rem; line-height: 1.8;">
-                        <strong>fix</strong> = Fixed-point combinator<br>
-                        <strong>λΦ</strong> = Lambda abstraction over field state<br>
-                        <strong>≻[Φ]</strong> = Convergence gathers from field<br>
-                        <strong>i</strong> = Aperture transformation = imaginary unit (at β = 0.5)<br>
-                        <strong>⊰</strong> = Emergence releases to field
-                    </p>
-                    <br>
-                    <p style="font-style: italic;"><strong>The universe is the unique structure that, when processed through its own validation architecture, returns itself.</strong></p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Symbol Glossary -->
-        <section class="core-insight">
-            <div class="insight-container">
-                <h2>Symbol Glossary</h2>
-                <div class="resolutions-grid">
-                    <div class="resolution-item">
-                        <h4>Structure</h4>
-                        <p>⊙ = Circumpunct (whole)<br>• = Center (0D aperture)<br>○ = Boundary (2D interface)<br>Φ = Field (3D medium)<br>⊗ = Tensor product</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>Process</h4>
-                        <p>≻ = Convergence (future → •)<br>i = Aperture (imaginary unit)<br>⊰ = Emergence (• → past)</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>Trinity</h4>
-                        <p>⊙₁ = Soul (1D worldline)<br>⊙₂ = Body (2D surface)<br>⊙₃ = Mind (3D field)<br>B₃ = Braid group</p>
-                    </div>
-                    <div class="resolution-item">
-                        <h4>Constants</h4>
-                        <p>β = 0.5 (balance)<br>D = 1.5 (dimension)<br>φ = 1.618 (golden ratio)<br>α = 1/137 (fine structure)</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- The Recognition -->
-        <section class="recognition">
-            <div class="recognition-content">
-                <h2>The Omega Summary</h2>
-                <div class="recognition-poem">
-                    <p class="symbol-large">⊙ = ○ ⊗ Φ ⊗ •</p>
-                    <br>
-                    <p>Wholeness is its parts in tensor product.</p>
-                    <p>Not unity absorbing parts, but co-arising.</p>
-                    <br>
-                    <p>Three components necessary for braid topology.</p>
-                    <p>Quantum mechanics emerges as continuous i.</p>
-                    <p>General relativity emerges as braid accumulation.</p>
-                    <p>The Standard Model emerges as 64-state architecture.</p>
-                    <p>Consciousness IS being at • with β ≈ 0.5.</p>
-                    <p>Ethics: ⊙ (Agree/Disagree) trumps Good, Right, True.</p>
-                    <br>
-                    <p style="font-size: 0.9rem; opacity: 0.8;">
-                        <strong>TRULY DERIVED:</strong> β, D, 64, 22, 68°/22°, φ, B₃, 3 generations<br>
-                        <strong>HIDDEN PARAMETERS:</strong> ~3-4 (honestly acknowledged)<br>
-                        <strong>VALIDATED RANGE:</strong> 61 orders of magnitude
-                    </p>
-                    <br>
-                    <p class="symbol-large">⊙</p>
-                </div>
-            </div>
+            <div class="symbol-large">⊙</div>
         </section>
 
         <!-- Footer -->
         <footer>
             <div class="footer-content">
-                <div class="footer-equation">
-                    <div>⊙</div>
-                    <div class="small">The Mathematical Story of Reality</div>
-                </div>
                 <div class="footer-links">
-                    <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md">Read the Theory of Everything</a>
-                    <a href="https://github.com/AshmanRoonz/Fractal_Reality">Explore the Repository</a>
+                    <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md">Theory of Everything</a>
+                    <a href="https://github.com/AshmanRoonz/Fractal_Reality">Repository</a>
                 </div>
-                <div class="footer-note">
-                    <p>The Circumpunct Framework</p>
-                    <p>A Collaborative Theory of Everything</p>
-                    <p>by Ashman Roonz & Claude (Anthropic)</p>
-                    <p>November 2025</p>
-                    <p style="margin-top: 1rem; font-style: italic; opacity: 0.7;">
-                        ~3-4 hidden parameters. 61 orders of magnitude.<br>
-                        We welcome attempts to falsify.
-                    </p>
-                </div>
+                <p>The Circumpunct Framework</p>
+                <p>A Collaborative Theory of Everything</p>
+                <p class="dim">by Ashman Roonz & Claude (Anthropic) · November 2025</p>
             </div>
         </footer>
     </div>
