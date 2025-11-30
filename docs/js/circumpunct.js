@@ -87,8 +87,10 @@
 
     const ctx = canvas.getContext('2d');
     let particles = [];
+    let lightningBolts = [];
+    let ripples = [];
     let animationId;
-    let centerX, centerY, boundaryRadius;
+    let centerX, centerY, boundaryRadius, soulRadius;
 
     function resize() {
         canvas.width = window.innerWidth;
@@ -96,7 +98,171 @@
         centerX = canvas.width / 2;
         centerY = canvas.height / 2;
         boundaryRadius = Math.min(canvas.width, canvas.height) * 0.18; // The ○ boundary
+        soulRadius = boundaryRadius * 0.23; // The • soul
         initParticles();
+    }
+
+    // Lightning bolt that shoots inward when boundary is hit
+    class Lightning {
+        constructor(angle, particleType) {
+            this.angle = angle;
+            this.life = 1.0;
+            this.decay = 0.04;
+            this.type = particleType;
+            // Generate jagged path from boundary to soul
+            this.segments = this.generatePath();
+        }
+
+        generatePath() {
+            const segments = [];
+            const startR = boundaryRadius;
+            const endR = soulRadius;
+            const steps = 8;
+
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const r = startR - (startR - endR) * t;
+                // Add jitter for lightning effect (less at start and end)
+                const jitter = (i > 0 && i < steps) ? (Math.random() - 0.5) * 0.3 : 0;
+                const a = this.angle + jitter;
+                segments.push({
+                    x: centerX + Math.cos(a) * r,
+                    y: centerY + Math.sin(a) * r
+                });
+            }
+            return segments;
+        }
+
+        update() {
+            this.life -= this.decay;
+            return this.life > 0;
+        }
+
+        draw() {
+            if (this.segments.length < 2) return;
+
+            // Color based on particle type that triggered it
+            let color;
+            if (this.type === 'body') {
+                color = `rgba(163, 113, 247, ${this.life * 0.8})`;
+            } else if (this.type === 'mind') {
+                color = `rgba(240, 180, 41, ${this.life * 0.8})`;
+            } else {
+                color = `rgba(88, 166, 255, ${this.life * 0.8})`;
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(this.segments[0].x, this.segments[0].y);
+            for (let i = 1; i < this.segments.length; i++) {
+                ctx.lineTo(this.segments[i].x, this.segments[i].y);
+            }
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2 * this.life;
+            ctx.stroke();
+
+            // Glow effect
+            ctx.strokeStyle = color.replace(this.life * 0.8, this.life * 0.3);
+            ctx.lineWidth = 6 * this.life;
+            ctx.stroke();
+        }
+    }
+
+    // Ripple that propagates through the field (mind)
+    class Ripple {
+        constructor(angle, particleType) {
+            this.angle = angle;
+            this.radius = boundaryRadius; // Start at boundary
+            this.speed = 1.5;
+            this.life = 1.0;
+            this.type = particleType;
+            this.hueShift = Math.random() * 30 - 15; // Slight color variation
+        }
+
+        update() {
+            this.radius -= this.speed; // Move inward
+            this.life = (this.radius - soulRadius) / (boundaryRadius - soulRadius);
+            return this.radius > soulRadius && this.life > 0;
+        }
+
+        getColor(interference = 0) {
+            // Base colors shifted by interference
+            let h, s, l;
+            if (this.type === 'body') {
+                h = 270 + this.hueShift + interference * 60; // Purple
+            } else if (this.type === 'mind') {
+                h = 40 + this.hueShift + interference * 60; // Gold
+            } else {
+                h = 210 + this.hueShift + interference * 60; // Cyan
+            }
+            s = 70 + interference * 20;
+            l = 50 + interference * 20;
+            return `hsla(${h}, ${s}%, ${l}%, ${this.life * 0.4})`;
+        }
+    }
+
+    // Calculate interference between ripples
+    function calculateInterference(x, y) {
+        let totalWave = 0;
+        ripples.forEach(ripple => {
+            const dx = x - centerX;
+            const dy = y - centerY;
+            const pointRadius = Math.sqrt(dx * dx + dy * dy);
+            const diff = Math.abs(pointRadius - ripple.radius);
+            if (diff < 15) {
+                // Wave contribution based on proximity to ripple
+                const wave = Math.cos((diff / 15) * Math.PI) * ripple.life;
+                totalWave += wave;
+            }
+        });
+        return totalWave;
+    }
+
+    function drawRipples() {
+        // Draw ripples as arcs in the field
+        ripples.forEach(ripple => {
+            const arcSpan = Math.PI / 3; // 60 degree arc
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, ripple.radius,
+                    ripple.angle - arcSpan / 2,
+                    ripple.angle + arcSpan / 2);
+
+            // Calculate interference at this ripple's position
+            const interference = calculateInterference(
+                centerX + Math.cos(ripple.angle) * ripple.radius,
+                centerY + Math.sin(ripple.angle) * ripple.radius
+            );
+
+            ctx.strokeStyle = ripple.getColor(Math.abs(interference));
+            ctx.lineWidth = 3 + Math.abs(interference) * 4;
+            ctx.stroke();
+        });
+
+        // Draw interference pattern overlay in the field
+        if (ripples.length > 1) {
+            const fieldSteps = 20;
+            for (let r = soulRadius + 5; r < boundaryRadius - 5; r += (boundaryRadius - soulRadius) / fieldSteps) {
+                for (let a = 0; a < Math.PI * 2; a += Math.PI / 16) {
+                    const x = centerX + Math.cos(a) * r;
+                    const y = centerY + Math.sin(a) * r;
+                    const interference = calculateInterference(x, y);
+
+                    if (Math.abs(interference) > 0.3) {
+                        // Interference creates color shifts
+                        const hue = 200 + interference * 120; // Shifts between colors
+                        const brightness = 50 + interference * 30;
+                        ctx.beginPath();
+                        ctx.arc(x, y, 2 + Math.abs(interference) * 2, 0, Math.PI * 2);
+                        ctx.fillStyle = `hsla(${hue}, 80%, ${brightness}%, ${Math.abs(interference) * 0.5})`;
+                        ctx.fill();
+                    }
+                }
+            }
+        }
+    }
+
+    function spawnLightningAndRipple(angle, particleType) {
+        lightningBolts.push(new Lightning(angle, particleType));
+        ripples.push(new Ripple(angle, particleType));
     }
 
     class Particle {
@@ -147,6 +313,9 @@
                 const dot = this.speedX * normalX + this.speedY * normalY;
                 this.speedX = this.speedX - 2 * dot * normalX;
                 this.speedY = this.speedY - 2 * dot * normalY;
+
+                // ⚡ Spawn lightning bolt and ripple on impact!
+                spawnLightningAndRipple(angle + Math.PI, this.type); // Inward angle
             }
 
             // Wrap around edges
@@ -279,8 +448,19 @@
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Update and draw particles
         particles.forEach(p => { p.update(); p.draw(); });
         drawConnections();
+
+        // Update and draw lightning bolts
+        lightningBolts = lightningBolts.filter(l => l.update());
+        lightningBolts.forEach(l => l.draw());
+
+        // Update and draw ripples in the field
+        ripples = ripples.filter(r => r.update());
+        drawRipples();
+
         animationId = requestAnimationFrame(animate);
     }
 
