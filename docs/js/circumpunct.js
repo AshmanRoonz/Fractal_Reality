@@ -1,6 +1,6 @@
 /**
  * Circumpunct Interactive Demo
- * Touch/click the ⊙ to explore Body, Mind, Soul
+ * Tap the ⊙ to explore Body, Mind, Soul
  */
 
 (function() {
@@ -16,26 +16,18 @@
     backdrop.className = 'backdrop';
     document.body.appendChild(backdrop);
 
-    // Current open panel
     let openPanel = null;
 
-    // Open a panel
+    // Open panel
     function openPanelByZone(zoneName) {
         const panel = document.getElementById(`panel-${zoneName}`);
         if (!panel) return;
 
-        // Close any open panel first
         closeAllPanels();
-
-        // Open this panel
         panel.classList.add('open');
         backdrop.classList.add('show');
         openPanel = panel;
-
-        // Highlight the zone
         document.querySelector(`.zone-${zoneName}`)?.classList.add('active');
-
-        // Prevent body scroll
         document.body.style.overflow = 'hidden';
     }
 
@@ -48,17 +40,14 @@
         document.body.style.overflow = '';
     }
 
-    // Zone click/tap handlers
+    // Zone click handlers
     zones.forEach(zone => {
         zone.addEventListener('click', (e) => {
             e.stopPropagation();
             const zoneName = zone.dataset.zone;
-            if (zoneName) {
-                openPanelByZone(zoneName);
-            }
+            if (zoneName) openPanelByZone(zoneName);
         });
 
-        // Touch feedback
         zone.addEventListener('touchstart', () => {
             zone.classList.add('active');
         }, { passive: true });
@@ -70,22 +59,14 @@
         }, { passive: true });
     });
 
-    // Close button handlers
-    closeButtons.forEach(btn => {
-        btn.addEventListener('click', closeAllPanels);
-    });
-
-    // Backdrop click closes panel
+    // Close handlers
+    closeButtons.forEach(btn => btn.addEventListener('click', closeAllPanels));
     backdrop.addEventListener('click', closeAllPanels);
-
-    // Escape key closes panel
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && openPanel) {
-            closeAllPanels();
-        }
+        if (e.key === 'Escape' && openPanel) closeAllPanels();
     });
 
-    // Swipe down to close on mobile
+    // Swipe to close
     let touchStartY = 0;
     panels.forEach(panel => {
         panel.addEventListener('touchstart', (e) => {
@@ -93,16 +74,10 @@
         }, { passive: true });
 
         panel.addEventListener('touchmove', (e) => {
-            const touchY = e.touches[0].clientY;
-            const diff = touchY - touchStartY;
-
-            // If swiping down from top of panel
-            if (diff > 80 && panel.scrollTop === 0) {
-                closeAllPanels();
-            }
+            const diff = e.touches[0].clientY - touchStartY;
+            if (diff > 80 && panel.scrollTop === 0) closeAllPanels();
         }, { passive: true });
     });
-
 
     // =========================================
     // Particle Background
@@ -113,17 +88,14 @@
     const ctx = canvas.getContext('2d');
     let particles = [];
     let animationId;
-    let mouseX = 0;
-    let mouseY = 0;
+    let mouseX = 0, mouseY = 0;
 
-    // Resize canvas
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         initParticles();
     }
 
-    // Particle class
     class Particle {
         constructor() {
             this.reset();
@@ -136,22 +108,14 @@
             this.speedX = (Math.random() - 0.5) * 0.3;
             this.speedY = (Math.random() - 0.5) * 0.3;
             this.opacity = Math.random() * 0.5 + 0.1;
-
-            // Color: mix of body/mind/soul colors
-            const colors = [
-                [163, 113, 247], // purple
-                [240, 180, 41],  // gold
-                [88, 166, 255]   // cyan
-            ];
+            const colors = [[163, 113, 247], [240, 180, 41], [88, 166, 255]];
             this.color = colors[Math.floor(Math.random() * colors.length)];
         }
 
         update() {
-            // Move
             this.x += this.speedX;
             this.y += this.speedY;
 
-            // Mouse influence (subtle)
             const dx = mouseX - this.x;
             const dy = mouseY - this.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
@@ -161,7 +125,6 @@
                 this.y -= dy * force;
             }
 
-            // Wrap around edges
             if (this.x < 0) this.x = canvas.width;
             if (this.x > canvas.width) this.x = 0;
             if (this.y < 0) this.y = canvas.height;
@@ -176,29 +139,23 @@
         }
     }
 
-    // Initialize particles
     function initParticles() {
         const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 15000));
         particles = [];
-        for (let i = 0; i < count; i++) {
-            particles.push(new Particle());
-        }
+        for (let i = 0; i < count; i++) particles.push(new Particle());
     }
 
-    // Draw connections between nearby particles
     function drawConnections() {
         for (let i = 0; i < particles.length; i++) {
             for (let j = i + 1; j < particles.length; j++) {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-
                 if (dist < 120) {
-                    const opacity = (1 - dist / 120) * 0.15;
                     ctx.beginPath();
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - dist / 120) * 0.15})`;
                     ctx.lineWidth = 0.5;
                     ctx.stroke();
                 }
@@ -206,23 +163,13 @@
         }
     }
 
-    // Animation loop
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Update and draw particles
-        particles.forEach(p => {
-            p.update();
-            p.draw();
-        });
-
-        // Draw connections
+        particles.forEach(p => { p.update(); p.draw(); });
         drawConnections();
-
         animationId = requestAnimationFrame(animate);
     }
 
-    // Mouse/touch tracking
     function handlePointer(e) {
         const point = e.touches ? e.touches[0] : e;
         mouseX = point.clientX;
@@ -232,18 +179,12 @@
     document.addEventListener('mousemove', handlePointer);
     document.addEventListener('touchmove', handlePointer, { passive: true });
 
-    // Initialize
     window.addEventListener('resize', resize);
     resize();
     animate();
 
-    // Cleanup on page hide (for battery)
     document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            cancelAnimationFrame(animationId);
-        } else {
-            animate();
-        }
+        if (document.hidden) cancelAnimationFrame(animationId);
+        else animate();
     });
-
 })();
