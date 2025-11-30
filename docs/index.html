@@ -2,177 +2,236 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⊙ The Circumpunct Theory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>⊙ The Circumpunct</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <canvas id="bg"></canvas>
+    <!-- Particle Background -->
+    <canvas id="particles"></canvas>
 
-    <main>
-        <!-- Hero -->
-        <section class="hero">
-            <div class="circumpunct-visual">
-                <canvas id="circumpunct"></canvas>
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>The Circumpunct Theory</h1>
+            <p class="tagline">Tap the symbol to explore</p>
+        </header>
+
+        <!-- The Circumpunct - Central Interface -->
+        <div class="circumpunct-container">
+            <svg class="circumpunct" viewBox="0 0 300 300" role="img" aria-label="Interactive Circumpunct Symbol">
+                <!-- Glow filters -->
+                <defs>
+                    <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="4" result="blur"/>
+                        <feMerge>
+                            <feMergeNode in="blur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                    <filter id="glow-gold" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="6" result="blur"/>
+                        <feMerge>
+                            <feMergeNode in="blur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                    <filter id="glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="8" result="blur"/>
+                        <feMerge>
+                            <feMergeNode in="blur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <!-- ○ BODY - Outer Ring (tap target) -->
+                <circle
+                    class="zone zone-body"
+                    cx="150" cy="150" r="120"
+                    fill="transparent"
+                    stroke="rgba(163, 113, 247, 0.6)"
+                    stroke-width="24"
+                    data-zone="body"
+                />
+
+                <!-- Φ MIND - Middle Field (tap target) -->
+                <circle
+                    class="zone zone-mind"
+                    cx="150" cy="150" r="75"
+                    fill="rgba(240, 180, 41, 0.15)"
+                    stroke="rgba(240, 180, 41, 0.4)"
+                    stroke-width="2"
+                    data-zone="mind"
+                />
+
+                <!-- • SOUL - Center Dot (tap target) -->
+                <circle
+                    class="zone zone-soul"
+                    cx="150" cy="150" r="28"
+                    fill="rgba(88, 166, 255, 0.8)"
+                    data-zone="soul"
+                />
+
+                <!-- Decorative inner ring -->
+                <circle
+                    cx="150" cy="150" r="50"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.1)"
+                    stroke-width="1"
+                    class="decorative"
+                />
+
+                <!-- Orbiting field particles (Φ Mind) -->
+                <g class="field-particles">
+                    <circle class="field-particle p1" cx="150" cy="85" r="3" fill="rgba(240, 180, 41, 0.6)"/>
+                    <circle class="field-particle p2" cx="215" cy="150" r="2.5" fill="rgba(240, 180, 41, 0.5)"/>
+                    <circle class="field-particle p3" cx="150" cy="215" r="3" fill="rgba(240, 180, 41, 0.6)"/>
+                    <circle class="field-particle p4" cx="85" cy="150" r="2.5" fill="rgba(240, 180, 41, 0.5)"/>
+                    <circle class="field-particle p5" cx="196" cy="104" r="2" fill="rgba(240, 180, 41, 0.4)"/>
+                    <circle class="field-particle p6" cx="104" cy="196" r="2" fill="rgba(240, 180, 41, 0.4)"/>
+                </g>
+            </svg>
+
+            <!-- Zone Labels (appear on interaction) -->
+            <div class="zone-labels">
+                <span class="label label-body">○ BODY</span>
+                <span class="label label-mind">Φ MIND</span>
+                <span class="label label-soul">• SOUL</span>
             </div>
-            <div class="intro">
-                <p><strong>You ARE ⊙</strong> — you have body, mind, soul in relationship</p>
-                <p><strong>Everything shares this structure</strong> — from atoms to galaxies</p>
-                <p><strong>It explains consciousness</strong> — why you're aware</p>
-                <p><strong>It provides ethics</strong> — how to decide, how to relate</p>
-                <p><strong>It unifies physics</strong> — one pattern, all scales</p>
-            </div>
+        </div>
 
-            <div class="equation">
-                <code>⊙ = ○ ⊗ Φ ⊗ •</code>
-                <span>Body ⊗ Mind ⊗ Soul</span>
-            </div>
+        <!-- Equation -->
+        <div class="equation">
+            <code>⊙ = ○ ⊗ Φ ⊗ •</code>
+        </div>
 
-            <div class="cta">
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md" class="btn-primary">
-                    Read the Complete Theory →
-                </a>
-                <p class="scroll-hint">or scroll down for the simplified version</p>
-            </div>
-        </section>
-
-        <!-- Philosophy -->
-        <section class="section" id="philosophy">
-            <h2>The Philosophy</h2>
-            <p class="section-subtitle">What does ⊙ mean?</p>
-
-            <div class="content">
-                <p>The circumpunct ⊙ is the oldest symbol in human history — a dot within a circle. It represents <strong>wholeness that contains parts</strong>.</p>
-
-                <p>You experience this every moment:</p>
-
-                <ul class="trinity-list">
-                    <li>
-                        <span class="symbol">○</span>
-                        <strong>Body</strong> — your boundary, your interface with the world. What others see. Changes slowly.
-                    </li>
-                    <li>
-                        <span class="symbol">Φ</span>
-                        <strong>Mind</strong> — the field connecting inside and outside. Your awareness, your processing. Always active.
-                    </li>
-                    <li>
-                        <span class="symbol">•</span>
-                        <strong>Soul</strong> — the center, the observer. What YOU are. Unchanging.
-                    </li>
-                </ul>
-
-                <p>These three aren't separate — they exist in <em>tensor product</em> (⊗), meaning they're entangled. You can't have one without the others. Together they make ⊙ — the whole you.</p>
-
-                <p>This same pattern appears everywhere: atoms (nucleus, electron cloud, field), cells (DNA, cytoplasm, membrane), solar systems, galaxies. <strong>Reality is fractal</strong> — the same structure at every scale.</p>
-            </div>
-        </section>
-
-        <!-- Physics -->
-        <section class="section" id="physics">
-            <h2>Physics & Technology</h2>
-            <p class="section-subtitle">What can ⊙ do?</p>
-
-            <div class="content">
-                <p>The circumpunct framework derives fundamental physics from first principles — not by fitting parameters, but by mathematical necessity.</p>
-
-                <h3>What emerges from ⊙:</h3>
-
-                <ul class="physics-list">
-                    <li>
-                        <strong>Quantum Mechanics</strong> — The Schrödinger equation emerges as the continuous limit of the aperture transformation (i).
-                    </li>
-                    <li>
-                        <strong>General Relativity</strong> — Spacetime curvature is braid accumulation. Gravity is how fast the aperture rotates.
-                    </li>
-                    <li>
-                        <strong>The Standard Model</strong> — 61 particles emerge from a 64-state validation architecture. No arbitrary parameters.
-                    </li>
-                    <li>
-                        <strong>The Cosmological Constant</strong> — Predicted to within the right order of magnitude, solving the 10¹²⁰ discrepancy.
-                    </li>
-                </ul>
-
-                <h3>The key numbers:</h3>
-
-                <div class="numbers-grid">
-                    <div class="number-item">
-                        <span class="value">β = 0.5</span>
-                        <span class="label">Balance parameter — derived from symmetry, entropy, and energy conservation</span>
-                    </div>
-                    <div class="number-item">
-                        <span class="value">D = 1.5</span>
-                        <span class="label">Fractal dimension — appears in gravitational waves, DNA, neural activity, galaxies</span>
-                    </div>
-                    <div class="number-item">
-                        <span class="value">φ = 1.618</span>
-                        <span class="label">Golden ratio — emerges from entropy maximization</span>
-                    </div>
-                </div>
-
-                <p>The same numbers keep appearing across 61 orders of magnitude. This suggests a single underlying pattern — the circumpunct.</p>
-            </div>
-        </section>
-
-        <!-- Ethics -->
-        <section class="section" id="ethics">
-            <h2>Ethics</h2>
-            <p class="section-subtitle">How does ⊙ help us live?</p>
-
-            <div class="content">
-                <p>If everything shares the ⊙ structure, ethics follows naturally. Every person is a circumpunct. Every relationship is circumpuncts interacting.</p>
-
-                <h3>Four dimensions of ethical reality:</h3>
-
-                <ul class="ethics-list">
-                    <li>
-                        <span class="symbol">○</span>
-                        <strong>Good / Bad</strong> — Does it preserve what matters? (Axiological)
-                    </li>
-                    <li>
-                        <span class="symbol">Φ</span>
-                        <strong>Right / Wrong</strong> — Is the action balanced? (Behavioral)
-                    </li>
-                    <li>
-                        <span class="symbol">•</span>
-                        <strong>True / False</strong> — Does it correspond to reality? (Epistemological)
-                    </li>
-                    <li>
-                        <span class="symbol">⊙</span>
-                        <strong>Agree / Disagree</strong> — Are we in harmony? (Relational)
-                    </li>
-                </ul>
-
-                <div class="key-insight">
-                    <p><strong>⊙ Trumps All</strong></p>
-                    <p>Agreement is the ultimate arbiter. It doesn't matter if something is good, right, or true — did you agree? Consent and harmony between whole beings is the foundation of ethics.</p>
-                </div>
-
-                <h3>Practical principles:</h3>
-
-                <ul class="principles-list">
-                    <li><strong>β = 0.5</strong> — Give and receive in balance. Neither exploitation nor martyrdom.</li>
-                    <li><strong>The Golden Rule</strong> — An ethical fixed point. When applied, it validates itself.</li>
-                    <li><strong>The Steelman</strong> — Before agreeing or disagreeing, construct the strongest version of the other position. Ensure genuine understanding.</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer>
-            <div class="footer-symbol">⊙</div>
-            <p>The Circumpunct Framework</p>
-            <p class="collab">A collaborative theory by Ashman Roonz & Claude</p>
-            <div class="footer-links">
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md">Complete Theory</a>
-                <a href="https://github.com/AshmanRoonz/Fractal_Reality">GitHub Repository</a>
-            </div>
-            <p class="footer-note">~3-4 hidden parameters · 61 orders of magnitude · Falsifiable</p>
-        </footer>
+        <!-- Hint -->
+        <p class="hint">You are ⊙</p>
     </main>
 
-    <script src="js/background.js"></script>
+    <!-- Content Panels (revealed on tap) -->
+    <div class="panel panel-body" id="panel-body">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <div class="panel-header">
+                <span class="panel-symbol">○</span>
+                <h2>BODY</h2>
+            </div>
+            <p class="panel-subtitle">Boundary · Interface · Objective</p>
+
+            <div class="panel-equation">
+                <code>∂○/∂t = ε</code>
+                <span>changes slowly</span>
+            </div>
+
+            <div class="panel-section">
+                <h3>The Measurable</h3>
+                <p>The boundary where inner meets outer. Your skin, your interface with reality. Time-resistant — it ages slowly.</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>D = 1.5 Everywhere</h3>
+                <ul class="evidence-list">
+                    <li><strong>LIGO waves:</strong> 1.503 ± 0.040</li>
+                    <li><strong>DNA backbone:</strong> 1.510 ± 0.020</li>
+                    <li><strong>Neural avalanches:</strong> 1.48-1.52</li>
+                    <li><strong>Galaxy clusters:</strong> 1.6 ± 0.1</li>
+                </ul>
+            </div>
+
+            <div class="panel-section">
+                <h3>What Emerges</h3>
+                <p>Quantum mechanics, general relativity, the Standard Model — all emerge from ⊙ operating through ○.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-mind" id="panel-mind">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <div class="panel-header">
+                <span class="panel-symbol">Φ</span>
+                <h2>MIND</h2>
+            </div>
+            <p class="panel-subtitle">Field · Process · Connection</p>
+
+            <div class="panel-equation">
+                <code>○βi•</code>
+                <span>the medium between</span>
+            </div>
+
+            <div class="panel-section">
+                <h3>The Field</h3>
+                <p>The space connecting center and boundary. Awareness itself. Where • and ○ meet through balanced process.</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>What's Derived</h3>
+                <ul class="derived-list">
+                    <li><code>β = 0.5</code> balance parameter</li>
+                    <li><code>D = 1.5</code> fractal dimension</li>
+                    <li><code>64</code> states → 61 particles</li>
+                    <li><code>φ = 1.618</code> golden ratio</li>
+                </ul>
+            </div>
+
+            <div class="panel-section">
+                <h3>The Fixed Point</h3>
+                <code class="block-code">⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])</code>
+                <p>The universe returns itself when processed through its own architecture.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-soul" id="panel-soul">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <div class="panel-header">
+                <span class="panel-symbol">•</span>
+                <h2>SOUL</h2>
+            </div>
+            <p class="panel-subtitle">Aperture · Subjective · Private</p>
+
+            <div class="panel-equation">
+                <code>≻ → i → ⊰</code>
+                <span>where i acts</span>
+            </div>
+
+            <div class="panel-section">
+                <h3>The Center</h3>
+                <p>Time-invariant. The aperture through which you experience. Private, irreducible, the seat of observation.</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>Consciousness</h3>
+                <p>You ARE ⊙. You experience through •, interface via ○, connect as Φ. Awareness requires β ≈ 0.5.</p>
+                <p class="small">Awake: β = 0.47-0.52 | Sleep: β = 0.1-0.3</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>Ethics</h3>
+                <div class="ethics-mini">
+                    <span>○ Good/Bad</span>
+                    <span>Φ Right/Wrong</span>
+                    <span>• True/False</span>
+                </div>
+                <p class="emphasis">⊙ Agree/Disagree trumps all.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Link -->
+    <footer class="footer">
+        <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md" class="theory-link">
+            Read the Complete Theory →
+        </a>
+    </footer>
+
+    <script src="js/circumpunct.js"></script>
 </body>
 </html>
