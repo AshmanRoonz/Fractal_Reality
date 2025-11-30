@@ -172,87 +172,91 @@
         constructor(angle, particleType) {
             this.angle = angle;
             this.radius = boundaryRadius; // Start at boundary
-            this.speed = 1.5;
+            this.speed = 0.8; // Slower - patterns persist longer
             this.life = 1.0;
             this.type = particleType;
-            this.hueShift = Math.random() * 30 - 15; // Slight color variation
+            this.hueShift = Math.random() * 20 - 10;
         }
 
         update() {
             this.radius -= this.speed; // Move inward
-            this.life = (this.radius - soulRadius) / (boundaryRadius - soulRadius);
-            return this.radius > soulRadius && this.life > 0;
-        }
-
-        getColor(interference = 0) {
-            // Base colors shifted by interference
-            let h, s, l;
-            if (this.type === 'body') {
-                h = 270 + this.hueShift + interference * 60; // Purple
-            } else if (this.type === 'mind') {
-                h = 40 + this.hueShift + interference * 60; // Gold
-            } else {
-                h = 210 + this.hueShift + interference * 60; // Cyan
-            }
-            s = 70 + interference * 20;
-            l = 50 + interference * 20;
-            return `hsla(${h}, ${s}%, ${l}%, ${this.life * 0.4})`;
+            // Slower decay - hold patterns longer
+            this.life = Math.max(0, (this.radius - soulRadius) / (boundaryRadius - soulRadius));
+            return this.radius > soulRadius;
         }
     }
 
-    // Calculate interference between ripples
-    function calculateInterference(x, y) {
+    // Calculate wave intensity at a point in the field
+    function getFieldIntensity(r, angle) {
         let totalWave = 0;
         ripples.forEach(ripple => {
-            const dx = x - centerX;
-            const dy = y - centerY;
-            const pointRadius = Math.sqrt(dx * dx + dy * dy);
-            const diff = Math.abs(pointRadius - ripple.radius);
-            if (diff < 15) {
-                // Wave contribution based on proximity to ripple
-                const wave = Math.cos((diff / 15) * Math.PI) * ripple.life;
-                totalWave += wave;
+            // Distance from this point to the ripple wavefront
+            const rippleDist = Math.abs(r - ripple.radius);
+            // Angular proximity to ripple origin
+            let angleDiff = Math.abs(angle - ripple.angle);
+            if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
+            // Ripple spreads as it moves inward
+            const spread = Math.PI * (1 - ripple.life) + 0.3;
+
+            if (rippleDist < 20 && angleDiff < spread) {
+                const radialWave = Math.cos((rippleDist / 20) * Math.PI) * ripple.life;
+                const angularFade = Math.cos((angleDiff / spread) * Math.PI / 2);
+                totalWave += radialWave * angularFade;
             }
         });
         return totalWave;
     }
 
-    function drawRipples() {
-        // Draw ripples as arcs in the field
-        ripples.forEach(ripple => {
-            const arcSpan = Math.PI / 3; // 60 degree arc
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, ripple.radius,
-                    ripple.angle - arcSpan / 2,
-                    ripple.angle + arcSpan / 2);
+    // Draw the golden mind field with ripple distortions
+    function drawMindField() {
+        const fieldInner = soulRadius + 3;
+        const fieldOuter = boundaryRadius - 3;
+        const rings = 12;
+        const segments = 36;
 
-            // Calculate interference at this ripple's position
-            const interference = calculateInterference(
-                centerX + Math.cos(ripple.angle) * ripple.radius,
-                centerY + Math.sin(ripple.angle) * ripple.radius
-            );
+        for (let ringIdx = 0; ringIdx < rings; ringIdx++) {
+            const r = fieldInner + (fieldOuter - fieldInner) * (ringIdx / rings);
 
-            ctx.strokeStyle = ripple.getColor(Math.abs(interference));
-            ctx.lineWidth = 3 + Math.abs(interference) * 4;
-            ctx.stroke();
-        });
+            for (let seg = 0; seg < segments; seg++) {
+                const angle = (seg / segments) * Math.PI * 2;
+                const nextAngle = ((seg + 1) / segments) * Math.PI * 2;
 
-        // Draw interference pattern overlay in the field
+                // Get wave intensity at this point
+                const intensity = getFieldIntensity(r, angle);
+
+                if (Math.abs(intensity) > 0.05) {
+                    // Base gold color, shifted by interference
+                    const hue = 45 + intensity * 40; // Gold shifts toward orange or yellow-green
+                    const saturation = 70 + Math.abs(intensity) * 30;
+                    const lightness = 45 + intensity * 25;
+                    const alpha = 0.15 + Math.abs(intensity) * 0.4;
+
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, r, angle, nextAngle);
+                    ctx.strokeStyle = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+                    ctx.lineWidth = (fieldOuter - fieldInner) / rings + Math.abs(intensity) * 4;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Draw bright interference nodes where multiple ripples overlap
         if (ripples.length > 1) {
-            const fieldSteps = 20;
-            for (let r = soulRadius + 5; r < boundaryRadius - 5; r += (boundaryRadius - soulRadius) / fieldSteps) {
-                for (let a = 0; a < Math.PI * 2; a += Math.PI / 16) {
-                    const x = centerX + Math.cos(a) * r;
-                    const y = centerY + Math.sin(a) * r;
-                    const interference = calculateInterference(x, y);
+            for (let r = fieldInner; r < fieldOuter; r += 8) {
+                for (let a = 0; a < Math.PI * 2; a += Math.PI / 12) {
+                    const intensity = getFieldIntensity(r, a);
 
-                    if (Math.abs(interference) > 0.3) {
-                        // Interference creates color shifts
-                        const hue = 200 + interference * 120; // Shifts between colors
-                        const brightness = 50 + interference * 30;
+                    if (Math.abs(intensity) > 0.6) {
+                        const x = centerX + Math.cos(a) * r;
+                        const y = centerY + Math.sin(a) * r;
+
+                        // Bright interference points
+                        const hue = 45 + intensity * 60;
+                        const size = 2 + Math.abs(intensity) * 4;
+
                         ctx.beginPath();
-                        ctx.arc(x, y, 2 + Math.abs(interference) * 2, 0, Math.PI * 2);
-                        ctx.fillStyle = `hsla(${hue}, 80%, ${brightness}%, ${Math.abs(interference) * 0.5})`;
+                        ctx.arc(x, y, size, 0, Math.PI * 2);
+                        ctx.fillStyle = `hsla(${hue}, 90%, 65%, ${Math.abs(intensity) * 0.7})`;
                         ctx.fill();
                     }
                 }
@@ -453,13 +457,15 @@
         particles.forEach(p => { p.update(); p.draw(); });
         drawConnections();
 
+        // Update ripples
+        ripples = ripples.filter(r => r.update());
+
+        // Draw the golden mind field (Φ) with ripple distortions
+        drawMindField();
+
         // Update and draw lightning bolts
         lightningBolts = lightningBolts.filter(l => l.update());
         lightningBolts.forEach(l => l.draw());
-
-        // Update and draw ripples in the field
-        ripples = ripples.filter(r => r.update());
-        drawRipples();
 
         animationId = requestAnimationFrame(animate);
     }
