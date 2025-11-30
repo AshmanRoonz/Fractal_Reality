@@ -26,6 +26,18 @@
         <div class="circumpunct-container">
             <svg class="circumpunct" viewBox="0 0 300 300" role="img" aria-label="Interactive Circumpunct">
                 <defs>
+                    <!-- Organic membrane filter for body ring (displacement + glow) -->
+                    <filter id="organic-membrane" x="-50%" y="-50%" width="200%" height="200%">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="42" result="noise">
+                            <animate attributeName="seed" values="42;100;42" dur="10s" repeatCount="indefinite"/>
+                        </feTurbulence>
+                        <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                        <feGaussianBlur in="displaced" stdDeviation="4" result="blur"/>
+                        <feMerge>
+                            <feMergeNode in="blur"/>
+                            <feMergeNode in="displaced"/>
+                        </feMerge>
+                    </filter>
                     <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
                         <feGaussianBlur stdDeviation="4" result="blur"/>
                         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
@@ -40,7 +52,7 @@
                     </filter>
                 </defs>
 
-                <!-- ○ BODY - Outer Ring -->
+                <!-- ○ BODY - Outer Ring (organic membrane) -->
                 <circle class="zone zone-body" cx="150" cy="150" r="120"
                     fill="transparent" stroke="rgba(163, 113, 247, 0.6)" stroke-width="24" data-zone="body"/>
 
