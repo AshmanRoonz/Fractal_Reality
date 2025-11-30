@@ -1,118 +1,97 @@
 /**
- * Subtle animated background
- * Simple particles that drift slowly
+ * Subtle animated background & Circumpunct animation
  */
 
 (function() {
     // =========================================
     // Animated Circumpunct (⊙)
     // =========================================
-    const circumpunctCanvas = document.getElementById('circumpunct');
-    if (circumpunctCanvas) {
-        const cCtx = circumpunctCanvas.getContext('2d');
-        const size = 400; // High res for crisp rendering
-        circumpunctCanvas.width = size;
-        circumpunctCanvas.height = size;
+    const circCanvas = document.getElementById('circumpunct');
+    if (circCanvas) {
+        const cCtx = circCanvas.getContext('2d');
+        const size = 360;
+        circCanvas.width = size;
+        circCanvas.height = size;
 
         const center = size / 2;
         let time = 0;
 
-        // Field particles (Φ Mind)
+        // Field particles orbiting in mind zone
         const fieldParticles = [];
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 8; i++) {
             fieldParticles.push({
-                angle: (Math.PI * 2 * i) / 12,
-                radius: 50 + Math.random() * 30,
-                speed: 0.002 + Math.random() * 0.003,
-                size: 1.5 + Math.random() * 1.5,
-                opacity: 0.3 + Math.random() * 0.3
+                angle: (Math.PI * 2 * i) / 8,
+                radius: 45 + Math.random() * 20,
+                speed: 0.003 + Math.random() * 0.002,
+                size: 2 + Math.random() * 2,
+                opacity: 0.4 + Math.random() * 0.3
             });
         }
 
         function drawCircumpunct() {
             cCtx.clearRect(0, 0, size, size);
-            time += 0.01;
+            time += 0.008;
 
-            // Outer ring glow (○ Body) - purple
-            const ringRadius = 70;
-            const ringPulse = Math.sin(time * 0.5) * 3;
+            // ○ Body - outer ring (purple)
+            const ringRadius = 65;
+            const ringPulse = Math.sin(time * 0.4) * 2;
 
-            // Outer glow
-            const ringGradient = cCtx.createRadialGradient(
-                center, center, ringRadius - 10 + ringPulse,
-                center, center, ringRadius + 20 + ringPulse
+            // Ring glow
+            const ringGlow = cCtx.createRadialGradient(
+                center, center, ringRadius - 8,
+                center, center, ringRadius + 25
             );
-            ringGradient.addColorStop(0, 'rgba(163, 113, 247, 0)');
-            ringGradient.addColorStop(0.5, 'rgba(163, 113, 247, 0.15)');
-            ringGradient.addColorStop(1, 'rgba(163, 113, 247, 0)');
-
+            ringGlow.addColorStop(0, 'rgba(163, 113, 247, 0)');
+            ringGlow.addColorStop(0.5, 'rgba(163, 113, 247, 0.15)');
+            ringGlow.addColorStop(1, 'rgba(163, 113, 247, 0)');
             cCtx.beginPath();
-            cCtx.arc(center, center, ringRadius + 10 + ringPulse, 0, Math.PI * 2);
-            cCtx.fillStyle = ringGradient;
+            cCtx.arc(center, center, ringRadius + 15, 0, Math.PI * 2);
+            cCtx.fillStyle = ringGlow;
             cCtx.fill();
 
             // Ring stroke
             cCtx.beginPath();
             cCtx.arc(center, center, ringRadius + ringPulse, 0, Math.PI * 2);
-            cCtx.strokeStyle = `rgba(163, 113, 247, ${0.4 + Math.sin(time * 0.5) * 0.1})`;
-            cCtx.lineWidth = 2;
+            cCtx.strokeStyle = `rgba(163, 113, 247, ${0.5 + Math.sin(time * 0.4) * 0.15})`;
+            cCtx.lineWidth = 3;
             cCtx.stroke();
 
-            // Field particles (Φ Mind) - gold
+            // Φ Mind - field particles (gold)
             fieldParticles.forEach(p => {
                 p.angle += p.speed;
-                const wobble = Math.sin(time * 2 + p.angle * 3) * 8;
+                const wobble = Math.sin(time * 1.5 + p.angle * 2) * 6;
                 const x = center + Math.cos(p.angle) * (p.radius + wobble);
                 const y = center + Math.sin(p.angle) * (p.radius + wobble);
 
                 cCtx.beginPath();
                 cCtx.arc(x, y, p.size, 0, Math.PI * 2);
-                cCtx.fillStyle = `rgba(240, 180, 41, ${p.opacity * (0.7 + Math.sin(time + p.angle) * 0.3)})`;
+                const pulse = 0.6 + Math.sin(time * 2 + p.angle) * 0.4;
+                cCtx.fillStyle = `rgba(240, 180, 41, ${p.opacity * pulse})`;
                 cCtx.fill();
             });
 
-            // Draw subtle connections between nearby particles
-            for (let i = 0; i < fieldParticles.length; i++) {
-                const p1 = fieldParticles[i];
-                const p2 = fieldParticles[(i + 1) % fieldParticles.length];
-                const wobble1 = Math.sin(time * 2 + p1.angle * 3) * 8;
-                const wobble2 = Math.sin(time * 2 + p2.angle * 3) * 8;
-                const x1 = center + Math.cos(p1.angle) * (p1.radius + wobble1);
-                const y1 = center + Math.sin(p1.angle) * (p1.radius + wobble1);
-                const x2 = center + Math.cos(p2.angle) * (p2.radius + wobble2);
-                const y2 = center + Math.sin(p2.angle) * (p2.radius + wobble2);
+            // • Soul - center dot (cyan)
+            const corePulse = Math.sin(time * 0.6) * 3;
+            const coreRadius = 18 + corePulse;
 
-                cCtx.beginPath();
-                cCtx.moveTo(x1, y1);
-                cCtx.lineTo(x2, y2);
-                cCtx.strokeStyle = 'rgba(240, 180, 41, 0.1)';
-                cCtx.lineWidth = 0.5;
-                cCtx.stroke();
-            }
-
-            // Center dot glow (• Soul) - cyan
-            const corePulse = Math.sin(time * 0.8) * 2;
-            const coreRadius = 12 + corePulse;
-
-            // Inner glow
-            const coreGradient = cCtx.createRadialGradient(
+            // Core glow
+            const coreGlow = cCtx.createRadialGradient(
                 center, center, 0,
-                center, center, coreRadius + 15
+                center, center, coreRadius + 20
             );
-            coreGradient.addColorStop(0, 'rgba(88, 166, 255, 0.9)');
-            coreGradient.addColorStop(0.3, 'rgba(88, 166, 255, 0.4)');
-            coreGradient.addColorStop(0.7, 'rgba(88, 166, 255, 0.1)');
-            coreGradient.addColorStop(1, 'rgba(88, 166, 255, 0)');
-
+            coreGlow.addColorStop(0, 'rgba(88, 166, 255, 0.9)');
+            coreGlow.addColorStop(0.4, 'rgba(88, 166, 255, 0.3)');
+            coreGlow.addColorStop(0.8, 'rgba(88, 166, 255, 0.1)');
+            coreGlow.addColorStop(1, 'rgba(88, 166, 255, 0)');
             cCtx.beginPath();
-            cCtx.arc(center, center, coreRadius + 15, 0, Math.PI * 2);
-            cCtx.fillStyle = coreGradient;
+            cCtx.arc(center, center, coreRadius + 20, 0, Math.PI * 2);
+            cCtx.fillStyle = coreGlow;
             cCtx.fill();
 
             // Core
             cCtx.beginPath();
             cCtx.arc(center, center, coreRadius, 0, Math.PI * 2);
-            cCtx.fillStyle = `rgba(88, 166, 255, ${0.8 + Math.sin(time * 0.8) * 0.2})`;
+            cCtx.fillStyle = `rgba(88, 166, 255, ${0.85 + Math.sin(time * 0.6) * 0.15})`;
             cCtx.fill();
 
             requestAnimationFrame(drawCircumpunct);
