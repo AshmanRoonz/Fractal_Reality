@@ -171,29 +171,29 @@ body {
 
 .label {
     position: absolute;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     opacity: 1;
     transition: all 0.3s ease;
     white-space: nowrap;
-    background: var(--bg);
+    background: rgba(10, 10, 15, 0.85);
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
 }
 
 .label-body {
     color: var(--body-color);
-    top: -25px;
+    top: 8%;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .label-mind {
     color: var(--mind-color);
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
 }
 
 .label-soul {
@@ -201,7 +201,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     background: transparent;
 }
 
@@ -394,16 +394,8 @@ body {
     }
 
     .label {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
         padding: 0.15rem 0.4rem;
-    }
-
-    .label-body {
-        top: -20px;
-    }
-
-    .label-mind {
-        bottom: -20px;
     }
 }
 
