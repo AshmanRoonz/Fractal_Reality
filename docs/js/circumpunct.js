@@ -194,18 +194,29 @@
             }
         }
 
-        // Connect particles to the main circumpunct (center)
-        const mainRadius = Math.min(canvas.width, canvas.height) * 0.25;
+        // Connect particles to the main circumpunct's BOUNDARY (not center!)
+        // ○ = boundary, Φ = field connects boundary to center, • = soul/center
+        // External connections only reach the boundary
+        const boundaryRadius = Math.min(canvas.width, canvas.height) * 0.18; // The outer ring
+        const connectionRange = Math.min(canvas.width, canvas.height) * 0.35;
+
         particles.forEach(p => {
             const dx = p.x - centerX;
             const dy = p.y - centerY;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
-            if (dist < mainRadius && dist > 50) {
-                const opacity = (1 - dist / mainRadius) * 0.3;
+            // Only connect if particle is outside the boundary but within range
+            if (dist > boundaryRadius && dist < connectionRange) {
+                const opacity = (1 - (dist - boundaryRadius) / (connectionRange - boundaryRadius)) * 0.4;
+
+                // Calculate the point on the boundary where line should end
+                const angle = Math.atan2(dy, dx);
+                const boundaryX = centerX + Math.cos(angle) * boundaryRadius;
+                const boundaryY = centerY + Math.sin(angle) * boundaryRadius;
+
                 ctx.beginPath();
                 ctx.moveTo(p.x, p.y);
-                ctx.lineTo(centerX, centerY);
+                ctx.lineTo(boundaryX, boundaryY); // Connect to boundary, not center!
 
                 // Color based on particle type
                 if (p.type === 'body') {
