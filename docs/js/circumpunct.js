@@ -281,10 +281,10 @@
                 this.y = Math.random() * canvas.height;
             } while (this.isInsideBoundary());
 
-            this.baseSize = Math.random() * 2 + 1;
+            this.baseSize = Math.random() * 2.5 + 1.5;
             this.speedX = (Math.random() - 0.5) * 0.4;
             this.speedY = (Math.random() - 0.5) * 0.4;
-            this.baseOpacity = Math.random() * 0.4 + 0.1;
+            this.baseOpacity = Math.random() * 0.4 + 0.4; // Brighter particles
             // Each particle is a mini circumpunct with body/mind/soul colors
             const types = ['body', 'mind', 'soul'];
             this.type = types[Math.floor(Math.random() * types.length)];
@@ -293,7 +293,7 @@
         isInsideBoundary() {
             const dx = this.x - centerX;
             const dy = this.y - centerY;
-            return Math.sqrt(dx * dx + dy * dy) < boundaryRadius + 10;
+            return Math.sqrt(dx * dx + dy * dy) < boundaryRadius + 25; // Match bounce radius
         }
 
         update() {
@@ -301,15 +301,17 @@
             this.y += this.speedY;
 
             // Bounce off the boundary (○) - particles cannot cross it
+            // Bounce BEFORE entering the purple ring visually
             const dx = this.x - centerX;
             const dy = this.y - centerY;
             const dist = Math.sqrt(dx * dx + dy * dy);
+            const bounceRadius = boundaryRadius + 18; // Stay outside the purple ring
 
-            if (dist < boundaryRadius + 5) {
+            if (dist < bounceRadius) {
                 // Push particle back outside and reflect velocity
                 const angle = Math.atan2(dy, dx);
-                this.x = centerX + Math.cos(angle) * (boundaryRadius + 6);
-                this.y = centerY + Math.sin(angle) * (boundaryRadius + 6);
+                this.x = centerX + Math.cos(angle) * (bounceRadius + 2);
+                this.y = centerY + Math.sin(angle) * (bounceRadius + 2);
 
                 // Reflect velocity away from center
                 const normalX = dx / dist;
@@ -319,7 +321,8 @@
                 this.speedY = this.speedY - 2 * dot * normalY;
 
                 // ⚡ Spawn lightning bolt and ripple on impact!
-                spawnLightningAndRipple(angle + Math.PI, this.type); // Inward angle
+                // Lightning shoots inward from the impact point (same side)
+                spawnLightningAndRipple(angle, this.type);
             }
 
             // Wrap around edges
