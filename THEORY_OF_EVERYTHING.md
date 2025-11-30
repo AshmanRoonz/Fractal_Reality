@@ -647,7 +647,7 @@ PHYSICAL MEANING:
     1.5 = [1.0D worldline] + [0.5D aperture branching]
 
 The ½ factor arises from the 90° rotation (i):
-    0°   = point (0D)
+    0°   = point
     90°  = quarter turn (0.5D) ← Maximum entropy at •
     180° = line (1D)
     360° = circle (2D)
