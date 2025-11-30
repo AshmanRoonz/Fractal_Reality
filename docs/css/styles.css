@@ -108,7 +108,7 @@ body {
     transition: all 0.3s ease;
 }
 
-.zone-body { filter: url(#glow-purple); }
+.zone-body { filter: url(#organic-membrane); }
 .zone-mind { filter: url(#glow-gold); }
 .zone-soul { filter: url(#glow-cyan); }
 
