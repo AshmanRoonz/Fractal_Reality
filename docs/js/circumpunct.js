@@ -88,13 +88,14 @@
     const ctx = canvas.getContext('2d');
     let particles = [];
     let animationId;
-    let centerX, centerY;
+    let centerX, centerY, boundaryRadius;
 
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         centerX = canvas.width / 2;
         centerY = canvas.height / 2;
+        boundaryRadius = Math.min(canvas.width, canvas.height) * 0.18; // The ○ boundary
         initParticles();
     }
 
@@ -104,8 +105,12 @@
         }
 
         reset() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
+            // Spawn particles outside the boundary
+            do {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+            } while (this.isInsideBoundary());
+
             this.baseSize = Math.random() * 2 + 1;
             this.speedX = (Math.random() - 0.5) * 0.4;
             this.speedY = (Math.random() - 0.5) * 0.4;
@@ -115,9 +120,34 @@
             this.type = types[Math.floor(Math.random() * types.length)];
         }
 
+        isInsideBoundary() {
+            const dx = this.x - centerX;
+            const dy = this.y - centerY;
+            return Math.sqrt(dx * dx + dy * dy) < boundaryRadius + 10;
+        }
+
         update() {
             this.x += this.speedX;
             this.y += this.speedY;
+
+            // Bounce off the boundary (○) - particles cannot cross it
+            const dx = this.x - centerX;
+            const dy = this.y - centerY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < boundaryRadius + 5) {
+                // Push particle back outside and reflect velocity
+                const angle = Math.atan2(dy, dx);
+                this.x = centerX + Math.cos(angle) * (boundaryRadius + 6);
+                this.y = centerY + Math.sin(angle) * (boundaryRadius + 6);
+
+                // Reflect velocity away from center
+                const normalX = dx / dist;
+                const normalY = dy / dist;
+                const dot = this.speedX * normalX + this.speedY * normalY;
+                this.speedX = this.speedX - 2 * dot * normalX;
+                this.speedY = this.speedY - 2 * dot * normalY;
+            }
 
             // Wrap around edges
             if (this.x < 0) this.x = canvas.width;
@@ -174,16 +204,32 @@
         for (let i = 0; i < count; i++) particles.push(new Particle());
     }
 
+    // Check if a line segment crosses through the circumpunct
+    function lineCrossesBoundary(x1, y1, x2, y2) {
+        // Find closest point on line segment to center
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const t = Math.max(0, Math.min(1, ((centerX - x1) * dx + (centerY - y1) * dy) / (dx * dx + dy * dy)));
+        const closestX = x1 + t * dx;
+        const closestY = y1 + t * dy;
+        const distToCenter = Math.sqrt((closestX - centerX) ** 2 + (closestY - centerY) ** 2);
+        return distToCenter < boundaryRadius;
+    }
+
     function drawConnections() {
         const connectionRadius = 150;
 
-        // Connect particles to each other
+        // Connect particles to each other (but not through the circumpunct!)
         for (let i = 0; i < particles.length; i++) {
             for (let j = i + 1; j < particles.length; j++) {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist < connectionRadius) {
+                    // Don't draw if line would cross the boundary
+                    if (lineCrossesBoundary(particles[i].x, particles[i].y, particles[j].x, particles[j].y)) {
+                        continue;
+                    }
                     ctx.beginPath();
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
@@ -197,7 +243,6 @@
         // Connect particles to the main circumpunct's BOUNDARY (not center!)
         // ○ = boundary, Φ = field connects boundary to center, • = soul/center
         // External connections only reach the boundary
-        const boundaryRadius = Math.min(canvas.width, canvas.height) * 0.18; // The outer ring
         const connectionRange = Math.min(canvas.width, canvas.height) * 0.35;
 
         particles.forEach(p => {
