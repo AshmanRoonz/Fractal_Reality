@@ -89,6 +89,7 @@
     let particles = [];
     let lightningBolts = [];
     let ripples = [];
+    let outwardRipples = []; // Emergence from soul
     let animationId;
     let centerX, centerY, boundaryRadius, soulRadius;
 
@@ -109,6 +110,7 @@
             this.life = 1.0;
             this.decay = 0.04;
             this.type = particleType;
+            this.hasTriggeredResponse = false; // Only trigger soul response once
             // Generate jagged path from boundary to soul
             this.segments = this.generatePath();
         }
@@ -135,6 +137,17 @@
 
         update() {
             this.life -= this.decay;
+
+            // When lightning "arrives" at soul (life around 0.5), trigger emergence
+            // Soul receives input, then responds with output
+            if (!this.hasTriggeredResponse && this.life < 0.5) {
+                this.hasTriggeredResponse = true;
+                // Soul responds! Spawn outward ripple after brief "processing"
+                // Angle may shift slightly - soul transforms, doesn't just reflect
+                const responseAngle = this.angle + (Math.random() - 0.5) * 0.3;
+                outwardRipples.push(new OutwardRipple(responseAngle, this.type));
+            }
+
             return this.life > 0;
         }
 
@@ -167,7 +180,7 @@
         }
     }
 
-    // Ripple that propagates through the field (mind)
+    // Ripple that propagates through the field (mind) - INWARD
     class Ripple {
         constructor(angle, particleType) {
             this.angle = angle;
@@ -176,6 +189,7 @@
             this.life = 1.0;
             this.type = particleType;
             this.hueShift = Math.random() * 20 - 10;
+            this.direction = 'inward';
         }
 
         update() {
@@ -186,25 +200,64 @@
         }
     }
 
+    // Outward ripple - EMERGENCE from soul
+    // The soul responds to input with transformed output
+    class OutwardRipple {
+        constructor(angle, sourceType) {
+            this.angle = angle;
+            this.radius = soulRadius; // Start at soul
+            this.speed = 1.2; // Slightly faster - soul's response is energized
+            this.life = 1.0;
+            this.sourceType = sourceType; // What triggered it
+            this.direction = 'outward';
+            // Soul transforms input - response is always soul-colored (cyan)
+            // but carries a hint of what triggered it
+            this.hueBase = 200; // Cyan base
+        }
+
+        update() {
+            this.radius += this.speed; // Move OUTWARD
+            this.life = Math.max(0, (boundaryRadius - this.radius) / (boundaryRadius - soulRadius));
+            return this.radius < boundaryRadius;
+        }
+    }
+
     // Calculate wave intensity at a point in the field
+    // Returns { inward: number, outward: number } for interference patterns
     function getFieldIntensity(r, angle) {
-        let totalWave = 0;
+        let inwardWave = 0;
+        let outwardWave = 0;
+
+        // Inward ripples (from boundary toward soul)
         ripples.forEach(ripple => {
-            // Distance from this point to the ripple wavefront
             const rippleDist = Math.abs(r - ripple.radius);
-            // Angular proximity to ripple origin
             let angleDiff = Math.abs(angle - ripple.angle);
             if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
-            // Ripple spreads as it moves inward
             const spread = Math.PI * (1 - ripple.life) + 0.3;
 
             if (rippleDist < 20 && angleDiff < spread) {
                 const radialWave = Math.cos((rippleDist / 20) * Math.PI) * ripple.life;
                 const angularFade = Math.cos((angleDiff / spread) * Math.PI / 2);
-                totalWave += radialWave * angularFade;
+                inwardWave += radialWave * angularFade;
             }
         });
-        return totalWave;
+
+        // Outward ripples (from soul toward boundary) - EMERGENCE
+        outwardRipples.forEach(ripple => {
+            const rippleDist = Math.abs(r - ripple.radius);
+            let angleDiff = Math.abs(angle - ripple.angle);
+            if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
+            // Outward ripples spread more as they travel
+            const spread = Math.PI * 0.5 * (1 - ripple.life) + 0.4;
+
+            if (rippleDist < 25 && angleDiff < spread) {
+                const radialWave = Math.cos((rippleDist / 25) * Math.PI) * ripple.life;
+                const angularFade = Math.cos((angleDiff / spread) * Math.PI / 2);
+                outwardWave += radialWave * angularFade;
+            }
+        });
+
+        return { inward: inwardWave, outward: outwardWave, total: inwardWave + outwardWave };
     }
 
     // Draw the golden mind field with ripple distortions
@@ -222,41 +275,66 @@
                 const nextAngle = ((seg + 1) / segments) * Math.PI * 2;
 
                 // Get wave intensity at this point
-                const intensity = getFieldIntensity(r, angle);
+                const waves = getFieldIntensity(r, angle);
+                const inward = waves.inward;
+                const outward = waves.outward;
+                const total = Math.abs(inward) + Math.abs(outward);
 
-                if (Math.abs(intensity) > 0.05) {
-                    // Base gold color, shifted by interference
-                    const hue = 45 + intensity * 40; // Gold shifts toward orange or yellow-green
-                    const saturation = 70 + Math.abs(intensity) * 30;
-                    const lightness = 45 + intensity * 25;
-                    const alpha = 0.15 + Math.abs(intensity) * 0.4;
+                if (total > 0.05) {
+                    // Blend between gold (inward/input) and cyan (outward/output)
+                    // Inward = gold (45), Outward = cyan (190)
+                    const inwardRatio = Math.abs(inward) / (total + 0.01);
+                    const outwardRatio = Math.abs(outward) / (total + 0.01);
+
+                    // Hue blends from gold to cyan based on direction
+                    const hue = 45 * inwardRatio + 190 * outwardRatio + waves.total * 20;
+                    const saturation = 70 + total * 30;
+                    const lightness = 45 + waves.total * 20;
+                    const alpha = 0.15 + total * 0.4;
 
                     ctx.beginPath();
                     ctx.arc(centerX, centerY, r, angle, nextAngle);
                     ctx.strokeStyle = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
-                    ctx.lineWidth = (fieldOuter - fieldInner) / rings + Math.abs(intensity) * 4;
+                    ctx.lineWidth = (fieldOuter - fieldInner) / rings + total * 4;
                     ctx.stroke();
                 }
             }
         }
 
-        // Draw bright interference nodes where multiple ripples overlap
-        if (ripples.length > 1) {
+        // Draw bright interference nodes where inward and outward waves meet
+        const hasInterference = ripples.length > 0 && outwardRipples.length > 0;
+        if (hasInterference || ripples.length > 1 || outwardRipples.length > 1) {
             for (let r = fieldInner; r < fieldOuter; r += 8) {
                 for (let a = 0; a < Math.PI * 2; a += Math.PI / 12) {
-                    const intensity = getFieldIntensity(r, a);
+                    const waves = getFieldIntensity(r, a);
+                    const total = Math.abs(waves.inward) + Math.abs(waves.outward);
 
-                    if (Math.abs(intensity) > 0.6) {
+                    if (total > 0.5) {
                         const x = centerX + Math.cos(a) * r;
                         const y = centerY + Math.sin(a) * r;
 
-                        // Bright interference points
-                        const hue = 45 + intensity * 60;
-                        const size = 2 + Math.abs(intensity) * 4;
+                        // When inward and outward meet - special interference!
+                        const bothPresent = Math.abs(waves.inward) > 0.2 && Math.abs(waves.outward) > 0.2;
+                        let hue, saturation;
 
+                        if (bothPresent) {
+                            // Input meets output - white/bright interference
+                            hue = 180; // Teal - meeting point
+                            saturation = 50;
+                        } else if (Math.abs(waves.outward) > Math.abs(waves.inward)) {
+                            // Soul's response - cyan
+                            hue = 200;
+                            saturation = 90;
+                        } else {
+                            // External input - gold
+                            hue = 45;
+                            saturation = 90;
+                        }
+
+                        const size = 2 + total * 4;
                         ctx.beginPath();
                         ctx.arc(x, y, size, 0, Math.PI * 2);
-                        ctx.fillStyle = `hsla(${hue}, 90%, 65%, ${Math.abs(intensity) * 0.7})`;
+                        ctx.fillStyle = `hsla(${hue}, ${saturation}%, 65%, ${total * 0.6})`;
                         ctx.fill();
                     }
                 }
@@ -460,13 +538,16 @@
         particles.forEach(p => { p.update(); p.draw(); });
         drawConnections();
 
-        // Update ripples
+        // Update ripples (inward - convergence)
         ripples = ripples.filter(r => r.update());
 
-        // Draw the golden mind field (Φ) with ripple distortions
+        // Update outward ripples (emergence from soul)
+        outwardRipples = outwardRipples.filter(r => r.update());
+
+        // Draw the mind field (Φ) with both inward and outward ripple distortions
         drawMindField();
 
-        // Update and draw lightning bolts
+        // Update and draw lightning bolts (which trigger soul responses)
         lightningBolts = lightningBolts.filter(l => l.update());
         lightningBolts.forEach(l => l.draw());
 
