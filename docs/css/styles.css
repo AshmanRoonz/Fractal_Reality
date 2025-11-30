@@ -89,8 +89,10 @@ body {
    =================================== */
 .circumpunct-container {
     position: relative;
-    width: min(280px, 70vw);
-    height: min(280px, 70vw);
+    width: 65vw;
+    height: 65vw;
+    max-width: 280px;
+    max-height: 280px;
     margin: 0.5rem 0;
 }
 
@@ -169,25 +171,27 @@ body {
 
 .label {
     position: absolute;
-    font-size: 1rem;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.08em;
-    opacity: 0.9;
+    opacity: 1;
     transition: all 0.3s ease;
     white-space: nowrap;
-    text-shadow: 0 0 15px currentColor;
+    background: var(--bg);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
 }
 
 .label-body {
     color: var(--body-color);
-    top: 10px;
+    top: -25px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .label-mind {
     color: var(--mind-color);
-    bottom: 10px;
+    bottom: -25px;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -197,7 +201,8 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 0.85rem;
+    font-size: 0.7rem;
+    background: transparent;
 }
 
 .circumpunct-container:hover .label {
@@ -373,14 +378,50 @@ body {
 /* ===================================
    Responsive
    =================================== */
+
+/* Small mobile */
+@media (max-width: 400px) {
+    .intro-text p {
+        font-size: 0.8rem;
+    }
+
+    .tagline {
+        font-size: 0.75rem;
+    }
+
+    .equation code {
+        font-size: 1rem;
+    }
+
+    .label {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.4rem;
+    }
+
+    .label-body {
+        top: -20px;
+    }
+
+    .label-mind {
+        bottom: -20px;
+    }
+}
+
+/* Desktop */
 @media (min-width: 768px) {
     .circumpunct-container {
         width: 320px;
         height: 320px;
+        max-width: 320px;
+        max-height: 320px;
     }
 
     .equation code {
         font-size: 1.6rem;
+    }
+
+    .label {
+        font-size: 0.9rem;
     }
 
     .panel {
