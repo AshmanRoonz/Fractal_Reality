@@ -377,6 +377,28 @@ The cone IS the physical aperture operator:
 
 **The cone doesn't *represent* the aperture—the cone *IS* the aperture made physical.**
 
+#### The Aperture as Universal Locus
+
+**The aperture (•) is where i acts. What i acts ON varies by scale:**
+
+```
+Scale          │ State Space       │ Aperture Function
+───────────────┼───────────────────┼────────────────────────────
+Planck         │ Geometry          │ Topological twist
+Quantum        │ ψ ∈ ℋ             │ iℏ∂ₜψ = Hψ
+Circumpunct    │ Φ(r)              │ ⊰ ∘ i ∘ ≻
+Neural         │ Activation        │ Pattern completion
+Cognitive      │ Belief            │ Insight/reframe
+```
+
+**SAME •**
+**SAME i**
+**DIFFERENT FUNCTION**
+
+The imaginary unit i appears at every scale because it encodes the fundamental operation: 90° rotation between orthogonal domains. At Planck scale, i rotates topology. At quantum scale, i rotates phase (hence iℏ∂ₜ). At the circumpunct level, i mediates between convergence (⊰) and emergence (≻). At neural scales, i transforms incomplete patterns into completed ones. At cognitive scales, i rotates belief frames.
+
+**This is why the same geometric structure (68° cone, 22° complement, 90° orthogonality) appears everywhere—it's the same i operating through the same •, just acting on different substrates at each scale.**
+
 ### 4.5 The 68° Cone Angle: Geometric Optimization
 
 **From empirical measurements (Tesla coils, atomic orbitals, DNA helices, galactic structures):**
