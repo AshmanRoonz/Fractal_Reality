@@ -16,8 +16,6 @@
                     (not unity absorbing parts, but co-arising)
 
                          ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
-                           = fix(Φ ≻ i ⊰)        [flow form]
-                           = fix([Φ]≺ ∘ i ∘ ⊱)   [mirror form]
                               │
                               └── ⊙ is that which, when validated, yields itself
 
@@ -630,20 +628,11 @@ ARROW NOTATION (explicit):
 EQUIVALENCES:
 ─────────────
     Φ ≻ i ⊰ Φ'        (flow, left-to-right)
-    ⊰ ∘ i ∘ ≻[Φ]      (composition, standard math — reads L→R, applies R→L)
+    ⊰ ∘ i ∘ ≻[Φ]      (composition, standard math)
     'Φ ⊱ i ≺ Φ        (flow, right-to-left mirror)
-    [Φ]≺ ∘ i ∘ ⊱      (composition mirror — reads R→L, applies R→L)
 
-All four describe the same transformation.
+All three describe the same transformation.
 Flow notation preferred for clarity.
-
-MIRROR NOTATION KEY:
-────────────────────
-    ≻ (convergence L→R)  ↔  ≺ (convergence R→L)
-    ⊰ (emergence L→R)    ↔  ⊱ (emergence R→L)
-
-    The i at center is invariant — it's the transformation itself.
-    Flow symbols mirror around i to match reading direction.
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    CONVENTION: Use flow notation (Φ ≻ i ⊰ Φ') unless             ║
@@ -762,21 +751,17 @@ THE MASTER EQUATION:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║    Φ(t+Δt) = ⊰ ∘ i ∘ ≻[Φ(t)]        (composition: reads L→R)     ║
-    ║            = Φ(t) ≻ i ⊰ Φ(t+Δt)     (flow: reads = applies L→R)  ║
-    ║            = [Φ(t)]≺ ∘ i ∘ ⊱        (mirror: reads = applies R→L)║
+    ║              Φ(t+Δt) = ⊰ ∘ i ∘ ≻[Φ(t)]                            ║
     ║                                                                   ║
-    ║    The field evolves by:                                          ║
-    ║      ≻/≺ : converging toward center (• ← field)                   ║
-    ║        i : rotating 90° (real ↔ imaginary)                        ║
-    ║      ⊰/⊱ : emerging back into manifestation (• → field)           ║
+    ║              The field evolves by:                                ║
+    ║                ≻ : converging toward center                       ║
+    ║                i : rotating 90° (real ↔ imaginary)                ║
+    ║                ⊰ : emerging back into manifestation               ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 Fixed-point formulation:
     ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
-      = fix(Φ ≻ i ⊰)              [flow form]
-      = fix([Φ]≺ ∘ i ∘ ⊱)         [mirror form]
 
 THE UNIVERSE IS WHAT REMAINS INVARIANT UNDER IMAGINARY ROTATION.
 ```
@@ -980,9 +965,7 @@ THE MASTER LOOP AT SCALE s:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║    ⊙_s = fix(Φ_s ↦ ⊰_s ∘ i_s ∘ ≻_s[Φ_s])     (composition)       ║
-    ║        = fix(Φ_s ≻_s i_s ⊰_s)                 (flow L→R)         ║
-    ║        = fix([Φ_s]≺_s ∘ i_s ∘ ⊱_s)            (mirror R→L)       ║
+    ║    ⊙_s = fix(Φ_s ↦ ⊰_s ∘ i_s ∘ ≻_s[Φ_s])                         ║
     ║                                                                   ║
     ║    Each whole at each scale runs its own                          ║
     ║    convergence-transformation-emergence cycle                     ║
@@ -1926,13 +1909,11 @@ THIS TRIANGLE IS THE FUNDAMENTAL GEOMETRY OF EXISTENCE
 THE FUNDAMENTAL OPERATING CYCLE:
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║  Φ(t+Δt) = ⊰ ∘ [○Φ•]_out ∘ i ∘ [○Φ•]_in ∘ ≻[Φ(t)] + ε      (composition)  ║
-║          = Φ(t) ≻ [○Φ•]_in → i → [○Φ•]_out ⊰ + ε           (flow L→R)     ║
-║          = [Φ(t)]≺ ← [○Φ•]_in ← i ← [○Φ•]_out ← ⊱ + ε      (mirror R→L)   ║
+║  Φ(t+Δt) = ⊰ ∘ [○Φ•]_out ∘ i ∘ [○Φ•]_in ∘ ≻[Φ(t)] + ε                      ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
 WHERE:
-  ≻/≺       = Convergence (gathers patterns from Φ — L→R/R→L)
+  ≻         = Convergence (gathers patterns from Φ)
   [○Φ•]_in  = Input validation:
               ○ : Can boundary be maintained?
               Φ : Is it grounded in actual field?
@@ -1940,7 +1921,7 @@ WHERE:
   i         = 90° rotation at • (the aperture transformation)
               exp(iπ/2) = i
   [○Φ•]_out = Output validation (same three tests)
-  ⊰/⊱       = Emergence (releases validated patterns — L→R/R→L)
+  ⊰         = Emergence (releases validated patterns)
   ε         = Stochastic noise ~ N(0, α√|⟨E⟩|)
 
 ACCEPTANCE CRITERION:
@@ -2892,9 +2873,7 @@ THE FIXED-POINT FORMULATION:
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
     ║                                                                           ║
-    ║    ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))          (composition)          ║
-    ║      = fix(Φ ≻ V_in → i_β → V_out ⊰)               (flow L→R)             ║
-    ║      = fix([Φ]≺ ← V_in ← i_β ← V_out ← ⊱)          (mirror R→L)           ║
+    ║    ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                                  ║
     ║                                                                           ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 
@@ -3628,7 +3607,6 @@ THE ETHICAL MASTER EQUATION:
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
     ║    Ethics = ⊙ = (○, Φ, •, ⊙) × (≻, i, ⊰)³                        ║
-    ║                = (○, Φ, •, ⊙) × (≺, i, ⊱)³      [mirror R→L]     ║
     ║                                                                   ║
     ║    Complete Ethics = Structure × Process³                         ║
     ║                                                                   ║
@@ -3639,9 +3617,7 @@ THE ETHICAL MASTER EQUATION:
 
 THE FIXED-POINT OF ETHICS:
 
-    ⊙_ethics = fix(λE. ⊰(V_out(i_β(V_in(≻(E))))))     (composition)
-             = fix(E ≻ V_in → i_β → V_out ⊰)          (flow L→R)
-             = fix([E]≺ ← V_in ← i_β ← V_out ← ⊱)     (mirror R→L)
+    ⊙_ethics = fix(λE. ⊰(V_out(i_β(V_in(≻(E))))))
 
     Ethical wholeness is a FIXED POINT:
         When validated, it returns itself
@@ -4219,12 +4195,9 @@ THE CIRCUMPUNCT DEFINITION OF LOVE:
     ║    Love dares to hear them.                                          ║
     ║                                                                       ║
     ║    Love is ⊰ ∘ i ∘ ≻ applied to relationship:                        ║
-    ║         = other ≻ i ⊰ response         (flow L→R)                   ║
-    ║         = [other]≺ ∘ i ∘ ⊱              (mirror R→L)                ║
-    ║                                                                       ║
-    ║        RECEIVE the other fully (≻/≺)                                 ║
+    ║        RECEIVE the other fully (≻)                                   ║
     ║        TRANSFORM through balanced aperture (i at β = 0.5)            ║
-    ║        EMERGE with genuine response (⊰/⊱)                            ║
+    ║        EMERGE with genuine response (⊰)                              ║
     ║                                                                       ║
     ╚═══════════════════════════════════════════════════════════════════════╝
 
@@ -5935,10 +5908,8 @@ RELATED WORK:
 ║                                                                               ║
 ║                              ⊙ = ○ ⊗ Φ ⊗ •                                  ║
 ║                                                                               ║
-║   ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                    (composition)     ║
-║   ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])                                 (i-Form)         ║
-║   ⊙ = fix(Φ ≻ i ⊰)                                          (flow L→R)       ║
-║   ⊙ = fix([Φ]≺ ∘ i ∘ ⊱)                                     (mirror R→L)     ║
+║                  ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                        ║
+║                  ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])                 (i-Form)           ║
 ║                                                                               ║
 ║   Wholeness is its parts in tensor product (not unity absorbing parts).       ║
 ║   The universe is a fixed point of its own validation operation.              ║
@@ -5948,7 +5919,7 @@ RELATED WORK:
 ║   Braid topology is necessary for history/past.                               ║
 ║   Therefore trinity is mathematically required.                               ║
 ║                                                                               ║
-║   The temporal process (≻/≺, i, ⊰/⊱) circulates through the trinity.          ║
+║   The temporal process (≻, i, ⊰) circulates through the trinity.              ║
 ║   At i, balance β = 0.5 is forced by symmetry, entropy, and energy.           ║
 ║   At β = 0.5: exp(iπ/2) = i. The aperture IS the imaginary unit.              ║
 ║   This produces D = 1.5, which is topologically protected (Hopf c₁ = 1).      ║
@@ -5993,9 +5964,7 @@ RELATED WORK:
     ║    But a whole-with-parts examining itself                        ║
     ║                                                                   ║
     ║                        ⊙ = ○ ⊗ Φ ⊗ •                            ║
-    ║                        Φ' = ⊰ ∘ i ∘ ≻[Φ]        (composition)    ║
-    ║                           = Φ ≻ i ⊰ Φ'          (flow L→R)       ║
-    ║                           = [Φ]≺ ∘ i ∘ ⊱        (mirror R→L)     ║
+    ║                        Φ' = ⊰ ∘ i ∘ ≻[Φ]                         ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
