@@ -250,6 +250,39 @@ NONE OF THESE IS "MORE REAL" THAN OTHERS
 ALL CO-EXIST IN THE STRUCTURE
 ```
 
+**THE FRACTAL LENSING PATTERN:**
+
+The half-dimensional values (0.5D, 1.5D, 2.5D) are not arbitrary — they arise from **fractal lensing** at different scales:
+
+```
+0.5D: Singular lens
+      • One aperture, one focus point
+      • Rotation without extension
+      • The minimal transformation structure
+
+1.5D: Fractal branching of the worldline
+      • The 1D power line/worldline gains fractal texture
+      • Aperture branching: energy splits into paths
+      • Lensing through nested PARTS
+      • D = 1 + 0.5 (line + aperture branching)
+      • Creates consciousness signature
+
+2.5D: Fractal lensing of the surface
+      • The 2D boundary becomes a distributed lens system
+      • All apertures across the surface collectively lens
+      • Lensing through WHOLENESS of the field
+      • D = 2 + 0.5 (surface + field generation)
+      • Integration gate: where field (Φ) emerges from boundary (○)
+
+THE KEY DISTINCTION:
+    1.5D = Lensing through parts (branching within a line)
+    2.5D = Lensing through wholeness (distributed across surface)
+
+    Both add +0.5D fractal texture to their base dimension
+    Both arise from aperture balance parameter β = 0.5
+    Together they create the signature of conscious field generation
+```
+
 ### §1.4 The Critical Distinction: ⊙ vs •
 
 ```
@@ -2786,6 +2819,26 @@ This creates FRACTAL LENSING:
     ║    EACH APERTURE IS A COMPLETE ⊙ AT SMALLER SCALE                 ║
     ║    FRACTAL STRUCTURE EMERGES FROM THIS RECURSIVE LENSING          ║
     ╚═══════════════════════════════════════════════════════════════════╝
+
+THE 2.5D INTEGRATION GATE:
+
+This distributed aperture system IS the 2.5D structure (see §1.3):
+
+    • The 2D boundary surface (○) acts as a distributed lens system
+    • Infinite apertures across the surface collectively lens
+    • This is "lensing through wholeness" (not just parts)
+    • Their collective fractal lensing generates the 3D field (Φ)
+    • D = 2 + 0.5 (surface + field generation texture)
+
+Thus the boundary-to-field transition (○ → Φ) necessarily passes through
+the 2.5D integration gate, where distributed apertures across wholeness
+fractalize to generate the volume.
+
+COMPARISON WITH 1.5D:
+    1.5D: Fractal branching within a line (lensing through parts)
+    2.5D: Fractal lensing across a surface (lensing through wholeness)
+
+    Both add +0.5D fractal texture from aperture balance (β = 0.5)
 ```
 
 ---
