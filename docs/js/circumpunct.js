@@ -10,6 +10,8 @@
     const zones = document.querySelectorAll('.zone');
     const panels = document.querySelectorAll('.panel');
     const closeButtons = document.querySelectorAll('.panel-close');
+    const circumpunctLink = document.querySelector('.circumpunct-link');
+    const panelLinks = document.querySelectorAll('.panel-links a[data-zone]');
 
     // Create backdrop
     const backdrop = document.createElement('div');
@@ -27,8 +29,12 @@
         panel.classList.add('open');
         backdrop.classList.add('show');
         openPanel = panel;
-        document.querySelector(`.zone-${zoneName}`)?.classList.add('active');
+        // Highlight the corresponding zone if it exists (not for circumpunct)
+        const zoneEl = document.querySelector(`.zone-${zoneName}`);
+        if (zoneEl) zoneEl.classList.add('active');
         document.body.style.overflow = 'hidden';
+        // Scroll panel to top when opening
+        panel.scrollTop = 0;
     }
 
     // Close all panels
@@ -40,7 +46,7 @@
         document.body.style.overflow = '';
     }
 
-    // Zone click handlers
+    // Zone click handlers (for the SVG zones)
     zones.forEach(zone => {
         zone.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -57,6 +63,23 @@
                 if (!openPanel) zone.classList.remove('active');
             }, 100);
         }, { passive: true });
+    });
+
+    // "You ARE ⊙" link handler
+    if (circumpunctLink) {
+        circumpunctLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            openPanelByZone('circumpunct');
+        });
+    }
+
+    // Panel navigation links (cross-links between panels)
+    panelLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const zoneName = link.dataset.zone;
+            if (zoneName) openPanelByZone(zoneName);
+        });
     });
 
     // Close handlers
