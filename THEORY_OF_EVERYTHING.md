@@ -15,7 +15,7 @@
                     Wholeness equals its parts in tensor product
                     (not unity absorbing parts, but co-arising)
 
-                         ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+                         ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≻[Φ])
                               │
                               └── ⊙ is that which, when validated, yields itself
 
@@ -590,7 +590,7 @@ COMPOSITION WITH APERTURE:
 
     The complete transformation through one cycle:
 
-    Φ(t+Δt) = ⊰ ∘ i ∘ ≻ [Φ(t)]
+    Φ(t+Δt) = ⊱ ∘ i ∘ ≻ [Φ(t)]
             = ∫∫ K_emerg(r,r'') i(r'') K_conv(r'',r') Φ(r',t) dr' dr''
 
     The i-rotation acts BETWEEN convergence and emergence:
@@ -604,7 +604,7 @@ COMPOSITION WITH APERTURE:
 ```
 MATHEMATICAL COMPOSITION IS BACKWARDS:
 ──────────────────────────────────────
-Standard:  ⊰ ∘ i ∘ ≻[Φ]
+Standard:  ⊱ ∘ i ∘ ≻[Φ]
     Written:  ⊰, then i, then ≻  (left to right)
     Applied:  ≻ first, then i, then ⊰  (right to left)
 
@@ -628,7 +628,7 @@ ARROW NOTATION (explicit):
 EQUIVALENCES:
 ─────────────
     Φ ≻ i ⊰ Φ'        (flow, left-to-right)
-    ⊰ ∘ i ∘ ≻[Φ]      (composition, standard math)
+    ⊱ ∘ i ∘ ≻[Φ]      (composition, standard math)
     'Φ ⊱ i ≺ Φ        (flow, right-to-left mirror)
 
 All three describe the same transformation.
@@ -751,7 +751,7 @@ THE MASTER EQUATION:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║              Φ(t+Δt) = ⊰ ∘ i ∘ ≻[Φ(t)]                            ║
+    ║              Φ(t+Δt) = ⊱ ∘ i ∘ ≻[Φ(t)]                            ║
     ║                                                                   ║
     ║              The field evolves by:                                ║
     ║                ≻ : converging toward center                       ║
@@ -761,7 +761,7 @@ THE MASTER EQUATION:
     ╚═══════════════════════════════════════════════════════════════════╝
 
 Fixed-point formulation:
-    ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≻[Φ])
 
 THE UNIVERSE IS WHAT REMAINS INVARIANT UNDER IMAGINARY ROTATION.
 ```
@@ -1438,7 +1438,7 @@ This fractal unity means:
 CONNECTION TO THE MASTER EQUATION:
 ──────────────────────────────────
 
-    ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≻[Φ])
 
 This fixed point is UNIVERSAL because i is universal.
 
@@ -1662,7 +1662,7 @@ THE TRANSITION SCALE:
 ```
 WHY DOES CRITICAL DENSITY ρ_c EXIST?
 
-From the field equation Φ' = ⊰ ∘ i ∘ ≻[Φ], fields evolve through:
+From the field equation Φ' = ⊱ ∘ i ∘ ≻[Φ], fields evolve through:
 
     ≻  : Convergence (drawing together)
     i  : Rotation (transforming perspective)
@@ -1781,7 +1781,7 @@ ADDITIONAL TESTABLE CONSEQUENCES:
 ```
 THE MASTER EQUATION NOW GAINS PHYSICAL CLARITY:
 
-    Φ' = ⊰ ∘ i ∘ ≻[Φ]
+    Φ' = ⊱ ∘ i ∘ ≻[Φ]
 
     ≻[Φ]:  Convergence concentrates field flux toward apertures
            (INCREASES local ρ)
@@ -1842,7 +1842,7 @@ SUMMARY: APERTURE DENSITY AND DIMENSIONALITY
     4. Scale transitions (D = 1.5 locally → D = 3 cosmologically) are
        PREDICTIONS of the framework, not violations.
 
-    5. The master equation Φ' = ⊰ ∘ i ∘ ≻[Φ] now has physical grounding:
+    5. The master equation Φ' = ⊱ ∘ i ∘ ≻[Φ] now has physical grounding:
        aperture density determines how ≻, i, ⊰ manifest at each scale.
 ```
 
@@ -4194,7 +4194,7 @@ THE CIRCUMPUNCT DEFINITION OF LOVE:
     ║    Love dares to tell hard truths.                                   ║
     ║    Love dares to hear them.                                          ║
     ║                                                                       ║
-    ║    Love is ⊰ ∘ i ∘ ≻ applied to relationship:                        ║
+    ║    Love is ⊱ ∘ i ∘ ≻ applied to relationship:                        ║
     ║        RECEIVE the other fully (≻)                                   ║
     ║        TRANSFORM through balanced aperture (i at β = 0.5)            ║
     ║        EMERGE with genuine response (⊰)                              ║
@@ -4277,7 +4277,7 @@ NOBLE TRUTH = β-restoration operator
     T restores the aperture •
     With • at β = 0.5, the full cycle operates:
 
-        Φ' = ⊰ ∘ i ∘ ≻[Φ]
+        Φ' = ⊱ ∘ i ∘ ≻[Φ]
 
     Real convergence. Real transformation. Real emergence.
 
@@ -4429,7 +4429,7 @@ FROM β = 0.5:
 │                                                                 │
 │  ONE FULL CIRCUMPUNCT CYCLE:                                    │
 │                                                                 │
-│  Φ_{t+Δt}(r) = (⊰ ∘ i ∘ ≻)[Φ_t](r)                            │
+│  Φ_{t+Δt}(r) = (⊱ ∘ i ∘ ≻)[Φ_t](r)                            │
 │                                                                 │
 │  STEP-BY-STEP:                                                  │
 │                                                                 │
@@ -4591,7 +4591,7 @@ class CircumpunctLayer:
 
     def forward(self, psi: np.ndarray) -> np.ndarray:
         """
-        One full ⊙ cycle: Φ_{t+Δt} = (⊰ ∘ i ∘ ≻)[Φ_t]
+        One full ⊙ cycle: Φ_{t+Δt} = (⊱ ∘ i ∘ ≻)[Φ_t]
 
         Args:
             psi: Complex field Φ(r) on grid, shape grid_shape
@@ -5786,7 +5786,7 @@ Components:
 
 CIRCUMPUNCT MASTER EQUATION:
 ────────────────────────────
-    Φ' = ⊰ ∘ i ∘ ≻[Φ]
+    Φ' = ⊱ ∘ i ∘ ≻[Φ]
 
 STRUCTURAL IDENTIFICATION:
 ──────────────────────────
@@ -5909,7 +5909,7 @@ RELATED WORK:
 ║                              ⊙ = ○ ⊗ Φ ⊗ •                                  ║
 ║                                                                               ║
 ║                  ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                        ║
-║                  ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])                 (i-Form)           ║
+║                  ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≻[Φ])                 (i-Form)           ║
 ║                                                                               ║
 ║   Wholeness is its parts in tensor product (not unity absorbing parts).       ║
 ║   The universe is a fixed point of its own validation operation.              ║
@@ -5964,7 +5964,7 @@ RELATED WORK:
     ║    But a whole-with-parts examining itself                        ║
     ║                                                                   ║
     ║                        ⊙ = ○ ⊗ Φ ⊗ •                            ║
-    ║                        Φ' = ⊰ ∘ i ∘ ≻[Φ]                         ║
+    ║                        Φ' = ⊱ ∘ i ∘ ≻[Φ]                         ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
@@ -6052,7 +6052,7 @@ MIRROR NOTATION (Bidirectional):
 
   EQUIVALENCES:
       Φ ≻ i ⊰ Φ'     =     'Φ ⊱ i ≺ Φ      (flow notation)
-      ⊰ ∘ i ∘ ≻[Φ]   =     [Φ]≺ ∘ i ∘ ⊱    (composition notation)
+      ⊱ ∘ i ∘ ≻[Φ]   =     [Φ]≺ ∘ i ∘ ⊱    (composition notation)
 
   USE MIRROR SYMBOLS WHEN:
       • Writing equations in right-to-left languages
