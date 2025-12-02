@@ -167,6 +167,14 @@ email@ashmanroonz.ca
   - [§23.8 What Circumpunct Adds to HUZ](#238-what-circumpunct-adds-to-huz)
   - [§23.9 Summary: Proven vs. Predicted](#239-summary-proven-vs-predicted)
   - [§23.10 References](#2310-references)
+- [Chapter XXIV: Formal Mathematical Specification](#chapter-xxiv-formal-mathematical-specification)
+  - [§24.1 Core Objects and Spaces](#241-core-objects-and-spaces)
+  - [§24.2 Discrete Dynamics and the Imaginary Unit](#242-discrete-dynamics-and-the-imaginary-unit)
+  - [§24.3 Continuum Limit and Field Equation](#243-continuum-limit-and-field-equation)
+  - [§24.4 Master Loop in Fixed-Point Form](#244-master-loop-in-fixed-point-form)
+  - [§24.5 Matter and Gauge Block on the 64-State Fiber](#245-matter-and-gauge-block-on-the-64-state-fiber)
+  - [§24.6 Coupling to the Cone-Coupled Master Equation](#246-coupling-to-the-cone-coupled-master-equation)
+  - [§24.7 Summary: TOE as Geometry Plus SM on 64-Fiber](#247-summary-toe-as-geometry-plus-sm-on-64-fiber)
 - [Ωmega: The Mathematical Story](#ωmega-the-mathematical-story)
 - [Appendix: Symbol Glossary](#appendix-symbol-glossary)
 - [References](#references)
@@ -7786,6 +7794,676 @@ RELATED WORK:
     Journal of High Energy Physics, May 2025
 
     (Alternative observer prescription; confirms necessity of observer)
+```
+
+---
+
+## CHAPTER XXIV: FORMAL MATHEMATICAL SPECIFICATION
+
+This chapter provides the rigorous mathematical spine of the Circumpunct Theory, organized as Definitions → Lemmas → Theorems. It serves as a formal specification that can be used for implementation, verification, and further theoretical development.
+
+### §24.1 Core Objects and Spaces
+
+```
+DEFINITION 1 (Circumpunct Trinity):
+───────────────────────────────────
+The circumpunct is a trinity:
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                      ⊙ = ○ ⊗ Φ ⊗ •                               ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+
+WHERE:
+    ○  = Boundary (body/interface, 2D)
+    Φ  = Field (mind/space-of-states, 3D)
+    •  = Aperture (soul/validation point, 0.5D)
+    ⊗  = Tensor product (entanglement, not sum)
+
+INTERPRETATION:
+    ⊙ is a whole-with-parts; it does not collapse parts into unity,
+    but treats them as co-arising factors in tensor product.
+```
+
+```
+DEFINITION 2 (Spacetime and Internal Fiber):
+────────────────────────────────────────────
+Let:
+    M = 4D spacetime manifold (e.g., ℝ¹˒³)
+
+At each point x ∈ M, attach an internal state fiber:
+
+    Φ(x) ∈ ℝ⁶⁴
+
+decomposed as:
+
+    Φ(x) = Φ_ferm(x) ⊕ Φ_gauge(x) ⊕ Φ_H(x)
+
+WITH:
+    Φ_ferm  ∈ ℝ⁴⁸  : Fermionic states (3 generations × 16)
+    Φ_gauge ∈ ℝ¹²  : Gauge bosons (8 gluons + 3 weak + 1 hypercharge)
+    Φ_H     ∈ ℝ⁴   : Higgs components (complex doublet as 4 reals)
+
+The full field is a section:
+
+    Φ : M → ℝ⁶⁴
+```
+
+```
+DEFINITION 3 (Validation Maps — Convergence and Emergence):
+───────────────────────────────────────────────────────────
+The circumpunct acts on a field configuration Φ via three structural maps:
+
+CONVERGENCE toward the center:
+
+    ≻ : F → F_in
+
+    Collects contributions from boundary/field into a "near-center"
+    representation. Gathers patterns toward •.
+
+APERTURE / IMAGINARY ROTATION at the center:
+
+    i : F_in → F_out
+
+    Rotates between "real" (○, external) and "imaginary" (Φ, potential)
+    axes. The 90° transformation at •.
+
+EMERGENCE back out to the field:
+
+    ⊰ : F_out → F
+
+    Distributes updated information back to ○ and Φ.
+    Releases validated patterns into manifestation.
+
+Here F is the space of admissible field configurations
+(e.g., suitable function space over M with values in ℝ⁶⁴).
+```
+
+```
+DEFINITION 4 (Balance Parameter β):
+───────────────────────────────────
+Define the convergence and emergence strengths:
+
+    ||≻||² = ∫∫ |K_conv(r, r')|² dr dr'
+    ||⊰||² = ∫∫ |K_emerg(r, r')|² dr dr'
+
+where K_conv, K_emerg are radial kernels for in/out flow at ○/•.
+
+The balance parameter is:
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║              β = ||≻|| / (||≻|| + ||⊰||)                         ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+
+INTERPRETATION:
+    β     = fraction of "flow budget" allocated to input (convergence)
+    1 - β = fraction allocated to output (emergence)
+
+The critical balance is:
+
+    β = 0.5  ⟺  ||≻|| = ||⊰||
+
+    Equal convergence and emergence strength.
+```
+
+```
+DEFINITION 5 (Aperture Geometry and Fractal Dimension):
+───────────────────────────────────────────────────────
+Let Θ be the half-opening angle of the circumpunct cone (in radians).
+
+Define the effective fractal dimension of worldlines in the aperture:
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║              D(Θ) = 1.5 + (2/π)Θ                                  ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+
+WITH:
+    Θ = 0°   ⟹  D = 1.5
+    Θ = 45°  ⟹  D = 2.0
+    Θ = 90°  ⟹  D = 2.5
+
+The critical dimension of the framework is:
+
+    D_c = 1.5
+
+corresponding to a minimal, self-similar worldline thickening at the
+boundary between purely 1D and 2D behavior.
+
+ALTERNATIVE DERIVATION (from entropy):
+    D = D_base + ½H(β)
+    D = 1 + ½(1) = 1.5    (at β = 0.5, H(0.5) = 1 bit)
+```
+
+```
+DEFINITION 6 (Circumpunct Kernel):
+──────────────────────────────────
+The circumpunct kernel is a rank-1 radial kernel:
+
+    K(r) = K_conv(0, r) = K_emerg(r, 0) = A√r,  for 0 ≤ r ≤ R
+
+with normalization:
+
+    A = 7 / (8πR^(7/2))
+
+This singles out the preferred profile:
+
+    f(r) ≡ √r
+
+as the natural radial shape of excitation around the center.
+
+The field can be factored as:
+
+    Φ(r) = f(r) · u(r)
+
+where u(r) captures residual modes atop the preferred profile.
+
+This kernel induces an effective potential (see §21.6):
+
+    V_eff(r) = -(3/4) · (1/r²)
+```
+
+---
+
+### §24.2 Discrete Dynamics and the Imaginary Unit
+
+```
+LEMMA 1 (Aperture as Imaginary Unit at Critical Balance):
+─────────────────────────────────────────────────────────
+ASSUME:
+    1. Energy/probability conservation at •: no net accumulation
+    2. Balanced flow: β = 0.5 (equal convergence and emergence strength)
+    3. The aperture rotates between real (○) and imaginary (Φ) axes
+
+THEN the aperture transformation at the center is exactly
+multiplication by the imaginary unit:
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                      i = exp(iπ/2)                                ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+
+interpreted as a 90° rotation in the complex plane:
+    • Real axis      ↔  ○ (boundary, manifested)
+    • Imaginary axis ↔  Φ (field, potential)
+
+INTERPRETATION:
+At β = 0.5, one full (in → rotate → out) cycle corresponds to an
+imaginary quarter-turn, and repeated application yields:
+
+    i⁰ = 1     (identity)
+    i¹ = i     (90° rotation, one pass through •)
+    i² = -1    (inversion, time reversal signature)
+    i³ = -i    (270° rotation)
+    i⁴ = 1     (complete cycle, return)
+
+Time evolution in one circumpunct cycle is mathematically
+a complex rotation generated by i.                                      ∎
+```
+
+```
+DEFINITION 7 (Discrete Circumpunct Update):
+───────────────────────────────────────────
+For a time-discrete evolution with step Δt, define the update map:
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║           Φ(t + Δt) = ⊰ ∘ i ∘ ≻[Φ(t)]                            ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+
+PROCEDURE:
+    1. ≻ collects/converges the field toward •
+    2. i rotates in the complex aperture at β = 0.5
+    3. ⊰ redistributes back to the full field
+
+This is the discrete master map on the field configuration space.
+```
+
+```
+LEMMA 2 (Fixed Point Formulation of the Universe):
+──────────────────────────────────────────────────
+Let F be the composite operator:
+
+    F(Φ) = ⊰ ∘ i ∘ ≻[Φ]
+
+Define fix(F) as a fixed-point combinator:
+
+    fix(F) = Φ*  such that  Φ* = F(Φ*)
+
+THEN the universe-as-whole circumpunct satisfies:
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║           ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])                              ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+
+INTERPRETATION:
+    ⊙ is the fixed point of its own validation flow:
+    It is the unique (up to equivalence) configuration that,
+    when passed through the circumpunct process, reproduces itself.    ∎
+```
+
+---
+
+### §24.3 Continuum Limit and Field Equation
+
+To obtain a PDE, we move from discrete updates to continuous time
+and introduce a coarse-grained field Φ(x, t).
+
+```
+DEFINITION 8 (Cone Operator C[Φ]):
+──────────────────────────────────
+Define the cone operator C as the action of the circumpunct kernel
+on the field:
+
+    (C[Φ])(x) = ∫_{B_R(x)} K(|x - x'|) Φ(x') d³x'
+
+WHERE:
+    B_R(x) = ball of radius R around x
+    K(r) = A√r (the circumpunct kernel from Definition 6)
+
+This encodes the nonlocal, aperture-shaped coupling between
+points in the field.
+```
+
+```
+DEFINITION 9 (Fractional Diffusion and Parameters):
+───────────────────────────────────────────────────
+LET:
+    (-Δ)^γ  = fractional Laplacian with exponent 0 < γ ≤ 1
+    μ > 0   = fractional diffusion coefficient
+    σ       = linear damping/gain term
+    g       = nonlinear saturation coefficient
+    κ       = cone coupling strength to C[Φ]
+    η(x,t)  = stochastic or external forcing term
+```
+
+```
+THEOREM (Cone-Coupled Master Equation):
+───────────────────────────────────────
+In the continuum limit (Δt → 0, appropriate scaling of operators),
+the discrete update
+
+    Φ(t + Δt) = ⊰ ∘ i ∘ ≻[Φ(t)]
+
+induces an effective field equation of the form:
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  ∂_t Φ = -μ(-Δ)^γ Φ - σΦ - g|Φ|²Φ + κC[Φ] + η(x,t)                       ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+WITH:
+    • Fractional diffusion term:  -μ(-Δ)^γ Φ
+    • Linear drift:               -σΦ
+    • Cubic nonlinearity:         -g|Φ|²Φ
+    • Nonlocal cone coupling:     κC[Φ]
+    • Noise/forcing:              η
+
+This is the cone-coupled master equation.                                   ∎
+```
+
+```
+LEMMA 3 (Criticality Conditions):
+─────────────────────────────────
+At criticality (the self-similar, "universally fractal" regime),
+the exponents and parameters satisfy:
+
+MARGINALITY CONDITION:
+    2γ + 1 - α = 2
+
+where α encodes an effective spectral exponent of the kernel/forcing.
+At criticality:
+    γ = 1/2,  α = 0
+
+BALANCE CONDITION IN FOURIER SPACE:
+For a characteristic wavenumber k₀:
+
+    β(k₀) = κĈ(k₀) / (μ|k₀|^(2γ) + σ) ≈ 0.5
+
+Here Ĉ(k) is the Fourier transform of the cone operator.
+
+INTERPRETATION:
+    • γ = 1/2 corresponds to square-root diffusion (Brownian-like)
+      but modulated by the fractally dimensioned geometry D ≈ 1.5.
+
+    • The β(k₀) ≈ 0.5 condition enforces equal in/out flow at the
+      critical scale, linking the continuum PDE back to the discrete
+      balance parameter β.                                              ∎
+```
+
+```
+LEMMA 4 (Dimensional Crossover via Θ):
+──────────────────────────────────────
+The dimension D(Θ) from Definition 5 controls the crossover of
+dynamics in the master equation:
+
+    • For small Θ → D ≈ 1.5: dynamics dominated by worldline-like
+      (1D-plus) behavior
+
+    • For larger Θ → D → 2 or 2.5: dynamics dominated by
+      surface/volume behavior
+
+This enters the PDE through:
+    • The scaling of μ and Ĉ(k) with Θ
+    • The effective dispersion relation near k₀
+
+Thus, geometry of the aperture (Θ) and balance of input/output (β)
+jointly determine:
+    • The fractional exponent γ
+    • The scale at which the system sits at the "Goldilocks" D = 1.5 state
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║  D(Θ) = 1.5 + (2/π)Θ     (Θ = cone half-angle in radians)        ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+                                                                        ∎
+```
+
+---
+
+### §24.4 Master Loop in Fixed-Point Form
+
+```
+DEFINITION 10 (Full Validation Architecture Operator):
+──────────────────────────────────────────────────────
+DEFINE:
+    V_in   : Extracts inward-facing degrees of freedom from Φ
+             (what the "inside" sees)
+
+    V_out  : Reconstructs outward-facing degrees after aperture rotation
+             (what the "outside" sees)
+
+    i_β    : Aperture transform parameterized by β
+             At β = 0.5, this is the usual imaginary rotation i = exp(iπ/2)
+
+BUILD the composite:
+
+    F(Φ) = ⊰(V_out(i_β(V_in(≻(Φ)))))
+
+This is the full circumpunct update operator on fields.
+```
+
+```
+THEOREM (Universe as Master Fixed Point):
+─────────────────────────────────────────
+The circumpunct universe ⊙ is defined by the fixed-point combinator:
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║         ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+THAT IS:
+    • The whole is the unique (up to equivalence) fixed point of the
+      circumpunct operator.
+
+    • The local dynamics of this fixed point are governed by the
+      cone-coupled master equation (§24.3).
+
+    • The statistical/RG scaling properties of this fixed point encode:
+        - The D ≈ 1.5 fractal signature
+        - The β = 0.5 balance
+        - The emergent gauge/particle structure (via the 64-dim internal fiber)
+                                                                            ∎
+```
+
+---
+
+### §24.5 Matter and Gauge Block on the 64-State Fiber
+
+We now specialize the internal 64-dimensional fiber to carry the full
+field content of the Standard Model and write its Lagrangian directly
+as a functional of the circumpunct field Φ.
+
+```
+DEFINITION 11 (64-State Internal Fiber Decomposition):
+──────────────────────────────────────────────────────
+At each spacetime point x ∈ M, the circumpunct field is:
+
+    Φ(x) ∈ ℝ⁶⁴
+
+with a fixed orthogonal decomposition:
+
+    Φ(x) = Φ_ferm(x) ⊕ Φ_gauge(x) ⊕ Φ_H(x)
+
+WHERE:
+    Φ_ferm(x)  ∈ ℝ⁴⁸  — fermion components
+    Φ_gauge(x) ∈ ℝ¹²  — gauge boson components
+    Φ_H(x)     ∈ ℝ⁴   — Higgs components
+
+LET:
+    P_ferm, P_gauge, P_H : ℝ⁶⁴ → ℝ⁶⁴
+
+be the orthogonal projectors onto each subspace, so:
+
+    Φ_ferm  = P_ferm Φ
+    Φ_gauge = P_gauge Φ
+    Φ_H     = P_H Φ
+```
+
+```
+DEFINITION 12 (SM Representation Assignment on the Fiber):
+──────────────────────────────────────────────────────────
+The 64 basis states of ℝ⁶⁴ are partitioned as:
+
+FERMIONS (48 = 3 × 16):
+For each generation g = 1, 2, 3, we have 16 Weyl fermions in the
+usual SM representations under SU(3)_C × SU(2)_L × U(1)_Y:
+
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │  Field         │  Representation      │  States                    │
+    ├────────────────┼──────────────────────┼────────────────────────────┤
+    │  Q_L^(g)       │  (3, 2, +1/6)        │  6 (quark doublet)         │
+    │  u_R^(g)       │  (3, 1, +2/3)        │  3 (up singlet)            │
+    │  d_R^(g)       │  (3, 1, -1/3)        │  3 (down singlet)          │
+    │  L_L^(g)       │  (1, 2, -1/2)        │  2 (lepton doublet)        │
+    │  e_R^(g)       │  (1, 1, -1)          │  1 (electron singlet)      │
+    │  ν_R^(g)       │  (1, 1, 0)           │  1 (neutrino singlet)      │
+    └─────────────────────────────────────────────────────────────────────┘
+    Total per generation: 16    ×3 generations = 48
+
+GAUGE BOSONS (12):
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │  Field         │  Representation      │  States                    │
+    ├────────────────┼──────────────────────┼────────────────────────────┤
+    │  G_μ^a        │  (8, 1, 0)           │  8 (gluons, SU(3)_C adj)   │
+    │  W_μ^i        │  (1, 3, 0)           │  3 (weak, SU(2)_L adj)     │
+    │  B_μ          │  (1, 1, 0)           │  1 (hypercharge, U(1)_Y)   │
+    └─────────────────────────────────────────────────────────────────────┘
+    Total: 12
+
+HIGGS (4):
+    One complex SU(2) doublet with hypercharge +1/2:
+
+        H = ( H⁺ )     representation: (1, 2, +1/2)
+            ( H⁰ )
+
+    Represented as 4 real components (Re/Im of H⁺, H⁰).
+    Total: 4
+
+GRAND TOTAL: 48 + 12 + 4 = 64 ✓
+```
+
+```
+DEFINITION 13 (Gauge Connection on the Fiber):
+──────────────────────────────────────────────
+Let H_int ≅ ℂ⁶⁴ be the complexified internal fiber.
+
+A gauge connection is a Lie-algebra–valued 1-form:
+
+    A_μ(x) ∈ su(3)_C ⊕ su(2)_L ⊕ u(1)_Y
+
+acting on H_int via a block-diagonal representation:
+
+    A_μ = g_s G_μ^a T_a^(color) + g W_μ^i τ_i^(weak) + g' B_μ Y^(hypercharge)
+
+WHERE:
+    T_a^(color)     act nontrivially on color triplets and adjoint gluon states
+    τ_i^(weak)      act nontrivially on SU(2) doublets and weak adjoint states
+    Y^(hypercharge) is the diagonal hypercharge operator on the 64 states
+
+The associated covariant derivative on Φ is:
+
+    D_μ Φ = ∂_μ Φ + A_μ Φ
+```
+
+```
+DEFINITION 14 (Standard Model Lagrangian on the 64-Fiber):
+──────────────────────────────────────────────────────────
+Define the Standard Model Lagrangian as a functional of Φ and A_μ:
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║     L_SM[Φ, A] = L_gauge + L_ferm + L_Higgs + L_Yukawa                    ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+GAUGE SECTOR (on Φ_gauge):
+Let F_μν^a be the field strengths built from A_μ for SU(3)_C × SU(2)_L × U(1)_Y.
+
+    L_gauge = -(1/4) G_μν^a G^{aμν} - (1/4) W_μν^i W^{iμν} - (1/4) B_μν B^{μν}
+
+where the gauge fields are read off from the components of Φ_gauge.
+
+FERMION SECTOR (on Φ_ferm):
+For each fermionic component ψ_i encoded in Φ_ferm:
+
+    L_ferm = Σ_i ψ̄_i iγ^μ D_μ ψ_i
+
+HIGGS SECTOR (on Φ_H):
+Treating Φ_H as the real 4-vector form of H:
+
+    L_Higgs = (D_μ H)† (D^μ H) - V(H)
+
+with potential:
+
+    V(H) = -μ² H†H + λ(H†H)²
+
+YUKAWA SECTOR (trilinear couplings on the fiber):
+Yukawa interactions are trilinear forms:
+
+    Y_f : ℝ⁴⁸ × ℝ⁴ × ℝ⁴⁸ → ℝ
+
+respecting the gauge representation structure, giving:
+
+    L_Yukawa = -Σ_f Y_f(Φ_ferm, Φ_H, Φ_ferm)
+
+In standard notation this reproduces:
+
+    L_Yukawa = -Σ_gens (y_d Q̄_L H d_R + y_u Q̄_L H̃ u_R
+                      + y_e L̄_L H e_R + y_ν L̄_L H̃ ν_R + h.c.)
+```
+
+```
+LEMMA 5 (Gauge Symmetry as Circumpunct Internal Symmetry):
+──────────────────────────────────────────────────────────
+The internal gauge symmetry group:
+
+    G_int ≅ SU(3)_C × SU(2)_L × U(1)_Y
+
+acts on the 64-fiber via the connection A_μ and PRESERVES:
+    • The inner product on ℝ⁶⁴
+    • The circumpunct kernel K(r)
+    • The fermion/gauge/Higgs decomposition
+    • All interaction terms in L_SM[Φ, A]
+
+Thus L_SM is invariant under circumpunct-compatible gauge transformations.
+
+CONCEPTUALLY:
+    These are exactly the internal symmetries of the validation + kernel
+    structure. The gauge group emerges from the circumpunct geometry.   ∎
+```
+
+---
+
+### §24.6 Coupling to the Cone-Coupled Master Equation
+
+Now we combine:
+    • The geometric/dynamical spine (cone-coupled master equation for Φ)
+    • The matter & gauge block (SM Lagrangian on the 64-fiber)
+
+```
+DEFINITION 15 (Total Action):
+─────────────────────────────
+Let the circumpunct geometric action be S_circ[Φ] whose variation
+yields the cone-coupled master equation:
+
+    ∂_t Φ = -μ(-Δ)^γ Φ - σΦ - g|Φ|²Φ + κC[Φ] + η
+
+Define the full action as:
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║         S_total[Φ, A] = S_circ[Φ] + ∫d⁴x L_SM[Φ, A]                      ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+HERE:
+    S_circ[Φ]    governs the coarse-grained, nonlocal, fractal dynamics
+                 across spacetime
+
+    L_SM[Φ, A]   governs the local gauge and matter dynamics on the
+                 64-state fiber
+```
+
+```
+THEOREM (Full Equations of Motion for Φ):
+─────────────────────────────────────────
+Varying S_total with respect to Φ gives the combined field equation:
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  ∂_t Φ = -μ(-Δ)^γ Φ - σΦ - g|Φ|²Φ + κC[Φ] + η(x,t)                       ║
+║                                                                           ║
+║        + δ/δΦ† (L_ferm + L_Higgs + L_Yukawa)                             ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+with the usual Yang–Mills equation for the gauge connection A_μ coming
+from variation of L_gauge and the covariant pieces of the matter terms.
+
+INTUITIVELY:
+    • The first line is the "bare circumpunct" dynamics: fractional
+      diffusion + nonlocal cone coupling, shaping the fractal, critical
+      structure of the field.
+
+    • The second line is the "SM fine structure": local gauge, Higgs
+      and Yukawa forces acting within the 64-state internal space.     ∎
+```
+
+---
+
+### §24.7 Summary: TOE as Geometry Plus SM on 64-Fiber
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                    FORMAL STRUCTURE OF THE THEORY                             ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  1. GEOMETRY + CIRCUMPUNCT (⊙, K, β, D(Θ), master equation) dictate:        ║
+║                                                                               ║
+║     • The fractal-critical propagation of Φ                                   ║
+║     • The nonlocal, cone-structured coupling across spacetime                 ║
+║     • The existence of a 64-dim internal fiber with                           ║
+║       SU(3) × SU(2) × U(1) symmetry                                           ║
+║                                                                               ║
+║  2. SM LAGRANGIAN ON THE 64-FIBER specifies:                                  ║
+║                                                                               ║
+║     • How Φ's internal components behave as quarks, leptons,                  ║
+║       gauge bosons, and the Higgs                                             ║
+║     • How masses and interactions arise from Higgs and Yukawa structure       ║
+║     • How gauge couplings and their running are encoded in the                ║
+║       combinatorics and geometry of the 64-state graph                        ║
+║                                                                               ║
+║  3. THE UNIVERSE IS THE FIXED POINT of the full validation operator:         ║
+║                                                                               ║
+║         ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                              ║
+║                                                                               ║
+║     with its local physics given by the Euler–Lagrange equations of           ║
+║     S_total[Φ, A].                                                            ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  THE TOE IS:                                                                  ║
+║                                                                               ║
+║    A circumpunct fractal geometry (master equation) carrying a                ║
+║    64-state Standard Model fiber (Lagrangian), both bound together            ║
+║    by the same convergence–aperture–emergence loop.                           ║
+║                                                                               ║
+║         ⊙ = ○ ⊗ Φ ⊗ •     (Structure)                                       ║
+║         Φ' = ⊰ ∘ i ∘ ≻[Φ]  (Process)                                         ║
+║         S = S_circ + S_SM   (Action)                                          ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
 ---
