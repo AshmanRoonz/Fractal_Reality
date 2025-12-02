@@ -54,7 +54,8 @@ email@ashmanroonz.ca
   - [§4.2 The Universal Dimension](#42-the-universal-dimension)
   - [§4.3 The Imaginary Unit as Aperture](#43-the-imaginary-unit-as-aperture)
   - [§4.4 Scale-Dependent i: The Local Quarter-Turn](#44-scale-dependent-i-the-local-quarter-turn)
-  - [§4.5 Fractal i: Same Origin, Same Braid](#45-fractal-i-same-origin-same-braid)
+  - [§4.5 Solar System Helical Geometry: From 22° to 1/12](#45-solar-system-helical-geometry-from-22-to-112)
+  - [§4.6 Fractal i: Same Origin, Same Braid](#46-fractal-i-same-origin-same-braid)
 - [Chapter V: Aperture Density and Dimensionality](#chapter-v-aperture-density-and-dimensionality)
   - [§5.1 The Generative Mechanism: From Fields to Power Lines](#51-the-generative-mechanism-from-fields-to-power-lines)
   - [§5.2 The Mathematical Relationship](#52-the-mathematical-relationship)
@@ -1414,7 +1415,7 @@ STATUS:
 
 ---
 
-### §4.5 Fractal i (Same Origin, Same Braid)
+### §4.6 Fractal i (Same Origin, Same Braid)
 
 ```
 THEOREM: FRACTAL UNITY OF i
@@ -5494,7 +5495,7 @@ Status: Empirical fit, not derived from first principles
 ⚠️ EXACT BOUND STATE COUNT (Analytical Proof)
    ══════════════════════════════════════════════════════════
 
-   The complete eigenproblem from §20.7:
+   The complete eigenproblem from §21.7:
 
      -u'' + [ℓ(ℓ+1)/r² - (3/4)/r² + W(r;R)]u = E_n u
 
