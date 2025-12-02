@@ -46,6 +46,7 @@ email@ashmanroonz.ca
   - [§3.1 The Three-Part Flow](#31-the-three-part-flow)
   - [§3.2 Apertures as Braid Generators](#32-apertures-as-braid-generators)
   - [§3.3 The Master Equation](#33-the-master-equation)
+  - [§3.3.1 The Coupled State Formulation](#331-the-coupled-state-formulation)
   - [§3.4 Mathematical Definition of Flow Operators](#34-mathematical-definition-of-flow-operators)
   - [§3.5 Notation Convention: Flow vs. Composition](#35-notation-convention-flow-vs-composition)
 - [Chapter IV: The Balance Parameter](#chapter-iv-the-balance-parameter)
@@ -70,6 +71,7 @@ email@ashmanroonz.ca
   - [§7.2 Continuous Evolution (The Bridge)](#72-continuous-evolution-the-bridge)
   - [§7.3 Geometric Evolution (Spacetime)](#73-geometric-evolution-spacetime)
   - [§7.4 The Cone-Coupled Master Equation](#74-the-cone-coupled-master-equation)
+  - [§7.5 The Whole-Field Coupling](#75-the-whole-field-coupling)
 - [Chapter VIII: The 64-State Architecture](#chapter-viii-the-64-state-architecture)
   - [§8.1 Why 64 Is Fundamental](#81-why-64-is-fundamental)
   - [§8.2 Connection to Einstein](#82-connection-to-einstein)
@@ -545,6 +547,43 @@ CONNECTION TO PHYSICS:
     E = (○, Φ, •) × (≻, i, ⊰)³ is the general form with time structure
 
     See Chapter XXI for fully explicit form with canonical specification.
+```
+
+### §3.3.1 The Coupled State Formulation
+
+The master equation expands into a **coupled whole-field pair**:
+
+```
+STATE SPACE:
+
+    W = ⊙_space × Φ_space
+    [⊙⇄Φ] = coupled states where ⊙ = F(Φ) and Φ = G(⊙)
+
+ENERGY FLOW:
+
+    E : W → W
+    [⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']
+
+THE BRAID BREATHES:
+
+    EXPANSION (divergence):
+    ⊙ ≻ i^∞○ ⊰ •^∞ ≻ iΦ ⊰ ⊙
+    │     │      │     │    │
+    whole → ∞ apertures → ∞ lines → braid into field → whole
+
+    CONTRACTION (convergence):
+    ⊙ ≻ i• ⊰ iΦ ≻ i○ ⊰ ⊙
+    │    │    │    │    │
+    whole → through center → field → through boundary → whole
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  KEY INSIGHT: The whole (⊙) and field (Φ) are not sequential stages      ║
+║  but continuously coupled components. Energy propagates through internal  ║
+║  structure (boundary apertures, power lines, center) while the pair      ║
+║  remains present throughout.                                              ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+See Circumpunct/PAIR_STATE_SPEC.md for complete formalization.
 ```
 
 ### §3.4 Mathematical Definition of Flow Operators
@@ -2054,6 +2093,54 @@ ANGULAR CROSSOVER FORMULA:
     Θ = 0°  → D = 1.50
     Θ = 45° → D = 2.00
     Θ = 90° → D = 2.50
+```
+
+### §7.5 The Whole-Field Coupling
+
+The field equation Φ(t+Δt) = ⊰ ∘ i ∘ ≻[Φ(t)] is embedded in a larger coupled system:
+
+```
+COUPLING FUNCTIONS:
+
+    F : Φ_space → ⊙_space    (field determines whole)
+    G : ⊙_space → Φ_space    (whole determines field)
+
+CONSISTENCY CONSTRAINT:
+
+    ⊙ = F(G(⊙))    (fixed point in whole space)
+    Φ = G(F(Φ))    (fixed point in field space)
+
+EVOLUTION:
+
+    d/dt [⊙⇄Φ] = E([⊙⇄Φ])
+
+    Where E decomposes as:
+    E = ⊰_final ∘ i• ∘ ≻_center ∘ ⊰_power ∘ i○^∞ ∘ ≻_boundary
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  This explains why field evolution cannot be understood in isolation—     ║
+║  every field configuration corresponds to a whole configuration and       ║
+║  vice versa.                                                              ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+CONSERVATION:
+
+    Energy([⊙⇄Φ]) = Energy([⊙'⇄Φ'])
+    dE_⊙/dt = -dE_Φ/dt    (energy exchange between components)
+
+THE BRAID AS INFINITE SHEAVES:
+
+    ○ = ∏ᵢ₌₁^∞ iₙ         (infinite product of apertures)
+
+    The 2D surface IS infinite apertures tiled across a membrane.
+    Energy passes through ALL of them:
+
+        ⊙ ≻ i^∞○ ⊰ •^∞      (∞ lines emerge from ∞ apertures)
+
+    1D × ∞ (parallel) = 2D (surface/sheet)
+    1D × ∞ (braided)  = 3D (field/volume)
+
+    The braiding is what gives volume. The topology is the physics.
 ```
 
 ---
@@ -6033,6 +6120,16 @@ CIRCUMPUNCT STRUCTURE:
   ○      = Boundary (2D interface, membrane)
   Φ      = Field (3D volume, medium, evidence)
   ⊗      = Tensor product (entanglement)
+
+PAIR-STATE FORMULATION (v5):
+  W        = Whole-field pair state space (⊙_space × Φ_space)
+  [⊙⇄Φ]   = Coupled state where ⊙ and Φ mutually determine each other
+  F(Φ)     = Coupling function: field → whole
+  G(⊙)     = Coupling function: whole → field
+  E : W→W  = Energy operator on coupled states
+  i○^∞     = Infinite boundary apertures (where ○ = ∏ᵢ₌₁^∞ iₙ)
+  •^∞      = Infinite power lines (1.5D braided structure)
+  i•       = Center aperture (convergence point)
 
 DIMENSIONAL SPECTRUM:
   0D     = Pure energy/potential (no extension, no rotation)
