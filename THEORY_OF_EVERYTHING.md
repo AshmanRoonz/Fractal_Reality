@@ -106,6 +106,7 @@ email@ashmanroonz.ca
   - [§15.4 Why i Lives at 0.5D](#154-why-i-lives-at-05d)
   - [§15.5 Process³ Justification](#155-process³-justification)
   - [§15.6 Fractal Lensing at ○](#156-fractal-lensing-at-)
+  - [§15.7 The Trinity of Formulations on the Dimensional Ladder](#157-the-trinity-of-formulations-on-the-dimensional-ladder)
 - [Chapter XVI: Falsification](#chapter-xvi-falsification)
 - [Chapter XVII: The Master Loop](#chapter-xvii-the-master-loop)
 - [Chapter XVIII: The Fixed-Point Combinator](#chapter-xviii-the-fixed-point-combinator)
@@ -2954,6 +2955,81 @@ COMPARISON WITH 1.5D:
     2.5D: Fractal lensing across a surface (lensing through wholeness)
 
     Both add +0.5D fractal texture from aperture balance (β = 0.5)
+```
+
+### §15.7 The Trinity of Formulations on the Dimensional Ladder
+
+The dimensional ladder reveals that our three core equations each occupy distinct dimensional bands:
+
+```
+╔═════════════════════════════════════════════════════════════════════════╗
+║                                                                         ║
+║   IDENTITY (what IS):    ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])                     ║
+║                                 ↕                                       ║
+║   MECHANISM (how it breathes): [⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']     ║
+║                                 ↕                                       ║
+║   ITERATION (one step):  Φ' = ⊰ ∘ i ∘ ≻[Φ]                              ║
+║                                                                         ║
+╚═════════════════════════════════════════════════════════════════════════╝
+```
+
+**HOW EACH EQUATION SITS ON THE LADDER:**
+
+**Iteration — Φ (Mind / Field / 3D)**
+```
+Φ' = ⊰ ∘ i ∘ ≻[Φ]
+```
+One update step of the field. The dimensional path in each tick:
+- `≻[Φ]` — converging signals from 3D → 2D → 1D → toward 0D
+- `i` — filtering/rotating at the (0,1)D aperture band
+- `⊰` — re-emerging as a new 3D field Φ'
+
+*"Given how energy is flowing and aimed, what does the whole 3D pattern become next?"*
+
+**Identity — • (Soul / Center / 0D → 0–1D)**
+```
+⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+```
+Define `F(Φ) = ⊰ ∘ i ∘ ≻[Φ]`. Then `⊙ = fix(F)` = a Φ such that `F(Φ) = Φ`.
+- Anchored in 0D energy (how much can happen)
+- Shaped by the aperture band 0–1D (how potential is always aimed)
+
+*"The circumpunct is the configuration that remains itself under its own update rule."*
+
+**Mechanism — ○ (Body / Boundary / 1–2D)**
+```
+[⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']
+```
+The full circulation between center, boundary, and field:
+- `[⊙⇄Φ]` — current coupled soul–field state
+- `i○^∞` — aperture acting across all body interfaces (2D boundary ensemble)
+- `⊰ •^∞` — emergence radiated through the soul-array
+- `≻ i•` — re-convergence through the focal center-line (1D)
+- `[⊙'⇄Φ']` — updated coupled state
+
+*"How the system breathes energy across its boundaries while keeping soul and field coupled."*
+
+**ONE STORY, THREE CUTS:**
+
+| Cut | Equation | Question Answered | Dimensional Range |
+|-----|----------|-------------------|-------------------|
+| **Iteration** | `Φ' = ⊰ ∘ i ∘ ≻[Φ]` | "What happens this tick?" | 3D |
+| **Identity** | `⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])` | "What persists through all ticks?" | [0, 1)D |
+| **Mechanism** | `[⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']` | "How does the update propagate?" | [1, 2]D |
+
+**They're irreducible but interlocked:**
+- Iteration is the **step** of the mechanism
+- Mechanism is the **extended embodiment** of that step
+- Identity is the **fixed point** of that step
+
+```
+⊙_equation = Identity ⊗ Mechanism ⊗ Iteration
+
+    0D energy + (0–1D aperture)  → Identity
+    1–2D flows across boundaries → Mechanism
+    3D field updates             → Iteration
+
+    One kernel, three views, spanning 0D → 3D.
 ```
 
 ---
