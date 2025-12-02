@@ -72,61 +72,113 @@ Once aimed potential extends along a single direction over time:
 
 ---
 
-## §2 Updated Trinity Mapping
-
-The dimensional ladder maps precisely onto the Trinity of Formulations:
-
-### Identity — What IS
+## §2 The Trinity of Formulations
 
 ```
-⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║   IDENTITY (what IS):    ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])               ║
+║                                 ↕                                 ║
+║   MECHANISM (how it breathes): [⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ'] ║
+║                                 ↕                                 ║
+║   ITERATION (one step):  Φ' = ⊰ ∘ i ∘ ≻[Φ]                       ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
 ```
-
-| Component | Dimension | Role |
-|-----------|-----------|------|
-| Energy reservoir | 0D | How much can happen |
-| Aperture law *i* | (0,1)D | How it's angled/aimed |
-
-> **Identity = "this much potential, with this way of aiming it"**
-
-**Dimensional span:** [0, 1)D — from scalar potential through aperture orientation
 
 ---
 
-### Mechanism — How It Breathes
+## §3 How Each Equation Sits on the Ladder
 
-```
-[⊙ ⇄ Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙' ⇄ Φ']
-```
-
-| Component | Dimension | Role |
-|-----------|-----------|------|
-| Worldlines | 1D | Powered trajectories |
-| Surfaces | 2D | Exchange interfaces |
-
-> **Mechanism = how energy flows across boundaries**
-
-**Dimensional span:** [1, 2]D — from worldline dynamics through surface flux
-
----
-
-### Iteration — What Happens Next
+### Iteration — Φ (Mind / Field / 3D)
 
 ```
 Φ' = ⊰ ∘ i ∘ ≻[Φ]
 ```
 
-| Component | Dimension | Role |
-|-----------|-----------|------|
-| Field update | 3D | Volumetric configuration |
+**What it does:** One update step of the field.
 
-> **Iteration = what emerges from the mechanism**
+**Dimensional path in one step:**
+- `≻[Φ]` — converging signals from 2D boundaries / 1D lines
+- `i` — filtering / rotating in the 0–1D aperture band
+- `⊰` — re-emerging as a new 3D field Φ'
 
-**Dimensional span:** 3D — the full spatial pattern that results
+> **Interpretation:** "Given how energy is flowing and aimed, what does the whole 3D pattern become next?"
 
 ---
 
-## §3 Summary Table
+### Identity — • (Soul / Center / 0D → 0–1D)
+
+```
+⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+```
+
+Define `F(Φ) = ⊰ ∘ i ∘ ≻[Φ]`. Then:
+- **Iteration:** `Φ' = F(Φ)`
+- **Identity:** `⊙ = fix(F)` = a Φ such that `F(Φ) = Φ`
+
+**Dimensional role:**
+- Anchored in 0D energy (how much can happen)
+- Shaped by the aperture band 0–1D (how that potential is always aimed)
+
+> **Interpretation:** "The circumpunct is the configuration that remains itself under its own update rule, given its energy and aperture law."
+
+**Identity = the stable way a being keeps updating without losing itself.**
+
+---
+
+### Mechanism — ○ (Body / Boundary / 1–2D)
+
+```
+[⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']
+```
+
+**Shows the full circulation between center, boundary, and field:**
+- `[⊙⇄Φ]` — current coupled soul–field state
+- `i○^∞` — aperture acting across all body interfaces (2D boundary ensemble)
+- `⊰ •^∞` — emergence radiated through the soul-array
+- `≻ i•` — re-convergence through the focal center-line (1D)
+- `[⊙'⇄Φ']` — updated coupled state
+
+**Dimensional role:**
+- Lives on 1D worldlines and 2D surfaces where energy actually moves
+
+> **Interpretation:** "How the system breathes energy and information across its boundaries while keeping soul and field coupled."
+
+**Mechanism = the embodied plumbing of the update rule.**
+
+---
+
+## §4 How They Relate (One Story, Three Cuts)
+
+You can see them as three cuts through the same process:
+
+| Cut | Equation | Question Answered |
+|-----|----------|-------------------|
+| **Iteration** | `Φ' = ⊰ ∘ i ∘ ≻[Φ]` | "What happens this tick?" |
+| **Identity** | `⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])` | "What persists through all ticks given its energy and aperture?" |
+| **Mechanism** | `[⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']` | "How does that ongoing update propagate along lines and across surfaces in a real body?" |
+
+**They're irreducible but interlocked:**
+- Iteration is the **step** of the mechanism
+- Mechanism is the **extended embodiment** of that step
+- Identity is the **fixed point** of that step
+
+So the full "master equation" is:
+
+```
+⊙_equation = Identity ⊗ Mechanism ⊗ Iteration
+```
+
+- **0D energy + (0–1D aperture)** → Identity
+- **1–2D flows across boundaries** → Mechanism  
+- **3D field updates** → Iteration
+
+**One kernel, three views, spanning 0D → 3D.**
+
+---
+
+## §5 Summary Table
 
 | Form | Aspect | Dimensional Range | Knows... |
 |------|--------|-------------------|----------|
@@ -136,7 +188,7 @@ The dimensional ladder maps precisely onto the Trinity of Formulations:
 
 ---
 
-## §4 The Complete Dimensional Flow
+## §6 The Complete Dimensional Flow
 
 The master kernel orchestrates the full dimensional ascent:
 
@@ -165,7 +217,7 @@ Where:
 
 ---
 
-## §5 Physical Interpretation
+## §7 Physical Interpretation
 
 This dimensional ladder isn't arbitrary — it reflects the **geometric necessity** of how potential becomes actual:
 
@@ -178,7 +230,7 @@ Each step is **irreducible**: you cannot skip dimensions. This is why the Trinit
 
 ---
 
-## §6 Testable Predictions
+## §8 Testable Predictions
 
 The dimensional ladder generates specific predictions:
 
