@@ -2476,7 +2476,7 @@ CRITICAL DISTINCTION:
 ```
 i OCCURS AT ALL β VALUES:
 
-    β ≈ 0.0: Pure ⊰, no • (photons)
+    β > 0.0: Pure ⊰, infinitesimal • (photons)
     β ≈ 0.1: Minimal • (rocks)
     β ≈ 0.3: Weak • (simple organisms)
     β ≈ 0.5: STABLE • (mammals, humans)
