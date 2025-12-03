@@ -639,7 +639,7 @@ The texture sector constants all derive from the φ³ family, where φ = (1+√5
 
 - **7/8** = kernel normalization factor (from A = 7/(8πR^(7/2)))
 - **φ³** = volumetric golden scaling (3D texture)
-- **Physical meaning:** Mass gap detection threshold for [ICE] validation
+- **Physical meaning:** Mass gap detection threshold for (○, Φ, •) validation
 
 **4. Quantum validation noise α_quantum:**
 
