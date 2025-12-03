@@ -120,6 +120,7 @@ Turbulence Cascades  | 1.51 ± 0.03      | 1.500     | <1%    | ✓
 
 | Document | Description |
 |----------|-------------|
+| **[papers/circumpunct_framework_physicists.md](papers/circumpunct_framework_physicists.md)** | ⭐ **Quick-start for working physicists** — rigorous formulation with explicit derivations of QM & GR limits |
 | **[64bit_reality/](64bit_reality/)** | 64-state architecture, particle mapping |
 | **[64bit_reality/the_one_third_rule.md](64bit_reality/the_one_third_rule.md)** | Why 22/64 ≈ 1/3 of states are physical |
 | **[64bit_reality/quarter_circle_to_cone_geometry_PUBLICATION_READY.md](64bit_reality/quarter_circle_to_cone_geometry_PUBLICATION_READY.md)** | 68°/22° cone derivation |

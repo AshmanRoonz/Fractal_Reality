@@ -28,6 +28,17 @@ We welcome rigorous critique and attempts to falsify. Please email for peer revi
 ```
 email@ashmanroonz.ca
 ```
+
+---
+
+### For Working Physicists: Quick-Start Formulation
+
+**[circumpunct_framework_physicists.md](papers/circumpunct_framework_physicists.md)** — A rigorous mathematical formulation designed for peer review. Strips away metaphors and focuses on explicit spaces, operators, kernels, and limits. Includes:
+- Explicit derivation of Schrödinger equation from kernel convolution (§4)
+- Einstein equations from coarse-grained braid structure (§5)
+- One-page cheat sheet for quick reference (§7)
+- Testable predictions with falsification criteria (§6)
+
 ---
 
 ## Table of Contents
