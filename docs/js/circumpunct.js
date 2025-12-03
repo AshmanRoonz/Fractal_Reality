@@ -124,9 +124,21 @@
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        centerX = canvas.width / 2;
-        centerY = canvas.height / 2;
-        boundaryRadius = Math.min(canvas.width, canvas.height) * 0.18; // The ○ boundary
+
+        // Get the actual position of the circumpunct SVG element
+        const circumpunctEl = document.querySelector('.circumpunct-container');
+        if (circumpunctEl) {
+            const rect = circumpunctEl.getBoundingClientRect();
+            centerX = rect.left + rect.width / 2;
+            centerY = rect.top + rect.height / 2;
+            // Scale boundary radius based on the actual circumpunct size
+            boundaryRadius = Math.min(rect.width, rect.height) * 0.4; // Match SVG proportions
+        } else {
+            // Fallback to canvas center
+            centerX = canvas.width / 2;
+            centerY = canvas.height / 2;
+            boundaryRadius = Math.min(canvas.width, canvas.height) * 0.18;
+        }
         soulRadius = boundaryRadius * 0.23; // The • soul
         initParticles();
         initAurora();
