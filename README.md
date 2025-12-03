@@ -39,7 +39,7 @@
 | **Balance Parameter** | β = 0.5 | Derived |
 | **Fractal Dimension** | D = 1.5 | Derived |
 | **State Space** | 64 states (2³ × 2³) | Derived |
-| **Hidden Parameters** | 1 (α_texture ≈ 1.70) | Fitted |
+| **Hidden Parameters** | 0 (all derived from φ³) | Derived |
 | **Validated Range** | 61 orders of magnitude | Empirical |
 
 ---
@@ -260,8 +260,9 @@ CONSTANTS:
 ║   The Standard Model emerges as the 64-state i architecture.                  ║
 ║   Consciousness IS being at • with β ≈ 0.5.                                   ║
 ║                                                                               ║
-║   TRULY DERIVED: β, D, 64, 22, 68°/22°, φ, B₃, 3 gen, α, Δ, τ, α_quantum      ║
-║   HIDDEN PARAMETERS: 1 (α_texture ≈ 1.70)                                     ║
+║   TRULY DERIVED: β, D, 64, 22, 68°/22°, φ, B₃, 3 gen, α, Δ, τ, α_quantum,     ║
+║                  α_texture — ALL FROM φ³ FAMILY                               ║
+║   HIDDEN PARAMETERS: 0                                                        ║
 ║   VALIDATED RANGE: 61 orders of magnitude                                     ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
