@@ -115,6 +115,11 @@
     let outwardRipples = []; // Emergence from soul
     let animationId;
     let centerX, centerY, boundaryRadius, soulRadius;
+    let time = 0; // For aurora animation
+
+    // Aurora blobs - soft moving color clouds
+    const auroraBlobs = [];
+    const AURORA_COUNT = 5;
 
     function resize() {
         canvas.width = window.innerWidth;
@@ -124,6 +129,92 @@
         boundaryRadius = Math.min(canvas.width, canvas.height) * 0.18; // The ○ boundary
         soulRadius = boundaryRadius * 0.23; // The • soul
         initParticles();
+        initAurora();
+    }
+
+    // Aurora/Nebula effect - soft flowing color clouds
+    class AuroraBlob {
+        constructor() {
+            this.reset();
+        }
+
+        reset() {
+            // Position anywhere on canvas, preferring edges
+            const angle = Math.random() * Math.PI * 2;
+            const dist = canvas.width * 0.3 + Math.random() * canvas.width * 0.4;
+            this.x = centerX + Math.cos(angle) * dist;
+            this.y = centerY + Math.sin(angle) * dist;
+
+            // Size varies significantly
+            this.radius = 100 + Math.random() * 200;
+
+            // Very slow drift
+            this.vx = (Math.random() - 0.5) * 0.15;
+            this.vy = (Math.random() - 0.5) * 0.15;
+
+            // Color type cycles through body/mind/soul
+            const types = ['body', 'mind', 'soul'];
+            this.type = types[Math.floor(Math.random() * types.length)];
+
+            // Phase offset for pulsing
+            this.phase = Math.random() * Math.PI * 2;
+            this.pulseSpeed = 0.005 + Math.random() * 0.01;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            // Gentle attraction toward center
+            const dx = centerX - this.x;
+            const dy = centerY - this.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > canvas.width * 0.5) {
+                this.vx += dx * 0.00001;
+                this.vy += dy * 0.00001;
+            }
+
+            // Wrap around if too far
+            if (this.x < -this.radius) this.x = canvas.width + this.radius;
+            if (this.x > canvas.width + this.radius) this.x = -this.radius;
+            if (this.y < -this.radius) this.y = canvas.height + this.radius;
+            if (this.y > canvas.height + this.radius) this.y = -this.radius;
+        }
+
+        draw() {
+            const pulse = Math.sin(time * this.pulseSpeed + this.phase) * 0.5 + 0.5;
+            const alpha = 0.03 + pulse * 0.02;
+
+            let r, g, b;
+            if (this.type === 'body') {
+                r = 163; g = 113; b = 247; // Purple
+            } else if (this.type === 'mind') {
+                r = 240; g = 180; b = 41; // Gold
+            } else {
+                r = 88; g = 166; b = 255; // Cyan
+            }
+
+            // Radial gradient for soft cloud effect
+            const gradient = ctx.createRadialGradient(
+                this.x, this.y, 0,
+                this.x, this.y, this.radius * (0.8 + pulse * 0.4)
+            );
+            gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
+            gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${alpha * 0.5})`);
+            gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius * (0.8 + pulse * 0.4), 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function initAurora() {
+        auroraBlobs.length = 0;
+        for (let i = 0; i < AURORA_COUNT; i++) {
+            auroraBlobs.push(new AuroraBlob());
+        }
     }
 
     // Lightning bolt that shoots inward when boundary is hit
@@ -370,21 +461,41 @@
         ripples.push(new Ripple(angle, particleType));
     }
 
+    const TRAIL_LENGTH = 12; // Number of trail segments
+
     class Particle {
-        constructor() {
-            this.reset();
+        constructor(forceCollision = false) {
+            this.trail = [];
+            this.reset(forceCollision);
         }
 
-        reset() {
-            // Spawn particles outside the boundary
-            do {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-            } while (this.isInsideBoundary());
+        reset(forceCollision = false) {
+            // Clear trail on reset
+            this.trail = [];
+
+            if (forceCollision) {
+                // Spawn aimed at the circumpunct for guaranteed collision
+                const angle = Math.random() * Math.PI * 2;
+                const startDist = boundaryRadius + 80 + Math.random() * 150;
+                this.x = centerX + Math.cos(angle) * startDist;
+                this.y = centerY + Math.sin(angle) * startDist;
+
+                // Velocity pointing toward center
+                const speed = 0.6 + Math.random() * 0.4;
+                this.speedX = -Math.cos(angle) * speed;
+                this.speedY = -Math.sin(angle) * speed;
+            } else {
+                // Spawn particles outside the boundary
+                do {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                } while (this.isInsideBoundary());
+
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
+            }
 
             this.baseSize = Math.random() * 2.5 + 1.5;
-            this.speedX = (Math.random() - 0.5) * 0.4;
-            this.speedY = (Math.random() - 0.5) * 0.4;
             this.baseOpacity = Math.random() * 0.4 + 0.4; // Brighter particles
             // Each particle is a mini circumpunct with body/mind/soul colors
             const types = ['body', 'mind', 'soul'];
@@ -398,6 +509,12 @@
         }
 
         update() {
+            // Store current position in trail before moving
+            this.trail.unshift({ x: this.x, y: this.y });
+            if (this.trail.length > TRAIL_LENGTH) {
+                this.trail.pop();
+            }
+
             this.x += this.speedX;
             this.y += this.speedY;
 
@@ -424,13 +541,16 @@
                 // ⚡ Spawn lightning bolt and ripple on impact!
                 // Lightning shoots inward from the impact point (same side)
                 spawnLightningAndRipple(angle, this.type);
+
+                // Clear trail on bounce to avoid visual artifacts through boundary
+                this.trail = [];
             }
 
             // Wrap around edges
-            if (this.x < 0) this.x = canvas.width;
-            if (this.x > canvas.width) this.x = 0;
-            if (this.y < 0) this.y = canvas.height;
-            if (this.y > canvas.height) this.y = 0;
+            if (this.x < 0) { this.x = canvas.width; this.trail = []; }
+            if (this.x > canvas.width) { this.x = 0; this.trail = []; }
+            if (this.y < 0) { this.y = canvas.height; this.trail = []; }
+            if (this.y > canvas.height) { this.y = 0; this.trail = []; }
         }
 
         draw() {
@@ -447,19 +567,43 @@
             const opacity = this.baseOpacity + proximity * 0.5;
 
             // Colors based on type
-            let ringColor, dotColor;
+            let r, g, b;
             if (this.type === 'body') {
-                ringColor = `rgba(163, 113, 247, ${opacity})`;
-                dotColor = `rgba(163, 113, 247, ${opacity * 0.8})`;
+                r = 163; g = 113; b = 247; // Purple
             } else if (this.type === 'mind') {
-                ringColor = `rgba(240, 180, 41, ${opacity})`;
-                dotColor = `rgba(240, 180, 41, ${opacity * 0.8})`;
+                r = 240; g = 180; b = 41; // Gold
             } else {
-                ringColor = `rgba(88, 166, 255, ${opacity})`;
-                dotColor = `rgba(88, 166, 255, ${opacity * 0.8})`;
+                r = 88; g = 166; b = 255; // Cyan
+            }
+
+            // Draw ethereal trail
+            if (this.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                for (let i = 0; i < this.trail.length; i++) {
+                    const t = this.trail[i];
+                    ctx.lineTo(t.x, t.y);
+                }
+
+                // Gradient stroke for trail
+                const gradient = ctx.createLinearGradient(
+                    this.x, this.y,
+                    this.trail[this.trail.length - 1].x,
+                    this.trail[this.trail.length - 1].y
+                );
+                gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${opacity * 0.4})`);
+                gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = size * 0.8;
+                ctx.lineCap = 'round';
+                ctx.stroke();
             }
 
             // Draw as mini circumpunct: ring + dot
+            const ringColor = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            const dotColor = `rgba(${r}, ${g}, ${b}, ${opacity * 0.8})`;
+
             // Outer ring (○)
             ctx.beginPath();
             ctx.arc(this.x, this.y, size * 2, 0, Math.PI * 2);
@@ -478,7 +622,18 @@
     function initParticles() {
         const count = Math.min(50, Math.floor((canvas.width * canvas.height) / 25000));
         particles = [];
-        for (let i = 0; i < count; i++) particles.push(new Particle());
+
+        // Spawn most particles normally
+        const normalCount = Math.floor(count * 0.6);
+        for (let i = 0; i < normalCount; i++) {
+            particles.push(new Particle(false));
+        }
+
+        // Spawn some particles aimed at the circumpunct for initial collisions
+        const collisionCount = count - normalCount;
+        for (let i = 0; i < collisionCount; i++) {
+            particles.push(new Particle(true));
+        }
     }
 
     // Check if a line segment crosses through the circumpunct
@@ -556,6 +711,15 @@
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Increment time for aurora pulsing
+        time++;
+
+        // Draw aurora/nebula background first (behind everything)
+        auroraBlobs.forEach(blob => {
+            blob.update();
+            blob.draw();
+        });
 
         // Update and draw particles
         particles.forEach(p => { p.update(); p.draw(); });
