@@ -6,6 +6,51 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
 
 ---
 
+## Table of Contents
+
+- [0. Aim and Scope](#0-aim-and-scope)
+- [1. Primitive Kinematical Objects](#1-primitive-kinematical-objects)
+  - [1.1 Base Spacetime](#11-base-spacetime)
+  - [1.2 Boundary Space (○)](#12-boundary-space-)
+  - [1.3 Field Space (Φ)](#13-field-space-φ)
+  - [1.4 Aperture (•)](#14-aperture-)
+  - [1.5 Circumpunct Configuration Space (⊙)](#15-circumpunct-configuration-space-)
+- [2. Primitive Dynamical Objects](#2-primitive-dynamical-objects)
+  - [2.1 Flow Operators (≻, i, ⊰)](#21-flow-operators---i-)
+  - [2.2 Mirror / Adjoint Flow Operators (⊱, ≺)](#22-mirror--adjoint-flow-operators--)
+  - [2.3 Balance Parameter (β)](#23-balance-parameter-β)
+  - [2.4 Canonical Radial Kernel and Worldline Dimension](#24-canonical-radial-kernel-and-worldline-dimension)
+- [3. Core Postulates (Physics Version)](#3-core-postulates-physics-version)
+  - [Postulate 1 — Circumpunct Kinematics](#postulate-1--circumpunct-kinematics)
+  - [Postulate 2 — Process Evolution](#postulate-2--process-evolution)
+  - [Postulate 3 — Aperture Balance and the Imaginary Unit](#postulate-3--aperture-balance-and-the-imaginary-unit)
+  - [Postulate 4 — Local Quantum Limit (Unitary Evolution)](#postulate-4--local-quantum-limit-unitary-evolution)
+  - [Postulate 5 — Geometric / GR Limit](#postulate-5--geometric--gr-limit)
+- [4. Schrödinger Equation from U = ⊰ ∘ i ∘ ≻](#4-schrödinger-equation-from-u----i--)
+  - [4.1 Simplifying Assumptions](#41-simplifying-assumptions)
+  - [4.2 Explicit Computation for the √r Kernel](#42-explicit-computation-for-the-r-kernel)
+- [5. Metric and Einstein Equations from ⊙](#5-metric-and-einstein-equations-from-)
+  - [5.1 Coarse-Grained Braid Structure → Redshift Factor](#51-coarse-grained-braid-structure--redshift-factor)
+  - [5.2 Stress-Energy from Field and Boundary](#52-stress-energy-from-field-and-boundary)
+  - [5.3 Gravitational Action (S_circ)](#53-gravitational-action-s_circ)
+  - [5.4 Einstein Equations](#54-einstein-equations)
+- [6. Testable Predictions and Current Status](#6-testable-predictions-and-current-status)
+  - [6.1 Zero Free Parameters (Established)](#61-zero-free-parameters-established)
+  - [6.2 Fitted Parameters (Phenomenological)](#62-fitted-parameters-phenomenological)
+  - [6.3 Falsifiable Predictions](#63-falsifiable-predictions)
+  - [6.4 Critical Falsification Tests](#64-critical-falsification-tests)
+- [7. One-Page Cheat Sheet](#7-one-page-cheat-sheet)
+- [8. Connection to Full Framework](#8-connection-to-full-framework)
+- [9. Open Questions and Future Work](#9-open-questions-and-future-work)
+  - [9.1 Theoretical Development Needed](#91-theoretical-development-needed)
+  - [9.2 Empirical Validation Required](#92-empirical-validation-required)
+  - [9.3 Computational Implementation](#93-computational-implementation)
+- [10. References to Full Framework](#10-references-to-full-framework)
+- [Acknowledgments](#acknowledgments)
+- [Appendix: Notation Reference](#appendix-notation-reference)
+
+---
+
 ## 0. Aim and Scope
 
 The circumpunct framework models the universe as a *whole-with-parts* object:
