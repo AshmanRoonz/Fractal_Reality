@@ -6,6 +6,36 @@ This branch contains the complete scientific formalization of the Fractal Realit
 
 ---
 
+## 🎯 **FOR WORKING PHYSICISTS: QUICK-START FORMULATION**
+
+### **The Circumpunct Framework: A Mathematical Formulation for Working Physicists**
+**File:** [`circumpunct_framework_physicists.md`](circumpunct_framework_physicists.md)
+**Author:** Circumpunct Framework Development Team
+**Date:** December 2024
+**Status:** 🔬 **PEER-REVIEW READY - RIGOROUS MATHEMATICAL FORMULATION** 🔬
+
+**A streamlined formulation designed for working physicists. Strips away metaphors and focuses on spaces, operators, and limits to standard QM and GR.**
+
+**What This Paper Provides:**
+- **Explicit Mathematical Spaces**: Hilbert spaces ℋ_○, ℋ_Φ, ℋ_• for boundary, field, and aperture
+- **Kernel-Based Dynamics**: Convergence (≻), aperture rotation (i), emergence (⊰) as integral operators
+- **Schrödinger Derivation**: Complete derivation from √r kernel convolution (§4.2)
+- **Einstein Equations**: Coarse-grained braid structure → metric (§5)
+- **One-Page Cheat Sheet**: Quick reference for all spaces, operators, and key equations (§7)
+- **Testable Predictions**: D=1.5 universality, braid-metric correlation, modified gravity signatures (§6)
+
+**Key Results:**
+- **Zero Free Parameters**: β=1/2 from symmetry, D=1.5 from entropy
+- **QM Limit**: iℏ∂Φ/∂t = HΦ emerges from U(Δt) = ⊰∘i∘≻
+- **GR Limit**: G_μν + Λg_μν = 8πGT_μν from braid accumulation
+- **Critical Falsification**: D ≠ 1.5 ± 0.05 in ⊙-structured systems falsifies framework
+
+**Perfect for:** Physicists wanting mathematical rigor, peer reviewers, those who prefer equations over metaphors
+
+**Connection to full theory:** See **[THEORY_OF_EVERYTHING.md](../THEORY_OF_EVERYTHING.md)** for complete framework including consciousness, ethics, and philosophical implications.
+
+---
+
 ## 🔥 **THE FOUNDATION PAPER: THE EQUATION OF EXISTENCE**
 
 ### **How 1 = 0.5 ⊗ 0.5 Creates All of Reality**
