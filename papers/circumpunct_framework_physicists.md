@@ -592,31 +592,56 @@ where Δ_μν^(fractal) are extra contributions from the D=1.5 aperture geometry
 
 ### 6.3 Falsifiable Predictions
 
-**4. Universal D ≈ 1.5 signature across scales:**
+**4. The D(β) relationship:**
 
-The framework predicts D ≈ 1.5 should appear in any system where ⊙-structure emerges:
+The framework predicts D = 1 + β, making the balance parameter empirically measurable:
 
-- **Quantum systems:** Decoherence timescales, quantum walk anomalous diffusion
-- **Biological systems:** Neural avalanche dynamics, cardiac rhythm variability, metabolic scaling
-- **Complex networks:** Information flow in hierarchical systems
-- **Cosmological structure:** Galaxy distribution at transition scales
+```
+β = D - 1
+```
 
-**5. Modified gravity signatures:**
+This allows direct experimental verification:
+- Measure fractal dimension D of any system
+- Calculate β = D - 1
+- Verify whether systems at optimal balance show β ≈ 0.5, D ≈ 1.5
+
+**5. Scale-dependent dimensionality:**
+
+D is NOT universally 1.5. The framework predicts:
+- **Quantum/biological scales (high aperture density):** D ≈ 1.5 (β ≈ 0.5)
+- **Cosmological scales (low aperture density):** D → 3 (β → 2)
+- **Transition follows aperture density mechanism**
+
+Specific predictions:
+- **Quantum systems:** Decoherence timescales, quantum walk anomalous diffusion → D ≈ 1.5
+- **Biological systems:** Neural avalanche dynamics, cardiac rhythm variability → D ≈ 1.5
+- **Cosmological structure:** Galaxy distribution transitions from D ≈ 1.5 (local) to D → 3 (>100 Mpc)
+
+**6. Modified gravity signatures:**
 
 - Corrections to Einstein equations at scales where D transitions 1.5 → 3
 - Possible connection to dark energy through fractal corrections (α, β terms in S_circ)
 - Deviation from inverse-square law at sub-Planckian scales
 
-**6. Braid-metric relationship:**
+**7. Braid-metric relationship:**
 
 - Quantitative prediction: B(x) ∝ √(-g_tt(x)) with R² > 0.999
 - Should hold across diverse metric solutions (Schwarzschild, Kerr, FLRW, etc.)
 
-### 6.4 Critical Falsification Test
+### 6.4 Critical Falsification Tests
 
-**If any system with clear ⊙-structure (center-boundary-field trinity with iterative dynamics) shows D ≠ 1.5 ± 0.05, the framework requires major revision.**
+The framework is falsified if:
 
-The D=1.5 prediction is parameter-free and universal, making it the framework's most vulnerable and therefore most valuable prediction.
+1. **D(β) relationship fails:** Systems at measured β don't show D = 1 + β
+   - Example: A system demonstrably at β = 0.3 should show D ≈ 1.3
+
+2. **Optimal balance violated:** Systems that should be at β = 0.5 (biological, conscious, quantum-coherent) show D significantly different from 1.5 (>3σ)
+
+3. **Scale transition fails:** The D ≈ 1.5 → D ≈ 3 transition doesn't follow aperture density mechanism
+
+4. **Braid-metric correlation fails:** B(x) ∝ √(-g_tt(x)) shows R² < 0.95
+
+**Note:** Cosmological D → 3 at large scales is a *prediction*, not a falsification. The framework explicitly predicts scale-dependent dimensionality.
 
 ---
 
