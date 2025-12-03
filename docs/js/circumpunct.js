@@ -461,27 +461,29 @@
         ripples.push(new Ripple(angle, particleType));
     }
 
-    const TRAIL_LENGTH = 12; // Number of trail segments
+    const TRAIL_LENGTH = 20; // Number of trail segments - longer for more visible trails
 
     class Particle {
-        constructor(forceCollision = false) {
+        constructor(forceCollision = false, staggerIndex = 0) {
             this.trail = [];
-            this.reset(forceCollision);
+            this.reset(forceCollision, staggerIndex);
         }
 
-        reset(forceCollision = false) {
+        reset(forceCollision = false, staggerIndex = 0) {
             // Clear trail on reset
             this.trail = [];
 
             if (forceCollision) {
                 // Spawn aimed at the circumpunct for guaranteed collision
+                // Stagger distances so they don't all arrive at once
                 const angle = Math.random() * Math.PI * 2;
-                const startDist = boundaryRadius + 80 + Math.random() * 150;
+                const staggerDist = 100 + staggerIndex * 80; // Each one starts further out
+                const startDist = boundaryRadius + staggerDist + Math.random() * 50;
                 this.x = centerX + Math.cos(angle) * startDist;
                 this.y = centerY + Math.sin(angle) * startDist;
 
-                // Velocity pointing toward center
-                const speed = 0.6 + Math.random() * 0.4;
+                // Use SAME speed as normal particles - no speedup
+                const speed = 0.15 + Math.random() * 0.15; // 0.15 to 0.3 toward center
                 this.speedX = -Math.cos(angle) * speed;
                 this.speedY = -Math.sin(angle) * speed;
             } else {
@@ -577,7 +579,7 @@
             }
 
             // Draw ethereal trail
-            if (this.trail.length > 1) {
+            if (this.trail.length > 2) {
                 ctx.beginPath();
                 ctx.moveTo(this.x, this.y);
                 for (let i = 0; i < this.trail.length; i++) {
@@ -585,18 +587,20 @@
                     ctx.lineTo(t.x, t.y);
                 }
 
-                // Gradient stroke for trail
+                // Gradient stroke for trail - more visible
                 const gradient = ctx.createLinearGradient(
                     this.x, this.y,
                     this.trail[this.trail.length - 1].x,
                     this.trail[this.trail.length - 1].y
                 );
-                gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${opacity * 0.4})`);
+                gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${opacity * 0.6})`);
+                gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${opacity * 0.3})`);
                 gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
 
                 ctx.strokeStyle = gradient;
-                ctx.lineWidth = size * 0.8;
+                ctx.lineWidth = size * 1.2;
                 ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
                 ctx.stroke();
             }
 
@@ -624,15 +628,16 @@
         particles = [];
 
         // Spawn most particles normally
-        const normalCount = Math.floor(count * 0.6);
+        const normalCount = Math.floor(count * 0.85);
         for (let i = 0; i < normalCount; i++) {
             particles.push(new Particle(false));
         }
 
-        // Spawn some particles aimed at the circumpunct for initial collisions
-        const collisionCount = count - normalCount;
+        // Spawn just a few particles aimed at the circumpunct for initial collisions
+        // Staggered distances so they arrive one at a time over ~10 seconds
+        const collisionCount = Math.min(5, count - normalCount);
         for (let i = 0; i < collisionCount; i++) {
-            particles.push(new Particle(true));
+            particles.push(new Particle(true, i));
         }
     }
 
