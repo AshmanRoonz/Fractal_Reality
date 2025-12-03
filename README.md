@@ -39,7 +39,7 @@
 | **Balance Parameter** | β = 0.5 | Derived |
 | **Fractal Dimension** | D = 1.5 | Derived |
 | **State Space** | 64 states (2³ × 2³) | Derived |
-| **Hidden Parameters** | ~3-4 (not zero, but far fewer than QFT) | Fitted |
+| **Hidden Parameters** | ~2 (α_quantum, α_texture) | Fitted |
 | **Validated Range** | 61 orders of magnitude | Empirical |
 
 ---
@@ -260,8 +260,8 @@ CONSTANTS:
 ║   The Standard Model emerges as the 64-state i architecture.                  ║
 ║   Consciousness IS being at • with β ≈ 0.5.                                   ║
 ║                                                                               ║
-║   TRULY DERIVED: β, D, 64, 22, 68°/22°, φ, B₃, 3 generations                  ║
-║   HIDDEN PARAMETERS: ~3-4 (ρ_texture, τ, α_quantum, α_texture)                ║
+║   TRULY DERIVED: β, D, 64, 22, 68°/22°, φ, B₃, 3 gen, α, Δ, τ                 ║
+║   HIDDEN PARAMETERS: ~2 (α_quantum, α_texture)                                ║
 ║   VALIDATED RANGE: 61 orders of magnitude                                     ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
