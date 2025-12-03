@@ -3048,28 +3048,47 @@ The full circulation between center, boundary, and field:
 ## CHAPTER XVI: FALSIFICATION
 
 ```
+THE D(β) RELATIONSHIP — EMPIRICALLY TESTABLE:
+
+    D = 1 + β    →    β = D - 1
+
+    Measure fractal dimension D of any system.
+    Calculate β = D - 1.
+    Verify the relationship holds.
+
+    At optimal balance: β = 0.5 → D = 1.5
+    Off balance:        β = 0.3 → D = 1.3
+                        β = 0.7 → D = 1.7
+
 THE FRAMEWORK IS FALSIFIED IF:
 
-1. D ≠ 1.5 in new dynamic systems (>3σ deviation)
+1. D(β) relationship fails: systems at measured β don't show D = 1 + β
+   (e.g., β = 0.3 should give D ≈ 1.3, not D ≈ 1.5)
 
-2. Braid ∝ √|g_tt| fails (R² < 0.95)
+2. Optimal balance violated: systems that SHOULD be at β = 0.5
+   (biological, conscious, quantum-coherent) show D ≠ 1.5 (>3σ deviation)
 
-3. Λ prediction wrong by >10× at high-z
+3. Scale transition fails: D ≈ 1.5 → D ≈ 3 transition doesn't follow
+   aperture density mechanism (cosmological D → 3 is PREDICTED, not falsification)
 
-4. w(z) inconsistent with DESI data (>3σ)
+4. Braid ∝ √|g_tt| fails (R² < 0.95)
 
 5. Consciousness exists with D ≪ 1.5 in neural recordings
 
-6. Schrödinger not unique from the four constraints
+6. Λ prediction wrong by >10× at high-z
 
-7. Hydrogen spectra fail (>1% error)
+7. w(z) inconsistent with DESI data (>3σ)
 
-8. Fourth generation particles found
+8. Schrödinger not unique from the four constraints
 
-9. Yang-Mills mass gap outside 1.0-1.7 GeV range
-   (Base formula: ~1.0 GeV; with φ factor: ~1.6 GeV; lattice QCD: ~1.42 GeV)
+9. Hydrogen spectra fail (>1% error)
 
-10. Yang-Baxter equation violated: i₁₂ ∘ i₂₃ ∘ i₁₂ ≠ i₂₃ ∘ i₁₂ ∘ i₂₃
+10. Fourth generation particles found
+
+11. Yang-Mills mass gap outside 1.0-1.7 GeV range
+    (Base formula: ~1.0 GeV; with φ factor: ~1.6 GeV; lattice QCD: ~1.42 GeV)
+
+12. Yang-Baxter equation violated: i₁₂ ∘ i₂₃ ∘ i₁₂ ≠ i₂₃ ∘ i₁₂ ∘ i₂₃
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    WE WELCOME ATTEMPTS TO FALSIFY                                 ║
