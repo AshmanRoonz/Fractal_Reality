@@ -36,9 +36,10 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
   - [5.4 Einstein Equations](#54-einstein-equations)
 - [6. Testable Predictions and Current Status](#6-testable-predictions-and-current-status)
   - [6.1 Zero Free Parameters (Established)](#61-zero-free-parameters-established)
-  - [6.2 Fitted Parameters (Phenomenological)](#62-fitted-parameters-phenomenological)
-  - [6.3 Falsifiable Predictions](#63-falsifiable-predictions)
-  - [6.4 Critical Falsification Tests](#64-critical-falsification-tests)
+  - [6.2 The φ³ Family (Derived Texture Constants)](#62-the-φ³-family-derived-texture-constants)
+  - [6.3 Open Derivations (Phenomenological)](#63-open-derivations-phenomenological)
+  - [6.4 Falsifiable Predictions](#64-falsifiable-predictions)
+  - [6.5 Critical Falsification Tests](#65-critical-falsification-tests)
 - [7. One-Page Cheat Sheet](#7-one-page-cheat-sheet)
 - [8. Connection to Full Framework](#8-connection-to-full-framework)
 - [9. Open Questions and Future Work](#9-open-questions-and-future-work)
@@ -626,18 +627,74 @@ where Δ_μν^(fractal) are extra contributions from the D=1.5 aperture geometry
 - **Status:** Exact from information-theoretic balance condition
 - **Derivation:** Shannon entropy of binary choice at optimal balance
 
-### 6.2 Fitted Parameters (Phenomenological)
+### 6.2 The φ³ Family (Derived Texture Constants)
 
-**3. Lepton mass ratios:**
+The texture sector constants all derive from the φ³ family, where φ = (1+√5)/2:
+
+**3. SNR threshold τ:**
+
+```
+τ = (7/8)φ³ = 3.7065594...
+```
+
+- **7/8** = kernel normalization factor (from A = 7/(8πR^(7/2)))
+- **φ³** = volumetric golden scaling (3D texture)
+- **Physical meaning:** Mass gap detection threshold for [ICE] validation
+
+**4. Quantum validation noise α_quantum:**
+
+```
+α_quantum = α × τ = (1/137.036) × 3.7066 = 0.02705
+```
+
+- **α** = fine structure constant (EM coupling at interface)
+- **τ** = SNR threshold from above
+- **Physical meaning:** Effective noise in textured aperture field
+- **Empirical match:** 0.027 (within 0.2%)
+
+**5. Texture amplitude α_texture:**
+
+```
+α_texture = (2/5)φ³ = 1.6944272
+```
+
+Equivalent forms:
+- **(2/5)φ³** = primary definition (fractal/volumetric)
+- **(16/35)τ** = linked to τ via rational structure
+- **πφ/3** ≈ 1.6944 = circumpunct form (circle × golden / triad)
+
+**Structural interpretation of 16/35:**
+
+```
+16 = 2⁴ = microtexture sector (16-state window of 64-state lattice)
+35 = C(7,3) = triadic channels across 7 truth axes
+
+α_texture = (16/35)τ
+          = "τ per 16-state microsector, averaged over 35 triadic channels"
+```
+
+**Summary: Zero fitted texture parameters**
+
+| Constant | Formula | Value | Status |
+|----------|---------|-------|--------|
+| τ | (7/8)φ³ | 3.7066 | DERIVED |
+| α_quantum | ατ | 0.02705 | DERIVED |
+| α_texture | (2/5)φ³ | 1.6944 | DERIVED |
+
+The **only external constant** is α (fine structure). Everything else is φ, π, and rational structure from the circumpunct geometry.
+
+### 6.3 Open Derivations (Phenomenological)
+
+**6. Lepton mass ratios:**
 - **Empirical fits:**
   - m_μ/m_e ≈ 206.77
   - m_τ/m_e ≈ 3477.6
 - **Framework formulas:** Fit experimental values within <0.13% error
 - **Status:** Awaiting first-principles derivation from gauge structure and 64-state fiber dynamics
 
-### 6.3 Falsifiable Predictions
+### 6.4 Falsifiable Predictions
 
-**4. The D(β) relationship:**
+**7. The D(β) relationship:**
 
 The framework predicts D = 1 + β, making the balance parameter empirically measurable:
 
@@ -650,7 +707,7 @@ This allows direct experimental verification:
 - Calculate β = D - 1
 - Verify whether systems at optimal balance show β ≈ 0.5, D ≈ 1.5
 
-**5. Scale-dependent dimensionality:**
+**8. Scale-dependent dimensionality:**
 
 D is NOT universally 1.5. The framework predicts:
 - **Quantum/biological scales (high aperture density):** D ≈ 1.5 (β ≈ 0.5)
@@ -662,18 +719,18 @@ Specific predictions:
 - **Biological systems:** Neural avalanche dynamics, cardiac rhythm variability → D ≈ 1.5
 - **Cosmological structure:** Galaxy distribution transitions from D ≈ 1.5 (local) to D → 3 (>100 Mpc)
 
-**6. Modified gravity signatures:**
+**9. Modified gravity signatures:**
 
 - Corrections to Einstein equations at scales where D transitions 1.5 → 3
 - Possible connection to dark energy through fractal corrections (α, β terms in S_circ)
 - Deviation from inverse-square law at sub-Planckian scales
 
-**7. Braid-metric relationship:**
+**10. Braid-metric relationship:**
 
 - Quantitative prediction: B(x) ∝ √(-g_tt(x)) with R² > 0.999
 - Should hold across diverse metric solutions (Schwarzschild, Kerr, FLRW, etc.)
 
-### 6.4 Critical Falsification Tests
+### 6.5 Critical Falsification Tests
 
 The framework is falsified if:
 
