@@ -3175,35 +3175,85 @@ Step 1: Start with quarter circle (90° arc)
         Arc length = (π/2) × r
 
 Step 2: Roll into cone
-        The quarter circle becomes cone surface
-        Arc length = circumference of base
+        The quarter circle becomes cone surface.
+        The arc length becomes the circumference of the base:
 
-Step 3: Geometric constraints
-        sin(α) = r_base / r_slant
-        where r_slant = r (original radius)
+            (π/2) r = 2π r_base  ⇒  r_base = r/4
 
-Step 4: Solve
-        Cone half-angle α satisfies:
-        2πr_base = (π/2)r
-        r_base/r = 1/4
-        α = arcsin(1/4) ≈ 14.48°
+Step 3: Solve cone angle from this constraint
+        Let α be the cone half-angle measured from the axis.
 
-Step 5: But we need the FULL cone angle
-        Full opening = 2α ≈ 29°
+            sin(α) = r_base / r_slant
+                   = (r/4) / r
+                   = 1/4
 
-        For the complementary angle (pitch vs opening):
-        68° is the half-angle from axis
-        22° is the golden spiral pitch angle
+        So:
+
+            α = arcsin(1/4) ≈ 14.48°
+            Full opening = 2α ≈ 28.96°
+
+        This anchors the cone geometry: a rolled quarter circle
+        naturally picks out a cone with base/slant ratio 1:4 and
+        a ~29° opening angle.
+
+Step 4: Golden-spiral pitch constraint
+        Independently, golden-ratio dynamics single out a canonical
+        pitch angle.
+
+        Golden angle:       θ_G = 360° / φ² ≈ 137.508°
+        Supplement:         θ_c = 180° - θ_G ≈ 42.492°
+        Half-supplement:    θ_p = θ_c / 2 ≈ 21.246° ≈ 22°
+
+        We take θ_p ≈ 22° as the characteristic pitch angle of
+        a golden spiral living on this cone surface.
+
+        (This matches the empirical "22° signature" seen across
+         helices, vortices, and wakes.)
+
+Step 5: Partition of the local quarter-turn (i)
+        The aperture i is represented by a 90° quarter turn.
+
+        If 22° of that quarter-turn is "spent" on the spiral pitch,
+        the remainder is forced to be:
+
+            90° - 22° = 68°
+
+        So the quarter-turn splits into:
+
+            68°  (cone's effective axial angle component)
+            22°  (golden spiral pitch)
+
+            68° + 22° = 90° = i
+
+Step 6: Structural interpretation
+        The cone geometry (arcsin(1/4)) fixes the underlying
+        1:4 base/slant structure.
+
+        The golden pitch (≈22°) fixes how a spiral can climb
+        that cone coherently.
+
+        Their complementarity within the 90° aperture produces
+        the 68°/22° split:
+
+            68°/22° ≈ 3.09 ≈ 3
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    68° + 22° = 90° (quarter turn)                                 ║
     ║    68°/22° ≈ 3.09 → SUGGESTS 3-FOLD STRUCTURE                     ║
-    ║    DERIVED FROM ROLLING A QUARTER CIRCLE INTO A CONE              ║
+    ║    CONE GEOMETRY + GOLDEN PITCH CONSTRAINT                        ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 This suggests why 3 generations of particles exist.
 The ratio 68/22 ≈ 3.09 provides a natural 3-fold structure, consistent with
 three generations—though the exact integer 3 requires additional constraint.
+
+HONESTY NOTE:
+    The 1:4 base/slant ratio and α = arcsin(1/4) DO NOT numerically equal
+    22° or 68°. They specify the cone's geometry. The 22° pitch is imposed
+    by golden-ratio dynamics (and backed by cross-scale data), and the 68°
+    angle is its complement within the 90° aperture. The 68°/22° split is
+    therefore a TWO-CONSTRAINT STRUCTURE, not a single pure trigonometric
+    identity.
 ```
 
 ### §14.4 Hidden Parameters (0)
