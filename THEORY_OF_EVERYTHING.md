@@ -218,12 +218,12 @@ email@ashmanroonz.ca
 THEOREM 0a (Nothing Is Causally Inert):
 ───────────────────────────────────────
 
-Suppose there was ever a state of absolute nothing—no space, no time,
+Suppose there was ever a state of absolute nothing... no space, no time,
 no energy, no potential, no possibility, literally nothing whatsoever.
 
 If such a state were possible, it would persist eternally.
-Nothing cannot spontaneously become something.
-There is no mechanism, no cause, no process by which absolute nothing
+Nothingness cannot spontaneously become something.
+There is no mechanism, no cause, no process by which absolute nothingness
 could generate anything.
 
 Therefore: If there was ever nothing, there would only be nothing forever.
@@ -237,15 +237,15 @@ The universe manifests. Something definitely exists right now.
 THEOREM 0b (The One Cannot Be Alone):
 ─────────────────────────────────────
 
-Suppose nothing exists—an empty whole.
+Suppose nothing exists...
 
-It would be the only thing.
+It would be the only "thing".
 
-But "the only thing" is already distinguished from what it is not.
+But the only "thing" is already distinguished from what it is not.
 
 Distinction is not empty.
 
-∴ Nothing cannot exist.                                               ∎
+∴ Nothingness cannot exist.                                               ∎
 
 
 Together: Nothing is both causally inert AND logically incoherent.
@@ -262,7 +262,7 @@ Two implies Three: thing, not-thing, and the relation between them.
 The minimum structure of existence is trinity.
 
 ∴ ⊙ = ○ ⊗ Φ ⊗ • is not imposed on being.
-   It is what being IS when nothing is impossible.
+   It is what being IS when nothingness is impossible.
 
 
 COROLLARY 0.2 (Fractal Necessity):
