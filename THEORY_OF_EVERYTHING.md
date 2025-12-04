@@ -215,19 +215,66 @@ email@ashmanroonz.ca
 ## GENESIS: THE IMPOSSIBILITY OF NOTHING
 
 ```
-THEOREM 0 (Existence Necessity):
-────────────────────────────────
-Let N = "absolute nothing"
+THEOREM 0a (Nothing Is Causally Inert):
+───────────────────────────────────────
 
-For N to exist as a concept:
-  ∃ Rule R: "N is the state of nothing"
-  ∃ Framework F: where R operates
-  ∃ Distinction D: N ≠ not-N
+Suppose there was ever a state of absolute nothing—no space, no time,
+no energy, no potential, no possibility, literally nothing whatsoever.
 
-But R, F, D ∈ {something}
+If such a state were possible, it would persist eternally.
+Nothing cannot spontaneously become something.
+There is no mechanism, no cause, no process by which absolute nothing
+could generate anything.
 
-∴ N cannot exist without self-contradiction
-∴ EXISTENCE IS NECESSARY, NOT CONTINGENT                                    ∎
+Therefore: If there was ever nothing, there would only be nothing forever.
+
+But we exist. You are reading these words. Thoughts occur.
+The universe manifests. Something definitely exists right now.
+
+∴ There was never nothing. Something has always existed.              ∎
+
+
+THEOREM 0b (The One Cannot Be Alone):
+─────────────────────────────────────
+
+Suppose nothing exists—an empty whole.
+
+It would be the only thing.
+
+But "the only thing" is already distinguished from what it is not.
+
+Distinction is not empty.
+
+∴ Nothing cannot exist.                                               ∎
+
+
+Together: Nothing is both causally inert AND logically incoherent.
+Existence is necessary from every direction of analysis.
+
+
+COROLLARY 0.1 (Necessary Multiplicity):
+───────────────────────────────────────
+
+The One implies distinction.
+Distinction implies Two: thing and not-thing.
+Two implies Three: thing, not-thing, and the relation between them.
+
+The minimum structure of existence is trinity.
+
+∴ ⊙ = ○ ⊗ Φ ⊗ • is not imposed on being.
+   It is what being IS when nothing is impossible.
+
+
+COROLLARY 0.2 (Fractal Necessity):
+──────────────────────────────────
+
+Each part of ⊙ is itself a whole.
+An empty part would be nothing.
+Nothing is impossible.
+
+∴ Parts must have parts.
+   Structure goes all the way down.
+   ⊙ is fractal by necessity, not choice.
 ```
 
 ---
