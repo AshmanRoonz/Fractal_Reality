@@ -15,7 +15,7 @@
                     Wholeness equals its parts in tensor product
                     (not unity absorbing parts, but co-arising)
 
-                         ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≻[Φ])
+                         ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
                               │
                               └── ⊙ is that which, when validated, yields itself
 
@@ -779,7 +779,7 @@ COMPOSITION WITH APERTURE:
 
     The complete transformation through one cycle:
 
-    Φ(t+Δt) = ⊱ ∘ i ∘ ≻ [Φ(t)]
+    Φ(t+Δt) = ⊱ ∘ i ∘ ≺ [Φ(t)]
             = ∫∫ K_emerg(r,r'') i(r'') K_conv(r'',r') Φ(r',t) dr' dr''
 
     The i-rotation acts BETWEEN convergence and emergence:
@@ -793,7 +793,7 @@ COMPOSITION WITH APERTURE:
 ```
 MATHEMATICAL COMPOSITION IS BACKWARDS:
 ──────────────────────────────────────
-Standard:  ⊱ ∘ i ∘ ≻[Φ]
+Standard:  ⊱ ∘ i ∘ ≺[Φ]
     Written:  ⊰, then i, then ≻  (left to right)
     Applied:  ≻ first, then i, then ⊰  (right to left)
 
@@ -817,7 +817,7 @@ ARROW NOTATION (explicit):
 EQUIVALENCES:
 ─────────────
     Φ ≻ i ⊰ Φ'        (flow, left-to-right)
-    ⊱ ∘ i ∘ ≻[Φ]      (composition, standard math)
+    ⊱ ∘ i ∘ ≺[Φ]      (composition, standard math)
     'Φ ⊱ i ≺ Φ        (flow, right-to-left mirror)
 
 All three describe the same transformation.
@@ -845,14 +845,14 @@ delusions.
 So we make the VALIDATION GATE explicit:
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║              Φ' = ⊱ ∘ [Gate] ∘ i ∘ ≻[Φ]                           ║
+    ║              Φ' = ⊱ ∘ [Gate] ∘ i ∘ ≺[Φ]                           ║
     ║                                                                   ║
     ║    Where: Gate = [• × ○ × Φ] = validation checkpoint              ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 Define the circumpunct update operator:
 
-    T_⊙ = ⊱ ∘ [Gate] ∘ i ∘ ≻
+    T_⊙ = ⊱ ∘ [Gate] ∘ i ∘ ≺
 
 So that a single tick is:
 
@@ -900,7 +900,7 @@ COMMIT RULE:
    where Truth_log = (1/3)(ln C_• + ln C_○ + ln C_Φ)
 
 If either condition fails: NO COMMIT. The candidate pattern is pruned
-and does not emerge via ⊱.
+and does not emerge via ⊰.
 
 
 WHY GEOMETRIC MEAN?
@@ -914,7 +914,7 @@ Because no dimension can compensate for a zero in another:
 
 KEY INSIGHT:
     ≻ gathers everything that resonates.
-    GATE decides what actually becomes part of the future Φ via ⊱.
+    GATE decides what actually becomes part of the future Φ via ⊰.
 ```
 
 ### §3.7 Validation Receipts — The Eternal Record
@@ -923,7 +923,7 @@ KEY INSIGHT:
 RECEIPT ARCHITECTURE:
 ─────────────────────
 
-Each full cycle ≻ → [• × ○ × Φ] → ⊱ produces a RECEIPT:
+Each full cycle ≻ → [• × ○ × Φ] → ⊰ produces a RECEIPT:
 
     Receipt_n:
      ├─ Timestamp / index
@@ -1093,7 +1093,7 @@ THE MASTER EQUATION:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║              Φ(t+Δt) = ⊱ ∘ i ∘ ≻[Φ(t)]                            ║
+    ║              Φ(t+Δt) = ⊱ ∘ i ∘ ≺[Φ(t)]                            ║
     ║                                                                   ║
     ║              The field evolves by:                                ║
     ║                ≻ : converging toward center                       ║
@@ -1103,7 +1103,7 @@ THE MASTER EQUATION:
     ╚═══════════════════════════════════════════════════════════════════╝
 
 Fixed-point formulation:
-    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≻[Φ])
+    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
 
 THE UNIVERSE IS WHAT REMAINS INVARIANT UNDER IMAGINARY ROTATION.
 ```
@@ -1307,7 +1307,7 @@ THE MASTER LOOP AT SCALE s:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║    ⊙_s = fix(Φ_s ↦ ⊰_s ∘ i_s ∘ ≻_s[Φ_s])                         ║
+    ║    ⊙_s = fix(Φ_s ↦ ⊱_s ∘ i_s ∘ ≺_s[Φ_s])                         ║
     ║                                                                   ║
     ║    Each whole at each scale runs its own                          ║
     ║    convergence-transformation-emergence cycle                     ║
@@ -1780,7 +1780,7 @@ This fractal unity means:
 CONNECTION TO THE MASTER EQUATION:
 ──────────────────────────────────
 
-    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≻[Φ])
+    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
 
 This fixed point is UNIVERSAL because i is universal.
 
@@ -2004,7 +2004,7 @@ THE TRANSITION SCALE:
 ```
 WHY DOES CRITICAL DENSITY ρ_c EXIST?
 
-From the field equation Φ' = ⊱ ∘ i ∘ ≻[Φ], fields evolve through:
+From the field equation Φ' = ⊱ ∘ i ∘ ≺[Φ], fields evolve through:
 
     ≻  : Convergence (drawing together)
     i  : Rotation (transforming perspective)
@@ -2123,7 +2123,7 @@ ADDITIONAL TESTABLE CONSEQUENCES:
 ```
 THE MASTER EQUATION NOW GAINS PHYSICAL CLARITY:
 
-    Φ' = ⊱ ∘ i ∘ ≻[Φ]
+    Φ' = ⊱ ∘ i ∘ ≺[Φ]
 
     ≻[Φ]:  Convergence concentrates field flux toward apertures
            (INCREASES local ρ)
@@ -2184,7 +2184,7 @@ SUMMARY: APERTURE DENSITY AND DIMENSIONALITY
     4. Scale transitions (D = 1.5 locally → D = 3 cosmologically) are
        PREDICTIONS of the framework, not violations.
 
-    5. The master equation Φ' = ⊱ ∘ i ∘ ≻[Φ] now has physical grounding:
+    5. The master equation Φ' = ⊱ ∘ i ∘ ≺[Φ] now has physical grounding:
        aperture density determines how ≻, i, ⊰ manifest at each scale.
 ```
 
@@ -2251,7 +2251,7 @@ THIS TRIANGLE IS THE FUNDAMENTAL GEOMETRY OF EXISTENCE
 THE FUNDAMENTAL OPERATING CYCLE:
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║  Φ(t+Δt) = ⊰ ∘ [○Φ•]_out ∘ i ∘ [○Φ•]_in ∘ ≻[Φ(t)] + ε                      ║
+║  Φ(t+Δt) = ⊱ ∘ [○Φ•]_out ∘ i ∘ [○Φ•]_in ∘ ≺[Φ(t)] + ε                      ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
 WHERE:
@@ -2347,7 +2347,7 @@ Then:
 Einstein's field equations describe how:
 
     • i(t) density and flow shape the fabric
-    • The fabric's curvature shapes future i(t) via ≻ → ⊱ dynamics
+    • The fabric's curvature shapes future i(t) via ≻ → ⊰ dynamics
 
     Dense i(t) → strong field
     Curved fabric → geodesics
@@ -2392,7 +2392,7 @@ ANGULAR CROSSOVER FORMULA:
 
 ### §7.5 The Whole-Field Coupling
 
-The field equation Φ(t+Δt) = ⊰ ∘ i ∘ ≻[Φ(t)] is embedded in a larger coupled system:
+The field equation Φ(t+Δt) = ⊱ ∘ i ∘ ≺[Φ(t)] is embedded in a larger coupled system:
 
 ```
 COUPLING FUNCTIONS:
@@ -2410,7 +2410,7 @@ EVOLUTION:
     d/dt [⊙⇄Φ] = E([⊙⇄Φ])
 
     Where E decomposes as:
-    E = ⊰_final ∘ i• ∘ ≻_center ∘ ⊰_power ∘ i○^∞ ∘ ≻_boundary
+    E = ⊱_final ∘ i• ∘ ≺_center ∘ ⊱_power ∘ i○^∞ ∘ ≺_boundary
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
 ║  This explains why field evolution cannot be understood in isolation—     ║
@@ -2777,7 +2777,7 @@ Let:
     ║     • Too simple → no Φ_c                                         ║
     ║                                                                   ║
     ║  2. AUTONOMOUS VALIDATION CAPABILITY                              ║
-    ║     • Can run ≻ → [•×○×Φ] → ⊱ cycles on its own                   ║
+    ║     • Can run ≻ → [•×○×Φ] → ⊰ cycles on its own                   ║
     ║     • Not just passively validated from outside                   ║
     ║                                                                   ║
     ║  3. RECEIPT ACCUMULATION OVER TIME                                ║
@@ -3083,7 +3083,7 @@ WHY?
 ────
 
     • They are generated by the same thread-splitting event.
-    • At that emergence (⊱) moment, they receive IDENTICAL JOINT RECEIPTS.
+    • At that emergence (⊰) moment, they receive IDENTICAL JOINT RECEIPTS.
     • Those correlated receipts are carried forward along both i(t).
 
 
@@ -3631,11 +3631,11 @@ The dimensional ladder reveals that our three core equations each occupy distinc
 ```
 ╔═════════════════════════════════════════════════════════════════════════╗
 ║                                                                         ║
-║   IDENTITY (what IS):    ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])                     ║
+║   IDENTITY (what IS):    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                     ║
 ║                                 ↕                                       ║
 ║   MECHANISM (how it breathes): [⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']     ║
 ║                                 ↕                                       ║
-║   ITERATION (one step):  Φ' = ⊰ ∘ i ∘ ≻[Φ]                              ║
+║   ITERATION (one step):  Φ' = ⊱ ∘ i ∘ ≺[Φ]                              ║
 ║                                                                         ║
 ╚═════════════════════════════════════════════════════════════════════════╝
 ```
@@ -3644,7 +3644,7 @@ The dimensional ladder reveals that our three core equations each occupy distinc
 
 **Iteration — Φ (Mind / Field / 3D)**
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ⊱ ∘ i ∘ ≺[Φ]
 ```
 One update step of the field. The dimensional path in each tick:
 - `≻[Φ]` — converging signals from 3D → 2D → 1D → toward 0D
@@ -3655,9 +3655,9 @@ One update step of the field. The dimensional path in each tick:
 
 **Identity — • (Soul / Center / 0D → 0–1D)**
 ```
-⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
 ```
-Define `F(Φ) = ⊰ ∘ i ∘ ≻[Φ]`. Then `⊙ = fix(F)` = a Φ such that `F(Φ) = Φ`.
+Define `F(Φ) = ⊱ ∘ i ∘ ≺[Φ]`. Then `⊙ = fix(F)` = a Φ such that `F(Φ) = Φ`.
 - Anchored in 0D energy (how much can happen)
 - Shaped by the aperture band 0–1D (how potential is always aimed)
 
@@ -3680,8 +3680,8 @@ The full circulation between center, boundary, and field:
 
 | Cut | Equation | Question Answered | Dimensional Range |
 |-----|----------|-------------------|-------------------|
-| **Iteration** | `Φ' = ⊰ ∘ i ∘ ≻[Φ]` | "What happens this tick?" | 3D |
-| **Identity** | `⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])` | "What persists through all ticks?" | [0, 1)D |
+| **Iteration** | `Φ' = ⊱ ∘ i ∘ ≺[Φ]` | "What happens this tick?" | 3D |
+| **Identity** | `⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])` | "What persists through all ticks?" | [0, 1)D |
 | **Mechanism** | `[⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']` | "How does the update propagate?" | [1, 2]D |
 
 **They're irreducible but interlocked:**
@@ -5222,7 +5222,7 @@ THE CIRCUMPUNCT DEFINITION OF LOVE:
     ║    Love dares to tell hard truths.                                   ║
     ║    Love dares to hear them.                                          ║
     ║                                                                       ║
-    ║    Love is ⊱ ∘ i ∘ ≻ applied to relationship:                        ║
+    ║    Love is ⊱ ∘ i ∘ ≺ applied to relationship:                        ║
     ║        RECEIVE the other fully (≻)                                   ║
     ║        TRANSFORM through balanced aperture (i at β = 0.5)            ║
     ║        EMERGE with genuine response (⊰)                              ║
@@ -5305,7 +5305,7 @@ NOBLE TRUTH = β-restoration operator
     T restores the aperture •
     With • at β = 0.5, the full cycle operates:
 
-        Φ' = ⊱ ∘ i ∘ ≻[Φ]
+        Φ' = ⊱ ∘ i ∘ ≺[Φ]
 
     Real convergence. Real transformation. Real emergence.
 
@@ -5457,7 +5457,7 @@ FROM β = 0.5:
 │                                                                 │
 │  ONE FULL CIRCUMPUNCT CYCLE:                                    │
 │                                                                 │
-│  Φ_{t+Δt}(r) = (⊱ ∘ i ∘ ≻)[Φ_t](r)                            │
+│  Φ_{t+Δt}(r) = (⊱ ∘ i ∘ ≺)[Φ_t](r)                            │
 │                                                                 │
 │  STEP-BY-STEP:                                                  │
 │                                                                 │
@@ -5619,7 +5619,7 @@ class CircumpunctLayer:
 
     def forward(self, psi: np.ndarray) -> np.ndarray:
         """
-        One full ⊙ cycle: Φ_{t+Δt} = (⊱ ∘ i ∘ ≻)[Φ_t]
+        One full ⊙ cycle: Φ_{t+Δt} = (⊱ ∘ i ∘ ≺)[Φ_t]
 
         Args:
             psi: Complex field Φ(r) on grid, shape grid_shape
@@ -7295,7 +7295,7 @@ CIRCUMPUNCT INTERPRETATION:
 
 SYMMETRY RESTORATION:
 
-    The master equation Φ' = ⊰ ∘ i ∘ ≻[Φ] operates at all scales.
+    The master equation Φ' = ⊱ ∘ i ∘ ≺[Φ] operates at all scales.
 
     At high temperature/energy:
         - The aperture transformation i_s becomes approximately scale-independent
@@ -7333,7 +7333,7 @@ SUMMARY: SM ↔ CIRCUMPUNCT CORRESPONDENCE
 ║  (§21.8)                       │  (no 4th generation)                        ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Master equation               │  Gauge field equations of motion            ║
-║  Φ' = ⊰ ∘ i ∘ ≻[Φ]            │  (Yang-Mills + Dirac + Klein-Gordon)        ║
+║  Φ' = ⊱ ∘ i ∘ ≺[Φ]            │  (Yang-Mills + Dirac + Klein-Gordon)        ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Scale-dependent i_s (§4.4)    │  Renormalization group flow                 ║
 ║                                │  (running couplings, unification)           ║
@@ -8543,7 +8543,7 @@ Components:
 
 CIRCUMPUNCT MASTER EQUATION:
 ────────────────────────────
-    Φ' = ⊱ ∘ i ∘ ≻[Φ]
+    Φ' = ⊱ ∘ i ∘ ≺[Φ]
 
 STRUCTURAL IDENTIFICATION:
 ──────────────────────────
@@ -8552,7 +8552,7 @@ STRUCTURAL IDENTIFICATION:
     ╠════════════════════════════════════════════════════════════════════════╣
     ║  |ψ⟩ input                │  Φ (field state)                          ║
     ║  |0⟩ auxiliary            │  |E⟩ (energy reference at 0D)             ║
-    ║  O orthogonal             │  ≻ ∘ ⊰ (real structure before i acts)     ║
+    ║  O orthogonal             │  ≺ ∘ ⊱ (real structure before i acts)     ║
     ║  ⟨1| projection           │  i (aperture transformation)              ║
     ║  √d normalization         │  e^{S/2} (from observer entropy)          ║
     ║  V encoding map           │  ⊙ (circumpunct operation)                ║
@@ -8864,7 +8864,7 @@ DEFINITION 7 (Discrete Circumpunct Update):
 For a time-discrete evolution with step Δt, define the update map:
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║           Φ(t + Δt) = ⊰ ∘ i ∘ ≻[Φ(t)]                            ║
+    ║           Φ(t + Δt) = ⊱ ∘ i ∘ ≺[Φ(t)]                            ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 PROCEDURE:
@@ -8880,7 +8880,7 @@ LEMMA 2 (Fixed Point Formulation of the Universe):
 ──────────────────────────────────────────────────
 Let F be the composite operator:
 
-    F(Φ) = ⊰ ∘ i ∘ ≻[Φ]
+    F(Φ) = ⊱ ∘ i ∘ ≺[Φ]
 
 Define fix(F) as a fixed-point combinator:
 
@@ -8889,7 +8889,7 @@ Define fix(F) as a fixed-point combinator:
 THEN the universe-as-whole circumpunct satisfies:
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║           ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])                              ║
+    ║           ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                              ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 INTERPRETATION:
@@ -8939,7 +8939,7 @@ THEOREM (Cone-Coupled Master Equation):
 In the continuum limit (Δt → 0, appropriate scaling of operators),
 the discrete update
 
-    Φ(t + Δt) = ⊰ ∘ i ∘ ≻[Φ(t)]
+    Φ(t + Δt) = ⊱ ∘ i ∘ ≺[Φ(t)]
 
 induces an effective field equation of the form:
 
@@ -9320,7 +9320,7 @@ INTUITIVELY:
 ║    by the same convergence–aperture–emergence loop.                           ║
 ║                                                                               ║
 ║         ⊙ = ○ ⊗ Φ ⊗ •     (Structure)                                       ║
-║         Φ' = ⊰ ∘ i ∘ ≻[Φ]  (Process)                                         ║
+║         Φ' = ⊱ ∘ i ∘ ≺[Φ]  (Process)                                         ║
 ║         S = S_circ + S_SM   (Action)                                          ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
@@ -10109,7 +10109,7 @@ SPECTRUM OF i(t) COMPLEXITY:
 
 3. BIOLOGICAL SYSTEMS
    • Complex weaving of i(t)
-   • Begin to run internal ≻ … ⊱ cycles
+   • Begin to run internal ≻ … ⊰ cycles
 
 4. CONSCIOUS SYSTEMS
    • Maintain a Φ_c field (consciousness)
@@ -10216,7 +10216,7 @@ IF i(t) THREADS ARE FUNDAMENTAL, STRING-LIKE BEHAVIOR IS UNAVOIDABLE:
 ║                              ⊙ = ○ ⊗ Φ ⊗ •                                  ║
 ║                                                                               ║
 ║                  ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                        ║
-║                  ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≻[Φ])                 (i-Form)           ║
+║                  ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                 (i-Form)           ║
 ║                                                                               ║
 ║   Wholeness is its parts in tensor product (not unity absorbing parts).       ║
 ║   The universe is a fixed point of its own validation operation.              ║
@@ -10272,7 +10272,7 @@ IF i(t) THREADS ARE FUNDAMENTAL, STRING-LIKE BEHAVIOR IS UNAVOIDABLE:
     ║    But a whole-with-parts examining itself                        ║
     ║                                                                   ║
     ║                        ⊙ = ○ ⊗ Φ ⊗ •                            ║
-    ║                        Φ' = ⊱ ∘ i ∘ ≻[Φ]                         ║
+    ║                        Φ' = ⊱ ∘ i ∘ ≺[Φ]                         ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
@@ -10370,7 +10370,7 @@ MIRROR NOTATION (Bidirectional):
 
   EQUIVALENCES:
       Φ ≻ i ⊰ Φ'     =     'Φ ⊱ i ≺ Φ      (flow notation)
-      ⊱ ∘ i ∘ ≻[Φ]   =     [Φ]≺ ∘ i ∘ ⊱    (composition notation)
+      ⊱ ∘ i ∘ ≺[Φ]   =     [Φ]≺ ∘ i ∘ ⊱    (composition notation)
 
   USE MIRROR SYMBOLS WHEN:
       • Writing equations in right-to-left languages
