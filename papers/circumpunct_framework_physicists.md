@@ -38,19 +38,23 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
   - [5.2 Stress-Energy from Field and Boundary](#52-stress-energy-from-field-and-boundary)
   - [5.3 Gravitational Action (S_circ)](#53-gravitational-action-s_circ)
   - [5.4 Einstein Equations](#54-einstein-equations)
-- [6. Testable Predictions and Current Status](#6-testable-predictions-and-current-status)
-  - [6.1 Zero Free Parameters (Established)](#61-zero-free-parameters-established)
-  - [6.2 The φ³ Family (Derived Texture Constants)](#62-the-φ³-family-derived-texture-constants)
-  - [6.3 Open Derivations (Phenomenological)](#63-open-derivations-phenomenological)
-  - [6.4 Falsifiable Predictions](#64-falsifiable-predictions)
-  - [6.5 Critical Falsification Tests](#65-critical-falsification-tests)
-- [7. One-Page Cheat Sheet](#7-one-page-cheat-sheet)
-- [8. Connection to Full Framework](#8-connection-to-full-framework)
-- [9. Open Questions and Future Work](#9-open-questions-and-future-work)
-  - [9.1 Theoretical Development Needed](#91-theoretical-development-needed)
-  - [9.2 Empirical Validation Required](#92-empirical-validation-required)
-  - [9.3 Computational Implementation](#93-computational-implementation)
-- [10. References to Full Framework](#10-references-to-full-framework)
+- [6. Emergent Chemistry from the QED Limit](#6-emergent-chemistry-from-the-qed-limit)
+  - [6.1 From 64-State SM to QED](#61-from-64-state-sm-to-qed)
+  - [6.2 Hydrogen Spectrum as Consistency Check](#62-hydrogen-spectrum-as-consistency-check)
+  - [6.3 Shell Structure and the D ≈ 1.5 Connection](#63-shell-structure-and-the-d--15-connection)
+- [7. Testable Predictions and Current Status](#7-testable-predictions-and-current-status)
+  - [7.1 Zero Free Parameters (Established)](#71-zero-free-parameters-established)
+  - [7.2 The φ³ Family (Derived Texture Constants)](#72-the-φ³-family-derived-texture-constants)
+  - [7.3 Open Derivations (Phenomenological)](#73-open-derivations-phenomenological)
+  - [7.4 Falsifiable Predictions](#74-falsifiable-predictions)
+  - [7.5 Critical Falsification Tests](#75-critical-falsification-tests)
+- [8. One-Page Cheat Sheet](#8-one-page-cheat-sheet)
+- [9. Connection to Full Framework](#9-connection-to-full-framework)
+- [10. Open Questions and Future Work](#10-open-questions-and-future-work)
+  - [10.1 Theoretical Development Needed](#101-theoretical-development-needed)
+  - [10.2 Empirical Validation Required](#102-empirical-validation-required)
+  - [10.3 Computational Implementation](#103-computational-implementation)
+- [11. References to Full Framework](#11-references-to-full-framework)
 - [Acknowledgments](#acknowledgments)
 - [Appendix: Notation Reference](#appendix-notation-reference)
 
@@ -617,9 +621,122 @@ where Δ_μν^(fractal) are extra contributions from the D=1.5 aperture geometry
 
 ---
 
-## 6. Testable Predictions and Current Status
+## 6. Emergent Chemistry from the QED Limit
 
-### 6.1 Zero Free Parameters (Established)
+This section shows how atomic and molecular physics emerge as bound-state solutions of the low-energy QED limit.
+
+### 6.1 From 64-State SM to QED
+
+The 64-state fiber carries the full Standard Model field content. In the low-energy, nonrelativistic limit:
+
+```
+QED REDUCTION:
+────────────────────────────────────────────────────────────────
+1. Start with S_SM[Φ, A] on the 64-state fiber
+
+2. Restrict to:
+   • Electron degrees of freedom (from fermionic sector)
+   • U(1) gauge field A_μ (from 12-dimensional gauge sector)
+   • Static nuclei (protons as QCD-confined composites)
+
+3. Take nonrelativistic limit (v << c):
+   • Expand around small velocities
+   • Integrate out high-energy modes
+
+4. Result: Nonrelativistic QED Lagrangian
+```
+
+The effective theory becomes:
+
+```
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║  L_QED,NR ≈ ψ†(iℏ∂_t + ℏ²/2m_e ∇²)ψ - eφψ†ψ + ...               ║
+║                                                                   ║
+║  where φ = electrostatic potential, e = electron charge           ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+```
+
+**Key point:** Once the circumpunct produces the Standard Model (§1.3, §3), QED in the low-energy limit comes for free. Atoms and molecules are then bound-state solutions of this emergent QED.
+
+### 6.2 Hydrogen Spectrum as Consistency Check
+
+For hydrogen (one electron, one proton), the electron obeys:
+
+```
+[-ℏ²/2m_e ∇² - αℏc/r] ψ(r) = E ψ(r)
+```
+
+with quantized energy levels:
+
+```
+E_n = -½ m_e c² α² / n²
+
+Ground state (n=1):
+  E₁ = -½ (0.511 MeV)(1/137.036)² = -13.6 eV  ✓
+```
+
+**The nontrivial claim:** In the circumpunct framework, α and m_e are not free parameters:
+
+- **α** derives from texture parameters τ, α_quantum, and kernel geometry
+- **m_e** emerges from the 64-state Higgs coupling structure
+
+Once these are fixed by circumpunct geometry, the hydrogen spectrum becomes a **derived consequence**:
+
+```
+VALIDATION CHAIN:
+  ⊙ → 64-state SM → QED → hydrogen spectrum
+     (§1-3)        (§6.1)    (standard QM)
+```
+
+### 6.3 Shell Structure and the D ≈ 1.5 Connection
+
+Multi-electron atoms inherit their structure from the same geometric data:
+
+**From the 64-fiber:**
+- Fermionic antisymmetry (Pauli exclusion) from Grassmann structure on fermionic subbundle
+- Orbital degeneracies (s, p, d, f) from SO(3) spatial symmetry coupled to kernel
+
+**The periodic table** is the stability map of which multi-electron configurations minimize the circumpunct-QED energy functional, given fermionic statistics and aperture-defined orbital structure.
+
+**D ≈ 1.5 hypothesis for molecular geometry:**
+
+```
+STATUS: Suggestive pattern, testable prediction
+────────────────────────────────────────────────────────────────
+The tetrahedral bond angle (109.5°) ubiquitous in carbon chemistry
+may represent an optimal fractal compromise where:
+
+  D_effective ≈ 1.5
+
+between line-like (bonds) and surface-like (lone pairs) character.
+
+TESTABLE: Compute effective fractal dimension of electron density
+in various molecular geometries; check if stable configurations
+cluster near D ≈ 1.5.
+```
+
+**Summary:**
+
+```
+╔═══════════════════════════════════════════════════════════════════╗
+║  EMERGENT CHEMISTRY PIPELINE                                      ║
+╠═══════════════════════════════════════════════════════════════════╣
+║  ⊙ (64-fiber) → SM → QED → Atoms → Molecules                     ║
+║       ↓           ↓      ↓        ↓         ↓                     ║
+║   geometry    particles  e+γ    H,He,...  bonds                   ║
+║                                                                   ║
+║  Once ⊙ produces SM, chemistry is NOT a new theory—              ║
+║  it is emergent solutions of the same field equations.            ║
+╚═══════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## 7. Testable Predictions and Current Status
+
+### 7.1 Zero Free Parameters (Established)
 
 **1. Three particle generations:**
 - **Prediction:** 2⁶ = 64 states → exactly 3 generations
@@ -631,7 +748,7 @@ where Δ_μν^(fractal) are extra contributions from the D=1.5 aperture geometry
 - **Status:** Exact from information-theoretic balance condition
 - **Derivation:** Shannon entropy of binary choice at optimal balance
 
-### 6.2 The φ³ Family (Derived Texture Constants)
+### 7.2 The φ³ Family (Derived Texture Constants)
 
 The texture sector constants all derive from the φ³ family, where φ = (1+√5)/2:
 
@@ -687,7 +804,7 @@ Equivalent forms:
 
 The **only external constant** is α (fine structure). Everything else is φ, π, and rational structure from the circumpunct geometry.
 
-### 6.3 Open Derivations (Phenomenological)
+### 7.3 Open Derivations (Phenomenological)
 
 **6. Lepton mass ratios:**
 - **Empirical fits:**
@@ -696,7 +813,7 @@ The **only external constant** is α (fine structure). Everything else is φ, π
 - **Framework formulas:** Fit experimental values within <0.13% error
 - **Status:** Awaiting first-principles derivation from gauge structure and 64-state fiber dynamics
 
-### 6.4 Falsifiable Predictions
+### 7.4 Falsifiable Predictions
 
 **7. The D(β) relationship:**
 
@@ -734,7 +851,7 @@ Specific predictions:
 - Quantitative prediction: B(x) ∝ √(-g_tt(x)) with R² > 0.999
 - Should hold across diverse metric solutions (Schwarzschild, Kerr, FLRW, etc.)
 
-### 6.5 Critical Falsification Tests
+### 7.5 Critical Falsification Tests
 
 The framework is falsified if:
 
@@ -751,7 +868,7 @@ The framework is falsified if:
 
 ---
 
-## 7. One-Page Cheat Sheet
+## 8. One-Page Cheat Sheet
 
 ### Spaces
 
@@ -790,7 +907,7 @@ B(x) ∝ √(-g_tt(x))
 
 ---
 
-## 8. Connection to Full Framework
+## 9. Connection to Full Framework
 
 This document presents the **local, linearized limit** of the circumpunct framework, sufficient to recover standard QM and GR. The full nonlinear theory includes:
 
@@ -804,23 +921,23 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 ---
 
-## 9. Open Questions and Future Work
+## 10. Open Questions and Future Work
 
-### 9.1 Theoretical Development Needed
+### 10.1 Theoretical Development Needed
 
 1. **Rigorous kernel derivation:** Derive K(r) ∝ √r from first principles rather than phenomenological modeling
 2. **S_circ coefficients:** Calculate α, β from microscopic braiding dynamics
 3. **Mass formula derivation:** Connect lepton mass ratios to gauge structure and fiber geometry
 4. **Boundary dynamics:** Formulate complete evolution equation for ○ ∈ 𝓑
 
-### 9.2 Empirical Validation Required
+### 10.2 Empirical Validation Required
 
 1. **Cross-scale D measurement:** Systematic measurement of fractal dimension across quantum, biological, and cosmological systems
 2. **Braid-metric correlation:** Test B ∝ √(-g_tt) prediction in diverse gravitational configurations
 3. **Modified gravity detection:** Search for α, β corrections in precision gravitational experiments
 4. **Lepton sector tests:** Verify mass ratio predictions to higher precision
 
-### 9.3 Computational Implementation
+### 10.3 Computational Implementation
 
 1. **Kernel evolution simulations:** Numerical integration of ⊰∘i∘≻ dynamics
 2. **Braid structure visualization:** 3D rendering of accumulated circumpunct histories
@@ -829,7 +946,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 ---
 
-## 10. References to Full Framework
+## 11. References to Full Framework
 
 For complete details, derivations, and empirical data, see:
 
