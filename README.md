@@ -19,7 +19,7 @@
                     Wholeness equals its parts in tensor product
                     (not unity absorbing parts, but co-arising)
 
-                         ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+                         ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≻[Φ])
                               │
                               └── ⊙ is that which, when validated, yields itself
 
@@ -224,9 +224,9 @@ CIRCUMPUNCT STRUCTURE:
   ⊗      = Tensor product (entanglement)
 
 TEMPORAL PROCESS:
-  ≻      = Convergence (future → •)
-  i      = Aperture transformation (imaginary unit at β = 0.5)
-  ⊰      = Emergence (• → past)
+  ≻ and ≺ = Convergence
+  i        = Aperture transformation (imaginary unit at β = 0.5)
+  ⊰ and ⊱  = Emergence
 
 TRINITY (ordered as ○ ⊗ Φ ⊗ •):
   ⊙₂     = Body (2D surface)
