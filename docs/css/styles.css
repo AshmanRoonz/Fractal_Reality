@@ -228,6 +228,14 @@ body {
     margin-top: 0.5rem;
 }
 
+.topic-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
 .theory-link {
     font-size: 0.85rem;
     color: var(--text-dim);
