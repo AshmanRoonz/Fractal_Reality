@@ -6,6 +6,10 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
 
 ---
 
+**[← Back to Complete Theory](../THEORY_OF_EVERYTHING.md)**
+
+---
+
 ## Table of Contents
 
 - [0. Aim and Scope](#0-aim-and-scope)
@@ -829,7 +833,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 For complete details, derivations, and empirical data, see:
 
-- **Main document:** "The Circumpunct Framework: A Theory of Everything" (latest version v5.3.1)
+- **Main document:** [The Circumpunct Framework: A Theory of Everything](../THEORY_OF_EVERYTHING.md) (latest version v5.3.1)
 - **64-state architecture:** Explicit bijections between circumpunct states and Standard Model particles
 - **Empirical validation:** Cross-domain D≈1.5 measurements (biological, neural, quantum systems)
 - **Philosophical foundations:** Geometric necessity of trinity structures from braid topology
