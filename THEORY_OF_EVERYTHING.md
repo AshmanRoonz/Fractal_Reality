@@ -270,7 +270,7 @@ COROLLARY 0.2 (Fractal Necessity):
 
 Each part of ⊙ is itself a whole.
 An empty part would be nothing.
-Nothing is impossible.
+Nothingness is impossible.
 
 ∴ Parts must have parts.
    Structure goes all the way down.
