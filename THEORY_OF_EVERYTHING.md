@@ -1671,13 +1671,13 @@ STATUS:
 THEOREM: FRACTAL UNITY OF i
 ─────────────────────────────────────────────────────────────
 
-There is only ONE abstract aperture transformation I, arising from
+There is only ONE abstract aperture transformation i, arising from
 the fundamental braid of reality:
 
-    Φ ──≻──> • ──I──> future field ──⊰──> Φ'
+    Φ ──≻──> • ──i──> future field ──⊰──> Φ'
 
 Every circumpunct ⊙ at every scale carries its own local i_s, but
-each is a fractal instantiation of this same I.
+each is a fractal instantiation of this same i.
 
     ╔═══════════════════════════════════════════════════════════╗
     ║  ALL VALID i's ARE LOCAL SHADOWS OF ONE COSMIC i,         ║
