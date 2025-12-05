@@ -813,9 +813,20 @@ cluster near D ≈ 1.5.
 - **Status:** Exact from information-theoretic balance condition
 - **Derivation:** Shannon entropy of binary choice at optimal balance
 
-### 7.2 The φ³ Family (Derived Texture Constants)
+### 7.2 The φ³ Family (Texture Constants)
 
-The texture sector constants all derive from the φ³ family, where φ = (1+√5)/2:
+The texture sector constants share a common structure: **derived rational prefactors** × **phenomenological φ³ scaling**, where φ = (1+√5)/2.
+
+**What is derived vs. fitted:**
+
+```
+τ = (7/8) × φ³
+      ↑       ↑
+   DERIVED   PHENOMENOLOGICAL
+
+- Rational prefactors (7/8, 2/5, 16/35): from kernel geometry and 64-state combinatorics
+- φ³ factor: fits empirical data, structural origin suspected but NOT YET DERIVED
+```
 
 **3. SNR threshold τ:**
 
@@ -823,8 +834,8 @@ The texture sector constants all derive from the φ³ family, where φ = (1+√5
 τ = (7/8)φ³ = 3.7065594...
 ```
 
-- **7/8** = kernel normalization factor (from A = 7/(8πR^(7/2)))
-- **φ³** = volumetric golden scaling (3D texture)
+- **7/8** = kernel normalization factor (DERIVED from A = 7/(8πR^(7/2)))
+- **φ³** = scaling factor (PHENOMENOLOGICAL — see note below)
 - **Physical meaning:** Mass gap detection threshold for (○, Φ, •) validation
 
 **4. Quantum validation noise α_quantum:**
@@ -833,7 +844,7 @@ The texture sector constants all derive from the φ³ family, where φ = (1+√5
 α_quantum = α × τ = (1/137.036) × 3.7066 = 0.02705
 ```
 
-- **α** = fine structure constant (EM coupling at interface)
+- **α** = fine structure constant (external constant from experiment)
 - **τ** = SNR threshold from above
 - **Physical meaning:** Effective noise in textured aperture field
 - **Empirical match:** 0.027 (within 0.2%)
@@ -844,12 +855,11 @@ The texture sector constants all derive from the φ³ family, where φ = (1+√5
 α_texture = (2/5)φ³ = 1.6944272
 ```
 
-Equivalent forms:
-- **(2/5)φ³** = primary definition (fractal/volumetric)
-- **(16/35)τ** = linked to τ via rational structure
-- **πφ/3** ≈ 1.6944 = circumpunct form (circle × golden / triad)
+- **(2/5)** = rational structure (DERIVED — see below)
+- **φ³** = scaling factor (PHENOMENOLOGICAL)
+- **(16/35)τ** = equivalent form linking to τ
 
-**Structural interpretation of 16/35:**
+**Structural interpretation of 16/35 (derived):**
 
 ```
 16 = 2⁴ = microtexture sector (16-state window of 64-state lattice)
@@ -859,15 +869,21 @@ Equivalent forms:
           = "τ per 16-state microsector, averaged over 35 triadic channels"
 ```
 
-**Summary: Zero fitted texture parameters**
+**Why φ might emerge (not yet proven):**
 
-| Constant | Formula | Value | Status |
-|----------|---------|-------|--------|
-| τ | (7/8)φ³ | 3.7066 | DERIVED |
-| α_quantum | ατ | 0.02705 | DERIVED |
-| α_texture | (2/5)φ³ | 1.6944 | DERIVED |
+The golden ratio φ is the unique fixed point of x → 1 + 1/x, and emerges naturally in self-similar structures where whole/part = part/remainder. The circumpunct framework IS self-similar (each ⊙ contains ⊙s at smaller scales), so φ appearing is not numerological—there is a plausible structural mechanism.
 
-The **only external constant** is α (fine structure). Everything else is φ, π, and rational structure from the circumpunct geometry.
+However, "plausible mechanism" ≠ derivation. To close this gap, we would need to show that validation dynamics on the 64-state fiber produce Fibonacci-like recursion (F_n = F_{n-1} + F_{n-2}), from which φ emerges necessarily. This remains an open question (§10.1).
+
+**Summary: Texture parameter status**
+
+| Constant | Formula | Value | Rational Part | φ³ Part |
+|----------|---------|-------|---------------|---------|
+| τ | (7/8)φ³ | 3.7066 | DERIVED | PHENOMENOLOGICAL |
+| α_quantum | ατ | 0.02705 | (via τ) | (via τ) |
+| α_texture | (2/5)φ³ | 1.6944 | DERIVED | PHENOMENOLOGICAL |
+
+**The only external constant** is α (fine structure). The rational prefactors come from circumpunct geometry. The φ³ scaling fits empirical values but awaits first-principles derivation from self-similar structure.
 
 ### 7.3 Open Derivations (Phenomenological)
 
@@ -991,9 +1007,10 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 ### 10.1 Theoretical Development Needed
 
 1. **Variational principle for α = β:** The dimensional interpolation argument (§2.4) establishes that the kernel exponent α equals the balance parameter β conceptually. A fully rigorous derivation should show that α = β extremizes some functional (entropy, action, or information flow) among power-law kernels, completing the derivation chain from symmetry to √r.
-2. **S_circ coefficients:** Calculate α, β from microscopic braiding dynamics
-3. **Mass formula derivation:** Connect lepton mass ratios to gauge structure and fiber geometry
-4. **Boundary dynamics:** Formulate complete evolution equation for ○ ∈ 𝓑
+2. **φ³ from self-similarity:** The texture constants (§7.2) contain a phenomenological φ³ factor. Derive this from the framework's self-similar structure by showing that validation dynamics on the 64-state fiber produce Fibonacci recursion (F_n = F_{n-1} + F_{n-2}), from which φ emerges as the growth ratio.
+3. **S_circ coefficients:** Calculate α, β from microscopic braiding dynamics
+4. **Mass formula derivation:** Connect lepton mass ratios to gauge structure and fiber geometry
+5. **Boundary dynamics:** Formulate complete evolution equation for ○ ∈ 𝓑
 
 ### 10.2 Empirical Validation Required
 
