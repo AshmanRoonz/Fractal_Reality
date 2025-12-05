@@ -2769,8 +2769,6 @@ NEURAL PREDICTIONS (Consciousness States Within Living Systems):
     The organism stays alive (metabolic β ≈ 0.5)
     but awareness has its own balance that can shift.
 
-    Cortical avalanches: D = 1.48-1.52 ✓
-    Critical branching: σ = 1.0 ✓
 ```
 
 ### §11.4 Φ_c — Conditional Consciousness Field
