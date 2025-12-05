@@ -561,29 +561,40 @@ where V_eff collects potential-like contributions from departures of K from pure
 
 ---
 
-## 5. Metric and Einstein Equations from ⊙
+## 5. Metric and Einstein Equations from ⊙ (Conjectural)
 
-Here we address: *How do metric and curvature arise from the circumpunct object ⊙?*
+Here we address: *How might metric and curvature arise from the circumpunct object ⊙?*
+
+**Status: This section is conjectural.** Unlike §4 (which derives Schrödinger from kernel convolution), the GR limit lacks a complete derivation. We present the physical intuition and proposed mechanism, with honest assessment of what remains to be proven.
 
 ### 5.1 Coarse-Grained Braid Structure → Redshift Factor
 
-In the full framework, repeated cycles of the process (≻, i, ⊰) generate a braided structure of worldlines and field lines. At large scales, this is summarized by a scalar "braid density" B(x) over spacetime:
-
-- Think of B(x) as the coarse-grained density of crossing histories of circumpunct cycles through a spacetime region around x
-
-Empirically, the theory claims a proportionality:
+**The conjecture:** Repeated cycles of the process (≻, i, ⊰) generate a braided structure of worldlines and field lines. At large scales, this should be summarizable by a scalar "braid density" B(x) over spacetime, with:
 
 ```
 B(x) ∝ √(-g_tt(x))
 ```
 
-for standard metrics tested ("Braid ∝ √|g_tt|, R² ≈ 0.9997 across 4 metrics").
+**What is established vs. conjectural:**
 
-**Definition:** For each circumpunct history ⊙(t), define an effective metric g_μν on M such that the gravitational redshift factor √(-g_tt(x)) matches a dimensionless braid density B(x) extracted from the circumpunct process.
+| Claim | Status |
+|-------|--------|
+| Braiding emerges from repeated ⊱∘i∘≺ cycles | Conceptual (plausible) |
+| B(x) has a rigorous mathematical definition | **NOT YET DEFINED** |
+| B(x) ∝ √(-g_tt) | **CONJECTURE** |
+| Computational test confirms scaling | ✓ (see note below) |
+| Empirical test against real gravitational data | **NOT DONE** |
 
-This identifies the **time component of the metric** in terms of ⊙-data.
+**Note on the "R² ≈ 0.9997" claim:** This comes from a numerical simulation that *assumed* texture accumulates as √|g_tt| and verified the code correctly implements this formula across 4 test metrics (Flat, Weak Field, Neutron Star, Near Horizon). This demonstrates **computational consistency**, not empirical validation or derivation from braid topology. The R² measures whether the simulation does what it was programmed to do—it does. The physical claim remains unproven.
 
-**Worldline density interpretation (v5.4):** The braid density B(x) can be understood as the density of i(t) worldline threads:
+**What would constitute a real derivation:**
+1. Define B(x) rigorously from braid group structure (e.g., crossing number density, integral of B₃ generators)
+2. Show mathematically that this definition implies B ∝ √(-g_tt)
+3. Test against actual gravitational data (not simulations that assume the answer)
+
+**Intuitive picture (not a proof):** Think of B(x) as the coarse-grained density of crossing histories of circumpunct cycles through a spacetime region around x. Denser braiding → more "substance" → stronger gravity.
+
+**Worldline density interpretation:** The braid density B(x) can be understood as the density of i(t) worldline threads:
 
 ```
 Spacetime = fabric of interwoven i(t) threads
@@ -598,6 +609,8 @@ In this picture:
 - The fabric's curvature shapes future i(t) via ≻ → ⊱ dynamics
 
 Other threads follow geodesics as their locally most coherent paths through the fabric.
+
+**This is a compelling physical picture, but picture ≠ derivation.** The rigorous connection between braid topology and metric structure remains an open problem (§10.1).
 
 ### 5.2 Stress-Energy from Field and Boundary
 
@@ -1008,9 +1021,10 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 1. **Variational principle for α = β:** The dimensional interpolation argument (§2.4) establishes that the kernel exponent α equals the balance parameter β conceptually. A fully rigorous derivation should show that α = β extremizes some functional (entropy, action, or information flow) among power-law kernels, completing the derivation chain from symmetry to √r.
 2. **φ³ from self-similarity:** The texture constants (§7.2) contain a phenomenological φ³ factor. Derive this from the framework's self-similar structure by showing that validation dynamics on the 64-state fiber produce Fibonacci recursion (F_n = F_{n-1} + F_{n-2}), from which φ emerges as the growth ratio.
-3. **S_circ coefficients:** Calculate α, β from microscopic braiding dynamics
-4. **Mass formula derivation:** Connect lepton mass ratios to gauge structure and fiber geometry
-5. **Boundary dynamics:** Formulate complete evolution equation for ○ ∈ 𝓑
+3. **Braid density definition and metric coupling:** The GR limit (§5) conjectures B(x) ∝ √(-g_tt) but lacks rigorous foundation. Required: (a) Define B(x) mathematically from braid group structure (crossing number density, B₃ generator integrals, or similar), (b) Derive the √(-g_tt) proportionality from this definition, (c) Test against real gravitational data rather than simulations that assume the answer.
+4. **S_circ coefficients:** Calculate α, β from microscopic braiding dynamics
+5. **Mass formula derivation:** Connect lepton mass ratios to gauge structure and fiber geometry
+6. **Boundary dynamics:** Formulate complete evolution equation for ○ ∈ 𝓑
 
 ### 10.2 Empirical Validation Required
 
