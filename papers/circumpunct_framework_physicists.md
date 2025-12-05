@@ -31,7 +31,7 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
   - [Postulate 3 — Aperture Balance and the Imaginary Unit](#postulate-3--aperture-balance-and-the-imaginary-unit)
   - [Postulate 4 — Local Quantum Limit (Unitary Evolution)](#postulate-4--local-quantum-limit-unitary-evolution)
   - [Postulate 5 — Geometric / GR Limit](#postulate-5--geometric--gr-limit)
-- [4. Schrödinger Equation from U = ⊰ ∘ i ∘ ≻](#4-schrödinger-equation-from-u----i--)
+- [4. Schrödinger Equation from U = ⊱ ∘ i ∘ ≺](#4-schrödinger-equation-from-u----i--)
   - [4.1 Simplifying Assumptions](#41-simplifying-assumptions)
   - [4.2 Explicit Computation for the √r Kernel](#42-explicit-computation-for-the-r-kernel)
 - [5. Metric and Einstein Equations from ⊙](#5-metric-and-einstein-equations-from-)
@@ -72,7 +72,7 @@ The circumpunct framework models the universe as a *whole-with-parts* object:
 equipped with a three-stage process (convergence, aperture rotation, emergence):
 
 ```
-Φ(t+Δt) = ⊰ ∘ i ∘ ≻[Φ(t)]
+Φ(t+Δt) = ⊱ ∘ i ∘ ≺[Φ(t)]
 ```
 
 **The goal of this document is to provide:**
@@ -169,7 +169,7 @@ Multiplication by the imaginary unit in the chosen complex structure, with scale
 The one-step evolution operator is:
 
 ```
-U(Δt) = ⊰ ∘ i ∘ ≻
+U(Δt) = ⊱ ∘ i ∘ ≺
 ```
 
 acting on ℋ_Φ, so that:
@@ -301,7 +301,7 @@ or, in the quantum theory, a state in the Hilbert space ℋ_⊙ = ℋ_○ ⊗ �
 **P2.** Time evolution in a given frame is implemented by a three-stage linear operator:
 
 ```
-U(Δt) = ⊰ ∘ i ∘ ≻
+U(Δt) = ⊱ ∘ i ∘ ≺
 ```
 
 acting on ℋ_Φ, so that:
@@ -318,22 +318,7 @@ The full universe is a fixed point of the extended "validation" evolution:
 
 where V_in/out are additional validation filters.
 
-**Note on validation operators:** In the full, non-linear theory, an explicit validation gate acts at the aperture:
-
-```
-T_⊙ = ⊱ ∘ [Gate] ∘ i ∘ ≻
-
-where Gate = [• × ○ × Φ] = validation checkpoint
-```
-
-The gate computes three coherence scores:
-- **C_•** (center coherence): No self-contradiction, identity continuous
-- **C_○** (boundary integrity): Fair interface, no forced participation
-- **C_Φ** (field correspondence): Matches reality, has fitness
-
-The combined truth score is the geometric mean: Truth = (C_• × C_○ × C_Φ)^(1/3). Patterns commit to Φ' only if all three exceed threshold and log-coherence increases.
-
-In this quick-start we suppress these maps and focus on the linear kernel ⊰ ∘ i ∘ ≻, which is sufficient to recover standard QM and GR limits.
+**Note on validation operators:** In the full, non-linear theory, additional "validation" maps V_in and V_out act before and after the aperture, encoding selection, normalization, and consistency across scales. In this quick-start we suppress these maps and focus on the linear kernel ⊱ ∘ i ∘ ≺, which is sufficient to recover standard QM and GR limits.
 
 ### Postulate 3 — Aperture Balance and the Imaginary Unit
 
@@ -393,7 +378,7 @@ Empirical claim: "Braid ∝ √|g_tt|, R² ≈ 0.9997 across test metrics."
 
 ---
 
-## 4. Schrödinger Equation from U = ⊰ ∘ i ∘ ≻
+## 4. Schrödinger Equation from U = ⊱ ∘ i ∘ ≺
 
 This section derives the standard Schrödinger equation as a local limit of the circumpunct evolution.
 
@@ -546,7 +531,7 @@ where V_eff collects potential-like contributions from departures of K from pure
 ╚═══════════════════════════════════════════════════════════╝
 ```
 
-**Summary:** The single-step process ⊰∘i∘≻ defines an integral evolution operator U(Δt). Under standard locality and scaling assumptions, its generator is a self-adjoint differential operator H, and the central aperture rotation i supplies the complex structure needed to write the evolution as the Schrödinger equation.
+**Summary:** The single-step process ⊱∘i∘≺ defines an integral evolution operator U(Δt). Under standard locality and scaling assumptions, its generator is a self-adjoint differential operator H, and the central aperture rotation i supplies the complex structure needed to write the evolution as the Schrödinger equation.
 
 ---
 
@@ -937,7 +922,7 @@ The framework is falsified if:
 - **Convergence:** ≻: ℋ_Φ → ℋ_in, kernel K_conv
 - **Aperture rotation:** i: ℋ_in → ℋ_out, multiplication by imaginary unit at balance β=1/2
 - **Emergence:** ⊰: ℋ_out → ℋ_Φ, kernel K_emerg
-- **Evolution:** U(Δt) = ⊰ ∘ i ∘ ≻
+- **Evolution:** U(Δt) = ⊱ ∘ i ∘ ≺
 
 ### Key Equalities
 
@@ -993,7 +978,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 ### 10.3 Computational Implementation
 
-1. **Kernel evolution simulations:** Numerical integration of ⊰∘i∘≻ dynamics
+1. **Kernel evolution simulations:** Numerical integration of ⊱∘i∘≺ dynamics
 2. **Braid structure visualization:** 3D rendering of accumulated circumpunct histories
 3. **Dimensional transition modeling:** Simulate D(scale) crossover behavior
 4. **AGI architecture:** Implement ⊙-based computational systems with real sensors
