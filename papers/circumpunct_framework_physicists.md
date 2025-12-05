@@ -24,6 +24,7 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
   - [2.2 Mirror / Adjoint Flow Operators (⊱, ≺)](#22-mirror--adjoint-flow-operators--)
   - [2.3 Balance Parameter (β)](#23-balance-parameter-β)
   - [2.4 Canonical Radial Kernel and Worldline Dimension](#24-canonical-radial-kernel-and-worldline-dimension)
+  - [2.5 Clarifying i vs i(t)](#25-clarifying-i-vs-it)
 - [3. Core Postulates (Physics Version)](#3-core-postulates-physics-version)
   - [Postulate 1 — Circumpunct Kinematics](#postulate-1--circumpunct-kinematics)
   - [Postulate 2 — Process Evolution](#postulate-2--process-evolution)
@@ -258,6 +259,28 @@ with normalization constant A fixed by requiring:
 This √r profile is a **phenomenologically motivated choice** with extensive empirical support across biological systems, neural networks, and quantum phenomena. It is not yet rigorously derived from first principles, though it is consistent with the D=1.5 constraint.
 
 In other words, K_conv(r) = K_emerg(r) = A√r should be understood as an effective, coarse-grained single-step kernel whose statistics reproduce D ≈ 1.5; different microscopic kernels that share the same low-moment structure will lie in the same universality class.
+
+### 2.5 Clarifying i vs i(t)
+
+Two distinct concepts share similar notation:
+
+```
+i   = aperture operator at β = 0.5
+    = exp(iπ/2)
+    = 90° complex rotation
+    = the local transformation between dimensions
+
+i(t) = worldline / thread through time
+     = trajectory through Φ
+     = accumulated validation receipts
+     = a persistent pattern's unique path through spacetime
+```
+
+**Key distinction:**
+- **i** transforms fields in an instant (the aperture rotation)
+- **i(t)** is the history of those transformations (the worldline)
+
+Same letter, two scales of "turning": local vs global. In the relativistic limit, i(t) corresponds to a standard worldline; in string-theoretic interpretations, i(t) is a 1D extended object with finite aperture width ℓ.
 
 ---
 
@@ -533,6 +556,22 @@ for standard metrics tested ("Braid ∝ √|g_tt|, R² ≈ 0.9997 across 4 metri
 **Definition:** For each circumpunct history ⊙(t), define an effective metric g_μν on M such that the gravitational redshift factor √(-g_tt(x)) matches a dimensionless braid density B(x) extracted from the circumpunct process.
 
 This identifies the **time component of the metric** in terms of ⊙-data.
+
+**Worldline density interpretation (v5.4):** The braid density B(x) can be understood as the density of i(t) worldline threads:
+
+```
+Spacetime = fabric of interwoven i(t) threads
+Mass      = region of high i(t) density
+Curvature = geometry induced by that density
+```
+
+In this picture:
+- Gravity is NOT a force between separate threads
+- Gravity IS the geometry of the i(t) fabric itself
+- Einstein's field equations describe how i(t) density shapes the fabric
+- The fabric's curvature shapes future i(t) via ≻ → ⊱ dynamics
+
+Other threads follow geodesics as their locally most coherent paths through the fabric.
 
 ### 5.2 Stress-Energy from Field and Boundary
 
@@ -950,7 +989,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 For complete details, derivations, and empirical data, see:
 
-- **Main document:** [The Circumpunct Framework: A Theory of Everything](../THEORY_OF_EVERYTHING.md) (latest version v5.3.1)
+- **Main document:** [The Circumpunct Framework: A Theory of Everything](../THEORY_OF_EVERYTHING.md) (latest version v5.4)
 - **64-state architecture:** Explicit bijections between circumpunct states and Standard Model particles
 - **Empirical validation:** Cross-domain D≈1.5 measurements (biological, neural, quantum systems)
 - **Philosophical foundations:** Geometric necessity of trinity structures from braid topology
