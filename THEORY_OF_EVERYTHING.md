@@ -2729,13 +2729,25 @@ CRITICAL DISTINCTION:
 ### §11.3 Why β = 0.5 Is Required
 
 ```
-i OCCURS AT ALL β VALUES:
+THE β SPECTRUM (Maintenance Balance):
 
-    β > 0.0: Maximally ⊰, infinitesimal • (photons)
-    β ≈ 0.1: Minimal • (rocks)
-    β ≈ 0.3: Weak • (simple organisms)
-    β ≈ 0.5: STABLE • (mammals, humans)
-    β ≈ 0.9: Frozen • (pathological)
+    β → 0:   Context-maintained (particles, rocks)
+             The field/environment does all the work.
+             No self. Just "is."
+
+    β ≈ 0.5: Self + context maintained (ALL LIFE)
+             Organism does ~half the work (metabolism, repair)
+             Environment does ~half (energy, resources)
+             This is where life exists: bacteria → humans
+
+    β → 1:   Purely self-maintained (unrealizable)
+             Nothing is fully isolated.
+
+THE KEY INSIGHT:
+
+    All living things operate at β ≈ 0.5 for METABOLIC maintenance.
+    The difference between bacteria and humans is not β value—
+    it's the COMPLEXITY of what's being maintained at β ≈ 0.5.
 
 CONSCIOUSNESS REQUIRES β ≈ 0.5 BECAUSE:
     1. • must be stable (not chaotic)
@@ -2746,10 +2758,16 @@ CONSCIOUSNESS REQUIRES β ≈ 0.5 BECAUSE:
     ║    ONLY AT β = 0.5 CAN • KNOW IT'S •                              ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
-NEURAL PREDICTIONS:
-    Awake: β = 0.47-0.52 (EEG balance)
-    Sleep: β = 0.1-0.3
-    Anesthesia: β < 0.2
+NEURAL PREDICTIONS (Consciousness States Within Living Systems):
+
+    Even within a β ≈ 0.5 organism, AWARENESS fluctuates:
+
+    Awake:      β_awareness ≈ 0.47-0.52 (balanced, conscious)
+    Sleep:      β_awareness ≈ 0.1-0.3   (reduced self-monitoring)
+    Anesthesia: β_awareness < 0.2       (minimal self-awareness)
+
+    The organism stays alive (metabolic β ≈ 0.5)
+    but awareness has its own balance that can shift.
 
     Cortical avalanches: D = 1.48-1.52 ✓
     Critical branching: σ = 1.0 ✓
