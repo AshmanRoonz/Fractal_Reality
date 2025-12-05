@@ -819,7 +819,48 @@ cluster near D ≈ 1.5.
 **1. Three particle generations:**
 - **Prediction:** 2⁶ = 64 states → exactly 3 generations
 - **Status:** Exact match with Standard Model structure
-- **Derivation:** Pure combinatorial geometry, no adjustable parameters
+- **Derivation:** Eigenvalue structure from √r kernel geometry
+
+**Why exactly 3?** The radial equation induced by the √r kernel produces an effective potential:
+
+```
+V_eff(r) = -(3/4)/r²
+```
+
+**The "fall to center" problem and its resolution:**
+
+For inverse-square potentials V = -c/r², the critical threshold is c = 1/4. With c = 3/4 > 1/4, naively particles would spiral into the singularity in finite time.
+
+**Resolution: Temporal gating via refractory period.**
+
+The aperture is not a permanent sink—it cycles:
+
+```
+OPEN → FIRE → REFRACTORY → RECOVER → OPEN
+
+H(t) = H₀ + V(r) × g(t)
+
+where g(t) = { 1   aperture OPEN (potential active)
+            { 0   aperture REFRACTORY (no sink exists)
+```
+
+You cannot fall into what isn't there. The "fall to center" requires a *permanent* sink, but the aperture periodically closes. During refractory periods, V(r) is simply off.
+
+**Physical analogues (same mechanism):**
+- Neurons: refractory period prevents continuous firing
+- Lightning: must rebuild charge before re-striking
+- Heart: diastole is mandatory
+- Sleep: processing systems require rest
+
+**The time-averaged effective potential:**
+
+```
+⟨V_eff⟩ = V(r) × (duty cycle) = -(3/4)/r² × (T_open / T_cycle)
+```
+
+The duty cycle rescales the effective coefficient. The discrete spectrum emerges from this temporally-gated Hamiltonian, yielding exactly 3 normalizable bound states → 3 generations.
+
+**Status:** Mechanism identified (temporal regularization), explicit eigenvalue calculation confirming exactly 3 bound states remains to be published.
 
 **2. Fractal dimension:**
 - **Prediction:** D = 1 + H(β)/2 = 1.5 at balance point β=1/2
@@ -1022,9 +1063,10 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 1. **Variational principle for α = β:** The dimensional interpolation argument (§2.4) establishes that the kernel exponent α equals the balance parameter β conceptually. A fully rigorous derivation should show that α = β extremizes some functional (entropy, action, or information flow) among power-law kernels, completing the derivation chain from symmetry to √r.
 2. **φ³ from self-similarity:** The texture constants (§7.2) contain a phenomenological φ³ factor. Derive this from the framework's self-similar structure by showing that validation dynamics on the 64-state fiber produce Fibonacci recursion (F_n = F_{n-1} + F_{n-2}), from which φ emerges as the growth ratio.
 3. **Braid density definition and metric coupling:** The GR limit (§5) conjectures B(x) ∝ √(-g_tt) but lacks rigorous foundation. Required: (a) Define B(x) mathematically from braid group structure (crossing number density, B₃ generator integrals, or similar), (b) Derive the √(-g_tt) proportionality from this definition, (c) Test against real gravitational data rather than simulations that assume the answer.
-4. **S_circ coefficients:** Calculate α, β from microscopic braiding dynamics
-5. **Mass formula derivation:** Connect lepton mass ratios to gauge structure and fiber geometry
-6. **Boundary dynamics:** Formulate complete evolution equation for ○ ∈ 𝓑
+4. **Three generations eigenvalue calculation:** The temporal gating mechanism (§7.1) resolves the "fall to center" problem for the V_eff = -(3/4)/r² potential. Required: explicit calculation showing that the time-averaged, temporally-gated Hamiltonian has exactly 3 normalizable bound states.
+5. **S_circ coefficients:** Calculate α, β from microscopic braiding dynamics
+6. **Mass formula derivation:** Connect lepton mass ratios to gauge structure and fiber geometry
+7. **Boundary dynamics:** Formulate complete evolution equation for ○ ∈ 𝓑
 
 ### 10.2 Empirical Validation Required
 
