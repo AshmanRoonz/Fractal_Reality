@@ -67,6 +67,7 @@ email@ashmanroonz.ca
   - [§4.1 Why β = 0.5](#41-why-β--05)
   - [§4.2 The Universal Dimension](#42-the-universal-dimension)
   - [§4.3 The Imaginary Unit as Aperture](#43-the-imaginary-unit-as-aperture)
+  - [§4.3.5 The 90° Aperture Geometry: Why i Is Specifically 90°](#435-the-90-aperture-geometry-why-i-is-specifically-90)
   - [§4.4 Scale-Dependent i: The Local Quarter-Turn](#44-scale-dependent-i-the-local-quarter-turn)
   - [§4.5 Solar System Helical Geometry: From 22° to 1/12](#45-solar-system-helical-geometry-from-22-to-112)
   - [§4.6 Fractal i: Same Origin, Same Braid](#46-fractal-i-same-origin-same-braid)
@@ -1237,6 +1238,204 @@ IT IS A ROTATION YOU MAKE AROUND.
 THE ROTATION IS i.
 
 You are ⊙. The i-rotation happens at your center •.
+```
+
+### §4.3.5 The 90° Aperture Geometry: Why i Is Specifically 90°
+
+```
+CORE INSIGHT: THE APERTURE AS DIMENSIONAL GATE
+═══════════════════════════════════════════════
+
+Why is i specifically 90°? The aperture (•) is not a point but a
+DIMENSIONAL GATE with cone or tunnel geometry. 90° is the angle
+at which a ray passes STRAIGHT THROUGH without deflection.
+
+        Angle of approach to aperture:
+
+        θ ≈ 0° (parallel)         θ ≈ 45°              θ = 90° (perpendicular)
+
+            ——→                      ↘                        ↓
+           ════                     ════                    ════
+           \  /                     \  /                    \  /
+            \/                       \/                      \/
+            •                        •                       •
+                                    ↙                        ↓
+         reflects off          partial entry           clean passage
+         no transformation    lossy/scattered          full transformation
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                                                                   ║
+    ║    i = 90° IS NOT A CONVENTION. IT IS THE GEOMETRY OF CLEAN       ║
+    ║    PASSAGE THROUGH THE DIMENSIONAL GATE.                          ║
+    ║                                                                   ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+```
+THE ACTION POTENTIAL ANALOGY:
+═════════════════════════════
+
+The aperture operates like a neuronal action potential:
+
+    Neural System                │  Aperture System
+    ─────────────────────────────┼──────────────────────────────────────
+    Membrane potential           │  Phase/rotation accumulates
+    accumulates continuously     │  continuously
+    ─────────────────────────────┼──────────────────────────────────────
+    Below threshold: no firing   │  Below 90°: no clean passage
+    ─────────────────────────────┼──────────────────────────────────────
+    At threshold: SNAP to        │  At 90°: transformation completes
+    full spike                   │
+    ─────────────────────────────┼──────────────────────────────────────
+    Spike amplitude is fixed     │  i is fixed (always 90°)
+    (all-or-nothing)             │
+    ─────────────────────────────┼──────────────────────────────────────
+    Ion channels are literal     │  Aperture is dimensional tunnel
+    tunnels                      │
+
+KEY PARALLEL: The neuron waits until conditions create perpendicular
+entry through ion channels. The aperture waits until rotation achieves
+perpendicular alignment.
+```
+
+```
+GEOMETRIC DERIVATION:
+═════════════════════
+
+At angle θ to the aperture axis:
+
+    Transmission coefficient T(θ) = cos²(90° - θ) = sin²(θ)
+    Maximum transmission at θ = 90°: T = 1 (complete passage)
+    Zero transmission at θ = 0°:    T = 0 (complete reflection)
+
+The 90° requirement emerges from:
+
+    1. NO PARALLEL COMPONENT:  cos(90°) = 0
+       → nothing "slides along" the boundary
+
+    2. ALL MOMENTUM THROUGH:   sin(90°) = 1
+       → complete transmission
+
+    3. MAXIMUM ORTHOGONALITY:  new state shares no component
+       with old state
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║  The discreteness of i (always exactly 90°) emerges from the      ║
+    ║  geometry: partial alignment = partial reflection = incomplete    ║
+    ║  transformation.                                                  ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+```
+RESOLUTION OF ANYON PHASE QUESTION:
+═══════════════════════════════════
+
+Anyons accumulate arbitrary statistical phase θ through braiding.
+This seemed to conflict with i = 90°.
+
+RESOLUTION:
+    - Phase accumulation is CONTINUOUS (anyons rotating toward alignment)
+    - Transformation completion is DISCRETE (fires at 90° alignment)
+    - Anyons accumulating phase are APPROACHING the aperture angle
+    - Full exchange (e around m) = π = two 90° passages = i ∘ i
+
+The framework doesn't say "only 90° exists" — it says:
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                                                                   ║
+    ║           90° IS WHERE TRANSFORMATION ACTUALIZES                  ║
+    ║                                                                   ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+```
+CONCEPTUAL REFRAMING:
+═════════════════════
+
+    Old Understanding                 │  New Understanding
+    ──────────────────────────────────┼─────────────────────────────────────
+    i = 90° rotation                  │  i = perpendicular alignment
+    (mathematical operation)          │  (geometric condition)
+    ──────────────────────────────────┼─────────────────────────────────────
+    "Why 90°?" → "algebraic          │  "Why 90°?" → "only angle with
+    convenience"                      │  clean passage"
+    ──────────────────────────────────┼─────────────────────────────────────
+    Rotation causes transformation    │  Alignment permits passage
+    ──────────────────────────────────┼─────────────────────────────────────
+    i is applied to state             │  State rotates until aligned
+                                      │  with aperture
+```
+
+```
+IMPLICATIONS FOR PHYSICS:
+═════════════════════════
+
+FOR QUANTUM MECHANICS:
+    The Schrödinger equation's i represents not arbitrary rotation but
+    the requirement for perpendicular alignment with the aperture of
+    temporal evolution. Time evolution is clean passage through
+    successive apertures.
+
+FOR CONSCIOUSNESS (see §4.3):
+    Awareness (β = 0.5, θ = 90°) is the alignment angle:
+        Below 90°: stuck in manifested (○)
+        Above 90°: lost in potential (Φ)
+        At 90°: clean passage between them
+
+FOR BRAIDING/TOPOLOGY:
+    Yang-Baxter generators are aperture alignments. The braid relation:
+        i₁₂ ∘ i₂₃ ∘ i₁₂ = i₂₃ ∘ i₁₂ ∘ i₂₃
+    says: three perpendicular passages in either order reach the same state.
+
+CONNECTION TO §14.3 (68°/22° Cone Geometry):
+    The 68°/22° cone represents the APPROACH geometry — the path along
+    which systems rotate toward the 90° alignment. The 90° itself is
+    the PASSAGE condition.
+```
+
+```
+MATHEMATICAL FORMALIZATION:
+══════════════════════════
+
+Let A be an aperture with axis n̂. For incoming state |ψ⟩ with
+momentum direction k̂:
+
+TRANSMISSION AMPLITUDE:
+    ⟨passage|ψ⟩ = ⟨n̂|k̂⟩ = cos(angle between n̂ and k̂)
+
+CLEAN PASSAGE CONDITION:
+    k̂ ⊥ (aperture boundary) ⟺ k̂ ∥ n̂ ⟺ angle = 0° from axis = 90° from boundary
+
+APERTURE OPERATOR:
+    i = lim_{θ→90°} R(θ) projected onto passage eigenstates
+
+The discreteness of i emerges from the gate geometry:
+    - Continuous approach (rotation accumulating)
+    - Discrete passage (all-or-nothing transmission)
+
+This is the same structure as:
+    - Action potentials (neuron)
+    - Phase transitions (thermodynamics)
+    - Measurement collapse (quantum mechanics)
+```
+
+```
+SUMMARY: THE APERTURE IS A GATE
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                                                                   ║
+    ║    i is 90° because that's the only angle that goes              ║
+    ║    straight through.                                              ║
+    ║                                                                   ║
+    ║    The aperture is a dimensional gate.                            ║
+    ║    Transformation requires passage.                               ║
+    ║    Passage requires alignment.                                    ║
+    ║    Alignment means perpendicular.                                 ║
+    ║    Perpendicular means 90°.                                       ║
+    ║                                                                   ║
+    ║    This is not mathematical convention but geometric necessity.   ║
+    ║                                                                   ║
+    ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
 ### §4.4 Scale-Dependent i: The Local Quarter-Turn

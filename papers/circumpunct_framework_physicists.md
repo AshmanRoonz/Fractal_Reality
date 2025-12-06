@@ -25,6 +25,7 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
   - [2.3 Balance Parameter (β)](#23-balance-parameter-β)
   - [2.4 Canonical Radial Kernel and Worldline Dimension](#24-canonical-radial-kernel-and-worldline-dimension)
   - [2.5 Clarifying i vs i(t)](#25-clarifying-i-vs-it)
+  - [2.6 The 90° Aperture Geometry](#26-the-90-aperture-geometry)
 - [3. Core Postulates (Physics Version)](#3-core-postulates-physics-version)
   - [Postulate 1 — Circumpunct Kinematics](#postulate-1--circumpunct-kinematics)
   - [Postulate 2 — Process Evolution](#postulate-2--process-evolution)
@@ -308,6 +309,95 @@ i(t) = worldline / thread through time
 - **i(t)** is the history of those transformations (the worldline)
 
 Same letter, two scales of "turning": local vs global. In the relativistic limit, i(t) corresponds to a standard worldline; in string-theoretic interpretations, i(t) is a 1D extended object with finite aperture width ℓ.
+
+### 2.6 The 90° Aperture Geometry
+
+**Why is i specifically a 90° rotation?** The answer is geometric, not conventional.
+
+#### 2.6.1 The Aperture as Dimensional Gate
+
+The aperture (•) has cone or tunnel geometry. The 90° angle is distinguished as the **unique angle of clean passage**:
+
+```
+        Angle of approach to aperture axis:
+
+        θ ≈ 0° (parallel)         θ ≈ 45°              θ = 90° (perpendicular)
+
+            ——→                      ↘                        ↓
+           ════                     ════                    ════
+           \  /                     \  /                    \  /
+            \/                       \/                      \/
+            •                        •                       •
+                                    ↙                        ↓
+         reflects off          partial entry           clean passage
+         (T = 0)              (T = sin²θ)               (T = 1)
+```
+
+**Transmission coefficient:** For angle θ to the aperture boundary:
+
+```
+T(θ) = sin²(θ)
+
+Maximum: T(90°) = 1  (complete passage)
+Minimum: T(0°) = 0   (complete reflection)
+```
+
+**The discreteness of i** emerges from this geometry: partial alignment produces partial reflection, yielding incomplete transformation. Only perpendicular incidence achieves full passage.
+
+#### 2.6.2 Mathematical Formalization
+
+Let A be an aperture with axis **n̂**. For incoming state |ψ⟩ with momentum direction **k̂**:
+
+**Transmission amplitude:**
+```
+⟨passage|ψ⟩ = |⟨n̂|k̂⟩| = |cos(θ_axis)| = |sin(θ_boundary)|
+```
+
+**Clean passage condition:**
+```
+k̂ ⊥ (aperture boundary) ⟺ k̂ ∥ n̂ ⟺ θ_boundary = 90°
+```
+
+**Aperture operator construction:**
+```
+i = lim_{θ→90°} R(θ)|_{passage eigenstates}
+```
+
+The three conditions for maximal transformation at 90°:
+1. **No parallel component:** cos(90°) = 0 — nothing slides along the boundary
+2. **Full perpendicular projection:** sin(90°) = 1 — complete transmission
+3. **Maximum orthogonality:** transformed state is fully orthogonal to initial state
+
+#### 2.6.3 Resolution of Anyon Phase Accumulation
+
+Anyons in topological systems accumulate arbitrary statistical phase θ through braiding. This appears to conflict with the claim that i = 90° is fundamental.
+
+**Resolution:** The framework distinguishes:
+
+| Process | Nature |
+|---------|--------|
+| Phase accumulation | Continuous (rotation toward alignment) |
+| Transformation completion | Discrete (fires at 90° alignment) |
+
+Anyons accumulating phase θ are **approaching** aperture alignment. A full exchange (e around m) equals π = two 90° passages = i ∘ i.
+
+The framework does not claim "only 90° exists"—it claims **90° is where transformation actualizes**.
+
+#### 2.6.4 Connection to Schrödinger Dynamics
+
+The i in the Schrödinger equation iℏ∂ψ/∂t = Hψ represents the requirement for perpendicular alignment with the aperture of temporal evolution. Each infinitesimal time step is a passage through an aperture gate.
+
+From §4: The composite kernel includes the central aperture factor i, producing the anti-Hermitian generator that yields unitary evolution. The 90° rotation is not chosen for algebraic convenience—it is the **geometric condition** for clean transformation between states.
+
+#### 2.6.5 Connection to Yang-Baxter / Braid Topology
+
+Yang-Baxter generators correspond to aperture alignments. The braid relation:
+
+```
+i₁₂ ∘ i₂₃ ∘ i₁₂ = i₂₃ ∘ i₁₂ ∘ i₂₃
+```
+
+expresses that three perpendicular passages in either order reach the same final state—a topological invariant arising from the geometry of clean passage.
 
 ---
 
