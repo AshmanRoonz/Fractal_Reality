@@ -22,15 +22,15 @@ The central idea here is to acknowledge this asymmetry **topologically** and for
 
 ### 1.2 Topological Picture: Loops, Basepoints, and Defects
 
-Consider a 2D manifold \(M\) with punctures/defects \(\{d_i\}\). Anyonic braiding and logical operations can be described in terms of:
+Consider a 2D manifold $M$ with punctures/defects $\{d_i\}$. Anyonic braiding and logical operations can be described in terms of:
 
 - The **braid group** of worldlines of anyons/defects.
 - **Homotopy classes** of loops encircling defects.
 
 Two key mathematical structures:
 
-1. **Fundamental group \(\pi_1(M \setminus \{d_i\})\)**  
-   - Loops up to homotopy, based at a chosen point \(x_0\).  
+1. **Fundamental group $\pi_1(M \setminus \{d_i\})$**  
+   - Loops up to homotopy, based at a chosen point $x_0$.  
    - Different basepoints give isomorphic groups, but **physically** a basepoint corresponds to a reference location from which all loops are measured.
 
 2. **Mapping class group / braiding operations**  
@@ -47,9 +47,9 @@ Defining an explicit **anchor** makes this basepoint **physical** rather than pu
 
 ### 1.3 Anchor Defect as a Physical Basepoint
 
-Define an **anchor defect** \(a\) in a domain \(D\):
+Define an **anchor defect** $a$ in a domain $D$:
 
-- Nontrivial loops and braids are defined **relative to** \(a\).  
+- Nontrivial loops and braids are defined **relative to** $a$.  
 - We distinguish:
   - **Anchor-centered loops**: loops that encircle other defects/anyons *with respect to* the anchor.
   - **Free loops**: loops that do not link the anchor.
@@ -121,20 +121,20 @@ HACQA is an architectural pattern for anyonic / surface-code quantum processors 
 
 ### 2.2 Domain Structure
 
-Each **domain** \(D_k\) at level \(\ell\) consists of:
+Each **domain** $D_k$ at level $\ell$ consists of:
 
-- **Anchor defect \(a_k\):**  
+- **Anchor defect $a_k$:**  
   A distinguished defect (or small defect cluster) that serves as the **topological center** of the domain.
 
-- **Peripheral defects / anyons \(\{d_{k,i}\}\):**  
-  Defects/anyons in \(D_k\) that can be braided around each other and around \(a_k\).
+- **Peripheral defects / anyons $\{d_{k,i}\}$:**  
+  Defects/anyons in $D_k$ that can be braided around each other and around $a_k$.
 
-- **Domain boundary \(\partial D_k\):**  
+- **Domain boundary $\partial D_k$:**  
   The physical boundary of the code patch/region (holes, rough/smooth boundaries, etc.).
 
-- **Domain state \(\sigma_k\):**  
+- **Domain state $\sigma_k$:**  
   A compact descriptor capturing:
-  - Logical degrees of freedom of \(D_k\),
+  - Logical degrees of freedom of $D_k$,
   - Anchor-relative invariants (e.g., winding numbers, parities),
   - Domain “health” (error rates, syndrome statistics, etc.).
 
@@ -147,12 +147,12 @@ Each **domain** \(D_k\) at level \(\ell\) consists of:
   - Domains are small patches or tiles, each with its own anchor defect.
 
 - **Level 1 (Logical–Local):**  
-  - Each domain \(D_k\) encodes one or more logical qubits.  
-  - Braiding is expressed as **anchor-relative braids**: sequences of moves that wind peripheral defects around \(a_k\).
+  - Each domain $D_k$ encodes one or more logical qubits.  
+  - Braiding is expressed as **anchor-relative braids**: sequences of moves that wind peripheral defects around $a_k$.
 
 - **Level 2 (Logical–Global):**  
   - Domains themselves are nodes in a graph; inter-domain braids realize **higher-level logical operations**.  
-  - A **global anchor** \(A\) (a distinguished domain or defect) defines a center for system-wide invariants.
+  - A **global anchor** $A$ (a distinguished domain or defect) defines a center for system-wide invariants.
 
 The hierarchy can be extended for large-scale modular systems.
 
@@ -167,7 +167,7 @@ Instead of a single flat QEC layer, HACQA uses:
    - Corrects errors that do not disturb anchor-centered invariants.
 
 2. **Inter-domain QEC**  
-   - Monitors **domain states** \(\{\sigma_k\}\) and **higher-level invariants** (e.g., parity relations across domains).  
+   - Monitors **domain states** $\{\sigma_k\}$ and **higher-level invariants** (e.g., parity relations across domains).  
    - Corrects or re-encodes domains when inconsistencies appear at this level (e.g., domain-level logical errors).
 
 3. **Anchor-aware remapping**  
@@ -180,7 +180,7 @@ Instead of a single flat QEC layer, HACQA uses:
 HACQA integrates a feedback loop:
 
 1. **Observation:**  
-   - Collect per-domain states \(\{\sigma_k\}\): logical content, anchor-winding statistics, error histories.
+   - Collect per-domain states $\{\sigma_k\}$: logical content, anchor-winding statistics, error histories.
 
 2. **Coherence evaluation:**  
    - Compute domain-level and global coherence scores based on error rates and stability of invariants.
@@ -223,8 +223,8 @@ Implement and test the *principles* of anchor-centered, hierarchical coherence c
 
 We reinterpret standard logical structures as anchor-centered domains:
 
-- Logical qubits or code patches → **domains** \(D_k\).
-- One logical qubit or register in each domain → **anchor** \(a_k\).
+- Logical qubits or code patches → **domains** $D_k$.
+- One logical qubit or register in each domain → **anchor** $a_k$.
 - Classical control (compiler, scheduler, decoder) → **software realization** of hierarchical coherence and anchor-aware scheduling.
 
 This overlays on any platform that supports:
@@ -239,14 +239,14 @@ This overlays on any platform that supports:
 
 #### 3.3.1 Domain & Anchor Definition
 
-- Partition logical qubits into domains \(\{D_k\}\).  
-- For each \(D_k\), select an **anchor logical qubit** \(a_k\) (or small anchor register) that:
+- Partition logical qubits into domains $\{D_k\}$.  
+- For each $D_k$, select an **anchor logical qubit** $a_k$ (or small anchor register) that:
   - Carries “central” information for that domain,
   - Acts as a reference point for logical operations within that domain.
 
 #### 3.3.2 Domain State Tracker
 
-Maintain a software-level **state descriptor** \(\sigma_k\) for each domain:
+Maintain a software-level **state descriptor** $\sigma_k$ for each domain:
 
 - Role (data, ancilla, buffer),
 - Error/syndrome history (recent decoder output, estimated logical error rates),
@@ -260,7 +260,7 @@ Maintain a software-level **state descriptor** \(\sigma_k\) for each domain:
   - Compute local health metrics (e.g., logical error probability, syndrome volatility).
 
 - **Global layer:**  
-  - Monitor relations between domain states \(\{\sigma_k\}\) and enforce higher-level constraints (e.g., parity relations, symmetries used by the algorithm).  
+  - Monitor relations between domain states $\{\sigma_k\}$ and enforce higher-level constraints (e.g., parity relations, symmetries used by the algorithm).  
   - Decide when to:
     - Reroute entangling operations through different domains,
     - Redistribute or re-encode logical content (move a logical qubit to a healthier domain).
