@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>64-State Universe Creator ⊙</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        header { text-align: center; margin-bottom: 25px; }
+        h1 { font-size: 2.2rem; color: #ffd700; margin-bottom: 8px; }
+        .subtitle { color: #a0a0a0; font-size: 1rem; }
+        .equation {
+            font-family: 'Courier New', monospace;
+            background: rgba(255,255,255,0.1);
+            padding: 6px 14px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        
+        .main-layout { display: grid; grid-template-columns: 260px 1fr; gap: 20px; }
+        
+        .sidebar {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 18px;
+            height: fit-content;
+        }
+        .sidebar h2 { color: #ffd700; font-size: 1.2rem; margin-bottom: 12px; }
+        .sidebar h3 { color: #888; font-size: 0.8rem; margin: 18px 0 8px 0; text-transform: uppercase; }
+        
+        .toggle-group { display: flex; flex-direction: column; gap: 10px; }
+        .toggle-item { display: flex; align-items: center; gap: 8px; }
+        .toggle-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: #e53e3e; }
+        .toggle-item label { cursor: pointer; font-size: 0.9rem; }
+        
+        .radio-group { display: flex; flex-direction: column; gap: 6px; }
+        .radio-item { display: flex; align-items: center; gap: 6px; }
+        .radio-item input[type="radio"] { cursor: pointer; accent-color: #ffd700; }
+        .radio-item label { cursor: pointer; font-size: 0.85rem; }
+        
+        .main-content { display: flex; flex-direction: column; gap: 15px; }
+        
+        .status-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .status-card { padding: 12px; border-radius: 8px; transition: all 0.3s ease; }
+        .status-card.active { background: rgba(56, 161, 105, 0.2); border: 1px solid #38a169; }
+        .status-card.disabled { background: rgba(229, 62, 62, 0.2); border: 1px solid #e53e3e; }
+        .status-card h4 { font-size: 0.95rem; margin-bottom: 6px; }
+        .status-card.active h4 { color: #68d391; }
+        .status-card.disabled h4 { color: #fc8181; }
+        .status-card p, .status-card ul { font-size: 0.8rem; color: #a0a0a0; line-height: 1.4; }
+        .status-card ul { padding-left: 16px; margin: 0; }
+        
+        .grid-container { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; }
+        .grid-title { text-align: center; font-size: 1.1rem; color: #e0e0e0; margin-bottom: 12px; }
+        
+        .particle-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 3px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            min-height: 65px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .cell:hover { transform: scale(1.1); z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        
+        .cell.fermion { background: linear-gradient(135deg, #2b6cb0, #3182ce); }
+        .cell.gauge { background: linear-gradient(135deg, #c53030, #e53e3e); }
+        .cell.higgs { background: linear-gradient(135deg, #b7791f, #d69e2e); }
+        .cell.disabled-cell { background: #2d3748 !important; opacity: 0.5; }
+        
+        .cell.gen1 { background: linear-gradient(135deg, #4299e1, #63b3ed); }
+        .cell.gen2 { background: linear-gradient(135deg, #3182ce, #4299e1); }
+        .cell.gen3 { background: linear-gradient(135deg, #2b6cb0, #3182ce); }
+        .cell.gen-gauge { background: linear-gradient(135deg, #c53030, #e53e3e); }
+        .cell.gen-higgs { background: linear-gradient(135deg, #b7791f, #d69e2e); }
+        
+        .cell.type-quark { background: linear-gradient(135deg, #2b6cb0, #4299e1); }
+        .cell.type-lepton { background: linear-gradient(135deg, #276749, #38a169); }
+        .cell.type-gluon { background: linear-gradient(135deg, #c53030, #e53e3e); }
+        .cell.type-weak { background: linear-gradient(135deg, #c05621, #dd6b20); }
+        .cell.type-hypercharge { background: linear-gradient(135deg, #6b46c1, #805ad5); }
+        .cell.type-higgs { background: linear-gradient(135deg, #b7791f, #d69e2e); }
+        
+        .cell-id { font-size: 0.8rem; font-weight: bold; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        .cell-symbol { font-size: 0.6rem; color: rgba(255,255,255,0.9); text-align: center; margin-top: 2px; }
+        .cell-icon { position: absolute; top: 2px; right: 3px; font-size: 0.65rem; }
+        .cell-disabled-icon { position: absolute; top: 2px; left: 3px; font-size: 0.65rem; color: #fc8181; }
+        
+        .tooltip {
+            position: fixed;
+            background: rgba(20, 20, 40, 0.98);
+            border: 1px solid #4a5568;
+            border-radius: 8px;
+            padding: 12px;
+            max-width: 260px;
+            z-index: 1000;
+            pointer-events: none;
+            display: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .tooltip h5 { color: #ffd700; margin-bottom: 8px; font-size: 0.9rem; }
+        .tooltip p { color: #e0e0e0; font-size: 0.75rem; line-height: 1.4; margin: 2px 0; }
+        .tooltip .special { color: #ffd700; font-weight: bold; }
+        .tooltip .disabled-warning { color: #fc8181; font-weight: bold; margin-top: 8px; }
+        
+        .legend-section { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 15px; }
+        .legend-card { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; }
+        .legend-card h4 { font-size: 0.85rem; margin-bottom: 6px; }
+        .legend-card.fermion h4 { color: #63b3ed; }
+        .legend-card.gauge h4 { color: #fc8181; }
+        .legend-card.higgs h4 { color: #f6e05e; }
+        .legend-card.validation h4 { color: #b794f4; }
+        .legend-card p, .legend-card ul { font-size: 0.75rem; color: #a0a0a0; line-height: 1.3; }
+        .legend-card ul { padding-left: 14px; margin: 0; }
+        .legend-card code { background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px; font-size: 0.7rem; }
+        
+        .divider { height: 1px; background: rgba(255,255,255,0.1); margin: 15px 0; }
+        
+        .expander { background: rgba(255,255,255,0.05); border-radius: 8px; margin-top: 12px; }
+        .expander-header { padding: 10px 12px; cursor: pointer; font-size: 0.85rem; }
+        .expander-header:hover { background: rgba(255,255,255,0.05); border-radius: 8px; }
+        .expander-content { padding: 0 12px 12px 12px; display: none; }
+        .expander-content.open { display: block; }
+        .expander-content pre { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; font-size: 0.7rem; line-height: 1.3; color: #a0a0a0; overflow-x: auto; }
+        
+        footer { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); color: #666; font-size: 0.75rem; }
+        
+        @media (max-width: 1000px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .legend-section { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .status-cards, .legend-section { grid-template-columns: 1fr; }
+            .cell { min-height: 50px; }
+            .cell-id { font-size: 0.7rem; }
+            .cell-symbol { font-size: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⊙ 64-State Universe Creator</h1>
+            <p class="subtitle"><strong>Circumpunct Framework</strong> — Standard Model as 64-fiber bundle</p>
+            <div class="equation">Φ' = ⊰ ∘ i ∘ ≻[Φ]</div>
+        </header>
+        
+        <div class="main-layout">
+            <aside class="sidebar">
+                <h2>🌌 Universe Creator</h2>
+                <div class="toggle-group">
+                    <div class="toggle-item">
+                        <input type="checkbox" id="disable-higgs">
+                        <label for="disable-higgs">❌ Disable Higgs</label>
+                    </div>
+                    <div class="toggle-item">
+                        <input type="checkbox" id="disable-strong">
+                        <label for="disable-strong">❌ Disable Strong Force</label>
+                    </div>
+                    <div class="toggle-item">
+                        <input type="checkbox" id="disable-weak">
+                        <label for="disable-weak">❌ Disable Weak Force</label>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="toggle-item">
+                    <input type="checkbox" id="show-validation">
+                    <label for="show-validation">🔍 Show Validation</label>
+                </div>
+                <h3>Color Mode</h3>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" name="colorBy" id="color-sector" value="sector" checked>
+                        <label for="color-sector">By Sector</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="colorBy" id="color-generation" value="generation">
+                        <label for="color-generation">By Generation</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="colorBy" id="color-type" value="type">
+                        <label for="color-type">By Particle Type</label>
+                    </div>
+                </div>
+            </aside>
+            
+            <main class="main-content">
+                <div class="status-cards">
+                    <div class="status-card active" id="higgs-status">
+                        <h4>✓ Higgs Active</h4>
+                        <p>Particles acquire mass via SSB</p>
+                    </div>
+                    <div class="status-card active" id="strong-status">
+                        <h4>✓ Strong Force Active</h4>
+                        <p>Quarks confined → hadrons</p>
+                    </div>
+                    <div class="status-card active" id="weak-status">
+                        <h4>✓ Weak Force Active</h4>
+                        <p>Flavor changing → nucleosynthesis</p>
+                    </div>
+                </div>
+                
+                <div class="grid-container">
+                    <div class="grid-title">64-State Standard Model Grid (8×8 = 2⁶)</div>
+                    <div class="particle-grid" id="particle-grid"></div>
+                </div>
+                
+                <div class="legend-section">
+                    <div class="legend-card fermion">
+                        <h4>🔵 Fermions (0-47)</h4>
+                        <ul><li><b>Gen 1</b>: 0-15</li><li><b>Gen 2</b>: 16-31</li><li><b>Gen 3</b>: 32-47</li></ul>
+                        <p><code>48 = 3×16</code></p>
+                    </div>
+                    <div class="legend-card gauge">
+                        <h4>🔴 Gauge (48-59)</h4>
+                        <ul><li><b>Gluons</b>: 48-55</li><li><b>W</b>: 56-58</li><li><b>B</b>: 59</li></ul>
+                        <p><code>12 = 8+3+1</code></p>
+                    </div>
+                    <div class="legend-card higgs">
+                        <h4>🟡 Higgs (60-63)</h4>
+                        <ul><li>φ₁,φ₂ → W±</li><li>φ₃ → 125GeV</li><li>φ₄ → Z⁰</li></ul>
+                        <p><code>4 = 2×2</code></p>
+                    </div>
+                    <div class="legend-card validation" id="validation-legend">
+                        <h4>🔍 Validation</h4>
+                        <p><em>Enable in sidebar</em></p>
+                    </div>
+                </div>
+                
+                <div class="expander">
+                    <div class="expander-header" onclick="toggleExpander('counting')">📐 Counting Verification</div>
+                    <div class="expander-content" id="counting-content">
+                        <pre>FERMIONS: 16 × 3 = 48 ✓
+GAUGE: 8 + 3 + 1 = 12 ✓
+HIGGS: 2 complex = 4 ✓
+TOTAL: 48 + 12 + 4 = 64 ✓
+ANOMALY: +2 + (-2) = 0 ✓</pre>
+                    </div>
+                </div>
+                
+                <div class="expander">
+                    <div class="expander-header" onclick="toggleExpander('circ')">⊙ Circumpunct Interpretation</div>
+                    <div class="expander-content" id="circ-content">
+                        <pre>0-47:  Fermions (quarks confined, leptons free)
+48-59: Gauge (force mediators)
+60-63: Higgs (SSB → masses)
+
+Flow: Φ ──≻── • ──i── • ──⊰── Φ′
+β = ½ → D = 1.5</pre>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <footer><strong>64-State Universe Creator</strong> | Circumpunct Framework</footer>
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+    const P = {
+        0:{n:"Left Up (Red)",s:"u_L^r",g:1,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+2/3",Y:"+1/6"},
+        1:{n:"Left Up (Green)",s:"u_L^g",g:1,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+2/3",Y:"+1/6"},
+        2:{n:"Left Up (Blue)",s:"u_L^b",g:1,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+2/3",Y:"+1/6"},
+        3:{n:"Left Down (Red)",s:"d_L^r",g:1,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-1/3",Y:"+1/6"},
+        4:{n:"Left Down (Green)",s:"d_L^g",g:1,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-1/3",Y:"+1/6"},
+        5:{n:"Left Down (Blue)",s:"d_L^b",g:1,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-1/3",Y:"+1/6"},
+        6:{n:"Right Up (Red)",s:"u_R^r",g:1,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+2/3",Y:"+2/3"},
+        7:{n:"Right Up (Green)",s:"u_R^g",g:1,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+2/3",Y:"+2/3"},
+        8:{n:"Right Up (Blue)",s:"u_R^b",g:1,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+2/3",Y:"+2/3"},
+        9:{n:"Right Down (Red)",s:"d_R^r",g:1,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-1/3",Y:"-1/3"},
+        10:{n:"Right Down (Green)",s:"d_R^g",g:1,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-1/3",Y:"-1/3"},
+        11:{n:"Right Down (Blue)",s:"d_R^b",g:1,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-1/3",Y:"-1/3"},
+        12:{n:"Left e-Neutrino",s:"ν_eL",g:1,t:"lepton",c:"L",S:"Fermion",Q:"0",Y:"-1/2"},
+        13:{n:"Left Electron",s:"e_L",g:1,t:"lepton",c:"L",S:"Fermion",Q:"-1",Y:"-1/2"},
+        14:{n:"Right Electron",s:"e_R",g:1,t:"lepton",c:"R",S:"Fermion",Q:"-1",Y:"-1"},
+        15:{n:"Right e-Neutrino",s:"ν_eR",g:1,t:"lepton",c:"R",S:"Fermion",Q:"0",Y:"0"},
+        16:{n:"Left Charm (Red)",s:"c_L^r",g:2,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+2/3",Y:"+1/6"},
+        17:{n:"Left Charm (Green)",s:"c_L^g",g:2,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+2/3",Y:"+1/6"},
+        18:{n:"Left Charm (Blue)",s:"c_L^b",g:2,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+2/3",Y:"+1/6"},
+        19:{n:"Left Strange (Red)",s:"s_L^r",g:2,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-1/3",Y:"+1/6"},
+        20:{n:"Left Strange (Green)",s:"s_L^g",g:2,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-1/3",Y:"+1/6"},
+        21:{n:"Left Strange (Blue)",s:"s_L^b",g:2,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-1/3",Y:"+1/6"},
+        22:{n:"Right Charm (Red)",s:"c_R^r",g:2,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+2/3",Y:"+2/3"},
+        23:{n:"Right Charm (Green)",s:"c_R^g",g:2,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+2/3",Y:"+2/3"},
+        24:{n:"Right Charm (Blue)",s:"c_R^b",g:2,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+2/3",Y:"+2/3"},
+        25:{n:"Right Strange (Red)",s:"s_R^r",g:2,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-1/3",Y:"-1/3"},
+        26:{n:"Right Strange (Green)",s:"s_R^g",g:2,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-1/3",Y:"-1/3"},
+        27:{n:"Right Strange (Blue)",s:"s_R^b",g:2,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-1/3",Y:"-1/3"},
+        28:{n:"Left μ-Neutrino",s:"ν_μL",g:2,t:"lepton",c:"L",S:"Fermion",Q:"0",Y:"-1/2"},
+        29:{n:"Left Muon",s:"μ_L",g:2,t:"lepton",c:"L",S:"Fermion",Q:"-1",Y:"-1/2"},
+        30:{n:"Right Muon",s:"μ_R",g:2,t:"lepton",c:"R",S:"Fermion",Q:"-1",Y:"-1"},
+        31:{n:"Right μ-Neutrino",s:"ν_μR",g:2,t:"lepton",c:"R",S:"Fermion",Q:"0",Y:"0"},
+        32:{n:"Left Top (Red)",s:"t_L^r",g:3,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+2/3",Y:"+1/6"},
+        33:{n:"Left Top (Green)",s:"t_L^g",g:3,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+2/3",Y:"+1/6"},
+        34:{n:"Left Top (Blue)",s:"t_L^b",g:3,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+2/3",Y:"+1/6"},
+        35:{n:"Left Bottom (Red)",s:"b_L^r",g:3,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-1/3",Y:"+1/6"},
+        36:{n:"Left Bottom (Green)",s:"b_L^g",g:3,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-1/3",Y:"+1/6"},
+        37:{n:"Left Bottom (Blue)",s:"b_L^b",g:3,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-1/3",Y:"+1/6"},
+        38:{n:"Right Top (Red)",s:"t_R^r",g:3,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+2/3",Y:"+2/3"},
+        39:{n:"Right Top (Green)",s:"t_R^g",g:3,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+2/3",Y:"+2/3"},
+        40:{n:"Right Top (Blue)",s:"t_R^b",g:3,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+2/3",Y:"+2/3"},
+        41:{n:"Right Bottom (Red)",s:"b_R^r",g:3,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-1/3",Y:"-1/3"},
+        42:{n:"Right Bottom (Green)",s:"b_R^g",g:3,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-1/3",Y:"-1/3"},
+        43:{n:"Right Bottom (Blue)",s:"b_R^b",g:3,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-1/3",Y:"-1/3"},
+        44:{n:"Left τ-Neutrino",s:"ν_τL",g:3,t:"lepton",c:"L",S:"Fermion",Q:"0",Y:"-1/2"},
+        45:{n:"Left Tau",s:"τ_L",g:3,t:"lepton",c:"L",S:"Fermion",Q:"-1",Y:"-1/2"},
+        46:{n:"Right Tau",s:"τ_R",g:3,t:"lepton",c:"R",S:"Fermion",Q:"-1",Y:"-1"},
+        47:{n:"Right τ-Neutrino",s:"ν_τR",g:3,t:"lepton",c:"R",S:"Fermion",Q:"0",Y:"0"},
+        48:{n:"Gluon 1",s:"G¹",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
+        49:{n:"Gluon 2",s:"G²",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
+        50:{n:"Gluon 3",s:"G³",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
+        51:{n:"Gluon 4",s:"G⁴",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
+        52:{n:"Gluon 5",s:"G⁵",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
+        53:{n:"Gluon 6",s:"G⁶",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
+        54:{n:"Gluon 7",s:"G⁷",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
+        55:{n:"Gluon 8",s:"G⁸",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
+        56:{n:"W¹ Boson",s:"W¹",g:null,t:"weak",S:"Gauge",Q:"±1",Y:"0",ssb:"→W±"},
+        57:{n:"W² Boson",s:"W²",g:null,t:"weak",S:"Gauge",Q:"±1",Y:"0",ssb:"→W±"},
+        58:{n:"W³ Boson",s:"W³",g:null,t:"weak",S:"Gauge",Q:"0",Y:"0",ssb:"→Z,γ"},
+        59:{n:"B Boson",s:"B",g:null,t:"hypercharge",S:"Gauge",Q:"0",Y:"0",ssb:"→Z,γ"},
+        60:{n:"Higgs φ₁",s:"φ₁",g:null,t:"higgs",S:"Higgs",Q:"+1",Y:"+1/2",ssb:"G⁺→W⁺"},
+        61:{n:"Higgs φ₂",s:"φ₂",g:null,t:"higgs",S:"Higgs",Q:"+1",Y:"+1/2",ssb:"G⁺→W⁺"},
+        62:{n:"Higgs φ₃",s:"φ₃",g:null,t:"higgs",S:"Higgs",Q:"0",Y:"+1/2",ssb:"v+h 125GeV"},
+        63:{n:"Higgs φ₄",s:"φ₄",g:null,t:"higgs",S:"Higgs",Q:"0",Y:"+1/2",ssb:"G⁰→Z",sp:"Vacuum/Eternal"}
+    };
+    
+    const QS=new Set(),LS=new Set([12,13,14,15,28,29,30,31,44,45,46,47]),GS=new Set([48,49,50,51,52,53,54,55]),WS=new Set([56,57,58,59]),HS=new Set([60,61,62,63]);
+    for(let i=0;i<12;i++)QS.add(i);for(let i=16;i<28;i++)QS.add(i);for(let i=32;i<44;i++)QS.add(i);
+    
+    const grid=document.getElementById('particle-grid'),tt=document.getElementById('tooltip');
+    
+    function render(){
+        const dH=document.getElementById('disable-higgs').checked;
+        const dS=document.getElementById('disable-strong').checked;
+        const dW=document.getElementById('disable-weak').checked;
+        const sV=document.getElementById('show-validation').checked;
+        const cB=document.querySelector('input[name="colorBy"]:checked').value;
+        
+        updateStatus(dH,dS,dW);updateVL(sV);
+        grid.innerHTML='';
+        
+        for(let id=0;id<64;id++){
+            const p=P[id],cell=document.createElement('div');
+            cell.className='cell';
+            let dis=false;
+            if(dH&&HS.has(id))dis=true;
+            if(dS&&GS.has(id))dis=true;
+            if(dW&&WS.has(id))dis=true;
+            
+            if(dis)cell.classList.add('disabled-cell');
+            else if(cB==='sector')cell.classList.add(p.S.toLowerCase());
+            else if(cB==='generation'){
+                if(p.g===1)cell.classList.add('gen1');
+                else if(p.g===2)cell.classList.add('gen2');
+                else if(p.g===3)cell.classList.add('gen3');
+                else if(p.S==='Gauge')cell.classList.add('gen-gauge');
+                else cell.classList.add('gen-higgs');
+            }else cell.classList.add('type-'+p.t);
+            
+            let icons='';
+            if(sV&&QS.has(id))icons+='<span class="cell-icon">🔒</span>';
+            if(sV&&LS.has(id))icons+='<span class="cell-icon" style="color:#68d391">✓</span>';
+            if(dis)icons+='<span class="cell-disabled-icon">✗</span>';
+            
+            cell.innerHTML=`<span class="cell-id">${id}</span><span class="cell-symbol">${p.s}</span>${icons}`;
+            cell.onmouseenter=(e)=>showTT(e,id,dis);
+            cell.onmousemove=moveTT;
+            cell.onmouseleave=()=>tt.style.display='none';
+            grid.appendChild(cell);
+        }
+    }
+    
+    function showTT(e,id,dis){
+        const p=P[id];
+        let h=`<h5>State ${id}: ${p.n}</h5><p><b>Symbol:</b> ${p.s}</p><p><b>Sector:</b> ${p.S}</p><p><b>Q:</b> ${p.Q} | <b>Y:</b> ${p.Y}</p>`;
+        if(p.g)h+=`<p><b>Gen:</b> ${p.g}</p>`;
+        if(p.c)h+=`<p><b>Chirality:</b> ${p.c}</p>`;
+        if(p.x)h+=`<p><b>Color:</b> ${p.x}</p>`;
+        if(p.ssb)h+=`<p><b>After SSB:</b> ${p.ssb}</p>`;
+        if(p.sp)h+=`<p class="special">★ ${p.sp}</p>`;
+        if(dis)h+=`<p class="disabled-warning">⚠️ DISABLED</p>`;
+        tt.innerHTML=h;tt.style.display='block';moveTT(e);
+    }
+    
+    function moveTT(e){
+        let x=e.clientX+12,y=e.clientY+12;
+        if(x+260>window.innerWidth)x=e.clientX-270;
+        if(y+180>window.innerHeight)y=e.clientY-180;
+        tt.style.left=x+'px';tt.style.top=y+'px';
+    }
+    
+    function updateStatus(dH,dS,dW){
+        const hC=document.getElementById('higgs-status'),sC=document.getElementById('strong-status'),wC=document.getElementById('weak-status');
+        hC.className=dH?'status-card disabled':'status-card active';
+        hC.innerHTML=dH?'<h4>⚠️ HIGGS OFF</h4><ul><li>Mass=0</li><li>All at c</li><li>No atoms</li></ul>':'<h4>✓ Higgs Active</h4><p>Particles acquire mass via SSB</p>';
+        sC.className=dS?'status-card disabled':'status-card active';
+        sC.innerHTML=dS?'<h4>⚠️ STRONG OFF</h4><ul><li>No hadrons</li><li>Free quarks</li></ul>':'<h4>✓ Strong Force Active</h4><p>Quarks confined → hadrons</p>';
+        wC.className=dW?'status-card disabled':'status-card active';
+        wC.innerHTML=dW?'<h4>⚠️ WEAK OFF</h4><ul><li>No β decay</li><li>No stars</li></ul>':'<h4>✓ Weak Force Active</h4><p>Flavor changing → nucleosynthesis</p>';
+    }
+    
+    function updateVL(s){
+        const l=document.getElementById('validation-legend');
+        l.innerHTML=s?'<h4>🔍 Validation</h4><ul><li><b>🔒</b> Quarks: confined</li><li><b>✓</b> Leptons: free</li><li><b>✗</b> Disabled</li></ul>':'<h4>🔍 Validation</h4><p><em>Enable in sidebar</em></p>';
+    }
+    
+    function toggleExpander(id){document.getElementById(id+'-content').classList.toggle('open');}
+    
+    document.querySelectorAll('input').forEach(el=>el.addEventListener('change',render));
+    render();
+    </script>
+</body>
+</html>
