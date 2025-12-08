@@ -17,7 +17,7 @@ This document formalizes the insight that **phase relationships between aperture
 Each aperture • in the foam 𝔸 has:
 - Two faces: ≻ (convergence) and ⊰ (emergence)
 - Each face carries a local phase: φ_≻ and φ_⊰
-- Phase represents the "clock" of the ≻ ∘ i ∘ ⊰ cycle at that face
+- Phase represents the "clock" of the ⊰ ∘ i ∘ ≻ cycle at that face
 
 **Phase evolution:**
 ```
@@ -69,20 +69,36 @@ When context is clear, T₁₂ refers to whichever channel (convergence or emerg
 
 ## §2. Why Phase, Not Direction?
 
-### 2.1 The Isoperimetric Insight
+### 2.1 The Isotropy of ⊙
 
-The sphere is the boundary that treats all directions equally. Maximum area for given perimeter. Most efficient enclosure.
+Every component of the circumpunct is isotropic:
 
-If ○ is spherical, there's no "which way the aperture faces." It faces all directions at once.
+| Component | Why isotropic |
+|-----------|---------------|
+| • (aperture) | Point is 0.5D, dimensionless - has no extension, no preferred axis. All directions collapse to it, all directions emanate from it. |
+| ○ (boundary) | Sphere treats all directions equally (isoperimetric principle). Maximum volume for given surface area. |
+| Φ (field) | Extends uniformly in all directions from • |
 
-**Therefore:**
-- Information flow isn't directional
-- The field Φ extends in all directions
-- Convergence ≻ comes from everywhere
-- Emergence ⊰ goes everywhere
-- **Only phase determines whether apertures are open to each other**
+**Direction cannot be the gating condition at any level.** The framework eliminates orientation as a variable through geometric necessity, not choice.
 
-### 2.2 The Perpendicular Requirement
+### 2.2 Isotropy as Validation Constraint
+
+This isotropy isn't incidental - it's one of four fundamental constraints required for coherent validation:
+
+1. **Locality** - Each cycle examines a bounded region (finite reach ℓ)
+2. **Isotropy** - The aperture has no preferred direction; examines neighborhood fairly in all directions
+3. **Conservation** - Total in through ≻ equals total out through ⊰
+4. **Smoothness** - Influence falls off continuously with distance
+
+These four constraints together derive the Schrödinger equation from aperture dynamics (see Chapter VII). The same isotropy that forces phase to be the universal gating condition is what makes quantum mechanics emerge.
+
+### 2.3 Phase as the Only Remaining Variable
+
+With direction eliminated at every scale, **phase is the only control variable left.**
+
+This is why T = cos²(Δφ/2) is the universal transmission law - it's the only thing that CAN gate interaction when everything is isotropic.
+
+### 2.4 The Perpendicular Requirement
 
 From the Circumpunct axiom: branching is perpendicular (i = 90°).
 
@@ -92,6 +108,22 @@ Locally, an aperture behaves like a directional tunnel:
 - θ = 90°: straight through, clean transformation
 
 But once we impose spherical symmetry on ○, every direction has a matching normal somewhere on the surface. Direction gets averaged out. What remains as the gating condition is not angle in space, but **phase alignment between apertures**.
+
+### 2.5 The Schrödinger Connection
+
+The isotropy constraint directly yields quantum mechanics:
+
+```
+Isotropy + Locality + Conservation + Smoothness
+                    ↓
+         Schrödinger equation emerges
+                    ↓
+         iℏ ∂ψ/∂t = Ĥψ
+```
+
+The i in Schrödinger IS the aperture rotation. The isotropy that eliminates direction as a variable is the same isotropy that makes quantum amplitudes phase-dependent rather than direction-dependent.
+
+**Phase coherence and quantum mechanics share the same geometric origin.**
 
 ---
 
@@ -421,16 +453,24 @@ All three "components" (visible matter, dark matter, dark energy) become **diffe
 
 The cos²(Δφ/2) structure is literally the intensity formula from two-slit quantum interference, now elevated to a universal transmission law.
 
-### 11.2 ≻ vs ⊰ as Hidden vs Visible
+### 11.2 Isotropy Derives Both Phase Gating and Schrödinger
+
+The same geometric constraint - aperture isotropy - has two consequences:
+1. **Eliminates direction** → phase becomes the only gating variable → T = cos²(Δφ/2)
+2. **Combined with locality, conservation, smoothness** → Schrödinger equation emerges
+
+Phase coherence and quantum mechanics aren't separate phenomena. They're two expressions of the same underlying geometry.
+
+### 11.3 ≻ vs ⊰ as Hidden vs Visible
 
 - Coherent ⊰ → visible sector (EM, chemistry, Standard Model)
 - Coherent ≻ with incoherent ⊰ → hidden sector that still shapes curvature
 
-### 11.3 D = 1.5 and Coherence Domains
+### 11.4 D = 1.5 and Coherence Domains
 
 Particle size / halo size connects to coherence length at which D drops from ~3 to ~1.5 because of dense aperture cycling.
 
-### 11.4 The Master Equation Still Holds
+### 11.5 The Master Equation Still Holds
 
 ```
 Φ' = ⊰ ∘ i ∘ ≻[Φ]
