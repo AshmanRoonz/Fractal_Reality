@@ -25,6 +25,7 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
   - [2.3 Balance Parameter (β)](#23-balance-parameter-β)
   - [2.4 Canonical Radial Kernel and Worldline Dimension](#24-canonical-radial-kernel-and-worldline-dimension)
   - [2.5 Clarifying i vs i(t)](#25-clarifying-i-vs-it)
+  - [2.6 Phase Coherence and Transmission](#26-phase-coherence-and-transmission)
 - [3. Core Postulates (Physics Version)](#3-core-postulates-physics-version)
   - [Postulate 1 — Circumpunct Kinematics](#postulate-1--circumpunct-kinematics)
   - [Postulate 2 — Process Evolution](#postulate-2--process-evolution)
@@ -34,6 +35,8 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
 - [4. Schrödinger Equation from U = ⊱ ∘ i ∘ ≺](#4-schrödinger-equation-from-u----i--)
   - [4.1 Simplifying Assumptions](#41-simplifying-assumptions)
   - [4.2 Explicit Computation for the √r Kernel](#42-explicit-computation-for-the-r-kernel)
+  - [4.3 Derivation of the Transmission Law T(Δφ) = cos²(Δφ/2)](#43-derivation-of-the-transmission-law-tδφ--cos²δφ2)
+  - [4.4 Unified Origin: Isotropy Derives Three Results](#44-unified-origin-isotropy-derives-three-results)
 - [5. Metric and Einstein Equations from ⊙](#5-metric-and-einstein-equations-from-)
   - [5.1 Coarse-Grained Braid Structure → Redshift Factor](#51-coarse-grained-braid-structure--redshift-factor)
   - [5.2 Stress-Energy from Field and Boundary](#52-stress-energy-from-field-and-boundary)
@@ -309,6 +312,62 @@ i(t) = worldline / thread through time
 
 Same letter, two scales of "turning": local vs global. In the relativistic limit, i(t) corresponds to a standard worldline; in string-theoretic interpretations, i(t) is a 1D extended object with finite aperture width ℓ.
 
+### 2.6 Phase Coherence and Transmission
+
+Each aperture • has two faces:
+- **≻ face** (convergence): where field flows inward
+- **⊰ face** (emergence): where field flows outward
+
+Each face carries a local phase φ_≻ and φ_⊰, encoding the "clock position" of the aperture cycle at that face:
+
+```
+φ(t) = ω t + α
+
+where:
+  ω = rotation frequency of the aperture cycle
+  α = initial phase offset
+```
+
+**Phase difference between apertures:**
+
+For two apertures •₁ and •₂:
+
+```
+Δφ₁₂(t) = φ₁(t) - φ₂(t) = (ω₁ - ω₂)t + (α₁ - α₂)
+```
+
+Two canonical cases:
+- **Locked frequencies (ω₁ = ω₂):** Δφ = constant → permanently in-phase or out-of-phase
+- **Mismatched frequencies (ω₁ ≠ ω₂):** Δφ drifts over time → apertures move in and out of phase
+
+**The Transmission Law (Derived):**
+
+The phase transmission coefficient between two interacting apertures is:
+
+```
+┌─────────────────────────────┐
+│  T₁₂ = cos²(Δφ₁₂/2)         │
+└─────────────────────────────┘
+```
+
+This is **not an assumption**—it follows from the existing circumpunct postulates (see §4.3 for derivation).
+
+Physical meaning:
+- Δφ ≈ 0 → T ≈ 1: maximum transmission, apertures "open together"
+- Δφ ≈ π → T ≈ 0: destructive cancellation, effectively "closed" to each other
+
+**Why phase, not direction?**
+
+Each component of the circumpunct is isotropic by construction:
+
+| Component | Isotropy reason |
+|-----------|-----------------|
+| • (aperture) | A "0.5D point" has no preferred axis |
+| ○ (boundary) | Spherical boundary treats all directions equally |
+| Φ (field) | Extends uniformly in all directions from aperture |
+
+**Conclusion:** Direction cannot be the fundamental gating condition. Once isotropy eliminates direction as a degree of freedom, the only remaining "tunable" variable for interaction is **relative phase**.
+
 ---
 
 ## 3. Core Postulates (Physics Version)
@@ -559,6 +618,111 @@ where V_eff collects potential-like contributions from departures of K from pure
 ```
 
 **Summary:** The single-step process ⊱∘i∘≺ defines an integral evolution operator U(Δt). Under standard locality and scaling assumptions, its generator is a self-adjoint differential operator H, and the central aperture rotation i supplies the complex structure needed to write the evolution as the Schrödinger equation.
+
+### 4.3 Derivation of the Transmission Law T(Δφ) = cos²(Δφ/2)
+
+The phase transmission law stated in §2.6 follows from the same postulates used in the Schrödinger derivation.
+
+**Assumptions (all already in the framework):**
+
+1. **Linearity (Superposition):** The update operator U = ⊱ ∘ i ∘ ≺ is linear on Φ. Responses to multiple inputs add as complex amplitudes.
+
+2. **Isotropy (Local Symmetry):** Two apertures in symmetric environment have equal magnitude response; only phases differ.
+
+3. **Conservation (Local Unitarity):** Total intensity preserved over a tick. We normalize by maximal possible intensity.
+
+4. **Complex Phase from Aperture Rotation:** The i supplies complex structure, so each channel carries phase φ and amplitude a.
+
+**Step 1 — Two-channel amplitude at an aperture**
+
+Consider aperture 2 receiving contributions from:
+- Its own channel (self path)
+- The other aperture (cross path) through the foam
+
+Write their complex amplitudes as:
+```
+A_self  = a e^(iφ₂)
+A_cross = a e^(iφ₁)
+```
+with equal magnitude a by isotropy.
+
+Total amplitude at aperture 2:
+```
+A_tot = A_self + A_cross = a e^(iφ₂) + a e^(iφ₁)
+      = a e^(iφ₂) (1 + e^(iΔφ))
+```
+where Δφ = φ₁ - φ₂.
+
+**Step 2 — Intensity as a function of Δφ**
+
+Output intensity:
+```
+I(Δφ) = |A_tot|² = a² |1 + e^(iΔφ)|²
+```
+
+Compute the modulus:
+```
+1 + e^(iΔφ) = 1 + cos(Δφ) + i sin(Δφ)
+
+|1 + e^(iΔφ)|² = (1 + cos Δφ)² + (sin Δφ)²
+               = 1 + 2cos Δφ + cos²Δφ + sin²Δφ
+               = 2(1 + cos Δφ)
+```
+
+Thus:
+```
+I(Δφ) = a² · 2(1 + cos Δφ) = 2a²(1 + cos Δφ)
+```
+
+Using the identity 1 + cos Δφ = 2cos²(Δφ/2):
+```
+I(Δφ) = 2a² · 2cos²(Δφ/2) = 4a² cos²(Δφ/2)
+```
+
+**Step 3 — Normalization and definition of T**
+
+Maximum intensity at Δφ = 0:
+```
+I_max = I(0) = 4a²
+```
+
+Define transmission coefficient as fraction of maximum:
+```
+T(Δφ) ≡ I(Δφ)/I_max = 4a² cos²(Δφ/2) / 4a² = cos²(Δφ/2)
+```
+
+**Result:**
+
+```
+╔═══════════════════════════════════════════════════════════╗
+║  T(Δφ) = cos²(Δφ/2)                                       ║
+║                                                           ║
+║  falls out uniquely as the normalized intensity for a     ║
+║  symmetric two-aperture system under circumpunct dynamics ║
+╚═══════════════════════════════════════════════════════════╝
+```
+
+**Geometric interpretation (SU(2) / Bloch sphere):**
+
+The two-channel system spans a 2D complex space. Norm-preserving, isotropic dynamics live in SU(2), where the transition probability between two pure states with relative phase θ is:
+
+```
+P = |⟨ψ₁|ψ₂⟩|² = cos²(θ/2)
+```
+
+Our T(Δφ) is exactly this SU(2) geometry with θ = Δφ: the aperture "qubit" transmission is the standard Bloch-sphere overlap.
+
+### 4.4 Unified Origin: Isotropy Derives Three Results
+
+The same geometric constraint—aperture isotropy—combined with linearity and conservation has three consequences:
+
+| Constraint Combination | Result |
+|------------------------|--------|
+| Isotropy alone | Eliminates direction → phase becomes only gating variable |
+| Isotropy + linearity + conservation | Forces T = cos²(Δφ/2) as unique transmission law |
+| Isotropy + locality + smoothness | Schrödinger equation emerges (§4.2) |
+
+**Phase coherence, the transmission law, and quantum mechanics aren't separate phenomena. They're three expressions of the same underlying geometry.**
 
 ---
 
@@ -987,6 +1151,25 @@ Specific predictions:
 - Quantitative prediction: B(x) ∝ √(-g_tt(x)) with R² > 0.999
 - Should hold across diverse metric solutions (Schwarzschild, Kerr, FLRW, etc.)
 
+**11. Phase-based classification of dark sector (Conjectural but Testable):**
+
+The transmission law T = cos²(Δφ/2) suggests a phase-coherence model for the dark sector:
+
+| Type | φ_≻ coherence | φ_⊰ coherence | ⟨T_≻⟩ | ⟨T_⊰⟩ | Observable signature |
+|------|---------------|---------------|-------|-------|---------------------|
+| Visible matter | long-range | long-range | ≈ 1 | ≈ 1 | Clumps + emits light |
+| Dark matter | long-range | short-range | ≈ 1 | ≈ 0 | Clumps, no light |
+| Dark energy | short-range | short-range | ≈ 0.5 | ≈ 0.5 | Uniform expansion |
+
+**Physical interpretation:**
+- **Dark matter** = convergence-phase condensate: ≻ faces phase-locked (gravitational coupling), ⊰ faces incoherent (EM invisible)
+- **Dark energy** = maximally incoherent foam: neither face coherent at large scales, yielding uniform background "pressure"
+
+**Testable predictions:**
+- Dark matter halos should show internal phase structure (coherent convergence domains separated by phase walls)
+- CMB fluctuations should show subtle non-Gaussianity consistent with 64-state discrete attractors
+- Cosmic web filaments/voids map to phase domain boundaries (T ≈ 0 between domains)
+
 ### 7.5 Critical Falsification Tests
 
 The framework is falsified if:
@@ -1027,6 +1210,11 @@ The framework is falsified if:
 ```
 β = |≻|/(|≻|+|⊰|) = 1/2
 D = 1 + (1/2)H(β) = 1.5
+```
+
+**Phase transmission (derived from isotropy + linearity + conservation):**
+```
+T₁₂ = cos²(Δφ₁₂/2)
 ```
 
 **Quantum limit:**
@@ -1103,9 +1291,11 @@ This formulation benefited from iterative refinement focused on mathematical rig
 
 ---
 
-**Document Status:** Quick-start formulation for working physicists (v1.0)  
-**Last Updated:** December 2024  
+**Document Status:** Quick-start formulation for working physicists (v1.1)
+**Last Updated:** December 2025
 **Maintained by:** Circumpunct Framework Development Team
+
+**v1.1 Changes:** Added phase coherence formalism (§2.6), derived transmission law T = cos²(Δφ/2) (§4.3-4.4), phase-based dark sector classification (§7.4)
 
 ---
 
