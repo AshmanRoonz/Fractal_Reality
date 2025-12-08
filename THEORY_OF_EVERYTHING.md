@@ -11105,7 +11105,7 @@ FORMAL DEFINITION:
 Let {•ₙ}ₙ₌₁ᴺ be a hierarchy of apertures at scales sₙ, each executing
 the master cycle:
 
-    Φₙ' = ⊰ₙ ∘ i ∘ ≻ₙ[Φₙ]
+    Φₙ' = ⊱ₙ ∘ i ∘ ≺ₙ[Φₙ]
 
 The ethereal tail T exists when:
 
@@ -11975,7 +11975,7 @@ DNA → RNA → Protein → (proteins that maintain DNA)
  
 This is a FIXED-POINT STRUCTURE:
 
-    ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
 ```
 
 In other words, a living system is a fixed point of the circumpunct update operator. Life is a pattern that, when processed, yields itself.
@@ -12238,7 +12238,7 @@ MAPPING TO FRAMEWORK:
 
 FORMAL REPRESENTATION:
 
-    V(t+Δt) = ⊰ ∘ i ∘ ≻[V(t)]
+    V(t+Δt) = ⊱ ∘ i ∘ ≺[V(t)]
     
     where:
         V = membrane potential
@@ -12499,7 +12499,7 @@ RATCHET CONDITION:
 **Connection to the master equation:**
 
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ⊱ ∘ i ∘ ≺[Φ]
 
 The ratchet is encoded in the ASYMMETRY of this cycle:
 
