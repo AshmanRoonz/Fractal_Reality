@@ -324,7 +324,7 @@ body {
 
 .label-body {
     color: var(--body-color);
-    top: 8%;
+    top: 18%;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -332,7 +332,7 @@ body {
 .label-mind {
     color: var(--mind-color);
     top: 50%;
-    right: 5%;
+    right: 12%;
     transform: translateY(-50%);
 }
 
