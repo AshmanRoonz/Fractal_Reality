@@ -17,7 +17,7 @@ This document formalizes the insight that **phase relationships between aperture
 Each aperture • in the foam 𝔸 has:
 - Two faces: ≻ (convergence) and ⊰ (emergence)
 - Each face carries a local phase: φ_≻ and φ_⊰
-- Phase represents the "clock" of the ⊰ ∘ i ∘ ≻ cycle at that face
+- Phase represents the "clock" of the ≻ ∘ i ∘ ⊰ cycle at that face
 
 **Phase evolution:**
 ```
