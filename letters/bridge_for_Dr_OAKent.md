@@ -205,7 +205,7 @@ In your terms:
 - The **sponge** is a local ○ (boundary) that defines what's inside vs. outside
 - The **miRNA-target binding** is Φ (the field of regulatory information)
 - The **threshold saturation point** is • (the aperture where loading becomes release)
-- The **gene expression change** is ⊰ (emergence of new state)
+- The **gene expression change** is ⊱ (emergence of new state)
 
 The framework claims this structure is universal—from quarks to consciousness. Your work provides one of the cleanest molecular examples I've seen.
 
