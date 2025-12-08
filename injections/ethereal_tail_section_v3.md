@@ -152,13 +152,13 @@ persists across scale transitions.
 WHY CP VIOLATION MATTERS FOR THE TAIL:
 
 Without CP violation:
-    ≻ → • → ⊰  ≡  ⊰ ← • ← ≻   (time-reversible)
-    
+    ≻ → • → ⊰  ≡  ⊱ → • → ≺   (time-reversible / adjoint-symmetric)
+
     The pump cycles forward and backward with equal probability.
     No net accumulation. No direction. No tail.
 
 With CP violation:
-    P(≻ → • → ⊰) ≠ P(⊰ ← • ← ≻)   (time-asymmetric)
+    P(≻ → • → ⊰) ≠ P(⊱ → • → ≺)   (time-asymmetric)
     
     ~2.5% more matter pathways than antimatter pathways.
     Each cycle leaves a residue.
