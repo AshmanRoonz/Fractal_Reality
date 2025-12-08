@@ -189,11 +189,11 @@ THE CIRCUMPUNCT: ⊙ = ○ ⊗ Φ ⊗ •
     Φ = field (mind, information, mediating space)  
     • = center (soul, aperture, point of convergence)
 
-THE MASTER EQUATION: Φ' = ⊰ ∘ i ∘ ≻[Φ]
+THE MASTER EQUATION: Φ' = ⊱ ∘ i ∘ ≺[Φ]
 
-    ≻ = convergence (loading, gathering toward center)
+    ≺ = convergence (loading, gathering toward center)
     i = 90° rotation (the threshold, the transformation)
-    ⊰ = emergence (release, radiation outward)
+    ⊱ = emergence (release, radiation outward)
 
 THE BALANCE PARAMETER: β = 0.5
 
