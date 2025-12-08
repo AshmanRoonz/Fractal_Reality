@@ -1,5 +1,5 @@
 # A Bridge Between Scales
-## For Helen, from Ashman
+## For HB, from Ashman
 
 ---
 
