@@ -86,14 +86,84 @@ body {
 }
 
 /* ===================================
+   DIMENSION TABLE (Body/Mind/Soul + Math)
+   =================================== */
+.dimension-table {
+    border-collapse: collapse;
+    margin: 0 auto 0.5rem;
+}
+
+.dimension-row td {
+    padding: 0.15rem 0.5rem;
+    vertical-align: middle;
+}
+
+.dimension-text {
+    text-align: left;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+}
+
+.dimension-math {
+    text-align: right;
+    font-size: 0.8rem;
+}
+
+.dimension-math code {
+    font-family: 'Space Grotesk', monospace;
+    letter-spacing: 0.03em;
+    opacity: 0.7;
+    transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+.dimension-table:hover .dimension-math code {
+    opacity: 1;
+}
+
+/* Color-coded symbols */
+.symbol-body { color: var(--body-color); }
+.symbol-mind { color: var(--mind-color); }
+.symbol-soul { color: var(--soul-color); }
+.symbol-whole {
+    color: var(--circumpunct-color);
+    text-shadow: 0 0 6px var(--soul-color);
+}
+
+/* Color-coded math */
+.math-body { color: var(--body-color); }
+.math-mind { color: var(--mind-color); }
+.math-soul { color: var(--soul-color); }
+.math-whole {
+    color: var(--circumpunct-color);
+    text-shadow: 0 0 4px var(--soul-color);
+}
+
+/* First row (You ARE ⊙) special styling */
+.dimension-circumpunct .dimension-text {
+    color: var(--text);
+}
+
+.dimension-circumpunct .dimension-math code {
+    color: var(--soul-color);
+    font-size: 0.85rem;
+}
+
+/* "Everything shares this structure" line */
+.everything-line {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+}
+
+/* ===================================
    THE BIG CIRCUMPUNCT
    =================================== */
 .circumpunct-container {
     position: relative;
-    width: 65vw;
-    height: 65vw;
-    max-width: 280px;
-    max-height: 280px;
+    width: 80vw;
+    height: 80vw;
+    max-width: 340px;
+    max-height: 340px;
     margin: 0.5rem 0;
 }
 
@@ -159,6 +229,75 @@ body {
     stroke-dasharray: 4 8;
 }
 
+/* ===================================
+   CURVED NAVIGATION ARC BUTTONS
+   =================================== */
+.nav-ring {
+    pointer-events: all;
+}
+
+.nav-arc {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.nav-arc .arc-bg {
+    transition: stroke 0.3s ease, stroke-opacity 0.3s ease;
+}
+
+.nav-arc .arc-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    fill: var(--text-dim);
+    transition: fill 0.3s ease;
+}
+
+/* Hover states for arc buttons */
+.nav-arc-theory:hover .arc-bg {
+    stroke: rgba(255, 255, 255, 0.4);
+}
+.nav-arc-theory:hover .arc-text {
+    fill: var(--text);
+}
+
+.nav-arc-physics:hover .arc-bg {
+    stroke: rgba(163, 113, 247, 0.5);
+}
+.nav-arc-physics:hover .arc-text {
+    fill: var(--body-color);
+}
+
+.nav-arc-consciousness:hover .arc-bg {
+    stroke: rgba(88, 166, 255, 0.5);
+}
+.nav-arc-consciousness:hover .arc-text {
+    fill: var(--soul-color);
+}
+
+.nav-arc-ethics:hover .arc-bg {
+    stroke: rgba(240, 180, 41, 0.5);
+}
+.nav-arc-ethics:hover .arc-text {
+    fill: var(--mind-color);
+}
+
+/* Subtle breathing animation for nav ring */
+@keyframes arc-pulse {
+    0%, 100% { stroke-opacity: 1; }
+    50% { stroke-opacity: 0.6; }
+}
+
+.nav-arc .arc-bg {
+    animation: arc-pulse 6s ease-in-out infinite;
+}
+
+.nav-arc-physics .arc-bg { animation-delay: 0s; }
+.nav-arc-consciousness .arc-bg { animation-delay: 1.5s; }
+.nav-arc-ethics .arc-bg { animation-delay: 3s; }
+.nav-arc-theory .arc-bg { animation-delay: 4.5s; }
+
 /* Zone Labels - Always visible */
 .zone-labels {
     position: absolute;
@@ -211,45 +350,7 @@ body {
     text-shadow: 0 0 25px currentColor, 0 0 50px currentColor;
 }
 
-/* Equation */
-.equation {
-    margin: 0.5rem 0;
-}
-
-.equation code {
-    font-family: 'Space Grotesk', monospace;
-    font-size: 1.2rem;
-    color: var(--soul-color);
-    letter-spacing: 0.05em;
-}
-
-/* CTA */
-.cta {
-    margin-top: 0.5rem;
-}
-
-.topic-links {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
-.theory-link {
-    font-size: 0.85rem;
-    color: var(--text-dim);
-    text-decoration: none;
-    padding: 0.6rem 1.2rem;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    transition: all 0.2s ease;
-}
-
-.theory-link:hover {
-    color: var(--text);
-    border-color: var(--soul-color);
-}
+/* (Old CTA styles removed - navigation now in curved arc buttons) */
 
 /* ===================================
    PANELS - Slide up from bottom
@@ -533,16 +634,20 @@ body {
 
 /* Small mobile */
 @media (max-width: 400px) {
-    .intro-text p {
-        font-size: 0.8rem;
+    .dimension-text {
+        font-size: 0.75rem;
+    }
+
+    .dimension-math code {
+        font-size: 0.7rem;
     }
 
     .tagline {
         font-size: 0.75rem;
     }
 
-    .equation code {
-        font-size: 1rem;
+    .nav-arc .arc-text {
+        font-size: 9px;
     }
 
     .label {
@@ -554,14 +659,22 @@ body {
 /* Desktop */
 @media (min-width: 768px) {
     .circumpunct-container {
-        width: 320px;
-        height: 320px;
-        max-width: 320px;
-        max-height: 320px;
+        width: 400px;
+        height: 400px;
+        max-width: 400px;
+        max-height: 400px;
     }
 
-    .equation code {
-        font-size: 1.6rem;
+    .dimension-text {
+        font-size: 0.95rem;
+    }
+
+    .dimension-math code {
+        font-size: 0.9rem;
+    }
+
+    .nav-arc .arc-text {
+        font-size: 13px;
     }
 
     .label {
