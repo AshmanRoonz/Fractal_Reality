@@ -35,7 +35,7 @@
                     </tr>
                     <tr class="dimension-row dimension-relationship">
                         <td class="dimension-text">...all in relationship <span class="symbol-whole">⊙</span></td>
-                        <td class="dimension-math"><code class="math-whole">⊙ = fix(λΦ)</code></td>
+                        <td class="dimension-math"><code class="math-whole">⊙ = fix(λΦ. ⊱∘i∘≺)</code></td>
                     </tr>
                 </table>
                 <p class="everything-line">Everything shares this structure — atoms to galaxies</p>
@@ -45,7 +45,7 @@
 
         <!-- The Big Interactive Circumpunct -->
         <div class="circumpunct-container">
-            <svg class="circumpunct" viewBox="0 0 300 300" role="img" aria-label="Interactive Circumpunct">
+            <svg class="circumpunct" viewBox="-10 -10 320 320" role="img" aria-label="Interactive Circumpunct" style="overflow: visible;">
                 <defs>
                     <!-- Organic membrane filter for body ring (displacement + glow) -->
                     <filter id="organic-membrane" x="-50%" y="-50%" width="200%" height="200%">
@@ -72,22 +72,37 @@
                         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                     </filter>
 
-                    <!-- Arc paths for curved navigation buttons -->
-                    <!-- Top arc: Complete Theory (235° to 305°) -->
-                    <path id="arc-top" d="M 61 23 A 155 155 0 0 1 239 23" fill="none"/>
-                    <!-- Right arc: Physics (325° to 35°) -->
-                    <path id="arc-right" d="M 277 61 A 155 155 0 0 1 277 239" fill="none"/>
-                    <!-- Bottom arc: Consciousness (125° to 55°, reversed for readability) -->
-                    <path id="arc-bottom" d="M 61 277 A 155 155 0 0 1 239 277" fill="none"/>
-                    <!-- Left arc: Ethics (215° to 145°, reversed for readability) -->
-                    <path id="arc-left" d="M 23 239 A 155 155 0 0 1 23 61" fill="none"/>
+                    <!-- Arc paths for curved navigation buttons (r=160 from center 150,150) -->
+                    <!-- Top arc: Complete Theory (centered at 270°, spans 235° to 305°) -->
+                    <path id="arc-top" d="M 58 58 A 130 130 0 0 1 242 58" fill="none"/>
+                    <!-- Right arc: Physics (centered at 0°, spans 325° to 35°) -->
+                    <path id="arc-right" d="M 242 58 A 130 130 0 0 1 242 242" fill="none"/>
+                    <!-- Bottom arc: Consciousness (centered at 90°, spans 55° to 125°) -->
+                    <path id="arc-bottom" d="M 242 242 A 130 130 0 0 1 58 242" fill="none"/>
+                    <!-- Left arc: Ethics (centered at 180°, spans 145° to 215°) -->
+                    <path id="arc-left" d="M 58 242 A 130 130 0 0 1 58 58" fill="none"/>
                 </defs>
+
+                <!-- ○ BODY - Outer Ring (organic membrane) -->
+                <circle class="zone zone-body" cx="150" cy="150" r="100"
+                    fill="transparent" stroke="rgba(163, 113, 247, 0.6)" stroke-width="20" data-zone="body"/>
+
+                <!-- Φ MIND - Middle Field -->
+                <circle class="zone zone-mind" cx="150" cy="150" r="60"
+                    fill="rgba(240, 180, 41, 0.15)" stroke="rgba(240, 180, 41, 0.4)" stroke-width="2" data-zone="mind"/>
+
+                <!-- • SOUL - Center -->
+                <circle class="zone zone-soul" cx="150" cy="150" r="22"
+                    fill="rgba(88, 166, 255, 0.8)" data-zone="soul"/>
+
+                <!-- Decorative ring -->
+                <circle cx="150" cy="150" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" class="decorative"/>
 
                 <!-- Navigation Arc Buttons (outer ring) -->
                 <g class="nav-ring">
                     <!-- Top: Complete Theory -->
                     <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md" class="nav-arc nav-arc-theory">
-                        <path d="M 61 23 A 155 155 0 0 1 239 23" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="28" stroke-linecap="round" class="arc-bg"/>
+                        <path d="M 58 58 A 130 130 0 0 1 242 58" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="24" stroke-linecap="round" class="arc-bg"/>
                         <text class="arc-text">
                             <textPath href="#arc-top" startOffset="50%" text-anchor="middle">Complete Theory</textPath>
                         </text>
@@ -95,7 +110,7 @@
 
                     <!-- Right: Physics -->
                     <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/circumpunct_framework_physicists.md" class="nav-arc nav-arc-physics">
-                        <path d="M 277 61 A 155 155 0 0 1 277 239" fill="none" stroke="rgba(163,113,247,0.2)" stroke-width="28" stroke-linecap="round" class="arc-bg"/>
+                        <path d="M 242 58 A 130 130 0 0 1 242 242" fill="none" stroke="rgba(163,113,247,0.15)" stroke-width="24" stroke-linecap="round" class="arc-bg"/>
                         <text class="arc-text">
                             <textPath href="#arc-right" startOffset="50%" text-anchor="middle">Physics</textPath>
                         </text>
@@ -103,7 +118,7 @@
 
                     <!-- Bottom: Consciousness -->
                     <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md#chapter-xi-consciousness" class="nav-arc nav-arc-consciousness">
-                        <path d="M 61 277 A 155 155 0 0 1 239 277" fill="none" stroke="rgba(88,166,255,0.2)" stroke-width="28" stroke-linecap="round" class="arc-bg"/>
+                        <path d="M 242 242 A 130 130 0 0 1 58 242" fill="none" stroke="rgba(88,166,255,0.15)" stroke-width="24" stroke-linecap="round" class="arc-bg"/>
                         <text class="arc-text">
                             <textPath href="#arc-bottom" startOffset="50%" text-anchor="middle">Consciousness</textPath>
                         </text>
@@ -111,27 +126,12 @@
 
                     <!-- Left: Ethics -->
                     <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md#chapter-xx-ethics" class="nav-arc nav-arc-ethics">
-                        <path d="M 23 239 A 155 155 0 0 1 23 61" fill="none" stroke="rgba(240,180,41,0.2)" stroke-width="28" stroke-linecap="round" class="arc-bg"/>
+                        <path d="M 58 242 A 130 130 0 0 1 58 58" fill="none" stroke="rgba(240,180,41,0.15)" stroke-width="24" stroke-linecap="round" class="arc-bg"/>
                         <text class="arc-text">
                             <textPath href="#arc-left" startOffset="50%" text-anchor="middle">Ethics</textPath>
                         </text>
                     </a>
                 </g>
-
-                <!-- ○ BODY - Outer Ring (organic membrane) -->
-                <circle class="zone zone-body" cx="150" cy="150" r="120"
-                    fill="transparent" stroke="rgba(163, 113, 247, 0.6)" stroke-width="24" data-zone="body"/>
-
-                <!-- Φ MIND - Middle Field -->
-                <circle class="zone zone-mind" cx="150" cy="150" r="75"
-                    fill="rgba(240, 180, 41, 0.15)" stroke="rgba(240, 180, 41, 0.4)" stroke-width="2" data-zone="mind"/>
-
-                <!-- • SOUL - Center -->
-                <circle class="zone zone-soul" cx="150" cy="150" r="28"
-                    fill="rgba(88, 166, 255, 0.8)" data-zone="soul"/>
-
-                <!-- Decorative ring -->
-                <circle cx="150" cy="150" r="50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" class="decorative"/>
             </svg>
 
             <div class="zone-labels">
