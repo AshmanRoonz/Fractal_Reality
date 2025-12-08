@@ -11060,18 +11060,18 @@ THE FIXED-POINT FORMULATION:
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
     ║                                                                           ║
-    ║    ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                                  ║
+    ║    ⊙ = fix(λΦ. ⊱(V_out(i_β(V_in(≺(Φ))))))                                  ║
     ║                                                                           ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 
 READING THIS:
     fix     = Fixed-point combinator (Y-combinator)
     λΦ      = Lambda abstraction over field state
-    ≻(Φ)    = Convergence gathers from field
+    ≺(Φ)    = Convergence gathers from field
     V_in    = Input validation [○Φ•]_in
     i_β     = Aperture transformation at β = 0.5
     V_out   = Output validation [○Φ•]_out
-    ⊰       = Emergence releases to field
+    ⊱       = Emergence releases to field
 
 THE UNIVERSE IS A FIXED POINT OF ITS OWN OPERATION.
 
@@ -11097,7 +11097,7 @@ This is not metaphor—it's the literal mathematical structure.
 ║                                                                               ║
 ║                              ⊙ = ○ ⊗ Φ ⊗ •                                  ║
 ║                                                                               ║
-║                  ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                        ║
+║                  ⊙ = fix(λΦ. ⊱(V_out(i_β(V_in(≺(Φ))))))                        ║
 ║                  ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                 (i-Form)           ║
 ║                                                                               ║
 ║   Wholeness is its parts in tensor product (not unity absorbing parts).       ║
