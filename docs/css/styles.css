@@ -710,13 +710,13 @@ body {
         display: grid;
         grid-template-columns: 1fr auto 1fr;
         align-items: center;
-        gap: 2rem;
+        gap: 1.5rem;
         width: 100%;
-        max-width: 1200px;
+        max-width: 1400px;
     }
 
     .side-panel {
-        max-width: 280px;
+        max-width: 320px;
     }
 
     .left-panel {
@@ -741,31 +741,40 @@ body {
         margin: 0;
     }
 
+    .right-panel .dimension-row td {
+        padding: 0.25rem 0.4rem;
+    }
+
+    .right-panel .dimension-math code {
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+
     .center-panel {
         flex-shrink: 0;
     }
 
     .circumpunct-container {
-        width: 350px;
-        height: 350px;
-        max-width: 350px;
-        max-height: 350px;
+        width: 320px;
+        height: 320px;
+        max-width: 320px;
+        max-height: 320px;
     }
 
     .dimension-text {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 
     .dimension-math code {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
 
     .nav-arc .arc-text {
-        font-size: 12px;
+        font-size: 11px;
     }
 
     .label {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
 
     .panel {
