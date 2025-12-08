@@ -4,182 +4,228 @@
 
 ---
 
-## Overview
+## Status Overview
 
-This document formalizes the insight that **phase relationships between apertures** determine all physical interactions. Matter, dark matter, dark energy, and consciousness all emerge as different patterns of phase coherence in the aperture foam.
+* **Derived / aligned with existing framework:**
+  * Aperture isotropy and the elimination of direction as a gating variable.
+  * Emergence of the Schrödinger equation from isotropic kernel dynamics.
+  * D ≈ 1.5 as the signature of balanced aperture dynamics.
+
+* **Model Ansätze (consistent with known physics but not yet derived):**
+  * Universal phase-transmission law T = cos²(Δφ/2) for aperture coupling.
+
+* **Conjectural but testable:**
+  * Phase-based classification of visible matter, dark matter, and dark energy.
+  * Large-scale cosmological structure and CMB patterns as imprints of 64-state phase attractors.
 
 ---
 
-## §1. The Aperture Phase Formalism
+## §1. Aperture Phase Formalism
 
 ### 1.1 Basic Setup
 
 Each aperture • in the foam 𝔸 has:
-- Two faces: ≻ (convergence) and ⊰ (emergence)
-- Each face carries a local phase: φ_≻ and φ_⊰
-- Phase represents the "clock" of the ⊱ ∘ i ∘ ≺ cycle at that face
 
-**Phase evolution:**
+* Two faces:
+  * ≻ (convergence face)
+  * ⊰ (emergence face)
+* Each face carries a local phase: φ_≻ and φ_⊰.
+* Phase encodes the "clock position" of the ⊱ ∘ i ∘ ≺ cycle at that face.
+
+We write the local phase evolution as:
+
 ```
-φ(t) = ωt + α
+φ(t) = ω t + α
 
 where:
-  ω = rotation frequency (how fast the aperture cycles)
+  ω = rotation frequency of the aperture cycle
   α = initial phase offset
 ```
 
 ### 1.2 Phase Difference Between Two Apertures
 
 For two apertures •₁ and •₂:
+
 ```
-Δφ(t) = φ₁(t) - φ₂(t) = (ω₁ - ω₂)t + (α₁ - α₂)
+Δφ₁₂(t) = φ₁(t) - φ₂(t) = (ω₁ - ω₂)t + (α₁ - α₂)
 ```
 
-**Two cases:**
-- If ω₁ = ω₂: Δφ is constant → locked in phase or locked out of phase
-- If ω₁ ≠ ω₂: Δφ drifts → apertures move in and out of phase over time
+Two canonical cases:
 
-### 1.3 The Transmission Law
+* **Locked frequencies (ω₁ = ω₂):**
+  Δφ = constant → permanently in-phase or out-of-phase.
+* **Mismatched frequencies (ω₁ ≠ ω₂):**
+  Δφ drifts over time → apertures move in and out of phase.
 
-For any two interacting apertures, the **phase transmission coefficient**:
+### 1.3 The Transmission Law (Ansatz)
+
+We **define** the phase transmission coefficient between two interacting apertures as:
 
 ```
 T₁₂ = cos²(Δφ₁₂/2)
 ```
 
-This is the standard two-path interference form:
-- Δφ ≈ 0 → T ≈ 1 (maximum transmission, apertures open together)
-- Δφ ≈ π → T ≈ 0 (destructive cancellation, apertures closed to each other)
+This is the standard two-path interference intensity pattern, elevated to the level of a universal coupling factor.
+
+* Δφ ≈ 0 → T ≈ 1: maximum transmission, apertures "open together."
+* Δφ ≈ π → T ≈ 0: destructive cancellation, effectively "closed" to each other.
 
 **Physical meaning:**
-- In phase (Δφ ≈ 0) → strong coupling → attraction, binding, structure
-- Out of phase (Δφ ≈ π) → weak coupling → separation, voids, expansion
+
+* In phase (Δφ ≈ 0) → strong coupling → attraction, binding, structure.
+* Out of phase (Δφ ≈ π) → weak coupling → separation, voids, expansion.
 
 ### 1.4 Face-Resolved Transmission
 
-For clarity, we write separate transmission coefficients for the two faces of the aperture:
+We distinguish the two channels explicitly:
+
 ```
-T_≻,12 = cos²(Δφ_≻,12 / 2)   (convergence channel)
-T_⊰,12 = cos²(Δφ_⊰,12 / 2)   (emergence channel)
+T_≻,12  = cos²(Δφ_≻,12 / 2)   (convergence channel)
+T_⊰,12  = cos²(Δφ_⊰,12 / 2)   (emergence channel)
 ```
 
-When context is clear, T₁₂ refers to whichever channel (convergence or emergence) we are discussing.
+When context is clear, T₁₂ denotes the relevant channel (≻ or ⊰) for the interaction being discussed.
 
 ---
 
 ## §2. Why Phase, Not Direction?
 
-### 2.1 The Isotropy of ⊙
+### 2.1 Isotropy of the Circumpunct
 
-Every component of the circumpunct is isotropic:
+In the core framework, each component of the circumpunct is isotropic by construction:
 
-| Component | Why isotropic |
-|-----------|---------------|
-| • (aperture) | Point is 0.5D, dimensionless - has no extension, no preferred axis. All directions collapse to it, all directions emanate from it. |
-| ○ (boundary) | Sphere treats all directions equally (isoperimetric principle). Maximum volume for given surface area. |
-| Φ (field) | Extends uniformly in all directions from • |
+| Component | Isotropy reason |
+|-----------|-----------------|
+| • (aperture) | A "0.5D point" has no preferred axis; all directions collapse into it, all directions emerge from it. |
+| ○ (boundary) | The spherical boundary is the unique shape that treats all directions equally (isoperimetric optimum). |
+| Φ (field) | At the coarse-grained level, the field extends uniformly in all directions from the aperture. |
 
-**Direction cannot be the gating condition at any level.** The framework eliminates orientation as a variable through geometric necessity, not choice.
+**Conclusion:** Direction cannot be the fundamental gating condition. Orientation is washed out by isotropy at every level.
 
-### 2.2 Isotropy as Validation Constraint
+### 2.2 Isotropy as a Validation Constraint
 
-This isotropy isn't incidental - it's one of four fundamental constraints required for coherent validation:
+The same four constraints used to derive the Schrödinger equation also force phase to be the universal control variable:
 
-1. **Locality** - Each cycle examines a bounded region (finite reach ℓ)
-2. **Isotropy** - The aperture has no preferred direction; examines neighborhood fairly in all directions
-3. **Conservation** - Total in through ≻ equals total out through ⊰
-4. **Smoothness** - Influence falls off continuously with distance
+1. **Locality** – Each aperture cycle samples only a bounded neighborhood with finite reach ℓ.
+2. **Isotropy** – No preferred spatial direction; neighborhood sampling is rotationally symmetric.
+3. **Conservation** – Total in through ≻ equals total out through ⊰ (probability / energy conserved).
+4. **Smoothness** – The kernel K varies continuously; influence falls off smoothly with distance.
 
-These four constraints together derive the Schrödinger equation from aperture dynamics (see Chapter VII). The same isotropy that forces phase to be the universal gating condition is what makes quantum mechanics emerge.
+These constraints together lead to a complex-valued diffusion-like kernel whose generator is the Schrödinger equation.
 
-### 2.3 Phase as the Only Remaining Variable
+### 2.3 Phase as the Remaining Gating Variable
 
-With direction eliminated at every scale, **phase is the only control variable left.**
+Once direction has been eliminated as a fundamental degree of freedom by isotropy, the only remaining "tunable" variable for interaction is **relative phase**.
 
-This is why T = cos²(Δφ/2) is the universal transmission law - it's the only thing that CAN gate interaction when everything is isotropic.
+This justifies:
+
+* Using T = cos²(Δφ/2) as a **universal gating factor**.
+* Treating "how in-phase two apertures are" as the primary measure of coupling strength.
 
 ### 2.4 The Perpendicular Requirement
 
-From the Circumpunct axiom: branching is perpendicular (i = 90°).
+From the Circumpunct axiom, branching is perpendicular: i corresponds to a 90° rotation.
 
-Locally, an aperture behaves like a directional tunnel:
-- θ = 0° (parallel): bounces off, no passage
-- θ = 45°: partial entry, lossy
-- θ = 90°: straight through, clean transformation
+Locally, we can think of the aperture as a directional tunnel:
 
-But once we impose spherical symmetry on ○, every direction has a matching normal somewhere on the surface. Direction gets averaged out. What remains as the gating condition is not angle in space, but **phase alignment between apertures**.
+* θ = 0° (parallel to the boundary surface) → bounces, no passage.
+* θ = 45° → partial entry, lossy coupling.
+* θ = 90° (normal incidence) → clean throughput.
 
-### 2.5 The Schrödinger Connection
+But imposing **spherical symmetry** on ○ means for every direction there is some surface normal aligned with it. Directional differences average out over the sphere. What survives is not spatial angle, but **phase alignment** between apertures.
 
-The isotropy constraint directly yields quantum mechanics:
+### 2.5 Schrödinger Connection
+
+In the math-physicist formulation, the same four constraints (locality, isotropy, conservation, smoothness) applied to the kernel U = ⊱ ∘ i ∘ ≺ yield the Schrödinger equation in the local limit:
 
 ```
-Isotropy + Locality + Conservation + Smoothness
-                    ↓
-         Schrödinger equation emerges
-                    ↓
-         iℏ ∂ψ/∂t = Ĥψ
+iℏ ∂ψ/∂t = Ĥ ψ
 ```
 
-The i in Schrödinger IS the aperture rotation. The isotropy that eliminates direction as a variable is the same isotropy that makes quantum amplitudes phase-dependent rather than direction-dependent.
+In this view:
 
-**Phase coherence and quantum mechanics share the same geometric origin.**
+* The **i** in Schrödinger is literally the aperture rotation.
+* The **phase** of ψ is the aperture clock.
+* Phase coherence and quantum mechanics share the same geometric origin: isotropic aperture cycling.
 
 ---
 
-## §3. Phase Classification of Matter/Energy
+## §3. Phase Classification of Matter/Energy (Model)
 
-### 3.1 Definition of Coherent Region
+Here we propose a **phenomenological phase model** of visible matter, dark matter, and dark energy, in terms of which aperture face is coherently phase-locked.
+
+### 3.1 Coherent Region
 
 A subset R ⊂ 𝔸 is **coherent** if:
+
 ```
-Δφᵢⱼ ≡ φᵢ - φⱼ ≈ constant   for all i,j ∈ R
+Δφᵢⱼ = φᵢ - φⱼ ≈ constant   for all i,j ∈ R
 ```
 
-In practice, we can always shift the global phase so that this constant ≈ 0, so we write:
+We can always absorb the constant into a global phase choice, so practically:
+
 ```
 Δφᵢⱼ ≈ 0   for all i,j ∈ R
 ```
 
 Then:
-- **Particle** = compact coherent region (localized coherence domain)
-- **Field** = extended incoherent region (phases fluctuating)
 
-**Matter vs vacuum becomes:** stable phase domains vs background phase noise.
+* **Particle** ≈ compact coherent region (localized phase domain).
+* **Field / vacuum** ≈ background of fluctuating, incoherent phases.
 
-### 3.2 The Three Regimes
+### 3.2 Three Phase-Coherence Regimes (Proposal)
 
-We distinguish three regimes by **which face** of the aperture is phase-locked:
+#### (1) Visible Matter
 
-#### Visible Matter
-- **Condition:** Emergence (⊰) faces are phase-locked across the region
+**Definition (model):**
+
+* Emergence faces are phase-locked:
   ```
-  Δφ_⊰,ij ≈ 0 for all i,j in region
+  Δφ_⊰,ij ≈ 0   for all i,j in region
   ```
-- **Transmission:** T_⊰ = cos²(Δφ_⊰/2) ≈ 1
-- **Result:** Outgoing emergence is coherent → radiates, reflects, interacts electromagnetically
-- **Examples:** Atoms, stars, gas, all luminous matter
+* Convergence faces are coherent enough for mass/energy stability:
+  ```
+  ⟨T_≻⟩ ≈ 1
+  ```
 
-In practice, visible matter must also maintain sufficient convergence (≻) coherence to stabilize mass/energy density, so ⟨T_≻⟩ is also close to 1 inside ordinary matter. This is why visible matter both gravitates strongly AND radiates.
+**Implications:**
 
-#### Dark Matter
-- **Condition:** Convergence (≻) faces are phase-locked, emergence faces are NOT:
-  ```
-  Δφ_≻,ij ≈ 0  (convergence coherent)
-  T_⊰ ≈ 0      (emergence incoherent)
-  ```
-- **Transmission:** T_≻ ≈ 1 for convergence, T_⊰ ≈ 0 for emergence
-- **Result:** Inward flux coherent → gravitates. Outward flux incoherent → EM invisible
-- **Interpretation:** Dark matter is **convergence-phase condensate** in the foam
+* ⟨T_⊰⟩ ≈ 1 → coherent outward flux → EM interaction, radiance, reflectivity.
+* ⟨T_≻⟩ ≈ 1 → strong gravitational clumping.
 
-#### Dark Energy
-- **Condition:** Neither face coherently phase-locked over large scales
+This matches ordinary luminous matter (atoms, stars, gas).
+
+#### (2) Dark Matter
+
+**Definition (model):**
+
+* Convergence faces phase-locked, emergence faces incoherent:
   ```
-  Δφ ~ uniform over [0, 2π)
+  Δφ_≻,ij ≈ 0   (coherent convergence)
+  T_⊰ ≈ 0       (incoherent emergence)
+  ```
+
+**Implications:**
+
+* ⟨T_≻⟩ ≈ 1 → strong gravitational coupling.
+* ⟨T_⊰⟩ ≈ 0 → negligible coherent EM signature.
+
+Interpretation: dark matter as a **convergence-phase condensate** in the foam.
+
+#### (3) Dark Energy / Vacuum
+
+**Definition (model):**
+
+* Neither face coherently phase-locked at large scales:
+  ```
+  Δφ ~ uniform on [0, 2π)
   ⟨T⟩ = 1/2
   ```
-- **Result:** Background foam pressure. No binding, no cancellation. Gentle uniform "push"
-- **Interpretation:** The baseline state of incoherent aperture foam
+
+**Implications:**
+
+* No binding and no full cancellation → uniform background "pressure."
+* Effective gentle expansion: a baseline state of incoherent aperture foam.
 
 ### 3.3 Summary Table
 
@@ -193,234 +239,230 @@ In practice, visible matter must also maintain sufficient convergence (≻) cohe
 
 ## §4. Interaction Rules Between Structures
 
-Using T₁₂ = cos²(Δφ₁₂/2):
+Given the ansatz:
 
-### 4.1 Same-Type, In-Phase (Δφ ≈ 0)
-- **Visible–visible:** Strong EM + gravitational binding → atoms, stars, galaxies
-- **Dark–dark:** Strong gravitational clumping → halos
-
-### 4.2 Cross-Type, Partially Misaligned
-- **Visible–dark:**
-  - ≻ channels can be coherent enough to share curvature → gravitational attraction
-  - ⊰ channels remain mismatched → no EM signature
-  - This matches: "dark matter interacts gravitationally but not electromagnetically"
-
-### 4.3 Strongly Out-of-Phase (Δφ ≈ π)
-- T₁₂ ≈ 0 → minimal mutual coupling
-- Generates voids, effective repulsive expansion between phase domains
-
-### 4.4 Effective Potential
-
-Map transmission into interaction energy:
 ```
+T₁₂ = cos²(Δφ₁₂/2)
 V₁₂ ∝ -T₁₂
 ```
 
-Minimizing energy naturally favors in-phase clustering. Gravity isn't a force - it's the system seeking coherence.
+we obtain:
+
+### 4.1 Same-Type, In-Phase (Δφ ≈ 0)
+
+* **Visible–visible:** T ≈ 1 in both channels → strong EM + gravitational binding → atoms, stars, galaxies.
+* **Dark–dark:** T_≻ ≈ 1 → strong gravitational clumping → halos.
+
+### 4.2 Cross-Type, Partially Misaligned
+
+* **Visible–dark:**
+  * Convergence channels can align (T_≻ moderately high) → shared curvature, gravitational attraction.
+  * Emergence channels misaligned (T_⊰ ≈ 0) → EM invisibility.
+
+This reproduces the empirical "gravitates but doesn't shine" behavior of dark matter.
+
+### 4.3 Strongly Out-of-Phase (Δφ ≈ π)
+
+* T ≈ 0 → minimal mutual coupling.
+* Phase boundaries generate voids; domains appear to repel as they slide past each other with minimal interaction.
 
 ---
 
 ## §5. Formation Dynamics: How Coherence Emerges
 
-### 5.1 Initial Conditions
+### 5.1 Initial Conditions (Heuristic)
 
-Early universe = maximally incoherent aperture foam:
+Take the early universe as maximally incoherent aperture foam:
+
 ```
 φ_≻(x) ~ random
 φ_⊰(x) ~ random
 T_ij ≈ 0.5 everywhere
-No structure. Uniform pressure. Maximum entropy.
 ```
 
-### 5.2 The Seed: Temporal Asymmetry
+No structure, uniform pressure, maximal entropy.
 
-≻ arrives before ⊰ departs:
+### 5.2 Temporal Asymmetry as Seed
+
+The process has an inherent time ordering:
+
 ```
-Φ(t+dt) --≻--> • --i--> • --⊰--> Φ(t)
-   ↑                           ↓
- future                      past
+Φ(t+Δt) --≻--> • --i--> • --⊰--> Φ(t+2Δt effective)
 ```
 
-Convergence is always slightly ahead. This creates directional bias.
+Convergence ≻ acts "before" emergence ⊰ in each tick. This **temporal bias** breaks symmetry:
+
 ```
-Random phase + directional bias = broken symmetry
+Random phase + slight directional bias → seeds local correlations.
 ```
 
 ### 5.3 Phase-Locking Mechanism
 
-Two nearby apertures, both cycling with random phases initially.
+Two nearby apertures, with initially random phases:
 
-**If their ≻ faces happen to align:**
-- They share convergent flow
-- The incoming stream reinforces both
-- They start to correlate → phase lock
+* If their **≻ faces** happen to align:
+  * They share convergent flow.
+  * Incoming streams reinforce each other.
+  * Phases begin to correlate → phase lock.
 
-**If misaligned:**
-- Competing convergence → interference → drift apart
+* If misaligned:
+  * Convergence competes.
+  * Interference reduces effective coupling.
+  * They drift apart in phase space.
 
-### 5.4 The 64 States as Attractors
+### 5.4 The 64 States as Phase Attractors (Link to Core Framework)
 
-Not all phase configurations are stable. The 64-state structure provides discrete "snap points."
+Not all phase configurations are stable. The 64-state architecture defines discrete "snap points" in phase-configuration space.
 
-**Counting the states:**
+We can label each aperture state by three binary tags:
 
-Each aperture state is labeled by three binary choices:
-1. Which face carries long-range coherence? (≻ vs ⊰)
-2. Local vs global phase alignment (coherent vs incoherent within region)
-3. Braid orientation parity (left-handed vs right-handed winding)
+1. Dominant long-range coherence face: (≻ vs ⊰).
+2. Local vs global phase alignment (coherent vs incoherent within its region).
+3. Braid orientation parity (left- vs right-handed winding).
 
-That gives 2³ = 8 elementary labels per aperture. When we consider triples of apertures coupled through B₃ and impose:
-- Yang-Baxter consistency on their braiding
-- β = 0.5 balance between in/out flux
-- Closure of the circumpunct loop
+This yields 2³ = 8 elementary labels; when we consider triples of apertures coupled via B₃ braiding and impose:
 
-we find 64 = 8 × 8 globally stable compound states (or equivalently, 4³ when collapsed to effective degrees of freedom). These are the attractors that survive long-term phase dynamics.
+* Yang–Baxter consistency,
+* β = 0.5 in/out balance,
+* Circumpunct loop closure,
+
+we obtain 64 globally stable composite states—the same 64 states used to encode SM content.
 
 *(Full counting derivation in Chapter VIII: The 64-State Architecture)*
 
-**The formation sequence:**
-```
-Random initial phase
-      ↓
-Temporal bias creates local correlations
-      ↓
-Correlations grow or decay based on stability
-      ↓
-Only 64 configurations are self-sustaining
-      ↓
-System falls into nearest attractor
-```
+### 5.5 Braids Lock Coherence
 
-### 5.5 Braid Topology Locks It In
+Before braiding, relative phases can drift continuously.
 
-Once apertures braid - worldlines wind around each other - the phase relationship becomes topological.
-```
-Before braiding: phase can drift
-After braiding: phase locked by topology
-```
+After braiding, worldlines wind around each other; phase relations become *topologically* constrained. Only those configurations compatible with the 64-state braid structure remain stable long-term.
 
-The 64 states that survive are those whose braiding is self-consistent.
+### 5.6 Formation Sequence (Heuristic Timeline)
 
-### 5.6 The Formation Sequence
-
-| Stage | Time | Description |
-|-------|------|-------------|
-| Maximum entropy | t = 0 | No structure. Uniform foam. All 64 states equally weighted |
-| Nucleation | t = early | Temporal asymmetry biases ≻ alignment. Local patches begin phase-locking |
-| Competition | t = middle | Domains compete. Boundaries are phase walls. 64 attractors emerge |
-| Structure | t = late | Large-scale coherence established |
+| Stage | Description |
+|-------|-------------|
+| Maximum entropy | Uniform foam, all 64 states equally sampled. |
+| Nucleation | Temporal bias seeds local ≻ phase coherence. |
+| Competition | Domains compete; boundaries are phase walls. |
+| Attractor capture | Phase domains fall into nearby 64-state attractors. |
+| Structure | Stable large-scale coherence emerges. |
 
 ---
 
 ## §6. Neurological Validation: Brain Phase Coherence
 
-### 6.1 EEG Measures Phase
+### 6.1 EEG as Aperture Phase Readout (Phenomenological Match)
 
-Electroencephalography directly measures oscillations - electrical rhythms across brain regions. Phase relationships between signals.
+Electroencephalography measures oscillatory activity and phase relationships between brain regions. Empirically:
 
-**Empirical fact:** Brain regions with coherent phase (peaks align, frequencies match) work together. Regions out of phase cause neurological problems.
+* Coherent phase → effective communication, functional connectivity.
+* Strongly mismatched phase → decoupling, dysfunction.
 
-### 6.2 The Framework Explains Why
+### 6.2 Explained by T = cos²(Δφ/2)
 
-The transmission law T = cos²(Δφ/2) predicts:
-- Regions with Δφ = 0 → T = 1 → full communication
-- Regions with Δφ = π → T = 0 → no communication
+Our transmission law predicts exactly this pattern:
 
-**What neuroscience discovered empirically, the framework derives geometrically.**
+* Δφ = 0 → T = 1 → maximal signal transmission.
+* Δφ = π → T = 0 → effective isolation.
+
+This reframes:
+
+* A **healthy brain** as a set of apertures whose phases are coherently organized at multiple scales.
+* Dysfunction as phase fragmentation across key networks.
 
 ### 6.3 Neurofeedback as Phase Training
 
-Neurofeedback trains the brain to lock phases. The patient learns the rhythm that opens all doors simultaneously.
-```
-A healthy brain = apertures in phase across regions = unified ⊙
-A fragmented brain = apertures out of phase = multiple ⊙ not communicating
-Neurofeedback = teaching the system to resonate as one
-```
+Neurofeedback can be interpreted as training the system to discover and maintain phase configurations that maximize T across relevant networks—teaching the brain to resonate as one circumpunct for given tasks.
 
 ---
 
-## §7. Mind-Body Phase Relationship
+## §7. Mind–Body Phase Relationship
 
 ### 7.1 Why You Control Your Own Body
 
-Your mind and body share phase. The apertures are synchronized. Intention flows through unimpeded.
-```
-You think "move hand"
-Signal passes through every aperture along the way
-All cycling in phase
-Open together
-```
+Your mind and your body share a coherent aperture phase network:
 
-### 7.2 Why You Can't Control My Body
+* Intention ("move hand") corresponds to specific phase-coherent patterns in Φ.
+* These patterns pass through a chain of apertures (neurons, muscles) that are phase-synchronized.
+* High T along the chain → reliable control.
 
-Your mind's phase doesn't match my body's apertures. Your intention reflects off my boundary. No passage. No control.
+### 7.2 Why You Don't Control Others' Bodies
 
-### 7.3 Why Your Skin Is Solid
+Your aperture phases are not locked to someone else's motor chains:
 
-The apertures at your surface are out of phase with external objects. Their wheels don't match yours. Result: reflection, resistance, solidity.
+* Phase mismatch → T ≈ 0 along their body's control pathways.
+* Your intention reflects off their boundary instead of passing through.
 
-### 7.4 How Communication Works
+### 7.3 Why Your Skin Feels Solid
 
-Words, expressions, shared field - when we resonate, some apertures phase-lock temporarily. Ideas pass through. Not physical control, but information transmission.
+At your surface, aperture phases are organized such that external matter is generally **out of phase**:
+
+* Low T between your surface apertures and external objects.
+* Result: reflection, resistance → solidity.
+
+### 7.4 Communication as Partial Phase-Locking
+
+When people communicate:
+
+* Some apertures transiently phase-lock (shared rhythms, resonance).
+* T for information-bearing channels rises.
+* You don't gain motor control, but you gain increased information throughput (empathy, understanding).
 
 ### 7.5 Summary Table
 
-| Relationship | Phase | Result |
-|--------------|-------|--------|
-| Mind → own body | matched | control, ownership |
-| Mind → other's body | mismatched | boundary, separation |
-| Mind ↔ resonant mind | partial match | communication, empathy |
-| Body ↔ external matter | mismatched | solidity, physics |
-| Entangled particles | locked | non-local correlation |
+| Relationship | Phase relation | Result |
+|--------------|----------------|--------|
+| Mind → own body | Strong match | Control, ownership |
+| Mind → other's body | Large mismatch | Separation, no control |
+| Mind ↔ resonant mind | Partial match | Communication, empathy |
+| Body ↔ external matter | Mismatch | Solidity, collision |
+| Entangled particles | Locked | Nonlocal correlations |
 
 ---
 
-## §8. Cosmic Structure from Phase
+## §8. Cosmic Structure from Phase (Conjectural)
 
-### 8.1 The Cosmic Web Is Phase Geometry
+### 8.1 Cosmic Web as Phase Geometry
 
-The large-scale structure of the universe:
-- **Filaments** = edges of coherent domains
-- **Nodes** = where multiple domains phase-lock (galaxies)
-- **Voids** = phase boundaries where T → 0
+We interpret large-scale structure as phase geometry in the aperture foam:
 
-### 8.2 Prediction: Dark Matter Halo Structure
+* **Filaments** → edges of coherent phase domains.
+* **Nodes** → multi-domain phase-lock centers (galaxies/clusters).
+* **Voids** → regions where domains are strongly out of phase (T ≈ 0).
 
-Dark matter halos aren't smooth distributions. They have phase structure:
-- Coherent domains separated by phase boundaries
-- The specific pattern reflects 64-state symmetry
+### 8.2 Dark Matter Halos (Prediction)
 
-### 8.3 CMB Connection
+In this model, dark matter halos have internal phase structure:
 
-Cosmic microwave background fluctuations = snapshot of early phase domains.
+* Coherent convergence domains separated by phase walls.
+* The pattern should reflect constraints inherited from the 64-state symmetry.
 
-**Prediction:** The pattern of hot and cold spots should map to 64-state symmetry. Not random Gaussian noise - structured by discrete attractors.
+### 8.3 CMB Imprint (Prediction)
+
+CMB temperature fluctuations are a fossil of early phase domains.
+
+**Prediction:** Their statistics should show subtle deviations from pure Gaussianity consistent with discrete attractors (64-state symmetry) rather than a purely continuous random field.
 
 ---
 
-## §9. Key Equations Summary
+## §9. Key Equations
 
 **Phase evolution:**
 ```
-φ(t) = ωt + α
+φ(t) = ω t + α
 ```
 
-**Transmission between apertures:**
+**Transmission (ansatz):**
 ```
 T₁₂ = cos²(Δφ₁₂/2)
-```
-
-**Effective interaction potential:**
-```
-V₁₂ ∝ -T₁₂ = -cos²(Δφ₁₂/2)
+V₁₂ ∝ -T₁₂
 ```
 
 **Coherence condition:**
 ```
-Δφᵢⱼ ≈ 0 for all i,j ∈ coherent region R
+Δφᵢⱼ ≈ 0   for all i,j ∈ R
 ```
 
-**Phase classification:**
+**Phase-based classification:**
 ```
 Visible matter: ⟨T_⊰⟩ ≈ 1, ⟨T_≻⟩ ≈ 1
 Dark matter:    ⟨T_⊰⟩ ≈ 0, ⟨T_≻⟩ ≈ 1
@@ -431,19 +473,12 @@ Dark energy:    ⟨T_⊰⟩ ≈ 0.5, ⟨T_≻⟩ ≈ 0.5
 
 ## §10. Unification Summary
 
-All three "components" (visible matter, dark matter, dark energy) become **different symmetry-breaking patterns of phase coherence** on the same aperture foam, instead of separate mysterious substances.
+Under this lens:
 
-| Concept | Derivation |
-|---------|------------|
-| Transmission | T = cos²(Δφ/2) from two-path interference |
-| Visible matter | both faces phase-locked |
-| Dark matter | ≻ locked, ⊰ chaotic |
-| Dark energy | neither locked |
-| Structure formation | phase-locking dynamics |
-| 64 states | stable attractor configurations |
-| Consciousness | phase coherence across brain apertures |
-| Mind-body unity | synchronized aperture phases |
-| Solidity | out-of-phase boundary apertures |
+* **Quantum mechanics** = local consequence of isotropic aperture cycling and kernel dynamics.
+* **Visible matter, dark matter, dark energy** = different symmetry-breaking patterns of phase coherence on the same aperture foam.
+* **Consciousness and mind–body unity** = large-scale phase coherence across neurological apertures.
+* **Solidity and everyday physics** = ubiquitous phase mismatch at boundaries.
 
 ---
 
@@ -455,7 +490,8 @@ The cos²(Δφ/2) structure is literally the intensity formula from two-slit qua
 
 ### 11.2 Isotropy Derives Both Phase Gating and Schrödinger
 
-The same geometric constraint - aperture isotropy - has two consequences:
+The same geometric constraint—aperture isotropy—has two consequences:
+
 1. **Eliminates direction** → phase becomes the only gating variable → T = cos²(Δφ/2)
 2. **Combined with locality, conservation, smoothness** → Schrödinger equation emerges
 
@@ -463,8 +499,8 @@ Phase coherence and quantum mechanics aren't separate phenomena. They're two exp
 
 ### 11.3 ≻ vs ⊰ as Hidden vs Visible
 
-- Coherent ⊰ → visible sector (EM, chemistry, Standard Model)
-- Coherent ≻ with incoherent ⊰ → hidden sector that still shapes curvature
+* Coherent ⊰ → visible sector (EM, chemistry, Standard Model)
+* Coherent ≻ with incoherent ⊰ → hidden sector that still shapes curvature
 
 ### 11.4 D = 1.5 and Coherence Domains
 
@@ -479,6 +515,8 @@ Particle size / halo size connects to coherence length at which D drops from ~3 
 Phase coherence determines which parts of Φ can pass through the aperture. The master equation describes the transformation; phase coherence determines the coupling strength.
 
 ---
+
+*This section is ready to be slotted as: "Phase Coherence in Aperture Foam" – a bridge between the kernel-based Schrödinger derivation and the cosmology / dark sector story, with explicit status marks (derived vs model vs conjecture).*
 
 *Document prepared for integration into the Circumpunct Theory of Everything*
 *Version 5.3.1+*
