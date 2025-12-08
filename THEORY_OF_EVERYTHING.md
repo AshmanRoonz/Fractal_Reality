@@ -689,9 +689,9 @@ THE BRAID BREATHES:
     whole → ∞ apertures → ∞ lines → braid into field → whole
 
     CONTRACTION (convergence):
-    ⊙ ≻ i• ⊰ iΦ ≻ i○ ⊰ ⊙
+    ⊙ ≺ i• ⊱ iΦ ≺ i○ ⊱ ⊙
     │    │    │    │    │
-    whole → through center → field → through boundary → whole
+    whole ← through center ← field ← through boundary ← whole
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
 ║  KEY INSIGHT: The whole (⊙) and field (Φ) are not sequential stages      ║
