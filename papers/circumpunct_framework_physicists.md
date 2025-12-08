@@ -24,6 +24,7 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
   - [2.2 Mirror / Adjoint Flow Operators (⊱, ≺)](#22-mirror--adjoint-flow-operators--)
   - [2.3 Balance Parameter (β)](#23-balance-parameter-β)
   - [2.4 Canonical Radial Kernel and Worldline Dimension](#24-canonical-radial-kernel-and-worldline-dimension)
+  - [2.4.1 The Aperture Rotation Operator Å(β)](#241-the-aperture-rotation-operator-åβ)
   - [2.5 Clarifying i vs i(t)](#25-clarifying-i-vs-it)
   - [2.6 Phase Coherence and Transmission](#26-phase-coherence-and-transmission)
 - [3. Core Postulates (Physics Version)](#3-core-postulates-physics-version)
@@ -289,6 +290,59 @@ with normalization constant A fixed by requiring:
 3. The kernel exponent equals the balance parameter (α = β = 0.5)
 
 In other words, K_conv(r) = K_emerg(r) = A√r should be understood as an effective, coarse-grained single-step kernel whose statistics reproduce D ≈ 1.5; different microscopic kernels that share the same low-moment structure will lie in the same universality class.
+
+### 2.4.1 The Aperture Rotation Operator Å(β)
+
+The aperture transformation i can be generalized to a one-parameter U(1) rotation:
+
+```
+Å(β) = exp(iπβ),    β ∈ [0,1]
+```
+
+This **aperture rotation operator** satisfies:
+
+| Property | Formula | Meaning |
+|----------|---------|---------|
+| Unit magnitude | \|Å(β)\| = 1 | Conserves flow magnitude |
+| Composition | Å(β₁)Å(β₂) = Å(β₁+β₂ mod 2) | Proper U(1) subgroup |
+| β = 0 | Å(0) = 1 | Identity (0° rotation) |
+| β = 0.5 | Å(0.5) = i | Quarter-turn (90° rotation) |
+| β = 1 | Å(1) = -1 | Half-turn (180° rotation) |
+
+**Unification through β:** The balance parameter appears in three equivalent contexts:
+
+1. **Flow balance:** β = |≻| / (|≻| + |⊰|)
+2. **Rotation angle:** θ(β) = πβ
+3. **Fractal dimension:** D(β) = 1 + ½H(β)
+
+At the critical balance point β = 1/2, all three unify:
+- Flow: Perfectly balanced convergence/emergence
+- Rotation: 90° perpendicular transformation
+- Dimension: D = 1.5 (optimal fractal branching)
+
+**Geometric optimality at β = 0.5:**
+
+The 90° rotation is geometrically optimal because it:
+1. Maximizes distance on unit circle (midway between identity and inversion)
+2. Maximizes Shannon entropy (equal probability of convergence vs emergence)
+3. Enables fractal branching (redirects flow into perpendicular mode)
+
+**Generalized master equation:**
+
+```
+Original:    Φ' = ⊱ ∘ i ∘ ≺[Φ]
+Generalized: Φ' = ⊱ ∘ Å(β) ∘ ≺[Φ]
+```
+
+At β = 0.5: Å(0.5) = exp(iπ/2) = i
+
+**Therefore:** The canonical "i" in the master equation is literally the 90° aperture rotation at optimal balance. The imaginary unit emerges from aperture geometry, not imposed from outside.
+
+**Schrödinger connection:** Time evolution in QM has form U(Δt) = exp(-iEΔt/ℏ). Aperture rotation has form Å(β) = exp(iπβ). Identifying θ(t) = πβ(t) = Et/ℏ gives:
+
+- **Energy is the rotation rate of the aperture clock**
+- **ℏ is the conversion factor** (phase to energy)
+- **The "i" in iℏ∂/∂t is Å(0.5)** — the 90° rotation at optimal balance
 
 ### 2.5 Clarifying i vs i(t)
 
@@ -1256,6 +1310,12 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 5. **S_circ coefficients:** Calculate α, β from microscopic braiding dynamics
 6. **Mass formula derivation:** Connect lepton mass ratios to gauge structure and fiber geometry
 7. **Boundary dynamics:** Formulate complete evolution equation for ○ ∈ 𝓑
+8. **Discrete aperture graph derivation:** To upgrade from "geometric reduction" to "full derivation from geometry alone," pursue the following path:
+   - Start with discrete aperture graph (not continuum ℝ³)
+   - Require at each node: isotropic adjacency (same degree, symmetric neighbours) and strictly conserved flow (unitarity at graph level)
+   - Derive: adjacency/Laplacian as unique generator compatible with constraints
+   - Show: continuum limit yields -∇² and thus p²/2m
+   - This would make "Laplacian from isotropy" a **theorem about the foam graph** rather than an imported continuum fact
 
 ### 10.2 Empirical Validation Required
 
@@ -1291,9 +1351,11 @@ This formulation benefited from iterative refinement focused on mathematical rig
 
 ---
 
-**Document Status:** Quick-start formulation for working physicists (v1.1)
+**Document Status:** Quick-start formulation for working physicists (v1.2)
 **Last Updated:** December 2025
 **Maintained by:** Circumpunct Framework Development Team
+
+**v1.2 Changes:** Added aperture rotation operator Å(β) formalization (§2.4.1), discrete graph derivation roadmap (§10.1)
 
 **v1.1 Changes:** Added phase coherence formalism (§2.6), derived transmission law T = cos²(Δφ/2) (§4.3-4.4), phase-based dark sector classification (§7.4)
 
@@ -1310,7 +1372,8 @@ This formulation benefited from iterative refinement focused on mathematical rig
 - ⊰ : emergence (left-to-right flow from aperture)
 - ≺ : convergence (right-to-left flow toward aperture), defined as ≺ = ≻†
 - ⊱ : emergence (right-to-left flow from aperture), defined as ⊱ = ⊰†
-- i : aperture rotation (imaginary unit)
+- i : aperture rotation (imaginary unit), equals Å(0.5)
+- Å(β) : aperture rotation operator, Å(β) = exp(iπβ)
 - β : balance parameter
 - D : fractal/Hausdorff dimension
 
