@@ -60,29 +60,52 @@ body {
     margin: 0 auto;
 }
 
-/* Header */
+/* Header - Hero Equation Section */
 .header {
     margin-bottom: 0.5rem;
+    max-width: 600px;
+    text-align: center;
 }
 
-.intro-text {
+.hero-equation {
     margin-bottom: 0.5rem;
 }
 
-.intro-text p {
-    font-size: 0.9rem;
-    color: var(--text-dim);
-    margin-bottom: 0.2rem;
+.equation-title {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--soul-color);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 20px rgba(88, 166, 255, 0.4);
 }
 
-.intro-text strong {
+.equation-explanation {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.equation-summary {
+    font-size: 1rem;
+    font-style: italic;
     color: var(--text);
+    font-weight: 400;
 }
 
 .tagline {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-dim);
     font-weight: 300;
+    margin-bottom: 0.25rem;
+}
+
+/* Dimension Section (below circumpunct) */
+.dimension-section {
+    margin-top: 1rem;
+    text-align: center;
 }
 
 /* ===================================
@@ -324,7 +347,7 @@ body {
 
 .label-body {
     color: var(--body-color);
-    top: 18%;
+    top: 28%;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -332,7 +355,7 @@ body {
 .label-mind {
     color: var(--mind-color);
     top: 50%;
-    right: 12%;
+    right: 28%;
     transform: translateY(-50%);
 }
 
