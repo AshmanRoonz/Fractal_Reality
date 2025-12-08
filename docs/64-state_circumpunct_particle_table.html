@@ -1,438 +1,1089 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>64-State Circumpunct Period Table of Particles ⊙</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e0e0e0;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container { max-width: 1400px; margin: 0 auto; }
-        
-        header { text-align: center; margin-bottom: 25px; }
-        h1 { font-size: 2.2rem; color: #ffd700; margin-bottom: 8px; }
-        .subtitle { color: #a0a0a0; font-size: 1rem; }
-        .equation {
-            font-family: 'Courier New', monospace;
-            background: rgba(255,255,255,0.1);
-            padding: 6px 14px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-top: 8px;
-        }
-        
-        .main-layout { display: grid; grid-template-columns: 260px 1fr; gap: 20px; }
-        
-        .sidebar {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 18px;
-            height: fit-content;
-        }
-        .sidebar h2 { color: #ffd700; font-size: 1.2rem; margin-bottom: 12px; }
-        .sidebar h3 { color: #888; font-size: 0.8rem; margin: 18px 0 8px 0; text-transform: uppercase; }
-        
-        .toggle-group { display: flex; flex-direction: column; gap: 10px; }
-        .toggle-item { display: flex; align-items: center; gap: 8px; }
-        .toggle-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: #e53e3e; }
-        .toggle-item label { cursor: pointer; font-size: 0.9rem; }
-        
-        .radio-group { display: flex; flex-direction: column; gap: 6px; }
-        .radio-item { display: flex; align-items: center; gap: 6px; }
-        .radio-item input[type="radio"] { cursor: pointer; accent-color: #ffd700; }
-        .radio-item label { cursor: pointer; font-size: 0.85rem; }
-        
-        .main-content { display: flex; flex-direction: column; gap: 15px; }
-        
-        .status-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .status-card { padding: 12px; border-radius: 8px; transition: all 0.3s ease; }
-        .status-card.active { background: rgba(56, 161, 105, 0.2); border: 1px solid #38a169; }
-        .status-card.disabled { background: rgba(229, 62, 62, 0.2); border: 1px solid #e53e3e; }
-        .status-card h4 { font-size: 0.95rem; margin-bottom: 6px; }
-        .status-card.active h4 { color: #68d391; }
-        .status-card.disabled h4 { color: #fc8181; }
-        .status-card p, .status-card ul { font-size: 0.8rem; color: #a0a0a0; line-height: 1.4; }
-        .status-card ul { padding-left: 16px; margin: 0; }
-        
-        .grid-container { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; }
-        .grid-title { text-align: center; font-size: 1.1rem; color: #e0e0e0; margin-bottom: 12px; }
-        
-        .particle-grid {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 3px;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        
-        .cell {
-            aspect-ratio: 1;
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.2s ease;
-            min-height: 65px;
-            border: 1px solid rgba(255,255,255,0.15);
-        }
-        .cell:hover { transform: scale(1.1); z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        
-        .cell.fermion { background: linear-gradient(135deg, #2b6cb0, #3182ce); }
-        .cell.gauge { background: linear-gradient(135deg, #c53030, #e53e3e); }
-        .cell.higgs { background: linear-gradient(135deg, #b7791f, #d69e2e); }
-        .cell.disabled-cell { background: #2d3748 !important; opacity: 0.5; }
-        
-        .cell.gen1 { background: linear-gradient(135deg, #4299e1, #63b3ed); }
-        .cell.gen2 { background: linear-gradient(135deg, #3182ce, #4299e1); }
-        .cell.gen3 { background: linear-gradient(135deg, #2b6cb0, #3182ce); }
-        .cell.gen-gauge { background: linear-gradient(135deg, #c53030, #e53e3e); }
-        .cell.gen-higgs { background: linear-gradient(135deg, #b7791f, #d69e2e); }
-        
-        .cell.type-quark { background: linear-gradient(135deg, #2b6cb0, #4299e1); }
-        .cell.type-lepton { background: linear-gradient(135deg, #276749, #38a169); }
-        .cell.type-gluon { background: linear-gradient(135deg, #c53030, #e53e3e); }
-        .cell.type-weak { background: linear-gradient(135deg, #c05621, #dd6b20); }
-        .cell.type-hypercharge { background: linear-gradient(135deg, #6b46c1, #805ad5); }
-        .cell.type-higgs { background: linear-gradient(135deg, #b7791f, #d69e2e); }
-        
-        .cell-id { font-size: 0.8rem; font-weight: bold; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-        .cell-symbol { font-size: 0.6rem; color: rgba(255,255,255,0.9); text-align: center; margin-top: 2px; }
-        .cell-icon { position: absolute; top: 2px; right: 3px; font-size: 0.65rem; }
-        .cell-disabled-icon { position: absolute; top: 2px; left: 3px; font-size: 0.65rem; color: #fc8181; }
-        
-        .tooltip {
-            position: fixed;
-            background: rgba(20, 20, 40, 0.98);
-            border: 1px solid #4a5568;
-            border-radius: 8px;
-            padding: 12px;
-            max-width: 260px;
-            z-index: 1000;
-            pointer-events: none;
-            display: none;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-        .tooltip h5 { color: #ffd700; margin-bottom: 8px; font-size: 0.9rem; }
-        .tooltip p { color: #e0e0e0; font-size: 0.75rem; line-height: 1.4; margin: 2px 0; }
-        .tooltip .special { color: #ffd700; font-weight: bold; }
-        .tooltip .disabled-warning { color: #fc8181; font-weight: bold; margin-top: 8px; }
-        
-        .legend-section { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 15px; }
-        .legend-card { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; }
-        .legend-card h4 { font-size: 0.85rem; margin-bottom: 6px; }
-        .legend-card.fermion h4 { color: #63b3ed; }
-        .legend-card.gauge h4 { color: #fc8181; }
-        .legend-card.higgs h4 { color: #f6e05e; }
-        .legend-card.validation h4 { color: #b794f4; }
-        .legend-card p, .legend-card ul { font-size: 0.75rem; color: #a0a0a0; line-height: 1.3; }
-        .legend-card ul { padding-left: 14px; margin: 0; }
-        .legend-card code { background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px; font-size: 0.7rem; }
-        
-        .divider { height: 1px; background: rgba(255,255,255,0.1); margin: 15px 0; }
-        
-        .expander { background: rgba(255,255,255,0.05); border-radius: 8px; margin-top: 12px; }
-        .expander-header { padding: 10px 12px; cursor: pointer; font-size: 0.85rem; }
-        .expander-header:hover { background: rgba(255,255,255,0.05); border-radius: 8px; }
-        .expander-content { padding: 0 12px 12px 12px; display: none; }
-        .expander-content.open { display: block; }
-        .expander-content pre { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; font-size: 0.7rem; line-height: 1.3; color: #a0a0a0; overflow-x: auto; }
-        
-        footer { text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); color: #666; font-size: 0.75rem; }
-        
-        @media (max-width: 1000px) {
-            .main-layout { grid-template-columns: 1fr; }
-            .legend-section { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 600px) {
-            .status-cards, .legend-section { grid-template-columns: 1fr; }
-            .cell { min-height: 50px; }
-            .cell-id { font-size: 0.7rem; }
-            .cell-symbol { font-size: 0.5rem; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⊙ 64-State Circumpunct Viewer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .app {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      height: 100vh;
+    }
+    
+    /* Left side - Field viewer */
+    .field-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      background: #0a0a0f;
+    }
+    
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .particle-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .particle-title h2 {
+      color: #ffd700;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+    
+    .particle-title .symbol {
+      background: rgba(255,215,0,0.15);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: #ffd700;
+      font-size: 0.9rem;
+    }
+    
+    .particle-title .id-badge {
+      background: #222;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      color: #888;
+      font-size: 0.7rem;
+    }
+    
+    .field-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.6rem;
+      color: #666;
+    }
+    
+    .field-stats span { color: #d4a54a; }
+    
+    .canvas-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+    }
+    
+    .canvas-wrap {
+      position: relative;
+    }
+    
+    #canvas {
+      border-radius: 8px;
+      background: #000;
+    }
+    
+    .overlay {
+      position: absolute;
+      padding: 0.2rem 0.5rem;
+      background: rgba(0,0,0,0.8);
+      border-radius: 3px;
+      font-size: 0.5rem;
+    }
+    
+    .overlay.tl { top: 8px; left: 8px; color: #d4a54a; }
+    .overlay.tr { top: 8px; right: 8px; color: #666; }
+    .overlay.bl { bottom: 8px; left: 8px; color: #888; }
+    
+    .field-controls {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+    }
+    
+    .ctrl-btn {
+      padding: 0.4rem 0.8rem;
+      font-family: inherit;
+      font-size: 0.55rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #888;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .ctrl-btn:hover { background: #252525; color: #aaa; }
+    .ctrl-btn.active { background: #d4a54a; color: #000; border-color: #d4a54a; }
+    .ctrl-btn.running { background: #a44; color: #fff; border-color: #a44; }
+    
+    .view-btns {
+      display: flex;
+      gap: 0.25rem;
+    }
+    
+    .properties-bar {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: #111;
+      border-radius: 6px;
+    }
+    
+    .prop {
+      text-align: center;
+      padding: 0.3rem;
+      background: #0a0a0a;
+      border-radius: 4px;
+    }
+    
+    .prop-label { font-size: 0.45rem; color: #555; margin-bottom: 0.15rem; }
+    .prop-value { font-size: 0.65rem; color: #d4a54a; }
+    .prop-value.fermion { color: #63b3ed; }
+    .prop-value.gauge { color: #fc8181; }
+    .prop-value.higgs { color: #f6e05e; }
+    
+    /* Right side - Particle grid */
+    .grid-panel {
+      background: #111;
+      border-left: 1px solid #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .grid-header {
+      padding: 0.75rem;
+      border-bottom: 1px solid #1a1a1a;
+      text-align: center;
+    }
+    
+    .grid-header h1 {
+      font-size: 0.9rem;
+      color: #ffd700;
+      font-weight: 400;
+      margin-bottom: 0.25rem;
+    }
+    
+    .grid-header .subtitle {
+      font-size: 0.5rem;
+      color: #666;
+    }
+    
+    .grid-header .intro {
+      font-size: 0.45rem;
+      color: #555;
+      margin-top: 0.4rem;
+      line-height: 1.4;
+      padding: 0 0.5rem;
+    }
+    
+    .grid-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+    
+    .particle-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+      padding: 4px;
+    }
+    
+    .cell {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      min-height: 34px;
+      position: relative;
+      background: #0a0a0a;
+    }
+    
+    /* Outer ring = sector color */
+    .cell::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 3px solid #444;
+      transition: all 0.15s;
+    }
+    
+    .cell.fermion::before { border-color: #4299e1; }
+    .cell.gauge::before { border-color: #e53e3e; }
+    .cell.higgs::before { border-color: #d69e2e; }
+    
+    /* Inner dot = color charge */
+    .cell::after {
+      content: '';
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      top: 2px;
+      right: 2px;
+    }
+    
+    /* Color charges for quarks */
+    .cell.color-r::after { background: #ff4444; box-shadow: 0 0 3px #ff4444; }
+    .cell.color-g::after { background: #44ff44; box-shadow: 0 0 3px #44ff44; }
+    .cell.color-b::after { background: #4488ff; box-shadow: 0 0 3px #4488ff; }
+    
+    /* Leptons - neutral */
+    .cell.color-none::after { background: #666; }
+    
+    /* Gluons - bicolor */
+    .cell.color-gluon::after { background: conic-gradient(#ff4444 0deg, #44ff44 120deg, #4488ff 240deg, #ff4444 360deg); }
+    
+    /* Weak bosons */
+    .cell.color-weak::after { background: #ff8844; }
+    
+    /* Higgs */
+    .cell.color-higgs::after { background: #ffd700; box-shadow: 0 0 4px #ffd700; }
+    
+    .cell:hover { 
+      transform: scale(1.25); 
+      z-index: 10;
+    }
+    
+    .cell.selected { transform: scale(1.1); }
+    .cell.selected::before { 
+      border-color: #ffd700 !important; 
+      border-width: 4px;
+      box-shadow: 0 0 15px rgba(255,215,0,0.9);
+    }
+    
+    /* Generation = ring thickness */
+    .cell.gen-1::before { border-width: 2px; }
+    .cell.gen-2::before { border-width: 3px; }
+    .cell.gen-3::before { border-width: 4px; }
+    
+    .cell-id { 
+      font-size: 0.5rem; 
+      font-weight: bold; 
+      color: #aaa;
+      z-index: 1;
+    }
+    
+    .cell-sym { 
+      font-size: 0.38rem; 
+      color: #777;
+      z-index: 1;
+    }
+    
+    .cell-sym sub {
+      font-size: 0.28rem;
+      color: #555;
+    }
+    
+    .cell:hover .cell-id { color: #fff; }
+    .cell:hover .cell-sym { color: #aaa; }
+    
+    .view-legend {
+      padding: 0.4rem;
+      text-align: center;
+      font-size: 0.45rem;
+      color: #555;
+      border-top: 1px solid #1a1a1a;
+    }
+    
+    .view-legend span {
+      cursor: help;
+    }
+    
+    .grid-legend {
+      padding: 0.4rem;
+      border-top: 1px solid #1a1a1a;
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      font-size: 0.5rem;
+      color: #888;
+    }
+    
+    .color-legend {
+      padding: 0.3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.45rem;
+      color: #666;
+      border-top: 1px solid #1a1a1a;
+    }
+    
+    .color-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+    
+    .legend-dot.fermion { background: #3182ce; }
+    .legend-dot.gauge { background: #e53e3e; }
+    .legend-dot.higgs { background: #d69e2e; }
+    
+    .tooltip {
+      position: fixed;
+      background: rgba(10, 10, 20, 0.98);
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 0.6rem;
+      max-width: 260px;
+      z-index: 1000;
+      pointer-events: none;
+      display: none;
+      font-size: 0.55rem;
+    }
+    
+    .tooltip h5 { color: #ffd700; margin-bottom: 0.3rem; font-size: 0.6rem; }
+    .tooltip p { color: #aaa; margin: 0.1rem 0; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>64-State Circumpunct Period Table of Particles ⊙</h1>
-           
-            <div class="equation">Φ' = ⊱ ∘ i ∘ ≺[Φ]</div>
-        </header>
-        
-        <div class="main-layout">
-            <aside class="sidebar">
-                <h2>🌌 Universe Creator</h2>
-                <div class="toggle-group">
-                    <div class="toggle-item">
-                        <input type="checkbox" id="disable-higgs">
-                        <label for="disable-higgs">❌ Disable Higgs</label>
-                    </div>
-                    <div class="toggle-item">
-                        <input type="checkbox" id="disable-strong">
-                        <label for="disable-strong">❌ Disable Strong Force</label>
-                    </div>
-                    <div class="toggle-item">
-                        <input type="checkbox" id="disable-weak">
-                        <label for="disable-weak">❌ Disable Weak Force</label>
-                    </div>
-                </div>
-                <div class="divider"></div>
-                <div class="toggle-item">
-                    <input type="checkbox" id="show-validation">
-                    <label for="show-validation">🔍 Show Validation</label>
-                </div>
-                <h3>Color Mode</h3>
-                <div class="radio-group">
-                    <div class="radio-item">
-                        <input type="radio" name="colorBy" id="color-sector" value="sector" checked>
-                        <label for="color-sector">By Sector</label>
-                    </div>
-                    <div class="radio-item">
-                        <input type="radio" name="colorBy" id="color-generation" value="generation">
-                        <label for="color-generation">By Generation</label>
-                    </div>
-                    <div class="radio-item">
-                        <input type="radio" name="colorBy" id="color-type" value="type">
-                        <label for="color-type">By Particle Type</label>
-                    </div>
-                </div>
-            </aside>
-            
-            <main class="main-content">
-                <div class="status-cards">
-                    <div class="status-card active" id="higgs-status">
-                        <h4>✓ Higgs Active</h4>
-                        <p>Particles acquire mass via SSB</p>
-                    </div>
-                    <div class="status-card active" id="strong-status">
-                        <h4>✓ Strong Force Active</h4>
-                        <p>Quarks confined → hadrons</p>
-                    </div>
-                    <div class="status-card active" id="weak-status">
-                        <h4>✓ Weak Force Active</h4>
-                        <p>Flavor changing → nucleosynthesis</p>
-                    </div>
-                </div>
-                
-                <div class="grid-container">
-                    <div class="grid-title">64-State Standard Model Grid (8×8 = 2⁶)</div>
-                    <div class="particle-grid" id="particle-grid"></div>
-                </div>
-                
-                <div class="legend-section">
-                    <div class="legend-card fermion">
-                        <h4>🔵 Fermions (0-47)</h4>
-                        <ul><li><b>Gen 1</b>: 0-15</li><li><b>Gen 2</b>: 16-31</li><li><b>Gen 3</b>: 32-47</li></ul>
-                        <p><code>48 = 3×16</code></p>
-                    </div>
-                    <div class="legend-card gauge">
-                        <h4>🔴 Gauge (48-59)</h4>
-                        <ul><li><b>Gluons</b>: 48-55</li><li><b>W</b>: 56-58</li><li><b>B</b>: 59</li></ul>
-                        <p><code>12 = 8+3+1</code></p>
-                    </div>
-                    <div class="legend-card higgs">
-                        <h4>🟡 Higgs (60-63)</h4>
-                        <ul><li>φ₁,φ₂ → W±</li><li>φ₃ → 125GeV</li><li>φ₄ → Z⁰</li></ul>
-                        <p><code>4 = 2×2</code></p>
-                    </div>
-                    <div class="legend-card validation" id="validation-legend">
-                        <h4>🔍 Validation</h4>
-                        <p><em>Enable in sidebar</em></p>
-                    </div>
-                </div>
-                
-                <div class="expander">
-                    <div class="expander-header" onclick="toggleExpander('counting')">📐 Counting Verification</div>
-                    <div class="expander-content" id="counting-content">
-                        <pre>FERMIONS: 16 × 3 = 48 ✓
-GAUGE: 8 + 3 + 1 = 12 ✓
-HIGGS: 2 complex = 4 ✓
-TOTAL: 48 + 12 + 4 = 64 ✓
-ANOMALY: +2 + (-2) = 0 ✓</pre>
-                    </div>
-                </div>
-                
-                <div class="expander">
-                    <div class="expander-header" onclick="toggleExpander('circ')">⊙ Circumpunct Interpretation</div>
-                    <div class="expander-content" id="circ-content">
-                        <pre>0-47:  Fermions (quarks confined, leptons free)
-48-59: Gauge (force mediators)
-60-63: Higgs (SSB → masses)
-
-Flow: Φ ──≻── • ──i── • ──⊰── Φ′
-β = ½ → D = 1.5</pre>
-                    </div>
-                </div>
-            </main>
+  <div class="app">
+    <div class="field-panel">
+      <div class="field-header">
+        <div class="particle-title">
+          <span class="id-badge" id="p-id">0</span>
+          <h2 id="p-name">Left Up (Red)</h2>
+          <span class="symbol" id="p-sym">u_L^r</span>
         </div>
-        <footer><strong>64-State Universe Creator</strong> | Circumpunct Framework</footer>
+        <div class="field-stats">
+          <span title="Simulation step">Cycle: <span id="cycle">0</span></span> · 
+          <span title="Fractal dimension of field support (1=point, 2=fills space, 1.5=balanced)" style="cursor:help">D<sub>Φ</sub>: <span id="dim">1.500</span></span> · 
+          <span id="fps">0</span> fps
+          <canvas id="d-spark" width="60" height="16" title="D history" style="margin-left:0.5rem;vertical-align:middle;background:#111;border-radius:2px;"></canvas>
+        </div>
+      </div>
+      
+      <div class="canvas-area">
+        <div class="canvas-wrap">
+          <canvas id="canvas" width="400" height="400"></canvas>
+          <div class="overlay tl" id="struct" title="Field topology type">—</div>
+          <div class="overlay tr" id="vort" title="Phase winding number (vorticity)">ν: 0.0</div>
+          <div class="overlay bl" id="energy" title="Energy conservation (should stay ~100%)">E: 100%</div>
+        </div>
+      </div>
+      
+      <div class="field-controls">
+        <button class="ctrl-btn" id="btn-run">▶ RUN</button>
+        <button class="ctrl-btn" id="btn-step">STEP</button>
+        <button class="ctrl-btn" id="btn-reset">RESET</button>
+        <div class="view-btns">
+          <button class="ctrl-btn active" data-v="mag">|Φ|</button>
+          <button class="ctrl-btn" data-v="phase">Phase</button>
+          <button class="ctrl-btn" data-v="re">Re</button>
+          <button class="ctrl-btn" data-v="im">Im</button>
+        </div>
+      </div>
+      
+      <div class="properties-bar">
+        <div class="prop">
+          <div class="prop-label">SECTOR</div>
+          <div class="prop-value fermion" id="prop-sector">Fermion</div>
+        </div>
+        <div class="prop">
+          <div class="prop-label">TYPE</div>
+          <div class="prop-value" id="prop-type">Quark</div>
+        </div>
+        <div class="prop">
+          <div class="prop-label">GEN</div>
+          <div class="prop-value" id="prop-gen">1</div>
+        </div>
+        <div class="prop">
+          <div class="prop-label">SPIN</div>
+          <div class="prop-value" id="prop-spin">½</div>
+        </div>
+        <div class="prop">
+          <div class="prop-label">CHARGE</div>
+          <div class="prop-value" id="prop-q">+⅔</div>
+        </div>
+        <div class="prop">
+          <div class="prop-label">MASS</div>
+          <div class="prop-value" id="prop-mass">2.2 MeV</div>
+        </div>
+      </div>
     </div>
     
-    <div class="tooltip" id="tooltip"></div>
+    <div class="grid-panel">
+      <div class="grid-header">
+        <h1>⊙ 64-State Universe</h1>
+        <div class="subtitle">Standard Model as field configurations</div>
+        <div class="intro">Standard Model in the <b>electroweak basis</b> (before symmetry breaking). The photon γ and Z⁰ emerge from W³+B mixing after SSB. Hover for details including masses.</div>
+      </div>
+      <div class="grid-scroll">
+        <div class="particle-grid" id="grid"></div>
+      </div>
+      <div class="grid-legend">
+        <span style="color:#4299e1">○</span> Fermion
+        <span style="color:#e53e3e">○</span> Gauge
+        <span style="color:#d69e2e">○</span> Higgs
+      </div>
+      <div class="color-legend">
+        <span class="color-dot" style="background:#ff4444"></span>R
+        <span class="color-dot" style="background:#44ff44"></span>G
+        <span class="color-dot" style="background:#4488ff"></span>B
+        <span style="color:#666;margin-left:0.5rem">· ring = sector · dot = color charge · thickness = generation</span>
+      </div>
+      <div class="view-legend">
+        <span title="Field amplitude - brighter = stronger">|Φ| amplitude</span> · 
+        <span title="Phase angle as color wheel">Phase angle</span> · 
+        <span title="Real part (red +, blue -)">Re/Im parts</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tooltip" id="tooltip"></div>
 
-    <script>
-    const P = {
-        0:{n:"Left Up (Red)",s:"u_L^r",g:1,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+2/3",Y:"+1/6"},
-        1:{n:"Left Up (Green)",s:"u_L^g",g:1,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+2/3",Y:"+1/6"},
-        2:{n:"Left Up (Blue)",s:"u_L^b",g:1,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+2/3",Y:"+1/6"},
-        3:{n:"Left Down (Red)",s:"d_L^r",g:1,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-1/3",Y:"+1/6"},
-        4:{n:"Left Down (Green)",s:"d_L^g",g:1,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-1/3",Y:"+1/6"},
-        5:{n:"Left Down (Blue)",s:"d_L^b",g:1,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-1/3",Y:"+1/6"},
-        6:{n:"Right Up (Red)",s:"u_R^r",g:1,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+2/3",Y:"+2/3"},
-        7:{n:"Right Up (Green)",s:"u_R^g",g:1,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+2/3",Y:"+2/3"},
-        8:{n:"Right Up (Blue)",s:"u_R^b",g:1,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+2/3",Y:"+2/3"},
-        9:{n:"Right Down (Red)",s:"d_R^r",g:1,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-1/3",Y:"-1/3"},
-        10:{n:"Right Down (Green)",s:"d_R^g",g:1,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-1/3",Y:"-1/3"},
-        11:{n:"Right Down (Blue)",s:"d_R^b",g:1,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-1/3",Y:"-1/3"},
-        12:{n:"Left e-Neutrino",s:"ν_eL",g:1,t:"lepton",c:"L",S:"Fermion",Q:"0",Y:"-1/2"},
-        13:{n:"Left Electron",s:"e_L",g:1,t:"lepton",c:"L",S:"Fermion",Q:"-1",Y:"-1/2"},
-        14:{n:"Right Electron",s:"e_R",g:1,t:"lepton",c:"R",S:"Fermion",Q:"-1",Y:"-1"},
-        15:{n:"Right e-Neutrino",s:"ν_eR",g:1,t:"lepton",c:"R",S:"Fermion",Q:"0",Y:"0"},
-        16:{n:"Left Charm (Red)",s:"c_L^r",g:2,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+2/3",Y:"+1/6"},
-        17:{n:"Left Charm (Green)",s:"c_L^g",g:2,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+2/3",Y:"+1/6"},
-        18:{n:"Left Charm (Blue)",s:"c_L^b",g:2,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+2/3",Y:"+1/6"},
-        19:{n:"Left Strange (Red)",s:"s_L^r",g:2,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-1/3",Y:"+1/6"},
-        20:{n:"Left Strange (Green)",s:"s_L^g",g:2,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-1/3",Y:"+1/6"},
-        21:{n:"Left Strange (Blue)",s:"s_L^b",g:2,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-1/3",Y:"+1/6"},
-        22:{n:"Right Charm (Red)",s:"c_R^r",g:2,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+2/3",Y:"+2/3"},
-        23:{n:"Right Charm (Green)",s:"c_R^g",g:2,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+2/3",Y:"+2/3"},
-        24:{n:"Right Charm (Blue)",s:"c_R^b",g:2,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+2/3",Y:"+2/3"},
-        25:{n:"Right Strange (Red)",s:"s_R^r",g:2,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-1/3",Y:"-1/3"},
-        26:{n:"Right Strange (Green)",s:"s_R^g",g:2,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-1/3",Y:"-1/3"},
-        27:{n:"Right Strange (Blue)",s:"s_R^b",g:2,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-1/3",Y:"-1/3"},
-        28:{n:"Left μ-Neutrino",s:"ν_μL",g:2,t:"lepton",c:"L",S:"Fermion",Q:"0",Y:"-1/2"},
-        29:{n:"Left Muon",s:"μ_L",g:2,t:"lepton",c:"L",S:"Fermion",Q:"-1",Y:"-1/2"},
-        30:{n:"Right Muon",s:"μ_R",g:2,t:"lepton",c:"R",S:"Fermion",Q:"-1",Y:"-1"},
-        31:{n:"Right μ-Neutrino",s:"ν_μR",g:2,t:"lepton",c:"R",S:"Fermion",Q:"0",Y:"0"},
-        32:{n:"Left Top (Red)",s:"t_L^r",g:3,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+2/3",Y:"+1/6"},
-        33:{n:"Left Top (Green)",s:"t_L^g",g:3,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+2/3",Y:"+1/6"},
-        34:{n:"Left Top (Blue)",s:"t_L^b",g:3,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+2/3",Y:"+1/6"},
-        35:{n:"Left Bottom (Red)",s:"b_L^r",g:3,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-1/3",Y:"+1/6"},
-        36:{n:"Left Bottom (Green)",s:"b_L^g",g:3,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-1/3",Y:"+1/6"},
-        37:{n:"Left Bottom (Blue)",s:"b_L^b",g:3,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-1/3",Y:"+1/6"},
-        38:{n:"Right Top (Red)",s:"t_R^r",g:3,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+2/3",Y:"+2/3"},
-        39:{n:"Right Top (Green)",s:"t_R^g",g:3,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+2/3",Y:"+2/3"},
-        40:{n:"Right Top (Blue)",s:"t_R^b",g:3,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+2/3",Y:"+2/3"},
-        41:{n:"Right Bottom (Red)",s:"b_R^r",g:3,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-1/3",Y:"-1/3"},
-        42:{n:"Right Bottom (Green)",s:"b_R^g",g:3,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-1/3",Y:"-1/3"},
-        43:{n:"Right Bottom (Blue)",s:"b_R^b",g:3,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-1/3",Y:"-1/3"},
-        44:{n:"Left τ-Neutrino",s:"ν_τL",g:3,t:"lepton",c:"L",S:"Fermion",Q:"0",Y:"-1/2"},
-        45:{n:"Left Tau",s:"τ_L",g:3,t:"lepton",c:"L",S:"Fermion",Q:"-1",Y:"-1/2"},
-        46:{n:"Right Tau",s:"τ_R",g:3,t:"lepton",c:"R",S:"Fermion",Q:"-1",Y:"-1"},
-        47:{n:"Right τ-Neutrino",s:"ν_τR",g:3,t:"lepton",c:"R",S:"Fermion",Q:"0",Y:"0"},
-        48:{n:"Gluon 1",s:"G¹",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
-        49:{n:"Gluon 2",s:"G²",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
-        50:{n:"Gluon 3",s:"G³",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
-        51:{n:"Gluon 4",s:"G⁴",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
-        52:{n:"Gluon 5",s:"G⁵",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
-        53:{n:"Gluon 6",s:"G⁶",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
-        54:{n:"Gluon 7",s:"G⁷",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
-        55:{n:"Gluon 8",s:"G⁸",g:null,t:"gluon",S:"Gauge",Q:"0",Y:"0",ssb:"gluon"},
-        56:{n:"W¹ Boson",s:"W¹",g:null,t:"weak",S:"Gauge",Q:"±1",Y:"0",ssb:"→W±"},
-        57:{n:"W² Boson",s:"W²",g:null,t:"weak",S:"Gauge",Q:"±1",Y:"0",ssb:"→W±"},
-        58:{n:"W³ Boson",s:"W³",g:null,t:"weak",S:"Gauge",Q:"0",Y:"0",ssb:"→Z,γ"},
-        59:{n:"B Boson",s:"B",g:null,t:"hypercharge",S:"Gauge",Q:"0",Y:"0",ssb:"→Z,γ"},
-        60:{n:"Higgs φ₁",s:"φ₁",g:null,t:"higgs",S:"Higgs",Q:"+1",Y:"+1/2",ssb:"G⁺→W⁺"},
-        61:{n:"Higgs φ₂",s:"φ₂",g:null,t:"higgs",S:"Higgs",Q:"+1",Y:"+1/2",ssb:"G⁺→W⁺"},
-        62:{n:"Higgs φ₃",s:"φ₃",g:null,t:"higgs",S:"Higgs",Q:"0",Y:"+1/2",ssb:"v+h 125GeV"},
-        63:{n:"Higgs φ₄",s:"φ₄",g:null,t:"higgs",S:"Higgs",Q:"0",Y:"+1/2",ssb:"G⁰→Z",sp:"Vacuum/Eternal"}
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// PARTICLE DATA - All 64 Standard Model States
+// ═══════════════════════════════════════════════════════════════════════════
+const P = {
+  // ═══════════════════════════════════════════════════════════════════
+  // GENERATION 1 - QUARKS (0-11)
+  // ═══════════════════════════════════════════════════════════════════
+  0:{n:"Up Quark",s:"u",sub:"L,r",g:1,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  1:{n:"Up Quark",s:"u",sub:"L,g",g:1,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  2:{n:"Up Quark",s:"u",sub:"L,b",g:1,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  3:{n:"Down Quark",s:"d",sub:"L,r",g:1,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  4:{n:"Down Quark",s:"d",sub:"L,g",g:1,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  5:{n:"Down Quark",s:"d",sub:"L,b",g:1,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  6:{n:"Up Quark",s:"u",sub:"R,r",g:1,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  7:{n:"Up Quark",s:"u",sub:"R,g",g:1,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  8:{n:"Up Quark",s:"u",sub:"R,b",g:1,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"2.2 MeV"},
+  9:{n:"Down Quark",s:"d",sub:"R,r",g:1,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  10:{n:"Down Quark",s:"d",sub:"R,g",g:1,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  11:{n:"Down Quark",s:"d",sub:"R,b",g:1,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.7 MeV"},
+  
+  // ═══════════════════════════════════════════════════════════════════
+  // GENERATION 1 - LEPTONS (12-15)
+  // ═══════════════════════════════════════════════════════════════════
+  12:{n:"Electron Neutrino",s:"νₑ",sub:"L",g:1,t:"lepton",c:"L",S:"Fermion",Q:"0",spin:0.5,mass:"<1 eV"},
+  13:{n:"Electron",s:"e",sub:"L",g:1,t:"lepton",c:"L",S:"Fermion",Q:"-1",spin:0.5,mass:"0.511 MeV"},
+  14:{n:"Electron",s:"e",sub:"R",g:1,t:"lepton",c:"R",S:"Fermion",Q:"-1",spin:0.5,mass:"0.511 MeV"},
+  15:{n:"Electron Neutrino",s:"νₑ",sub:"R",g:1,t:"lepton",c:"R",S:"Fermion",Q:"0",spin:0.5,mass:"<1 eV",note:"Sterile"},
+  
+  // ═══════════════════════════════════════════════════════════════════
+  // GENERATION 2 - QUARKS (16-27)
+  // ═══════════════════════════════════════════════════════════════════
+  16:{n:"Charm Quark",s:"c",sub:"L,r",g:2,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  17:{n:"Charm Quark",s:"c",sub:"L,g",g:2,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  18:{n:"Charm Quark",s:"c",sub:"L,b",g:2,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  19:{n:"Strange Quark",s:"s",sub:"L,r",g:2,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  20:{n:"Strange Quark",s:"s",sub:"L,g",g:2,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  21:{n:"Strange Quark",s:"s",sub:"L,b",g:2,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  22:{n:"Charm Quark",s:"c",sub:"R,r",g:2,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  23:{n:"Charm Quark",s:"c",sub:"R,g",g:2,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  24:{n:"Charm Quark",s:"c",sub:"R,b",g:2,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"1.27 GeV"},
+  25:{n:"Strange Quark",s:"s",sub:"R,r",g:2,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  26:{n:"Strange Quark",s:"s",sub:"R,g",g:2,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  27:{n:"Strange Quark",s:"s",sub:"R,b",g:2,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"95 MeV"},
+  
+  // ═══════════════════════════════════════════════════════════════════
+  // GENERATION 2 - LEPTONS (28-31)
+  // ═══════════════════════════════════════════════════════════════════
+  28:{n:"Muon Neutrino",s:"νμ",sub:"L",g:2,t:"lepton",c:"L",S:"Fermion",Q:"0",spin:0.5,mass:"<0.17 MeV"},
+  29:{n:"Muon",s:"μ",sub:"L",g:2,t:"lepton",c:"L",S:"Fermion",Q:"-1",spin:0.5,mass:"105.7 MeV"},
+  30:{n:"Muon",s:"μ",sub:"R",g:2,t:"lepton",c:"R",S:"Fermion",Q:"-1",spin:0.5,mass:"105.7 MeV"},
+  31:{n:"Muon Neutrino",s:"νμ",sub:"R",g:2,t:"lepton",c:"R",S:"Fermion",Q:"0",spin:0.5,mass:"<0.17 MeV",note:"Sterile"},
+  
+  // ═══════════════════════════════════════════════════════════════════
+  // GENERATION 3 - QUARKS (32-43)
+  // ═══════════════════════════════════════════════════════════════════
+  32:{n:"Top Quark",s:"t",sub:"L,r",g:3,t:"quark",c:"L",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  33:{n:"Top Quark",s:"t",sub:"L,g",g:3,t:"quark",c:"L",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  34:{n:"Top Quark",s:"t",sub:"L,b",g:3,t:"quark",c:"L",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  35:{n:"Bottom Quark",s:"b",sub:"L,r",g:3,t:"quark",c:"L",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  36:{n:"Bottom Quark",s:"b",sub:"L,g",g:3,t:"quark",c:"L",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  37:{n:"Bottom Quark",s:"b",sub:"L,b",g:3,t:"quark",c:"L",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  38:{n:"Top Quark",s:"t",sub:"R,r",g:3,t:"quark",c:"R",x:"r",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  39:{n:"Top Quark",s:"t",sub:"R,g",g:3,t:"quark",c:"R",x:"g",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  40:{n:"Top Quark",s:"t",sub:"R,b",g:3,t:"quark",c:"R",x:"b",S:"Fermion",Q:"+⅔",spin:0.5,mass:"173 GeV"},
+  41:{n:"Bottom Quark",s:"b",sub:"R,r",g:3,t:"quark",c:"R",x:"r",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  42:{n:"Bottom Quark",s:"b",sub:"R,g",g:3,t:"quark",c:"R",x:"g",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  43:{n:"Bottom Quark",s:"b",sub:"R,b",g:3,t:"quark",c:"R",x:"b",S:"Fermion",Q:"-⅓",spin:0.5,mass:"4.18 GeV"},
+  
+  // ═══════════════════════════════════════════════════════════════════
+  // GENERATION 3 - LEPTONS (44-47)
+  // ═══════════════════════════════════════════════════════════════════
+  44:{n:"Tau Neutrino",s:"ντ",sub:"L",g:3,t:"lepton",c:"L",S:"Fermion",Q:"0",spin:0.5,mass:"<18.2 MeV"},
+  45:{n:"Tau",s:"τ",sub:"L",g:3,t:"lepton",c:"L",S:"Fermion",Q:"-1",spin:0.5,mass:"1.777 GeV"},
+  46:{n:"Tau",s:"τ",sub:"R",g:3,t:"lepton",c:"R",S:"Fermion",Q:"-1",spin:0.5,mass:"1.777 GeV"},
+  47:{n:"Tau Neutrino",s:"ντ",sub:"R",g:3,t:"lepton",c:"R",S:"Fermion",Q:"0",spin:0.5,mass:"<18.2 MeV",note:"Sterile"},
+  
+  // ═══════════════════════════════════════════════════════════════════
+  // GAUGE BOSONS - GLUONS (48-55) - SU(3) color
+  // ═══════════════════════════════════════════════════════════════════
+  48:{n:"Gluon",s:"g",sub:"1",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0",note:"rḡ + gr̄"},
+  49:{n:"Gluon",s:"g",sub:"2",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0",note:"-i(rḡ - gr̄)"},
+  50:{n:"Gluon",s:"g",sub:"3",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0",note:"rr̄ - gḡ"},
+  51:{n:"Gluon",s:"g",sub:"4",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0",note:"rb̄ + br̄"},
+  52:{n:"Gluon",s:"g",sub:"5",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0",note:"-i(rb̄ - br̄)"},
+  53:{n:"Gluon",s:"g",sub:"6",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0",note:"gḇ + bḡ"},
+  54:{n:"Gluon",s:"g",sub:"7",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0",note:"-i(gḇ - bḡ)"},
+  55:{n:"Gluon",s:"g",sub:"8",g:null,t:"gluon",S:"Gauge",Q:"0",spin:1,mass:"0",note:"(rr̄+gḡ-2bḇ)/√3"},
+  
+  // ═══════════════════════════════════════════════════════════════════
+  // GAUGE BOSONS - ELECTROWEAK (56-59) - SU(2)×U(1)
+  // ═══════════════════════════════════════════════════════════════════
+  56:{n:"W Boson",s:"W",sub:"1",g:null,t:"weak",S:"Gauge",Q:"±1",spin:1,mass:"80.4 GeV",ssb:"→ W⁺",note:"SU(2)"},
+  57:{n:"W Boson",s:"W",sub:"2",g:null,t:"weak",S:"Gauge",Q:"±1",spin:1,mass:"80.4 GeV",ssb:"→ W⁻",note:"SU(2)"},
+  58:{n:"W Boson / Z / Photon",s:"W",sub:"3",g:null,t:"weak",S:"Gauge",Q:"0",spin:1,mass:"—",ssb:"→ Z⁰, γ",note:"Mixes with B"},
+  59:{n:"B Boson / Z / Photon",s:"B",sub:"",g:null,t:"hypercharge",S:"Gauge",Q:"0",spin:1,mass:"—",ssb:"→ Z⁰, γ",note:"U(1), mixes with W³"},
+  
+  // ═══════════════════════════════════════════════════════════════════
+  // HIGGS DOUBLET (60-63)
+  // ═══════════════════════════════════════════════════════════════════
+  60:{n:"Higgs (charged)",s:"H",sub:"+",g:null,t:"higgs",S:"Higgs",Q:"+1",spin:0,mass:"—",ssb:"→ G⁺ (eaten by W⁺)",note:"Goldstone"},
+  61:{n:"Higgs (charged)",s:"H",sub:"-",g:null,t:"higgs",S:"Higgs",Q:"-1",spin:0,mass:"—",ssb:"→ G⁻ (eaten by W⁻)",note:"Goldstone"},
+  62:{n:"Higgs Boson",s:"H",sub:"0",g:null,t:"higgs",S:"Higgs",Q:"0",spin:0,mass:"125.1 GeV",ssb:"Physical Higgs",note:"Discovered 2012"},
+  63:{n:"Higgs (vacuum)",s:"H",sub:"v",g:null,t:"higgs",S:"Higgs",Q:"0",spin:0,mass:"—",ssb:"→ G⁰ (eaten by Z)",special:"⊙ v = 246 GeV"}
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CIRCUMPUNCT FIELD - Adapted for particle visualization
+// ═══════════════════════════════════════════════════════════════════════════
+class Field {
+  constructor(n=80) {
+    this.n = n;
+    this.f = new Float32Array(n*n*2);
+    this.t = new Float32Array(n*n*2);
+    this.cycle = 0;
+    this.e0 = 1;
+    this.conv = 0.5;
+    this.theta = 10*Math.PI/180;
+    this.emerg = 0.5;
+    this.dHistory = []; // Track fractal dimension over time
+  }
+  
+  i(x,y) { return (((y%this.n)+this.n)%this.n*this.n + ((x%this.n)+this.n)%this.n)*2; }
+  re(x,y) { return this.f[this.i(x,y)]; }
+  im(x,y) { return this.f[this.i(x,y)+1]; }
+  mag(x,y) { const r=this.re(x,y),i=this.im(x,y); return Math.sqrt(r*r+i*i); }
+  phase(x,y) { return Math.atan2(this.im(x,y),this.re(x,y)); }
+  
+  // Initialize based on particle properties
+  initParticle(p) {
+    const cx=this.n/2, cy=this.n/2;
+    const spin = p.spin || 0;
+    const gen = p.g || 1;
+    const isQuark = p.t === 'quark';
+    const isLepton = p.t === 'lepton';
+    const isGauge = p.S === 'Gauge';
+    const isHiggs = p.S === 'Higgs';
+    const isLeft = p.c === 'L';
+    const isGluon = p.t === 'gluon';
+    
+    // Color charge determines 3-fold symmetry for quarks
+    let colorPhase = 0;
+    if (p.x === 'r') colorPhase = 0;
+    else if (p.x === 'g') colorPhase = 2*Math.PI/3;
+    else if (p.x === 'b') colorPhase = 4*Math.PI/3;
+    
+    // Generation affects scale (higher gen = tighter localization)
+    const scale = this.n / (3 + gen);
+    
+    // Chirality affects rotation direction
+    const chiralSign = isLeft ? 1 : -1;
+    
+    for(let y=0;y<this.n;y++) for(let x=0;x<this.n;x++) {
+      const dx=x-cx, dy=y-cy;
+      const r=Math.sqrt(dx*dx+dy*dy);
+      const th=Math.atan2(dy,dx);
+      
+      let amp=0, phase=0;
+      
+      if(isHiggs) {
+        // Higgs: scalar field, circumpunct pattern
+        // H_v (vacuum) is special - the ground state
+        if(p.sub === 'v') {
+          // Vacuum/eternal - pure circumpunct ⊙
+          const iR=this.n/8, oR=this.n/3;
+          amp = 3*Math.exp(-r*r/(2*iR*iR)) + Math.exp(-Math.pow(r-oR,2)/(2*Math.pow(oR/6,2)));
+          phase = 0; // Real, no phase
+        } else if(p.sub === '0') {
+          // Physical Higgs boson (125 GeV)
+          const w = this.n/4;
+          amp = 2.5*Math.exp(-r*r/(2*w*w));
+          phase = 0;
+        } else {
+          // Charged Higgs / Goldstones
+          const w = this.n/4;
+          amp = 2*Math.exp(-r*r/(2*w*w));
+          phase = (p.sub === '+') ? th : -th;
+        }
+      }
+      else if(isGauge) {
+        // Gauge bosons: spin-1 vortices
+        const w = this.n/3;
+        
+        if(p.t === 'gluon') {
+          // Gluons: 8 patterns based on Gell-Mann matrices
+          const gluonNum = parseInt(p.sub) || 1;
+          amp = Math.pow(r/w, 1) * Math.exp(-r*r/(2*w*w)) * 2;
+          phase = th + (gluonNum-1)*Math.PI/4;
+        }
+        else if(p.t === 'weak') {
+          // W bosons: SU(2) structure
+          amp = Math.pow(r/w, 1) * Math.exp(-r*r/(2*w*w)) * 2;
+          phase = th * (p.sub === '3' ? 2 : 1);
+        }
+        else {
+          // B boson
+          amp = Math.pow(r/w, 1) * Math.exp(-r*r/(2*w*w)) * 2;
+          phase = th;
+        }
+      }
+      else if(isQuark) {
+        // Quarks: spin-1/2 with color structure
+        // 3-fold color symmetry visible in pattern
+        const vortexCharge = 0.5 * chiralSign;
+        amp = Math.pow(r/scale, Math.abs(vortexCharge)) * Math.exp(-r*r/(2*scale*scale)) * 2;
+        
+        // Phase includes vortex + color + generation modulation
+        phase = th * vortexCharge + colorPhase + Math.cos(3*th)*0.3/gen;
+      }
+      else if(isLepton) {
+        // Leptons: spin-1/2, no color (simpler)
+        const vortexCharge = 0.5 * chiralSign;
+        amp = Math.pow(r/scale, Math.abs(vortexCharge)) * Math.exp(-r*r/(2*scale*scale)) * 2.5;
+        
+        // Neutrinos are more diffuse
+        if(p.t === 'lepton' && p.Q === '0') {
+          amp *= 0.7;
+          amp += 0.3*Math.exp(-r*r/(2*(this.n/2)*(this.n/2)));
+        }
+        
+        phase = th * vortexCharge;
+      }
+      
+      const idx = this.i(x,y);
+      this.f[idx] = amp * Math.cos(phase);
+      this.f[idx+1] = amp * Math.sin(phase);
+    }
+    
+    this.cycle = 0;
+    this.e0 = this.energy();
+    this.dHistory = [this.fractalD()]; // Reset history
+    
+    // Set dynamics based on particle
+    this.theta = (isLeft ? 1 : -1) * (5 + 5*spin) * Math.PI/180;
+  }
+  
+  step() {
+    // Convergence
+    const c = this.conv * 0.25;
+    for(let y=0;y<this.n;y++) for(let x=0;x<this.n;x++) {
+      const oR=this.re(x,y), oI=this.im(x,y);
+      const aR=(oR+this.re(x+1,y)+this.re(x-1,y)+this.re(x,y+1)+this.re(x,y-1))/5;
+      const aI=(oI+this.im(x+1,y)+this.im(x-1,y)+this.im(x,y+1)+this.im(x,y-1))/5;
+      const idx=this.i(x,y);
+      this.t[idx]=(1-c)*oR+c*aR;
+      this.t[idx+1]=(1-c)*oI+c*aI;
+    }
+    this.f.set(this.t);
+    
+    // Rotation
+    const cos=Math.cos(this.theta), sin=Math.sin(this.theta);
+    for(let i=0;i<this.f.length;i+=2) {
+      const r=this.f[i], im=this.f[i+1];
+      this.f[i]=r*cos-im*sin;
+      this.f[i+1]=r*sin+im*cos;
+    }
+    
+    // Emergence
+    const e = this.emerg * 0.12;
+    for(let y=0;y<this.n;y++) for(let x=0;x<this.n;x++) {
+      const cR=this.re(x,y), cI=this.im(x,y);
+      const lR=this.re(x+1,y)+this.re(x-1,y)+this.re(x,y+1)+this.re(x,y-1)-4*cR;
+      const lI=this.im(x+1,y)+this.im(x-1,y)+this.im(x,y+1)+this.im(x,y-1)-4*cI;
+      const idx=this.i(x,y);
+      this.t[idx]=cR-e*lR;
+      this.t[idx+1]=cI-e*lI;
+    }
+    this.f.set(this.t);
+    
+    // Normalize
+    const en=this.energy();
+    if(en>1e-10) { const s=Math.sqrt(this.e0/en); for(let i=0;i<this.f.length;i++) this.f[i]*=s; }
+    
+    this.cycle++;
+    
+    // Track D every few cycles
+    if(this.cycle % 3 === 0) {
+      this.dHistory.push(this.fractalD());
+      if(this.dHistory.length > 100) this.dHistory.shift();
+    }
+  }
+  
+  energy() { let e=0; for(let i=0;i<this.f.length;i+=2) e+=this.f[i]*this.f[i]+this.f[i+1]*this.f[i+1]; return e; }
+  maxMag() { let m=0; for(let i=0;i<this.f.length;i+=2) { const v=this.f[i]*this.f[i]+this.f[i+1]*this.f[i+1]; if(v>m)m=v; } return Math.sqrt(m); }
+  
+  vorticity() {
+    const cx=this.n/2, cy=this.n/2, rad=this.n/4, steps=32;
+    let v=0, pp=null;
+    for(let i=0;i<=steps;i++) {
+      const a=(i/steps)*2*Math.PI;
+      const p=this.phase(Math.round(cx+rad*Math.cos(a)), Math.round(cy+rad*Math.sin(a)));
+      if(pp!==null) { let d=p-pp; while(d>Math.PI)d-=2*Math.PI; while(d<-Math.PI)d+=2*Math.PI; v+=d; }
+      pp=p;
+    }
+    return v/(2*Math.PI);
+  }
+  
+  fractalD() {
+    const avg=this.energy()/(this.n*this.n), th=avg*0.25, scales=[2,4,8,16], pts=[];
+    for(const sc of scales) {
+      let cnt=0; const cs=this.n/sc;
+      for(let cy=0;cy<sc;cy++) for(let cx=0;cx<sc;cx++) {
+        let has=false;
+        for(let y=Math.floor(cy*cs);y<Math.floor((cy+1)*cs)&&!has;y++)
+          for(let x=Math.floor(cx*cs);x<Math.floor((cx+1)*cs)&&!has;x++) {
+            const idx=this.i(x,y);
+            if(this.f[idx]*this.f[idx]+this.f[idx+1]*this.f[idx+1]>th) has=true;
+          }
+        if(has) cnt++;
+      }
+      if(cnt>0) pts.push({s:sc,c:cnt});
+    }
+    if(pts.length<2) return 2;
+    let sx=0,sy=0,sxy=0,sx2=0;
+    for(const{s,c}of pts) { const x=Math.log(s),y=Math.log(c); sx+=x;sy+=y;sxy+=x*y;sx2+=x*x; }
+    return Math.max(1,Math.min(2,(pts.length*sxy-sx*sy)/(pts.length*sx2-sx*sx)));
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// APP
+// ═══════════════════════════════════════════════════════════════════════════
+class App {
+  constructor() {
+    this.field = new Field(80);
+    this.particleId = 0;
+    this.running = false;
+    this.view = 'mag';
+    this.lastT = 0;
+    this.frames = 0;
+    
+    this.canvas = document.getElementById('canvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.img = this.ctx.createImageData(this.canvas.width, this.canvas.height);
+    
+    this.sparkCanvas = document.getElementById('d-spark');
+    this.sparkCtx = this.sparkCanvas.getContext('2d');
+    
+    this.tooltip = document.getElementById('tooltip');
+    
+    this.buildGrid();
+    this.bind();
+    this.selectParticle(0);
+  }
+  
+  buildGrid() {
+    const grid = document.getElementById('grid');
+    for(let id=0; id<64; id++) {
+      const p = P[id];
+      const cell = document.createElement('div');
+      
+      // Base sector class
+      cell.className = 'cell ' + p.S.toLowerCase();
+      
+      // Generation class (affects border thickness)
+      if(p.g) cell.classList.add('gen-' + p.g);
+      
+      // Color charge class (affects inner dot)
+      if(p.x === 'r') cell.classList.add('color-r');
+      else if(p.x === 'g') cell.classList.add('color-g');
+      else if(p.x === 'b') cell.classList.add('color-b');
+      else if(p.t === 'lepton') cell.classList.add('color-none');
+      else if(p.t === 'gluon') cell.classList.add('color-gluon');
+      else if(p.t === 'weak' || p.t === 'hypercharge') cell.classList.add('color-weak');
+      else if(p.t === 'higgs') cell.classList.add('color-higgs');
+      
+      cell.innerHTML = `<span class="cell-id">${id}</span><span class="cell-sym">${p.s}<sub>${p.sub||''}</sub></span>`;
+      cell.onclick = () => this.selectParticle(id);
+      cell.onmouseenter = (e) => this.showTooltip(e, id);
+      cell.onmousemove = (e) => this.moveTooltip(e);
+      cell.onmouseleave = () => this.tooltip.style.display = 'none';
+      cell.dataset.id = id;
+      grid.appendChild(cell);
+    }
+  }
+  
+  showTooltip(e, id) {
+    const p = P[id];
+    let h = `<h5>${p.n}</h5>`;
+    h += `<p><b>Symbol:</b> ${p.s}${p.sub ? '<sub>'+p.sub+'</sub>' : ''}</p>`;
+    h += `<p><b>Sector:</b> ${p.S} · <b>Spin:</b> ${p.spin}</p>`;
+    h += `<p><b>Charge:</b> ${p.Q}</p>`;
+    if(p.mass) h += `<p><b>Mass:</b> ${p.mass}</p>`;
+    if(p.g) h += `<p><b>Generation:</b> ${p.g}</p>`;
+    if(p.c) h += `<p><b>Chirality:</b> ${p.c === 'L' ? 'Left-handed' : 'Right-handed'}</p>`;
+    if(p.x) h += `<p><b>Color:</b> ${p.x === 'r' ? 'Red' : p.x === 'g' ? 'Green' : 'Blue'}</p>`;
+    if(p.ssb) h += `<p style="color:#ffa"><b>After SSB:</b> ${p.ssb}</p>`;
+    if(p.note) h += `<p style="color:#aaf"><b>Note:</b> ${p.note}</p>`;
+    if(p.special) h += `<p style="color:#ffd700"><b>★ ${p.special}</b></p>`;
+    this.tooltip.innerHTML = h;
+    this.tooltip.style.display = 'block';
+    this.moveTooltip(e);
+  }
+  
+  moveTooltip(e) {
+    let x = e.clientX + 10, y = e.clientY + 10;
+    if(x + 200 > window.innerWidth) x = e.clientX - 210;
+    if(y + 150 > window.innerHeight) y = e.clientY - 150;
+    this.tooltip.style.left = x + 'px';
+    this.tooltip.style.top = y + 'px';
+  }
+  
+  selectParticle(id) {
+    this.particleId = id;
+    const p = P[id];
+    
+    // Stop current simulation
+    this.running = false;
+    
+    // Update selection
+    document.querySelectorAll('.cell').forEach(c => c.classList.remove('selected'));
+    document.querySelector(`.cell[data-id="${id}"]`).classList.add('selected');
+    
+    // Update header
+    document.getElementById('p-id').textContent = id;
+    document.getElementById('p-name').textContent = p.n;
+    document.getElementById('p-sym').innerHTML = p.s + (p.sub ? '<sub>'+p.sub+'</sub>' : '');
+    
+    // Update properties
+    const sectorEl = document.getElementById('prop-sector');
+    sectorEl.textContent = p.S;
+    sectorEl.className = 'prop-value ' + p.S.toLowerCase();
+    
+    document.getElementById('prop-type').textContent = p.t.charAt(0).toUpperCase() + p.t.slice(1);
+    document.getElementById('prop-gen').textContent = p.g || '—';
+    document.getElementById('prop-spin').textContent = p.spin === 0.5 ? '½' : p.spin === 1 ? '1' : '0';
+    document.getElementById('prop-q').textContent = p.Q;
+    document.getElementById('prop-mass').textContent = p.mass || '—';
+    
+    // Initialize field
+    this.field.initParticle(p);
+    this.render();
+    
+    // Auto-run
+    this.running = true;
+    document.getElementById('btn-run').textContent = '■ STOP';
+    document.getElementById('btn-run').classList.add('running');
+    this.lastT = performance.now();
+    this.frames = 0;
+    this.animate();
+  }
+  
+  bind() {
+    document.getElementById('btn-run').onclick = () => {
+      this.running = !this.running;
+      const btn = document.getElementById('btn-run');
+      btn.textContent = this.running ? '■ STOP' : '▶ RUN';
+      btn.classList.toggle('running', this.running);
+      if(this.running) { this.lastT = performance.now(); this.frames = 0; this.animate(); }
     };
     
-    const QS=new Set(),LS=new Set([12,13,14,15,28,29,30,31,44,45,46,47]),GS=new Set([48,49,50,51,52,53,54,55]),WS=new Set([56,57,58,59]),HS=new Set([60,61,62,63]);
-    for(let i=0;i<12;i++)QS.add(i);for(let i=16;i<28;i++)QS.add(i);for(let i=32;i<44;i++)QS.add(i);
+    document.getElementById('btn-step').onclick = () => {
+      if(!this.running) { this.field.step(); this.render(); }
+    };
     
-    const grid=document.getElementById('particle-grid'),tt=document.getElementById('tooltip');
+    document.getElementById('btn-reset').onclick = () => {
+      this.running = false;
+      document.getElementById('btn-run').textContent = '▶ RUN';
+      document.getElementById('btn-run').classList.remove('running');
+      this.field.initParticle(P[this.particleId]);
+      this.render();
+      // Don't auto-run on reset - let user step through manually if desired
+    };
     
-    function render(){
-        const dH=document.getElementById('disable-higgs').checked;
-        const dS=document.getElementById('disable-strong').checked;
-        const dW=document.getElementById('disable-weak').checked;
-        const sV=document.getElementById('show-validation').checked;
-        const cB=document.querySelector('input[name="colorBy"]:checked').value;
-        
-        updateStatus(dH,dS,dW);updateVL(sV);
-        grid.innerHTML='';
-        
-        for(let id=0;id<64;id++){
-            const p=P[id],cell=document.createElement('div');
-            cell.className='cell';
-            let dis=false;
-            if(dH&&HS.has(id))dis=true;
-            if(dS&&GS.has(id))dis=true;
-            if(dW&&WS.has(id))dis=true;
-            
-            if(dis)cell.classList.add('disabled-cell');
-            else if(cB==='sector')cell.classList.add(p.S.toLowerCase());
-            else if(cB==='generation'){
-                if(p.g===1)cell.classList.add('gen1');
-                else if(p.g===2)cell.classList.add('gen2');
-                else if(p.g===3)cell.classList.add('gen3');
-                else if(p.S==='Gauge')cell.classList.add('gen-gauge');
-                else cell.classList.add('gen-higgs');
-            }else cell.classList.add('type-'+p.t);
-            
-            let icons='';
-            if(sV&&QS.has(id))icons+='<span class="cell-icon">🔒</span>';
-            if(sV&&LS.has(id))icons+='<span class="cell-icon" style="color:#68d391">✓</span>';
-            if(dis)icons+='<span class="cell-disabled-icon">✗</span>';
-            
-            cell.innerHTML=`<span class="cell-id">${id}</span><span class="cell-symbol">${p.s}</span>${icons}`;
-            cell.onmouseenter=(e)=>showTT(e,id,dis);
-            cell.onmousemove=moveTT;
-            cell.onmouseleave=()=>tt.style.display='none';
-            grid.appendChild(cell);
+    document.querySelectorAll('.view-btns .ctrl-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.view-btns .ctrl-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.view = btn.dataset.v;
+        this.render();
+      };
+    });
+  }
+  
+  animate() {
+    if(!this.running) return;
+    this.field.step();
+    this.frames++;
+    
+    const now = performance.now();
+    if(now - this.lastT >= 500) {
+      document.getElementById('fps').textContent = Math.round(this.frames*1000/(now-this.lastT));
+      this.frames = 0;
+      this.lastT = now;
+    }
+    
+    this.render();
+    requestAnimationFrame(() => this.animate());
+  }
+  
+  render() {
+    const n = this.field.n;
+    const scale = this.canvas.width / n;
+    const data = this.img.data;
+    
+    let maxM = this.field.maxMag() || 1;
+    let maxR = 0, maxI = 0;
+    for(let i=0;i<this.field.f.length;i+=2) {
+      maxR = Math.max(maxR, Math.abs(this.field.f[i]));
+      maxI = Math.max(maxI, Math.abs(this.field.f[i+1]));
+    }
+    
+    // Get particle color for theming
+    const p = P[this.particleId];
+    let baseHue = 0.12; // gold
+    if(p.S === 'Fermion') baseHue = 0.6; // blue
+    if(p.S === 'Gauge') baseHue = 0.0; // red
+    if(p.S === 'Higgs') baseHue = 0.12; // gold
+    
+    for(let y=0;y<n;y++) for(let x=0;x<n;x++) {
+      const idx = this.field.i(x,y);
+      const re = this.field.f[idx], im = this.field.f[idx+1];
+      const mag = Math.sqrt(re*re+im*im);
+      const phase = Math.atan2(im, re);
+      
+      let r,g,b;
+      if(this.view==='mag') {
+        const v = Math.pow(mag/maxM, 0.7);
+        // Color based on particle type
+        if(p.S === 'Fermion') {
+          r = 40*v*v|0; g = 150*v|0; b = 255*v|0;
+        } else if(p.S === 'Gauge') {
+          r = 255*v|0; g = 80*v|0; b = 80*v*v|0;
+        } else {
+          r = 255*v|0; g = 200*v|0; b = 50*v*v|0;
         }
+      } else if(this.view==='phase') {
+        const h = (phase+Math.PI)/(2*Math.PI);
+        const l = 0.1 + 0.75*(mag/maxM);
+        [r,g,b] = this.hsl(h, 0.9, l);
+      } else if(this.view==='re') {
+        const v = re/(maxR||1);
+        r = v>0 ? 220*v|0 : 0;
+        b = v<0 ? 220*(-v)|0 : 0;
+        g = 30;
+      } else {
+        const v = im/(maxI||1);
+        g = v>0 ? 220*v|0 : 0;
+        r = v<0 ? 180*(-v)|0 : 0;
+        b = 30;
+      }
+      
+      for(let py=0;py<scale;py++) for(let px=0;px<scale;px++) {
+        const pi = ((y*scale+py)*this.canvas.width + (x*scale+px))*4;
+        data[pi]=r; data[pi+1]=g; data[pi+2]=b; data[pi+3]=255;
+      }
     }
     
-    function showTT(e,id,dis){
-        const p=P[id];
-        let h=`<h5>State ${id}: ${p.n}</h5><p><b>Symbol:</b> ${p.s}</p><p><b>Sector:</b> ${p.S}</p><p><b>Q:</b> ${p.Q} | <b>Y:</b> ${p.Y}</p>`;
-        if(p.g)h+=`<p><b>Gen:</b> ${p.g}</p>`;
-        if(p.c)h+=`<p><b>Chirality:</b> ${p.c}</p>`;
-        if(p.x)h+=`<p><b>Color:</b> ${p.x}</p>`;
-        if(p.ssb)h+=`<p><b>After SSB:</b> ${p.ssb}</p>`;
-        if(p.sp)h+=`<p class="special">★ ${p.sp}</p>`;
-        if(dis)h+=`<p class="disabled-warning">⚠️ DISABLED</p>`;
-        tt.innerHTML=h;tt.style.display='block';moveTT(e);
+    this.ctx.putImageData(this.img, 0, 0);
+    
+    // Update stats
+    document.getElementById('cycle').textContent = this.field.cycle;
+    document.getElementById('dim').textContent = this.field.fractalD().toFixed(3);
+    document.getElementById('vort').textContent = 'ν: ' + this.field.vorticity().toFixed(2);
+    document.getElementById('energy').textContent = 'E: ' + ((this.field.energy()/this.field.e0)*100).toFixed(0) + '%';
+    
+    // Structure detection - based on particle type and field topology
+    const v = Math.abs(this.field.vorticity());
+    let struct = '—';
+    
+    if(p.S === 'Higgs') {
+      struct = v < 0.15 ? 'scalar' : 'excited';
+    } else if(p.S === 'Gauge') {
+      struct = v > 0.8 ? 'vortex-1' : 'gauge';
+    } else { // Fermion
+      if(Math.abs(v - 0.5) < 0.15) struct = 'spinor';
+      else if(v > 0.3) struct = 'vortex';
+      else struct = 'localized';
     }
+    document.getElementById('struct').textContent = struct;
     
-    function moveTT(e){
-        let x=e.clientX+12,y=e.clientY+12;
-        if(x+260>window.innerWidth)x=e.clientX-270;
-        if(y+180>window.innerHeight)y=e.clientY-180;
-        tt.style.left=x+'px';tt.style.top=y+'px';
+    // Render D sparkline
+    this.renderSparkline();
+  }
+  
+  renderSparkline() {
+    const ctx = this.sparkCtx;
+    const w = this.sparkCanvas.width;
+    const h = this.sparkCanvas.height;
+    const data = this.field.dHistory;
+    
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, w, h);
+    
+    if(data.length < 2) return;
+    
+    // Draw target line at D=1.5
+    const ty = h - ((1.5 - 1) / 1) * h;
+    ctx.strokeStyle = '#5af';
+    ctx.setLineDash([1, 1]);
+    ctx.beginPath();
+    ctx.moveTo(0, ty);
+    ctx.lineTo(w, ty);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Draw D history
+    ctx.strokeStyle = '#d4a54a';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for(let i = 0; i < data.length; i++) {
+      const x = (i / (data.length - 1)) * w;
+      const y = h - ((data[i] - 1) / 1) * h; // D ranges 1-2
+      if(i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
     }
-    
-    function updateStatus(dH,dS,dW){
-        const hC=document.getElementById('higgs-status'),sC=document.getElementById('strong-status'),wC=document.getElementById('weak-status');
-        hC.className=dH?'status-card disabled':'status-card active';
-        hC.innerHTML=dH?'<h4>⚠️ HIGGS OFF</h4><ul><li>Mass=0</li><li>All at c</li><li>No atoms</li></ul>':'<h4>✓ Higgs Active</h4><p>Particles acquire mass via SSB</p>';
-        sC.className=dS?'status-card disabled':'status-card active';
-        sC.innerHTML=dS?'<h4>⚠️ STRONG OFF</h4><ul><li>No hadrons</li><li>Free quarks</li></ul>':'<h4>✓ Strong Force Active</h4><p>Quarks confined → hadrons</p>';
-        wC.className=dW?'status-card disabled':'status-card active';
-        wC.innerHTML=dW?'<h4>⚠️ WEAK OFF</h4><ul><li>No β decay</li><li>No stars</li></ul>':'<h4>✓ Weak Force Active</h4><p>Flavor changing → nucleosynthesis</p>';
-    }
-    
-    function updateVL(s){
-        const l=document.getElementById('validation-legend');
-        l.innerHTML=s?'<h4>🔍 Validation</h4><ul><li><b>🔒</b> Quarks: confined</li><li><b>✓</b> Leptons: free</li><li><b>✗</b> Disabled</li></ul>':'<h4>🔍 Validation</h4><p><em>Enable in sidebar</em></p>';
-    }
-    
-    function toggleExpander(id){document.getElementById(id+'-content').classList.toggle('open');}
-    
-    document.querySelectorAll('input').forEach(el=>el.addEventListener('change',render));
-    render();
-    </script>
+    ctx.stroke();
+  }
+  
+  hsl(h,s,l) {
+    const f = (n) => {
+      const k = (n + h*12) % 12;
+      const a = s * Math.min(l, 1-l);
+      return l - a * Math.max(-1, Math.min(k-3, 9-k, 1));
+    };
+    return [f(0)*255|0, f(8)*255|0, f(4)*255|0];
+  }
+}
+
+new App();
+</script>
 </body>
 </html>
