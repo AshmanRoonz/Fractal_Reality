@@ -60,10 +60,30 @@ body {
     margin: 0 auto;
 }
 
+/* ===================================
+   RESPONSIVE LAYOUT (Mobile-first)
+   =================================== */
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.side-panel {
+    width: 100%;
+    max-width: 400px;
+}
+
+.center-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 /* Header - Hero Equation Section */
 .header {
     margin-bottom: 0.5rem;
-    max-width: 600px;
     text-align: center;
 }
 
@@ -347,7 +367,7 @@ body {
 
 .label-body {
     color: var(--body-color);
-    top: 28%;
+    top: 22%;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -355,7 +375,7 @@ body {
 .label-mind {
     color: var(--mind-color);
     top: 50%;
-    right: 28%;
+    right: 18%;
     transform: translateY(-50%);
 }
 
@@ -679,29 +699,73 @@ body {
     }
 }
 
-/* Desktop */
-@media (min-width: 768px) {
+/* Desktop / Wide screens */
+@media (min-width: 900px) {
+    .container {
+        min-height: 100vh;
+        padding: 1rem 2rem;
+    }
+
+    .main-layout {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 2rem;
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    .side-panel {
+        max-width: 280px;
+    }
+
+    .left-panel {
+        justify-self: end;
+        text-align: right;
+    }
+
+    .left-panel .equation-title {
+        font-size: 1.1rem;
+    }
+
+    .left-panel .equation-explanation {
+        font-size: 0.8rem;
+    }
+
+    .right-panel {
+        justify-self: start;
+        text-align: left;
+    }
+
+    .right-panel .dimension-table {
+        margin: 0;
+    }
+
+    .center-panel {
+        flex-shrink: 0;
+    }
+
     .circumpunct-container {
-        width: 400px;
-        height: 400px;
-        max-width: 400px;
-        max-height: 400px;
+        width: 350px;
+        height: 350px;
+        max-width: 350px;
+        max-height: 350px;
     }
 
     .dimension-text {
-        font-size: 0.95rem;
+        font-size: 0.85rem;
     }
 
     .dimension-math code {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 
     .nav-arc .arc-text {
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .label {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 
     .panel {
@@ -713,6 +777,24 @@ body {
 
     .panel.open {
         transform: translate(-50%, 0);
+    }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 899px) {
+    .circumpunct-container {
+        width: 380px;
+        height: 380px;
+        max-width: 380px;
+        max-height: 380px;
+    }
+
+    .nav-arc .arc-text {
+        font-size: 12px;
+    }
+
+    .label {
+        font-size: 0.85rem;
     }
 }
 
