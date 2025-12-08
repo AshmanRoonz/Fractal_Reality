@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⊙ Circumpunct v5</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
+    .header h1 { font-size: 2rem; font-weight: 200; color: #d4a54a; letter-spacing: 0.3em; }
+    .header .equation { color: #d4a54a80; font-size: 0.75rem; letter-spacing: 0.1em; }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 1rem;
+    }
+    
+    @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+    
+    .panel {
+      background: rgba(20, 20, 25, 0.8);
+      border: 1px solid rgba(180, 140, 60, 0.15);
+      border-radius: 6px;
+      padding: 0.75rem;
+    }
+    
+    .panel-title { color: #d4a54a; font-size: 0.65rem; letter-spacing: 0.15em; margin-bottom: 0.5rem; }
+    
+    .canvas-wrapper {
+      position: relative;
+      aspect-ratio: 1;
+      background: #000;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    #field-canvas { width: 100%; height: 100%; display: block; }
+    
+    .overlay {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.4rem;
+      background: rgba(0,0,0,0.85);
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.6rem;
+      color: #888;
+    }
+    
+    .overlay-left { right: auto; left: 0.4rem; color: #d4a54a; }
+    
+    .view-modes {
+      display: flex;
+      gap: 0.3rem;
+      margin-top: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .view-btn {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.6rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #888;
+      border-radius: 3px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    
+    .view-btn:hover { background: #252525; border-color: #444; }
+    .view-btn.active { background: #d4a54a; color: #000; border-color: #d4a54a; }
+    
+    .sidebar { display: flex; flex-direction: column; gap: 0.5rem; }
+    
+    .param-group { margin-bottom: 0.4rem; }
+    
+    .param-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.55rem;
+      color: #777;
+      margin-bottom: 0.15rem;
+    }
+    
+    .param-value { color: #d4a54a; font-weight: 500; }
+    
+    .param-desc { font-size: 0.5rem; color: #555; margin-top: 0.1rem; }
+    
+    input[type="range"] {
+      width: 100%;
+      height: 3px;
+      background: #333;
+      border-radius: 2px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: #d4a54a;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.55rem;
+      color: #777;
+      padding: 0.3rem;
+      background: rgba(0,0,0,0.3);
+      border-radius: 3px;
+      margin-top: 0.2rem;
+    }
+    
+    .checkbox-row input { accent-color: #d4a54a; width: 12px; height: 12px; }
+    
+    .checkbox-row.highlight {
+      background: rgba(180, 140, 60, 0.15);
+      border: 1px solid rgba(180, 140, 60, 0.3);
+    }
+    
+    .metric { margin-bottom: 0.4rem; }
+    
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.55rem;
+      margin-bottom: 0.1rem;
+    }
+    
+    .metric-label { color: #666; }
+    .metric-value { color: #d4a54a; }
+    .metric-value.good { color: #5a5; }
+    .metric-value.target { color: #5af; }
+    .metric-value.warning { color: #a55; }
+    
+    .progress-bar {
+      height: 4px;
+      background: #1a1a1a;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #b8860b, #d4a54a);
+      transition: width 0.2s;
+    }
+    
+    .progress-fill.energy { background: linear-gradient(90deg, #2a6b2a, #5a5); }
+    
+    .progress-target {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #5af;
+    }
+    
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.25rem;
+    }
+    
+    .btn {
+      padding: 0.45rem;
+      font-family: inherit;
+      font-size: 0.6rem;
+      letter-spacing: 0.05em;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .btn-run { background: #d4a54a; color: #000; }
+    .btn-run:hover { background: #e5b85b; }
+    .btn-run.stop { background: #a44; color: #fff; }
+    .btn-secondary { background: #252525; color: #999; border: 1px solid #333; }
+    .btn-secondary:hover { background: #333; }
+    
+    .init-section { border-top: 1px solid #252525; padding-top: 0.4rem; margin-top: 0.25rem; }
+    .init-label { font-size: 0.5rem; color: #555; margin-bottom: 0.25rem; }
+    
+    .init-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.2rem; }
+    
+    .init-btn {
+      padding: 0.3rem;
+      font-size: 0.85rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #666;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .init-btn:hover { background: #252525; }
+    .init-btn.active { background: #d4a54a; color: #000; border-color: #d4a54a; }
+    
+    .info-box {
+      background: rgba(180, 134, 11, 0.08);
+      border: 1px solid rgba(180, 134, 11, 0.15);
+      border-radius: 4px;
+      padding: 0.4rem;
+      font-size: 0.5rem;
+      color: rgba(212, 165, 74, 0.7);
+      line-height: 1.35;
+    }
+    
+    .info-box strong { color: #d4a54a; }
+    
+    .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-top: 0.4rem; }
+    .chart-box { background: #0a0a0a; border-radius: 3px; padding: 0.25rem; }
+    .chart-title { font-size: 0.45rem; color: #555; text-align: center; margin-bottom: 0.1rem; }
+    .chart-canvas { width: 100%; height: 40px; display: block; }
+    
+    .footer { text-align: center; margin-top: 1rem; color: #333; font-size: 0.5rem; letter-spacing: 0.1em; }
+    
+    .event-log {
+      max-height: 45px;
+      overflow-y: auto;
+      font-size: 0.45rem;
+      color: #666;
+      background: #0a0a0a;
+      border-radius: 3px;
+      padding: 0.25rem;
+      margin-top: 0.25rem;
+    }
+    
+    .event-log div { margin-bottom: 0.08rem; }
+    .event-log .event-particle { color: #5af; }
+    .event-log .event-halo { color: #fa5; }
+    .event-log .event-vortex { color: #a5f; }
+    .event-log .event-target { color: #5fa; }
+    
+    .balance-display {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.3rem;
+      background: rgba(0,0,0,0.4);
+      border-radius: 3px;
+      margin-top: 0.3rem;
+      font-size: 0.55rem;
+    }
+    
+    .balance-display .label { color: #666; }
+    .balance-display .value { color: #d4a54a; font-weight: 500; }
+    .balance-display .value.balanced { color: #5fa; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>⊙</h1>
+    <div class="equation">Φ' = ⊰ ∘ Å(θ) ∘ ≻[Φ]</div>
+  </div>
+
+  <div class="container">
+    <div class="main-area">
+      <div class="panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <span class="panel-title">FIELD Φ</span>
+          <span id="cycle-counter" style="color: #555; font-size: 0.6rem;">CYCLE 0</span>
+        </div>
+        
+        <div class="canvas-wrapper">
+          <canvas id="field-canvas" width="512" height="512"></canvas>
+          <div class="overlay" id="fps-display">0 FPS</div>
+          <div class="overlay overlay-left" id="structure-display">—</div>
+        </div>
+        
+        <div class="view-modes">
+          <button class="view-btn active" data-mode="magnitude">|Φ|</button>
+          <button class="view-btn" data-mode="phase">PHASE</button>
+          <button class="view-btn" data-mode="real">Re</button>
+          <button class="view-btn" data-mode="imag">Im</button>
+        </div>
+        
+        <div class="charts">
+          <div class="chart-box">
+            <div class="chart-title">Fractal D (target 1.5)</div>
+            <canvas id="d-chart" class="chart-canvas"></canvas>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">Energy</div>
+            <canvas id="e-chart" class="chart-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <!-- Operators -->
+      <div class="panel">
+        <div class="panel-title">OPERATORS</div>
+        
+        <div class="param-group">
+          <div class="param-label">
+            <span>≻ Convergence</span>
+            <span class="param-value" id="conv-value">0.50</span>
+          </div>
+          <input type="range" id="conv-slider" min="0" max="100" value="50">
+          <div class="param-desc">Gentle smoothing toward local mean</div>
+        </div>
+        
+        <div class="param-group">
+          <div class="param-label">
+            <span>Å Rotation θ</span>
+            <span class="param-value" id="theta-value">10°</span>
+          </div>
+          <input type="range" id="theta-slider" min="0" max="90" value="10">
+          <div class="param-desc">Phase rotation per cycle</div>
+        </div>
+        
+        <div class="param-group">
+          <div class="param-label">
+            <span>⊰ Emergence</span>
+            <span class="param-value" id="emerg-value">0.50</span>
+          </div>
+          <input type="range" id="emerg-slider" min="0" max="100" value="50">
+          <div class="param-desc">Edge enhancement / sharpening</div>
+        </div>
+        
+        <div class="balance-display">
+          <span class="label">β = ≻/(≻+⊰)</span>
+          <span class="value" id="beta-value">0.50</span>
+        </div>
+        
+        <div class="checkbox-row highlight">
+          <input type="checkbox" id="nonlinear-toggle">
+          <label for="nonlinear-toggle">Saturable nonlinearity</label>
+        </div>
+        
+        <div class="checkbox-row">
+          <input type="checkbox" id="conserve-energy" checked>
+          <label for="conserve-energy">Conserve energy</label>
+        </div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="panel">
+        <div class="panel-title">METRICS</div>
+        
+        <div class="metric">
+          <div class="metric-header">
+            <span class="metric-label">Fractal D</span>
+            <span class="metric-value" id="d-value">1.500</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="d-bar" style="width: 50%;"></div>
+            <div class="progress-target" style="left: 50%;"></div>
+          </div>
+        </div>
+        
+        <div class="metric">
+          <div class="metric-header">
+            <span class="metric-label">Energy</span>
+            <span class="metric-value good" id="e-value">100%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill energy" id="e-bar" style="width: 100%;"></div>
+          </div>
+        </div>
+        
+        <div class="metric">
+          <div class="metric-header">
+            <span class="metric-label">Vorticity</span>
+            <span class="metric-value" id="vort-value">0.0</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="vort-bar" style="width: 0%;"></div>
+          </div>
+        </div>
+        
+        <div class="event-log" id="event-log"></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="panel">
+        <div class="panel-title">CONTROLS</div>
+        
+        <div class="controls-grid">
+          <button class="btn btn-run" id="run-btn">▶ RUN</button>
+          <button class="btn btn-secondary" id="step-btn">STEP</button>
+          <button class="btn btn-secondary" id="step10-btn">+10</button>
+          <button class="btn btn-secondary" id="step100-btn">+100</button>
+        </div>
+        
+        <div class="init-section">
+          <div class="init-label">INITIALIZE</div>
+          <div class="init-grid">
+            <button class="init-btn active" data-init="circumpunct" title="Circumpunct">⊙</button>
+            <button class="init-btn" data-init="vortex" title="Vortex">◎</button>
+            <button class="init-btn" data-init="ring" title="Ring">○</button>
+            <button class="init-btn" data-init="gaussian" title="Gaussian">●</button>
+            <button class="init-btn" data-init="random" title="Random">◌</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="info-box">
+        <strong>v5 — Balanced operators</strong><br>
+        Convergence now blends with original (not full blur).<br>
+        Emergence strength matched to convergence.<br><br>
+        <strong>Try:</strong> All sliders at 0.50, θ=10°, see D→1.5
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">⊙ = • ⊗ ○ ⊗ Φ</div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════════
+    // CIRCUMPUNCT v5 - Properly balanced operators
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    class CircumpunctField {
+      constructor(size = 128) {
+        this.size = size;
+        this.field = new Float32Array(size * size * 2);
+        this.temp = new Float32Array(size * size * 2);
+        this.blur = new Float32Array(size * size * 2);
+        this.cycle = 0;
+        this.energyHistory = [];
+        this.dimensionHistory = [];
+        this.initialEnergy = 1;
+        
+        // Parameters 0-1
+        this.convergence = 0.5;  // Blend factor with smoothed version
+        this.theta = 10 * Math.PI / 180;
+        this.emergence = 0.5;    // Laplacian enhancement strength
+        this.useNonlinear = false;
+        this.conserveEnergy = true;
+      }
+
+      get beta() {
+        const total = this.convergence + this.emergence;
+        return total > 0 ? this.convergence / total : 0.5;
+      }
+
+      idx(x, y) {
+        x = ((x % this.size) + this.size) % this.size;
+        y = ((y % this.size) + this.size) % this.size;
+        return (y * this.size + x) * 2;
+      }
+
+      getRe(x, y) { return this.field[this.idx(x, y)]; }
+      getIm(x, y) { return this.field[this.idx(x, y) + 1]; }
+      setRe(x, y, v) { this.field[this.idx(x, y)] = v; }
+      setIm(x, y, v) { this.field[this.idx(x, y) + 1] = v; }
+      getMag(x, y) { const re = this.getRe(x,y), im = this.getIm(x,y); return Math.sqrt(re*re + im*im); }
+      getPhase(x, y) { return Math.atan2(this.getIm(x, y), this.getRe(x, y)); }
+
+      // ═══════════════════════════════════════════════════════════════════════
+      // INITIALIZATION
+      // ═══════════════════════════════════════════════════════════════════════
+
+      initCircumpunct() {
+        const cx = this.size / 2, cy = this.size / 2;
+        const innerR = this.size / 10, outerR = this.size / 3;
+        
+        for (let y = 0; y < this.size; y++) {
+          for (let x = 0; x < this.size; x++) {
+            const dx = x - cx, dy = y - cy;
+            const r = Math.sqrt(dx*dx + dy*dy);
+            const theta = Math.atan2(dy, dx);
+            
+            const center = 2.5 * Math.exp(-r*r / (2*innerR*innerR));
+            const ring = Math.exp(-Math.pow(r - outerR, 2) / (2*Math.pow(outerR/6, 2)));
+            const mid = 0.5 * Math.exp(-Math.pow(r - (outerR+innerR)/2, 2) / (2*Math.pow((outerR-innerR)/4, 2)));
+            
+            const amp = center + ring * 0.8 + mid;
+            const phase = theta * 2 + r * 0.1;
+            
+            this.setRe(x, y, amp * Math.cos(phase));
+            this.setIm(x, y, amp * Math.sin(phase));
+          }
+        }
+        this.resetMetrics();
+      }
+
+      initVortex() {
+        const cx = this.size/2, cy = this.size/2, sigma = this.size/4, charge = 2;
+        for (let y = 0; y < this.size; y++) {
+          for (let x = 0; x < this.size; x++) {
+            const dx = x-cx, dy = y-cy;
+            const r = Math.sqrt(dx*dx + dy*dy);
+            const theta = Math.atan2(dy, dx);
+            const amp = Math.pow(r/sigma, charge) * Math.exp(-r*r/(2*sigma*sigma)) * 3;
+            this.setRe(x, y, amp * Math.cos(theta * charge));
+            this.setIm(x, y, amp * Math.sin(theta * charge));
+          }
+        }
+        this.resetMetrics();
+      }
+
+      initRing() {
+        const cx = this.size/2, cy = this.size/2, ringR = this.size/3, ringW = this.size/15;
+        for (let y = 0; y < this.size; y++) {
+          for (let x = 0; x < this.size; x++) {
+            const dx = x-cx, dy = y-cy;
+            const r = Math.sqrt(dx*dx + dy*dy);
+            const theta = Math.atan2(dy, dx);
+            const amp = 2 * Math.exp(-Math.pow(r-ringR, 2)/(2*ringW*ringW));
+            this.setRe(x, y, amp * Math.cos(theta * 4));
+            this.setIm(x, y, amp * Math.sin(theta * 4));
+          }
+        }
+        this.resetMetrics();
+      }
+
+      initGaussian() {
+        const cx = this.size/2, cy = this.size/2, sigma = this.size/5;
+        for (let y = 0; y < this.size; y++) {
+          for (let x = 0; x < this.size; x++) {
+            const dx = x-cx, dy = y-cy;
+            const amp = 2 * Math.exp(-(dx*dx+dy*dy)/(2*sigma*sigma));
+            this.setRe(x, y, amp);
+            this.setIm(x, y, 0);
+          }
+        }
+        this.resetMetrics();
+      }
+
+      initRandom() {
+        for (let i = 0; i < this.field.length; i++) {
+          this.field[i] = (Math.random() - 0.5) * 2;
+        }
+        // Light smoothing
+        for (let k = 0; k < 3; k++) {
+          for (let y = 0; y < this.size; y++) {
+            for (let x = 0; x < this.size; x++) {
+              const avgRe = (this.getRe(x,y) + this.getRe(x+1,y) + this.getRe(x-1,y) + 
+                            this.getRe(x,y+1) + this.getRe(x,y-1)) / 5;
+              const avgIm = (this.getIm(x,y) + this.getIm(x+1,y) + this.getIm(x-1,y) + 
+                            this.getIm(x,y+1) + this.getIm(x,y-1)) / 5;
+              const idx = (y * this.size + x) * 2;
+              this.temp[idx] = avgRe;
+              this.temp[idx + 1] = avgIm;
+            }
+          }
+          this.field.set(this.temp);
+        }
+        this.resetMetrics();
+      }
+
+      resetMetrics() {
+        this.cycle = 0;
+        this.initialEnergy = this.totalEnergy();
+        this.energyHistory = [this.initialEnergy];
+        this.dimensionHistory = [this.estimateFractalDimension()];
+      }
+
+      // ═══════════════════════════════════════════════════════════════════════
+      // OPERATORS - Now properly balanced
+      // ═══════════════════════════════════════════════════════════════════════
+
+      // ≻ Convergence: Blend original with local 5-point average
+      // At c=0: no change. At c=1: full replacement with average
+      applyConvergence() {
+        const c = this.convergence * 0.3; // Scale so 1.0 isn't too aggressive
+        if (c < 0.001) return;
+        
+        for (let y = 0; y < this.size; y++) {
+          for (let x = 0; x < this.size; x++) {
+            const origRe = this.getRe(x, y);
+            const origIm = this.getIm(x, y);
+            
+            // 5-point average (self + 4 neighbors)
+            const avgRe = (origRe + this.getRe(x+1,y) + this.getRe(x-1,y) + 
+                          this.getRe(x,y+1) + this.getRe(x,y-1)) / 5;
+            const avgIm = (origIm + this.getIm(x+1,y) + this.getIm(x-1,y) + 
+                          this.getIm(x,y+1) + this.getIm(x,y-1)) / 5;
+            
+            // Blend: (1-c)*original + c*average
+            const idx = (y * this.size + x) * 2;
+            this.temp[idx] = (1-c) * origRe + c * avgRe;
+            this.temp[idx + 1] = (1-c) * origIm + c * avgIm;
+          }
+        }
+        this.field.set(this.temp);
+      }
+
+      // Å Rotation: Phase rotation by θ
+      applyRotation() {
+        if (Math.abs(this.theta) < 0.0001) return;
+        const cosT = Math.cos(this.theta), sinT = Math.sin(this.theta);
+        
+        for (let i = 0; i < this.field.length; i += 2) {
+          const re = this.field[i], im = this.field[i + 1];
+          this.field[i] = re * cosT - im * sinT;
+          this.field[i + 1] = re * sinT + im * cosT;
+        }
+      }
+
+      // ⊰ Emergence: Laplacian sharpening (subtract Laplacian)
+      // At e=0: no change. At e=1: strong sharpening
+      applyEmergence() {
+        const e = this.emergence * 0.15; // Scale to match convergence effect
+        if (e < 0.001) return;
+        
+        for (let y = 0; y < this.size; y++) {
+          for (let x = 0; x < this.size; x++) {
+            const cRe = this.getRe(x, y), cIm = this.getIm(x, y);
+            
+            // Laplacian = sum of neighbors - 4*center
+            const lapRe = this.getRe(x+1,y) + this.getRe(x-1,y) + 
+                          this.getRe(x,y+1) + this.getRe(x,y-1) - 4*cRe;
+            const lapIm = this.getIm(x+1,y) + this.getIm(x-1,y) + 
+                          this.getIm(x,y+1) + this.getIm(x,y-1) - 4*cIm;
+            
+            // Sharpening: subtract scaled Laplacian
+            const idx = (y * this.size + x) * 2;
+            this.temp[idx] = cRe - e * lapRe;
+            this.temp[idx + 1] = cIm - e * lapIm;
+          }
+        }
+        this.field.set(this.temp);
+      }
+
+      // Saturable nonlinearity: prevents collapse
+      applyNonlinearity() {
+        if (!this.useNonlinear) return;
+        const g = 0.08;
+        
+        for (let i = 0; i < this.field.length; i += 2) {
+          const re = this.field[i], im = this.field[i + 1];
+          const mag2 = re*re + im*im;
+          const factor = 1 + g * mag2 / (1 + mag2);
+          this.field[i] = re * factor;
+          this.field[i + 1] = im * factor;
+        }
+      }
+
+      normalizeEnergy() {
+        if (!this.conserveEnergy) return;
+        const current = this.totalEnergy();
+        if (current > 1e-10) {
+          const scale = Math.sqrt(this.initialEnergy / current);
+          for (let i = 0; i < this.field.length; i++) this.field[i] *= scale;
+        }
+      }
+
+      // ═══════════════════════════════════════════════════════════════════════
+      // MASTER LOOP
+      // ═══════════════════════════════════════════════════════════════════════
+      update() {
+        this.applyConvergence();
+        this.applyRotation();
+        this.applyEmergence();
+        this.applyNonlinearity();
+        this.normalizeEnergy();
+        this.cycle++;
+        
+        if (this.cycle % 3 === 0) {
+          this.energyHistory.push(this.totalEnergy());
+          this.dimensionHistory.push(this.estimateFractalDimension());
+          if (this.energyHistory.length > 300) {
+            this.energyHistory.shift();
+            this.dimensionHistory.shift();
+          }
+        }
+      }
+
+      // ═══════════════════════════════════════════════════════════════════════
+      // METRICS
+      // ═══════════════════════════════════════════════════════════════════════
+
+      totalEnergy() {
+        let e = 0;
+        for (let i = 0; i < this.field.length; i += 2) {
+          e += this.field[i]*this.field[i] + this.field[i+1]*this.field[i+1];
+        }
+        return e;
+      }
+
+      maxAmplitude() {
+        let m = 0;
+        for (let i = 0; i < this.field.length; i += 2) {
+          const mag2 = this.field[i]*this.field[i] + this.field[i+1]*this.field[i+1];
+          if (mag2 > m) m = mag2;
+        }
+        return Math.sqrt(m);
+      }
+
+      centerAmplitude() {
+        return this.getMag(Math.floor(this.size/2), Math.floor(this.size/2));
+      }
+
+      totalVorticity() {
+        const cx = this.size/2, cy = this.size/2, r = this.size/4, n = 32;
+        let vort = 0, prevPhase = null;
+        
+        for (let i = 0; i <= n; i++) {
+          const angle = (i/n) * 2 * Math.PI;
+          const x = Math.round(cx + r * Math.cos(angle));
+          const y = Math.round(cy + r * Math.sin(angle));
+          const phase = this.getPhase(x, y);
+          
+          if (prevPhase !== null) {
+            let dp = phase - prevPhase;
+            while (dp > Math.PI) dp -= 2*Math.PI;
+            while (dp < -Math.PI) dp += 2*Math.PI;
+            vort += dp;
+          }
+          prevPhase = phase;
+        }
+        return Math.abs(vort / (2*Math.PI));
+      }
+
+      estimateFractalDimension() {
+        const avgE = this.totalEnergy() / (this.size * this.size);
+        const threshold = avgE * 0.25;
+        const scales = [2, 4, 8, 16, 32];
+        const counts = [];
+        
+        for (const scale of scales) {
+          if (scale > this.size/2) continue;
+          let count = 0;
+          const cellSize = this.size / scale;
+          
+          for (let cy = 0; cy < scale; cy++) {
+            for (let cx = 0; cx < scale; cx++) {
+              let has = false;
+              const x0 = Math.floor(cx * cellSize), y0 = Math.floor(cy * cellSize);
+              const x1 = Math.floor((cx+1) * cellSize), y1 = Math.floor((cy+1) * cellSize);
+              
+              outer: for (let y = y0; y < y1; y++) {
+                for (let x = x0; x < x1; x++) {
+                  const idx = (y * this.size + x) * 2;
+                  const m2 = this.field[idx]*this.field[idx] + this.field[idx+1]*this.field[idx+1];
+                  if (m2 > threshold) { has = true; break outer; }
+                }
+              }
+              if (has) count++;
+            }
+          }
+          if (count > 0) counts.push({ scale, count });
+        }
+        
+        if (counts.length < 2) return 2;
+        
+        let sx=0, sy=0, sxy=0, sx2=0;
+        for (const {scale, count} of counts) {
+          const x = Math.log(scale), y = Math.log(count);
+          sx += x; sy += y; sxy += x*y; sx2 += x*x;
+        }
+        const n = counts.length;
+        const slope = (n*sxy - sx*sy) / (n*sx2 - sx*sx);
+        return Math.max(1, Math.min(2, slope));
+      }
+
+      detectStructure() {
+        const maxA = this.maxAmplitude(), centerA = this.centerAmplitude();
+        const vort = this.totalVorticity();
+        const cx = this.size/2, cy = this.size/2;
+        
+        let ringE = 0, centerE = 0;
+        const ringR = this.size/3, ringW = this.size/10;
+        
+        for (let y = 0; y < this.size; y++) {
+          for (let x = 0; x < this.size; x++) {
+            const dx = x-cx, dy = y-cy;
+            const r = Math.sqrt(dx*dx + dy*dy);
+            const m2 = Math.pow(this.getMag(x,y), 2);
+            if (Math.abs(r - ringR) < ringW) ringE += m2;
+            if (r < ringW) centerE += m2;
+          }
+        }
+        
+        const s = [];
+        if (vort > 0.5) s.push('vortex');
+        if (ringE > centerE * 2) s.push('halo');
+        if (centerA > maxA * 0.7 && centerA > 0.3) s.push('particle');
+        return s.length > 0 ? s.join('+') : '—';
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // UI
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    class Simulator {
+      constructor() {
+        this.field = new CircumpunctField(128);
+        this.field.initCircumpunct();
+        this.isRunning = false;
+        this.viewMode = 'magnitude';
+        this.lastTime = performance.now();
+        this.frameCount = 0;
+        this.lastStructure = '—';
+        this.lastD = 1.5;
+        
+        this.canvas = document.getElementById('field-canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.imageData = this.ctx.createImageData(this.canvas.width, this.canvas.height);
+        
+        this.dChart = document.getElementById('d-chart');
+        this.eChart = document.getElementById('e-chart');
+        this.dCtx = this.dChart.getContext('2d');
+        this.eCtx = this.eChart.getContext('2d');
+        
+        this.eventLog = document.getElementById('event-log');
+        
+        this.setupEventListeners();
+        this.updateBeta();
+        this.render();
+      }
+
+      log(msg, type='') {
+        const div = document.createElement('div');
+        div.textContent = `[${this.field.cycle}] ${msg}`;
+        if (type) div.className = `event-${type}`;
+        this.eventLog.insertBefore(div, this.eventLog.firstChild);
+        if (this.eventLog.children.length > 12) this.eventLog.removeChild(this.eventLog.lastChild);
+      }
+
+      updateBeta() {
+        const b = this.field.beta;
+        const el = document.getElementById('beta-value');
+        el.textContent = b.toFixed(2);
+        el.className = 'value' + (Math.abs(b - 0.5) < 0.05 ? ' balanced' : '');
+      }
+
+      setupEventListeners() {
+        document.getElementById('run-btn').addEventListener('click', () => this.toggleRun());
+        document.getElementById('step-btn').addEventListener('click', () => this.step(1));
+        document.getElementById('step10-btn').addEventListener('click', () => this.step(10));
+        document.getElementById('step100-btn').addEventListener('click', () => this.step(100));
+        
+        document.getElementById('conv-slider').addEventListener('input', (e) => {
+          this.field.convergence = parseInt(e.target.value) / 100;
+          document.getElementById('conv-value').textContent = this.field.convergence.toFixed(2);
+          this.updateBeta();
+        });
+        
+        document.getElementById('theta-slider').addEventListener('input', (e) => {
+          const deg = parseInt(e.target.value);
+          this.field.theta = deg * Math.PI / 180;
+          document.getElementById('theta-value').textContent = deg + '°';
+        });
+        
+        document.getElementById('emerg-slider').addEventListener('input', (e) => {
+          this.field.emergence = parseInt(e.target.value) / 100;
+          document.getElementById('emerg-value').textContent = this.field.emergence.toFixed(2);
+          this.updateBeta();
+        });
+        
+        document.getElementById('nonlinear-toggle').addEventListener('change', (e) => {
+          this.field.useNonlinear = e.target.checked;
+          this.log(e.target.checked ? 'Nonlinear ON' : 'Nonlinear OFF');
+        });
+        
+        document.getElementById('conserve-energy').addEventListener('change', (e) => {
+          this.field.conserveEnergy = e.target.checked;
+        });
+        
+        document.querySelectorAll('.view-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            this.viewMode = e.target.dataset.mode;
+            this.render();
+          });
+        });
+        
+        document.querySelectorAll('.init-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            this.isRunning = false;
+            document.getElementById('run-btn').textContent = '▶ RUN';
+            document.getElementById('run-btn').classList.remove('stop');
+            
+            document.querySelectorAll('.init-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            const type = e.target.dataset.init;
+            switch(type) {
+              case 'vortex': this.field.initVortex(); break;
+              case 'ring': this.field.initRing(); break;
+              case 'gaussian': this.field.initGaussian(); break;
+              case 'random': this.field.initRandom(); break;
+              default: this.field.initCircumpunct();
+            }
+            this.eventLog.innerHTML = '';
+            this.log(`Init: ${type}`);
+            this.render();
+          });
+        });
+      }
+
+      toggleRun() {
+        this.isRunning = !this.isRunning;
+        const btn = document.getElementById('run-btn');
+        if (this.isRunning) {
+          btn.textContent = '■ STOP';
+          btn.classList.add('stop');
+          this.lastTime = performance.now();
+          this.frameCount = 0;
+          this.animate();
+        } else {
+          btn.textContent = '▶ RUN';
+          btn.classList.remove('stop');
+        }
+      }
+
+      step(n) {
+        if (this.isRunning) return;
+        for (let i = 0; i < n; i++) this.field.update();
+        this.checkStructure();
+        this.render();
+      }
+
+      checkStructure() {
+        const struct = this.field.detectStructure();
+        const d = this.field.dimensionHistory[this.field.dimensionHistory.length - 1] || 1.5;
+        
+        if (struct !== this.lastStructure && struct !== '—') {
+          if (struct.includes('particle')) this.log('Particle!', 'particle');
+          if (struct.includes('halo')) this.log('Halo!', 'halo');
+          if (struct.includes('vortex')) this.log('Vortex!', 'vortex');
+        }
+        
+        if ((this.lastD < 1.5 && d >= 1.5) || (this.lastD > 1.5 && d <= 1.5)) {
+          if (Math.abs(d - 1.5) < 0.03) this.log('D ≈ 1.5 ✓', 'target');
+        }
+        
+        this.lastStructure = struct;
+        this.lastD = d;
+        document.getElementById('structure-display').textContent = struct;
+      }
+
+      animate() {
+        if (!this.isRunning) return;
+        this.field.update();
+        
+        this.frameCount++;
+        const now = performance.now();
+        if (now - this.lastTime >= 500) {
+          document.getElementById('fps-display').textContent = 
+            Math.round(this.frameCount * 1000 / (now - this.lastTime)) + ' FPS';
+          this.frameCount = 0;
+          this.lastTime = now;
+          this.checkStructure();
+        }
+        
+        this.render();
+        requestAnimationFrame(() => this.animate());
+      }
+
+      render() {
+        this.renderField();
+        this.renderMetrics();
+        this.renderCharts();
+      }
+
+      renderField() {
+        const size = this.field.size;
+        const scale = this.canvas.width / size;
+        const data = this.imageData.data;
+        
+        let maxMag = this.field.maxAmplitude() || 1;
+        let maxRe = 0, maxIm = 0;
+        
+        for (let i = 0; i < this.field.field.length; i += 2) {
+          maxRe = Math.max(maxRe, Math.abs(this.field.field[i]));
+          maxIm = Math.max(maxIm, Math.abs(this.field.field[i+1]));
+        }
+        
+        for (let y = 0; y < size; y++) {
+          for (let x = 0; x < size; x++) {
+            const re = this.field.getRe(x, y);
+            const im = this.field.getIm(x, y);
+            const mag = Math.sqrt(re*re + im*im);
+            const phase = Math.atan2(im, re);
+            
+            let r, g, b;
+            
+            switch(this.viewMode) {
+              case 'magnitude':
+                const intensity = Math.pow(mag / maxMag, 0.7);
+                r = Math.floor(255 * intensity);
+                g = Math.floor(180 * intensity);
+                b = Math.floor(40 * intensity * intensity);
+                break;
+              case 'phase':
+                const hue = (phase + Math.PI) / (2 * Math.PI);
+                const light = 0.1 + 0.75 * (mag / maxMag);
+                [r, g, b] = this.hslToRgb(hue, 0.9, light);
+                break;
+              case 'real':
+                const nRe = re / (maxRe || 1);
+                r = nRe > 0 ? Math.floor(220 * nRe) : 0;
+                b = nRe < 0 ? Math.floor(220 * (-nRe)) : 0;
+                g = 30;
+                break;
+              case 'imag':
+                const nIm = im / (maxIm || 1);
+                g = nIm > 0 ? Math.floor(220 * nIm) : 0;
+                r = nIm < 0 ? Math.floor(180 * (-nIm)) : 0;
+                b = 30;
+                break;
+            }
+            
+            for (let py = 0; py < scale; py++) {
+              for (let px = 0; px < scale; px++) {
+                const idx = ((y * scale + py) * this.canvas.width + (x * scale + px)) * 4;
+                data[idx] = r;
+                data[idx + 1] = g;
+                data[idx + 2] = b;
+                data[idx + 3] = 255;
+              }
+            }
+          }
+        }
+        
+        this.ctx.putImageData(this.imageData, 0, 0);
+        
+        // Overlay circle
+        const cx = this.canvas.width / 2, cy = this.canvas.height / 2;
+        this.ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.arc(cx, cy, this.canvas.width * 0.38, 0, 2 * Math.PI);
+        this.ctx.stroke();
+        
+        document.getElementById('cycle-counter').textContent = `CYCLE ${this.field.cycle}`;
+      }
+
+      renderMetrics() {
+        const d = this.field.dimensionHistory[this.field.dimensionHistory.length - 1] || 1.5;
+        const e = this.field.energyHistory[this.field.energyHistory.length - 1] || 0;
+        const ratio = e / this.field.initialEnergy;
+        const vort = this.field.totalVorticity();
+        
+        const dEl = document.getElementById('d-value');
+        dEl.textContent = d.toFixed(3);
+        dEl.className = 'metric-value' + (Math.abs(d - 1.5) < 0.03 ? ' target' : '');
+        document.getElementById('d-bar').style.width = `${((d-1)/1)*100}%`;
+        
+        const eEl = document.getElementById('e-value');
+        eEl.textContent = `${(ratio*100).toFixed(0)}%`;
+        eEl.className = 'metric-value ' + (ratio > 0.95 && ratio < 1.05 ? 'good' : 'warning');
+        document.getElementById('e-bar').style.width = `${Math.min(100, ratio*100)}%`;
+        
+        document.getElementById('vort-value').textContent = vort.toFixed(1);
+        document.getElementById('vort-bar').style.width = `${Math.min(100, vort*25)}%`;
+      }
+
+      renderCharts() {
+        this.renderChart(this.dCtx, this.dChart, this.field.dimensionHistory, '#d4a54a', 1, 2, 1.5);
+        this.renderChart(this.eCtx, this.eChart, this.field.energyHistory, '#5a5');
+      }
+
+      renderChart(ctx, canvas, data, color, minV, maxV, target) {
+        ctx.fillStyle = '#050505';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (data.length < 2) return;
+        
+        let min = minV !== undefined ? minV : Math.min(...data) * 0.9;
+        let max = maxV !== undefined ? maxV : Math.max(...data) * 1.1;
+        if (max <= min) max = min + 1;
+        
+        if (target !== undefined) {
+          const ty = canvas.height - ((target - min) / (max - min)) * canvas.height;
+          ctx.strokeStyle = '#5af';
+          ctx.setLineDash([2, 2]);
+          ctx.beginPath();
+          ctx.moveTo(0, ty);
+          ctx.lineTo(canvas.width, ty);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+        
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for (let i = 0; i < data.length; i++) {
+          const x = (i / (data.length - 1)) * canvas.width;
+          const y = canvas.height - ((data[i] - min) / (max - min)) * canvas.height;
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+
+      hslToRgb(h, s, l) {
+        let r, g, b;
+        if (s === 0) { r = g = b = l; }
+        else {
+          const hue2rgb = (p, q, t) => {
+            if (t < 0) t += 1; if (t > 1) t -= 1;
+            if (t < 1/6) return p + (q-p) * 6 * t;
+            if (t < 1/2) return q;
+            if (t < 2/3) return p + (q-p) * (2/3-t) * 6;
+            return p;
+          };
+          const q = l < 0.5 ? l * (1+s) : l + s - l*s;
+          const p = 2*l - q;
+          r = hue2rgb(p, q, h + 1/3);
+          g = hue2rgb(p, q, h);
+          b = hue2rgb(p, q, h - 1/3);
+        }
+        return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => new Simulator());
+  </script>
+</body>
+</html>
