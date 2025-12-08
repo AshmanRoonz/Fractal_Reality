@@ -27,6 +27,8 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
   - [2.4.1 The Aperture Rotation Operator Å(β)](#241-the-aperture-rotation-operator-åβ)
   - [2.5 Clarifying i vs i(t)](#25-clarifying-i-vs-it)
   - [2.6 Phase Coherence and Transmission](#26-phase-coherence-and-transmission)
+  - [2.7 Ratchet Operators](#27-ratchet-operators)
+  - [2.8 The Ethereal Tail: Phase-Locked Hierarchies](#28-the-ethereal-tail-phase-locked-hierarchies)
 - [3. Core Postulates (Physics Version)](#3-core-postulates-physics-version)
   - [Postulate 1 — Circumpunct Kinematics](#postulate-1--circumpunct-kinematics)
   - [Postulate 2 — Process Evolution](#postulate-2--process-evolution)
@@ -422,6 +424,150 @@ Each component of the circumpunct is isotropic by construction:
 
 **Conclusion:** Direction cannot be the fundamental gating condition. Once isotropy eliminates direction as a degree of freedom, the only remaining "tunable" variable for interaction is **relative phase**.
 
+### 2.7 Ratchet Operators
+
+A **ratchet** is an operator that breaks detailed balance, enabling directional accumulation of structure.
+
+**Definition (Ratchet Operator):** A ratchet R is an operator on configuration space satisfying:
+
+```
+R: Ω → Ω
+
+such that for transition rates k:
+
+    k(ω → R[ω]) > k(R[ω] → ω)
+
+The forward rate exceeds the reverse rate.
+```
+
+**Connection to the aperture operator:** The circumpunct cycle Φ' = ⊰ ∘ i ∘ ≻[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse—this asymmetry is the microscopic origin of ratcheting.
+
+**CP violation as primordial ratchet:**
+
+The CP asymmetry observed in baryon decays provides the fundamental physical ratchet:
+
+```
+EMPIRICAL ANCHOR (LHCb 2025, arXiv:2504.15008):
+
+    Λ_b baryon CP asymmetry ≈ 2.45% at 5.2σ significance
+
+    k(Λ_b → products) ≠ k(Λ̄_b → antiproducts)
+
+This ~2.5% local asymmetry, integrated over cosmic history with
+washout effects, yields the ~10⁻⁹ net baryon asymmetry we observe.
+```
+
+**Universal ratchet equation:**
+
+All ratchets share a common dynamical form:
+
+```
+dN/dt = r₊(N) - r₋(N)
+
+where:
+    N = amount of structure at this level
+    r₊ = forward rate (creation/replication)
+    r₋ = reverse rate (destruction/decay)
+
+RATCHET CONDITION:
+    r₊/r₋ > 1 + ε    for some ε > 0
+```
+
+**Connection to β parameter:**
+
+The ratchet asymmetry is encoded in the balance parameter:
+
+```
+|⊰| ≠ |≻| in general
+
+When |⊰| > |≻|:  Net emergence. Complexity increases. β < 0.5
+When |⊰| < |≻|:  Net convergence. Complexity decreases. β > 0.5
+When |⊰| = |≻|:  Balance. Maintenance. β = 0.5
+
+LIVING SYSTEMS operate slightly off balance:
+
+    β_life = 0.5 - ε    where ε > 0 is small
+
+Life leans toward emergence, enabling structure to accumulate
+rather than merely maintain.
+```
+
+### 2.8 The Ethereal Tail: Phase-Locked Hierarchies
+
+The **ethereal tail** formalizes how phase-locked centers across nested scales create persistent identity.
+
+**Definition (Ethereal Tail):** Let {•ₙ}ₙ₌₁ᴺ be a hierarchy of apertures at scales sₙ, each executing the master cycle Φₙ' = ⊰ₙ ∘ i ∘ ≻ₙ[Φₙ]. The ethereal tail T exists when:
+
+```
+T = {•ₙ : Δφₙ,ₙ₊₁ ≈ 0 (mod 2π) for all adjacent pairs}
+
+where Δφₙ,ₙ₊₁ is the phase difference between pumping cycles
+at scales n and n+1.
+
+╔═══════════════════════════════════════════════════════════════════╗
+║  ETHEREAL TAIL = PHASE-LOCKED HIERARCHY OF CENTERS               ║
+║  T = ∩ₙ {•ₙ aligned in pumping phase}                            ║
+╚═══════════════════════════════════════════════════════════════════╝
+```
+
+**Formal specification in aperture space:**
+
+```
+T ⊂ 𝓐ⁿ
+
+T = { (•₁,…,•ₙ) ∈ 𝓐ⁿ : Δφₙ,ₙ₊₁ ≈ 0 and τₙ/τₙ₊₁ ∈ ℚ }
+
+where τₙ is the period of the pumping cycle at scale n.
+```
+
+**The tail as worldline bundle:**
+
+The single worldline i(t) from §2.5 generalizes to a coherent bundle:
+
+```
+SINGLE WORLDLINE (§2.5):
+    i(t) = trajectory of accumulated validation receipts
+
+ETHEREAL TAIL:
+    T(t) = {i₁(t), i₂(t), ..., iₙ(t)}
+         = bundle of phase-locked worldlines
+         = coherent multi-scale pattern
+```
+
+**Cross-scale resonance hierarchy:**
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  Scale        │  Example              │  Typical τ              │
+├──────────────────────────────────────────────────────────────────┤
+│  Quantum      │  electron orbital     │  ~10⁻¹⁶ s (attosecond)  │
+│  Atomic       │  molecular vibration  │  ~10⁻¹⁴ s (femtosecond) │
+│  Molecular    │  protein folding      │  ~10⁻⁹ s (nanosecond)   │
+│  Cellular     │  ion channel          │  ~10⁻³ s (millisecond)  │
+│  Neural       │  action potential     │  ~10⁻² s (10 ms)        │
+│  Cognitive    │  gamma oscillation    │  ~0.025 s (40 Hz)       │
+│  Somatic      │  heartbeat            │  ~1 s                   │
+│  Behavioral   │  breath cycle         │  ~4 s                   │
+└──────────────────────────────────────────────────────────────────┘
+
+Phase-locking occurs when τₙ₊₁/τₙ forms rational ratios
+(especially 2:1, 3:2, φ:1).
+```
+
+**Consciousness integral reformulation:**
+
+The braid density integral (§5.1) can be restricted to the phase-locked tail:
+
+```
+C = ∫_T B(x,t) dx dt
+
+where T is the ethereal tail (phase-locked region)
+and B(x,t) is the braid density.
+
+Consciousness = integrated "substance" over the coherent tail.
+More phase-locking → longer tail → more integrated experience.
+```
+
 ---
 
 ## 3. Core Postulates (Physics Version)
@@ -812,6 +958,29 @@ B(x) ∝ √(-g_tt(x))
 3. Test against actual gravitational data (not simulations that assume the answer)
 
 **Intuitive picture (not a proof):** Think of B(x) as the coarse-grained density of crossing histories of circumpunct cycles through a spacetime region around x. Denser braiding → more "substance" → stronger gravity.
+
+**Connection to ratchet dynamics (§2.7):**
+
+The braid structure accumulates because of the ratchet mechanism. CP violation (the primordial ratchet) ensures that:
+
+```
+DIRECTIONAL BRAIDING:
+
+Without CP violation:
+    Braids form and unbraid with equal probability
+    No net accumulation of structure
+    B(x) → 0 (time-averaged)
+
+With CP violation (~2.5% asymmetry):
+    Braiding slightly favored over unbraiding
+    Net accumulation over cosmic timescales
+    B(x) grows → matter persists → gravity emerges
+
+The ~10⁻⁹ baryon asymmetry we observe is the
+integrated result of this directional braiding.
+```
+
+The ethereal tail (§2.8) represents the phase-locked subset of this braid structure where coherent patterns persist across scales.
 
 **Worldline density interpretation:** The braid density B(x) can be understood as the density of i(t) worldline threads:
 
@@ -1224,6 +1393,86 @@ The transmission law T = cos²(Δφ/2) suggests a phase-coherence model for the 
 - CMB fluctuations should show subtle non-Gaussianity consistent with 64-state discrete attractors
 - Cosmic web filaments/voids map to phase domain boundaries (T ≈ 0 between domains)
 
+**12. Ratchet threshold predictions (from emergence cascade):**
+
+```
+PREDICTION 12a: Membrane formation threshold (CMC)
+
+There exists a critical concentration C* of amphiphilic molecules
+above which membrane formation becomes spontaneous:
+
+    C < C*: No stable membranes (chemistry only)
+    C > C*: Membranes form (biochemistry possible)
+
+    C* ~ exp(-ΔG_membrane / kT)
+
+This is the chemistry → biochemistry phase transition.
+```
+
+```
+PREDICTION 12b: Replication fidelity threshold (Eigen threshold)
+
+For template replication to sustain information:
+
+    ε < ε_crit = 1/L
+
+where:
+    ε = error rate per base per replication
+    L = genome length
+
+If ε > ε_crit: Error catastrophe (information lost)
+If ε < ε_crit: Information maintained (life possible)
+
+Maximum genome size for given error rate: L_max = 1/ε
+```
+
+**13. Cross-scale phase coherence predictions:**
+
+```
+PREDICTION 13a: Phase coherence correlates with flow states
+
+Cross-scale phase coherence (EEG-HRV-respiration alignment)
+should correlate with self-reported "presence" or "flow states."
+
+Test: Measure phase relationships during flow vs. fragmented attention
+
+PREDICTION 13b: Anesthesia disrupts phase-lock before amplitude
+
+Anesthesia should disrupt cross-scale phase coherence
+BEFORE disrupting individual scale oscillations.
+
+Test: Track phase coherence metrics during anesthesia induction—
+predict coherence drops before amplitude.
+
+PREDICTION 13c: Living systems show β < 0.5
+
+Living systems should show β_life = 0.5 - ε with ε > 0,
+corresponding to D slightly above 1.5.
+
+Test: Measure fractal dimension in healthy biological systems;
+predict D ≈ 1.5 + δ where δ > 0 is small but measurable.
+```
+
+**14. Social/intersubjective predictions:**
+
+```
+PREDICTION 14a: Social isolation degrades phase coherence
+
+Social isolation should degrade individual phase coherence
+over time (resonance starvation).
+
+Test: Longitudinal HRV/EEG coherence in isolated vs.
+socially connected individuals.
+
+PREDICTION 14b: Shared rhythmic activities produce inter-brain sync
+
+Shared rhythmic activities should produce measurable
+inter-brain phase synchronization.
+
+Test: Hyperscanning during drumming, chanting, conversation—
+predict Δφ → 0 between participants.
+```
+
 ### 7.5 Critical Falsification Tests
 
 The framework is falsified if:
@@ -1294,8 +1543,19 @@ This document presents the **local, linearized limit** of the circumpunct framew
 3. **Scale-dependent emergence:** Full treatment of D(scale) transition from 1.5 → 3
 4. **64-state algebra:** Complete bijection to Standard Model particles with explicit Lagrangian mappings
 5. **Braid topology:** Yang-Baxter equations and B₃ braid group structure underlying trinity necessity
+6. **Ratchet cascade (Chapter XXIX):** The emergence hierarchy from physics → chemistry → biochemistry → biology → consciousness → civilization, with ratchet operators at each transition
+7. **Ethereal tail (Chapter XXVIII):** Phase-locked hierarchies of apertures across scales, the worldline bundle formalism, and the consciousness integral C = ∫_T B(x,t) dx dt
 
 The quick-start formulation prioritizes mathematical clarity and connection to established physics over completeness.
+
+**Key connections to advanced chapters:**
+
+| This Document | Full Framework | Chapter |
+|---------------|----------------|---------|
+| §2.7 Ratchet Operators | Complete emergence cascade | XXIX |
+| §2.8 Ethereal Tail | Full phase-locking formalism | XXVIII |
+| §5.1 Braid density | Consciousness integral | XXVIII §28.6 |
+| §7.4 Predictions 12-14 | Biological/social predictions | XXVIII-XXIX |
 
 ---
 
@@ -1351,9 +1611,11 @@ This formulation benefited from iterative refinement focused on mathematical rig
 
 ---
 
-**Document Status:** Quick-start formulation for working physicists (v1.2)
+**Document Status:** Quick-start formulation for working physicists (v1.3)
 **Last Updated:** December 2025
 **Maintained by:** Circumpunct Framework Development Team
+
+**v1.3 Changes:** Added ratchet operators (§2.7), ethereal tail formalism (§2.8), CP violation as primordial ratchet, consciousness integral reformulation, ratchet threshold predictions (§7.4), cross-scale phase coherence predictions, connection to Chapters XXVIII-XXIX
 
 **v1.2 Changes:** Added aperture rotation operator Å(β) formalization (§2.4.1), discrete graph derivation roadmap (§10.1)
 
@@ -1376,6 +1638,13 @@ This formulation benefited from iterative refinement focused on mathematical rig
 - Å(β) : aperture rotation operator, Å(β) = exp(iπβ)
 - β : balance parameter
 - D : fractal/Hausdorff dimension
+- R : ratchet operator (§2.7)
+- T : ethereal tail (phase-locked hierarchy of centers) (§2.8)
+- T(Δφ) : transmission coefficient = cos²(Δφ/2)
+- Δφ : phase difference between apertures
+- τₙ : pumping period at scale n
+- C : consciousness integral = ∫_T B(x,t) dx dt
+- B(x,t) : braid density
 
 **Note on flow notation:** We use a left-to-right convention in the main text:
 
