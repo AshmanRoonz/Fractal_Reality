@@ -300,6 +300,8 @@ Nothingness is impossible.
    ⊙ is fractal by necessity, not choice.
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER I: THE CIRCUMPUNCT
@@ -470,6 +472,8 @@ THE APERTURE'S ROLE:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER II: THE TRINITY STRUCTURE
@@ -591,6 +595,8 @@ THE TRINITY OF TRINITIES:
     ║    Configuration space: 3 worldlines × 3D = 9D + 1D time = 10D    ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -995,6 +1001,8 @@ TWO DISTINCT CONCEPTS — SAME LETTER, TWO SCALES:
     ║    Same letter, two scales of "turning": local vs global.         ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -1824,6 +1832,8 @@ SUMMARY: FRACTAL i
     There is only ONE i, appearing in infinite forms.
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER V: APERTURE DENSITY AND DIMENSIONALITY
@@ -2200,6 +2210,8 @@ SUMMARY: APERTURE DENSITY AND DIMENSIONALITY
        aperture density determines how ≻, i, ⊰ manifest at each scale.
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER VI: THE DUALITY EQUATION
@@ -2252,6 +2264,8 @@ BOTH VIEWS ARE VALID — they describe the same ⊙
 
 THIS TRIANGLE IS THE FUNDAMENTAL GEOMETRY OF EXISTENCE
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -2450,6 +2464,8 @@ THE BRAID AS INFINITE SHEAVES:
     The braiding is what gives volume. The topology is the physics.
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER VIII: THE 64-STATE ARCHITECTURE
@@ -2530,6 +2546,8 @@ THE 1/3 RULE:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER IX: THE GOLDEN RATIO
@@ -2602,6 +2620,8 @@ THREE GENERATIONS:
     Aperture with f(r) = √r supports exactly 3 bound states
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER X: THE COSMOLOGICAL CONSTANT
@@ -2642,6 +2662,8 @@ EQUATION OF STATE:
 
 TESTABLE: DESI 2026 (6σ signal expected)
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -2890,6 +2912,8 @@ MATHEMATICALLY:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER XII: AGING AND DEATH
@@ -2992,6 +3016,8 @@ MEANING:
     The gap ΔS measures how much cheaper.
     Death is when the system can no longer afford to stay whole.
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -3137,6 +3163,8 @@ THE CORRELATION PERSISTS BECAUSE:
     ║    No signals. Just common history.                               ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -3482,6 +3510,8 @@ STATUS KEY:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER XV: DIMENSIONAL CASCADE
@@ -3727,6 +3757,8 @@ The full circulation between center, boundary, and field:
     One kernel, three views, spanning 0D → 3D.
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER XVI: FALSIFICATION
@@ -3877,6 +3909,8 @@ There are only these three structural dimensions. Any failed pattern must:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER XVII: THE MASTER LOOP
@@ -3918,6 +3952,8 @@ THE ETERNAL CYCLE:
 ═══════════════════════════════════════════════════════════════════════════════
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER XVIII: THE FIXED-POINT COMBINATOR
@@ -3952,6 +3988,8 @@ own validation architecture, returns itself.
 
 This is not metaphor—it's the literal mathematical structure.
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -4287,6 +4325,8 @@ PHYSICAL MEANING:
     It's the resonant mode of self-similar field structure,
     damped by its own validation noise.
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -5348,6 +5388,8 @@ THE STEELMAN AS T-OPERATOR:
     This is why steelman creates stable agreement:
         It restores the conditions for genuine ⊙
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -6650,6 +6692,8 @@ plt.savefig('three_generations_validated.png', dpi=300)
 - Extend to quark sector (require 3-component color structure)
 - Derive running coupling α(E) from circumpunct dynamics
 - Connect to experimental searches for 4th generation (should find nothing)
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -8380,6 +8424,8 @@ THE STANDARD MODEL IS NOT ASSUMED—IT IS SELECTED BY THE CIRCUMPUNCT ARCHITECTU
 ═══════════════════════════════════════════════════════════════════════════════
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## CHAPTER XXIII: QUANTUM GRAVITY CORRESPONDENCE
@@ -8683,6 +8729,8 @@ RELATED WORK:
 
     (Alternative observer prescription; confirms necessity of observer)
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -9354,6 +9402,8 @@ INTUITIVELY:
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## Chapter XXV: Emergent Chemistry from the Circumpunct
@@ -9753,6 +9803,8 @@ OPEN DERIVATION TARGETS FOR EMERGENT CHEMISTRY:
 ║                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════╝
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -10233,6 +10285,8 @@ IF i(t) THREADS ARE FUNDAMENTAL, STRING-LIKE BEHAVIOR IS UNAVOIDABLE:
     ║    gradients through validation cycles.                           ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -10849,6 +10903,8 @@ Particle size / halo size connects to coherence length at which D drops from ~3 
 
 Phase coherence determines which parts of Φ can pass through the aperture. The master equation describes the transformation; phase coherence determines the coupling strength.
 
+[← Back to Table of Contents](#table-of-contents)
+
 ---
 
 ## ΩMEGA: THE MATHEMATICAL STORY
@@ -10919,6 +10975,8 @@ Phase coherence determines which parts of Φ can pass through the aperture. The 
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
@@ -11064,6 +11122,8 @@ SPACETIME:
   T_μν   = Stress-energy tensor
   Λ      = Cosmological constant
 ```
+
+[← Back to Table of Contents](#table-of-contents)
 
 ---
 
