@@ -17,7 +17,7 @@ This document formalizes the insight that **phase relationships between aperture
 Each aperture • in the foam 𝔸 has:
 - Two faces: ≻ (convergence) and ⊰ (emergence)
 - Each face carries a local phase: φ_≻ and φ_⊰
-- Phase represents the "clock" of the ⊰ ∘ i ∘ ≻ cycle at that face
+- Phase represents the "clock" of the ⊱ ∘ i ∘ ≺ cycle at that face
 
 **Phase evolution:**
 ```
@@ -473,7 +473,7 @@ Particle size / halo size connects to coherence length at which D drops from ~3 
 ### 11.5 The Master Equation Still Holds
 
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ⊱ ∘ i ∘ ≺[Φ]
 ```
 
 Phase coherence determines which parts of Φ can pass through the aperture. The master equation describes the transformation; phase coherence determines the coupling strength.
