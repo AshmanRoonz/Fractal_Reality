@@ -4,7 +4,7 @@
 
 Biology is not separate from physics—it is physics discovering how to remember itself.
 
-In circumpunct terms, each new biological level is just Φ' = ⊰ ∘ i ∘ ≻[Φ] learning to hold on to what it just created—turning a reversible pump into a ratchet.
+In circumpunct terms, each new biological level is just Φ' = ⊱ ∘ i ∘ ≺[Φ] learning to hold on to what it just created—turning a reversible pump into a ratchet.
 
 Each level of emergence requires a **ratchet**: an irreversible mechanism that prevents the system from sliding back to the previous level. Without ratchets, complexity dissipates. With them, complexity accumulates.
 
@@ -81,7 +81,7 @@ BROKEN DETAILED BALANCE (ratchet):
     Net flow. Accumulation. Life possible.
 ```
 
-The circumpunct cycle Φ' = ⊰ ∘ i ∘ ≻[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse.
+The circumpunct cycle Φ' = ⊱ ∘ i ∘ ≺[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse.
 
 ## §29.3 Level 1: Physics → Chemistry
 
@@ -301,7 +301,7 @@ DNA → RNA → Protein → (proteins that maintain DNA)
  
 This is a FIXED-POINT STRUCTURE:
 
-    ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
 ```
 
 In other words, a living system is a fixed point of the circumpunct update operator. Life is a pattern that, when processed, yields itself.
@@ -564,7 +564,7 @@ MAPPING TO FRAMEWORK:
 
 FORMAL REPRESENTATION:
 
-    V(t+Δt) = ⊰ ∘ i ∘ ≻[V(t)]
+    V(t+Δt) = ⊱ ∘ i ∘ ≺[V(t)]
     
     where:
         V = membrane potential
@@ -825,7 +825,7 @@ RATCHET CONDITION:
 **Connection to the master equation:**
 
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ⊱ ∘ i ∘ ≺[Φ]
 
 The ratchet is encoded in the ASYMMETRY of this cycle:
 

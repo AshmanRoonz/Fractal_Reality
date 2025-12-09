@@ -28,7 +28,7 @@ Grok correctly identified the following genuine strengths:
 **Confirmed.** The tensor product structure ⊗ is essential because:
 - Multiplicative composition preserves wholeness
 - Quantum Hilbert spaces naturally multiply dimensions
-- The fixed-point formulation ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ]) provides self-consistency
+- The fixed-point formulation ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ]) provides self-consistency
 
 ### 1.2 Interdisciplinary Unity
 > "Bridges gaps impressively... Topology, consciousness, ethics"
@@ -267,7 +267,7 @@ If lattice QCD converges on a value outside 1.48-1.82 GeV, the prediction fails.
 Our claim is that Schrödinger emerges naturally from these constraints, not that it's the *only* possible result. Higher-order corrections (from D ≠ exactly 1.5) would modify the equation.
 
 ### 3.5 Simulation Proposal
-> "Simulate the master equation Φ(t+Δt) = ⊰ ∘ i ∘ ≻[Φ(t)] in code"
+> "Simulate the master equation Φ(t+Δt) = ⊱ ∘ i ∘ ≺[Φ(t)] in code"
 
 **Excellent suggestion.** We have partial implementations in `/analysis/` but need a dedicated simulation demonstrating:
 1. Emergence of D = 1.5 from the master equation

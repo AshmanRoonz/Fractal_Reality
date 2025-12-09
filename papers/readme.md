@@ -26,7 +26,7 @@ This branch contains the complete scientific formalization of the Fractal Realit
 
 **Key Results:**
 - **Zero Free Parameters**: β=1/2 from symmetry, D=1.5 from entropy
-- **QM Limit**: iℏ∂Φ/∂t = HΦ emerges from U(Δt) = ⊰∘i∘≻
+- **QM Limit**: iℏ∂Φ/∂t = HΦ emerges from U(Δt) = ⊱∘i∘≺
 - **GR Limit**: G_μν + Λg_μν = 8πGT_μν from braid accumulation
 - **Critical Falsification**: D ≠ 1.5 ± 0.05 in ⊙-structured systems falsifies framework
 

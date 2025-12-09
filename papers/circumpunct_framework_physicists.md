@@ -461,7 +461,7 @@ such that for transition rates k:
 The forward rate exceeds the reverse rate.
 ```
 
-**Connection to the aperture operator:** The circumpunct cycle Φ' = ⊰ ∘ i ∘ ≻[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse—this asymmetry is the microscopic origin of ratcheting.
+**Connection to the aperture operator:** The circumpunct cycle Φ' = ⊱ ∘ i ∘ ≺[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse—this asymmetry is the microscopic origin of ratcheting.
 
 **CP violation as primordial ratchet:**
 

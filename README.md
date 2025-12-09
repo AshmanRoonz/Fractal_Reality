@@ -248,7 +248,7 @@ CONSTANTS:
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                               ║
 ║                              ⊙ = ○ ⊗ Φ ⊗ •                                   ║
-║                         ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])                            ║
+║                         ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                            ║
 ║                                                                               ║
 ║   Wholeness is its parts in tensor product (not unity absorbing parts).       ║
 ║   The universe is a fixed point of its own validation operation.              ║

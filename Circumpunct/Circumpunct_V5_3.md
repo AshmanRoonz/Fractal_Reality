@@ -1906,7 +1906,7 @@ i(a)      = exp(iπ/2) · a                          (90° rotation)
 **The dynamics unfold through operator composition:**
 
 ```
-Φ_{t+Δt}(r) = (⊰ ∘ i ∘ ≻)[Φ_t](r)
+Φ_{t+Δt}(r) = (⊱ ∘ i ∘ ≺)[Φ_t](r)
 
 Reading right-to-left:
   ≻  : Field → converges to center (integration over volume)
@@ -2040,7 +2040,7 @@ FREE (physical scale):
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  Φ_{t+Δt}(r) = (⊰ ∘ i ∘ ≻)[Φ_t](r)                              │
+│  Φ_{t+Δt}(r) = (⊱ ∘ i ∘ ≺)[Φ_t](r)                              │
 │                                                                  │
 │  Step 1 (Converge):                                              │
 │    a = (1/Z_c) ∫_{|r'|≤R} √|r'| · e^{-|r'|²/2σ²} · Φ_t(r') d³r' │

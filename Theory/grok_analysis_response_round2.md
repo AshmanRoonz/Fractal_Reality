@@ -276,7 +276,7 @@ def compute_fractal_dim(field, scales=None):
 
 def master_equation_step(field, beta=0.5):
     """
-    Φ(t+Δt) = ⊰ ∘ i ∘ ≻[Φ(t)]
+    Φ(t+Δt) = ⊱ ∘ i ∘ ≺[Φ(t)]
     """
     # Convergence (≻): smoothing toward center
     conv = gaussian_filter(field, sigma=1.0) * beta

@@ -323,7 +323,7 @@ M ──≻──→ Å ──i──→ Å ──⊰──→ P
 where ≻, i, ⊰ are morphisms in category of aperture-states
 ```
 
-**Goal**: Prove existence/uniqueness of fixed point ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+**Goal**: Prove existence/uniqueness of fixed point ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
 
 ### 7.3 Thermodynamic Interpretation
 

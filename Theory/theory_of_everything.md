@@ -386,7 +386,7 @@ Scale          │ State Space       │ Aperture Function
 ───────────────┼───────────────────┼────────────────────────────
 Planck         │ Geometry          │ Topological twist
 Quantum        │ ψ ∈ ℋ             │ iℏ∂ₜψ = Hψ
-Circumpunct    │ Φ(r)              │ ⊰ ∘ i ∘ ≻
+Circumpunct    │ Φ(r)              │ ⊱ ∘ i ∘ ≺
 Neural         │ Activation        │ Pattern completion
 Cognitive      │ Belief            │ Insight/reframe
 ```
