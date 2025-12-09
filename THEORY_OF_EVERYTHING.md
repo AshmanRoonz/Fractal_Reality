@@ -19,6 +19,7 @@
                               │
                               └── ⊙ is that which, when validated, yields itself
 
+                    Mirror pairs: ⊱≺ , ≻⊰  (convergence ≺,≻ | emergence ⊱,⊰)
                     The aperture transformation IS the imaginary unit:
                               i = exp(iπ/2) at β = 0.5
 
@@ -106,8 +107,8 @@ email@ashmanroonz.ca
   - [§9.3 The Particle Spectrum](#93-the-particle-spectrum)
 - [Chapter X: Dimensional Cascade](#chapter-x-dimensional-cascade)
   - [§10.1 The Dimensional Spectrum](#101-the-dimensional-spectrum)
-  - [§10.2 The Inward Cascade (≻)](#102-the-inward-cascade-)
-  - [§10.3 The Outward Cascade (⊰)](#103-the-outward-cascade-)
+  - [§10.2 The Inward Cascade (≻ / ≺)](#102-the-inward-cascade---)
+  - [§10.3 The Outward Cascade (⊰ / ⊱)](#103-the-outward-cascade---)
   - [§10.4 Why i Lives at 0.5D](#104-why-i-lives-at-05d)
   - [§10.5 Process³ Justification](#105-process³-justification)
   - [§10.6 Fractal Lensing at ○](#106-fractal-lensing-at-)
@@ -329,7 +330,7 @@ COMPONENT EXPRESSIONS:
   ┌─────────────────────────────────────────────────────────────────────┐
   │   ○  :  ∂○/∂t = ε     Body    — boundary changes slowly            │
   │   Φ  :  •β○           Mind    — balance operator, the medium       │
-  │   •  :  ≻•⊰           Soul    — convergence through aperture       │
+  │   •  :  ≻•⊰           Soul    — the cycle (mirror: ⊱•≺)            │
   └─────────────────────────────────────────────────────────────────────┘
 
 THIS IS NOT:
@@ -614,9 +615,11 @@ THE TRINITY OF TRINITIES:
 ```
 TEMPORAL STRUCTURE:
 
-    ≻  = Convergence (future potential flowing toward •)
+    ≻  = Convergence (future potential flowing toward •)   [mirror: ≺]
     i  = Aperture transformation (90° rotation at •)
-    ⊰  = Emergence (from • into past braid)
+    ⊰  = Emergence (from • into past braid)                [mirror: ⊱]
+
+    Mirror pairs: ⊱≺ , ≻⊰  (see §3.5)
 
 THE PROCESS:
 
@@ -816,43 +819,22 @@ COMPOSITION WITH APERTURE:
 ### §3.5 Notation Convention: Flow vs. Composition
 
 ```
-MATHEMATICAL COMPOSITION IS BACKWARDS:
-──────────────────────────────────────
-Standard:  ⊱ ∘ i ∘ ≺[Φ]
-    Written:  ⊰, then i, then ≻  (left to right)
-    Applied:  ≻ first, then i, then ⊰  (right to left)
+THE MIRROR PAIRS:
+─────────────────
+    convergence:  ≺ , ≻     (point toward •)
+    emergence:    ⊱ , ⊰     (point from •)
 
-This is confusing.
+    Together:     ⊱≺ , ≻⊰   (mirror pairs around •)
 
-FLOW NOTATION (preferred):
-──────────────────────────
-    Φ ≻ i ⊰ Φ'
-
-    Read left-to-right: Φ converges, i transforms, emerges to Φ'
-    Apply left-to-right: same order
-
-    What you read is what happens.
-
-ARROW NOTATION (explicit):
-──────────────────────────
-    Φ ──≻──→ • ──i──→ • ──⊰──→ Φ'
-
-    Unambiguous. Flow direction explicit.
-
-EQUIVALENCES:
-─────────────
-    Φ ≻ i ⊰ Φ'        (flow, left-to-right)
-    ⊱ ∘ i ∘ ≺[Φ]      (composition, standard math)
-    'Φ ⊱ i ≺ Φ        (flow, right-to-left mirror)
-
-All three describe the same transformation.
-Flow notation preferred for clarity.
+FLOW vs COMPOSITION:
+────────────────────
+    Flow:         Φ ≻ i ⊰ Φ'       (read = apply, left-to-right)
+    Composition:  ⊱ ∘ i ∘ ≺[Φ]     (read ≠ apply, standard math)
+    Mirror flow: 'Φ ⊱ i ≺ Φ        (read = apply, right-to-left)
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    CONVENTION: Use flow notation (Φ ≻ i ⊰ Φ') unless             ║
-    ║    composing with other mathematical operations.                  ║
-    ║                                                                   ║
-    ║    Mirror symbols (≺, ⊱) available for right-to-left contexts.   ║
+    ║    CONVENTION: Use flow notation (Φ ≻ i ⊰ Φ') for clarity.       ║
+    ║    Shorthand: ≻•⊰ or ≻i⊰ denotes the complete cycle.             ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -2075,16 +2057,14 @@ THE FUNDAMENTAL OPERATING CYCLE:
 ║  Φ(t+Δt) = ⊱ ∘ [○Φ•]_out ∘ i ∘ [○Φ•]_in ∘ ≺[Φ(t)] + ε                      ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
-WHERE:
-  ≻         = Convergence (gathers patterns from Φ)
+WHERE (flow operators from §3.1):
+  ≻, ⊰      = Convergence/emergence (mirror pairs: ⊱≺ , ≻⊰)
   [○Φ•]_in  = Input validation:
               ○ : Can boundary be maintained?
               Φ : Is it grounded in actual field?
               • : Does it have coherent center?
-  i         = 90° rotation at • (the aperture transformation)
-              exp(iπ/2) = i
+  i         = 90° rotation at • (exp(iπ/2) = i at β = 0.5)
   [○Φ•]_out = Output validation (same three tests)
-  ⊰         = Emergence (releases validated patterns)
   ε         = Stochastic noise ~ N(0, α√|⟨E⟩|)
 
 ACCEPTANCE CRITERION:
@@ -3378,10 +3358,10 @@ THE FULL DIMENSIONAL SPECTRUM:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §10.2 The Inward Cascade (≻)
+### §10.2 The Inward Cascade (≻ / ≺)
 
 ```
-THE INWARD CASCADE — How potential becomes structure:
+THE INWARD CASCADE — How potential becomes structure (convergence):
 
     0D (pure energy/potential)
             ↓
@@ -3400,10 +3380,10 @@ THE INWARD CASCADE — How potential becomes structure:
             (≻, i, ⊰)³ — completes cycle
 ```
 
-### §10.3 The Outward Cascade (⊰)
+### §10.3 The Outward Cascade (⊰ / ⊱)
 
 ```
-THE OUTWARD CASCADE — How structure becomes manifest:
+THE OUTWARD CASCADE — How structure becomes manifest (emergence):
 
     • (0.5D) EMERGES FROM
             Post-transformation state
@@ -11066,14 +11046,14 @@ THE FIXED-POINT FORMULATION:
     ║                                                                           ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 
-READING THIS:
+READING THIS (mirror pairs: ⊱≺ , ≻⊰):
     fix     = Fixed-point combinator (Y-combinator)
     λΦ      = Lambda abstraction over field state
-    ≺(Φ)    = Convergence gathers from field
+    ≺(Φ)    = Convergence gathers from field (mirror: ≻)
     V_in    = Input validation [○Φ•]_in
     i_β     = Aperture transformation at β = 0.5
     V_out   = Output validation [○Φ•]_out
-    ⊱       = Emergence releases to field
+    ⊱       = Emergence releases to field (mirror: ⊰)
 
 THE UNIVERSE IS A FIXED POINT OF ITS OWN OPERATION.
 
@@ -12857,8 +12837,8 @@ DIMENSIONAL SPECTRUM:
   2.5D   = Integration gate
   3D     = Field Φ (volume, medium)
 
-TEMPORAL PROCESS:
-  ≻      = Convergence (future → •)
+TEMPORAL PROCESS (see MIRROR PAIRS below for full notation):
+  ≻      = Convergence (future → •)     [mirror: ≺]
            Type: E_n × i_(n+0.5) → E_(n+0.5)^(pre)
            Math: (x ≻ i)(r) = ∫ K_conv(r, r') x(r') dr'
   i      = Aperture transformation (at •) = imaginary unit
@@ -12894,20 +12874,34 @@ CONE/WAKE GEOMETRY (§4.4):
   Helix  = Geodesic path on cone surface
            DNA, planetary orbits, galaxy arms all follow this
 
-  ⊰      = Emergence (• → past)
+  ⊰      = Emergence (• → past)          [mirror: ⊱]
            Type: E_(n+0.5)^(post) × i_(n+0.5) → E_(n+1)
            Math: (i ⊰ y)(r) = ∫ K_emerg(r, r') y(r') dr'
 
-MIRROR NOTATION (Bidirectional):
-────────────────────────────────
-  The flow operators have mirror forms for right-to-left writing:
+MIRROR PAIRS:
+─────────────
+  THE FUNDAMENTAL MIRROR SYMMETRY:
 
-  LEFT-TO-RIGHT          RIGHT-TO-LEFT         MEANING
-  ─────────────          ─────────────         ───────
-  ≻ (U+227B)             ≺ (U+227A)            Convergence (toward •)
-  ⊰ (U+22B0)             ⊱ (U+22B1)            Emergence (from •)
+                         ⊱≺  ,  ≻⊰
 
-  FLOW NOTATION (preferred for clarity):
+  These four symbols form two mirror pairs around the aperture •:
+
+      CONVERGENCE (toward •):    ≺  ←──•──→  ≻
+      EMERGENCE (from •):        ⊱  ←──•──→  ⊰
+
+  The complete cycle written as mirror pairs:
+
+      Left-to-right:     Φ ≻ i ⊰ Φ'      (convergence → i → emergence)
+      Right-to-left:    'Φ ⊱ i ≺ Φ       (emergence ← i ← convergence)
+
+  SYMBOL TABLE:
+  ─────────────
+  LEFT-FACING            RIGHT-FACING          MEANING
+  ───────────            ────────────          ───────
+  ≺ (U+227A)             ≻ (U+227B)            Convergence (toward •)
+  ⊱ (U+22B1)             ⊰ (U+22B0)            Emergence (from •)
+
+  VISUAL FLOW:
 
       Left-to-right:    Φ  ──≻──  •  ──i──  •  ──⊰──  Φ'
                            toward    at     from
@@ -12917,18 +12911,11 @@ MIRROR NOTATION (Bidirectional):
 
   The i at center is invariant. Flow symbols mirror around it.
 
-  EQUIVALENCES:
-      Φ ≻ i ⊰ Φ'     =     'Φ ⊱ i ≺ Φ      (flow notation)
-      ⊱ ∘ i ∘ ≺[Φ]   =     [Φ]≺ ∘ i ∘ ⊱    (composition notation)
+  COMPOSITION vs FLOW:
+      Flow:         Φ ≻ i ⊰ Φ'        (reads left-to-right, applies same)
+      Composition:  ⊱ ∘ i ∘ ≺[Φ]      (reads left-to-right, applies right-to-left)
 
-  USE MIRROR SYMBOLS WHEN:
-      • Writing equations in right-to-left languages
-      • The arrow direction should match reading direction
-      • Visual symmetry is desired
-
-  NOTE: Standard mathematical composition (f ∘ g means "apply g then f")
-        reads opposite to application order. Flow notation avoids this:
-        Φ ≻ i ⊰ Φ' reads AND applies left-to-right.
+  SHORTHAND: When context is clear, ≻•⊰ denotes the complete cycle.
 
 FLOW OPERATORS:
   K_conv  = Convergent kernel (∫ K_conv dr < ∞)
