@@ -228,6 +228,7 @@ body {
 .helix-full tbody td {
     padding: 0.2rem 0.3rem;
     vertical-align: middle;
+    text-align: left;
 }
 
 .helix-full code {
