@@ -793,7 +793,7 @@ body {
     }
 
     .side-panel {
-        max-width: 320px;
+        max-width: 380px;
     }
 
     .left-panel {
@@ -819,7 +819,8 @@ body {
     }
 
     .right-panel .dimension-row td {
-        padding: 0.25rem 0.4rem;
+        padding: 0.25rem 0.5rem;
+        white-space: nowrap;
     }
 
     .right-panel .dimension-math code {
