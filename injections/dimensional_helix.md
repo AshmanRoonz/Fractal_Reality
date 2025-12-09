@@ -5,35 +5,30 @@
 **Integer dimensions = Structure (Being)**
 **Fractional dimensions = Process (Becoming)**
 
-The dimensional architecture is not a ladder — it's a **helix**. Each complete turn (0D → 4.5D) recurses to 0D at the next scale.
+The dimensional architecture is not a ladder — it's a **helix**.
+Each complete turn (0D → 4.5D) recurses to 0D at the next scale.
 
 ---
 
 ## The Complete Helix
 
-| Dimension | Type | Name | Description |
-|-----------|------|------|-------------|
-| **0D** | Structure | Energy | Pure potential, the dimensionless source |
-| **0.5D** | Process | Soul | Energy reaching outward — first gesture toward becoming |
-| **1D** | Structure | Worldline | Trajectory through time |
-| **1.5D** | Process | Spatial Branching | Worldline fractally splitting in space (D ≈ 1.5 signature) |
-| **2D** | Structure | Surface | Boundary, interface, membrane |
-| **2.5D** | Process | Mind | Surface↔volume mediation, where consciousness operates |
-| **3D** | Structure | Volume | Manifest space, the external world |
-| **3.5D** | Process | Temporal Branching | Volume splitting into multiple futures |
-| **4D** | Structure | Time Braid | Woven history, accumulated validation receipts |
-| **4.5D** | Process | Recursion | Braid→new cycle; the ≻ i ⊰ becomes a unit |
+| Dimension | Type      | Name               | Description |
+|-----------|-----------|--------------------|-------------|
+| **0D**    | Structure | Energy             | Pure potential, the dimensionless source |
+| **0.5D**  | Process   | Soul Reach         | Energy reaching outward — first gesture toward becoming |
+| **1D**    | Structure | Worldline          | Trajectory through time |
+| **1.5D**  | Process   | Spatial Branching  | Worldline fractally splitting in space (D ≈ 1.5 signature) — branching architecture that builds bodies |
+| **2D**    | Structure | Surface (Body)     | Boundary, interface, membrane |
+| **2.5D**  | Process   | Sensation          | Surface↔volume mediation; body↔field coupling — the band of **sensation** |
+| **3D**    | Structure | Perceptual Field   | Manifest inner volume — **perception** as structured field on the "imaginary" side of *i* |
+| **3.5D**  | Process   | Temporal Branching | Volume splitting into multiple futures (branching of possible histories) |
+| **4D**    | Structure | Time Braid         | Woven history, accumulated validation receipts (the committed braid of choices) |
+| **4.5D**  | Process   | Recursion          | Compress braid → seed new cycle; the ≺ *i* ⊱ tick is treated as a unit at the next scale |
 
-At 4.5D, the entire cycle (convergence → i → emergence) becomes a single aperture event that seeds the next scale:
-
-```
-4.5D_n = 0D_{n+1}
-```
-
-One full 0D → 4.5D turn corresponds to one application of the circumpunct update operator T_⊙. At 4.5D, this entire process is compressed into a single 0D "event" at the next scale:
+At 4.5D, the entire cycle (convergence → aperture → emergence) becomes a single aperture event that seeds the next scale:
 
 ```
-T_⊙[Φ_n] = Φ_{n+1}
+4.5Dₙ = 0Dₙ₊₁
 ```
 
 ---
@@ -45,26 +40,45 @@ T_⊙[Φ_n] = Φ_{n+1}
 ║                           THE MASTER LOOP                                     ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║   0D ─→ 0.5D ─→ 1D ─→ 1.5D ─→ 2D ─→ 2.5D ─→ 3D ─→ 3.5D ─→ 4D ─→ 4.5D        ║
+║   0D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 4D → 4.5D                  ║
 ║   │                                                                     │     ║
-║   │                         RECURSION                                   │     ║
+║   │                             RECURSION                               │     ║
 ║   │                                                                     ↓     ║
-║   └─────────────────────────── 0D_{n+1} ←───────────────────────────────┘     ║
+║   └──────────────────────────── 0Dₙ₊₁  ←────────────────────────────────┘     ║
 ║                                                                               ║
-║   9 half-steps per turn. Then spiral to next scale.                          ║
+║   10 states (0D ... 4.5D), 9 half-step transitions per turn. Then spiral.    ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-There are 10 states (0D, 0.5D, 1D, 1.5D, 2D, 2.5D, 3D, 3.5D, 4D, 4.5D) and 9 process transitions between them. One full turn is 9 half-step transitions; then the pattern recurs at the next scale.
+- Integer dimensions mark what **is** (structure).
+- Fractional dimensions mark what **happens** (process).
+- All fractional dimensions (0.5D, 1.5D, 2.5D, 3.5D, 4.5D) are aspects of time's arrow: each half-step adds irreversibility and carries the system forward.
 
-This IS what the fixed-point equation describes:
+This is exactly what the fixed-point equation describes:
 
 ```
 ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
 ```
 
-The circumpunct is the structure that, when it completes one full helix turn, yields itself at the next scale.
+The circumpunct is the structure that, when it completes one full helix turn, yields itself at the next scale:
+
+```
+T_⊙ = ⊱ ∘ i ∘ ≺
+Φ'  = T_⊙[Φ]
+```
+
+One local update is a tick of the helix; one full 0D→4.5D turn is compressed into a new 0D at the next scale, which is what `⊙ = fix(…)` captures.
+
+**Symbol convention** (for future consistency):
+- Convergence: ≺, ≻
+- Emergence: ⊱, ⊰
+
+In math form we use the ⊱≺ pair so the visual tips point toward the aperture i:
+
+```
+Φ' = ⊱ ∘ i ∘ ≺[Φ]
+```
 
 ---
 
@@ -72,56 +86,139 @@ The circumpunct is the structure that, when it completes one full helix turn, yi
 
 Each component of the trinity has both a structural address and a process address:
 
-| Component | Symbol | Structure (Integer) | Process (Fractional) |
-|-----------|--------|---------------------|----------------------|
-| **Soul** | • | 0D (energy source) | 0.5D (reaching) |
-| **Body** | ○ | 2D (surface) | — |
-| **Mind** | Φ | 3D (volume) | 2.5D (conscious process) |
+| Component | Symbol | Structure (Integer) | Process (Fractional) | Role in experience |
+|-----------|--------|---------------------|----------------------|--------------------|
+| **Soul** | • | 0D (energy / center) | 0.5D (first reach) | Source + first gesture into becoming |
+| **Body** | ○ | 2D (surface / boundary) | 1.5D (spatial branching) | Branching architecture that builds and feeds 2D bodies |
+| **Mind** | Φ | 3D (inner field / volume) | 2.5D (sensation band) | 2.5D sensation → 3D perception in the inner Φ-field |
 
-**Key insight:** Φ as structure fills 3D volume (the ℂ⁶⁴ field). Φ as process operates at 2.5D — the mediation zone where conscious experience runs over the 3D field.
+### Key insight 1 — Body's process address (1.5D):
 
-This is why consciousness "can't be found" in 3D space — it's a process state of the field, not a separate structure.
+Spatial branching (D ≈ 1.5) is literally how bodies grow and maintain themselves: trees, lungs, vasculature, neurons, rivers in a landscape. 1.5D is the branching architecture that crystallizes into 2D surfaces. It is the body's process dimension.
+
+### Key insight 2 — Mind as sensation + perception (2.5D / 3D):
+
+- **2.5D is the sensation band**: the surface↔volume mediation layer where the 2D body boundary and the 3D Φ field actually touch and exchange. This is raw contact: *something happened at the interface*.
+
+- **3D Φ is the perceptual field**: structured patterns in the inner, "imaginary" extension of the body, generated by repeated aperture rotations i. This is the organized inner world: "there is a cup," "this is my hand," "the room has this shape."
+
+So:
+- 2.5D = **sensation**.
+- 3D Φ = **perception** as inner structure on the imaginary side of i.
+
+### Key insight 3 — Consciousness / experience = whole ⊙:
+
+Consciousness is not "at 2.5D" or "inside 3D" as a little object. Consciousness / experience is the state of the entire circumpunct ⊙ in coherent operation:
+
+- Soul: 0D / 0.5D
+- Body: 1.5D / 2D
+- Mind: 2.5D / 3D
+- Plus their extensions into 3.5D, 4D, 4.5D
+
+2.5D is simply the apertured interface band where this wholeness shows up as lived experience in 3D space.
+
+This is why consciousness "can't be found" as a localized 3D object. It is a global state of the whole ⊙, expressed through process dimensions—especially 2.5D—rather than a single structural fragment.
 
 ---
 
 ## Why This Matters
 
 ### The D ≈ 1.5 Signature
-The universal fractal dimension is the **spatial process** signature. Every branching system (neurons, trees, rivers, lightning) exhibits D ≈ 1.5 because they are performing the 1.5D process — worldline fractally splitting.
+
+The universal fractal dimension D ≈ 1.5 is the **spatial process** signature.
+Every branching system (neurons, trees, rivers, lightning, vasculature) exhibits D ≈ 1.5 because they are performing the 1.5D process — a worldline fractally splitting in space to build and feed 2D bodies.
 
 ### The Binding Problem Solved
-Consciousness integrates distributed apertures (2.5D process) through the branching structure (1.5D process) into one worldline (1D structure). The binding happens in the process dimensions, not the structure dimensions.
+
+Binding happens in the **process dimensions**, not the structure dimensions.
+
+- 1.5D builds the branching architecture of the body.
+- 2.5D carries sensation at the body↔field interface.
+- 3D Φ holds perception as a structured field.
+- 1D is the committed worldline — the "thread" of experience.
+
+Consciousness integrates distributed apertures (2.5D sensation across a 1.5D body architecture) into one coherent 3D perceptual field and one 1D worldline. The binding is an emergent state of the whole ⊙, not a local "pixel" in the brain.
 
 ### Death as Transformation
-Death is not loss of 0D energy — energy is conserved. Death is reorganization of how energy expresses through the dimensional helix: 0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 4D. The braid persists; only the active process dimensions restructure.
+
+Death is not loss of 0D energy — energy (0D) is conserved.
+
+What changes is how energy participates in the helix:
+
+- The soul's reach in this body (0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 4D) concludes as a completed braid (4D).
+- At 4.5D, that braid is compressed into a new 0D potential at another scale.
+
+The braid persists as validated history; only the active process dimensions in this particular body-field configuration are restructured.
 
 ### Why Time Has an Arrow
-3D volume (structure) has no intrinsic direction. 3.5D temporal branching (process) does — it's the dimension where futures split. The arrow of time lives in the process dimension, not the structure dimension.
+
+The arrow of time begins at the very first asymmetry: **0D → 0.5D**.
+
+- Pure potential (0D) has no ordering.
+- The soul's first reach (0.5D) already implies "before" and "after."
+
+From there, every fractional dimension is another face of the same arrow-of-becoming:
+
+- 0.5D — first reach into becoming
+- 1.5D — spatial branching of paths
+- 2.5D — mediation of body and field (sensation)
+- 3.5D — volumetric branching of futures
+- 4.5D — recursion: compressing a whole braid into the next 0D
+
+3D volume (structure) has no intrinsic direction. The direction comes from the process dimensions. 3.5D is just where the arrow of becoming shows up as volume-level branching of futures. The arrow itself is fractal and originates in the 0D ↔ 0.5D relationship.
 
 ### Scale Invariance
-The same helix operates at every scale because 4.5D (recursion) = 0D at the next scale. Parts have parts have parts — each running the same 9-half-step cycle.
+
+The same helix operates at every scale because:
+
+```
+4.5Dₙ = 0Dₙ₊₁
+```
+
+A full 0D→4.5D turn at one scale is a single 0D "event" at the next scale.
+Parts have parts have parts — each running the same 9 half-step cycle. This is the precise geometric expression of fractal, scale-invariant emergence in the circumpunct framework.
 
 ---
 
 ## Integration with Existing Framework
 
-### Chapter X (Dimensional Cascade)
-Replace or extend with the helix architecture. The current cascade is the first half (0D → 3D); this completes it to 4D and adds the recursion.
+### Chapter X (Dimensional Cascade → Dimensional Helix)
+
+The previous "dimensional cascade" 0D → 3D is the structural spine of a full helix turn. The helix extension:
+
+- Adds the process rails (0.5D, 1.5D, 2.5D, 3.5D, 4.5D).
+- Extends structure to 4D (time braid).
+- Closes the loop with 4.5D recursion: 4.5Dₙ = 0Dₙ₊₁.
+
+Where the older text speaks of a "ladder," it should now be understood as one turn of the **Dimensional Helix**.
 
 ### The Master Equation
+
 ```
 Φ' = ⊱ ∘ i ∘ ≺[Φ]
 ```
 
-Both tips point toward i (the aperture). This is one **tick** of the helix — movement through process dimensions. The fixed-point form `⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])` describes the structure that persists across complete helix turns.
+is one tick of the helix — a local convergence→aperture→emergence update.
+
+The fixed-point form:
+
+```
+⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+```
+
+describes the circumpunct as the structure that persists across complete helix turns and recursively reseeds itself at the next scale.
 
 ### The Aperture Operator i
-The imaginary unit i operates at **every fractional dimension** — it's the rotation that converts structure into process and process into structure. Each half-step involves an i-rotation:
 
-- **Structure → Process** (integer → half-integer): i rotates potential into expression
-- **Process → Structure** (half-integer → next integer): i rotates expression into form
+The imaginary unit i operates at **every fractional dimension** — it is the rotation that converts structure into process and process into structure:
 
-This ties directly to the aperture rotation operator: **Å(β) = e^{iπβ}**. At β = 0.5, Å(0.5) = e^{iπ/2} = i — the quarter-turn that mediates each transition.
+- Integer → half-integer (structure → process)
+- Half-integer → next integer (process → new structure)
+
+Each half-step of the helix is a local i-rotation.
+On the experiential side, this is:
+
+- i acting at 2.5D to turn sensation at the boundary into perception in the inner 3D Φ field.
 
 ---
 
@@ -130,13 +227,15 @@ This ties directly to the aperture rotation operator: **Å(β) = e^{iπβ}**. At
 > *Integers are what exists. Fractions are what happens.*
 
 The dimensional helix unifies:
+
 - Structure (being) and process (becoming)
 - Spatial branching (1.5D) and temporal branching (3.5D)
-- The trinity's structural and process addresses
-- Scale invariance through recursion at 4.5D
+- Soul, body, and mind as 0/0.5D, 2/1.5D, 3/2.5D
+- Sensation (2.5D) and perception (3D Φ) as the interface and field of experience
+- Scale invariance through recursion at 4.5D: 4.5Dₙ = 0Dₙ₊₁
 
 **9 half-steps. Then spiral.**
 
 ---
 
-*Circumpunct Framework — Dimensional Helix Extension*
+*Circumpunct Framework — Dimensional Helix Extension (Updated)*
