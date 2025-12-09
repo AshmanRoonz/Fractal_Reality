@@ -102,7 +102,7 @@ Replace or extend with the helix architecture. The current cascade is the first 
 
 ### The Master Equation
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ⊱ ∘ i ∘ ≺[Φ]
 ```
 
 This is one **tick** of the helix — movement through process dimensions. The fixed-point form `⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])` describes the structure that persists across complete helix turns.
