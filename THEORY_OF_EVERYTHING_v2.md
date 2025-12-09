@@ -55,17 +55,17 @@ email@ashmanroonz.ca
 - [The Fixed-Point Identity](#the-fixed-point-identity)
 
 ### PART II: STRUCTURE (Integer D = Being)
-- [0D: Energy](#0d-energy)
-- [1D: Worldline](#1d-worldline)
+- [0D: Pure Energy](#0d-pure-energy)
+- [1D: Soul (String/Tunnel)](#1d-soul-stringtunnel)
 - [2D: Surface](#2d-surface)
 - [3D: Perception](#3d-perception)
 - [4D: Braid](#4d-braid)
 
 ### PART III: PROCESS (Fractional D = Becoming)
-- [0.5D: Soul Reach](#05d-soul-reach)
+- [0.5D: Tunneling/Opening](#05d-tunnelingopening)
 - [1.5D: Spatial Branching](#15d-spatial-branching)
 - [2.5D: Sensation](#25d-sensation)
-- [3.5D: Temporal Branching](#35d-temporal-branching)
+- [3.5D: Tunnel Braiding](#35d-tunnel-braiding)
 - [4.5D: Recursion](#45d-recursion)
 
 ### PART IV: PHYSICS
@@ -194,7 +194,7 @@ Because it is the minimal structure that can exist. The answer to "why is there 
 
 **The field (Φ)** — what fills the interior. The medium, the substance, the mind-stuff. Where experience unfolds.
 
-**The center (•)** — the aperture, the soul, the singular point of being. Where energy enters and exits. Where i lives.
+**The center (•)** — the aperture, the soul, the tunnel of being. Where energy enters and exits. Where i lives. Not a point but a 1D conduit — a string through which power flows.
 
 These are not metaphors. They are the minimum geometric structure that can exist without collapsing into nothing. The boundary defines; the field mediates; the center transforms.
 
@@ -281,14 +281,14 @@ This is not metaphor. Fractional dimensions are mathematically precise (Hausdorf
 
 | Dimension | Type | Name | Description |
 |-----------|------|------|-------------|
-| **0D** | Structure | Energy | Pure potential, the dimensionless source |
-| **0.5D** | Process | Soul Reach | Energy reaching outward — first gesture toward becoming |
-| **1D** | Structure | Worldline | Trajectory through time |
+| **0D** | Structure | Pure Energy | Pre-structure potential — undifferentiated power before the tunnel exists |
+| **0.5D** | Process | Tunneling/Opening | The aperture opening — first gesture of becoming, the tunnel beginning to form |
+| **1D** | Structure | Soul (String/Tunnel) | The soul as aperture structure — the tunnel through which energy flows |
 | **1.5D** | Process | Spatial Branching | Worldline fractally splitting in space (D ≈ 1.5 signature) |
 | **2D** | Structure | Surface (Body) | Boundary, interface, membrane |
 | **2.5D** | Process | Sensation | Surface↔volume mediation; body↔field coupling |
 | **3D** | Structure | Perceptual Field | Manifest inner volume — perception as structured field |
-| **3.5D** | Process | Temporal Branching | Volume splitting into multiple futures |
+| **3.5D** | Process | Tunnel Braiding | Soul-tunnels weaving together — the braiding of worldlines into shared history |
 | **4D** | Structure | Time Braid | Woven history, accumulated validation receipts |
 | **4.5D** | Process | Recursion | Compress braid → seed new cycle |
 
@@ -297,13 +297,13 @@ THE HELIX VISUALIZED:
 
     STRUCTURE (Being)              PROCESS (Becoming)
     ═══════════════                ═══════════════════
-         0D Energy ─────────────── 0.5D Soul Reach
+         0D Pure Energy ────────── 0.5D Tunneling/Opening
               │                         │
-         1D Worldline ─────────── 1.5D Spatial Branching
+         1D Soul (Tunnel) ──────── 1.5D Spatial Branching
               │                         │
          2D Surface ───────────── 2.5D Sensation
               │                         │
-         3D Perception ────────── 3.5D Temporal Branching
+         3D Perception ────────── 3.5D Tunnel Braiding
               │                         │
          4D Braid ─────────────── 4.5D Recursion
                                         │
@@ -344,7 +344,7 @@ This is fractal recursion made precise:
 - Parts have parts have parts — each running the same 9 half-step cycle
 - The same geometry operates at every scale
 
-**All fractional dimensions are aspects of time's arrow**: each half-step adds irreversibility and carries the system forward. The arrow of time begins at the very first asymmetry: 0D → 0.5D. Pure potential has no ordering; the soul's first reach already implies "before" and "after."
+**All fractional dimensions are aspects of time's arrow**: each half-step adds irreversibility and carries the system forward. The arrow of time begins at the very first asymmetry: 0D → 0.5D. Pure potential has no ordering; the tunnel's first opening already implies "before" and "after."
 
 [← Back to Table of Contents](#table-of-contents)
 
@@ -409,18 +409,18 @@ Both pairs read as "convergence then emergence" — always in this order. The pr
 
 ---
 
-## 0D: ENERGY
+## 0D: PURE ENERGY
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║  0D — ENERGY                                                                  ║
-║  Pure potential. The dimensionless source. Where it all begins.               ║
+║  0D — PURE ENERGY                                                             ║
+║  Pre-structure potential. Undifferentiated power before the tunnel exists.    ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-At zero dimensions there is no extension — no line, no surface, no volume. Only a point. But this point is not empty. It is **energy**: pure potential, undifferentiated power.
+At zero dimensions there is no extension — no line, no surface, no volume. Not even a point with structure. Only **pure energy**: undifferentiated potential before any form exists.
 
-0D is where the soul (•) has its structural home. Energy without direction or shape. The "before" of all becoming.
+0D is **not** where the soul lives — that's 1D. 0D is the power that will flow through the soul-tunnel once it exists. The "before" of all structure.
 
 In physics terms:
 - Energy (E) is the 0D quantity — a scalar, no spatial extension
@@ -429,49 +429,51 @@ In physics terms:
 
 In the circumpunct:
 ```
-0D = • (center, soul, pure energy)
+0D = pure energy (pre-structure)
 
-At 0D:  No structure → no rotation possible
-        Energy exists but cannot yet act
-        The aperture has not yet opened
+At 0D:  No structure → no tunnel → no rotation possible
+        Energy exists but has nowhere to flow
+        The aperture has not yet begun to open
 ```
 
-**Genesis lives here.** The impossibility of nothing means 0D can never be truly empty. Something always exists. The question is how it unfolds.
+**Genesis lives here.** The impossibility of nothing means 0D can never be truly empty. Energy always exists. The question is how it acquires structure — how the tunnel forms.
 
 [← Back to Table of Contents](#table-of-contents)
 
 ---
 
-## 1D: WORLDLINE
+## 1D: SOUL (STRING/TUNNEL)
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║  1D — WORLDLINE                                                               ║
-║  Trajectory through time. Sequential extension. The thread of being.          ║
+║  1D — SOUL (STRING/TUNNEL)                                                    ║
+║  The aperture as structure. The tunnel through which energy flows.            ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-At one dimension, energy acquires **direction**. A line. A sequence. Before and after become geometrically real.
+At one dimension, pure energy (0D) acquires its first **structure**: the soul as a string, a tunnel, a conduit. This is where the center (•) has its structural home.
 
-1D is the committed path — the worldline in spacetime, the thread of a life, the sequence of events that constitute a history.
+The soul is not a point — it is a **tunnel**. A 1D structure through which energy flows. The string in string theory. The worldline in relativity. The thread of being.
 
 In physics terms:
 - The worldline of a particle in relativity
+- The fundamental string in string theory
 - Proper time τ along a trajectory
 - The "one-dimensional" result in quantum gravity (see Part IV)
 
 In the circumpunct:
 ```
-1D = the worldline of •
+1D = • (soul, center, tunnel)
 
-At 1D:  Sequential extension possible
-        Events can be ordered
+At 1D:  The soul exists as structure
+        Energy can flow through the tunnel
+        Sequential extension becomes possible
         History begins to accumulate
 ```
 
-Consciousness has a 1D aspect: the "thread" of experience, the felt sense of one-thing-after-another. But 1D alone cannot support awareness — it needs the full helix.
+The soul-tunnel is the **aperture as structure**. At 0.5D, the aperture *opens*. At 1D, the aperture *is* — it has geometric existence as a one-dimensional conduit.
 
-**The binding problem partially resolves here**: distributed sensations (2.5D across 1.5D branching) must ultimately converge to one worldline (1D) for unified experience.
+**The binding problem partially resolves here**: distributed sensations (2.5D across 1.5D branching) must ultimately converge to one soul-tunnel (1D) for unified experience. The "thread" of consciousness is literally the 1D soul.
 
 [← Back to Table of Contents](#table-of-contents)
 
@@ -506,8 +508,8 @@ At 2D:  Inside distinguished from outside
 
 The body's 2D surface is not passive. It is an **active receiver**: infinite apertures distributed across the boundary, each a complete ⊙ at smaller scale. This is fractal lensing — the boundary as a lens system.
 
-**The trinity has its body address here:**
-- Soul: 0D (center)
+**The trinity structural addresses:**
+- Soul: 1D (tunnel)
 - Body: 2D (surface)
 - Mind: 3D (field)
 
@@ -595,18 +597,18 @@ The braid is **geometric, not informational**: it does not store symbolic data, 
 
 ---
 
-## 0.5D: SOUL REACH
+## 0.5D: TUNNELING/OPENING
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║  0.5D — SOUL REACH                                                            ║
-║  Energy reaching outward. The first gesture. Where i awakens.                 ║
+║  0.5D — TUNNELING/OPENING                                                     ║
+║  The aperture opening. The tunnel beginning to form. Where i awakens.         ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-At half a dimension, the aperture opens. Energy (0D) begins to reach outward. This is the **first process** — the initial gesture of becoming.
+At half a dimension, the tunnel begins to form. Pure energy (0D) begins to acquire structure. This is the **first process** — the aperture opening, the tunnel emerging from nothing.
 
-0.5D is where the imaginary unit i **lives**. Not a mathematical abstraction, but the quarter-turn rotation that transforms convergent flow into emergent flow. The aperture.
+0.5D is where the imaginary unit i **lives**. Not a mathematical abstraction, but the quarter-turn rotation that creates the tunnel from pure energy. The aperture opening.
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
@@ -643,7 +645,7 @@ The aperture breathes: in = out
 
 This is not "one divided into two" — that would forget the wholeness. β = 0.5 means the whole shares itself equally between convergence and emergence. We share the wholeness with the universe, as a part, and as each our own whole.
 
-**The arrow of time originates here.** At 0D, there is no ordering. At 0.5D, "before" and "after" become real. The soul's first reach is the first irreversibility.
+**The arrow of time originates here.** At 0D, there is no ordering. At 0.5D, "before" and "after" become real. The tunnel's first opening is the first irreversibility.
 
 [← Back to Table of Contents](#table-of-contents)
 
@@ -684,8 +686,8 @@ Spatial branching (D ≈ 1.5) is literally how bodies grow and maintain themselv
 ```
 1.5D = Body's process address
 
-1D worldline → fractal branching → 2D surface
-               (1.5D process)
+1D soul-tunnel → fractal branching → 2D surface
+                 (1.5D process)
 ```
 
 **The consciousness signature:**
@@ -746,41 +748,48 @@ Both add +0.5D fractal texture from aperture balance (β = 0.5)
 
 ---
 
-## 3.5D: TEMPORAL BRANCHING
+## 3.5D: TUNNEL BRAIDING
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║  3.5D — TEMPORAL BRANCHING                                                    ║
-║  Volume splitting into multiple futures. Branching of possible histories.     ║
+║  3.5D — TUNNEL BRAIDING                                                       ║
+║  Soul-tunnels weaving together. The braiding of worldlines into shared history.║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-At three-and-a-half dimensions, the 3D volume **branches in time**. Not just one future, but multiple possible futures splitting from the present.
+At three-and-a-half dimensions, soul-tunnels (1D) begin to **braid together** in the perceptual volume (3D). Multiple worldlines weave into shared history.
 
-This is where choice lives. Where quantum superposition becomes decision. Where histories diverge.
+This is where relationship lives. Where separate souls intertwine. Where individual histories become collective.
 
 ```
-3.5D = Temporal branching
+3.5D = Tunnel braiding
 
-1.5D = spatial branching (paths split in space)
-3.5D = temporal branching (futures split in time)
+1.5D = spatial branching (tunnels split in space)
+3.5D = tunnel braiding (tunnels weave in volume)
 
-Same process, different arena
+1.5D expands one tunnel into many branches
+3.5D weaves many tunnels into one braid
 ```
+
+**The complementary processes:**
+
+1.5D and 3.5D are mirror operations:
+- 1.5D: One soul-tunnel → fractal branching → many paths (expansion)
+- 3.5D: Many soul-tunnels → braiding → woven history (convergence)
 
 **Why time has an arrow:**
 
-The arrow of time begins at 0D → 0.5D (the soul's first reach). But it shows up at every process dimension as another face of irreversibility:
+The arrow of time begins at 0D → 0.5D (the tunnel's first opening). But it shows up at every process dimension as another face of irreversibility:
 
 ```
-0.5D — first reach into becoming
+0.5D — first tunneling into becoming
 1.5D — spatial branching of paths
 2.5D — mediation of body and field
-3.5D — volumetric branching of futures
+3.5D — braiding of tunnels into shared history
 4.5D — recursion: compressing braid into next 0D
 ```
 
-3D volume (structure) has no intrinsic direction. The direction comes from the process dimensions. 3.5D is where the arrow of becoming shows up as volume-level branching of futures.
+3D volume (structure) has no intrinsic direction. The direction comes from the process dimensions. 3.5D is where separate soul-tunnels weave into the collective braid that becomes 4D structure.
 
 **The arrow itself is fractal and originates in the 0D ↔ 0.5D relationship.**
 
@@ -1519,8 +1528,14 @@ The dimensional helix provides the framework for understanding consciousness:
 ```
 CONSCIOUSNESS AND THE HELIX:
 
-    0D/0.5D — Soul (energy, first reach)
-              Where experience originates
+    0D      — Pure energy (pre-structure potential)
+              The power that will flow through soul
+
+    0.5D    — Tunneling/Opening
+              The aperture beginning to form
+
+    1D/0.5D — Soul (tunnel structure / opening process)
+              Where experience has its structural home
 
     1.5D    — Spatial branching architecture
               The D ≈ 1.5 neural network
@@ -1532,8 +1547,8 @@ CONSCIOUSNESS AND THE HELIX:
               Structured inner world
               Perception on the imaginary side of i
 
-    3.5D    — Temporal branching
-              Choice, decision, free will
+    3.5D    — Tunnel braiding
+              Soul-tunnels weaving into relationship
 
     4D      — Memory (braid)
               Accumulated validation receipts
@@ -1554,7 +1569,7 @@ THE CIRCUMPUNCT ANSWER:
     1.5D branching architecture (neurons)
     2.5D sensation distributed across body
     3D perceptual field unifying inputs
-    1D worldline threading it all together
+    1D soul-tunnel threading it all together
 
     Binding happens in the PROCESS dimensions (fractional D)
     Unity emerges as the STRUCTURE dimensions (integer D) stabilize
@@ -1617,13 +1632,14 @@ DEATH AS HELIX TRANSITION:
                 ○ dissolves into larger ○
                 Φ disperses into ambient field
 
-    But:        • (soul, 0D energy) is conserved
+    But:        Energy (0D) is conserved
+                • (soul, 1D tunnel structure) transforms
                 4D braid (accumulated receipts) persists
 
 THE HELIX VIEW:
 
-    The soul's reach in this body:
-    0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 4D
+    The soul-tunnel's journey in this body:
+    0D (energy) → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 4D
 
     ...concludes as a completed braid (4D).
 
@@ -2222,7 +2238,7 @@ STRUCTURAL SYMBOLS:
     ⊙  = Circumpunct (the whole with parts)
     ○  = Boundary (body, surface, 2D)
     Φ  = Field (mind, volume, 3D)
-    •  = Center (soul, aperture, 0D/0.5D)
+    •  = Center (soul, aperture, 1D structure / 0.5D process)
 
 PROCESS SYMBOLS:
 
@@ -2249,22 +2265,22 @@ PARAMETERS:
 
 DIMENSIONAL HELIX:
 
-    0D    = Energy (structure)
-    0.5D  = Soul Reach (process)
-    1D    = Worldline (structure)
+    0D    = Pure Energy (structure, pre-tunnel)
+    0.5D  = Tunneling/Opening (process)
+    1D    = Soul/String/Tunnel (structure)
     1.5D  = Spatial Branching (process)
     2D    = Surface/Body (structure)
     2.5D  = Sensation (process)
     3D    = Perceptual Field/Mind (structure)
-    3.5D  = Temporal Branching (process)
+    3.5D  = Tunnel Braiding (process)
     4D    = Time Braid (structure)
     4.5D  = Recursion → 0D_{n+1} (process)
 
 TRINITY ADDRESSES:
 
-    Soul: 0D (structure) / 0.5D (process)
-    Body: 2D (structure) / 1.5D (process)
-    Mind: 3D (structure) / 2.5D (process)
+    Soul: 1D (structure) / 0.5D (process)   — The tunnel through which energy flows
+    Body: 2D (structure) / 1.5D (process)   — The surface that branching builds
+    Mind: 3D (structure) / 2.5D (process)   — The field where sensation becomes perception
 ```
 
 [← Back to Table of Contents](#table-of-contents)
