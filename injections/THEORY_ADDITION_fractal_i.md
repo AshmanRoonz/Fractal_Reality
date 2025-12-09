@@ -120,7 +120,7 @@ This fractal unity means:
 CONNECTION TO THE MASTER EQUATION:
 ──────────────────────────────────
 
-    ⊙ = fix(λΦ. ⊰ ∘ i ∘ ≻[Φ])
+    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
 
 This fixed point is UNIVERSAL because i is universal.
 

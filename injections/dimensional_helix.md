@@ -105,7 +105,7 @@ Replace or extend with the helix architecture. The current cascade is the first 
 Φ' = ⊱ ∘ i ∘ ≺[Φ]
 ```
 
-This is one **tick** of the helix — movement through process dimensions. The fixed-point form `⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])` describes the structure that persists across complete helix turns.
+Both tips point toward i (the aperture). This is one **tick** of the helix — movement through process dimensions. The fixed-point form `⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])` describes the structure that persists across complete helix turns.
 
 ### The Aperture Operator i
 The imaginary unit i operates at **every fractional dimension** — it's the rotation that converts structure into process and process into structure. Each half-step involves an i-rotation.

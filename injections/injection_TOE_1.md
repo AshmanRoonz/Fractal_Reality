@@ -140,7 +140,7 @@ FROM β = 0.5:
 │                                                                 │
 │  ONE FULL CIRCUMPUNCT CYCLE:                                    │
 │                                                                 │
-│  Φ_{t+Δt}(r) = (⊰ ∘ i ∘ ≻)[Φ_t](r)                            │
+│  Φ_{t+Δt}(r) = (⊱ ∘ i ∘ ≺)[Φ_t](r)                            │
 │                                                                 │
 │  STEP-BY-STEP:                                                  │
 │                                                                 │
@@ -302,7 +302,7 @@ class CircumpunctLayer:
         
     def forward(self, psi: np.ndarray) -> np.ndarray:
         """
-        One full ⊙ cycle: Φ_{t+Δt} = (⊰ ∘ i ∘ ≻)[Φ_t]
+        One full ⊙ cycle: Φ_{t+Δt} = (⊱ ∘ i ∘ ≺)[Φ_t]
         
         Args:
             psi: Complex field Φ(r) on grid, shape grid_shape
@@ -532,7 +532,7 @@ NEXT STEP:
 │                                                                │
 │  ✅ CANONICAL (Zero Parameters):                               │
 │                                                                │
-│    • Circumpunct operator (⊰ ∘ i ∘ ≻)                         │
+│    • Circumpunct operator (⊱ ∘ i ∘ ≺)                         │
 │    • Kernels K_conv, K_emerg from D = 1.5                     │
 │    • √r eigenmode structure                                    │
 │    • Rank-1 operator with single eigenvalue                    │

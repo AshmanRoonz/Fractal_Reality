@@ -206,7 +206,7 @@ Components:
 
 CIRCUMPUNCT MASTER EQUATION:
 ────────────────────────────
-    Φ' = ⊰ ∘ i ∘ ≻[Φ]
+    Φ' = ⊱ ∘ i ∘ ≺[Φ]
 
 STRUCTURAL IDENTIFICATION:
 ──────────────────────────
@@ -350,7 +350,7 @@ MIRROR NOTATION (Bidirectional):
   
   EQUIVALENCES:
       Φ ≻ i ⊰ Φ'     =     'Φ ⊱ i ≺ Φ      (flow notation)
-      ⊰ ∘ i ∘ ≻[Φ]   =     [Φ]≺ ∘ i ∘ ⊱    (composition notation)
+      ⊱ ∘ i ∘ ≺[Φ]   =     [Φ]≺ ∘ i ∘ ⊱    (composition notation)
 
   USE MIRROR SYMBOLS WHEN:
       • Writing equations in right-to-left languages
@@ -374,7 +374,7 @@ MIRROR NOTATION (Bidirectional):
 ```
 MATHEMATICAL COMPOSITION IS BACKWARDS:
 ──────────────────────────────────────
-Standard:  ⊰ ∘ i ∘ ≻[Φ]
+Standard:  ⊱ ∘ i ∘ ≺[Φ]
     Written:  ⊰, then i, then ≻  (left to right)
     Applied:  ≻ first, then i, then ⊰  (right to left)
 
@@ -398,7 +398,7 @@ ARROW NOTATION (explicit):
 EQUIVALENCES:
 ─────────────
     Φ ≻ i ⊰ Φ'        (flow, left-to-right)
-    ⊰ ∘ i ∘ ≻[Φ]      (composition, standard math)
+    ⊱ ∘ i ∘ ≺[Φ]      (composition, standard math)
     'Φ ⊱ i ≺ Φ        (flow, right-to-left mirror)
 
 All three describe the same transformation.
