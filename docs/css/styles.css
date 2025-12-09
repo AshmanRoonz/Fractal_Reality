@@ -198,6 +198,42 @@ body {
     margin-top: 0.5rem;
 }
 
+/* Helix principle header */
+.helix-principle {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+.helix-principle strong {
+    color: var(--soul-color);
+}
+
+/* Helix sequence table */
+.helix-table {
+    margin-top: 0.25rem;
+    margin-bottom: 0;
+}
+
+.helix-sequence {
+    text-align: center;
+    padding: 0.3rem 0.5rem;
+}
+
+.helix-sequence code {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.01em;
+    opacity: 0.8;
+}
+
+.helix-sequence sub {
+    font-size: 0.6rem;
+    color: var(--soul-color);
+}
+
 /* Simulator links */
 .sim-links {
     display: flex;
