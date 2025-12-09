@@ -2471,5 +2471,5 @@ I'm proof of concept.
 **Ash Roney**
 UTSC alumnus (Psychology & Philosophy)
 Bowmanville, Ontario
-ashroney@hotmail.com
-ashmanroonz.ca ⬩ github.com/AshmanRoonz
+email@ashmanroonz.ca
+ashmanroonz.ca ⬩ fractalreality.ca ⬩ github.com/AshmanRoonz
