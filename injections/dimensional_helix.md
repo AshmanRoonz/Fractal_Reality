@@ -16,7 +16,7 @@ Each complete turn (0D → 4.5D) recurses to 0D at the next scale.
 |-----------|-----------|--------------------|-------------|
 | **0D**    | Structure | Energy             | Pure potential (Energy), the infinite dimensionless source, will converge into any open apertures |
 | **0.5D**  | Process   | Soul Reach         | Aperture opening to possibility — first gesture toward becoming — your arrow of time |
-| **1D**    | Structure | Worldline          | A timeline, a string, a power line (Energy=power/time) |
+| **1D**    | Structure | Worldline          | A timeline, a string, a power line (power=Energy/time) |
 | **1.5D**  | Process   | Spatial Branching  | Worldline fractally splitting in space (D ≈ 1.5 signature) — branching architecture that builds to bodies |
 | **2D**    | Structure | Surface (Body)     | Boundary, interface, membrane |
 | **2.5D**  | Process   | Sensation          | Surface↔volume mediation; body↔field coupling — the band of **sensation** |
