@@ -1086,7 +1086,7 @@ CIRCUMPUNCT FRAMEWORK (Dual i):
 64-STATE PARTICLE MAPPING:
 
 REGION 1: STABLE PARTICLES — State 63 (111, 111)
-    Full validation at both ≺ and ⊱
+    Full validation at both ≻ and ⊰
     • Electron, Proton, Neutrinos, Photon
     These are ETERNAL patterns in the braid
 
