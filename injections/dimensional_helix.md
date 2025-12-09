@@ -23,7 +23,7 @@ Each complete turn (0D → 4.5D) recurses to 0D at the next scale.
 | **3D**    | Structure | Perceptual Field   | Manifest inner volume — **perception** as structured field on the "imaginary" side of *i* |
 | **3.5D**  | Process   | Tunnel Braiding    | Soul-tunnels weaving together — the braiding of worldlines into shared history |
 | **4D**    | Structure | Time Braid         | Woven history, accumulated validation receipts (the committed braid of choices) |
-| **4.5D**  | Process   | Recursion          | Compress braid → seed new cycle; the ≺ *i* ⊱ tick is treated as a unit at the next scale |
+| **4.5D**  | Process   | Recursion          | Compress braid → seed new cycle; the ⊱ ∘ i ∘ ≺ tick is treated as a unit at the next scale |
 
 At 4.5D, the entire cycle (convergence → aperture → emergence) becomes a single aperture event that seeds the next scale:
 
@@ -70,15 +70,7 @@ T_⊙ = ⊱ ∘ i ∘ ≺
 
 One local update is a tick of the helix; one full 0D→4.5D turn is compressed into a new 0D at the next scale, which is what `⊙ = fix(…)` captures.
 
-**Symbol convention** (for future consistency):
-- Convergence: ≺, ≻
-- Emergence: ⊱, ⊰
 
-In math form we use the ⊱≺ pair so the visual tips point toward the aperture i:
-
-```
-Φ' = ⊱ ∘ i ∘ ≺[Φ]
-```
 
 ---
 
