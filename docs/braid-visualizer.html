@@ -670,7 +670,8 @@
         <span>Time:</span> <span id="time">0</span> · 
         <span>Crossings:</span> <span id="crossings">0</span> · 
         <span>Writhe:</span> <span id="writhe">0</span> ·
-        <span>Linking:</span> <span id="linking">0</span>
+        <span>L₀₁:</span> <span id="link01">0</span> ·
+        <span>L₁₂:</span> <span id="link12">0</span>
       </div>
     </div>
     
@@ -881,8 +882,27 @@ class Braid {
   }
   
   get linking() {
-    // Simplified linking number between strand pairs
-    return Math.floor(this.operations.length / 2);
+    // Pair-wise linking: count signed crossings per strand pair
+    // L₀₁ from σ₁ operations, L₁₂ from σ₂ operations
+    let L01 = 0, L12 = 0;
+    for (const op of this.operations) {
+      const sign = op.type.endsWith('i') ? -1 : 1;
+      if (op.type.startsWith('s1')) L01 += sign;
+      else if (op.type.startsWith('s2')) L12 += sign;
+    }
+    // Total linking is sum of pair-wise (simplified - true linking is more complex)
+    return Math.abs(L01) + Math.abs(L12);
+  }
+  
+  get linkingDetail() {
+    // Return pair-wise linking for display
+    let L01 = 0, L12 = 0;
+    for (const op of this.operations) {
+      const sign = op.type.endsWith('i') ? -1 : 1;
+      if (op.type.startsWith('s1')) L01 += sign;
+      else if (op.type.startsWith('s2')) L12 += sign;
+    }
+    return { L01, L12 };
   }
   
   getWordHTML() {
@@ -1195,9 +1215,11 @@ class App {
   checkYangBaxter() {
     const status = document.getElementById('yb-status');
     // Both sequences should give same permutation
-    // σ₁σ₂σ₁ and σ₂σ₁σ₂ both give (2,0,1) from (0,1,2)
+    // σ₁σ₂σ₁: [0,1,2] → σ₁[1,0,2] → σ₂[1,2,0] → σ₁[2,1,0]
+    // σ₂σ₁σ₂: [0,1,2] → σ₂[0,2,1] → σ₁[2,0,1] → σ₂[2,1,0]
+    // Both give [2,1,0] - this IS the Yang-Baxter equation
     const perm = this.braid.strands.join(',');
-    if (perm === '2,0,1' || perm === '1,2,0') {
+    if (perm === '2,1,0') {
       status.textContent = `✓ ${this.ybSequence}`;
       status.className = 'status satisfied';
     } else {
@@ -1210,7 +1232,12 @@ class App {
     document.getElementById('time').textContent = this.braid.time;
     document.getElementById('crossings').textContent = this.braid.crossings;
     document.getElementById('writhe').textContent = this.braid.writhe;
-    document.getElementById('linking').textContent = this.braid.linking;
+    
+    // Pair-wise linking numbers
+    const link = this.braid.linkingDetail;
+    document.getElementById('link01').textContent = link.L01;
+    document.getElementById('link12').textContent = link.L12;
+    
     document.getElementById('braid-word').innerHTML = this.braid.getWordHTML() || 'ε';
     
     // Compute and display unitary matrix for current braid
