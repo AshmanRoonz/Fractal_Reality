@@ -210,28 +210,42 @@ body {
     color: var(--soul-color);
 }
 
-/* Helix sequence table */
-.helix-table {
-    margin-top: 0.25rem;
-    margin-bottom: 0;
+/* Full helix table */
+.helix-full {
+    width: 100%;
+    font-size: 0.75rem;
 }
 
-.helix-sequence {
-    text-align: center;
-    padding: 0.3rem 0.5rem;
+.helix-full thead th {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 0.2rem 0.3rem;
+    border-bottom: 1px solid var(--border);
 }
 
-.helix-sequence code {
+.helix-full tbody td {
+    padding: 0.2rem 0.3rem;
+    vertical-align: middle;
+}
+
+.helix-full code {
     font-family: 'Space Grotesk', monospace;
     font-size: 0.7rem;
-    color: var(--text-dim);
-    letter-spacing: 0.01em;
+    color: var(--soul-color);
     opacity: 0.8;
 }
 
-.helix-sequence sub {
-    font-size: 0.6rem;
+.helix-full sub {
+    font-size: 0.55rem;
     color: var(--soul-color);
+}
+
+.dim-num {
+    color: var(--soul-color);
+    font-weight: 500;
+    margin-right: 0.2rem;
 }
 
 /* Simulator links */
