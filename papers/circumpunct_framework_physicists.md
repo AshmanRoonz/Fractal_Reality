@@ -111,6 +111,46 @@ The "boundary" ○ is formalized as classes of embedded 2-surfaces in M:
 
 This encodes the "membrane/interface" the full theory discusses, now as a rigorous space of 2-surfaces.
 
+**Mass as a Surface Quantity:**
+
+In the circumpunct framework, mass is fundamentally a property of the 2D boundary surface, not a 3D volume:
+
+```
+THE SURFACE MASS PRINCIPLE:
+
+    The body is a surface Σ (the ○ boundary) embedded in ℝ³.
+    What we call "mass" is the resistance of this surface to acceleration—
+    the inertia of the interface where field Φ, soul tunnel P, and external world meet.
+
+FORMALLY:
+
+    Σ ⊂ ℝ³              (body surface)
+    ρ_surf : Σ → ℝ⁺     (surface mass density)
+
+    M = ∫_Σ ρ_surf(x) dA
+
+    where dA is the area element on Σ.
+```
+
+**Physical justification:**
+
+All physical interaction happens at surfaces:
+- Cross-sections, scattering, drag, pressure, friction → all surface phenomena
+- We never "touch a volume," only the boundary
+- Even black hole mass is encoded in horizon area (Bekenstein-Hawking)
+
+This connects to the Schrödinger limit (§4): the m in iℏ ∂ψ/∂t = -(ℏ²/2m)∇²ψ + V(x)ψ is interpreted as the effective surface inertia of ○—how hard it is to change the braided history of the boundary on M⁴.
+
+**The trinity of dimensional addresses:**
+
+```
+Component │ Dimension │ Role
+──────────┼───────────┼──────────────────────────
+    •     │    1D     │ Soul (tunnel/worldline)
+    ○     │    2D     │ Body (surface/interface)
+    Φ     │    3D     │ Mind (field/volume)
+```
+
 ### 1.3 Field Space (Φ)
 
 The "field" Φ is a section of a vector bundle over M:
@@ -840,6 +880,18 @@ where V_eff collects potential-like contributions from departures of K from pure
 
 **Summary:** The single-step process ⊱∘i∘≺ defines an integral evolution operator U(Δt). Under standard locality and scaling assumptions, its generator is a self-adjoint differential operator H, and the central aperture rotation i supplies the complex structure needed to write the evolution as the Schrödinger equation.
 
+**Physical interpretation of m (surface mass):**
+
+The mass m appearing in the Schrödinger equation is not an arbitrary parameter—it is the **surface inertia of the boundary ○**:
+
+```
+m = effective resistance of ○ to acceleration
+  = integrated surface mass density over the boundary
+  = M = ∫_Σ ρ_surf(x) dA    (see §1.2)
+```
+
+This explains why mass appears in the kinetic term: the -(ℏ²/2m)∇² operator encodes how hard it is to change the spatial configuration of the boundary's braided history. Heavier particles (larger m) spread more slowly because their ○ boundary resists acceleration more strongly.
+
 ### 4.3 Derivation of the Transmission Law T(Δφ) = cos²(Δφ/2)
 
 The phase transmission law stated in §2.6 follows from the same postulates used in the Schrödinger derivation.
@@ -1007,9 +1059,11 @@ The ethereal tail (§2.8) represents the phase-locked subset of this braid struc
 
 ```
 Spacetime = fabric of interwoven i(t) threads
-Mass      = region of high i(t) density
+Mass      = region of high i(t) density (at the boundary ○)
 Curvature = geometry induced by that density
 ```
+
+**Connection to surface mass (§1.2):** The "high i(t) density" that constitutes mass is localized at the 2D boundary surface ○. The braid density B(x) is highest where worldline threads cross through boundaries. Mass as M = ∫_Σ ρ_surf dA (surface integral) is consistent with mass as "high thread density at ○"—both describe how boundaries concentrate and resist the flow of the i(t) fabric.
 
 In this picture:
 - Gravity is NOT a force between separate threads
