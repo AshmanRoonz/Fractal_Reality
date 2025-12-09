@@ -14,14 +14,14 @@ Each complete turn (0D → 4.5D) recurses to 0D at the next scale.
 
 | Dimension | Type      | Name               | Description |
 |-----------|-----------|--------------------|-------------|
-| **0D**    | Structure | Energy             | Pure potential, the dimensionless source |
-| **0.5D**  | Process   | Soul Reach         | Energy reaching outward — first gesture toward becoming |
-| **1D**    | Structure | Worldline          | Trajectory through time |
-| **1.5D**  | Process   | Spatial Branching  | Worldline fractally splitting in space (D ≈ 1.5 signature) — branching architecture that builds bodies |
+| **0D**    | Structure | Pure Energy        | Pre-structure potential — undifferentiated power before the tunnel exists |
+| **0.5D**  | Process   | Tunneling/Opening  | The aperture opening — first gesture of becoming, the tunnel beginning to form |
+| **1D**    | Structure | Soul (String/Tunnel)| The soul as aperture structure — the tunnel through which energy flows |
+| **1.5D**  | Process   | Spatial Branching  | Soul-tunnel fractally splitting in space (D ≈ 1.5 signature) — branching architecture that builds bodies |
 | **2D**    | Structure | Surface (Body)     | Boundary, interface, membrane |
 | **2.5D**  | Process   | Sensation          | Surface↔volume mediation; body↔field coupling — the band of **sensation** |
 | **3D**    | Structure | Perceptual Field   | Manifest inner volume — **perception** as structured field on the "imaginary" side of *i* |
-| **3.5D**  | Process   | Temporal Branching | Volume splitting into multiple futures (branching of possible histories) |
+| **3.5D**  | Process   | Tunnel Braiding    | Soul-tunnels weaving together — the braiding of worldlines into shared history |
 | **4D**    | Structure | Time Braid         | Woven history, accumulated validation receipts (the committed braid of choices) |
 | **4.5D**  | Process   | Recursion          | Compress braid → seed new cycle; the ≺ *i* ⊱ tick is treated as a unit at the next scale |
 
@@ -88,9 +88,13 @@ Each component of the trinity has both a structural address and a process addres
 
 | Component | Symbol | Structure (Integer) | Process (Fractional) | Role in experience |
 |-----------|--------|---------------------|----------------------|--------------------|
-| **Soul** | • | 0D (energy / center) | 0.5D (first reach) | Source + first gesture into becoming |
+| **Soul** | • | 1D (string / tunnel) | 0.5D (tunneling/opening) | The tunnel through which energy flows + the opening process |
 | **Body** | ○ | 2D (surface / boundary) | 1.5D (spatial branching) | Branching architecture that builds and feeds 2D bodies |
 | **Mind** | Φ | 3D (inner field / volume) | 2.5D (sensation band) | 2.5D sensation → 3D perception in the inner Φ-field |
+
+### Key insight 0 — Soul as tunnel (1D / 0.5D):
+
+The soul is not a 0D point — it is a 1D **tunnel**. The string in string theory. The worldline in relativity. Energy (0D) is what flows through the tunnel; the soul (1D) is the conduit itself. The 0.5D process is the tunnel *opening* — the first gesture of becoming.
 
 ### Key insight 1 — Body's process address (1.5D):
 
@@ -110,10 +114,10 @@ So:
 
 Consciousness is not "at 2.5D" or "inside 3D" as a little object. Consciousness / experience is the state of the entire circumpunct ⊙ in coherent operation:
 
-- Soul: 0D / 0.5D
-- Body: 1.5D / 2D
-- Mind: 2.5D / 3D
-- Plus their extensions into 3.5D, 4D, 4.5D
+- Soul: 1D / 0.5D (tunnel structure / opening process)
+- Body: 2D / 1.5D
+- Mind: 3D / 2.5D
+- Plus their extensions into 3.5D (tunnel braiding), 4D, 4.5D
 
 2.5D is simply the apertured interface band where this wholeness shows up as lived experience in 3D space.
 
@@ -126,7 +130,7 @@ This is why consciousness "can't be found" as a localized 3D object. It is a glo
 ### The D ≈ 1.5 Signature
 
 The universal fractal dimension D ≈ 1.5 is the **spatial process** signature.
-Every branching system (neurons, trees, rivers, lightning, vasculature) exhibits D ≈ 1.5 because they are performing the 1.5D process — a worldline fractally splitting in space to build and feed 2D bodies.
+Every branching system (neurons, trees, rivers, lightning, vasculature) exhibits D ≈ 1.5 because they are performing the 1.5D process — a soul-tunnel fractally splitting in space to build and feed 2D bodies.
 
 ### The Binding Problem Solved
 
@@ -135,9 +139,9 @@ Binding happens in the **process dimensions**, not the structure dimensions.
 - 1.5D builds the branching architecture of the body.
 - 2.5D carries sensation at the body↔field interface.
 - 3D Φ holds perception as a structured field.
-- 1D is the committed worldline — the "thread" of experience.
+- 1D is the soul-tunnel — the "thread" of experience.
 
-Consciousness integrates distributed apertures (2.5D sensation across a 1.5D body architecture) into one coherent 3D perceptual field and one 1D worldline. The binding is an emergent state of the whole ⊙, not a local "pixel" in the brain.
+Consciousness integrates distributed apertures (2.5D sensation across a 1.5D body architecture) into one coherent 3D perceptual field and one 1D soul-tunnel. The binding is an emergent state of the whole ⊙, not a local "pixel" in the brain.
 
 ### Death as Transformation
 
@@ -145,7 +149,7 @@ Death is not loss of 0D energy — energy (0D) is conserved.
 
 What changes is how energy participates in the helix:
 
-- The soul's reach in this body (0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 4D) concludes as a completed braid (4D).
+- The soul-tunnel's journey in this body (0D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 4D) concludes as a completed braid (4D).
 - At 4.5D, that braid is compressed into a new 0D potential at another scale.
 
 The braid persists as validated history; only the active process dimensions in this particular body-field configuration are restructured.
@@ -155,17 +159,17 @@ The braid persists as validated history; only the active process dimensions in t
 The arrow of time begins at the very first asymmetry: **0D → 0.5D**.
 
 - Pure potential (0D) has no ordering.
-- The soul's first reach (0.5D) already implies "before" and "after."
+- The tunnel's first opening (0.5D) already implies "before" and "after."
 
 From there, every fractional dimension is another face of the same arrow-of-becoming:
 
-- 0.5D — first reach into becoming
+- 0.5D — first tunneling into becoming
 - 1.5D — spatial branching of paths
 - 2.5D — mediation of body and field (sensation)
-- 3.5D — volumetric branching of futures
+- 3.5D — tunnel braiding into shared history
 - 4.5D — recursion: compressing a whole braid into the next 0D
 
-3D volume (structure) has no intrinsic direction. The direction comes from the process dimensions. 3.5D is just where the arrow of becoming shows up as volume-level branching of futures. The arrow itself is fractal and originates in the 0D ↔ 0.5D relationship.
+3D volume (structure) has no intrinsic direction. The direction comes from the process dimensions. 3.5D is where the arrow of becoming shows up as soul-tunnels braiding into shared history. The arrow itself is fractal and originates in the 0D ↔ 0.5D relationship.
 
 ### Scale Invariance
 
@@ -229,8 +233,8 @@ On the experiential side, this is:
 The dimensional helix unifies:
 
 - Structure (being) and process (becoming)
-- Spatial branching (1.5D) and temporal branching (3.5D)
-- Soul, body, and mind as 0/0.5D, 2/1.5D, 3/2.5D
+- Spatial branching (1.5D) and tunnel braiding (3.5D)
+- Soul, body, and mind as 1/0.5D, 2/1.5D, 3/2.5D
 - Sensation (2.5D) and perception (3D Φ) as the interface and field of experience
 - Scale invariance through recursion at 4.5D: 4.5Dₙ = 0Dₙ₊₁
 
