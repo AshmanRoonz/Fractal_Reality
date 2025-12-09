@@ -471,6 +471,13 @@ At 1D:  The soul exists as structure
         History begins to accumulate
 ```
 
+In the ΩMEGA formal spec, this appears as:
+```
+P = ℝ⁺ × S¹
+D(P) = 1
+```
+P is the soul string / worldline tunnel along which 0D energy E becomes 1D power.
+
 The soul-tunnel is the **aperture as structure**. At 0.5D, the aperture *opens*. At 1D, the aperture *is* — it has geometric existence as a one-dimensional conduit.
 
 **The binding problem partially resolves here**: distributed sensations (2.5D across 1.5D branching) must ultimately converge to one soul-tunnel (1D) for unified experience. The "thread" of consciousness is literally the 1D soul.
@@ -507,6 +514,21 @@ At 2D:  Inside distinguished from outside
 ```
 
 The body's 2D surface is not passive. It is an **active receiver**: infinite apertures distributed across the boundary, each a complete ⊙ at smaller scale. This is fractal lensing — the boundary as a lens system.
+
+**Mass as a Surface Property:**
+
+Mathematically, the body is a 2D surface Σ embedded in 3D:
+
+```
+Let Σ ⊂ ℝ³ be the surface corresponding to ○.
+All "mass" we interact with is modeled as surface mass density on Σ.
+
+    M = ∫_Σ ρ_surf(x) dA
+
+where ρ_surf is the surface mass density and dA is the area element.
+```
+
+What we call "mass" is simply the inertia of the 2D interface — what resists change when you push on the boundary. We never "touch a volume," only the boundary. Mass is the integrated resistance of the surface to acceleration, the way ○ couples Φ to the worldline P.
 
 **The trinity structural addresses:**
 - Soul: 1D (tunnel)
@@ -1224,6 +1246,36 @@ The imaginary unit i is INTRODUCED BY the aperture.
 ---
 
 ## CONSTANTS AND DERIVATIONS
+
+### Mass as a Surface Quantity
+
+In the circumpunct framework, **mass is not a 3D blob** but a 2D interface property.
+
+```
+THE SURFACE MASS PRINCIPLE:
+
+    The body is a surface Σ (the ○ boundary) embedded in ℝ³.
+    The field Φ lives on and through this surface.
+    What we call "mass" is the resistance of this surface to acceleration.
+
+FORMALLY:
+
+    Σ ⊂ ℝ³              (body surface)
+    ρ_surf : Σ → ℝ⁺     (surface mass density)
+
+    M = ∫_Σ ρ_surf(x) dA
+
+INTERPRETATION:
+
+    All interaction happens at surfaces.
+    Cross-sections, scattering, drag, pressure, friction → all surface phenomena.
+    Even black hole mass is encoded in horizon area in GR.
+
+    Mass is fundamentally a property of Σ — the interface where the field Φ,
+    the soul tunnel P, and the external world meet.
+```
+
+This connects to the Schrödinger limit: the m in iℏ ∂ψ/∂t = -(ℏ²/2m)∇²ψ + V(x)ψ is interpreted as the effective surface inertia of ○ — how hard it is to change the braided history of the boundary on M⁴.
 
 ### The Golden Ratio φ
 
@@ -2134,6 +2186,35 @@ FIXED-POINT IDENTITY:
     Then ⊙ is the unique Φ such that T_⊙[Φ] = Φ
 ```
 
+```
+DIMENSIONAL TYPES:
+
+    D(E)   = 0      (energy scalar, 0D structure)
+    D(P)   = 1      (soul string / worldline tunnel)
+    D(M)   = 2      (mass surfaces: ○ as 2D boundary)
+    D(Φ)   = 3      (perceptual field / mind volume)
+    D(M⁴)  = 4      (time braid base manifold, spacetime)
+
+PROCESS DIMENSIONS (FRACTIONAL D):
+
+    0.5D   = Tunneling/opening (aperture forming)
+    1.5D   = Spatial branching (D ≈ 1.5 fractal architecture)
+    2.5D   = Sensation band (surface↔volume coupling)
+    3.5D   = Tunnel braiding (soul-tunnels weaving)
+    4.5D   = Recursion: braid → next 0D event
+
+INTERPRETATION:
+
+    • E is pure 0D potential.
+    • P is the 1D tunnel/string along which energy flows (soul/worldline).
+    • M is what we actually "bump into": 2D surfaces in 3D embedding.
+    • Φ is the 3D inner/perceptual field.
+    • M⁴ is the 4D braid manifold where histories live.
+
+    Integers = what exists (being).
+    Fractions = what happens (becoming) between these structures.
+```
+
 ### The 64-State Fiber Bundle
 
 ```
@@ -2236,7 +2317,7 @@ D = 1.5 FROM HOPF FIBRATION:
 STRUCTURAL SYMBOLS:
 
     ⊙  = Circumpunct (the whole with parts)
-    ○  = Boundary (body, surface, 2D)
+    ○  = Boundary (body, surface, 2D, locus of mass M as surface inertia)
     Φ  = Field (mind, volume, 3D)
     •  = Center (soul, aperture, 1D structure / 0.5D process)
 
