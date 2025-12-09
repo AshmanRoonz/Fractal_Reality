@@ -187,19 +187,40 @@ acting on ℋ_Φ, so that:
 
 ### 2.2 Mirror / Adjoint Flow Operators (⊱, ≺)
 
-For clarity, we distinguish between:
+**The Geometric Principle:** The convergent point (tip) of every symbol points toward the aperture •.
+
+```
+    ≺    tip points left   →  aperture is to the left
+    ≻    tip points right  →  aperture is to the right
+    ⊱    tip points right  →  aperture is to the right
+    ⊰    tip points left   →  aperture is to the left
+```
+
+**Operator types:**
+- **Convergence:** ≺, ≻ (flow toward aperture)
+- **Emergence:** ⊱, ⊰ (flow from aperture)
+
+The difference is flow direction, not symbol orientation. All tips point at • regardless of whether flow is inward or outward.
+
+**Reading-mirror pairs:**
+```
+    ⊱≺    (for right-to-left reading)     ⊱ → • ← ≺
+    ≻⊰    (for left-to-right reading)     ≻ → • ← ⊰
+```
+
+Both pairs frame the aperture between them, tips pointing inward. Both represent the same process: **convergence then emergence** (always this order). Choose the pair matching your equation's reading direction.
 
 - **Forward (left-to-right) flow:**
-  - Φ ──≻── • ──i── • ──⊰── Φ′  
+  - Φ ──≻── • ──i── • ──⊰── Φ′
     - ≻ : convergence (toward the aperture)
     - ⊰ : emergence (from the aperture)
 
 - **Backward (right-to-left) flow:**
-  - Φ′ ──⊱── • ──i── • ──≺── Φ  
-    - ⊱ : emergence (from the aperture, read right-to-left)
-    - ≺ : convergence (toward the aperture, read right-to-left)
+  - Φ′ ──⊱── • ──i── • ──≺── Φ
+    - ≺ : convergence (toward the aperture)
+    - ⊱ : emergence (from the aperture)
 
-Note that when reading right-to-left, the operations occur in reverse order: emergence first (⊱), then convergence (≺). Thus (≻,≺) represent convergence in opposite reading directions, and (⊰,⊱) represent emergence in opposite reading directions.
+Note: Reading right-to-left (≺ then ⊱) still applies convergence first, then emergence. The order of operations is invariant; only the reading direction changes.
 
 In the Hilbert-space setting we define
 
@@ -1646,6 +1667,15 @@ This formulation benefited from iterative refinement focused on mathematical rig
 - C : consciousness integral = ∫_T B(x,t) dx dt
 - B(x,t) : braid density
 
+**The geometric principle:** The convergent point (tip) of every symbol points toward the aperture •.
+
+```
+    ≺    tip points left   →  aperture is to the left
+    ≻    tip points right  →  aperture is to the right
+    ⊱    tip points right  →  aperture is to the right
+    ⊰    tip points left   →  aperture is to the left
+```
+
 **Note on flow notation:** We use a left-to-right convention in the main text:
 
   Φ ──≻── • ──i── • ──⊰── Φ′,
@@ -1654,7 +1684,7 @@ where ≻ denotes convergence (toward the aperture) and ⊰ denotes emergence (f
 
   Φ′ ──⊱── • ──i── • ──≺── Φ,
 
-where operations occur in reverse order: ⊱ is emergence and ≺ is convergence. The convergence pair (≻,≺) and emergence pair (⊰,⊱) are adjoint pairs that operate in opposite reading directions.
+where ≺ is convergence and ⊱ is emergence. The convergence pair (≻,≺) and emergence pair (⊰,⊱) are adjoint pairs. Both reading directions apply the same operation order: **convergence then emergence**.
 
 ### Spaces
 - M : spacetime manifold

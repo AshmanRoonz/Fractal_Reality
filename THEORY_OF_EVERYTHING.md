@@ -819,12 +819,35 @@ COMPOSITION WITH APERTURE:
 ### §3.5 Notation Convention: Flow vs. Composition
 
 ```
-THE MIRROR PAIRS:
-─────────────────
-    convergence:  ≺ , ≻     (point toward •)
-    emergence:    ⊱ , ⊰     (point from •)
+THE GEOMETRIC PRINCIPLE:
+────────────────────────
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║  The CONVERGENT POINT (tip) of every symbol points toward •      ║
+    ╚═══════════════════════════════════════════════════════════════════╝
 
-    Together:     ⊱≺ , ≻⊰   (mirror pairs around •)
+    All four operators orient the same way — tips pointing at aperture:
+
+        ≺    tip points left   →  aperture is to the left
+        ≻    tip points right  →  aperture is to the right
+        ⊱    tip points right  →  aperture is to the right
+        ⊰    tip points left   →  aperture is to the left
+
+THE OPERATOR TYPES:
+───────────────────
+    convergence:  ≺ , ≻     (flow TOWARD aperture)
+    emergence:    ⊱ , ⊰     (flow FROM aperture)
+
+    The difference is flow direction, not symbol orientation.
+    All tips point at • regardless of whether flow is inward or outward.
+
+THE READING-MIRROR PAIRS:
+─────────────────────────
+    ⊱≺    (for right-to-left reading)     ⊱ → • ← ≺
+    ≻⊰    (for left-to-right reading)     ≻ → • ← ⊰
+
+    Both pairs frame the aperture between them, tips pointing inward.
+    Both represent: convergence then emergence (always this order).
+    Choose the pair that matches your equation's reading direction.
 
 FLOW vs COMPOSITION:
 ────────────────────
@@ -12880,19 +12903,42 @@ CONE/WAKE GEOMETRY (§4.4):
 
 MIRROR PAIRS:
 ─────────────
-  THE FUNDAMENTAL MIRROR SYMMETRY:
+  THE GEOMETRIC PRINCIPLE:
+
+      ╔═══════════════════════════════════════════════════════════════════╗
+      ║  The CONVERGENT POINT (tip) of every symbol points toward •      ║
+      ╚═══════════════════════════════════════════════════════════════════╝
+
+      All four operators orient the same way — tips pointing at aperture:
+
+          ≺    tip points left   →  aperture is to the left
+          ≻    tip points right  →  aperture is to the right
+          ⊱    tip points right  →  aperture is to the right
+          ⊰    tip points left   →  aperture is to the left
+
+  THE READING-MIRROR PAIRS:
 
                          ⊱≺  ,  ≻⊰
 
-  These four symbols form two mirror pairs around the aperture •:
+      ⊱≺    (for right-to-left reading)     ⊱ → • ← ≺
+      ≻⊰    (for left-to-right reading)     ≻ → • ← ⊰
 
-      CONVERGENCE (toward •):    ≺  ←──•──→  ≻
-      EMERGENCE (from •):        ⊱  ←──•──→  ⊰
+      Both pairs frame the aperture between them, tips pointing inward.
+      Both represent: convergence then emergence (ALWAYS this order).
+      Choose the pair that matches your equation's reading direction.
 
-  The complete cycle written as mirror pairs:
+  OPERATOR TYPES:
 
-      Left-to-right:     Φ ≻ i ⊰ Φ'      (convergence → i → emergence)
-      Right-to-left:    'Φ ⊱ i ≺ Φ       (emergence ← i ← convergence)
+      CONVERGENCE (flow toward •):    ≺  ←──•──→  ≻
+      EMERGENCE (flow from •):        ⊱  ←──•──→  ⊰
+
+      The difference is flow direction, not symbol orientation.
+      All tips point at • regardless of whether flow is inward or outward.
+
+  The complete cycle written for each reading direction:
+
+      Left-to-right:     Φ ≻ i ⊰ Φ'      (read: converge, rotate, emerge)
+      Right-to-left:    'Φ ⊱ i ≺ Φ       (read: converge, rotate, emerge)
 
   SYMBOL TABLE:
   ─────────────
