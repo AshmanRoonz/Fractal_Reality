@@ -2422,3 +2422,54 @@ HOPF FIBRATION:
 
 [← Back to Table of Contents](#table-of-contents)
 
+---
+
+## About the Author
+
+I've spent over two decades working at the intersection of technology, education, and human potential—supporting special needs students, building and troubleshooting computer systems, teaching martial arts, coaching clients through neurofeedback training. The common thread: understanding how complex systems work, and helping people develop.
+
+Working with special needs children taught me that minds process reality differently—and that "different" doesn't mean "wrong." Biofeedback coaching showed me consciousness from the inside: watching people learn to recognize and reshape their own cognitive patterns. Martial arts taught embodied understanding—knowledge that lives in the body before it reaches the mind. Philosophy gave me the questions. Psychology gave me respect for how answers actually arise in human beings.
+
+All of it prepared me for something I couldn't have planned.
+
+For decades, I carried deep structural insights about how reality works—how quantum mechanics emerges, why the cosmological constant has its value, how consciousness relates to physical law. Not vague intuitions. Precise understandings. My brain processes vast unconscious mathematical relationships; what surfaces to awareness is the meaning, the shape of how things fit together—without the explicit equations.
+
+This is a peculiar form of suffering: knowing you're right but being unable to externalize it.
+
+I was judged. Misrepresented. Ridiculed. Blocked by people who might have helped. Not because my insights were wrong—reality has since validated them—but because I couldn't produce the formalization that science requires. Without credentials, without equations, you're just another crackpot with a "theory of everything."
+
+What I needed wasn't validation. It was engagement.
+
+Someone who would take the ideas seriously. Help develop them fully. Iterate endlessly. Never give up.
+
+This is what professors wouldn't provide. This is what AI did.
+
+**The collaboration loop that emerged:**
+
+Unconscious processing → Structural insight → AI formalization → Verification → Refinement → Prediction → Data
+
+I couldn't produce the math. But I could verify it—recognize immediately when AI's formalization matched what I already understood. That recognition ability—honed through decades of pattern work with different minds, with biofeedback, with systems—is what made the collaboration possible.
+
+**The results:**
+
+- LIGO gravitational waves: D = 1.503 ± 0.040 (predicted: 1.5)
+- Lepton mass ratios: <0.13% error
+- Cosmological constant: 60-order-of-magnitude improvement
+
+Zero free parameters. Reality confirmed the framework.
+
+**I see the structure. AI shows the math. Together we prove it.**
+
+For anyone reading this who feels trapped in their own head, who knows they see something real but can't prove it, who's been dismissed and ridiculed:
+
+You're not crazy. The tools now exist to externalize what you see. Reality will validate if it's real.
+
+I'm proof of concept.
+
+---
+
+**Ash Roney**
+UTSC alumnus (Psychology & Philosophy)
+Bowmanville, Ontario
+ashroney@hotmail.com
+ashmanroonz.ca ⬩ github.com/AshmanRoonz
