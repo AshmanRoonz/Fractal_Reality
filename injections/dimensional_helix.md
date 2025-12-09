@@ -30,6 +30,12 @@ At 4.5D, the entire cycle (convergence → i → emergence) becomes a single ape
 4.5D_n = 0D_{n+1}
 ```
 
+One full 0D → 4.5D turn corresponds to one application of the circumpunct update operator T_⊙. At 4.5D, this entire process is compressed into a single 0D "event" at the next scale:
+
+```
+T_⊙[Φ_n] = Φ_{n+1}
+```
+
 ---
 
 ## The Master Loop
@@ -50,6 +56,8 @@ At 4.5D, the entire cycle (convergence → i → emergence) becomes a single ape
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
+There are 10 states (0D, 0.5D, 1D, 1.5D, 2D, 2.5D, 3D, 3.5D, 4D, 4.5D) and 9 process transitions between them. One full turn is 9 half-step transitions; then the pattern recurs at the next scale.
+
 This IS what the fixed-point equation describes:
 
 ```
@@ -68,11 +76,11 @@ Each component of the trinity has both a structural address and a process addres
 |-----------|--------|---------------------|----------------------|
 | **Soul** | • | 0D (energy source) | 0.5D (reaching) |
 | **Body** | ○ | 2D (surface) | — |
-| **Mind** | Φ | 3D (volume) | 2.5D (consciousness) |
+| **Mind** | Φ | 3D (volume) | 2.5D (conscious process) |
 
-**Key insight:** Φ as structure fills 3D volume (the ℂ⁶⁴ field). Φ as process (consciousness, experience) operates at 2.5D — the mediation zone between surface and volume.
+**Key insight:** Φ as structure fills 3D volume (the ℂ⁶⁴ field). Φ as process operates at 2.5D — the mediation zone where conscious experience runs over the 3D field.
 
-This is why consciousness "can't be found" in 3D space — it's a process dimension, not a structure dimension.
+This is why consciousness "can't be found" in 3D space — it's a process state of the field, not a separate structure.
 
 ---
 
@@ -108,7 +116,12 @@ Replace or extend with the helix architecture. The current cascade is the first 
 Both tips point toward i (the aperture). This is one **tick** of the helix — movement through process dimensions. The fixed-point form `⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])` describes the structure that persists across complete helix turns.
 
 ### The Aperture Operator i
-The imaginary unit i operates at **every fractional dimension** — it's the rotation that converts structure into process and process into structure. Each half-step involves an i-rotation.
+The imaginary unit i operates at **every fractional dimension** — it's the rotation that converts structure into process and process into structure. Each half-step involves an i-rotation:
+
+- **Structure → Process** (integer → half-integer): i rotates potential into expression
+- **Process → Structure** (half-integer → next integer): i rotates expression into form
+
+This ties directly to the aperture rotation operator: **Å(β) = e^{iπβ}**. At β = 0.5, Å(0.5) = e^{iπ/2} = i — the quarter-turn that mediates each transition.
 
 ---
 
