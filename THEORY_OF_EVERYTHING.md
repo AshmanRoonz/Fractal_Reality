@@ -1069,7 +1069,7 @@ EINSTEIN'S FIELD EQUATIONS (Single i):
 
 CIRCUMPUNCT FRAMEWORK (Dual i):
 
-    ≺ ←(8)→ • ←(8)→ ⊱
+    ≻ ←(8)→ • ←(8)→ ⊰
     Input      Output
 
     Total: 8 × 8 = 64
