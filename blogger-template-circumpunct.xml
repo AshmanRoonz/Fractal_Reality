@@ -1,0 +1,1654 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:css='false' b:defaultwidgetversion='2' b:layoutsVersion='3' b:responsive='true' b:templateUrl='classic.xml' b:templateVersion='1.0.0' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+    <meta content='width=device-width, initial-scale=1.0, user-scalable=no' name='viewport'/>
+    <title><data:view.title.escaped/></title>
+    <b:include data='blog' name='all-head-content'/>
+
+    <!-- Google Fonts -->
+    <link href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&amp;display=swap' rel='stylesheet'/>
+
+    <b:skin version='1.3.3'><![CDATA[
+/* ===================================
+   Circumpunct Blogger Template
+   =================================== */
+
+:root {
+    --bg: #0a0a0f;
+    --body-color: #a371f7;
+    --mind-color: #f0b429;
+    --soul-color: #58a6ff;
+    --circumpunct-color: #ffffff;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --panel-bg: #161b22;
+    --border: #30363d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Space Grotesk', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+a {
+    color: var(--soul-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--mind-color);
+}
+
+/* Particle Background */
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* Main Container */
+.main-container {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+}
+
+/* Navigation Bar */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    font-size: 1.5rem;
+    color: var(--soul-color);
+    text-shadow: 0 0 20px rgba(88, 166, 255, 0.4);
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--text);
+}
+
+.nav-links a.active {
+    color: var(--soul-color);
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Hero Section with Circumpunct */
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1rem 2rem;
+    text-align: center;
+}
+
+.hero-equation {
+    margin-bottom: 1rem;
+}
+
+.equation-title {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--soul-color);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 20px rgba(88, 166, 255, 0.4);
+}
+
+.equation-explanation {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    max-width: 600px;
+}
+
+.equation-summary {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--text);
+    font-weight: 400;
+}
+
+.tagline {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+}
+
+/* Circumpunct Container */
+.circumpunct-container {
+    position: relative;
+    width: 80vw;
+    height: 80vw;
+    max-width: 340px;
+    max-height: 340px;
+    margin: 1rem 0;
+}
+
+.circumpunct {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* Zones */
+.zone {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.zone-body { filter: url(#organic-membrane); }
+.zone-mind { filter: url(#glow-gold); }
+.zone-soul { filter: url(#glow-cyan); }
+
+.zone-body:hover, .zone-body.active {
+    stroke: rgba(163, 113, 247, 1);
+    stroke-width: 28;
+}
+
+.zone-mind:hover, .zone-mind.active {
+    fill: rgba(240, 180, 41, 0.3);
+    stroke: rgba(240, 180, 41, 0.8);
+}
+
+.zone-soul:hover, .zone-soul.active {
+    fill: rgba(88, 166, 255, 1);
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+@keyframes breathe {
+    0%, 100% { stroke-opacity: 0.6; }
+    50% { stroke-opacity: 0.9; }
+}
+
+@keyframes shimmer {
+    0%, 100% { fill-opacity: 0.15; }
+    50% { fill-opacity: 0.25; }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.zone-soul { animation: pulse 4s ease-in-out infinite; }
+.zone-body { animation: breathe 5s ease-in-out infinite; }
+.zone-mind { animation: shimmer 4s ease-in-out infinite; }
+
+.decorative {
+    transform-origin: 150px 150px;
+    animation: rotate 60s linear infinite;
+    stroke-dasharray: 4 8;
+}
+
+/* Navigation Arc Buttons */
+.nav-ring {
+    pointer-events: all;
+}
+
+.nav-arc {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.nav-arc .arc-bg {
+    transition: stroke 0.3s ease, stroke-opacity 0.3s ease;
+}
+
+.nav-arc .arc-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    fill: var(--text-dim);
+    transition: fill 0.3s ease;
+}
+
+.nav-arc-theory:hover .arc-bg { stroke: rgba(255, 255, 255, 0.4); }
+.nav-arc-theory:hover .arc-text { fill: var(--text); }
+
+.nav-arc-physics:hover .arc-bg { stroke: rgba(163, 113, 247, 0.5); }
+.nav-arc-physics:hover .arc-text { fill: var(--body-color); }
+
+.nav-arc-consciousness:hover .arc-bg { stroke: rgba(88, 166, 255, 0.5); }
+.nav-arc-consciousness:hover .arc-text { fill: var(--soul-color); }
+
+.nav-arc-ethics:hover .arc-bg { stroke: rgba(240, 180, 41, 0.5); }
+.nav-arc-ethics:hover .arc-text { fill: var(--mind-color); }
+
+@keyframes arc-pulse {
+    0%, 100% { stroke-opacity: 1; }
+    50% { stroke-opacity: 0.6; }
+}
+
+.nav-arc .arc-bg { animation: arc-pulse 6s ease-in-out infinite; }
+.nav-arc-physics .arc-bg { animation-delay: 0s; }
+.nav-arc-consciousness .arc-bg { animation-delay: 1.5s; }
+.nav-arc-ethics .arc-bg { animation-delay: 3s; }
+.nav-arc-theory .arc-bg { animation-delay: 4.5s; }
+
+/* Zone Labels */
+.zone-labels {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+}
+
+.label {
+    position: absolute;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    opacity: 1;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    background: rgba(10, 10, 15, 0.85);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.label-body {
+    color: var(--body-color);
+    top: 22%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.label-mind {
+    color: var(--mind-color);
+    top: 50%;
+    right: 18%;
+    transform: translateY(-50%);
+}
+
+.label-soul {
+    color: #ffffff;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.65rem;
+    background: transparent;
+}
+
+/* Dimension Table */
+.dimension-section {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.dimension-table {
+    border-collapse: collapse;
+    margin: 0 auto 0.5rem;
+}
+
+.dimension-row td {
+    padding: 0.2rem 0.5rem;
+    vertical-align: middle;
+}
+
+.dimension-text {
+    text-align: left;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+
+.dimension-math {
+    text-align: right;
+    font-size: 0.85rem;
+}
+
+.dimension-math code {
+    font-family: 'Space Grotesk', monospace;
+    letter-spacing: 0.03em;
+    opacity: 0.7;
+}
+
+.symbol-body { color: var(--body-color); }
+.symbol-mind { color: var(--mind-color); }
+.symbol-soul { color: var(--soul-color); }
+
+.math-body { color: var(--body-color); }
+.math-mind { color: var(--mind-color); }
+.math-soul { color: var(--soul-color); }
+
+.dimension-circumpunct .dimension-text { color: var(--text); }
+.dimension-circumpunct .dimension-math code { color: var(--soul-color); font-size: 0.9rem; }
+
+.everything-line {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+}
+
+.sim-links {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.sim-links a {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.sim-links a:hover {
+    color: var(--soul-color);
+    border-color: var(--soul-color);
+    background: rgba(88, 166, 255, 0.1);
+}
+
+/* Scroll Down Indicator */
+.scroll-indicator {
+    margin-top: 2rem;
+    animation: bounce 2s infinite;
+}
+
+.scroll-indicator span {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-bottom: 2px solid var(--text-dim);
+    border-right: 2px solid var(--text-dim);
+    transform: rotate(45deg);
+    margin: -10px auto;
+    animation: scroll-bounce 2s infinite;
+}
+
+@keyframes scroll-bounce {
+    0%, 20%, 50%, 80%, 100% { transform: rotate(45deg) translateY(0); }
+    40% { transform: rotate(45deg) translateY(-10px); }
+    60% { transform: rotate(45deg) translateY(-5px); }
+}
+
+/* ===================================
+   BLOG POSTS SECTION
+   =================================== */
+.blog-section {
+    padding: 4rem 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: var(--text);
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: var(--soul-color);
+    margin: 0.75rem auto 0;
+}
+
+/* Post Cards */
+.post-outer {
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.post-outer:hover {
+    border-color: var(--soul-color);
+    box-shadow: 0 0 30px rgba(88, 166, 255, 0.1);
+}
+
+.post {
+    padding: 1.5rem;
+}
+
+.post-title {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+}
+
+.post-title a {
+    color: var(--text);
+}
+
+.post-title a:hover {
+    color: var(--soul-color);
+}
+
+.post-header {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+}
+
+.post-body {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.post-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.post-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.post-labels a {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(88, 166, 255, 0.1);
+    border: 1px solid var(--soul-color);
+    border-radius: 12px;
+    color: var(--soul-color);
+    margin-right: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.post-labels a:hover {
+    background: rgba(88, 166, 255, 0.2);
+}
+
+.read-more {
+    font-size: 0.85rem;
+    color: var(--mind-color);
+    font-weight: 500;
+}
+
+/* Blog Pager */
+.blog-pager {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 1rem;
+}
+
+.blog-pager a {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    margin: 0 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.blog-pager a:hover {
+    border-color: var(--soul-color);
+    background: rgba(88, 166, 255, 0.1);
+}
+
+/* ===================================
+   SIDEBAR / ARCHIVE
+   =================================== */
+.sidebar-toggle {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-toggle:hover {
+    border-color: var(--soul-color);
+    box-shadow: 0 0 30px rgba(88, 166, 255, 0.2);
+}
+
+.sidebar-container {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 320px;
+    height: 100vh;
+    background: var(--panel-bg);
+    border-left: 1px solid var(--border);
+    z-index: 101;
+    overflow-y: auto;
+    transition: right 0.3s ease;
+    padding: 5rem 1.5rem 2rem;
+}
+
+.sidebar-container.open {
+    right: 0;
+}
+
+.sidebar-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.sidebar-section {
+    margin-bottom: 2rem;
+}
+
+.sidebar-section h3 {
+    font-size: 0.9rem;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-section ul {
+    list-style: none;
+}
+
+.sidebar-section li {
+    margin-bottom: 0.75rem;
+}
+
+.sidebar-section a {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    display: block;
+    padding: 0.4rem 0;
+    transition: all 0.2s ease;
+}
+
+.sidebar-section a:hover {
+    color: var(--soul-color);
+    padding-left: 0.5rem;
+}
+
+.post-count {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* ===================================
+   PANELS (for circumpunct zones)
+   =================================== */
+.panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 85vh;
+    background: var(--panel-bg);
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    z-index: 100;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.panel.open {
+    transform: translateY(0);
+}
+
+.panel-close {
+    position: sticky;
+    top: 0;
+    right: 0;
+    float: right;
+    margin: 1rem;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: var(--text);
+    font-size: 1.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.panel-content {
+    padding: 0 1.5rem 2rem;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+.panel-symbol {
+    font-size: 2rem;
+}
+
+.panel-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.panel-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+}
+
+.panel-section {
+    margin-bottom: 1.5rem;
+}
+
+.panel-section h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+}
+
+.panel-section p {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.panel-body .panel-symbol { color: var(--body-color); }
+.panel-body { border-top: 3px solid var(--body-color); }
+
+.panel-mind .panel-symbol { color: var(--mind-color); }
+.panel-mind { border-top: 3px solid var(--mind-color); }
+
+.panel-soul .panel-symbol { color: var(--soul-color); }
+.panel-soul { border-top: 3px solid var(--soul-color); }
+
+.panel-circumpunct .panel-symbol {
+    color: var(--circumpunct-color);
+    text-shadow: 0 0 10px var(--soul-color), 0 0 20px var(--mind-color), 0 0 30px var(--body-color);
+}
+.panel-circumpunct { border-top: 3px solid var(--circumpunct-color); }
+
+.panel-practice {
+    background: rgba(88, 166, 255, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-left: 3px solid var(--soul-color);
+}
+
+.panel-practice h3 {
+    color: var(--soul-color);
+}
+
+.panel-links {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.panel-links span {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+.panel-links a {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    transition: all 0.2s ease;
+}
+
+.panel-links a:hover {
+    color: var(--text);
+    border-color: var(--soul-color);
+    background: rgba(88, 166, 255, 0.1);
+}
+
+/* Backdrop */
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.backdrop.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Footer */
+.site-footer {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    background: rgba(10, 10, 15, 0.95);
+}
+
+.site-footer p {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.site-footer a {
+    color: var(--soul-color);
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: var(--panel-bg);
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0.5rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .equation-title {
+        font-size: 1.2rem;
+    }
+
+    .circumpunct-container {
+        max-width: 280px;
+        max-height: 280px;
+    }
+
+    .nav-arc .arc-text {
+        font-size: 9px;
+    }
+
+    .label {
+        font-size: 0.6rem;
+    }
+
+    .sidebar-container {
+        width: 100%;
+        right: -100%;
+    }
+}
+
+@media (min-width: 900px) {
+    .panel {
+        max-width: 500px;
+        left: 50%;
+        transform: translate(-50%, 100%);
+        border-radius: 24px 24px 0 0;
+    }
+
+    .panel.open {
+        transform: translate(-50%, 0);
+    }
+
+    .circumpunct-container {
+        max-width: 380px;
+        max-height: 380px;
+    }
+
+    .blog-section {
+        padding: 5rem 2rem;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+.zone:focus {
+    outline: 2px solid var(--soul-color);
+    outline-offset: 4px;
+}
+
+/* Widget Styles */
+.widget {
+    margin-bottom: 2rem;
+}
+
+.widget .title {
+    font-size: 0.9rem;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+}
+
+.widget ul {
+    list-style: none;
+    padding: 0;
+}
+
+.widget li {
+    margin-bottom: 0.5rem;
+}
+
+/* Hidden elements */
+.hidden {
+    display: none !important;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+/* Skip Navigation */
+.skip-navigation {
+    background-color: var(--panel-bg);
+    color: var(--text);
+    display: block;
+    height: 0;
+    left: 0;
+    overflow: hidden;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: 900;
+}
+
+.skip-navigation:focus {
+    height: 50px;
+    line-height: 50px;
+}
+
+/* Comments */
+#comments {
+    background: var(--panel-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+#comments .title {
+    color: var(--text);
+    margin-bottom: 1rem;
+}
+
+#comments .comment {
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+}
+
+#comments .comment:last-child {
+    border-bottom: none;
+}
+
+#comments .comment-author {
+    color: var(--soul-color);
+    font-weight: 500;
+}
+
+#comments .comment-body {
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+}
+    ]]></b:skin>
+
+    <b:include data='blog' name='google-analytics'/>
+</head>
+<body>
+    <b:class cond='data:view.isHomepage' name='homepage'/>
+    <b:class cond='data:view.isPost' name='item-view'/>
+    <b:class cond='data:view.isPage' name='page-view'/>
+    <b:class cond='data:view.isArchive' name='archive-view'/>
+    <b:class cond='data:view.isLabelSearch' name='label-view'/>
+    <b:class cond='data:view.isSearch' name='search-view'/>
+
+    <!-- Skip Navigation -->
+    <a class='skip-navigation' expr:href='&quot;#main&quot;'>Skip to main content</a>
+
+    <!-- Particle Background Canvas -->
+    <canvas id='particles'/>
+
+    <div class='main-container'>
+        <!-- Top Navigation -->
+        <nav class='top-nav'>
+            <a class='nav-logo' expr:href='data:blog.homepageUrl'>&#8857;</a>
+            <button class='menu-toggle' onclick='toggleMobileMenu()'>&#9776;</button>
+            <div class='nav-links'>
+                <a expr:href='data:blog.homepageUrl'>Home</a>
+                <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md'>Theory</a>
+                <a href='https://ashmanroonz.github.io/Fractal_Reality/braid-visualizer.html'>Simulator</a>
+                <a href='#' onclick='openSidebar(); return false;'>Archive</a>
+            </div>
+        </nav>
+
+        <!-- Hero Section with Circumpunct (shown on homepage) -->
+        <b:if cond='data:view.isHomepage'>
+        <section class='hero-section'>
+            <div class='hero-equation'>
+                <h1 class='equation-title'>The Circumpunct Theory</h1>
+                <h1 class='equation-title'>&#8857; = fix(&#955;&#934;. &#8881; &#8728; i &#8728; &#8826;[&#934;])</h1>
+                <p class='equation-explanation'>Reality self-references: the future converges inward (&#8826;), rotates into existence (i), and emerges outward as pattern (&#8881;). The fix(&#955;&#934;. ...) means this is a self-referential loop, like a camera pointed at its own screen.</p>
+                <p class='equation-summary'>&quot;You are the process of becoming yourself, forever.&quot;</p>
+            </div>
+
+            <p class='tagline'>Tap the symbol to explore</p>
+
+            <!-- The Big Interactive Circumpunct -->
+            <div class='circumpunct-container'>
+                <svg class='circumpunct' viewBox='-10 -10 320 320' role='img' aria-label='Interactive Circumpunct' style='overflow: visible;'>
+                    <defs>
+                        <filter id='organic-membrane' x='-50%' y='-50%' width='200%' height='200%'>
+                            <feTurbulence type='fractalNoise' baseFrequency='0.012' numOctaves='3' seed='42' result='noise'>
+                                <animate attributeName='seed' values='42;100;42' dur='10s' repeatCount='indefinite'/>
+                            </feTurbulence>
+                            <feDisplacementMap in='SourceGraphic' in2='noise' scale='5' xChannelSelector='R' yChannelSelector='G' result='displaced'/>
+                            <feGaussianBlur in='displaced' stdDeviation='4' result='blur'/>
+                            <feMerge>
+                                <feMergeNode in='blur'/>
+                                <feMergeNode in='displaced'/>
+                            </feMerge>
+                        </filter>
+                        <filter id='glow-purple' x='-50%' y='-50%' width='200%' height='200%'>
+                            <feGaussianBlur stdDeviation='4' result='blur'/>
+                            <feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge>
+                        </filter>
+                        <filter id='glow-gold' x='-50%' y='-50%' width='200%' height='200%'>
+                            <feGaussianBlur stdDeviation='6' result='blur'/>
+                            <feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge>
+                        </filter>
+                        <filter id='glow-cyan' x='-50%' y='-50%' width='200%' height='200%'>
+                            <feGaussianBlur stdDeviation='8' result='blur'/>
+                            <feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge>
+                        </filter>
+
+                        <path id='arc-top' d='M 58 58 A 130 130 0 0 1 242 58' fill='none'/>
+                        <path id='arc-right' d='M 242 58 A 130 130 0 0 1 242 242' fill='none'/>
+                        <path id='arc-bottom' d='M 242 242 A 130 130 0 0 1 58 242' fill='none'/>
+                        <path id='arc-left' d='M 58 242 A 130 130 0 0 1 58 58' fill='none'/>
+                    </defs>
+
+                    <!-- BODY - Outer Ring -->
+                    <circle class='zone zone-body' cx='150' cy='150' r='100'
+                        fill='transparent' stroke='rgba(163, 113, 247, 0.6)' stroke-width='20' data-zone='body'/>
+
+                    <!-- MIND - Middle Field -->
+                    <circle class='zone zone-mind' cx='150' cy='150' r='60'
+                        fill='rgba(240, 180, 41, 0.15)' stroke='rgba(240, 180, 41, 0.4)' stroke-width='2' data-zone='mind'/>
+
+                    <!-- SOUL - Center -->
+                    <circle class='zone zone-soul' cx='150' cy='150' r='22'
+                        fill='rgba(88, 166, 255, 0.8)' data-zone='soul'/>
+
+                    <!-- Decorative ring -->
+                    <circle cx='150' cy='150' r='40' fill='none' stroke='rgba(255,255,255,0.1)' stroke-width='1' class='decorative'/>
+
+                    <!-- Navigation Arc Buttons -->
+                    <g class='nav-ring'>
+                        <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md' class='nav-arc nav-arc-theory'>
+                            <path d='M 58 58 A 130 130 0 0 1 242 58' fill='none' stroke='rgba(255,255,255,0.12)' stroke-width='24' stroke-linecap='round' class='arc-bg'/>
+                            <text class='arc-text'>
+                                <textPath href='#arc-top' startOffset='50%' text-anchor='middle'>Complete Theory</textPath>
+                            </text>
+                        </a>
+
+                        <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/papers/circumpunct_framework_physicists.md' class='nav-arc nav-arc-physics'>
+                            <path d='M 242 58 A 130 130 0 0 1 242 242' fill='none' stroke='rgba(163,113,247,0.15)' stroke-width='24' stroke-linecap='round' class='arc-bg'/>
+                            <text class='arc-text'>
+                                <textPath href='#arc-right' startOffset='50%' text-anchor='middle'>Physics</textPath>
+                            </text>
+                        </a>
+
+                        <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md#chapter-xi-consciousness' class='nav-arc nav-arc-consciousness'>
+                            <path d='M 242 242 A 130 130 0 0 1 58 242' fill='none' stroke='rgba(88,166,255,0.15)' stroke-width='24' stroke-linecap='round' class='arc-bg'/>
+                            <text class='arc-text'>
+                                <textPath href='#arc-bottom' startOffset='50%' text-anchor='middle'>Consciousness</textPath>
+                            </text>
+                        </a>
+
+                        <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md#chapter-xx-ethics' class='nav-arc nav-arc-ethics'>
+                            <path d='M 58 242 A 130 130 0 0 1 58 58' fill='none' stroke='rgba(240,180,41,0.15)' stroke-width='24' stroke-linecap='round' class='arc-bg'/>
+                            <text class='arc-text'>
+                                <textPath href='#arc-left' startOffset='50%' text-anchor='middle'>Ethics</textPath>
+                            </text>
+                        </a>
+                    </g>
+                </svg>
+
+                <div class='zone-labels'>
+                    <span class='label label-body'>&#9675; BODY</span>
+                    <span class='label label-mind'>&#934; MIND</span>
+                    <span class='label label-soul'>&#8226; SOUL</span>
+                </div>
+            </div>
+
+            <!-- Dimension Table -->
+            <div class='dimension-section'>
+                <table class='dimension-table'>
+                    <tr class='dimension-row dimension-circumpunct'>
+                        <td class='dimension-text'><a href='#' class='circumpunct-link' data-zone='circumpunct'><strong>You ARE &#8857;</strong></a></td>
+                        <td class='dimension-math'><code>&#8857; = &#9675; &#8855; &#934; &#8855; &#8226;</code></td>
+                    </tr>
+                    <tr class='dimension-row dimension-body'>
+                        <td class='dimension-text'>Body <span class='symbol-body'>&#9675;</span> (2D Surface)</td>
+                        <td class='dimension-math'><code class='math-body'>&#8706;&#9675;/&#8706;t = &#949;</code></td>
+                    </tr>
+                    <tr class='dimension-row dimension-mind'>
+                        <td class='dimension-text'>Mind <span class='symbol-mind'>&#934;</span> (3D Volume)</td>
+                        <td class='dimension-math'><code class='math-mind'>&#8450;&#8310;&#8308; field, &#8706;&#934;/&#8706;t = O(1)</code></td>
+                    </tr>
+                    <tr class='dimension-row dimension-soul'>
+                        <td class='dimension-text'>Soul <span class='symbol-soul'>&#8226;</span> (0.5D Aperture)</td>
+                        <td class='dimension-math'><code class='math-soul'>&#8706;&#8226;/&#8706;t = 0</code></td>
+                    </tr>
+                </table>
+                <p class='everything-line'>Everything shares this structure — atoms to galaxies</p>
+                <div class='sim-links'>
+                    <a href='https://ashmanroonz.github.io/Fractal_Reality/braid-visualizer.html'>64-Particle Braid Simulator</a>
+                </div>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class='scroll-indicator'>
+                <span/>
+            </div>
+        </section>
+        </b:if>
+
+        <!-- Main Content Area -->
+        <main class='blog-section' id='main' role='main'>
+            <b:if cond='data:view.isHomepage'>
+                <h2 class='section-title'>Latest Articles</h2>
+            </b:if>
+            <b:if cond='data:view.isArchive'>
+                <h2 class='section-title'>Archive: <data:view.archive.rangeMessage/></h2>
+            </b:if>
+            <b:if cond='data:view.isLabelSearch'>
+                <h2 class='section-title'>Posts labeled: <data:view.search.label/></h2>
+            </b:if>
+
+            <b:section class='main' id='main-section' name='Main' showaddelement='true'>
+                <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' visible='true'>
+                    <b:includable id='main'>
+                        <b:loop values='data:posts' var='post'>
+                            <b:include data='post' name='post'/>
+                        </b:loop>
+                        <b:include name='postPagination'/>
+                    </b:includable>
+
+                    <b:includable id='post' var='post'>
+                        <article class='post-outer'>
+                            <div class='post'>
+                                <h3 class='post-title'>
+                                    <a expr:href='data:post.url'><data:post.title/></a>
+                                </h3>
+                                <div class='post-header'>
+                                    <span class='post-timestamp'><data:post.date/></span>
+                                    <b:if cond='data:post.author'>
+                                        <span> by <data:post.author.name/></span>
+                                    </b:if>
+                                </div>
+                                <div class='post-body'>
+                                    <b:if cond='data:view.isSingleItem'>
+                                        <data:post.body/>
+                                    <b:else/>
+                                        <b:if cond='data:post.snippet'>
+                                            <data:post.snippet/>
+                                            <a class='read-more' expr:href='data:post.url'>Read more &#8594;</a>
+                                        <b:else/>
+                                            <data:post.body/>
+                                        </b:if>
+                                    </b:if>
+                                </div>
+                                <div class='post-footer'>
+                                    <b:if cond='data:post.labels'>
+                                        <div class='post-labels'>
+                                            <b:loop values='data:post.labels' var='label'>
+                                                <a expr:href='data:label.url' rel='tag'><data:label.name/></a>
+                                            </b:loop>
+                                        </div>
+                                    </b:if>
+                                </div>
+                            </div>
+                        </article>
+                        <b:if cond='data:view.isSingleItem'>
+                            <b:include data='post' name='comments'/>
+                        </b:if>
+                    </b:includable>
+
+                    <b:includable id='postPagination'>
+                        <div class='blog-pager'>
+                            <b:if cond='data:newerPageUrl'>
+                                <a class='blog-pager-newer-link' expr:href='data:newerPageUrl'>&#8592; Newer Posts</a>
+                            </b:if>
+                            <b:if cond='data:olderPageUrl'>
+                                <a class='blog-pager-older-link' expr:href='data:olderPageUrl'>Older Posts &#8594;</a>
+                            </b:if>
+                        </div>
+                    </b:includable>
+
+                    <b:includable id='comments' var='post'>
+                        <b:if cond='data:post.allowComments'>
+                            <section id='comments'>
+                                <h3 class='title'>Comments</h3>
+                                <div id='comment-holder'>
+                                    <data:post.commentHtml/>
+                                </div>
+                            </section>
+                        </b:if>
+                    </b:includable>
+                </b:widget>
+            </b:section>
+        </main>
+
+        <!-- Footer -->
+        <footer class='site-footer'>
+            <p>&#169; <data:blog.title/> | Powered by <a href='https://www.blogger.com'>Blogger</a></p>
+            <p><a href='mailto:email@ashmanroonz.ca'>Contact</a></p>
+        </footer>
+    </div>
+
+    <!-- Sidebar Toggle Button -->
+    <button class='sidebar-toggle' onclick='openSidebar()' aria-label='Open Archive'>&#9776;</button>
+
+    <!-- Sidebar with Archive -->
+    <aside class='sidebar-container' id='sidebar'>
+        <button class='sidebar-close' onclick='closeSidebar()'>&#215;</button>
+
+        <b:section id='sidebar-section' name='Sidebar'>
+            <b:widget id='BlogArchive1' locked='false' title='Archive' type='BlogArchive' visible='true'>
+                <b:includable id='main'>
+                    <div class='sidebar-section'>
+                        <h3><data:title/></h3>
+                        <b:include name='content'/>
+                    </div>
+                </b:includable>
+                <b:includable id='content'>
+                    <div class='widget-content'>
+                        <div id='ArchiveList'>
+                            <b:include name='hierarchy'/>
+                        </div>
+                    </div>
+                </b:includable>
+                <b:includable id='hierarchy'>
+                    <ul>
+                        <b:loop values='data:data' var='year'>
+                            <li>
+                                <a expr:href='data:year.url'><data:year.name/></a>
+                                <span class='post-count'>(<data:year.post-count/>)</span>
+                                <b:if cond='data:year.data'>
+                                    <ul>
+                                        <b:loop values='data:year.data' var='month'>
+                                            <li>
+                                                <a expr:href='data:month.url'><data:month.name/></a>
+                                                <span class='post-count'>(<data:month.post-count/>)</span>
+                                            </li>
+                                        </b:loop>
+                                    </ul>
+                                </b:if>
+                            </li>
+                        </b:loop>
+                    </ul>
+                </b:includable>
+            </b:widget>
+
+            <b:widget id='Label1' locked='false' title='Categories' type='Label' visible='true'>
+                <b:includable id='main'>
+                    <div class='sidebar-section'>
+                        <h3><data:title/></h3>
+                        <b:include name='content'/>
+                    </div>
+                </b:includable>
+                <b:includable id='content'>
+                    <ul>
+                        <b:loop values='data:labels' var='label'>
+                            <li>
+                                <a expr:href='data:label.url'><data:label.name/></a>
+                                <span class='post-count'>(<data:label.count/>)</span>
+                            </li>
+                        </b:loop>
+                    </ul>
+                </b:includable>
+            </b:widget>
+
+            <b:widget id='LinkList1' locked='false' title='Links' type='LinkList' visible='true'>
+                <b:includable id='main'>
+                    <div class='sidebar-section'>
+                        <h3><data:title/></h3>
+                        <ul>
+                            <b:loop values='data:links' var='link'>
+                                <li><a expr:href='data:link.target'><data:link.name/></a></li>
+                            </b:loop>
+                        </ul>
+                    </div>
+                </b:includable>
+            </b:widget>
+        </b:section>
+    </aside>
+
+    <!-- Backdrop for panels/sidebar -->
+    <div class='backdrop' id='backdrop' onclick='closeAllPanels()'/>
+
+    <!-- BODY Panel -->
+    <div class='panel panel-body' id='panel-body'>
+        <button class='panel-close' onclick='closeAllPanels()'>&#215;</button>
+        <div class='panel-content'>
+            <div class='panel-header'>
+                <span class='panel-symbol'>&#9675;</span>
+                <h2>BODY</h2>
+            </div>
+            <p class='panel-subtitle'>The Living Boundary</p>
+
+            <div class='panel-section'>
+                <p>Your body is not one boundary. It&#8217;s <strong>boundaries all the way down</strong>.</p>
+                <p>&#9675; is <strong>body as interface</strong>. It&#8217;s the place where inside meets outside, where you open and close, where you breathe in air, take in food, receive touch, absorb experience. It is not a wall. It&#8217;s a <strong>selective membrane</strong>&#8212;alive, responsive, and always in motion.</p>
+            </div>
+
+            <div class='panel-section panel-practice'>
+                <h3>Try This</h3>
+                <p>Close your eyes and feel where your body ends and the air begins. Notice how many tiny sensations are being woven into that one felt &#8220;edge.&#8221;</p>
+            </div>
+
+            <div class='panel-links'>
+                <span>Explore:</span>
+                <a href='#' data-zone='mind'>&#934; Mind</a>
+                <a href='#' data-zone='soul'>&#8226; Soul</a>
+                <a href='#' data-zone='circumpunct'>&#8857; The Whole</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MIND Panel -->
+    <div class='panel panel-mind' id='panel-mind'>
+        <button class='panel-close' onclick='closeAllPanels()'>&#215;</button>
+        <div class='panel-content'>
+            <div class='panel-header'>
+                <span class='panel-symbol'>&#934;</span>
+                <h2>MIND</h2>
+            </div>
+            <p class='panel-subtitle'>The Field Between</p>
+
+            <div class='panel-section'>
+                <p><strong>&#934;</strong> is <strong>mind as field</strong>&#8212;the living medium between center (&#8226;) and boundary (&#9675;). It&#8217;s the whole relational space where signals from the body come in, where awareness from the center flows out, and where the two blend into conscious experience.</p>
+            </div>
+
+            <div class='panel-section panel-practice'>
+                <h3>Try This</h3>
+                <p>Notice your body breathing by itself. That&#8217;s &#9675;. Now notice that you&#8217;re noticing. That reflective awareness is flowing from &#8226;. Then feel the <strong>space in which both are happening</strong>. That&#8217;s &#934;.</p>
+            </div>
+
+            <div class='panel-links'>
+                <span>Explore:</span>
+                <a href='#' data-zone='body'>&#9675; Body</a>
+                <a href='#' data-zone='soul'>&#8226; Soul</a>
+                <a href='#' data-zone='circumpunct'>&#8857; The Whole</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOUL Panel -->
+    <div class='panel panel-soul' id='panel-soul'>
+        <button class='panel-close' onclick='closeAllPanels()'>&#215;</button>
+        <div class='panel-content'>
+            <div class='panel-header'>
+                <span class='panel-symbol'>&#8226;</span>
+                <h2>SOUL</h2>
+            </div>
+            <p class='panel-subtitle'>The Aware Center</p>
+
+            <div class='panel-section'>
+                <p>&#8226; is <strong>soul as center</strong>&#8212;not a substance lurking somewhere inside you, but the <strong>point of view</strong> from which everything is seen. It is the structural center of the whole circumpunct.</p>
+                <p>Bodies change completely over a lifetime. Memories blur, identities shift. And yet, there&#8217;s a sense that <em>the one who was there then is the same one who is here now</em>.</p>
+            </div>
+
+            <div class='panel-section panel-practice'>
+                <h3>Try This</h3>
+                <p>Close your eyes. Notice your breath. Then, gently, turn attention back toward that awareness itself&#8212;not the objects in it, but the <strong>fact that knowing is happening</strong>. That&#8217;s &#8226;.</p>
+            </div>
+
+            <div class='panel-links'>
+                <span>Explore:</span>
+                <a href='#' data-zone='body'>&#9675; Body</a>
+                <a href='#' data-zone='mind'>&#934; Mind</a>
+                <a href='#' data-zone='circumpunct'>&#8857; The Whole</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CIRCUMPUNCT Panel -->
+    <div class='panel panel-circumpunct' id='panel-circumpunct'>
+        <button class='panel-close' onclick='closeAllPanels()'>&#215;</button>
+        <div class='panel-content'>
+            <div class='panel-header'>
+                <span class='panel-symbol'>&#8857;</span>
+                <h2>CIRCUMPUNCT</h2>
+            </div>
+            <p class='panel-subtitle'>The Whole You</p>
+
+            <div class='panel-section'>
+                <p>&#8857; is the <strong>circumpunct</strong>: a circle with a point at the center. The circle is <strong>the boundary</strong> that holds everything that is &#8220;you&#8221; as a single system. The point is <strong>centeredness</strong>&#8212;the soul that experiences from within.</p>
+                <p>Instead of thinking, &#8220;I have a body, I have a mind, I have a soul,&#8221; you can think, &#8220;<strong>I am &#8857;</strong>: a whole being whose body, mind, and soul are three faces of the same process.&#8221;</p>
+            </div>
+
+            <div class='panel-section panel-practice'>
+                <h3>Try This</h3>
+                <p>Feel your body as one shape (&#9675;). Notice the space of awareness in which thoughts arise (&#934;). Sense the quiet center that&#8217;s aware of all of this (&#8226;). Then soften your attention to hold all three at once. That&#8217;s <strong>&#8857;</strong>.</p>
+                <p><strong>You are not on your way to being &#8857;. You are &#8857;, right now.</strong></p>
+            </div>
+
+            <div class='panel-links'>
+                <span>Explore:</span>
+                <a href='#' data-zone='body'>&#9675; Body</a>
+                <a href='#' data-zone='mind'>&#934; Mind</a>
+                <a href='#' data-zone='soul'>&#8226; Soul</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script type='text/javascript'>
+    //<![CDATA[
+    (function() {
+        'use strict';
+
+        // Mobile menu toggle
+        window.toggleMobileMenu = function() {
+            document.querySelector('.nav-links').classList.toggle('open');
+        };
+
+        // Sidebar functions
+        window.openSidebar = function() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('backdrop').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeSidebar = function() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('backdrop').classList.remove('show');
+            document.body.style.overflow = '';
+        };
+
+        // Panel functions
+        window.openPanelByZone = function(zoneName) {
+            var panel = document.getElementById('panel-' + zoneName);
+            if (!panel) return;
+
+            closeAllPanels();
+            panel.classList.add('open');
+            document.getElementById('backdrop').classList.add('show');
+            document.body.style.overflow = 'hidden';
+            panel.scrollTop = 0;
+        };
+
+        window.closeAllPanels = function() {
+            var panels = document.querySelectorAll('.panel');
+            panels.forEach(function(panel) {
+                panel.classList.remove('open');
+            });
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('backdrop').classList.remove('show');
+            document.body.style.overflow = '';
+
+            var zones = document.querySelectorAll('.zone');
+            zones.forEach(function(zone) {
+                zone.classList.remove('active');
+            });
+        };
+
+        // Zone click handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            var zones = document.querySelectorAll('.zone');
+            zones.forEach(function(zone) {
+                zone.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var zoneName = zone.dataset.zone;
+                    if (zoneName) openPanelByZone(zoneName);
+                });
+            });
+
+            // Circumpunct link
+            var circumpunctLink = document.querySelector('.circumpunct-link');
+            if (circumpunctLink) {
+                circumpunctLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openPanelByZone('circumpunct');
+                });
+            }
+
+            // Panel navigation links
+            var panelLinks = document.querySelectorAll('.panel-links a[data-zone]');
+            panelLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var zoneName = link.dataset.zone;
+                    if (zoneName) openPanelByZone(zoneName);
+                });
+            });
+
+            // Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeAllPanels();
+            });
+        });
+
+        // Particle Background
+        var canvas = document.getElementById('particles');
+        if (!canvas) return;
+
+        var ctx = canvas.getContext('2d');
+        var particles = [];
+        var centerX, centerY, boundaryRadius;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            centerX = canvas.width / 2;
+            centerY = canvas.height / 2;
+            boundaryRadius = Math.min(canvas.width, canvas.height) * 0.15;
+            initParticles();
+        }
+
+        function Particle() {
+            this.reset();
+        }
+
+        Particle.prototype.reset = function() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
+            this.size = Math.random() * 2 + 1;
+            this.opacity = Math.random() * 0.5 + 0.2;
+            var types = ['body', 'mind', 'soul'];
+            this.type = types[Math.floor(Math.random() * types.length)];
+        };
+
+        Particle.prototype.update = function() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.x < 0) this.x = canvas.width;
+            if (this.x > canvas.width) this.x = 0;
+            if (this.y < 0) this.y = canvas.height;
+            if (this.y > canvas.height) this.y = 0;
+        };
+
+        Particle.prototype.draw = function() {
+            var r, g, b;
+            if (this.type === 'body') {
+                r = 163; g = 113; b = 247;
+            } else if (this.type === 'mind') {
+                r = 240; g = 180; b = 41;
+            } else {
+                r = 88; g = 166; b = 255;
+            }
+
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + this.opacity + ')';
+            ctx.fill();
+        };
+
+        function initParticles() {
+            var count = Math.min(60, Math.floor((canvas.width * canvas.height) / 20000));
+            particles = [];
+            for (var i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(function(p) {
+                p.update();
+                p.draw();
+            });
+
+            // Draw connections
+            for (var i = 0; i < particles.length; i++) {
+                for (var j = i + 1; j < particles.length; j++) {
+                    var dx = particles[i].x - particles[j].x;
+                    var dy = particles[i].y - particles[j].y;
+                    var dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = 'rgba(255, 255, 255, ' + ((1 - dist / 120) * 0.15) + ')';
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        animate();
+    })();
+    //]]>
+    </script>
+</body>
+</html>
