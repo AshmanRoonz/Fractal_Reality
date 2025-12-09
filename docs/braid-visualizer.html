@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⊙ B₃ Braid Visualizer</title>
+  <title>⊙ Topological Quantum Computer (B₃)</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap');
     
@@ -43,9 +43,16 @@
       color: #ffd700;
       font-size: 1rem;
       font-weight: 400;
+      margin-bottom: 0.1rem;
     }
     
     .braid-header h1 sub { font-size: 0.75rem; }
+    
+    .braid-header .subtitle {
+      font-size: 0.55rem;
+      color: #666;
+      margin-bottom: 0.3rem;
+    }
     
     .selected-particles {
       display: flex;
@@ -71,12 +78,11 @@
     
     .selected-slot.filled {
       border-style: solid;
-      background: #111;
     }
     
-    .selected-slot.slot-0.filled { border-color: #ff6b6b; }
-    .selected-slot.slot-1.filled { border-color: #4ecdc4; }
-    .selected-slot.slot-2.filled { border-color: #ffe66d; }
+    .selected-slot.slot-0.filled { box-shadow: 0 0 8px #ff6b6b; }
+    .selected-slot.slot-1.filled { box-shadow: 0 0 8px #4ecdc4; }
+    .selected-slot.slot-2.filled { box-shadow: 0 0 8px #ffe66d; }
     
     .selected-slot .slot-label {
       position: absolute;
@@ -85,13 +91,14 @@
       color: #666;
     }
     
-    .selected-slot .particle-name {
-      display: none;
+    .selected-slot .particle-id {
+      font-size: 0.65rem;
+      font-weight: bold;
     }
     
     .selected-slot .particle-sym {
-      font-size: 0.9rem;
-      color: #fff;
+      font-size: 0.75rem;
+      color: #888;
     }
     
     .selected-slot .clear-btn {
@@ -428,34 +435,21 @@
       min-height: 28px;
       position: relative;
       background: #0a0a0a;
-    }
-    
-    .cell::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
       border: 2px solid #333;
-      transition: all 0.15s;
     }
-    
-    .cell.fermion::before { border-color: #4299e1; }
-    .cell.gauge::before { border-color: #e53e3e; }
-    .cell.higgs::before { border-color: #d69e2e; }
     
     .cell:hover { transform: scale(1.3); z-index: 10; }
     
-    .cell.in-braid::before {
+    .cell.in-braid {
       border-width: 3px;
-      box-shadow: 0 0 10px currentColor;
     }
     
-    .cell.in-braid.strand-0::before { border-color: #ff6b6b !important; box-shadow: 0 0 10px #ff6b6b; }
-    .cell.in-braid.strand-1::before { border-color: #4ecdc4 !important; box-shadow: 0 0 10px #4ecdc4; }
-    .cell.in-braid.strand-2::before { border-color: #ffe66d !important; box-shadow: 0 0 10px #ffe66d; }
+    .cell.in-braid.strand-0 { border-color: #ff6b6b !important; box-shadow: 0 0 10px #ff6b6b; }
+    .cell.in-braid.strand-1 { border-color: #4ecdc4 !important; box-shadow: 0 0 10px #4ecdc4; }
+    .cell.in-braid.strand-2 { border-color: #ffe66d !important; box-shadow: 0 0 10px #ffe66d; }
     
-    .cell-id { font-size: 0.7rem; font-weight: bold; color: #888; z-index: 1; }
-    .cell-sym { font-size: 0.55rem; color: #666; z-index: 1; }
+    .cell-id { font-size: 0.7rem; font-weight: bold; z-index: 1; }
+    .cell-sym { font-size: 0.55rem; color: #888; z-index: 1; }
     
     .grid-legend {
       padding: 0.5rem;
@@ -491,6 +485,67 @@
       text-align: center;
     }
     
+    .unitary-display {
+      background: #0a0a0a;
+      border-radius: 4px;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    
+    .unitary-label {
+      font-size: 0.65rem;
+      color: #666;
+      margin-bottom: 0.3rem;
+    }
+    
+    .matrix {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      position: relative;
+      padding: 0.3rem 0.5rem;
+    }
+    
+    .matrix::before, .matrix::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border: 2px solid #d4a54a;
+    }
+    
+    .matrix::before {
+      left: 0;
+      border-right: none;
+      border-radius: 4px 0 0 4px;
+    }
+    
+    .matrix::after {
+      right: 0;
+      border-left: none;
+      border-radius: 0 4px 4px 0;
+    }
+    
+    .matrix-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .matrix-row span {
+      min-width: 50px;
+      text-align: center;
+      color: #d4a54a;
+    }
+    
+    .unitary-info {
+      font-size: 0.55rem;
+      color: #888;
+      margin-top: 0.3rem;
+    }
+    
     .yang-baxter-small .eq {
       font-size: 0.8rem;
       color: #d4a54a;
@@ -510,22 +565,26 @@
     <!-- LEFT: Narrow braid panel -->
     <div class="braid-panel">
       <div class="braid-header">
-        <h1>⊙ B<sub>3</sub></h1>
+        <h1>⊙ TQC</h1>
+        <div class="subtitle">Topological Quantum Computer</div>
       </div>
       
       <div class="selected-particles">
         <div class="selected-slot slot-0" data-slot="0">
           <span class="slot-label">1</span>
+          <span class="particle-id"></span>
           <span class="particle-sym">?</span>
           <button class="clear-btn">×</button>
         </div>
         <div class="selected-slot slot-1" data-slot="1">
           <span class="slot-label">2</span>
+          <span class="particle-id"></span>
           <span class="particle-sym">?</span>
           <button class="clear-btn">×</button>
         </div>
         <div class="selected-slot slot-2" data-slot="2">
           <span class="slot-label">3</span>
+          <span class="particle-id"></span>
           <span class="particle-sym">?</span>
           <button class="clear-btn">×</button>
         </div>
@@ -552,6 +611,12 @@
       </div>
       
       <div class="braid-word" id="braid-word">ε</div>
+      
+      <div class="unitary-display">
+        <div class="unitary-label">Quantum Gate U(braid):</div>
+        <div class="matrix" id="unitary-matrix"></div>
+        <div class="unitary-info" id="unitary-info">Identity</div>
+      </div>
       
       <div class="yang-baxter-small">
         <div class="eq">σ₁σ₂σ₁ = σ₂σ₁σ₂</div>
@@ -622,6 +687,11 @@
         <span style="color:#ff6b6b">●</span> strand 1 · 
         <span style="color:#4ecdc4">●</span> strand 2 · 
         <span style="color:#ffe66d">●</span> strand 3
+      </div>
+      <div class="grid-legend" style="border-top:none;padding-top:0;font-size:0.5rem;">
+        <div><span style="color:#888">Number (•):</span> <span style="color:#ff6b6b">■</span>r <span style="color:#4ecdc4">■</span>g <span style="color:#6b9fff">■</span>b <span style="color:#ffaadd">■</span>e⁻ <span style="color:#aaddff">■</span>ν</div>
+        <div><span style="color:#888">Fill (Φ):</span> <span style="color:#9966cc">■</span>quark <span style="color:#4488bb">■</span>lepton <span style="color:#ff6600">■</span>gluon <span style="color:#aa00aa">■</span>weak <span style="color:#aa8800">■</span>higgs</div>
+        <div><span style="color:#888">Border (○):</span> darker=L, lighter=R · <span style="color:#888">Brightness:</span> gen 1→3</div>
       </div>
     </div>
   </div>
@@ -698,6 +768,72 @@ const P = {
   62:{n:"Higgs Boson",s:"H",sub:"0",g:null,t:"higgs",S:"Higgs",Q:"0",spin:0,mass:"125.1 GeV"},
   63:{n:"Higgs (vacuum)",s:"H",sub:"v",g:null,t:"higgs",S:"Higgs",Q:"0",spin:0,special:"⊙ v=246 GeV"}
 };
+
+// Get circumpunct colors for a particle: center(•), field(Φ), surface(○)
+function getCircumpunctColors(id) {
+  const p = P[id];
+  
+  // Default colors
+  let center = '#fff';   // Font color (•)
+  let field = '#1a1a1a'; // Fill color (Φ)
+  let surface = '#444';  // Border color (○)
+  
+  if (p.S === 'Fermion') {
+    // Generation affects field intensity
+    const gen = p.g || 1;
+    const genBright = [0.4, 0.6, 0.85][gen - 1];
+    
+    if (p.t === 'quark') {
+      // Quarks: color charge determines center
+      if (p.x === 'r') center = '#ff6b6b';
+      else if (p.x === 'g') center = '#4ecdc4';
+      else if (p.x === 'b') center = '#6b9fff';
+      
+      // Field: purple-ish for quarks, varies by generation
+      const r = Math.round(80 * genBright);
+      const g = Math.round(40 * genBright);
+      const b = Math.round(120 * genBright);
+      field = `rgb(${r},${g},${b})`;
+      
+      // Surface: chirality (L=solid, R=dashed effect via lighter)
+      surface = p.c === 'L' ? '#9966cc' : '#cc99ff';
+    } else {
+      // Leptons: no color charge, center based on charge
+      center = p.Q === '0' ? '#aaddff' : '#ffaadd';
+      
+      // Field: blue-ish for leptons
+      const r = Math.round(40 * genBright);
+      const g = Math.round(80 * genBright);
+      const b = Math.round(140 * genBright);
+      field = `rgb(${r},${g},${b})`;
+      
+      // Surface
+      surface = p.c === 'L' ? '#4499cc' : '#99ccff';
+    }
+  } else if (p.S === 'Gauge') {
+    // Gauge bosons
+    if (p.t === 'gluon') {
+      center = '#ffaa00';
+      field = '#3d2200';
+      surface = '#ff6600';
+    } else if (p.t === 'weak') {
+      center = '#ff44ff';
+      field = '#2a0033';
+      surface = '#aa00aa';
+    } else if (p.t === 'photon') {
+      center = '#ffffaa';
+      field = '#333322';
+      surface = '#ffff00';
+    }
+  } else if (p.S === 'Higgs') {
+    // Higgs sector - golden
+    center = '#ffd700';
+    field = id === 63 ? '#2a2200' : '#1a1500'; // Vacuum is special
+    surface = id === 63 ? '#ffd700' : '#aa8800';
+  }
+  
+  return { center, field, surface };
+}
 
 const STRAND_COLORS = ['#ff6b6b', '#4ecdc4', '#ffe66d'];
 
@@ -801,6 +937,7 @@ class App {
     
     this.buildGrid();
     this.bindControls();
+    this.updateBraidInfo(); // Initialize matrix display
     this.render();
     this.animate();
   }
@@ -827,10 +964,18 @@ class App {
     const grid = document.getElementById('grid');
     for (let id = 0; id < 64; id++) {
       const p = P[id];
+      const colors = getCircumpunctColors(id);
+      
       const cell = document.createElement('div');
       cell.className = 'cell ' + p.S.toLowerCase();
       cell.innerHTML = `<span class="cell-id">${id}</span><span class="cell-sym">${p.s}</span>`;
       cell.dataset.id = id;
+      
+      // Apply circumpunct colors
+      cell.style.background = colors.field;
+      cell.style.borderColor = colors.surface;
+      cell.querySelector('.cell-id').style.color = colors.center;
+      
       cell.onclick = () => this.selectParticle(id);
       cell.onmouseenter = (e) => this.showTooltip(e, id);
       cell.onmousemove = (e) => this.moveTooltip(e);
@@ -854,7 +999,7 @@ class App {
     this.selectedParticles[slot] = id;
     this.activeSlot = (slot + 1) % 3;
     
-    // Reset persistent fields and trails when particles change
+    // Reset persistent fields and trails when particles change (but keep braid config)
     this.persistentField = null;
     this.prevPositions = null;
     if (this.trailCtx) {
@@ -863,7 +1008,6 @@ class App {
     
     this.updateSlotDisplay(slot);
     this.updateGridHighlights();
-    this.braid.reset();
     this.updateBraidInfo();
     this.render();
   }
@@ -874,13 +1018,23 @@ class App {
     
     if (id !== null) {
       const p = P[id];
+      const colors = getCircumpunctColors(id);
+      
       slotEl.classList.add('filled');
+      slotEl.style.background = colors.field;
+      slotEl.style.borderColor = colors.surface;
+      
+      slotEl.querySelector('.particle-id').textContent = id;
+      slotEl.querySelector('.particle-id').style.color = colors.center;
       slotEl.querySelector('.particle-sym').innerHTML = p.s + (p.sub ? `<sub>${p.sub}</sub>` : '');
-      slotEl.querySelector('.particle-name').textContent = p.n;
+      slotEl.querySelector('.particle-sym').style.color = '#aaa';
     } else {
       slotEl.classList.remove('filled');
+      slotEl.style.background = '';
+      slotEl.style.borderColor = '';
+      slotEl.querySelector('.particle-id').textContent = '';
       slotEl.querySelector('.particle-sym').textContent = '?';
-      slotEl.querySelector('.particle-name').textContent = 'click to select';
+      slotEl.querySelector('.particle-sym').style.color = '';
     }
   }
   
@@ -958,6 +1112,16 @@ class App {
         document.querySelectorAll('.view-btn[data-speed]').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         this.speed = parseInt(btn.dataset.speed);
+        
+        // Stop and reset when changing speed
+        this.running = false;
+        this.animTime = 0;
+        this.prevPositions = null;
+        document.getElementById('btn-run').textContent = '▶';
+        document.getElementById('btn-run').classList.remove('running');
+        if (this.trailCtx) {
+          this.trailCtx.clearRect(0, 0, this.trailCanvas.width, this.trailCanvas.height);
+        }
       };
     });
     
@@ -1049,9 +1213,144 @@ class App {
     document.getElementById('linking').textContent = this.braid.linking;
     document.getElementById('braid-word').innerHTML = this.braid.getWordHTML() || 'ε';
     
+    // Compute and display unitary matrix for current braid
+    this.updateUnitaryMatrix();
+    
     if (this.braid.operations.length === 0) {
       document.getElementById('yb-status').textContent = 'Yang-Baxter';
       document.getElementById('yb-status').className = 'status';
+    }
+  }
+  
+  // Compute unitary matrix for braid word (Fibonacci anyon representation)
+  updateUnitaryMatrix() {
+    const phi = (1 + Math.sqrt(5)) / 2; // Golden ratio
+    const invPhi = 1 / phi;
+    const sqrtInvPhi = Math.sqrt(invPhi);
+    
+    // R-matrix phase: exp(-4πi/5)
+    const theta = -4 * Math.PI / 5;
+    const R_phase = { re: Math.cos(theta), im: Math.sin(theta) };
+    
+    // exp(3πi/5) for the (1,1) element
+    const theta2 = 3 * Math.PI / 5;
+    const R11 = { re: Math.cos(theta + theta2), im: Math.sin(theta + theta2) };
+    
+    // σ₁ matrix (R-matrix)
+    const sigma1 = [
+      [R_phase, { re: 0, im: 0 }],
+      [{ re: 0, im: 0 }, R11]
+    ];
+    
+    // F-matrix for basis change
+    const F = [
+      [{ re: invPhi, im: 0 }, { re: sqrtInvPhi, im: 0 }],
+      [{ re: sqrtInvPhi, im: 0 }, { re: -invPhi, im: 0 }]
+    ];
+    
+    // F-inverse
+    const Finv = [
+      [{ re: invPhi, im: 0 }, { re: sqrtInvPhi, im: 0 }],
+      [{ re: sqrtInvPhi, im: 0 }, { re: -invPhi, im: 0 }]
+    ];
+    
+    // σ₂ = F⁻¹ σ₁ F
+    const sigma2 = this.matMul(this.matMul(Finv, sigma1), F);
+    
+    // Start with identity
+    let U = [
+      [{ re: 1, im: 0 }, { re: 0, im: 0 }],
+      [{ re: 0, im: 0 }, { re: 1, im: 0 }]
+    ];
+    
+    // Multiply by each operation
+    for (const op of this.braid.operations) {
+      let mat;
+      if (op.type === 's1') mat = sigma1;
+      else if (op.type === 's1i') mat = this.matConj(sigma1);
+      else if (op.type === 's2') mat = sigma2;
+      else if (op.type === 's2i') mat = this.matConj(sigma2);
+      
+      U = this.matMul(U, mat);
+    }
+    
+    // Display matrix
+    this.displayMatrix(U);
+  }
+  
+  // Complex matrix multiplication
+  matMul(A, B) {
+    const C = [[{ re: 0, im: 0 }, { re: 0, im: 0 }], [{ re: 0, im: 0 }, { re: 0, im: 0 }]];
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 2; j++) {
+        for (let k = 0; k < 2; k++) {
+          const a = A[i][k], b = B[k][j];
+          C[i][j].re += a.re * b.re - a.im * b.im;
+          C[i][j].im += a.re * b.im + a.im * b.re;
+        }
+      }
+    }
+    return C;
+  }
+  
+  // Complex conjugate transpose (inverse for unitary)
+  matConj(A) {
+    return [
+      [{ re: A[0][0].re, im: -A[0][0].im }, { re: A[1][0].re, im: -A[1][0].im }],
+      [{ re: A[0][1].re, im: -A[0][1].im }, { re: A[1][1].re, im: -A[1][1].im }]
+    ];
+  }
+  
+  // Format complex number for display
+  fmtComplex(z) {
+    const mag = Math.sqrt(z.re * z.re + z.im * z.im);
+    if (mag < 0.001) return '0';
+    
+    const phase = Math.atan2(z.im, z.re);
+    
+    // Check for nice fractions of π
+    const piFrac = phase / Math.PI;
+    const niceFracs = [0, 0.2, 0.4, 0.6, 0.8, 1, -0.2, -0.4, -0.6, -0.8, -1];
+    
+    let phaseStr = '';
+    for (const f of niceFracs) {
+      if (Math.abs(piFrac - f) < 0.02) {
+        if (f === 0) phaseStr = '';
+        else if (f === 1) phaseStr = 'π';
+        else if (f === -1) phaseStr = '-π';
+        else phaseStr = (f > 0 ? '' : '-') + Math.abs(f * 5) + 'π/5';
+        break;
+      }
+    }
+    
+    if (Math.abs(mag - 1) < 0.01) {
+      if (phaseStr === '') return '1';
+      return 'e<sup>i' + phaseStr + '</sup>';
+    }
+    
+    const magStr = mag.toFixed(2);
+    if (phaseStr === '') return magStr;
+    return magStr + 'e<sup>i' + phaseStr + '</sup>';
+  }
+  
+  displayMatrix(U) {
+    const el = document.getElementById('unitary-matrix');
+    const info = document.getElementById('unitary-info');
+    
+    if (!el || !info) return;
+    
+    const row0 = `<div class="matrix-row"><span>${this.fmtComplex(U[0][0])}</span><span>${this.fmtComplex(U[0][1])}</span></div>`;
+    const row1 = `<div class="matrix-row"><span>${this.fmtComplex(U[1][0])}</span><span>${this.fmtComplex(U[1][1])}</span></div>`;
+    el.innerHTML = row0 + row1;
+    
+    // Check if identity
+    const isId = Math.abs(U[0][0].re - 1) < 0.01 && Math.abs(U[1][1].re - 1) < 0.01 &&
+                 Math.abs(U[0][1].re) < 0.01 && Math.abs(U[1][0].re) < 0.01;
+    
+    if (this.braid.operations.length === 0) {
+      info.textContent = 'Identity (no gates)';
+    } else {
+      info.textContent = `Fibonacci anyon: ${this.braid.operations.length} gates`;
     }
   }
   
@@ -1196,7 +1495,7 @@ class App {
     requestAnimationFrame(() => this.animate());
   }
   
-  // Draw 3 strings per particle, incrementally
+  // Draw 1 string per particle, incrementally
   drawStrings() {
     const ctx = this.trailCtx;
     const w = this.trailCanvas.width;
@@ -1207,44 +1506,11 @@ class App {
     ctx.fillStyle = `rgba(0, 0, 0, ${fadeRate})`;
     ctx.fillRect(0, 0, w, h);
     
-    // Get current positions for all 3 particles, each with 3 strings
+    // Get current positions for all 3 particles
     const currentPositions = [];
     for (let s = 0; s < 3; s++) {
       const pos = this.getStrandPosition(s);
-      const particleId = this.selectedParticles[s];
-      const p = particleId !== null ? P[particleId] : null;
-      
-      // Unique string behavior per particle type
-      const spin = p ? p.spin : 0.5;
-      const gen = p ? (p.g || 1) : 1;
-      const colorPhase = p ? (p.x === 'r' ? 0 : p.x === 'g' ? 2.094 : p.x === 'b' ? 4.188 : 0) : 0;
-      const isLeft = p ? (p.c === 'L') : true;
-      
-      // String spread varies by generation (heavier = tighter strings)
-      const stringOffset = 0.15 / gen;
-      
-      // Rotation speed varies by spin
-      const stringRotSpeed = spin === 0.5 ? 2.5 : spin === 1 ? 4 : 1.5;
-      const rotDir = isLeft ? 1 : -1;
-      
-      // Base angle with unique phase
-      const baseAngle = this.animTime * stringRotSpeed * rotDir + colorPhase + s * 0.5;
-      
-      // Create 3 strings with unique offsets
-      currentPositions.push([
-        { 
-          x: pos.x + stringOffset * Math.cos(baseAngle), 
-          y: pos.y + stringOffset * Math.sin(baseAngle) 
-        },
-        { 
-          x: pos.x + stringOffset * Math.cos(baseAngle + 2.094), 
-          y: pos.y + stringOffset * Math.sin(baseAngle + 2.094) 
-        },
-        { 
-          x: pos.x + stringOffset * Math.cos(baseAngle + 4.188), 
-          y: pos.y + stringOffset * Math.sin(baseAngle + 4.188) 
-        }
-      ]);
+      currentPositions.push({ x: pos.x, y: pos.y });
     }
     
     // Draw lines from previous to current
@@ -1253,28 +1519,24 @@ class App {
       
       for (let s = 0; s < 3; s++) {
         const color = STRAND_COLORS[s];
+        const prev = this.prevPositions[s];
+        const curr = currentPositions[s];
         
-        // Draw 3 strings per particle
-        for (let str = 0; str < 3; str++) {
-          const prev = this.prevPositions[s][str];
-          const curr = currentPositions[s][str];
-          
-          const px0 = (prev.x / 5 + 0.5) * w;
-          const py0 = (prev.y / 5 + 0.5) * h;
-          const px1 = (curr.x / 5 + 0.5) * w;
-          const py1 = (curr.y / 5 + 0.5) * h;
-          
-          // Glow effect
-          ctx.shadowColor = color;
-          ctx.shadowBlur = 4;
-          ctx.strokeStyle = color;
-          ctx.lineWidth = 1.5;
-          
-          ctx.beginPath();
-          ctx.moveTo(px0, py0);
-          ctx.lineTo(px1, py1);
-          ctx.stroke();
-        }
+        const px0 = (prev.x / 5 + 0.5) * w;
+        const py0 = (prev.y / 5 + 0.5) * h;
+        const px1 = (curr.x / 5 + 0.5) * w;
+        const py1 = (curr.y / 5 + 0.5) * h;
+        
+        // Glow effect
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 6;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        
+        ctx.beginPath();
+        ctx.moveTo(px0, py0);
+        ctx.lineTo(px1, py1);
+        ctx.stroke();
       }
       ctx.shadowBlur = 0;
     }
