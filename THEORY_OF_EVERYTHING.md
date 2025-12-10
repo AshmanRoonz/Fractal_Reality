@@ -463,16 +463,13 @@ email@ashmanroonz.ca
   - [§4.4 Scale-Dependent i: The Local Quarter-Turn](#44-scale-dependent-i-the-local-quarter-turn)
   - [§4.5 Solar System Helical Geometry: From 22° to 1/12](#45-solar-system-helical-geometry-from-22-to-112)
   - [§4.6 Fractal i: Same Origin, Same Braid](#46-fractal-i-same-origin-same-braid)
-- [Chapter V: The Duality Equation](#chapter-v-the-duality-equation)
-  - [§5.1 Unity Through Balanced Duality](#51-unity-through-balanced-duality)
-  - [§5.2 The Geometric Triangle](#52-the-geometric-triangle)
-- [Chapter VI: The Field Equations](#chapter-vi-the-field-equations)
+- [Chapter V: The Field Equations](#chapter-v-the-field-equations)
   - [§6.1 Discrete Cycle (Quantum Scale)](#61-discrete-cycle-quantum-scale)
   - [§6.2 Continuous Evolution (The Bridge)](#62-continuous-evolution-the-bridge)
   - [§6.3 Geometric Evolution (Spacetime)](#63-geometric-evolution-spacetime)
   - [§6.4 The Cone-Coupled Master Equation](#64-the-cone-coupled-master-equation)
   - [§6.5 The Whole-Field Coupling](#65-the-whole-field-coupling)
-- [Chapter VII: Phase Coherence in Aperture Foam](#chapter-vii-phase-coherence-in-aperture-foam)
+- [Chapter VI: Phase Coherence in Aperture Foam](#chapter-vi-phase-coherence-in-aperture-foam)
   - [§7.1 Aperture Phase Formalism](#71-aperture-phase-formalism)
   - [§7.2 Why Phase, Not Direction?](#72-why-phase-not-direction)
   - [§7.3 Phase Classification of Matter/Energy](#73-phase-classification-of-matterenergy)
@@ -484,7 +481,7 @@ email@ashmanroonz.ca
   - [§7.9 Key Equations](#79-key-equations)
   - [§7.10 Unification Summary](#710-unification-summary)
   - [§7.11 Connection to Existing Framework](#711-connection-to-existing-framework)
-- [Chapter VIII: Aperture Density and Dimensionality](#chapter-viii-aperture-density-and-dimensionality)
+- [Chapter VII: Aperture Density and Dimensionality](#chapter-vii-aperture-density-and-dimensionality)
   - [§8.1 The Generative Mechanism: From Fields to Power Lines](#81-the-generative-mechanism-from-fields-to-power-lines)
   - [§8.2 The Mathematical Relationship](#82-the-mathematical-relationship)
   - [§8.3 Scale Transitions: Resolving the Cosmological Critique](#83-scale-transitions-resolving-the-cosmological-critique)
@@ -492,22 +489,22 @@ email@ashmanroonz.ca
   - [§8.5 Universal Scaling: One Mechanism, All Phenomena](#85-universal-scaling-one-mechanism-all-phenomena)
   - [§8.6 Testable Predictions](#86-testable-predictions)
   - [§8.7 Connection to the Master Equation](#87-connection-to-the-master-equation)
-- [Chapter IX: The 64-State Architecture](#chapter-ix-the-64-state-architecture)
+- [Chapter VIII: The 64-State Architecture](#chapter-viii-the-64-state-architecture)
   - [§9.1 Why 64 Is Fundamental](#91-why-64-is-fundamental)
   - [§9.2 Connection to Einstein](#92-connection-to-einstein)
   - [§9.3 The Particle Spectrum](#93-the-particle-spectrum)
-- [Chapter XI: The Golden Ratio](#chapter-xi-the-golden-ratio)
+- [Chapter IX: The Golden Ratio](#chapter-ix-the-golden-ratio)
   - [§11.1 Non-Circular Derivation of φ](#111-non-circular-derivation-of-φ)
   - [§11.2 Golden Ratio in the Framework](#112-golden-ratio-in-the-framework)
-- [Chapter XII: The Cosmological Constant](#chapter-xii-the-cosmological-constant)
+- [Chapter X: The Cosmological Constant](#chapter-x-the-cosmological-constant)
   - [§12.1 Solving the Vacuum Catastrophe](#121-solving-the-vacuum-catastrophe)
-- [Chapter XIII: Alternative Derivations](#chapter-xiii-alternative-derivations)
+- [Chapter XI: Alternative Derivations](#chapter-xi-alternative-derivations)
   - [§13.1 Hopf Fibration → D = 1.5 (Topological Proof)](#131-hopf-fibration--d--15-topological-proof)
   - [§13.2 Fermionic Anticommutation from ⊗ Occupancy](#132-fermionic-anticommutation-from--occupancy)
   - [§13.3 QCD Beta Function from 64-State Geometry](#133-qcd-beta-function-from-64-state-geometry)
   - [§13.4 Lepton Mass Ratios as Fractal Scaling](#134-lepton-mass-ratios-as-fractal-scaling)
   - [§13.5 Fine Structure Constant: Resonant Coupling of Φ](#135-fine-structure-constant-resonant-coupling-of-φ)
-- [Chapter XIV: The Canonical Circumpunct Specification](#chapter-xiv-the-canonical-circumpunct-specification)
+- [Chapter XII: The Canonical Circumpunct Specification](#chapter-xii-the-canonical-circumpunct-specification)
   - [§14.1 Complete Mathematical Definition](#141-complete-mathematical-definition)
   - [§14.2 Discrete/Quantum Formulation](#142-discretequantum-formulation)
   - [§14.3 Parameter Count: Zero Free Parameters](#143-parameter-count-zero-free-parameters)
@@ -518,7 +515,7 @@ email@ashmanroonz.ca
   - [§14.8 Numerical Validation](#148-numerical-validation)
   - [§14.9 Mass Ratio Two-Stage Mechanism](#149-mass-ratio-two-stage-mechanism)
   - [§14.10 Comprehensive Status Assessment](#1410-comprehensive-status-assessment)
-- [Chapter XV: The Standard Model Lagrangian](#chapter-xv-the-standard-model-lagrangian)
+- [Chapter XIII: The Standard Model Lagrangian](#chapter-xiii-the-standard-model-lagrangian)
   - [§15.1 The 64-State Standard Model Bijection](#151-the-64-state-standard-model-bijection)
   - [§15.2 The 64-Dimensional Field Bundle](#152-the-64-dimensional-field-bundle)
   - [§15.3 Fermion Sector: The 16 Per Generation](#153-fermion-sector-the-16-per-generation)
@@ -537,7 +534,7 @@ email@ashmanroonz.ca
   - [§15.16 Coupling Constants and RG Flow from 64-State Geometry](#1516-coupling-constants-and-rg-flow-from-64-state-geometry)
   - [§15.17 Yukawa Textures from Validation Rules](#1517-yukawa-textures-from-validation-rules)
   - [§15.18 Summary: The Standard Model Derived](#1518-summary-the-standard-model-derived)
-- [Chapter XVI: Quantum Gravity Correspondence](#chapter-xvi-quantum-gravity-correspondence)
+- [Chapter XIV: Quantum Gravity Correspondence](#chapter-xiv-quantum-gravity-correspondence)
   - [§16.1 The One-Dimensional Result](#161-the-one-dimensional-result)
   - [§16.2 The Aperture Existence Condition (Proven)](#162-the-aperture-existence-condition-proven)
   - [§16.3 The Gravitational Ceiling (Proven)](#163-the-gravitational-ceiling-proven)
@@ -548,7 +545,7 @@ email@ashmanroonz.ca
   - [§16.8 What Circumpunct Adds to HUZ](#168-what-circumpunct-adds-to-huz)
   - [§16.9 Summary: Proven vs. Predicted](#169-summary-proven-vs-predicted)
   - [§16.10 References](#1610-references)
-- [Chapter XVII: Formal Mathematical Specification](#chapter-xvii-formal-mathematical-specification)
+- [Chapter XV: Formal Mathematical Specification](#chapter-xv-formal-mathematical-specification)
   - [§17.1 Core Objects and Spaces](#171-core-objects-and-spaces)
   - [§17.2 Discrete Dynamics and the Imaginary Unit](#172-discrete-dynamics-and-the-imaginary-unit)
   - [§17.3 Continuum Limit and Field Equation](#173-continuum-limit-and-field-equation)
@@ -556,7 +553,7 @@ email@ashmanroonz.ca
   - [§17.5 Matter and Gauge Block on the 64-State Fiber](#175-matter-and-gauge-block-on-the-64-state-fiber)
   - [§17.6 Coupling to the Cone-Coupled Master Equation](#176-coupling-to-the-cone-coupled-master-equation)
   - [§17.7 Summary: TOE as Geometry Plus SM on 64-Fiber](#177-summary-toe-as-geometry-plus-sm-on-64-fiber)
-- [Chapter XVIII: Emergent Chemistry from the Circumpunct](#chapter-xviii-emergent-chemistry-from-the-circumpunct)
+- [Chapter XVI: Emergent Chemistry from the Circumpunct](#chapter-xvi-emergent-chemistry-from-the-circumpunct)
   - [§18.1 From Circumpunct to QED](#181-from-circumpunct-to-qed)
   - [§18.2 Hydrogen as the First Consistency Check](#182-hydrogen-as-the-first-consistency-check)
   - [§18.3 Shell Structure and the Periodic Table as Emergent Patterns](#183-shell-structure-and-the-periodic-table-as-emergent-patterns)
@@ -564,7 +561,7 @@ email@ashmanroonz.ca
   - [§18.5 The Complete Pipeline](#185-the-complete-pipeline)
   - [§18.6 Status and Roadmap](#186-status-and-roadmap)
   - [§18.7 Summary](#187-summary)
-- [Chapter XIX: From Chemistry to Life — Wholeness and Living Systems](#chapter-xix-from-chemistry-to-life--wholeness-and-living-systems)
+- [Chapter XVII: From Chemistry to Life — Wholeness and Living Systems](#chapter-xvii-from-chemistry-to-life--wholeness-and-living-systems)
   - [§19.1 The Wholeness Principle](#191-the-wholeness-principle)
   - [§19.1.1 Application: Molecules as Wholeness](#1911-application-molecules-as-wholeness)
   - [§19.2 The Life Principle](#192-the-life-principle)
@@ -576,46 +573,56 @@ email@ashmanroonz.ca
   - [§19.8 The i(t) Worldline Architecture](#198-the-it-worldline-architecture)
   - [§19.9 String Tension as Convergence Gradient](#199-string-tension-as-convergence-gradient)
   - [§19.10 Why String Theory Must Be True (Here)](#1910-why-string-theory-must-be-true-here)
-- [Chapter XX: Consciousness](#chapter-xx-consciousness)
-  - [§20.1 The Consciousness Equation](#201-the-consciousness-equation)
-  - [§20.2 The Three Aspects of Experience](#202-the-three-aspects-of-experience)
-  - [§20.3 Why ◐ = 0.5 Is Required](#203-why-◐--05-is-required)
-  - [§20.4 Φ_c — Conditional Consciousness Field](#204-φ_c--conditional-consciousness-field)
-  - [§20.5 Two Attractors for Every i(t)](#205-two-attractors-for-every-it)
-- [Chapter XXI: Aging and Death](#chapter-xxi-aging-and-death)
-  - [§21.1 The Aging Equation](#211-the-aging-equation)
-  - [§21.2 Life Extension](#212-life-extension)
-  - [§21.3 Death Reformulated: When the Wholeness Gap Closes](#213-death-reformulated-when-the-wholeness-gap-closes)
-- [Chapter XXII: Empirical Validation](#chapter-xxii-empirical-validation)
-  - [§22.1 The Universal D ≈ 1.5 Signature](#221-the-universal-d--15-signature)
-  - [§22.2 Quantum Scale Validation](#222-quantum-scale-validation)
-  - [§22.3 The Two-Dimensional Nature of Field Validation](#223-the-two-dimensional-nature-of-field-validation)
-  - [§22.4 Entanglement from Shared Receipts](#224-entanglement-from-shared-receipts)
-- [Chapter XXIII: Constants Table](#chapter-xxiii-constants-table)
-  - [§23.1 What Is Truly Derived (Zero Parameters)](#231-what-is-truly-derived-zero-parameters)
-  - [§23.2 The 22/64 Derivation](#232-the-2264-derivation)
-  - [§23.3 The 68°/22° Cone Geometry](#233-the-6822-cone-geometry)
-  - [§23.4 Hidden Parameters (0)](#234-hidden-parameters-0)
-  - [§23.5 Structurally Derived But Uses Measured Input](#235-structurally-derived-but-uses-measured-input)
-  - [§23.6 Full Constants Table](#236-full-constants-table)
-- [Chapter XXIV: Falsification](#chapter-xxiv-falsification)
-  - [§24.1 Honesty Note on D ≈ 1.5 as Falsification Criterion](#241-honesty-note-on-d--15-as-falsification-criterion)
-  - [§24.2 Three Ways Validation Can Fail](#242-three-ways-validation-can-fail)
-- [Chapter XXV: Ethics](#chapter-xxv-ethics)
-  - [§25.1 The Four Dimensions of Ethical Reality](#251-the-four-dimensions-of-ethical-reality)
-  - [§25.2 Center: True/False (Epistemological Ethics)](#252-center-truefalse-epistemological-ethics)
-  - [§25.3 Boundary: Good/Bad (Axiological Ethics)](#253-boundary-goodbad-axiological-ethics)
-  - [§25.4 Field: Right/Wrong (Behavioral Ethics)](#254-field-rightwrong-behavioral-ethics)
-  - [§25.5 Circumpunct: Agree/Disagree (Relational Ethics)](#255-circumpunct-agreedisagree-relational-ethics)
-  - [§25.6 The Ethical Balance Parameter](#256-the-ethical-balance-parameter)
-  - [§25.7 Ethical Validation: The Complete Test](#257-ethical-validation-the-complete-test)
-  - [§25.8 The Steelman: Highest Ethical Practice](#258-the-steelman-highest-ethical-practice)
-  - [§25.9 The Noble Lie: Why We Became Strawmen](#259-the-noble-lie-why-we-became-strawmen)
-- [Chapter XXVI: The Master Loop](#chapter-xxvi-the-master-loop)
-- [Chapter XXVII: The Fixed-Point Combinator](#chapter-xxvii-the-fixed-point-combinator)
-  - [§27.1 The Entire Framework in One Line](#271-the-entire-framework-in-one-line)
-- [Chapter XXVIII: The Ethereal Tail](#chapter-xxviii-the-ethereal-tail)
-- [Chapter XXIX: The Emergence of Biology from Physics](#chapter-xxix-the-emergence-of-biology-from-physics)
+- [Chapter XVIII: Consciousness](#chapter-xviii-consciousness)
+  - [§18.1 The Consciousness Equation](#181-the-consciousness-equation)
+  - [§18.2 The Three Aspects of Experience](#182-the-three-aspects-of-experience)
+  - [§18.3 Why ◐ = 0.5 Is Required](#183-why-◐--05-is-required)
+  - [§18.4 Φ_c — Conditional Consciousness Field](#184-φ_c--conditional-consciousness-field)
+  - [§18.5 Two Attractors for Every i(t)](#185-two-attractors-for-every-it)
+- [Chapter XIX: Emotions and Memory](#chapter-xix-emotions-and-memory)
+  - [§19.1 Emotions as Field Dynamics](#191-emotions-as-field-dynamics)
+  - [§19.2 The Braid as Relational Field](#192-the-braid-as-relational-field)
+  - [§19.3 Memory as Resonant Pattern](#193-memory-as-resonant-pattern)
+  - [§19.4 Shared Memory and Inheritance](#194-shared-memory-and-inheritance)
+  - [§19.5 Forgetting and Healing](#195-forgetting-and-healing)
+  - [§19.6 The Selective Rainbow Lock: Attention as Circumpunct](#196-the-selective-rainbow-lock-attention-as-circumpunct)
+  - [§19.7 The Neural Correlate](#197-the-neural-correlate)
+  - [§19.8 Connection to Validation Receipts](#198-connection-to-validation-receipts)
+  - [§19.9 Summary: The Complete Phenomenology](#199-summary-the-complete-phenomenology)
+- [Chapter XX: Aging and Death](#chapter-xx-aging-and-death)
+  - [§20.1 The Aging Equation](#201-the-aging-equation)
+  - [§20.2 Life Extension](#202-life-extension)
+  - [§20.3 Death Reformulated: When the Wholeness Gap Closes](#203-death-reformulated-when-the-wholeness-gap-closes)
+- [Chapter XXI: Empirical Validation](#chapter-xxi-empirical-validation)
+  - [§21.1 The Universal D ≈ 1.5 Signature](#211-the-universal-d--15-signature)
+  - [§21.2 Quantum Scale Validation](#212-quantum-scale-validation)
+  - [§21.3 The Two-Dimensional Nature of Field Validation](#213-the-two-dimensional-nature-of-field-validation)
+  - [§21.4 Entanglement from Shared Receipts](#214-entanglement-from-shared-receipts)
+- [Chapter XXII: Constants Table](#chapter-xxii-constants-table)
+  - [§22.1 What Is Truly Derived (Zero Parameters)](#221-what-is-truly-derived-zero-parameters)
+  - [§22.2 The 22/64 Derivation](#222-the-2264-derivation)
+  - [§22.3 The 68°/22° Cone Geometry](#223-the-6822-cone-geometry)
+  - [§22.4 Hidden Parameters (0)](#224-hidden-parameters-0)
+  - [§22.5 Structurally Derived But Uses Measured Input](#225-structurally-derived-but-uses-measured-input)
+  - [§22.6 Full Constants Table](#226-full-constants-table)
+- [Chapter XXIII: Falsification](#chapter-xxiii-falsification)
+  - [§23.1 Honesty Note on D ≈ 1.5 as Falsification Criterion](#231-honesty-note-on-d--15-as-falsification-criterion)
+  - [§23.2 Three Ways Validation Can Fail](#232-three-ways-validation-can-fail)
+- [Chapter XXIV: Ethics](#chapter-xxiv-ethics)
+  - [§24.1 The Four Dimensions of Ethical Reality](#241-the-four-dimensions-of-ethical-reality)
+  - [§24.2 Center: True/False (Epistemological Ethics)](#242-center-truefalse-epistemological-ethics)
+  - [§24.3 Boundary: Good/Bad (Axiological Ethics)](#243-boundary-goodbad-axiological-ethics)
+  - [§24.4 Field: Right/Wrong (Behavioral Ethics)](#244-field-rightwrong-behavioral-ethics)
+  - [§24.5 Circumpunct: Agree/Disagree (Relational Ethics)](#245-circumpunct-agreedisagree-relational-ethics)
+  - [§24.6 The Ethical Balance Parameter](#246-the-ethical-balance-parameter)
+  - [§24.7 Ethical Validation: The Complete Test](#247-ethical-validation-the-complete-test)
+  - [§24.8 The Steelman: Highest Ethical Practice](#248-the-steelman-highest-ethical-practice)
+  - [§24.9 The Noble Lie: Why We Became Strawmen](#249-the-noble-lie-why-we-became-strawmen)
+- [Chapter XXV: The Master Loop](#chapter-xxv-the-master-loop)
+- [Chapter XXVI: The Fixed-Point Combinator](#chapter-xxvi-the-fixed-point-combinator)
+  - [§26.1 The Entire Framework in One Line](#261-the-entire-framework-in-one-line)
+- [Chapter XXVII: The Ethereal Tail](#chapter-xxvii-the-ethereal-tail)
+- [Chapter XXVIII: The Emergence of Biology from Physics](#chapter-xxviii-the-emergence-of-biology-from-physics)
 - [Ωmega: The Mathematical Story](#ωmega-the-mathematical-story)
 - [Appendix: Symbol Glossary](#appendix-symbol-glossary)
 - [References](#references)
@@ -2395,64 +2402,7 @@ SUMMARY: FRACTAL i
 
 ---
 
-## CHAPTER V: THE DUALITY EQUATION
-
-### §5.1 Unity Through Balanced Duality
-
-```
-THE FUNDAMENTAL EQUATION (alternative form):
-
-                    ╔═══════════════════════════════════════════════════╗
-                    ║       1 = 0.5 ⊗ 0.5                               ║
-                    ║           ↓   ↓   ↓                               ║
-                    ║          ○   Φ   •                                ║
-                    ╚═══════════════════════════════════════════════════╝
-
-WHERE:
-  1   = ⊙ (wholeness, not "the one")
-  0.5 = Half (appears twice as ≻ and ⊰)
-  ⊗   = The operation at • maintaining balance
-
-THE MAPPING:
-
-    1 = 0.5 ⊗ 0.5       DUALITY VIEW
-        ↓   ↓   ↓
-       ○   Φ   •        TRINITY VIEW (structure)
-        ↓   ↓   ↓
-       ≻   i   ⊰        TRINITY VIEW (process)
-
-BOTH VIEWS ARE VALID — they describe the same ⊙
-```
-
-### §5.2 The Geometric Triangle
-
-```
-                          ⊙ (Wholeness)
-                         /|\
-                        / | \
-                       /  |  \
-                      /   |   \
-                     /    •    \      ← Center (aperture)
-                    /     |     \
-                   /      |      \
-                 ○ ───────┼─────── Φ
-            (Boundary)         (Field)
-
-    • Equilateral: Perfect balance (all sides equal)
-    • Center: • at geometric center
-    • Vertices: ⊙ (top), ○ (left), Φ (right)
-    • Process: ≻ flows down, ⊰ flows out
-
-THIS TRIANGLE IS THE FUNDAMENTAL GEOMETRY OF EXISTENCE
-```
-
-[← Back to Table of Contents](#table-of-contents)
-
----
-
----
-
-## CHAPTER VI: THE FIELD EQUATIONS
+## CHAPTER V: THE FIELD EQUATIONS
 
 ### §6.1 Discrete Cycle (Quantum Scale)
 
@@ -2650,7 +2600,7 @@ THE BRAID AS INFINITE SHEAVES:
 
 ---
 
-## CHAPTER VII: PHASE COHERENCE IN APERTURE FOAM
+## CHAPTER VI: PHASE COHERENCE IN APERTURE FOAM
 
 *A bridge between the kernel-based Schrödinger derivation and the cosmology / dark sector story, with the transmission law T = cos²(Δφ/2) derived from first principles.*
 
@@ -3269,7 +3219,7 @@ Phase coherence determines which parts of Φ can pass through the aperture. The 
 
 ---
 
-## CHAPTER VIII: APERTURE DENSITY AND DIMENSIONALITY
+## CHAPTER VII: APERTURE DENSITY AND DIMENSIONALITY
 
 ### §8.1 The Generative Mechanism: From Fields to Power Lines
 
@@ -3640,7 +3590,7 @@ SUMMARY: APERTURE DENSITY AND DIMENSIONALITY
 
 ---
 
-## CHAPTER IX: THE 64-STATE ARCHITECTURE
+## CHAPTER VIII: THE 64-STATE ARCHITECTURE
 
 ### §9.1 Why 64 Is Fundamental
 
@@ -3724,7 +3674,7 @@ THE 1/3 RULE:
 
 ---
 
-## CHAPTER XI: THE GOLDEN RATIO
+## CHAPTER IX: THE GOLDEN RATIO
 
 ### §11.1 Non-Circular Derivation of φ
 
@@ -3800,7 +3750,7 @@ THREE GENERATIONS:
 
 ---
 
-## CHAPTER XII: THE COSMOLOGICAL CONSTANT
+## CHAPTER X: THE COSMOLOGICAL CONSTANT
 
 ### §12.1 Solving the Vacuum Catastrophe
 
@@ -3845,7 +3795,7 @@ TESTABLE: DESI 2026 (6σ signal expected)
 
 ---
 
-## CHAPTER XIII: ALTERNATIVE DERIVATIONS
+## CHAPTER XI: ALTERNATIVE DERIVATIONS
 
 ### §13.1 Hopf Fibration → D = 1.5 (Topological Proof)
 
@@ -4184,7 +4134,7 @@ PHYSICAL MEANING:
 
 ---
 
-## CHAPTER XIV: THE CANONICAL CIRCUMPUNCT SPECIFICATION
+## CHAPTER XII: THE CANONICAL CIRCUMPUNCT SPECIFICATION
 
 ### §14.1 Complete Mathematical Definition
 
@@ -5489,7 +5439,7 @@ plt.savefig('three_generations_validated.png', dpi=300)
 
 ---
 
-## CHAPTER XV: THE STANDARD MODEL LAGRANGIAN
+## CHAPTER XIII: THE STANDARD MODEL LAGRANGIAN
 
 ### §15.1 The 64-State Standard Model Bijection
 
@@ -7222,7 +7172,7 @@ THE STANDARD MODEL IS NOT ASSUMED—IT IS SELECTED BY THE CIRCUMPUNCT ARCHITECTU
 
 ---
 
-## CHAPTER XVI: QUANTUM GRAVITY CORRESPONDENCE
+## CHAPTER XIV: QUANTUM GRAVITY CORRESPONDENCE
 
 ```
 ═══════════════════════════════════════════════════════════════════════════════
@@ -7530,7 +7480,7 @@ RELATED WORK:
 
 ---
 
-## CHAPTER XVII: FORMAL MATHEMATICAL SPECIFICATION
+## CHAPTER XV: FORMAL MATHEMATICAL SPECIFICATION
 
 This chapter provides the rigorous mathematical spine of the Circumpunct Theory, organized as Definitions → Lemmas → Theorems. It serves as a formal specification that can be used for implementation, verification, and further theoretical development.
 
@@ -8204,7 +8154,7 @@ INTUITIVELY:
 
 ---
 
-## CHAPTER XVIII: Emergent Chemistry from the Circumpunct
+## CHAPTER XVI: Emergent Chemistry from the Circumpunct
 
 > *If the circumpunct really is the engine behind the Standard Model, then atoms and molecules are not a separate miracle. They are just what the circumpunct does in the low-energy limit when you give it protons, neutrons, and electrons to play with.*
 
@@ -8608,7 +8558,7 @@ OPEN DERIVATION TARGETS FOR EMERGENT CHEMISTRY:
 
 ---
 
-## CHAPTER XIX: From Chemistry to Life — Wholeness and Living Systems
+## CHAPTER XVII: From Chemistry to Life — Wholeness and Living Systems
 
 > *Chemistry shows us molecules as wholes that are cheaper than their parts. Life shows us wholes that do work to stay whole. The same principle, extended.*
 
@@ -9085,7 +9035,7 @@ IF i(t) THREADS ARE FUNDAMENTAL, STRING-LIKE BEHAVIOR IS UNAVOIDABLE:
 
 <a id="chapter-xi-consciousness"></a>
 
-## CHAPTER XX: CONSCIOUSNESS
+## CHAPTER XVIII: CONSCIOUSNESS
 
 ### §20.1 The Consciousness Equation
 
@@ -9332,9 +9282,707 @@ MATHEMATICALLY:
 
 ---
 
-## CHAPTER XXI: AGING AND DEATH
+## CHAPTER XIX: EMOTIONS AND MEMORY
 
-### §21.1 The Aging Equation
+### The Phenomenology of Braid Dynamics
+
+---
+
+### §19.1 Emotions as Field Dynamics
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║              EMOTIONS ARE WHAT BRAID DYNAMICS FEEL LIKE FROM INSIDE           ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+THE FUNDAMENTAL INSIGHT:
+────────────────────────
+
+    The mathematics describes structure:
+        ≻ i ⊰    convergence, rotation, emergence
+        ◐        balance parameter (center vs periphery)
+        ⊙ = ○ ⊗ Φ ⊗ •   trinitarian wholeness
+
+    But you EXPERIENCE it as:
+
+    ┌─────────────────────────────────────────────────────────────────────────┐
+    │   LOVE        =  Braid resonance, coherent vibration between i(t)s     │
+    │   GRIEF       =  A strand woven, now absent—still shaping the pattern  │
+    │   JOY         =  Successful ⊰, emergence completing through aperture   │
+    │   ANXIETY     =  ≻ without resolution, convergence stuck before i      │
+    │   PEACE       =  ◐ balanced field, harmonious oscillation              │
+    │   ANGER       =  Boundary violation, ○ breached without consent        │
+    │   FEAR        =  Anticipatory ≻, future threat converging              │
+    │   LONGING     =  Braid tension across distance, pull toward reunion    │
+    └─────────────────────────────────────────────────────────────────────────┘
+
+THEOREM 19.1 (Emotion-Geometry Correspondence):
+───────────────────────────────────────────────
+
+    Every emotional state corresponds to a braid configuration.
+    Emotions are not epiphenomenal—they are direct phenomenological
+    readout of field dynamics between entangled circumpuncts.
+
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║                                                                         ║
+    ║   E(t) = Φ_phenomenal[B(t)]                                             ║
+    ║                                                                         ║
+    ║   Where:                                                                ║
+    ║       E(t)  = Emotional state at time t                                 ║
+    ║       B(t)  = Braid configuration (set of coupled i(t) worldlines)      ║
+    ║       Φ_phenomenal = The map from geometry to felt experience           ║
+    ║                                                                         ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+THE THREE MODES OF EMOTIONAL INFORMATION:
+─────────────────────────────────────────
+
+    Through •  (Soul/Aperture):   FEELING    — private, immediate, raw
+    Through ○  (Body/Boundary):   SENSATION  — embodied, localized, physical
+    Through Φ  (Mind/Field):      AWARENESS  — recognized, named, processed
+
+    Complete emotional experience requires all three.
+    Dissociation = • active, ○ and Φ suppressed
+    Somatization = ○ active, • and Φ suppressed
+    Intellectualization = Φ active, • and ○ suppressed
+
+```
+
+### §19.2 The Braid as Relational Field
+
+```
+DEFINITION (Emotional Braid):
+─────────────────────────────
+
+    When two or more circumpuncts (⊙_1, ⊙_2, ...) form persistent
+    relationship, their i(t) worldlines braid together:
+
+                        ⊙_1          ⊙_2
+                         │            │
+                     i_1(t)      i_2(t)
+                          ╲          ╱
+                           ╲        ╱
+                            ╲      ╱
+                             ╲    ╱
+                              ╲  ╱
+                               ╳     ← crossing = interaction = σ_i
+                              ╱  ╲
+                             ╱    ╲
+                            ╱      ╲
+                           ╱        ╲
+                          ╱          ╲
+                      i_1(t')    i_2(t')
+                         │            │
+
+
+    Each crossing (σ_i in braid group B_n) is a moment of mutual
+    transformation. The braid accumulates history—a geometric record
+    of all interactions.
+
+WHY EMOTIONS ARE RELATIONAL:
+────────────────────────────
+
+    You cannot feel love alone.
+    You cannot feel grief without prior connection.
+    You cannot feel belonging without others.
+
+    Emotions require OTHER i(t) worldlines to braid with.
+    The braid IS the relationship.
+    The vibration of the braid IS the emotion.
+
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║                                                                         ║
+    ║    "Pulling my strings" = Another circumpunct exciting vibrations       ║
+    ║                           in the braid that connects you                ║
+    ║                                                                         ║
+    ║    The strings are REAL. The pull is REAL.                              ║
+    ║    Emotion is the TENSION IN THE BRAID being felt.                      ║
+    ║                                                                         ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+FAMILY AS BRAID BUNDLE:
+───────────────────────
+
+    Family members share deep braids—woven from earliest development.
+    These braids resonate at fundamental frequencies.
+
+    You feel them "from within" because:
+        1. The braid is part of your Φ field
+        2. Their vibrations propagate through the shared structure
+        3. Distance is irrelevant for the braid's coherence—the braid is
+           topological, not spatial. The physical carriers still live in
+           space, but the relational pattern doesn't weaken just because
+           kilometers increase.
+
+    Across the world, your sister thinks of you.
+    The braid vibrates.
+    You feel it.
+
+    This is not just mysticism. It is field dynamics described in geometric
+    language. Whatever the physical substrate (neurons, EM fields, something
+    deeper), the pattern behaves like a braid.
+```
+
+### §19.3 Memory as Resonant Pattern
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║         MEMORY IS PATTERN IMPRESSED INTO THE BRAID THROUGH RESONANCE          ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+THE STORAGE PROBLEM DISSOLVED:
+──────────────────────────────
+
+    Conventional view: Memory is local storage (brain as hard drive)
+    Problem: How do neurons encode meaning? Where is the "file"?
+
+    Circumpunct view: Memory is BRAID CONFIGURATION
+
+    The braid holds pattern.
+    Pattern = information.
+    Retrieving memory = re-resonating with the braid at that frequency.
+
+THEOREM 19.2 (Memory-Resonance Identity):
+─────────────────────────────────────────
+
+    Let M be a memory and B_M the braid configuration that encodes it.
+    Let ω_M be the characteristic frequency of that configuration.
+
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║                                                                         ║
+    ║   RECALL(M) = RESONATE(Φ, ω_M)                                          ║
+    ║                                                                         ║
+    ║   Memory retrieval IS frequency matching.                               ║
+    ║   The brain is a TUNING FORK, not a HARD DRIVE.                         ║
+    ║                                                                         ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+FRACTAL MEMORY COMPRESSION:
+───────────────────────────
+
+    Memory doesn't just store—it SCALES DOWN fractally over time:
+
+    ┌─────────────────────────────────────────────────────────────────────────┐
+    │   Memory(t = now)     at scale s₀     →  [full detail, near ○]         │
+    │   Memory(t - Δt)      at scale s₀/2   →  [compressed pattern]          │
+    │   Memory(t - 2Δt)     at scale s₀/4   →  [further abstracted]          │
+    │   Memory(t - 3Δt)     at scale s₀/8   →  [essence only, near •]        │
+    └─────────────────────────────────────────────────────────────────────────┘
+
+    Recent memories live at higher resolution near the boundary ○.
+    Older memories compress toward the center •.
+
+    The compression follows D ≈ 1.5—the fractal dimension of the braid itself.
+
+    Forgetting is not deletion—it's DECOHERENCE.
+    Information recedes into smaller fractal depths.
+    The pattern may still exist—you just can't tune to it.
+
+THE EMOTION-MEMORY BRIDGE:
+──────────────────────────
+
+    WHY are emotions the fastest access to memory?
+
+    Because emotions ARE braid dynamics.
+    Feeling an emotion = vibrating at a frequency.
+    That frequency matches memories encoded at similar frequencies.
+
+    ┌─────────────────────────────────────────────────────────────────────────┐
+    │   You don't THINK your way to a memory of your mother.                  │
+    │   You FEEL the braid, and the memory emerges.                           │
+    │                                                                         │
+    │   Smell triggers memory because it resonates directly—                  │
+    │   bypassing cognitive filtering, hitting the braid raw.                 │
+    └─────────────────────────────────────────────────────────────────────────┘
+
+TYPES OF MEMORY BY BRAID STRUCTURE:
+───────────────────────────────────
+
+    ┌────────────────┬──────────────────────────────────────────────────────┐
+    │ Memory Type    │ Braid Structure                                      │
+    ├────────────────┼──────────────────────────────────────────────────────┤
+    │ Episodic       │ Single event = localized crossing pattern            │
+    │ Semantic       │ Repeated pattern = reinforced braid section          │
+    │ Procedural     │ Motor braid = body-boundary coupled oscillation      │
+    │ Emotional      │ Relational braid = multi-circumpunct resonance       │
+    │ Traumatic      │ Frozen braid = stuck ≻ unable to complete to ⊰       │
+    └────────────────┴──────────────────────────────────────────────────────┘
+```
+
+### §19.4 Shared Memory and Inheritance
+
+```
+SHARED MEMORY (Multi-Circumpunct Resonance):
+────────────────────────────────────────────
+
+    When multiple circumpuncts experience an event together,
+    they encode it in their SHARED braid, not just individual fields.
+
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║                                                                         ║
+    ║   Shared memory is STRONGER because:                                    ║
+    ║       • Multiple i(t)s vibrate in phase                                 ║
+    ║       • The pattern is multiply-impressed                               ║
+    ║       • Recall can be triggered by ANY participant                      ║
+    ║       • The braid itself holds the memory, not any one node             ║
+    ║                                                                         ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    This explains:
+        • Why shared experiences bond people
+        • Why couples "finish each other's sentences"
+        • Why families have "unspoken understanding"
+        • Why cultures have collective memory
+
+INHERITED MEMORY (Transgenerational Braid):
+───────────────────────────────────────────
+
+    The braid extends across generations.
+    Parents weave into children before birth.
+    The pattern carries forward.
+
+    ┌─────────────────────────────────────────────────────────────────────────┐
+    │   You inherit not just genes but RESONANT STRUCTURE.                    │
+    │                                                                         │
+    │   Ancestral trauma = frozen patterns in the inherited braid             │
+    │   Cultural wisdom = successful patterns passed through resonance        │
+    │   "Old soul" = deep braid history, many crossings inherited             │
+    └─────────────────────────────────────────────────────────────────────────┘
+
+    This is not Lamarckism (acquired traits in genes).
+    This is BRAID TOPOLOGY passing through the biological channel.
+    Epigenetics may be the physical correlate.
+
+THE DEAD IN THE BRAID:
+──────────────────────
+
+    When someone dies, their i(t) worldline terminates.
+    But the braid they wove PERSISTS.
+
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║                                                                         ║
+    ║   GRIEF = Feeling the braid where their strand still holds shape        ║
+    ║           but no longer vibrates with new input                         ║
+    ║                                                                         ║
+    ║   The pattern they wove is still THERE.                                 ║
+    ║   You feel them because the braid is real.                              ║
+    ║   They are not "gone"—they are COMPLETE.                                ║
+    ║   Their crossings remain. Their influence propagates.                   ║
+    ║                                                                         ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+```
+
+### §19.5 Forgetting and Healing
+
+```
+FORGETTING AS DECOHERENCE:
+──────────────────────────
+
+    Forgetting is NOT deletion.
+    Forgetting is the braid falling out of resonance at that frequency.
+
+    The pattern may still exist—but you cannot tune to it.
+    Sometimes the pattern degrades (braid relaxation).
+    Sometimes access is blocked (interference from other patterns).
+
+    ┌─────────────────────────────────────────────────────────────────────────┐
+    │   "I know I knew this" = Pattern exists, resonance access lost          │
+    │   "It's on the tip of my tongue" = Partial resonance, incomplete lock   │
+    │   "It came back to me" = Resonance re-established through new path      │
+    └─────────────────────────────────────────────────────────────────────────┘
+
+TRAUMA AS FROZEN BRAID:
+───────────────────────
+
+    Traumatic memory = Pattern stuck in ≻ (convergence)
+    The event began processing but could not complete through i to ⊰.
+
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║                                                                         ║
+    ║   TRAUMA:     ≻ → [stuck before i] → (no emergence)                     ║
+    ║                                                                         ║
+    ║   HEALING:    ≻ → i → ⊰    (completing the circuit)                     ║
+    ║                                                                         ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    A previously incomplete loop finally registers a validation receipt.
+    The past event doesn't change, but its status in the braid does:
+    from "open circuit" to "closed and integrated."
+
+    Therapeutic approaches that work:
+        • Re-experiencing in safe context (allows ≻ to reach i)
+        • Bilateral stimulation (EMDR) (helps rotate through i)
+        • Integration practices (supports ⊰ emergence)
+
+    The goal is not to erase the pattern.
+    The goal is to COMPLETE it—let it flow through to emergence.
+
+HEALING AS BRAID COMPLETION:
+────────────────────────────
+
+    Emotional healing = Allowing stuck patterns to complete ≻ i ⊰
+
+    This requires:
+        1. Safety (◐ held near ½ during process)
+        2. Witnessing (another circumpunct to resonate with)
+        3. Time (the rotation through i cannot be forced)
+        4. Integration (the ⊰ must be metabolized)
+
+    ┌─────────────────────────────────────────────────────────────────────────┐
+    │   Why we need others to heal:                                           │
+    │                                                                         │
+    │   The frozen pattern was often relationally caused.                     │
+    │   It requires relational resonance to complete.                         │
+    │   The braid that was wounded needs the braid to heal.                   │
+    └─────────────────────────────────────────────────────────────────────────┘
+```
+
+### §19.6 The Selective Rainbow Lock: Attention as Circumpunct
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║       ATTENTION ITSELF IS A CIRCUMPUNCT: THE SELECTIVE RAINBOW LOCK           ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+THE FUNDAMENTAL INSIGHT:
+────────────────────────
+
+    The act of attending creates a circumpunct structure:
+
+                         ⊙_attention
+                    ┌─────────────────┐
+                    │                 │
+                    │   • = carrier   │  (what you focus on)
+                    │   ○ = sidebands │  (peripheral context)
+                    │   Φ = coherence │  (how they relate)
+                    │   ◐             │  (balance of center vs periphery)
+                    │                 │
+                    └─────────────────┘
+
+    Attention isn't just USING the circumpunct—attention IS a circumpunct.
+
+THE SELECTIVE RAINBOW LOCK (SRL):
+─────────────────────────────────
+
+    Let Ω be the infinite field of all possible frequencies (the "rainbow").
+    Attention LOCKS onto specific frequencies, filtering the rest.
+
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║                                                                         ║
+    ║   W_total = W_carrier + W_sidebands                                     ║
+    ║                 •              ○                                        ║
+    ║             (center)      (periphery)                                   ║
+    ║                                                                         ║
+    ║   Where:                                                                ║
+    ║       W_carrier   = gaussian(ω - ω_c, σ_c)     [focused attention]      ║
+    ║       W_sidebands = Σ gaussian(ω - ω_si, σ_si) [contextual awareness]   ║
+    ║       ω_c         = carrier frequency          [what you attend to]     ║
+    ║                                                                         ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+THE ◐ BALANCE PARAMETER:
+────────────────────────
+
+    Define ◐ as the fraction of attention energy in the carrier:
+
+        ◐ = |W_carrier| / (|W_carrier| + |W_sidebands|)
+
+    Then:
+
+        ◐ → 1   : attention almost all in the center (tunnel vision)
+        ◐ = ½   : balanced center and periphery (relaxed focus)
+        ◐ → 0   : attention almost all in the periphery (scattered)
+
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║                                                                         ║
+    ║   THE BALANCE SYMBOL: ◐                                                 ║
+    ║                                                                         ║
+    ║       ◯  ≈ 0   = all boundary/sidebands     (lost in context)           ║
+    ║       ◐  = ½   = half center, half periphery (optimal balance)          ║
+    ║       ●  ≈ 1   = all center/carrier         (rigid tunnel vision)       ║
+    ║                                                                         ║
+    ║   When |W_carrier| = |W_sidebands|:  ◐ = W/(W+W) = ½                    ║
+    ║                                                                         ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    OPTIMAL ATTENTION = ◐ = ½
+
+    Not tunnel vision (lost context).
+    Not scattered (lost focus).
+    Balanced—center and periphery in proper ratio.
+
+CIRCUMPUNCT FORMALIZATION:
+──────────────────────────
+
+    SRL: Ω → ≻_ω → i(ω_c) → Φ_filtered
+
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║                                                                         ║
+    ║   Ω          = Full spectrum (infinite field, all frequencies)          ║
+    ║   ≻_ω        = Frequency-selective convergence (attention narrows)      ║
+    ║   i(ω_c)     = Aperture locked to carrier frequency                     ║
+    ║   Φ_filtered = Field with effective balance encoded by ◐                ║
+    ║                                                                         ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    The aperture i doesn't just rotate—it TUNES.
+    It selects which part of Ω passes through.
+    The carrier lock IS the aperture configuration.
+
+WHY THIS MATTERS FOR MEMORY:
+────────────────────────────
+
+    ENCODING:
+        Stable ◐ near ½ during experience (clear carrier with context)
+            → sharp frequency signature
+        ◐ far from ½ or unstable → diffuse encoding, harder to retrieve
+
+    RETRIEVAL:
+        Re-locking carrier to ω_M → memory emerges
+        Partial lock → "tip of tongue" phenomenon
+        Wrong frequency → retrieval failure
+
+    EMOTION AS TUNING SIGNAL:
+        Emotions provide FAST frequency matching.
+        Smell bypasses cognitive filtering—direct carrier hit.
+        That's why scent triggers memory so powerfully.
+
+    ┌─────────────────────────────────────────────────────────────────────────┐
+    │   RECALL(M) = SRL(Φ, ω_M) = ≻_ω → i(ω_M) → ⊰                           │
+    │                                                                         │
+    │   Memory retrieval is attention locked to a past frequency,             │
+    │   allowing the pattern to emerge through the aperture.                  │
+    └─────────────────────────────────────────────────────────────────────────┘
+
+MEDITATION AS CARRIER TRAINING:
+───────────────────────────────
+
+    A scattered mind has UNSTABLE ω_c—jumping between frequencies.
+    A focused mind HOLDS THE LOCK.
+
+    Meditation trains:
+        1. Carrier stability (sustained attention on single frequency)
+        2. ◐ calibration (keeping some periphery without losing center)
+        3. Lock release (ability to shift carrier smoothly)
+
+    The goal is not rigid lock (◐ → 1, tunnel vision).
+    The goal is STABLE FLEXIBILITY at ◐ = ½.
+
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║                                                                         ║
+    ║   "Relaxed focus" = Carrier locked, sidebands present = ◐ = ½          ║
+    ║                                                                         ║
+    ║   This is the optimal attention state.                                  ║
+    ║   Fully present to the center, fully aware of context.                  ║
+    ║                                                                         ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+GASLIGHTING AS CARRIER ATTACK:
+──────────────────────────────
+
+    Gaslighting works by BLOCKING DIRECT OBSERVATION.
+
+    The carrier (what you directly perceive) is overridden
+    by forced sidebands (what they tell you happened).
+
+    ┌─────────────────────────────────────────────────────────────────────────┐
+    │   Normal:      W_carrier dominant, sidebands contextual                 │
+    │   Gaslighting: Forced W_sidebands override W_carrier                    │
+    │                                                                         │
+    │   "You didn't see what you saw."                                        │
+    │   "That's not what happened."                                           │
+    │   "You're remembering wrong."                                           │
+    │                                                                         │
+    │   Result: Carrier lock destabilized. Memory encoding corrupted.         │
+    │           Truth enters through direct observation, not inference.       │
+    │           Block direct observation → block truth.                       │
+    └─────────────────────────────────────────────────────────────────────────┘
+
+FRACTAL RECURSION:
+──────────────────
+
+    The SRL (⊙_attention) operates WITHIN consciousness (⊙_mind)
+    which operates WITHIN the body (⊙_organism)
+    which operates WITHIN reality (⊙_universal).
+
+    Each level is a circumpunct.
+    Each level has its own ◐ balance.
+    And they NEST.
+
+    ⊙_universal
+        └─→ ⊙_organism
+                └─→ ⊙_mind
+                        └─→ ⊙_attention
+                                └─→ ⊙_moment
+
+    Attention is where the fractal meets the now.
+```
+
+### §19.7 The Neural Correlate
+
+```
+BRAIN AS TUNING APPARATUS:
+──────────────────────────
+
+    The brain is not WHERE memory lives.
+    The brain is HOW the circumpunct tunes to memory in the braid.
+
+    ┌─────────────────────────────────────────────────────────────────────────┐
+    │   Hippocampus     = Frequency selector, addresses braid locations       │
+    │   Amygdala        = Emotional frequency amplifier                       │
+    │   Prefrontal      = Resonance modulator, selective attention            │
+    │   Default Mode    = Braid-wandering, free resonance exploration         │
+    └─────────────────────────────────────────────────────────────────────────┘
+
+    Damage to hippocampus = Cannot select new frequencies (anterograde amnesia)
+    The old braids still exist—they just can't be newly addressed.
+
+TESTABLE PREDICTIONS:
+─────────────────────
+
+    1. MEMORY RETRIEVAL OSCILLATIONS
+       ────────────────────────────
+       Retrieval should show characteristic oscillatory signatures.
+       Prediction: Theta rhythms (4-8 Hz) during recall represent
+       the brain "sweeping" through braid frequencies.
+
+    2. EMOTIONAL CONTAGION TIMING
+       ──────────────────────────
+       Shared emotional states should show phase-locking between
+       individuals BEFORE conscious awareness.
+       Prediction: EEG synchronization precedes reported emotional resonance.
+
+    3. TRANSGENERATIONAL PATTERNS
+       ─────────────────────────
+       Specific trauma patterns should show characteristic signatures
+       in descendants who were never directly exposed.
+       Prediction: Inherited stress responses should correlate with
+       ancestral event patterns, mediated by epigenetic markers.
+
+    4. HEALING COMPLETION
+       ─────────────────
+       Successful trauma processing should show neural signatures of
+       "completion"—a shift from stuck oscillation to resolved pattern.
+       Prediction: Pre/post therapy brain imaging should show
+       transition from repetitive to integrated activation patterns.
+```
+
+### §19.8 Connection to Validation Receipts
+
+```
+MEMORY AND RECEIPTS (Link to §3.7):
+───────────────────────────────────
+
+    Validation receipts are the eternal record of ≻ i ⊰ completions.
+    Memory is the RESONANT ACCESS to these receipts.
+
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║                                                                         ║
+    ║   Receipt    = The fact that validation occurred (eternal, objective)   ║
+    ║   Memory     = Ability to resonate with the receipt (temporal, access)  ║
+    ║   Emotion    = The felt quality of the resonance (phenomenal, subjective)║
+    ║                                                                         ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+    The receipts are always there.
+    Your capacity to tune to them varies.
+    What you feel when you tune IS the emotion.
+
+WHY EMOTIONS ARE TRUSTWORTHY DATA:
+──────────────────────────────────
+
+    Emotions are not "irrational."
+    Emotions are DIRECT READOUT of braid dynamics.
+    They may be more accurate than cognitive interpretation.
+
+    ┌─────────────────────────────────────────────────────────────────────────┐
+    │   When you feel something is wrong but can't explain why:               │
+    │                                                                         │
+    │   The braid detected a pattern before cognition could process it.       │
+    │   The emotion is DATA. Treat it as a real measurement, not a conclusion.│
+    │   Trust that it's telling you something, then investigate what.         │
+    └─────────────────────────────────────────────────────────────────────────┘
+```
+
+### §19.9 Summary: The Complete Phenomenology
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║   THE CIRCUMPUNCT THEORY OF EMOTIONS AND MEMORY                               ║
+║                                                                               ║
+║   1. Emotions are what braid dynamics feel like from inside                   ║
+║                                                                               ║
+║   2. Memory is pattern stored in braid topology, accessed by resonance        ║
+║                                                                               ║
+║   3. The brain is a tuning fork, not a hard drive                             ║
+║                                                                               ║
+║   4. Relationships ARE braids—the connection is geometric, not metaphorical   ║
+║                                                                               ║
+║   5. "Pulling my strings" is literal: others vibrate our shared braids        ║
+║                                                                               ║
+║   6. The dead remain in the braid—complete, no longer generating new input    ║
+║                                                                               ║
+║   7. Trauma is frozen ≻ unable to complete through i to ⊰                     ║
+║                                                                               ║
+║   8. Healing requires relational resonance to complete the circuit            ║
+║                                                                               ║
+║   9. Emotions are data—direct phenomenological readout of field dynamics      ║
+║                                                                               ║
+║  10. Attention IS a circumpunct: carrier (•) + sidebands (○), optimal at ◐ ║
+║                                                                               ║
+║  11. Memory compresses fractally: recent near ○, ancient near •               ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+THE SELECTIVE RAINBOW LOCK:
+───────────────────────────
+
+                    W_total = W_carrier + W_sidebands
+                                  •              ○
+                              (focus)       (context)
+
+    ◐ = |W_carrier| / (|W_carrier| + |W_sidebands|)
+
+    Optimal attention: ◐ = ½
+    Present to center, aware of periphery.
+
+THE EQUATION THAT IS FEELING:
+─────────────────────────────
+
+                    E = Φ_phenomenal[B]
+
+    Where you feel your family resonating from within—
+    that is the braid, vibrating.
+
+    Where you remember through emotion rather than thought—
+    that is frequency matching to the eternal receipts.
+
+    Where grief persists though years have passed—
+    that is the strand they wove, still holding shape.
+
+    Where attention settles into relaxed focus—
+    that is ◐ = ½, carrier locked, sidebands present.
+
+                             ⊙
+
+```
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
+---
+
+## CHAPTER XX: AGING AND DEATH
+
+### §20.1 The Aging Equation
 
 ```
 TEMPORAL DYNAMICS:
@@ -9439,7 +10087,7 @@ MEANING:
 
 ---
 
-## CHAPTER XXII: EMPIRICAL VALIDATION
+## CHAPTER XXI: EMPIRICAL VALIDATION
 
 ### §22.1 The Universal D ≈ 1.5 Signature
 
@@ -9581,7 +10229,7 @@ THE CORRELATION PERSISTS BECAUSE:
 
 ---
 
-## CHAPTER XXIII: CONSTANTS TABLE
+## CHAPTER XXII: CONSTANTS TABLE
 
 ### §23.1 What Is Truly Derived (Zero Parameters)
 
@@ -9929,7 +10577,7 @@ STATUS KEY:
 
 ---
 
-## CHAPTER XXIV: FALSIFICATION
+## CHAPTER XXIII: FALSIFICATION
 
 ```
 THE D(◐) RELATIONSHIP — EMPIRICALLY TESTABLE:
@@ -10081,7 +10729,7 @@ There are only these three structural dimensions. Any failed pattern must:
 
 <a id="chapter-xx-ethics"></a>
 
-## CHAPTER XXV: ETHICS
+## CHAPTER XXIV: ETHICS
 
 ### §25.1 The Four Dimensions of Ethical Reality
 
@@ -11146,7 +11794,7 @@ THE STEELMAN AS T-OPERATOR:
 
 ---
 
-## CHAPTER XXVI: THE MASTER LOOP
+## CHAPTER XXV: THE MASTER LOOP
 
 ```
 THE ETERNAL CYCLE:
@@ -11190,7 +11838,7 @@ THE ETERNAL CYCLE:
 
 ---
 
-## CHAPTER XXVII: THE FIXED-POINT COMBINATOR
+## CHAPTER XXVI: THE FIXED-POINT COMBINATOR
 
 ### §27.1 The Entire Framework in One Line
 
@@ -11227,7 +11875,7 @@ This is not metaphor—it's the literal mathematical structure.
 
 ---
 
-## CHAPTER XXVIII: THE ETHEREAL TAIL
+## CHAPTER XXVII: THE ETHEREAL TAIL
 
 
 > *This chapter reinterprets the worldline i(t) from §3.8 not as a single thread but as a phase-locked bundle across scales. Where §3.8 traced one persistent pattern through spacetime, here we show that identity—and consciousness itself—emerges from the coherent alignment of many such threads.*
@@ -11808,7 +12456,7 @@ PREDICTION 3: The ~2.5% CP asymmetry should appear as a
 
 ---
 
-## CHAPTER XXIX: THE EMERGENCE OF BIOLOGY FROM PHYSICS
+## CHAPTER XXVIII: THE EMERGENCE OF BIOLOGY FROM PHYSICS
 
 
 ## §29.1 The Ratchet Cascade
