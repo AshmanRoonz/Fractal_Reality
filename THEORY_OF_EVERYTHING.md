@@ -9857,6 +9857,8 @@ as the optimal balance between convergence and emergence.
 
 ---
 
+<a id="chapter-xi-consciousness"></a>
+
 ## CHAPTER 19: CONSCIOUSNESS
 
 ### §19.1 The Consciousness Equation
@@ -10984,6 +10986,8 @@ THREE GENERATIONS:
 [← Back to Table of Contents](#table-of-contents)
 
 ---
+
+<a id="chapter-xx-ethics"></a>
 
 ## CHAPTER 23: ETHICS
 
