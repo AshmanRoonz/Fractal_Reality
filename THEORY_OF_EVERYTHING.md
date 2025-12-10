@@ -1,9 +1,7 @@
 # ⊙ The Circumpunct Theory
 ## by Ashman Roonz
-## The Dimensional Cascade: Complete Mathematical Formalism
 
 ## ⊙ = (○, Φ, •) × (≻, i, ⊰)³
-
 Energy = Structure × Process³
 
 ---
