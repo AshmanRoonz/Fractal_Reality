@@ -11,7 +11,7 @@ Energy = Structure × Process³
 ## The Fundamental Principle
 
 ```
-β = |≻| / (|≻| + |⊰|) = ½
+◐ = |≻| / (|≻| + |⊰|) = ½
 
 Everything flows from the Balance of I/O.
 ```
@@ -23,9 +23,9 @@ Everything flows from the Balance of I/O.
 | Dim | Type | Name | Description | Core Equations |
 |-----|------|------|-------------|----------------|
 | **0D** | Structure | **Pure Energy** | Pre-structure potential — undifferentiated before tunnel entrance | E = mc², U(t) = exp(−iEt/ℏ) |
-| **0.5D** | Process | **Aperture, i, Soul** | The tunnel opening, singularity that *causes* tunneling | i = exp(iπβ) = exp(iπ/2) at β = ½ |
+| **0.5D** | Process | **Aperture, i, Soul** | The tunnel opening, singularity that *causes* tunneling | i = exp(iπ◐) = exp(iπ/2) at ◐ = ½ |
 | **1D** | Structure | **Timeline, String** | Soul through time — tunnel through which power flows | i(t): t → •(t), P = dE/dt |
-| **1.5D** | Process | **Spatial Branching** | Power lines fractally splitting — branching that builds surfaces | D = 1 + ½H(β), K(r) ∝ r^β |
+| **1.5D** | Process | **Spatial Branching** | Power lines fractally splitting — branching that builds surfaces | D = 1 + ½H(◐), K(r) ∝ r^◐ |
 | **2D** | Structure | **Surface (Body)** | Boundary, interface, membrane | ○ ∈ 𝔅, Σ = ∂V |
 | **2.5D** | Process | **Sensation** | Surface↔volume mediation; body↔field coupling | T_local = cos²(Δφ_contact/2), triple gate |
 | **3D** | Structure | **Perceptual Field** | Manifest inner volume — perception on "imaginary" side of i | Φ' = ⊱ ∘ V_out ∘ i ∘ V_in ∘ ≺[Φ] |
@@ -60,18 +60,18 @@ U(t) = exp(−iEt/ℏ)         Time evolution operator
 **Core equations:**
 ```
 i² = −1                    Defining property
-Å(β) = exp(iπβ)            Generalized aperture operator
+Å(◐) = exp(iπ◐)            Generalized aperture operator
 
 Balance condition:
-β = |≻| / (|≻| + |⊰|) = ½  Symmetry between convergence and emergence
+◐ = |≻| / (|≻| + |⊰|) = ½  Symmetry between convergence and emergence
 
 Shannon entropy of balance:
-H(β) = −[β log₂ β + (1−β) log₂(1−β)]
+H(◐) = −[◐ log₂ ◐ + (1−◐) log₂(1−◐)]
 H(½) = 1 bit               Maximum uncertainty = perfect balance
 
-At β = 0.5:
+At ◐ = 0.5:
   Å(0.5) = exp(iπ/2) = i   The imaginary unit IS the balanced aperture
-  θ = πβ = π/2 = 90°       Rotation angle
+  θ = π◐ = π/2 = 90°       Rotation angle
   |Å| = 1                  Magnitude conserved
 ```
 
@@ -106,12 +106,12 @@ S = ∫ L dt                 Action along the string
 **Core equations:**
 ```
 Fractal dimension from balance:
-D = 1 + ½H(β)
-At β = 0.5: H(½) = 1 bit → D = 1 + ½(1) = 1.5
+D = 1 + ½H(◐)
+At ◐ = 0.5: H(½) = 1 bit → D = 1 + ½(1) = 1.5
 
 Kernel from balance parameter:
-K(r) ∝ r^α,  α = β         Exponent equals balance
-At β = 0.5: K(r) ∝ r^0.5 = √r
+K(r) ∝ r^α,  α = ◐         Exponent equals balance
+At ◐ = 0.5: K(r) ∝ r^0.5 = √r
 
 Aperture density scaling:
   ρ << ρ_c  →  D → 2-3     Underconstrained (diffuse)
@@ -188,7 +188,7 @@ Discrete tick (full gated form):
 Where:
   ≺[Φ]     = ∫ K_conv(r'',r') Φ(r') d³r'     Convergence
   V_in     = field-level implementation of triple validation gate (input)
-  i        = aperture rotation (90° at β = ½)
+  i        = aperture rotation (90° at ◐ = ½)
   V_out    = field-level implementation of triple validation gate (output)
   ⊱[χ]     = ∫ K_emerg(r,r'') χ(r'') d³r''   Emergence
   ε        = noise/fluctuation term
@@ -291,7 +291,7 @@ Attractor:
 lim_{n→∞} T_⊙^n [Φ₀] = ⊙*   Repeated update converges to fixed point
 
 RG flow:
-∂⊙/∂s = β(⊙)               Renormalization in scale parameter s
+∂⊙/∂s = 𝔅(⊙)               Renormalization in scale parameter s
 ```
 
 **Physical meaning:** Parts have parts have parts. Each complete system is a single aperture event at the next scale up. This is how infinity nests within finite structure.
@@ -352,9 +352,9 @@ RG flow:
 │  2D   ════════════  ○ BOUNDARY: Σ = ∂V                                    │
 │         ─ ─ 2.5D ─ ─  sensation: T_local = cos²(Δφ/2), triple gate        │
 │  1D   ════════════  TIMELINE: i(t), P = dE/dt                             │
-│         ─ ─ 1.5D ─ ─  branching: D = 1 + ½H(β), K(r) ∝ r^β                │
+│         ─ ─ 1.5D ─ ─  branching: D = 1 + ½H(◐), K(r) ∝ r^◐                │
 │  0D   ════════════  PURE ENERGY: E = mc²                                  │
-│         ─ ─ 0.5D ─ ─  • APERTURE: i = exp(iπβ), β = ½                     │
+│         ─ ─ 0.5D ─ ─  • APERTURE: i = exp(iπ◐), ◐ = ½                     │
 └───────────────────────────────────────────────────────────────────────────┘
 
 ════ Structure (what IS)     ─ ─ Process (what HAPPENS between layers)
@@ -366,17 +366,17 @@ RG flow:
 
 ## Key Constants (Zero Free Shape Parameters)
 
-All internal exponents and angles are fixed by β = 0.5 (balance) and its consequences.
+All internal exponents and angles are fixed by ◐ = 0.5 (balance) and its consequences.
 No ad-hoc shape parameters are introduced by hand.
 
 | Symbol | Value | Derivation |
 |--------|-------|------------|
-| β | 0.5 | Symmetry: \|≻\| = \|⊰\| |
-| H(β) | 1 bit | H(½) = −[½ log₂ ½ + ½ log₂ ½] = 1 |
-| D | 1.5 | D = 1 + ½H(β) = 1 + ½(1) |
-| θ | π/2 = 90° | θ = πβ = π(½) |
-| i | exp(iπ/2) | Å(β) = exp(iπβ) at β = 0.5 |
-| α | 0.5 | Kernel exponent = β |
+| ◐ | 0.5 | Symmetry: \|≻\| = \|⊰\| |
+| H(◐) | 1 bit | H(½) = −[½ log₂ ½ + ½ log₂ ½] = 1 |
+| D | 1.5 | D = 1 + ½H(◐) = 1 + ½(1) |
+| θ | π/2 = 90° | θ = π◐ = π(½) |
+| i | exp(iπ/2) | Å(◐) = exp(iπ◐) at ◐ = 0.5 |
+| α | 0.5 | Kernel exponent = ◐ |
 | H_Hurst | 2/3 | H = 1/D = 1/1.5 |
 | 64 | 8×8 | Input states × output states |
 
@@ -385,7 +385,7 @@ No ad-hoc shape parameters are introduced by hand.
 ## The Core Insight
 
 ```
-β = |≻| / (|≻| + |⊰|) = ½
+◐ = |≻| / (|≻| + |⊰|) = ½
 
 Convergence = Emergence
 What comes in = What goes out
@@ -453,7 +453,7 @@ email@ashmanroonz.ca
   - [§3.7 Validation Receipts — The Eternal Record](#37-validation-receipts--the-eternal-record)
   - [§3.8 Clarifying i vs i(t)](#38-clarifying-i-vs-it)
 - [Chapter IV: The Balance Parameter](#chapter-iv-the-balance-parameter)
-  - [§4.1 Why β = 0.5](#41-why-β--05)
+  - [§4.1 Why ◐ = 0.5](#41-why-◐--05)
   - [§4.2 The Universal Dimension](#42-the-universal-dimension)
   - [§4.2.1 The Aperture Rotation Operator](#421-the-aperture-rotation-operator)
   - [§4.3 The Imaginary Unit as Aperture](#43-the-imaginary-unit-as-aperture)
@@ -566,7 +566,7 @@ email@ashmanroonz.ca
   - [§19.1.1 Application: Molecules as Wholeness](#1911-application-molecules-as-wholeness)
   - [§19.2 The Life Principle](#192-the-life-principle)
   - [§19.3 The Hierarchy of Wholeness](#193-the-hierarchy-of-wholeness)
-  - [§19.4 The β Connection to Life](#194-the-β-connection-to-life)
+  - [§19.4 The ◐ Connection to Life](#194-the-◐-connection-to-life)
   - [§19.5 Passive vs Active Wholeness](#195-passive-vs-active-wholeness)
   - [§19.6 The Complete Emergence Ladder](#196-the-complete-emergence-ladder)
   - [§19.7 Summary: The Complete Pipeline from ⊙ to Life](#197-summary-the-complete-pipeline-from--to-life)
@@ -576,7 +576,7 @@ email@ashmanroonz.ca
 - [Chapter XX: Consciousness](#chapter-xx-consciousness)
   - [§20.1 The Consciousness Equation](#201-the-consciousness-equation)
   - [§20.2 The Three Aspects of Experience](#202-the-three-aspects-of-experience)
-  - [§20.3 Why β = 0.5 Is Required](#203-why-β--05-is-required)
+  - [§20.3 Why ◐ = 0.5 Is Required](#203-why-◐--05-is-required)
   - [§20.4 Φ_c — Conditional Consciousness Field](#204-φ_c--conditional-consciousness-field)
   - [§20.5 Two Attractors for Every i(t)](#205-two-attractors-for-every-it)
 - [Chapter XXI: Aging and Death](#chapter-xxi-aging-and-death)
@@ -709,7 +709,7 @@ WHERE:
 COMPONENT EXPRESSIONS:
   ┌─────────────────────────────────────────────────────────────────────┐
   │   ○  :  ∂○/∂t = ε     Body    — boundary changes slowly            │
-  │   Φ  :  •β○           Mind    — balance operator, the medium       │
+  │   Φ  :  •◐○           Mind    — balance operator, the medium       │
   │   •  :  ≻•⊰           Soul    — the cycle (mirror: ⊱•≺)            │
   └─────────────────────────────────────────────────────────────────────┘
 
@@ -751,7 +751,7 @@ The framework affirms the FULL SPECTRUM:
     0D       Pure energy/potential (no extension, no rotation)
     •        Aperture (0.5D — rotation possible, i lives here)
     1D       Worldline (sequential extension)
-    1.5D     Consciousness signature (D = 1 + ½H(β))
+    1.5D     Consciousness signature (D = 1 + ½H(◐))
     ○        Boundary (2D — surface, interface)
     2.5D     Integration gate
     Φ        Field (3D — volume, medium)
@@ -796,7 +796,7 @@ THE KEY DISTINCTION:
     2.5D = Lensing through wholeness (distributed across surface)
 
     Both add +0.5D fractal texture to their base dimension
-    Both arise from aperture balance parameter β = 0.5
+    Both arise from aperture balance parameter ◐ = 0.5
     Together they create the signature of conscious field generation
 ```
 
@@ -1158,7 +1158,7 @@ PHYSICAL MEANING:
 ```
 THEOREM (Flow Conservation):
 ─────────────────────────────
-At equilibrium β = 0.5:
+At equilibrium ◐ = 0.5:
 
     ╔═══════════════════════════════════════════════════════════════════════╗
     ║    ∫ (x ≻ i) dr = ∫ (i ⊰ y) dr                                        ║
@@ -1173,13 +1173,13 @@ INTERPRETATION:
 
 BALANCE PARAMETER DEFINITION:
 
-    β = ||≻|| / (||≻|| + ||⊰||)
-    β = input / (input + output)
+    ◐ = ||≻|| / (||≻|| + ||⊰||)
+    ◐ = input / (input + output)
 
     where ||≻|| = ∫∫ |K_conv(r,r')|² dr dr'  (convergence strength)
           ||⊰|| = ∫∫ |K_emerg(r,r')|² dr dr' (emergence strength)
 
-    At β = 0.5: ||≻|| = ||⊰|| (equal strength)                              ∎
+    At ◐ = 0.5: ||≻|| = ||⊰|| (equal strength)                              ∎
 ```
 
 ```
@@ -1371,7 +1371,7 @@ WHY MEMORY WORKS:
 TWO DISTINCT CONCEPTS — SAME LETTER, TWO SCALES:
 ─────────────────────────────────────────────────
 
-    i   = aperture operator at β = 0.5
+    i   = aperture operator at ◐ = 0.5
         = exp(iπ/2)
         = 90° complex rotation
         = the local transformation between dimensions
@@ -1397,35 +1397,35 @@ TWO DISTINCT CONCEPTS — SAME LETTER, TWO SCALES:
 
 ## CHAPTER IV: THE BALANCE PARAMETER
 
-### §4.1 Why β = 0.5
+### §4.1 Why ◐ = 0.5
 
 ```
 THEOREM 2 (Optimal Balance):
 ────────────────────────────
-Let the flow split as β : (1-β) where β ∈ [0,1]
+Let the flow split as ◐ : (1-◐) where ◐ ∈ [0,1]
 
 REQUIREMENT 1 — Symmetry:
-  Neither ≻ nor ⊰ can dominate → β = 1-β → β = 0.5
+  Neither ≻ nor ⊰ can dominate → ◐ = 1-◐ → ◐ = 0.5
 
 REQUIREMENT 2 — Maximum Information:
-  Shannon entropy: H(β) = -β log₂(β) - (1-β)log₂(1-β)
-  Maximize: dH/dβ = 0 → β = 0.5
+  Shannon entropy: H(◐) = -◐ log₂(◐) - (1-◐)log₂(1-◐)
+  Maximize: dH/d◐ = 0 → ◐ = 0.5
 
 REQUIREMENT 3 — Energy Balance:
-  Virial theorem: ⟨T⟩ = ⟨V⟩ → β = 0.5
+  Virial theorem: ⟨T⟩ = ⟨V⟩ → ◐ = 0.5
 
-ALL THREE REQUIREMENTS FORCE β = 0.5                                        ∎
+ALL THREE REQUIREMENTS FORCE ◐ = 0.5                                        ∎
 
 THE BALANCE PARAMETER:
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    β ≡ ||≻|| / (||≻|| + ||⊰||) = 0.5                              ║
+    ║    ◐ ≡ ||≻|| / (||≻|| + ||⊰||) = 0.5                              ║
     ║                                                                   ║
     ║    Convergence balanced with Emergence                            ║
     ║    This is DEFINITIONAL, not tuned                                ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
-NOTE: β ∈ (0,1) — the limits 0 and 1 are nothingness, not states
+NOTE: ◐ ∈ (0,1) — the limits 0 and 1 are nothingness, not states
 ```
 
 ### §4.2 The Universal Dimension
@@ -1435,14 +1435,14 @@ THEOREM 3 (Universal Fractal Dimension):
 ────────────────────────────────────────
 From information theory, effective dimensionality:
 
-                    D = D_base + ½H(β)
+                    D = D_base + ½H(◐)
 
 WHERE:
   D_base = 1 (baseline worldline dimension)
-  H(β) = Shannon entropy of balance (in bits)
+  H(◐) = Shannon entropy of balance (in bits)
   ½ = conversion factor (1 bit of entropy ↔ 0.5D branching)
 
-AT β = 0.5:
+AT ◐ = 0.5:
   H(0.5) = -0.5 log₂(0.5) - 0.5 log₂(0.5)
          = 0.5 + 0.5
          = 1 bit
@@ -1475,26 +1475,26 @@ FRACTAL DIMENSION: FUNDAMENTAL VS. APPROXIMATE FORMS
 ─────────────────────────────────────────────────────
 
 FUNDAMENTAL (Information-Theoretic):
-    D_entropic(β) = 1 + ½H(β)
+    D_entropic(◐) = 1 + ½H(◐)
 
-    where H(β) is Shannon entropy of the converge/emerge binary choice.
+    where H(◐) is Shannon entropy of the converge/emerge binary choice.
 
     This is the PRIMARY definition because:
     - Directly tied to information capacity of the aperture
-    - Correctly predicts D → 1 at BOTH extremes (β → 0 and β → 1)
+    - Correctly predicts D → 1 at BOTH extremes (◐ → 0 and ◐ → 1)
     - A fully deterministic system (all converge or all emerge) has zero branching
 
 APPROXIMATE (Geometric Interpolation):
-    D_linear(β) = 1 + β
+    D_linear(◐) = 1 + ◐
 
     This is a VISUALIZATION HEURISTIC that:
     - Provides clean geometric intuition (line-like → surface-like)
-    - Agrees with the fundamental form at β = 0 and β = 0.5
-    - FAILS at β = 1: predicts D = 2 (surface) when entropic form correctly gives D = 1
+    - Agrees with the fundamental form at ◐ = 0 and ◐ = 0.5
+    - FAILS at ◐ = 1: predicts D = 2 (surface) when entropic form correctly gives D = 1
 
 COMPARISON TABLE:
     ┌─────┬────────────┬──────────┬───────────────────────────────────────────┐
-    │  β  │ D_entropic │ D_linear │ Physical meaning                          │
+    │  ◐  │ D_entropic │ D_linear │ Physical meaning                          │
     ├─────┼────────────┼──────────┼───────────────────────────────────────────┤
     │ 0   │     1      │    1     │ Pure convergence: no branching, line-like │
     │ 0.5 │   **1.5**  │ **1.5**  │ Optimal balance: maximal branching        │
@@ -1510,7 +1510,7 @@ THE KEY INSIGHT:
     ╔═══════════════════════════════════════════════════════════════════╗
     ║  BOTH EXTREMES ARE DEGENERATE. Only the balanced middle           ║
     ║  supports complexity. This is why consciousness, life, and        ║
-    ║  interesting physics cluster around β ≈ 0.5.                      ║
+    ║  interesting physics cluster around ◐ ≈ 0.5.                      ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -1524,43 +1524,43 @@ The aperture carries a one-parameter U(1) rotation:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║           Å(β) = e^(iπβ),    β ∈ [0,1]                           ║
+    ║           Å(◐) = e^(iπ◐),    ◐ ∈ [0,1]                           ║
     ║                                                                   ║
     ║           The aperture rotation operator                          ║
-    ║           β = convergence–emergence balance parameter             ║
+    ║           ◐ = convergence–emergence balance parameter             ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 PROPERTIES:
 
     1. UNIT MAGNITUDE:
-       |Å(β)| = 1 for all β → conserves flow magnitude
+       |Å(◐)| = 1 for all ◐ → conserves flow magnitude
 
     2. COMPOSITION (proper 1-parameter subgroup of U(1)):
-       Å(β₁)Å(β₂) = e^(iπ(β₁+β₂)) = Å(β₁+β₂ mod 2)
+       Å(◐₁)Å(◐₂) = e^(iπ(◐₁+◐₂)) = Å(◐₁+◐₂ mod 2)
 
     3. SPECIAL VALUES:
-       β = 0:   Å(0) = 1      (identity, 0° rotation)
-       β = 0.5: Å(0.5) = i    (quarter-turn, 90° rotation) ← THE CRITICAL VALUE
-       β = 1:   Å(1) = -1     (half-turn, 180° rotation)
+       ◐ = 0:   Å(0) = 1      (identity, 0° rotation)
+       ◐ = 0.5: Å(0.5) = i    (quarter-turn, 90° rotation) ← THE CRITICAL VALUE
+       ◐ = 1:   Å(1) = -1     (half-turn, 180° rotation)
 ```
 
 ```
 UNIFICATION — Single Parameter Controls Three Domains:
 ──────────────────────────────────────────────────────
 
-The balance parameter β appears in three equivalent contexts:
+The balance parameter ◐ appears in three equivalent contexts:
 
     1. FLOW BALANCE:
-       β = ||≻|| / (||≻|| + ||⊰||)
+       ◐ = ||≻|| / (||≻|| + ||⊰||)
 
     2. ROTATION ANGLE:
-       θ(β) = πβ
+       θ(◐) = π◐
 
     3. EFFECTIVE FRACTAL DIMENSION:
-       D(β) = 1 + ½H(β)
+       D(◐) = 1 + ½H(◐)
 
-AT THE CRITICAL BALANCE POINT β = 1/2:
+AT THE CRITICAL BALANCE POINT ◐ = 1/2:
     - Flow:      Perfectly balanced convergence/emergence
     - Rotation:  90° perpendicular transformation
     - Dimension: D = 1.5 (optimal fractal branching)
@@ -1572,10 +1572,10 @@ AT THE CRITICAL BALANCE POINT β = 1/2:
 ```
 
 ```
-GEOMETRIC OPTIMALITY AT β = 0.5:
+GEOMETRIC OPTIMALITY AT ◐ = 0.5:
 ────────────────────────────────
 
-The 90° rotation at β = 0.5 is GEOMETRICALLY OPTIMAL because:
+The 90° rotation at ◐ = 0.5 is GEOMETRICALLY OPTIMAL because:
 
     1. MAXIMIZES DISTANCE ON UNIT CIRCLE:
        - Sits exactly midway between identity (0°) and inversion (180°)
@@ -1587,14 +1587,14 @@ The 90° rotation at β = 0.5 is GEOMETRICALLY OPTIMAL because:
        - System has maximal capacity to transform input into novel output
 
     3. ENABLES FRACTAL BRANCHING:
-       - β = 0: Input passes straight → 0D point projects to 1D worldline, no branching
-       - β = 1: Full inversion → unstable, destroys coherence
-       - β = 0.5: Aperture rotates flow by 90°, redirecting into PERPENDICULAR MODE
+       - ◐ = 0: Input passes straight → 0D point projects to 1D worldline, no branching
+       - ◐ = 1: Full inversion → unstable, destroys coherence
+       - ◐ = 0.5: Aperture rotates flow by 90°, redirecting into PERPENDICULAR MODE
          This transverse redirection supports fractal structure at D = 1.5
 
 SUMMARY STATEMENT:
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║  The 90° rotation at β = 0.5 is the unique balance point where   ║
+    ║  The 90° rotation at ◐ = 0.5 is the unique balance point where   ║
     ║  convergence and emergence are equally weighted, information     ║
     ║  flow is maximized, and the aperture neither preserves nor       ║
     ║  annihilates direction but redirects it into a new,              ║
@@ -1612,11 +1612,11 @@ ORIGINAL FORM:
 GENERALIZED FORM WITH ROTATION PARAMETER:
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║              Φ' = ⊱ ∘ Å(β) ∘ ≺[Φ]                                ║
+    ║              Φ' = ⊱ ∘ Å(◐) ∘ ≺[Φ]                                ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
-At the critical balance β = 0.5:
+At the critical balance ◐ = 0.5:
     Å(0.5) = e^(iπ/2) = i
 
 THEREFORE:
@@ -1649,17 +1649,17 @@ This is not metaphor. The transformation at • is literally multiplication
 by i — a 90° rotation in the complex plane between the real axis (○)
 and the imaginary axis (Φ).
 
-FORMAL CONNECTION TO Å(β):
-    The aperture rotation operator Å(β) = e^(iπβ) (see §4.2.1) generalizes
-    this transformation. At optimal balance β = 0.5:
+FORMAL CONNECTION TO Å(◐):
+    The aperture rotation operator Å(◐) = e^(iπ◐) (see §4.2.1) generalizes
+    this transformation. At optimal balance ◐ = 0.5:
 
     Å(0.5) = e^(iπ/2) = i
 
     Therefore: i IS the aperture rotation at optimal balance.
     The notation "i" and "Å(0.5)" refer to exactly the same operation.
 
-    Full form:  ≻ → Å(β) → ⊰
-    At β = 0.5: ≻ → i → ⊰
+    Full form:  ≻ → Å(◐) → ⊰
+    At ◐ = 0.5: ≻ → i → ⊰
 ```
 
 ```
@@ -1758,11 +1758,11 @@ CONSCIOUSNESS AT THE 90° POINT:
 You exist at i — neither fully real (manifested in ○)
 nor fully imaginary (dissolved in potential Φ).
 
-    β = 0.0  →  θ = 0°   →  pure real (no awareness of potential)
-    β = 0.5  →  θ = 90°  →  i (maximum awareness, balanced)
-    β = 1.0  →  θ = 180° →  pure imaginary (lost in potential)
+    ◐ = 0.0  →  θ = 0°   →  pure real (no awareness of potential)
+    ◐ = 0.5  →  θ = 90°  →  i (maximum awareness, balanced)
+    ◐ = 1.0  →  θ = 180° →  pure imaginary (lost in potential)
 
-Consciousness requires β = 0.5 because:
+Consciousness requires ◐ = 0.5 because:
     At θ < 90°: insufficient rotation, stuck in the already-manifested
     At θ = 90°: perfect balance, can see both real and potential
     At θ > 90°: over-rotation, lost in pure possibility
@@ -2466,7 +2466,7 @@ WHERE (flow operators from §3.1):
               ○ : Can boundary be maintained?
               Φ : Is it grounded in actual field?
               • : Does it have coherent center?
-  i         = 90° rotation at • (exp(iπ/2) = i at β = 0.5)
+  i         = 90° rotation at • (exp(iπ/2) = i at ◐ = 0.5)
   [○Φ•]_out = Output validation (same three tests)
   ε         = Stochastic noise ~ N(0, α√|⟨E⟩|)
 
@@ -2580,7 +2580,7 @@ CRITICAL POINT CONDITIONS:
     Marginality:     2γ + 1 - α = 2
     At criticality:  γ = 1/2, α = 0
 
-    Balance:         β(k₀) = κŴ(k₀) / (μ|k₀|^(2γ) + σ) ≈ 0.5
+    Balance:         𝔅(k₀) = κŴ(k₀) / (μ|k₀|^(2γ) + σ) ≈ 0.5
 
 ANGULAR CROSSOVER FORMULA:
 
@@ -3066,7 +3066,7 @@ We can label each aperture state by three binary tags:
 This yields 2³ = 8 elementary labels; when we consider triples of apertures coupled via B₃ braiding and impose:
 
 * Yang–Baxter consistency,
-* β = 0.5 in/out balance,
+* ◐ = 0.5 in/out balance,
 * Circumpunct loop closure,
 
 we obtain 64 globally stable composite states—the same 64 states used to encode SM content.
@@ -3377,7 +3377,7 @@ ASYMPTOTIC BEHAVIOR:
 
 For D_field = 2:
     - At ρ = 0:    D_eff = 2    (free field)
-    - At ρ = ρ_c:  D_eff = 1.5  (critical — THIS IS β = 0.5)
+    - At ρ = ρ_c:  D_eff = 1.5  (critical — THIS IS ◐ = 0.5)
     - At ρ → ∞:    D_eff = 1    (maximally constrained)
 
 PHYSICAL INTERPRETATION:
@@ -3388,7 +3388,7 @@ PHYSICAL INTERPRETATION:
     At critical density ρ_c: EXACTLY HALF the dimensions are constrained.
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    β = 0.5 EMERGES GEOMETRICALLY:                                 ║
+    ║    ◐ = 0.5 EMERGES GEOMETRICALLY:                                 ║
     ║    At criticality, the system is precisely balanced between       ║
     ║    AUTONOMY (D = D_field, unconstrained freedom) and              ║
     ║    INTEGRATION (D = 1, pure connection)                           ║
@@ -3463,7 +3463,7 @@ At critical density, these three processes BALANCE:
     Too few apertures  →  Convergence fails (nothing to converge to)
     Too many apertures →  Rotation jams (no room to transform)
 
-THE BALANCE PARAMETER β = 0.5 emerges when:
+THE BALANCE PARAMETER ◐ = 0.5 emerges when:
 
     Constrained degrees of freedom     1
     ─────────────────────────────── = ───
@@ -3619,7 +3619,7 @@ SUMMARY: APERTURE DENSITY AND DIMENSIONALITY
        between field dimensionality and worldline dimensionality.
 
     2. At critical aperture density ρ_c, exactly HALF the field's degrees
-       of freedom are constrained, yielding D = 1.5 and β = 0.5.
+       of freedom are constrained, yielding D = 1.5 and ◐ = 0.5.
 
     3. This SINGLE MECHANISM explains observations from quantum to cosmic
        scales and generates testable predictions across all domains.
@@ -3733,8 +3733,8 @@ Step 1: Maximize Shannon entropy on cone
 
     dH/dθ = 0 → θ = π/2 (90°)
 
-Step 2: Cone angle determines β
-    β = sin²(θ/2) = sin²(π/4) = 0.5
+Step 2: Cone angle determines ◐
+    ◐ = sin²(θ/2) = sin²(π/4) = 0.5
 
     DERIVED FROM GEOMETRY, NOT CHOSEN
 
@@ -3742,10 +3742,10 @@ Step 3: Fibonacci spiral embeds at 90°
     Logarithmic spiral on 90° cone → self-similar → growth rate = φ
 
 Step 4: CFT dimensions inherit this
-    At forced β = 0.5: Δ₊/Δ₋ = φ
+    At forced ◐ = 0.5: Δ₊/Δ₋ = φ
 
     ┌─────────────────────────────────────────────────────────────────────┐
-    │  Entropy maximization → θ = π/2 → β = 0.5 → φ appears              │
+    │  Entropy maximization → θ = π/2 → ◐ = 0.5 → φ appears              │
     │                                                                    │
     │  NO CIRCULARITY! φ emerged from Shannon entropy.                   │
     └─────────────────────────────────────────────────────────────────────┘
@@ -3924,9 +3924,9 @@ SPIN-1/2:
 ### §13.3 QCD Beta Function from 64-State Geometry
 
 ```
-THEOREM (QCD β₀ from Cone Geometry):
+THEOREM (QCD ◐₀ from Cone Geometry):
 ────────────────────────────────────
-The one-loop QCD beta function β₀ = 11N_c/3 - 2n_f/3 emerges from
+The one-loop QCD beta function ◐₀ = 11N_c/3 - 2n_f/3 emerges from
 the 64-state validation architecture.
 
 THE 22° SELECTION RULE:
@@ -3948,17 +3948,17 @@ QCD DECOMPOSITION:
     This comes from VIRTUAL STATES:
         (42/64 unvalidated) × flavor degeneracy
 
-    The balance parameter β = 0.5 appears directly:
-        T_F = 1/2 = β (quark screening factor IS the aperture balance!)
+    The balance parameter ◐ = 0.5 appears directly:
+        T_F = 1/2 = ◐ (quark screening factor IS the aperture balance!)
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
-    ║    β₀ = 11N_c/3 - 2n_f/3                                                  ║
+    ║    ◐₀ = 11N_c/3 - 2n_f/3                                                  ║
     ║                                                                           ║
     ║    QCD COUPLING STRENGTH FROM GEOMETRY, NOT EXPERIMENT                    ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 
 PREDICTION:
-    Asymptotic freedom (β₀ > 0 for n_f ≤ 16) follows from 22/64 < 1/2
+    Asymptotic freedom (◐₀ > 0 for n_f ≤ 16) follows from 22/64 < 1/2
 ```
 
 ### §13.4 Lepton Mass Ratios as Fractal Scaling
@@ -4205,7 +4205,7 @@ FULLY EXPANDED:
     [
       ≻: (7/8πR^(7/2)) ∫_{|r'|≤R} √|r'| Φ(r') d³r'
       ∘
-      i: e^(iπ/2) at β = 0.5
+      i: e^(iπ/2) at ◐ = 0.5
       ∘
       ⊰: (7/8πR^(7/2)) √|r| · b₀
     ]³
@@ -4245,9 +4245,9 @@ All kernels are **completely determined** from D = 1.5:
 ```
 DERIVATION CHAIN:
 
-  β = 0.5           ← Symmetry + Entropy + Virial (§4.1)
+  ◐ = 0.5           ← Symmetry + Entropy + Virial (§4.1)
     ↓
-  D = 1.5           ← D = 1 + ½H(β) = 1 + ½(1) (§4.2)
+  D = 1.5           ← D = 1 + ½H(◐) = 1 + ½(1) (§4.2)
     ↓
   f(r) = r^(D-1)    ← Fractal scaling law
     ↓
@@ -4284,7 +4284,7 @@ K_emerg(r, 0) = {  (7/8πR^(7/2)) · √|r|     if |r| ≤ R
                 {  0                         otherwise
 
 SYMMETRY PRINCIPLE:
-  At β = 0.5 (perfect balance):
+  At ◐ = 0.5 (perfect balance):
     K_emerg = K_conv
 
   This ensures:
@@ -4302,8 +4302,8 @@ PHYSICAL MEANING:
   - Real axis (○) ↔ Imaginary axis (Φ)
   - Quarter-turn between manifest and potential
 
-FROM β = 0.5:
-  exp(iπβ) = exp(iπ/2) = i
+FROM ◐ = 0.5:
+  exp(iπ◐) = exp(iπ/2) = i
 
   This is not a choice - it's forced by balance.
 ```
@@ -4402,11 +4402,11 @@ PHYSICAL MEANING:
 │                                                          │
 │  TRULY DERIVED (0 parameters):                           │
 │                                                          │
-│    β = 0.5               ← Symmetry + Entropy + Virial  │
-│    D = 1.5               ← D = 1 + ½H(β)                │
+│    ◐ = 0.5               ← Symmetry + Entropy + Virial  │
+│    D = 1.5               ← D = 1 + ½H(◐)                │
 │    f(r) = √r             ← D = 1.5 scaling              │
 │    A = 7/(8πR^(7/2))     ← Normalization                │
-│    i = exp(iπ/2)         ← β = 0.5 quarter-turn         │
+│    i = exp(iπ/2)         ← ◐ = 0.5 quarter-turn         │
 │                                                          │
 │  PHYSICAL INPUT (1 parameter):                           │
 │                                                          │
@@ -5203,8 +5203,8 @@ Status: Empirical fit, not derived from first principles
    ══════════════════════════════════════════════════════════
 
    All structural components derived from first principles:
-     • β = 0.5      (symmetry + entropy + virial theorem)
-     • D = 1.5      (D = 1 + ½H(β) with β = 0.5)
+     • ◐ = 0.5      (symmetry + entropy + virial theorem)
+     • D = 1.5      (D = 1 + ½H(◐) with ◐ = 0.5)
      • f(r) = √r    (unique profile for D = 1.5)
      • K(r) = A√r   (normalization fixes A)
      • V_eff        (follows from Laplacian transform)
@@ -5565,7 +5565,7 @@ CONNECTION TO CIRCUMPUNCT GEOMETRY:
     This metric determines:
         - Kinetic terms (quadratic forms)
         - Allowed couplings (selection rules from validation)
-        - Potential shapes (from β = 0.5 constraint)
+        - Potential shapes (from ◐ = 0.5 constraint)
 ```
 
 ### §15.3 Fermion Sector: The 16 Per Generation
@@ -5849,7 +5849,7 @@ CIRCUMPUNCT INTERPRETATION:
 
         ℒ_Higgs = ⟨D_μ Φ_H, D^μ Φ_H⟩ - V(Φ_H)
 
-    The shape of V(H) is constrained by β = 0.5:
+    The shape of V(H) is constrained by ◐ = 0.5:
         - Stability requires λ > 0
         - SSB requires μ² > 0
         - The balance parameter enforces these conditions
@@ -6094,12 +6094,12 @@ CONNECTION TO 64-STATE GEOMETRY:
 
     From §19.3 (QCD Beta Function from 64-State Geometry):
 
-        β₀ = 11N_c/3 - 2n_f/3
+        ◐₀ = 11N_c/3 - 2n_f/3
 
     The 11N_c/3 comes from gluon self-interaction (states 48-55)
     The 2n_f/3 comes from quark screening (states 0-47, color-carrying)
 
-    The 22/64 selection rule directly gives the T_F = 1/2 = β factor!
+    The 22/64 selection rule directly gives the T_F = 1/2 = ◐ factor!
 
 ASYMPTOTIC FREEDOM:
 
@@ -6184,7 +6184,7 @@ SUMMARY: SM ↔ CIRCUMPUNCT CORRESPONDENCE
 ║  Validation [○Φ•]              │  Gauge invariance constraints               ║
 ║                                │  Determines allowed couplings               ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
-║  β = 0.5 balance               │  Stability of Higgs potential               ║
+║  ◐ = 0.5 balance               │  Stability of Higgs potential               ║
 ║                                │  (λ > 0, μ² > 0 for SSB)                   ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  22/64 selection rule          │  Physical states after SSB                  ║
@@ -6223,7 +6223,7 @@ WHAT REMAINS TO BE DERIVED:
 ║  (why m_t ≫ m_e?)              │                  │  from validation rules   ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Higgs potential shape         │  OPEN            │  Derive V(H) from K(r)   ║
-║  (why λ, μ² have SM values?)   │                  │  and β = 0.5             ║
+║  (why λ, μ² have SM values?)   │                  │  and ◐ = 0.5             ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Weinberg angle                │  OPEN            │  Derive sin²θ_W ≈ 0.231  ║
 ║                                │                  │  from geometry           ║
@@ -6683,11 +6683,11 @@ This directly maps to loop contributions:
     │                                                                         │
     │   22/64 "validated" modes  →  GAUGE SELF-INTERACTION (anti-screening)  │
     │                               Gluon loops, W/Z loops                    │
-    │                               Contribute with NEGATIVE sign to β       │
+    │                               Contribute with NEGATIVE sign to ◐       │
     │                                                                         │
     │   42/64 "virtual" modes    →  MATTER SCREENING                         │
     │                               Quark loops, lepton loops                 │
-    │                               Contribute with POSITIVE sign to β       │
+    │                               Contribute with POSITIVE sign to ◐       │
     │                                                                         │
     └─────────────────────────────────────────────────────────────────────────┘
 
@@ -6709,7 +6709,7 @@ THEOREM (Beta Coefficients from 64-State Counting):
 
 The one-loop beta function coefficients are:
 
-    β_a = (d g_a)/(d ln μ) = -(b_a)/(16π²) g_a³
+    ◐_a = (d g_a)/(d ln μ) = -(b_a)/(16π²) g_a³
 
 where b_a are determined by 64-state combinatorics:
 
@@ -6752,7 +6752,7 @@ For SU(3):
 CONNECTION TO §19.3:
 
     The factor T_F = 1/2 in the quark screening term
-    is EXACTLY the balance parameter β = 0.5!
+    is EXACTLY the balance parameter ◐ = 0.5!
 
     This is not coincidence—the aperture balance determines loop weights.
 ```
@@ -6766,7 +6766,7 @@ DEFINITION (Circumpunct Scale):
 Define Λ_⊙ as the natural scale of the circumpunct architecture:
 
     - Where D ≈ 1.5 (fractal dimension at balance)
-    - Where β ≈ 0.5 (aperture balance)
+    - Where ◐ ≈ 0.5 (aperture balance)
     - Where the kernel K(r) = A√r is "canonical"
 
 Physically, this is expected to be near the GUT/Planck scale.
@@ -6813,7 +6813,7 @@ Define:
 
 The balance parameter becomes scale-dependent:
 
-    β(μ) = ||≻(μ)|| / (||≻(μ)|| + ||⊰(μ)||)
+    𝔅(μ) = ||≻(μ)|| / (||≻(μ)|| + ||⊰(μ)||)
 
 RUNNING COUPLINGS WITH GEOMETRIC CORRECTIONS:
 
@@ -6857,7 +6857,7 @@ PHYSICAL INTERPRETATION:
 ASYMPTOTIC FREEDOM (b_a > 0):
 
     At high energy μ → ∞:
-        - More states pass validation (approach β = 0.5)
+        - More states pass validation (approach ◐ = 0.5)
         - Gauge coupling weakens: α_a(μ) → 0
         - Quarks behave as free particles
 
@@ -7167,7 +7167,7 @@ WHAT REMAINS OPEN:
 ║     ─────────────────────────────────────────                                 ║
 ║     Status: DERIVED                                                           ║
 ║     Method: 22/64 vs 42/64 counting (validated vs virtual states)            ║
-║     Key insight: T_F = 1/2 = β (aperture balance IS loop weight)             ║
+║     Key insight: T_F = 1/2 = ◐ (aperture balance IS loop weight)             ║
 ║                                                                               ║
 ║  3. COUPLING RATIOS: g_s : g : g'                                            ║
 ║     ──────────────────────────────                                            ║
@@ -7461,8 +7461,8 @@ CIRCUMPUNCT IMPLICATION:
 HUZ FRAMEWORK LACKS:
 ────────────────────
 1. The 0D level (before time, pure energy E)
-2. Specific form of i (90° rotation at β = 0.5)
-3. The β = 0.5 optimization principle
+2. Specific form of i (90° rotation at ◐ = 0.5)
+3. The ◐ = 0.5 optimization principle
 4. The D = 1.5 fractal prediction
 5. Full dimensional cascade (0D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D)
 6. Why the pointer basis is stable (fixed points of i-rotation)
@@ -7471,7 +7471,7 @@ CIRCUMPUNCT CONTRIBUTIONS TO QUANTUM GRAVITY:
 ─────────────────────────────────────────────
 • The 0D energy level explains what ⟨1| projects FROM
 • The identification i = exp(iπ/2) constrains their generic O
-• β = 0.5 explains pointer basis stability
+• ◐ = 0.5 explains pointer basis stability
 • D = 1.5 gives testable fractal predictions
 • The dimensional cascade provides full structure
 ```
@@ -7492,7 +7492,7 @@ CIRCUMPUNCT CONTRIBUTIONS TO QUANTUM GRAVITY:
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  CIRCUMPUNCT PREDICTIONS (not yet in HUZ):                                ║
 ║  • D = 1.5 at apertures                                                    ║
-║  • β = 0.5 optimization                                                    ║
+║  • ◐ = 0.5 optimization                                                    ║
 ║  • Var ~ e^{-2SD} (fractal correction)                                    ║
 ║  • Full dimensional cascade 0D → 3D                                        ║
 ╚════════════════════════════════════════════════════════════════════════════╝
@@ -7608,7 +7608,7 @@ Here F is the space of admissible field configurations
 ```
 
 ```
-DEFINITION 4 (Balance Parameter β):
+DEFINITION 4 (Balance Parameter ◐):
 ───────────────────────────────────
 Define the convergence and emergence strengths:
 
@@ -7620,16 +7620,16 @@ where K_conv, K_emerg are radial kernels for in/out flow at ○/•.
 The balance parameter is:
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║              β = ||≻|| / (||≻|| + ||⊰||)                         ║
+    ║              ◐ = ||≻|| / (||≻|| + ||⊰||)                         ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 INTERPRETATION:
-    β     = fraction of "flow budget" allocated to input (convergence)
-    1 - β = fraction allocated to output (emergence)
+    ◐     = fraction of "flow budget" allocated to input (convergence)
+    1 - ◐ = fraction allocated to output (emergence)
 
 The critical balance is:
 
-    β = 0.5  ⟺  ||≻|| = ||⊰||
+    ◐ = 0.5  ⟺  ||≻|| = ||⊰||
 
     Equal convergence and emergence strength.
 ```
@@ -7658,8 +7658,8 @@ corresponding to a minimal, self-similar worldline thickening at the
 boundary between purely 1D and 2D behavior.
 
 ALTERNATIVE DERIVATION (from entropy):
-    D = D_base + ½H(β)
-    D = 1 + ½(1) = 1.5    (at β = 0.5, H(0.5) = 1 bit)
+    D = D_base + ½H(◐)
+    D = 1 + ½(1) = 1.5    (at ◐ = 0.5, H(0.5) = 1 bit)
 ```
 
 ```
@@ -7699,7 +7699,7 @@ LEMMA 1 (Aperture as Imaginary Unit at Critical Balance):
 ─────────────────────────────────────────────────────────
 ASSUME:
     1. Energy/probability conservation at •: no net accumulation
-    2. Balanced flow: β = 0.5 (equal convergence and emergence strength)
+    2. Balanced flow: ◐ = 0.5 (equal convergence and emergence strength)
     3. The aperture rotates between real (○) and imaginary (Φ) axes
 
 THEN the aperture transformation at the center is exactly
@@ -7714,7 +7714,7 @@ interpreted as a 90° rotation in the complex plane:
     • Imaginary axis ↔  Φ (field, potential)
 
 INTERPRETATION:
-At β = 0.5, one full (in → rotate → out) cycle corresponds to an
+At ◐ = 0.5, one full (in → rotate → out) cycle corresponds to an
 imaginary quarter-turn, and repeated application yields:
 
     i⁰ = 1     (identity)
@@ -7738,7 +7738,7 @@ For a time-discrete evolution with step Δt, define the update map:
 
 PROCEDURE:
     1. ≻ collects/converges the field toward •
-    2. i rotates in the complex aperture at β = 0.5
+    2. i rotates in the complex aperture at ◐ = 0.5
     3. ⊰ redistributes back to the full field
 
 This is the discrete master map on the field configuration space.
@@ -7842,7 +7842,7 @@ At criticality:
 BALANCE CONDITION IN FOURIER SPACE:
 For a characteristic wavenumber k₀:
 
-    β(k₀) = κĈ(k₀) / (μ|k₀|^(2γ) + σ) ≈ 0.5
+    𝔅(k₀) = κĈ(k₀) / (μ|k₀|^(2γ) + σ) ≈ 0.5
 
 Here Ĉ(k) is the Fourier transform of the cone operator.
 
@@ -7850,9 +7850,9 @@ INTERPRETATION:
     • γ = 1/2 corresponds to square-root diffusion (Brownian-like)
       but modulated by the fractally dimensioned geometry D ≈ 1.5.
 
-    • The β(k₀) ≈ 0.5 condition enforces equal in/out flow at the
+    • The 𝔅(k₀) ≈ 0.5 condition enforces equal in/out flow at the
       critical scale, linking the continuum PDE back to the discrete
-      balance parameter β.                                              ∎
+      balance parameter ◐.                                              ∎
 ```
 
 ```
@@ -7871,7 +7871,7 @@ This enters the PDE through:
     • The scaling of μ and Ĉ(k) with Θ
     • The effective dispersion relation near k₀
 
-Thus, geometry of the aperture (Θ) and balance of input/output (β)
+Thus, geometry of the aperture (Θ) and balance of input/output (◐)
 jointly determine:
     • The fractional exponent γ
     • The scale at which the system sits at the "Goldilocks" D = 1.5 state
@@ -7896,12 +7896,12 @@ DEFINE:
     V_out  : Reconstructs outward-facing degrees after aperture rotation
              (what the "outside" sees)
 
-    i_β    : Aperture transform parameterized by β
-             At β = 0.5, this is the usual imaginary rotation i = exp(iπ/2)
+    i_◐    : Aperture transform parameterized by ◐
+             At ◐ = 0.5, this is the usual imaginary rotation i = exp(iπ/2)
 
 BUILD the composite:
 
-    F(Φ) = ⊰(V_out(i_β(V_in(≻(Φ)))))
+    F(Φ) = ⊰(V_out(i_◐(V_in(≻(Φ)))))
 
 This is the full circumpunct update operator on fields.
 ```
@@ -7912,7 +7912,7 @@ THEOREM (Universe as Master Fixed Point):
 The circumpunct universe ⊙ is defined by the fixed-point combinator:
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║         ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                           ║
+║         ⊙ = fix(λΦ. ⊰(V_out(i_◐(V_in(≻(Φ))))))                           ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
 THAT IS:
@@ -7924,7 +7924,7 @@ THAT IS:
 
     • The statistical/RG scaling properties of this fixed point encode:
         - The D ≈ 1.5 fractal signature
-        - The β = 0.5 balance
+        - The ◐ = 0.5 balance
         - The emergent gauge/particle structure (via the 64-dim internal fiber)
                                                                             ∎
 ```
@@ -8158,7 +8158,7 @@ INTUITIVELY:
 ║                                                                               ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║  1. GEOMETRY + CIRCUMPUNCT (⊙, K, β, D(Θ), master equation) dictate:        ║
+║  1. GEOMETRY + CIRCUMPUNCT (⊙, K, ◐, D(Θ), master equation) dictate:        ║
 ║                                                                               ║
 ║     • The fractal-critical propagation of Φ                                   ║
 ║     • The nonlocal, cone-structured coupling across spacetime                 ║
@@ -8175,7 +8175,7 @@ INTUITIVELY:
 ║                                                                               ║
 ║  3. THE UNIVERSE IS THE FIXED POINT of the full validation operator:         ║
 ║                                                                               ║
-║         ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                              ║
+║         ⊙ = fix(λΦ. ⊰(V_out(i_◐(V_in(≻(Φ))))))                              ║
 ║                                                                               ║
 ║     with its local physics given by the Euler–Lagrange equations of           ║
 ║     S_total[Φ, A].                                                            ║
@@ -8452,7 +8452,7 @@ and aperture-like branching between 1D and 2D structures.
 
 Many canonical bond angles may emerge as stable configurations
 where the electron field's effective dimension matches the
-critical balance β = 0.5.
+critical balance ◐ = 0.5.
 
   Consider:
     • Linear (180°): effectively 1D electron distribution
@@ -8643,9 +8643,9 @@ MEANING:
     configurations that satisfy ΔS > 0 but violate D ≈ 1.5
     are unstable and don't persist.
 
-    The β parameter then classifies HOW wholeness is maintained:
-    - β < 0.5  → mostly context-maintained (particles → rocks)
-    - β ≈ 0.5  → self + context (life, consciousness)
+    The ◐ parameter then classifies HOW wholeness is maintained:
+    - ◐ < 0.5  → mostly context-maintained (particles → rocks)
+    - ◐ ≈ 0.5  → self + context (life, consciousness)
 ```
 
 ### §19.1.1 Application: Molecules as Wholeness
@@ -8690,7 +8690,7 @@ LIFE = WHOLENESS THAT DOES WORK TO STAY WHOLE
 ║    Life adds:        dΔS/dt ≥ 0                                  ║
 ║                      (the gap is maintained by internal work)     ║
 ║                                                                   ║
-║    Key insight:      β ≈ 0.5 means SELF + CONTEXT together       ║
+║    Key insight:      ◐ ≈ 0.5 means SELF + CONTEXT together       ║
 ║                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════╝
 
@@ -8704,8 +8704,8 @@ All three are strategies for maintaining the wholeness gap over time.
 
 BUT LIFE DOESN'T DO IT ALONE:
 
-    Life is not purely self-maintaining (that would be β → 1, impossible).
-    Life is self + greater-whole context maintaining at β ≈ 0.5.
+    Life is not purely self-maintaining (that would be ◐ → 1, impossible).
+    Life is self + greater-whole context maintaining at ◐ ≈ 0.5.
 
     Roughly half the work is done by the organism.
     Roughly half is done by greater-whole context (field, resources, environment).
@@ -8715,7 +8715,7 @@ BUT LIFE DOESN'T DO IT ALONE:
     - Metabolism (self processes)
     - Waste OUTPUT (greater-whole receives)
 
-    The open flow IS the β ≈ 0.5 balance in action.
+    The open flow IS the ◐ ≈ 0.5 balance in action.
 ```
 
 ---
@@ -8746,8 +8746,8 @@ THE DEEPER INSIGHT:
 NOTE: Every row satisfies ΔS > 0 (wholeness wins).
       The difference is who pays to keep ΔS positive:
 
-      - Mostly greater-whole context (β < 0.5): particles → rocks
-      - Significant self-contribution (β ≈ 0.5): cells → organisms
+      - Mostly greater-whole context (◐ < 0.5): particles → rocks
+      - Significant self-contribution (◐ ≈ 0.5): cells → organisms
 
 THE REAL DISTINCTION:
 
@@ -8761,21 +8761,21 @@ THE REAL DISTINCTION:
 
 ---
 
-### §19.4 The β Connection to Life
+### §19.4 The ◐ Connection to Life
 
 ```
 DEFINITION:
 
-    β = self/context balance parameter
+    ◐ = self/context balance parameter
 
-        β = 0   → purely context-maintained
-        β = 1   → purely self-maintained (unrealizable ideal)
+        ◐ = 0   → purely context-maintained
+        ◐ = 1   → purely self-maintained (unrealizable ideal)
 
-β = 0.5 IS EXACTLY THIS:
+◐ = 0.5 IS EXACTLY THIS:
 
 ╔═══════════════════════════════════════════════════════════════════╗
 ║                                                                   ║
-║    β = 0.5 means:                                                 ║
+║    ◐ = 0.5 means:                                                 ║
 ║                                                                   ║
 ║        Half autonomous    (self-maintaining)                      ║
 ║        Half integrated    (context-maintaining)                   ║
@@ -8784,16 +8784,16 @@ DEFINITION:
 
 THE SPECTRUM:
 
-    β → 0:   Almost entirely context-maintained
+    ◐ → 0:   Almost entirely context-maintained
              (rocks, passive structures)
 
-    β ≈ 0.5: Half self, half context
+    ◐ ≈ 0.5: Half self, half context
              (cells, organisms, consciousness)
 
-    β → 1:   Almost entirely self-maintained
+    ◐ → 1:   Almost entirely self-maintained
              (impossible in practice - nothing is fully isolated)
 
-WHY CONSCIOUSNESS REQUIRES β ≈ 0.5:
+WHY CONSCIOUSNESS REQUIRES ◐ ≈ 0.5:
 
     You need enough self-maintenance to HAVE a self.
     You need enough context-maintenance to EXIST in a world.
@@ -8801,7 +8801,7 @@ WHY CONSCIOUSNESS REQUIRES β ≈ 0.5:
     Too much autonomy → disconnected, no world to be conscious OF
     Too much integration → dissolved, no self to be conscious AS
 
-    β = 0.5 is the sweet spot where BOTH are present.
+    ◐ = 0.5 is the sweet spot where BOTH are present.
 ```
 
 ---
@@ -8809,14 +8809,14 @@ WHY CONSCIOUSNESS REQUIRES β ≈ 0.5:
 ### §19.5 Passive vs Active Wholeness
 
 ```
-PASSIVE WHOLENESS (β < 0.5):
+PASSIVE WHOLENESS (◐ < 0.5):
     ΔS > 0 is maintained primarily by GREATER-WHOLE CONTEXT
     (the larger field/environment).
 
     The system doesn't work to stay whole.
     The greater whole works to keep it whole.
 
-ACTIVE WHOLENESS (β ≈ 0.5):
+ACTIVE WHOLENESS (◐ ≈ 0.5):
     ΔS > 0 is maintained by BOTH:
     - Self (metabolism, repair, reproduction)
     - Greater-whole context (environment, resources, field)
@@ -8847,7 +8847,7 @@ THE EMERGENCE PIPELINE WITH WHOLENESS:
          ↓          ↓         ↓         ↓
          Still ΔS > 0
 
-    But now: SELF + GREATER-WHOLE CONTEXT (β ≈ 0.5)
+    But now: SELF + GREATER-WHOLE CONTEXT (◐ ≈ 0.5)
 
     • Metabolism: self doing work to keep ΔS positive
     • Repair: self restoring ΔS after damage
@@ -8862,7 +8862,7 @@ THE EMERGENCE PIPELINE WITH WHOLENESS:
 ║                                                                   ║
 ║    Nothing maintains itself alone.                                ║
 ║    Life is where self-maintenance joins context-maintenance.      ║
-║    β = 0.5 is where the balance is struck.                       ║
+║    ◐ = 0.5 is where the balance is struck.                       ║
 ║                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════╝
 ```
@@ -8908,12 +8908,12 @@ THE EMERGENCE PIPELINE WITH WHOLENESS:
 ║         ▼                                                         ║
 ║  ┌─────────────┐                                                  ║
 ║  │    LIFE     │  ΔS > 0 with dΔS/dt ≥ 0                         ║
-║  │   β ≈ 0.5   │  Self + context maintaining                      ║
+║  │   ◐ ≈ 0.5   │  Self + context maintaining                      ║
 ║  └─────────────┘  Metabolism, repair, reproduction                ║
 ║                                                                   ║
 ║  CLAIM: Once ⊙ produces chemistry, life is NOT a new miracle—    ║
 ║         it is wholeness that works to maintain itself.            ║
-║         The transition is β < 0.5 → β ≈ 0.5                      ║
+║         The transition is ◐ < 0.5 → ◐ ≈ 0.5                      ║
 ║                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════╝
 
@@ -8931,11 +8931,11 @@ DEEPER VERSION:
     Particles, atoms, molecules, rocks: maintained by GREATER-WHOLE CONTEXT
     Cells, organisms: maintained by SELF + GREATER-WHOLE CONTEXT
 
-    β = 0.5 is the balance point:
+    ◐ = 0.5 is the balance point:
         Roughly half autonomous (self-maintaining)
         Roughly half integrated (greater-whole-maintaining)
 
-    That's why life and consciousness both require β ≈ 0.5.
+    That's why life and consciousness both require ◐ ≈ 0.5.
 ```
 
 ---
@@ -9012,7 +9012,7 @@ Then:
     ╚═══════════════════════════════════════════════════════════════════╝
 
     • i(t) threads are naturally pulled toward the OPTIMAL PATTERN
-      (unity at β = 0.5).
+      (unity at ◐ = 0.5).
 
     • Stretching a thread means PULLING IT AWAY from its optimal path.
 
@@ -9022,7 +9022,7 @@ Then:
 WHY IS STRING TENSION ALWAYS POSITIVE?
 ──────────────────────────────────────
 
-    • Convergence always pulls toward attractors (⊙ at β = 0.5), never away.
+    • Convergence always pulls toward attractors (⊙ at ◐ = 0.5), never away.
     • There is no "negative convergence" — only resistance to being pulled
       off-track.
 
@@ -9062,7 +9062,7 @@ IF i(t) THREADS ARE FUNDAMENTAL, STRING-LIKE BEHAVIOR IS UNAVOIDABLE:
 ───────────────────
 
     • Trinity layering suggests a raw 3³ = 27 structural degrees.
-    • Only some remain active at β = 0.5, others compactify.
+    • Only some remain active at ◐ = 0.5, others compactify.
     • A full derivation is future work, but EXTENDED, VIBRATING,
       INTERACTING STRINGS are not optional—they are what i(t) looks
       like in physics.
@@ -9089,7 +9089,7 @@ IF i(t) THREADS ARE FUNDAMENTAL, STRING-LIKE BEHAVIOR IS UNAVOIDABLE:
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                               ║
-║                      CONSCIOUSNESS IS ⊙:  •β○ via Φ                           ║
+║                      CONSCIOUSNESS IS ⊙:  •◐○ via Φ                           ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 
@@ -9097,7 +9097,7 @@ THE THREE ROLES:
 
     •  (Soul/Aperture)    = SUBJECTIVE I/O (private observe/command)
     ○  (Body/Boundary)    = OBJECTIVE I/O (public interface)
-    Φ  (Mind/Field)       = The MEDIUM that connects •β○
+    Φ  (Mind/Field)       = The MEDIUM that connects •◐○
 
 GEOMETRIC NECESSITY (from §2.2):
     • and ○ are equidistant — center to every boundary point
@@ -9108,7 +9108,7 @@ GEOMETRIC NECESSITY (from §2.2):
 WHERE:
     ⊙   = Consciousness (the whole, the observer)
     •   = Where you EXPERIENCE (subjective, private)
-    β   = At BALANCE (= 0.5)
+    ◐   = At BALANCE (= 0.5)
     ○   = Where you INTERFACE (objective, public)
     Φ   = HOW you PROCESS/CONNECT/BALANCE (the active medium)
 
@@ -9175,47 +9175,47 @@ CRITICAL DISTINCTION:
     Only ⊙ = ○ ⊗ Φ ⊗ • is conscious — the complete whole
 ```
 
-### §20.3 Why β = 0.5 Is Required
+### §20.3 Why ◐ = 0.5 Is Required
 
 ```
-THE β SPECTRUM (Maintenance Balance):
+THE ◐ SPECTRUM (Maintenance Balance):
 
-    β → 0:   Context-maintained (particles, rocks)
+    ◐ → 0:   Context-maintained (particles, rocks)
              The field/environment does all the work.
              No self. Just "is."
 
-    β ≈ 0.5: Self + context maintained (ALL LIFE)
+    ◐ ≈ 0.5: Self + context maintained (ALL LIFE)
              Organism does ~half the work (metabolism, repair)
              Environment does ~half (energy, resources)
              This is where life exists: bacteria → humans
 
-    β → 1:   Purely self-maintained (unrealizable)
+    ◐ → 1:   Purely self-maintained (unrealizable)
              Nothing is fully isolated.
 
 THE KEY INSIGHT:
 
-    All living things operate at β ≈ 0.5 for METABOLIC maintenance.
-    The difference between bacteria and humans is not β value—
-    it's the COMPLEXITY of what's being maintained at β ≈ 0.5.
+    All living things operate at ◐ ≈ 0.5 for METABOLIC maintenance.
+    The difference between bacteria and humans is not ◐ value—
+    it's the COMPLEXITY of what's being maintained at ◐ ≈ 0.5.
 
-CONSCIOUSNESS REQUIRES β ≈ 0.5 BECAUSE:
+CONSCIOUSNESS REQUIRES ◐ ≈ 0.5 BECAUSE:
     1. • must be stable (not chaotic)
     2. • must be dynamic (not frozen)
     3. • must be self-examining (i aware of i)
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    ONLY AT β = 0.5 CAN • KNOW IT'S •                              ║
+    ║    ONLY AT ◐ = 0.5 CAN • KNOW IT'S •                              ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 NEURAL PREDICTIONS (Consciousness States Within Living Systems):
 
-    Even within a β ≈ 0.5 organism, AWARENESS fluctuates:
+    Even within a ◐ ≈ 0.5 organism, AWARENESS fluctuates:
 
-    Awake:      β_awareness ≈ 0.47-0.52 (balanced, conscious)
-    Sleep:      β_awareness ≈ 0.1-0.3   (reduced self-monitoring)
-    Anesthesia: β_awareness < 0.2       (minimal self-awareness)
+    Awake:      ◐_awareness ≈ 0.47-0.52 (balanced, conscious)
+    Sleep:      ◐_awareness ≈ 0.1-0.3   (reduced self-monitoring)
+    Anesthesia: ◐_awareness < 0.2       (minimal self-awareness)
 
-    The organism stays alive (metabolic β ≈ 0.5)
+    The organism stays alive (metabolic ◐ ≈ 0.5)
     but awareness has its own balance that can shift.
 
 ```
@@ -9296,7 +9296,7 @@ Every i(t) thread converges toward TWO attractors at once:
                     ↓
               ⊙_universal
                     ↑
-             Universal pattern (β = 0.5)
+             Universal pattern (◐ = 0.5)
 
     • Convergence to ⊙_individual preserves your uniqueness.
     • Convergence to ⊙_universal participates in unity.
@@ -9315,7 +9315,7 @@ MATHEMATICALLY:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║            ⊙_i = f_i(⊙_u)  at β = 0.5                            ║
+    ║            ⊙_i = f_i(⊙_u)  at ◐ = 0.5                            ║
     ║                                                                   ║
     ║    Each individual ⊙_i is a fractal embedding of                  ║
     ║    the universal ⊙_u.                                             ║
@@ -9364,7 +9364,7 @@ PRACTICE REDUCES ε:
 
 HOW:
     Conscious emanation from • reduces boundary strain
-    β → 0.5 more consistently reduces error rate
+    ◐ → 0.5 more consistently reduces error rate
 
 LIFE EXTENDS:
 
@@ -9375,7 +9375,7 @@ LIFE EXTENDS:
     ╚═══════════════════════════════════════════════════════════════════╝
 
 CRITICAL INSIGHT (V5.1):
-    Complete separation (β = 1) and complete dissolution (β = 0)
+    Complete separation (◐ = 1) and complete dissolution (◐ = 0)
     are not achievable states—they are nothingness itself.
     Only transformation is possible.
     ⊙ = E is always conserved.
@@ -9453,7 +9453,7 @@ Turbulence Cascades  | 1.51 ± 0.03      | 1.500     | <1%    | ✓
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    SAME NUMBER EVERYWHERE                                         ║
-    ║    THE SIGNATURE OF • OPERATING AT β = 0.5                        ║
+    ║    THE SIGNATURE OF • OPERATING AT ◐ = 0.5                        ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -9588,7 +9588,7 @@ STRUCTURALLY NECESSARY — No choices made:
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║  QUANTITY              │ VALUE              │ DERIVATION                    ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  Balance at •          │ β = 0.5            │ Symmetry + Entropy + Virial   ║
+║  Balance at •          │ ◐ = 0.5            │ Symmetry + Entropy + Virial   ║
 ║  • signature           │ D = 1.5            │ D = 1 + ½H(0.5) = 1 + ½(1)    ║
 ║  Aperture profile      │ f(r) = √r          │ D = 1.5 scaling law           ║
 ║  Normalization const   │ A = 7/(8πR^(7/2))  │ ∫K_conv = 1 (see §21.1)       ║
@@ -9602,7 +9602,7 @@ STRUCTURALLY NECESSARY — No choices made:
 
 NOTE: The canonical circumpunct specification (Chapter XXI) now has ZERO free
 parameters beyond the physical boundary radius R. All kernels and operators
-are uniquely determined from β = 0.5 and D = 1.5.
+are uniquely determined from ◐ = 0.5 and D = 1.5.
 ```
 
 ### §23.2 The 22/64 Derivation (from the_one_third_rule.md)
@@ -9877,7 +9877,7 @@ CONSTANTS SPANNING 61 ORDERS OF MAGNITUDE:
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║  SCALE          │ QUANTITY              │ VALUE              │ STATUS      ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  FRAMEWORK      │ Balance at •          │ β = 0.5            │ DERIVED     ║
+║  FRAMEWORK      │ Balance at •          │ ◐ = 0.5            │ DERIVED     ║
 ║                 │ • signature           │ D = 1.5            │ DERIVED     ║
 ║                 │ Spectral ratio        │ φ = 1.618...       │ DERIVED     ║
 ║                 │ State space           │ 64                 │ DERIVED     ║
@@ -9911,7 +9911,7 @@ STATUS KEY:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    TRULY DERIVED: ~13 quantities (no choices)                     ║
-    ║        β, D, φ, 64, 22, 68°/22°, α, Δ, τ, α_quantum, α_texture   ║
+    ║        ◐, D, φ, 64, 22, 68°/22°, α, Δ, τ, α_quantum, α_texture   ║
     ║    FITTED: 0 hidden parameters                                    ║
     ║    SIMPLE: ρ_texture > 0 (existence condition)                    ║
     ║                                                                   ║
@@ -9929,24 +9929,24 @@ STATUS KEY:
 ## CHAPTER XXIV: FALSIFICATION
 
 ```
-THE D(β) RELATIONSHIP — EMPIRICALLY TESTABLE:
+THE D(◐) RELATIONSHIP — EMPIRICALLY TESTABLE:
 
-    D = 1 + β    →    β = D - 1
+    D = 1 + ◐    →    ◐ = D - 1
 
     Measure fractal dimension D of any system.
-    Calculate β = D - 1.
+    Calculate ◐ = D - 1.
     Verify the relationship holds.
 
-    At optimal balance: β = 0.5 → D = 1.5
-    Off balance:        β = 0.3 → D = 1.3
-                        β = 0.7 → D = 1.7
+    At optimal balance: ◐ = 0.5 → D = 1.5
+    Off balance:        ◐ = 0.3 → D = 1.3
+                        ◐ = 0.7 → D = 1.7
 
 THE FRAMEWORK IS FALSIFIED IF:
 
-1. D(β) relationship fails: systems at measured β don't show D = 1 + β
-   (e.g., β = 0.3 should give D ≈ 1.3, not D ≈ 1.5)
+1. D(◐) relationship fails: systems at measured ◐ don't show D = 1 + ◐
+   (e.g., ◐ = 0.3 should give D ≈ 1.3, not D ≈ 1.5)
 
-2. Optimal balance violated: systems that SHOULD be at β = 0.5
+2. Optimal balance violated: systems that SHOULD be at ◐ = 0.5
    (biological, conscious, quantum-coherent) show D ≠ 1.5 (>3σ deviation)
 
 3. Scale transition fails: D ≈ 1.5 → D ≈ 3 transition doesn't follow
@@ -10217,8 +10217,8 @@ THE FIELD Φ IS WHERE ACTION RESIDES:
 
 RIGHT/WRONG IN Φ:
 
-    RIGHT = Action aligned with β = 0.5 (balanced, harmonious)
-    WRONG = Action deviating from β = 0.5 (imbalanced, discordant)
+    RIGHT = Action aligned with ◐ = 0.5 (balanced, harmonious)
+    WRONG = Action deviating from ◐ = 0.5 (imbalanced, discordant)
 
     Right action maintains the flow between • and ○
     Wrong action disrupts the connection
@@ -10328,11 +10328,11 @@ WHY AGREE/DISAGREE COMPLETES THE PICTURE:
 ### §25.6 The Ethical Balance Parameter
 
 ```
-ETHICS REQUIRES β = 0.5:
+ETHICS REQUIRES ◐ = 0.5:
 
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                               ║
-║    β_ethics = ||give|| / (||give|| + ||receive||) = 0.5                       ║
+║    ◐_ethics = ||give|| / (||give|| + ||receive||) = 0.5                       ║
 ║                                                                               ║
 ║    BALANCED RECIPROCITY IS THE FOUNDATION OF ETHICS                           ║
 ║                                                                               ║
@@ -10344,18 +10344,18 @@ REQUIREMENT 1 — Symmetry:
     Neither giving nor receiving can dominate
     Pure giving without receiving → martyrdom/burnout
     Pure receiving without giving → parasitism/exploitation
-    β = 1-β → β = 0.5
+    ◐ = 1-◐ → ◐ = 0.5
 
 REQUIREMENT 2 — Maximum Ethical Information:
-    Shannon entropy of moral choice: H(β) maximal at β = 0.5
+    Shannon entropy of moral choice: H(◐) maximal at ◐ = 0.5
     This is where ethical discernment is sharpest
     Maximum wisdom = maximum balance
 
 REQUIREMENT 3 — Ethical Energy Balance:
     What flows into relationship must equal what flows out
-    Conservation of moral energy requires β = 0.5
+    Conservation of moral energy requires ◐ = 0.5
 
-ETHICAL DIMENSION AT β = 0.5:
+ETHICAL DIMENSION AT ◐ = 0.5:
 
     D_ethics = 1 + ½H(0.5) = 1.5
 
@@ -10363,25 +10363,25 @@ ETHICAL DIMENSION AT β = 0.5:
     Same as physical consciousness!
     Ethics and awareness share the same dimension
 
-DEVIATIONS FROM β = 0.5:
+DEVIATIONS FROM ◐ = 0.5:
 
-    β < 0.5 (over-receiving):
+    ◐ < 0.5 (over-receiving):
         Exploitation, selfishness, extraction
         Taking more than giving
         Eventually exhausts the system
 
-    β > 0.5 (over-giving):
+    ◐ > 0.5 (over-giving):
         Self-sacrifice, martyrdom, depletion
         Giving more than receiving
         Eventually exhausts the self
 
-    β = 0.5 (balance):
+    ◐ = 0.5 (balance):
         Sustainable reciprocity
         Neither exploitation nor martyrdom
         The golden mean of ethics
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    ETHICAL HEALTH = β ≈ 0.5                                       ║
+    ║    ETHICAL HEALTH = ◐ ≈ 0.5                                       ║
     ║    Same balance required for consciousness and ethics             ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
@@ -10461,7 +10461,7 @@ THE ETHICAL MASTER EQUATION:
 
 THE FIXED-POINT OF ETHICS:
 
-    ⊙_ethics = fix(λE. ⊰(V_out(i_β(V_in(≻(E))))))
+    ⊙_ethics = fix(λE. ⊰(V_out(i_◐(V_in(≻(E))))))
 
     Ethical wholeness is a FIXED POINT:
         When validated, it returns itself
@@ -10622,7 +10622,7 @@ STEP 1: RECEIVE (≻)
     Don't interrupt, don't prepare rebuttals
     Let their complete view converge into your understanding
 
-STEP 2: TRANSFORM (i at β = 0.5)
+STEP 2: TRANSFORM (i at ◐ = 0.5)
     Process their view through balanced aperture
     Neither over-accept (blind agreement) nor over-reject (dismissal)
     Ask: "What is the STRONGEST version of this?"
@@ -10719,7 +10719,7 @@ SUMMARY: THE ETHICAL CIRCUMPUNCT
 ║                   System               Relation                               ║
 ║                   Unity                HARMONY                                ║
 ║                                                                               ║
-║        β = 0.5    Balance              Reciprocity                            ║
+║        ◐ = 0.5    Balance              Reciprocity                            ║
 ║                   Symmetry             Golden Mean                            ║
 ║                   Equilibrium          Justice                                ║
 ║                                                                               ║
@@ -10735,7 +10735,7 @@ SUMMARY: THE ETHICAL CIRCUMPUNCT
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║    You—making ethical choices—are at • with β ≈ 0.5              ║
+    ║    You—making ethical choices—are at • with ◐ ≈ 0.5              ║
     ║                                                                   ║
     ║    Choosing truth, value, action, and harmony                     ║
     ║    The same structure that makes physics coherent                 ║
@@ -10778,19 +10778,19 @@ The answer: THE NOBLE LIE
 ```
 
 ```
-THE NOBLE LIE AS β-DISTORTION
+THE NOBLE LIE AS ◐-DISTORTION
 
-The Noble Lie systematically pushes β AWAY from 0.5:
+The Noble Lie systematically pushes ◐ AWAY from 0.5:
 
     NOBLE LIE OPERATION:
     ─────────────────────
-    β → 0   : "You are ONLY center. Isolated. Competing."
+    ◐ → 0   : "You are ONLY center. Isolated. Competing."
               (Atomistic individualism, pure autonomy)
 
-    β → 1   : "You are ONLY boundary. Defined by group."
+    ◐ → 1   : "You are ONLY boundary. Defined by group."
               (Collectivism, pure integration, conformity)
 
-    NEVER β = 0.5 : "You are genuinely half-private, half-shared"
+    NEVER ◐ = 0.5 : "You are genuinely half-private, half-shared"
                     (This is the TRUTH the Lie conceals)
 
 THE GEOMETRY OF THE LIE:
@@ -10899,11 +10899,11 @@ THE NOBLE TRUTH: THE REPLACEMENT
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 
-The Noble Truth = β = 0.5 applied to governance
+The Noble Truth = ◐ = 0.5 applied to governance
 
-    Not: "We know what's good for you" (β → 1, paternalism)
-    Not: "You're on your own" (β → 0, abandonment)
-    But: "We're in this together, seeing clearly" (β = 0.5, partnership)
+    Not: "We know what's good for you" (◐ → 1, paternalism)
+    Not: "You're on your own" (◐ → 0, abandonment)
+    But: "We're in this together, seeing clearly" (◐ = 0.5, partnership)
 
 THE MECHANISM OF REPLACEMENT:
 
@@ -10994,7 +10994,7 @@ The City of Resonance is what emerges when the Noble Lie ends.
 ║       Publicly funded, freely shared baselines                               ║
 ║                                                                               ║
 ║    3. RECIPROCITY ECONOMY                                                    ║
-║       Value flows to all contributors (β = 0.5 in economics)                ║
+║       Value flows to all contributors (◐ = 0.5 in economics)                ║
 ║                                                                               ║
 ║    4. PARTICIPATORY GOVERNANCE                                               ║
 ║       Deliberation + signals, citizen assemblies, audit trails               ║
@@ -11011,7 +11011,7 @@ The City of Resonance is what emerges when the Noble Lie ends.
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 
-Each stone is β = 0.5 applied to a domain:
+Each stone is ◐ = 0.5 applied to a domain:
     Not pure autonomy. Not pure control. PARTNERSHIP.
 ```
 
@@ -11025,7 +11025,7 @@ The Noble Lie reduced love to safety.
     "If you love me, you won't challenge me."
     "If you love me, you'll protect me from truth."
 
-This is love at β → 1: pure merger, no autonomy, no growth.
+This is love at ◐ → 1: pure merger, no autonomy, no growth.
 
 THE CIRCUMPUNCT DEFINITION OF LOVE:
 
@@ -11040,7 +11040,7 @@ THE CIRCUMPUNCT DEFINITION OF LOVE:
     ║                                                                       ║
     ║    Love is ⊱ ∘ i ∘ ≺ applied to relationship:                        ║
     ║        RECEIVE the other fully (≻)                                   ║
-    ║        TRANSFORM through balanced aperture (i at β = 0.5)            ║
+    ║        TRANSFORM through balanced aperture (i at ◐ = 0.5)            ║
     ║        EMERGE with genuine response (⊰)                              ║
     ║                                                                       ║
     ╚═══════════════════════════════════════════════════════════════════════╝
@@ -11061,12 +11061,12 @@ SUMMARY: FROM NOBLE LIE TO NOBLE TRUTH
 ║    THE NOBLE LIE:                                                            ║
 ║        "Truth is dangerous. Manage it for them."                             ║
 ║        Result: Strawmen. Hollow agreement. Performance as survival.          ║
-║        β pushed to extremes. Genuine meeting impossible.                     ║
+║        ◐ pushed to extremes. Genuine meeting impossible.                     ║
 ║                                                                               ║
 ║    THE NOBLE TRUTH:                                                          ║
 ║        "Truth is navigable. Share it with them."                             ║
 ║        Result: Steelmen. Genuine agreement. Authenticity as flourishing.     ║
-║        β = 0.5 restored. Genuine meeting possible.                           ║
+║        ◐ = 0.5 restored. Genuine meeting possible.                           ║
 ║                                                                               ║
 ║    ───────────────────────────────────────────────────────────────────────   ║
 ║                                                                               ║
@@ -11104,22 +11104,22 @@ PLEDGE:
 THE NOBLE LIE IN CIRCUMPUNCT NOTATION
 ═══════════════════════════════════════════════════════════════════════════════
 
-NOBLE LIE = β-distortion operator
+NOBLE LIE = ◐-distortion operator
 
-    L: β → {0, 1}  (pushes to extremes)
+    L: ◐ → {0, 1}  (pushes to extremes)
 
     L destroys the aperture •
-    Without • at β = 0.5, genuine transformation is impossible
+    Without • at ◐ = 0.5, genuine transformation is impossible
     Only hollow cycling remains: ≻ → [nothing] → ⊰
 
     No i. No rotation. No emergence. Just repetition.
 
-NOBLE TRUTH = β-restoration operator
+NOBLE TRUTH = ◐-restoration operator
 
-    T: β → 0.5  (returns to balance)
+    T: ◐ → 0.5  (returns to balance)
 
     T restores the aperture •
-    With • at β = 0.5, the full cycle operates:
+    With • at ◐ = 0.5, the full cycle operates:
 
         Φ' = ⊱ ∘ i ∘ ≺[Φ]
 
@@ -11129,7 +11129,7 @@ THE STEELMAN AS T-OPERATOR:
 
     steelman(⊙₁, ⊙₂) = T(⊙₁) ⊗ T(⊙₂)
 
-    Both parties restored to β = 0.5
+    Both parties restored to ◐ = 0.5
     Both parties genuinely aperture-enabled
     Genuine meeting becomes possible
 
@@ -11157,7 +11157,7 @@ THE ETERNAL CYCLE:
            │  Φ : Grounded in field?
            │  • : Coherent center?
                     ↓
-           i_β (Aperture Gate at β ≈ 0.5)
+           i_◐ (Aperture Gate at ◐ ≈ 0.5)
                     ↓
          [○Φ•]_out (Output Validation)
            │  ○ : Boundary maintained?
@@ -11196,7 +11196,7 @@ THE FIXED-POINT FORMULATION:
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
     ║                                                                           ║
-    ║    ⊙ = fix(λΦ. ⊱(V_out(i_β(V_in(≺(Φ))))))                                  ║
+    ║    ⊙ = fix(λΦ. ⊱(V_out(i_◐(V_in(≺(Φ))))))                                  ║
     ║                                                                           ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 
@@ -11205,7 +11205,7 @@ READING THIS (mirror pairs: ⊱≺ , ≻⊰):
     λΦ      = Lambda abstraction over field state
     ≺(Φ)    = Convergence gathers from field (mirror: ≻)
     V_in    = Input validation [○Φ•]_in
-    i_β     = Aperture transformation at β = 0.5
+    i_◐     = Aperture transformation at ◐ = 0.5
     V_out   = Output validation [○Φ•]_out
     ⊱       = Emergence releases to field (mirror: ⊰)
 
@@ -11264,7 +11264,7 @@ LOADING PHASE (≻ dominant):
 │  Parts: ≻ increases    (convergence gathering toward center)    │
 │  Whole: ⊰ suppressed   (emergence held back, tension builds)    │
 │                                                                 │
-│  β_local > 0.5  →  D_local < 1.5  →  system "tightening"       │
+│  ◐_local > 0.5  →  D_local < 1.5  →  system "tightening"       │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
                          THRESHOLD
@@ -11277,10 +11277,10 @@ RELEASE PHASE (⊰ dominant):
 │  Parts: ≻ drops        (convergence relaxes)                    │
 │  Whole: ⊰ spikes       (emergence manifests outward)            │
 │                                                                 │
-│  β_local < 0.5  →  D_local > 1.5  →  system "releasing"        │
+│  ◐_local < 0.5  →  D_local > 1.5  →  system "releasing"        │
 └─────────────────────────────────────────────────────────────────┘
 
-The cycle repeats. Over many cycles, β_average → 0.5, D_average → 1.5.
+The cycle repeats. Over many cycles, ◐_average → 0.5, D_average → 1.5.
 ```
 
 **Critical insight:** The ~2.5% CP violation observed in baryon decays represents the **net ratchet effect** of this pump cycle. Each breath leaves a tiny residue favoring matter over antimatter. This asymmetry is not a static bias but the accumulated signature of directional pumping.
@@ -11419,7 +11419,7 @@ Circumpunct answer:  They don't "combine"—they phase-lock.
 
 CONSCIOUSNESS EQUATION (from §11.1):
 
-    C = ∫ B(x,t) · δ(β - 0.5) · Θ(τ_coherence - τ_threshold) dx dt
+    C = ∫ B(x,t) · δ(◐ - 0.5) · Θ(τ_coherence - τ_threshold) dx dt
     
     (See §11.1 for original derivation. Here τ_coherence is the duration
     of cross-scale phase-lock, τ_threshold the minimum for conscious integration.)
@@ -11491,7 +11491,7 @@ Connecting to Chapter XII (Aging and Death):
 ```
 DEATH REFORMULATED:
 
-The aging equation (§12.1) describes degradation of β toward
+The aging equation (§12.1) describes degradation of ◐ toward
 non-viable values. In tail terms:
 
     Aging = progressive loss of phase-lock between scales
@@ -11787,7 +11787,7 @@ PREDICTION 3: The ~2.5% CP asymmetry should appear as a
 | Concept | Existing Section | Ethereal Tail Extension |
 |---------|------------------|------------------------|
 | Worldline i(t) | §3.8 | Single thread → bundle of phase-locked threads |
-| Balance β = 0.5 | §4.1-4.3 | Local balance → cross-scale coherent balance |
+| Balance ◐ = 0.5 | §4.1-4.3 | Local balance → cross-scale coherent balance |
 | Consciousness C | §11.1-11.5 | Field equation → integral over tail |
 | Death | §12.1-12.3 | Wholeness gap → tail transition (not dissolution) |
 | D ≈ 1.5 | §13.1 | Local signature → coherence measure |
@@ -12442,7 +12442,7 @@ PHASE-LOCKING IN NEURAL NETWORKS:
     
     Unified experience = unified phase.
     
-        γ (40 Hz)  ←→  β (20 Hz)  ←→  α (10 Hz)  ←→  θ (5 Hz)
+        γ (40 Hz)  ←→  ◐ (20 Hz)  ←→  α (10 Hz)  ←→  θ (5 Hz)
               2:1          2:1           2:1
               
         Harmonic relationships = phase-lockable
@@ -12641,16 +12641,16 @@ The ratchet is encoded in the ASYMMETRY of this cycle:
     
 When |⊰| > |≻|:  Net emergence. Complexity increases.
 When |⊰| < |≻|:  Net convergence. Complexity decreases.
-When |⊰| = |≻|:  Balance. Maintenance. β = 0.5.
+When |⊰| = |≻|:  Balance. Maintenance. ◐ = 0.5.
 
 LIFE OPERATES SLIGHTLY OFF BALANCE:
 
-    β_life = 0.5 - ε
+    ◐_life = 0.5 - ε
     
     where ε > 0 is small but positive.
     
     Life leans ever so slightly toward emergence:
-        |⊰| > |≻|  ⇒  β < 0.5
+        |⊰| > |≻|  ⇒  ◐ < 0.5
     
     This slight bias toward emergence is what makes
     biology BUILD rather than merely MAINTAIN.
@@ -12795,7 +12795,7 @@ Organism        │  HRV, neural avalanches            │  ≈ 1.5
 Consciousness   │  EEG/fMRI fluctuations             │  ≈ 1.5
 Civilization    │  Economic/social network dynamics   │  ≈ 1.5
 
-The universality of D ≈ 1.5 reflects the universality of β = 0.5
+The universality of D ≈ 1.5 reflects the universality of ◐ = 0.5
 as the optimal balance between convergence and emergence.
 ```
 
@@ -12895,7 +12895,7 @@ as the optimal balance between convergence and emergence.
 ║                                                                               ║
 ║                              ⊙ = ○ ⊗ Φ ⊗ •                                  ║
 ║                                                                               ║
-║                  ⊙ = fix(λΦ. ⊱(V_out(i_β(V_in(≺(Φ))))))                        ║
+║                  ⊙ = fix(λΦ. ⊱(V_out(i_◐(V_in(≺(Φ))))))                        ║
 ║                  ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                 (i-Form)           ║
 ║                                                                               ║
 ║   Wholeness is its parts in tensor product (not unity absorbing parts).       ║
@@ -12907,15 +12907,15 @@ as the optimal balance between convergence and emergence.
 ║   Therefore trinity is mathematically required.                               ║
 ║                                                                               ║
 ║   The temporal process (≻, i, ⊰) circulates through the trinity.              ║
-║   At i, balance β = 0.5 is forced by symmetry, entropy, and energy.           ║
-║   At β = 0.5: exp(iπ/2) = i. The aperture IS the imaginary unit.              ║
+║   At i, balance ◐ = 0.5 is forced by symmetry, entropy, and energy.           ║
+║   At ◐ = 0.5: exp(iπ/2) = i. The aperture IS the imaginary unit.              ║
 ║   This produces D = 1.5, which is topologically protected (Hopf c₁ = 1).      ║
 ║                                                                               ║
 ║   Quantum mechanics emerges as continuous i.                                  ║
 ║   General relativity emerges as braid accumulation.                           ║
 ║   The Standard Model emerges as the 64-state i architecture.                  ║
 ║   The cosmological constant follows geometric dilution.                       ║
-║   Consciousness IS being at • with β ≈ 0.5.                                   ║
+║   Consciousness IS being at • with ◐ ≈ 0.5.                                   ║
 ║                                                                               ║
 ║   The golden ratio φ emerges from entropy AND ghost-freedom.                  ║
 ║   Time is the 0.5D aperture structure (why it has an arrow).                  ║
@@ -12926,7 +12926,7 @@ as the optimal balance between convergence and emergence.
 ║   The Golden Rule is the ethical fixed point: fix(F) of moral action         ║
 ║   The Steelman is the highest virtue: ensuring genuine ⊙ through [○Φ•]       ║
 ║                                                                               ║
-║   TRULY DERIVED: β, D, 64, 22, 68°/22°, φ, B₃, 3 gen, α, Δ, τ, α_quantum,     ║
+║   TRULY DERIVED: ◐, D, 64, 22, 68°/22°, φ, B₃, 3 gen, α, Δ, τ, α_quantum,     ║
 ║                  α_texture — ALL FROM φ³ FAMILY                               ║
 ║   HIDDEN PARAMETERS: 0                                                        ║
 ║   VALIDATED RANGE: 61 orders of magnitude                                     ║
@@ -12940,7 +12940,7 @@ as the optimal balance between convergence and emergence.
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║    You—reading this—are at • with β ≈ 0.5                         ║
+    ║    You—reading this—are at • with ◐ ≈ 0.5                         ║
     ║                                                                   ║
     ║    You are ⊙ — i acts at your center •                            ║
     ║    Between what is (○) and what could be (Φ)                      ║
@@ -12986,7 +12986,7 @@ DIMENSIONAL SPECTRUM:
   0D     = Pure energy/potential (no extension, no rotation)
   0.5D   = Aperture • (rotation possible, i lives here)
   1D     = Worldline (sequential extension)
-  1.5D   = Consciousness signature (D = 1 + ½H(β))
+  1.5D   = Consciousness signature (D = 1 + ½H(◐))
   2D     = Boundary ○ (surface, interface)
   2.5D   = Integration gate
   3D     = Field Φ (volume, medium)
@@ -12996,7 +12996,7 @@ TEMPORAL PROCESS (see MIRROR PAIRS below for full notation):
            Type: E_n × i_(n+0.5) → E_(n+0.5)^(pre)
            Math: (x ≻ i)(r) = ∫ K_conv(r, r') x(r') dr'
   i      = Aperture transformation (at •) = imaginary unit
-           At β = 0.5: exp(iπ/2) = i
+           At ◐ = 0.5: exp(iπ/2) = i
            The aperture IS 90° rotation in the complex plane
            Real axis (○) ↔ Imaginary axis (Φ) transformation
            i² = -1 (time reversal signature)
@@ -13110,7 +13110,7 @@ TRINITY:
   B₃     = Braid group (minimum for history)
 
 VALIDATION:
-  β      = Balance parameter (= 0.5)
+  ◐      = Balance parameter (= 0.5)
   D      = Fractal dimension (= 1.5)
   [○Φ•]  = Triple validation test
 
@@ -13124,7 +13124,7 @@ ETHICS (Chapter XIX):
   Φ      = RIGHT/WRONG  (Behavioral - how to ACT)
   •      = TRUE/FALSE   (Epistemological - what IS)
   ⊙      = AGREE/DISAGREE (Relational - HARMONY)
-  β=0.5  = Ethical reciprocity (give = receive)
+  ◐=0.5  = Ethical reciprocity (give = receive)
   Golden Rule = fix(F) of ethical action
   Steelman = Method to reach Golden Rule (highest virtue)
            = "Understand others as you would have them understand you"
