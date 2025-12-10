@@ -16,7 +16,6 @@ together with a three-phase flow procedure:
 ```
 ◐ = |≻| / (|≻| + |⊰|) = ½
 
-```
 ⊙ = (○, Φ, •) × (≻, i, ⊰)³
 Energy = Structure × Process³
 ```
