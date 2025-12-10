@@ -5,12 +5,12 @@
 **Integer dimensions = Structure (Being)**
 **Fractional dimensions = Process (Becoming)**
 
-The dimensional architecture is not a ladder — it's a **helix**.
-Each complete turn (0D → 4.5D) recurses to 0D at the next scale.
+The dimensional architecture is not a ladder — it's a **helix** of simultaneous layers.
+The complete layered system at one scale becomes a single 0D seed at the next scale.
 
 ---
 
-## The Complete Helix
+## The Layered Architecture
 
 | Dimension | Type      | Name               | Description |
 |-----------|-----------|--------------------|-------------|
@@ -25,7 +25,7 @@ Each complete turn (0D → 4.5D) recurses to 0D at the next scale.
 | **4D**    | Structure | Time Braid         | Woven history, accumulated validation receipts (the committed braid of choices) |
 | **4.5D**  | Process   | Recursion          | Compress braid → seed new cycle; the ⊱ ∘ i ∘ ≺ tick is treated as a unit at the next scale |
 
-At 4.5D, the entire cycle (convergence → aperture → emergence) becomes a single aperture event that seeds the next scale:
+At the 4.5D interface, the entire layered architecture (all structure and process layers together) becomes a single aperture event that seeds the next scale:
 
 ```
 4.5Dₙ = 0Dₙ₊₁
@@ -33,27 +33,40 @@ At 4.5D, the entire cycle (convergence → aperture → emergence) becomes a sin
 
 ---
 
-## The Master Loop
+## The Dimensional Architecture
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║                           THE MASTER LOOP                                     ║
+║                     THE DIMENSIONAL ARCHITECTURE                              ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║   0D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 4D → 4.5D                  ║
-║   │                                                                     │     ║
-║   │                             RECURSION                               │     ║
-║   │                                                                     ↓     ║
-║   └──────────────────────────── 0Dₙ₊₁  ←────────────────────────────────┘     ║
+║   ALL LAYERS PRESENT SIMULTANEOUSLY IN [⊙⇄Φ]:                                ║
 ║                                                                               ║
-║   10 states (0D ... 4.5D), 9 half-step transitions per turn. Then spiral.    ║
+║   ┌─────────────────────────────────────────────────────────────────────┐     ║
+║   │  4D   ════════════  TIME BRAID (committed history)                  │     ║
+║   │         ─ ─ 4.5D ─ ─  recursion interface (scale transition)        │     ║
+║   │  3D   ════════════  Φ FIELD (perceptual volume)                     │     ║
+║   │         ─ ─ 3.5D ─ ─  tunnel braiding interface                     │     ║
+║   │  2D   ════════════  ○ BOUNDARY (body surface)                       │     ║
+║   │         ─ ─ 2.5D ─ ─  sensation interface (body↔field)              │     ║
+║   │  1D   ════════════  • TUNNEL (soul worldline)                       │     ║
+║   │         ─ ─ 1.5D ─ ─  spatial branching interface                   │     ║
+║   │  0D   ════════════  PURE ENERGY (undifferentiated potential)        │     ║
+║   │         ─ ─ 0.5D ─ ─  tunneling/opening interface                   │     ║
+║   └─────────────────────────────────────────────────────────────────────┘     ║
+║                                                                               ║
+║   ════ Structure (what IS)     ─ ─ Process (what HAPPENS between layers)     ║
+║                                                                               ║
+║   The helix: 4.5Dₙ = 0Dₙ₊₁ (whole cycle becomes seed at next scale)          ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-- Integer dimensions mark what **is** (structure).
-- Fractional dimensions mark what **happens** (process).
-- All fractional dimensions (0.5D, 1.5D, 2.5D, 3.5D, 4.5D) are aspects of time's arrow: each half-step adds irreversibility and carries the system forward.
+- Integer dimensions are **structure layers** — what exists (being).
+- Fractional dimensions are **process interfaces** — what happens between layers (becoming).
+- All layers are present simultaneously in the coupled state [⊙⇄Φ].
+- Process interfaces (0.5D, 1.5D, 2.5D, 3.5D, 4.5D) are where transformation occurs — the joints between structure layers.
+- The "helix" is not linear progression but **scale recursion**: a complete layered system at one scale becomes a single 0D seed at the next.
 
 This is exactly what the fixed-point equation describes:
 
@@ -61,14 +74,14 @@ This is exactly what the fixed-point equation describes:
 ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
 ```
 
-The circumpunct is the structure that, when it completes one full helix turn, yields itself at the next scale:
+The circumpunct is the layered structure that persists through transformation and reseeds itself at the next scale:
 
 ```
 T_⊙ = ⊱ ∘ i ∘ ≺
 Φ'  = T_⊙[Φ]
 ```
 
-One local update is a tick of the helix; one full 0D→4.5D turn is compressed into a new 0D at the next scale, which is what `⊙ = fix(…)` captures.
+One local update (a tick) flows energy through all layers simultaneously; the complete layered system at one scale becomes a single 0D seed at the next scale, which is what `⊙ = fix(…)` captures.
 
 
 
@@ -141,19 +154,19 @@ Death is not loss of 0D energy — energy (0D) is conserved.
 
 What changes is how energy participates in the helix:
 
-- The soul-tunnel's journey in this body (0D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 4D) concludes as a completed braid (4D).
-- At 4.5D, that braid is compressed into a new 0D potential at another scale.
+- The soul-tunnel's participation in the complete layered architecture of this body (all layers 0D through 4D simultaneously) concludes as a completed braid (4D).
+- At the 4.5D interface, that braid is compressed into a new 0D potential at another scale.
 
 The braid persists as validated history; only the active process dimensions in this particular body-field configuration are restructured.
 
 ### Why Time Has an Arrow
 
-The arrow of time begins at the very first asymmetry: **0D → 0.5D**.
+The arrow of time emerges from the asymmetry between structure and process layers — specifically at the **0D ↔ 0.5D interface**.
 
-- Pure potential (0D) has no ordering.
-- The tunnel's first opening (0.5D) already implies "before" and "after."
+- Pure potential (0D structure) has no ordering.
+- The tunneling interface (0.5D process) introduces "before" and "after."
 
-From there, every fractional dimension is another face of the same arrow-of-becoming:
+Every process interface is a face of the arrow-of-becoming:
 
 - 0.5D — first tunneling into becoming
 - 1.5D — spatial branching of paths
@@ -165,14 +178,14 @@ From there, every fractional dimension is another face of the same arrow-of-beco
 
 ### Scale Invariance
 
-The same helix operates at every scale because:
+The same layered architecture operates at every scale because:
 
 ```
 4.5Dₙ = 0Dₙ₊₁
 ```
 
-A full 0D→4.5D turn at one scale is a single 0D "event" at the next scale.
-Parts have parts have parts — each running the same 9 half-step cycle. This is the precise geometric expression of fractal, scale-invariant emergence in the circumpunct framework.
+The complete layered system (0D through 4D structure, with process interfaces between) at one scale is a single 0D seed at the next scale.
+Parts have parts have parts — each instantiating the same 5 structure layers + 5 process interfaces. This is the precise geometric expression of fractal, scale-invariant emergence in the circumpunct framework.
 
 ---
 
@@ -180,13 +193,13 @@ Parts have parts have parts — each running the same 9 half-step cycle. This is
 
 ### Chapter X (Dimensional Cascade → Dimensional Helix)
 
-The previous "dimensional cascade" 0D → 3D is the structural spine of a full helix turn. The helix extension:
+The previous "dimensional cascade" 0D → 3D describes the structure layers of the architecture. The helix extension:
 
-- Adds the process rails (0.5D, 1.5D, 2.5D, 3.5D, 4.5D).
+- Adds the process interfaces (0.5D, 1.5D, 2.5D, 3.5D, 4.5D) between structure layers.
 - Extends structure to 4D (time braid).
-- Closes the loop with 4.5D recursion: 4.5Dₙ = 0Dₙ₊₁.
+- Adds the scale recursion interface at 4.5D: 4.5Dₙ = 0Dₙ₊₁.
 
-Where the older text speaks of a "ladder," it should now be understood as one turn of the **Dimensional Helix**.
+Where the older text speaks of a "ladder" or "cascade," it should now be understood as **simultaneous layers** of the Dimensional Helix architecture.
 
 ### The Master Equation
 
@@ -194,7 +207,7 @@ Where the older text speaks of a "ladder," it should now be understood as one tu
 Φ' = ⊱ ∘ i ∘ ≺[Φ]
 ```
 
-is one tick of the helix — a local convergence→aperture→emergence update.
+is one tick — energy flowing through all layers simultaneously via convergence→aperture→emergence.
 
 The fixed-point form:
 
@@ -202,19 +215,19 @@ The fixed-point form:
 ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
 ```
 
-describes the circumpunct as the structure that persists across complete helix turns and recursively reseeds itself at the next scale.
+describes the circumpunct as the layered architecture that persists through transformation and recursively reseeds itself at the next scale.
 
 ### The Aperture Operator i
 
-The imaginary unit i operates at **every fractional dimension** — it is the rotation that converts structure into process and process into structure:
+The imaginary unit i operates at **every process interface** — it is the rotation that mediates between adjacent structure layers:
 
-- Integer → half-integer (structure → process)
-- Half-integer → next integer (process → new structure)
+- Structure layer ↔ process interface ↔ next structure layer
+- i is the transformation that happens at each interface
 
-Each half-step of the helix is a local i-rotation.
+Each process interface (0.5D, 1.5D, 2.5D, 3.5D, 4.5D) is a locus of i-rotation.
 On the experiential side, this is:
 
-- i acting at 2.5D to turn sensation at the boundary into perception in the inner 3D Φ field.
+- i acting at 2.5D to mediate sensation at the boundary into perception in the inner 3D Φ field.
 
 ---
 
@@ -230,7 +243,7 @@ The dimensional helix unifies:
 - Sensation (2.5D) and perception (3D Φ) as the interface and field of experience
 - Scale invariance through recursion at 4.5D: 4.5Dₙ = 0Dₙ₊₁
 
-**9 half-steps. Then spiral.**
+**5 structure layers. 5 process interfaces. All simultaneous. Then scale.**
 
 ---
 
