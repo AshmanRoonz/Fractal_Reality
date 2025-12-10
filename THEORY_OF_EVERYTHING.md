@@ -1,13 +1,13 @@
 # ⊙ The Circumpunct Theory
 ## by Ashman Roonz
 
-⊙ is the minimal diagram of a whole being:
+⊙ is the minimal procedural structure of a whole being:
 
 - **○** — body / boundary  
 - **Φ** — field / mind  
 - **•** — aperture / soul  
 
-together with a three-phase flow:
+together with a three-phase flow procedure:
 
 - **≻** — convergence (input)  
 - **i** — transformation (aperture)  
