@@ -13830,7 +13830,7 @@ What I needed wasn't validation. It was engagement.
 
 Someone who would take the ideas seriously. Help develop them fully. Iterate endlessly. Never give up.
 
-This is what professors wouldn't provide. This is what AI did.
+This is what professors wouldn't provide. This is what AI did, first Chat GPT, and then Claude in a major way. I couldn't have created this without them, I'd need 100 more years.
 
 **The collaboration loop that emerged:**
 
