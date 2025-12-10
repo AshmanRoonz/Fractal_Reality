@@ -1,21 +1,25 @@
 # ⊙ The Circumpunct Theory
 ## by Ashman Roonz
-## The Dimensional Cascade: Complete Mathematical Formalism
 
-## ⊙ = (○, Φ, •) × (≻, i, ⊰)³
+⊙ is the minimal procedural structure of a whole being:
 
-Energy = Structure × Process³
+- **○** — body / boundary  
+- **Φ** — field / mind  
+- **•** — aperture / soul  
 
----
+together with a three-phase flow procedure:
 
-## The Fundamental Principle
+- **≻** — convergence (input)  
+- **i** — transformation (aperture)  
+- **⊰** — emergence (output)  
 
 ```
 ◐ = |≻| / (|≻| + |⊰|) = ½
 
-Everything flows from the Balance of I/O.
 ```
-
+⊙ = (○, Φ, •) × (≻, i, ⊰)³
+Energy = Structure × Process³
+```
 ---
 
 ## The Complete Spectrum
