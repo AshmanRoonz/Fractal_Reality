@@ -4020,6 +4020,77 @@ THE ACTION POTENTIAL IS THE ⊱ ∘ i ∘ ≺ CYCLE IN BIOLOGICAL HARDWARE
 
 ## LIFE
 
+### The Wholeness Principle
+
+```
+THE CORE INEQUALITY:
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║    S(whole) < Σ S(parts)                                         ║
+║                                                                   ║
+║    Subject to: D ≈ 1.5  (fractal, structured systems)            ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+DEFINE THE WHOLENESS GAP:
+
+    ΔS ≔ Σ S(parts) - S(whole)
+
+WHERE:
+    S(whole)   = validation cost of the unified configuration
+    Σ S(parts) = sum of validation costs if disassembled
+
+    ΔS > 0  →  wholeness is cheaper  →  whole wins
+    ΔS < 0  →  parts are cheaper     →  whole dissolves
+
+MEANING:
+    Wholeness is selected when being together is cheaper than being apart.
+    The gap ΔS measures how much cheaper.
+```
+
+### The Life Principle
+
+```
+LIFE = WHOLENESS THAT DOES WORK TO STAY WHOLE
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║    Base condition:   ΔS > 0  (wholeness is cheaper)              ║
+║                                                                   ║
+║    Life adds:        dΔS/dt ≥ 0                                  ║
+║                      (the gap is maintained by internal work)     ║
+║                                                                   ║
+║    Key insight:      β ≈ 0.5 means SELF + CONTEXT together       ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+THE DERIVATIVE CAPTURES:
+
+    • Metabolism:    spending energy to keep ΔS positive
+    • Repair:        restoring ΔS after damage
+    • Reproduction:  creating new systems with ΔS > 0
+
+All three are strategies for maintaining the wholeness gap over time.
+
+BUT LIFE DOESN'T DO IT ALONE:
+
+    Life is not purely self-maintaining (that would be β → 1, impossible).
+    Life is self + greater-whole context maintaining at β ≈ 0.5.
+
+    Roughly half the work is done by the organism.
+    Roughly half is done by greater-whole context (field, resources, environment).
+
+    This is why life requires:
+    - Energy INPUT (greater-whole provides)
+    - Metabolism (self processes)
+    - Waste OUTPUT (greater-whole receives)
+
+    The open flow IS the β ≈ 0.5 balance in action.
+```
+
+### Life as Process Configuration
+
 Life is not a thing — it is a **process configuration**.
 
 ```
