@@ -310,10 +310,10 @@ RG flow:
 ║    ⊙* = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                             [0D–1D band]    ║
 ║                                                                            ║
 ║  MECHANISM (how it breathes):                                              ║
-║    [⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']                      [1D–2D band]    ║
+║    [⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']                      [1D–2D band]  ║
 ║                                                                            ║
 ║  ITERATION (one step):                                                     ║
-║    Φ' = ⊱ ∘ V_out ∘ i ∘ V_in ∘ ≺[Φ]                        [3D]           ║
+║    Φ' = ⊱ ∘ V_out ∘ i ∘ V_in ∘ ≺[Φ]                        [3D]            ║
 ║                                                                            ║
 ╚════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -350,14 +350,14 @@ RG flow:
 ┌───────────────────────────────────────────────────────────────────────────┐
 │  4D   ════════════  TIME BRAID: G_μν = (8πG/c⁴)T_μν                       │
 │         ─ ─ 4.5D ─ ─  recursion: 4.5D_n = 0D_{n+1}                        │
-│  3D   ════════════  Φ FIELD: Φ' = ⊱ ∘ V_out ∘ i ∘ V_in ∘ ≺[Φ]            │
+│  3D   ════════════  Φ FIELD: Φ' = ⊱ ∘ V_out ∘ i ∘ V_in ∘ ≺[Φ]             │
 │         ─ ─ 3.5D ─ ─  braiding: T_eff,ij, backreaction loop               │
 │  2D   ════════════  ○ BOUNDARY: Σ = ∂V                                    │
 │         ─ ─ 2.5D ─ ─  sensation: T_local = cos²(Δφ/2), triple gate        │
 │  1D   ════════════  TIMELINE: i(t), P = dE/dt                             │
-│         ─ ─ 1.5D ─ ─  branching: D = 1 + ½H(◐), K(r) ∝ r^◐                │
+│         ─ ─ 1.5D ─ ─  branching: D = 1 + ½H(◐), K(r) ∝ r^◐               │
 │  0D   ════════════  PURE ENERGY: E = mc²                                  │
-│         ─ ─ 0.5D ─ ─  • APERTURE: i = exp(iπ◐), ◐ = ½                     │
+│         ─ ─ 0.5D ─ ─  • APERTURE: i = exp(iπ◐), ◐ = ½                    │
 └───────────────────────────────────────────────────────────────────────────┘
 
 ════ Structure (what IS)     ─ ─ Process (what HAPPENS between layers)
