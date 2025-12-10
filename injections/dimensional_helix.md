@@ -14,11 +14,11 @@ The complete layered system at one scale becomes a single 0D seed at the next sc
 
 | Dimension | Type      | Name               | Description |
 |-----------|-----------|--------------------|-------------|
-| **0D**    | Structure | Pure Energy        | Pre-structure potential — undifferentiated power before the tunnel exists |
-| **0.5D**  | Process   | Tunneling/Opening  | The aperture opening — first gesture of becoming, the tunnel beginning to form |
-| **1D**    | Structure | Soul (String/Tunnel)| The soul as aperture structure — the tunnel through which energy flows |
-| **1.5D**  | Process   | Spatial Branching  | Soul-tunnel fractally splitting in space (D ≈ 1.5 signature) — branching architecture that builds bodies |
-| **2D**    | Structure | Surface (Body)     | Boundary, interface, membrane |
+| **0D**    | Structure | Pure Energy        | Pre-structure potential — undifferentiated before the tunnel entrance (E=mc^2) |
+| **0.5D**  | Process   | Aperture, i, Soul  | The aperture/tunnel opening, a singularity, causing tunneling |
+| **1D**    | Structure | Timeline, String   | The soul through time — the tunnel through which power flows (p=e/t), i(t)|
+| **1.5D**  | Process   | Spatial Branching  | Power lines fractally splitting in space — branching process that builds surface |
+| **2D**    | Structure | Surface (Body)     | Boundary, interface, membrane, optimal branching maintains surfaces |
 | **2.5D**  | Process   | Sensation          | Surface↔volume mediation; body↔field coupling — the band of **sensation** |
 | **3D**    | Structure | Perceptual Field   | Manifest inner volume — **perception** as structured field on the "imaginary" side of *i* |
 | **3.5D**  | Process   | Tunnel Braiding    | Soul-tunnels weaving together — the braiding of worldlines into shared history |
