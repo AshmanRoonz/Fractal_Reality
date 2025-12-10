@@ -2,7 +2,7 @@
 
 ## Abstract
 
-We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental object ⊙ = ○ ⊗ Φ ⊗ • unifies boundary (○), field (Φ), and aperture (•) through three-stage evolution operators (convergence, aperture rotation, emergence). We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition β=1/2 predicts universal fractal dimension D=1.5 with zero free parameters. The framework makes testable predictions across domains from particle physics to biological systems.
+We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental object ⊙ = ○ ⊗ Φ ⊗ • unifies boundary (○), field (Φ), and aperture (•) through three-stage evolution operators (convergence, aperture rotation, emergence). We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 predicts universal fractal dimension D=1.5 with zero free parameters. The framework makes testable predictions across domains from particle physics to biological systems.
 
 ---
 
@@ -22,9 +22,9 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
 - [2. Primitive Dynamical Objects](#2-primitive-dynamical-objects)
   - [2.1 Flow Operators (≻, i, ⊰)](#21-flow-operators---i-)
   - [2.2 Mirror / Adjoint Flow Operators (⊱, ≺)](#22-mirror--adjoint-flow-operators--)
-  - [2.3 Balance Parameter (β)](#23-balance-parameter-β)
+  - [2.3 Balance Parameter (◐)](#23-balance-parameter-◐)
   - [2.4 Canonical Radial Kernel and Worldline Dimension](#24-canonical-radial-kernel-and-worldline-dimension)
-  - [2.4.1 The Aperture Rotation Operator Å(β)](#241-the-aperture-rotation-operator-åβ)
+  - [2.4.1 The Aperture Rotation Operator Å(◐)](#241-the-aperture-rotation-operator-å◐)
   - [2.5 Clarifying i vs i(t)](#25-clarifying-i-vs-it)
   - [2.6 Phase Coherence and Transmission](#26-phase-coherence-and-transmission)
   - [2.7 Ratchet Operators](#27-ratchet-operators)
@@ -141,15 +141,24 @@ All physical interaction happens at surfaces:
 
 This connects to the Schrödinger limit (§4): the m in iℏ ∂ψ/∂t = -(ℏ²/2m)∇²ψ + V(x)ψ is interpreted as the effective surface inertia of ○—how hard it is to change the braided history of the boundary on M⁴.
 
-**The trinity of dimensional addresses:**
+**The dimensional architecture (structure vs process):**
 
 ```
-Component │ Dimension │ Role
-──────────┼───────────┼──────────────────────────
-    •     │    1D     │ Soul (tunnel/worldline)
-    ○     │    2D     │ Body (surface/interface)
-    Φ     │    3D     │ Mind (field/volume)
+Dim   │ Type      │ Symbol │ Role
+──────┼───────────┼────────┼──────────────────────────────────────
+0D    │ Structure │   —    │ Pure energy (pre-structure potential)
+0.5D  │ Process   │   •    │ Aperture/Soul (tunnel opening, i lives here)
+1D    │ Structure │  i(t)  │ Timeline/String (soul through time)
+1.5D  │ Process   │   —    │ Spatial branching (D = 1 + ½H(◐))
+2D    │ Structure │   ○    │ Body/Surface (boundary, interface)
+2.5D  │ Process   │   —    │ Sensation (body↔field coupling)
+3D    │ Structure │   Φ    │ Mind/Field (perceptual volume)
+3.5D  │ Process   │   —    │ Tunnel braiding (shared history)
+4D    │ Structure │   —    │ Time braid (committed history)
+4.5D  │ Process   │   —    │ Recursion (4.5Dₙ = 0Dₙ₊₁)
 ```
+
+Integer dimensions = Structure (being). Fractional dimensions = Process (becoming).
 
 ### 1.3 Field Space (Φ)
 
@@ -270,7 +279,7 @@ so that (≻,≺) and (⊰,⊱) are adjoint pairs.
 
 In this quick-start note, we work primarily with the forward triple (≻, i, ⊰) and use ⊱, ≺ implicitly in adjoint/unitarity arguments.
 
-### 2.3 Balance Parameter (β)
+### 2.3 Balance Parameter (◐)
 
 The convergence/emergence kernels define norms:
 
@@ -282,13 +291,13 @@ The convergence/emergence kernels define norms:
 and a **balance parameter**:
 
 ```
-β = |≻| / (|≻| + |⊰|)
+◐ = |≻| / (|≻| + |⊰|)
 ```
 
-The framework singles out **β = 1/2** by symmetry, maximum entropy, and energy balance arguments. At this fixed point, the effective fractal dimension of worldlines is:
+The framework singles out **◐ = 1/2** by symmetry, maximum entropy, and energy balance arguments. At this fixed point, the effective fractal dimension of worldlines is:
 
 ```
-D = 1 + (1/2)H(β) = 1.5
+D = 1 + (1/2)H(◐) = 1.5
 ```
 
 where H is the Shannon entropy in bits.
@@ -303,7 +312,7 @@ where H is the Shannon entropy in bits.
 
 For reference: Brownian motion has D=2; ballistic motion has D=1. The circumpunct fixed point corresponds to D=1.5.
 
-**Note on notation:** We write H(β) for Shannon entropy (appearing in the balance equation) and H_H for the Hurst exponent (mentioned below).
+**Note on notation:** We write H(◐) for Shannon entropy (appearing in the balance equation) and H_H for the Hurst exponent (mentioned below).
 
 **Connection to fractional Brownian motion:** For fractional Brownian motion with Hurst exponent H_H, the mean squared displacement scales as ⟨r²(t)⟩ ∝ t^(2H_H). Comparing with our definition ⟨r²(t)⟩ ∝ t^(2/D) gives an effective walk dimension:
 
@@ -313,13 +322,13 @@ D = 1 / H_H
 
 Thus D = 1.5 corresponds to H_H = 2/3, i.e. superdiffusive but sub-ballistic motion (faster than Brownian H_H = 1/2, slower than ballistic H_H = 1).
 
-**Kernel derivation from balance:** The kernel exponent is not a free parameter—it follows from the balance condition. For power-law kernels K(r) ∝ r^α, the exponent α equals the balance parameter β:
+**Kernel derivation from balance:** The kernel exponent is not a free parameter—it follows from the balance condition. For power-law kernels K(r) ∝ r^α, the exponent α equals the balance parameter ◐:
 
 ```
-α = β = 0.5
+α = ◐ = 0.5
 ```
 
-**Dimensional interpolation argument:** The balance parameter β represents the effective dimensionality of the aperture process. A kernel r^α interpolates between:
+**Dimensional interpolation argument:** The balance parameter ◐ represents the effective dimensionality of the aperture process. A kernel r^α interpolates between:
 
 | α | Behavior | Interpretation |
 |---|----------|----------------|
@@ -327,19 +336,19 @@ Thus D = 1.5 corresponds to H_H = 2/3, i.e. superdiffusive but sub-ballistic mot
 | 1 | r^1 = linear | Weight spreads linearly with distance (1D) |
 | 0.5 | r^0.5 = √r | Balanced intermediate behavior (0.5D) |
 
-At β = 0.5, the aperture is "halfway" between a point (0D) and a line (1D). The kernel r^β = r^0.5 is the spatial signature of this 0.5D aperture—the radial profile that implements the balance between concentration and spread.
+At ◐ = 0.5, the aperture is "halfway" between a point (0D) and a line (1D). The kernel r^◐ = r^0.5 is the spatial signature of this 0.5D aperture—the radial profile that implements the balance between concentration and spread.
 
 **Derivation chain:**
 ```
-Symmetry (K_conv = K_emerg) → β = 0.5
-β = effective aperture dimension → kernel exponent α = β
+Symmetry (K_conv = K_emerg) → ◐ = 0.5
+◐ = effective aperture dimension → kernel exponent α = ◐
 Therefore: K(r) ∝ r^0.5 = √r
 This kernel → D = 1.5 (emergent consequence)
 ```
 
-The √r profile and D = 1.5 are both downstream consequences of β = 0.5, not independent assumptions.
+The √r profile and D = 1.5 are both downstream consequences of ◐ = 0.5, not independent assumptions.
 
-**Note on rigor:** The step "α = β" follows from interpreting β as the effective dimensionality of the aperture, with r^β as the natural radial profile interpolating between point-like and linear behavior. A fully rigorous derivation from variational principles (showing that α = β extremizes some functional) remains an open question (§10.1).
+**Note on rigor:** The step "α = ◐" follows from interpreting ◐ as the effective dimensionality of the aperture, with r^◐ as the natural radial profile interpolating between point-like and linear behavior. A fully rigorous derivation from variational principles (showing that α = ◐ extremizes some functional) remains an open question (§10.1).
 
 In the simplest isotropic model:
 
@@ -350,40 +359,40 @@ K_conv(r) = K_emerg(r) = A√r,  0 ≤ r ≤ R
 with normalization constant A fixed by requiring:
 1. K is normalizable in 3D
 2. Convergence and emergence share the same radial profile (symmetry)
-3. The kernel exponent equals the balance parameter (α = β = 0.5)
+3. The kernel exponent equals the balance parameter (α = ◐ = 0.5)
 
 In other words, K_conv(r) = K_emerg(r) = A√r should be understood as an effective, coarse-grained single-step kernel whose statistics reproduce D ≈ 1.5; different microscopic kernels that share the same low-moment structure will lie in the same universality class.
 
-### 2.4.1 The Aperture Rotation Operator Å(β)
+### 2.4.1 The Aperture Rotation Operator Å(◐)
 
 The aperture transformation i can be generalized to a one-parameter U(1) rotation:
 
 ```
-Å(β) = exp(iπβ),    β ∈ [0,1]
+Å(◐) = exp(iπ◐),    ◐ ∈ [0,1]
 ```
 
 This **aperture rotation operator** satisfies:
 
 | Property | Formula | Meaning |
 |----------|---------|---------|
-| Unit magnitude | \|Å(β)\| = 1 | Conserves flow magnitude |
-| Composition | Å(β₁)Å(β₂) = Å(β₁+β₂ mod 2) | Proper U(1) subgroup |
-| β = 0 | Å(0) = 1 | Identity (0° rotation) |
-| β = 0.5 | Å(0.5) = i | Quarter-turn (90° rotation) |
-| β = 1 | Å(1) = -1 | Half-turn (180° rotation) |
+| Unit magnitude | \|Å(◐)\| = 1 | Conserves flow magnitude |
+| Composition | Å(◐₁)Å(◐₂) = Å(◐₁+◐₂ mod 2) | Proper U(1) subgroup |
+| ◐ = 0 | Å(0) = 1 | Identity (0° rotation) |
+| ◐ = 0.5 | Å(0.5) = i | Quarter-turn (90° rotation) |
+| ◐ = 1 | Å(1) = -1 | Half-turn (180° rotation) |
 
-**Unification through β:** The balance parameter appears in three equivalent contexts:
+**Unification through ◐:** The balance parameter appears in three equivalent contexts:
 
-1. **Flow balance:** β = |≻| / (|≻| + |⊰|)
-2. **Rotation angle:** θ(β) = πβ
-3. **Fractal dimension:** D(β) = 1 + ½H(β)
+1. **Flow balance:** ◐ = |≻| / (|≻| + |⊰|)
+2. **Rotation angle:** θ(◐) = π◐
+3. **Fractal dimension:** D(◐) = 1 + ½H(◐)
 
-At the critical balance point β = 1/2, all three unify:
+At the critical balance point ◐ = 1/2, all three unify:
 - Flow: Perfectly balanced convergence/emergence
 - Rotation: 90° perpendicular transformation
 - Dimension: D = 1.5 (optimal fractal branching)
 
-**Geometric optimality at β = 0.5:**
+**Geometric optimality at ◐ = 0.5:**
 
 The 90° rotation is geometrically optimal because it:
 1. Maximizes distance on unit circle (midway between identity and inversion)
@@ -394,14 +403,14 @@ The 90° rotation is geometrically optimal because it:
 
 ```
 Original:    Φ' = ⊱ ∘ i ∘ ≺[Φ]
-Generalized: Φ' = ⊱ ∘ Å(β) ∘ ≺[Φ]
+Generalized: Φ' = ⊱ ∘ Å(◐) ∘ ≺[Φ]
 ```
 
-At β = 0.5: Å(0.5) = exp(iπ/2) = i
+At ◐ = 0.5: Å(0.5) = exp(iπ/2) = i
 
 **Therefore:** The canonical "i" in the master equation is literally the 90° aperture rotation at optimal balance. The imaginary unit emerges from aperture geometry, not imposed from outside.
 
-**Schrödinger connection:** Time evolution in QM has form U(Δt) = exp(-iEΔt/ℏ). Aperture rotation has form Å(β) = exp(iπβ). Identifying θ(t) = πβ(t) = Et/ℏ gives:
+**Schrödinger connection:** Time evolution in QM has form U(Δt) = exp(-iEΔt/ℏ). Aperture rotation has form Å(◐) = exp(iπ◐). Identifying θ(t) = π◐(t) = Et/ℏ gives:
 
 - **Energy is the rotation rate of the aperture clock**
 - **ℏ is the conversion factor** (phase to energy)
@@ -412,7 +421,7 @@ At β = 0.5: Å(0.5) = exp(iπ/2) = i
 Two distinct concepts share similar notation:
 
 ```
-i   = aperture operator at β = 0.5
+i   = aperture operator at ◐ = 0.5
     = exp(iπ/2)
     = 90° complex rotation
     = the local transformation between dimensions
@@ -534,20 +543,20 @@ RATCHET CONDITION:
     r₊/r₋ > 1 + ε    for some ε > 0
 ```
 
-**Connection to β parameter:**
+**Connection to ◐ parameter:**
 
 The ratchet asymmetry is encoded in the balance parameter:
 
 ```
 |⊰| ≠ |≻| in general
 
-When |⊰| > |≻|:  Net emergence. Complexity increases. β < 0.5
-When |⊰| < |≻|:  Net convergence. Complexity decreases. β > 0.5
-When |⊰| = |≻|:  Balance. Maintenance. β = 0.5
+When |⊰| > |≻|:  Net emergence. Complexity increases. ◐ < 0.5
+When |⊰| < |≻|:  Net convergence. Complexity decreases. ◐ > 0.5
+When |⊰| = |≻|:  Balance. Maintenance. ◐ = 0.5
 
 LIVING SYSTEMS operate slightly off balance:
 
-    β_life = 0.5 - ε    where ε > 0 is small
+    ◐_life = 0.5 - ε    where ε > 0 is small
 
 Life leans toward emergence, enabling structure to accumulate
 rather than merely maintain.
@@ -660,7 +669,7 @@ acting on ℋ_Φ, so that:
 The full universe is a fixed point of the extended "validation" evolution:
 
 ```
-⊙ = fix(λΦ. ⊱(V_out(i_β(V_in(≺Φ)))))
+⊙ = fix(λΦ. ⊱(V_out(i_◐(V_in(≺Φ)))))
 ```
 
 where V_in/out are additional validation filters.
@@ -675,15 +684,15 @@ where V_in/out are additional validation filters.
 i² = -1
 ```
 
-and it acts at a critical balance β = 1/2 between convergence and emergence:
+and it acts at a critical balance ◐ = 1/2 between convergence and emergence:
 
 ```
-β = |≻| / (|≻| + |⊰|) = 1/2
+◐ = |≻| / (|≻| + |⊰|) = 1/2
 ```
 
 This balance fixes the effective fractal dimension of worldlines to a universal value D = 1.5.
 
-**Physical interpretation:** At the balanced fixed point β=1/2, the aperture rotation is a quarter-turn in the complex plane, i = e^(iπ/2). Repeated action of the aperture defines an internal phase clock with frequency ω. We postulate a universal constant ℏ such that energy is the generator of this phase:
+**Physical interpretation:** At the balanced fixed point ◐=1/2, the aperture rotation is a quarter-turn in the complex plane, i = e^(iπ/2). Repeated action of the aperture defines an internal phase clock with frequency ω. We postulate a universal constant ℏ such that energy is the generator of this phase:
 
 ```
 θ(t) = Et/ℏ
@@ -1108,11 +1117,11 @@ with local physics obtained via Euler-Lagrange equations.
 S_circ[g] = (c³/16πG) ∫ d⁴x √(-g) [
     R - 2Λ 
     + α (∇_μR ∇^μR)/R² 
-    + β ℓ_P² C_μνρσ C^μνρσ
+    + ◐ ℓ_P² C_μνρσ C^μνρσ
 ]
 ```
 
-with dimensionless coefficients α, β, where ℓ_P is the Planck length (or some other fundamental length associated with the D=1.5 → D=3 transition scale).
+with dimensionless coefficients α, ◐, where ℓ_P is the Planck length (or some other fundamental length associated with the D=1.5 → D=3 transition scale).
 
 **Physical interpretation:**
 
@@ -1122,14 +1131,14 @@ with dimensionless coefficients α, β, where ℓ_P is the Planck length (or som
 
 *Heuristically, the D=1.5 signature is tied to how curvature "feels" the underlying braided, partially self-similar structure of worldlines. The Weyl term is the simplest local quantity sensitive to conformal and topological structure, making it a natural receptacle for corrections derived from Hopf-link-like braiding.*
 
-**The coefficients α and β encode the "stiffness" of spacetime to fractal perturbations:**
+**The coefficients α and ◐ encode the "stiffness" of spacetime to fractal perturbations:**
 - α controls how curvature gradients resist scale-dependent deformations
-- β controls how conformal structure (Weyl curvature) couples to braid topology
+- ◐ controls how conformal structure (Weyl curvature) couples to braid topology
 
 Both should be order-unity dimensionless numbers if the fundamental scale is Planckian, or could be enhanced if the D=1.5 → D=3 crossover occurs at larger scales (as suggested by biological data).
 
 **Regime behavior:**
-- In low-curvature, large-scale regimes, α, β-terms are negligible → standard GR
+- In low-curvature, large-scale regimes, α, ◐-terms are negligible → standard GR
 - At small scales / strong curvature, they drive dimensional flow (D_eff: 3 → 1.5)
 
 ### 5.4 Einstein Equations
@@ -1326,7 +1335,7 @@ The duty cycle rescales the effective coefficient. The discrete spectrum emerges
 **Status:** Mechanism identified (temporal regularization), explicit eigenvalue calculation confirming exactly 3 bound states remains to be published.
 
 **2. Fractal dimension:**
-- **Prediction:** D = 1 + H(β)/2 = 1.5 at balance point β=1/2
+- **Prediction:** D = 1 + H(◐)/2 = 1.5 at balance point ◐=1/2
 - **Status:** Exact from information-theoretic balance condition
 - **Derivation:** Shannon entropy of binary choice at optimal balance
 
@@ -1413,24 +1422,24 @@ However, "plausible mechanism" ≠ derivation. To close this gap, we would need 
 
 ### 7.4 Falsifiable Predictions
 
-**7. The D(β) relationship:**
+**7. The D(◐) relationship:**
 
-The framework predicts D = 1 + β, making the balance parameter empirically measurable:
+The framework predicts D = 1 + ◐, making the balance parameter empirically measurable:
 
 ```
-β = D - 1
+◐ = D - 1
 ```
 
 This allows direct experimental verification:
 - Measure fractal dimension D of any system
-- Calculate β = D - 1
-- Verify whether systems at optimal balance show β ≈ 0.5, D ≈ 1.5
+- Calculate ◐ = D - 1
+- Verify whether systems at optimal balance show ◐ ≈ 0.5, D ≈ 1.5
 
 **8. Scale-dependent dimensionality:**
 
 D is NOT universally 1.5. The framework predicts:
-- **Quantum/biological scales (high aperture density):** D ≈ 1.5 (β ≈ 0.5)
-- **Cosmological scales (low aperture density):** D → 3 (β → 2)
+- **Quantum/biological scales (high aperture density):** D ≈ 1.5 (◐ ≈ 0.5)
+- **Cosmological scales (low aperture density):** D → 3 (◐ → 2)
 - **Transition follows aperture density mechanism**
 
 Specific predictions:
@@ -1441,7 +1450,7 @@ Specific predictions:
 **9. Modified gravity signatures:**
 
 - Corrections to Einstein equations at scales where D transitions 1.5 → 3
-- Possible connection to dark energy through fractal corrections (α, β terms in S_circ)
+- Possible connection to dark energy through fractal corrections (α, ◐ terms in S_circ)
 - Deviation from inverse-square law at sub-Planckian scales
 
 **10. Braid-metric relationship:**
@@ -1519,9 +1528,9 @@ BEFORE disrupting individual scale oscillations.
 Test: Track phase coherence metrics during anesthesia induction—
 predict coherence drops before amplitude.
 
-PREDICTION 13c: Living systems show β < 0.5
+PREDICTION 13c: Living systems show ◐ < 0.5
 
-Living systems should show β_life = 0.5 - ε with ε > 0,
+Living systems should show ◐_life = 0.5 - ε with ε > 0,
 corresponding to D slightly above 1.5.
 
 Test: Measure fractal dimension in healthy biological systems;
@@ -1552,10 +1561,10 @@ predict Δφ → 0 between participants.
 
 The framework is falsified if:
 
-1. **D(β) relationship fails:** Systems at measured β don't show D = 1 + β
-   - Example: A system demonstrably at β = 0.3 should show D ≈ 1.3
+1. **D(◐) relationship fails:** Systems at measured ◐ don't show D = 1 + ◐
+   - Example: A system demonstrably at ◐ = 0.3 should show D ≈ 1.3
 
-2. **Optimal balance violated:** Systems that should be at β = 0.5 (biological, conscious, quantum-coherent) show D significantly different from 1.5 (>3σ)
+2. **Optimal balance violated:** Systems that should be at ◐ = 0.5 (biological, conscious, quantum-coherent) show D significantly different from 1.5 (>3σ)
 
 3. **Scale transition fails:** The D ≈ 1.5 → D ≈ 3 transition doesn't follow aperture density mechanism
 
@@ -1578,7 +1587,7 @@ The framework is falsified if:
 ### Operators
 
 - **Convergence:** ≻: ℋ_Φ → ℋ_in, kernel K_conv
-- **Aperture rotation:** i: ℋ_in → ℋ_out, multiplication by imaginary unit at balance β=1/2
+- **Aperture rotation:** i: ℋ_in → ℋ_out, multiplication by imaginary unit at balance ◐=1/2
 - **Emergence:** ⊰: ℋ_out → ℋ_Φ, kernel K_emerg
 - **Evolution:** U(Δt) = ⊱ ∘ i ∘ ≺
 
@@ -1586,8 +1595,8 @@ The framework is falsified if:
 
 **Balance:**
 ```
-β = |≻|/(|≻|+|⊰|) = 1/2
-D = 1 + (1/2)H(β) = 1.5
+◐ = |≻|/(|≻|+|⊰|) = 1/2
+D = 1 + (1/2)H(◐) = 1.5
 ```
 
 **Phase transmission (derived from isotropy + linearity + conservation):**
@@ -1638,11 +1647,11 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 ### 10.1 Theoretical Development Needed
 
-1. **Variational principle for α = β:** The dimensional interpolation argument (§2.4) establishes that the kernel exponent α equals the balance parameter β conceptually. A fully rigorous derivation should show that α = β extremizes some functional (entropy, action, or information flow) among power-law kernels, completing the derivation chain from symmetry to √r.
+1. **Variational principle for α = ◐:** The dimensional interpolation argument (§2.4) establishes that the kernel exponent α equals the balance parameter ◐ conceptually. A fully rigorous derivation should show that α = ◐ extremizes some functional (entropy, action, or information flow) among power-law kernels, completing the derivation chain from symmetry to √r.
 2. **φ³ from self-similarity:** The texture constants (§7.2) contain a phenomenological φ³ factor. Derive this from the framework's self-similar structure by showing that validation dynamics on the 64-state fiber produce Fibonacci recursion (F_n = F_{n-1} + F_{n-2}), from which φ emerges as the growth ratio.
 3. **Braid density definition and metric coupling:** The GR limit (§5) conjectures B(x) ∝ √(-g_tt) but lacks rigorous foundation. Required: (a) Define B(x) mathematically from braid group structure (crossing number density, B₃ generator integrals, or similar), (b) Derive the √(-g_tt) proportionality from this definition, (c) Test against real gravitational data rather than simulations that assume the answer.
 4. **Three generations eigenvalue calculation:** The temporal gating mechanism (§7.1) resolves the "fall to center" problem for the V_eff = -(3/4)/r² potential. Required: explicit calculation showing that the time-averaged, temporally-gated Hamiltonian has exactly 3 normalizable bound states.
-5. **S_circ coefficients:** Calculate α, β from microscopic braiding dynamics
+5. **S_circ coefficients:** Calculate α, ◐ from microscopic braiding dynamics
 6. **Mass formula derivation:** Connect lepton mass ratios to gauge structure and fiber geometry
 7. **Boundary dynamics:** Formulate complete evolution equation for ○ ∈ 𝓑
 8. **Discrete aperture graph derivation:** To upgrade from "geometric reduction" to "full derivation from geometry alone," pursue the following path:
@@ -1656,7 +1665,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 1. **Cross-scale D measurement:** Systematic measurement of fractal dimension across quantum, biological, and cosmological systems
 2. **Braid-metric correlation:** Test B ∝ √(-g_tt) prediction in diverse gravitational configurations
-3. **Modified gravity detection:** Search for α, β corrections in precision gravitational experiments
+3. **Modified gravity detection:** Search for α, ◐ corrections in precision gravitational experiments
 4. **Lepton sector tests:** Verify mass ratio predictions to higher precision
 
 ### 10.3 Computational Implementation
@@ -1692,7 +1701,7 @@ This formulation benefited from iterative refinement focused on mathematical rig
 
 **v1.3 Changes:** Added ratchet operators (§2.7), ethereal tail formalism (§2.8), CP violation as primordial ratchet, consciousness integral reformulation, ratchet threshold predictions (§7.4), cross-scale phase coherence predictions, connection to Chapters XXVIII-XXIX
 
-**v1.2 Changes:** Added aperture rotation operator Å(β) formalization (§2.4.1), discrete graph derivation roadmap (§10.1)
+**v1.2 Changes:** Added aperture rotation operator Å(◐) formalization (§2.4.1), discrete graph derivation roadmap (§10.1)
 
 **v1.1 Changes:** Added phase coherence formalism (§2.6), derived transmission law T = cos²(Δφ/2) (§4.3-4.4), phase-based dark sector classification (§7.4)
 
@@ -1710,8 +1719,8 @@ This formulation benefited from iterative refinement focused on mathematical rig
 - ≺ : convergence (right-to-left flow toward aperture), defined as ≺ = ≻†
 - ⊱ : emergence (right-to-left flow from aperture), defined as ⊱ = ⊰†
 - i : aperture rotation (imaginary unit), equals Å(0.5)
-- Å(β) : aperture rotation operator, Å(β) = exp(iπβ)
-- β : balance parameter
+- Å(◐) : aperture rotation operator, Å(◐) = exp(iπ◐)
+- ◐ : balance parameter
 - D : fractal/Hausdorff dimension
 - R : ratchet operator (§2.7)
 - T : ethereal tail (phase-locked hierarchy of centers) (§2.8)
