@@ -3,9 +3,9 @@
 
 ⊙ is the minimal procedural structure of a whole being:
 
-- **○** — body / boundary
+- **○** — surface / body
 - **Φ** — field / mind
-- **•** — aperture / soul
+- **•** — singularity / soul
 
 together with a three-phase flow procedure:
 
