@@ -1,19 +1,24 @@
 # ⊙ The Circumpunct Theory
 ## by Ashman Roonz
 
-## ⊙ = (○, Φ, •) × (≻, i, ⊰)³
+⊙ is the minimal diagram of a whole being:
+
+- **○** — body / boundary  
+- **Φ** — field / mind  
+- **•** — aperture / soul  
+
+together with a three-phase flow:
+
+- **≻** — convergence (input)  
+- **i** — transformation (aperture)  
+- **⊰** — emergence (output)  
+
+Packed into one line:
+
+```
+⊙ = (○, Φ, •) × (≻, i, ⊰)³
 Energy = Structure × Process³
-
----
-
-## The Fundamental Principle
-
 ```
-β = |≻| / (|≻| + |⊰|) = ½
-
-Everything flows from the Balance of I/O.
-```
-
 ---
 
 ## The Complete Spectrum
