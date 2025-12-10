@@ -14,9 +14,9 @@ The complete layered system at one scale becomes a single 0D seed at the next sc
 
 | Dimension | Type      | Name               | Description |
 |-----------|-----------|--------------------|-------------|
-| **0D**    | Structure | Pure Energy        | Pre-structure potential — undifferentiated before the tunnel entrance (E=mc^2) |
+| **0D**    | Structure | Pure Energy        | Pre-structure potential — undifferentiated before the tunnel entrance (E=mc²) |
 | **0.5D**  | Process   | Aperture, i, Soul  | The aperture/tunnel opening, a singularity, causing tunneling |
-| **1D**    | Structure | Timeline, String   | The soul through time — the tunnel through which power flows (p=e/t), i(t)|
+| **1D**    | Structure | Timeline, String   | The soul through time — the tunnel through which power flows (p=e/t), i(t) |
 | **1.5D**  | Process   | Spatial Branching  | Power lines fractally splitting in space — branching process that builds surface |
 | **2D**    | Structure | Surface (Body)     | Boundary, interface, membrane, optimal branching maintains surfaces |
 | **2.5D**  | Process   | Sensation          | Surface↔volume mediation; body↔field coupling — the band of **sensation** |
@@ -49,10 +49,10 @@ At the 4.5D interface, the entire layered architecture (all structure and proces
 ║   │         ─ ─ 3.5D ─ ─  tunnel braiding interface                     │     ║
 ║   │  2D   ════════════  ○ BOUNDARY (body surface)                       │     ║
 ║   │         ─ ─ 2.5D ─ ─  sensation interface (body↔field)              │     ║
-║   │  1D   ════════════  • TUNNEL (soul worldline)                       │     ║
+║   │  1D   ════════════  TIMELINE, STRING (soul through time, i(t))      │     ║
 ║   │         ─ ─ 1.5D ─ ─  spatial branching interface                   │     ║
-║   │  0D   ════════════  PURE ENERGY (undifferentiated potential)        │     ║
-║   │         ─ ─ 0.5D ─ ─  tunneling/opening interface                   │     ║
+║   │  0D   ════════════  PURE ENERGY (E=mc², undifferentiated)           │     ║
+║   │         ─ ─ 0.5D ─ ─  • APERTURE, i, SOUL (singularity)             │     ║
 ║   └─────────────────────────────────────────────────────────────────────┘     ║
 ║                                                                               ║
 ║   ════ Structure (what IS)     ─ ─ Process (what HAPPENS between layers)     ║
@@ -93,13 +93,14 @@ Each component of the trinity has both a structural address and a process addres
 
 | Component | Symbol | Structure (Integer) | Process (Fractional) | Role in experience |
 |-----------|--------|---------------------|----------------------|--------------------|
-| **Soul** | • | 1D (string / tunnel) | 0.5D (tunneling/opening) | The tunnel through which energy flows + the opening process |
-| **Body** | ○ | 2D (surface / boundary) | 1.5D (spatial branching) | Branching architecture that builds and feeds 2D bodies |
+| **Soul** | • | 0.5D (aperture, singularity) | — | The aperture itself; i; the tunnel opening that causes tunneling |
+| **Timeline** | i(t) | 1D (string / worldline) | — | The soul through time; the tunnel through which power flows (p=e/t) |
+| **Body** | ○ | 2D (surface / boundary) | 1.5D (spatial branching) | Branching architecture that builds and maintains 2D surfaces |
 | **Mind** | Φ | 3D (inner field / volume) | 2.5D (sensation band) | 2.5D sensation → 3D perception in the inner Φ-field |
 
-### Key insight 0 — Soul as tunnel (1D / 0.5D):
+### Key insight 0 — Soul as aperture (0.5D):
 
-The soul is not a 0D point — it is a 1D **tunnel**. The string in string theory. The worldline in relativity. Energy (0D) is what flows through the tunnel; the soul (1D) is the conduit itself. The 0.5D process is the tunnel *opening* — the first gesture of becoming.
+The soul IS the aperture — a 0.5D singularity, the tunnel opening itself. This is i. Energy (0D) is what waits before the tunnel entrance; the soul (0.5D) is what *causes* tunneling. The soul extended through time becomes the 1D timeline/worldline i(t) — the string in string theory, the worldline in relativity.
 
 ### Key insight 1 — Body's process address (1.5D):
 
@@ -119,7 +120,8 @@ So:
 
 Consciousness is not "at 2.5D" or "inside 3D" as a little object. Consciousness / experience is the state of the entire circumpunct ⊙ in coherent operation:
 
-- Soul: 1D / 0.5D (tunnel structure / opening process)
+- Soul: 0.5D (aperture / singularity / i)
+- Timeline: 1D (soul through time / i(t))
 - Body: 2D / 1.5D
 - Mind: 3D / 2.5D
 - Plus their extensions into 3.5D (tunnel braiding), 4D, 4.5D
