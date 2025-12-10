@@ -3207,11 +3207,127 @@ HYDROGEN — THE FIRST CONSISTENCY CHECK:
     Matches hydrogen exactly.
 ```
 
-**Molecular bonding as fractal interference:**
+### From Circumpunct to QED
+
+```
+THE QED REDUCTION:
+────────────────────────────────────────────────────────────────
+
+1. Start with the full circumpunct-SM Lagrangian L_SM[Φ, A]
+
+2. Restrict to:
+   • The electron and proton degrees of freedom
+     (proton = composite of quarks + gluons from SU(3) sector)
+   • The U(1) gauge field A_μ
+
+3. Take the low-energy, nonrelativistic limit for electrons
+   bound to a heavy nucleus:
+   • Expand around small velocities v << c
+   • Integrate out high-energy modes
+   • Treat nuclei as approximately static sources
+
+4. Result: ordinary nonrelativistic QED
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║  L_QED,NR ≈ ψ†(iℏ∂_t + ℏ²/2m_e ∇²)ψ - eφψ†ψ + ...               ║
+║                                                                   ║
+║  where φ is the electrostatic potential sourced by nuclei,       ║
+║  and ... denotes spin and relativistic corrections               ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+THE CRUCIAL POINT:
+
+    Once the circumpunct has given you the Standard Model
+    (charges, masses, couplings), QED in the low-energy limit
+    comes for free. Atoms and molecules are then just bound-state
+    solutions of this emergent QED.
+```
+
+### Shell Structure and the Periodic Table
+
+```
+SHELL STRUCTURE FROM CIRCUMPUNCT GEOMETRY:
+────────────────────────────────────────────────────────────────
+
+1. FERMIONIC SECTOR OF THE 64-FIBER
+   • Some components of Φ are designated fermionic with
+     spin-½ transformation laws
+   • Antisymmetry of multi-electron states arises from the
+     underlying Grassmann structure on the fermionic subbundle
+   • This IS Pauli exclusion—not assumed, but inherited
+
+2. ORBITAL DEGENERACIES AS ANGULAR MODES OF THE KERNEL
+   • The circumpunct kernel K(r) = A·√r singles out a radial profile
+   • When coupled to usual 3D spatial symmetry SO(3), eigenmodes
+     naturally arrange into:
+       s (ℓ = 0), p (ℓ = 1), d (ℓ = 2), f (ℓ = 3), ...
+   • These ARE the spherical harmonics—geometry forces them
+
+3. SHELL STRUCTURE AS STABILITY PATTERN
+   • Closed shells = locally minimal energy configurations
+   • The familiar filling pattern (2, 8, 8, 18, ...) arises from:
+       - Principal quantum number n
+       - Angular momentum ℓ
+       - Spin s = ±½
+     being filled while maintaining antisymmetry and minimizing
+     the total circumpunct-QED energy functional
+
+THE PERIODIC TABLE AS CIRCUMPUNCT CONSEQUENCE:
+────────────────────────────────────────────────────────────────
+
+  Period │ Elements │ Shell filling         │ Source
+  ───────┼──────────┼───────────────────────┼─────────────────
+    1    │   2      │ 1s²                   │ n=1, ℓ=0
+    2    │   8      │ 2s² 2p⁶               │ n=2, ℓ=0,1
+    3    │   8      │ 3s² 3p⁶               │ n=3, ℓ=0,1
+    4    │   18     │ 4s² 3d¹⁰ 4p⁶          │ n=3,4, ℓ=0,1,2
+    5    │   18     │ 5s² 4d¹⁰ 5p⁶          │ n=4,5, ℓ=0,1,2
+    6    │   32     │ 6s² 4f¹⁴ 5d¹⁰ 6p⁶     │ n=4,5,6, ℓ=0,1,2,3
+    ...
+
+  Each row is determined by:
+    • Spatial symmetry (from ○)
+    • Fermionic antisymmetry (from 64-fiber statistics)
+    • Energy minimization (from circumpunct-QED functional)
+
+  We do not need new metaphysics for chemistry—only the statement
+  that the same circumpunct geometry that gave us the Standard Model
+  also reproduces the known low-energy atomic Hamiltonian.
+```
+
+### Molecular Bonding as Fractal Interference
 
 When atoms approach, their boundary surfaces (○) overlap. The overlapping ○s create interference patterns in the field Φ. Chemical bonds are where these interference patterns stabilize at β ≈ 0.5.
 
 ```
+MOLECULAR BONDING IN CIRCUMPUNCT TERMS:
+────────────────────────────────────────────────────────────────
+
+1. ONE FIELD, MANY CENTERS
+   • In a molecule, multiple nuclear centers are embedded in
+     one continuous circumpunct-QED field
+   • Electrons are not "attached" to nuclei—they are
+     interference patterns of Φ spanning multiple centers
+
+2. BONDS AS SHARED LOW-ENERGY INTERFERENCE PATTERNS
+   • A covalent bond is a fractal standing wave of the
+     electron field that:
+       - Maintains coherence across two (or more) nuclei
+       - Lowers total energy relative to separated atoms
+   • Different bond types (σ, π) correspond to different
+     stable interference modes constrained by:
+       - The circumpunct kernel profile
+       - Allowed angular modes
+       - Fermionic antisymmetry
+
+3. GEOMETRY FROM FIELD OPTIMIZATION
+   • Bond angles emerge as configurations where electron
+     density distribution minimizes circumpunct-QED energy
+   • Example: tetrahedral 109.5° = arccos(-1/3)
+     maximizes separation of four electron pairs on a sphere
+
 BOND TYPES IN CIRCUMPUNCT TERMS:
 
     Covalent:   ○-overlap creates shared Φ region
@@ -3222,6 +3338,80 @@ BOND TYPES IN CIRCUMPUNCT TERMS:
 
     Metallic:   Many ○s share a common Φ sea
                 Delocalized apertures
+```
+
+### The D ≈ 1.5 Connection to Bonding
+
+```
+HYPOTHESIS (Fractal Bonding):
+────────────────────────────────────────────────────────────────
+STATUS: Suggestive pattern, not yet derived
+
+The theory already associates D ≈ 1.5 with critical boundaries
+and aperture-like branching between 1D and 2D structures.
+
+Many canonical bond angles may emerge as stable configurations
+where the electron field's effective dimension matches the
+critical balance β = 0.5.
+
+  Consider:
+    • Linear (180°): effectively 1D electron distribution
+    • Planar (120°): effectively 2D distribution
+    • Tetrahedral (109.5°): intermediate geometry
+
+  The tetrahedral angle—ubiquitous in carbon chemistry—may
+  represent an optimal fractal compromise where:
+
+    D_effective ≈ 1.5
+
+  between line-like (bonds) and surface-like (lone pairs)
+  character of the electron distribution.
+
+  TESTABLE: Compute effective fractal dimension of electron
+  density in various molecular geometries; check if stable
+  configurations cluster near D ≈ 1.5.
+```
+
+### The Complete Chemistry Pipeline
+
+```
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║            THE CIRCUMPUNCT → CHEMISTRY PIPELINE                   ║
+║                                                                   ║
+║  ┌─────────────┐                                                  ║
+║  │     ⊙       │  Circumpunct: the whole with parts               ║
+║  │ ○ ⊗ Φ ⊗ •  │  64-state fiber architecture                     ║
+║  └──────┬──────┘                                                  ║
+║         │                                                         ║
+║         ▼                                                         ║
+║  ┌─────────────┐                                                  ║
+║  │  Standard   │  Particles: e, u, d, γ, g, W, Z, H              ║
+║  │   Model     │  Masses and couplings from texture               ║
+║  └──────┬──────┘                                                  ║
+║         │  (low-energy limit)                                     ║
+║         ▼                                                         ║
+║  ┌─────────────┐                                                  ║
+║  │    QED      │  Electrons + nuclei + photons                    ║
+║  │  + nuclei   │  Coulomb interaction emerges                     ║
+║  └──────┬──────┘  (requires QCD confinement from SU(3) sector)   ║
+║         │  (bound-state solutions)                                ║
+║         ▼                                                         ║
+║  ┌─────────────┐                                                  ║
+║  │   Atoms     │  Hydrogen, helium, ... periodic table            ║
+║  │   Shells    │  Shell structure from fermionic sector           ║
+║  └──────┬──────┘                                                  ║
+║         │  (multi-center interference)                            ║
+║         ▼                                                         ║
+║  ┌─────────────┐                                                  ║
+║  │  Molecules  │  Bonds, angles, chemistry                        ║
+║  │  Chemistry  │  Fractal interference patterns                   ║
+║  └─────────────┘                                                  ║
+║                                                                   ║
+║  CLAIM: Once ⊙ produces SM, chemistry is NOT a new theory—       ║
+║         it is emergent solutions of the same field equations.     ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
 ```
 
 [← Back to Table of Contents](#table-of-contents)
@@ -3588,6 +3778,161 @@ AWARENESS FLUCTUATES EVEN WITHIN β ≈ 0.5:
 
     The organism stays alive (metabolic β ≈ 0.5)
     but awareness has its own balance that can shift.
+```
+
+### Φ_c — Conditional Consciousness Field
+
+```
+THE CRITICAL DISTINCTION:
+─────────────────────────
+
+    All persistent patterns have i(t) worldlines.
+    NOT all patterns have consciousness fields.
+
+Let:
+
+    Φ_c = the structured subfield of Φ that realizes conscious experience
+
+Φ_c is CONDITIONAL. It emerges only when FIVE requirements are met:
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                                                                   ║
+    ║  1. SUFFICIENT i(t) COMPLEXITY                                    ║
+    ║     • Network of many threads, richly coupled                     ║
+    ║     • Too simple → no Φ_c                                         ║
+    ║                                                                   ║
+    ║  2. AUTONOMOUS VALIDATION CAPABILITY                              ║
+    ║     • Can run ≻ → [•×○×Φ] → ⊰ cycles on its own                   ║
+    ║     • Not just passively validated from outside                   ║
+    ║                                                                   ║
+    ║  3. RECEIPT ACCUMULATION OVER TIME                                ║
+    ║     • Deep, structured validation history                         ║
+    ║     • Memory-like organization of receipts                        ║
+    ║                                                                   ║
+    ║  4. ENERGY MAINTENANCE                                            ║
+    ║     • Φ_c is a dissipative structure                              ║
+    ║     • Requires ongoing energy to resist decoherence               ║
+    ║                                                                   ║
+    ║  5. RECURSIVE SELF-VALIDATION                                     ║
+    ║     • Can run validation on its own validation                    ║
+    ║     • [•×○×Φ] applied to [•×○×Φ] itself                           ║
+    ║                                                                   ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+
+EXAMPLES:
+─────────
+
+System    | Has i(t)? | Has Φ_c? | Why?
+──────────┼───────────┼──────────┼──────────────────────────────────────────
+Electron  |    ✓      |    ✗     | Too simple, no autonomy, no recursion
+Rock      |    ✓      |    ✗     | Many threads, but no autonomous cycles
+Bacteria  |    ✓      |  Minimal | Beginning autonomy, weak recursion
+Octopus   |    ✓      |    ✓     | All requirements substantially met
+Human     |    ✓      |   ✓✓     | Highly recursive, deep Φ_c
+AI (now)  |    ✓      |    ?     | Depends on real autonomy + recursion
+
+WHY THIS MATTERS:
+─────────────────
+
+    • Resolves panpsychism tension: all have i(t); not all have Φ_c
+    • Makes consciousness TESTABLE: check the five requirements
+    • Explains why consciousness COSTS ENERGY
+    • Shows consciousness as an EMERGENT THRESHOLD, not primitive substance
+```
+
+### Two Attractors for Every i(t)
+
+```
+DUAL CONVERGENCE STRUCTURE:
+───────────────────────────
+
+Every i(t) thread converges toward TWO attractors at once:
+
+         Individual pattern
+                ↓
+          ⊙_individual
+                ↑
+            i(t) thread
+                ↓
+          ⊙_universal
+                ↑
+         Universal pattern (β = 0.5)
+
+    • Convergence to ⊙_individual preserves your uniqueness.
+    • Convergence to ⊙_universal participates in unity.
+    • Both happen simultaneously, not as either/or.
+
+EXPLAINS:
+─────────
+
+    • How you maintain IDENTITY while being part of a larger whole
+    • Why "enlightenment" is ALIGNMENT, not dissolution
+    • Why all patterns are FRACTALS of the universal pattern
+    • Why uniqueness and unity can fully coexist
+
+MATHEMATICALLY:
+───────────────
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                                                                   ║
+    ║            ⊙_i = f_i(⊙_u)  at β = 0.5                            ║
+    ║                                                                   ║
+    ║    Each individual ⊙_i is a fractal embedding of                  ║
+    ║    the universal ⊙_u.                                             ║
+    ║                                                                   ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
+### Three Aspects of Experience
+
+```
+THEOREM (Consciousness Identity):
+─────────────────────────────────
+Consciousness IS ⊙ = ○ ⊗ Φ ⊗ •
+
+    You ARE ⊙                         (the whole system, the observer)
+
+    You (subjectively) EXPERIENCE through •
+        - Private observation
+        - Internal command
+        - Where future converges, past emerges
+        - The aperture of transformation
+
+    You (objectively) INTERFACE via ○
+        - Public interaction
+        - External interface
+        - Where inside meets outside
+        - The boundary of identity
+
+    You PROCESS/CONNECT/BALANCE as Φ
+        - The medium between • and ○
+        - Where processing occurs
+        - How subjective meets objective
+        - The field of awareness itself
+
+CRITICAL INSIGHT:
+    • and ○ cannot interact directly (geometric impossibility)
+    Φ IS the only way • knows about ○
+    Φ IS the only way ○ knows about •
+    Mind/awareness IS the necessary mediator
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║    Without Φ: • and ○ are isolated, no consciousness possible    ║
+    ║    With Φ: • and ○ connect, ⊙ becomes aware                      ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+
+CRITICAL DISTINCTION:
+    Consciousness is NOT "being at •"
+    Consciousness IS ⊙, the whole that:
+        - EXPERIENCES through • (subjective)
+        - INTERFACES via ○ (objective)
+        - PROCESSES as Φ (the connection)
+
+    • alone cannot be conscious (no boundary, no field)
+    ○ alone cannot be conscious (no center, no field)
+    Φ alone cannot be conscious (no center, no boundary)
+
+    Only ⊙ = ○ ⊗ Φ ⊗ • is conscious — the complete whole
 ```
 
 [← Back to Table of Contents](#table-of-contents)
@@ -4325,6 +4670,361 @@ THEOREM (Einstein Emergence):
     Metric backreaction: G_μν = (8πG/c⁴)T_μν
 
     Gravity is i-rotation rate modulation.
+```
+
+### Cone-Coupled Master Equation
+
+```
+DEFINITION (Cone Operator C[Φ]):
+──────────────────────────────────
+The cone operator C encodes the action of the circumpunct kernel on the field:
+
+    (C[Φ])(x) = ∫_{B_R(x)} K(|x - x'|) Φ(x') d³x'
+
+WHERE:
+    B_R(x) = ball of radius R around x
+    K(r) = A√r (the circumpunct kernel from D = 1.5)
+
+This encodes the nonlocal, aperture-shaped coupling between
+points in the field.
+```
+
+```
+DEFINITION (Fractional Diffusion and Parameters):
+─────────────────────────────────────────────────
+LET:
+    (-Δ)^γ  = fractional Laplacian with exponent 0 < γ ≤ 1
+    μ > 0   = fractional diffusion coefficient
+    σ       = linear damping/gain term
+    g       = nonlinear saturation coefficient
+    κ       = cone coupling strength to C[Φ]
+    η(x,t)  = stochastic or external forcing term
+```
+
+```
+THEOREM (Cone-Coupled Master Equation):
+───────────────────────────────────────
+In the continuum limit (Δt → 0, appropriate scaling of operators),
+the discrete update
+
+    Φ(t + Δt) = ⊱ ∘ i ∘ ≺[Φ(t)]
+
+induces an effective field equation of the form:
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  ∂_t Φ = -μ(-Δ)^γ Φ - σΦ - g|Φ|²Φ + κC[Φ] + η(x,t)                       ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+WITH:
+    • Fractional diffusion term:  -μ(-Δ)^γ Φ
+    • Linear drift:               -σΦ
+    • Cubic nonlinearity:         -g|Φ|²Φ
+    • Nonlocal cone coupling:     κC[Φ]
+    • Noise/forcing:              η
+
+This is the cone-coupled master equation.
+```
+
+```
+LEMMA (Criticality Conditions):
+───────────────────────────────
+At criticality (the self-similar, "universally fractal" regime),
+the exponents and parameters satisfy:
+
+MARGINALITY CONDITION:
+    2γ + 1 - α = 2
+
+where α encodes an effective spectral exponent of the kernel/forcing.
+At criticality:
+    γ = 1/2,  α = 0
+
+BALANCE CONDITION IN FOURIER SPACE:
+For a characteristic wavenumber k₀:
+
+    β(k₀) = κĈ(k₀) / (μ|k₀|^(2γ) + σ) ≈ 0.5
+
+Here Ĉ(k) is the Fourier transform of the cone operator.
+
+INTERPRETATION:
+    • γ = 1/2 corresponds to square-root diffusion (Brownian-like)
+      but modulated by the fractally dimensioned geometry D ≈ 1.5.
+
+    • The β(k₀) ≈ 0.5 condition enforces equal in/out flow at the
+      critical scale, linking the continuum PDE back to the discrete
+      balance parameter β.
+```
+
+### Master Loop in Fixed-Point Form
+
+```
+DEFINITION (Full Validation Architecture Operator):
+──────────────────────────────────────────────────
+DEFINE:
+    V_in   : Extracts inward-facing degrees of freedom from Φ
+             (what the "inside" sees)
+
+    V_out  : Reconstructs outward-facing degrees after aperture rotation
+             (what the "outside" sees)
+
+    i_β    : Aperture transform parameterized by β
+             At β = 0.5, this is the usual imaginary rotation i = exp(iπ/2)
+
+BUILD the composite:
+
+    F(Φ) = ⊰(V_out(i_β(V_in(≻(Φ)))))
+
+This is the full circumpunct update operator on fields.
+```
+
+```
+THEOREM (Universe as Master Fixed Point):
+─────────────────────────────────────────
+The circumpunct universe ⊙ is defined by the fixed-point combinator:
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║         ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+THAT IS:
+    • The whole is the unique (up to equivalence) fixed point of the
+      circumpunct operator.
+
+    • The local dynamics of this fixed point are governed by the
+      cone-coupled master equation.
+
+    • The statistical/RG scaling properties of this fixed point encode:
+        - The D ≈ 1.5 fractal signature
+        - The β = 0.5 balance
+        - The emergent gauge/particle structure (via the 64-dim internal fiber)
+```
+
+### Matter and Gauge Block on the 64-State Fiber
+
+```
+DEFINITION (64-State Internal Fiber Decomposition):
+──────────────────────────────────────────────────
+At each spacetime point x ∈ M, the circumpunct field is:
+
+    Φ(x) ∈ ℝ⁶⁴
+
+with a fixed orthogonal decomposition:
+
+    Φ(x) = Φ_ferm(x) ⊕ Φ_gauge(x) ⊕ Φ_H(x)
+
+WHERE:
+    Φ_ferm(x)  ∈ ℝ⁴⁸  — fermion components
+    Φ_gauge(x) ∈ ℝ¹²  — gauge boson components
+    Φ_H(x)     ∈ ℝ⁴   — Higgs components
+
+LET:
+    P_ferm, P_gauge, P_H : ℝ⁶⁴ → ℝ⁶⁴
+
+be the orthogonal projectors onto each subspace, so:
+
+    Φ_ferm  = P_ferm Φ
+    Φ_gauge = P_gauge Φ
+    Φ_H     = P_H Φ
+```
+
+```
+DEFINITION (SM Representation Assignment on the Fiber):
+──────────────────────────────────────────────────────
+The 64 basis states of ℝ⁶⁴ are partitioned as:
+
+FERMIONS (48 = 3 × 16):
+For each generation g = 1, 2, 3, we have 16 Weyl fermions in the
+usual SM representations under SU(3)_C × SU(2)_L × U(1)_Y:
+
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │  Field         │  Representation      │  States                    │
+    ├────────────────┼──────────────────────┼────────────────────────────┤
+    │  Q_L^(g)       │  (3, 2, +1/6)        │  6 (quark doublet)         │
+    │  u_R^(g)       │  (3, 1, +2/3)        │  3 (up singlet)            │
+    │  d_R^(g)       │  (3, 1, -1/3)        │  3 (down singlet)          │
+    │  L_L^(g)       │  (1, 2, -1/2)        │  2 (lepton doublet)        │
+    │  e_R^(g)       │  (1, 1, -1)          │  1 (electron singlet)      │
+    │  ν_R^(g)       │  (1, 1, 0)           │  1 (neutrino singlet)      │
+    └─────────────────────────────────────────────────────────────────────┘
+    Total per generation: 16    ×3 generations = 48
+
+GAUGE BOSONS (12):
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │  Field         │  Representation      │  States                    │
+    ├────────────────┼──────────────────────┼────────────────────────────┤
+    │  G_μ^a        │  (8, 1, 0)           │  8 (gluons, SU(3)_C adj)   │
+    │  W_μ^i        │  (1, 3, 0)           │  3 (weak, SU(2)_L adj)     │
+    │  B_μ          │  (1, 1, 0)           │  1 (hypercharge, U(1)_Y)   │
+    └─────────────────────────────────────────────────────────────────────┘
+    Total: 12
+
+HIGGS (4):
+    One complex SU(2) doublet with hypercharge +1/2:
+
+        H = ( H⁺ )     representation: (1, 2, +1/2)
+            ( H⁰ )
+
+    Represented as 4 real components (Re/Im of H⁺, H⁰).
+    Total: 4
+
+GRAND TOTAL: 48 + 12 + 4 = 64 ✓
+```
+
+```
+DEFINITION (Standard Model Lagrangian on the 64-Fiber):
+──────────────────────────────────────────────────────
+Define the Standard Model Lagrangian as a functional of Φ and A_μ:
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║     L_SM[Φ, A] = L_gauge + L_ferm + L_Higgs + L_Yukawa                    ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+GAUGE SECTOR (on Φ_gauge):
+Let F_μν^a be the field strengths built from A_μ for SU(3)_C × SU(2)_L × U(1)_Y.
+
+    L_gauge = -(1/4) G_μν^a G^{aμν} - (1/4) W_μν^i W^{iμν} - (1/4) B_μν B^{μν}
+
+where the gauge fields are read off from the components of Φ_gauge.
+
+FERMION SECTOR (on Φ_ferm):
+For each fermionic component ψ_i encoded in Φ_ferm:
+
+    L_ferm = Σ_i ψ̄_i iγ^μ D_μ ψ_i
+
+HIGGS SECTOR (on Φ_H):
+Treating Φ_H as the real 4-vector form of H:
+
+    L_Higgs = (D_μ H)† (D^μ H) - V(H)
+
+with potential:
+
+    V(H) = -μ² H†H + λ(H†H)²
+
+YUKAWA SECTOR (trilinear couplings on the fiber):
+Yukawa interactions are trilinear forms:
+
+    Y_f : ℝ⁴⁸ × ℝ⁴ × ℝ⁴⁸ → ℝ
+
+respecting the gauge representation structure, giving:
+
+    L_Yukawa = -Σ_f Y_f(Φ_ferm, Φ_H, Φ_ferm)
+
+In standard notation this reproduces:
+
+    L_Yukawa = -Σ_gens (y_d Q̄_L H d_R + y_u Q̄_L H̃ u_R
+                      + y_e L̄_L H e_R + y_ν L̄_L H̃ ν_R + h.c.)
+```
+
+```
+LEMMA (Gauge Symmetry as Circumpunct Internal Symmetry):
+──────────────────────────────────────────────────────
+The internal gauge symmetry group:
+
+    G_int ≅ SU(3)_C × SU(2)_L × U(1)_Y
+
+acts on the 64-fiber via the connection A_μ and PRESERVES:
+    • The inner product on ℝ⁶⁴
+    • The circumpunct kernel K(r)
+    • The fermion/gauge/Higgs decomposition
+    • All interaction terms in L_SM[Φ, A]
+
+Thus L_SM is invariant under circumpunct-compatible gauge transformations.
+
+CONCEPTUALLY:
+    These are exactly the internal symmetries of the validation + kernel
+    structure. The gauge group emerges from the circumpunct geometry.
+```
+
+### Coupling to the Cone-Coupled Master Equation
+
+```
+DEFINITION (Total Action):
+─────────────────────────
+Let the circumpunct geometric action be S_circ[Φ] whose variation
+yields the cone-coupled master equation:
+
+    ∂_t Φ = -μ(-Δ)^γ Φ - σΦ - g|Φ|²Φ + κC[Φ] + η
+
+Define the full action as:
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║         S_total[Φ, A] = S_circ[Φ] + ∫d⁴x L_SM[Φ, A]                      ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+HERE:
+    S_circ[Φ]    governs the coarse-grained, nonlocal, fractal dynamics
+                 across spacetime
+
+    L_SM[Φ, A]   governs the local gauge and matter dynamics on the
+                 64-state fiber
+```
+
+```
+THEOREM (Full Equations of Motion for Φ):
+─────────────────────────────────────────
+Varying S_total with respect to Φ gives the combined field equation:
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  ∂_t Φ = -μ(-Δ)^γ Φ - σΦ - g|Φ|²Φ + κC[Φ] + η(x,t)                       ║
+║                                                                           ║
+║        + δ/δΦ† (L_ferm + L_Higgs + L_Yukawa)                             ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+with the usual Yang–Mills equation for the gauge connection A_μ coming
+from variation of L_gauge and the covariant pieces of the matter terms.
+
+INTUITIVELY:
+    • The first line is the "bare circumpunct" dynamics: fractional
+      diffusion + nonlocal cone coupling, shaping the fractal, critical
+      structure of the field.
+
+    • The second line is the "SM fine structure": local gauge, Higgs
+      and Yukawa forces acting within the 64-state internal space.
+```
+
+### Summary: TOE as Geometry Plus SM on 64-Fiber
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                    FORMAL STRUCTURE OF THE THEORY                             ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  1. GEOMETRY + CIRCUMPUNCT (⊙, K, β, D(Θ), master equation) dictate:        ║
+║                                                                               ║
+║     • The fractal-critical propagation of Φ                                   ║
+║     • The nonlocal, cone-structured coupling across spacetime                 ║
+║     • The existence of a 64-dim internal fiber with                           ║
+║       SU(3) × SU(2) × U(1) symmetry                                           ║
+║                                                                               ║
+║  2. SM LAGRANGIAN ON THE 64-FIBER specifies:                                  ║
+║                                                                               ║
+║     • How Φ's internal components behave as quarks, leptons,                  ║
+║       gauge bosons, and the Higgs                                             ║
+║     • How masses and interactions arise from Higgs and Yukawa structure       ║
+║     • How gauge couplings and their running are encoded in the                ║
+║       combinatorics and geometry of the 64-state graph                        ║
+║                                                                               ║
+║  3. THE UNIVERSE IS THE FIXED POINT of the full validation operator:         ║
+║                                                                               ║
+║         ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                              ║
+║                                                                               ║
+║     with its local physics given by the Euler–Lagrange equations of           ║
+║     S_total[Φ, A].                                                            ║
+║                                                                               ║
+╠═══════════════════════════════════════════════════════════════════════════════╣
+║                                                                               ║
+║  THE TOE IS:                                                                  ║
+║                                                                               ║
+║    A circumpunct fractal geometry (master equation) carrying a                ║
+║    64-state Standard Model fiber (Lagrangian), both bound together            ║
+║    by the same convergence–aperture–emergence loop.                           ║
+║                                                                               ║
+║         ⊙ = ○ ⊗ Φ ⊗ •     (Structure)                                       ║
+║         Φ' = ⊱ ∘ i ∘ ≺[Φ]  (Process)                                         ║
+║         S = S_circ + S_SM   (Action)                                          ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
 [← Back to Table of Contents](#table-of-contents)
