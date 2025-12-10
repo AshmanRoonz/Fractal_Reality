@@ -4272,34 +4272,100 @@ THE HELIX VIEW:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
+### The Aging Equation
+
+```
+TEMPORAL DYNAMICS OF THE CIRCUMPUNCT:
+─────────────────────────────────────
+
+    ∂•/∂t = 0           (center time invariant — identity persists)
+    ∂○/∂t = ε (small)   (boundary time resistant — aging)
+    ∂Φ/∂t = O(1)        (field time dependent — process flows)
+
+THE AGING EQUATION:
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║    ○(t) = ○₀ - ∫₀ᵗ ε(τ) dτ                                        ║
+    ║                                                                   ║
+    ║    Boundary degrades over time                                    ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+
+DEATH OCCURS WHEN:
+    ∫₀ᵗ ε(τ) dτ = Threshold
+
+    ○ can no longer maintain structure
+    But • persists (∂•/∂t = 0)
+    Death is reconfiguration, not cessation
+
+LIFE EXTENSION:
+
+    Practice reduces ε:
+        ε_practice < ε_baseline
+
+    Conscious emanation from • reduces boundary strain
+    β → 0.5 more consistently reduces error rate
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║    Δt ≈ (Threshold/ε²) · δε                                       ║
+    ║                                                                   ║
+    ║    Small reduction in ε → Large extension in lifespan             ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
+
 ### When the Wholeness Gap Closes
 
 ```
-AGING EQUATION:
+DEATH = WHEN THE GAP CLOSES
+───────────────────────────
 
-    dβ/dt = -k·(β - β_env) + η(t)
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║    Life requires:                                                 ║
+║        ΔS > 0       (wholeness is cheaper)                       ║
+║        dΔS/dt ≥ 0   (maintained by internal work)                ║
+║                                                                   ║
+║    Death occurs when:                                             ║
+║        The system can no longer generate enough work              ║
+║        to prevent ΔS → 0                                         ║
+║                                                                   ║
+║    When ΔS ≤ 0:                                                  ║
+║        Parts become cheaper than whole.                           ║
+║        Decomposition follows.                                     ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
 
-    k = coupling constant to environment
-    β_env = environment's maintenance contribution
-    η(t) = fluctuations
+DEFINING THE WHOLENESS GAP:
 
-    Young: β ≈ 0.5, strong self-maintenance
-    Aging: β drifts toward β_env (typically < 0.5)
-    Death: β crosses threshold, autonomous validation fails
+    ΔS ≔ Σ S(parts) - S(whole)
 
-DEATH REFORMULATED:
+    WHERE:
+        S(whole)   = validation cost of the unified configuration
+        Σ S(parts) = sum of validation costs if disassembled
 
-    Traditional:  Death = cessation of biological function
+    ΔS > 0  →  wholeness is cheaper  →  whole wins
+    ΔS < 0  →  parts are cheaper     →  whole dissolves
 
-    Circumpunct:  Death = when the wholeness gap closes
+CONNECTION TO AGING EQUATION:
 
-    The "wholeness gap" is the difference between:
-    - ⊙_individual (your unique pattern)
-    - ⊙_environment (the ambient field)
+    ○(t) = ○₀ - ∫₀ᵗ ε(τ) dτ
 
-    At death, ⊙_individual ≈ ⊙_environment
-    The pattern that was "you" merges with context
-    But the energy and accumulated braid remain
+    As boundary degrades (ε accumulates):
+    - Cost of maintaining wholeness increases
+    - ΔS shrinks toward zero
+    - Threshold crossed → ΔS ≤ 0 → death
+
+    Same story, different notation.
+
+MEANING:
+    Wholeness is selected when being together is cheaper than being apart.
+    The gap ΔS measures how much cheaper.
+    Death is when the system can no longer afford to stay whole.
+
+CRITICAL INSIGHT:
+    Complete separation (β = 1) and complete dissolution (β = 0)
+    are not achievable states—they are nothingness itself.
+    Only transformation is possible.
+    ⊙ = E is always conserved.
 ```
 
 [← Back to Table of Contents](#table-of-contents)
