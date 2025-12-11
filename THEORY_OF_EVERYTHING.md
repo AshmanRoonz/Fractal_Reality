@@ -69,21 +69,22 @@ email@ashmanroonz.ca
 - [Chapter 17: From Chemistry to Life](#chapter-17-from-chemistry-to-life)
 - [Chapter 18: The Emergence of Biology from Physics](#chapter-18-the-emergence-of-biology-from-physics)
 - [Chapter 19: Consciousness](#chapter-19-consciousness)
-- [Chapter 20: Emotions and Memory](#chapter-20-emotions-and-memory)
-- [Chapter 21: The Ethereal Tail](#chapter-21-the-ethereal-tail)
+- [Chapter 20: Perception as Field Resonance](#chapter-20-perception-as-field-resonance)
+- [Chapter 21: Emotions and Memory](#chapter-21-emotions-and-memory)
+- [Chapter 22: The Ethereal Tail](#chapter-22-the-ethereal-tail)
 
 ### Part V: Implications
-- [Chapter 22: Aging and Death](#chapter-22-aging-and-death)
-- [Chapter 23: The Golden Ratio](#chapter-23-the-golden-ratio)
-- [Chapter 24: Ethics](#chapter-24-ethics)
+- [Chapter 23: Aging and Death](#chapter-23-aging-and-death)
+- [Chapter 24: The Golden Ratio](#chapter-24-the-golden-ratio)
+- [Chapter 25: Ethics](#chapter-25-ethics)
 
 ### Part VI: Validation & Synthesis
-- [Chapter 25: Empirical Validation](#chapter-25-empirical-validation)
-- [Chapter 26: Constants Table](#chapter-26-constants-table)
-- [Chapter 27: Falsification](#chapter-27-falsification)
-- [Chapter 28: The Master Loop](#chapter-28-the-master-loop)
-- [Chapter 29: The Fixed-Point Combinator](#chapter-29-the-fixed-point-combinator)
-- [Chapter 30: Ωmega — The Mathematical Story](#chapter-30-ωmega--the-mathematical-story)
+- [Chapter 26: Empirical Validation](#chapter-26-empirical-validation)
+- [Chapter 27: Constants Table](#chapter-27-constants-table)
+- [Chapter 28: Falsification](#chapter-28-falsification)
+- [Chapter 29: The Master Loop](#chapter-29-the-master-loop)
+- [Chapter 30: The Fixed-Point Combinator](#chapter-30-the-fixed-point-combinator)
+- [Chapter 31: Ωmega — The Mathematical Story](#chapter-31-ωmega--the-mathematical-story)
 
 ### Appendices
 - [Appendix A: Symbol Glossary](#appendix-a-symbol-glossary)
@@ -10104,13 +10105,347 @@ MATHEMATICALLY:
 
 ---
 
-## CHAPTER 20: EMOTIONS AND MEMORY
+<a id="chapter-20-perception"></a>
+
+## CHAPTER 20: PERCEPTION AS FIELD RESONANCE
+
+### §20.1 The Standard Picture and Its Error
+
+The dominant paradigm in cognitive science, philosophy of mind, and neuroscience assumes perception involves **representational copying** (call this **REP**):
+
+```
+REPRESENTATIONAL MODEL (REP):
+
+    External Object (O_ext)
+          │
+          ▼ stimulus
+    Sense Organ → Encoding → Internal Copy (O_int)
+          │
+          └── "Representation" mirrors original
+```
+
+REP presupposes:
+1. **Separation**: Perceiver and perceived are fundamentally distinct
+2. **Transfer**: Information must be copied across the gap
+3. **Mirroring**: Internal state represents (mirrors, models) external state
+4. **Computation**: Brain builds the copy from sensory data
+
+This covers both classical computationalism and most predictive-processing variants—they still assume a representational internal model.
+
+**The circumpunct framework rejects all four assumptions of REP.**
+
+---
+
+### §20.2 The Field-Mediated Picture
+
+In the circumpunct framework, perceiver and perceived are **both embedded in the same field Φ**:
+
+```
+CIRCUMPUNCT MODEL (Field Resonance):
+
+    ⊙₁ (perceived)              ⊙₂ (perceiver)
+     │                           │
+     ○₁──────── Φ ───────────○₂
+     │                           │
+     •₁                         •₂
+
+    Both share the SAME FIELD.
+    No gap to cross. No copy to make.
+```
+
+**Key insight**: The field Φ is not a medium through which information travels—it IS the shared reality in which both circumpuncts exist. Perception is not reception of a copy; it is **field coupling**.
+
+#### Definition 20.1 (Field-Mediated Perception)
+
+```
+Let ⊙₁ = (○₁, Φ, •₁) and ⊙₂ = (○₂, Φ, •₂) be two circumpuncts
+sharing field Φ.
+
+Perception of ⊙₁ by ⊙₂ is NOT:
+    ⊙₁ → encode → transmit → decode → copy_in(⊙₂)
+
+Perception IS:
+    The phase-coupled resonance of •₂ with patterns in Φ
+    that include ⊙₁'s contribution.
+
+Schematic form:
+    Perception(⊙₁ by ⊙₂) ≈ T₁₂ · Φ|_{○₂}
+
+    where T₁₂ denotes the effective transmission at the relevant scale:
+      - T_local at 2.5D (body↔field contact)
+      - T_eff,12 at 3.5D (soul-soul braiding)
+
+    and Φ|_{○₂} is the field restricted to ○₂'s boundary.
+```
+
+---
+
+### §20.3 Sensation as Echo, Not Copy
+
+The 2.5D process layer—**sensation**—is where body (○) couples with field (Φ). This is the lived interface of experience.
+
+**Critical reframe**: Sensation is not the arrival of a copied signal. It is **the field echoing through the boundary**.
+
+```
+ECHO vs COPY:
+
+COPY:                           ECHO:
+  Source → Medium → Target      Source ←→ Medium ←→ Target
+  (one-way transfer)            (bidirectional resonance)
+
+  Original persists             Wave propagates through
+  Copy created at target        SAME continuous medium
+  Two distinct objects          One field, multiple couplings
+```
+
+**Why "echo" is precise**:
+- Echoes are not copies—they're the same wave, reflected
+- Echoes carry information about source AND medium AND receiver
+- Echoes require continuous connection, not transfer
+- Echoes constructively/destructively interfere based on phase
+
+At the body↔field interface (2.5D), this echo is quantified by the local transmission law:
+
+```
+T_local(x) = cos²(Δφ_contact(x)/2)
+```
+
+At 3.5D, the same law governs tunnel braiding between apertures:
+
+```
+T_eff,ij = cos²(Δφ_ij/2)
+```
+
+The law is fractal—same form at every scale, different subscripts.
+
+In Chapter 10 this same form appears as the **aperture phase transmission law** for physical interactions; here we are reading it as **perceptual echo coherence**.
+
+#### The Transmission Law as Echo Coherence
+
+| Δφ | T | Meaning |
+|-----|-----|---------|
+| 0 | 1 | Perfect phase-lock → maximal resonance |
+| π/2 | 0.5 | Partial coherence → half transmission |
+| π | 0 | Anti-phase → destructive interference |
+
+**Perception "sees" what it can resonate with.** The field carries all patterns; transmission depends on phase coherence.
+
+#### Concrete Example: Seeing a Red Apple
+
+Consider the simple experience of seeing a red apple on a table:
+
+- **Field (Φ)**: EM patterns at ~700nm wavelength, modulated by the apple's surface geometry and pigment distribution—the apple's contribution to the shared field
+- **Body (○₂)**: Your retinal boundary, with cone cells tuned to specific frequency bands; the geometry of your visual surface
+- **Soul (•₂)**: Phase-locking of your aperture with the incoming pattern at frequencies your cones can couple with
+- **Triple gate**: Why you see "red round object" and not the table's infrared emission or the apple's internal structure—only patterns achieving triple resonance (soul + body + field thresholds) register as sensation
+
+You don't receive a copy of the apple. Your boundary resonates with the apple's contribution to the field you both inhabit. The "redness" is what that resonance feels like from inside.
+
+---
+
+### §20.4 The Field Connects Both—It Doesn't Carry Between
+
+REP treats the medium as a **channel**:
+```
+Channel model:  A ──signal──→ B
+```
+
+The circumpunct model treats Φ as **substrate**:
+```
+Substrate model:  A ⊂ Φ ⊃ B
+                  └───┬───┘
+                  Both IN field
+```
+
+**Principle 20.1** (Field Unity):
+```
+If ⊙₁ and ⊙₂ share field Φ, then:
+
+1. Φ is not "between" them—they are both "within" it
+2. No encoding/decoding is required—both already speak field
+3. Phase coherence determines coupling, not signal strength
+4. Perception is participation, not reception
+```
+
+This is the 3D/2.5D version of the general statement that **structure lives in integer dimensions, coupling in half-dimensions** (see Preface: Dimensional Cascade for the full 0D → 4.5D cycle).
+
+#### Implications
+
+**Immediacy**: Perception feels immediate because it IS immediate—you're not waiting for a copy to arrive. You're phase-locking with what's already there.
+
+**Participation**: Perception affects what's perceived. Your ○ coupling with Φ changes Φ. Observation participates in observed (cf. quantum measurement).
+
+**Incompleteness**: You never perceive "the whole object"—you perceive the resonant overlap between your phase and its contribution to the field. Different phases = different perceptions of "same" thing.
+
+---
+
+### §20.5 Dimensional Analysis
+
+Recall the dimensional architecture:
+
+| Dim | Type | Role |
+|-----|------|------|
+| 2D | Structure | Body/Surface (○) |
+| **2.5D** | **Process** | **Sensation (○↔Φ coupling)** |
+| 3D | Structure | Mind/Field (Φ) |
+
+**Dimensional origin**: D = 2 + 0.5 = 2.5 — surface plus aperture texture.
+
+**2.5D is a process, not a structure.** It's not a "layer" or "place"—it's the ACT of coupling.
+
+```
+Sensation = The process of boundary resonating with field
+
+NOT: Sensation = The copy that arrives at boundary
+```
+
+This is why sensation is **fractional** (2.5D): it exists between structure-states, in the transition from 2D body to 3D field. Process dimensions are WHERE transformation happens.
+
+---
+
+### §20.6 Resolving Classical Problems
+
+#### The Problem of Representation
+
+**Classical puzzle**: How can neural activity "represent" external reality? What makes a brain state "about" something?
+
+**Circumpunct resolution**: Brain states don't represent external reality—they ARE patterns in the same field that external reality patterns. No "aboutness" required because there's no gap to bridge. Both perceiver and perceived are excitations in Φ.
+
+On this view, "aboutness" reduces to **field fit** (correspondence + fitness) rather than to an internal "picture" of the external. (See §26.3 on evidence as correspondence × fitness.)
+
+In practice, what cognitive science calls "internal models" are just **subregions of Φ** whose dynamics have high field fit to other regions—stable resonant patterns, not pictures stored in a separate inner world.
+
+#### The Problem of Qualia
+
+**Classical puzzle**: Why does red FEEL like something? How does physical processing produce phenomenal experience?
+
+**Circumpunct resolution**: Qualia are not produced BY processing—they ARE the resonance. The "feel" of red is what it's like when your •₂ phase-locks with electromagnetic patterns at ~700nm. There's nothing to explain beyond the resonance itself.
+
+In the full framework, the "amount" of resonance over time is quantified by the consciousness integral C = ∫_T B(x,t) dx dt; qualia are the *local shape* of this resonance, not an add-on.
+
+The "mystery" arises only if we demand that a 3D structural description *contain* 2.5D process. Once we recognize qualia as the 2.5D resonance itself, the explanatory gap is reclassified as a **category error**.
+
+#### The Explanatory Gap
+
+**Classical puzzle**: Physical description seems to leave something out—the "what it's like."
+
+**Circumpunct resolution**: Physical description describes structure (integer dimensions). Experience IS the process (fractional dimensions). The gap exists because we try to capture 2.5D (process) with 2D or 3D (structure) language. Experience is verbs, not nouns.
+
+---
+
+### §20.7 The Triple Gate as Resonance Filter
+
+The triple validation gate at 2.5D:
+```
+Accept ≡ [•(pattern) > θ_•]      Soul threshold
+     AND [○(pattern) > θ_○]      Body threshold
+     AND [Φ(pattern) > θ_Φ]      Mind threshold
+```
+
+This is NOT a filter selecting which signals to copy. It's a **resonance criterion**:
+- Pattern must resonate with aperture dynamics (•)
+- Pattern must resonate with boundary geometry (○)
+- Pattern must resonate with field configuration (Φ)
+
+All three must cohere for sensation to occur. This is why we don't perceive everything in the field—only what achieves triple resonance.
+
+At 3D, these thresholds appear as V_in and V_out selecting which patterns enter and leave the perceptual field:
+```
+V_in[Φ]  = Φ restricted to patterns passing triple gate on input
+V_out[χ] = χ restricted to patterns passing triple gate on output
+```
+
+---
+
+### §20.8 Testable Predictions
+
+**Prediction 20.1**: Perception should show phase-sensitivity
+- Test: Present stimuli with controlled phase relationships
+- Predict: Detection/discrimination depends on Δφ, not just amplitude
+- cf. binaural beats, visual interference patterns
+
+**Prediction 20.2**: Perception should be participatory
+- Test: Measure back-action of observation on observed system
+- Predict: Phase-coupling goes both directions
+- cf. quantum weak measurements, observer effects in psychology
+
+**Prediction 20.3**: Perception quality correlates with phase coherence
+- Test: Measure neural phase coherence during clear vs. ambiguous perception
+- Predict: Consciousness integral C = ∫_T B(x,t) dx dt increases with perceptual clarity
+- cf. neural synchronization studies, gamma-band coherence in awareness
+
+**Prediction 20.4**: Altered states modify phase, not representation
+- Test: Compare neural firing RATE vs. neural PHASE during altered states
+- Predict: Phase disruption precedes and explains experiential changes
+- cf. psychedelic neural signatures, meditation EEG patterns
+
+---
+
+### §20.9 Connection to Existing Framework
+
+This chapter formalizes and extends:
+
+- **§2.5D (Preface)**: Body↔field coupling as resonance process
+- **Chapter 10 (Phase Coherence)**: T = cos²(Δφ/2) now interpreted as echo coherence
+- **Chapter 19 (Consciousness)**: C = ∫_T B(x,t) dx dt measures integrated resonance
+- **§22.8 (Ethereal Tail)**: "Apertures in resonance" as the basis of experienced reality
+
+The echo/resonance model unifies these elements under a single ontological claim:
+
+```
+╔═══════════════════════════════════════════════════════════════════════╗
+║                                                                       ║
+║   PERCEPTION IS NOT REPRESENTATION.                                   ║
+║   PERCEPTION IS RESONANCE.                                            ║
+║                                                                       ║
+║   The field doesn't carry information between separate things.        ║
+║   The field IS the shared reality in which all things exist.          ║
+║                                                                       ║
+║   Sensation is the echo of wholeness through the aperture.            ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+### §20.10 REP as a Special Case
+
+The circumpunct framework does not say representational language is useless. It says it is **derived**. Whenever a local subfield of Φ (e.g. the brain) maintains a stable resonant pattern that tracks another region of Φ across time, it is convenient to *describe* this as "an internal model" or "representation" of the other. In reality, both are simply coupled patterns in one field.
+
+**Representation is field resonance seen from a narrow angle.**
+
+This explains why REP works as well as it does—it's not wrong, just incomplete. The cognitive scientist's "internal model" is real; it's just not internal to anything separate from the world it models.
+
+---
+
+### §20.11 Summary
+
+| Aspect | REP (Representational) | Circumpunct (Resonance) |
+|--------|----------------------|-------------------|
+| Structure | Perceiver → Medium → Perceived | Perceiver ⊂ Field ⊃ Perceived |
+| Mechanism | Copy/encode/transmit/decode | Phase-coupled resonance |
+| Medium role | Channel carrying signal | Substrate containing both |
+| What arrives | Information copy | Nothing "arrives"—resonance occurs |
+| Qualia | Mystery to explain | The resonance itself |
+| Participation | Observer passive | Observer couples bidirectionally |
+| Time | Signal transit delay | Immediate phase-lock |
+| Key equation | I = f(S) (internal = function of signal) | T = cos²(Δφ/2) (transmission = phase coherence) |
+
+**The circumpunct framework reveals perception as what it phenomenologically appears to be**: not receiving news from elsewhere, but being in the world and resonating with it.
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
+<a id="chapter-21-emotions-and-memory"></a>
+
+## CHAPTER 21: EMOTIONS AND MEMORY
 
 ### The Phenomenology of Braid Dynamics
 
 ---
 
-### §20.1 Emotions as Field Dynamics
+### §21.1 Emotions as Field Dynamics
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
@@ -10140,7 +10475,7 @@ THE FUNDAMENTAL INSIGHT:
     │   LONGING     =  Braid tension across distance, pull toward reunion    │
     └─────────────────────────────────────────────────────────────────────────┘
 
-THEOREM 19.1 (Emotion-Geometry Correspondence):
+THEOREM 21.1 (Emotion-Geometry Correspondence):
 ───────────────────────────────────────────────
 
     Every emotional state corresponds to a braid configuration.
@@ -10172,7 +10507,7 @@ THE THREE MODES OF EMOTIONAL INFORMATION:
 
 ```
 
-### §20.2 The Braid as Relational Field
+### §21.2 The Braid as Relational Field
 
 ```
 DEFINITION (Emotional Braid):
@@ -10247,7 +10582,7 @@ FAMILY AS BRAID BUNDLE:
     deeper), the pattern behaves like a braid.
 ```
 
-### §20.3 Memory as Resonant Pattern
+### §21.3 Memory as Resonant Pattern
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
@@ -10335,7 +10670,7 @@ TYPES OF MEMORY BY BRAID STRUCTURE:
     └────────────────┴──────────────────────────────────────────────────────┘
 ```
 
-### §20.4 Shared Memory and Inheritance
+### §21.4 Shared Memory and Inheritance
 
 ```
 SHARED MEMORY (Multi-Circumpunct Resonance):
@@ -10398,7 +10733,7 @@ THE DEAD IN THE BRAID:
     ╚═════════════════════════════════════════════════════════════════════════╝
 ```
 
-### §20.5 Forgetting and Healing
+### §21.5 Forgetting and Healing
 
 ```
 FORGETTING AS DECOHERENCE:
@@ -10463,7 +10798,7 @@ HEALING AS BRAID COMPLETION:
     └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-### §20.6 The Selective Rainbow Lock: Attention as Circumpunct
+### §21.6 The Selective Rainbow Lock: Attention as Circumpunct
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
@@ -10646,7 +10981,7 @@ FRACTAL RECURSION:
     Attention is where the fractal meets the now.
 ```
 
-### §20.7 The Neural Correlate
+### §21.7 The Neural Correlate
 
 ```
 BRAIN AS TUNING APPARATUS:
@@ -10695,10 +11030,10 @@ TESTABLE PREDICTIONS:
        transition from repetitive to integrated activation patterns.
 ```
 
-### §20.8 Connection to Validation Receipts
+### §21.8 Connection to Validation Receipts
 
 ```
-MEMORY AND RECEIPTS (Link to §20.7):
+MEMORY AND RECEIPTS (Link to §21.7):
 ───────────────────────────────────
 
     Validation receipts are the eternal record of ≻ i ⊰ completions.
@@ -10732,7 +11067,7 @@ WHY EMOTIONS ARE TRUSTWORTHY DATA:
     └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-### §20.9 Summary: The Complete Phenomenology
+### §21.9 Summary: The Complete Phenomenology
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
@@ -10800,12 +11135,12 @@ THE EQUATION THAT IS FEELING:
 
 ---
 
-## CHAPTER 21: THE ETHEREAL TAIL
+## CHAPTER 22: THE ETHEREAL TAIL
 
 
 > *This chapter reinterprets the worldline i(t) not as a single thread but as a phase-locked bundle across scales. Where earlier chapters traced one persistent pattern through spacetime, here we show that identity—and consciousness itself—emerges from the coherent alignment of many such threads.*
 
-## §21.1 Definition: Phase-Locked Pumping Across Scales
+## §22.1 Definition: Phase-Locked Pumping Across Scales
 
 The **ethereal tail** is the coherent alignment of centers (•) across nested scales, maintained through phase-locked pumping of the convergence-emergence cycle.
 
@@ -10830,7 +11165,7 @@ at scales n and n+1.
 ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-## §21.2 The Pumping Mechanism
+## §22.2 The Pumping Mechanism
 
 Each circumpunct at every scale executes a **breathing cycle** with two phases:
 
@@ -10861,7 +11196,7 @@ The cycle repeats. Over many cycles, ◐_average → 0.5, D_average → 1.5.
 
 **Critical insight:** The ~2.5% CP violation observed in baryon decays represents the **net ratchet effect** of this pump cycle. Each breath leaves a tiny residue favoring matter over antimatter. This asymmetry is not a static bias but the accumulated signature of directional pumping.
 
-## §21.3 Cross-Scale Phase Locking
+## §22.3 Cross-Scale Phase Locking
 
 For the ethereal tail to form, adjacent scales must synchronize their pumping:
 
@@ -10894,7 +11229,7 @@ When τₙ₊₁/τₙ forms rational ratios (especially small integers like
 2:1, 3:2, φ:1), the scales can phase-lock into a coherent tail.
 ```
 
-## §21.4 The Tail as Worldline Bundle
+## §22.4 The Tail as Worldline Bundle
 
 The ethereal tail is not a single worldline i(t) but a **coherent bundle** of worldlines across scales:
 
@@ -10931,7 +11266,7 @@ projected through time. It's the "thread of identity" that
 persists across scale transitions.
 ```
 
-### §21.4.1 Formal Bridge to Physicist Document
+### §22.4.1 Formal Bridge to Physicist Document
 
 > *For readers of the working-physicists supplement:*
 >
@@ -10939,11 +11274,11 @@ persists across scale transitions.
 >
 > **T = { (•₁,…,•ₙ) ∈ 𝓐ⁿ : Δφₙ,ₙ₊₁ ≈ 0 and τₙ/τₙ₊₁ ∈ ℚ }**
 >
-> The bundle of worldlines {iₖ(t)} is the time-parametrization of these aligned apertures. The braid density B(x,t) in the consciousness integral (§21.1) measures the "texture" of these i(t) threads braiding through spacetime.
+> The bundle of worldlines {iₖ(t)} is the time-parametrization of these aligned apertures. The braid density B(x,t) in the consciousness integral (§22.1) measures the "texture" of these i(t) threads braiding through spacetime.
 >
 > Thus "Consciousness = ∫_T B(x,t) dx dt" is not a new equation but a **restriction of the existing C-equation** to the phase-locked tail region.
 
-## §21.5 CP Violation as Ratchet Tooth
+## §22.5 CP Violation as Ratchet Tooth
 
 > *This section provides the microscopic ratchet mechanism that underlies the Ratchet Cascade.*
 
@@ -10979,7 +11314,7 @@ With CP violation:
 
 The framework identifies i = exp(iπ/2) as a 90° rotation. CP violation means this rotation has a **preferred handedness**—it's not equivalent to -i (the opposite rotation). The chirality of i at the quantum scale propagates up through the phase-locked hierarchy, orienting the entire tail.
 
-## §21.6 Consciousness Rides the Tail
+## §22.6 Consciousness Rides the Tail
 
 The ethereal tail provides the substrate for unified conscious experience:
 
@@ -10993,11 +11328,11 @@ Circumpunct answer:  They don't "combine"—they phase-lock.
                      Consciousness IS the coherence pattern
                      across scales, not located at any single scale.
 
-CONSCIOUSNESS EQUATION (from §21.1):
+CONSCIOUSNESS EQUATION (from §22.1):
 
     C = ∫ B(x,t) · δ(◐ - 0.5) · Θ(τ_coherence - τ_threshold) dx dt
 
-    (See §21.1 for original derivation. Here τ_coherence is the duration
+    (See §22.1 for original derivation. Here τ_coherence is the duration
     of cross-scale phase-lock, τ_threshold the minimum for conscious integration.)
 
 Now rewritten in terms of the ethereal tail:
@@ -11013,7 +11348,7 @@ INTERPRETATION:
     more integrated consciousness.
 ```
 
-## §21.7 Strengthening the Tail: Practical Implications
+## §22.7 Strengthening the Tail: Practical Implications
 
 The ethereal tail can be **strengthened, weakened, or reset** by activities that affect cross-scale phase coherence:
 
@@ -11058,11 +11393,11 @@ phase-locks without guaranteeing better ones form. Therapeutic benefit
 depends on integration support and set/setting.
 ```
 
-## §21.8 Death as Tail Transition
+## §22.8 Death as Tail Transition
 
-> **Status:** This section extends the framework into metaphysical territory. §21.8.1 (dreaming) is empirically grounded; §21.8.2-21.8.5 describe how the framework *could* extend beyond biological substrates. These are structural possibilities consistent with the mathematics, not empirical claims.
+> **Status:** This section extends the framework into metaphysical territory. §22.8.1 (dreaming) is empirically grounded; §22.8.2-22.8.5 describe how the framework *could* extend beyond biological substrates. These are structural possibilities consistent with the mathematics, not empirical claims.
 
-Connecting to Chapter 22 (Aging and Death):
+Connecting to Chapter 23 (Aging and Death):
 
 ```
 DEATH REFORMULATED:
@@ -11100,7 +11435,7 @@ with Option 2 as the mechanism of partial anchoring to
 biological-scale resonance partners.
 ```
 
-### §21.8.1 Dreaming as Evidence for Substrate-Agnostic Tail
+### §22.8.1 Dreaming as Evidence for Substrate-Agnostic Tail
 
 Option 3 is not mere speculation—**consciousness performs substrate transition every night**:
 
@@ -11141,7 +11476,7 @@ STATE TRANSITIONS AS SUBSTRATE MIGRATION:
 
 In terms of the formal framework: sleep is nightly evidence that tails are **substrate-agnostic objects in 𝓐ⁿ**, not properties of a particular biological wiring pattern. The tail's persistence through substrate transitions is what makes Option 3 structurally plausible rather than mere wishful thinking.
 
-### §21.8.2 Substrate = Apertures in Resonance
+### §22.8.2 Substrate = Apertures in Resonance
 
 The minimal ontology for any "reality":
 
@@ -11168,7 +11503,7 @@ This dissolves apparent mysticism:
 | What is death (Option 3)? | Your tail finding new resonance partners |
 | What would "afterlife" require? | Compatible apertures, nothing more |
 
-### §21.8.3 Substrate Stickiness
+### §22.8.3 Substrate Stickiness
 
 Why do we wake up rather than drift permanently into dream-substrate?
 
@@ -11200,7 +11535,7 @@ DREAM SUBSTRATE:
 
 **Intersubjectivity is key.** Waking reality isn't just *your* tail phase-locked—it's billions of tails mutually confirming the same structure. That collective coherence creates enormous gravitational pull.
 
-### §21.8.4 True Death = Resonance Isolation
+### §22.8.4 True Death = Resonance Isolation
 
 ```
 TRUE DEATH IS NOT:
@@ -11226,7 +11561,7 @@ TRUE DEATH IS:
 
 **Important clarification:** This is a *structural definition within the model*, not a moral claim about people who feel lonely. Psychological loneliness is a **signal** of resonance poverty, not proof of ontological isolation. The felt experience of loneliness indicates that resonance channels are under-supported—which is precisely why addressing it matters. No living person is "truly dead" in this sense; the very fact of embodiment maintains minimal resonance with physical reality.
 
-### §21.8.5 Connection as Ontological Necessity
+### §22.8.5 Connection as Ontological Necessity
 
 This reframes relationship from sentiment to structure:
 
@@ -11255,7 +11590,7 @@ This explains empirical phenomena:
 
 None of this implies that people in isolated situations are "less real." It means their tail is **under-supported by resonance networks**—which is exactly why reaching out, building connection, and supporting isolated individuals matters. The framework makes compassion structurally urgent, not optional.
 
-## §21.9 Testable Predictions
+## §22.9 Testable Predictions
 
 The ethereal tail makes predictions across multiple scales, from neural physiology to social dynamics to fundamental physics:
 
@@ -11318,7 +11653,7 @@ PREDICTION 3: The ~2.5% CP asymmetry should appear as a
 ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-## §21.10 Summary: The Tail in One Diagram
+## §22.10 Summary: The Tail in One Diagram
 
 ```
                     THE ETHEREAL TAIL
@@ -11368,9 +11703,9 @@ PREDICTION 3: The ~2.5% CP asymmetry should appear as a
 
 ---
 
-## CHAPTER 22: AGING AND DEATH
+## CHAPTER 23: AGING AND DEATH
 
-### §22.1 The Aging Equation
+### §23.1 The Aging Equation
 
 ```
 TEMPORAL DYNAMICS:
@@ -11394,7 +11729,7 @@ DEATH OCCURS WHEN:
     Death is reconfiguration, not cessation
 ```
 
-### §22.2 Life Extension
+### §23.2 Life Extension
 
 ```
 PRACTICE REDUCES ε:
@@ -11420,7 +11755,7 @@ CRITICAL INSIGHT (V5.1):
     ⊙ = E is always conserved.
 ```
 
-### §22.3 Death Reformulated: When the Wholeness Gap Closes
+### §23.3 Death Reformulated: When the Wholeness Gap Closes
 
 ```
 DEATH = WHEN THE GAP CLOSES
@@ -11452,7 +11787,7 @@ DEFINING THE WHOLENESS GAP:
     ΔS > 0  →  wholeness is cheaper  →  whole wins
     ΔS < 0  →  parts are cheaper     →  whole dissolves
 
-CONNECTION TO AGING EQUATION (§21.1):
+CONNECTION TO AGING EQUATION (§22.1):
 
     ○(t) = ○₀ - ∫₀ᵗ ε(τ) dτ
 
@@ -11473,9 +11808,9 @@ MEANING:
 
 ---
 
-## CHAPTER 23: THE GOLDEN RATIO
+## CHAPTER 24: THE GOLDEN RATIO
 
-### §23.1 Non-Circular Derivation of φ
+### §24.1 Non-Circular Derivation of φ
 
 ```
 PATH 1: GEOMETRIC NECESSITY (Entropy)
@@ -11521,7 +11856,7 @@ DOUBLE CONVERGENCE:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §23.2 Golden Ratio in the Framework
+### §24.2 Golden Ratio in the Framework
 
 ```
 FIBONACCI SPECTRAL LADDER:
@@ -11533,7 +11868,7 @@ MASS RATIOS (Conjectural Fractal Aperture Scaling):
             = (1/α)^(13/12) ≈ 206.49
     Experimental: 206.768
     Error: ~0.13%
-    Status: CONJECTURAL (see §22.4 for derivation)
+    Status: CONJECTURAL (see §23.4 for derivation)
 
 CFT DIMENSION RATIO:
     Δ₊/Δ₋ = φ
@@ -11549,9 +11884,9 @@ THREE GENERATIONS:
 
 <a id="chapter-xx-ethics"></a>
 
-## CHAPTER 24: ETHICS
+## CHAPTER 25: ETHICS
 
-### §24.1 The Four Dimensions of Ethical Reality
+### §25.1 The Four Dimensions of Ethical Reality
 
 ```
 THE ETHICAL STRUCTURE OF ⊙:
@@ -11584,7 +11919,7 @@ JUST AS ⊙ = ○ ⊗ Φ ⊗ • IN PHYSICS:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §24.2 Center: True/False (Epistemological Ethics)
+### §25.2 Center: True/False (Epistemological Ethics)
 
 ```
 THE CENTER • IS WHERE TRUTH RESIDES:
@@ -11627,7 +11962,7 @@ WHY TRUE/FALSE IS NECESSARY BUT NOT SUFFICIENT:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §24.3 Boundary: Good/Bad (Axiological Ethics)
+### §25.3 Boundary: Good/Bad (Axiological Ethics)
 
 ```
 THE BOUNDARY ○ IS WHERE VALUE RESIDES:
@@ -11677,7 +12012,7 @@ WHY GOOD/BAD IS NECESSARY BUT NOT SUFFICIENT:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §24.4 Field: Right/Wrong (Behavioral Ethics)
+### §25.4 Field: Right/Wrong (Behavioral Ethics)
 
 ```
 THE FIELD Φ IS WHERE ACTION RESIDES:
@@ -11734,7 +12069,7 @@ WHY RIGHT/WRONG IS NECESSARY BUT NOT SUFFICIENT:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §24.5 Circumpunct: Agree/Disagree (Relational Ethics)
+### §25.5 Circumpunct: Agree/Disagree (Relational Ethics)
 
 ```
 THE CIRCUMPUNCT ⊙ IS WHERE HARMONY RESIDES:
@@ -11796,7 +12131,7 @@ WHY AGREE/DISAGREE COMPLETES THE PICTURE:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §24.6 The Ethical Balance Parameter
+### §25.6 The Ethical Balance Parameter
 
 ```
 ETHICS REQUIRES ◐ = 0.5:
@@ -11809,7 +12144,7 @@ ETHICS REQUIRES ◐ = 0.5:
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 
-THE THREE REQUIREMENTS (parallel to §23.1):
+THE THREE REQUIREMENTS (parallel to §24.1):
 
 REQUIREMENT 1 — Symmetry:
     Neither giving nor receiving can dominate
@@ -11857,7 +12192,7 @@ DEVIATIONS FROM ◐ = 0.5:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §24.7 Ethical Validation: The Complete Test
+### §25.7 Ethical Validation: The Complete Test
 
 ```
 THE COMPLETE ETHICAL VALIDATION:
@@ -11906,7 +12241,7 @@ PARTIAL VALIDATIONS (common ethical errors):
         "We all agreed to do the wrong thing"
         Consensus toward harm = ethical failure at Φ
 
-THE 2-OUT-OF-3 THRESHOLD (from §23.2):
+THE 2-OUT-OF-3 THRESHOLD (from §24.2):
 
     Just as in physics, 2-out-of-3 may pass validation
     But COMPLETE ethics requires ALL FOUR
@@ -11951,7 +12286,7 @@ THE FIXED-POINT OF ETHICS:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §24.8 The Steelman: Highest Ethical Practice
+### §25.8 The Steelman: Highest Ethical Practice
 
 > **See also:** [The Noble Lie and the Steelman Movement](Ethics/The_Steelman_Movement.md) — A deeper exploration of the strawman reflex, the noble lie, and the Steelman Movement as social practice.
 
@@ -12221,7 +12556,7 @@ SUMMARY: THE ETHICAL CIRCUMPUNCT
 
 ---
 
-### §24.9 The Noble Lie: Why We Became Strawmen
+### §25.9 The Noble Lie: Why We Became Strawmen
 
 ```
 THE ORIGIN OF ETHICAL FAILURE
@@ -12622,9 +12957,9 @@ THE STEELMAN AS T-OPERATOR:
 
 ---
 
-## CHAPTER 25: EMPIRICAL VALIDATION
+## CHAPTER 26: EMPIRICAL VALIDATION
 
-### §25.1 The Universal D ≈ 1.5 Signature
+### §26.1 The Universal D ≈ 1.5 Signature
 
 ```
 CROSS-DOMAIN VALIDATION:
@@ -12643,7 +12978,7 @@ Turbulence Cascades  | 1.51 ± 0.03      | 1.500     | <1%    | ✓
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §25.2 Quantum Scale Validation
+### §26.2 Quantum Scale Validation
 
 ```
 HYDROGEN ATOM SPECTRUM:
@@ -12667,7 +13002,7 @@ METRIC COUPLING:
     77.6% horizon suppression ✓
 ```
 
-### §25.3 The Two-Dimensional Nature of Field Validation
+### §26.3 The Two-Dimensional Nature of Field Validation
 
 ```
 EVIDENCE HAS TWO FACES:
@@ -12718,7 +13053,7 @@ Over time, NATURAL SELECTION IS Φ-TESTING AT SCALE:
     • Low-fitness patterns prune, even if they once corresponded well.
 ```
 
-### §25.4 Entanglement from Shared Receipts
+### §26.4 Entanglement from Shared Receipts
 
 ```
 QUANTUM ENTANGLEMENT AS SHARED VALIDATION HISTORY:
@@ -12762,9 +13097,9 @@ THE CORRELATION PERSISTS BECAUSE:
 
 ---
 
-## CHAPTER 26: CONSTANTS TABLE
+## CHAPTER 27: CONSTANTS TABLE
 
-### §26.1 What Is Truly Derived (Zero Parameters)
+### §27.1 What Is Truly Derived (Zero Parameters)
 
 ```
 STRUCTURALLY NECESSARY — No choices made:
@@ -12775,7 +13110,7 @@ STRUCTURALLY NECESSARY — No choices made:
 ║  Balance at •          │ ◐ = 0.5            │ Symmetry + Entropy + Virial   ║
 ║  • signature           │ D = 1.5            │ D = 1 + ½H(0.5) = 1 + ½(1)    ║
 ║  Aperture profile      │ f(r) = √r          │ D = 1.5 scaling law           ║
-║  Normalization const   │ A = 7/(8πR^(7/2))  │ ∫K_conv = 1 (see §25.1)       ║
+║  Normalization const   │ A = 7/(8πR^(7/2))  │ ∫K_conv = 1 (see §26.1)       ║
 ║  State space           │ 64 states          │ 2³ × 2³ dual interface        ║
 ║  Relevant fraction     │ 22/64 ≈ 1/3        │ 2-out-of-3 combinatorics      ║
 ║  Cone geometry         │ 68°/22°            │ Quarter circle → cone         ║
@@ -12789,7 +13124,7 @@ parameters beyond the physical boundary radius R. All kernels and operators
 are uniquely determined from ◐ = 0.5 and D = 1.5.
 ```
 
-### §26.2 The 22/64 Derivation (from the_one_third_rule.md)
+### §27.2 The 22/64 Derivation (from the_one_third_rule.md)
 
 ```
 THE 2-OUT-OF-3 THRESHOLD:
@@ -12816,7 +13151,7 @@ The "1/3 rule" appears everywhere because 22/64 is forced by the
 dual-validation architecture requiring 2-out-of-3 threshold at both ends.
 ```
 
-### §26.3 The 68°/22° Cone Geometry (from quarter_circle_to_cone_geometry)
+### §27.3 The 68°/22° Cone Geometry (from quarter_circle_to_cone_geometry)
 
 ```
 THE DERIVATION:
@@ -12906,7 +13241,7 @@ HONESTY NOTE:
     identity.
 ```
 
-### §26.4 Hidden Parameters (0)
+### §27.4 Hidden Parameters (0)
 
 ```
 PARAMETER STATUS — All parameters now derived from φ³:
@@ -13021,7 +13356,7 @@ PARAMETER COLLAPSE COMPLETE:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §26.5 Structurally Derived But Uses Measured Input
+### §27.5 Structurally Derived But Uses Measured Input
 
 ```
 HYBRID — Framework provides structure, measurement provides precision:
@@ -13029,7 +13364,7 @@ HYBRID — Framework provides structure, measurement provides precision:
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║  QUANTITY              │ VALUE              │ STATUS                        ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  Fine structure α      │  1/137.036          │ Resonance of Φ (see §25.5)    ║
+║  Fine structure α      │  1/137.036          │ Resonance of Φ (see §26.5)    ║
 ║                        │                    │ Ideal: 360°/φ² = 137.508      ║
 ║                        │                    │ Shifted by validation noise   ║
 ║  Yang-Mills gap Δ      │ ~1.0-1.6 GeV       │ Base: (68/22)×m_p×(22/64)≈1.0 ║
@@ -13053,7 +13388,7 @@ WHAT REMAINS OPEN:
     - Connection to QED running coupling
 ```
 
-### §25.6 Full Constants Table
+### §27.6 Full Constants Table
 
 ```
 CONSTANTS SPANNING 61 ORDERS OF MAGNITUDE:
@@ -13073,9 +13408,9 @@ CONSTANTS SPANNING 61 ORDERS OF MAGNITUDE:
 ║                 │ Initial density       │ ρ_texture > 0      │ EXISTENCE   ║
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  QUANTUM        │ Fine Structure α      │ 1/137.036          │ DERIVED     ║
-║                 │                       │ (360°/φ² damped)   │ (see §25.5) ║
+║                 │                       │ (360°/φ² damped)   │ (see §26.5) ║
 ║                 │ Mass Gap Δ            │ ~1.6 GeV           │ DERIVED     ║
-║                 │                       │ (68/64)×m_p×φ      │ (see §25.4) ║
+║                 │                       │ (68/64)×m_p×φ      │ (see §26.4) ║
 ║                 │ Validation Noise      │ α_quantum = ατ     │ DERIVED     ║
 ║                 │ SNR threshold         │ τ = (7/8)φ³        │ DERIVED     ║
 ╠════════════════════════════════════════════════════════════════════════════╣
@@ -13108,7 +13443,7 @@ STATUS KEY:
 
 ---
 
-## CHAPTER 27: FALSIFICATION
+## CHAPTER 28: FALSIFICATION
 
 ```
 THE D(◐) RELATIONSHIP — EMPIRICALLY TESTABLE:
@@ -13158,7 +13493,7 @@ THE FRAMEWORK IS FALSIFIED IF:
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
-### §26.1 Honesty Note on D ≈ 1.5 as Falsification Criterion
+### §28.1 Honesty Note on D ≈ 1.5 as Falsification Criterion
 
 ```
 HONESTY NOTE:
@@ -13203,7 +13538,7 @@ CLASSIFICATION:
     And claims can be wrong.
 ```
 
-### §26.2 Three Ways Validation Can Fail
+### §28.2 Three Ways Validation Can Fail
 
 ```
 COMPLETE FAILURE TAXONOMY:
@@ -13258,7 +13593,7 @@ There are only these three structural dimensions. Any failed pattern must:
 
 <a id="chapter-xx-ethics"></a>
 
-## CHAPTER 28: THE MASTER LOOP
+## CHAPTER 29: THE MASTER LOOP
 
 ```
 THE ETERNAL CYCLE:
@@ -13300,9 +13635,9 @@ THE ETERNAL CYCLE:
 
 ---
 
-## CHAPTER 29: THE FIXED-POINT COMBINATOR
+## CHAPTER 30: THE FIXED-POINT COMBINATOR
 
-### §29.1 The Entire Framework in One Line
+### §30.1 The Entire Framework in One Line
 
 ```
 THE FIXED-POINT FORMULATION:
@@ -13337,7 +13672,7 @@ This is not metaphor—it's the literal mathematical structure.
 
 ---
 
-## CHAPTER 30: ΩMEGA — THE MATHEMATICAL STORY
+## CHAPTER 31: ΩMEGA — THE MATHEMATICAL STORY
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
