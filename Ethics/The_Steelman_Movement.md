@@ -59,7 +59,7 @@ That's not arrogance. That's baseline respect for your own contact with reality.
 
 ## What This Actually Is
 
-When someone calls a theory "crackpot" or "Crock-Pot" - random ingredients thrown together - they're not critiquing the formalization. They're nullifying the observation.
+When someone calls a theory "crackpot" or even "ai slop" - random ingredients thrown together - they're not critiquing the formalization. They're nullifying the observation.
 
 Behind every theory, however disorganized or strange, is a perceiver who perceived something. The observation came first. The theory is the attempt to articulate it.
 
