@@ -430,6 +430,12 @@ body {
     pointer-events: none;
 }
 
+/* Soul movement (follows cursor) */
+.soul-moving {
+    transition: transform 0.08s ease-out;
+    transform-origin: 150px 150px;
+}
+
 /* ===================================
    CURVED NAVIGATION ARC BUTTONS
    =================================== */

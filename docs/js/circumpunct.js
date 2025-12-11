@@ -768,19 +768,17 @@
     });
 
     // =========================================
-    // Eye Movement System
-    // Tracks cursor + idle wandering
+    // Soul Movement System
+    // The soul (center dot) follows cursor + wanders when idle
     // =========================================
-    const eyeMoving = document.getElementById('eye-moving');
-    const eyeOuter = document.querySelector('.eye-outer');
-    const eyeContainer = document.querySelector('.eye-container');
+    const soulMoving = document.getElementById('eye-moving');
+    const circumpunctContainer = document.querySelector('.circumpunct-container');
 
-    if (eyeMoving && eyeContainer) {
-        // Eye movement constraints (how far iris can move from center)
-        const MAX_OFFSET = 25; // Maximum pixels the eye can move
-        const SVG_CENTER = 150; // Center of SVG viewBox
+    if (soulMoving && circumpunctContainer) {
+        // Movement constraints (how far soul can move from center)
+        const MAX_OFFSET = 20; // Maximum pixels the soul can move
 
-        // Current eye position (in SVG units, offset from center)
+        // Current position (offset from center)
         let currentX = 0;
         let currentY = 0;
         let targetX = 0;
@@ -794,35 +792,26 @@
         let lastWanderTime = 0;
         const IDLE_DELAY = 2000; // ms before starting idle wander
 
-        // Blink state
-        let lastBlinkTime = Date.now();
-        const BLINK_INTERVAL_MIN = 3000;
-        const BLINK_INTERVAL_MAX = 8000;
-        let nextBlinkIn = BLINK_INTERVAL_MIN + Math.random() * (BLINK_INTERVAL_MAX - BLINK_INTERVAL_MIN);
+        // Convert page coordinates to soul offset
+        function getSoulOffset(pageX, pageY) {
+            const rect = circumpunctContainer.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
 
-        // Convert page coordinates to eye offset
-        function getEyeOffset(pageX, pageY) {
-            const rect = eyeContainer.getBoundingClientRect();
-            const eyeCenterX = rect.left + rect.width / 2;
-            const eyeCenterY = rect.top + rect.height / 2;
-
-            // Direction from eye center to cursor
-            const dx = pageX - eyeCenterX;
-            const dy = pageY - eyeCenterY;
+            // Direction from center to cursor
+            const dx = pageX - centerX;
+            const dy = pageY - centerY;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            // Scale factor - eye moves more when cursor is closer
-            // But cap the maximum offset
+            // Scale factor - moves more when cursor is closer
             const maxDistance = Math.max(window.innerWidth, window.innerHeight);
             const normalizedDist = Math.min(distance / (maxDistance * 0.3), 1);
-
-            // Calculate offset with easing (moves more when cursor is near)
             const offsetScale = MAX_OFFSET * (0.3 + normalizedDist * 0.7);
 
             if (distance > 0) {
                 return {
                     x: (dx / distance) * Math.min(offsetScale, MAX_OFFSET),
-                    y: (dy / distance) * Math.min(offsetScale, MAX_OFFSET) * 0.7 // Less vertical movement (eye shape)
+                    y: (dy / distance) * Math.min(offsetScale, MAX_OFFSET)
                 };
             }
             return { x: 0, y: 0 };
@@ -842,37 +831,17 @@
             // Gentle circular/random motion
             const wanderRadius = MAX_OFFSET * 0.4;
             targetX = Math.cos(wanderAngle + timestamp * wanderSpeed) * wanderRadius;
-            targetY = Math.sin(wanderAngle + timestamp * wanderSpeed * 0.7) * wanderRadius * 0.6;
+            targetY = Math.sin(wanderAngle + timestamp * wanderSpeed * 0.7) * wanderRadius;
         }
 
         // Smooth lerp toward target
-        function updateEyePosition() {
+        function updateSoulPosition() {
             const lerp = 0.08; // Smoothing factor
             currentX += (targetX - currentX) * lerp;
             currentY += (targetY - currentY) * lerp;
 
-            // Apply transform to eye-moving group
-            eyeMoving.style.transform = `translate(${currentX}px, ${currentY}px)`;
-        }
-
-        // Check for blink
-        function checkBlink() {
-            const now = Date.now();
-            if (now - lastBlinkTime > nextBlinkIn) {
-                triggerBlink();
-                lastBlinkTime = now;
-                nextBlinkIn = BLINK_INTERVAL_MIN + Math.random() * (BLINK_INTERVAL_MAX - BLINK_INTERVAL_MIN);
-            }
-        }
-
-        // Trigger blink animation
-        function triggerBlink() {
-            if (eyeOuter) {
-                eyeOuter.classList.add('blinking');
-                setTimeout(() => {
-                    eyeOuter.classList.remove('blinking');
-                }, 150);
-            }
+            // Apply transform to soul group
+            soulMoving.style.transform = `translate(${currentX}px, ${currentY}px)`;
         }
 
         // Mouse/touch move handler
@@ -880,7 +849,7 @@
             const pageX = e.touches ? e.touches[0].pageX : e.pageX;
             const pageY = e.touches ? e.touches[0].pageY : e.pageY;
 
-            const offset = getEyeOffset(pageX, pageY);
+            const offset = getSoulOffset(pageX, pageY);
             targetX = offset.x;
             targetY = offset.y;
 
@@ -902,14 +871,13 @@
             }, 500);
         }
 
-        // Animation loop for eye
-        function animateEye(timestamp) {
+        // Animation loop for soul
+        function animateSoul(timestamp) {
             if (isIdle) {
                 updateWander(timestamp);
             }
-            updateEyePosition();
-            checkBlink();
-            requestAnimationFrame(animateEye);
+            updateSoulPosition();
+            requestAnimationFrame(animateSoul);
         }
 
         // Event listeners
@@ -918,7 +886,7 @@
         document.addEventListener('mouseleave', handlePointerLeave);
 
         // Start animation
-        requestAnimationFrame(animateEye);
+        requestAnimationFrame(animateSoul);
 
         // Start in idle mode
         lastWanderTime = performance.now();

@@ -135,9 +135,12 @@
                         fill="rgba(255,255,255,0.6)"/>
                 </g>
 
-                <!-- Upper eyelid line -->
-                <path class="eyelid-line upper" d="M 45 150 Q 150 60 255 150"
-                    fill="none" stroke="rgba(60,50,50,0.4)" stroke-width="2"/>
+                <!-- The moving soul group (follows cursor) -->
+                <g class="soul-moving" id="eye-moving">
+                    <!-- • SOUL - Center -->
+                    <circle class="zone zone-soul" cx="150" cy="150" r="22"
+                        fill="rgba(88, 166, 255, 0.8)" data-zone="soul"/>
+                </g>
 
                 <!-- Lower eyelid line -->
                 <path class="eyelid-line lower" d="M 50 155 Q 150 230 250 155"
