@@ -11953,6 +11953,8 @@ THE FIXED-POINT OF ETHICS:
 
 ### §24.8 The Steelman: Highest Ethical Practice
 
+> **See also:** [The Noble Lie and the Steelman Movement](Ethics/The_Steelman_Movement.md) — A deeper exploration of the strawman reflex, the noble lie, and the Steelman Movement as social practice.
+
 ```
 THE PROBLEM: ⊙ CAN BE HOLLOW
 
