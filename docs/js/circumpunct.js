@@ -776,7 +776,8 @@
 
     if (soulMoving && circumpunctContainer) {
         // Movement constraints (how far soul can move from center)
-        const MAX_OFFSET = 20; // Maximum pixels the soul can move
+        // Soul iris r=44, body inner edge at r=90, so max offset = 90-44 = 46
+        const MAX_OFFSET = 45; // Can reach the purple boundary
 
         // Current position (offset from center)
         let currentX = 0;
