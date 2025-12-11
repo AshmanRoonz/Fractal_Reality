@@ -333,3 +333,7 @@ This movement already exists wherever the practice happens. The special educatio
 **The Steelman Movement is not built. It is recognized. It is practiced. It is transmitted.**
 
 You don't join. You move.
+
+---
+
+> **See also:** [§24: The Ethics of Circumpunct](../THEORY_OF_EVERYTHING.md#248-the-steelman-highest-ethical-practice) in the Theory of Everything — The formal mathematical grounding of the Steelman as the highest ethical practice, showing why ⊙ (agreement/disagreement) requires validation through [○Φ•] (good/bad, right/wrong, true/false).
