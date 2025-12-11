@@ -788,7 +788,7 @@
         let isIdle = true;
         let idleTimeout = null;
         let wanderAngle = Math.random() * Math.PI * 2;
-        let wanderSpeed = 0.005;
+        let wanderSpeed = 0.0025; // Slower wandering
         let lastWanderTime = 0;
         const IDLE_DELAY = 2000; // ms before starting idle wander
 
@@ -817,14 +817,14 @@
             return { x: 0, y: 0 };
         }
 
-        // Idle wandering - gentle random movement
+        // Idle wandering - gentle random movement (slower, less frequent)
         function updateWander(timestamp) {
             if (!isIdle) return;
 
-            // Change direction occasionally
-            if (timestamp - lastWanderTime > 2000 + Math.random() * 3000) {
+            // Change direction occasionally (doubled interval = half as frequent)
+            if (timestamp - lastWanderTime > 4000 + Math.random() * 6000) {
                 wanderAngle += (Math.random() - 0.5) * Math.PI * 0.5;
-                wanderSpeed = 0.003 + Math.random() * 0.004;
+                wanderSpeed = 0.0015 + Math.random() * 0.002; // Half speed
                 lastWanderTime = timestamp;
             }
 
