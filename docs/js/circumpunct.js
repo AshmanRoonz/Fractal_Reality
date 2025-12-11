@@ -775,9 +775,14 @@
     const circumpunctContainer = document.querySelector('.circumpunct-container');
 
     if (soulMoving && circumpunctContainer) {
+        // Get pupil and highlight elements for parallax effect
+        const soulPupil = soulMoving.querySelector('.soul-pupil');
+        const soulHighlight = soulMoving.querySelector('.soul-highlight');
+
         // Movement constraints (how far soul can move from center)
         // Soul iris r=44, body inner edge at r=90, so max offset = 90-44 = 46
         const MAX_OFFSET = 45; // Can reach the purple boundary
+        const PUPIL_PARALLAX = 0.25; // Pupil moves 25% extra for depth illusion
 
         // Current position (offset from center)
         let currentX = 0;
@@ -843,6 +848,22 @@
 
             // Apply transform to soul group
             soulMoving.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+            // Apply parallax offset to pupil for spherical depth illusion
+            if (soulPupil) {
+                const pupilOffsetX = currentX * PUPIL_PARALLAX;
+                const pupilOffsetY = currentY * PUPIL_PARALLAX;
+                soulPupil.setAttribute('cx', 150 + pupilOffsetX);
+                soulPupil.setAttribute('cy', 150 + pupilOffsetY);
+            }
+
+            // Move highlight opposite direction slightly (stays on light source side)
+            if (soulHighlight) {
+                const highlightOffsetX = currentX * PUPIL_PARALLAX * 0.5;
+                const highlightOffsetY = currentY * PUPIL_PARALLAX * 0.5;
+                soulHighlight.setAttribute('cx', 140 + highlightOffsetX);
+                soulHighlight.setAttribute('cy', 142 + highlightOffsetY);
+            }
         }
 
         // Mouse/touch move handler
