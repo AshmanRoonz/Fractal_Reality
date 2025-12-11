@@ -354,10 +354,7 @@ body {
     transition: filter 0.3s ease;
 }
 
-.soul-pupil {
-    transition: r 0.3s ease;
-}
-
+.soul-pupil,
 .soul-highlight,
 .soul-limbal {
     pointer-events: none;
