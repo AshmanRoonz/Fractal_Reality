@@ -276,7 +276,7 @@ body {
 }
 
 /* ===================================
-   THE BIG CIRCUMPUNCT
+   THE INTERACTIVE EYE (evolved Circumpunct)
    =================================== */
 .circumpunct-container {
     position: relative;
@@ -293,60 +293,141 @@ body {
     cursor: pointer;
 }
 
+/* Eye-specific container styles */
+.eye-container {
+    border-radius: 50%;
+}
+
+.eye-svg {
+    filter: drop-shadow(0 4px 20px rgba(0,0,0,0.3));
+}
+
 /* Zones */
 .zone {
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.zone-body { filter: url(#organic-membrane); }
-.zone-mind { filter: url(#glow-gold); }
-.zone-soul { filter: url(#glow-cyan); }
-
-/* Hover/Active states */
-.zone-body:hover, .zone-body.active {
-    stroke: rgba(163, 113, 247, 1);
-    stroke-width: 28;
+/* Eye element styles */
+.sclera {
+    transition: fill 0.3s ease;
 }
 
-.zone-mind:hover, .zone-mind.active {
-    fill: rgba(240, 180, 41, 0.3);
-    stroke: rgba(240, 180, 41, 0.8);
+.iris {
+    transition: transform 0.1s ease-out;
 }
 
-.zone-soul:hover, .zone-soul.active {
-    fill: rgba(88, 166, 255, 1);
+.pupil {
+    transition: transform 0.1s ease-out, r 0.3s ease;
 }
 
-/* Animations */
-@keyframes pulse {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; }
+.eye-highlight {
+    pointer-events: none;
 }
 
-@keyframes breathe {
-    0%, 100% { stroke-opacity: 0.6; }
-    50% { stroke-opacity: 0.9; }
+.limbal-ring {
+    transition: stroke-opacity 0.3s ease;
 }
 
-@keyframes shimmer {
-    0%, 100% { fill-opacity: 0.15; }
-    50% { fill-opacity: 0.25; }
+.eyelid-shadow {
+    pointer-events: none;
+    opacity: 0.5;
 }
 
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.eyelid-line {
+    pointer-events: none;
 }
 
-.zone-soul { animation: pulse 4s ease-in-out infinite; }
-.zone-body { animation: breathe 5s ease-in-out infinite; }
-.zone-mind { animation: shimmer 4s ease-in-out infinite; }
-
-.decorative {
+/* The moving group containing iris, pupil, and highlights */
+.eye-moving {
+    transition: transform 0.08s ease-out;
     transform-origin: 150px 150px;
-    animation: rotate 60s linear infinite;
-    stroke-dasharray: 4 8;
+}
+
+/* Hover/Active states for eye zones */
+.zone-body.sclera:hover, .zone-body.sclera.active {
+    fill: #fafafa;
+}
+
+.zone-mind.iris:hover, .zone-mind.iris.active {
+    filter: url(#iris-glow) brightness(1.1);
+}
+
+.zone-soul.pupil:hover, .zone-soul.pupil.active {
+    r: 24;
+}
+
+/* Iris fiber animation - subtle rotation */
+@keyframes iris-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.iris-fibers {
+    transform-origin: 150px 150px;
+    animation: iris-rotate 120s linear infinite;
+}
+
+/* Pupil subtle pulse */
+@keyframes pupil-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+.pupil {
+    transform-origin: center;
+    animation: pupil-pulse 4s ease-in-out infinite;
+}
+
+/* Eye highlight shimmer */
+@keyframes highlight-shimmer {
+    0%, 100% { opacity: 0.9; }
+    50% { opacity: 0.7; }
+}
+
+.primary-highlight {
+    animation: highlight-shimmer 3s ease-in-out infinite;
+}
+
+/* Limbal ring subtle breathe */
+@keyframes limbal-breathe {
+    0%, 100% { stroke-opacity: 0.6; }
+    50% { stroke-opacity: 0.8; }
+}
+
+.limbal-ring {
+    animation: limbal-breathe 5s ease-in-out infinite;
+}
+
+/* Blink animation (optional - triggered by JS) */
+@keyframes blink {
+    0%, 100% {
+        clip-path: ellipse(105px 85px at 150px 150px);
+    }
+    45%, 55% {
+        clip-path: ellipse(105px 5px at 150px 150px);
+    }
+}
+
+.eye-outer.blinking {
+    animation: blink 0.15s ease-in-out;
+}
+
+/* Hide labels visually but keep for screen readers */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.eye-labels {
+    pointer-events: none;
 }
 
 /* Soul movement (follows cursor) */
