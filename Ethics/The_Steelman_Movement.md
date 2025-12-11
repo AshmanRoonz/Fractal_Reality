@@ -341,4 +341,4 @@ You don't join. You move.
 
 > **See also:** [§24: The Ethics of Circumpunct](../THEORY_OF_EVERYTHING.md#chapter-24-ethics) in the Theory of Everything — The formal mathematical grounding of the Steelman as the highest ethical practice, showing why ⊙ (agreement/disagreement) requires validation through [○Φ•] (good/bad, right/wrong, true/false).
 
-Be sure to check out [Fractal Reality](www.fractalreality.ca)
+Be sure to check out [Fractal Reality](https://www.fractalreality.ca)
