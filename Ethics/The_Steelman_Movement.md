@@ -13,6 +13,8 @@ Chances are, you're a strawman.
 
 Not of someone else's argument. Of yourself.
 
+(the "man" or "men" in the words "Steelman, Steelman, Strawman, Strawmen" are genderless and refer to the huMAN)
+
 ---
 
 ## The Cut
