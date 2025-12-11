@@ -27,124 +27,81 @@
 
             <!-- Center Column: Circumpunct -->
             <div class="center-panel">
-                <p class="tagline">The eye that sees itself seeing</p>
+                <p class="tagline">Tap the symbol to explore</p>
 
-        <!-- The Big Interactive Eye (evolved Circumpunct) -->
-        <div class="circumpunct-container eye-container">
-            <svg class="circumpunct eye-svg" viewBox="-10 -10 320 320" role="img" aria-label="Interactive Eye - The Circumpunct" style="overflow: visible;">
+        <!-- The Big Interactive Circumpunct -->
+        <div class="circumpunct-container">
+            <svg class="circumpunct" viewBox="-10 -10 320 320" role="img" aria-label="Interactive Circumpunct" style="overflow: visible;">
                 <defs>
-                    <!-- Iris texture gradient (based on user's gray-green/hazel eye) -->
-                    <radialGradient id="iris-gradient" cx="50%" cy="50%" r="50%" fx="40%" fy="40%">
-                        <stop offset="0%" stop-color="#8a9a88"/>
-                        <stop offset="30%" stop-color="#7a8b78"/>
-                        <stop offset="60%" stop-color="#6b7d6b"/>
-                        <stop offset="85%" stop-color="#5a6b5a"/>
-                        <stop offset="100%" stop-color="#3d4a3d"/>
-                    </radialGradient>
-
-                    <!-- Iris detail pattern -->
-                    <radialGradient id="iris-detail" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stop-color="rgba(120,140,120,0.3)"/>
-                        <stop offset="50%" stop-color="rgba(90,110,90,0.1)"/>
-                        <stop offset="100%" stop-color="rgba(60,80,60,0.2)"/>
-                    </radialGradient>
-
-                    <!-- Pupil gradient -->
-                    <radialGradient id="pupil-gradient" cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
-                        <stop offset="0%" stop-color="#1a1a1a"/>
-                        <stop offset="70%" stop-color="#0a0a0a"/>
-                        <stop offset="100%" stop-color="#000000"/>
-                    </radialGradient>
-
-                    <!-- Eye highlight -->
-                    <radialGradient id="highlight-gradient" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stop-color="rgba(255,255,255,0.95)"/>
-                        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-                    </radialGradient>
-
-                    <!-- Sclera (white of eye) gradient -->
-                    <radialGradient id="sclera-gradient" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stop-color="#f5f5f5"/>
-                        <stop offset="70%" stop-color="#e8e8e8"/>
-                        <stop offset="100%" stop-color="#d0d0d0"/>
-                    </radialGradient>
-
-                    <!-- Subtle shadow for depth -->
-                    <filter id="eye-shadow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.3)"/>
-                    </filter>
-
-                    <!-- Iris glow -->
-                    <filter id="iris-glow" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="2" result="blur"/>
+                    <!-- Organic membrane filter for body ring (displacement + glow) -->
+                    <filter id="organic-membrane" x="-50%" y="-50%" width="200%" height="200%">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="42" result="noise">
+                            <animate attributeName="seed" values="42;100;42" dur="10s" repeatCount="indefinite"/>
+                        </feTurbulence>
+                        <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                        <feGaussianBlur in="displaced" stdDeviation="4" result="blur"/>
                         <feMerge>
                             <feMergeNode in="blur"/>
-                            <feMergeNode in="SourceGraphic"/>
+                            <feMergeNode in="displaced"/>
                         </feMerge>
                     </filter>
+                    <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="4" result="blur"/>
+                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                    <filter id="glow-gold" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="6" result="blur"/>
+                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                    <filter id="glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="8" result="blur"/>
+                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+
+                    <!-- Soul iris gradient (gray-green like user's eye) -->
+                    <radialGradient id="soul-iris-gradient" cx="50%" cy="50%" r="50%" fx="40%" fy="40%">
+                        <stop offset="0%" stop-color="#8a9a88"/>
+                        <stop offset="40%" stop-color="#7a8b78"/>
+                        <stop offset="70%" stop-color="#6b7d6b"/>
+                        <stop offset="100%" stop-color="#4a5a4a"/>
+                    </radialGradient>
+                    <!-- Soul pupil gradient -->
+                    <radialGradient id="soul-pupil-gradient" cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
+                        <stop offset="0%" stop-color="#1a1a1a"/>
+                        <stop offset="100%" stop-color="#000000"/>
+                    </radialGradient>
 
                     <!-- Arc paths for curved navigation buttons -->
                     <path id="arc-top" d="M 58 58 A 130 130 0 0 1 242 58" fill="none"/>
                     <path id="arc-right" d="M 242 58 A 130 130 0 0 1 242 242" fill="none"/>
                     <path id="arc-bottom" d="M 242 242 A 130 130 0 0 1 58 242" fill="none"/>
                     <path id="arc-left" d="M 58 242 A 130 130 0 0 1 58 58" fill="none"/>
-
-                    <!-- Clip path for eye shape -->
-                    <clipPath id="eye-clip">
-                        <ellipse cx="150" cy="150" rx="105" ry="85"/>
-                    </clipPath>
                 </defs>
 
-                <!-- ○ BODY - Sclera (white of eye) with eyelid shape -->
-                <g class="eye-outer" clip-path="url(#eye-clip)">
-                    <ellipse class="zone zone-body sclera" cx="150" cy="150" rx="105" ry="85"
-                        fill="url(#sclera-gradient)" data-zone="body"/>
+                <!-- ○ BODY - Outer Ring (organic membrane) -->
+                <circle class="zone zone-body" cx="150" cy="150" r="100"
+                    fill="transparent" stroke="rgba(163, 113, 247, 0.6)" stroke-width="20" data-zone="body"/>
 
-                    <!-- Subtle blood vessels / pink tint at edges -->
-                    <ellipse cx="150" cy="150" rx="105" ry="85"
-                        fill="none" stroke="rgba(180,140,140,0.15)" stroke-width="15" class="sclera-tint"/>
-                </g>
+                <!-- Φ MIND - Middle Field -->
+                <circle class="zone zone-mind" cx="150" cy="150" r="60"
+                    fill="rgba(240, 180, 41, 0.15)" stroke="rgba(240, 180, 41, 0.4)" stroke-width="2" data-zone="mind"/>
 
-                <!-- Eyelid shadow (top) -->
-                <ellipse cx="150" cy="80" rx="110" ry="40" fill="rgba(0,0,0,0.1)" class="eyelid-shadow"/>
-
-                <!-- The moving eye group (iris + pupil + highlights) -->
-                <g class="eye-moving" id="eye-moving">
-                    <!-- Φ MIND - Iris -->
-                    <circle class="zone zone-mind iris" cx="150" cy="150" r="55"
-                        fill="url(#iris-gradient)" filter="url(#iris-glow)" data-zone="mind"/>
-
-                    <!-- Iris detail lines (radial fibers) -->
-                    <g class="iris-fibers" opacity="0.4">
-                        <circle cx="150" cy="150" r="55" fill="url(#iris-detail)"/>
-                    </g>
-
-                    <!-- Limbal ring (dark ring around iris) -->
-                    <circle cx="150" cy="150" r="54" fill="none" stroke="rgba(40,50,40,0.6)" stroke-width="3" class="limbal-ring"/>
-
-                    <!-- • SOUL - Pupil -->
-                    <circle class="zone zone-soul pupil" cx="150" cy="150" r="22"
-                        fill="url(#pupil-gradient)" data-zone="soul"/>
-
-                    <!-- Primary highlight (main light reflection) -->
-                    <ellipse class="eye-highlight primary-highlight" cx="140" cy="140" rx="12" ry="10"
-                        fill="url(#highlight-gradient)" opacity="0.9"/>
-
-                    <!-- Secondary highlight (smaller) -->
-                    <circle class="eye-highlight secondary-highlight" cx="162" cy="158" r="5"
-                        fill="rgba(255,255,255,0.6)"/>
-                </g>
-
-                <!-- The moving soul group (follows cursor) -->
+                <!-- The moving soul group (follows cursor) - styled as small eye/iris -->
                 <g class="soul-moving" id="eye-moving">
-                    <!-- • SOUL - Center -->
-                    <circle class="zone zone-soul" cx="150" cy="150" r="22"
-                        fill="rgba(88, 166, 255, 0.8)" data-zone="soul"/>
+                    <!-- • SOUL - The watching eye -->
+                    <!-- Iris (outer part of soul-eye) -->
+                    <circle class="zone zone-soul soul-iris" cx="150" cy="150" r="22"
+                        fill="url(#soul-iris-gradient)" data-zone="soul"/>
+                    <!-- Limbal ring (dark edge around iris) -->
+                    <circle cx="150" cy="150" r="21" fill="none" stroke="rgba(40,50,40,0.5)" stroke-width="2" class="soul-limbal"/>
+                    <!-- Pupil (center) -->
+                    <circle cx="150" cy="150" r="8" fill="url(#soul-pupil-gradient)" class="soul-pupil"/>
+                    <!-- Highlight -->
+                    <circle cx="145" cy="146" r="3" fill="rgba(255,255,255,0.7)" class="soul-highlight"/>
                 </g>
 
-                <!-- Lower eyelid line -->
-                <path class="eyelid-line lower" d="M 50 155 Q 150 230 250 155"
-                    fill="none" stroke="rgba(60,50,50,0.2)" stroke-width="1.5"/>
+                <!-- Decorative ring -->
+                <circle cx="150" cy="150" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" class="decorative"/>
 
                 <!-- Navigation Arc Buttons (outer ring) -->
                 <g class="nav-ring">
@@ -182,11 +139,10 @@
                 </g>
             </svg>
 
-            <!-- Zone labels hidden for eye design, but kept for accessibility -->
-            <div class="zone-labels eye-labels">
-                <span class="label label-body visually-hidden">○ BODY (Sclera)</span>
-                <span class="label label-mind visually-hidden">Φ MIND (Iris)</span>
-                <span class="label label-soul visually-hidden">• SOUL (Pupil)</span>
+            <div class="zone-labels">
+                <span class="label label-body">○ BODY</span>
+                <span class="label label-mind">Φ MIND</span>
+                <span class="label label-soul">• SOUL</span>
             </div>
         </div>
             </div><!-- /center-panel -->
