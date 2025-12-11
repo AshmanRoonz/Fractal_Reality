@@ -96,7 +96,7 @@ email@ashmanroonz.ca
 ## PREFACE: THE DIMENSIONAL CASCADE
 
 
-## The Complete Spectrum
+## The Dimensions of ⊙
 
 | Dim | Type | Name | Description | Core Equations |
 |-----|------|------|-------------|----------------|
