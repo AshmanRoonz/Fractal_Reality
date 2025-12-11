@@ -766,4 +766,161 @@
         if (document.hidden) cancelAnimationFrame(animationId);
         else animate();
     });
+
+    // =========================================
+    // Eye Movement System
+    // Tracks cursor + idle wandering
+    // =========================================
+    const eyeMoving = document.getElementById('eye-moving');
+    const eyeOuter = document.querySelector('.eye-outer');
+    const eyeContainer = document.querySelector('.eye-container');
+
+    if (eyeMoving && eyeContainer) {
+        // Eye movement constraints (how far iris can move from center)
+        const MAX_OFFSET = 25; // Maximum pixels the eye can move
+        const SVG_CENTER = 150; // Center of SVG viewBox
+
+        // Current eye position (in SVG units, offset from center)
+        let currentX = 0;
+        let currentY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        // Idle wandering state
+        let isIdle = true;
+        let idleTimeout = null;
+        let wanderAngle = Math.random() * Math.PI * 2;
+        let wanderSpeed = 0.005;
+        let lastWanderTime = 0;
+        const IDLE_DELAY = 2000; // ms before starting idle wander
+
+        // Blink state
+        let lastBlinkTime = Date.now();
+        const BLINK_INTERVAL_MIN = 3000;
+        const BLINK_INTERVAL_MAX = 8000;
+        let nextBlinkIn = BLINK_INTERVAL_MIN + Math.random() * (BLINK_INTERVAL_MAX - BLINK_INTERVAL_MIN);
+
+        // Convert page coordinates to eye offset
+        function getEyeOffset(pageX, pageY) {
+            const rect = eyeContainer.getBoundingClientRect();
+            const eyeCenterX = rect.left + rect.width / 2;
+            const eyeCenterY = rect.top + rect.height / 2;
+
+            // Direction from eye center to cursor
+            const dx = pageX - eyeCenterX;
+            const dy = pageY - eyeCenterY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Scale factor - eye moves more when cursor is closer
+            // But cap the maximum offset
+            const maxDistance = Math.max(window.innerWidth, window.innerHeight);
+            const normalizedDist = Math.min(distance / (maxDistance * 0.3), 1);
+
+            // Calculate offset with easing (moves more when cursor is near)
+            const offsetScale = MAX_OFFSET * (0.3 + normalizedDist * 0.7);
+
+            if (distance > 0) {
+                return {
+                    x: (dx / distance) * Math.min(offsetScale, MAX_OFFSET),
+                    y: (dy / distance) * Math.min(offsetScale, MAX_OFFSET) * 0.7 // Less vertical movement (eye shape)
+                };
+            }
+            return { x: 0, y: 0 };
+        }
+
+        // Idle wandering - gentle random movement
+        function updateWander(timestamp) {
+            if (!isIdle) return;
+
+            // Change direction occasionally
+            if (timestamp - lastWanderTime > 2000 + Math.random() * 3000) {
+                wanderAngle += (Math.random() - 0.5) * Math.PI * 0.5;
+                wanderSpeed = 0.003 + Math.random() * 0.004;
+                lastWanderTime = timestamp;
+            }
+
+            // Gentle circular/random motion
+            const wanderRadius = MAX_OFFSET * 0.4;
+            targetX = Math.cos(wanderAngle + timestamp * wanderSpeed) * wanderRadius;
+            targetY = Math.sin(wanderAngle + timestamp * wanderSpeed * 0.7) * wanderRadius * 0.6;
+        }
+
+        // Smooth lerp toward target
+        function updateEyePosition() {
+            const lerp = 0.08; // Smoothing factor
+            currentX += (targetX - currentX) * lerp;
+            currentY += (targetY - currentY) * lerp;
+
+            // Apply transform to eye-moving group
+            eyeMoving.style.transform = `translate(${currentX}px, ${currentY}px)`;
+        }
+
+        // Check for blink
+        function checkBlink() {
+            const now = Date.now();
+            if (now - lastBlinkTime > nextBlinkIn) {
+                triggerBlink();
+                lastBlinkTime = now;
+                nextBlinkIn = BLINK_INTERVAL_MIN + Math.random() * (BLINK_INTERVAL_MAX - BLINK_INTERVAL_MIN);
+            }
+        }
+
+        // Trigger blink animation
+        function triggerBlink() {
+            if (eyeOuter) {
+                eyeOuter.classList.add('blinking');
+                setTimeout(() => {
+                    eyeOuter.classList.remove('blinking');
+                }, 150);
+            }
+        }
+
+        // Mouse/touch move handler
+        function handlePointerMove(e) {
+            const pageX = e.touches ? e.touches[0].pageX : e.pageX;
+            const pageY = e.touches ? e.touches[0].pageY : e.pageY;
+
+            const offset = getEyeOffset(pageX, pageY);
+            targetX = offset.x;
+            targetY = offset.y;
+
+            // Reset idle state
+            isIdle = false;
+            clearTimeout(idleTimeout);
+            idleTimeout = setTimeout(() => {
+                isIdle = true;
+                lastWanderTime = performance.now();
+            }, IDLE_DELAY);
+        }
+
+        // Mouse leave - return to idle
+        function handlePointerLeave() {
+            clearTimeout(idleTimeout);
+            idleTimeout = setTimeout(() => {
+                isIdle = true;
+                lastWanderTime = performance.now();
+            }, 500);
+        }
+
+        // Animation loop for eye
+        function animateEye(timestamp) {
+            if (isIdle) {
+                updateWander(timestamp);
+            }
+            updateEyePosition();
+            checkBlink();
+            requestAnimationFrame(animateEye);
+        }
+
+        // Event listeners
+        document.addEventListener('mousemove', handlePointerMove);
+        document.addEventListener('touchmove', handlePointerMove, { passive: true });
+        document.addEventListener('mouseleave', handlePointerLeave);
+
+        // Start animation
+        requestAnimationFrame(animateEye);
+
+        // Start in idle mode
+        lastWanderTime = performance.now();
+    }
 })();
