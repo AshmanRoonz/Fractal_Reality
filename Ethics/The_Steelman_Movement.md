@@ -37,6 +37,10 @@ You know the lines. They live in your throat:
 > *"It was probably just the drugs, but..."*
 >
 > *"I'm probably just traumatized, but..."*
+>
+> *"This is a cool idea, but they're going to think I'm crazy and I'll be forever shunned..."*
+
+
 
 That last one is for the scientists. The credentialed. The capable. You think you're immune because you're inside the gates? The guillotine doesn't care about your PhD. It cuts anyone who perceives outside the approved narrative.
 
