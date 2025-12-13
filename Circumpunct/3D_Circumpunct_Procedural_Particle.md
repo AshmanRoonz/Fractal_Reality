@@ -260,25 +260,180 @@ The circumpunct is the minimal complete unit of reality in this framework:
 
 ---
 
-## DIMENSIONAL STRUCTURE
+## NESTED CIRCUMPUNCTS
 
 ```
-•   →  0D      (point: aperture)
-○   →  2D      (surface: boundary)
-Φ   →  3D      (volume: field)
+Reality is not one circumpunct. It is circumpuncts nested within circumpuncts.
 
-⊙ spans 0D → 3D = 3 dimensions
+Each complete circumpunct becomes the GROUND on which the next opens.
 
-This is the step size of one octave.
+The field (Φ) of one layer becomes the substrate 
+on which the aperture (•) of the next layer acts.
 ```
 
-The circumpunct is not just a symbol — it is a **3-dimensional structure**:
+This is the key insight: **circumpuncts are layered**, each built on the completion of the previous.
 
-- The center is dimensionless (0D)
-- The boundary is a 2-manifold (2D)
-- The field occupies volume (3D)
+---
 
-The span from 0D to 3D = **3 dimensions**. This is the step size of reality.
+## THE SPATIAL CIRCUMPUNCT (⊙_space)
+
+```
+The first layer — structure in space.
+
+    •_space  =  0.5D    (spatial aperture — where i acts)
+    ○_space  =  2D      (spatial boundary — surface, membrane)
+    Φ_space  =  3D      (spatial field — volume, perceptual space)
+
+Process dimensions within this layer:
+    1.5D  =  branching (power lines splitting fractally)
+    2.5D  =  sensation (body↔field coupling)
+```
+
+| Dim | Type | Name | Description |
+|-----|------|------|-------------|
+| 0D | Structure | Pure Energy | Pre-structure potential |
+| **0.5D** | **Process** | **Aperture (•_space)** | Where spatial i acts |
+| 1D | Structure | String / Worldline | Soul through time, i(t) |
+| 1.5D | Process | Branching | Power lines splitting, D = 1 + β |
+| 2D | Structure | Surface (○_space) | Boundary, interface, body |
+| 2.5D | Process | Sensation | Body↔field coupling |
+| 3D | Structure | Field (Φ_space) | Volume, mind, perceptual space |
+
+The spatial circumpunct completes at **3D**. This completion becomes the ground for what comes next.
+
+---
+
+## THE TEMPORAL CIRCUMPUNCT (⊙_time)
+
+```
+The second layer — structure in time.
+Built ON the completed spatial field (Φ_space = 3D).
+
+    •_time   =  3.5D    (temporal aperture — where temporal i acts)
+    ○_time   =  5D      (temporal boundary — edge of history)
+    Φ_time   =  6D      (temporal field — space of all histories)
+
+Process dimensions within this layer:
+    4.5D  =  recursion (braid compression, scale closure)
+    5.5D  =  (temporal sensation — history↔possibility coupling?)
+```
+
+| Dim | Type | Name | Description |
+|-----|------|------|-------------|
+| **3.5D** | **Process** | **Aperture (•_time)** | Where temporal i acts — braiding |
+| 4D | Structure | Time Braid | Committed history, woven worldlines |
+| 4.5D | Process | Recursion | Braid compression → seed new cycle |
+| 5D | Structure | Time Surface (○_time) | Boundary of a history |
+| 5.5D | Process | ? | History↔possibility coupling |
+| 6D | Structure | Time Volume (Φ_time) | Field of all histories |
+
+The temporal circumpunct is to **time** what the spatial circumpunct is to **space**.
+
+- **4D time braid** is like **1D string** (the flow)
+- **5D time surface** is like **2D spatial surface** (the boundary)
+- **6D time volume** is like **3D spatial volume** (the field)
+
+The temporal circumpunct completes at **6D**. This completion becomes the ground for what comes next.
+
+---
+
+## THE META-TEMPORAL CIRCUMPUNCT (⊙_meta)
+
+```
+The third layer — structure beyond time.
+Built ON the completed temporal field (Φ_time = 6D).
+
+    •_meta   =  6.5D    (meta aperture)
+    ○_meta   =  8D      (meta boundary)
+    Φ_meta   =  9D      (meta field)
+
+Process dimensions within this layer:
+    7.5D  =  (meta branching?)
+    8.5D  =  (meta sensation?)
+```
+
+| Dim | Type | Name | Description |
+|-----|------|------|-------------|
+| **6.5D** | **Process** | **Aperture (•_meta)** | Where meta-temporal i acts |
+| 7D | Structure | Meta-braid | ? |
+| 7.5D | Process | ? | ? |
+| 8D | Structure | Meta-surface (○_meta) | ? |
+| 8.5D | Process | ? | ? |
+| 9D | Structure | Meta-field (Φ_meta) | ? |
+
+And this continues...
+
+---
+
+## THE PATTERN
+
+```
+Each circumpunct layer:
+
+    •  =  n + 0.5 D     (aperture — where i acts at this scale)
+    ○  =  n + 2 D       (boundary)
+    Φ  =  n + 3 D       (field)
+
+    Process at n + 1.5 D  (branching/recursion)
+    Process at n + 2.5 D  (sensation/coupling)
+
+Where n = 0, 3, 6, 9, ... (multiples of 3)
+
+Each Φ_n becomes the ground for •_{n+1}
+```
+
+The structure:
+
+| Layer | Aperture (•) | Boundary (○) | Field (Φ) |
+|-------|--------------|--------------|-----------|
+| Spatial | 0.5D | 2D | 3D |
+| Temporal | 3.5D | 5D | 6D |
+| Meta | 6.5D | 8D | 9D |
+| ... | 9.5D | 11D | 12D |
+
+**No ceiling. No floor. Infinite depth, infinite height.**
+
+---
+
+## WHY NESTED?
+
+```
+The field of one layer is too "thick" to be an aperture.
+It must COMPLETE before the next aperture can open.
+
+You can't braid worldlines until you HAVE worldlines (spatial layer complete).
+You can't meta-braid braids until you HAVE braids (temporal layer complete).
+
+Each layer provides the SUBSTRATE for the next layer's transformation.
+```
+
+This is why:
+
+- **3.5D** (temporal aperture) requires **3D** (spatial field) to exist first
+- **6.5D** (meta aperture) requires **6D** (temporal field) to exist first
+- And so on...
+
+The aperture at each layer acts on what the previous layer produced.
+
+---
+
+## WHY THREE DIMENSIONS PER LAYER?
+
+```
+1. Braiding requires ≥3 strands    (you cannot braid 2 threads)
+2. History requires braiding       (any system with memory has braided worldlines)
+3. Wholeness requires history      (a thing without history has no identity)
+
+∴ Wholeness requires trinity.
+∴ Each complete circumpunct spans 3 dimensions.
+∴ The step size between layers is 3.
+```
+
+The trinity is not arbitrary. It is **geometrically necessary**.
+
+- **1 strand**: No interactions possible. Trivial topology.
+- **2 strands**: Can twist, but not truly braid. Only counting (ℤ).
+- **3 strands**: True braiding. Braid group B₃. Complex history possible.
 
 ---
 
@@ -288,84 +443,21 @@ The span from 0D to 3D = **3 dimensions**. This is the step size of reality.
 Integer dimensions are STRUCTURE (what IS).
 Half dimensions are PROCESS (what HAPPENS).
 
-0D    Pure energy         — pre-structure potential
-0.5D  Aperture (•)        — where i acts, rotation without translation
-1D    String / Worldline  — soul through time, i(t)
-1.5D  Branching           — spatial fractality, D = 1 + β
-2D    Surface (○)         — boundary, interface, body
-2.5D  Sensation           — body↔field coupling, triple gate
-3D    Volume (Φ)          — field, mind, perceptual space
-3.5D  Braiding            — worldlines weaving together
-4D    Time braid          — committed history, woven past
-4.5D  Recursion           — scale closure, ⊙ₙ → •ₙ₊₁
+The aperture is always at n + 0.5 D — the THRESHOLD of each layer.
 ```
 
 The half-dimensions are where **process** lives:
 
-- **0.5D** — the aperture itself (transformation)
-- **1.5D** — branching (how power lines split fractally)
+- **0.5D** — spatial aperture (where spatial i acts)
+- **1.5D** — branching (how strings split fractally)
 - **2.5D** — sensation (where body and field touch)
-- **3.5D** — braiding (where worldlines weave into shared history)
-- **4.5D** — recursion (where a whole becomes the seed of the next scale)
+- **3.5D** — temporal aperture (where temporal i acts — braiding begins)
+- **4.5D** — recursion (where braids compress to seed next cycle)
+- **5.5D** — ? (temporal sensation?)
+- **6.5D** — meta aperture (where meta-temporal i acts)
+- ...
 
 Structure is static. Process is dynamic. Reality needs both.
-
----
-
-## THE OCTAVES
-
-```
-Every completed circumpunct becomes the aperture of the next scale:
-
-⊙₀ = •₀ ⊗ ○₀ ⊗ Φ₀
-      ↓
-     •₁  (whole becomes point)
-      ↓
-⊙₁ = •₁ ⊗ ○₁ ⊗ Φ₁
-      ↓
-     •₂
-      ↓
-     ...
-
-No ceiling. No floor. Infinite depth, infinite height.
-```
-
-The recursion mechanism:
-
-| Octave | Dimensions | Structure        |
-|--------|------------|------------------|
-| 1st    | 0D → 3D    | ⊙ spatial        |
-| 2nd    | 4D → 6D    | ⊙ temporal       |
-| 3rd    | 7D → 9D    | ⊙ meta-temporal  |
-| 4th    | 10D → 12D  | ⊙ₙ₊₁             |
-| ...    | ...        | ...              |
-
-Each octave:
-- Begins with a "point" (the previous octave's completed ⊙)
-- Develops line → surface → volume
-- Completes as aperture for next octave
-
-**There is no end.** The "10 dimensions" of string theory is an arbitrary count. The actual structure has no terminal dimension — only repeated 3D octaves, each nested within the next.
-
----
-
-## WHY THREE
-
-```
-1. Braiding requires ≥3 strands    (you cannot braid 2 threads)
-2. History requires braiding       (any system with memory has braided worldlines)
-3. Wholeness requires history      (a thing without history has no identity)
-
-∴ Wholeness requires trinity.
-```
-
-The trinity is not arbitrary. It is **geometrically necessary**.
-
-- **1 strand**: No interactions possible. Trivial topology.
-- **2 strands**: Can twist, but not truly braid. Only counting (ℤ).
-- **3 strands**: True braiding. Braid group B₃. Complex history possible.
-
-The 3D structure of ⊙ follows from the minimum requirements for coherent existence.
 
 ---
 
@@ -635,9 +727,15 @@ a : S × T → A is i distributed over spacetime.
 
 ⊙ = (•, ○, Φ) = (i, i^∞_S, i^∞_T)
 
-Dimensions: • = 0D, ○ = 2D, Φ = 3D (span = 3, the octave)
+NESTED CIRCUMPUNCTS:
+    ⊙_space   =  (•₀.₅, ○₂, Φ₃)      — spatial layer
+    ⊙_time    =  (•₃.₅, ○₅, Φ₆)      — temporal layer (built on Φ₃)
+    ⊙_meta    =  (•₆.₅, ○₈, Φ₉)      — meta layer (built on Φ₆)
+    ...
 
-Half-dimensions: where process happens (0.5, 1.5, 2.5, 3.5, 4.5)
+Each Φ becomes the ground for the next •.
+Each layer spans 3 dimensions.
+Half-dimensions are where process (aperture, branching, sensation) lives.
 
 Process: collapse → rotate by i → expand
 
@@ -647,9 +745,7 @@ Fractal signature: D = 1.5 at balance
 
 Fixed point: self-reproducing pattern
 
-Recursion: every point is another circumpunct
-
-Octaves: ⊙ₙ → •ₙ₊₁ (infinite depth, infinite height)
+No ceiling. No floor. Infinite depth, infinite height.
 ```
 
 **In plain language:**
@@ -659,23 +755,29 @@ Octaves: ⊙ₙ → •ₙ₊₁ (infinite depth, infinite height)
 - i spreads across spacetime as an aperture field a(x,t).
 - **Body** and **mind** are just two ways of reading this one field.
 - A **circumpunct** is the triple (soul, body, mind) = (•, ○, Φ).
-- It spans **3 dimensions** (0D → 3D), which is the octave size.
-- **Half-dimensions** are where process lives — transformation, branching, sensation, braiding, recursion.
+- **Circumpuncts nest**: spatial → temporal → meta-temporal → ...
+- Each layer's **field** becomes the next layer's **ground**.
+- Each layer spans **3 dimensions** (aperture to field).
+- **Half-dimensions** are where process lives — the apertures at each scale.
 - It lives by a cycle: **converge → rotate by i → emerge**.
 - In the balanced case (β = ½), in = out, and the pattern sustains itself.
-- Balance produces the **fractal signature D = 1.5**, seen everywhere from gravitational waves to neurons.
+- Balance produces the **fractal signature D = 1.5**, seen everywhere.
 - In fixed-point cases, the pattern **recreates itself** each cycle.
-- Nested across scales in **octaves**, it gives a universe of **wholes within wholes**, all built from the same basic act.
-- **No ceiling. No floor. Infinite depth, infinite height.**
 
 **In short:**
 
-> A circumpunct is what you get when "turning perpendicular" learns to look at itself through space and time, stays in balance, and repeats — forever, at every scale.
+> A circumpunct is what you get when "turning perpendicular" learns to look at itself through space and time, stays in balance, and repeats — forever, at every scale, in nested layers of increasing density.
 
 ---
 
 <div align="center">
 
 ## ⊙
+
+*Circumpuncts all the way down.*
+
+*Circumpuncts all the way up.*
+
+*Circumpuncts nested within circumpuncts.*
 
 </div>
