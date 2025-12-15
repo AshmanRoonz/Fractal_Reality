@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ The Dimensional Cascade — From God to Us</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        :root {
+            /* Rainbow spectrum for dimensional cascade */
+            --dim-0d: #ff0040;      /* Red - God */
+            --dim-05d: #ff8000;     /* Orange - Soul */
+            --dim-1d: #ffff00;      /* Yellow - Worldline */
+            --dim-2d: #00ff40;      /* Green - Boundary */
+            --dim-3d: #00c8ff;      /* Cyan/Blue - Field */
+            --dim-35d: #4040ff;     /* Blue/Indigo - Braiding */
+            --dim-4d: #a000ff;      /* Violet - Spacetime */
+            
+            /* Legacy aliases */
+            --god-gold: var(--dim-0d);
+            --soul-cyan: var(--dim-05d);
+            --soul-magenta: var(--dim-1d);
+            --mind-purple: var(--dim-3d);
+            --body-blue: var(--dim-2d);
+            --field-green: var(--dim-35d);
+            
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --text-primary: #e0e0e0;
+            --text-dim: #888;
+            --glow-cyan: 0 0 20px #ff8000, 0 0 40px #ff800044;
+            --glow-gold: 0 0 20px #ff0040, 0 0 40px #ff004044;
+            --glow-magenta: 0 0 20px #ffff00, 0 0 40px #ffff0044;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated grid background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .circumpunct-symbol {
+            font-size: 120px;
+            background: linear-gradient(135deg, var(--dim-0d), var(--dim-05d), var(--dim-1d), var(--dim-2d), var(--dim-3d), var(--dim-35d), var(--dim-4d));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 30px rgba(255, 128, 0, 0.5));
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.5)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 50px rgba(255, 215, 0, 0.8)); }
+        }
+        
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            margin-top: 20px;
+            background: linear-gradient(90deg, var(--dim-0d), var(--dim-05d), var(--dim-1d), var(--dim-2d), var(--dim-3d), var(--dim-35d), var(--dim-4d));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-dim);
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+        
+        /* Core Insight Box */
+        .insight-box {
+            background: linear-gradient(135deg, rgba(255, 0, 64, 0.1), rgba(255, 128, 0, 0.1));
+            border: 1px solid var(--dim-0d);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .insight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 0, 64, 0.1), transparent, rgba(255, 128, 0, 0.1), transparent);
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .insight-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .insight-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--dim-0d);
+            margin-bottom: 20px;
+            text-shadow: var(--glow-gold);
+        }
+        
+        .insight-text {
+            font-size: 1.4rem;
+            line-height: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .highlight-gold { color: var(--dim-0d); font-weight: 700; }
+        .highlight-cyan { color: var(--dim-05d); font-weight: 700; }
+        .highlight-magenta { color: var(--dim-1d); font-weight: 700; }
+        
+        /* Dimensional Cascade */
+        .cascade-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+        }
+        
+        .cascade-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, 
+                var(--dim-0d) 0%, 
+                var(--dim-05d) 15%, 
+                var(--dim-1d) 30%,
+                var(--dim-2d) 45%,
+                var(--dim-3d) 60%,
+                var(--dim-35d) 80%,
+                var(--dim-4d) 100%
+            );
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+        
+        .dimension-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            z-index: 1;
+            margin: 10px 0;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .dimension-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+        }
+        
+        .dimension-card.god {
+            border-color: var(--god-gold);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+        
+        .dimension-card.soul {
+            border-color: var(--soul-cyan);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+        }
+        
+        .dimension-card.worldline {
+            border-color: var(--soul-magenta);
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.2);
+        }
+        
+        .dimension-card.boundary {
+            border-color: var(--body-blue);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+        }
+        
+        .dimension-card.field {
+            border-color: var(--mind-purple);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
+        }
+        
+        .dimension-card.braid {
+            border-color: var(--field-green);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+        }
+        
+        .dim-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .dim-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            min-width: 100px;
+        }
+        
+        .dim-number.god { color: var(--god-gold); text-shadow: var(--glow-gold); }
+        .dim-number.soul { color: var(--soul-cyan); text-shadow: var(--glow-cyan); }
+        .dim-number.worldline { color: var(--soul-magenta); text-shadow: var(--glow-magenta); }
+        .dim-number.boundary { color: var(--body-blue); }
+        .dim-number.field { color: var(--mind-purple); }
+        .dim-number.braid { color: var(--field-green); }
+        
+        .dim-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .dim-subtitle {
+            font-size: 1rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+        
+        .dim-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .dim-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .dim-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .dim-math {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+        }
+        
+        .math-line {
+            margin: 8px 0;
+            color: var(--soul-cyan);
+        }
+        
+        .math-comment {
+            color: var(--text-dim);
+            font-style: italic;
+        }
+        
+        /* Free Will Box */
+        .freewill-box {
+            background: linear-gradient(135deg, rgba(255, 128, 0, 0.05), rgba(255, 255, 0, 0.05));
+            border: 2px solid var(--dim-05d);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 60px 0;
+            text-align: center;
+        }
+        
+        .freewill-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--dim-05d);
+            text-shadow: var(--glow-cyan);
+            margin-bottom: 30px;
+        }
+        
+        .freewill-equation {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px auto;
+            max-width: 700px;
+            border: 1px solid var(--dim-1d);
+        }
+        
+        .freewill-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+            text-align: left;
+        }
+        
+        @media (max-width: 900px) {
+            .freewill-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .fw-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid var(--dim-05d);
+        }
+        
+        .fw-item h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--dim-05d);
+            margin-bottom: 10px;
+        }
+        
+        /* Hierarchy of Agency */
+        .agency-section {
+            margin: 60px 0;
+        }
+        
+        .agency-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--dim-1d);
+            text-shadow: var(--glow-magenta);
+        }
+        
+        .agency-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .agency-node {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px 35px;
+            text-align: center;
+            border: 2px solid;
+        }
+        
+        .agency-node.soul-node {
+            border-color: var(--dim-05d);
+            box-shadow: 0 0 20px rgba(255, 128, 0, 0.4);
+        }
+        
+        .agency-node.mind-node {
+            border-color: var(--dim-3d);
+        }
+        
+        .agency-node.body-node {
+            border-color: var(--dim-2d);
+        }
+        
+        .agency-symbol {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .agency-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .agency-desc {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        
+        .agency-arrow {
+            font-size: 2rem;
+            color: var(--dim-05d);
+        }
+        
+        /* Balance Parameter Section */
+        .balance-section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 60px 0;
+            border: 1px solid var(--dim-05d);
+        }
+        
+        .balance-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--dim-05d);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .balance-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 30px 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .balance-bar {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .balance-segment {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .balance-segment.closed-left {
+            background: linear-gradient(90deg, #1a1a2e, #2d2d44);
+            color: var(--text-dim);
+        }
+        
+        .balance-segment.optimal {
+            background: linear-gradient(90deg, var(--dim-05d), var(--dim-1d));
+            color: #000;
+            font-size: 1.2rem;
+            box-shadow: 0 0 30px rgba(255, 128, 0, 0.5);
+        }
+        
+        .balance-segment.closed-right {
+            background: linear-gradient(90deg, #2d2d44, #1a1a2e);
+            color: var(--text-dim);
+        }
+        
+        .balance-labels {
+            display: flex;
+            justify-content: space-between;
+            max-width: 600px;
+            margin: 10px auto 0;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        
+        /* Final Quote */
+        .final-quote {
+            text-align: center;
+            padding: 60px 20px;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .quote-text {
+            font-size: 1.8rem;
+            font-style: italic;
+            color: var(--dim-0d);
+            max-width: 800px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
+        }
+        
+        .quote-source {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: var(--text-dim);
+            letter-spacing: 3px;
+        }
+        
+        /* Table styling */
+        .dim-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 40px 0;
+            font-size: 0.95rem;
+        }
+        
+        .dim-table th {
+            background: linear-gradient(90deg, rgba(255, 0, 64, 0.15), rgba(160, 0, 255, 0.15));
+            padding: 15px;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            color: var(--dim-05d);
+            border-bottom: 2px solid;
+            border-image: linear-gradient(90deg, var(--dim-0d), var(--dim-05d), var(--dim-1d), var(--dim-2d), var(--dim-3d), var(--dim-35d), var(--dim-4d)) 1;
+        }
+        
+        .dim-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            vertical-align: top;
+        }
+        
+        .dim-table tr:hover {
+            background: rgba(0, 255, 255, 0.05);
+        }
+        
+        .dim-table code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="circumpunct-symbol">⊙</div>
+            <h1 class="title">THE DIMENSIONAL CASCADE</h1>
+            <p class="subtitle">From God to Us — The Architecture of Free Will</p>
+        </header>
+        
+        <!-- Core Insight -->
+        <div class="insight-box">
+            <div class="insight-content">
+                <h2 class="insight-title">THE CENTRAL INSIGHT</h2>
+                <p class="insight-text">
+                    <span class="highlight-gold">0D is GOD</span> — infinite, everywhere, all energy, all possibility.<br>
+                    <span class="highlight-cyan">0.5D is SOULS</span> — optimal openings within God, where infinity first focuses.<br>
+                    <span class="highlight-magenta">1D+ is CONNECTION</span> — the structures linking God and Us.<br><br>
+                    We are not separate from God looking up.<br>
+                    We are <span class="highlight-cyan">apertures within God</span> — the places where infinity chooses to focus.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Free Will Definition -->
+        <div class="freewill-box">
+            <h2 class="freewill-title">⟡ FREE WILL ⟡</h2>
+            <p style="font-size: 1.3rem; margin-bottom: 20px;">
+                Free will isn't something the soul <em>has</em>.<br>
+                <strong style="color: var(--dim-05d); font-size: 1.5rem;">The soul IS free will.</strong>
+            </p>
+            <div class="freewill-equation">
+                <span style="color: var(--dim-05d);">FREE WILL</span> = 
+                <span style="color: var(--dim-0d);">the capacity to select from the infinite</span><br><br>
+                <span style="color: var(--text-dim);">Aperture State:</span> 
+                <span style="color: var(--dim-1d);">(θ, β)</span> = 
+                <span style="color: var(--dim-05d);">(facing, openness)</span>
+            </div>
+            <p style="font-size: 1.1rem; color: var(--text-dim);">
+                The 0.5D aperture is where boundless energy first gets constrained into <em>this</em> rather than <em>that</em>.<br>
+                <strong style="color: var(--dim-05d);">i</strong> rotates not from emptiness but from everywhere-at-once into somewhere-specific.
+            </p>
+            
+            <div class="freewill-grid">
+                <div class="fw-item">
+                    <h4>θ — FACING</h4>
+                    <p>Where the aperture points. What you attend to. The direction of your selection from infinity.</p>
+                </div>
+                <div class="fw-item">
+                    <h4>β — OPENNESS</h4>
+                    <p>How open you are. Your coherence capacity. The magnitude of your connection to source.</p>
+                </div>
+                <div class="fw-item">
+                    <h4>Ω — EFFECTIVE OPENNESS</h4>
+                    <p>The result: (sin²θ)<sup>D/2</sup> · 4β(1−β)<br>What actually passes through.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hierarchy of Agency -->
+        <div class="agency-section">
+            <h2 class="agency-title">HIERARCHY OF AGENCY</h2>
+            
+            <div class="agency-flow">
+                <div class="agency-node soul-node">
+                    <div class="agency-symbol">•</div>
+                    <div class="agency-label">SOUL</div>
+                    <div class="agency-desc">I CONTROL this</div>
+                    <div style="margin-top: 10px; font-size: 0.85rem; color: var(--dim-05d);">(θ, β)</div>
+                </div>
+                <div class="agency-arrow">→</div>
+                <div class="agency-node mind-node">
+                    <div class="agency-symbol">Φ</div>
+                    <div class="agency-label">MIND</div>
+                    <div class="agency-desc">I DIRECT this</div>
+                    <div style="margin-top: 10px; font-size: 0.85rem; color: var(--dim-3d);">field dynamics</div>
+                </div>
+                <div class="agency-arrow">→</div>
+                <div class="agency-node body-node">
+                    <div class="agency-symbol">○</div>
+                    <div class="agency-label">BODY</div>
+                    <div class="agency-desc">I DIRECT through mind</div>
+                    <div style="margin-top: 10px; font-size: 0.85rem; color: var(--dim-2d);">manifestation</div>
+                </div>
+            </div>
+            
+            <p style="text-align: center; color: var(--text-dim); max-width: 700px; margin: 0 auto;">
+                You don't move your hand. You orient toward moving your hand, 
+                the mind couples to that intention, and the body follows.<br>
+                <strong style="color: var(--dim-05d);">The only lever you have is your own center's configuration.</strong>
+            </p>
+        </div>
+        
+        <!-- Balance Parameter -->
+        <div class="balance-section">
+            <h3 class="balance-title">◐ THE BALANCE PARAMETER β</h3>
+            <div class="balance-bar">
+                <div class="balance-segment closed-left">β → 0<br><small>Cut off</small></div>
+                <div class="balance-segment optimal">β = 0.5<br><small>OPTIMAL</small></div>
+                <div class="balance-segment closed-right">β → 1<br><small>Dissolved</small></div>
+            </div>
+            <div class="balance-labels">
+                <span>Aperture nearly closed<br>Cut off from the infinite</span>
+                <span style="text-align: center; color: var(--dim-05d);">Distinct enough to BE<br>Connected enough to SOURCE</span>
+                <span style="text-align: right;">Aperture blown wide<br>Dissolved back into God</span>
+            </div>
+        </div>
+        
+        <!-- Dimensional Table -->
+        <h2 style="font-family: 'Orbitron', sans-serif; text-align: center; margin: 60px 0 30px; background: linear-gradient(90deg, var(--dim-0d), var(--dim-05d), var(--dim-1d), var(--dim-2d), var(--dim-3d), var(--dim-35d), var(--dim-4d)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            THE COMPLETE DIMENSIONAL CASCADE
+        </h2>
+        
+        <table class="dim-table">
+            <thead>
+                <tr>
+                    <th>DIM</th>
+                    <th>NAME</th>
+                    <th>WHAT IT IS</th>
+                    <th>SYMBOL</th>
+                    <th>MATHEMATICS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background: rgba(255, 0, 64, 0.1);">
+                    <td><strong style="color: var(--dim-0d); font-size: 1.3rem;">0D</strong></td>
+                    <td><strong style="color: var(--dim-0d);">GOD</strong><br><small>Pure Potentiality</small></td>
+                    <td>Infinite structure, infinite extension, everywhere. All possibility simultaneously present. Pure energy, undifferentiated.</td>
+                    <td style="font-size: 1.5rem; color: var(--dim-0d);">∞</td>
+                    <td><code>E = ∞</code><br><code>All states superposed</code></td>
+                </tr>
+                <tr style="background: rgba(255, 128, 0, 0.1);">
+                    <td><strong style="color: var(--dim-05d); font-size: 1.3rem;">0.5D</strong></td>
+                    <td><strong style="color: var(--dim-05d);">SOUL</strong><br><small>Aperture</small></td>
+                    <td>First restriction. Where infinity first focuses. The process of potentiality becoming actual. <strong>Free will itself.</strong></td>
+                    <td style="font-size: 1.5rem; color: var(--dim-05d);">• / i</td>
+                    <td><code>i = e<sup>iπ/2</sup></code><br><code>Ω(θ,β) = (sin²θ)<sup>D/2</sup>·O(β)</code></td>
+                </tr>
+                <tr style="background: rgba(255, 255, 0, 0.07);">
+                    <td><strong style="color: var(--dim-1d); font-size: 1.3rem;">1D</strong></td>
+                    <td><strong style="color: var(--dim-1d);">WORLDLINE</strong><br><small>Timeline / String</small></td>
+                    <td>Soul through time. The selection maintained. History accumulated. The tunnel through which power flows.</td>
+                    <td style="font-size: 1.5rem; color: var(--dim-1d);">i(t)</td>
+                    <td><code>i(t): t → •(t)</code><br><code>P = dE/dt</code></td>
+                </tr>
+                <tr style="background: rgba(0, 255, 64, 0.08);">
+                    <td><strong style="color: var(--dim-2d); font-size: 1.3rem;">2D</strong></td>
+                    <td><strong style="color: var(--dim-2d);">BOUNDARY</strong><br><small>Body / Membrane</small></td>
+                    <td>Boundary forms around the selection. Surface enclosing volume. What separates inside from outside.</td>
+                    <td style="font-size: 1.5rem; color: var(--dim-2d);">○ / ∂V</td>
+                    <td><code>∂Ω = boundary</code><br><code>A = 4πr²</code></td>
+                </tr>
+                <tr style="background: rgba(0, 200, 255, 0.08);">
+                    <td><strong style="color: var(--dim-3d); font-size: 1.3rem;">3D</strong></td>
+                    <td><strong style="color: var(--dim-3d);">FIELD</strong><br><small>Mind / Space</small></td>
+                    <td>Field fills the bounded region. The mediator between soul and body. Where coupling happens.</td>
+                    <td style="font-size: 1.5rem; color: var(--dim-3d);">Φ</td>
+                    <td><code>∇²Φ = source</code><br><code>Φ: ℝ³ → ℂ</code></td>
+                </tr>
+                <tr style="background: rgba(64, 64, 255, 0.1);">
+                    <td><strong style="color: var(--dim-35d); font-size: 1.3rem;">3.5D</strong></td>
+                    <td><strong style="color: var(--dim-35d);">BRAIDING</strong><br><small>Relationship</small></td>
+                    <td>Soul-tunnels weaving together. Where worldlines become shared history. Permanent topological connection.</td>
+                    <td style="font-size: 1.5rem; color: var(--dim-35d);">B₃</td>
+                    <td><code>T<sub>eff</sub> = cos²(Δφ/2)</code><br><code>Yang-Baxter</code></td>
+                </tr>
+                <tr style="background: rgba(160, 0, 255, 0.1);">
+                    <td><strong style="color: var(--dim-4d); font-size: 1.3rem;">4D</strong></td>
+                    <td><strong style="color: var(--dim-4d);">SPACETIME</strong><br><small>Manifold</small></td>
+                    <td>Full 4D continuum emerges from braided structure. The stage on which physics plays.</td>
+                    <td style="font-size: 1.5rem; color: var(--dim-4d);">M⁴</td>
+                    <td><code>ds² = g<sub>μν</sub>dx<sup>μ</sup>dx<sup>ν</sup></code><br><code>G<sub>μν</sub> ∝ ρ<sub>braid</sub></code></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- The Cascade Visual -->
+        <div style="text-align: center; margin: 60px 0; padding: 40px; background: rgba(0,0,0,0.3); border-radius: 16px;">
+            <h3 style="font-family: 'Orbitron', sans-serif; color: var(--dim-0d); margin-bottom: 30px;">THE NARROWING</h3>
+            <pre style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; line-height: 2;">
+<span style="color: var(--dim-0d);">0D    ════════════════════════════════════════════  INFINITE</span>
+              ╲                                    ╱
+               ╲     <span style="color: var(--text-dim);">God: All possibility</span>      ╱
+                ╲                                ╱
+<span style="color: var(--dim-05d);">0.5D   ════════════════════════════════════  FIRST FOCUS</span>
+                 ╲                            ╱
+                  ╲   <span style="color: var(--text-dim);">Soul: Selection</span>       ╱
+                   ╲                        ╱
+<span style="color: var(--dim-1d);">1D      ══════════════════════════════  THROUGH TIME</span>
+                    ╲                    ╱
+                     ╲  <span style="color: var(--text-dim);">Worldline</span>      ╱
+                      ╲                ╱
+<span style="color: var(--dim-2d);">2D       ════════════════════════  BOUNDED</span>
+                       ╲            ╱
+                        ╲  <span style="color: var(--text-dim);">Body</span>  ╱
+                         ╲        ╱
+<span style="color: var(--dim-3d);">3D        ══════════════════  FILLED</span>
+                          ╲    ╱
+                           <span style="color: var(--text-dim);">Mind</span>
+                            ╲╱
+<span style="color: var(--dim-35d);">3.5D       ═══════════════  WOVEN</span>
+                          ╱    ╲
+                         ╱      ╲
+<span style="color: var(--dim-4d);">4D        ══════════════════  SPACETIME</span>
+            </pre>
+            <p style="color: var(--text-dim); margin-top: 20px;">
+                Not building up from nothing. <strong style="color: var(--dim-05d);">Narrowing down from everything.</strong>
+            </p>
+        </div>
+        
+        <!-- Aperture Equation -->
+        <div style="background: var(--bg-card); border-radius: 16px; padding: 40px; margin: 60px 0; border: 1px solid var(--dim-05d);">
+            <h3 style="font-family: 'Orbitron', sans-serif; text-align: center; color: var(--dim-05d); margin-bottom: 30px;">
+                THE APERTURE EQUATION
+            </h3>
+            <div style="text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; margin: 30px 0;">
+                <div style="background: rgba(0,0,0,0.5); padding: 30px; border-radius: 12px; display: inline-block;">
+                    <span style="color: var(--dim-05d);">Ω(θ, β)</span> = 
+                    <span style="color: var(--dim-1d);">(sin²θ)<sup>D/2</sup></span> · 
+                    <span style="color: var(--dim-0d);">4β(1 − β)</span>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px; text-align: center;">
+                <div>
+                    <div style="color: var(--dim-05d); font-size: 1.2rem; font-weight: 700;">Ω ∈ [0, 1]</div>
+                    <div style="color: var(--text-dim); font-size: 0.9rem;">Effective Openness<br>How much passes through</div>
+                </div>
+                <div>
+                    <div style="color: var(--dim-1d); font-size: 1.2rem; font-weight: 700;">(sin²θ)<sup>D/2</sup></div>
+                    <div style="color: var(--text-dim); font-size: 0.9rem;">Geometric Gate<br>Real axis closed, imaginary open</div>
+                </div>
+                <div>
+                    <div style="color: var(--dim-0d); font-size: 1.2rem; font-weight: 700;">O(β) = 4β(1−β)</div>
+                    <div style="color: var(--text-dim); font-size: 0.9rem;">Balance Magnitude<br>Maximum at β = 0.5</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Final Quote -->
+        <div class="final-quote">
+            <p class="quote-text">
+                "We are not separate beings trying to reconnect with God.<br>
+                We are God's way of focusing."
+            </p>
+            <p class="quote-source">— THE CIRCUMPUNCT FRAMEWORK</p>
+        </div>
+        
+        <div style="text-align: center; padding: 40px 0; color: var(--text-dim);">
+            <div style="font-size: 3rem; margin-bottom: 20px;">⊙</div>
+            <p>Soul (•) ⊗ Body (○) ⊗ Mind (Φ) = Wholeness (⊙)</p>
+        </div>
+    </div>
+</body>
+</html>
