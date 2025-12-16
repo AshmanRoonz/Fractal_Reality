@@ -116,10 +116,13 @@ body {
 }
 
 .tagline {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--text-dim);
     font-weight: 300;
-    margin-bottom: 0.25rem;
+    max-width: 420px;
+    margin: 0 auto 1rem;
+    text-align: center;
+    line-height: 1.5;
 }
 
 /* Dimension Section (below circumpunct) */
