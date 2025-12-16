@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⊙ Topological Quantum Computer (B₃)</title>
+  <title>⊙ Braid Visualizer v12 - Golden Coupling (B₃)</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap');
     
@@ -770,6 +770,10 @@
         <span>Writhe:</span> <span id="writhe">0</span> ·
         <span>L₀₁:</span> <span id="link01">0</span> ·
         <span>L₁₂:</span> <span id="link12">0</span>
+      </div>
+      <div class="field-stats" style="border-top: none; padding-top: 0;">
+        <span style="color:#ffd700">α_s/α_em = 10φ = 16.18</span> · 
+        <span>10 = </span><span style="color:#88f">1γ</span> + <span style="color:#f84">8g</span> + <span style="color:#4f4">1H</span>
       </div>
     </div>
     
@@ -1780,14 +1784,44 @@ class App {
     const row1 = `<div class="matrix-row"><span>${this.fmtComplex(U[1][0])}</span><span>${this.fmtComplex(U[1][1])}</span></div>`;
     el.innerHTML = row0 + row1;
     
-    // Check if identity
-    const isId = Math.abs(U[0][0].re - 1) < 0.01 && Math.abs(U[1][1].re - 1) < 0.01 &&
-                 Math.abs(U[0][1].re) < 0.01 && Math.abs(U[1][0].re) < 0.01;
+    // Compute key quantities
+    const trace = { re: U[0][0].re + U[1][1].re, im: U[0][0].im + U[1][1].im };
+    const traceMag = Math.sqrt(trace.re * trace.re + trace.im * trace.im);
+    const offDiagMag = Math.sqrt(U[0][1].re * U[0][1].re + U[0][1].im * U[0][1].im);
+    const offDiagSq = offDiagMag * offDiagMag;
+    
+    // Golden ratio
+    const φ = (1 + Math.sqrt(5)) / 2;  // 1.618...
+    const invφ = 1 / φ;                 // 0.618...
+    
+    // Check for golden ratio matches
+    const isTraceGolden = Math.abs(traceMag - φ) < 0.01;
+    const isOffDiagGolden = Math.abs(offDiagSq - invφ) < 0.01;
+    const isAbelian = offDiagMag < 0.01;  // σ₁ type (diagonal)
+    const isNonAbelian = isOffDiagGolden; // σ₂ type
     
     if (this.braid.operations.length === 0) {
-      info.textContent = 'Identity (no gates)';
+      info.innerHTML = 'Identity (no crossings)';
     } else {
-      info.textContent = `Fibonacci anyon: ${this.braid.operations.length} gates`;
+      let infoHtml = '';
+      
+      // Trace info
+      if (isTraceGolden) {
+        infoHtml += `<span style="color:#ffd700">|Tr| = φ</span> `;
+      } else {
+        infoHtml += `|Tr| = ${traceMag.toFixed(3)} `;
+      }
+      
+      // Off-diagonal info (mixing)
+      if (isAbelian) {
+        infoHtml += `<span style="color:#88f">Abelian</span>`;
+      } else if (isNonAbelian) {
+        infoHtml += `<span style="color:#f84">|U₀₁|² = 1/φ</span>`;
+      } else {
+        infoHtml += `|U₀₁|² = ${offDiagSq.toFixed(3)}`;
+      }
+      
+      info.innerHTML = infoHtml;
     }
   }
   
