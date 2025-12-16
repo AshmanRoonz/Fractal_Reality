@@ -669,18 +669,18 @@
       
       <!-- Validation Panel -->
       <div class="validation-panel">
-        <h3>⊙ [○Φ•] ≥ 2</h3>
+        <h3>⊙ = • ⊗ ○ ⊗ Φ</h3>
         <div class="validation-checks">
-          <div class="v-check" id="v-color">
-            <span class="label">○ Color</span>
+          <div class="v-check" id="v-center">
+            <span class="label">• center</span>
             <span class="status">—</span>
           </div>
-          <div class="v-check" id="v-charge">
-            <span class="label">Φ Charge</span>
+          <div class="v-check" id="v-field">
+            <span class="label">Φ field</span>
             <span class="status">—</span>
           </div>
-          <div class="v-check" id="v-chirality">
-            <span class="label">• Chiral</span>
+          <div class="v-check" id="v-boundary">
+            <span class="label">○ boundary</span>
             <span class="status">—</span>
           </div>
         </div>
@@ -869,124 +869,164 @@ const P = {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// VALIDATION RULES - [○Φ•] ≥ 2 dual validation from framework
+// CIRCUMPUNCT VERTEX VALIDATOR
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// A valid vertex is a valid circumpunct: ⊙ = • ⊗ ○ ⊗ Φ
+//
+// The three particles must be assignable to:
+//   • = center (source/incoming)
+//   ○ = boundary (sink/outgoing)
+//   Φ = field (mediator/carrier)
+//
+// AND the Φ must actually couple to both • and ○
+//
 // ═══════════════════════════════════════════════════════════════════════════
 
 const Validator = {
-  // Parse charge string to number
-  parseQ(q) {
-    if (typeof q === 'number') return q;
-    if (q === '0') return 0;
-    if (q === '+1') return 1;
-    if (q === '-1') return -1;
-    if (q === '+⅔') return 2/3;
-    if (q === '-⅓') return -1/3;
-    return 0;
+  
+  // What roles can each particle type play?
+  getRoles(p) {
+    const roles = { canBeCenter: false, canBeBoundary: false, canBeField: false };
+    
+    if (p.S === 'Fermion') {
+      // Fermions can be source (•) or sink (○), never mediator
+      roles.canBeCenter = true;
+      roles.canBeBoundary = true;
+      roles.canBeField = false;
+    }
+    else if (p.t === 'photon') {
+      // Photon: abelian, carries no charge, can ONLY mediate
+      roles.canBeCenter = false;
+      roles.canBeBoundary = false;
+      roles.canBeField = true;
+    }
+    else if (p.t === 'gluon') {
+      // Gluon: non-abelian, carries color charge - can do all
+      roles.canBeCenter = true;
+      roles.canBeBoundary = true;
+      roles.canBeField = true;
+    }
+    else if (p.t === 'weak') {
+      // W±, Z: non-abelian - can do all
+      roles.canBeCenter = true;
+      roles.canBeBoundary = true;
+      roles.canBeField = true;
+    }
+    else if (p.t === 'higgs') {
+      // Higgs: scalar field - can do all
+      roles.canBeCenter = true;
+      roles.canBeBoundary = true;
+      roles.canBeField = true;
+    }
+    
+    return roles;
   },
   
-  // Check if three particles form a valid braid
+  // Does 'field' particle couple to 'matter' particle?
+  doesCouple(field, matter) {
+    // Photon couples to Q ≠ 0
+    if (field.t === 'photon') {
+      const q = typeof matter.Q === 'number' ? matter.Q : 
+                matter.Q === '+⅔' ? 2/3 : matter.Q === '-⅓' ? -1/3 :
+                matter.Q === '+1' ? 1 : matter.Q === '-1' ? -1 : 0;
+      return Math.abs(q) > 0.01;
+    }
+    
+    // Gluon couples to colored particles
+    if (field.t === 'gluon') {
+      return !!matter.x || matter.t === 'gluon';
+    }
+    
+    // W/Z coupling rules
+    if (field.t === 'weak') {
+      // W couples to fermions
+      if (matter.S === 'Fermion') return true;
+      // W couples to other weak bosons
+      if (matter.t === 'weak') {
+        // But Z does NOT couple to Z (ZZZ vertex vanishes in SM)
+        // Triple gauge needs charge flow: at least one W±
+        if (field.s === 'Z' && matter.s === 'Z') return false;
+        return true;
+      }
+      if (matter.t === 'higgs') return true;
+      return false;
+    }
+    
+    // Higgs couples to massive fermions, W/Z, itself
+    if (field.t === 'higgs') {
+      if (matter.S === 'Fermion') return true;
+      if (matter.t === 'weak') return true;
+      if (matter.t === 'higgs') return true;
+      return false;
+    }
+    
+    return false;
+  },
+  
+  // Check if three particles form a valid ⊙ = • ⊗ ○ ⊗ Φ
   validate(ids) {
     if (ids.some(id => id === null)) {
-      return { valid: false, incomplete: true, checks: {}, vertexType: null };
+      return { valid: false, incomplete: true, assignments: [], vertexType: null };
     }
     
     const particles = ids.map(id => P[id]);
+    const roles = particles.map(p => this.getRoles(p));
     
-    // The three validation checks
-    const colorCheck = this.checkColor(particles);
-    const chargeCheck = this.checkCharge(particles);
-    const chiralityCheck = this.checkChirality(particles);
+    // Try all 6 permutations of (•, ○, Φ) assignments
+    const permutations = [
+      [0, 1, 2], [0, 2, 1], [1, 0, 2],
+      [1, 2, 0], [2, 0, 1], [2, 1, 0],
+    ];
     
-    // 2-out-of-3 threshold
-    const passCount = [colorCheck, chargeCheck, chiralityCheck].filter(c => c.pass).length;
-    const valid = passCount >= 2;
+    const validAssignments = [];
     
+    for (const [iCenter, iBoundary, iField] of permutations) {
+      const center = particles[iCenter];
+      const boundary = particles[iBoundary];
+      const field = particles[iField];
+      
+      // Check: can each particle play its assigned role?
+      if (!roles[iCenter].canBeCenter) continue;
+      if (!roles[iBoundary].canBeBoundary) continue;
+      if (!roles[iField].canBeField) continue;
+      
+      // Check: does the field couple to both center and boundary?
+      const couplesToCenter = this.doesCouple(field, center);
+      const couplesToBoundary = this.doesCouple(field, boundary);
+      
+      if (couplesToCenter && couplesToBoundary) {
+        validAssignments.push({
+          center: { id: ids[iCenter], p: center },
+          boundary: { id: ids[iBoundary], p: boundary },
+          field: { id: ids[iField], p: field }
+        });
+      }
+    }
+    
+    const valid = validAssignments.length > 0;
     const vertexType = this.identifyVertex(particles);
     
-    return { valid, incomplete: false, passCount, checks: { color: colorCheck, charge: chargeCheck, chirality: chiralityCheck }, vertexType };
-  },
-  
-  // ○ Check: Color singlet
-  checkColor(particles) {
-    const quarks = particles.filter(p => p.t === 'quark');
-    const gluons = particles.filter(p => p.t === 'gluon');
-    
-    // No colored particles = pass
-    if (quarks.length === 0 && gluons.length === 0) {
-      return { pass: true, reason: "No color" };
-    }
-    
-    // 3 quarks: must be r,g,b
-    if (quarks.length === 3 && gluons.length === 0) {
-      const colors = new Set(quarks.map(q => q.x));
-      if (colors.size === 3 && colors.has('r') && colors.has('g') && colors.has('b')) {
-        return { pass: true, reason: "rgb singlet" };
-      }
-      return { pass: false, reason: "Not singlet" };
-    }
-    
-    // 2 quarks + 1 gluon: QCD vertex
-    if (quarks.length === 2 && gluons.length === 1) {
-      return { pass: true, reason: "QCD vertex" };
-    }
-    
-    // 3 gluons: self-interaction
-    if (gluons.length === 3) {
-      return { pass: true, reason: "ggg vertex" };
-    }
-    
-    // Quarks + electroweak
-    const ew = particles.filter(p => ['photon','weak','higgs'].includes(p.t));
-    if (quarks.length === 2 && ew.length === 1) {
-      return { pass: true, reason: "EW vertex" };
-    }
-    
-    return { pass: false, reason: "Color violation" };
-  },
-  
-  // Φ Check: Charge conservation
-  checkCharge(particles) {
-    const totalQ = particles.reduce((sum, p) => sum + this.parseQ(p.Q), 0);
-    
-    // Integer or third-integer charge is OK
-    if (Math.abs(totalQ) < 0.01 || Math.abs(totalQ - Math.round(totalQ)) < 0.01 || 
-        Math.abs(totalQ * 3 - Math.round(totalQ * 3)) < 0.01) {
-      return { pass: true, reason: `Q=${totalQ.toFixed(2)}` };
-    }
-    
-    return { pass: false, reason: `Q=${totalQ.toFixed(2)}` };
-  },
-  
-  // • Check: Chirality coherence
-  checkChirality(particles) {
-    const wBosons = particles.filter(p => p.s === 'W');
-    const fermions = particles.filter(p => p.S === 'Fermion');
-    
-    // No W = pass
-    if (wBosons.length === 0) {
-      return { pass: true, reason: "No W" };
-    }
-    
-    // W needs left-handed fermions
-    const leftHanded = fermions.filter(f => f.c === 'L');
-    if (leftHanded.length >= 1) {
-      return { pass: true, reason: "W→L" };
-    }
-    
-    return { pass: false, reason: "W needs L" };
+    return {
+      valid,
+      incomplete: false,
+      assignments: validAssignments,
+      vertexType,
+      reason: valid 
+        ? `⊙ = • ⊗ ○ ⊗ Φ`
+        : 'No valid assignment'
+    };
   },
   
   // Identify vertex type
   identifyVertex(particles) {
-    const types = particles.map(p => p.t);
-    const quarks = types.filter(t => t === 'quark').length;
-    const leptons = types.filter(t => t === 'lepton').length;
-    const gluons = types.filter(t => t === 'gluon').length;
-    const photons = types.filter(t => t === 'photon').length;
-    const weak = types.filter(t => t === 'weak').length;
-    const higgs = types.filter(t => t === 'higgs').length;
+    const quarks = particles.filter(p => p.t === 'quark').length;
+    const leptons = particles.filter(p => p.t === 'lepton').length;
+    const gluons = particles.filter(p => p.t === 'gluon').length;
+    const photons = particles.filter(p => p.t === 'photon').length;
+    const weak = particles.filter(p => p.t === 'weak').length;
+    const higgs = particles.filter(p => p.t === 'higgs').length;
     
-    if (quarks === 3) return "Baryon (qqq)";
     if (quarks === 2 && gluons === 1) return "QCD (qqg)";
     if (quarks === 2 && photons === 1) return "QED (qqγ)";
     if (quarks === 2 && weak === 1) return "Weak (qqW/Z)";
@@ -994,11 +1034,17 @@ const Validator = {
     if (leptons === 2 && photons === 1) return "QED (llγ)";
     if (leptons === 2 && weak === 1) return "Weak (llW/Z)";
     if (leptons === 2 && higgs === 1) return "Yukawa (llH)";
-    if (gluons === 3) return "Triple gluon";
-    if (weak === 3) return "Triple gauge";
-    if (higgs >= 2) return "Higgs self";
+    if (gluons === 3) return "QCD (ggg)";
+    if (weak === 3) return "Gauge (WWZ)";
+    if (weak === 2 && photons === 1) return "Gauge (WWγ)";
+    if (weak === 2 && higgs === 1) return "Higgs (WWH)";
+    if (higgs === 3) return "Higgs (HHH)";
+    if (quarks === 3) {
+      const colors = new Set(particles.filter(p => p.t === 'quark').map(p => p.x));
+      if (colors.size === 3) return "Baryon (qqq)";
+    }
     
-    return "Custom";
+    return "—";
   },
   
   // Get compatible particles for partial selection
@@ -1008,33 +1054,37 @@ const Validator = {
     if (filled.length >= 3) return new Set();
     
     const compatible = new Set();
+    
+    // For each candidate, check if adding it COULD lead to valid triplet
     for (let id = 0; id < 64; id++) {
       if (filled.includes(id)) continue;
       
-      // Test if adding this particle could lead to valid triplet
-      const testIds = [...filled, id];
-      while (testIds.length < 3) testIds.push(null);
+      const candidate = P[id];
+      const filledParticles = filled.map(i => P[i]);
       
-      // Simplified: most combinations are potentially valid
-      // Only exclude obvious impossibilities
-      const particles = testIds.filter(i => i !== null).map(i => P[i]);
-      const quarks = particles.filter(p => p.t === 'quark');
+      // Quick check: can this form a valid ⊙?
+      // Need at least one particle that can be Φ
+      const allParticles = [...filledParticles, candidate];
+      const hasField = allParticles.some(p => 
+        p.t === 'photon' || p.t === 'gluon' || p.t === 'weak' || p.t === 'higgs'
+      );
+      const hasMatter = allParticles.some(p => p.S === 'Fermion');
       
-      // If 2 quarks of same color, third must be gluon or different color
-      if (quarks.length === 2 && filled.length === 2) {
-        const colors = quarks.map(q => q.x);
-        const candidate = P[id];
-        if (candidate.t === 'quark') {
-          // Need different color for baryon
-          if (!colors.includes(candidate.x)) compatible.add(id);
-        } else {
-          // Bosons can mediate
+      // If we have 2 particles, we need complementary roles
+      if (filled.length === 2) {
+        // Test the full triplet
+        const testIds = [...filled, id];
+        const result = this.validate(testIds);
+        if (result.valid) compatible.add(id);
+      } else {
+        // With 1 particle, most additions are potentially valid
+        // Exclude only obviously incompatible
+        if (hasField || hasMatter) {
           compatible.add(id);
         }
-      } else {
-        compatible.add(id);
       }
     }
+    
     return compatible;
   }
 };
@@ -1357,23 +1407,55 @@ class App {
   updateValidation() {
     this.validationState = Validator.validate(this.selectedParticles);
     
-    const checks = ['color', 'charge', 'chirality'];
-    const checkIds = ['v-color', 'v-charge', 'v-chirality'];
+    const centerEl = document.getElementById('v-center');
+    const fieldEl = document.getElementById('v-field');
+    const boundaryEl = document.getElementById('v-boundary');
     
-    checks.forEach((check, i) => {
-      const el = document.getElementById(checkIds[i]);
-      if (!el) return;
+    if (this.validationState.incomplete) {
+      // Reset display
+      [centerEl, fieldEl, boundaryEl].forEach(el => {
+        if (el) {
+          el.className = 'v-check';
+          el.querySelector('.status').textContent = '—';
+        }
+      });
+    } else if (this.validationState.valid && this.validationState.assignments.length > 0) {
+      // Show first valid assignment
+      const a = this.validationState.assignments[0];
       
-      if (this.validationState.incomplete) {
-        el.className = 'v-check';
-        el.querySelector('.status').textContent = '—';
-      } else {
-        const c = this.validationState.checks[check];
-        el.className = 'v-check ' + (c.pass ? 'pass' : 'fail');
-        el.querySelector('.status').textContent = c.pass ? '✓' : '✗';
-        el.title = c.reason;
+      if (centerEl) {
+        centerEl.className = 'v-check pass';
+        centerEl.querySelector('.status').textContent = a.center.p.s;
       }
-    });
+      if (fieldEl) {
+        fieldEl.className = 'v-check pass';
+        fieldEl.querySelector('.status').textContent = a.field.p.s;
+      }
+      if (boundaryEl) {
+        boundaryEl.className = 'v-check pass';
+        boundaryEl.querySelector('.status').textContent = a.boundary.p.s;
+      }
+    } else {
+      // Invalid - show what's missing
+      const particles = this.selectedParticles.map(id => P[id]);
+      const hasField = particles.some(p => 
+        p.t === 'photon' || p.t === 'gluon' || p.t === 'weak' || p.t === 'higgs'
+      );
+      const hasMatter = particles.some(p => p.S === 'Fermion');
+      
+      if (centerEl) {
+        centerEl.className = 'v-check ' + (hasMatter ? 'pass' : 'fail');
+        centerEl.querySelector('.status').textContent = hasMatter ? '?' : '✗';
+      }
+      if (fieldEl) {
+        fieldEl.className = 'v-check ' + (hasField ? 'pass' : 'fail');
+        fieldEl.querySelector('.status').textContent = hasField ? '?' : '✗';
+      }
+      if (boundaryEl) {
+        boundaryEl.className = 'v-check ' + (hasMatter ? 'pass' : 'fail');
+        boundaryEl.querySelector('.status').textContent = hasMatter ? '?' : '✗';
+      }
+    }
     
     const result = document.getElementById('v-result');
     const vertexType = document.getElementById('vertex-type');
@@ -1384,10 +1466,10 @@ class App {
         result.textContent = 'Select 3';
       } else if (this.validationState.valid) {
         result.className = 'validation-result valid';
-        result.textContent = `✓ ${this.validationState.passCount}/3`;
+        result.textContent = `✓ Valid ⊙`;
       } else {
         result.className = 'validation-result invalid';
-        result.textContent = `✗ ${this.validationState.passCount}/3`;
+        result.textContent = `✗ No ⊙`;
       }
     }
     
