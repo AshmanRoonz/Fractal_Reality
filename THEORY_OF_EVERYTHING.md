@@ -1,7 +1,9 @@
 # ⊙ The Circumpunct Theory
 ## by Ashman Roonz
 
-⊙ is the minimal procedural structure of a whole being:
+⊙ The Circumpunct symbolizes the same pattern that exists in EVERYTHING.
+
+⊙ is the minimal procedural structure of any whole entity:
 
 - **○** — surface / body
 - **Φ** — field / mind
