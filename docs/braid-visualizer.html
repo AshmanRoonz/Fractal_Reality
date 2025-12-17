@@ -3,11 +3,222 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⊙ Braid Visualizer v12 - Golden Coupling (B₃)</title>
+  <title>⊙ Topological Quantum Computer - Circumpunct Framework</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap');
     
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* Welcome Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    
+    .modal-overlay.hidden { display: none; }
+    
+    .modal {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0a0a15 100%);
+      border: 1px solid #ffd700;
+      border-radius: 12px;
+      max-width: 650px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 1.8rem;
+      box-shadow: 0 0 60px rgba(255, 215, 0, 0.15);
+    }
+    
+    .modal h1 {
+      color: #ffd700;
+      font-size: 1.6rem;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .modal h1 .symbol { font-size: 2.2rem; }
+    
+    .modal .modal-subtitle {
+      color: #888;
+      font-size: 0.85rem;
+      margin-bottom: 1.2rem;
+    }
+    
+    .modal h2 {
+      color: #4ecdc4;
+      font-size: 1rem;
+      margin-top: 1.2rem;
+      margin-bottom: 0.6rem;
+      border-bottom: 1px solid #333;
+      padding-bottom: 0.25rem;
+    }
+    
+    .modal p {
+      color: #ccc;
+      line-height: 1.55;
+      margin-bottom: 0.6rem;
+      font-size: 0.8rem;
+    }
+    
+    .modal ul {
+      margin-left: 1.2rem;
+      margin-bottom: 0.8rem;
+    }
+    
+    .modal li {
+      color: #aaa;
+      margin-bottom: 0.35rem;
+      font-size: 0.8rem;
+    }
+    
+    .modal li strong { color: #ffd700; }
+    
+    .modal .highlight-box {
+      background: rgba(255, 215, 0, 0.08);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: 8px;
+      padding: 0.8rem;
+      margin: 0.8rem 0;
+      text-align: center;
+    }
+    
+    .modal .highlight-box .formula {
+      color: #ffd700;
+      font-size: 1.1rem;
+      margin: 0.4rem 0;
+    }
+    
+    .modal .highlight-box .formula-note {
+      font-size: 0.7rem;
+      color: #888;
+      margin: 0;
+    }
+    
+    .modal .key-insight {
+      background: linear-gradient(90deg, rgba(78, 205, 196, 0.1), transparent);
+      border-left: 3px solid #4ecdc4;
+      padding: 0.6rem 0.8rem;
+      margin: 0.8rem 0;
+    }
+    
+    .modal .key-insight p {
+      color: #4ecdc4;
+      margin: 0;
+      font-size: 0.8rem;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1.2rem;
+      justify-content: center;
+    }
+    
+    .modal-btn {
+      padding: 0.6rem 1.5rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .modal-btn.primary {
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      border: none;
+      color: #000;
+      font-weight: bold;
+    }
+    
+    .modal-btn.primary:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    }
+    
+    .modal-btn.secondary {
+      background: transparent;
+      border: 1px solid #555;
+      color: #888;
+    }
+    
+    .modal-btn.secondary:hover {
+      border-color: #888;
+      color: #aaa;
+    }
+    
+    .modal .framework-link {
+      text-align: center;
+      margin-top: 1.2rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid #333;
+    }
+    
+    .modal .framework-link a {
+      color: #ffd700;
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+    
+    .modal .framework-link a:hover { text-decoration: underline; }
+    
+    /* Top Bar */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: #0a0a0f;
+      border-bottom: 1px solid #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.8rem;
+      z-index: 100;
+    }
+    
+    .top-bar .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #ffd700;
+      font-size: 0.8rem;
+      text-decoration: none;
+    }
+    
+    .top-bar .logo-link:hover { opacity: 0.8; }
+    .top-bar .logo-symbol { font-size: 1.1rem; }
+    
+    .top-bar .help-btn {
+      background: transparent;
+      border: 1px solid #333;
+      color: #666;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.7rem;
+    }
+    
+    .top-bar .help-btn:hover {
+      border-color: #ffd700;
+      color: #ffd700;
+    }
+    
+    /* Adjust app for top bar */
+    .app {
+      margin-top: 32px;
+      height: calc(100vh - 32px);
+    }
     
     body {
       font-family: 'JetBrains Mono', monospace;
@@ -638,6 +849,71 @@
   </style>
 </head>
 <body>
+<!-- Welcome Modal -->
+<div class="modal-overlay" id="welcome-modal">
+  <div class="modal">
+    <h1><span class="symbol">⊙</span> Topological Quantum Computer</h1>
+    <div class="modal-subtitle">Circumpunct Framework — Braid-Based Quantum Simulation</div>
+    
+    <h2>What is this?</h2>
+    <p>
+      This is a working simulator for <strong>topological quantum computing</strong> using Fibonacci anyons. 
+      Unlike conventional quantum computers that use fragile qubits, topological quantum computers encode 
+      information in the <em>braiding patterns</em> of exotic particles.
+    </p>
+    
+    <div class="key-insight">
+      <p><strong>Key Insight:</strong> The golden ratio φ appears in the quantum gate matrices — not by choice, but by mathematical necessity. This is the Circumpunct Framework's prediction made manifest.</p>
+    </div>
+    
+    <h2>How to Use</h2>
+    <ul>
+      <li><strong>Select 3 particles</strong> from the grid on the right (click to add)</li>
+      <li><strong>Apply braid operations</strong> using σ₁, σ₂ buttons (these are quantum gates)</li>
+      <li><strong>Watch the field evolve</strong> in the center visualization</li>
+      <li><strong>See the unitary matrix</strong> update — notice φ in the entries!</li>
+    </ul>
+    
+    <div class="highlight-box">
+      <p>The braid generators satisfy the <strong>Yang-Baxter equation</strong>:</p>
+      <div class="formula">σ₁σ₂σ₁ = σ₂σ₁σ₂</div>
+      <p class="formula-note">This is the fundamental consistency condition for quantum computation.</p>
+    </div>
+    
+    <h2>The Physics</h2>
+    <ul>
+      <li><strong>σ₁</strong> — Braids strands 1 and 2 (R-matrix gate)</li>
+      <li><strong>σ₂</strong> — Braids strands 2 and 3 (requires F-matrix basis change)</li>
+      <li><strong>F-matrix</strong> — Built from φ: entries are 1/φ and √(1/φ)</li>
+      <li><strong>⊙ = • ⊗ ○ ⊗ Φ</strong> — Valid vertices require center, boundary, and field</li>
+    </ul>
+    
+    <h2>Why It Matters</h2>
+    <p>
+      This isn't just visualization — it's a proof of concept. The framework predicts that φ (the golden ratio) 
+      is fundamental to reality's structure. Here, you can see it directly: <strong>φ appears in every quantum 
+      gate because Fibonacci anyons require it</strong>.
+    </p>
+    
+    <div class="modal-buttons">
+      <button class="modal-btn secondary" onclick="closeModal()">Skip</button>
+      <button class="modal-btn primary" onclick="closeModal()">Start Exploring</button>
+    </div>
+    
+    <div class="framework-link">
+      <a href="https://www.fractalreality.ca" target="_blank">⊙ Learn more at fractalreality.ca →</a>
+    </div>
+  </div>
+</div>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <a href="https://www.fractalreality.ca" target="_blank" class="logo-link">
+    <span class="logo-symbol">⊙</span>
+    <span>Circumpunct Framework</span>
+  </a>
+  <button class="help-btn" onclick="showModal()">? Help</button>
+</div>
   <div class="app">
     <!-- LEFT: Narrow braid panel -->
     <div class="braid-panel">
@@ -737,9 +1013,9 @@
             <span style="color:#666;font-size:0.7rem;margin-right:4px;">Speed:</span>
             <button class="view-btn" data-speed="1">1×</button>
             <button class="view-btn" data-speed="10">10×</button>
-            <button class="view-btn active" data-speed="100">100×</button>
+            <button class="view-btn" data-speed="100">100×</button>
             <button class="view-btn" data-speed="1000">1k×</button>
-            <button class="view-btn" data-speed="10000">10k×</button>
+            <button class="view-btn active" data-speed="10000">10k×</button>
           </div>
           <div class="slider-wrap">
             <div class="slider-group">
@@ -1253,7 +1529,7 @@ class App {
     
     // View modes
     this.viewMode = 'mag'; // mag, phase, re, im
-    this.speed = 100; // Animation speed multiplier
+    this.speed = 10000; // Animation speed multiplier
     
     // Field persistence and vacuum
     this.persistence = 0.92;
@@ -2536,6 +2812,22 @@ class App {
   }
 }
 
+// Modal functions
+function closeModal() {
+  document.getElementById('welcome-modal').classList.add('hidden');
+  localStorage.setItem('tqc-tutorial-seen', 'true');
+}
+
+function showModal() {
+  document.getElementById('welcome-modal').classList.remove('hidden');
+}
+
+// Check if first visit
+document.addEventListener('DOMContentLoaded', function() {
+  if (localStorage.getItem('tqc-tutorial-seen')) {
+    document.getElementById('welcome-modal').classList.add('hidden');
+  }
+});
 new App();
 </script>
 </body>
