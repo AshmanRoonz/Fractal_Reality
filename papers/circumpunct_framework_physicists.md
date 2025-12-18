@@ -2378,48 +2378,78 @@ Where g(Φ) = coupling constant, U(w) = braid unitary, |•⟩, |○⟩ = partic
 
 ---
 
-## 7C. Comprehensive Framework Predictions — 23 Confirmed Results
+## 7C. Comprehensive Framework Predictions — Tiered Support Status
 
-**Status:** CONFIRMED (2024-12-16)
+**Status:** UPDATED (2024-12-18)
 
-Systematic testing of the circumpunct framework against known physics reveals **23 parameter-free predictions** with < 1% error, spanning particle physics, cosmology, and mathematics.
+Systematic testing of the circumpunct framework reveals **25 predictions** with < 1% error. These are now organized by **support type** to distinguish derived from phenomenological results.
 
-**Key finding:** Combinations of φ (golden ratio), π, and small integers from particle content successfully predict values across all domains of physics.
+### Support Type Classification
 
-### Master Table: All Confirmed Predictions
+| Tier | Status | Meaning | Examples |
+|------|--------|---------|----------|
+| **Tier 1** | DERIVED | Integers from spectrum, π from U² | 8, 6, π |
+| **Tier 2** | PARTIAL DERIV | Formula works + pre-registered test passed | m_μ/m_e, m_p/m_e |
+| **Tier 3** | FITTED | Formula works but no derivation | Bosons, cosmology |
 
-| # | Quantity | Formula | Predicted | Measured | Error |
-|---|----------|---------|-----------|----------|-------|
-| 1 | m_μ/m_e | 8π²φ² + φ⁻⁶ | 206.7674 | 206.7683 | **0.0004%** |
-| 2 | m_p/m_e | 6π⁵ | 1836.118 | 1836.153 | **0.002%** |
-| 3 | m_Z | 80 + φ⁵ + 1/10 GeV | 91.190 | 91.188 | **0.003%** |
-| 4 | m_n/m_e | 6π⁵ + φ² | 1838.736 | 1838.684 | **0.003%** |
-| 5 | sin²θ_W | 3/10 + φ⁻¹⁰ - 1/13 | 0.23121 | 0.23122 | **0.005%** |
-| 6 | m_W | 80 + 1/φ² GeV | 80.382 | 80.377 | **0.006%** |
-| 7 | 1/α | 4π³ + 13 | 137.025 | 137.036 | **0.008%** |
-| 8 | e (Euler) | φ² + 1/10 | 2.71803 | 2.71828 | **0.009%** |
-| 9 | m_τ/m_e | (8π²φ²+φ⁻⁶)(10+φ⁴-1/30) | 3477.99 | 3477.23 | **0.02%** |
-| 10 | m_τ/m_μ | 10 + φ⁴ - 1/30 | 16.821 | 16.817 | **0.02%** |
-| 11 | α_s/α_em | 10φ | 16.180 | 16.170 | **0.06%** |
-| 12 | sin²θ₁₃ | 1/45 | 0.02222 | 0.02220 | **0.10%** |
-| 13 | H₀/100 | ln(2) - 1/50 | 0.6731 | 0.6740 | **0.13%** |
-| 14 | m_H | 100 + 8π GeV | 125.13 | 125.25 | **0.09%** |
-| 15 | σ₈ | φ/2 | 0.8090 | 0.8110 | **0.24%** |
-| 16 | n_s | 1 - 1/(10π) | 0.9682 | 0.9649 | **0.34%** |
-| 17 | Deuteron B | φ + 1/φ MeV | 2.236 | 2.224 | **0.54%** |
-| 18 | Ω_Λ | ln(2) | 0.6931 | 0.6889 | **0.62%** |
-| 19 | α binding | 18φ - 1 MeV | 28.12 | 28.30 | **0.62%** |
-| 20 | m_t/m_b | 40 + φ | 41.62 | 41.33 | **0.70%** |
-| 21 | Ω_m | 1/3 - 1/50 | 0.3133 | 0.3111 | **0.72%** |
-| 22 | m_t/m_c | 1/α | 137.04 | 136.03 | **0.74%** |
-| 23 | \|V_us\| | 1/φ³ - 0.01 | 0.2261 | 0.2243 | **0.79%** |
-| 24 | m_c/m_s | φ⁵ + φ² | 13.71 | 13.60 | **0.82%** |
-| 25 | Ω_b | 1/(6π + φ) | 0.0489 | 0.0493 | **0.90%** |
+**What's Spectrally Grounded (Session 9 Results):**
+- **8** = Localization scale (18.7σ null baseline, p < 0.0001)
+- **6** = Connectivity bound (analytic: adjacency eigenvalue of Q₆)
+- **π** = Two-level closure (i² = e^{iπ} from U² structure)
+
+**What's Empirically Confirmed:**
+- **φ²** = Generation scaling (μ/e ratio at 0.03% error)
+- **10 + φ⁴** = Threshold operator (τ/μ ratio at 0.22% error)
+
+### Master Table: Predictions with Support Type
+
+| # | Quantity | Formula | Predicted | Measured | Error | Support |
+|---|----------|---------|-----------|----------|-------|---------|
+| 1 | m_μ/m_e | 8π²φ² + φ⁻⁶ | 206.7674 | 206.7683 | **0.0004%** | PARTIAL |
+| 2 | m_p/m_e | 6π⁵ | 1836.118 | 1836.153 | **0.002%** | PARTIAL |
+| 3 | m_Z | 80 + φ⁵ + 1/10 GeV | 91.190 | 91.188 | **0.003%** | FITTED |
+| 4 | m_n/m_e | 6π⁵ + φ² | 1838.736 | 1838.684 | **0.003%** | PARTIAL |
+| 5 | sin²θ_W | 3/10 + φ⁻¹⁰ - 1/13 | 0.23121 | 0.23122 | **0.005%** | FITTED |
+| 6 | m_W | 80 + 1/φ² GeV | 80.382 | 80.377 | **0.006%** | FITTED |
+| 7 | 1/α | 4π³ + 13 | 137.025 | 137.036 | **0.008%** | FITTED |
+| 8 | e (Euler) | φ² + 1/10 | 2.71803 | 2.71828 | **0.009%** | FITTED |
+| 9 | m_τ/m_e | (8π²φ²+φ⁻⁶)(10+φ⁴-1/30) | 3477.99 | 3477.23 | **0.02%** | PARTIAL |
+| 10 | m_τ/m_μ | 10 + φ⁴ - 1/30 | 16.821 | 16.817 | **0.02%** | EMPIRIC |
+| 11 | α_s/α_em | 10φ | 16.180 | 16.170 | **0.06%** | FITTED |
+| 12 | sin²θ₁₃ | 1/45 | 0.02222 | 0.02220 | **0.10%** | FITTED |
+| 13 | H₀/100 | ln(2) - 1/50 | 0.6731 | 0.6740 | **0.13%** | FITTED |
+| 14 | m_H | 100 + 8π GeV | 125.13 | 125.25 | **0.09%** | FITTED |
+| 15 | σ₈ | φ/2 | 0.8090 | 0.8110 | **0.24%** | FITTED |
+| 16 | n_s | 1 - 1/(10π) | 0.9682 | 0.9649 | **0.34%** | FITTED |
+| 17 | Deuteron B | φ + 1/φ MeV | 2.236 | 2.224 | **0.54%** | FITTED |
+| 18 | Ω_Λ | ln(2) | 0.6931 | 0.6889 | **0.62%** | FITTED |
+| 19 | α binding | 18φ - 1 MeV | 28.12 | 28.30 | **0.62%** | FITTED |
+| 20 | m_t/m_b | 40 + φ | 41.62 | 41.33 | **0.70%** | FITTED |
+| 21 | Ω_m | 1/3 - 1/50 | 0.3133 | 0.3111 | **0.72%** | FITTED |
+| 22 | m_t/m_c | 1/α | 137.04 | 136.03 | **0.74%** | FITTED |
+| 23 | \|V_us\| | 1/φ³ - 0.01 | 0.2261 | 0.2243 | **0.79%** | FITTED |
+| 24 | m_c/m_s | φ⁵ + φ² | 13.71 | 13.60 | **0.82%** | FITTED |
+| 25 | Ω_b | 1/(6π + φ) | 0.0489 | 0.0493 | **0.90%** | FITTED |
+
+**Support Type Breakdown:**
+- PARTIAL DERIV: 5 predictions (integers 8, 6 spectrally grounded; π from U² closure)
+- EMPIRICAL: 1 prediction (τ/μ threshold confirmed at 0.22% error)
+- FITTED: 19 predictions (impressive phenomenology, awaiting derivation)
 
 **Statistics:**
 - 11 predictions with < 0.1% error
 - 15 predictions with < 0.5% error
 - 25 predictions with < 1.0% error
+
+### The Honest Picture
+
+The fitted predictions remain impressive phenomenology—formulas involving φ, π, and small integers that match experiment to high precision. However, most are not yet derived from the spectral engine.
+
+**Tier 1 (DERIVED):** Integers 8 and 6 emerge as sector observables on Q₆ eigenmodes with statistical significance (p < 0.0001). π arises from the two-level structure (i² = e^{iπ}).
+
+**Tier 2 (PARTIAL DERIV):** The mass formulas m_μ/m_e = 8π²φ² and m_p/m_e = 6π⁵ use derived integers but the full formulas await complete spectral derivation.
+
+**Tier 3 (FITTED):** All boson masses, coupling constants, cosmological parameters, and CKM elements have no first-principles derivation yet.
 
 ### Detailed Results by Category
 

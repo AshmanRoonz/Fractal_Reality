@@ -246,6 +246,12 @@
         .domain-mixing { background: rgba(121, 192, 255, 0.15); color: #79c0ff; }
         .domain-nuclear { background: rgba(255, 166, 87, 0.15); color: #ffa657; }
 
+        /* Support Type Colors */
+        .support { display: inline-block; padding: 0.2em 0.5em; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .support-partial { background: rgba(63, 185, 80, 0.2); color: #3fb950; border: 1px solid rgba(63, 185, 80, 0.4); }
+        .support-empirical { background: rgba(88, 166, 255, 0.2); color: #58a6ff; border: 1px solid rgba(88, 166, 255, 0.4); }
+        .support-fitted { background: rgba(139, 148, 158, 0.2); color: #8b949e; border: 1px solid rgba(139, 148, 158, 0.4); }
+
         /* Visual Summary */
         .visual-summary {
             background: var(--bg-card);
@@ -405,6 +411,7 @@
                         <th>Predicted</th>
                         <th>Measured</th>
                         <th>Error</th>
+                        <th>Support</th>
                         <th>Domain</th>
                     </tr>
                 </thead>
@@ -416,6 +423,7 @@
                         <td class="predicted">206.7674</td>
                         <td class="measured">206.7683</td>
                         <td class="error error-excellent">0.0004%</td>
+                        <td><span class="support support-partial">PARTIAL</span></td>
                         <td><span class="domain domain-lepton">Lepton</span></td>
                     </tr>
                     <tr>
@@ -425,6 +433,7 @@
                         <td class="predicted">1836.118</td>
                         <td class="measured">1836.153</td>
                         <td class="error error-excellent">0.002%</td>
+                        <td><span class="support support-partial">PARTIAL</span></td>
                         <td><span class="domain domain-nucleon">Nucleon</span></td>
                     </tr>
                     <tr>
@@ -434,6 +443,7 @@
                         <td class="predicted">91.190</td>
                         <td class="measured">91.188</td>
                         <td class="error error-excellent">0.003%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-boson">Boson</span></td>
                     </tr>
                     <tr>
@@ -443,6 +453,7 @@
                         <td class="predicted">1838.736</td>
                         <td class="measured">1838.684</td>
                         <td class="error error-excellent">0.003%</td>
+                        <td><span class="support support-partial">PARTIAL</span></td>
                         <td><span class="domain domain-nucleon">Nucleon</span></td>
                     </tr>
                     <tr>
@@ -452,6 +463,7 @@
                         <td class="predicted">0.23121</td>
                         <td class="measured">0.23122</td>
                         <td class="error error-excellent">0.005%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-coupling">Coupling</span></td>
                     </tr>
                     <tr>
@@ -461,6 +473,7 @@
                         <td class="predicted">80.382</td>
                         <td class="measured">80.377</td>
                         <td class="error error-excellent">0.006%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-boson">Boson</span></td>
                     </tr>
                     <tr>
@@ -470,6 +483,7 @@
                         <td class="predicted">137.025</td>
                         <td class="measured">137.036</td>
                         <td class="error error-excellent">0.008%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-coupling">Coupling</span></td>
                     </tr>
                     <tr>
@@ -479,6 +493,7 @@
                         <td class="predicted">3477.99</td>
                         <td class="measured">3477.23</td>
                         <td class="error error-excellent">0.02%</td>
+                        <td><span class="support support-partial">PARTIAL</span></td>
                         <td><span class="domain domain-lepton">Lepton</span></td>
                     </tr>
                     <tr>
@@ -488,6 +503,7 @@
                         <td class="predicted">16.821</td>
                         <td class="measured">16.817</td>
                         <td class="error error-excellent">0.02%</td>
+                        <td><span class="support support-empirical">EMPIRIC</span></td>
                         <td><span class="domain domain-lepton">Lepton</span></td>
                     </tr>
                     <tr>
@@ -497,6 +513,7 @@
                         <td class="predicted">16.180</td>
                         <td class="measured">16.170</td>
                         <td class="error error-excellent">0.06%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-coupling">Coupling</span></td>
                     </tr>
                     <tr>
@@ -506,6 +523,7 @@
                         <td class="predicted">0.02222</td>
                         <td class="measured">0.02220</td>
                         <td class="error error-good">0.10%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-mixing">Mixing</span></td>
                     </tr>
                     <tr>
@@ -515,6 +533,7 @@
                         <td class="predicted">125.133</td>
                         <td class="measured">125.250</td>
                         <td class="error error-excellent">0.09%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-boson">Boson</span></td>
                     </tr>
                     <tr>
@@ -524,6 +543,7 @@
                         <td class="predicted">0.6731</td>
                         <td class="measured">0.674</td>
                         <td class="error error-good">0.13%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-cosmology">Cosmology</span></td>
                     </tr>
                     <tr>
@@ -533,6 +553,7 @@
                         <td class="predicted">0.8090</td>
                         <td class="measured">0.811</td>
                         <td class="error error-good">0.24%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-cosmology">Cosmology</span></td>
                     </tr>
                     <tr>
@@ -542,6 +563,7 @@
                         <td class="predicted">0.9682</td>
                         <td class="measured">0.9649</td>
                         <td class="error error-good">0.34%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-cosmology">Cosmology</span></td>
                     </tr>
                     <tr>
@@ -551,6 +573,7 @@
                         <td class="predicted">2.236</td>
                         <td class="measured">2.224</td>
                         <td class="error error-fair">0.54%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-nuclear">Nuclear</span></td>
                     </tr>
                     <tr>
@@ -560,6 +583,7 @@
                         <td class="predicted">0.6931</td>
                         <td class="measured">0.6889</td>
                         <td class="error error-fair">0.62%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-cosmology">Cosmology</span></td>
                     </tr>
                     <tr>
@@ -569,6 +593,7 @@
                         <td class="predicted">28.12</td>
                         <td class="measured">28.30</td>
                         <td class="error error-fair">0.62%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-nuclear">Nuclear</span></td>
                     </tr>
                     <tr>
@@ -578,6 +603,7 @@
                         <td class="predicted">41.62</td>
                         <td class="measured">41.33</td>
                         <td class="error error-fair">0.70%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-quark">Quark</span></td>
                     </tr>
                     <tr>
@@ -587,6 +613,7 @@
                         <td class="predicted">0.3133</td>
                         <td class="measured">0.3111</td>
                         <td class="error error-fair">0.72%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-cosmology">Cosmology</span></td>
                     </tr>
                     <tr>
@@ -596,6 +623,7 @@
                         <td class="predicted">137.04</td>
                         <td class="measured">136.03</td>
                         <td class="error error-fair">0.74%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-quark">Quark</span></td>
                     </tr>
                     <tr>
@@ -605,6 +633,7 @@
                         <td class="predicted">0.2261</td>
                         <td class="measured">0.2243</td>
                         <td class="error error-fair">0.79%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-mixing">CKM</span></td>
                     </tr>
                     <tr>
@@ -614,6 +643,7 @@
                         <td class="predicted">13.71</td>
                         <td class="measured">13.60</td>
                         <td class="error error-fair">0.82%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-quark">Quark</span></td>
                     </tr>
                     <tr>
@@ -623,6 +653,7 @@
                         <td class="predicted">0.0489</td>
                         <td class="measured">0.0493</td>
                         <td class="error error-fair">0.90%</td>
+                        <td><span class="support support-fitted">FITTED</span></td>
                         <td><span class="domain domain-cosmology">Cosmology</span></td>
                     </tr>
                 </tbody>
