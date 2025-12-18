@@ -9598,17 +9598,34 @@ PHYSICAL MEANING:
 
 ---
 
-### §15.6 Comprehensive Framework Predictions — 23 Confirmed Results
+### §15.6 Comprehensive Framework Predictions — Tiered Support Status
 
-**Status:** CONFIRMED (2024-12-16)
+**Status:** UPDATED (2024-12-18)
 
-Systematic testing of the circumpunct framework against known physics reveals **23 parameter-free predictions** with < 1% error, spanning particle physics, cosmology, and mathematics.
+Systematic testing of the circumpunct framework against known physics reveals **25 predictions** with < 1% error. These are now organized by **support type** to distinguish what has been derived from first principles versus what remains phenomenological.
+
+#### Support Type Classification
+
+| Tier | Status | Meaning | Examples |
+|------|--------|---------|----------|
+| **Tier 1** | DERIVED | Integers from spectrum, π from U² | 8, 6, π |
+| **Tier 2** | PARTIALLY DERIVED | Formula works AND passes pre-registered test | m_μ/m_e, m_τ/m_μ, m_p/m_e |
+| **Tier 3** | FITTED | Formula works but no derivation | Bosons, cosmology, CKM |
+
+**What's Spectrally Grounded (Session 9 Results):**
+- **8** = Localization scale (18.7σ null baseline, p < 0.0001)
+- **6** = Connectivity bound (analytic: adjacency eigenvalue of Q₆)
+- **π** = Two-level closure (i² = e^{iπ} from U² structure)
+
+**What's Empirically Confirmed:**
+- **φ²** = Generation scaling (μ/e ratio at 0.03% error)
+- **10 + φ⁴** = Threshold operator (τ/μ ratio at 0.22% error)
 
 **Key finding:** Combinations of φ (golden ratio), π, and small integers from particle content successfully predict values across all domains of physics.
 
 ```
 ╔═════════════════════════════════════════════════════════════════════════════════════════════╗
-║                        MASTER TABLE: ALL CONFIRMED PREDICTIONS                               ║
+║                           MASTER TABLE: PREDICTIONS WITH SUPPORT TYPE                                         ║
 ╠════╦════════════════╦═════════════════════════════════════╦═══════════╦═══════════╦═════════╣
 ║ #  ║ Quantity       ║ Formula                             ║ Predicted ║ Measured  ║ Error   ║
 ╠════╬════════════════╬═════════════════════════════════════╬═══════════╬═══════════╬═════════╣
@@ -9644,7 +9661,36 @@ STATISTICS:
     • 15 predictions with < 0.5% error
     • 25 predictions with < 1.0% error
     • Average error: ~0.35%
+
+SUPPORT TYPE BY PREDICTION:
+    PARTIAL DERIV (8, 6, π spectrally grounded):
+      #1  m_μ/m_e = 8π²φ²     (8 = localization scale, 18.7σ; π from U²)
+      #2  m_p/m_e = 6π⁵       (6 = connectivity bound, analytic)
+      #4  m_n/m_e = 6π⁵ + φ²  (6 derived, φ² empirical)
+      #9  m_τ/m_e             (builds on #1)
+
+    EMPIRICAL (confirmed by pre-registered test):
+      #10 m_τ/m_μ = 10 + φ⁴   (0.22% error, threshold operator confirmed)
+
+    FITTED (impressive phenomenology, awaiting derivation):
+      All boson masses (#3, #6, #14)
+      All coupling constants (#5, #7, #11)
+      All cosmology (#13, #15-18, #21, #25)
+      Quark ratios (#20, #22, #24)
+      CKM element (#23)
+      Nuclear binding (#17, #19)
+      Mathematical constant (#8)
 ```
+
+#### The Honest Picture
+
+The fitted predictions remain impressive phenomenology—formulas involving φ, π, and small integers that match experiment to high precision. However, they are not yet derived from the spectral engine.
+
+**Tier 1 (DERIVED):** Integers 8 and 6 emerge as sector observables on Q₆ eigenmodes with statistical significance (p < 0.0001). π arises from the two-level structure (i² = e^{iπ}).
+
+**Tier 2 (PARTIAL DERIV):** The mass formulas m_μ/m_e = 8π²φ² and m_p/m_e = 6π⁵ use derived integers but the full formulas await complete spectral derivation.
+
+**Tier 3 (FITTED):** All boson masses, coupling constants, cosmological parameters, and CKM elements have no first-principles derivation yet—they are pattern recognition awaiting theoretical grounding.
 
 #### Detailed Results by Category
 
