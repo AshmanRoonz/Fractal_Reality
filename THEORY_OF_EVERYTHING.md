@@ -6761,7 +6761,7 @@ SUMMARY: APERTURE DENSITY AND DIMENSIONALITY
        of freedom are constrained, yielding D = 1.5 and ◐ = 0.5.
 
     3. This SINGLE MECHANISM explains observations from quantum to cosmic
-       scales and generates testable predictions across all domains.
+       scales and generates testable predictions (see Master Table, §15.6).
 
     4. Scale transitions (D = 1.5 locally → D = 3 cosmologically) are
        PREDICTIONS of the framework, not violations.
@@ -9681,6 +9681,7 @@ To test whether "mixed modes" (high on both spatial and temporal observables) ar
 - B_q = top q% of modes by K (temporal connectivity)
 - m_q = |A_q ∩ B_q| (mixed count)
 - Null: permute K values, recompute m_q (10,000 permutations)
+- p-value = (1 + #{m_null ≥ m_obs}) / (N + 1), one-sided (testing excess overlap)
 
 **Pre-Registration:** We pre-registered q ∈ {0.10, 0.15} before seeing results. All other quantiles are robustness checks.
 
@@ -9697,7 +9698,7 @@ Scan statistic (corrects for q-selection): p = 0.163 (not significant)
 
 **The "10" Question:** The mixed count (3-5 modes) does NOT encode "10". The threshold factor (10 + φ⁴) in m_τ/m_μ remains an effective operator weight from ontology, not a spectral mode count.
 
-**Key finding:** Combinations of φ (golden ratio), π, and small integers from particle content successfully predict values across all domains of physics.
+**Key finding:** Combinations of φ (golden ratio), π, and small integers yield formulas that match the benchmark quantities in the Master Table below, with support type noted per row.
 
 ```
 ╔═════════════════════════════════════════════════════════════════════════════════════════════╗
