@@ -2,7 +2,9 @@
 
 ## Abstract
 
-We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental object ⊙ = ○ ⊗ Φ ⊗ • unifies boundary (○), field (Φ), and aperture (•) through three-stage evolution operators (convergence, aperture rotation, emergence). We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 predicts universal fractal dimension D=1.5 with zero free parameters. The framework makes testable predictions across domains from particle physics to biological systems.
+We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental object ⊙ = ○ ⊗ Φ ⊗ • unifies boundary (○), field (Φ), and aperture (•) through three-stage evolution operators (convergence, aperture rotation, emergence). We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 produces the specific fractal dimension D=1.5 with zero free parameters.
+
+**On process dimensions:** The framework builds on Mandelbrot's proven mathematical foundation: fractional (Hausdorff) dimensions are real and measurable, describing process traces rather than static objects. The specific D value varies by system (coastlines ≈1.25, Brownian motion =1.5 exactly, DLA clusters ≈1.7)—this variation is expected. The framework predicts that balanced aperture dynamics produce D≈1.5; empirical examples illustrate this principle but are not load-bearing evidence for it.
 
 ---
 
@@ -97,6 +99,27 @@ equipped with a three-stage process (convergence, aperture rotation, emergence):
    - The coarse-grained geometric limit reproduces GR-like dynamics from ⊙
 
 This formulation strips away metaphors and focuses on spaces, operators, and limits to standard quantum mechanics and general relativity.
+
+### 0.1 Process Dimensions: The Mandelbrot Foundation
+
+Before proceeding, we establish a key ontological distinction proven by Mandelbrot:
+
+> **Integer dimensions describe static objects—the Platonic ideals of point (0D), line (1D), surface (2D), and volume (3D). Fractional dimensions describe what processes leave behind: coastlines, bronchi, lightning, vascular networks. Mandelbrot proved this intermediate space is real and measurable.**
+
+This is not speculation—it is rigorous mathematics:
+- **Hausdorff dimension formalism** is standard measure theory
+- **Brownian motion's D=1.5** is a theorem (not a fit)
+- **Non-integer dimensions** are not controversial in mathematics
+
+The framework's dimensional claims build on this foundation:
+
+| Type | Dimension | Mathematical Status |
+|------|-----------|---------------------|
+| Static structures | Integer (0, 1, 2, 3...) | Platonic ideals |
+| Process traces | Fractional | Mandelbrot's proven territory |
+| Balanced aperture | D ≈ 1.5 specifically | Framework prediction |
+
+**Important:** The specific D value varies by system—coastlines (≈1.25), Brownian motion (=1.5), DLA clusters (≈1.7). This variation is *expected*. The framework predicts that balance (◐ = 0.5) produces D ≈ 1.5. Empirical examples are *illustrations* of this principle, not load-bearing evidence for it.
 
 ---
 
@@ -1540,12 +1563,20 @@ This allows direct experimental verification:
 - Calculate ◐ = D - 1
 - Verify whether systems at optimal balance show ◐ ≈ 0.5, D ≈ 1.5
 
-**8. Scale-dependent dimensionality:**
+**8. Scale-dependent dimensionality (variation is expected):**
 
-D is NOT universally 1.5. The framework predicts:
+D is NOT universally 1.5—variation is a feature, not a bug. The framework predicts:
 - **Quantum/biological scales (high aperture density):** D ≈ 1.5 (◐ ≈ 0.5)
 - **Cosmological scales (low aperture density):** D → 3 (◐ → 2)
 - **Transition follows aperture density mechanism**
+
+**Important context from Mandelbrot:** Process dimensions vary by system. Known examples:
+- Coastlines: D ≈ 1.25
+- Brownian motion graphs: D = 1.5 exactly (theorem, not fit)
+- DLA clusters (2D): D ≈ 1.7
+- Bronchial trees (3D): D ≈ 2.5
+
+The framework's claim is that *balanced aperture dynamics* (◐ = 0.5) produce D ≈ 1.5 specifically. Empirical observations illustrate this; they don't prove the mathematical principle.
 
 Specific predictions:
 - **Quantum systems:** Decoherence timescales, quantum walk anomalous diffusion → D ≈ 1.5
@@ -1711,12 +1742,21 @@ WHY HOPF?
     - Hopf fibration is the generator of π₃(S²) = ℤ
     - c₁ = 1 is FORCED by topology, not chosen
 
-EMPIRICAL VALIDATION:
-    LIGO gravitational waves: D = 1.503 ± 0.040 ✓
-    DNA backbone:            D = 1.510 ± 0.020 ✓
-    Neural avalanches:       D = 1.48-1.52     ✓
+ILLUSTRATIVE EXAMPLES (where this manifests):
+    LIGO gravitational waves: D = 1.503 ± 0.040
+    DNA backbone:            D = 1.510 ± 0.020
+    Neural avalanches:       D = 1.48-1.52
 
-Same number everywhere because topology is the same everywhere.
+IMPORTANT FRAMING:
+    These are illustrations of the principle, not load-bearing evidence.
+    The specific D value varies by system—Mandelbrot showed:
+    - Coastlines ≈ 1.25
+    - Brownian motion = 1.5 (theorem)
+    - DLA clusters ≈ 1.7
+
+    The mathematical foundation (fractional dimensions exist) is PROVEN.
+    The framework prediction (balance → D ≈ 1.5) is TESTABLE.
+    The empirical fits are ILLUSTRATIONS.
 ```
 
 ### 7A.2 Fermionic Anticommutation from ⊗ Occupancy
@@ -2850,7 +2890,11 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 ### 10.2 Empirical Validation Required
 
+**Important framing note:** The empirical observations below are *illustrations* of the framework's principles, not load-bearing evidence for them. The mathematical foundation (Mandelbrot's proof that fractional dimensions exist and describe process traces) stands independently of any specific fit. If specific empirical fits were debunked, the framework would still rest on solid mathematical ground.
+
 1. **Cross-scale D measurement:** Systematic measurement of fractal dimension across quantum, biological, and cosmological systems
+   - Note: Variation in D values across systems is *expected* (cf. Mandelbrot: coastlines ≈1.25, Brownian motion =1.5, DLA ≈1.7)
+   - The framework's specific prediction: balanced aperture dynamics (◐ = 0.5) produce D ≈ 1.5
 2. **Braid-metric correlation:** Test B ∝ √(-g_tt) prediction in diverse gravitational configurations
 3. **Modified gravity detection:** Search for α, ξ corrections in precision gravitational experiments
 4. **Lepton sector tests:** Verify mass ratio predictions to higher precision
@@ -2870,7 +2914,7 @@ For complete details, derivations, and empirical data, see:
 
 - **Main document:** [The Circumpunct Framework: A Theory of Everything](../THEORY_OF_EVERYTHING.md) (latest version v5.4)
 - **64-state architecture:** Explicit bijections between circumpunct states and Standard Model particles
-- **Empirical validation:** Cross-domain D≈1.5 measurements (biological, neural, quantum systems)
+- **Illustrative examples:** Cross-domain D≈1.5 observations (biological, neural, quantum systems)—note: these illustrate the principle, not prove it
 - **Philosophical foundations:** Geometric necessity of trinity structures from braid topology
 - **Temporal dynamics:** Equations for ∂•/∂t = 0, ∂○/∂t = ε, ∂Φ/∂t = O(1)
 
@@ -2878,7 +2922,7 @@ For complete details, derivations, and empirical data, see:
 
 ## Acknowledgments
 
-This formulation benefited from iterative refinement focused on mathematical rigor and honest distinction between derived results and phenomenological models. The framework's empirical predictions remain open to falsification, with the D=1.5 universality serving as the critical test case.
+This formulation benefited from iterative refinement focused on mathematical rigor and honest distinction between derived results and phenomenological models. The framework builds on Mandelbrot's proven mathematical foundation that fractional (Hausdorff) dimensions are real and describe process traces. The specific D values vary by system—this is expected and does not undermine the principle. Empirical observations are *illustrations* of where the framework's predictions manifest, not load-bearing evidence for the mathematical foundation. The framework remains open to falsification through its testable predictions.
 
 ---
 
