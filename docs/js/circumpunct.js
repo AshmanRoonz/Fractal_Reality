@@ -780,8 +780,8 @@
         const soulHighlight = soulMoving.querySelector('.soul-highlight');
 
         // Movement constraints (how far soul can move from center)
-        // Soul iris r=44, body inner edge at r=90, so max offset = 90-44 = 46
-        const MAX_OFFSET = 45; // Can reach the purple boundary
+        // Soul iris r=32, mind zone at r=60, keep soul inside mind area
+        const MAX_OFFSET = 25; // Stay mostly within the mind field
         const PUPIL_PARALLAX = 0.25; // Pupil moves 25% extra for depth illusion
 
         // Current position (offset from center)
