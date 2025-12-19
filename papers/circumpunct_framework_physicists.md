@@ -172,22 +172,104 @@ This connects to the Schrödinger limit (§4): the m in iℏ ∂ψ/∂t = -(ℏ�
 
 **The dimensional architecture (structure vs process):**
 
+Reality is structured as **nested circumpuncts**, each spanning 3 dimensions. Every completed circumpunct (⊙) becomes the ground upon which the next layer's aperture opens.
+
 ```
-Dim   │ Type      │ Symbol │ Role
-──────┼───────────┼────────┼──────────────────────────────────────
-0D    │ Structure │   —    │ Pure energy (pre-structure potential)
-0.5D  │ Process   │   •    │ Aperture/Soul (tunnel opening, i lives here)
-1D    │ Structure │  i(t)  │ Timeline/String (soul through time)
-1.5D  │ Process   │   —    │ Spatial branching (D = 1 + ◐)
-2D    │ Structure │   ○    │ Body/Surface (boundary, interface)
-2.5D  │ Process   │   —    │ Sensation (body↔field coupling)
-3D    │ Structure │   Φ    │ Mind/Field (perceptual volume)
-3.5D  │ Process   │   —    │ Tunnel braiding (shared history)
-4D    │ Structure │   —    │ Time braid (committed history)
-4.5D  │ Process   │   —    │ Recursion (4.5Dₙ = 0Dₙ₊₁)
+CORE PRINCIPLE:
+
+    Integer dimensions  =  STRUCTURE (being)
+    Half-integer dims   =  PROCESS (becoming)
+
+    Each layer: • (aperture) → ○ (boundary) → Φ (field)
+    Step size:  3 dimensions per complete circumpunct
+    Pattern:    Φₙ becomes the ground for •ₙ₊₁
 ```
 
-Integer dimensions = Structure (being). Fractional dimensions = Process (becoming).
+**Layer I — SPATIAL CIRCUMPUNCT (⊙_space): Dimensions 0D → 3D**
+
+The first complete circumpunct. The structure of space itself.
+
+```
+Dim   │ Type      │ Symbol │ Name              │ Core Equations
+──────┼───────────┼────────┼───────────────────┼─────────────────────────────────
+0D    │ Structure │   —    │ Pure Energy       │ E = mc², E = ℏω, U(t) = exp(−iEt/ℏ)
+0.5D  │ Process   │   •    │ Aperture/Soul     │ i² = −1, Å(β) = exp(iπβ), Å(½) = i
+1D    │ Structure │  i(t)  │ Timeline/String   │ γ: ℝ → M, P = dE/dt
+1.5D  │ Process   │   —    │ Spatial Branching │ D = 1 + β, K(r) ∝ r^β, H(½) = 1 bit
+2D    │ Structure │   ○    │ Surface/Body      │ ○ ∈ 𝔅, Σ = ∂V, M = ∫_Σ ρ_surf dA
+2.5D  │ Process   │   —    │ Sensation         │ T_local = cos²(Δφ/2), triple gate
+3D    │ Structure │   Φ    │ Perceptual Field  │ Φ ∈ 𝔉 = Γ(E), ℋ_Φ = L²(M, d³x; ℂ⁶⁴)
+```
+
+**Layer II — TEMPORAL CIRCUMPUNCT (⊙_time): Dimensions 3.5D → 6D**
+
+The second circumpunct layer. Built ON the completed spatial field (Φ_space = 3D).
+
+```
+Dim   │ Type      │ Symbol │ Name               │ Core Equations
+──────┼───────────┼────────┼────────────────────┼─────────────────────────────────
+3.5D  │ Process   │  •_t   │ Temporal Aperture  │ T_eff,ij = cos²(Δφ_ij/2), B₃ generators
+4D    │ Structure │   —    │ Time Braid         │ G_μν = (8πG/c⁴)T_μν, B(x) ∝ √(−g_tt)
+4.5D  │ Process   │   —    │ Recursion          │ 4.5Dₙ = 0Dₙ₊₁, ⊙* = fix(λΦ. ⊱∘i∘≻[Φ])
+5D    │ Structure │  ○_t   │ Time Surface       │ Temporal membrane enclosing 4D braid
+5.5D  │ Process   │   —    │ Temporal Sensation │ History↔possibility coupling
+6D    │ Structure │  Φ_t   │ Time Volume        │ Configuration space of all 4D braids
+```
+
+**Layer III — META-TEMPORAL CIRCUMPUNCT (⊙_meta): Dimensions 6.5D → 9D**
+
+The third circumpunct layer. Built ON the completed temporal field (Φ_time = 6D).
+
+```
+Dim   │ Type      │ Symbol │ Name          │ Description
+──────┼───────────┼────────┼───────────────┼─────────────────────────────────
+6.5D  │ Process   │  •_m   │ Meta Aperture │ Aperture operating on fields of histories
+7D    │ Structure │   —    │ Meta-Braid    │ Weaving of 6D possibility spaces
+7.5D  │ Process   │   —    │ Meta Branching│ Fractal at meta scale
+8D    │ Structure │  ○_m   │ Meta-Surface  │ Membrane enclosing meta-braids
+8.5D  │ Process   │   —    │ Meta Sensation│ Interface at meta scale
+9D    │ Structure │  Φ_m   │ Meta-Field    │ Space of all possible 6D configurations
+```
+
+**General Dimensional Formula:**
+
+For layer index n ∈ {0, 1, 2, 3, ...}:
+
+```
+    Aperture dimension:    D_• = 3n + 0.5
+    Boundary dimension:    D_○ = 3n + 2
+    Field dimension:       D_Φ = 3n + 3
+
+    Branching process:     D_b = 3n + 1.5
+    Sensation process:     D_s = 3n + 2.5
+```
+
+| n | Layer | •ₙ | ○ₙ | Φₙ |
+|:-:|:-----:|:--:|:--:|:--:|
+| 0 | Spatial | 0.5D | 2D | 3D |
+| 1 | Temporal | 3.5D | 5D | 6D |
+| 2 | Meta | 6.5D | 8D | 9D |
+| 3 | Meta² | 9.5D | 11D | 12D |
+
+**Connection to String Theory:**
+
+```
+STRING THEORY DIMENSIONS:
+
+    Superstring:  10D = 9 spatial + 1 temporal
+    M-Theory:     11D
+
+CIRCUMPUNCT INTERPRETATION:
+
+    9D   =  Φ_meta  (meta-field completion)
+    10D  =  Approaching •_meta² (next aperture at 9.5D)
+    11D  =  ○_meta² (M-theory boundary)
+
+The "extra dimensions" are not compactified spatial loops —
+they are higher octaves of the nested circumpunct structure.
+```
+
+This provides a natural explanation for why string theory requires precisely 10D or 11D: these are the completion points of the third and fourth circumpunct layers respectively.
 
 ### 1.3 Field Space (Φ)
 
