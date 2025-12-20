@@ -302,6 +302,22 @@ body {
     transform: translateY(-1px);
 }
 
+/* Circumpunct Narrative button */
+.sim-links a.link-narrative {
+    color: #c9a227;
+    border: 1.5px solid #c9a227;
+    background: rgba(201, 162, 39, 0.1);
+    box-shadow: 0 0 12px rgba(201, 162, 39, 0.2);
+}
+
+.sim-links a.link-narrative:hover {
+    color: #fff;
+    background: rgba(201, 162, 39, 0.25);
+    border-color: #f4d03f;
+    box-shadow: 0 0 20px rgba(201, 162, 39, 0.4), 0 0 40px rgba(201, 162, 39, 0.2);
+    transform: translateY(-1px);
+}
+
 /* ===================================
    THE BIG CIRCUMPUNCT
    =================================== */

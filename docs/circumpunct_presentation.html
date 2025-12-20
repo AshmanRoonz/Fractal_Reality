@@ -466,17 +466,245 @@
             transform: translateY(30px);
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
-        
+
         .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Floating TOC Menu */
+        .toc-menu {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        .toc-toggle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--nebula) 0%, var(--cosmos) 100%);
+            border: 1px solid var(--gold-dim);
+            color: var(--gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .toc-toggle:hover {
+            background: linear-gradient(135deg, var(--gold-dim) 0%, var(--gold) 100%);
+            color: var(--deep-space);
+            transform: scale(1.1);
+        }
+
+        .toc-toggle.active {
+            background: var(--gold);
+            color: var(--deep-space);
+        }
+
+        .toc-panel {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 280px;
+            max-height: 70vh;
+            overflow-y: auto;
+            background: linear-gradient(135deg, rgba(15, 22, 41, 0.98) 0%, rgba(10, 10, 20, 0.98) 100%);
+            border: 1px solid var(--gold-dim);
+            border-radius: 12px;
+            padding: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .toc-panel.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .toc-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .toc-panel::-webkit-scrollbar-track {
+            background: var(--deep-space);
+        }
+
+        .toc-panel::-webkit-scrollbar-thumb {
+            background: var(--gold-dim);
+            border-radius: 3px;
+        }
+
+        .toc-title {
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc-list a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: var(--silver);
+            text-decoration: none;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .toc-list a:hover {
+            background: rgba(201, 162, 39, 0.15);
+            color: var(--gold);
+            padding-left: 1rem;
+        }
+
+        .toc-list .toc-part-num {
+            color: var(--gold-dim);
+            font-size: 0.75rem;
+            display: block;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .toc-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+            margin: 1rem 0;
+        }
+
+        .toc-external {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(201, 162, 39, 0.3);
+        }
+
+        .toc-external a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+
+        .toc-external a:hover {
+            color: var(--gold-bright);
+        }
+
+        @media (max-width: 600px) {
+            .toc-menu {
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .toc-toggle {
+                width: 44px;
+                height: 44px;
+                font-size: 1.3rem;
+            }
+
+            .toc-panel {
+                width: calc(100vw - 2rem);
+                right: -0.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="starfield"></div>
     <div class="stars" id="stars"></div>
-    
+
+    <!-- Floating TOC Menu -->
+    <nav class="toc-menu">
+        <button class="toc-toggle" id="toc-toggle" aria-label="Table of Contents">⊙</button>
+        <div class="toc-panel" id="toc-panel">
+            <div class="toc-title">Table of Contents</div>
+            <ul class="toc-list">
+                <li>
+                    <a href="#prologue">
+                        <span class="toc-part-num">Prologue</span>
+                        The Oldest Symbol
+                    </a>
+                </li>
+                <li>
+                    <a href="#part-one">
+                        <span class="toc-part-num">Part One</span>
+                        Something Rather Than Nothing
+                    </a>
+                </li>
+                <li>
+                    <a href="#part-two">
+                        <span class="toc-part-num">Part Two</span>
+                        The Doorway
+                    </a>
+                </li>
+                <li>
+                    <a href="#part-three">
+                        <span class="toc-part-num">Part Three</span>
+                        The Nesting
+                    </a>
+                </li>
+                <li>
+                    <a href="#part-four">
+                        <span class="toc-part-num">Part Four</span>
+                        Validation and Stability
+                    </a>
+                </li>
+                <li>
+                    <a href="#part-five">
+                        <span class="toc-part-num">Part Five</span>
+                        Death, Identity, and Energy
+                    </a>
+                </li>
+                <li>
+                    <a href="#part-six">
+                        <span class="toc-part-num">Part Six</span>
+                        Ethics from Structure
+                    </a>
+                </li>
+                <li>
+                    <a href="#part-seven">
+                        <span class="toc-part-num">Part Seven</span>
+                        Consciousness and Perception
+                    </a>
+                </li>
+                <li>
+                    <a href="#epilogue">
+                        <span class="toc-part-num">Epilogue</span>
+                        The Unity
+                    </a>
+                </li>
+            </ul>
+            <div class="toc-external">
+                <a href="https://fractalreality.ca" target="_blank" rel="noopener">
+                    <span>⊙</span> Visit FractalReality.ca
+                </a>
+            </div>
+        </div>
+    </nav>
+
     <div class="content">
         <!-- Hero -->
         <header class="hero">
@@ -492,7 +720,7 @@
         </header>
         
         <!-- Prologue -->
-        <section class="fade-in">
+        <section id="prologue" class="fade-in">
             <div class="part-header">
                 <span class="part-number">Prologue</span>
                 <h2 class="part-title">The Oldest Symbol</h2>
@@ -510,7 +738,7 @@
         <div class="divider">· · ·</div>
         
         <!-- Part One -->
-        <section class="fade-in">
+        <section id="part-one" class="fade-in">
             <div class="part-header">
                 <span class="part-number">Part One</span>
                 <h2 class="part-title">Something Rather Than Nothing</h2>
@@ -570,7 +798,7 @@
         <div class="divider">· · ·</div>
         
         <!-- Part Two -->
-        <section class="fade-in">
+        <section id="part-two" class="fade-in">
             <div class="part-header">
                 <span class="part-number">Part Two</span>
                 <h2 class="part-title">The Doorway</h2>
@@ -621,7 +849,7 @@
         <div class="divider">· · ·</div>
         
         <!-- Part Three -->
-        <section class="fade-in">
+        <section id="part-three" class="fade-in">
             <div class="part-header">
                 <span class="part-number">Part Three</span>
                 <h2 class="part-title">The Nesting</h2>
@@ -669,7 +897,7 @@
         <div class="divider">· · ·</div>
         
         <!-- Part Four -->
-        <section class="fade-in">
+        <section id="part-four" class="fade-in">
             <div class="part-header">
                 <span class="part-number">Part Four</span>
                 <h2 class="part-title">Validation and Stability</h2>
@@ -705,7 +933,7 @@
         <div class="divider">· · ·</div>
         
         <!-- Part Five -->
-        <section class="fade-in">
+        <section id="part-five" class="fade-in">
             <div class="part-header">
                 <span class="part-number">Part Five</span>
                 <h2 class="part-title">Death, Identity, and Energy</h2>
@@ -747,7 +975,7 @@
         <div class="divider">· · ·</div>
         
         <!-- Part Six -->
-        <section class="fade-in">
+        <section id="part-six" class="fade-in">
             <div class="part-header">
                 <span class="part-number">Part Six</span>
                 <h2 class="part-title">Ethics from Structure</h2>
@@ -801,7 +1029,7 @@
         <div class="divider">· · ·</div>
         
         <!-- Part Seven -->
-        <section class="fade-in">
+        <section id="part-seven" class="fade-in">
             <div class="part-header">
                 <span class="part-number">Part Seven</span>
                 <h2 class="part-title">Consciousness and Perception</h2>
@@ -839,7 +1067,7 @@
         <div class="divider">· · ·</div>
         
         <!-- Epilogue -->
-        <section class="fade-in epilogue">
+        <section id="epilogue" class="fade-in epilogue">
             <div class="part-header">
                 <span class="part-number">Epilogue</span>
                 <h2 class="part-title">The Unity</h2>
@@ -924,6 +1152,31 @@
         
         document.querySelectorAll('.fade-in').forEach(el => {
             observer.observe(el);
+        });
+
+        // TOC Menu Toggle
+        const tocToggle = document.getElementById('toc-toggle');
+        const tocPanel = document.getElementById('toc-panel');
+
+        tocToggle.addEventListener('click', () => {
+            tocPanel.classList.toggle('open');
+            tocToggle.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.toc-list a').forEach(link => {
+            link.addEventListener('click', () => {
+                tocPanel.classList.remove('open');
+                tocToggle.classList.remove('active');
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!tocToggle.contains(e.target) && !tocPanel.contains(e.target)) {
+                tocPanel.classList.remove('open');
+                tocToggle.classList.remove('active');
+            }
         });
     </script>
 </body>
