@@ -620,7 +620,7 @@
         // Fetch all Pokemon names for suggestions
         async function fetchPokemonList() {
             try {
-                const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1010');
+                const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1500');
                 const data = await response.json();
                 allPokemonList = data.results.map(p => p.name);
             } catch (error) {
