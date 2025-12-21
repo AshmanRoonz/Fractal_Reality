@@ -106,6 +106,15 @@
             box-shadow: var(--glow-cyan), inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
+        .search-label {
+            display: block;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
         .search-wrapper {
             position: relative;
             display: flex;
@@ -506,12 +515,13 @@
         </header>
 
         <section class="search-section">
+            <label class="search-label" for="pokemonSearch">Enter opponent's Pokémon name</label>
             <div class="search-wrapper">
-                <input 
-                    type="text" 
-                    class="search-input" 
-                    id="pokemonSearch" 
-                    placeholder="Enter opponent's Pokémon name..."
+                <input
+                    type="text"
+                    class="search-input"
+                    id="pokemonSearch"
+                    placeholder="e.g. Pikachu"
                     autocomplete="off"
                 >
                 <button class="search-btn" id="searchBtn">Analyze</button>
