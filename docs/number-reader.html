@@ -646,11 +646,51 @@
             return words.trim();
         }
 
+        function fullNumberToWords(numStr) {
+            if (!numStr || numStr === '0') return 'zero';
+
+            // Remove leading zeros
+            numStr = numStr.replace(/^0+/, '') || '0';
+            if (numStr === '0') return 'zero';
+
+            // Pad to make groups of 3
+            while (numStr.length % 3 !== 0) {
+                numStr = '0' + numStr;
+            }
+
+            // Split into groups of 3
+            const groups = [];
+            for (let i = 0; i < numStr.length; i += 3) {
+                groups.push(numStr.substr(i, 3));
+            }
+
+            const numGroups = groups.length;
+            let parts = [];
+
+            groups.forEach((group, idx) => {
+                const groupIndex = numGroups - 1 - idx;
+                const groupValue = parseInt(group, 10);
+
+                if (groupValue === 0) return;
+
+                const groupWord = numberToWords(groupValue);
+                const groupName = groupNames[groupIndex];
+
+                if (groupName) {
+                    parts.push(groupWord + ' ' + groupName);
+                } else {
+                    parts.push(groupWord);
+                }
+            });
+
+            return parts.join(' ') || 'zero';
+        }
+
         function speakNumber() {
             if (!currentNumber) return;
-            
-            const num = parseInt(currentNumber, 10);
-            const utterance = new SpeechSynthesisUtterance(num.toString());
+
+            const words = fullNumberToWords(currentNumber);
+            const utterance = new SpeechSynthesisUtterance(words);
             utterance.rate = 0.8;
             utterance.pitch = 1.1;
             speechSynthesis.speak(utterance);
