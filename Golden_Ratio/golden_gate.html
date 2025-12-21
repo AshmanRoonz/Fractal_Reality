@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⊙ The Golden Gate — Universal Quantum Rotation</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      color: #f1f5f9;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+    .header { text-align: center; margin-bottom: 1.5rem; }
+    .header h1 { 
+      font-size: 2.2rem; 
+      background: linear-gradient(90deg, #fbbf24, #fcd34d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header p { color: #94a3b8; margin-top: 0.25rem; }
+    
+    .card { 
+      background: rgba(30, 41, 59, 0.8); 
+      border-radius: 12px; 
+      padding: 1.25rem; 
+      margin-bottom: 1rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(251, 191, 36, 0.1);
+    }
+    .card-title { 
+      color: #fbbf24; 
+      font-size: 1.1rem; 
+      font-weight: 600; 
+      margin-bottom: 0.75rem;
+    }
+    
+    .euler-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.9));
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      text-align: center;
+      padding: 1.5rem;
+    }
+    .euler-title { color: #fbbf24; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .euler-equation { font-family: 'Times New Roman', serif; font-size: 1.5rem; color: white; }
+    .euler-details { margin-top: 0.75rem; font-size: 0.875rem; color: #cbd5e1; }
+    .euler-note { font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+    
+    .matrix-display {
+      background: #1e293b;
+      padding: 1rem;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+    }
+    .matrix-label { color: #fbbf24; margin-bottom: 0.5rem; }
+    .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; text-align: center; }
+    .matrix-cell { background: #334155; padding: 0.5rem; border-radius: 4px; }
+    .matrix-note { color: #94a3b8; font-size: 0.75rem; margin-top: 0.75rem; }
+    
+    .preset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+    @media (max-width: 500px) { .preset-grid { grid-template-columns: repeat(2, 1fr); } }
+    .preset-btn {
+      background: #334155;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: white;
+    }
+    .preset-btn:hover { background: #475569; }
+    .preset-btn.active { background: #fbbf24; color: #0f172a; }
+    .preset-symbol { font-family: monospace; font-size: 1.25rem; }
+    .preset-name { font-size: 0.7rem; opacity: 0.8; margin-top: 0.25rem; }
+    
+    .slider-group { margin-bottom: 1rem; }
+    .slider-label { font-size: 0.875rem; color: #cbd5e1; margin-bottom: 0.25rem; display: block; }
+    .slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #334155;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fbbf24;
+      cursor: pointer;
+    }
+    
+    .controls-row { display: flex; gap: 1rem; align-items: center; margin-top: 0.75rem; flex-wrap: wrap; }
+    .checkbox-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #cbd5e1; cursor: pointer; }
+    .checkbox-label input { accent-color: #fbbf24; }
+    
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: #fbbf24; color: #0f172a; }
+    .btn-primary:hover { background: #fcd34d; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .result-grid { 
+      display: grid; 
+      grid-template-columns: repeat(4, 1fr); 
+      gap: 0.75rem; 
+      text-align: center;
+      background: #334155;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+    @media (max-width: 600px) { .result-grid { grid-template-columns: repeat(2, 1fr); } }
+    .result-value { font-size: 1.5rem; font-family: monospace; }
+    .result-label { font-size: 0.7rem; color: #94a3b8; margin-top: 0.25rem; }
+    
+    .color-amber { color: #fbbf24; }
+    .color-cyan { color: #22d3ee; }
+    .color-green { color: #4ade80; }
+    .color-pink { color: #f472b6; }
+    .color-muted { color: #64748b; }
+    
+    .gate-set { font-family: monospace; font-size: 0.875rem; }
+    .gate-set div { margin-bottom: 0.25rem; }
+    .gate-note { font-size: 0.75rem; color: #94a3b8; margin-top: 0.75rem; line-height: 1.5; }
+    
+    .table-container { overflow-x: auto; }
+    table { width: 100%; font-size: 0.875rem; border-collapse: collapse; }
+    th { text-align: left; padding: 0.5rem; color: #94a3b8; border-bottom: 1px solid #475569; }
+    th:not(:first-child) { text-align: right; }
+    td { padding: 0.5rem; border-bottom: 1px solid #334155; }
+    td:not(:first-child) { text-align: right; }
+    tr:hover { background: rgba(51, 65, 85, 0.5); }
+    
+    .error-chart { background: #1e293b; padding: 0.75rem; border-radius: 8px; }
+    .chart-title { font-size: 0.875rem; color: #cbd5e1; margin-bottom: 0.5rem; font-weight: 600; }
+    .chart-note { font-size: 0.7rem; color: #94a3b8; text-align: center; margin-top: 0.5rem; }
+    
+    .footer { 
+      text-align: center; 
+      margin-top: 2rem; 
+      padding-top: 1rem;
+      border-top: 1px solid #334155;
+      color: #64748b;
+      font-size: 0.75rem;
+    }
+    .footer .equation { font-family: monospace; margin-bottom: 0.25rem; color: #94a3b8; }
+    
+    .svg-container { display: flex; justify-content: center; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useMemo, useCallback, useEffect } = React;
+
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const GOLDEN_ANGLE_RAD = Math.PI / (PHI * PHI);
+    const GOLDEN_ANGLE_DEG = 180 / (PHI * PHI);
+
+    function GoldenGateApp() {
+      const [targetAngle, setTargetAngle] = useState(45);
+      const [maxN, setMaxN] = useState(100);
+      const [showTrail, setShowTrail] = useState(true);
+      const [trailLength] = useState(50);
+      const [animating, setAnimating] = useState(false);
+      const [animationN, setAnimationN] = useState(0);
+      const [selectedPreset, setSelectedPreset] = useState(0);
+
+      const presets = [
+        { name: 'T gate (π/4)', angle: 45, symbol: 'T' },
+        { name: 'S gate (π/2)', angle: 90, symbol: 'S' },
+        { name: 'T† gate (-π/4)', angle: -45, symbol: 'T†' },
+        { name: 'π/8 gate', angle: 22.5, symbol: 'π/8' },
+        { name: 'π/3 gate', angle: 60, symbol: 'π/3' },
+        { name: 'Z gate (π)', angle: 180, symbol: 'Z' },
+      ];
+
+      const findBestApproximation = useCallback((target, max) => {
+        const targetRad = (target * Math.PI) / 180;
+        let bestN = 0;
+        let bestError = Infinity;
+        
+        for (let n = -max; n <= max; n++) {
+          const angle = n * GOLDEN_ANGLE_RAD;
+          const normalized = ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+          const targetNorm = ((targetRad % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+          let error = Math.abs(normalized - targetNorm);
+          error = Math.min(error, 2 * Math.PI - error);
+          
+          if (error < bestError) {
+            bestError = error;
+            bestN = n;
+          }
+        }
+        
+        return {
+          n: bestN,
+          achievedAngle: (bestN * GOLDEN_ANGLE_DEG) % 360,
+          errorDeg: (bestError * 180) / Math.PI,
+          errorPercent: target !== 0 ? (bestError * 180 / Math.PI / Math.abs(target)) * 100 : 0
+        };
+      }, []);
+
+      const approximation = useMemo(() => 
+        findBestApproximation(targetAngle, maxN), 
+        [targetAngle, maxN, findBestApproximation]
+      );
+
+      const trailPoints = useMemo(() => {
+        const points = [];
+        const startN = Math.max(0, approximation.n - Math.floor(trailLength / 2));
+        for (let i = 0; i < trailLength; i++) {
+          const n = startN + i;
+          const angle = n * GOLDEN_ANGLE_RAD;
+          points.push({
+            n,
+            x: Math.cos(angle),
+            y: Math.sin(angle),
+            angle: (n * GOLDEN_ANGLE_DEG) % 360
+          });
+        }
+        return points;
+      }, [approximation.n, trailLength]);
+
+      const errorScaling = useMemo(() => {
+        const data = [];
+        for (let exp = 1; exp <= 5; exp++) {
+          const max = Math.pow(10, exp);
+          const result = findBestApproximation(targetAngle, max);
+          data.push({ maxN: max, error: result.errorDeg, n: result.n });
+        }
+        return data;
+      }, [targetAngle, findBestApproximation]);
+
+      useEffect(() => {
+        if (!animating) return;
+        const interval = setInterval(() => {
+          setAnimationN(prev => {
+            if (prev >= Math.abs(approximation.n)) {
+              setAnimating(false);
+              return Math.abs(approximation.n);
+            }
+            return prev + Math.max(1, Math.floor(Math.abs(approximation.n) / 60));
+          });
+        }, 30);
+        return () => clearInterval(interval);
+      }, [animating, approximation.n]);
+
+      const startAnimation = () => {
+        setAnimationN(0);
+        setAnimating(true);
+      };
+
+      const CircleView = () => {
+        const size = 280;
+        const cx = size / 2;
+        const cy = size / 2;
+        const r = size / 2 - 30;
+        
+        const targetRad = (targetAngle * Math.PI) / 180;
+        const targetX = cx + r * Math.cos(targetRad);
+        const targetY = cy - r * Math.sin(targetRad);
+        
+        const currentN = animating ? (approximation.n >= 0 ? animationN : -animationN) : approximation.n;
+        const currentRad = currentN * GOLDEN_ANGLE_RAD;
+        const currentX = cx + r * Math.cos(currentRad);
+        const currentY = cy - r * Math.sin(currentRad);
+
+        return (
+          <svg width={size} height={size}>
+            <defs>
+              <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#1e293b" />
+                <stop offset="100%" stopColor="#0f172a" />
+              </radialGradient>
+            </defs>
+            <circle cx={cx} cy={cy} r={r + 15} fill="url(#bgGrad)" />
+            <circle cx={cx} cy={cy} r={r} fill="none" stroke="#334155" strokeWidth="2" />
+            <line x1={cx} y1={cy} x2={cx + r} y2={cy} stroke="#475569" strokeWidth="1" />
+            <line x1={cx} y1={cy} x2={cx} y2={cy - r} stroke="#475569" strokeWidth="1" />
+            <line x1={cx} y1={cy} x2={cx - r} y2={cy} stroke="#475569" strokeWidth="1" strokeDasharray="3,3" />
+            <line x1={cx} y1={cy} x2={cx} y2={cy + r} stroke="#475569" strokeWidth="1" strokeDasharray="3,3" />
+            
+            {showTrail && trailPoints.map((point, i) => (
+              <circle
+                key={i}
+                cx={cx + r * point.x}
+                cy={cy - r * point.y}
+                r={2.5}
+                fill={`rgba(251, 191, 36, ${0.1 + 0.6 * (i / trailLength)})`}
+              />
+            ))}
+            
+            <line x1={cx} y1={cy} x2={targetX} y2={targetY} stroke="#3b82f6" strokeWidth="2" strokeDasharray="5,3" />
+            <circle cx={targetX} cy={targetY} r={8} fill="#3b82f6" opacity="0.8" />
+            
+            <line x1={cx} y1={cy} x2={currentX} y2={currentY} stroke="#fbbf24" strokeWidth="3" />
+            <circle cx={currentX} cy={currentY} r={8} fill="#fbbf24" />
+            
+            <text x={cx + r + 5} y={cy + 4} fill="#64748b" fontSize="10">0°</text>
+            <text x={cx - 4} y={cy - r - 8} fill="#64748b" fontSize="10">90°</text>
+            <text x={cx - r - 20} y={cy + 4} fill="#64748b" fontSize="10">180°</text>
+            
+            <text x={cx} y={size - 8} textAnchor="middle" fill="#94a3b8" fontSize="10">
+              G = {GOLDEN_ANGLE_DEG.toFixed(3)}° per step
+            </text>
+          </svg>
+        );
+      };
+
+      const MatrixView = () => {
+        const angle = GOLDEN_ANGLE_RAD / 2;
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        
+        return (
+          <div className="matrix-display">
+            <div className="matrix-label">G = Rz(π/φ²) = exp(-iπσz/2φ²)</div>
+            <div className="matrix-grid">
+              <div className="matrix-cell">
+                <span className="color-cyan">{cos.toFixed(4)}</span>
+                <span className="color-muted"> − </span>
+                <span className="color-pink">{sin.toFixed(4)}i</span>
+              </div>
+              <div className="matrix-cell color-muted">0</div>
+              <div className="matrix-cell color-muted">0</div>
+              <div className="matrix-cell">
+                <span className="color-cyan">{cos.toFixed(4)}</span>
+                <span className="color-muted"> + </span>
+                <span className="color-pink">{sin.toFixed(4)}i</span>
+              </div>
+            </div>
+            <div className="matrix-note">
+              Rotation: {GOLDEN_ANGLE_DEG.toFixed(3)}° = π/φ² rad ≈ 1.1999 rad
+            </div>
+          </div>
+        );
+      };
+
+      const ErrorChart = () => {
+        const maxError = Math.max(...errorScaling.map(d => d.error));
+        const height = 110;
+        const width = 260;
+        const padding = 25;
+        
+        return (
+          <div className="error-chart">
+            <div className="chart-title">Error vs Max |n| (log scale)</div>
+            <svg width={width} height={height}>
+              {errorScaling.map((d, i) => {
+                const x = padding + (i / (errorScaling.length - 1)) * (width - 2 * padding);
+                const barHeight = Math.max(4, (d.error / maxError) * (height - 35));
+                return (
+                  <g key={i}>
+                    <rect
+                      x={x - 18}
+                      y={height - 22 - barHeight}
+                      width={36}
+                      height={barHeight}
+                      fill="#fbbf24"
+                      opacity={0.85}
+                      rx={3}
+                    />
+                    <text x={x} y={height - 6} textAnchor="middle" fill="#94a3b8" fontSize="9">
+                      10^{i + 1}
+                    </text>
+                    <text x={x} y={height - 28 - barHeight} textAnchor="middle" fill="#fbbf24" fontSize="9">
+                      {d.error < 0.01 ? d.error.toFixed(3) : d.error.toFixed(2)}°
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+            <div className="chart-note">Error scales as O(1/n) — equidistribution theorem</div>
+          </div>
+        );
+      };
+
+      return (
+        <div className="container">
+          <header className="header">
+            <h1>⊙ The Golden Gate</h1>
+            <p>Universal Quantum Rotation from φ-Structure</p>
+          </header>
+
+          <div className="card euler-card">
+            <div className="euler-title">Golden Euler Identity</div>
+            <div className="euler-equation">
+              e<sup>iπ/φ</sup> · e<sup>iπ/φ²</sup> + 1 = 0
+            </div>
+            <div className="euler-details">
+              <span className="color-cyan">e^(iπ/φ²)</span> = {GOLDEN_ANGLE_DEG.toFixed(2)}° &nbsp;·&nbsp;
+              <span className="color-pink">e^(iπ/φ)</span> = {(180 / PHI).toFixed(2)}° &nbsp;·&nbsp;
+              Sum = 180°
+            </div>
+            <div className="euler-note">Two golden steps = one π rotation = complete inversion</div>
+          </div>
+
+          <div className="grid-2">
+            <div className="card">
+              <div className="card-title">Gate Definition</div>
+              <MatrixView />
+              <div style={{marginTop: '1rem'}}>
+                <div style={{fontSize: '0.875rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '0.5rem'}}>Why Universal?</div>
+                <p style={{fontSize: '0.75rem', color: '#94a3b8', lineHeight: 1.6}}>
+                  Since π/φ² is an <span className="color-amber">irrational multiple of 2π</span>, 
+                  the sequence {'{Gⁿ}'} is <span className="color-cyan">dense in U(1)</span>.
+                  Any rotation can be approximated to arbitrary precision.
+                </p>
+              </div>
+            </div>
+
+            <div className="card">
+              <div className="card-title">Preset Gates</div>
+              <div className="preset-grid">
+                {presets.map((preset, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setTargetAngle(preset.angle);
+                      setSelectedPreset(i);
+                    }}
+                    className={`preset-btn ${selectedPreset === i ? 'active' : ''}`}
+                  >
+                    <div className="preset-symbol">{preset.symbol}</div>
+                    <div className="preset-name">{preset.name}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-title">Approximation Visualizer</div>
+            
+            <div className="grid-2">
+              <div>
+                <div className="slider-group">
+                  <label className="slider-label">
+                    Target Angle: <strong>{targetAngle}°</strong>
+                  </label>
+                  <input
+                    type="range"
+                    className="slider"
+                    min="-180"
+                    max="180"
+                    value={targetAngle}
+                    onChange={(e) => {
+                      setTargetAngle(Number(e.target.value));
+                      setSelectedPreset(null);
+                    }}
+                  />
+                </div>
+                
+                <div className="slider-group">
+                  <label className="slider-label">
+                    Max |n|: <strong>{maxN.toLocaleString()}</strong>
+                  </label>
+                  <input
+                    type="range"
+                    className="slider"
+                    min="10"
+                    max="10000"
+                    step="10"
+                    value={maxN}
+                    onChange={(e) => setMaxN(Number(e.target.value))}
+                  />
+                </div>
+
+                <div className="controls-row">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={showTrail}
+                      onChange={(e) => setShowTrail(e.target.checked)}
+                    />
+                    Show trail
+                  </label>
+                  <button
+                    onClick={startAnimation}
+                    disabled={animating}
+                    className="btn btn-primary"
+                  >
+                    {animating ? 'Animating...' : '▶ Animate'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="svg-container">
+                <CircleView />
+              </div>
+            </div>
+
+            <div className="result-grid">
+              <div>
+                <div className="result-value color-amber">G^{approximation.n}</div>
+                <div className="result-label">Optimal power</div>
+              </div>
+              <div>
+                <div className="result-value color-cyan">{approximation.achievedAngle.toFixed(3)}°</div>
+                <div className="result-label">Achieved angle</div>
+              </div>
+              <div>
+                <div className="result-value color-green">{approximation.errorDeg.toFixed(4)}°</div>
+                <div className="result-label">Absolute error</div>
+              </div>
+              <div>
+                <div className="result-value color-pink">{approximation.errorPercent.toFixed(3)}%</div>
+                <div className="result-label">Relative error</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <ErrorChart />
+            
+            <div className="card">
+              <div className="card-title">Golden Gate Set</div>
+              <div className="gate-set">
+                <div><span className="color-amber">G</span> = Rz(π/φ²) <span className="color-muted">— generates all Rz</span></div>
+                <div><span className="color-cyan">X</span> = σx <span className="color-muted">— Pauli X</span></div>
+                <div><span className="color-pink">√X</span> <span className="color-muted">— square root of X</span></div>
+                <div><span className="color-green">CNOT</span> <span className="color-muted">— entanglement</span></div>
+              </div>
+              <div className="gate-note">
+                Any U ∈ SU(2) decomposes as Rz · Ry · Rz.<br/>
+                Using Ry(θ) = √X · Rz(θ) · √X†, Golden Gate provides all rotations.
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-title">Approximation Table (max |n| = 10,000)</div>
+            <div className="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Gate</th>
+                    <th>Target</th>
+                    <th>Best n</th>
+                    <th>Error</th>
+                    <th>Rel. Error</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {presets.map((preset, i) => {
+                    const result = findBestApproximation(preset.angle, 10000);
+                    return (
+                      <tr key={i}>
+                        <td><span className="color-amber" style={{fontFamily: 'monospace'}}>{preset.symbol}</span></td>
+                        <td>{preset.angle}°</td>
+                        <td style={{fontFamily: 'monospace'}}>{result.n}</td>
+                        <td className="color-cyan">{result.errorDeg.toFixed(4)}°</td>
+                        <td className="color-green">{result.errorPercent.toFixed(3)}%</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <footer className="footer">
+            <div className="equation">⊙ = φ ⊗ i = e^(iπ/φ²) ⊗ e^(iπ/φ)</div>
+            <div>Circumpunct Framework · Golden Gate Quantum Computing</div>
+            <div style={{marginTop: '0.25rem'}}>The golden ratio IS why recursion works</div>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<GoldenGateApp />, document.getElementById('root'));
+  </script>
+</body>
+</html>

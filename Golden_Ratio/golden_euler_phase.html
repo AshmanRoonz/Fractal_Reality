@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Golden Euler Identity</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a0a0f 0%, #111827 50%, #0a0a0f 100%);
+      color: #f3f4f6;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: #fcd34d;
+      margin-bottom: 0.5rem;
+    }
+    
+    .equation {
+      font-family: 'Cambria Math', 'Times New Roman', serif;
+      font-size: 1.25rem;
+      color: #9ca3af;
+      margin-bottom: 1.5rem;
+    }
+    
+    .equation sup { font-size: 0.75em; }
+    
+    #canvas-container {
+      background: #111827;
+      border-radius: 1rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      padding: 1rem;
+    }
+    
+    canvas { display: block; }
+    
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    button {
+      padding: 0.6rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary { background: #d97706; color: white; }
+    .btn-primary:hover { background: #f59e0b; }
+    
+    .btn-secondary { background: #374151; color: white; }
+    .btn-secondary:hover { background: #4b5563; }
+    
+    .btn-toggle { background: #1f2937; color: #9ca3af; }
+    .btn-toggle.active { background: #4b5563; color: white; }
+    
+    .btn-cyan.active { background: #0e7490; }
+    .btn-violet.active { background: #7c3aed; }
+    .btn-amber.active { background: #b45309; }
+    
+    .mode-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    .mode-btn {
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      border-radius: 0.5rem;
+    }
+    
+    .info-panel {
+      max-width: 36rem;
+      background: #111827;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      border: 1px solid #1f2937;
+    }
+    
+    .info-panel h2 {
+      color: #fcd34d;
+      font-size: 1.25rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+    
+    .step-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .step-card {
+      background: #1f2937;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      border-left: 4px solid;
+    }
+    
+    .step-card.convergence { border-color: #22d3ee; }
+    .step-card.emergence { border-color: #a78bfa; }
+    
+    .step-card .label {
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    .step-card.convergence .label { color: #22d3ee; }
+    .step-card.emergence .label { color: #a78bfa; }
+    
+    .step-card .formula {
+      font-family: 'Cambria Math', monospace;
+      color: #d1d5db;
+      font-size: 0.95rem;
+    }
+    
+    .step-card .detail {
+      color: #6b7280;
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+    }
+    
+    .equation-box {
+      background: #1f2937;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    
+    .equation-box .cyan { color: #22d3ee; }
+    .equation-box .violet { color: #a78bfa; }
+    .equation-box .amber { color: #fbbf24; }
+    .equation-box .gray { color: #6b7280; }
+    
+    .description {
+      margin-top: 1rem;
+      color: #9ca3af;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    
+    .description .green { color: #34d399; }
+    .description .red { color: #f87171; }
+    .description .gold { color: #fcd34d; }
+    
+    .final-equation {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    
+    .final-equation .box {
+      display: inline-block;
+      background: #111827;
+      border: 1px solid #b45309;
+      border-radius: 0.75rem;
+      padding: 1rem 2rem;
+    }
+    
+    .final-equation .main {
+      font-family: 'Cambria Math', serif;
+      font-size: 1.5rem;
+      color: #fcd34d;
+    }
+    
+    .final-equation .sub {
+      color: #6b7280;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .progress-container {
+      width: 100%;
+      max-width: 600px;
+      margin-top: 1rem;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #374151;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #22d3ee 0%, #22d3ee 38.2%, #a78bfa 38.2%, #a78bfa 100%);
+      border-radius: 3px;
+      transition: width 0.05s linear;
+    }
+
+    .angle-display {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: #6b7280;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>The Golden Euler Identity</h1>
+  <p class="equation">e<sup>iπ/φ</sup> · e<sup>iπ/φ²</sup> + 1 = 0</p>
+  
+  <div id="canvas-container">
+    <canvas id="phase-canvas" width="600" height="600"></canvas>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="angle-display">
+      <span id="current-angle">0°</span>
+      <span id="current-phase">Starting at 1</span>
+      <span>180°</span>
+    </div>
+  </div>
+  
+  <div class="controls">
+    <button class="btn-primary" id="play-btn">▶ Play</button>
+    <button class="btn-secondary" id="reset-btn">Reset</button>
+    <button class="btn-toggle" id="labels-btn">Labels</button>
+    <button class="btn-toggle btn-amber" id="spiral-btn">φ-Spiral</button>
+  </div>
+  
+  <div class="mode-controls">
+    <button class="mode-btn btn-toggle active" id="mode-both">Both Steps</button>
+    <button class="mode-btn btn-toggle btn-cyan" id="mode-convergence">≻ Convergence</button>
+    <button class="mode-btn btn-toggle btn-violet" id="mode-emergence">⊰ Emergence</button>
+  </div>
+  
+  <div class="info-panel">
+    <h2>Two Golden Steps = One Inversion</h2>
+    
+    <div class="step-grid">
+      <div class="step-card convergence">
+        <div class="label">≻ Convergence</div>
+        <div class="formula">e<sup>iπ/φ²</sup></div>
+        <div class="detail">68.754° • gathering</div>
+      </div>
+      <div class="step-card emergence">
+        <div class="label">⊰ Emergence</div>
+        <div class="formula">e<sup>iπ/φ</sup></div>
+        <div class="detail">111.246° • expressing</div>
+      </div>
+    </div>
+    
+    <div class="equation-box">
+      <span class="cyan">≻</span>
+      <span class="gray"> × </span>
+      <span class="violet">⊰</span>
+      <span class="gray"> = </span>
+      <span class="amber">flip</span>
+      <span class="gray" style="margin-left: 1rem;">|</span>
+      <span class="gray" style="margin-left: 1rem;">π/φ² + π/φ = π</span>
+    </div>
+    
+    <p class="description">
+      The fundamental inversion from <span class="green">1</span> to <span class="red">-1</span> naturally 
+      decomposes into two golden-weighted rotations. The ratio of the angles is <span class="gold">φ:1</span>—the 
+      golden partition repeating its own structure.
+    </p>
+  </div>
+  
+  <div class="final-equation">
+    <div class="box">
+      <div class="main">⊙ = φ ⊗ i = e<sup>iπ/φ²</sup> ⊗ e<sup>iπ/φ</sup></div>
+      <div class="sub">The circumpunct IS the golden factorization of inversion</div>
+    </div>
+  </div>
+
+  <script>
+    const φ = (1 + Math.sqrt(5)) / 2;
+    const θ1 = Math.PI / (φ * φ);  // π/φ² ≈ 68.754°
+    const θ2 = Math.PI / φ;         // π/φ ≈ 111.246°
+    
+    const canvas = document.getElementById('phase-canvas');
+    const ctx = canvas.getContext('2d');
+    const cx = 300, cy = 300, radius = 200;
+    
+    let animationProgress = 0;
+    let isPlaying = false;
+    let showLabels = true;
+    let showSpiral = false;
+    let highlightMode = 'both';
+    let animationId = null;
+    
+    // UI Elements
+    const playBtn = document.getElementById('play-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const labelsBtn = document.getElementById('labels-btn');
+    const spiralBtn = document.getElementById('spiral-btn');
+    const modeBoth = document.getElementById('mode-both');
+    const modeConvergence = document.getElementById('mode-convergence');
+    const modeEmergence = document.getElementById('mode-emergence');
+    const progressFill = document.getElementById('progress-fill');
+    const currentAngleEl = document.getElementById('current-angle');
+    const currentPhaseEl = document.getElementById('current-phase');
+    
+    function toDegrees(rad) {
+      return (rad * 180 / Math.PI).toFixed(2);
+    }
+    
+    function draw() {
+      ctx.clearRect(0, 0, 600, 600);
+      
+      // Background
+      ctx.fillStyle = '#111827';
+      ctx.fillRect(0, 0, 600, 600);
+      
+      // Grid
+      ctx.strokeStyle = '#374151';
+      ctx.lineWidth = 0.5;
+      ctx.globalAlpha = 0.3;
+      [-200, -100, 0, 100, 200].forEach(offset => {
+        ctx.beginPath();
+        ctx.moveTo(cx + offset, 100);
+        ctx.lineTo(cx + offset, 500);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(100, cy + offset);
+        ctx.lineTo(500, cy + offset);
+        ctx.stroke();
+      });
+      ctx.globalAlpha = 1;
+      
+      // Unit circle
+      ctx.strokeStyle = '#4b5563';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      // Center glow
+      const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 60);
+      gradient.addColorStop(0, 'rgba(251, 191, 36, 0.3)');
+      gradient.addColorStop(1, 'rgba(251, 191, 36, 0)');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 60, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Golden spiral
+      if (showSpiral) {
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = 0.4;
+        ctx.beginPath();
+        for (let i = 0; i <= 200; i++) {
+          const t = (i / 200) * 4 * Math.PI;
+          const r = 30 * Math.pow(φ, t / (2 * Math.PI));
+          const x = cx + r * Math.cos(t);
+          const y = cy - r * Math.sin(t);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+      
+      // Axes
+      ctx.strokeStyle = '#6b7280';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(80, cy);
+      ctx.lineTo(520, cy);
+      ctx.moveTo(cx, 80);
+      ctx.lineTo(cx, 520);
+      ctx.stroke();
+      
+      // Axis labels
+      ctx.fillStyle = '#9ca3af';
+      ctx.font = '14px sans-serif';
+      ctx.fillText('Re', 530, cy + 5);
+      ctx.fillText('Im', cx + 8, 75);
+      ctx.font = '12px sans-serif';
+      ctx.fillText('1', cx + radius + 10, cy + 20);
+      ctx.fillText('-1', cx - radius - 25, cy + 20);
+      ctx.fillText('i', cx + 8, cy - radius - 5);
+      ctx.fillText('-i', cx + 8, cy + radius + 18);
+      
+      // Angle wedges (filled)
+      ctx.globalAlpha = 0.15;
+      
+      // Convergence wedge
+      ctx.fillStyle = '#22d3ee';
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, 60, 0, -θ1, true);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Emergence wedge
+      ctx.fillStyle = '#a78bfa';
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, 60, -θ1, -(θ1 + θ2), true);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.globalAlpha = 1;
+      
+      // Animated arcs
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      
+      // Convergence arc
+      if (highlightMode === 'convergence' || highlightMode === 'both') {
+        const convergenceProgress = Math.min(1, animationProgress * 2);
+        if (convergenceProgress > 0) {
+          ctx.strokeStyle = '#22d3ee';
+          ctx.shadowColor = '#22d3ee';
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius - 20, 0, -θ1 * convergenceProgress, true);
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+      }
+      
+      // Emergence arc
+      if (highlightMode === 'emergence' || highlightMode === 'both') {
+        const emergenceProgress = Math.max(0, (animationProgress - 0.5) * 2);
+        if (emergenceProgress > 0) {
+          ctx.strokeStyle = '#a78bfa';
+          ctx.shadowColor = '#a78bfa';
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius + 20, -θ1, -θ1 - θ2 * emergenceProgress, true);
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+      }
+      
+      // Key points
+      const points = [
+        { x: cx + radius, y: cy, color: '#10b981', label: '1 (start)' },
+        { x: cx + radius * Math.cos(θ1), y: cy - radius * Math.sin(θ1), color: '#22d3ee', label: 'e^(iπ/φ²)' },
+        { x: cx - radius, y: cy, color: '#ef4444', label: '-1 (end)' }
+      ];
+      
+      points.forEach((p, i) => {
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        
+        if (showLabels) {
+          ctx.font = '13px monospace';
+          ctx.fillStyle = p.color;
+          if (i === 0) ctx.fillText(p.label, p.x + 15, p.y + 5);
+          else if (i === 1) ctx.fillText(p.label, p.x + 15, p.y - 10);
+          else ctx.fillText(p.label, p.x - 60, p.y + 25);
+        }
+      });
+      
+      // Animated point
+      if (isPlaying || animationProgress > 0) {
+        const currentAngle = animationProgress < 0.5 
+          ? animationProgress * 2 * θ1 
+          : θ1 + (animationProgress - 0.5) * 2 * θ2;
+        
+        const ax = cx + radius * Math.cos(currentAngle);
+        const ay = cy - radius * Math.sin(currentAngle);
+        
+        ctx.fillStyle = '#fbbf24';
+        ctx.shadowColor = '#fbbf24';
+        ctx.shadowBlur = 15;
+        ctx.beginPath();
+        ctx.arc(ax, ay, 10 + Math.sin(Date.now() / 100) * 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+      
+      // Center point (aperture)
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#1f2937';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Angle labels
+      if (showLabels) {
+        ctx.font = '11px sans-serif';
+        ctx.fillStyle = '#22d3ee';
+        ctx.fillText(`≻ ${toDegrees(θ1)}°`, cx + 75, cy - 25);
+        ctx.fillStyle = '#a78bfa';
+        ctx.fillText(`⊰ ${toDegrees(θ2)}°`, cx - 20, cy - 70);
+      }
+      
+      // Ratio bar
+      ctx.fillStyle = '#374151';
+      roundRect(ctx, 50, 550, 200, 12, 6);
+      ctx.fill();
+      
+      ctx.fillStyle = '#22d3ee';
+      ctx.globalAlpha = 0.7;
+      roundRect(ctx, 50, 550, 200 / φ, 12, 6);
+      ctx.fill();
+      
+      ctx.fillStyle = '#a78bfa';
+      roundRect(ctx, 50 + 200 / φ, 550, 200 / (φ * φ), 12, 6);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      
+      ctx.fillStyle = '#9ca3af';
+      ctx.font = '11px sans-serif';
+      ctx.fillText('1/φ : 1/φ² = φ : 1', 50, 580);
+
+      // Update progress bar and displays
+      const currentAngle = animationProgress < 0.5 
+        ? animationProgress * 2 * θ1 
+        : θ1 + (animationProgress - 0.5) * 2 * θ2;
+      
+      progressFill.style.width = `${animationProgress * 100}%`;
+      currentAngleEl.textContent = `${toDegrees(currentAngle)}°`;
+      
+      if (animationProgress < 0.01) {
+        currentPhaseEl.textContent = 'Starting at 1';
+      } else if (animationProgress < 0.5) {
+        currentPhaseEl.textContent = '≻ Converging...';
+      } else if (animationProgress < 0.99) {
+        currentPhaseEl.textContent = '⊰ Emerging...';
+      } else {
+        currentPhaseEl.textContent = 'Arrived at -1';
+      }
+    }
+    
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+    
+    function animate() {
+      if (isPlaying) {
+        animationProgress += 0.006;
+        if (animationProgress >= 1) {
+          animationProgress = 1;
+          isPlaying = false;
+          playBtn.textContent = '↻ Replay';
+        }
+        draw();
+        animationId = requestAnimationFrame(animate);
+      }
+    }
+    
+    playBtn.addEventListener('click', () => {
+      if (animationProgress >= 1) {
+        animationProgress = 0;
+      }
+      isPlaying = !isPlaying;
+      playBtn.textContent = isPlaying ? '⏸ Pause' : '▶ Play';
+      if (isPlaying) animate();
+    });
+    
+    resetBtn.addEventListener('click', () => {
+      isPlaying = false;
+      animationProgress = 0;
+      playBtn.textContent = '▶ Play';
+      draw();
+    });
+    
+    labelsBtn.addEventListener('click', () => {
+      showLabels = !showLabels;
+      labelsBtn.classList.toggle('active', showLabels);
+      draw();
+    });
+    
+    spiralBtn.addEventListener('click', () => {
+      showSpiral = !showSpiral;
+      spiralBtn.classList.toggle('active', showSpiral);
+      draw();
+    });
+    
+    function setMode(mode) {
+      highlightMode = mode;
+      modeBoth.classList.toggle('active', mode === 'both');
+      modeConvergence.classList.toggle('active', mode === 'convergence');
+      modeEmergence.classList.toggle('active', mode === 'emergence');
+      draw();
+    }
+    
+    modeBoth.addEventListener('click', () => setMode('both'));
+    modeConvergence.addEventListener('click', () => setMode('convergence'));
+    modeEmergence.addEventListener('click', () => setMode('emergence'));
+    
+    // Initial state
+    labelsBtn.classList.add('active');
+    draw();
+    
+    // Continuous redraw for glow animation
+    setInterval(() => {
+      if (!isPlaying && animationProgress > 0) draw();
+    }, 50);
+  </script>
+</body>
+</html>
