@@ -521,7 +521,7 @@
                     type="text"
                     class="search-input"
                     id="pokemonSearch"
-                    placeholder="e.g. Pikachu"
+                    placeholder="e.g. Pikachu, Alola"
                     autocomplete="off"
                 >
                 <button class="search-btn" id="searchBtn">Analyze</button>
@@ -823,27 +823,45 @@
         // Suggestions
         function showSuggestions(query) {
             const suggestionsEl = document.getElementById('suggestions');
-            
+
             if (!query || query.length < 2) {
                 suggestionsEl.classList.remove('active');
                 return;
             }
 
-            const matches = allPokemonList
-                .filter(name => name.startsWith(query.toLowerCase()))
-                .slice(0, 8);
+            const lowerQuery = query.toLowerCase();
+
+            // Find matches - prioritize starts-with, then contains
+            const startsWithMatches = allPokemonList.filter(name => name.startsWith(lowerQuery));
+            const containsMatches = allPokemonList.filter(name =>
+                !name.startsWith(lowerQuery) && name.includes(lowerQuery)
+            );
+
+            // Combine and limit results
+            const matches = [...startsWithMatches, ...containsMatches].slice(0, 10);
 
             if (matches.length === 0) {
                 suggestionsEl.classList.remove('active');
                 return;
             }
 
+            // Format display name for regional variants
+            function formatDisplayName(name) {
+                if (name.includes('-alola')) return name.replace('-alola', '') + ' (Alolan)';
+                if (name.includes('-galar')) return name.replace('-galar', '') + ' (Galarian)';
+                if (name.includes('-hisui')) return name.replace('-hisui', '') + ' (Hisuian)';
+                if (name.includes('-paldea')) return name.replace('-paldea', '') + ' (Paldean)';
+                if (name.includes('-mega')) return name.replace('-mega', '') + ' (Mega)';
+                if (name.includes('-gmax')) return name.replace('-gmax', '') + ' (Gigantamax)';
+                return name;
+            }
+
             suggestionsEl.innerHTML = matches.map(name => `
                 <div class="suggestion-item" data-name="${name}">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${allPokemonList.indexOf(name) + 1}.png" 
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${allPokemonList.indexOf(name) + 1}.png"
                          alt="${name}"
                          onerror="this.style.display='none'">
-                    <span style="text-transform: capitalize">${name}</span>
+                    <span style="text-transform: capitalize">${formatDisplayName(name)}</span>
                 </div>
             `).join('');
 
