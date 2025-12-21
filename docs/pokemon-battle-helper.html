@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon GO Battle Helper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Exo+2:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-card: #151c2c;
+            --accent-cyan: #00d4ff;
+            --accent-magenta: #ff2d75;
+            --accent-yellow: #ffd700;
+            --text-primary: #ffffff;
+            --text-muted: #8892a4;
+            --glow-cyan: 0 0 30px rgba(0, 212, 255, 0.4);
+            --glow-magenta: 0 0 30px rgba(255, 45, 117, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(255, 45, 117, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-family: 'Russo One', sans-serif;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(0, 212, 255, 0.5);
+            letter-spacing: 2px;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: var(--glow-cyan), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            font-family: 'Exo 2', sans-serif;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-btn {
+            padding: 1rem 2rem;
+            font-family: 'Russo One', sans-serif;
+            font-size: 1rem;
+            background: linear-gradient(135deg, var(--accent-cyan), #0099cc);
+            border: none;
+            border-radius: 12px;
+            color: var(--bg-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Suggestions dropdown */
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-width: calc(100% - 120px);
+            background: var(--bg-card);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            margin-top: 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .suggestions.active {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: background 0.2s;
+        }
+
+        .suggestion-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .suggestion-item img {
+            width: 40px;
+            height: 40px;
+            image-rendering: pixelated;
+        }
+
+        /* Results Section */
+        .results {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Pokemon Card */
+        .pokemon-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 45, 117, 0.2);
+            box-shadow: var(--glow-magenta);
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .pokemon-image {
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(255, 45, 117, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .pokemon-image img {
+            width: 150px;
+            height: 150px;
+            image-rendering: auto;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .pokemon-info {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .pokemon-name {
+            font-family: 'Russo One', sans-serif;
+            font-size: 2.5rem;
+            text-transform: capitalize;
+            margin-bottom: 0.5rem;
+        }
+
+        .pokemon-number {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .type-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .type-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Type colors */
+        .type-normal { background: #A8A878; color: #fff; }
+        .type-fire { background: #F08030; color: #fff; }
+        .type-water { background: #6890F0; color: #fff; }
+        .type-electric { background: #F8D030; color: #333; }
+        .type-grass { background: #78C850; color: #fff; }
+        .type-ice { background: #98D8D8; color: #333; }
+        .type-fighting { background: #C03028; color: #fff; }
+        .type-poison { background: #A040A0; color: #fff; }
+        .type-ground { background: #E0C068; color: #333; }
+        .type-flying { background: #A890F0; color: #fff; }
+        .type-psychic { background: #F85888; color: #fff; }
+        .type-bug { background: #A8B820; color: #fff; }
+        .type-rock { background: #B8A038; color: #fff; }
+        .type-ghost { background: #705898; color: #fff; }
+        .type-dragon { background: #7038F8; color: #fff; }
+        .type-dark { background: #705848; color: #fff; }
+        .type-steel { background: #B8B8D0; color: #333; }
+        .type-fairy { background: #EE99AC; color: #333; }
+
+        /* Info Panels */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-panel {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .panel-icon.attacks { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+        .panel-icon.weak { background: linear-gradient(135deg, #ff2d75, #c0392b); }
+        .panel-icon.strong { background: linear-gradient(135deg, #00d4ff, #0984e3); }
+        .panel-icon.avoid { background: linear-gradient(135deg, #ffd700, #f39c12); }
+
+        .panel-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .panel-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .move-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0.8rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .move-name {
+            font-weight: 600;
+        }
+
+        .move-type {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+        }
+
+        .type-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .type-chip {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .type-chip.super-effective {
+            border: 2px solid rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+
+        .type-chip.not-effective {
+            border: 2px solid rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+        }
+
+        .effectiveness-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Loading state */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 212, 255, 0.2);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error state */
+        .error {
+            background: rgba(255, 45, 117, 0.1);
+            border: 1px solid rgba(255, 45, 117, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            color: var(--accent-magenta);
+            display: none;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 212, 255, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .pokemon-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .type-badges {
+                justify-content: center;
+            }
+
+            .suggestions {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    <div class="grid-overlay"></div>
+
+    <div class="container">
+        <header>
+            <h1 class="logo">Battle Helper</h1>
+            <p class="subtitle">Pokémon GO Combat Guide</p>
+        </header>
+
+        <section class="search-section">
+            <div class="search-wrapper">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="pokemonSearch" 
+                    placeholder="Enter opponent's Pokémon name..."
+                    autocomplete="off"
+                >
+                <button class="search-btn" id="searchBtn">Analyze</button>
+                <div class="suggestions" id="suggestions"></div>
+            </div>
+        </section>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing battle data...</p>
+        </div>
+
+        <div class="error" id="error">
+            <p>Pokémon not found! Please check the name and try again.</p>
+        </div>
+
+        <section class="results" id="results">
+            <div class="pokemon-card" id="pokemonCard">
+                <!-- Filled by JS -->
+            </div>
+
+            <div class="info-grid">
+                <div class="info-panel">
+                    <div class="panel-header">
+                        <div class="panel-icon attacks">⚔️</div>
+                        <h3 class="panel-title">Possible Attacks</h3>
+                    </div>
+                    <div class="panel-content" id="movesList">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <div class="info-panel">
+                    <div class="panel-header">
+                        <div class="panel-icon strong">💪</div>
+                        <h3 class="panel-title">Use These Attack Types</h3>
+                    </div>
+                    <p class="effectiveness-label">Super effective against this Pokémon</p>
+                    <div class="panel-content" id="strongAgainst">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <div class="info-panel">
+                    <div class="panel-header">
+                        <div class="panel-icon avoid">🛡️</div>
+                        <h3 class="panel-title">Avoid These Pokémon Types</h3>
+                    </div>
+                    <p class="effectiveness-label">Your Pokémon will take extra damage</p>
+                    <div class="panel-content" id="avoidTypes">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <div class="info-panel">
+                    <div class="panel-header">
+                        <div class="panel-icon weak">⚠️</div>
+                        <h3 class="panel-title">Safe Pokémon Types</h3>
+                    </div>
+                    <p class="effectiveness-label">Resistant to this Pokémon's attacks</p>
+                    <div class="panel-content" id="resistantTypes">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Type effectiveness chart
+        const typeChart = {
+            normal: { weakTo: ['fighting'], resistantTo: [], immuneTo: ['ghost'], attacks: { superEffective: [], notEffective: ['rock', 'steel'], noEffect: ['ghost'] } },
+            fire: { weakTo: ['water', 'ground', 'rock'], resistantTo: ['fire', 'grass', 'ice', 'bug', 'steel', 'fairy'], immuneTo: [], attacks: { superEffective: ['grass', 'ice', 'bug', 'steel'], notEffective: ['fire', 'water', 'rock', 'dragon'], noEffect: [] } },
+            water: { weakTo: ['electric', 'grass'], resistantTo: ['fire', 'water', 'ice', 'steel'], immuneTo: [], attacks: { superEffective: ['fire', 'ground', 'rock'], notEffective: ['water', 'grass', 'dragon'], noEffect: [] } },
+            electric: { weakTo: ['ground'], resistantTo: ['electric', 'flying', 'steel'], immuneTo: [], attacks: { superEffective: ['water', 'flying'], notEffective: ['electric', 'grass', 'dragon'], noEffect: ['ground'] } },
+            grass: { weakTo: ['fire', 'ice', 'poison', 'flying', 'bug'], resistantTo: ['water', 'electric', 'grass', 'ground'], immuneTo: [], attacks: { superEffective: ['water', 'ground', 'rock'], notEffective: ['fire', 'grass', 'poison', 'flying', 'bug', 'dragon', 'steel'], noEffect: [] } },
+            ice: { weakTo: ['fire', 'fighting', 'rock', 'steel'], resistantTo: ['ice'], immuneTo: [], attacks: { superEffective: ['grass', 'ground', 'flying', 'dragon'], notEffective: ['fire', 'water', 'ice', 'steel'], noEffect: [] } },
+            fighting: { weakTo: ['flying', 'psychic', 'fairy'], resistantTo: ['bug', 'rock', 'dark'], immuneTo: [], attacks: { superEffective: ['normal', 'ice', 'rock', 'dark', 'steel'], notEffective: ['poison', 'flying', 'psychic', 'bug', 'fairy'], noEffect: ['ghost'] } },
+            poison: { weakTo: ['ground', 'psychic'], resistantTo: ['grass', 'fighting', 'poison', 'bug', 'fairy'], immuneTo: [], attacks: { superEffective: ['grass', 'fairy'], notEffective: ['poison', 'ground', 'rock', 'ghost'], noEffect: ['steel'] } },
+            ground: { weakTo: ['water', 'grass', 'ice'], resistantTo: ['poison', 'rock'], immuneTo: ['electric'], attacks: { superEffective: ['fire', 'electric', 'poison', 'rock', 'steel'], notEffective: ['grass', 'bug'], noEffect: ['flying'] } },
+            flying: { weakTo: ['electric', 'ice', 'rock'], resistantTo: ['grass', 'fighting', 'bug'], immuneTo: ['ground'], attacks: { superEffective: ['grass', 'fighting', 'bug'], notEffective: ['electric', 'rock', 'steel'], noEffect: [] } },
+            psychic: { weakTo: ['bug', 'ghost', 'dark'], resistantTo: ['fighting', 'psychic'], immuneTo: [], attacks: { superEffective: ['fighting', 'poison'], notEffective: ['psychic', 'steel'], noEffect: ['dark'] } },
+            bug: { weakTo: ['fire', 'flying', 'rock'], resistantTo: ['grass', 'fighting', 'ground'], immuneTo: [], attacks: { superEffective: ['grass', 'psychic', 'dark'], notEffective: ['fire', 'fighting', 'poison', 'flying', 'ghost', 'steel', 'fairy'], noEffect: [] } },
+            rock: { weakTo: ['water', 'grass', 'fighting', 'ground', 'steel'], resistantTo: ['normal', 'fire', 'poison', 'flying'], immuneTo: [], attacks: { superEffective: ['fire', 'ice', 'flying', 'bug'], notEffective: ['fighting', 'ground', 'steel'], noEffect: [] } },
+            ghost: { weakTo: ['ghost', 'dark'], resistantTo: ['poison', 'bug'], immuneTo: ['normal', 'fighting'], attacks: { superEffective: ['psychic', 'ghost'], notEffective: ['dark'], noEffect: ['normal'] } },
+            dragon: { weakTo: ['ice', 'dragon', 'fairy'], resistantTo: ['fire', 'water', 'electric', 'grass'], immuneTo: [], attacks: { superEffective: ['dragon'], notEffective: ['steel'], noEffect: ['fairy'] } },
+            dark: { weakTo: ['fighting', 'bug', 'fairy'], resistantTo: ['ghost', 'dark'], immuneTo: ['psychic'], attacks: { superEffective: ['psychic', 'ghost'], notEffective: ['fighting', 'dark', 'fairy'], noEffect: [] } },
+            steel: { weakTo: ['fire', 'fighting', 'ground'], resistantTo: ['normal', 'grass', 'ice', 'flying', 'psychic', 'bug', 'rock', 'dragon', 'steel', 'fairy'], immuneTo: ['poison'], attacks: { superEffective: ['ice', 'rock', 'fairy'], notEffective: ['fire', 'water', 'electric', 'steel'], noEffect: [] } },
+            fairy: { weakTo: ['poison', 'steel'], resistantTo: ['fighting', 'bug', 'dark'], immuneTo: ['dragon'], attacks: { superEffective: ['fighting', 'dragon', 'dark'], notEffective: ['fire', 'poison', 'steel'], noEffect: [] } }
+        };
+
+        // Pokemon data cache
+        let pokemonCache = {};
+        let allPokemonList = [];
+
+        // Fetch all Pokemon names for suggestions
+        async function fetchPokemonList() {
+            try {
+                const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1010');
+                const data = await response.json();
+                allPokemonList = data.results.map(p => p.name);
+            } catch (error) {
+                console.error('Error fetching Pokemon list:', error);
+            }
+        }
+
+        // Fetch Pokemon data
+        async function fetchPokemon(name) {
+            const normalizedName = name.toLowerCase().trim();
+            
+            if (pokemonCache[normalizedName]) {
+                return pokemonCache[normalizedName];
+            }
+
+            try {
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${normalizedName}`);
+                if (!response.ok) throw new Error('Pokemon not found');
+                const data = await response.json();
+                pokemonCache[normalizedName] = data;
+                return data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        // Get Pokemon GO moves (using PokéAPI move data)
+        async function getPokemonMoves(pokemon) {
+            const moves = pokemon.moves.slice(0, 8); // Get first 8 moves
+            const moveDetails = [];
+
+            for (const move of moves) {
+                try {
+                    const response = await fetch(move.move.url);
+                    const data = await response.json();
+                    moveDetails.push({
+                        name: data.name.replace(/-/g, ' '),
+                        type: data.type.name,
+                        power: data.power || 0
+                    });
+                } catch (error) {
+                    moveDetails.push({
+                        name: move.move.name.replace(/-/g, ' '),
+                        type: 'normal',
+                        power: 0
+                    });
+                }
+            }
+
+            // Sort by power
+            return moveDetails.sort((a, b) => b.power - a.power);
+        }
+
+        // Calculate weaknesses for a Pokemon with multiple types
+        function getWeaknesses(types) {
+            const weaknesses = new Set();
+            const resistances = new Set();
+            const immunities = new Set();
+
+            types.forEach(type => {
+                const chart = typeChart[type];
+                if (chart) {
+                    chart.weakTo.forEach(t => weaknesses.add(t));
+                    chart.resistantTo.forEach(t => resistances.add(t));
+                    chart.immuneTo.forEach(t => immunities.add(t));
+                }
+            });
+
+            // Remove resistances and immunities from weaknesses
+            resistances.forEach(t => weaknesses.delete(t));
+            immunities.forEach(t => weaknesses.delete(t));
+
+            return Array.from(weaknesses);
+        }
+
+        // Get types that resist attacks from this Pokemon
+        function getTypesToAvoid(types) {
+            const dangerousTo = new Set();
+
+            types.forEach(type => {
+                const chart = typeChart[type];
+                if (chart) {
+                    chart.attacks.superEffective.forEach(t => dangerousTo.add(t));
+                }
+            });
+
+            return Array.from(dangerousTo);
+        }
+
+        // Get types that resist this Pokemon's attacks
+        function getResistantTypes(types) {
+            const allResistant = new Set();
+
+            types.forEach(type => {
+                const chart = typeChart[type];
+                if (chart) {
+                    chart.attacks.notEffective.forEach(t => allResistant.add(t));
+                    chart.attacks.noEffect.forEach(t => allResistant.add(t));
+                }
+            });
+
+            return Array.from(allResistant);
+        }
+
+        // Create type badge HTML
+        function createTypeBadge(type, extraClass = '') {
+            return `<span class="type-badge type-${type} ${extraClass}">${type}</span>`;
+        }
+
+        // Create type chip HTML
+        function createTypeChip(type, effectClass = '') {
+            return `<div class="type-chip type-${type} ${effectClass}">${type}</div>`;
+        }
+
+        // Display results
+        async function displayResults(pokemon) {
+            const types = pokemon.types.map(t => t.type.name);
+            const moves = await getPokemonMoves(pokemon);
+            const weaknesses = getWeaknesses(types);
+            const typesToAvoid = getTypesToAvoid(types);
+            const resistantTypes = getResistantTypes(types);
+
+            // Pokemon card
+            document.getElementById('pokemonCard').innerHTML = `
+                <div class="pokemon-image">
+                    <img src="${pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default}" 
+                         alt="${pokemon.name}">
+                </div>
+                <div class="pokemon-info">
+                    <h2 class="pokemon-name">${pokemon.name}</h2>
+                    <p class="pokemon-number">#${pokemon.id.toString().padStart(4, '0')}</p>
+                    <div class="type-badges">
+                        ${types.map(t => createTypeBadge(t)).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Moves list
+            document.getElementById('movesList').innerHTML = moves.length > 0 
+                ? moves.map(m => `
+                    <div class="move-item">
+                        <span class="move-name">${m.name}</span>
+                        <span class="move-type type-badge type-${m.type}">${m.type}</span>
+                    </div>
+                `).join('')
+                : '<p style="color: var(--text-muted)">No move data available</p>';
+
+            // Strong against (what attacks to use)
+            document.getElementById('strongAgainst').innerHTML = `
+                <div class="type-list">
+                    ${weaknesses.length > 0 
+                        ? weaknesses.map(t => createTypeChip(t, 'super-effective')).join('') 
+                        : '<p style="color: var(--text-muted)">No major weaknesses</p>'}
+                </div>
+            `;
+
+            // Types to avoid using
+            document.getElementById('avoidTypes').innerHTML = `
+                <div class="type-list">
+                    ${typesToAvoid.length > 0 
+                        ? typesToAvoid.map(t => createTypeChip(t, 'not-effective')).join('') 
+                        : '<p style="color: var(--text-muted)">No specific types to avoid</p>'}
+                </div>
+            `;
+
+            // Resistant types (safe to use)
+            document.getElementById('resistantTypes').innerHTML = `
+                <div class="type-list">
+                    ${resistantTypes.length > 0 
+                        ? resistantTypes.map(t => createTypeChip(t)).join('') 
+                        : '<p style="color: var(--text-muted)">No resistant types</p>'}
+                </div>
+            `;
+
+            document.getElementById('results').classList.add('active');
+        }
+
+        // Search functionality
+        async function searchPokemon() {
+            const searchInput = document.getElementById('pokemonSearch');
+            const query = searchInput.value.trim();
+
+            if (!query) return;
+
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('error').classList.remove('active');
+            document.getElementById('suggestions').classList.remove('active');
+
+            try {
+                const pokemon = await fetchPokemon(query);
+                await displayResults(pokemon);
+            } catch (error) {
+                document.getElementById('error').classList.add('active');
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+            }
+        }
+
+        // Suggestions
+        function showSuggestions(query) {
+            const suggestionsEl = document.getElementById('suggestions');
+            
+            if (!query || query.length < 2) {
+                suggestionsEl.classList.remove('active');
+                return;
+            }
+
+            const matches = allPokemonList
+                .filter(name => name.startsWith(query.toLowerCase()))
+                .slice(0, 8);
+
+            if (matches.length === 0) {
+                suggestionsEl.classList.remove('active');
+                return;
+            }
+
+            suggestionsEl.innerHTML = matches.map(name => `
+                <div class="suggestion-item" data-name="${name}">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${allPokemonList.indexOf(name) + 1}.png" 
+                         alt="${name}"
+                         onerror="this.style.display='none'">
+                    <span style="text-transform: capitalize">${name}</span>
+                </div>
+            `).join('');
+
+            suggestionsEl.classList.add('active');
+        }
+
+        // Event listeners
+        document.getElementById('searchBtn').addEventListener('click', searchPokemon);
+
+        document.getElementById('pokemonSearch').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchPokemon();
+        });
+
+        document.getElementById('pokemonSearch').addEventListener('input', (e) => {
+            showSuggestions(e.target.value);
+        });
+
+        document.getElementById('suggestions').addEventListener('click', (e) => {
+            const item = e.target.closest('.suggestion-item');
+            if (item) {
+                document.getElementById('pokemonSearch').value = item.dataset.name;
+                document.getElementById('suggestions').classList.remove('active');
+                searchPokemon();
+            }
+        });
+
+        // Close suggestions on click outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-wrapper')) {
+                document.getElementById('suggestions').classList.remove('active');
+            }
+        });
+
+        // Initialize
+        fetchPokemonList();
+    </script>
+</body>
+</html>
