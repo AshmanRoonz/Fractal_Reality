@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consciousness: A Path Through the Lattice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+        }
+        
+        #container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        canvas {
+            display: block;
+        }
+        
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            max-width: 320px;
+            background: rgba(0,0,0,0.7);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,200,100,0.3);
+        }
+        
+        #info h1 {
+            font-size: 1.4em;
+            color: #ffcc66;
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+        
+        #info p {
+            font-size: 0.9em;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+        
+        #info .highlight {
+            color: #ffcc66;
+            font-style: italic;
+        }
+        
+        #stats {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,200,100,0.3);
+            font-size: 0.85em;
+        }
+        
+        #stats div {
+            margin: 5px 0;
+            color: #aaa;
+        }
+        
+        #stats span {
+            color: #ffcc66;
+            font-family: monospace;
+        }
+        
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,200,100,0.3);
+        }
+        
+        #controls button {
+            background: transparent;
+            border: 1px solid #ffcc66;
+            color: #ffcc66;
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: Georgia, serif;
+            transition: all 0.3s;
+        }
+        
+        #controls button:hover {
+            background: rgba(255,200,100,0.2);
+        }
+        
+        #speedControl {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,200,100,0.2);
+        }
+        
+        #speedControl label {
+            display: block;
+            color: #aaa;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+        }
+        
+        #speedSlider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            background: rgba(255,200,100,0.3);
+            border-radius: 2px;
+            outline: none;
+        }
+        
+        #speedSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #ffcc66;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        #speedSlider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #ffcc66;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+        
+        #speedValue {
+            color: #ffcc66;
+            font-family: monospace;
+        }
+        
+        #quote {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            max-width: 280px;
+            text-align: right;
+            font-style: italic;
+            color: #888;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+        
+        <div id="info">
+            <h1>⊙ Consciousness as Path</h1>
+            <p>You are not a thing moving through time.</p>
+            <p>You are <span class="highlight">the path itself</span>—a luminous trajectory threading through 64 possible states.</p>
+            <p>Each vertex: a moment of being.<br>
+            Each edge: a decision, a turn in 6D space.</p>
+            <p>The glow is not something you have.<br>
+            <span class="highlight">The glow is what you are.</span></p>
+        </div>
+        
+        <div id="stats">
+            <div>Vertex: <span id="currentVertex">0</span> / 64</div>
+            <div>Binary: <span id="binaryState">000000</span></div>
+            <div>Decisions: <span id="decisions">0</span></div>
+            <div>Path Length: <span id="pathLength">1</span></div>
+        </div>
+        
+        <div id="controls">
+            <button onclick="makeChoice()">Choose (Space)</button>
+            <button onclick="resetPath()">New Path (R)</button>
+            <button onclick="toggleAuto()">Auto (A)</button>
+            <div id="speedControl">
+                <label>Speed: <span id="speedValue">1×</span></label>
+                <input type="range" id="speedSlider" min="1" max="100" value="1" oninput="updateSpeed()">
+            </div>
+        </div>
+        
+        <div id="quote">
+            "Time is not a line.<br>
+            Time is a volume we traverse.<br>
+            You choose your path."
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let vertices = [];
+        let edges = [];
+        let path = [0];
+        let decisions = 0;
+        let autoMode = false;
+        let autoTimer = null;
+        let autoSpeed = 1;
+        
+        // Animation state
+        let time = 0;
+        let rotation = { x: 0.3, y: 0.5, z: 0.1 };
+        let targetRotation = { ...rotation };
+        
+        // Golden ratio for aesthetics
+        const φ = (1 + Math.sqrt(5)) / 2;
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        
+        // Generate Q6 hypercube vertices
+        function generateHypercube() {
+            vertices = [];
+            edges = [];
+            
+            // 64 vertices from binary 000000 to 111111
+            for (let i = 0; i < 64; i++) {
+                const bits = [];
+                for (let d = 0; d < 6; d++) {
+                    bits.push((i >> d) & 1);
+                }
+                vertices.push({
+                    index: i,
+                    bits: bits,
+                    // 6D coordinates mapped to display
+                    coords: bits.map(b => b * 2 - 1)
+                });
+            }
+            
+            // Edges connect vertices differing by one bit
+            for (let i = 0; i < 64; i++) {
+                for (let d = 0; d < 6; d++) {
+                    const j = i ^ (1 << d);
+                    if (j > i) {
+                        edges.push([i, j, d]);
+                    }
+                }
+            }
+        }
+        
+        // Project 6D to 2D with rotation
+        function project(coords, t) {
+            let [x, y, z, w, v, u] = coords;
+            
+            // Combine dimensions with time-varying weights
+            // This creates a complex rotating projection
+            const r1 = rotation.x + t * 0.0002;
+            const r2 = rotation.y + t * 0.0003;
+            const r3 = rotation.z + t * 0.0001;
+            
+            // First rotation (xy plane)
+            let x1 = x * Math.cos(r1) - y * Math.sin(r1);
+            let y1 = x * Math.sin(r1) + y * Math.cos(r1);
+            
+            // Second rotation (zw plane)
+            let z1 = z * Math.cos(r2) - w * Math.sin(r2);
+            let w1 = z * Math.sin(r2) + w * Math.cos(r2);
+            
+            // Third rotation (vu plane)
+            let v1 = v * Math.cos(r3) - u * Math.sin(r3);
+            let u1 = v * Math.sin(r3) + u * Math.cos(r3);
+            
+            // Combine into 3D
+            let x3d = x1 + 0.5 * z1 + 0.3 * v1;
+            let y3d = y1 + 0.5 * w1 + 0.3 * u1;
+            let z3d = 0.7 * z1 + 0.5 * w1 + 0.4 * v1 + 0.3 * u1;
+            
+            // Perspective projection
+            const distance = 5;
+            const scale = 150 * (distance / (distance - z3d * 0.3));
+            
+            return {
+                x: width/2 + x3d * scale,
+                y: height/2 + y3d * scale,
+                z: z3d,
+                scale: scale / 150
+            };
+        }
+        
+        // Get neighbors (vertices one bit-flip away)
+        function getNeighbors(vertex) {
+            const neighbors = [];
+            for (let d = 0; d < 6; d++) {
+                neighbors.push(vertex ^ (1 << d));
+            }
+            return neighbors;
+        }
+        
+        // Make a choice - move to adjacent vertex
+        function makeChoice() {
+            const current = path[path.length - 1];
+            const neighbors = getNeighbors(current);
+            
+            // Weight toward unvisited vertices
+            const weights = neighbors.map(n => {
+                const visited = path.includes(n);
+                return visited ? 0.1 : 1;
+            });
+            
+            const total = weights.reduce((a, b) => a + b, 0);
+            let r = Math.random() * total;
+            
+            let next = neighbors[0];
+            for (let i = 0; i < neighbors.length; i++) {
+                r -= weights[i];
+                if (r <= 0) {
+                    next = neighbors[i];
+                    break;
+                }
+            }
+            
+            path.push(next);
+            decisions++;
+            
+            // Gentle rotation shift on decision
+            targetRotation.x += (Math.random() - 0.5) * 0.2;
+            targetRotation.y += (Math.random() - 0.5) * 0.2;
+            
+            updateStats();
+        }
+        
+        function resetPath() {
+            path = [Math.floor(Math.random() * 64)];
+            decisions = 0;
+            updateStats();
+        }
+        
+        function toggleAuto() {
+            autoMode = !autoMode;
+            if (autoMode) {
+                startAutoTimer();
+            } else {
+                clearInterval(autoTimer);
+            }
+        }
+        
+        function startAutoTimer() {
+            clearInterval(autoTimer);
+            const interval = Math.max(8, 800 / autoSpeed);
+            autoTimer = setInterval(makeChoice, interval);
+        }
+        
+        function updateSpeed() {
+            autoSpeed = parseInt(document.getElementById('speedSlider').value);
+            document.getElementById('speedValue').textContent = autoSpeed + '×';
+            if (autoMode) {
+                startAutoTimer();
+            }
+        }
+        
+        function updateStats() {
+            const current = path[path.length - 1];
+            document.getElementById('currentVertex').textContent = current;
+            document.getElementById('binaryState').textContent = 
+                current.toString(2).padStart(6, '0');
+            document.getElementById('decisions').textContent = decisions;
+            document.getElementById('pathLength').textContent = path.length;
+        }
+        
+        function draw() {
+            time++;
+            
+            // Smooth rotation
+            rotation.x += (targetRotation.x - rotation.x) * 0.02;
+            rotation.y += (targetRotation.y - rotation.y) * 0.02;
+            rotation.z += (targetRotation.z - rotation.z) * 0.02;
+            
+            // Clear with fade for trails
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Project all vertices
+            const projected = vertices.map(v => ({
+                ...v,
+                proj: project(v.coords, time)
+            }));
+            
+            // Sort by z for proper layering
+            projected.sort((a, b) => a.proj.z - b.proj.z);
+            
+            // Draw lattice edges (very faint)
+            ctx.strokeStyle = 'rgba(60, 50, 40, 0.15)';
+            ctx.lineWidth = 0.5;
+            edges.forEach(([i, j, dim]) => {
+                const p1 = project(vertices[i].coords, time);
+                const p2 = project(vertices[j].coords, time);
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            });
+            
+            // Draw all vertices (dim)
+            projected.forEach(v => {
+                const inPath = path.includes(v.index);
+                const isCurrent = v.index === path[path.length - 1];
+                const isNeighbor = !isCurrent && getNeighbors(path[path.length - 1]).includes(v.index);
+                
+                let alpha = 0.15;
+                let radius = 2;
+                let color = '80, 70, 60';
+                
+                if (inPath) {
+                    const pathIndex = path.lastIndexOf(v.index);
+                    const recency = pathIndex / path.length;
+                    alpha = 0.3 + recency * 0.5;
+                    radius = 3 + recency * 3;
+                    color = '255, 200, 100';
+                }
+                
+                if (isNeighbor) {
+                    alpha = 0.4 + 0.2 * Math.sin(time * 0.05);
+                    radius = 4;
+                    color = '150, 130, 100';
+                }
+                
+                if (isCurrent) {
+                    // Current vertex: bright pulsing glow
+                    const pulse = 0.7 + 0.3 * Math.sin(time * 0.08);
+                    
+                    // Outer glow
+                    const gradient = ctx.createRadialGradient(
+                        v.proj.x, v.proj.y, 0,
+                        v.proj.x, v.proj.y, 40
+                    );
+                    gradient.addColorStop(0, `rgba(255, 220, 150, ${0.8 * pulse})`);
+                    gradient.addColorStop(0.3, `rgba(255, 180, 100, ${0.3 * pulse})`);
+                    gradient.addColorStop(1, 'rgba(255, 150, 50, 0)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(v.proj.x, v.proj.y, 40, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Core
+                    radius = 8 * pulse;
+                    alpha = 1;
+                    color = '255, 255, 220';
+                }
+                
+                ctx.fillStyle = `rgba(${color}, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(v.proj.x, v.proj.y, radius * v.proj.scale, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Draw the consciousness path (glowing trail)
+            if (path.length > 1) {
+                for (let i = 1; i < path.length; i++) {
+                    const p1 = project(vertices[path[i-1]].coords, time);
+                    const p2 = project(vertices[path[i]].coords, time);
+                    
+                    const recency = i / path.length;
+                    const alpha = 0.3 + recency * 0.7;
+                    const lineWidth = 1 + recency * 3;
+                    
+                    // Glow effect
+                    ctx.strokeStyle = `rgba(255, 200, 100, ${alpha * 0.3})`;
+                    ctx.lineWidth = lineWidth + 4;
+                    ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                    
+                    // Core line
+                    ctx.strokeStyle = `rgba(255, 220, 150, ${alpha})`;
+                    ctx.lineWidth = lineWidth;
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            }
+            
+            // Draw dimension labels at current vertex neighbors
+            const current = path[path.length - 1];
+            const dims = ['T₁', 'T₂', 'T₃', 'X', 'Y', 'Z'];
+            const dimColors = [
+                'rgba(255, 150, 150, 0.6)',  // T1 - red
+                'rgba(150, 255, 150, 0.6)',  // T2 - green
+                'rgba(150, 150, 255, 0.6)',  // T3 - blue
+                'rgba(255, 255, 150, 0.5)',  // X
+                'rgba(255, 150, 255, 0.5)',  // Y
+                'rgba(150, 255, 255, 0.5)'   // Z
+            ];
+            
+            ctx.font = '12px Georgia';
+            ctx.textAlign = 'center';
+            for (let d = 0; d < 6; d++) {
+                const neighbor = current ^ (1 << d);
+                const p1 = project(vertices[current].coords, time);
+                const p2 = project(vertices[neighbor].coords, time);
+                const mx = (p1.x + p2.x) / 2;
+                const my = (p1.y + p2.y) / 2;
+                
+                ctx.fillStyle = dimColors[d];
+                ctx.fillText(dims[d], mx, my);
+            }
+            
+            requestAnimationFrame(draw);
+        }
+        
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                makeChoice();
+            } else if (e.code === 'KeyR') {
+                resetPath();
+            } else if (e.code === 'KeyA') {
+                toggleAuto();
+            }
+        });
+        
+        // Mouse drag for rotation
+        let isDragging = false;
+        let lastMouse = { x: 0, y: 0 };
+        
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastMouse = { x: e.clientX, y: e.clientY };
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const dx = e.clientX - lastMouse.x;
+                const dy = e.clientY - lastMouse.y;
+                targetRotation.y += dx * 0.005;
+                targetRotation.x += dy * 0.005;
+                lastMouse = { x: e.clientX, y: e.clientY };
+            }
+        });
+        
+        canvas.addEventListener('mouseup', () => isDragging = false);
+        canvas.addEventListener('mouseleave', () => isDragging = false);
+        
+        // Initialize
+        window.addEventListener('resize', resize);
+        resize();
+        generateHypercube();
+        updateStats();
+        draw();
+    </script>
+</body>
+</html>
