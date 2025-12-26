@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circumpunct Battery Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .panel {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .panel h2 {
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        
+        .canvas-container {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        
+        canvas {
+            border-radius: 5px;
+            width: 100%;
+            display: block;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .stat {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .controls {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background: rgba(255,215,0,0.3);
+            border: 2px solid gold;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: rgba(255,215,0,0.5);
+            transform: scale(1.05);
+        }
+        
+        .info-box {
+            background: rgba(255,215,0,0.1);
+            border: 2px solid rgba(255,215,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⊙ Circumpunct Battery Technology</h1>
+        <p class="subtitle">Conventional vs Fractal Electrode Design</p>
+        
+        <div class="controls">
+            <button onclick="animateDendrites()">Simulate Dendrite Formation</button>
+            <button onclick="animateCharging()">Simulate Fast Charging</button>
+            <button onclick="resetSimulation()">Reset</button>
+        </div>
+        
+        <div class="comparison">
+            <div class="panel">
+                <h2>Conventional Battery</h2>
+                <div class="canvas-container">
+                    <canvas id="conventionalCanvas" width="400" height="400"></canvas>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-label">Energy Density</div>
+                        <div class="stat-value">250 Wh/kg</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Cycle Life</div>
+                        <div class="stat-value">1,000</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Charge Time</div>
+                        <div class="stat-value">30 min</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Fractal Dim (D)</div>
+                        <div class="stat-value">2.0</div>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <strong>Problems:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Dendrite formation (β localizes)</li>
+                        <li>Capacity fade over cycles</li>
+                        <li>Slow charging required</li>
+                        <li>Planar structure (D = 2)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2>Circumpunct Battery</h2>
+                <div class="canvas-container">
+                    <canvas id="circumpunctCanvas" width="400" height="400"></canvas>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-label">Energy Density</div>
+                        <div class="stat-value" style="color: #0f0;">600 Wh/kg</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Cycle Life</div>
+                        <div class="stat-value" style="color: #0f0;">5,000+</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Charge Time</div>
+                        <div class="stat-value" style="color: #0f0;">10 min</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Fractal Dim (D)</div>
+                        <div class="stat-value" style="color: #0f0;">1.5</div>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <strong>Innovations:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Fractal structure (D ≈ 1.5)</li>
+                        <li>β = 0.5 field balance</li>
+                        <li>φ-ratio resonant charging</li>
+                        <li>Topological protection</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>Key Design Principles</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+                <div class="stat">
+                    <div class="stat-label">Fractal Dimension</div>
+                    <div class="stat-value">D ≈ 1.5</div>
+                    <p style="font-size: 0.9em; margin-top: 10px;">Optimal surface area + stability</p>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Balance Parameter</div>
+                    <div class="stat-value">β = 0.5</div>
+                    <p style="font-size: 0.9em; margin-top: 10px;">Equal field sharing prevents dendrites</p>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Golden Ratio</div>
+                    <div class="stat-value">φ ≈ 1.618</div>
+                    <p style="font-size: 0.9em; margin-top: 10px;">Resonant charging frequency</p>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Topology</div>
+                    <div class="stat-value">Braid Protected</div>
+                    <p style="font-size: 0.9em; margin-top: 10px;">Prevents degradation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const phi = 1.618033988749;
+        let animationFrame = null;
+        
+        function drawConventional(ctx, time = 0) {
+            ctx.clearRect(0, 0, 400, 400);
+            
+            // Planar electrode structure
+            ctx.fillStyle = 'rgba(100, 100, 100, 0.5)';
+            ctx.fillRect(50, 50, 300, 150);
+            
+            ctx.fillStyle = 'rgba(150, 150, 150, 0.5)';
+            ctx.fillRect(50, 250, 300, 100);
+            
+            // Show dendrite formation during animation
+            if (time > 0) {
+                ctx.strokeStyle = 'rgba(255, 50, 50, 0.8)';
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 5; i++) {
+                    const x = 100 + i * 50;
+                    ctx.beginPath();
+                    ctx.moveTo(x, 200);
+                    // Dendrites growing randomly
+                    for (let j = 0; j < time / 20; j++) {
+                        ctx.lineTo(x + (Math.random() - 0.5) * 20, 200 + j * 5);
+                    }
+                    ctx.stroke();
+                }
+            }
+            
+            // Labels
+            ctx.fillStyle = 'white';
+            ctx.font = '14px Arial';
+            ctx.fillText('Planar Anode (D = 2.0)', 120, 120);
+            ctx.fillText('Planar Cathode', 150, 300);
+            ctx.fillText('β localizes → dendrites', 100, 380);
+        }
+        
+        function drawCircumpunct(ctx, time = 0) {
+            ctx.clearRect(0, 0, 400, 400);
+            
+            // Fractal electrode structure (Sierpinski-like)
+            drawFractal(ctx, 200, 100, 120, 3);
+            drawFractal(ctx, 200, 300, 100, 3);
+            
+            // Smooth field distribution
+            if (time > 0) {
+                const gradient = ctx.createRadialGradient(200, 200, 0, 200, 200, 150);
+                gradient.addColorStop(0, 'rgba(0, 255, 100, 0.3)');
+                gradient.addColorStop(1, 'rgba(0, 100, 255, 0.1)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, 400, 400);
+            }
+            
+            // Labels
+            ctx.fillStyle = 'white';
+            ctx.font = '14px Arial';
+            ctx.fillText('Fractal Anode (D = 1.5)', 110, 40);
+            ctx.fillText('Fractal Cathode', 140, 360);
+            ctx.fillText('β = 0.5 → uniform field', 100, 380);
+        }
+        
+        function drawFractal(ctx, x, y, size, depth) {
+            if (depth === 0) {
+                ctx.fillStyle = 'rgba(255, 215, 0, 0.4)';
+                ctx.fillRect(x - size/2, y - size/2, size, size);
+                return;
+            }
+            
+            const newSize = size / phi;
+            const offset = size / 3;
+            
+            // Draw fractal pattern
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    if (Math.abs(i) + Math.abs(j) > 0) {
+                        drawFractal(ctx, x + i * offset, y + j * offset, newSize, depth - 1);
+                    }
+                }
+            }
+        }
+        
+        function animateDendrites() {
+            let frame = 0;
+            const animate = () => {
+                const conv = document.getElementById('conventionalCanvas');
+                const circ = document.getElementById('circumpunctCanvas');
+                const convCtx = conv.getContext('2d');
+                const circCtx = circ.getContext('2d');
+                
+                drawConventional(convCtx, frame);
+                drawCircumpunct(circCtx, frame);
+                
+                frame++;
+                if (frame < 100) {
+                    animationFrame = requestAnimationFrame(animate);
+                }
+            };
+            animate();
+        }
+        
+        function animateCharging() {
+            let frame = 0;
+            const animate = () => {
+                const conv = document.getElementById('conventionalCanvas');
+                const circ = document.getElementById('circumpunctCanvas');
+                const convCtx = conv.getContext('2d');
+                const circCtx = circ.getContext('2d');
+                
+                // Show charging process
+                drawConventional(convCtx, 0);
+                drawCircumpunct(circCtx, 0);
+                
+                // Pulsed charging visualization for circumpunct
+                if (Math.sin(frame / 10) > 0) {
+                    circCtx.fillStyle = 'rgba(0, 255, 0, 0.2)';
+                    circCtx.fillRect(0, 0, 400, 400);
+                }
+                
+                frame++;
+                if (frame < 200) {
+                    animationFrame = requestAnimationFrame(animate);
+                }
+            };
+            animate();
+        }
+        
+        function resetSimulation() {
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+            }
+            
+            const conv = document.getElementById('conventionalCanvas');
+            const circ = document.getElementById('circumpunctCanvas');
+            const convCtx = conv.getContext('2d');
+            const circCtx = circ.getContext('2d');
+            
+            drawConventional(convCtx);
+            drawCircumpunct(circCtx);
+        }
+        
+        // Initial draw
+        resetSimulation();
+    </script>
+</body>
+</html>

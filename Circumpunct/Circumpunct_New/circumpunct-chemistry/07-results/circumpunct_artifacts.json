@@ -1,0 +1,89 @@
+{
+  "metadata": {
+    "timestamp": "2025-12-26T01:33:47.084063",
+    "framework": "Circumpunct Chemistry",
+    "version": "1.0.0"
+  },
+  "tests": {},
+  "molecules": {
+    "H2O": {
+      "formula": "H2O",
+      "atoms": [
+        "O",
+        "H",
+        "H"
+      ],
+      "bonds": 2,
+      "geometry": "bent",
+      "angle": 104.5,
+      "polar": true,
+      "dipole_magnitude": "moderate",
+      "pair_structure": {
+        "i_ext": 2,
+        "i_int": 2
+      },
+      "network": {
+        "donate": 2,
+        "accept": 2
+      }
+    },
+    "CH4": {
+      "formula": "CH4",
+      "atoms": [
+        "C",
+        "H",
+        "H",
+        "H",
+        "H"
+      ],
+      "bonds": 4,
+      "geometry": "tetrahedral",
+      "angle": 109.5,
+      "polar": false,
+      "dipole_magnitude": "none",
+      "pair_structure": {
+        "i_ext": 4,
+        "i_int": 0
+      }
+    },
+    "NH3": {
+      "formula": "NH3",
+      "atoms": [
+        "N",
+        "H",
+        "H",
+        "H"
+      ],
+      "bonds": 3,
+      "geometry": "trigonal_pyramidal",
+      "angle": 107.0,
+      "polar": true,
+      "dipole_magnitude": "moderate",
+      "pair_structure": {
+        "i_ext": 3,
+        "i_int": 1
+      },
+      "network": {
+        "donate": 3,
+        "accept": 1
+      }
+    },
+    "CO2": {
+      "formula": "CO2",
+      "atoms": [
+        "C",
+        "O",
+        "O"
+      ],
+      "bonds": 2,
+      "geometry": "linear",
+      "angle": 180.0,
+      "polar": false,
+      "dipole_magnitude": "none",
+      "pair_structure": {
+        "i_ext": 4,
+        "i_int": 0
+      }
+    }
+  }
+}

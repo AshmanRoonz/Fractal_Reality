@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>64-State Circumpunct Chemistry Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        select, input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 5px;
+            color: #fff;
+            font-size: 1em;
+        }
+        
+        input[type="range"] {
+            padding: 0;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(18, 1fr);
+            gap: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .element {
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .element:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+        
+        .element.active {
+            background: rgba(255,215,0,0.4);
+            border-color: gold;
+            box-shadow: 0 0 15px gold;
+        }
+        
+        .element-symbol {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .element-number {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+        
+        .element-config {
+            font-size: 0.6em;
+            opacity: 0.7;
+        }
+        
+        .state-display {
+            font-size: 0.5em;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .info-panel {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+        
+        .info-panel h2 {
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ffd700;
+        }
+        
+        .state-matrix {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 3px;
+            margin-top: 20px;
+            max-width: 600px;
+        }
+        
+        .state-cell {
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .state-cell:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .state-cell.occupied {
+            background: rgba(255,215,0,0.4);
+            border-color: gold;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(9, 1fr);
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⊙ 64-State Circumpunct Chemistry</h1>
+        <p class="subtitle">Interactive Periodic Table with Binary State Visualization</p>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="viewMode">View Mode:</label>
+                <select id="viewMode">
+                    <option value="periodic">Periodic Table</option>
+                    <option value="states">64-State Matrix</option>
+                    <option value="shells">Electron Shells</option>
+                    <option value="bonding">Bonding Analysis</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="highlightMode">Highlight:</label>
+                <select id="highlightMode">
+                    <option value="none">None</option>
+                    <option value="group">Chemical Groups</option>
+                    <option value="period">Periods</option>
+                    <option value="block">Orbital Blocks (s,p,d,f)</option>
+                    <option value="valence">Valence Electrons</option>
+                    <option value="beta">β Parameter</option>
+                </select>
+            </div>
+        </div>
+        
+        <div id="mainDisplay"></div>
+        
+        <div class="info-panel" id="infoPanel">
+            <h2>Selected Element: <span id="selectedElement">Click an element</span></h2>
+            <div class="info-grid" id="infoGrid"></div>
+        </div>
+        
+        <div class="info-panel">
+            <h2>Legend</h2>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(255,100,100,0.4);"></div>
+                    <span>s-block (Alkali/Alkaline Earth)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(100,255,100,0.4);"></div>
+                    <span>p-block (Main Group)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(255,215,0,0.4);"></div>
+                    <span>d-block (Transition Metals)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(255,100,255,0.4);"></div>
+                    <span>f-block (Lanthanides/Actinides)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(100,200,255,0.4);"></div>
+                    <span>Noble Gases (Complete)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Element data (simplified for demonstration)
+        const elements = [
+            {z: 1, symbol: 'H', name: 'Hydrogen', config: '1s¹', period: 1, group: 1, block: 's'},
+            {z: 2, symbol: 'He', name: 'Helium', config: '1s²', period: 1, group: 18, block: 's'},
+            {z: 3, symbol: 'Li', name: 'Lithium', config: '[He]2s¹', period: 2, group: 1, block: 's'},
+            {z: 4, symbol: 'Be', name: 'Beryllium', config: '[He]2s²', period: 2, group: 2, block: 's'},
+            {z: 5, symbol: 'B', name: 'Boron', config: '[He]2s²2p¹', period: 2, group: 13, block: 'p'},
+            {z: 6, symbol: 'C', name: 'Carbon', config: '[He]2s²2p²', period: 2, group: 14, block: 'p'},
+            {z: 7, symbol: 'N', name: 'Nitrogen', config: '[He]2s²2p³', period: 2, group: 15, block: 'p'},
+            {z: 8, symbol: 'O', name: 'Oxygen', config: '[He]2s²2p⁴', period: 2, group: 16, block: 'p'},
+            {z: 9, symbol: 'F', name: 'Fluorine', config: '[He]2s²2p⁵', period: 2, group: 17, block: 'p'},
+            {z: 10, symbol: 'Ne', name: 'Neon', config: '[He]2s²2p⁶', period: 2, group: 18, block: 'p'},
+            {z: 11, symbol: 'Na', name: 'Sodium', config: '[Ne]3s¹', period: 3, group: 1, block: 's'},
+            {z: 12, symbol: 'Mg', name: 'Magnesium', config: '[Ne]3s²', period: 3, group: 2, block: 's'},
+            {z: 13, symbol: 'Al', name: 'Aluminum', config: '[Ne]3s²3p¹', period: 3, group: 13, block: 'p'},
+            {z: 14, symbol: 'Si', name: 'Silicon', config: '[Ne]3s²3p²', period: 3, group: 14, block: 'p'},
+            {z: 15, symbol: 'P', name: 'Phosphorus', config: '[Ne]3s²3p³', period: 3, group: 15, block: 'p'},
+            {z: 16, symbol: 'S', name: 'Sulfur', config: '[Ne]3s²3p⁴', period: 3, group: 16, block: 'p'},
+            {z: 17, symbol: 'Cl', name: 'Chlorine', config: '[Ne]3s²3p⁵', period: 3, group: 17, block: 'p'},
+            {z: 18, symbol: 'Ar', name: 'Argon', config: '[Ne]3s²3p⁶', period: 3, group: 18, block: 'p'},
+            // Add more elements as needed - this is simplified
+        ];
+        
+        let selectedElement = null;
+        
+        function getBinaryState(z) {
+            // Simplified mapping to 64-state binary
+            const period = elements.find(e => e.z === z)?.period || 1;
+            const input = (period - 1).toString(2).padStart(3, '0');
+            const output = (z % 8).toString(2).padStart(3, '0');
+            return `${input},${output}`;
+        }
+        
+        function getBlockColor(block) {
+            const colors = {
+                's': 'rgba(255,100,100,0.4)',
+                'p': 'rgba(100,255,100,0.4)',
+                'd': 'rgba(255,215,0,0.4)',
+                'f': 'rgba(255,100,255,0.4)'
+            };
+            return colors[block] || 'rgba(255,255,255,0.15)';
+        }
+        
+        function renderPeriodicTable() {
+            const container = document.getElementById('mainDisplay');
+            container.className = 'grid-container';
+            container.innerHTML = '';
+            
+            // Create grid
+            for (let i = 0; i < 7 * 18; i++) {
+                const div = document.createElement('div');
+                const element = elements.find(e => getGridPosition(e) === i);
+                
+                if (element) {
+                    div.className = 'element';
+                    div.style.background = getBlockColor(element.block);
+                    
+                    if (element.group === 18) {
+                        div.style.background = 'rgba(100,200,255,0.4)';
+                    }
+                    
+                    div.innerHTML = `
+                        <div class="state-display">${getBinaryState(element.z)}</div>
+                        <div class="element-number">${element.z}</div>
+                        <div class="element-symbol">${element.symbol}</div>
+                        <div class="element-config">${element.config}</div>
+                    `;
+                    
+                    div.onclick = () => selectElement(element);
+                    
+                    if (selectedElement?.z === element.z) {
+                        div.classList.add('active');
+                    }
+                }
+                
+                container.appendChild(div);
+            }
+        }
+        
+        function getGridPosition(element) {
+            // Simplified grid positioning
+            const row = element.period - 1;
+            const col = element.group - 1;
+            return row * 18 + col;
+        }
+        
+        function render64StateMatrix() {
+            const container = document.getElementById('mainDisplay');
+            container.innerHTML = '<div class="state-matrix"></div>';
+            const matrix = container.querySelector('.state-matrix');
+            
+            for (let i = 0; i < 64; i++) {
+                const div = document.createElement('div');
+                div.className = 'state-cell';
+                
+                const input = Math.floor(i / 8);
+                const output = i % 8;
+                
+                const binary = `${input.toString(2).padStart(3,'0')},${output.toString(2).padStart(3,'0')}`;
+                div.textContent = binary;
+                
+                // Check if this state is occupied by selected element
+                if (selectedElement && getBinaryState(selectedElement.z) === binary) {
+                    div.classList.add('occupied');
+                }
+                
+                div.onclick = () => {
+                    alert(`State ${binary}\nInput: ${input} (${input.toString(2).padStart(3,'0')})\nOutput: ${output} (${output.toString(2).padStart(3,'0')})`);
+                };
+                
+                matrix.appendChild(div);
+            }
+        }
+        
+        function selectElement(element) {
+            selectedElement = element;
+            
+            document.getElementById('selectedElement').textContent = 
+                `${element.name} (${element.symbol})`;
+            
+            const infoGrid = document.getElementById('infoGrid');
+            infoGrid.innerHTML = `
+                <div class="info-item">
+                    <div class="info-label">Atomic Number</div>
+                    <div>${element.z}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Electron Config</div>
+                    <div>${element.config}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">64-State Binary</div>
+                    <div>${getBinaryState(element.z)}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Period</div>
+                    <div>${element.period}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Group</div>
+                    <div>${element.group}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Block</div>
+                    <div>${element.block}-block</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">β Parameter (est.)</div>
+                    <div>${estimateBeta(element).toFixed(3)}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Circumpunct State</div>
+                    <div>${getCircumpunctState(element)}</div>
+                </div>
+            `;
+            
+            render();
+        }
+        
+        function estimateBeta(element) {
+            // Estimate β based on valence electrons and noble gas proximity
+            const valence = element.z % 8;
+            if (element.group === 18) return 0; // Noble gas, no bonding
+            if (valence === 4) return 0.5; // Carbon-like, perfect balance
+            return Math.abs(valence - 4) / 8;
+        }
+        
+        function getCircumpunctState(element) {
+            const state = getBinaryState(element.z);
+            const [input, output] = state.split(',');
+            return `(${input}, ${output})`;
+        }
+        
+        function render() {
+            const viewMode = document.getElementById('viewMode').value;
+            
+            switch(viewMode) {
+                case 'periodic':
+                    renderPeriodicTable();
+                    break;
+                case 'states':
+                    render64StateMatrix();
+                    break;
+                case 'shells':
+                    renderShellView();
+                    break;
+                case 'bonding':
+                    renderBondingView();
+                    break;
+            }
+        }
+        
+        function renderShellView() {
+            const container = document.getElementById('mainDisplay');
+            container.innerHTML = `
+                <div class="info-panel">
+                    <h2>Electron Shell Structure</h2>
+                    <p>Select an element to see its electron shell configuration mapped to 64-state architecture.</p>
+                    ${selectedElement ? `
+                        <h3>${selectedElement.name} (${selectedElement.symbol})</h3>
+                        <p>Configuration: ${selectedElement.config}</p>
+                        <p>64-State: ${getCircumpunctState(selectedElement)}</p>
+                        <div style="margin-top: 20px;">
+                            <svg width="400" height="400" style="background: rgba(255,255,255,0.05); border-radius: 10px;">
+                                <!-- Electron shells visualization would go here -->
+                                <circle cx="200" cy="200" r="30" fill="gold" opacity="0.5"/>
+                                <circle cx="200" cy="200" r="80" fill="none" stroke="white" opacity="0.3"/>
+                                <circle cx="200" cy="200" r="130" fill="none" stroke="white" opacity="0.3"/>
+                                <circle cx="200" cy="200" r="180" fill="none" stroke="white" opacity="0.3"/>
+                                <text x="200" y="210" text-anchor="middle" fill="white" font-size="20">
+                                    ${selectedElement.symbol}
+                                </text>
+                            </svg>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+        
+        function renderBondingView() {
+            const container = document.getElementById('mainDisplay');
+            container.innerHTML = `
+                <div class="info-panel">
+                    <h2>Bonding Analysis</h2>
+                    <p>Molecular bonding as dual-aperture coherence in 64-state space.</p>
+                    ${selectedElement ? `
+                        <h3>${selectedElement.name} Bonding Characteristics</h3>
+                        <ul style="margin-top: 15px; line-height: 1.8;">
+                            <li>Valence electrons: ${selectedElement.z % 8}</li>
+                            <li>Typical coordination: ${getTypicalCoordination(selectedElement)}</li>
+                            <li>β parameter: ${estimateBeta(selectedElement).toFixed(3)}</li>
+                            <li>Bonding type: ${getBondingType(selectedElement)}</li>
+                            <li>Fractal dimension (D): ${getFractalDimension(selectedElement)}</li>
+                        </ul>
+                        ${element.symbol === 'C' ? `
+                            <div style="margin-top: 20px; padding: 15px; background: rgba(255,215,0,0.1); border-radius: 5px;">
+                                <strong>Special Note: Carbon is the β = 0.5 element!</strong>
+                                <p style="margin-top: 10px;">
+                                    With 4 valence electrons and tetrahedral geometry (109.5°),
+                                    carbon operates at the critical balance point where D ≈ 1.5.
+                                    This makes it ideal for complex molecular structures and life.
+                                </p>
+                            </div>
+                        ` : ''}
+                    ` : ''}
+                </div>
+            `;
+        }
+        
+        function getTypicalCoordination(element) {
+            const valence = element.z % 8;
+            if (element.group === 18) return 0;
+            if (element.block === 's' && element.group === 1) return 1;
+            if (element.symbol === 'C') return 4;
+            if (element.symbol === 'N') return 3;
+            if (element.symbol === 'O') return 2;
+            return 'Variable';
+        }
+        
+        function getBondingType(element) {
+            const valence = element.z % 8;
+            if (element.group === 18) return 'None (noble gas)';
+            if (element.group === 1 || element.group === 2) return 'Ionic (donor)';
+            if (element.group === 17) return 'Ionic (acceptor) or covalent';
+            if (element.group >= 13 && element.group <= 16) return 'Covalent';
+            if (element.block === 'd') return 'Metallic or coordinate';
+            return 'Mixed';
+        }
+        
+        function getFractalDimension(element) {
+            if (element.symbol === 'C') return '≈ 1.5 (tetrahedral)';
+            if (element.group === 1) return '≈ 1.0 (linear)';
+            if (element.group === 2) return '≈ 1.2 (bent)';
+            if (element.group === 13) return '≈ 2.0 (planar)';
+            return '1.0-2.0';
+        }
+        
+        // Event listeners
+        document.getElementById('viewMode').addEventListener('change', render);
+        document.getElementById('highlightMode').addEventListener('change', render);
+        
+        // Initial render
+        render();
+        
+        // Auto-select carbon as example
+        selectElement(elements.find(e => e.symbol === 'C'));
+    </script>
+</body>
+</html>
