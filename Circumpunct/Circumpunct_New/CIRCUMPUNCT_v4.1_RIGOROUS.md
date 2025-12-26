@@ -291,12 +291,17 @@ $$\boxed{D = 1 + \beta}$$
 **Physical interpretation:**
 
 ```
-β = convergence/(convergence + emergence)
+β = aperture openness / branching amount
 
-β → 0: All emergence, no gathering → D → 1 (line, minimal branching)
-β → 1: All convergence, no expression → D → 2 (surface, maximal branching)
-β = 0.5: Balanced → D = 1.5 (intermediate branching)
+β = 0: D = 1 (line, NO branching - pure convergence, no emergence)
+β = 1: D = 2 (surface, INFINITE branching - pure emergence, no convergence)
+β = 0.5: D = 1.5 (balanced branching - equal convergence and emergence)
 ```
+
+**In terms of convergence (≺) and emergence (⊱):**
+- β = 0: Only convergence, no emergence → everything collapses to a line
+- β = 1: Only emergence, no convergence → everything spreads to fill a surface
+- β = 0.5: Balanced → fractal structure between line and surface
 
 **The fundamental postulate:** Optimal balance occurs at **β = 0.5**.
 
