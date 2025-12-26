@@ -276,11 +276,12 @@ Benoit Mandelbrot rigorously proved that fractional (Hausdorff) dimensions exist
 - **Fractional dimensions describe process traces** (coastlines, rivers, lightning, bronchial trees)
 - These processes exhibit D ∈ [1, 2] depending on branching behavior
 
-**The range D ∈ [1, 2] is proven mathematics.** Specific values vary by system:
-- Coastlines: D ≈ 1.25 (moderate branching)
-- Norwegian coast: D ≈ 1.52
-- DLA clusters: D ≈ 1.7 (heavy branching)
-- Bronchial trees: D ≈ 2.5 (approaches surface)
+**The range D ∈ [1, 2] is proven mathematics** for processes embedded in 2D space. Specific values vary by system:
+- British coastline: D ≈ 1.25 (moderate branching)
+- Norwegian coast: D ≈ 1.52 (heavier branching)
+- DLA clusters (2D): D ≈ 1.7 (heavy branching)
+
+**Note:** For 3D embedded systems (like bronchial trees, vascular networks), the range is [2, 3] instead. The framework's D = 1 + β formula applies to the dimensionality added by branching processes.
 
 ### Framework Insight: β Parameterizes Branching
 
