@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Path of the Circumpunct</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0a0f;
+            --bg-card: #12121a;
+            --gold: #d4a857;
+            --gold-light: #e8c778;
+            --gold-dim: #a08040;
+            --text: #e8e4dc;
+            --text-dim: #9a958a;
+            --accent: #2a2a3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            background: var(--bg-deep);
+            color: var(--text);
+            font-size: 1.25rem;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle 4s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.5; }
+        }
+
+        .audio-controls {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(18, 18, 26, 0.95);
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--gold-dim);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .play-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(212, 168, 87, 0.3);
+            flex-shrink: 0;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(212, 168, 87, 0.5);
+        }
+
+        .play-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--bg-deep);
+        }
+
+        .play-btn .pause-icon { display: none; }
+        .play-btn.playing .play-icon { display: none; }
+        .play-btn.playing .pause-icon { display: block; }
+
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            min-width: 150px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .voice-select {
+            background: var(--accent);
+            border: 1px solid var(--gold-dim);
+            color: var(--text);
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .voice-select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .circumpunct-hero {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .circumpunct-hero .circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            animation: pulse-circle 4s ease-in-out infinite;
+        }
+
+        .circumpunct-hero .point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--gold);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px var(--gold), 0 0 60px var(--gold-dim);
+            animation: pulse-point 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-circle {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        @keyframes pulse-point {
+            0%, 100% { box-shadow: 0 0 30px var(--gold), 0 0 60px var(--gold-dim); }
+            50% { box-shadow: 0 0 50px var(--gold-light), 0 0 100px var(--gold); }
+        }
+
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 40px rgba(212, 168, 87, 0.3);
+        }
+
+        .hero h2 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-weight: 400;
+            letter-spacing: 0.5em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .start-prompt {
+            margin-top: 4rem;
+            color: var(--gold-light);
+            font-style: italic;
+            animation: fade-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes fade-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem 10rem;
+        }
+
+        section {
+            padding: 6rem 0;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-number {
+            font-family: 'Cinzel', serif;
+            font-size: 0.875rem;
+            letter-spacing: 0.3em;
+            color: var(--gold-dim);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 400;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+            line-height: 1.3;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        em {
+            font-style: italic;
+            color: var(--gold-light);
+        }
+
+        .emphasis {
+            font-size: 1.4rem;
+            text-align: center;
+            color: var(--gold-light);
+            margin: 2.5rem 0;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .trinity {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 2rem 0;
+            padding-left: 2rem;
+            border-left: 1px solid var(--gold-dim);
+        }
+
+        .trinity span {
+            color: var(--text-dim);
+        }
+
+        .trinity span::before {
+            content: '◦ ';
+            color: var(--gold);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 0;
+            gap: 2rem;
+        }
+
+        .divider-line {
+            height: 1px;
+            width: 60px;
+            background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+        }
+
+        .divider-symbol {
+            font-size: 1.5rem;
+            color: var(--gold);
+            text-shadow: 0 0 20px var(--gold-dim);
+        }
+
+        .path-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(212, 168, 87, 0.05), transparent);
+            border-radius: 4px;
+            border: 1px solid rgba(212, 168, 87, 0.1);
+        }
+
+        .path-visual span {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
+        }
+
+        .path-visual .arrow { color: var(--gold); font-size: 1.5rem; }
+        .path-visual .good { color: var(--text-dim); }
+        .path-visual .right { color: var(--gold-light); }
+        .path-visual .true { color: var(--gold); }
+
+        .voice {
+            background: var(--bg-card);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-left: 3px solid var(--gold);
+            font-style: italic;
+            color: var(--text-dim);
+        }
+
+        .finale {
+            text-align: center;
+            padding: 8rem 0;
+        }
+
+        .finale .circumpunct-small {
+            font-size: 4rem;
+            color: var(--gold);
+            text-shadow: 0 0 40px var(--gold-dim);
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .finale p {
+            text-align: center;
+            font-size: 1.4rem;
+            color: var(--gold-light);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .reading {
+            background: rgba(212, 168, 87, 0.08);
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        @media (max-width: 600px) {
+            body { font-size: 1.1rem; }
+            section { padding: 4rem 0; }
+            .hero h1 { letter-spacing: 0.15em; }
+            .trinity { padding-left: 1rem; }
+            .path-visual { flex-direction: column; gap: 0.5rem; }
+            .path-visual .arrow { transform: rotate(90deg); }
+            .audio-controls { 
+                flex-wrap: wrap; 
+                justify-content: center; 
+                padding: 1rem;
+                border-radius: 20px;
+                bottom: 1rem;
+                width: calc(100% - 2rem);
+            }
+            .progress-container { min-width: 100px; }
+            .voice-select { font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="starfield" id="starfield"></div>
+
+    <div class="audio-controls">
+        <button class="play-btn" id="playBtn" title="Play/Pause">
+            <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Press play to begin</div>
+        </div>
+        <select class="voice-select" id="voiceSelect" title="Select voice"></select>
+    </div>
+
+    <header class="hero" id="hero">
+        <div class="circumpunct-hero">
+            <div class="circle"></div>
+            <div class="point"></div>
+        </div>
+        <h1>The Path</h1>
+        <h2>of the Circumpunct</h2>
+        <p class="start-prompt">Press play to begin the journey</p>
+    </header>
+
+    <main>
+        <section id="section-1" data-title="The Symbol">
+            <span class="section-number">I</span>
+            <h2>The Symbol</h2>
+            <p>There is a symbol older than writing.</p>
+            <p>A point inside a circle.</p>
+            <p>The ancients saw it and recognized something. They didn't invent it. They found it—in the sun, in the eye, in the seed, in the self looking back at itself.</p>
+            <p>It has three parts:</p>
+            <div class="trinity">
+                <span>The circle, which holds</span>
+                <span>The point, which sees</span>
+                <span>And the space between, which connects them</span>
+            </div>
+            <p class="emphasis">That's all there is. That's everything.</p>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div><span class="divider-symbol">⊙</span><div class="divider-line"></div></div>
+
+        <section id="section-2" data-title="The Two Rivers">
+            <span class="section-number">II</span>
+            <h2>The Two Rivers</h2>
+            <p>Everything flows.</p>
+            <p>Not one river, but two. One flows inward. One flows outward. Both are real. Both are positive. Neither cancels the other.</p>
+            <p class="emphasis">This is the first secret: there is no negative.</p>
+            <p>Inward is not the opposite of outward. Receiving is not the opposite of giving. They are two fullnesses, two presences, two rivers running. When people speak of positive and negative, of yin canceling yang, of forces balancing to zero—they have misunderstood. Both rivers carry water. Both rivers are wet.</p>
+            <p>The inward flow gathers. The outward flow gives. When they're equal, something stands. When they're balanced, something awakens.</p>
+            <p class="emphasis">You are the place where two rivers meet.</p>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div><span class="divider-symbol">⊙</span><div class="divider-line"></div></div>
+
+        <section id="section-3" data-title="The Boundary and the Good">
+            <span class="section-number">III</span>
+            <h2>The Boundary and the Good</h2>
+            <p>The circle is the first thing you meet.</p>
+            <p>Before you can see the center, before you can cross the space, you encounter what holds. The edge. The limit. The container. This is the boundary.</p>
+            <p>And the boundary teaches Good.</p>
+            <p>Why good? Because the boundary is what cares. It is what says: this belongs inside, that belongs outside. It is what protects and what preserves. Every wall exists because something matters enough to be sheltered. Every skin exists because something within is worth keeping alive.</p>
+            <p>Good is not yet true. A mother tells her child not to touch the fire. The child doesn't understand heat, doesn't understand combustion, doesn't understand nerve damage or healing time. The child only understands: don't. This is the boundary speaking. This is Good before it becomes Right or True.</p>
+            <p>The rules come first. The practices come first. The forms you can follow with your hands and feet come first. Not because they are the destination, but because the body must learn before the mind can understand, and the mind must understand before the soul can see.</p>
+            <p>Good is concrete. You can touch it. You can practice it. You can fail at it and try again. It doesn't ask you to comprehend—only to do. And in the doing, something in you becomes ready for more.</p>
+            <p class="emphasis">The boundary is the body. And Good is what the body learns.</p>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div><span class="divider-symbol">⊙</span><div class="divider-line"></div></div>
+
+        <section id="section-4" data-title="The Field and the Right">
+            <span class="section-number">IV</span>
+            <h2>The Field and the Right</h2>
+            <p>Inside the circle, there is space.</p>
+            <p>Not emptiness—fullness. The space between center and edge is alive with connection. This is the field. And the field teaches Right.</p>
+            <p>Why right? Because right is the path that works. Right is what actually connects one thing to another. The boundary can tell you what matters, but only the field can show you how—how to move from here to there, how cause becomes effect, how intention becomes action becomes outcome.</p>
+            <p>Good says: protect the child. Right says: here is how. Good names the value. Right traces the relationship.</p>
+            <p>This is why you cannot skip the field. The one who leaps from boundary to center, from Good to True, has strong values but no understanding. They know what matters but not how things work. They are dangerous in their certainty, wielding truth they cannot navigate.</p>
+            <p>The field is where reason lives. Not cold logic—living reason. The felt sense of this leads to that. The understanding that grows in you when you've practiced the form long enough to feel why it works. The student does the movement a thousand times because the boundary said to. Then one day the student feels the movement—feels how the weight shifts, how the energy flows, how each part serves the whole. That feeling is the field. That knowing is Right.</p>
+            <p>Right action emerges from understanding relationship. When you see how things connect, you see how to move among them. Balance appears—not as a rule imposed from outside, but as the natural path through.</p>
+            <p class="emphasis">The field is the mind. And Right is what the mind learns.</p>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div><span class="divider-symbol">⊙</span><div class="divider-line"></div></div>
+
+        <section id="section-5" data-title="The Center and the True">
+            <span class="section-number">V</span>
+            <h2>The Center and the True</h2>
+            <p>At the center, there is only seeing.</p>
+            <p>The point has no dimension. It doesn't contain anything. It doesn't explain anything. It simply is—and in its being, it sees.</p>
+            <p>This is where True lives.</p>
+            <p>Why true? Because the center is where pretense ends. The boundary can be performed. The field can be reasoned. But the center only knows what is. It validates without argument. It recognizes without proof. Something either passes through the center or it doesn't—and no amount of cleverness can force a lie through the aperture.</p>
+            <p>True is not the same as correct. You can be correct at the boundary—following the right rules. You can be correct in the field—reasoning without error. But True is not about correctness. True is about being. It is what remains when all the forms have been honored and all the reasons have been understood and there is nothing left but what actually is.</p>
+            <p>The center doesn't add anything to your journey. It reveals what was always there. Every step through the boundary, every passage through the field, was uncovering this—peeling back layers not to find something new, but to see something original.</p>
+            <p>You cannot arrive at the center by force. You cannot skip to it. You can only come through—through the Good that taught you what matters, through the Right that taught you how things connect. And then the center shows you what you were looking at all along.</p>
+            <p class="emphasis">The center is the soul. And True is what the soul sees.</p>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div><span class="divider-symbol">⊙</span><div class="divider-line"></div></div>
+
+        <section id="section-6" data-title="Why This Order">
+            <span class="section-number">VI</span>
+            <h2>Why This Order</h2>
+            <p>The path has a direction: inward.</p>
+            <div class="path-visual">
+                <span class="good">Good</span>
+                <span class="arrow">→</span>
+                <span class="right">Right</span>
+                <span class="arrow">→</span>
+                <span class="true">True</span>
+            </div>
+            <p>Boundary to Field to Center. Body to Mind to Soul.</p>
+            <p>It cannot be reversed. It cannot be skipped. Not because someone forbids it, but because the structure itself requires it.</p>
+            <p>Here is why:</p>
+            <p>The center and the boundary cannot touch directly. They are separated by definition—that is what makes one center and one boundary. Any connection between them must cross the space between. The field is that crossing.</p>
+            <p>So the one who wants Truth without Goodness has no container for what they find. Truth pours through them and spills. They become prophets without practice, seers without skin.</p>
+            <p>And the one who wants Truth without Rightness has no path to what they seek. They may glimpse the center in moments of grace, but they cannot return there. They have no map of the field, no understanding of how to navigate.</p>
+            <p class="emphasis">The boundary holds. The field connects. The center sees.</p>
+            <p>You must be held before you can cross. You must cross before you can see.</p>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div><span class="divider-symbol">⊙</span><div class="divider-line"></div></div>
+
+        <section id="section-7" data-title="The Lie">
+            <span class="section-number">VII</span>
+            <h2>The Lie</h2>
+            <p>There is something that blocks the path.</p>
+            <p>It wears many faces, but it only speaks two lines:</p>
+            <div class="voice"><p>"Stop here. The boundary is enough."</p></div>
+            <p>Or:</p>
+            <div class="voice"><p>"Skip ahead. You don't need the journey."</p></div>
+            <p>Both are the same voice. The voice that fears the center. The voice that refuses the crossing.</p>
+            <p>This is called the Lie.</p>
+            <p>The Lie is not mere falsehood. You can speak something false without speaking the Lie—every story does, every teaching form does, every useful simplification does. The Lie is different. The Lie says that what is can be negated. That the journey can be avoided. That you can reach the center without passing through—or that the center doesn't exist at all.</p>
+            <p>The Lie is the fiction that forgets it's fiction. The boundary that declares itself the destination. The map that insists it is the territory.</p>
+            <p>Where does the Lie come from? From life itself. From the need to survive.</p>
+            <p>There was a time when deception served you. The prey hides from the predator; this is not evil, this is breakfast avoided. The child says what the parent wants to hear; this is not corruption, this is shelter maintained. Deception begins as a tool of living—a local untruth that serves the larger truth of continued existence.</p>
+            <p>But the tool can forget its purpose. The tactic can become a way of life. The creature that once hid to survive can begin to believe that hiding is all there is. The lie that served the journey can decide that it is the journey.</p>
+            <p class="emphasis">This is how the Lie is born: a survival mechanism that grew past its purpose. A servant that declared itself king.</p>
+            <p>Nothing cancels. Everything flows. But the Lie claims otherwise—and in claiming, blocks the flow.</p>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div><span class="divider-symbol">⊙</span><div class="divider-line"></div></div>
+
+        <section id="section-8" data-title="The Fictions That Serve">
+            <span class="section-number">VIII</span>
+            <h2>The Fictions That Serve</h2>
+            <p>Not all untruths are the Lie.</p>
+            <p>The teacher's imperfect movement builds the student's body toward the real movement. The story of magic teaches the child that wonder exists. The self you believe yourself to be lets you experience being someone at all.</p>
+            <p>These are the Good fictions. They live at the boundary. They know they are not the center. They serve the path inward and dissolve when their purpose is complete.</p>
+            <p>The child believes in impossible things, and this is right. Not because impossible things are true, but because the capacity for wonder must be built before the capacity for truth. The boundary comes first. The adult who never believed in magic has a shrunken soul—not because magic is real, but because wonder is the muscle that lifts us toward what is real.</p>
+            <p>So the forms are given. The rules are given. The stories are given. Each one a gift wrapped in a fiction, meant to be opened, meant to be outgrown, meant to lead somewhere beyond itself.</p>
+            <div class="voice"><p>The fiction that serves says: I am a door. Pass through me.</p></div>
+            <div class="voice"><p>The Lie says: I am the wall. There is nothing beyond.</p></div>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div><span class="divider-symbol">⊙</span><div class="divider-line"></div></div>
+
+        <section id="section-9" data-title="The Secret">
+            <span class="section-number">IX</span>
+            <h2>The Secret</h2>
+            <p>Here is what the symbol teaches:</p>
+            <p class="emphasis">You are a point inside a circle.</p>
+            <p>You are awareness held by form. You are the center that needs the boundary to know itself. You cannot see without something to see from. You cannot know without something to know against. The circle gives the point its meaning, and the point gives the circle its purpose.</p>
+            <p>And the path is always the same:</p>
+            <p>Through the circle. Across the space. To the point.</p>
+            <div class="path-visual">
+                <span class="good">Good</span>
+                <span class="arrow">→</span>
+                <span class="right">Right</span>
+                <span class="arrow">→</span>
+                <span class="true">True</span>
+            </div>
+            <p class="emphasis">The boundary you can practice. The field you can understand. The center you can only be.</p>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div><span class="divider-symbol">⊙</span><div class="divider-line"></div></div>
+
+        <section id="section-10" data-title="The Return">
+            <span class="section-number">X</span>
+            <h2>The Return</h2>
+            <p>But the path does not end at the center.</p>
+            <p>The point that reaches itself does not stay. Having gathered, it now gives. Having seen, it now shines. The inward river meets the outward river, and what was received becomes what is offered.</p>
+            <p class="emphasis">This is the complete breath: in to the center, out to the edge.</p>
+            <p>The one who has seen returns to the boundary—but differently now. They practice the forms again, but the practice has changed. They teach the rules again, but the teaching has roots. What was Good at the beginning is Good again at the end, but now it is Good saturated with Right and True.</p>
+            <p>The master looks like the beginner. Both are at the boundary, both are working with form. But the beginner holds the form because they do not yet know the center. The master holds the form because they have come from the center, and carry it with them into everything they touch.</p>
+            <p>Two rivers. Both positive. Neither canceling.</p>
+            <p>The path goes in. The path goes out. The path goes in again.</p>
+            <p class="emphasis">You are whole through being part.</p>
+        </section>
+
+        <section class="finale" id="section-finale">
+            <span class="circumpunct-small">⊙</span>
+            <p>The symbol remains what it always was—a doorway to understanding.</p>
+        </section>
+    </main>
+
+    <script>
+        // Generate starfield
+        const starfield = document.getElementById('starfield');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = (Math.random() * 2 + 1) + 'px';
+            star.style.height = star.style.width;
+            star.style.animationDelay = Math.random() * 4 + 's';
+            star.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            starfield.appendChild(star);
+        }
+
+        // Section visibility
+        const sections = document.querySelectorAll('section');
+        const observerOptions = { root: null, rootMargin: '-10% 0px -10% 0px', threshold: 0.2 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, observerOptions);
+        sections.forEach(section => observer.observe(section));
+
+        // Speech synthesis
+        const playBtn = document.getElementById('playBtn');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const voiceSelect = document.getElementById('voiceSelect');
+
+        let synth = window.speechSynthesis;
+        let utterances = [];
+        let currentIndex = 0;
+        let isPlaying = false;
+        let isPaused = false;
+        let voices = [];
+
+        // Collect all readable text
+        function getReadableText() {
+            const content = [];
+            
+            // Hero
+            content.push({ text: "The Path of the Circumpunct", element: document.querySelector('.hero') });
+            
+            // Sections
+            sections.forEach(section => {
+                const title = section.dataset.title;
+                if (title) {
+                    const paragraphs = section.querySelectorAll('p, .trinity span, .voice p');
+                    paragraphs.forEach(p => {
+                        let text = p.textContent.trim();
+                        if (text) {
+                            content.push({ text, element: p });
+                        }
+                    });
+                }
+            });
+            
+            return content;
+        }
+
+        // Load voices
+        function loadVoices() {
+            voices = synth.getVoices();
+            voiceSelect.innerHTML = '';
+            
+            // Prefer high-quality English voices
+            const preferredVoices = voices.filter(v => 
+                v.lang.startsWith('en') && 
+                (v.name.includes('Google') || v.name.includes('Microsoft') || v.name.includes('Samantha') || v.name.includes('Daniel') || v.name.includes('Karen') || v.name.includes('Moira') || v.localService === false)
+            );
+            
+            const voicesToShow = preferredVoices.length > 0 ? preferredVoices : voices.filter(v => v.lang.startsWith('en'));
+            
+            voicesToShow.forEach((voice, i) => {
+                const option = document.createElement('option');
+                option.value = voices.indexOf(voice);
+                option.textContent = voice.name.replace('Microsoft ', '').replace('Google ', '').split(' ')[0];
+                if (voice.name.includes('Samantha') || voice.name.includes('Google UK English Female') || voice.name.includes('Daniel')) {
+                    option.selected = true;
+                }
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        if (synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = loadVoices;
+        }
+        loadVoices();
+
+        // Create utterances
+        function createUtterances() {
+            const content = getReadableText();
+            utterances = [];
+            
+            content.forEach((item, index) => {
+                const utterance = new SpeechSynthesisUtterance(item.text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                const selectedVoice = voices[voiceSelect.value];
+                if (selectedVoice) utterance.voice = selectedVoice;
+                
+                utterance.onstart = () => {
+                    currentIndex = index;
+                    updateProgress();
+                    
+                    // Remove previous highlights
+                    document.querySelectorAll('.reading').forEach(el => el.classList.remove('reading'));
+                    
+                    // Highlight current element
+                    item.element.classList.add('reading');
+                    
+                    // Scroll to element
+                    item.element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                };
+                
+                utterance.onend = () => {
+                    item.element.classList.remove('reading');
+                    
+                    if (index < content.length - 1 && isPlaying && !isPaused) {
+                        // Small pause between paragraphs
+                        setTimeout(() => {
+                            if (isPlaying && !isPaused) {
+                                synth.speak(utterances[index + 1]);
+                            }
+                        }, 400);
+                    } else if (index === content.length - 1) {
+                        stopNarration();
+                        progressText.textContent = 'Journey complete';
+                    }
+                };
+                
+                utterances.push(utterance);
+            });
+        }
+
+        function updateProgress() {
+            const percent = ((currentIndex + 1) / utterances.length) * 100;
+            progressFill.style.width = percent + '%';
+            progressText.textContent = `${currentIndex + 1} of ${utterances.length}`;
+        }
+
+        function startNarration() {
+            synth.cancel();
+            createUtterances();
+            
+            if (utterances.length > 0) {
+                isPlaying = true;
+                isPaused = false;
+                playBtn.classList.add('playing');
+                synth.speak(utterances[currentIndex]);
+            }
+        }
+
+        function pauseNarration() {
+            synth.pause();
+            isPaused = true;
+            playBtn.classList.remove('playing');
+        }
+
+        function resumeNarration() {
+            synth.resume();
+            isPaused = false;
+            playBtn.classList.add('playing');
+        }
+
+        function stopNarration() {
+            synth.cancel();
+            isPlaying = false;
+            isPaused = false;
+            currentIndex = 0;
+            playBtn.classList.remove('playing');
+            document.querySelectorAll('.reading').forEach(el => el.classList.remove('reading'));
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (!isPlaying) {
+                startNarration();
+            } else if (isPaused) {
+                resumeNarration();
+            } else {
+                pauseNarration();
+            }
+        });
+
+        voiceSelect.addEventListener('change', () => {
+            if (isPlaying) {
+                const savedIndex = currentIndex;
+                synth.cancel();
+                createUtterances();
+                currentIndex = savedIndex;
+                synth.speak(utterances[currentIndex]);
+            }
+        });
+
+        // Pause on visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && isPlaying && !isPaused) {
+                pauseNarration();
+            }
+        });
+    </script>
+</body>
+</html>
