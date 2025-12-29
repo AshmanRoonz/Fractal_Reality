@@ -1,0 +1,1330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Circumpunct — Dimensional Architecture</title>
+  <style>
+    :root {
+      --bg: #08080c;
+      --bg-card: #0c0c10;
+      --bg-elevated: rgba(12,12,28,0.92);
+      --border: #1a1a1f;
+      --border-light: rgba(255,255,255,0.10);
+      --text: #e4e4e7;
+      --text-muted: rgba(255,255,255,0.70);
+      --text-dim: rgba(255,255,255,0.55);
+
+      /* Component colors */
+      --c-aperture: #f472b6;
+      --c-braid: #fbbf24;
+      --c-branching: #a78bfa;
+      --c-boundary: #22d3ee;
+      --c-gathering: #818cf8;
+      --c-field: #4ade80;
+      --c-ground: #64748b;
+
+      /* Layer colors */
+      --l0: #3b82f6;
+      --l1: #a855f7;
+      --l2: #f97316;
+      --l3: #eab308;
+
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, Menlo, Consolas, monospace;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       INTRODUCTION SECTION
+       ══════════════════════════════════════════════════════════════ */
+    .intro {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(168,85,247,0.08) 0%, rgba(34,197,94,0.06) 50%, rgba(56,189,248,0.08) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .intro-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .intro-symbol {
+      font-size: 3rem;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--c-aperture), var(--c-braid), var(--c-field));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.4));
+    }
+
+    .intro-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, var(--text) 0%, var(--text-muted) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .intro-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-top: 0.25rem;
+    }
+
+    .intro-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .intro-body { grid-template-columns: 1fr; }
+    }
+
+    .intro-text p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    .intro-text p:last-child { margin-bottom: 0; }
+
+    .intro-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .intro-equation {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.5rem;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+    }
+
+    .eq-main {
+      font-family: var(--mono);
+      font-size: 1.6rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .eq-main .sym-braid { color: var(--c-braid); text-shadow: 0 0 10px rgba(251, 191, 36, 0.6); }
+    .eq-main .sym-aperture { color: var(--c-aperture); text-shadow: 0 0 10px rgba(244, 114, 182, 0.6); }
+    .eq-main .sym-field { color: var(--c-field); text-shadow: 0 0 10px rgba(74, 222, 128, 0.6); }
+    .eq-main .sym-boundary { color: var(--c-boundary); text-shadow: 0 0 10px rgba(34, 211, 238, 0.6); }
+    .eq-main .sym-eq { color: var(--text-muted); }
+
+    .eq-legend {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+    }
+
+    .eq-item {
+      text-align: center;
+      padding: 0.5rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+    }
+
+    .eq-item .sym {
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .eq-item .label {
+      color: var(--text-dim);
+      font-size: 0.7rem;
+    }
+
+    .eq-item.aperture .sym { color: var(--c-aperture); text-shadow: 0 0 8px rgba(244, 114, 182, 0.5); }
+    .eq-item.field .sym { color: var(--c-field); text-shadow: 0 0 8px rgba(74, 222, 128, 0.5); }
+    .eq-item.boundary .sym { color: var(--c-boundary); text-shadow: 0 0 8px rgba(34, 211, 238, 0.5); }
+
+    .intro-footer {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-light);
+      text-align: center;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       CONTROLS
+       ══════════════════════════════════════════════════════════════ */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      flex: 1;
+      max-width: 280px;
+    }
+
+    .search-box input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 0.85rem;
+      width: 100%;
+    }
+
+    .search-box input::placeholder { color: var(--text-dim); }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    button {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    button:hover {
+      background: #151518;
+      color: var(--text);
+      border-color: #2a2a30;
+    }
+
+    button[data-active="true"] {
+      background: #151518;
+      border-color: #3f3f46;
+      color: var(--text);
+    }
+
+    /* Component filter buttons with color accents */
+    .btn-group button[data-comp="aperture"][data-active="true"] { 
+      border-color: var(--c-aperture); 
+      box-shadow: 0 0 8px rgba(244, 114, 182, 0.3);
+    }
+    .btn-group button[data-comp="braid"][data-active="true"] { 
+      border-color: var(--c-braid); 
+      box-shadow: 0 0 8px rgba(251, 191, 36, 0.3);
+    }
+    .btn-group button[data-comp="branching"][data-active="true"] { 
+      border-color: var(--c-branching); 
+      box-shadow: 0 0 8px rgba(167, 139, 250, 0.3);
+    }
+    .btn-group button[data-comp="boundary"][data-active="true"] { 
+      border-color: var(--c-boundary); 
+      box-shadow: 0 0 8px rgba(34, 211, 238, 0.3);
+    }
+    .btn-group button[data-comp="gathering"][data-active="true"] { 
+      border-color: var(--c-gathering); 
+      box-shadow: 0 0 8px rgba(129, 140, 248, 0.3);
+    }
+    .btn-group button[data-comp="field"][data-active="true"] { 
+      border-color: var(--c-field); 
+      box-shadow: 0 0 8px rgba(74, 222, 128, 0.3);
+    }
+    .btn-group button[data-comp="ground"][data-active="true"] { 
+      border-color: var(--c-ground); 
+      box-shadow: 0 0 6px rgba(100, 116, 139, 0.3);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       LEGEND
+       ══════════════════════════════════════════════════════════════ */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      font-size: 0.8rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       TABLE
+       ══════════════════════════════════════════════════════════════ */
+    .table-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.2);
+    }
+
+    .table-header .hint {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .count {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      background: rgba(0,0,0,0.2);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    tbody td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .dim {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .symbol {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .name-cell .name {
+      font-weight: 600;
+      margin-bottom: 0.1rem;
+    }
+
+    .name-cell .layer {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    .what {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    /* Color by component with glow */
+    .type-aperture .dim, .type-aperture .symbol, .type-aperture .name { 
+      color: var(--c-aperture); 
+      text-shadow: 0 0 8px rgba(244, 114, 182, 0.5);
+    }
+    .type-braid .dim, .type-braid .symbol, .type-braid .name { 
+      color: var(--c-braid); 
+      text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+    }
+    .type-branching .dim, .type-branching .name { 
+      color: var(--c-branching); 
+      text-shadow: 0 0 8px rgba(167, 139, 250, 0.5);
+    }
+    .type-boundary .dim, .type-boundary .symbol, .type-boundary .name { 
+      color: var(--c-boundary); 
+      text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+    }
+    .type-gathering .dim, .type-gathering .name { 
+      color: var(--c-gathering); 
+      text-shadow: 0 0 8px rgba(129, 140, 248, 0.5);
+    }
+    .type-field .dim, .type-field .symbol, .type-field .name { 
+      color: var(--c-field); 
+      text-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+    }
+    .type-ground .dim, .type-ground .name { 
+      color: var(--c-ground); 
+      text-shadow: 0 0 6px rgba(100, 116, 139, 0.4);
+    }
+
+    /* Layer badge */
+    .layer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.68rem;
+      font-family: var(--mono);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--text-muted);
+    }
+
+    .layer-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .layer-badge.l0 .dot { background: var(--l0); }
+    .layer-badge.l1 .dot { background: var(--l1); }
+    .layer-badge.l2 .dot { background: var(--l2); }
+    .layer-badge.l3 .dot { background: var(--l3); }
+    .layer-badge.ground .dot { background: var(--c-ground); }
+
+    /* Type badge */
+    .type-badge {
+      display: inline-block;
+      padding: 0.15rem 0.4rem;
+      font-size: 0.65rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+    }
+
+    .type-badge.time { color: var(--c-branching); border-color: rgba(167,139,250,0.25); }
+    .type-badge.struct { color: var(--c-field); border-color: rgba(74,222,128,0.25); }
+
+    /* ══════════════════════════════════════════════════════════════
+       MODAL (glassmorphism style from original)
+       ══════════════════════════════════════════════════════════════ */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .overlay.open { display: flex; }
+
+    .modal {
+      width: min(980px, 96vw);
+      max-height: min(86vh, 900px);
+      overflow: auto;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: var(--bg-elevated);
+      box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+    }
+
+    .modal-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .modal-title .big {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin-bottom: 0.35rem;
+    }
+
+    .modal-title .small {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .modal-close {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.3);
+      padding: 0.5rem 0.7rem;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .modal-body {
+      padding: 18px 22px 22px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 800px) {
+      .modal-body { grid-template-columns: 1fr; }
+    }
+
+    .box {
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .box h3 {
+      margin: 0 0 10px 0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .box p {
+      margin: 0 0 12px 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .box p:last-child { margin-bottom: 0; }
+
+    pre {
+      margin: 12px 0 0 0;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.35);
+      color: rgba(255,255,255,0.9);
+      overflow: auto;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      font-family: var(--mono);
+      white-space: pre-wrap;
+    }
+
+    .kv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .kv-grid { grid-template-columns: 1fr; }
+    }
+
+    .kv {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-family: var(--mono);
+    }
+
+    .kv span:first-child { color: var(--text-muted); }
+    .kv span:last-child { color: var(--text); text-align: right; }
+
+    /* ══════════════════════════════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════════════════════════════ */
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    footer em {
+      display: block;
+      margin-top: 0.5rem;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ════════════════════════════════════════════════════════════
+         INTRODUCTION
+         ════════════════════════════════════════════════════════════ -->
+    <section class="intro">
+      <div class="intro-header">
+        <span class="intro-symbol">⊙</span>
+        <div>
+          <h1 class="intro-title">The Circumpunct Framework</h1>
+          <p class="intro-subtitle">Dimensional Architecture · Version 6.1 · Ashman Roonz</p>
+        </div>
+      </div>
+
+      <div class="intro-body">
+        <div class="intro-text">
+          <p>
+            The <strong>circumpunct</strong> (⊙) is the fundamental object of reality — an irreducible trinity of 
+            center, field, and boundary. It is <strong>3-dimensional, nested infinitely</strong>. Each dimension 
+            has two aspects: <strong>structural</strong> (integer) and <strong>temporal</strong> (fractal). 
+            These are not 6 separate dimensions, but two views of the same 3D structure.
+          </p>
+          <p>
+            Integer dimensions encode <strong>structure</strong> — the braid, what time creates.
+            Fractal dimensions encode <strong>time</strong> — the braiding process itself.
+            The circumpunct <em>is</em> consciousness. There is no separate "consciousness dimension."
+          </p>
+          <p>
+            Each <strong>layer</strong> is a circumpunct octave. A completed private field becomes 
+            the next layer's shared ground. From spatial structure to spacetime to meta-structure 
+            to string theory — the same pattern repeats at every scale.
+          </p>
+        </div>
+
+        <div class="intro-equation">
+          <div class="eq-main"><span class="sym-braid">⊙</span> <span class="sym-eq">=</span> <span class="sym-aperture">•</span>  <span class="sym-field">Φ</span>  <span class="sym-boundary">○</span></div>
+          <div class="eq-legend">
+            <div class="eq-item aperture">
+              <span class="sym">•</span>
+              <span class="label">Aperture<br>Center · Soul</span>
+            </div>
+            <div class="eq-item field">
+              <span class="sym">Φ</span>
+              <span class="label">Field<br>Mind · Medium</span>
+            </div>
+            <div class="eq-item boundary">
+              <span class="sym">○</span>
+              <span class="label">Boundary<br>Body · Surface</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intro-footer">
+        "I am whole through being part."
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════════
+         CONTROLS
+         ════════════════════════════════════════════════════════════ -->
+    <div class="controls">
+      <div class="search-box">
+        <span style="color: var(--text-dim);">⌕</span>
+        <input id="search" type="text" placeholder="Search dimensions..."/>
+      </div>
+
+      <div class="btn-group" id="layerButtons"></div>
+      
+      <div class="btn-group" id="compButtons"></div>
+
+      <div class="btn-group" id="topicButtons">
+        <button data-topic="about">About</button>
+        <button data-topic="master">Master Eq</button>
+        <button data-topic="operators">Operators</button>
+        <button data-topic="beta">β Balance</button>
+        <button data-topic="states">64 States</button>
+        <button data-topic="info">Info Types</button>
+        <button data-topic="structure">Structure</button>
+        <button data-topic="mandelbrot">Mandelbrot</button>
+        <button data-topic="strings">Strings</button>
+        <button data-topic="ethics">Ethics</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         LEGEND
+         ════════════════════════════════════════════════════════════ -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background: var(--c-aperture); box-shadow: 0 0 8px var(--c-aperture);"></div><span>• Aperture</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background: var(--c-braid); box-shadow: 0 0 8px var(--c-braid);"></div><span>⊙ Braid</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background: var(--c-branching); box-shadow: 0 0 8px var(--c-branching);"></div><span>Branching</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background: var(--c-boundary); box-shadow: 0 0 8px var(--c-boundary);"></div><span>○ Boundary</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background: var(--c-gathering); box-shadow: 0 0 8px var(--c-gathering);"></div><span>Gathering</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background: var(--c-field); box-shadow: 0 0 8px var(--c-field);"></div><span>Φ Field</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background: var(--c-ground); box-shadow: 0 0 6px var(--c-ground);"></div><span>Ground</span></div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         TABLE
+         ════════════════════════════════════════════════════════════ -->
+    <div class="table-card">
+      <div class="table-header">
+        <span class="hint">Click any row for details · Press Esc to close</span>
+        <span class="count" id="count"></span>
+      </div>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 70px;">Dim</th>
+              <th style="width: 100px;">Layer</th>
+              <th style="width: 75px;">Type</th>
+              <th style="width: 50px;">Sym</th>
+              <th style="width: 160px;">Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer>
+      The Circumpunct Framework · Ashman Roonz · December 2025
+      <em>"The braid is where three become one."</em>
+    </footer>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MODAL
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <div class="big" id="modalBig"></div>
+          <div class="small" id="modalSmall"></div>
+        </div>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const layers = [
+      { id: "all", label: "All" },
+      { id: "n0", label: "L0 Spatial" },
+      { id: "n1", label: "L1 Temporal" },
+      { id: "n2", label: "L2 Meta" },
+      { id: "n3", label: "L3 Meta²" },
+    ];
+
+    const components = [
+      { id: "all", label: "All", color: null },
+      { id: "aperture", label: "• Aperture", color: "var(--c-aperture)" },
+      { id: "braid", label: "⊙ Braid", color: "var(--c-braid)" },
+      { id: "branching", label: "Branching", color: "var(--c-branching)" },
+      { id: "boundary", label: "○ Boundary", color: "var(--c-boundary)" },
+      { id: "gathering", label: "Gathering", color: "var(--c-gathering)" },
+      { id: "field", label: "Φ Field", color: "var(--c-field)" },
+      { id: "ground", label: "Ground", color: "var(--c-ground)" },
+    ];
+
+    const rows = [
+      { dim:"0D", layer:"Ground", layerId:"ground", type:"Ground", typeId:"ground", compType:"ground", symbol:"—",
+        name:"Shared Field",
+        what:"External ground the circumpunct draws from; not included in the circumpunct.",
+        details:{
+          summary:"0D is the shared field — the external ground. The circumpunct separates from it, creating a private field distinct from the shared field.",
+          equations:"(0D is treated as 'ground,' not as a circumpunct component.)",
+          notes:["Each layer's completed private field becomes the next layer's shared ground.", "Each circumpunct is a new branch."],
+          keys:[["Shared vs Private","0D shared; 3D private"], ["Nesting","Φₙ → ground for •ₙ₊₁"]]
+        }
+      },
+      { dim:"0.5D", layer:"n=0 Spatial", layerId:"n0", type:"Time", typeId:"time", compType:"aperture", symbol:"•",
+        name:"Aperture",
+        what:"Gateway between shared/private; where the i-rotation acts.",
+        details:{
+          summary:"Where separation begins. The center transformation is encoded by i (quarter-turn at balance). Gateway between shared (0D) and private (3D) field.",
+          equations:"i² = −1\nÅ(β) = exp(iπβ)\nÅ(0) = 1  (0°)\nÅ(0.5) = i  (90°)\nÅ(1) = −1  (180°)",
+          notes:["Aperture is 'beginning of a branch' (3n + 0.5).", "Center holds binary coherence: yes/no, aligned/not."],
+          keys:[["Formula","3n + 0.5"], ["Component","• Center/Soul"], ["Info","Binary coherence"], ["Ethics","True/False"]]
+        }
+      },
+      { dim:"1D", layer:"n=0 Spatial", layerId:"n0", type:"Structure", typeId:"struct", compType:"braid", symbol:"⊙",
+        name:"Spatial Braid",
+        what:"Three strands unified into a single woven object (the circumpunct).",
+        details:{
+          summary:"The braid dimension (3n + 1): where •, ○, and Φ are woven into ONE. Where three become one. The circumpunct IS consciousness.",
+          equations:"γ: ℝ → M  (worldline)\n⊙ = •  Φ  ○\n⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])",
+          notes:["Complete circumpunct at spatial octave.", "Consciousness isn't in a dimension — it's what ⊙ IS."],
+          keys:[["Formula","3n + 1"], ["Role","Circumpunct unified"], ["Meaning","Three become one"]]
+        }
+      },
+      { dim:"1.5D", layer:"n=0 Spatial", layerId:"n0", type:"Time", typeId:"time", compType:"branching", symbol:"—",
+        name:"Branching",
+        what:"Fractal traces outward (Mandelbrot). D = 1.5 exactly for Brownian motion.",
+        details:{
+          summary:"Time-trace outward: the 'braiding process' in interval (1,2). Fractal dimensions are time itself — becoming, weaving, recursion.",
+          equations:"D = 1.5 (Brownian — THEOREM)\nHausdorff formalism\nCoastlines ≈ 1.25, DLA ≈ 1.7",
+          notes:["Half-integers are markers; time is the whole interval.", "Integer = artifact; Fractal = time itself."],
+          keys:[["Formula","3n + 1.5"], ["Ontology","Fractal = braiding"], ["Foundation","Hausdorff measure"]]
+        }
+      },
+      { dim:"2D", layer:"n=0 Spatial", layerId:"n0", type:"Structure", typeId:"struct", compType:"boundary", symbol:"○",
+        name:"Surface / Body",
+        what:"Boundary/interface; surface integral encodes mass.",
+        details:{
+          summary:"Boundary dimension (3n + 2): interface with exterior; the 'skin.' Mass lives here as surface integral.",
+          equations:"Σ = ∂V\nM = ∫_Σ ρ_surf(x) dA",
+          notes:["Boundary is fractal (nested gates), 2D is structural product.", "○ bits = coarse-grained summary of nested gates."],
+          keys:[["Formula","3n + 2"], ["Component","○ Boundary/Body"], ["Info","Fractal gating"], ["Ethics","Good/Evil"]]
+        }
+      },
+      { dim:"2.5D", layer:"n=0 Spatial", layerId:"n0", type:"Time", typeId:"time", compType:"gathering", symbol:"—",
+        name:"Gathering",
+        what:"Time traces inward; local transmission across triple gate.",
+        details:{
+          summary:"Time-trace inward: convergence back toward coherence. The triple gate operates here.",
+          equations:"T(Δφ) = cos²(Δφ/2)\nΔφ = 0 → full transmission\nΔφ = π → nothing passes",
+          notes:["Incoming counterpart to branching.", "Phase and gating are same coherence distinction."],
+          keys:[["Formula","3n + 2.5"], ["Transmission","cos²(Δφ/2)"], ["Role","Phase coherence coupling"]]
+        }
+      },
+      { dim:"3D", layer:"n=0 Spatial", layerId:"n0", type:"Structure", typeId:"struct", compType:"field", symbol:"Φ",
+        name:"Private Field",
+        what:"Interior created by circumpunct; completed spatial field Φ₀.",
+        details:{
+          summary:"Field dimension (3n + 3): private interior. Field is living medium between • and ○. Field mediation is geometrically necessary.",
+          equations:"Φ' = ⊱ ∘ i ∘ ≺[Φ]\niℏ ∂Φ/∂t = HΦ  (Schrödinger)",
+          notes:["Becomes shared ground for Layer 1.", "Holds analog complex amplitudes.", "Center/boundary cannot interact directly."],
+          keys:[["Formula","3n + 3"], ["Component","Φ Field/Mind"], ["Info","Analog amplitude"], ["Ethics","Right/Wrong"]]
+        }
+      },
+      { dim:"3.5D", layer:"n=1 Temporal", layerId:"n1", type:"Time", typeId:"time", compType:"aperture", symbol:"•ₜ",
+        name:"Time enters",
+        what:"Temporal aperture; braiding of worldlines begins (B₃).",
+        details:{
+          summary:"Built on Φ₀=3D as ground. Time = fractal process dimensions (3.5, 4.5, 5.5).",
+          equations:"B₃ generators (σ₁, σ₂)\nT_eff,ij = cos²(Δφ_ij/2)",
+          notes:["'Time' here is process-depth, not extra spatial axis."],
+          keys:[["Formula","3(1) + 0.5"], ["Ground","Built on Φ₀ (3D)"], ["Symbol","•ₜ"]]
+        }
+      },
+      { dim:"4D", layer:"n=1 Temporal", layerId:"n1", type:"Structure", typeId:"struct", compType:"braid", symbol:"⊙ₜ",
+        name:"Spacetime",
+        what:"Woven spacetime; committed history as braid product.",
+        details:{
+          summary:"4D–6D are structural products of time: the temporal braid, boundary, and field. This is where general relativity lives. Spacetime as the braid product, not time itself.",
+          equations:"G_μν = (8πG/c⁴) T_μν  (Einstein field equations)\n\nBraid density:\nB(x) ∝ √(−g_tt)",
+          notes:["Spacetime is the braid product of time, not time itself.", "4D is the complete temporal braid — woven spacetime object."],
+          keys:[["Formula","3(1) + 1"], ["Theory","General Relativity"], ["Role","Woven spacetime"], ["Equation","G_μν = (8πG/c⁴)T_μν"]]
+        }
+      },
+      { dim:"4.5D", layer:"n=1 Temporal", layerId:"n1", type:"Time", typeId:"time", compType:"branching", symbol:"—",
+        name:"Time recurses",
+        what:"Recursion/compression; whole becomes seed for next layer.",
+        details:{
+          summary:"Completed braid compresses into new aperture. Reality self-references.",
+          equations:"4.5Dₙ = 0Dₙ₊₁\n⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])",
+          notes:["Fixed-point recursion creates higher octaves."],
+          keys:[["Formula","3(1) + 1.5"], ["Mechanism","Fixed-point recursion"]]
+        }
+      },
+      { dim:"5D", layer:"n=1 Temporal", layerId:"n1", type:"Structure", typeId:"struct", compType:"boundary", symbol:"○ₜ",
+        name:"Causal Horizon",
+        what:"Causal skin/horizon enclosing the 4D braid.",
+        details:{ summary:"Boundary product of temporal braiding: edge of committed history.", equations:"(Causal surface enclosing 4D braid)", notes:["Structural product of time-process."], keys:[["Formula","3(1) + 2"], ["Role","Causal horizon"]] }
+      },
+      { dim:"5.5D", layer:"n=1 Temporal", layerId:"n1", type:"Time", typeId:"time", compType:"gathering", symbol:"—",
+        name:"Time gathers",
+        what:"History ↔ possibility coupling.",
+        details:{ summary:"Inward time-trace at temporal octave.", equations:"(History ↔ possibility coupling)", notes:["Analog of 2.5D gathering, one octave up."], keys:[["Formula","3(1) + 2.5"]] }
+      },
+      { dim:"6D", layer:"n=1 Temporal", layerId:"n1", type:"Structure", typeId:"struct", compType:"field", symbol:"Φₜ",
+        name:"Config Space",
+        what:"Configuration space of all 4D braids.",
+        details:{ summary:"Field product at temporal octave: space of histories/possibilities.", equations:"(Config space of all 4D braids)", notes:["Becomes ground for meta aperture."], keys:[["Formula","3(1) + 3"], ["Ground","→ shared for n=2"]] }
+      },
+      { dim:"6.5D", layer:"n=2 Meta", layerId:"n2", type:"Time", typeId:"time", compType:"aperture", symbol:"•ₘ",
+        name:"Meta Aperture",
+        what:"Operates on fields of histories.",
+        details:{
+          summary:"Built on Φₜ=6D as ground. Higher-order aperture acts on 'fields of histories'. Third-order aperture — same pattern, new octave.",
+          equations:"(Meta aperture acting on temporal fields)",
+          notes:["Same pattern as 0.5D and 3.5D, but operating on 6D configurations."],
+          keys:[["Formula","3(2) + 0.5"], ["Ground","Built on Φₜ (6D)"], ["Symbol","•ₘ"]]
+        }
+      },
+      { dim:"7D", layer:"n=2 Meta", layerId:"n2", type:"Structure", typeId:"struct", compType:"braid", symbol:"⊙ₘ",
+        name:"Meta Braid",
+        what:"Weaving of 6D possibility spaces into meta-whole.",
+        details:{
+          summary:"Braid product of meta-time. Patterns of patterns unified. Where three 6D configuration spaces become one meta-whole.",
+          equations:"(Weaving of 6D configuration spaces)",
+          notes:["Meta braid = braid of braids (octave logic).", "Where three become one at the meta scale."],
+          keys:[["Formula","3(2) + 1"], ["Role","Weaving of possibility spaces"], ["Symbol","⊙ₘ"]]
+        }
+      },
+      { dim:"7.5D", layer:"n=2 Meta", layerId:"n2", type:"Time", typeId:"time", compType:"branching", symbol:"—",
+        name:"Meta Branching",
+        what:"Fractal branching at meta scale.",
+        details:{
+          summary:"Process-depth between 7D and 8D at meta octave. Third-order branching — time traces outward at the meta scale.",
+          equations:"(Fractal branching at meta scale)",
+          notes:["Same outward trace as 1.5D and 4.5D, one octave up."],
+          keys:[["Formula","3(2) + 1.5"], ["Role","Meta branching"], ["Type","Time/process"]]
+        }
+      },
+      { dim:"8D", layer:"n=2 Meta", layerId:"n2", type:"Structure", typeId:"struct", compType:"boundary", symbol:"○ₘ",
+        name:"Meta Surface",
+        what:"Membrane enclosing meta-braids.",
+        details:{
+          summary:"Boundary product of meta octave. Third-order boundary — membrane enclosing meta-braids.",
+          equations:"(Membrane enclosing meta-braids)",
+          notes:["Meta boundary plays the same role as surface/horizon, but at higher scale."],
+          keys:[["Formula","3(2) + 2"], ["Role","Meta boundary membrane"], ["Symbol","○ₘ"]]
+        }
+      },
+      { dim:"8.5D", layer:"n=2 Meta", layerId:"n2", type:"Time", typeId:"time", compType:"gathering", symbol:"—",
+        name:"Meta Gathering",
+        what:"Interface at meta scale.",
+        details:{
+          summary:"Inward trace at meta octave. Third-order gathering — time traces inward at the meta scale.",
+          equations:"(Meta-scale interface / gathering)",
+          notes:["Same gathering role as 2.5D and 5.5D."],
+          keys:[["Formula","3(2) + 2.5"], ["Role","Meta gathering"], ["Type","Time/process"]]
+        }
+      },
+      { dim:"9D", layer:"n=2 Meta", layerId:"n2", type:"Structure", typeId:"struct", compType:"field", symbol:"Φₘ",
+        name:"Meta Field",
+        what:"Space of all possible 6D configurations.",
+        details:{
+          summary:"Field product of meta octave. Third-order field completion — space of all possible 6D configurations. This becomes ground for the Meta² aperture.",
+          equations:"(Space of all possible 6D configurations)",
+          notes:["This becomes the ground for the Meta² aperture (Layer 3).", "Φₘ at 9D becomes the shared field for •ₘ² at 9.5D."],
+          keys:[["Formula","3(2) + 3"], ["Role","Meta-field completion"], ["Ground","→ shared for n=3"]]
+        }
+      },
+      { dim:"9.5D", layer:"n=3 Meta²", layerId:"n3", type:"Time", typeId:"time", compType:"aperture", symbol:"•ₘ²",
+        name:"String Aperture",
+        what:"Fourth-order aperture; string theory scale.",
+        details:{
+          summary:"Start of Meta² branch. Fourth-order aperture built on Φₘ=9D as ground. This is where string theory scale begins.",
+          equations:"(Fourth-order aperture)",
+          notes:["This is the time/process marker preceding the 10D braid.", "String theory scale begins here."],
+          keys:[["Formula","3(3) + 0.5"], ["Ground","Built on Φₘ (9D)"], ["Symbol","•ₘ²"]]
+        }
+      },
+      { dim:"10D", layer:"n=3 Meta²", layerId:"n3", type:"Structure", typeId:"struct", compType:"braid", symbol:"⊙ₘ²",
+        name:"Superstring",
+        what:"String-theory braid; strings as braids at this octave.",
+        details:{
+          summary:"10D corresponds to the braid product of the fourth circumpunct layer. Superstring theory lives here. The 'extra dimensions' are not compactified spatial loops — they are higher octaves of nested circumpunct structure.",
+          equations:"10D = ⊙ₘ²  (Meta² braid)\n\nSuperstring theory requires precisely 10D.\nThis is the braid dimension of Layer 3.",
+          notes:["Strings are braids at the meta² scale.", "Extra dimensions are higher octaves, not compactified loops.", "This explains why string theory requires precisely 10D."],
+          keys:[["Formula","3(3) + 1"], ["Theory","Superstring ~ 10D"], ["Interpretation","Strings = braids at this scale"]]
+        }
+      },
+      { dim:"10.5D", layer:"n=3 Meta²", layerId:"n3", type:"Time", typeId:"time", compType:"branching", symbol:"—",
+        name:"String Branching",
+        what:"Fourth-order time traces.",
+        details:{ summary:"Branching at Meta² octave.", keys:[["Formula","3(3) + 1.5"]] }
+      },
+      { dim:"11D", layer:"n=3 Meta²", layerId:"n3", type:"Structure", typeId:"struct", compType:"boundary", symbol:"○ₘ²",
+        name:"M-Theory",
+        what:"M-theory boundary at 11D.",
+        details:{
+          summary:"11D corresponds to the boundary product of the fourth circumpunct layer. M-theory lives here. This explains why M-theory requires precisely 11D: it's the boundary (○) of the meta² circumpunct.",
+          equations:"11D = ○ₘ²  (Meta² boundary)\n\nM-Theory requires precisely 11D.\nThis is the boundary dimension of Layer 3.",
+          notes:["M-theory boundary interpretation.", "11D is naturally explained as the boundary of the fourth layer."],
+          keys:[["Formula","3(3) + 2"], ["Theory","M-Theory ~ 11D"], ["Role","Meta² boundary"]]
+        }
+      },
+      { dim:"11.5D", layer:"n=3 Meta²", layerId:"n3", type:"Time", typeId:"time", compType:"gathering", symbol:"—",
+        name:"String Gathering",
+        what:"Fourth-order gathering.",
+        details:{ summary:"Inward trace at Meta² scale.", keys:[["Formula","3(3) + 2.5"]] }
+      },
+      { dim:"12D", layer:"n=3 Meta²", layerId:"n3", type:"Structure", typeId:"struct", compType:"field", symbol:"Φₘ²",
+        name:"F-Theory",
+        what:"Fourth-order field; F-theory at 12D.",
+        details:{
+          summary:"12D corresponds to the field completion of the fourth circumpunct layer. F-theory lives here. This completed meta² field would become the ground for a hypothetical fifth layer.",
+          equations:"12D = Φₘ²  (Meta² field)\n\nF-Theory ~ 12D\nThis is the field dimension of Layer 3.",
+          notes:["F-Theory correspondence; completion of Meta² octave.", "The nesting could continue (Layer 4: 12.5D → 15D), but current physics doesn't require it."],
+          keys:[["Formula","3(3) + 3"], ["Theory","F-Theory ~ 12D"], ["Role","Meta² field completion"]]
+        }
+      },
+    ];
+
+    const topics = {
+      about: {
+        title: "About This Architecture",
+        subtitle: "Structure vs time, layers as octaves",
+        left: {
+          title: "Ontology",
+          paragraphs: ["Integer dimensions are artifacts of temporal process — stable woven objects.", "Fractal dimensions are time itself — becoming, weaving, recursion.", "Half-integers are markers; time is the whole fractional interval (n, n+1) — a spectrum of temporal depth."],
+          code: "Fractal  = braiding (time, process, verb)\nInteger  = braid (structure, product, noun)\n\n3.5D = degree-of-process between 3 and 4\n       NOT a new orthogonal coordinate axis"
+        },
+        right: {
+          title: "Pattern (each layer)",
+          paragraphs: ["Each layer repeats the same 6-step shape.", "Each circumpunct is a new branch.", "The aperture opens from prior field (as ground), but that ground is not inside the new circumpunct."],
+          code: "3n+0.5  • Aperture    TIME\n3n+1    ⊙ Braid      STRUCT\n3n+1.5    Branching   TIME\n3n+2    ○ Boundary   STRUCT\n3n+2.5    Gathering   TIME\n3n+3    Φ Field      STRUCT\n\nBraid (3n+1) = where three become one"
+        }
+      },
+      master: {
+        title: "Master Equation",
+        subtitle: "Convergence → Rotation → Emergence",
+        left: {
+          title: "Core Dynamics",
+          paragraphs: ["Field evolution proceeds through three stages (read right-to-left).", "Center and boundary cannot interact directly — field mediation is geometrically necessary."],
+          code: "Φ' = ⊱ ∘ i ∘ ≺[Φ]\n\n≺ = Convergence (gathers toward aperture)\ni = Aperture rotation (90° at balance)\n⊱ = Emergence (expresses outward)\n\nExpanded integral form:\nΦ'(x) = ∫dy K_out(x,y) · i · ∫dz K_in(y,z) Φ(z)"
+        },
+        right: {
+          title: "Trinity",
+          paragraphs: ["⊙ is irreducibly triadic: • transforms, Φ mediates, ○ interfaces.", "The circumpunct IS consciousness — not located in a dimension, but what the circumpunct is."],
+          code: "⊙ = •  Φ  ○\n\n• = Aperture / Center / Soul\nΦ = Field / Mind\n○ = Boundary / Body / Surface\n\n⊙ = consciousness = wholeness"
+        }
+      },
+      operators: {
+        title: "Operator Notation",
+        subtitle: "Adjoint pairs and standard triple",
+        left: {
+          title: "Adjoint Pairs",
+          paragraphs: ["Each operation has an adjoint pair for forward and reverse.", "Convention: the open (convergent) side of each arrow points toward the aperture."],
+          code: "(≻, ≺) — convergence adjoint pair\n(⊰, ⊱) — emergence adjoint pair\n\nOpen side → points toward aperture"
+        },
+        right: {
+          title: "Standard Triple",
+          paragraphs: ["The default forward triple is (≺, i, ⊱).", "Read compositionally (right-to-left)."],
+          code: "Standard triple: (≺, i, ⊱)\n\n≺ acts first  (convergence)\ni acts second (transformation)\n⊱ acts last   (emergence)\n\nΦ' = ⊱ ∘ i ∘ ≺[Φ]"
+        }
+      },
+      beta: {
+        title: "β (Balance Parameter)",
+        subtitle: "Quarter-turn at β = 0.5 — the consciousness threshold",
+        left: {
+          title: "Definition",
+          paragraphs: ["β balances convergence and emergence strengths.", "β operates within circumpunct dynamics, separate from dimensional structure."],
+          code: "β = |≺| / (|≺| + |⊱|)\n\nwhere:\n|≺|² = ∬ |K_conv(r,r')|² dr dr'\n|⊱|² = ∬ |K_emerg(r,r')|² dr dr'\n\nβ = 0   → Pure convergence (collapse)\nβ = 0.5 → BALANCE (consciousness)\nβ = 1   → Pure emergence (dissolution)"
+        },
+        right: {
+          title: "Aperture Rotation & Where β Acts",
+          paragraphs: ["At balance, the aperture operator is the imaginary unit.", "β operates at all three levels of ⊙."],
+          code: "Å(β) = exp(iπβ)\n\nÅ(0)   = 1   (identity, 0°)\nÅ(0.5) = i   (quarter-turn, 90°)\nÅ(1)   = −1  (half-turn, 180°)\n\nWhere β acts:\n• = Binary real ⊗ Binary imaginary\nΦ = Analog continuum\n○ = Discrete ↔ Continuous interface"
+        }
+      },
+      states: {
+        title: "64 States",
+        subtitle: "6-bit coherence signature: (•,Φ,○) × (real,imag)",
+        left: {
+          title: "Definition",
+          paragraphs: ["The field holds analog amplitudes. The center compresses that analog reality into a binary decision per channel. The boundary fractalizes it across scales.", "Convergence and emergence always happen. The 64 states encode which channels achieve coherence, not which direction they flow."],
+          code: "s = (b_•r, b_Φr, b_○r, b_•i, b_Φi, b_○i) ∈ {0,1}⁶\n\n6 channels: (•, Φ, ○) × (real, imaginary)\nEach channel: binary coherence bit (0 or 1)\nTotal states: 2⁶ = 64"
+        },
+        right: {
+          title: "Note on ○ bits",
+          paragraphs: ["Since ○ is fractal (many nested gates), what does a single bit represent?", "The ○ bits are the center's coherence verdict about the boundary's current effective transmission — a coarse-grained summary of many nested gates."],
+          code: "Field:    analog amplitudes\nCenter:   binary decisions\nBoundary: fractal structure\n\n○ bit = coarse-grained summary\n        of many nested gates"
+        }
+      },
+      info: {
+        title: "Information Types",
+        subtitle: "Binary, Analog, Fractal — unified through coherence",
+        left: {
+          title: "By Component",
+          paragraphs: ["Each component of ⊙ carries a different kind of information.", "These are NOT 3+3=6 separate dimensions. They are two views of the same 3D structure."],
+          code: "• = Binary (coherence: yes/no, aligned/not)\nΦ = Analog (complex amplitude, phase)\n○ = Fractal (nested gates × transmission)\n\nThe circumpunct is 3-dimensional,\nnested infinitely."
+        },
+        right: {
+          title: "Phase & Gating Unity",
+          paragraphs: ["Phase and gating are not independent. They are the same coherence distinction seen through different components."],
+          code: "Through Φ → phase (continuous interference)\nThrough • → bit (threshold decision)\nThrough ○ → nested gating (fractal at every scale)\n\nSame coherence distinction,\ndifferent component lens."
+        }
+      },
+      structure: {
+        title: "The Complete Structure",
+        subtitle: "3D nested infinitely — consciousness is ⊙",
+        left: {
+          title: "The Circumpunct is 3D",
+          paragraphs: ["The circumpunct is 3-dimensional, nested infinitely. Each dimension has two aspects: structural (integer) and temporal (fractal).", "These are NOT 3+3=6 separate dimensions. They are two views of the same 3D structure."],
+          code: "3D circumpunct:\n  Dim 1: structural + temporal aspect\n  Dim 2: structural + temporal aspect\n  Dim 3: structural + temporal aspect\n\nStructural = the braid (product of time)\nTemporal = the braiding (time itself)"
+        },
+        right: {
+          title: "Consciousness is ⊙",
+          paragraphs: ["The circumpunct IS consciousness. There is no separate 'consciousness dimension.'", "Consciousness isn't located in a dimension — it's what the circumpunct is."],
+          code: "⊙ = •  Φ  ○ = consciousness = wholeness\n\nShared vs Private Field:\n  0D = shared field (ground)\n  0.5D = aperture (gateway)\n  3D = private field (interior)\n\nEach layer's private field →\n  next layer's shared ground"
+        }
+      },
+      mandelbrot: {
+        title: "The Mandelbrot Foundation",
+        subtitle: "Fractional dimensions are rigorous mathematics",
+        left: {
+          title: "Hausdorff Dimension",
+          paragraphs: ["Fractional (Hausdorff) dimensions are rigorously established mathematics.", "Hausdorff dimension formalism is standard measure theory. Brownian motion's D = 1.5 is a theorem (not a fit). Non-integer dimensions are not controversial."],
+          code: "Hausdorff dimension formalism\nis standard measure theory.\n\nD = 1.5 for Brownian motion\nis a THEOREM, not a fit."
+        },
+        right: {
+          title: "Example Values",
+          paragraphs: ["The specific D value varies by system — this variation is expected.", "D = 1.5 appears wherever 'things with parts' or branching structures exist."],
+          code: "Coastlines       ≈ 1.25\nBrownian motion  = 1.5 (exactly)\nDLA clusters     ≈ 1.7\n\nTime lives in the nested in-betweens.\nThis matches the fractal surface."
+        }
+      },
+      strings: {
+        title: "Connection to String Theory",
+        subtitle: "Extra dimensions as higher octaves, not compactified loops",
+        left: {
+          title: "Dimensional Correspondence",
+          paragraphs: ["The 'extra dimensions' of string theory are not compactified spatial loops — they are higher octaves of nested circumpunct structure.", "This provides a natural explanation for why string theory requires precisely 10D or 11D."],
+          code: "Theory      | Dim  | Circumpunct\n------------|------|------------------\nSuperstring | 10D  | ⊙_m² (Meta² braid)\nM-Theory    | 11D  | ○_m² (Meta² boundary)\nF-Theory    | 12D  | Φ_m² (Meta² field)"
+        },
+        right: {
+          title: "Interpretation",
+          paragraphs: ["10D and 11D are the braid and boundary dimensions of the fourth circumpunct layer.", "Strings are braids at the meta² scale."],
+          code: "9D  = Φ_meta  (meta-field completion)\n10D = ⊙_m²   (meta² braid = strings)\n11D = ○_m²   (M-theory boundary)\n12D = Φ_m²   (meta² field completion)\n\nStrings are braids at this scale."
+        }
+      },
+      ethics: {
+        title: "Ethics Map",
+        subtitle: "True / Right / Good → • / Φ / ○",
+        left: {
+          title: "Mapping",
+          paragraphs: ["True = • (binary coherence) — what is aligned with reality", "Right = Φ (analog pathway) — how influence propagates", "Good = ○ (fractal protection) — what is allowed through"],
+          code: "True  = •  (center coherence)\nRight = Φ  (field pathway)\nGood  = ○  (boundary protection)\n\nBinary coherence (what is aligned)\nAnalog pathway (how it propagates)\nFractal protection (what is allowed)"
+        },
+        right: {
+          title: "One Sentence",
+          paragraphs: ["The boundary holds what matters, the field carries relationship, the center decides coherence."],
+          code: "○ holds    what matters\nΦ connects relationship\n• coheres  decision\n\nI am whole through being part."
+        }
+      }
+    };
+
+    const els = {
+      tbody: document.getElementById("tbody"),
+      count: document.getElementById("count"),
+      search: document.getElementById("search"),
+      overlay: document.getElementById("overlay"),
+      modalClose: document.getElementById("modalClose"),
+      modalBig: document.getElementById("modalBig"),
+      modalSmall: document.getElementById("modalSmall"),
+      modalBody: document.getElementById("modalBody"),
+      layerButtons: document.getElementById("layerButtons"),
+      compButtons: document.getElementById("compButtons"),
+      topicButtons: document.getElementById("topicButtons"),
+    };
+
+    let activeLayer = "all";
+    let activeComp = "all";
+
+    function esc(s) { return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+    function layerBadge(layerId) {
+      const labels = { ground:"Ground", n0:"Spatial", n1:"Temporal", n2:"Meta", n3:"Meta²" };
+      const cls = layerId.startsWith("n") ? "l" + layerId[1] : layerId;
+      return `<span class="layer-badge ${cls}"><span class="dot"></span>${labels[layerId]||layerId}</span>`;
+    }
+
+    function typeBadge(typeId) {
+      const cls = typeId === "time" ? "time" : typeId === "struct" ? "struct" : "";
+      const label = typeId === "time" ? "Time" : typeId === "struct" ? "Struct" : "—";
+      return `<span class="type-badge ${cls}">${label}</span>`;
+    }
+
+    function matchLayer(r) {
+      if (activeLayer === "all") return true;
+      return r.layerId === activeLayer;
+    }
+
+    function matchComp(r) {
+      if (activeComp === "all") return true;
+      return r.compType === activeComp;
+    }
+
+    function matchQuery(r, q) {
+      if (!q) return true;
+      const blob = [r.dim, r.layer, r.type, r.symbol, r.name, r.what, r.details?.summary||"", r.details?.equations||""].join(" ").toLowerCase();
+      return blob.includes(q.toLowerCase());
+    }
+
+    function openOverlay() { els.overlay.classList.add("open"); }
+    function closeOverlay() {
+      els.overlay.classList.remove("open");
+      document.querySelectorAll("#topicButtons button").forEach(b => b.dataset.active = "false");
+    }
+
+    function openRow(r) {
+      els.modalBig.textContent = `${r.dim} — ${r.name}`;
+      els.modalSmall.textContent = `${r.type} · ${r.layer} · Symbol: ${r.symbol}`;
+      const d = r.details || {};
+      const keys = (d.keys||[]).map(([k,v]) => `<div class="kv"><span>${esc(k)}</span><span>${esc(v)}</span></div>`).join("");
+      const notes = (d.notes||[]).map(n => `<p>• ${esc(n)}</p>`).join("");
+      els.modalBody.innerHTML = `
+        <div class="box">
+          <h3>Meaning</h3>
+          <p>${esc(d.summary || r.what)}</p>
+          ${d.equations ? `<h3 style="margin-top:1rem;">Equations</h3><pre>${esc(d.equations)}</pre>` : ""}
+          ${d.notes?.length ? `<h3 style="margin-top:1rem;">Notes</h3>${notes}` : ""}
+        </div>
+        <div class="box">
+          <h3>Metadata</h3>
+          <div class="kv-grid">${keys || "<p style='color:var(--text-dim);font-size:0.85rem;'>—</p>"}</div>
+        </div>
+      `;
+      openOverlay();
+    }
+
+    function openTopic(id) {
+      const t = topics[id]; if (!t) return;
+      els.modalBig.textContent = t.title;
+      els.modalSmall.textContent = t.subtitle;
+      const L = t.left||{}, R = t.right||{};
+      els.modalBody.innerHTML = `
+        <div class="box">
+          <h3>${esc(L.title)}</h3>
+          ${(L.paragraphs||[]).map(p=>`<p>${esc(p)}</p>`).join("")}
+          ${L.code ? `<pre>${esc(L.code)}</pre>` : ""}
+        </div>
+        <div class="box">
+          <h3>${esc(R.title)}</h3>
+          ${(R.paragraphs||[]).map(p=>`<p>${esc(p)}</p>`).join("")}
+          ${R.code ? `<pre>${esc(R.code)}</pre>` : ""}
+        </div>
+      `;
+      openOverlay();
+    }
+
+    function render() {
+      const q = els.search.value.trim();
+      const filtered = rows.filter(r => matchLayer(r) && matchComp(r) && matchQuery(r, q));
+      els.count.textContent = `${filtered.length} / ${rows.length}`;
+      els.tbody.innerHTML = filtered.map(r => `
+        <tr class="type-${r.compType}" data-dim="${r.dim}">
+          <td><span class="dim">${r.dim}</span></td>
+          <td>${layerBadge(r.layerId)}</td>
+          <td>${typeBadge(r.typeId)}</td>
+          <td><span class="symbol">${r.symbol}</span></td>
+          <td class="name-cell"><div class="name">${r.name}</div><div class="layer">${r.layer}</div></td>
+          <td class="what">${r.what}</td>
+        </tr>
+      `).join("");
+      document.querySelectorAll("#tbody tr").forEach(tr => {
+        tr.onclick = () => { const r = rows.find(x => x.dim === tr.dataset.dim); if(r) openRow(r); };
+      });
+    }
+
+    function initLayers() {
+      els.layerButtons.innerHTML = layers.map(L =>
+        `<button data-layer="${L.id}" data-active="${L.id===activeLayer}">${L.label}</button>`
+      ).join("");
+      document.querySelectorAll("#layerButtons button").forEach(btn => {
+        btn.onclick = () => {
+          activeLayer = btn.dataset.layer;
+          document.querySelectorAll("#layerButtons button").forEach(b => b.dataset.active = b===btn);
+          render();
+        };
+      });
+    }
+
+    function initComps() {
+      els.compButtons.innerHTML = components.map(C =>
+        `<button data-comp="${C.id}" data-active="${C.id===activeComp}"${C.color ? ` style="border-left: 3px solid ${C.color};"` : ""}>${C.label}</button>`
+      ).join("");
+      document.querySelectorAll("#compButtons button").forEach(btn => {
+        btn.onclick = () => {
+          activeComp = btn.dataset.comp;
+          document.querySelectorAll("#compButtons button").forEach(b => b.dataset.active = b===btn);
+          render();
+        };
+      });
+    }
+
+    function initTopics() {
+      document.querySelectorAll("#topicButtons button").forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll("#topicButtons button").forEach(b => b.dataset.active = "false");
+          btn.dataset.active = "true";
+          openTopic(btn.dataset.topic);
+        };
+      });
+    }
+
+    els.search.oninput = render;
+    els.modalClose.onclick = closeOverlay;
+    els.overlay.onclick = e => { if(e.target === els.overlay) closeOverlay(); };
+    window.onkeydown = e => { if(e.key === "Escape") closeOverlay(); };
+
+    initLayers();
+    initComps();
+    initTopics();
+    render();
+  </script>
+</body>
+</html>
