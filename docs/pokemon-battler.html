@@ -990,20 +990,55 @@
         }
 
         function handleMessage(msg) {
+            console.log('Received message:', msg.type, msg.data);
             const { type, data } = msg;
 
             switch (type) {
+                case 'game-start':
+                    // Joiner receives Pokemon from host
+                    if (!isHost) {
+                        gameState.myPokemon = data.joinerPokemon.map(p => ({
+                            ...p,
+                            currentHp: p.stats.hp,
+                            maxHp: p.stats.hp,
+                            ar: 0,
+                            dr: 0,
+                            inBattle: false
+                        }));
+                        gameState.enemyPokemon = data.hostPokemon.map(p => ({
+                            ...p,
+                            currentHp: p.stats.hp,
+                            maxHp: p.stats.hp,
+                            ar: 0,
+                            dr: 0,
+                            inBattle: false
+                        }));
+                        console.log('Joiner received Pokemon, starting game');
+                        showScreen('game');
+                        updateUI();
+                        startPlacementPhase();
+                    }
+                    break;
                 case 'ready':
+                    console.log('Enemy is ready');
                     gameState.enemyReady = true;
                     checkBothReady();
                     break;
                 case 'lanes':
-                    gameState.enemyLanes = data.lanes;
-                    checkBothReady();
+                    console.log('Received enemy lanes');
+                    // Parse enemy lanes with full Pokemon data
+                    gameState.enemyLanes = data.lanes.map(p => {
+                        if (!p) return null;
+                        return {
+                            ...p,
+                            currentHp: p.currentHp || p.stats.hp,
+                            maxHp: p.maxHp || p.stats.hp
+                        };
+                    });
                     break;
                 case 'swap':
                     // Enemy swapped their lanes
-                    if (data.swap) {
+                    if (data.swap && data.swap[0] !== null && data.swap[1] !== null) {
                         const [a, b] = data.swap;
                         const temp = gameState.enemyLanes[a];
                         gameState.enemyLanes[a] = gameState.enemyLanes[b];
@@ -1022,33 +1057,66 @@
         async function startGame() {
             showScreen('loading');
             
-            // Fetch 100 Pokemon total, split 50-50
-            const allPokemon = await fetchRandomPokemon(100);
-            
-            // Shuffle and split
-            const shuffled = allPokemon.sort(() => Math.random() - 0.5);
-            
             if (isHost) {
-                gameState.myPokemon = shuffled.slice(0, 50);
-                gameState.enemyPokemon = shuffled.slice(50, 100);
+                // Host fetches all 100 Pokemon and distributes
+                const allPokemon = await fetchRandomPokemon(100);
+                
+                // Shuffle and split
+                const shuffled = allPokemon.sort(() => Math.random() - 0.5);
+                const hostPokemon = shuffled.slice(0, 50);
+                const joinerPokemon = shuffled.slice(50, 100);
+                
+                gameState.myPokemon = hostPokemon.map(p => ({
+                    ...p,
+                    currentHp: p.stats.hp,
+                    maxHp: p.stats.hp,
+                    ar: 0,
+                    dr: 0,
+                    inBattle: false
+                }));
+                gameState.enemyPokemon = joinerPokemon.map(p => ({
+                    ...p,
+                    currentHp: p.stats.hp,
+                    maxHp: p.stats.hp,
+                    ar: 0,
+                    dr: 0,
+                    inBattle: false
+                }));
+
+                // Send Pokemon to joiner
+                console.log('Host sending Pokemon to joiner');
+                send('game-start', {
+                    hostPokemon: hostPokemon,
+                    joinerPokemon: joinerPokemon
+                });
+
+                // Reset game state
+                gameState.round = 1;
+                gameState.battle = 1;
+                gameState.myLanes = [null, null, null, null, null];
+                gameState.enemyLanes = [null, null, null, null, null];
+                gameState.phase = 'placement';
+                gameState.ready = false;
+                gameState.enemyReady = false;
+
+                clearLog();
+                showScreen('game');
+                updateUI();
+                startPlacementPhase();
             } else {
-                gameState.myPokemon = shuffled.slice(50, 100);
-                gameState.enemyPokemon = shuffled.slice(0, 50);
+                // Joiner waits for Pokemon from host
+                document.getElementById('loading-text').textContent = 'Waiting for host to deal Pokemon...';
+                
+                // Reset game state
+                gameState.round = 1;
+                gameState.battle = 1;
+                gameState.myLanes = [null, null, null, null, null];
+                gameState.enemyLanes = [null, null, null, null, null];
+                gameState.phase = 'placement';
+                gameState.ready = false;
+                gameState.enemyReady = false;
+                clearLog();
             }
-
-            // Reset game state
-            gameState.round = 1;
-            gameState.battle = 1;
-            gameState.myLanes = [null, null, null, null, null];
-            gameState.enemyLanes = [null, null, null, null, null];
-            gameState.phase = 'placement';
-            gameState.ready = false;
-            gameState.enemyReady = false;
-
-            clearLog();
-            showScreen('game');
-            updateUI();
-            startPlacementPhase();
         }
 
         function startPlacementPhase() {
@@ -1196,10 +1264,27 @@
 
         function confirmReady() {
             gameState.ready = true;
-            send('lanes', { lanes: gameState.myLanes.map(p => p ? {
-                ...p,
-                // Send minimal data
-            } : null)});
+            
+            // Send lanes with full Pokemon data (simplified for transfer)
+            const lanesData = gameState.myLanes.map(p => {
+                if (!p) return null;
+                return {
+                    id: p.id,
+                    name: p.name,
+                    sprite: p.sprite,
+                    types: p.types,
+                    stats: p.stats,
+                    currentHp: p.currentHp,
+                    maxHp: p.maxHp,
+                    ar: p.ar,
+                    dr: p.dr
+                };
+            });
+            
+            console.log('Sending lanes:', lanesData);
+            send('lanes', { lanes: lanesData });
+            
+            console.log('Sending ready signal');
             send('ready', {});
             
             document.getElementById('ready-btn').style.display = 'none';
@@ -1208,8 +1293,14 @@
         }
 
         function checkBothReady() {
-            if (!gameState.ready || !gameState.enemyReady) return;
+            console.log('checkBothReady - myReady:', gameState.ready, 'enemyReady:', gameState.enemyReady, 'phase:', gameState.phase);
+            
+            if (!gameState.ready || !gameState.enemyReady) {
+                console.log('Not both ready yet');
+                return;
+            }
 
+            console.log('Both ready! Proceeding...');
             hideWaiting();
 
             if (gameState.phase === 'placement') {
@@ -1348,6 +1439,8 @@
             }
         }
 
+        let pendingSwap = null; // Track the swap pair
+
         function selectLaneForSwap(laneIdx) {
             if (gameState.phase !== 'swap') return;
 
@@ -1361,6 +1454,8 @@
                 slots[laneIdx].classList.remove('swap-selected');
             } else {
                 // Perform swap
+                pendingSwap = [gameState.swapSelection, laneIdx];
+                
                 const temp = gameState.myLanes[gameState.swapSelection];
                 gameState.myLanes[gameState.swapSelection] = gameState.myLanes[laneIdx];
                 gameState.myLanes[laneIdx] = temp;
@@ -1379,9 +1474,12 @@
 
         function confirmSwap() {
             gameState.ready = true;
-            send('swap', { swap: gameState.swapSelection !== null ? [gameState.swapSelection, -1] : null });
+            
+            console.log('Confirming swap:', pendingSwap);
+            send('swap', { swap: pendingSwap });
             send('ready', {});
 
+            pendingSwap = null;
             document.getElementById('confirm-swap-btn').style.display = 'none';
             document.getElementById('skip-swap-btn').style.display = 'none';
             document.querySelectorAll('#your-lanes .lane-slot').forEach(s => {
@@ -1394,7 +1492,7 @@
         }
 
         function skipSwap() {
-            gameState.swapSelection = null;
+            pendingSwap = null;
             confirmSwap();
         }
 
