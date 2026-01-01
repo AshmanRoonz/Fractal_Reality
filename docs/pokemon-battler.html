@@ -908,15 +908,28 @@
             peer = new Peer(roomCode);
             
             peer.on('open', (id) => {
+                console.log('Host peer opened with ID:', id);
                 document.getElementById('my-room-code').textContent = id;
                 document.getElementById('room-code-display').style.display = 'block';
                 isHost = true;
             });
 
             peer.on('connection', (connection) => {
+                console.log('Host received connection from:', connection.peer);
                 conn = connection;
                 opponentId = conn.peer;
-                setupConnection();
+                
+                conn.on('open', () => {
+                    console.log('Host: connection fully open');
+                    setupConnection();
+                });
+                
+                conn.on('data', handleMessage);
+                
+                conn.on('close', () => {
+                    alert('Opponent disconnected!');
+                    showScreen('lobby');
+                });
             });
 
             peer.on('error', (err) => {
@@ -930,27 +943,41 @@
             peer = new Peer(myId);
 
             peer.on('open', () => {
-                conn = peer.connect(roomCode);
+                console.log('Joiner peer opened with ID:', myId);
+                console.log('Joiner attempting to connect to:', roomCode);
+                
+                conn = peer.connect(roomCode, { reliable: true });
                 opponentId = roomCode;
+                
                 conn.on('open', () => {
+                    console.log('Joiner: connection fully open');
+                    isHost = false;
                     setupConnection();
+                });
+                
+                conn.on('data', handleMessage);
+                
+                conn.on('close', () => {
+                    alert('Opponent disconnected!');
+                    showScreen('lobby');
+                });
+                
+                conn.on('error', (err) => {
+                    console.error('Connection error:', err);
+                    document.getElementById('join-status').textContent = 'Connection error!';
                 });
             });
 
             peer.on('error', (err) => {
+                console.error('Peer error:', err);
                 document.getElementById('join-status').textContent = 'Error: Could not connect';
             });
         }
 
         function setupConnection() {
+            console.log('setupConnection called, isHost:', isHost);
             document.getElementById('create-status').textContent = 'Connected!';
             document.getElementById('join-status').textContent = 'Connected!';
-
-            conn.on('data', handleMessage);
-            conn.on('close', () => {
-                alert('Opponent disconnected!');
-                showScreen('lobby');
-            });
 
             // Start game
             startGame();
