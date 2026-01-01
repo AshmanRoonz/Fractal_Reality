@@ -568,18 +568,32 @@
             // Use Server-Sent Events to listen
             eventSource = new EventSource(`${NTFY_SERVER}/${roomTopic}/sse`);
             
+            eventSource.onopen = () => {
+                console.log('SSE connected to:', roomTopic);
+            };
+            
             eventSource.onmessage = (e) => {
+                console.log('SSE raw:', e.data);
                 try {
-                    const data = JSON.parse(e.data);
-                    if (data.event === 'message') {
-                        const msg = JSON.parse(data.message);
+                    const event = JSON.parse(e.data);
+                    // ntfy wraps messages in an event object
+                    if (event.event === 'message' && event.message) {
+                        const msg = JSON.parse(event.message);
                         if (msg.from !== myId) {
-                            console.log('Received:', msg);
                             handleMessage(msg);
                         }
                     }
                 } catch (err) {
-                    // Ignore non-JSON messages
+                    console.log('SSE parse (trying direct):', err.message);
+                    // Maybe it's a direct message?
+                    try {
+                        const msg = JSON.parse(e.data);
+                        if (msg.from && msg.from !== myId && msg.type) {
+                            handleMessage(msg);
+                        }
+                    } catch (err2) {
+                        // Ignore
+                    }
                 }
             };
 
@@ -587,26 +601,34 @@
                 console.error('SSE error:', e);
             };
 
-            console.log('Subscribed to:', roomTopic);
+            console.log('Subscribing to:', roomTopic);
         }
 
         async function send(data) {
             if (!roomTopic) return;
             
-            const msg = { ...data, from: myId };
+            const msg = { ...data, from: myId, ts: Date.now() };
+            const body = JSON.stringify(msg);
+            
+            console.log('Sending to', roomTopic, ':', msg.type);
             
             try {
-                await fetch(`${NTFY_SERVER}/${roomTopic}`, {
+                const res = await fetch(`${NTFY_SERVER}/${roomTopic}`, {
                     method: 'POST',
-                    body: JSON.stringify(msg)
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: body
                 });
-                console.log('Sent:', msg);
+                console.log('Send response:', res.status);
             } catch (e) {
                 console.error('Send error:', e);
             }
         }
 
         function handleMessage(msg) {
+            console.log('handleMessage:', msg.type, msg);
+            
             switch (msg.type) {
                 case 'join':
                     if (isHost && state.phase === 'lobby') {
@@ -615,7 +637,16 @@
                     }
                     break;
                     
+                case 'ready-for-data':
+                    // Player 2 is ready to receive game data
+                    if (isHost && state.pendingGameData) {
+                        console.log('P2 ready, sending game data...');
+                        send({ type: 'game-data', p1Pokemon: state.pendingGameData.p1, p2Pokemon: state.pendingGameData.p2 });
+                    }
+                    break;
+                    
                 case 'game-data':
+                    console.log('Received game-data!');
                     if (!isHost) {
                         state.myPokemon = msg.p2Pokemon;
                         state.enemyPokemon = msg.p1Pokemon;
@@ -674,11 +705,32 @@
             subscribe(roomName);
             
             document.getElementById('room-name-display').textContent = roomName.toUpperCase();
-            document.getElementById('waiting-status').textContent = 'Connected! Waiting for host to start...';
+            document.getElementById('waiting-status').textContent = 'Connecting...';
             showScreen('waiting');
             
-            // Tell host we joined
-            setTimeout(() => send({ type: 'join' }), 1000);
+            // Tell host we joined, and keep asking for data until we get it
+            setTimeout(() => {
+                send({ type: 'join' });
+                document.getElementById('waiting-status').textContent = 'Connected! Waiting for host...';
+                
+                // Show loading screen after a moment
+                setTimeout(() => {
+                    if (state.phase === 'lobby') {
+                        showScreen('loading');
+                        document.getElementById('loading-text').textContent = 'Waiting for host to catch Pokemon...';
+                    }
+                }, 2000);
+            }, 1000);
+            
+            // Keep requesting data every 3 seconds until game starts
+            const requestInterval = setInterval(() => {
+                if (state.phase === 'placement' || state.phase === 'battle' || state.phase === 'swap') {
+                    clearInterval(requestInterval);
+                    return;
+                }
+                console.log('Requesting game data...');
+                send({ type: 'ready-for-data' });
+            }, 3000);
         }
 
         // ============== GAME LOGIC ==============
@@ -699,14 +751,28 @@
                 state.myPokemon = p1Pokemon;
                 state.enemyPokemon = p2Pokemon;
                 
-                // Send to opponent
+                // Store for when p2 requests it
+                state.pendingGameData = { p1: p1Pokemon, p2: p2Pokemon };
+                
+                // Send to opponent (they should be listening by now)
+                console.log('Sending game-data to p2...');
                 send({ type: 'game-data', p1Pokemon, p2Pokemon });
+                
+                // Also send again after a delay in case they missed it
+                setTimeout(() => {
+                    if (state.pendingGameData) {
+                        console.log('Re-sending game-data...');
+                        send({ type: 'game-data', p1Pokemon: state.pendingGameData.p1, p2Pokemon: state.pendingGameData.p2 });
+                    }
+                }, 2000);
                 
                 initGameState();
                 showScreen('game');
                 startPlacementPhase();
             } else {
                 document.getElementById('loading-text').textContent = 'Waiting for host...';
+                // Tell host we're ready to receive
+                send({ type: 'ready-for-data' });
             }
         }
 
