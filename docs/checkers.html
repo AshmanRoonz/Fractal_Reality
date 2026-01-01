@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pokemon Chess</title>
+    <title>Pokemon Checkers</title>
     <style>
         * {
             margin: 0;
@@ -51,7 +51,7 @@
             transition: all 0.3s ease;
             border: 3px solid transparent;
             flex: 1;
-            max-width: 160px;
+            max-width: 150px;
         }
 
         .player-info.active {
@@ -65,10 +65,9 @@
             font-size: clamp(0.8rem, 3vw, 1rem);
         }
 
-        .player-info .captures {
-            font-size: clamp(0.7rem, 2.5vw, 0.85rem);
-            opacity: 0.8;
-            margin-top: 5px;
+        .player-info .score {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-weight: bold;
         }
 
         .player-info small {
@@ -136,6 +135,7 @@
             display: flex;
         }
 
+        /* Board sizing - responsive */
         :root {
             --cell-size: min(11vw, 70px);
             --piece-size: calc(var(--cell-size) * 1.15);
@@ -170,43 +170,17 @@
         }
 
         .cell.valid-move {
+            background: rgba(100, 255, 100, 0.5);
             cursor: pointer;
         }
 
         .cell.valid-move::after {
             content: '';
-            position: absolute;
-            width: calc(var(--cell-size) * 0.35);
-            height: calc(var(--cell-size) * 0.35);
-            background: rgba(100, 200, 100, 0.7);
+            width: calc(var(--cell-size) * 0.3);
+            height: calc(var(--cell-size) * 0.3);
+            background: rgba(255, 255, 255, 0.7);
             border-radius: 50%;
-            z-index: 1;
             animation: pulse 1s infinite;
-        }
-
-        .cell.valid-capture::after {
-            content: '';
-            position: absolute;
-            width: calc(var(--cell-size) * 0.9);
-            height: calc(var(--cell-size) * 0.9);
-            background: transparent;
-            border: 4px solid rgba(255, 100, 100, 0.8);
-            border-radius: 50%;
-            z-index: 1;
-        }
-
-        .cell.in-check {
-            background: rgba(255, 0, 0, 0.5) !important;
-            animation: checkPulse 1s infinite;
-        }
-
-        @keyframes checkPulse {
-            0%, 100% { background: rgba(255, 0, 0, 0.3); }
-            50% { background: rgba(255, 0, 0, 0.6); }
-        }
-
-        .cell.last-move {
-            background: rgba(255, 255, 0, 0.3);
         }
 
         @keyframes pulse {
@@ -223,7 +197,7 @@
             justify-content: center;
             transition: transform 0.2s, filter 0.2s;
             position: relative;
-            z-index: 2;
+            z-index: 1;
         }
 
         .piece:hover {
@@ -232,13 +206,17 @@
         }
 
         .piece.red img {
-            filter: drop-shadow(0 0 3px rgba(255, 100, 100, 0.8)) 
-                    drop-shadow(0 3px 5px rgba(0,0,0,0.4));
+            filter: drop-shadow(0 0 8px rgba(255, 80, 80, 1)) 
+                    drop-shadow(0 0 15px rgba(255, 80, 80, 0.9))
+                    drop-shadow(0 0 25px rgba(255, 50, 50, 0.7))
+                    drop-shadow(0 3px 6px rgba(0,0,0,0.5));
         }
 
         .piece.blue img {
-            filter: drop-shadow(0 0 3px rgba(78, 205, 196, 0.8)) 
-                    drop-shadow(0 3px 5px rgba(0,0,0,0.4));
+            filter: drop-shadow(0 0 8px rgba(78, 220, 210, 1)) 
+                    drop-shadow(0 0 15px rgba(78, 220, 210, 0.9))
+                    drop-shadow(0 0 25px rgba(50, 200, 190, 0.7))
+                    drop-shadow(0 3px 6px rgba(0,0,0,0.5));
         }
 
         .piece.selected {
@@ -248,8 +226,9 @@
         }
 
         .piece.selected img {
-            filter: drop-shadow(0 0 8px gold) 
-                    drop-shadow(0 0 15px gold)
+            filter: drop-shadow(0 0 12px gold) 
+                    drop-shadow(0 0 25px gold)
+                    drop-shadow(0 0 40px rgba(255, 215, 0, 0.8))
                     drop-shadow(0 4px 8px rgba(0,0,0,0.5));
         }
 
@@ -265,34 +244,23 @@
             pointer-events: none;
         }
 
-        .piece-icon {
+        .piece.king::before {
+            content: '👑';
             position: absolute;
-            bottom: 0px;
-            right: 0px;
-            font-size: clamp(16px, 4vw, 24px);
-            background: rgba(255,255,255,0.95);
-            color: #333;
-            border-radius: 50%;
-            width: clamp(20px, 5vw, 28px);
-            height: clamp(20px, 5vw, 28px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 3;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-            border: 2px solid #333;
+            top: -5px;
+            font-size: clamp(14px, 4vw, 22px);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+            z-index: 2;
         }
 
-        .piece.red .piece-icon {
-            background: #ff6b6b;
-            color: white;
-            border-color: #c0392b;
-        }
-
-        .piece.blue .piece-icon {
-            background: #4ecdc4;
-            color: white;
-            border-color: #1abc9c;
+        .piece.king::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, gold, transparent);
+            border-radius: 2px;
         }
 
         .controls {
@@ -360,7 +328,7 @@
             to { transform: scale(1.05); }
         }
 
-        .captured-area {
+        .pokemon-teams {
             display: flex;
             gap: 15px;
             margin-top: 15px;
@@ -369,101 +337,41 @@
             width: 100%;
         }
 
-        .captured {
+        .team {
             background: rgba(255,255,255,0.1);
             padding: 10px;
             border-radius: 12px;
             text-align: center;
             flex: 1;
             min-width: 140px;
-            max-width: 250px;
+            max-width: 200px;
         }
 
-        .captured h4 {
+        .team h4 {
             color: white;
             margin-bottom: 8px;
             font-size: clamp(0.75rem, 2.5vw, 0.9rem);
         }
 
-        .captured-pokemon {
+        .team-pokemon {
             display: flex;
             flex-wrap: wrap;
             gap: 3px;
             justify-content: center;
-            min-height: 35px;
         }
 
-        .captured-pokemon img {
-            width: clamp(25px, 7vw, 35px);
-            height: clamp(25px, 7vw, 35px);
-            image-rendering: pixelated;
-            opacity: 0.6;
-        }
-
-        /* Promotion Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            border: 3px solid #ffcb05;
-        }
-
-        .modal-content h3 {
-            color: #ffcb05;
-            margin-bottom: 15px;
-        }
-
-        .promotion-options {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .promotion-option {
-            cursor: pointer;
-            padding: 10px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            transition: all 0.3s;
-        }
-
-        .promotion-option:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.1);
-        }
-
-        .promotion-option img {
-            width: 60px;
-            height: 60px;
+        .team-pokemon img {
+            width: clamp(28px, 8vw, 40px);
+            height: clamp(28px, 8vw, 40px);
             image-rendering: pixelated;
         }
 
-        .promotion-option span {
-            display: block;
-            color: white;
-            font-size: 0.8rem;
-            margin-top: 5px;
+        .captured {
+            opacity: 0.3;
+            filter: grayscale(100%);
         }
 
+        /* Extra small screens */
         @media (max-width: 380px) {
             body {
                 padding: 10px 5px;
@@ -486,6 +394,7 @@
             }
         }
 
+        /* Landscape mode on mobile */
         @media (max-height: 500px) and (orientation: landscape) {
             body {
                 padding: 10px;
@@ -516,11 +425,15 @@
             .controls {
                 margin-top: 8px;
             }
+            
+            .pokemon-teams {
+                margin-top: 8px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>⚡ Pokémon Chess ⚡</h1>
+    <h1>⚡ Pokémon Checkers ⚡</h1>
     
     <div id="loading">
         <div class="pokeball-loader"></div>
@@ -529,13 +442,15 @@
 
     <div id="game-container">
         <div class="game-info">
-            <div class="player-info" id="blue-info">
-                <h3 class="player-blue">🔵 Blue</h3>
-                <small>Legendary Team</small>
-            </div>
             <div class="player-info active" id="red-info">
                 <h3 class="player-red">🔴 Red</h3>
-                <small>Legendary Team</small>
+                <div class="score" id="red-score">12</div>
+                <small>pieces</small>
+            </div>
+            <div class="player-info" id="blue-info">
+                <h3 class="player-blue">🔵 Blue</h3>
+                <div class="score" id="blue-score">12</div>
+                <small>pieces</small>
             </div>
         </div>
 
@@ -548,125 +463,62 @@
             <button id="new-pokemon">🎲 New Pokémon</button>
         </div>
 
-        <div class="captured-area">
-            <div class="captured">
-                <h4 class="player-red">Red Captured</h4>
-                <div class="captured-pokemon" id="red-captured"></div>
+        <div class="pokemon-teams">
+            <div class="team">
+                <h4 class="player-red">Red Team Roster</h4>
+                <div class="team-pokemon" id="red-roster"></div>
             </div>
-            <div class="captured">
-                <h4 class="player-blue">Blue Captured</h4>
-                <div class="captured-pokemon" id="blue-captured"></div>
+            <div class="team">
+                <h4 class="player-blue">Blue Team Roster</h4>
+                <div class="team-pokemon" id="blue-roster"></div>
             </div>
-        </div>
-    </div>
-
-    <div class="modal" id="promotion-modal">
-        <div class="modal-content">
-            <h3>Choose Promotion!</h3>
-            <div class="promotion-options" id="promotion-options"></div>
         </div>
     </div>
 
     <script>
-        // Legendary Pokemon IDs
-        const LEGENDARY_IDS = [
-            144, 145, 146, 150, 151, // Gen 1: Articuno, Zapdos, Moltres, Mewtwo, Mew
-            243, 244, 245, 249, 250, 251, // Gen 2: Raikou, Entei, Suicune, Lugia, Ho-Oh, Celebi
-            377, 378, 379, 380, 381, 382, 383, 384, 385, 386, // Gen 3
-            480, 481, 482, 483, 484, 485, 486, 487, 488, 491, 492, 493, // Gen 4
-            638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, // Gen 5
-            716, 717, 718, 719, 720, 721, // Gen 6
-            785, 786, 787, 788, 789, 790, 791, 792, 800, // Gen 7
-        ];
-
-        // Chess piece types
-        const PIECE_TYPES = {
-            KING: 'king',
-            QUEEN: 'queen', 
-            ROOK: 'rook',
-            BISHOP: 'bishop',
-            KNIGHT: 'knight',
-            PAWN: 'pawn'
-        };
-
-        const PIECE_ICONS = {
-            king: '♚',
-            queen: '♛',
-            rook: '♜',
-            bishop: '♝',
-            knight: '♞',
-            pawn: '♟'
-        };
-
         // Game State
         let board = [];
         let selectedPiece = null;
         let currentPlayer = 'red';
         let validMoves = [];
+        let mustJump = false;
+        let redPokemon = [];
+        let bluePokemon = [];
         let gameOver = false;
-        let lastMove = null;
-        let redCaptured = [];
-        let blueCaptured = [];
-        let promotionPending = null;
-
-        // Pokemon data
-        let pokemonData = {
-            red: { pawns: [], king: null, queen: null, rook: null, bishop: null, knight: null },
-            blue: { pawns: [], king: null, queen: null, rook: null, bishop: null, knight: null }
-        };
 
         // DOM Elements
         const boardEl = document.getElementById('board');
         const messageEl = document.getElementById('message');
         const loadingEl = document.getElementById('loading');
         const gameContainer = document.getElementById('game-container');
+        const redScoreEl = document.getElementById('red-score');
+        const blueScoreEl = document.getElementById('blue-score');
         const redInfoEl = document.getElementById('red-info');
         const blueInfoEl = document.getElementById('blue-info');
-        const redCapturedEl = document.getElementById('red-captured');
-        const blueCapturedEl = document.getElementById('blue-captured');
-        const promotionModal = document.getElementById('promotion-modal');
-        const promotionOptions = document.getElementById('promotion-options');
+        const redRosterEl = document.getElementById('red-roster');
+        const blueRosterEl = document.getElementById('blue-roster');
 
-        // Fetch Pokemon by ID
-        async function fetchPokemon(id) {
-            try {
-                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-                const data = await response.json();
-                return {
-                    id: data.id,
-                    name: data.name,
-                    sprite: data.sprites.front_default || data.sprites.front_shiny
-                };
-            } catch (e) {
-                console.log(`Failed to fetch Pokemon ${id}`);
-                return null;
-            }
-        }
-
-        // Fetch random Pokemon (non-legendary)
+        // Fetch random Pokemon
         async function fetchRandomPokemon(count) {
             const pokemon = [];
-            const usedIds = new Set(LEGENDARY_IDS);
+            const usedIds = new Set();
             
             while (pokemon.length < count) {
-                const id = Math.floor(Math.random() * 898) + 1;
+                const id = Math.floor(Math.random() * 898) + 1; // Gen 1-8
                 if (usedIds.has(id)) continue;
                 usedIds.add(id);
                 
-                const p = await fetchPokemon(id);
-                if (p) pokemon.push(p);
-            }
-            return pokemon;
-        }
-
-        // Fetch random legendaries
-        async function fetchRandomLegendaries(count) {
-            const shuffled = [...LEGENDARY_IDS].sort(() => Math.random() - 0.5);
-            const pokemon = [];
-            
-            for (let i = 0; i < count && i < shuffled.length; i++) {
-                const p = await fetchPokemon(shuffled[i]);
-                if (p) pokemon.push(p);
+                try {
+                    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+                    const data = await response.json();
+                    pokemon.push({
+                        id: data.id,
+                        name: data.name,
+                        sprite: data.sprites.front_default || data.sprites.front_shiny
+                    });
+                } catch (e) {
+                    console.log(`Failed to fetch Pokemon ${id}, trying another...`);
+                }
             }
             return pokemon;
         }
@@ -676,36 +528,16 @@
             loadingEl.style.display = 'flex';
             gameContainer.classList.remove('visible');
             
-            // Fetch pawns (16 random Pokemon, 8 per team)
-            const allPawns = await fetchRandomPokemon(16);
-            
-            // Fetch legendaries (10 total - 5 types x 2 teams)
-            const legendaries = await fetchRandomLegendaries(10);
-            
-            // Assign Pokemon to teams
-            pokemonData = {
-                red: {
-                    pawns: allPawns.slice(0, 8),
-                    king: legendaries[0],
-                    queen: legendaries[1],
-                    rook: legendaries[2],
-                    bishop: legendaries[3],
-                    knight: legendaries[4]
-                },
-                blue: {
-                    pawns: allPawns.slice(8, 16),
-                    king: legendaries[5],
-                    queen: legendaries[6],
-                    rook: legendaries[7],
-                    bishop: legendaries[8],
-                    knight: legendaries[9]
-                }
-            };
+            // Fetch Pokemon for both teams
+            const allPokemon = await fetchRandomPokemon(24);
+            redPokemon = allPokemon.slice(0, 12);
+            bluePokemon = allPokemon.slice(12, 24);
             
             loadingEl.style.display = 'none';
             gameContainer.classList.add('visible');
             
             setupBoard();
+            updateRosters();
         }
 
         // Setup the board
@@ -715,61 +547,19 @@
             selectedPiece = null;
             currentPlayer = 'red';
             validMoves = [];
+            mustJump = false;
             gameOver = false;
-            lastMove = null;
-            redCaptured = [];
-            blueCaptured = [];
-            redCapturedEl.innerHTML = '';
-            blueCapturedEl.innerHTML = '';
+            
+            let redIndex = 0;
+            let blueIndex = 0;
 
-            // Initialize empty board
+            // Reset roster styling
+            document.querySelectorAll('.team-pokemon img').forEach(img => {
+                img.classList.remove('captured');
+            });
+
             for (let row = 0; row < 8; row++) {
                 board[row] = [];
-                for (let col = 0; col < 8; col++) {
-                    board[row][col] = null;
-                }
-            }
-
-            // Place pieces
-            // Blue pieces (top, rows 0-1)
-            placePieces('blue', 0, 1);
-            // Red pieces (bottom, rows 6-7)
-            placePieces('red', 7, 6);
-
-            renderBoard();
-            updateTurnIndicator();
-            updateMessage();
-        }
-
-        function placePieces(color, backRow, pawnRow) {
-            const data = pokemonData[color];
-            
-            // Back row: Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook
-            board[backRow][0] = { color, type: PIECE_TYPES.ROOK, pokemon: data.rook, hasMoved: false };
-            board[backRow][1] = { color, type: PIECE_TYPES.KNIGHT, pokemon: data.knight };
-            board[backRow][2] = { color, type: PIECE_TYPES.BISHOP, pokemon: data.bishop };
-            board[backRow][3] = { color, type: PIECE_TYPES.QUEEN, pokemon: data.queen };
-            board[backRow][4] = { color, type: PIECE_TYPES.KING, pokemon: data.king, hasMoved: false };
-            board[backRow][5] = { color, type: PIECE_TYPES.BISHOP, pokemon: data.bishop };
-            board[backRow][6] = { color, type: PIECE_TYPES.KNIGHT, pokemon: data.knight };
-            board[backRow][7] = { color, type: PIECE_TYPES.ROOK, pokemon: data.rook, hasMoved: false };
-
-            // Pawns
-            for (let col = 0; col < 8; col++) {
-                board[pawnRow][col] = { 
-                    color, 
-                    type: PIECE_TYPES.PAWN, 
-                    pokemon: data.pawns[col],
-                    hasMoved: false
-                };
-            }
-        }
-
-        // Render the board
-        function renderBoard() {
-            boardEl.innerHTML = '';
-            
-            for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 8; col++) {
                     const cell = document.createElement('div');
                     cell.className = `cell ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
@@ -778,53 +568,51 @@
                     cell.addEventListener('click', handleCellClick);
                     cell.addEventListener('touchend', handleCellTouch);
 
-                    // Highlight last move
-                    if (lastMove && 
-                        ((lastMove.from.row === row && lastMove.from.col === col) ||
-                         (lastMove.to.row === row && lastMove.to.col === col))) {
-                        cell.classList.add('last-move');
-                    }
-
-                    const piece = board[row][col];
-                    if (piece) {
-                        const pieceEl = createPiece(piece);
-                        cell.appendChild(pieceEl);
-
-                        // Highlight king in check
-                        if (piece.type === PIECE_TYPES.KING && isInCheck(piece.color)) {
-                            cell.classList.add('in-check');
+                    // Place pieces
+                    if ((row + col) % 2 === 1) {
+                        if (row < 3) {
+                            // Blue pieces (top)
+                            const piece = createPiece('blue', bluePokemon[blueIndex]);
+                            cell.appendChild(piece);
+                            board[row][col] = { color: 'blue', king: false, pokemon: bluePokemon[blueIndex] };
+                            blueIndex++;
+                        } else if (row > 4) {
+                            // Red pieces (bottom)
+                            const piece = createPiece('red', redPokemon[redIndex]);
+                            cell.appendChild(piece);
+                            board[row][col] = { color: 'red', king: false, pokemon: redPokemon[redIndex] };
+                            redIndex++;
+                        } else {
+                            board[row][col] = null;
                         }
+                    } else {
+                        board[row][col] = null;
                     }
 
                     boardEl.appendChild(cell);
                 }
             }
 
-            // Highlight valid moves
-            highlightValidMoves();
+            updateScores();
+            updateTurnIndicator();
+            updateMessage();
         }
 
         // Create a piece element
-        function createPiece(piece) {
-            const pieceEl = document.createElement('div');
-            pieceEl.className = `piece ${piece.color}`;
+        function createPiece(color, pokemon) {
+            const piece = document.createElement('div');
+            piece.className = `piece ${color}`;
             
             const img = document.createElement('img');
-            img.src = piece.pokemon.sprite;
-            img.alt = piece.pokemon.name;
-            img.title = `${piece.pokemon.name} (${piece.type})`;
-            pieceEl.appendChild(img);
-
-            // Add piece type icon
-            const icon = document.createElement('span');
-            icon.className = 'piece-icon';
-            icon.textContent = PIECE_ICONS[piece.type];
-            pieceEl.appendChild(icon);
+            img.src = pokemon.sprite;
+            img.alt = pokemon.name;
+            img.title = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+            piece.appendChild(img);
             
-            return pieceEl;
+            return piece;
         }
 
-        // Handle touch events
+        // Handle touch events for mobile
         function handleCellTouch(e) {
             e.preventDefault();
             handleCellClick(e);
@@ -832,7 +620,7 @@
 
         // Handle cell clicks
         function handleCellClick(e) {
-            if (gameOver || promotionPending) return;
+            if (gameOver) return;
             
             const cell = e.currentTarget;
             const row = parseInt(cell.dataset.row);
@@ -850,20 +638,36 @@
 
             // If clicking on own piece
             if (piece && piece.color === currentPlayer) {
-                selectPiece(row, col);
+                selectPiece(row, col, cell);
             }
         }
 
         // Select a piece
-        function selectPiece(row, col) {
-            selectedPiece = { row, col };
-            validMoves = getValidMoves(row, col);
-            
-            const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+        function selectPiece(row, col, cell) {
+            const piece = board[row][col];
             const pieceEl = cell.querySelector('.piece');
-            if (pieceEl) pieceEl.classList.add('selected');
             
-            highlightValidMoves();
+            // Check if there are mandatory jumps
+            const allJumps = getAllJumps(currentPlayer);
+            
+            if (allJumps.length > 0) {
+                // Must make a jump
+                const jumpsForPiece = getJumps(row, col, piece);
+                if (jumpsForPiece.length === 0) {
+                    messageEl.textContent = '⚠️ Must capture! Pick a piece that can jump.';
+                    return;
+                }
+                validMoves = jumpsForPiece;
+                mustJump = true;
+            } else {
+                validMoves = getMoves(row, col, piece);
+            }
+
+            if (validMoves.length > 0) {
+                selectedPiece = { row, col };
+                pieceEl.classList.add('selected');
+                highlightValidMoves();
+            }
         }
 
         // Clear selection
@@ -871,213 +675,68 @@
             selectedPiece = null;
             validMoves = [];
             document.querySelectorAll('.piece.selected').forEach(p => p.classList.remove('selected'));
-            document.querySelectorAll('.cell.valid-move, .cell.valid-capture').forEach(c => {
-                c.classList.remove('valid-move', 'valid-capture');
-            });
+            document.querySelectorAll('.cell.valid-move').forEach(c => c.classList.remove('valid-move'));
         }
 
-        // Highlight valid moves
-        function highlightValidMoves() {
-            document.querySelectorAll('.cell.valid-move, .cell.valid-capture').forEach(c => {
-                c.classList.remove('valid-move', 'valid-capture');
-            });
-
-            validMoves.forEach(move => {
-                const cell = document.querySelector(`.cell[data-row="${move.row}"][data-col="${move.col}"]`);
-                if (cell) {
-                    if (board[move.row][move.col]) {
-                        cell.classList.add('valid-capture');
-                    } else {
-                        cell.classList.add('valid-move');
-                    }
-                }
-            });
-        }
-
-        // Get valid moves for a piece
-        function getValidMoves(row, col) {
-            const piece = board[row][col];
-            if (!piece) return [];
-
-            let moves = [];
-
-            switch (piece.type) {
-                case PIECE_TYPES.PAWN:
-                    moves = getPawnMoves(row, col, piece);
-                    break;
-                case PIECE_TYPES.ROOK:
-                    moves = getRookMoves(row, col, piece);
-                    break;
-                case PIECE_TYPES.KNIGHT:
-                    moves = getKnightMoves(row, col, piece);
-                    break;
-                case PIECE_TYPES.BISHOP:
-                    moves = getBishopMoves(row, col, piece);
-                    break;
-                case PIECE_TYPES.QUEEN:
-                    moves = getQueenMoves(row, col, piece);
-                    break;
-                case PIECE_TYPES.KING:
-                    moves = getKingMoves(row, col, piece);
-                    break;
-            }
-
-            // Filter moves that would leave king in check
-            return moves.filter(move => !wouldBeInCheck(row, col, move.row, move.col, piece.color));
-        }
-
-        // Pawn moves
-        function getPawnMoves(row, col, piece) {
+        // Get regular moves for a piece
+        function getMoves(row, col, piece) {
             const moves = [];
-            const direction = piece.color === 'red' ? -1 : 1;
-            const startRow = piece.color === 'red' ? 6 : 1;
+            const directions = piece.king ? [-1, 1] : (piece.color === 'red' ? [-1] : [1]);
 
-            // Forward move
-            if (isValidCell(row + direction, col) && !board[row + direction][col]) {
-                moves.push({ row: row + direction, col });
-                
-                // Double move from start
-                if (row === startRow && !board[row + 2 * direction][col]) {
-                    moves.push({ row: row + 2 * direction, col });
-                }
-            }
-
-            // Captures
-            for (const dc of [-1, 1]) {
-                const newCol = col + dc;
-                if (isValidCell(row + direction, newCol)) {
-                    const target = board[row + direction][newCol];
-                    if (target && target.color !== piece.color) {
-                        moves.push({ row: row + direction, col: newCol });
-                    }
-                }
-            }
-
-            // En passant
-            if (lastMove && lastMove.piece.type === PIECE_TYPES.PAWN &&
-                Math.abs(lastMove.from.row - lastMove.to.row) === 2 &&
-                lastMove.to.row === row && Math.abs(lastMove.to.col - col) === 1) {
-                moves.push({ row: row + direction, col: lastMove.to.col, enPassant: true });
-            }
-
-            return moves;
-        }
-
-        // Rook moves
-        function getRookMoves(row, col, piece) {
-            return getSlidingMoves(row, col, piece, [[0, 1], [0, -1], [1, 0], [-1, 0]]);
-        }
-
-        // Bishop moves
-        function getBishopMoves(row, col, piece) {
-            return getSlidingMoves(row, col, piece, [[1, 1], [1, -1], [-1, 1], [-1, -1]]);
-        }
-
-        // Queen moves
-        function getQueenMoves(row, col, piece) {
-            return getSlidingMoves(row, col, piece, [
-                [0, 1], [0, -1], [1, 0], [-1, 0],
-                [1, 1], [1, -1], [-1, 1], [-1, -1]
-            ]);
-        }
-
-        // Sliding piece moves (rook, bishop, queen)
-        function getSlidingMoves(row, col, piece, directions) {
-            const moves = [];
-            
-            for (const [dr, dc] of directions) {
-                let r = row + dr;
-                let c = col + dc;
-                
-                while (isValidCell(r, c)) {
-                    if (!board[r][c]) {
-                        moves.push({ row: r, col: c });
-                    } else {
-                        if (board[r][c].color !== piece.color) {
-                            moves.push({ row: r, col: c });
-                        }
-                        break;
-                    }
-                    r += dr;
-                    c += dc;
-                }
-            }
-            
-            return moves;
-        }
-
-        // Knight moves
-        function getKnightMoves(row, col, piece) {
-            const moves = [];
-            const offsets = [
-                [-2, -1], [-2, 1], [-1, -2], [-1, 2],
-                [1, -2], [1, 2], [2, -1], [2, 1]
-            ];
-
-            for (const [dr, dc] of offsets) {
-                const r = row + dr;
-                const c = col + dc;
-                
-                if (isValidCell(r, c) && (!board[r][c] || board[r][c].color !== piece.color)) {
-                    moves.push({ row: r, col: c });
-                }
-            }
-            
-            return moves;
-        }
-
-        // King moves
-        function getKingMoves(row, col, piece) {
-            const moves = [];
-            
-            for (let dr = -1; dr <= 1; dr++) {
-                for (let dc = -1; dc <= 1; dc++) {
-                    if (dr === 0 && dc === 0) continue;
+            for (const dRow of directions) {
+                for (const dCol of [-1, 1]) {
+                    const newRow = row + dRow;
+                    const newCol = col + dCol;
                     
-                    const r = row + dr;
-                    const c = col + dc;
-                    
-                    if (isValidCell(r, c) && (!board[r][c] || board[r][c].color !== piece.color)) {
-                        moves.push({ row: r, col: c });
+                    if (isValidCell(newRow, newCol) && !board[newRow][newCol]) {
+                        moves.push({ row: newRow, col: newCol, isJump: false });
                     }
                 }
             }
 
-            // Castling
-            if (!piece.hasMoved && !isInCheck(piece.color)) {
-                // Kingside
-                if (canCastle(row, col, row, 7)) {
-                    moves.push({ row, col: col + 2, castle: 'kingside' });
-                }
-                // Queenside
-                if (canCastle(row, col, row, 0)) {
-                    moves.push({ row, col: col - 2, castle: 'queenside' });
-                }
-            }
-            
             return moves;
         }
 
-        // Check if castling is possible
-        function canCastle(kingRow, kingCol, rookRow, rookCol) {
-            const rook = board[rookRow][rookCol];
-            if (!rook || rook.type !== PIECE_TYPES.ROOK || rook.hasMoved) return false;
+        // Get jump moves for a piece
+        function getJumps(row, col, piece) {
+            const jumps = [];
+            const directions = piece.king ? [-1, 1] : (piece.color === 'red' ? [-1] : [1]);
+            const opponent = piece.color === 'red' ? 'blue' : 'red';
 
-            const direction = rookCol > kingCol ? 1 : -1;
-            const color = board[kingRow][kingCol].color;
+            for (const dRow of directions) {
+                for (const dCol of [-1, 1]) {
+                    const midRow = row + dRow;
+                    const midCol = col + dCol;
+                    const newRow = row + (dRow * 2);
+                    const newCol = col + (dCol * 2);
 
-            // Check if path is clear
-            for (let c = kingCol + direction; c !== rookCol; c += direction) {
-                if (board[kingRow][c]) return false;
+                    if (isValidCell(newRow, newCol) && 
+                        board[midRow]?.[midCol]?.color === opponent &&
+                        !board[newRow][newCol]) {
+                        jumps.push({ 
+                            row: newRow, 
+                            col: newCol, 
+                            isJump: true,
+                            captured: { row: midRow, col: midCol }
+                        });
+                    }
+                }
             }
 
-            // Check if king passes through check
-            for (let c = kingCol; c !== kingCol + 3 * direction; c += direction) {
-                if (c < 0 || c > 7) break;
-                if (wouldBeInCheck(kingRow, kingCol, kingRow, c, color)) return false;
-            }
+            return jumps;
+        }
 
-            return true;
+        // Get all jumps for a player
+        function getAllJumps(color) {
+            const jumps = [];
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if (board[row][col]?.color === color) {
+                        jumps.push(...getJumps(row, col, board[row][col]));
+                    }
+                }
+            }
+            return jumps;
         }
 
         // Check if cell is valid
@@ -1085,205 +744,91 @@
             return row >= 0 && row < 8 && col >= 0 && col < 8;
         }
 
-        // Check if a move would leave the king in check
-        function wouldBeInCheck(fromRow, fromCol, toRow, toCol, color) {
-            // Simulate the move
-            const originalFrom = board[fromRow][fromCol];
-            const originalTo = board[toRow][toCol];
-            
-            board[toRow][toCol] = originalFrom;
-            board[fromRow][fromCol] = null;
-            
-            const inCheck = isInCheck(color);
-            
-            // Undo the move
-            board[fromRow][fromCol] = originalFrom;
-            board[toRow][toCol] = originalTo;
-            
-            return inCheck;
-        }
-
-        // Check if a color's king is in check
-        function isInCheck(color) {
-            // Find king
-            let kingRow, kingCol;
-            for (let r = 0; r < 8; r++) {
-                for (let c = 0; c < 8; c++) {
-                    const piece = board[r][c];
-                    if (piece && piece.color === color && piece.type === PIECE_TYPES.KING) {
-                        kingRow = r;
-                        kingCol = c;
-                        break;
-                    }
-                }
-            }
-
-            // Check if any opponent piece can capture the king
-            const opponent = color === 'red' ? 'blue' : 'red';
-            for (let r = 0; r < 8; r++) {
-                for (let c = 0; c < 8; c++) {
-                    const piece = board[r][c];
-                    if (piece && piece.color === opponent) {
-                        const moves = getRawMoves(r, c, piece);
-                        if (moves.some(m => m.row === kingRow && m.col === kingCol)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            
-            return false;
-        }
-
-        // Get raw moves without check validation (to avoid infinite recursion)
-        function getRawMoves(row, col, piece) {
-            switch (piece.type) {
-                case PIECE_TYPES.PAWN:
-                    // Only captures for check detection
-                    const direction = piece.color === 'red' ? -1 : 1;
-                    const moves = [];
-                    for (const dc of [-1, 1]) {
-                        if (isValidCell(row + direction, col + dc)) {
-                            moves.push({ row: row + direction, col: col + dc });
-                        }
-                    }
-                    return moves;
-                case PIECE_TYPES.ROOK:
-                    return getRookMoves(row, col, piece);
-                case PIECE_TYPES.KNIGHT:
-                    return getKnightMoves(row, col, piece);
-                case PIECE_TYPES.BISHOP:
-                    return getBishopMoves(row, col, piece);
-                case PIECE_TYPES.QUEEN:
-                    return getQueenMoves(row, col, piece);
-                case PIECE_TYPES.KING:
-                    const kingMoves = [];
-                    for (let dr = -1; dr <= 1; dr++) {
-                        for (let dc = -1; dc <= 1; dc++) {
-                            if (dr === 0 && dc === 0) continue;
-                            const r = row + dr, c = col + dc;
-                            if (isValidCell(r, c)) kingMoves.push({ row: r, col: c });
-                        }
-                    }
-                    return kingMoves;
-            }
-            return [];
+        // Highlight valid moves
+        function highlightValidMoves() {
+            validMoves.forEach(move => {
+                const cell = document.querySelector(`.cell[data-row="${move.row}"][data-col="${move.col}"]`);
+                if (cell) cell.classList.add('valid-move');
+            });
         }
 
         // Move a piece
         function movePiece(fromRow, fromCol, toRow, toCol) {
             const move = validMoves.find(m => m.row === toRow && m.col === toCol);
             const piece = board[fromRow][fromCol];
-            const captured = board[toRow][toCol];
 
-            // Handle en passant capture
-            if (move.enPassant) {
-                const capturedPawn = board[fromRow][toCol];
-                addCaptured(capturedPawn);
-                board[fromRow][toCol] = null;
-            }
-
-            // Handle regular capture
-            if (captured) {
-                addCaptured(captured);
-            }
-
-            // Handle castling
-            if (move.castle) {
-                const rookCol = move.castle === 'kingside' ? 7 : 0;
-                const newRookCol = move.castle === 'kingside' ? 5 : 3;
-                const rook = board[toRow][rookCol];
-                board[toRow][newRookCol] = rook;
-                board[toRow][rookCol] = null;
-                rook.hasMoved = true;
-            }
-
-            // Move the piece
+            // Update board state
             board[toRow][toCol] = piece;
             board[fromRow][fromCol] = null;
-            piece.hasMoved = true;
 
-            // Record last move
-            lastMove = {
-                from: { row: fromRow, col: fromCol },
-                to: { row: toRow, col: toCol },
-                piece: piece
-            };
-
-            // Check for pawn promotion
-            if (piece.type === PIECE_TYPES.PAWN && (toRow === 0 || toRow === 7)) {
-                showPromotionModal(toRow, toCol, piece);
-                return;
+            // Handle capture
+            if (move.isJump) {
+                const captured = board[move.captured.row][move.captured.col];
+                board[move.captured.row][move.captured.col] = null;
+                
+                // Mark as captured in roster
+                markCaptured(captured.pokemon, captured.color);
             }
 
-            finishMove();
-        }
-
-        // Add to captured pieces
-        function addCaptured(piece) {
-            if (piece.color === 'red') {
-                blueCaptured.push(piece);
-                const img = document.createElement('img');
-                img.src = piece.pokemon.sprite;
-                img.title = piece.pokemon.name;
-                blueCapturedEl.appendChild(img);
-            } else {
-                redCaptured.push(piece);
-                const img = document.createElement('img');
-                img.src = piece.pokemon.sprite;
-                img.title = piece.pokemon.name;
-                redCapturedEl.appendChild(img);
+            // Check for king promotion
+            if ((piece.color === 'red' && toRow === 0) || (piece.color === 'blue' && toRow === 7)) {
+                piece.king = true;
             }
-        }
 
-        // Show promotion modal
-        function showPromotionModal(row, col, piece) {
-            promotionPending = { row, col, piece };
-            promotionOptions.innerHTML = '';
+            // Render the move
+            renderBoard();
 
-            const promotionTypes = [
-                { type: PIECE_TYPES.QUEEN, pokemon: pokemonData[piece.color].queen },
-                { type: PIECE_TYPES.ROOK, pokemon: pokemonData[piece.color].rook },
-                { type: PIECE_TYPES.BISHOP, pokemon: pokemonData[piece.color].bishop },
-                { type: PIECE_TYPES.KNIGHT, pokemon: pokemonData[piece.color].knight }
-            ];
+            // Check for multi-jump
+            if (move.isJump) {
+                const moreJumps = getJumps(toRow, toCol, piece);
+                if (moreJumps.length > 0) {
+                    selectedPiece = { row: toRow, col: toCol };
+                    validMoves = moreJumps;
+                    highlightValidMoves();
+                    const cell = document.querySelector(`.cell[data-row="${toRow}"][data-col="${toCol}"]`);
+                    cell.querySelector('.piece').classList.add('selected');
+                    messageEl.textContent = '🎯 Multi-jump! Keep capturing!';
+                    return;
+                }
+            }
 
-            promotionTypes.forEach(({ type, pokemon }) => {
-                const option = document.createElement('div');
-                option.className = 'promotion-option';
-                option.innerHTML = `
-                    <img src="${pokemon.sprite}" alt="${pokemon.name}">
-                    <span>${PIECE_ICONS[type]} ${type}</span>
-                `;
-                option.addEventListener('click', () => promotePawn(type, pokemon));
-                promotionOptions.appendChild(option);
-            });
-
-            promotionModal.classList.add('active');
-        }
-
-        // Promote pawn
-        function promotePawn(type, pokemon) {
-            const { row, col, piece } = promotionPending;
-            board[row][col] = {
-                color: piece.color,
-                type: type,
-                pokemon: pokemon,
-                hasMoved: true
-            };
-            
-            promotionModal.classList.remove('active');
-            promotionPending = null;
-            finishMove();
-        }
-
-        // Finish the move
-        function finishMove() {
+            // Switch turns
             clearSelection();
             currentPlayer = currentPlayer === 'red' ? 'blue' : 'red';
-            renderBoard();
+            updateScores();
             updateTurnIndicator();
-            checkGameEnd();
+            checkWinCondition();
+        }
+
+        // Render the board
+        function renderBoard() {
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+                    const existingPiece = cell.querySelector('.piece');
+                    if (existingPiece) existingPiece.remove();
+
+                    const piece = board[row][col];
+                    if (piece) {
+                        const pieceEl = createPiece(piece.color, piece.pokemon);
+                        if (piece.king) pieceEl.classList.add('king');
+                        cell.appendChild(pieceEl);
+                    }
+                }
+            }
+        }
+
+        // Update scores
+        function updateScores() {
+            let redCount = 0, blueCount = 0;
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if (board[row][col]?.color === 'red') redCount++;
+                    if (board[row][col]?.color === 'blue') blueCount++;
+                }
+            }
+            redScoreEl.textContent = redCount;
+            blueScoreEl.textContent = blueCount;
         }
 
         // Update turn indicator
@@ -1298,35 +843,71 @@
             messageEl.textContent = `${color} team's turn - Select a piece`;
         }
 
-        // Check for checkmate or stalemate
-        function checkGameEnd() {
-            // Check if current player has any legal moves
-            let hasLegalMove = false;
-            
-            for (let r = 0; r < 8 && !hasLegalMove; r++) {
-                for (let c = 0; c < 8 && !hasLegalMove; c++) {
-                    const piece = board[r][c];
-                    if (piece && piece.color === currentPlayer) {
-                        const moves = getValidMoves(r, c);
-                        if (moves.length > 0) hasLegalMove = true;
+        // Check win condition
+        function checkWinCondition() {
+            let redCount = 0, blueCount = 0;
+            let redMoves = 0, blueMoves = 0;
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const piece = board[row][col];
+                    if (piece) {
+                        if (piece.color === 'red') {
+                            redCount++;
+                            redMoves += getMoves(row, col, piece).length + getJumps(row, col, piece).length;
+                        } else {
+                            blueCount++;
+                            blueMoves += getMoves(row, col, piece).length + getJumps(row, col, piece).length;
+                        }
                     }
                 }
             }
 
-            if (!hasLegalMove) {
-                gameOver = true;
-                if (isInCheck(currentPlayer)) {
-                    const winner = currentPlayer === 'red' ? 'Blue' : 'Red';
-                    messageEl.innerHTML = `🏆 <span class="winner-message">Checkmate! ${winner} Wins!</span> 🏆`;
-                } else {
-                    messageEl.innerHTML = `🤝 <span class="winner-message">Stalemate! It's a draw!</span> 🤝`;
-                }
-            } else if (isInCheck(currentPlayer)) {
-                const color = currentPlayer === 'red' ? 'Red' : 'Blue';
-                messageEl.textContent = `⚠️ ${color} is in CHECK!`;
+            if (redCount === 0 || (currentPlayer === 'red' && redMoves === 0)) {
+                endGame('blue');
+            } else if (blueCount === 0 || (currentPlayer === 'blue' && blueMoves === 0)) {
+                endGame('red');
             } else {
                 updateMessage();
             }
+        }
+
+        // End game
+        function endGame(winner) {
+            gameOver = true;
+            const color = winner === 'red' ? 'Red' : 'Blue';
+            messageEl.innerHTML = `🏆 <span class="winner-message">${color} Wins!</span> 🏆`;
+            messageEl.classList.add('winner-message');
+        }
+
+        // Update roster display
+        function updateRosters() {
+            redRosterEl.innerHTML = '';
+            blueRosterEl.innerHTML = '';
+
+            redPokemon.forEach(p => {
+                const img = document.createElement('img');
+                img.src = p.sprite;
+                img.alt = p.name;
+                img.title = p.name;
+                img.id = `roster-red-${p.id}`;
+                redRosterEl.appendChild(img);
+            });
+
+            bluePokemon.forEach(p => {
+                const img = document.createElement('img');
+                img.src = p.sprite;
+                img.alt = p.name;
+                img.title = p.name;
+                img.id = `roster-blue-${p.id}`;
+                blueRosterEl.appendChild(img);
+            });
+        }
+
+        // Mark a Pokemon as captured
+        function markCaptured(pokemon, color) {
+            const rosterImg = document.getElementById(`roster-${color}-${pokemon.id}`);
+            if (rosterImg) rosterImg.classList.add('captured');
         }
 
         // Event Listeners
