@@ -59,6 +59,17 @@
         .btn-primary { background: #ffcb05; color: #3466af; }
         .btn-secondary { background: #4ecdc4; color: white; }
         .btn-danger { background: #ff6b6b; color: white; }
+        .room-code {
+            font-size: 1.8rem;
+            font-family: monospace;
+            letter-spacing: 5px;
+            color: #ffcb05;
+            background: rgba(0,0,0,0.3);
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin: 15px 0;
+            user-select: all;
+        }
         .status { margin-top: 10px; color: #4ecdc4; }
         .status.error { color: #ff6b6b; }
         
@@ -324,27 +335,24 @@
     <!-- LOBBY -->
     <div id="lobby-screen" class="screen active">
         <div class="box">
-            <h2>Create Room</h2>
-            <button class="btn-primary" id="create-btn">Create New Room</button>
-            <p class="status" id="create-status"></p>
-        </div>
-        <div class="box">
-            <h2>Join Room</h2>
-            <input type="text" id="room-input" placeholder="ROOM CODE" maxlength="20">
+            <h2>Enter Room Name</h2>
+            <p style="margin: 10px 0; opacity: 0.7; font-size: 0.9rem;">
+                Both players enter the same room name!
+            </p>
+            <input type="text" id="room-input" placeholder="ROOM NAME" maxlength="20">
             <br>
-            <button class="btn-secondary" id="join-btn">Join Room</button>
-            <p class="status" id="join-status"></p>
+            <button class="btn-primary" id="host-btn">Create as Host</button>
+            <button class="btn-secondary" id="join-btn">Join as Player 2</button>
+            <p class="status" id="status"></p>
         </div>
     </div>
     
     <!-- WAITING -->
     <div id="waiting-screen" class="screen">
         <div class="box">
-            <h2>Room Code:</h2>
-            <div style="font-size: 1.1rem; font-family: monospace; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin: 10px 0; word-break: break-all; user-select: all;" id="room-code-display">---</div>
-            <p style="font-size: 0.85rem; opacity: 0.7;">Share this code with your opponent!</p>
+            <h2>Room: <span id="room-name-display">---</span></h2>
             <div class="loader"></div>
-            <p class="status" id="waiting-status">Waiting for opponent...</p>
+            <p class="status" id="waiting-status">Connecting...</p>
             <button class="btn-danger" id="leave-btn" style="margin-top: 15px;">Cancel</button>
         </div>
     </div>
@@ -435,16 +443,12 @@
     </div>
 
     <script>
-        // ============== CONFIG ==============
-        // Using jsonbin.io free tier for simple storage
-        const JSONBIN_API = 'https://api.jsonbin.io/v3/b';
-        const MASTER_KEY = '$2a$10$QLbFXfGSnMwqAP/VkCKnOeHLO4Fvl7X5h5TM5HSqWLbHNzqQKvPSi'; // Free public key
-        
-        let binId = null;
+        // ============== NTFY.SH CONFIG ==============
+        const NTFY_SERVER = 'https://ntfy.sh';
+        let roomTopic = null;
         let isHost = false;
-        let myPlayer = null; // 'p1' or 'p2'
-        let pollInterval = null;
-        let lastUpdate = 0;
+        let eventSource = null;
+        let myId = 'p' + Math.random().toString(36).substr(2, 6);
 
         // ============== TYPE CHART ==============
         const TYPE_CHART = {
@@ -557,155 +561,124 @@
             return pokemon;
         }
 
-        // ============== JSONBIN API ==============
-        async function createBin(data) {
-            const res = await fetch(JSONBIN_API, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': MASTER_KEY
-                },
-                body: JSON.stringify(data)
-            });
-            const json = await res.json();
-            return json.metadata.id;
+        // ============== NTFY.SH MESSAGING ==============
+        function subscribe(topic) {
+            roomTopic = 'pokebattle-' + topic.toUpperCase();
+            
+            // Use Server-Sent Events to listen
+            eventSource = new EventSource(`${NTFY_SERVER}/${roomTopic}/sse`);
+            
+            eventSource.onmessage = (e) => {
+                try {
+                    const data = JSON.parse(e.data);
+                    if (data.event === 'message') {
+                        const msg = JSON.parse(data.message);
+                        if (msg.from !== myId) {
+                            console.log('Received:', msg);
+                            handleMessage(msg);
+                        }
+                    }
+                } catch (err) {
+                    // Ignore non-JSON messages
+                }
+            };
+
+            eventSource.onerror = (e) => {
+                console.error('SSE error:', e);
+            };
+
+            console.log('Subscribed to:', roomTopic);
         }
 
-        async function readBin(id) {
-            const res = await fetch(`${JSONBIN_API}/${id}/latest`, {
-                headers: { 'X-Master-Key': MASTER_KEY }
-            });
-            const json = await res.json();
-            return json.record;
-        }
-
-        async function updateBin(id, data) {
-            await fetch(`${JSONBIN_API}/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': MASTER_KEY
-                },
-                body: JSON.stringify(data)
-            });
-        }
-
-        // ============== NETWORKING ==============
-        async function createRoom() {
-            document.getElementById('create-status').textContent = 'Creating room...';
+        async function send(data) {
+            if (!roomTopic) return;
+            
+            const msg = { ...data, from: myId };
             
             try {
-                const roomData = {
-                    version: Date.now(),
-                    status: 'waiting',
-                    p1: { ready: false, lanes: null },
-                    p2: { ready: false, lanes: null },
-                    pokemon: null
-                };
-                
-                binId = await createBin(roomData);
-                isHost = true;
-                myPlayer = 'p1';
-                
-                document.getElementById('room-code-display').textContent = binId;
-                showScreen('waiting');
-                
-                // Start polling for opponent
-                startPolling();
-            } catch (e) {
-                console.error(e);
-                document.getElementById('create-status').textContent = 'Error creating room: ' + e.message;
-            }
-        }
-
-        async function joinRoom(code) {
-            document.getElementById('join-status').textContent = 'Joining...';
-            
-            try {
-                binId = code.trim();
-                const data = await readBin(binId);
-                
-                if (data.status !== 'waiting') {
-                    document.getElementById('join-status').textContent = 'Room is full or game started';
-                    return;
-                }
-                
-                isHost = false;
-                myPlayer = 'p2';
-                
-                // Mark as joined
-                data.status = 'joined';
-                data.version = Date.now();
-                await updateBin(binId, data);
-                
-                document.getElementById('room-code-display').textContent = binId;
-                document.getElementById('waiting-status').textContent = 'Connected! Waiting for host to start...';
-                showScreen('waiting');
-                
-                startPolling();
-            } catch (e) {
-                console.error(e);
-                document.getElementById('join-status').textContent = 'Invalid room code or error';
-            }
-        }
-
-        function startPolling() {
-            pollInterval = setInterval(pollForUpdates, 1500);
-        }
-
-        function stopPolling() {
-            if (pollInterval) {
-                clearInterval(pollInterval);
-                pollInterval = null;
-            }
-        }
-
-        async function pollForUpdates() {
-            try {
-                const data = await readBin(binId);
-                
-                if (data.version <= lastUpdate) return;
-                lastUpdate = data.version;
-                
-                console.log('Poll update:', data.status, data);
-                
-                // Host sees player 2 joined
-                if (isHost && data.status === 'joined' && state.phase === 'lobby') {
-                    document.getElementById('waiting-status').textContent = 'Opponent joined! Starting game...';
-                    setTimeout(() => startGame(), 500);
-                }
-                
-                // Joiner receives pokemon
-                if (!isHost && data.status === 'playing' && data.pokemon && state.phase === 'lobby') {
-                    state.myPokemon = data.pokemon.p2;
-                    state.enemyPokemon = data.pokemon.p1;
-                    initGameState();
-                    showScreen('game');
-                    startPlacementPhase();
-                }
-                
-                // Check enemy ready
-                const enemyPlayer = myPlayer === 'p1' ? 'p2' : 'p1';
-                if (data[enemyPlayer]?.ready && !state.enemyReady) {
-                    state.enemyReady = true;
-                    state.enemyLanes = data[enemyPlayer].lanes?.map(p => p ? { ...p } : null) || state.enemyLanes;
-                    checkBothReady();
-                }
-                
-            } catch (e) {
-                console.error('Poll error:', e);
-            }
-        }
-
-        async function sendUpdate(myData) {
-            try {
-                const data = await readBin(binId);
-                data[myPlayer] = { ...data[myPlayer], ...myData };
-                data.version = Date.now();
-                await updateBin(binId, data);
+                await fetch(`${NTFY_SERVER}/${roomTopic}`, {
+                    method: 'POST',
+                    body: JSON.stringify(msg)
+                });
+                console.log('Sent:', msg);
             } catch (e) {
                 console.error('Send error:', e);
             }
+        }
+
+        function handleMessage(msg) {
+            switch (msg.type) {
+                case 'join':
+                    if (isHost && state.phase === 'lobby') {
+                        document.getElementById('waiting-status').textContent = 'Opponent joined! Starting game...';
+                        setTimeout(() => startGame(), 500);
+                    }
+                    break;
+                    
+                case 'game-data':
+                    if (!isHost) {
+                        state.myPokemon = msg.p2Pokemon;
+                        state.enemyPokemon = msg.p1Pokemon;
+                        initGameState();
+                        showScreen('game');
+                        startPlacementPhase();
+                    }
+                    break;
+                    
+                case 'lanes':
+                    state.enemyLanes = msg.lanes.map(p => p ? { ...p } : null);
+                    break;
+                    
+                case 'ready':
+                    state.enemyReady = true;
+                    checkBothReady();
+                    break;
+                    
+                case 'swap':
+                    if (msg.swapPair) {
+                        const [a, b] = msg.swapPair;
+                        const temp = state.enemyLanes[a];
+                        state.enemyLanes[a] = state.enemyLanes[b];
+                        state.enemyLanes[b] = temp;
+                    }
+                    state.enemyReady = true;
+                    checkBothReady();
+                    break;
+            }
+        }
+
+        // ============== ROOM MANAGEMENT ==============
+        function createRoom() {
+            const roomName = document.getElementById('room-input').value.trim();
+            if (roomName.length < 2) {
+                document.getElementById('status').textContent = 'Enter a room name (2+ chars)';
+                return;
+            }
+            
+            isHost = true;
+            subscribe(roomName);
+            
+            document.getElementById('room-name-display').textContent = roomName.toUpperCase();
+            document.getElementById('waiting-status').textContent = 'Waiting for Player 2 to join "' + roomName.toUpperCase() + '"...';
+            showScreen('waiting');
+        }
+
+        function joinRoom() {
+            const roomName = document.getElementById('room-input').value.trim();
+            if (roomName.length < 2) {
+                document.getElementById('status').textContent = 'Enter a room name (2+ chars)';
+                return;
+            }
+            
+            isHost = false;
+            subscribe(roomName);
+            
+            document.getElementById('room-name-display').textContent = roomName.toUpperCase();
+            document.getElementById('waiting-status').textContent = 'Connected! Waiting for host to start...';
+            showScreen('waiting');
+            
+            // Tell host we joined
+            setTimeout(() => send({ type: 'join' }), 1000);
         }
 
         // ============== GAME LOGIC ==============
@@ -727,17 +700,13 @@
                 state.enemyPokemon = p2Pokemon;
                 
                 // Send to opponent
-                const data = await readBin(binId);
-                data.status = 'playing';
-                data.pokemon = { p1: p1Pokemon, p2: p2Pokemon };
-                data.version = Date.now();
-                await updateBin(binId, data);
+                send({ type: 'game-data', p1Pokemon, p2Pokemon });
                 
                 initGameState();
                 showScreen('game');
                 startPlacementPhase();
             } else {
-                document.getElementById('loading-text').textContent = 'Waiting for Pokemon...';
+                document.getElementById('loading-text').textContent = 'Waiting for host...';
             }
         }
 
@@ -774,9 +743,6 @@
                 slot.innerHTML = `<span class="lane-num">${parseInt(slot.dataset.lane) + 1}</span>`;
                 slot.classList.remove('filled');
             });
-
-            // Reset ready state on server
-            sendUpdate({ ready: false, lanes: null });
 
             log(`=== Round ${state.round} ===`, 'info');
             renderHand();
@@ -870,7 +836,8 @@
                 stats: p.stats, currentHp: p.currentHp, maxHp: p.maxHp, ar: p.ar, dr: p.dr
             } : null);
             
-            await sendUpdate({ ready: true, lanes: lanesData });
+            send({ type: 'lanes', lanes: lanesData });
+            send({ type: 'ready' });
             
             document.getElementById('ready-btn').style.display = 'none';
             showOverlay('Waiting for opponent...');
@@ -880,10 +847,7 @@
         function checkBothReady() {
             if (!state.ready || !state.enemyReady) return;
             hideOverlay();
-            
-            // Reset for next phase
-            state.enemyReady = false;
-            sendUpdate({ ready: false });
+            state.enemyReady = false; // Reset for next phase
             
             if (state.phase === 'placement') {
                 state.enemyLanes.forEach((p, i) => { if (p) renderLane(i, p, 'enemy'); });
@@ -969,9 +933,6 @@
             document.querySelectorAll('#my-lanes .slot').forEach(slot => {
                 if (state.myLanes[slot.dataset.lane]) slot.classList.add('selectable');
             });
-            
-            // Reset ready state
-            sendUpdate({ ready: false, lanes: null });
         }
 
         let pendingSwap = null;
@@ -1001,13 +962,13 @@
         async function confirmSwap() {
             state.ready = true;
             
-            // Send current lanes after swap
             const lanesData = state.myLanes.map(p => p ? {
                 id: p.id, name: p.name, sprite: p.sprite, types: p.types,
                 stats: p.stats, currentHp: p.currentHp, maxHp: p.maxHp, ar: p.ar, dr: p.dr
             } : null);
             
-            await sendUpdate({ ready: true, lanes: lanesData });
+            send({ type: 'swap', swapPair: pendingSwap, lanes: lanesData });
+            send({ type: 'ready' });
             
             pendingSwap = null;
             document.getElementById('confirm-swap-btn').style.display = 'none';
@@ -1036,7 +997,7 @@
         }
 
         function endGame() {
-            stopPolling();
+            if (eventSource) eventSource.close();
             const myRem = state.myPokemon.filter(p => p.currentHp > 0).length;
             document.getElementById('my-final').textContent = myRem;
             document.getElementById('enemy-final').textContent = '?';
@@ -1059,23 +1020,15 @@
         }
 
         // ============== EVENT LISTENERS ==============
-        document.getElementById('create-btn').onclick = createRoom;
+        document.getElementById('host-btn').onclick = createRoom;
+        document.getElementById('join-btn').onclick = joinRoom;
         
-        document.getElementById('join-btn').onclick = () => {
-            const code = document.getElementById('room-input').value.trim();
-            if (code.length > 10) {
-                joinRoom(code);
-            } else {
-                document.getElementById('join-status').textContent = 'Enter a valid room code';
-            }
-        };
-
         document.getElementById('room-input').onkeypress = e => {
-            if (e.key === 'Enter') document.getElementById('join-btn').click();
+            if (e.key === 'Enter') document.getElementById('host-btn').click();
         };
 
         document.getElementById('leave-btn').onclick = () => {
-            stopPolling();
+            if (eventSource) eventSource.close();
             location.reload();
         };
         
