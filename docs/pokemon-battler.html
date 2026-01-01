@@ -616,7 +616,7 @@
             console.log('Subscribing to:', roomTopic);
         }
 
-        async function send(data) {
+        async function send(data, retries = 3) {
             if (!roomTopic) return;
             
             const msg = { ...data, from: myId, ts: Date.now() };
@@ -624,17 +624,31 @@
             
             console.log('Sending to', roomTopic, ':', msg.type);
             
-            try {
-                const res = await fetch(`${NTFY_SERVER}/${roomTopic}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: body
-                });
-                console.log('Send response:', res.status);
-            } catch (e) {
-                console.error('Send error:', e);
+            for (let attempt = 0; attempt < retries; attempt++) {
+                try {
+                    const res = await fetch(`${NTFY_SERVER}/${roomTopic}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: body
+                    });
+                    
+                    if (res.status === 429) {
+                        // Rate limited - wait and retry
+                        console.log('Rate limited, waiting 2s before retry...');
+                        await new Promise(r => setTimeout(r, 2000));
+                        continue;
+                    }
+                    
+                    console.log('Send response:', res.status);
+                    return; // Success
+                } catch (e) {
+                    console.error('Send error (attempt ' + (attempt + 1) + '):', e.message);
+                    if (attempt < retries - 1) {
+                        await new Promise(r => setTimeout(r, 1000));
+                    }
+                }
             }
         }
 
@@ -668,17 +682,18 @@
                     }
                     break;
                     
-                case 'lanes':
-                    state.enemyLanes = msg.lanes.map(p => p ? { ...p } : null);
-                    break;
-                    
                 case 'ready':
+                    if (msg.lanes) {
+                        state.enemyLanes = msg.lanes.map(p => p ? { ...p } : null);
+                    }
                     state.enemyReady = true;
                     checkBothReady();
                     break;
                     
                 case 'swap':
-                    if (msg.swapPair) {
+                    if (msg.lanes) {
+                        state.enemyLanes = msg.lanes.map(p => p ? { ...p } : null);
+                    } else if (msg.swapPair) {
                         const [a, b] = msg.swapPair;
                         const temp = state.enemyLanes[a];
                         state.enemyLanes[a] = state.enemyLanes[b];
@@ -734,7 +749,7 @@
                 }, 2000);
             }, 1000);
             
-            // Keep requesting data every 3 seconds until game starts
+            // Keep requesting data every 5 seconds until game starts
             const requestInterval = setInterval(() => {
                 if (state.phase === 'placement' || state.phase === 'battle' || state.phase === 'swap') {
                     clearInterval(requestInterval);
@@ -742,7 +757,7 @@
                 }
                 console.log('Requesting game data...');
                 send({ type: 'ready-for-data' });
-            }, 3000);
+            }, 5000);
         }
 
         // ============== GAME LOGIC ==============
@@ -766,17 +781,9 @@
                 // Store for when p2 requests it
                 state.pendingGameData = { p1: p1Pokemon, p2: p2Pokemon };
                 
-                // Send to opponent (they should be listening by now)
+                // Send to opponent
                 console.log('Sending game-data to p2...');
                 send({ type: 'game-data', p1Pokemon, p2Pokemon });
-                
-                // Also send again after a delay in case they missed it
-                setTimeout(() => {
-                    if (state.pendingGameData) {
-                        console.log('Re-sending game-data...');
-                        send({ type: 'game-data', p1Pokemon: state.pendingGameData.p1, p2Pokemon: state.pendingGameData.p2 });
-                    }
-                }, 2000);
                 
                 initGameState();
                 showScreen('game');
@@ -914,8 +921,8 @@
                 stats: p.stats, currentHp: p.currentHp, maxHp: p.maxHp, ar: p.ar, dr: p.dr
             } : null);
             
-            send({ type: 'lanes', lanes: lanesData });
-            send({ type: 'ready' });
+            // Send lanes and ready in ONE message
+            send({ type: 'ready', lanes: lanesData });
             
             document.getElementById('ready-btn').style.display = 'none';
             showOverlay('Waiting for opponent...');
@@ -1045,8 +1052,8 @@
                 stats: p.stats, currentHp: p.currentHp, maxHp: p.maxHp, ar: p.ar, dr: p.dr
             } : null);
             
+            // Send swap info and ready in ONE message
             send({ type: 'swap', swapPair: pendingSwap, lanes: lanesData });
-            send({ type: 'ready' });
             
             pendingSwap = null;
             document.getElementById('confirm-swap-btn').style.display = 'none';
