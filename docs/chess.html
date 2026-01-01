@@ -1332,10 +1332,20 @@
         // Event Listeners
         document.getElementById('new-game').addEventListener('click', setupBoard);
         document.getElementById('new-pokemon').addEventListener('click', initGame);
+        
+        // Also add touch support for buttons
+        document.getElementById('new-game').addEventListener('touchend', function(e) {
+            e.preventDefault();
+            setupBoard();
+        });
+        document.getElementById('new-pokemon').addEventListener('touchend', function(e) {
+            e.preventDefault();
+            initGame();
+        });
 
-        // Prevent double-tap zoom on mobile
+        // Prevent double-tap zoom on mobile (board only)
         document.addEventListener('touchend', function(e) {
-            if (e.target.closest('#board') || e.target.closest('button')) {
+            if (e.target.closest('#board')) {
                 e.preventDefault();
             }
         }, { passive: false });
