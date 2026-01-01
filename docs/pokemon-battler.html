@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pokemon Card Battler</title>
     <script type="module">
-        // Import Trystero using nostr strategy (uses Nostr relays for signaling)
-        import { joinRoom } from 'https://esm.sh/trystero/nostr';
+        // Import Trystero using torrent strategy (uses BitTorrent trackers)
+        import { joinRoom } from 'https://esm.sh/trystero/torrent';
         window.joinRoom = joinRoom;
+        window.trysteroLoaded = true;
+        console.log('Trystero loaded (torrent strategy)');
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -76,6 +78,7 @@
             user-select: all;
         }
         .status { margin-top: 10px; color: #4ecdc4; }
+        .status.error { color: #ff6b6b; }
         .error { color: #ff6b6b; }
         
         .loader {
@@ -612,20 +615,23 @@
         async function joinRoomByName(roomName) {
             const { joinRoom } = window;
             if (!joinRoom) {
-                document.getElementById('status').textContent = 'Error: Network library not loaded. Refresh the page.';
+                document.getElementById('status').textContent = 'Error: Network library not loaded. Please refresh.';
+                document.getElementById('status').classList.add('error');
                 return;
             }
 
             document.getElementById('status').textContent = 'Connecting to room...';
+            console.log('Joining room:', roomName);
             
             try {
-                room = joinRoom({ appId: 'pokemon-battler-game-2024' }, roomName);
+                room = joinRoom({ appId: 'pokemon-card-battler-v2' }, roomName);
+                console.log('Room object created:', room);
                 
                 const [sendMsg, getMsg] = room.makeAction('message');
                 sendData = sendMsg;
                 
-                getMsg((data, peerId) => {
-                    console.log('Received:', data, 'from:', peerId);
+                getMsg((data, pId) => {
+                    console.log('Received from', pId, ':', data);
                     handleMessage(data);
                 });
 
@@ -636,33 +642,35 @@
                     
                     if (isHost) {
                         document.getElementById('waiting-status').textContent = 'Opponent connected! Starting game...';
-                        setTimeout(() => startGame(), 500);
+                        setTimeout(() => startGame(), 1000);
                     }
                 });
 
                 room.onPeerLeave(pId => {
                     console.log('Peer left:', pId);
-                    if (connected) {
+                    if (connected && state.phase !== 'lobby') {
                         alert('Opponent disconnected!');
                         location.reload();
                     }
                 });
 
-                // Wait a moment to see if anyone else is in the room
+                // Show waiting screen
                 document.getElementById('room-name-display').textContent = roomName;
                 showScreen('waiting');
                 
+                // After 3 seconds, if no one else, become host
                 setTimeout(() => {
                     if (!connected) {
                         isHost = true;
-                        document.getElementById('waiting-status').textContent = 'You are the host. Waiting for opponent...';
-                        console.log('No one else in room, becoming host');
+                        document.getElementById('waiting-status').textContent = 'You are the Host. Waiting for opponent to join "' + roomName + '"...';
+                        console.log('Becoming host - no peers found');
                     }
-                }, 2000);
+                }, 3000);
                 
             } catch (err) {
-                console.error('Room error:', err);
+                console.error('Room join error:', err);
                 document.getElementById('status').textContent = 'Error: ' + err.message;
+                document.getElementById('status').classList.add('error');
             }
         }
 
