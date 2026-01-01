@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pokemon Card Battler</title>
-    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.7.2.0.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -60,20 +59,8 @@
         .btn-primary { background: #ffcb05; color: #3466af; }
         .btn-secondary { background: #4ecdc4; color: white; }
         .btn-danger { background: #ff6b6b; color: white; }
-        .room-code {
-            font-size: 2rem;
-            font-family: monospace;
-            letter-spacing: 5px;
-            color: #ffcb05;
-            background: rgba(0,0,0,0.3);
-            padding: 10px 20px;
-            border-radius: 8px;
-            margin: 10px 0;
-            user-select: all;
-        }
         .status { margin-top: 10px; color: #4ecdc4; }
         .status.error { color: #ff6b6b; }
-        .status.success { color: #4ecdc4; }
         
         .loader {
             width: 50px; height: 50px;
@@ -100,7 +87,6 @@
             text-align: center;
             flex: 1;
         }
-        .player-box.active { border: 2px solid #ffcb05; box-shadow: 0 0 10px rgba(255,203,5,0.5); }
         .player-box.me { border-left: 4px solid #4ecdc4; }
         .player-box.enemy { border-left: 4px solid #ff6b6b; }
         .player-box .label { font-size: 0.75rem; opacity: 0.7; }
@@ -178,10 +164,7 @@
             display: flex;
             gap: 2px;
         }
-        .slot .dice span {
-            padding: 1px 3px;
-            border-radius: 2px;
-        }
+        .slot .dice span { padding: 1px 3px; border-radius: 2px; }
         .slot .dice .ar { background: #ff9f43; }
         .slot .dice .dr { background: #54a0ff; }
         .slot .lane-num {
@@ -263,20 +246,12 @@
         .card .stats { font-size: 0.45rem; display: flex; gap: 2px; margin-top: 2px; flex-wrap: wrap; justify-content: center; }
         .card .stat { background: rgba(255,255,255,0.1); padding: 1px 3px; border-radius: 2px; }
         .card .type-badge {
-            position: absolute;
-            top: 2px; left: 2px;
-            font-size: 0.4rem;
-            padding: 1px 3px;
-            border-radius: 3px;
-            text-transform: uppercase;
+            position: absolute; top: 2px; left: 2px;
+            font-size: 0.4rem; padding: 1px 3px; border-radius: 3px; text-transform: uppercase;
         }
         .card .hp-badge {
-            position: absolute;
-            top: 2px; right: 2px;
-            font-size: 0.5rem;
-            padding: 1px 3px;
-            border-radius: 3px;
-            background: #ff6b6b;
+            position: absolute; top: 2px; right: 2px;
+            font-size: 0.5rem; padding: 1px 3px; border-radius: 3px; background: #ff6b6b;
         }
         
         /* Battle Log */
@@ -293,13 +268,10 @@
         .log-entry { padding: 2px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .log-entry.info { color: #ffcb05; }
         .log-entry.damage { color: #ff6b6b; }
-        .log-entry.heal { color: #4ecdc4; }
         .log-entry.faint { color: #ff6b6b; font-weight: bold; }
         
-        /* Action Buttons */
         .actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 10px 0; }
         
-        /* Waiting Overlay */
         .overlay {
             display: none;
             position: fixed;
@@ -314,7 +286,6 @@
         }
         .overlay.active { display: flex; }
         
-        /* Results */
         .results-box {
             background: rgba(255,255,255,0.1);
             padding: 30px;
@@ -324,7 +295,6 @@
         .results-box h2 { font-size: 1.8rem; margin-bottom: 15px; }
         .results-box.win h2 { color: #4ecdc4; }
         .results-box.lose h2 { color: #ff6b6b; }
-        .results-box.draw h2 { color: #ffcb05; }
         .final-score { font-size: 2.5rem; margin: 15px 0; }
         
         /* Type Colors */
@@ -346,13 +316,6 @@
         .type-bug { background: #A8B820; }
         .type-ghost { background: #705898; }
         .type-steel { background: #B8B8D0; color: #333; }
-        
-        @media (max-width: 380px) {
-            .slot { width: 52px; height: 72px; }
-            .slot img { width: 36px; height: 36px; }
-            .card { width: 58px; height: 82px; }
-            .card img { width: 35px; height: 35px; }
-        }
     </style>
 </head>
 <body>
@@ -361,30 +324,28 @@
     <!-- LOBBY -->
     <div id="lobby-screen" class="screen active">
         <div class="box">
-            <h2>Enter Room Name</h2>
-            <p style="margin: 10px 0; opacity: 0.7; font-size: 0.9rem;">
-                Both players enter the same room name to connect!
-            </p>
-            <input type="text" id="room-input" placeholder="ROOM NAME" maxlength="12">
-            <br>
-            <button class="btn-primary" id="join-btn">Join Room</button>
-            <p class="status" id="status"></p>
+            <h2>Create Room</h2>
+            <button class="btn-primary" id="create-btn">Create New Room</button>
+            <p class="status" id="create-status"></p>
         </div>
-        <div class="box" style="font-size: 0.85rem; opacity: 0.8;">
-            <p><strong>How to play:</strong></p>
-            <p>1. Both players enter the same room name</p>
-            <p>2. First player waits as Host</p>
-            <p>3. When second player joins, game starts!</p>
+        <div class="box">
+            <h2>Join Room</h2>
+            <input type="text" id="room-input" placeholder="ROOM CODE" maxlength="20">
+            <br>
+            <button class="btn-secondary" id="join-btn">Join Room</button>
+            <p class="status" id="join-status"></p>
         </div>
     </div>
     
     <!-- WAITING -->
     <div id="waiting-screen" class="screen">
         <div class="box">
-            <h2>Room: <span id="room-name-display">-----</span></h2>
+            <h2>Room Code:</h2>
+            <div style="font-size: 1.1rem; font-family: monospace; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin: 10px 0; word-break: break-all; user-select: all;" id="room-code-display">---</div>
+            <p style="font-size: 0.85rem; opacity: 0.7;">Share this code with your opponent!</p>
             <div class="loader"></div>
-            <p class="status" id="waiting-status">Connecting...</p>
-            <button class="btn-danger" id="leave-btn" style="margin-top: 15px;">Leave Room</button>
+            <p class="status" id="waiting-status">Waiting for opponent...</p>
+            <button class="btn-danger" id="leave-btn" style="margin-top: 15px;">Cancel</button>
         </div>
     </div>
     
@@ -463,8 +424,7 @@
             <div class="final-score">
                 <span id="my-final">0</span> - <span id="enemy-final">0</span>
             </div>
-            <button class="btn-primary" id="rematch-btn">Rematch</button>
-            <button class="btn-secondary" id="new-room-btn">New Room</button>
+            <button class="btn-primary" id="new-room-btn">New Game</button>
         </div>
     </div>
     
@@ -475,6 +435,17 @@
     </div>
 
     <script>
+        // ============== CONFIG ==============
+        // Using jsonbin.io free tier for simple storage
+        const JSONBIN_API = 'https://api.jsonbin.io/v3/b';
+        const MASTER_KEY = '$2a$10$QLbFXfGSnMwqAP/VkCKnOeHLO4Fvl7X5h5TM5HSqWLbHNzqQKvPSi'; // Free public key
+        
+        let binId = null;
+        let isHost = false;
+        let myPlayer = null; // 'p1' or 'p2'
+        let pollInterval = null;
+        let lastUpdate = 0;
+
         // ============== TYPE CHART ==============
         const TYPE_CHART = {
             normal: { rock: 0.5, ghost: 0, steel: 0.5 },
@@ -504,17 +475,6 @@
             }
             return mult;
         }
-
-        // ============== PUBNUB CONFIG ==============
-        // Using PubNub demo keys - these are free/public for testing
-        const PUBNUB_PUB_KEY = 'pub-c-6ef6eb06-a3e2-4f0a-9aec-69cc9c83dc50';
-        const PUBNUB_SUB_KEY = 'sub-c-e973b0ea-58ce-47de-a965-bf6bc87cc432';
-        
-        let pubnub = null;
-        let myUUID = 'player_' + Math.random().toString(36).substr(2, 9);
-        let roomChannel = null;
-        let isHost = false;
-        let opponentUUID = null;
 
         // ============== STATE ==============
         const state = {
@@ -597,113 +557,160 @@
             return pokemon;
         }
 
-        // ============== PUBNUB ==============
-        function initPubNub() {
-            pubnub = new PubNub({
-                publishKey: PUBNUB_PUB_KEY,
-                subscribeKey: PUBNUB_SUB_KEY,
-                uuid: myUUID
+        // ============== JSONBIN API ==============
+        async function createBin(data) {
+            const res = await fetch(JSONBIN_API, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': MASTER_KEY
+                },
+                body: JSON.stringify(data)
             });
-            console.log('PubNub initialized, UUID:', myUUID);
+            const json = await res.json();
+            return json.metadata.id;
         }
 
-        function joinRoom(roomName) {
-            roomChannel = 'pokemon-battle-' + roomName.toUpperCase();
+        async function readBin(id) {
+            const res = await fetch(`${JSONBIN_API}/${id}/latest`, {
+                headers: { 'X-Master-Key': MASTER_KEY }
+            });
+            const json = await res.json();
+            return json.record;
+        }
+
+        async function updateBin(id, data) {
+            await fetch(`${JSONBIN_API}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': MASTER_KEY
+                },
+                body: JSON.stringify(data)
+            });
+        }
+
+        // ============== NETWORKING ==============
+        async function createRoom() {
+            document.getElementById('create-status').textContent = 'Creating room...';
             
-            document.getElementById('room-name-display').textContent = roomName.toUpperCase();
-            document.getElementById('waiting-status').textContent = 'Connecting...';
-            showScreen('waiting');
+            try {
+                const roomData = {
+                    version: Date.now(),
+                    status: 'waiting',
+                    p1: { ready: false, lanes: null },
+                    p2: { ready: false, lanes: null },
+                    pokemon: null
+                };
+                
+                binId = await createBin(roomData);
+                isHost = true;
+                myPlayer = 'p1';
+                
+                document.getElementById('room-code-display').textContent = binId;
+                showScreen('waiting');
+                
+                // Start polling for opponent
+                startPolling();
+            } catch (e) {
+                console.error(e);
+                document.getElementById('create-status').textContent = 'Error creating room: ' + e.message;
+            }
+        }
 
-            // Subscribe to room
-            pubnub.subscribe({ channels: [roomChannel], withPresence: true });
-
-            // Listen for messages
-            pubnub.addListener({
-                message: (event) => {
-                    if (event.publisher === myUUID) return; // Ignore own messages
-                    console.log('Received:', event.message);
-                    handleMessage(event.message);
-                },
-                presence: (event) => {
-                    console.log('Presence event:', event.action, event.uuid);
-                    if (event.action === 'join' && event.uuid !== myUUID) {
-                        opponentUUID = event.uuid;
-                        if (isHost) {
-                            document.getElementById('waiting-status').textContent = 'Opponent joined! Starting...';
-                            setTimeout(() => startGame(), 500);
-                        }
-                    } else if (event.action === 'leave' || event.action === 'timeout') {
-                        if (event.uuid === opponentUUID && state.phase !== 'lobby') {
-                            alert('Opponent disconnected!');
-                            location.reload();
-                        }
-                    }
-                },
-                status: (event) => {
-                    console.log('Status:', event.category);
-                    if (event.category === 'PNConnectedCategory') {
-                        // Check who's in the room
-                        pubnub.hereNow({ channels: [roomChannel], includeUUIDs: true }, (status, response) => {
-                            console.log('HereNow:', response);
-                            const occupants = response.channels[roomChannel]?.occupants || [];
-                            const others = occupants.filter(o => o.uuid !== myUUID);
-                            
-                            if (others.length === 0) {
-                                isHost = true;
-                                document.getElementById('waiting-status').textContent = 
-                                    'You are the Host. Waiting for opponent to join "' + roomName.toUpperCase() + '"...';
-                            } else {
-                                isHost = false;
-                                opponentUUID = others[0].uuid;
-                                document.getElementById('waiting-status').textContent = 'Connected! Waiting for host...';
-                                // Tell host we're here
-                                send({ type: 'join' });
-                            }
-                        });
-                    }
+        async function joinRoom(code) {
+            document.getElementById('join-status').textContent = 'Joining...';
+            
+            try {
+                binId = code.trim();
+                const data = await readBin(binId);
+                
+                if (data.status !== 'waiting') {
+                    document.getElementById('join-status').textContent = 'Room is full or game started';
+                    return;
                 }
-            });
+                
+                isHost = false;
+                myPlayer = 'p2';
+                
+                // Mark as joined
+                data.status = 'joined';
+                data.version = Date.now();
+                await updateBin(binId, data);
+                
+                document.getElementById('room-code-display').textContent = binId;
+                document.getElementById('waiting-status').textContent = 'Connected! Waiting for host to start...';
+                showScreen('waiting');
+                
+                startPolling();
+            } catch (e) {
+                console.error(e);
+                document.getElementById('join-status').textContent = 'Invalid room code or error';
+            }
         }
 
-        function send(data) {
-            if (!pubnub || !roomChannel) return;
-            pubnub.publish({ channel: roomChannel, message: data });
+        function startPolling() {
+            pollInterval = setInterval(pollForUpdates, 1500);
         }
 
-        function handleMessage(msg) {
-            switch (msg.type) {
-                case 'join':
-                    if (isHost && !opponentUUID) {
-                        opponentUUID = msg.uuid || 'opponent';
-                        document.getElementById('waiting-status').textContent = 'Opponent joined! Starting...';
-                        setTimeout(() => startGame(), 500);
-                    }
-                    break;
-                case 'game-data':
-                    receiveGameData(msg);
-                    break;
-                case 'lanes':
-                    state.enemyLanes = msg.lanes.map(p => p ? { ...p } : null);
-                    break;
-                case 'ready':
+        function stopPolling() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+            }
+        }
+
+        async function pollForUpdates() {
+            try {
+                const data = await readBin(binId);
+                
+                if (data.version <= lastUpdate) return;
+                lastUpdate = data.version;
+                
+                console.log('Poll update:', data.status, data);
+                
+                // Host sees player 2 joined
+                if (isHost && data.status === 'joined' && state.phase === 'lobby') {
+                    document.getElementById('waiting-status').textContent = 'Opponent joined! Starting game...';
+                    setTimeout(() => startGame(), 500);
+                }
+                
+                // Joiner receives pokemon
+                if (!isHost && data.status === 'playing' && data.pokemon && state.phase === 'lobby') {
+                    state.myPokemon = data.pokemon.p2;
+                    state.enemyPokemon = data.pokemon.p1;
+                    initGameState();
+                    showScreen('game');
+                    startPlacementPhase();
+                }
+                
+                // Check enemy ready
+                const enemyPlayer = myPlayer === 'p1' ? 'p2' : 'p1';
+                if (data[enemyPlayer]?.ready && !state.enemyReady) {
                     state.enemyReady = true;
+                    state.enemyLanes = data[enemyPlayer].lanes?.map(p => p ? { ...p } : null) || state.enemyLanes;
                     checkBothReady();
-                    break;
-                case 'swap':
-                    if (msg.swap) {
-                        const [a, b] = msg.swap;
-                        const temp = state.enemyLanes[a];
-                        state.enemyLanes[a] = state.enemyLanes[b];
-                        state.enemyLanes[b] = temp;
-                    }
-                    state.enemyReady = true;
-                    checkBothReady();
-                    break;
+                }
+                
+            } catch (e) {
+                console.error('Poll error:', e);
+            }
+        }
+
+        async function sendUpdate(myData) {
+            try {
+                const data = await readBin(binId);
+                data[myPlayer] = { ...data[myPlayer], ...myData };
+                data.version = Date.now();
+                await updateBin(binId, data);
+            } catch (e) {
+                console.error('Send error:', e);
             }
         }
 
         // ============== GAME LOGIC ==============
         async function startGame() {
+            state.phase = 'starting';
             showScreen('loading');
             
             if (isHost) {
@@ -713,25 +720,25 @@
                 });
                 
                 const shuffled = all.sort(() => Math.random() - 0.5);
-                state.myPokemon = shuffled.slice(0, 50);
-                state.enemyPokemon = shuffled.slice(50);
+                const p1Pokemon = shuffled.slice(0, 50);
+                const p2Pokemon = shuffled.slice(50);
                 
-                send({ type: 'game-data', hostPokemon: state.myPokemon, joinerPokemon: state.enemyPokemon });
+                state.myPokemon = p1Pokemon;
+                state.enemyPokemon = p2Pokemon;
+                
+                // Send to opponent
+                const data = await readBin(binId);
+                data.status = 'playing';
+                data.pokemon = { p1: p1Pokemon, p2: p2Pokemon };
+                data.version = Date.now();
+                await updateBin(binId, data);
                 
                 initGameState();
                 showScreen('game');
                 startPlacementPhase();
             } else {
-                document.getElementById('loading-text').textContent = 'Waiting for host...';
+                document.getElementById('loading-text').textContent = 'Waiting for Pokemon...';
             }
-        }
-
-        function receiveGameData(msg) {
-            state.myPokemon = msg.joinerPokemon;
-            state.enemyPokemon = msg.hostPokemon;
-            initGameState();
-            showScreen('game');
-            startPlacementPhase();
         }
 
         function initGameState() {
@@ -767,6 +774,9 @@
                 slot.innerHTML = `<span class="lane-num">${parseInt(slot.dataset.lane) + 1}</span>`;
                 slot.classList.remove('filled');
             });
+
+            // Reset ready state on server
+            sendUpdate({ ready: false, lanes: null });
 
             log(`=== Round ${state.round} ===`, 'info');
             renderHand();
@@ -853,14 +863,15 @@
             document.getElementById('placed-count').textContent = `${count}/${max} placed`;
         }
 
-        function confirmReady() {
+        async function confirmReady() {
             state.ready = true;
             const lanesData = state.myLanes.map(p => p ? {
                 id: p.id, name: p.name, sprite: p.sprite, types: p.types,
                 stats: p.stats, currentHp: p.currentHp, maxHp: p.maxHp, ar: p.ar, dr: p.dr
             } : null);
-            send({ type: 'lanes', lanes: lanesData });
-            send({ type: 'ready' });
+            
+            await sendUpdate({ ready: true, lanes: lanesData });
+            
             document.getElementById('ready-btn').style.display = 'none';
             showOverlay('Waiting for opponent...');
             checkBothReady();
@@ -869,6 +880,11 @@
         function checkBothReady() {
             if (!state.ready || !state.enemyReady) return;
             hideOverlay();
+            
+            // Reset for next phase
+            state.enemyReady = false;
+            sendUpdate({ ready: false });
+            
             if (state.phase === 'placement') {
                 state.enemyLanes.forEach((p, i) => { if (p) renderLane(i, p, 'enemy'); });
                 startBattle();
@@ -953,6 +969,9 @@
             document.querySelectorAll('#my-lanes .slot').forEach(slot => {
                 if (state.myLanes[slot.dataset.lane]) slot.classList.add('selectable');
             });
+            
+            // Reset ready state
+            sendUpdate({ ready: false, lanes: null });
         }
 
         let pendingSwap = null;
@@ -979,10 +998,17 @@
             }
         }
 
-        function confirmSwap() {
+        async function confirmSwap() {
             state.ready = true;
-            send({ type: 'swap', swap: pendingSwap });
-            send({ type: 'ready' });
+            
+            // Send current lanes after swap
+            const lanesData = state.myLanes.map(p => p ? {
+                id: p.id, name: p.name, sprite: p.sprite, types: p.types,
+                stats: p.stats, currentHp: p.currentHp, maxHp: p.maxHp, ar: p.ar, dr: p.dr
+            } : null);
+            
+            await sendUpdate({ ready: true, lanes: lanesData });
+            
             pendingSwap = null;
             document.getElementById('confirm-swap-btn').style.display = 'none';
             document.getElementById('skip-swap-btn').style.display = 'none';
@@ -1010,11 +1036,12 @@
         }
 
         function endGame() {
+            stopPolling();
             const myRem = state.myPokemon.filter(p => p.currentHp > 0).length;
             document.getElementById('my-final').textContent = myRem;
             document.getElementById('enemy-final').textContent = '?';
             const box = document.getElementById('results-box');
-            box.classList.remove('win', 'lose', 'draw');
+            box.classList.remove('win', 'lose');
             if (myRem > 0) {
                 document.getElementById('result-title').textContent = '🏆 Victory!';
                 box.classList.add('win');
@@ -1032,13 +1059,14 @@
         }
 
         // ============== EVENT LISTENERS ==============
+        document.getElementById('create-btn').onclick = createRoom;
+        
         document.getElementById('join-btn').onclick = () => {
-            const name = document.getElementById('room-input').value.trim();
-            if (name.length >= 2) {
-                initPubNub();
-                joinRoom(name);
+            const code = document.getElementById('room-input').value.trim();
+            if (code.length > 10) {
+                joinRoom(code);
             } else {
-                document.getElementById('status').textContent = 'Enter a room name (2+ chars)';
+                document.getElementById('join-status').textContent = 'Enter a valid room code';
             }
         };
 
@@ -1046,11 +1074,14 @@
             if (e.key === 'Enter') document.getElementById('join-btn').click();
         };
 
-        document.getElementById('leave-btn').onclick = () => location.reload();
+        document.getElementById('leave-btn').onclick = () => {
+            stopPolling();
+            location.reload();
+        };
+        
         document.getElementById('ready-btn').onclick = confirmReady;
         document.getElementById('confirm-swap-btn').onclick = confirmSwap;
         document.getElementById('skip-swap-btn').onclick = skipSwap;
-        document.getElementById('rematch-btn').onclick = () => location.reload();
         document.getElementById('new-room-btn').onclick = () => location.reload();
 
         document.querySelectorAll('#my-lanes .slot').forEach(slot => {
