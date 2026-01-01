@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pokemon Card Battler</title>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: #ffcb05;
+            text-shadow: 3px 3px 0 #3466af, -1px -1px 0 #3466af;
+            font-size: clamp(1.3rem, 5vw, 2rem);
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Lobby Screen */
+        #lobby {
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .lobby-box {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .lobby-box h2 {
+            margin-bottom: 15px;
+            color: #ffcb05;
+        }
+
+        input {
+            padding: 12px 15px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 200px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ffcb05, #f0b000);
+            color: #3466af;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: white;
+        }
+
+        .room-code {
+            font-size: 2rem;
+            letter-spacing: 5px;
+            color: #ffcb05;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+
+        .status {
+            color: #4ecdc4;
+            margin-top: 10px;
+        }
+
+        /* Loading */
+        #loading {
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .pokeball-loader {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(to bottom, #ff1a1a 50%, white 50%);
+            border-radius: 50%;
+            position: relative;
+            animation: spin 1s linear infinite;
+            border: 4px solid #333;
+        }
+
+        .pokeball-loader::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: #333;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .pokeball-loader::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 4px solid #333;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Game Screen */
+        #game {
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 600px;
+            gap: 10px;
+        }
+
+        .player-status {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .player-status.you {
+            border: 2px solid #4ecdc4;
+        }
+
+        .player-status.enemy {
+            border: 2px solid #ff6b6b;
+        }
+
+        .player-status .name {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .player-status .count {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .round-info {
+            background: rgba(255,203,5,0.2);
+            padding: 8px 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #ffcb05;
+        }
+
+        /* Battle Arena */
+        .arena {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .arena-side {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .arena-side.enemy {
+            transform: rotate(180deg);
+        }
+
+        .arena-side.enemy .lane-slot {
+            transform: rotate(180deg);
+        }
+
+        .lane-slot {
+            width: calc(20% - 4px);
+            max-width: 100px;
+            aspect-ratio: 3/4;
+            background: rgba(255,255,255,0.05);
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .lane-slot.has-card {
+            border: 2px solid rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .lane-slot.selectable {
+            border-color: #4ecdc4;
+            cursor: pointer;
+            animation: pulse-border 1s infinite;
+        }
+
+        .lane-slot.swap-selected {
+            border-color: #ffcb05;
+            box-shadow: 0 0 15px rgba(255,203,5,0.5);
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { box-shadow: 0 0 5px rgba(78,205,196,0.5); }
+            50% { box-shadow: 0 0 15px rgba(78,205,196,0.8); }
+        }
+
+        .lane-number {
+            position: absolute;
+            top: -20px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* Cards */
+        .card {
+            width: 100%;
+            height: 100%;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .card.mini {
+            background: linear-gradient(135deg, #2a2a4a, #1a1a3a);
+            border: 2px solid #444;
+        }
+
+        .card img {
+            width: 70%;
+            height: auto;
+            image-rendering: pixelated;
+        }
+
+        .card .card-name {
+            font-size: clamp(0.5rem, 2vw, 0.7rem);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .card .card-hp {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #ff6b6b;
+            color: white;
+            font-size: 0.6rem;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .card .dice-rolls {
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            display: flex;
+            gap: 2px;
+        }
+
+        .dice {
+            font-size: 0.55rem;
+            padding: 1px 3px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+
+        .dice.ar { background: #ff9f43; color: white; }
+        .dice.dr { background: #54a0ff; color: white; }
+
+        .card .type-badge {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 0.6rem;
+            padding: 1px 3px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .hp-bar {
+            width: 90%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 2px;
+        }
+
+        .hp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            transition: width 0.5s;
+        }
+
+        /* Hand */
+        .hand-container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .hand-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .hand-header h3 {
+            font-size: 0.9rem;
+        }
+
+        .hand {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 10px 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            scroll-snap-type: x mandatory;
+        }
+
+        .hand::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .hand::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+        }
+
+        .hand::-webkit-scrollbar-thumb {
+            background: #4ecdc4;
+            border-radius: 3px;
+        }
+
+        .hand-card {
+            flex-shrink: 0;
+            width: 80px;
+            height: 110px;
+            background: linear-gradient(135deg, #2a2a4a, #1a1a3a);
+            border: 2px solid #444;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            scroll-snap-align: start;
+            position: relative;
+        }
+
+        .hand-card:hover {
+            transform: translateY(-5px);
+            border-color: #4ecdc4;
+        }
+
+        .hand-card.selected {
+            border-color: #ffcb05;
+            box-shadow: 0 0 15px rgba(255,203,5,0.5);
+            transform: translateY(-10px);
+        }
+
+        .hand-card.used {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .hand-card img {
+            width: 50px;
+            height: 50px;
+            image-rendering: pixelated;
+        }
+
+        .hand-card .stats {
+            font-size: 0.55rem;
+            display: flex;
+            gap: 3px;
+            margin-top: 2px;
+        }
+
+        .stat {
+            padding: 1px 3px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Phase indicator */
+        .phase-indicator {
+            background: rgba(255,203,5,0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .phase-indicator h3 {
+            color: #ffcb05;
+            margin-bottom: 5px;
+        }
+
+        /* Battle Log */
+        .battle-log {
+            width: 100%;
+            max-width: 600px;
+            max-height: 150px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 0.8rem;
+        }
+
+        .log-entry {
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .log-entry.damage { color: #ff6b6b; }
+        .log-entry.faint { color: #ff6b6b; font-weight: bold; }
+        .log-entry.effective { color: #4ecdc4; }
+        .log-entry.info { color: #ffcb05; }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Results Screen */
+        #results {
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .results-box {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .results-box h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .results-box.win h2 { color: #4ecdc4; }
+        .results-box.lose h2 { color: #ff6b6b; }
+        .results-box.draw h2 { color: #ffcb05; }
+
+        .final-score {
+            font-size: 3rem;
+            margin: 20px 0;
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 350px;
+            margin-top: 20px;
+        }
+
+        .leaderboard h3 {
+            color: #ffcb05;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        /* Type colors */
+        .type-normal { background: #A8A878; }
+        .type-fire { background: #F08030; }
+        .type-water { background: #6890F0; }
+        .type-electric { background: #F8D030; color: #333; }
+        .type-grass { background: #78C850; }
+        .type-ice { background: #98D8D8; color: #333; }
+        .type-fighting { background: #C03028; }
+        .type-poison { background: #A040A0; }
+        .type-ground { background: #E0C068; color: #333; }
+        .type-flying { background: #A890F0; }
+        .type-psychic { background: #F85888; }
+        .type-bug { background: #A8B820; }
+        .type-rock { background: #B8A038; }
+        .type-ghost { background: #705898; }
+        .type-dragon { background: #7038F8; }
+        .type-dark { background: #705848; }
+        .type-steel { background: #B8B8D0; color: #333; }
+        .type-fairy { background: #EE99AC; color: #333; }
+
+        /* Responsive */
+        @media (max-width: 400px) {
+            .hand-card {
+                width: 70px;
+                height: 95px;
+            }
+            .hand-card img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* Waiting overlay */
+        .waiting-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .waiting-overlay.active {
+            display: flex;
+        }
+
+        /* Battle animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .card.battling {
+            animation: shake 0.3s ease-in-out;
+        }
+
+        .damage-number {
+            position: absolute;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            animation: float-up 1s forwards;
+            z-index: 10;
+        }
+
+        @keyframes float-up {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-30px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Lobby Screen -->
+    <div id="lobby" class="screen active">
+        <h1>⚡ Pokemon Card Battler ⚡</h1>
+        
+        <div class="lobby-box">
+            <h2>Create Room</h2>
+            <button class="btn-primary" id="create-btn">Create Battle</button>
+            <div id="room-code-display" style="display:none;">
+                <p>Share this code:</p>
+                <div class="room-code" id="my-room-code">------</div>
+                <p class="status" id="create-status">Waiting for opponent...</p>
+            </div>
+        </div>
+
+        <div class="lobby-box">
+            <h2>Join Room</h2>
+            <input type="text" id="join-code" placeholder="ENTER CODE" maxlength="6">
+            <br>
+            <button class="btn-secondary" id="join-btn">Join Battle</button>
+            <p class="status" id="join-status"></p>
+        </div>
+
+        <div class="leaderboard" id="lobby-leaderboard">
+            <h3>🏆 Leaderboard</h3>
+            <div id="leaderboard-entries">
+                <p style="text-align:center; opacity:0.6;">No battles yet</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loading" class="screen">
+        <div class="pokeball-loader"></div>
+        <p id="loading-text">Catching Pokemon...</p>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game" class="screen">
+        <div class="game-header">
+            <div class="player-status enemy">
+                <div class="name" id="enemy-name">Opponent</div>
+                <div class="count" id="enemy-count">50</div>
+                <small>Pokemon left</small>
+            </div>
+            <div class="round-info">
+                <div>Round <span id="round-num">1</span>/10</div>
+                <div>Battle <span id="battle-num">1</span>/5</div>
+            </div>
+            <div class="player-status you">
+                <div class="name" id="your-name">You</div>
+                <div class="count" id="your-count">50</div>
+                <small>Pokemon left</small>
+            </div>
+        </div>
+
+        <div class="arena">
+            <div class="arena-side enemy" id="enemy-lanes">
+                <div class="lane-slot" data-lane="0"><span class="lane-number">1</span></div>
+                <div class="lane-slot" data-lane="1"><span class="lane-number">2</span></div>
+                <div class="lane-slot" data-lane="2"><span class="lane-number">3</span></div>
+                <div class="lane-slot" data-lane="3"><span class="lane-number">4</span></div>
+                <div class="lane-slot" data-lane="4"><span class="lane-number">5</span></div>
+            </div>
+            <div class="arena-side you" id="your-lanes">
+                <div class="lane-slot selectable" data-lane="0"><span class="lane-number">1</span></div>
+                <div class="lane-slot selectable" data-lane="1"><span class="lane-number">2</span></div>
+                <div class="lane-slot selectable" data-lane="2"><span class="lane-number">3</span></div>
+                <div class="lane-slot selectable" data-lane="3"><span class="lane-number">4</span></div>
+                <div class="lane-slot selectable" data-lane="4"><span class="lane-number">5</span></div>
+            </div>
+        </div>
+
+        <div class="phase-indicator">
+            <h3 id="phase-title">Placement Phase</h3>
+            <p id="phase-desc">Select a Pokemon and place it in a lane</p>
+        </div>
+
+        <div class="action-buttons" id="action-buttons">
+            <button class="btn-primary" id="ready-btn" style="display:none;">Ready!</button>
+            <button class="btn-secondary" id="confirm-swap-btn" style="display:none;">Confirm Swap</button>
+            <button class="btn-danger" id="skip-swap-btn" style="display:none;">Skip Swap</button>
+        </div>
+
+        <div class="battle-log" id="battle-log"></div>
+
+        <div class="hand-container">
+            <div class="hand-header">
+                <h3>Your Hand (<span id="hand-count">50</span> Pokemon)</h3>
+                <span id="selected-count">0/5 selected</span>
+            </div>
+            <div class="hand" id="hand"></div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results" class="screen">
+        <div class="results-box" id="results-box">
+            <h2 id="result-title">Victory!</h2>
+            <p>Pokemon Remaining:</p>
+            <div class="final-score">
+                <span id="your-final">25</span> - <span id="enemy-final">12</span>
+            </div>
+            <button class="btn-primary" id="rematch-btn">Rematch</button>
+            <button class="btn-secondary" id="back-lobby-btn">Back to Lobby</button>
+        </div>
+
+        <div class="leaderboard">
+            <h3>🏆 Match History</h3>
+            <div id="results-leaderboard"></div>
+        </div>
+    </div>
+
+    <!-- Waiting Overlay -->
+    <div class="waiting-overlay" id="waiting-overlay">
+        <div class="pokeball-loader"></div>
+        <p id="waiting-text">Waiting for opponent...</p>
+    </div>
+
+    <script>
+        // ============== TYPE EFFECTIVENESS ==============
+        const TYPE_CHART = {
+            normal:   { rock: 0.5, ghost: 0, steel: 0.5 },
+            fire:     { fire: 0.5, water: 0.5, grass: 2, ice: 2, bug: 2, rock: 0.5, dragon: 0.5, steel: 2 },
+            water:    { fire: 2, water: 0.5, grass: 0.5, ground: 2, rock: 2, dragon: 0.5 },
+            electric: { water: 2, electric: 0.5, grass: 0.5, ground: 0, flying: 2, dragon: 0.5 },
+            grass:    { fire: 0.5, water: 2, grass: 0.5, poison: 0.5, ground: 2, flying: 0.5, bug: 0.5, rock: 2, dragon: 0.5, steel: 0.5 },
+            ice:      { fire: 0.5, water: 0.5, grass: 2, ice: 0.5, ground: 2, flying: 2, dragon: 2, steel: 0.5 },
+            fighting: { normal: 2, ice: 2, poison: 0.5, flying: 0.5, psychic: 0.5, bug: 0.5, rock: 2, ghost: 0, dark: 2, steel: 2, fairy: 0.5 },
+            poison:   { grass: 2, poison: 0.5, ground: 0.5, rock: 0.5, ghost: 0.5, steel: 0, fairy: 2 },
+            ground:   { fire: 2, electric: 2, grass: 0.5, poison: 2, flying: 0, bug: 0.5, rock: 2, steel: 2 },
+            flying:   { electric: 0.5, grass: 2, fighting: 2, bug: 2, rock: 0.5, steel: 0.5 },
+            psychic:  { fighting: 2, poison: 2, psychic: 0.5, dark: 0, steel: 0.5 },
+            bug:      { fire: 0.5, grass: 2, fighting: 0.5, poison: 0.5, flying: 0.5, psychic: 2, ghost: 0.5, dark: 2, steel: 0.5, fairy: 0.5 },
+            rock:     { fire: 2, ice: 2, fighting: 0.5, ground: 0.5, flying: 2, bug: 2, steel: 0.5 },
+            ghost:    { normal: 0, psychic: 2, ghost: 2, dark: 0.5 },
+            dragon:   { dragon: 2, steel: 0.5, fairy: 0 },
+            dark:     { fighting: 0.5, psychic: 2, ghost: 2, dark: 0.5, fairy: 0.5 },
+            steel:    { fire: 0.5, water: 0.5, electric: 0.5, ice: 2, rock: 2, steel: 0.5, fairy: 2 },
+            fairy:    { fire: 0.5, fighting: 2, poison: 0.5, dragon: 2, dark: 2, steel: 0.5 }
+        };
+
+        function getTypeMultiplier(attackType, defenderTypes) {
+            let multiplier = 1;
+            for (const defType of defenderTypes) {
+                const effectiveness = TYPE_CHART[attackType]?.[defType];
+                if (effectiveness !== undefined) {
+                    multiplier *= effectiveness;
+                }
+            }
+            return multiplier;
+        }
+
+        // ============== GAME STATE ==============
+        let peer = null;
+        let conn = null;
+        let isHost = false;
+        let myId = '';
+        let opponentId = '';
+
+        let gameState = {
+            phase: 'lobby', // lobby, placement, battle, swap, results
+            round: 1,
+            battle: 1,
+            myPokemon: [],
+            enemyPokemon: [],
+            myLanes: [null, null, null, null, null],
+            enemyLanes: [null, null, null, null, null],
+            selectedCard: null,
+            swapSelection: null,
+            ready: false,
+            enemyReady: false
+        };
+
+        let leaderboard = JSON.parse(localStorage.getItem('pokemonBattlerLeaderboard') || '{}');
+
+        // ============== DOM ELEMENTS ==============
+        const screens = {
+            lobby: document.getElementById('lobby'),
+            loading: document.getElementById('loading'),
+            game: document.getElementById('game'),
+            results: document.getElementById('results')
+        };
+
+        // ============== UTILITY FUNCTIONS ==============
+        function showScreen(screenName) {
+            Object.values(screens).forEach(s => s.classList.remove('active'));
+            screens[screenName].classList.add('active');
+        }
+
+        function generateRoomCode() {
+            return Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+
+        function rollDice(sides = 6) {
+            return Math.floor(Math.random() * sides) + 1;
+        }
+
+        function log(message, type = '') {
+            const logEl = document.getElementById('battle-log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = message;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('battle-log').innerHTML = '';
+        }
+
+        // ============== POKEMON API ==============
+        async function fetchPokemon(id) {
+            try {
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+                const data = await response.json();
+                return {
+                    id: data.id,
+                    name: data.name,
+                    sprite: data.sprites.front_default,
+                    types: data.types.map(t => t.type.name),
+                    stats: {
+                        hp: data.stats[0].base_stat,
+                        attack: data.stats[1].base_stat,
+                        defense: data.stats[2].base_stat,
+                        speed: data.stats[5].base_stat
+                    }
+                };
+            } catch (e) {
+                return null;
+            }
+        }
+
+        async function fetchRandomPokemon(count) {
+            document.getElementById('loading-text').textContent = `Catching Pokemon... 0/${count}`;
+            const pokemon = [];
+            const usedIds = new Set();
+
+            while (pokemon.length < count) {
+                const id = Math.floor(Math.random() * 898) + 1;
+                if (usedIds.has(id)) continue;
+                usedIds.add(id);
+
+                const p = await fetchPokemon(id);
+                if (p && p.sprite) {
+                    pokemon.push({
+                        ...p,
+                        currentHp: p.stats.hp,
+                        maxHp: p.stats.hp,
+                        ar: 0,
+                        dr: 0,
+                        inBattle: false
+                    });
+                    document.getElementById('loading-text').textContent = 
+                        `Catching Pokemon... ${pokemon.length}/${count}`;
+                }
+            }
+            return pokemon;
+        }
+
+        // ============== PEER CONNECTION ==============
+        function initPeer() {
+            const roomCode = generateRoomCode();
+            myId = roomCode;
+            
+            peer = new Peer(roomCode);
+            
+            peer.on('open', (id) => {
+                document.getElementById('my-room-code').textContent = id;
+                document.getElementById('room-code-display').style.display = 'block';
+                isHost = true;
+            });
+
+            peer.on('connection', (connection) => {
+                conn = connection;
+                opponentId = conn.peer;
+                setupConnection();
+            });
+
+            peer.on('error', (err) => {
+                console.error('Peer error:', err);
+                document.getElementById('create-status').textContent = 'Error: ' + err.type;
+            });
+        }
+
+        function joinPeer(roomCode) {
+            myId = generateRoomCode();
+            peer = new Peer(myId);
+
+            peer.on('open', () => {
+                conn = peer.connect(roomCode);
+                opponentId = roomCode;
+                conn.on('open', () => {
+                    setupConnection();
+                });
+            });
+
+            peer.on('error', (err) => {
+                document.getElementById('join-status').textContent = 'Error: Could not connect';
+            });
+        }
+
+        function setupConnection() {
+            document.getElementById('create-status').textContent = 'Connected!';
+            document.getElementById('join-status').textContent = 'Connected!';
+
+            conn.on('data', handleMessage);
+            conn.on('close', () => {
+                alert('Opponent disconnected!');
+                showScreen('lobby');
+            });
+
+            // Start game
+            startGame();
+        }
+
+        function send(type, data) {
+            if (conn && conn.open) {
+                conn.send({ type, data });
+            }
+        }
+
+        function handleMessage(msg) {
+            const { type, data } = msg;
+
+            switch (type) {
+                case 'ready':
+                    gameState.enemyReady = true;
+                    checkBothReady();
+                    break;
+                case 'lanes':
+                    gameState.enemyLanes = data.lanes;
+                    checkBothReady();
+                    break;
+                case 'swap':
+                    // Enemy swapped their lanes
+                    if (data.swap) {
+                        const [a, b] = data.swap;
+                        const temp = gameState.enemyLanes[a];
+                        gameState.enemyLanes[a] = gameState.enemyLanes[b];
+                        gameState.enemyLanes[b] = temp;
+                    }
+                    gameState.enemyReady = true;
+                    checkBothReady();
+                    break;
+                case 'rematch':
+                    startGame();
+                    break;
+            }
+        }
+
+        // ============== GAME LOGIC ==============
+        async function startGame() {
+            showScreen('loading');
+            
+            // Fetch 100 Pokemon total, split 50-50
+            const allPokemon = await fetchRandomPokemon(100);
+            
+            // Shuffle and split
+            const shuffled = allPokemon.sort(() => Math.random() - 0.5);
+            
+            if (isHost) {
+                gameState.myPokemon = shuffled.slice(0, 50);
+                gameState.enemyPokemon = shuffled.slice(50, 100);
+            } else {
+                gameState.myPokemon = shuffled.slice(50, 100);
+                gameState.enemyPokemon = shuffled.slice(0, 50);
+            }
+
+            // Reset game state
+            gameState.round = 1;
+            gameState.battle = 1;
+            gameState.myLanes = [null, null, null, null, null];
+            gameState.enemyLanes = [null, null, null, null, null];
+            gameState.phase = 'placement';
+            gameState.ready = false;
+            gameState.enemyReady = false;
+
+            clearLog();
+            showScreen('game');
+            updateUI();
+            startPlacementPhase();
+        }
+
+        function startPlacementPhase() {
+            gameState.phase = 'placement';
+            gameState.ready = false;
+            gameState.enemyReady = false;
+            gameState.myLanes = [null, null, null, null, null];
+            gameState.enemyLanes = [null, null, null, null, null];
+            gameState.selectedCard = null;
+
+            document.getElementById('phase-title').textContent = 'Placement Phase';
+            document.getElementById('phase-desc').textContent = 'Select 5 Pokemon and place them in lanes';
+            document.getElementById('ready-btn').style.display = 'none';
+            document.getElementById('confirm-swap-btn').style.display = 'none';
+            document.getElementById('skip-swap-btn').style.display = 'none';
+
+            // Clear lanes UI
+            document.querySelectorAll('#your-lanes .lane-slot').forEach(slot => {
+                slot.innerHTML = `<span class="lane-number">${parseInt(slot.dataset.lane) + 1}</span>`;
+                slot.classList.remove('has-card');
+                slot.classList.add('selectable');
+            });
+
+            document.querySelectorAll('#enemy-lanes .lane-slot').forEach(slot => {
+                slot.innerHTML = `<span class="lane-number">${parseInt(slot.dataset.lane) + 1}</span>`;
+                slot.classList.remove('has-card');
+            });
+
+            log(`Round ${gameState.round} - Place your Pokemon!`, 'info');
+            renderHand();
+            updateUI();
+        }
+
+        function renderHand() {
+            const handEl = document.getElementById('hand');
+            handEl.innerHTML = '';
+
+            const availablePokemon = gameState.myPokemon.filter(p => !p.inBattle && p.currentHp > 0);
+
+            availablePokemon.forEach((pokemon, idx) => {
+                const card = document.createElement('div');
+                card.className = 'hand-card';
+                card.dataset.idx = gameState.myPokemon.indexOf(pokemon);
+                
+                const inLane = gameState.myLanes.includes(pokemon);
+                if (inLane) card.classList.add('used');
+
+                card.innerHTML = `
+                    <div class="type-badge type-${pokemon.types[0]}">${pokemon.types[0]}</div>
+                    <div class="card-hp">${pokemon.stats.hp}</div>
+                    <img src="${pokemon.sprite}" alt="${pokemon.name}">
+                    <div class="card-name">${pokemon.name}</div>
+                    <div class="stats">
+                        <span class="stat">⚔${pokemon.stats.attack}</span>
+                        <span class="stat">🛡${pokemon.stats.defense}</span>
+                        <span class="stat">💨${pokemon.stats.speed}</span>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => selectHandCard(pokemon));
+                handEl.appendChild(card);
+            });
+
+            document.getElementById('hand-count').textContent = availablePokemon.length;
+            updateSelectedCount();
+        }
+
+        function selectHandCard(pokemon) {
+            if (gameState.phase !== 'placement') return;
+            if (gameState.myLanes.includes(pokemon)) return;
+
+            gameState.selectedCard = pokemon;
+            
+            // Update visual selection
+            document.querySelectorAll('.hand-card').forEach(c => c.classList.remove('selected'));
+            const cards = document.querySelectorAll('.hand-card');
+            cards.forEach(c => {
+                if (parseInt(c.dataset.idx) === gameState.myPokemon.indexOf(pokemon)) {
+                    c.classList.add('selected');
+                }
+            });
+        }
+
+        function placePokemonInLane(laneIdx) {
+            if (gameState.phase !== 'placement') return;
+            if (!gameState.selectedCard) return;
+            if (gameState.myLanes[laneIdx]) return;
+
+            const pokemon = gameState.selectedCard;
+            
+            // Roll dice
+            pokemon.ar = rollDice(6);
+            pokemon.dr = rollDice(6);
+            pokemon.inBattle = true;
+
+            gameState.myLanes[laneIdx] = pokemon;
+            gameState.selectedCard = null;
+
+            renderLane(laneIdx, pokemon, 'your');
+            renderHand();
+            updateSelectedCount();
+
+            // Check if all lanes filled
+            const filledLanes = gameState.myLanes.filter(l => l !== null).length;
+            if (filledLanes === 5) {
+                document.getElementById('ready-btn').style.display = 'inline-block';
+            }
+        }
+
+        function renderLane(laneIdx, pokemon, side) {
+            const lanesEl = document.getElementById(`${side}-lanes`);
+            const slot = lanesEl.querySelector(`[data-lane="${laneIdx}"]`);
+            
+            if (!pokemon) {
+                slot.innerHTML = `<span class="lane-number">${laneIdx + 1}</span>`;
+                slot.classList.remove('has-card');
+                return;
+            }
+
+            slot.classList.add('has-card');
+            slot.classList.remove('selectable');
+
+            const hpPercent = (pokemon.currentHp / pokemon.maxHp) * 100;
+
+            slot.innerHTML = `
+                <span class="lane-number">${laneIdx + 1}</span>
+                <div class="card mini">
+                    <div class="type-badge type-${pokemon.types[0]}">${pokemon.types[0]}</div>
+                    <div class="card-hp">${pokemon.currentHp}</div>
+                    <img src="${pokemon.sprite}" alt="${pokemon.name}">
+                    <div class="card-name">${pokemon.name}</div>
+                    <div class="hp-bar"><div class="hp-bar-fill" style="width:${hpPercent}%"></div></div>
+                    <div class="dice-rolls">
+                        <span class="dice ar">⚔${pokemon.ar}</span>
+                        <span class="dice dr">🛡${pokemon.dr}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateSelectedCount() {
+            const count = gameState.myLanes.filter(l => l !== null).length;
+            document.getElementById('selected-count').textContent = `${count}/5 placed`;
+        }
+
+        function confirmReady() {
+            gameState.ready = true;
+            send('lanes', { lanes: gameState.myLanes.map(p => p ? {
+                ...p,
+                // Send minimal data
+            } : null)});
+            send('ready', {});
+            
+            document.getElementById('ready-btn').style.display = 'none';
+            showWaiting('Waiting for opponent to place Pokemon...');
+            checkBothReady();
+        }
+
+        function checkBothReady() {
+            if (!gameState.ready || !gameState.enemyReady) return;
+
+            hideWaiting();
+
+            if (gameState.phase === 'placement') {
+                // Render enemy lanes (hidden stats until battle)
+                gameState.enemyLanes.forEach((pokemon, idx) => {
+                    if (pokemon) {
+                        pokemon.currentHp = pokemon.currentHp || pokemon.stats?.hp || pokemon.maxHp;
+                        pokemon.maxHp = pokemon.maxHp || pokemon.stats?.hp;
+                        renderLane(idx, pokemon, 'enemy');
+                    }
+                });
+                startBattle();
+            } else if (gameState.phase === 'swap') {
+                startBattle();
+            }
+        }
+
+        function startBattle() {
+            gameState.phase = 'battle';
+            document.getElementById('phase-title').textContent = `Battle ${gameState.battle}/5`;
+            document.getElementById('phase-desc').textContent = 'Watch the battle unfold!';
+
+            log(`--- Battle ${gameState.battle} ---`, 'info');
+
+            // Process each lane
+            for (let i = 0; i < 5; i++) {
+                const myPoke = gameState.myLanes[i];
+                const enemyPoke = gameState.enemyLanes[i];
+
+                if (!myPoke && !enemyPoke) {
+                    log(`Lane ${i + 1}: Both empty`, 'info');
+                } else if (!myPoke) {
+                    log(`Lane ${i + 1}: ${enemyPoke.name} idles`, 'info');
+                } else if (!enemyPoke) {
+                    log(`Lane ${i + 1}: ${myPoke.name} idles`, 'info');
+                } else {
+                    resolveCombat(i, myPoke, enemyPoke);
+                }
+            }
+
+            // Update displays
+            gameState.myLanes.forEach((p, i) => renderLane(i, p, 'your'));
+            gameState.enemyLanes.forEach((p, i) => renderLane(i, p, 'enemy'));
+            updateUI();
+
+            // Check for next phase
+            setTimeout(() => {
+                gameState.battle++;
+                
+                if (gameState.battle > 5) {
+                    // End of round
+                    endRound();
+                } else {
+                    // Swap phase
+                    startSwapPhase();
+                }
+            }, 1500);
+        }
+
+        function resolveCombat(laneIdx, myPoke, enemyPoke) {
+            // Calculate speed ratio for hits
+            const myHits = calculateHits(myPoke.stats.speed, enemyPoke.stats.speed);
+            const enemyHits = calculateHits(enemyPoke.stats.speed, myPoke.stats.speed);
+
+            // Calculate damage
+            const myDamage = calculateDamage(myPoke, enemyPoke) * myHits;
+            const enemyDamage = calculateDamage(enemyPoke, myPoke) * enemyHits;
+
+            // Apply damage simultaneously
+            myPoke.currentHp = Math.max(0, myPoke.currentHp - enemyDamage);
+            enemyPoke.currentHp = Math.max(0, enemyPoke.currentHp - myDamage);
+
+            // Log results
+            const myType = getTypeMultiplier(myPoke.types[0], enemyPoke.types);
+            const enemyType = getTypeMultiplier(enemyPoke.types[0], myPoke.types);
+
+            let myEffective = myType > 1 ? ' (Super Effective!)' : myType < 1 ? ' (Not very effective)' : '';
+            let enemyEffective = enemyType > 1 ? ' (Super Effective!)' : enemyType < 1 ? ' (Not very effective)' : '';
+
+            log(`Lane ${laneIdx + 1}: ${myPoke.name} hits ${myHits}x for ${Math.round(myDamage)} dmg${myEffective}`, 
+                myType > 1 ? 'effective' : 'damage');
+            log(`Lane ${laneIdx + 1}: ${enemyPoke.name} hits ${enemyHits}x for ${Math.round(enemyDamage)} dmg${enemyEffective}`, 
+                enemyType > 1 ? 'effective' : 'damage');
+
+            // Check faints
+            if (myPoke.currentHp <= 0) {
+                log(`${myPoke.name} fainted!`, 'faint');
+                myPoke.inBattle = false;
+                gameState.myLanes[laneIdx] = null;
+            }
+            if (enemyPoke.currentHp <= 0) {
+                log(`${enemyPoke.name} fainted!`, 'faint');
+                gameState.enemyLanes[laneIdx] = null;
+            }
+        }
+
+        function calculateHits(attackerSpeed, defenderSpeed) {
+            const ratio = attackerSpeed / defenderSpeed;
+            if (ratio >= 2) return 3;
+            if (ratio >= 1.5) return 2;
+            return 1;
+        }
+
+        function calculateDamage(attacker, defender) {
+            const typeMultiplier = getTypeMultiplier(attacker.types[0], defender.types);
+            const damage = (attacker.stats.attack * attacker.ar * typeMultiplier) / 
+                          (defender.stats.defense * defender.dr);
+            return Math.max(1, Math.round(damage * 10)); // Scale up for meaningful HP loss
+        }
+
+        function startSwapPhase() {
+            gameState.phase = 'swap';
+            gameState.ready = false;
+            gameState.enemyReady = false;
+            gameState.swapSelection = null;
+
+            document.getElementById('phase-title').textContent = 'Swap Phase';
+            document.getElementById('phase-desc').textContent = 'Swap one pair of your lanes (or skip)';
+            
+            document.getElementById('confirm-swap-btn').style.display = 'inline-block';
+            document.getElementById('skip-swap-btn').style.display = 'inline-block';
+
+            // Make lanes selectable for swapping
+            document.querySelectorAll('#your-lanes .lane-slot').forEach(slot => {
+                if (gameState.myLanes[slot.dataset.lane]) {
+                    slot.classList.add('selectable');
+                    slot.onclick = () => selectLaneForSwap(parseInt(slot.dataset.lane));
+                }
+            });
+
+            // Allow moving Pokemon to empty lanes (from fainted slots)
+            const emptyLanes = gameState.myLanes.map((p, i) => p === null ? i : -1).filter(i => i !== -1);
+            if (emptyLanes.length > 0) {
+                document.getElementById('phase-desc').textContent = 
+                    'Swap lanes or move Pokemon to empty lanes';
+            }
+        }
+
+        function selectLaneForSwap(laneIdx) {
+            if (gameState.phase !== 'swap') return;
+
+            const slots = document.querySelectorAll('#your-lanes .lane-slot');
+
+            if (gameState.swapSelection === null) {
+                gameState.swapSelection = laneIdx;
+                slots[laneIdx].classList.add('swap-selected');
+            } else if (gameState.swapSelection === laneIdx) {
+                gameState.swapSelection = null;
+                slots[laneIdx].classList.remove('swap-selected');
+            } else {
+                // Perform swap
+                const temp = gameState.myLanes[gameState.swapSelection];
+                gameState.myLanes[gameState.swapSelection] = gameState.myLanes[laneIdx];
+                gameState.myLanes[laneIdx] = temp;
+
+                // Update UI
+                renderLane(gameState.swapSelection, gameState.myLanes[gameState.swapSelection], 'your');
+                renderLane(laneIdx, gameState.myLanes[laneIdx], 'your');
+
+                log(`Swapped lanes ${gameState.swapSelection + 1} and ${laneIdx + 1}`, 'info');
+
+                // Clear selection
+                slots.forEach(s => s.classList.remove('swap-selected'));
+                gameState.swapSelection = null;
+            }
+        }
+
+        function confirmSwap() {
+            gameState.ready = true;
+            send('swap', { swap: gameState.swapSelection !== null ? [gameState.swapSelection, -1] : null });
+            send('ready', {});
+
+            document.getElementById('confirm-swap-btn').style.display = 'none';
+            document.getElementById('skip-swap-btn').style.display = 'none';
+            document.querySelectorAll('#your-lanes .lane-slot').forEach(s => {
+                s.classList.remove('selectable', 'swap-selected');
+                s.onclick = null;
+            });
+
+            showWaiting('Waiting for opponent...');
+            checkBothReady();
+        }
+
+        function skipSwap() {
+            gameState.swapSelection = null;
+            confirmSwap();
+        }
+
+        function endRound() {
+            gameState.round++;
+            gameState.battle = 1;
+
+            // Reset Pokemon for next round (heal survivors)
+            gameState.myLanes.forEach(p => {
+                if (p) {
+                    p.currentHp = p.maxHp;
+                    p.inBattle = false;
+                }
+            });
+
+            if (gameState.round > 10) {
+                endGame();
+            } else {
+                log(`=== Round ${gameState.round} ===`, 'info');
+                startPlacementPhase();
+            }
+        }
+
+        function endGame() {
+            gameState.phase = 'results';
+
+            const myRemaining = gameState.myPokemon.filter(p => p.currentHp > 0).length;
+            const enemyRemaining = gameState.enemyPokemon.filter(p => p.currentHp > 0).length;
+
+            document.getElementById('your-final').textContent = myRemaining;
+            document.getElementById('enemy-final').textContent = enemyRemaining;
+
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('win', 'lose', 'draw');
+
+            if (myRemaining > enemyRemaining) {
+                document.getElementById('result-title').textContent = '🏆 Victory!';
+                resultsBox.classList.add('win');
+                updateLeaderboard('win');
+            } else if (myRemaining < enemyRemaining) {
+                document.getElementById('result-title').textContent = '💀 Defeat';
+                resultsBox.classList.add('lose');
+                updateLeaderboard('loss');
+            } else {
+                document.getElementById('result-title').textContent = '🤝 Draw!';
+                resultsBox.classList.add('draw');
+                updateLeaderboard('draw');
+            }
+
+            renderLeaderboard('results-leaderboard');
+            showScreen('results');
+        }
+
+        function updateLeaderboard(result) {
+            if (!leaderboard[myId]) {
+                leaderboard[myId] = { wins: 0, losses: 0, draws: 0 };
+            }
+            if (result === 'win') leaderboard[myId].wins++;
+            if (result === 'loss') leaderboard[myId].losses++;
+            if (result === 'draw') leaderboard[myId].draws++;
+
+            localStorage.setItem('pokemonBattlerLeaderboard', JSON.stringify(leaderboard));
+        }
+
+        function renderLeaderboard(elementId) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = '';
+
+            const entries = Object.entries(leaderboard);
+            if (entries.length === 0) {
+                el.innerHTML = '<p style="text-align:center;opacity:0.6;">No battles yet</p>';
+                return;
+            }
+
+            entries.forEach(([id, stats]) => {
+                const entry = document.createElement('div');
+                entry.className = 'leaderboard-entry';
+                entry.innerHTML = `
+                    <span>${id === myId ? '⭐ You' : id.substring(0, 6)}</span>
+                    <span>${stats.wins}W / ${stats.losses}L / ${stats.draws}D</span>
+                `;
+                el.appendChild(entry);
+            });
+        }
+
+        function updateUI() {
+            document.getElementById('round-num').textContent = gameState.round;
+            document.getElementById('battle-num').textContent = gameState.battle;
+            document.getElementById('your-count').textContent = 
+                gameState.myPokemon.filter(p => p.currentHp > 0).length;
+            document.getElementById('enemy-count').textContent = 
+                gameState.enemyPokemon.filter(p => p.currentHp > 0).length;
+        }
+
+        function showWaiting(text) {
+            document.getElementById('waiting-text').textContent = text;
+            document.getElementById('waiting-overlay').classList.add('active');
+        }
+
+        function hideWaiting() {
+            document.getElementById('waiting-overlay').classList.remove('active');
+        }
+
+        function requestRematch() {
+            send('rematch', {});
+            startGame();
+        }
+
+        function backToLobby() {
+            if (conn) conn.close();
+            if (peer) peer.destroy();
+            peer = null;
+            conn = null;
+            showScreen('lobby');
+        }
+
+        // ============== EVENT LISTENERS ==============
+        document.getElementById('create-btn').addEventListener('click', initPeer);
+        
+        document.getElementById('join-btn').addEventListener('click', () => {
+            const code = document.getElementById('join-code').value.toUpperCase();
+            if (code.length >= 4) {
+                document.getElementById('join-status').textContent = 'Connecting...';
+                joinPeer(code);
+            }
+        });
+
+        document.getElementById('ready-btn').addEventListener('click', confirmReady);
+        document.getElementById('confirm-swap-btn').addEventListener('click', confirmSwap);
+        document.getElementById('skip-swap-btn').addEventListener('click', skipSwap);
+        document.getElementById('rematch-btn').addEventListener('click', requestRematch);
+        document.getElementById('back-lobby-btn').addEventListener('click', backToLobby);
+
+        // Lane click handlers
+        document.querySelectorAll('#your-lanes .lane-slot').forEach(slot => {
+            slot.addEventListener('click', () => {
+                if (gameState.phase === 'placement') {
+                    placePokemonInLane(parseInt(slot.dataset.lane));
+                }
+            });
+        });
+
+        // Initialize leaderboard on load
+        renderLeaderboard('leaderboard-entries');
+    </script>
+</body>
+</html>
