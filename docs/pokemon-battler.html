@@ -572,28 +572,40 @@
                 console.log('SSE connected to:', roomTopic);
             };
             
-            eventSource.onmessage = (e) => {
+            eventSource.onmessage = async (e) => {
                 console.log('SSE raw:', e.data);
                 try {
                     const event = JSON.parse(e.data);
-                    // ntfy wraps messages in an event object
+                    
+                    // Check if it's an attachment (large message)
+                    if (event.attachment && event.attachment.url) {
+                        console.log('Fetching attachment:', event.attachment.url);
+                        try {
+                            const res = await fetch(event.attachment.url);
+                            const msg = await res.json();
+                            console.log('Attachment data:', msg.type);
+                            if (msg.from !== myId) {
+                                handleMessage(msg);
+                            }
+                        } catch (fetchErr) {
+                            console.error('Failed to fetch attachment:', fetchErr);
+                        }
+                        return;
+                    }
+                    
+                    // Regular message
                     if (event.event === 'message' && event.message) {
-                        const msg = JSON.parse(event.message);
-                        if (msg.from !== myId) {
-                            handleMessage(msg);
+                        try {
+                            const msg = JSON.parse(event.message);
+                            if (msg.from !== myId) {
+                                handleMessage(msg);
+                            }
+                        } catch (parseErr) {
+                            // Message wasn't JSON, ignore
                         }
                     }
                 } catch (err) {
-                    console.log('SSE parse (trying direct):', err.message);
-                    // Maybe it's a direct message?
-                    try {
-                        const msg = JSON.parse(e.data);
-                        if (msg.from && msg.from !== myId && msg.type) {
-                            handleMessage(msg);
-                        }
-                    } catch (err2) {
-                        // Ignore
-                    }
+                    console.log('SSE parse error:', err.message);
                 }
             };
 
