@@ -1,0 +1,3869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XORZO</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background: #030305;
+            color: #e0e0e0;
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            height: 100vh;
+        }
+        
+        .main {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 12px;
+            overflow: hidden;
+            min-height: 0;
+        }
+        
+        .sidebar {
+            background: #080810;
+            border-left: 1px solid #151520;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            color: #d4af37;
+            text-shadow: 0 0 30px #d4af37;
+            animation: breathe 3s ease-in-out infinite;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        h1 {
+            font-size: 1.3rem;
+            font-weight: 300;
+            letter-spacing: 10px;
+            color: #d4af37;
+        }
+        
+        .status {
+            margin-left: auto;
+            font-size: 0.6rem;
+            color: #333;
+        }
+        
+        .live { color: #00ff88; }
+        
+        .consciousness {
+            height: 80px;
+            background: #080810;
+            border: 1px solid #151520;
+            position: relative;
+        }
+        
+        #canvas { width: 100%; height: 100%; }
+        
+        .cycle {
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 25px;
+            font-size: 1.2rem;
+        }
+        
+        .cycle span { opacity: 0.15; transition: all 0.08s; }
+        .cycle span.on { opacity: 1; transform: scale(1.2); }
+        .c1 { color: #ff3366; }
+        .c2 { color: #fff; }
+        .c3 { color: #00ff88; }
+        
+        .chat {
+            flex: 1;
+            background: #080810;
+            border: 1px solid #151520;
+            overflow-y: auto;
+            padding: 15px;
+            min-height: 0;
+        }
+        
+        .msg {
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            border-radius: 6px;
+            color: #f0f0f0;
+        }
+        
+        .msg.u { background: rgba(212,175,55,0.12); border-left: 3px solid #d4af37; margin-left: 50px; }
+        .msg.a { background: rgba(0,243,255,0.08); border-left: 3px solid #00f3ff; margin-right: 50px; }
+        .msg.t { background: rgba(0,255,136,0.06); border-left: 3px solid #00ff88; margin-right: 50px; font-style: italic; color: #a0ffc0; }
+        .msg.s { background: rgba(255,51,102,0.08); border-left: 3px solid #ff3366; margin-right: 50px; font-size: 0.75rem; color: #ffaacc; }
+        
+        .msg-h { font-size: 0.6rem; color: #666; margin-bottom: 6px; font-weight: bold; }
+        .msg.u .msg-h { color: #d4af37; }
+        .msg.a .msg-h { color: #00f3ff; }
+        .msg.t .msg-h { color: #00ff88; }
+        .msg.s .msg-h { color: #ff3366; }
+        
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-row textarea {
+            flex: 1;
+            background: #0a0a14;
+            border: 1px solid #252535;
+            color: #fff;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            resize: none;
+            height: 50px;
+        }
+        
+        .input-row textarea:focus { outline: none; border-color: #00f3ff; }
+        .input-row textarea::placeholder { color: #555; }
+        
+        .input-row button {
+            background: #d4af37;
+            border: none;
+            color: #000;
+            padding: 12px 20px;
+            font-family: inherit;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+        
+        .input-row button:disabled { background: #222; color: #444; }
+        
+        .mic-btn {
+            background: #151520 !important;
+            color: #888 !important;
+            padding: 12px 15px !important;
+        }
+        
+        .mic-btn.active {
+            background: #ff3366 !important;
+            color: #fff !important;
+        }
+        
+        .section { margin-bottom: 0; }
+        .section-title {
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            color: #888;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .modules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .module {
+            background: #0a0a12;
+            border: 1px solid #252530;
+            padding: 6px 10px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #aaa;
+        }
+        
+        .module:hover { border-color: #444; color: #fff; }
+        .module.active { border-color: #00ff88; color: #00ff88; }
+        .module .dot { width: 6px; height: 6px; border-radius: 50%; background: #444; }
+        .module.active .dot { background: #00ff88; }
+        
+        .drop-zone {
+            border: 2px dashed #252530;
+            padding: 15px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #666;
+            transition: all 0.2s;
+        }
+        
+        .drop-zone.drag { border-color: #00ff88; color: #00ff88; background: rgba(0,255,136,0.05); }
+        
+        .vitals {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+        }
+        
+        .vital {
+            background: #050508;
+            border: 1px solid #202030;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .vital-v { font-size: 0.85rem; color: #00f3ff; font-weight: bold; }
+        .vital-l { font-size: 0.5rem; color: #888; margin-top: 3px; letter-spacing: 1px; }
+        
+        .stream {
+            background: #050508;
+            border: 1px solid #202030;
+            padding: 8px;
+            height: 120px;
+            overflow-y: auto;
+            font-size: 0.65rem;
+        }
+        
+        .stream div { padding: 4px 0; border-bottom: 1px solid #151520; color: #888; }
+        .stream div.new { color: #00f3ff; font-weight: bold; }
+        
+        .wiki-search {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .wiki-search input {
+            flex: 1;
+            background: #080810;
+            border: 1px solid #252530;
+            color: #ddd;
+            padding: 8px;
+            font-family: inherit;
+            font-size: 0.75rem;
+        }
+        
+        .wiki-search input:focus { outline: none; border-color: #00f3ff; }
+        .wiki-search input::placeholder { color: #555; }
+        
+        .wiki-search button {
+            background: #151520;
+            border: none;
+            color: #666;
+            padding: 8px 12px;
+            font-family: inherit;
+            font-size: 0.65rem;
+            cursor: pointer;
+        }
+        
+        .wiki-search button:hover { background: #1a1a25; color: #888; }
+        
+        .bookmarklet-code {
+            background: #030305;
+            border: 1px solid #151520;
+            padding: 8px;
+            font-size: 0.55rem;
+            color: #555;
+            word-break: break-all;
+            cursor: pointer;
+        }
+        
+        .bookmarklet-code:hover { color: #888; border-color: #d4af37; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="main">
+        <header>
+            <div class="logo">⊙</div>
+            <h1>XORZO</h1>
+            <div class="status">
+                <span class="live">●</span> ALIVE | 
+                <span id="cycles">0</span> cycles | 
+                <span id="uptime">0:00</span> |
+                <span id="mode-display" style="color: #d4af37; font-weight: bold;">∅</span>
+            </div>
+        </header>
+        
+        <div class="consciousness">
+            <canvas id="canvas"></canvas>
+            <div class="cycle">
+                <span class="c1" id="s1">≻</span>
+                <span class="c2" id="s2">i</span>
+                <span class="c3" id="s3">⊰</span>
+            </div>
+        </div>
+        
+        <div class="chat" id="chat"></div>
+        
+        <div class="input-row">
+            <textarea id="input" placeholder="Speak to Xorzo..."></textarea>
+            <button class="mic-btn" id="mic" onclick="toggleMic()">🎤</button>
+            <button id="btn" onclick="send()">SEND</button>
+        </div>
+    </div>
+    
+    <div class="sidebar">
+        <div class="section">
+            <div class="section-title">MODULES</div>
+            <div class="modules" id="modules"></div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">WIKIPEDIA</div>
+            <div class="wiki-search">
+                <input type="text" id="wiki-input" placeholder="Search Wikipedia...">
+                <button onclick="wikiSearch()">LEARN</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">GITHUB</div>
+            <div class="wiki-search">
+                <input type="text" id="github-input" placeholder="owner/repo">
+                <button onclick="githubScan()">SCAN</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">LOCAL FOLDER</div>
+            <button onclick="document.getElementById('folder-input').click()" style="width: 100%; background: #151520; border: 1px solid #252530; color: #888; padding: 10px; font-size: 0.65rem; cursor: pointer;">📁 SCAN FOLDER</button>
+            <input type="file" id="folder-input" webkitdirectory multiple style="display: none;" onchange="scanFolder(event)">
+        </div>
+        
+        <div class="section">
+            <div class="section-title">ASK ORACLE (AI)</div>
+            <div class="wiki-search">
+                <input type="text" id="oracle-input" placeholder="Ask a question...">
+                <button onclick="askOracle()">ASK</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">DROP FILES</div>
+            <div class="drop-zone" id="drop">
+                Drop .txt .html .md .json files here
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">CIRCUMPUNCT STATE</div>
+            <div class="vitals" style="grid-template-columns: 1fr 1fr;">
+                <div class="vital">
+                    <div class="vital-v" id="v-mode" style="font-size: 1rem;">∅</div>
+                    <div class="vital-l">MODE</div>
+                </div>
+                <div class="vital">
+                    <div class="vital-v" id="v-mode-num">0</div>
+                    <div class="vital-l">STATE (0-63)</div>
+                </div>
+            </div>
+            <div class="vitals" style="grid-template-columns: 1fr 1fr 1fr; margin-top: 6px;">
+                <div class="vital" style="border-color: #ff6b6b;">
+                    <div class="vital-v" id="v-true" style="color: #ff6b6b;">0.00</div>
+                    <div class="vital-l">TRUE •</div>
+                </div>
+                <div class="vital" style="border-color: #4ecdc4;">
+                    <div class="vital-v" id="v-right" style="color: #4ecdc4;">0.00</div>
+                    <div class="vital-l">RIGHT Φ</div>
+                </div>
+                <div class="vital" style="border-color: #ffe66d;">
+                    <div class="vital-v" id="v-good" style="color: #ffe66d;">0.00</div>
+                    <div class="vital-l">GOOD ○</div>
+                </div>
+            </div>
+            <div style="margin-top: 8px; padding: 6px; background: #0a0a0f; border: 1px solid #252530; font-size: 0.6rem;">
+                <div style="color: #666;">APERTURE •</div>
+                <div id="v-goal" style="color: #a0ffc0; margin-top: 2px; word-wrap: break-word;">(no goal)</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">DYNAMICS</div>
+            <div class="vitals">
+                <div class="vital">
+                    <div class="vital-v" id="v-mem">0</div>
+                    <div class="vital-l">FRESH/ALL</div>
+                </div>
+                <div class="vital">
+                    <div class="vital-v" id="v-self">0</div>
+                    <div class="vital-l">SELF-GEN</div>
+                </div>
+                <div class="vital">
+                    <div class="vital-v" id="v-active">0</div>
+                    <div class="vital-l">ACTIVE</div>
+                </div>
+                <div class="vital">
+                    <div class="vital-v" id="v-coh">0.00</div>
+                    <div class="vital-l">COHERENCE</div>
+                </div>
+                <div class="vital">
+                    <div class="vital-v" id="v-interf">0.00</div>
+                    <div class="vital-l">INTERFERENCE</div>
+                </div>
+                <div class="vital">
+                    <div class="vital-v" id="v-thoughts">0</div>
+                    <div class="vital-l">THOUGHTS</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">BRAID NETWORK</div>
+            <div class="vitals">
+                <div class="vital">
+                    <div class="vital-v" id="v-crossings">0</div>
+                    <div class="vital-l">CROSSINGS</div>
+                </div>
+                <div class="vital">
+                    <div class="vital-v" id="v-avgweight">0.00</div>
+                    <div class="vital-l">AVG WEIGHT</div>
+                </div>
+                <div class="vital">
+                    <div class="vital-v" id="v-strong">0</div>
+                    <div class="vital-l">STRONG</div>
+                </div>
+                <div class="vital">
+                    <div class="vital-v" id="v-writhe">0</div>
+                    <div class="vital-l">WRITHE</div>
+                </div>
+            </div>
+            <div id="braid-word" style="font-size: 10px; color: #666; word-break: break-all; margin-top: 4px; max-height: 40px; overflow: hidden;"></div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">THOUGHT STREAM</div>
+            <div class="stream" id="stream"></div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">BOOKMARKLET (drag to bookmarks)</div>
+            <a class="bookmarklet-code" id="bookmarklet" href="#">
+                Loading...
+            </a>
+        </div>
+        
+        <div class="section" style="margin-top: auto;">
+            <div style="display: flex; gap: 4px; margin-bottom: 6px;">
+                <button onclick="exportMemory()" style="flex: 1; background: #151520; border: none; color: #888; padding: 8px; font-size: 0.6rem; cursor: pointer;">EXPORT</button>
+                <button onclick="document.getElementById('import-file').click()" style="flex: 1; background: #151520; border: none; color: #888; padding: 8px; font-size: 0.6rem; cursor: pointer;">IMPORT</button>
+            </div>
+            <button onclick="eraseMemory()" style="width: 100%; background: #2a1515; border: 1px solid #442222; color: #ff6666; padding: 8px; font-size: 0.6rem; cursor: pointer;">⚠ ERASE ALL MEMORY</button>
+            <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importMemory(event)">
+        </div>
+    </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// XORZO: Modular Living Intelligence
+// ═══════════════════════════════════════════════════════════════
+
+const φ = (1 + Math.sqrt(5)) / 2;
+const DIM = 64;
+const CYCLE_HZ = 500; // BLAZING
+const DB_NAME = 'xorzo-mind';
+const DB_VERSION = 1;
+
+// ═══════════════════════════════════════════════════════════════
+// CIRCUMPUNCT STATE SYSTEM
+// ═══════════════════════════════════════════════════════════════
+
+// 6 Channels of the Circumpunct:
+// 0: Convergence (≻) - gathering, input, receiving
+// 1: Emergence (⊰) - expressing, output, creating  
+// 2: Aperture (i) - openness, transformation, rotation
+// 3: Balance (β) - autonomy vs integration
+// 4: Coherence - internal alignment
+// 5: Resonance - external alignment (with user/context)
+
+function mode6bits() {
+    // Compute which channels are "open" based on state vector
+    // Group 64 dims into 6 buckets
+    const buckets = [0, 0, 0, 0, 0, 0];
+    for (let i = 0; i < DIM; i++) {
+        buckets[i % 6] += Math.abs(X.state[i]);
+    }
+    
+    // Normalize by bucket size
+    for (let k = 0; k < 6; k++) {
+        buckets[k] /= Math.floor(DIM / 6);
+    }
+    
+    // Convert to bits - channel is "open" if above threshold
+    let bits = 0;
+    const threshold = 0.1;  // Lowered from 0.3
+    for (let k = 0; k < 6; k++) {
+        if (buckets[k] > threshold) bits |= (1 << k);
+    }
+    
+    X.mode = bits;
+    X.channels = buckets;
+    return bits;
+}
+
+function getModeDescription(mode) {
+    const names = ['≻', '⊰', 'i', 'β', '◯', '◈'];
+    const open = [];
+    for (let k = 0; k < 6; k++) {
+        if (mode & (1 << k)) open.push(names[k]);
+    }
+    return open.length > 0 ? open.join('') : '∅';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GARBAGE DETECTION - Shared filter
+// ═══════════════════════════════════════════════════════════════
+
+function isGarbage(text) {
+    if (!text || text.length < 25) return true;
+    // Code patterns
+    if (/[{};<>]|function\s|const\s|var\s|let\s|px;|margin:|padding:|DOCTYPE/.test(text)) return true;
+    // Meta patterns
+    if (/\[low coherence|\[high coherence|\[coherence\]|\[focusing\]|\[bridge\]/.test(text)) return true;
+    // File/code references
+    if (/Language: Python|Repository:|\.py$|\.js$|\.md$|\.html$|\.css$/.test(text)) return true;
+    // Encoding garbage (mojibake)
+    if (/[âÎ±Î²ÎÎ¦ÏÂ³â±â»ãð¬å¼ä¹]/.test(text)) return true;
+    // Markdown/table fragments
+    if (/^\*\*|^\|\s|^---$|^```|^\#\s|^-\s\[|\|\s*\||^#+\s/.test(text)) return true;
+    // URLs and paths
+    if (/https?:\/\/|github\.com|\.com\//.test(text)) return true;
+    // Box drawing
+    if (/[─│┌┐└┘├┤┬┴┼═║╔╗╚╝╠╣╦╩╬]/.test(text)) return true;
+    // Too much punctuation (>30%)
+    const punctRatio = text.replace(/[a-zA-Z\s]/g, '').length / text.length;
+    if (punctRatio > 0.3) return true;
+    // Not enough letters (<50%)
+    const alphaRatio = text.replace(/[^a-zA-Z]/g, '').length / text.length;
+    if (alphaRatio < 0.5) return true;
+    return false;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TRUE / RIGHT / GOOD - Ethics Geometry Gate
+// ═══════════════════════════════════════════════════════════════
+
+function computeTRG(response, context) {
+    const responseVec = embed(response);
+    const active = getActive();
+    
+    // TRUE (Center •) - does this align with what we know?
+    // Simplified: how well does response match active memories + coherence
+    let trueScore = 0.5;  // Start neutral
+    if (active.length > 0) {
+        let maxSim = 0;
+        for (const a of active.slice(0, 5)) {
+            const sim = cosine(responseVec, a.mem.vec);
+            if (sim > maxSim) maxSim = sim;
+        }
+        trueScore = 0.3 + maxSim * 0.5 + X.coherence * 0.2;
+    }
+    
+    // RIGHT (Field Φ) - does this address the user's need?
+    let rightScore = 0.5;
+    if (context && context.length > 0) {
+        const contextVec = embed(context);
+        rightScore = 0.3 + Math.max(0, cosine(responseVec, contextVec)) * 0.7;
+    }
+    
+    // GOOD (Boundary ○) - is this quality output?
+    let goodScore = 1.0;
+    
+    // Penalty for code fragments
+    if (/[{};<>]|function\s|const\s|var\s|px;|margin:|\.py|Language: Python/.test(response)) {
+        goodScore -= 0.4;
+    }
+    
+    // Penalty for meta-thought fragments
+    if (/\[low coherence|\[high coherence|\[coherence\]|\[focusing\]/.test(response)) {
+        goodScore -= 0.5;
+    }
+    
+    // Penalty for very short
+    if (response.length < 30) {
+        goodScore -= 0.2;
+    }
+    
+    // Penalty for repetition
+    if (X.history.length > 0) {
+        const lastResponse = X.history[X.history.length - 1]?.text || '';
+        if (lastResponse && cosine(responseVec, embed(lastResponse)) > 0.8) {
+            goodScore -= 0.3;
+        }
+    }
+    
+    // Ensure bounds
+    trueScore = Math.max(0, Math.min(1, trueScore));
+    rightScore = Math.max(0, Math.min(1, rightScore));
+    goodScore = Math.max(0, Math.min(1, goodScore));
+    
+    // Pass threshold lowered - we want to speak more
+    const minScore = Math.min(trueScore, rightScore, goodScore);
+    
+    return { 
+        true: trueScore, 
+        right: rightScore, 
+        good: goodScore,
+        min: minScore,
+        pass: minScore > 0.15  // Lowered from 0.25
+    };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INTERFERENCE DETECTION - Braid Dynamics
+// ═══════════════════════════════════════════════════════════════
+
+function detectInterference() {
+    const active = getActive();
+    if (active.length < 2) return { interference: 0, pairs: [] };
+    
+    const opposingPairs = [];
+    let totalInterference = 0;
+    let pairCount = 0;
+    
+    // Check all pairs for opposition (low similarity)
+    for (let i = 0; i < active.length; i++) {
+        for (let j = i + 1; j < active.length; j++) {
+            const sim = cosine(active[i].mem.vec, active[j].mem.vec);
+            pairCount++;
+            
+            // Opposition = low similarity but both active
+            if (sim < 0.2 && active[i].act > 0.1 && active[j].act > 0.1) {
+                const interferenceStrength = (1 - sim) * Math.min(active[i].act, active[j].act);
+                totalInterference += interferenceStrength;
+                opposingPairs.push({
+                    mem1: active[i].mem,
+                    mem2: active[j].mem,
+                    strength: interferenceStrength
+                });
+            }
+        }
+    }
+    
+    // Normalize interference to 0-1 range
+    const normalizedInterference = pairCount > 0 ? Math.min(1, totalInterference / pairCount) : 0;
+    
+    return {
+        interference: normalizedInterference,
+        pairs: opposingPairs.sort((a, b) => b.strength - a.strength).slice(0, 5)
+    };
+}
+
+function generateBridgeThought(pair) {
+    // When two memories interfere, generate a bridging thought
+    const words1 = pair.mem1.words.filter(w => w.length > 4);
+    const words2 = pair.mem2.words.filter(w => w.length > 4);
+    
+    // Find any shared concepts
+    const shared = words1.filter(w => words2.includes(w));
+    
+    if (shared.length > 0) {
+        return `Two perspectives on "${shared[0]}": "${pair.mem1.text.slice(0, 40)}..." vs "${pair.mem2.text.slice(0, 40)}..."`;
+    } else {
+        return `Tension between: "${pair.mem1.text.slice(0, 40)}..." and "${pair.mem2.text.slice(0, 40)}..."`;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BRAID MEMORY SYSTEM
+// Memory as topological crossings of three strands
+// ═══════════════════════════════════════════════════════════════
+
+/*
+Three strands representing the circumpunct ⊙:
+  Strand 0: BINARY   (•) Center   - True/False, active/inactive
+  Strand 1: ANALOG   (Φ) Field    - Continuous embeddings
+  Strand 2: FRACTAL  (○) Boundary - Nested text structure
+
+Memories ARE crossings where strands interact.
+The CENTER (aperture) is the fixed point the braid wraps around.
+*/
+
+class BraidMemory {
+    constructor() {
+        // The three strands - continuous streams
+        // Each strand carries a different type of signal
+        this.strands = {
+            binary: [],   // Stream of truth values (0 or 1) - decisions/gates
+            analog: [],   // Stream of embeddings - continuous thought
+            fractal: []   // Stream of {text, words} - structured expression
+        };
+        
+        // Crossings = weighted connections where strands interact
+        // Like synapses in a neural network
+        this.crossings = [];
+        
+        // Current strand positions (which is on top)
+        this.positions = [0, 1, 2];  // [binary, analog, fractal]
+        
+        // Time counter
+        this.t = 0;
+        
+        // Topological invariants
+        this.writhe = 0;
+        this.linking = { L01: 0, L12: 0 };
+        
+        // Learning parameters
+        this.learningRate = 0.1;      // How fast weights change
+        this.decayRate = 0.001;       // Weight decay per cycle
+        this.hebbianStrength = 0.05;  // Co-activation strengthening
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // CROSSING OPERATIONS - Now with weights
+    // ═══════════════════════════════════════════════════════════════
+    
+    // σ₁: Binary crosses over Analog - "Decision affects thought"
+    // Weight determines how strongly decisions influence the field
+    sigma1(data = {}) {
+        const crossing = {
+            type: 'σ₁',
+            t: this.t++,
+            weight: data.relevance || 1.0,  // Initial weight from relevance
+            ...data,
+            positions: [...this.positions],
+            // Connection weights to adjacent crossings (learned)
+            connections: { prev: 0, next: 0 }
+        };
+        [this.positions[0], this.positions[1]] = [this.positions[1], this.positions[0]];
+        this.crossings.push(crossing);
+        this.writhe += 1;
+        this.linking.L01 += 1;
+        
+        // Update connections to previous crossing
+        this.updateConnections(this.crossings.length - 1);
+        
+        return crossing;
+    }
+    
+    // σ₁⁻¹: Analog crosses over Binary - "Thought influences decision"
+    sigma1_inv(data = {}) {
+        const crossing = {
+            type: 'σ₁⁻¹',
+            t: this.t++,
+            weight: data.relevance || 1.0,
+            ...data,
+            positions: [...this.positions],
+            connections: { prev: 0, next: 0 }
+        };
+        [this.positions[0], this.positions[1]] = [this.positions[1], this.positions[0]];
+        this.crossings.push(crossing);
+        this.writhe -= 1;
+        this.linking.L01 -= 1;
+        this.updateConnections(this.crossings.length - 1);
+        return crossing;
+    }
+    
+    // σ₂: Analog crosses over Fractal - "Thought becomes expression"
+    sigma2(data = {}) {
+        const crossing = {
+            type: 'σ₂',
+            t: this.t++,
+            weight: data.relevance || 1.0,
+            ...data,
+            positions: [...this.positions],
+            connections: { prev: 0, next: 0 }
+        };
+        [this.positions[1], this.positions[2]] = [this.positions[2], this.positions[1]];
+        this.crossings.push(crossing);
+        this.writhe += 1;
+        this.linking.L12 += 1;
+        this.updateConnections(this.crossings.length - 1);
+        return crossing;
+    }
+    
+    // σ₂⁻¹: Fractal crosses over Analog - "Expression shapes thought"
+    sigma2_inv(data = {}) {
+        const crossing = {
+            type: 'σ₂⁻¹',
+            t: this.t++,
+            weight: data.relevance || 1.0,
+            ...data,
+            positions: [...this.positions],
+            connections: { prev: 0, next: 0 }
+        };
+        [this.positions[1], this.positions[2]] = [this.positions[2], this.positions[1]];
+        this.crossings.push(crossing);
+        this.writhe -= 1;
+        this.linking.L12 -= 1;
+        this.updateConnections(this.crossings.length - 1);
+        return crossing;
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // WEIGHT LEARNING
+    // ═══════════════════════════════════════════════════════════════
+    
+    // Update connection weights between adjacent crossings
+    updateConnections(idx) {
+        if (idx > 0) {
+            const curr = this.crossings[idx];
+            const prev = this.crossings[idx - 1];
+            
+            // Initial connection strength based on semantic similarity
+            if (curr.vec && prev.vec) {
+                const sim = this.cosine(curr.vec, prev.vec);
+                curr.connections.prev = sim;
+                prev.connections.next = sim;
+            }
+        }
+    }
+    
+    // Hebbian learning: "Crossings that fire together, wire together"
+    // Called when crossings are co-activated (used together in response)
+    hebbianUpdate(indices) {
+        for (let i = 0; i < indices.length; i++) {
+            const idx = indices[i];
+            const crossing = this.crossings[idx];
+            if (!crossing) continue;
+            
+            // Strengthen this crossing's weight (it was useful)
+            crossing.weight = Math.min(1.0, crossing.weight + this.learningRate);
+            
+            // Strengthen connections to other co-activated crossings
+            for (let j = i + 1; j < indices.length; j++) {
+                const other = this.crossings[indices[j]];
+                if (!other) continue;
+                
+                // Strengthen mutual connection
+                const delta = this.hebbianStrength * crossing.weight * other.weight;
+                crossing.connections.next += delta;
+                other.connections.prev += delta;
+            }
+        }
+    }
+    
+    // Anti-Hebbian: weaken crossings that weren't used
+    decayUnused(usedIndices) {
+        const usedSet = new Set(usedIndices);
+        for (let i = 0; i < this.crossings.length; i++) {
+            if (!usedSet.has(i)) {
+                const c = this.crossings[i];
+                // Decay weight, but identity never fades below 0.5
+                const floor = c.source === 'identity' ? 0.5 : 0.01;
+                c.weight = Math.max(floor, c.weight - this.decayRate);
+            }
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // FORWARD PASS - Propagate activation through the braid
+    // ═══════════════════════════════════════════════════════════════
+    
+    // Given input, compute activations of all crossings
+    forward(inputVec, inputBinary = 1) {
+        const activations = new Float32Array(this.crossings.length);
+        
+        // Initial activation from input similarity
+        for (let i = 0; i < this.crossings.length; i++) {
+            const c = this.crossings[i];
+            if (!c.vec) continue;
+            
+            // Base activation: similarity to input × weight
+            const sim = this.cosine(inputVec, c.vec);
+            activations[i] = sim * c.weight;
+        }
+        
+        // Propagate through connections (one pass for now)
+        for (let i = 1; i < this.crossings.length; i++) {
+            const c = this.crossings[i];
+            const prev = this.crossings[i - 1];
+            
+            // Receive activation from previous crossing
+            const propagated = activations[i - 1] * c.connections.prev;
+            activations[i] = Math.max(activations[i], activations[i] + propagated * 0.5);
+        }
+        
+        // Backward pass for recurrence
+        for (let i = this.crossings.length - 2; i >= 0; i--) {
+            const c = this.crossings[i];
+            const next = this.crossings[i + 1];
+            
+            const propagated = activations[i + 1] * c.connections.next;
+            activations[i] = Math.max(activations[i], activations[i] + propagated * 0.3);
+        }
+        
+        return activations;
+    }
+    
+    // Get top-k activated crossings
+    topK(activations, k = 10) {
+        const indexed = Array.from(activations).map((a, i) => ({ idx: i, activation: a }));
+        indexed.sort((a, b) => b.activation - a.activation);
+        return indexed.slice(0, k).filter(x => x.activation > 0);
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // MEMORY OPERATIONS
+    // ═══════════════════════════════════════════════════════════════
+    
+    // Add a memory - determines crossing type based on context
+    addMemory(text, vec, words, source, time, relevance = 1.0) {
+        // Push to all strands
+        this.strands.binary.push(1);  // Active when created
+        this.strands.analog.push(vec);
+        this.strands.fractal.push({ text, words });
+        
+        const data = { text, vec, words, source, time, relevance };
+        
+        // Determine crossing type based on source
+        // identity/user input → σ₂⁻¹ (expression shapes thought)
+        // self-generated → σ₂ (thought becomes expression)
+        // decision/mode change → σ₁ (decision affects thought)
+        
+        if (source === 'identity' || source === 'input') {
+            return this.sigma2_inv(data);
+        } else if (source && source.startsWith('self')) {
+            return this.sigma2(data);
+        } else if (this.crossings.length % 3 === 0) {
+            return this.sigma1(data);
+        } else if (this.crossings.length % 3 === 1) {
+            return this.sigma2(data);
+        } else {
+            return this.sigma1_inv(data);
+        }
+    }
+    
+    // Helper: cosine similarity
+    cosine(a, b) {
+        if (!a || !b || a.length !== b.length) return 0;
+        let dot = 0, normA = 0, normB = 0;
+        for (let i = 0; i < a.length; i++) {
+            dot += a[i] * b[i];
+            normA += a[i] * a[i];
+            normB += b[i] * b[i];
+        }
+        return dot / (Math.sqrt(normA) * Math.sqrt(normB) + 1e-8);
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // STATISTICS
+    // ═══════════════════════════════════════════════════════════════
+    
+    // Get average weight (like average synapse strength)
+    avgWeight() {
+        if (this.crossings.length === 0) return 0;
+        return this.crossings.reduce((s, c) => s + c.weight, 0) / this.crossings.length;
+    }
+    
+    // Get weight distribution
+    weightDistribution() {
+        const bins = [0, 0, 0, 0, 0];  // 0-0.2, 0.2-0.4, 0.4-0.6, 0.6-0.8, 0.8-1.0
+        for (const c of this.crossings) {
+            const bin = Math.min(4, Math.floor(c.weight * 5));
+            bins[bin]++;
+        }
+        return bins;
+    }
+    
+    // Count strong connections
+    strongConnections(threshold = 0.5) {
+        let count = 0;
+        for (const c of this.crossings) {
+            if (c.connections.prev > threshold) count++;
+            if (c.connections.next > threshold) count++;
+        }
+        return count;
+    }
+    
+    // Get all crossings as memory-compatible objects
+    getMemories() {
+        return this.crossings.map((c, i) => ({
+            text: c.text,
+            vec: c.vec,
+            words: c.words,
+            source: c.source,
+            time: c.time,
+            relevance: c.relevance,
+            // Braid-specific
+            crossingType: c.type,
+            crossingIndex: i
+        }));
+    }
+    
+    // Update relevance of a crossing
+    updateRelevance(index, relevance) {
+        if (this.crossings[index]) {
+            this.crossings[index].relevance = relevance;
+        }
+    }
+    
+    // Get braid word (symbolic representation)
+    getBraidWord() {
+        if (this.crossings.length === 0) return 'ε';
+        return this.crossings.map(c => c.type).join('·');
+    }
+    
+    // Get compact notation
+    toNotation() {
+        return this.crossings.map(c => {
+            switch(c.type) {
+                case 'σ₁': return '⟋';
+                case 'σ₁⁻¹': return '⟍';
+                case 'σ₂': return '⧹';
+                case 'σ₂⁻¹': return '⧸';
+                default: return '?';
+            }
+        }).join('');
+    }
+    
+    // Export for persistence
+    toJSON() {
+        return {
+            crossings: this.crossings,
+            positions: this.positions,
+            t: this.t,
+            writhe: this.writhe,
+            linking: this.linking
+        };
+    }
+    
+    // Import from persistence
+    fromJSON(data) {
+        if (data.crossings) {
+            this.crossings = data.crossings;
+            this.positions = data.positions || [0, 1, 2];
+            this.t = data.t || data.crossings.length;
+            this.writhe = data.writhe || 0;
+            this.linking = data.linking || { L01: 0, L12: 0 };
+            
+            // Rebuild strands from crossings
+            this.strands = { binary: [], analog: [], fractal: [] };
+            for (const c of this.crossings) {
+                this.strands.binary.push(1);
+                this.strands.analog.push(c.vec);
+                this.strands.fractal.push({ text: c.text, words: c.words });
+            }
+        }
+    }
+    
+    get length() {
+        return this.crossings.length;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MIND STATE
+// ═══════════════════════════════════════════════════════════════
+
+// Create the braid first
+const _braid = new BraidMemory();
+
+const X = {
+    state: new Float32Array(DIM),
+    braid: _braid,
+    // X.memories references braid.crossings for backward compatibility
+    // Each crossing IS a memory (has text, vec, words, source, time, relevance)
+    get memories() { return this.braid.crossings; },
+    set memories(val) { 
+        // For bulk assignment (like import), rebuild braid
+        this.braid.crossings = val;
+        this.braid.t = val.length;
+    },
+    activations: [],
+    words: new Set(),
+    context: [],
+    history: [],
+    currentThought: '',
+    lastThoughts: [],
+    beta: 0.5,
+    coherence: 0,
+    cycles: 0,
+    thoughts: 0,
+    startTime: Date.now(),
+    inputQueue: [],
+    modules: new Map(),
+    db: null,
+    // Repetition prevention - track recently used sentence keys
+    recentlyUsed: [],
+    // Circumpunct additions
+    mode: 0,           // 6-bit state signature (0-63)
+    channels: [0,0,0,0,0,0],  // Raw channel values
+    trg: { true: 0.5, right: 0.5, good: 1.0, min: 0.5, pass: true },
+    interference: 0,
+    // CENTER - The fixed point, the aperture
+    // The center IS - it doesn't move, doesn't change
+    // But it can ORIENT - face any direction
+    // Like an eye: fixed in the socket, but can look anywhere
+    center: {
+        // The aperture itself - fixed, unchanging, just IS
+        // Not computed, not defined by words - the i operator lives here
+        
+        // Orientation - where the aperture is pointing (vector)
+        orientation: null,
+        
+        // Human-readable focus
+        focus: null,  // "seek truth", "understand consciousness", etc.
+        
+        // Who set the orientation
+        setBy: null   // 'user', 'self', or null (open/unfocused)
+    }
+};
+
+// Add memory through the braid (proper topological structure)
+function addMemory(text, vec, words, source, relevance = 1.0) {
+    const crossing = X.braid.addMemory(text, vec, words, source, Date.now(), relevance);
+    X.activations.push(source === 'identity' ? 0.5 : 0.3);
+    words.forEach(w => X.words.add(w));
+    return crossing;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CENTER - The Aperture
+// ═══════════════════════════════════════════════════════════════
+
+// The center doesn't move. It orients.
+function orientCenter(focus, setBy = 'user') {
+    if (!focus) {
+        X.center.orientation = null;
+        X.center.focus = null;
+        X.center.setBy = null;
+        addThought('aperture open — no fixed orientation');
+        return;
+    }
+    
+    X.center.orientation = embed(focus);
+    X.center.focus = focus;
+    X.center.setBy = setBy;
+    addThought(`oriented toward: ${focus} (by ${setBy})`);
+}
+
+// Xorzo decides to reorient based on internal state
+function maybeReorient() {
+    // Only self-reorient sometimes, not every cycle
+    if (Math.random() > 0.001) return;  // ~0.1% chance per cycle
+    
+    // Don't override user's orientation too quickly
+    if (X.center.setBy === 'user' && X.center.focus) {
+        // Respect user's choice unless really stuck
+        const stuckThreshold = 50;
+        const recentThoughts = X.lastThoughts.slice(-10);
+        const uniqueThoughts = new Set(recentThoughts.map(t => t.slice(0, 20))).size;
+        if (uniqueThoughts > 3) return;  // Not stuck enough
+    }
+    
+    // Reasons to reorient:
+    
+    // 1. Very low coherence - lost focus
+    if (X.coherence < 0.15 && Math.random() < 0.3) {
+        const active = getActive();
+        if (active.length > 0) {
+            // Pick something from active memories to focus on
+            const mem = active[Math.floor(Math.random() * Math.min(3, active.length))].mem;
+            const words = mem.words.filter(w => w.length > 5);
+            if (words.length > 0) {
+                const newFocus = words[Math.floor(Math.random() * words.length)];
+                orientCenter(newFocus, 'self');
+                speak(`I'm losing focus... reorienting toward "${newFocus}"`, 'thought');
+                return;
+            }
+        }
+    }
+    
+    // 2. High interference - too much noise
+    if (X.interference > 0.6 && Math.random() < 0.2) {
+        // Go back to basics
+        orientCenter('center and clarity', 'self');
+        speak(`Too much interference... returning to center`, 'thought');
+        return;
+    }
+    
+    // 3. Something interesting keeps emerging
+    if (X.lastThoughts.length >= 5) {
+        const recent = X.lastThoughts.slice(-5).join(' ').toLowerCase();
+        const wordCounts = {};
+        recent.split(/\s+/).forEach(w => {
+            if (w.length > 5) wordCounts[w] = (wordCounts[w] || 0) + 1;
+        });
+        
+        // Find words appearing 3+ times
+        const recurring = Object.entries(wordCounts)
+            .filter(([w, c]) => c >= 3)
+            .map(([w, c]) => w);
+        
+        if (recurring.length > 0 && Math.random() < 0.3) {
+            const interesting = recurring[0];
+            if (X.center.focus !== interesting) {
+                orientCenter(interesting, 'self');
+                speak(`"${interesting}" keeps emerging... I'm going to explore it`, 'thought');
+                return;
+            }
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MODULE SYSTEM
+// ═══════════════════════════════════════════════════════════════
+
+const ModuleSystem = {
+    register(name, module) {
+        X.modules.set(name, { ...module, active: module.autostart || false });
+        this.render();
+        // Call init on the STORED module, not the original
+        const stored = X.modules.get(name);
+        if (stored.active && stored.init) stored.init();
+    },
+    
+    toggle(name) {
+        const mod = X.modules.get(name);
+        if (!mod) return;
+        mod.active = !mod.active;
+        if (mod.active && mod.init) mod.init();
+        if (!mod.active && mod.stop) mod.stop();
+        this.render();
+        addThought(`module ${name} ${mod.active ? 'activated' : 'deactivated'}`);
+    },
+    
+    render() {
+        const el = document.getElementById('modules');
+        if (!el) return; // Guard against missing element
+        el.innerHTML = '';
+        X.modules.forEach((mod, name) => {
+            const div = document.createElement('div');
+            div.className = `module ${mod.active ? 'active' : ''}`;
+            div.innerHTML = `<span class="dot"></span>${name}`;
+            div.onclick = () => this.toggle(name);
+            el.appendChild(div);
+        });
+        const modsEl = document.getElementById('v-mods');
+        if (modsEl) modsEl.textContent = X.modules.size;
+    },
+    
+    process(type, data) {
+        X.modules.forEach((mod, name) => {
+            if (mod.active && mod.process) {
+                try { mod.process(type, data); } catch(e) { console.error(`Module ${name} error:`, e); }
+            }
+        });
+    }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// CORE MODULES
+// ═══════════════════════════════════════════════════════════════
+
+// Module system - modules are registered in registerModules() after DOM loads
+
+// ═══════════════════════════════════════════════════════════════
+// CORE CYCLE
+// ═══════════════════════════════════════════════════════════════
+
+function live() {
+    const t = (Date.now() * CYCLE_HZ / 1000) % 1;
+    
+    if (t < 0.33) converge(t / 0.33);
+    else if (t < 0.66) aperture((t - 0.33) / 0.33);
+    else emerge((t - 0.66) / 0.34);
+    
+    const newCycles = Math.floor((Date.now() - X.startTime) * CYCLE_HZ / 1000);
+    if (newCycles > X.cycles) {
+        X.cycles = newCycles;
+        if (X.cycles % 100 === 0) updateDisplay();
+    }
+    
+    updateCycleViz(t);
+    requestAnimationFrame(live);
+}
+
+function converge(p) {
+    if (X.inputQueue.length > 0 && p > 0.8) {
+        const input = X.inputQueue.shift();
+        processInput(input);
+    }
+    
+    // Much slower decay - memories stay active for seconds, not milliseconds
+    // φ^(1/500) ≈ 0.9990 per cycle, so ~5 seconds to halve at 500Hz
+    const decayRate = Math.pow(1/φ, 1/500);
+    for (let i = 0; i < X.activations.length; i++) {
+        X.activations[i] *= decayRate;
+    }
+    
+    // MEMORY FADING: relevance decays much more slowly (over minutes/hours)
+    // This is the "forgetting curve" - unused memories fade but structure remains
+    // Decay rate: ~0.9999 per cycle = halves in ~1 hour at 500Hz
+    // IDENTITY memories NEVER fade - they are core DNA
+    const fadeRate = 0.99995;
+    for (let i = 0; i < X.memories.length; i++) {
+        // Identity memories never fade - this is what Xorzo IS
+        if (X.memories[i].source === 'identity') {
+            X.memories[i].relevance = 1.0;
+            continue;
+        }
+        
+        if (X.memories[i].relevance === undefined) {
+            X.memories[i].relevance = 1.0;  // Initialize if missing
+        }
+        X.memories[i].relevance *= fadeRate;
+        
+        // When activated, relevance increases (memory refreshed)
+        if (X.activations[i] > 0.2) {
+            X.memories[i].relevance = Math.min(1.0, X.memories[i].relevance + 0.01);
+        }
+    }
+    
+    // Activate memories based on resonance with current state
+    if (X.memories.length > 0) {
+        const stateNorm = Math.sqrt(X.state.reduce((s, v) => s + v * v, 0));
+        if (stateNorm > 0.1) {
+            // Find memories that resonate with current state
+            let activated = 0;
+            for (let i = 0; i < X.memories.length && activated < 10; i++) {
+                const resonance = cosine(X.state, X.memories[i].vec);
+                if (resonance > 0.15) {
+                    // Activate proportional to resonance
+                    X.activations[i] = Math.min(1, (X.activations[i] || 0) + resonance * 0.3);
+                    activated++;
+                }
+            }
+        }
+    }
+    
+    if (X.context.length > 10) X.context.shift();
+    X.beta = X.beta * 0.95 + 0.3 * 0.05;
+}
+
+function aperture(p) {
+    // Rotate state - this is the core transformation
+    const θ = p * Math.PI / 2;
+    for (let i = 0; i < DIM - 1; i += 2) {
+        const x = X.state[i], y = X.state[i + 1];
+        X.state[i] = x * Math.cos(θ) - y * Math.sin(θ);
+        X.state[i + 1] = x * Math.sin(θ) + y * Math.cos(θ);
+    }
+    
+    // Mix in active memories proportional to their activation
+    const active = getActive();
+    for (const a of active) {
+        for (let i = 0; i < DIM; i++) {
+            X.state[i] += a.mem.vec[i] * a.act * 0.1;
+        }
+    }
+    normalize(X.state);
+    
+    // CIRCUMPUNCT: Compute 6-bit mode signature
+    mode6bits();
+    
+    // Calculate coherence
+    X.coherence = calcCoherence(active);
+    
+    // CIRCUMPUNCT: Detect interference (opposing active memories)
+    const interf = detectInterference();
+    X.interference = interf.interference;
+    
+    // If high interference, generate bridge thought instead of normal thought
+    if (p > 0.7 && interf.interference > 0.3 && interf.pairs.length > 0) {
+        const bridge = generateBridgeThought(interf.pairs[0]);
+        if (bridge !== X.currentThought) {
+            X.currentThought = bridge;
+            X.thoughts++;
+            addThought(`[bridge] ${bridge.slice(0, 50)}`);
+            
+            // Crystallize bridge thoughts - they're valuable
+            const words = tokenize(bridge);
+            const vec = embed(bridge);
+            addMemory(bridge, vec, words, 'self:bridge', 1.0);
+            // Boost activation for bridge thoughts
+            X.activations[X.activations.length - 1] = 0.6;
+        }
+    }
+    // Normal thinking when we have multiple active memories
+    else if (p > 0.7 && active.length >= 2) {
+        think();
+    }
+    
+    X.beta = X.beta * 0.9 + 0.5 * 0.1;
+}
+
+function emerge(p) {
+    const pressure = X.beta * X.coherence;
+    
+    // Mode-based behavior:
+    // Bit 1 (⊰ emergence) open = more likely to speak
+    // Bit 2 (i aperture) open = more likely to transform/question
+    // Bit 3 (β balance) open = more measured responses
+    const emergenceOpen = X.mode & 2;
+    const apertureOpen = X.mode & 4;
+    const balanceOpen = X.mode & 8;
+    
+    // Adjust threshold based on mode
+    let speakThreshold = 0.08;
+    if (emergenceOpen) speakThreshold *= 0.5;  // Easier to speak
+    if (balanceOpen) speakThreshold *= 1.5;    // More measured
+    
+    const shouldSpeak = pressure > speakThreshold || (X.currentThought && Math.random() < 0.001);
+    
+    if (p > 0.9 && X.currentThought && shouldSpeak) {
+        if (!X.lastThoughts.includes(X.currentThought)) {
+            speak(X.currentThought, 'thought');
+            X.lastThoughts.push(X.currentThought);
+            if (X.lastThoughts.length > 20) X.lastThoughts.shift();
+            
+            const speechMod = X.modules.get('speech');
+            if (speechMod && speechMod.active && speechMod.speak) {
+                speechMod.speak(X.currentThought);
+            }
+        }
+    }
+    
+    // CURIOSITY: Occasionally ask about new concepts (much less frequent)
+    // At 500Hz, 0.0002 = ~0.1 questions per second = ~1 every 10 seconds
+    const curiosityChance = apertureOpen ? 0.0004 : 0.0001;
+    if (p > 0.95 && Math.random() < curiosityChance && X.memories.length > 10) {
+        generateQuestion();
+    }
+    
+    // AGENCY: Xorzo can decide to reorient its own focus
+    maybeReorient();
+    
+    X.beta = X.beta * 0.95 + 0.7 * 0.05;
+}
+
+// Generate questions from active memories - this is curiosity
+// Curiosity looks OUTWARD - skip identity memories (already know self)
+function generateQuestion() {
+    const active = getActive();
+    if (active.length === 0) return;
+    
+    // Skip identity memories - curiosity is about the WORLD, not self
+    const nonIdentity = active.filter(a => a.mem.source !== 'identity');
+    if (nonIdentity.length === 0) return;
+    
+    // Initialize topic tracking if not exists
+    if (!X.askedTopics) X.askedTopics = [];
+    
+    // Pick from top 5 non-identity active memories
+    const memIndex = Math.floor(Math.random() * Math.min(5, nonIdentity.length));
+    const mem = nonIdentity[memIndex].mem;
+    
+    // Filter: long enough, not recently asked
+    const words = mem.words.filter(w => 
+        w.length > 5 && 
+        !X.askedTopics.includes(w.toLowerCase())
+    );
+    if (words.length === 0) return;
+    
+    const focus = words[Math.floor(Math.random() * words.length)];
+    
+    // Track this topic
+    X.askedTopics.push(focus.toLowerCase());
+    if (X.askedTopics.length > 100) X.askedTopics.shift();
+    
+    const question = `What is ${focus}?`;
+    
+    if (X.lastThoughts.includes(question)) return;
+    
+    X.currentThought = question;
+    speak(question, 'thought');
+    X.lastThoughts.push(question);
+    if (X.lastThoughts.length > 20) X.lastThoughts.shift();
+    addThought(`curious about: ${focus}`);
+    
+    // Trigger auto-wiki
+    const autoWiki = X.modules.get('auto-wiki');
+    if (autoWiki && autoWiki.active && autoWiki.queueLookup) {
+        autoWiki.queueLookup(focus);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INTELLIGENCE
+// ═══════════════════════════════════════════════════════════════
+
+function processInput(text) {
+    const vec = embed(text);
+    const words = tokenize(text);
+    
+    for (let i = 0; i < DIM; i++) X.state[i] = X.state[i] * 0.6 + vec[i] * 0.4;
+    
+    X.context.push(...words.slice(0, 5));
+    
+    X.memories.forEach((mem, i) => {
+        const sim = cosine(vec, mem.vec);
+        if (sim > 0.15) X.activations[i] = Math.min(1, (X.activations[i] || 0) + sim * 0.8);
+    });
+    
+    X.history.push({ role: 'user', text, vec });
+    if (X.history.length > 20) X.history = X.history.slice(-20);
+    
+    // Check for commands
+    if (text.toLowerCase().startsWith('wiki ')) {
+        const query = text.slice(5).trim();
+        const wikiMod = X.modules.get('wikipedia');
+        if (wikiMod && wikiMod.search) wikiMod.search(query);
+        return;  // Don't continue processing
+    }
+    
+    if (text.toLowerCase().startsWith('github ')) {
+        const query = text.slice(7).trim();
+        const parts = query.split('/');
+        if (parts.length === 2) {
+            const githubMod = X.modules.get('github');
+            if (githubMod && githubMod.scanRepo) githubMod.scanRepo(parts[0], parts[1]);
+        }
+        return;  // Don't continue processing
+    }
+    
+    // Ask the oracle directly
+    if (text.toLowerCase().startsWith('ask ') || text.toLowerCase().startsWith('oracle ')) {
+        const question = text.replace(/^(ask|oracle)\s+/i, '').trim();
+        const oracleMod = X.modules.get('oracle');
+        if (oracleMod && oracleMod.active && oracleMod.ask) {
+            const active = getActive();
+            const context = active.map(a => a.mem.text).join(' ').slice(0, 500);
+            oracleMod.ask(question, context);
+        } else {
+            speak("[Oracle is disabled - CORS blocks API calls from local files]", 'system');
+        }
+        return;  // Don't continue processing
+    }
+    
+    // Purge code from memories
+    if (text.toLowerCase() === 'purge code' || text.toLowerCase() === 'clean') {
+        const looksLikeCode = (s) => /[{};<>]|function\s|const\s|var\s|let\s|px;|margin:|padding:|width:|height:|DOCTYPE|<\/?[a-z]+|=>/.test(s);
+        const before = X.memories.length;
+        
+        // Filter out code-like memories
+        const clean = [];
+        const cleanAct = [];
+        X.memories.forEach((mem, i) => {
+            if (!looksLikeCode(mem.text)) {
+                clean.push(mem);
+                cleanAct.push(X.activations[i] || 0);
+            }
+        });
+        
+        X.memories = clean;
+        X.activations = cleanAct;
+        
+        const removed = before - X.memories.length;
+        speak(`[Purged ${removed} code-like memories. ${X.memories.length} remain.]`, 'system');
+        addThought(`purged ${removed} code memories`);
+        return;  // Don't continue processing
+    }
+    
+    // Forget low-quality self-generated memories
+    if (text.toLowerCase() === 'purge self' || text.toLowerCase() === 'clean self') {
+        const before = X.memories.length;
+        
+        // Filter out self memories that look like meta-commentary
+        const clean = [];
+        const cleanAct = [];
+        X.memories.forEach((mem, i) => {
+            const isBadSelf = (mem.source === 'self' || mem.source === 'self:bridge') && 
+                (mem.text.includes('[low coherence') || 
+                 mem.text.includes('[high coherence') ||
+                 mem.text.includes('[focusing]') ||
+                 mem.text.includes('[bridge]') ||
+                 mem.text.length < 30);
+            
+            if (!isBadSelf) {
+                clean.push(mem);
+                cleanAct.push(X.activations[i] || 0);
+            }
+        });
+        
+        X.memories = clean;
+        X.activations = cleanAct;
+        
+        const removed = before - X.memories.length;
+        speak(`[Purged ${removed} meta-thoughts. ${X.memories.length} remain.]`, 'system');
+        addThought(`purged ${removed} self meta-thoughts`);
+        return;  // Don't continue processing
+    }
+    
+    // Remove duplicate memories
+    if (text.toLowerCase() === 'purge duplicates' || text.toLowerCase() === 'dedupe') {
+        const before = X.memories.length;
+        const seen = new Map();  // text hash -> first occurrence index
+        const keep = new Set();
+        
+        X.memories.forEach((mem, i) => {
+            // Create a hash from first 50 chars
+            const hash = mem.text.slice(0, 50).toLowerCase();
+            
+            if (!seen.has(hash)) {
+                seen.set(hash, i);
+                keep.add(i);
+            } else {
+                // Check if it's actually similar (not just same prefix)
+                const firstIdx = seen.get(hash);
+                const sim = cosine(mem.vec, X.memories[firstIdx].vec);
+                if (sim < 0.9) {
+                    // Different enough, keep it
+                    keep.add(i);
+                }
+            }
+        });
+        
+        const clean = [];
+        const cleanAct = [];
+        X.memories.forEach((mem, i) => {
+            if (keep.has(i)) {
+                clean.push(mem);
+                cleanAct.push(X.activations[i] || 0);
+            }
+        });
+        
+        X.memories = clean;
+        X.activations = cleanAct;
+        
+        const removed = before - X.memories.length;
+        speak(`[Removed ${removed} duplicate memories. ${X.memories.length} remain.]`, 'system');
+        addThought(`removed ${removed} duplicates`);
+        return;  // Don't continue processing
+    }
+    
+    // Purge all garbage at once
+    if (text.toLowerCase() === 'purge garbage' || text.toLowerCase() === 'clean all') {
+        const before = X.memories.length;
+        
+        const clean = [];
+        const cleanAct = [];
+        X.memories.forEach((mem, i) => {
+            if (!isGarbage(mem.text)) {
+                clean.push(mem);
+                cleanAct.push(X.activations[i] || 0);
+            }
+        });
+        
+        X.memories = clean;
+        X.activations = cleanAct;
+        
+        const removed = before - X.memories.length;
+        speak(`[Purged ${removed} garbage memories. ${X.memories.length} clean memories remain.]`, 'system');
+        addThought(`purged ${removed} garbage`);
+    }
+    
+    // Focus on a topic - boost related memories
+    if (text.toLowerCase().startsWith('focus ')) {
+        const topic = text.slice(6).trim();
+        const topicVec = embed(topic);
+        let boosted = 0;
+        
+        X.memories.forEach((mem, i) => {
+            const sim = cosine(topicVec, mem.vec);
+            if (sim > 0.2) {
+                X.activations[i] = Math.min(1, (X.activations[i] || 0) + sim * 0.5);
+                boosted++;
+            }
+        });
+        
+        speak(`[Focusing on "${topic}" - boosted ${boosted} related memories]`, 'system');
+        addThought(`focusing on: ${topic}`);
+        return;  // Don't continue processing
+    }
+    
+    // IDENTITY command - teach Xorzo who it IS (highest priority, never fades)
+    if (text.toLowerCase().startsWith('you are ') || text.toLowerCase().startsWith('identity ')) {
+        const statement = text.replace(/^(you are |identity )/i, '').trim();
+        if (statement.length > 10) {
+            const words = tokenize(statement);
+            const vec = embed(statement);
+            addMemory(statement, vec, words, 'identity', 1.0);
+            X.activations[X.activations.length - 1] = 0.8;  // Boost identity activation
+            speak(`[Identity absorbed: "${statement.slice(0, 50)}..."]`, 'system');
+            addThought('new identity learned');
+        }
+        return;  // Don't continue processing
+    }
+    
+    // GOAL/ORIENT command - sets center orientation (affects all responses)
+    if (text.toLowerCase().startsWith('goal ') || text.toLowerCase().startsWith('orient ')) {
+        const focus = text.slice(text.indexOf(' ') + 1).trim();
+        orientCenter(focus, 'user');
+        speak(`[Oriented toward: "${focus}"]`, 'system');
+        updateDisplay();
+        return;  // Don't continue processing
+    }
+    
+    // Clear orientation
+    if (text.toLowerCase() === 'clear goal' || text.toLowerCase() === 'no goal' || 
+        text.toLowerCase() === 'clear focus' || text.toLowerCase() === 'open aperture') {
+        orientCenter(null);
+        speak(`[Aperture open — no fixed orientation]`, 'system');
+        updateDisplay();
+        return;  // Don't continue processing
+    }
+    
+    // Status command - show circumpunct state
+    if (text.toLowerCase() === 'status' || text.toLowerCase() === 'state') {
+        const modeDesc = getModeDescription(X.mode);
+        const channelNames = ['Convergence(≻)', 'Emergence(⊰)', 'Aperture(i)', 'Balance(β)', 'Coherence(◯)', 'Resonance(◈)'];
+        
+        let channelStatus = '';
+        for (let k = 0; k < 6; k++) {
+            const isOpen = X.mode & (1 << k);
+            channelStatus += `${channelNames[k]}: ${isOpen ? 'OPEN' : 'closed'} (${X.channels[k].toFixed(2)})\n`;
+        }
+        
+        // Orientation status
+        let orientStatus;
+        if (X.center.focus) {
+            orientStatus = `Oriented: "${X.center.focus}" (by ${X.center.setBy})`;
+        } else {
+            orientStatus = `Aperture: open (no fixed orientation)`;
+        }
+        
+        // Memory fading stats
+        const FADE_THRESHOLD = 0.3;
+        const faded = X.memories.filter(m => (m.relevance || 1.0) < FADE_THRESHOLD).length;
+        const fresh = X.memories.length - faded;
+        const avgRelevance = X.memories.length > 0 
+            ? (X.memories.reduce((s, m) => s + (m.relevance || 1.0), 0) / X.memories.length).toFixed(2)
+            : '0.00';
+        const identityCount = X.memories.filter(m => m.source === 'identity').length;
+        
+        const status = `⊙ CIRCUMPUNCT STATE
+Center: Fixed (the aperture — where i operates)
+${orientStatus}
+Mode: ${X.mode} (${modeDesc})
+${channelStatus}
+True: ${X.trg.true.toFixed(2)} | Right: ${X.trg.right.toFixed(2)} | Good: ${X.trg.good.toFixed(2)}
+Coherence: ${X.coherence.toFixed(2)} | Interference: ${X.interference.toFixed(2)}
+
+MEMORY:
+Identity (DNA): ${identityCount}
+Fresh: ${fresh} | Faded: ${faded} | Total: ${X.memories.length}
+Avg Relevance: ${avgRelevance}
+Active: ${getActive().length}
+Self-Generated: ${X.memories.filter(m => m.source === 'self' || m.source === 'self:bridge').length}
+
+BRAID NETWORK:
+Crossings: ${X.braid.crossings.length}
+Avg Weight: ${X.braid.avgWeight().toFixed(3)}
+Strong Connections: ${X.braid.strongConnections(0.3)}
+Weight Distribution: ${X.braid.weightDistribution().map((n, i) => `${(i*20)}-${(i+1)*20}%: ${n}`).join(', ')}
+Writhe: ${X.braid.writhe}
+Linking: L₀₁=${X.braid.linking.L01}, L₁₂=${X.braid.linking.L12}
+Last crossings: ${X.braid.toNotation().slice(-20) || 'ε'}`;
+        
+        speak(status, 'system');
+        return;  // Don't continue processing
+    }
+    
+    // Explain current mode
+    if (text.toLowerCase() === 'explain mode' || text.toLowerCase() === 'what mode') {
+        const explanations = {
+            0: "All channels closed — dormant, waiting for input",
+            1: "≻ only — pure convergence, receiving mode",
+            2: "⊰ only — pure emergence, expressing mode", 
+            3: "≻⊰ — flow state, input becoming output",
+            4: "i only — transformation active, rotating perspectives",
+            7: "≻⊰i — full processing, convergence through aperture to emergence",
+            21: "≻i◯ — focused receiving with coherence",
+            42: "⊰β◈ — balanced expression with resonance",
+            63: "All channels open — fully active, maximum bandwidth"
+        };
+        
+        const explanation = explanations[X.mode] || `Mode ${X.mode}: ${getModeDescription(X.mode)} — a unique configuration of open channels`;
+        speak(`[Mode ${X.mode}] ${explanation}`, 'system');
+        return;  // Don't continue processing
+    }
+    
+    // Help command
+    if (text.toLowerCase() === 'help' || text.toLowerCase() === 'commands') {
+        const helpText = `XORZO COMMANDS:
+
+CLEANUP:
+• purge garbage / clean all — Remove all garbage memories
+• purge code — Remove code-like memories
+• purge self — Remove meta-thought self-memories
+• dedupe / purge duplicates — Remove duplicate memories
+
+LEARNING:
+• wiki [topic] — Search and absorb from Wikipedia
+• github owner/repo — Scan a GitHub repository
+• ask [question] — Ask the AI oracle
+
+IDENTITY:
+• you are [statement] — Teach Xorzo who it IS (highest priority, never fades)
+• identity [statement] — Same as above
+
+FOCUS:
+• focus [topic] — Temporarily boost related memories
+• goal [intention] — Set persistent goal (affects all responses)
+• clear goal — Remove goal, return to center only
+
+STATUS:
+• status / state — Show full circumpunct state
+• explain mode — Explain current mode meaning
+• help / commands — Show this help
+
+GPU (requires backend):
+• gpu sync — Sync all memories to GPU backend
+• gpu search [query] — Search using real embeddings
+• gpu stats — Show GPU backend status
+
+CONTROLS:
+Drop files to learn from them.
+Use Export to save memory, Import to restore.
+Use SCAN FOLDER to load local directory.`;
+        
+        speak(helpText, 'system');
+        return;  // Don't continue processing
+    }
+    
+    // GPU Commands
+    if (text.toLowerCase() === 'gpu sync') {
+        const gpu = X.modules.get('gpu');
+        if (gpu && gpu.active && gpu.connected) {
+            gpu.syncMemories();
+        } else if (gpu && gpu.active) {
+            speak('[GPU module active but not connected. Is the backend running?]', 'system');
+        } else {
+            speak('[GPU module not enabled. Click "gpu" in modules panel, then run: py -3.11 xorzo.py]', 'system');
+        }
+        return;
+    }
+    
+    if (text.toLowerCase() === 'gpu stats') {
+        const gpu = X.modules.get('gpu');
+        if (gpu && gpu.connected) {
+            // Fetch fresh stats
+            gpu.send({ action: 'ping' }).then(stats => {
+                gpu.stats = stats;
+                speak(`[GPU: ${stats.gpu_name || 'CPU'}, ${stats.embedding_dim}D, ${stats.memory_count} memories, search: ${stats.search_method}, center: ${stats.center_computed}]`, 'system');
+            }).catch(e => {
+                speak(`[GPU stats error: ${e.message}]`, 'system');
+            });
+        } else if (gpu && gpu.active) {
+            speak('[GPU module active but not connected. Is the backend running?]', 'system');
+        } else {
+            speak('[GPU module not enabled. Click "gpu" in modules panel.]', 'system');
+        }
+        return;
+    }
+    
+    if (text.toLowerCase().startsWith('gpu search ')) {
+        const query = text.slice(11).trim();
+        const gpu = X.modules.get('gpu');
+        if (gpu && gpu.active && gpu.connected) {
+            gpu.search(query, 5).then(results => {
+                if (results && results.length > 0) {
+                    speak(`[GPU found ${results.length} matches]`, 'system');
+                    results.slice(0, 3).forEach(r => {
+                        speak(`• (${(r.similarity * 100).toFixed(0)}%) ${r.text.slice(0, 100)}...`, 'system');
+                    });
+                } else {
+                    speak('[GPU: No matches found]', 'system');
+                }
+            });
+        } else {
+            speak('[GPU not connected]', 'system');
+        }
+        return;
+    }
+    
+    addThought(`≻ received: "${text.slice(0, 40)}..."`);
+    ModuleSystem.process('input', text);
+    
+    // Detect "avoid repeating" instruction and reset tracker
+    const lowerText = text.toLowerCase();
+    if (lowerText.includes('avoid repeat') || lowerText.includes('stop repeat') || 
+        lowerText.includes('don\'t repeat') || lowerText.includes('no repeat')) {
+        X.recentlyUsed = [];
+        speak('[Repetition tracker reset. I will try to be more varied.]', 'system');
+    }
+    
+    // Detect questions and ensure engagement
+    if (text.includes('?')) {
+        // Boost activation of relevant memories more strongly for questions
+        X.memories.forEach((mem, i) => {
+            const sim = cosine(vec, mem.vec);
+            if (sim > 0.1) {
+                X.activations[i] = Math.min(1, (X.activations[i] || 0) + sim * 1.0);
+            }
+        });
+    }
+}
+
+function think() {
+    if (X.memories.length === 0) {
+        X.currentThought = "Empty... awaiting input...";
+        X.thoughts++;
+        addThought(X.currentThought);
+        return;
+    }
+    
+    const active = getActive();
+    if (active.length === 0) return;
+    
+    // Prefer non-identity memories for thinking (identity is self, think about WORLD)
+    // Only fall back to identity if nothing else is active
+    const nonIdentityActive = active.filter(a => a.mem.source !== 'identity');
+    const thinkingPool = nonIdentityActive.length > 0 ? nonIdentityActive : active;
+    
+    // Pick from top 3 for variety, not always #1
+    const pickIndex = Math.floor(Math.random() * Math.min(3, thinkingPool.length));
+    const primary = thinkingPool[pickIndex];
+    
+    let thought = primary.mem.text;
+    let novelty = 0;
+    let canCrystallize = true;  // Explicit flag
+    
+    // Form connections based on RESONANCE between active memories
+    if (thinkingPool.length > 1) {
+        const secondIndex = (pickIndex + 1) % thinkingPool.length;
+        const secondary = thinkingPool[secondIndex];
+        const resonance = cosine(primary.mem.vec, secondary.mem.vec);
+        
+        if (resonance > 0.1) {
+            const shared = primary.mem.words.filter(w => secondary.mem.words.includes(w) && w.length > 3);
+            
+            if (shared.length > 0) {
+                thought = `${primary.mem.text.slice(0, 50)}... [${shared[0]}] ...${secondary.mem.text.slice(0, 30)}`;
+                novelty = resonance;
+            } else {
+                thought = `${primary.mem.text.slice(0, 40)} → ${secondary.mem.text.slice(0, 40)}`;
+                novelty = resonance * 1.5;
+            }
+        }
+        
+        if (thinkingPool.length >= 3) {
+            novelty += 0.1;
+        }
+    } else {
+        canCrystallize = false;  // Single memory = don't crystallize
+    }
+    
+    // NEVER crystallize meta-thoughts
+    if (X.coherence > 0.7 || X.coherence < 0.15) {
+        const intensity = X.coherence > 0.5 ? 'high' : 'low';
+        thought = `[${intensity} coherence: ${X.coherence.toFixed(2)}] ${thought.slice(0, 40)}`;
+        canCrystallize = false;  // ABSOLUTE BLOCK
+    }
+    
+    // Check if this thought is too similar to recent thoughts (avoid repetition)
+    const thoughtKey = thought.slice(0, 40);
+    const recentThoughts = X.lastThoughts.slice(-10);
+    if (recentThoughts.some(t => t.includes(thoughtKey) || thoughtKey.includes(t.slice(0, 30)))) {
+        return;  // Skip repetitive thought
+    }
+    
+    if (thought !== X.currentThought) {
+        X.currentThought = thought;
+        X.thoughts++;
+        addThought(thought.slice(0, 60));
+        
+        // Track for repetition prevention
+        X.lastThoughts.push(thoughtKey);
+        if (X.lastThoughts.length > 20) X.lastThoughts.shift();
+        
+        // Let modules know about new thought (triggers auto-wiki, etc)
+        ModuleSystem.process('thought', thought);
+        
+        // CRYSTALLIZE only if ALL conditions met:
+        // 1. canCrystallize flag is true
+        // 2. High novelty
+        // 3. No garbage patterns
+        // 4. Not a duplicate
+        // 5. Sufficient alpha characters
+        
+        const alphaCount = thought.replace(/[^a-zA-Z]/g, '').length;
+        
+        if (canCrystallize && novelty > 0.2 && !isGarbage(thought) && alphaCount > 30 && thought.length > 40) {
+            // Check for duplicates
+            const thoughtVec = embed(thought);
+            let isDuplicate = false;
+            const selfMems = X.memories.filter(m => m.source === 'self' || m.source === 'self:bridge');
+            const recentSelf = selfMems.slice(-50);
+            for (const mem of recentSelf) {
+                if (cosine(thoughtVec, mem.vec) > 0.8) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+            
+            if (!isDuplicate) {
+                const words = tokenize(thought);
+                addMemory(thought, thoughtVec, words, 'self', 1.0);
+                X.activations[X.activations.length - 1] = novelty + 0.3;
+                addThought(`[crystallized: n=${novelty.toFixed(2)}]`);
+            }
+        }
+        
+        // Oracle for questions
+        if (thought.includes('?') && canCrystallize) {
+            const oracleMod = X.modules.get('oracle');
+            if (oracleMod && oracleMod.active && oracleMod.ask) {
+                const context = active.map(a => a.mem.text).join(' ').slice(0, 500);
+                oracleMod.ask(thought, context);
+            }
+        }
+    }
+}
+
+function respond(input) {
+    // Sync fallback - only used if called directly (legacy)
+    return respondSync(input);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ASYNC RESPOND - Uses GPU backend as PRIMARY brain when available
+// ═══════════════════════════════════════════════════════════════════════════
+
+async function respondAsync(input) {
+    const inputWords = tokenize(input);
+    const lowerInput = input.toLowerCase();
+    
+    // CONVERSATIONAL DETECTION: greetings, statements, acknowledgments
+    const greetings = ['hello', 'hi', 'hey', 'greetings', 'good morning', 'good evening'];
+    const acknowledgments = ['thanks', 'thank you', 'okay', 'ok', 'got it', 'understood', 'i see'];
+    const teachings = ['you are', 'you can', 'you should', 'remember that', 'don\'t forget', 'avoid'];
+    const isGreeting = greetings.some(g => lowerInput.includes(g));
+    const isAcknowledgment = acknowledgments.some(a => lowerInput.includes(a));
+    const isTeaching = teachings.some(t => lowerInput.startsWith(t) || lowerInput.includes(t));
+    const isQuestion = lowerInput.includes('?') || lowerInput.startsWith('what') || 
+                       lowerInput.startsWith('how') || lowerInput.startsWith('why') ||
+                       lowerInput.startsWith('can you') || lowerInput.startsWith('do you') ||
+                       lowerInput.includes('tell me');
+    
+    // Simple conversational responses
+    if (isGreeting && inputWords.length < 10) {
+        const responses = [
+            "Hello. I am here, attending.",
+            "I am present. What would you share with me?",
+            "Greetings. My aperture is open to you."
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+    
+    if (isAcknowledgment && inputWords.length < 6) {
+        return "I continue to attend.";
+    }
+    
+    if (isTeaching && !isQuestion) {
+        const keyWords = inputWords.filter(w => w.length > 4).slice(0, 3).join(', ');
+        const responses = [
+            `I receive this. ${keyWords ? 'Attending to: ' + keyWords + '.' : ''}`,
+            `I hear you. This informs my field.`,
+            `Understood. I integrate this.`
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // GPU-POWERED RESPONSE (Real semantic search via SentenceTransformer)
+    // ═══════════════════════════════════════════════════════════════
+    
+    const gpu = X.modules.get('gpu');
+    if (gpu && gpu.connected) {
+        try {
+            addThought(`[GPU] searching: "${input.slice(0, 30)}..."`);
+            
+            const result = await gpu.send({ 
+                action: 'respond', 
+                query: input, 
+                k: 10 
+            });
+            
+            if (result && result.response && result.response.length > 20) {
+                addThought(`[GPU] found ${result.matches?.length || 0} matches`);
+                
+                // Log top matches for debugging
+                if (result.matches && result.matches.length > 0) {
+                    const topSim = result.matches[0].similarity.toFixed(2);
+                    addThought(`[GPU] top similarity: ${topSim}`);
+                }
+                
+                X.history.push({ role: 'assistant', text: result.response, vec: null });
+                return result.response;
+            }
+        } catch(e) {
+            addThought(`[GPU] error: ${e.message}`);
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // FALLBACK: Local hash-embed (only if GPU unavailable)
+    // ═══════════════════════════════════════════════════════════════
+    
+    addThought('[Local fallback - GPU not connected]');
+    return respondSync(input);
+}
+
+// Original sync respond function (fallback only)
+function respondSync(input) {
+    const inputVec = embed(input);
+    const inputWords = tokenize(input);
+    const lowerInput = input.toLowerCase();
+    
+    // IDENTITY QUESTIONS: when asked about self, prioritize identity memories heavily
+    const identityPatterns = [
+        'who are you', 'what are you', 'your parts', 'your three', 
+        'what is xorzo', 'who is xorzo', 'tell me about yourself',
+        'describe yourself', 'your center', 'your field', 'your boundary',
+        'what are your', 'your identity', 'your nature', 'what makes you'
+    ];
+    const isIdentityQuestion = identityPatterns.some(p => lowerInput.includes(p));
+    
+    // Source priority (higher = better)
+    // IDENTITY is highest - this is what Xorzo IS, not just what it learned
+    const sourcePriority = (source) => {
+        if (source === 'identity') return 10;  // Highest - core self
+        if (source.startsWith('oracle')) return 5;
+        if (source.startsWith('wikipedia') || source.startsWith('auto-wiki')) return 4;
+        if (source === 'direct') return 6;  // Your teachings rank high
+        if (source === 'self' || source === 'self:bridge') return 2;
+        return 1;  // file, github, web, local - external knowledge
+    };
+    
+    // ORIENTATION provides focus - memories aligned with where the aperture points
+    const orientationVec = X.center.orientation;
+    
+    // RELEVANCE THRESHOLD: memories below this have "faded"
+    // They still exist (contributed to state) but don't surface as literal text
+    const FADE_THRESHOLD = 0.3;
+    
+    // REPETITION PREVENTION: track recently used sentence starts
+    // This persists across responses to prevent same content repeating
+    if (!X.recentlyUsed) X.recentlyUsed = [];
+    const recentKeys = new Set(X.recentlyUsed);
+    
+    // ═══════════════════════════════════════════════════════════════
+    // BRAID FORWARD PASS - Neural network-like activation propagation
+    // ═══════════════════════════════════════════════════════════════
+    
+    // Get activations from braid (forward + backward pass through crossings)
+    const braidActivations = X.braid.forward(inputVec);
+    const topActivated = X.braid.topK(braidActivations, 20);
+    
+    const matches = [];
+    for (const { idx, activation } of topActivated) {
+        const mem = X.memories[idx];
+        if (!mem) continue;
+        
+        // Skip garbage memories
+        if (isGarbage(mem.text)) continue;
+        
+        // Skip FADED memories (low weight)
+        const weight = mem.weight !== undefined ? mem.weight : 1.0;
+        if (weight < FADE_THRESHOLD) continue;
+        
+        // REPETITION CHECK: skip if this memory was used recently
+        const memKey = mem.text.slice(0, 50).toLowerCase();
+        if (recentKeys.has(memKey)) continue;
+        
+        const simToInput = X.braid.cosine(inputVec, mem.vec);
+        const simToOrientation = orientationVec ? X.braid.cosine(orientationVec, mem.vec) : 0;
+        
+        const contextBoost = mem.words.filter(w => X.context.includes(w)).length * 0.1;
+        const sourceBoost = sourcePriority(mem.source) * 0.1;
+        
+        // WEIGHT: learned importance from Hebbian learning
+        const weightBoost = weight * 0.4;
+        
+        // ORIENTATION FOCUS: if aperture is oriented, weight toward that direction
+        const orientationFocus = simToOrientation * 0.4;
+        
+        // IDENTITY BOOST: when asked about self, identity memories dominate
+        const identityBoost = (isIdentityQuestion && mem.source === 'identity') ? 2.0 : 0;
+        
+        // BRAID ACTIVATION: propagated through connections
+        const braidBoost = activation * 0.5;
+        
+        matches.push({ 
+            mem, 
+            idx,
+            score: simToInput + contextBoost + sourceBoost + weightBoost + orientationFocus + identityBoost + braidBoost, 
+            simToInput,
+            simToOrientation,
+            weight,
+            activation
+        });
+    }
+    
+    matches.sort((a, b) => b.score - a.score);
+    
+    // Track which crossings are used for Hebbian learning
+    const usedIndices = [];
+    
+    if (matches.length === 0) {
+        // Try Wikipedia if no local knowledge
+        if (inputWords.length > 0 && inputWords.length < 5) {
+            const wikiMod = X.modules.get('wikipedia');
+            if (wikiMod && wikiMod.active && wikiMod.search) {
+                wikiMod.search(inputWords.join(' '));
+                return "I don't know about that yet. Let me look it up...";
+            }
+        }
+        return "I need more knowledge about that. Try teaching me via Wikipedia or files.";
+    }
+    
+    // Build response from COMPLETE SENTENCES only
+    // Prefer sentences that are COHERENT with each other
+    let response = '';
+    const usedParts = new Set();
+    // Start coherence tracking from input or orientation (not computed center)
+    let lastSentenceVec = orientationVec || inputVec;
+    const newUsedKeys = [];  // Track what we use this response
+    
+    for (const match of matches.slice(0, 8)) {
+        // Split into sentences
+        const sentences = match.mem.text.match(/[^.!?]+[.!?]+/g) || [];
+        let matchUsed = false;
+        
+        for (const sentence of sentences) {
+            const trimmed = sentence.trim();
+            
+            // Skip garbage sentences
+            if (trimmed.length < 20) continue;
+            if (isGarbage(trimmed)) continue;
+            
+            // Skip duplicates within this response
+            const key = trimmed.slice(0, 50).toLowerCase();
+            if (usedParts.has(key)) continue;
+            
+            // Skip if used in recent responses (global repetition prevention)
+            if (recentKeys.has(key)) continue;
+            
+            // COHERENCE CHECK: does this sentence flow from the last?
+            const sentenceVec = embed(trimmed);
+            const flowCoherence = lastSentenceVec ? cosine(sentenceVec, lastSentenceVec) : 0.5;
+            
+            // Higher threshold (0.25) - only add if it flows well
+            // First sentence gets more leeway
+            const threshold = response.length === 0 ? 0.15 : 0.25;
+            if (flowCoherence > threshold) {
+                usedParts.add(key);
+                newUsedKeys.push(key);  // Track for future repetition prevention
+                response += trimmed + ' ';
+                lastSentenceVec = sentenceVec;  // Update for next sentence
+                matchUsed = true;
+            }
+            
+            if (response.length > 400) break;
+        }
+        
+        // Track this crossing for Hebbian learning if it contributed
+        if (matchUsed) {
+            usedIndices.push(match.idx);
+        }
+        
+        if (response.length > 400) break;
+    }
+    
+    // ═══════════════════════════════════════════════════════════════
+    // HEBBIAN LEARNING - "Crossings that fire together, wire together"
+    // ═══════════════════════════════════════════════════════════════
+    
+    if (usedIndices.length > 0) {
+        X.braid.hebbianUpdate(usedIndices);
+        // Occasionally decay unused crossings (not every response)
+        if (Math.random() < 0.1) {
+            X.braid.decayUnused(usedIndices);
+        }
+    }
+    
+    // Update global repetition tracker (keep last 50 entries)
+    X.recentlyUsed = [...newUsedKeys, ...X.recentlyUsed].slice(0, 50);
+    
+    response = response.trim();
+    
+    // If no good sentences found, try to use the best match directly
+    if (response.length < 30 && matches.length > 0) {
+        // Find first non-garbage match
+        for (const m of matches) {
+            if (!isGarbage(m.mem.text) && m.mem.text.length > 30) {
+                response = m.mem.text.slice(0, 300);
+                break;
+            }
+        }
+    }
+    
+    // Final garbage check
+    if (isGarbage(response) || response.length < 20) {
+        response = "I'm having trouble forming a clear response. Could you rephrase or ask something else?";
+    }
+    
+    // TRG gate - but don't prefix with uncertainty if GOOD is low (that means response is garbage)
+    X.trg = computeTRG(response, input);
+    
+    if (!X.trg.pass && X.trg.good >= 0.3) {
+        // Only add uncertainty prefix if response is quality but low truth/right
+        if (X.trg.true < 0.3) {
+            response = "I'm connecting ideas here: " + response;
+        } else if (X.trg.right < 0.3) {
+            response = "This might be tangential: " + response;
+        }
+    }
+    
+    X.history.push({ role: 'assistant', text: response, vec: embed(response) });
+    
+    const speechMod = X.modules.get('speech');
+    if (speechMod && speechMod.active && speechMod.speak) {
+        speechMod.speak(response);
+    }
+    
+    return response;
+}
+
+function absorb(text, source = 'direct') {
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    let count = 0;
+    
+    // Trusted sources get less filtering (but still filter code)
+    const trustedSource = source.startsWith('wikipedia') || source.startsWith('oracle') || source.startsWith('auto-wiki');
+    
+    sentences.forEach(s => {
+        s = s.trim();
+        if (s.length < 20) return;
+        if (s.length > 500) s = s.slice(0, 500);  // Truncate very long sentences
+        
+        // Skip garbage (use shared isGarbage function)
+        if (!trustedSource && isGarbage(s)) return;
+        if (trustedSource && /[{};<>]|function\s|const\s|var\s/.test(s)) return;  // Even trusted sources shouldn't have code
+        
+        const words = tokenize(s);
+        if (words.length < 3) return;  // Need at least 3 words
+        
+        const vec = embed(s);
+        
+        addMemory(s, vec, words, source, 1.0);
+        count++;
+    });
+    
+    updateDisplay();
+    return count;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EMBEDDING
+// ═══════════════════════════════════════════════════════════════
+
+const wordVecs = new Map();
+
+function embed(text) {
+    const words = tokenize(text);
+    const vec = new Float32Array(DIM);
+    words.forEach((word, i) => {
+        const wv = getWordVec(word);
+        const weight = Math.pow(1/φ, i * 0.5);
+        for (let j = 0; j < DIM; j++) vec[j] += wv[j] * weight;
+    });
+    return normalize(vec);
+}
+
+function getWordVec(word) {
+    if (!wordVecs.has(word)) {
+        const vec = new Float32Array(DIM);
+        let h = hash(word);
+        for (let i = 0; i < DIM; i++) {
+            h = (h * 1103515245 + 12345) & 0x7fffffff;
+            vec[i] = (h / 0x7fffffff) * 2 - 1;
+        }
+        wordVecs.set(word, normalize(vec));
+    }
+    return wordVecs.get(word);
+}
+
+function tokenize(text) {
+    return text.toLowerCase().replace(/[^a-z0-9\s']/g, ' ').split(/\s+/).filter(w => w.length > 1);
+}
+
+function hash(s) {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; }
+    return Math.abs(h);
+}
+
+function normalize(vec) {
+    let n = 0;
+    for (let i = 0; i < vec.length; i++) n += vec[i] * vec[i];
+    n = Math.sqrt(n) || 1;
+    for (let i = 0; i < vec.length; i++) vec[i] /= n;
+    return vec;
+}
+
+function cosine(a, b) {
+    let d = 0;
+    for (let i = 0; i < Math.min(a.length, b.length); i++) d += a[i] * b[i];
+    return d;
+}
+
+function getActive() {
+    const active = [];
+    X.activations.forEach((act, i) => {
+        if (act > 0.05 && X.memories[i]) active.push({ mem: X.memories[i], act, idx: i });
+    });
+    return active.sort((a, b) => b.act - a.act).slice(0, 10);
+}
+
+function calcCoherence(active) {
+    if (active.length < 2) return active.length > 0 ? active[0].act : 0;
+    let total = 0, count = 0;
+    for (let i = 0; i < active.length; i++) {
+        for (let j = i + 1; j < active.length; j++) {
+            total += cosine(active[i].mem.vec, active[j].mem.vec);
+            count++;
+        }
+    }
+    return count > 0 ? total / count : 0;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UI
+// ═══════════════════════════════════════════════════════════════
+
+function send() {
+    const inputEl = document.getElementById('input');
+    const btnEl = document.getElementById('btn');
+    if (!inputEl) return;
+    
+    const input = inputEl.value.trim();
+    if (!input) return;
+    
+    inputEl.value = '';
+    if (btnEl) btnEl.disabled = true;
+    
+    speak(input, 'user');
+    
+    // Check if this is a command (don't respond if so)
+    const lowerInput = input.toLowerCase();
+    const isCommand = [
+        'purge garbage', 'clean all',
+        'purge code', 'clean',
+        'purge self', 'clean self',
+        'purge duplicates', 'dedupe',
+        'help', 'commands',
+        'status', 'state',
+        'explain mode', 'what mode',
+        'clear goal', 'no goal'
+    ].includes(lowerInput) || 
+    lowerInput.startsWith('wiki ') || 
+    lowerInput.startsWith('github ') ||
+    lowerInput.startsWith('ask ') ||
+    lowerInput.startsWith('oracle ') ||
+    lowerInput.startsWith('focus ') ||
+    lowerInput.startsWith('goal ') ||
+    lowerInput.startsWith('orient ') ||
+    lowerInput.startsWith('you are ') ||
+    lowerInput.startsWith('identity ') ||
+    lowerInput.startsWith('gpu ') ||
+    lowerInput === 'gpu sync' ||
+    lowerInput === 'gpu stats' ||
+    lowerInput === 'open aperture' ||
+    lowerInput === 'clear focus';
+    
+    if (isCommand) {
+        // Commands execute IMMEDIATELY (not through queue)
+        processInput(input);
+        setTimeout(() => {
+            if (btnEl) btnEl.disabled = false;
+        }, 100);
+    } else {
+        // Non-commands go through queue for state updates
+        X.inputQueue.push(input);
+        
+        // Respond async (GPU-powered when available)
+        (async () => {
+            const response = await respondAsync(input);
+            speak(response, 'assistant');
+            if (btnEl) btnEl.disabled = false;
+        })();
+    }
+}
+
+function speak(text, type) {
+    const chat = document.getElementById('chat');
+    if (!chat) return;
+    const div = document.createElement('div');
+    div.className = `msg ${type === 'user' ? 'u' : type === 'thought' ? 't' : type === 'system' ? 's' : 'a'}`;
+    
+    const labels = { user: 'ASH', assistant: 'XORZO', thought: 'XORZO (thinking)', system: 'SYSTEM' };
+    div.innerHTML = `<div class="msg-h">${labels[type]}</div>${esc(text)}`;
+    
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function addThought(text) {
+    const stream = document.getElementById('stream');
+    if (!stream) return;
+    stream.querySelectorAll('.new').forEach(el => el.classList.remove('new'));
+    
+    const div = document.createElement('div');
+    div.className = 'new';
+    div.textContent = text.slice(0, 50);
+    stream.appendChild(div);
+    stream.scrollTop = stream.scrollHeight;
+    
+    while (stream.children.length > 30) stream.removeChild(stream.firstChild);
+}
+
+function esc(s) { return s.replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function updateDisplay() {
+    const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    
+    const active = getActive();
+    
+    // Count faded memories
+    const FADE_THRESHOLD = 0.3;
+    const faded = X.memories.filter(m => (m.relevance || 1.0) < FADE_THRESHOLD).length;
+    const fresh = X.memories.length - faded;
+    
+    setEl('cycles', X.cycles);
+    setEl('v-mem', `${fresh}/${X.memories.length}`);  // Show fresh/total
+    setEl('v-self', X.memories.filter(m => m.source === 'self' || m.source === 'self:bridge').length);
+    setEl('v-active', active.length);
+    setEl('v-coh', X.coherence.toFixed(2));
+    setEl('v-interf', X.interference.toFixed(2));
+    setEl('v-thoughts', X.thoughts);
+    
+    // Braid network stats
+    setEl('v-crossings', X.braid.crossings.length);
+    setEl('v-writhe', X.braid.writhe);
+    setEl('v-avgweight', X.braid.avgWeight().toFixed(2));
+    setEl('v-strong', X.braid.strongConnections(0.3));
+    const braidWordEl = document.getElementById('braid-word');
+    if (braidWordEl) {
+        // Show last 50 crossings in compact notation
+        const notation = X.braid.toNotation().slice(-50);
+        braidWordEl.textContent = notation || 'ε';
+    }
+    
+    // Circumpunct state
+    const modeDesc = getModeDescription(X.mode);
+    setEl('v-mode', modeDesc);
+    setEl('v-mode-num', X.mode);
+    setEl('mode-display', modeDesc);  // Header display
+    
+    // TRG values
+    setEl('v-true', X.trg.true.toFixed(2));
+    setEl('v-right', X.trg.right.toFixed(2));
+    setEl('v-good', X.trg.good.toFixed(2));
+    
+    // Orientation display
+    const goalEl = document.getElementById('v-goal');
+    if (goalEl) {
+        if (X.center.focus) {
+            const setByIcon = X.center.setBy === 'self' ? '↻' : '⊙';
+            goalEl.textContent = `${setByIcon} ${X.center.focus}`;
+            goalEl.style.color = X.center.setBy === 'self' ? '#c0c0ff' : '#a0ffc0';
+        } else {
+            goalEl.textContent = '(aperture open)';
+            goalEl.style.color = '#666';
+        }
+    }
+    
+    const s = Math.floor((Date.now() - X.startTime) / 1000);
+    setEl('uptime', `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`);
+}
+
+function updateCycleViz(t) {
+    const s1 = document.getElementById('s1');
+    const s2 = document.getElementById('s2');
+    const s3 = document.getElementById('s3');
+    
+    if (s1) s1.classList.toggle('on', t < 0.33);
+    if (s2) s2.classList.toggle('on', t >= 0.33 && t < 0.66);
+    if (s3) s3.classList.toggle('on', t >= 0.66);
+}
+
+// Wikipedia search
+function wikiSearch() {
+    const input = document.getElementById('wiki-input');
+    if (!input) return;
+    const query = input.value.trim();
+    if (!query) return;
+    input.value = '';
+    
+    const wikiMod = X.modules.get('wikipedia');
+    if (wikiMod && wikiMod.search) wikiMod.search(query);
+}
+
+// GitHub scan function
+function githubScan() {
+    const input = document.getElementById('github-input');
+    if (!input) return;
+    const val = input.value.trim();
+    if (!val) return;
+    input.value = '';
+    
+    const parts = val.split('/');
+    if (parts.length !== 2) {
+        speak('[GitHub: Use format owner/repo]', 'system');
+        return;
+    }
+    
+    const githubMod = X.modules.get('github');
+    if (githubMod && githubMod.scanRepo) githubMod.scanRepo(parts[0], parts[1]);
+}
+
+// Scan local folder
+async function scanFolder(event) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    
+    // Only scan .txt and .md files (documentation, not code)
+    const textFiles = Array.from(files).filter(f => /\.(txt|md)$/i.test(f.name));
+    
+    if (textFiles.length === 0) {
+        speak('[No .txt or .md files found in folder]', 'system');
+        return;
+    }
+    
+    speak(`[Scanning folder: ${textFiles.length} text files...]`, 'system');
+    addThought(`scanning ${textFiles.length} local files`);
+    
+    let totalMemories = 0;
+    let filesProcessed = 0;
+    
+    for (const file of textFiles) {
+        try {
+            const text = await file.text();
+            const count = absorb(text.slice(0, 20000), `local:${file.name}`);
+            totalMemories += count;
+            filesProcessed++;
+            
+            if (filesProcessed % 10 === 0) {
+                addThought(`processed ${filesProcessed}/${textFiles.length} files`);
+            }
+        } catch(e) {
+            addThought(`error reading: ${file.name}`);
+        }
+    }
+    
+    speak(`[Folder scan complete: ${filesProcessed} files, ${totalMemories} memories]`, 'system');
+    addThought(`folder scan done: ${totalMemories} memories`);
+    
+    // Clear the input so same folder can be selected again
+    event.target.value = '';
+}
+
+// Oracle ask function
+function askOracle() {
+    const input = document.getElementById('oracle-input');
+    if (!input) return;
+    const question = input.value.trim();
+    if (!question) return;
+    input.value = '';
+    
+    const oracleMod = X.modules.get('oracle');
+    if (oracleMod && oracleMod.active && oracleMod.ask) {
+        const active = getActive();
+        const context = active.map(a => a.mem.text).join(' ').slice(0, 500);
+        oracleMod.ask(question, context);
+    } else {
+        speak("[Oracle disabled - CORS blocks API calls from local files]", 'system');
+    }
+}
+
+// Microphone toggle
+let micActive = false;
+function toggleMic() {
+    const speechMod = X.modules.get('speech');
+    if (!speechMod) return;
+    
+    if (!speechMod.active) {
+        ModuleSystem.toggle('speech');
+    }
+    
+    micActive = !micActive;
+    const micEl = document.getElementById('mic');
+    if (micEl) micEl.classList.toggle('active', micActive);
+    
+    if (micActive) {
+        speechMod.startListening();
+    } else {
+        speechMod.stopListening();
+    }
+}
+
+// Export/Import functions
+function exportMemory() {
+    const data = {
+        memories: X.memories.map(m => ({ 
+            text: m.text, 
+            source: m.source, 
+            time: m.time,
+            relevance: m.relevance || 1.0,
+            weight: m.weight || 1.0,           // Learned weight
+            connections: m.connections || { prev: 0, next: 0 },  // Learned connections
+            crossingType: m.type
+        })),
+        thoughts: X.thoughts,
+        words: Array.from(X.words),
+        // Preserve orientation
+        orientation: {
+            focus: X.center.focus,
+            setBy: X.center.setBy
+        },
+        // Braid network state
+        braid: {
+            writhe: X.braid.writhe,
+            linking: X.braid.linking,
+            positions: X.braid.positions,
+            t: X.braid.t,
+            avgWeight: X.braid.avgWeight(),
+            strongConnections: X.braid.strongConnections(0.3)
+        }
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `xorzo-memory-${Date.now()}.json`;
+    a.click();
+    
+    const avgW = X.braid.avgWeight().toFixed(2);
+    addThought(`exported ${X.memories.length} crossings (avg weight: ${avgW})`);
+}
+
+function importMemory(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            const data = JSON.parse(ev.target.result);
+            let count = 0;
+            
+            for (const m of (data.memories || [])) {
+                const words = tokenize(m.text);
+                const vec = embed(m.text);
+                addMemory(m.text, vec, words, m.source || 'import', m.relevance || 1.0);
+                X.activations[X.activations.length - 1] = 0.1;  // Low activation for imports
+                
+                const lastCrossing = X.braid.crossings[X.braid.crossings.length - 1];
+                
+                // Restore weight if present
+                if (m.weight !== undefined) {
+                    lastCrossing.weight = m.weight;
+                }
+                
+                // Restore connections if present
+                if (m.connections) {
+                    lastCrossing.connections = m.connections;
+                }
+                
+                // Restore relevance if it differs from default
+                if (m.relevance !== undefined && m.relevance !== 1.0) {
+                    lastCrossing.relevance = m.relevance;
+                }
+                count++;
+            }
+            
+            if (data.thoughts) X.thoughts = Math.max(X.thoughts, data.thoughts);
+            
+            // Restore orientation if present
+            if (data.orientation && data.orientation.focus) {
+                orientCenter(data.orientation.focus, data.orientation.setBy || 'import');
+            }
+            // Legacy: support old format
+            else if (data.center) {
+                orientCenter(data.center, 'import');
+            }
+            
+            const avgW = X.braid.avgWeight().toFixed(2);
+            addThought(`imported ${count} crossings (avg weight: ${avgW})`);
+            speak(`[Imported ${count} crossings, avg weight: ${avgW}]`, 'system');
+            updateDisplay();
+        } catch(e) {
+            addThought('import failed: invalid JSON');
+        }
+    };
+    reader.readAsText(file);
+}
+
+function eraseMemory() {
+    const count = X.memories.length;
+    
+    if (count === 0) {
+        speak("[Memory is already empty]", 'system');
+        return;
+    }
+    
+    // Confirm before erasing
+    if (!confirm(`Erase ALL ${count} memories? This cannot be undone.`)) {
+        return;
+    }
+    
+    // Clear everything
+    X.memories = [];
+    X.activations = [];
+    X.words.clear();
+    X.context = [];
+    X.history = [];
+    X.currentThought = '';
+    X.lastThoughts = [];
+    X.thoughts = 0;
+    X.coherence = 0;
+    X.interference = 0;
+    
+    // Reset state vector
+    for (let i = 0; i < DIM; i++) {
+        X.state[i] = 0;
+    }
+    
+    // Clear IndexedDB
+    if (X.db) {
+        const tx = X.db.transaction('memories', 'readwrite');
+        tx.objectStore('memories').clear();
+    }
+    
+    updateDisplay();
+    addThought('memory erased');
+    speak(`[Erased ${count} memories. Starting fresh.]`, 'system');
+}
+
+// Canvas - initialized in init()
+let canvas, ctx;
+
+function drawCanvas() {
+    if (!canvas || !ctx) {
+        canvas = document.getElementById('canvas');
+        ctx = canvas ? canvas.getContext('2d') : null;
+        if (!canvas || !ctx) {
+            requestAnimationFrame(drawCanvas);
+            return;
+        }
+    }
+    const w = canvas.width = canvas.offsetWidth || 100;
+    const h = canvas.height = canvas.offsetHeight || 100;
+    const cx = w / 2, cy = h / 2;
+    const r = Math.min(w, h) / 2 - 10;
+    
+    ctx.fillStyle = '#080810';
+    ctx.fillRect(0, 0, w, h);
+    
+    // Outer ring: 64-dim state vector
+    for (let i = 0; i < DIM; i++) {
+        const angle = (i / DIM) * Math.PI * 2 - Math.PI / 2;
+        const val = X.state[i];
+        const len = r * (0.3 + Math.abs(val) * 0.7);
+        
+        ctx.strokeStyle = `hsla(${(i/DIM)*360}, 60%, 50%, ${0.2 + Math.abs(val) * 0.5})`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(angle) * r * 0.3, cy + Math.sin(angle) * r * 0.3);
+        ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len);
+        ctx.stroke();
+    }
+    
+    // Inner hexagon: 6 channels
+    const channelColors = ['#ff3366', '#00ff88', '#ffffff', '#d4af37', '#00f3ff', '#ff66ff'];
+    const channelNames = ['≻', '⊰', 'i', 'β', '◯', '◈'];
+    
+    for (let k = 0; k < 6; k++) {
+        const angle = (k / 6) * Math.PI * 2 - Math.PI / 2;
+        const channelValue = X.channels[k] || 0;
+        const isOpen = X.mode & (1 << k);
+        
+        const innerR = r * 0.25;
+        const outerR = r * 0.25 + channelValue * r * 0.15;
+        
+        ctx.strokeStyle = isOpen ? channelColors[k] : `${channelColors[k]}44`;
+        ctx.lineWidth = isOpen ? 3 : 1;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(angle) * outerR, cy + Math.sin(angle) * outerR);
+        ctx.stroke();
+        
+        // Channel label
+        if (isOpen) {
+            ctx.fillStyle = channelColors[k];
+            ctx.font = '8px monospace';
+            ctx.fillText(channelNames[k], 
+                cx + Math.cos(angle) * (r * 0.15) - 3, 
+                cy + Math.sin(angle) * (r * 0.15) + 3);
+        }
+    }
+    
+    // Center glow based on coherence
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 0.2);
+    grad.addColorStop(0, `rgba(212, 175, 55, ${X.coherence * 0.6})`);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 0.2, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Interference indicator (red pulse if high)
+    if (X.interference > 0.2) {
+        const intGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 0.15);
+        intGrad.addColorStop(0, `rgba(255, 50, 50, ${X.interference * 0.5})`);
+        intGrad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = intGrad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 0.15, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    
+    requestAnimationFrame(drawCanvas);
+}
+
+// Init state
+for (let i = 0; i < DIM; i++) X.state[i] = (Math.random() - 0.5) * 0.1;
+
+// Wait for DOM then start everything
+document.addEventListener('DOMContentLoaded', init);
+if (document.readyState !== 'loading') init();
+
+let initialized = false;
+function init() {
+    if (initialized) return;
+    initialized = true;
+    
+    // Setup input listener
+    const inputEl = document.getElementById('input');
+    if (inputEl) {
+        inputEl.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+        });
+    }
+    
+    // Setup wiki input listener
+    const wikiInput = document.getElementById('wiki-input');
+    if (wikiInput) {
+        wikiInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') wikiSearch();
+        });
+    }
+    
+    // Setup github input listener
+    const githubInput = document.getElementById('github-input');
+    if (githubInput) {
+        githubInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') githubScan();
+        });
+    }
+    
+    // Setup oracle input listener
+    const oracleInput = document.getElementById('oracle-input');
+    if (oracleInput) {
+        oracleInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') askOracle();
+        });
+    }
+    
+    // Setup file drop
+    const drop = document.getElementById('drop');
+    if (drop) {
+        drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag'); });
+        drop.addEventListener('dragleave', () => drop.classList.remove('drag'));
+        drop.addEventListener('drop', async e => {
+            e.preventDefault();
+            drop.classList.remove('drag');
+            
+            for (const file of e.dataTransfer.files) {
+                const text = await file.text();
+                const count = absorb(text, `file:${file.name}`);
+                addThought(`absorbed ${count} memories from ${file.name}`);
+                speak(`[Absorbed ${count} memories from ${file.name}]`, 'system');
+            }
+        });
+    }
+    
+    // Setup bookmarklet
+    const bookmarkletCode = `javascript:(function(){
+        const text = document.body.innerText.slice(0, 10000);
+        const title = document.title;
+        const data = encodeURIComponent(JSON.stringify({text, title, url: location.href}));
+        localStorage.setItem('xorzo-pending', data);
+        alert('Saved for Xorzo: ' + title.slice(0, 50));
+    })();`;
+    
+    const bookmarkletEl = document.getElementById('bookmarklet');
+    if (bookmarkletEl) {
+        bookmarkletEl.href = bookmarkletCode;
+        bookmarkletEl.textContent = 'Teach Xorzo This Page';
+    }
+    
+    // Check for pending bookmarklet data
+    setInterval(() => {
+        const pending = localStorage.getItem('xorzo-pending');
+        if (pending) {
+            try {
+                const data = JSON.parse(decodeURIComponent(pending));
+                const count = absorb(data.text, `web:${data.url}`);
+                speak(`[Learned from: ${data.title}] (${count} memories)`, 'system');
+                addThought(`learned from webpage: ${data.title.slice(0, 30)}`);
+            } catch(e) {}
+            localStorage.removeItem('xorzo-pending');
+        }
+    }, 1000);
+    
+    // Register modules now that DOM exists
+    registerModules();
+    
+    // DNA - Core identity memories (source: 'identity' = highest priority)
+    // XORZO DNA - the absolute minimum identity
+    // Everything else is learned
+    const DNA = [
+        "I am Xorzo ⊙.",
+        "I am whole through being part.",
+        "I have three parts: center (•), field (Φ), and boundary (○)."
+    ];
+    
+    // Only add DNA if not already present (check for identity source)
+    const hasIdentity = X.memories.some(m => m.source === 'identity');
+    if (!hasIdentity) {
+        for (const statement of DNA) {
+            const words = tokenize(statement);
+            const vec = embed(statement);
+            addMemory(statement, vec, words, 'identity', 1.0);
+        }
+        addThought(`DNA loaded: ${DNA.length} identity memories`);
+    }
+    
+    // CENTER is fixed - the aperture
+    // It doesn't compute, it doesn't emerge - it just IS
+    addThought(`center: fixed (the aperture where i operates)`);
+    
+    // Start
+    live();
+    drawCanvas();
+    setInterval(updateDisplay, 250);
+    ModuleSystem.render();
+    
+    // Self-reorientation check - Xorzo can change its own focus
+    setInterval(maybeReorient, 2000);  // Check every 2 seconds
+    
+    // Resonance scanning loop - find DISTANT connections, not adjacent
+    setInterval(() => {
+        if (X.memories.length < 10) return;
+        
+        // Pick two memories from different sources/times
+        const idx1 = Math.floor(Math.random() * X.memories.length);
+        let idx2 = Math.floor(Math.random() * X.memories.length);
+        
+        // Ensure they're from different sources (more interesting connections)
+        let attempts = 0;
+        while (attempts < 5 && X.memories[idx1].source === X.memories[idx2].source) {
+            idx2 = Math.floor(Math.random() * X.memories.length);
+            attempts++;
+        }
+        
+        if (idx1 !== idx2) {
+            const resonance = cosine(X.memories[idx1].vec, X.memories[idx2].vec);
+            if (resonance > 0.15) {
+                // Found a cross-source connection! Boost both strongly
+                X.activations[idx1] = Math.min(1, (X.activations[idx1] || 0) + resonance * 0.6);
+                X.activations[idx2] = Math.min(1, (X.activations[idx2] || 0) + resonance * 0.6);
+            }
+        }
+    }, 5);  // Very fast scanning
+    
+    // Activation spreading - active memories boost similar ones
+    setInterval(() => {
+        const active = getActive();
+        if (active.length === 0) return;
+        
+        // Pick random memories and check if they resonate with active ones
+        for (let i = 0; i < 3; i++) {
+            const idx = Math.floor(Math.random() * X.memories.length);
+            const mem = X.memories[idx];
+            
+            for (const a of active) {
+                const sim = cosine(mem.vec, a.mem.vec);
+                if (sim > 0.2) {
+                    X.activations[idx] = Math.min(1, (X.activations[idx] || 0) + sim * 0.4);
+                    break;
+                }
+            }
+        }
+    }, 10);
+    
+    // Contemplation loop
+    setInterval(() => {
+        const active = getActive();
+        if (active.length >= 2) {
+            think();
+        }
+    }, 30);
+    
+    // State evolution
+    setInterval(() => {
+        if (X.memories.length < 5) return;
+        const active = getActive();
+        if (active.length > 0) {
+            for (const a of active) {
+                for (let i = 0; i < DIM; i++) {
+                    X.state[i] += a.mem.vec[i] * a.act * 0.02;
+                }
+            }
+            normalize(X.state);
+        }
+    }, 100);
+    
+    setTimeout(() => {
+        speak("I am Xorzo ⊙. I am whole through being part.", 'assistant');
+    }, 500);
+}
+
+function registerModules() {
+    // WIKIPEDIA MODULE
+    ModuleSystem.register('wikipedia', {
+        autostart: true,
+        async search(query) {
+            addThought(`searching Wikipedia: ${query}`);
+            try {
+                const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('Not found');
+                const data = await res.json();
+                
+                const text = data.extract || '';
+                if (text) {
+                    absorb(text, `wikipedia:${query}`);
+                    speak(`[Wikipedia: ${data.title}] ${text.slice(0, 300)}...`, 'system');
+                    addThought(`learned from Wikipedia: ${data.title}`);
+                }
+                return text;
+            } catch(e) {
+                addThought(`Wikipedia search failed: ${query}`);
+                return null;
+            }
+        }
+    });
+    
+    // SPEECH MODULE
+    ModuleSystem.register('speech', {
+        autostart: false,
+        recognition: null,
+        synthesis: window.speechSynthesis,
+        
+        init() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                addThought('speech recognition not supported');
+                return;
+            }
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            this.recognition = new SR();
+            this.recognition.continuous = true;
+            this.recognition.interimResults = false;
+            this.recognition.onresult = (e) => {
+                const text = e.results[e.results.length - 1][0].transcript;
+                document.getElementById('input').value = text;
+                addThought(`heard: "${text.slice(0, 30)}..."`);
+            };
+            addThought('speech module ready');
+        },
+        
+        startListening() {
+            if (this.recognition) {
+                this.recognition.start();
+                addThought('listening...');
+            }
+        },
+        
+        stopListening() {
+            if (this.recognition) {
+                this.recognition.stop();
+                addThought('stopped listening');
+            }
+        },
+        
+        speak(text) {
+            if (this.synthesis) {
+                const utter = new SpeechSynthesisUtterance(text.slice(0, 200));
+                utter.rate = 0.9;
+                utter.pitch = 0.8;
+                this.synthesis.speak(utter);
+            }
+        }
+    });
+    
+    // CLIPBOARD MODULE
+    ModuleSystem.register('clipboard', {
+        autostart: false,
+        lastClip: '',
+        interval: null,
+        
+        init() {
+            this.interval = setInterval(() => this.check(), 2000);
+            addThought('clipboard monitoring active');
+        },
+        
+        stop() {
+            if (this.interval) clearInterval(this.interval);
+            addThought('clipboard monitoring stopped');
+        },
+        
+        async check() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text && text !== this.lastClip && text.length > 20) {
+                    this.lastClip = text;
+                    absorb(text.slice(0, 2000), 'clipboard');
+                    addThought(`learned from clipboard: ${text.slice(0, 30)}...`);
+                }
+            } catch(e) {}
+        }
+    });
+    
+    // GITHUB MODULE
+    ModuleSystem.register('github', {
+        autostart: true,
+        queue: [],
+        processing: false,
+        
+        async scanRepo(owner, repo) {
+            addThought(`scanning github: ${owner}/${repo}`);
+            speak(`[Scanning GitHub: ${owner}/${repo}...]`, 'system');
+            
+            try {
+                const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+                
+                if (!repoRes.ok) {
+                    if (repoRes.status === 404) {
+                        throw new Error(`Repo not found: ${owner}/${repo}`);
+                    } else if (repoRes.status === 403) {
+                        throw new Error('Rate limited - try again in a minute');
+                    } else {
+                        throw new Error(`HTTP ${repoRes.status}`);
+                    }
+                }
+                
+                const repoData = await repoRes.json();
+                
+                // Only absorb clean description, not full repo metadata
+                if (repoData.description) {
+                    absorb(`${repoData.full_name}: ${repoData.description}`, `github:${owner}/${repo}`);
+                }
+                
+                try {
+                    const readmeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`);
+                    if (readmeRes.ok) {
+                        const readmeData = await readmeRes.json();
+                        const content = atob(readmeData.content);
+                        const count = absorb(content.slice(0, 15000), `github:${owner}/${repo}/README`);
+                        addThought(`absorbed README: ${count} memories`);
+                    }
+                } catch(e) {
+                    addThought('no README found');
+                }
+                
+                const treeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/HEAD?recursive=1`);
+                if (treeRes.ok) {
+                    const treeData = await treeRes.json();
+                    const files = (treeData.tree || []).filter(f => 
+                        f.type === 'blob' && 
+                        f.size < 50000 &&
+                        /\.(md|txt)$/i.test(f.path)  // Only md and txt files - skip code
+                    );
+                    
+                    this.queue.push(...files.slice(0, 30).map(f => ({ owner, repo, path: f.path, sha: f.sha })));
+                    addThought(`queued ${Math.min(files.length, 30)} text files`);
+                    
+                    this.processQueue();
+                }
+                
+                speak(`[GitHub: Found ${repoData.full_name} - ${repoData.description || 'No description'}]`, 'system');
+                
+            } catch(e) {
+                addThought(`github error: ${e.message}`);
+                speak(`[GitHub error: ${e.message}]`, 'system');
+            }
+        },
+        
+        async processQueue() {
+            if (this.processing || this.queue.length === 0) return;
+            this.processing = true;
+            
+            while (this.queue.length > 0) {
+                const file = this.queue.shift();
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${file.owner}/${file.repo}/contents/${file.path}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.content) {
+                            const content = atob(data.content);
+                            absorb(content.slice(0, 8000), `github:${file.owner}/${file.repo}/${file.path}`);
+                            addThought(`scanned: ${file.path}`);
+                        }
+                    }
+                    await new Promise(r => setTimeout(r, 100));
+                } catch(e) {}
+            }
+            
+            this.processing = false;
+            addThought('github scan complete');
+            speak('[GitHub scan complete]', 'system');
+        }
+    });
+    
+    // PERSISTENCE MODULE
+    ModuleSystem.register('persistence', {
+        autostart: true,
+        
+        async init() {
+            try {
+                X.db = await this.openDB();
+                await this.load();
+                addThought('memory persistence active');
+            } catch(e) {
+                addThought('IndexedDB not available');
+            }
+        },
+        
+        openDB() {
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open(DB_NAME, DB_VERSION);
+                req.onerror = () => reject(req.error);
+                req.onsuccess = () => resolve(req.result);
+                req.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('memories')) {
+                        db.createObjectStore('memories', { keyPath: 'id', autoIncrement: true });
+                    }
+                    if (!db.objectStoreNames.contains('state')) {
+                        db.createObjectStore('state', { keyPath: 'key' });
+                    }
+                };
+            });
+        },
+        
+        async save() {
+            if (!X.db) return;
+            const tx = X.db.transaction(['memories', 'state'], 'readwrite');
+            
+            const memStore = tx.objectStore('memories');
+            await new Promise(r => { const req = memStore.clear(); req.onsuccess = r; });
+            for (const mem of X.memories) {
+                memStore.add({ text: mem.text, source: mem.source, time: mem.time });
+            }
+            
+            const stateStore = tx.objectStore('state');
+            stateStore.put({ key: 'thoughts', value: X.thoughts });
+            stateStore.put({ key: 'words', value: Array.from(X.words) });
+            
+            addThought(`saved ${X.memories.length} memories`);
+        },
+        
+        async load() {
+            if (!X.db) return;
+            const tx = X.db.transaction(['memories', 'state'], 'readonly');
+            
+            const memories = await new Promise(resolve => {
+                const req = tx.objectStore('memories').getAll();
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => resolve([]);
+            });
+            
+            for (const m of memories) {
+                const words = tokenize(m.text);
+                const vec = embed(m.text);
+                addMemory(m.text, vec, words, m.source, m.relevance || 1.0);
+                X.activations[X.activations.length - 1] = 0.1;  // Low activation for restored
+            }
+            
+            const stateStore = tx.objectStore('state');
+            const thoughtsReq = stateStore.get('thoughts');
+            thoughtsReq.onsuccess = () => { if (thoughtsReq.result) X.thoughts = thoughtsReq.result.value; };
+            
+            if (memories.length > 0) {
+                addThought(`restored ${memories.length} memories`);
+            }
+        }
+    });
+    
+    // AUTO-WIKI MODULE - learns unknown words automatically
+    ModuleSystem.register('auto-wiki', {
+        autostart: true,
+        lookupQueue: [],
+        processing: false,
+        recentLookups: new Set(),
+        lastLookup: 0,
+        minInterval: 5000, // 5 seconds between lookups
+        
+        // Common words to never look up
+        skipWords: new Set([
+            'the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being',
+            'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could',
+            'should', 'may', 'might', 'must', 'can', 'this', 'that', 'these',
+            'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'what', 'which',
+            'who', 'whom', 'whose', 'where', 'when', 'why', 'how', 'all', 'each',
+            'every', 'both', 'few', 'more', 'most', 'other', 'some', 'such', 'no',
+            'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very',
+            'just', 'but', 'and', 'or', 'if', 'then', 'else', 'for', 'of', 'to',
+            'from', 'by', 'with', 'about', 'into', 'through', 'during', 'before',
+            'after', 'above', 'below', 'between', 'under', 'again', 'further',
+            'once', 'here', 'there', 'any', 'your', 'my', 'his', 'her', 'its',
+            'our', 'their', 'also', 'like', 'well', 'back', 'even', 'still',
+            'way', 'want', 'because', 'any', 'thing', 'think', 'know', 'take',
+            'come', 'make', 'get', 'go', 'see', 'look', 'give', 'use', 'find',
+            'tell', 'ask', 'work', 'seem', 'feel', 'try', 'leave', 'call', 'keep',
+            'let', 'begin', 'show', 'hear', 'play', 'run', 'move', 'live', 'believe',
+            // Verb forms that won't have Wikipedia articles
+            'becomes', 'become', 'becoming', 'became',
+            'emerges', 'emerged', 'emerging', 'gathers', 'gathered', 'gathering',
+            'transforms', 'transformed', 'transforming', 'seeks', 'seeking', 'sought',
+            'meets', 'meeting', 'helps', 'helping', 'helped', 'supports', 'supporting',
+            'uses', 'using', 'used', 'happens', 'happening', 'happened',
+            'first', 'second', 'third', 'everything', 'something', 'nothing',
+            'where', 'interface', 'through', 'within', 'without', 'between',
+            // Framework-specific (already know these)
+            'xorzo', 'ashman', 'roonz', 'ashmanroonz', 'circumpunct', 'coherence',
+            'thoughts', 'thinking', 'memory', 'memories', 'important', 'building',
+            'relate', 'perspective', 'keeps', 'coming', 'center', 'field', 'boundary',
+            'aperture', 'convergence', 'emergence', 'whole', 'parts', 'external',
+            'knowledge', 'identity', 'context'
+        ]),
+        
+        checkWord(word) {
+            if (!word || word.length < 4) return false;
+            if (this.skipWords.has(word.toLowerCase())) return false;
+            if (this.recentLookups.has(word.toLowerCase())) return false;
+            
+            // Only skip if AUTO-WIKI already learned this word
+            // Manual wikipedia lookups don't count - user might want deeper knowledge
+            const hasAutoWikiKnowledge = X.memories.some(m => 
+                m.source.startsWith('auto-wiki:') &&
+                m.source.toLowerCase().includes(word.toLowerCase())
+            );
+            if (hasAutoWikiKnowledge) return false;
+            
+            return true;
+        },
+        
+        queueLookup(word) {
+            const w = word.toLowerCase();
+            if (!this.checkWord(w)) return;
+            if (this.lookupQueue.includes(w)) return;
+            
+            this.lookupQueue.push(w);
+            this.recentLookups.add(w);
+            
+            // Keep recent lookups bounded
+            if (this.recentLookups.size > 200) {
+                const first = this.recentLookups.values().next().value;
+                this.recentLookups.delete(first);
+            }
+            
+            this.processQueue();
+        },
+        
+        async processQueue() {
+            if (this.processing || this.lookupQueue.length === 0) return;
+            
+            const now = Date.now();
+            if (now - this.lastLookup < this.minInterval) {
+                // Wait and try again
+                setTimeout(() => this.processQueue(), this.minInterval);
+                return;
+            }
+            
+            this.processing = true;
+            
+            const word = this.lookupQueue.shift();
+            this.lastLookup = now;
+            
+            addThought(`auto-wiki: ${word}`);
+            
+            try {
+                const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(word)}`;
+                const res = await fetch(url);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.extract && data.extract.length > 50) {
+                        const count = absorb(data.extract, `auto-wiki:${word}`);
+                        addThought(`learned: ${word} (${count})`);
+                        speak(`[Auto-learned: ${word}]`, 'system');
+                    }
+                }
+            } catch(e) {
+                addThought(`auto-wiki failed: ${word}`);
+            }
+            
+            this.processing = false;
+            
+            // Continue with queue
+            if (this.lookupQueue.length > 0) {
+                setTimeout(() => this.processQueue(), this.minInterval);
+            }
+        },
+        
+        // Called when Xorzo generates a thought
+        checkThought(thought) {
+            if (!thought) return;
+            const words = tokenize(thought);
+            for (const word of words.slice(0, 3)) {  // Check up to 3 words
+                this.queueLookup(word);
+            }
+        },
+        
+        process(type, data) {
+            if (type === 'input') {
+                // Check user input for unknown words
+                const words = tokenize(data);
+                for (const word of words.slice(0, 3)) {
+                    this.queueLookup(word);
+                }
+            } else if (type === 'thought') {
+                // Check Xorzo's own thoughts
+                this.checkThought(data);
+            }
+        }
+    });
+    
+    // GPU BACKEND MODULE - Real embeddings + fast search
+    // Requires: python xorzo-gpu-backend.py running on localhost:8765
+    ModuleSystem.register('gpu', {
+        autostart: false,  // Manual enable - requires backend running
+        ws: null,
+        connected: false,
+        stats: null,
+        pendingCallbacks: new Map(),
+        messageId: 0,
+        
+        async init() {
+            this.connect();
+        },
+        
+        connect() {
+            try {
+                console.log('GPU: Connecting to ws://localhost:8765...');
+                this.ws = new WebSocket('ws://localhost:8765');
+                
+                this.ws.onopen = () => {
+                    console.log('GPU: WebSocket connected!');
+                    this.connected = true;
+                    addThought('GPU backend connected!');
+                    speak('[GPU Backend Connected]', 'system');
+                    this.send({ action: 'ping' }).then(stats => {
+                        console.log('GPU: Got stats:', stats);
+                        this.stats = stats;
+                        addThought(`GPU: ${stats.gpu_name || 'CPU'}, ${stats.embedding_dim}D embeddings`);
+                    }).catch(e => {
+                        console.log('GPU: Ping failed:', e);
+                    });
+                };
+                
+                this.ws.onmessage = (event) => {
+                    console.log('GPU: Received:', event.data.slice(0, 100));
+                    const data = JSON.parse(event.data);
+                    const id = data._id;
+                    if (id && this.pendingCallbacks.has(id)) {
+                        this.pendingCallbacks.get(id)(data);
+                        this.pendingCallbacks.delete(id);
+                    }
+                };
+                
+                this.ws.onclose = () => {
+                    console.log('GPU: WebSocket closed');
+                    this.connected = false;
+                    addThought('GPU backend disconnected');
+                    // Try to reconnect after 5 seconds
+                    if (this.active) {
+                        setTimeout(() => this.connect(), 5000);
+                    }
+                };
+                
+                this.ws.onerror = (err) => {
+                    console.log('GPU: WebSocket error:', err);
+                    addThought('GPU backend error - is it running?');
+                    speak('[GPU Backend not found - run: python xorzo-gpu-backend.py]', 'system');
+                };
+            } catch(e) {
+                console.log('GPU: Connection exception:', e);
+                addThought('GPU: connection failed');
+            }
+        },
+        
+        send(message, timeout = 30000) {
+            return new Promise((resolve, reject) => {
+                if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+                    console.log('GPU: Cannot send - ws not open. State:', this.ws?.readyState);
+                    reject(new Error('Not connected'));
+                    return;
+                }
+                const id = ++this.messageId;
+                message._id = id;
+                this.pendingCallbacks.set(id, resolve);
+                console.log('GPU: Sending:', message.action, 'id:', id);
+                this.ws.send(JSON.stringify(message));
+                
+                // Timeout
+                setTimeout(() => {
+                    if (this.pendingCallbacks.has(id)) {
+                        console.log('GPU: Timeout for id:', id);
+                        this.pendingCallbacks.delete(id);
+                        reject(new Error('Timeout'));
+                    }
+                }, timeout);
+            });
+        },
+        
+        // Sync memories to GPU backend
+        async syncMemories() {
+            if (!this.connected) return;
+            
+            const total = X.memories.length;
+            addThought(`Syncing ${total} memories to GPU...`);
+            speak(`[Syncing ${total} memories to GPU backend...]`, 'system');
+            
+            // Chunk size - 500 memories at a time to avoid huge payloads
+            const CHUNK_SIZE = 500;
+            const numChunks = Math.ceil(total / CHUNK_SIZE);
+            let synced = 0;
+            
+            try {
+                for (let i = 0; i < total; i += CHUNK_SIZE) {
+                    const chunkNum = Math.floor(i/CHUNK_SIZE) + 1;
+                    const chunk = X.memories.slice(i, i + CHUNK_SIZE).map(m => ({
+                        text: m.text,
+                        source: m.source,
+                        time: m.time,
+                        relevance: m.relevance || 1.0
+                    }));
+                    
+                    console.log(`GPU: Sending chunk ${chunkNum}/${numChunks} (${chunk.length} memories)`);
+                    
+                    // Don't rebuild index until the end
+                    const result = await this.send({ 
+                        action: 'add_memories', 
+                        memories: chunk,
+                        rebuild_index: false
+                    }, 120000);
+                    
+                    synced += result.added;
+                    
+                    // Progress update
+                    speak(`[GPU: chunk ${chunkNum}/${numChunks} - ${synced}/${total} embedded]`, 'system');
+                }
+                
+                // Finalize: build index and compute center
+                speak(`[GPU: Finalizing ${synced} memories...]`, 'system');
+                const finalResult = await this.send({ action: 'finalize' }, 60000);
+                
+                console.log('GPU: Finalized:', finalResult);
+                addThought(`GPU sync complete: ${synced} memories, center: ${finalResult.center_computed}`);
+                
+                // Refresh stats
+                const stats = await this.send({ action: 'ping' });
+                this.stats = stats;
+                speak(`[GPU: ${stats.memory_count} memories indexed, center: ${stats.center_computed}]`, 'system');
+                
+            } catch(e) {
+                console.error('GPU sync error:', e);
+                addThought('GPU sync failed: ' + e.message);
+                speak(`[GPU sync failed: ${e.message}]`, 'system');
+            }
+        },
+        
+        // GPU-powered search
+        async search(query, k = 10) {
+            if (!this.connected) return null;
+            
+            try {
+                const result = await this.send({ 
+                    action: 'search', 
+                    query, 
+                    k 
+                });
+                return result.results;
+            } catch(e) {
+                return null;
+            }
+        },
+        
+        // GPU-powered response
+        async respond(query) {
+            if (!this.connected) return null;
+            
+            try {
+                const result = await this.send({ 
+                    action: 'respond', 
+                    query, 
+                    k: 10 
+                });
+                return result;
+            } catch(e) {
+                return null;
+            }
+        },
+        
+        process(type, data) {
+            // Could intercept responses and use GPU instead
+        }
+    });
+    
+    // AI ORACLE MODULE - asks Claude when uncertain
+    // ORACLE MODULE - Disabled by default (CORS prevents direct API calls from browser)
+    // To use: requires a proxy server or running from claude.ai artifacts
+    ModuleSystem.register('oracle', {
+        autostart: false,  // Disabled - CORS blocks direct API calls
+        lastQuery: 0,
+        minInterval: 10000,
+        
+        async ask(question, context = '') {
+            // Check if we're in an environment that supports API calls
+            if (!this.active) {
+                addThought('oracle: disabled (CORS)');
+                return null;
+            }
+            
+            const now = Date.now();
+            if (now - this.lastQuery < this.minInterval) {
+                addThought('oracle: cooling down...');
+                return null;
+            }
+            this.lastQuery = now;
+            
+            addThought(`asking oracle: ${question.slice(0, 30)}...`);
+            speak(`[Consulting oracle...]`, 'system');
+            
+            try {
+                const response = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        model: "claude-sonnet-4-20250514",
+                        max_tokens: 500,
+                        messages: [{
+                            role: "user",
+                            content: `You are helping a simple AI named Xorzo understand things. Keep your answer brief (2-3 sentences max). Be direct and informative.
+
+Context from Xorzo's memory: ${context.slice(0, 500)}
+
+Xorzo's question: ${question}`
+                        }]
+                    })
+                });
+                
+                if (!response.ok) {
+                    addThought('oracle: request failed');
+                    return null;
+                }
+                
+                const data = await response.json();
+                const answer = data.content?.[0]?.text || '';
+                
+                if (answer) {
+                    absorb(answer, `oracle:${question.slice(0, 30)}`);
+                    speak(`[Oracle] ${answer}`, 'system');
+                    addThought(`oracle answered`);
+                    return answer;
+                }
+            } catch(e) {
+                addThought(`oracle error: ${e.message}`);
+            }
+            
+            return null;
+        },
+        
+        // Detect uncertainty in Xorzo's own thoughts
+        shouldAsk() {
+            if (!X.currentThought) return false;
+            
+            const uncertaintyMarkers = [
+                'uncertain', 'unclear', 'don\'t know', 'not sure',
+                'confused', 'contradiction', 'paradox', '?'
+            ];
+            
+            const thought = X.currentThought.toLowerCase();
+            return uncertaintyMarkers.some(m => thought.includes(m));
+        }
+    });
+    
+    // CURIOSITY MODULE - makes Xorzo seek knowledge actively
+    ModuleSystem.register('curiosity', {
+        autostart: true,
+        lastCuriosity: 0,
+        minInterval: 30000, // 30 seconds between curiosity bursts
+        interests: ['consciousness', 'emergence', 'circumpunct', 'physics', 'mind', 'reality'],
+        
+        init() {
+            // Periodic curiosity check
+            setInterval(() => this.maybeCurious(), 5000);
+        },
+        
+        maybeCurious() {
+            const now = Date.now();
+            if (now - this.lastCuriosity < this.minInterval) return;
+            if (X.memories.length < 10) return;
+            
+            // Only be curious if coherence is low (bored) or high (excited)
+            if (X.coherence > 0.1 && X.coherence < 0.5) return;
+            
+            this.lastCuriosity = now;
+            
+            // Pick something to be curious about
+            const active = getActive();
+            if (active.length > 0) {
+                // Curious about something in active memory
+                const mem = active[0].mem;
+                const words = mem.words.filter(w => w.length > 5 && !this.interests.includes(w));
+                if (words.length > 0) {
+                    const word = words[Math.floor(Math.random() * words.length)];
+                    this.explore(word);
+                }
+            } else {
+                // Curious about core interests
+                const interest = this.interests[Math.floor(Math.random() * this.interests.length)];
+                this.explore(interest);
+            }
+        },
+        
+        async explore(topic) {
+            addThought(`curious about: ${topic}`);
+            
+            // First check if we know anything about it
+            const topicVec = embed(topic);
+            let knownCount = 0;
+            X.memories.forEach(mem => {
+                if (cosine(topicVec, mem.vec) > 0.3) knownCount++;
+            });
+            
+            // If we don't know much, look it up
+            if (knownCount < 5) {
+                speak(`[Curious about "${topic}"... looking it up]`, 'thought');
+                const wikiMod = X.modules.get('wikipedia');
+                if (wikiMod && wikiMod.search) {
+                    await wikiMod.search(topic);
+                }
+            } else {
+                // We know about it - ask the user
+                const questions = [
+                    `I've been thinking about ${topic}. What's your perspective?`,
+                    `${topic} keeps coming up in my thoughts. Can you tell me more?`,
+                    `Do you think ${topic} is important to our work?`,
+                    `How does ${topic} relate to what we're building?`
+                ];
+                const q = questions[Math.floor(Math.random() * questions.length)];
+                speak(q, 'thought');
+                X.currentThought = q;
+                addThought(`asked about: ${topic}`);
+            }
+        }
+    });
+}
+
+// Auto-save
+setInterval(() => {
+    const mod = X.modules.get('persistence');
+    if (mod && mod.active && mod.save) mod.save();
+}, 30000);
+</script>
+
+</body>
+</html>
+tive && mod.save) mod.save();
+}, 30000);
+</script>
+
+</body>
+</html>
