@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pokemon Card Battler</title>
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -906,7 +906,10 @@
             myId = roomCode;
             isHost = true;
             
-            peer = new Peer(roomCode);
+            console.log('Creating peer with ID:', roomCode);
+            peer = new Peer(roomCode, {
+                debug: 2 // Enable PeerJS debugging
+            });
             
             peer.on('open', (id) => {
                 console.log('Host ready with ID:', id);
@@ -915,29 +918,47 @@
             });
 
             peer.on('connection', (connection) => {
-                console.log('Someone is connecting...');
+                console.log('Someone is connecting...', connection);
                 conn = connection;
                 opponentId = conn.peer;
+                
+                // Set up all handlers immediately
+                conn.on('data', (data) => {
+                    console.log('Host received data:', data);
+                    handleMessage(data);
+                });
+                
+                conn.on('close', () => {
+                    console.log('Connection closed');
+                    alert('Opponent disconnected!');
+                    location.reload();
+                });
+                
+                conn.on('error', (err) => {
+                    console.error('Connection error (host):', err);
+                });
                 
                 conn.on('open', () => {
                     console.log('Connection opened (host side)');
                     document.getElementById('create-status').textContent = 'Connected! Starting game...';
-                    
-                    // Host starts loading Pokemon
                     loadAndStartGame();
                 });
                 
-                conn.on('data', handleMessage);
-                
-                conn.on('close', () => {
-                    alert('Opponent disconnected!');
-                    location.reload();
-                });
+                // Check if already open (sometimes the event fires before we attach)
+                if (conn.open) {
+                    console.log('Connection already open!');
+                    document.getElementById('create-status').textContent = 'Connected! Starting game...';
+                    loadAndStartGame();
+                }
             });
 
             peer.on('error', (err) => {
                 console.error('Peer error:', err);
                 document.getElementById('create-status').textContent = 'Error: ' + err.type;
+            });
+            
+            peer.on('disconnected', () => {
+                console.log('Peer disconnected from server');
             });
         }
 
@@ -945,14 +966,39 @@
             myId = 'joiner_' + generateRoomCode();
             isHost = false;
             
-            peer = new Peer(myId);
+            console.log('Creating joiner peer with ID:', myId);
+            peer = new Peer(myId, {
+                debug: 2
+            });
 
             peer.on('open', () => {
                 console.log('Joiner peer ready, connecting to:', roomCode);
                 document.getElementById('join-status').textContent = 'Connecting...';
                 
-                conn = peer.connect(roomCode, { reliable: true });
+                conn = peer.connect(roomCode, { 
+                    reliable: true,
+                    serialization: 'json'
+                });
                 opponentId = roomCode;
+                
+                console.log('Connection object created:', conn);
+                
+                // Set up all handlers immediately  
+                conn.on('data', (data) => {
+                    console.log('Joiner received data:', data);
+                    handleMessage(data);
+                });
+                
+                conn.on('close', () => {
+                    console.log('Connection closed');
+                    alert('Host disconnected!');
+                    location.reload();
+                });
+                
+                conn.on('error', (err) => {
+                    console.error('Connection error (joiner):', err);
+                    document.getElementById('join-status').textContent = 'Connection failed: ' + err;
+                });
                 
                 conn.on('open', () => {
                     console.log('Connection opened (joiner side)');
@@ -961,22 +1007,26 @@
                     document.getElementById('loading-text').textContent = 'Waiting for host to catch Pokemon...';
                 });
                 
-                conn.on('data', handleMessage);
-                
-                conn.on('close', () => {
-                    alert('Host disconnected!');
-                    location.reload();
-                });
-                
-                conn.on('error', (err) => {
-                    console.error('Connection error:', err);
-                    document.getElementById('join-status').textContent = 'Connection failed!';
-                });
+                // Check if already open
+                setTimeout(() => {
+                    if (conn.open) {
+                        console.log('Connection already open (joiner)!');
+                        document.getElementById('join-status').textContent = 'Connected! Waiting for game...';
+                        showScreen('loading');
+                        document.getElementById('loading-text').textContent = 'Waiting for host to catch Pokemon...';
+                    } else {
+                        console.log('Connection not yet open, state:', conn);
+                    }
+                }, 1000);
             });
 
             peer.on('error', (err) => {
                 console.error('Peer error:', err);
                 document.getElementById('join-status').textContent = 'Error: ' + err.type;
+            });
+            
+            peer.on('disconnected', () => {
+                console.log('Peer disconnected from server');
             });
         }
 
@@ -1034,8 +1084,12 @@
         }
 
         function send(type, data) {
+            console.log('Attempting to send:', type, 'conn open:', conn?.open);
             if (conn && conn.open) {
                 conn.send({ type, data });
+                console.log('Sent:', type);
+            } else {
+                console.warn('Cannot send, connection not open');
             }
         }
 
