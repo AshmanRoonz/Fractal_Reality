@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pokemon Checkers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: #ffcb05;
+            text-shadow: 3px 3px 0 #3466af, -1px -1px 0 #3466af;
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            justify-content: center;
+        }
+
+        .player-info {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 15px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            flex: 1;
+            max-width: 150px;
+        }
+
+        .player-info.active {
+            border-color: #ffcb05;
+            box-shadow: 0 0 15px rgba(255, 203, 5, 0.5);
+            transform: scale(1.05);
+        }
+
+        .player-info h3 {
+            margin-bottom: 3px;
+            font-size: clamp(0.8rem, 3vw, 1rem);
+        }
+
+        .player-info .score {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-weight: bold;
+        }
+
+        .player-info small {
+            font-size: clamp(0.6rem, 2vw, 0.8rem);
+        }
+
+        .player-red { color: #ff6b6b; }
+        .player-blue { color: #4ecdc4; }
+
+        #loading {
+            color: white;
+            font-size: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .pokeball-loader {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(to bottom, #ff1a1a 50%, white 50%);
+            border-radius: 50%;
+            position: relative;
+            animation: spin 1s linear infinite;
+            border: 4px solid #333;
+        }
+
+        .pokeball-loader::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: #333;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .pokeball-loader::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 4px solid #333;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #game-container {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #game-container.visible {
+            display: flex;
+        }
+
+        /* Board sizing - responsive */
+        :root {
+            --cell-size: min(11vw, 70px);
+            --piece-size: calc(var(--cell-size) * 1.15);
+            --sprite-size: calc(var(--cell-size) * 1.15);
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, var(--cell-size));
+            grid-template-rows: repeat(8, var(--cell-size));
+            border: clamp(4px, 1.5vw, 8px) solid #5d4e37;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            touch-action: manipulation;
+        }
+
+        .cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .cell.light {
+            background: #f0d9b5;
+        }
+
+        .cell.dark {
+            background: #b58863;
+        }
+
+        .cell.valid-move {
+            background: rgba(100, 255, 100, 0.5);
+            cursor: pointer;
+        }
+
+        .cell.valid-move::after {
+            content: '';
+            width: calc(var(--cell-size) * 0.3);
+            height: calc(var(--cell-size) * 0.3);
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .piece {
+            width: var(--piece-size);
+            height: var(--piece-size);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, filter 0.2s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .piece:hover {
+            transform: scale(1.15);
+            z-index: 5;
+        }
+
+        .piece.red img {
+            filter: drop-shadow(0 0 3px rgba(255, 100, 100, 0.8)) 
+                    drop-shadow(0 3px 5px rgba(0,0,0,0.4));
+        }
+
+        .piece.blue img {
+            filter: drop-shadow(0 0 3px rgba(78, 205, 196, 0.8)) 
+                    drop-shadow(0 3px 5px rgba(0,0,0,0.4));
+        }
+
+        .piece.selected {
+            transform: scale(1.25);
+            z-index: 10;
+            animation: bounce 0.5s ease infinite alternate;
+        }
+
+        .piece.selected img {
+            filter: drop-shadow(0 0 8px gold) 
+                    drop-shadow(0 0 15px gold)
+                    drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        }
+
+        @keyframes bounce {
+            from { transform: scale(1.25) translateY(0); }
+            to { transform: scale(1.25) translateY(-5px); }
+        }
+
+        .piece img {
+            width: var(--sprite-size);
+            height: var(--sprite-size);
+            image-rendering: pixelated;
+            pointer-events: none;
+        }
+
+        .piece.king::before {
+            content: '👑';
+            position: absolute;
+            top: -5px;
+            font-size: clamp(14px, 4vw, 22px);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+            z-index: 2;
+        }
+
+        .piece.king::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, gold, transparent);
+            border-radius: 2px;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: clamp(0.8rem, 3vw, 1rem);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            touch-action: manipulation;
+        }
+
+        #new-game {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: white;
+        }
+
+        #new-pokemon {
+            background: linear-gradient(135deg, #ffcb05, #f0b000);
+            color: #3466af;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #message {
+            margin-top: 12px;
+            padding: 8px 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: clamp(0.85rem, 3vw, 1.1rem);
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .winner-message {
+            animation: celebrate 0.5s ease infinite alternate;
+        }
+
+        @keyframes celebrate {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        .pokemon-teams {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .team {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            flex: 1;
+            min-width: 140px;
+            max-width: 200px;
+        }
+
+        .team h4 {
+            color: white;
+            margin-bottom: 8px;
+            font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+        }
+
+        .team-pokemon {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            justify-content: center;
+        }
+
+        .team-pokemon img {
+            width: clamp(28px, 8vw, 40px);
+            height: clamp(28px, 8vw, 40px);
+            image-rendering: pixelated;
+        }
+
+        .captured {
+            opacity: 0.3;
+            filter: grayscale(100%);
+        }
+
+        /* Extra small screens */
+        @media (max-width: 380px) {
+            body {
+                padding: 10px 5px;
+            }
+            
+            .game-info {
+                gap: 10px;
+            }
+            
+            .player-info {
+                padding: 8px 10px;
+            }
+            
+            .controls {
+                gap: 8px;
+            }
+            
+            button {
+                padding: 8px 15px;
+            }
+        }
+
+        /* Landscape mode on mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.2rem;
+                margin-bottom: 5px;
+            }
+            
+            .game-info {
+                margin-bottom: 8px;
+            }
+            
+            .player-info {
+                padding: 5px 10px;
+            }
+            
+            :root {
+                --cell-size: min(11vh, 50px);
+            }
+            
+            #message {
+                margin-top: 8px;
+                padding: 5px 10px;
+            }
+            
+            .controls {
+                margin-top: 8px;
+            }
+            
+            .pokemon-teams {
+                margin-top: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>⚡ Pokémon Checkers ⚡</h1>
+    
+    <div id="loading">
+        <div class="pokeball-loader"></div>
+        <p>Catching Pokémon...</p>
+    </div>
+
+    <div id="game-container">
+        <div class="game-info">
+            <div class="player-info active" id="red-info">
+                <h3 class="player-red">🔴 Red</h3>
+                <div class="score" id="red-score">12</div>
+                <small>pieces</small>
+            </div>
+            <div class="player-info" id="blue-info">
+                <h3 class="player-blue">🔵 Blue</h3>
+                <div class="score" id="blue-score">12</div>
+                <small>pieces</small>
+            </div>
+        </div>
+
+        <div id="board"></div>
+
+        <div id="message">Red team's turn - Select a piece</div>
+
+        <div class="controls">
+            <button id="new-game">🔄 New Game</button>
+            <button id="new-pokemon">🎲 New Pokémon</button>
+        </div>
+
+        <div class="pokemon-teams">
+            <div class="team">
+                <h4 class="player-red">Red Team Roster</h4>
+                <div class="team-pokemon" id="red-roster"></div>
+            </div>
+            <div class="team">
+                <h4 class="player-blue">Blue Team Roster</h4>
+                <div class="team-pokemon" id="blue-roster"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let board = [];
+        let selectedPiece = null;
+        let currentPlayer = 'red';
+        let validMoves = [];
+        let mustJump = false;
+        let redPokemon = [];
+        let bluePokemon = [];
+        let gameOver = false;
+
+        // DOM Elements
+        const boardEl = document.getElementById('board');
+        const messageEl = document.getElementById('message');
+        const loadingEl = document.getElementById('loading');
+        const gameContainer = document.getElementById('game-container');
+        const redScoreEl = document.getElementById('red-score');
+        const blueScoreEl = document.getElementById('blue-score');
+        const redInfoEl = document.getElementById('red-info');
+        const blueInfoEl = document.getElementById('blue-info');
+        const redRosterEl = document.getElementById('red-roster');
+        const blueRosterEl = document.getElementById('blue-roster');
+
+        // Fetch random Pokemon
+        async function fetchRandomPokemon(count) {
+            const pokemon = [];
+            const usedIds = new Set();
+            
+            while (pokemon.length < count) {
+                const id = Math.floor(Math.random() * 898) + 1; // Gen 1-8
+                if (usedIds.has(id)) continue;
+                usedIds.add(id);
+                
+                try {
+                    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+                    const data = await response.json();
+                    pokemon.push({
+                        id: data.id,
+                        name: data.name,
+                        sprite: data.sprites.front_default || data.sprites.front_shiny
+                    });
+                } catch (e) {
+                    console.log(`Failed to fetch Pokemon ${id}, trying another...`);
+                }
+            }
+            return pokemon;
+        }
+
+        // Initialize the game
+        async function initGame() {
+            loadingEl.style.display = 'flex';
+            gameContainer.classList.remove('visible');
+            
+            // Fetch Pokemon for both teams
+            const allPokemon = await fetchRandomPokemon(24);
+            redPokemon = allPokemon.slice(0, 12);
+            bluePokemon = allPokemon.slice(12, 24);
+            
+            loadingEl.style.display = 'none';
+            gameContainer.classList.add('visible');
+            
+            setupBoard();
+            updateRosters();
+        }
+
+        // Setup the board
+        function setupBoard() {
+            board = [];
+            boardEl.innerHTML = '';
+            selectedPiece = null;
+            currentPlayer = 'red';
+            validMoves = [];
+            mustJump = false;
+            gameOver = false;
+            
+            let redIndex = 0;
+            let blueIndex = 0;
+
+            // Reset roster styling
+            document.querySelectorAll('.team-pokemon img').forEach(img => {
+                img.classList.remove('captured');
+            });
+
+            for (let row = 0; row < 8; row++) {
+                board[row] = [];
+                for (let col = 0; col < 8; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = `cell ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.addEventListener('click', handleCellClick);
+                    cell.addEventListener('touchend', handleCellTouch);
+
+                    // Place pieces
+                    if ((row + col) % 2 === 1) {
+                        if (row < 3) {
+                            // Blue pieces (top)
+                            const piece = createPiece('blue', bluePokemon[blueIndex]);
+                            cell.appendChild(piece);
+                            board[row][col] = { color: 'blue', king: false, pokemon: bluePokemon[blueIndex] };
+                            blueIndex++;
+                        } else if (row > 4) {
+                            // Red pieces (bottom)
+                            const piece = createPiece('red', redPokemon[redIndex]);
+                            cell.appendChild(piece);
+                            board[row][col] = { color: 'red', king: false, pokemon: redPokemon[redIndex] };
+                            redIndex++;
+                        } else {
+                            board[row][col] = null;
+                        }
+                    } else {
+                        board[row][col] = null;
+                    }
+
+                    boardEl.appendChild(cell);
+                }
+            }
+
+            updateScores();
+            updateTurnIndicator();
+            updateMessage();
+        }
+
+        // Create a piece element
+        function createPiece(color, pokemon) {
+            const piece = document.createElement('div');
+            piece.className = `piece ${color}`;
+            
+            const img = document.createElement('img');
+            img.src = pokemon.sprite;
+            img.alt = pokemon.name;
+            img.title = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+            piece.appendChild(img);
+            
+            return piece;
+        }
+
+        // Handle touch events for mobile
+        function handleCellTouch(e) {
+            e.preventDefault();
+            handleCellClick(e);
+        }
+
+        // Handle cell clicks
+        function handleCellClick(e) {
+            if (gameOver) return;
+            
+            const cell = e.currentTarget;
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
+            const piece = board[row][col];
+
+            // If clicking on a valid move destination
+            if (validMoves.some(m => m.row === row && m.col === col)) {
+                movePiece(selectedPiece.row, selectedPiece.col, row, col);
+                return;
+            }
+
+            // Clear previous selection
+            clearSelection();
+
+            // If clicking on own piece
+            if (piece && piece.color === currentPlayer) {
+                selectPiece(row, col, cell);
+            }
+        }
+
+        // Select a piece
+        function selectPiece(row, col, cell) {
+            const piece = board[row][col];
+            const pieceEl = cell.querySelector('.piece');
+            
+            // Check if there are mandatory jumps
+            const allJumps = getAllJumps(currentPlayer);
+            
+            if (allJumps.length > 0) {
+                // Must make a jump
+                const jumpsForPiece = getJumps(row, col, piece);
+                if (jumpsForPiece.length === 0) {
+                    messageEl.textContent = '⚠️ Must capture! Pick a piece that can jump.';
+                    return;
+                }
+                validMoves = jumpsForPiece;
+                mustJump = true;
+            } else {
+                validMoves = getMoves(row, col, piece);
+            }
+
+            if (validMoves.length > 0) {
+                selectedPiece = { row, col };
+                pieceEl.classList.add('selected');
+                highlightValidMoves();
+            }
+        }
+
+        // Clear selection
+        function clearSelection() {
+            selectedPiece = null;
+            validMoves = [];
+            document.querySelectorAll('.piece.selected').forEach(p => p.classList.remove('selected'));
+            document.querySelectorAll('.cell.valid-move').forEach(c => c.classList.remove('valid-move'));
+        }
+
+        // Get regular moves for a piece
+        function getMoves(row, col, piece) {
+            const moves = [];
+            const directions = piece.king ? [-1, 1] : (piece.color === 'red' ? [-1] : [1]);
+
+            for (const dRow of directions) {
+                for (const dCol of [-1, 1]) {
+                    const newRow = row + dRow;
+                    const newCol = col + dCol;
+                    
+                    if (isValidCell(newRow, newCol) && !board[newRow][newCol]) {
+                        moves.push({ row: newRow, col: newCol, isJump: false });
+                    }
+                }
+            }
+
+            return moves;
+        }
+
+        // Get jump moves for a piece
+        function getJumps(row, col, piece) {
+            const jumps = [];
+            const directions = piece.king ? [-1, 1] : (piece.color === 'red' ? [-1] : [1]);
+            const opponent = piece.color === 'red' ? 'blue' : 'red';
+
+            for (const dRow of directions) {
+                for (const dCol of [-1, 1]) {
+                    const midRow = row + dRow;
+                    const midCol = col + dCol;
+                    const newRow = row + (dRow * 2);
+                    const newCol = col + (dCol * 2);
+
+                    if (isValidCell(newRow, newCol) && 
+                        board[midRow]?.[midCol]?.color === opponent &&
+                        !board[newRow][newCol]) {
+                        jumps.push({ 
+                            row: newRow, 
+                            col: newCol, 
+                            isJump: true,
+                            captured: { row: midRow, col: midCol }
+                        });
+                    }
+                }
+            }
+
+            return jumps;
+        }
+
+        // Get all jumps for a player
+        function getAllJumps(color) {
+            const jumps = [];
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if (board[row][col]?.color === color) {
+                        jumps.push(...getJumps(row, col, board[row][col]));
+                    }
+                }
+            }
+            return jumps;
+        }
+
+        // Check if cell is valid
+        function isValidCell(row, col) {
+            return row >= 0 && row < 8 && col >= 0 && col < 8;
+        }
+
+        // Highlight valid moves
+        function highlightValidMoves() {
+            validMoves.forEach(move => {
+                const cell = document.querySelector(`.cell[data-row="${move.row}"][data-col="${move.col}"]`);
+                if (cell) cell.classList.add('valid-move');
+            });
+        }
+
+        // Move a piece
+        function movePiece(fromRow, fromCol, toRow, toCol) {
+            const move = validMoves.find(m => m.row === toRow && m.col === toCol);
+            const piece = board[fromRow][fromCol];
+
+            // Update board state
+            board[toRow][toCol] = piece;
+            board[fromRow][fromCol] = null;
+
+            // Handle capture
+            if (move.isJump) {
+                const captured = board[move.captured.row][move.captured.col];
+                board[move.captured.row][move.captured.col] = null;
+                
+                // Mark as captured in roster
+                markCaptured(captured.pokemon, captured.color);
+            }
+
+            // Check for king promotion
+            if ((piece.color === 'red' && toRow === 0) || (piece.color === 'blue' && toRow === 7)) {
+                piece.king = true;
+            }
+
+            // Render the move
+            renderBoard();
+
+            // Check for multi-jump
+            if (move.isJump) {
+                const moreJumps = getJumps(toRow, toCol, piece);
+                if (moreJumps.length > 0) {
+                    selectedPiece = { row: toRow, col: toCol };
+                    validMoves = moreJumps;
+                    highlightValidMoves();
+                    const cell = document.querySelector(`.cell[data-row="${toRow}"][data-col="${toCol}"]`);
+                    cell.querySelector('.piece').classList.add('selected');
+                    messageEl.textContent = '🎯 Multi-jump! Keep capturing!';
+                    return;
+                }
+            }
+
+            // Switch turns
+            clearSelection();
+            currentPlayer = currentPlayer === 'red' ? 'blue' : 'red';
+            updateScores();
+            updateTurnIndicator();
+            checkWinCondition();
+        }
+
+        // Render the board
+        function renderBoard() {
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+                    const existingPiece = cell.querySelector('.piece');
+                    if (existingPiece) existingPiece.remove();
+
+                    const piece = board[row][col];
+                    if (piece) {
+                        const pieceEl = createPiece(piece.color, piece.pokemon);
+                        if (piece.king) pieceEl.classList.add('king');
+                        cell.appendChild(pieceEl);
+                    }
+                }
+            }
+        }
+
+        // Update scores
+        function updateScores() {
+            let redCount = 0, blueCount = 0;
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if (board[row][col]?.color === 'red') redCount++;
+                    if (board[row][col]?.color === 'blue') blueCount++;
+                }
+            }
+            redScoreEl.textContent = redCount;
+            blueScoreEl.textContent = blueCount;
+        }
+
+        // Update turn indicator
+        function updateTurnIndicator() {
+            redInfoEl.classList.toggle('active', currentPlayer === 'red');
+            blueInfoEl.classList.toggle('active', currentPlayer === 'blue');
+        }
+
+        // Update message
+        function updateMessage() {
+            const color = currentPlayer === 'red' ? 'Red' : 'Blue';
+            messageEl.textContent = `${color} team's turn - Select a piece`;
+        }
+
+        // Check win condition
+        function checkWinCondition() {
+            let redCount = 0, blueCount = 0;
+            let redMoves = 0, blueMoves = 0;
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const piece = board[row][col];
+                    if (piece) {
+                        if (piece.color === 'red') {
+                            redCount++;
+                            redMoves += getMoves(row, col, piece).length + getJumps(row, col, piece).length;
+                        } else {
+                            blueCount++;
+                            blueMoves += getMoves(row, col, piece).length + getJumps(row, col, piece).length;
+                        }
+                    }
+                }
+            }
+
+            if (redCount === 0 || (currentPlayer === 'red' && redMoves === 0)) {
+                endGame('blue');
+            } else if (blueCount === 0 || (currentPlayer === 'blue' && blueMoves === 0)) {
+                endGame('red');
+            } else {
+                updateMessage();
+            }
+        }
+
+        // End game
+        function endGame(winner) {
+            gameOver = true;
+            const color = winner === 'red' ? 'Red' : 'Blue';
+            messageEl.innerHTML = `🏆 <span class="winner-message">${color} Wins!</span> 🏆`;
+            messageEl.classList.add('winner-message');
+        }
+
+        // Update roster display
+        function updateRosters() {
+            redRosterEl.innerHTML = '';
+            blueRosterEl.innerHTML = '';
+
+            redPokemon.forEach(p => {
+                const img = document.createElement('img');
+                img.src = p.sprite;
+                img.alt = p.name;
+                img.title = p.name;
+                img.id = `roster-red-${p.id}`;
+                redRosterEl.appendChild(img);
+            });
+
+            bluePokemon.forEach(p => {
+                const img = document.createElement('img');
+                img.src = p.sprite;
+                img.alt = p.name;
+                img.title = p.name;
+                img.id = `roster-blue-${p.id}`;
+                blueRosterEl.appendChild(img);
+            });
+        }
+
+        // Mark a Pokemon as captured
+        function markCaptured(pokemon, color) {
+            const rosterImg = document.getElementById(`roster-${color}-${pokemon.id}`);
+            if (rosterImg) rosterImg.classList.add('captured');
+        }
+
+        // Event Listeners
+        document.getElementById('new-game').addEventListener('click', setupBoard);
+        document.getElementById('new-pokemon').addEventListener('click', initGame);
+
+        // Prevent double-tap zoom on mobile
+        document.addEventListener('touchend', function(e) {
+            if (e.target.closest('#board') || e.target.closest('button')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Start the game
+        initGame();
+    </script>
+</body>
+</html>
