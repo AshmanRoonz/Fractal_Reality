@@ -904,31 +904,34 @@
         function initPeer() {
             const roomCode = generateRoomCode();
             myId = roomCode;
+            isHost = true;
             
             peer = new Peer(roomCode);
             
             peer.on('open', (id) => {
-                console.log('Host peer opened with ID:', id);
+                console.log('Host ready with ID:', id);
                 document.getElementById('my-room-code').textContent = id;
                 document.getElementById('room-code-display').style.display = 'block';
-                isHost = true;
             });
 
             peer.on('connection', (connection) => {
-                console.log('Host received connection from:', connection.peer);
+                console.log('Someone is connecting...');
                 conn = connection;
                 opponentId = conn.peer;
                 
                 conn.on('open', () => {
-                    console.log('Host: connection fully open');
-                    setupConnection();
+                    console.log('Connection opened (host side)');
+                    document.getElementById('create-status').textContent = 'Connected! Starting game...';
+                    
+                    // Host starts loading Pokemon
+                    loadAndStartGame();
                 });
                 
                 conn.on('data', handleMessage);
                 
                 conn.on('close', () => {
                     alert('Opponent disconnected!');
-                    showScreen('lobby');
+                    location.reload();
                 });
             });
 
@@ -939,48 +942,95 @@
         }
 
         function joinPeer(roomCode) {
-            myId = generateRoomCode();
+            myId = 'joiner_' + generateRoomCode();
+            isHost = false;
+            
             peer = new Peer(myId);
 
             peer.on('open', () => {
-                console.log('Joiner peer opened with ID:', myId);
-                console.log('Joiner attempting to connect to:', roomCode);
+                console.log('Joiner peer ready, connecting to:', roomCode);
+                document.getElementById('join-status').textContent = 'Connecting...';
                 
                 conn = peer.connect(roomCode, { reliable: true });
                 opponentId = roomCode;
                 
                 conn.on('open', () => {
-                    console.log('Joiner: connection fully open');
-                    isHost = false;
-                    setupConnection();
+                    console.log('Connection opened (joiner side)');
+                    document.getElementById('join-status').textContent = 'Connected! Waiting for game...';
+                    showScreen('loading');
+                    document.getElementById('loading-text').textContent = 'Waiting for host to catch Pokemon...';
                 });
                 
                 conn.on('data', handleMessage);
                 
                 conn.on('close', () => {
-                    alert('Opponent disconnected!');
-                    showScreen('lobby');
+                    alert('Host disconnected!');
+                    location.reload();
                 });
                 
                 conn.on('error', (err) => {
                     console.error('Connection error:', err);
-                    document.getElementById('join-status').textContent = 'Connection error!';
+                    document.getElementById('join-status').textContent = 'Connection failed!';
                 });
             });
 
             peer.on('error', (err) => {
                 console.error('Peer error:', err);
-                document.getElementById('join-status').textContent = 'Error: Could not connect';
+                document.getElementById('join-status').textContent = 'Error: ' + err.type;
             });
         }
 
-        function setupConnection() {
-            console.log('setupConnection called, isHost:', isHost);
-            document.getElementById('create-status').textContent = 'Connected!';
-            document.getElementById('join-status').textContent = 'Connected!';
-
-            // Start game
-            startGame();
+        async function loadAndStartGame() {
+            showScreen('loading');
+            
+            // Host fetches all Pokemon
+            const allPokemon = await fetchRandomPokemon(100);
+            const shuffled = allPokemon.sort(() => Math.random() - 0.5);
+            
+            const hostPokemon = shuffled.slice(0, 50);
+            const joinerPokemon = shuffled.slice(50, 100);
+            
+            // Set up host's Pokemon
+            gameState.myPokemon = hostPokemon.map(p => ({
+                ...p,
+                currentHp: p.stats.hp,
+                maxHp: p.stats.hp,
+                ar: 0,
+                dr: 0,
+                inBattle: false
+            }));
+            gameState.enemyPokemon = joinerPokemon.map(p => ({
+                ...p,
+                currentHp: p.stats.hp,
+                maxHp: p.stats.hp,
+                ar: 0,
+                dr: 0,
+                inBattle: false
+            }));
+            
+            // Send Pokemon to joiner
+            console.log('Sending Pokemon to joiner...');
+            send('game-data', {
+                yourPokemon: joinerPokemon,
+                opponentPokemon: hostPokemon
+            });
+            
+            // Start the game
+            initGameState();
+            showScreen('game');
+            updateUI();
+            startPlacementPhase();
+        }
+        
+        function initGameState() {
+            gameState.round = 1;
+            gameState.battle = 1;
+            gameState.myLanes = [null, null, null, null, null];
+            gameState.enemyLanes = [null, null, null, null, null];
+            gameState.phase = 'placement';
+            gameState.ready = false;
+            gameState.enemyReady = false;
+            clearLog();
         }
 
         function send(type, data) {
@@ -990,34 +1040,33 @@
         }
 
         function handleMessage(msg) {
-            console.log('Received message:', msg.type, msg.data);
+            console.log('Received message:', msg.type);
             const { type, data } = msg;
 
             switch (type) {
-                case 'game-start':
+                case 'game-data':
                     // Joiner receives Pokemon from host
-                    if (!isHost) {
-                        gameState.myPokemon = data.joinerPokemon.map(p => ({
-                            ...p,
-                            currentHp: p.stats.hp,
-                            maxHp: p.stats.hp,
-                            ar: 0,
-                            dr: 0,
-                            inBattle: false
-                        }));
-                        gameState.enemyPokemon = data.hostPokemon.map(p => ({
-                            ...p,
-                            currentHp: p.stats.hp,
-                            maxHp: p.stats.hp,
-                            ar: 0,
-                            dr: 0,
-                            inBattle: false
-                        }));
-                        console.log('Joiner received Pokemon, starting game');
-                        showScreen('game');
-                        updateUI();
-                        startPlacementPhase();
-                    }
+                    console.log('Joiner received Pokemon from host!');
+                    gameState.myPokemon = data.yourPokemon.map(p => ({
+                        ...p,
+                        currentHp: p.stats.hp,
+                        maxHp: p.stats.hp,
+                        ar: 0,
+                        dr: 0,
+                        inBattle: false
+                    }));
+                    gameState.enemyPokemon = data.opponentPokemon.map(p => ({
+                        ...p,
+                        currentHp: p.stats.hp,
+                        maxHp: p.stats.hp,
+                        ar: 0,
+                        dr: 0,
+                        inBattle: false
+                    }));
+                    initGameState();
+                    showScreen('game');
+                    updateUI();
+                    startPlacementPhase();
                     break;
                 case 'ready':
                     console.log('Enemy is ready');
@@ -1026,7 +1075,6 @@
                     break;
                 case 'lanes':
                     console.log('Received enemy lanes');
-                    // Parse enemy lanes with full Pokemon data
                     gameState.enemyLanes = data.lanes.map(p => {
                         if (!p) return null;
                         return {
@@ -1037,7 +1085,6 @@
                     });
                     break;
                 case 'swap':
-                    // Enemy swapped their lanes
                     if (data.swap && data.swap[0] !== null && data.swap[1] !== null) {
                         const [a, b] = data.swap;
                         const temp = gameState.enemyLanes[a];
@@ -1048,74 +1095,10 @@
                     checkBothReady();
                     break;
                 case 'rematch':
-                    startGame();
+                    if (isHost) {
+                        loadAndStartGame();
+                    }
                     break;
-            }
-        }
-
-        // ============== GAME LOGIC ==============
-        async function startGame() {
-            showScreen('loading');
-            
-            if (isHost) {
-                // Host fetches all 100 Pokemon and distributes
-                const allPokemon = await fetchRandomPokemon(100);
-                
-                // Shuffle and split
-                const shuffled = allPokemon.sort(() => Math.random() - 0.5);
-                const hostPokemon = shuffled.slice(0, 50);
-                const joinerPokemon = shuffled.slice(50, 100);
-                
-                gameState.myPokemon = hostPokemon.map(p => ({
-                    ...p,
-                    currentHp: p.stats.hp,
-                    maxHp: p.stats.hp,
-                    ar: 0,
-                    dr: 0,
-                    inBattle: false
-                }));
-                gameState.enemyPokemon = joinerPokemon.map(p => ({
-                    ...p,
-                    currentHp: p.stats.hp,
-                    maxHp: p.stats.hp,
-                    ar: 0,
-                    dr: 0,
-                    inBattle: false
-                }));
-
-                // Send Pokemon to joiner
-                console.log('Host sending Pokemon to joiner');
-                send('game-start', {
-                    hostPokemon: hostPokemon,
-                    joinerPokemon: joinerPokemon
-                });
-
-                // Reset game state
-                gameState.round = 1;
-                gameState.battle = 1;
-                gameState.myLanes = [null, null, null, null, null];
-                gameState.enemyLanes = [null, null, null, null, null];
-                gameState.phase = 'placement';
-                gameState.ready = false;
-                gameState.enemyReady = false;
-
-                clearLog();
-                showScreen('game');
-                updateUI();
-                startPlacementPhase();
-            } else {
-                // Joiner waits for Pokemon from host
-                document.getElementById('loading-text').textContent = 'Waiting for host to deal Pokemon...';
-                
-                // Reset game state
-                gameState.round = 1;
-                gameState.battle = 1;
-                gameState.myLanes = [null, null, null, null, null];
-                gameState.enemyLanes = [null, null, null, null, null];
-                gameState.phase = 'placement';
-                gameState.ready = false;
-                gameState.enemyReady = false;
-                clearLog();
             }
         }
 
@@ -1598,7 +1581,9 @@
 
         function requestRematch() {
             send('rematch', {});
-            startGame();
+            if (isHost) {
+                loadAndStartGame();
+            }
         }
 
         function backToLobby() {
