@@ -683,6 +683,7 @@
                     break;
                     
                 case 'ready':
+                    console.log('Received ready, lanes:', msg.lanes ? msg.lanes.length + ' pokemon' : 'none');
                     if (msg.lanes) {
                         state.enemyLanes = msg.lanes.map(p => p ? { ...p } : null);
                     }
@@ -691,6 +692,7 @@
                     break;
                     
                 case 'swap':
+                    console.log('Received swap, lanes:', msg.lanes ? msg.lanes.length + ' pokemon' : 'none');
                     if (msg.lanes) {
                         state.enemyLanes = msg.lanes.map(p => p ? { ...p } : null);
                     } else if (msg.swapPair) {
@@ -934,12 +936,8 @@
             hideOverlay();
             state.enemyReady = false; // Reset for next phase
             
-            if (state.phase === 'placement') {
-                state.enemyLanes.forEach((p, i) => { if (p) renderLane(i, p, 'enemy'); });
-                startBattle();
-            } else if (state.phase === 'swap') {
-                startBattle();
-            }
+            console.log('Both ready! Enemy lanes:', state.enemyLanes.filter(p => p).length);
+            startBattle();
         }
 
         function startBattle() {
@@ -947,6 +945,10 @@
             document.getElementById('phase-title').textContent = `Battle ${state.battle}/5`;
             document.getElementById('phase-desc').textContent = 'Watch the battle!';
             log(`--- Battle ${state.battle} ---`, 'info');
+            
+            // Make sure both sides' lanes are rendered
+            state.myLanes.forEach((p, i) => renderLane(i, p, 'my'));
+            state.enemyLanes.forEach((p, i) => renderLane(i, p, 'enemy'));
 
             for (let i = 0; i < 5; i++) {
                 const mine = state.myLanes[i];
