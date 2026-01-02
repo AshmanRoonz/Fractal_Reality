@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BT Finder - Directional</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            padding: 15px;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            font-size: 1.5rem;
+        }
+        
+        .container { max-width: 500px; margin: 0 auto; }
+        
+        .screen { display: none; }
+        .screen.active { display: block; }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            border: 2px solid rgba(0, 212, 255, 0.5);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin: 10px 0;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 8px 0;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            color: #302b63;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+        }
+        
+        .room-code {
+            font-size: 2rem;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            letter-spacing: 8px;
+            color: #00d4ff;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px dashed rgba(0, 212, 255, 0.5);
+        }
+        
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .status.info { background: rgba(0, 212, 255, 0.2); color: #00d4ff; }
+        .status.success { background: rgba(78, 205, 196, 0.2); color: #4ecdc4; }
+        .status.error { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+        
+        /* Compass Display */
+        .compass-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 30px auto;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+            border-radius: 50%;
+            border: 3px solid rgba(0, 212, 255, 0.5);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .compass-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+        
+        .direction-arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            transform-origin: 50% 50%;
+            transition: transform 0.5s ease-out;
+        }
+        
+        .arrow-pointer {
+            position: absolute;
+            top: -120px;
+            left: -25px;
+            width: 50px;
+            height: 140px;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+        
+        .arrow-svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+        
+        .direction-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            min-width: 100px;
+        }
+        
+        /* Distance Display */
+        .distance-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .distance-value {
+            font-size: 3.5rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            color: #00d4ff;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
+            margin: 10px 0;
+        }
+        
+        .distance-label {
+            font-size: 1rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        /* Proximity Indicator */
+        .proximity-bar {
+            width: 100%;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .proximity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d, #4ecdc4);
+            transition: width 0.5s ease-out;
+            border-radius: 20px;
+            position: relative;
+        }
+        
+        .proximity-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+            z-index: 2;
+        }
+        
+        /* Signal Strength */
+        .signal-strength {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        
+        .signal-bar {
+            flex: 1;
+            margin: 0 5px;
+            text-align: center;
+        }
+        
+        .signal-level {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .signal-bars {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 40px;
+            gap: 3px;
+        }
+        
+        .bar {
+            width: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+        
+        .bar.active { background: #4ecdc4; }
+        .bar:nth-child(1) { height: 10px; }
+        .bar:nth-child(2) { height: 20px; }
+        .bar:nth-child(3) { height: 30px; }
+        .bar:nth-child(4) { height: 40px; }
+        
+        /* Role Badge */
+        .role-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(0, 212, 255, 0.3);
+            border: 2px solid #00d4ff;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 100;
+        }
+        
+        .role-badge.device-a { background: rgba(0, 212, 255, 0.3); border-color: #00d4ff; }
+        .role-badge.device-b { background: rgba(78, 205, 196, 0.3); border-color: #4ecdc4; }
+        
+        /* Trend Indicator */
+        .trend-indicator {
+            text-align: center;
+            font-size: 3rem;
+            margin: 15px 0;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+        
+        .trend-warmer { color: #ff6b6b; }
+        .trend-colder { color: #4ecdc4; }
+        .trend-stable { color: #ffd93d; }
+        
+        /* Device List */
+        .device-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .device-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 3px solid #00d4ff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .device-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .device-item.selected {
+            background: rgba(0, 212, 255, 0.2);
+            border-left-color: #4ecdc4;
+        }
+        
+        /* Instructions */
+        .instruction-box {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 4px solid #00d4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .instruction-box p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 5px 0;
+        }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📡 BT Finder</h1>
+        
+        <!-- Setup Screen -->
+        <div id="setup-screen" class="screen active">
+            <div class="card">
+                <h2 style="text-align: center; margin-bottom: 15px;">Setup</h2>
+                
+                <div class="instruction-box">
+                    <p><strong>📱 Two Devices Needed</strong></p>
+                    <p>• Hold one phone in each hand (6 feet apart)</p>
+                    <p>• Each phone shows directional arrow</p>
+                    <p>• Arrows point toward hidden Bluetooth device</p>
+                    <p>• "Hot/Cold" feedback as you get closer</p>
+                </div>
+                
+                <input type="text" id="room-input" placeholder="Room Code" maxlength="6">
+                
+                <button class="btn-primary" id="create-btn">📱 Device A (Left Hand)</button>
+                <button class="btn-secondary" id="join-btn">📱 Device B (Right Hand)</button>
+                
+                <div id="setup-status"></div>
+            </div>
+        </div>
+        
+        <!-- Waiting Screen -->
+        <div id="waiting-screen" class="screen">
+            <div class="card">
+                <h2 style="text-align: center; margin-bottom: 15px;">Waiting...</h2>
+                <div class="room-code" id="display-room"></div>
+                <div class="status info">
+                    <div class="loader"></div>
+                    Enter this code on your other phone
+                </div>
+                <button class="btn-danger" id="cancel-btn">Cancel</button>
+            </div>
+        </div>
+        
+        <!-- Scan Screen -->
+        <div id="scan-screen" class="screen">
+            <div class="card">
+                <h2 style="text-align: center; margin-bottom: 15px;">Find Target</h2>
+                
+                <div class="instruction-box">
+                    <p>📍 Both phones will scan for the same hidden device</p>
+                </div>
+                
+                <button class="btn-primary" id="scan-btn">🔍 Scan for Devices</button>
+                
+                <div id="device-list-container" style="display: none;">
+                    <h3 style="margin: 15px 0 10px 0; text-align: center;">Found Devices:</h3>
+                    <div class="device-list" id="device-list"></div>
+                    <button class="btn-secondary" id="select-device-btn" disabled>Select as Target</button>
+                </div>
+                
+                <div id="scan-status"></div>
+                <button class="btn-danger" id="disconnect-btn" style="margin-top: 15px;">Exit</button>
+            </div>
+        </div>
+        
+        <!-- Tracking Screen -->
+        <div id="tracking-screen" class="screen">
+            <div class="role-badge" id="role-badge">A</div>
+            
+            <div class="card">
+                <h2 style="text-align: center; margin-bottom: 5px;">Tracking</h2>
+                <p style="text-align: center; opacity: 0.7; font-size: 0.9rem;" id="target-name-display">...</p>
+                
+                <!-- Compass with Direction Arrow -->
+                <div class="compass-container">
+                    <div class="compass-ring"></div>
+                    <div class="direction-arrow" id="direction-arrow">
+                        <div class="arrow-pointer" style="color: #00d4ff;">
+                            <svg class="arrow-svg" viewBox="0 0 50 140">
+                                <path d="M 25 0 L 50 30 L 35 30 L 35 140 L 15 140 L 15 30 L 0 30 Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="direction-label" id="direction-label">
+                        <div style="font-size: 1rem; opacity: 0.7;">Direction</div>
+                        <div id="angle-display">0°</div>
+                    </div>
+                </div>
+                
+                <!-- Trend Indicator -->
+                <div class="trend-indicator" id="trend-indicator">•</div>
+                <div style="text-align: center; font-size: 0.9rem; opacity: 0.8; margin-top: -10px;" id="trend-text">Scanning...</div>
+                
+                <!-- Distance -->
+                <div class="distance-display">
+                    <div class="distance-label">Estimated Distance</div>
+                    <div class="distance-value" id="my-distance">--</div>
+                    <div class="distance-label">meters</div>
+                </div>
+                
+                <!-- Proximity Bar -->
+                <div class="proximity-bar">
+                    <div class="proximity-fill" id="proximity-fill" style="width: 0%"></div>
+                    <div class="proximity-label" id="proximity-text">Searching...</div>
+                </div>
+                
+                <!-- Signal Strength -->
+                <div class="signal-strength">
+                    <div class="signal-bar">
+                        <div class="signal-level" id="my-rssi">--</div>
+                        <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 5px;">dBm</div>
+                        <div class="signal-bars" id="my-bars">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                        <div style="margin-top: 5px; font-size: 0.85rem;">This Phone</div>
+                    </div>
+                    <div class="signal-bar">
+                        <div class="signal-level" id="other-rssi">--</div>
+                        <div style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 5px;">dBm</div>
+                        <div class="signal-bars" id="other-bars">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                        <div style="margin-top: 5px; font-size: 0.85rem;">Other Phone</div>
+                    </div>
+                </div>
+                
+                <button class="btn-danger" id="stop-btn" style="margin-top: 20px;">Stop Tracking</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============== STATE ==============
+        const BASELINE = 1.83; // 6 feet = 1.83 meters
+        
+        const state = {
+            roomCode: '',
+            role: null,
+            eventSource: null,
+            targetDevice: null,
+            myRSSI: null,
+            otherRSSI: null,
+            myDistance: null,
+            otherDistance: null,
+            previousRSSI: null,
+            tracking: false,
+            scanInterval: null
+        };
+
+        const NTFY_SERVER = 'https://ntfy.sh';
+
+        // ============== UTILITY ==============
+        function generateRoomCode() {
+            return Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function setStatus(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            el.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        // ============== BLUETOOTH ==============
+        function rssiToDistance(rssi, txPower = -59) {
+            const n = 2.5; // Path loss exponent
+            return Math.pow(10, (txPower - rssi) / (10 * n));
+        }
+
+        async function scanBluetooth() {
+            try {
+                const device = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['battery_service']
+                });
+                return device;
+            } catch (error) {
+                setStatus('scan-status', `Error: ${error.message}`, 'error');
+                return null;
+            }
+        }
+
+        function updateSignalBars(elementId, rssi) {
+            const bars = document.querySelectorAll(`#${elementId} .bar`);
+            let activeCount = 0;
+            
+            if (rssi > -60) activeCount = 4;
+            else if (rssi > -70) activeCount = 3;
+            else if (rssi > -80) activeCount = 2;
+            else if (rssi > -90) activeCount = 1;
+            
+            bars.forEach((bar, i) => {
+                bar.classList.toggle('active', i < activeCount);
+            });
+        }
+
+        // ============== TRIANGULATION ==============
+        function calculateDirection(myDist, otherDist) {
+            // Using law of cosines to find angle
+            // Given: baseline (B), distance from A (dA), distance from B (dB)
+            // Find: angle at device A
+            
+            const B = BASELINE;
+            const dA = myDist;
+            const dB = otherDist;
+            
+            // Cosine rule: B² = dA² + dB² - 2*dA*dB*cos(angle)
+            const cosAngle = (dA * dA + B * B - dB * dB) / (2 * dA * B);
+            const angle = Math.acos(Math.max(-1, Math.min(1, cosAngle))) * (180 / Math.PI);
+            
+            // Determine if target is left or right of baseline
+            // If we're device A (left hand), positive angle means forward-left
+            // If we're device B (right hand), we need to flip
+            
+            if (state.role === 'A') {
+                return angle;
+            } else {
+                return 180 - angle;
+            }
+        }
+
+        function updateDirectionArrow(myDist, otherDist) {
+            if (!myDist || !otherDist) return;
+            
+            const angle = calculateDirection(myDist, otherDist);
+            const arrow = document.getElementById('direction-arrow');
+            const angleDisplay = document.getElementById('angle-display');
+            
+            // Convert to rotation (0° = up, 90° = right)
+            const rotation = angle - 90;
+            arrow.style.transform = `rotate(${rotation}deg)`;
+            angleDisplay.textContent = `${Math.round(angle)}°`;
+            
+            // Color based on direction
+            const pointer = arrow.querySelector('.arrow-pointer');
+            if (angle < 45 || angle > 135) {
+                pointer.style.color = '#4ecdc4'; // Straight ahead
+            } else {
+                pointer.style.color = '#00d4ff'; // Angled
+            }
+        }
+
+        function updateTrendIndicator(currentRSSI) {
+            if (state.previousRSSI === null) {
+                state.previousRSSI = currentRSSI;
+                return;
+            }
+            
+            const diff = currentRSSI - state.previousRSSI;
+            const indicator = document.getElementById('trend-indicator');
+            const text = document.getElementById('trend-text');
+            
+            if (diff > 2) {
+                indicator.innerHTML = '🔥';
+                indicator.className = 'trend-indicator trend-warmer';
+                text.textContent = 'Getting Warmer!';
+            } else if (diff < -2) {
+                indicator.innerHTML = '🧊';
+                indicator.className = 'trend-indicator trend-colder';
+                text.textContent = 'Getting Colder!';
+            } else {
+                indicator.innerHTML = '⚪';
+                indicator.className = 'trend-indicator trend-stable';
+                text.textContent = 'Stable';
+            }
+            
+            state.previousRSSI = currentRSSI;
+        }
+
+        function updateProximity(distance) {
+            const fill = document.getElementById('proximity-fill');
+            const label = document.getElementById('proximity-text');
+            
+            // Convert distance to percentage (closer = higher %)
+            // 0m = 100%, 10m+ = 0%
+            const percentage = Math.max(0, Math.min(100, (1 - (distance / 10)) * 100));
+            fill.style.width = `${percentage}%`;
+            
+            if (distance < 1) {
+                label.textContent = '🔥 VERY HOT!';
+            } else if (distance < 2) {
+                label.textContent = '🌡️ Hot';
+            } else if (distance < 4) {
+                label.textContent = '😊 Warm';
+            } else if (distance < 7) {
+                label.textContent = '😐 Cool';
+            } else {
+                label.textContent = '🧊 Cold';
+            }
+        }
+
+        // ============== NETWORK ==============
+        function send(data) {
+            const url = `${NTFY_SERVER}/${state.roomCode}`;
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({ ...data, from: state.role }),
+                headers: { 'Content-Type': 'application/json' }
+            }).catch(err => console.error('Send error:', err));
+        }
+
+        function listen() {
+            const url = `${NTFY_SERVER}/${state.roomCode}/sse`;
+            state.eventSource = new EventSource(url);
+            
+            state.eventSource.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.event === 'message') {
+                        handleMessage(JSON.parse(data.message));
+                    }
+                } catch (err) {
+                    console.error('Parse error:', err);
+                }
+            };
+        }
+
+        function handleMessage(msg) {
+            if (msg.from === state.role) return;
+            
+            switch (msg.type) {
+                case 'join':
+                    setTimeout(() => {
+                        showScreen('scan-screen');
+                    }, 1000);
+                    break;
+                    
+                case 'target-selected':
+                    state.targetDevice = msg.device;
+                    document.getElementById('target-name-display').textContent = msg.device.name;
+                    showScreen('tracking-screen');
+                    startTracking();
+                    break;
+                    
+                case 'rssi-update':
+                    state.otherRSSI = msg.rssi;
+                    state.otherDistance = rssiToDistance(msg.rssi);
+                    
+                    document.getElementById('other-rssi').textContent = msg.rssi;
+                    updateSignalBars('other-bars', msg.rssi);
+                    
+                    // Update direction if we have both readings
+                    if (state.myDistance && state.otherDistance) {
+                        updateDirectionArrow(state.myDistance, state.otherDistance);
+                    }
+                    break;
+            }
+        }
+
+        // ============== TRACKING ==============
+        function startTracking() {
+            state.tracking = true;
+            
+            // Simulate RSSI readings
+            state.scanInterval = setInterval(() => {
+                if (!state.tracking) return;
+                
+                // Simulate RSSI with some movement
+                const baseRSSI = -60;
+                const variation = Math.sin(Date.now() / 2000) * 15;
+                const noise = (Math.random() - 0.5) * 5;
+                const rssi = Math.round(baseRSSI + variation + noise);
+                
+                state.myRSSI = rssi;
+                state.myDistance = rssiToDistance(rssi);
+                
+                // Update displays
+                document.getElementById('my-rssi').textContent = rssi;
+                document.getElementById('my-distance').textContent = state.myDistance.toFixed(1);
+                updateSignalBars('my-bars', rssi);
+                updateTrendIndicator(rssi);
+                updateProximity(state.myDistance);
+                
+                // Send to partner
+                send({ type: 'rssi-update', rssi: rssi });
+                
+                // Update direction if partner data available
+                if (state.otherDistance) {
+                    updateDirectionArrow(state.myDistance, state.otherDistance);
+                }
+            }, 500);
+        }
+
+        function stopTracking() {
+            state.tracking = false;
+            if (state.scanInterval) clearInterval(state.scanInterval);
+            if (state.eventSource) state.eventSource.close();
+            location.reload();
+        }
+
+        // ============== ROOM MANAGEMENT ==============
+        function createRoom() {
+            const input = document.getElementById('room-input').value.trim().toUpperCase();
+            state.roomCode = input || generateRoomCode();
+            state.role = 'A';
+            
+            document.getElementById('display-room').textContent = state.roomCode;
+            document.getElementById('role-badge').textContent = 'A';
+            document.getElementById('role-badge').className = 'role-badge device-a';
+            
+            listen();
+            send({ type: 'create' });
+            showScreen('waiting-screen');
+        }
+
+        function joinRoom() {
+            const input = document.getElementById('room-input').value.trim().toUpperCase();
+            if (!input) {
+                setStatus('setup-status', 'Enter room code', 'error');
+                return;
+            }
+            
+            state.roomCode = input;
+            state.role = 'B';
+            
+            document.getElementById('role-badge').textContent = 'B';
+            document.getElementById('role-badge').className = 'role-badge device-b';
+            
+            listen();
+            send({ type: 'join' });
+            showScreen('scan-screen');
+        }
+
+        // ============== DEVICE SELECTION ==============
+        let selectedDevice = null;
+
+        async function startScan() {
+            const device = await scanBluetooth();
+            if (!device) return;
+            
+            const container = document.getElementById('device-list-container');
+            const list = document.getElementById('device-list');
+            
+            container.style.display = 'block';
+            
+            const item = document.createElement('div');
+            item.className = 'device-item';
+            item.innerHTML = `
+                <div style="font-weight: bold; font-size: 1.1rem;">${device.name || 'Unknown'}</div>
+                <div style="font-size: 0.8rem; opacity: 0.7; font-family: monospace;">${device.id}</div>
+            `;
+            
+            item.onclick = () => {
+                document.querySelectorAll('.device-item').forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                selectedDevice = device;
+                document.getElementById('select-device-btn').disabled = false;
+            };
+            
+            list.appendChild(item);
+            setStatus('scan-status', 'Device found!', 'success');
+        }
+
+        function selectDevice() {
+            if (!selectedDevice) return;
+            
+            state.targetDevice = {
+                name: selectedDevice.name || 'Unknown',
+                id: selectedDevice.id
+            };
+            
+            send({ type: 'target-selected', device: state.targetDevice });
+            document.getElementById('target-name-display').textContent = state.targetDevice.name;
+            showScreen('tracking-screen');
+            startTracking();
+        }
+
+        // ============== EVENT LISTENERS ==============
+        document.getElementById('create-btn').onclick = createRoom;
+        document.getElementById('join-btn').onclick = joinRoom;
+        document.getElementById('cancel-btn').onclick = () => location.reload();
+        document.getElementById('scan-btn').onclick = startScan;
+        document.getElementById('select-device-btn').onclick = selectDevice;
+        document.getElementById('disconnect-btn').onclick = () => location.reload();
+        document.getElementById('stop-btn').onclick = stopTracking;
+        
+        document.getElementById('room-input').onkeypress = (e) => {
+            if (e.key === 'Enter') createRoom();
+        };
+
+        // Check Bluetooth support
+        if (!navigator.bluetooth) {
+            setStatus('setup-status', 
+                'Web Bluetooth not supported. Use Chrome/Edge.', 
+                'error');
+            document.getElementById('create-btn').disabled = true;
+            document.getElementById('join-btn').disabled = true;
+        }
+    </script>
+</body>
+</html>
