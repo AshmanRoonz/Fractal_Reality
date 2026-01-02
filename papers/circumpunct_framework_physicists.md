@@ -209,9 +209,9 @@ The second circumpunct layer. Built ON the completed spatial field (Φ_space = 3
 ```
 Dim   │ Type      │ Symbol │ Name               │ Core Equations
 ──────┼───────────┼────────┼────────────────────┼─────────────────────────────────
-3.5D  │ Process   │  •_t   │ Temporal Aperture  │ T_eff,ij = cos²(Δφ_ij/2), B₃ generators
+3.5D  │ Process   │  •_t   │ Reiteration        │ T_eff,ij = cos²(Δφ_ij/2), B₃ generators
 4D    │ Structure │   —    │ Time Braid         │ G_μν = (8πG/c⁴)T_μν, B(x) ∝ √(−g_tt)
-4.5D  │ Process   │   —    │ Recursion          │ 4.5Dₙ = 0Dₙ₊₁, ⊙* = fix(λΦ. ⊱∘i∘≻[Φ])
+4.5D  │ Process   │   —    │ Braid Branching    │ 4.5Dₙ = 0Dₙ₊₁, ⊙* = fix(λΦ. ⊱∘i∘≻[Φ])
 5D    │ Structure │  ○_t   │ Time Surface       │ Temporal membrane enclosing 4D braid
 5.5D  │ Process   │   —    │ Temporal Sensation │ History↔possibility coupling
 6D    │ Structure │  Φ_t   │ Time Volume        │ Configuration space of all 4D braids
