@@ -2,7 +2,7 @@
 
 ## Abstract
 
-We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental object ⊙ = ○ ⊗ Φ ⊗ • unifies boundary (○), field (Φ), and aperture (•) through three-stage evolution operators (convergence, aperture rotation, emergence). We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 produces the specific fractal dimension D=1.5 with zero free parameters.
+We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental object ⊙ = ○ ⊗ Φ ⊗ • unifies boundary (○), field (Φ), and aperture (•) through three-stage evolution operators (convergence, aperture rotation, emergence). We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 corresponds to D=1.5—the fractal dimension of Brownian motion, a Mandelbrot fact (theorem, not fit).
 
 **On process dimensions:** The framework builds on Mandelbrot's proven mathematical foundation: fractional (Hausdorff) dimensions are real and measurable, describing process traces rather than static objects. The specific D value varies by system (coastlines ≈1.25, Brownian motion =1.5 exactly, DLA clusters ≈1.7)—this variation is expected. The framework predicts that balanced aperture dynamics produce D≈1.5; empirical examples illustrate this principle but are not load-bearing evidence for it.
 
@@ -117,9 +117,10 @@ The framework's dimensional claims build on this foundation:
 |------|-----------|---------------------|
 | Static structures | Integer (0, 1, 2, 3...) | Platonic ideals |
 | Process traces | Fractional | Mandelbrot's proven territory |
-| Balanced aperture | D ≈ 1.5 specifically | Framework prediction |
+| Brownian motion | D = 1.5 exactly | Mandelbrot fact (theorem) |
+| Balanced aperture | ◐ = 0.5 → D = 1.5 | Framework correspondence |
 
-**Important:** The specific D value varies by system—coastlines (≈1.25), Brownian motion (=1.5), DLA clusters (≈1.7). This variation is *expected*. The framework predicts that balance (◐ = 0.5) produces D ≈ 1.5. Empirical examples are *illustrations* of this principle, not load-bearing evidence for it.
+**Important:** The specific D value varies by system—coastlines (≈1.25), Brownian motion (=1.5), DLA clusters (≈1.7). This variation is *expected*. D = 1.5 is the Mandelbrot dimension of Brownian motion—a proven mathematical fact. The framework's balance point ◐ = 0.5 corresponds to this dimension; empirical examples are *illustrations* of the correspondence, not load-bearing evidence for it.
 
 ---
 
@@ -405,15 +406,15 @@ and a **balance parameter**:
 ◐ = |≻| / (|≻| + |⊰|)
 ```
 
-The framework singles out **◐ = 1/2** by symmetry, maximum entropy, and energy balance arguments. At this fixed point, the effective fractal dimension of worldlines is:
+The framework singles out **◐ = 1/2** by symmetry, maximum entropy, and energy balance arguments. At this fixed point, the effective fractal dimension of worldlines corresponds to:
 
 ```
-D = 1 + ◐ = 1.5
+D = 1.5 (Mandelbrot fact: the fractal dimension of Brownian motion)
 ```
 
-At the critical balance point ◐ = 0.5, this gives D = 1.5.
+This is a proven mathematical theorem, not a fit or derivation. The balance point ◐ = 0.5 corresponds to this Mandelbrot dimension via the interpolation D = 1 + ◐.
 
-**Note:** The linear relation D = 1 + ◐ is the simplest form consistent with dimensional interpolation. At ◐ = 0 (pure convergence), D = 1 (ballistic); at ◐ = 1 (pure emergence), D = 2 (diffusive); at balance ◐ = 0.5, D = 1.5 (superdiffusive).
+**Note:** The linear relation D = 1 + ◐ interpolates between regimes. At ◐ = 0 (pure convergence), D = 1 (ballistic); at ◐ = 1 (pure emergence), D = 2 (diffusive); at balance ◐ = 0.5, D = 1.5—which is precisely the Mandelbrot dimension of Brownian motion. The framework does not derive 1.5; rather, it identifies that the balance point corresponds to this established mathematical fact.
 
 ### 2.4 Canonical Radial Kernel and Worldline Dimension
 
@@ -451,15 +452,15 @@ Thus D = 1.5 corresponds to H_H = 2/3, i.e. superdiffusive but sub-ballistic mot
 
 At ◐ = 0.5, the aperture is "halfway" between a point (0D) and a line (1D). The kernel r^◐ = r^0.5 is the spatial signature of this 0.5D aperture—the radial profile that implements the balance between concentration and spread.
 
-**Derivation chain:**
+**Correspondence chain:**
 ```
 Symmetry (K_conv = K_emerg) → ◐ = 0.5
 ◐ = effective aperture dimension → kernel exponent α = ◐
 Therefore: K(r) ∝ r^0.5 = √r
-This kernel → D = 1.5 (emergent consequence)
+This corresponds to D = 1.5 (Mandelbrot fact)
 ```
 
-The √r profile and D = 1.5 are both downstream consequences of ◐ = 0.5, not independent assumptions.
+The √r kernel profile is compatible with D = 1.5, which is not derived but is the proven Mandelbrot dimension of Brownian motion. The framework identifies that balanced aperture dynamics (◐ = 0.5) correspond to this established mathematical fact.
 
 **Note on rigor:** The step "α = ◐" follows from interpreting ◐ as the effective dimensionality of the aperture, with r^◐ as the natural radial profile interpolating between point-like and linear behavior. A fully rigorous derivation from variational principles (showing that α = ◐ extremizes some functional) remains an open question (§10.1).
 
@@ -1796,48 +1797,45 @@ The framework is falsified if:
 
 This section collects rigorous derivations that establish key framework results from multiple independent routes.
 
-### 7A.1 Hopf Fibration → D = 1.5 (Topological Proof)
+### 7A.1 D = 1.5 as Mandelbrot Fact and Framework Correspondence
 
-The fractal dimension D = 1.5 is not merely a parameter choice—it is a **topological invariant**.
+The fractal dimension D = 1.5 is the **Mandelbrot dimension of Brownian motion**—a proven mathematical theorem, not a framework derivation.
 
 ```
-THEOREM (Topologically Protected Dimension):
-───────────────────────────────────────────
-THE HOPF FIBRATION:
-    S³ → S² with fiber S¹
+THE MANDELBROT FACT:
+────────────────────
+Brownian motion has fractal dimension D = 1.5 exactly.
+This is a THEOREM in measure theory, not a fit or approximation.
 
-    The Hopf invariant c₁ = 1 (first Chern number)
-    This is an INTEGER—topologically quantized
-
-THE DERIVATION:
-    D = D_base + |c₁|/2
-    D = 1 + 1/2
-    D = 1.5
+FRAMEWORK CORRESPONDENCE:
+────────────────────────
+The framework's balance point ◐ = 0.5 corresponds to D = 1.5 via:
+    D = 1 + ◐ = 1 + 0.5 = 1.5
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
-    ║    D = 1.5 IS TOPOLOGICALLY PROTECTED                                     ║
-    ║    Cannot be continuously deformed to any other value                     ║
+    ║    D = 1.5 IS A MANDELBROT FACT                                           ║
+    ║    The framework's balance point corresponds to this proven dimension     ║
     ╚═══════════════════════════════════════════════════════════════════════════╝
 
-WHY HOPF?
-    - S³ is the unique simply-connected 3-manifold (Poincaré)
-    - Hopf fibration is the generator of π₃(S²) = ℤ
-    - c₁ = 1 is FORCED by topology, not chosen
+TOPOLOGICAL STRUCTURE (Hopf fibration):
+    S³ → S² with fiber S¹, Hopf invariant c₁ = 1
+    The formula D = D_base + |c₁|/2 = 1 + 0.5 = 1.5
+    shows the framework's topology is compatible with the Mandelbrot fact.
 
-ILLUSTRATIVE EXAMPLES (where this manifests):
+ILLUSTRATIVE EXAMPLES (where D ≈ 1.5 appears):
     LIGO gravitational waves: D = 1.503 ± 0.040
     DNA backbone:            D = 1.510 ± 0.020
     Neural avalanches:       D = 1.48-1.52
 
 IMPORTANT FRAMING:
-    These are illustrations of the principle, not load-bearing evidence.
+    These are illustrations of the correspondence, not load-bearing evidence.
     The specific D value varies by system—Mandelbrot showed:
     - Coastlines ≈ 1.25
     - Brownian motion = 1.5 (theorem)
     - DLA clusters ≈ 1.7
 
-    The mathematical foundation (fractional dimensions exist) is PROVEN.
-    The framework prediction (balance → D ≈ 1.5) is TESTABLE.
+    D = 1.5 is established mathematics (Mandelbrot).
+    The framework identifies ◐ = 0.5 as corresponding to this fact.
     The empirical fits are ILLUSTRATIONS.
 ```
 
@@ -3013,7 +3011,7 @@ This formulation benefited from iterative refinement focused on mathematical rig
 **Maintained by:** Circumpunct Framework Development Team
 
 **v1.6 Changes:** Major update adding §7A Alternative Derivations section with 9 rigorous derivations:
-- §7A.1: D = 1.5 from Hopf fibration (topological proof)
+- §7A.1: D = 1.5 as Mandelbrot fact and framework correspondence
 - §7A.2: Fermionic anticommutation {ψ,ψ†}=1 from exclusive node occupancy
 - §7A.3: QCD beta function β₀ = 11Nc/3 - 2nf/3 from 22/64 selection rule
 - §7A.4: Lepton mass formula m_μ/m_e = (1/α)^(13/12) from 6-channel geometry (0.13% error)
