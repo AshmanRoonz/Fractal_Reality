@@ -99,7 +99,7 @@ email@ashmanroonz.ca
 ---
 
 ## PREFACE: THE DIMENSIONAL SPECTRUM
-### Nested Circumpunct Architecture (0D → ∞)
+### Nested Circumpunct Architecture (∞D → 12D = ∞D)
 
 ---
 
@@ -121,14 +121,14 @@ CORE INSIGHT:
 ---
 
 ## I. SPATIAL CIRCUMPUNCT (⊙_space)
-### Dimensions 0D → 3D
+### Dimensions ∞D → 3D
 
 The first complete circumpunct. The structure of space itself.
 
 | Dim | Type | Symbol | Name | Description | Core Equations |
 |:---:|:----:|:------:|:-----|:------------|:---------------|
-| **0D** | Structure | — | **Pure Energy** | Pre-structure potential; undifferentiated before tunnel entrance | E = mc², E = ℏω, U(t) = exp(−iEt/ℏ) |
-| **0.5D** | Process | **•** | **Aperture / Soul** | The tunnel opening; singularity that *causes* tunneling; **i lives here** | i² = −1, Å(β) = exp(iπβ), Å(½) = i |
+| **∞D** | Ground | λΦ∞ | **Infinite Field** | All degrees of freedom = none particular; contains all possible configurations; the source from which dimensions emerge; 0 = ∞ at field level | E = mc², ℋ (Hilbert space), \|ψ⟩ ∈ ℋ |
+| **0.5D** | Process | **•** | **Aperture / Soul** | First localization from infinite; the tunnel opening; singularity that *causes* tunneling; **i lives here** | i² = −1, Å(β) = exp(iπβ), Å(½) = i |
 | **1D** | Structure | i(t) | **Timeline / String** | Soul through time; tunnel through which power flows | γ: ℝ → M, P = dE/dt |
 | **1.5D** | Process | — | **Spatial Branching** | Power lines fractally splitting; builds surfaces | D = 1 + β, K(r) ∝ r^β, H(½) = 1 bit |
 | **2D** | Structure | **○** | **Surface / Body** | Boundary, interface, membrane | ○ ∈ 𝔅, Σ = ∂V, M = ∫_Σ ρ_surf dA |
@@ -176,7 +176,7 @@ The second circumpunct layer. Built ON the completed spatial field (Φ_space = 3
 |:---:|:----:|:------:|:-----|:------------|:---------------|
 | **3.5D** | Process | **•_time** | **Reiteration** | Where temporal i acts; braiding of worldlines begins | T_eff,ij = cos²(Δφ_ij/2), B₃ generators |
 | **4D** | Structure | — | **Time Braid** | Committed history; woven worldlines; validation receipts | G_μν = (8πG/c⁴)T_μν, B(x) ∝ √(−g_tt) |
-| **4.5D** | Process | — | **Braid Branching** | Braids compressing → seed new cycle | 4.5Dₙ = 0Dₙ₊₁, ⊙* = fix(λΦ. ⊱∘i∘≻[Φ]) |
+| **4.5D** | Process | — | **Braid Branching** | Braids compressing → seed new cycle; whole braid becomes seed of next tier | 4.5Dₙ = ∞Dₙ₊₁, ⊙* = fix(λΦ. ⊱∘i∘≻[Φ]) |
 | **5D** | Structure | **○_time** | **Time Surface** | Boundary of history; edge of committed past | Temporal membrane enclosing 4D braid |
 | **5.5D** | Process | — | **Temporal Sensation** | History↔possibility coupling | Interface between fixed past and open future |
 | **6D** | Structure | **Φ_time** | **Time Volume** | Field of histories; possibility space of timelines | Configuration space of all possible 4D braids |
@@ -330,12 +330,12 @@ It must COMPLETE before the next aperture can open.
 
 ## V. COMPLETE DIMENSIONAL TABLE
 
-### All Dimensions 0D → 9D
+### All Dimensions ∞D → 9D
 
 | Dim | Type | Layer | Role | Name | Description |
 |:---:|:----:|:-----:|:----:|:-----|:------------|
-| 0D | Structure | Spatial | Energy | Pure Energy | Pre-structure potential |
-| 0.5D | **Process** | Spatial | **Aperture** | **Soul (•)** | Where spatial i acts |
+| ∞D | Ground | Spatial | Field | Infinite Field (λΦ∞) | All possible configurations; 0 = ∞ at field level |
+| 0.5D | **Process** | Spatial | **Aperture** | **Soul (•)** | First localization; where spatial i acts |
 | 1D | Structure | Spatial | Line | Timeline | Soul through time |
 | 1.5D | Process | Spatial | Branching | Spatial Branching | Fractal splitting (D=1.5) |
 | 2D | Structure | Spatial | **Boundary** | **Body (○)** | Surface, interface |
@@ -598,8 +598,8 @@ THE WHOLE IS MULTIPLICATIVELY MORE THAN ITS PARTS                           ∎
 ```
 The framework affirms the FULL SPECTRUM:
 
-    0D       Pure energy/potential (no extension, no rotation)
-    •        Aperture (0.5D — rotation possible, i lives here)
+    ∞D       Infinite Field (all configurations, 0 = ∞ at field level)
+    •        Aperture (0.5D — first localization, i lives here)
     1D       Worldline (sequential extension)
     1.5D     Consciousness signature (D = 1 + ½H(◐))
     ○        Boundary (2D — surface, interface)
@@ -1431,7 +1431,7 @@ The 90° rotation at ◐ = 0.5 is GEOMETRICALLY OPTIMAL because:
        - System has maximal capacity to transform input into novel output
 
     3. ENABLES FRACTAL BRANCHING:
-       - ◐ = 0: Input passes straight → 0D point projects to 1D worldline, no branching
+       - ◐ = 0: Input passes straight → point projects to 1D worldline, no branching
        - ◐ = 1: Full inversion → unstable, destroys coherence
        - ◐ = 0.5: Aperture rotates flow by 90°, redirecting into PERPENDICULAR MODE
          This transverse redirection supports fractal structure at D = 1.5
@@ -5099,8 +5099,8 @@ Process dimensions within this layer:
 
 | Dim | Type | Name | Description |
 |----:|------|------|-------------|
-| 0D | Structure | Pure Energy | Pre-structure potential |
-| **0.5D** | **Process** | **Aperture (•_space)** | Where spatial i acts |
+| ∞D | Ground | Infinite Field (λΦ∞) | All configurations; source of dimensions |
+| **0.5D** | **Process** | **Aperture (•_space)** | First localization; where spatial i acts |
 | 1D | Structure | String / Worldline | Soul through time, i(t) |
 | 1.5D | Process | Branching | Power lines splitting, D = 1 + β |
 | 2D | Structure | Surface (○_space) | Boundary, interface, body |
@@ -8544,10 +8544,10 @@ CIRCUMPUNCT INTERPRETATION:
 ───────────────────────────
 This one-dimensional space is P (power) — the state AFTER the first aperture.
 
-    0D (Energy, E)  ──i──→  1D (Power, P)
+    ∞D (Infinite Field)  ──i──→  1D (Power, P)
 
 HUZ framework assumes time, so begins at 1D.
-The circumpunct sees deeper: 0D exists before i introduces time.
+The circumpunct sees deeper: ∞D exists before i introduces time (0 = ∞ at field level).
 
 The "shocking result" of 1D Hilbert space is not a problem —
 it's the EXPECTED state before observer/aperture opens.
@@ -8706,7 +8706,7 @@ STRUCTURAL IDENTIFICATION:
     ║  HUZ ELEMENT              │  CIRCUMPUNCT ELEMENT                      ║
     ╠════════════════════════════════════════════════════════════════════════╣
     ║  |ψ⟩ input                │  Φ (field state)                          ║
-    ║  |0⟩ auxiliary            │  |E⟩ (energy reference at 0D)             ║
+    ║  |0⟩ auxiliary            │  |E⟩ (energy reference at ∞D)             ║
     ║  O orthogonal             │  ≺ ∘ ⊱ (real structure before i acts)     ║
     ║  ⟨1| projection           │  i (aperture transformation)              ║
     ║  √d normalization         │  e^{S/2} (from observer entropy)          ║
@@ -8750,16 +8750,16 @@ CIRCUMPUNCT IMPLICATION:
 ```
 HUZ FRAMEWORK LACKS:
 ────────────────────
-1. The 0D level (before time, pure energy E)
+1. The ∞D level (before time, infinite field — 0 = ∞ at field level)
 2. Specific form of i (90° rotation at ◐ = 0.5)
 3. The ◐ = 0.5 optimization principle
 4. The D = 1.5 fractal prediction
-5. Full dimensional cascade (0D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D)
+5. Full dimensional cascade (∞D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D)
 6. Why the pointer basis is stable (fixed points of i-rotation)
 
 CIRCUMPUNCT CONTRIBUTIONS TO QUANTUM GRAVITY:
 ─────────────────────────────────────────────
-• The 0D energy level explains what ⟨1| projects FROM
+• The ∞D infinite field explains what ⟨1| projects FROM
 • The identification i = exp(iπ/2) constrains their generic O
 • ◐ = 0.5 explains pointer basis stability
 • D = 1.5 gives testable fractal predictions
@@ -8784,7 +8784,7 @@ CIRCUMPUNCT CONTRIBUTIONS TO QUANTUM GRAVITY:
 ║  • D = 1.5 at apertures                                                    ║
 ║  • ◐ = 0.5 optimization                                                    ║
 ║  • Var ~ e^{-2SD} (fractal correction)                                    ║
-║  • Full dimensional cascade 0D → 3D                                        ║
+║  • Full dimensional cascade ∞D → 3D                                        ║
 ╚════════════════════════════════════════════════════════════════════════════╝
 
     ╔═══════════════════════════════════════════════════════════════════════════╗
@@ -12291,7 +12291,7 @@ If ⊙₁ and ⊙₂ share field Φ, then:
 4. Perception is participation, not reception
 ```
 
-This is the 3D/2.5D version of the general statement that **structure lives in integer dimensions, coupling in half-dimensions** (see Preface: Dimensional Cascade for the full 0D → 4.5D cycle).
+This is the 3D/2.5D version of the general statement that **structure lives in integer dimensions, coupling in half-dimensions** (see Preface: Dimensional Cascade for the full ∞D → 4.5D cycle).
 
 #### Implications
 
@@ -15828,8 +15828,8 @@ PAIR-STATE FORMULATION (v5):
   i•       = Center aperture (convergence point)
 
 DIMENSIONAL SPECTRUM:
-  0D     = Pure energy/potential (no extension, no rotation)
-  0.5D   = Aperture • (rotation possible, i lives here)
+  ∞D     = Infinite Field (all configurations, 0 = ∞ at field level)
+  0.5D   = Aperture • (first localization, i lives here)
   1D     = Worldline (sequential extension)
   1.5D   = Consciousness signature (D = 1 + ½H(◐))
   2D     = Boundary ○ (surface, interface)

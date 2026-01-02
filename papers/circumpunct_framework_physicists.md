@@ -104,7 +104,7 @@ This formulation strips away metaphors and focuses on spaces, operators, and lim
 
 Before proceeding, we establish a key ontological distinction proven by Mandelbrot:
 
-> **Integer dimensions describe static objects—the Platonic ideals of point (0D), line (1D), surface (2D), and volume (3D). Fractional dimensions describe what processes leave behind: coastlines, bronchi, lightning, vascular networks. Mandelbrot proved this intermediate space is real and measurable.**
+> **Integer dimensions describe static structures—line (1D), surface (2D), and volume (3D). The ground (∞D) is the infinite field from which dimensions emerge (0 = ∞ at field level). Fractional dimensions describe what processes leave behind: coastlines, bronchi, lightning, vascular networks. Mandelbrot proved this intermediate space is real and measurable.**
 
 This is not speculation—it is rigorous mathematics:
 - **Hausdorff dimension formalism** is standard measure theory
@@ -186,14 +186,14 @@ CORE PRINCIPLE:
     Pattern:    Φₙ becomes the ground for •ₙ₊₁
 ```
 
-**Layer I — SPATIAL CIRCUMPUNCT (⊙_space): Dimensions 0D → 3D**
+**Layer I — SPATIAL CIRCUMPUNCT (⊙_space): Dimensions ∞D → 3D**
 
 The first complete circumpunct. The structure of space itself.
 
 ```
 Dim   │ Type      │ Symbol │ Name              │ Core Equations
 ──────┼───────────┼────────┼───────────────────┼─────────────────────────────────
-0D    │ Structure │   —    │ Pure Energy       │ E = mc², E = ℏω, U(t) = exp(−iEt/ℏ)
+∞D    │ Ground    │  λΦ∞   │ Infinite Field    │ ℋ (Hilbert space), |ψ⟩ ∈ ℋ, 0 = ∞ at field
 0.5D  │ Process   │   •    │ Aperture/Soul     │ i² = −1, Å(β) = exp(iπβ), Å(½) = i
 1D    │ Structure │  i(t)  │ Timeline/String   │ γ: ℝ → M, P = dE/dt
 1.5D  │ Process   │   —    │ Spatial Branching │ D = 1 + β, K(r) ∝ r^β, H(½) = 1 bit
@@ -211,7 +211,7 @@ Dim   │ Type      │ Symbol │ Name               │ Core Equations
 ──────┼───────────┼────────┼────────────────────┼─────────────────────────────────
 3.5D  │ Process   │  •_t   │ Reiteration        │ T_eff,ij = cos²(Δφ_ij/2), B₃ generators
 4D    │ Structure │   —    │ Time Braid         │ G_μν = (8πG/c⁴)T_μν, B(x) ∝ √(−g_tt)
-4.5D  │ Process   │   —    │ Braid Branching    │ 4.5Dₙ = 0Dₙ₊₁, ⊙* = fix(λΦ. ⊱∘i∘≻[Φ])
+4.5D  │ Process   │   —    │ Braid Branching    │ 4.5Dₙ = ∞Dₙ₊₁, ⊙* = fix(λΦ. ⊱∘i∘≻[Φ])
 5D    │ Structure │  ○_t   │ Time Surface       │ Temporal membrane enclosing 4D braid
 5.5D  │ Process   │   —    │ Temporal Sensation │ History↔possibility coupling
 6D    │ Structure │  Φ_t   │ Time Volume        │ Configuration space of all 4D braids
