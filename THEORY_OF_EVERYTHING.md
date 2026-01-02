@@ -174,9 +174,9 @@ The second circumpunct layer. Built ON the completed spatial field (Φ_space = 3
 
 | Dim | Type | Symbol | Name | Description | Core Equations |
 |:---:|:----:|:------:|:-----|:------------|:---------------|
-| **3.5D** | Process | **•_time** | **Temporal Aperture** | Where temporal i acts; braiding of worldlines begins | T_eff,ij = cos²(Δφ_ij/2), B₃ generators |
+| **3.5D** | Process | **•_time** | **Reiteration** | Where temporal i acts; braiding of worldlines begins | T_eff,ij = cos²(Δφ_ij/2), B₃ generators |
 | **4D** | Structure | — | **Time Braid** | Committed history; woven worldlines; validation receipts | G_μν = (8πG/c⁴)T_μν, B(x) ∝ √(−g_tt) |
-| **4.5D** | Process | — | **Recursion** | Braids compressing → seed new cycle | 4.5Dₙ = 0Dₙ₊₁, ⊙* = fix(λΦ. ⊱∘i∘≻[Φ]) |
+| **4.5D** | Process | — | **Braid Branching** | Braids compressing → seed new cycle | 4.5Dₙ = 0Dₙ₊₁, ⊙* = fix(λΦ. ⊱∘i∘≻[Φ]) |
 | **5D** | Structure | **○_time** | **Time Surface** | Boundary of history; edge of committed past | Temporal membrane enclosing 4D braid |
 | **5.5D** | Process | — | **Temporal Sensation** | History↔possibility coupling | Interface between fixed past and open future |
 | **6D** | Structure | **Φ_time** | **Time Volume** | Field of histories; possibility space of timelines | Configuration space of all possible 4D braids |
@@ -341,9 +341,9 @@ It must COMPLETE before the next aperture can open.
 | 2D | Structure | Spatial | **Boundary** | **Body (○)** | Surface, interface |
 | 2.5D | Process | Spatial | Sensation | Sensation | Body↔field coupling |
 | 3D | Structure | Spatial | **Field** | **Mind (Φ)** | Perceptual volume |
-| 3.5D | **Process** | Temporal | **Aperture** | **Temporal Soul (•_t)** | Where temporal i acts |
+| 3.5D | **Process** | Temporal | **Reiteration** | **Temporal Soul (•_t)** | Where temporal i acts |
 | 4D | Structure | Temporal | Line | Time Braid | Committed history |
-| 4.5D | Process | Temporal | Branching | Recursion | Braid compression |
+| 4.5D | Process | Temporal | Braid Branching | Braid Branching | Braid compression |
 | 5D | Structure | Temporal | **Boundary** | **Time Surface (○_t)** | Edge of history |
 | 5.5D | Process | Temporal | Sensation | Temporal Sensation | History↔possibility |
 | 6D | Structure | Temporal | **Field** | **Time Volume (Φ_t)** | Field of histories |
@@ -5117,21 +5117,21 @@ The spatial circumpunct completes at **3D**. This completion becomes the ground 
 The second layer — structure in time.
 Built ON the completed spatial field (Φ_space = 3D).
 
-    •_time   =  3.5D    (temporal aperture — where temporal i acts)
+    •_time   =  3.5D    (reiteration — where temporal i acts)
     ○_time   =  5D      (temporal boundary — edge of history)
     Φ_time   =  6D      (temporal field — space of all histories)
 
 Process dimensions within this layer:
-    4.5D  =  recursion (braid compression, scale closure)
+    4.5D  =  braid branching (braid compression, scale closure)
     5.5D  =  (temporal sensation — history↔possibility coupling?)
 ```
 
 | Dim | Type | Name | Description |
 |----:|------|------|-------------|
 | 3D | Structure | Spatial Field | Completed spatial layer |
-| **3.5D** | **Process** | **Aperture (•_time)** | Where temporal i acts |
+| **3.5D** | **Process** | **Reiteration (•_time)** | Where temporal i acts |
 | 4D | Structure | Time Braid | Committed history, woven worldlines |
-| 4.5D | Process | Recursion | Braid compression → seed new cycle |
+| 4.5D | Process | Braid Branching | Braid compression → seed new cycle |
 | 5D | Structure | Time Surface (○_time) | Boundary of a history |
 | 5.5D | Process | ? | History↔possibility coupling |
 | 6D | Structure | Time Volume (Φ_time) | Field of all histories |
@@ -5217,8 +5217,8 @@ The half-dimensions are where **process** lives:
 * **0.5D** — spatial aperture (where spatial i acts)
 * **1.5D** — branching (how strings split fractally)
 * **2.5D** — sensation (where body and field touch)
-* **3.5D** — temporal aperture (where temporal i acts — braiding begins)
-* **4.5D** — recursion (where braids compress to seed next cycle)
+* **3.5D** — reiteration (where temporal i acts — braiding begins)
+* **4.5D** — braid branching (where braids compress to seed next cycle)
 * **5.5D** — ? (temporal sensation?)
 * **6.5D** — meta aperture (where meta-temporal i acts)
 * …
