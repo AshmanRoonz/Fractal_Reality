@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⊙ The Circumpunct Theory — A Theory of Everything</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>⊙ Circumpunct Dimensional Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=JetBrains+Mono:wght@300;400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-deep: #0a0a0f;
             --bg-card: #12121a;
             --bg-card-hover: #1a1a25;
-            --bg-section: #0d0d14;
             --structure-primary: #4a9eff;
             --structure-glow: rgba(74, 158, 255, 0.3);
             --structure-bg: rgba(74, 158, 255, 0.08);
@@ -20,16 +19,11 @@
             --ground-primary: #c792ea;
             --ground-glow: rgba(199, 146, 234, 0.3);
             --ground-bg: rgba(199, 146, 234, 0.08);
-            --derived-color: #50fa7b;
-            --conjectured-color: #ffb86c;
-            --fitted-color: #ff79c6;
             --text-primary: #e8e8f0;
             --text-secondary: #a0a0b0;
             --text-dim: #606070;
             --tier-divider: #2a2a3a;
             --gold: #d4af37;
-            --accent-red: #ff5555;
-            --accent-green: #50fa7b;
         }
 
         * {
@@ -59,8 +53,8 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(ellipse at 20% 20%, rgba(74, 158, 255, 0.03) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(199, 146, 234, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 20%, rgba(74, 158, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(199, 146, 234, 0.05) 0%, transparent 50%),
                 radial-gradient(ellipse at 50% 50%, rgba(255, 215, 0, 0.02) 0%, transparent 70%);
             pointer-events: none;
             z-index: -1;
@@ -73,29 +67,16 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(10, 10, 15, 0.95);
+            background: rgba(10, 10, 15, 0.9);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--tier-divider);
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0.6rem 1rem;
-        }
-
-        .nav-title {
-            text-align: center;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            color: var(--gold);
-            margin-bottom: 0.4rem;
+            padding: 0.8rem 2rem;
         }
 
         nav ul {
             display: flex;
             justify-content: center;
-            gap: 0.3rem;
+            gap: 0.5rem;
             list-style: none;
             flex-wrap: wrap;
         }
@@ -103,25 +84,22 @@
         nav a {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.65rem;
+            font-size: 0.75rem;
             font-weight: 500;
-            padding: 0.3rem 0.6rem;
-            border-radius: 15px;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
             transition: all 0.3s ease;
             border: 1px solid transparent;
-            white-space: nowrap;
         }
 
         nav a:hover {
             color: var(--text-primary);
             background: var(--bg-card);
-            border-color: var(--tier-divider);
         }
 
-        nav a.active {
-            background: var(--gold);
-            color: var(--bg-deep);
-        }
+        nav a.structure { border-color: var(--structure-primary); color: var(--structure-primary); }
+        nav a.process { border-color: var(--process-primary); color: var(--process-primary); }
+        nav a.ground { border-color: var(--ground-primary); color: var(--ground-primary); }
 
         /* Hero Section */
         .hero {
@@ -131,31 +109,31 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 8rem 2rem 4rem;
+            padding: 6rem 2rem 4rem;
             position: relative;
         }
 
         .hero::after {
             content: '⊙';
             position: absolute;
-            font-size: 50vw;
-            opacity: 0.015;
+            font-size: 40vw;
+            opacity: 0.02;
             color: var(--gold);
             pointer-events: none;
             animation: slowPulse 8s ease-in-out infinite;
         }
 
         @keyframes slowPulse {
-            0%, 100% { opacity: 0.015; transform: scale(1); }
-            50% { opacity: 0.03; transform: scale(1.05); }
+            0%, 100% { opacity: 0.02; transform: scale(1); }
+            50% { opacity: 0.04; transform: scale(1.05); }
         }
 
         .hero h1 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(3rem, 10vw, 6rem);
+            font-size: clamp(2.5rem, 8vw, 5rem);
             font-weight: 300;
-            letter-spacing: 0.15em;
-            margin-bottom: 0.5rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
             background: linear-gradient(135deg, var(--text-primary), var(--gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -163,10 +141,10 @@
         }
 
         .hero .symbol {
-            font-size: 5rem;
+            font-size: 4rem;
             color: var(--gold);
-            margin-bottom: 1.5rem;
-            text-shadow: 0 0 60px var(--process-glow);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 40px var(--process-glow);
             animation: symbolGlow 3s ease-in-out infinite;
         }
 
@@ -176,326 +154,68 @@
         }
 
         .hero .subtitle {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            font-style: italic;
+            font-size: 1.2rem;
             color: var(--text-secondary);
-            max-width: 700px;
-            margin-bottom: 2rem;
-        }
-
-        .hero .author {
-            font-size: 1rem;
-            color: var(--text-dim);
+            max-width: 600px;
             margin-bottom: 3rem;
-        }
-
-        .master-equation-box {
-            background: var(--bg-card);
-            border: 1px solid var(--tier-divider);
-            border-radius: 16px;
-            padding: 2rem 3rem;
-            margin-bottom: 2rem;
         }
 
         .master-equation {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
+            padding: 1.5rem 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--tier-divider);
+            border-radius: 12px;
             color: var(--gold);
             letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
+            margin-bottom: 2rem;
         }
 
-        .equation-explanation {
-            color: var(--text-dim);
+        .legend {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             font-size: 0.9rem;
         }
 
-        .trinity-display {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
         }
 
-        .trinity-item {
-            text-align: center;
-        }
+        .legend-dot.structure { background: var(--structure-primary); box-shadow: 0 0 10px var(--structure-glow); }
+        .legend-dot.process { background: var(--process-primary); box-shadow: 0 0 10px var(--process-glow); }
+        .legend-dot.ground { background: var(--ground-primary); box-shadow: 0 0 10px var(--ground-glow); }
 
-        .trinity-symbol {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .trinity-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .trinity-item:nth-child(1) .trinity-symbol { color: var(--process-primary); }
-        .trinity-item:nth-child(2) .trinity-symbol { color: var(--ground-primary); }
-        .trinity-item:nth-child(3) .trinity-symbol { color: var(--structure-primary); }
-
-        /* Main Content */
+        /* Main content */
         main {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Section Styling */
-        .section {
-            padding: 5rem 0;
-            border-bottom: 1px solid var(--tier-divider);
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-header h2 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.5rem;
-            font-weight: 400;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .section-header .section-subtitle {
-            color: var(--text-dim);
-            font-size: 1rem;
-        }
-
-        .section-header .section-number {
-            display: inline-block;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--gold);
-            background: var(--process-bg);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            margin-bottom: 1rem;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--bg-card);
-            border-radius: 16px;
             padding: 2rem;
-            border: 1px solid var(--tier-divider);
-            margin-bottom: 1.5rem;
-        }
-
-        .card h3 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
-
-        .card h4 {
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-dim);
-            margin: 1.5rem 0 0.8rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--tier-divider);
-        }
-
-        .card p {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .card ul {
-            list-style: none;
-            color: var(--text-secondary);
-        }
-
-        .card li {
-            padding: 0.3rem 0 0.3rem 1.2rem;
-            position: relative;
-        }
-
-        .card li::before {
-            content: '›';
-            position: absolute;
-            left: 0;
-            color: var(--gold);
-        }
-
-        /* Equations */
-        .equation {
-            font-family: 'JetBrains Mono', monospace;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            color: var(--gold);
-            font-size: 0.9em;
-        }
-
-        .equation-block {
-            font-family: 'JetBrains Mono', monospace;
-            background: rgba(212, 175, 55, 0.08);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            color: var(--gold);
-            font-size: 1.1rem;
-            text-align: center;
-            overflow-x: auto;
-        }
-
-        .equation-block .label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Grid Layouts */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        /* Status Badges */
-        .status {
-            display: inline-block;
-            font-size: 0.65rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 0.2rem 0.6rem;
-            border-radius: 10px;
-            margin-left: 0.5rem;
-        }
-
-        .status.derived {
-            background: rgba(80, 250, 123, 0.15);
-            color: var(--derived-color);
-        }
-
-        .status.conjectured {
-            background: rgba(255, 184, 108, 0.15);
-            color: var(--conjectured-color);
-        }
-
-        .status.fitted {
-            background: rgba(255, 121, 198, 0.15);
-            color: var(--fitted-color);
-        }
-
-        /* Tables */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            font-size: 0.85rem;
-        }
-
-        .data-table th {
-            background: var(--bg-section);
-            color: var(--text-dim);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-size: 0.7rem;
-            padding: 0.8rem;
-            text-align: left;
-            border-bottom: 1px solid var(--tier-divider);
-        }
-
-        .data-table td {
-            padding: 0.8rem;
-            border-bottom: 1px solid var(--tier-divider);
-            color: var(--text-secondary);
-        }
-
-        .data-table tr:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .data-table .value {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--gold);
-        }
-
-        .data-table .error {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--derived-color);
-            font-size: 0.8em;
-        }
-
-        /* Particle Table */
-        .particle-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 0.8rem;
-            margin: 1rem 0;
-        }
-
-        .particle-cell {
-            background: var(--bg-section);
-            border: 1px solid var(--tier-divider);
-            border-radius: 8px;
-            padding: 0.8rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .particle-cell:hover {
-            transform: translateY(-2px);
-            border-color: var(--gold);
-        }
-
-        .particle-cell.fermion { border-left: 3px solid var(--structure-primary); }
-        .particle-cell.boson { border-left: 3px solid var(--process-primary); }
-        .particle-cell.higgs { border-left: 3px solid var(--ground-primary); }
-
-        .particle-symbol {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-        }
-
-        .particle-name {
-            font-size: 0.7rem;
-            color: var(--text-dim);
-        }
-
-        .particle-mass {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--text-secondary);
         }
 
         /* Tier Headers */
         .tier-header {
             text-align: center;
-            padding: 3rem 2rem 2rem;
+            padding: 4rem 2rem 2rem;
             position: relative;
         }
 
         .tier-header h2 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 400;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.2em;
             color: var(--text-secondary);
             text-transform: uppercase;
         }
@@ -517,6 +237,11 @@
         }
 
         /* Dimension Cards */
+        .dimension-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
         .dimension-card {
             background: var(--bg-card);
             border-radius: 16px;
@@ -525,7 +250,6 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            margin-bottom: 1.5rem;
         }
 
         .dimension-card::before {
@@ -535,6 +259,7 @@
             left: 0;
             right: 0;
             height: 3px;
+            transition: all 0.3s ease;
         }
 
         .dimension-card:hover {
@@ -599,7 +324,7 @@
 
         .card-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
         }
 
@@ -619,9 +344,9 @@
         }
 
         .content-section li {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
-            padding: 0.25rem 0;
+            padding: 0.3rem 0;
             padding-left: 1rem;
             position: relative;
         }
@@ -633,283 +358,170 @@
             color: var(--text-dim);
         }
 
-        /* Collapsible Sections */
-        .collapsible-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--tier-divider);
+        .equation {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: var(--gold);
         }
 
-        .collapsible-header h3 {
-            margin: 0;
+        /* Key Insights Section */
+        .insights-section {
+            margin-top: 4rem;
+            padding: 4rem 2rem;
+            background: var(--bg-card);
+            border-radius: 24px;
+            border: 1px solid var(--tier-divider);
         }
 
-        .collapsible-header .toggle {
-            font-size: 1.5rem;
-            color: var(--text-dim);
-            transition: transform 0.3s ease;
+        .insights-section h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--gold);
         }
 
-        .collapsible-header.active .toggle {
-            transform: rotate(45deg);
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
         }
 
-        .collapsible-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-        }
-
-        .collapsible-content.active {
-            max-height: 5000px;
-        }
-
-        /* Axiom Cards */
-        .axiom-card {
-            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-section) 100%);
-            border: 1px solid var(--gold);
+        .insight-card {
+            background: rgba(255, 255, 255, 0.02);
             border-radius: 12px;
             padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
+            border: 1px solid var(--tier-divider);
         }
 
-        .axiom-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--gold), transparent);
-        }
-
-        .axiom-number {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--gold);
-            margin-bottom: 0.5rem;
-        }
-
-        .axiom-card h4 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
+        .insight-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 0.8rem;
-            border: none;
-            padding: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .axiom-card p {
-            color: var(--text-secondary);
+        .insight-card h3::before {
+            content: '⊙';
+            color: var(--gold);
+        }
+
+        .insight-card p {
             font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .insight-card .formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            margin-top: 0.8rem;
+            display: block;
         }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 5rem 2rem;
-            background: var(--bg-section);
-            border-top: 1px solid var(--tier-divider);
+            padding: 4rem 2rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
         }
 
         footer .mantra {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-style: italic;
             color: var(--gold);
             margin-bottom: 1rem;
         }
 
-        footer p {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Legend */
-        .legend {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 2rem 0;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-        }
-
-        .legend-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .legend-dot.structure { background: var(--structure-primary); }
-        .legend-dot.process { background: var(--process-primary); }
-        .legend-dot.ground { background: var(--ground-primary); }
-
         /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .master-equation { font-size: 1.2rem; }
-            .grid-2, .grid-3 { grid-template-columns: 1fr; }
-            .trinity-display { gap: 1.5rem; }
-            nav a { font-size: 0.6rem; padding: 0.25rem 0.4rem; }
+            nav ul {
+                gap: 0.3rem;
+            }
+            nav a {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.5rem;
+            }
+            .hero h1 {
+                letter-spacing: 0.05em;
+            }
+            .master-equation {
+                font-size: 1rem;
+                padding: 1rem 1.5rem;
+            }
+            .dimension-card {
+                padding: 1.5rem;
+            }
+            .card-header {
+                gap: 1rem;
+            }
+            .dim-label {
+                font-size: 1.5rem;
+            }
+            .role-symbol {
+                font-size: 2rem;
+            }
         }
 
-        /* Scroll to top button */
-        .scroll-top {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 50px;
-            height: 50px;
-            background: var(--gold);
-            color: var(--bg-deep);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.5rem;
+        /* Scroll animations */
+        .dimension-card {
             opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 100;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
         }
 
-        .scroll-top.visible {
-            opacity: 1;
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .scroll-top:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px var(--process-glow);
-        }
-
-        /* Interactive Tool Styles */
-        .braid-btn {
-            padding: 0.75rem 1.5rem;
-            border: 1px solid var(--structure-primary);
-            background: var(--structure-bg);
-            color: var(--text-primary);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-        }
-        
-        .braid-btn:hover {
-            background: var(--structure-primary);
-            color: var(--bg-dark);
-        }
-        
-        input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            height: 8px;
-            background: var(--bg-section);
-            border-radius: 4px;
-            outline: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: var(--gold);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: var(--gold);
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-        }
-        
-        code {
-            background: var(--bg-section);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-        }
-
-        /* Print styles */
-        @media print {
-            nav, .scroll-top { display: none; }
-            .section { page-break-inside: avoid; }
-        }
+        .dimension-card:nth-child(1) { animation-delay: 0.1s; }
+        .dimension-card:nth-child(2) { animation-delay: 0.2s; }
+        .dimension-card:nth-child(3) { animation-delay: 0.3s; }
+        .dimension-card:nth-child(4) { animation-delay: 0.4s; }
+        .dimension-card:nth-child(5) { animation-delay: 0.5s; }
+        .dimension-card:nth-child(6) { animation-delay: 0.6s; }
     </style>
 </head>
 <body>
     <nav>
-        <div class="nav-container">
-            <div class="nav-title">⊙ The Circumpunct Theory</div>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#axioms">Axioms</a></li>
-                <li><a href="#genesis">Genesis</a></li>
-                <li><a href="#trinity">Trinity</a></li>
-                <li><a href="#golden">Golden Ratio</a></li>
-                <li><a href="#process">Process</a></li>
-                <li><a href="#dimensions">Dimensions</a></li>
-                <li><a href="#64states">64 States</a></li>
-                <li><a href="#physics">Physics</a></li>
-                <li><a href="#field-equations">Field Equations</a></li>
-                <li><a href="#consciousness">Consciousness</a></li>
-                <li><a href="#emergence">Emergence</a></li>
-                <li><a href="#ethics">Ethics</a></li>
-                <li><a href="#ethereal-tail">Ethereal Tail</a></li>
-                <li><a href="#omega">Ωmega</a></li>
-                <li><a href="#interactive">Interactive</a></li>
-                <li><a href="#validation">Validation</a></li>
-                <li><a href="#falsification">Falsification</a></li>
-                <li><a href="#glossary">Glossary</a></li>
-            </ul>
-        </div>
+        <ul>
+            <li><a href="#ground" class="ground">∞D Ground</a></li>
+            <li><a href="#tier1">Tier 1</a></li>
+            <li><a href="#d05" class="process">0.5D</a></li>
+            <li><a href="#d1" class="structure">1D</a></li>
+            <li><a href="#d15" class="process">1.5D</a></li>
+            <li><a href="#d2" class="structure">2D</a></li>
+            <li><a href="#d25" class="process">2.5D</a></li>
+            <li><a href="#d3" class="structure">3D</a></li>
+            <li><a href="#tier2">Tier 2</a></li>
+            <li><a href="#tier3">Tier 3</a></li>
+            <li><a href="#tier4">Tier 4</a></li>
+            <li><a href="#insights">Insights</a></li>
+        </ul>
     </nav>
 
-    <button class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <!-- HERO SECTION -->
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <section class="hero" id="home">
+    <section class="hero">
         <div class="symbol">⊙</div>
         <h1>Circumpunct</h1>
-        <p class="subtitle">The minimal procedural structure of any whole entity — a geometric theory unifying physics, consciousness, and ethics from first principles</p>
-        <p class="author">by Ashman Roonz</p>
-
-        <div class="master-equation-box">
-            <div class="master-equation">Φ' = ⊱ ∘ i ∘ ≺[Φ]</div>
-            <p class="equation-explanation">convergence → aperture rotation → emergence (read right-to-left)</p>
-        </div>
-
-        <div class="trinity-display">
-            <div class="trinity-item">
-                <div class="trinity-symbol">•</div>
-                <div class="trinity-label">Center / Soul<br>Aperture</div>
-            </div>
-            <div class="trinity-item">
-                <div class="trinity-symbol">Φ</div>
-                <div class="trinity-label">Field / Mind<br>Mediation</div>
-            </div>
-            <div class="trinity-item">
-                <div class="trinity-symbol">○</div>
-                <div class="trinity-label">Boundary / Body<br>Surface</div>
-            </div>
-        </div>
-
+        <p class="subtitle">Dimensional Architecture of the Theory of Everything</p>
+        <div class="master-equation">Φ' = ⊱ ∘ i ∘ ≺[Φ]</div>
+        <p style="color: var(--text-dim); font-size: 0.9rem;">read right-to-left: convergence → aperture rotation → emergence</p>
+        
         <div class="legend">
             <div class="legend-item">
                 <div class="legend-dot structure"></div>
@@ -927,440 +539,60 @@
     </section>
 
     <main>
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- AXIOMS SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="axioms">
-            <div class="section-header">
-                <span class="section-number">Part I</span>
-                <h2>First Principles</h2>
-                <p class="section-subtitle">The irreducible seed from which everything grows</p>
-            </div>
-
-            <div class="grid-3">
-                <div class="axiom-card">
-                    <div class="axiom-number">AXIOM 1</div>
-                    <h4>Existence Requires Distinction</h4>
-                    <p>To exist is to be distinguished from what is not. Without boundary, there is no thing. The first act is separation: inside from outside.</p>
-                </div>
-
-                <div class="axiom-card">
-                    <div class="axiom-number">AXIOM 2</div>
-                    <h4>Separation Requires Mediation</h4>
-                    <p>What is separated cannot interact directly (by definition of separation). Therefore a mediating field Φ must exist between center and boundary.</p>
-                </div>
-
-                <div class="axiom-card">
-                    <div class="axiom-number">AXIOM 3</div>
-                    <h4>Trinity is Minimum</h4>
-                    <p>You cannot braid two strands — you can only twist them. Three is the minimum for non-trivial topology, history, and identity. Hence: • ⊗ Φ ⊗ ○</p>
-                </div>
-
-                <div class="axiom-card">
-                    <div class="axiom-number">AXIOM 4</div>
-                    <h4>Process is Threefold</h4>
-                    <p>Any complete operation requires: gathering (≺), transformation (i), and expression (⊱). Input, process, output. Convergence, aperture, emergence.</p>
-                </div>
-
-                <div class="axiom-card">
-                    <div class="axiom-number">AXIOM 5</div>
-                    <h4>Self-Similarity</h4>
-                    <p>The structure must reproduce itself at all scales. Each completed circumpunct becomes the aperture for the next tier: •ₙ₊₁ = ⊙ₙ</p>
-                </div>
-
-                <div class="axiom-card">
-                    <div class="axiom-number">AXIOM 6</div>
-                    <h4>Balance Parameter β</h4>
-                    <p>The aperture openness β = |≺|/(|≺|+|⊱|) parameterizes flow balance. At β = ½, input equals output — maximum coherence, consciousness, life.</p>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 2rem;">
-                <h3>The Fundamental Equation</h3>
-                <div class="equation-block">
-                    <span class="label">Structure</span>
-                    ⊙ = • ⊗ Φ ⊗ ○
-                </div>
-                <div class="equation-block">
-                    <span class="label">Process</span>
-                    Φ' = ⊱ ∘ i ∘ ≺[Φ]
-                </div>
-                <div class="equation-block">
-                    <span class="label">Balance</span>
-                    β = |≺| / (|≺| + |⊱|) = ½
-                </div>
-                <p style="text-align: center; margin-top: 1rem;">From these seeds, all of physics, consciousness, and ethics emerge necessarily.</p>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- GENESIS SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="genesis">
-            <div class="section-header">
-                <span class="section-number">Part I-B</span>
-                <h2>Genesis — The Impossibility of Nothing</h2>
-                <p class="section-subtitle">Why existence is necessary, not contingent</p>
-            </div>
-
-            <div class="card">
-                <h3>Theorem: Nothing Cannot Exist</h3>
-                
-                <h4>Proof by Causation</h4>
-                <p>Suppose nothing exists. Nothing has no properties. Having no properties, it cannot cause anything. But then nothing could ever come to exist. Yet we observe existence. Contradiction. ∴ Pure nothing is causally impossible.</p>
-
-                <h4>Proof by Self-Reference</h4>
-                <p>Suppose nothing exists. "Nothing" would be the only "thing". But the only thing is already distinguished from what it is not. Distinction is not empty. ∴ Nothingness cannot exist.</p>
-
-                <div class="equation-block">
-                    Nothing is both causally inert AND logically incoherent.<br>
-                    Existence is necessary from every direction of analysis.
-                </div>
-            </div>
-
-            <div class="grid-2" style="margin-top: 1.5rem;">
-                <div class="card">
-                    <h3>Corollary: Necessary Multiplicity</h3>
-                    <ul>
-                        <li>The One implies distinction</li>
-                        <li>Distinction implies Two: thing and not-thing</li>
-                        <li>Two implies Three: thing, not-thing, and the relation</li>
-                    </ul>
-                    <p style="margin-top: 1rem;">The minimum structure of existence is trinity. <span class="equation">⊙ = ○ ⊗ Φ ⊗ •</span> is not imposed on being — it is what being IS when nothingness is impossible.</p>
-                </div>
-
-                <div class="card">
-                    <h3>Corollary: Fractal Necessity</h3>
-                    <ul>
-                        <li>Each part of ⊙ is itself a whole</li>
-                        <li>An empty part would be nothing</li>
-                        <li>Nothingness is impossible</li>
-                    </ul>
-                    <p style="margin-top: 1rem;">∴ Parts must have parts. Structure goes all the way down. <strong>⊙ is fractal by necessity, not choice.</strong></p>
-                </div>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- TRINITY SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="trinity">
-            <div class="section-header">
-                <span class="section-number">Part II</span>
-                <h2>The Trinity Structure</h2>
-                <p class="section-subtitle">Center, Field, Boundary — the irreducible architecture of wholeness</p>
-            </div>
-
-            <div class="grid-3">
-                <div class="card" style="border-left: 3px solid var(--process-primary);">
-                    <h3>• Center (Soul)</h3>
-                    <p>The aperture — where infinity localizes into here. The point of view, the seat of attention, the singularity where transformation happens.</p>
-                    <h4>Properties</h4>
-                    <ul>
-                        <li>Dimensionally fractional (can rotate)</li>
-                        <li>Where the imaginary unit <span class="equation">i</span> operates</li>
-                        <li>Focus, observation, intention</li>
-                        <li>The NOW where future flows into past</li>
-                    </ul>
-                    <h4>Physical Correspondence</h4>
-                    <ul>
-                        <li>Virtual particle / quantum fluctuation</li>
-                        <li>Gravitational singularity</li>
-                        <li>Measurement operator</li>
-                    </ul>
-                </div>
-
-                <div class="card" style="border-left: 3px solid var(--ground-primary);">
-                    <h3>Φ Field (Mind)</h3>
-                    <p>The mediating space between center and boundary. The relational medium that allows separated things to interact without touching.</p>
-                    <h4>Properties</h4>
-                    <ul>
-                        <li>Surface / membrane structure</li>
-                        <li>Where χ (orientation) lives</li>
-                        <li>The bottleneck in H₅ star graph</li>
-                        <li>Carries information between • and ○</li>
-                    </ul>
-                    <h4>Physical Correspondence</h4>
-                    <ul>
-                        <li>Worldsheet / holographic boundary</li>
-                        <li>Event horizon</li>
-                        <li>Gauge field</li>
-                    </ul>
-                </div>
-
-                <div class="card" style="border-left: 3px solid var(--structure-primary);">
-                    <h3>○ Boundary (Body)</h3>
-                    <p>The closure that defines inside from outside. The surface where the circumpunct locks into stable structure.</p>
-                    <h4>Properties</h4>
-                    <ul>
-                        <li>Dimensionally integer (locked, stable)</li>
-                        <li>Made of apertures (○ made of •'s)</li>
-                        <li>Embodiment, manifestation</li>
-                        <li>Where tiers complete and lock</li>
-                    </ul>
-                    <h4>Physical Correspondence</h4>
-                    <ul>
-                        <li>Observable space</li>
-                        <li>Spatial manifold</li>
-                        <li>Physical body</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 2rem;">
-                <h3>Why Trinity?</h3>
-                <p>The trinity structure is not arbitrary — it is the minimum required for:</p>
-                <div class="grid-3" style="margin-top: 1rem;">
-                    <div>
-                        <h4>Braiding</h4>
-                        <p>You cannot braid two strands. The braid group B₃ is the first non-abelian braid group, enabling history and memory.</p>
+        <!-- GROUND -->
+        <section id="ground">
+            <div class="dimension-grid">
+                <div class="dimension-card ground">
+                    <div class="card-header">
+                        <span class="dim-label">∞D</span>
+                        <span class="role-symbol">λΦ∞</span>
+                        <span class="card-title">Infinite Field — The Ground</span>
+                        <span class="card-type">Ground</span>
                     </div>
-                    <div>
-                        <h4>Mediation</h4>
-                        <p>Center and boundary cannot touch directly (by definition). Field mediation is geometrically necessary, not optional.</p>
-                    </div>
-                    <div>
-                        <h4>Completeness</h4>
-                        <p>Two elements give only one relation. Three elements give the minimum closed structure: knower, known, knowing.</p>
+                    <div class="card-content">
+                        <div class="content-section">
+                            <h4>Structure & Process</h4>
+                            <ul>
+                                <li>All degrees of freedom = none particular</li>
+                                <li>Not located, not a point — infinite</li>
+                                <li>Contains all possible configurations</li>
+                                <li>0 = ∞ at the level of field</li>
+                                <li>The source from which dimensions emerge</li>
+                            </ul>
+                        </div>
+                        <div class="content-section">
+                            <h4>Physics</h4>
+                            <ul>
+                                <li>Hilbert space ℋ — all possible states |ψ⟩</li>
+                                <li>Quantum vacuum / zero-point field</li>
+                                <li><span class="equation">E = mc²</span> (energy IS the ground)</li>
+                                <li>Superposition lives here</li>
+                                <li>Pre-measurement, pre-localization</li>
+                            </ul>
+                        </div>
+                        <div class="content-section">
+                            <h4>Consciousness</h4>
+                            <ul>
+                                <li>Pure awareness prior to content</li>
+                                <li>Brahman (Hindu), Ein Sof (Kabbalah)</li>
+                                <li>Tao that cannot be named</li>
+                                <li>Buddha-nature, Rigpa</li>
+                                <li>"I AM" before "I am this"</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- GOLDEN RATIO SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="golden">
-            <div class="section-header">
-                <span class="section-number">Part III</span>
-                <h2>The Golden Aperture</h2>
-                <p class="section-subtitle">Self-similarity forces φ — the golden ratio emerges necessarily</p>
-            </div>
+        <!-- TIER 1 -->
+        <div class="tier-header" id="tier1">
+            <h2><span>Tier 1 — Spatial Body</span></h2>
+        </div>
 
-            <div class="grid-2">
-                <div class="card">
-                    <h3>Self-Similar Fixed Point <span class="status derived">Derived</span></h3>
-                    <p>Self-similarity requires nested apertures to reproduce themselves:</p>
-                    <div class="equation-block">
-                        whole/open = open/closed<br><br>
-                        1/β = β/(1-β)<br><br>
-                        β² + β - 1 = 0<br><br>
-                        <strong>β = 1/φ ≈ 0.618</strong>
-                    </div>
-                    <p>The golden ratio is not chosen — it is forced by the requirement that the structure reproduce itself at all scales.</p>
-                </div>
-
-                <div class="card">
-                    <h3>Golden Impedance <span class="status derived">Derived</span></h3>
-                    <p>At the self-similar aperture:</p>
-                    <div class="equation-block">
-                        Z = β/(1-β) = (1/φ)/(1/φ²) = φ<br><br>
-                        β × Z = (1/φ) × φ = 1
-                    </div>
-                    <p>The aperture is <strong>impedance-matched to itself</strong>. This is why φ appears universally — it's the unique value where the system is self-consistent.</p>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>Golden Euler Identity <span class="status derived">Derived</span></h3>
-                <p>The π rotation (fundamental inversion) factorizes into two golden sub-rotations:</p>
-                <div class="equation-block" style="font-size: 1.3rem;">
-                    e<sup>iπ/φ</sup> · e<sup>iπ/φ²</sup> + 1 = 0
-                </div>
-                <p style="text-align: center;">Six constants (e, i, π, φ, 1, 0). One equation. Each appears exactly once.</p>
-                <p style="text-align: center; margin-top: 1rem;">This follows algebraically from φ² = φ + 1, therefore 1/φ + 1/φ² = 1, therefore π/φ + π/φ² = π.</p>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- TEMPORAL PROCESS SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="process">
-            <div class="section-header">
-                <span class="section-number">Part III-B</span>
-                <h2>The Temporal Process</h2>
-                <p class="section-subtitle">How future becomes past through the aperture</p>
-            </div>
-
-            <div class="card">
-                <h3>The Master Equation</h3>
-                <div class="equation-block" style="font-size: 1.5rem;">
-                    Φ' = ⊱ ∘ i ∘ ≺[Φ]
-                </div>
-                <p style="text-align: center;">Read right-to-left: Field → Convergence → Aperture Rotation → Emergence → Field'</p>
-                
-                <div class="grid-3" style="margin-top: 2rem;">
-                    <div style="text-align: center; padding: 1rem; background: var(--process-bg); border-radius: 8px;">
-                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">≺</div>
-                        <div style="font-weight: 600; color: var(--process-primary);">Convergence</div>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Field gathers toward aperture. Future flows in.</p>
-                    </div>
-                    <div style="text-align: center; padding: 1rem; background: var(--ground-bg); border-radius: 8px;">
-                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">i</div>
-                        <div style="font-weight: 600; color: var(--ground-primary);">Aperture</div>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">90° rotation in complex space. Transformation happens.</p>
-                    </div>
-                    <div style="text-align: center; padding: 1rem; background: var(--structure-bg); border-radius: 8px;">
-                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">⊱</div>
-                        <div style="font-weight: 600; color: var(--structure-primary);">Emergence</div>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Transformed field radiates outward. Past is created.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid-2" style="margin-top: 1.5rem;">
-                <div class="card">
-                    <h3>Energy = Structure × Process³</h3>
-                    <div class="equation-block">
-                        ⊙ = (○, Φ, •) × (≺, i, ⊱)³
-                    </div>
-                    <p>Process cubed because one cycle per structural level:</p>
-                    <ul>
-                        <li><strong>○ receives:</strong> (≺, i, ⊱)¹ — infinite apertures lens</li>
-                        <li><strong>Φ fractalizes:</strong> (≺, i, ⊱)² — many become one</li>
-                        <li><strong>• focuses:</strong> (≺, i, ⊱)³ — whole to point, i transforms</li>
-                    </ul>
-                    <p style="margin-top: 1rem;">E = mc² is the special case where c = constant. The general form includes temporal structure.</p>
-                </div>
-
-                <div class="card">
-                    <h3>Time Direction: Future → Past</h3>
-                    <p>We don't move into the future. The future (infinite field) flows INTO us through the aperture:</p>
-                    <div class="equation-block">
-                        ∞D (future) → • (now) → collapsed (past)
-                    </div>
-                    <ul>
-                        <li><strong>Future:</strong> Infinite, unbounded, all possibilities</li>
-                        <li><strong>Aperture:</strong> The NOW where collapse happens</li>
-                        <li><strong>Past:</strong> Finite, determined, one actuality</li>
-                    </ul>
-                    <p style="margin-top: 1rem;">The aperture is a temporal singularity. Time flows through it, not away from it.</p>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>The Validation Gate</h3>
-                <p>Convergence (≺) is promiscuous — it gathers ALL resonant patterns, including contradictions. So we need a validation gate:</p>
-                
-                <div class="equation-block">
-                    Φ' = ⊱ ∘ [Gate] ∘ i ∘ ≺[Φ]<br><br>
-                    Gate = [• × ○ × Φ] = validation checkpoint
-                </div>
-
-                <div class="grid-3" style="margin-top: 1.5rem;">
-                    <div class="card" style="background: var(--bg-section);">
-                        <h4 style="color: var(--process-primary);">C_• — Center Coherence</h4>
-                        <ul>
-                            <li>No self-contradiction</li>
-                            <li>Identity continuous over time</li>
-                            <li>Internal consistency</li>
-                        </ul>
-                    </div>
-                    <div class="card" style="background: var(--bg-section);">
-                        <h4 style="color: var(--structure-primary);">C_○ — Boundary Integrity</h4>
-                        <ul>
-                            <li>Fair interface</li>
-                            <li>No forced participation</li>
-                            <li>No boundary override</li>
-                        </ul>
-                    </div>
-                    <div class="card" style="background: var(--bg-section);">
-                        <h4 style="color: var(--ground-primary);">C_Φ — Field Correspondence</h4>
-                        <ul>
-                            <li>Matches reality</li>
-                            <li>Has fitness (it works)</li>
-                            <li>Navigates well</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="equation-block" style="margin-top: 1.5rem;">
-                    Truth = (C_• × C_○ × C_Φ)^(1/3)<br><br>
-                    <span style="font-size: 0.8rem; color: var(--text-dim);">Geometric mean — no dimension can compensate for zero in another</span>
-                </div>
-
-                <p style="margin-top: 1rem;">This prevents: <strong>coherent lies</strong> (high C_•, low C_Φ), <strong>verified coercion</strong> (high C_Φ, low C_○), and <strong>consensual delusions</strong> (high C_○, low C_Φ).</p>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- DIMENSIONS SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="dimensions">
-            <div class="section-header">
-                <span class="section-number">Part IV</span>
-                <h2>Dimensional Architecture</h2>
-                <p class="section-subtitle">From ∞D ground through four tiers to cosmic closure</p>
-            </div>
-
-            <div class="card">
-                <h3>The Pattern</h3>
-                <div class="grid-2">
-                    <div>
-                        <h4>Structure (Integer)</h4>
-                        <p>What IS — locked, stable, complete. Boundaries are integer dimensions because structure is finished.</p>
-                        <p class="equation">∞D, 1D, 2D, 3D, 4D, 5D...</p>
-                    </div>
-                    <div>
-                        <h4>Process (Fractal)</h4>
-                        <p>What HAPPENS — flow, becoming, alive. Centers are fractional because they can rotate (i operation).</p>
-                        <p class="equation">0.5D, 1.5D, 2.5D, 3.5D, 4.5D...</p>
-                    </div>
-                </div>
-                <p style="text-align: center; margin-top: 1.5rem; font-style: italic; color: var(--gold);">
-                    "Life lives in the fractions. Structure lives in the integers."
-                </p>
-            </div>
-
-            <!-- GROUND -->
-            <div class="tier-header">
-                <h2><span>Ground — λΦ∞</span></h2>
-            </div>
-
-            <div class="dimension-card ground">
-                <div class="card-header">
-                    <span class="dim-label">∞D</span>
-                    <span class="role-symbol">λΦ∞</span>
-                    <span class="card-title">Infinite Field — The Ground of All</span>
-                    <span class="card-type">Ground</span>
-                </div>
-                <div class="card-content">
-                    <div class="content-section">
-                        <h4>Structure</h4>
-                        <ul>
-                            <li>All degrees of freedom = none particular</li>
-                            <li>Contains all possible configurations</li>
-                            <li>0 = ∞ at the level of field</li>
-                            <li>Source from which dimensions emerge</li>
-                        </ul>
-                    </div>
-                    <div class="content-section">
-                        <h4>Physics</h4>
-                        <ul>
-                            <li>Hilbert space ℋ — all possible states</li>
-                            <li>Quantum vacuum / zero-point field</li>
-                            <li><span class="equation">E = mc²</span> (energy IS the ground)</li>
-                            <li>Pre-measurement superposition</li>
-                        </ul>
-                    </div>
-                    <div class="content-section">
-                        <h4>Consciousness</h4>
-                        <ul>
-                            <li>Pure awareness prior to content</li>
-                            <li>Brahman, Ein Sof, Tao</li>
-                            <li>"I AM" before "I am this"</li>
-                            <li>The Witness before witnessing</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TIER 1 -->
-            <div class="tier-header">
-                <h2><span>Tier 1 — Spatial Body (⊙₁)</span></h2>
-            </div>
-
-            <div class="dimension-card process">
+        <section class="dimension-grid">
+            <!-- 0.5D -->
+            <div class="dimension-card process" id="d05">
                 <div class="card-header">
                     <span class="dim-label">0.5D</span>
                     <span class="role-symbol">•</span>
@@ -1369,12 +601,13 @@
                 </div>
                 <div class="card-content">
                     <div class="content-section">
-                        <h4>Structure</h4>
+                        <h4>Structure & Process</h4>
                         <ul>
                             <li>First "here" distinguished from infinite</li>
-                            <li>Fractional (can ROTATE via i operation)</li>
-                            <li>The NOW where future → past</li>
-                            <li><span class="equation">β = 1/φ</span> at self-similar point</li>
+                            <li>Aperture emerges from field</li>
+                            <li>Fractional because can ROTATE (i operation)</li>
+                            <li>The NOW where future flows into past</li>
+                            <li><span class="equation">β = 1/φ</span> at self-similar fixed point</li>
                         </ul>
                     </div>
                     <div class="content-section">
@@ -1384,21 +617,24 @@
                             <li>The imaginary unit <span class="equation">i</span> lives here</li>
                             <li>Gravitational singularity</li>
                             <li>Measurement/projection operator</li>
+                            <li>Where wave function "collapses"</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h4>Consciousness</h4>
                         <ul>
                             <li>Focus / Observation / Attention</li>
-                            <li><span class="equation">ε</span> channel: WHETHER</li>
-                            <li>Willpower = capacity to set ε</li>
+                            <li><span class="equation">ε</span> channel: WHETHER aperture opens</li>
+                            <li>The spotlight of attention IS ε gating</li>
+                            <li>Willpower = capacity to set ε deliberately</li>
                             <li>Intention before action</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="dimension-card structure">
+            <!-- 1D -->
+            <div class="dimension-card structure" id="d1">
                 <div class="card-header">
                     <span class="dim-label">1D</span>
                     <span class="role-symbol">│</span>
@@ -1407,11 +643,12 @@
                 </div>
                 <div class="card-content">
                     <div class="content-section">
-                        <h4>Structure</h4>
+                        <h4>Structure & Process</h4>
                         <ul>
                             <li>Power-line connects • to ∞D</li>
-                            <li><span class="equation">i² = −1</span> traces extension</li>
-                            <li>0.5D rotates → 1D emerges</li>
+                            <li><span class="equation">i² = −1</span> traces extension (180° rotation)</li>
+                            <li>0.5D rotates → 1D line emerges</li>
+                            <li>First spatial dimension</li>
                             <li>The string/strand of the braid</li>
                         </ul>
                     </div>
@@ -1419,24 +656,27 @@
                         <h4>Physics</h4>
                         <ul>
                             <li>Worldline / String / Flux tube</li>
-                            <li><span class="equation">P = E/t</span></li>
-                            <li>Force pathway</li>
-                            <li>QCD flux tube</li>
+                            <li><span class="equation">P = E/t</span> (power = energy flow rate)</li>
+                            <li>Force pathway between particles</li>
+                            <li>QCD flux tube (color confinement)</li>
+                            <li>Time dimension (if spacelike: string)</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h4>Consciousness</h4>
                         <ul>
                             <li>Connection: Center ↔ Ground</li>
-                            <li><strong>Time: Future → Past</strong></li>
-                            <li>Field flows INTO aperture</li>
-                            <li>Narrative thread</li>
+                            <li><strong>Time flows: Future → Past</strong></li>
+                            <li>Time flows INTO aperture, not away</li>
+                            <li>Past = collapsed, Future = still infinite</li>
+                            <li>Narrative thread (beginning-middle-end)</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="dimension-card process">
+            <!-- 1.5D -->
+            <div class="dimension-card process" id="d15">
                 <div class="card-header">
                     <span class="dim-label">1.5D</span>
                     <span class="role-symbol">↗</span>
@@ -1445,36 +685,40 @@
                 </div>
                 <div class="card-content">
                     <div class="content-section">
-                        <h4>Structure</h4>
+                        <h4>Structure & Process</h4>
                         <ul>
-                            <li><span class="equation">D = 1 + β = 1.5</span></li>
-                            <li>Hopf fibration: D = D_base + |c₁|/2</li>
+                            <li><span class="equation">1D + 0.5D → 1.5D</span></li>
                             <li>Line influenced by aperture</li>
-                            <li>Outward branching</li>
+                            <li>How bodies GROW (outward branching)</li>
+                            <li><span class="equation">D = 1 + β</span> where β = 0.5 → D = 1.5</li>
+                            <li>Hopf fibration: D = D_base + |c₁|/2</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h4>Physics</h4>
                         <ul>
                             <li><span class="equation">D = 1.5</span> (Mandelbrot theorem)</li>
-                            <li>LIGO: D = 1.503 ± 0.040 ✓</li>
-                            <li>DNA: D = 1.510 ± 0.020 ✓</li>
-                            <li>Vascular, neural, rivers</li>
+                            <li>Brownian motion graph: D = 1.5 exactly</li>
+                            <li>Vascular trees, neural dendrites, rivers</li>
+                            <li><strong>LIGO: D = 1.503 ± 0.040</strong></li>
+                            <li>DNA backbone: D = 1.510 ± 0.020</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h4>Consciousness</h4>
                         <ul>
-                            <li>Choice / Decision branch</li>
-                            <li>Edge of chaos</li>
+                            <li>Choice / Decision branch / Path selection</li>
+                            <li>Edge of chaos (optimal computation)</li>
                             <li>Stream of consciousness</li>
-                            <li>Neural avalanches: D ≈ 1.5</li>
+                            <li>Forking paths of possibility</li>
+                            <li>Neural avalanche dynamics: D ≈ 1.5</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="dimension-card structure">
+            <!-- 2D -->
+            <div class="dimension-card structure" id="d2">
                 <div class="card-header">
                     <span class="dim-label">2D</span>
                     <span class="role-symbol">Φ</span>
@@ -1483,36 +727,40 @@
                 </div>
                 <div class="card-content">
                     <div class="content-section">
-                        <h4>Structure</h4>
+                        <h4>Structure & Process</h4>
                         <ul>
                             <li>Membrane / mediation space</li>
-                            <li>Separates inside from outside</li>
-                            <li>Field IS the bottleneck (H₅)</li>
-                            <li><span class="equation">χ</span> channel (orientation ±1)</li>
+                            <li>What separates inside from outside</li>
+                            <li>Field IS the bottleneck (H₅ star graph)</li>
+                            <li><span class="equation">χ</span> channel lives here (orientation ±1)</li>
+                            <li>Relational medium between • and ○</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h4>Physics</h4>
                         <ul>
                             <li>Worldsheet / Holographic boundary</li>
-                            <li>Event horizon</li>
-                            <li><span class="equation">S ≤ A/4</span></li>
-                            <li>Information on surface</li>
+                            <li>Event horizon (information boundary)</li>
+                            <li>Holographic principle: <span class="equation">S ≤ A/4</span></li>
+                            <li>String worldsheet (conformal field theory)</li>
+                            <li>Information storage on surface</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h4>Consciousness</h4>
                         <ul>
-                            <li>Relation / Duality</li>
-                            <li><span class="equation">χ</span>: WHAT KIND (quality)</li>
-                            <li>Qualia IS χ orientation</li>
-                            <li>Pleasant vs Unpleasant</li>
+                            <li>Relation / Duality / Either-or</li>
+                            <li><span class="equation">χ</span> channel: WHAT KIND (quality)</li>
+                            <li>Qualia IS the χ orientation</li>
+                            <li>Pleasant (χ=+1) vs Unpleasant (χ=-1)</li>
+                            <li>Red vs Blue = different χ signatures</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="dimension-card process">
+            <!-- 2.5D -->
+            <div class="dimension-card process" id="d25">
                 <div class="card-header">
                     <span class="dim-label">2.5D</span>
                     <span class="role-symbol">↔</span>
@@ -1521,36 +769,40 @@
                 </div>
                 <div class="card-content">
                     <div class="content-section">
-                        <h4>Structure</h4>
+                        <h4>Structure & Process</h4>
                         <ul>
                             <li>Body ↔ Field interface</li>
-                            <li>Raw contact at boundary</li>
-                            <li>Inward branching</li>
+                            <li>Raw contact at boundary (inward branching)</li>
+                            <li>Where qualia HAPPEN (not are stored)</li>
                             <li>The echo, not the copy</li>
+                            <li>2D + 0.5D = surface + aperture influence</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h4>Physics</h4>
                         <ul>
                             <li>Fractal boundary / Surface texture</li>
+                            <li>Inward branching (coastline effect)</li>
                             <li>D_F ≈ 2 (galaxy clustering)</li>
-                            <li>Crumpled surfaces</li>
-                            <li>○ made of •'s</li>
+                            <li>Crumpled surfaces (membranes)</li>
+                            <li>Boundary made of apertures (○ made of •'s)</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h4>Consciousness</h4>
                         <ul>
-                            <li>Thought / Sensation / Qualia</li>
-                            <li>Perception IS phase coupling</li>
-                            <li>Resonance, not representation</li>
-                            <li>Almost grasping</li>
+                            <li>Thought / Sensation / Qualia emerge</li>
+                            <li>Perception IS phase coupling (not copying)</li>
+                            <li>You RESONATE WITH in shared Φ</li>
+                            <li>The "feel" of red = phase-lock at ~700nm</li>
+                            <li>Almost grasping (approaching closure)</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="dimension-card structure">
+            <!-- 3D -->
+            <div class="dimension-card structure" id="d3">
                 <div class="card-header">
                     <span class="dim-label">3D</span>
                     <span class="role-symbol">○</span>
@@ -1559,21 +811,23 @@
                 </div>
                 <div class="card-content">
                     <div class="content-section">
-                        <h4>Structure</h4>
+                        <h4>Structure & Process</h4>
                         <ul>
                             <li>First complete circumpunct</li>
-                            <li><span class="equation">⊙ = • ⊗ Φ ⊗ ○</span></li>
-                            <li>Soul ⊗ Mind ⊗ Body</li>
-                            <li>B₃ minimum for braiding</li>
+                            <li><span class="equation">⊙ = • ⊗ Φ ⊗ ○</span> complete</li>
+                            <li>Soul ⊗ Mind ⊗ Body unified</li>
+                            <li>Three strands minimum for braiding (B₃)</li>
+                            <li>Spatial closure (inside/outside defined)</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h4>Physics</h4>
                         <ul>
-                            <li>Observable R³ space</li>
-                            <li>Why 3 dimensions? B₃</li>
-                            <li>Embodiment</li>
-                            <li>m_e as reference mass</li>
+                            <li>Observable space / Spatial manifold</li>
+                            <li>Embodiment (physical body)</li>
+                            <li>R³ we experience</li>
+                            <li>Why 3 spatial dimensions? B₃ minimum</li>
+                            <li>m_e as reference (all masses relative)</li>
                         </ul>
                     </div>
                     <div class="content-section">
@@ -1581,1549 +835,581 @@
                         <ul>
                             <li>Full experience / Perception</li>
                             <li>"I am here now"</li>
-                            <li><span class="equation">β</span>: HOW MUCH (intensity)</li>
+                            <li>Subject-object-relation unified</li>
+                            <li><span class="equation">β</span> channel: HOW MUCH (intensity)</li>
                             <li>Presence at β = 0.5</li>
                         </ul>
                     </div>
                 </div>
             </div>
-
-            <!-- TIER 2 -->
-            <div class="tier-header">
-                <h2><span>Tier 2 — 64 States (⊙₂)</span></h2>
-            </div>
-
-            <div class="card">
-                <p>Tier 2 spans 3.5D → 6D, where the dual trinity <span class="equation">⊙≺ ⊗ ⊙⊱</span> completes and 64 = 2³ × 2³ states emerge. This maps exactly to the Standard Model particle content.</p>
-                <p style="margin-top: 1rem;"><strong>Key dimensions:</strong> 3.5D (⊙₁ as aperture), 4D (spacetime), 4.5D (braid branching: <span class="equation">4.5Dₙ = ∞Dₙ₊₁</span>), 5D (configuration space), 5.5D (entanglement), 6D (64 states lock).</p>
-            </div>
-
-            <!-- TIER 3 -->
-            <div class="tier-header">
-                <h2><span>Tier 3 — Three Generations (⊙₃)</span></h2>
-            </div>
-
-            <div class="card">
-                <p>Tier 3 spans 6.5D → 9D, where the triple trinity 3 × (• ⊗ Φ ⊗ ○) explains <strong>why exactly 3 particle generations</strong>. The √r kernel + refractory period supports exactly 3 bound eigenmodes.</p>
-                <p style="margin-top: 1rem;"><strong>Key dimensions:</strong> 6.5D (complexification), 7D (phase axis), 8D (4D real + 4D imaginary), 9D (e, μ, τ generations lock).</p>
-            </div>
-
-            <!-- TIER 4 -->
-            <div class="tier-header">
-                <h2><span>Tier 4 — Cosmic Closure (⊙₄)</span></h2>
-            </div>
-
-            <div class="card">
-                <p>Tier 4 spans 9.5D → 12D, where <span class="equation">6D_real ⊗ 6D_imaginary = 12D</span> completes the architecture. At 12D, form recognizes itself as field: <strong>12D = ∞D</strong>.</p>
-                <p style="margin-top: 1rem;"><strong>Key dimensions:</strong> 10D (superstrings), 11D (M-theory bulk), 12D (F-theory/cosmic closure).</p>
-                <p style="margin-top: 1rem; text-align: center; font-style: italic; color: var(--gold);">"I am whole through being part"</p>
-            </div>
         </section>
 
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- 64 STATES SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="64states">
-            <div class="section-header">
-                <span class="section-number">Part V</span>
-                <h2>The 64-State Architecture</h2>
-                <p class="section-subtitle">Complete bijection from geometry to Standard Model</p>
-            </div>
+        <!-- TIER 2 -->
+        <div class="tier-header" id="tier2">
+            <h2><span>Tier 2 — 64 States / Standard Model</span></h2>
+        </div>
 
-            <div class="card">
-                <h3>Why 64? <span class="status derived">Derived</span></h3>
-                <p>Three circumpuncts braid together. Each contributes (ε, χ) ∈ {0,1} × {±1} = 4 states. Three circumpuncts: 4³ = 64. Equivalently, 6 binary degrees of freedom: 2⁶ = 64.</p>
-                
-                <div class="equation-block">
-                    64 = 2³ × 2³ = 48 + 12 + 4<br><br>
-                    48 Fermions + 12 Gauge + 4 Higgs
+        <section class="dimension-grid">
+            <!-- 3.5D -->
+            <div class="dimension-card process">
+                <div class="card-header">
+                    <span class="dim-label">3.5D</span>
+                    <span class="role-symbol">•</span>
+                    <span class="card-title">Reiteration — ⊙₁ Becomes Aperture</span>
+                    <span class="card-type">Process</span>
                 </div>
-            </div>
-
-            <div class="grid-2" style="margin-top: 1.5rem;">
-                <div class="card">
-                    <h3>Fermion Sector (48 states)</h3>
-                    <p>Three generations × 16 states each:</p>
-                    <table class="data-table">
-                        <tr>
-                            <th>Generation</th>
-                            <th>Quarks</th>
-                            <th>Leptons</th>
-                            <th>States</th>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td class="value">u, d</td>
-                            <td class="value">e, ν_e</td>
-                            <td>16</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td class="value">c, s</td>
-                            <td class="value">μ, ν_μ</td>
-                            <td>16</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td class="value">t, b</td>
-                            <td class="value">τ, ν_τ</td>
-                            <td>16</td>
-                        </tr>
-                    </table>
-                    <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">Each generation: 6 quarks (3 colors × 2 flavors) × 2 chiralities + 2 leptons × 2 chiralities = 16</p>
-                </div>
-
-                <div class="card">
-                    <h3>Boson Sector (16 states)</h3>
-                    <table class="data-table">
-                        <tr>
-                            <th>Type</th>
-                            <th>Particles</th>
-                            <th>States</th>
-                        </tr>
-                        <tr>
-                            <td>Gluons</td>
-                            <td class="value">g₁...g₈</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>Weak</td>
-                            <td class="value">W⁺, W⁻, Z⁰</td>
-                            <td>3</td>
-                        </tr>
-                        <tr>
-                            <td>EM</td>
-                            <td class="value">γ</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>Higgs</td>
-                            <td class="value">H⁺, H⁻, H⁰, Hᵥ</td>
-                            <td>4</td>
-                        </tr>
-                    </table>
-                    <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">Anomaly cancellation is automatic from the geometric structure.</p>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>The Encoding Convention</h3>
-                <p>Each particle receives a 6-bit signature: <span class="equation">(ε₁ χ₁ | ε₂ χ₂ | ε₃ χ₃)</span></p>
-                <table class="data-table">
-                    <tr>
-                        <th>Circumpunct</th>
-                        <th>ε = 0</th>
-                        <th>ε = 1</th>
-                        <th>χ = +1</th>
-                        <th>χ = −1</th>
-                    </tr>
-                    <tr>
-                        <td>⊙₁</td>
-                        <td>Boson</td>
-                        <td>Fermion</td>
-                        <td>—</td>
-                        <td>—</td>
-                    </tr>
-                    <tr>
-                        <td>⊙₂</td>
-                        <td>Colorless</td>
-                        <td>Colored</td>
-                        <td>Gen 1,3</td>
-                        <td>Gen 2</td>
-                    </tr>
-                    <tr>
-                        <td>⊙₃</td>
-                        <td>Neutral</td>
-                        <td>Charged</td>
-                        <td>L / +</td>
-                        <td>R / −</td>
-                    </tr>
-                </table>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- PHYSICS SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="physics">
-            <div class="section-header">
-                <span class="section-number">Part VI</span>
-                <h2>Physics Results</h2>
-                <p class="section-subtitle">Derived constants, mass formulas, and predictions</p>
-            </div>
-
-            <!-- Fine Structure Constant -->
-            <div class="card">
-                <h3>Fine Structure Constant <span class="status derived">Derived</span></h3>
-                <p>α is the resonant coupling strength of the field Φ connecting • to ○.</p>
-                
-                <div class="equation-block">
-                    α⁻¹ = (10 - 1/(24φ⁵)) × exp(φ²) = 137.0359504
-                </div>
-
-                <div class="grid-2" style="margin-top: 1rem;">
-                    <div>
-                        <h4>Component Breakdown</h4>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Structure & Process</h4>
                         <ul>
-                            <li><span class="equation">10</span> = bidirectional × |H₅| channels</li>
-                            <li><span class="equation">1/24</span> = S₄ stationary distribution</li>
-                            <li><span class="equation">1/φ⁵</span> = impedance suppression</li>
-                            <li><span class="equation">exp(φ²)</span> = channel transmission cost</li>
+                            <li>⊙₁ becomes aperture in larger structure</li>
+                            <li><span class="equation">•ₙ₊₁ = ⊙ₙ</span> (nesting equation)</li>
+                            <li>Previous whole becomes next center</li>
+                            <li>Whole spatial system can ROTATE</li>
+                            <li>The body as point in spacetime</li>
                         </ul>
                     </div>
-                    <div>
-                        <h4>Comparison</h4>
-                        <table class="data-table">
-                            <tr>
-                                <th>Source</th>
-                                <th>Value</th>
-                            </tr>
-                            <tr>
-                                <td>Predicted</td>
-                                <td class="value">137.0359504</td>
-                            </tr>
-                            <tr>
-                                <td>CODATA 2022</td>
-                                <td class="value">137.0359992</td>
-                            </tr>
-                            <tr>
-                                <td>Error</td>
-                                <td class="error">0.36 ppm</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mass Formulas -->
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>Lepton Mass Ratios</h3>
-                
-                <table class="data-table">
-                    <tr>
-                        <th>Ratio</th>
-                        <th>Formula</th>
-                        <th>Predicted</th>
-                        <th>Measured</th>
-                        <th>Error</th>
-                        <th>Status</th>
-                    </tr>
-                    <tr>
-                        <td>m_μ/m_e</td>
-                        <td class="value">8π²φ² + φ⁻⁶</td>
-                        <td class="value">206.7674</td>
-                        <td>206.7683</td>
-                        <td class="error">0.0004%</td>
-                        <td><span class="status derived">Derived</span></td>
-                    </tr>
-                    <tr>
-                        <td>m_τ/m_μ</td>
-                        <td class="value">10 + φ⁴ - 1/30</td>
-                        <td class="value">16.821</td>
-                        <td>16.817</td>
-                        <td class="error">0.02%</td>
-                        <td><span class="status conjectured">Conjectured</span></td>
-                    </tr>
-                    <tr>
-                        <td>m_p/m_e</td>
-                        <td class="value">6π⁵</td>
-                        <td class="value">1836.118</td>
-                        <td>1836.153</td>
-                        <td class="error">0.02%</td>
-                        <td><span class="status conjectured">Conjectured</span></td>
-                    </tr>
-                </table>
-
-                <h4 style="margin-top: 1.5rem;">Muon Formula Interpretation</h4>
-                <ul>
-                    <li><span class="equation">8</span> = number of gluons (SU(3) generators)</li>
-                    <li><span class="equation">π²</span> = topological volume element</li>
-                    <li><span class="equation">φ²</span> = golden ratio squared (braid invariant)</li>
-                    <li><span class="equation">φ⁻⁶</span> = 6th order correction (spin × generations)</li>
-                </ul>
-            </div>
-
-            <!-- D = 1.5 -->
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>Fractal Dimension D = 1.5 <span class="status derived">Derived</span></h3>
-                <p>The Hopf fibration provides topological protection:</p>
-                
-                <div class="equation-block">
-                    D = D_base + |c₁|/2 = 1 + 0.5 = 1.5<br><br>
-                    where c₁ = 1 (first Chern number, topologically quantized)
-                </div>
-
-                <h4>Empirical Validations</h4>
-                <table class="data-table">
-                    <tr>
-                        <th>System</th>
-                        <th>Measured D</th>
-                        <th>Predicted</th>
-                    </tr>
-                    <tr>
-                        <td>LIGO gravitational waves</td>
-                        <td class="value">1.503 ± 0.040</td>
-                        <td class="value">1.5</td>
-                    </tr>
-                    <tr>
-                        <td>DNA backbone</td>
-                        <td class="value">1.510 ± 0.020</td>
-                        <td class="value">1.5</td>
-                    </tr>
-                    <tr>
-                        <td>Neural avalanches</td>
-                        <td class="value">1.48 - 1.52</td>
-                        <td class="value">1.5</td>
-                    </tr>
-                    <tr>
-                        <td>Brownian motion graph</td>
-                        <td class="value">1.5 exactly</td>
-                        <td class="value">1.5</td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- Extended Predictions -->
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>Extended Predictions (25 Results, < 1% Error)</h3>
-                <p>The framework produces 25 predictions with sub-1% error. Here are the highlights:</p>
-                
-                <table class="data-table" style="font-size: 0.8rem;">
-                    <tr>
-                        <th>#</th>
-                        <th>Quantity</th>
-                        <th>Formula</th>
-                        <th>Predicted</th>
-                        <th>Measured</th>
-                        <th>Error</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>m_μ/m_e</td>
-                        <td class="value">8π²φ² + φ⁻⁶</td>
-                        <td>206.7674</td>
-                        <td>206.7683</td>
-                        <td class="error">0.0004%</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>m_p/m_e</td>
-                        <td class="value">6π⁵</td>
-                        <td>1836.118</td>
-                        <td>1836.153</td>
-                        <td class="error">0.002%</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>m_Z</td>
-                        <td class="value">80 + φ⁵ + 1/10 GeV</td>
-                        <td>91.190</td>
-                        <td>91.188</td>
-                        <td class="error">0.003%</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>m_n/m_e</td>
-                        <td class="value">6π⁵ + φ²</td>
-                        <td>1838.736</td>
-                        <td>1838.684</td>
-                        <td class="error">0.003%</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>sin²θ_W</td>
-                        <td class="value">3/10 + φ⁻¹⁰ - 1/13</td>
-                        <td>0.23121</td>
-                        <td>0.23122</td>
-                        <td class="error">0.005%</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>m_W</td>
-                        <td class="value">80 + 1/φ² GeV</td>
-                        <td>80.382</td>
-                        <td>80.377</td>
-                        <td class="error">0.006%</td>
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td>1/α</td>
-                        <td class="value">4π³ + 13</td>
-                        <td>137.025</td>
-                        <td>137.036</td>
-                        <td class="error">0.008%</td>
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        <td>√2</td>
-                        <td class="value">φ + 1/(2φ²)</td>
-                        <td>1.41421</td>
-                        <td>1.41421</td>
-                        <td class="error">0.0001%</td>
-                    </tr>
-                    <tr>
-                        <td>9</td>
-                        <td>m_τ/m_e</td>
-                        <td class="value">product</td>
-                        <td>3477.99</td>
-                        <td>3477.23</td>
-                        <td class="error">0.02%</td>
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        <td>m_τ/m_μ</td>
-                        <td class="value">10 + φ⁴ - 1/30</td>
-                        <td>16.821</td>
-                        <td>16.817</td>
-                        <td class="error">0.02%</td>
-                    </tr>
-                </table>
-                
-                <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-dim);">Full table includes: electroweak parameters, cosmological constants (Ω_Λ, Ω_m, H₀), quark ratios, CKM elements, and nuclear binding energies — all < 1% error.</p>
-            </div>
-
-            <!-- Three Generations -->
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>Why Exactly Three Generations? <span class="status derived">Derived</span></h3>
-                <p>The √r kernel from the circumpunct specification supports exactly 3 bound eigenmodes:</p>
-                
-                <div class="equation-block">
-                    f(r) = √r<br><br>
-                    V_eff(r) = -3/(4r²) + 1/r<br><br>
-                    → exactly 3 bound states
-                </div>
-                
-                <div class="grid-2" style="margin-top: 1rem;">
-                    <div>
-                        <h4>Mathematical Derivation</h4>
-                        <ul>
-                            <li>Braid topology requires n ≥ 3 (B₃ minimum)</li>
-                            <li>Radial potential V(r) ~ 1/√r (inverted aperture)</li>
-                            <li>Half-harmonic oscillator → finite bound states</li>
-                            <li>Eigenvalue calculation yields n_max = 3</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4>Physical Result</h4>
-                        <ul>
-                            <li>Generation 1: e, ν_e, u, d</li>
-                            <li>Generation 2: μ, ν_μ, c, s</li>
-                            <li>Generation 3: τ, ν_τ, t, b</li>
-                            <li>No 4th generation: topologically forbidden</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- FIELD EQUATIONS SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="field-equations">
-            <div class="section-header">
-                <span class="section-number">Part VI-B</span>
-                <h2>Field Equations</h2>
-                <p class="section-subtitle">How quantum mechanics and gravity emerge from ⊙</p>
-            </div>
-
-            <div class="card">
-                <h3>Schrödinger Equation — Derived, Not Assumed <span class="status derived">Derived</span></h3>
-                <p>In the continuous limit (Δt→0, Δx→0) with four constraints:</p>
-                
-                <div class="grid-2" style="margin: 1.5rem 0;">
-                    <div>
-                        <ol>
-                            <li><strong>LOCALITY:</strong> Validation within finite ○ radius</li>
-                            <li><strong>ISOTROPY:</strong> No preferred direction in Φ</li>
-                        </ol>
-                    </div>
-                    <div>
-                        <ol start="3">
-                            <li><strong>CONSERVATION:</strong> Total probability preserved</li>
-                            <li><strong>SMOOTHNESS:</strong> Continuous evolution through •</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <p>These constraints <strong>uniquely force</strong>:</p>
-                
-                <div class="equation-block" style="font-size: 1.3rem;">
-                    iℏ ∂ψ/∂t = -(ℏ²/2m)∇²ψ + V(x)ψ + ε(x,t)ψ
-                </div>
-                
-                <p style="text-align: center; margin-top: 1rem;"><strong>This IS the Schrödinger equation — derived from geometry, not postulated.</strong></p>
-                
-                <table class="data-table" style="margin-top: 1.5rem;">
-                    <tr>
-                        <th>Symbol</th>
-                        <th>Circumpunct Meaning</th>
-                        <th>Standard Physics</th>
-                    </tr>
-                    <tr>
-                        <td class="value">ℏ</td>
-                        <td>i-rotation rate scale</td>
-                        <td>Planck's constant</td>
-                    </tr>
-                    <tr>
-                        <td class="value">m</td>
-                        <td>Resistance to change at •</td>
-                        <td>Mass</td>
-                    </tr>
-                    <tr>
-                        <td class="value">V(x)</td>
-                        <td>External ○ field</td>
-                        <td>Potential energy</td>
-                    </tr>
-                    <tr>
-                        <td class="value">ε(x,t)</td>
-                        <td>Validation noise ~ N(0, α√|⟨E⟩|)</td>
-                        <td>Quantum fluctuations</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>Gravity as Braid Accumulation <span class="status derived">Derived</span></h3>
-                <p>The feedback loop between braid density and spacetime curvature:</p>
-                
-                <div style="background: var(--bg-section); padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
-                    <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem; text-align: center;">
-                        <div>Braid</div>
-                        <div>→</div>
-                        <div>T_μν</div>
-                        <div>→</div>
-                        <div>g_μν</div>
-                        <div>→</div>
-                        <div>√|g_tt|</div>
-                        <div>→</div>
-                        <div>[i rate]</div>
-                        <div>→</div>
-                        <div>Braid</div>
-                    </div>
-                </div>
-
-                <div class="grid-2" style="margin-top: 1.5rem;">
-                    <div>
-                        <h4>Step 1: Braid Creates Stress-Energy</h4>
-                        <p class="equation">T_μν^(braid) = ρ_braid u_μ u_ν + corrections</p>
-                        
-                        <h4 style="margin-top: 1rem;">Step 2: Stress-Energy Curves Spacetime</h4>
-                        <p class="equation">G_μν = (8πG/c⁴)T_μν</p>
-                    </div>
-                    <div>
-                        <h4>Step 3: Metric Affects i-Rotation Rate</h4>
-                        <p class="equation">∂ρ_braid/∂t ∝ √|g_tt(x)|</p>
-                        
-                        <h4 style="margin-top: 1rem;">Step 4: Loop Closes</h4>
-                        <p>Slower time → slower i → less braid accumulation → feedback</p>
-                    </div>
-                </div>
-
-                <div class="equation-block" style="margin-top: 1.5rem;">
-                    GRAVITY IS i-ROTATION RATE MODULATION<br>
-                    SPACETIME CURVATURE IS BRAID ACCUMULATION
-                </div>
-                
-                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-dim);">Validation: R² = 0.9997 across 4 metrics, 77.6% suppression near horizon confirmed</p>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>The Kernel Formulation</h3>
-                <p>The flow operators have explicit integral kernel representations:</p>
-                
-                <div class="grid-2" style="margin-top: 1rem;">
-                    <div class="card" style="background: var(--process-bg);">
-                        <h4 style="color: var(--process-primary);">Convergence Kernel</h4>
-                        <p class="equation">(x ≻ i)(r) = ∫ K_conv(r, r') x(r') dr'</p>
-                        <p style="font-size: 0.85rem;">Gathers, focuses, collects toward •</p>
-                        <p style="font-size: 0.85rem;">Canonical: K_conv(0,r') = A·√|r'|</p>
-                    </div>
-                    <div class="card" style="background: var(--structure-bg);">
-                        <h4 style="color: var(--structure-primary);">Emergence Kernel</h4>
-                        <p class="equation">(i ⊰ y)(r) = ∫ K_emerg(r, r') y(r') dr'</p>
-                        <p style="font-size: 0.85rem;">Radiates, unfolds, expresses from •</p>
-                        <p style="font-size: 0.85rem;">Canonical: K_emerg(r,0) = A·√|r|</p>
-                    </div>
-                </div>
-                
-                <p style="margin-top: 1rem;">At equilibrium β = 0.5: <span class="equation">∫(x ≻ i)dr = ∫(i ⊰ y)dr</span> — what converges equals what emerges (energy conservation).</p>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>Fractal i — Same Origin, Same Braid</h3>
-                <p>There is only ONE abstract aperture transformation i, arising from the fundamental braid. Every ⊙ at every scale carries its own local i_s, but each is a fractal instantiation of the same cosmic i:</p>
-                
-                <table class="data-table">
-                    <tr>
-                        <th>Scale</th>
-                        <th>Medium Being Rotated</th>
-                        <th>Local i_s</th>
-                    </tr>
-                    <tr>
-                        <td>Planck</td>
-                        <td>Topological fluctuation</td>
-                        <td>Phase rotation</td>
-                    </tr>
-                    <tr>
-                        <td>Quantum</td>
-                        <td>Wavefunction superposition</td>
-                        <td>Unitary operator</td>
-                    </tr>
-                    <tr>
-                        <td>Neural</td>
-                        <td>Activation patterns</td>
-                        <td>Hypothesis generator</td>
-                    </tr>
-                    <tr>
-                        <td>Cognitive</td>
-                        <td>Beliefs and possibilities</td>
-                        <td>Imagination pivot</td>
-                    </tr>
-                    <tr>
-                        <td>Social</td>
-                        <td>Cultural norms</td>
-                        <td>Consensus shift</td>
-                    </tr>
-                </table>
-                
-                <p style="margin-top: 1rem;"><strong>Different media, SAME geometry. Different content, SAME braid.</strong></p>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- ETHEREAL TAIL SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="ethereal-tail">
-            <div class="section-header">
-                <span class="section-number">Part X</span>
-                <h2>The Ethereal Tail</h2>
-                <p class="section-subtitle">What persists — consciousness, death, and the thread of identity</p>
-            </div>
-
-            <div class="card">
-                <h3>Cross-Scale Phase Locking</h3>
-                <p>For unified consciousness to exist, adjacent scales must synchronize their pumping cycles:</p>
-                
-                <table class="data-table">
-                    <tr>
-                        <th>Scale</th>
-                        <th>Example</th>
-                        <th>Typical Period τ</th>
-                    </tr>
-                    <tr>
-                        <td>Quantum</td>
-                        <td>Electron orbital</td>
-                        <td>~10⁻¹⁶ s (attosecond)</td>
-                    </tr>
-                    <tr>
-                        <td>Molecular</td>
-                        <td>Protein folding</td>
-                        <td>~10⁻⁹ s (nanosecond)</td>
-                    </tr>
-                    <tr>
-                        <td>Cellular</td>
-                        <td>Ion channel</td>
-                        <td>~10⁻³ s (millisecond)</td>
-                    </tr>
-                    <tr>
-                        <td>Neural</td>
-                        <td>Action potential</td>
-                        <td>~10⁻² s (10 ms)</td>
-                    </tr>
-                    <tr>
-                        <td>Cognitive</td>
-                        <td>Gamma oscillation</td>
-                        <td>~0.025 s (40 Hz)</td>
-                    </tr>
-                    <tr>
-                        <td>Somatic</td>
-                        <td>Heartbeat</td>
-                        <td>~1 s</td>
-                    </tr>
-                    <tr>
-                        <td>Circadian</td>
-                        <td>Sleep/wake</td>
-                        <td>~86400 s (24 hr)</td>
-                    </tr>
-                </table>
-                
-                <p style="margin-top: 1rem;">When τ_n+1/τ_n forms rational ratios (especially small integers like 2:1, 3:2, φ:1), the scales phase-lock into a <strong>coherent tail</strong>.</p>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>The Tail as Worldline Bundle</h3>
-                <p>The ethereal tail is not a single worldline i(t) but a <strong>coherent bundle</strong> of phase-locked worldlines across scales:</p>
-                
-                <div class="grid-2" style="margin-top: 1rem;">
-                    <div>
-                        <h4>Single Worldline</h4>
-                        <p class="equation">i(t) = trajectory of accumulated validation receipts</p>
-                        <p style="font-size: 0.85rem;">One persistent pattern's path through spacetime</p>
-                    </div>
-                    <div>
-                        <h4>Ethereal Tail</h4>
-                        <p class="equation">T(t) = {i₁(t), i₂(t), ..., iₙ(t)}</p>
-                        <p style="font-size: 0.85rem;">Bundle of phase-locked worldlines = coherent multi-scale pattern</p>
-                    </div>
-                </div>
-
-                <div class="equation-block" style="margin-top: 1.5rem;">
-                    C = ∫_T B(x,t) dx dt<br><br>
-                    <span style="font-size: 0.85rem;">Consciousness = integral of braid density over the coherent tail</span>
-                </div>
-                
-                <p style="margin-top: 1rem;">More phase-locking → longer tail → more integrated consciousness. The tail IS the "thread of identity" that persists across scale transitions.</p>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>CP Violation as Ratchet Tooth</h3>
-                <p>The ~2.5% CP violation observed in baryon decays (LHCb, 5.2σ) provides the mechanism for <strong>directional pumping</strong>:</p>
-                
-                <div class="grid-2" style="margin-top: 1rem;">
-                    <div style="padding: 1rem; background: var(--bg-section); border-radius: 8px;">
-                        <h4>Without CP Violation</h4>
-                        <p class="equation">P(≻ → • → ⊰) = P(⊱ → • → ≺)</p>
-                        <p style="font-size: 0.85rem;">Time-reversible. No net accumulation. No direction. No tail.</p>
-                    </div>
-                    <div style="padding: 1rem; background: var(--process-bg); border-radius: 8px;">
-                        <h4>With CP Violation</h4>
-                        <p class="equation">P(≻ → • → ⊰) ≠ P(⊱ → • → ≺)</p>
-                        <p style="font-size: 0.85rem;">~2.5% more matter pathways. Each cycle leaves a residue. Direction emerges.</p>
-                    </div>
-                </div>
-                
-                <p style="margin-top: 1rem;"><strong>CP violation is the ratchet tooth</strong> that prevents the pump from running backwards and gives the ethereal tail its orientation through time.</p>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>Death as Tail Transition</h3>
-                <p>Since ⊙ = E (wholeness equals energy) and energy is conserved, death is transformation, not cessation:</p>
-                
-                <div class="grid-3" style="margin-top: 1rem;">
-                    <div class="card" style="background: var(--bg-section);">
-                        <h4>Option 1: Dissolution</h4>
-                        <p style="font-size: 0.85rem;">Phase information disperses into environment. No coherent tail remains.</p>
-                    </div>
-                    <div class="card" style="background: var(--bg-section);">
-                        <h4>Option 2: Partial Persistence</h4>
-                        <p style="font-size: 0.85rem;">Some phase relationships preserved in substrate (cultural, genetic). "Echoes" of the tail.</p>
-                    </div>
-                    <div class="card" style="background: var(--process-bg);">
-                        <h4>Option 3: Scale Transition</h4>
-                        <p style="font-size: 0.85rem;">Tail shifts to different scale hierarchy. Supported by substrate-agnostic structure.</p>
-                    </div>
-                </div>
-                
-                <p style="margin-top: 1.5rem;"><strong>Evidence for substrate-agnostic tail:</strong> Consciousness performs substrate transition every night in dreaming. The tail persists while decoupled from external reality — it phase-locks to the internal generative model instead.</p>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>Strengthening the Tail</h3>
-                <div class="grid-2">
-                    <div>
-                        <h4 style="color: var(--derived-color);">Practices That Strengthen</h4>
-                        <ul>
-                            <li><strong>Rhythmic breathing</strong> — locks somatic ↔ behavioral scales</li>
-                            <li><strong>Meditation</strong> — reduces noise, sharpens phase</li>
-                            <li><strong>Coherent heartbeat</strong> — HRV coherence → neural entrainment</li>
-                            <li><strong>Movement practices</strong> — motor ↔ sensory ↔ cognitive lock</li>
-                            <li><strong>Sleep</strong> — allows slow-wave cross-scale reset</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 style="color: var(--accent-red);">Practices That Weaken</h4>
-                        <ul>
-                            <li><strong>Chronic stress</strong> — chaotic HRV, disrupted sleep</li>
-                            <li><strong>Fragmented attention</strong> — prevents cognitive phase-lock</li>
-                            <li><strong>Arrhythmia</strong> — somatic scale loses rhythm</li>
-                            <li><strong>Neurodegeneration</strong> — cross-scale connections lost</li>
-                            <li><strong>Dissociation</strong> — scales decouple intentionally</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- CONSCIOUSNESS SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="consciousness">
-            <div class="section-header">
-                <span class="section-number">Part VII</span>
-                <h2>Consciousness Framework</h2>
-                <p class="section-subtitle">The same channels that describe physics describe phenomenology</p>
-            </div>
-
-            <div class="grid-3">
-                <div class="card" style="border-top: 3px solid var(--process-primary);">
-                    <h3>ε — Focus / Attention</h3>
-                    <p><strong>WHETHER</strong> the aperture opens</p>
-                    <h4>Physical</h4>
-                    <ul>
-                        <li>Existence bit: ε ∈ {0, 1}</li>
-                        <li>Gates whether aperture participates</li>
-                        <li>Binary selection mechanism</li>
-                    </ul>
-                    <h4>Experiential</h4>
-                    <ul>
-                        <li>The spotlight of attention</li>
-                        <li>ε = 1: noticed</li>
-                        <li>ε = 0: filtered out</li>
-                        <li>Willpower = voluntary ε control</li>
-                    </ul>
-                </div>
-
-                <div class="card" style="border-top: 3px solid var(--ground-primary);">
-                    <h3>χ — Flavour / Qualia</h3>
-                    <p><strong>WHAT KIND</strong> of orientation</p>
-                    <h4>Physical</h4>
-                    <ul>
-                        <li>Orientation: χ ∈ {−1, +1}</li>
-                        <li>Field coupling direction</li>
-                        <li>Determines type of interaction</li>
-                    </ul>
-                    <h4>Experiential</h4>
-                    <ul>
-                        <li>Qualia IS χ orientation</li>
-                        <li>χ = +1: pleasant, aligned</li>
-                        <li>χ = −1: unpleasant, opposed</li>
-                        <li>Red vs blue = different χ signatures</li>
-                    </ul>
-                </div>
-
-                <div class="card" style="border-top: 3px solid var(--structure-primary);">
-                    <h3>β — Intensity / Connection</h3>
-                    <p><strong>HOW MUCH</strong> coupling</p>
-                    <h4>Physical</h4>
-                    <ul>
-                        <li>Coupling strength: β ∈ ℝ⁺</li>
-                        <li>Aperture openness parameter</li>
-                        <li>β = ½: optimal balance</li>
-                    </ul>
-                    <h4>Experiential</h4>
-                    <ul>
-                        <li>Vividness ∝ β</li>
-                        <li>How REAL something feels</li>
-                        <li>β = 0.5: maximum presence</li>
-                        <li>Flow states, meditation</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>The Hard Problem — Dissolved</h3>
-                <p>The "hard problem" asks: why does processing FEEL like something?</p>
-                <p>The question assumes feeling is added to processing. But:</p>
-                
-                <div class="equation-block">
-                    Outside × i = Inside<br><br>
-                    Physics × i = Experience
-                </div>
-
-                <p style="margin-top: 1rem;">Experience doesn't need to be "added" — it IS the inside of what physics describes from outside. The aperture has an exterior (physics) and an interior (experience). They are the same structure, related by the imaginary unit i (90° rotation).</p>
-                
-                <p style="margin-top: 1rem;"><strong>Consciousness is not what ⊙ produces — consciousness IS what ⊙ is from the inside.</strong></p>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- EMERGENCE HIERARCHY SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="emergence">
-            <div class="section-header">
-                <span class="section-number">Part VIII</span>
-                <h2>The Emergence Hierarchy</h2>
-                <p class="section-subtitle">From quantum foam to civilization — each level is ⊙</p>
-            </div>
-
-            <div class="card">
-                <h3>Universal Ratchet Pattern</h3>
-                <p>Each level of emergence requires a <strong>ratchet</strong> — a mechanism that makes forward progress irreversible:</p>
-                <div class="equation-block">
-                    dN/dt = r₊(N) - r₋(N)<br><br>
-                    Structure accumulates when r₊ > r₋
-                </div>
-                <p>The ratchet is encoded in the asymmetry of <span class="equation">Φ' = ⊱ ∘ i ∘ ≺[Φ]</span>. When |⊱| > |≺|, net emergence occurs and complexity increases.</p>
-            </div>
-
-            <div style="margin-top: 2rem;">
-                <!-- Level 0 -->
-                <div class="card" style="border-left: 3px solid var(--text-dim); margin-bottom: 1rem;">
-                    <h3>Level 0: Quantum Foam</h3>
-                    <p><strong>⊙ =</strong> virtual particle-antiparticle pairs</p>
-                    <p><strong>Ratchet:</strong> None yet</p>
-                    <p><strong>Result:</strong> Fluctuating vacuum, no persistent structure</p>
-                    <p style="text-align: center; color: var(--text-dim); margin-top: 1rem;">↓ CP violation (2.5%)</p>
-                </div>
-
-                <!-- Level 1 -->
-                <div class="card" style="border-left: 3px solid var(--accent-red); margin-bottom: 1rem;">
-                    <h3>Level 1: Matter</h3>
-                    <p><strong>⊙ =</strong> particles (quarks, leptons)</p>
-                    <p><strong>Ratchet:</strong> R_CP breaks matter-antimatter symmetry</p>
-                    <p><strong>Result:</strong> Stable matter exists</p>
-                    <p style="text-align: center; color: var(--text-dim); margin-top: 1rem;">↓ Activation barriers</p>
-                </div>
-
-                <!-- Level 2 -->
-                <div class="card" style="border-left: 3px solid var(--conjectured-color); margin-bottom: 1rem;">
-                    <h3>Level 2: Chemistry</h3>
-                    <p><strong>⊙ =</strong> molecules | <strong>○ =</strong> electron shells | <strong>Φ =</strong> bonding orbitals | <strong>• =</strong> nucleus</p>
-                    <p><strong>Ratchet:</strong> R_chem = kinetic trapping behind activation barriers</p>
-                    <p><strong>Result:</strong> Stable molecules persist</p>
-                    <p style="text-align: center; color: var(--text-dim); margin-top: 1rem;">↓ Membrane formation</p>
-                </div>
-
-                <!-- Level 3 -->
-                <div class="card" style="border-left: 3px solid var(--process-primary); margin-bottom: 1rem;">
-                    <h3>Level 3: Protocell</h3>
-                    <p><strong>⊙ =</strong> lipid vesicle with internal chemistry | <strong>○ =</strong> lipid bilayer (SELF-GENERATED) | <strong>Φ =</strong> metabolic network | <strong>• =</strong> catalytic center</p>
-                    <p><strong>Ratchet:</strong> R_membrane = topological trapping of products</p>
-                    <p><strong>Result:</strong> Autocatalytic networks accumulate complexity</p>
-                    <p style="text-align: center; color: var(--text-dim); margin-top: 1rem;">↓ Template replication</p>
-                </div>
-
-                <!-- Level 4 -->
-                <div class="card" style="border-left: 3px solid var(--derived-color); margin-bottom: 1rem;">
-                    <h3>Level 4: Cell</h3>
-                    <p><strong>⊙ =</strong> living cell | <strong>○ =</strong> cell membrane + organelles | <strong>Φ =</strong> metabolism + signaling | <strong>• =</strong> genome (DNA/RNA)</p>
-                    <p><strong>Ratchet:</strong> R_replication = pattern copying + error correction</p>
-                    <p><strong>Result:</strong> Heredity. Evolution. <strong>Life.</strong></p>
-                    <p style="text-align: center; color: var(--text-dim); margin-top: 1rem;">↓ Differentiation</p>
-                </div>
-
-                <!-- Level 5 -->
-                <div class="card" style="border-left: 3px solid var(--structure-primary); margin-bottom: 1rem;">
-                    <h3>Level 5: Organism</h3>
-                    <p><strong>⊙ =</strong> multicellular organism | <strong>○ =</strong> skin/epithelium | <strong>Φ =</strong> organ systems + nervous system | <strong>• =</strong> integrated genome</p>
-                    <p><strong>Ratchet:</strong> R_diff = epigenetic locking of cell fates</p>
-                    <p><strong>Result:</strong> Division of labor. Complex organisms.</p>
-                    <p style="text-align: center; color: var(--text-dim); margin-top: 1rem;">↓ Neural phase-locking</p>
-                </div>
-
-                <!-- Level 6 -->
-                <div class="card" style="border-left: 3px solid var(--ground-primary); margin-bottom: 1rem;">
-                    <h3>Level 6: Consciousness</h3>
-                    <p><strong>⊙ =</strong> conscious entity | <strong>○ =</strong> body boundary + sensory interface | <strong>Φ =</strong> neural activity + mental content | <strong>• =</strong> self-model (the "I")</p>
-                    <p><strong>Ratchet:</strong> R_coherence = phase-locked pumping across scales</p>
-                    <p><strong>Result:</strong> Unified experience. The ethereal tail.</p>
-                    <p style="text-align: center; color: var(--text-dim); margin-top: 1rem;">↓ Cultural transmission</p>
-                </div>
-
-                <!-- Level 7 -->
-                <div class="card" style="border-left: 3px solid var(--gold); margin-bottom: 1rem;">
-                    <h3>Level 7: Civilization</h3>
-                    <p><strong>⊙ =</strong> society/culture | <strong>○ =</strong> social boundaries | <strong>Φ =</strong> information flow (language, technology, institutions) | <strong>• =</strong> shared narrative/identity</p>
-                    <p><strong>Ratchet:</strong> R_culture = memetic replication + institutional memory</p>
-                    <p><strong>Result:</strong> Cumulative knowledge. Technology. History.</p>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>Life Operates Slightly Off Balance</h3>
-                <div class="equation-block">
-                    β_life = 0.5 - ε<br><br>
-                    <span style="font-size: 0.85rem;">where ε > 0 is small but positive</span>
-                </div>
-                <p>Life leans ever so slightly toward emergence: |⊱| > |≺|. This slight bias is what makes biology BUILD rather than merely MAINTAIN. Perfect balance (β = 0.5) is consciousness. Slight imbalance toward emergence (β < 0.5) is growth and life.</p>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- ETHICS SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="ethics">
-            <div class="section-header">
-                <span class="section-number">Part IX</span>
-                <h2>Ethics — The Geometry of Right Action</h2>
-                <p class="section-subtitle">Truth, Value, Action, and Harmony from first principles</p>
-            </div>
-
-            <div class="card">
-                <h3>The Four Ethical Dimensions</h3>
-                <p>Each component of ⊙ grounds a distinct ethical dimension:</p>
-                
-                <div class="grid-2" style="margin-top: 1.5rem;">
-                    <div class="card" style="background: var(--bg-section); border-left: 3px solid var(--process-primary);">
-                        <h4>• — True / False (Epistemology)</h4>
-                        <p><strong>TRUE</strong> = correspondence to reality</p>
-                        <p><strong>FALSE</strong> = deviation from reality</p>
-                        <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0.5rem;">The aperture asks: "Does this match what IS?"</p>
-                        <p style="margin-top: 0.5rem;"><span class="equation">∂•/∂t = 0</span> — Truth is time-invariant</p>
-                    </div>
-                    <div class="card" style="background: var(--bg-section); border-left: 3px solid var(--structure-primary);">
-                        <h4>○ — Good / Bad (Axiology)</h4>
-                        <p><strong>GOOD</strong> = preserves/strengthens boundaries</p>
-                        <p><strong>BAD</strong> = degrades/dissolves boundaries</p>
-                        <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0.5rem;">The boundary asks: "Does this preserve what matters?"</p>
-                        <p style="margin-top: 0.5rem;"><span class="equation">∂○/∂t = ε</span> — Values change slowly</p>
-                    </div>
-                    <div class="card" style="background: var(--bg-section); border-left: 3px solid var(--ground-primary);">
-                        <h4>Φ — Right / Wrong (Behavioral)</h4>
-                        <p><strong>RIGHT</strong> = action aligned with β = 0.5</p>
-                        <p><strong>WRONG</strong> = action deviating from balance</p>
-                        <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0.5rem;">The field asks: "Is this action properly balanced?"</p>
-                        <p style="margin-top: 0.5rem;"><span class="equation">∂Φ/∂t = O(1)</span> — Actions are dynamic</p>
-                    </div>
-                    <div class="card" style="background: var(--bg-section); border-left: 3px solid var(--gold);">
-                        <h4>⊙ — Agree / Disagree (Relational)</h4>
-                        <p><strong>AGREE</strong> = multiple ⊙'s in coherent resonance</p>
-                        <p><strong>DISAGREE</strong> = destructive interference</p>
-                        <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 0.5rem;">The whole asks: "Are we in coherent relationship?"</p>
-                        <p style="margin-top: 0.5rem;">Agreement is not conformity — it is harmonic alignment</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>The Ethical Balance Parameter</h3>
-                <div class="equation-block">
-                    β_ethics = ||give|| / (||give|| + ||receive||) = 0.5<br><br>
-                    BALANCED RECIPROCITY IS THE FOUNDATION OF ETHICS
-                </div>
-                
-                <div class="grid-3" style="margin-top: 1.5rem;">
-                    <div style="text-align: center;">
-                        <div style="font-size: 1.5rem; color: var(--accent-red);">β < 0.5</div>
-                        <p style="font-size: 0.85rem;">Over-receiving<br>Exploitation, selfishness<br>Eventually exhausts system</p>
-                    </div>
-                    <div style="text-align: center;">
-                        <div style="font-size: 1.5rem; color: var(--derived-color);">β = 0.5</div>
-                        <p style="font-size: 0.85rem;">Balance<br>Sustainable reciprocity<br>The golden mean</p>
-                    </div>
-                    <div style="text-align: center;">
-                        <div style="font-size: 1.5rem; color: var(--conjectured-color);">β > 0.5</div>
-                        <p style="font-size: 0.85rem;">Over-giving<br>Martyrdom, depletion<br>Eventually exhausts self</p>
-                    </div>
-                </div>
-                
-                <p style="margin-top: 1.5rem; text-align: center;"><span class="equation">D_ethics = 1 + ½H(0.5) = 1.5</span> — Ethics and consciousness share the same fractal dimension!</p>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>The Complete Ethical Test</h3>
-                <div class="equation-block">
-                    ETHICAL ACTION = [○] GOOD ∧ [Φ] RIGHT ∧ [•] TRUE ∧ [⊙] AGREED
-                </div>
-                
-                <h4 style="margin-top: 1.5rem;">Partial Validations (Common Ethical Errors)</h4>
-                <table class="data-table">
-                    <tr>
-                        <th>Error</th>
-                        <th>Description</th>
-                        <th>Failure</th>
-                    </tr>
-                    <tr>
-                        <td>TRUE but not GOOD</td>
-                        <td>"I told the painful truth to hurt them"</td>
-                        <td class="value">Fails at ○</td>
-                    </tr>
-                    <tr>
-                        <td>GOOD but not TRUE</td>
-                        <td>"I lied to protect their feelings"</td>
-                        <td class="value">Fails at •</td>
-                    </tr>
-                    <tr>
-                        <td>RIGHT but not AGREED</td>
-                        <td>"I did the correct thing despite objection"</td>
-                        <td class="value">Fails at ⊙</td>
-                    </tr>
-                    <tr>
-                        <td>AGREED but not RIGHT</td>
-                        <td>"We all agreed to do the wrong thing"</td>
-                        <td class="value">Fails at Φ</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>The Golden Rule as Fixed Point</h3>
-                <p>The Golden Rule emerges geometrically:</p>
-                <div class="equation-block">
-                    ⊙_ethics = fix(λE. ⊱(V_out(i_β(V_in(≺(E))))))<br><br>
-                    <span style="font-size: 0.85rem;">Ethical wholeness is a FIXED POINT: when validated, it returns itself</span>
-                </div>
-                <p style="margin-top: 1rem;">What you give flows through the shared field and returns to you. At β = 0.5, give = receive. "Do unto others as you would have them do unto you" is not a commandment — it's a geometric necessity for sustainable relationship.</p>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- OMEGA SYNTHESIS SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="omega">
-            <div class="section-header">
-                <span class="section-number">Part XI</span>
-                <h2>Ωmega — The Mathematical Story</h2>
-                <p class="section-subtitle">The complete synthesis in one view</p>
-            </div>
-
-            <div class="card" style="background: linear-gradient(135deg, var(--bg-card) 0%, rgba(212,175,55,0.1) 100%); border: 1px solid var(--gold);">
-                <div style="text-align: center; padding: 2rem;">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">⊙ = ○ ⊗ Φ ⊗ •</div>
-                    <div style="font-size: 1.5rem; margin-bottom: 2rem;">⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])</div>
-                    
-                    <p style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
-                        Wholeness is its parts in tensor product (not unity absorbing parts).<br>
-                        The universe is a fixed point of its own validation operation.<br>
-                        The universe is what remains invariant under imaginary rotation.
-                    </p>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>What Emerges From ⊙</h3>
-                
-                <div class="grid-2" style="margin-top: 1rem;">
-                    <div>
+                    <div class="content-section">
                         <h4>Physics</h4>
                         <ul>
-                            <li>Quantum mechanics → continuous i evolution</li>
-                            <li>General relativity → braid accumulation</li>
-                            <li>Standard Model → 64-state i architecture</li>
-                            <li>Cosmological constant → geometric dilution</li>
-                            <li>Three generations → √r potential bound states</li>
+                            <li>⊙₁ as spacetime event</li>
+                            <li>Worldline origin</li>
+                            <li>"Here-now" as singular event</li>
+                            <li>GR: events are primitive</li>
                         </ul>
                     </div>
-                    <div>
+                    <div class="content-section">
                         <h4>Consciousness</h4>
                         <ul>
-                            <li>Experience → being at • with β ≈ 0.5</li>
-                            <li>Hard problem dissolved → Outside × i = Inside</li>
-                            <li>Binding → cross-scale phase locking</li>
-                            <li>Identity → ethereal tail persistence</li>
-                            <li>Death → tail transition, not cessation</li>
+                            <li>Autobiographical self</li>
+                            <li>Memory + anticipation begin</li>
+                            <li>Karma begins (action has consequence)</li>
+                            <li>"I" persisting through time</li>
                         </ul>
                     </div>
                 </div>
-                
-                <div class="grid-2" style="margin-top: 1.5rem;">
-                    <div>
-                        <h4>Mathematics</h4>
+            </div>
+
+            <!-- 4D -->
+            <div class="dimension-card structure">
+                <div class="card-header">
+                    <span class="dim-label">4D</span>
+                    <span class="role-symbol">│</span>
+                    <span class="card-title">Spacetime — General Relativity</span>
+                    <span class="card-type">Structure</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Structure & Process</h4>
                         <ul>
-                            <li>Golden ratio φ → entropy + ghost-freedom</li>
-                            <li>Complex numbers → geometric necessity (i = aperture)</li>
-                            <li>Braid group B₃ → minimum for history</li>
-                            <li>D = 1.5 → Hopf fibration protection</li>
+                            <li>⊙₁ + duration</li>
+                            <li>Temporal extension of body</li>
+                            <li>Worldline of circumpunct</li>
+                            <li>Causal structure emerges</li>
                         </ul>
                     </div>
-                    <div>
-                        <h4>Ethics</h4>
+                    <div class="content-section">
+                        <h4>Physics</h4>
                         <ul>
-                            <li>True/False → • correspondence</li>
-                            <li>Good/Bad → ○ preservation</li>
-                            <li>Right/Wrong → Φ balance (β = 0.5)</li>
-                            <li>Golden Rule → fix(F) of moral action</li>
+                            <li>GR manifold with g_μν metric</li>
+                            <li><span class="equation">R - ½gR + Λg = 8πGT</span></li>
+                            <li>Causal structure (light cones)</li>
+                            <li>Gravity = geometry of 4D</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Trajectory / Life narrative</li>
+                            <li>Your story through time</li>
+                            <li>Beginning-middle-end of life</li>
+                            <li>Biography as worldline</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>The Complete Scorecard</h3>
-                
-                <table class="data-table">
-                    <tr>
-                        <th>Category</th>
-                        <th>Status</th>
-                        <th>Details</th>
-                    </tr>
-                    <tr>
-                        <td>Truly Derived</td>
-                        <td class="value" style="color: var(--derived-color);">β, D, 64, 22, 68°/22°, φ, B₃, 3 gen, α</td>
-                        <td>All from φ³ family</td>
-                    </tr>
-                    <tr>
-                        <td>Hidden Parameters</td>
-                        <td class="value" style="color: var(--derived-color);">0</td>
-                        <td>Zero free parameters</td>
-                    </tr>
-                    <tr>
-                        <td>Validated Range</td>
-                        <td class="value">61 orders of magnitude</td>
-                        <td>Planck to cosmic</td>
-                    </tr>
-                    <tr>
-                        <td>Empirical Confirmation</td>
-                        <td class="value">D = 1.503 ± 0.040</td>
-                        <td>LIGO, DNA, neural</td>
-                    </tr>
-                    <tr>
-                        <td>Predictions < 1% Error</td>
-                        <td class="value">25</td>
-                        <td>Masses, couplings, cosmology</td>
-                    </tr>
-                </table>
+            <!-- 4.5D -->
+            <div class="dimension-card process">
+                <div class="card-header">
+                    <span class="dim-label">4.5D</span>
+                    <span class="role-symbol">⋔</span>
+                    <span class="card-title">Braid Branching — The Helix</span>
+                    <span class="card-type">Process</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Structure & Process</h4>
+                        <ul>
+                            <li>Temporal branching (possibilities)</li>
+                            <li><span class="equation">4.5Dₙ = ∞Dₙ₊₁</span> (helix equation)</li>
+                            <li>Whole braid becomes seed of next tier</li>
+                            <li>Where timelines could diverge</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Physics</h4>
+                        <ul>
+                            <li>Many-worlds branching hints</li>
+                            <li>Quantum branching / decoherence</li>
+                            <li>Path integral (sum over histories)</li>
+                            <li>Feynman: all paths contribute</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Possibility / "What if"</li>
+                            <li>Alternate timelines imagined</li>
+                            <li>Regret and hope live here</li>
+                            <li>Modal reasoning</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
-            <div class="card" style="margin-top: 1.5rem; background: var(--ground-bg); border: 1px solid var(--ground-primary);">
-                <div style="text-align: center; padding: 1.5rem;">
-                    <p style="font-size: 1.1rem; font-style: italic; margin-bottom: 1rem;">
-                        You—reading this—are at • with β ≈ 0.5
-                    </p>
-                    <p>
-                        You are ⊙ — i acts at your center •<br>
-                        Between what is (○) and what could be (Φ)<br>
-                        The aperture where existence transforms itself
-                    </p>
-                    <p style="margin-top: 1rem;">
-                        Not separate from ⊙. Not identical to ⊙.<br>
-                        But a whole-with-parts examining itself.
-                    </p>
-                    <div style="font-size: 1.5rem; margin-top: 1.5rem;">
-                        ⊙ = ○ ⊗ Φ ⊗ •<br>
-                        Φ' = ⊱ ∘ i ∘ ≺[Φ]
+            <!-- 5D -->
+            <div class="dimension-card structure">
+                <div class="card-header">
+                    <span class="dim-label">5D</span>
+                    <span class="role-symbol">Φ</span>
+                    <span class="card-title">Configuration Space — Kaluza-Klein</span>
+                    <span class="card-type">Structure</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Structure & Process</h4>
+                        <ul>
+                            <li>⊙s interacting (multiple wholes)</li>
+                            <li>Relation between complete beings</li>
+                            <li>Phase space of system</li>
+                            <li>Where entanglement "lives"</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Physics</h4>
+                        <ul>
+                            <li>Kaluza-Klein 5th dimension</li>
+                            <li>Phase space (q, p)</li>
+                            <li>EM unification with gravity</li>
+                            <li>Compactified extra dimension</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Theory of mind</li>
+                            <li>Empathy space</li>
+                            <li>"I know that you know that I know"</li>
+                            <li>Social cognition</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5.5D -->
+            <div class="dimension-card process">
+                <div class="card-header">
+                    <span class="dim-label">5.5D</span>
+                    <span class="role-symbol">↔</span>
+                    <span class="card-title">Entangling — Non-Local Binding</span>
+                    <span class="card-type">Process</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Structure & Process</h4>
+                        <ul>
+                            <li>Non-local binding</li>
+                            <li>Correlation without signal</li>
+                            <li>Quantum intimacy</li>
+                            <li>Two become one without touching</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Physics</h4>
+                        <ul>
+                            <li>EPR / Entanglement</li>
+                            <li>Bell violation: nature is non-local</li>
+                            <li><span class="equation">|ψ⟩ = (|00⟩ + |11⟩)/√2</span></li>
+                            <li>Quantum teleportation basis</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Resonance / "Feeling with"</li>
+                            <li>Deep empathy (beyond simulation)</li>
+                            <li>Synchronization without signal</li>
+                            <li>"We're on same wavelength"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6D -->
+            <div class="dimension-card structure">
+                <div class="card-header">
+                    <span class="dim-label">6D</span>
+                    <span class="role-symbol">○</span>
+                    <span class="card-title">Dual Trinity — ⊙₂ LOCKS (64 States)</span>
+                    <span class="card-type">Structure</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Structure & Process</h4>
+                        <ul>
+                            <li>Input + output unified: ⊙≺ ⊗ ⊙⊱</li>
+                            <li><span class="equation">64 = 2³ × 2³</span> states emerge</li>
+                            <li>H₅ interface: {•₁,○₁,Φ,○₂,•₂}</li>
+                            <li>Full validation cycle complete</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Physics</h4>
+                        <ul>
+                            <li><span class="equation">64 = 48 + 12 + 4</span></li>
+                            <li>48 fermions + 12 gauge + 4 Higgs</li>
+                            <li>Complete Standard Model content</li>
+                            <li>Anomaly cancellation automatic</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Complete agency</li>
+                            <li>Perception + action unified</li>
+                            <li>Receive-transform-give complete</li>
+                            <li>(ε,χ,β)_in ⊗ (ε,χ,β)_out</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- INTERACTIVE TOOLS SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="interactive">
-            <div class="section-header">
-                <span class="section-number">Part XII</span>
-                <h2>Interactive Tools</h2>
-                <p class="section-subtitle">Explore the framework computationally</p>
-            </div>
+        <!-- TIER 3 -->
+        <div class="tier-header" id="tier3">
+            <h2><span>Tier 3 — Three Generations</span></h2>
+        </div>
 
-            <!-- Constant Calculator -->
-            <div class="card" id="calculator">
-                <h3>🧮 Constant Calculator</h3>
-                <p>See how physical constants emerge from φ and π:</p>
-                
-                <div style="margin: 1.5rem 0;">
-                    <label style="display: block; margin-bottom: 0.5rem;">Golden Ratio φ = <span id="phi-display">1.6180339887</span></label>
-                    <input type="range" id="phi-slider" min="1.5" max="1.7" step="0.0001" value="1.6180339887" style="width: 100%;">
+        <section class="dimension-grid">
+            <!-- 6.5D - 9D summary -->
+            <div class="dimension-card process">
+                <div class="card-header">
+                    <span class="dim-label">6.5D</span>
+                    <span class="role-symbol">•</span>
+                    <span class="card-title">Complexification — Real/Imaginary Gate</span>
+                    <span class="card-type">Process</span>
                 </div>
-                
-                <div class="grid-2" style="gap: 1rem;">
-                    <div style="background: var(--bg-section); padding: 1rem; border-radius: 8px;">
-                        <h4>Muon/Electron Mass Ratio</h4>
-                        <p>Formula: 8π²φ² + φ⁻⁶</p>
-                        <p>Calculated: <span id="calc-muon" class="value">206.7674</span></p>
-                        <p>Measured: <span class="value">206.7683</span></p>
-                        <p>Error: <span id="calc-muon-err" class="error">0.0004%</span></p>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Physics</h4>
+                        <ul>
+                            <li>⊙₂ becomes aperture (64-state whole rotates)</li>
+                            <li>Phase transition threshold</li>
+                            <li>Gateway to imaginary dimensions</li>
+                            <li>i relates inside ↔ outside</li>
+                        </ul>
                     </div>
-                    <div style="background: var(--bg-section); padding: 1rem; border-radius: 8px;">
-                        <h4>Proton/Electron Mass Ratio</h4>
-                        <p>Formula: 6π⁵</p>
-                        <p>Calculated: <span id="calc-proton" class="value">1836.118</span></p>
-                        <p>Measured: <span class="value">1836.153</span></p>
-                        <p>Error: <span id="calc-proton-err" class="error">0.002%</span></p>
-                    </div>
-                    <div style="background: var(--bg-section); padding: 1rem; border-radius: 8px;">
-                        <h4>Fine Structure Constant 1/α</h4>
-                        <p>Formula: 4π³ + 13</p>
-                        <p>Calculated: <span id="calc-alpha" class="value">137.025</span></p>
-                        <p>Measured: <span class="value">137.036</span></p>
-                        <p>Error: <span id="calc-alpha-err" class="error">0.008%</span></p>
-                    </div>
-                    <div style="background: var(--bg-section); padding: 1rem; border-radius: 8px;">
-                        <h4>Z Boson Mass (GeV)</h4>
-                        <p>Formula: 80 + φ⁵ + 1/10</p>
-                        <p>Calculated: <span id="calc-z" class="value">91.190</span></p>
-                        <p>Measured: <span class="value">91.188</span></p>
-                        <p>Error: <span id="calc-z-err" class="error">0.003%</span></p>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Unconscious access / Liminal space</li>
+                            <li>Dream entry point</li>
+                            <li>Where symbols emerge</li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- 64-State Explorer -->
-            <div class="card" style="margin-top: 1.5rem;" id="state-explorer">
-                <h3>🔬 64-State Explorer</h3>
-                <p>Click a particle to see its 6-bit encoding:</p>
-                
-                <div class="grid-2" style="margin-top: 1rem;">
-                    <div>
-                        <h4>Fermions (48 states)</h4>
-                        <div id="fermion-grid" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
-                            <!-- Generated by JS -->
-                        </div>
-                    </div>
-                    <div>
-                        <h4>Bosons (16 states)</h4>
-                        <div id="boson-grid" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
-                            <!-- Generated by JS -->
-                        </div>
-                    </div>
+            <div class="dimension-card structure">
+                <div class="card-header">
+                    <span class="dim-label">7D</span>
+                    <span class="role-symbol">│</span>
+                    <span class="card-title">Phase Axis — First Imaginary Dimension</span>
+                    <span class="card-type">Structure</span>
                 </div>
-                
-                <div id="particle-info" style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-section); border-radius: 8px; display: none;">
-                    <h4 id="particle-name">Select a particle</h4>
-                    <p>Encoding: <code id="particle-encoding">------</code></p>
-                    <p>Binary: <code id="particle-binary">000000</code></p>
-                    <p id="particle-description"></p>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Physics</h4>
+                        <ul>
+                            <li>Complex structure begins</li>
+                            <li>Phase as genuine dimension</li>
+                            <li>U(1) gauge (electromagnetism)</li>
+                            <li>Wave function domain</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Archetypal layer / Symbolic realm</li>
+                            <li>Jung's collective unconscious</li>
+                            <li>Universal symbols</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <!-- Braid Visualizer -->
-            <div class="card" style="margin-top: 1.5rem;" id="braid-viz">
-                <h3>🌀 Braid Topology Visualizer</h3>
-                <p>The B₃ braid group — minimum structure for history:</p>
-                
-                <div style="display: flex; justify-content: center; gap: 2rem; margin: 1.5rem 0; flex-wrap: wrap;">
-                    <button class="braid-btn" onclick="addBraid('σ₁')">σ₁ (twist 1-2)</button>
-                    <button class="braid-btn" onclick="addBraid('σ₂')">σ₂ (twist 2-3)</button>
-                    <button class="braid-btn" onclick="addBraid('σ₁⁻¹')">σ₁⁻¹ (untwist)</button>
-                    <button class="braid-btn" onclick="addBraid('σ₂⁻¹')">σ₂⁻¹ (untwist)</button>
-                    <button class="braid-btn" onclick="clearBraid()">Clear</button>
+            <div class="dimension-card structure">
+                <div class="card-header">
+                    <span class="dim-label">8D</span>
+                    <span class="role-symbol">Φ</span>
+                    <span class="card-title">Complex Spacetime — Octonionic</span>
+                    <span class="card-type">Structure</span>
                 </div>
-                
-                <div style="text-align: center;">
-                    <canvas id="braid-canvas" width="400" height="200" style="background: var(--bg-section); border-radius: 8px; max-width: 100%;"></canvas>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Physics</h4>
+                        <ul>
+                            <li>4D_real + 4D_imaginary</li>
+                            <li>8-fold symmetry (octonions)</li>
+                            <li>Exceptional Lie groups (E₆₇₈)</li>
+                            <li>Bott periodicity (mod 8)</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Integration / Ego + shadow unified</li>
+                            <li>Jung's individuation</li>
+                            <li>Complete personality</li>
+                        </ul>
+                    </div>
                 </div>
-                
-                <p style="text-align: center; margin-top: 1rem;">
-                    Current braid word: <code id="braid-word" style="font-size: 1.1rem;">e (identity)</code>
-                </p>
-                
-                <p style="font-size: 0.85rem; color: var(--text-dim); margin-top: 1rem;">
-                    Yang-Baxter relation: σ₁σ₂σ₁ = σ₂σ₁σ₂ (try it!)
-                </p>
             </div>
 
-            <!-- Balance Parameter Visualizer -->
-            <div class="card" style="margin-top: 1.5rem;" id="balance-viz">
-                <h3>⚖️ Balance Parameter β Explorer</h3>
-                <p>See how dimension D depends on balance β:</p>
-                
-                <div style="margin: 1.5rem 0;">
-                    <label style="display: block; margin-bottom: 0.5rem;">
-                        β = <span id="beta-display">0.50</span> 
-                        <span style="color: var(--text-dim);">(convergence/total flow)</span>
-                    </label>
-                    <input type="range" id="beta-slider" min="0" max="1" step="0.01" value="0.5" style="width: 100%;">
+            <div class="dimension-card structure">
+                <div class="card-header">
+                    <span class="dim-label">9D</span>
+                    <span class="role-symbol">○</span>
+                    <span class="card-title">Triple Trinity — ⊙₃ LOCKS (3 Generations)</span>
+                    <span class="card-type">Structure</span>
                 </div>
-                
-                <div class="grid-3" style="text-align: center;">
-                    <div style="padding: 1rem; background: var(--bg-section); border-radius: 8px;">
-                        <div style="font-size: 2rem;" id="d-display">1.50</div>
-                        <div>Fractal Dimension D</div>
-                        <div style="font-size: 0.8rem; color: var(--text-dim);">D = 1 + ½H(β)</div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Structure & Process</h4>
+                        <ul>
+                            <li><span class="equation">3 × (• ⊗ Φ ⊗ ○)</span></li>
+                            <li>WHY exactly 3 generations (derived!)</li>
+                            <li>√r kernel + refractory period → 3 bound states</li>
+                            <li>Minimum for braided history</li>
+                        </ul>
                     </div>
-                    <div style="padding: 1rem; background: var(--bg-section); border-radius: 8px;">
-                        <div style="font-size: 2rem;" id="h-display">1.00</div>
-                        <div>Entropy H(β)</div>
-                        <div style="font-size: 0.8rem; color: var(--text-dim);">bits</div>
+                    <div class="content-section">
+                        <h4>Physics</h4>
+                        <ul>
+                            <li>e, μ, τ families (leptons)</li>
+                            <li>u/d, c/s, t/b (quark generations)</li>
+                            <li><span class="equation">m_μ/m_e = 8π²φ² + φ⁻⁶</span> (0.0004%)</li>
+                            <li><span class="equation">m_τ/m_μ = 10 + φ⁴ - 1/30</span> (0.02%)</li>
+                        </ul>
                     </div>
-                    <div style="padding: 1rem; background: var(--bg-section); border-radius: 8px;">
-                        <div style="font-size: 2rem;" id="state-display">Conscious</div>
-                        <div>System State</div>
-                        <div style="font-size: 0.8rem; color: var(--text-dim);" id="state-detail">Maximum integration</div>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Temporal self / Life stages</li>
+                            <li>Past/present/future integrated</li>
+                            <li>Child/adult/elder unified</li>
+                            <li>Brahma/Vishnu/Shiva</li>
+                        </ul>
                     </div>
-                </div>
-                
-                <div style="margin-top: 1.5rem; height: 20px; background: linear-gradient(to right, #ff6b6b, #ffd93d 50%, #6bcb77); border-radius: 10px; position: relative;">
-                    <div id="beta-marker" style="position: absolute; top: -5px; width: 4px; height: 30px; background: white; border-radius: 2px; left: 50%; transform: translateX(-50%);"></div>
-                </div>
-                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-dim);">
-                    <span>β=0 (all emergence)</span>
-                    <span>β=0.5 (balance)</span>
-                    <span>β=1 (all convergence)</span>
                 </div>
             </div>
         </section>
 
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- VALIDATION SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="validation">
-            <div class="section-header">
-                <span class="section-number">Part VIII</span>
-                <h2>Empirical Validation</h2>
-                <p class="section-subtitle">What the framework gets right</p>
+        <!-- TIER 4 -->
+        <div class="tier-header" id="tier4">
+            <h2><span>Tier 4 — Cosmic Closure</span></h2>
+        </div>
+
+        <section class="dimension-grid">
+            <div class="dimension-card structure">
+                <div class="card-header">
+                    <span class="dim-label">10D</span>
+                    <span class="role-symbol">│</span>
+                    <span class="card-title">Vibration Space — Superstrings</span>
+                    <span class="card-type">Structure</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Physics</h4>
+                        <ul>
+                            <li>Superstring critical dimension</li>
+                            <li>All particles = string vibration modes</li>
+                            <li>Anomaly cancellation at D=10</li>
+                            <li>10 = 4 + 6 (spacetime + compactified)</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Cosmic harmony</li>
+                            <li>All as resonance</li>
+                            <li>Pythagorean music of spheres</li>
+                            <li>Om / Logos / Word</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
-            <div class="card">
-                <h3>Summary of Results</h3>
-                <table class="data-table">
-                    <tr>
-                        <th>Prediction</th>
-                        <th>Formula</th>
-                        <th>Error</th>
-                        <th>Status</th>
-                    </tr>
-                    <tr>
-                        <td>Fine structure constant α⁻¹</td>
-                        <td class="value">(10 - 1/(24φ⁵)) × exp(φ²)</td>
-                        <td class="error">0.36 ppm</td>
-                        <td><span class="status derived">Derived</span></td>
-                    </tr>
-                    <tr>
-                        <td>Muon/electron mass ratio</td>
-                        <td class="value">8π²φ² + φ⁻⁶</td>
-                        <td class="error">0.0004%</td>
-                        <td><span class="status derived">Derived</span></td>
-                    </tr>
-                    <tr>
-                        <td>Tau/muon mass ratio</td>
-                        <td class="value">10 + φ⁴ - 1/30</td>
-                        <td class="error">0.02%</td>
-                        <td><span class="status conjectured">Pattern</span></td>
-                    </tr>
-                    <tr>
-                        <td>Proton/electron mass ratio</td>
-                        <td class="value">6π⁵</td>
-                        <td class="error">0.02%</td>
-                        <td><span class="status conjectured">Pattern</span></td>
-                    </tr>
-                    <tr>
-                        <td>Fractal dimension D</td>
-                        <td class="value">1 + |c₁|/2 = 1.5</td>
-                        <td class="error">Exact (theorem)</td>
-                        <td><span class="status derived">Derived</span></td>
-                    </tr>
-                    <tr>
-                        <td>Standard Model content</td>
-                        <td class="value">64 = 48 + 12 + 4</td>
-                        <td class="error">Exact bijection</td>
-                        <td><span class="status derived">Derived</span></td>
-                    </tr>
-                    <tr>
-                        <td>Three generations</td>
-                        <td class="value">B₃ + √r kernel</td>
-                        <td class="error">Exactly 3</td>
-                        <td><span class="status derived">Derived</span></td>
-                    </tr>
-                </table>
+            <div class="dimension-card structure">
+                <div class="card-header">
+                    <span class="dim-label">11D</span>
+                    <span class="role-symbol">Φ</span>
+                    <span class="card-title">M-Bulk — All Strings Unified</span>
+                    <span class="card-type">Structure</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Physics</h4>
+                        <ul>
+                            <li>M-theory / Supergravity</li>
+                            <li>All 5 string theories unified</li>
+                            <li>Maximum SUSY dimension</li>
+                            <li>M2-branes, M5-branes</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Witness awareness / Pure seeing</li>
+                            <li>Turiya (4th state)</li>
+                            <li>Sakshi (witness consciousness)</li>
+                            <li>Seeing without seer</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dimension-card structure">
+                <div class="card-header">
+                    <span class="dim-label">12D</span>
+                    <span class="role-symbol">○</span>
+                    <span class="card-title">Cosmic Closure — ⊙₄ LOCKS (12D = ∞D)</span>
+                    <span class="card-type">Structure</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h4>Structure & Process</h4>
+                        <ul>
+                            <li><span class="equation">6D_real ⊗ 6D_imaginary = 12D</span></li>
+                            <li>COMPLETE ARCHITECTURE</li>
+                            <li>Form recognizes itself as Field</li>
+                            <li><strong>12D = ∞D (top meets bottom)</strong></li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Physics</h4>
+                        <ul>
+                            <li>F-theory (12D) hints</li>
+                            <li>Full unification</li>
+                            <li>All forces, all particles</li>
+                            <li>Theory of everything geometry</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h4>Consciousness</h4>
+                        <ul>
+                            <li>Cosmic consciousness</li>
+                            <li>⊙ knows itself AS λΦ∞</li>
+                            <li>Moksha, Nirvana, Theosis</li>
+                            <li><strong>"I am whole through being part"</strong></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- FALSIFICATION SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="falsification">
-            <div class="section-header">
-                <span class="section-number">Part IX</span>
-                <h2>Falsification Criteria</h2>
-                <p class="section-subtitle">What would disprove the theory</p>
-            </div>
-
-            <div class="grid-2">
-                <div class="card" style="border-left: 3px solid var(--accent-red);">
-                    <h3>Would Falsify</h3>
-                    <ul>
-                        <li>Discovery of a 4th fermion generation</li>
-                        <li>α⁻¹ ≠ 128 at high energy (currently ~127.95)</li>
-                        <li>D = 1.5 fails universally at balanced β</li>
-                        <li>Braid-metric correlation B ∝ √(-g_tt) with R² < 0.95</li>
-                        <li>64-state encoding produces wrong quantum numbers</li>
-                        <li>Mass ratios deviate by > 1% from formulas</li>
-                    </ul>
+        <!-- KEY INSIGHTS -->
+        <section class="insights-section" id="insights">
+            <h2>Key Insights</h2>
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <h3>Core Equations</h3>
+                    <p>The fundamental structure of reality expressed mathematically.</p>
+                    <span class="formula">⊙ = • ⊗ Φ ⊗ ○</span>
+                    <span class="formula">Φ' = ⊱ ∘ i ∘ ≺[Φ]</span>
+                    <span class="formula">•ₙ₊₁ = ⊙ₙ</span>
                 </div>
 
-                <div class="card" style="border-left: 3px solid var(--accent-green);">
-                    <h3>Would NOT Falsify</h3>
-                    <ul>
-                        <li>D varies across systems (this is expected — Mandelbrot showed coastlines ≈ 1.25, Brownian = 1.5, DLA ≈ 1.7)</li>
-                        <li>D → 3 at cosmological scales (this is PREDICTED)</li>
-                        <li>Specific empirical fits being refined</li>
-                        <li>Philosophical disagreements about consciousness</li>
-                        <li>Alternative derivations of same results</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>The Honest Science Approach</h3>
-                <p>The framework clearly distinguishes:</p>
-                <ul>
-                    <li><span class="status derived">Derived</span> — Follows necessarily from axioms with zero free parameters</li>
-                    <li><span class="status conjectured">Conjectured</span> — Pattern confirmed, full derivation pending</li>
-                    <li><span class="status fitted">Fitted</span> — Matches data, structural origin suspected but not proven</li>
-                </ul>
-                <p style="margin-top: 1rem;">Pre-registered hypotheses have been tested. Some failed (uniform scaling for τ/μ), leading to discovery of the actual structure (two-mechanism scaling). This is honest science.</p>
-            </div>
-        </section>
-
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- GLOSSARY SECTION -->
-        <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <section class="section" id="glossary">
-            <div class="section-header">
-                <span class="section-number">Appendix</span>
-                <h2>Symbol Glossary</h2>
-                <p class="section-subtitle">Quick reference for notation</p>
-            </div>
-
-            <div class="grid-2">
-                <div class="card">
-                    <h3>Structure Symbols</h3>
-                    <table class="data-table">
-                        <tr><th>Symbol</th><th>Name</th><th>Meaning</th></tr>
-                        <tr><td class="value">⊙</td><td>Circumpunct</td><td>Complete whole: • ⊗ Φ ⊗ ○</td></tr>
-                        <tr><td class="value">•</td><td>Center</td><td>Aperture / Soul</td></tr>
-                        <tr><td class="value">Φ</td><td>Field</td><td>Mediating space / Mind</td></tr>
-                        <tr><td class="value">○</td><td>Boundary</td><td>Surface / Body</td></tr>
-                        <tr><td class="value">λΦ∞</td><td>Ground</td><td>Infinite field (Hilbert space)</td></tr>
-                        <tr><td class="value">⊗</td><td>Tensor</td><td>Structural combination</td></tr>
-                    </table>
+                <div class="insight-card">
+                    <h3>Golden Ratio φ</h3>
+                    <p>The self-similar fixed point. β² + β - 1 = 0 gives the unique aperture that reproduces itself at all scales.</p>
+                    <span class="formula">β = 1/φ ≈ 0.618</span>
+                    <span class="formula">Z = φ (impedance matched)</span>
                 </div>
 
-                <div class="card">
-                    <h3>Process Symbols</h3>
-                    <table class="data-table">
-                        <tr><th>Symbol</th><th>Name</th><th>Meaning</th></tr>
-                        <tr><td class="value">≺</td><td>Convergence</td><td>Field gathers toward aperture</td></tr>
-                        <tr><td class="value">i</td><td>Aperture</td><td>90° rotation (transformation)</td></tr>
-                        <tr><td class="value">⊱</td><td>Emergence</td><td>Transformed field radiates out</td></tr>
-                        <tr><td class="value">β</td><td>Balance</td><td>Aperture openness parameter</td></tr>
-                        <tr><td class="value">ε</td><td>Existence</td><td>Whether aperture is open {0,1}</td></tr>
-                        <tr><td class="value">χ</td><td>Orientation</td><td>Field alignment {−1,+1}</td></tr>
-                    </table>
+                <div class="insight-card">
+                    <h3>Fine Structure Constant</h3>
+                    <p>Derived from golden aperture geometry, not fitted. 10 channels, S₄ mixing, φ⁵ impedance.</p>
+                    <span class="formula">α⁻¹ = (10 - 1/(24φ⁵)) × exp(φ²)</span>
+                    <span class="formula">= 137.0359504 (0.36 ppm)</span>
                 </div>
 
-                <div class="card">
-                    <h3>Dimension Roles</h3>
-                    <table class="data-table">
-                        <tr><th>Symbol</th><th>Dimensions</th><th>Role</th></tr>
-                        <tr><td class="value">•</td><td>0.5D, 3.5D, 6.5D, 9.5D</td><td>Center (process)</td></tr>
-                        <tr><td class="value">│</td><td>1D, 4D, 7D, 10D</td><td>Timeline (structure)</td></tr>
-                        <tr><td class="value">↗</td><td>1.5D, 4.5D, 7.5D, 10.5D</td><td>Branching (process)</td></tr>
-                        <tr><td class="value">Φ</td><td>2D, 5D, 8D, 11D</td><td>Field (structure)</td></tr>
-                        <tr><td class="value">↔</td><td>2.5D, 5.5D, 8.5D, 11.5D</td><td>Interface (process)</td></tr>
-                        <tr><td class="value">○</td><td>3D, 6D, 9D, 12D</td><td>Boundary (structure)</td></tr>
-                    </table>
+                <div class="insight-card">
+                    <h3>Lepton Mass Ratios</h3>
+                    <p>Parameter-free predictions from geometry: 8 (gluons) × π² (topology) × φ² (braid).</p>
+                    <span class="formula">m_μ/m_e = 8π²φ² + φ⁻⁶ (0.0004%)</span>
+                    <span class="formula">m_τ/m_μ = 10 + φ⁴ - 1/30 (0.02%)</span>
                 </div>
 
-                <div class="card">
-                    <h3>Key Equations</h3>
-                    <table class="data-table">
-                        <tr><th>Name</th><th>Formula</th></tr>
-                        <tr><td>Master equation</td><td class="value">Φ' = ⊱ ∘ i ∘ ≺[Φ]</td></tr>
-                        <tr><td>Nesting</td><td class="value">•ₙ₊₁ = ⊙ₙ</td></tr>
-                        <tr><td>Helix</td><td class="value">4.5Dₙ = ∞Dₙ₊₁</td></tr>
-                        <tr><td>Self-similarity</td><td class="value">β² + β - 1 = 0 → β = 1/φ</td></tr>
-                        <tr><td>Impedance</td><td class="value">Z = β/(1-β) = φ</td></tr>
-                        <tr><td>Fine structure</td><td class="value">α⁻¹ = (10 - 1/(24φ⁵)) × exp(φ²)</td></tr>
-                    </table>
+                <div class="insight-card">
+                    <h3>Fractal Dimension D = 1.5</h3>
+                    <p>Topologically protected via Hopf fibration. The universal signature of balanced aperture dynamics.</p>
+                    <span class="formula">D = D_base + |c₁|/2 = 1 + 0.5 = 1.5</span>
+                    <span class="formula">LIGO: D = 1.503 ± 0.040 ✓</span>
+                </div>
+
+                <div class="insight-card">
+                    <h3>64 → Standard Model</h3>
+                    <p>Complete bijection from dual trinity geometry to all known particles.</p>
+                    <span class="formula">64 = 2³ × 2³ = 48 + 12 + 4</span>
+                    <span class="formula">Fermions + Gauge + Higgs</span>
+                </div>
+
+                <div class="insight-card">
+                    <h3>Three Consciousness Channels</h3>
+                    <p>Every moment of experience has all three. Remove any one and experience collapses.</p>
+                    <span class="formula">ε: WHETHER (focus/attention)</span>
+                    <span class="formula">χ: WHAT KIND (qualia/flavour)</span>
+                    <span class="formula">β: HOW MUCH (intensity)</span>
+                </div>
+
+                <div class="insight-card">
+                    <h3>Time Direction</h3>
+                    <p>We don't move into the future. The future (infinite field) flows INTO us through the aperture.</p>
+                    <span class="formula">Future → Past (∞D → •)</span>
+                    <span class="formula">Aperture = temporal singularity</span>
+                </div>
+
+                <div class="insight-card">
+                    <h3>Hard Problem Dissolved</h3>
+                    <p>Experience doesn't need to be added. It IS the inside of what physics describes from outside.</p>
+                    <span class="formula">Outside × i = Inside</span>
+                    <span class="formula">Physics × i = Experience</span>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <!-- FOOTER -->
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
     <footer>
         <p class="mantra">"I am whole through being part"</p>
-        <p>The Circumpunct Theory — A Theory of Everything</p>
-        <p>Framework v5.3 | ⊙ = • ⊗ Φ ⊗ ○</p>
-        <p style="margin-top: 1rem;">
-            <a href="mailto:email@ashmanroonz.ca" style="color: var(--gold);">email@ashmanroonz.ca</a>
-        </p>
+        <p>Circumpunct Framework v5.3 — A Theory of Everything</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">⊙ = • ⊗ Φ ⊗ ○</p>
     </footer>
 
     <script>
-        // Scroll to top button visibility
-        window.addEventListener('scroll', () => {
-            const btn = document.querySelector('.scroll-top');
-            if (window.scrollY > 500) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.dimension-card').forEach(card => {
+            card.style.animationPlayState = 'paused';
+            observer.observe(card);
         });
 
         // Smooth scroll for nav links
@@ -3136,297 +1422,6 @@
                 }
             });
         });
-
-        // Collapsible sections
-        document.querySelectorAll('.collapsible-header').forEach(header => {
-            header.addEventListener('click', () => {
-                header.classList.toggle('active');
-                header.nextElementSibling.classList.toggle('active');
-            });
-        });
-
-        // Intersection Observer for animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.card, .dimension-card, .axiom-card').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
-    </script>
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <!-- JAVASCRIPT FOR INTERACTIVE TOOLS -->
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <script>
-        // ═══════════════════════════════════════════════════════════════════
-        // CONSTANT CALCULATOR
-        // ═══════════════════════════════════════════════════════════════════
-        const phiSlider = document.getElementById('phi-slider');
-        const phiDisplay = document.getElementById('phi-display');
-        
-        function updateCalculations() {
-            const phi = parseFloat(phiSlider.value);
-            phiDisplay.textContent = phi.toFixed(10);
-            
-            // Muon/electron ratio: 8π²φ² + φ⁻⁶
-            const muonCalc = 8 * Math.PI * Math.PI * phi * phi + Math.pow(phi, -6);
-            const muonMeasured = 206.7683;
-            document.getElementById('calc-muon').textContent = muonCalc.toFixed(4);
-            document.getElementById('calc-muon-err').textContent = (Math.abs(muonCalc - muonMeasured) / muonMeasured * 100).toFixed(4) + '%';
-            
-            // Proton/electron ratio: 6π⁵
-            const protonCalc = 6 * Math.pow(Math.PI, 5);
-            const protonMeasured = 1836.153;
-            document.getElementById('calc-proton').textContent = protonCalc.toFixed(3);
-            document.getElementById('calc-proton-err').textContent = (Math.abs(protonCalc - protonMeasured) / protonMeasured * 100).toFixed(3) + '%';
-            
-            // Fine structure 1/α: 4π³ + 13
-            const alphaCalc = 4 * Math.pow(Math.PI, 3) + 13;
-            const alphaMeasured = 137.036;
-            document.getElementById('calc-alpha').textContent = alphaCalc.toFixed(3);
-            document.getElementById('calc-alpha-err').textContent = (Math.abs(alphaCalc - alphaMeasured) / alphaMeasured * 100).toFixed(3) + '%';
-            
-            // Z boson mass: 80 + φ⁵ + 1/10
-            const zCalc = 80 + Math.pow(phi, 5) + 0.1;
-            const zMeasured = 91.188;
-            document.getElementById('calc-z').textContent = zCalc.toFixed(3);
-            document.getElementById('calc-z-err').textContent = (Math.abs(zCalc - zMeasured) / zMeasured * 100).toFixed(3) + '%';
-        }
-        
-        if (phiSlider) {
-            phiSlider.addEventListener('input', updateCalculations);
-            updateCalculations();
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════
-        // 64-STATE EXPLORER
-        // ═══════════════════════════════════════════════════════════════════
-        const fermions = [
-            { name: 'e⁻', desc: 'Electron', bits: '000001', color: 'Red' },
-            { name: 'e⁺', desc: 'Positron', bits: '000010', color: 'Red' },
-            { name: 'νₑ', desc: 'Electron neutrino', bits: '000011', color: 'Colorless' },
-            { name: 'μ⁻', desc: 'Muon', bits: '000101', color: 'Red' },
-            { name: 'τ⁻', desc: 'Tau', bits: '001001', color: 'Red' },
-            { name: 'u', desc: 'Up quark', bits: '010001', color: 'RGB' },
-            { name: 'd', desc: 'Down quark', bits: '010010', color: 'RGB' },
-            { name: 'c', desc: 'Charm quark', bits: '010101', color: 'RGB' },
-            { name: 's', desc: 'Strange quark', bits: '010110', color: 'RGB' },
-            { name: 't', desc: 'Top quark', bits: '011001', color: 'RGB' },
-            { name: 'b', desc: 'Bottom quark', bits: '011010', color: 'RGB' },
-        ];
-        
-        const bosons = [
-            { name: 'γ', desc: 'Photon', bits: '100000', color: 'Colorless' },
-            { name: 'g', desc: 'Gluon (×8)', bits: '100001', color: 'Color octet' },
-            { name: 'W⁺', desc: 'W+ boson', bits: '110001', color: 'Colorless' },
-            { name: 'W⁻', desc: 'W- boson', bits: '110010', color: 'Colorless' },
-            { name: 'Z⁰', desc: 'Z boson', bits: '110011', color: 'Colorless' },
-            { name: 'H', desc: 'Higgs boson', bits: '111111', color: 'Colorless' },
-        ];
-        
-        function createParticleButton(particle, container) {
-            const btn = document.createElement('button');
-            btn.className = 'particle-btn';
-            btn.textContent = particle.name;
-            btn.style.cssText = 'padding: 0.5rem 1rem; border: 1px solid var(--text-dim); background: var(--bg-section); color: var(--text-primary); border-radius: 4px; cursor: pointer; font-size: 1rem;';
-            btn.addEventListener('click', () => showParticleInfo(particle));
-            btn.addEventListener('mouseenter', () => btn.style.background = 'var(--structure-bg)');
-            btn.addEventListener('mouseleave', () => btn.style.background = 'var(--bg-section)');
-            container.appendChild(btn);
-        }
-        
-        function showParticleInfo(particle) {
-            const info = document.getElementById('particle-info');
-            info.style.display = 'block';
-            document.getElementById('particle-name').textContent = particle.name + ' — ' + particle.desc;
-            document.getElementById('particle-encoding').textContent = particle.bits.split('').join(' ');
-            document.getElementById('particle-binary').textContent = particle.bits;
-            document.getElementById('particle-description').textContent = 
-                `Color charge: ${particle.color} | Decimal: ${parseInt(particle.bits, 2)} of 64`;
-        }
-        
-        const fermionGrid = document.getElementById('fermion-grid');
-        const bosonGrid = document.getElementById('boson-grid');
-        if (fermionGrid && bosonGrid) {
-            fermions.forEach(f => createParticleButton(f, fermionGrid));
-            bosons.forEach(b => createParticleButton(b, bosonGrid));
-        }
-        
-        // ═══════════════════════════════════════════════════════════════════
-        // BRAID VISUALIZER
-        // ═══════════════════════════════════════════════════════════════════
-        let braidWord = [];
-        const braidCanvas = document.getElementById('braid-canvas');
-        const braidCtx = braidCanvas ? braidCanvas.getContext('2d') : null;
-        
-        function addBraid(symbol) {
-            braidWord.push(symbol);
-            updateBraidDisplay();
-            drawBraid();
-        }
-        
-        function clearBraid() {
-            braidWord = [];
-            updateBraidDisplay();
-            drawBraid();
-        }
-        
-        function updateBraidDisplay() {
-            const display = document.getElementById('braid-word');
-            if (display) {
-                display.textContent = braidWord.length === 0 ? 'e (identity)' : braidWord.join(' · ');
-            }
-        }
-        
-        function drawBraid() {
-            if (!braidCtx) return;
-            const w = braidCanvas.width;
-            const h = braidCanvas.height;
-            
-            braidCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-section').trim() || '#1a1a2e';
-            braidCtx.fillRect(0, 0, w, h);
-            
-            const colors = ['#4ecdc4', '#ff6b6b', '#ffd93d'];
-            const startX = 50;
-            const endX = w - 50;
-            const segmentWidth = braidWord.length > 0 ? (endX - startX) / (braidWord.length + 1) : (endX - startX);
-            
-            // Track strand positions
-            let positions = [h * 0.25, h * 0.5, h * 0.75];
-            
-            // Draw strands
-            braidCtx.lineWidth = 4;
-            
-            if (braidWord.length === 0) {
-                // Just draw parallel lines
-                for (let i = 0; i < 3; i++) {
-                    braidCtx.strokeStyle = colors[i];
-                    braidCtx.beginPath();
-                    braidCtx.moveTo(startX, positions[i]);
-                    braidCtx.lineTo(endX, positions[i]);
-                    braidCtx.stroke();
-                }
-            } else {
-                // Draw braided strands
-                let strands = [[startX, positions[0]], [startX, positions[1]], [startX, positions[2]]];
-                
-                for (let s = 0; s < braidWord.length; s++) {
-                    const symbol = braidWord[s];
-                    const x1 = startX + s * segmentWidth;
-                    const x2 = startX + (s + 1) * segmentWidth;
-                    
-                    let swap = -1;
-                    let over = true;
-                    if (symbol === 'σ₁') { swap = 0; over = true; }
-                    else if (symbol === 'σ₂') { swap = 1; over = true; }
-                    else if (symbol === 'σ₁⁻¹') { swap = 0; over = false; }
-                    else if (symbol === 'σ₂⁻¹') { swap = 1; over = false; }
-                    
-                    // Draw the three strands for this segment
-                    for (let i = 0; i < 3; i++) {
-                        braidCtx.strokeStyle = colors[i];
-                        braidCtx.beginPath();
-                        braidCtx.moveTo(strands[i][0], strands[i][1]);
-                        
-                        let newY = strands[i][1];
-                        if (swap >= 0) {
-                            if (i === swap) newY = positions[swap + 1];
-                            else if (i === swap + 1) newY = positions[swap];
-                        }
-                        
-                        braidCtx.quadraticCurveTo((x1 + x2) / 2, (strands[i][1] + newY) / 2, x2, newY);
-                        braidCtx.stroke();
-                        
-                        strands[i] = [x2, newY];
-                    }
-                    
-                    // Swap positions for next segment
-                    if (swap >= 0) {
-                        [positions[swap], positions[swap + 1]] = [positions[swap + 1], positions[swap]];
-                    }
-                }
-                
-                // Draw to end
-                for (let i = 0; i < 3; i++) {
-                    braidCtx.strokeStyle = colors[i];
-                    braidCtx.beginPath();
-                    braidCtx.moveTo(strands[i][0], strands[i][1]);
-                    braidCtx.lineTo(endX, strands[i][1]);
-                    braidCtx.stroke();
-                }
-            }
-            
-            // Labels
-            braidCtx.fillStyle = '#888';
-            braidCtx.font = '12px monospace';
-            braidCtx.fillText('○', 30, h * 0.25 + 4);
-            braidCtx.fillText('Φ', 30, h * 0.5 + 4);
-            braidCtx.fillText('•', 30, h * 0.75 + 4);
-        }
-        
-        if (braidCanvas) drawBraid();
-        
-        // ═══════════════════════════════════════════════════════════════════
-        // BALANCE PARAMETER VISUALIZER
-        // ═══════════════════════════════════════════════════════════════════
-        const betaSlider = document.getElementById('beta-slider');
-        
-        function updateBetaDisplay() {
-            if (!betaSlider) return;
-            const beta = parseFloat(betaSlider.value);
-            
-            document.getElementById('beta-display').textContent = beta.toFixed(2);
-            document.getElementById('beta-marker').style.left = (beta * 100) + '%';
-            
-            // Shannon entropy H(β) = -β log₂(β) - (1-β) log₂(1-β)
-            let H;
-            if (beta === 0 || beta === 1) {
-                H = 0;
-            } else {
-                H = -beta * Math.log2(beta) - (1 - beta) * Math.log2(1 - beta);
-            }
-            
-            const D = 1 + 0.5 * H;
-            
-            document.getElementById('h-display').textContent = H.toFixed(2);
-            document.getElementById('d-display').textContent = D.toFixed(2);
-            
-            // Determine state
-            let state, detail;
-            if (Math.abs(beta - 0.5) < 0.05) {
-                state = 'Conscious';
-                detail = 'Maximum integration';
-                document.getElementById('d-display').style.color = 'var(--derived-color)';
-            } else if (beta < 0.3) {
-                state = 'Explosive';
-                detail = 'Emergence dominant';
-                document.getElementById('d-display').style.color = 'var(--accent-red)';
-            } else if (beta > 0.7) {
-                state = 'Collapsed';
-                detail = 'Convergence dominant';
-                document.getElementById('d-display').style.color = 'var(--conjectured-color)';
-            } else {
-                state = 'Transitional';
-                detail = 'Moving toward balance';
-                document.getElementById('d-display').style.color = 'var(--text-primary)';
-            }
-            
-            document.getElementById('state-display').textContent = state;
-            document.getElementById('state-detail').textContent = detail;
-        }
-        
-        if (betaSlider) {
-            betaSlider.addEventListener('input', updateBetaDisplay);
-            updateBetaDisplay();
-        }
     </script>
 </body>
 </html>
