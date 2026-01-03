@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RateBid - Make Lenders Compete For You</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0f1a;
+      --bg-card: #121a2b;
+      --bg-card-hover: #1a2438;
+      --accent: #00d4aa;
+      --accent-dim: #00d4aa33;
+      --text-primary: #ffffff;
+      --text-secondary: #8892a6;
+      --text-muted: #4a5568;
+      --border: #1e2a3d;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 15, 26, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+    }
+
+    .logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--accent);
+    }
+
+    /* View Management */
+    .view {
+      display: none;
+      padding-top: 80px;
+      min-height: 100vh;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    /* Common Elements */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg-dark);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px var(--accent-dim);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    /* Landing Page */
+    .hero {
+      padding: 6rem 2rem;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: var(--accent-dim);
+      color: var(--accent);
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--accent);
+    }
+
+    .hero h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* How It Works */
+    .how-it-works {
+      padding: 4rem 2rem;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .how-it-works h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .step {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .step-number {
+      width: 50px;
+      height: 50px;
+      background: var(--accent);
+      color: var(--bg-dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin: 0 auto 1rem;
+    }
+
+    .step h3 {
+      margin-bottom: 0.5rem;
+    }
+
+    .step p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* Form Styles */
+    .form-section {
+      padding: 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .form-section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-section > p {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .form-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+
+    .form-section-title {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Profile Detail View */
+    .profile-detail {
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .profile-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .profile-detail-header h2 {
+      font-size: 2rem;
+    }
+
+    .share-link-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .share-link-box input {
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      font-size: 0.875rem;
+      width: 200px;
+    }
+
+    .share-link-box button {
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      color: var(--bg-dark);
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .detail-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .detail-card h3 {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      color: var(--text-secondary);
+    }
+
+    .detail-value {
+      font-weight: 600;
+    }
+
+    .detail-value.highlight {
+      color: var(--accent);
+    }
+
+    /* Offers Section */
+    .offers-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .offers-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .offers-section h3 {
+      font-size: 1.25rem;
+    }
+
+    .offers-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .offers-table th {
+      text-align: left;
+      padding: 1rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .offers-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .offers-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .best-rate {
+      background: var(--accent-dim);
+    }
+
+    .best-rate td:first-child::before {
+      content: "★ ";
+      color: var(--accent);
+    }
+
+    .delete-offer {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+
+    .delete-offer:hover {
+      color: var(--danger);
+    }
+
+    .no-offers {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-muted);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .modal h3 {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .modal-buttons .btn {
+      flex: 1;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .empty-state h2 {
+      margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    /* Savings Calculator */
+    .savings-card {
+      background: linear-gradient(135deg, var(--accent-dim), transparent);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .savings-card h3 {
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .savings-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .savings-stat {
+      padding: 1rem;
+    }
+
+    .savings-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .savings-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .share-link-box {
+        flex-direction: column;
+      }
+
+      .share-link-box input {
+        width: 100%;
+      }
+
+      .offers-table {
+        font-size: 0.875rem;
+      }
+
+      .offers-table th, .offers-table td {
+        padding: 0.75rem 0.5rem;
+      }
+
+      .savings-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo" onclick="showView('landing')">RateBid</div>
+    <div class="nav-links">
+      <a onclick="showView('profile')" id="nav-profile">My Profile</a>
+      <a onclick="showView('create')" id="nav-create">Edit Profile</a>
+    </div>
+  </nav>
+
+  <!-- Landing Page -->
+  <div id="view-landing" class="view active">
+    <section class="hero">
+      <div class="hero-tag">🇨🇦 Your Personal Mortgage Tool</div>
+      <h1>Make Lenders <span>Compete</span> For Your Mortgage</h1>
+      <p>Build your borrower profile. Track offers as they come in. See exactly how much you're saving.</p>
+      <div class="cta-group">
+        <button class="btn btn-primary" onclick="checkProfile()">View My Profile</button>
+        <button class="btn btn-secondary" onclick="showView('create')">Create Profile</button>
+      </div>
+    </section>
+
+    <section class="how-it-works">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Create Your Profile</h3>
+          <p>Enter your mortgage details, credit score, and income. Everything saves locally on your device.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Collect Offers</h3>
+          <p>As you get quotes from lenders, add them here. Watch the rates compete.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Pick Your Winner</h3>
+          <p>See your savings calculated instantly. Take your best offer to negotiate.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>RateBid — Your data stays on your device. Nothing is uploaded.</p>
+    </footer>
+  </div>
+
+  <!-- Create/Edit Profile -->
+  <div id="view-create" class="view">
+    <section class="form-section">
+      <h2>Your Borrower Profile</h2>
+      <p>This information saves locally on your device. Use it to track your mortgage shopping.</p>
+
+      <form id="profile-form" class="form-card">
+        <div class="form-section-title">Property & Mortgage</div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Province</label>
+            <select name="province" required>
+              <option value="">Select...</option>
+              <option value="ON">Ontario</option>
+              <option value="BC">British Columbia</option>
+              <option value="AB">Alberta</option>
+              <option value="QC">Quebec</option>
+              <option value="MB">Manitoba</option>
+              <option value="SK">Saskatchewan</option>
+              <option value="NS">Nova Scotia</option>
+              <option value="NB">New Brunswick</option>
+              <option value="NL">Newfoundland</option>
+              <option value="PE">PEI</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>City / Region</label>
+            <input type="text" name="city" placeholder="e.g. Durham Region">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Property Type</label>
+            <select name="propertyType">
+              <option value="detached">Detached</option>
+              <option value="semi">Semi-Detached</option>
+              <option value="townhouse">Townhouse</option>
+              <option value="condo">Condo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mortgage Type</label>
+            <select name="mortgageType">
+              <option value="renewal">Renewal</option>
+              <option value="purchase">New Purchase</option>
+              <option value="refinance">Refinance</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Mortgage Amount ($)</label>
+            <input type="number" name="mortgageAmount" placeholder="483000">
+          </div>
+          <div class="form-group">
+            <label>Property Value ($)</label>
+            <input type="number" name="propertyValue" placeholder="900000">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Current Rate (%) - if renewing</label>
+            <input type="number" step="0.01" name="currentRate" placeholder="1.94">
+          </div>
+          <div class="form-group">
+            <label>Remaining Amortization (years)</label>
+            <input type="number" name="amortization" placeholder="25">
+          </div>
+        </div>
+
+        <hr class="form-divider">
+
+        <div class="form-section-title">Borrower Profile</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Credit Score (lowest if multiple borrowers)</label>
+            <select name="creditScore">
+              <option value="820+">820+</option>
+              <option value="780-819">780-819</option>
+              <option value="740-779">740-779</option>
+              <option value="700-739">700-739</option>
+              <option value="680-699">680-699</option>
+              <option value="below-680">Below 680</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Combined Household Income ($)</label>
+            <input type="number" name="income" placeholder="181000">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Employment Type</label>
+            <select name="employmentType">
+              <option value="fulltime">Full-time employed</option>
+              <option value="selfemployed">Self-employed</option>
+              <option value="contract">Contract</option>
+              <option value="mixed">Mixed</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Employment Stability</label>
+            <select name="employmentYears">
+              <option value="10+">10+ years</option>
+              <option value="5-10">5-10 years</option>
+              <option value="2-5">2-5 years</option>
+              <option value="under-2">Under 2 years</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Monthly Debt Payments - excluding mortgage ($)</label>
+          <input type="number" name="monthlyDebt" placeholder="0">
+          <div class="form-hint">Car loans, credit cards, lines of credit, etc.</div>
+        </div>
+
+        <hr class="form-divider">
+
+        <div class="form-section-title">Contact Info (for your reference)</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name(s)</label>
+            <input type="text" name="names" placeholder="Jennifer & Ashley">
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" name="phone" placeholder="647-555-1234">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="you@email.com">
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button type="submit" class="btn btn-primary" style="flex: 1;">Save Profile</button>
+          <button type="button" class="btn btn-secondary" onclick="clearProfile()">Clear All</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- Profile View -->
+  <div id="view-profile" class="view">
+    <section class="profile-detail" id="profile-content">
+      <!-- Filled dynamically -->
+    </section>
+  </div>
+
+  <!-- Add Offer Modal -->
+  <div class="modal-overlay" id="offer-modal">
+    <div class="modal">
+      <h3>Add New Offer</h3>
+      <form id="offer-form">
+        <div class="form-group">
+          <label>Lender Name</label>
+          <input type="text" name="lender" placeholder="e.g. TD Bank, MCAP, Meridian" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Rate (%)</label>
+            <input type="number" step="0.01" name="rate" placeholder="3.89" required>
+          </div>
+          <div class="form-group">
+            <label>Term (years)</label>
+            <select name="term">
+              <option value="5">5 year</option>
+              <option value="4">4 year</option>
+              <option value="3">3 year</option>
+              <option value="2">2 year</option>
+              <option value="1">1 year</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Rate Type</label>
+            <select name="rateType">
+              <option value="fixed">Fixed</option>
+              <option value="variable">Variable</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Date Received</label>
+            <input type="date" name="date">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notes (optional)</label>
+          <input type="text" name="notes" placeholder="e.g. Rate hold until Feb 15">
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="btn btn-secondary" onclick="closeOfferModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Offer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Data management
+    function getProfile() {
+      const data = localStorage.getItem('ratebid_profile');
+      return data ? JSON.parse(data) : null;
+    }
+
+    function saveProfile(profile) {
+      localStorage.setItem('ratebid_profile', JSON.stringify(profile));
+    }
+
+    function getOffers() {
+      const data = localStorage.getItem('ratebid_offers');
+      return data ? JSON.parse(data) : [];
+    }
+
+    function saveOffers(offers) {
+      localStorage.setItem('ratebid_offers', JSON.stringify(offers));
+    }
+
+    // View management
+    function showView(viewName) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + viewName).classList.add('active');
+      
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      if (viewName === 'profile') document.getElementById('nav-profile').classList.add('active');
+      if (viewName === 'create') document.getElementById('nav-create').classList.add('active');
+      
+      if (viewName === 'profile') renderProfile();
+      if (viewName === 'create') loadFormData();
+      
+      window.scrollTo(0, 0);
+    }
+
+    function checkProfile() {
+      const profile = getProfile();
+      if (profile) {
+        showView('profile');
+      } else {
+        showView('create');
+      }
+    }
+
+    // Profile form handling
+    document.getElementById('profile-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const profile = {};
+      formData.forEach((value, key) => {
+        profile[key] = value;
+      });
+      saveProfile(profile);
+      showView('profile');
+    });
+
+    function loadFormData() {
+      const profile = getProfile();
+      if (!profile) return;
+      
+      const form = document.getElementById('profile-form');
+      Object.keys(profile).forEach(key => {
+        const field = form.elements[key];
+        if (field) field.value = profile[key];
+      });
+    }
+
+    function clearProfile() {
+      if (confirm('Clear all profile data and offers? This cannot be undone.')) {
+        localStorage.removeItem('ratebid_profile');
+        localStorage.removeItem('ratebid_offers');
+        document.getElementById('profile-form').reset();
+        showView('landing');
+      }
+    }
+
+    // Offer modal
+    function openOfferModal() {
+      document.getElementById('offer-modal').classList.add('active');
+      document.getElementById('offer-form').reset();
+      document.querySelector('[name="date"]').value = new Date().toISOString().split('T')[0];
+    }
+
+    function closeOfferModal() {
+      document.getElementById('offer-modal').classList.remove('active');
+    }
+
+    document.getElementById('offer-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const offer = {
+        id: Date.now(),
+        lender: formData.get('lender'),
+        rate: parseFloat(formData.get('rate')),
+        term: formData.get('term'),
+        rateType: formData.get('rateType'),
+        date: formData.get('date'),
+        notes: formData.get('notes')
+      };
+      
+      const offers = getOffers();
+      offers.push(offer);
+      saveOffers(offers);
+      closeOfferModal();
+      renderProfile();
+    });
+
+    function deleteOffer(id) {
+      if (confirm('Delete this offer?')) {
+        const offers = getOffers().filter(o => o.id !== id);
+        saveOffers(offers);
+        renderProfile();
+      }
+    }
+
+    // Calculate monthly payment (Canadian mortgage formula)
+    function calculatePayment(principal, annualRate, amortizationYears) {
+      if (!principal || !annualRate || !amortizationYears) return null;
+      
+      // Canadian mortgages use semi-annual compounding
+      const semiAnnualRate = annualRate / 100 / 2;
+      const monthlyRate = Math.pow(1 + semiAnnualRate, 1/6) - 1;
+      const numPayments = amortizationYears * 12;
+      
+      const payment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / 
+                      (Math.pow(1 + monthlyRate, numPayments) - 1);
+      
+      return payment;
+    }
+
+    // Render profile view
+    function renderProfile() {
+      const profile = getProfile();
+      const offers = getOffers();
+      const container = document.getElementById('profile-content');
+      
+      if (!profile || !profile.mortgageAmount) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h2>No Profile Yet</h2>
+            <p>Create your borrower profile to start tracking mortgage offers.</p>
+            <button class="btn btn-primary" onclick="showView('create')">Create Profile</button>
+          </div>
+        `;
+        return;
+      }
+
+      const ltv = profile.propertyValue ? 
+        Math.round((profile.mortgageAmount / profile.propertyValue) * 100) : '—';
+      
+      const mortgageTypeLabels = {
+        renewal: 'Renewing',
+        purchase: 'New Purchase',
+        refinance: 'Refinancing'
+      };
+
+      // Sort offers by rate
+      const sortedOffers = [...offers].sort((a, b) => a.rate - b.rate);
+      const bestOffer = sortedOffers[0];
+      
+      // Calculate savings
+      let savingsHtml = '';
+      if (bestOffer && profile.currentRate && profile.mortgageAmount && profile.amortization) {
+        const currentPayment = calculatePayment(
+          parseFloat(profile.mortgageAmount),
+          parseFloat(profile.currentRate),
+          parseFloat(profile.amortization)
+        );
+        const newPayment = calculatePayment(
+          parseFloat(profile.mortgageAmount),
+          bestOffer.rate,
+          parseFloat(profile.amortization)
+        );
+        
+        if (currentPayment && newPayment) {
+          const monthlyIncrease = newPayment - currentPayment;
+          const termCost = newPayment * 12 * parseInt(bestOffer.term);
+          
+          savingsHtml = `
+            <div class="savings-card">
+              <h3>📊 With Best Offer (${bestOffer.lender} @ ${bestOffer.rate}%)</h3>
+              <div class="savings-grid">
+                <div class="savings-stat">
+                  <div class="savings-value">$${newPayment.toFixed(0)}</div>
+                  <div class="savings-label">New Monthly Payment</div>
+                </div>
+                <div class="savings-stat">
+                  <div class="savings-value" style="color: ${monthlyIncrease > 0 ? 'var(--warning)' : 'var(--success)'}">
+                    ${monthlyIncrease > 0 ? '+' : ''}$${monthlyIncrease.toFixed(0)}
+                  </div>
+                  <div class="savings-label">vs Current ($${currentPayment.toFixed(0)})</div>
+                </div>
+                <div class="savings-stat">
+                  <div class="savings-value">$${(termCost/1000).toFixed(0)}K</div>
+                  <div class="savings-label">Total over ${bestOffer.term}yr term</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // Offers table
+      let offersHtml = '';
+      if (offers.length === 0) {
+        offersHtml = `<div class="no-offers">No offers yet. Add your first quote!</div>`;
+      } else {
+        offersHtml = `
+          <table class="offers-table">
+            <thead>
+              <tr>
+                <th>Lender</th>
+                <th>Rate</th>
+                <th>Term</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${sortedOffers.map((offer, index) => `
+                <tr class="${index === 0 ? 'best-rate' : ''}">
+                  <td>${offer.lender}${offer.notes ? `<br><small style="color: var(--text-muted)">${offer.notes}</small>` : ''}</td>
+                  <td style="${index === 0 ? 'color: var(--accent); font-weight: 700;' : ''}">${offer.rate}%</td>
+                  <td>${offer.term} year</td>
+                  <td>${offer.rateType}</td>
+                  <td>${offer.date || '—'}</td>
+                  <td>
+                    <button class="delete-offer" onclick="deleteOffer(${offer.id})">✕</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      container.innerHTML = `
+        <div class="profile-detail-header">
+          <div>
+            <span class="profile-badge" style="background: var(--warning); color: var(--bg-dark); margin-bottom: 0.5rem; display: inline-block; padding: 0.25rem 0.75rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600;">
+              ${mortgageTypeLabels[profile.mortgageType] || 'Mortgage'}
+            </span>
+            <h2>$${parseInt(profile.mortgageAmount).toLocaleString()} · ${profile.city || profile.province || 'Canada'}</h2>
+          </div>
+          <button class="btn btn-secondary btn-small" onclick="showView('create')">Edit Profile</button>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-card">
+            <h3>Property</h3>
+            <div class="detail-row">
+              <span class="detail-label">Location</span>
+              <span class="detail-value">${profile.city || '—'}, ${profile.province || '—'}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Type</span>
+              <span class="detail-value">${profile.propertyType || '—'}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Estimated Value</span>
+              <span class="detail-value">${profile.propertyValue ? '$' + parseInt(profile.propertyValue).toLocaleString() : '—'}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Loan-to-Value</span>
+              <span class="detail-value highlight">${ltv}%</span>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <h3>Mortgage</h3>
+            <div class="detail-row">
+              <span class="detail-label">Amount</span>
+              <span class="detail-value">$${parseInt(profile.mortgageAmount).toLocaleString()}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Current Rate</span>
+              <span class="detail-value">${profile.currentRate ? profile.currentRate + '%' : '—'}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Amortization</span>
+              <span class="detail-value">${profile.amortization ? profile.amortization + ' years' : '—'}</span>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <h3>Borrowers</h3>
+            <div class="detail-row">
+              <span class="detail-label">Credit Score</span>
+              <span class="detail-value highlight">${profile.creditScore || '—'}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Combined Income</span>
+              <span class="detail-value">${profile.income ? '$' + parseInt(profile.income).toLocaleString() : '—'}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Employment</span>
+              <span class="detail-value">${profile.employmentType || '—'}, ${profile.employmentYears || '—'}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Monthly Debt</span>
+              <span class="detail-value">${profile.monthlyDebt ? '$' + parseInt(profile.monthlyDebt).toLocaleString() : '$0'}</span>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <h3>Contact</h3>
+            <div class="detail-row">
+              <span class="detail-label">Name(s)</span>
+              <span class="detail-value">${profile.names || '—'}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Phone</span>
+              <span class="detail-value">${profile.phone || '—'}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Email</span>
+              <span class="detail-value">${profile.email || '—'}</span>
+            </div>
+          </div>
+        </div>
+
+        ${savingsHtml}
+
+        <div class="offers-section">
+          <div class="offers-header">
+            <h3>Offers Received (${offers.length})</h3>
+            <button class="btn btn-primary btn-small" onclick="openOfferModal()">+ Add Offer</button>
+          </div>
+          ${offersHtml}
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border);">
+          <strong>💡 Next Step:</strong>
+          <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+            ${offers.length === 0 
+              ? 'Start collecting quotes from lenders and brokers. Add each offer here to compare.' 
+              : offers.length < 3 
+                ? 'Keep collecting! Aim for at least 3-4 offers before making a decision.'
+                : 'You\'ve got good options. Take your best offer to your current lender and ask them to match or beat it.'}
+          </p>
+        </div>
+      `;
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      const profile = getProfile();
+      if (profile && profile.mortgageAmount) {
+        // Show profile if exists
+      }
+    });
+  </script>
+</body>
+</html>
