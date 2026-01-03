@@ -1,0 +1,16 @@
+{
+  "n_observations": 36,
+  "snr_range": [
+    15.6,
+    34.7
+  ],
+  "D_mean": 1.287679375099175,
+  "D_std": 0.2645848654282242,
+  "pearson_r": 0.004466217572056918,
+  "pearson_p": 0.9793756479385104,
+  "spearman_rho": 0.002835968876670968,
+  "spearman_p": 0.9869030710966433,
+  "high_snr_D_mean": 1.2792281179261782,
+  "low_snr_D_mean": 1.297124897821936,
+  "conclusion": "noise_dominated"
+}
