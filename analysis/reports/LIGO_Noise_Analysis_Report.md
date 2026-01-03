@@ -2,6 +2,7 @@
 
 **Date:** January 3, 2026
 **Status:** Critical methodological finding
+**Evidence:** Real LIGO O4 data analysis (N=36 observations)
 
 ---
 
@@ -13,6 +14,17 @@ A control experiment was conducted to determine whether the measured fractal dim
 2. A characteristic of detector noise
 
 **Finding:** The evidence strongly suggests that **D ≈ 1.5 is a property of detector noise**, not gravitational waves.
+
+### Key Evidence (from real O4 data)
+
+| Test | Result | Interpretation |
+|------|--------|----------------|
+| SNR vs D correlation | r = 0.004, p = 0.98 | **No correlation** |
+| High SNR (≥20) D | 1.28 ± 0.29 | Same as low SNR |
+| Low SNR (<20) D | 1.30 ± 0.24 | Same as high SNR |
+| t-test (high vs low) | p = 0.84 | **Not significant** |
+
+If D were a gravitational wave property, it should change with signal strength (SNR). It doesn't.
 
 ---
 
@@ -120,21 +132,57 @@ The measurement appears to reflect detector noise characteristics, which inheren
 
 ---
 
-## Appendix: Code and Data
+---
 
-### Control Experiment Script
-Location: `/analysis/tests/ligo/noise_control_experiment.py`
+## SNR Correlation Analysis (Real O4 Data)
+
+Using the existing O4 analysis results (36 observations from 17 events), we tested whether fractal dimension correlates with signal-to-noise ratio.
 
 ### Results
-Location: `/analysis/tests/ligo/noise_control_results.json`
+
+```
+SNR range: 15.6 - 34.7
+D range: 0.723 - 1.643
+D mean: 1.288 ± 0.265
+
+Pearson Correlation (SNR vs D): r = 0.004, p = 0.979
+Spearman Correlation: rho = 0.003, p = 0.987
+
+High SNR (≥20): N=19, D = 1.279 ± 0.293
+Low SNR (<20):  N=17, D = 1.297 ± 0.238
+t-test: p = 0.843 (not significant)
+```
+
+### Interpretation
+
+**Zero correlation** between SNR and D.
+
+If D ≈ 1.5 were a gravitational wave property:
+- Higher SNR (stronger signal) should show different D than low SNR
+- D should systematically change as signal-to-noise ratio increases
+
+But D is constant regardless of SNR:
+- This is exactly what we'd expect if D measures **noise**, not signal
+- The detector noise has the same fractal properties whether a GW is present or not
+
+---
+
+## Appendix: Code and Data
+
+### SNR Correlation Test (primary evidence)
+- Script: `/analysis/tests/ligo/snr_correlation_test.py`
+- Data: `/analysis/tests/ligo/O4/O4_fractal_results_20251019_203311.csv`
+- Results: `/analysis/tests/ligo/snr_correlation_results.json`
+
+### Synthetic Control Experiment
+- Script: `/analysis/tests/ligo/noise_control_experiment.py`
+- Results: `/analysis/tests/ligo/noise_control_results.json`
 
 ### How to reproduce
 ```bash
 cd /home/user/Fractal_Reality/analysis/tests/ligo
-python noise_control_experiment.py
+python snr_correlation_test.py  # Uses existing O4 data
 ```
-
-Note: Real LIGO data download requires network access to gwosc.org
 
 ---
 
