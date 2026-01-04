@@ -661,14 +661,14 @@
     <!-- Offer Modal -->
     <div class="modal-overlay" id="offer-modal">
         <div class="modal">
-            <h3>≻ Share Your Offer</h3>
+            <h3>≻ Step 1: Share Your Offer</h3>
             <p style="margin-bottom: 1rem; color: var(--text-dim);">
-                Send this offer to a peer. They'll respond with an answer.
+                Copy this code and send it to a friend. Then click Next to wait for their answer.
             </p>
             <textarea id="offer-text" rows="6" readonly></textarea>
             <div class="modal-actions">
                 <button class="btn" onclick="copyOffer()">Copy</button>
-                <button class="btn" onclick="closeModal('offer-modal')">Close</button>
+                <button class="btn primary" onclick="proceedToReceiveAnswer()">Next →</button>
             </div>
         </div>
     </div>
@@ -676,9 +676,9 @@
     <!-- Join Modal -->
     <div class="modal-overlay" id="join-modal">
         <div class="modal">
-            <h3>⊰ Join Swarm</h3>
+            <h3>≻ Step 1: Paste Offer</h3>
             <p style="margin-bottom: 1rem; color: var(--text-dim);">
-                Paste the offer from a peer:
+                Paste the offer code from your friend:
             </p>
             <textarea id="remote-offer" rows="4" placeholder="Paste offer here..."></textarea>
             <div class="modal-actions">
@@ -691,9 +691,9 @@
     <!-- Answer Modal -->
     <div class="modal-overlay" id="answer-modal">
         <div class="modal">
-            <h3>i Send Answer</h3>
+            <h3>⊰ Step 2: Send Answer</h3>
             <p style="margin-bottom: 1rem; color: var(--text-dim);">
-                Send this answer back to the peer who shared the offer:
+                Copy this answer and send it back to your friend. Connection will complete when they receive it.
             </p>
             <textarea id="answer-text" rows="6" readonly></textarea>
             <div class="modal-actions">
@@ -706,9 +706,9 @@
     <!-- Receive Answer Modal -->
     <div class="modal-overlay" id="receive-answer-modal">
         <div class="modal">
-            <h3>⊰ Receive Answer</h3>
+            <h3>⊰ Step 2: Receive Answer</h3>
             <p style="margin-bottom: 1rem; color: var(--text-dim);">
-                Paste the answer from the peer:
+                Paste the answer code your friend sent back:
             </p>
             <textarea id="remote-answer" rows="4" placeholder="Paste answer here..."></textarea>
             <div class="modal-actions">
@@ -943,11 +943,6 @@
             document.getElementById('offer-modal').classList.add('active');
             
             log('Offer created - share with peer', 'convergence');
-            
-            // Show receive answer modal after copying
-            setTimeout(() => {
-                document.getElementById('receive-answer-modal').classList.add('active');
-            }, 500);
         }
         
         async function acceptOffer() {
@@ -1503,6 +1498,11 @@
         
         function closeModal(id) {
             document.getElementById(id).classList.remove('active');
+        }
+        
+        function proceedToReceiveAnswer() {
+            closeModal('offer-modal');
+            document.getElementById('receive-answer-modal').classList.add('active');
         }
         
         function copyOffer() {
