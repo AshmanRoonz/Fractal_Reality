@@ -408,7 +408,7 @@
         </div>
         
         <footer>
-            <p>⊙ Circumpunct Swarm Protocol v0.3</p>
+            <p>⊙ Circumpunct Swarm Protocol v0.3.1</p>
             <p style="margin-top: 0.5rem;">Reality self-references: the future converges inward (≻), rotates into existence (i), and emerges outward as pattern (⊰)</p>
         </footer>
     </div>
@@ -428,7 +428,9 @@
         const state = {
             myId: 'P' + Math.random().toString(36).substr(2, 6).toUpperCase(),
             roomTopic: null,
+            roomName: null,
             eventSource: null,
+            heartbeatInterval: null,
             peers: new Map(),           // peerId -> { lastSeen, connection, dataChannel, files }
             pendingConnections: new Map(), // peerId -> RTCPeerConnection (waiting for answer)
             sharedFiles: new Map(),
@@ -455,22 +457,35 @@
         
         function subscribe(roomName) {
             state.roomTopic = 'circumpunct-' + roomName.toUpperCase();
+            state.roomName = roomName.toUpperCase();
+            connectSSE();
+        }
+        
+        function connectSSE() {
+            if (state.eventSource) {
+                state.eventSource.close();
+            }
+            
             state.eventSource = new EventSource(`${NTFY_SERVER}/${state.roomTopic}/sse`);
             
             state.eventSource.onopen = () => {
+                console.log('SSE connected');
                 document.getElementById('connecting-status').textContent = 'Connected! Announcing presence...';
                 send({ type: 'join' });
                 
                 setTimeout(() => {
                     showScreen('main');
-                    document.getElementById('room-tag').textContent = roomName.toUpperCase();
+                    document.getElementById('room-tag').textContent = state.roomName;
                     updateConnectionStatus(true);
-                    log(`Joined swarm: ${roomName.toUpperCase()}`, 'emergence');
+                    log(`Joined swarm: ${state.roomName}`, 'emergence');
                     
-                    setInterval(() => {
-                        send({ type: 'heartbeat' });
-                        cleanupPeers();
-                    }, 10000);
+                    // Start heartbeat if not already running
+                    if (!state.heartbeatInterval) {
+                        state.heartbeatInterval = setInterval(() => {
+                            send({ type: 'heartbeat' });
+                            cleanupPeers();
+                        }, 10000);
+                    }
                 }, 500);
             };
             
@@ -492,7 +507,20 @@
                 } catch (err) {}
             };
             
-            state.eventSource.onerror = () => updateConnectionStatus(false);
+            state.eventSource.onerror = (e) => {
+                console.log('SSE error, readyState:', state.eventSource?.readyState);
+                // Only show disconnected if actually closed
+                if (state.eventSource?.readyState === EventSource.CLOSED) {
+                    updateConnectionStatus(false);
+                    // Auto-reconnect after 2 seconds
+                    setTimeout(() => {
+                        if (state.roomTopic && (!state.eventSource || state.eventSource.readyState === EventSource.CLOSED)) {
+                            console.log('Reconnecting SSE...');
+                            connectSSE();
+                        }
+                    }, 2000);
+                }
+            };
         }
         
         async function send(data) {
@@ -588,6 +616,24 @@
                 console.log(`Connection to ${peerId}: ${pc.connectionState}`);
                 if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
                     state.pendingConnections.delete(peerId);
+                }
+            };
+            
+            // Handle ICE connection state for better reliability
+            pc.oniceconnectionstatechange = () => {
+                console.log(`ICE state for ${peerId}: ${pc.iceConnectionState}`);
+                if (pc.iceConnectionState === 'disconnected') {
+                    // Give it a moment to recover
+                    setTimeout(() => {
+                        if (pc.iceConnectionState === 'disconnected' || pc.iceConnectionState === 'failed') {
+                            console.log(`Reconnecting to ${peerId}...`);
+                            pc.close();
+                            state.peers.delete(peerId);
+                            state.pendingConnections.delete(peerId);
+                            // Try to reconnect
+                            setTimeout(() => initiateWebRTC(peerId), 1000);
+                        }
+                    }, 3000);
                 }
             };
             
@@ -692,6 +738,17 @@
                 
                 // Send our file manifest
                 sendManifestToPeer(peerId);
+                
+                // Start keepalive ping for this channel
+                const keepalive = setInterval(() => {
+                    if (channel.readyState === 'open') {
+                        try {
+                            channel.send(JSON.stringify({ type: 'ping' }));
+                        } catch (e) {}
+                    } else {
+                        clearInterval(keepalive);
+                    }
+                }, 5000);
             };
             
             channel.onclose = () => {
@@ -704,6 +761,14 @@
                 updatePeerList();
                 updateFileList();
                 updateVisualization();
+                
+                // Try to reconnect after a brief delay
+                setTimeout(() => {
+                    if (state.roomTopic && !state.peers.has(peerId) && !state.pendingConnections.has(peerId)) {
+                        log(`Attempting to reconnect to ${peerId}...`, 'aperture');
+                        send({ type: 'join' }); // Re-announce to trigger reconnection
+                    }
+                }, 2000);
             };
             
             channel.onmessage = (e) => {
@@ -719,7 +784,18 @@
         
         // Handle messages received via WebRTC data channel
         function handlePeerMessage(msg) {
+            // Update lastSeen for this peer
+            const peer = state.peers.get(msg.from);
+            if (peer) peer.lastSeen = Date.now();
+            
             switch (msg.type) {
+                case 'ping':
+                    // Just a keepalive, respond with pong
+                    sendToPeer(msg.from, { type: 'pong' });
+                    break;
+                case 'pong':
+                    // Keepalive response, nothing to do
+                    break;
                 case 'manifest':
                     handleManifest(msg);
                     break;
@@ -743,8 +819,15 @@
         
         function cleanupPeers() {
             const now = Date.now();
+            const PEER_TIMEOUT = 60000; // 60 seconds - more forgiving for mobile
+            
             for (const [peerId, peer] of state.peers) {
-                if (now - peer.lastSeen > 30000) {
+                // Don't clean up if WebRTC data channel is still open
+                if (peer.dataChannel?.readyState === 'open') {
+                    peer.lastSeen = now; // Keep alive if channel is open
+                    continue;
+                }
+                if (now - peer.lastSeen > PEER_TIMEOUT) {
                     if (peer.connection) peer.connection.close();
                     state.peers.delete(peerId);
                     log(`Peer left: ${peerId}`, 'convergence');
@@ -1115,14 +1198,41 @@
             };
             
             document.getElementById('cancel-btn').onclick = () => {
-                if (state.eventSource) state.eventSource.close();
+                // Clean up everything
+                if (state.eventSource) {
+                    state.eventSource.close();
+                    state.eventSource = null;
+                }
+                if (state.heartbeatInterval) {
+                    clearInterval(state.heartbeatInterval);
+                    state.heartbeatInterval = null;
+                }
+                // Close all WebRTC connections
+                for (const [peerId, peer] of state.peers) {
+                    if (peer.connection) peer.connection.close();
+                }
+                for (const [peerId, pc] of state.pendingConnections) {
+                    pc.close();
+                }
+                state.peers.clear();
+                state.pendingConnections.clear();
+                state.roomTopic = null;
+                state.roomName = null;
                 showScreen('lobby');
             };
             
             const dropZone = document.getElementById('drop-zone');
             const fileInput = document.getElementById('file-input');
             
-            dropZone.onclick = () => fileInput.click();
+            // Track if we're in file picker (mobile goes to background)
+            let inFilePicker = false;
+            
+            dropZone.onclick = () => {
+                inFilePicker = true;
+                log('Opening file picker...', 'aperture');
+                fileInput.click();
+            };
+            
             dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('dragover'); };
             dropZone.ondragleave = () => dropZone.classList.remove('dragover');
             dropZone.ondrop = (e) => {
@@ -1130,9 +1240,53 @@
                 dropZone.classList.remove('dragover');
                 if (e.dataTransfer.files.length > 0) shareFile(e.dataTransfer.files[0]);
             };
+            
             fileInput.onchange = (e) => {
-                if (e.target.files.length > 0) shareFile(e.target.files[0]);
+                inFilePicker = false;
+                if (e.target.files.length > 0) {
+                    log('File selected, sharing...', 'aperture');
+                    shareFile(e.target.files[0]);
+                }
+                // Clear the input so same file can be selected again
+                fileInput.value = '';
             };
+            
+            // Cancel/close of file picker without selection
+            fileInput.oncancel = () => {
+                inFilePicker = false;
+                log('File picker closed', 'aperture');
+            };
+            
+            // More aggressive reconnection on visibility change
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible' && state.roomTopic) {
+                    console.log('Page visible again, reconnecting...');
+                    
+                    // Always reconnect SSE when coming back
+                    setTimeout(() => {
+                        if (state.eventSource?.readyState !== EventSource.OPEN) {
+                            log('Reconnecting to swarm...', 'aperture');
+                            connectSSE();
+                        } else {
+                            // SSE is open, just re-announce
+                            send({ type: 'join' });
+                        }
+                        updateConnectionStatus(true);
+                    }, 300);
+                }
+            });
+            
+            // Also handle page focus (some mobile browsers use this)
+            window.addEventListener('focus', () => {
+                if (state.roomTopic) {
+                    setTimeout(() => {
+                        if (state.eventSource?.readyState !== EventSource.OPEN) {
+                            connectSSE();
+                        }
+                        send({ type: 'join' });
+                    }, 300);
+                }
+            });
         });
     </script>
 </body>
