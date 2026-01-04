@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ Geometric Harmonic Periodic Table</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            background: #111827; 
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .element-card {
+            transition: all 0.2s ease;
+        }
+        .element-card:hover {
+            transform: scale(1.08);
+            z-index: 10;
+        }
+        .element-card.selected {
+            transform: scale(1.12);
+            box-shadow: 0 0 0 2px white;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Physical constants
+        const R_INF = 13.605693; // Rydberg constant in eV
+        const PHI = (1 + Math.sqrt(5)) / 2; // Golden ratio
+        const LAMBDA = R_INF * Math.pow(PHI, -7); // Angular penalty
+
+        // Element data
+        const elements = [
+            { Z: 1, symbol: 'H', name: 'Hydrogen', d: 0, l: 0, n: 1, config: '1s¹', row: 1, col: 1 },
+            { Z: 2, symbol: 'He', name: 'Helium', d: 0, l: 0, n: 1, config: '1s²', row: 1, col: 18 },
+            { Z: 3, symbol: 'Li', name: 'Lithium', d: 1, l: 0, n: 2, config: '[He]2s¹', row: 2, col: 1 },
+            { Z: 4, symbol: 'Be', name: 'Beryllium', d: 1, l: 0, n: 2, config: '[He]2s²', row: 2, col: 2 },
+            { Z: 5, symbol: 'B', name: 'Boron', d: 2, l: 1, n: 2, config: '[He]2s²2p¹', row: 2, col: 13 },
+            { Z: 6, symbol: 'C', name: 'Carbon', d: 2, l: 1, n: 2, config: '[He]2s²2p²', row: 2, col: 14 },
+            { Z: 7, symbol: 'N', name: 'Nitrogen', d: 2, l: 1, n: 2, config: '[He]2s²2p³', row: 2, col: 15 },
+            { Z: 8, symbol: 'O', name: 'Oxygen', d: 2, l: 1, n: 2, config: '[He]2s²2p⁴', row: 2, col: 16 },
+            { Z: 9, symbol: 'F', name: 'Fluorine', d: 2, l: 1, n: 2, config: '[He]2s²2p⁵', row: 2, col: 17 },
+            { Z: 10, symbol: 'Ne', name: 'Neon', d: 2, l: 1, n: 2, config: '[He]2s²2p⁶', row: 2, col: 18 },
+            { Z: 11, symbol: 'Na', name: 'Sodium', d: 2, l: 0, n: 3, config: '[Ne]3s¹', row: 3, col: 1 },
+            { Z: 12, symbol: 'Mg', name: 'Magnesium', d: 2, l: 0, n: 3, config: '[Ne]3s²', row: 3, col: 2 },
+            { Z: 13, symbol: 'Al', name: 'Aluminum', d: 3, l: 1, n: 3, config: '[Ne]3s²3p¹', row: 3, col: 13 },
+            { Z: 14, symbol: 'Si', name: 'Silicon', d: 3, l: 1, n: 3, config: '[Ne]3s²3p²', row: 3, col: 14 },
+            { Z: 15, symbol: 'P', name: 'Phosphorus', d: 3, l: 1, n: 3, config: '[Ne]3s²3p³', row: 3, col: 15 },
+            { Z: 16, symbol: 'S', name: 'Sulfur', d: 3, l: 1, n: 3, config: '[Ne]3s²3p⁴', row: 3, col: 16 },
+            { Z: 17, symbol: 'Cl', name: 'Chlorine', d: 3, l: 1, n: 3, config: '[Ne]3s²3p⁵', row: 3, col: 17 },
+            { Z: 18, symbol: 'Ar', name: 'Argon', d: 3, l: 1, n: 3, config: '[Ne]3s²3p⁶', row: 3, col: 18 },
+            { Z: 19, symbol: 'K', name: 'Potassium', d: 3, l: 0, n: 4, config: '[Ar]4s¹', row: 4, col: 1 },
+            { Z: 20, symbol: 'Ca', name: 'Calcium', d: 3, l: 0, n: 4, config: '[Ar]4s²', row: 4, col: 2 },
+            { Z: 21, symbol: 'Sc', name: 'Scandium', d: 3, l: 2, n: 3, config: '[Ar]3d¹4s²', row: 4, col: 3, gated: true },
+            { Z: 22, symbol: 'Ti', name: 'Titanium', d: 3, l: 2, n: 3, config: '[Ar]3d²4s²', row: 4, col: 4, gated: true },
+            { Z: 23, symbol: 'V', name: 'Vanadium', d: 3, l: 2, n: 3, config: '[Ar]3d³4s²', row: 4, col: 5, gated: true },
+            { Z: 24, symbol: 'Cr', name: 'Chromium', d: 3, l: 2, n: 3, config: '[Ar]3d⁵4s¹', row: 4, col: 6, gated: true, promoted: true },
+            { Z: 25, symbol: 'Mn', name: 'Manganese', d: 3, l: 2, n: 3, config: '[Ar]3d⁵4s²', row: 4, col: 7, gated: true },
+            { Z: 26, symbol: 'Fe', name: 'Iron', d: 3, l: 2, n: 3, config: '[Ar]3d⁶4s²', row: 4, col: 8, gated: true },
+            { Z: 27, symbol: 'Co', name: 'Cobalt', d: 3, l: 2, n: 3, config: '[Ar]3d⁷4s²', row: 4, col: 9, gated: true },
+            { Z: 28, symbol: 'Ni', name: 'Nickel', d: 3, l: 2, n: 3, config: '[Ar]3d⁸4s²', row: 4, col: 10, gated: true },
+            { Z: 29, symbol: 'Cu', name: 'Copper', d: 3, l: 2, n: 3, config: '[Ar]3d¹⁰4s¹', row: 4, col: 11, gated: true, promoted: true },
+            { Z: 30, symbol: 'Zn', name: 'Zinc', d: 3, l: 2, n: 3, config: '[Ar]3d¹⁰4s²', row: 4, col: 12, gated: true },
+            { Z: 31, symbol: 'Ga', name: 'Gallium', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p¹', row: 4, col: 13 },
+            { Z: 32, symbol: 'Ge', name: 'Germanium', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p²', row: 4, col: 14 },
+            { Z: 33, symbol: 'As', name: 'Arsenic', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p³', row: 4, col: 15 },
+            { Z: 34, symbol: 'Se', name: 'Selenium', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p⁴', row: 4, col: 16 },
+            { Z: 35, symbol: 'Br', name: 'Bromine', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p⁵', row: 4, col: 17 },
+            { Z: 36, symbol: 'Kr', name: 'Krypton', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p⁶', row: 4, col: 18 },
+            { Z: 37, symbol: 'Rb', name: 'Rubidium', d: 4, l: 0, n: 5, config: '[Kr]5s¹', row: 5, col: 1 },
+            { Z: 38, symbol: 'Sr', name: 'Strontium', d: 4, l: 0, n: 5, config: '[Kr]5s²', row: 5, col: 2 },
+            { Z: 39, symbol: 'Y', name: 'Yttrium', d: 4, l: 2, n: 4, config: '[Kr]4d¹5s²', row: 5, col: 3, gated: true },
+            { Z: 40, symbol: 'Zr', name: 'Zirconium', d: 4, l: 2, n: 4, config: '[Kr]4d²5s²', row: 5, col: 4, gated: true },
+            { Z: 41, symbol: 'Nb', name: 'Niobium', d: 4, l: 2, n: 4, config: '[Kr]4d⁴5s¹', row: 5, col: 5, gated: true },
+            { Z: 42, symbol: 'Mo', name: 'Molybdenum', d: 4, l: 2, n: 4, config: '[Kr]4d⁵5s¹', row: 5, col: 6, gated: true, promoted: true },
+            { Z: 43, symbol: 'Tc', name: 'Technetium', d: 4, l: 2, n: 4, config: '[Kr]4d⁵5s²', row: 5, col: 7, gated: true },
+            { Z: 44, symbol: 'Ru', name: 'Ruthenium', d: 4, l: 2, n: 4, config: '[Kr]4d⁷5s¹', row: 5, col: 8, gated: true },
+            { Z: 45, symbol: 'Rh', name: 'Rhodium', d: 4, l: 2, n: 4, config: '[Kr]4d⁸5s¹', row: 5, col: 9, gated: true },
+            { Z: 46, symbol: 'Pd', name: 'Palladium', d: 4, l: 2, n: 4, config: '[Kr]4d¹⁰', row: 5, col: 10, gated: true },
+            { Z: 47, symbol: 'Ag', name: 'Silver', d: 4, l: 2, n: 4, config: '[Kr]4d¹⁰5s¹', row: 5, col: 11, gated: true, promoted: true },
+            { Z: 48, symbol: 'Cd', name: 'Cadmium', d: 4, l: 2, n: 4, config: '[Kr]4d¹⁰5s²', row: 5, col: 12, gated: true },
+            { Z: 49, symbol: 'In', name: 'Indium', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p¹', row: 5, col: 13 },
+            { Z: 50, symbol: 'Sn', name: 'Tin', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p²', row: 5, col: 14 },
+            { Z: 51, symbol: 'Sb', name: 'Antimony', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p³', row: 5, col: 15 },
+            { Z: 52, symbol: 'Te', name: 'Tellurium', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p⁴', row: 5, col: 16 },
+            { Z: 53, symbol: 'I', name: 'Iodine', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p⁵', row: 5, col: 17 },
+            { Z: 54, symbol: 'Xe', name: 'Xenon', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p⁶', row: 5, col: 18 },
+            { Z: 55, symbol: 'Cs', name: 'Cesium', d: 5, l: 0, n: 6, config: '[Xe]6s¹', row: 6, col: 1 },
+            { Z: 56, symbol: 'Ba', name: 'Barium', d: 5, l: 0, n: 6, config: '[Xe]6s²', row: 6, col: 2 },
+            { Z: 57, symbol: 'La', name: 'Lanthanum', d: 5, l: 3, n: 4, config: '[Xe]5d¹6s²', row: 6, col: 3, gated: true, lanthanide: true },
+            // Lanthanides in separate row
+            { Z: 58, symbol: 'Ce', name: 'Cerium', d: 5, l: 3, n: 4, config: '[Xe]4f¹5d¹6s²', row: 8, col: 4, gated: true, fBlock: true },
+            { Z: 59, symbol: 'Pr', name: 'Praseodymium', d: 5, l: 3, n: 4, config: '[Xe]4f³6s²', row: 8, col: 5, gated: true, fBlock: true },
+            { Z: 60, symbol: 'Nd', name: 'Neodymium', d: 5, l: 3, n: 4, config: '[Xe]4f⁴6s²', row: 8, col: 6, gated: true, fBlock: true },
+            { Z: 61, symbol: 'Pm', name: 'Promethium', d: 5, l: 3, n: 4, config: '[Xe]4f⁵6s²', row: 8, col: 7, gated: true, fBlock: true },
+            { Z: 62, symbol: 'Sm', name: 'Samarium', d: 5, l: 3, n: 4, config: '[Xe]4f⁶6s²', row: 8, col: 8, gated: true, fBlock: true },
+            { Z: 63, symbol: 'Eu', name: 'Europium', d: 5, l: 3, n: 4, config: '[Xe]4f⁷6s²', row: 8, col: 9, gated: true, fBlock: true },
+            { Z: 64, symbol: 'Gd', name: 'Gadolinium', d: 5, l: 3, n: 4, config: '[Xe]4f⁷5d¹6s²', row: 8, col: 10, gated: true, fBlock: true },
+            { Z: 65, symbol: 'Tb', name: 'Terbium', d: 5, l: 3, n: 4, config: '[Xe]4f⁹6s²', row: 8, col: 11, gated: true, fBlock: true },
+            { Z: 66, symbol: 'Dy', name: 'Dysprosium', d: 5, l: 3, n: 4, config: '[Xe]4f¹⁰6s²', row: 8, col: 12, gated: true, fBlock: true },
+            { Z: 67, symbol: 'Ho', name: 'Holmium', d: 5, l: 3, n: 4, config: '[Xe]4f¹¹6s²', row: 8, col: 13, gated: true, fBlock: true },
+            { Z: 68, symbol: 'Er', name: 'Erbium', d: 5, l: 3, n: 4, config: '[Xe]4f¹²6s²', row: 8, col: 14, gated: true, fBlock: true },
+            { Z: 69, symbol: 'Tm', name: 'Thulium', d: 5, l: 3, n: 4, config: '[Xe]4f¹³6s²', row: 8, col: 15, gated: true, fBlock: true },
+            { Z: 70, symbol: 'Yb', name: 'Ytterbium', d: 5, l: 3, n: 4, config: '[Xe]4f¹⁴6s²', row: 8, col: 16, gated: true, fBlock: true },
+            { Z: 71, symbol: 'Lu', name: 'Lutetium', d: 5, l: 3, n: 4, config: '[Xe]4f¹⁴5d¹6s²', row: 8, col: 17, gated: true, fBlock: true },
+            // Continue period 6
+            { Z: 72, symbol: 'Hf', name: 'Hafnium', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d²6s²', row: 6, col: 4, gated: true },
+            { Z: 73, symbol: 'Ta', name: 'Tantalum', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d³6s²', row: 6, col: 5, gated: true },
+            { Z: 74, symbol: 'W', name: 'Tungsten', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d⁴6s²', row: 6, col: 6, gated: true },
+            { Z: 75, symbol: 'Re', name: 'Rhenium', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d⁵6s²', row: 6, col: 7, gated: true },
+            { Z: 76, symbol: 'Os', name: 'Osmium', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d⁶6s²', row: 6, col: 8, gated: true },
+            { Z: 77, symbol: 'Ir', name: 'Iridium', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d⁷6s²', row: 6, col: 9, gated: true },
+            { Z: 78, symbol: 'Pt', name: 'Platinum', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d⁹6s¹', row: 6, col: 10, gated: true },
+            { Z: 79, symbol: 'Au', name: 'Gold', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d¹⁰6s¹', row: 6, col: 11, gated: true, promoted: true },
+            { Z: 80, symbol: 'Hg', name: 'Mercury', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d¹⁰6s²', row: 6, col: 12, gated: true },
+            { Z: 81, symbol: 'Tl', name: 'Thallium', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p¹', row: 6, col: 13 },
+            { Z: 82, symbol: 'Pb', name: 'Lead', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p²', row: 6, col: 14 },
+            { Z: 83, symbol: 'Bi', name: 'Bismuth', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p³', row: 6, col: 15 },
+            { Z: 84, symbol: 'Po', name: 'Polonium', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p⁴', row: 6, col: 16 },
+            { Z: 85, symbol: 'At', name: 'Astatine', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p⁵', row: 6, col: 17 },
+            { Z: 86, symbol: 'Rn', name: 'Radon', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p⁶', row: 6, col: 18 },
+        ];
+
+        const orbitalTypes = {
+            0: { name: 's', color: '#e74c3c', degeneracy: 2 },
+            1: { name: 'p', color: '#3498db', degeneracy: 6 },
+            2: { name: 'd', color: '#2ecc71', degeneracy: 10 },
+            3: { name: 'f', color: '#9b59b6', degeneracy: 14 }
+        };
+
+        const calculateFrequency = (Z, n, l) => {
+            const Z_eff = Math.max(1, Z - 2 * (n - 1));
+            const E_n = R_INF * Math.pow(Z_eff, 2) / Math.pow(n, 2);
+            const HBAR = 6.582119569e-16;
+            return (E_n / HBAR) / (2 * Math.PI);
+        };
+
+        const formatFrequency = (freq) => {
+            if (freq > 1e18) return `${(freq / 1e18).toFixed(1)} EHz`;
+            if (freq > 1e15) return `${(freq / 1e15).toFixed(1)} PHz`;
+            if (freq > 1e12) return `${(freq / 1e12).toFixed(1)} THz`;
+            return `${(freq / 1e9).toFixed(1)} GHz`;
+        };
+
+        const ElementCard = ({ element, isSelected, onClick, viewMode }) => {
+            const orbital = orbitalTypes[element.l];
+            const freq = calculateFrequency(element.Z, element.n, element.l);
+            const harmonicLevel = Math.round(Math.log(freq) / Math.log(PHI));
+            
+            const bgColor = viewMode === 'orbital' ? orbital.color :
+                           viewMode === 'harmonic' ? `hsl(${(harmonicLevel * 12) % 360}, 70%, 45%)` :
+                           viewMode === 'gating' ? (element.gated ? '#f39c12' : '#6b7280') :
+                           orbital.color;
+
+            return (
+                <div 
+                    className={`element-card cursor-pointer rounded-lg p-1 text-center ${isSelected ? 'selected' : ''}`}
+                    style={{ 
+                        backgroundColor: bgColor,
+                        gridColumn: element.col,
+                        gridRow: element.row,
+                        minWidth: '48px'
+                    }}
+                    onClick={() => onClick(element)}
+                >
+                    <div className="text-white">
+                        <div className="text-xs opacity-70">{element.Z}</div>
+                        <div className="text-base font-bold">{element.symbol}</div>
+                        <div className="text-xs opacity-70">{element.n}{orbital.name}</div>
+                    </div>
+                    {element.promoted && <div className="absolute bottom-0 right-1 text-xs">★</div>}
+                </div>
+            );
+        };
+
+        const InfoPanel = ({ element }) => {
+            if (!element) return (
+                <div className="bg-gray-800 rounded-xl p-4 text-gray-400 text-center h-full flex flex-col items-center justify-center">
+                    <div className="text-5xl mb-3">⊙</div>
+                    <p>Select an element</p>
+                </div>
+            );
+
+            const orbital = orbitalTypes[element.l];
+            const freq = calculateFrequency(element.Z, element.n, element.l);
+            const harmonicLevel = Math.round(Math.log(freq) / Math.log(PHI));
+            const energy = -R_INF * Math.pow(element.Z - 2*(element.n-1), 2) / Math.pow(element.n, 2) 
+                          + LAMBDA * element.l * (element.l + 1) / Math.pow(element.n, 2);
+
+            return (
+                <div className="bg-gray-800 rounded-xl p-4 text-white h-full overflow-y-auto">
+                    <div className="flex items-center gap-3 mb-3">
+                        <div className="w-14 h-14 rounded-lg flex items-center justify-center text-2xl font-bold"
+                             style={{ backgroundColor: orbital.color }}>
+                            {element.symbol}
+                        </div>
+                        <div>
+                            <div className="text-lg font-bold">{element.name}</div>
+                            <div className="text-sm text-gray-400">Z = {element.Z} · {element.config}</div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 mb-3 text-sm">
+                        <div className="bg-gray-700 rounded p-2">
+                            <div className="text-gray-400 text-xs">Geometric (d, ℓ)</div>
+                            <div className="font-mono">({element.d}, {element.l})</div>
+                        </div>
+                        <div className="bg-gray-700 rounded p-2">
+                            <div className="text-gray-400 text-xs">Principal n</div>
+                            <div className="font-mono">{element.n}</div>
+                        </div>
+                        <div className="bg-gray-700 rounded p-2">
+                            <div className="text-gray-400 text-xs">Orbital</div>
+                            <div style={{ color: orbital.color }}>{orbital.name} ({orbital.degeneracy} states)</div>
+                        </div>
+                        <div className="bg-gray-700 rounded p-2">
+                            <div className="text-gray-400 text-xs">φ-Harmonic</div>
+                            <div className="font-mono">φ^{harmonicLevel}</div>
+                        </div>
+                    </div>
+
+                    <div className="bg-gray-700 rounded p-2 mb-3">
+                        <div className="text-gray-400 text-xs">Standing Wave Frequency</div>
+                        <div className="text-yellow-400 font-mono">{formatFrequency(freq)}</div>
+                        <div className="text-xs text-gray-500">mc² = ℏω</div>
+                    </div>
+
+                    <div className="bg-gray-700 rounded p-2 mb-3">
+                        <div className="text-gray-400 text-xs">Energy (geometric)</div>
+                        <div className="font-mono text-sm">{energy.toFixed(3)} eV</div>
+                        <div className="text-xs text-gray-500">E = -R∞Z²/n² + λℓ(ℓ+1)/n²</div>
+                    </div>
+
+                    {element.gated && (
+                        <div className="bg-yellow-900 border border-yellow-600 rounded p-2">
+                            <div className="text-yellow-400 text-sm font-bold">⚡ Gated</div>
+                            <div className="text-xs text-yellow-200">
+                                {element.l === 2 ? '(n+1)s before nd' : '(n+2)s before nf'}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [selected, setSelected] = useState(null);
+            const [viewMode, setViewMode] = useState('orbital');
+
+            return (
+                <div className="min-h-screen p-4">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="text-center mb-4">
+                            <h1 className="text-2xl font-bold text-white mb-1">
+                                ⊙ Geometric Harmonic Periodic Table
+                            </h1>
+                            <p className="text-gray-400 text-sm">
+                                Elements as standing waves · λ = R∞·φ⁻⁷ · mc² = ℏω
+                            </p>
+                        </div>
+
+                        <div className="flex justify-center gap-2 mb-3">
+                            {['orbital', 'harmonic', 'gating'].map(mode => (
+                                <button key={mode}
+                                    onClick={() => setViewMode(mode)}
+                                    className={`px-3 py-1 rounded text-sm capitalize ${
+                                        viewMode === mode ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300'
+                                    }`}>
+                                    {mode}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="flex gap-3 mb-3 justify-center flex-wrap">
+                            {Object.entries(orbitalTypes).map(([l, info]) => (
+                                <div key={l} className="flex items-center gap-1">
+                                    <div className="w-3 h-3 rounded" style={{ backgroundColor: info.color }} />
+                                    <span className="text-white text-xs">{info.name} (ℓ={l})</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="flex gap-4">
+                            <div className="flex-1 bg-gray-800 rounded-xl p-3 overflow-x-auto">
+                                <div className="grid gap-1" style={{ 
+                                    gridTemplateColumns: 'repeat(18, minmax(48px, 1fr))',
+                                    gridTemplateRows: 'repeat(8, auto)'
+                                }}>
+                                    {elements.filter(e => !e.fBlock).map(el => (
+                                        <ElementCard 
+                                            key={el.Z} 
+                                            element={el} 
+                                            isSelected={selected?.Z === el.Z}
+                                            onClick={setSelected}
+                                            viewMode={viewMode}
+                                        />
+                                    ))}
+                                </div>
+                                
+                                <div className="mt-3 pt-3 border-t border-gray-700">
+                                    <div className="text-gray-400 text-xs mb-2">Lanthanides (4f gated)</div>
+                                    <div className="flex gap-1 flex-wrap">
+                                        {elements.filter(e => e.fBlock).map(el => (
+                                            <ElementCard 
+                                                key={el.Z} 
+                                                element={el} 
+                                                isSelected={selected?.Z === el.Z}
+                                                onClick={setSelected}
+                                                viewMode={viewMode}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="w-64">
+                                <InfoPanel element={selected} />
+                                
+                                <div className="bg-gray-800 rounded-xl p-3 mt-3 text-white text-xs">
+                                    <div className="font-bold mb-2">Constants</div>
+                                    <div className="space-y-1 font-mono">
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-400">φ</span>
+                                            <span>{PHI.toFixed(4)}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-400">R∞</span>
+                                            <span>{R_INF.toFixed(4)} eV</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-400">λ = R∞φ⁻⁷</span>
+                                            <span>{LAMBDA.toFixed(4)} eV</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-gray-800 rounded-xl p-3 mt-3 text-white text-xs">
+                                    <div className="font-bold mb-2">(d, ℓ) → n</div>
+                                    <div className="space-y-1 font-mono">
+                                        <div><span className="text-red-400">s,p</span>: n = d+1</div>
+                                        <div><span className="text-green-400">d</span>: n = d</div>
+                                        <div><span className="text-purple-400">f</span>: n = d-1</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="text-center text-gray-500 text-xs mt-4">
+                            Chemistry is geometry · ⊙ = • ⊗ Φ ⊗ ○ · The periodic table is computable
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
