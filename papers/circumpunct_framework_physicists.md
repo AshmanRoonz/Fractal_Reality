@@ -25,6 +25,8 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
   - [2.1 Flow Operators (≻, i, ⊰)](#21-flow-operators---i-)
   - [2.2 Mirror / Adjoint Flow Operators (⊱, ≺)](#22-mirror--adjoint-flow-operators--)
   - [2.3 Balance Parameter (◐)](#23-balance-parameter-◐)
+  - [2.3.1 The Aperture Chamber](#231-the-aperture-chamber)
+  - [2.3.2 Infinite Depth: The Fractal Reservoir](#232-infinite-depth-the-fractal-reservoir)
   - [2.4 Canonical Radial Kernel and Worldline Dimension](#24-canonical-radial-kernel-and-worldline-dimension)
   - [2.4.1 The Aperture Rotation Operator Å(◐)](#241-the-aperture-rotation-operator-å◐)
   - [2.5 Clarifying i vs i(t)](#25-clarifying-i-vs-it)
@@ -415,6 +417,74 @@ D = 1.5 (Mandelbrot fact: the fractal dimension of Brownian motion)
 This is a proven mathematical theorem, not a fit or derivation. The balance point ◐ = 0.5 corresponds to this Mandelbrot dimension via the interpolation D = 1 + ◐.
 
 **Note:** The linear relation D = 1 + ◐ interpolates between regimes. At ◐ = 0 (pure convergence), D = 1 (ballistic); at ◐ = 1 (pure emergence), D = 2 (diffusive); at balance ◐ = 0.5, D = 1.5—which is precisely the Mandelbrot dimension of Brownian motion. The framework does not derive 1.5; rather, it identifies that the balance point corresponds to this established mathematical fact.
+
+### 2.3.1 The Aperture Chamber
+
+The aperture (•) is not a membrane but a **chamber** with internal structure:
+
+```
+THREE-STAGE ARCHITECTURE:
+
+     FUTURE (possibility)              PAST (pattern)
+            ↓                               ↓
+       ┌────┴────┐                    ┌────┴────┐
+       │  INPUT  │                    │ OUTPUT  │
+       │  VALVE  │                    │  VALVE  │
+       │   ≻     │                    │    ⊰    │
+       └────┬────┘                    └────┬────┘
+            │                               ↑
+            └───────→ [i CHAMBER] ──────────┘
+                      transform
+                        space
+
+    Stage 1: INPUT VALVE (≻)  — Regulates convergence rate
+    Stage 2: TRANSFORM SPACE (i) — 90° rotation at β = 0.5
+    Stage 3: OUTPUT VALVE (⊰) — Regulates emergence rate
+```
+
+**Chamber State Equation:**
+
+The transform space has a state (pressure/charge):
+
+```
+    dP/dt = |≻| − |⊰|
+
+    where:
+        P = chamber pressure (accumulated potential)
+        |≻| = input flow rate
+        |⊰| = output flow rate
+```
+
+**Three Regimes:**
+- |≻| > |⊰| → β > 0.5 → BUILDUP (accumulating potential)
+- |≻| < |⊰| → β < 0.5 → DEPLETION (spending reserves)
+- |≻| = |⊰| → β = 0.5 → STEADY STATE (balanced flow)
+
+### 2.3.2 Infinite Depth: The Fractal Reservoir
+
+Because every center (•) contains infinite smaller circumpuncts, the chamber is an infinite regression of nested tanks:
+
+```
+SCALE n:     [≻ₙ] → [iₙ CHAMBER] → [⊰ₙ]
+                         │
+                     contains
+                         ↓
+SCALE n−1:   [≻ₙ₋₁] → [iₙ₋₁ CHAMBER] → [⊰ₙ₋₁]
+                         │
+                         ↓
+                        ...∞
+```
+
+This infinite depth provides:
+1. **Capacitance** — Room for fluctuations
+2. **Cross-scale pressure flow** — Excess drains inward or bubbles outward
+3. **Why β = 0.5 everywhere** — Only balance maintains the infinite stack
+
+```
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║    β(n) = 0.5 for all n  ⟺  No scale drains or floods neighbors ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+```
 
 ### 2.4 Canonical Radial Kernel and Worldline Dimension
 
@@ -2112,6 +2182,60 @@ PHYSICAL MEANING:
     This explains why α ≈ 1/137 is universal:
     It's the resonant mode of self-similar field structure,
     damped by its own validation noise.
+```
+
+#### 7A.5.1 The Depth Formula
+
+The aperture chamber (§2.3.1) provides a more precise derivation:
+
+```
+THE DEPTH FORMULA:
+━━━━━━━━━━━━━━━━━━
+
+Electromagnetic coupling happens at the BOUNDARY (○), which is 2D:
+
+    ○ = 2D surface → 360° signature = 4i (full rotation)
+
+The infinite depth of the aperture chamber contributes at each level:
+
+    Level 2:  360/φ²  ←  main term
+    Level 3:  2/φ³    ←  valve correction
+    Level 4+: residual
+
+    ╔═══════════════════════════════════════════════════════════════════╗
+    ║                                                                   ║
+    ║             1/α = 360/φ² − 2/φ³                                  ║
+    ║                                                                   ║
+    ║   = 137.5077 − 0.4721 = 137.0356   (2.7 ppm from CODATA)        ║
+    ║                                                                   ║
+    ╚═══════════════════════════════════════════════════════════════════╝
+
+COMPONENT MEANINGS:
+
+    360 = 2D boundary signature (θ for D = 2)
+    φ² = Level 2 impedance (self-similar nesting)
+    2 = Bidirectional flow (input valve + output valve)
+    φ³ = Level 3 impedance
+
+CONNECTION TO CHAMBER DYNAMICS:
+
+    Chamber Concept     →    α Formula Component
+    ─────────────────────────────────────────────
+    Boundary (○)             360° = 2D signature
+    Level 2 nesting          /φ²
+    Valve difference         2/φ³
+    Infinite depth           Higher φⁿ corrections
+    β = 0.5 everywhere       Why the formula works
+
+THE INSIGHT:
+    α measures how infinite depth affects transmission through the boundary.
+    The field flows through an infinitely nested pump.
+    The cost of that passage is 1/137.
+
+RESIDUAL:
+    Predicted:  137.035628
+    Measured:   137.035999
+    Residual:   0.000371 (2.7 ppm) — from deeper levels (φ⁴, φ⁵, ...)
 ```
 
 ### 7A.6 Three Generations: Numerical Proof
