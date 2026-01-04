@@ -936,7 +936,10 @@
             
             state.pendingOffers.set(remotePeerId, pc);
             
-            document.getElementById('offer-text').value = btoa(JSON.stringify(offerData));
+            // Convert to hex for cleaner sharing (no special chars)
+            const offerHex = Array.from(new TextEncoder().encode(JSON.stringify(offerData)))
+                .map(b => b.toString(16).padStart(2, '0')).join('');
+            document.getElementById('offer-text').value = offerHex;
             document.getElementById('offer-modal').classList.add('active');
             
             log('Offer created - share with peer', 'convergence');
@@ -952,7 +955,10 @@
             if (!offerText) return;
             
             try {
-                const offerData = JSON.parse(atob(offerText));
+                // Decode hex to string
+                const offerStr = offerText.match(/.{2}/g)
+                    .map(byte => String.fromCharCode(parseInt(byte, 16))).join('');
+                const offerData = JSON.parse(offerStr);
                 const remotePeerId = offerData.from;
                 
                 const pc = await createPeerConnection(remotePeerId);
@@ -980,7 +986,10 @@
                     sdp: pc.localDescription
                 };
                 
-                document.getElementById('answer-text').value = btoa(JSON.stringify(answerData));
+                // Convert to hex for cleaner sharing
+                const answerHex = Array.from(new TextEncoder().encode(JSON.stringify(answerData)))
+                    .map(b => b.toString(16).padStart(2, '0')).join('');
+                document.getElementById('answer-text').value = answerHex;
                 closeModal('join-modal');
                 document.getElementById('answer-modal').classList.add('active');
                 
@@ -995,7 +1004,10 @@
             if (!answerText) return;
             
             try {
-                const answerData = JSON.parse(atob(answerText));
+                // Decode hex to string
+                const answerStr = answerText.match(/.{2}/g)
+                    .map(byte => String.fromCharCode(parseInt(byte, 16))).join('');
+                const answerData = JSON.parse(answerStr);
                 
                 // Find the pending connection
                 for (const [pendingId, pc] of state.pendingOffers) {
