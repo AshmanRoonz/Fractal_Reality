@@ -408,7 +408,7 @@
         </div>
         
         <footer>
-            <p>⊙ Circumpunct Swarm Protocol v0.3.1</p>
+            <p>⊙ Circumpunct Swarm Protocol v0.3.2</p>
             <p style="margin-top: 0.5rem;">Reality self-references: the future converges inward (≻), rotates into existence (i), and emerges outward as pattern (⊰)</p>
         </footer>
     </div>
@@ -458,18 +458,9 @@
         function subscribe(roomName) {
             state.roomTopic = 'circumpunct-' + roomName.toUpperCase();
             state.roomName = roomName.toUpperCase();
-            connectSSE();
-        }
-        
-        function connectSSE() {
-            if (state.eventSource) {
-                state.eventSource.close();
-            }
-            
             state.eventSource = new EventSource(`${NTFY_SERVER}/${state.roomTopic}/sse`);
             
             state.eventSource.onopen = () => {
-                console.log('SSE connected');
                 document.getElementById('connecting-status').textContent = 'Connected! Announcing presence...';
                 send({ type: 'join' });
                 
@@ -479,12 +470,12 @@
                     updateConnectionStatus(true);
                     log(`Joined swarm: ${state.roomName}`, 'emergence');
                     
-                    // Start heartbeat if not already running
+                    // Start heartbeat
                     if (!state.heartbeatInterval) {
                         state.heartbeatInterval = setInterval(() => {
                             send({ type: 'heartbeat' });
                             cleanupPeers();
-                        }, 10000);
+                        }, 15000); // 15 seconds, less aggressive
                     }
                 }, 500);
             };
@@ -507,20 +498,7 @@
                 } catch (err) {}
             };
             
-            state.eventSource.onerror = (e) => {
-                console.log('SSE error, readyState:', state.eventSource?.readyState);
-                // Only show disconnected if actually closed
-                if (state.eventSource?.readyState === EventSource.CLOSED) {
-                    updateConnectionStatus(false);
-                    // Auto-reconnect after 2 seconds
-                    setTimeout(() => {
-                        if (state.roomTopic && (!state.eventSource || state.eventSource.readyState === EventSource.CLOSED)) {
-                            console.log('Reconnecting SSE...');
-                            connectSSE();
-                        }
-                    }, 2000);
-                }
-            };
+            state.eventSource.onerror = () => updateConnectionStatus(false);
         }
         
         async function send(data) {
@@ -616,24 +594,6 @@
                 console.log(`Connection to ${peerId}: ${pc.connectionState}`);
                 if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
                     state.pendingConnections.delete(peerId);
-                }
-            };
-            
-            // Handle ICE connection state for better reliability
-            pc.oniceconnectionstatechange = () => {
-                console.log(`ICE state for ${peerId}: ${pc.iceConnectionState}`);
-                if (pc.iceConnectionState === 'disconnected') {
-                    // Give it a moment to recover
-                    setTimeout(() => {
-                        if (pc.iceConnectionState === 'disconnected' || pc.iceConnectionState === 'failed') {
-                            console.log(`Reconnecting to ${peerId}...`);
-                            pc.close();
-                            state.peers.delete(peerId);
-                            state.pendingConnections.delete(peerId);
-                            // Try to reconnect
-                            setTimeout(() => initiateWebRTC(peerId), 1000);
-                        }
-                    }, 3000);
                 }
             };
             
@@ -739,16 +699,14 @@
                 // Send our file manifest
                 sendManifestToPeer(peerId);
                 
-                // Start keepalive ping for this channel
+                // Keepalive ping every 20 seconds
                 const keepalive = setInterval(() => {
                     if (channel.readyState === 'open') {
-                        try {
-                            channel.send(JSON.stringify({ type: 'ping' }));
-                        } catch (e) {}
+                        try { channel.send(JSON.stringify({ type: 'ping' })); } catch (e) {}
                     } else {
                         clearInterval(keepalive);
                     }
-                }, 5000);
+                }, 20000);
             };
             
             channel.onclose = () => {
@@ -761,14 +719,6 @@
                 updatePeerList();
                 updateFileList();
                 updateVisualization();
-                
-                // Try to reconnect after a brief delay
-                setTimeout(() => {
-                    if (state.roomTopic && !state.peers.has(peerId) && !state.pendingConnections.has(peerId)) {
-                        log(`Attempting to reconnect to ${peerId}...`, 'aperture');
-                        send({ type: 'join' }); // Re-announce to trigger reconnection
-                    }
-                }, 2000);
             };
             
             channel.onmessage = (e) => {
@@ -1224,15 +1174,7 @@
             const dropZone = document.getElementById('drop-zone');
             const fileInput = document.getElementById('file-input');
             
-            // Track if we're in file picker (mobile goes to background)
-            let inFilePicker = false;
-            
-            dropZone.onclick = () => {
-                inFilePicker = true;
-                log('Opening file picker...', 'aperture');
-                fileInput.click();
-            };
-            
+            dropZone.onclick = () => fileInput.click();
             dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('dragover'); };
             dropZone.ondragleave = () => dropZone.classList.remove('dragover');
             dropZone.ondrop = (e) => {
@@ -1240,53 +1182,10 @@
                 dropZone.classList.remove('dragover');
                 if (e.dataTransfer.files.length > 0) shareFile(e.dataTransfer.files[0]);
             };
-            
             fileInput.onchange = (e) => {
-                inFilePicker = false;
-                if (e.target.files.length > 0) {
-                    log('File selected, sharing...', 'aperture');
-                    shareFile(e.target.files[0]);
-                }
-                // Clear the input so same file can be selected again
-                fileInput.value = '';
+                if (e.target.files.length > 0) shareFile(e.target.files[0]);
+                fileInput.value = ''; // Allow re-selecting same file
             };
-            
-            // Cancel/close of file picker without selection
-            fileInput.oncancel = () => {
-                inFilePicker = false;
-                log('File picker closed', 'aperture');
-            };
-            
-            // More aggressive reconnection on visibility change
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible' && state.roomTopic) {
-                    console.log('Page visible again, reconnecting...');
-                    
-                    // Always reconnect SSE when coming back
-                    setTimeout(() => {
-                        if (state.eventSource?.readyState !== EventSource.OPEN) {
-                            log('Reconnecting to swarm...', 'aperture');
-                            connectSSE();
-                        } else {
-                            // SSE is open, just re-announce
-                            send({ type: 'join' });
-                        }
-                        updateConnectionStatus(true);
-                    }, 300);
-                }
-            });
-            
-            // Also handle page focus (some mobile browsers use this)
-            window.addEventListener('focus', () => {
-                if (state.roomTopic) {
-                    setTimeout(() => {
-                        if (state.eventSource?.readyState !== EventSource.OPEN) {
-                            connectSSE();
-                        }
-                        send({ type: 'join' });
-                    }, 300);
-                }
-            });
         });
     </script>
 </body>
