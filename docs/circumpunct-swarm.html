@@ -408,7 +408,7 @@
         </div>
         
         <footer>
-            <p>⊙ Circumpunct Swarm Protocol v0.3.2</p>
+            <p>⊙ Circumpunct Swarm Protocol v0.3</p>
             <p style="margin-top: 0.5rem;">Reality self-references: the future converges inward (≻), rotates into existence (i), and emerges outward as pattern (⊰)</p>
         </footer>
     </div>
@@ -428,9 +428,7 @@
         const state = {
             myId: 'P' + Math.random().toString(36).substr(2, 6).toUpperCase(),
             roomTopic: null,
-            roomName: null,
             eventSource: null,
-            heartbeatInterval: null,
             peers: new Map(),           // peerId -> { lastSeen, connection, dataChannel, files }
             pendingConnections: new Map(), // peerId -> RTCPeerConnection (waiting for answer)
             sharedFiles: new Map(),
@@ -457,7 +455,6 @@
         
         function subscribe(roomName) {
             state.roomTopic = 'circumpunct-' + roomName.toUpperCase();
-            state.roomName = roomName.toUpperCase();
             state.eventSource = new EventSource(`${NTFY_SERVER}/${state.roomTopic}/sse`);
             
             state.eventSource.onopen = () => {
@@ -466,17 +463,14 @@
                 
                 setTimeout(() => {
                     showScreen('main');
-                    document.getElementById('room-tag').textContent = state.roomName;
+                    document.getElementById('room-tag').textContent = roomName.toUpperCase();
                     updateConnectionStatus(true);
-                    log(`Joined swarm: ${state.roomName}`, 'emergence');
+                    log(`Joined swarm: ${roomName.toUpperCase()}`, 'emergence');
                     
-                    // Start heartbeat
-                    if (!state.heartbeatInterval) {
-                        state.heartbeatInterval = setInterval(() => {
-                            send({ type: 'heartbeat' });
-                            cleanupPeers();
-                        }, 15000); // 15 seconds, less aggressive
-                    }
+                    setInterval(() => {
+                        send({ type: 'heartbeat' });
+                        cleanupPeers();
+                    }, 10000);
                 }, 500);
             };
             
@@ -698,15 +692,6 @@
                 
                 // Send our file manifest
                 sendManifestToPeer(peerId);
-                
-                // Keepalive ping every 20 seconds
-                const keepalive = setInterval(() => {
-                    if (channel.readyState === 'open') {
-                        try { channel.send(JSON.stringify({ type: 'ping' })); } catch (e) {}
-                    } else {
-                        clearInterval(keepalive);
-                    }
-                }, 20000);
             };
             
             channel.onclose = () => {
@@ -734,18 +719,7 @@
         
         // Handle messages received via WebRTC data channel
         function handlePeerMessage(msg) {
-            // Update lastSeen for this peer
-            const peer = state.peers.get(msg.from);
-            if (peer) peer.lastSeen = Date.now();
-            
             switch (msg.type) {
-                case 'ping':
-                    // Just a keepalive, respond with pong
-                    sendToPeer(msg.from, { type: 'pong' });
-                    break;
-                case 'pong':
-                    // Keepalive response, nothing to do
-                    break;
                 case 'manifest':
                     handleManifest(msg);
                     break;
@@ -769,15 +743,8 @@
         
         function cleanupPeers() {
             const now = Date.now();
-            const PEER_TIMEOUT = 60000; // 60 seconds - more forgiving for mobile
-            
             for (const [peerId, peer] of state.peers) {
-                // Don't clean up if WebRTC data channel is still open
-                if (peer.dataChannel?.readyState === 'open') {
-                    peer.lastSeen = now; // Keep alive if channel is open
-                    continue;
-                }
-                if (now - peer.lastSeen > PEER_TIMEOUT) {
+                if (now - peer.lastSeen > 30000) {
                     if (peer.connection) peer.connection.close();
                     state.peers.delete(peerId);
                     log(`Peer left: ${peerId}`, 'convergence');
@@ -1148,26 +1115,7 @@
             };
             
             document.getElementById('cancel-btn').onclick = () => {
-                // Clean up everything
-                if (state.eventSource) {
-                    state.eventSource.close();
-                    state.eventSource = null;
-                }
-                if (state.heartbeatInterval) {
-                    clearInterval(state.heartbeatInterval);
-                    state.heartbeatInterval = null;
-                }
-                // Close all WebRTC connections
-                for (const [peerId, peer] of state.peers) {
-                    if (peer.connection) peer.connection.close();
-                }
-                for (const [peerId, pc] of state.pendingConnections) {
-                    pc.close();
-                }
-                state.peers.clear();
-                state.pendingConnections.clear();
-                state.roomTopic = null;
-                state.roomName = null;
+                if (state.eventSource) state.eventSource.close();
                 showScreen('lobby');
             };
             
@@ -1184,7 +1132,6 @@
             };
             fileInput.onchange = (e) => {
                 if (e.target.files.length > 0) shareFile(e.target.files[0]);
-                fileInput.value = ''; // Allow re-selecting same file
             };
         });
     </script>
