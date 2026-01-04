@@ -9,28 +9,41 @@
         
         :root {
             --phi: 1.618033988749895;
+            --phi-inv: 0.618033988749895;
             --gold: #D4AF37;
+            --gold-dim: #8B7355;
             --void: #0a0a0f;
             --field: #1a1a2e;
+            --boundary: #16213e;
             --center: #e94560;
+            --emergence: #0f3460;
             --convergence: #533483;
             --text: #e8e8e8;
             --text-dim: #888;
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
         body {
             font-family: 'Cormorant Garamond', Georgia, serif;
             background: var(--void);
             color: var(--text);
             min-height: 100vh;
+            overflow-x: hidden;
         }
         
+        /* Cosmic background */
         body::before {
             content: '';
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: 
                 radial-gradient(ellipse at 20% 80%, rgba(83, 52, 131, 0.15) 0%, transparent 50%),
                 radial-gradient(ellipse at 80% 20%, rgba(15, 52, 96, 0.15) 0%, transparent 50%),
@@ -39,8 +52,13 @@
             z-index: -1;
         }
         
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
         
+        /* Header */
         header {
             text-align: center;
             padding: 3rem 0;
@@ -72,80 +90,39 @@
             font-size: 0.85rem;
             color: var(--text-dim);
             margin-top: 1rem;
-        }
-        
-        .screen { display: none; }
-        .screen.active { display: block; }
-        
-        .lobby-box {
-            max-width: 500px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, var(--field) 0%, var(--void) 100%);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 12px;
-            padding: 3rem;
-            text-align: center;
-        }
-        
-        .lobby-box h2 { color: var(--gold); font-weight: 400; margin-bottom: 1rem; }
-        .lobby-box p { color: var(--text-dim); margin-bottom: 2rem; font-size: 1.1rem; }
-        
-        .room-input {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.5rem;
-            padding: 1rem 1.5rem;
-            border: 2px solid rgba(212, 175, 55, 0.4);
-            border-radius: 8px;
-            background: var(--void);
-            color: var(--gold);
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            width: 100%;
-            max-width: 300px;
-            margin-bottom: 1.5rem;
-        }
-        
-        .room-input:focus { outline: none; border-color: var(--gold); }
-        .room-input::placeholder { color: var(--text-dim); text-transform: none; letter-spacing: normal; }
-        
-        .btn {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
-            padding: 0.85rem 2rem;
-            border: 1px solid var(--gold);
-            background: transparent;
-            color: var(--gold);
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
             letter-spacing: 0.1em;
-            margin: 0.25rem;
         }
         
-        .btn:hover { background: var(--gold); color: var(--void); }
-        .btn.primary { background: var(--gold); color: var(--void); }
-        .btn.primary:hover { background: transparent; color: var(--gold); }
+        /* Main layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+        }
         
-        .status { margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-dim); }
-        .status.error { color: var(--center); }
+        @media (max-width: 1000px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
         
-        .main-grid { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; }
-        @media (max-width: 1000px) { .main-grid { grid-template-columns: 1fr; } }
-        
+        /* Panels */
         .panel {
             background: linear-gradient(135deg, var(--field) 0%, var(--void) 100%);
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 8px;
             padding: 1.5rem;
             position: relative;
+            overflow: hidden;
         }
         
         .panel::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; height: 2px;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
         }
         
@@ -158,56 +135,43 @@
             gap: 0.5rem;
         }
         
-        .panel-title .symbol { font-size: 1.5rem; }
+        .panel-title .symbol {
+            font-size: 1.5rem;
+        }
         
+        /* Swarm Visualization */
         #swarm-canvas {
             width: 100%;
             height: 500px;
             background: radial-gradient(ellipse at center, var(--field) 0%, var(--void) 100%);
             border-radius: 50%;
             border: 2px solid rgba(212, 175, 55, 0.3);
+            position: relative;
         }
         
-        .swarm-svg { width: 100%; height: 100%; }
-        
-        .connection-bar {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            background: rgba(0,0,0,0.3);
-            border-radius: 6px;
-            margin-bottom: 1rem;
+        .swarm-svg {
+            width: 100%;
+            height: 100%;
         }
         
-        .status-dot {
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            background: var(--text-dim);
+        /* Peer nodes */
+        .peer-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
         
-        .status-dot.connected { background: #4ade80; box-shadow: 0 0 10px #4ade80; }
-        .status-dot.pending { background: var(--gold); animation: blink 1s infinite; }
-        
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        
-        .room-display {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            color: var(--gold);
-            background: rgba(212, 175, 55, 0.1);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            margin-left: auto;
+        .peer-node:hover {
+            filter: brightness(1.3);
         }
         
+        /* File drop zone */
         .drop-zone {
             border: 2px dashed rgba(212, 175, 55, 0.4);
             border-radius: 8px;
             padding: 3rem 2rem;
             text-align: center;
-            cursor: pointer;
             transition: all 0.3s ease;
+            cursor: pointer;
             margin-bottom: 1.5rem;
         }
         
@@ -216,10 +180,123 @@
             background: rgba(212, 175, 55, 0.05);
         }
         
-        .drop-zone .icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.7; }
-        .drop-zone input { display: none; }
+        .drop-zone .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
         
-        .file-list { max-height: 300px; overflow-y: auto; }
+        .drop-zone input {
+            display: none;
+        }
+        
+        /* Connection panel */
+        .connection-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .connection-section label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+        
+        textarea, input[type="text"] {
+            width: 100%;
+            background: var(--void);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 4px;
+            padding: 0.75rem;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            resize: vertical;
+        }
+        
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        
+        /* Buttons */
+        .btn {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--gold);
+            background: transparent;
+            color: var(--gold);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .btn:hover {
+            background: var(--gold);
+            color: var(--void);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn.primary {
+            background: var(--gold);
+            color: var(--void);
+        }
+        
+        .btn.primary:hover {
+            background: transparent;
+            color: var(--gold);
+        }
+        
+        /* Status indicators */
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-dim);
+        }
+        
+        .status-dot.connected {
+            background: #4ade80;
+            box-shadow: 0 0 10px #4ade80;
+        }
+        
+        .status-dot.pending {
+            background: var(--gold);
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* File list */
+        .file-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
         
         .file-item {
             display: flex;
@@ -231,21 +308,29 @@
             margin-bottom: 0.5rem;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s;
         }
         
-        .file-item:hover { background: rgba(212, 175, 55, 0.1); }
-        .file-item .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .file-item .size { color: var(--text-dim); }
-        .file-item .owner { font-size: 0.7rem; color: var(--gold); }
+        .file-item .name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .file-item .size {
+            color: var(--text-dim);
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            margin-top: 0.5rem;
+        }
         
         .progress-bar {
             height: 4px;
             background: var(--void);
             border-radius: 2px;
             overflow: hidden;
-            margin-top: 0.5rem;
         }
         
         .progress-fill {
@@ -254,6 +339,37 @@
             transition: width 0.3s ease;
         }
         
+        /* Chunk visualization */
+        .chunk-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+            margin-top: 0.5rem;
+        }
+        
+        .chunk {
+            aspect-ratio: 1;
+            background: var(--void);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .chunk.received {
+            background: var(--gold);
+        }
+        
+        .chunk.sending {
+            background: var(--center);
+            animation: sendPulse 0.5s ease;
+        }
+        
+        @keyframes sendPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Log */
         .log {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.7rem;
@@ -265,12 +381,17 @@
             margin-top: 1rem;
         }
         
-        .log-entry { margin-bottom: 0.25rem; opacity: 0.8; }
+        .log-entry {
+            margin-bottom: 0.25rem;
+            opacity: 0.8;
+        }
+        
         .log-entry.convergence { color: var(--convergence); }
         .log-entry.aperture { color: var(--gold); }
         .log-entry.emergence { color: var(--center); }
         .log-entry.error { color: #ef4444; }
         
+        /* Info section */
         .info-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -280,9 +401,27 @@
             border-top: 1px solid rgba(212, 175, 55, 0.2);
         }
         
-        .info-item { text-align: center; }
-        .info-value { font-size: 1.5rem; color: var(--gold); font-weight: 600; }
-        .info-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+        .info-item {
+            text-align: center;
+        }
+        
+        .info-value {
+            font-size: 1.5rem;
+            color: var(--gold);
+            font-weight: 600;
+        }
+        
+        .info-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        /* Peer list */
+        .peer-list {
+            margin-top: 1rem;
+        }
         
         .peer-item {
             display: flex;
@@ -296,8 +435,62 @@
             font-size: 0.75rem;
         }
         
-        .peer-item .id { color: var(--gold); }
+        .peer-item .id {
+            color: var(--gold);
+        }
         
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--field);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .modal h3 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+        }
+        
+        /* Equation display */
+        .equation {
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
+            padding: 1rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+            color: var(--gold);
+        }
+        
+        /* Footer */
         footer {
             text-align: center;
             padding: 3rem;
@@ -307,16 +500,10 @@
             margin-top: 3rem;
         }
         
-        .loader {
-            width: 40px; height: 40px;
-            border: 3px solid rgba(212, 175, 55, 0.2);
-            border-top-color: var(--gold);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 1rem auto;
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
         }
-        
-        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -324,118 +511,253 @@
         <header>
             <div class="logo">⊙</div>
             <h1>Circumpunct Swarm</h1>
-            <div class="subtitle">Φ' = ⊰ ∘ i ∘ ≻[Φ] — Hybrid P2P File Transfer (WebRTC + Relay)</div>
+            <div class="subtitle">Φ' = ⊰ ∘ i ∘ ≻[Φ] — Fractal P2P File Transfer</div>
         </header>
         
-        <!-- LOBBY -->
-        <div id="lobby-screen" class="screen active">
-            <div class="lobby-box">
-                <h2>Enter Swarm Name</h2>
-                <p>Both peers enter the same name to connect!</p>
-                <input type="text" class="room-input" id="room-input" placeholder="e.g. GOLDEN" maxlength="20" autofocus>
-                <br>
-                <button class="btn primary" id="join-btn">Join Swarm</button>
-                <div class="status" id="lobby-status"></div>
+        <div class="main-grid">
+            <!-- Left: Visualization -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span class="symbol">Φ</span>
+                    <span>Swarm Field</span>
+                </div>
+                
+                <div id="swarm-canvas">
+                    <svg class="swarm-svg" viewBox="0 0 500 500">
+                        <!-- Center point -->
+                        <circle cx="250" cy="250" r="8" fill="#D4AF37" class="center-node">
+                            <animate attributeName="r" values="6;10;6" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        
+                        <!-- Orbital rings -->
+                        <circle cx="250" cy="250" r="80" fill="none" stroke="rgba(212,175,55,0.2)" stroke-width="1"/>
+                        <circle cx="250" cy="250" r="130" fill="none" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
+                        <circle cx="250" cy="250" r="180" fill="none" stroke="rgba(212,175,55,0.1)" stroke-width="1"/>
+                        
+                        <!-- Convergence arrows (≻) -->
+                        <g id="convergence-arrows" opacity="0.3">
+                            <path d="M250 50 L250 70" stroke="#533483" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <path d="M450 250 L430 250" stroke="#533483" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <path d="M250 450 L250 430" stroke="#533483" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <path d="M50 250 L70 250" stroke="#533483" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        </g>
+                        
+                        <!-- Emergence arrows (⊰) -->
+                        <g id="emergence-arrows" opacity="0.3">
+                            <path d="M280 250 L350 200" stroke="#e94560" stroke-width="2" stroke-dasharray="5,5"/>
+                            <path d="M280 250 L350 300" stroke="#e94560" stroke-width="2" stroke-dasharray="5,5"/>
+                            <path d="M220 250 L150 200" stroke="#e94560" stroke-width="2" stroke-dasharray="5,5"/>
+                            <path d="M220 250 L150 300" stroke="#e94560" stroke-width="2" stroke-dasharray="5,5"/>
+                        </g>
+                        
+                        <!-- Peer nodes container -->
+                        <g id="peer-nodes"></g>
+                        
+                        <!-- Data flow particles -->
+                        <g id="flow-particles"></g>
+                        
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#533483"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-value" id="peer-count">0</div>
+                        <div class="info-label">Peers</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-value" id="chunk-count">0</div>
+                        <div class="info-label">Chunks</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-value" id="transfer-rate">0</div>
+                        <div class="info-label">KB/s</div>
+                    </div>
+                </div>
             </div>
-        </div>
-        
-        <!-- CONNECTING -->
-        <div id="connecting-screen" class="screen">
-            <div class="lobby-box">
-                <h2>Swarm: <span id="room-display">---</span></h2>
-                <div class="loader"></div>
-                <p id="connecting-status">Connecting to swarm...</p>
-                <button class="btn" id="cancel-btn" style="margin-top: 1rem;">Cancel</button>
-            </div>
-        </div>
-        
-        <!-- MAIN -->
-        <div id="main-screen" class="screen">
-            <div class="main-grid">
+            
+            <!-- Right: Controls -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Connection Panel -->
                 <div class="panel">
-                    <div class="panel-title"><span class="symbol">Φ</span><span>Swarm Field</span></div>
-                    
-                    <div class="connection-bar">
-                        <div class="status-dot" id="connection-dot"></div>
-                        <span id="connection-text">Connecting...</span>
-                        <span class="room-display" id="room-tag">---</span>
+                    <div class="panel-title">
+                        <span class="symbol">○</span>
+                        <span>Boundary Interface</span>
                     </div>
                     
-                    <div id="swarm-canvas">
-                        <svg class="swarm-svg" viewBox="0 0 500 500">
-                            <circle cx="250" cy="250" r="8" fill="#D4AF37">
-                                <animate attributeName="r" values="6;10;6" dur="2s" repeatCount="indefinite"/>
-                            </circle>
-                            <circle cx="250" cy="250" r="80" fill="none" stroke="rgba(212,175,55,0.2)" stroke-width="1"/>
-                            <circle cx="250" cy="250" r="130" fill="none" stroke="rgba(212,175,55,0.15)" stroke-width="1"/>
-                            <circle cx="250" cy="250" r="180" fill="none" stroke="rgba(212,175,55,0.1)" stroke-width="1"/>
-                            <g id="peer-nodes"></g>
-                            <g id="flow-particles"></g>
-                        </svg>
+                    <div class="status">
+                        <div class="status-dot" id="connection-status"></div>
+                        <span id="status-text">Disconnected</span>
                     </div>
                     
-                    <div class="info-grid">
-                        <div class="info-item"><div class="info-value" id="peer-count">0</div><div class="info-label">Peers</div></div>
-                        <div class="info-item"><div class="info-value" id="file-count">0</div><div class="info-label">Files</div></div>
-                        <div class="info-item"><div class="info-value" id="transfer-rate">0</div><div class="info-label">KB/s</div></div>
+                    <div class="connection-section">
+                        <label>Your Peer ID</label>
+                        <input type="text" id="peer-id" readonly value="Generating...">
+                    </div>
+                    
+                    <div class="btn-group" style="margin-bottom: 1rem;">
+                        <button class="btn primary" id="create-offer-btn">Create Offer</button>
+                        <button class="btn" id="join-btn">Join Swarm</button>
+                    </div>
+                    
+                    <div class="peer-list" id="peer-list">
+                        <!-- Connected peers will appear here -->
                     </div>
                 </div>
                 
-                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    <div class="panel">
-                        <div class="panel-title"><span class="symbol">○</span><span>Connected Peers</span></div>
-                        <div id="peer-list"><div style="color: var(--text-dim); font-size: 0.85rem;">Waiting for peers...</div></div>
+                <!-- File Panel -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span class="symbol">•</span>
+                        <span>Center (Files)</span>
                     </div>
                     
-                    <div class="panel">
-                        <div class="panel-title"><span class="symbol">•</span><span>Shared Files</span></div>
-                        <div class="drop-zone" id="drop-zone">
-                            <div class="icon">≻</div>
-                            <div>Drop file to share</div>
-                            <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">or click to select</div>
-                            <input type="file" id="file-input">
+                    <div class="drop-zone" id="drop-zone">
+                        <div class="icon">≻</div>
+                        <div>Drop file to share</div>
+                        <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">
+                            or click to select
                         </div>
-                        <div class="file-list" id="file-list"></div>
+                        <input type="file" id="file-input">
                     </div>
                     
-                    <div class="panel">
-                        <div class="panel-title"><span class="symbol">i</span><span>Transfers</span></div>
-                        <div id="transfer-list"><div style="color: var(--text-dim); font-size: 0.85rem;">No active transfers</div></div>
-                        <div class="log" id="log"><div class="log-entry aperture">[⊙] Swarm ready</div></div>
+                    <div class="file-list" id="file-list">
+                        <!-- Shared files will appear here -->
+                    </div>
+                </div>
+                
+                <!-- Transfer Panel -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span class="symbol">i</span>
+                        <span>Aperture (Transfers)</span>
+                    </div>
+                    
+                    <div id="transfer-list">
+                        <div style="color: var(--text-dim); font-size: 0.85rem;">
+                            No active transfers
+                        </div>
+                    </div>
+                    
+                    <div class="log" id="log">
+                        <div class="log-entry aperture">[⊙] Swarm initialized</div>
                     </div>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p>⊙ Circumpunct Swarm Protocol v0.3</p>
-            <p style="margin-top: 0.5rem;">Reality self-references: the future converges inward (≻), rotates into existence (i), and emerges outward as pattern (⊰)</p>
+            <p>⊙ Circumpunct Swarm Protocol v0.1</p>
+            <p style="margin-top: 0.5rem;">
+                Reality self-references: the future converges inward (≻), rotates into existence (i), and emerges outward as pattern (⊰)
+            </p>
         </footer>
+    </div>
+    
+    <!-- Offer Modal -->
+    <div class="modal-overlay" id="offer-modal">
+        <div class="modal">
+            <h3>≻ Share Your Offer</h3>
+            <p style="margin-bottom: 1rem; color: var(--text-dim);">
+                Send this offer to a peer. They'll respond with an answer.
+            </p>
+            <textarea id="offer-text" rows="6" readonly></textarea>
+            <div class="modal-actions">
+                <button class="btn" onclick="copyOffer()">Copy</button>
+                <button class="btn" onclick="closeModal('offer-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Join Modal -->
+    <div class="modal-overlay" id="join-modal">
+        <div class="modal">
+            <h3>⊰ Join Swarm</h3>
+            <p style="margin-bottom: 1rem; color: var(--text-dim);">
+                Paste the offer from a peer:
+            </p>
+            <textarea id="remote-offer" rows="4" placeholder="Paste offer here..."></textarea>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeModal('join-modal')">Cancel</button>
+                <button class="btn primary" onclick="acceptOffer()">Accept</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Answer Modal -->
+    <div class="modal-overlay" id="answer-modal">
+        <div class="modal">
+            <h3>i Send Answer</h3>
+            <p style="margin-bottom: 1rem; color: var(--text-dim);">
+                Send this answer back to the peer who shared the offer:
+            </p>
+            <textarea id="answer-text" rows="6" readonly></textarea>
+            <div class="modal-actions">
+                <button class="btn" onclick="copyAnswer()">Copy</button>
+                <button class="btn primary" onclick="closeModal('answer-modal')">Done</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Receive Answer Modal -->
+    <div class="modal-overlay" id="receive-answer-modal">
+        <div class="modal">
+            <h3>⊰ Receive Answer</h3>
+            <p style="margin-bottom: 1rem; color: var(--text-dim);">
+                Paste the answer from the peer:
+            </p>
+            <textarea id="remote-answer" rows="4" placeholder="Paste answer here..."></textarea>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeModal('receive-answer-modal')">Cancel</button>
+                <button class="btn primary" onclick="completeConnection()">Connect</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        const NTFY_SERVER = 'https://ntfy.sh';
-        const PHI = 1.618033988749895;
-        const CHUNK_SIZE = 65536; // 64KB chunks for WebRTC (much bigger now!)
+        // ═══════════════════════════════════════════════════════════════
+        // CIRCUMPUNCT SWARM PROTOCOL - Core Constants
+        // ═══════════════════════════════════════════════════════════════
         
-        const rtcConfig = {
-            iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' }
-            ]
-        };
+        const PHI = 1.618033988749895;
+        const PHI_INV = 0.618033988749895;
+        const CHUNK_BASE_SIZE = 16384; // 16KB base chunk
+        const MAX_FRACTAL_DEPTH = 5;
+        
+        // ═══════════════════════════════════════════════════════════════
+        // State Management
+        // ═══════════════════════════════════════════════════════════════
         
         const state = {
-            myId: 'P' + Math.random().toString(36).substr(2, 6).toUpperCase(),
-            roomTopic: null,
-            eventSource: null,
-            peers: new Map(),           // peerId -> { lastSeen, connection, dataChannel, files }
-            pendingConnections: new Map(), // peerId -> RTCPeerConnection (waiting for answer)
-            sharedFiles: new Map(),
-            remoteFiles: new Map(),
-            transfers: new Map(),
-            stats: { bytesIn: 0, bytesOut: 0, lastUpdate: Date.now() }
+            peerId: generatePeerId(),
+            peers: new Map(), // peerId -> { connection, dataChannel, files }
+            sharedFiles: new Map(), // fileId -> { name, size, chunks, data }
+            transfers: new Map(), // transferId -> { fileId, peerId, progress, chunks }
+            peerConnections: new Map(), // peerId -> RTCPeerConnection
+            pendingOffers: new Map(),
+            stats: {
+                bytesReceived: 0,
+                bytesSent: 0,
+                lastUpdate: Date.now()
+            }
         };
+        
+        // ═══════════════════════════════════════════════════════════════
+        // Utility Functions
+        // ═══════════════════════════════════════════════════════════════
+        
+        function generatePeerId() {
+            const chars = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ';
+            const nums = '0123456789';
+            let id = '⊙';
+            for (let i = 0; i < 3; i++) id += chars[Math.floor(Math.random() * chars.length)];
+            for (let i = 0; i < 4; i++) id += nums[Math.floor(Math.random() * nums.length)];
+            return id;
+        }
         
         function log(message, type = 'aperture') {
             const logEl = document.getElementById('log');
@@ -453,686 +775,801 @@
             return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
         }
         
-        function subscribe(roomName) {
-            state.roomTopic = 'circumpunct-' + roomName.toUpperCase();
-            state.eventSource = new EventSource(`${NTFY_SERVER}/${state.roomTopic}/sse`);
+        // ═══════════════════════════════════════════════════════════════
+        // Fractal Chunking (Golden Ratio Scaling)
+        // ═══════════════════════════════════════════════════════════════
+        
+        function calculateFractalChunks(fileSize) {
+            const chunks = [];
+            let remaining = fileSize;
+            let offset = 0;
+            let level = 0;
             
-            state.eventSource.onopen = () => {
-                document.getElementById('connecting-status').textContent = 'Connected! Announcing presence...';
-                send({ type: 'join' });
+            while (remaining > 0 && level < MAX_FRACTAL_DEPTH * 10) {
+                // Golden ratio decay per level
+                const levelFactor = Math.pow(PHI_INV, Math.floor(level / 3));
+                const chunkSize = Math.min(
+                    Math.floor(CHUNK_BASE_SIZE * levelFactor),
+                    remaining
+                );
                 
-                setTimeout(() => {
-                    showScreen('main');
-                    document.getElementById('room-tag').textContent = roomName.toUpperCase();
-                    updateConnectionStatus(true);
-                    log(`Joined swarm: ${roomName.toUpperCase()}`, 'emergence');
-                    
-                    setInterval(() => {
-                        send({ type: 'heartbeat' });
-                        cleanupPeers();
-                    }, 10000);
-                }, 500);
-            };
-            
-            state.eventSource.onmessage = async (e) => {
-                try {
-                    const event = JSON.parse(e.data);
-                    if (event.attachment?.url) {
-                        const res = await fetch(event.attachment.url);
-                        const msg = await res.json();
-                        if (msg.from !== state.myId) handleMessage(msg);
-                        return;
-                    }
-                    if (event.event === 'message' && event.message) {
-                        try {
-                            const msg = JSON.parse(event.message);
-                            if (msg.from !== state.myId) handleMessage(msg);
-                        } catch (e) {}
-                    }
-                } catch (err) {}
-            };
-            
-            state.eventSource.onerror = () => updateConnectionStatus(false);
-        }
-        
-        async function send(data) {
-            if (!state.roomTopic) return;
-            const msg = { ...data, from: state.myId, ts: Date.now() };
-            try {
-                await fetch(`${NTFY_SERVER}/${state.roomTopic}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(msg)
+                chunks.push({
+                    id: chunks.length,
+                    offset: offset,
+                    size: chunkSize,
+                    level: Math.floor(level / 3),
+                    received: false,
+                    hash: null
                 });
-            } catch (e) { console.error('Send error:', e); }
+                
+                offset += chunkSize;
+                remaining -= chunkSize;
+                level++;
+            }
+            
+            return chunks;
         }
         
-        // Send directly to a peer via WebRTC data channel
-        function sendToPeer(peerId, data) {
-            const peer = state.peers.get(peerId);
-            if (peer?.dataChannel?.readyState === 'open') {
-                peer.dataChannel.send(JSON.stringify(data));
-                return true;
+        // Braid-inspired hash (simplified 3-strand verification)
+        async function braidHash(data) {
+            const encoder = new TextEncoder();
+            const dataBuffer = typeof data === 'string' ? encoder.encode(data) : data;
+            
+            // Three-strand hash: split data into 3 parts, hash each, interleave
+            const third = Math.ceil(dataBuffer.length / 3);
+            const strands = [
+                dataBuffer.slice(0, third),
+                dataBuffer.slice(third, third * 2),
+                dataBuffer.slice(third * 2)
+            ];
+            
+            const hashes = await Promise.all(strands.map(async (strand) => {
+                const hash = await crypto.subtle.digest('SHA-256', strand);
+                return new Uint8Array(hash);
+            }));
+            
+            // Yang-Baxter interleave: σ₁σ₂σ₁ pattern
+            const braided = new Uint8Array(24);
+            for (let i = 0; i < 8; i++) {
+                braided[i * 3] = hashes[0][i] ^ hashes[1][i]; // σ₁
+                braided[i * 3 + 1] = hashes[1][i] ^ hashes[2][i]; // σ₂
+                braided[i * 3 + 2] = hashes[0][i] ^ hashes[2][i]; // σ₁
             }
-            return false;
-        }
-        
-        // Broadcast to all connected peers via WebRTC
-        function broadcast(data) {
-            for (const [peerId, peer] of state.peers) {
-                if (peer.dataChannel?.readyState === 'open') {
-                    peer.dataChannel.send(JSON.stringify(data));
-                }
-            }
-        }
-        
-        function handleMessage(msg) {
-            switch (msg.type) {
-                case 'join':
-                    // New peer announced - initiate WebRTC connection
-                    if (!state.peers.has(msg.from) && !state.pendingConnections.has(msg.from)) {
-                        log(`Peer discovered: ${msg.from}`, 'convergence');
-                        initiateWebRTC(msg.from);
-                    }
-                    break;
-                case 'heartbeat':
-                    // Keep peer alive even if WebRTC isn't connected yet
-                    if (state.peers.has(msg.from)) {
-                        state.peers.get(msg.from).lastSeen = Date.now();
-                    }
-                    break;
-                case 'webrtc-offer':
-                    handleWebRTCOffer(msg);
-                    break;
-                case 'webrtc-answer':
-                    handleWebRTCAnswer(msg);
-                    break;
-                case 'webrtc-ice':
-                    handleICECandidate(msg);
-                    break;
-                // Fallback for peers without WebRTC
-                case 'manifest':
-                    handleManifest(msg);
-                    break;
-                case 'request':
-                    handleFileRequest(msg);
-                    break;
-                case 'chunk':
-                    handleChunk(msg);
-                    break;
-            }
+            
+            return Array.from(braided).map(b => b.toString(16).padStart(2, '0')).join('');
         }
         
         // ═══════════════════════════════════════════════════════════════
         // WebRTC Connection Management
         // ═══════════════════════════════════════════════════════════════
         
-        async function initiateWebRTC(peerId) {
-            log(`Initiating WebRTC to ${peerId}...`, 'aperture');
-            
+        const rtcConfig = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
+            ]
+        };
+        
+        async function createPeerConnection(remotePeerId) {
             const pc = new RTCPeerConnection(rtcConfig);
-            state.pendingConnections.set(peerId, pc);
             
-            // Create data channel
-            const channel = pc.createDataChannel('swarm', { ordered: true });
-            setupDataChannel(channel, peerId, pc);
-            
-            // Handle ICE candidates
             pc.onicecandidate = (e) => {
                 if (e.candidate) {
-                    send({ type: 'webrtc-ice', to: peerId, candidate: e.candidate });
+                    log(`ICE candidate gathered`, 'convergence');
                 }
             };
             
             pc.onconnectionstatechange = () => {
-                console.log(`Connection to ${peerId}: ${pc.connectionState}`);
-                if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
-                    state.pendingConnections.delete(peerId);
-                }
+                log(`Connection state: ${pc.connectionState}`, 'aperture');
+                updateConnectionStatus();
             };
-            
-            // Create and send offer
-            const offer = await pc.createOffer();
-            await pc.setLocalDescription(offer);
-            
-            // Wait for ICE gathering to complete
-            await waitForICE(pc);
-            
-            send({ type: 'webrtc-offer', to: peerId, sdp: pc.localDescription });
-            log(`Sent WebRTC offer to ${peerId}`, 'emergence');
-        }
-        
-        async function handleWebRTCOffer(msg) {
-            if (msg.to !== state.myId) return;
-            
-            log(`Received WebRTC offer from ${msg.from}`, 'convergence');
-            
-            const pc = new RTCPeerConnection(rtcConfig);
             
             pc.ondatachannel = (e) => {
-                setupDataChannel(e.channel, msg.from, pc);
+                setupDataChannel(e.channel, remotePeerId);
             };
             
-            pc.onicecandidate = (e) => {
-                if (e.candidate) {
-                    send({ type: 'webrtc-ice', to: msg.from, candidate: e.candidate });
-                }
-            };
-            
-            await pc.setRemoteDescription(msg.sdp);
-            const answer = await pc.createAnswer();
-            await pc.setLocalDescription(answer);
-            
-            await waitForICE(pc);
-            
-            send({ type: 'webrtc-answer', to: msg.from, sdp: pc.localDescription });
-            log(`Sent WebRTC answer to ${msg.from}`, 'emergence');
-            
-            state.pendingConnections.set(msg.from, pc);
+            state.peerConnections.set(remotePeerId, pc);
+            return pc;
         }
         
-        async function handleWebRTCAnswer(msg) {
-            if (msg.to !== state.myId) return;
-            
-            const pc = state.pendingConnections.get(msg.from);
-            if (!pc) return;
-            
-            log(`Received WebRTC answer from ${msg.from}`, 'convergence');
-            await pc.setRemoteDescription(msg.sdp);
-        }
-        
-        async function handleICECandidate(msg) {
-            if (msg.to !== state.myId) return;
-            
-            const pc = state.pendingConnections.get(msg.from) || state.peers.get(msg.from)?.connection;
-            if (pc && msg.candidate) {
-                try {
-                    await pc.addIceCandidate(msg.candidate);
-                } catch (e) {
-                    console.log('ICE candidate error:', e);
-                }
-            }
-        }
-        
-        function waitForICE(pc) {
-            return new Promise((resolve) => {
-                if (pc.iceGatheringState === 'complete') {
-                    resolve();
-                } else {
-                    const checkState = () => {
-                        if (pc.iceGatheringState === 'complete') {
-                            pc.removeEventListener('icegatheringstatechange', checkState);
-                            resolve();
-                        }
-                    };
-                    pc.addEventListener('icegatheringstatechange', checkState);
-                    // Timeout fallback
-                    setTimeout(resolve, 2000);
-                }
-            });
-        }
-        
-        function setupDataChannel(channel, peerId, pc) {
+        function setupDataChannel(channel, remotePeerId) {
             channel.binaryType = 'arraybuffer';
             
             channel.onopen = () => {
-                log(`⚡ Direct connection to ${peerId}!`, 'emergence');
-                
-                // Move from pending to active
-                state.pendingConnections.delete(peerId);
-                state.peers.set(peerId, {
-                    lastSeen: Date.now(),
-                    connection: pc,
+                log(`Channel open with ${remotePeerId}`, 'emergence');
+                state.peers.set(remotePeerId, {
+                    connection: state.peerConnections.get(remotePeerId),
                     dataChannel: channel,
                     files: new Map()
                 });
-                
                 updatePeerList();
                 updateVisualization();
                 
-                // Send our file manifest
-                sendManifestToPeer(peerId);
+                // Send file manifest
+                sendManifest(remotePeerId);
             };
             
             channel.onclose = () => {
-                log(`Connection closed: ${peerId}`, 'convergence');
-                state.peers.delete(peerId);
-                // Clean up their files
-                for (const [fileId, file] of state.remoteFiles) {
-                    if (file.owner === peerId) state.remoteFiles.delete(fileId);
-                }
+                log(`Channel closed with ${remotePeerId}`, 'convergence');
+                state.peers.delete(remotePeerId);
                 updatePeerList();
-                updateFileList();
                 updateVisualization();
             };
             
-            channel.onmessage = (e) => {
-                try {
-                    const msg = JSON.parse(e.data);
-                    msg.from = peerId;
-                    handlePeerMessage(msg);
-                } catch (err) {
-                    console.log('Data channel message error:', err);
+            channel.onmessage = (e) => handleMessage(remotePeerId, e.data);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // Signaling (Manual Copy-Paste)
+        // ═══════════════════════════════════════════════════════════════
+        
+        async function createOffer() {
+            const remotePeerId = 'pending_' + Date.now();
+            const pc = await createPeerConnection(remotePeerId);
+            
+            const channel = pc.createDataChannel('swarm', {
+                ordered: true
+            });
+            setupDataChannel(channel, remotePeerId);
+            
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            
+            // Wait for ICE gathering
+            await new Promise(resolve => {
+                if (pc.iceGatheringState === 'complete') {
+                    resolve();
+                } else {
+                    pc.onicegatheringstatechange = () => {
+                        if (pc.iceGatheringState === 'complete') resolve();
+                    };
+                    // Timeout fallback
+                    setTimeout(resolve, 3000);
                 }
+            });
+            
+            const offerData = {
+                type: 'offer',
+                from: state.peerId,
+                sdp: pc.localDescription
             };
+            
+            state.pendingOffers.set(remotePeerId, pc);
+            
+            // Convert to hex for cleaner sharing (no special chars)
+            const offerHex = Array.from(new TextEncoder().encode(JSON.stringify(offerData)))
+                .map(b => b.toString(16).padStart(2, '0')).join('');
+            document.getElementById('offer-text').value = offerHex;
+            document.getElementById('offer-modal').classList.add('active');
+            
+            log('Offer created - share with peer', 'convergence');
+            
+            // Show receive answer modal after copying
+            setTimeout(() => {
+                document.getElementById('receive-answer-modal').classList.add('active');
+            }, 500);
         }
         
-        // Handle messages received via WebRTC data channel
-        function handlePeerMessage(msg) {
-            switch (msg.type) {
-                case 'manifest':
-                    handleManifest(msg);
-                    break;
-                case 'request':
-                    handleFileRequest(msg);
-                    break;
-                case 'chunk':
-                    handleChunk(msg);
-                    break;
+        async function acceptOffer() {
+            const offerText = document.getElementById('remote-offer').value.trim();
+            if (!offerText) return;
+            
+            try {
+                // Decode hex to string
+                const offerStr = offerText.match(/.{2}/g)
+                    .map(byte => String.fromCharCode(parseInt(byte, 16))).join('');
+                const offerData = JSON.parse(offerStr);
+                const remotePeerId = offerData.from;
+                
+                const pc = await createPeerConnection(remotePeerId);
+                await pc.setRemoteDescription(offerData.sdp);
+                
+                const answer = await pc.createAnswer();
+                await pc.setLocalDescription(answer);
+                
+                // Wait for ICE gathering
+                await new Promise(resolve => {
+                    if (pc.iceGatheringState === 'complete') {
+                        resolve();
+                    } else {
+                        pc.onicegatheringstatechange = () => {
+                            if (pc.iceGatheringState === 'complete') resolve();
+                        };
+                        setTimeout(resolve, 3000);
+                    }
+                });
+                
+                const answerData = {
+                    type: 'answer',
+                    from: state.peerId,
+                    to: remotePeerId,
+                    sdp: pc.localDescription
+                };
+                
+                // Convert to hex for cleaner sharing
+                const answerHex = Array.from(new TextEncoder().encode(JSON.stringify(answerData)))
+                    .map(b => b.toString(16).padStart(2, '0')).join('');
+                document.getElementById('answer-text').value = answerHex;
+                closeModal('join-modal');
+                document.getElementById('answer-modal').classList.add('active');
+                
+                log(`Answer created for ${remotePeerId}`, 'aperture');
+            } catch (err) {
+                log(`Invalid offer: ${err.message}`, 'error');
             }
         }
         
-        function addPeer(peerId) {
-            if (peerId === state.myId) return;
-            if (!state.peers.has(peerId)) {
-                // Peer will be fully added when WebRTC connects
-                // For now just note we've seen them
-                log(`Peer discovered: ${peerId}`, 'convergence');
-            }
-        }
-        
-        function cleanupPeers() {
-            const now = Date.now();
-            for (const [peerId, peer] of state.peers) {
-                if (now - peer.lastSeen > 30000) {
-                    if (peer.connection) peer.connection.close();
-                    state.peers.delete(peerId);
-                    log(`Peer left: ${peerId}`, 'convergence');
-                    for (const [fileId, file] of state.remoteFiles) {
-                        if (file.owner === peerId) state.remoteFiles.delete(fileId);
+        async function completeConnection() {
+            const answerText = document.getElementById('remote-answer').value.trim();
+            if (!answerText) return;
+            
+            try {
+                // Decode hex to string
+                const answerStr = answerText.match(/.{2}/g)
+                    .map(byte => String.fromCharCode(parseInt(byte, 16))).join('');
+                const answerData = JSON.parse(answerStr);
+                
+                // Find the pending connection
+                for (const [pendingId, pc] of state.pendingOffers) {
+                    if (pc.signalingState === 'have-local-offer') {
+                        await pc.setRemoteDescription(answerData.sdp);
+                        
+                        // Update the peer ID mapping
+                        state.peerConnections.delete(pendingId);
+                        state.peerConnections.set(answerData.from, pc);
+                        state.pendingOffers.delete(pendingId);
+                        
+                        log(`Connected to ${answerData.from}`, 'emergence');
+                        closeModal('receive-answer-modal');
+                        closeModal('offer-modal');
+                        return;
                     }
                 }
+                
+                log('No pending connection found', 'error');
+            } catch (err) {
+                log(`Invalid answer: ${err.message}`, 'error');
             }
-            // Also clean up pending connections
-            for (const [peerId, pc] of state.pendingConnections) {
-                if (pc.connectionState === 'failed' || pc.connectionState === 'closed') {
-                    state.pendingConnections.delete(peerId);
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // Message Protocol
+        // ═══════════════════════════════════════════════════════════════
+        
+        function sendMessage(peerId, message) {
+            const peer = state.peers.get(peerId);
+            if (peer && peer.dataChannel && peer.dataChannel.readyState === 'open') {
+                if (typeof message === 'object' && !(message instanceof ArrayBuffer)) {
+                    peer.dataChannel.send(JSON.stringify(message));
+                } else {
+                    peer.dataChannel.send(message);
                 }
             }
-            updatePeerList();
+        }
+        
+        function broadcastMessage(message) {
+            for (const [peerId] of state.peers) {
+                sendMessage(peerId, message);
+            }
+        }
+        
+        function handleMessage(peerId, data) {
+            // Binary data = chunk
+            if (data instanceof ArrayBuffer) {
+                handleChunkData(peerId, data);
+                return;
+            }
+            
+            try {
+                const msg = JSON.parse(data);
+                
+                switch (msg.type) {
+                    case 'manifest':
+                        handleManifest(peerId, msg);
+                        break;
+                    case 'request_chunk':
+                        handleChunkRequest(peerId, msg);
+                        break;
+                    case 'chunk_header':
+                        handleChunkHeader(peerId, msg);
+                        break;
+                    case 'file_complete':
+                        handleFileComplete(peerId, msg);
+                        break;
+                }
+            } catch (err) {
+                log(`Parse error: ${err.message}`, 'error');
+            }
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // File Sharing
+        // ═══════════════════════════════════════════════════════════════
+        
+        function sendManifest(peerId) {
+            const files = [];
+            for (const [fileId, file] of state.sharedFiles) {
+                files.push({
+                    id: fileId,
+                    name: file.name,
+                    size: file.size,
+                    chunks: file.chunks.length,
+                    hash: file.hash
+                });
+            }
+            
+            sendMessage(peerId, {
+                type: 'manifest',
+                files: files
+            });
+        }
+        
+        function handleManifest(peerId, msg) {
+            const peer = state.peers.get(peerId);
+            if (!peer) return;
+            
+            for (const file of msg.files) {
+                peer.files.set(file.id, file);
+                log(`${peerId} sharing: ${file.name}`, 'convergence');
+            }
+            
             updateFileList();
-            updateVisualization();
         }
         
         async function shareFile(file) {
-            const fileId = state.myId + '_' + Date.now();
+            const fileId = await braidHash(file.name + file.size + Date.now());
+            const chunks = calculateFractalChunks(file.size);
             
-            // Read file as ArrayBuffer for WebRTC
-            const arrayBuffer = await file.arrayBuffer();
-            const totalChunks = Math.ceil(arrayBuffer.byteLength / CHUNK_SIZE);
-            
-            state.sharedFiles.set(fileId, { 
-                name: file.name, 
-                size: file.size, 
-                mimeType: file.type, 
-                data: arrayBuffer,
-                totalChunks 
-            });
-            
-            log(`Sharing: ${file.name} (${totalChunks} chunks)`, 'emergence');
-            updateFileList();
-            
-            // Send manifest to all connected peers
-            broadcastManifest();
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const data = new Uint8Array(e.target.result);
+                const hash = await braidHash(data);
+                
+                state.sharedFiles.set(fileId, {
+                    name: file.name,
+                    size: file.size,
+                    chunks: chunks,
+                    data: data,
+                    hash: hash
+                });
+                
+                log(`Sharing: ${file.name} (${chunks.length} chunks)`, 'emergence');
+                updateFileList();
+                
+                // Broadcast to all peers
+                broadcastMessage({
+                    type: 'manifest',
+                    files: [{
+                        id: fileId,
+                        name: file.name,
+                        size: file.size,
+                        chunks: chunks.length,
+                        hash: hash
+                    }]
+                });
+            };
+            reader.readAsArrayBuffer(file);
         }
         
-        function sendManifestToPeer(peerId) {
-            const files = [];
-            for (const [fileId, file] of state.sharedFiles) {
-                files.push({ id: fileId, name: file.name, size: file.size, chunks: file.totalChunks });
-            }
-            sendToPeer(peerId, { type: 'manifest', files });
-        }
-        
-        function broadcastManifest() {
-            const files = [];
-            for (const [fileId, file] of state.sharedFiles) {
-                files.push({ id: fileId, name: file.name, size: file.size, chunks: file.totalChunks });
-            }
-            broadcast({ type: 'manifest', files });
-        }
-        
-        // Legacy - keep for fallback
-        function sendManifest() {
-            const files = [];
-            for (const [fileId, file] of state.sharedFiles) {
-                files.push({ id: fileId, name: file.name, size: file.size, chunks: file.totalChunks });
-            }
-            if (files.length > 0 || state.peers.size > 0) send({ type: 'manifest', files });
-        }
-        
-        function handleManifest(msg) {
-            for (const file of msg.files) {
-                state.remoteFiles.set(file.id, { ...file, owner: msg.from });
-            }
-            log(`${msg.from} sharing ${msg.files.length} file(s)`, 'convergence');
-            updateFileList();
-        }
-        
-        function requestFile(fileId) {
-            const file = state.remoteFiles.get(fileId);
-            if (!file) return;
+        function requestFile(peerId, fileId) {
+            const peer = state.peers.get(peerId);
+            if (!peer) return;
             
-            const transferId = fileId + '_' + Date.now();
+            const fileInfo = peer.files.get(fileId);
+            if (!fileInfo) return;
+            
+            // Initialize transfer
+            const transferId = `${peerId}_${fileId}`;
             state.transfers.set(transferId, {
-                fileId, name: file.name, size: file.size, owner: file.owner,
-                totalChunks: file.chunks, receivedChunks: new Set(), 
-                data: new Array(file.chunks).fill(null),
-                mimeType: null
+                fileId: fileId,
+                peerId: peerId,
+                name: fileInfo.name,
+                size: fileInfo.size,
+                totalChunks: fileInfo.chunks,
+                receivedChunks: 0,
+                data: new Uint8Array(fileInfo.size),
+                chunks: new Array(fileInfo.chunks).fill(false)
             });
             
-            log(`Requesting: ${file.name} (${file.chunks} chunks)`, 'convergence');
+            log(`Requesting: ${fileInfo.name} from ${peerId}`, 'convergence');
             updateTransferList();
             
-            // Request all chunks - peer will send them
-            const requestMsg = { type: 'request', fileId, transferId, totalChunks: file.chunks };
-            
-            // Try WebRTC first, fall back to ntfy
-            if (!sendToPeer(file.owner, requestMsg)) {
-                send({ ...requestMsg, to: file.owner });
-            }
-            
-            animateFlow('convergence');
+            // Request chunks in golden ratio order (prioritize larger chunks first)
+            requestNextChunk(transferId);
         }
         
-        function handleFileRequest(msg) {
+        function requestNextChunk(transferId) {
+            const transfer = state.transfers.get(transferId);
+            if (!transfer) return;
+            
+            // Find next unreceived chunk
+            const nextChunk = transfer.chunks.findIndex(c => !c);
+            if (nextChunk === -1) return; // All chunks received
+            
+            sendMessage(transfer.peerId, {
+                type: 'request_chunk',
+                fileId: transfer.fileId,
+                chunkIndex: nextChunk
+            });
+        }
+        
+        function handleChunkRequest(peerId, msg) {
             const file = state.sharedFiles.get(msg.fileId);
             if (!file) return;
             
-            log(`Sending ${file.name} to ${msg.from}`, 'emergence');
+            const chunk = file.chunks[msg.chunkIndex];
+            if (!chunk) return;
             
-            // Send chunks
-            for (let i = 0; i < file.totalChunks; i++) {
-                const start = i * CHUNK_SIZE;
-                const end = Math.min(start + CHUNK_SIZE, file.data.byteLength);
-                const chunkData = file.data.slice(start, end);
-                
-                // Convert to base64 for JSON transport
-                const base64 = btoa(String.fromCharCode(...new Uint8Array(chunkData)));
-                
-                const chunkMsg = {
-                    type: 'chunk',
-                    fileId: msg.fileId,
-                    transferId: msg.transferId,
-                    chunkIndex: i,
-                    totalChunks: file.totalChunks,
-                    data: base64,
-                    name: file.name,
-                    mimeType: file.mimeType,
-                    size: chunkData.byteLength
-                };
-                
-                // Use WebRTC if available
-                if (!sendToPeer(msg.from, chunkMsg)) {
-                    send({ ...chunkMsg, to: msg.from });
-                }
-                
-                state.stats.bytesOut += chunkData.byteLength;
-            }
+            const chunkData = file.data.slice(chunk.offset, chunk.offset + chunk.size);
             
+            // Send header first
+            sendMessage(peerId, {
+                type: 'chunk_header',
+                fileId: msg.fileId,
+                chunkIndex: msg.chunkIndex,
+                offset: chunk.offset,
+                size: chunk.size,
+                level: chunk.level
+            });
+            
+            // Then send binary data
+            sendMessage(peerId, chunkData.buffer);
+            
+            state.stats.bytesSent += chunk.size;
+            log(`Sent chunk ${msg.chunkIndex} to ${peerId}`, 'emergence');
             animateFlow('emergence');
         }
         
-        function handleChunk(msg) {
-            let transfer = state.transfers.get(msg.transferId);
-            if (!transfer) {
-                transfer = {
-                    fileId: msg.fileId, name: msg.name, totalChunks: msg.totalChunks,
-                    receivedChunks: new Set(), data: new Array(msg.totalChunks).fill(null), 
-                    mimeType: msg.mimeType
-                };
-                state.transfers.set(msg.transferId, transfer);
-            }
+        let pendingChunkHeader = null;
+        
+        function handleChunkHeader(peerId, msg) {
+            pendingChunkHeader = msg;
+        }
+        
+        function handleChunkData(peerId, data) {
+            if (!pendingChunkHeader) return;
             
-            if (!transfer.receivedChunks.has(msg.chunkIndex)) {
-                // Decode base64 to binary
-                const binary = atob(msg.data);
-                const bytes = new Uint8Array(binary.length);
-                for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-                
-                transfer.data[msg.chunkIndex] = bytes;
-                transfer.receivedChunks.add(msg.chunkIndex);
-                transfer.mimeType = msg.mimeType || transfer.mimeType;
-                state.stats.bytesIn += bytes.length;
-                
-                const progress = Math.round((transfer.receivedChunks.size / transfer.totalChunks) * 100);
-                if (progress % 20 === 0 || transfer.receivedChunks.size === transfer.totalChunks) {
-                    log(`${transfer.name}: ${progress}%`, 'convergence');
-                }
-                
-                updateTransferList();
-                animateFlow('convergence');
-                
-                if (transfer.receivedChunks.size === transfer.totalChunks) {
-                    completeDownload(msg.transferId, transfer);
-                }
+            const header = pendingChunkHeader;
+            pendingChunkHeader = null;
+            
+            const transferId = `${peerId}_${header.fileId}`;
+            const transfer = state.transfers.get(transferId);
+            if (!transfer) return;
+            
+            // Store chunk data
+            const chunkData = new Uint8Array(data);
+            transfer.data.set(chunkData, header.offset);
+            transfer.chunks[header.chunkIndex] = true;
+            transfer.receivedChunks++;
+            
+            state.stats.bytesReceived += chunkData.length;
+            
+            log(`Received chunk ${header.chunkIndex} (level ${header.level})`, 'convergence');
+            animateFlow('convergence');
+            updateTransferList();
+            
+            // Check if complete
+            if (transfer.receivedChunks === transfer.totalChunks) {
+                completeDownload(transferId);
+            } else {
+                // Request next chunk
+                requestNextChunk(transferId);
             }
         }
         
-        function completeDownload(transferId, transfer) {
+        async function completeDownload(transferId) {
+            const transfer = state.transfers.get(transferId);
+            if (!transfer) return;
+            
             log(`Download complete: ${transfer.name}`, 'emergence');
             
-            // Combine chunks into single ArrayBuffer
-            const totalSize = transfer.data.reduce((sum, chunk) => sum + chunk.length, 0);
-            const combined = new Uint8Array(totalSize);
-            let offset = 0;
-            for (const chunk of transfer.data) {
-                combined.set(chunk, offset);
-                offset += chunk.length;
-            }
-            
-            const blob = new Blob([combined], { type: transfer.mimeType || 'application/octet-stream' });
+            // Create download link
+            const blob = new Blob([transfer.data]);
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = transfer.name;
             a.click();
             URL.revokeObjectURL(url);
+            
             state.transfers.delete(transferId);
             updateTransferList();
         }
         
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id + '-screen').classList.add('active');
-        }
+        // ═══════════════════════════════════════════════════════════════
+        // UI Updates
+        // ═══════════════════════════════════════════════════════════════
         
-        function updateConnectionStatus(connected) {
-            const dot = document.getElementById('connection-dot');
-            const text = document.getElementById('connection-text');
-            dot.className = connected ? 'status-dot connected' : 'status-dot';
-            text.textContent = connected ? `Connected as ${state.myId}` : 'Disconnected';
+        function updateConnectionStatus() {
+            const statusDot = document.getElementById('connection-status');
+            const statusText = document.getElementById('status-text');
+            
+            if (state.peers.size > 0) {
+                statusDot.className = 'status-dot connected';
+                statusText.textContent = `Connected to ${state.peers.size} peer(s)`;
+            } else if (state.peerConnections.size > 0) {
+                statusDot.className = 'status-dot pending';
+                statusText.textContent = 'Connecting...';
+            } else {
+                statusDot.className = 'status-dot';
+                statusText.textContent = 'Disconnected';
+            }
+            
+            document.getElementById('peer-count').textContent = state.peers.size;
         }
         
         function updatePeerList() {
             const listEl = document.getElementById('peer-list');
-            const totalPeers = state.peers.size + state.pendingConnections.size;
+            listEl.innerHTML = '';
             
-            if (totalPeers === 0) {
-                listEl.innerHTML = '<div style="color: var(--text-dim); font-size: 0.85rem;">Waiting for peers...</div>';
-            } else {
-                listEl.innerHTML = '';
-                
-                // Connected peers (WebRTC established)
-                for (const [peerId, peer] of state.peers) {
-                    const item = document.createElement('div');
-                    item.className = 'peer-item';
-                    item.innerHTML = `
-                        <div class="status-dot connected"></div>
-                        <span class="id">${peerId}</span>
-                        <span style="margin-left: auto; font-size: 0.65rem; color: #4ade80;">⚡ direct</span>
-                    `;
-                    listEl.appendChild(item);
-                }
-                
-                // Pending connections
-                for (const [peerId] of state.pendingConnections) {
-                    const item = document.createElement('div');
-                    item.className = 'peer-item';
-                    item.innerHTML = `
-                        <div class="status-dot pending"></div>
-                        <span class="id">${peerId}</span>
-                        <span style="margin-left: auto; font-size: 0.65rem; color: var(--gold);">connecting...</span>
-                    `;
-                    listEl.appendChild(item);
-                }
+            for (const [peerId, peer] of state.peers) {
+                const item = document.createElement('div');
+                item.className = 'peer-item';
+                item.innerHTML = `
+                    <div class="status-dot connected"></div>
+                    <span class="id">${peerId}</span>
+                    <span style="margin-left: auto; color: var(--text-dim);">
+                        ${peer.files.size} files
+                    </span>
+                `;
+                listEl.appendChild(item);
             }
-            document.getElementById('peer-count').textContent = state.peers.size;
+            
+            updateConnectionStatus();
         }
         
         function updateFileList() {
             const listEl = document.getElementById('file-list');
             listEl.innerHTML = '';
-            let totalFiles = 0;
             
+            // Local files
             for (const [fileId, file] of state.sharedFiles) {
-                totalFiles++;
                 const item = document.createElement('div');
                 item.className = 'file-item';
-                item.innerHTML = `<span style="color: var(--gold);">⊙</span><span class="name">${file.name}</span><span class="size">${formatSize(file.size)}</span><span class="owner">you</span>`;
+                item.innerHTML = `
+                    <span style="color: var(--gold);">⊙</span>
+                    <span class="name">${file.name}</span>
+                    <span class="size">${formatSize(file.size)}</span>
+                `;
                 listEl.appendChild(item);
             }
             
-            for (const [fileId, file] of state.remoteFiles) {
-                totalFiles++;
-                const item = document.createElement('div');
-                item.className = 'file-item';
-                item.style.cursor = 'pointer';
-                item.innerHTML = `<span style="color: var(--convergence);">≻</span><span class="name">${file.name}</span><span class="size">${formatSize(file.size)}</span><span class="owner">${file.owner}</span>`;
-                item.onclick = () => requestFile(fileId);
-                listEl.appendChild(item);
+            // Remote files (from peers)
+            for (const [peerId, peer] of state.peers) {
+                for (const [fileId, file] of peer.files) {
+                    if (state.sharedFiles.has(fileId)) continue; // Skip if we have it
+                    
+                    const item = document.createElement('div');
+                    item.className = 'file-item';
+                    item.style.cursor = 'pointer';
+                    item.innerHTML = `
+                        <span style="color: var(--convergence);">≻</span>
+                        <span class="name">${file.name}</span>
+                        <span class="size">${formatSize(file.size)}</span>
+                    `;
+                    item.onclick = () => requestFile(peerId, fileId);
+                    listEl.appendChild(item);
+                }
             }
             
-            document.getElementById('file-count').textContent = totalFiles;
+            document.getElementById('chunk-count').textContent = 
+                Array.from(state.sharedFiles.values())
+                    .reduce((sum, f) => sum + f.chunks.length, 0);
         }
         
         function updateTransferList() {
             const listEl = document.getElementById('transfer-list');
+            
             if (state.transfers.size === 0) {
-                listEl.innerHTML = '<div style="color: var(--text-dim); font-size: 0.85rem;">No active transfers</div>';
+                listEl.innerHTML = `<div style="color: var(--text-dim); font-size: 0.85rem;">
+                    No active transfers
+                </div>`;
                 return;
             }
+            
             listEl.innerHTML = '';
+            
             for (const [transferId, transfer] of state.transfers) {
-                const received = transfer.receivedChunks instanceof Set ? transfer.receivedChunks.size : transfer.receivedChunks.length;
-                const progress = (received / transfer.totalChunks) * 100;
+                const progress = (transfer.receivedChunks / transfer.totalChunks) * 100;
+                
                 const item = document.createElement('div');
                 item.className = 'file-item';
-                item.style.flexDirection = 'column';
-                item.style.alignItems = 'stretch';
                 item.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--center);">⊰</span>
-                        <span class="name">${transfer.name}</span>
-                        <span class="size">${Math.round(progress)}%</span>
+                    <span style="color: var(--center);">⊰</span>
+                    <span class="name">${transfer.name}</span>
+                    <span class="size">${Math.round(progress)}%</span>
+                `;
+                
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-container';
+                progressBar.innerHTML = `
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
                     </div>
-                    <div class="progress-bar"><div class="progress-fill" style="width: ${progress}%"></div></div>`;
+                    <div class="chunk-grid">
+                        ${transfer.chunks.slice(0, 64).map((c, i) => 
+                            `<div class="chunk ${c ? 'received' : ''}"></div>`
+                        ).join('')}
+                    </div>
+                `;
+                
+                item.appendChild(progressBar);
                 listEl.appendChild(item);
             }
         }
         
+        // ═══════════════════════════════════════════════════════════════
+        // Visualization
+        // ═══════════════════════════════════════════════════════════════
+        
         function updateVisualization() {
-            const container = document.getElementById('peer-nodes');
-            container.innerHTML = '';
+            const nodesContainer = document.getElementById('peer-nodes');
+            nodesContainer.innerHTML = '';
+            
             const peers = Array.from(state.peers.keys());
             const angleStep = (2 * Math.PI) / Math.max(peers.length, 1);
             
             peers.forEach((peerId, i) => {
                 const angle = angleStep * i - Math.PI / 2;
-                const x = 250 + 120 * Math.cos(angle);
-                const y = 250 + 120 * Math.sin(angle);
+                const radius = 120;
+                const x = 250 + radius * Math.cos(angle);
+                const y = 250 + radius * Math.sin(angle);
+                
                 const node = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                node.classList.add('peer-node');
                 node.innerHTML = `
-                    <line x1="250" y1="250" x2="${x}" y2="${y}" stroke="rgba(212,175,55,0.3)" stroke-width="1" stroke-dasharray="5,5"/>
                     <circle cx="${x}" cy="${y}" r="12" fill="#0f3460" stroke="#D4AF37" stroke-width="2"/>
-                    <text x="${x}" y="${y + 4}" text-anchor="middle" fill="#D4AF37" font-size="8">○</text>`;
-                container.appendChild(node);
+                    <text x="${x}" y="${y + 4}" text-anchor="middle" fill="#D4AF37" font-size="8" font-family="JetBrains Mono">○</text>
+                `;
+                nodesContainer.appendChild(node);
+                
+                // Connection line to center
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', '250');
+                line.setAttribute('y1', '250');
+                line.setAttribute('x2', x);
+                line.setAttribute('y2', y);
+                line.setAttribute('stroke', 'rgba(212,175,55,0.3)');
+                line.setAttribute('stroke-width', '1');
+                line.setAttribute('stroke-dasharray', '5,5');
+                nodesContainer.insertBefore(line, nodesContainer.firstChild);
             });
         }
         
         function animateFlow(direction) {
-            const container = document.getElementById('flow-particles');
+            const particlesContainer = document.getElementById('flow-particles');
             const particle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            
             const angle = Math.random() * Math.PI * 2;
             const startR = direction === 'convergence' ? 180 : 30;
             const endR = direction === 'convergence' ? 30 : 180;
-            const startX = 250 + startR * Math.cos(angle), startY = 250 + startR * Math.sin(angle);
-            const endX = 250 + endR * Math.cos(angle), endY = 250 + endR * Math.sin(angle);
+            
+            const startX = 250 + startR * Math.cos(angle);
+            const startY = 250 + startR * Math.sin(angle);
+            const endX = 250 + endR * Math.cos(angle);
+            const endY = 250 + endR * Math.sin(angle);
             
             particle.setAttribute('cx', startX);
             particle.setAttribute('cy', startY);
             particle.setAttribute('r', '4');
             particle.setAttribute('fill', direction === 'convergence' ? '#533483' : '#e94560');
-            container.appendChild(particle);
             
+            particlesContainer.appendChild(particle);
+            
+            // Animate
+            const duration = 1000;
             const startTime = Date.now();
+            
             function animate() {
-                const progress = Math.min((Date.now() - startTime) / 1000, 1);
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Golden ratio easing
                 const eased = 1 - Math.pow(1 - progress, PHI);
-                particle.setAttribute('cx', startX + (endX - startX) * eased);
-                particle.setAttribute('cy', startY + (endY - startY) * eased);
+                
+                const x = startX + (endX - startX) * eased;
+                const y = startY + (endY - startY) * eased;
+                
+                particle.setAttribute('cx', x);
+                particle.setAttribute('cy', y);
                 particle.setAttribute('opacity', 1 - progress);
-                if (progress < 1) requestAnimationFrame(animate);
-                else particle.remove();
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    particle.remove();
+                }
             }
+            
             requestAnimationFrame(animate);
         }
         
+        // Stats update
         setInterval(() => {
-            const elapsed = (Date.now() - state.stats.lastUpdate) / 1000;
-            const rate = (state.stats.bytesIn + state.stats.bytesOut) / elapsed / 1024;
+            const now = Date.now();
+            const elapsed = (now - state.stats.lastUpdate) / 1000;
+            const rate = (state.stats.bytesReceived + state.stats.bytesSent) / elapsed / 1024;
+            
             document.getElementById('transfer-rate').textContent = rate.toFixed(1);
-            state.stats.bytesIn = 0;
-            state.stats.bytesOut = 0;
-            state.stats.lastUpdate = Date.now();
+            
+            state.stats.bytesReceived = 0;
+            state.stats.bytesSent = 0;
+            state.stats.lastUpdate = now;
         }, 1000);
         
+        // ═══════════════════════════════════════════════════════════════
+        // Modal Helpers
+        // ═══════════════════════════════════════════════════════════════
+        
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+        
+        function copyOffer() {
+            const text = document.getElementById('offer-text').value;
+            navigator.clipboard.writeText(text);
+            log('Offer copied to clipboard', 'aperture');
+        }
+        
+        function copyAnswer() {
+            const text = document.getElementById('answer-text').value;
+            navigator.clipboard.writeText(text);
+            log('Answer copied to clipboard', 'aperture');
+        }
+        
+        // ═══════════════════════════════════════════════════════════════
+        // Event Listeners
+        // ═══════════════════════════════════════════════════════════════
+        
         document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('peer-id').value = state.peerId;
+            
+            // Create offer button
+            document.getElementById('create-offer-btn').onclick = createOffer;
+            
+            // Join button
             document.getElementById('join-btn').onclick = () => {
-                const roomName = document.getElementById('room-input').value.trim();
-                if (roomName.length < 2) {
-                    document.getElementById('lobby-status').textContent = 'Enter a name (2+ characters)';
-                    document.getElementById('lobby-status').className = 'status error';
-                    return;
-                }
-                document.getElementById('room-display').textContent = roomName.toUpperCase();
-                showScreen('connecting');
-                subscribe(roomName);
+                document.getElementById('join-modal').classList.add('active');
             };
             
-            document.getElementById('room-input').onkeypress = (e) => {
-                if (e.key === 'Enter') document.getElementById('join-btn').click();
-            };
-            
-            document.getElementById('cancel-btn').onclick = () => {
-                if (state.eventSource) state.eventSource.close();
-                showScreen('lobby');
-            };
-            
+            // File drop zone
             const dropZone = document.getElementById('drop-zone');
             const fileInput = document.getElementById('file-input');
             
             dropZone.onclick = () => fileInput.click();
-            dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('dragover'); };
-            dropZone.ondragleave = () => dropZone.classList.remove('dragover');
+            
+            dropZone.ondragover = (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            };
+            
+            dropZone.ondragleave = () => {
+                dropZone.classList.remove('dragover');
+            };
+            
             dropZone.ondrop = (e) => {
                 e.preventDefault();
                 dropZone.classList.remove('dragover');
-                if (e.dataTransfer.files.length > 0) shareFile(e.dataTransfer.files[0]);
+                const files = e.dataTransfer.files;
+                if (files.length > 0) shareFile(files[0]);
             };
+            
             fileInput.onchange = (e) => {
-                if (e.target.files.length > 0) shareFile(e.target.files[0]);
+                if (e.target.files.length > 0) {
+                    shareFile(e.target.files[0]);
+                }
             };
+            
+            // Close modals on overlay click
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.onclick = (e) => {
+                    if (e.target === overlay) {
+                        overlay.classList.remove('active');
+                    }
+                };
+            });
+            
+            log('Ready - create offer or join swarm', 'aperture');
         });
     </script>
 </body>
