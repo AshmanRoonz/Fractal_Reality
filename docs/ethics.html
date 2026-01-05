@@ -674,10 +674,10 @@
                 
                 <div class="checks">
                     <div class="checks-title"><span class="cyan">C○ BOUNDARY</span> — Task T satisfies C○ iff:</div>
-                    <div class="check">For all agents A affected by T: outcomes(T) ⊆ A.model(T)</div>
-                    <div class="check">Constrained when: A's model covers T's effects (informed consent)</div>
-                    <div class="check">Unconstrained when: T produces effects outside A's model (violation)</div>
-                    <div class="check">Measurable: |outcomes ∩ model| / |outcomes| ≥ τ</div>
+                    <div class="check">For all agents A: outcomes_foreseeable(T) ⊆ A.model(T)</div>
+                    <div class="check">Constrained when: A's model covers foreseeable effects (informed consent)</div>
+                    <div class="check">Unconstrained when: foreseeable effects outside A's model (violation)</div>
+                    <div class="check">"Foreseeable" acknowledges human boundedness — not omniscience</div>
                 </div>
                 
                 <div class="checks">
@@ -698,10 +698,10 @@
                 
                 <div class="checks">
                     <div class="checks-title"><span class="yellow">C⊙ MUTUAL CONSTRUCTION</span> — Task T satisfies C⊙ iff:</div>
-                    <div class="check">CC(A) after T ≥ CC(A) before T (or above minimum)</div>
-                    <div class="check">CC(B) after T ≥ CC(B) before T (or above minimum)</div>
-                    <div class="check">Neither A nor B converted to substrate</div>
-                    <div class="check">Extraction = CC(A)↑ while CC(B)↓</div>
+                    <div class="check">CC(A) after T ≥ CC_min(A) — above viability threshold</div>
+                    <div class="check">CC(B) after T ≥ CC_min(B) — above viability threshold</div>
+                    <div class="check">No systematic extraction pattern (sustained CC↑ while other CC↓)</div>
+                    <div class="check">Ethical acts can cost — constraint is viability + no extraction, not zero cost</div>
                 </div>
                 
                 <h2>FORMAL ANALYSIS</h2>
@@ -735,6 +735,26 @@
                     <div class="pillar">
                         <span class="green">POSSIBLE BRIDGES</span>
                         <div class="pillar-desc" style="margin-top: 8px;">A's model = probability distribution over outcomes. Identity = fixed point of self-modeling. τ from stability analysis. CC ↔ channel capacity.</div>
+                    </div>
+                </div>
+                
+                <h2>THE COMPLETE MAPPING</h2>
+                <div class="pillars">
+                    <div class="pillar">
+                        <span class="cyan">○ BOUNDARY ↔ C○</span>
+                        <div class="pillar-desc" style="margin-top: 8px;">Interface constraints: consent, integrity, foreseeable outcomes ⊆ model</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="magenta">Φ FIELD ↔ CΦ</span>
+                        <div class="pillar-desc" style="margin-top: 8px;">Constructor existence + evidence: working constructor, P(success) ≥ τ, repeatable</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="green">• CENTER ↔ C•</span>
+                        <div class="pillar-desc" style="margin-top: 8px;">Invariants / identity coherence: eigenvector persists, correlation ≥ τ</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="yellow">⊙ WHOLE ↔ C⊙</span>
+                        <div class="pillar-desc" style="margin-top: 8px;">Symmetric validation: both CC ≥ min, no extraction, neither → substrate</div>
                     </div>
                 </div>
                 
