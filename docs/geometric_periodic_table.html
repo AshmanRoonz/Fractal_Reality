@@ -3,167 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⊙ Geometric Harmonic Periodic Table</title>
+    <title>⊙ Musical Periodic Table v6 - Fibonacci + 7-Note Scale</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { 
-            background: #111827; 
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        .element-card {
-            transition: all 0.2s ease;
-        }
-        .element-card:hover {
-            transform: scale(1.08);
-            z-index: 10;
-        }
-        .element-card.selected {
-            transform: scale(1.12);
-            box-shadow: 0 0 0 2px white;
-            z-index: 20;
-        }
+        body { background: #0a0a0f; font-family: system-ui, -apple-system, sans-serif; }
+        .element-card { transition: all 0.2s ease; }
+        .element-card:hover { transform: scale(1.08); z-index: 10; }
+        .element-card.selected { transform: scale(1.12); box-shadow: 0 0 0 3px #f39c12; z-index: 20; }
+        .element-card.in-chord { box-shadow: 0 0 0 2px #3498db; }
+        .playing { animation: pulse 0.5s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .same-note { outline: 2px dashed rgba(255,255,255,0.3); }
     </style>
 </head>
 <body>
     <div id="root"></div>
     
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useRef } = React;
 
-        // Physical constants
-        const R_INF = 13.605693; // Rydberg constant in eV
-        const PHI = (1 + Math.sqrt(5)) / 2; // Golden ratio
-        const LAMBDA = R_INF * Math.pow(PHI, -7); // Angular penalty
+        // ═══════════════════════════════════════════════════════════════
+        // THE DUAL-LAYER MODEL
+        // ═══════════════════════════════════════════════════════════════
+        // 
+        // Frequency = Base × F(period) × NoteRatio(group)
+        //
+        // MACRO (Fibonacci): How octaves scale between periods
+        // MICRO (7-note):    How elements resolve within a period
+        //
+        // Fibonacci governs growth; the scale governs completion.
+        // ═══════════════════════════════════════════════════════════════
+
+        // Fibonacci sequence (macro scaling between periods)
+        const FIB = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34];
+        
+        // Period → Fibonacci index mapping
+        const PERIOD_TO_FIB = {
+            1: 1,  // F(1) = 1
+            2: 2,  // F(2) = 1
+            3: 3,  // F(3) = 2
+            4: 4,  // F(4) = 3
+            5: 5,  // F(5) = 5
+            6: 6,  // F(6) = 8
+            7: 7,  // F(7) = 13
+        };
+
+        // The 7 notes of the scale (micro resolution within period)
+        const NOTES = ['do', 're', 'mi', 'fa', 'so', 'la', 'ti'];
+        
+        // Just Intonation ratios - contain Fibonacci numbers (2, 3, 5)!
+        const NOTE_RATIOS = {
+            'do': 1,        // 1/1 - unison (start)
+            're': 9/8,      // 9/8 - major second
+            'mi': 5/4,      // 5/4 - major third (Fib: 5)
+            'fa': 4/3,      // 4/3 - perfect fourth
+            'so': 3/2,      // 3/2 - perfect fifth (Fib: 3, 2)
+            'la': 5/3,      // 5/3 - major sixth (Fib: 5, 3)
+            'ti': 15/8,     // 15/8 - major seventh (15 = 3×5)
+            'DO': 2,        // 2/1 - octave (completion)
+        };
+
+        // Note colors
+        const NOTE_COLORS = {
+            'do': '#e74c3c',  // red - root
+            're': '#e67e22',  // orange
+            'mi': '#f1c40f',  // yellow
+            'fa': '#2ecc71',  // green
+            'so': '#3498db',  // blue
+            'la': '#9b59b6',  // purple
+            'ti': '#e91e63',  // pink - leading tone
+            'DO': '#c0392b',  // dark red - completion
+        };
+
+        // Group → Note mapping (main group elements)
+        const GROUP_TO_NOTE = {
+            1: 'do',   // Alkali - START
+            2: 're',   // Alkaline earth
+            13: 'mi',  // Boron group
+            14: 'fa',  // Carbon group
+            15: 'so',  // Nitrogen group (pnictogens)
+            16: 'la',  // Oxygen group (chalcogens)
+            17: 'ti',  // Halogens - LEADING TONE
+            18: 'DO',  // Noble gases - COMPLETION
+        };
+
+        // Transition metals: chromatic fill between re and ti
+        // Groups 3-12 interpolate
+        const TRANSITION_NOTE_RATIOS = {
+            3:  10/9,   // between do and re
+            4:  9/8,    // re
+            5:  6/5,    // minor third
+            6:  5/4,    // mi (major third)
+            7:  4/3,    // fa
+            8:  45/32,  // tritone
+            9:  3/2,    // so
+            10: 8/5,    // minor sixth
+            11: 5/3,    // la
+            12: 16/9,   // minor seventh (approaching ti)
+        };
+
+        // Base frequency (middle C)
+        const BASE_FREQ = 256;
+
+        // ═══════════════════════════════════════════════════════════════
+        // THE FORMULA
+        // ═══════════════════════════════════════════════════════════════
+        // 
+        // Frequency = Base × F(period) × NoteRatio(group)
+        //
+        // This means:
+        // - Same group, different periods = SAME NOTE, Fibonacci-scaled
+        // - Same period, different groups = SAME SCALE, moving toward completion
+        // ═══════════════════════════════════════════════════════════════
+
+        const getFrequency = (period, group, isTransition = false, fBlockIndex = null) => {
+            const fibIndex = PERIOD_TO_FIB[period] || 1;
+            const fibMultiplier = FIB[fibIndex];
+            
+            let noteRatio;
+            
+            if (fBlockIndex !== null) {
+                // f-block: microtonal between do and re
+                noteRatio = 1 + (fBlockIndex / 14) * (9/8 - 1);
+            } else if (isTransition) {
+                noteRatio = TRANSITION_NOTE_RATIOS[group] || 1;
+            } else {
+                const note = GROUP_TO_NOTE[group];
+                noteRatio = NOTE_RATIOS[note] || 1;
+            }
+            
+            return BASE_FREQ * fibMultiplier * noteRatio;
+        };
+
+        const getNote = (group, isTransition = false) => {
+            if (isTransition) {
+                // Map transition groups to approximate notes
+                const transitionNotes = {
+                    3: 'do+', 4: 're', 5: 're+', 6: 'mi',
+                    7: 'fa', 8: 'fa+', 9: 'so', 10: 'la-',
+                    11: 'la', 12: 'ti-'
+                };
+                return transitionNotes[group] || '?';
+            }
+            return GROUP_TO_NOTE[group] || '?';
+        };
+
+        // Format frequency
+        const formatFreq = (freq) => {
+            if (freq >= 1000) return `${(freq/1000).toFixed(2)} kHz`;
+            return `${freq.toFixed(1)} Hz`;
+        };
+
+        // Get musical note name
+        const getMusicalNoteName = (freq) => {
+            const A4 = 440;
+            const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+            const semitones = 12 * Math.log2(freq / A4);
+            const noteIndex = Math.round(semitones) + 9;
+            const octave = Math.floor((noteIndex + 3) / 12) + 4;
+            const noteName = noteNames[((noteIndex % 12) + 12) % 12];
+            return `≈${noteName}${octave}`;
+        };
 
         // Element data
         const elements = [
-            { Z: 1, symbol: 'H', name: 'Hydrogen', d: 0, l: 0, n: 1, config: '1s¹', row: 1, col: 1 },
-            { Z: 2, symbol: 'He', name: 'Helium', d: 0, l: 0, n: 1, config: '1s²', row: 1, col: 18 },
-            { Z: 3, symbol: 'Li', name: 'Lithium', d: 1, l: 0, n: 2, config: '[He]2s¹', row: 2, col: 1 },
-            { Z: 4, symbol: 'Be', name: 'Beryllium', d: 1, l: 0, n: 2, config: '[He]2s²', row: 2, col: 2 },
-            { Z: 5, symbol: 'B', name: 'Boron', d: 2, l: 1, n: 2, config: '[He]2s²2p¹', row: 2, col: 13 },
-            { Z: 6, symbol: 'C', name: 'Carbon', d: 2, l: 1, n: 2, config: '[He]2s²2p²', row: 2, col: 14 },
-            { Z: 7, symbol: 'N', name: 'Nitrogen', d: 2, l: 1, n: 2, config: '[He]2s²2p³', row: 2, col: 15 },
-            { Z: 8, symbol: 'O', name: 'Oxygen', d: 2, l: 1, n: 2, config: '[He]2s²2p⁴', row: 2, col: 16 },
-            { Z: 9, symbol: 'F', name: 'Fluorine', d: 2, l: 1, n: 2, config: '[He]2s²2p⁵', row: 2, col: 17 },
-            { Z: 10, symbol: 'Ne', name: 'Neon', d: 2, l: 1, n: 2, config: '[He]2s²2p⁶', row: 2, col: 18 },
-            { Z: 11, symbol: 'Na', name: 'Sodium', d: 2, l: 0, n: 3, config: '[Ne]3s¹', row: 3, col: 1 },
-            { Z: 12, symbol: 'Mg', name: 'Magnesium', d: 2, l: 0, n: 3, config: '[Ne]3s²', row: 3, col: 2 },
-            { Z: 13, symbol: 'Al', name: 'Aluminum', d: 3, l: 1, n: 3, config: '[Ne]3s²3p¹', row: 3, col: 13 },
-            { Z: 14, symbol: 'Si', name: 'Silicon', d: 3, l: 1, n: 3, config: '[Ne]3s²3p²', row: 3, col: 14 },
-            { Z: 15, symbol: 'P', name: 'Phosphorus', d: 3, l: 1, n: 3, config: '[Ne]3s²3p³', row: 3, col: 15 },
-            { Z: 16, symbol: 'S', name: 'Sulfur', d: 3, l: 1, n: 3, config: '[Ne]3s²3p⁴', row: 3, col: 16 },
-            { Z: 17, symbol: 'Cl', name: 'Chlorine', d: 3, l: 1, n: 3, config: '[Ne]3s²3p⁵', row: 3, col: 17 },
-            { Z: 18, symbol: 'Ar', name: 'Argon', d: 3, l: 1, n: 3, config: '[Ne]3s²3p⁶', row: 3, col: 18 },
-            { Z: 19, symbol: 'K', name: 'Potassium', d: 3, l: 0, n: 4, config: '[Ar]4s¹', row: 4, col: 1 },
-            { Z: 20, symbol: 'Ca', name: 'Calcium', d: 3, l: 0, n: 4, config: '[Ar]4s²', row: 4, col: 2 },
-            { Z: 21, symbol: 'Sc', name: 'Scandium', d: 3, l: 2, n: 3, config: '[Ar]3d¹4s²', row: 4, col: 3, gated: true },
-            { Z: 22, symbol: 'Ti', name: 'Titanium', d: 3, l: 2, n: 3, config: '[Ar]3d²4s²', row: 4, col: 4, gated: true },
-            { Z: 23, symbol: 'V', name: 'Vanadium', d: 3, l: 2, n: 3, config: '[Ar]3d³4s²', row: 4, col: 5, gated: true },
-            { Z: 24, symbol: 'Cr', name: 'Chromium', d: 3, l: 2, n: 3, config: '[Ar]3d⁵4s¹', row: 4, col: 6, gated: true, promoted: true },
-            { Z: 25, symbol: 'Mn', name: 'Manganese', d: 3, l: 2, n: 3, config: '[Ar]3d⁵4s²', row: 4, col: 7, gated: true },
-            { Z: 26, symbol: 'Fe', name: 'Iron', d: 3, l: 2, n: 3, config: '[Ar]3d⁶4s²', row: 4, col: 8, gated: true },
-            { Z: 27, symbol: 'Co', name: 'Cobalt', d: 3, l: 2, n: 3, config: '[Ar]3d⁷4s²', row: 4, col: 9, gated: true },
-            { Z: 28, symbol: 'Ni', name: 'Nickel', d: 3, l: 2, n: 3, config: '[Ar]3d⁸4s²', row: 4, col: 10, gated: true },
-            { Z: 29, symbol: 'Cu', name: 'Copper', d: 3, l: 2, n: 3, config: '[Ar]3d¹⁰4s¹', row: 4, col: 11, gated: true, promoted: true },
-            { Z: 30, symbol: 'Zn', name: 'Zinc', d: 3, l: 2, n: 3, config: '[Ar]3d¹⁰4s²', row: 4, col: 12, gated: true },
-            { Z: 31, symbol: 'Ga', name: 'Gallium', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p¹', row: 4, col: 13 },
-            { Z: 32, symbol: 'Ge', name: 'Germanium', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p²', row: 4, col: 14 },
-            { Z: 33, symbol: 'As', name: 'Arsenic', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p³', row: 4, col: 15 },
-            { Z: 34, symbol: 'Se', name: 'Selenium', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p⁴', row: 4, col: 16 },
-            { Z: 35, symbol: 'Br', name: 'Bromine', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p⁵', row: 4, col: 17 },
-            { Z: 36, symbol: 'Kr', name: 'Krypton', d: 4, l: 1, n: 4, config: '[Ar]3d¹⁰4s²4p⁶', row: 4, col: 18 },
-            { Z: 37, symbol: 'Rb', name: 'Rubidium', d: 4, l: 0, n: 5, config: '[Kr]5s¹', row: 5, col: 1 },
-            { Z: 38, symbol: 'Sr', name: 'Strontium', d: 4, l: 0, n: 5, config: '[Kr]5s²', row: 5, col: 2 },
-            { Z: 39, symbol: 'Y', name: 'Yttrium', d: 4, l: 2, n: 4, config: '[Kr]4d¹5s²', row: 5, col: 3, gated: true },
-            { Z: 40, symbol: 'Zr', name: 'Zirconium', d: 4, l: 2, n: 4, config: '[Kr]4d²5s²', row: 5, col: 4, gated: true },
-            { Z: 41, symbol: 'Nb', name: 'Niobium', d: 4, l: 2, n: 4, config: '[Kr]4d⁴5s¹', row: 5, col: 5, gated: true },
-            { Z: 42, symbol: 'Mo', name: 'Molybdenum', d: 4, l: 2, n: 4, config: '[Kr]4d⁵5s¹', row: 5, col: 6, gated: true, promoted: true },
-            { Z: 43, symbol: 'Tc', name: 'Technetium', d: 4, l: 2, n: 4, config: '[Kr]4d⁵5s²', row: 5, col: 7, gated: true },
-            { Z: 44, symbol: 'Ru', name: 'Ruthenium', d: 4, l: 2, n: 4, config: '[Kr]4d⁷5s¹', row: 5, col: 8, gated: true },
-            { Z: 45, symbol: 'Rh', name: 'Rhodium', d: 4, l: 2, n: 4, config: '[Kr]4d⁸5s¹', row: 5, col: 9, gated: true },
-            { Z: 46, symbol: 'Pd', name: 'Palladium', d: 4, l: 2, n: 4, config: '[Kr]4d¹⁰', row: 5, col: 10, gated: true },
-            { Z: 47, symbol: 'Ag', name: 'Silver', d: 4, l: 2, n: 4, config: '[Kr]4d¹⁰5s¹', row: 5, col: 11, gated: true, promoted: true },
-            { Z: 48, symbol: 'Cd', name: 'Cadmium', d: 4, l: 2, n: 4, config: '[Kr]4d¹⁰5s²', row: 5, col: 12, gated: true },
-            { Z: 49, symbol: 'In', name: 'Indium', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p¹', row: 5, col: 13 },
-            { Z: 50, symbol: 'Sn', name: 'Tin', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p²', row: 5, col: 14 },
-            { Z: 51, symbol: 'Sb', name: 'Antimony', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p³', row: 5, col: 15 },
-            { Z: 52, symbol: 'Te', name: 'Tellurium', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p⁴', row: 5, col: 16 },
-            { Z: 53, symbol: 'I', name: 'Iodine', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p⁵', row: 5, col: 17 },
-            { Z: 54, symbol: 'Xe', name: 'Xenon', d: 5, l: 1, n: 5, config: '[Kr]4d¹⁰5s²5p⁶', row: 5, col: 18 },
-            { Z: 55, symbol: 'Cs', name: 'Cesium', d: 5, l: 0, n: 6, config: '[Xe]6s¹', row: 6, col: 1 },
-            { Z: 56, symbol: 'Ba', name: 'Barium', d: 5, l: 0, n: 6, config: '[Xe]6s²', row: 6, col: 2 },
-            { Z: 57, symbol: 'La', name: 'Lanthanum', d: 5, l: 3, n: 4, config: '[Xe]5d¹6s²', row: 6, col: 3, gated: true, lanthanide: true },
-            // Lanthanides in separate row
-            { Z: 58, symbol: 'Ce', name: 'Cerium', d: 5, l: 3, n: 4, config: '[Xe]4f¹5d¹6s²', row: 8, col: 4, gated: true, fBlock: true },
-            { Z: 59, symbol: 'Pr', name: 'Praseodymium', d: 5, l: 3, n: 4, config: '[Xe]4f³6s²', row: 8, col: 5, gated: true, fBlock: true },
-            { Z: 60, symbol: 'Nd', name: 'Neodymium', d: 5, l: 3, n: 4, config: '[Xe]4f⁴6s²', row: 8, col: 6, gated: true, fBlock: true },
-            { Z: 61, symbol: 'Pm', name: 'Promethium', d: 5, l: 3, n: 4, config: '[Xe]4f⁵6s²', row: 8, col: 7, gated: true, fBlock: true },
-            { Z: 62, symbol: 'Sm', name: 'Samarium', d: 5, l: 3, n: 4, config: '[Xe]4f⁶6s²', row: 8, col: 8, gated: true, fBlock: true },
-            { Z: 63, symbol: 'Eu', name: 'Europium', d: 5, l: 3, n: 4, config: '[Xe]4f⁷6s²', row: 8, col: 9, gated: true, fBlock: true },
-            { Z: 64, symbol: 'Gd', name: 'Gadolinium', d: 5, l: 3, n: 4, config: '[Xe]4f⁷5d¹6s²', row: 8, col: 10, gated: true, fBlock: true },
-            { Z: 65, symbol: 'Tb', name: 'Terbium', d: 5, l: 3, n: 4, config: '[Xe]4f⁹6s²', row: 8, col: 11, gated: true, fBlock: true },
-            { Z: 66, symbol: 'Dy', name: 'Dysprosium', d: 5, l: 3, n: 4, config: '[Xe]4f¹⁰6s²', row: 8, col: 12, gated: true, fBlock: true },
-            { Z: 67, symbol: 'Ho', name: 'Holmium', d: 5, l: 3, n: 4, config: '[Xe]4f¹¹6s²', row: 8, col: 13, gated: true, fBlock: true },
-            { Z: 68, symbol: 'Er', name: 'Erbium', d: 5, l: 3, n: 4, config: '[Xe]4f¹²6s²', row: 8, col: 14, gated: true, fBlock: true },
-            { Z: 69, symbol: 'Tm', name: 'Thulium', d: 5, l: 3, n: 4, config: '[Xe]4f¹³6s²', row: 8, col: 15, gated: true, fBlock: true },
-            { Z: 70, symbol: 'Yb', name: 'Ytterbium', d: 5, l: 3, n: 4, config: '[Xe]4f¹⁴6s²', row: 8, col: 16, gated: true, fBlock: true },
-            { Z: 71, symbol: 'Lu', name: 'Lutetium', d: 5, l: 3, n: 4, config: '[Xe]4f¹⁴5d¹6s²', row: 8, col: 17, gated: true, fBlock: true },
-            // Continue period 6
-            { Z: 72, symbol: 'Hf', name: 'Hafnium', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d²6s²', row: 6, col: 4, gated: true },
-            { Z: 73, symbol: 'Ta', name: 'Tantalum', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d³6s²', row: 6, col: 5, gated: true },
-            { Z: 74, symbol: 'W', name: 'Tungsten', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d⁴6s²', row: 6, col: 6, gated: true },
-            { Z: 75, symbol: 'Re', name: 'Rhenium', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d⁵6s²', row: 6, col: 7, gated: true },
-            { Z: 76, symbol: 'Os', name: 'Osmium', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d⁶6s²', row: 6, col: 8, gated: true },
-            { Z: 77, symbol: 'Ir', name: 'Iridium', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d⁷6s²', row: 6, col: 9, gated: true },
-            { Z: 78, symbol: 'Pt', name: 'Platinum', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d⁹6s¹', row: 6, col: 10, gated: true },
-            { Z: 79, symbol: 'Au', name: 'Gold', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d¹⁰6s¹', row: 6, col: 11, gated: true, promoted: true },
-            { Z: 80, symbol: 'Hg', name: 'Mercury', d: 5, l: 2, n: 5, config: '[Xe]4f¹⁴5d¹⁰6s²', row: 6, col: 12, gated: true },
-            { Z: 81, symbol: 'Tl', name: 'Thallium', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p¹', row: 6, col: 13 },
-            { Z: 82, symbol: 'Pb', name: 'Lead', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p²', row: 6, col: 14 },
-            { Z: 83, symbol: 'Bi', name: 'Bismuth', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p³', row: 6, col: 15 },
-            { Z: 84, symbol: 'Po', name: 'Polonium', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p⁴', row: 6, col: 16 },
-            { Z: 85, symbol: 'At', name: 'Astatine', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p⁵', row: 6, col: 17 },
-            { Z: 86, symbol: 'Rn', name: 'Radon', d: 6, l: 1, n: 6, config: '[Xe]4f¹⁴5d¹⁰6s²6p⁶', row: 6, col: 18 },
+            // Period 1
+            { Z: 1, symbol: 'H', name: 'Hydrogen', row: 1, col: 1, group: 1, period: 1 },
+            { Z: 2, symbol: 'He', name: 'Helium', row: 1, col: 18, group: 18, period: 1 },
+            // Period 2
+            { Z: 3, symbol: 'Li', name: 'Lithium', row: 2, col: 1, group: 1, period: 2 },
+            { Z: 4, symbol: 'Be', name: 'Beryllium', row: 2, col: 2, group: 2, period: 2 },
+            { Z: 5, symbol: 'B', name: 'Boron', row: 2, col: 13, group: 13, period: 2 },
+            { Z: 6, symbol: 'C', name: 'Carbon', row: 2, col: 14, group: 14, period: 2 },
+            { Z: 7, symbol: 'N', name: 'Nitrogen', row: 2, col: 15, group: 15, period: 2 },
+            { Z: 8, symbol: 'O', name: 'Oxygen', row: 2, col: 16, group: 16, period: 2 },
+            { Z: 9, symbol: 'F', name: 'Fluorine', row: 2, col: 17, group: 17, period: 2 },
+            { Z: 10, symbol: 'Ne', name: 'Neon', row: 2, col: 18, group: 18, period: 2 },
+            // Period 3
+            { Z: 11, symbol: 'Na', name: 'Sodium', row: 3, col: 1, group: 1, period: 3 },
+            { Z: 12, symbol: 'Mg', name: 'Magnesium', row: 3, col: 2, group: 2, period: 3 },
+            { Z: 13, symbol: 'Al', name: 'Aluminum', row: 3, col: 13, group: 13, period: 3 },
+            { Z: 14, symbol: 'Si', name: 'Silicon', row: 3, col: 14, group: 14, period: 3 },
+            { Z: 15, symbol: 'P', name: 'Phosphorus', row: 3, col: 15, group: 15, period: 3 },
+            { Z: 16, symbol: 'S', name: 'Sulfur', row: 3, col: 16, group: 16, period: 3 },
+            { Z: 17, symbol: 'Cl', name: 'Chlorine', row: 3, col: 17, group: 17, period: 3 },
+            { Z: 18, symbol: 'Ar', name: 'Argon', row: 3, col: 18, group: 18, period: 3 },
+            // Period 4
+            { Z: 19, symbol: 'K', name: 'Potassium', row: 4, col: 1, group: 1, period: 4 },
+            { Z: 20, symbol: 'Ca', name: 'Calcium', row: 4, col: 2, group: 2, period: 4 },
+            { Z: 21, symbol: 'Sc', name: 'Scandium', row: 4, col: 3, group: 3, period: 4, transition: true },
+            { Z: 22, symbol: 'Ti', name: 'Titanium', row: 4, col: 4, group: 4, period: 4, transition: true },
+            { Z: 23, symbol: 'V', name: 'Vanadium', row: 4, col: 5, group: 5, period: 4, transition: true },
+            { Z: 24, symbol: 'Cr', name: 'Chromium', row: 4, col: 6, group: 6, period: 4, transition: true },
+            { Z: 25, symbol: 'Mn', name: 'Manganese', row: 4, col: 7, group: 7, period: 4, transition: true },
+            { Z: 26, symbol: 'Fe', name: 'Iron', row: 4, col: 8, group: 8, period: 4, transition: true },
+            { Z: 27, symbol: 'Co', name: 'Cobalt', row: 4, col: 9, group: 9, period: 4, transition: true },
+            { Z: 28, symbol: 'Ni', name: 'Nickel', row: 4, col: 10, group: 10, period: 4, transition: true },
+            { Z: 29, symbol: 'Cu', name: 'Copper', row: 4, col: 11, group: 11, period: 4, transition: true },
+            { Z: 30, symbol: 'Zn', name: 'Zinc', row: 4, col: 12, group: 12, period: 4, transition: true },
+            { Z: 31, symbol: 'Ga', name: 'Gallium', row: 4, col: 13, group: 13, period: 4 },
+            { Z: 32, symbol: 'Ge', name: 'Germanium', row: 4, col: 14, group: 14, period: 4 },
+            { Z: 33, symbol: 'As', name: 'Arsenic', row: 4, col: 15, group: 15, period: 4 },
+            { Z: 34, symbol: 'Se', name: 'Selenium', row: 4, col: 16, group: 16, period: 4 },
+            { Z: 35, symbol: 'Br', name: 'Bromine', row: 4, col: 17, group: 17, period: 4 },
+            { Z: 36, symbol: 'Kr', name: 'Krypton', row: 4, col: 18, group: 18, period: 4 },
+            // Period 5
+            { Z: 37, symbol: 'Rb', name: 'Rubidium', row: 5, col: 1, group: 1, period: 5 },
+            { Z: 38, symbol: 'Sr', name: 'Strontium', row: 5, col: 2, group: 2, period: 5 },
+            { Z: 39, symbol: 'Y', name: 'Yttrium', row: 5, col: 3, group: 3, period: 5, transition: true },
+            { Z: 40, symbol: 'Zr', name: 'Zirconium', row: 5, col: 4, group: 4, period: 5, transition: true },
+            { Z: 41, symbol: 'Nb', name: 'Niobium', row: 5, col: 5, group: 5, period: 5, transition: true },
+            { Z: 42, symbol: 'Mo', name: 'Molybdenum', row: 5, col: 6, group: 6, period: 5, transition: true },
+            { Z: 43, symbol: 'Tc', name: 'Technetium', row: 5, col: 7, group: 7, period: 5, transition: true },
+            { Z: 44, symbol: 'Ru', name: 'Ruthenium', row: 5, col: 8, group: 8, period: 5, transition: true },
+            { Z: 45, symbol: 'Rh', name: 'Rhodium', row: 5, col: 9, group: 9, period: 5, transition: true },
+            { Z: 46, symbol: 'Pd', name: 'Palladium', row: 5, col: 10, group: 10, period: 5, transition: true },
+            { Z: 47, symbol: 'Ag', name: 'Silver', row: 5, col: 11, group: 11, period: 5, transition: true },
+            { Z: 48, symbol: 'Cd', name: 'Cadmium', row: 5, col: 12, group: 12, period: 5, transition: true },
+            { Z: 49, symbol: 'In', name: 'Indium', row: 5, col: 13, group: 13, period: 5 },
+            { Z: 50, symbol: 'Sn', name: 'Tin', row: 5, col: 14, group: 14, period: 5 },
+            { Z: 51, symbol: 'Sb', name: 'Antimony', row: 5, col: 15, group: 15, period: 5 },
+            { Z: 52, symbol: 'Te', name: 'Tellurium', row: 5, col: 16, group: 16, period: 5 },
+            { Z: 53, symbol: 'I', name: 'Iodine', row: 5, col: 17, group: 17, period: 5 },
+            { Z: 54, symbol: 'Xe', name: 'Xenon', row: 5, col: 18, group: 18, period: 5 },
+            // Period 6
+            { Z: 55, symbol: 'Cs', name: 'Cesium', row: 6, col: 1, group: 1, period: 6 },
+            { Z: 56, symbol: 'Ba', name: 'Barium', row: 6, col: 2, group: 2, period: 6 },
+            { Z: 57, symbol: 'La', name: 'Lanthanum', row: 6, col: 3, group: 3, period: 6, transition: true },
+            // Lanthanides (f-block)
+            { Z: 58, symbol: 'Ce', name: 'Cerium', row: 8, col: 4, period: 6, fBlock: true, fIndex: 1 },
+            { Z: 59, symbol: 'Pr', name: 'Praseodymium', row: 8, col: 5, period: 6, fBlock: true, fIndex: 2 },
+            { Z: 60, symbol: 'Nd', name: 'Neodymium', row: 8, col: 6, period: 6, fBlock: true, fIndex: 3 },
+            { Z: 61, symbol: 'Pm', name: 'Promethium', row: 8, col: 7, period: 6, fBlock: true, fIndex: 4 },
+            { Z: 62, symbol: 'Sm', name: 'Samarium', row: 8, col: 8, period: 6, fBlock: true, fIndex: 5 },
+            { Z: 63, symbol: 'Eu', name: 'Europium', row: 8, col: 9, period: 6, fBlock: true, fIndex: 6 },
+            { Z: 64, symbol: 'Gd', name: 'Gadolinium', row: 8, col: 10, period: 6, fBlock: true, fIndex: 7 },
+            { Z: 65, symbol: 'Tb', name: 'Terbium', row: 8, col: 11, period: 6, fBlock: true, fIndex: 8 },
+            { Z: 66, symbol: 'Dy', name: 'Dysprosium', row: 8, col: 12, period: 6, fBlock: true, fIndex: 9 },
+            { Z: 67, symbol: 'Ho', name: 'Holmium', row: 8, col: 13, period: 6, fBlock: true, fIndex: 10 },
+            { Z: 68, symbol: 'Er', name: 'Erbium', row: 8, col: 14, period: 6, fBlock: true, fIndex: 11 },
+            { Z: 69, symbol: 'Tm', name: 'Thulium', row: 8, col: 15, period: 6, fBlock: true, fIndex: 12 },
+            { Z: 70, symbol: 'Yb', name: 'Ytterbium', row: 8, col: 16, period: 6, fBlock: true, fIndex: 13 },
+            { Z: 71, symbol: 'Lu', name: 'Lutetium', row: 8, col: 17, period: 6, fBlock: true, fIndex: 14 },
+            // Period 6 continued
+            { Z: 72, symbol: 'Hf', name: 'Hafnium', row: 6, col: 4, group: 4, period: 6, transition: true },
+            { Z: 73, symbol: 'Ta', name: 'Tantalum', row: 6, col: 5, group: 5, period: 6, transition: true },
+            { Z: 74, symbol: 'W', name: 'Tungsten', row: 6, col: 6, group: 6, period: 6, transition: true },
+            { Z: 75, symbol: 'Re', name: 'Rhenium', row: 6, col: 7, group: 7, period: 6, transition: true },
+            { Z: 76, symbol: 'Os', name: 'Osmium', row: 6, col: 8, group: 8, period: 6, transition: true },
+            { Z: 77, symbol: 'Ir', name: 'Iridium', row: 6, col: 9, group: 9, period: 6, transition: true },
+            { Z: 78, symbol: 'Pt', name: 'Platinum', row: 6, col: 10, group: 10, period: 6, transition: true },
+            { Z: 79, symbol: 'Au', name: 'Gold', row: 6, col: 11, group: 11, period: 6, transition: true },
+            { Z: 80, symbol: 'Hg', name: 'Mercury', row: 6, col: 12, group: 12, period: 6, transition: true },
+            { Z: 81, symbol: 'Tl', name: 'Thallium', row: 6, col: 13, group: 13, period: 6 },
+            { Z: 82, symbol: 'Pb', name: 'Lead', row: 6, col: 14, group: 14, period: 6 },
+            { Z: 83, symbol: 'Bi', name: 'Bismuth', row: 6, col: 15, group: 15, period: 6 },
+            { Z: 84, symbol: 'Po', name: 'Polonium', row: 6, col: 16, group: 16, period: 6 },
+            { Z: 85, symbol: 'At', name: 'Astatine', row: 6, col: 17, group: 17, period: 6 },
+            { Z: 86, symbol: 'Rn', name: 'Radon', row: 6, col: 18, group: 18, period: 6 },
         ];
 
-        const orbitalTypes = {
-            0: { name: 's', color: '#e74c3c', degeneracy: 2 },
-            1: { name: 'p', color: '#3498db', degeneracy: 6 },
-            2: { name: 'd', color: '#2ecc71', degeneracy: 10 },
-            3: { name: 'f', color: '#9b59b6', degeneracy: 14 }
+        // Audio synth
+        const useAudioSynth = () => {
+            const audioCtxRef = useRef(null);
+            const oscillatorsRef = useRef({});
+            const gainNodesRef = useRef({});
+
+            const initAudio = () => {
+                if (!audioCtxRef.current) {
+                    audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                return audioCtxRef.current;
+            };
+
+            const playTone = (id, frequency) => {
+                const ctx = initAudio();
+                stopTone(id);
+
+                const oscillator = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
+                
+                gainNode.gain.setValueAtTime(0, ctx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 0.05);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                oscillator.start();
+                
+                oscillatorsRef.current[id] = oscillator;
+                gainNodesRef.current[id] = gainNode;
+            };
+
+            const stopTone = (id) => {
+                if (oscillatorsRef.current[id]) {
+                    const ctx = audioCtxRef.current;
+                    const gainNode = gainNodesRef.current[id];
+                    if (gainNode && ctx) {
+                        gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.1);
+                    }
+                    setTimeout(() => {
+                        if (oscillatorsRef.current[id]) {
+                            try { oscillatorsRef.current[id].stop(); } catch(e) {}
+                            delete oscillatorsRef.current[id];
+                            delete gainNodesRef.current[id];
+                        }
+                    }, 150);
+                }
+            };
+
+            const playChord = (frequencies, duration = 2000) => {
+                frequencies.forEach((freq, i) => playTone(`chord-${i}`, freq));
+                setTimeout(() => {
+                    frequencies.forEach((_, i) => stopTone(`chord-${i}`));
+                }, duration);
+            };
+
+            const playColumn = (group, elements) => {
+                // Play same note across all periods (Fibonacci scaling)
+                const columnElements = elements.filter(e => e.group === group && !e.fBlock && !e.transition);
+                columnElements.forEach((el, i) => {
+                    setTimeout(() => {
+                        const freq = getFrequency(el.period, el.group);
+                        playTone(`col-${i}`, freq);
+                        setTimeout(() => stopTone(`col-${i}`), 400);
+                    }, i * 300);
+                });
+            };
+
+            const playRow = (period, elements) => {
+                // Play scale across one period
+                const rowElements = elements
+                    .filter(e => e.period === period && !e.fBlock)
+                    .sort((a, b) => a.col - b.col);
+                rowElements.forEach((el, i) => {
+                    setTimeout(() => {
+                        const freq = getFrequency(el.period, el.group, el.transition);
+                        playTone(`row-${i}`, freq);
+                        setTimeout(() => stopTone(`row-${i}`), 250);
+                    }, i * 200);
+                });
+            };
+
+            return { playTone, stopTone, playChord, playColumn, playRow, initAudio };
         };
 
-        const calculateFrequency = (Z, n, l) => {
-            const Z_eff = Math.max(1, Z - 2 * (n - 1));
-            const E_n = R_INF * Math.pow(Z_eff, 2) / Math.pow(n, 2);
-            const HBAR = 6.582119569e-16;
-            return (E_n / HBAR) / (2 * Math.PI);
-        };
-
-        const formatFrequency = (freq) => {
-            if (freq > 1e18) return `${(freq / 1e18).toFixed(1)} EHz`;
-            if (freq > 1e15) return `${(freq / 1e15).toFixed(1)} PHz`;
-            if (freq > 1e12) return `${(freq / 1e12).toFixed(1)} THz`;
-            return `${(freq / 1e9).toFixed(1)} GHz`;
-        };
-
-        const ElementCard = ({ element, isSelected, onClick, viewMode }) => {
-            const orbital = orbitalTypes[element.l];
-            const freq = calculateFrequency(element.Z, element.n, element.l);
-            const harmonicLevel = Math.round(Math.log(freq) / Math.log(PHI));
+        // Element Card
+        const ElementCard = ({ element, isSelected, isInChord, onClick, onRightClick, viewMode, highlightGroup }) => {
+            const freq = getFrequency(
+                element.period, 
+                element.group, 
+                element.transition,
+                element.fBlock ? element.fIndex : null
+            );
             
-            const bgColor = viewMode === 'orbital' ? orbital.color :
-                           viewMode === 'harmonic' ? `hsl(${(harmonicLevel * 12) % 360}, 70%, 45%)` :
-                           viewMode === 'gating' ? (element.gated ? '#f39c12' : '#6b7280') :
-                           orbital.color;
+            const note = element.fBlock ? 'do→re' : getNote(element.group, element.transition);
+            const baseNote = GROUP_TO_NOTE[element.group] || (element.transition ? 'chromatic' : '?');
+            
+            let bgColor;
+            if (viewMode === 'note') {
+                bgColor = NOTE_COLORS[baseNote] || '#4a5568';
+                if (element.transition) bgColor = NOTE_COLORS[baseNote] ? NOTE_COLORS[baseNote] + 'bb' : '#4a5568';
+                if (element.fBlock) bgColor = '#2d3748';
+            } else if (viewMode === 'period') {
+                const hue = (element.period * 45) % 360;
+                bgColor = `hsl(${hue}, 60%, 40%)`;
+            } else if (viewMode === 'fibonacci') {
+                const fibVal = FIB[PERIOD_TO_FIB[element.period]] || 1;
+                const hue = (Math.log2(fibVal) * 60) % 360;
+                bgColor = `hsl(${hue}, 70%, 45%)`;
+            }
+
+            const isSameGroup = highlightGroup && element.group === highlightGroup && !element.fBlock && !element.transition;
 
             return (
                 <div 
-                    className={`element-card cursor-pointer rounded-lg p-1 text-center ${isSelected ? 'selected' : ''}`}
+                    className={`element-card cursor-pointer rounded-lg p-1 text-center relative 
+                        ${isSelected ? 'selected' : ''} 
+                        ${isInChord ? 'in-chord' : ''}
+                        ${isSameGroup ? 'same-note' : ''}`}
                     style={{ 
                         backgroundColor: bgColor,
                         gridColumn: element.col,
@@ -171,105 +394,300 @@
                         minWidth: '48px'
                     }}
                     onClick={() => onClick(element)}
+                    onContextMenu={(e) => { e.preventDefault(); onRightClick(element); }}
+                    title={`${element.name}\n${note} · Period ${element.period}\nF(${PERIOD_TO_FIB[element.period]})=${FIB[PERIOD_TO_FIB[element.period]]}\n${formatFreq(freq)}`}
                 >
                     <div className="text-white">
                         <div className="text-xs opacity-70">{element.Z}</div>
                         <div className="text-base font-bold">{element.symbol}</div>
-                        <div className="text-xs opacity-70">{element.n}{orbital.name}</div>
+                        <div className="text-xs opacity-80">{note}</div>
                     </div>
-                    {element.promoted && <div className="absolute bottom-0 right-1 text-xs">★</div>}
-                </div>
-            );
-        };
-
-        const InfoPanel = ({ element }) => {
-            if (!element) return (
-                <div className="bg-gray-800 rounded-xl p-4 text-gray-400 text-center h-full flex flex-col items-center justify-center">
-                    <div className="text-5xl mb-3">⊙</div>
-                    <p>Select an element</p>
-                </div>
-            );
-
-            const orbital = orbitalTypes[element.l];
-            const freq = calculateFrequency(element.Z, element.n, element.l);
-            const harmonicLevel = Math.round(Math.log(freq) / Math.log(PHI));
-            const energy = -R_INF * Math.pow(element.Z - 2*(element.n-1), 2) / Math.pow(element.n, 2) 
-                          + LAMBDA * element.l * (element.l + 1) / Math.pow(element.n, 2);
-
-            return (
-                <div className="bg-gray-800 rounded-xl p-4 text-white h-full overflow-y-auto">
-                    <div className="flex items-center gap-3 mb-3">
-                        <div className="w-14 h-14 rounded-lg flex items-center justify-center text-2xl font-bold"
-                             style={{ backgroundColor: orbital.color }}>
-                            {element.symbol}
-                        </div>
-                        <div>
-                            <div className="text-lg font-bold">{element.name}</div>
-                            <div className="text-sm text-gray-400">Z = {element.Z} · {element.config}</div>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 mb-3 text-sm">
-                        <div className="bg-gray-700 rounded p-2">
-                            <div className="text-gray-400 text-xs">Geometric (d, ℓ)</div>
-                            <div className="font-mono">({element.d}, {element.l})</div>
-                        </div>
-                        <div className="bg-gray-700 rounded p-2">
-                            <div className="text-gray-400 text-xs">Principal n</div>
-                            <div className="font-mono">{element.n}</div>
-                        </div>
-                        <div className="bg-gray-700 rounded p-2">
-                            <div className="text-gray-400 text-xs">Orbital</div>
-                            <div style={{ color: orbital.color }}>{orbital.name} ({orbital.degeneracy} states)</div>
-                        </div>
-                        <div className="bg-gray-700 rounded p-2">
-                            <div className="text-gray-400 text-xs">φ-Harmonic</div>
-                            <div className="font-mono">φ^{harmonicLevel}</div>
-                        </div>
-                    </div>
-
-                    <div className="bg-gray-700 rounded p-2 mb-3">
-                        <div className="text-gray-400 text-xs">Standing Wave Frequency</div>
-                        <div className="text-yellow-400 font-mono">{formatFrequency(freq)}</div>
-                        <div className="text-xs text-gray-500">mc² = ℏω</div>
-                    </div>
-
-                    <div className="bg-gray-700 rounded p-2 mb-3">
-                        <div className="text-gray-400 text-xs">Energy (geometric)</div>
-                        <div className="font-mono text-sm">{energy.toFixed(3)} eV</div>
-                        <div className="text-xs text-gray-500">E = -R∞Z²/n² + λℓ(ℓ+1)/n²</div>
-                    </div>
-
-                    {element.gated && (
-                        <div className="bg-yellow-900 border border-yellow-600 rounded p-2">
-                            <div className="text-yellow-400 text-sm font-bold">⚡ Gated</div>
-                            <div className="text-xs text-yellow-200">
-                                {element.l === 2 ? '(n+1)s before nd' : '(n+2)s before nf'}
-                            </div>
-                        </div>
+                    {element.group === 18 && !element.fBlock && (
+                        <div className="absolute top-0 right-0 text-xs">✓</div>
+                    )}
+                    {isInChord && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full text-xs flex items-center justify-center">♪</div>
                     )}
                 </div>
             );
         };
 
+        // Info Panel
+        const InfoPanel = ({ element, onPlayTone, onPlayColumn, onPlayRow, elements }) => {
+            if (!element) return (
+                <div className="bg-gray-800 rounded-xl p-4 text-gray-400 text-center">
+                    <div className="text-4xl mb-2">⊙</div>
+                    <p className="font-bold">Dual-Layer Model</p>
+                    <p className="text-xs mt-2">Fibonacci × 7-Note Scale</p>
+                    <p className="text-xs mt-1">f = Base × F(period) × Note(group)</p>
+                </div>
+            );
+
+            const freq = getFrequency(
+                element.period, 
+                element.group, 
+                element.transition,
+                element.fBlock ? element.fIndex : null
+            );
+            const note = element.fBlock ? 'do→re' : getNote(element.group, element.transition);
+            const fibIndex = PERIOD_TO_FIB[element.period];
+            const fibValue = FIB[fibIndex];
+            const noteRatio = element.fBlock 
+                ? (1 + (element.fIndex / 14) * (9/8 - 1)).toFixed(4)
+                : (element.transition 
+                    ? TRANSITION_NOTE_RATIOS[element.group]?.toFixed(4) 
+                    : NOTE_RATIOS[GROUP_TO_NOTE[element.group]]?.toFixed(4)) || '?';
+
+            return (
+                <div className="bg-gray-800 rounded-xl p-4 text-white">
+                    <div className="flex items-center gap-3 mb-3">
+                        <div className="w-14 h-14 rounded-lg flex items-center justify-center text-2xl font-bold"
+                             style={{ backgroundColor: NOTE_COLORS[GROUP_TO_NOTE[element.group]] || '#4a5568' }}>
+                            {element.symbol}
+                        </div>
+                        <div>
+                            <div className="text-lg font-bold">{element.name}</div>
+                            <div className="text-sm text-gray-400">Z = {element.Z}</div>
+                        </div>
+                    </div>
+
+                    {/* The Formula */}
+                    <div className="bg-gray-900 rounded p-3 mb-3 font-mono text-sm">
+                        <div className="text-gray-400 text-xs mb-1">THE FORMULA</div>
+                        <div className="text-yellow-400">
+                            {BASE_FREQ} × <span className="text-green-400">{fibValue}</span> × <span className="text-blue-400">{noteRatio}</span> = <span className="text-white">{freq.toFixed(1)}</span>
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">
+                            Base × F({fibIndex}) × {note}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 mb-3">
+                        <div className="bg-gray-700 rounded p-2">
+                            <div className="text-gray-400 text-xs">Period (Fibonacci)</div>
+                            <div className="text-green-400 font-mono">
+                                P{element.period} → F({fibIndex}) = {fibValue}
+                            </div>
+                        </div>
+                        <div className="bg-gray-700 rounded p-2">
+                            <div className="text-gray-400 text-xs">Group (Note)</div>
+                            <div className="font-bold" style={{ color: NOTE_COLORS[GROUP_TO_NOTE[element.group]] || '#fff' }}>
+                                {note.toUpperCase()} ({noteRatio})
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-gray-700 rounded p-2 mb-3">
+                        <div className="text-gray-400 text-xs">Frequency</div>
+                        <div className="text-xl font-mono text-white">{formatFreq(freq)}</div>
+                        <div className="text-xs text-gray-400">{getMusicalNoteName(freq)}</div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                        <button 
+                            onClick={() => onPlayTone(element)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm"
+                        >
+                            🔊 Play
+                        </button>
+                        <button 
+                            onClick={() => onPlayColumn(element.group, elements)}
+                            className="bg-green-600 hover:bg-green-700 text-white py-2 rounded text-sm"
+                            title="Same note across periods (Fibonacci scaling)"
+                        >
+                            ↕ Column
+                        </button>
+                        <button 
+                            onClick={() => onPlayRow(element.period, elements)}
+                            className="bg-purple-600 hover:bg-purple-700 text-white py-2 rounded text-sm"
+                            title="Scale across period (7-note resolution)"
+                        >
+                            ↔ Period
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        // Chord Builder
+        const ChordBuilder = ({ chordElements, onRemove, onClear, onPlayChord }) => {
+            const frequencies = chordElements.map(el => 
+                getFrequency(el.period, el.group, el.transition, el.fBlock ? el.fIndex : null)
+            );
+
+            const getMoleculeFormula = () => {
+                const counts = {};
+                chordElements.forEach(el => {
+                    counts[el.symbol] = (counts[el.symbol] || 0) + 1;
+                });
+                return Object.entries(counts)
+                    .map(([sym, count]) => count > 1 ? `${sym}${count}` : sym)
+                    .join('');
+            };
+
+            return (
+                <div className="bg-gray-800 rounded-xl p-4 text-white">
+                    <div className="flex justify-between items-center mb-3">
+                        <div className="font-bold text-yellow-400">🎵 Molecular Chord</div>
+                        {chordElements.length > 0 && (
+                            <button onClick={onClear} className="text-xs text-red-400 hover:text-red-300">Clear</button>
+                        )}
+                    </div>
+
+                    {chordElements.length === 0 ? (
+                        <div className="text-gray-400 text-sm text-center py-4">
+                            Right-click to add elements
+                        </div>
+                    ) : (
+                        <>
+                            <div className="text-2xl font-mono text-center mb-3 text-green-400">
+                                {getMoleculeFormula()}
+                            </div>
+                            
+                            <div className="space-y-1 mb-3 max-h-28 overflow-y-auto text-sm">
+                                {chordElements.map((el, i) => {
+                                    const note = getNote(el.group, el.transition);
+                                    return (
+                                        <div key={`${el.Z}-${i}`} className="flex justify-between items-center bg-gray-700 rounded px-2 py-1">
+                                            <span className="font-bold">{el.symbol}</span>
+                                            <span className="text-xs">{note} · P{el.period}</span>
+                                            <span className="text-xs font-mono">{formatFreq(frequencies[i])}</span>
+                                            <button onClick={() => onRemove(i)} className="text-red-400 text-xs">✕</button>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <button 
+                                onClick={() => onPlayChord(frequencies)}
+                                className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded"
+                            >
+                                🎶 Play Chord
+                            </button>
+                        </>
+                    )}
+                </div>
+            );
+        };
+
+        // Dual Layer Explanation
+        const DualLayerPanel = () => (
+            <div className="bg-gray-800 rounded-xl p-4 text-white text-xs">
+                <div className="font-bold text-yellow-400 mb-2">The Dual-Layer Model</div>
+                
+                <div className="mb-3">
+                    <div className="text-green-400 font-bold">FIBONACCI (Macro)</div>
+                    <div className="text-gray-400">Period-to-period scaling</div>
+                    <div className="font-mono">P1→P2→P3→P4→P5→P6</div>
+                    <div className="font-mono text-green-400">F: 1→1→2→3→5→8</div>
+                </div>
+                
+                <div className="mb-3">
+                    <div className="text-blue-400 font-bold">7-NOTE (Micro)</div>
+                    <div className="text-gray-400">Element-to-element resolution</div>
+                    <div className="font-mono">do→re→mi→fa→so→la→ti→DO</div>
+                    <div className="text-gray-400">Noble gas = completion</div>
+                </div>
+
+                <div className="border-t border-gray-700 pt-2">
+                    <div className="text-gray-400">Same group = same note, Fibonacci-scaled</div>
+                    <div className="text-gray-400">C, Si, Ge, Sn, Pb all = <span className="text-green-400">fa</span></div>
+                </div>
+            </div>
+        );
+
+        // Harmonic Equivalence Display
+        const HarmonicEquivalence = ({ elements, selected }) => {
+            if (!selected || selected.fBlock || selected.transition) return null;
+            
+            const sameGroup = elements.filter(e => 
+                e.group === selected.group && !e.fBlock && !e.transition
+            );
+            
+            return (
+                <div className="bg-gray-800 rounded-xl p-4 text-white text-xs">
+                    <div className="font-bold text-yellow-400 mb-2">Harmonic Equivalents (same note)</div>
+                    <div className="space-y-1">
+                        {sameGroup.map(el => {
+                            const freq = getFrequency(el.period, el.group);
+                            const fibVal = FIB[PERIOD_TO_FIB[el.period]];
+                            return (
+                                <div key={el.Z} className={`flex justify-between ${el.Z === selected.Z ? 'text-yellow-400' : ''}`}>
+                                    <span className="font-bold">{el.symbol}</span>
+                                    <span>P{el.period} (×{fibVal})</span>
+                                    <span className="font-mono">{formatFreq(freq)}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        // Main App
         const App = () => {
             const [selected, setSelected] = useState(null);
-            const [viewMode, setViewMode] = useState('orbital');
+            const [viewMode, setViewMode] = useState('note');
+            const [chordElements, setChordElements] = useState([]);
+            const [isPlaying, setIsPlaying] = useState(false);
+            
+            const { playTone, stopTone, playChord, playColumn, playRow, initAudio } = useAudioSynth();
+
+            const handlePlayTone = (element) => {
+                initAudio();
+                const freq = getFrequency(
+                    element.period, 
+                    element.group, 
+                    element.transition,
+                    element.fBlock ? element.fIndex : null
+                );
+                setIsPlaying(true);
+                playTone('single', freq);
+                setTimeout(() => {
+                    stopTone('single');
+                    setIsPlaying(false);
+                }, 1500);
+            };
+
+            const handlePlayChord = (frequencies) => {
+                initAudio();
+                setIsPlaying(true);
+                playChord(frequencies, 2500);
+                setTimeout(() => setIsPlaying(false), 2500);
+            };
+
+            const handlePlayColumn = (group) => {
+                initAudio();
+                setIsPlaying(true);
+                playColumn(group, elements);
+                setTimeout(() => setIsPlaying(false), 2500);
+            };
+
+            const handlePlayRow = (period) => {
+                initAudio();
+                setIsPlaying(true);
+                playRow(period, elements);
+                setTimeout(() => setIsPlaying(false), 4000);
+            };
 
             return (
                 <div className="min-h-screen p-4">
                     <div className="max-w-7xl mx-auto">
                         <div className="text-center mb-4">
-                            <h1 className="text-2xl font-bold text-white mb-1">
-                                ⊙ Geometric Harmonic Periodic Table
+                            <h1 className={`text-2xl font-bold text-white mb-1 ${isPlaying ? 'playing' : ''}`}>
+                                ⊙ Musical Periodic Table v6
                             </h1>
                             <p className="text-gray-400 text-sm">
-                                Elements as standing waves · λ = R∞·φ⁻⁷ · mc² = ℏω
+                                <span className="text-green-400">Fibonacci</span> governs octave scaling · 
+                                <span className="text-blue-400"> 7-note scale</span> governs resolution
+                            </p>
+                            <p className="text-gray-500 text-xs font-mono">
+                                f = {BASE_FREQ} × F(period) × NoteRatio(group)
                             </p>
                         </div>
 
                         <div className="flex justify-center gap-2 mb-3">
-                            {['orbital', 'harmonic', 'gating'].map(mode => (
+                            {['note', 'period', 'fibonacci'].map(mode => (
                                 <button key={mode}
                                     onClick={() => setViewMode(mode)}
                                     className={`px-3 py-1 rounded text-sm capitalize ${
@@ -277,15 +695,6 @@
                                     }`}>
                                     {mode}
                                 </button>
-                            ))}
-                        </div>
-
-                        <div className="flex gap-3 mb-3 justify-center flex-wrap">
-                            {Object.entries(orbitalTypes).map(([l, info]) => (
-                                <div key={l} className="flex items-center gap-1">
-                                    <div className="w-3 h-3 rounded" style={{ backgroundColor: info.color }} />
-                                    <span className="text-white text-xs">{info.name} (ℓ={l})</span>
-                                </div>
                             ))}
                         </div>
 
@@ -300,62 +709,55 @@
                                             key={el.Z} 
                                             element={el} 
                                             isSelected={selected?.Z === el.Z}
+                                            isInChord={chordElements.some(ce => ce.Z === el.Z)}
                                             onClick={setSelected}
+                                            onRightClick={(el) => chordElements.length < 8 && setChordElements([...chordElements, el])}
                                             viewMode={viewMode}
+                                            highlightGroup={selected?.group}
                                         />
                                     ))}
                                 </div>
                                 
                                 <div className="mt-3 pt-3 border-t border-gray-700">
-                                    <div className="text-gray-400 text-xs mb-2">Lanthanides (4f gated)</div>
+                                    <div className="text-gray-400 text-xs mb-2">Lanthanides (microtonal: do→re)</div>
                                     <div className="flex gap-1 flex-wrap">
                                         {elements.filter(e => e.fBlock).map(el => (
                                             <ElementCard 
                                                 key={el.Z} 
                                                 element={el} 
                                                 isSelected={selected?.Z === el.Z}
+                                                isInChord={chordElements.some(ce => ce.Z === el.Z)}
                                                 onClick={setSelected}
+                                                onRightClick={(el) => chordElements.length < 8 && setChordElements([...chordElements, el])}
                                                 viewMode={viewMode}
+                                                highlightGroup={null}
                                             />
                                         ))}
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="w-64">
-                                <InfoPanel element={selected} />
-                                
-                                <div className="bg-gray-800 rounded-xl p-3 mt-3 text-white text-xs">
-                                    <div className="font-bold mb-2">Constants</div>
-                                    <div className="space-y-1 font-mono">
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-400">φ</span>
-                                            <span>{PHI.toFixed(4)}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-400">R∞</span>
-                                            <span>{R_INF.toFixed(4)} eV</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-400">λ = R∞φ⁻⁷</span>
-                                            <span>{LAMBDA.toFixed(4)} eV</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="bg-gray-800 rounded-xl p-3 mt-3 text-white text-xs">
-                                    <div className="font-bold mb-2">(d, ℓ) → n</div>
-                                    <div className="space-y-1 font-mono">
-                                        <div><span className="text-red-400">s,p</span>: n = d+1</div>
-                                        <div><span className="text-green-400">d</span>: n = d</div>
-                                        <div><span className="text-purple-400">f</span>: n = d-1</div>
-                                    </div>
-                                </div>
+                            <div className="w-72 space-y-3">
+                                <InfoPanel 
+                                    element={selected} 
+                                    onPlayTone={handlePlayTone}
+                                    onPlayColumn={handlePlayColumn}
+                                    onPlayRow={handlePlayRow}
+                                    elements={elements}
+                                />
+                                <ChordBuilder 
+                                    chordElements={chordElements}
+                                    onRemove={(i) => setChordElements(chordElements.filter((_, idx) => idx !== i))}
+                                    onClear={() => setChordElements([])}
+                                    onPlayChord={handlePlayChord}
+                                />
+                                <HarmonicEquivalence elements={elements} selected={selected} />
+                                <DualLayerPanel />
                             </div>
                         </div>
 
                         <div className="text-center text-gray-500 text-xs mt-4">
-                            Chemistry is geometry · ⊙ = • ⊗ Φ ⊗ ○ · The periodic table is computable
+                            Column (↕) = same note, Fibonacci-scaled · Row (↔) = scale resolving to noble gas
                         </div>
                     </div>
                 </div>
