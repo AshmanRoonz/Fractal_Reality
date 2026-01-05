@@ -973,6 +973,77 @@ For physicists trained in QM/QFT/GR, here is how the circumpunct objects map to 
 
 This dictionary is not exhaustive but should help orient the reader. The full mapping emerges through the derivations in §4–§6.
 
+### 3.7 Information Types
+
+The trinity structure maps to three fundamental information types:
+
+| Symbol | Info Type | Physics | Operation | Values |
+|--------|-----------|---------|-----------|--------|
+| • | Binary | Particle existence | Threshold decision | {0, 1} |
+| Φ | Analog | Field amplitude/phase | Continuous propagation | ℂ |
+| ○ | Fractal | Surface interface | Scale-bridging | B ⊗ A ⊗ ∞ |
+
+**Physical interpretation:**
+
+```
+BINARY (•):
+    The aperture decides existence: signal or no signal
+    Prior to amplitude — you cannot have "how much" without first "is it there"
+    The center compresses continuous reality into discrete decision
+
+    • asks: "Is there anything?"  →  {0, 1}
+
+ANALOG (Φ):
+    The field carries continuous information
+    Amplitude, phase, interference patterns
+    Conditional on binary existence (ε = 1)
+
+    Φ asks: "How much? What kind?"  →  ℂ
+
+FRACTAL (○):
+    The boundary nests binary and analog at all scales
+    Each point on the surface is itself a complete circumpunct
+    Gates (binary) × transmission (analog) × recursion (∞)
+
+    ○ asks: "Same pattern at next scale?"  →  B ⊗ A ⊗ ∞
+```
+
+**Information hierarchy:**
+
+| Level | Content | Description |
+|-------|---------|-------------|
+| Fundamental | Input/Output (≺/⊱) | The flow itself — prior to content |
+| Structural | Binary/Analog/Fractal | The type of content that flows |
+| Countable | 64 states, ℂ⁶⁴ amplitudes | The specific configurations |
+
+**The 64 states are binary:**
+
+The 64 quantum states derive from binary decisions at the center:
+```
+3 circumpuncts × 2 channels each = 6 binary degrees of freedom
+2⁶ = 64 states
+
+s = (b_•r, b_Φr, b_○r, b_•i, b_Φi, b_○i) ∈ {0,1}⁶
+```
+
+Analog and fractal information live in different components:
+
+| Component | Info Type | What It Holds |
+|-----------|-----------|---------------|
+| • | Binary | 6-bit coherence signature → 64 states |
+| Φ | Analog | Complex amplitudes (including phase) |
+| ○ | Fractal | Nested gates × analog transmission |
+
+**Phase and gating correspondence:**
+
+Phase (continuous) and gating (discrete) are the same coherence distinction viewed through different components:
+
+- Through Φ → phase (continuous, interference)
+- Through • → bit (threshold decision)
+- Through ○ → nested gating (fractal repetition)
+
+This resolves the apparent tension between discrete state counting and continuous field dynamics: they are complementary views of the same underlying coherence structure.
+
 
 ---
 
