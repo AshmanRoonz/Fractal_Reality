@@ -283,13 +283,13 @@ Most ethical failures occur when some pillars pass but others fail:
 Ethics is not imposed by culture or decree. It emerges necessarily from the geometric structure of validation itself.
 
 ```
-THE [ICE] VALIDATION FRAMEWORK:
+THE THREE-FOLD VALIDATION:
 
-[I] Interface  = GOOD (2D - boundary integrity, consent, distinction)
-[C] Center     = TRUE (1.5D - coherence with authentic nature)
-[E] Evidence   = RIGHT (3D - grounded in reality, actual consequences)
+○ GOOD  — Does it honor boundaries? (consent, distinction, care)
+• TRUE  — Does it cohere with what is? (authenticity, non-contradiction)
+Φ RIGHT — Does it survive contact with reality? (evidence, consequence, fitness)
 
-For actions to persist, they must pass [ICE] validation.
+For actions to persist, they must pass all three.
 ```
 
 ### The One-Third Rule
@@ -299,9 +299,9 @@ Of all possible actions, only approximately **one-third are geometrically stable
 ```
 64 Total Possible Response Patterns
 ├─ ~42 patterns fail validation (66%)
-│   ├─ Violate boundaries ([I] fails)
-│   ├─ Self-contradictory ([C] fails)
-│   ├─ Detached from reality ([E] fails)
+│   ├─ Violate boundaries (○ fails)
+│   ├─ Self-contradictory (• fails)
+│   ├─ Detached from reality (Φ fails)
 │   └─ UNSTABLE → dissolve
 │
 └─ ~22 patterns pass validation (34%)
