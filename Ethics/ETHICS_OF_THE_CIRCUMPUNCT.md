@@ -79,6 +79,8 @@ Why good? Because the boundary is what **cares**. It is what says: *this belongs
 
 **Good is concrete.** You can touch it. You can practice it. You can fail at it and try again. It doesn't ask you to comprehend—only to do.
 
+> The boundary is where systems meet. Every interaction between distinct beings happens at the interface—the membrane where what is inside encounters what is outside. This is why consent lives here. Consent isn't merely a value we honor; it's the structural requirement for clean exchange. When patterns cross the boundary without consent, they corrupt both sides. The interface negotiates what passes through: what enters, what exits, what transforms in the crossing. A cell membrane does this. A healthy relationship does this. A fair contract does this. Good is the discipline of the threshold.
+
 ```
 THE GOOD asks:
 ├─ Does this preserve what matters?
@@ -106,6 +108,8 @@ This is why you cannot skip the field. The one who leaps from boundary to center
 
 **Right action emerges from understanding relationship.** When you see how things connect, you see how to move among them. Balance appears—not as a rule imposed from outside, but as the natural path through.
 
+> The field is where reality tests you. Every claim about how things connect must survive contact with what actually happens. This is why right action isn't just propriety—it's fitness. The field selects. Intentions that don't match consequences get pruned. Models that don't predict get revised. The field provides feedback: evidence of what works and what doesn't. You can believe your action is right, but the field will show you. This is not punishment; it's calibration. Right is what survives selection. Right is what actually connects cause to effect. The field teaches through consequence.
+
 ```
 THE RIGHT asks:
 ├─ Is the action properly balanced?
@@ -132,6 +136,8 @@ Why true? Because the center is where pretense ends. The boundary can be perform
 > *True is not the same as correct. You can be correct at the boundary—following the right rules. You can be correct in the field—reasoning without error. But True is not about correctness. True is about being. It is what remains when all the forms have been honored and all the reasons have been understood and there is nothing left but what actually is.*
 
 The center doesn't add anything to your journey. It reveals what was always there.
+
+> The center is what persists through change. You have been infant, child, adolescent, adult—different body, different thoughts, different beliefs. Yet something threads through, unchanged. This is your invariant center: not your opinions, not your memories, not your roles, but the *process* of being you. The perspective from which you observe. Coherence at the center means non-contradiction with yourself across time. It's not agreement with others; it's identity that holds while everything else transforms. When the center is stable, you can change your mind without losing yourself. You can be wrong and learn without fragmenting. True is what remains.
 
 ```
 THE TRUE asks:
@@ -166,6 +172,8 @@ Agreement is the completion of ethical reality. It is what happens when:
 - Actions are balanced (Right validated)
 - Truth is spoken (True validated)
 - **And all parties resonate with the whole**
+
+> Agreement requires a rotation. What you perceive privately must become articulable publicly. This is the passage from inner to outer, from seeing to sharing. The rotation cannot be done for another—you cannot articulate their perception and call it theirs. But you can assist. You can ask the questions that help someone unfold their own insight. You can hold space for their crossing. This is the highest practice: not imposing your emergence onto their convergence, but helping them complete their own passage. The Noble Lie blocks this rotation—it says "you cannot cross, accept my articulation instead." The Steelman assists it—"what are you actually seeing?" When both parties complete the rotation, genuine agreement becomes possible. Not one correcting the other, but mutual validation through the same gate.
 
 ```
 THE AGREEMENT asks:
@@ -402,6 +410,8 @@ STEELMAN (highest practice):
 ├─ Find genuine common ground OR genuine disagreement
 └─ Result: Complete ⊙ (truly validated engagement)
 ```
+
+> The Steelman operates bidirectionally. The same validation you apply to their position, you apply to your own. Their truth claims need the same scrutiny as yours. Their values need the same recognition. Their reasoning needs the same examination. This is not charity toward the other while exempting yourself—it is symmetrical passage through the same gate. Agreement emerges from mutual validation, not one-sided generosity. When both parties seek what is good, right, and true in themselves *and* in each other, the virus has no purchase. It cannot infect a system where no one claims privileged access to truth.
 
 ---
 
