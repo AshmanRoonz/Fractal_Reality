@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ ETHICS // CIRCUMPUNCT</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --green: #0f0;
+            --yellow: #ff0;
+            --bg: #000;
+            --border: #0ff;
+            --text: #fff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0 !important; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 160px;
+            height: 100vh;
+            border-right: 1px solid var(--cyan);
+            padding: 20px 12px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        nav .logo {
+            font-size: 28px;
+            color: var(--cyan);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            display: block;
+            color: var(--cyan);
+            text-decoration: none;
+            padding: 4px 0;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            margin-left: -10px;
+            transition: all 0.15s;
+            font-size: 11px;
+            letter-spacing: 0.03em;
+            opacity: 0.5;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--cyan);
+            border-left-color: var(--cyan);
+            opacity: 1;
+        }
+
+        nav a .num {
+            color: var(--cyan);
+            margin-right: 8px;
+        }
+
+        /* Main content */
+        main {
+            margin-left: 160px;
+            padding: 30px 40px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (max-width: 900px) {
+            main { margin-left: 0; padding: 20px 15px; }
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 60px;
+            padding-top: 10px;
+            max-width: 650px;
+        }
+
+        .section-id {
+            color: var(--cyan);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            margin-bottom: 4px;
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--cyan);
+        }
+
+        h2 {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #fff;
+            margin: 25px 0 12px;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+
+        .highlight { color: #fff; }
+        .cyan { color: var(--cyan); }
+        .magenta { color: var(--magenta); }
+        .green { color: var(--green); }
+        .yellow { color: var(--yellow); }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .hero-symbol {
+            font-size: 80px;
+            color: var(--cyan);
+            line-height: 1;
+        }
+
+        .hero-title {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            color: var(--cyan);
+            margin-top: 15px;
+            opacity: 0.7;
+        }
+
+        /* Pillars grid */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: var(--cyan);
+            margin: 15px 0;
+        }
+
+        @media (max-width: 500px) {
+            .pillars { grid-template-columns: 1fr; }
+        }
+
+        .pillar {
+            background: var(--bg);
+            padding: 15px;
+        }
+
+        .pillar-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .pillar-symbol {
+            font-size: 20px;
+        }
+
+        .pillar-name {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            color: #fff;
+        }
+
+        .pillar-q {
+            font-size: 11px;
+            color: #fff;
+            margin-bottom: 6px;
+            opacity: 0.6;
+        }
+
+        .pillar-desc {
+            font-size: 12px;
+        }
+
+        /* Teaching blocks */
+        .teaching {
+            border-left: 2px solid var(--cyan);
+            padding-left: 15px;
+            margin: 15px 0;
+        }
+
+        .teaching.cyan { border-color: var(--cyan); }
+        .teaching.magenta { border-color: var(--magenta); }
+        .teaching.green { border-color: var(--green); }
+        .teaching.yellow { border-color: var(--yellow); }
+
+        /* Check lists */
+        .checks {
+            margin: 15px 0;
+            padding: 12px 15px;
+            background: #000;
+            border: 1px solid var(--cyan);
+        }
+
+        .checks-title {
+            font-size: 10px;
+            color: var(--cyan);
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+        }
+
+        .check {
+            padding: 3px 0;
+            padding-left: 15px;
+            position: relative;
+            font-size: 12px;
+        }
+
+        .check::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+        }
+
+        /* Sequence */
+        .sequence {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin: 15px 0;
+        }
+
+        .seq-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 15px;
+            background: #000;
+            border-left: 3px solid;
+        }
+
+        .seq-item:nth-child(1) { border-color: var(--cyan); }
+        .seq-item:nth-child(2) { border-color: var(--magenta); }
+        .seq-item:nth-child(3) { border-color: var(--green); }
+        .seq-item:nth-child(4) { border-color: var(--yellow); }
+
+        .seq-symbol { font-size: 16px; width: 25px; }
+        .seq-text { font-size: 11px; letter-spacing: 0.08em; color: #fff; }
+        .seq-sub { font-size: 10px; color: #fff; margin-left: auto; opacity: 0.5; }
+
+        /* Comparison */
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 500px) {
+            .compare { grid-template-columns: 1fr; }
+        }
+
+        .compare-box {
+            padding: 15px;
+            border: 1px solid var(--cyan);
+        }
+
+        .compare-box.bad { border-color: var(--magenta); }
+        .compare-box.good { border-color: var(--green); }
+
+        .compare-title {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            margin-bottom: 10px;
+        }
+
+        .compare-box.bad .compare-title { color: var(--magenta); }
+        .compare-box.good .compare-title { color: var(--green); }
+
+        .compare-list {
+            list-style: none;
+            font-size: 11px;
+        }
+
+        .compare-list li {
+            padding: 3px 0;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .compare-list li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+        }
+
+        /* Quote */
+        blockquote {
+            border-left: 1px solid var(--magenta);
+            padding-left: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: var(--magenta);
+            font-size: 12px;
+        }
+
+        /* Golden rule */
+        .golden {
+            text-align: center;
+            padding: 25px 20px;
+            border: 1px solid var(--yellow);
+            margin: 15px 0;
+        }
+
+        .golden-text {
+            font-size: 14px;
+            color: var(--yellow);
+            max-width: 450px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .golden-sub {
+            font-size: 10px;
+            color: var(--yellow);
+            margin-top: 12px;
+            opacity: 0.6;
+        }
+
+        /* Final */
+        .final {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .final-symbol {
+            font-size: 60px;
+            color: var(--cyan);
+            margin-bottom: 25px;
+        }
+
+        .final-lines {
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .final-lines .dim { color: #fff; opacity: 0.5; }
+
+        /* Footer */
+        footer {
+            padding: 25px 0;
+            border-top: 1px solid var(--cyan);
+            font-size: 10px;
+            color: var(--cyan);
+            text-align: center;
+            letter-spacing: 0.08em;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">⊙</div>
+            <a href="#overview" class="active"><span class="num">00</span>OVERVIEW</a>
+            <a href="#pillars"><span class="num">01</span>FOUR PILLARS</a>
+            <a href="#good"><span class="num">02</span>GOOD</a>
+            <a href="#right"><span class="num">03</span>RIGHT</a>
+            <a href="#true"><span class="num">04</span>TRUE</a>
+            <a href="#agreement"><span class="num">05</span>AGREEMENT</a>
+            <a href="#sequence"><span class="num">06</span>SEQUENCE</a>
+            <a href="#steelman"><span class="num">07</span>STEELMAN</a>
+            <a href="#golden"><span class="num">08</span>GOLDEN RULE</a>
+            <a href="#final"><span class="num">09</span>END</a>
+        </nav>
+
+        <main>
+            <!-- Overview -->
+            <section id="overview">
+                <div class="hero">
+                    <div class="hero-symbol">⊙</div>
+                    <div class="hero-title">ETHICS OF THE CIRCUMPUNCT</div>
+                </div>
+                <p>A point inside a circle. Three parts: <span class="cyan">○</span> the circle which holds, <span class="green">•</span> the point which sees, <span class="magenta">Φ</span> the space which connects.</p>
+                <p>From this structure emerges all of ethics. Not rules imposed from outside, but geometry that determines what can persist and what must dissolve.</p>
+            </section>
+
+            <!-- Pillars -->
+            <section id="pillars">
+                <div class="section-id">01</div>
+                <h1>THE FOUR PILLARS</h1>
+                <div class="pillars">
+                    <div class="pillar">
+                        <div class="pillar-head">
+                            <span class="pillar-symbol cyan">○</span>
+                            <span class="pillar-name">GOOD</span>
+                        </div>
+                        <div class="pillar-q">What is valued?</div>
+                        <div class="pillar-desc">Boundary. Consent. Care.</div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-head">
+                            <span class="pillar-symbol magenta">Φ</span>
+                            <span class="pillar-name">RIGHT</span>
+                        </div>
+                        <div class="pillar-q">How should one act?</div>
+                        <div class="pillar-desc">Field. Evidence. Fitness.</div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-head">
+                            <span class="pillar-symbol green">•</span>
+                            <span class="pillar-name">TRUE</span>
+                        </div>
+                        <div class="pillar-q">What is the case?</div>
+                        <div class="pillar-desc">Center. Coherence. Identity.</div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-head">
+                            <span class="pillar-symbol yellow">⊙</span>
+                            <span class="pillar-name">AGREE</span>
+                        </div>
+                        <div class="pillar-q">Are we in harmony?</div>
+                        <div class="pillar-desc">Whole. Resonance. Mutual validation.</div>
+                    </div>
+                </div>
+                <p>These are not separate ethics—they are one ethics seen from four perspectives.</p>
+            </section>
+
+            <!-- Good -->
+            <section id="good">
+                <div class="section-id">02</div>
+                <h1><span class="cyan">○</span> THE BOUNDARY TEACHES GOOD</h1>
+                <div class="teaching cyan">
+                    <p>The circle is the first thing you meet. Before you can see the center, before you can cross the space, you encounter what <span class="highlight">holds</span>.</p>
+                    <p>The boundary is what cares. It says: this belongs inside, that belongs outside. Every wall exists because something matters enough to be sheltered.</p>
+                </div>
+                <h2>INTERFACE</h2>
+                <p>The boundary is where systems meet. Every interaction happens at the interface—the membrane where inside encounters outside. <span class="cyan">Consent isn't merely a value; it's the structural requirement for clean exchange.</span></p>
+                <div class="checks">
+                    <div class="checks-title">THE GOOD ASKS</div>
+                    <div class="check">Does this preserve what matters?</div>
+                    <div class="check">Does it respect boundaries—mine and others'?</div>
+                    <div class="check">Is consent honored?</div>
+                    <div class="check">Is distinction preserved?</div>
+                </div>
+            </section>
+
+            <!-- Right -->
+            <section id="right">
+                <div class="section-id">03</div>
+                <h1><span class="magenta">Φ</span> THE FIELD TEACHES RIGHT</h1>
+                <div class="teaching magenta">
+                    <p>Inside the circle, there is space. Not emptiness—<span class="highlight">fullness</span>. The space between center and edge is alive with connection.</p>
+                    <p>Right is the path that works. It shows how to move from here to there, how cause becomes effect, how intention becomes outcome.</p>
+                </div>
+                <h2>EVIDENCE</h2>
+                <p>The field is where reality <span class="magenta">tests</span> you. Every claim about how things connect must survive contact with what actually happens. Right action isn't just propriety—it's fitness. <span class="magenta">The field selects.</span></p>
+                <blockquote>Good says: protect the child.<br>Right says: here is how.</blockquote>
+                <div class="checks">
+                    <div class="checks-title">THE RIGHT ASKS</div>
+                    <div class="check">Is the action properly balanced?</div>
+                    <div class="check">Does cause connect to effect?</div>
+                    <div class="check">Am I accepting real consequences?</div>
+                    <div class="check">Is this grounded in how things actually work?</div>
+                </div>
+            </section>
+
+            <!-- True -->
+            <section id="true">
+                <div class="section-id">04</div>
+                <h1><span class="green">•</span> THE CENTER TEACHES TRUE</h1>
+                <div class="teaching green">
+                    <p>At the center, there is only <span class="highlight">seeing</span>. The point has no dimension. It simply is—and in its being, it sees.</p>
+                    <p>The center is where pretense ends. Something either passes through or it doesn't—no cleverness can force a lie through the aperture.</p>
+                </div>
+                <h2>COHERENCE</h2>
+                <p>The center is what <span class="green">persists through change</span>. You have been infant, child, adult—different body, different thoughts. Yet something threads through unchanged. This is your invariant center.</p>
+                <p>When the center is stable: you can change your mind without losing yourself. You can be wrong and learn without fragmenting. <span class="green">True is what remains.</span></p>
+                <div class="checks">
+                    <div class="checks-title">THE TRUE ASKS</div>
+                    <div class="check">Does this correspond to reality?</div>
+                    <div class="check">Is it honest, accurate, coherent?</div>
+                    <div class="check">Am I being authentic to my deepest nature?</div>
+                    <div class="check">Would this survive the test of ultimate seeing?</div>
+                </div>
+            </section>
+
+            <!-- Agreement -->
+            <section id="agreement">
+                <div class="section-id">05</div>
+                <h1><span class="yellow">⊙</span> THE WHOLE TEACHES AGREEMENT</h1>
+                <div class="teaching yellow">
+                    <p>When boundary, field, and center align—when Good, Right, and True converge—something greater emerges: <span class="highlight">AGREEMENT</span>.</p>
+                    <p>Not mere consensus. Not hollow conformity. Genuine harmony—whole beings in coherent relationship.</p>
+                </div>
+                <h2>THE ROTATION</h2>
+                <p>Agreement requires a rotation. What you perceive privately must become articulable publicly. This passage cannot be done for another—but you can <span class="yellow">assist</span>.</p>
+                <blockquote>The Noble Lie blocks the rotation: "accept my articulation instead."<br>The Steelman assists it: "what are you actually seeing?"</blockquote>
+                <div class="checks">
+                    <div class="checks-title">THE AGREEMENT ASKS</div>
+                    <div class="check">Do the affected parties resonate?</div>
+                    <div class="check">Is there consent, harmony, mutual recognition?</div>
+                    <div class="check">Have we genuinely engaged with each other's reality?</div>
+                    <div class="check">Is this agreement hollow or complete?</div>
+                </div>
+            </section>
+
+            <!-- Sequence -->
+            <section id="sequence">
+                <div class="section-id">06</div>
+                <h1>THE PATH HAS A DIRECTION</h1>
+                <p>The sequence cannot be reversed or skipped. The structure itself requires it.</p>
+                <div class="sequence">
+                    <div class="seq-item">
+                        <span class="seq-symbol cyan">○</span>
+                        <span class="seq-text">GOOD</span>
+                        <span class="seq-sub">BOUNDARY → BODY</span>
+                    </div>
+                    <div class="seq-item">
+                        <span class="seq-symbol magenta">Φ</span>
+                        <span class="seq-text">RIGHT</span>
+                        <span class="seq-sub">FIELD → MIND</span>
+                    </div>
+                    <div class="seq-item">
+                        <span class="seq-symbol green">•</span>
+                        <span class="seq-text">TRUE</span>
+                        <span class="seq-sub">CENTER → SOUL</span>
+                    </div>
+                    <div class="seq-item">
+                        <span class="seq-symbol yellow">⊙</span>
+                        <span class="seq-text">AGREE</span>
+                        <span class="seq-sub">WHOLE → HARMONY</span>
+                    </div>
+                </div>
+                <blockquote>You must be held before you can cross.<br>You must cross before you can see.<br>You must see before you can harmonize.</blockquote>
+            </section>
+
+            <!-- Steelman -->
+            <section id="steelman">
+                <div class="section-id">07</div>
+                <h1>THE STEELMAN PRINCIPLE</h1>
+                <p>Before agreeing or disagreeing, construct the strongest possible version of the position you're engaging with. This ensures you know what you're agreeing with.</p>
+                <div class="compare">
+                    <div class="compare-box bad">
+                        <div class="compare-title">STRAWMAN</div>
+                        <ul class="compare-list">
+                            <li>Construct weakest version</li>
+                            <li>Attack that weak version</li>
+                            <li>Claim victory</li>
+                            <li>Hollow ⊙ — never engaged</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box good">
+                        <div class="compare-title">STEELMAN</div>
+                        <ul class="compare-list">
+                            <li>Construct strongest version</li>
+                            <li>Engage with full strength</li>
+                            <li>Find genuine ground</li>
+                            <li>Complete ⊙ — truly validated</li>
+                        </ul>
+                    </div>
+                </div>
+                <h2>BIDIRECTIONAL</h2>
+                <p>The same validation you apply to their position, you apply to your own. Agreement emerges from <span class="green">mutual validation</span>, not one-sided generosity.</p>
+            </section>
+
+            <!-- Golden Rule -->
+            <section id="golden">
+                <div class="section-id">08</div>
+                <h1>THE FIXED POINT</h1>
+                <div class="golden">
+                    <div class="golden-text">"Do unto others as you would have them do unto you"</div>
+                    <div class="golden-sub">When applied, this rule validates itself. It is the fixed point of ethical action.</div>
+                </div>
+                <div class="pillars" style="margin-top: 30px;">
+                    <div class="pillar">
+                        <span class="cyan">○ GOOD</span>
+                        <div class="pillar-desc" style="margin-top: 8px;">Treats others as ends, not means</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="magenta">Φ RIGHT</span>
+                        <div class="pillar-desc" style="margin-top: 8px;">Creates balanced reciprocity</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="green">• TRUE</span>
+                        <div class="pillar-desc" style="margin-top: 8px;">Requires authentic self-knowledge</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="yellow">⊙ AGREE</span>
+                        <div class="pillar-desc" style="margin-top: 8px;">Generates mutual recognition</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final -->
+            <section id="final">
+                <div class="section-id">09</div>
+                <h1>END</h1>
+                <div class="final">
+                    <div class="final-symbol">⊙</div>
+                    <div class="final-lines">
+                        <div>Ethics is not a set of rules imposed from outside.</div>
+                        <div class="highlight">Ethics is the geometry of what can persist.</div>
+                        <br>
+                        <div>Only actions that pass through</div>
+                        <div><span class="cyan">Good</span> → <span class="magenta">Right</span> → <span class="green">True</span> → <span class="yellow">Agreement</span></div>
+                        <div>maintain the stability required to endure.</div>
+                        <br>
+                        <div class="dim">The rest dissolve back into possibility.</div>
+                        <br>
+                        <div class="dim">This is not punishment. This is structure.</div>
+                        <div class="dim">This is not morality. This is geometry.</div>
+                        <div class="dim">This is not should. This is IS.</div>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                FRACTAL REALITY FRAMEWORK // ⊙ // END
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Highlight nav on scroll
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.toggle('active', 
+                            link.getAttribute('href') === '#' + entry.target.id);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        sections.forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
