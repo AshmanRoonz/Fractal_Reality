@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hypercube: 5D vs 6D — Why 64 States Require 6 Dimensions</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Space+Grotesk:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0f;
+            color: #e0e0e0;
+            font-family: 'Space Grotesk', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            padding: 2rem 0 3rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f0c040 0%, #ff6b6b 50%, #c471ed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: #888;
+            letter-spacing: 0.05em;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 900px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: linear-gradient(135deg, rgba(20,20,30,0.9) 0%, rgba(15,15,25,0.95) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+        
+        .panel-5d::before {
+            background: linear-gradient(90deg, #ff6b6b, #ffa500);
+        }
+        
+        .panel-6d::before {
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+        }
+        
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .panel-5d .panel-title {
+            color: #ff6b6b;
+        }
+        
+        .panel-6d .panel-title {
+            color: #4facfe;
+        }
+        
+        .vertex-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+        
+        .panel-5d .vertex-count {
+            color: #ffa500;
+        }
+        
+        .panel-6d .vertex-count {
+            color: #00f2fe;
+        }
+        
+        .formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+        
+        canvas {
+            display: block;
+            margin: 0 auto;
+            cursor: grab;
+        }
+        
+        canvas:active {
+            cursor: grabbing;
+        }
+        
+        .insight-box {
+            background: linear-gradient(135deg, rgba(240,192,64,0.1) 0%, rgba(255,107,107,0.1) 100%);
+            border: 1px solid rgba(240,192,64,0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .insight-box h3 {
+            color: #f0c040;
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .insight-box p {
+            line-height: 1.6;
+            color: #ccc;
+        }
+        
+        .state-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 3px;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+        }
+        
+        .state-cell {
+            aspect-ratio: 1;
+            border-radius: 2px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .state-cell.filled-5d {
+            background: linear-gradient(135deg, rgba(255,107,107,0.6), rgba(255,165,0,0.6));
+        }
+        
+        .state-cell.filled-6d {
+            background: linear-gradient(135deg, rgba(79,172,254,0.6), rgba(0,242,254,0.6));
+        }
+        
+        .state-cell.empty {
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.2);
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .physics-mapping {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(79,172,254,0.05);
+            border: 1px solid rgba(79,172,254,0.2);
+            border-radius: 8px;
+        }
+        
+        .physics-mapping h3 {
+            color: #4facfe;
+            margin-bottom: 1rem;
+        }
+        
+        .mapping-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .mapping-item {
+            padding: 0.75rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        
+        .mapping-item .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00f2fe;
+        }
+        
+        .mapping-item .label {
+            color: #888;
+            margin-top: 0.25rem;
+        }
+        
+        .equation-box {
+            text-align: center;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+        }
+        
+        .equation-box .eq {
+            color: #f0c040;
+            font-size: 1.5rem;
+        }
+        
+        .dimension-slider {
+            margin: 1rem 0;
+        }
+        
+        .dimension-slider input {
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        .tier-comparison {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(196,113,237,0.05);
+            border: 1px solid rgba(196,113,237,0.2);
+            border-radius: 8px;
+        }
+        
+        .tier-comparison h3 {
+            color: #c471ed;
+            margin-bottom: 1rem;
+        }
+        
+        .tier-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .tier-table th, .tier-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .tier-table th {
+            color: #c471ed;
+            font-weight: 600;
+        }
+        
+        .tier-table .dim {
+            color: #f0c040;
+        }
+        
+        .tier-table .role {
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⊙ Hypercube Dimensions</h1>
+            <p class="subtitle">Why 64 States Require 6 Dimensions — Not 5</p>
+        </header>
+        
+        <div class="equation-box">
+            <div class="eq">2<sup>5</sup> = 32 &nbsp;&nbsp;│&nbsp;&nbsp; 2<sup>6</sup> = 64</div>
+            <p style="margin-top: 0.5rem; color: #888; font-size: 0.9rem;">Each dimension doubles the vertices</p>
+        </div>
+        
+        <div class="comparison">
+            <div class="panel panel-5d">
+                <div class="panel-title">
+                    <span>5D Hypercube</span>
+                    <span style="font-size: 0.8rem; color: #888;">(Penteract)</span>
+                </div>
+                <div class="formula">2⁵ vertices</div>
+                <div class="vertex-count">32 states</div>
+                <canvas id="canvas5d" width="350" height="350"></canvas>
+                <div class="controls">drag to rotate</div>
+                
+                <div style="margin-top: 1rem; color: #ff6b6b; font-weight: 600;">
+                    ⚠ Missing half the Standard Model
+                </div>
+                
+                <div class="state-grid" id="grid5d"></div>
+            </div>
+            
+            <div class="panel panel-6d">
+                <div class="panel-title">
+                    <span>6D Hypercube</span>
+                    <span style="font-size: 0.8rem; color: #888;">(Hexeract)</span>
+                </div>
+                <div class="formula">2⁶ vertices</div>
+                <div class="vertex-count">64 states</div>
+                <canvas id="canvas6d" width="350" height="350"></canvas>
+                <div class="controls">drag to rotate</div>
+                
+                <div style="margin-top: 1rem; color: #00f2fe; font-weight: 600;">
+                    ✓ Complete dual trinity
+                </div>
+                
+                <div class="state-grid" id="grid6d"></div>
+            </div>
+        </div>
+        
+        <div class="physics-mapping">
+            <h3>64 States → Standard Model</h3>
+            <div class="mapping-grid">
+                <div class="mapping-item">
+                    <div class="number">48</div>
+                    <div class="label">Fermions</div>
+                </div>
+                <div class="mapping-item">
+                    <div class="number">12</div>
+                    <div class="label">Gauge Bosons</div>
+                </div>
+                <div class="mapping-item">
+                    <div class="number">4</div>
+                    <div class="label">Higgs</div>
+                </div>
+            </div>
+            <p style="margin-top: 1rem; color: #888; font-size: 0.9rem; font-family: 'JetBrains Mono', monospace;">
+                48 + 12 + 4 = 64 = 2³ × 2³ = Input Trinity × Output Trinity
+            </p>
+        </div>
+        
+        <div class="tier-comparison">
+            <h3>The Pattern: Braid → Field → Boundary</h3>
+            <table class="tier-table">
+                <tr>
+                    <th>Tier</th>
+                    <th>Braid</th>
+                    <th>Field</th>
+                    <th>Boundary (Closure)</th>
+                </tr>
+                <tr>
+                    <td>Spatial</td>
+                    <td><span class="dim">1D</span> <span class="role">Line</span></td>
+                    <td><span class="dim">2D</span> <span class="role">Surface</span></td>
+                    <td><span class="dim">3D</span> <span class="role">Volume — ⊙₁ locks</span></td>
+                </tr>
+                <tr>
+                    <td>Temporal</td>
+                    <td><span class="dim">4D</span> <span class="role">Worldline</span></td>
+                    <td><span class="dim">5D</span> <span class="role">Config Space</span></td>
+                    <td><span class="dim">6D</span> <span class="role">Dual Trinity — ⊙₂ locks</span></td>
+                </tr>
+            </table>
+            <p style="margin-top: 1rem; color: #888; font-size: 0.9rem;">
+                Same pattern. Same roles. Why would nature change the rule after 4D?
+            </p>
+        </div>
+        
+        <div class="insight-box">
+            <h3>The Question for Solomon</h3>
+            <p>
+                If you cap at 5D, you have 2⁵ = 32 vertices. That's half the states needed for the Standard Model.
+                <br><br>
+                Where do your other 32 states live?
+                <br><br>
+                The 6th dimension isn't a patch — it's where the dual trinity (input × output) completes. 
+                2³ × 2³ = 64. Not 32. Not 128. Exactly 64.
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Hypercube visualization
+        class Hypercube {
+            constructor(canvas, dimensions, color1, color2) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.dimensions = dimensions;
+                this.color1 = color1;
+                this.color2 = color2;
+                this.vertices = this.generateVertices();
+                this.edges = this.generateEdges();
+                this.angles = new Array(dimensions).fill(0);
+                this.isDragging = false;
+                this.lastX = 0;
+                this.lastY = 0;
+                
+                this.setupEvents();
+                this.animate();
+            }
+            
+            generateVertices() {
+                const vertices = [];
+                const n = Math.pow(2, this.dimensions);
+                for (let i = 0; i < n; i++) {
+                    const vertex = [];
+                    for (let d = 0; d < this.dimensions; d++) {
+                        vertex.push((i >> d) & 1 ? 1 : -1);
+                    }
+                    vertices.push(vertex);
+                }
+                return vertices;
+            }
+            
+            generateEdges() {
+                const edges = [];
+                const n = this.vertices.length;
+                for (let i = 0; i < n; i++) {
+                    for (let j = i + 1; j < n; j++) {
+                        let diff = 0;
+                        for (let d = 0; d < this.dimensions; d++) {
+                            if (this.vertices[i][d] !== this.vertices[j][d]) diff++;
+                        }
+                        if (diff === 1) edges.push([i, j]);
+                    }
+                }
+                return edges;
+            }
+            
+            rotate(vertex, angles) {
+                let v = [...vertex];
+                // Apply rotations in pairs of dimensions
+                for (let i = 0; i < angles.length - 1; i++) {
+                    const a = angles[i];
+                    const cos = Math.cos(a);
+                    const sin = Math.sin(a);
+                    const x = v[i];
+                    const y = v[i + 1];
+                    v[i] = x * cos - y * sin;
+                    v[i + 1] = x * sin + y * cos;
+                }
+                return v;
+            }
+            
+            project(vertex) {
+                // Project down to 2D
+                let v = this.rotate(vertex, this.angles);
+                let scale = 1;
+                for (let d = this.dimensions - 1; d >= 2; d--) {
+                    const perspective = 3 / (3 - v[d] * 0.5);
+                    scale *= perspective;
+                }
+                const x = v[0] * scale * 60 + this.canvas.width / 2;
+                const y = v[1] * scale * 60 + this.canvas.height / 2;
+                const depth = v.slice(2).reduce((a, b) => a + b, 0) / (this.dimensions - 2);
+                return { x, y, depth };
+            }
+            
+            setupEvents() {
+                this.canvas.addEventListener('mousedown', (e) => {
+                    this.isDragging = true;
+                    this.lastX = e.clientX;
+                    this.lastY = e.clientY;
+                });
+                
+                window.addEventListener('mouseup', () => {
+                    this.isDragging = false;
+                });
+                
+                window.addEventListener('mousemove', (e) => {
+                    if (this.isDragging) {
+                        const dx = e.clientX - this.lastX;
+                        const dy = e.clientY - this.lastY;
+                        this.angles[0] += dy * 0.01;
+                        this.angles[1] += dx * 0.01;
+                        this.lastX = e.clientX;
+                        this.lastY = e.clientY;
+                    }
+                });
+            }
+            
+            draw() {
+                const ctx = this.ctx;
+                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Project all vertices
+                const projected = this.vertices.map(v => this.project(v));
+                
+                // Sort edges by depth for proper rendering
+                const edgesWithDepth = this.edges.map(([i, j]) => ({
+                    edge: [i, j],
+                    depth: (projected[i].depth + projected[j].depth) / 2
+                }));
+                edgesWithDepth.sort((a, b) => a.depth - b.depth);
+                
+                // Draw edges
+                edgesWithDepth.forEach(({ edge: [i, j], depth }) => {
+                    const p1 = projected[i];
+                    const p2 = projected[j];
+                    const alpha = 0.2 + (depth + 1) * 0.3;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.3})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                });
+                
+                // Draw vertices
+                projected.forEach((p, i) => {
+                    const alpha = 0.4 + (p.depth + 1) * 0.3;
+                    const size = 3 + (p.depth + 1) * 2;
+                    
+                    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
+                    gradient.addColorStop(0, this.color1);
+                    gradient.addColorStop(1, this.color2);
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = gradient;
+                    ctx.globalAlpha = alpha;
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                });
+                
+                // Vertex count
+                ctx.font = '12px JetBrains Mono';
+                ctx.fillStyle = '#666';
+                ctx.fillText(`${this.vertices.length} vertices`, 10, 20);
+            }
+            
+            animate() {
+                // Auto-rotate slowly when not dragging
+                if (!this.isDragging) {
+                    for (let i = 0; i < this.angles.length; i++) {
+                        this.angles[i] += 0.002 * (i + 1);
+                    }
+                }
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        
+        // Initialize
+        const cube5d = new Hypercube(
+            document.getElementById('canvas5d'), 
+            5, 
+            '#ff6b6b', 
+            '#ffa500'
+        );
+        
+        const cube6d = new Hypercube(
+            document.getElementById('canvas6d'), 
+            6, 
+            '#4facfe', 
+            '#00f2fe'
+        );
+        
+        // Generate state grids
+        function generateGrid(containerId, count, maxCount, filledClass) {
+            const container = document.getElementById(containerId);
+            for (let i = 0; i < maxCount; i++) {
+                const cell = document.createElement('div');
+                cell.className = `state-cell ${i < count ? filledClass : 'empty'}`;
+                cell.textContent = i < count ? i : '';
+                container.appendChild(cell);
+            }
+        }
+        
+        generateGrid('grid5d', 32, 64, 'filled-5d');
+        generateGrid('grid6d', 64, 64, 'filled-6d');
+    </script>
+</body>
+</html>
