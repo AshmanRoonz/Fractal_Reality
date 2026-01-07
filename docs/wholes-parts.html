@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ WHOLES_PARTS.exe</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Bebas+Neue&display=swap');
+
+        :root {
+            --terminal-green: #20c20e;
+            --warning-amber: #ffa500;
+            --error-red: #ff3333;
+            --data-blue: #00aaff;
+            --corrupt: #ff00aa;
+            --bg: #0c0c0c;
+            --bg-panel: #111111;
+            --border: #222;
+            --text: #aaa;
+            --text-bright: #ddd;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            font-size: 15px;
+            background: var(--bg);
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Noise texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        /* Terminal header */
+        .terminal-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 28px;
+            background: #1a1a1a;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            font-size: 0.75rem;
+            z-index: 1000;
+            gap: 8px;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27ca40; }
+
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            color: #666;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+        }
+
+        .terminal-status {
+            color: var(--terminal-green);
+            font-size: 0.65rem;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Main content */
+        main {
+            padding-top: 28px;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 60px 5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* SECTION 0: The Hook */
+        .hook {
+            align-items: center;
+            text-align: center;
+            background: 
+                radial-gradient(ellipse at 30% 70%, rgba(32, 194, 14, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 30%, rgba(255, 0, 170, 0.02) 0%, transparent 50%);
+        }
+
+        .big-truth {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            color: var(--text-bright);
+            line-height: 1.15;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        .big-truth .em {
+            color: var(--terminal-green);
+        }
+
+        .big-truth .em2 {
+            color: var(--corrupt);
+        }
+
+        .subtruth {
+            font-size: 1.1rem;
+            color: var(--text);
+            max-width: 600px;
+            line-height: 1.8;
+        }
+
+        .circumpunct {
+            font-size: 4rem;
+            margin: 40px 0;
+            color: var(--warning-amber);
+            text-shadow: 0 0 30px var(--warning-amber);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* Data blocks */
+        .data-block {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            padding: 30px;
+            margin: 20px 0;
+            position: relative;
+            max-width: 900px;
+        }
+
+        .data-block::before {
+            content: attr(data-label);
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--bg);
+            padding: 0 10px;
+            font-size: 0.65rem;
+            color: #555;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Split view */
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            background: var(--border);
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        @media (max-width: 700px) {
+            .split { grid-template-columns: 1fr; }
+        }
+
+        .split-panel {
+            background: var(--bg-panel);
+            padding: 40px;
+        }
+
+        .split-panel h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .split-panel.whole h3 { color: var(--terminal-green); }
+        .split-panel.part h3 { color: var(--corrupt); }
+
+        .split-panel ul {
+            list-style: none;
+        }
+
+        .split-panel li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .split-panel li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: #444;
+        }
+
+        /* Section headers */
+        .section-id {
+            font-size: 0.65rem;
+            color: #444;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--text-bright);
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        /* Examples */
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .example-card {
+            background: var(--bg-panel);
+            border-left: 3px solid var(--data-blue);
+            padding: 25px;
+        }
+
+        .example-card h4 {
+            font-size: 0.8rem;
+            color: var(--data-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .example-card p {
+            line-height: 1.7;
+            color: var(--text);
+        }
+
+        /* The equation */
+        .equation-display {
+            text-align: center;
+            padding: 50px;
+            margin: 40px auto;
+            max-width: 800px;
+            background: linear-gradient(135deg, rgba(32, 194, 14, 0.03) 0%, rgba(255, 0, 170, 0.03) 100%);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .equation-display::before,
+        .equation-display::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+
+        .equation-display::before {
+            top: -1px;
+            left: -1px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .equation-display::after {
+            bottom: -1px;
+            right: -1px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .equation {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: var(--warning-amber);
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+        }
+
+        .equation-meaning {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Hierarchy chain */
+        .hierarchy-chain {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+
+        .h-item {
+            padding: 8px 15px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+        }
+
+        .h-arrow {
+            color: #444;
+        }
+
+        /* Warning/error states */
+        .warning-block {
+            background: rgba(255, 51, 51, 0.05);
+            border: 1px solid rgba(255, 51, 51, 0.3);
+            border-left: 3px solid var(--error-red);
+            padding: 25px;
+            margin: 15px 0;
+        }
+
+        .warning-block h4 {
+            color: var(--error-red);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        /* The trinity */
+        .trinity-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .trinity-node {
+            width: 140px;
+            height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .trinity-node::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -35px;
+            width: 30px;
+            height: 1px;
+            background: #333;
+        }
+
+        .trinity-node:last-child::after {
+            display: none;
+        }
+
+        .trinity-node .symbol {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .trinity-node .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+        }
+
+        .node-center .symbol { color: var(--terminal-green); }
+        .node-field .symbol { color: var(--warning-amber); }
+        .node-boundary .symbol { color: var(--corrupt); }
+
+        /* Conclusion */
+        .conclusion {
+            text-align: center;
+            align-items: center;
+        }
+
+        .final-statement {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            line-height: 1.5;
+            margin: 30px 0;
+            color: var(--text-bright);
+        }
+
+        .final-statement .line {
+            display: block;
+        }
+
+        .attribution {
+            font-size: 0.85rem;
+            color: #555;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Scroll indicator */
+        .scroll-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.65rem;
+            color: #444;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 100;
+            animation: bob 2s ease-in-out infinite;
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(5px); }
+        }
+
+        /* Chromatic aberration on hover */
+        .glitch-hover:hover {
+            animation: glitch 0.3s ease;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 var(--corrupt), -2px 0 var(--data-blue); }
+            25% { text-shadow: -2px 0 var(--corrupt), 2px 0 var(--data-blue); }
+            50% { text-shadow: 2px 0 var(--data-blue), -2px 0 var(--corrupt); }
+            75% { text-shadow: -2px 0 var(--data-blue), 2px 0 var(--corrupt); }
+            100% { text-shadow: none; }
+        }
+
+        /* Log lines */
+        .log-line {
+            font-size: 0.75rem;
+            color: #444;
+            padding: 3px 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .log-line .timestamp {
+            color: #333;
+        }
+
+        .log-line .level-info { color: var(--data-blue); }
+        .log-line .level-warn { color: var(--warning-amber); }
+        .log-line .level-ok { color: var(--terminal-green); }
+
+        /* Process flow */
+        .process-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .process-step {
+            text-align: center;
+            padding: 25px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            min-width: 150px;
+        }
+
+        .process-step .step-symbol {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .process-step .step-name {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+        }
+
+        .process-arrow {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .step-1 .step-symbol { color: var(--terminal-green); }
+        .step-2 .step-symbol { color: var(--warning-amber); }
+        .step-3 .step-symbol { color: var(--corrupt); }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--terminal-green);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Selection color */
+        ::selection {
+            background: var(--terminal-green);
+            color: var(--bg);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            section { padding: 40px 4%; }
+            .trinity-node { width: 100px; height: 100px; }
+            .trinity-node::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-bar">
+        <div class="terminal-dots">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+        </div>
+        <div class="terminal-title">WHOLES_PARTS.exe — TRANSMISSION ACTIVE</div>
+        <div class="terminal-status">● LIVE</div>
+    </div>
+
+    <main>
+        <!-- SECTION 0: THE HOOK - Simple truth first -->
+        <section class="hook">
+            <div class="log-line"><span class="timestamp">[2026.01.07]</span> <span class="level-info">[INIT]</span> Loading universal pattern...</div>
+            
+            <div class="circumpunct">⊙</div>
+            
+            <h1 class="big-truth glitch-hover">
+                YOU ARE <span class="em">COMPLETE</span>.<br>
+                YOU ARE <span class="em2">CONNECTED</span>.<br>
+                BOTH. RIGHT NOW.
+            </h1>
+            
+            <p class="subtruth">
+                This is the architecture of existence.<br>
+                Everything that exists is a <strong>whole</strong> (complete in itself) 
+                and a <strong>part</strong> (of something larger). Simultaneously. Always.
+            </p>
+
+            <div class="log-line" style="margin-top: 40px;"><span class="level-ok">[OK]</span> Pattern recognized at age 11. Formalized at 39.</div>
+        </section>
+
+        <!-- SECTION 1: THE SIMPLE PROOF -->
+        <section>
+            <div class="section-id">001 // OBSERVATION</div>
+            <h2 class="section-title">Look at your hand.</h2>
+            
+            <div class="split">
+                <div class="split-panel whole">
+                    <h3>It's a whole</h3>
+                    <ul>
+                        <li>Complete hand</li>
+                        <li>Functions as a unit</li>
+                        <li>You experience it as "my hand"</li>
+                        <li>It can do things on its own</li>
+                    </ul>
+                </div>
+                <div class="split-panel part">
+                    <h3>It's a part</h3>
+                    <ul>
+                        <li>Part of your arm</li>
+                        <li>Part of your body</li>
+                        <li>Part of your actions</li>
+                        <li>Part of your identity</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="text-align: center; color: #666; margin-top: 30px;">
+                Not sometimes one, sometimes the other. <span style="color: var(--text-bright);">Always both.</span>
+            </p>
+        </section>
+
+        <!-- SECTION 2: IT'S EVERYWHERE -->
+        <section>
+            <div class="section-id">002 // RECURSION</div>
+            <h2 class="section-title">This pattern never breaks.</h2>
+
+            <div class="data-block" data-label="MATTER">
+                <div class="hierarchy-chain">
+                    <span class="h-item">atoms</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">molecules</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">cells</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">organs</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">organisms</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">ecosystems</span>
+                </div>
+            </div>
+
+            <div class="data-block" data-label="LANGUAGE">
+                <div class="hierarchy-chain">
+                    <span class="h-item">letters</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">words</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">sentences</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">paragraphs</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">books</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">culture</span>
+                </div>
+            </div>
+
+            <div class="data-block" data-label="MIND">
+                <div class="hierarchy-chain">
+                    <span class="h-item">thoughts</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">ideas</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">theories</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">worldviews</span>
+                    <span class="h-arrow">→</span>
+                    <span class="h-item">civilization</span>
+                </div>
+            </div>
+
+            <p style="text-align: center; margin-top: 30px; color: var(--terminal-green);">
+                Every level: wholes made of parts. Parts that are themselves wholes.
+            </p>
+        </section>
+
+        <!-- SECTION 3: WHY IT MATTERS -->
+        <section>
+            <div class="section-id">003 // FAILURE MODES</div>
+            <h2 class="section-title">Break the pattern, break yourself.</h2>
+
+            <div class="split" style="max-width: 900px;">
+                <div class="split-panel">
+                    <div class="warning-block">
+                        <h4>⚠ Only a whole</h4>
+                        <p>"I don't need anyone."</p>
+                        <ul style="margin-top: 15px; list-style: none;">
+                            <li>→ Lose connection</li>
+                            <li>→ Lose context</li>
+                            <li>→ Lose meaning</li>
+                            <li>→ Eventually dissolve</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="split-panel">
+                    <div class="warning-block">
+                        <h4>⚠ Only a part</h4>
+                        <p>"I am nothing but what others need."</p>
+                        <ul style="margin-top: 15px; list-style: none;">
+                            <li>→ Lose identity</li>
+                            <li>→ Lose agency</li>
+                            <li>→ Lose self</li>
+                            <li>→ Eventually disappear</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="equation-display" style="margin-top: 50px;">
+                <div class="equation">β = 0.5</div>
+                <div class="equation-meaning">The balance point. Half autonomous, half integrated.<br>Whole through being part. Part without losing wholeness.</div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: THE STRUCTURE -->
+        <section>
+            <div class="section-id">004 // ARCHITECTURE</div>
+            <h2 class="section-title">Why three parts? Geometry.</h2>
+
+            <p style="text-align: center; max-width: 700px; margin: 0 auto 40px; color: var(--text);">
+                Center and boundary are separated in space. They can't touch directly.<br>
+                Something must mediate between them. This isn't design. It's necessity.
+            </p>
+
+            <div class="trinity-visual">
+                <div class="trinity-node node-center">
+                    <div class="symbol">•</div>
+                    <div class="label">Center</div>
+                    <div style="font-size: 0.6rem; color: #444; margin-top: 5px;">identity / self</div>
+                </div>
+                <div class="trinity-node node-field">
+                    <div class="symbol">Φ</div>
+                    <div class="label">Field</div>
+                    <div style="font-size: 0.6rem; color: #444; margin-top: 5px;">mediation</div>
+                </div>
+                <div class="trinity-node node-boundary">
+                    <div class="symbol">○</div>
+                    <div class="label">Boundary</div>
+                    <div style="font-size: 0.6rem; color: #444; margin-top: 5px;">context / relations</div>
+                </div>
+            </div>
+
+            <div class="equation-display">
+                <div class="equation">⊙ = • ⊗ Φ ⊗ ○</div>
+                <div class="equation-meaning">A thing is whole when it has an identity that relates meaningfully to its context.</div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: THE PROCESS -->
+        <section>
+            <div class="section-id">005 // DYNAMICS</div>
+            <h2 class="section-title">How wholes and parts interact.</h2>
+
+            <div class="process-flow">
+                <div class="process-step step-1">
+                    <div class="step-symbol">≻</div>
+                    <div class="step-name">Converge</div>
+                    <div style="font-size: 0.7rem; color: #555; margin-top: 8px;">gather inward</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step step-2">
+                    <div class="step-symbol">i</div>
+                    <div class="step-name">Transform</div>
+                    <div style="font-size: 0.7rem; color: #555; margin-top: 8px;">rotate 90°</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step step-3">
+                    <div class="step-symbol">⊰</div>
+                    <div class="step-name">Emerge</div>
+                    <div style="font-size: 0.7rem; color: #555; margin-top: 8px;">express outward</div>
+                </div>
+            </div>
+
+            <div class="example-grid" style="margin-top: 50px;">
+                <div class="example-card">
+                    <h4>Reading</h4>
+                    <p>You gather words (converge), process meaning (transform), understand the thought (emerge).</p>
+                </div>
+                <div class="example-card">
+                    <h4>Breathing</h4>
+                    <p>Air comes in (converge), gas exchange happens (transform), you exhale (emerge).</p>
+                </div>
+                <div class="example-card">
+                    <h4>Creating</h4>
+                    <p>Ideas accumulate (converge), insight strikes (transform), you make something (emerge).</p>
+                </div>
+            </div>
+
+            <div class="equation-display" style="margin-top: 40px;">
+                <div class="equation">Φ∞ ≻ i ⊰ ⊙</div>
+                <div class="equation-meaning">The field converges, rotates through the aperture, and emerges as pattern.</div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: VALIDATION -->
+        <section>
+            <div class="section-id">006 // EMPIRICAL</div>
+            <h2 class="section-title">It calculates.</h2>
+
+            <div class="stats-row">
+                <div class="stat">
+                    <div class="stat-value">64</div>
+                    <div class="stat-label">fundamental states</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">99.75%</div>
+                    <div class="stat-label">mass ratio accuracy</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">0.36 ppm</div>
+                    <div class="stat-label">fine structure match</div>
+                </div>
+            </div>
+
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>Particles</h4>
+                    <p>Predicts lepton mass ratios from geometric necessity. No parameters fitted.</p>
+                </div>
+                <div class="example-card">
+                    <h4>Geology</h4>
+                    <p>Brunhes-Matuyama magnetic reversal timing falls out of the math.</p>
+                </div>
+                <div class="example-card">
+                    <h4>Biology</h4>
+                    <p>DNA backbone geometry matches predicted fractal dimension D ≈ 1.5.</p>
+                </div>
+            </div>
+
+            <p style="text-align: center; margin-top: 40px; color: #555; font-size: 0.85rem;">
+                Mathematics is a language for describing the pattern. The pattern is real.<br>
+                The equations make it shareable and testable.
+            </p>
+        </section>
+
+        <!-- SECTION 7: CONCLUSION -->
+        <section class="conclusion">
+            <div class="section-id">007 // CORE</div>
+            
+            <div class="circumpunct" style="font-size: 5rem;">⊙</div>
+
+            <div class="final-statement">
+                <span class="line">You are <span style="color: var(--terminal-green);">complete</span>.</span>
+                <span class="line">You are <span style="color: var(--corrupt);">connected</span>.</span>
+                <span class="line">Both. Always. <span style="color: var(--warning-amber);">Necessarily</span>.</span>
+            </div>
+
+            <p style="max-width: 500px; color: var(--text); line-height: 1.8;">
+                This is not what reality is.<br>
+                This is how reality organizes itself.<br>
+                You already know this. You feel it every day—the tension between being yourself and fitting in, the desire to be independent and connected.
+            </p>
+
+            <p style="color: var(--text-bright); margin-top: 30px; font-size: 1.1rem;">
+                You are whole through being part.
+            </p>
+
+            <div class="attribution">
+                "Everything is wholes and parts."<br>
+                — ASHMAN ROONZ, age 11<br><br>
+                <span style="color: var(--terminal-green);">Still true at 39. Still true always.</span>
+            </div>
+
+            <div class="log-line" style="margin-top: 50px;">
+                <span class="timestamp">[EOF]</span> <span class="level-ok">[TRANSMISSION COMPLETE]</span>
+            </div>
+        </section>
+    </main>
+
+    <div class="scroll-hint">scroll ↓</div>
+
+    <script>
+        // Hide scroll hint after scrolling
+        window.addEventListener('scroll', () => {
+            const hint = document.querySelector('.scroll-hint');
+            if (window.scrollY > 100) {
+                hint.style.opacity = '0';
+            } else {
+                hint.style.opacity = '1';
+            }
+        });
+    </script>
+</body>
+</html>
