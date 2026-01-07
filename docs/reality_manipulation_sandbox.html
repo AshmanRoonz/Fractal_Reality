@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ REALITY MANIPULATION SANDBOX - {116, 138, 144}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0f0;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+
+        #canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .hud {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #0f0;
+            padding: 20px;
+            font-size: 14px;
+            max-width: 400px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .hud h1 {
+            color: #0ff;
+            font-size: 20px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #0ff;
+        }
+
+        .hud .key {
+            color: #ff0;
+            font-weight: bold;
+        }
+
+        .stats {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #f0f;
+            padding: 15px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+
+        .stats .label {
+            color: #f0f;
+        }
+
+        .stats .value {
+            color: #ff0;
+            font-weight: bold;
+        }
+
+        .stats .critical {
+            color: #f00;
+            animation: pulse 0.5s infinite;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #0f0;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #0f0 0%, #0a0 100%);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            font-family: 'Courier New', monospace;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.8);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn.demon {
+            background: linear-gradient(135deg, #f0f 0%, #a0a 100%);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        .control-btn.demon:hover {
+            box-shadow: 0 0 40px rgba(255, 0, 255, 0.8);
+        }
+
+        .control-btn.reset {
+            background: linear-gradient(135deg, #f00 0%, #a00 100%);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .intervention-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 0, 255, 0.3);
+            pointer-events: none;
+            opacity: 0;
+            z-index: 999;
+        }
+
+        .intervention-flash.active {
+            animation: flash 0.5s;
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #0ff;
+            padding: 40px;
+            font-size: 24px;
+            color: #0ff;
+            text-align: center;
+            z-index: 2000;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.8);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .message.show {
+            animation: fadeInOut 3s;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+
+        .audio-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #0ff;
+            padding: 10px;
+            z-index: 1000;
+            font-size: 12px;
+        }
+
+        .slider-control {
+            margin: 10px 0;
+        }
+
+        .slider-control label {
+            color: #0f0;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .slider-control input {
+            width: 200px;
+        }
+
+        .slider-control .value {
+            color: #ff0;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="hud">
+        <h1>⊙ REALITY MANIPULATION</h1>
+        <p>You have the keys: <span class="key">{116, 138, 144}</span></p>
+        <p style="margin-top: 10px; color: #0ff;">CONTROLS:</p>
+        <p>• Click anywhere to spawn particles</p>
+        <p>• Hold SPACE to open apertures</p>
+        <p>• Press D for Maxwell's Demon mode</p>
+        <p>• Press R to reset field</p>
+        <p>• Press T to toggle time flow</p>
+        <p style="margin-top: 10px; color: #f0f;">When M(t) > 0.85, apertures are CRITICAL</p>
+        <p style="color: #ff0;">Intervene at critical moments to reverse entropy</p>
+        
+        <div class="slider-control">
+            <label>Balance β: <span class="value" id="betaDisplay">0.50</span></label>
+            <input type="range" id="betaSlider" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        
+        <div class="slider-control">
+            <label>Field Strength: <span class="value" id="strengthDisplay">1.0</span></label>
+            <input type="range" id="strengthSlider" min="0.1" max="3" step="0.1" value="1">
+        </div>
+    </div>
+
+    <div class="stats">
+        <div><span class="label">PARTICLES:</span> <span class="value" id="particleCount">0</span></div>
+        <div><span class="label">ENTROPY:</span> <span class="value" id="entropy">0.00</span></div>
+        <div><span class="label">ORDER:</span> <span class="value" id="order">0.00</span></div>
+        <div><span class="label">FIELD Φ(t):</span> <span class="value" id="fieldValue">0.00</span></div>
+        <div><span class="label">MODULATION M(t):</span> <span class="value" id="modValue">0.00</span></div>
+        <div><span class="label">TIME (Ma):</span> <span class="value" id="timeValue">0.00</span></div>
+        <div style="margin-top: 10px;"><span class="label">INTERVENTIONS:</span> <span class="value" id="interventions">0</span></div>
+        <div><span class="label">DEMON MODE:</span> <span class="value" id="demonStatus">OFF</span></div>
+    </div>
+
+    <div class="controls">
+        <button class="control-btn" onclick="spawnParticleBurst()">SPAWN BURST</button>
+        <button class="control-btn demon" onclick="toggleDemonMode()">MAXWELL'S DEMON</button>
+        <button class="control-btn" onclick="toggleTimeFlow()">PAUSE TIME</button>
+        <button class="control-btn reset" onclick="resetSimulation()">RESET ALL</button>
+    </div>
+
+    <div class="intervention-flash" id="flash"></div>
+    <div class="message" id="message"></div>
+    
+    <div class="audio-indicator">
+        <div>RESONANCE: <span id="resonance" style="color: #0ff;">--</span></div>
+    </div>
+
+    <script>
+        // Chronomagnetic constants
+        const LAMBDA = 3722 / 2705;
+        const LN_LAMBDA = Math.log(LAMBDA);
+        const OMEGA = (2 * Math.PI) / LN_LAMBDA;
+        const BETA_OPTIMAL = 0.5;
+        
+        // Canvas setup
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        // Particle system
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.charge = Math.random() > 0.5 ? 1 : -1;
+                this.mass = 1 + Math.random() * 2;
+                this.radius = 3 + Math.random() * 3;
+                this.hue = this.charge > 0 ? 120 : 300; // Green for +, Magenta for -
+                this.opacity = 1;
+                this.sorted = false;
+                this.trail = [];
+            }
+
+            update(field, beta) {
+                // Chronomagnetic field force
+                const dx = this.x - width / 2;
+                const dy = this.y - height / 2;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                // Field influence based on Φ(t)
+                const fieldForce = field * beta * this.charge / (1 + dist * 0.001);
+                const angle = Math.atan2(dy, dx);
+                
+                // Aperture influence (when M is high, sorting occurs)
+                const sortingForce = state.modulation > 0.85 ? 5 : 0;
+                
+                this.vx += Math.cos(angle) * fieldForce * 0.1;
+                this.vy += Math.sin(angle) * fieldForce * 0.1;
+                
+                // Demon mode: strong sorting when active
+                if (state.demonMode && state.modulation > 0.85) {
+                    const targetX = this.charge > 0 ? width * 0.75 : width * 0.25;
+                    const targetY = height / 2;
+                    const tdx = targetX - this.x;
+                    const tdy = targetY - this.y;
+                    this.vx += tdx * 0.01 * sortingForce;
+                    this.vy += tdy * 0.01 * sortingForce;
+                    this.sorted = Math.abs(tdx) < 50 && Math.abs(tdy) < 50;
+                }
+                
+                // Velocity damping
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+                
+                // Update position
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Boundaries with wrapping
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+                
+                // Trail
+                this.trail.push({ x: this.x, y: this.y });
+                if (this.trail.length > 20) this.trail.shift();
+            }
+
+            draw() {
+                // Trail
+                ctx.strokeStyle = `hsla(${this.hue}, 100%, 50%, 0.2)`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                for (let i = 0; i < this.trail.length; i++) {
+                    const point = this.trail[i];
+                    if (i === 0) ctx.moveTo(point.x, point.y);
+                    else ctx.lineTo(point.x, point.y);
+                }
+                ctx.stroke();
+                
+                // Particle
+                const glow = this.sorted ? 20 : 10;
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.radius + glow
+                );
+                gradient.addColorStop(0, `hsla(${this.hue}, 100%, 70%, ${this.opacity})`);
+                gradient.addColorStop(0.5, `hsla(${this.hue}, 100%, 50%, ${this.opacity * 0.5})`);
+                gradient.addColorStop(1, `hsla(${this.hue}, 100%, 30%, 0)`);
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius + glow, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Core
+                ctx.fillStyle = this.sorted ? '#fff' : `hsl(${this.hue}, 100%, 50%)`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // State
+        let state = {
+            particles: [],
+            time: 0,
+            timeMa: 0.1, // Millions of years
+            field: 0,
+            modulation: 0,
+            beta: 0.5,
+            strength: 1,
+            demonMode: false,
+            interventions: 0,
+            timeFlowing: true,
+            apertureOpen: false
+        };
+
+        // Audio context for resonance
+        let audioCtx = null;
+        let oscillator = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                gainNode.gain.value = 0;
+                oscillator.start();
+            }
+        }
+
+        // Calculate chronomagnetic field
+        function calculateField(t) {
+            const tc = 0.001;
+            const t0 = 1.0;
+            const u = Math.log((t + tc) / t0);
+            const phi = Math.cos(OMEGA * u);
+            const M = Math.abs(Math.sin(OMEGA * u));
+            return { phi, M, u };
+        }
+
+        // Spawn particles
+        function spawnParticle(x, y) {
+            if (state.particles.length < 500) {
+                state.particles.push(new Particle(x, y));
+            }
+        }
+
+        function spawnParticleBurst() {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            for (let i = 0; i < 50; i++) {
+                const angle = (Math.PI * 2 * i) / 50;
+                const radius = 50 + Math.random() * 50;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                spawnParticle(x, y);
+            }
+            showMessage("PARTICLE BURST SPAWNED");
+        }
+
+        // Maxwell's Demon intervention
+        function performIntervention() {
+            if (state.modulation > 0.85) {
+                state.interventions++;
+                state.beta = BETA_OPTIMAL;
+                document.getElementById('betaSlider').value = BETA_OPTIMAL;
+                document.getElementById('betaDisplay').textContent = BETA_OPTIMAL.toFixed(2);
+                
+                // Flash effect
+                const flash = document.getElementById('flash');
+                flash.classList.add('active');
+                setTimeout(() => flash.classList.remove('active'), 500);
+                
+                // Audio feedback
+                if (audioCtx) {
+                    const gainNode = audioCtx.createGain();
+                    const osc = audioCtx.createOscillator();
+                    osc.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                    osc.frequency.value = 440 * Math.pow(2, state.modulation);
+                    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.5);
+                }
+                
+                showMessage(`⚡ INTERVENTION ${state.interventions} ⚡<br>ENTROPY REVERSED`);
+                return true;
+            }
+            return false;
+        }
+
+        // Calculate entropy and order
+        function calculateMetrics() {
+            if (state.particles.length === 0) return { entropy: 0, order: 0 };
+            
+            // Spatial entropy: how spread out are particles?
+            let sumX = 0, sumY = 0;
+            state.particles.forEach(p => {
+                sumX += p.x;
+                sumY += p.y;
+            });
+            const centerX = sumX / state.particles.length;
+            const centerY = sumY / state.particles.length;
+            
+            let totalDist = 0;
+            state.particles.forEach(p => {
+                const dx = p.x - centerX;
+                const dy = p.y - centerY;
+                totalDist += Math.sqrt(dx * dx + dy * dy);
+            });
+            const entropy = totalDist / state.particles.length / 100;
+            
+            // Order: how well sorted are +/- charges?
+            const positive = state.particles.filter(p => p.charge > 0);
+            const negative = state.particles.filter(p => p.charge < 0);
+            
+            if (positive.length === 0 || negative.length === 0) return { entropy, order: 0 };
+            
+            const posAvgX = positive.reduce((sum, p) => sum + p.x, 0) / positive.length;
+            const negAvgX = negative.reduce((sum, p) => sum + p.x, 0) / negative.length;
+            const separation = Math.abs(posAvgX - negAvgX);
+            const order = Math.min(separation / width, 1);
+            
+            return { entropy, order };
+        }
+
+        // Show message
+        function showMessage(text) {
+            const msg = document.getElementById('message');
+            msg.innerHTML = text;
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), 3000);
+        }
+
+        // Toggle functions
+        function toggleDemonMode() {
+            state.demonMode = !state.demonMode;
+            document.getElementById('demonStatus').textContent = state.demonMode ? 'ACTIVE' : 'OFF';
+            document.getElementById('demonStatus').style.color = state.demonMode ? '#f0f' : '#ff0';
+            showMessage(state.demonMode ? 
+                '👹 MAXWELL\'S DEMON ACTIVATED 👹<br>ENTROPY REVERSAL ENABLED' : 
+                'DEMON MODE DEACTIVATED');
+        }
+
+        function toggleTimeFlow() {
+            state.timeFlowing = !state.timeFlowing;
+            showMessage(state.timeFlowing ? 'TIME RESUMED' : 'TIME FROZEN');
+        }
+
+        function resetSimulation() {
+            state.particles = [];
+            state.time = 0;
+            state.timeMa = 0.1;
+            state.interventions = 0;
+            state.beta = 0.5;
+            state.strength = 1;
+            document.getElementById('betaSlider').value = 0.5;
+            document.getElementById('strengthSlider').value = 1;
+            showMessage('REALITY RESET');
+        }
+
+        // Draw field background
+        function drawField() {
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            // Field lines based on Φ(t)
+            ctx.strokeStyle = `rgba(0, 255, 255, ${Math.abs(state.field) * 0.3})`;
+            ctx.lineWidth = 2;
+            
+            const numLines = 24;
+            for (let i = 0; i < numLines; i++) {
+                const angle = (Math.PI * 2 * i) / numLines;
+                const startRadius = 50;
+                const endRadius = Math.max(width, height);
+                
+                ctx.beginPath();
+                ctx.moveTo(
+                    centerX + Math.cos(angle) * startRadius,
+                    centerY + Math.sin(angle) * startRadius
+                );
+                
+                // Spiral based on field
+                const steps = 50;
+                for (let j = 0; j <= steps; j++) {
+                    const t = j / steps;
+                    const radius = startRadius + (endRadius - startRadius) * t;
+                    const spiralAngle = angle + state.field * t * Math.PI;
+                    ctx.lineTo(
+                        centerX + Math.cos(spiralAngle) * radius,
+                        centerY + Math.sin(spiralAngle) * radius
+                    );
+                }
+                ctx.stroke();
+            }
+            
+            // Central aperture indicator
+            if (state.modulation > 0.85 || state.apertureOpen) {
+                const pulseSize = 30 + state.modulation * 70;
+                const gradient = ctx.createRadialGradient(
+                    centerX, centerY, 0,
+                    centerX, centerY, pulseSize
+                );
+                gradient.addColorStop(0, 'rgba(255, 0, 255, 0.8)');
+                gradient.addColorStop(0.5, 'rgba(255, 0, 255, 0.4)');
+                gradient.addColorStop(1, 'rgba(255, 0, 255, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, pulseSize, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Aperture symbol ⊙
+                ctx.strokeStyle = '#f0f';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, 20, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            // Clear
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Update time
+            if (state.timeFlowing) {
+                state.time += 0.016; // ~60fps
+                state.timeMa = 0.1 + state.time * 0.01;
+            }
+            
+            // Calculate field
+            const fieldResult = calculateField(state.timeMa);
+            state.field = fieldResult.phi * state.strength;
+            state.modulation = fieldResult.M;
+            
+            // Draw field
+            drawField();
+            
+            // Update and draw particles
+            state.particles.forEach(p => {
+                p.update(state.field, state.beta);
+                p.draw();
+            });
+            
+            // Calculate metrics
+            const metrics = calculateMetrics();
+            
+            // Update HUD
+            document.getElementById('particleCount').textContent = state.particles.length;
+            document.getElementById('entropy').textContent = metrics.entropy.toFixed(2);
+            document.getElementById('order').textContent = metrics.order.toFixed(2);
+            document.getElementById('fieldValue').textContent = state.field.toFixed(3);
+            
+            const modEl = document.getElementById('modValue');
+            modEl.textContent = state.modulation.toFixed(3);
+            modEl.className = state.modulation > 0.85 ? 'value critical' : 'value';
+            
+            document.getElementById('timeValue').textContent = state.timeMa.toFixed(3);
+            document.getElementById('interventions').textContent = state.interventions;
+            
+            // Audio resonance
+            if (oscillator && audioCtx) {
+                const freq = 220 + state.modulation * 440;
+                oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                document.getElementById('resonance').textContent = freq.toFixed(0) + ' Hz';
+            }
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Event listeners
+        canvas.addEventListener('click', (e) => {
+            initAudio();
+            spawnParticle(e.clientX, e.clientY);
+        });
+
+        let spacePressed = false;
+        document.addEventListener('keydown', (e) => {
+            initAudio();
+            
+            if (e.code === 'Space' && !spacePressed) {
+                e.preventDefault();
+                spacePressed = true;
+                state.apertureOpen = true;
+                performIntervention();
+            } else if (e.code === 'KeyD') {
+                toggleDemonMode();
+            } else if (e.code === 'KeyR') {
+                resetSimulation();
+            } else if (e.code === 'KeyT') {
+                toggleTimeFlow();
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'Space') {
+                spacePressed = false;
+                state.apertureOpen = false;
+            }
+        });
+
+        document.getElementById('betaSlider').addEventListener('input', (e) => {
+            state.beta = parseFloat(e.target.value);
+            document.getElementById('betaDisplay').textContent = state.beta.toFixed(2);
+        });
+
+        document.getElementById('strengthSlider').addEventListener('input', (e) => {
+            state.strength = parseFloat(e.target.value);
+            document.getElementById('strengthDisplay').textContent = state.strength.toFixed(1);
+        });
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // Start
+        showMessage('⊙ REALITY UNLOCKED ⊙<br>Keys: {116, 138, 144}');
+        animate();
+
+        // Auto-spawn initial particles
+        setTimeout(() => {
+            for (let i = 0; i < 100; i++) {
+                spawnParticle(
+                    width / 2 + (Math.random() - 0.5) * 200,
+                    height / 2 + (Math.random() - 0.5) * 200
+                );
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
