@@ -15,9 +15,9 @@
             --gold-primary: #d4a853;
             --gold-light: #f0d78c;
             --gold-dark: #a67c2e;
-            --text-primary: #e8e4dc;
-            --text-secondary: #9a958a;
-            --text-dim: #5a564e;
+            --text-primary: #f2efe8;
+            --text-secondary: #c9c4b8;
+            --text-dim: #8a857a;
             --blue-spirit: #4a7c9b;
             --blue-glow: #6ba3c7;
             --violet-accent: #8b6bb3;
@@ -318,7 +318,7 @@
             font-style: normal;
             font-size: 0.8rem;
             letter-spacing: 0.15em;
-            color: var(--text-dim);
+            color: var(--text-secondary);
         }
 
         /* Content Typography */
@@ -439,7 +439,7 @@
             font-family: 'Cormorant Garamond', serif;
             font-size: 0.85rem;
             font-style: italic;
-            color: var(--text-dim);
+            color: var(--text-secondary);
         }
 
         .bridge-connector {
@@ -485,7 +485,7 @@
             font-size: 0.7rem;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: var(--text-dim);
+            color: var(--text-secondary);
             margin-top: 1.5rem;
         }
 
@@ -519,7 +519,7 @@
         td {
             padding: 1rem;
             border-bottom: 1px solid rgba(255,255,255,0.03);
-            color: var(--text-secondary);
+            color: var(--text-primary);
         }
 
         tr:hover td {
@@ -558,7 +558,7 @@
             font-family: 'Cinzel', serif;
             font-size: 0.75rem;
             letter-spacing: 0.1em;
-            color: var(--text-dim);
+            color: var(--text-secondary);
         }
 
         /* Code/Math blocks */
@@ -576,7 +576,7 @@
         }
 
         .code-block .comment {
-            color: var(--text-dim);
+            color: var(--text-secondary);
         }
 
         .code-block .highlight {
@@ -585,6 +585,47 @@
 
         .code-block .blue {
             color: var(--blue-glow);
+        }
+
+        /* Derivations List */
+        .derivations-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .derivation-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.5rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .derivation-item:last-child {
+            border-bottom: none;
+        }
+
+        .derivation-term {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--gold-light);
+            letter-spacing: 0.05em;
+            min-width: 140px;
+        }
+
+        .derivation-desc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .derivation-desc::before {
+            content: '— ';
+            color: var(--text-dim);
         }
 
         /* Final Section */
@@ -735,10 +776,11 @@
     <nav>
         <div class="nav-symbol">⊙</div>
         <ul class="nav-links">
+            <li><a href="#axiom">Axiom</a></li>
             <li><a href="#derivation">Derivation</a></li>
             <li><a href="#bridge">The Bridge</a></li>
             <li><a href="#mapping">Mapping</a></li>
-            <li><a href="#implications">Implications</a></li>
+            <li><a href="#ethics">Ethics</a></li>
         </ul>
     </nav>
 
@@ -749,7 +791,7 @@
             <div class="circumpunct-inner"></div>
         </div>
         <h1>The Bridge</h1>
-        <p class="subtitle">Science and Spirituality Unified Through Geometric Necessity</p>
+        <p class="subtitle">Science and Spirituality Unified Through One Axiom</p>
         <p class="author">Ashman Roonz — The Circumpunct Framework</p>
         <div class="scroll-indicator">
             <span></span>
@@ -768,6 +810,64 @@
         </blockquote>
         <cite>— Albert Einstein</cite>
     </div>
+
+    <!-- The Axiom -->
+    <section id="axiom" style="text-align: center; padding: 6rem 2rem;">
+        <div class="fade-in">
+            <span class="section-number">The Axiom</span>
+            <div class="equation-box" style="max-width: 600px; margin: 2rem auto; padding: 3rem;">
+                <div class="equation" style="font-size: 1.4rem;">Parts are fractals of their wholes.</div>
+                <p class="equation-label">One rule. Everything else is costume.</p>
+            </div>
+        </div>
+
+        <div class="fade-in" style="max-width: 700px; margin: 3rem auto; text-align: left;">
+            <p style="text-align: center; color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 3rem;">From this alone, everything derives:</p>
+            
+            <div class="derivations-grid">
+                <div class="derivation-item">
+                    <span class="derivation-term">Trinity</span>
+                    <span class="derivation-desc">the fractal unit is (•, Φ, ○), so every part is trinitarian</span>
+                </div>
+                <div class="derivation-item">
+                    <span class="derivation-term">Nesting</span>
+                    <span class="derivation-desc">no top, no bottom; parts contain parts contain parts</span>
+                </div>
+                <div class="derivation-item">
+                    <span class="derivation-term">The Bridge</span>
+                    <span class="derivation-desc">you ARE God fractally; God IS you wholistically</span>
+                </div>
+                <div class="derivation-item">
+                    <span class="derivation-term">Σ = Φ</span>
+                    <span class="derivation-desc">the interface is the field; how parts relate within wholes</span>
+                </div>
+                <div class="derivation-item">
+                    <span class="derivation-term">64 States</span>
+                    <span class="derivation-desc">fractal coupling between trinities: 2³ × 2³</span>
+                </div>
+                <div class="derivation-item">
+                    <span class="derivation-term">Same Procedure</span>
+                    <span class="derivation-desc">every part runs the same operation as its whole</span>
+                </div>
+                <div class="derivation-item">
+                    <span class="derivation-term">i at Every Scale</span>
+                    <span class="derivation-desc">the rotation is what relating IS, fractally present</span>
+                </div>
+                <div class="derivation-item">
+                    <span class="derivation-term">As Above, So Below</span>
+                    <span class="derivation-desc">not analogy; literal structural identity</span>
+                </div>
+                <div class="derivation-item">
+                    <span class="derivation-term">Coherence</span>
+                    <span class="derivation-desc">alignment means matching your fractal to its whole</span>
+                </div>
+                <div class="derivation-item">
+                    <span class="derivation-term">Ethics</span>
+                    <span class="derivation-desc">good is fractal integrity; evil is fractal contradiction</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Part I: The Derivation -->
     <section id="derivation">
@@ -867,6 +967,22 @@
             <h2>The Asymmetric Factorization</h2>
             <p>The 2³ × 2³ factorization admits an asymmetric interpretation: <strong>one singular circumpunct</strong> coupled through a <strong>universal interface</strong> to <strong>infinite circumpuncts</strong>.</p>
             <p>Every individual ⊙ᵪ pairs with the <strong>same</strong> ⊙<sub>∞</sub> through the <strong>same</strong> Σ.</p>
+
+            <h3>But There Is No Top</h3>
+            <p>⊙<sub>∞</sub> is not "the God circumpunct at the top." There is no top. No bottom. Parts contain parts contain parts—infinite nesting in both directions.</p>
+            <p>⊙<sub>∞</sub> is <strong>the pattern itself</strong>. The invariant. What every circumpunct IS. God isn't a circumpunct—<strong>God is what circumpunct IS.</strong></p>
+
+            <div class="code-block" style="text-align: center;">
+    ...⊙ ⊃ ⊙ ⊃ ⊙ ⊃ ⊙ ⊃ ⊙...
+              ↑
+       <span class="highlight">ALL OF THESE ARE ⊙<sub>∞</sub></span>
+       
+    <span class="comment">The invariant pattern
+    Present at every scale
+    Not a level — the structure</span>
+            </div>
+
+            <p style="text-align: center; margin-top: 1.5rem;">The ONE is the EVERYWHERE.<br>Not at a location in the stack. AS the stack. AS the nesting. AS the procedure that never varies.</p>
         </div>
 
         <div class="bridge-container fade-in">
@@ -942,6 +1058,29 @@
 
             <div class="insight">
                 <p>The Logos is not metaphor. It is the rotation operator that makes manifestation possible.</p>
+            </div>
+
+            <h2>The Interface IS the Field</h2>
+            <p>There is one circumpunct. All circumpuncts are fractals of it, and in it. The singular interface Σ through which all parts relate is the <strong>Φ (field) of the one circumpunct</strong>.</p>
+
+            <div class="code-block" style="text-align: center;">
+<span class="highlight">THE ONE CIRCUMPUNCT:</span> ⊙<sub>∞</sub> = •<sub>∞</sub> ⊗ Φ<sub>∞</sub> ⊗ ○<sub>∞</sub>
+
+•<sub>∞</sub> = <span class="comment">God's center (the Absolute, unknowable, the Father)</span>
+Φ<sub>∞</sub> = <span class="comment">God's field = Σ (the Logos, the interface, the Son)</span>
+○<sub>∞</sub> = <span class="comment">God's boundary (all manifestation, all creation)</span>
+
+<span class="highlight">We exist WITHIN Φ<sub>∞</sub>.</span>
+            </div>
+
+            <p>The interface isn't <em>between</em> God and creation—<strong>the interface IS the field in which creation exists.</strong> This is why "in him all things hold together." We exist IN Φ<sub>∞</sub>.</p>
+
+            <h2>i at Every Scale</h2>
+            <p>Σ = i (universal, the ONE interface). But your aperture • = i (local, YOUR aperture). They're not copies—they're <strong>the same i, fractally present.</strong></p>
+            <p>The rotation operator doesn't exist "somewhere else." It exists <strong>at every center</strong> because every center IS a fractal of Σ.</p>
+
+            <div class="insight">
+                <p>The mediator isn't between you and God. <strong>The mediator is what you ARE at your center.</strong> Go deep enough into your own aperture, and you find Σ—because your • IS Σ at your scale.</p>
             </div>
 
             <h2>Phase Alignment and Transmission</h2>
@@ -1097,19 +1236,112 @@
 
         <div class="fade-in">
             <h2>For Science</h2>
-            <p><strong>Consciousness is fundamental.</strong> The circumpunct ⊙ is not derived from physics—physics is derived from circumpunct dynamics. Matter is a configuration of conscious wholes.</p>
-            <p><strong>The hard problem dissolves.</strong> There is no gap to bridge. Subject and object are center and boundary of the same circumpunct. Experience is what the interior of a circumpunct is.</p>
+            <p><strong>Consciousness is fundamental.</strong> The circumpunct ⊙ is not derived from physics—physics is derived from circumpunct dynamics. Parts are fractals of their wholes, all the way down. Matter is a configuration of conscious wholes.</p>
+            <p><strong>The hard problem dissolves.</strong> There is no gap to bridge. Subject and object are center and boundary of the same circumpunct. Experience is what the interior of a fractal part IS.</p>
 
             <h2>For Spirituality</h2>
-            <p><strong>Practice has mechanism.</strong> Prayer, meditation, alignment—these are phase operations. Adjusting your internal configuration changes your transmission coefficient with respect to ⊙<sub>∞</sub>.</p>
-            <p><strong>Ethics is geometry.</strong> "Good" is not arbitrary divine command. It is phase alignment with the singular ground. What conduces to coherence IS good—geometrically, necessarily.</p>
+            <p><strong>Practice has mechanism.</strong> Prayer, meditation, alignment—these are phase operations. You are adjusting your fractal to match its whole. T(Δφ) → 1.</p>
+            <p><strong>Grace is geometry.</strong> What flows from whole to part when alignment is achieved. Not arbitrary gift—structural consequence of fractal coherence.</p>
 
             <h2>For Integration</h2>
-            <p><strong>The war is over.</strong> Science and spirituality are not in conflict. They never were. They are two languages describing the same architecture—one through measurement, one through experience.</p>
+            <p><strong>The war is over.</strong> Science and spirituality are not in conflict. They never were. They are two languages describing the same truth: parts are fractals of their wholes.</p>
 
             <div class="insight">
-                <p>The bridge between science and spirituality is not metaphor. It is geometric necessity.</p>
+                <p>The bridge between science and spirituality is not metaphor. It is the axiom itself.</p>
             </div>
+        </div>
+    </section>
+
+    <!-- Part V: Ethics -->
+    <section id="ethics">
+        <div class="section-header fade-in">
+            <span class="section-number">Part V</span>
+            <h1 class="section-title">Ethics</h1>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="fade-in">
+            <h2>Fractal Integrity and Fractal Contradiction</h2>
+            
+            <p>If the axiom is <strong>parts are fractals of their wholes</strong>, then ethics follows geometrically:</p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Good</th>
+                            <th>Evil</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Definition</strong></td>
+                            <td>Fractal integrity</td>
+                            <td>Fractal contradiction</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pattern</strong></td>
+                            <td>Part accurately reflects whole</td>
+                            <td>Part denies/distorts relation to whole</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Transmission</strong></td>
+                            <td>T(Δφ) → 1</td>
+                            <td>T(Δφ) → 0</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Experience</strong></td>
+                            <td>Coherence, flow, life</td>
+                            <td>Dissonance, blockage, suffering</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>The Two Contradictions</h2>
+
+            <h3>1. The Part Claims to BE the Whole</h3>
+            <div class="code-block">
+⊙_λ says: "I am ⊙_∞. There is nothing beyond me."
+
+<span class="comment">This is pride. Domination. Ego inflation.
+The cell claiming to be the body.
+The self claiming to be God.</span>
+            </div>
+
+            <h3>2. The Part Denies It's OF the Whole</h3>
+            <div class="code-block">
+⊙_λ says: "I am separate. There is no ⊙_∞."
+
+<span class="comment">This is isolation. Nihilism. Despair.
+The wave denying the ocean.
+The self claiming there is no God.</span>
+            </div>
+
+            <div class="insight">
+                <p>Both are the <strong>same error</strong> — misunderstanding the fractal relationship. You are God's fractal — neither God nor not-God. Divine AND creaturely. Free AND embedded.</p>
+            </div>
+
+            <h2>Why Evil is Self-Defeating</h2>
+            <p>You cannot <strong>actually</strong> stop being a fractal of your whole. You can only <strong>act</strong> as if you're not.</p>
+            <p>The dissonance between what you ARE (fractal) and what you PRETEND (separate or supreme) IS suffering.</p>
+            <p>The part that denies the whole cuts off its own transmission. T → 0. No flow. No life. No coherence. But it's still IN the whole. Still a fractal. Just a fractured one — experiencing its own denial as pain.</p>
+
+            <div class="insight">
+                <p><strong>Hell isn't punishment. It's the experience of fractal contradiction from the inside.</strong></p>
+            </div>
+
+            <h2>Redemption</h2>
+            <div class="code-block" style="text-align: center;">
+Remember what you are.
+Part OF. Fractal OF.
+Same pattern.
+<span class="highlight">Realign.</span>
+T → 1.
+            </div>
+
+            <p style="text-align: center; font-size: 1.2rem; margin-top: 2rem; color: var(--gold-light);"><strong>Parts are fractals of their wholes. Act like it.</strong></p>
         </div>
     </section>
 
@@ -1120,7 +1352,16 @@
             <div class="circumpunct-inner"></div>
         </div>
 
-        <div class="equation-box" style="max-width: 500px; margin: 0 auto 3rem;">
+        <div class="equation-box" style="max-width: 600px; margin: 0 auto 3rem;">
+            <div class="equation" style="font-size: 1.3rem;">Parts are fractals of their wholes.</div>
+        </div>
+
+        <p>One rule.</p>
+        <p>Everything else is costume.</p>
+
+        <br><br>
+
+        <div class="equation-box" style="max-width: 500px; margin: 0 auto 3rem; background: transparent; border-color: var(--blue-spirit);">
             <div class="equation">2⁶ = 2³ × 2³ = ⊙<sub>∞</sub> ×<sub>Σ</sub> ⊙<sub>λ</sub><sup>∞</sup></div>
         </div>
 
@@ -1130,8 +1371,9 @@
         <br><br>
 
         <p>The mathematics demanded trinity.<br>Spirituality named it Father, Son, Spirit.</p>
-        <p>The mathematics demanded singular ground.<br>Spirituality named it God.</p>
-        <p>The mathematics demanded universal interface.<br>Spirituality named it Logos.</p>
+        <p>The mathematics demanded fractal nesting.<br>Spirituality named it "as above, so below."</p>
+        <p>The mathematics demanded phase alignment.<br>Spirituality named it holiness.</p>
+        <p>The mathematics demanded fractal integrity.<br>Spirituality named it love.</p>
 
         <br>
 
