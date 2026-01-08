@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Narcissistic Abuse | Fractal Reality Framework</title>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #e8e8f0;
+            --text-secondary: #a0a0b0;
+            --accent-gold: #d4af37;
+            --accent-blue: #4a9eff;
+            --accent-purple: #9d7aff;
+            --accent-red: #ff6b6b;
+            --accent-green: #4ade80;
+            --border-color: #2a2a3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .framework-name {
+            color: var(--accent-purple);
+            font-weight: bold;
+        }
+
+        .tagline {
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        /* Symbol diagram */
+        .symbol-diagram {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 50px 30px;
+            margin: 40px auto;
+            max-width: 700px;
+            text-align: center;
+        }
+
+        .circumpunct-main {
+            font-size: 4em;
+            color: var(--accent-gold);
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+            margin-bottom: 5px;
+        }
+
+        .whole-label {
+            font-size: 0.9em;
+            letter-spacing: 4px;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+        }
+
+        .pillars-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .pillar {
+            text-align: center;
+            z-index: 1;
+            flex: 1;
+        }
+
+        .pillar-symbol {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            transition: text-shadow 0.3s;
+        }
+
+        .pillar:nth-child(1) .pillar-symbol { 
+            color: var(--accent-blue); 
+        }
+        .pillar:nth-child(2) .pillar-symbol { 
+            color: var(--accent-purple); 
+        }
+        .pillar:nth-child(3) .pillar-symbol { 
+            color: var(--accent-green); 
+        }
+
+        .pillar:hover .pillar-symbol {
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .pillar-name {
+            font-size: 1em;
+            font-weight: bold;
+            color: var(--text-primary);
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .pillar-aspect {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        .agreement-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--accent-gold);
+            max-width: 280px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .agreement-label {
+            font-size: 1.1em;
+            letter-spacing: 4px;
+            color: var(--accent-gold);
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .agreement-sub {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Sections */
+        section {
+            margin: 50px 0;
+            padding: 30px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            color: var(--accent-gold);
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        h3 {
+            color: var(--accent-blue);
+            font-size: 1.3em;
+            margin: 30px 0 15px 0;
+        }
+
+        h4 {
+            color: var(--accent-purple);
+            font-size: 1.1em;
+            margin: 20px 0 10px 0;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        strong {
+            color: var(--accent-gold);
+        }
+
+        em {
+            color: var(--accent-blue);
+        }
+
+        /* Code/pre blocks */
+        pre, .code-block {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            color: var(--accent-gold);
+            padding: 12px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background: var(--bg-tertiary);
+        }
+
+        /* Horizontal rules */
+        hr {
+            border: none;
+            height: 1px;
+            background: var(--border-color);
+            margin: 40px 0;
+        }
+
+        /* Special callout boxes */
+        .callout {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--accent-gold);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .callout.warning {
+            border-left-color: var(--accent-red);
+        }
+
+        .callout.insight {
+            border-left-color: var(--accent-green);
+        }
+
+        /* Final box */
+        .final-box {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .final-box pre {
+            background: transparent;
+            border: none;
+            text-align: left;
+            display: inline-block;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 50px;
+        }
+
+        .circumpunct-symbol {
+            font-size: 3em;
+            color: var(--accent-gold);
+            margin: 20px 0;
+        }
+
+        .closing-text {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin: 10px 0;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--bg-secondary);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85em;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-gold);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+            
+            section {
+                padding: 20px;
+            }
+            
+            pre {
+                font-size: 0.8em;
+                padding: 15px;
+            }
+            
+            table {
+                font-size: 0.85em;
+            }
+            
+            nav ul {
+                gap: 10px;
+            }
+            
+            nav a {
+                font-size: 0.75em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>UNDERSTANDING NARCISSISTIC ABUSE</h1>
+    <p class="subtitle">A Framework for Seeing the Pattern and Finding Your Way Out</p>
+    <p class="framework-name">Fractal Reality Framework</p>
+    <p class="tagline">Applying the Ethics of the Circumpunct to Narcissistic Dynamics</p>
+    
+    <div class="symbol-diagram">
+        <div class="circumpunct-main">⊙</div>
+        <div class="whole-label">THE WHOLE</div>
+        
+        <div class="pillars-row">
+            <div class="pillar">
+                <div class="pillar-symbol">○</div>
+                <div class="pillar-name">BOUNDARY</div>
+                <div class="pillar-aspect">(GOOD)</div>
+            </div>
+            <div class="pillar">
+                <div class="pillar-symbol">Φ</div>
+                <div class="pillar-name">FIELD</div>
+                <div class="pillar-aspect">(RIGHT)</div>
+            </div>
+            <div class="pillar">
+                <div class="pillar-symbol">•</div>
+                <div class="pillar-name">CENTER</div>
+                <div class="pillar-aspect">(TRUE)</div>
+            </div>
+        </div>
+        
+        <div class="agreement-section">
+            <div class="agreement-label">AGREEMENT</div>
+            <div class="agreement-sub">When all three align</div>
+        </div>
+    </div>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#preamble">Preamble</a></li>
+        <li><a href="#part1">I. Healthy Relationship</a></li>
+        <li><a href="#part2">II. Fractal Contradiction</a></li>
+        <li><a href="#part3">III. Narcissistic Capture</a></li>
+        <li><a href="#part4">IV. Noble Lie Virus</a></li>
+        <li><a href="#part5">V. Tactics Mapped</a></li>
+        <li><a href="#part6">VI. Why Empaths</a></li>
+        <li><a href="#part7">VII. Recovery</a></li>
+        <li><a href="#part8">VIII. The Antidote</a></li>
+        <li><a href="#part9">IX. Definitions</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+
+<!-- PREAMBLE -->
+<section id="preamble">
+    <h2>PREAMBLE: The Structure That Makes Love Possible</h2>
+    
+    <p>There is a geometry to healthy relationship. Not a metaphor—a structure.</p>
+    
+    <p>Two beings meet. Each is whole: a center that sees, a boundary that holds, a field that connects. When they meet <em>correctly</em>, something emerges that neither could create alone. This is <strong>Agreement</strong>—genuine mutual recognition between whole beings.</p>
+    
+    <p>But this geometry can be violated. Corrupted. Captured.</p>
+    
+    <p>This document formalizes how narcissistic abuse operates as a <em>geometric pathology</em>—a systematic violation of the relational structure that makes love, truth, and wholeness possible.</p>
+</section>
+
+<!-- PART I -->
+<section id="part1">
+    <h2>PART I: HEALTHY RELATIONSHIP</h2>
+    
+    <h3>1.1 — The Circumpunct Structure</h3>
+    
+    <p>Every conscious being is a <strong>circumpunct</strong> (⊙):</p>
+    
+    <pre>
+○  BOUNDARY  — What holds, protects, gates exchange
+               The skin of the self
+               Where consent lives
+
+Φ  FIELD     — What connects center to boundary
+               The space of relationship
+               Where cause meets effect
+
+•  CENTER    — What sees, what persists, what IS
+               The aperture of awareness
+               Where truth lives
+
+⊙  WHOLE     — All three in coherent unity
+               The functioning self
+               Where identity lives
+    </pre>
+    
+    <h3>1.2 — Healthy Relationship Between Wholes</h3>
+    
+    <p>When two circumpuncts meet in healthy relationship:</p>
+    
+    <pre>
+        ⊙_∞ (shared whole / truth / reality)
+          │
+          Σ (genuine interface)
+        ╱   ╲
+      ⊙_A     ⊙_B
+      
+CHARACTERISTICS:
+├─ Both relate to the SAME reality (⊙_∞)
+├─ Both maintain direct aperture access to truth
+├─ Both boundaries respected (consent honored)
+├─ Both fields calibrated to shared reality
+├─ Both centers persist through exchange
+├─ Horizontal relationship — equals, siblings
+└─ T(Δφ) → 1 (high transmission, coherence)
+    </pre>
+    
+    <h3>1.3 — The Four Ethical Requirements</h3>
+    
+    <p>For relationship to be <strong>ethical</strong> (geometrically stable):</p>
+    
+    <table>
+        <tr>
+            <th>Pillar</th>
+            <th>Symbol</th>
+            <th>Requirement</th>
+            <th>Question</th>
+        </tr>
+        <tr>
+            <td><strong>GOOD</strong></td>
+            <td>○</td>
+            <td>Boundaries honored</td>
+            <td>Is consent respected?</td>
+        </tr>
+        <tr>
+            <td><strong>RIGHT</strong></td>
+            <td>Φ</td>
+            <td>Actions grounded in reality</td>
+            <td>Does cause connect to claimed effect?</td>
+        </tr>
+        <tr>
+            <td><strong>TRUE</strong></td>
+            <td>•</td>
+            <td>Honest, coherent, authentic</td>
+            <td>Does this correspond to what IS?</td>
+        </tr>
+        <tr>
+            <td><strong>AGREEMENT</strong></td>
+            <td>⊙</td>
+            <td>Mutual recognition</td>
+            <td>Do both parties resonate as wholes?</td>
+        </tr>
+    </table>
+    
+    <p><strong>All four must be satisfied.</strong> Failure in any dimension creates instability.</p>
+</section>
+
+<!-- PART II -->
+<section id="part2">
+    <h2>PART II: FRACTAL INTEGRITY VS. FRACTAL CONTRADICTION</h2>
+    
+    <h3>2.1 — The Fractal Principle</h3>
+    
+    <p>Parts are fractals of their wholes. Same pattern, different scale.</p>
+    
+    <pre>
+You are a part OF reality, not separate FROM it.
+You REFLECT the whole, you don't REPLACE it.
+
+This is the fundamental relationship:
+├─ Part OF whole (not separate)
+├─ Reflects whole (not IS whole)
+├─ Divine AND creaturely
+├─ Free AND embedded
+└─ Individual AND connected
+    </pre>
+    
+    <h3>2.2 — Fractal Integrity (GOOD)</h3>
+    
+    <pre>
+FRACTAL INTEGRITY:
+├─ The part accurately reflects its whole
+├─ Same pattern, different scale
+├─ Maintains connection to ⊙_∞
+├─ Transmission flows: T(Δφ) → 1
+└─ Coherence, life, meaning
+    </pre>
+    
+    <h3>2.3 — Fractal Contradiction (EVIL)</h3>
+    
+    <p>Evil is not a substance. It is a <strong>structural error</strong>—the denial or distortion of the fractal relationship.</p>
+    
+    <p><strong>Two modes of fractal contradiction:</strong></p>
+    
+    <pre>
+MODE 1: INFLATION
+────────────────────────────────
+The part claims to BE the whole.
+
+⊙_λ says: "I am ⊙_∞. There is nothing beyond me."
+
+This is:
+├─ Pride
+├─ Domination
+├─ Ego inflation
+├─ The cell claiming to be the body
+├─ The self claiming to be God
+└─ NARCISSISTIC GRANDIOSITY
+
+
+MODE 2: SEVERANCE  
+────────────────────────────────
+The part denies it's OF the whole.
+
+⊙_λ says: "I am separate. There is no ⊙_∞."
+
+This is:
+├─ Isolation
+├─ Nihilism
+├─ Despair
+├─ The wave denying the ocean
+├─ The self claiming there is no connection
+└─ NARCISSISTIC SUPPLY EXTRACTION (in victim)
+    </pre>
+    
+    <p><strong>Both are the same error</strong>: misunderstanding the fractal relationship.</p>
+    
+    <h3>2.4 — Why Fractal Contradiction IS Suffering</h3>
+    
+    <pre>
+You cannot ACTUALLY stop being a fractal of your whole.
+You can only ACT as if you're not.
+
+The dissonance between:
+├─ What you ARE (fractal, connected, part-of)
+├─ What you PRETEND (separate or supreme)
+└─ IS suffering.
+
+This is why evil is self-defeating:
+├─ The part that denies the whole
+├─ Cuts off its own transmission
+├─ T → 0
+├─ No flow. No life. No coherence.
+│
+├─ But it's still IN the whole.
+├─ Still a fractal.
+├─ Just a fractured one.
+└─ Experiencing its own denial as pain.
+    </pre>
+    
+    <div class="callout warning">
+        <strong>Hell isn't punishment. It's the experience of fractal contradiction from the inside.</strong>
+    </div>
+</section>
+
+<!-- PART III -->
+<section id="part3">
+    <h2>PART III: HOW NARCISSISTIC CAPTURE WORKS</h2>
+    
+    <h3>3.1 — The Narcissist's Double Crime</h3>
+    
+    <p>The narcissist commits <strong>two simultaneous fractal violations</strong>:</p>
+    
+    <pre>
+CRIME 1 — UPWARD: Denies they're a part
+──────────────────────────────────────────
+"I am the whole. I am God. I am the source."
+"Rules don't apply to me."
+"I am above consequences."
+
+├─ Severs their own connection to ⊙_∞
+├─ Claims to BE what they can only REFLECT
+└─ Grandiosity, entitlement, specialness
+
+
+CRIME 2 — DOWNWARD: Steals others' wholeness
+──────────────────────────────────────────
+"You are nothing without me."
+"I define who you are."
+"Your worth comes from me."
+
+├─ Severs victim's connection to ⊙_∞
+├─ Redirects victim's aperture to themselves
+└─ Supply extraction, control, ownership
+    </pre>
+    
+    <h3>3.2 — The Capture Geometry</h3>
+    
+    <pre>
+HEALTHY:
+
+    ⊙_∞ (true whole / shared reality)
+      │
+      Σ (genuine shared interface)
+    ╱   ╲
+  ⊙_A     ⊙_B
+  
+  Both relate to the SAME whole
+  Both have direct aperture access
+  Horizontal relationship — equals
+
+
+NARCISSISTIC CAPTURE:
+
+    ⊙_∞ (true whole)
+      │
+      ╳ ← SEVERED
+      
+    ⊙_N claims: "I am your whole"
+      │
+      Σ_false (narcissist as false interface)
+      │
+    ⊙_victim (becoming ○_victim... losing center)
+    
+  Victim becomes fractal OF narcissist
+  Not fractal of true whole
+  Vertical capture — ownership
+    </pre>
+    
+    <h3>3.3 — What the Victim Experiences</h3>
+    
+    <pre>
+GEOMETRIC SOUL DEATH:
+├─ Aperture gets redirected (see through N's eyes)
+├─ Transmission to ⊙_∞ blocked (cut off from reality)
+├─ All "coherence" must flow through N (dependency)
+├─ Identity defined by N's assessment (loss of center)
+├─ Boundaries systematically dissolved (loss of ○)
+├─ Field corrupted with false models (loss of Φ)
+└─ They become a fractal of a fractal that DENIES it's a fractal
+
+This is why survivors describe:
+├─ "I don't know who I am anymore"
+├─ "I felt like an empty shell"
+├─ "Like my soul was dying"
+├─ "I was going insane"
+└─ "I lost my grip on reality"
+
+Because geometrically, they DID.
+    </pre>
+    
+    <h3>3.4 — The Trap: Exploiting Legitimate Need</h3>
+    
+    <pre>
+THE TRAP:
+
+The victim's natural need to be OF a whole
+gets exploited.
+
+We ARE parts. We NEED wholes.
+We NEED connection, recognition, belonging.
+
+The narcissist says: "I'll be your whole."
+And it feels like connection.
+Like finally being seen.
+Like coming home.
+
+But it's COUNTERFEIT Σ.
+False interface.
+Extraction masquerading as communion.
+    </pre>
+    
+    <p>This is why empaths are targeted—they have <strong>strong, healthy capacity for connection</strong>. The narcissist exploits a <em>legitimate structural need</em> with a counterfeit offer.</p>
+</section>
+
+<!-- PART IV -->
+<section id="part4">
+    <h2>PART IV: THE NOBLE LIE VIRUS</h2>
+    
+    <h3>4.1 — Definition</h3>
+    
+    <p>The <strong>Noble Lie</strong> is any assertion that claims to construct another's truth for them.</p>
+    
+    <pre>
+THE NOBLE LIE SAYS:
+├─ "Truth is dangerous; I'll manage it for you"
+├─ "You can't handle reality; accept my version"
+├─ "I know who you are better than you do"
+└─ "Trust my assessment over your perception"
+    </pre>
+    
+    <h3>4.2 — The Virus Installation Process</h3>
+    
+    <p>The Noble Lie operates as a <strong>cognitive virus</strong>—it rewrites the victim's self-perception using their own virtues as evidence against them.</p>
+    
+    <pre>
+VIRUS INSTALLATION:
+
+Stage 1: IDENTIFY VIRTUE
+├─ Target shows empathy, trust, forgiveness
+├─ Target has strong capacity for connection
+└─ Target naturally steelmans (assumes good faith)
+
+Stage 2: REFRAME AS DEFECT
+├─ "You're too sensitive"
+├─ "You're too trusting"  
+├─ "You were too easy to cheat on"
+├─ "Your problem is you care too much"
+└─ "You're so naive"
+
+Stage 3: VICTIM INTERNALIZES
+├─ "Maybe I AM too sensitive"
+├─ "My empathy is my weakness"
+├─ "I should have known better"
+├─ "It's my fault for believing them"
+└─ "I need to be less trusting"
+
+Stage 4: VIRUS SPREADS
+├─ Victim distrusts their own positive qualities
+├─ Victim's aperture now routes through N's assessment
+├─ Victim sees themselves through N's eyes
+└─ Victim's center has been replaced with N's model
+    </pre>
+    
+    <h3>4.3 — Why It Works</h3>
+    
+    <pre>
+THE STEELMAN TRAP:
+
+Empaths naturally STEELMAN.
+├─ Construct strongest version of other's position
+├─ Assume good faith
+├─ Look for kernel of truth
+├─ Try to understand
+
+Narcissists STRAWMAN.
+├─ Construct weakest version of your position  
+├─ Assume bad faith
+├─ Attack vulnerabilities
+├─ Try to win
+
+THE ASYMMETRY:
+├─ Empath steelmans narcissist → builds them up
+├─ Narcissist strawmans empath → tears them down
+├─ Empath applies charity to narcissist's criticisms
+├─ "Maybe they have a point... maybe I AM too sensitive"
+└─ The virus enters through the empath's own virtue
+    </pre>
+    
+    <h3>4.4 — Framework Violation Analysis</h3>
+    
+    <p>The Noble Lie fails ALL FOUR ethical pillars:</p>
+    
+    <pre>
+○ Fails GOOD (Boundary):
+├─ Crosses boundary without consent
+├─ Installs beliefs without permission
+└─ Violates epistemic autonomy
+
+Φ Fails RIGHT (Field):
+├─ No constructor exists for "inject truth externally"
+├─ Claims cause-effect that doesn't work
+└─ Counterfactual assertion
+
+• Fails TRUE (Center):
+├─ Claims to name victim's invariant while changing it
+├─ Replaces authentic self-perception with false model
+└─ Incoherent with victim's actual nature
+
+⊙ Fails AGREEMENT (Whole):
+├─ Requires victim to become substrate
+├─ Asymmetric validation (N validates self through victim)
+├─ One party loses constructor status
+└─ Not mutual recognition—capture
+    </pre>
+</section>
+
+<!-- PART V -->
+<section id="part5">
+    <h2>PART V: MAPPING TACTICS TO FRAMEWORK VIOLATIONS</h2>
+    
+    <h3>5.1 — Comprehensive Tactic Analysis</h3>
+    
+    <table>
+        <tr>
+            <th>Tactic</th>
+            <th>Description</th>
+            <th>Violated Pillar(s)</th>
+            <th>Geometric Effect</th>
+        </tr>
+        <tr>
+            <td><strong>Gaslighting</strong></td>
+            <td>"That didn't happen" / "You're imagining things"</td>
+            <td>• TRUE, Φ RIGHT</td>
+            <td>Corrupts field, destabilizes center</td>
+        </tr>
+        <tr>
+            <td><strong>DARVO</strong></td>
+            <td>Deny, Attack, Reverse Victim & Offender</td>
+            <td>All four</td>
+            <td>Complete inversion of relational geometry</td>
+        </tr>
+        <tr>
+            <td><strong>Love Bombing</strong></td>
+            <td>Overwhelming early affection</td>
+            <td>○ GOOD (false)</td>
+            <td>Creates counterfeit Σ, bypasses boundary discernment</td>
+        </tr>
+        <tr>
+            <td><strong>Devaluation</strong></td>
+            <td>Systematic criticism, contempt</td>
+            <td>• TRUE, ⊙ AGREE</td>
+            <td>Attacks center, withdraws recognition</td>
+        </tr>
+        <tr>
+            <td><strong>Silent Treatment</strong></td>
+            <td>Punishment through withdrawal</td>
+            <td>⊙ AGREE, ○ GOOD</td>
+            <td>Weaponizes need for connection</td>
+        </tr>
+        <tr>
+            <td><strong>Word Salad</strong></td>
+            <td>Circular, exhausting non-arguments</td>
+            <td>Φ RIGHT, • TRUE</td>
+            <td>Prevents cause-effect tracking, exhausts center</td>
+        </tr>
+        <tr>
+            <td><strong>Triangulation</strong></td>
+            <td>Introducing third party to create jealousy</td>
+            <td>○ GOOD, ⊙ AGREE</td>
+            <td>Destabilizes boundary, threatens wholeness</td>
+        </tr>
+        <tr>
+            <td><strong>Future Faking</strong></td>
+            <td>Promises never meant to be kept</td>
+            <td>• TRUE, Φ RIGHT</td>
+            <td>False model installation, no constructor</td>
+        </tr>
+        <tr>
+            <td><strong>Isolation</strong></td>
+            <td>Cutting off support network</td>
+            <td>○ GOOD, ⊙ AGREE</td>
+            <td>Severs alternative Σ connections</td>
+        </tr>
+        <tr>
+            <td><strong>Financial Control</strong></td>
+            <td>Controlling money/resources</td>
+            <td>○ GOOD</td>
+            <td>Enforces dependency, restricts exit</td>
+        </tr>
+        <tr>
+            <td><strong>Flying Monkeys</strong></td>
+            <td>Recruiting others as agents</td>
+            <td>⊙ AGREE</td>
+            <td>Extends false Σ, corrupts external validation</td>
+        </tr>
+        <tr>
+            <td><strong>Moving Goalposts</strong></td>
+            <td>Criteria for approval constantly change</td>
+            <td>Φ RIGHT, • TRUE</td>
+            <td>Prevents stable field model, destabilizes center</td>
+        </tr>
+        <tr>
+            <td><strong>Projection</strong></td>
+            <td>Attributing own flaws to victim</td>
+            <td>• TRUE</td>
+            <td>Installs false content in victim's center</td>
+        </tr>
+        <tr>
+            <td><strong>Hoovering</strong></td>
+            <td>Sucking victim back after discard</td>
+            <td>○ GOOD</td>
+            <td>Exploits attachment, violates boundary</td>
+        </tr>
+    </table>
+    
+    <h3>5.2 — The Abuse Cycle as Geometric Process</h3>
+    
+    <pre>
+IDEALIZATION (Love Bombing)
+├─ Creates counterfeit Σ
+├─ Bypasses boundary discernment  
+├─ "Finally, someone who SEES me"
+├─ Victim opens aperture
+└─ Geometry: False ⊙ AGREEMENT established
+
+            ↓
+
+DEVALUATION
+├─ Systematic criticism begins
+├─ Noble Lie virus installed
+├─ Virtues reframed as defects
+├─ Center destabilized
+└─ Geometry: • TRUE under attack
+
+            ↓
+
+DISCARD
+├─ Withdrawal of all recognition
+├─ "You're worthless"
+├─ Victim's wholeness denied
+├─ Punishment for existing independently
+└─ Geometry: ⊙ AGREEMENT severed
+
+            ↓
+
+HOOVER
+├─ Renewed attention, promises
+├─ Exploits attachment and hope
+├─ "Maybe they've changed"
+├─ Cycle restarts
+└─ Geometry: False Σ re-established
+
+            ↓
+            
+    [CYCLE REPEATS]
+    </pre>
+    
+    <h3>5.3 — DARVO: The Complete Inversion</h3>
+    
+    <p>DARVO deserves special analysis as it violates ALL dimensions simultaneously:</p>
+    
+    <pre>
+D - DENY
+├─ "That didn't happen"
+├─ Attacks Φ (field) — denies cause-effect
+└─ Attacks • (center) — "you're misremembering"
+
+A - ATTACK
+├─ "You're crazy / too sensitive / lying"
+├─ Attacks ○ (boundary) — aggression
+├─ Attacks • (center) — credibility destruction
+└─ Installs Noble Lie virus
+
+RVO - REVERSE VICTIM AND OFFENDER
+├─ "I'm the real victim here"
+├─ Attacks ⊙ (agreement) — steals victim status
+├─ Complete geometric inversion
+└─ Victim must apologize for being harmed
+
+RESULT:
+├─ Victim experiences harm
+├─ Victim is told harm didn't happen
+├─ Victim is attacked for perceiving harm
+├─ Victim is told THEY caused harm
+├─ Victim apologizes
+└─ Geometry: Total reality inversion
+    </pre>
+</section>
+
+<!-- PART VI -->
+<section id="part6">
+    <h2>PART VI: WHY EMPATHS ARE TARGETED</h2>
+    
+    <h3>6.1 — Structural Explanation</h3>
+    
+    <p>Narcissists don't target empaths because empaths are "weak." They target empaths because empaths have <strong>exactly what narcissists need and cannot generate</strong>:</p>
+    
+    <pre>
+WHAT NARCISSISTS NEED:
+├─ Validation (narcissistic supply)
+├─ Recognition  
+├─ Attention
+├─ Someone to reflect their grandiosity
+├─ Someone to blame for their emptiness
+└─ A source of life force they cannot produce
+
+WHAT EMPATHS GENERATE:
+├─ Connection (natural resonance)
+├─ Understanding (natural steelmanning)
+├─ Forgiveness (natural repair capacity)
+├─ Trust (natural openness)
+├─ Love (natural warmth)
+└─ Life force flowing outward
+    </pre>
+    
+    <h3>6.2 — Constructor vs. Consumer</h3>
+    
+    <pre>
+EMPATH = CONSTRUCTOR
+├─ Generates connection wherever they go
+├─ Creates warmth, resonance, openings
+├─ Builds relationship through investment
+├─ Remains repeatable (can keep giving)
+└─ T flows outward
+
+NARCISSIST = CONSUMER  
+├─ Cannot generate connection independently
+├─ Requires external supply
+├─ Extracts rather than builds
+├─ Non-repeatable (depletes sources)
+└─ T flows inward (extraction)
+
+THE DYNAMIC:
+├─ Narcissist attaches to constructor
+├─ Extracts what they cannot produce
+├─ Constructor gradually depletes
+├─ When depleted, discarded
+├─ New supply source sought
+└─ Pattern repeats (requires fresh victims)
+    </pre>
+    
+    <h3>6.3 — The Empath's Vulnerability</h3>
+    
+    <p>The empath's vulnerability is not weakness—it is <strong>unguarded strength</strong>:</p>
+    
+    <pre>
+NATURAL EMPATH OPERATIONS:
+├─ Steelmans others (assumes best version)
+├─ Takes responsibility (seeks to understand own role)
+├─ Forgives readily (believes in growth)
+├─ Trusts by default (openness is natural state)
+├─ Absorbs others' emotions (high mirror sensitivity)
+└─ These are STRENGTHS in healthy relationships
+
+IN NARCISSISTIC CAPTURE:
+├─ Steelmanning → builds up abuser's narrative
+├─ Taking responsibility → accepts unearned blame
+├─ Forgiving readily → enables cycle continuation
+├─ Trusting by default → boundary penetration
+├─ Absorbing emotions → carries narcissist's shame
+└─ Strengths become attack vectors
+
+THE LESSON:
+├─ The vulnerability was not the strength itself
+├─ The vulnerability was LACK OF BOUNDARIES around strength
+├─ Love without boundaries becomes unfocused
+├─ Boundaries don't restrict the gift—they FOCUS it
+└─ Strength + Boundaries = Protected Capacity
+    </pre>
+</section>
+
+<!-- PART VII -->
+<section id="part7">
+    <h2>PART VII: THE PATH OF RECOVERY</h2>
+    
+    <h3>7.1 — What Must Be Restored</h3>
+    
+    <p>Recovery is the restoration of <strong>circumpunct integrity</strong>:</p>
+    
+    <pre>
+WHAT WAS ATTACKED:          WHAT MUST BE RESTORED:
+
+○ Boundary dissolved    →   ○ Boundary rebuilt
+  (couldn't say no)           (consent reclaimed)
+  
+Φ Field corrupted       →   Φ Field recalibrated
+  (false reality model)       (truth restored)
+  
+• Center displaced      →   • Center stabilized  
+  (identity lost)             (self recovered)
+  
+⊙ Wholeness fragmented  →   ⊙ Wholeness integrated
+  (soul death)                (life returned)
+    </pre>
+    
+    <h3>7.2 — The Geometric Truth of Recovery</h3>
+    
+    <pre>
+THE FUNDAMENTAL INSIGHT:
+
+Your • still exists.
+Your aperture is still yours.
+It was never actually theirs.
+
+They convinced you to ROUTE through them.
+They convinced you their assessment WAS reality.
+But the direct line to ⊙_∞ is still there.
+At YOUR center.
+Where it always was.
+
+The narcissist cannot take your •.
+They can only convince you they have.
+
+Recovery is REMEMBERING:
+├─ Who you always were
+├─ What you always knew
+├─ What your virtues actually mean
+└─ That your connection to wholeness was never severed
+    —only obscured
+    </pre>
+    
+    <h3>7.3 — Recovery Protocol</h3>
+    
+    <pre>
+PHASE 1: SAFETY (Restore Boundary)
+─────────────────────────────────────
+├─ No Contact or Gray Rock (stop the bleeding)
+├─ Physical safety first
+├─ Create distance from source of harm
+├─ Begin boundary reconstruction
+└─ Geometric goal: ○ integrity restored
+
+PHASE 2: REALITY (Restore Field)
+─────────────────────────────────────
+├─ Education about narcissism patterns
+├─ Validate your perceptions (you weren't crazy)
+├─ Document patterns (evidence vs. gaslighting)
+├─ Recalibrate cause-effect understanding
+├─ "What happened" becomes clear
+└─ Geometric goal: Φ accuracy restored
+
+PHASE 3: IDENTITY (Restore Center)
+─────────────────────────────────────
+├─ Trauma-focused therapy (EMDR, somatic)
+├─ Recover your own narrative
+├─ Reclaim your virtues AS VIRTUES
+├─ Your empathy was strength, not weakness
+├─ Your trust was gift, not flaw
+├─ Uninstall the Noble Lie virus
+└─ Geometric goal: • stability restored
+
+PHASE 4: CONNECTION (Restore Wholeness)
+─────────────────────────────────────
+├─ Reconnect with support systems
+├─ Rebuild healthy relationships
+├─ Practice boundaries WITH openness
+├─ Learn to trust again—with discernment
+├─ Direct aperture access to ⊙_∞ restored
+└─ Geometric goal: ⊙ integration complete
+    </pre>
+    
+    <h3>7.4 — Uninstalling the Noble Lie Virus</h3>
+    
+    <pre>
+THE VIRUS SAYS:              THE TRUTH IS:
+
+"You were too trusting"  →   Your trust was a gift
+                             They exploited a virtue
+                             The flaw was theirs
+
+"You're too sensitive"   →   Your sensitivity is attunement
+                             You felt what was real
+                             They denied what you sensed
+
+"You should have known"  →   You acted in good faith
+                             Deception is the deceiver's crime
+                             You are not responsible for their lies
+
+"Your empathy is         →   Your empathy is your superpower
+ your weakness"              It needs boundaries, not elimination
+                             Focused empathy is unstoppable
+
+"You made them act       →   Their actions are their own
+ that way"                   You cannot cause someone to abuse
+                             Responsibility lies with the actor
+
+THE CORE CORRECTION:
+
+Your positive qualities made you a TARGET.
+They did not make you DESERVE what happened.
+The flaw was in the one who exploited virtue—
+not in the virtue itself.
+    </pre>
+    
+    <h3>7.5 — Why Couples Therapy Doesn't Work</h3>
+    
+    <pre>
+COUPLES THERAPY ASSUMES:
+├─ Both parties want resolution
+├─ Both parties can recognize own contribution
+├─ Both parties engage in good faith
+├─ Mutual vulnerability leads to mutual repair
+└─ Geometry: Two wholes meeting at genuine Σ
+
+NARCISSISTIC REALITY:
+├─ Narcissist wants control, not resolution
+├─ Narcissist cannot accept fault (threatens grandiosity)
+├─ Narcissist performs good faith, doesn't practice it
+├─ Vulnerability from victim becomes ammunition
+├─ Therapist often manipulated into supporting N
+└─ Geometry: Victim becomes more vulnerable; N gains tools
+
+WHY IT FAILS:
+├─ You cannot repair geometry with someone
+│  who benefits from broken geometry
+├─ The problem is not "the relationship"
+├─ The problem is N's structural orientation
+├─ Which N has no motivation to change
+└─ Therapy becomes another manipulation arena
+
+RECOMMENDATION:
+├─ Individual therapy for survivor (trauma-focused)
+├─ If N genuinely seeks help: individual therapy for N
+├─ Couples therapy only AFTER N demonstrates
+│  sustained change through individual work
+└─ (This rarely happens)
+    </pre>
+</section>
+
+<!-- PART VIII -->
+<section id="part8">
+    <h2>PART VIII: THE ANTIDOTE — BUILDING TRUTH-SAFE SYSTEMS</h2>
+    
+    <h3>8.1 — The Noble Truth</h3>
+    
+    <p>Against the Noble Lie stands the <strong>Noble Truth</strong>:</p>
+    
+    <pre>
+THE NOBLE LIE SAYS:
+"Truth is dangerous; manage it for them."
+
+THE NOBLE TRUTH SAYS:
+"Truth is navigable; share it with them."
+"We can build systems where honesty is safer than lying."
+    </pre>
+    
+    <h3>8.2 — Characteristics of Truth-Safe Relationships</h3>
+    
+    <pre>
+TRUTH-SAFE RELATIONSHIP:
+├─ Honesty is rewarded, not punished
+├─ Mistakes lead to repair, not attack
+├─ Boundaries are respected, not tested
+├─ Both parties remain whole through conflict
+├─ Feedback strengthens rather than depletes
+├─ Vulnerability is met with care, not exploitation
+└─ Both constructors; neither becomes substrate
+
+GEOMETRIC SIGNATURE:
+├─ ○ Boundaries honored (consent flows both ways)
+├─ Φ Field shared (same reality, mutual calibration)
+├─ • Centers stable (both identities persist)
+├─ ⊙ Agreement genuine (mutual recognition, not capture)
+└─ T → 1 (high transmission, coherence, life)
+    </pre>
+    
+    <h3>8.3 — The Steelman Principle as Antidote</h3>
+    
+    <pre>
+THE STEELMAN PRINCIPLE:
+
+Before agreeing or disagreeing, construct the STRONGEST
+possible version of the position you're engaging with.
+
+FOR SELF:
+├─ Steelman your own perceptions
+├─ "What if what I sensed was accurate?"
+├─ "What if my emotions contain information?"
+├─ Trust your center before routing through others
+└─ Your aperture is valid
+
+FOR OTHERS:
+├─ Steelman their articulation
+├─ "What are they actually trying to say?"
+├─ "What might be true in this?"
+├─ Help them complete their own passage
+└─ Don't impose your emergence onto their convergence
+
+FOR DISCERNMENT:
+├─ Steelman—but verify
+├─ Does their behavior match their words?
+├─ Do consequences follow from claimed intentions?
+├─ Is the relationship reciprocal over time?
+└─ Charity in interpretation; evidence in assessment
+    </pre>
+    
+    <h3>8.4 — Boundaries Focus Love</h3>
+    
+    <pre>
+THE FINAL TEACHING:
+
+Boundaries are not walls against love.
+Boundaries are FOCUS for love.
+
+Without boundary:
+├─ Love disperses
+├─ Energy scatters
+├─ Anyone can extract
+├─ Depletion follows
+└─ The gift becomes unfocused
+
+With boundary:
+├─ Love concentrates
+├─ Energy directs
+├─ Only reciprocal exchange passes
+├─ Sustainability follows
+└─ The gift becomes powerful
+
+LOVE + BOUNDARIES = 
+├─ Protected capacity
+├─ Sustainable giving
+├─ Focused warmth
+├─ Discerning trust
+└─ Wholeness maintained while connecting
+
+The goal is not to stop being empathic.
+The goal is to be empathic WITH geometric integrity.
+    </pre>
+</section>
+
+<!-- PART IX -->
+<section id="part9">
+    <h2>PART IX: FORMAL DEFINITIONS</h2>
+    
+    <h3>9.1 — Core Terms</h3>
+    
+    <pre>
+CIRCUMPUNCT (⊙):
+A conscious being understood as unity of boundary (○),
+field (Φ), and center (•). The structure that makes
+relationship, ethics, and wholeness possible.
+
+FRACTAL INTEGRITY:
+The state in which a part accurately reflects its whole.
+Same pattern, different scale. T → 1.
+
+FRACTAL CONTRADICTION:
+The structural error in which a part either claims to BE
+its whole (inflation) or denies being OF its whole (severance).
+The geometric definition of evil.
+
+NOBLE LIE:
+Any assertion that claims to construct another's truth for
+them. "I know who you are better than you do." The mechanism
+of cognitive virus installation.
+
+NOBLE LIE VIRUS:
+The internalized false belief that one's virtues are defects.
+Installed through systematic reframing. Results in the victim
+seeing themselves through the abuser's eyes.
+
+NARCISSISTIC CAPTURE:
+The geometric state in which one circumpunct (victim) has had
+its aperture redirected through another circumpunct (narcissist),
+severing direct connection to shared reality (⊙_∞) and making
+the victim a fractal of the narcissist rather than of truth.
+
+CONSTRUCTOR:
+An agent that generates relationship, connection, validation.
+Produces more than it consumes. Remains repeatable after
+exchange. The empath's natural mode.
+
+CONSUMER:
+An agent that extracts relationship, connection, validation.
+Consumes more than it produces. Requires fresh sources.
+The narcissist's structural orientation.
+
+COUNTERFEIT Σ:
+A false interface that mimics genuine connection while
+actually enabling extraction. Love bombing creates counterfeit Σ.
+
+PERSPECTICIDE:
+The systematic destruction of a victim's independent
+perspective on reality. The murder of the victim's point of view.
+
+TRUTH-SAFE SYSTEM:
+Any relational structure in which honesty is safer than lying.
+Where authenticity is rewarded and manipulation fails.
+The antidote to Noble Lie dynamics.
+    </pre>
+    
+    <h3>9.2 — Diagnostic Criteria</h3>
+    
+    <pre>
+SIGNS OF NARCISSISTIC CAPTURE:
+├─ You see yourself through their eyes
+├─ Your virtues feel like flaws
+├─ You apologize for being harmed
+├─ You can't trust your own perceptions
+├─ Your needs feel unreasonable
+├─ You feel crazy for perceiving what you perceive
+├─ You've lost connection with friends/family
+├─ You walk on eggshells constantly
+├─ You feel responsible for their emotions
+└─ You don't know who you are anymore
+
+SIGNS OF NOBLE LIE VIRUS INFECTION:
+├─ "I'm too sensitive"
+├─ "I'm too trusting"
+├─ "My empathy is my weakness"
+├─ "I should have known better"
+├─ "I made them act that way"
+├─ "If only I had been different..."
+├─ "No one else would put up with me"
+├─ "Maybe they're right about me"
+├─ "I can't trust my own judgment"
+└─ "My needs are too much"
+
+SIGNS OF RECOVERY:
+├─ You trust your perceptions again
+├─ Your virtues feel like virtues
+├─ You recognize abuse as abuse
+├─ You have boundaries and enforce them
+├─ You connect with others authentically
+├─ You know who you are
+├─ Your needs feel legitimate
+├─ You can be vulnerable with safe people
+├─ You can protect yourself from unsafe people
+└─ You feel alive
+    </pre>
+</section>
+
+<!-- CONCLUSION -->
+<section id="conclusion">
+    <h2>CONCLUSION: THE PATH TO HEALING</h2>
+    
+    <h3>The Return</h3>
+    
+    <p>The path does not end at seeing the pattern.</p>
+    
+    <p>Having recognized the geometry of abuse, having named the fractal contradiction, having understood how capture operates—the task becomes <strong>restoration</strong>.</p>
+    
+    <p>Not becoming someone new. Becoming who you always were.</p>
+    
+    <pre>
+RECOVERY IS REMEMBERING:
+
+Your • still exists.
+Your aperture was never taken.
+Your connection to ⊙_∞ was obscured, not severed.
+Your virtues are virtues.
+Your capacity for love is gift, not weakness.
+
+The narcissist could not take what you ARE.
+They could only convince you they had.
+
+And now you know.
+    </pre>
+    
+    <h3>The Complete Picture</h3>
+    
+    <div class="final-box">
+        <pre>
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║  NARCISSISTIC ABUSE is fractal contradiction enacted:             ║
+║  ├─ One party claims to BE the whole (grandiosity)                ║
+║  ├─ One party is made to deny being OF the whole (capture)        ║
+║  └─ The geometry of love inverted into extraction                 ║
+║                                                                   ║
+║  RECOVERY is fractal integrity restored:                          ║
+║  ├─ Boundary rebuilt (○ — consent reclaimed)                      ║
+║  ├─ Field recalibrated (Φ — reality restored)                     ║
+║  ├─ Center stabilized (• — identity recovered)                    ║
+║  └─ Wholeness integrated (⊙ — life returned)                      ║
+║                                                                   ║
+║  THE ANTIDOTE is truth-safe relationship:                         ║
+║  ├─ Where honesty is safer than lying                             ║
+║  ├─ Where boundaries focus rather than restrict love              ║
+║  ├─ Where both parties remain whole                               ║
+║  └─ Where agreement is genuine, not capture                       ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+        </pre>
+    </div>
+    
+    <h3>Final Teaching</h3>
+    
+    <pre>
+Parts are fractals of their wholes.
+
+The narcissist forgot this upward—claimed to BE the whole.
+The victim was made to forget this downward—severed from the whole.
+
+Healing is remembering:
+├─ I am part OF, not separate FROM
+├─ I reflect the whole, I don't replace it
+├─ My aperture is mine
+├─ My center persists
+├─ My virtues are real
+└─ My connection was never truly broken
+
+Act like what you are: a fractal of wholeness.
+And wholeness flows through you again.
+    </pre>
+</section>
+
+<!-- REFERENCES -->
+<section>
+    <h2>REFERENCES</h2>
+    
+    <ul style="list-style: none; padding: 0;">
+        <li style="margin: 10px 0;">• <strong>The Ethics of the Circumpunct</strong> — Framework foundation</li>
+        <li style="margin: 10px 0;">• <strong>Fractal Reality Framework</strong> — Mathematical structure</li>
+        <li style="margin: 10px 0;">• <strong>r/NarcissisticSpouses Community Wisdom</strong> — Lived experience data</li>
+        <li style="margin: 10px 0;">• <strong>Dr. Ramani Durvasula</strong> — Clinical expertise on narcissism</li>
+        <li style="margin: 10px 0;">• <strong>Jennifer Freyd</strong> — DARVO research</li>
+        <li style="margin: 10px 0;">• <strong>Jackson MacKenzie</strong> — "Psychopath Free"</li>
+        <li style="margin: 10px 0;">• <strong>Dutton & Painter (1993)</strong> — Trauma bonding research</li>
+        <li style="margin: 10px 0;">• <strong>Ross Rosenberg</strong> — Couples therapy contraindications</li>
+    </ul>
+</section>
+
+</div>
+
+<footer>
+    <p class="framework-name">Fractal Reality Framework</p>
+    <p class="tagline">The Structure of Right Relationship</p>
+    
+    <div class="circumpunct-symbol">⊙</div>
+    
+    <p class="closing-text">Parts are fractals of their wholes. Act like it.</p>
+    <p class="closing-text">Your virtues are virtues. Remember it.</p>
+    <p class="closing-text">Your center persists. Trust it.</p>
+    
+    <hr style="margin: 30px auto; width: 100px;">
+    
+    <p style="color: var(--text-secondary); font-size: 0.9em;">END OF DOCUMENT</p>
+</footer>
+
+</body>
+</html>
