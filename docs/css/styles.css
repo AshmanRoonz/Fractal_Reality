@@ -170,6 +170,9 @@ body {
 .symbol-body { color: var(--body-color); }
 .symbol-mind { color: var(--mind-color); }
 .symbol-soul { color: var(--soul-color); }
+.symbol-line { color: var(--soul-color); }
+.symbol-branch { color: var(--mind-color); }
+.symbol-converge { color: var(--body-color); }
 .symbol-whole {
     color: var(--circumpunct-color);
     text-shadow: 0 0 6px var(--soul-color);
