@@ -5,11 +5,11 @@
 We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental object ⊙ = ○ ⊗ Φ ⊗ • unifies boundary (○), field (Φ), and aperture (•) through the master equation:
 
 ```
-Φ∞ →⊛→ iλ∞ →☀→ ⊙λ∞     (Forward: Field → Aperture → Form)
-⊙λ∞ →⊛→ iλ∞ →☀→ Φ∞     (Return: Form → Aperture → Field)
+Φ∞ →⊛→ iλ∞ →☀︎→ ⊙λ∞     (Forward: Field → Aperture → Form)
+⊙λ∞ →⊛→ iλ∞ →☀︎→ Φ∞     (Return: Form → Aperture → Field)
 ```
 
-where ⊛ denotes convergence (input to aperture) and ☀ denotes emergence (output from aperture). We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 corresponds to D=1.5—the fractal dimension of Brownian motion, a Mandelbrot fact (theorem, not fit).
+where ⊛ denotes convergence (input to aperture) and ☀︎ denotes emergence (output from aperture). We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 corresponds to D=1.5—the fractal dimension of Brownian motion, a Mandelbrot fact (theorem, not fit).
 
 **On process dimensions:** The framework builds on Mandelbrot's proven mathematical foundation: fractional (Hausdorff) dimensions are real and measurable, describing process traces rather than static objects. The specific D value varies by system (coastlines ≈1.25, Brownian motion =1.5 exactly, DLA clusters ≈1.7)—this variation is expected. The framework predicts that balanced aperture dynamics produce D≈1.5; empirical examples illustrate this principle but are not load-bearing evidence for it.
 
@@ -29,7 +29,7 @@ where ⊛ denotes convergence (input to aperture) and ☀ denotes emergence (out
   - [1.4 Aperture (•)](#14-aperture-)
   - [1.5 Circumpunct Configuration Space (⊙)](#15-circumpunct-configuration-space-)
 - [2. Primitive Dynamical Objects](#2-primitive-dynamical-objects)
-  - [2.1 Flow Operators (⊛, i, ☀)](#21-flow-operators---i-)
+  - [2.1 Flow Operators (⊛, i, ☀︎)](#21-flow-operators---i-)
   - [2.2 The Two Operators: Isotropic Convergence and Emergence](#22-the-two-operators-isotropic-convergence-and-emergence)
   - [2.3 Balance Parameter (◐)](#23-balance-parameter-◐)
   - [2.3.1 The Aperture Chamber](#231-the-aperture-chamber)
@@ -47,7 +47,7 @@ where ⊛ denotes convergence (input to aperture) and ☀ denotes emergence (out
   - [Postulate 4 — Local Quantum Limit (Unitary Evolution)](#postulate-4--local-quantum-limit-unitary-evolution)
   - [Postulate 5 — Geometric / GR Limit](#postulate-5--geometric--gr-limit)
   - [3.6 Dictionary to Standard Formalisms](#36-dictionary-to-standard-formalisms)
-- [4. Schrödinger Equation from U = ☀ ∘ i ∘ ⊛](#4-schrödinger-equation-from-u----i--)
+- [4. Schrödinger Equation from U = ☀︎ ∘ i ∘ ⊛](#4-schrödinger-equation-from-u----i--)
   - [4.1 Simplifying Assumptions](#41-simplifying-assumptions)
   - [4.2 Explicit Computation for the √r Kernel](#42-explicit-computation-for-the-r-kernel)
   - [4.3 Derivation of the Transmission Law T(Δφ) = cos²(Δφ/2)](#43-derivation-of-the-transmission-law-tδφ--cos²δφ2)
@@ -96,7 +96,7 @@ The circumpunct framework models the universe as a *whole-with-parts* object:
 equipped with a three-stage process (convergence, aperture rotation, emergence):
 
 ```
-Φ(t+Δt) = ☀ ∘ i ∘ ⊛[Φ(t)]
+Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]
 ```
 
 **The goal of this document is to provide:**
@@ -220,7 +220,7 @@ Dim   │ Type      │ Symbol │ Name               │ Core Equations
 ──────┼───────────┼────────┼────────────────────┼─────────────────────────────────
 3.5D  │ Process   │  •_t   │ Reiteration        │ T_eff,ij = cos²(Δφ_ij/2), B₃ generators
 4D    │ Structure │   —    │ Time Braid         │ G_μν = (8πG/c⁴)T_μν, B(x) ∝ √(−g_tt)
-4.5D  │ Process   │   —    │ Braid Branching    │ 4.5Dₙ = ∞Dₙ₊₁, ⊙* = fix(λΦ. ☀∘i∘⊛[Φ])
+4.5D  │ Process   │   —    │ Braid Branching    │ 4.5Dₙ = ∞Dₙ₊₁, ⊙* = fix(λΦ. ☀︎∘i∘⊛[Φ])
 5D    │ Structure │  ○_t   │ Time Surface       │ Temporal membrane enclosing 4D braid
 5.5D  │ Process   │   —    │ Temporal Sensation │ History↔possibility coupling
 6D    │ Structure │  Φ_t   │ Time Volume        │ Configuration space of all 4D braids
@@ -323,7 +323,7 @@ The slogan "⊙ = ○ ⊗ Φ ⊗ •" is understood as "a state in the tensor-pr
 
 ## 2. Primitive Dynamical Objects
 
-### 2.1 Flow Operators (⊛, i, ☀)
+### 2.1 Flow Operators (⊛, i, ☀︎)
 
 Dynamics is implemented by a three-stage map on field configurations. In integral-kernel form (suppressing bundle indices):
 
@@ -340,13 +340,13 @@ Multiplication by the imaginary unit in the chosen complex structure, with scale
 
 **3. Emergence** (outward redistribution back into the field)
 ```
-(☀ χ)(r) = ∫ K_emerg(r, r'') χ(r'') d³r''
+(☀︎ χ)(r) = ∫ K_emerg(r, r'') χ(r'') d³r''
 ```
 
 The one-step evolution operator is:
 
 ```
-U(Δt) = ☀ ∘ i ∘ ⊛
+U(Δt) = ☀︎ ∘ i ∘ ⊛
 ```
 
 acting on ℋ_Φ, so that:
@@ -357,7 +357,7 @@ acting on ℋ_Φ, so that:
 
 ### 2.2 The Two Operators: Isotropic Convergence and Emergence
 
-**Isotropy Principle:** The symbols ⊛ and ☀ are rotationally symmetric (isotropic). This matters because:
+**Isotropy Principle:** The symbols ⊛ and ☀︎ are rotationally symmetric (isotropic). This matters because:
 - Schrödinger's equation requires isotropy
 - The wavefunction has no built-in directional bias
 - Probability flows equally in all directions until measurement constrains it
@@ -367,23 +367,23 @@ acting on ℋ_Φ, so that:
 | Symbol | Name | What It Does |
 |:------:|:-----|:-------------|
 | ⊛ | Convergence | Input TO aperture — gathering, receiving, focusing from ALL directions |
-| ☀ | Emergence | Output FROM aperture — radiating, producing, manifesting to ALL directions |
+| ☀︎ | Emergence | Output FROM aperture — radiating, producing, manifesting to ALL directions |
 
 **Physical Interpretation:**
 - ⊛ gathers from ALL directions equally — like a drain, a sink, a gravitational well
-- ☀ radiates to ALL directions equally — like a source, a fountain, a star
+- ☀︎ radiates to ALL directions equally — like a source, a fountain, a star
 
 **The Complete Flow:**
 ```
-    Φ →⊛→ i →☀→ Φ′        (Forward: field converges, rotates, emerges)
-    Φ′ →⊛→ i →☀→ Φ        (Return: form converges, rotates, emerges as field)
+    Φ →⊛→ i →☀︎→ Φ′        (Forward: field converges, rotates, emerges)
+    Φ′ →⊛→ i →☀︎→ Φ        (Return: form converges, rotates, emerges as field)
 ```
 
 The order of operations is always: **convergence → aperture rotation → emergence**.
 
-In the Hilbert-space setting, ⊛ and ☀ are defined with adjoint relations that preserve unitarity:
+In the Hilbert-space setting, ⊛ and ☀︎ are defined with adjoint relations that preserve unitarity:
 
-    ⊛† = ⊛,   ☀† = ☀  (self-adjoint in appropriate inner product)
+    ⊛† = ⊛,   ☀︎† = ☀︎  (self-adjoint in appropriate inner product)
 
 **Mapping to Fundamental Forces:**
 
@@ -391,8 +391,8 @@ In the Hilbert-space setting, ⊛ and ☀ are defined with adjoint relations tha
 |:------|:-----|:--------|
 | Gravity | ⊛ Convergence | Every mass draws spacetime toward itself |
 | Strong Force | ⊛ Convergence | Binds quarks, confines nucleons |
-| Electromagnetism | ☀ Emergence | Photons radiate outward from every charge |
-| Weak Force | ☀ Emergence | Enables decay and transmutation |
+| Electromagnetism | ☀︎ Emergence | Photons radiate outward from every charge |
+| Weak Force | ☀︎ Emergence | Enables decay and transmutation |
 
 The four forces are not four separate things — they are **two operations at two scales**.
 
@@ -402,13 +402,13 @@ The convergence/emergence kernels define norms:
 
 ```
 |⊛|² = ∬ |K_conv(r,r')|² dr dr'
-|☀|² = ∬ |K_emerg(r,r')|² dr dr'
+|☀︎|² = ∬ |K_emerg(r,r')|² dr dr'
 ```
 
 and a **balance parameter**:
 
 ```
-◐ = |⊛| / (|⊛| + |☀|)
+◐ = |⊛| / (|⊛| + |☀︎|)
 ```
 
 The framework singles out **◐ = 1/2** by symmetry, maximum entropy, and energy balance arguments. At this fixed point, the effective fractal dimension of worldlines corresponds to:
@@ -433,7 +433,7 @@ THREE-STAGE ARCHITECTURE:
        ┌────┴────┐                    ┌────┴────┐
        │  INPUT  │                    │ OUTPUT  │
        │  VALVE  │                    │  VALVE  │
-       │   ⊛     │                    │    ☀    │
+       │   ⊛     │                    │    ☀︎    │
        └────┬────┘                    └────┬────┘
             │                               ↑
             └───────→ [i CHAMBER] ──────────┘
@@ -442,7 +442,7 @@ THREE-STAGE ARCHITECTURE:
 
     Stage 1: INPUT VALVE (⊛)  — Regulates convergence rate
     Stage 2: TRANSFORM SPACE (i) — 90° rotation at β = 0.5
-    Stage 3: OUTPUT VALVE (☀) — Regulates emergence rate
+    Stage 3: OUTPUT VALVE (☀︎) — Regulates emergence rate
 ```
 
 **Chamber State Equation:**
@@ -450,29 +450,29 @@ THREE-STAGE ARCHITECTURE:
 The transform space has a state (pressure/charge):
 
 ```
-    dP/dt = |⊛| − |☀|
+    dP/dt = |⊛| − |☀︎|
 
     where:
         P = chamber pressure (accumulated potential)
         |⊛| = input flow rate
-        |☀| = output flow rate
+        |☀︎| = output flow rate
 ```
 
 **Three Regimes:**
-- |⊛| > |☀| → β > 0.5 → BUILDUP (accumulating potential)
-- |⊛| < |☀| → β < 0.5 → DEPLETION (spending reserves)
-- |⊛| = |☀| → β = 0.5 → STEADY STATE (balanced flow)
+- |⊛| > |☀︎| → β > 0.5 → BUILDUP (accumulating potential)
+- |⊛| < |☀︎| → β < 0.5 → DEPLETION (spending reserves)
+- |⊛| = |☀︎| → β = 0.5 → STEADY STATE (balanced flow)
 
 ### 2.3.2 Infinite Depth: The Fractal Reservoir
 
 Because every center (•) contains infinite smaller circumpuncts, the chamber is an infinite regression of nested tanks:
 
 ```
-SCALE n:     [⊛ₙ] → [iₙ CHAMBER] → [☀ₙ]
+SCALE n:     [⊛ₙ] → [iₙ CHAMBER] → [☀︎ₙ]
                          │
                      contains
                          ↓
-SCALE n−1:   [⊛ₙ₋₁] → [iₙ₋₁ CHAMBER] → [☀ₙ₋₁]
+SCALE n−1:   [⊛ₙ₋₁] → [iₙ₋₁ CHAMBER] → [☀︎ₙ₋₁]
                          │
                          ↓
                         ...∞
@@ -570,7 +570,7 @@ This **aperture rotation operator** satisfies:
 
 **Unification through ◐:** The balance parameter appears in three equivalent contexts:
 
-1. **Flow balance:** ◐ = |⊛| / (|⊛| + |☀|)
+1. **Flow balance:** ◐ = |⊛| / (|⊛| + |☀︎|)
 2. **Rotation angle:** θ(◐) = π◐
 3. **Fractal dimension:** D(◐) = 1 + ◐
 
@@ -593,8 +593,8 @@ The 90° rotation is geometrically optimal because it:
 **Generalized master equation:**
 
 ```
-Original:    Φ' = ☀ ∘ i ∘ ⊛[Φ]
-Generalized: Φ' = ☀ ∘ Å(◐) ∘ ⊛[Φ]
+Original:    Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
+Generalized: Φ' = ☀︎ ∘ Å(◐) ∘ ⊛[Φ]
 ```
 
 At ◐ = 0.5: Å(0.5) = exp(iπ/2) = i
@@ -643,9 +643,9 @@ Same letter, two scales of "turning": local vs global. In the relativistic limit
 
 Each aperture • has two faces:
 - **⊛ face** (convergence): where field flows inward
-- **☀ face** (emergence): where field flows outward
+- **☀︎ face** (emergence): where field flows outward
 
-Each face carries a local phase φ_⊛ and φ_☀, encoding the "clock position" of the aperture cycle at that face:
+Each face carries a local phase φ_⊛ and φ_☀︎, encoding the "clock position" of the aperture cycle at that face:
 
 ```
 φ(t) = ω t + α
@@ -711,7 +711,7 @@ such that for transition rates k:
 The forward rate exceeds the reverse rate.
 ```
 
-**Connection to the aperture operator:** The circumpunct cycle Φ' = ☀ ∘ i ∘ ⊛[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse—this asymmetry is the microscopic origin of ratcheting.
+**Connection to the aperture operator:** The circumpunct cycle Φ' = ☀︎ ∘ i ∘ ⊛[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse—this asymmetry is the microscopic origin of ratcheting.
 
 **CP violation as primordial ratchet:**
 
@@ -749,11 +749,11 @@ RATCHET CONDITION:
 The ratchet asymmetry is encoded in the balance parameter:
 
 ```
-|☀| ≠ |⊛| in general
+|☀︎| ≠ |⊛| in general
 
-When |☀| > |⊛|:  Net emergence. Complexity increases. ◐ < 0.5
-When |☀| < |⊛|:  Net convergence. Complexity decreases. ◐ > 0.5
-When |☀| = |⊛|:  Balance. Maintenance. ◐ = 0.5
+When |☀︎| > |⊛|:  Net emergence. Complexity increases. ◐ < 0.5
+When |☀︎| < |⊛|:  Net convergence. Complexity decreases. ◐ > 0.5
+When |☀︎| = |⊛|:  Balance. Maintenance. ◐ = 0.5
 
 LIVING SYSTEMS operate slightly off balance:
 
@@ -767,7 +767,7 @@ rather than merely maintain.
 
 The **ethereal tail** formalizes how phase-locked centers across nested scales create persistent identity.
 
-**Definition (Ethereal Tail):** Let {•ₙ}ₙ₌₁ᴺ be a hierarchy of apertures at scales sₙ, each executing the master cycle Φₙ' = ☀ₙ ∘ i ∘ ⊛ₙ[Φₙ]. The ethereal tail T exists when:
+**Definition (Ethereal Tail):** Let {•ₙ}ₙ₌₁ᴺ be a hierarchy of apertures at scales sₙ, each executing the master cycle Φₙ' = ☀︎ₙ ∘ i ∘ ⊛ₙ[Φₙ]. The ethereal tail T exists when:
 
 ```
 T = {•ₙ : Δφₙ,ₙ₊₁ ≈ 0 (mod 2π) for all adjacent pairs}
@@ -858,7 +858,7 @@ or, in the quantum theory, a state in the Hilbert space ℋ_⊙ = ℋ_○ ⊗ �
 **P2.** Time evolution in a given frame is implemented by a three-stage linear operator:
 
 ```
-U(Δt) = ☀ ∘ i ∘ ⊛
+U(Δt) = ☀︎ ∘ i ∘ ⊛
 ```
 
 acting on ℋ_Φ, so that:
@@ -870,12 +870,12 @@ acting on ℋ_Φ, so that:
 The full universe is a fixed point of the extended "validation" evolution:
 
 ```
-⊙ = fix(λΦ. ☀(V_out(i_◐(V_in(⊛Φ)))))
+⊙ = fix(λΦ. ☀︎(V_out(i_◐(V_in(⊛Φ)))))
 ```
 
 where V_in/out are additional validation filters.
 
-**Note on validation operators:** In the full, non-linear theory, additional "validation" maps V_in and V_out act before and after the aperture, encoding selection, normalization, and consistency across scales. In this quick-start we suppress these maps and focus on the linear kernel ☀ ∘ i ∘ ⊛, which is sufficient to recover standard QM and GR limits.
+**Note on validation operators:** In the full, non-linear theory, additional "validation" maps V_in and V_out act before and after the aperture, encoding selection, normalization, and consistency across scales. In this quick-start we suppress these maps and focus on the linear kernel ☀︎ ∘ i ∘ ⊛, which is sufficient to recover standard QM and GR limits.
 
 ### Postulate 3 — Aperture Balance and the Imaginary Unit
 
@@ -888,7 +888,7 @@ i² = -1
 and it acts at a critical balance ◐ = 1/2 between convergence and emergence:
 
 ```
-◐ = |⊛| / (|⊛| + |☀|) = 1/2
+◐ = |⊛| / (|⊛| + |☀︎|) = 1/2
 ```
 
 This balance fixes the effective fractal dimension of worldlines to a universal value D = 1.5.
@@ -953,8 +953,8 @@ For physicists trained in QM/QFT/GR, here is how the circumpunct objects map to 
 |-------------|------------------|-------|
 | Å(◐) = i at ◐=0.5 | U(1) phase generator | The "i" in iℏ∂/∂t |
 | ⊛ (convergence) | Coarse-graining / RG flow | Integrating out short scales |
-| ☀ (emergence) | Projection to observables | Decoherence / measurement |
-| ☀ ∘ i ∘ ⊛ | Unitary evolution U(t) | Standard QM time evolution |
+| ☀︎ (emergence) | Projection to observables | Decoherence / measurement |
+| ☀︎ ∘ i ∘ ⊛ | Unitary evolution U(t) | Standard QM time evolution |
 | ℛ (ratchet) | CP-violating processes | Breaks detailed balance |
 
 **Limits and Correspondences:**
@@ -968,7 +968,7 @@ For physicists trained in QM/QFT/GR, here is how the circumpunct objects map to 
 
 **Key Translation Rules:**
 
-1. **"Process evolution"** = one application of ☀ ∘ i ∘ ⊛
+1. **"Process evolution"** = one application of ☀︎ ∘ i ∘ ⊛
 2. **"Balance point ◐ = 0.5"** = the fixed point where convergence equals emergence
 3. **"D = 1.5"** = fractal dimension of worldline, measurable via box-counting or power spectrum
 4. **"Braid density B(x)"** = (conjectural) coarse-grained crossing number density → metric
@@ -1015,7 +1015,7 @@ FRACTAL (○):
 
 | Level | Content | Description |
 |-------|---------|-------------|
-| Fundamental | Input/Output (⊛/☀) | The flow itself — prior to content |
+| Fundamental | Input/Output (⊛/☀︎) | The flow itself — prior to content |
 | Structural | Binary/Analog/Fractal | The type of content that flows |
 | Countable | 64 states, ℂ⁶⁴ amplitudes | The specific configurations |
 
@@ -1050,7 +1050,7 @@ This resolves the apparent tension between discrete state counting and continuou
 
 ---
 
-## 4. Schrödinger Equation from U = ☀ ∘ i ∘ ⊛
+## 4. Schrödinger Equation from U = ☀︎ ∘ i ∘ ⊛
 
 This section derives the standard Schrödinger equation as a local limit of the circumpunct evolution.
 
@@ -1203,7 +1203,7 @@ where V_eff collects potential-like contributions from departures of K from pure
 ╚═══════════════════════════════════════════════════════════╝
 ```
 
-**Summary:** The single-step process ☀∘i∘⊛ defines an integral evolution operator U(Δt). Under standard locality and scaling assumptions, its generator is a self-adjoint differential operator H, and the central aperture rotation i supplies the complex structure needed to write the evolution as the Schrödinger equation.
+**Summary:** The single-step process ☀︎∘i∘⊛ defines an integral evolution operator U(Δt). Under standard locality and scaling assumptions, its generator is a self-adjoint differential operator H, and the central aperture rotation i supplies the complex structure needed to write the evolution as the Schrödinger equation.
 
 **Physical interpretation of m (surface mass):**
 
@@ -1223,7 +1223,7 @@ The phase transmission law stated in §2.6 follows from the same postulates used
 
 **Assumptions (all already in the framework):**
 
-1. **Linearity (Superposition):** The update operator U = ☀ ∘ i ∘ ⊛ is linear on Φ. Responses to multiple inputs add as complex amplitudes.
+1. **Linearity (Superposition):** The update operator U = ☀︎ ∘ i ∘ ⊛ is linear on Φ. Responses to multiple inputs add as complex amplitudes.
 
 2. **Isotropy (Local Symmetry):** Two apertures in symmetric environment have equal magnitude response; only phases differ.
 
@@ -1332,7 +1332,7 @@ Here we address: *How might metric and curvature arise from the circumpunct obje
 
 ### 5.1 Coarse-Grained Braid Structure → Redshift Factor
 
-**The conjecture:** Repeated cycles of the process (⊛, i, ☀) generate a braided structure of worldlines and field lines. At large scales, this should be summarizable by a scalar "braid density" B(x) over spacetime, with:
+**The conjecture:** Repeated cycles of the process (⊛, i, ☀︎) generate a braided structure of worldlines and field lines. At large scales, this should be summarizable by a scalar "braid density" B(x) over spacetime, with:
 
 ```
 B(x) ∝ √(-g_tt(x))
@@ -1342,7 +1342,7 @@ B(x) ∝ √(-g_tt(x))
 
 | Claim | Status |
 |-------|--------|
-| Braiding emerges from repeated ☀∘i∘⊛ cycles | Conceptual (plausible) |
+| Braiding emerges from repeated ☀︎∘i∘⊛ cycles | Conceptual (plausible) |
 | B(x) has a rigorous mathematical definition | **NOT YET DEFINED** |
 | B(x) ∝ √(-g_tt) | **CONJECTURE** |
 | Computational test confirms scaling | ✓ (see note below) |
@@ -1385,7 +1385,7 @@ The balls don't attract each other. They aren't pushed together. They are **topo
 
 **Mapping to formalism:**
 - The winding = committed history (4D braid structure)
-- Unwinding = master equation Φ' = ☀ ∘ i ∘ ⊛[Φ] playing out
+- Unwinding = master equation Φ' = ☀︎ ∘ i ∘ ⊛[Φ] playing out
 - Orbital rotation = aperture operator i (90° phase advancement)
 - Convergence toward center = ⊛ operator
 - Fixed hanging point = shared boundary ○
@@ -1430,7 +1430,7 @@ In this picture:
 - Gravity is NOT a force between separate threads
 - Gravity IS the geometry of the i(t) fabric itself
 - Einstein's field equations describe how i(t) density shapes the fabric
-- The fabric's curvature shapes future i(t) via ⊛ → ☀ dynamics
+- The fabric's curvature shapes future i(t) via ⊛ → ☀︎ dynamics
 
 Other threads follow geodesics as their locally most coherent paths through the fabric.
 
@@ -1825,14 +1825,14 @@ Specific predictions:
 
 The transmission law T = cos²(Δφ/2) suggests a phase-coherence model for the dark sector:
 
-| Type | φ_⊛ coherence | φ_☀ coherence | ⟨T_⊛⟩ | ⟨T_☀⟩ | Observable signature |
+| Type | φ_⊛ coherence | φ_☀︎ coherence | ⟨T_⊛⟩ | ⟨T_☀︎⟩ | Observable signature |
 |------|---------------|---------------|-------|-------|---------------------|
 | Visible matter | long-range | long-range | ≈ 1 | ≈ 1 | Clumps + emits light |
 | Dark matter | long-range | short-range | ≈ 1 | ≈ 0 | Clumps, no light |
 | Dark energy | short-range | short-range | ≈ 0.5 | ≈ 0.5 | Uniform expansion |
 
 **Physical interpretation:**
-- **Dark matter** = convergence-phase condensate: ⊛ faces phase-locked (gravitational coupling), ☀ faces incoherent (EM invisible)
+- **Dark matter** = convergence-phase condensate: ⊛ faces phase-locked (gravitational coupling), ☀︎ faces incoherent (EM invisible)
 - **Dark energy** = maximally incoherent foam: neither face coherent at large scales, yielding uniform background "pressure"
 
 **Testable predictions:**
@@ -2088,7 +2088,7 @@ THE CIRCUMPUNCT TUNNEL: ⊙⊙
     │        ⊙ ─────────────────────────────────────────── ⊙          │
     │     source                tunnel                  target        │
     │                                                                 │
-    │   3 IN (convergence ⊛)        ×       3 OUT (emergence ☀)       │
+    │   3 IN (convergence ⊛)        ×       3 OUT (emergence ☀︎)       │
     │   • x-direction in                    • x-direction out         │
     │   • y-direction in                    • y-direction out         │
     │   • z-direction in                    • z-direction out         │
@@ -2131,7 +2131,7 @@ LEPTON MASS SCALING LAW:
 PHYSICAL INTERPRETATION:
     - Baseline exponent 1: Linear worldline → minimal validation load
     - Correction (D-1)/6 = 1/12: Extra validation resistance per channel
-    - Division by 6: 3 spatial × 2 flows (⊛ convergence / ☀ emergence)
+    - Division by 6: 3 spatial × 2 flows (⊛ convergence / ☀︎ emergence)
     - Result: Muon worldline is 1/12 "thicker" per channel than electron's
 ```
 
@@ -3084,14 +3084,14 @@ This suggests a common geometric origin.
 
 - **Convergence:** ⊛: ℋ_Φ → ℋ_in, kernel K_conv
 - **Aperture rotation:** i: ℋ_in → ℋ_out, multiplication by imaginary unit at balance ◐=1/2
-- **Emergence:** ☀: ℋ_out → ℋ_Φ, kernel K_emerg
-- **Evolution:** U(Δt) = ☀ ∘ i ∘ ⊛
+- **Emergence:** ☀︎: ℋ_out → ℋ_Φ, kernel K_emerg
+- **Evolution:** U(Δt) = ☀︎ ∘ i ∘ ⊛
 
 ### Key Equalities
 
 **Balance:**
 ```
-◐ = |⊛|/(|⊛|+|☀|) = 1/2
+◐ = |⊛|/(|⊛|+|☀︎|) = 1/2
 D = 1 + ◐ = 1.5
 ```
 
@@ -3179,7 +3179,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 ### 10.3 Computational Implementation
 
-1. **Kernel evolution simulations:** Numerical integration of ☀∘i∘⊛ dynamics
+1. **Kernel evolution simulations:** Numerical integration of ☀︎∘i∘⊛ dynamics
 2. **Braid structure visualization:** 3D rendering of accumulated circumpunct histories
 3. **Dimensional transition modeling:** Simulate D(scale) crossover behavior
 4. **AGI architecture:** Implement ⊙-based computational systems with real sensors
@@ -3245,23 +3245,23 @@ Updated status labels: α now marked as DERIVED (not external), lepton mass form
 
 **Process (Two Operators):**
 - ⊛ : convergence — input TO aperture, gathering from all directions (isotropic)
-- ☀ : emergence — output FROM aperture, radiating to all directions (isotropic)
+- ☀︎ : emergence — output FROM aperture, radiating to all directions (isotropic)
 - i : aperture rotation (imaginary unit), equals Å(0.5) = e^(iπ/2)
 
 **The Master Equation:**
 ```
-    Φ∞ →⊛→ iλ∞ →☀→ ⊙λ∞     (Forward: Field → Aperture → Form)
-    ⊙λ∞ →⊛→ iλ∞ →☀→ Φ∞     (Return: Form → Aperture → Field)
+    Φ∞ →⊛→ iλ∞ →☀︎→ ⊙λ∞     (Forward: Field → Aperture → Form)
+    ⊙λ∞ →⊛→ iλ∞ →☀︎→ Φ∞     (Return: Form → Aperture → Field)
 ```
 
-**Isotropy Principle:** The symbols ⊛ and ☀ are rotationally symmetric. This is required because:
+**Isotropy Principle:** The symbols ⊛ and ☀︎ are rotationally symmetric. This is required because:
 - Schrödinger's equation requires isotropy
 - The aperture must receive from everywhere and radiate to everywhere
 - No preferred direction until measurement constrains it
 
 **Other Symbols:**
 - Å(◐) : aperture rotation operator, Å(◐) = exp(iπ◐)
-- ◐ : balance parameter = |⊛| / (|⊛| + |☀|) = ½ at equilibrium
+- ◐ : balance parameter = |⊛| / (|⊛| + |☀︎|) = ½ at equilibrium
 - D : fractal/Hausdorff dimension (D = 1.5 for balanced aperture)
 - ℛ : ratchet operator (§2.7)
 - ξ : Weyl-squared coupling in S_circ
@@ -3276,7 +3276,7 @@ Updated status labels: α now marked as DERIVED (not external), lepton mass form
 
 **Flow Notation:**
 ```
-    Φ →⊛→ i →☀→ Φ′        (Convergence → Rotation → Emergence)
+    Φ →⊛→ i →☀︎→ Φ′        (Convergence → Rotation → Emergence)
 ```
 The order is always: **convergence then emergence**.
 
