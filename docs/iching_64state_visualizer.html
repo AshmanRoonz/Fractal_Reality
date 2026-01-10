@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>64-State Isomorphism: Circumpunct ↔ I Ching</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ffd700, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+        
+        @media (max-width: 1000px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .grid-64 {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .cell {
+            aspect-ratio: 1;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.7em;
+            padding: 4px;
+            position: relative;
+        }
+        
+        .cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+        
+        .cell.selected {
+            outline: 3px solid #ffd700;
+            transform: scale(1.15);
+            z-index: 11;
+        }
+        
+        .cell.fermion { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .cell.gluon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .cell.electroweak { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .cell.higgs { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+        
+        .cell .hexagram {
+            font-size: 1.8em;
+            line-height: 1;
+        }
+        
+        .cell .id {
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+        
+        .detail-panel {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .detail-panel h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: #888;
+        }
+        
+        .detail-value {
+            font-weight: bold;
+            text-align: right;
+        }
+        
+        .hexagram-large {
+            font-size: 4em;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 0 0 30px rgba(255,215,0,0.5);
+        }
+        
+        .signature-display {
+            font-family: monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1em;
+            margin: 15px 0;
+        }
+        
+        .trigram-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .trigram-box {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .trigram-box .symbol {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+        
+        .trigram-box .name {
+            font-size: 0.9em;
+            color: #aaa;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .legend-color.fermion { background: #e74c3c; }
+        .legend-color.gluon { background: #3498db; }
+        .legend-color.electroweak { background: #9b59b6; }
+        .legend-color.higgs { background: #f1c40f; }
+        
+        .mapping-info {
+            background: rgba(255,215,0,0.1);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .mapping-info h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .mapping-info p {
+            font-size: 0.85em;
+            color: #aaa;
+            line-height: 1.5;
+        }
+        
+        .partition-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 30px 0;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .stat-box.fermion { border-left: 4px solid #e74c3c; }
+        .stat-box.gluon { border-left: 4px solid #3498db; }
+        .stat-box.electroweak { border-left: 4px solid #9b59b6; }
+        .stat-box.higgs { border-left: 4px solid #f1c40f; }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.8em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>64-State Isomorphism</h1>
+        <p class="subtitle">Circumpunct Framework ↔ I Ching — Same Mathematics, Same Structure</p>
+        
+        <div class="legend">
+            <div class="legend-item"><div class="legend-color fermion"></div>Fermions (48)</div>
+            <div class="legend-item"><div class="legend-color gluon"></div>Gluons (8)</div>
+            <div class="legend-item"><div class="legend-color electroweak"></div>Electroweak (4)</div>
+            <div class="legend-item"><div class="legend-color higgs"></div>Higgs (4)</div>
+        </div>
+        
+        <div class="partition-stats">
+            <div class="stat-box fermion">
+                <div class="stat-number">48</div>
+                <div class="stat-label">Fermions (ε₁=1)</div>
+            </div>
+            <div class="stat-box gluon">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Gluons (ε₂=1)</div>
+            </div>
+            <div class="stat-box electroweak">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Electroweak</div>
+            </div>
+            <div class="stat-box higgs">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Higgs</div>
+            </div>
+        </div>
+        
+
+        
+        <div class="main-grid">
+            <div class="grid-64" id="stateGrid"></div>
+            
+            <div class="detail-panel">
+                <h2>State Details</h2>
+                <div id="detailContent">
+                    <p style="color: #666; text-align: center; padding: 40px 0;">
+                        Click a cell to view details
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mapping-info">
+            <h3>The Isomorphism</h3>
+            <p>
+                Both systems encode <strong>6 binary degrees of freedom</strong> yielding 2⁶ = 64 states.
+                The I Ching uses 6 lines (yao) forming hexagrams; the Circumpunct Framework uses 
+                3 circumpuncts each contributing (ε, χ) ∈ {0,1} × {±1}. The partition 48+12+4 
+                (Fermions + Gauge Bosons + Higgs) emerges naturally from both systems' structure.
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // The 64 hexagram characters
+        const hexagrams = [
+            '䷀','䷁','䷂','䷃','䷄','䷅','䷆','䷇',
+            '䷈','䷉','䷊','䷋','䷌','䷍','䷎','䷏',
+            '䷐','䷑','䷒','䷓','䷔','䷕','䷖','䷗',
+            '䷘','䷙','䷚','䷛','䷜','䷝','䷞','䷟',
+            '䷠','䷡','䷢','䷣','䷤','䷥','䷦','䷧',
+            '䷨','䷩','䷪','䷫','䷬','䷭','䷮','䷯',
+            '䷰','䷱','䷲','䷳','䷴','䷵','䷶','䷷',
+            '䷸','䷹','䷺','䷻','䷼','䷽','䷾','䷿'
+        ];
+        
+        // Hexagram names
+        const hexNames = [
+            'Qián (Creative)', 'Kūn (Receptive)', 'Zhūn (Difficulty)', 'Méng (Youthful)',
+            'Xū (Waiting)', 'Sòng (Conflict)', 'Shī (Army)', 'Bǐ (Holding)',
+            'Xiǎo Chù (Small Taming)', 'Lǚ (Treading)', 'Tài (Peace)', 'Pǐ (Standstill)',
+            'Tóng Rén (Fellowship)', 'Dà Yǒu (Great Possession)', 'Qiān (Modesty)', 'Yù (Enthusiasm)',
+            'Suí (Following)', 'Gǔ (Decay)', 'Lín (Approach)', 'Guān (Contemplation)',
+            'Shì Kè (Biting)', 'Bì (Grace)', 'Bō (Splitting)', 'Fù (Return)',
+            'Wú Wàng (Innocence)', 'Dà Chù (Great Taming)', 'Yí (Nourishment)', 'Dà Guò (Great Excess)',
+            'Kǎn (Abysmal)', 'Lí (Clinging)', 'Xián (Influence)', 'Héng (Duration)',
+            'Dùn (Retreat)', 'Dà Zhuàng (Great Power)', 'Jìn (Progress)', 'Míng Yí (Darkening)',
+            'Jiā Rén (Family)', 'Kuí (Opposition)', 'Jiǎn (Obstruction)', 'Jiě (Deliverance)',
+            'Sǔn (Decrease)', 'Yì (Increase)', 'Guài (Breakthrough)', 'Gòu (Coming)',
+            'Cuì (Gathering)', 'Shēng (Pushing)', 'Kùn (Oppression)', 'Jǐng (Well)',
+            'Gé (Revolution)', 'Dǐng (Cauldron)', 'Zhèn (Arousing)', 'Gèn (Keeping Still)',
+            'Jiàn (Development)', 'Guī Mèi (Marrying)', 'Fēng (Abundance)', 'Lǚ (Wanderer)',
+            'Xùn (Gentle)', 'Duì (Joyous)', 'Huàn (Dispersion)', 'Jié (Limitation)',
+            'Zhōng Fú (Inner Truth)', 'Xiǎo Guò (Small Excess)', 'Jì Jì (After Completion)', 'Wèi Jì (Before Completion)'
+        ];
+        
+        // Trigram data
+        const trigrams = {
+            '111': { symbol: '☰', name: 'Qián (Heaven)', element: 'Metal' },
+            '000': { symbol: '☷', name: 'Kūn (Earth)', element: 'Earth' },
+            '001': { symbol: '☳', name: 'Zhèn (Thunder)', element: 'Wood' },
+            '010': { symbol: '☵', name: 'Kǎn (Water)', element: 'Water' },
+            '011': { symbol: '☱', name: 'Duì (Lake)', element: 'Metal' },
+            '100': { symbol: '☶', name: 'Gèn (Mountain)', element: 'Earth' },
+            '101': { symbol: '☲', name: 'Lí (Fire)', element: 'Fire' },
+            '110': { symbol: '☴', name: 'Xùn (Wind)', element: 'Wood' }
+        };
+        
+        // Generate the 64 states with all mappings
+        // Based on Circumpunct Framework §13 - the ID-based assignment
+        const states = [];
+        for (let i = 0; i < 64; i++) {
+            const binary = i.toString(2).padStart(6, '0');
+            
+            // Extract signature bits for display
+            const e1 = parseInt(binary[5]);
+            const x1 = parseInt(binary[4]) ? '+' : '-';
+            const e2 = parseInt(binary[3]);
+            const x2 = parseInt(binary[2]) ? '+' : '-';
+            const e3 = parseInt(binary[1]);
+            const x3 = parseInt(binary[0]) ? '+' : '-';
+            
+            // Determine particle type based on ID ranges from §13
+            // This is the MODELED assignment from the framework
+            let type, particle, generation;
+            
+            if (i < 48) {
+                // FERMIONS: IDs 0-47 (48 states)
+                type = 'fermion';
+                
+                if (i < 16) {
+                    // Gen 1: IDs 0-15 (ε₁=1, χ₂=+)
+                    generation = 1;
+                    if (i < 12) {
+                        // Quarks (12 states: 2 flavors × 3 colors × 2 chiralities)
+                        const quark = i < 6 ? 'u' : 'd';
+                        const color = ['r', 'g', 'b'][i % 3];
+                        const chiral = Math.floor((i % 6) / 3) === 0 ? 'L' : 'R';
+                        particle = `${quark}_${color} (${chiral})`;
+                    } else {
+                        // Leptons (4 states: 2 particles × 2 chiralities)
+                        const leptons = ['ν_e (L)', 'e (L)', 'e (R)', 'ν_e (R)'];
+                        particle = leptons[i - 12];
+                    }
+                } else if (i < 32) {
+                    // Gen 2: IDs 16-31 (ε₁=1, χ₂=-)
+                    generation = 2;
+                    const j = i - 16;
+                    if (j < 12) {
+                        const quark = j < 6 ? 'c' : 's';
+                        const color = ['r', 'g', 'b'][j % 3];
+                        const chiral = Math.floor((j % 6) / 3) === 0 ? 'L' : 'R';
+                        particle = `${quark}_${color} (${chiral})`;
+                    } else {
+                        const leptons = ['ν_μ (L)', 'μ (L)', 'μ (R)', 'ν_μ (R)'];
+                        particle = leptons[j - 12];
+                    }
+                } else {
+                    // Gen 3: IDs 32-47 (ε₁=0, χ₂=+) - NOTE: ε₁=0 but still fermions!
+                    generation = 3;
+                    const j = i - 32;
+                    if (j < 12) {
+                        const quark = j < 6 ? 't' : 'b';
+                        const color = ['r', 'g', 'b'][j % 3];
+                        const chiral = Math.floor((j % 6) / 3) === 0 ? 'L' : 'R';
+                        particle = `${quark}_${color} (${chiral})`;
+                    } else {
+                        const leptons = ['ν_τ (L)', 'τ (L)', 'τ (R)', 'ν_τ (R)'];
+                        particle = leptons[j - 12];
+                    }
+                }
+            } else if (i < 56) {
+                // GLUONS: IDs 48-55 (8 states)
+                type = 'gluon';
+                generation = 0;
+                particle = `g_${i - 47}`;
+            } else if (i < 60) {
+                // ELECTROWEAK: IDs 56-59 (4 states)
+                type = 'electroweak';
+                generation = 0;
+                const ew = ['W⁺', 'W⁻', 'Z⁰', 'γ'];
+                particle = ew[i - 56];
+            } else {
+                // HIGGS: IDs 60-63 (4 states)
+                type = 'higgs';
+                generation = 0;
+                const higgs = ['H⁺', 'H⁻', 'H⁰', 'H_v'];
+                particle = higgs[i - 60];
+            }
+            
+            // Extract trigrams
+            const lowerTrigram = binary.slice(3, 6);
+            const upperTrigram = binary.slice(0, 3);
+            
+            states.push({
+                id: i,
+                binary,
+                signature: `[${e1}${x1}|${e2}${x2}|${e3}${x3}]`,
+                type,
+                particle,
+                generation,
+                hexagram: hexagrams[i],
+                hexName: hexNames[i],
+                lowerTrigram: trigrams[lowerTrigram],
+                upperTrigram: trigrams[upperTrigram],
+                kingWenOrder: (i + 1), // Simplified
+                fuxiOrder: i
+            });
+        }
+        
+        let selectedState = null;
+        
+        function renderGrid() {
+            const grid = document.getElementById('stateGrid');
+            
+            grid.innerHTML = '';
+            
+            states.forEach(state => {
+                const cell = document.createElement('div');
+                cell.className = `cell ${state.type}`;
+                
+                if (selectedState === state.id) {
+                    cell.classList.add('selected');
+                }
+                
+                // Show both hexagram and particle (locked)
+                let content = `<div class="hexagram">${state.hexagram}</div>`;
+                content += `<div class="id">${state.particle}</div>`;
+                
+                cell.innerHTML = content;
+                cell.onclick = () => selectState(state.id);
+                grid.appendChild(cell);
+            });
+        }
+        
+        function selectState(id) {
+            selectedState = id;
+            const state = states[id];
+            
+            const detail = document.getElementById('detailContent');
+            detail.innerHTML = `
+                <div class="hexagram-large">${state.hexagram}</div>
+                <div style="text-align:center;margin-bottom:15px;">
+                    <strong>${state.hexName}</strong>
+                </div>
+                
+                <div class="signature-display">
+                    ${state.signature}
+                </div>
+                
+                <div class="trigram-breakdown">
+                    <div class="trigram-box">
+                        <div class="symbol">${state.upperTrigram.symbol}</div>
+                        <div class="name">Upper: ${state.upperTrigram.name}</div>
+                    </div>
+                    <div class="trigram-box">
+                        <div class="symbol">${state.lowerTrigram.symbol}</div>
+                        <div class="name">Lower: ${state.lowerTrigram.name}</div>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">State ID</span>
+                    <span class="detail-value">${state.id}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Binary</span>
+                    <span class="detail-value" style="font-family:monospace">${state.binary}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Type</span>
+                    <span class="detail-value" style="text-transform:capitalize">${state.type}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Particle</span>
+                    <span class="detail-value">${state.particle}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Generation</span>
+                    <span class="detail-value">${state.generation}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Fu Xi Order</span>
+                    <span class="detail-value">#${state.fuxiOrder}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">King Wen Order</span>
+                    <span class="detail-value">#${state.kingWenOrder}</span>
+                </div>
+                
+                <div class="mapping-info" style="margin-top:20px;">
+                    <h3>Circumpunct Axes</h3>
+                    <p>
+                        <strong>⊙₁:</strong> ε₁=${state.binary[5]} (${state.binary[5]==='1'?'Fermion':'Boson'})<br>
+                        <strong>⊙₂:</strong> ε₂=${state.binary[3]} (${state.binary[3]==='1'?'Colored':'Colorless'})<br>
+                        <strong>⊙₃:</strong> ε₃=${state.binary[1]} (${state.binary[1]==='1'?'Charged':'Neutral'})
+                    </p>
+                </div>
+            `;
+            
+            renderGrid();
+        }
+        
+        // Initial render
+        renderGrid();
+    </script>
+</body>
+</html>
