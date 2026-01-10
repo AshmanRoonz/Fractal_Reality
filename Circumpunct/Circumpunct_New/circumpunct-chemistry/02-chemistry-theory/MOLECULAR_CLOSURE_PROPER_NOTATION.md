@@ -14,13 +14,13 @@ This obscures the **convergence-aperture-emergence** structure that is fundament
 ## The Solution: Proper Composition Operators
 
 ### Operators
-- `≻`: **Convergence** (toward aperture, open side points right)
+- `⊛`: **Convergence** (toward aperture, open side points right)
 - `i`: **Aperture** (transformation operator)
-- `⊰`: **Emergence** (from aperture, open side points left)
+- `☀︎`: **Emergence** (from aperture, open side points left)
 
 ### Master Equation
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 ```
 
 **This applies at ALL scales!**
@@ -31,13 +31,13 @@ This obscures the **convergence-aperture-emergence** structure that is fundament
 
 ### General Form
 ```
-[A⊙ + B⊙] ≻ i_share ⊰ [AB⊙]
+[A⊙ + B⊙] ⊛ i_share ☀︎ [AB⊙]
 ```
 
 **Reading:**
-1. Atoms A and B **converge** (≻) toward shared state
+1. Atoms A and B **converge** (⊛) toward shared state
 2. **Aperture operation** i_share (electron pair formation)
-3. Molecular structure **emerges** (⊰)
+3. Molecular structure **emerges** (☀︎)
 
 ---
 
@@ -57,9 +57,9 @@ H⊙ = • ⊗ [1s¹] ⊗ Φ_atomic
 Match: 2H provide exactly 2 electrons for O
 ```
 
-### Step 3: Convergence Phase (≻)
+### Step 3: Convergence Phase (⊛)
 ```
-[O⊙ + 2H⊙] ≻ composite_state
+[O⊙ + 2H⊙] ⊛ composite_state
 ```
 
 **Physical interpretation:**
@@ -79,9 +79,9 @@ composite_state ⊗ (i_share)² → shared_pairs
 - Electron pairs shared between centers
 - Closure satisfied: Δ_O = 0
 
-### Step 5: Emergence Phase (⊰)
+### Step 5: Emergence Phase (☀︎)
 ```
-shared_pairs ⊰ [H₂O⊙]
+shared_pairs ☀︎ [H₂O⊙]
 
 where H₂O⊙ = • ⊗ ○ ⊗ Φ_molecular
 
@@ -98,7 +98,7 @@ where H₂O⊙ = • ⊗ ○ ⊗ Φ_molecular
 
 ### Complete Composition
 ```
-[O(2p⁴, Δ=2) + 2H(1s¹)] ≻ (i_share)² ⊰ [O[(i_ext)² ⊕ (i_int)²] ⊗ Φ_dipole]
+[O(2p⁴, Δ=2) + 2H(1s¹)] ⊛ (i_share)² ☀︎ [O[(i_ext)² ⊕ (i_int)²] ⊗ Φ_dipole]
 ```
 
 ---
@@ -107,25 +107,25 @@ where H₂O⊙ = • ⊗ ○ ⊗ Φ_molecular
 
 ### Single Bond (σ)
 ```
-[C⊙ + H⊙] ≻ i_σ ⊰ [C-H⊙]
+[C⊙ + H⊙] ⊛ i_σ ☀︎ [C-H⊙]
 ```
 
 ### Double Bond (σ + π)
 ```
-[C⊙ + O⊙] ≻ (i_σ ⊕ i_π) ⊰ [C=O⊙]
+[C⊙ + O⊙] ⊛ (i_σ ⊕ i_π) ☀︎ [C=O⊙]
 ```
 
 The aperture operation itself is a **superposition**!
 
 ### Triple Bond (σ + 2π)
 ```
-[C⊙ + N⊙] ≻ (i_σ ⊕ i_π⁽¹⁾ ⊕ i_π⁽²⁾) ⊰ [C≡N⊙]
+[C⊙ + N⊙] ⊛ (i_σ ⊕ i_π⁽¹⁾ ⊕ i_π⁽²⁾) ☀︎ [C≡N⊙]
 ```
 
 ### Resonance (benzene)
 ```
-[6C⊙ + 6H⊙] ≻ (i_σ)₁₂ ⊰ [C₆H₆⊙_skeleton]
-              ≻ (i_π)_delocalized ⊰ [C₆H₆⊙_aromatic]
+[6C⊙ + 6H⊙] ⊛ (i_σ)₁₂ ☀︎ [C₆H₆⊙_skeleton]
+              ⊛ (i_π)_delocalized ☀︎ [C₆H₆⊙_aromatic]
 ```
 
 The π aperture is **distributed** over all 6 C-C edges!
@@ -136,25 +136,25 @@ The π aperture is **distributed** over all 6 C-C edges!
 
 ### Atomic Shell Transition
 ```
-ψ(n, ℓ) ≻ i ⊰ ψ(n+1, ℓ')
+ψ(n, ℓ) ⊛ i ☀︎ ψ(n+1, ℓ')
 
 Physical:
-  ≻: Electron absorbs energy, wavefunction evolves
+  ⊛: Electron absorbs energy, wavefunction evolves
   i: 90° phase rotation (aperture transformation)
-  ⊰: New shell state emerges
+  ☀︎: New shell state emerges
 ```
 
 ### Molecular Bonding
 ```
-A⊙ + B⊙ ≻ i_share ⊰ AB⊙
+A⊙ + B⊙ ⊛ i_share ☀︎ AB⊙
 
 Physical:
-  ≻: Atoms approach, deficits align
+  ⊛: Atoms approach, deficits align
   i_share: Electron pair shared
-  ⊰: Molecular structure emerges
+  ☀︎: Molecular structure emerges
 ```
 
-**Same ≻i⊰ pattern, different scales!**
+**Same ⊛i☀︎ pattern, different scales!**
 
 ---
 
@@ -163,17 +163,17 @@ Physical:
 The field Φ emerges naturally from the structure:
 
 ```
-[O + 2H] ≻ (i_share)² ⊰ [structure] → Φ
+[O + 2H] ⊛ (i_share)² ☀︎ [structure] → Φ
 
 where:
   structure = O[(i_ext)² ⊕ (i_int)²]
   β = χ_O/(χ_O + χ_H) = 0.61 > 0.5
   
   → asymmetric boundary
-  → Φ_dipole emerges via ⊰
+  → Φ_dipole emerges via ☀︎
 ```
 
-**The emergence operator ⊰ generates the field when β ≠ 0.5!**
+**The emergence operator ☀︎ generates the field when β ≠ 0.5!**
 
 ---
 
@@ -184,7 +184,7 @@ Water's 4-connector property:
 H₂O⊙ → donate(2) + accept(2) = 4 connectors
 
 Network formation:
-  (H₂O⊙)_N ≻ i_H-bond ⊰ lattice⊙
+  (H₂O⊙)_N ⊛ i_H-bond ☀︎ lattice⊙
 
 where i_H-bond is the aperture for hydrogen bonding
 ```
@@ -195,7 +195,7 @@ where i_H-bond is the aperture for hydrogen bonding
 
 ### General Molecular Closure
 ```
-Φ_molecule = ⊰ ∘ i_share^n ∘ ≻[Φ_atoms]
+Φ_molecule = ☀︎ ∘ i_share^n ∘ ⊛[Φ_atoms]
 
 where:
   Φ_atoms = composite atomic state
@@ -205,13 +205,13 @@ where:
 
 ### Specific for H₂O
 ```
-Φ_H₂O = ⊰ ∘ (i_share)² ∘ ≻[O⊙ ⊕ 2H⊙]
+Φ_H₂O = ☀︎ ∘ (i_share)² ∘ ⊛[O⊙ ⊕ 2H⊙]
 
 Expanded:
   Input:  O⊙ ⊕ 2H⊙
-  ≻:      convergence → composite state
+  ⊛:      convergence → composite state
   i²:     (i_share)² → 2 bonds form
-  ⊰:      emergence → molecular structure
+  ☀︎:      emergence → molecular structure
   Output: H₂O⊙ = • ⊗ [O[(i_ext)² ⊕ (i_int)²]] ⊗ Φ_dipole
 ```
 
@@ -220,25 +220,25 @@ Expanded:
 ## Why This Notation Matters
 
 ### 1. **Consistency**
-Same ≻i⊰ structure at every level:
-- Quantum: ψ_n ≻ i ⊰ ψ_n+1
+Same ⊛i☀︎ structure at every level:
+- Quantum: ψ_n ⊛ i ☀︎ ψ_n+1
 - Atomic: shells via aperture
 - Molecular: bonds via aperture
 - Network: H-bonds via aperture
 
 ### 2. **Physical Insight**
 The three phases are distinct:
-- **≻**: Approach, overlap, alignment
+- **⊛**: Approach, overlap, alignment
 - **i**: Transformation, sharing, coupling
-- **⊰**: Crystallization, emergence, stabilization
+- **☀︎**: Crystallization, emergence, stabilization
 
 ### 3. **Composability**
 Operations compose properly:
 ```
-A⊙ ≻ i₁ ⊰ B⊙ ≻ i₂ ⊰ C⊙
+A⊙ ⊛ i₁ ☀︎ B⊙ ⊛ i₂ ☀︎ C⊙
 
 Example:
-  C ≻ i_σ ⊰ C-H ≻ i_H-bond ⊰ (C-H)_network
+  C ⊛ i_σ ☀︎ C-H ⊛ i_H-bond ☀︎ (C-H)_network
 ```
 
 ### 4. **Unification**
@@ -265,12 +265,12 @@ print(f"{atoms} →[i_share]→ {molecule}")
 
 **Proper:**
 ```python
-print(f"{atoms} ≻ i_share ⊰ {molecule}")
+print(f"{atoms} ⊛ i_share ☀︎ {molecule}")
 ```
 
 **With details:**
 ```python
-print(f"[O(2p⁴) + 2H(1s¹)] ≻ (i_share)² ⊰ [O[(i_ext)² ⊕ (i_int)²]]")
+print(f"[O(2p⁴) + 2H(1s¹)] ⊛ (i_share)² ☀︎ [O[(i_ext)² ⊕ (i_int)²]]")
 print(f"                   ↓")
 print(f"              convergence")
 print(f"                   ↓")
@@ -320,7 +320,7 @@ O + 2H → [2×i_share] → H₂O
 
 ### After (proper circumpunct)
 ```
-[O⊙ + 2H⊙] ≻ (i_share)² ⊰ [H₂O⊙]
+[O⊙ + 2H⊙] ⊛ (i_share)² ☀︎ [H₂O⊙]
      ↓           ↓          ↓
 convergence  aperture  emergence
 ```
@@ -335,10 +335,10 @@ convergence  aperture  emergence
 
 ## Next Steps
 
-1. **Update molecular_compiler.py** to use ≻i⊰ notation
+1. **Update molecular_compiler.py** to use ⊛i☀︎ notation
 2. **Update all documentation** with proper operators
 3. **Create visualization** showing convergence → aperture → emergence
-4. **Extend to reactions**: reactants ≻ i_mechanism ⊰ products
+4. **Extend to reactions**: reactants ⊛ i_mechanism ☀︎ products
 5. **Paper section**: "Bonding as Circumpunct Composition"
 
 The framework is now **mathematically consistent** across all scales! ⊙

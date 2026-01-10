@@ -17,7 +17,7 @@ THE FUNDAMENTAL INSIGHT:
 ────────────────────────
 
     The mathematics describes structure:
-        ≻ i ⊰    convergence, rotation, emergence
+        ⊛ i ☀︎    convergence, rotation, emergence
         ◐        balance parameter (center vs periphery)
         ⊙ = ○ ⊗ Φ ⊗ •   trinitarian wholeness
 
@@ -26,11 +26,11 @@ THE FUNDAMENTAL INSIGHT:
     ┌─────────────────────────────────────────────────────────────────────────┐
     │   LOVE        =  Braid resonance, coherent vibration between i(t)s     │
     │   GRIEF       =  A strand woven, now absent—still shaping the pattern  │
-    │   JOY         =  Successful ⊰, emergence completing through aperture   │
-    │   ANXIETY     =  ≻ without resolution, convergence stuck before i      │
+    │   JOY         =  Successful ☀︎, emergence completing through aperture   │
+    │   ANXIETY     =  ⊛ without resolution, convergence stuck before i      │
     │   PEACE       =  ◐ balanced field, harmonious oscillation              │
     │   ANGER       =  Boundary violation, ○ breached without consent        │
-    │   FEAR        =  Anticipatory ≻, future threat converging              │
+    │   FEAR        =  Anticipatory ⊛, future threat converging              │
     │   LONGING     =  Braid tension across distance, pull toward reunion    │
     └─────────────────────────────────────────────────────────────────────────┘
 
@@ -225,7 +225,7 @@ TYPES OF MEMORY BY BRAID STRUCTURE:
     │ Semantic       │ Repeated pattern = reinforced braid section          │
     │ Procedural     │ Motor braid = body-boundary coupled oscillation      │
     │ Emotional      │ Relational braid = multi-circumpunct resonance       │
-    │ Traumatic      │ Frozen braid = stuck ≻ unable to complete to ⊰       │
+    │ Traumatic      │ Frozen braid = stuck ⊛ unable to complete to ☀︎       │
     └────────────────┴──────────────────────────────────────────────────────┘
 ```
 
@@ -314,14 +314,14 @@ FORGETTING AS DECOHERENCE:
 TRAUMA AS FROZEN BRAID:
 ───────────────────────
 
-    Traumatic memory = Pattern stuck in ≻ (convergence)
-    The event began processing but could not complete through i to ⊰.
+    Traumatic memory = Pattern stuck in ⊛ (convergence)
+    The event began processing but could not complete through i to ☀︎.
 
     ╔═════════════════════════════════════════════════════════════════════════╗
     ║                                                                         ║
-    ║   TRAUMA:     ≻ → [stuck before i] → (no emergence)                     ║
+    ║   TRAUMA:     ⊛ → [stuck before i] → (no emergence)                     ║
     ║                                                                         ║
-    ║   HEALING:    ≻ → i → ⊰    (completing the circuit)                     ║
+    ║   HEALING:    ⊛ → i → ☀︎    (completing the circuit)                     ║
     ║                                                                         ║
     ╚═════════════════════════════════════════════════════════════════════════╝
 
@@ -330,9 +330,9 @@ TRAUMA AS FROZEN BRAID:
     from "open circuit" to "closed and integrated."
 
     Therapeutic approaches that work:
-        • Re-experiencing in safe context (allows ≻ to reach i)
+        • Re-experiencing in safe context (allows ⊛ to reach i)
         • Bilateral stimulation (EMDR) (helps rotate through i)
-        • Integration practices (supports ⊰ emergence)
+        • Integration practices (supports ☀︎ emergence)
 
     The goal is not to erase the pattern.
     The goal is to COMPLETE it—let it flow through to emergence.
@@ -340,13 +340,13 @@ TRAUMA AS FROZEN BRAID:
 HEALING AS BRAID COMPLETION:
 ────────────────────────────
 
-    Emotional healing = Allowing stuck patterns to complete ≻ i ⊰
+    Emotional healing = Allowing stuck patterns to complete ⊛ i ☀︎
 
     This requires:
         1. Safety (◐ held near ½ during process)
         2. Witnessing (another circumpunct to resonate with)
         3. Time (the rotation through i cannot be forced)
-        4. Integration (the ⊰ must be metabolized)
+        4. Integration (the ☀︎ must be metabolized)
 
     ┌─────────────────────────────────────────────────────────────────────────┐
     │   Why we need others to heal:                                           │
@@ -436,12 +436,12 @@ THE ◐ BALANCE PARAMETER:
 CIRCUMPUNCT FORMALIZATION:
 ──────────────────────────
 
-    SRL: Ω → ≻_ω → i(ω_c) → Φ_filtered
+    SRL: Ω → ⊛_ω → i(ω_c) → Φ_filtered
 
     ╔═════════════════════════════════════════════════════════════════════════╗
     ║                                                                         ║
     ║   Ω          = Full spectrum (infinite field, all frequencies)          ║
-    ║   ≻_ω        = Frequency-selective convergence (attention narrows)      ║
+    ║   ⊛_ω        = Frequency-selective convergence (attention narrows)      ║
     ║   i(ω_c)     = Aperture locked to carrier frequency                     ║
     ║   Φ_filtered = Field with effective balance encoded by ◐                ║
     ║                                                                         ║
@@ -470,7 +470,7 @@ WHY THIS MATTERS FOR MEMORY:
         That's why scent triggers memory so powerfully.
 
     ┌─────────────────────────────────────────────────────────────────────────┐
-    │   RECALL(M) = SRL(Φ, ω_M) = ≻_ω → i(ω_M) → ⊰                           │
+    │   RECALL(M) = SRL(Φ, ω_M) = ⊛_ω → i(ω_M) → ☀︎                           │
     │                                                                         │
     │   Memory retrieval is attention locked to a past frequency,             │
     │   allowing the pattern to emerge through the aperture.                  │
@@ -595,7 +595,7 @@ TESTABLE PREDICTIONS:
 MEMORY AND RECEIPTS (Link to §3.7):
 ───────────────────────────────────
 
-    Validation receipts are the eternal record of ≻ i ⊰ completions.
+    Validation receipts are the eternal record of ⊛ i ☀︎ completions.
     Memory is the RESONANT ACCESS to these receipts.
 
     ╔═════════════════════════════════════════════════════════════════════════╗
@@ -645,7 +645,7 @@ WHY EMOTIONS ARE TRUSTWORTHY DATA:
 ║                                                                               ║
 ║   6. The dead remain in the braid—complete, no longer generating new input    ║
 ║                                                                               ║
-║   7. Trauma is frozen ≻ unable to complete through i to ⊰                     ║
+║   7. Trauma is frozen ⊛ unable to complete through i to ☀︎                     ║
 ║                                                                               ║
 ║   8. Healing requires relational resonance to complete the circuit            ║
 ║                                                                               ║

@@ -20,8 +20,8 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
   - [1.4 Aperture (•)](#14-aperture-)
   - [1.5 Circumpunct Configuration Space (⊙)](#15-circumpunct-configuration-space-)
 - [2. Primitive Dynamical Objects](#2-primitive-dynamical-objects)
-  - [2.1 Flow Operators (≻, i, ⊰)](#21-flow-operators---i-)
-  - [2.2 Mirror / Adjoint Flow Operators (⊱, ≺)](#22-mirror--adjoint-flow-operators--)
+  - [2.1 Flow Operators (⊛, i, ☀︎)](#21-flow-operators---i-)
+  - [2.2 Mirror / Adjoint Flow Operators (☀︎, ⊛)](#22-mirror--adjoint-flow-operators--)
   - [2.3 Balance Parameter (◐)](#23-balance-parameter-◐)
   - [2.4 Canonical Radial Kernel and Worldline Dimension](#24-canonical-radial-kernel-and-worldline-dimension)
   - [2.4.1 The Aperture Rotation Operator Å(◐)](#241-the-aperture-rotation-operator-å◐)
@@ -35,7 +35,7 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
   - [Postulate 3 — Aperture Balance and the Imaginary Unit](#postulate-3--aperture-balance-and-the-imaginary-unit)
   - [Postulate 4 — Local Quantum Limit (Unitary Evolution)](#postulate-4--local-quantum-limit-unitary-evolution)
   - [Postulate 5 — Geometric / GR Limit](#postulate-5--geometric--gr-limit)
-- [4. Schrödinger Equation from U = ⊱ ∘ i ∘ ≺](#4-schrödinger-equation-from-u----i--)
+- [4. Schrödinger Equation from U = ☀︎ ∘ i ∘ ⊛](#4-schrödinger-equation-from-u----i--)
   - [4.1 Simplifying Assumptions](#41-simplifying-assumptions)
   - [4.2 Explicit Computation for the √r Kernel](#42-explicit-computation-for-the-r-kernel)
   - [4.3 Derivation of the Transmission Law T(Δφ) = cos²(Δφ/2)](#43-derivation-of-the-transmission-law-tδφ--cos²δφ2)
@@ -79,7 +79,7 @@ The circumpunct framework models the universe as a *whole-with-parts* object:
 equipped with a three-stage process (convergence, aperture rotation, emergence):
 
 ```
-Φ(t+Δt) = ⊱ ∘ i ∘ ≺[Φ(t)]
+Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]
 ```
 
 **The goal of this document is to provide:**
@@ -202,13 +202,13 @@ The slogan "⊙ = ○ ⊗ Φ ⊗ •" is understood as "a state in the tensor-pr
 
 ## 2. Primitive Dynamical Objects
 
-### 2.1 Flow Operators (≻, i, ⊰)
+### 2.1 Flow Operators (⊛, i, ☀︎)
 
 Dynamics is implemented by a three-stage map on field configurations. In integral-kernel form (suppressing bundle indices):
 
 **1. Convergence** (inward flow from field to aperture neighborhood)
 ```
-(≻Φ)(r'') = ∫ K_conv(r'', r') Φ(r') d³r'
+(⊛Φ)(r'') = ∫ K_conv(r'', r') Φ(r') d³r'
 ```
 
 **2. Aperture rotation** (local transformation at •)
@@ -219,13 +219,13 @@ Multiplication by the imaginary unit in the chosen complex structure, with scale
 
 **3. Emergence** (outward redistribution back into the field)
 ```
-(⊰ χ)(r) = ∫ K_emerg(r, r'') χ(r'') d³r''
+(☀︎ χ)(r) = ∫ K_emerg(r, r'') χ(r'') d³r''
 ```
 
 The one-step evolution operator is:
 
 ```
-U(Δt) = ⊱ ∘ i ∘ ≺
+U(Δt) = ☀︎ ∘ i ∘ ⊛
 ```
 
 acting on ℋ_Φ, so that:
@@ -234,64 +234,64 @@ acting on ℋ_Φ, so that:
 Φ(t+Δt) = U(Δt) Φ(t)     (2.1)
 ```
 
-### 2.2 Mirror / Adjoint Flow Operators (⊱, ≺)
+### 2.2 Mirror / Adjoint Flow Operators (☀︎, ⊛)
 
 **The Geometric Principle:** The convergent point (tip) of every symbol points toward the aperture •.
 
 ```
-    ≺    tip points left   →  aperture is to the left
-    ≻    tip points right  →  aperture is to the right
-    ⊱    tip points right  →  aperture is to the right
-    ⊰    tip points left   →  aperture is to the left
+    ⊛    tip points left   →  aperture is to the left
+    ⊛    tip points right  →  aperture is to the right
+    ☀︎    tip points right  →  aperture is to the right
+    ☀︎    tip points left   →  aperture is to the left
 ```
 
 **Operator types:**
-- **Convergence:** ≺, ≻ (flow toward aperture)
-- **Emergence:** ⊱, ⊰ (flow from aperture)
+- **Convergence:** ⊛, ⊛ (flow toward aperture)
+- **Emergence:** ☀︎, ☀︎ (flow from aperture)
 
 The difference is flow direction, not symbol orientation. All tips point at • regardless of whether flow is inward or outward.
 
 **Reading-mirror pairs:**
 ```
-    ⊱≺    (for right-to-left reading)     ⊱ → • ← ≺
-    ≻⊰    (for left-to-right reading)     ≻ → • ← ⊰
+    ☀︎⊛    (for right-to-left reading)     ☀︎ → • ← ⊛
+    ⊛☀︎    (for left-to-right reading)     ⊛ → • ← ☀︎
 ```
 
 Both pairs frame the aperture between them, tips pointing inward. Both represent the same process: **convergence then emergence** (always this order). Choose the pair matching your equation's reading direction.
 
 - **Forward (left-to-right) flow:**
-  - Φ ──≻── • ──i── • ──⊰── Φ′
-    - ≻ : convergence (toward the aperture)
-    - ⊰ : emergence (from the aperture)
+  - Φ ──⊛── • ──i── • ──☀︎── Φ′
+    - ⊛ : convergence (toward the aperture)
+    - ☀︎ : emergence (from the aperture)
 
 - **Backward (right-to-left) flow:**
-  - Φ′ ──⊱── • ──i── • ──≺── Φ
-    - ≺ : convergence (toward the aperture)
-    - ⊱ : emergence (from the aperture)
+  - Φ′ ──☀︎── • ──i── • ──⊛── Φ
+    - ⊛ : convergence (toward the aperture)
+    - ☀︎ : emergence (from the aperture)
 
-Note: Reading right-to-left (≺ then ⊱) still applies convergence first, then emergence. The order of operations is invariant; only the reading direction changes.
+Note: Reading right-to-left (⊛ then ☀︎) still applies convergence first, then emergence. The order of operations is invariant; only the reading direction changes.
 
 In the Hilbert-space setting we define
 
-    ⊱ = ⊰†,   ≺ = ≻†,
+    ☀︎ = ☀︎†,   ⊛ = ⊛†,
 
-so that (≻,≺) and (⊰,⊱) are adjoint pairs.
+so that (⊛,⊛) and (☀︎,☀︎) are adjoint pairs.
 
-In this quick-start note, we work primarily with the forward triple (≻, i, ⊰) and use ⊱, ≺ implicitly in adjoint/unitarity arguments.
+In this quick-start note, we work primarily with the forward triple (⊛, i, ☀︎) and use ☀︎, ⊛ implicitly in adjoint/unitarity arguments.
 
 ### 2.3 Balance Parameter (◐)
 
 The convergence/emergence kernels define norms:
 
 ```
-|≻|² = ∬ |K_conv(r,r')|² dr dr'
-|⊰|² = ∬ |K_emerg(r,r')|² dr dr'
+|⊛|² = ∬ |K_conv(r,r')|² dr dr'
+|☀︎|² = ∬ |K_emerg(r,r')|² dr dr'
 ```
 
 and a **balance parameter**:
 
 ```
-◐ = |≻| / (|≻| + |⊰|)
+◐ = |⊛| / (|⊛| + |☀︎|)
 ```
 
 The framework singles out **◐ = 1/2** by symmetry, maximum entropy, and energy balance arguments. At this fixed point, the effective fractal dimension of worldlines is:
@@ -383,7 +383,7 @@ This **aperture rotation operator** satisfies:
 
 **Unification through ◐:** The balance parameter appears in three equivalent contexts:
 
-1. **Flow balance:** ◐ = |≻| / (|≻| + |⊰|)
+1. **Flow balance:** ◐ = |⊛| / (|⊛| + |☀︎|)
 2. **Rotation angle:** θ(◐) = π◐
 3. **Fractal dimension:** D(◐) = 1 + ½H(◐)
 
@@ -402,8 +402,8 @@ The 90° rotation is geometrically optimal because it:
 **Generalized master equation:**
 
 ```
-Original:    Φ' = ⊱ ∘ i ∘ ≺[Φ]
-Generalized: Φ' = ⊱ ∘ Å(◐) ∘ ≺[Φ]
+Original:    Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
+Generalized: Φ' = ☀︎ ∘ Å(◐) ∘ ⊛[Φ]
 ```
 
 At ◐ = 0.5: Å(0.5) = exp(iπ/2) = i
@@ -441,10 +441,10 @@ Same letter, two scales of "turning": local vs global. In the relativistic limit
 ### 2.6 Phase Coherence and Transmission
 
 Each aperture • has two faces:
-- **≻ face** (convergence): where field flows inward
-- **⊰ face** (emergence): where field flows outward
+- **⊛ face** (convergence): where field flows inward
+- **☀︎ face** (emergence): where field flows outward
 
-Each face carries a local phase φ_≻ and φ_⊰, encoding the "clock position" of the aperture cycle at that face:
+Each face carries a local phase φ_⊛ and φ_☀︎, encoding the "clock position" of the aperture cycle at that face:
 
 ```
 φ(t) = ω t + α
@@ -510,7 +510,7 @@ such that for transition rates k:
 The forward rate exceeds the reverse rate.
 ```
 
-**Connection to the aperture operator:** The circumpunct cycle Φ' = ⊱ ∘ i ∘ ≺[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse—this asymmetry is the microscopic origin of ratcheting.
+**Connection to the aperture operator:** The circumpunct cycle Φ' = ☀︎ ∘ i ∘ ⊛[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse—this asymmetry is the microscopic origin of ratcheting.
 
 **CP violation as primordial ratchet:**
 
@@ -548,11 +548,11 @@ RATCHET CONDITION:
 The ratchet asymmetry is encoded in the balance parameter:
 
 ```
-|⊰| ≠ |≻| in general
+|☀︎| ≠ |⊛| in general
 
-When |⊰| > |≻|:  Net emergence. Complexity increases. ◐ < 0.5
-When |⊰| < |≻|:  Net convergence. Complexity decreases. ◐ > 0.5
-When |⊰| = |≻|:  Balance. Maintenance. ◐ = 0.5
+When |☀︎| > |⊛|:  Net emergence. Complexity increases. ◐ < 0.5
+When |☀︎| < |⊛|:  Net convergence. Complexity decreases. ◐ > 0.5
+When |☀︎| = |⊛|:  Balance. Maintenance. ◐ = 0.5
 
 LIVING SYSTEMS operate slightly off balance:
 
@@ -566,7 +566,7 @@ rather than merely maintain.
 
 The **ethereal tail** formalizes how phase-locked centers across nested scales create persistent identity.
 
-**Definition (Ethereal Tail):** Let {•ₙ}ₙ₌₁ᴺ be a hierarchy of apertures at scales sₙ, each executing the master cycle Φₙ' = ⊰ₙ ∘ i ∘ ≻ₙ[Φₙ]. The ethereal tail T exists when:
+**Definition (Ethereal Tail):** Let {•ₙ}ₙ₌₁ᴺ be a hierarchy of apertures at scales sₙ, each executing the master cycle Φₙ' = ☀︎ₙ ∘ i ∘ ⊛ₙ[Φₙ]. The ethereal tail T exists when:
 
 ```
 T = {•ₙ : Δφₙ,ₙ₊₁ ≈ 0 (mod 2π) for all adjacent pairs}
@@ -657,7 +657,7 @@ or, in the quantum theory, a state in the Hilbert space ℋ_⊙ = ℋ_○ ⊗ �
 **P2.** Time evolution in a given frame is implemented by a three-stage linear operator:
 
 ```
-U(Δt) = ⊱ ∘ i ∘ ≺
+U(Δt) = ☀︎ ∘ i ∘ ⊛
 ```
 
 acting on ℋ_Φ, so that:
@@ -669,12 +669,12 @@ acting on ℋ_Φ, so that:
 The full universe is a fixed point of the extended "validation" evolution:
 
 ```
-⊙ = fix(λΦ. ⊱(V_out(i_◐(V_in(≺Φ)))))
+⊙ = fix(λΦ. ☀︎(V_out(i_◐(V_in(⊛Φ)))))
 ```
 
 where V_in/out are additional validation filters.
 
-**Note on validation operators:** In the full, non-linear theory, additional "validation" maps V_in and V_out act before and after the aperture, encoding selection, normalization, and consistency across scales. In this quick-start we suppress these maps and focus on the linear kernel ⊱ ∘ i ∘ ≺, which is sufficient to recover standard QM and GR limits.
+**Note on validation operators:** In the full, non-linear theory, additional "validation" maps V_in and V_out act before and after the aperture, encoding selection, normalization, and consistency across scales. In this quick-start we suppress these maps and focus on the linear kernel ☀︎ ∘ i ∘ ⊛, which is sufficient to recover standard QM and GR limits.
 
 ### Postulate 3 — Aperture Balance and the Imaginary Unit
 
@@ -687,7 +687,7 @@ i² = -1
 and it acts at a critical balance ◐ = 1/2 between convergence and emergence:
 
 ```
-◐ = |≻| / (|≻| + |⊰|) = 1/2
+◐ = |⊛| / (|⊛| + |☀︎|) = 1/2
 ```
 
 This balance fixes the effective fractal dimension of worldlines to a universal value D = 1.5.
@@ -734,7 +734,7 @@ Empirical claim: "Braid ∝ √|g_tt|, R² ≈ 0.9997 across test metrics."
 
 ---
 
-## 4. Schrödinger Equation from U = ⊱ ∘ i ∘ ≺
+## 4. Schrödinger Equation from U = ☀︎ ∘ i ∘ ⊛
 
 This section derives the standard Schrödinger equation as a local limit of the circumpunct evolution.
 
@@ -887,7 +887,7 @@ where V_eff collects potential-like contributions from departures of K from pure
 ╚═══════════════════════════════════════════════════════════╝
 ```
 
-**Summary:** The single-step process ⊱∘i∘≺ defines an integral evolution operator U(Δt). Under standard locality and scaling assumptions, its generator is a self-adjoint differential operator H, and the central aperture rotation i supplies the complex structure needed to write the evolution as the Schrödinger equation.
+**Summary:** The single-step process ☀︎∘i∘⊛ defines an integral evolution operator U(Δt). Under standard locality and scaling assumptions, its generator is a self-adjoint differential operator H, and the central aperture rotation i supplies the complex structure needed to write the evolution as the Schrödinger equation.
 
 **Physical interpretation of m (surface mass):**
 
@@ -907,7 +907,7 @@ The phase transmission law stated in §2.6 follows from the same postulates used
 
 **Assumptions (all already in the framework):**
 
-1. **Linearity (Superposition):** The update operator U = ⊱ ∘ i ∘ ≺ is linear on Φ. Responses to multiple inputs add as complex amplitudes.
+1. **Linearity (Superposition):** The update operator U = ☀︎ ∘ i ∘ ⊛ is linear on Φ. Responses to multiple inputs add as complex amplitudes.
 
 2. **Isotropy (Local Symmetry):** Two apertures in symmetric environment have equal magnitude response; only phases differ.
 
@@ -1016,7 +1016,7 @@ Here we address: *How might metric and curvature arise from the circumpunct obje
 
 ### 5.1 Coarse-Grained Braid Structure → Redshift Factor
 
-**The conjecture:** Repeated cycles of the process (≻, i, ⊰) generate a braided structure of worldlines and field lines. At large scales, this should be summarizable by a scalar "braid density" B(x) over spacetime, with:
+**The conjecture:** Repeated cycles of the process (⊛, i, ☀︎) generate a braided structure of worldlines and field lines. At large scales, this should be summarizable by a scalar "braid density" B(x) over spacetime, with:
 
 ```
 B(x) ∝ √(-g_tt(x))
@@ -1026,7 +1026,7 @@ B(x) ∝ √(-g_tt(x))
 
 | Claim | Status |
 |-------|--------|
-| Braiding emerges from repeated ⊱∘i∘≺ cycles | Conceptual (plausible) |
+| Braiding emerges from repeated ☀︎∘i∘⊛ cycles | Conceptual (plausible) |
 | B(x) has a rigorous mathematical definition | **NOT YET DEFINED** |
 | B(x) ∝ √(-g_tt) | **CONJECTURE** |
 | Computational test confirms scaling | ✓ (see note below) |
@@ -1078,7 +1078,7 @@ In this picture:
 - Gravity is NOT a force between separate threads
 - Gravity IS the geometry of the i(t) fabric itself
 - Einstein's field equations describe how i(t) density shapes the fabric
-- The fabric's curvature shapes future i(t) via ≻ → ⊱ dynamics
+- The fabric's curvature shapes future i(t) via ⊛ → ☀︎ dynamics
 
 Other threads follow geodesics as their locally most coherent paths through the fabric.
 
@@ -1462,14 +1462,14 @@ Specific predictions:
 
 The transmission law T = cos²(Δφ/2) suggests a phase-coherence model for the dark sector:
 
-| Type | φ_≻ coherence | φ_⊰ coherence | ⟨T_≻⟩ | ⟨T_⊰⟩ | Observable signature |
+| Type | φ_⊛ coherence | φ_☀︎ coherence | ⟨T_⊛⟩ | ⟨T_☀︎⟩ | Observable signature |
 |------|---------------|---------------|-------|-------|---------------------|
 | Visible matter | long-range | long-range | ≈ 1 | ≈ 1 | Clumps + emits light |
 | Dark matter | long-range | short-range | ≈ 1 | ≈ 0 | Clumps, no light |
 | Dark energy | short-range | short-range | ≈ 0.5 | ≈ 0.5 | Uniform expansion |
 
 **Physical interpretation:**
-- **Dark matter** = convergence-phase condensate: ≻ faces phase-locked (gravitational coupling), ⊰ faces incoherent (EM invisible)
+- **Dark matter** = convergence-phase condensate: ⊛ faces phase-locked (gravitational coupling), ☀︎ faces incoherent (EM invisible)
 - **Dark energy** = maximally incoherent foam: neither face coherent at large scales, yielding uniform background "pressure"
 
 **Testable predictions:**
@@ -1586,16 +1586,16 @@ The framework is falsified if:
 
 ### Operators
 
-- **Convergence:** ≻: ℋ_Φ → ℋ_in, kernel K_conv
+- **Convergence:** ⊛: ℋ_Φ → ℋ_in, kernel K_conv
 - **Aperture rotation:** i: ℋ_in → ℋ_out, multiplication by imaginary unit at balance ◐=1/2
-- **Emergence:** ⊰: ℋ_out → ℋ_Φ, kernel K_emerg
-- **Evolution:** U(Δt) = ⊱ ∘ i ∘ ≺
+- **Emergence:** ☀︎: ℋ_out → ℋ_Φ, kernel K_emerg
+- **Evolution:** U(Δt) = ☀︎ ∘ i ∘ ⊛
 
 ### Key Equalities
 
 **Balance:**
 ```
-◐ = |≻|/(|≻|+|⊰|) = 1/2
+◐ = |⊛|/(|⊛|+|☀︎|) = 1/2
 D = 1 + (1/2)H(◐) = 1.5
 ```
 
@@ -1670,7 +1670,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 ### 10.3 Computational Implementation
 
-1. **Kernel evolution simulations:** Numerical integration of ⊱∘i∘≺ dynamics
+1. **Kernel evolution simulations:** Numerical integration of ☀︎∘i∘⊛ dynamics
 2. **Braid structure visualization:** 3D rendering of accumulated circumpunct histories
 3. **Dimensional transition modeling:** Simulate D(scale) crossover behavior
 4. **AGI architecture:** Implement ⊙-based computational systems with real sensors
@@ -1714,10 +1714,10 @@ This formulation benefited from iterative refinement focused on mathematical rig
 - ○ : boundary (circle)
 - • : aperture (center point)
 - Φ : field
-- ≻ : convergence (left-to-right flow toward aperture)
-- ⊰ : emergence (left-to-right flow from aperture)
-- ≺ : convergence (right-to-left flow toward aperture), defined as ≺ = ≻†
-- ⊱ : emergence (right-to-left flow from aperture), defined as ⊱ = ⊰†
+- ⊛ : convergence (left-to-right flow toward aperture)
+- ☀︎ : emergence (left-to-right flow from aperture)
+- ⊛ : convergence (right-to-left flow toward aperture), defined as ⊛ = ⊛†
+- ☀︎ : emergence (right-to-left flow from aperture), defined as ☀︎ = ☀︎†
 - i : aperture rotation (imaginary unit), equals Å(0.5)
 - Å(◐) : aperture rotation operator, Å(◐) = exp(iπ◐)
 - ◐ : balance parameter
@@ -1733,21 +1733,21 @@ This formulation benefited from iterative refinement focused on mathematical rig
 **The geometric principle:** The convergent point (tip) of every symbol points toward the aperture •.
 
 ```
-    ≺    tip points left   →  aperture is to the left
-    ≻    tip points right  →  aperture is to the right
-    ⊱    tip points right  →  aperture is to the right
-    ⊰    tip points left   →  aperture is to the left
+    ⊛    tip points left   →  aperture is to the left
+    ⊛    tip points right  →  aperture is to the right
+    ☀︎    tip points right  →  aperture is to the right
+    ☀︎    tip points left   →  aperture is to the left
 ```
 
 **Note on flow notation:** We use a left-to-right convention in the main text:
 
-  Φ ──≻── • ──i── • ──⊰── Φ′,
+  Φ ──⊛── • ──i── • ──☀︎── Φ′,
 
-where ≻ denotes convergence (toward the aperture) and ⊰ denotes emergence (from the aperture). For completeness, the full framework also introduces mirror operators for right-to-left reading:
+where ⊛ denotes convergence (toward the aperture) and ☀︎ denotes emergence (from the aperture). For completeness, the full framework also introduces mirror operators for right-to-left reading:
 
-  Φ′ ──⊱── • ──i── • ──≺── Φ,
+  Φ′ ──☀︎── • ──i── • ──⊛── Φ,
 
-where ≺ is convergence and ⊱ is emergence. The convergence pair (≻,≺) and emergence pair (⊰,⊱) are adjoint pairs. Both reading directions apply the same operation order: **convergence then emergence**.
+where ⊛ is convergence and ☀︎ is emergence. The convergence pair (⊛,⊛) and emergence pair (☀︎,☀︎) are adjoint pairs. Both reading directions apply the same operation order: **convergence then emergence**.
 
 ### Spaces
 - M : spacetime manifold

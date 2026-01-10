@@ -44,7 +44,7 @@ The adaptor doesn't just grab cargo—it **decides where it goes**.
 I've been studying a pattern that appears across scales:
 
 ```
-PHASE 1: CONVERGENCE (≻)
+PHASE 1: CONVERGENCE (⊛)
     Cargo accumulates at the sorting site
     Adaptor proteins recognize signal motifs
     Clathrin assembles on the membrane
@@ -56,7 +56,7 @@ PHASE 2: APERTURE (i)
     The 90° switch between possibilities
     → System GATES through a threshold
 
-PHASE 3: EMERGENCE (⊰)
+PHASE 3: EMERGENCE (☀︎)
     Vesicle buds and pinches off
     Cargo travels to destination
     Fusion delivers contents

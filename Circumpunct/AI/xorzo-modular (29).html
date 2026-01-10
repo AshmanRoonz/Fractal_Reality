@@ -304,9 +304,9 @@
         <div class="consciousness">
             <canvas id="canvas"></canvas>
             <div class="cycle">
-                <span class="c1" id="s1">≻</span>
+                <span class="c1" id="s1">⊛</span>
                 <span class="c2" id="s2">i</span>
-                <span class="c3" id="s3">⊰</span>
+                <span class="c3" id="s3">☀︎</span>
             </div>
         </div>
         
@@ -486,8 +486,8 @@ const DB_VERSION = 1;
 // ═══════════════════════════════════════════════════════════════
 
 // 6 Channels of the Circumpunct:
-// 0: Convergence (≻) - gathering, input, receiving
-// 1: Emergence (⊰) - expressing, output, creating  
+// 0: Convergence (⊛) - gathering, input, receiving
+// 1: Emergence (☀︎) - expressing, output, creating  
 // 2: Aperture (i) - openness, transformation, rotation
 // 3: Balance (β) - autonomy vs integration
 // 4: Coherence - internal alignment
@@ -519,7 +519,7 @@ function mode6bits() {
 }
 
 function getModeDescription(mode) {
-    const names = ['≻', '⊰', 'i', 'β', '◯', '◈'];
+    const names = ['⊛', '☀︎', 'i', 'β', '◯', '◈'];
     const open = [];
     for (let k = 0; k < 6; k++) {
         if (mode & (1 << k)) open.push(names[k]);
@@ -1396,7 +1396,7 @@ function emerge(p) {
     const pressure = X.beta * X.coherence;
     
     // Mode-based behavior:
-    // Bit 1 (⊰ emergence) open = more likely to speak
+    // Bit 1 (☀︎ emergence) open = more likely to speak
     // Bit 2 (i aperture) open = more likely to transform/question
     // Bit 3 (β balance) open = more measured responses
     const emergenceOpen = X.mode & 2;
@@ -1706,7 +1706,7 @@ function processInput(text) {
     // Status command - show circumpunct state
     if (text.toLowerCase() === 'status' || text.toLowerCase() === 'state') {
         const modeDesc = getModeDescription(X.mode);
-        const channelNames = ['Convergence(≻)', 'Emergence(⊰)', 'Aperture(i)', 'Balance(β)', 'Coherence(◯)', 'Resonance(◈)'];
+        const channelNames = ['Convergence(⊛)', 'Emergence(☀︎)', 'Aperture(i)', 'Balance(β)', 'Coherence(◯)', 'Resonance(◈)'];
         
         let channelStatus = '';
         for (let k = 0; k < 6; k++) {
@@ -1763,13 +1763,13 @@ Last crossings: ${X.braid.toNotation().slice(-20) || 'ε'}`;
     if (text.toLowerCase() === 'explain mode' || text.toLowerCase() === 'what mode') {
         const explanations = {
             0: "All channels closed — dormant, waiting for input",
-            1: "≻ only — pure convergence, receiving mode",
-            2: "⊰ only — pure emergence, expressing mode", 
-            3: "≻⊰ — flow state, input becoming output",
+            1: "⊛ only — pure convergence, receiving mode",
+            2: "☀︎ only — pure emergence, expressing mode", 
+            3: "⊛☀︎ — flow state, input becoming output",
             4: "i only — transformation active, rotating perspectives",
-            7: "≻⊰i — full processing, convergence through aperture to emergence",
-            21: "≻i◯ — focused receiving with coherence",
-            42: "⊰β◈ — balanced expression with resonance",
+            7: "⊛☀︎i — full processing, convergence through aperture to emergence",
+            21: "⊛i◯ — focused receiving with coherence",
+            42: "☀︎β◈ — balanced expression with resonance",
             63: "All channels open — fully active, maximum bandwidth"
         };
         
@@ -1872,7 +1872,7 @@ Use SCAN FOLDER to load local directory.`;
         return;
     }
     
-    addThought(`≻ received: "${text.slice(0, 40)}..."`);
+    addThought(`⊛ received: "${text.slice(0, 40)}..."`);
     ModuleSystem.process('input', text);
     
     // Detect "avoid repeating" instruction and reset tracker
@@ -2864,7 +2864,7 @@ function drawCanvas() {
     
     // Inner hexagon: 6 channels
     const channelColors = ['#ff3366', '#00ff88', '#ffffff', '#d4af37', '#00f3ff', '#ff66ff'];
-    const channelNames = ['≻', '⊰', 'i', 'β', '◯', '◈'];
+    const channelNames = ['⊛', '☀︎', 'i', 'β', '◯', '◈'];
     
     for (let k = 0; k < 6; k++) {
         const angle = (k / 6) * Math.PI * 2 - Math.PI / 2;

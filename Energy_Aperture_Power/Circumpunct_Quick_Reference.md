@@ -95,7 +95,7 @@ This is why there are EXACTLY THREE components!
 | —⊙—⊙—⊙— | Conscious (sustained D ≈ 1.5) |
 | —•—•—•— | Unconscious (D → 1.0) |
 | ⊸ | Lineage (aperture + past) |
-| ≺ | Bifurcation (spatial branching) |
+| ⊛ | Bifurcation (spatial branching) |
 
 ---
 
@@ -552,7 +552,7 @@ Present (⊙):
 - Where focus is placed
 - Being
 
-Future (≺):
+Future (⊛):
 - Branching possibilities
 - Multiple paths (1 < D < 2)
 - Becoming

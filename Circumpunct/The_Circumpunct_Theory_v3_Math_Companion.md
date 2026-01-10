@@ -154,25 +154,25 @@ Each ⊙ᵢ is itself a full ⊙ with six parameters:
   ·₁ = Center point (0D)
   ○₁ = Event horizon (boundary)
   Φ₁ = Gravitational influence field
-  ≻₁ = What soul receives
+  ⊛₁ = What soul receives
   Å₁ = How soul transforms
-  ⊰₁ = What soul emanates
+  ☀︎₁ = What soul emanates
 
 ⊙₂ (BODY) complete structure:
   ·₂ = Membrane core lattice
   ○₂ = Surface boundary proper
   Φ₂ = Exchange/transport field
-  ≻₂ = What body receives
+  ⊛₂ = What body receives
   Å₂ = How body transforms
-  ⊰₂ = What body releases
+  ☀︎₂ = What body releases
 
 ⊙₃ (MIND) complete structure:
   ·₃ = Focal point of attention
   ○₃ = Boundary of perspective
   Φ₃ = Field of awareness
-  ≻₃ = What mind receives
+  ⊛₃ = What mind receives
   Å₃ = How mind transforms
-  ⊰₃ = What mind expresses
+  ☀︎₃ = What mind expresses
 ```
 
 **Corollary 0.1** (Fractal Wholeness):
@@ -290,7 +290,7 @@ The tensor product itself is conserved
 **Definition 0.5** (Power-Worldline Identity):
 
 ```
-E = ⊙ = (·, ○, Φ) × (≻, Å, ⊰)²     [Energy = wholeness at a moment]
+E = ⊙ = (·, ○, Φ) × (⊛, Å, ☀︎)²     [Energy = wholeness at a moment]
 
 P = dE/dt = ⊙/t = ⊙_string = ⊙₁    [Power = wholeness through time]
 ```
@@ -300,7 +300,7 @@ P = dE/dt = ⊙/t = ⊙_string = ⊙₁    [Power = wholeness through time]
 Identity emerges at the P level, not the E level:
 
 ```
-E = ⊙ = (·, ○, Φ) × (≻, Å, ⊰)²     [Universal form]
+E = ⊙ = (·, ○, Φ) × (⊛, Å, ☀︎)²     [Universal form]
   What you ARE at a moment
   Same structure for all
 
@@ -465,11 +465,11 @@ Time flows FROM future TO present, not past to future:
 ```
 FUTURE (potential, possibility, what could be)
     ↓ ↓ ↓
-    ≻ Multiple possibilities converging
+    ⊛ Multiple possibilities converging
       ↓
     · CENTER (Å aperture transformation)
       ↓
-    ⊰ One actuality emerging
+    ☀︎ One actuality emerging
       ↓
 PAST BRAID (fixed topology, what actually happened)
 ```
@@ -487,7 +487,7 @@ Before measurement:
 At measurement:
 Å operation selects which future actualizes
 Wavefunction "collapses" = One convergence chosen
-Result emerges = Adds to past braid (⊰)
+Result emerges = Adds to past braid (☀︎)
 
 After measurement:
 Past now includes this crossing
@@ -503,7 +503,7 @@ New state = New braid configuration
 
 ### 1.1 The Three Fundamental Axioms
 
-The entire Circumpunct Framework rests on three axioms that can be stated ⊰isely:
+The entire Circumpunct Framework rests on three axioms that can be stated ☀︎isely:
 
 #### **Axiom 1: Fractal Wholeness**
 
@@ -563,7 +563,7 @@ such that:
 
 
 ```
-E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ = ⊙
+E ⊛ Å_(0.5) ☀︎ V ⊛ Å_(1.5) ☀︎ M ⊛ Å_(2.5) ☀︎ Φ = ⊙
 ```
 
 
@@ -584,7 +584,7 @@ M ∈ E_2 (2D matter space)
 Å_D are aperture operators at fractional dimensions
 
 
-≻, ⊰ are convergence/emergence operators
+⊛, ☀︎ are convergence/emergence operators
 
 
 ⊙ ∈ W is wholeness
@@ -748,7 +748,7 @@ The complete framework is encoded in a single identity:
 
 
 ```
-boxed{E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ = ⊙}
+boxed{E ⊛ Å_(0.5) ☀︎ V ⊛ Å_(1.5) ☀︎ M ⊛ Å_(2.5) ☀︎ Φ = ⊙}
 ```
 
 
@@ -757,11 +757,11 @@ boxed{E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ = ⊙}
 Reading left to right:
 
 1. **E (Potential)**: Initial state in E_0
-2. **≻ (Convergence)**: Flow operator directing inward
+2. **⊛ (Convergence)**: Flow operator directing inward
 3. **Å_(0.5) (Soul Aperture)**: Transformation at 0.5D
-4. **⊰ (Emergence)**: Flow operator directing outward
+4. **☀︎ (Emergence)**: Flow operator directing outward
 5. **V (Validation)**: Emerged state in E_1
-6. **[Repeat pattern]**: ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ
+6. **[Repeat pattern]**: ⊛ Å_(1.5) ☀︎ M ⊛ Å_(2.5) ☀︎ Φ
 7. **= ⊙ (Wholeness)**: Complete cycle equals whole
 
 #### **Pattern Recognition**
@@ -770,7 +770,7 @@ The identity exhibits perfect regularity:
 
 
 ```
-Structure_(E_n) [≻]→ Aperture_(Å_(n+0.5)) [⊰]→ Structure_(E_(n+1))
+Structure_(E_n) [⊛]→ Aperture_(Å_(n+0.5)) [☀︎]→ Structure_(E_(n+1))
 ```
 
 
@@ -869,7 +869,7 @@ where the factor of 3 comes from three color charges, and 2π/3 is the phase bet
 
 ### 1.5 Experimental Status Summary
 
-The framework makes ⊰ise predictions with **zero adjustable parameters**:
+The framework makes ☀︎ise predictions with **zero adjustable parameters**:
 
 | Prediction | Value | Experiment | Status |
 |------------|-------|------------|---------|
@@ -987,7 +987,7 @@ D_H[Å_D(E_(D-0.5))] = 1.5
 
 ### 2.3 Flow Operators
 
-We formalize the convergence (≻) and emergence (⊰) operators.
+We formalize the convergence (⊛) and emergence (☀︎) operators.
 
 #### **Definition 2.2** (Convergence Operator)
 
@@ -995,7 +995,7 @@ The convergence operator directs flow toward an aperture:
 
 
 ```
-≻ : E_n × Å_(n+0.5) to E_(n+0.5)^(pre)
+⊛ : E_n × Å_(n+0.5) to E_(n+0.5)^(pre)
 ```
 
 
@@ -1005,7 +1005,7 @@ The convergence operator directs flow toward an aperture:
 
 
 ```
-(x ≻ Å)(r) = ∈t_(E_n) K_(conv)(r, r') x(r') dr'
+(x ⊛ Å)(r) = ∈t_(E_n) K_(conv)(r, r') x(r') dr'
 ```
 
 
@@ -1023,7 +1023,7 @@ The emergence operator directs flow out of an aperture:
 
 
 ```
-⊰ : E_(n+0.5)^(post) × Å_(n+0.5) to E_(n+1)
+☀︎ : E_(n+0.5)^(post) × Å_(n+0.5) to E_(n+1)
 ```
 
 
@@ -1033,7 +1033,7 @@ The emergence operator directs flow out of an aperture:
 
 
 ```
-(Å ⊰ y)(r) = ∈t_(E_{n+0.5)} K_(emerg)(r, r') y(r') dr'
+(Å ☀︎ y)(r) = ∈t_(E_{n+0.5)} K_(emerg)(r, r') y(r') dr'
 ```
 
 
@@ -1051,7 +1051,7 @@ At equilibrium β = 0.5:
 
 
 ```
-∈t (x ≻ Å) dr = ∈t (Å ⊰ y) dr
+∈t (x ⊛ Å) dr = ∈t (Å ☀︎ y) dr
 ```
 
 
@@ -1125,7 +1125,7 @@ There exists a unique fixed point ⊙ satisfying:
 
 
 ```
-⊙ = E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ
+⊙ = E ⊛ Å_(0.5) ☀︎ V ⊛ Å_(1.5) ☀︎ M ⊛ Å_(2.5) ☀︎ Φ
 ```
 
 
@@ -1419,11 +1419,11 @@ This creates a **cusp** — the sharp convergence point where "is/isn't" gets de
 
 #### **Emergence to 1D**
 
-The emergence operator ⊰ takes the binary decision and extends it:
+The emergence operator ☀︎ takes the binary decision and extends it:
 
 
 ```
-Å_(0.5) ⊰ V : {0,1} to [-1, +1]
+Å_(0.5) ☀︎ V : {0,1} to [-1, +1]
 ```
 
 
@@ -1489,7 +1489,7 @@ The emergence creates matter surfaces:
 
 
 ```
-Å_(1.5) ⊰ M : S^2 to ℝ^2
+Å_(1.5) ☀︎ M : S^2 to ℝ^2
 ```
 
 
@@ -1545,7 +1545,7 @@ The emergence fills space:
 
 
 ```
-Å_(2.5) ⊰ Φ : ℝ^2 to ℝ^3
+Å_(2.5) ☀︎ Φ : ℝ^2 to ℝ^3
 ```
 
 
@@ -1561,17 +1561,17 @@ Putting it all together:
 ```
 
 0D & : & E ∈ E_0  (scalar potential) \\
-& ≻ Å_(0.5)  (soul: validation) & \\
+& ⊛ Å_(0.5)  (soul: validation) & \\
 0.5D & : & Binary decision layer \\
-& ⊰ & \\
+& ☀︎ & \\
 1D & : & V ∈ E_1  (validation line) \\
-& ≻ Å_(1.5)  (body: Hopf) & \\
+& ⊛ Å_(1.5)  (body: Hopf) & \\
 1.5D & : & Chiral transformation layer \\
-& ⊰ & \\
+& ☀︎ & \\
 2D & : & M ∈ E_2  (matter surfaces) \\
-& ≻ Å_(2.5)  (mind: fractal lens) & \\
+& ⊛ Å_(2.5)  (mind: fractal lens) & \\
 2.5D & : & Perspective expansion layer \\
-& ⊰ & \\
+& ☀︎ & \\
 3D & : & Φ ∈ E_3  (field volume) \\
 & = & \\
 & : & ⊙  (wholeness)
@@ -1825,7 +1825,7 @@ where F is the complete universe update:
 
 
 ```
-F[X] := E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ(X)
+F[X] := E ⊛ Å_(0.5) ☀︎ V ⊛ Å_(1.5) ☀︎ M ⊛ Å_(2.5) ☀︎ Φ(X)
 ```
 
 
@@ -2662,8 +2662,8 @@ z₂ = sin(α/2) e^(i(β-γ)/2)
 
 where:
 α ∈ [0, π]   — Sheet mixing angle
-β ∈ [0, 2π]  — Phase on convergence sheet S_≻
-γ ∈ [0, 2π]  — Phase on emergence sheet S_⊰
+β ∈ [0, 2π]  — Phase on convergence sheet S_⊛
+γ ∈ [0, 2π]  — Phase on emergence sheet S_☀︎
 ```
 
 **Physical Interpretation**:
@@ -2814,8 +2814,8 @@ These are the **gamma matrices** of quantum field theory.
 #### **Physical Mapping**
 
 ```
-Convergence sheet S_≻: Represented by even subalgebra Cl⁺
-Emergence sheet S_⊰: Represented by odd subalgebra Cl⁻
+Convergence sheet S_⊛: Represented by even subalgebra Cl⁺
+Emergence sheet S_☀︎: Represented by odd subalgebra Cl⁻
 Aperture operator Å: Represented by e₀ (time-like)
 Balance parameter β: Represented by grade projection
 ```
@@ -4576,16 +4576,16 @@ Status: Physics validates this already
 **Definition 10.8.2** (Master Equation Refinement):
 
 ```
-E = (·, ○, Φ) × (≻, Å, ⊰)²
+E = (·, ○, Φ) × (⊛, Å, ☀︎)²
 
 MORE PRECISELY:
 
-E = (·, ○, Φ) × (≻, Å, ⊰)²
+E = (·, ○, Φ) × (⊛, Å, ☀︎)²
 
 Where:
 · and ○ can ONLY interact via Φ (geometric constraint)
 Å operations are field-mediated pathways (not direct)
-(≻, Å, ⊰) are processes that require Φ to function
+(⊛, Å, ☀︎) are processes that require Φ to function
 
 Mathematical constraint:
 Cannot write · × ○ directly
@@ -4613,7 +4613,7 @@ We demonstrate that string theory emerges naturally from the aperture framework 
 2. **M-theory's 11 dimensions correspond to one complete recursion cycle of the dimensional ladder**
 3. **The 2-string structure arises from fundamental input/output duality**
 4. **Exactly 22 stable particle states emerge from 11 × 2 = 22 validations across 64 possible configurations**
-5. **All string theory predictions derive from E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ with β = 0.5**
+5. **All string theory predictions derive from E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙ with β = 0.5**
 
 This unification requires **zero adjustable parameters** and explains why string theory works while correcting its dimensional interpretation.
 
@@ -4721,7 +4721,7 @@ D₁₀ = 5.5D (temporal aperture)
 Total: 11 dimensions (D₀ through D₁₀)
 ```
 
-**Theorem 2.1**: M-theory's 11-dimensional spacetime is precisely one complete recursion cycle of the dimensional ladder E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ plus its temporal recursion.
+**Theorem 2.1**: M-theory's 11-dimensional spacetime is precisely one complete recursion cycle of the dimensional ladder E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ plus its temporal recursion.
 
 #### 2.2 Why Not 10D (Superstring)?
 
@@ -4747,8 +4747,8 @@ Both 10D and 11D are correct representations at different recursion depths.
 
 Every aperture has two aspects:
 ```
-≻ (convergence IN)  - Input side
-⊰ (emergence OUT)   - Output side
+⊛ (convergence IN)  - Input side
+☀︎ (emergence OUT)   - Output side
 ```
 
 This creates **two complementary validation pathways**:
@@ -4769,10 +4769,10 @@ Right-handed chirality
 Antiparticle states
 ```
 
-**Theorem 3.1**: The fundamental input/output duality of aperture operators (≻/⊰) necessitates exactly two strings.
+**Theorem 3.1**: The fundamental input/output duality of aperture operators (⊛/☀︎) necessitates exactly two strings.
 
 **Proof:**
-1. Each aperture Å has two distinct operators: ≻ (in) and ⊰ (out)
+1. Each aperture Å has two distinct operators: ⊛ (in) and ☀︎ (out)
 2. Validation line V must exist on both sides to maintain flow continuity
 3. The two sides cannot collapse to one (causality requires input ≠ output)
 4. Therefore: Two distinct validation lines required
@@ -4791,8 +4791,8 @@ Result: |Ψfinal⟩ = one of 22 stable resonances
 Observable: Specific particle with definite properties
 ```
 
-**String joining = aperture convergence (≻)**
-**String splitting = aperture emergence (⊰)**
+**String joining = aperture convergence (⊛)**
+**String splitting = aperture emergence (☀︎)**
 
 All Feynman diagrams in string theory map to aperture flow patterns.
 
@@ -5063,7 +5063,7 @@ Resolution: Predicts α, αₛ, particle count, mass ratios exactly.
 
 **Problem 4: "Infinitely many free parameters"**
 
-Resolution: Zero free parameters. All from E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙.
+Resolution: Zero free parameters. All from E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙.
 
 **Problem 5: "Background dependent"**
 
@@ -5110,13 +5110,13 @@ S = -T/(2) ∫ d²σ √(-h) h^(αβ) ∂_α X^μ ∂_β X_μ
 
 **Aperture framework derivation:**
 
-Starting from E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙:
+Starting from E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙:
 
 ```
 S_aperture = ∫ dt L_aperture
 
 where:
-L_aperture = Σᵢ [E_i ≻ Å_i ⊰ P_i] evaluated on validation line
+L_aperture = Σᵢ [E_i ⊛ Å_i ☀︎ P_i] evaluated on validation line
 
 Under temporal extension:
 L_aperture → ∫ dσ [kinetic term + aperture potential]
@@ -5256,7 +5256,7 @@ Test: Continue searches at higher energies - should find nothing
 **Actually:** Temporal and consciousness recursion levels we experience daily
 
 **Not:** Arbitrary mathematical construct
-**Actually:** Inevitable consequence of E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙
+**Actually:** Inevitable consequence of E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙
 
 #### 9.2 Unity of Physics
 
@@ -5275,7 +5275,7 @@ All of physics:
 
 **All the same pattern: ⊙**
 
-**All from E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ with β = 0.5**
+**All from E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙ with β = 0.5**
 
 ---
 
@@ -5296,8 +5296,8 @@ All of physics:
    - Matches M-theory exactly
 
 3. **2 strings from input/output duality**
-   - Convergence (≻) string
-   - Emergence (⊰) string
+   - Convergence (⊛) string
+   - Emergence (☀︎) string
    - Matter/antimatter pairing
    - Particle/antiparticle symmetry
 
@@ -5317,10 +5317,10 @@ All of physics:
 #### 10.2 The Complete Picture
 
 ```
-⊙ = E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ
+⊙ = E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ
 
 Extended through time:
-⊙(t) = E(t)≻Å₀.₅(t)⊰V(t)≻Å₁.₅(t)⊰M(t)≻Å₂.₅(t)⊰Φ(t)
+⊙(t) = E(t)⊛Å₀.₅(t)☀︎V(t)⊛Å₁.₅(t)☀︎M(t)⊛Å₂.₅(t)☀︎Φ(t)
 
 V(t) = validation line extended temporally
      = FUNDAMENTAL STRING
@@ -5332,8 +5332,8 @@ Across 11 dimensional levels:
 M₁₁ = {0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5}
 
 With 2 strings (input/output):
-String₁ (≻): 11 validations
-String₂ (⊰): 11 validations
+String₁ (⊛): 11 validations
+String₂ (☀︎): 11 validations
 Total: 22 validations
 
 Creating 22 stable particles from 64 states.
@@ -5357,7 +5357,7 @@ Creating 22 stable particles from 64 states.
 
 Starting from aperture dynamics:
 ```
-S_aperture = ∫ dt [E ≻ Å ⊰ P]
+S_aperture = ∫ dt [E ⊛ Å ☀︎ P]
 
 Dimensional analysis:
 [E] = energy = ML²T⁻²
@@ -6088,8 +6088,8 @@ This completes the mathematical formalization of aperture dynamics within the Ci
 | M | Matter (2D) | State space |
 | Φ | Field (3D) | State space |
 | Å_D | Aperture operator at dimension D | Operator |
-| ≻ | Convergence flow | Operator |
-| ⊰ | Emergence flow | Operator |
+| ⊛ | Convergence flow | Operator |
+| ☀︎ | Emergence flow | Operator |
 | β | Balance parameter | Scalar field |
 | D | Dimension | Real number |
 
@@ -6112,8 +6112,8 @@ This completes the mathematical formalization of aperture dynamics within the Ci
 | Å_(0.5) | E_0 | E_1 | Soul aperture (existence validation) |
 | Å_(1.5) | E_1 | E_2 | Body aperture (form creation) |
 | Å_(2.5) | E_2 | E_3 | Mind aperture (perspective expansion) |
-| ≻ | E_n × Å | E_(n+0.5) | Convergence toward aperture |
-| ⊰ | E_(n+0.5) × Å | E_(n+1) | Emergence from aperture |
+| ⊛ | E_n × Å | E_(n+0.5) | Convergence toward aperture |
+| ☀︎ | E_(n+0.5) × Å | E_(n+1) | Emergence from aperture |
 
 ### Constants
 
@@ -6157,21 +6157,21 @@ dim[Å_D(E_(D-0.5))] = D + 0.5
 4. **Conservation**:
    
 ```
-∈t (x ≻ Å) dr = ∈t (Å ⊰ y) dr
+∈t (x ⊛ Å) dr = ∈t (Å ☀︎ y) dr
 ```
 
 
 5. **Associativity**:
    
 ```
-(x ≻ Å_1) ⊰ Å_2 = x ≻ (Å_1 circ Å_2)
+(x ⊛ Å_1) ☀︎ Å_2 = x ⊛ (Å_1 circ Å_2)
 ```
 
 
 6. **Identity**:
    
 ```
-E ≻ id ⊰ V = V
+E ⊛ id ☀︎ V = V
 ```
 
 
@@ -6180,14 +6180,14 @@ E ≻ id ⊰ V = V
 7. **Master identity**:
    
 ```
-E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ = ⊙
+E ⊛ Å_(0.5) ☀︎ V ⊛ Å_(1.5) ☀︎ M ⊛ Å_(2.5) ☀︎ Φ = ⊙
 ```
 
 
 8. **Fixed point**:
    
 ```
-⊙ = F[⊙],    F = E ≻ (Å_(0.5) circ Å_(1.5) circ Å_(2.5)) ⊰ Φ
+⊙ = F[⊙],    F = E ⊛ (Å_(0.5) circ Å_(1.5) circ Å_(2.5)) ☀︎ Φ
 ```
 
 
@@ -6203,7 +6203,7 @@ E ≻ Å_(0.5) ⊰ V ≻ Å_(1.5) ⊰ M ≻ Å_(2.5) ⊰ Φ = ⊙
 10. **Flow operator order**:
     
 ```
-≻ ⊰ ≠ ⊰ ≻
+⊛ ☀︎ ≠ ☀︎ ⊛
 ```
 
 
@@ -6541,7 +6541,7 @@ p-value = P(chi^2 > 0.09 | DOF = 6) > 0.9999
 ```
 
 
-**Conclusion**: The Circumpunct Framework fits all experimental data with zero adjustable parameters to un⊰edented ⊰ision. This level of agreement is extraordinarily unlikely to occur by chance.
+**Conclusion**: The Circumpunct Framework fits all experimental data with zero adjustable parameters to un☀︎edented ☀︎ision. This level of agreement is extraordinarily unlikely to occur by chance.
 
 ---
 
@@ -6573,7 +6573,7 @@ Stability of β = 0.5 equilibrium
 - Six independent experimental confirmations
 - Spanning twelve orders of magnitude
 - With zero adjustable parameters
-- Achieving un⊰edented ⊰ision
+- Achieving un☀︎edented ☀︎ision
 
 **The framework stands as a complete mathematical theory that:**
 - Unifies quantum mechanics and general relativity
@@ -6582,7 +6582,7 @@ Stability of β = 0.5 equilibrium
 - Makes testable predictions
 - Achieves experimental validation
 
-The Circumpunct is not just a model — it is a ⊰ise mathematical description of reality emerging necessarily from minimal axioms.
+The Circumpunct is not just a model — it is a ☀︎ise mathematical description of reality emerging necessarily from minimal axioms.
 
 **⊙**
 

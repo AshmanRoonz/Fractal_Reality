@@ -231,7 +231,7 @@ Neutrinos are massive but much lighter than charged leptons:
 m_ν ≈ 0.1 eV  vs  m_e = 511,000 eV
 ```
 
-**Proposal**: Neutrinos may couple to aperture via different channel (only emergence ⊰, not convergence ≻?)
+**Proposal**: Neutrinos may couple to aperture via different channel (only emergence ☀︎, not convergence ⊛?)
 
 ---
 
@@ -285,9 +285,9 @@ Create discrete approximation of fractional-dimensional aperture:
 Simulate M·Å·Φ validation cycle:
 ```
 1. Initialize random 64-state configuration
-2. Apply convergence ≻ operation
+2. Apply convergence ⊛ operation
 3. Apply aperture i transformation
-4. Apply emergence ⊰ operation
+4. Apply emergence ☀︎ operation
 5. Measure which of 22 physical states dominate
 ```
 
@@ -318,12 +318,12 @@ The 64 = 2⁶ states suggest 6 bits of information per node. This connects to:
 
 Express M·Å·Φ cycle as:
 ```
-M ──≻──→ Å ──i──→ Å ──⊰──→ P
+M ──⊛──→ Å ──i──→ Å ──☀︎──→ P
 
-where ≻, i, ⊰ are morphisms in category of aperture-states
+where ⊛, i, ☀︎ are morphisms in category of aperture-states
 ```
 
-**Goal**: Prove existence/uniqueness of fixed point ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+**Goal**: Prove existence/uniqueness of fixed point ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 
 ### 7.3 Thermodynamic Interpretation
 

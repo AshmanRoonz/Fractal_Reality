@@ -92,8 +92,8 @@ The golden division of π **repeats its own structure**.
 
 The framework's flow has two directed operators:
 ```
-≻ = convergence   (outside → inside)
-⊰ = emergence     (inside → outside)
+⊛ = convergence   (outside → inside)
+☀︎ = emergence     (inside → outside)
 ```
 
 The aperture mediates them via rotation i (orthogonal transformation).
@@ -122,7 +122,7 @@ The trinity components map to rotations:
 Therefore:
 ```
 Convergence × Emergence = Inversion
-≻ × ⊰ = flip
+⊛ × ☀︎ = flip
 ```
 
 The field (Φ) represents the complete transformation—what convergence and emergence accomplish together.

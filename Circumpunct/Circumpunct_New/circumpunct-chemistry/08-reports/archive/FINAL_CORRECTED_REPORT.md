@@ -64,9 +64,9 @@ Polarity predictions:  4/4 = 100%
 β asymmetry:           4/4 = 100%
 ```
 
-### Test 2: Full ≻i⊰ Traces ✓ PASS
+### Test 2: Full ⊛i☀︎ Traces ✓ PASS
 ```
-All molecules with proper ≻i⊰ notation
+All molecules with proper ⊛i☀︎ notation
 CO₂ trace now shows: "• (center): C nucleus" ✓
 Process grammar validated
 ```
@@ -181,11 +181,11 @@ CO2
 
 ### One Process
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
-≻: convergence toward aperture
+⊛: convergence toward aperture
 i: aperture (90° rotation, coupling)
-⊰: emergence of new state
+☀︎: emergence of new state
 ```
 
 ### One Mechanism
@@ -357,7 +357,7 @@ def get_central_atom(atoms, bonds):
 
 2. **Same pattern everywhere**
    - Quantum, atomic, molecular, network
-   - All follow ≻i⊰ process grammar
+   - All follow ⊛i☀︎ process grammar
 
 3. **Polarity is geometric**
    - 100% accuracy from β asymmetry
@@ -384,7 +384,7 @@ def get_central_atom(atoms, bonds):
 
 **Theoretically:**
 - ✓ One axiom (⊙)
-- ✓ One process (≻i⊰)
+- ✓ One process (⊛i☀︎)
 - ✓ Falsifiable predictions (benzene)
 - ✓ Honest boundaries (diatomics fail)
 

@@ -279,7 +279,7 @@
 
   <div class="header">
     <h1>⊙</h1>
-    <div class="equation">Φ' = ⊰ ∘ Å(θ) ∘ ≻[Φ]</div>
+    <div class="equation">Φ' = ☀︎ ∘ Å(θ) ∘ ⊛[Φ]</div>
   </div>
 
   <div class="container">
@@ -323,7 +323,7 @@
         
         <div class="param-group">
           <div class="param-label">
-            <span>≻ Convergence</span>
+            <span>⊛ Convergence</span>
             <span class="param-value" id="conv-value">0.50</span>
           </div>
           <input type="range" id="conv-slider" min="0" max="100" value="50">
@@ -341,7 +341,7 @@
         
         <div class="param-group">
           <div class="param-label">
-            <span>⊰ Emergence</span>
+            <span>☀︎ Emergence</span>
             <span class="param-value" id="emerg-value">0.50</span>
           </div>
           <input type="range" id="emerg-slider" min="0" max="100" value="50">
@@ -349,7 +349,7 @@
         </div>
         
         <div class="balance-display">
-          <span class="label">β = ≻/(≻+⊰)</span>
+          <span class="label">β = ⊛/(⊛+☀︎)</span>
           <span class="value" id="beta-value">0.50</span>
         </div>
         
@@ -583,7 +583,7 @@
       // OPERATORS - Now properly balanced
       // ═══════════════════════════════════════════════════════════════════════
 
-      // ≻ Convergence: Blend original with local 5-point average
+      // ⊛ Convergence: Blend original with local 5-point average
       // At c=0: no change. At c=1: full replacement with average
       applyConvergence() {
         const c = this.convergence * 0.3; // Scale so 1.0 isn't too aggressive
@@ -621,7 +621,7 @@
         }
       }
 
-      // ⊰ Emergence: Laplacian sharpening (subtract Laplacian)
+      // ☀︎ Emergence: Laplacian sharpening (subtract Laplacian)
       // At e=0: no change. At e=1: strong sharpening
       applyEmergence() {
         const e = this.emergence * 0.15; // Scale to match convergence effect

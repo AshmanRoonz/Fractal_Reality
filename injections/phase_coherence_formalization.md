@@ -25,10 +25,10 @@
 Each aperture • in the foam 𝔸 has:
 
 * Two faces:
-  * ≻ (convergence face)
-  * ⊰ (emergence face)
-* Each face carries a local phase: φ_≻ and φ_⊰.
-* Phase encodes the "clock position" of the ⊱ ∘ i ∘ ≺ cycle at that face.
+  * ⊛ (convergence face)
+  * ☀︎ (emergence face)
+* Each face carries a local phase: φ_⊛ and φ_☀︎.
+* Phase encodes the "clock position" of the ☀︎ ∘ i ∘ ⊛ cycle at that face.
 
 We write the local phase evolution as:
 
@@ -81,7 +81,7 @@ This is **not an assumption** - it follows from the existing circumpunct postula
 
 **Assumptions (all already in the framework):**
 
-1. **Linearity (Superposition):** The update operator U = ⊱ ∘ i ∘ ≺ is linear on Φ. Responses to multiple inputs add as complex amplitudes.
+1. **Linearity (Superposition):** The update operator U = ☀︎ ∘ i ∘ ⊛ is linear on Φ. Responses to multiple inputs add as complex amplitudes.
 
 2. **Isotropy (Local Symmetry):** Two apertures in symmetric environment have equal magnitude response; only phases differ.
 
@@ -176,11 +176,11 @@ Our T(Δφ) is exactly this SU(2) geometry with θ = Δφ: the aperture "qubit" 
 We distinguish the two channels explicitly:
 
 ```
-T_≻,12  = cos²(Δφ_≻,12 / 2)   (convergence channel)
-T_⊰,12  = cos²(Δφ_⊰,12 / 2)   (emergence channel)
+T_⊛,12  = cos²(Δφ_⊛,12 / 2)   (convergence channel)
+T_☀︎,12  = cos²(Δφ_☀︎,12 / 2)   (emergence channel)
 ```
 
-When context is clear, T₁₂ denotes the relevant channel (≻ or ⊰) for the interaction being discussed.
+When context is clear, T₁₂ denotes the relevant channel (⊛ or ☀︎) for the interaction being discussed.
 
 ---
 
@@ -204,7 +204,7 @@ The same four constraints used to derive the Schrödinger equation also force ph
 
 1. **Locality** – Each aperture cycle samples only a bounded neighborhood with finite reach ℓ.
 2. **Isotropy** – No preferred spatial direction; neighborhood sampling is rotationally symmetric.
-3. **Conservation** – Total in through ≻ equals total out through ⊰ (probability / energy conserved).
+3. **Conservation** – Total in through ⊛ equals total out through ☀︎ (probability / energy conserved).
 4. **Smoothness** – The kernel K varies continuously; influence falls off smoothly with distance.
 
 These constraints together lead to a complex-valued diffusion-like kernel whose generator is the Schrödinger equation.
@@ -232,7 +232,7 @@ But imposing **spherical symmetry** on ○ means for every direction there is so
 
 ### 2.5 Schrödinger Connection
 
-In the math-physicist formulation, the same four constraints (locality, isotropy, conservation, smoothness) applied to the kernel U = ⊱ ∘ i ∘ ≺ yield the Schrödinger equation in the local limit:
+In the math-physicist formulation, the same four constraints (locality, isotropy, conservation, smoothness) applied to the kernel U = ☀︎ ∘ i ∘ ⊛ yield the Schrödinger equation in the local limit:
 
 ```
 iℏ ∂ψ/∂t = Ĥ ψ
@@ -277,17 +277,17 @@ Then:
 
 * Emergence faces are phase-locked:
   ```
-  Δφ_⊰,ij ≈ 0   for all i,j in region
+  Δφ_☀︎,ij ≈ 0   for all i,j in region
   ```
 * Convergence faces are coherent enough for mass/energy stability:
   ```
-  ⟨T_≻⟩ ≈ 1
+  ⟨T_⊛⟩ ≈ 1
   ```
 
 **Implications:**
 
-* ⟨T_⊰⟩ ≈ 1 → coherent outward flux → EM interaction, radiance, reflectivity.
-* ⟨T_≻⟩ ≈ 1 → strong gravitational clumping.
+* ⟨T_☀︎⟩ ≈ 1 → coherent outward flux → EM interaction, radiance, reflectivity.
+* ⟨T_⊛⟩ ≈ 1 → strong gravitational clumping.
 
 This matches ordinary luminous matter (atoms, stars, gas).
 
@@ -297,14 +297,14 @@ This matches ordinary luminous matter (atoms, stars, gas).
 
 * Convergence faces phase-locked, emergence faces incoherent:
   ```
-  Δφ_≻,ij ≈ 0   (coherent convergence)
-  T_⊰ ≈ 0       (incoherent emergence)
+  Δφ_⊛,ij ≈ 0   (coherent convergence)
+  T_☀︎ ≈ 0       (incoherent emergence)
   ```
 
 **Implications:**
 
-* ⟨T_≻⟩ ≈ 1 → strong gravitational coupling.
-* ⟨T_⊰⟩ ≈ 0 → negligible coherent EM signature.
+* ⟨T_⊛⟩ ≈ 1 → strong gravitational coupling.
+* ⟨T_☀︎⟩ ≈ 0 → negligible coherent EM signature.
 
 Interpretation: dark matter as a **convergence-phase condensate** in the foam.
 
@@ -325,7 +325,7 @@ Interpretation: dark matter as a **convergence-phase condensate** in the foam.
 
 ### 3.3 Summary Table
 
-| Type | φ_≻ coherence | φ_⊰ coherence | Clumps gravitationally? | Emits light? |
+| Type | φ_⊛ coherence | φ_☀︎ coherence | Clumps gravitationally? | Emits light? |
 |------|---------------|---------------|-------------------------|--------------|
 | Visible matter | long-range | long-range | Yes | Yes |
 | Dark matter | long-range | short-range | Yes | No |
@@ -347,13 +347,13 @@ we obtain:
 ### 4.1 Same-Type, In-Phase (Δφ ≈ 0)
 
 * **Visible–visible:** T ≈ 1 in both channels → strong EM + gravitational binding → atoms, stars, galaxies.
-* **Dark–dark:** T_≻ ≈ 1 → strong gravitational clumping → halos.
+* **Dark–dark:** T_⊛ ≈ 1 → strong gravitational clumping → halos.
 
 ### 4.2 Cross-Type, Partially Misaligned
 
 * **Visible–dark:**
-  * Convergence channels can align (T_≻ moderately high) → shared curvature, gravitational attraction.
-  * Emergence channels misaligned (T_⊰ ≈ 0) → EM invisibility.
+  * Convergence channels can align (T_⊛ moderately high) → shared curvature, gravitational attraction.
+  * Emergence channels misaligned (T_☀︎ ≈ 0) → EM invisibility.
 
 This reproduces the empirical "gravitates but doesn't shine" behavior of dark matter.
 
@@ -371,8 +371,8 @@ This reproduces the empirical "gravitates but doesn't shine" behavior of dark ma
 Take the early universe as maximally incoherent aperture foam:
 
 ```
-φ_≻(x) ~ random
-φ_⊰(x) ~ random
+φ_⊛(x) ~ random
+φ_☀︎(x) ~ random
 T_ij ≈ 0.5 everywhere
 ```
 
@@ -383,10 +383,10 @@ No structure, uniform pressure, maximal entropy.
 The process has an inherent time ordering:
 
 ```
-Φ(t+Δt) --≻--> • --i--> • --⊰--> Φ(t+2Δt effective)
+Φ(t+Δt) --⊛--> • --i--> • --☀︎--> Φ(t+2Δt effective)
 ```
 
-Convergence ≻ acts "before" emergence ⊰ in each tick. This **temporal bias** breaks symmetry:
+Convergence ⊛ acts "before" emergence ☀︎ in each tick. This **temporal bias** breaks symmetry:
 
 ```
 Random phase + slight directional bias → seeds local correlations.
@@ -396,7 +396,7 @@ Random phase + slight directional bias → seeds local correlations.
 
 Two nearby apertures, with initially random phases:
 
-* If their **≻ faces** happen to align:
+* If their **⊛ faces** happen to align:
   * They share convergent flow.
   * Incoming streams reinforce each other.
   * Phases begin to correlate → phase lock.
@@ -412,7 +412,7 @@ Not all phase configurations are stable. The 64-state architecture defines discr
 
 We can label each aperture state by three binary tags:
 
-1. Dominant long-range coherence face: (≻ vs ⊰).
+1. Dominant long-range coherence face: (⊛ vs ☀︎).
 2. Local vs global phase alignment (coherent vs incoherent within its region).
 3. Braid orientation parity (left- vs right-handed winding).
 
@@ -437,7 +437,7 @@ After braiding, worldlines wind around each other; phase relations become *topol
 | Stage | Description |
 |-------|-------------|
 | Maximum entropy | Uniform foam, all 64 states equally sampled. |
-| Nucleation | Temporal bias seeds local ≻ phase coherence. |
+| Nucleation | Temporal bias seeds local ⊛ phase coherence. |
 | Competition | Domains compete; boundaries are phase walls. |
 | Attractor capture | Phase domains fall into nearby 64-state attractors. |
 | Structure | Stable large-scale coherence emerges. |
@@ -560,9 +560,9 @@ V₁₂ ∝ -T₁₂
 
 **Phase-based classification:**
 ```
-Visible matter: ⟨T_⊰⟩ ≈ 1, ⟨T_≻⟩ ≈ 1
-Dark matter:    ⟨T_⊰⟩ ≈ 0, ⟨T_≻⟩ ≈ 1
-Dark energy:    ⟨T_⊰⟩ ≈ 0.5, ⟨T_≻⟩ ≈ 0.5
+Visible matter: ⟨T_☀︎⟩ ≈ 1, ⟨T_⊛⟩ ≈ 1
+Dark matter:    ⟨T_☀︎⟩ ≈ 0, ⟨T_⊛⟩ ≈ 1
+Dark energy:    ⟨T_☀︎⟩ ≈ 0.5, ⟨T_⊛⟩ ≈ 0.5
 ```
 
 ---
@@ -596,10 +596,10 @@ The same geometric constraint—aperture isotropy—combined with linearity and 
 
 Phase coherence, the transmission law, and quantum mechanics aren't separate phenomena. They're three expressions of the same underlying geometry.
 
-### 11.3 ≻ vs ⊰ as Hidden vs Visible
+### 11.3 ⊛ vs ☀︎ as Hidden vs Visible
 
-* Coherent ⊰ → visible sector (EM, chemistry, Standard Model)
-* Coherent ≻ with incoherent ⊰ → hidden sector that still shapes curvature
+* Coherent ☀︎ → visible sector (EM, chemistry, Standard Model)
+* Coherent ⊛ with incoherent ☀︎ → hidden sector that still shapes curvature
 
 ### 11.4 D = 1.5 and Coherence Domains
 
@@ -608,7 +608,7 @@ Particle size / halo size connects to coherence length at which D drops from ~3 
 ### 11.5 The Master Equation Still Holds
 
 ```
-Φ' = ⊱ ∘ i ∘ ≺[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 ```
 
 Phase coherence determines which parts of Φ can pass through the aperture. The master equation describes the transformation; phase coherence determines the coupling strength.

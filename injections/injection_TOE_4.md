@@ -423,7 +423,7 @@ Experimental values:
 The muon's worldline connects two circumpunct singularities ⊙⊙ through 6 validation channels:
 
 ```
-3 spatial directions × 2 flows (≻ convergent + ⊰ emergent) = 6 channels
+3 spatial directions × 2 flows (⊛ convergent + ☀︎ emergent) = 6 channels
 
 Baseline coupling: γ₀ = 1 (simple 1D worldline)
 

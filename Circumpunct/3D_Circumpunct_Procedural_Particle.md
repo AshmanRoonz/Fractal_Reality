@@ -259,29 +259,29 @@ You can think of it as:
 A^{S×T}  =  space of aperture fields on spacetime
             (all functions a : S × T → A)
 
-≻ : A^{S×T} → A
+⊛ : A^{S×T} → A
     (collapse field → single aperture value)
 
-⊰ : A → A^{S×T}
+☀︎ : A → A^{S×T}
     (expand single aperture value → full field)
 ```
 
 The types make explicit what the process operators do:
 
-* **≻** takes a whole field spread across spacetime and collapses it to a single complex number at the center.
-* **⊰** takes a single complex number at the center and expands it back into a whole field across spacetime.
+* **⊛** takes a whole field spread across spacetime and collapses it to a single complex number at the center.
+* **☀︎** takes a single complex number at the center and expands it back into a whole field across spacetime.
 
 These are adjoints in spirit — one gathers, one radiates.
 
 ### 7.2 One concrete model (optional)
 
-This framework does **not** require a specific implementation of ≻ and ⊰, but one standard way to make "collapse / re-expand" explicit is kernel pooling:
+This framework does **not** require a specific implementation of ⊛ and ☀︎, but one standard way to make "collapse / re-expand" explicit is kernel pooling:
 
 ```
 Choose a kernel K : S×T → ℂ.
 
-≻[a]        :=  ∬ a(x,t) K(x,t) dx dt
-⊰[z](x,t)   :=  z · K(x,t)
+⊛[a]        :=  ∬ a(x,t) K(x,t) dx dt
+☀︎[z](x,t)   :=  z · K(x,t)
 ```
 
 Other choices are possible (coarse-graining maps, projections, traces, RG-like operators, etc.). The definitions below remain schematic.
@@ -291,13 +291,13 @@ Other choices are possible (coarse-graining maps, projections, traces, RG-like o
 ## 8. Master Cycle
 
 ```
-a' = ⊰ ∘ (×i) ∘ ≻ [a]
+a' = ☀︎ ∘ (×i) ∘ ⊛ [a]
 
 where:
     a   ∈ A^{S×T}
-    z   = ≻[a]      ∈ A
+    z   = ⊛[a]      ∈ A
     z'  = i·z       ∈ A
-    a'  = ⊰[z']     ∈ A^{S×T}
+    a'  = ☀︎[z']     ∈ A^{S×T}
 
 The same i that generated A now acts as the transformation.
 ```
@@ -305,9 +305,9 @@ The same i that generated A now acts as the transformation.
 The master cycle in full:
 
 * **Start:** a is the current aperture field (distributed across spacetime)
-* **Converge:** z = ≻[a] collapses everything to one value at the center
+* **Converge:** z = ⊛[a] collapses everything to one value at the center
 * **Transform:** z' = i·z rotates that value by 90°
-* **Emerge:** a' = ⊰[z'] re-expands into a new field
+* **Emerge:** a' = ☀︎[z'] re-expands into a new field
 
 Notice: the i that generated the algebra A in the first place is the same i that performs the transformation at the center.
 
@@ -342,7 +342,7 @@ You experience what's on either side — the gathering and the releasing — but
 ## 10. Balance (Stability)
 
 ```
-β  =  |≻| / (|≻| + |⊰|)
+β  =  |⊛| / (|⊛| + |☀︎|)
 
 Balanced when β = ½
 
@@ -350,14 +350,14 @@ Convergence strength = Emergence strength
 Load = Release
 In = Out
 
-Here |≻| and |⊰| denote the "strength" of the maps.
+Here |⊛| and |☀︎| denote the "strength" of the maps.
 
 One concrete choice:
-    View ≻ and ⊰ as linear operators on A^{S×T}
+    View ⊛ and ☀︎ as linear operators on A^{S×T}
     and define |⋅| as the operator norm:
 
-        |≻|  =  ∥≻∥_op
-        |⊰|  =  ∥⊰∥_op
+        |⊛|  =  ∥⊛∥_op
+        |☀︎|  =  ∥☀︎∥_op
 ```
 
 For the circumpunct to be **stable**, convergence and emergence must balance:
@@ -378,7 +378,7 @@ A **living** circumpunct is one where inward and outward flow are in dynamic equ
 Let the update operator be:
 
 ```
-T(a) := ⊰ ∘ (×i) ∘ ≻ [a]
+T(a) := ☀︎ ∘ (×i) ∘ ⊛ [a]
 ```
 
 A **fixed-point circumpunct** is a field configuration that returns to itself under this update:
@@ -386,7 +386,7 @@ A **fixed-point circumpunct** is a field configuration that returns to itself un
 ```
 a = T(a)
 
-⊙* = fix( λa. ⊰ ∘ (×i) ∘ ≻ [a] )
+⊙* = fix( λa. ☀︎ ∘ (×i) ∘ ⊛ [a] )
 ```
 
 A fixed-point circumpunct is a pattern that can:
@@ -695,15 +695,15 @@ Wherever you find D ≈ 1.5, you find a system at the sweet spot — neither col
 
 (vi) Dynamics:
 
-        a' = ⊰ ∘ (×i) ∘ ≻ [a]
+        a' = ☀︎ ∘ (×i) ∘ ⊛ [a]
 
 (vii) Balance:
 
-        β = |≻|/(|≻|+|⊰|)   with stability at β = ½
+        β = |⊛|/(|⊛|+|☀︎|)   with stability at β = ½
 
 (viii) Fixed points:
 
-        a = ⊰ ∘ (×i) ∘ ≻ [a]
+        a = ☀︎ ∘ (×i) ∘ ⊛ [a]
 
 (ix) Nesting / layers:
 

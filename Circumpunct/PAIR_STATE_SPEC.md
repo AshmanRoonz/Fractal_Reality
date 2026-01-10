@@ -7,7 +7,7 @@
 //   - [⊙⇄Φ] means whole and field mutually determine each other via F and G.
 //   - Energy E: W → W pushes a pulse through boundary apertures (i○^∞),
 //     power lines (•^∞), and center apertures (i•), then returns a new [⊙'⇄Φ']:
-//         [⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ'].
+//         [⊙⇄Φ] ⊛ i○^∞ ☀︎ •^∞ ⊛ i• ☀︎ [⊙'⇄Φ'].
 ```
 
 ## State Space Definition
@@ -79,17 +79,17 @@ E([⊙⇄Φ]) = [⊙'⇄Φ']
 */
 
 // E acts on W, but its internal factors thread through (W, aperture_state)
-// pairs. The ≻ and ⊰ factors never discard W, they just transform the
-// internal aperture layer, until ⊰_final updates W itself.
+// pairs. The ⊛ and ☀︎ factors never discard W, they just transform the
+// internal aperture layer, until ☀︎_final updates W itself.
 
-E = (⊰_final ∘ i• ∘ ≻_center ∘ ⊰_power ∘ i○^∞ ∘ ≻_boundary)
+E = (☀︎_final ∘ i• ∘ ⊛_center ∘ ☀︎_power ∘ i○^∞ ∘ ⊛_boundary)
 
 Where each stage operates INSIDE the W state:
 
-  ≻_boundary : W → (W, i○^∞)        // boundary apertures activated
-  ⊰_power    : (W, i○^∞) → (W, •^∞) // power lines emerge
-  ≻_center   : (W, •^∞) → (W, i•)   // converge to center
-  ⊰_final    : (W, i•) → W           // emerge as new state
+  ⊛_boundary : W → (W, i○^∞)        // boundary apertures activated
+  ☀︎_power    : (W, i○^∞) → (W, •^∞) // power lines emerge
+  ⊛_center   : (W, •^∞) → (W, i•)   // converge to center
+  ☀︎_final    : (W, i•) → W           // emerge as new state
 ```
 
 ## Explicit Flow Notation
@@ -101,23 +101,23 @@ Where each stage operates INSIDE the W state:
 
 W₀ = [⊙⇄Φ]                    // initial coupled state
 
-W₁ = W₀ ≻ i○^∞                 // energy hits boundary apertures
+W₁ = W₀ ⊛ i○^∞                 // energy hits boundary apertures
    = (W₀, {apertures at ○})    // W₀ still present, apertures activated
 
-W₂ = W₁ ⊰ •^∞                  // power lines emerge
+W₂ = W₁ ☀︎ •^∞                  // power lines emerge
    = (W₀, {power lines •^∞})   // W₀ still present, power structure formed
 
-W₃ = W₂ ≻ i•                   // converge to center aperture
+W₃ = W₂ ⊛ i•                   // converge to center aperture
    = (W₀, {transform at •})    // W₀ still present, center transformation
 
-W₄ = W₃ ⊰ [⊙'⇄Φ']             // emerge as updated coupled state
+W₄ = W₃ ☀︎ [⊙'⇄Φ']             // emerge as updated coupled state
    = [⊙'⇄Φ']                   // new coupled state
 
 /*
   COMPACT FORM
 */
 
-[⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']
+[⊙⇄Φ] ⊛ i○^∞ ☀︎ •^∞ ⊛ i• ☀︎ [⊙'⇄Φ']
 ```
 
 ## The Coupling Functions (Explicit Form)
@@ -180,10 +180,10 @@ i•        : Center aperture       // center transformation point
   OPERATOR SIGNATURES
 */
 
-≻_boundary : W → (W, i○^∞)
-⊰_power    : (W, i○^∞) → (W, •^∞)
-≻_center   : (W, •^∞) → (W, i•)
-⊰_final    : (W, i•) → W
+⊛_boundary : W → (W, i○^∞)
+☀︎_power    : (W, i○^∞) → (W, •^∞)
+⊛_center   : (W, •^∞) → (W, i•)
+☀︎_final    : (W, i•) → W
 
 E          : W → W                // composite energy operator
 ```
@@ -259,10 +259,10 @@ W₀ = [⊙₀⇄Φ₀]  where Φ₀ = background field
   FLOW THROUGH SYSTEM
 */
 
-W₀ ≻ i○^∞    // photon hits retinal boundary apertures
-   ⊰ •^∞     // generates neural power lines (action potentials)
-   ≻ i•      // converges to conscious center
-   ⊰ W₁      // emerges as updated state
+W₀ ⊛ i○^∞    // photon hits retinal boundary apertures
+   ☀︎ •^∞     // generates neural power lines (action potentials)
+   ⊛ i•      // converges to conscious center
+   ☀︎ W₁      // emerges as updated state
 
 W₁ = [⊙₁⇄Φ₁]  where:
   ⊙₁ = "I see red"       (updated whole - conscious state)
@@ -284,9 +284,9 @@ The coupling [⊙⇄Φ] ensures:
 ║                                                                ║
 ║  ENERGY OPERATOR:    E : W → W                                ║
 ║                                                                ║
-║  DECOMPOSITION:      E = ⊰ ∘ i• ∘ ≻ ∘ ⊰ ∘ i○^∞ ∘ ≻           ║
+║  DECOMPOSITION:      E = ☀︎ ∘ i• ∘ ⊛ ∘ ☀︎ ∘ i○^∞ ∘ ⊛           ║
 ║                                                                ║
-║  FLOW:               [⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']      ║
+║  FLOW:               [⊙⇄Φ] ⊛ i○^∞ ☀︎ •^∞ ⊛ i• ☀︎ [⊙'⇄Φ']      ║
 ║                                                                ║
 ║  CONSERVATION:       Energy(W) = Energy(E(W))                  ║
 ║                                                                ║

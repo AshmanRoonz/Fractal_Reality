@@ -109,7 +109,7 @@ This document maintains the framework's commitment to honest reporting. We disti
 The Circumpunct framework establishes that reality flows through three apertures:
 
 ```
-E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙
+E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙
 ```
 
 Previous formulations treated these apertures as **fixed geometric structures** operating at specific fractional dimensions (0.5D, 1.5D, 2.5D). While this explains **why** these dimensions exist, it leaves open the question: **How do these apertures actually operate?**
@@ -170,7 +170,7 @@ It provides explicit equations for:
 The Soul aperture performs **binary validation** with variable strength:
 
 ```
-E ≻ Å₀.₅(β_soul) ⊰ V
+E ⊛ Å₀.₅(β_soul) ☀︎ V
 
 Input: Potential E at 0D
 Parameter: β_soul controls "aperture opening"
@@ -278,7 +278,7 @@ D = 2.0  →  θ = 180°  (complete reversal, maximum deflection)
 The Body aperture performs **branching transformation** with variable angle:
 
 ```
-V ≻ Å₁.₅(D_body) ⊰ M
+V ⊛ Å₁.₅(D_body) ☀︎ M
 
 Input: Validation line V at 1D
 Parameter: D_body controls branching angle
@@ -397,7 +397,7 @@ I = 1 (D = 3.0):    Hyper-isotropic (omnidirectional)
 The Mind aperture performs **fractal perspective expansion** with variable isotropy:
 
 ```
-M ≻ Å₂.₅(D_mind) ⊰ Φ
+M ⊛ Å₂.₅(D_mind) ☀︎ Φ
 
 Input: Matter surface M at 2D
 Parameter: D_mind controls isotropy

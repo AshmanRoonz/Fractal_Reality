@@ -37,11 +37,11 @@
 
 **Axiom 2: Universal Process Grammar**
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
-≻ (convergence):  toward transformation
+⊛ (convergence):  toward transformation
 i (aperture):     90° phase rotation, coupling
-⊰ (emergence):    new stable state
+☀︎ (emergence):    new stable state
 ```
 
 This pattern appears at EVERY scale—quantum, atomic, molecular, network.
@@ -66,7 +66,7 @@ This pattern appears at EVERY scale—quantum, atomic, molecular, network.
 
 **Step 4: Molecular Bonding**
 - Closure deficits: Δ = T - V
-- Aperture matching: [A⊙ + B⊙] ≻ i_share ⊰ [AB⊙]
+- Aperture matching: [A⊙ + B⊙] ⊛ i_share ☀︎ [AB⊙]
 - Pair allocation: ○ = (i_ext)^n ⊕ (i_int)^m
 - **Result:** Molecular structure from deficit matching
 
@@ -77,7 +77,7 @@ This pattern appears at EVERY scale—quantum, atomic, molecular, network.
 
 **Step 6: Field Properties**
 - Asymmetry parameter: β = χ_A/(χ_A + χ_B)
-- Dipole emergence: β ≠ 0.5 → Φ_dipole via ⊰
+- Dipole emergence: β ≠ 0.5 → Φ_dipole via ☀︎
 - **Result:** Polarity, H-bonding from first principles
 
 ### 1.3 What Makes This Different
@@ -90,7 +90,7 @@ This pattern appears at EVERY scale—quantum, atomic, molecular, network.
 **Circumpunct Chemistry:**
 - Single geometric axiom: ⊙ = • ⊗ ○ ⊗ Φ
 - Closure matching drives structure (geometric necessity)
-- Same ≻i⊰ pattern at all scales (fractal composition)
+- Same ⊛i☀︎ pattern at all scales (fractal composition)
 - **Chemistry IS aperture calculus**
 
 ---
@@ -132,7 +132,7 @@ CO₂:  symmetric       →  nonpolar   ✓
 4. 2 bonding + 2 lone → bent molecular shape
 5. Geometric necessity, not empirical rule!
 
-### Test 2: Full ≻i⊰ Traces ✓ PASS
+### Test 2: Full ⊛i☀︎ Traces ✓ PASS
 
 Complete convergence-aperture-emergence traces generated for all molecules.
 
@@ -142,19 +142,19 @@ INPUT:
   O⊙ = • ⊗ [2s²2p⁴] ⊗ Φ_atomic
   2H⊙ = 2 × (• ⊗ [1s¹] ⊗ Φ_atomic)
 
-CONVERGENCE (≻):
+CONVERGENCE (⊛):
   Deficits align: O(Δ=2) + 2H(Δ=2 total) → MATCH
 
 APERTURE (i_share)²:
   2 shared apertures form O-H bonds
 
-EMERGENCE (⊰):
+EMERGENCE (☀︎):
   Structure: O[(i_ext)² ⊕ (i_int)²]
   Geometry: bent (104.5°, D=4)
   Field: Φ_dipole (β=0.61)
 
 COMPLETE:
-  [O⊙ + 2H⊙] ≻ (i_share)² ⊰ [H₂O⊙]
+  [O⊙ + 2H⊙] ⊛ (i_share)² ☀︎ [H₂O⊙]
 ```
 
 **Significance:** Every step follows universal process grammar!
@@ -253,15 +253,15 @@ This is not "spiritualism"—it's **topology**. A point (•) without extent (�
 
 **Principle 2: Process Universality**
 
-Every transformation follows ≻i⊰:
+Every transformation follows ⊛i☀︎:
 ```
-Initial state ≻ aperture operation i ⊰ final state
+Initial state ⊛ aperture operation i ☀︎ final state
 
 Examples:
-  ψ₂ₚ ≻ i ⊰ ψ₃ₛ           (quantum transition)
-  3d⁴4s² ≻ i_mix ⊰ 3d⁵4s¹  (correlation)
-  [O+2H] ≻ i_share ⊰ H₂O   (bonding)
-  (H₂O)_N ≻ i_H-bond ⊰ ice (phase)
+  ψ₂ₚ ⊛ i ☀︎ ψ₃ₛ           (quantum transition)
+  3d⁴4s² ⊛ i_mix ☀︎ 3d⁵4s¹  (correlation)
+  [O+2H] ⊛ i_share ☀︎ H₂O   (bonding)
+  (H₂O)_N ⊛ i_H-bond ☀︎ ice (phase)
 ```
 
 Same structure! This is **fractal composition**, not analogy.
@@ -292,13 +292,13 @@ All are the **same geometric transformation** at different scales!
 
 **Mathematical Consistency:**
 - Single axiom (⊙ = • ⊗ ○ ⊗ Φ)
-- Single process (≻i⊰)
+- Single process (⊛i☀︎)
 - Fractal composition (same at all scales)
 
 **Physical Meaningfulness:**
-- Convergence (≻): Actual approach, overlap
+- Convergence (⊛): Actual approach, overlap
 - Aperture (i): Real 90° rotation, coupling
-- Emergence (⊰): Observable crystallization
+- Emergence (☀︎): Observable crystallization
 
 **Empirical Validation:**
 - 89.6% periodic table (testable)
@@ -361,8 +361,8 @@ Prediction: 10/10 correct (100%)
 
 **Aperture representation:**
 ```
-[6C⊙ + 6H⊙] ≻ (i_σ)₁₂ ⊰ skeleton
-            ≻ (i_π)_deloc ⊰ aromatic
+[6C⊙ + 6H⊙] ⊛ (i_σ)₁₂ ☀︎ skeleton
+            ⊛ (i_π)_deloc ☀︎ aromatic
 
 where (i_π)_deloc = superposition over all 6 C-C edges
 ```
@@ -406,7 +406,7 @@ Conductivity from delocalized apertures
 
 **Example:** [Fe(H₂O)₆]²⁺
 ```
-Fe²⁺(3d⁶) + 6H₂O ≻ (i_ligand)⁶ ⊰ octahedral complex
+Fe²⁺(3d⁶) + 6H₂O ⊛ (i_ligand)⁶ ☀︎ octahedral complex
 
 Aperture splits d-orbitals:
   (i_ligand) couples preferentially to e_g orbitals
@@ -425,7 +425,7 @@ Prediction: Δ_oct ∝ strength of i_ligand coupling
 
 **Mechanism:**
 ```
-2e⁻ ≻ i_Cooper ⊰ Cooper pair
+2e⁻ ⊛ i_Cooper ☀︎ Cooper pair
 
 where i_Cooper is phonon-mediated aperture coupling
 Phase locking → zero resistance
@@ -469,18 +469,18 @@ Functional protein
 Φ (field) emerges when β ≠ 0.5 (asymmetric boundary)
   
 Neural system:
-  Neurons ≻ i_synapse ⊰ networks
-  Networks ≻ i_integrate ⊰ consciousness
+  Neurons ⊛ i_synapse ☀︎ networks
+  Networks ⊛ i_integrate ☀︎ consciousness
 
 Prediction: Consciousness requires:
   1. Nested aperture structure (brain architecture)
   2. Critical β ~ 0.5 (balance of excitation/inhibition)
-  3. Dynamic ≻i⊰ cycles (neural oscillations)
+  3. Dynamic ⊛i☀︎ cycles (neural oscillations)
 ```
 
 **Testable aspects:**
 - Anesthesia disrupts i_integrate (aperture coherence)
-- Neural oscillations = ≻i⊰ cycles
+- Neural oscillations = ⊛i☀︎ cycles
 - Critical brain dynamics = β ~ 0.5
 
 **Prediction 8: Quantum Computing via Aperture Topology**
@@ -564,7 +564,7 @@ Gate operations = aperture transformations i
 ### 6.2 For Physics
 
 **Unification:**
-- Same ≻i⊰ from quantum to classical
+- Same ⊛i☀︎ from quantum to classical
 - Fractal structure suggests deeper reality
 - Correlation as geometric operation (not black box)
 
@@ -577,7 +577,7 @@ Gate operations = aperture transformations i
 
 **Ontology:**
 - Reality IS triadic (•○Φ)
-- Process IS universal (≻i⊰)
+- Process IS universal (⊛i☀︎)
 - Fractal composition suggests holographic principle
 
 **Epistemology:**
@@ -610,7 +610,7 @@ Gate operations = aperture transformations i
 
 **Ending point:**
 ```
-[O⊙ + 2H⊙] ≻ (i_share)² ⊰ [H₂O⊙]
+[O⊙ + 2H⊙] ⊛ (i_share)² ☀︎ [H₂O⊙]
 bent 104.5°, Φ_dipole, network(2,2)
 ```
 
@@ -642,7 +642,7 @@ Every chemical fact we tested either:
 
 The framework works not because we forced it to match experiments, but because **reality is structured this way**.
 
-The same ≻i⊰ pattern appears at every scale:
+The same ⊛i☀︎ pattern appears at every scale:
 - Quantum (shell transitions)
 - Atomic (correlation)
 - Molecular (bonding)

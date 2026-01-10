@@ -23,7 +23,7 @@ The complete layered system at one scale becomes a single 0D seed at the next sc
 | **3D**    | Structure | Perceptual Field   | Manifest inner volume — **perception** as structured field on the "imaginary" side of *i* |
 | **3.5D**  | Process   | Tunnel Braiding    | Soul-tunnels weaving together — the braiding of worldlines into shared history |
 | **4D**    | Structure | Time Braid         | Woven history, accumulated validation receipts (the committed braid of choices) |
-| **4.5D**  | Process   | Recursion          | Compress braid → seed new cycle; the ⊱ ∘ i ∘ ≺ tick is treated as a unit at the next scale |
+| **4.5D**  | Process   | Recursion          | Compress braid → seed new cycle; the ☀︎ ∘ i ∘ ⊛ tick is treated as a unit at the next scale |
 
 At the 4.5D interface, the entire layered architecture (all structure and process layers together) becomes a single aperture event that seeds the next scale:
 
@@ -71,13 +71,13 @@ At the 4.5D interface, the entire layered architecture (all structure and proces
 This is exactly what the fixed-point equation describes:
 
 ```
-⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 ```
 
 The circumpunct is the layered structure that persists through transformation and reseeds itself at the next scale:
 
 ```
-T_⊙ = ⊱ ∘ i ∘ ≺
+T_⊙ = ☀︎ ∘ i ∘ ⊛
 Φ'  = T_⊙[Φ]
 ```
 
@@ -206,7 +206,7 @@ Where the older text speaks of a "ladder" or "cascade," it should now be underst
 ### The Master Equation
 
 ```
-Φ' = ⊱ ∘ i ∘ ≺[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 ```
 
 is one tick — energy flowing through all layers simultaneously via convergence→aperture→emergence.
@@ -214,7 +214,7 @@ is one tick — energy flowing through all layers simultaneously via convergence
 The fixed-point form:
 
 ```
-⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 ```
 
 describes the circumpunct as the layered architecture that persists through transformation and recursively reseeds itself at the next scale.

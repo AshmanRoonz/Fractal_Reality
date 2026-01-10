@@ -198,7 +198,7 @@ Interpretation:
 ## Mathematical Consistency
 
 ### What Did NOT Change:
-- ✓ Canonical equation: E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙
+- ✓ Canonical equation: E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙
 - ✓ Dimensional structure (only labels swapped)
 - ✓ All mathematical derivations
 - ✓ All experimental predictions

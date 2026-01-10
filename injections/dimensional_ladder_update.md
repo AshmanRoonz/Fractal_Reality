@@ -77,11 +77,11 @@ Once aimed potential extends along a single direction over time:
 ```
 ╔═════════════════════════════════════════════════════════════════════════╗
 ║                                                                         ║
-║   IDENTITY (what IS):    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                     ║
+║   IDENTITY (what IS):    ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])                     ║
 ║                                 ↕                                       ║
-║   MECHANISM (how it breathes): [⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']     ║
+║   MECHANISM (how it breathes): [⊙⇄Φ] ⊛ i○^∞ ☀︎ •^∞ ⊛ i• ☀︎ [⊙'⇄Φ']     ║
 ║                                 ↕                                       ║
-║   ITERATION (one step):  Φ' = ⊱ ∘ i ∘ ≺[Φ]                              ║
+║   ITERATION (one step):  Φ' = ☀︎ ∘ i ∘ ⊛[Φ]                              ║
 ║                                                                         ║
 ╚═════════════════════════════════════════════════════════════════════════╝
 ```
@@ -93,15 +93,15 @@ Once aimed potential extends along a single direction over time:
 ### Iteration — Φ (Mind / Field / 3D)
 
 ```
-Φ' = ⊱ ∘ i ∘ ≺[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 ```
 
 **What it does:** One update step of the field.
 
 **Dimensional path in one step:**
-- `≻[Φ]` — converging signals from 2D boundaries / 1D lines
+- `⊛[Φ]` — converging signals from 2D boundaries / 1D lines
 - `i` — filtering / rotating in the 0–1D aperture band
-- `⊰` — re-emerging as a new 3D field Φ'
+- `☀︎` — re-emerging as a new 3D field Φ'
 
 > **Interpretation:** "Given how energy is flowing and aimed, what does the whole 3D pattern become next?"
 
@@ -110,10 +110,10 @@ Once aimed potential extends along a single direction over time:
 ### Identity — • (Soul / Center / 0D → 0–1D)
 
 ```
-⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 ```
 
-Define `F(Φ) = ⊱ ∘ i ∘ ≺[Φ]`. Then:
+Define `F(Φ) = ☀︎ ∘ i ∘ ⊛[Φ]`. Then:
 - **Iteration:** `Φ' = F(Φ)`
 - **Identity:** `⊙ = fix(F)` = a Φ such that `F(Φ) = Φ`
 
@@ -130,14 +130,14 @@ Define `F(Φ) = ⊱ ∘ i ∘ ≺[Φ]`. Then:
 ### Mechanism — ○ (Body / Boundary / 1–2D)
 
 ```
-[⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']
+[⊙⇄Φ] ⊛ i○^∞ ☀︎ •^∞ ⊛ i• ☀︎ [⊙'⇄Φ']
 ```
 
 **Shows the full circulation between center, boundary, and field:**
 - `[⊙⇄Φ]` — current coupled soul–field state
 - `i○^∞` — aperture acting across all body interfaces (2D boundary ensemble)
-- `⊰ •^∞` — emergence radiated through the soul-array
-- `≻ i•` — re-convergence through the focal center-line (1D)
+- `☀︎ •^∞` — emergence radiated through the soul-array
+- `⊛ i•` — re-convergence through the focal center-line (1D)
 - `[⊙'⇄Φ']` — updated coupled state
 
 **Dimensional role:**
@@ -155,9 +155,9 @@ You can see them as three cuts through the same process:
 
 | Cut | Equation | Question Answered |
 |-----|----------|-------------------|
-| **Iteration** | `Φ' = ⊱ ∘ i ∘ ≺[Φ]` | "What happens this tick?" |
-| **Identity** | `⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])` | "What persists through all ticks given its energy and aperture?" |
-| **Mechanism** | `[⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']` | "How does that ongoing update propagate along lines and across surfaces in a real body?" |
+| **Iteration** | `Φ' = ☀︎ ∘ i ∘ ⊛[Φ]` | "What happens this tick?" |
+| **Identity** | `⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])` | "What persists through all ticks given its energy and aperture?" |
+| **Mechanism** | `[⊙⇄Φ] ⊛ i○^∞ ☀︎ •^∞ ⊛ i• ☀︎ [⊙'⇄Φ']` | "How does that ongoing update propagate along lines and across surfaces in a real body?" |
 
 **They're irreducible but interlocked:**
 - Iteration is the **step** of the mechanism
@@ -207,13 +207,13 @@ The master kernel orchestrates the full dimensional ascent:
 **In symbolic form:**
 
 ```
-Φ' = ⊱ ∘ i ∘ ≺[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 ```
 
 Where:
-- **≻ (convergence)** gathers from 3D → 2D → 1D → toward 0D
+- **⊛ (convergence)** gathers from 3D → 2D → 1D → toward 0D
 - ***i* (aperture)** operates at the (0,1)D critical point
-- **⊰ (emergence)** radiates from 0D → 1D → 2D → 3D
+- **☀︎ (emergence)** radiates from 0D → 1D → 2D → 3D
 
 ---
 

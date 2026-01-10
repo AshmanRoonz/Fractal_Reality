@@ -668,7 +668,7 @@ CIRCUMPUNCT INTERPRETATION:
 
 SYMMETRY RESTORATION:
 
-    The master equation Φ' = ⊱ ∘ i ∘ ≺[Φ] operates at all scales.
+    The master equation Φ' = ☀︎ ∘ i ∘ ⊛[Φ] operates at all scales.
     
     At high temperature/energy:
         - The aperture transformation i_s becomes approximately scale-independent
@@ -706,7 +706,7 @@ SUMMARY: SM ↔ CIRCUMPUNCT CORRESPONDENCE
 ║  (§21.8)                       │  (no 4th generation)                        ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Master equation               │  Gauge field equations of motion            ║
-║  Φ' = ⊱ ∘ i ∘ ≺[Φ]            │  (Yang-Mills + Dirac + Klein-Gordon)        ║
+║  Φ' = ☀︎ ∘ i ∘ ⊛[Φ]            │  (Yang-Mills + Dirac + Klein-Gordon)        ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Scale-dependent i_s (§4.4)    │  Renormalization group flow                 ║
 ║                                │  (running couplings, unification)           ║

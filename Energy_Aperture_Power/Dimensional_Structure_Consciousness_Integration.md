@@ -1034,7 +1034,7 @@ Tree topology prevents time travel (no closed loops)
 - Where focus is placed
 - Experienced reality
 
-**Future: ≺ (Bifurcation)**
+**Future: ⊛ (Bifurcation)**
 - Branching possibilities
 - Paths not yet taken
 - Superposition of futures

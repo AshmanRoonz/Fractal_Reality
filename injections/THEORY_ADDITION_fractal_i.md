@@ -14,7 +14,7 @@ THEOREM: FRACTAL UNITY OF i
 There is only ONE abstract aperture transformation I, arising from
 the fundamental braid of reality:
 
-    Φ ──≻──> • ──I──> future field ──⊰──> Φ'
+    Φ ──⊛──> • ──I──> future field ──☀︎──> Φ'
 
 Every circumpunct ⊙ at every scale carries its own local i_s, but
 each is a fractal instantiation of this same I.
@@ -37,7 +37,7 @@ SAME ORIGIN:
 SAME BRAID:
     All i's live in the same structural position:
     
-        … → ≻ → i → ⊰ → ≻ → i → ⊰ → …
+        … → ⊛ → i → ☀︎ → ⊛ → i → ☀︎ → …
     
     This braid structure (convergence → quarter-turn → emergence) is
     INVARIANT across all scales.
@@ -100,7 +100,7 @@ This fractal unity means:
    smoothness) FORCE the 90° rotation at all scales.
    
    What varies is the SUBSTRATE (numbers, words, neurons, societies)
-   What remains constant is the BRAID (≻ → i → ⊰)
+   What remains constant is the BRAID (⊛ → i → ☀︎)
 
 3. RENORMALIZATION WITHOUT NEW PARAMETERS:
    
@@ -120,7 +120,7 @@ This fractal unity means:
 CONNECTION TO THE MASTER EQUATION:
 ──────────────────────────────────
 
-    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+    ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 
 This fixed point is UNIVERSAL because i is universal.
 
@@ -139,7 +139,7 @@ and ethics in ONE equation - they all run the same braid.
 SUMMARY: FRACTAL i
 
     Origin:  One cosmic circulation (⊙_∞)
-    Braid:   Always ≻ → i → ⊰ (invariant pattern)
+    Braid:   Always ⊛ → i → ☀︎ (invariant pattern)
     Media:   Different substrates at each scale
     Result:  Same geometry, different content
     
@@ -178,7 +178,7 @@ Replace the current glossary entry for `i` with:
            i⁴ = 1 (complete cycle)
            
            FRACTAL UNITY: All i's share same origin (⊙_∞) and 
-           same braid (≻ → i → ⊰). Different scales realize i 
+           same braid (⊛ → i → ☀︎). Different scales realize i 
            in different media, but same geometry.
            
            IMPLEMENTATION:
@@ -194,7 +194,7 @@ Replace the current glossary entry for `i` with:
    → Because i is ontologically necessary (not just math convenience)
 
 2. **The "how does physics unify?" question**  
-   → Same braid (≻→i→⊰) in different media
+   → Same braid (⊛→i→☀︎) in different media
 
 3. **The "scale problem" in physics**
    → Automatic renormalization via i_s ⊗ i_{s+1}

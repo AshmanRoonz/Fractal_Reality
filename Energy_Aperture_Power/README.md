@@ -6,7 +6,7 @@
 ## 🌟 **START HERE: THE COMPLETE FORMALIZATION** 🌟
 
 ### **[The Circumpunct Theory: Complete Formalization](Circumpunct_Complete_Formalization(full).md)**
-### **M≻Å(∙)⊰Φ = ⊙ and the Dynamic Optimization Principle**
+### **M⊛Å(∙)☀︎Φ = ⊙ and the Dynamic Optimization Principle**
 
 **THIS IS THE MAIN DOCUMENT.** The complete theory from axioms to experimental validation.
 
@@ -313,7 +313,7 @@ Physics = Consciousness = Geometric necessity
 
 **[Circumpunct Theory: Complete](Circumpunct_Theory_Complete.md)** ⭐ **THE PHILOSOPHY**
 - The three fundamental axioms of ⊙
-- Complete symbol system (⊙, ⊸, ≺, —)
+- Complete symbol system (⊙, ⊸, ⊛, —)
 - Dimensional structure (D = 1.5, β = 0.5) explained
 - From geometry to particles to consciousness
 - Philosophical implications and meaning
@@ -767,7 +767,7 @@ Legend:
 | **Φ** or **φ** | Field structure | All |
 | **—** | Temporal connection | Circumpunct_*.md |
 | **⊸** | Aperture + temporal lineage | Circumpunct_*.md |
-| **≺** | Spatial bifurcation | Circumpunct_*.md |
+| **⊛** | Spatial bifurcation | Circumpunct_*.md |
 | **D** | Fractal dimension (= 1.5) | All |
 | **β** | Branching parameter (= 0.5) | All |
 | **E_*** | Universal energy scale (≈ 50 MeV) | binary_thresholds.md, why_binary.md |

@@ -107,14 +107,14 @@ header = """# ⊙ The Circumpunct Theory
 
 together with a three-phase flow procedure:
 
-- **≻** — convergence (input)
+- **⊛** — convergence (input)
 - **i** — transformation (aperture)
-- **⊰** — emergence (output)
+- **☀︎** — emergence (output)
 
 ```
-◐ = |≻| / (|≻| + |⊰|) = ½
+◐ = |⊛| / (|⊛| + |☀︎|) = ½
 
-⊙ = (○, Φ, •) × (≻, i, ⊰)³
+⊙ = (○, Φ, •) × (⊛, i, ☀︎)³
 Energy = Structure × Process³
 ```
 

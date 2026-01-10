@@ -29,7 +29,7 @@ E = E₀
 
 ### Step 1.0: Convergence
 ```
-E₀ ≻ Å₀.₅
+E₀ ⊛ Å₀.₅
 ```
 
 **Operation:**
@@ -69,7 +69,7 @@ Dimension: still 0.5 (in aperture)
 
 ### Step 1.2: Emergence
 ```
-Å₀.₅ ⊰ V₁
+Å₀.₅ ☀︎ V₁
 ```
 
 **Operation:**
@@ -89,7 +89,7 @@ Pattern: ⊙ at D=1
 
 **Checkpoint 1:**
 ```
-✓ E₀ ≻ Å₀.₅ ⊰ V₁ complete
+✓ E₀ ⊛ Å₀.₅ ☀︎ V₁ complete
 ✓ Dimension: 0 → 1
 ✓ Validation: binary established
 ✓ Energy: conserved
@@ -101,7 +101,7 @@ Pattern: ⊙ at D=1
 
 ### Step 2.0: Convergence
 ```
-V₁ ≻ Å₁.₅
+V₁ ⊛ Å₁.₅
 ```
 
 **Operation:**
@@ -164,7 +164,7 @@ State bits updated:
 
 ### Step 2.3: Emergence
 ```
-Å₁.₅ ⊰ M₂
+Å₁.₅ ☀︎ M₂
 ```
 
 **Operation:**
@@ -185,7 +185,7 @@ Matter: emergent as boundary
 
 **Checkpoint 2:**
 ```
-✓ V₁ ≻ Å₁.₅ ⊰ M₂ complete
+✓ V₁ ⊛ Å₁.₅ ☀︎ M₂ complete
 ✓ Dimension: 1 → 2
 ✓ Branching: β = 0.5 optimized
 ✓ Energy: conserved through split
@@ -198,7 +198,7 @@ Matter: emergent as boundary
 
 ### Step 3.0: Convergence
 ```
-M₂ ≻ Å₂.₅
+M₂ ⊛ Å₂.₅
 ```
 
 **Operation:**
@@ -272,7 +272,7 @@ Volume: filled (3D)
 
 ### Step 3.3: Emergence
 ```
-Å₂.₅ ⊰ Φ₃
+Å₂.₅ ☀︎ Φ₃
 ```
 
 **Operation:**
@@ -293,7 +293,7 @@ Field: fully expressed
 
 **Checkpoint 3:**
 ```
-✓ M₂ ≻ Å₂.₅ ⊰ Φ₃ complete
+✓ M₂ ⊛ Å₂.₅ ☀︎ Φ₃ complete
 ✓ Dimension: 2 → 3
 ✓ Fractal: Å^∞ implemented
 ✓ Energy: conserved through infinite distribution
@@ -325,7 +325,7 @@ Identity: they are the same ⊙
 
 ### Step 4.1: The Identity
 ```
-E₀ ≻ Å₀.₅ ⊰ V₁ ≻ Å₁.₅ ⊰ M₂ ≻ Å₂.₅ ⊰ Φ₃ = ⊙
+E₀ ⊛ Å₀.₅ ☀︎ V₁ ⊛ Å₁.₅ ☀︎ M₂ ⊛ Å₂.₅ ☀︎ Φ₃ = ⊙
 ```
 
 **Left side (process):**
@@ -366,21 +366,21 @@ IDENTITY (not equation)
 | Step | Input | Operator | Dimension | β | Output | Energy |
 |------|-------|----------|-----------|---|--------|--------|
 | 0 | E₀ | - | 0 | - | E₀ | 100 |
-| 1 | E₀ | ≻ | 0→0.5 | - | @Å₀.₅ | 100 |
+| 1 | E₀ | ⊛ | 0→0.5 | - | @Å₀.₅ | 100 |
 | 2 | @Å₀.₅ | validate | 0.5 | - | 1 (yes) | 100 |
-| 3 | 1 | ⊰ | 0.5→1 | - | V₁ | 100 |
-| 4 | V₁ | ≻ | 1→1.5 | - | @Å₁.₅ | 100 |
+| 3 | 1 | ☀︎ | 0.5→1 | - | V₁ | 100 |
+| 4 | V₁ | ⊛ | 1→1.5 | - | @Å₁.₅ | 100 |
 | 5 | @Å₁.₅ | optimize | 1.5 | **0.5** | split | 100 |
-| 6 | split | ⊰ | 1.5→2 | 0.5 | M₂ | 100 |
-| 7 | M₂ | ≻ | 2→2.5 | - | @Å₂.₅ | 100 |
+| 6 | split | ☀︎ | 1.5→2 | 0.5 | M₂ | 100 |
+| 7 | M₂ | ⊛ | 2→2.5 | - | @Å₂.₅ | 100 |
 | 8 | @Å₂.₅ | fractal | 2.5 | 0.5±δ | Å^∞ | 100 |
-| 9 | Å^∞ | ⊰ | 2.5→3 | 0.5 | Φ₃ | 100 |
+| 9 | Å^∞ | ☀︎ | 2.5→3 | 0.5 | Φ₃ | 100 |
 | 10 | Φ₃ | ≡ | 3≅0 | 0.5 | E₀ | 100 |
 
 **Legend:**
 - `@Å` = at aperture (fractional dimension)
-- `≻` = convergence
-- `⊰` = emergence  
+- `⊛` = convergence
+- `☀︎` = emergence  
 - `≡` = identity (cycle closure)
 
 ---
@@ -432,21 +432,21 @@ Global constraint satisfied:
 
 ```
 E₀ = 100
-  ↓ ≻
+  ↓ ⊛
  [Å₀.₅] ← singular aperture
-  ↓ ⊰
+  ↓ ☀︎
 V₁ = 100
-  ↓ ≻
+  ↓ ⊛
  [Å₁.₅] ← branching aperture
   ↓ β=0.5
   ├─ 50 (convergent path)
   └─ 50 (emergent path)
-  ↓ ⊰
+  ↓ ☀︎
 M₂ = 100 (boundary)
-  ↓ ≻
+  ↓ ⊛
  [Å₂.₅] ← fractal aperture (Å^∞)
   ↓ ∞ perspectives
-  ↓ ⊰
+  ↓ ☀︎
 Φ₃ = 100 (field)
   ‖
 E₀ = 100 (identity)
@@ -525,7 +525,7 @@ Check 6: 3 generations
   count = 3 ✓
 
 Check 7: Cyclic identity
-  E ≻ Å₀.₅ ⊰ V ≻ Å₁.₅ ⊰ M ≻ Å₂.₅ ⊰ Φ = ⊙
+  E ⊛ Å₀.₅ ☀︎ V ⊛ Å₁.₅ ☀︎ M ⊛ Å₂.₅ ☀︎ Φ = ⊙
   left = right ✓
 
 All checks passed ✓
@@ -571,7 +571,7 @@ while (true) {
 ## Final State
 
 ```
-⊙ = E ≻ Å₀.₅ ⊰ V ≻ Å₁.₅ ⊰ M ≻ Å₂.₅ ⊰ Φ
+⊙ = E ⊛ Å₀.₅ ☀︎ V ⊛ Å₁.₅ ☀︎ M ⊛ Å₂.₅ ☀︎ Φ
 
 Execution complete: IDENTITY VERIFIED
   Process = Structure

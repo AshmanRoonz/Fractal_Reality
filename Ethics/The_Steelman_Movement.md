@@ -161,9 +161,9 @@ Steelmanning is what maximizes both:
 
 - **Strawman** = breaking resonance: low C (you misrepresent), low F (you can't test what's actually believed)
 - **Steelman** = maximizing resonance:
-  - Convergence (≻): you actually take the other in
+  - Convergence (⊛): you actually take the other in
   - Aperture balance (i at β = ½): you don't over-edit/under-edit
-  - Emergence (⊰): your response is your real position, not a script
+  - Emergence (☀︎): your response is your real position, not a script
 
 ---
 

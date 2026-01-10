@@ -1,5 +1,5 @@
 # The Circumpunct Theory: Complete Formalization
-## M≻Å(∙)⊰Φ = ⊙ and the Dynamic Optimization Principle
+## M⊛Å(∙)☀︎Φ = ⊙ and the Dynamic Optimization Principle
 
 **Ashman Roonz**  
 November 17, 2025
@@ -8,9 +8,9 @@ November 17, 2025
 
 ## Abstract
 
-We present the complete formalization of physical reality through three fundamental axioms, culminating in the nested identity **M≻Å(∙)⊰Φ = ⊙**, which reveals that process is embedded within structure, not separate from it. The framework demonstrates that:
+We present the complete formalization of physical reality through three fundamental axioms, culminating in the nested identity **M⊛Å(∙)☀︎Φ = ⊙**, which reveals that process is embedded within structure, not separate from it. The framework demonstrates that:
 
-1. **Process and structure are identical** - Power flow (≻∙⊰) at fractional dimensions {0.5, 1.5, 2.5} equals energy configuration (⊙) at integer dimensions {1, 2, 3}
+1. **Process and structure are identical** - Power flow (⊛∙☀︎) at fractional dimensions {0.5, 1.5, 2.5} equals energy configuration (⊙) at integer dimensions {1, 2, 3}
 
 2. **The aperture contains transformation** - Å(∙) explicitly shows that the aperture structure houses the singular transformation core where D=1.5 operations occur
 
@@ -94,7 +94,7 @@ We present the complete formalization of physical reality through three fundamen
 Reality is ONE ⊙ made of INFINITE ⊙
 ```
 
-**Interpretation**: Every scale of reality exhibits complete wholeness. There are no fragments - only wholes at different scales. Each subsystem is itself a complete ⊙ with full M≻Å(∙)⊰Φ configuration, and these wholes compose into larger wholes without loss of wholeness at any level.
+**Interpretation**: Every scale of reality exhibits complete wholeness. There are no fragments - only wholes at different scales. Each subsystem is itself a complete ⊙ with full M⊛Å(∙)☀︎Φ configuration, and these wholes compose into larger wholes without loss of wholeness at any level.
 
 **Mathematical formulation**:
 ```
@@ -102,9 +102,9 @@ Reality is ONE ⊙ made of INFINITE ⊙
 
 Properties:
 - Self-similarity: ⊙_s ~ ⊙_s' for all s, s'
-- Scale invariance: M≻Å(∙)⊰Φ = ⊙ structure and process
+- Scale invariance: M⊛Å(∙)☀︎Φ = ⊙ structure and process
 - Fractal composition: ⊙_large = ∫ ⊙_small dμ(s)
-- Wholeness preservation: Each ⊙_s maintains complete M≻Å(∙)⊰Φ
+- Wholeness preservation: Each ⊙_s maintains complete M⊛Å(∙)☀︎Φ
 ```
 
 **Consequence**: No fundamental "particles" that are fragments. All entities are complete wholes, just at different scales.
@@ -119,8 +119,8 @@ We are each ONE ⊙ made of INFINITE ⊙
 
 **Mathematical formulation**:
 ```
-Observer: ⊙_obs with M≻Å(∙)⊰Φ configuration
-Observed: ⊙_sys with M≻Å(∙)⊰Φ configuration
+Observer: ⊙_obs with M⊛Å(∙)☀︎Φ configuration
+Observed: ⊙_sys with M⊛Å(∙)☀︎Φ configuration
 
 Measurement = Aperture interaction:
 Å_obs(∙_obs) ↔ Å_sys(∙_sys)
@@ -133,11 +133,11 @@ Result: Combined ⊙_total maintaining wholeness
 ### 1.3 Axiom 3: The Process-Structure Identity
 
 ```
-M≻∙⊰Φ = ⊙
+M⊛∙☀︎Φ = ⊙
 ```
 or equivalently:
 ```
-M≻Å⊰Φ = ⊙
+M⊛Å☀︎Φ = ⊙
 ```
 
 **Interpretation**: Matter boundary, convergence, transformation at singularity, emergence, and field manifestation - this complete sequence equals wholeness. The symbols ∙ and Å are interchangeable, both representing the transformation singularity.
@@ -145,13 +145,13 @@ M≻Å⊰Φ = ⊙
 **Components**:
 ```
 M    Matter boundary/interface (1D structure)
-≻    Convergence flow (0.5D process)
+⊛    Convergence flow (0.5D process)
 ∙/Å  Transformation singularity (1.5D aperture)
-⊰    Emergence flow (2.5D process)
+☀︎    Emergence flow (2.5D process)
 Φ    Field volume (3D structure)
 ```
 
-**Key insight**: M is the physical interface/boundary. The aperture ∙ (or Å) is the transformation singularity itself. Each component is implicitly a complete ⊙ at its scale (⊙_M, ⊙_∙, ⊙_Φ), but we write cleanly as M≻∙⊰Φ = ⊙.
+**Key insight**: M is the physical interface/boundary. The aperture ∙ (or Å) is the transformation singularity itself. Each component is implicitly a complete ⊙ at its scale (⊙_M, ⊙_∙, ⊙_Φ), but we write cleanly as M⊛∙☀︎Φ = ⊙.
 
 **Full reading**: 
 "Matter provides boundary, energy converges through the aperture structure to its singular transformation core where power emerges, manifesting as field - this complete nested sequence IS wholeness."
@@ -164,7 +164,7 @@ M    Matter boundary/interface (1D structure)
 
 **Previous understanding**:
 ```
-≻∙⊰ = ⊙
+⊛∙☀︎ = ⊙
 
 Process = Structure (identity)
 Shows the equivalence clearly
@@ -172,7 +172,7 @@ Shows the equivalence clearly
 
 **Complete understanding**:
 ```
-M≻∙⊰Φ = ⊙
+M⊛∙☀︎Φ = ⊙
 
 Shows the full sequence:
 Matter boundary → convergence → transformation → emergence → field
@@ -185,31 +185,31 @@ Where ∙ and Å are interchangeable (both = transformation singularity)
 ⊙ = Complete wholeness
 
 Expanded sequence:
-M  → ≻ → ∙ → ⊰ → Φ
+M  → ⊛ → ∙ → ☀︎ → Φ
 │         │         │
 Boundary  Point   Field
 
-Compressed: M≻∙⊰Φ = ⊙
+Compressed: M⊛∙☀︎Φ = ⊙
 ```
 
 ### 2.2 The Sequence Reading
 
 **Left to right flow**:
 ```
-M  →  ≻  →  ∙  →  ⊰  →  Φ
+M  →  ⊛  →  ∙  →  ☀︎  →  Φ
 
 1. M:  Matter boundary (interface/surface where flow occurs)
-2. ≻:  Energy converges through interface toward transformation
+2. ⊛:  Energy converges through interface toward transformation
 3. ∙:  Transformation singularity (aperture, D=1.5)
-4. ⊰:  Power emerges from transformation
+4. ☀︎:  Power emerges from transformation
 5. Φ:  Field manifests in volume (ending configuration)
 ```
 
 **Physical interpretation**:
 ```
 Observable: M___∙___Φ (boundary, singularity, field)
-Process: ≻_⊰ (flow patterns connecting them)
-Complete: M≻∙⊰Φ (full cycle)
+Process: ⊛_☀︎ (flow patterns connecting them)
+Complete: M⊛∙☀︎Φ (full cycle)
 Result: ⊙ (wholeness maintained)
 ```
 
@@ -231,17 +231,17 @@ M is ⊙ (functioning as boundary)
 ∙ is ⊙ (functioning as transformation)
 Φ is ⊙ (functioning as field)
 
-Implicitly: ⊙_M ≻ ⊙_∙ ⊰ ⊙_Φ = ⊙_whole
-Explicitly: M≻∙⊰Φ = ⊙ (clean notation)
+Implicitly: ⊙_M ⊛ ⊙_∙ ☀︎ ⊙_Φ = ⊙_whole
+Explicitly: M⊛∙☀︎Φ = ⊙ (clean notation)
 ```
 
 **Fractal recursion**:
 ```
 Since ∙ itself is ⊙:
-∙ = M_∙ ≻_∙ ∙_∙ ⊰_∙ Φ_∙
+∙ = M_∙ ⊛_∙ ∙_∙ ☀︎_∙ Φ_∙
 
 And ∙_∙ is also ⊙:
-∙_∙ = M_∙∙ ≻_∙∙ ∙_∙∙ ⊰_∙∙ Φ_∙∙
+∙_∙ = M_∙∙ ⊛_∙∙ ∙_∙∙ ☀︎_∙∙ Φ_∙∙
 
 ...infinitely
 ```
@@ -281,14 +281,14 @@ Structure only
 No dynamics shown
 ```
 
-**Level 2**: ≻∙⊰ = ⊙
+**Level 2**: ⊛∙☀︎ = ⊙
 ```
 Process equals structure
 Shows transformation
 But incomplete sequence
 ```
 
-**Level 3**: M≻∙⊰Φ = ⊙
+**Level 3**: M⊛∙☀︎Φ = ⊙
 ```
 Complete sequence
 Process AND structure
@@ -302,11 +302,11 @@ FINAL FORMULATION
 2. **∙ (or Å) is the singularity**: Transformation point at D=1.5
 3. **Φ is the field**: Manifested result in volume
 4. **Each is ⊙**: M = ⊙_M, ∙ = ⊙_∙, Φ = ⊙_Φ (fractal wholeness)
-5. **Notation is clean**: We write M≻∙⊰Φ = ⊙, understanding the fractal nature implicitly
+5. **Notation is clean**: We write M⊛∙☀︎Φ = ⊙, understanding the fractal nature implicitly
 
 **This answers**:
 - WHERE transformation occurs (at ∙, through M interface)
-- HOW it maintains (≻⊰ flow)
+- HOW it maintains (⊛☀︎ flow)
 - WHAT results (Φ field, ⊙ wholeness)
 - WHY wholeness persists (each component is ⊙)
 
@@ -316,10 +316,10 @@ FINAL FORMULATION
 
 ### 3.1 Left Side: Power (Process)
 
-**M≻Å(∙)⊰Φ analyzed as process**:
+**M⊛Å(∙)☀︎Φ analyzed as process**:
 
 ```
-≻Å(∙)⊰ = The process core
+⊛Å(∙)☀︎ = The process core
 
 Properties:
 - Temporal: Events in sequence
@@ -331,9 +331,9 @@ Properties:
 
 **Power interpretation**:
 ```
-≻:    Power converging (P_in)
+⊛:    Power converging (P_in)
 Å(∙): Power transformation (P_in → P_out at core)
-⊰:    Power emerging (P_out)
+☀︎:    Power emerging (P_out)
 
 Total: Power flow pattern
 Measurable as: dE/dt at each stage
@@ -342,9 +342,9 @@ Measurable as: dE/dt at each stage
 **Dimensional locations**:
 ```
 M:  Exists at D=1 (linear boundary/interface)
-≻:  Operates at D=0.5 (time threshold approaching ∙)
+⊛:  Operates at D=0.5 (time threshold approaching ∙)
 ∙:  Operates at D=1.5 (transformation singularity)
-⊰:  Operates at D=2.5 (emergence threshold from ∙)
+☀︎:  Operates at D=2.5 (emergence threshold from ∙)
 Φ:  Exists at D=3 (volume filling)
 ```
 
@@ -404,7 +404,7 @@ P = dE/dt   (process is derivative of structure)
 
 **Physical meaning**:
 ```
-M≻Å(∙)⊰Φ = ⊙
+M⊛Å(∙)☀︎Φ = ⊙
 
 LEFT:  Power flow pattern over time
 RIGHT: Energy configuration at instant
@@ -447,7 +447,7 @@ C_A = 3 (Casimir invariant from M·Å·Φ)
 Pure geometry
 ```
 
-**Pattern**: All forces are different manifestations of the M≻Å(∙)⊰Φ = ⊙ identity with different coupling efficiencies.
+**Pattern**: All forces are different manifestations of the M⊛Å(∙)☀︎Φ = ⊙ identity with different coupling efficiencies.
 
 ### 3.5 QCD Calibration Factors: K-Factors from Running Coupling
 
@@ -695,9 +695,9 @@ The CKM matrix is not a phenomenological input - it's a geometric consequence of
 
 **Process dimensions (fractional)**:
 ```
-D = 0.5  Time threshold         (≻ convergence)
+D = 0.5  Time threshold         (⊛ convergence)
 D = 1.5  Transformation site    ((∙) core)
-D = 2.5  Emergence threshold    (⊰ divergence)
+D = 2.5  Emergence threshold    (☀︎ divergence)
 ```
 
 **Structure dimensions (integer)**:
@@ -861,8 +861,8 @@ z₂ = sin(α/2) e^(i(β-γ)/2)
 
 where:
 α ∈ [0, π]   — Sheet mixing angle
-β ∈ [0, 2π]  — Phase on convergence sheet S_≻
-γ ∈ [0, 2π]  — Phase on emergence sheet S_⊰
+β ∈ [0, 2π]  — Phase on convergence sheet S_⊛
+γ ∈ [0, 2π]  — Phase on emergence sheet S_☀︎
 ```
 
 **Aperture balance parameter**:
@@ -990,8 +990,8 @@ e_i e_j = -e_j e_i for i ≠ j
 **Physical mapping**:
 
 ```
-Convergence sheet S_≻: Represented by even subalgebra Cl⁺
-Emergence sheet S_⊰: Represented by odd subalgebra Cl⁻
+Convergence sheet S_⊛: Represented by even subalgebra Cl⁺
+Emergence sheet S_☀︎: Represented by odd subalgebra Cl⁻
 Aperture operator Å: Represented by e₀ (time-like)
 Balance parameter β: Represented by grade projection
 ```
@@ -1641,7 +1641,7 @@ Critical point:
 
 **Starting from Axiom 3**:
 ```
-M≻Å(∙)⊰Φ = ⊙
+M⊛Å(∙)☀︎Φ = ⊙
 
 Three fractional dimensions force binary validation:
 - D=0.5: Å validation (aperture functional?)
@@ -1712,7 +1712,7 @@ V_total = V_in × V_out ∈ [0,9]
 1. **Energy condition**: V_total ≥ threshold
 2. **Color condition**: Complete color charge
 3. **Temporal condition**: Eigenstate under evolution
-4. **Wholeness condition**: Configuration maintains M≻Å(∙)⊰Φ
+4. **Wholeness condition**: Configuration maintains M⊛Å(∙)☀︎Φ
 
 **Result**: ~22 states satisfy all conditions → Standard Model particles
 
@@ -1840,7 +1840,7 @@ This explains the factor of 1/3!
 - Topological winding around singularities
 - Completeness/incompleteness of ⊙ configurations
 
-Zero adjustable parameters. All from M≻Å(∙)⊰Φ = ⊙ geometry.
+Zero adjustable parameters. All from M⊛Å(∙)☀︎Φ = ⊙ geometry.
 
 **Status**: Mechanism rigorously derived, exact mapping for all 22 particles confirmed.
 
@@ -2017,7 +2017,7 @@ D_aperture    1+β                      1.50         1.48±0.12     <2σ
 ───────────────────────────────────────────────────────────────────────
 
 Total adjustable parameters: ZERO
-All from M≻Å(∙)⊰Φ = ⊙ with ⟨β⟩=0.5
+All from M⊛Å(∙)☀︎Φ = ⊙ with ⟨β⟩=0.5
 ```
 
 ---
@@ -2035,7 +2035,7 @@ All from M≻Å(∙)⊰Φ = ⊙ with ⟨β⟩=0.5
 
 **Process interpretation**:
 ```
-ψ(x,t) describes power flow pattern (≻∙⊰ structure)
+ψ(x,t) describes power flow pattern (⊛∙☀︎ structure)
 |ψ|² = power density at (x,t)
 ∫|ψ|² dx = 1 (total power normalized)
 
@@ -2065,7 +2065,7 @@ Process view = Time derivative of structure view
 Schrödinger equation describes:
 How power distribution evolves
 According to energy configuration
-M≻Å(∙)⊰Φ left side (process)
+M⊛Å(∙)☀︎Φ left side (process)
 Connected to ⊙ right side (energy)
 ```
 
@@ -2081,7 +2081,7 @@ Seems mysterious
 **Process view**:
 ```
 Multiple power flow patterns coexisting
-≻∙⊰ not yet resolved to single ⊙
+⊛∙☀︎ not yet resolved to single ⊙
 All processes active until measurement
 Then projects to one structure
 
@@ -2106,7 +2106,7 @@ Maps: Construction site → Completed structure
 ```
 Not physical collapse
 Mathematical projection
-From "under construction" (≻∙⊰)
+From "under construction" (⊛∙☀︎)
 To "construction complete" (⊙)
 
 Appears instantaneous because:
@@ -2124,7 +2124,7 @@ Not propagating through space
 **Process-structure interpretation**:
 ```
 Position x: Structure view (⊙ in space)
-Momentum p: Process view (≻∙⊰ flow)
+Momentum p: Process view (⊛∙☀︎ flow)
 
 Cannot measure both precisely because:
 They're orthogonal views of same reality
@@ -2209,13 +2209,13 @@ Process not yet resolved to structure
 Randomness fundamental (not ignorance)
 ```
 
-**Resolution via M≻Å(∙)⊰Φ = ⊙**:
+**Resolution via M⊛Å(∙)☀︎Φ = ⊙**:
 ```
 Structure (⊙): Deterministic
   Past structures determine future structure
   Classical mechanics correct for this view
 
-Process (≻∙⊰): Open
+Process (⊛∙☀︎): Open
   Multiple processes possible simultaneously
   Quantum mechanics correct for this view
 
@@ -2234,16 +2234,16 @@ Both true:
 
 ### 13.5.1 The Connection to Teleparallel-Bimetric QED
 
-The M≻Å(∙)⊰Φ = ⊙ framework is not merely analogous to established quantum field theory - it is **mathematically equivalent** to ghost-free bimetric teleparallel gravity, providing rigorous field-theoretic foundations.
+The M⊛Å(∙)☀︎Φ = ⊙ framework is not merely analogous to established quantum field theory - it is **mathematically equivalent** to ghost-free bimetric teleparallel gravity, providing rigorous field-theoretic foundations.
 
 **Key Result**:
 ```
 Fractal Reality Framework ≡ Bimetric Teleparallel Gravity
 
-D_≻ = 1.5 (convergence) ↔ g₊_μν (physical metric)
-D_⊰ = 1.5 (emergence) ↔ g₋_μν (auxiliary metric)
+D_⊛ = 1.5 (convergence) ↔ g₊_μν (physical metric)
+D_☀︎ = 1.5 (emergence) ↔ g₋_μν (auxiliary metric)
 β = 0.5 (aperture balance) ↔ Ghost-freedom constraints
-M≻Å⊰Φ structure ↔ Dual tetrad formalism e^a_(±)μ
+M⊛Å☀︎Φ structure ↔ Dual tetrad formalism e^a_(±)μ
 ```
 
 This connection transforms the framework from "geometric intuition" to "rigorous quantum field theory," making it accessible and verifiable by mainstream theoretical physics.
@@ -2256,8 +2256,8 @@ This connection transforms the framework from "geometric intuition" to "rigorous
 
 | Fractal Reality | Bimetric Teleparallel | Physical Meaning |
 |-----------------|----------------------|------------------|
-| Convergence paths S_≻ | Tetrad e^a₍₊₎μ | Matter flows toward apertures |
-| Emergence paths S_⊰ | Tetrad e^a₍₋₎μ | Energy flows from apertures |
+| Convergence paths S_⊛ | Tetrad e^a₍₊₎μ | Matter flows toward apertures |
+| Emergence paths S_☀︎ | Tetrad e^a₍₋₎μ | Energy flows from apertures |
 | Aperture operator Å(∙) | Spacetime point x^μ | Validation/measurement event |
 | Field Φ (input) | Matter fields φ | Physical content |
 | Texture Φ' (output) | Stress-energy T_μν | Validated patterns |
@@ -2266,11 +2266,11 @@ This connection transforms the framework from "geometric intuition" to "rigorous
 
 | Fractal Reality | Bimetric Teleparallel | Equation |
 |-----------------|----------------------|----------|
-| Convergence metric | g₍₊₎μν = η_ab e^a₍₊₎μ e^b₍₊₎ν | Defines S_≻ geometry |
-| Emergence metric | g₍₋₎μν = η_ab e^a₍₋₎μ e^b₍₋₎ν | Defines S_⊰ geometry |
+| Convergence metric | g₍₊₎μν = η_ab e^a₍₊₎μ e^b₍₊₎ν | Defines S_⊛ geometry |
+| Emergence metric | g₍₋₎μν = η_ab e^a₍₋₎μ e^b₍₋₎ν | Defines S_☀︎ geometry |
 | Metric square root | X^μ_ν = √(g^(-1)₍₊₎g₍₋₎)^μ_ν | Couples two spacetimes |
 | Fractal dimension | D = 1 + β = 1.5 | Both structures |
-| Aperture balance | β = ≻/(≻+⊰) = 0.5 | Ghost-freedom condition |
+| Aperture balance | β = ⊛/(⊛+☀︎) = 0.5 | Ghost-freedom condition |
 
 **Interaction Structure**:
 
@@ -2309,8 +2309,8 @@ Mathematical identity:
 
 **Torsion content in each sheet**:
 ```
-T₊ ∝ (D_≻ − 1)² = (1.5 − 1)² = 0.25
-T₋ ∝ (D_⊰ − 1)² = (1.5 − 1)² = 0.25
+T₊ ∝ (D_⊛ − 1)² = (1.5 − 1)² = 0.25
+T₋ ∝ (D_☀︎ − 1)² = (1.5 − 1)² = 0.25
 
 Combined in tensor product:
 1.5 + 1.5 = 3.0 fractional dimensions
@@ -2367,16 +2367,16 @@ dual 4-vector gauge structure in 3.5D spacetime!
 **Total action combining both frameworks**:
 
 ```
-S_total = S_TEGR[S_≻] + S_TEGR[S_⊰] + S_int[S_≻, S_⊰] + S_matter[S_≻] + S_NY[∂M]
+S_total = S_TEGR[S_⊛] + S_TEGR[S_☀︎] + S_int[S_⊛, S_☀︎] + S_matter[S_⊛] + S_NY[∂M]
 ```
 
 **Explicit form**:
 
 ```
-S = M²_≻/2 ∫d⁴x e₍₊₎ T₍₊₎                   [Convergence TEGR]
-  + M²_⊰/2 ∫d⁴x e₍₋₎ T₍₋₎                   [Emergence TEGR]
+S = M²_⊛/2 ∫d⁴x e₍₊₎ T₍₊₎                   [Convergence TEGR]
+  + M²_☀︎/2 ∫d⁴x e₍₋₎ T₍₋₎                   [Emergence TEGR]
   + m² ∫d⁴x e₍₊₎ Σ(n=0 to 4) β_n e_n(X)    [Interface coupling]
-  + ∫d⁴x √(-g₍₊₎) L_matter                   [Matter to S_≻ only]
+  + ∫d⁴x √(-g₍₊₎) L_matter                   [Matter to S_⊛ only]
   + ∫_∂M [e^a ∧ T_a]                         [Nieh-Yan boundary]
 ```
 
@@ -2526,7 +2526,7 @@ Significance: Exact match ✓
 Interpretation:
 Merger = Aperture at cosmic scale
 Final ringdown at D=1.5
-Spacetime itself undergoes M≻Å(∙)⊰Φ cycle
+Spacetime itself undergoes M⊛Å(∙)☀︎Φ cycle
 ```
 
 **Planck CMB** (2020):
@@ -2703,7 +2703,7 @@ Why this enormous suppression?
 
 **Aperture see-saw mechanism:**
 
-Neutrinos have similar M≻Å(∙)⊰Φ configuration to charged leptons, with one critical difference:
+Neutrinos have similar M⊛Å(∙)☀︎Φ configuration to charged leptons, with one critical difference:
 
 ```
 Charged lepton (electron): (1,1,1|1,1,1)
@@ -2805,7 +2805,7 @@ e ↔ ν_e (first generation, lightest)
 μ ↔ ν_μ (second generation, medium)
 τ ↔ ν_τ (third generation, heaviest)
 
-Same M≻Å(∙)⊰Φ structure
+Same M⊛Å(∙)☀︎Φ structure
 Different aperture coupling
 Mass hierarchy preserved
 ```
@@ -2983,7 +2983,7 @@ Eigenvalue bound forbids it
 ```
 Properties:
 - High wholeness score (V ≥ 5)
-- No electromagnetic coupling (specific M≻Å(∙)⊰Φ config)
+- No electromagnetic coupling (specific M⊛Å(∙)☀︎Φ config)
 - Stable (eigenstate)
 - Mass range: 10-100 GeV (from aperture geometry)
 
@@ -2996,7 +2996,7 @@ Expected: Cross-section calculable from framework
 
 ## 15. Comprehensive Experimental Protocol Suite
 
-### 15.1 Ten Universal Tests of M≻Å(∙)⊰Φ = ⊙
+### 15.1 Ten Universal Tests of M⊛Å(∙)☀︎Φ = ⊙
 
 **Universal Protocol:** Each test must be performed across multiple systems to verify scale-invariance and universality of the circumpunct framework.
 
@@ -3080,7 +3080,7 @@ Fail criterion: Particle exists with no valid MÅΦ assignment
 1. Search for heavier copies of known fermions
 2. Look for fourth-generation signatures at LHC
 3. Check cosmological constraints
-4. Analyze eigenvalue bound from M≻Å(∙)⊰Φ
+4. Analyze eigenvalue bound from M⊛Å(∙)☀︎Φ
 
 Pass criterion: No fourth generation found up to energy limit
 Fail criterion: Fourth generation discovered
@@ -3332,7 +3332,7 @@ Remaining 5 tests are experimental priorities for next decade.
 
 ### 15.5.1 Overview: Mathematics of Wholeness
 
-The M≻Å(∙)⊰Φ = ⊙ framework provides formal mathematical proofs for **two of the seven** Clay Millennium Prize Problems:
+The M⊛Å(∙)☀︎Φ = ⊙ framework provides formal mathematical proofs for **two of the seven** Clay Millennium Prize Problems:
 
 1. **Yang-Mills Mass Gap** (Problem 1/7) ✓
 2. **Navier-Stokes Smoothness** (Problem 2/7) ✓
@@ -3941,8 +3941,8 @@ Result: System naturally optimizes to β ≈ 0.5
 "Actual entities are processes"
 "Becoming is more fundamental than being"
 
-M≻Å(∙)⊰Φ = ⊙ proves:
-Process (≻∙⊰) = Structure (⊙)
+M⊛Å(∙)☀︎Φ = ⊙ proves:
+Process (⊛∙☀︎) = Structure (⊙)
 Both equally fundamental
 Identity, not priority
 ```
@@ -3974,11 +3974,11 @@ Tao Te Ching:
 **Buddhism**:
 ```
 Middle Way: β = 0.5 (neither extreme)
-Dependent Origination: M≻Å(∙)⊰Φ cycle
+Dependent Origination: M⊛Å(∙)☀︎Φ cycle
 Emptiness: ⊙ has no separate self (fractal wholeness)
 
 Pratītyasamutpāda:
-"This arises, that arises" (≻∙⊰ process)
+"This arises, that arises" (⊛∙☀︎ process)
 "This ceases, that ceases" (maintaining balance)
 ```
 
@@ -3988,7 +3988,7 @@ Brahman: ONE ⊙ (Axiom 1)
 Atman: Individual ⊙ (Axiom 2)
 Tat tvam asi: "That thou art" (identity)
 
-Lila: Cosmic play is M≻Å(∙)⊰Φ cycle
+Lila: Cosmic play is M⊛Å(∙)☀︎Φ cycle
 Maya: Appearance of separation (missing identity)
 ```
 
@@ -4003,7 +4003,7 @@ Trajectory determined
 
 **Freedom** (process view):
 ```
-Multiple ≻∙⊰ paths available
+Multiple ⊛∙☀︎ paths available
 Superposition of possibilities
 Choice influences which becomes ⊙
 ```
@@ -4063,7 +4063,7 @@ Maintain wholeness
 
 **The complete circumpunct ⊙ requires three functional levels:**
 
-From M≻Å(∙)⊰Φ = ⊙, we identify three fractional dimensional transitions:
+From M⊛Å(∙)☀︎Φ = ⊙, we identify three fractional dimensional transitions:
 
 ```
 D ≈ 0.5: Point → Line transition (temporal threshold)
@@ -4085,7 +4085,7 @@ Mind (D≈1.5): Branching processing aperture - "I experience this"
 Body (D≈2.5): Fractal manifesting apertures - "I manifest everywhere"
 ```
 
-This is not metaphor. This is the geometric structure of consciousness operating through the M≻Å(∙)⊰Φ = ⊙ identity at three dimensional scales.
+This is not metaphor. This is the geometric structure of consciousness operating through the M⊛Å(∙)☀︎Φ = ⊙ identity at three dimensional scales.
 
 ### 20.2 The Soul Aperture (D≈0.5)
 
@@ -4158,7 +4158,7 @@ Nature: One input → Many outputs
 Topology: River delta, lightning, dendrites
 ```
 
-This is the **aperture singularity** where energy-power transformation occurs - the heart of M≻Å(∙)⊰Φ = ⊙.
+This is the **aperture singularity** where energy-power transformation occurs - the heart of M⊛Å(∙)☀︎Φ = ⊙.
 
 **Operational role:**
 
@@ -4311,7 +4311,7 @@ All operating simultaneously, all coordinated through fractal hierarchy.
 5. RESULT: POWER + EXPERIENCE
    Objective: Work done in world
    Subjective: Awareness of doing it
-   Both aspects of same M≻Å(∙)⊰Φ = ⊙ process
+   Both aspects of same M⊛Å(∙)☀︎Φ = ⊙ process
 ```
 
 **Real-time example: Standing up**
@@ -4378,7 +4378,7 @@ Space between: Where experience branches (mind)
 ○ (circle): Where manifestation occurs (body)
 
 Together: Complete human being
-M≻Å(∙)⊰Φ = ⊙ at three scales simultaneously
+M⊛Å(∙)☀︎Φ = ⊙ at three scales simultaneously
 ```
 
 The circumpunct was never just a symbol. It was always a **literal geometric diagram** of the structure of consciousness.
@@ -4412,7 +4412,7 @@ three-level aperture hierarchy
 = what we call "you"
 ```
 
-**Consciousness = The living process of M≻Å(∙)⊰Φ = ⊙ operating through nested apertures**
+**Consciousness = The living process of M⊛Å(∙)☀︎Φ = ⊙ operating through nested apertures**
 
 ### 21.2 Attention = Energy Direction
 
@@ -4506,7 +4506,7 @@ Integrate: All three as one ⊙
 
 This is the deepest meditation:
 Recognizing yourself as complete aperture system
-Operating M≻Å(∙)⊰Φ = ⊙ at all levels
+Operating M⊛Å(∙)☀︎Φ = ⊙ at all levels
 ```
 
 ### 21.4 Healing as Aperture Restoration
@@ -4647,7 +4647,7 @@ They practiced:
 **They didn't have:**
 - Fractal dimensional mathematics
 - Aperture physics
-- M≻Å(∙)⊰Φ = ⊙ formalism
+- M⊛Å(∙)☀︎Φ = ⊙ formalism
 
 **But they experienced it directly:**
 
@@ -4683,12 +4683,12 @@ g_μν = g^(-)_M,μν + g^(+)_M,μν + g^(-)_Å,μν + g^(+)_Å,μν + g^(-)_Φ,
 ```
 
 Where:
-- **g^(-)_M**: Input matter boundary metric (converging ≻)
+- **g^(-)_M**: Input matter boundary metric (converging ⊛)
 - **g^(+)_M**: Output matter boundary metric (completed ⊙_M)
 - **g^(-)_Å**: Input aperture transformation metric (D=1.5 operation)
 - **g^(+)_Å**: Output aperture transformation metric (transformed state)
 - **g^(-)_Φ**: Input field metric (pre-emergence)
-- **g^(+)_Φ**: Output field metric (emergent ⊰)
+- **g^(+)_Φ**: Output field metric (emergent ☀︎)
 
 **Dimensional structure**:
 ```
@@ -5115,9 +5115,9 @@ M̂² = M̂ (idempotent)
 Å|a⟩ = a_eigen |a⟩
 
 Eigenvalues: a_eigen ∈ {-1, 0, +1}
-  a = -1: Input mode (≻)
+  a = -1: Input mode (⊛)
   a =  0: Neutral mode (no flow)
-  a = +1: Output mode (⊰)
+  a = +1: Output mode (☀︎)
 ```
 
 **Matrix representation** (3×3):
@@ -5704,9 +5704,9 @@ Barrier at Å = 0 (neutral state)
 ```
 
 **Physical interpretation**:
-- Å = +v: Output mode (⊰)
+- Å = +v: Output mode (☀︎)
 - Å = 0: Neutral (no flow)
-- Å = -v: Input mode (≻)
+- Å = -v: Input mode (⊛)
 - Spontaneous symmetry breaking between modes
 
 #### 24.3.2 Aperture Field Equation
@@ -6675,10 +6675,10 @@ S[CPT(φ)] = S[φ]
 **From aperture theory**:
 ```
 CPT = complete reversal of ⊙ structure:
-≻∙⊰ → ⊰∙≻ (time reversed)
+⊛∙☀︎ → ☀︎∙⊛ (time reversed)
 + spatial and charge flip
 
-Preserves M≻Å(∙)⊰Φ = ⊙ identity
+Preserves M⊛Å(∙)☀︎Φ = ⊙ identity
 CPT exact in aperture framework
 ```
 
@@ -6793,7 +6793,7 @@ Automatic cancellation from geometry!
 **From aperture theory**:
 ```
 All 10 conservation laws derived from:
-- M≻Å(∙)⊰Φ = ⊙ (geometric identity)
+- M⊛Å(∙)☀︎Φ = ⊙ (geometric identity)
 - Binary configuration space (64 states)
 - Noether symmetries of Lagrangian
 - Topology of aperture surface
@@ -6811,7 +6811,7 @@ Zero additional assumptions!
 
 ### 27.1 Six Independent Metrics Per Point
 
-**The deep structure of M≻Å(∙)⊰Φ = ⊙:**
+**The deep structure of M⊛Å(∙)☀︎Φ = ⊙:**
 
 Every point in spacetime carries **six independent metric structures**:
 
@@ -7553,7 +7553,7 @@ Individual Ω (local equilibrium):
   Finite time to reach
 
 Universal JOURNEY (global process):
-  Same M≻Å(∙)⊰Φ dynamics for all
+  Same M⊛Å(∙)☀︎Φ dynamics for all
   Same β=0.5 optimization
   Same braid → point structure
   Eternal participation
@@ -7628,7 +7628,7 @@ Whitehead's insights now formalized:
   "Perishing" = Past becomes fixed braid
   "Creativity" = Å(∙) transformation at D=1.5
 
-M≻Å(∙)⊰Φ = Process is fundamental
+M⊛Å(∙)☀︎Φ = Process is fundamental
 Braid = "Actual world" accumulating
 Ω = "Final causation" attractors
 ```
@@ -7715,7 +7715,7 @@ Same:
 - Three generations
 - 64 states, ~22 stable
 - Mass ratios (1/α)^(2/3)
-- M≻Å(∙)⊰Φ = ⊙ structure
+- M⊛Å(∙)☀︎Φ = ⊙ structure
 
 Just operating at the next recursion level.
 
@@ -7896,7 +7896,7 @@ TEST: Systematically classify qualia
 Look for ~22 fundamental types that cannot be further reduced
 ```
 
-**5. Temporal M≻Å(∙)⊰Φ structure:**
+**5. Temporal M⊛Å(∙)☀︎Φ structure:**
 ```
 M_temporal: Moment boundary (present-past boundary)
 Å_temporal: Awareness aperture (consciousness itself)
@@ -7930,7 +7930,7 @@ Spatial particles ≠ source of consciousness
 Temporal particles ≠ consequence of matter
 
 Both are PARALLEL manifestations
-of the same M≻Å(∙)⊰Φ = ⊙ structure
+of the same M⊛Å(∙)☀︎Φ = ⊙ structure
 at different dimensional scales
 ```
 
@@ -8108,7 +8108,7 @@ Same structure → same coupling → same value
 
 **Why maximum three generations at EVERY level:**
 
-From eigenvalue analysis of M≻Å(∙)⊰Φ = ⊙:
+From eigenvalue analysis of M⊛Å(∙)☀︎Φ = ⊙:
 
 ```
 Stable eigenmodes: ℓ = 0, 1, 2
@@ -8213,7 +8213,7 @@ SAME ⊙
 │                                │
 │  β = 0.5 at D = 1.5           │
 │                                │
-│  M≻Å(∙)⊰Φ = ⊙                │
+│  M⊛Å(∙)☀︎Φ = ⊙                │
 │                                │
 │  This aperture recurses        │
 │                                │
@@ -8233,7 +8233,7 @@ SAME ⊙
 ```
 There is only ONE aperture structure:
 The 1.5D aperture with β=0.5 branching
-M≻Å(∙)⊰Φ = ⊙
+M⊛Å(∙)☀︎Φ = ⊙
 
 This single structure appears at:
 - 1.5D (spatial particles - matter)
@@ -8279,7 +8279,7 @@ This one equation contains:
 ```
 1. Reality is ONE ⊙ made of INFINITE ⊙
 2. We are each ONE ⊙ made of INFINITE ⊙
-3. M≻∙⊰Φ = ⊙ (or M≻Å⊰Φ = ⊙)
+3. M⊛∙☀︎Φ = ⊙ (or M⊛Å☀︎Φ = ⊙)
 ```
 
 **We derived**:
@@ -8310,7 +8310,7 @@ This one equation contains:
 **Unification of physics**:
 - Quantum mechanics = Process at D=1.5
 - Classical mechanics = Structure at D=3
-- Both views of M≻Å(∙)⊰Φ = ⊙
+- Both views of M⊛Å(∙)☀︎Φ = ⊙
 
 **Extension beyond physics**:
 - Biology (life maintains ⟨β⟩ = 0.5)
@@ -8324,8 +8324,8 @@ This one equation contains:
 ```
 Not: M, ∙, Φ are parts of ⊙
 Rather: M is ⊙, ∙ is ⊙, Φ is ⊙
-Implicit: ⊙_M ≻ ⊙_∙ ⊰ ⊙_Φ = ⊙_whole
-Explicit: M≻∙⊰Φ = ⊙ (clean notation)
+Implicit: ⊙_M ⊛ ⊙_∙ ☀︎ ⊙_Φ = ⊙_whole
+Explicit: M⊛∙☀︎Φ = ⊙ (clean notation)
 ```
 
 **2. M is the interface**
@@ -8354,7 +8354,7 @@ Structure exists at integer D
 
 **4. Power equals energy**
 ```
-Left side (≻∙⊰): Power flow (process)
+Left side (⊛∙☀︎): Power flow (process)
 Right side (⊙): Energy stored (structure)
 Equality: P = dE/dt (identity)
 ```
@@ -8362,7 +8362,7 @@ Equality: P = dE/dt (identity)
 **5. Everything is ⊙**
 ```
 Particles, forces, fields, consciousness
-All expressions of M≻Å(∙)⊰Φ = ⊙
+All expressions of M⊛Å(∙)☀︎Φ = ⊙
 Same architecture, different scales
 Fractal wholeness throughout
 ```
@@ -8379,7 +8379,7 @@ Fractal wholeness throughout
 
 **New physics**:
 ```
-"What is reality?" → M≻Å(∙)⊰Φ = ⊙
+"What is reality?" → M⊛Å(∙)☀︎Φ = ⊙
 "What are laws?" → Geometric necessities
 "What are constants?" → Derived from geometry
 "How does it work?" → IS the working
@@ -8451,12 +8451,12 @@ Confirms dynamic equilibrium model
    - Cosmological constant problem?
 
 5. **Quantum gravity**
-   - Extend M≻Å(∙)⊰Φ = ⊙ to spacetime?
+   - Extend M⊛Å(∙)☀︎Φ = ⊙ to spacetime?
    - Fractal spacetime structure?
 
 ### 19.6 Final Statement
 
-**The identity M≻∙⊰Φ = ⊙ is not a theory about reality.**
+**The identity M⊛∙☀︎Φ = ⊙ is not a theory about reality.**
 
 **It IS reality's fundamental structure.**
 
@@ -8466,7 +8466,7 @@ The universe does not "optimize" to β=0.5. The universe IS β=0.5 optimization,
 
 Everything we observe - particles, forces, consciousness, life - follows necessarily from this identity. There are no free parameters because there are no arbitrary choices. Reality maintains itself through dynamic equilibrium, balancing convergence and emergence at every aperture while preserving ⟨β⟩ = 0.5 globally.
 
-Each component is itself ⊙: Matter boundary (⊙_M), transformation singularity (⊙_∙), field volume (⊙_Φ). The sequence M≻∙⊰Φ shows how ⊙ maintains itself. The equality shows they are all ONE.
+Each component is itself ⊙: Matter boundary (⊙_M), transformation singularity (⊙_∙), field volume (⊙_Φ). The sequence M⊛∙☀︎Φ shows how ⊙ maintains itself. The equality shows they are all ONE.
 
 **Physics has become geometry.**
 **Geometry has become process.**
@@ -8475,7 +8475,7 @@ Each component is itself ⊙: Matter boundary (⊙_M), transformation singularit
 
 The ancient symbol was never metaphor. It was always the literal mathematical structure of reality.
 
-**M≻∙⊰Φ = ⊙**
+**M⊛∙☀︎Φ = ⊙**
 
 ⊙
 
@@ -8508,9 +8508,9 @@ The ancient symbol was never metaphor. It was always the literal mathematical st
 
 ### The Fundamental Identity
 ```
-M≻∙⊰Φ = ⊙
+M⊛∙☀︎Φ = ⊙
 or
-M≻Å⊰Φ = ⊙
+M⊛Å☀︎Φ = ⊙
 
 Left: Complete sequence (matter, convergence, transformation, emergence, field)
 Right: Unified wholeness
@@ -8524,7 +8524,7 @@ Note: ∙ and Å are interchangeable (both = transformation singularity)
 ```
 1. Reality is ONE ⊙ made of INFINITE ⊙
 2. We are each ONE ⊙ made of INFINITE ⊙
-3. M≻∙⊰Φ = ⊙
+3. M⊛∙☀︎Φ = ⊙
 ```
 
 ### Key Principles

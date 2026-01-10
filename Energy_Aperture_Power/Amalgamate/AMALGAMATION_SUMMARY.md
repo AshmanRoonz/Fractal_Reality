@@ -41,12 +41,12 @@ Successfully amalgamated two formalization documents by injecting updated concep
 
 #### Old Form (throughout document):
 ```
-M ≻ Å(∙) ⊰ Φ = ⊙
+M ⊛ Å(∙) ☀︎ Φ = ⊙
 ```
 
 #### New Form (updated to):
 ```
-E ≻ Å₀.₅ ⊰ ≻ Å₁.₅ ⊰ M ≻ Å₂.₅ ⊰ Φ = ⊙
+E ⊛ Å₀.₅ ☀︎ ⊛ Å₁.₅ ☀︎ M ⊛ Å₂.₅ ☀︎ Φ = ⊙
 ```
 
 **Key improvements:**
@@ -60,12 +60,12 @@ E ≻ Å₀.₅ ⊰ ≻ Å₁.₅ ⊰ M ≻ Å₂.₅ ⊰ Φ = ⊙
 **Major conceptual advancement:**
 
 EVERY aperture (Å₀.₅, Å₁.₅, Å₂.₅) now explicitly shown to have:
-- **Convergence (≻)** flowing INTO it
-- **Emergence (⊰)** flowing OUT of it
+- **Convergence (⊛)** flowing INTO it
+- **Emergence (☀︎)** flowing OUT of it
 
 **Pattern established:**
 ```
-Structure → ≻ → Aperture → ⊰ → Structure → ≻ → Aperture → ⊰ → ...
+Structure → ⊛ → Aperture → ☀︎ → Structure → ⊛ → Aperture → ☀︎ → ...
 ```
 
 This perfect regularity repeats at ALL scales, revealing the deep symmetry of the framework.
@@ -95,7 +95,7 @@ This perfect regularity repeats at ALL scales, revealing the deep symmetry of th
 #### SECTION 1: THE FUNDAMENTAL EQUATION
 - Complete operator cascade: ℬ[Ψ] = 𝟙
 - Operator decomposition with all three apertures
-- Updated symbolic form showing E≻Å₀.₅⊰≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙
+- Updated symbolic form showing E⊛Å₀.₅☀︎⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙
 
 #### SECTION 2: CLIFFORD ALGEBRA FOUNDATION  
 - Clifford algebra Cl(3,0,1) formulation
@@ -109,7 +109,7 @@ This perfect regularity repeats at ALL scales, revealing the deep symmetry of th
 - Dimensional structure (integer vs fractional)
 - Aperture branching equation (fundamental)
 - Energy stream, matter surface, field volume dynamics
-- Complete operator flow showing ≻ and ⊰ at every aperture
+- Complete operator flow showing ⊛ and ☀︎ at every aperture
 
 ---
 
@@ -150,7 +150,7 @@ This perfect regularity repeats at ALL scales, revealing the deep symmetry of th
 **Solution**: Preserved existing formalism, added notes about three aperture forms
 
 ### 3. Historical References
-**Challenge**: Some sections historically referenced the old M≻Å(∙)⊰Φ form
+**Challenge**: Some sections historically referenced the old M⊛Å(∙)☀︎Φ form
 **Solution**: Kept historical context where appropriate, added clarifying notes about evolution to new understanding
 
 ---
@@ -197,7 +197,7 @@ The three-aperture structure is now explicit throughout the document, making it 
 - BODY (Å₂.₅) - fractal lensing, infinite distribution
 
 ### 4. Complete Regularity Revealed
-The pattern Structure → ≻ → Aperture → ⊰ → Structure repeats perfectly at every scale, showing the framework's deep symmetry.
+The pattern Structure → ⊛ → Aperture → ☀︎ → Structure repeats perfectly at every scale, showing the framework's deep symmetry.
 
 ---
 
@@ -230,8 +230,8 @@ This amalgamation represents a significant advancement in the framework because 
 
 1. **Resolves dimensional ambiguity** - E, M, and Φ are now at correct integer dimensions
 2. **Reveals three apertures** - Å₀.₅, Å₁.₅, Å₂.₅ are distinct but related transformations  
-3. **Shows complete regularity** - Every aperture has both ≻ and ⊰, no exceptions
-4. **Unifies the notation** - E≻Å₀.₅⊰≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ is the complete form
+3. **Shows complete regularity** - Every aperture has both ⊛ and ☀︎, no exceptions
+4. **Unifies the notation** - E⊛Å₀.₅☀︎⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙ is the complete form
 
 The framework is now more mathematically precise and conceptually clearer while maintaining all original insights and content.
 

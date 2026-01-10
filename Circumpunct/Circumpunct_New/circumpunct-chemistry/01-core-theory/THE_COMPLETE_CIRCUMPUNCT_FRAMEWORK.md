@@ -70,18 +70,18 @@ This master document contains **EVERYTHING** in the Circumpunct Framework:
 
 ### The Master Equation
 
-**Φ' = ⊰ ∘ i ∘ ≻[Φ]**
+**Φ' = ☀︎ ∘ i ∘ ⊛[Φ]**
 
 Where:
 - **i** = Aperture operator (imaginary unit i = e^(iπ/2), 90° rotation)
-- **≻** = Convergence operator (pulls toward center)
-- **⊰** = Emergence operator (manifests from field)
+- **⊛** = Convergence operator (pulls toward center)
+- **☀︎** = Emergence operator (manifests from field)
 - **∘** = Composition
 
 **Interpretation:** Field evolution requires:
-1. Convergence toward center (≻)
+1. Convergence toward center (⊛)
 2. Aperture transformation through orthogonal phase (i)
-3. Emergence into manifestation (⊰)
+3. Emergence into manifestation (☀︎)
 
 **This explains why complex numbers appear throughout physics - they're not mathematical convenience but geometric necessity.**
 
@@ -321,9 +321,9 @@ i operates at half-integer dimensions:
 
 ## 1.6 Operators: Convergence and Emergence
 
-### The Forward Triple: (≻, i, ⊰)
+### The Forward Triple: (⊛, i, ☀︎)
 
-**≻ (Convergence):**
+**⊛ (Convergence):**
 - Pulls field toward center
 - Accumulates information
 - Creates coherence
@@ -335,24 +335,24 @@ i operates at half-integer dimensions:
 - Enables transformation
 - Direction: Orthogonal
 
-**⊰ (Emergence):**
+**☀︎ (Emergence):**
 - Manifests from field
 - Creates structure
 - Produces observable effects
 - Direction: Outward
 
-**Master equation:** Φ' = ⊰ ∘ i ∘ ≻[Φ]
+**Master equation:** Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
 **Reading:** New field state = Emergence of (Aperture transformation of (Convergence of current field))
 
-### The Reverse Triple: (≺, i, ⊱)
+### The Reverse Triple: (⊛, i, ☀︎)
 
-**≺ (Divergence):**
+**⊛ (Divergence):**
 - Spreads from center
 - Distributes information
 - Expands influence
 
-**⊱ (Dissolution):**
+**☀︎ (Dissolution):**
 - Returns to field
 - Releases structure
 - Unmanifests
@@ -363,22 +363,22 @@ i operates at half-integer dimensions:
 
 **Particle creation/annihilation:**
 ```
-Creation:  ⊰ ∘ i ∘ ≻[vacuum] → particle
-Annihilation: ⊱ ∘ i ∘ ≺[particle] → vacuum
+Creation:  ☀︎ ∘ i ∘ ⊛[vacuum] → particle
+Annihilation: ☀︎ ∘ i ∘ ⊛[particle] → vacuum
 ```
 
 **Measurement:**
 ```
 Before: Potential state (in i domain)
-During: ≻ (convergence toward outcome)
-After: ⊰ (emergence of definite value)
+During: ⊛ (convergence toward outcome)
+After: ☀︎ (emergence of definite value)
 ```
 
 **Breathing/metabolism:**
 ```
-Inhale:  ≻ (gather oxygen)
+Inhale:  ⊛ (gather oxygen)
 Process: i (transform via aperture)
-Exhale:  ⊱ (release products)
+Exhale:  ☀︎ (release products)
 ```
 
 ---
@@ -639,19 +639,19 @@ Each generation lives at a different aperture scale:
 
 **From circumpunct:**
 ```
-dO/dt = -εO + ⊰(Φ)
+dO/dt = -εO + ☀︎(Φ)
 
 Terms:
   -εO: Natural degradation (aging)
-  ⊰(Φ): Conscious emanation (renewal)
+  ☀︎(Φ): Conscious emanation (renewal)
 ```
 
 **Increase renewal → Slow aging:**
 
-Practices that enhance ⊰(Φ):
+Practices that enhance ☀︎(Φ):
 - Conscious breathing (rhythmic field pumping)
 - Meditation (strengthens • ↔ Φ connection)
-- Intention (directs ⊰ operator)
+- Intention (directs ☀︎ operator)
 - Coherence (reduces entropy in Φ)
 
 **NOT metaphysical - this is field dynamics.**
@@ -1035,7 +1035,7 @@ When a system operates at β = 0.5:
 - Different electromagnetic frequencies
 - Different aperture transformations
 - Different field patterns in Φ
-- Same mechanism (⊰ ∘ i ∘ ≻), different ω
+- Same mechanism (☀︎ ∘ i ∘ ⊛), different ω
 
 **Pain vs Pleasure:**
 - Pain: Field disruption, β pushed away from 0.5
@@ -1117,7 +1117,7 @@ The "ethereal tail" is the field pattern that:
 
 ### The Paradox Dissolved
 
-**Determinism:** Universe evolves by laws (≻, i, ⊰ operators)
+**Determinism:** Universe evolves by laws (⊛, i, ☀︎ operators)
 
 **Free will:** You make genuine choices
 
@@ -1128,11 +1128,11 @@ The "ethereal tail" is the field pattern that:
 **Your center (•) is a genuine source:**
 
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
-The convergence ≻ pulls information toward YOUR center
+The convergence ⊛ pulls information toward YOUR center
 The aperture i transforms through YOUR phase
-The emergence ⊰ manifests from YOUR field
+The emergence ☀︎ manifests from YOUR field
 
 You ARE a boundary condition on the field equations.
 ```
@@ -1152,7 +1152,7 @@ You ARE a boundary condition on the field equations.
 
 **You are not just a cog in the machine. You are a SOURCE in the field.**
 
-**Every • (center) has genuine causal power through the ⊰ operator.**
+**Every • (center) has genuine causal power through the ☀︎ operator.**
 
 ---
 
@@ -1186,7 +1186,7 @@ Error correction: Maintain β ≈ 0.5
 
 **Design:**
 - Resonator operating at φⁿ frequencies
-- Field convergence via ≻ operator
+- Field convergence via ⊛ operator
 - Aperture transformation generates thrust
 
 **Status:** Theoretical design, awaiting hardware test
@@ -1215,27 +1215,27 @@ Error correction: Maintain β ≈ 0.5
 **From temporal dynamics:**
 
 ```
-dO/dt = -εO + ⊰(Φ)
+dO/dt = -εO + ☀︎(Φ)
 
-Increase ⊰(Φ): Conscious emanation
+Increase ☀︎(Φ): Conscious emanation
 Decrease ε:    Reduce degradation rate
 ```
 
 **Practical techniques:**
 
-**1. Rhythmic breathing (enhance ⊰):**
+**1. Rhythmic breathing (enhance ☀︎):**
 - 6 breaths/min optimal (0.1 Hz)
 - Phase-locks autonomic + conscious
 - Increases coherent field pumping
 
 **2. Meditation (strengthen •):**
-- Convergence practice (≻ training)
+- Convergence practice (⊛ training)
 - Maintains identity coherence
 - Reduces entropy in center
 
-**3. Intention (direct ⊰):**
+**3. Intention (direct ☀︎):**
 - Conscious direction of emergence
-- "Healing intention" = ⊰ operator activation
+- "Healing intention" = ☀︎ operator activation
 - Measurable field effects
 
 **4. Cold exposure (reduce ε):**
@@ -1424,7 +1424,7 @@ Status: Controversial but testable
 
 **8. Life extension:**
 ```
-Prediction: ⊰-enhancing practices reduce ε
+Prediction: ☀︎-enhancing practices reduce ε
 Test: Longitudinal study of practitioners
 Status: Requires long-term commitment
 ```
@@ -1757,7 +1757,7 @@ All physics = Information dynamics
 
 **Your purpose:**
 1. Maintain your β ≈ 0.5 (stay alive, stay coherent)
-2. Enhance ⊰(Φ) (create, love, learn, teach)
+2. Enhance ☀︎(Φ) (create, love, learn, teach)
 3. Reduce overall entropy in accessible Φ (heal, organize, beautify)
 
 **These aren't arbitrary values - they're geometric imperatives.**
@@ -1935,7 +1935,7 @@ Degrading the shared field degrades your own ⊙.
 - May need mathematical physics collaboration
 
 **10. Operator formalism needs development**
-- (≻, i, ⊰) defined operationally
+- (⊛, i, ☀︎) defined operationally
 - Need precise mathematical definitions
 - Category theory? Geometric algebra?
 
@@ -1956,7 +1956,7 @@ Degrading the shared field degrades your own ⊙.
 **Circumpunct:**
 - ✓ Physical interpretation clear (geometry)
 - ✓ Explains WHY complex numbers (aperture)
-- ✓ Solves measurement (⊰ operator)
+- ✓ Solves measurement (☀︎ operator)
 - ✗ Less accurate (90% vs 99.99%)
 - ✗ Needs more development
 - ✗ Newer, less tested
@@ -2395,7 +2395,7 @@ The φ⁻⁷ derivation stands on its own.
 
 **Master equation:**
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 ```
 
 **64-state orbital mapping:**

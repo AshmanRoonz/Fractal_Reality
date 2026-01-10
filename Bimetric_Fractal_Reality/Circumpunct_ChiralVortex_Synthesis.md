@@ -64,16 +64,16 @@ The Circumpunct's structural equation:
 
 Circumpunct's three-phase flow:
 ```
-≻ (convergence) → i (transformation) → ⊰ (emergence)
+⊛ (convergence) → i (transformation) → ☀︎ (emergence)
 ```
 
 Maps to the group's sector structure:
 
 | Circumpunct Process | Group's Mechanism | Mathematical Form |
 |--------------------|-------------------|-------------------|
-| **≻** (convergence) | Sheet integration toward core | ∫_Σ₂ d²σ √γ ρ² (...) |
+| **⊛** (convergence) | Sheet integration toward core | ∫_Σ₂ d²σ √γ ρ² (...) |
 | **i** (transformation) | Chiral flip at Q = 0 | P₊ ↔ P₋ mixing |
-| **⊰** (emergence) | Holographic projection to M₄ | Φ^A(σ;x) = Σᵢ uᵢ(σ) Ψᵢᴬ(x) |
+| **☀︎** (emergence) | Holographic projection to M₄ | Φ^A(σ;x) = Σᵢ uᵢ(σ) Ψᵢᴬ(x) |
 
 ### 2.2 The Aperture Operator
 
@@ -104,7 +104,7 @@ This explains why ☯ = ½ is the "balanced" state: it produces maximal sector c
 
 **Circumpunct Master Equation:**
 ```
-E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³
+E = ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³
 Energy = Structure × Process³
 ```
 
@@ -164,7 +164,7 @@ Total: 9 physical DOF, matching the Circumpunct counting.
 
 **Circumpunct's Balance:**
 ```
-☯ = |≻| / (|≻| + |⊰|) = ½
+☯ = |⊛| / (|⊛| + |☀︎|) = ½
 ```
 
 **Group's Phase-Flux:**
@@ -275,7 +275,7 @@ This needs explicit verification.
 
 **Question:** Does the Circumpunct's trinity structure naturally produce an 8-dimensional Clifford algebra?
 
-**Approach:** The trinity (○, Φ, •) with process (≻, i, ⊰) gives 3 × 3 = 9 generator candidates. Mod out by the constraint ☯ = ½ to get 8 independent generators.
+**Approach:** The trinity (○, Φ, •) with process (⊛, i, ☀︎) gives 3 × 3 = 9 generator candidates. Mod out by the constraint ☯ = ½ to get 8 independent generators.
 
 ### 7.2 The Hassan-Rosen Potential
 
@@ -353,7 +353,7 @@ S_coupling = ∫ d⁴x d²σ √(-g^{(eff)}) √γ L_{int}(Φ, e^{(±)}, T^{(±)
 
 The discrete dynamical rule:
 ```
-Φ' = T_⊙[Φ] = ⊱ ∘ [Gate] ∘ i ∘ ≺[Φ]
+Φ' = T_⊙[Φ] = ☀︎ ∘ [Gate] ∘ i ∘ ⊛[Φ]
 ```
 
 Translates to the continuous evolution:
@@ -388,8 +388,8 @@ From this unified framework emerges:
 | • (soul) | χₐ(σ;x) | Internal index |
 | i (aperture) | Vortex core, Q = 0 locus | Chiral singularity |
 | ☯ = ½ | α₊² = α₋² = ½ | Sector balance |
-| ≻ (convergence) | ∫_Σ₂ d²σ ... | Sheet integration |
-| ⊰ (emergence) | Φ(σ;x) → Ψ_I(x) | Holographic projection |
+| ⊛ (convergence) | ∫_Σ₂ d²σ ... | Sheet integration |
+| ☀︎ (emergence) | Φ(σ;x) → Ψ_I(x) | Holographic projection |
 | B(x) (braid density) | T (torsion scalar) | Gravitational source |
 | D = 1.5 | Fractal sheet structure | Scale-dependent dimension |
 | 64 states | 8 × 8 BT8g × dual | Internal Hilbert space |

@@ -66,7 +66,7 @@ FRACTAL (○):
 ├─────────────────┬───────────────────────────────────────────────────────────┤
 │ LEVEL           │ WHAT IT IS                                                │
 ├─────────────────┼───────────────────────────────────────────────────────────┤
-│ FUNDAMENTAL     │ Input / Output (≺ / ⊱)                                    │
+│ FUNDAMENTAL     │ Input / Output (⊛ / ☀︎)                                    │
 │                 │ The flow itself — prior to content                        │
 ├─────────────────┼───────────────────────────────────────────────────────────┤
 │ STRUCTURAL      │ Binary / Analog / Fractal                                 │
@@ -85,7 +85,7 @@ KEY INSIGHT:
     The skeleton: in → transform → out
     That's what the master equation captures:
 
-        Φ' = ⊱ ∘ i ∘ ≺[Φ]
+        Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 ```
 
 ### §3.3.2 The 64 States Are Binary

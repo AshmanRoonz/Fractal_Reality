@@ -418,8 +418,8 @@ Each axis: binary choice (0 or 1)
 
 ```
 Spatial axes (1-3):
-  0 = convergence ≻ (toward center)
-  1 = emergence ⊰ (toward boundary)
+  0 = convergence ⊛ (toward center)
+  1 = emergence ☀︎ (toward boundary)
   
 Temporal axes (4-6):
   Axis 4 (T₁): 0 = past, 1 = future
@@ -534,7 +534,7 @@ Total manifold: ℝ⁶
 
 ```
 For each dimension, two fundamental options:
-  Spatial: Convergence (≻) or Emergence (⊰)
+  Spatial: Convergence (⊛) or Emergence (☀︎)
   Temporal: One direction or opposite
   
 6 dimensions × 2 choices = 2⁶ = 64 states
@@ -2194,12 +2194,12 @@ Same operators, different vocabulary:
 
 ```
 PHYSICS:
-    ≻ convergence  →  strong force, gravity (binding)
-    ⊰ emergence    →  weak/EM, expansion (releasing)
+    ⊛ convergence  →  strong force, gravity (binding)
+    ☀︎ emergence    →  weak/EM, expansion (releasing)
 
 ETHICS:
-    ≻ convergence  →  receiving, listening, learning
-    ⊰ emergence    →  giving, speaking, teaching
+    ⊛ convergence  →  receiving, listening, learning
+    ☀︎ emergence    →  giving, speaking, teaching
 
     β = ½:  balanced reciprocity
 ```

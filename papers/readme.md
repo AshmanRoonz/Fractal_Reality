@@ -18,7 +18,7 @@ This branch contains the complete scientific formalization of the Fractal Realit
 
 **What This Paper Provides:**
 - **Explicit Mathematical Spaces**: Hilbert spaces ℋ_○, ℋ_Φ, ℋ_• for boundary, field, and aperture
-- **Kernel-Based Dynamics**: Convergence (≻), aperture rotation (i), emergence (⊰) as integral operators
+- **Kernel-Based Dynamics**: Convergence (⊛), aperture rotation (i), emergence (☀︎) as integral operators
 - **Schrödinger Derivation**: Complete derivation from √r kernel convolution (§4.2)
 - **Einstein Equations**: Coarse-grained braid structure → metric (§5)
 - **One-Page Cheat Sheet**: Quick reference for all spaces, operators, and key equations (§7)
@@ -26,7 +26,7 @@ This branch contains the complete scientific formalization of the Fractal Realit
 
 **Key Results:**
 - **Zero Free Parameters**: β=1/2 from symmetry, D=1.5 from entropy
-- **QM Limit**: iℏ∂Φ/∂t = HΦ emerges from U(Δt) = ⊱∘i∘≺
+- **QM Limit**: iℏ∂Φ/∂t = HΦ emerges from U(Δt) = ☀︎∘i∘⊛
 - **GR Limit**: G_μν + Λg_μν = 8πGT_μν from braid accumulation
 - **Critical Falsification**: D ≠ 1.5 ± 0.05 in ⊙-structured systems falsifies framework
 

@@ -50,18 +50,18 @@ Exit Code:     0
 Result: 4/4 molecules perfect
 ```
 
-### Test 2: Full ≻i⊰ Traces ✓ PASS
+### Test 2: Full ⊛i☀︎ Traces ✓ PASS
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ PROCESS GRAMMAR VALIDATION                                  │
 ├─────────────────────────────────────────────────────────────┤
-│ Every molecule compiled with proper ≻i⊰ notation           │
+│ Every molecule compiled with proper ⊛i☀︎ notation           │
 │                                                             │
-│ Example: [O⊙ + 2H⊙] ≻ (i_share)² ⊰ [H₂O⊙]                  │
+│ Example: [O⊙ + 2H⊙] ⊛ (i_share)² ☀︎ [H₂O⊙]                  │
 │                                                             │
-│ ≻ Convergence:  Deficits align                             │
+│ ⊛ Convergence:  Deficits align                             │
 │ i Aperture:     Electron pairs form                        │
-│ ⊰ Emergence:    Structure + field                          │
+│ ☀︎ Emergence:    Structure + field                          │
 └─────────────────────────────────────────────────────────────┘
 
 Result: Universal grammar confirmed
@@ -198,7 +198,7 @@ Result: Clear successes and honest boundaries
 ### ✓ Derived from First Principles
 ```
 Starting point: ⊙ = • ⊗ ○ ⊗ Φ
-Ending point:   [O⊙ + 2H⊙] ≻ (i_share)² ⊰ [H₂O⊙]
+Ending point:   [O⊙ + 2H⊙] ⊛ (i_share)² ☀︎ [H₂O⊙]
 ```
 
 ### ✓ Computationally Real
@@ -243,14 +243,14 @@ Not optional - geometric requirement!
 
 ### Universal Process
 ```
-Every transformation follows ≻i⊰:
+Every transformation follows ⊛i☀︎:
   
-  Initial ≻ aperture i ⊰ final
+  Initial ⊛ aperture i ☀︎ final
   
 Examples:
-  ψ₂ₚ ≻ i ⊰ ψ₃ₛ           (quantum)
-  3d⁴4s² ≻ i_mix ⊰ 3d⁵4s¹  (atomic)
-  [O+2H] ≻ i_share ⊰ H₂O   (molecular)
+  ψ₂ₚ ⊛ i ☀︎ ψ₃ₛ           (quantum)
+  3d⁴4s² ⊛ i_mix ☀︎ 3d⁵4s¹  (atomic)
+  [O+2H] ⊛ i_share ☀︎ H₂O   (molecular)
   
 Same structure at all scales!
 ```
@@ -330,7 +330,7 @@ Artifacts:
 
 2. **Same pattern everywhere**
    - Quantum, atomic, molecular, network
-   - ≻i⊰ is universal process grammar
+   - ⊛i☀︎ is universal process grammar
 
 3. **Correlation is geometric**
    - i_mix(3d ↔ 4s) like i_share(A ↔ B)
@@ -389,7 +389,7 @@ If successful, all coupling constants emerge from ⊙.
 ```
 From:  ⊙ = • ⊗ ○ ⊗ Φ
 
-To:    [O⊙ + 2H⊙] ≻ (i_share)² ⊰ [H₂O⊙]
+To:    [O⊙ + 2H⊙] ⊛ (i_share)² ☀︎ [H₂O⊙]
        bent 104.5°, Φ_dipole, network(2,2)
 
 Via:   64 states → atoms → molecules

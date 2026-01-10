@@ -544,7 +544,7 @@ Define:
 
 The balance parameter becomes scale-dependent:
 
-    β(μ) = ||≻(μ)|| / (||≻(μ)|| + ||⊰(μ)||)
+    β(μ) = ||⊛(μ)|| / (||⊛(μ)|| + ||☀︎(μ)||)
 
 RUNNING COUPLINGS WITH GEOMETRIC CORRECTIONS:
 
@@ -670,7 +670,7 @@ THE 6-CHANNEL ORIGIN OF κ:
     
         Worldline connects two circumpunct singularities through 6 channels:
         
-            3 spatial directions × 2 flows (≻ convergent, ⊰ emergent) = 6
+            3 spatial directions × 2 flows (⊛ convergent, ☀︎ emergent) = 6
             
         Each channel adds (D-1)/6 = 1/12 validation resistance
         

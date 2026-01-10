@@ -99,17 +99,17 @@ Visual structure of ⊸:
 
 **Definition 2.3 (Spatial Branching):**
 ```
-≺ = Bifurcation in space
+⊛ = Bifurcation in space
     One flow becomes two
     Creates D = 1.5 tree structure
 ```
 
-The symbol ≺ represents spatial splitting where:
+The symbol ⊛ represents spatial splitting where:
 - Single input line (bottom)
 - Branches into two paths (top)
 - Maintains tree topology (no cycles)
 
-**Theorem 2.2:** The branching operation ≺ creates fractal dimension D = 1.5 when applied recursively.
+**Theorem 2.2:** The branching operation ⊛ creates fractal dimension D = 1.5 when applied recursively.
 
 **Proof:** 
 For binary tree with N levels:
@@ -825,7 +825,7 @@ Time is not fundamental—it's the — connection between ⊙ moments.
 
 **Past:** The ⊸ tunnel (where this ⊙ came from)
 **Present:** The ⊙ (what exists now)
-**Future:** The ≺ branching (possibilities ahead)
+**Future:** The ⊛ branching (possibilities ahead)
 
 **Arrow of time:** Tree topology prevents closed loops
 No time travel: — connections form tree (no cycles)
@@ -930,7 +930,7 @@ The theory makes specific, testable predictions:
 ```
 ⊙ = M·Å·Φ (structure)
 ⊸ = Aperture + past (temporal)
-≺ = Branching (spatial)
+⊛ = Branching (spatial)
 — = Connection (causal)
 ```
 
@@ -985,7 +985,7 @@ The symbol ⊙ has appeared in human culture for over 5000 years, representing t
 Φ = Field structure
 — = Temporal connection
 ⊸ = Aperture + temporal lineage
-≺ = Spatial bifurcation (D=1.5)
+⊛ = Spatial bifurcation (D=1.5)
 β = 0.5 = Branching parameter
 D = 1.5 = Fractal dimension
 ```

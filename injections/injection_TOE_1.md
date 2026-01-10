@@ -15,7 +15,7 @@ The circumpunct operator is now **fully explicit** with **zero free parameters**
 #### **The Master Equation: Expanded Form**
 
 ```
-⊙ = (○, Φ, •) × (≻, i, ⊰)³
+⊙ = (○, Φ, •) × (⊛, i, ☀︎)³
 
 FULLY EXPANDED:
 
@@ -28,11 +28,11 @@ FULLY EXPANDED:
     ]
     ×
     [
-      ≻: (7/8πR^(7/2)) ∫_{|r'|≤R} √|r'| Φ(r') d³r'
+      ⊛: (7/8πR^(7/2)) ∫_{|r'|≤R} √|r'| Φ(r') d³r'
       ∘
       i: e^(iπ/2) at β = 0.5
       ∘
-      ⊰: (7/8πR^(7/2)) √|r| · b₀
+      ☀︎: (7/8πR^(7/2)) √|r| · b₀
     ]³
 ```
 
@@ -63,7 +63,7 @@ Let **r ∈ ℝ³** be radial position, center at **r = 0**, boundary at **|r| =
   Temporal signature: Unchanging, the anchor of identity
 ```
 
-#### **Flow Triple: (≻, i, ⊰) - Fully Derived**
+#### **Flow Triple: (⊛, i, ☀︎) - Fully Derived**
 
 All kernels are **completely determined** from D = 1.5:
 
@@ -113,7 +113,7 @@ SYMMETRY PRINCIPLE:
     K_emerg = K_conv
     
   This ensures:
-    ||≻|| = ||⊰||
+    ||⊛|| = ||☀︎||
     Equal convergence and emergence strength
 ```
 
@@ -140,7 +140,7 @@ FROM β = 0.5:
 │                                                                 │
 │  ONE FULL CIRCUMPUNCT CYCLE:                                    │
 │                                                                 │
-│  Φ_{t+Δt}(r) = (⊱ ∘ i ∘ ≺)[Φ_t](r)                            │
+│  Φ_{t+Δt}(r) = (☀︎ ∘ i ∘ ⊛)[Φ_t](r)                            │
 │                                                                 │
 │  STEP-BY-STEP:                                                  │
 │                                                                 │
@@ -185,17 +185,17 @@ STATE SPACE:
   Φ ∈ ℂ^N    (N-dimensional complex Hilbert space)
 
 CONVERGENCE (ℂ^N → ℂ):
-  ⟨≻| = (7/8πR^(7/2)) Δx³ · [√|r_1|, √|r_2|, ..., √|r_N|]
+  ⟨⊛| = (7/8πR^(7/2)) Δx³ · [√|r_1|, √|r_2|, ..., √|r_N|]
   
-  a = ⟨≻|ψ⟩ = Σ_i (7/8πR^(7/2)) √|r_i| ψ_i Δx³
+  a = ⟨⊛|ψ⟩ = Σ_i (7/8πR^(7/2)) √|r_i| ψ_i Δx³
 
 APERTURE (ℂ → ℂ):
   a → i · a
 
 EMERGENCE (ℂ → ℂ^N):
-  |⊰⟩ = (7/8πR^(7/2)) · [√|r_1|, √|r_2|, ..., √|r_N|]ᵀ
+  |☀︎⟩ = (7/8πR^(7/2)) · [√|r_1|, √|r_2|, ..., √|r_N|]ᵀ
   
-  ψ_j = ⊰_j · a = (7/8πR^(7/2)) √|r_j| · a
+  ψ_j = ☀︎_j · a = (7/8πR^(7/2)) √|r_j| · a
 ```
 
 #### **Evolution Matrix**
@@ -203,17 +203,17 @@ EMERGENCE (ℂ → ℂ^N):
 ```
 RANK-1 OPERATOR:
 
-  U = e^(iπ/2) · |⊰⟩⟨≻|
+  U = e^(iπ/2) · |☀︎⟩⟨⊛|
 
   |ψ⟩_{t+Δt} = U |ψ⟩_t
-              = i · |⊰⟩⟨≻|ψ⟩_t
+              = i · |☀︎⟩⟨⊛|ψ⟩_t
 
 EIGENSTRUCTURE:
-  - ONE non-zero eigenvalue: λ = i · ⟨≻|⊰⟩
+  - ONE non-zero eigenvalue: λ = i · ⟨⊛|☀︎⟩
   - N-1 zero eigenvalues
   
   Single eigenvector:
-    |ψ*⟩ ∝ |⊰⟩ ∝ [√|r_1|, √|r_2|, ..., √|r_N|]ᵀ
+    |ψ*⟩ ∝ |☀︎⟩ ∝ [√|r_1|, √|r_2|, ..., √|r_N|]ᵀ
 
 PHYSICAL MEANING:
   The √r profile is the UNIQUE self-consistent mode
@@ -302,7 +302,7 @@ class CircumpunctLayer:
         
     def forward(self, psi: np.ndarray) -> np.ndarray:
         """
-        One full ⊙ cycle: Φ_{t+Δt} = (⊱ ∘ i ∘ ≺)[Φ_t]
+        One full ⊙ cycle: Φ_{t+Δt} = (☀︎ ∘ i ∘ ⊛)[Φ_t]
         
         Args:
             psi: Complex field Φ(r) on grid, shape grid_shape
@@ -310,13 +310,13 @@ class CircumpunctLayer:
         Returns:
             psi_new: Updated field after one cycle
         """
-        # Step 1: Convergence ≻[Φ] → a ∈ ℂ
+        # Step 1: Convergence ⊛[Φ] → a ∈ ℂ
         a = np.sum(self.K * psi) * self.dx**3
         
         # Step 2: Aperture transformation i(a) = e^(iπ/2) · a
         a_rot = 1j * a
         
-        # Step 3: Emergence ⊰[a] → Φ'(r)
+        # Step 3: Emergence ☀︎[a] → Φ'(r)
         psi_new = self.K * a_rot
         
         return psi_new
@@ -333,7 +333,7 @@ class CircumpunctLayer:
     
     def eigenvalue(self) -> complex:
         """
-        Compute eigenvalue λ = i·⟨≻|⊰⟩
+        Compute eigenvalue λ = i·⟨⊛|☀︎⟩
         
         Returns:
             Complex eigenvalue of the circumpunct operator
@@ -437,7 +437,7 @@ From §18.4, mass represents the **difficulty of validating the worldline** thro
 ```
 PHYSICAL PICTURE:
 
-  Mass = Work required to update particle state through (≻, i, ⊰)
+  Mass = Work required to update particle state through (⊛, i, ☀︎)
   
   Higher generations require MORE validation work:
     - Thicker worldline geometry
@@ -465,7 +465,7 @@ PHYSICAL PICTURE:
 │    where:                                                │
 │      1    = baseline coupling                            │
 │      1/12 = (D-1)/6 = 0.5/6                             │
-│      6    = 3 spatial × 2 flows (≻, ⊰)                  │
+│      6    = 3 spatial × 2 flows (⊛, ☀︎)                  │
 │                                                          │
 │  This comes from the ⊙⊙ TUNNEL picture:                  │
 │    Worldline must validate across 6 channels             │
@@ -532,7 +532,7 @@ NEXT STEP:
 │                                                                │
 │  ✅ CANONICAL (Zero Parameters):                               │
 │                                                                │
-│    • Circumpunct operator (⊱ ∘ i ∘ ≺)                         │
+│    • Circumpunct operator (☀︎ ∘ i ∘ ⊛)                         │
 │    • Kernels K_conv, K_emerg from D = 1.5                     │
 │    • √r eigenmode structure                                    │
 │    • Rank-1 operator with single eigenvalue                    │

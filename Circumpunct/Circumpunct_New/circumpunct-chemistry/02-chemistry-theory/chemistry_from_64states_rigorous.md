@@ -69,7 +69,7 @@ HYPOTHESIS: Input bits encode the principal quantum number n
    6        110       7            32
    7        111       8            50
 
-This is the CONVERGING aperture (≻)
+This is the CONVERGING aperture (⊛)
 Electrons at different n are at different "depths" in the validation
 ```
 
@@ -96,7 +96,7 @@ HYPOTHESIS: Output bits encode orbital structure within each shell
    110      110       d continuing        2
    111      111       d/f complete        2
 
-This is the EMERGING aperture (⊰)
+This is the EMERGING aperture (☀︎)
 Electrons with different ℓ are emerging at different angular modes
 ```
 
@@ -313,7 +313,7 @@ The (011, 001) states fill first (K, Ca)
 Then (011, 101-111) states fill (Sc through Zn)
 
 WHY?
-   Convergence (≻) from input (011) has TWO paths:
+   Convergence (⊛) from input (011) has TWO paths:
    
    Path 1: Direct to (011, 001) - s-orbital
            Radially symmetric, low angular momentum

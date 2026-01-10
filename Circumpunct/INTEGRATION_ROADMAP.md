@@ -229,7 +229,7 @@ Persistent wholeness requires exactly:
 2. ∙ (Center/Aperture) - Cohomological identity preservation
 3. Φ (Evidence) - Dynamical stability via field manifestation
 
-Complete notation: M≻Å(∙)⊰Φ = ⊙
+Complete notation: M⊛Å(∙)☀︎Φ = ⊙
 ```
 
 **Proof Methods:**

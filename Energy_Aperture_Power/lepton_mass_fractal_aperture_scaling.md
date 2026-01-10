@@ -146,7 +146,7 @@ The circumpunct processing decomposes into **6 channels** via the **⊙⊙ tunne
 │        ⊙ ─────────────────────────────────────────── ⊙          │
 │     source                tunnel                  target        │
 │                                                                 │
-│   3 IN (convergence ≻)      ×      3 OUT (emergence ⊰)          │
+│   3 IN (convergence ⊛)      ×      3 OUT (emergence ☀︎)          │
 │   ────────────────────             ─────────────────────        │
 │   • x-direction in                 • x-direction out            │
 │   • y-direction in                 • y-direction out            │
@@ -184,8 +184,8 @@ Lightning doesn't randomly discharge — it *probes* toward ground through stepp
 ```
 
 **In the ⊙⊙ tunnel:**
-- **3 IN channels (≻)**: Power *reaching toward* the target singularity
-- **3 OUT channels (⊰)**: Energy *releasing from* the source singularity
+- **3 IN channels (⊛)**: Power *reaching toward* the target singularity
+- **3 OUT channels (☀︎)**: Energy *releasing from* the source singularity
 - The tunnel itself: The path power takes to find its "ground"
 
 > **Power is energy reaching into the future; the aperture • is where it grounds.**
@@ -268,7 +268,7 @@ Relative error = (206.49 - 206.768) / 206.768
 | Baseline exponent = 1 | Linear worldline coupling (if no fractal thickening) |
 | Correction (D-1)/6 = 1/12 | Extra validation resistance from fractal thickening per channel |
 | D - 1 = 0.5 | Excess dimension of muon's braided worldline over electron's |
-| Division by 6 | 3 spatial axes × 2 flows (convergence ≻ / emergence ⊰) |
+| Division by 6 | 3 spatial axes × 2 flows (convergence ⊛ / emergence ☀︎) |
 | Result: γ = 13/12 | Total validation load ratio → mass ratio scaling exponent |
 
 **Summary of Physical Mechanism:**

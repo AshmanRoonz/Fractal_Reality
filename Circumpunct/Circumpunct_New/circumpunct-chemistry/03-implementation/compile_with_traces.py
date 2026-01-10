@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Molecular Compiler with Full ≻i⊰ Traces
+Molecular Compiler with Full ⊛i☀︎ Traces
 Compiles molecules from atomic configs using proper circumpunct notation
 """
 
@@ -15,14 +15,14 @@ PHI = (1 + 5**0.5) / 2
 
 @dataclass
 class CircumpunctTrace:
-    """Complete trace of molecular compilation in ≻i⊰ form"""
+    """Complete trace of molecular compilation in ⊛i☀︎ form"""
     molecule_name: str
     
     # Input (atomic states)
     atoms: List[str]
     configs: Dict[str, List[Tuple[Orbital, int]]]
     
-    # Convergence phase (≻)
+    # Convergence phase (⊛)
     valence_sigs: Dict
     deficits: Dict
     closure_match: str
@@ -31,15 +31,15 @@ class CircumpunctTrace:
     bonds: List
     aperture_operations: str
     
-    # Emergence phase (⊰)
+    # Emergence phase (☀︎)
     pair_structures: Dict
     geometries: Dict
     field: any
     
     def print_full_trace(self):
-        """Print complete ≻i⊰ trace"""
+        """Print complete ⊛i☀︎ trace"""
         print(f"\n{'='*80}")
-        print(f"{self.molecule_name} - COMPLETE ≻i⊰ TRACE")
+        print(f"{self.molecule_name} - COMPLETE ⊛i☀︎ TRACE")
         print(f"{'='*80}")
         
         # Input
@@ -48,8 +48,8 @@ class CircumpunctTrace:
             config_str = self._format_config(self.configs[atom])
             print(f"  {atom}⊙ = • ⊗ [{config_str}] ⊗ Φ_atomic")
         
-        # Convergence phase (≻)
-        print(f"\n{'CONVERGENCE PHASE (≻)':-^80}")
+        # Convergence phase (⊛)
+        print(f"\n{'CONVERGENCE PHASE (⊛)':-^80}")
         print("\nValence signatures:")
         for atom, sig in self.valence_sigs.items():
             print(f"  {sig}")
@@ -70,8 +70,8 @@ class CircumpunctTrace:
         for bond in self.bonds:
             print(f"  {bond}")
         
-        # Emergence phase (⊰)
-        print(f"\n{'EMERGENCE PHASE (⊰)':-^80}")
+        # Emergence phase (☀︎)
+        print(f"\n{'EMERGENCE PHASE (☀︎)':-^80}")
         
         print("\nPair structures (○ = i_ext ⊕ i_int):")
         for atom in sorted(set(self.atoms)):
@@ -90,7 +90,7 @@ class CircumpunctTrace:
         print(f"\nField (Φ):")
         print(f"  {self.field}")
         if self.field.has_dipole:
-            print(f"    → β ≠ 0.5, asymmetric boundary → Φ_dipole emerges via ⊰")
+            print(f"    → β ≠ 0.5, asymmetric boundary → Φ_dipole emerges via ☀︎")
             if self.field.network_potential:
                 print(f"    → Network potential: donate({self.field.network_potential[0]}) + accept({self.field.network_potential[1]})")
         else:
@@ -155,7 +155,7 @@ class CircumpunctTrace:
         return next((e for e in self.atoms if e != "H"), self.atoms[0])
     
     def _format_complete_composition(self):
-        """Format the complete [A⊙+B⊙] ≻ i ⊰ [AB⊙] equation"""
+        """Format the complete [A⊙+B⊙] ⊛ i ☀︎ [AB⊙] equation"""
         # Input atoms
         atom_counts = {}
         for atom in self.atoms:
@@ -192,13 +192,13 @@ class CircumpunctTrace:
         output_str = f"[{central}[{boundary_str}] ⊗ {field_str}]"
         
         # Complete equation
-        equation = f"[{input_str}] ≻ {aperture_str} ⊰ {output_str}"
+        equation = f"[{input_str}] ⊛ {aperture_str} ☀︎ {output_str}"
         
         # Add interpretation
         interpretation = "\nReading:\n"
-        interpretation += f"  ≻: {input_str} converge (deficits align)\n"
+        interpretation += f"  ⊛: {input_str} converge (deficits align)\n"
         interpretation += f"  i: {aperture_str} (electron sharing apertures)\n"
-        interpretation += f"  ⊰: Structure emerges with geometry + field"
+        interpretation += f"  ☀︎: Structure emerges with geometry + field"
         
         return equation + "\n" + interpretation
 
@@ -206,7 +206,7 @@ class CircumpunctTrace:
 def compile_with_trace(molecule_name: str, atoms: List[str],
                        configs: Dict[str, List[Tuple[Orbital, int]]]) -> CircumpunctTrace:
     """
-    Compile molecule and return full ≻i⊰ trace
+    Compile molecule and return full ⊛i☀︎ trace
     """
     compiler = MolecularCompiler()
     
@@ -293,7 +293,7 @@ def main():
     print("\n")
     print("╔" + "="*78 + "╗")
     print("║" + " "*20 + "CIRCUMPUNCT MOLECULAR COMPILER" + " "*28 + "║")
-    print("║" + " "*20 + "Full ≻i⊰ Trace Generation" + " "*33 + "║")
+    print("║" + " "*20 + "Full ⊛i☀︎ Trace Generation" + " "*33 + "║")
     print("╚" + "="*78 + "╝")
     
     # Canonical molecules
@@ -320,13 +320,13 @@ def main():
         input("\nPress ENTER for next molecule...")
     
     print("\n" + "="*80)
-    print("⊙ ALL MOLECULES COMPILED IN PROPER ≻i⊰ NOTATION ⊙")
+    print("⊙ ALL MOLECULES COMPILED IN PROPER ⊛i☀︎ NOTATION ⊙")
     print("="*80)
     print("\nKey insights:")
-    print("  • Same ≻i⊰ pattern at every scale")
-    print("  • Convergence (≻): deficits align")
+    print("  • Same ⊛i☀︎ pattern at every scale")
+    print("  • Convergence (⊛): deficits align")
     print("  • Aperture (i): transformation/sharing")
-    print("  • Emergence (⊰): structure + field")
+    print("  • Emergence (☀︎): structure + field")
     print("\n  Chemistry IS aperture calculus! ⊙")
     print()
 

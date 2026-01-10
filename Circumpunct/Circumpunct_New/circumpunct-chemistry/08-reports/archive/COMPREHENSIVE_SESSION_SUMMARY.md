@@ -84,7 +84,7 @@ Agreement: 99.84%
 
 **Key Results**:
 - ζ = 1 + φ⁻³ prediction (zero parameters, 99.84% agreement)
-- Bonding as convergent field overlap (≻ operator)
+- Bonding as convergent field overlap (⊛ operator)
 - Critical balance at S ≈ 0.5 (β = 0.5)
 - Same φ scaling as atomic framework (φ⁻⁷ → φ⁻³)
 
@@ -204,7 +204,7 @@ Agreement: 99.84%
 
 **Why bonding occurs**:
 - Fields achieve critical balance (β = 0.5)
-- Convergent overlap (≻ operator)
+- Convergent overlap (⊛ operator)
 - Aperture phase coherence (i alignment)
 
 **Why φ appears everywhere**:
@@ -294,11 +294,11 @@ Agreement: 99.84%
 
 **⊙ = • ⊗ ○ ⊗ Φ** (center ⊗ boundary ⊗ field)
 
-**Dynamics**: Φ' = ⊰ ∘ i ∘ ≻[Φ]
-- **≻**: Convergence (bonding, attraction)
-- **≺**: Divergence (antibonding, repulsion)
+**Dynamics**: Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
+- **⊛**: Convergence (bonding, attraction)
+- **⊛**: Divergence (antibonding, repulsion)
 - **i**: Aperture (90° phase, iπ/2)
-- **⊰**: Emergence (new structure)
+- **☀︎**: Emergence (new structure)
 
 **Validated in**:
 - Atomic: Gating constraints (shell structure)
