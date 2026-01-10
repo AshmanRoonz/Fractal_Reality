@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>φ-Resonance Field | Circumpunct Framework</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #e0e0e0;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ffd700;
+            max-width: 350px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .title {
+            font-size: 1.5em;
+            color: #ffd700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .phi-symbol {
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+        
+        .mode-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,215,0,0.4);
+        }
+        
+        button.active {
+            background: linear-gradient(135deg, #ff4500 0%, #ff6347 100%);
+            box-shadow: 0 0 20px rgba(255,69,0,0.6);
+        }
+        
+        button.secondary {
+            background: linear-gradient(135deg, #333 0%, #555 100%);
+            color: #fff;
+        }
+        
+        .param {
+            margin-bottom: 12px;
+        }
+        
+        .param-label {
+            color: #ffd700;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .param-value {
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #ffd700;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,215,0,0.3);
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+        
+        .info-title {
+            color: #ffd700;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .stats {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,215,0,0.3);
+            backdrop-filter: blur(10px);
+            min-width: 250px;
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        
+        .stat-label {
+            color: #aaa;
+        }
+        
+        .stat-value {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        select {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            color: #e0e0e0;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .controls, .info, .stats {
+                position: relative;
+                margin: 10px;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="controls">
+        <div class="title"><span class="phi-symbol">φ</span> Resonance Field</div>
+        
+        <div class="mode-buttons">
+            <button id="btnInterference" class="active">Interference</button>
+            <button id="btnBinaural">Binaural</button>
+            <button id="btnAmbient">Ambient</button>
+            <button id="btnComparison">Compare</button>
+        </div>
+        
+        <div class="param">
+            <div class="param-label">
+                <span>Base Frequency</span>
+                <span class="param-value" id="freqValue">432 Hz</span>
+            </div>
+            <input type="range" id="frequency" min="200" max="600" value="432" step="1">
+        </div>
+        
+        <div class="param">
+            <div class="param-label">
+                <span>φ-Layers</span>
+                <span class="param-value" id="layersValue">5</span>
+            </div>
+            <input type="range" id="layers" min="3" max="12" value="5" step="1">
+        </div>
+        
+        <div class="param">
+            <div class="param-label">
+                <span>Volume</span>
+                <span class="param-value" id="volumeValue">25%</span>
+            </div>
+            <input type="range" id="volume" min="0" max="50" value="25" step="1">
+        </div>
+        
+        <div class="param" id="ratioParam" style="display:none;">
+            <div class="param-label">
+                <span>Comparison Ratio</span>
+            </div>
+            <select id="ratioSelect">
+                <option value="phi">φ (1.618...)</option>
+                <option value="fifth">Perfect Fifth (1.5)</option>
+                <option value="major">Major Third (1.25)</option>
+                <option value="semitone">Semitone (1.0595)</option>
+            </select>
+        </div>
+        
+        <button id="toggleSound" class="secondary" style="width:100%; margin-top:10px;">▶ Start Sound</button>
+    </div>
+    
+    <div class="stats">
+        <div class="stat-row">
+            <span class="stat-label">Mode:</span>
+            <span class="stat-value" id="statMode">Interference</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Active Frequencies:</span>
+            <span class="stat-value" id="statFreqs">0</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Resonance Index:</span>
+            <span class="stat-value" id="statResonance">0.00</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">β-Parameter:</span>
+            <span class="stat-value" id="statBeta">0.00</span>
+        </div>
+    </div>
+    
+    <div class="info">
+        <div class="info-title" id="infoTitle">INTERFERENCE MODE</div>
+        <div id="infoText">
+            Visualizes wave interference patterns. φ-spacing minimizes resonance buildup by preventing phase alignment. Watch how waves interact without creating destructive interference or standing wave patterns.
+        </div>
+    </div>
+
+    <script>
+        // Constants
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const TWO_PI = Math.PI * 2;
+        
+        // State
+        let audioContext;
+        let mode = 'interference';
+        let isPlaying = false;
+        let oscillators = [];
+        let animationId;
+        
+        // Canvas setup
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, centerX, centerY;
+        
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            centerX = width / 2;
+            centerY = height / 2;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Audio setup
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        
+        // Generate φ-frequencies
+        function generatePhiFrequencies(base, layers) {
+            const freqs = [];
+            for (let n = 0; n < layers; n++) {
+                freqs.push(base * Math.pow(PHI, n - Math.floor(layers/2)));
+            }
+            return freqs;
+        }
+        
+        // Generate comparison frequencies
+        function generateComparisonFrequencies(base, layers, ratio) {
+            const freqs = [];
+            let actualRatio;
+            
+            switch(ratio) {
+                case 'fifth': actualRatio = 1.5; break;
+                case 'major': actualRatio = 1.25; break;
+                case 'semitone': actualRatio = Math.pow(2, 1/12); break;
+                default: actualRatio = PHI;
+            }
+            
+            for (let n = 0; n < layers; n++) {
+                freqs.push(base * Math.pow(actualRatio, n - Math.floor(layers/2)));
+            }
+            return freqs;
+        }
+        
+        // Start sound
+        function startSound() {
+            initAudio();
+            stopSound();
+            
+            const baseFreq = parseFloat(document.getElementById('frequency').value);
+            const layers = parseInt(document.getElementById('layers').value);
+            const volume = parseFloat(document.getElementById('volume').value) / 100;
+            
+            let frequencies;
+            
+            if (mode === 'comparison') {
+                const ratio = document.getElementById('ratioSelect').value;
+                frequencies = generateComparisonFrequencies(baseFreq, layers, ratio);
+            } else {
+                frequencies = generatePhiFrequencies(baseFreq, layers);
+            }
+            
+            // Create oscillators based on mode
+            if (mode === 'binaural') {
+                createBinauralBeats(frequencies, volume);
+            } else if (mode === 'ambient') {
+                createAmbientField(frequencies, volume);
+            } else {
+                createInterference(frequencies, volume);
+            }
+            
+            isPlaying = true;
+            document.getElementById('toggleSound').textContent = '⬛ Stop Sound';
+            document.getElementById('statFreqs').textContent = frequencies.length;
+        }
+        
+        // Create interference pattern
+        function createInterference(frequencies, volume) {
+            frequencies.forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                const panner = audioContext.createStereoPanner();
+                
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                
+                gain.gain.value = volume / frequencies.length;
+                panner.pan.value = (i / frequencies.length) * 2 - 1;
+                
+                osc.connect(gain);
+                gain.connect(panner);
+                panner.connect(audioContext.destination);
+                
+                osc.start();
+                oscillators.push({ osc, gain, freq, phase: Math.random() * TWO_PI });
+            });
+        }
+        
+        // Create binaural beats
+        function createBinauralBeats(frequencies, volume) {
+            const beatFreq = PHI; // φ Hz difference for optimal β = 0.5
+            
+            frequencies.forEach((freq, i) => {
+                // Left ear
+                const oscL = audioContext.createOscillator();
+                const gainL = audioContext.createGain();
+                const pannerL = audioContext.createStereoPanner();
+                
+                oscL.type = 'sine';
+                oscL.frequency.value = freq;
+                gainL.gain.value = volume / frequencies.length;
+                pannerL.pan.value = -1;
+                
+                oscL.connect(gainL);
+                gainL.connect(pannerL);
+                pannerL.connect(audioContext.destination);
+                oscL.start();
+                
+                // Right ear (offset by φ Hz)
+                const oscR = audioContext.createOscillator();
+                const gainR = audioContext.createGain();
+                const pannerR = audioContext.createStereoPanner();
+                
+                oscR.type = 'sine';
+                oscR.frequency.value = freq + beatFreq;
+                gainR.gain.value = volume / frequencies.length;
+                pannerR.pan.value = 1;
+                
+                oscR.connect(gainR);
+                gainR.connect(pannerR);
+                pannerR.connect(audioContext.destination);
+                oscR.start();
+                
+                oscillators.push(
+                    { osc: oscL, gain: gainL, freq, phase: 0 },
+                    { osc: oscR, gain: gainR, freq: freq + beatFreq, phase: 0 }
+                );
+            });
+        }
+        
+        // Create ambient field
+        function createAmbientField(frequencies, volume) {
+            frequencies.forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                const panner = audioContext.createStereoPanner();
+                const filter = audioContext.createBiquadFilter();
+                
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                
+                filter.type = 'lowpass';
+                filter.frequency.value = freq * 2;
+                filter.Q.value = 1;
+                
+                // Slow LFO on gain
+                const lfoGain = audioContext.createGain();
+                const lfo = audioContext.createOscillator();
+                lfo.frequency.value = 0.1 / Math.pow(PHI, i % 3);
+                lfo.connect(lfoGain);
+                lfoGain.connect(gain.gain);
+                lfoGain.gain.value = volume / (frequencies.length * 2);
+                
+                gain.gain.value = volume / frequencies.length;
+                panner.pan.value = Math.sin(i * PHI) * 0.8;
+                
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(panner);
+                panner.connect(audioContext.destination);
+                
+                osc.start();
+                lfo.start();
+                oscillators.push({ osc, gain, freq, phase: i * PHI, lfo });
+            });
+        }
+        
+        // Stop sound
+        function stopSound() {
+            oscillators.forEach(({ osc, lfo }) => {
+                try {
+                    osc.stop();
+                    if (lfo) lfo.stop();
+                } catch(e) {}
+            });
+            oscillators = [];
+            isPlaying = false;
+            document.getElementById('toggleSound').textContent = '▶ Start Sound';
+            document.getElementById('statFreqs').textContent = '0';
+        }
+        
+        // Calculate resonance index (how much constructive interference)
+        function calculateResonance() {
+            if (oscillators.length === 0) return 0;
+            
+            let sum = 0;
+            const time = audioContext ? audioContext.currentTime : 0;
+            
+            oscillators.forEach(({ freq, phase }) => {
+                sum += Math.sin(TWO_PI * freq * time + phase);
+            });
+            
+            const avg = sum / oscillators.length;
+            return Math.abs(avg);
+        }
+        
+        // Visualization
+        function draw() {
+            const time = Date.now() / 1000;
+            
+            // Clear with trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+            
+            if (mode === 'interference') {
+                drawInterferencePattern(time);
+            } else if (mode === 'binaural') {
+                drawBinauralVisualization(time);
+            } else if (mode === 'ambient') {
+                drawAmbientField(time);
+            } else if (mode === 'comparison') {
+                drawComparisonVisualization(time);
+            }
+            
+            // Update stats
+            if (isPlaying) {
+                const resonance = calculateResonance();
+                document.getElementById('statResonance').textContent = resonance.toFixed(3);
+                
+                // β-parameter estimate (0 = chaos, 0.5 = optimal, 1 = locked)
+                const beta = 0.5 * (1 - resonance);
+                document.getElementById('statBeta').textContent = beta.toFixed(3);
+            }
+            
+            animationId = requestAnimationFrame(draw);
+        }
+        
+        // Draw interference pattern
+        function drawInterferencePattern(time) {
+            if (oscillators.length === 0) {
+                // Draw φ spiral
+                ctx.strokeStyle = 'rgba(255, 215, 0, 0.1)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                
+                for (let angle = 0; angle < 8 * Math.PI; angle += 0.05) {
+                    const r = 20 * Math.pow(PHI, angle / TWO_PI);
+                    const x = centerX + r * Math.cos(angle);
+                    const y = centerY + r * Math.sin(angle);
+                    
+                    if (angle === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                return;
+            }
+            
+            // Draw wave interference
+            const numRings = 12;
+            oscillators.forEach(({ freq, phase }, idx) => {
+                const hue = (idx / oscillators.length) * 60 + 30;
+                
+                for (let ring = 0; ring < numRings; ring++) {
+                    const radius = 50 + ring * 30;
+                    const segments = 120;
+                    
+                    ctx.beginPath();
+                    for (let i = 0; i <= segments; i++) {
+                        const angle = (i / segments) * TWO_PI;
+                        const waveOffset = Math.sin(angle * 3 + time * freq / 100 + phase) * 15;
+                        const r = radius + waveOffset;
+                        const x = centerX + r * Math.cos(angle + time / 2);
+                        const y = centerY + r * Math.sin(angle + time / 2);
+                        
+                        if (i === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    
+                    const alpha = 0.3 * (1 - ring / numRings);
+                    ctx.strokeStyle = `hsla(${hue}, 100%, 50%, ${alpha})`;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            });
+            
+            // Center point
+            ctx.fillStyle = 'rgba(255, 215, 0, 0.8)';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 5, 0, TWO_PI);
+            ctx.fill();
+        }
+        
+        // Draw binaural visualization
+        function drawBinauralVisualization(time) {
+            // Left ear (blue)
+            ctx.strokeStyle = 'rgba(100, 150, 255, 0.5)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(centerX - 200, centerY, 100 + Math.sin(time * PHI) * 20, 0, TWO_PI);
+            ctx.stroke();
+            
+            // Right ear (red)
+            ctx.strokeStyle = 'rgba(255, 100, 150, 0.5)';
+            ctx.beginPath();
+            ctx.arc(centerX + 200, centerY, 100 + Math.cos(time * PHI) * 20, 0, TWO_PI);
+            ctx.stroke();
+            
+            // Beat pattern in center
+            const beatPhase = time * PHI;
+            const intensity = (Math.sin(beatPhase) + 1) / 2;
+            
+            ctx.fillStyle = `rgba(255, 215, 0, ${intensity * 0.5})`;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 50 + intensity * 30, 0, TWO_PI);
+            ctx.fill();
+            
+            // Connection lines
+            oscillators.forEach((osc, i) => {
+                if (i % 2 === 0 && i + 1 < oscillators.length) {
+                    const angle = (i / oscillators.length) * TWO_PI + time;
+                    const r = 150;
+                    
+                    ctx.strokeStyle = `rgba(255, 215, 0, 0.2)`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 200 + Math.cos(angle) * r, centerY + Math.sin(angle) * r);
+                    ctx.lineTo(centerX + 200 + Math.cos(angle + 0.1) * r, centerY + Math.sin(angle + 0.1) * r);
+                    ctx.stroke();
+                }
+            });
+        }
+        
+        // Draw ambient field
+        function drawAmbientField(time) {
+            oscillators.forEach(({ freq, phase }, idx) => {
+                const angle = phase + time / 5;
+                const distance = 100 + idx * 50;
+                const x = centerX + Math.cos(angle) * distance;
+                const y = centerY + Math.sin(angle) * distance;
+                
+                // Pulsing orb
+                const pulse = (Math.sin(time * freq / 200 + phase) + 1) / 2;
+                const radius = 20 + pulse * 15;
+                
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius * 2);
+                gradient.addColorStop(0, `rgba(255, 215, 0, ${0.6 * pulse})`);
+                gradient.addColorStop(0.5, `rgba(255, 165, 0, ${0.3 * pulse})`);
+                gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(x, y, radius * 2, 0, TWO_PI);
+                ctx.fill();
+                
+                // Connection to center
+                ctx.strokeStyle = `rgba(255, 215, 0, ${0.1 * pulse})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            });
+            
+            // Central circumpunct
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 40, 0, TWO_PI);
+            ctx.stroke();
+            
+            ctx.fillStyle = 'rgba(255, 215, 0, 0.8)';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 5, 0, TWO_PI);
+            ctx.fill();
+        }
+        
+        // Draw comparison visualization
+        function drawComparisonVisualization(time) {
+            if (oscillators.length === 0) return;
+            
+            // Waveform superposition
+            const samples = width;
+            const scale = 100;
+            
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.7)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            for (let x = 0; x < samples; x++) {
+                const t = time + x / 100;
+                let sum = 0;
+                
+                oscillators.forEach(({ freq }) => {
+                    sum += Math.sin(TWO_PI * freq / 100 * t);
+                });
+                
+                const y = centerY + (sum / oscillators.length) * scale;
+                
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            
+            // Individual waves
+            oscillators.forEach(({ freq }, idx) => {
+                const alpha = 0.2;
+                const hue = (idx / oscillators.length) * 360;
+                
+                ctx.strokeStyle = `hsla(${hue}, 100%, 50%, ${alpha})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                
+                for (let x = 0; x < samples; x += 5) {
+                    const t = time + x / 100;
+                    const y = centerY + Math.sin(TWO_PI * freq / 100 * t) * 50;
+                    
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            });
+        }
+        
+        // UI Events
+        document.getElementById('toggleSound').addEventListener('click', () => {
+            if (isPlaying) stopSound();
+            else startSound();
+        });
+        
+        document.getElementById('btnInterference').addEventListener('click', () => setMode('interference'));
+        document.getElementById('btnBinaural').addEventListener('click', () => setMode('binaural'));
+        document.getElementById('btnAmbient').addEventListener('click', () => setMode('ambient'));
+        document.getElementById('btnComparison').addEventListener('click', () => setMode('comparison'));
+        
+        function setMode(newMode) {
+            mode = newMode;
+            
+            document.querySelectorAll('.mode-buttons button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`btn${newMode.charAt(0).toUpperCase() + newMode.slice(1)}`).classList.add('active');
+            
+            document.getElementById('ratioParam').style.display = mode === 'comparison' ? 'block' : 'none';
+            
+            // Update info text
+            const infoTexts = {
+                interference: 'Visualizes wave interference patterns. φ-spacing minimizes resonance buildup by preventing phase alignment. Watch how waves interact without creating destructive interference.',
+                binaural: 'Binaural beats with φ Hz difference create optimal β = 0.5 consciousness state. Left and right ears receive slightly different frequencies, creating perceived beat in the brain.',
+                ambient: 'Generative ambient soundscape using φ-cascade principles. Multiple layers create non-resonant harmonic field optimal for sustained attention without emotional triggering.',
+                comparison: 'Compare φ-spacing vs rational ratios. Rational intervals create beating patterns (interference) while φ maintains smooth distribution. Listen for the difference!'
+            };
+            
+            document.getElementById('statMode').textContent = newMode.charAt(0).toUpperCase() + newMode.slice(1);
+            document.getElementById('infoTitle').textContent = newMode.toUpperCase() + ' MODE';
+            document.getElementById('infoText').textContent = infoTexts[newMode];
+            
+            if (isPlaying) {
+                stopSound();
+                setTimeout(startSound, 100);
+            }
+        }
+        
+        // Parameter updates
+        document.getElementById('frequency').addEventListener('input', (e) => {
+            document.getElementById('freqValue').textContent = e.target.value + ' Hz';
+            if (isPlaying) {
+                stopSound();
+                setTimeout(startSound, 100);
+            }
+        });
+        
+        document.getElementById('layers').addEventListener('input', (e) => {
+            document.getElementById('layersValue').textContent = e.target.value;
+            if (isPlaying) {
+                stopSound();
+                setTimeout(startSound, 100);
+            }
+        });
+        
+        document.getElementById('volume').addEventListener('input', (e) => {
+            document.getElementById('volumeValue').textContent = e.target.value + '%';
+            if (isPlaying) {
+                const volume = parseFloat(e.target.value) / 100;
+                oscillators.forEach(({ gain }) => {
+                    gain.gain.value = volume / oscillators.length;
+                });
+            }
+        });
+        
+        document.getElementById('ratioSelect').addEventListener('change', () => {
+            if (isPlaying && mode === 'comparison') {
+                stopSound();
+                setTimeout(startSound, 100);
+            }
+        });
+        
+        // Start animation
+        draw();
+        
+        // Auto-start in interference mode after 1 second
+        setTimeout(() => {
+            if (!isPlaying) {
+                startSound();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
