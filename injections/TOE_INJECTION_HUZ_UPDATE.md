@@ -206,7 +206,7 @@ Components:
 
 CIRCUMPUNCT MASTER EQUATION:
 ────────────────────────────
-    Φ' = ⊱ ∘ i ∘ ≺[Φ]
+    Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
 STRUCTURAL IDENTIFICATION:
 ──────────────────────────
@@ -215,7 +215,7 @@ STRUCTURAL IDENTIFICATION:
     ╠════════════════════════════════════════════════════════════════════════╣
     ║  |ψ⟩ input                │  Φ (field state)                          ║
     ║  |0⟩ auxiliary            │  |E⟩ (energy reference at 0D)             ║
-    ║  O orthogonal             │  ≻ ∘ ⊰ (real structure before i acts)     ║
+    ║  O orthogonal             │  ⊛ ∘ ☀︎ (real structure before i acts)     ║
     ║  ⟨1| projection           │  i (aperture transformation)              ║
     ║  √d normalization         │  e^{S/2} (from observer entropy)          ║
     ║  V encoding map           │  ⊙ (circumpunct operation)                ║
@@ -335,22 +335,22 @@ MIRROR NOTATION (Bidirectional):
 
   LEFT-TO-RIGHT          RIGHT-TO-LEFT         MEANING
   ─────────────          ─────────────         ───────
-  ≻ (U+227B)             ≺ (U+227A)            Convergence (toward •)
-  ⊰ (U+22B0)             ⊱ (U+22B1)            Emergence (from •)
+  ⊛ (U+227B)             ⊛ (U+227A)            Convergence (toward •)
+  ☀︎ (U+22B0)             ☀︎ (U+22B1)            Emergence (from •)
 
   FLOW NOTATION (preferred for clarity):
   
-      Left-to-right:    Φ  ──≻──  •  ──i──  •  ──⊰──  Φ'
+      Left-to-right:    Φ  ──⊛──  •  ──i──  •  ──☀︎──  Φ'
                            toward    at     from
 
-      Right-to-left:   'Φ  ──⊱──  •  ──i──  •  ──≺──  Φ
+      Right-to-left:   'Φ  ──☀︎──  •  ──i──  •  ──⊛──  Φ
                            from     at     toward
 
   The i at center is invariant. Flow symbols mirror around it.
   
   EQUIVALENCES:
-      Φ ≻ i ⊰ Φ'     =     'Φ ⊱ i ≺ Φ      (flow notation)
-      ⊱ ∘ i ∘ ≺[Φ]   =     [Φ]≺ ∘ i ∘ ⊱    (composition notation)
+      Φ ⊛ i ☀︎ Φ'     =     'Φ ☀︎ i ⊛ Φ      (flow notation)
+      ☀︎ ∘ i ∘ ⊛[Φ]   =     [Φ]⊛ ∘ i ∘ ☀︎    (composition notation)
 
   USE MIRROR SYMBOLS WHEN:
       • Writing equations in right-to-left languages
@@ -359,7 +359,7 @@ MIRROR NOTATION (Bidirectional):
 
   NOTE: Standard mathematical composition (f ∘ g means "apply g then f")
         reads opposite to application order. Flow notation avoids this:
-        Φ ≻ i ⊰ Φ' reads AND applies left-to-right.
+        Φ ⊛ i ☀︎ Φ' reads AND applies left-to-right.
 ```
 
 ---
@@ -374,15 +374,15 @@ MIRROR NOTATION (Bidirectional):
 ```
 MATHEMATICAL COMPOSITION IS BACKWARDS:
 ──────────────────────────────────────
-Standard:  ⊱ ∘ i ∘ ≺[Φ]
-    Written:  ⊰, then i, then ≻  (left to right)
-    Applied:  ≻ first, then i, then ⊰  (right to left)
+Standard:  ☀︎ ∘ i ∘ ⊛[Φ]
+    Written:  ☀︎, then i, then ⊛  (left to right)
+    Applied:  ⊛ first, then i, then ☀︎  (right to left)
 
 This is confusing.
 
 FLOW NOTATION (preferred):
 ──────────────────────────
-    Φ ≻ i ⊰ Φ'
+    Φ ⊛ i ☀︎ Φ'
 
     Read left-to-right: Φ converges, i transforms, emerges to Φ'
     Apply left-to-right: same order
@@ -391,24 +391,24 @@ FLOW NOTATION (preferred):
 
 ARROW NOTATION (explicit):
 ──────────────────────────
-    Φ ──≻──→ • ──i──→ • ──⊰──→ Φ'
+    Φ ──⊛──→ • ──i──→ • ──☀︎──→ Φ'
 
     Unambiguous. Flow direction explicit.
 
 EQUIVALENCES:
 ─────────────
-    Φ ≻ i ⊰ Φ'        (flow, left-to-right)
-    ⊱ ∘ i ∘ ≺[Φ]      (composition, standard math)
-    'Φ ⊱ i ≺ Φ        (flow, right-to-left mirror)
+    Φ ⊛ i ☀︎ Φ'        (flow, left-to-right)
+    ☀︎ ∘ i ∘ ⊛[Φ]      (composition, standard math)
+    'Φ ☀︎ i ⊛ Φ        (flow, right-to-left mirror)
 
 All three describe the same transformation.
 Flow notation preferred for clarity.
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    CONVENTION: Use flow notation (Φ ≻ i ⊰ Φ') unless             ║
+    ║    CONVENTION: Use flow notation (Φ ⊛ i ☀︎ Φ') unless             ║
     ║    composing with other mathematical operations.                  ║
     ║                                                                   ║
-    ║    Mirror symbols (≺, ⊱) available for right-to-left contexts.   ║
+    ║    Mirror symbols (⊛, ☀︎) available for right-to-left contexts.   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 ```
@@ -462,11 +462,11 @@ After injection, verify:
 
 - [ ] Chapter XXII appears after Chapter XXI
 - [ ] Table of Contents updated with §22.1-§22.10
-- [ ] Symbol Glossary includes mirror notation (≺, ⊱)
+- [ ] Symbol Glossary includes mirror notation (⊛, ☀︎)
 - [ ] §3.5 or equivalent notation note added
 - [ ] Final summary reflects "PROVEN" status
 - [ ] No broken markdown formatting
-- [ ] All Unicode symbols render correctly (≻≺⊰⊱)
+- [ ] All Unicode symbols render correctly (⊛⊛☀︎☀︎)
 
 ---
 

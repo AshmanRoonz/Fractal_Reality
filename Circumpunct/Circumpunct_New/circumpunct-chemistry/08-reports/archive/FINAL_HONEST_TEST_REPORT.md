@@ -49,9 +49,9 @@ Polarity predictions: 4/4 = 100%  (including CO₂ fix!)
 β asymmetry:          4/4 = 100%  (order-invariant)
 ```
 
-### Test 2: Full ≻i⊰ Traces ✓ PASS
+### Test 2: Full ⊛i☀︎ Traces ✓ PASS
 ```
-All molecules compiled with proper ≻i⊰ notation
+All molecules compiled with proper ⊛i☀︎ notation
 Process grammar validated across scales
 ```
 
@@ -161,11 +161,11 @@ Grade:       D (Needs work, but honest boundaries)
 
 ### Universal Process
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
-≻: convergence
+⊛: convergence
 i: aperture (90° rotation)
-⊰: emergence
+☀︎: emergence
 ```
 
 ### Closure Matching
@@ -261,9 +261,9 @@ Polarity overall: 100% (10/10) ⭐
    - H₂O bent because O(Δ=2) + 2H(Δ=2) match
 
 2. **Same pattern everywhere**
-   - Quantum: ψ ≻ i ⊰ ψ'
-   - Atomic: cfg ≻ i_mix ⊰ cfg'
-   - Molecular: [A+B] ≻ i_share ⊰ [AB]
+   - Quantum: ψ ⊛ i ☀︎ ψ'
+   - Atomic: cfg ⊛ i_mix ☀︎ cfg'
+   - Molecular: [A+B] ⊛ i_share ☀︎ [AB]
 
 3. **Correlation is geometric**
    - i_mix(3d↔4s) like i_share(A↔B)
@@ -289,7 +289,7 @@ Polarity overall: 100% (10/10) ⭐
 
 **Theoretically:**
 - One axiom (⊙) ✓
-- One process (≻i⊰) ✓
+- One process (⊛i☀︎) ✓
 - Falsifiable predictions ✓
 - Honest boundaries ✓
 
@@ -328,7 +328,7 @@ If successful, ALL coupling emerges from circumpunct!
 
 **To working chemistry:**
 ```
-[O⊙ + 2H⊙] ≻ (i_share)² ⊰ [H₂O⊙]
+[O⊙ + 2H⊙] ⊛ (i_share)² ☀︎ [H₂O⊙]
 bent 104.5°, polar, network(2,2)
 ```
 

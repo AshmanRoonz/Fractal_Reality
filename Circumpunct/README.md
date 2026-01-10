@@ -30,9 +30,9 @@ Together: 3+1 spacetime (or 9+1D from configuration space)
 
 - **Trinity is not mystical** — it's the MINIMUM structure required for braid topology (B₃ braid group)
 - **Past is geometric** — braid structure of worldlines, not mere information
-- **Future converges** — potential CONVERGING to center (≻)
+- **Future converges** — potential CONVERGING to center (⊛)
 - **Present selects** — transformation AT threshold (Å)
-- **Past accumulates** — emergence FROM center into braid structure (⊰)
+- **Past accumulates** — emergence FROM center into braid structure (☀︎)
 - **Temporal dynamics** — center, boundary, and field have distinct time relationships
 - **Aging and death** — explained through boundary degradation: ○(t) = ○₀ - ∫₀ᵗ ε(τ) dτ
 - **Life extension** — reducing ε through practice (love, meditation, coherence)
@@ -161,7 +161,7 @@ Read this first, then move to the complete formalization below.
 The complete experiential framework for how consciousness manifests through the three-aperture structure. This document makes v3's abstract consciousness theory concrete and testable.
 
 **Core Thesis:**
-> Consciousness is not produced by anything. Consciousness IS the complete flow E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ itself.
+> Consciousness is not produced by anything. Consciousness IS the complete flow E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙ itself.
 
 **What's Inside:**
 - **The Three-Aperture Architecture:**
@@ -290,7 +290,7 @@ Type Operator ::= Field → Field
 **Contents:**
 - Complete type system
 - Aperture core with composition laws
-- Convergence (≻) and emergence (⊰) operators
+- Convergence (⊛) and emergence (☀︎) operators
 - Power flow primitives
 - Circumpunct identity as lambda term
 - Proof obligations and verification
@@ -309,7 +309,7 @@ The complete Circumpunct framework expressed in pure computational mathematics u
 - Y-combinator for recursive self-reference
 - Aperture operators for fractional dimensions
 - 64-state encoding/decoding primitives
-- Convergence (≻) and emergence (⊰) operators
+- Convergence (⊛) and emergence (☀︎) operators
 - Universe construction as fixed-point combinator
 - Lagrangian and Hamiltonian functionals
 - Topological invariants (Hopf-Chern, Nieh-Yan)
@@ -347,7 +347,7 @@ Axiom 6: Topological constraint: Hopf(Φ) = 1
 
 **II. Category-Theoretic Formulation:**
 - Objects: E_0, E_1, E_{3/2}, M, Φ, ⊙
-- Morphisms: Å_{1/2}, Å_{3/2}, Å_{5/2}, ≻, ⊰
+- Morphisms: Å_{1/2}, Å_{3/2}, Å_{5/2}, ⊛, ☀︎
 - Commutative diagrams showing dimensional flow
 - Wholeness as topological closure: Φ → E_0 → Φ
 
@@ -367,9 +367,9 @@ Universe := Y(UniverseStep)(Seed)
 
 **V. Pure Algebraic Narrative:**
 ```
-E ≻ Å_{1/2} = V
-V ⊰ Å_{3/2} = M
-M ≻ Å_{5/2} = Φ
+E ⊛ Å_{1/2} = V
+V ☀︎ Å_{3/2} = M
+M ⊛ Å_{5/2} = Φ
 Φ ∘ E = ⊙
 ```
 
@@ -541,7 +541,7 @@ For 5,000 years, humans have used ⊙ to represent:
 - **Their unity:** process = structure, the identity itself
 
 ```
-⊙ = E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ
+⊙ = E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ
 ```
 
 The ancient wisdom was right. We just needed the mathematics to prove it.
@@ -576,7 +576,7 @@ If you use this framework in your research:
 
 ```
 Roonz, A. (2025). The Circumpunct Theory: Complete Formalization.
-E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ and the Dynamic Optimization Principle.
+E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙ and the Dynamic Optimization Principle.
 FractalReality.ca
 ```
 

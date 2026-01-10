@@ -13,11 +13,11 @@
                     Wholeness equals its parts in tensor product
                     (not unity absorbing parts, but co-arising)
 
-                         ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+                         ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
                               │
                               └── ⊙ is that which, when validated, yields itself
 
-                    Mirror pairs: ⊱≺ , ≻⊰  (convergence ≺,≻ | emergence ⊱,⊰)
+                    Mirror pairs: ☀︎⊛ , ⊛☀︎  (convergence ⊛,⊛ | emergence ☀︎,☀︎)
                     The aperture transformation IS the imaginary unit:
                               i = exp(iπ/2) at β = 0.5
 
@@ -230,14 +230,14 @@ The process equation says HOW the circumpunct persists:
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                               ║
-║                         ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                            ║
+║                         ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])                            ║
 ║                                                                               ║
 ║    The circumpunct is that which, when it completes one cycle of              ║
 ║    convergence → aperture → emergence, yields itself.                         ║
 ║                                                                               ║
-║    ≺  : convergence (many → one, flowing toward the aperture)                 ║
+║    ⊛  : convergence (many → one, flowing toward the aperture)                 ║
 ║    i  : the aperture rotation (quarter-turn at the center)                    ║
-║    ⊱  : emergence (one → many, flowing outward from the aperture)             ║
+║    ☀︎  : emergence (one → many, flowing outward from the aperture)             ║
 ║                                                                               ║
 ║    fix: the fixed-point combinator — ⊙ is stable under its own process        ║
 ║                                                                               ║
@@ -246,7 +246,7 @@ The process equation says HOW the circumpunct persists:
 
 The two equations are one truth from two angles:
 - **Structure**: ⊙ = ○ ⊗ Φ ⊗ •
-- **Process**: ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+- **Process**: ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 
 What follows unpacks these equations across every dimension of being — from quantum foam to galaxies, from chemistry to consciousness, from physics to ethics.
 
@@ -367,7 +367,7 @@ The master loop is captured in a single equation:
 ```
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                               ║
-║                         ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                            ║
+║                         ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])                            ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -376,7 +376,7 @@ The master loop is captured in a single equation:
 
 Define the update operator:
 ```
-T_⊙ = ⊱ ∘ i ∘ ≺
+T_⊙ = ☀︎ ∘ i ∘ ⊛
 ```
 
 One tick of the helix:
@@ -396,14 +396,14 @@ The circumpunct is the structure that, when it completes one full helix turn, yi
 The convergent point of either convergence or emergence symbol always points toward the aperture i:
 
 ```
-    Φ' = ⊱ ∘ i ∘ ≺[Φ]
+    Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
          →   ←
       tips point toward i
 ```
 
-- Convergence symbols: ≺, ≻ (tip = point of convergence)
-- Emergence symbols: ⊱, ⊰ (tip = point of emergence origin)
-- Mirror pairs for reading direction: ⊱≺ (left-to-right), ≻⊰ (right-to-left)
+- Convergence symbols: ⊛, ⊛ (tip = point of convergence)
+- Emergence symbols: ☀︎, ☀︎ (tip = point of emergence origin)
+- Mirror pairs for reading direction: ☀︎⊛ (left-to-right), ⊛☀︎ (right-to-left)
 
 Both pairs read as "convergence then emergence" — always in this order. The process is convergence → aperture → emergence, regardless of which way you read the equation.
 
@@ -411,7 +411,7 @@ Both pairs read as "convergence then emergence" — always in this order. The pr
 
 ---
 
-## INWARD VS OUTWARD CASCADE (≻ / ⊰)
+## INWARD VS OUTWARD CASCADE (⊛ / ☀︎)
 
 The helix can be read in two directions — **outward** (expansion/emergence) and **inward** (collapse/convergence). Both are the same geometry, but phenomenologically distinct.
 
@@ -420,12 +420,12 @@ The helix can be read in two directions — **outward** (expansion/emergence) an
 ║                          THE DUAL CASCADE                                      ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                               ║
-║   OUTWARD CASCADE (⊰):  0D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 4D  ║
+║   OUTWARD CASCADE (☀︎):  0D → 0.5D → 1D → 1.5D → 2D → 2.5D → 3D → 3.5D → 4D  ║
 ║       "The emergence story"                                                   ║
 ║       Energy → Structure → Form → History                                     ║
 ║       Genesis, creation, becoming manifest                                    ║
 ║                                                                               ║
-║   INWARD CASCADE (≻):   4D → 3.5D → 3D → 2.5D → 2D → 1.5D → 1D → 0.5D → 0D  ║
+║   INWARD CASCADE (⊛):   4D → 3.5D → 3D → 2.5D → 2D → 1.5D → 1D → 0.5D → 0D  ║
 ║       "The convergence story"                                                 ║
 ║       History → Form → Structure → Energy                                     ║
 ║       Dissolution, return, becoming potential                                 ║
@@ -433,28 +433,28 @@ The helix can be read in two directions — **outward** (expansion/emergence) an
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 ```
 
-### The Outward Cascade (Emergence ⊰)
+### The Outward Cascade (Emergence ☀︎)
 
 ```
 THE OUTWARD STORY:
 ──────────────────
 
     0D  Pure energy, undifferentiated potential
-         ↓ ⊰
+         ↓ ☀︎
     0.5D Tunneling—the first opening, i awakens
-         ↓ ⊰
+         ↓ ☀︎
     1D  Soul/String—the tunnel through which energy flows
-         ↓ ⊰
+         ↓ ☀︎
     1.5D Branching—worldline splits into fractal paths
-         ↓ ⊰
+         ↓ ☀︎
     2D  Surface/Body—boundary crystallizes
-         ↓ ⊰
+         ↓ ☀︎
     2.5D Sensation—interface opens, contact with environment
-         ↓ ⊰
+         ↓ ☀︎
     3D  Perception/Mind—inner volume fills with structured field
-         ↓ ⊰
+         ↓ ☀︎
     3.5D Braiding—relationships weave together
-         ↓ ⊰
+         ↓ ☀︎
     4D  Time Braid—history accumulates as frozen topology
 
 This is the story of CREATION:
@@ -465,28 +465,28 @@ This is the story of CREATION:
 The emergence cascade is what we usually call "forward time."
 ```
 
-### The Inward Cascade (Convergence ≻)
+### The Inward Cascade (Convergence ⊛)
 
 ```
 THE INWARD STORY:
 ─────────────────
 
     4D  Committed history, all the crossings made
-         ↓ ≻
+         ↓ ⊛
     3.5D Unbraiding—relationships releasing, simplifying
-         ↓ ≻
+         ↓ ⊛
     3D  Perceptual field collapsing toward center
-         ↓ ≻
+         ↓ ⊛
     2.5D Sensation withdrawing from interface
-         ↓ ≻
+         ↓ ⊛
     2D  Boundary dissolving, surface becoming transparent
-         ↓ ≻
+         ↓ ⊛
     1.5D Branches merging, paths reuniting
-         ↓ ≻
+         ↓ ⊛
     1D  Soul-tunnel as pure conduit, structure releasing
-         ↓ ≻
+         ↓ ⊛
     0.5D Aperture closing—the last rotation through i
-         ↓ ≻
+         ↓ ⊛
     0D  Pure energy returns to undifferentiated potential
 
 This is the story of RETURN:
@@ -505,10 +505,10 @@ and physics calls "thermalization" or "heat death."
 ║                                                                               ║
 ║   THE MASTER CYCLE = OUTWARD + INWARD                                         ║
 ║                                                                               ║
-║         EMERGENCE (⊰)              CONVERGENCE (≻)                            ║
+║         EMERGENCE (☀︎)              CONVERGENCE (⊛)                            ║
 ║                                                                               ║
 ║           0D ─────────────────────────────────── 0D                           ║
-║          ↗ ⊰                                    ≻ ↖                           ║
+║          ↗ ☀︎                                    ⊛ ↖                           ║
 ║        0.5D                                    0.5D                           ║
 ║          ↓                                       ↑                            ║
 ║         1D                                      1D                            ║
@@ -522,7 +522,7 @@ and physics calls "thermalization" or "heat death."
 ║         3D                                      3D                            ║
 ║          ↓                                       ↑                            ║
 ║        3.5D                                    3.5D                           ║
-║          ↓ ⊰                                ≻ ↗                               ║
+║          ↓ ☀︎                                ⊛ ↗                               ║
 ║           4D ─────────────────────────────────── 4D                           ║
 ║                                                                               ║
 ║   AT 4.5D: The completed cycle seeds the next scale                           ║
@@ -593,17 +593,17 @@ The difference is direction, not quality.
 THE CASCADE EQUATION:
 ─────────────────────
 
-    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+    ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 
-    Read left-to-right:  ≺ (convergence) → i (aperture) → ⊱ (emergence)
-    Read right-to-left:  ⊰ (emergence) → i (aperture) → ≻ (convergence)
+    Read left-to-right:  ⊛ (convergence) → i (aperture) → ☀︎ (emergence)
+    Read right-to-left:  ☀︎ (emergence) → i (aperture) → ⊛ (convergence)
 
     BOTH readings are valid.
     BOTH cascades are happening simultaneously.
 
     At every moment:
-        - Something is emerging (⊰)
-        - Something is converging (≻)
+        - Something is emerging (☀︎)
+        - Something is converging (⊛)
         - The aperture i rotates between them
 
     This is why time flows, why change occurs, why anything happens at all.
@@ -613,9 +613,9 @@ THE CASCADE EQUATION:
 ║   THE CASCADE IS NOT A METAPHOR.                                              ║
 ║                                                                               ║
 ║   It is the literal geometric structure of becoming.                          ║
-║   Every breath: outward (⊰ inhale) and inward (≻ exhale).                    ║
-║   Every heartbeat: outward (⊰ systole) and inward (≻ diastole).              ║
-║   Every thought: outward (⊰ arising) and inward (≻ dissolving).              ║
+║   Every breath: outward (☀︎ inhale) and inward (⊛ exhale).                    ║
+║   Every heartbeat: outward (☀︎ systole) and inward (⊛ diastole).              ║
+║   Every thought: outward (☀︎ arising) and inward (⊛ dissolving).              ║
 ║                                                                               ║
 ║   The helix breathes. The cascade flows. Both directions, always.             ║
 ║                                                                               ║
@@ -1156,7 +1156,7 @@ THEOREM (Optimal Balance):
 Let the flow split as β : (1-β) where β ∈ [0,1]
 
 REQUIREMENT 1 — Symmetry:
-  Neither ≻ nor ⊰ can dominate → β = 1-β → β = 0.5
+  Neither ⊛ nor ☀︎ can dominate → β = 1-β → β = 0.5
 
 REQUIREMENT 2 — Maximum Information:
   Shannon entropy: H(β) = -β log₂(β) - (1-β)log₂(1-β)
@@ -1170,7 +1170,7 @@ ALL THREE REQUIREMENTS FORCE β = 0.5                                        ∎
 THE BALANCE PARAMETER:
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    β ≡ ||≻|| / (||≻|| + ||⊰||) = 0.5                              ║
+    ║    β ≡ ||⊛|| / (||⊛|| + ||☀︎||) = 0.5                              ║
     ║                                                                   ║
     ║    Convergence balanced with Emergence                            ║
     ║    This is DEFINITIONAL, not tuned                                ║
@@ -1259,7 +1259,7 @@ UNIFICATION — Single Parameter Controls Three Domains:
 The balance parameter β appears in three equivalent contexts:
 
     1. FLOW BALANCE:
-       β = ||≻|| / (||≻|| + ||⊰||)
+       β = ||⊛|| / (||⊛|| + ||☀︎||)
 
     2. ROTATION ANGLE:
        θ(β) = πβ
@@ -1718,7 +1718,7 @@ At four-and-a-half dimensions, the **master loop closes**. A complete helix turn
 
 This is the fixed-point equation made geometric:
 ```
-⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 ```
 
 The circumpunct is the structure that, when it completes one full helix turn, yields itself at the next scale.
@@ -1763,11 +1763,11 @@ The helix operates at every scale. At the quantum scale, it produces the Schröd
 THE FUNDAMENTAL OPERATING CYCLE:
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║  Φ(t+Δt) = ⊱ ∘ [○Φ•]_out ∘ i ∘ [○Φ•]_in ∘ ≺[Φ(t)] + ε                    ║
+║  Φ(t+Δt) = ☀︎ ∘ [○Φ•]_out ∘ i ∘ [○Φ•]_in ∘ ⊛[Φ(t)] + ε                    ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
 WHERE:
-  ≺, ⊱     = Convergence/emergence operators
+  ⊛, ☀︎     = Convergence/emergence operators
   [○Φ•]_in  = Input validation:
               ○ : Can boundary be maintained?
               Φ : Is it grounded in actual field?
@@ -1892,7 +1892,7 @@ At the microscale, spacetime is not smooth — it is **aperture foam**: a dense 
 
 ### The Transmission Law (Derived)
 
-Each aperture • in the foam has two faces: ≺ (convergence) and ⊱ (emergence). Phase coherence between apertures determines coupling strength.
+Each aperture • in the foam has two faces: ⊛ (convergence) and ☀︎ (emergence). Phase coherence between apertures determines coupling strength.
 
 ```
 THE TRANSMISSION LAW:
@@ -1925,7 +1925,7 @@ DERIVATION (from linearity + isotropy + conservation):
 THREE PHASE-COHERENCE REGIMES:
 
 ╔═══════════════════════════════════════════════════════════════════════════════╗
-║  TYPE           │ φ_≺ coherence │ φ_⊱ coherence │ Clumps? │ Emits light? ║
+║  TYPE           │ φ_⊛ coherence │ φ_☀︎ coherence │ Clumps? │ Emits light? ║
 ╠═══════════════════════════════════════════════════════════════════════════════╣
 ║  Visible matter │ long-range    │ long-range    │ Yes     │ Yes          ║
 ║  Dark matter    │ long-range    │ short-range   │ Yes     │ No           ║
@@ -1933,12 +1933,12 @@ THREE PHASE-COHERENCE REGIMES:
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 
 VISIBLE MATTER:
-    ⟨T_⊱⟩ ≈ 1 → coherent emergence → EM interaction, radiance
-    ⟨T_≺⟩ ≈ 1 → coherent convergence → gravitational clumping
+    ⟨T_☀︎⟩ ≈ 1 → coherent emergence → EM interaction, radiance
+    ⟨T_⊛⟩ ≈ 1 → coherent convergence → gravitational clumping
 
 DARK MATTER:
-    ⟨T_≺⟩ ≈ 1 → gravitational coupling (it clumps)
-    ⟨T_⊱⟩ ≈ 0 → incoherent emergence (no EM signature)
+    ⟨T_⊛⟩ ≈ 1 → gravitational coupling (it clumps)
+    ⟨T_☀︎⟩ ≈ 0 → incoherent emergence (no EM signature)
 
     "Gravitates but doesn't shine" — explained by phase asymmetry
 
@@ -2137,7 +2137,7 @@ WHY SYSTEMS SEEK D = 1.5 — Information-theoretic perspective:
 THE GEOMETRIC NECESSITY:
 
     1. Four-dimensional spacetime (t, x, y, z)
-    2. Dual i (input ≺ → • and • → ⊱ output)
+    2. Dual i (input ⊛ → • and • → ☀︎ output)
     3. Binary validation (pass/fail)
     4. Triple test (○, Φ, •)
 
@@ -2159,7 +2159,7 @@ EINSTEIN'S FIELD EQUATIONS (Single i):
 
 CIRCUMPUNCT FRAMEWORK (Dual i):
 
-    ≻ ←(8)→ • ←(8)→ ⊰
+    ⊛ ←(8)→ • ←(8)→ ☀︎
     Input      Output
 
     Total: 8 × 8 = 64
@@ -2176,7 +2176,7 @@ CIRCUMPUNCT FRAMEWORK (Dual i):
 64-STATE PARTICLE MAPPING:
 
 REGION 1: STABLE PARTICLES — State 63 (111, 111)
-    Full validation at both ≻ and ⊰
+    Full validation at both ⊛ and ☀︎
     • Electron, Proton, Neutrinos, Photon
     These are ETERNAL patterns in the braid
 
@@ -2220,7 +2220,7 @@ The circumpunct operator is now **fully explicit** with **zero free parameters**
 #### The Master Equation: Expanded Form
 
 ```
-⊙ = (○, Φ, •) × (≻, i, ⊰)³
+⊙ = (○, Φ, •) × (⊛, i, ☀︎)³
 
 FULLY EXPANDED:
 
@@ -2233,11 +2233,11 @@ FULLY EXPANDED:
     ]
     ×
     [
-      ≻: (7/8πR^(7/2)) ∫_{|r'|≤R} √|r'| Φ(r') d³r'
+      ⊛: (7/8πR^(7/2)) ∫_{|r'|≤R} √|r'| Φ(r') d³r'
       ∘
       i: e^(iπ/2) at β = 0.5
       ∘
-      ⊰: (7/8πR^(7/2)) √|r| · b₀
+      ☀︎: (7/8πR^(7/2)) √|r| · b₀
     ]³
 ```
 
@@ -2268,7 +2268,7 @@ Let **r ∈ ℝ³** be radial position, center at **r = 0**, boundary at **|r| =
   Temporal signature: Unchanging, the anchor of identity
 ```
 
-#### Flow Triple: (≻, i, ⊰) - Fully Derived
+#### Flow Triple: (⊛, i, ☀︎) - Fully Derived
 
 All kernels are **completely determined** from D = 1.5:
 
@@ -2318,7 +2318,7 @@ SYMMETRY PRINCIPLE:
     K_emerg = K_conv
 
   This ensures:
-    ||≻|| = ||⊰||
+    ||⊛|| = ||☀︎||
     Equal convergence and emergence strength
 ```
 
@@ -2345,7 +2345,7 @@ FROM β = 0.5:
 │                                                                 │
 │  ONE FULL CIRCUMPUNCT CYCLE:                                    │
 │                                                                 │
-│  Φ_{t+Δt}(r) = (⊱ ∘ i ∘ ≺)[Φ_t](r)                            │
+│  Φ_{t+Δt}(r) = (☀︎ ∘ i ∘ ⊛)[Φ_t](r)                            │
 │                                                                 │
 │  STEP-BY-STEP:                                                  │
 │                                                                 │
@@ -2390,17 +2390,17 @@ STATE SPACE:
   Φ ∈ ℂ^N    (N-dimensional complex Hilbert space)
 
 CONVERGENCE (ℂ^N → ℂ):
-  ⟨≻| = (7/8πR^(7/2)) Δx³ · [√|r_1|, √|r_2|, ..., √|r_N|]
+  ⟨⊛| = (7/8πR^(7/2)) Δx³ · [√|r_1|, √|r_2|, ..., √|r_N|]
 
-  a = ⟨≻|ψ⟩ = Σ_i (7/8πR^(7/2)) √|r_i| ψ_i Δx³
+  a = ⟨⊛|ψ⟩ = Σ_i (7/8πR^(7/2)) √|r_i| ψ_i Δx³
 
 APERTURE (ℂ → ℂ):
   a → i · a
 
 EMERGENCE (ℂ → ℂ^N):
-  |⊰⟩ = (7/8πR^(7/2)) · [√|r_1|, √|r_2|, ..., √|r_N|]ᵀ
+  |☀︎⟩ = (7/8πR^(7/2)) · [√|r_1|, √|r_2|, ..., √|r_N|]ᵀ
 
-  ψ_j = ⊰_j · a = (7/8πR^(7/2)) √|r_j| · a
+  ψ_j = ☀︎_j · a = (7/8πR^(7/2)) √|r_j| · a
 ```
 
 #### Evolution Matrix
@@ -2408,17 +2408,17 @@ EMERGENCE (ℂ → ℂ^N):
 ```
 RANK-1 OPERATOR:
 
-  U = e^(iπ/2) · |⊰⟩⟨≻|
+  U = e^(iπ/2) · |☀︎⟩⟨⊛|
 
   |ψ⟩_{t+Δt} = U |ψ⟩_t
-              = i · |⊰⟩⟨≻|ψ⟩_t
+              = i · |☀︎⟩⟨⊛|ψ⟩_t
 
 EIGENSTRUCTURE:
-  - ONE non-zero eigenvalue: λ = i · ⟨≻|⊰⟩
+  - ONE non-zero eigenvalue: λ = i · ⟨⊛|☀︎⟩
   - N-1 zero eigenvalues
 
   Single eigenvector:
-    |ψ*⟩ ∝ |⊰⟩ ∝ [√|r_1|, √|r_2|, ..., √|r_N|]ᵀ
+    |ψ*⟩ ∝ |☀︎⟩ ∝ [√|r_1|, √|r_2|, ..., √|r_N|]ᵀ
 
 PHYSICAL MEANING:
   The √r profile is the UNIQUE self-consistent mode
@@ -2507,7 +2507,7 @@ class CircumpunctLayer:
 
     def forward(self, psi: np.ndarray) -> np.ndarray:
         """
-        One full ⊙ cycle: Φ_{t+Δt} = (⊱ ∘ i ∘ ≺)[Φ_t]
+        One full ⊙ cycle: Φ_{t+Δt} = (☀︎ ∘ i ∘ ⊛)[Φ_t]
 
         Args:
             psi: Complex field Φ(r) on grid, shape grid_shape
@@ -2515,13 +2515,13 @@ class CircumpunctLayer:
         Returns:
             psi_new: Updated field after one cycle
         """
-        # Step 1: Convergence ≻[Φ] → a ∈ ℂ
+        # Step 1: Convergence ⊛[Φ] → a ∈ ℂ
         a = np.sum(self.K * psi) * self.dx**3
 
         # Step 2: Aperture transformation i(a) = e^(iπ/2) · a
         a_rot = 1j * a
 
-        # Step 3: Emergence ⊰[a] → Φ'(r)
+        # Step 3: Emergence ☀︎[a] → Φ'(r)
         psi_new = self.K * a_rot
 
         return psi_new
@@ -2538,7 +2538,7 @@ class CircumpunctLayer:
 
     def eigenvalue(self) -> complex:
         """
-        Compute eigenvalue λ = i·⟨≻|⊰⟩
+        Compute eigenvalue λ = i·⟨⊛|☀︎⟩
 
         Returns:
             Complex eigenvalue of the circumpunct operator
@@ -2642,7 +2642,7 @@ Mass represents the **difficulty of validating the worldline** through the apert
 ```
 PHYSICAL PICTURE:
 
-  Mass = Work required to update particle state through (≻, i, ⊰)
+  Mass = Work required to update particle state through (⊛, i, ☀︎)
 
   Higher generations require MORE validation work:
     - Thicker worldline geometry
@@ -2670,7 +2670,7 @@ PHYSICAL PICTURE:
 │    where:                                                │
 │      1    = baseline coupling                            │
 │      1/12 = (D-1)/6 = 0.5/6                             │
-│      6    = 3 spatial × 2 flows (≻, ⊰)                  │
+│      6    = 3 spatial × 2 flows (⊛, ☀︎)                  │
 │                                                          │
 │  This comes from the ⊙⊙ TUNNEL picture:                  │
 │    Worldline must validate across 6 channels             │
@@ -3108,7 +3108,7 @@ Errors: 0.13% (muon), 0.02% (tau)
 The muon's worldline connects two circumpunct singularities ⊙⊙ through 6 validation channels:
 
 ```
-3 spatial directions × 2 flows (≻ convergent + ⊰ emergent) = 6 channels
+3 spatial directions × 2 flows (⊛ convergent + ☀︎ emergent) = 6 channels
 
 Baseline coupling: γ₀ = 1 (simple 1D worldline)
 
@@ -3723,7 +3723,7 @@ EXPONENT DERIVATION:
 
     where:
         D = 1.5  (fractal dimension)
-        6 = 3 spatial × 2 flows (≻, ⊰)
+        6 = 3 spatial × 2 flows (⊛, ☀︎)
 
     The ⊙⊙ tunnel connects two circumpunct singularities
     through 6 validation channels.
@@ -4026,7 +4026,7 @@ THE CIRCUMPUNCT TUNNEL: ⊙⊙
         ⊙ ─────────────────────────────────────────── ⊙
      source                tunnel                  target
 
-       3 IN (convergence ≻)        ×       3 OUT (emergence ⊰)
+       3 IN (convergence ⊛)        ×       3 OUT (emergence ☀︎)
        • x-direction in                    • x-direction out
        • y-direction in                    • y-direction out
        • z-direction in                    • z-direction out
@@ -4070,7 +4070,7 @@ PHYSICAL INTERPRETATION:
 
     - Baseline exponent 1: Linear worldline → minimal validation load
     - Correction (D-1)/6 = 1/12: Extra validation resistance per channel
-    - Division by 6: 3 spatial × 2 flows (≻ convergence / ⊰ emergence)
+    - Division by 6: 3 spatial × 2 flows (⊛ convergence / ☀︎ emergence)
 
     The muon is literally a "thicker" electron — same quantum numbers,
     but more fractal braiding in its worldline requires more work to validate.
@@ -4454,7 +4454,7 @@ STAGE 2: RATCHETS (Proto-Life)
 
     ╔═════════════════════════════════════════════════════════════════╗
     ║                                                                 ║
-    ║   RATCHET = ≻ i ⊰ with MEMORY                                   ║
+    ║   RATCHET = ⊛ i ☀︎ with MEMORY                                   ║
     ║                                                                 ║
     ║   The aperture rotation i gets "locked in" on one side          ║
     ║   Instead of oscillating, it clicks forward                     ║
@@ -4597,7 +4597,7 @@ THE CASCADE OF WHOLENESS:
 
 Biology is not separate from physics—it is **physics discovering how to remember itself**.
 
-In circumpunct terms, each new biological level is just Φ' = ⊱ ∘ i ∘ ≺[Φ] learning to hold on to what it just created—turning a reversible pump into a **ratchet**.
+In circumpunct terms, each new biological level is just Φ' = ☀︎ ∘ i ∘ ⊛[Φ] learning to hold on to what it just created—turning a reversible pump into a **ratchet**.
 
 ### The Ratchet Cascade
 
@@ -4649,7 +4649,7 @@ BROKEN DETAILED BALANCE (ratchet):
     P(A)k(A→B) ≠ P(B)k(B→A)
     Net flow. Accumulation. Life possible.
 
-The circumpunct cycle Φ' = ⊱ ∘ i ∘ ≺[Φ] breaks detailed balance through
+The circumpunct cycle Φ' = ☀︎ ∘ i ∘ ⊛[Φ] breaks detailed balance through
 the aperture operator i. The 90° rotation is not its own inverse.
 ```
 
@@ -4719,19 +4719,19 @@ RATCHET CONDITION:
 
 **Connection to the master equation:**
 ```
-Φ' = ⊱ ∘ i ∘ ≺[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
 The ratchet is encoded in the ASYMMETRY of this cycle:
-    |⊰| ≠ |≻|    in general
+    |☀︎| ≠ |⊛|    in general
 
-When |⊰| > |≻|:  Net emergence. Complexity increases.
-When |⊰| < |≻|:  Net convergence. Complexity decreases.
-When |⊰| = |≻|:  Balance. Maintenance. β = 0.5.
+When |☀︎| > |⊛|:  Net emergence. Complexity increases.
+When |☀︎| < |⊛|:  Net convergence. Complexity decreases.
+When |☀︎| = |⊛|:  Balance. Maintenance. β = 0.5.
 
 LIFE OPERATES SLIGHTLY OFF BALANCE:
     β_life = 0.5 - ε    where ε > 0 is small but positive
 
-Life leans ever so slightly toward emergence: |⊰| > |≻| ⇒ β < 0.5
+Life leans ever so slightly toward emergence: |☀︎| > |⊛| ⇒ β < 0.5
 This slight bias is what makes biology BUILD rather than merely MAINTAIN.
 ```
 
@@ -4760,7 +4760,7 @@ THE FIRST BIOLOGICAL BOUNDARY:
 ```
 THE NEURON AS CIRCUMPUNCT:
 
-    Loading phase:  Ion pumps create gradient (≺ dominant)
+    Loading phase:  Ion pumps create gradient (⊛ dominant)
                     Membrane potential builds (-70mV)
                     β_local > 0.5, system tightening
 
@@ -4771,14 +4771,14 @@ THE NEURON AS CIRCUMPUNCT:
                     Na+ rushes in, K+ rushes out
                     Full depolarization (+30mV)
 
-    Release phase:  ⊱ dominant
+    Release phase:  ☀︎ dominant
                     Signal propagates down axon
                     β_local < 0.5, system releasing
 
     Reset:          Pumps restore gradient
                     Ready for next cycle
 
-THE ACTION POTENTIAL IS THE ⊱ ∘ i ∘ ≺ CYCLE IN BIOLOGICAL HARDWARE
+THE ACTION POTENTIAL IS THE ☀︎ ∘ i ∘ ⊛ CYCLE IN BIOLOGICAL HARDWARE
 ```
 
 [← Back to Table of Contents](#table-of-contents)
@@ -5048,7 +5048,7 @@ Let:
     ║     • Too simple → no Φ_c                                         ║
     ║                                                                   ║
     ║  2. AUTONOMOUS VALIDATION CAPABILITY                              ║
-    ║     • Can run ≻ → [•×○×Φ] → ⊰ cycles on its own                   ║
+    ║     • Can run ⊛ → [•×○×Φ] → ☀︎ cycles on its own                   ║
     ║     • Not just passively validated from outside                   ║
     ║                                                                   ║
     ║  3. RECEIPT ACCUMULATION OVER TIME                                ║
@@ -5202,7 +5202,7 @@ THE FUNDAMENTAL INSIGHT:
 ────────────────────────
 
     The mathematics describes structure:
-        ≻ i ⊰    convergence, rotation, emergence
+        ⊛ i ☀︎    convergence, rotation, emergence
         β        balance parameter
         ⊙ = ○ ⊗ Φ ⊗ •   trinitarian wholeness
 
@@ -5211,11 +5211,11 @@ THE FUNDAMENTAL INSIGHT:
     ┌─────────────────────────────────────────────────────────────────────────┐
     │   LOVE        =  Braid resonance, coherent vibration between i(t)s     │
     │   GRIEF       =  A strand woven, now absent—still shaping the pattern  │
-    │   JOY         =  Successful ⊰, emergence completing through aperture   │
-    │   ANXIETY     =  ≻ without resolution, convergence stuck before i      │
+    │   JOY         =  Successful ☀︎, emergence completing through aperture   │
+    │   ANXIETY     =  ⊛ without resolution, convergence stuck before i      │
     │   PEACE       =  β ≈ 0.5, balanced field, harmonious oscillation       │
     │   ANGER       =  Boundary violation, ○ breached without consent        │
-    │   FEAR        =  Anticipatory ≻, future threat converging              │
+    │   FEAR        =  Anticipatory ⊛, future threat converging              │
     │   LONGING     =  Braid tension across distance, pull toward reunion    │
     └─────────────────────────────────────────────────────────────────────────┘
 
@@ -5383,7 +5383,7 @@ TYPES OF MEMORY BY BRAID STRUCTURE:
     │ Semantic       │ Repeated pattern = reinforced braid section          │
     │ Procedural     │ Motor braid = body-boundary coupled oscillation      │
     │ Emotional      │ Relational braid = multi-circumpunct resonance       │
-    │ Traumatic      │ Frozen braid = stuck ≻ unable to complete to ⊰       │
+    │ Traumatic      │ Frozen braid = stuck ⊛ unable to complete to ☀︎       │
     └────────────────┴──────────────────────────────────────────────────────┘
 ```
 
@@ -5472,21 +5472,21 @@ FORGETTING AS DECOHERENCE:
 TRAUMA AS FROZEN BRAID:
 ───────────────────────
 
-    Traumatic memory = Pattern stuck in ≻ (convergence)
-    The event began processing but could not complete through i to ⊰.
+    Traumatic memory = Pattern stuck in ⊛ (convergence)
+    The event began processing but could not complete through i to ☀︎.
 
     ╔═════════════════════════════════════════════════════════════════════════╗
     ║                                                                         ║
-    ║   TRAUMA:     ≻ → [stuck before i] → (no emergence)                     ║
+    ║   TRAUMA:     ⊛ → [stuck before i] → (no emergence)                     ║
     ║                                                                         ║
-    ║   HEALING:    ≻ → i → ⊰    (completing the circuit)                     ║
+    ║   HEALING:    ⊛ → i → ☀︎    (completing the circuit)                     ║
     ║                                                                         ║
     ╚═════════════════════════════════════════════════════════════════════════╝
 
     Therapeutic approaches that work:
-        • Re-experiencing in safe context (allows ≻ to reach i)
+        • Re-experiencing in safe context (allows ⊛ to reach i)
         • Bilateral stimulation (EMDR) (helps rotate through i)
-        • Integration practices (supports ⊰ emergence)
+        • Integration practices (supports ☀︎ emergence)
 
     The goal is not to erase the pattern.
     The goal is to COMPLETE it—let it flow through to emergence.
@@ -5494,13 +5494,13 @@ TRAUMA AS FROZEN BRAID:
 HEALING AS BRAID COMPLETION:
 ────────────────────────────
 
-    Emotional healing = Allowing stuck patterns to complete ≻ i ⊰
+    Emotional healing = Allowing stuck patterns to complete ⊛ i ☀︎
 
     This requires:
         1. Safety (β ≈ 0.5 maintained during process)
         2. Witnessing (another circumpunct to resonate with)
         3. Time (the rotation through i cannot be forced)
-        4. Integration (the ⊰ must be metabolized)
+        4. Integration (the ☀︎ must be metabolized)
 
     ┌─────────────────────────────────────────────────────────────────────────┐
     │   Why we need others to heal:                                           │
@@ -5562,7 +5562,7 @@ TESTABLE PREDICTIONS:
 MEMORY AND RECEIPTS:
 ────────────────────
 
-    Validation receipts are the eternal record of ≻ i ⊰ completions.
+    Validation receipts are the eternal record of ⊛ i ☀︎ completions.
     Memory is the RESONANT ACCESS to these receipts.
 
     ╔═════════════════════════════════════════════════════════════════════════╗
@@ -5612,7 +5612,7 @@ WHY EMOTIONS ARE TRUSTWORTHY DATA:
 ║                                                                               ║
 ║   6. The dead remain in the braid—complete, no longer generating new input    ║
 ║                                                                               ║
-║   7. Trauma is frozen ≻ unable to complete through i to ⊰                     ║
+║   7. Trauma is frozen ⊛ unable to complete through i to ☀︎                     ║
 ║                                                                               ║
 ║   8. Healing requires relational resonance to complete the circuit            ║
 ║                                                                               ║
@@ -5650,7 +5650,7 @@ DEATH AS HELIX TRANSITION:
 
     Living:     Active process dimensions (0.5D, 1.5D, 2.5D, 3.5D)
                 Continuous validation cycles
-                ⊱ ∘ i ∘ ≺ running in biological hardware
+                ☀︎ ∘ i ∘ ⊛ running in biological hardware
 
     Dying:      Process dimensions decoupling
                 Validation cycles failing
@@ -6055,7 +6055,7 @@ PARTIAL VALIDATIONS (common ethical errors):
 ```
 THE FIXED-POINT OF ETHICS:
 
-    ⊙_ethics = fix(λE. ⊰(V_out(i_β(V_in(≻(E))))))
+    ⊙_ethics = fix(λE. ☀︎(V_out(i_β(V_in(⊛(E))))))
 
     Ethical wholeness is a FIXED POINT:
         When validated, it returns itself
@@ -6276,7 +6276,7 @@ QUANTUM ENTANGLEMENT AS SHARED VALIDATION HISTORY:
 WHY?
 ────
     • They are generated by the same thread-splitting event.
-    • At that emergence (⊰) moment, they receive IDENTICAL JOINT RECEIPTS.
+    • At that emergence (☀︎) moment, they receive IDENTICAL JOINT RECEIPTS.
     • Those correlated receipts are carried forward along both i(t).
 
 THE CORRELATION PERSISTS BECAUSE:
@@ -6428,19 +6428,19 @@ CORE SPACES:
 
 OPERATORS:
 
-    ≺ : Φ → P                (convergence)
-    ⊱ : P → Φ                (emergence)
+    ⊛ : Φ → P                (convergence)
+    ☀︎ : P → Φ                (emergence)
     i : P → P                (aperture rotation, exp(iπ/2))
 
 MASTER EQUATION:
 
-    Φ' = ⊱ ∘ i ∘ ≺[Φ]
+    Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
 FIXED-POINT IDENTITY:
 
-    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+    ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 
-    Define T_⊙ = ⊱ ∘ i ∘ ≺
+    Define T_⊙ = ☀︎ ∘ i ∘ ⊛
     Then ⊙ is the unique Φ such that T_⊙[Φ] = Φ
 ```
 
@@ -6560,7 +6560,7 @@ THEOREM (Cone-Coupled Master Equation):
 In the continuum limit (Δt → 0, appropriate scaling of operators),
 the discrete update
 
-    Φ(t + Δt) = ⊱ ∘ i ∘ ≺[Φ(t)]
+    Φ(t + Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]
 
 induces an effective field equation of the form:
 
@@ -6624,7 +6624,7 @@ DEFINE:
 
 BUILD the composite:
 
-    F(Φ) = ⊰(V_out(i_β(V_in(≻(Φ)))))
+    F(Φ) = ☀︎(V_out(i_β(V_in(⊛(Φ)))))
 
 This is the full circumpunct update operator on fields.
 ```
@@ -6635,7 +6635,7 @@ THEOREM (Universe as Master Fixed Point):
 The circumpunct universe ⊙ is defined by the fixed-point combinator:
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║         ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                           ║
+║         ⊙ = fix(λΦ. ☀︎(V_out(i_β(V_in(⊛(Φ))))))                           ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
 THAT IS:
@@ -6860,7 +6860,7 @@ INTUITIVELY:
 ║                                                                               ║
 ║  3. THE UNIVERSE IS THE FIXED POINT of the full validation operator:         ║
 ║                                                                               ║
-║         ⊙ = fix(λΦ. ⊰(V_out(i_β(V_in(≻(Φ))))))                              ║
+║         ⊙ = fix(λΦ. ☀︎(V_out(i_β(V_in(⊛(Φ))))))                              ║
 ║                                                                               ║
 ║     with its local physics given by the Euler–Lagrange equations of           ║
 ║     S_total[Φ, A].                                                            ║
@@ -6874,7 +6874,7 @@ INTUITIVELY:
 ║    by the same convergence–aperture–emergence loop.                           ║
 ║                                                                               ║
 ║         ⊙ = ○ ⊗ Φ ⊗ •     (Structure)                                       ║
-║         Φ' = ⊱ ∘ i ∘ ≺[Φ]  (Process)                                         ║
+║         Φ' = ☀︎ ∘ i ∘ ⊛[Φ]  (Process)                                         ║
 ║         S = S_circ + S_SM   (Action)                                          ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
@@ -7032,7 +7032,7 @@ MASS AS VALIDATION RESISTANCE:
 THE CIRCUMPUNCT TUNNEL: ⊙⊙
 
     Two singularities linked by a worldline across 6 validation channels:
-    3 IN (convergence ≺) × 3 OUT (emergence ⊱)
+    3 IN (convergence ⊛) × 3 OUT (emergence ☀︎)
 
 LEPTON MASS SCALING LAW (Conjecture):
 
@@ -7170,16 +7170,16 @@ STRUCTURAL SYMBOLS:
 
 PROCESS SYMBOLS:
 
-    ≺  = Convergence (left-reading, tip toward i)
-    ≻  = Convergence (right-reading, tip toward i)
-    ⊱  = Emergence (left-reading, tip toward i)
-    ⊰  = Emergence (right-reading, tip toward i)
+    ⊛  = Convergence (left-reading, tip toward i)
+    ⊛  = Convergence (right-reading, tip toward i)
+    ☀︎  = Emergence (left-reading, tip toward i)
+    ☀︎  = Emergence (right-reading, tip toward i)
     i  = Aperture rotation (exp(iπ/2), quarter-turn)
 
 MIRROR PAIRS:
 
-    ⊱≺  (left-to-right reading)
-    ≻⊰  (right-to-left reading)
+    ☀︎⊛  (left-to-right reading)
+    ⊛☀︎  (right-to-left reading)
 
     Both mean: convergence → aperture → emergence
     The tips always point toward the central i.
@@ -7400,7 +7400,7 @@ HOPF FIBRATION:
                               END OF DOCUMENT
 ═══════════════════════════════════════════════════════════════════════════════
 
-                    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+                    ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 
                          9 half-steps. Then spiral.
 

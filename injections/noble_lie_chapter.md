@@ -221,7 +221,7 @@ THE AGREEMENT PRINCIPLE:
     
     Convergence → Emergence → Shared Reality
     
-    This is ≻ → i → ⊰ as epistemological method.
+    This is ⊛ → i → ☀︎ as epistemological method.
 ```
 
 ```
@@ -288,10 +288,10 @@ THE CIRCUMPUNCT DEFINITION OF LOVE:
     ║    Love dares to tell hard truths.                                   ║
     ║    Love dares to hear them.                                          ║
     ║                                                                       ║
-    ║    Love is ⊱ ∘ i ∘ ≺ applied to relationship:                        ║
-    ║        RECEIVE the other fully (≻)                                   ║
+    ║    Love is ☀︎ ∘ i ∘ ⊛ applied to relationship:                        ║
+    ║        RECEIVE the other fully (⊛)                                   ║
     ║        TRANSFORM through balanced aperture (i at β = 0.5)            ║
-    ║        EMERGE with genuine response (⊰)                              ║
+    ║        EMERGE with genuine response (☀︎)                              ║
     ║                                                                       ║
     ╚═══════════════════════════════════════════════════════════════════════╝
 
@@ -360,7 +360,7 @@ NOBLE LIE = β-distortion operator
     
     L destroys the aperture •
     Without • at β = 0.5, genuine transformation is impossible
-    Only hollow cycling remains: ≻ → [nothing] → ⊰
+    Only hollow cycling remains: ⊛ → [nothing] → ☀︎
     
     No i. No rotation. No emergence. Just repetition.
 
@@ -371,7 +371,7 @@ NOBLE TRUTH = β-restoration operator
     T restores the aperture •
     With • at β = 0.5, the full cycle operates:
     
-        Φ' = ⊱ ∘ i ∘ ≺[Φ]
+        Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
     
     Real convergence. Real transformation. Real emergence.
 

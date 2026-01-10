@@ -15,12 +15,12 @@ W = ⊙_space × Φ_space              // paired whole-field states
 ## Energy Flow
 ```
 E : W → W                           // state transformation
-E = ⊰ ∘ i• ∘ ≻ ∘ ⊰ ∘ i○^∞ ∘ ≻      // internal decomposition
+E = ☀︎ ∘ i• ∘ ⊛ ∘ ☀︎ ∘ i○^∞ ∘ ⊛      // internal decomposition
 ```
 
 ## Compact Form
 ```
-[⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']
+[⊙⇄Φ] ⊛ i○^∞ ☀︎ •^∞ ⊛ i• ☀︎ [⊙'⇄Φ']
   └──────────────────────────────┘
     energy pulse through system
     while pair stays coupled

@@ -407,16 +407,16 @@ Status: Physics validates this already
 ### 3.5.12 The Master Equation Refinement
 
 ```
-E = (·, ○, Φ) × (≻, Å, ⊰)²
+E = (·, ○, Φ) × (⊛, Å, ☀︎)²
 
 MORE PRECISELY:
 
-E = (·, ○, Φ) × (≻, Å, ⊰)²
+E = (·, ○, Φ) × (⊛, Å, ☀︎)²
 
 Where:
 · and ○ can ONLY interact via Φ (geometric constraint)
 Å operations are field-mediated pathways (not direct)
-(≻, Å, ⊰) are processes that require Φ to function
+(⊛, Å, ☀︎) are processes that require Φ to function
 
 Mathematical constraint:
 Cannot write · × ○ directly

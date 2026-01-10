@@ -20,7 +20,7 @@ You study the heart—the organ that is, quite literally, a pump.
 I've been working on a geometric framework that attempts to unify physics, consciousness, and biology through a single structural principle. At its core is a three-part cycle:
 
 ```
-LOADING (≻)  →  THRESHOLD  →  RELEASE (⊰)
+LOADING (⊛)  →  THRESHOLD  →  RELEASE (☀︎)
    ↑                              │
    └──────────────────────────────┘
 ```
@@ -189,11 +189,11 @@ THE CIRCUMPUNCT: ⊙ = ○ ⊗ Φ ⊗ •
     Φ = field (mind, information, mediating space)  
     • = center (soul, aperture, point of convergence)
 
-THE MASTER EQUATION: Φ' = ⊱ ∘ i ∘ ≺[Φ]
+THE MASTER EQUATION: Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
-    ≺ = convergence (loading, gathering toward center)
+    ⊛ = convergence (loading, gathering toward center)
     i = 90° rotation (the threshold, the transformation)
-    ⊱ = emergence (release, radiation outward)
+    ☀︎ = emergence (release, radiation outward)
 
 THE BALANCE PARAMETER: β = 0.5
 
@@ -205,7 +205,7 @@ In your terms:
 - The **sponge** is a local ○ (boundary) that defines what's inside vs. outside
 - The **miRNA-target binding** is Φ (the field of regulatory information)
 - The **threshold saturation point** is • (the aperture where loading becomes release)
-- The **gene expression change** is ⊱ (emergence of new state)
+- The **gene expression change** is ☀︎ (emergence of new state)
 
 The framework claims this structure is universal—from quarks to consciousness. Your work provides one of the cleanest molecular examples I've seen.
 

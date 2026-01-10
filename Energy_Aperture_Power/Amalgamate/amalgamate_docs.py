@@ -54,17 +54,17 @@ def update_canonical_equation(content):
     """Update the canonical equation from old to new form."""
     changes = 0
 
-    # Old form: M≻Å(∙)⊰Φ = ⊙
-    # New form: E ≻ Å₀.₅ ⊰ ≻ Å₁.₅ ⊰ M ≻ Å₂.₅ ⊰ Φ = ⊙
+    # Old form: M⊛Å(∙)☀︎Φ = ⊙
+    # New form: E ⊛ Å₀.₅ ☀︎ ⊛ Å₁.₅ ☀︎ M ⊛ Å₂.₅ ☀︎ Φ = ⊙
 
     # Don't change every instance - keep some historical references
     # But update key explanatory sections
 
     patterns = [
         # Update main equation statements
-        (r'M≻Å\(∙\)⊰Φ = ⊙', 'E ≻ Å₀.₅ ⊰ ≻ Å₁.₅ ⊰ M ≻ Å₂.₅ ⊰ Φ = ⊙', 'main equation'),
-        (r'M≻∙⊰Φ = ⊙', 'E ≻ Å₀.₅ ⊰ ≻ Å₁.₅ ⊰ M ≻ Å₂.₅ ⊰ Φ = ⊙', 'compact equation'),
-        (r'M ≻ Å ⊰ Φ = ⊙', 'E ≻ Å₀.₅ ⊰ ≻ Å₁.₅ ⊰ M ≻ Å₂.₅ ⊰ Φ = ⊙', 'expanded equation'),
+        (r'M⊛Å\(∙\)☀︎Φ = ⊙', 'E ⊛ Å₀.₅ ☀︎ ⊛ Å₁.₅ ☀︎ M ⊛ Å₂.₅ ☀︎ Φ = ⊙', 'main equation'),
+        (r'M⊛∙☀︎Φ = ⊙', 'E ⊛ Å₀.₅ ☀︎ ⊛ Å₁.₅ ☀︎ M ⊛ Å₂.₅ ☀︎ Φ = ⊙', 'compact equation'),
+        (r'M ⊛ Å ☀︎ Φ = ⊙', 'E ⊛ Å₀.₅ ☀︎ ⊛ Å₁.₅ ☀︎ M ⊛ Å₂.₅ ☀︎ Φ = ⊙', 'expanded equation'),
     ]
 
     for pattern, replacement, description in patterns:
@@ -100,21 +100,21 @@ def inject_new_sections(target_content, injection_content):
 
 ```
 1D energy stream (E)
-  ≻ convergence IN
+  ⊛ convergence IN
 Å 0.5D
-  ⊰ emergence OUT
-  ≻ convergence IN
+  ☀︎ emergence OUT
+  ⊛ convergence IN
 Å 1.5D
-  ⊰ emergence OUT
+  ☀︎ emergence OUT
 2D surface (M)
-  ≻ convergence IN
+  ⊛ convergence IN
 Å^∞ 2.5D
-  ⊰ emergence OUT
+  ☀︎ emergence OUT
 3D field volume (Φ)
 
 EVERY aperture has:
-- Convergence (≻) flowing INTO it
-- Emergence (⊰) flowing OUT of it
+- Convergence (⊛) flowing INTO it
+- Emergence (☀︎) flowing OUT of it
 - Transformation/validation at the aperture
 
 Complete regularity!
@@ -161,30 +161,30 @@ ALL apertures transform and validate in their own way.
 ### The Complete Flow
 
 ```
-E (1D) ≻ Å₀.₅ ⊰ ≻ Å₁.₅ ⊰ M (2D) ≻ Å₂.₅ ⊰ Φ (3D)
+E (1D) ⊛ Å₀.₅ ☀︎ ⊛ Å₁.₅ ☀︎ M (2D) ⊛ Å₂.₅ ☀︎ Φ (3D)
 
 Where:
 E    = Energy stream (1D structure)
-≻    = Convergence operator (into aperture)
+⊛    = Convergence operator (into aperture)
 Å₀.₅ = Aperture validation (SOUL)
-⊰    = Emergence operator (from aperture)
-≻    = Convergence operator (into aperture)
+☀︎    = Emergence operator (from aperture)
+⊛    = Convergence operator (into aperture)
 Å₁.₅ = Aperture branching (MIND)
-⊰    = Emergence operator (from aperture)
+☀︎    = Emergence operator (from aperture)
 M    = Matter surface (2D structure)
-≻    = Convergence operator (into aperture)
+⊛    = Convergence operator (into aperture)
 Å₂.₅ = Aperture infinity (BODY)
-⊰    = Emergence operator (from aperture)
+☀︎    = Emergence operator (from aperture)
 Φ    = Field volume (3D structure)
 
-Pattern: Structure → ≻ → Aperture → ⊰ → (repeat)
+Pattern: Structure → ⊛ → Aperture → ☀︎ → (repeat)
 ```
 
 **Aperture Å exists at THREE fractional dimensions in different forms!**
 
 **EVERY aperture has the SAME pattern:**
-- Convergence (≻) flows INTO it
-- Emergence (⊰) flows OUT of it
+- Convergence (⊛) flows INTO it
+- Emergence (☀︎) flows OUT of it
 
 **Complete regularity across all scales!**
 

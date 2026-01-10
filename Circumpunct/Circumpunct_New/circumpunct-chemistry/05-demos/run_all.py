@@ -191,7 +191,7 @@ def main():
         return 1
     
     # Test 2: Compile with Traces
-    print_header("TEST 2: FULL ≻i⊰ TRACES")
+    print_header("TEST 2: FULL ⊛i☀︎ TRACES")
     success, result = run_test(
         "Complete Molecular Traces",
         [sys.executable, "compile_with_traces.py", "--auto"],

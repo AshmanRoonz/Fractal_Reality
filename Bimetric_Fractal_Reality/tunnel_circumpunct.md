@@ -35,7 +35,7 @@ The muon's worldline must tunnel between two circumpunct singularities:
 │        ⊙ ─────────────────────────────────────────── ⊙          │
 │     source                tunnel                  target        │
 │                                                                 │
-│   3 IN (convergence ≻)        ×       3 OUT (emergence ⊰)       │
+│   3 IN (convergence ⊛)        ×       3 OUT (emergence ☀︎)       │
 │   ────────────────────                ─────────────────────     │
 │   • x-direction in                    • x-direction out         │
 │   • y-direction in                    • y-direction out         │

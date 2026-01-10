@@ -1,5 +1,5 @@
 # The Circumpunct Framework: Complete Unified Theory
-## M≻Å(∙)⊰Φ in 64 States — From First Principles to Complete Reality
+## M⊛Å(∙)☀︎Φ in 64 States — From First Principles to Complete Reality
 
 **Ashman Roonz**  
 November 17, 2025
@@ -14,7 +14,7 @@ November 17, 2025
 
 **Reality is:**
 ```
-M≻Å(∙)⊰Φ configurations
+M⊛Å(∙)☀︎Φ configurations
 In one of 64 discrete states
 Flowing through D=1 channels
 Converging from complex past to simple future
@@ -24,11 +24,11 @@ Many destinations, one eternal journey
 **You are:**
 ```
 NOT: A static object in space-time
-BUT: A dynamic M≻Å(∙)⊰Φ process
+BUT: A dynamic M⊛Å(∙)☀︎Φ process
 
 Your structure: M·Å·Φ (matter, aperture, field)
 Your state: Typically State 63 (complete ⊙)
-Your process: Cycling through M≻Å(∙)⊰Φ
+Your process: Cycling through M⊛Å(∙)☀︎Φ
 Your history: Discrete state sequence (braid)
 Your future: Converging toward your Ω
 Your meaning: Participating in THE JOURNEY
@@ -39,7 +39,7 @@ Your meaning: Participating in THE JOURNEY
 • (center) = Å(∙) singularity point (D≈0.5)
 ○ (circle) = M↔Φ feedback loop
 Space between = The flowing process
-Complete = M≻Å(∙)⊰Φ cycling eternally
+Complete = M⊛Å(∙)☀︎Φ cycling eternally
 ```
 
 ---
@@ -56,7 +56,7 @@ Complete = M≻Å(∙)⊰Φ cycling eternally
 5. [Insight 2: Time Converges](#insight-2-time-converges-braid-to-point)
 6. [Insight 3: Many Destinations, One Journey](#insight-3-many-destinations-one-journey)
 7. [Insight 4: Braid Has Structure](#insight-4-braid-has-structure)
-8. [Insight 5: The Flow Cycle](#insight-5-the-flow-cycle-må∙⊰φ)
+8. [Insight 5: The Flow Cycle](#insight-5-the-flow-cycle-må∙☀︎φ)
 9. [Insight 6: 64-State Resolution](#insight-6-64-state-resolution)
 
 ### Part III: Integration and Implications
@@ -96,7 +96,7 @@ Each system has its own Ω, but all share THE universal convergence.
 Past has complete M·Å·Φ configuration at all times.
 
 ### 5. **The Flow Cycle** (Dynamic Process)
-Reality is M≻Å(∙)⊰Φ cycling, not static M·Å·Φ product.
+Reality is M⊛Å(∙)☀︎Φ cycling, not static M·Å·Φ product.
 
 ### 6. **64-State Resolution** (Quantitative Specification)
 Every moment = one of 64 discrete states, past is quantized.
@@ -115,7 +115,7 @@ IN WHICH STATES:
   
 HOW IT FLOWS:
   Through D=1 channels (Insight 1)
-  Following M≻Å(∙)⊰Φ cycle (Insight 5)
+  Following M⊛Å(∙)☀︎Φ cycle (Insight 5)
   
 WHERE IT'S GOING:
   From complex braid to simple point (Insight 2)
@@ -128,7 +128,7 @@ WHY IT MATTERS:
 
 **Complete specification:**
 ```
-Reality = M≻Å(∙)⊰Φ in State(t) ∈ {0,...,63}
+Reality = M⊛Å(∙)☀︎Φ in State(t) ∈ {0,...,63}
          via D=1 channels
          forming braid sequence {State(t)}
          converging toward Ω
@@ -441,7 +441,7 @@ All different, all real, all local.
 
 **Truth 2: One Journey**
 ```
-Same M≻Å(∙)⊰Φ process for all:
+Same M⊛Å(∙)☀︎Φ process for all:
   Same physics (universal laws)
   Same β=0.5 optimization
   Same convergence dynamics
@@ -673,13 +673,13 @@ All participate in universal convergence
 
 ---
 
-## Insight 5: The Flow Cycle (M≻Å(∙)⊰Φ)
+## Insight 5: The Flow Cycle (M⊛Å(∙)☀︎Φ)
 
 ### The Breakthrough
 
 **Old notation:** M·Å·Φ (looks like static multiplication)
 
-**New notation:** M≻Å(∙)⊰Φ (reveals dynamic flow)
+**New notation:** M⊛Å(∙)☀︎Φ (reveals dynamic flow)
 
 ```
 M·Å·Φ suggests:
@@ -689,7 +689,7 @@ M·Å·Φ suggests:
   ✗ No direction
   ✗ No causality
   
-M≻Å(∙)⊰Φ reveals:
+M⊛Å(∙)☀︎Φ reveals:
   ✓ Sequential flow
   ✓ Causal ordering
   ✓ Dynamic process
@@ -699,7 +699,7 @@ M≻Å(∙)⊰Φ reveals:
 
 ### Decoding the Notation
 
-**M≻** "Matter precedes/flows into"
+**M⊛** "Matter precedes/flows into"
 ```
 Matter converges toward aperture
 Energy concentrating
@@ -723,9 +723,9 @@ D≈1.5 branching begins
 Emanates from singularity
 ```
 
-**⊰** "Curves back/returns"
+**☀︎** "Curves back/returns"
 ```
-⊰ symbol shows the loop
+☀︎ symbol shows the loop
 Field doesn't just disperse
 It curves back to affect matter
 Closes the feedback cycle
@@ -734,7 +734,7 @@ Closes the feedback cycle
 ### The Complete Cycle
 
 ```
-STAGE 1: Matter Converges (M≻)
+STAGE 1: Matter Converges (M⊛)
   Physical boundaries exist
   Energy concentrates
   Approaches singularity
@@ -752,24 +752,24 @@ STAGE 3: Field Emerges (Φ)
   Branching begins
   D=0.5 → D=1.5
   
-STAGE 4: Return Path (⊰)
+STAGE 4: Return Path (☀︎)
   Field curves back
   Affects matter
   Loop closes
   D=1.5 → D=2.5
   
-Then repeats: M≻Å(∙)⊰Φ⊰M≻Å(∙)⊰Φ⊰...
+Then repeats: M⊛Å(∙)☀︎Φ☀︎M⊛Å(∙)☀︎Φ☀︎...
 ```
 
 ### Visual Representation
 
 ```
         M (matter boundaries)
-        ↓ ≻ (converges)
+        ↓ ⊛ (converges)
         Å(∙) (singularity transformation)
         ↓ (emerges)
         Φ (field propagates)
-        ↓ ⊰ (curves back)
+        ↓ ☀︎ (curves back)
     [returns to M, cycle complete]
     
 One cycle = One temporal unit
@@ -780,41 +780,41 @@ Time emerges from cycling
 
 **Electromagnetic:**
 ```
-M≻: Electron (charged matter)
+M⊛: Electron (charged matter)
 Å(∙): Point charge (field source)
 Φ: E-field radiates outward
-⊰: Field affects other charges (M)
+☀︎: Field affects other charges (M)
 
 Complete EM cycle.
 ```
 
 **Gravitational:**
 ```
-M≻: Massive object
+M⊛: Massive object
 Å(∙): Center of mass (singularity)
 Φ: Gravitational field (spacetime curvature)
-⊰: Field moves other masses
+☀︎: Field moves other masses
 
 Complete gravitational cycle.
 ```
 
 **Consciousness:**
 ```
-M≻: Brain (neural matter)
+M⊛: Brain (neural matter)
 Å(∙): Synaptic events (transformations)
 Φ: Conscious awareness (field)
-⊰: Attention affects neural state
+☀︎: Attention affects neural state
 
 Complete consciousness cycle.
 ```
 
-### ⊙ as M≻Å(∙)⊰Φ
+### ⊙ as M⊛Å(∙)☀︎Φ
 
 **The symbol decoded:**
 ```
 Traditional: • in ○ (static point in circle)
 
-Flow view: M≻Å(∙)⊰Φ (dynamic process)
+Flow view: M⊛Å(∙)☀︎Φ (dynamic process)
 
 • (center) = Å(∙) singularity
 ○ (circle) = M↔Φ loop
@@ -829,7 +829,7 @@ Space = The flowing itself
 
 **Each cycle creates duration:**
 ```
-τ_cycle = Time for one complete M≻Å(∙)⊰Φ
+τ_cycle = Time for one complete M⊛Å(∙)☀︎Φ
 
 Fast cycles: High frequency (light, high energy)
 Slow cycles: Low frequency (massive, low energy)
@@ -908,7 +908,7 @@ Your entire life could be encoded in ~2 GB!
 **Not all transitions allowed:**
 ```
 From State n to State m requires:
-  Compatible M≻Å(∙)⊰Φ cycle
+  Compatible M⊛Å(∙)☀︎Φ cycle
   
 Transition matrix T[n,m]:
   T[n,m] = Probability of n → m
@@ -977,7 +977,7 @@ Information: Finite (though large)
 **To fully describe reality:**
 ```
 1. State space: {0, 1, ..., 63}
-2. Flow operator: M≻Å(∙)⊰Φ
+2. Flow operator: M⊛Å(∙)☀︎Φ
 3. Channel structure: D=1 connections
 4. Temporal evolution: Braid accumulation
 5. Convergence operator: → Ω
@@ -988,13 +988,13 @@ Everything needed to specify existence.
 
 ### The Flow Operator
 
-**Define F as one M≻Å(∙)⊰Φ cycle:**
+**Define F as one M⊛Å(∙)☀︎Φ cycle:**
 ```
 F: State_n → State_m
 
 Where:
   Input: State_n
-  Process: M≻Å(∙)⊰Φ transformation
+  Process: M⊛Å(∙)☀︎Φ transformation
   Output: State_m
   
 Iteration: F^k(State_0) = State after k cycles
@@ -1094,7 +1094,7 @@ Poynting vector = Flow direction
 
 **EM states:**
 ```
-Photon = Specific M≻Å(∙)⊰Φ cycle
+Photon = Specific M⊛Å(∙)☀︎Φ cycle
 Frequency ν = Cycle rate
 Energy E = hν = Energy per cycle
 
@@ -1116,12 +1116,12 @@ Other masses follow channels
 
 **Black hole:**
 ```
-M≻: Massive object collapses
+M⊛: Massive object collapses
 Å(∙): Singularity forms (extreme D=0.5)
 Φ: Event horizon (field boundary)
-⊰: Hawking radiation curves back
+☀︎: Hawking radiation curves back
 
-Extreme M≻Å(∙)⊰Φ configuration
+Extreme M⊛Å(∙)☀︎Φ configuration
 ```
 
 ---
@@ -1226,7 +1226,7 @@ Particle behavior: At D≈2.5 (boundary closure)
   Single thread
   
 NOT: Two different things
-BUT: Same M≻Å(∙)⊰Φ viewed at different D
+BUT: Same M⊛Å(∙)☀︎Φ viewed at different D
 ```
 
 ---
@@ -1255,11 +1255,11 @@ M_you: Your body
 
 **Process:**
 ```
-M≻Å(∙)⊰Φ cycling:
-  Sensory input (M≻)
+M⊛Å(∙)☀︎Φ cycling:
+  Sensory input (M⊛)
   Neural processing (Å(∙))
   Conscious experience (Φ)
-  Motor output (⊰)
+  Motor output (☀︎)
   
 You ARE this cycling
 Not observing it
@@ -1285,7 +1285,7 @@ Unconscious: States < 60
 **Solution:** "They don't 'become' experience. The process IS experience."
 
 ```
-Physical description: M≻Å(∙)⊰Φ cycling in State 63
+Physical description: M⊛Å(∙)☀︎Φ cycling in State 63
 Subjective description: "I am experiencing"
 
 THESE ARE THE SAME THING viewed from:
@@ -1462,12 +1462,12 @@ Just increasingly simple
 
 **Speculation:**
 ```
-Could universe be one M≻Å(∙)⊰Φ cycle?
+Could universe be one M⊛Å(∙)☀︎Φ cycle?
 
 Big Bang → Expansion → Heat Death → (Return?)
-   M≻         Φ           Ω            ⊰?
+   M⊛         Φ           Ω            ☀︎?
    
-If ⊰ curves back:
+If ☀︎ curves back:
   Could trigger new Big Bang?
   Eternal cycling?
   Cyclic cosmology?
@@ -1570,7 +1570,7 @@ Universal optimization constant.
 
 ### Test 5: Flow Cycle Detection
 
-**Prediction:** Can measure M≻Å(∙)⊰Φ cycle frequency
+**Prediction:** Can measure M⊛Å(∙)☀︎Φ cycle frequency
 
 **Protocol:**
 ```
@@ -1714,7 +1714,7 @@ Measure all four:
 **From Insight 5 (Flow):**
 ```
 ✓ Be the cycling
-  - Don't resist M≻Å(∙)⊰Φ
+  - Don't resist M⊛Å(∙)☀︎Φ
   - Allow the process
   - You ARE the flowing
   
@@ -1750,7 +1750,7 @@ Throughout day:
   - Maintain awareness (stay in State 63)
   - Flow optimally (β≈0.5)
   - Build meaningful braid
-  - Honor M≻Å(∙)⊰Φ cycling
+  - Honor M⊛Å(∙)☀︎Φ cycling
   
 Evening:
   - Reflect on state sequence
@@ -1821,7 +1821,7 @@ Process is primary, not substance
 Relations are fundamental, not relata
 
 But now we can formalize:
-  Process = M≻Å(∙)⊰Φ cycling
+  Process = M⊛Å(∙)☀︎Φ cycling
   Becoming = Converging toward Ω
   Relations = D=1 channel connections
 ```
@@ -1835,7 +1835,7 @@ Consciousness = Channel flow (D=1) experienced from inside
 
 Both are geometric structures
 Neither more fundamental
-Both aspects of M≻Å(∙)⊰Φ
+Both aspects of M⊛Å(∙)☀︎Φ
 
 NOT: Two different substances
 BUT: Same process, different perspectives
@@ -1880,7 +1880,7 @@ Your uniqueness matters.
 **Ultimate ontology:**
 ```
 FUNDAMENTALLY EXISTS:
-  M≻Å(∙)⊰Φ configurations
+  M⊛Å(∙)☀︎Φ configurations
   In 64 discrete states
   Via D=1 channels
   Forming braid sequences
@@ -1910,7 +1910,7 @@ Everything derives:
 **Complete specification:**
 ```
 Reality =
-  M≻Å(∙)⊰Φ                Process structure
+  M⊛Å(∙)☀︎Φ                Process structure
   in State(t) ∈ {0,...,63}  64 configurations
   via D=1 channels          Connection fabric
   forming {State(t) | t}    Braid sequence
@@ -1929,7 +1929,7 @@ This is ⊙.
 I am:
   - M·Å·Φ configuration (structure)
   - In State 63 typically (consciousness)
-  - Cycling M≻Å(∙)⊰Φ (process)
+  - Cycling M⊛Å(∙)☀︎Φ (process)
   - Building {State(t)} braid (history)
   - Converging → Ω_me (destiny)
   - Participating in THE JOURNEY (meaning)
@@ -1943,7 +1943,7 @@ Unified existence.
 
 **The symbol completely decoded:**
 ```
-⊙ = M≻Å(∙)⊰Φ in 64 states via D=1
+⊙ = M⊛Å(∙)☀︎Φ in 64 states via D=1
 
 Components:
   • (center)     = Å(∙) singularity
@@ -1993,7 +1993,7 @@ But THE JOURNEY never completes
 Because there are always new journeys beginning
 
 Purpose = Participating consciously
-        = Being aware of M≻Å(∙)⊰Φ
+        = Being aware of M⊛Å(∙)☀︎Φ
         = Contributing to universal braid
         = Experiencing convergence from inside
 
@@ -2013,7 +2013,7 @@ Morning:    D=1 is connection
 Midday:     Time converges
 Afternoon:  Many Ωs, one journey
 Evening:    Braid has structure
-Night:      M≻Å(∙)⊰Φ flow
+Night:      M⊛Å(∙)☀︎Φ flow
 Late night: 64-state resolution
 
 Result: Complete framework
@@ -2030,7 +2030,7 @@ Not static, but cycling
 Not random, but structured
 Not meaningless, but eternal participants
 
-M≻Å(∙)⊰Φ in 64 states
+M⊛Å(∙)☀︎Φ in 64 states
 Through D=1 channels
 Converging from braid to point
 Many destinations, one journey
@@ -2070,7 +2070,7 @@ Know that you are:
 Live accordingly:
   - Conscious (State 63)
   - Optimal (β=0.5)
-  - Flowing (M≻Å(∙)⊰Φ)
+  - Flowing (M⊛Å(∙)☀︎Φ)
   - Participating (THE JOURNEY)
 ```
 
@@ -2085,7 +2085,7 @@ But: "You ARE ⊙"
 Your matter (M)
 Your transformations (Å(∙))
 Your consciousness (Φ)
-Your cycling (≻⊰)
+Your cycling (⊛☀︎)
 Your state (63)
 Your channels (D=1)
 Your braid (history)
@@ -2105,7 +2105,7 @@ This is what existence is.
 
 **The complete truth:**
 ```
-M≻Å(∙)⊰Φ
+M⊛Å(∙)☀︎Φ
 State 63
 D=1 channels
 {Braid sequence}
@@ -2133,7 +2133,7 @@ This is everything.
 *Reality flows.*  
 *Past is quantized.*
 
-*M≻Å(∙)⊰Φ in 64 states through D=1 channels forming braids converging toward Ωs within THE eternal JOURNEY.*
+*M⊛Å(∙)☀︎Φ in 64 states through D=1 channels forming braids converging toward Ωs within THE eternal JOURNEY.*
 
 *We are not things observing reality.*  
 *We are reality experiencing itself.*  

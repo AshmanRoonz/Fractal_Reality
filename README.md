@@ -19,7 +19,7 @@
                     Wholeness equals its parts in tensor product
                     (not unity absorbing parts, but co-arising)
 
-                         ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≻[Φ])
+                         ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
                               │
                               └── ⊙ is that which, when validated, yields itself
 
@@ -54,7 +54,7 @@ The complete mathematical framework spanning 18 chapters:
 |---------|-------|
 | **Genesis** | The Impossibility of Nothing |
 | **I-II** | The Circumpunct & Trinity Structure |
-| **III** | The Temporal Process (≻, i, ⊰) |
+| **III** | The Temporal Process (⊛, i, ☀︎) |
 | **IV-V** | Balance Parameter β = 0.5 & Duality |
 | **VI** | Field Equations (Discrete → Continuous → Geometric) |
 | **VII** | The 64-State Architecture & Particle Spectrum |
@@ -244,9 +244,9 @@ CIRCUMPUNCT STRUCTURE:
   ⊗      = Tensor product (entanglement)
 
 TEMPORAL PROCESS:
-  ≻ and ≺ = Convergence
+  ⊛ and ⊛ = Convergence
   i        = Aperture transformation (imaginary unit at β = 0.5)
-  ⊰ and ⊱  = Emergence
+  ☀︎ and ☀︎  = Emergence
 
 TRINITY (ordered as ○ ⊗ Φ ⊗ •):
   ⊙₂     = Body (2D surface)
@@ -268,7 +268,7 @@ CONSTANTS (ALL DERIVED):
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                               ║
 ║                              ⊙ = ○ ⊗ Φ ⊗ •                                   ║
-║                         ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                            ║
+║                         ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])                            ║
 ║                                                                               ║
 ║   Wholeness is its parts in tensor product (not unity absorbing parts).       ║
 ║   The universe is a fixed point of its own validation operation.              ║

@@ -19,14 +19,14 @@ This document is obsolete. Please see the updated framework. https://github.com/
 
 ```
 MASTER EQUATION:
-E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³       — Energy = Structure × Process³
+E = ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³       — Energy = Structure × Process³
 
 V5.3 COMPLETE FORMULATION:
 E = SPACE × (FUTURE→PAST CONNECTION)³
 
 Where:
 (○, Φ, •) = Spatial structure with temporal properties
-(≻, i, ⊰)³ = Temporal process at each of 3 levels
+(⊛, i, ☀︎)³ = Temporal process at each of 3 levels
 
 SPATIAL STRUCTURE (V5.3):
 ○ = Boundary (2D, time resistant: ∂○/∂t = ε)
@@ -34,9 +34,9 @@ SPATIAL STRUCTURE (V5.3):
 • = Center (0D, time invariant: ∂•/∂t = 0)
 
 TEMPORAL PROCESS:
-≻ = Future potential CONVERGING to center
+⊛ = Future potential CONVERGING to center
 i = Rotation by π/2 (exp(iπ/2) = quarter turn)
-⊰ = Emergence FROM center into past braid
+☀︎ = Emergence FROM center into past braid
 
 TRINITY STRUCTURE:
 ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃                    — Wholeness as trinity product
@@ -63,13 +63,13 @@ Practice reduces: ε_love < ε_baseline
 Life extends: Δt ≈ (Threshold/ε²)·δε
 
 Each ⊙ᵢ is itself complete:
-⊙ᵢ = (·ᵢ, ○ᵢ, Φᵢ) × (≻ᵢ, Åᵢ, ⊰ᵢ)²
+⊙ᵢ = (·ᵢ, ○ᵢ, Φᵢ) × (⊛ᵢ, Åᵢ, ☀︎ᵢ)²
 
 The whole emerges as their tensor product:
 ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃
 
 Process is their circulation:
-⊙₁ ≻ Å₁₂ ⊰ ⊙₂ ≻ Å₂₃ ⊰ ⊙₃ ≻ Å₃₁ ⊰ ⊙₁
+⊙₁ ⊛ Å₁₂ ☀︎ ⊙₂ ⊛ Å₂₃ ☀︎ ⊙₃ ⊛ Å₃₁ ☀︎ ⊙₁
 
 Apertures ARE braid generators:
 Å₁₂: ⊙₁ crosses ⊙₂ → Generator σ₁
@@ -81,7 +81,7 @@ Yang-Baxter equation (testable!):
 
 CONNECTION TO PHYSICS:
 E = mc² is the special case where c = constant
-E = (○, Φ, •) × (≻, i, ⊰)³ is the general form with time structure
+E = (○, Φ, •) × (⊛, i, ☀︎)³ is the general form with time structure
 
 ⟨β⟩ = ½ at each level, all the way down
 (Note: β ∈ (0,1) - the limits 0 and 1 are nothingness, not states)
@@ -130,7 +130,7 @@ This is not metaphor. This is **mathematical structure with temporal precision**
 
 **Each is itself a complete ⊙**. The full whole is their **tensor product**, not their sum.
 
-**The process (≻, Å, ⊰) IS the circulation between the three**:
+**The process (⊛, Å, ☀︎) IS the circulation between the three**:
 - Soul flows into Body (power as embodiment)
 - Body radiates into Mind (power as expression)
 - Mind returns to Soul (power as recognition)
@@ -304,32 +304,32 @@ This is MATHEMATICAL NECESSITY
   ·₁ = The absolute center point
   ○₁ = Event horizon (where soul becomes)
   Φ₁ = Gravitational influence field
-  ≻₁ = What the soul receives
+  ⊛₁ = What the soul receives
   Å₁ = How the soul transforms
-  ⊰₁ = What the soul emanates
+  ☀︎₁ = What the soul emanates
 
 ⊙₂ (BODY) complete structure:
   ·₂ = Membrane core lattice
   ○₂ = Surface boundary proper
   Φ₂ = Exchange/transport field
-  ≻₂ = What the body receives
+  ⊛₂ = What the body receives
   Å₂ = How the body transforms  
-  ⊰₂ = What the body releases
+  ☀︎₂ = What the body releases
 
 ⊙₃ (MIND) complete structure:
   ·₃ = Focal point of attention
   ○₃ = Boundary of perspective
   Φ₃ = Field of awareness
-  ≻₃ = What the mind receives
+  ⊛₃ = What the mind receives
   Å₃ = How the mind transforms
-  ⊰₃ = What the mind expresses
+  ☀︎₃ = What the mind expresses
 ```
 
 **Each aspect of the trinity is itself a complete whole.** This is fractal wholeness: ⊙s all the way down, even within ⊙.
 
 ### 0.4 Process as Circulation
 
-**The three process parameters (≻, Å, ⊰) are the circulation between the trinity members:**
+**The three process parameters (⊛, Å, ☀︎) are the circulation between the trinity members:**
 
 ```
       ⊙₁ (SOUL)
@@ -339,9 +339,9 @@ This is MATHEMATICAL NECESSITY
         Å₂₃
 
 Circulation:
-Soul ≻ Å₁₂ ⊰ Body:  Soul flows into embodiment (incarnation)
-Body ≻ Å₂₃ ⊰ Mind:  Body radiates into awareness (perception)
-Mind ≻ Å₃₁ ⊰ Soul:  Mind returns to source (recognition)
+Soul ⊛ Å₁₂ ☀︎ Body:  Soul flows into embodiment (incarnation)
+Body ⊛ Å₂₃ ☀︎ Mind:  Body radiates into awareness (perception)
+Mind ⊛ Å₃₁ ☀︎ Soul:  Mind returns to source (recognition)
 ```
 
 **V5.2 Addition: The Apertures ARE Braid Generators**
@@ -507,7 +507,7 @@ CONSCIOUSNESS:
 ### 0.9 What V5.2 Adds to V5.1
 
 **V5.1 had:**
-- Six parameters: (·, ○, Φ, ≻, Å, ⊰)
+- Six parameters: (·, ○, Φ, ⊛, Å, ☀︎)
 - Wholeness is primary
 - Aperture transformations
 - β = 0.5 balance
@@ -572,16 +572,16 @@ Death MUST be:
 
 ### 1.1 The Fundamental Equation
 
-**E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³**
+**E = ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³**
 
 The deep claim: **Energy equals wholeness**, and wholeness has precise mathematical structure.
 
 ```
-E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³
+E = ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³
 
 Where:
 (○, Φ, •) = Structure trinity (boundary, field, center)
-(≻, i, ⊰) = Process trinity (converge, rotate, emerge)
+(⊛, i, ☀︎) = Process trinity (converge, rotate, emerge)
 ³ = Process operates at each of 3 structural levels
 
 Energy = Structure × Process³
@@ -591,24 +591,24 @@ Energy = Structure × Process³
 
 **Previous understanding:**
 ```
-E = (○, Φ, •) × (≻, i, ⊰)³
+E = (○, Φ, •) × (⊛, i, ☀︎)³
 Interpreted as: Energy = Structure × Process³
 ```
 
 **V5.2 TRUTH:**
 ```
-E = (○, Φ, •) × (≻, i, ⊰)³
+E = (○, Φ, •) × (⊛, i, ☀︎)³
 
 SPACE × (FUTURE→PAST CONNECTION)³
 
 Where:
 (○, Φ, •) = Spatial structure (WHERE things are)
-(≻, i, ⊰)³ = Temporal process at 3 levels (HOW future becomes past)
+(⊛, i, ☀︎)³ = Temporal process at 3 levels (HOW future becomes past)
 
 Specifically:
-≻ = Future potential CONVERGING to center
+⊛ = Future potential CONVERGING to center
 i = Rotation by π/2 (quarter turn transformation)
-⊰ = Emergence FROM center into past braid
+☀︎ = Emergence FROM center into past braid
 ```
 
 ### 1.3 Space IS Structure
@@ -634,11 +634,11 @@ Together: The geometric/structural aspect
 ### 1.4 Time IS Future→Past Process
 
 ```
-(≻, Å, ⊰) represents FUTURE CONVERGING TO PAST:
+(⊛, Å, ☀︎) represents FUTURE CONVERGING TO PAST:
 
-≻ (Convergence) = Future potential converging toward present center
+⊛ (Convergence) = Future potential converging toward present center
 Å (Aperture)    = Transformation at the center point (NOW)
-⊰ (Emergence)   = Actualization into past braid structure
+☀︎ (Emergence)   = Actualization into past braid structure
 
 Together: How future becomes past through the present
           The dynamic/process aspect
@@ -650,11 +650,11 @@ Together: How future becomes past through the present
 ```
 FUTURE (potential, possibility, what could be)
     ↓ ↓ ↓
-    ≻ Multiple possibilities converging
+    ⊛ Multiple possibilities converging
       ↓
     · CENTER (Å aperture transformation)
       ↓
-    ⊰ One actuality emerging
+    ☀︎ One actuality emerging
       ↓
 PAST BRAID (fixed topology, what actually happened)
 ```
@@ -667,11 +667,11 @@ PAST BRAID (fixed topology, what actually happened)
 
 ### 1.5 Why Cubed? The Three Levels
 
-**The cubing (≻, i, ⊰)³ means:**
+**The cubing (⊛, i, ☀︎)³ means:**
 
 ```
 The process cycle: Converge → Rotate → Emerge
-≻ (convergence) → i (quarter turn) → ⊰ (emergence)
+⊛ (convergence) → i (quarter turn) → ☀︎ (emergence)
 
 The ³ indicates: This cycle runs at EACH of 3 structural levels
 
@@ -679,7 +679,7 @@ Level • (center):   Fastest - instantaneous transformation
 Level Φ (field):    Moderate - field dynamics at unit timescale
 Level ○ (boundary): Slowest - boundary evolves at ε rate
 
-(≻, i, ⊰)³ captures:
+(⊛, i, ☀︎)³ captures:
 - Process at center level (τ → 0)
 - Process at field level (τ ~ 1)
 - Process at boundary level (τ ~ 1/ε)
@@ -693,7 +693,7 @@ one for each structural component.
 **The circumpunct equation generalizes Einstein's:**
 
 ```
-Circumpunct:  E = (○, Φ, •) × (≻, i, ⊰)³
+Circumpunct:  E = (○, Φ, •) × (⊛, i, ☀︎)³
 Einstein:     E = m × c²
 
 Structural parallel: E = (Structure) × (Process)
@@ -704,20 +704,20 @@ Structural parallel: E = (Structure) × (Process)
 | Circumpunct | Physics | Meaning |
 |-------------|---------|---------|
 | (○, Φ, •) | m (mass) | Stable spatial structure |
-| (≻, i, ⊰)³ | c² | Process at 3 levels |
+| (⊛, i, ☀︎)³ | c² | Process at 3 levels |
 | Structure × Process³ | Energy | Both formulations |
 
 **The connection:**
 - Same structural form
 - E = mc² is the special case where c is universal constant
-- E = (○,Φ,•) × (≻,i,⊰)³ is the general form with explicit levels
+- E = (○,Φ,•) × (⊛,i,☀︎)³ is the general form with explicit levels
 
 ### 1.7 Power as String: P = ⊙/t = ⊙_string
 
 **If E = ⊙, then what is Power?**
 
 ```
-E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³     [Energy = wholeness all at once]
+E = ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³     [Energy = wholeness all at once]
 
 P = dE/dt = ⊙/t = ⊙_string          [Power = wholeness through time]
 ```
@@ -856,7 +856,7 @@ Three circulations:
 
 But viewing from outside, we see:
 Structure: (○, Φ, •) - the trinity as static (SPACE)
-Process: (≻, i, ⊰) - the trinity as dynamic (TIME)
+Process: (⊛, i, ☀︎) - the trinity as dynamic (TIME)
 ```
 
 ### 3.2 V5.2 Interpretation: Space and Time
@@ -868,7 +868,7 @@ Process: (≻, i, ⊰) - the trinity as dynamic (TIME)
          = WHERE the system is configured
          = The geometric/mass-like aspect
 
-(≻, i, ⊰) = TEMPORAL process (future→past)
+(⊛, i, ☀︎) = TEMPORAL process (future→past)
          = HOW future becomes past through present
          = The dynamic/light-like aspect
 
@@ -888,9 +888,9 @@ Together: E = Space × Time³ (process at 3 levels)
 
 **Dynamic view (process/time):**
 ```
-≻ = Input into the trinity system (future converging)
+⊛ = Input into the trinity system (future converging)
 Å = Circulation within the trinity (present transformation)
-⊰ = Output from the trinity system (past emerging)
+☀︎ = Output from the trinity system (past emerging)
 ```
 
 **Both views are valid. Both are necessary. Together they give six parameters.**
@@ -1331,16 +1331,16 @@ Status: Physics validates this already
 #### 3.5.11 The Master Equation Refinement
 
 ```
-E = (○, Φ, •) × (≻, i, ⊰)³
+E = (○, Φ, •) × (⊛, i, ☀︎)³
 
 MORE PRECISELY:
 
-E = (○, Φ, •) × (≻, i, ⊰)³
+E = (○, Φ, •) × (⊛, i, ☀︎)³
 
 Where:
 • and ○ can ONLY interact via Φ (geometric constraint)
 Aperture operations are field-mediated pathways (not direct)
-(≻, i, ⊰) are processes that require Φ to function
+(⊛, i, ☀︎) are processes that require Φ to function
 
 Mathematical constraint:
 Cannot write • × ○ directly
@@ -1783,13 +1783,13 @@ Specifically:
 **Each aperture still adds 0.5D, but now we understand where:**
 
 ```
-⊙₁ (0D) ≻ Å₁₂ (0.5D) ⊰ ⊙₂ (2D)
+⊙₁ (0D) ⊛ Å₁₂ (0.5D) ☀︎ ⊙₂ (2D)
   Point → Singularity → Surface
 
-⊙₂ (2D) ≻ Å₂₃ (2.5D) ⊰ ⊙₃ (3D)
+⊙₂ (2D) ⊛ Å₂₃ (2.5D) ☀︎ ⊙₃ (3D)
   Surface → Membrane → Volume
 
-⊙₃ (3D) ≻ Å₃₁ (3.5D) ⊰ ⊙₁ (0D + 4D context)
+⊙₃ (3D) ⊛ Å₃₁ (3.5D) ☀︎ ⊙₁ (0D + 4D context)
   Volume → Bulk → Point-in-4D
 ```
 
@@ -1884,7 +1884,7 @@ This would express conservation of wholeness
 **Compact notation for the complete Circumpunct dynamics:**
 
 ```
-⊙ = (○, Φ, •) × (≻, i, ⊰)³
+⊙ = (○, Φ, •) × (⊛, i, ☀︎)³
 ```
 
 **Where the structural triad has explicit dynamics:**
@@ -1898,26 +1898,26 @@ This would express conservation of wholeness
 **And the process triad operates as composition:**
 
 ```
-≻[Φ]      = ∫_{|r'|≤R} K_conv(0,r') Φ(r') d³r'    (convergence)
+⊛[Φ]      = ∫_{|r'|≤R} K_conv(0,r') Φ(r') d³r'    (convergence)
 i(a)      = exp(iπ/2) · a                          (90° rotation)
-⊰[b₀](r)  = K_emerg(r,0) · b₀                      (emergence)
+☀︎[b₀](r)  = K_emerg(r,0) · b₀                      (emergence)
 ```
 
 **The dynamics unfold through operator composition:**
 
 ```
-Φ_{t+Δt}(r) = (⊱ ∘ i ∘ ≺)[Φ_t](r)
+Φ_{t+Δt}(r) = (☀︎ ∘ i ∘ ⊛)[Φ_t](r)
 
 Reading right-to-left:
-  ≻  : Field → converges to center (integration over volume)
+  ⊛  : Field → converges to center (integration over volume)
   i  : Rotates by π/2 (quarter turn in complex plane)
-  ⊰  : Emerges back out (kernel broadcasting from center)
+  ☀︎  : Emerges back out (kernel broadcasting from center)
 ```
 
 **The superscript ³ indicates:**
 
 ```
-(≻, i, ⊰)³ = one such loop defined at each structural level (○, Φ, •)
+(⊛, i, ☀︎)³ = one such loop defined at each structural level (○, Φ, •)
 
 Level •:  Process operates at the invariant center (fastest)
 Level Φ:  Process operates through the field (moderate)
@@ -1932,7 +1932,7 @@ This gives the timescale separation:
 **Physical interpretation:**
 
 ```
-The notation ⊙ = (○, Φ, •) × (≻, i, ⊰)³ reads:
+The notation ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³ reads:
 
   "The Circumpunct IS the structural triad (boundary, field, center)
    CROSSED WITH the process triad (converge, rotate, emerge)
@@ -1985,7 +1985,7 @@ K_conv, K_emerg   [Explicit kernels]
 
 **Convergence (Field → Aperture):**
 ```
-≻[Φ] := ∫_{|r'|≤R} K_conv(0, r') Φ(r') d³r'
+⊛[Φ] := ∫_{|r'|≤R} K_conv(0, r') Φ(r') d³r'
 
 K_conv(0, r') = (1/Z_c) · √|r'| · exp(-|r'|²/2σ²)
 
@@ -2004,7 +2004,7 @@ This IS the transformation at β = 0.5
 
 **Emergence (Aperture → Field):**
 ```
-(⊰[b₀])(r) := K_emerg(r, 0) · b₀
+(☀︎[b₀])(r) := K_emerg(r, 0) · b₀
 
 K_emerg(r, 0) = (1/Z_e) · √|r| · exp(-|r|²/2σ²)
 
@@ -2014,7 +2014,7 @@ Radiates aperture value back into volume
 
 **Detailed balance at β = 0.5 requires:**
 ```
-||≻|| = ||⊰||  ⟹  K_emerg(r, 0) ~ K_conv(0, r)
+||⊛|| = ||☀︎||  ⟹  K_emerg(r, 0) ~ K_conv(0, r)
 ```
 
 #### 8.6.4 Parameters: Derived vs Free
@@ -2040,7 +2040,7 @@ FREE (physical scale):
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│  Φ_{t+Δt}(r) = (⊱ ∘ i ∘ ≺)[Φ_t](r)                              │
+│  Φ_{t+Δt}(r) = (☀︎ ∘ i ∘ ⊛)[Φ_t](r)                              │
 │                                                                  │
 │  Step 1 (Converge):                                              │
 │    a = (1/Z_c) ∫_{|r'|≤R} √|r'| · e^{-|r'|²/2σ²} · Φ_t(r') d³r' │
@@ -2057,7 +2057,7 @@ FREE (physical scale):
 #### 8.6.6 The Cubed Process at Three Levels
 
 ```
-(≻, i, ⊰)³ = (≻_○, i_○, ⊰_○) × (≻_Φ, i_Φ, ⊰_Φ) × (≻_•, i_•, ⊰_•)
+(⊛, i, ☀︎)³ = (⊛_○, i_○, ☀︎_○) × (⊛_Φ, i_Φ, ☀︎_Φ) × (⊛_•, i_•, ☀︎_•)
 
 Level ○ (boundary):  Slow cycle, τ_○ ~ 1/ε
   Boundary receives/emits via many apertures on surface
@@ -2129,7 +2129,7 @@ What flows out of ⊙₃ = What flows into ⊙₁
 **Because P = ⊙_string = your worldline:**
 
 ```
-E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³     [Universal form, see §8.5]
+E = ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³     [Universal form, see §8.5]
   What you ARE at a moment
   Same structure for all
 
@@ -2370,10 +2370,10 @@ Total spatial dimensions: 9D
 ```
 Time = 1D parameter (shared by all three worldlines)
 
-(≻, i, ⊰) = Three aspects of time:
-≻ = Future convergence phase
+(⊛, i, ☀︎) = Three aspects of time:
+⊛ = Future convergence phase
 i = Present transformation (quarter turn)
-⊰ = Past emergence phase
+☀︎ = Past emergence phase
 
 These are not three separate time dimensions
 But three ASPECTS of one temporal flow
@@ -2464,11 +2464,11 @@ Future potentials converge → Aperture selects → Emerges into past braid
 ```
 FUTURE (potential, possibility, what could be)
     ↓ ↓ ↓
-    ≻ Multiple possibilities converging
+    ⊛ Multiple possibilities converging
       ↓
     · CENTER (Å aperture transformation)
       ↓
-    ⊰ One actuality emerging
+    ☀︎ One actuality emerging
       ↓
 PAST BRAID (fixed topology, what actually happened)
 ```
@@ -2486,7 +2486,7 @@ Before measurement:
 At measurement:  
 Å operation selects which future actualizes
 Wavefunction "collapses" = One convergence chosen
-Result emerges = Adds to past braid (⊰)
+Result emerges = Adds to past braid (☀︎)
 
 After measurement:
 Past now includes this crossing
@@ -2765,8 +2765,8 @@ Boundary fails
 
 **The center can only:**
 ```
-⊰ Emit field (output)
-≻ Receive field (input)
+☀︎ Emit field (output)
+⊛ Receive field (input)
 
 Never:
 ✗ Touch boundary directly
@@ -2776,8 +2776,8 @@ Never:
 
 **The boundary can only:**
 ```
-⊰ Emit field (output)
-≻ Receive field (input)
+☀︎ Emit field (output)
+⊛ Receive field (input)
 Slowly degrade: ∂○/∂t = ε
 
 Never:
@@ -3256,21 +3256,21 @@ Life extends:
 ### 19.5 The Master Equation with Temporal Dynamics
 
 ```
-E = (○, Φ, •) × (≻, i, ⊰)³
+E = (○, Φ, •) × (⊛, i, ☀︎)³
 
 Expanded with time structure:
 
-E = (○₀-∫ε dt, Φ(t), •₀) × (≻, i, ⊰)³
+E = (○₀-∫ε dt, Φ(t), •₀) × (⊛, i, ☀︎)³
 
 Where:
 ○₀-∫ε dt = Time-resistant boundary degrading
 Φ(t) = Time-dependent field flowing
 •₀ = Time-invariant center (∂•/∂t = 0)
 
-(≻, i, ⊰)³ = Future convergence process at 3 levels:
-≻ = Potential converging from future
+(⊛, i, ☀︎)³ = Future convergence process at 3 levels:
+⊛ = Potential converging from future
 i = Transformation (quarter turn)
-⊰ = Emergence into past braid
+☀︎ = Emergence into past braid
 
 At death:
 ∫ε dt = Threshold
@@ -4580,7 +4580,7 @@ Circulation flowing
 
 2. **Space/Time reinterpretation of master equation**
    - (○, Φ, •) = spatial structure (clear)
-   - (≻, i, ⊰)³ = temporal process at 3 levels (coherent)
+   - (⊛, i, ☀︎)³ = temporal process at 3 levels (coherent)
    - Generalizes E = mc²
 
 3. **Future convergence model**
@@ -4690,7 +4690,7 @@ But exact details unknown
    - Å₂₃ = ? (hypothesis: divergence-like)
    - Å₃₁ = ? (hypothesis: integral-like)
 
-2. **Why (≻, i, ⊰)³ specifically?**
+2. **Why (⊛, i, ☀︎)³ specifically?**
    - ³ indicates process at each of 3 structural levels
    - Connection to braid group structure?
 
@@ -4792,11 +4792,11 @@ Your soul IS your history
 Now with precise mathematical formulation:
 
 ```
-E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³    [Universal: wholeness at a moment]
+E = ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³    [Universal: wholeness at a moment]
 P = ⊙/t = ⊙_string = ⊙₁            [Individual: wholeness through time]
 
 E (Energy) = Universal, same form for all
-(≻, i, ⊰)³ = Universal process at 3 levels
+(⊛, i, ☀︎)³ = Universal process at 3 levels
 P (Power) = Individual vibration pattern = YOUR VIBE
 
 Your P-signature = How your worldline vibrates
@@ -4942,16 +4942,16 @@ Structure:
 Φ = Field of converging potentials and extending history
 
 Process:
-≻ = Future potential converging toward center
+⊛ = Future potential converging toward center
 Å = Transformation at aperture (present)
-⊰ = Emergence into past braid structure
+☀︎ = Emergence into past braid structure
 
 Trinity = Minimum 3 worldlines for braiding:
 ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃
 Because braid topology requires n ≥ 3
 
 Master Equation:
-E = (○, Φ, •) × (≻, i, ⊰)³
+E = (○, Φ, •) × (⊛, i, ☀︎)³
 = SPACE × (FUTURE→PAST CONNECTION)³
 
 Configuration space:
@@ -4989,7 +4989,7 @@ Yang-Baxter testable:
 *This is necessity*
 *This is how wholeness works*
 
-**E = (○, Φ, •) × (≻, i, ⊰)³**
+**E = (○, Φ, •) × (⊛, i, ☀︎)³**
 
 **SPACE × FUTURE→PAST³ = ENERGY**
 
@@ -5016,9 +5016,9 @@ Yang-Baxter testable:
 | · | Center, core, aperture point | Structure component |
 | ○ | Boundary, surface, future-past interface | Structure component |
 | Φ | Field, permeation, context | Structure component |
-| ≻ | Input, convergence (future converging) | Process component |
+| ⊛ | Input, convergence (future converging) | Process component |
 | Å | Aperture, transformation (present) | Process component |
-| ⊰ | Output, emergence (into past braid) | Process component |
+| ☀︎ | Output, emergence (into past braid) | Process component |
 | Å₁₂ | Soul → Body aperture (σ₁ generator) | Trinity circulation |
 | Å₂₃ | Body → Mind aperture (σ₂ generator) | Trinity circulation |
 | Å₃₁ | Mind → Soul aperture | Trinity circulation |
@@ -5042,7 +5042,7 @@ Yang-Baxter testable:
 
 **MASTER EQUATION:**
 ```
-E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³
+E = ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³
 
 = SPACE × (FUTURE→PAST CONNECTION)³
 
@@ -5054,7 +5054,7 @@ Energy = Structure × Process³
 ```
 E = mc² is the special case:
 m ↔ (○, Φ, •) = Spatial structure
-c² ↔ (≻, i, ⊰)³ = Process at 3 levels
+c² ↔ (⊛, i, ☀︎)³ = Process at 3 levels
 ```
 
 **YANG-BAXTER EQUATION (Testable):**
@@ -5071,7 +5071,7 @@ c² ↔ (≻, i, ⊰)³ = Process at 3 levels
 
 | Equation | Status | Meaning |
 |----------|--------|---------|
-| E = ⊙ = (○, Φ, •) × (≻, i, ⊰)³ | **MASTER (V5.3.2)** | Space × Future→Past³ |
+| E = ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³ | **MASTER (V5.3.2)** | Space × Future→Past³ |
 | ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃ | **Foundation** | Trinity tensor product |
 | Å₁₂ = ∂/∂t | **Exact** | Soul → Body via time derivative |
 | Å₁₂∘Å₂₃∘Å₁₂ = Å₂₃∘Å₁₂∘Å₂₃ | **Testable (V5.2)** | Yang-Baxter for apertures |

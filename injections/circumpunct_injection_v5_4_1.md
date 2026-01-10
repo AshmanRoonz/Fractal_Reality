@@ -141,7 +141,7 @@ The kernel convolution derivation (§4.2) shows:
 2. Taylor expansion + isotropy + locality yields the Laplacian
 3. The evolution equation emerges as iℏ∂Φ/∂t = HΦ
 
-**Key quote:** "The single-step process ⊱∘i∘≻ defines an integral evolution operator U(Δt). Under standard locality and scaling assumptions, its generator is a self-adjoint differential operator H, and the central aperture rotation i supplies the complex structure needed to write the evolution as the Schrödinger equation."
+**Key quote:** "The single-step process ☀︎∘i∘⊛ defines an integral evolution operator U(Δt). Under standard locality and scaling assumptions, its generator is a self-adjoint differential operator H, and the central aperture rotation i supplies the complex structure needed to write the evolution as the Schrödinger equation."
 
 ### 2.2 The Å(β) Interpretation
 
@@ -223,7 +223,7 @@ This is the **Transmission Law** — derived from the same postulates as the Sch
 
 | Standard QM | Circumpunct |
 |-------------|-------------|
-| \|ψ(0)⟩ = (1/√2)(\|L⟩ + \|R⟩) | Φ₀ = ≻[Φ] → balanced split (β = 0.5) |
+| \|ψ(0)⟩ = (1/√2)(\|L⟩ + \|R⟩) | Φ₀ = ⊛[Φ] → balanced split (β = 0.5) |
 | Ĥ = diag(E_L, E_R) | ε_L, ε_R = local aperture energies |
 | iℏ ∂_t\|ψ⟩ = Ĥ\|ψ⟩ | θ(t) = πβ(t) = Et/ℏ |
 | φ_L = -E_L t/ℏ | Å(β_L) = e^(iε_L t/ℏ) |
@@ -251,7 +251,7 @@ The same geometric constraint—**aperture isotropy**—combined with linearity 
 **Flow Structure:**
 
 ```
-Future potentials → ≻ → Aperture (•) → Å(β) → ⊱ → Past topology
+Future potentials → ⊛ → Aperture (•) → Å(β) → ☀︎ → Past topology
                     ↓              ↓           ↓
                  0D point      90° rotate   1D ray
               convergence    (at β=0.5)   emergence

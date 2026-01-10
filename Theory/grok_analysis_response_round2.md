@@ -276,15 +276,15 @@ def compute_fractal_dim(field, scales=None):
 
 def master_equation_step(field, beta=0.5):
     """
-    Φ(t+Δt) = ⊱ ∘ i ∘ ≺[Φ(t)]
+    Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]
     """
-    # Convergence (≻): smoothing toward center
+    # Convergence (⊛): smoothing toward center
     conv = gaussian_filter(field, sigma=1.0) * beta
 
     # i-rotation: 90° phase shift
     trans = conv * 1j
 
-    # Emergence (⊰): outward spreading
+    # Emergence (☀︎): outward spreading
     emerg = gaussian_filter(trans.real, sigma=0.5) * (1 - beta)
 
     return emerg

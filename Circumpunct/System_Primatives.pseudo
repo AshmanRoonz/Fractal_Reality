@@ -499,7 +499,7 @@ CircumpunctIdentity =
   let V = Validation_at_D(1) in
   let M = Matter_at_D(2) in
   let Φ = Field_at_D(3) in
-  let full_process = E ≻ Å(0.5) ⊰ V ≻ Å(1.5) ⊰ M ≻ Å(2.5) ⊰ Φ in
+  let full_process = E ⊛ Å(0.5) ☀︎ V ⊛ Å(1.5) ☀︎ M ⊛ Å(2.5) ☀︎ Φ in
   let wholeness = ⊙ in
   (full_process = wholeness)
 

@@ -12,7 +12,7 @@ FORMAL DEFINITION:
 Let {•ₙ}ₙ₌₁ᴺ be a hierarchy of apertures at scales sₙ, each executing
 the master cycle:
 
-    Φₙ' = ⊰ₙ ∘ i ∘ ≻ₙ[Φₙ]
+    Φₙ' = ☀︎ₙ ∘ i ∘ ⊛ₙ[Φₙ]
 
 The ethereal tail T exists when:
 
@@ -32,10 +32,10 @@ at scales n and n+1.
 Each circumpunct at every scale executes a **breathing cycle** with two phases:
 
 ```
-LOADING PHASE (≻ dominant):
+LOADING PHASE (⊛ dominant):
 ┌─────────────────────────────────────────────────────────────────┐
-│  Parts: ≻ increases    (convergence gathering toward center)    │
-│  Whole: ⊰ suppressed   (emergence held back, tension builds)    │
+│  Parts: ⊛ increases    (convergence gathering toward center)    │
+│  Whole: ☀︎ suppressed   (emergence held back, tension builds)    │
 │                                                                 │
 │  β_local > 0.5  →  D_local < 1.5  →  system "tightening"       │
 └─────────────────────────────────────────────────────────────────┘
@@ -45,10 +45,10 @@ LOADING PHASE (≻ dominant):
                            *SNAP*
                      (action potential)
                               ↓
-RELEASE PHASE (⊰ dominant):
+RELEASE PHASE (☀︎ dominant):
 ┌─────────────────────────────────────────────────────────────────┐
-│  Parts: ≻ drops        (convergence relaxes)                    │
-│  Whole: ⊰ spikes       (emergence manifests outward)            │
+│  Parts: ⊛ drops        (convergence relaxes)                    │
+│  Whole: ☀︎ spikes       (emergence manifests outward)            │
 │                                                                 │
 │  β_local < 0.5  →  D_local > 1.5  →  system "releasing"        │
 └─────────────────────────────────────────────────────────────────┘
@@ -152,13 +152,13 @@ persists across scale transitions.
 WHY CP VIOLATION MATTERS FOR THE TAIL:
 
 Without CP violation:
-    ≻ → • → ⊰  ≡  ⊱ → • → ≺   (time-reversible / adjoint-symmetric)
+    ⊛ → • → ☀︎  ≡  ☀︎ → • → ⊛   (time-reversible / adjoint-symmetric)
 
     The pump cycles forward and backward with equal probability.
     No net accumulation. No direction. No tail.
 
 With CP violation:
-    P(≻ → • → ⊰) ≠ P(⊱ → • → ≺)   (time-asymmetric)
+    P(⊛ → • → ☀︎) ≠ P(☀︎ → • → ⊛)   (time-asymmetric)
     
     ~2.5% more matter pathways than antimatter pathways.
     Each cycle leaves a residue.
@@ -353,7 +353,7 @@ The minimal ontology for any "reality":
 
 Physical reality isn't metaphysically special—it's a LOT of apertures
 in stable mutual resonance. Atoms, molecules, organisms, stars.
-All pumping ≻ → i → ⊰, all phase-lockable.
+All pumping ⊛ → i → ☀︎, all phase-lockable.
 ```
 
 This dissolves apparent mysticism:
@@ -410,7 +410,7 @@ TRUE DEATH IS:
     A single aperture, pumping alone, with nothing 
     to phase-lock to. No confirmation. No reality.
     
-    Just... ≻ → i → ⊰ → ≻ → i → ⊰ → ≻ → i → ⊰
+    Just... ⊛ → i → ☀︎ → ⊛ → i → ☀︎ → ⊛ → i → ☀︎
     
     Forever. Unwitnessed.
 

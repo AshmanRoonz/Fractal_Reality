@@ -20,7 +20,7 @@ FUNDAMENTAL STRUCTURE:
    
    Each dimension represents binary validation:
    
-   INPUT APERTURE (≻):      OUTPUT APERTURE (⊰):
+   INPUT APERTURE (⊛):      OUTPUT APERTURE (☀︎):
    ○ passes/fails           ○ passes/fails
    Φ passes/fails           Φ passes/fails  
    • passes/fails           • passes/fails
@@ -79,7 +79,7 @@ The pattern 2, 8, 8, 18, 18, 32, 32, 50 emerges from how the 64-state structure 
 ORBITAL TYPES AS VALIDATION PATTERNS:
 
 s orbitals (ℓ = 0): Spherically symmetric
-   ○ passes, Φ passes, • passes at both ≻ and ⊰
+   ○ passes, Φ passes, • passes at both ⊛ and ☀︎
    These are (111, 111) states - fully validated
 
 p orbitals (ℓ = 1): Three orientations (px, py, pz)
@@ -465,7 +465,7 @@ LINEAR COMBINATION OF ATOMIC ORBITALS (LCAO):
 
 Standard:    ψ_mol = Σ cᵢ φᵢ
 
-Circumpunct: ψ_mol = Σ cᵢ (≻ᵢ ∘ i ∘ ⊰ᵢ)[Φ]
+Circumpunct: ψ_mol = Σ cᵢ (⊛ᵢ ∘ i ∘ ☀︎ᵢ)[Φ]
 
 Where each atomic orbital φᵢ is really a circumpunct
 transformation applied to the field Φ at different centers.

@@ -27,10 +27,10 @@ To avoid confusion, we distinguish:
 
 | Symbol | Name | Direction |
 |--------|------|-----------|
-| **≻** | Convergence | Inward (gathering) |
-| **⊰** | Emergence | Outward (expressing) |
+| **⊛** | Convergence | Inward (gathering) |
+| **☀︎** | Emergence | Outward (expressing) |
 
-Adjoint pairs: (≻, ≺) for convergence, (⊰, ⊱) for emergence.
+Adjoint pairs: (⊛, ⊛) for convergence, (☀︎, ☀︎) for emergence.
 
 ---
 
@@ -412,7 +412,7 @@ In this graph, **Φ is the articulation point**: removing Φ disconnects all oth
 
 ### Definition 9.2 — Channel Count
 
-Bidirectional flow (≻, ⊰) through 5 states:
+Bidirectional flow (⊛, ☀︎) through 5 states:
 
 $$\text{Channels} = 5 \times 2 = 10$$
 
@@ -479,7 +479,7 @@ $$\text{Channels} = 3 \text{ components} \times 2 \text{ flows} = 6$$
 
 | Components | Flows | Product |
 |------------|-------|---------|
-| (•, Φ, ○) | (≻, ⊰) | 6 |
+| (•, Φ, ○) | (⊛, ☀︎) | 6 |
 
 **Clarification (6 vs 10):**
 - **6 channels:** Local circumpunct operational degrees of freedom (single ⊙)
@@ -1039,7 +1039,7 @@ This is the minimal factorization of modeling.
 
 *Framework version: Circumpunct v5.3.5*
 *Notation: ε for existence, i for aperture, εᴬ for articulation*
-*Master equation: Φ' = ⊰ ∘ i ∘ ≻[Φ]*
+*Master equation: Φ' = ☀︎ ∘ i ∘ ⊛[Φ]*
 
 ---
 

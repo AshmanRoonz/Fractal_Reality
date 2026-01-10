@@ -1,5 +1,5 @@
 ```
-⊙ = fix(Φ ↦ ⊰ ∘ [•○Φ]_out ∘ Å_β ∘ [•○Φ]_in ∘ ≻[Φ])
+⊙ = fix(Φ ↦ ☀︎ ∘ [•○Φ]_out ∘ Å_β ∘ [•○Φ]_in ∘ ⊛[Φ])
      │
      └── ⊙ is that which, when validated, yields itself
 ```
@@ -213,17 +213,17 @@ THE TRINITY OF TRINITIES:
 ```
 TEMPORAL STRUCTURE:
 
-    ≻  = Convergence (future potential flowing toward •)
+    ⊛  = Convergence (future potential flowing toward •)
     Å  = Aperture transformation (at the threshold)
-    ⊰  = Emergence (from • into past braid)
+    ☀︎  = Emergence (from • into past braid)
 
 THE PROCESS:
 
-         ≻ (future converges)
+         ⊛ (future converges)
               ↓
               •  (transformation at center)
               ↓
-         ⊰ (past emerges as braid)
+         ☀︎ (past emerges as braid)
 
 CRITICAL INSIGHT:
     Time flows FROM future TO present, not past to future
@@ -243,9 +243,9 @@ THE CIRCULATION BETWEEN TRINITY MEMBERS:
           Å₂₃
 
 Circulation:
-    ⊙₁ ≻ Å₁₂ ⊰ ⊙₂:  Soul flows into embodiment
-    ⊙₂ ≻ Å₂₃ ⊰ ⊙₃:  Body radiates into awareness
-    ⊙₃ ≻ Å₃₁ ⊰ ⊙₁:  Mind returns to source
+    ⊙₁ ⊛ Å₁₂ ☀︎ ⊙₂:  Soul flows into embodiment
+    ⊙₂ ⊛ Å₂₃ ☀︎ ⊙₃:  Body radiates into awareness
+    ⊙₃ ⊛ Å₃₁ ☀︎ ⊙₁:  Mind returns to source
 
 THE APERTURES ARE BRAID GENERATORS:
 
@@ -266,14 +266,14 @@ YANG-BAXTER EQUATION (testable!):
 THE CIRCUMPUNCT MASTER EQUATION:
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║    E = ⊙ = (•, ○, Φ) × (≻, Å, ⊰)²                                         ║
+║    E = ⊙ = (•, ○, Φ) × (⊛, Å, ☀︎)²                                         ║
 ║                                                                           ║
 ║    Energy = Structure × Process²                                          ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
 EXPANDED:
     (•, ○, Φ) = Spatial structure with temporal properties
-    (≻, Å, ⊰) = Temporal process (HOW future becomes past)
+    (⊛, Å, ☀︎) = Temporal process (HOW future becomes past)
 
     Process squared because:
     - First power: the process itself
@@ -281,7 +281,7 @@ EXPANDED:
 
 CONNECTION TO PHYSICS:
     E = mc² is the special case where c = constant
-    E = (•, ○, Φ) × (≻, Å, ⊰)² is the general form with time structure
+    E = (•, ○, Φ) × (⊛, Å, ☀︎)² is the general form with time structure
 ```
 
 ---
@@ -296,7 +296,7 @@ THEOREM 2 (Optimal Balance):
 Let the flow split as α : (1-α) where α ∈ [0,1]
 
 REQUIREMENT 1 — Symmetry:
-  Neither ≻ nor ⊰ can dominate → α = 1-α → α = 0.5
+  Neither ⊛ nor ☀︎ can dominate → α = 1-α → α = 0.5
 
 REQUIREMENT 2 — Maximum Information:
   Shannon entropy: H(α) = -α log₂(α) - (1-α)log₂(1-α)
@@ -310,7 +310,7 @@ ALL THREE REQUIREMENTS FORCE α = 0.5                                        ∎
 THE BALANCE PARAMETER:
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    β ≡ ||≻|| / (||≻|| + ||⊰||) = 0.5                              ║
+    ║    β ≡ ||⊛|| / (||⊛|| + ||☀︎||) = 0.5                              ║
     ║                                                                   ║
     ║    Convergence balanced with Emergence                            ║
     ║    This is DEFINITIONAL, not tuned                                ║
@@ -375,7 +375,7 @@ THE FUNDAMENTAL EQUATION (alternative form):
 
 WHERE:
   1   = ⊙ (wholeness, not "the one")
-  0.5 = Half (appears twice as ≻ and ⊰)
+  0.5 = Half (appears twice as ⊛ and ☀︎)
   ⊗   = The operation at • maintaining balance
 
 THE MAPPING:
@@ -384,7 +384,7 @@ THE MAPPING:
         ↓   ↓   ↓
        ○   •   Φ        TRINITY VIEW (structure)
         ↓   ↓   ↓
-       ≻   Å   ⊰        TRINITY VIEW (process)
+       ⊛   Å   ☀︎        TRINITY VIEW (process)
 
 BOTH VIEWS ARE VALID — they describe the same ⊙
 ```
@@ -406,7 +406,7 @@ BOTH VIEWS ARE VALID — they describe the same ⊙
     • Equilateral: Perfect balance (all sides equal)
     • Center: • at geometric center
     • Vertices: ⊙ (top), ○ (left), Φ (right)
-    • Process: ≻ flows down, ⊰ flows out
+    • Process: ⊛ flows down, ☀︎ flows out
 
 THIS TRIANGLE IS THE FUNDAMENTAL GEOMETRY OF EXISTENCE
 ```
@@ -421,11 +421,11 @@ THIS TRIANGLE IS THE FUNDAMENTAL GEOMETRY OF EXISTENCE
 THE FUNDAMENTAL OPERATING CYCLE:
 
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║  Φ(t+Δt) = ⊰ ∘ [•○Φ]_out ∘ Å_β ∘ [•○Φ]_in ∘ ≻[Φ(t)] + ε                  ║
+║  Φ(t+Δt) = ☀︎ ∘ [•○Φ]_out ∘ Å_β ∘ [•○Φ]_in ∘ ⊛[Φ(t)] + ε                  ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
 WHERE:
-  ≻         = Convergence (gathers patterns from Φ)
+  ⊛         = Convergence (gathers patterns from Φ)
   [•○Φ]_in  = Input validation:
               • : Does it have coherent center?
               ○ : Can boundary be maintained?
@@ -433,7 +433,7 @@ WHERE:
   Å_β       = Aperture gate = exp(β 𝕏)
               Performs 90° rotation when β ≈ 0.5
   [•○Φ]_out = Output validation (same three tests)
-  ⊰         = Emergence (releases validated patterns)
+  ☀︎         = Emergence (releases validated patterns)
   ε         = Stochastic noise ~ N(0, α√|⟨E⟩|)
 
 ACCEPTANCE CRITERION:
@@ -543,7 +543,7 @@ ANGULAR CROSSOVER FORMULA:
 THE GEOMETRIC NECESSITY:
 
     1. Four-dimensional spacetime (t, x, y, z)
-    2. Dual Å (input ≻ → • and • → ⊰ output)
+    2. Dual Å (input ⊛ → • and • → ☀︎ output)
     3. Binary validation (pass/fail)
     4. Triple test (•, ○, Φ)
 
@@ -565,7 +565,7 @@ EINSTEIN'S FIELD EQUATIONS (Single Å):
 
 CIRCUMPUNCT FRAMEWORK (Dual Å):
 
-    ≻ ←(8)→ • ←(8)→ ⊰
+    ⊛ ←(8)→ • ←(8)→ ☀︎
     Input      Output
 
     Total: 8 × 8 = 64
@@ -582,7 +582,7 @@ CIRCUMPUNCT FRAMEWORK (Dual Å):
 64-STATE PARTICLE MAPPING:
 
 REGION 1: STABLE PARTICLES — State 63 (111, 111)
-    Full validation at both ≻ and ⊰
+    Full validation at both ⊛ and ☀︎
     • Electron, Proton, Neutrinos, Photon
     These are ETERNAL patterns in the braid
 
@@ -753,7 +753,7 @@ Consciousness IS being at • in ⊙ = • ⊗ ○ ⊗ Φ
     AT •: Where process occurs, where choice happens
 
 When a system:
-    1. Operates at β ≈ 0.5 (balanced ≻ and ⊰)
+    1. Operates at β ≈ 0.5 (balanced ⊛ and ☀︎)
     2. Has self-referential structure (Å examining Å)
     3. Maintains coherence at •
 
@@ -772,7 +772,7 @@ EXPERIENCE EMERGES AS BEING THE CENTER ITSELF
 ```
 Å OCCURS AT ALL β VALUES:
 
-    β ≈ 0.0: Pure ⊰, no • (photons)
+    β ≈ 0.0: Pure ☀︎, no • (photons)
     β ≈ 0.1: Minimal • (rocks)
     β ≈ 0.3: Weak • (simple organisms)
     β ≈ 0.5: STABLE • (mammals, humans)
@@ -955,7 +955,7 @@ REALITY ALTERNATES BETWEEN BEING (integer D) AND BECOMING (half D):
               ↓
          1D STATE: Worldline (Sequential Flow)
               │ Linear causality
-              │ ≻ → • → ⊰
+              │ ⊛ → • → ☀︎
               ↓
     [1.5D GATE: • at β = 0.5] ⭐ YOU ARE HERE
               │ Consciousness emerges
@@ -1021,7 +1021,7 @@ THE ETERNAL CYCLE:
 
               Φ_∞ (Unbounded Field)
                     ↓
-               ≻ (Convergence)
+               ⊛ (Convergence)
                     ↓
           [•○Φ]_in (Input Validation)
            │  • : Coherent center?
@@ -1035,7 +1035,7 @@ THE ETERNAL CYCLE:
            │  ○ : Boundary maintained?
            │  Φ : Grounded in field?
                     ↓
-               ⊰ (Emergence)
+               ☀︎ (Emergence)
                     ↓
               B₃ (Braid / Past)
                     ↓
@@ -1045,7 +1045,7 @@ THE ETERNAL CYCLE:
                     ↓
           √|g_tt| (Å Rate Modifier)
                     ↓
-              [LOOP BACK TO ≻]
+              [LOOP BACK TO ⊛]
 
 
 ═══════════════════════════════════════════════════════════════════════════════
@@ -1068,7 +1068,7 @@ THE ETERNAL CYCLE:
 ║   Braid topology is necessary for history/past.                               ║
 ║   Therefore trinity is mathematically required.                               ║
 ║                                                                               ║
-║   The temporal process (≻, Å, ⊰) circulates through the trinity.              ║
+║   The temporal process (⊛, Å, ☀︎) circulates through the trinity.              ║
 ║   At Å, balance β = 0.5 is forced by symmetry, entropy, and energy.           ║
 ║   This produces universal dimension D = 1.5.                                  ║
 ║                                                                               ║
@@ -1118,9 +1118,9 @@ CIRCUMPUNCT STRUCTURE:
   ⊗      = Tensor product (entanglement)
 
 TEMPORAL PROCESS:
-  ≻      = Convergence (future → •)
+  ⊛      = Convergence (future → •)
   Å      = Aperture transformation (at •)
-  ⊰      = Emergence (• → past)
+  ☀︎      = Emergence (• → past)
 
 TRINITY:
   ⊙₁     = Soul (1D worldline)

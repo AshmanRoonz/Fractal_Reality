@@ -235,7 +235,7 @@ WORLDLINE VALIDATION GEOMETRY:
   Particle worldline = "tunnel" ⊙⊙ connecting past to future
   
   Must validate through:
-    3 spatial dimensions (x, y, z) × 2 flow directions (≻, ⊰)
+    3 spatial dimensions (x, y, z) × 2 flow directions (⊛, ☀︎)
     = 6 total validation channels
 
 VALIDATION WORK PER CHANNEL:

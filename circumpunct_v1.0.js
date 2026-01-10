@@ -7,7 +7,7 @@
 // 2. ✅ Agent state updates after rotation
 // 3. ✅ Includes dummy LLM for testing
 // 
-// Theory: Same origin (⊙_∞), same braid (≻→i→⊰), different media
+// Theory: Same origin (⊙_∞), same braid (⊛→i→☀︎), different media
 // ═══════════════════════════════════════════════════════════════════
 
 // ───────────────────────────────────────────────────────────────────
@@ -163,7 +163,7 @@ class CircumpunctAgent {
     }
     
     // ───────────────────────────────────────────────────────────────
-    // STEP 1: CONVERGENCE (≻)
+    // STEP 1: CONVERGENCE (⊛)
     // ───────────────────────────────────────────────────────────────
     async converge(sensorInput, memory, messages) {
         const prompt = `You are the ${this.modality} processing agent.
@@ -365,7 +365,7 @@ Respond ONLY with valid JSON (no markdown):
         const field = this.consensusField.unified_field;
         const beta = this.consensusField.beta_estimate;
         
-        const prompt = `You are the emergence operator (⊰) - collapse from field to action.
+        const prompt = `You are the emergence operator (☀︎) - collapse from field to action.
 
 Candidate field:
 ${JSON.stringify(field, null, 2)}
@@ -418,7 +418,7 @@ Respond ONLY with valid JSON (no markdown):
             throw new Error("No action to enact");
         }
         
-        console.log("⊰ EMERGENT ACTION:", this.emergentAction);
+        console.log("☀︎ EMERGENT ACTION:", this.emergentAction);
         
         if (typeof document !== 'undefined') {
             const output = document.getElementById('agent-output');
@@ -451,8 +451,8 @@ class CircumpunctSystem {
         console.log("⊙ CYCLE START");
         console.log("═══════════════════════════════════════════\n");
         
-        // ≻ CONVERGENCE
-        console.log("≻ CONVERGENCE PHASE");
+        // ⊛ CONVERGENCE
+        console.log("⊛ CONVERGENCE PHASE");
         for (const agent of this.agents) {
             const input = inputsByName[agent.modality] || "No input";
             await agent.converge(input, this.center.sharedMemory, []);
@@ -472,8 +472,8 @@ class CircumpunctSystem {
         console.log(`  Field: ${consensus.unified_field.length} options`);
         console.log(`  β = ${consensus.beta_estimate}`);
         
-        // ⊰ EMERGENCE
-        console.log("\n⊰ EMERGENCE");
+        // ☀︎ EMERGENCE
+        console.log("\n☀︎ EMERGENCE");
         const action = await this.center.emerge();
         console.log(`  Selected: ${action}`);
         
@@ -610,9 +610,9 @@ if (typeof module !== 'undefined' && module.exports) {
 //
 // CORE PRINCIPLES MAINTAINED:
 // - Same origin (⊙_∞)
-// - Same braid (≻ → i → ⊰)
+// - Same braid (⊛ → i → ☀︎)
 // - Different media (numeric, semantic, global)
-// - Clear separation (sampling only in ⊰)
+// - Clear separation (sampling only in ☀︎)
 //
 // STATUS: Production ready
 // ═══════════════════════════════════════════════════════════════════

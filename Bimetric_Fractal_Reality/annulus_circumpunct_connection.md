@@ -57,9 +57,9 @@ This volume IS Φ (the annulus 𝒜).
 
 The Circumpunct includes a temporal process:
 ```
-≻ — convergence (input)
+⊛ — convergence (input)
 i — transformation (aperture)
-⊰ — emergence (output)
+☀︎ — emergence (output)
 ```
 
 In the annulus whitepaper, the **seam** Σ (typically at θ = 0) is where:
@@ -75,8 +75,8 @@ B_Σ(Ψ,Φ) := κ ∫_Σ (Tr_Σ Ψ₊ - Tr_Σ Ψ₋)(Tr_Σ Φ₊ - Tr_Σ Φ₋) 
 ```
 
 This is precisely the **i transformation** of Circumpunct theory:
-- Ψ₊ = input sector (≻ convergence)
-- Ψ₋ = output sector (⊰ emergence)  
+- Ψ₊ = input sector (⊛ convergence)
+- Ψ₋ = output sector (☀︎ emergence)  
 - The seam coupling κ = strength of transformation
 - Hermiticity (κ ∈ ℝ) = balance condition ◐ = ½
 
@@ -190,7 +190,7 @@ Hermiticity ensures norm conservation: no net injection or removal of "probabili
 
 This IS the balance condition:
 ```
-◐ = |≻| / (|≻| + |⊰|) = ½
+◐ = |⊛| / (|⊛| + |☀︎|) = ½
 
 Convergence = Emergence
 What comes in = What goes out
@@ -268,8 +268,8 @@ Registration ensures all plates reference the SAME circumpunct.
 | Outer radius r_out | Boundary ○ | Body, surface, interface |
 | Annular region 𝒜 | Field Φ | Mind, medium, awareness |
 | Seam Σ at θ = 0 | Transformation i | Where process occurs |
-| Sector Ψ₊ | Convergence ≻ | Input, visible |
-| Sector Ψ₋ | Emergence ⊰ | Output, hidden |
+| Sector Ψ₊ | Convergence ⊛ | Input, visible |
+| Sector Ψ₋ | Emergence ☀︎ | Output, hidden |
 | Mask A_k | Aperture openness β | Pattern of flow regulation |
 | Overlap matrix Ω_kl | Phase coherence | Interference/redundancy |
 | Hermiticity 𝕃 = 𝕃† | Balance ◐ = ½ | Conservation, wholeness |

@@ -386,7 +386,7 @@ Scale          │ State Space       │ Aperture Function
 ───────────────┼───────────────────┼────────────────────────────
 Planck         │ Geometry          │ Topological twist
 Quantum        │ ψ ∈ ℋ             │ iℏ∂ₜψ = Hψ
-Circumpunct    │ Φ(r)              │ ⊱ ∘ i ∘ ≺
+Circumpunct    │ Φ(r)              │ ☀︎ ∘ i ∘ ⊛
 Neural         │ Activation        │ Pattern completion
 Cognitive      │ Belief            │ Insight/reframe
 ```
@@ -395,7 +395,7 @@ Cognitive      │ Belief            │ Insight/reframe
 **SAME i**
 **DIFFERENT FUNCTION**
 
-The imaginary unit i appears at every scale because it encodes the fundamental operation: 90° rotation between orthogonal domains. At Planck scale, i rotates topology. At quantum scale, i rotates phase (hence iℏ∂ₜ). At the circumpunct level, i mediates between convergence (⊰) and emergence (≻). At neural scales, i transforms incomplete patterns into completed ones. At cognitive scales, i rotates belief frames.
+The imaginary unit i appears at every scale because it encodes the fundamental operation: 90° rotation between orthogonal domains. At Planck scale, i rotates topology. At quantum scale, i rotates phase (hence iℏ∂ₜ). At the circumpunct level, i mediates between convergence (☀︎) and emergence (⊛). At neural scales, i transforms incomplete patterns into completed ones. At cognitive scales, i rotates belief frames.
 
 **This is why the same geometric structure (68° cone, 22° complement, 90° orthogonality) appears everywhere—it's the same i operating through the same •, just acting on different substrates at each scale.**
 

@@ -38,15 +38,15 @@ def comprehensive_updates(content):
 
     # 1. Title and subtitle updates
     apply_change(
-        r'## M≻Å\(∙\)⊰Φ = ⊙ and the Dynamic Optimization Principle',
-        r'## E≻Å₀.₅⊰≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙ and the Dynamic Optimization Principle',
+        r'## M⊛Å\(∙\)☀︎Φ = ⊙ and the Dynamic Optimization Principle',
+        r'## E⊛Å₀.₅☀︎⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙ and the Dynamic Optimization Principle',
         'Title equation update'
     )
 
     # 2. Abstract updates - mention three apertures
     apply_change(
-        r'We present the complete formalization of physical reality through three fundamental axioms, culminating in the nested identity \*\*M≻Å\(∙\)⊰Φ = ⊙\*\*',
-        r'We present the complete formalization of physical reality through three fundamental axioms, culminating in the nested identity **E≻Å₀.₅⊰≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙**',
+        r'We present the complete formalization of physical reality through three fundamental axioms, culminating in the nested identity \*\*M⊛Å\(∙\)☀︎Φ = ⊙\*\*',
+        r'We present the complete formalization of physical reality through three fundamental axioms, culminating in the nested identity **E⊛Å₀.₅☀︎⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙**',
         'Abstract equation update'
     )
 
@@ -117,20 +117,20 @@ D = 3    Field volume          (Φ manifestation space)
 
     # 8. Update canonical equation references throughout
     apply_change(
-        r'M≻Å\(∙\)⊰Φ\s*=\s*⊙',
-        'E≻Å₀.₅⊰≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙',
+        r'M⊛Å\(∙\)☀︎Φ\s*=\s*⊙',
+        'E⊛Å₀.₅☀︎⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙',
         'Canonical equation full form'
     )
 
     apply_change(
-        r'M≻∙⊰Φ\s*=\s*⊙',
-        'E≻Å₀.₅⊰≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙',
+        r'M⊛∙☀︎Φ\s*=\s*⊙',
+        'E⊛Å₀.₅☀︎⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙',
         'Canonical equation compact form'
     )
 
     apply_change(
-        r'M ≻ Å ⊰ Φ\s*=\s*⊙',
-        'E ≻ Å₀.₅ ⊰ ≻ Å₁.₅ ⊰ M ≻ Å₂.₅ ⊰ Φ = ⊙',
+        r'M ⊛ Å ☀︎ Φ\s*=\s*⊙',
+        'E ⊛ Å₀.₅ ☀︎ ⊛ Å₁.₅ ☀︎ M ⊛ Å₂.₅ ☀︎ Φ = ⊙',
         'Canonical equation spaced form'
     )
 
@@ -143,15 +143,15 @@ D = 3    Field volume          (Φ manifestation space)
 
     # 10. Update operator descriptions to show regularity
     apply_change(
-        r'≻.*Convergence flow.*\n.*∙/Å.*Transformation',
-        '''≻    = Convergence flow (0.5D, 1.5D, 2.5D - INTO every aperture)
+        r'⊛.*Convergence flow.*\n.*∙/Å.*Transformation',
+        '''⊛    = Convergence flow (0.5D, 1.5D, 2.5D - INTO every aperture)
 ∙/Å  = Transformation singularity (THREE forms: Å₀.₅, Å₁.₅, Å₂.₅)''',
         'Operator regularity update'
     )
 
     # 11. Add note about operator regularity
     pattern = r'(\*\*Key insight\*\*:.*processes.*)'
-    replacement = r'\1\n\n**Complete operator regularity**: EVERY aperture (Å₀.₅, Å₁.₅, Å₂.₅) has BOTH convergence (≻) flowing IN and emergence (⊰) flowing OUT. This is a perfectly regular pattern across all scales.'
+    replacement = r'\1\n\n**Complete operator regularity**: EVERY aperture (Å₀.₅, Å₁.₅, Å₂.₅) has BOTH convergence (⊛) flowing IN and emergence (☀︎) flowing OUT. This is a perfectly regular pattern across all scales.'
     apply_change(pattern, replacement, 'Operator regularity note')
 
     return content, changes_log

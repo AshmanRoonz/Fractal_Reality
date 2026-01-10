@@ -49,11 +49,11 @@ bits_of(s) = s.bits
 */
 
 /* --- Convergence / Emergence --- */
-≻ : Energy × Aperture → Energy
-≻(E, a) := E' where E' = Converge(E, a)
+⊛ : Energy × Aperture → Energy
+⊛(E, a) := E' where E' = Converge(E, a)
 
-⊰ : Energy × Aperture → Energy
-⊰(E, a) := E'' where E'' = Emerge(E, a)
+☀︎ : Energy × Aperture → Energy
+☀︎(E, a) := E'' where E'' = Emerge(E, a)
 
 /* --- Universe builder (recursive generator) --- */
 UniverseStep : Field → Field

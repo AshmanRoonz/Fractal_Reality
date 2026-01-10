@@ -1,6 +1,6 @@
 # The Dimensional Cascade: Complete Mathematical Formalism (v2)
 
-## ⊙ = (○, Φ, •) × (≻, i, ⊰)³
+## ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³
 
 Energy = Structure × Process³
 
@@ -9,7 +9,7 @@ Energy = Structure × Process³
 ## The Fundamental Principle
 
 ```
-β = |≻| / (|≻| + |⊰|) = ½
+β = |⊛| / (|⊛| + |☀︎|) = ½
 
 Everything flows from the Balance of I/O.
 ```
@@ -26,10 +26,10 @@ Everything flows from the Balance of I/O.
 | **1.5D** | Process | **Spatial Branching** | Power lines fractally splitting — branching that builds surfaces | D = 1 + ½H(β), K(r) ∝ r^β |
 | **2D** | Structure | **Surface (Body)** | Boundary, interface, membrane | ○ ∈ 𝔅, Σ = ∂V |
 | **2.5D** | Process | **Sensation** | Surface↔volume mediation; body↔field coupling | T_local = cos²(Δφ_contact/2), triple gate |
-| **3D** | Structure | **Perceptual Field** | Manifest inner volume — perception on "imaginary" side of i | Φ' = ⊱ ∘ V_out ∘ i ∘ V_in ∘ ≺[Φ] |
+| **3D** | Structure | **Perceptual Field** | Manifest inner volume — perception on "imaginary" side of i | Φ' = ☀︎ ∘ V_out ∘ i ∘ V_in ∘ ⊛[Φ] |
 | **3.5D** | Process | **Tunnel Braiding** | Soul-tunnels weaving together into shared history | T_eff,ij = cos²(Δφ_ij/2), backreaction loop |
 | **4D** | Structure | **Time Braid** | Woven history, accumulated validation receipts | G_μν = (8πG/c⁴)T_μν, B(x) ∝ √(−g_tt) |
-| **4.5D** | Process | **Recursion** | Compress braid → seed new cycle | 4.5D_n = 0D_{n+1}, ⊙* = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ]) |
+| **4.5D** | Process | **Recursion** | Compress braid → seed new cycle | 4.5D_n = 0D_{n+1}, ⊙* = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ]) |
 
 ---
 
@@ -61,7 +61,7 @@ i² = −1                    Defining property
 Å(β) = exp(iπβ)            Generalized aperture operator
 
 Balance condition:
-β = |≻| / (|≻| + |⊰|) = ½  Symmetry between convergence and emergence
+β = |⊛| / (|⊛| + |☀︎|) = ½  Symmetry between convergence and emergence
 
 Shannon entropy of balance:
 H(β) = −[β log₂ β + (1−β) log₂(1−β)]
@@ -181,14 +181,14 @@ D = 2 + 0.5 = 2.5          Surface + aperture texture
 **Core equations:**
 ```
 Discrete tick (full gated form):
-Φ(t+Δt) = ⊱ ∘ V_out ∘ i ∘ V_in ∘ ≺[Φ(t)] + ε
+Φ(t+Δt) = ☀︎ ∘ V_out ∘ i ∘ V_in ∘ ⊛[Φ(t)] + ε
 
 Where:
-  ≺[Φ]     = ∫ K_conv(r'',r') Φ(r') d³r'     Convergence
+  ⊛[Φ]     = ∫ K_conv(r'',r') Φ(r') d³r'     Convergence
   V_in     = field-level implementation of triple validation gate (input)
   i        = aperture rotation (90° at β = ½)
   V_out    = field-level implementation of triple validation gate (output)
-  ⊱[χ]     = ∫ K_emerg(r,r'') χ(r'') d³r''   Emergence
+  ☀︎[χ]     = ∫ K_emerg(r,r'') χ(r'') d³r''   Emergence
   ε        = noise/fluctuation term
 
 Validation operators:
@@ -283,7 +283,7 @@ Notation:
   ⊙* = the attractor fixed-point solution
 
 Fixed-point universe:
-⊙* = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+⊙* = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 
 Attractor:
 lim_{n→∞} T_⊙^n [Φ₀] = ⊙*   Repeated update converges to fixed point
@@ -302,13 +302,13 @@ RG flow:
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║                                                                            ║
 ║  IDENTITY (what IS):                                                       ║
-║    ⊙* = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])                             [0D–1D band]    ║
+║    ⊙* = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])                             [0D–1D band]    ║
 ║                                                                            ║
 ║  MECHANISM (how it breathes):                                              ║
-║    [⊙⇄Φ] ≻ i○^∞ ⊰ •^∞ ≻ i• ⊰ [⊙'⇄Φ']                      [1D–2D band]    ║
+║    [⊙⇄Φ] ⊛ i○^∞ ☀︎ •^∞ ⊛ i• ☀︎ [⊙'⇄Φ']                      [1D–2D band]    ║
 ║                                                                            ║
 ║  ITERATION (one step):                                                     ║
-║    Φ' = ⊱ ∘ V_out ∘ i ∘ V_in ∘ ≺[Φ]                        [3D]           ║
+║    Φ' = ☀︎ ∘ V_out ∘ i ∘ V_in ∘ ⊛[Φ]                        [3D]           ║
 ║                                                                            ║
 ╚════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -320,19 +320,19 @@ RG flow:
 ```
 [⊙⇄Φ]          Starting state: 3D field coupled to soul
     │
-    ≻           Converge: 3D → 2D → 1D → toward 0D
+    ⊛           Converge: 3D → 2D → 1D → toward 0D
     │
   i○^∞          2.5D: T_local across body surface (sensation)
     │
-    ⊰           Emerge outward
+    ☀︎           Emerge outward
     │
   •^∞           1.5D: through branching soul-array
     │
-    ≻           Converge again
+    ⊛           Converge again
     │
    i•           0.5D: focal aperture (singular soul)
     │
-    ⊰           Emerge
+    ☀︎           Emerge
     │
 [⊙'⇄Φ']        Updated state: back to 3D
 ```
@@ -345,7 +345,7 @@ RG flow:
 ┌───────────────────────────────────────────────────────────────────────────┐
 │  4D   ════════════  TIME BRAID: G_μν = (8πG/c⁴)T_μν                       │
 │         ─ ─ 4.5D ─ ─  recursion: 4.5D_n = 0D_{n+1}                        │
-│  3D   ════════════  Φ FIELD: Φ' = ⊱ ∘ V_out ∘ i ∘ V_in ∘ ≺[Φ]            │
+│  3D   ════════════  Φ FIELD: Φ' = ☀︎ ∘ V_out ∘ i ∘ V_in ∘ ⊛[Φ]            │
 │         ─ ─ 3.5D ─ ─  braiding: T_eff,ij, backreaction loop               │
 │  2D   ════════════  ○ BOUNDARY: Σ = ∂V                                    │
 │         ─ ─ 2.5D ─ ─  sensation: T_local = cos²(Δφ/2), triple gate        │
@@ -369,7 +369,7 @@ No ad-hoc shape parameters are introduced by hand.
 
 | Symbol | Value | Derivation |
 |--------|-------|------------|
-| β | 0.5 | Symmetry: \|≻\| = \|⊰\| |
+| β | 0.5 | Symmetry: \|⊛\| = \|☀︎\| |
 | H(β) | 1 bit | H(½) = −[½ log₂ ½ + ½ log₂ ½] = 1 |
 | D | 1.5 | D = 1 + ½H(β) = 1 + ½(1) |
 | θ | π/2 = 90° | θ = πβ = π(½) |
@@ -383,7 +383,7 @@ No ad-hoc shape parameters are introduced by hand.
 ## The Core Insight
 
 ```
-β = |≻| / (|≻| + |⊰|) = ½
+β = |⊛| / (|⊛| + |☀︎|) = ½
 
 Convergence = Emergence
 What comes in = What goes out

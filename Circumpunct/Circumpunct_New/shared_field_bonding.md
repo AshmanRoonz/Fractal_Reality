@@ -294,11 +294,11 @@ Where φ_i are atomic orbitals centered on each nucleus
 ### Circumpunct Formulation
 
 ```
-Φ_molecular = (≻_combined ∘ i ∘ ⊰_combined)[field state]
+Φ_molecular = (⊛_combined ∘ i ∘ ☀︎_combined)[field state]
 
 Where:
-   ≻_combined: convergence from ALL nuclear centers
-   ⊰_combined: emergence to ALL nuclear centers
+   ⊛_combined: convergence from ALL nuclear centers
+   ☀︎_combined: emergence to ALL nuclear centers
    i: aperture transformation (unchanged)
    
    field state: the actual electron configuration in ℂ⁶⁴

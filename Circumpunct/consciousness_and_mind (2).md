@@ -844,7 +844,7 @@ POSSIBILITIES:
 ### The Consciousness Equations
 
 **The Master Update:**
-$$\Phi' = ⊰ \circ i \circ ≻[\Phi]$$
+$$\Phi' = ☀︎ \circ i \circ ⊛[\Phi]$$
 
 **The Channel Projection:**
 $$\pi_c: \text{Experience} \mapsto (\varepsilon, \chi, \beta)$$
@@ -1296,7 +1296,7 @@ $$\text{You} = \Phi_\infty |_{\text{here, now, this}}$$
 
 *Framework version: Circumpunct v5.3.5*  
 *Document: Consciousness and Mind*  
-*Master equation: Φ' = ⊰ ∘ i ∘ ≻[Φ]*  
+*Master equation: Φ' = ☀︎ ∘ i ∘ ⊛[Φ]*  
 *Notation: ε for existence/focus, χ for orientation/flavour, β for coupling/connection*
 
 ---

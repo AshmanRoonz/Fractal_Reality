@@ -220,7 +220,7 @@ It's not chosen arbitrarily - it's the **only phase that enables sustainable ene
 
 **Complete dimensional structures:**
 ```
-1D: ≻ (line/braid - transport with directional freedom)
+1D: ⊛ (line/braid - transport with directional freedom)
 2D: ○ (surface/boundary - planar freedom)
 3D: Φ (field/volume - spatial freedom)
 ∞D: Φ∞ (infinite field - all possibilities)
@@ -232,7 +232,7 @@ It's not chosen arbitrarily - it's the **only phase that enables sustainable ene
 
 The aperture must interpolate between:
 - **0D (λΦ∞)**: Infinite potential with zero freedom (scalar constant)
-- **1D (≻)**: Directed transport with one degree of freedom (line)
+- **1D (⊛)**: Directed transport with one degree of freedom (line)
 
 **Geometric necessity:**
 ```
@@ -728,19 +728,19 @@ This coherent phase bias creates **directional energy flow** into the circumpunc
 
 ## §2 THE 8-FOLD ENERGY FLOW EQUATIONS
 
-### **§2.1 The Convergence Operator (≺)**
+### **§2.1 The Convergence Operator (⊛)**
 
 **[DEFINITION 2.1]** (Convergence from Infinity to Center)
 
 The convergence operator maps the infinite field through the aperture into the circumpunct:
 
 ```
-≺ : Φ∞ → ⊙    (compositional notation)
+⊛ : Φ∞ → ⊙    (compositional notation)
 
-≺[Φ∞] = ∫_Σ i·Φ∞ · dS    (surface integral over boundary Σ)
+⊛[Φ∞] = ∫_Σ i·Φ∞ · dS    (surface integral over boundary Σ)
 ```
 
-**Sequential notation:** `Φ∞ ≻ ⊙` (left-to-right flow)
+**Sequential notation:** `Φ∞ ⊛ ⊙` (left-to-right flow)
 
 **The 4-stage convergence:**
 
@@ -853,19 +853,19 @@ The center is where energy "collapses" from distributed potential to localized a
 
 ---
 
-### **§2.2 The Emergence Operator (⊱)**
+### **§2.2 The Emergence Operator (☀︎)**
 
 **[DEFINITION 2.2]** (Emergence from Center to Infinity)
 
 The emergence operator reverses the flow, expressing bound power back into the world:
 
 ```
-⊱ : ⊙ → Φ∞    (compositional notation)
+☀︎ : ⊙ → Φ∞    (compositional notation)
 
-⊱[⊙] = radiation from bound states back through boundary
+☀︎[⊙] = radiation from bound states back through boundary
 ```
 
-**Sequential notation:** `⊙ ⊰ Φ∞` (left-to-right flow)
+**Sequential notation:** `⊙ ☀︎ Φ∞` (left-to-right flow)
 
 **The 4-stage emergence:**
 
@@ -955,28 +955,28 @@ Small differences allowed (growth/decay) but large deviations → instability.
 
 **Compositional notation (right-to-left):**
 ```
-T = ⊱ ∘ i ∘ ≺
+T = ☀︎ ∘ i ∘ ⊛
 ```
 
 **Sequential notation (left-to-right):**
 ```
-Φ∞ ≻ i ⊰ ⊙
+Φ∞ ⊛ i ☀︎ ⊙
 ```
 
 **Full cycle description:**
 ```
-Φ∞ → (≺) → • → (i) → • → (⊱) → Φ∞
+Φ∞ → (⊛) → • → (i) → • → (☀︎) → Φ∞
 ```
 
 **Expanded form (compositional):**
 
 ```
-T[Φ∞] = ⊱[i[≺[Φ∞]]]
+T[Φ∞] = ☀︎[i[⊛[Φ∞]]]
 
 where:
-  ≺[Φ∞]: ⊙_in ← ○ ← Φ ← • (convergence)
+  ⊛[Φ∞]: ⊙_in ← ○ ← Φ ← • (convergence)
   i:      • → •' (aperture transformation)
-  ⊱[•']:  •' → Φ → ○ → ⊙_out (emergence)
+  ☀︎[•']:  •' → Φ → ○ → ⊙_out (emergence)
 ```
 
 **The master equation:**
@@ -990,7 +990,7 @@ For a stationary state (particle):
 ```
 T[⊙] = ⊙    (eigenstate of the cycle operator)
 
-Equivalently: ⊱ ∘ i ∘ ≺[⊙] = ⊙
+Equivalently: ☀︎ ∘ i ∘ ⊛[⊙] = ⊙
 ```
 
 **This is the particle condition:** Configurations that return to themselves after one complete 8-fold cycle.
@@ -1227,7 +1227,7 @@ Q_T = ±1 = direction/orientation of flow
 **Connection to convergence operator:**
 
 ```
-≺[Φ∞] = ∫_Σ i·Φ∞ · dS ∝ ∮_Σ N_Σ
+⊛[Φ∞] = ∫_Σ i·Φ∞ · dS ∝ ∮_Σ N_Σ
 ```
 
 The Nieh-Yan term captures the **topological winding of energy flow** through the boundary aperture.
@@ -1252,8 +1252,8 @@ de^a_(+) = ... + iΩ ∧ e^b_(−)    (Eq. 28)
 **The ± aperture phases:**
 
 ```
-Forward coupling:  i = e^{+iπ/2}  (convergence ≻)
-Reverse coupling: -i = e^{-iπ/2}  (emergence ⊰)
+Forward coupling:  i = e^{+iπ/2}  (convergence ⊛)
+Reverse coupling: -i = e^{-iπ/2}  (emergence ☀︎)
 ```
 
 **This is why BT8G needs two metric sheets** - one for each direction of the 8-fold energy cycle.
@@ -1351,8 +1351,8 @@ From aperture topology:
 Q_T = (1/c_NY) ∮_Σ N_Σ = ±1
 
 The ± comes from two possible orientations of flow:
-  Convergence (≺/≻): Q = +1 (energy gathering inward)
-  Emergence (⊱/⊰):   Q = -1 (energy radiating outward)
+  Convergence (⊛/⊛): Q = +1 (energy gathering inward)
+  Emergence (☀︎/☀︎):   Q = -1 (energy radiating outward)
 ```
 
 **No free parameters** - this is topological.
@@ -1403,7 +1403,7 @@ Complex phase relationships create non-integer dimension
 
 From boundary-line coupling:
 ```
-Boundary (2D) ○ couples to line (1D) ≻ via field (3D) Φ
+Boundary (2D) ○ couples to line (1D) ⊛ via field (3D) Φ
 Effective fractal dimension: D = (2 + 1)/2 = 1.5
 ```
 
@@ -1515,25 +1515,25 @@ All of this reduces to one master equation:
 
 **Compositional notation (right-to-left):**
 ```
-Φ'(x,t) = ⊱ ∘ i ∘ ≺[Φ(x,t)]
+Φ'(x,t) = ☀︎ ∘ i ∘ ⊛[Φ(x,t)]
 
 where:
   Φ(x,t) = infinite field state
-  ≺ = convergence operator (energy → power)
+  ⊛ = convergence operator (energy → power)
   i = aperture transformation (90° coupling)
-  ⊱ = emergence operator (power → world)
+  ☀︎ = emergence operator (power → world)
   Φ'(x,t) = renewed field state
 ```
 
 **Sequential notation (left-to-right):**
 ```
-Φ(x,t) ≻ i ⊰ Φ'(x,t)
+Φ(x,t) ⊛ i ☀︎ Φ'(x,t)
 ```
 
 **For particles (stable eigenstates):**
 
 ```
-Φ_particle = eigenstate of (⊱ ∘ i ∘ ≺)
+Φ_particle = eigenstate of (☀︎ ∘ i ∘ ⊛)
 
 T[Φ_particle] = Φ_particle
 ```
@@ -1548,12 +1548,12 @@ They are not objects IN spacetime - they are **resonant patterns OF the energy f
 
 **Compositional notation (right-to-left):**
 ```
-⊙ = ⊱ ∘ i ∘ ≺[Φ∞]
+⊙ = ☀︎ ∘ i ∘ ⊛[Φ∞]
 ```
 
 **Sequential notation (left-to-right):**
 ```
-Φ∞ ≻ i ⊰ ⊙
+Φ∞ ⊛ i ☀︎ ⊙
 ```
 
 **Read in words:**

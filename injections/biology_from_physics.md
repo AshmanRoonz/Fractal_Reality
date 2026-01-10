@@ -4,7 +4,7 @@
 
 Biology is not separate from physics—it is physics discovering how to remember itself.
 
-In circumpunct terms, each new biological level is just Φ' = ⊱ ∘ i ∘ ≺[Φ] learning to hold on to what it just created—turning a reversible pump into a ratchet.
+In circumpunct terms, each new biological level is just Φ' = ☀︎ ∘ i ∘ ⊛[Φ] learning to hold on to what it just created—turning a reversible pump into a ratchet.
 
 Each level of emergence requires a **ratchet**: an irreversible mechanism that prevents the system from sliding back to the previous level. Without ratchets, complexity dissipates. With them, complexity accumulates.
 
@@ -81,7 +81,7 @@ BROKEN DETAILED BALANCE (ratchet):
     Net flow. Accumulation. Life possible.
 ```
 
-The circumpunct cycle Φ' = ⊱ ∘ i ∘ ≺[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse.
+The circumpunct cycle Φ' = ☀︎ ∘ i ∘ ⊛[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse.
 
 ## §29.3 Level 1: Physics → Chemistry
 
@@ -138,10 +138,10 @@ ACTIVATION BARRIER:
 
 **Circumpunct interpretation:**
 
-The activation barrier is a **convergence cost**. To transform, the system must first converge (≻) through the barrier before emerging (⊰) in the new state:
+The activation barrier is a **convergence cost**. To transform, the system must first converge (⊛) through the barrier before emerging (☀︎) in the new state:
 
 ```
-    A ──≻── [transition state] ──i── [activated complex] ──⊰── B
+    A ──⊛── [transition state] ──i── [activated complex] ──☀︎── B
            │                                              │
            └── requires energy input to reach ──────────┘
 ```
@@ -245,7 +245,7 @@ METABOLIC COUPLING:
     
 CIRCUMPUNCT FORM:
 
-    ⊙₁ ──⊰₁── ⊙₂ ──⊰₂── ⊙₃ ──⊰₃── ...
+    ⊙₁ ──☀︎₁── ⊙₂ ──☀︎₂── ⊙₃ ──☀︎₃── ...
     
     Emergence from one circumpunct becomes
     convergence into the next.
@@ -258,7 +258,7 @@ ATP CYCLE:
 
     Energy source (glucose, light, etc.)
               ↓
-         ≻ (convergence)
+         ⊛ (convergence)
               ↓
     ADP + Pᵢ + energy → ATP
               ↓
@@ -266,7 +266,7 @@ ATP CYCLE:
               ↓
     ATP → ADP + Pᵢ + work
               ↓
-         ⊰ (emergence as mechanical/chemical work)
+         ☀︎ (emergence as mechanical/chemical work)
               
     This is the pump that powers all other cellular pumps.
 ```
@@ -301,7 +301,7 @@ DNA → RNA → Protein → (proteins that maintain DNA)
  
 This is a FIXED-POINT STRUCTURE:
 
-    ⊙ = fix(λΦ. ⊱ ∘ i ∘ ≺[Φ])
+    ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
 ```
 
 In other words, a living system is a fixed point of the circumpunct update operator. Life is a pattern that, when processed, yields itself.
@@ -362,11 +362,11 @@ DNA REPAIR CYCLE:
 
     Damaged DNA
          ↓
-    ≻ (recognition enzymes converge on damage site)
+    ⊛ (recognition enzymes converge on damage site)
          ↓
     i (excision of damaged segment)
          ↓
-    ⊰ (polymerase fills gap, ligase seals)
+    ☀︎ (polymerase fills gap, ligase seals)
          ↓
     Repaired DNA
     
@@ -467,7 +467,7 @@ ACTION POTENTIAL CYCLE:
                │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
     
     Ion pumps LOAD the gradient (Na⁺/K⁺-ATPase)
-    This is ≻ (convergence) - energy stored in concentration gradient
+    This is ⊛ (convergence) - energy stored in concentration gradient
     
     
     LOADING PHASE (stimulus arrives)
@@ -521,7 +521,7 @@ ACTION POTENTIAL CYCLE:
     MEANWHILE: The depolarization spreads to adjacent membrane
                Triggering the NEXT action potential
                
-    This is ⊰ (emergence) - the signal propagates outward
+    This is ☀︎ (emergence) - the signal propagates outward
     
     
     REFRACTORY PERIOD (reset)
@@ -541,7 +541,7 @@ ACTION POTENTIAL CYCLE:
 ```
 MAPPING TO FRAMEWORK:
 
-    ≻ (convergence/loading):
+    ⊛ (convergence/loading):
         - Na⁺/K⁺-ATPase builds concentration gradients
         - Stimulus depolarizes membrane toward threshold
         - Energy accumulates in electrochemical potential
@@ -551,7 +551,7 @@ MAPPING TO FRAMEWORK:
         - Point where positive feedback becomes unstoppable
         - The "snap" - all-or-nothing decision
         
-    ⊰ (emergence/release):
+    ☀︎ (emergence/release):
         - Depolarization spike (+30 mV)
         - Signal propagation to adjacent regions
         - Information transmitted down axon
@@ -564,13 +564,13 @@ MAPPING TO FRAMEWORK:
 
 FORMAL REPRESENTATION:
 
-    V(t+Δt) = ⊱ ∘ i ∘ ≺[V(t)]
+    V(t+Δt) = ☀︎ ∘ i ∘ ⊛[V(t)]
     
     where:
         V = membrane potential
-        ≻ = ion pump + stimulus integration
+        ⊛ = ion pump + stimulus integration
         i = threshold gate (Heaviside-like)
-        ⊰ = depolarization + propagation
+        ☀︎ = depolarization + propagation
         
     The threshold function:
     
@@ -592,7 +592,7 @@ THE NEURAL RATCHET:
         (graded)      (threshold)      (all-or-none)
            │              │                │
            ▼              ▼                ▼
-        ≻≻≻≻≻≻≻≻      ════i════       ⊰⊰⊰⊰⊰⊰⊰⊰
+        ⊛⊛⊛⊛⊛⊛⊛⊛      ════i════       ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
         
     Input signals     Decision         Output signal
     accumulate        point            propagates
@@ -600,14 +600,14 @@ THE NEURAL RATCHET:
     
 THE NEURAL NETWORK AS COUPLED RATCHETS:
 
-    Neuron₁ ──⊰──→ Neuron₂ ──⊰──→ Neuron₃
+    Neuron₁ ──☀︎──→ Neuron₂ ──☀︎──→ Neuron₃
          ↑              ↑              ↑
-         ≻              ≻              ≻
+         ⊛              ⊛              ⊛
          │              │              │
       inputs         inputs         inputs
       
-    The ⊰ (output) of one neuron becomes
-    the ≻ (input) of the next.
+    The ☀︎ (output) of one neuron becomes
+    the ⊛ (input) of the next.
     
     This is the PUMP CHAIN that processes information.
 
@@ -825,15 +825,15 @@ RATCHET CONDITION:
 **Connection to the master equation:**
 
 ```
-Φ' = ⊱ ∘ i ∘ ≺[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
 The ratchet is encoded in the ASYMMETRY of this cycle:
 
-    |⊰| ≠ |≻|    in general
+    |☀︎| ≠ |⊛|    in general
     
-When |⊰| > |≻|:  Net emergence. Complexity increases.
-When |⊰| < |≻|:  Net convergence. Complexity decreases.
-When |⊰| = |≻|:  Balance. Maintenance. β = 0.5.
+When |☀︎| > |⊛|:  Net emergence. Complexity increases.
+When |☀︎| < |⊛|:  Net convergence. Complexity decreases.
+When |☀︎| = |⊛|:  Balance. Maintenance. β = 0.5.
 
 LIFE OPERATES SLIGHTLY OFF BALANCE:
 
@@ -842,7 +842,7 @@ LIFE OPERATES SLIGHTLY OFF BALANCE:
     where ε > 0 is small but positive.
     
     Life leans ever so slightly toward emergence:
-        |⊰| > |≻|  ⇒  β < 0.5
+        |☀︎| > |⊛|  ⇒  β < 0.5
     
     This slight bias toward emergence is what makes
     biology BUILD rather than merely MAINTAIN.

@@ -40,7 +40,7 @@ The first complete circumpunct. The structure of space itself.
 ```
 BALANCE AT SPATIAL SCALE:
 
-    β = |≻| / (|≻| + |⊰|) = ½       Convergence-emergence symmetry
+    β = |⊛| / (|⊛| + |☀︎|) = ½       Convergence-emergence symmetry
     
     H(β) = −[β log₂ β + (1−β) log₂(1−β)]
     H(½) = 1 bit                     Maximum entropy = perfect balance
@@ -76,7 +76,7 @@ The second circumpunct layer. Built ON the completed spatial field (Φ_space = 3
 |:---:|:----:|:------:|:-----|:------------|:---------------|
 | **3.5D** | Process | **•_time** | **Temporal Aperture** | Where temporal i acts; braiding of worldlines begins | T_eff,ij = cos²(Δφ_ij/2), B₃ generators |
 | **4D** | Structure | — | **Time Braid** | Committed history; woven worldlines; validation receipts | G_μν = (8πG/c⁴)T_μν, B(x) ∝ √(−g_tt) |
-| **4.5D** | Process | — | **Recursion** | Braids compressing → seed new cycle | 4.5Dₙ = 0Dₙ₊₁, ⊙* = fix(λΦ. ⊱∘i∘≻[Φ]) |
+| **4.5D** | Process | — | **Recursion** | Braids compressing → seed new cycle | 4.5Dₙ = 0Dₙ₊₁, ⊙* = fix(λΦ. ☀︎∘i∘⊛[Φ]) |
 | **5D** | Structure | **○_time** | **Time Surface** | Boundary of history; edge of committed past | Temporal membrane enclosing 4D braid |
 | **5.5D** | Process | — | **Temporal Sensation** | History↔possibility coupling | Interface between fixed past and open future |
 | **6D** | Structure | **Φ_time** | **Time Volume** | Field of histories; possibility space of timelines | Configuration space of all possible 4D braids |

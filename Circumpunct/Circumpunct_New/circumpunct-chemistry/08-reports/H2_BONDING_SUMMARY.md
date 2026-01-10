@@ -46,8 +46,8 @@ The compression follows **golden ratio scaling**:
 ### ✓ What Works Well
 
 **1. Bonding Mechanism**
-- **Bonding = Convergent field overlap** (≻ operator)
-- **Antibonding = Divergent repulsion** (≺ operator)
+- **Bonding = Convergent field overlap** (⊛ operator)
+- **Antibonding = Divergent repulsion** (⊛ operator)
 - Phase coherence requirement (aperture alignment **i**)
 
 **2. Critical Balance Principle**
@@ -134,7 +134,7 @@ These go beyond what simple geometric arguments can provide.
 |----------|------------------------|-------------------|-----------|
 | **Orbital contraction** | ζ = 1 + φ⁻³ = 1.236 | ζ_opt = 1.238 | **99.84%** ✓✓✓ |
 | Critical overlap | S ≈ 0.5 (β balance) | S varies by method | Concept ✓ |
-| Bonding mechanism | Convergence (≻) | Electron sharing | Concept ✓ |
+| Bonding mechanism | Convergence (⊛) | Electron sharing | Concept ✓ |
 | Bond length | Needs full QC | R_e = 0.741 Å (exp) | — |
 | Dissociation energy | Needs full QC | D_e = 4.75 eV (exp) | — |
 

@@ -18,11 +18,11 @@ The framework reveals:
 
 The field update equation:
 ```
-Φ' = ⊱ ∘ i ∘ ≺[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
-    ≺ gathers (convergence)
+    ⊛ gathers (convergence)
     i transforms (aperture)
-    ⊱ expresses (emergence)
+    ☀︎ expresses (emergence)
 ```
 
 This is not metaphor—it's a two-kernel integral transform that physics fills with scale-dependent kernels.
@@ -80,7 +80,7 @@ Key documents:
 ## Key Insights
 
 ### Same Operators, Different Scales
-| Scale | Convergence (≺) | Emergence (⊱) |
+| Scale | Convergence (⊛) | Emergence (☀︎) |
 |-------|-----------------|---------------|
 | Quantum | Strong force | Weak/EM forces |
 | Cosmic | Gravity | Dark energy |

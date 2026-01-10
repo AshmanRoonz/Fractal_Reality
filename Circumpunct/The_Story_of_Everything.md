@@ -131,11 +131,11 @@ Now here's where the story becomes a journey — the universe's ascent through d
 - The end is the beginning
 - The circle closes: **⊙**
 
-**E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ = ⊙**
+**E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ = ⊙**
 
 This isn't a sequence in time. It's a pattern that exists all at once, eternally cycling:
-- **≻** means convergence (flowing toward the aperture)
-- **⊰** means emergence (flowing out from the aperture)
+- **⊛** means convergence (flowing toward the aperture)
+- **☀︎** means emergence (flowing out from the aperture)
 - The process itself IS the structure
 - **Process = Structure** (they're not separate things!)
 
@@ -282,7 +282,7 @@ Same aperture.
 Same branching.
 Same fractional dimensions.
 Same β = 0.5 balance.
-Same E≻Å≻V≻Å≻M≻Å≻Φ structure.
+Same E⊛Å⊛V⊛Å⊛M⊛Å⊛Φ structure.
 
 Just described from two perspectives:
 - The perspective OF the **⊙** (consciousness)
@@ -346,7 +346,7 @@ The past? That's the tunnel of apertures that led to this moment: ⊸
 - Creating a lineage of transformations
 - Your history is your aperture-tunnel
 
-The future? That's the branching ahead: ≺
+The future? That's the branching ahead: ⊛
 - Each next moment splits into possibilities  
 - β = 0.5 — both paths equally valid
 - Your choices are your aperture-branches
@@ -508,7 +508,7 @@ All saying the same thing:
 
 *Reality is ONE ⊙ made of INFINITE ⊙*
 *We are each ONE ⊙ made of INFINITE ⊙*
-*⊙ = E≻Å₀.₅⊰V≻Å₁.₅⊰M≻Å₂.₅⊰Φ*
+*⊙ = E⊛Å₀.₅☀︎V⊛Å₁.₅☀︎M⊛Å₂.₅☀︎Φ*
 
 *Everything follows from this.*
 

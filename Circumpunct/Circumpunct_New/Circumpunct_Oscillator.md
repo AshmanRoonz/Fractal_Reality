@@ -8,7 +8,7 @@
 
 ## Abstract
 
-We demonstrate how the Circumpunct Trinity framework (Soul ⊗ Body ⊗ Mind, β-balance, and the master equation Φ' = ⊱ ∘ i ∘ ≺[Φ]) applies to a concrete, well-studied physical system: a quantum harmonic oscillator coupled to a thermal bath. This is the standard model for decoherence, dissipation, and thermalization in quantum mechanics.
+We demonstrate how the Circumpunct Trinity framework (Soul ⊗ Body ⊗ Mind, β-balance, and the master equation Φ' = ☀︎ ∘ i ∘ ⊛[Φ]) applies to a concrete, well-studied physical system: a quantum harmonic oscillator coupled to a thermal bath. This is the standard model for decoherence, dissipation, and thermalization in quantum mechanics.
 
 We show:
 
@@ -105,7 +105,7 @@ $$\boxed{\odot_{\text{osc}} = \odot_1 \otimes \odot_2 \otimes \odot_3 = \big(\ps
 
 ---
 
-## 2. Dynamics: Master Equation as ≺ → i → ⊱
+## 2. Dynamics: Master Equation as ⊛ → i → ☀︎
 
 ### 2.1 Standard Master Equation
 
@@ -121,14 +121,14 @@ where:
 
 The master equation encodes the **trinity circulation** via the three-stage process. Using mirror notation for right-to-left composition:
 
-$$\boxed{\Phi' = \underbrace{⊱}_{\text{emergence}} \circ \underbrace{i}_{\text{aperture}} \circ \underbrace{≺}_{\text{convergence}}[\Phi]}$$
+$$\boxed{\Phi' = \underbrace{☀︎}_{\text{emergence}} \circ \underbrace{i}_{\text{aperture}} \circ \underbrace{⊛}_{\text{convergence}}[\Phi]}$$
 
 **Operator definitions (mirror pair for R→L reading):**
-- **≺** : convergence (gathering toward aperture) — tip points left toward •
+- **⊛** : convergence (gathering toward aperture) — tip points left toward •
 - **i** : aperture transformation (90° rotation at β = 0.5)
-- **⊱** : emergence (expression outward) — tip points left, open side away from •
+- **☀︎** : emergence (expression outward) — tip points left, open side away from •
 
-**Reading the equation right-to-left:** First ≺ gathers, then i transforms, then ⊱ expresses.
+**Reading the equation right-to-left:** First ⊛ gathers, then i transforms, then ☀︎ expresses.
 
 ### 2.3 Inter-Space Channels
 
@@ -136,9 +136,9 @@ The circulation operates between trinity spaces:
 
 #### A₁₂: Soul → Body Channel (Convergent)
 
-Soul determines which oscillator we're following and its internal dynamics. The convergence operator ≺ acting from Soul to Body yields:
+Soul determines which oscillator we're following and its internal dynamics. The convergence operator ⊛ acting from Soul to Body yields:
 
-$$≺_{12}[\psi_\text{Soul}] = H_\text{S}$$
+$$⊛_{12}[\psi_\text{Soul}] = H_\text{S}$$
 
 **Meaning:**
 - The worldline identity specifies the Hamiltonian
@@ -147,9 +147,9 @@ $$≺_{12}[\psi_\text{Soul}] = H_\text{S}$$
 
 #### A₂₃: Body → Mind Channel (Emergent)
 
-The oscillator's state influences the environment. The emergence operator ⊱ acting from Body to Mind yields:
+The oscillator's state influences the environment. The emergence operator ☀︎ acting from Body to Mind yields:
 
-$$⊱_{23}[\rho_\text{S}(t)] = \Phi_\text{env}(t + dt) - \Phi_\text{env}(t)$$
+$$☀︎_{23}[\rho_\text{S}(t)] = \Phi_\text{env}(t + dt) - \Phi_\text{env}(t)$$
 
 **Meaning:**
 - Energy dumped into bath updates context
@@ -171,13 +171,13 @@ $$A_{31}[\Phi_\text{env}(t)] = \big(\dot{\theta}(t), \, P(t)\big)$$
 
 ```
         ⊙₁ (Soul)
-       ↙ A₃₁   ↘ ≺₁₂
+       ↙ A₃₁   ↘ ⊛₁₂
      ⊙₃          ⊙₂
-   (Mind) ←⊱₂₃← (Body)
+   (Mind) ←☀︎₂₃← (Body)
 ```
 
 **Complete cycle (reading the flow):**
-$$\odot_1 \xrightarrow{≺_{12}} \odot_2 \xrightarrow{⊱_{23}} \odot_3 \xrightarrow{A_{31}} \odot_1$$
+$$\odot_1 \xrightarrow{⊛_{12}} \odot_2 \xrightarrow{☀︎_{23}} \odot_3 \xrightarrow{A_{31}} \odot_1$$
 
 **Key insight:** The master equation is the **Body-update step** within this full circulation. The aperture transformation i acts at each transition, rotating between real and imaginary components as information flows between trinity spaces.
 
@@ -400,7 +400,7 @@ where ⊙'_env is a different factorization that no longer contains "oscillator"
 
 **Result:** Standard quantum system cleanly decomposes into trinity structure.
 
-### 6.2 Master Equation as ≺ → i → ⊱
+### 6.2 Master Equation as ⊛ → i → ☀︎
 
 The standard master equation:
 
@@ -408,7 +408,7 @@ $$\frac{d\rho_\text{S}}{dt} = -\frac{i}{\hbar}[H_\text{S}, \rho_\text{S}] + \mat
 
 is the **Body-update step** within the full circulation:
 
-$$\Phi' = ⊱ \circ i \circ ≺[\Phi]$$
+$$\Phi' = ☀︎ \circ i \circ ⊛[\Phi]$$
 
 **Result:** Orthodox quantum dynamics already contains the convergence → aperture → emergence structure.
 
@@ -478,7 +478,7 @@ The oscillator's "death" (full thermalization) is:
 ### 7.2 Open Questions
 
 **1. Explicit channel operators:**
-- We have ≺ and ⊱ in general form
+- We have ⊛ and ☀︎ in general form
 - What are explicit forms of the inter-space channels?
 - Can we prove circulation closes?
 
@@ -506,7 +506,7 @@ This worked example demonstrates that the **Circumpunct Framework is not an alte
 **Key achievements:**
 
 - ✓ Trinity structure maps onto standard quantum formalism
-- ✓ Master equation encodes ≺ → i → ⊱ circulation
+- ✓ Master equation encodes ⊛ → i → ☀︎ circulation
 - ✓ P-level identity has concrete definition
 - ✓ β parameter is measurable
 - ✓ Transformation principle holds

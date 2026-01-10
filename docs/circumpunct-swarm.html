@@ -324,7 +324,7 @@
         <header>
             <div class="logo">⊙</div>
             <h1>Circumpunct Swarm</h1>
-            <div class="subtitle">Φ' = ⊰ ∘ i ∘ ≻[Φ] — Hybrid P2P File Transfer (WebRTC + Relay)</div>
+            <div class="subtitle">Φ' = ☀︎ ∘ i ∘ ⊛[Φ] — Hybrid P2P File Transfer (WebRTC + Relay)</div>
         </header>
         
         <!-- LOBBY -->
@@ -390,7 +390,7 @@
                     <div class="panel">
                         <div class="panel-title"><span class="symbol">•</span><span>Shared Files</span></div>
                         <div class="drop-zone" id="drop-zone">
-                            <div class="icon">≻</div>
+                            <div class="icon">⊛</div>
                             <div>Drop file to share</div>
                             <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">or click to select</div>
                             <input type="file" id="file-input">
@@ -409,7 +409,7 @@
         
         <footer>
             <p>⊙ Circumpunct Swarm Protocol v0.3</p>
-            <p style="margin-top: 0.5rem;">Reality self-references: the future converges inward (≻), rotates into existence (i), and emerges outward as pattern (⊰)</p>
+            <p style="margin-top: 0.5rem;">Reality self-references: the future converges inward (⊛), rotates into existence (i), and emerges outward as pattern (☀︎)</p>
         </footer>
     </div>
 
@@ -441,7 +441,7 @@
             const logEl = document.getElementById('log');
             const entry = document.createElement('div');
             entry.className = `log-entry ${type}`;
-            const symbols = { convergence: '≻', aperture: 'i', emergence: '⊰', error: '✗' };
+            const symbols = { convergence: '⊛', aperture: 'i', emergence: '☀︎', error: '✗' };
             entry.textContent = `[${symbols[type] || '⊙'}] ${message}`;
             logEl.appendChild(entry);
             logEl.scrollTop = logEl.scrollHeight;
@@ -1008,7 +1008,7 @@
                 const item = document.createElement('div');
                 item.className = 'file-item';
                 item.style.cursor = 'pointer';
-                item.innerHTML = `<span style="color: var(--convergence);">≻</span><span class="name">${file.name}</span><span class="size">${formatSize(file.size)}</span><span class="owner">${file.owner}</span>`;
+                item.innerHTML = `<span style="color: var(--convergence);">⊛</span><span class="name">${file.name}</span><span class="size">${formatSize(file.size)}</span><span class="owner">${file.owner}</span>`;
                 item.onclick = () => requestFile(fileId);
                 listEl.appendChild(item);
             }
@@ -1032,7 +1032,7 @@
                 item.style.alignItems = 'stretch';
                 item.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--center);">⊰</span>
+                        <span style="color: var(--center);">☀︎</span>
                         <span class="name">${transfer.name}</span>
                         <span class="size">${Math.round(progress)}%</span>
                     </div>

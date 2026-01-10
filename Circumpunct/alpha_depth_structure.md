@@ -102,7 +102,7 @@ Level ∞
 | 2 | 2 | Bidirectional flow (in + out) |
 | φ³ | 4.236... | Level 3 impedance (next nesting layer) |
 
-The **2** in the correction term = the two valves (≻ and ⊰) of the pump chamber.
+The **2** in the correction term = the two valves (⊛ and ☀︎) of the pump chamber.
 
 ---
 
@@ -114,8 +114,8 @@ The **2** in the correction term = the two valves (≻ and ⊰) of the pump cham
 |:----------------|:--------------------|
 | Boundary (○) | 360° = 2D signature |
 | Level 2 nesting | /φ² |
-| Input valve (≻) | 180°/φ² |
-| Output valve (⊰) | 180°/φ² |
+| Input valve (⊛) | 180°/φ² |
+| Output valve (☀︎) | 180°/φ² |
 | Valve difference | 2/φ³ = (θ₂ − θ₁)/90° |
 | Infinite depth | Higher φⁿ corrections |
 | β = 0.5 everywhere | Why the formula works at all |

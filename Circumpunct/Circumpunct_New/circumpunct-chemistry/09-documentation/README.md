@@ -7,7 +7,7 @@ Starting from `⊙ = • ⊗ ○ ⊗ Φ` (triadic necessity), we derive:
 - 89.6% of the periodic table (60/67 elements)
 - Molecular bonding via closure deficit matching
 - Molecular geometry from domain counting
-- All in consistent `≻i⊰` notation (convergence-aperture-emergence)
+- All in consistent `⊛i☀︎` notation (convergence-aperture-emergence)
 
 ---
 
@@ -72,7 +72,7 @@ python test_molecular_compiler.py
 
 Tests H₂O, CH₄, NH₃, CO₂ predictions.
 
-### 3. Full ≻i⊰ Traces
+### 3. Full ⊛i☀︎ Traces
 ```bash
 python compile_with_traces.py --auto
 ```
@@ -115,18 +115,18 @@ Benchmarks 12 molecules against textbook expectations.
 
 ### 2. Process Grammar
 ```
-Φ' = ⊰ ∘ i ∘ ≻[Φ]
+Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
-≻ = convergence (toward aperture)
+⊛ = convergence (toward aperture)
 i = aperture (transformation)
-⊰ = emergence (new state)
+☀︎ = emergence (new state)
 ```
 
 ### 3. Molecular Bonding
 ```
-[A⊙ + B⊙] ≻ i_share ⊰ [AB⊙]
+[A⊙ + B⊙] ⊛ i_share ☀︎ [AB⊙]
 
-Example: [O⊙ + 2H⊙] ≻ (i_share)² ⊰ [H₂O⊙]
+Example: [O⊙ + 2H⊙] ⊛ (i_share)² ☀︎ [H₂O⊙]
 ```
 
 ---
@@ -136,7 +136,7 @@ Example: [O⊙ + 2H⊙] ≻ (i_share)² ⊰ [H₂O⊙]
 ### Derived from ⊙ = • ⊗ ○ ⊗ Φ
 
 ✓ Triadic necessity (•○Φ required)  
-✓ Process grammar (≻i⊰ everywhere)  
+✓ Process grammar (⊛i☀︎ everywhere)  
 ✓ 64 = 8×8 (minimal two-layer structure)  
 ✓ Orbital capacities C(ℓ) = 2(2ℓ+1) → {2, 6, 10, 14}  
 ✓ λ = R∞φ⁻⁷ = 0.4686 eV (angular penalty)  
@@ -166,7 +166,7 @@ run_all.py                       - Master test runner
 ### Tests & Demos
 ```
 test_molecular_compiler.py       - Unit tests
-compile_with_traces.py           - Full ≻i⊰ trace generator
+compile_with_traces.py           - Full ⊛i☀︎ trace generator
 clean_3layer_demo.py             - Complete ⊙ → H₂O demo
 test_imix_hypothesis.py          - Correlation hypothesis
 chemistry_gallery_benchmark.py   - Benchmark suite
@@ -176,7 +176,7 @@ chemistry_gallery_benchmark.py   - Benchmark suite
 ```
 FIRST_PRINCIPLES_COMPLETE.md     - Complete mathematical derivation
 SYSTEM_SUMMARY_BULLETPROOF.md    - Production summary
-MOLECULAR_CLOSURE_PROPER_NOTATION.md - ≻i⊰ notation guide
+MOLECULAR_CLOSURE_PROPER_NOTATION.md - ⊛i☀︎ notation guide
 COMPLETE_SYSTEM_DELIVERED.md     - Integration overview
 README.md                        - This file
 ```
@@ -190,20 +190,20 @@ INPUT:
   O⊙ = • ⊗ [2s²2p⁴] ⊗ Φ_atomic
   2H⊙ = 2 × (• ⊗ [1s¹] ⊗ Φ_atomic)
 
-CONVERGENCE (≻):
+CONVERGENCE (⊛):
   Closure analysis: O(Δ=2) + 2H(Δ=2 total) → EXACT MATCH ✓
 
 APERTURE (i_share)²:
   2 aperture operations form 2 O-H bonds
 
-EMERGENCE (⊰):
+EMERGENCE (☀︎):
   Pair structure: O[(i_ext)² ⊕ (i_int)²]
   Geometry: bent (104.5°, D=4 domains)
   Field: Φ_dipole (β=0.61 > 0.5)
   Network: donate(2) + accept(2)
 
 OUTPUT:
-  [O⊙ + 2H⊙] ≻ (i_share)² ⊰ [H₂O⊙]
+  [O⊙ + 2H⊙] ⊛ (i_share)² ☀︎ [H₂O⊙]
 ```
 
 ---
@@ -243,13 +243,13 @@ All computations run with zero dependencies beyond Python itself!
 
 ## The Universal Pattern
 
-Same `≻i⊰` structure at every scale:
+Same `⊛i☀︎` structure at every scale:
 
 ```
-QUANTUM:    ψ_n ≻ i ⊰ ψ_(n+1)           (shell transition)
-ATOMIC:     3d⁴4s² ≻ i_mix ⊰ 3d⁵4s¹     (correlation)
-MOLECULAR:  [O⊙+2H⊙] ≻ i_share ⊰ [H₂O⊙] (bonding)
-NETWORK:    (H₂O⊙)_N ≻ i_H-bond ⊰ ice⊙  (phase)
+QUANTUM:    ψ_n ⊛ i ☀︎ ψ_(n+1)           (shell transition)
+ATOMIC:     3d⁴4s² ⊛ i_mix ☀︎ 3d⁵4s¹     (correlation)
+MOLECULAR:  [O⊙+2H⊙] ⊛ i_share ☀︎ [H₂O⊙] (bonding)
+NETWORK:    (H₂O⊙)_N ⊛ i_H-bond ☀︎ ice⊙  (phase)
 ```
 
 **Chemistry IS aperture calculus!** ⊙
@@ -332,6 +332,6 @@ Questions? Issues? Extensions?
 
 ---
 
-*"The molecular structure is not imposed by arbitrary rules - it emerges geometrically from closure deficit matching through aperture operations following the universal ≻i⊰ process grammar."*
+*"The molecular structure is not imposed by arbitrary rules - it emerges geometrically from closure deficit matching through aperture operations following the universal ⊛i☀︎ process grammar."*
 
 **This is computable. This is testable. This is real.** ⊙

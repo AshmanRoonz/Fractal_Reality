@@ -55,19 +55,19 @@ Where:
 
 ## A2: The Master Transformation
 
-$$\boxed{\Phi' = ⊱ \circ i \circ ≺[\Phi]}$$
+$$\boxed{\Phi' = ☀︎ \circ i \circ ⊛[\Phi]}$$
 
 **Operators defined:**
-- **≺ (convergence)**: Gathering operation toward center
+- **⊛ (convergence)**: Gathering operation toward center
 - **i (aperture)**: 90° rotation in complex plane, i = e^(iπ/2)
-- **⊱ (emergence)**: Expression operation from center
+- **☀︎ (emergence)**: Expression operation from center
 
 **Fixed point:**
-$$⊙ = \text{fix}(\lambda\Phi. ⊱ \circ i \circ ≺[\Phi])$$
+$$⊙ = \text{fix}(\lambda\Phi. ☀︎ \circ i \circ ⊛[\Phi])$$
 
 ## A3: The Balance Parameter
 
-$$\beta = \frac{≺}{≺ + ⊱} = 0.5$$
+$$\beta = \frac{⊛}{⊛ + ☀︎} = 0.5$$
 
 This is the **fundamental postulate**: optimal balance occurs at β = 0.5.
 
@@ -747,7 +747,7 @@ Where τ ≈ 3.7 is the SNR threshold.
 ## The Core Insight
 
 $$⊙ = ○ ⊗ Φ ⊗ •$$
-$$\Phi' = ⊱ \circ i \circ ≺[\Phi]$$
+$$\Phi' = ☀︎ \circ i \circ ⊛[\Phi]$$
 $$\beta = 0.5$$
 
 **Boundary, Field mediating, Center.**
@@ -767,8 +767,8 @@ From this, surprising numerical predictions emerge—some confirmed to 0.002%, o
 | ○ | Boundary | Component |
 | • | Center | Component |
 | Φ | Field | Component |
-| ≺ | Convergence | Operator |
-| ⊱ | Emergence | Operator |
+| ⊛ | Convergence | Operator |
+| ☀︎ | Emergence | Operator |
 | i | Aperture (imaginary unit) | Operator |
 | β | Balance = 0.5 | Parameter |
 | D | Fractal dimension = 1.5 | Derived |

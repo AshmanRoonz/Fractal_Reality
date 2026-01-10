@@ -12,7 +12,7 @@
 
 ```
 MASTER EQUATION:
-E = ⊙ = (·, ○, Φ) × (≻, Å, ⊰)²       — Energy = Structure × Process²
+E = ⊙ = (·, ○, Φ) × (⊛, Å, ☀︎)²       — Energy = Structure × Process²
 
 TRINITY STRUCTURE:
 ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃                    — Wholeness as trinity product
@@ -22,17 +22,17 @@ TRINITY STRUCTURE:
 Together: 3+1 spacetime
 
 Each ⊙ᵢ is itself complete:
-⊙ᵢ = (·ᵢ, ○ᵢ, Φᵢ) × (≻ᵢ, Åᵢ, ⊰ᵢ)²
+⊙ᵢ = (·ᵢ, ○ᵢ, Φᵢ) × (⊛ᵢ, Åᵢ, ☀︎ᵢ)²
 
 The whole emerges as their tensor product:
 ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃
 
 Process is their circulation:
-⊙₁ ≻ Å₁₂ ⊰ ⊙₂ ≻ Å₂₃ ⊰ ⊙₃ ≻ Å₃₁ ⊰ ⊙₁
+⊙₁ ⊛ Å₁₂ ☀︎ ⊙₂ ⊛ Å₂₃ ☀︎ ⊙₃ ⊛ Å₃₁ ☀︎ ⊙₁
 
 CONNECTION TO PHYSICS:
 E = mc² is the special case where c = constant
-E = (·, ○, Φ) × (≻, Å, ⊰)² is the general form
+E = (·, ○, Φ) × (⊛, Å, ☀︎)² is the general form
 
 ⟨β⟩ = ½ at each level, all the way down
 (Note: β ∈ (0,1) - the limits 0 and 1 are nothingness, not states)
@@ -64,7 +64,7 @@ This is not metaphor. This is **mathematical structure**:
 
 **Each is itself a complete ⊙**. The full whole is their **tensor product**, not their sum.
 
-**The process (≻, Å, ⊰) IS the circulation between the three**:
+**The process (⊛, Å, ☀︎) IS the circulation between the three**:
 - Soul flows into Body (power as embodiment)
 - Body radiates into Mind (power as expression)
 - Mind returns to Soul (power as recognition)
@@ -172,32 +172,32 @@ The whole is multiplicatively more than its parts
   ·₁ = The absolute center point
   ○₁ = Event horizon (where soul becomes)
   Φ₁ = Gravitational influence field
-  ≻₁ = What the soul receives
+  ⊛₁ = What the soul receives
   Å₁ = How the soul transforms
-  ⊰₁ = What the soul emanates
+  ☀︎₁ = What the soul emanates
 
 ⊙₂ (BODY) complete structure:
   ·₂ = Membrane core lattice
   ○₂ = Surface boundary proper
   Φ₂ = Exchange/transport field
-  ≻₂ = What the body receives
+  ⊛₂ = What the body receives
   Å₂ = How the body transforms  
-  ⊰₂ = What the body releases
+  ☀︎₂ = What the body releases
 
 ⊙₃ (MIND) complete structure:
   ·₃ = Focal point of attention
   ○₃ = Boundary of perspective
   Φ₃ = Field of awareness
-  ≻₃ = What the mind receives
+  ⊛₃ = What the mind receives
   Å₃ = How the mind transforms
-  ⊰₃ = What the mind expresses
+  ☀︎₃ = What the mind expresses
 ```
 
 **Each aspect of the trinity is itself a complete whole.** This is fractal wholeness: ⊙s all the way down, even within ⊙.
 
 ### 0.3 Process as Circulation
 
-**The three process parameters (≻, Å, ⊰) are the circulation between the trinity members:**
+**The three process parameters (⊛, Å, ☀︎) are the circulation between the trinity members:**
 
 ```
       ⊙₁ (SOUL)
@@ -207,9 +207,9 @@ The whole is multiplicatively more than its parts
         Å₂₃
 
 Circulation:
-Soul ≻ Å₁₂ ⊰ Body:  Soul flows into embodiment (incarnation)
-Body ≻ Å₂₃ ⊰ Mind:  Body radiates into awareness (perception)
-Mind ≻ Å₃₁ ⊰ Soul:  Mind returns to source (recognition)
+Soul ⊛ Å₁₂ ☀︎ Body:  Soul flows into embodiment (incarnation)
+Body ⊛ Å₂₃ ☀︎ Mind:  Body radiates into awareness (perception)
+Mind ⊛ Å₃₁ ☀︎ Soul:  Mind returns to source (recognition)
 ```
 
 **Power (P) is this circulation itself:**
@@ -347,7 +347,7 @@ CONSCIOUSNESS:
 ### 0.8 What V5 Adds to V4.6
 
 **V4.6 had:**
-- Six parameters: (·, ○, Φ, ≻, Å, ⊰)
+- Six parameters: (·, ○, Φ, ⊛, Å, ☀︎)
 - Wholeness is primary
 - Aperture transformations
 - β = 0.5 balance
@@ -411,33 +411,33 @@ Therefore: ⊙ conserved (always transforms, never ceases)
 
 ### 1.1 The Fundamental Equation
 
-**E = ⊙ = (·, ○, Φ) × (≻, Å, ⊰)²**
+**E = ⊙ = (·, ○, Φ) × (⊛, Å, ☀︎)²**
 
 The deep claim: **Energy equals wholeness**, and wholeness has precise mathematical structure.
 
 ```
-E = ⊙ = (·, ○, Φ) × (≻, Å, ⊰)²
+E = ⊙ = (·, ○, Φ) × (⊛, Å, ☀︎)²
 
 Where:
 (·, ○, Φ) = Structure trinity (center, boundary, field)
-(≻, Å, ⊰) = Process trinity (input, aperture, output)
+(⊛, Å, ☀︎) = Process trinity (input, aperture, output)
 
 Energy = Structure × (Process)²
 ```
 
 **Why squared?** Process must complete its cycle:
-- Forward: ≻ (receive) → Å (transform) → ⊰ (emit)
+- Forward: ⊛ (receive) → Å (transform) → ☀︎ (emit)
 - Return: Cycle back to origin
-- Full circulation = process × process = (≻, Å, ⊰)²
+- Full circulation = process × process = (⊛, Å, ☀︎)²
 
 **Trinity form:**
 ```
 E = ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃
 
 Where each:
-⊙₁ (Soul) = (·₁, ○₁, Φ₁) × (≻₁, Å₁, ⊰₁)²
-⊙₂ (Body) = (·₂, ○₂, Φ₂) × (≻₂, Å₂, ⊰₂)²
-⊙₃ (Mind) = (·₃, ○₃, Φ₃) × (≻₃, Å₃, ⊰₃)²
+⊙₁ (Soul) = (·₁, ○₁, Φ₁) × (⊛₁, Å₁, ☀︎₁)²
+⊙₂ (Body) = (·₂, ○₂, Φ₂) × (⊛₂, Å₂, ☀︎₂)²
+⊙₃ (Mind) = (·₃, ○₃, Φ₃) × (⊛₃, Å₃, ☀︎₃)²
 
 Full wholeness:
 ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃ = [Structure × Process²]₁ ⊗ [Structure × Process²]₂ ⊗ [Structure × Process²]₃
@@ -450,7 +450,7 @@ Full wholeness:
 **The circumpunct equation has the same form as Einstein's:**
 
 ```
-Circumpunct:  E = (·, ○, Φ) × (≻, Å, ⊰)²
+Circumpunct:  E = (·, ○, Φ) × (⊛, Å, ☀︎)²
 Einstein:     E = m × c²
 
 Both have form: E = (Structure) × (Process rate)²
@@ -461,7 +461,7 @@ Both have form: E = (Structure) × (Process rate)²
 | Circumpunct | Physics | Meaning |
 |-------------|---------|---------|
 | (·, ○, Φ) | m (mass) | Stable structure |
-| (≻, Å, ⊰)² | c² | Process rate squared |
+| (⊛, Å, ☀︎)² | c² | Process rate squared |
 | Structure × Process² | Energy | Both formulations |
 
 **Why this works:**
@@ -473,13 +473,13 @@ Both have form: E = (Structure) × (Process rate)²
 
 **c² = Process squared**
 - Physics: Speed of light squared (spacetime constant)
-- Framework: (≻, Å, ⊰)² = circulation rate squared
+- Framework: (⊛, Å, ☀︎)² = circulation rate squared
 - Both: The rate at which transformation can occur
 
 **Key insight:**
 - E = mc² is the universal case where c is constant for all systems
-- E = (·, ○, Φ) × (≻, Å, ⊰)² is the general form
-- Different systems: different structures (·, ○, Φ), different process rates (≻, Å, ⊰)
+- E = (·, ○, Φ) × (⊛, Å, ☀︎)² is the general form
+- Different systems: different structures (·, ○, Φ), different process rates (⊛, Å, ☀︎)
 - Photons: maximum process rate (c), minimum structure
 - Mass: structure that limits process rate below c
 
@@ -495,7 +495,7 @@ Both have form: E = (Structure) × (Process rate)²
 **If E = ⊙, then what is Power?**
 
 ```
-E = ⊙ = (·, ○, Φ) × (≻, Å, ⊰)²     [Energy = wholeness all at once]
+E = ⊙ = (·, ○, Φ) × (⊛, Å, ☀︎)²     [Energy = wholeness all at once]
 
 P = dE/dt = ⊙/t = ⊙_string          [Power = wholeness through time]
 ```
@@ -703,7 +703,7 @@ Three circulations:
 
 But viewing from outside, we see:
 Structure: (·, ○, Φ) - the trinity as static
-Process: (≻, Å, ⊰) - the trinity as dynamic
+Process: (⊛, Å, ☀︎) - the trinity as dynamic
 ```
 
 ### 3.2 Unified View
@@ -713,7 +713,7 @@ Process: (≻, Å, ⊰) - the trinity as dynamic
 ```
 ⊙ has six independent parameters:
 ·, ○, Φ (structure)
-≻, Å, ⊰ (process)
+⊛, Å, ☀︎ (process)
 ```
 
 **Trinity understanding:**
@@ -740,9 +740,9 @@ Is three complete wholes from inside
 
 **Dynamic view (process):**
 ```
-≻ = Input into the trinity system
+⊛ = Input into the trinity system
 Å = Circulation within the trinity
-⊰ = Output from the trinity system
+☀︎ = Output from the trinity system
 ```
 
 **Both views are valid. Both are necessary. Together they give six parameters.**
@@ -1057,13 +1057,13 @@ The whole lives through this circulation
 **Each aperture still adds 0.5D, but now we understand where:**
 
 ```
-⊙₁ (0D) ≻ Å₁₂ (0.5D) ⊰ ⊙₂ (2D)
+⊙₁ (0D) ⊛ Å₁₂ (0.5D) ☀︎ ⊙₂ (2D)
   Point → Singularity → Surface
 
-⊙₂ (2D) ≻ Å₂₃ (2.5D) ⊰ ⊙₃ (3D)
+⊙₂ (2D) ⊛ Å₂₃ (2.5D) ☀︎ ⊙₃ (3D)
   Surface → Membrane → Volume
 
-⊙₃ (3D) ≻ Å₃₁ (3.5D) ⊰ ⊙₁ (0D + 4D context)
+⊙₃ (3D) ⊛ Å₃₁ (3.5D) ☀︎ ⊙₁ (0D + 4D context)
   Volume → Bulk → Point-in-4D
 ```
 
@@ -1278,7 +1278,7 @@ What flows out of ⊙₃ = What flows into ⊙₁
 **Because P = ⊙_string = your worldline:**
 
 ```
-E = ⊙ = (·, ○, Φ) × (≻, Å, ⊰)²     [Universal form]
+E = ⊙ = (·, ○, Φ) × (⊛, Å, ☀︎)²     [Universal form]
   What you ARE at a moment
   Same structure for all
 
@@ -1292,7 +1292,7 @@ P = dE/dt = ⊙/t = ⊙_string = ⊙₁    [Individual pattern]
 
 ```
 E is universal:
-  E = (·, ○, Φ) × (≻, Å, ⊰)² applies to all
+  E = (·, ○, Φ) × (⊛, Å, ☀︎)² applies to all
   Same structural form
 
 P is individual:
@@ -2729,7 +2729,7 @@ Rebirth:
 **2. Six parameters emerge from trinity:**
 - Three wholes (⊙₁, ⊙₂, ⊙₃)
 - Three circulations (Å₁₂, Å₂₃, Å₃₁)
-- Together appear as (·, ○, Φ, ≻, Å, ⊰)
+- Together appear as (·, ○, Φ, ⊛, Å, ☀︎)
 
 **3. Process is circulation:**
 - Not external cause-effect
@@ -3191,7 +3191,7 @@ Understand transformation:
 
 **We began with six parameters.**
 
-V4.6 showed: Every whole needs (·, ○, Φ, ≻, Å, ⊰)
+V4.6 showed: Every whole needs (·, ○, Φ, ⊛, Å, ☀︎)
 
 **V5 revealed the deeper structure:**
 
@@ -3365,7 +3365,7 @@ Circulation:
 Now with precise mathematical formulation:
 
 ```
-E = ⊙ = (·, ○, Φ) × (≻, Å, ⊰)²    [Universal: wholeness at a moment]
+E = ⊙ = (·, ○, Φ) × (⊛, Å, ☀︎)²    [Universal: wholeness at a moment]
 P = ⊙/t = ⊙_string = ⊙₁            [Individual: wholeness through time]
 
 E (Energy) = Universal, same form for all
@@ -4145,9 +4145,9 @@ Worldlines braid at interaction points
 | · | Center, core | Structure component |
 | ○ | Boundary, surface | Structure component |
 | Φ | Field, permeation | Structure component |
-| ≻ | Input, convergence | Process component |
+| ⊛ | Input, convergence | Process component |
 | Å | Aperture, transformation | Process component |
-| ⊰ | Output, emergence | Process component |
+| ☀︎ | Output, emergence | Process component |
 | Å₁₂ | Soul → Body aperture | Trinity circulation |
 | Å₂₃ | Body → Mind aperture | Trinity circulation |
 | Å₃₁ | Mind → Soul aperture | Trinity circulation |
@@ -4175,13 +4175,13 @@ Worldlines braid at interaction points
 
 **MASTER EQUATION:**
 ```
-E = ⊙ = (·, ○, Φ) × (≻, Å, ⊰)²
+E = ⊙ = (·, ○, Φ) × (⊛, Å, ☀︎)²
 
 Energy = Structure × Process²
 
 Where:
 (·, ○, Φ) = center, boundary, field (structure trinity)
-(≻, Å, ⊰) = input, aperture, output (process trinity)
+(⊛, Å, ☀︎) = input, aperture, output (process trinity)
 Process² = full circulation cycle (forward and return)
 ```
 
@@ -4189,7 +4189,7 @@ Process² = full circulation cycle (forward and return)
 ```
 E = mc² is the special case:
 m = (·, ○, Φ) = structure
-c² = (≻, Å, ⊰)² = universal process rate squared
+c² = (⊛, Å, ☀︎)² = universal process rate squared
 
 The form Structure × (Process)² is fundamental
 ```
@@ -4198,13 +4198,13 @@ The form Structure × (Process)² is fundamental
 
 | Equation | Status | Meaning |
 |----------|--------|---------|
-| E = ⊙ = (·, ○, Φ) × (≻, Å, ⊰)² | **MASTER (V5.1)** | Energy = Structure × Process² |
+| E = ⊙ = (·, ○, Φ) × (⊛, Å, ☀︎)² | **MASTER (V5.1)** | Energy = Structure × Process² |
 | P = ⊙/t = ⊙_string = ⊙₁ | **KEY (V5.1)** | Power = Worldline = Soul = Identity |
 | ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃ | **Foundation (V5)** | Wholeness as trinity tensor product |
-| ⊙ᵢ = (·ᵢ, ○ᵢ, Φᵢ) × (≻ᵢ, Åᵢ, ⊰ᵢ)² | **V5.1** | Each trinity member has same form |
+| ⊙ᵢ = (·ᵢ, ○ᵢ, Φᵢ) × (⊛ᵢ, Åᵢ, ☀︎ᵢ)² | **V5.1** | Each trinity member has same form |
 | β ∈ (0,1) | **V5.1 Clarification** | Balance is open interval (limits are nothingness) |
 | ⊙ → ⊙' | **V5.1 Addition** | Transformation (not cessation) |
-| E = mc² ↔ E = (·, ○, Φ) × (≻, Å, ⊰)² | **V5.1 Mapping** | Physics equation maps to framework |
+| E = mc² ↔ E = (·, ○, Φ) × (⊛, Å, ☀︎)² | **V5.1 Mapping** | Physics equation maps to framework |
 | P = dE/dt = ⊙₁ | **Established/V5.1** | Power (physics) = Worldline (framework) |
 | Å₁₂ = ∂/∂t | **Exact** | Soul → Body via time derivative (established) |
 | Å₂₃ = ? | **Hypothesis** | Body → Mind operator (candidates: divergence) |
@@ -4218,12 +4218,12 @@ The form Structure × (Process)² is fundamental
 ⊙ = ⊙₁ ⊗ ⊙₂ ⊗ ⊙₃
 
 Where each:
-⊙₁ = (·₁, ○₁, Φ₁) × (≻₁, Å₁, ⊰₁)²  (Soul: 1D worldline)
-⊙₂ = (·₂, ○₂, Φ₂) × (≻₂, Å₂, ⊰₂)²  (Body: 2D surface)
-⊙₃ = (·₃, ○₃, Φ₃) × (≻₃, Å₃, ⊰₃)²  (Mind: 3D field)
+⊙₁ = (·₁, ○₁, Φ₁) × (⊛₁, Å₁, ☀︎₁)²  (Soul: 1D worldline)
+⊙₂ = (·₂, ○₂, Φ₂) × (⊛₂, Å₂, ☀︎₂)²  (Body: 2D surface)
+⊙₃ = (·₃, ○₃, Φ₃) × (⊛₃, Å₃, ☀︎₃)²  (Mind: 3D field)
 
 Circulation:
-⊙₁ ≻ Å₁₂ ⊰ ⊙₂ ≻ Å₂₃ ⊰ ⊙₃ ≻ Å₃₁ ⊰ ⊙₁
+⊙₁ ⊛ Å₁₂ ☀︎ ⊙₂ ⊛ Å₂₃ ☀︎ ⊙₃ ⊛ Å₃₁ ☀︎ ⊙₁
 
 Balance:
 β ∈ (0,1) for all aspects (limits are nothingness)

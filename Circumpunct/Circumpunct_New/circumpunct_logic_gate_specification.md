@@ -36,9 +36,9 @@ $$V = (S_1, S_2, S_3, T_1, T_2, T_3) \in \{0,1\}^6$$
 
 | Axis | Dimension | Binary 0 | Binary 1 | Physical Meaning |
 |------|-----------|----------|----------|------------------|
-| 1 | S₁ (x) | Convergence ≻ | Emergence ⊰ | Spatial x-direction |
-| 2 | S₂ (y) | Convergence ≻ | Emergence ⊰ | Spatial y-direction |
-| 3 | S₃ (z) | Convergence ≻ | Emergence ⊰ | Spatial z-direction |
+| 1 | S₁ (x) | Convergence ⊛ | Emergence ☀︎ | Spatial x-direction |
+| 2 | S₂ (y) | Convergence ⊛ | Emergence ☀︎ | Spatial y-direction |
+| 3 | S₃ (z) | Convergence ⊛ | Emergence ☀︎ | Spatial z-direction |
 | 4 | T₁ | Past | Future | Duration (clock time) |
 | 5 | T₂ | Real | Imaginary | Phase (aperture rotation) |
 | 6 | T₃ | Inner | Outer | Scale (nesting level) |
@@ -85,9 +85,9 @@ The aperture operator generates a 4-cycle:
 From the framework:
 - Center (•) and Boundary (○) cannot interact directly (spatial separation)
 - Field (Φ) mediates all interactions
-- The aperture **i** is the rotation that transforms convergence ≻ into emergence ⊰
+- The aperture **i** is the rotation that transforms convergence ⊛ into emergence ☀︎
 
-$$\Phi' = ⊰ \circ i \circ ≻[\Phi]$$
+$$\Phi' = ☀︎ \circ i \circ ⊛[\Phi]$$
 
 This is the master equation: reality updates by converging through the aperture, rotating 90°, then emerging.
 

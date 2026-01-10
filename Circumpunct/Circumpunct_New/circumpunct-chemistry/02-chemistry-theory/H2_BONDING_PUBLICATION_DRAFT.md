@@ -533,8 +533,8 @@ Bowmanville, Ontario, Canada
 ### Aperture Operators
 - **i**: Imaginary unit (90° rotation, aperture)
 - **i_share**: Bonding aperture (electron sharing)
-- **≻**: Convergence operator
-- **⊰**: Emergence operator
+- **⊛**: Convergence operator
+- **☀︎**: Emergence operator
 
 ### Parameters
 - **β**: Balance parameter (0 to 1)

@@ -114,15 +114,15 @@ By symmetry (identical atoms), c_A = c_B, so:
 - Constructive interference (+ phase alignment)
 - Apertures **i_A** and **i_B** in phase
 - Field concentration between nuclei
-- **Convergent** operator ≻ active
+- **Convergent** operator ⊛ active
 
 **Antibonding (σ_u)**:
 - Destructive interference (- phase alignment)  
 - Apertures out of phase by π
 - Field depletion between nuclei
-- **Divergent** operator ≺ active
+- **Divergent** operator ⊛ active
 
-**Critical insight**: Bonding is **convergence** (≻), antibonding is **divergence** (≺).
+**Critical insight**: Bonding is **convergence** (⊛), antibonding is **divergence** (⊛).
 
 This connects to the circumpunct forward/backward operators!
 
@@ -486,19 +486,19 @@ This is the **same pattern** as in angular penalty λ = R∞φ⁻⁷ = R∞φ⁻
 
 ### 9.3 Bonding as Convergence
 
-**Circumpunct dynamics**: Φ' = ⊰ ∘ i ∘ ≻[Φ]
+**Circumpunct dynamics**: Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
 
 For bonding:
-- **≻**: Convergence operator (fields collapse toward bond)
+- **⊛**: Convergence operator (fields collapse toward bond)
 - **i**: Aperture (90° phase for coherence)
-- **⊰**: Emergence (new molecular entity)
+- **☀︎**: Emergence (new molecular entity)
 
 For antibonding:
-- **≺**: Divergence operator (fields repel)
+- **⊛**: Divergence operator (fields repel)
 - **i**: Aperture misaligned (destructive interference)
-- **⊱**: Anti-emergence (destabilization)
+- **☀︎**: Anti-emergence (destabilization)
 
-**Principle**: Molecular bonding is convergent field overlap (≻) at critical balance (β=0.5) with phase coherence (i).
+**Principle**: Molecular bonding is convergent field overlap (⊛) at critical balance (β=0.5) with phase coherence (i).
 
 ---
 
@@ -581,7 +581,7 @@ All should follow from optimal field distribution at β = 0.5.
 
 1. **Can we derive J and K integrals** from pure field overlap geometry?
 2. **Does π bonding** have different β_optimal than σ bonding?
-3. **Do triple bonds** require ≻≻≻ (triple convergence)?
+3. **Do triple bonds** require ⊛⊛⊛ (triple convergence)?
 4. **Can we extend to ionic bonding** (field transfer rather than overlap)?
 5. **What about metallic bonding** (delocalized fields)?
 
@@ -680,7 +680,7 @@ print("\nPlot saved as 'h2_bonding.png'")
 
 1. **Bond length** R_e = 0.74 Å from S(R) = 0.5 critical balance (0.1% error)
 2. **Orbital contraction** ζ = 1 + φ⁻³ from geometric scaling (0.2% error)  
-3. **Bonding mechanism** explained as convergent field overlap (≻)
+3. **Bonding mechanism** explained as convergent field overlap (⊛)
 4. **No fitted parameters** - all from R∞, φ, β
 
 ### Physical Insights
@@ -688,7 +688,7 @@ print("\nPlot saved as 'h2_bonding.png'")
 **Bonding occurs when**:
 - Field overlap S(R) → 0.5 (critical balance β = 0.5)
 - Apertures align in-phase (constructive interference)
-- Convergence operator ≻ dominates
+- Convergence operator ⊛ dominates
 - Geometric compression ζ = 1 + φ⁻³ optimizes energy
 
 **This is the same geometric framework that predicted**:

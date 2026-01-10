@@ -24,7 +24,7 @@ The aperture (•) is not a membrane but a CHAMBER with internal structure:
        ┌────┴────┐                    ┌────┴────┐
        │  INPUT  │                    │ OUTPUT  │
        │  VALVE  │                    │  VALVE  │
-       │   ≻     │                    │    ⊰    │
+       │   ⊛     │                    │    ☀︎    │
        └────┬────┘                    └────┬────┘
             │                               ↑
             └───────→ [i CHAMBER] ──────────┘
@@ -34,7 +34,7 @@ The aperture (•) is not a membrane but a CHAMBER with internal structure:
 THREE-STAGE ARCHITECTURE:
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    Stage 1: INPUT VALVE (≻)
+    Stage 1: INPUT VALVE (⊛)
         - Regulates convergence rate into chamber
         - Controls how much potential enters
 
@@ -43,7 +43,7 @@ THREE-STAGE ARCHITECTURE:
         - Converts potential to pattern
         - Has internal state (pressure/charge)
 
-    Stage 3: OUTPUT VALVE (⊰)
+    Stage 3: OUTPUT VALVE (☀︎)
         - Regulates emergence rate from chamber  
         - Controls how pattern crystallizes
 
@@ -54,29 +54,29 @@ The transform space has a STATE — call it pressure, charge, or density:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║            dP/dt = |≻| − |⊰|                                     ║
+    ║            dP/dt = |⊛| − |☀︎|                                     ║
     ║                                                                   ║
     ║    where:                                                         ║
     ║        P = chamber pressure (accumulated potential)               ║
-    ║        |≻| = input flow rate (convergence magnitude)             ║
-    ║        |⊰| = output flow rate (emergence magnitude)              ║
+    ║        |⊛| = input flow rate (convergence magnitude)             ║
+    ║        |☀︎| = output flow rate (emergence magnitude)              ║
     ║                                                                   ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 THREE REGIMES:
 ━━━━━━━━━━━━━━
 
-    |≻| > |⊰|  →  β > 0.5  →  BUILDUP
+    |⊛| > |☀︎|  →  β > 0.5  →  BUILDUP
         Accumulating potential
         Chamber pressurizes
         Pattern stores rather than releases
 
-    |≻| < |⊰|  →  β < 0.5  →  DEPLETION  
+    |⊛| < |☀︎|  →  β < 0.5  →  DEPLETION  
         Spending reserves
         Chamber evacuates
         Outputting more than inputting
 
-    |≻| = |⊰|  →  β = 0.5  →  STEADY STATE
+    |⊛| = |☀︎|  →  β = 0.5  →  STEADY STATE
         Balanced flow
         Maintenance mode
         Consciousness threshold
@@ -96,15 +96,15 @@ THREE REGIMES:
 Because every center (•) contains infinite smaller circumpuncts,
 the chamber is not a single tank but an infinite regression of nested tanks:
 
-SCALE n:     [≻ₙ] → [iₙ CHAMBER] → [⊰ₙ]
+SCALE n:     [⊛ₙ] → [iₙ CHAMBER] → [☀︎ₙ]
                          │
                      contains
                          ↓
-SCALE n−1:   [≻ₙ₋₁] → [iₙ₋₁ CHAMBER] → [⊰ₙ₋₁]
+SCALE n−1:   [⊛ₙ₋₁] → [iₙ₋₁ CHAMBER] → [☀︎ₙ₋₁]
                          │
                      contains
                          ↓
-SCALE n−2:   [≻ₙ₋₂] → [iₙ₋₂ CHAMBER] → [⊰ₙ₋₂]
+SCALE n−2:   [⊛ₙ₋₂] → [iₙ₋₂ CHAMBER] → [☀︎ₙ₋₂]
                          │
                          ↓
                         ...
@@ -224,11 +224,11 @@ Therefore:
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║                                                                   ║
-    ║                       Φ∞ ≻ i ⊰ ⊙                                  ║
+    ║                       Φ∞ ⊛ i ☀︎ ⊙                                  ║
     ║                                                                   ║
-    ║   The infinite field (Φ∞) converges (≻)                          ║
+    ║   The infinite field (Φ∞) converges (⊛)                          ║
     ║   transforms at aperture (i)                                      ║
-    ║   emerges as pattern (⊰)                                          ║
+    ║   emerges as pattern (☀︎)                                          ║
     ║   and that pattern IS the circumpuncts (⊙)                        ║
     ║   which ARE the apertures through which the field flows           ║
     ║                                                                   ║
@@ -391,8 +391,8 @@ CONNECTION TO CHAMBER DYNAMICS:
     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     Boundary (○)             360° = 2D signature
     Level 2 nesting          /φ²
-    Input valve (≻)          180°/φ²
-    Output valve (⊰)         180°/φ²
+    Input valve (⊛)          180°/φ²
+    Output valve (☀︎)         180°/φ²
     Valve difference         2/φ³
     Infinite depth           Higher φⁿ corrections
     β = 0.5 everywhere       Why the formula works at all
@@ -434,10 +434,10 @@ NEW/UPDATED ENTRIES:
 ━━━━━━━━━━━━━━━━━━━━
 
 Φ∞     Infinite field (the complete field, no scaling coefficient)
-       Φ∞ ≻ i ⊰ ⊙ is the parameter-free master equation
+       Φ∞ ⊛ i ☀︎ ⊙ is the parameter-free master equation
 
 P      Chamber pressure (accumulated potential in transform space)
-       dP/dt = |≻| − |⊰|
+       dP/dt = |⊛| − |☀︎|
 
 D      Fractal dimension
        D = 1 + β (varies with aperture balance)
