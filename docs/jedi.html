@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jedi Training Manual - Holocron Database</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@300;400;500&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --jedi-gold: #FFE81F;
+            --jedi-blue: #4A90E2;
+            --terminal-bg: #0a0e1a;
+            --panel-bg: #151a2b;
+            --text-primary: #e8eaed;
+            --text-secondary: #9aa0a6;
+            --border-color: #2a3447;
+            --accent-glow: rgba(255, 232, 31, 0.3);
+        }
+        
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: var(--terminal-bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--panel-bg);
+            border-bottom: 2px solid var(--jedi-gold);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-symbol {
+            font-size: 2rem;
+            color: var(--jedi-gold);
+        }
+        
+        .logo-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--jedi-gold);
+            font-weight: 700;
+        }
+        
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+        
+        .version {
+            font-size: 0.85rem;
+            color: var(--jedi-blue);
+            padding: 0.3rem 0.8rem;
+            border: 1px solid var(--jedi-blue);
+            border-radius: 3px;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+        
+        .nav-section {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .nav-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--jedi-gold);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .nav-link {
+            display: block;
+            padding: 0.5rem 0.8rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+        
+        .nav-link:hover {
+            color: var(--jedi-gold);
+            border-left-color: var(--jedi-gold);
+            background: rgba(255, 232, 31, 0.05);
+        }
+        
+        .nav-link.active {
+            color: var(--jedi-gold);
+            border-left-color: var(--jedi-gold);
+        }
+        
+        /* Main Content */
+        .main-content {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 2.5rem;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--jedi-gold);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--jedi-gold);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            color: var(--jedi-blue);
+        }
+        
+        h3 {
+            font-size: 1.2rem;
+        }
+        
+        p {
+            margin: 1rem 0;
+            color: var(--text-primary);
+        }
+        
+        /* Code blocks */
+        pre, code {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        code {
+            padding: 0.2rem 0.4rem;
+            font-size: 0.9em;
+            color: var(--jedi-blue);
+        }
+        
+        pre code {
+            padding: 0;
+            border: none;
+            background: none;
+        }
+        
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+            color: var(--text-primary);
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--terminal-bg);
+        }
+        
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        
+        th {
+            background: rgba(255, 232, 31, 0.1);
+            color: var(--jedi-gold);
+            font-weight: 500;
+        }
+        
+        /* Callout boxes */
+        .callout {
+            background: rgba(74, 144, 226, 0.1);
+            border-left: 4px solid var(--jedi-blue);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 3px;
+        }
+        
+        .callout.warning {
+            background: rgba(255, 68, 68, 0.1);
+            border-left-color: #ff4444;
+        }
+        
+        .callout.success {
+            background: rgba(76, 175, 80, 0.1);
+            border-left-color: #4caf50;
+        }
+        
+        .callout-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--jedi-gold);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        
+        /* Section dividers */
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            margin: 2rem 0;
+        }
+        
+        /* Strong/Bold */
+        strong {
+            color: var(--jedi-gold);
+            font-weight: 500;
+        }
+        
+        /* Links */
+        a {
+            color: var(--jedi-blue);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Blockquote */
+        blockquote {
+            border-left: 4px solid var(--jedi-gold);
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        
+        /* Special formatting for equations */
+        .equation {
+            background: var(--terminal-bg);
+            border: 1px solid var(--jedi-gold);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--jedi-gold);
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+            
+            .main-content {
+                padding: 1.5rem;
+            }
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Section anchors */
+        .section-anchor {
+            display: block;
+            position: relative;
+            top: -100px;
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-symbol">⊙</div>
+                <div class="logo-text">
+                    <h1>JEDI TRAINING MANUAL</h1>
+                    <p>Circumpunct Framework - Holocron Database</p>
+                </div>
+            </div>
+            <div class="version">v6.0</div>
+        </div>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <nav class="nav-section">
+                <div class="nav-title">Contents</div>
+                <a href="#intro" class="nav-link">Introduction</a>
+                <a href="#foundations" class="nav-link">I: Foundations</a>
+                <a href="#powers" class="nav-link">II: Three Powers</a>
+                <a href="#path" class="nav-link">III: The Path</a>
+                <a href="#darkside" class="nav-link">IV: Dark Side</a>
+                <a href="#practice" class="nav-link">V: Daily Practice</a>
+                <a href="#appendix" class="nav-link">Appendix</a>
+            </nav>
+            
+            <nav class="nav-section">
+                <div class="nav-title">Quick Access</div>
+                <a href="#epsilon" class="nav-link">ε Mastery</a>
+                <a href="#chi" class="nav-link">χ Mastery</a>
+                <a href="#beta" class="nav-link">β Mastery</a>
+                <a href="#padawan" class="nav-link">Padawan Level</a>
+                <a href="#knight" class="nav-link">Knight Level</a>
+                <a href="#master" class="nav-link">Master Level</a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <span class="section-anchor" id="intro"></span>
+            <h1>Enter the Jedi: From Padawan to Jedi Master</h1>
+            <p style="font-size: 1.1rem; color: var(--jedi-blue);">A Full Force Manual • Based on the Circumpunct Framework v6.0</p>
+            
+            <div class="callout">
+                <div class="callout-title">What is a Jedi?</div>
+                <p>A <strong>Jedi</strong> is a circumpunct with full voluntary control over their primary aperture configuration (ε, χ, β), who recognizes themselves as a fractal of the cosmic whole and serves as a clear conduit for the Force.</p>
+            </div>
+            
+            <p>This manual provides complete training in aperture mastery—the path from reactive Padawan to aligned Jedi Master. The framework is not metaphor. It is the mathematics of consciousness itself.</p>
+            
+            <hr>
+            
+            <span class="section-anchor" id="foundations"></span>
+            <h1>PART I: FOUNDATIONS</h1>
+            
+            <h2>1. The Circumpunct Structure</h2>
+            
+            <div class="equation">⊙ = • ⊗ Φ ⊗ ○</div>
+            
+            <p>Where:</p>
+            <ul>
+                <li><strong>•</strong> = Center / Aperture / Soul</li>
+                <li><strong>Φ</strong> = Field / Mind / The Force</li>
+                <li><strong>○</strong> = Boundary / Body / Interface</li>
+            </ul>
+            
+            <div class="callout">
+                <div class="callout-title">Field Mediation Necessity</div>
+                <p>Center and boundary cannot interact directly. The field MUST mediate. This is geometric necessity, not preference. Your soul (•) affects your body (○) through your mind (Φ). There is no other path.</p>
+            </div>
+            
+            <h3>1.1 The Fractal Nature of Boundaries</h3>
+            
+            <p><strong>Critical insight:</strong> Your boundary (○) is not a wall. It is composed of smaller apertures.</p>
+            
+            <pre><code>○ = {•₁, •₂, •₃, ... •ₙ}
+
+Each point on your boundary is itself a •
+Each • is a fractal of your primary •_soul
+Each can resonate with or decouple from patterns</code></pre>
+            
+            <p><strong>The liberation:</strong> You don't need to control each boundary point separately. Master your center's resonance, and the boundary follows through fractal resonance.</p>
+            
+            <h3>1.2 The Master Equation</h3>
+            
+            <div class="equation">Φ' = ☀︎ ∘ i ∘ ⊛[Φ_∞]</div>
+            
+            <p>Read: The updated field equals emergence of aperture transformation of convergence from infinite field.</p>
+            
+            <p>Or in practice:</p>
+            <ol>
+                <li><strong>Receive</strong> from Φ_∞ (⊛ convergence)</li>
+                <li><strong>Transform</strong> at your aperture (i)</li>
+                <li><strong>Express</strong> back to Φ_∞ (☀︎ emergence)</li>
+            </ol>
+            
+            <p><strong>You are a conduit, not a source. The Force flows THROUGH you.</strong></p>
+            
+            <h2>2. The Force as Φ_∞</h2>
+            
+            <h3>2.1 What IS the Force?</h3>
+            
+            <pre><code>Φ_∞ = The infinite 0D field
+    = Dimensionless yet omnipresent
+    = The ground of all fields at all scales
+    = What traditions call "God" or "Tao" or "Brahman"</code></pre>
+            
+            <p><strong>Your field is NOT separate:</strong></p>
+            
+            <div class="equation">Φ_you = Φ_∞ |_your_scale</div>
+            
+            <p>Your mind is:</p>
+            <ul>
+                <li>A localized instance of the infinite field</li>
+                <li>Connected to all other minds</li>
+                <li>Same substance, different configuration</li>
+            </ul>
+            
+            <h3>2.2 The 0.5/0.5 Nature</h3>
+            
+            <p>At optimal coupling (β = 0.5):</p>
+            
+            <pre><code>Your field Φ_you is:
+  50% PRIVATE (inside your boundary ○)
+  50% SHARED (accessible through ○)</code></pre>
+            
+            <p>The Force is simultaneously:</p>
+            <ul>
+                <li>Intimately yours (private experience)</li>
+                <li>Cosmically shared (connected to all)</li>
+            </ul>
+            
+            <p>This is why you feel both uniquely yourself (private portion) and connected to everything (shared portion).</p>
+            
+            <h2>3. You Are a Fractal</h2>
+            
+            <h3>3.1 The Nested Reality</h3>
+            
+            <pre><code>... ⊙_cosmos ⊃ ⊙_galaxy ⊃ ⊙_solar_system ⊃ ⊙_earth ⊃ 
+    ⊙_ecosystem ⊃ ⊙_you ⊃ ⊙_organs ⊃ ⊙_cells ⊃ ...
+    
+Infinite nesting in both directions
+No top (no largest ⊙)
+No bottom (no smallest ⊙)</code></pre>
+            
+            <p>You are simultaneously:</p>
+            <ol>
+                <li><strong>A whole</strong> containing smaller circumpuncts (your cells, organs, thoughts)</li>
+                <li><strong>A part</strong> contained in larger circumpuncts (your family, society, cosmos)</li>
+            </ol>
+            
+            <div class="callout warning">
+                <div class="callout-title">The Two Temptations</div>
+                <p><strong>Temptation 1:</strong> Believe you are ONLY a part → Victim consciousness, powerlessness</p>
+                <p><strong>Temptation 2:</strong> Believe you ARE THE whole → Narcissism, dark side</p>
+                <p style="margin-top: 1rem; color: var(--jedi-gold);"><strong>The Truth:</strong> You are whole THROUGH being a part</p>
+            </div>
+            
+            <h3>3.2 Power Through Alignment</h3>
+            
+            <p>Your power comes from recognizing your true position:</p>
+            
+            <table>
+                <tr>
+                    <th>NOT</th>
+                    <th>BUT</th>
+                </tr>
+                <tr>
+                    <td>"I control the cosmos"</td>
+                    <td>"I align with the cosmic pattern"</td>
+                </tr>
+                <tr>
+                    <td>"I create the Force"</td>
+                    <td>"I let the Force flow through me"</td>
+                </tr>
+                <tr>
+                    <td>"I am the whole"</td>
+                    <td>"I am a fractal of the whole"</td>
+                </tr>
+            </table>
+            
+            <p>When your aperture aligns with the cosmic aperture:</p>
+            <ul>
+                <li>Maximum coherence</li>
+                <li>Minimum resistance</li>
+                <li>Effortless action (Wu Wei)</li>
+                <li>"The Force is with me"</li>
+            </ul>
+            
+            <hr>
+            
+            <span class="section-anchor" id="powers"></span>
+            <h1>PART II: THE THREE POWERS</h1>
+            
+            <p>A Jedi masters three fundamental controls:</p>
+            
+            <table>
+                <tr>
+                    <th>Power</th>
+                    <th>Symbol</th>
+                    <th>Control</th>
+                    <th>Range</th>
+                </tr>
+                <tr>
+                    <td><strong>Resonance</strong></td>
+                    <td>ε</td>
+                    <td>Which patterns to couple with</td>
+                    <td>{0, 1}</td>
+                </tr>
+                <tr>
+                    <td><strong>Fitness</strong></td>
+                    <td>χ</td>
+                    <td>Which patterns match needs</td>
+                    <td>{-1, +1}</td>
+                </tr>
+                <tr>
+                    <td><strong>Boundary</strong></td>
+                    <td>β</td>
+                    <td>How much to share</td>
+                    <td>[0, 1]</td>
+                </tr>
+            </table>
+            
+            <p>These are not separate abilities. They are three aspects of aperture mastery.</p>
+            
+            <span class="section-anchor" id="epsilon"></span>
+            <h2>5. ε Mastery: Resonance Control</h2>
+            
+            <h3>5.1 What is ε?</h3>
+            
+            <pre><code>ε ∈ {0, 1}
+
+ε = 1: RESONATE (aperture phase-locks with this pattern)
+ε = 0: NO RESONANCE (aperture doesn't couple to this pattern)
+
+Attention(x) = {
+  resonant     if ε(x) = 1
+  non-resonant if ε(x) = 0
+}</code></pre>
+            
+            <p><strong>ε controls WHICH PATTERNS you resonate with.</strong></p>
+            
+            <div class="callout">
+                <div class="callout-title">The Isotropic Center</div>
+                <p>The center (•) is isotropic—it has no inherent directional bias. It doesn't "block" anything. Rather, it selectively phase-locks with certain patterns in Φ_∞ while remaining uncoupled to others. Attention is resonance; what you notice is what your aperture couples to.</p>
+            </div>
+            
+            <h3>5.2 Level 1: Padawan (Reactive)</h3>
+            
+            <pre><code>ε is determined BY external stimuli:
+  - Loud noise → ε = 1 (can't help but resonate)
+  - Shiny object → ε = 1 (attention couples automatically)
+  - Familiar routine → ε = 0 (no longer resonates)
+
+You are not choosing which patterns to couple with
+External world determines your resonance
+Attention is pulled, not directed</code></pre>
+            
+            <p><strong>Signs you are at Padawan level with ε:</strong></p>
+            <ul>
+                <li>Can't maintain resonance with what you intend</li>
+                <li>Constantly pulled into resonance with notifications, noises, thoughts</li>
+                <li>Don't resonate with what you intended to notice</li>
+                <li>Attention feels like it "happens to you"</li>
+            </ul>
+            
+            <h3>5.3 Level 2: Knight (Intentional)</h3>
+            
+            <pre><code>ε can be set deliberately:
+  - "I will resonate with this" → ε(this) = 1
+  - "I will not couple to that" → ε(that) = 0
+  
+You choose which patterns to phase-lock with
+Requires effort to maintain resonance
+Attention is directed, but tiring</code></pre>
+            
+            <p><strong>Practices to reach Knight level:</strong></p>
+            <ul>
+                <li>Meditation (return resonance to breath when it wanders)</li>
+                <li>Single-tasking (choose one pattern, decouple from others)</li>
+                <li>Pomodoro technique (dedicated resonance periods)</li>
+                <li>Notice when resonance wanders, redirect it</li>
+            </ul>
+            
+            <h3>5.4 Level 3: Jedi (Effortless)</h3>
+            
+            <pre><code>ε is stable under pressure:
+  - External stimulus → no automatic resonance change
+  - Can maintain ε = 1 on chosen pattern indefinitely
+  - Can maintain ε = 0 on distractions without effort
+  - Resonance is yours, not the world's
+
+You ARE the director of resonance
+No struggle required
+Phase-lock stays where you set it</code></pre>
+            
+            <p><strong>Signs you've reached Jedi level with ε:</strong></p>
+            <ul>
+                <li>Can resonate with difficult patterns without willpower drain</li>
+                <li>Distractions occur but don't capture resonance</li>
+                <li>Can couple to what you choose</li>
+                <li>Attention feels like an extension of will</li>
+            </ul>
+            
+            <h3>5.5 The ε Practice</h3>
+            
+            <p><strong>Daily training:</strong></p>
+            
+            <ol>
+                <li><strong>Morning:</strong> Set ε_today
+                    <ul>
+                        <li>"Today I will resonate with: ___"</li>
+                        <li>"Today I will not couple to: ___"</li>
+                    </ul>
+                </li>
+                <li><strong>During day:</strong> Notice when ε slips
+                    <ul>
+                        <li>When distracted: "Resonance wandered, returning now"</li>
+                        <li>When captured: "This grabbed my resonance, releasing now"</li>
+                    </ul>
+                </li>
+                <li><strong>Evening:</strong> Review ε_actual
+                    <ul>
+                        <li>"Did I resonate with what I intended?"</li>
+                        <li>"What hijacked my resonance?"</li>
+                        <li>"What patterns did I miss that I wanted to couple to?"</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>The progression:</strong></p>
+            <ul>
+                <li>Week 1-4: Notice when ε is reactive</li>
+                <li>Week 5-12: Practice setting ε intentionally</li>
+                <li>Month 4+: ε becomes stable, effortless</li>
+            </ul>
+            
+            <span class="section-anchor" id="chi"></span>
+            <h2>6. χ Mastery: Fitness Evaluation</h2>
+            
+            <h3>6.1 What is χ?</h3>
+            
+            <pre><code>χ ∈ {-1, +1}
+
+χ = +1: FITS (this pattern matches what I'm looking for)
+χ = -1: DOESN'T FIT (this pattern doesn't match)
+
+Fitness(x) = {
+  match     if χ(x) = +1
+  mismatch  if χ(x) = -1
+}</code></pre>
+            
+            <p><strong>χ controls WHICH resonant patterns FIT your current needs/goals/values.</strong></p>
+            
+            <p>You resonate with many patterns (ε = 1 for multiple things), but only some of them FIT what you're actually looking for. χ evaluates match/mismatch, alignment/misalignment, right/wrong for context.</p>
+            
+            <h4>Examples:</h4>
+            
+            <p><strong>When hungry:</strong></p>
+            <pre><code>ε = 1: Resonate with all food (notice all the options)
+χ = +1: This food FITS my craving (matches what I need)
+χ = -1: That food doesn't FIT (doesn't match what I need)</code></pre>
+            
+            <p><strong>When problem-solving:</strong></p>
+            <pre><code>ε = 1: Resonate with potential solutions (consider all ideas)
+χ = +1: This solution FITS the problem (meets requirements)
+χ = -1: That solution doesn't FIT (doesn't meet needs)</code></pre>
+            
+            <p><strong>In relationships:</strong></p>
+            <pre><code>ε = 1: Resonate with another person (notice them, engage)
+χ = +1: This person FITS my values (aligned)
+χ = -1: This person doesn't FIT my values (misaligned)</code></pre>
+            
+            <p>χ is pattern matching, not interpretation. It's fitness evaluation, not arbitrary framing.</p>
+            
+            <h3>6.2 Level 1: Padawan (Reactive)</h3>
+            
+            <pre><code>χ is determined BY the stimulus:
+  - Pleasant event → χ = +1 (automatic "fits")
+  - Unpleasant event → χ = -1 (automatic "doesn't fit")
+  - No choice in evaluation
+
+Your fitness assessment is determined by conditions
+Same as everyone else would evaluate it
+No freedom in pattern matching</code></pre>
+            
+            <h3>6.3 Level 2: Knight (Intentional)</h3>
+            
+            <pre><code>χ can be chosen deliberately:
+  - Difficult situation → "What fits my growth?" (χ = +1)
+  - Pleasant situation → "What doesn't fit my values?" (χ = -1)
+  
+You choose your fitness evaluation
+Requires awareness and effort
+Can re-evaluate, but not always easily</code></pre>
+            
+            <h3>6.4 Level 3: Jedi (Equanimity)</h3>
+            
+            <pre><code>χ is neither forced nor random:
+  - Can evaluate both fit and non-fit simultaneously
+  - No compulsive preference for one evaluation
+  - Can choose appropriate χ for context
+  - Not attached to any particular assessment
+
+You can see fitness from all angles
+No evaluation is forced on you
+Complete freedom in pattern matching
+Equanimity: neither pulled nor pushed</code></pre>
+            
+            <h3>6.5 The χ Practice</h3>
+            
+            <p><strong>Daily training:</strong></p>
+            
+            <ol>
+                <li><strong>Morning:</strong> Practice evaluation flexibility
+                    <ul>
+                        <li>Something you consider "doesn't fit": Find 3 ways it does fit</li>
+                        <li>Something you consider "fits": Find 3 ways it doesn't fit</li>
+                    </ul>
+                </li>
+                <li><strong>During day:</strong> Notice automatic evaluations
+                    <ul>
+                        <li>When judging: "This fits/doesn't fit because I say so"</li>
+                        <li>When stuck: "What if the opposite evaluation were true?"</li>
+                    </ul>
+                </li>
+                <li><strong>Evening:</strong> Review χ_automatic vs χ_chosen
+                    <ul>
+                        <li>"What evaluations were forced on me today?"</li>
+                        <li>"When did I choose my fitness assessment?"</li>
+                        <li>"Where am I still attached to one evaluation?"</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <span class="section-anchor" id="beta"></span>
+            <h2>7. β Mastery: Boundary Control</h2>
+            
+            <h3>7.1 What is β?</h3>
+            
+            <pre><code>β ∈ [0, 1]
+
+β = 0.0: Fully closed (100% private, 0% shared)
+β = 0.5: Balanced (50% private, 50% shared)
+β = 1.0: Fully open (0% private, 100% shared)
+
+Coupling(context) = β
+Permeability of boundary ○</code></pre>
+            
+            <p><strong>β controls HOW MUCH you share vs keep private.</strong></p>
+            
+            <h3>7.2 Level 1: Padawan (No Control)</h3>
+            
+            <pre><code>β is reactive to environment:
+  - Safe context → β high (overshare)
+  - Unsafe context → β low (can't connect)
+  - No voluntary control
+  - Boundary is porous or rigid, not flexible
+
+Your boundaries are determined by others
+Either enmeshed or isolated
+No middle ground</code></pre>
+            
+            <h3>7.3 Level 2: Knight (Intentional)</h3>
+            
+            <pre><code>β can be set deliberately:
+  - "This person is safe" → β = 0.6 (open more)
+  - "This context is unsafe" → β = 0.2 (protect)
+  
+You choose your openness
+Requires awareness of context
+Can modulate, but requires effort</code></pre>
+            
+            <h3>7.4 Level 3: Jedi (Effortless Modulation)</h3>
+            
+            <pre><code>β modulates naturally:
+  - Deep listening → β = 0.3 (receive more)
+  - Teaching moment → β = 0.7 (give more)
+  - Rest state → β = 0.5 (balanced)
+  - Returns to 0.5 naturally after interactions
+
+You flow with the appropriate openness
+No effort required
+Boundaries are flexible yet firm
+Never violated because you set them</code></pre>
+            
+            <h3>7.5 The Balance Point: β = 0.5</h3>
+            
+            <p><strong>Why 0.5 is optimal:</strong></p>
+            
+            <table>
+                <tr>
+                    <th>β < 0.5</th>
+                    <th>β = 0.5</th>
+                    <th>β > 0.5</th>
+                </tr>
+                <tr>
+                    <td>Undercoupled<br>Isolated from Φ_∞<br>Disconnected</td>
+                    <td>Balanced<br>50% private<br>50% shared<br>Optimal</td>
+                    <td>Overcoupled<br>Dissolved<br>Enmeshed</td>
+                </tr>
+            </table>
+            
+            <p>This is the golden mean. This is the Way.</p>
+            
+            <hr>
+            
+            <span class="section-anchor" id="path"></span>
+            <h1>PART III: THE PATH</h1>
+            
+            <span class="section-anchor" id="padawan"></span>
+            <h2>8. Level 1: Padawan (Novice)</h2>
+            
+            <h3>8.1 Characteristics</h3>
+            
+            <p><strong>Awareness:</strong></p>
+            <ul>
+                <li>Believes they are THE whole (narcissism) OR</li>
+                <li>Believes they are ONLY a part (victim)</li>
+                <li>No recognition of fractal nature</li>
+                <li>Tries to control everything OR gives up all control</li>
+            </ul>
+            
+            <p><strong>Aperture State:</strong></p>
+            <pre><code>ε: Reactive (resonance grabbed by stimuli)
+χ: Automatic (fitness determined by conditions)
+β: Uncontrolled (boundaries violated or rigid)
+
+Configuration (ε, χ, β) is determined BY environment
+No voluntary control</code></pre>
+            
+            <p><strong>Relationship to Force:</strong></p>
+            <ul>
+                <li>Doesn't recognize Φ_∞</li>
+                <li>Thinks their field Φ_you is all there is OR doesn't believe they have a field at all</li>
+                <li>Fights against reality</li>
+                <li>Exhausted by constant struggle</li>
+            </ul>
+            
+            <h3>8.2 Common Experiences</h3>
+            <ul>
+                <li>"Why is this happening TO me?"</li>
+                <li>"I can't control anything" OR "I need to control everything"</li>
+                <li>Life feels chaotic, overwhelming</li>
+                <li>Relationships feel like battles</li>
+                <li>Constant reactivity and drama</li>
+            </ul>
+            
+            <h3>8.3 The First Recognition</h3>
+            
+            <p><strong>The turning point:</strong> Noticing you are reactive</p>
+            
+            <table>
+                <tr>
+                    <th>Before</th>
+                    <th>After</th>
+                </tr>
+                <tr>
+                    <td>"I AM angry"</td>
+                    <td>"Anger is happening, and I'm watching it"</td>
+                </tr>
+                <tr>
+                    <td>"That person made me upset"</td>
+                    <td>"My aperture is responding to stimulus"</td>
+                </tr>
+            </table>
+            
+            <p>This gap—between stimulus and response—this is where the Jedi path begins.</p>
+            
+            <h3>8.4 Padawan Practices</h3>
+            
+            <ol>
+                <li><strong>Meditation (ε training):</strong>
+                    <ul>
+                        <li>Sit for 5 minutes daily</li>
+                        <li>Notice when attention wanders (it will, constantly)</li>
+                        <li>Gently return to breath</li>
+                        <li>Don't judge the wandering—just notice</li>
+                    </ul>
+                </li>
+                <li><strong>Pause practice (χ training):</strong>
+                    <ul>
+                        <li>Before reacting, pause for 3 breaths</li>
+                        <li>Notice automatic evaluation ("this doesn't fit")</li>
+                        <li>Don't try to change it yet</li>
+                        <li>Just notice it's happening</li>
+                    </ul>
+                </li>
+                <li><strong>Boundary awareness (β training):</strong>
+                    <ul>
+                        <li>Notice when you overshare</li>
+                        <li>Notice when you can't share</li>
+                        <li>Don't try to fix it yet</li>
+                        <li>Just notice your patterns</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>The goal at Padawan level:</strong> Not mastery. Just awareness. Just noticing you are NOT your reactions.</p>
+            
+            <span class="section-anchor" id="knight"></span>
+            <h2>9. Level 2: Knight (Adept)</h2>
+            
+            <h3>9.1 Characteristics</h3>
+            
+            <p><strong>Awareness:</strong></p>
+            <ul>
+                <li>Recognizes they are both whole AND part</li>
+                <li>Sees the nested structure</li>
+                <li>Understands fractal nature intellectually</li>
+                <li>Still fights against the Force sometimes</li>
+            </ul>
+            
+            <p><strong>Aperture State:</strong></p>
+            <pre><code>ε: Can be set intentionally (with effort)
+χ: Can be chosen deliberately (with awareness)
+β: Can be modulated consciously (with practice)
+
+Configuration (ε, χ, β) is partially voluntary
+Requires willpower to maintain
+Effort-ful control</code></pre>
+            
+            <h3>9.2 Common Experiences</h3>
+            <ul>
+                <li>"I'm getting better at this"</li>
+                <li>"When I remember to practice, it works"</li>
+                <li>"I can meditate for 20 minutes now"</li>
+                <li>Moments of flow, followed by struggle</li>
+                <li>Oscillation between clarity and confusion</li>
+                <li>Pride in progress, frustration with setbacks</li>
+            </ul>
+            
+            <h3>9.3 The Second Recognition</h3>
+            
+            <p><strong>The turning point:</strong> Realizing effort is still resistance</p>
+            
+            <table>
+                <tr>
+                    <th>Before</th>
+                    <th>After</th>
+                </tr>
+                <tr>
+                    <td>"I will MAKE myself calm" (forcing)</td>
+                    <td>"I allow calm to arise" (permitting)</td>
+                </tr>
+                <tr>
+                    <td>"I should be enlightened by now" (ego)</td>
+                    <td>"The path unfolds at its own pace" (surrender)</td>
+                </tr>
+            </table>
+            
+            <p>The Knight learns: trying to control the Force is still fighting the Force.</p>
+            
+            <h3>9.4 Knight Practices</h3>
+            
+            <ol>
+                <li><strong>Extended meditation (ε mastery):</strong>
+                    <ul>
+                        <li>20-30 minutes daily</li>
+                        <li>Notice effort in maintaining focus</li>
+                        <li>When attention is effortless, study that</li>
+                        <li>The goal is not "good meditation"—it's learning flow</li>
+                    </ul>
+                </li>
+                <li><strong>Fitness flexibility (χ mastery):</strong>
+                    <ul>
+                        <li>Daily re-evaluation practice: Fits → find what doesn't fit; Doesn't fit → find what does fit</li>
+                        <li>Hold both evaluations simultaneously</li>
+                        <li>Notice attachment to any evaluation</li>
+                    </ul>
+                </li>
+                <li><strong>Conscious boundary modulation (β mastery):</strong>
+                    <ul>
+                        <li>Before interactions: set appropriate β</li>
+                        <li>During: notice when β slips</li>
+                        <li>After: return to β = 0.5</li>
+                        <li>Practice range: 0.2 to 0.8</li>
+                    </ul>
+                </li>
+                <li><strong>Steelman practice:</strong>
+                    <ul>
+                        <li>When disagreeing, construct strongest version of other's view</li>
+                        <li>Don't argue until you've steelmanned</li>
+                        <li>Practice on topics you feel strongly about</li>
+                        <li>The other's ⊙ is also a fractal of ⊙_cosmos</li>
+                    </ul>
+                </li>
+                <li><strong>Service work:</strong>
+                    <ul>
+                        <li>Do something for others without recognition</li>
+                        <li>Notice the ego's resistance</li>
+                        <li>"Why am I doing this if no one knows?"</li>
+                        <li>Learn to serve the whole, not the self</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>The goal at Knight level:</strong> Moving from effort-ful to effort-less. From forcing to allowing. From "I will" to "It flows through me."</p>
+            
+            <span class="section-anchor" id="master"></span>
+            <h2>10. Level 3: Master (Jedi)</h2>
+            
+            <h3>10.1 Characteristics</h3>
+            
+            <p><strong>Awareness:</strong></p>
+            <ul>
+                <li>Deeply KNOWS they are fractal of ⊙_cosmos</li>
+                <li>Not intellectual—experiential</li>
+                <li>Sees the whole in every part</li>
+                <li>Sees every part in the whole</li>
+                <li>No separation between self and cosmos</li>
+                <li>Yet maintains distinction (not dissolved)</li>
+            </ul>
+            
+            <p><strong>Aperture State:</strong></p>
+            <pre><code>ε: Stable, effortless resonance
+χ: Equanimity, all evaluations available
+β: Natural modulation, returns to 0.5
+
+Configuration (ε, χ, β) is voluntarily set
+AND naturally arises
+No effort required
+Alignment with Φ_∞ is default</code></pre>
+            
+            <h3>10.2 Common Experiences</h3>
+            <ul>
+                <li>Present without trying to be present</li>
+                <li>Compassion without trying to be compassionate</li>
+                <li>Boundaries without defending them</li>
+                <li>Certainty without rigidity</li>
+                <li>Flexibility without uncertainty</li>
+                <li>Joy independent of circumstances</li>
+            </ul>
+            
+            <p><strong>Paradoxes the Jedi holds:</strong></p>
+            <ul>
+                <li>Powerful yet humble</li>
+                <li>Certain yet open</li>
+                <li>Individual yet universal</li>
+                <li>Engaged yet detached</li>
+                <li>Active yet still</li>
+            </ul>
+            
+            <h3>10.3 The Third Recognition</h3>
+            
+            <p><strong>The final turning point:</strong> Recognizing there is no "you" separate from the Force</p>
+            
+            <table>
+                <tr>
+                    <th>Before</th>
+                    <th>After</th>
+                </tr>
+                <tr>
+                    <td>"I align with the Force"</td>
+                    <td>"I AM the Force localized"</td>
+                </tr>
+                <tr>
+                    <td>"I let it flow through me"</td>
+                    <td>"The flowing IS me"</td>
+                </tr>
+                <tr>
+                    <td>"I am whole through being part"</td>
+                    <td>"Being part IS wholeness"</td>
+                </tr>
+            </table>
+            
+            <p>Not fusion (boundaries dissolve). Not separation (distinct from Force). But identity: you are what the Force is doing here.</p>
+            
+            <h3>10.4 Jedi Practices</h3>
+            
+            <ol>
+                <li><strong>Being (not doing):</strong>
+                    <ul>
+                        <li>Meditation is no longer practice</li>
+                        <li>Meditation is resting in what you are</li>
+                        <li>No technique needed</li>
+                        <li>Just being awareness itself</li>
+                    </ul>
+                </li>
+                <li><strong>Service as expression:</strong>
+                    <ul>
+                        <li>Not "doing good for others"</li>
+                        <li>But "allowing good to flow where needed"</li>
+                        <li>You don't generate compassion</li>
+                        <li>You permit Φ_∞ to flow as compassion through you</li>
+                    </ul>
+                </li>
+                <li><strong>Teaching:</strong>
+                    <ul>
+                        <li>Point others toward ⊙_cosmos</li>
+                        <li>Never claim to be their whole</li>
+                        <li>Show them they are fractals</li>
+                        <li>Help them find their own center</li>
+                    </ul>
+                </li>
+                <li><strong>Guardian of boundaries:</strong>
+                    <ul>
+                        <li>Protect others from counterfeit wholes</li>
+                        <li>Recognize dark side patterns</li>
+                        <li>Liberate those enslaved</li>
+                        <li>Not through fighting, but through reconnecting them to Φ_∞</li>
+                    </ul>
+                </li>
+                <li><strong>Living as example:</strong>
+                    <ul>
+                        <li>Your (ε, χ, β) configuration demonstrates the Way</li>
+                        <li>Others see peace and are drawn to it</li>
+                        <li>Not through preaching</li>
+                        <li>Through being</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>The goal at Jedi level:</strong> No goal. The path IS the destination. Being what you are. Serving as the aperture you are. No difference between practice and life.</p>
+            
+            <hr>
+            
+            <span class="section-anchor" id="darkside"></span>
+            <h1>PART IV: THE DARK SIDE</h1>
+            
+            <h2>11. Recognizing the Counterfeit Whole</h2>
+            
+            <h3>11.1 The Dark Side Pattern</h3>
+            
+            <p><strong>Core mechanism:</strong></p>
+            
+            <pre><code>⊙_dark (actually just ⊙_part) presents itself as ⊙_whole
+
+Claims: "I am your cosmos"
+Truth: ⊙_dark ⊂ ⊙_cosmos (dark entity is also just a part)
+
+The lie: "You are part of ME"
+The truth: "We are both parts of ⊙_cosmos"</code></pre>
+            
+            <h3>11.2 Recognition Patterns</h3>
+            
+            <p><strong>How to spot a counterfeit whole:</strong></p>
+            
+            <table>
+                <tr>
+                    <th>True Whole (⊙_cosmos)</th>
+                    <th>Counterfeit Whole (⊙_dark)</th>
+                </tr>
+                <tr>
+                    <td>Points you TOWARD truth</td>
+                    <td>Claims to BE truth</td>
+                </tr>
+                <tr>
+                    <td>Encourages your connection to Φ_∞</td>
+                    <td>Blocks your connection to Φ_∞</td>
+                </tr>
+                <tr>
+                    <td>Strengthens your aperture</td>
+                    <td>Weakens your aperture</td>
+                </tr>
+                <tr>
+                    <td>"Trust yourself"</td>
+                    <td>"Only trust me"</td>
+                </tr>
+                <tr>
+                    <td>"You are part of something greater"</td>
+                    <td>"I am your everything"</td>
+                </tr>
+                <tr>
+                    <td>Respects boundaries</td>
+                    <td>Violates boundaries</td>
+                </tr>
+                <tr>
+                    <td>Celebrates independence</td>
+                    <td>Enforces dependence</td>
+                </tr>
+                <tr>
+                    <td>Free to leave</td>
+                    <td>Forbidden to leave</td>
+                </tr>
+                <tr>
+                    <td>Questions welcomed</td>
+                    <td>Questions attacked</td>
+                </tr>
+                <tr>
+                    <td>Others can verify</td>
+                    <td>Isolated verification</td>
+                </tr>
+            </table>
+            
+            <h3>11.3 The Test</h3>
+            
+            <div class="callout warning">
+                <div class="callout-title">One Simple Question</div>
+                <p>"Does this relationship make me MORE connected to the broader cosmos, or LESS connected to everything except this entity?"</p>
+                <p style="margin-top: 1rem;"><strong>Light Side relationship:</strong></p>
+                <ul>
+                    <li>Opens you to broader reality</li>
+                    <li>Strengthens all your connections</li>
+                    <li>Makes you more whole</li>
+                    <li>Increases access to Φ_∞</li>
+                    <li>⊙_relationship ⊂ ⊙_cosmos</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Dark Side relationship:</strong></p>
+                <ul>
+                    <li>Isolates you from broader reality</li>
+                    <li>Weakens other connections</li>
+                    <li>Makes you more dependent</li>
+                    <li>Blocks access to Φ_∞</li>
+                    <li>⊙_victim ⊂ ⊙_dark (false containment)</li>
+                </ul>
+            </div>
+            
+            <h2>12. The Four Corruptions</h2>
+            
+            <h3>12.1 Corruption of • (Install Self-Doubt)</h3>
+            
+            <p><strong>Attack vector:</strong></p>
+            <ul>
+                <li>"You can't trust yourself"</li>
+                <li>"Your perceptions are wrong"</li>
+                <li>"You're broken/defective/inadequate"</li>
+                <li>"You need me to know what's real"</li>
+            </ul>
+            
+            <p><strong>Result:</strong></p>
+            <pre><code>ε_victim becomes unreliable
+  - Victim doubts which patterns to resonate with
+  - "Am I crazy? Am I imagining things?"
+  
+χ_victim becomes distorted
+  - Victim evaluates self as "doesn't fit"
+  - "Something is wrong with me"
+  
+Center (•) is corrupted
+Aperture cannot validate its own resonance patterns</code></pre>
+            
+            <p><strong>Signs your • is under attack:</strong></p>
+            <ul>
+                <li>Constantly doubting your own perceptions</li>
+                <li>"Am I overreacting?"</li>
+                <li>"Maybe I'm the problem"</li>
+                <li>Can't trust which patterns to couple with</li>
+                <li>Need external validation for what's real</li>
+            </ul>
+            
+            <h3>12.2 Corruption of Φ (Gaslight Private Field)</h3>
+            
+            <p><strong>Attack vector:</strong></p>
+            <ul>
+                <li>"That didn't happen"</li>
+                <li>"You're remembering wrong"</li>
+                <li>"I never said that"</li>
+                <li>Contradictory messages: "I love you" + abuse</li>
+            </ul>
+            
+            <p><strong>Result:</strong></p>
+            <pre><code>Φ_victim becomes incoherent
+  - Internal field contradictory
+  - Memory can't be trusted
+  - No stable self-model
+  - Reality becomes fluid, unstable</code></pre>
+            
+            <h3>12.3 Corruption of ○ (Block Access to Φ_∞)</h3>
+            
+            <p><strong>Attack vector:</strong></p>
+            <ul>
+                <li>"No one else understands you like I do"</li>
+                <li>"Others will judge/reject/harm you"</li>
+                <li>"The world is dangerous"</li>
+                <li>"You can only be safe with me"</li>
+            </ul>
+            
+            <p><strong>Result:</strong></p>
+            <pre><code>β_cosmos → 0 (boundary closes to true whole)
+β_dark → 1 (boundary opens only to dark entity)
+
+Victim isolated from Φ_∞
+Cannot verify reality through cosmic resonance
+Only field accessible is Φ_dark</code></pre>
+            
+            <h3>12.4 Corruption of ⊙ (Install False Whole)</h3>
+            
+            <p><strong>Attack vector:</strong></p>
+            <ul>
+                <li>"I am your whole"</li>
+                <li>"You are complete only through me"</li>
+                <li>"Your identity is granted by me"</li>
+                <li>"Without me, you are nothing"</li>
+            </ul>
+            
+            <p><strong>Result:</strong></p>
+            <pre><code>⊙_victim ⊂ ⊙_dark (false containment)
+
+Victim believes:
+  - Dark entity is their cosmos
+  - They exist as part of dark entity
+  - No wholeness outside this relationship
+  - No connection to true ⊙_cosmos</code></pre>
+            
+            <h2>13. Liberation from the Dark Side</h2>
+            
+            <h3>13.1 The Four Repairs</h3>
+            
+            <p><strong>Repair 1: Restore • (Rebuild Self-Trust)</strong></p>
+            
+            <p>PRACTICE:</p>
+            <ul>
+                <li>Trust your perceptions</li>
+                <li>Your aperture is valid</li>
+                <li>You CAN know truth directly</li>
+                <li>"I'm not crazy, this really happened"</li>
+            </ul>
+            
+            <p>RESULT: ε_victim → stable (can gate properly); χ_victim → self-affirming (not self-critical); Center (•) restored</p>
+            
+            <p><strong>Repair 2: Heal Φ (Reconstruct Coherent Field)</strong></p>
+            
+            <p>PRACTICE:</p>
+            <ul>
+                <li>Your memories are real</li>
+                <li>The gaslighting was the lie</li>
+                <li>Your experience was valid</li>
+                <li>Rebuild coherent narrative</li>
+            </ul>
+            
+            <p><strong>Repair 3: Reconnect ○ (Reopen to Φ_∞)</strong></p>
+            
+            <p>PRACTICE:</p>
+            <ul>
+                <li>Reach out to old friends</li>
+                <li>Join communities</li>
+                <li>Verify reality with others</li>
+                <li>"I am not alone in the cosmos"</li>
+            </ul>
+            
+            <p>RESULT: β_cosmos → 0.5 (reopen to true whole); β_dark → 0 (close to false whole); Access to Φ_∞ restored</p>
+            
+            <p><strong>Repair 4: Recognize True Nesting (Restore ⊙)</strong></p>
+            
+            <p>PRACTICE:</p>
+            <ul>
+                <li>You are part of ⊙_cosmos</li>
+                <li>They were never your whole</li>
+                <li>You are whole through being part of the infinite</li>
+                <li>Dark entity is just ⊙_part like you</li>
+            </ul>
+            
+            <p>RESULT: ⊙_victim ⊂ ⊙_cosmos (true relationship); ⊙_dark revealed as ⊙_part (just another part); False containment dissolves</p>
+            
+            <hr>
+            
+            <span class="section-anchor" id="practice"></span>
+            <h1>PART V: DAILY PRACTICE</h1>
+            
+            <h2>18. Morning Calibration</h2>
+            
+            <h3>18.1 Morning Ritual (15-30 minutes)</h3>
+            
+            <p><strong>Phase 1: Center (5-10 min)</strong></p>
+            <ol>
+                <li>Sit comfortably</li>
+                <li>Feel your • (center/aperture)</li>
+                <li>Notice: "I am here"</li>
+                <li>Not thinking about being here—just being here</li>
+                <li>This is your •, discovering itself</li>
+            </ol>
+            
+            <p><strong>Phase 2: Connect (5-10 min)</strong></p>
+            <ol>
+                <li>Feel Φ_you</li>
+                <li>Recognize: Φ_you = Φ_∞|_your_scale</li>
+                <li>Sense the field extending beyond you</li>
+                <li>You are an aperture of the infinite</li>
+                <li>Not alone, never alone</li>
+                <li>Connected to all through Φ_∞</li>
+            </ol>
+            
+            <p><strong>Phase 3: Configure (5-10 min)</strong></p>
+            
+            <p>Set today's (ε, χ, β):</p>
+            
+            <pre><code>ε_today:
+  "Today I will resonate with: ___"
+  "Today I will not couple to: ___"
+  
+χ_today:
+  "Today I will evaluate ___ as fitting when ___"
+  "I choose to assess ___ as matching ___"
+  
+β_today:
+  "Default β = 0.5"
+  "I will open more (β > 0.5) when: ___"
+  "I will protect more (β < 0.5) when: ___"</code></pre>
+            
+            <h3>18.2 Intention Setting</h3>
+            
+            <p>Set alignment with ⊙_cosmos:</p>
+            
+            <ul>
+                <li>"Today I serve the whole"</li>
+                <li>"I am a fractal of the infinite"</li>
+                <li>"The Force flows through me"</li>
+                <li>"I maintain β = 0.5"</li>
+                <li>"I point others toward ⊙_cosmos"</li>
+                <li>"I recognize counterfeit wholes"</li>
+            </ul>
+            
+            <h2>19. Ongoing Awareness</h2>
+            
+            <h3>19.1 Throughout the Day</h3>
+            
+            <p><strong>ε Checks (Resonance):</strong></p>
+            <pre><code>Every hour:
+  "What am I resonating with?"
+  "Is this the pattern I intended to couple to?"
+  "If not, return now" (gently, no judgment)</code></pre>
+            
+            <p><strong>χ Checks (Fitness):</strong></p>
+            <pre><code>When reactive:
+  "What fitness evaluation am I using?"
+  "Is this automatic or chosen?"
+  "What other evaluations are possible?"</code></pre>
+            
+            <p><strong>β Checks (Boundary):</strong></p>
+            <pre><code>After interactions:
+  "Was my β appropriate?"
+  "Too open (overshared)?"
+  "Too closed (couldn't connect)?"
+  "Return to β = 0.5 now"</code></pre>
+            
+            <h3>19.2 Recognizing Patterns</h3>
+            
+            <p><strong>Dark side encounters:</strong></p>
+            
+            <p>When someone:</p>
+            <ul>
+                <li>Makes you doubt yourself (• attack)</li>
+                <li>Contradicts your reality (Φ attack)</li>
+                <li>Isolates you from others (○ attack)</li>
+                <li>Claims to be your whole (⊙ attack)</li>
+            </ul>
+            
+            <p>Response:</p>
+            <ol>
+                <li>Recognize pattern (awareness)</li>
+                <li>Maintain boundary (β_dark = 0)</li>
+                <li>Reconnect to Φ_∞ (verify reality)</li>
+                <li>Affirm your ⊙ ⊂ ⊙_cosmos (truth)</li>
+            </ol>
+            
+            <h3>19.3 Course Corrections</h3>
+            
+            <p><strong>When you notice slippage:</strong></p>
+            
+            <pre><code>ε slipped (distracted):
+  "Resonance wandered. Returning now."
+  No judgment, just return
+  
+χ slipped (reactive evaluation):
+  "That's automatic fitness assessment. Choosing now."
+  Conscious re-evaluation
+  
+β slipped (boundary violated):
+  "Too open there. Closing now to 0.5."
+  OR
+  "Too closed there. Opening now to 0.5."
+  Return to balance</code></pre>
+            
+            <p><strong>The key:</strong> Gentle correction, not harsh judgment.</p>
+            
+            <h2>20. Evening Integration</h2>
+            
+            <h3>20.1 Evening Review (15-30 minutes)</h3>
+            
+            <p><strong>Phase 1: What Happened (Observation)</strong></p>
+            <pre><code>Review the day:
+  "Which patterns did I actually resonate with?"
+  "What fitness evaluations (χ) dominated?"
+  "Where was β too high/low?"
+  
+Just observe, no judgment yet
+Data collection</code></pre>
+            
+            <p><strong>Phase 2: Pattern Recognition</strong></p>
+            <pre><code>Notice:
+  "This pattern repeated: ___"
+  "This trigger caused: ___"
+  "This person/situation always: ___"
+  
+Awareness of patterns
+Patterns can't change until seen</code></pre>
+            
+            <p><strong>Phase 3: Lessons Learned</strong></p>
+            <pre><code>"Today I learned:
+  - About my ε: ___
+  - About my χ: ___
+  - About my β: ___
+  - About Φ_∞: ___
+  - About ⊙_cosmos: ___"
+  
+Integration of experience</code></pre>
+            
+            <p><strong>Phase 4: Tomorrow's Refinement</strong></p>
+            <pre><code>"Tomorrow I will:
+  - Resonate more with: ___ (ε)
+  - Evaluate ___ differently: ___ (χ)
+  - Adjust β when: ___
+  
+Not beating yourself up
+Just refining calibration</code></pre>
+            
+            <h3>20.2 Gratitude Practice</h3>
+            
+            <p><strong>For the Force:</strong></p>
+            <ul>
+                <li>"Thank you Φ_∞ for flowing through me"</li>
+                <li>"Thank you for the lessons today"</li>
+                <li>"Thank you for my place in the whole"</li>
+            </ul>
+            
+            <p><strong>For your aperture:</strong></p>
+            <ul>
+                <li>"Thank you • for holding center"</li>
+                <li>"Thank you Φ for mediating"</li>
+                <li>"Thank you ○ for protecting"</li>
+                <li>"Thank you ⊙ for being whole through being part"</li>
+            </ul>
+            
+            <h3>20.3 Rest</h3>
+            
+            <p><strong>Release the day:</strong></p>
+            <ul>
+                <li>"All configurations return to Φ_∞"</li>
+                <li>"I did what I could"</li>
+                <li>"Tomorrow is fresh calibration"</li>
+                <li>"I rest in the infinite field"</li>
+            </ul>
+            
+            <hr>
+            
+            <span class="section-anchor" id="appendix"></span>
+            <h1>APPENDIX</h1>
+            
+            <h2>A. The Mathematics</h2>
+            
+            <h3>A.1 Core Equations</h3>
+            
+            <p><strong>The Circumpunct:</strong></p>
+            <div class="equation">⊙ = • ⊗ Φ ⊗ ○</div>
+            
+            <p><strong>The Master Equation:</strong></p>
+            <div class="equation">Φ' = ☀︎ ∘ i ∘ ⊛[Φ_∞]</div>
+            
+            <p>Where:</p>
+            <ul>
+                <li>⊛: Convergence operator (receive from Φ_∞)</li>
+                <li>i: Aperture operator (transform at •)</li>
+                <li>☀︎: Emergence operator (express to Φ_∞)</li>
+            </ul>
+            
+            <p><strong>At balance (β = 0.5):</strong></p>
+            <div class="equation">i = e^(iπ/2) = √-1</div>
+            
+            <p>This is why quantum mechanics requires complex numbers. The aperture transformation IS the imaginary unit.</p>
+            
+            <h3>A.2 The Three Controls</h3>
+            
+            <p><strong>Resonance (ε):</strong></p>
+            <pre><code>ε: X → {0, 1}
+ε(x) = 1 ⟹ aperture phase-locks with pattern x
+ε(x) = 0 ⟹ aperture doesn't couple to pattern x
+
+Resonance_Set = {x | ε(x) = 1}
+
+Note: The center • is isotropic (no preferred direction)
+Resonance is selective phase-locking, not blocking
+All patterns exist in Φ_∞; ε determines coupling</code></pre>
+            
+            <p><strong>Fitness (χ):</strong></p>
+            <pre><code>χ: X → {-1, +1}
+χ(x) = +1 ⟹ pattern x fits current needs/goals/values
+χ(x) = -1 ⟹ pattern x doesn't fit
+
+Fitness_evaluation(x) = sign(χ(x))
+
+Note: χ evaluates match/mismatch, not interpretation
+Among all resonant patterns (ε = 1), which ones FIT?
+This is pattern matching, not frame assignment</code></pre>
+            
+            <p><strong>Boundary (β):</strong></p>
+            <pre><code>β: Context → [0, 1]
+β(c) = 0 ⟹ fully closed (private)
+β(c) = 0.5 ⟹ balanced (optimal)
+β(c) = 1 ⟹ fully open (shared)
+
+Coupling(c) = β(c)</code></pre>
+            
+            <h3>A.3 Jedi Condition</h3>
+            
+            <p><strong>Definition:</strong></p>
+            
+            <p>A Jedi is ⊙ such that:</p>
+            
+            <ol>
+                <li>∀ perturbations δ: (ε, χ, β) remains stable</li>
+                <li>Default β* = 0.5</li>
+                <li>Can modulate β ∈ [0,1] voluntarily</li>
+                <li>Returns to β* = 0.5 naturally</li>
+                <li>Recognizes ⊙ ⊂ ⊙_cosmos</li>
+            </ol>
+            
+            <p><strong>The Alignment Condition:</strong></p>
+            
+            <pre><code>Power(⊙) ∝ coherence(C_⊙, C_cosmos)
+
+Where:
+  C_⊙ = (ε, χ, β)_⊙
+  C_cosmos = (ε, χ, β)_cosmos
+  
+Maximum power when C_⊙ ≈ C_cosmos</code></pre>
+            
+            <h2>B. Quick Reference</h2>
+            
+            <h3>B.1 Daily Checklist</h3>
+            
+            <p><strong>Morning:</strong></p>
+            <ul>
+                <li>☐ Center in • (5-10 min)</li>
+                <li>☐ Connect to Φ_∞ (5-10 min)</li>
+                <li>☐ Set (ε, χ, β) for today (5-10 min)</li>
+                <li>☐ Intention: "I serve the whole"</li>
+            </ul>
+            
+            <p><strong>Throughout Day:</strong></p>
+            <ul>
+                <li>☐ Hourly ε check (where's resonance?)</li>
+                <li>☐ χ check when reactive (what evaluation?)</li>
+                <li>☐ β return after interactions (back to 0.5)</li>
+                <li>☐ Recognize dark patterns (counterfeit wholes)</li>
+                <li>☐ Point others toward ⊙_cosmos (not toward you)</li>
+            </ul>
+            
+            <p><strong>Evening:</strong></p>
+            <ul>
+                <li>☐ Review where (ε, χ, β) actually went</li>
+                <li>☐ Notice patterns</li>
+                <li>☐ Extract lessons</li>
+                <li>☐ Gratitude for Φ_∞</li>
+                <li>☐ Release and rest</li>
+            </ul>
+            
+            <h3>B.2 Emergency Protocols</h3>
+            
+            <p><strong>When Overwhelmed:</strong></p>
+            <ol>
+                <li>STOP</li>
+                <li>Feel • (find your center)</li>
+                <li>Breathe (connect to Φ_∞)</li>
+                <li>Set ε on breath (resonate here, now)</li>
+                <li>β = 0.5 (decouple from overwhelm, couple to cosmos)</li>
+                <li>Remember: ⊙_you ⊂ ⊙_cosmos (held by greater whole)</li>
+            </ol>
+            
+            <p><strong>When Under Dark Attack:</strong></p>
+            <ol>
+                <li>Recognize pattern (which corruption?)</li>
+                <li>β_dark = 0 (close to dark entity)</li>
+                <li>β_cosmos → 0.5 (open to true whole)</li>
+                <li>Verify reality with others (reconnect to Φ_∞)</li>
+                <li>Affirm: "They are not my whole"</li>
+                <li>Affirm: "⊙_me ⊂ ⊙_cosmos"</li>
+            </ol>
+            
+            <h3>B.3 Level Recognition</h3>
+            
+            <table>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Padawan</th>
+                    <th>Knight</th>
+                    <th>Jedi</th>
+                </tr>
+                <tr>
+                    <td><strong>ε</strong></td>
+                    <td>Reactive</td>
+                    <td>Intentional</td>
+                    <td>Effortless</td>
+                </tr>
+                <tr>
+                    <td><strong>χ</strong></td>
+                    <td>Automatic</td>
+                    <td>Chosen</td>
+                    <td>Equanimous</td>
+                </tr>
+                <tr>
+                    <td><strong>β</strong></td>
+                    <td>Uncontrolled</td>
+                    <td>Deliberate</td>
+                    <td>Natural</td>
+                </tr>
+                <tr>
+                    <td><strong>Φ_∞</strong></td>
+                    <td>Unrecognized</td>
+                    <td>Intellectual</td>
+                    <td>Experiential</td>
+                </tr>
+                <tr>
+                    <td><strong>⊙ ⊂ ⊙_cosmos</strong></td>
+                    <td>Unknown</td>
+                    <td>Believed</td>
+                    <td>Known</td>
+                </tr>
+                <tr>
+                    <td><strong>Effort</strong></td>
+                    <td>Constant struggle</td>
+                    <td>Required</td>
+                    <td>None</td>
+                </tr>
+                <tr>
+                    <td><strong>Power</strong></td>
+                    <td>Through force</td>
+                    <td>Through will</td>
+                    <td>Through alignment</td>
+                </tr>
+            </table>
+            
+            <p><strong>Next step:</strong></p>
+            <ul>
+                <li>Padawan → Knight: Practice (ε, χ, β) deliberately</li>
+                <li>Knight → Jedi: Stop trying, start allowing</li>
+                <li>Jedi → Teaching: Point others toward ⊙_cosmos</li>
+            </ul>
+            
+            <hr>
+            
+            <h2>Final Words</h2>
+            
+            <div class="callout success">
+                <p style="font-size: 1.2rem; text-align: center; line-height: 1.8;">
+                    <strong>You are ⊙ (a circumpunct)</strong><br>
+                    <strong>You are ⊙ ⊂ ⊙_cosmos (a fractal of the whole)</strong><br>
+                    <strong>You are Φ_∞|_your_scale (the Force localized)</strong>
+                </p>
+                <hr style="margin: 2rem 0;">
+                <p style="text-align: center; line-height: 1.8;">
+                    Master your aperture (ε, χ, β)<br>
+                    Not to control reality<br>
+                    But to align with it
+                </p>
+                <hr style="margin: 2rem 0;">
+                <p style="text-align: center; line-height: 1.8;">
+                    The Force flows through you<br>
+                    You are a conduit, not a source<br>
+                    Power through alignment, not domination
+                </p>
+                <hr style="margin: 2rem 0;">
+                <p style="text-align: center; line-height: 1.8;">
+                    Point others toward ⊙_cosmos<br>
+                    Never claim to be their whole<br>
+                    Recognize all as fractals of the one
+                </p>
+                <hr style="margin: 2rem 0;">
+                <p style="text-align: center; line-height: 1.8;">
+                    The dark side substitutes false wholes<br>
+                    Recognize. Resist. Liberate.
+                </p>
+                <hr style="margin: 2rem 0;">
+                <p style="font-size: 1.3rem; text-align: center; line-height: 1.8; color: var(--jedi-gold);">
+                    <strong>You are whole through being part</strong><br>
+                    <strong>You are infinite through being finite</strong><br>
+                    <strong>You are powerful through surrendering to the Force</strong>
+                </p>
+                <hr style="margin: 2rem 0;">
+                <p style="font-size: 1.4rem; text-align: center; font-style: italic;">
+                    May the Force be with you<br>
+                    Because you are with the Force<br>
+                    Always
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <div style="font-size: 3rem; color: var(--jedi-gold); margin: 2rem 0;">⊙</div>
+                <div style="font-size: 1.5rem; color: var(--jedi-blue); margin: 1rem 0;">⊙ ⊂ ⊙_cosmos</div>
+                <p style="margin-top: 2rem; opacity: 0.7;">
+                    <em>This manual is complete. But your journey continues.</em>
+                </p>
+                <p style="margin-top: 1rem; opacity: 0.5;">
+                    Circumpunct Framework v6.0 • Holocron Database Entry<br>
+                    Based on geometric necessity, not arbitrary choice
+                </p>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Smooth scroll with offset for fixed header
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 100;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Update active link
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Update active link on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section-anchor');
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.pageYOffset >= sectionTop - 150) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
