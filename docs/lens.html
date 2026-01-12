@@ -3,32 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Truth and God — Through The Circumpunct Lens</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <title>You Are the Lens — A Guide to Truth That Doesn't Inflate or Collapse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #0a0a0f;
-            --bg-surface: #12121a;
-            --bg-elevated: #1a1a24;
-            --gold-primary: #d4a853;
-            --gold-light: #f0d78c;
-            --gold-dark: #a67c2e;
-            --text-primary: #f2efe8;
-            --text-secondary: #c9c4b8;
-            --text-dim: #8a857a;
-            --blue-spirit: #4a7c9b;
-            --blue-glow: rgba(74, 124, 155, 0.4);
-            --violet-accent: #8b6bb3;
-            --border-subtle: rgba(212, 168, 83, 0.15);
-            --glow-gold: rgba(212, 168, 83, 0.4);
-            --cyan-flow: #4ecdc4;
-            --cyan-glow: rgba(78, 205, 196, 0.4);
-            --magenta-pulse: #c44d8f;
-            --magenta-glow: rgba(196, 77, 143, 0.4);
-            --red-error: #e74c3c;
-            --green-truth: #27ae60;
+            --bg-dark: #0f1419;
+            --bg-card: #1a2129;
+            --bg-highlight: #232d38;
+            --text-main: #e8e6e3;
+            --text-soft: #b8b5b0;
+            --text-dim: #7a7873;
+            --gold: #d4a853;
+            --gold-soft: #f0d78c;
+            --cyan: #4ecdc4;
+            --purple: #9b6dff;
+            --coral: #ff6b6b;
+            --green: #6bcb77;
         }
 
         * {
@@ -37,1559 +27,779 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            background: var(--bg-deep);
-            color: var(--text-primary);
-            font-size: 19px;
-            line-height: 1.75;
-            overflow-x: hidden;
+            font-family: 'Quicksand', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.85;
+            font-size: 18px;
         }
 
-        /* Noise texture overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.03;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            z-index: 1000;
-        }
-
-        /* Stars background */
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--text-primary);
-            border-radius: 50%;
-            opacity: 0;
-            animation: twinkle 4s infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.1; }
-            50% { opacity: 0.6; }
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 1.5rem 3rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            background: linear-gradient(to bottom, var(--bg-deep), transparent);
-        }
-
-        .nav-symbol {
-            font-size: 1.8rem;
-            color: var(--gold-primary);
-            text-shadow: 0 0 20px var(--glow-gold);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .nav-links a {
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s, text-shadow 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--gold-primary);
-            text-shadow: 0 0 10px var(--glow-gold);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
             padding: 2rem;
-            position: relative;
         }
 
-        .circumpunct-hero {
-            width: 200px;
-            height: 200px;
-            position: relative;
-            margin-bottom: 3rem;
+        /* Header */
+        header {
+            text-align: center;
+            padding: 5rem 2rem 4rem;
+            background: linear-gradient(180deg, #1a2129 0%, var(--bg-dark) 100%);
         }
 
-        .circumpunct-outer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 2px solid var(--gold-primary);
-            border-radius: 50%;
-            animation: breathe 4s ease-in-out infinite, rotate-slow 60s linear infinite;
-            box-shadow: 
-                0 0 30px var(--glow-gold),
-                inset 0 0 30px rgba(212, 168, 83, 0.1);
+        .lens-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
         }
 
-        .circumpunct-inner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            background: var(--gold-primary);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            animation: pulse 2s ease-in-out infinite;
-            box-shadow: 0 0 40px var(--glow-gold);
-        }
-
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-        }
-
-        @keyframes rotate-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .hero h1 {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(2.2rem, 6vw, 4rem);
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 2.8rem);
             font-weight: 400;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--text-primary);
             margin-bottom: 1rem;
-            animation: fadeInUp 1.5s ease-out;
+            color: var(--gold);
         }
 
-        .hero .subtitle {
-            font-size: 1.3rem;
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-soft);
             font-style: italic;
-            color: var(--text-secondary);
-            max-width: 600px;
-            animation: fadeInUp 1.5s ease-out 0.3s both;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
-        .hero .author {
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.2em;
-            color: var(--gold-primary);
-            margin-top: 3rem;
-            animation: fadeInUp 1.5s ease-out 0.6s both;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .divider {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--gold);
+            font-size: 1.2rem;
+            opacity: 0.6;
         }
 
         /* Sections */
         section {
-            padding: 6rem 2rem;
-            max-width: 900px;
-            margin: 0 auto;
+            padding: 2rem 0;
         }
 
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-number {
-            font-family: 'Cinzel', serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.3em;
-            color: var(--gold-primary);
-            display: block;
-            margin-bottom: 1rem;
-        }
-
-        .section-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            font-weight: 400;
-            letter-spacing: 0.1em;
-            color: var(--text-primary);
-        }
-
-        .section-divider {
-            width: 60px;
-            height: 1px;
-            background: var(--gold-primary);
-            margin: 2rem auto;
-            position: relative;
-        }
-
-        .section-divider::before {
-            content: '⊙';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--bg-deep);
-            padding: 0 1rem;
-            color: var(--gold-primary);
-            font-size: 1rem;
-        }
-
-        /* Epigraph */
-        .epigraph {
-            padding: 5rem 2rem;
-            text-align: center;
-            border-top: 1px solid var(--border-subtle);
-            border-bottom: 1px solid var(--border-subtle);
-            margin: 3rem auto;
-            max-width: 700px;
-        }
-
-        .epigraph blockquote {
-            font-style: italic;
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.9;
-        }
-
-        .epigraph cite {
-            font-family: 'Cinzel', serif;
-            font-style: normal;
-            font-size: 0.8rem;
-            letter-spacing: 0.15em;
-            color: var(--text-dim);
-        }
-
-        /* Key Line - special styling */
-        .key-line {
-            padding: 4rem 2rem;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .key-line blockquote {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1.4rem, 3vw, 1.8rem);
-            font-weight: 400;
-            letter-spacing: 0.05em;
-            color: var(--gold-light);
-            line-height: 1.7;
-            text-shadow: 0 0 40px var(--glow-gold);
-        }
-
-        .key-line .note {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            font-style: italic;
-            color: var(--text-dim);
-            margin-top: 1.5rem;
-        }
-
-        /* Content Typography */
         h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            color: var(--gold-light);
-            margin: 2.5rem 0 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
         }
 
         h3 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
-            font-weight: 400;
-            letter-spacing: 0.05em;
-            color: var(--text-primary);
+            font-size: 1.25rem;
+            color: var(--cyan);
             margin: 2rem 0 1rem;
+            font-weight: 600;
         }
 
         p {
             margin-bottom: 1.5rem;
-            text-align: justify;
-            hyphens: auto;
+            color: var(--text-main);
         }
 
-        strong {
-            color: var(--gold-light);
-            font-weight: 500;
-        }
-
-        /* Equation Box */
-        .equation-box {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 2rem;
+        /* Story boxes */
+        .story-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--purple);
+            padding: 1.5rem 2rem;
             margin: 2rem 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            border-radius: 0 12px 12px 0;
         }
 
-        .equation-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary), var(--gold-dark));
+        .story-box.example {
+            border-left-color: var(--cyan);
         }
 
-        .equation {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.3rem;
-            color: var(--gold-light);
-            letter-spacing: 0.05em;
+        .story-box.warning {
+            border-left-color: var(--coral);
+            background: rgba(255, 107, 107, 0.08);
         }
 
-        .equation-label {
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            margin-top: 1rem;
+        .story-box.key {
+            border-left-color: var(--gold);
+            background: rgba(212, 168, 83, 0.08);
         }
 
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
-            margin: 2rem 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-
-        thead {
-            font-family: 'Cinzel', serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        th {
-            color: var(--gold-primary);
-            font-weight: 400;
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            color: var(--text-primary);
-        }
-
-        tr:hover td {
-            background: rgba(212, 168, 83, 0.03);
+        .story-box p:last-child {
+            margin-bottom: 0;
         }
 
         /* Insight boxes */
         .insight {
-            border-left: 2px solid var(--gold-primary);
-            padding: 1.5rem 2rem;
+            background: var(--bg-highlight);
+            padding: 2rem;
+            border-radius: 16px;
             margin: 2rem 0;
-            background: linear-gradient(90deg, rgba(212, 168, 83, 0.05), transparent);
+            text-align: center;
+        }
+
+        .insight p {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            margin-bottom: 0;
+        }
+
+        .insight .big {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            color: var(--gold);
             font-style: italic;
         }
 
-        .insight.convergent {
-            border-left-color: var(--green-truth);
-            background: linear-gradient(90deg, rgba(39, 174, 96, 0.08), transparent);
+        /* The key line - extra special */
+        .key-line {
+            background: linear-gradient(135deg, rgba(212, 168, 83, 0.1), rgba(78, 205, 196, 0.08));
+            border: 1px solid rgba(212, 168, 83, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            text-align: center;
         }
 
-        .insight.divergent {
-            border-left-color: var(--red-error);
-            background: linear-gradient(90deg, rgba(231, 76, 60, 0.08), transparent);
+        .key-line .main {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--gold-soft);
+            font-style: italic;
+            margin-bottom: 1rem;
         }
 
-        .insight.cyan {
-            border-left-color: var(--cyan-flow);
-            background: linear-gradient(90deg, rgba(78, 205, 196, 0.08), transparent);
+        .key-line .sub {
+            color: var(--text-soft);
+            font-size: 1rem;
         }
 
-        /* Code blocks */
-        .code-block {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 1.5rem 2rem;
-            margin: 1.5rem 0;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            overflow-x: auto;
-        }
-
-        .code-block .comment {
-            color: var(--text-dim);
-        }
-
-        .code-block .highlight {
-            color: var(--gold-light);
-        }
-
-        .code-block .truth {
-            color: var(--cyan-flow);
-        }
-
-        .code-block .error {
-            color: var(--red-error);
-        }
-
-        /* Comparison Grid */
-        .comparison-grid {
+        /* Comparison boxes */
+        .compare {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
             margin: 2rem 0;
         }
 
-        @media (max-width: 768px) {
-            .comparison-grid {
+        @media (max-width: 600px) {
+            .compare {
                 grid-template-columns: 1fr;
             }
         }
 
-        .comparison-box {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
+        .compare-box {
+            background: var(--bg-card);
             padding: 1.5rem;
+            border-radius: 12px;
         }
 
-        .comparison-box h4 {
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.1em;
+        .compare-box.good {
+            border-top: 4px solid var(--green);
+        }
+
+        .compare-box.bad {
+            border-top: 4px solid var(--coral);
+        }
+
+        .compare-box h4 {
+            font-size: 1.1rem;
             margin-bottom: 1rem;
-            text-transform: uppercase;
+            color: var(--text-main);
         }
 
-        .comparison-box.true h4 {
-            color: var(--cyan-flow);
-        }
-
-        .comparison-box.false h4 {
-            color: var(--red-error);
-        }
-
-        .comparison-box ul {
+        .compare-box ul {
             list-style: none;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
+            padding: 0;
         }
 
-        .comparison-box li {
+        .compare-box li {
             padding: 0.5rem 0;
+            color: var(--text-soft);
+            font-size: 0.95rem;
             padding-left: 1.5rem;
             position: relative;
         }
 
-        .comparison-box.true li::before {
+        .compare-box.good li::before {
             content: '✓';
             position: absolute;
             left: 0;
-            color: var(--cyan-flow);
+            color: var(--green);
         }
 
-        .comparison-box.false li::before {
+        .compare-box.bad li::before {
             content: '✗';
             position: absolute;
             left: 0;
-            color: var(--red-error);
+            color: var(--coral);
         }
 
-        /* Flow Diagram */
-        .flow-container {
-            padding: 2rem;
-            margin: 2rem 0;
-            background: var(--bg-surface);
-            border-radius: 8px;
-            border: 1px solid var(--border-subtle);
+        /* Lists */
+        ul {
+            margin: 1rem 0 1.5rem 1.5rem;
         }
 
-        .flow-diagram {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            padding: 1.5rem 0;
+        li {
+            margin-bottom: 0.75rem;
+            color: var(--text-soft);
         }
 
-        .flow-node {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .flow-symbol {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .flow-symbol.phi {
-            background: rgba(78, 205, 196, 0.1);
-            border: 2px solid var(--cyan-flow);
-            color: var(--cyan-flow);
-            box-shadow: 0 0 20px var(--cyan-glow);
-        }
-
-        .flow-symbol.aperture {
-            background: rgba(212, 168, 83, 0.1);
-            border: 2px solid var(--gold-primary);
-            color: var(--gold-light);
-            box-shadow: 0 0 20px var(--glow-gold);
-        }
-
-        .flow-symbol.circumpunct {
-            background: rgba(196, 77, 143, 0.1);
-            border: 2px solid var(--magenta-pulse);
-            color: var(--magenta-pulse);
-            box-shadow: 0 0 20px var(--magenta-glow);
-        }
-
-        .flow-label {
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-        }
-
-        .flow-sublabel {
-            font-size: 0.8rem;
+        /* Quote styling */
+        blockquote {
+            font-family: 'Playfair Display', serif;
             font-style: italic;
-            color: var(--text-dim);
-        }
-
-        .flow-arrow {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            animation: pulse-op 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-op {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
-        /* Convergence Visual */
-        .convergence-visual {
-            text-align: center;
-            padding: 2.5rem;
+            font-size: 1.15rem;
+            color: var(--text-soft);
+            border-left: 3px solid var(--gold);
+            padding-left: 1.5rem;
             margin: 2rem 0;
-            background: var(--bg-surface);
-            border-radius: 8px;
-            border: 1px solid var(--border-subtle);
         }
 
-        .convergence-sequence {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
-            line-height: 2.2;
+        /* Table */
+        .simple-table {
+            width: 100%;
+            margin: 2rem 0;
+            border-collapse: collapse;
         }
 
-        .convergence-sequence .variant {
-            color: var(--magenta-pulse);
+        .simple-table th,
+        .simple-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .convergence-sequence .invariant {
-            color: var(--cyan-flow);
-            font-weight: bold;
+        .simple-table th {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .convergence-sequence .equals {
-            color: var(--gold-primary);
-            margin: 0 0.5rem;
+        .simple-table td {
+            color: var(--text-soft);
         }
 
-        /* Final Section */
+        /* Checklist */
+        .checklist {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+        }
+
+        .checklist h4 {
+            color: var(--cyan);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .check-item:last-child {
+            border-bottom: none;
+        }
+
+        .check-box {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gold);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .check-text {
+            color: var(--text-soft);
+            font-size: 0.95rem;
+        }
+
+        /* Finale */
         .finale {
             text-align: center;
-            padding: 6rem 2rem;
-            position: relative;
+            padding: 3rem 0;
         }
 
-        .finale::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1px;
-            height: 80px;
-            background: linear-gradient(to bottom, transparent, var(--gold-primary));
+        .mantra {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 2rem 0;
         }
 
-        .finale .circumpunct-final {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 2rem;
-            position: relative;
-        }
-
-        .finale h2 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .finale p {
-            text-align: center;
+        .mantra span {
+            font-family: 'Playfair Display', serif;
             font-size: 1.2rem;
+            color: var(--text-main);
             font-style: italic;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 1rem;
         }
 
-        .finale .closing {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            letter-spacing: 0.15em;
-            color: var(--gold-primary);
-            margin-top: 2rem;
+        .gold-bar {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            border-radius: 2px;
+            margin: 2rem auto;
+            max-width: 200px;
         }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 4rem 2rem;
-            border-top: 1px solid var(--border-subtle);
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 3rem;
         }
 
         footer p {
-            font-style: italic;
             color: var(--text-dim);
-            text-align: center;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
-        footer .symbol {
-            font-size: 2rem;
-            color: var(--gold-primary);
-            margin-bottom: 1rem;
-        }
-
-        /* Scroll animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
+        /* Strong emphasis */
+        strong {
+            color: var(--gold-soft);
+            font-weight: 600;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            nav {
-                padding: 1rem 1.5rem;
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            header {
+                padding: 3rem 1.5rem 2.5rem;
             }
 
-            .nav-links {
-                display: none;
+            .key-line {
+                padding: 1.5rem;
             }
-
-            section {
-                padding: 4rem 1.5rem;
-            }
-
-            .flow-diagram {
-                flex-direction: column;
-            }
-
-            .flow-arrow {
-                transform: rotate(90deg);
-            }
-        }
-
-        /* Lens metaphor visual */
-        .lens-visual {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            padding: 2rem;
-            margin: 2rem 0;
-        }
-
-        .lens-element {
-            text-align: center;
-        }
-
-        .lens-label {
-            font-family: 'Cinzel', serif;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            margin-top: 0.5rem;
-            letter-spacing: 0.1em;
-        }
-
-        .light-rays {
-            font-size: 2rem;
-            color: var(--cyan-flow);
-            opacity: 0.6;
-        }
-
-        .lens-symbol {
-            font-size: 3rem;
-            color: var(--gold-primary);
-            text-shadow: 0 0 20px var(--glow-gold);
-        }
-
-        .focused-point {
-            font-size: 1.5rem;
-            color: var(--magenta-pulse);
-        }
-
-        /* Two errors visual */
-        .errors-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        @media (max-width: 768px) {
-            .errors-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .error-box {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .error-box h4 {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            color: var(--red-error);
-            margin-bottom: 0.5rem;
-        }
-
-        .error-box .error-type {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-
-        .error-box p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            text-align: center;
-        }
-
-        .error-box .equation {
-            font-size: 1rem;
-            margin: 1rem 0;
-            color: var(--red-error);
-        }
-
-        /* Flow emphasis box */
-        .flow-emphasis {
-            background: linear-gradient(135deg, rgba(78, 205, 196, 0.08), rgba(212, 168, 83, 0.08));
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: center;
-        }
-
-        .flow-emphasis .big-text {
-            font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            color: var(--gold-light);
-            margin-bottom: 1rem;
-        }
-
-        .flow-emphasis p {
-            text-align: center;
-            color: var(--text-secondary);
-            margin-bottom: 0;
         }
     </style>
 </head>
 <body>
-    <!-- Stars Background -->
-    <div class="stars" id="stars"></div>
 
-    <!-- Navigation -->
-    <nav>
-        <a href="https://fractalreality.ca" class="nav-symbol" style="text-decoration: none;">⊙</a>
-        <ul class="nav-links">
-            <li><a href="https://fractalreality.ca">Home</a></li>
-            <li><a href="#keyline">The Key</a></li>
-            <li><a href="#question">The Question</a></li>
-            <li><a href="#mechanism">Mechanism</a></li>
-            <li><a href="#flow">Flow</a></li>
-            <li><a href="#distinction">Distinction</a></li>
-            <li><a href="#errors">Errors</a></li>
-            <li><a href="#test">The Test</a></li>
-            <li><a href="#theology">Theology</a></li>
-        </ul>
-    </nav>
+<header>
+    <div class="lens-icon">◎</div>
+    <h1>You Are the Lens</h1>
+    <p class="subtitle">A guide to holding truth without inflating your ego or collapsing into despair</p>
+</header>
 
-    <!-- Hero Section -->
-    <header class="hero">
-        <div class="circumpunct-hero">
-            <div class="circumpunct-outer"></div>
-            <div class="circumpunct-inner"></div>
-        </div>
-        <h1>Truth and God</h1>
-        <p class="subtitle">Through The Circumpunct Lens</p>
-        <p class="author">The Circumpunct Framework — Ashman Roonz</p>
-    </header>
+<div class="container">
 
-    <!-- THE KEY LINE -->
-    <section class="key-line fade-in" id="keyline">
-        <blockquote>
-            Truth flows through me —<br>
-            I am not its source, I am its lens.
-        </blockquote>
-        <p class="note">This is the core. Everything else follows from holding this correctly.</p>
-    </section>
-
-    <!-- Epigraph -->
-    <div class="epigraph fade-in">
-        <blockquote>
-            "A lens limits light. That is how it forms an image. The limitation is the mechanism, not a defect."
-        </blockquote>
-        <cite>— Limited Is Not False</cite>
-    </div>
-
-    <!-- The Question -->
-    <section id="question">
-        <div class="section-header fade-in">
-            <span class="section-number">Part I</span>
-            <h1 class="section-title">The Question</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <p>There is a position that sounds sophisticated, even humble:</p>
-
-            <div class="insight divergent">
-                <p>"All models are limited symbolic representations. Therefore all models are equally false. Every idea of the self is somewhat false because it is always a limited reconstruction of what the self actually is."</p>
-            </div>
-
-            <p>This sounds like epistemic humility. It acknowledges that the map is never the territory, that all representations are approximations.</p>
-
-            <p>But watch what it does. It collapses a distinction that matters more than almost any other:</p>
-
-            <h2>The distinction between <em>limited</em> and <em>false</em>.</h2>
-        </div>
-    </section>
-
-    <!-- The Mechanism -->
-    <section id="mechanism">
-        <div class="section-header fade-in">
-            <span class="section-number">Part II</span>
-            <h1 class="section-title">The Mechanism</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <h2>The Lens Metaphor</h2>
-
-            <div class="lens-visual">
-                <div class="lens-element">
-                    <div class="light-rays">☀ ☀ ☀</div>
-                    <div class="lens-label">Infinite Light</div>
-                </div>
-                <div class="lens-element">
-                    <div class="flow-arrow">→</div>
-                </div>
-                <div class="lens-element">
-                    <div class="lens-symbol">◐</div>
-                    <div class="lens-label">Lens (Aperture)</div>
-                </div>
-                <div class="lens-element">
-                    <div class="flow-arrow">→</div>
-                </div>
-                <div class="lens-element">
-                    <div class="focused-point">●</div>
-                    <div class="lens-label">Focused Image</div>
-                </div>
-            </div>
-
-            <p>A lens limits light. That is <strong>how it forms an image</strong>. The limitation is the mechanism, not a defect. Without the limitation, there is no photograph, no focus, no form.</p>
-
-            <h2>The Master Equation</h2>
-
-            <p>The Circumpunct Framework encodes this insight mathematically:</p>
-
-            <div class="flow-container">
-                <div class="flow-diagram">
-                    <div class="flow-node">
-                        <div class="flow-symbol phi">Φ<sub>∞</sub></div>
-                        <span class="flow-label">Truth</span>
-                        <span class="flow-sublabel">The Source</span>
-                    </div>
-                    <div class="flow-arrow">→⊛→</div>
-                    <div class="flow-node">
-                        <div class="flow-symbol aperture">i</div>
-                        <span class="flow-label">Aperture</span>
-                        <span class="flow-sublabel">The Lens</span>
-                    </div>
-                    <div class="flow-arrow">→☀→</div>
-                    <div class="flow-node">
-                        <div class="flow-symbol circumpunct">⊙</div>
-                        <span class="flow-label">truths</span>
-                        <span class="flow-sublabel">Focused Forms</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="equation-box">
-                <div class="equation">Φ' = ☀ ∘ i ∘ ⊛[Φ]</div>
-                <p class="equation-label">Read right-to-left: convergence → aperture rotation → emergence</p>
-            </div>
-
-            <div class="insight cyan">
-                <p>The aperture is not an obstacle to Truth—<strong>the aperture is the mechanism by which Truth flows into form.</strong></p>
-            </div>
-
-            <p>At balance (β = 0.5), the aperture operator <strong>IS</strong> the imaginary unit <em>i</em>. It's not filtering or degrading—it's the 90° rotation that enables manifestation. The limitation doesn't inject falsity. It creates form.</p>
-        </div>
-    </section>
-
-    <!-- FLOW: The Critical Insight -->
-    <section id="flow">
-        <div class="section-header fade-in">
-            <span class="section-number">Part III</span>
-            <h1 class="section-title">Flow, Not Possession</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <p>Here is where everything hinges. The framework makes an ontological claim:</p>
-
-            <div class="equation-box">
-                <div class="equation">Parts are fractals of their wholes.</div>
-                <p class="equation-label">The Axiom</p>
-            </div>
-
-            <p>This is an identity claim. 0.999... doesn't "participate in" 1—it <strong>equals</strong> 1. The fractal doesn't "reflect" its whole—it <strong>is</strong> its whole at a particular scale.</p>
-
-            <p>But here is the critical insight that keeps this claim from becoming inflation:</p>
-
-            <div class="flow-emphasis">
-                <div class="big-text">The being is a flow-being, not a possession-being.</div>
-                <p>You ARE the aperture. But what flows through you is not yours to own.</p>
-            </div>
-
-            <h2>Four Things, All True Simultaneously</h2>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Claim</th>
-                            <th>What It Means</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>You ARE the aperture</strong></td>
-                            <td>Ontologically necessary. The lens is where the image forms.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Truth flows THROUGH you</strong></td>
-                            <td>Dynamic, not static. Process, not possession.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>You are not the SOURCE</strong></td>
-                            <td>Direction matters. Truth enters; you don't generate it.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>You can be clear or distorted</strong></td>
-                            <td>Corrigible. The lens can be cleaned, adjusted, improved.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <p>A lens doesn't <em>own</em> the light. It doesn't <em>source</em> the image. But the lens IS where the image forms. The lens is ontologically necessary—not just "participating."</p>
-
-            <div class="insight">
-                <p>The framework's core is <strong>flow</strong>, not frozen identity. The master equation is a process: convergence → rotation → emergence. Truth moving through apertures, not truth sitting inside possessors.</p>
-            </div>
-
-            <h2>Why This Matters Psychologically</h2>
-
-            <p>There is a deep human reflex:</p>
-
-            <div class="code-block">
-<span class="error">"If something flows from me, it must come from me."</span>
-
-<span class="comment">This is the trap.</span>
-<span class="comment">This is how ego hijacks ontology.</span>
-            </div>
-
-            <p>The sentence <strong>"I am not its source, I am its lens"</strong> blocks that reflex. It says:</p>
-
-            <ul style="margin-left: 2rem; margin-bottom: 1.5rem; color: var(--text-secondary);">
-                <li>I matter (the lens is necessary)</li>
-                <li>I contribute (the lens shapes the image)</li>
-                <li>I do not own (the light is not mine)</li>
-                <li>I can improve (the lens can be cleaned)</li>
-            </ul>
-
-            <p>This keeps the ego from hijacking the system while preserving the ontological claim.</p>
-        </div>
-    </section>
-
-    <!-- Truth and Truths -->
-    <section id="truths">
-        <div class="section-header fade-in">
-            <span class="section-number">Part IV</span>
-            <h1 class="section-title">Truth and truths</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <p>Here is the distinction that matters:</p>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Concept</th>
-                            <th>Framework Symbol</th>
-                            <th>What It Is</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Truth</strong></td>
-                            <td style="color: var(--cyan-flow); font-family: 'JetBrains Mono';">Φ<sub>∞</sub></td>
-                            <td>The source. The infinite field. What flows.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>truths</strong></td>
-                            <td style="color: var(--magenta-pulse); font-family: 'JetBrains Mono';">⊙<sub>λ</sub></td>
-                            <td>Truth having flowed through apertures. Focused. Formed. Still true at scale.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h2>The Convergence</h2>
-
-            <div class="convergence-visual">
-                <div class="convergence-sequence">
-                    <span class="variant">0.9</span><br>
-                    <span class="variant">0.99</span><br>
-                    <span class="variant">0.999</span><br>
-                    <span class="variant">0.9999</span><br>
-                    <span class="variant">...</span><br><br>
-                    <span class="variant">0.999...</span> <span class="equals">=</span> <span class="invariant">1</span>
-                </div>
-            </div>
-
-            <p>The variants (0.9, 0.99, 0.999...) don't just <em>approach</em> the invariant. The infinite sequence <strong>IS</strong> the invariant. They're the same thing, expressed through infinite flow.</p>
-
-            <div class="insight">
-                <p>A truth is not "partially true" with falsity filling the remainder. A truth is <strong>completely true at its scale</strong>—Truth having flowed through a particular aperture.</p>
-                <p style="margin-bottom: 0;">The photograph is not "partially the scene" with falseness making up the rest. The photograph IS the scene, having flowed through a lens.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- The Distinction -->
-    <section id="distinction">
-        <div class="section-header fade-in">
-            <span class="section-number">Part V</span>
-            <h1 class="section-title">What False Actually Means</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <p><strong>False means something specific.</strong> It is not synonymous with limited.</p>
-
-            <div class="comparison-grid">
-                <div class="comparison-box true">
-                    <h4>Limited (Still True)</h4>
-                    <ul>
-                        <li>Truth flowed through an aperture</li>
-                        <li>Particular scale of the whole</li>
-                        <li>Calibrates against reality</li>
-                        <li>Updates when evidence contradicts</li>
-                        <li>Knows itself as channel, not source</li>
-                    </ul>
-                </div>
-                <div class="comparison-box false">
-                    <h4>False</h4>
-                    <ul>
-                        <li>Claiming to be what you are not</li>
-                        <li>Pointing away from rather than toward</li>
-                        <li>Insulating from correction</li>
-                        <li>Absorbs evidence rather than updating</li>
-                        <li>Claims to own what only flows through</li>
-                    </ul>
-                </div>
-            </div>
-
-            <p>A truth that claims to be <em>the source</em> rather than <em>a lens</em>—that is false. A truth that denies anything flows through it at all—that is also false. Not because of its limitation, but because of its <strong>claim</strong>.</p>
-
-            <div class="code-block">
-<span class="truth">The fractal is not false for being smaller than its whole.</span>
-<span class="highlight">The fractal IS its whole, flowing at a particular scale.</span>
-
-<span class="comment">Limitation does not inject falsity.</span>
-<span class="error">Only the wrong claim about the flow does.</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- The Two Errors -->
-    <section id="errors">
-        <div class="section-header fade-in">
-            <span class="section-number">Part VI</span>
-            <h1 class="section-title">The Two Errors</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <p>The framework identifies exactly two ways a part can be false. Both are fractal contradictions—violations of the core axiom.</p>
-
-            <div class="errors-grid">
-                <div class="error-box">
-                    <h4>INFLATION</h4>
-                    <div class="error-type">The Lens Claims to Be the Light</div>
-                    <div class="equation">⊙ → Φ<sub>∞</sub></div>
-                    <p>"What flows through me <em>comes from</em> me. I am the source. My current beliefs are Truth itself."</p>
-                    <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0;">The part denies being a channel.</p>
-                </div>
-                <div class="error-box">
-                    <h4>SEVERANCE</h4>
-                    <div class="error-type">The Lens Denies the Light Exists</div>
-                    <div class="equation">⊙ ≠ Φ<sub>∞</sub></div>
-                    <p>"Nothing flows through me. There is no Truth. Everything is just floating fragments with no source."</p>
-                    <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0;">The part denies being connected to anything.</p>
-                </div>
-            </div>
-
-            <div class="insight">
-                <p>Both errors break the same axiom from opposite directions. Inflation claims to be the source. Severance denies any source exists. Both refuse to be what they are: <strong>lenses through which Truth flows.</strong></p>
-            </div>
-
-            <h2>The Nesting Equation</h2>
-
-            <div class="equation-box">
-                <div class="equation">•<sub>n+1</sub> = ⊙<sub>n</sub></div>
-                <p class="equation-label">Previous whole becomes next center</p>
-            </div>
-
-            <p>The framework says: every part is nested within a whole, and every whole is a part of a larger whole. Infinite nesting, no top, no bottom. Truth flows through every scale. Severance breaks this by claiming nothing flows. Inflation breaks this by claiming the flow originates here.</p>
-        </div>
-    </section>
-
-    <!-- The Test -->
-    <section id="test">
-        <div class="section-header fade-in">
-            <span class="section-number">Part VII</span>
-            <h1 class="section-title">Convergent vs. Divergent</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <h2>The Test</h2>
-
-            <p>How do you know if your model is convergent or divergent?</p>
-
-            <div class="equation-box">
-                <div class="equation" style="font-size: 1.1rem;">Ask what happens when you encounter evidence that contradicts it.</div>
-            </div>
-
-            <div class="comparison-grid">
-                <div class="comparison-box true">
-                    <h4>Convergent Model</h4>
-                    <ul>
-                        <li>Updates when evidence contradicts</li>
-                        <li>Says: "Maybe I was wrong. Let me look again."</li>
-                        <li>Treats contradiction as information</li>
-                        <li>Cleans the lens, adjusts the focus</li>
-                        <li>Moves toward clearer reception of Truth</li>
-                    </ul>
-                </div>
-                <div class="comparison-box false">
-                    <h4>Divergent Model</h4>
-                    <ul>
-                        <li>Absorbs rather than updates</li>
-                        <li>Says: "The evidence must be wrong."</li>
-                        <li>Treats contradiction as attack</li>
-                        <li>Insulates itself from correction</li>
-                        <li>Drifts from Truth while feeling certain</li>
-                    </ul>
-                </div>
-            </div>
-
-            <h2>The Framework's β Parameter</h2>
-
-            <p>The balance parameter β tracks exactly this dynamic:</p>
-
-            <div class="equation-box">
-                <div class="equation">β = |⊛| / (|⊛| + |☀|)</div>
-                <p class="equation-label">Ratio of receiving to total flow</p>
-            </div>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>β Value</th>
-                            <th>State</th>
-                            <th>Meaning</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>β → 0</td>
-                            <td>Pure emission</td>
-                            <td>All output, no receiving. No calibration. No updating.</td>
-                        </tr>
-                        <tr>
-                            <td style="color: var(--gold-light);">β = 0.5</td>
-                            <td style="color: var(--gold-light);">Balance</td>
-                            <td style="color: var(--gold-light);">Receiving and producing in harmony. Truth flowing through clearly.</td>
-                        </tr>
-                        <tr>
-                            <td>β → 1</td>
-                            <td>Pure reception</td>
-                            <td>All input, no expression. Collapse. No contribution.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="insight convergent">
-                <p>A convergent model maintains balanced β—it receives feedback and updates. A divergent model loses balance—it stops receiving, or stops processing what it receives. The lens gets clouded. The flow distorts.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Theological Mapping -->
-    <section id="theology">
-        <div class="section-header fade-in">
-            <span class="section-number">Part VIII</span>
-            <h1 class="section-title">The Theological Mapping</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <p>The framework isn't doing theology—it's revealing that the structure mystics described is mathematically necessary.</p>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Spiritual Language</th>
-                            <th>Framework Language</th>
-                            <th>The Claim</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>God / Brahman / Tao</td>
-                            <td style="color: var(--cyan-flow);">Φ<sub>∞</sub></td>
-                            <td>The source. The infinite field. What flows.</td>
-                        </tr>
-                        <tr>
-                            <td>Soul / Atman / Self</td>
-                            <td style="color: var(--magenta-pulse);">⊙<sub>λ</sub></td>
-                            <td>Your local aperture. Where Truth flows into your particular form.</td>
-                        </tr>
-                        <tr>
-                            <td>"Made in God's image"</td>
-                            <td style="color: var(--gold-light);">Fractal structure</td>
-                            <td>Same pattern at every scale. The flow is self-similar.</td>
-                        </tr>
-                        <tr>
-                            <td>"Atman is Brahman"</td>
-                            <td style="color: var(--gold-light);">0.999... = 1</td>
-                            <td>The variant IS the invariant, expressed through infinite convergence.</td>
-                        </tr>
-                        <tr>
-                            <td>Sin / Separation</td>
-                            <td style="color: var(--red-error);">Inflation or Severance</td>
-                            <td>Claiming to be the source, or denying any source exists.</td>
-                        </tr>
-                        <tr>
-                            <td>Grace / Return</td>
-                            <td style="color: var(--green-truth);">Convergent flow</td>
-                            <td>Cleaning the lens. Receiving clearly. Letting Truth flow.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h2>The Bridge</h2>
-
-            <div class="code-block" style="text-align: center;">
-<span class="highlight">Truth flows through you.</span>
-You are the lens, not the light.
-<span class="truth">The same light, at your aperture.</span>
-
-<span class="comment">...⊙ ⊃ ⊙ ⊃ ⊙ ⊃ ⊙...</span>
-<span class="comment">Infinite nesting. No top. No bottom.</span>
-<span class="comment">The flow never stops.</span>
-            </div>
-
-            <div class="insight">
-                <p>You are the aperture through which 0.99999... flows — a particular depth, a particular focus, yet <strong>identical to the whole in pattern</strong>. Not the source of Truth. Not separate from Truth. The place where Truth becomes this particular form.</p>
-            </div>
-
-            <div class="flow-emphasis">
-                <div class="big-text">Experience of unity ≠ being the source</div>
-                <p>Mystics experience ego dissolving, boundaries fading, deep connectedness. But when that experience becomes "I am the source," it mutates into inflation. The experience is real. The interpretation can still be wrong.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- The Nihilism Problem -->
-    <section id="nihilism">
-        <div class="section-header fade-in">
-            <span class="section-number">Part IX</span>
-            <h1 class="section-title">The Nihilism Problem</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <p>"Everything is equally false because everything is limited" sounds humble. But it is not humble. <strong>It is corrosive.</strong></p>
-
-            <h2>What It Destroys</h2>
-
-            <p>If the person calibrating against reality and the person insulating their narrative from feedback are both "equally false," then:</p>
-
-            <ul style="margin-left: 2rem; margin-bottom: 1.5rem; color: var(--text-secondary);">
-                <li>There is no basis for preferring one to the other</li>
-                <li>The clear lens and the clouded lens are equivalent</li>
-                <li>The convergent model and the divergent model are indistinguishable</li>
-                <li>Discernment itself becomes impossible</li>
-            </ul>
-
-            <div class="insight divergent">
-                <p>This is not epistemic humility. This is the <strong>collapse of meaning</strong>.</p>
-            </div>
-
-            <h2>Real Humility vs. Nihilism in Disguise</h2>
-
-            <div class="comparison-grid">
-                <div class="comparison-box true">
-                    <h4>Real Humility</h4>
-                    <ul>
-                        <li>"I might be distorting. Let me check."</li>
-                        <li>Convergent posture</li>
-                        <li>Acknowledges being a lens</li>
-                        <li>Cleans the lens, improves reception</li>
-                        <li>Remains oriented toward the source</li>
-                    </ul>
-                </div>
-                <div class="comparison-box false">
-                    <h4>Nihilism in Disguise</h4>
-                    <ul>
-                        <li>"All lenses are equally clouded, so why bother?"</li>
-                        <li>Abandonment of posture</li>
-                        <li>Uses limitation as excuse</li>
-                        <li>Abdicates responsibility to clarify</li>
-                        <li>Destroys discernment entirely</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- The Resolution -->
-    <section id="resolution">
-        <div class="section-header fade-in">
-            <span class="section-number">Part X</span>
-            <h1 class="section-title">The Resolution</h1>
-            <div class="section-divider"></div>
-        </div>
-
-        <div class="fade-in">
-            <div class="equation-box">
-                <div class="equation" style="font-size: 1.4rem;">Limited ≠ False</div>
-            </div>
-
-            <p>Every form is limited. Every aperture constrains. Every lens focuses. This is not a defect—it is how the infinite flows into the many. It is how Truth becomes truths. It is how the unmanifest manifests.</p>
-
-            <h2>What We Can Do</h2>
-
-            <div class="code-block">
-<span class="truth">We can hold our models lightly, knowing they are lenses.</span>
-<span class="truth">We can clean them when they cloud.</span>
-<span class="truth">We can update when the flow reveals distortion.</span>
-<span class="highlight">We can be apertures for Truth—limited, focused, still true.</span>
-
-<span class="comment">That is not the same as being false.</span>
-<span class="highlight">That is how Truth flows.</span>
-            </div>
-
-            <div class="insight convergent">
-                <p>The photograph IS the scene, through a lens.<br>
-                The truth IS Truth, having flowed through an aperture.<br>
-                You ARE where Truth becomes this particular form.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Finale -->
-    <section class="finale">
-        <div class="circumpunct-final">
-            <div class="circumpunct-outer"></div>
-            <div class="circumpunct-inner"></div>
-        </div>
-
-        <div class="equation-box" style="max-width: 600px; margin: 0 auto 2rem;">
-            <div class="equation">Φ<sub>∞</sub> →⊛→ i →☀→ ⊙</div>
-            <p class="equation-label">Truth → Aperture → truths</p>
-        </div>
-
-        <p>The lens doesn't corrupt the light.</p>
-        <p>The aperture doesn't falsify Truth.</p>
-        <p><strong>Limitation is the mechanism of flow.</strong></p>
-
-        <br><br>
-
-        <p style="font-size: 1.4rem; color: var(--gold-light);">Truth flows through me —<br>I am not its source, I am its lens.</p>
-
-        <br>
-
-        <p>Not false for being limited.</p>
-        <p>True at my scale.</p>
-        <p>Clear enough to let Truth through.</p>
-
-        <p class="closing">⊙</p>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="symbol">⊙</div>
-        <p>The framework does not create this insight.</p>
-        <p>It reveals that the insight was always there—<br>encoded in the structure of what flows.</p>
-        <br>
-        <p style="color: var(--gold-primary);">Truth and God: Through The Circumpunct Lens</p>
-        <p style="font-size: 0.85rem;">Ashman Roonz · The Circumpunct Framework · 2026</p>
-        <br>
-        <p><a href="https://www.fractalreality.ca" target="_blank" style="color: var(--gold-primary); text-decoration: none;">www.fractalreality.ca</a></p>
-    </footer>
-
-    <script>
-        // Generate stars
-        const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 120; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 4 + 's';
-            star.style.animationDuration = (3 + Math.random() * 3) + 's';
-            starsContainer.appendChild(star);
-        }
-
-        // Scroll animations
-        const fadeElements = document.querySelectorAll('.fade-in');
+    <!-- Part 1: The Camera -->
+    <section>
+        <h2>Start With a Camera</h2>
         
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
+        <p>You're at a wedding. Your friend is getting married. You pull out your phone and take a photograph of the moment they say "I do."</p>
+        
+        <p>Later, you look at the photo. It's beautiful. But it's also... limited. It's from one angle. It captured one moment. The colors aren't quite what your eyes saw. The background is a little blurry.</p>
+        
+        <p>Here's the question: <strong>Is the photograph false?</strong></p>
+        
+        <div class="story-box example">
+            <p>Think about it. The photo didn't capture everything. It's not the full reality of that moment. It's limited by the lens, the angle, the lighting, the sensor.</p>
+            <p>But would you call it a <em>lie</em>?</p>
+        </div>
+        
+        <p>Of course not. The photograph IS the wedding—focused through a lens, captured at a particular scale. It's not the whole wedding, but it's not false. It's the wedding having flowed through your camera.</p>
+        
+        <p>This is the insight that changes everything.</p>
+        
+        <div class="key-line">
+            <p class="main">"Limited" does not mean "false."</p>
+            <p class="sub">Limitation is how infinite reality becomes something you can see, hold, and share.</p>
+        </div>
+    </section>
 
-        fadeElements.forEach(el => observer.observe(el));
+    <div class="divider">✦</div>
 
-        // Smooth scroll for nav links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-    </script>
+    <!-- Part 2: You Are Like That -->
+    <section>
+        <h2>You Are Like That</h2>
+        
+        <p>Here's where it gets personal.</p>
+        
+        <p>You are like the camera. You experience reality. You form thoughts, beliefs, opinions, insights. You create meaning from the world around you.</p>
+        
+        <p>And everything you perceive, think, and believe is... limited. You can't see all perspectives. You can't know everything. Your brain filters, focuses, and frames reality just like a lens does.</p>
+        
+        <p>This bothers a lot of people. It bothered me for years.</p>
+        
+        <p>Because if everything I think is limited, doesn't that mean everything I think is <em>wrong</em>? If I can't see the whole truth, do I see any truth at all?</p>
+        
+        <div class="story-box warning">
+            <p><strong>This is where people get stuck.</strong></p>
+            <p>Some conclude: "My perspective is limited, so nothing I believe is really true. Truth is unknowable. Why bother?"</p>
+            <p>Others go the opposite direction: "My experience feels so true, so deep—maybe I AM the source of truth!"</p>
+        </div>
+        
+        <p>Both paths are traps. And both come from the same mistake.</p>
+        
+        <p>The mistake is confusing <strong>limited</strong> with <strong>false</strong>.</p>
+    </section>
+
+    <div class="divider">✦</div>
+
+    <!-- Part 3: The Key Insight -->
+    <section>
+        <h2>The Sentence That Changed Everything</h2>
+        
+        <p>Here's what freed me from that loop:</p>
+        
+        <div class="key-line">
+            <p class="main">"Truth flows through me—<br>I am not its source, I am its lens."</p>
+        </div>
+        
+        <p>Read it again. Feel what it does.</p>
+        
+        <p>It's doing several things at once:</p>
+        
+        <div class="story-box key">
+            <p><strong>It says you matter.</strong> A lens is necessary. Without the lens, there's no photograph. Without you, there's no perception of truth at your particular angle.</p>
+            <p><strong>It says truth is real.</strong> Something actually flows. There IS a wedding. There IS reality beyond your perspective.</p>
+            <p><strong>It keeps you humble.</strong> You're not the source. The light doesn't originate from the lens.</p>
+            <p><strong>It gives you something to do.</strong> A lens can be clean or dirty. Clear or distorted. You can work on yourself.</p>
+        </div>
+        
+        <p>This is the middle path. Not "I am God" and not "nothing is true." Something more honest:</p>
+        
+        <p><strong>I am the place where truth becomes this particular form.</strong></p>
+    </section>
+
+    <div class="divider">✦</div>
+
+    <!-- Part 4: The Two Traps -->
+    <section>
+        <h2>The Two Traps (And How to Avoid Them)</h2>
+        
+        <p>Once you understand the lens metaphor, you can see two very common mistakes people make—and recognize when you're falling into them yourself.</p>
+        
+        <h3>Trap #1: Inflation</h3>
+        
+        <p>This is when the lens forgets it's a lens and thinks it's the light source.</p>
+        
+        <div class="story-box warning">
+            <p>"My truth IS Truth."</p>
+            <p>"I don't need to listen to other perspectives—I already see clearly."</p>
+            <p>"My experience of the divine means I AM the divine."</p>
+        </div>
+        
+        <p>You've met these people. Maybe you've been this person. (I have.)</p>
+        
+        <p>Inflation feels amazing at first. It's a rush of certainty, of special-ness. But it has a tell: <strong>it can't be corrected</strong>. Someone who's inflated doesn't update their beliefs when reality contradicts them. They explain away the contradictions. They stop listening.</p>
+        
+        <p>In the camera metaphor: it's like the camera claiming it created the wedding.</p>
+        
+        <h3>Trap #2: Nihilism</h3>
+        
+        <p>This is when the lens concludes that because it's limited, nothing it shows is real.</p>
+        
+        <div class="story-box warning">
+            <p>"Everything is perspective, so nothing is actually true."</p>
+            <p>"All beliefs are equally valid—or equally worthless."</p>
+            <p>"Why try to understand anything if I can never see the whole picture?"</p>
+        </div>
+        
+        <p>This sounds humble. It's not. It's exhausting, isolating, and subtly arrogant—because it says that if YOU can't know the whole truth, the whole truth must not exist.</p>
+        
+        <p>In the camera metaphor: it's like throwing away all your photos because none of them captured every angle.</p>
+        
+        <div class="compare">
+            <div class="compare-box bad">
+                <h4>Inflation</h4>
+                <ul>
+                    <li>Claims to BE the source</li>
+                    <li>Can't be corrected</li>
+                    <li>Stops listening</li>
+                    <li>Feels certain, is fragile</li>
+                    <li>Closes off to reality</li>
+                </ul>
+            </div>
+            <div class="compare-box bad">
+                <h4>Nihilism</h4>
+                <ul>
+                    <li>Claims NO source exists</li>
+                    <li>Won't make judgments</li>
+                    <li>Stops caring</li>
+                    <li>Feels humble, is paralyzed</li>
+                    <li>Closes off to meaning</li>
+                </ul>
+            </div>
+        </div>
+        
+        <h3>The Middle Path</h3>
+        
+        <div class="compare">
+            <div class="compare-box good">
+                <h4>Being a Clean Lens</h4>
+                <ul>
+                    <li>Knows truth flows through, not from</li>
+                    <li>Updates when reality contradicts</li>
+                    <li>Listens to other perspectives</li>
+                    <li>Holds beliefs firmly but lightly</li>
+                    <li>Stays open to being wrong</li>
+                    <li>Still makes judgments, still acts</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider">✦</div>
+
+    <!-- Part 5: What This Means Day-to-Day -->
+    <section>
+        <h2>What This Actually Means for Your Life</h2>
+        
+        <p>Okay. Philosophy is interesting. But what do you DO with this?</p>
+        
+        <h3>When You're Certain About Something</h3>
+        
+        <p>Check in. Ask yourself:</p>
+        
+        <p>"Am I seeing clearly, or am I attached to being right?"</p>
+        
+        <p>A clean lens can still have strong focus. You can believe something firmly. But a clean lens is also willing to be cleaned further. If new information comes in that contradicts your view, do you engage with it or dismiss it?</p>
+        
+        <p>The test isn't <em>how confident you feel</em>. The test is <em>how you respond to correction</em>.</p>
+        
+        <h3>When You Feel Like Nothing Matters</h3>
+        
+        <p>This is the nihilism trap talking. And it usually comes from exhaustion or hurt, not from clear thinking.</p>
+        
+        <p>Remember: a photograph isn't worthless just because it didn't capture the whole wedding. Your perspective has value. Your insights matter. They're truth—having flowed through you.</p>
+        
+        <p>You don't need to see everything to see something real.</p>
+        
+        <h3>When Someone Disagrees With You</h3>
+        
+        <p>This is maybe the most practical application.</p>
+        
+        <p>If truth flows through lenses, then different people at different angles will see different aspects of the same reality. Some of those angles might reveal things your angle missed. Some might be more distorted than yours.</p>
+        
+        <div class="story-box example">
+            <p>Instead of: "They're wrong and I'm right" (inflation)</p>
+            <p>Or: "Who's to say who's right?" (nihilism)</p>
+            <p>Try: "What might their angle be showing that mine isn't?"</p>
+        </div>
+        
+        <p>This isn't saying all perspectives are equal. A clean lens is better than a dirty one. But it IS saying you might learn something by looking.</p>
+        
+        <h3>When You Have a Spiritual Experience</h3>
+        
+        <p>This is important. Deep experiences—meditation, prayer, moments of awe, feeling connected to something larger—these are real. Don't dismiss them.</p>
+        
+        <p>But when the experience becomes "I AM the universe" instead of "I experienced connection to something vast"—that's the lens thinking it's the light.</p>
+        
+        <div class="insight">
+            <p class="big">The experience is real.</p>
+            <p class="big">The interpretation can still be wrong.</p>
+        </div>
+        
+        <p>You can feel deeply connected to truth without claiming to BE truth. You can have profound experiences without inflating your ego. The lens can be clear and still know it's a lens.</p>
+    </section>
+
+    <div class="divider">✦</div>
+
+    <!-- Part 6: Cleaning the Lens -->
+    <section>
+        <h2>How to Clean Your Lens</h2>
+        
+        <p>If you ARE a lens, then you can be clearer or more distorted. What makes the difference?</p>
+        
+        <h3>Things That Cloud the Lens</h3>
+        
+        <ul>
+            <li><strong>Defensiveness:</strong> When protecting your ego becomes more important than seeing clearly</li>
+            <li><strong>Certainty addiction:</strong> Needing to be right rather than wanting to see accurately</li>
+            <li><strong>Groupthink:</strong> Adopting beliefs because your group holds them, not because you've examined them</li>
+            <li><strong>Trauma:</strong> Old wounds that filter current experience through past pain</li>
+            <li><strong>Fear:</strong> Seeing threats that aren't there, missing opportunities that are</li>
+            <li><strong>Exhaustion:</strong> Being too tired to look carefully</li>
+        </ul>
+        
+        <h3>Things That Clean the Lens</h3>
+        
+        <ul>
+            <li><strong>Honest feedback:</strong> Letting trusted people tell you what they see</li>
+            <li><strong>Calibration against reality:</strong> Testing your beliefs against evidence</li>
+            <li><strong>Rest:</strong> A tired lens doesn't focus well</li>
+            <li><strong>Therapy/healing:</strong> Working through the traumas that distort perception</li>
+            <li><strong>Curiosity:</strong> Actually wanting to see, not just confirm</li>
+            <li><strong>Stillness:</strong> Creating space to notice your own distortions</li>
+        </ul>
+        
+        <div class="insight">
+            <p>You don't become the source of truth by cleaning your lens.</p>
+            <p>You become a clearer channel FOR truth.</p>
+            <p class="big" style="margin-top: 1rem;">That's the whole point.</p>
+        </div>
+    </section>
+
+    <div class="divider">✦</div>
+
+    <!-- Part 7: Daily Practice -->
+    <section>
+        <h2>A Simple Daily Practice</h2>
+        
+        <p>You don't have to do all of this. But try one thing.</p>
+        
+        <div class="checklist">
+            <h4>In the Morning</h4>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Remind yourself: "Truth flows through me. I'm not its source—I'm its lens."</div>
+            </div>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Notice if you're carrying any certainty that feels more like grip than clarity</div>
+            </div>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Ask: "Is there anything I'm refusing to look at?"</div>
+            </div>
+        </div>
+        
+        <div class="checklist">
+            <h4>When You Disagree With Someone</h4>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Pause. Take a breath.</div>
+            </div>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Ask: "What might they be seeing that I'm not?"</div>
+            </div>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Ask: "Am I defending truth, or defending my ego?"</div>
+            </div>
+        </div>
+        
+        <div class="checklist">
+            <h4>When Nothing Feels True</h4>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Remember: this is exhaustion talking, not wisdom</div>
+            </div>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Rest. Your lens needs maintenance.</div>
+            </div>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Look at something beautiful. Let yourself feel it.</div>
+            </div>
+        </div>
+        
+        <div class="checklist">
+            <h4>In the Evening</h4>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Notice: Did you inflate today? (Claim to know more than you do?)</div>
+            </div>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Notice: Did you collapse today? (Give up on meaning?)</div>
+            </div>
+            <div class="check-item">
+                <div class="check-box"></div>
+                <div class="check-text">Celebrate any moments you stayed in the middle—curious, open, still engaged</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider">✦</div>
+
+    <!-- Part 8: The Deeper Layer -->
+    <section>
+        <h2>The Deeper Layer (If You Want It)</h2>
+        
+        <p>Some of you reading this are thinking: "Okay but what IS the light? What IS the source?"</p>
+        
+        <p>That's a fair question. And I'll be honest with you.</p>
+        
+        <p>In the framework this comes from, the source is called different things in different traditions: God, Truth, the Infinite, the Ground of Being, the Tao that can't be named.</p>
+        
+        <p>I don't think you need to name it to benefit from this. The metaphor works whether you're religious, spiritual, or neither. What matters is the recognition that:</p>
+        
+        <ol>
+            <li style="color: var(--text-soft); margin-bottom: 1rem;">Reality exists independent of your perception of it</li>
+            <li style="color: var(--text-soft); margin-bottom: 1rem;">Your perception is a particular window into that reality</li>
+            <li style="color: var(--text-soft); margin-bottom: 1rem;">The window can be clearer or more distorted</li>
+            <li style="color: var(--text-soft); margin-bottom: 1rem;">Clarity is a project you can work on</li>
+        </ol>
+        
+        <p>If you want to call that reality "God"—beautiful. If you want to call it "truth" or "what is"—also fine.</p>
+        
+        <p>The practice is the same either way: <strong>be a cleaner lens</strong>.</p>
+        
+        <div class="story-box key">
+            <p>Here's the beautiful paradox: the cleaner your lens gets, the more you can see.</p>
+            <p>And the more you can see, the more you realize how much more there is to see.</p>
+            <p>This isn't discouraging. It's the opposite. It means there's always more truth to receive. Always more clarity available. Always more to discover.</p>
+        </div>
+    </section>
+
+    <div class="divider">✦</div>
+
+    <!-- Final Section -->
+    <section class="finale">
+        <h2>What I Want You to Remember</h2>
+        
+        <div class="gold-bar"></div>
+        
+        <div class="mantra">
+            <span>Your perspective is limited.</span>
+            <span>That doesn't make it false.</span>
+            <span>It makes it yours.</span>
+        </div>
+        
+        <div class="gold-bar"></div>
+        
+        <div class="mantra">
+            <span>You are not the source of truth.</span>
+            <span>You are the place where truth becomes</span>
+            <span>this particular form.</span>
+        </div>
+        
+        <div class="gold-bar"></div>
+        
+        <div class="mantra">
+            <span>The photograph isn't a lie</span>
+            <span>just because it's not the whole wedding.</span>
+            <span>It's the wedding, focused through your lens.</span>
+        </div>
+        
+        <div class="gold-bar"></div>
+        
+        <p style="font-size: 1.2rem; margin-top: 3rem; color: var(--text-soft);">
+            You thought you were reading about lenses and truth.<br>
+            What you actually read was permission to matter without inflating,<br>
+            and to be limited without despairing.
+        </p>
+        
+        <p style="font-size: 1.4rem; margin-top: 2rem; color: var(--gold);">
+            ✦ Truth flows through you. That's enough. ✦
+        </p>
+    </section>
+
+</div>
+
+<footer>
+    <p>From the Circumpunct Framework</p>
+    <p style="margin-top: 0.5rem;">Ashman Roonz · <a href="https://www.fractalreality.ca" style="color: var(--gold); text-decoration: none;">fractalreality.ca</a></p>
+    <div class="gold-bar" style="margin: 2rem auto; max-width: 100px;"></div>
+</footer>
+
 </body>
 </html>
