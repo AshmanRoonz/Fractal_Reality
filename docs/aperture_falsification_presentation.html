@@ -183,21 +183,41 @@
         }
 
         @media (max-width: 700px) {
-            .nav-menu {
-                display: none;
+            .top-nav {
+                padding: 8px 12px;
             }
-            .top-nav::after {
-                content: '...';
-                color: var(--text-secondary);
+            .nav-home {
+                font-size: 13px;
+            }
+            .nav-menu {
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            .nav-menu a {
+                font-size: 10px;
             }
             .section-nav {
                 top: 40px;
+                padding: 8px 12px;
+            }
+            .nav-title {
+                font-size: 11px;
             }
             .nav-links {
-                gap: 12px;
+                gap: 10px;
             }
             .nav-links a {
-                font-size: 11px;
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .nav-menu a, .nav-links a {
+                font-size: 9px;
+            }
+            .nav-menu, .nav-links {
+                gap: 8px;
             }
         }
         
