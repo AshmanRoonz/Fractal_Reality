@@ -74,7 +74,7 @@ body {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 0.75rem;
     font-weight: 400;
-    color: var(--text-dim);
+    color: var(--text);
     text-decoration: none;
     letter-spacing: 0.02em;
     transition: color 0.2s ease;
@@ -82,6 +82,7 @@ body {
 
 .nav-menu a:hover {
     color: var(--mind-color);
+    text-shadow: 0 0 8px var(--mind-color);
 }
 
 /* Responsive nav */
