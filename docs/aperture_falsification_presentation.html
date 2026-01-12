@@ -89,54 +89,123 @@
             z-index: -1;
         }
         
-        /* Navigation */
-        nav {
+        /* Top Navigation Menu */
+        .top-nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            z-index: 100;
-            background: rgba(8, 9, 12, 0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 24px;
+            z-index: 200;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 10px 24px;
+            background: rgba(8, 9, 12, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
         }
-        
-        .nav-title {
+
+        .nav-home {
             font-family: var(--font-display);
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 0.05em;
-            color: var(--gold);
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--cyan);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            transition: color 0.2s, text-shadow 0.2s;
         }
-        
-        .nav-links {
+
+        .nav-home:hover {
+            color: #fff;
+            text-shadow: 0 0 12px var(--cyan);
+        }
+
+        .nav-menu {
             display: flex;
-            gap: 24px;
+            gap: 20px;
         }
-        
-        .nav-links a {
+
+        .nav-menu a {
             font-family: var(--font-display);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 400;
             color: var(--text-secondary);
             text-decoration: none;
             letter-spacing: 0.02em;
             transition: color 0.2s;
         }
-        
+
+        .nav-menu a:hover {
+            color: var(--gold);
+        }
+
+        /* Section Navigation */
+        .section-nav {
+            position: fixed;
+            top: 44px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(8, 9, 12, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            font-family: var(--font-display);
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            transition: color 0.2s;
+        }
+
         .nav-links a:hover {
             color: var(--gold);
+        }
+
+        @media (max-width: 700px) {
+            .nav-menu {
+                display: none;
+            }
+            .top-nav::after {
+                content: '...';
+                color: var(--text-secondary);
+            }
+            .section-nav {
+                top: 40px;
+            }
+            .nav-links {
+                gap: 12px;
+            }
+            .nav-links a {
+                font-size: 11px;
+            }
         }
         
         /* Main content */
         main {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 100px 32px 80px;
+            padding: 140px 32px 80px;
         }
         
         /* Hero section */
@@ -662,7 +731,21 @@
     </style>
 </head>
 <body>
-    <nav>
+    <!-- Top Navigation Menu -->
+    <nav class="top-nav">
+        <a href="https://fractalreality.ca" class="nav-home">⊙ Fractal Reality</a>
+        <div class="nav-menu">
+            <a href="index.html">Home</a>
+            <a href="the_bridge_presentation.html">The Bridge</a>
+            <a href="circumpunct-presentation.html">Dimensions</a>
+            <a href="circumpunct_math.html">Math</a>
+            <a href="lens.html">Truth & God</a>
+            <a href="ethics.html">Ethics</a>
+        </div>
+    </nav>
+
+    <!-- Section Navigation -->
+    <nav class="section-nav">
         <div class="nav-title">⊙ APERTURE IRREDUCIBILITY</div>
         <div class="nav-links">
             <a href="#models">Models</a>
