@@ -32,6 +32,90 @@ body {
     color: var(--text);
 }
 
+/* ===================================
+   TOP NAVIGATION MENU
+   =================================== */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1.5rem;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav-home {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--soul-color);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.nav-home:hover {
+    color: #fff;
+    text-shadow: 0 0 12px var(--soul-color);
+}
+
+.nav-menu {
+    display: flex;
+    gap: 1.25rem;
+}
+
+.nav-menu a {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s ease;
+}
+
+.nav-menu a:hover {
+    color: var(--mind-color);
+}
+
+/* Responsive nav */
+@media (max-width: 700px) {
+    .top-nav {
+        padding: 0.5rem 1rem;
+    }
+
+    .nav-home {
+        font-size: 0.8rem;
+    }
+
+    .nav-menu {
+        gap: 0.75rem;
+    }
+
+    .nav-menu a {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .nav-menu {
+        display: none;
+    }
+
+    .top-nav::after {
+        content: '☰';
+        font-size: 1.2rem;
+        color: var(--text-dim);
+        cursor: pointer;
+    }
+}
+
 /* Particle Background */
 #particles {
     position: fixed;
@@ -53,7 +137,7 @@ body {
     justify-content: center;
     min-height: 100vh;
     min-height: 100dvh;
-    padding: 1rem;
+    padding: 3rem 1rem 1rem;
     text-align: center;
     width: 100%;
     max-width: 100%;
