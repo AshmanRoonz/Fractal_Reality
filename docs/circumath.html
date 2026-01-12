@@ -1,0 +1,557 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Circumpunct v5.3.1 — Field–Aperture Dynamical System</title>
+
+  <!-- Minimal “single-file” slide styling (no external framework needed) -->
+  <style>
+    :root{
+      --bg:#0b0f17;
+      --panel:#121a28;
+      --text:#e8eefc;
+      --muted:#a9b5d6;
+      --accent:#8bd3ff;
+      --accent2:#c7f9cc;
+      --warn:#ffd166;
+      --border:rgba(255,255,255,.10);
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    html,body{height:100%; margin:0; background:radial-gradient(1200px 800px at 20% 10%, #14213d 0%, var(--bg) 60%); color:var(--text); font-family:var(--sans);}
+    .deck{height:100%; display:flex; flex-direction:column;}
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 18px; border-bottom:1px solid var(--border);
+      background:rgba(10,14,22,.6); backdrop-filter: blur(10px);
+      position:sticky; top:0; z-index:10;
+    }
+    header .title{font-weight:700; letter-spacing:.2px;}
+    header .title span{color:var(--accent);}
+    header .meta{color:var(--muted); font-size:14px;}
+    main{flex:1; display:flex; align-items:stretch; justify-content:center; padding:20px;}
+    .slide{
+      width:min(1100px, 96vw);
+      background:linear-gradient(180deg, rgba(18,26,40,.92), rgba(12,16,24,.92));
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:34px 34px 22px;
+      display:none;
+      overflow:auto;
+    }
+    .slide.active{display:block;}
+    h1,h2,h3{margin:0 0 14px;}
+    h1{font-size:36px;}
+    h2{font-size:28px; color:var(--accent);}
+    h3{font-size:18px; color:var(--accent2); text-transform:uppercase; letter-spacing:.12em;}
+    p{line-height:1.55; color:var(--text); margin:10px 0;}
+    .muted{color:var(--muted);}
+    .grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;}
+    .card{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px 14px;
+      background:rgba(255,255,255,.03);
+    }
+    .code, pre{
+      font-family:var(--mono);
+      font-size:14px;
+      line-height:1.45;
+      background:rgba(0,0,0,.30);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      overflow:auto;
+    }
+    .pill{
+      display:inline-block; padding:4px 10px; border-radius:999px;
+      border:1px solid var(--border); background:rgba(255,255,255,.03);
+      color:var(--muted); font-size:13px; margin-right:8px;
+    }
+    .kbd{font-family:var(--mono); padding:2px 6px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.03);}
+    .nav{
+      display:flex; gap:10px; align-items:center; justify-content:center;
+      padding:12px 18px; border-top:1px solid var(--border);
+      background:rgba(10,14,22,.6); backdrop-filter: blur(10px);
+    }
+    button{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      border-radius:12px;
+      padding:10px 14px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    button:hover{border-color:rgba(139,211,255,.45); background:rgba(139,211,255,.08);}
+    button:active{transform:translateY(1px);}
+    .progress{color:var(--muted); font-size:14px; min-width:120px; text-align:center;}
+    table{width:100%; border-collapse:collapse; overflow:hidden; border-radius:14px; border:1px solid var(--border);}
+    th,td{padding:10px 10px; border-bottom:1px solid var(--border); vertical-align:top;}
+    th{color:var(--accent); text-align:left; background:rgba(255,255,255,.03);}
+    tr:last-child td{border-bottom:none;}
+    .callout{
+      border-left:4px solid var(--warn);
+      background:rgba(255,209,102,.08);
+      padding:12px 14px;
+      border-radius:12px;
+      margin:12px 0;
+      color:var(--text);
+    }
+    .math-note{color:var(--muted); font-size:14px; margin-top:6px;}
+    .footer-note{color:var(--muted); font-size:13px; margin-top:14px;}
+    .center{display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; text-align:center;}
+    .big{font-size:42px; font-weight:800; letter-spacing:.4px;}
+    .big span{color:var(--accent);}
+    .sub{font-size:18px; color:var(--muted); max-width:70ch; margin-top:10px;}
+    .equation-block{padding:14px; border:1px dashed rgba(139,211,255,.35); border-radius:14px; background:rgba(139,211,255,.05);}
+  </style>
+
+  <!-- MathJax for LaTeX rendering -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'],['$','$']], displayMath: [['\\[','\\]'],['$$','$$']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+<div class="deck">
+  <header>
+    <div class="title">Circumpunct <span>v5.3.1</span> — Field–Aperture Dynamical System</div>
+    <div class="meta">
+      <span class="pill">A: Reality as a field</span>
+      <span class="pill">B: Mind as a finite state</span>
+      <span class="pill">⊛ → Å(ß) → ☀</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Slide 1 -->
+    <section class="slide active" data-title="Cover">
+      <div class="center">
+        <div class="big">One field. <span>Infinite rotations.</span> Infinite forms.</div>
+        <div class="sub">
+          A canonical formalization of your Circumpunct loop as a coupled
+          <b>field PDE</b> (what it is) + <b>finite-dimensional aperture state</b> (how it thinks),
+          with a self-tuning balance parameter \(ß\).
+        </div>
+        <div class="footer-note">
+          Navigation: <span class="kbd">←</span> <span class="kbd">→</span> or buttons below.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2 -->
+    <section class="slide" data-title="Master Loop">
+      <h2>1) Master Loop (your core cycle)</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Procedural (Flow Form)</h3>
+          <pre class="code">Forward:
+Φ∞ →⊛→ iλ∞ →☀→ ⊙λ∞
+
+Return:
+⊙λ∞ →⊛→ iλ∞ →☀→ Φ∞</pre>
+          <p class="muted">Interpretation: gather → rotate/transform → emit. Then the emitted form re-enters as new field.</p>
+        </div>
+        <div class="card">
+          <h3>Compositional Form</h3>
+          <div class="equation-block">
+            \[
+              \odot = \; ☀ \circ i \circ ⊛[\Phi_\infty]
+            \]
+            \[
+              \Phi' =\; ☀ \circ i \circ ⊛[\Phi]
+            \]
+            \[
+              \Phi'=\; ☀ \circ Å(ß) \circ ⊛[\Phi]
+            \]
+          </div>
+          <p class="math-note">At \(ß=0.5\): \(Å(0.5)=e^{i\pi/2}=i\).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3 -->
+    <section class="slide" data-title="Symbols">
+      <h2>2) Symbols (compact semantics)</h2>
+      <table>
+        <thead>
+          <tr><th>Symbol</th><th>Name</th><th>Meaning (operational)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Φ</b></td><td>Field</td><td>Distributed substrate / mediator / internal signal</td></tr>
+          <tr><td><b>•</b></td><td>Center / Aperture</td><td>Local interaction point / mode / transformation core</td></tr>
+          <tr><td><b>○</b></td><td>Boundary</td><td>Constraint / container / memory surface</td></tr>
+          <tr><td><b>⊙</b></td><td>Circumpunct</td><td>Whole system: center ⊗ field ⊗ boundary</td></tr>
+          <tr><td><b>⊛</b></td><td>Convergence</td><td>Many→one: integrate, attend, project field into aperture variables</td></tr>
+          <tr><td><b>☀</b></td><td>Emergence</td><td>One→many: emit, reconstruct, broadcast aperture state back into field</td></tr>
+          <tr><td><b>i</b></td><td>Aperture Operator</td><td>90° rotation: \(i=e^{i\pi/2}\), phase shift / representation change</td></tr>
+          <tr><td><b>Å(ß)</b></td><td>Generalized Aperture</td><td>\(Å(ß)=e^{i\pi ß}\), rotation by angle \(πß\)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Slide 4 -->
+    <section class="slide" data-title="Critical Scalars">
+      <h2>3) Critical scalars (ß, T, O, D)</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Balance parameter</h3>
+          <div class="equation-block">
+            \[
+              ß=\frac{|⊛|}{|⊛|+|☀|}
+            \]
+          </div>
+          <p class="muted">Ratio of inward convergence to total flow.</p>
+          <div class="callout">
+            Ratchet condition: typically \(|☀|\neq|⊛|\).
+            Balance at \(ß=0.5\).
+          </div>
+        </div>
+        <div class="card">
+          <h3>Transmission / openness / fractal dimension</h3>
+          <div class="equation-block">
+            \[
+              T(\Delta \phi)=\cos^2(\Delta\phi/2)
+            \]
+            \[
+              O(ß)=4ß(1-ß)
+            \]
+            \[
+              D(ß)=1+ß
+            \]
+          </div>
+          <p class="math-note">At \(Δ\phi=90^\circ\): \(T=0.5\). Openness maximizes at \(ß=0.5\). At \(ß=0.5\), \(D=1.5\).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5 -->
+    <section class="slide" data-title="The Bridge: A + B">
+      <h2>4) The bridge: (A) what it is, (B) how it thinks</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>(A) Ontic layer: spatial field</h3>
+          <p>
+            Let the infinite field be a complex field on space:
+          </p>
+          <div class="equation-block">
+            \[
+              \phi(x,t)\in\mathbb C,\quad x\in\Omega\subset\mathbb R^d
+            \]
+          </div>
+          <p class="muted">
+            Here ⊛ becomes spatial integration/projection; ☀ becomes a spatial emission kernel.
+          </p>
+        </div>
+        <div class="card">
+          <h3>(B) Epistemic layer: finite aperture state</h3>
+          <p>
+            Let the aperture “mind” be a finite complex vector:
+          </p>
+          <div class="equation-block">
+            \[
+              \psi(t)\in\mathbb C^n
+            \]
+          </div>
+          <p class="muted">
+            Here ⊛ becomes a learned aggregator; Å(ß) becomes a gate/rotation in feature space; ☀ becomes a decoder back into the field.
+          </p>
+        </div>
+      </div>
+      <div class="callout">
+        Canonical interpretation: <b>a coupled field–mode system</b> (PDE + ODE) with feedback.
+        (B) is a low-dimensional “aperture model” sampling and re-injecting (A).
+      </div>
+    </section>
+
+    <!-- Slide 6 -->
+    <section class="slide" data-title="Canonical Coupled System">
+      <h2>5) Canonical coupled dynamical system (PDE + ODE + memory + ß)</h2>
+
+      <div class="card">
+        <h3>5.1 Field reality (A): PDE with aperture emission</h3>
+        <div class="equation-block">
+          \[
+            \partial_t \phi(x,t)=D\nabla^2\phi(x,t)-\gamma\phi(x,t)+\sum_{k=1}^n v_k(x)\,\psi_k(t)
+          \]
+        </div>
+        <p class="muted">
+          Propagation/dispersion (\(D\nabla^2\)), natural decay (\(-\gamma\phi\)), and emergence injection (the \(v_k(x)\psi_k\) term).
+        </p>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>5.2 Convergence (⊛): field → aperture modes</h3>
+          <div class="equation-block">
+            \[
+              z_k(t)=\int_\Omega u_k(x)\,\phi(x,t)\,dx
+            \]
+          </div>
+          <p class="muted">Mode overlaps: many directions collapse into finite coordinates.</p>
+        </div>
+        <div class="card">
+          <h3>5.3 Aperture rotation Å(ß)</h3>
+          <div class="equation-block">
+            \[
+              \tilde z(t)=e^{i\pi b(t)}\,z(t)
+            \]
+          </div>
+          <p class="muted">A phase gate / representation shift controlled by the balance variable \(b(t)\in[0,1]\).</p>
+        </div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>5.4 Aperture dynamics (B): ODE</h3>
+          <div class="equation-block">
+            \[
+              \dot\psi(t)=-\alpha \psi(t)+\tanh(\tilde z(t))
+            \]
+          </div>
+          <p class="muted">Damped recurrence driven by rotated converged input.</p>
+        </div>
+        <div class="card">
+          <h3>5.5 Boundary memory ○: gated update</h3>
+          <div class="equation-block">
+            \[
+              \dot c(t)= -\lambda c(t) + f(b)\odot c(t) + g(b)\odot H(z(t))
+            \]
+          </div>
+          <p class="muted">
+            LSTM-style memory: past retention \(f(b)\) and input incorporation \(g(b)\).
+          </p>
+        </div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h3>5.6 Balance variable ß as feedback law</h3>
+        <div class="equation-block">
+          \[
+            I(t)=\|z(t)\|,\quad O(t)=\|\psi(t)\|
+          \]
+          \[
+            \dot b(t)=\kappa\left(\frac{I(t)}{I(t)+O(t)+\varepsilon}-b(t)\right)
+          \]
+        </div>
+        <p class="muted">ß relaxes to the inflow/outflow ratio (your definition made dynamical).</p>
+      </div>
+    </section>
+
+    <!-- Slide 7 -->
+    <section class="slide" data-title="Well-posedness & Stability">
+      <h2>6) Clean stability assumptions (canonical)</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Well-posedness (existence/uniqueness)</h3>
+          <ul>
+            <li class="muted">Choose \(D>0\), \(\gamma>0\) to make the field PDE dissipative.</li>
+            <li class="muted">Choose \(\alpha>0\) (aperture damping) and \(\lambda>0\) (memory damping).</li>
+            <li class="muted">Take \(\tanh(\cdot)\) (or any Lipschitz nonlinearity) to prevent blow-up.</li>
+            <li class="muted">Use smooth bounded gates \(f(b),g(b)\in[0,1]^m\) for memory stability.</li>
+            <li class="muted">Use \(\varepsilon>0\) in \(b\)-update to avoid division issues.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Intuition</h3>
+          <p>
+            The field decays unless driven; the aperture decays unless fed; memory decays unless gated;
+            and the balance parameter moves toward a self-consistent ratio.
+          </p>
+          <div class="callout">
+            The “edge” \(b\approx 0.5\) often corresponds to maximal openness
+            \(O(b)=4b(1-b)\), where inflow and outflow are comparable.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8 -->
+    <section class="slide" data-title="Discretization & Simulation Map">
+      <h2>7) How to simulate (PDE → grid, modes → vectors)</h2>
+      <div class="card">
+        <h3>Discretize the field (A) into a vector (B-compatible)</h3>
+        <p class="muted">
+          Pick a spatial grid \(x_j\) (j=1..N). Represent \(\phi(x,t)\) as
+          \(\Phi(t)\in\mathbb C^N\). Then:
+        </p>
+        <div class="equation-block">
+          \[
+            \dot \Phi(t) = D L \Phi(t) - \gamma \Phi(t) + V \psi(t)
+          \]
+        </div>
+        <p class="muted">
+          Where \(L\) is the discrete Laplacian, and \(V\in\mathbb C^{N\times n}\) injects aperture state into the field.
+        </p>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Discrete convergence ⊛</h3>
+          <div class="equation-block">
+            \[
+              z(t)=U^\ast \Phi(t)
+            \]
+          </div>
+          <p class="muted">
+            \(U\in\mathbb C^{N\times n}\) defines “aperture sensitivity” patterns \(u_k(x)\).
+          </p>
+        </div>
+        <div class="card">
+          <h3>Discrete emergence ☀</h3>
+          <div class="equation-block">
+            \[
+              \text{field injection} = V\,\psi(t)
+            \]
+          </div>
+          <p class="muted">
+            \(V\) defines “radiation / emission” patterns \(v_k(x)\).
+          </p>
+        </div>
+      </div>
+
+      <div class="callout">
+        This makes the simulation straightforward: integrate the coupled ODE system
+        for \((\Phi,\psi,c,b)\) with Euler/RK4.
+      </div>
+    </section>
+
+    <!-- Slide 9 -->
+    <section class="slide" data-title="Compact One-Slide System">
+      <h2>8) The complete canonical Circumpunct system (compact)</h2>
+      <div class="card">
+        <div class="equation-block">
+          \[
+          \begin{aligned}
+          \partial_t \phi(x,t) &= D\nabla^2\phi(x,t)-\gamma\phi(x,t)+\sum_{k=1}^n v_k(x)\psi_k(t)\\[4pt]
+          z_k(t) &= \int_\Omega u_k(x)\phi(x,t)\,dx\\[4pt]
+          \tilde z(t) &= e^{i\pi b(t)}z(t)\\[4pt]
+          \dot\psi(t) &= -\alpha\psi(t)+\tanh(\tilde z(t))\\[4pt]
+          \dot c(t) &= -\lambda c(t) + f(b)\odot c(t) + g(b)\odot H(z(t))\\[4pt]
+          \dot b(t) &= \kappa\left(\frac{\|z(t)\|}{\|z(t)\|+\|\psi(t)\|+\varepsilon}-b(t)\right)
+          \end{aligned}
+          \]
+        </div>
+        <p class="muted">
+          (A) is the field PDE. (B) is the aperture ODE. ○ is memory. ß is self-tuned balance.
+          ⊛ is projection (integral), Å is phase gate, ☀ is injection/emission.
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 10 -->
+    <section class="slide" data-title="Close">
+      <div class="center">
+        <div class="big">Φ∞ →⊛→ Å(ß) →☀→ ⊙</div>
+        <div class="sub">
+          Canonical reading: a <b>continuous world-field</b> coupled to a <b>finite aperture mind</b>,
+          stabilized by dissipation, bounded nonlinearities, and a self-consistent balance parameter.
+        </div>
+        <div class="footer-note">
+          Tip: press <span class="kbd">G</span> to toggle a slide index overlay.
+        </div>
+      </div>
+    </section>
+
+    <!-- Optional Slide Index (overlay) -->
+    <section id="indexOverlay" class="slide" data-title="Index" style="display:none;">
+      <h2>Slide Index</h2>
+      <div class="card">
+        <ol id="indexList" class="muted" style="line-height:1.8; margin:0; padding-left:18px;"></ol>
+        <p class="footer-note">Click an item to jump. Press <span class="kbd">G</span> again to close.</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="nav">
+    <button id="prevBtn">← Prev</button>
+    <div class="progress" id="progress">Slide 1 / 10</div>
+    <button id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll(".slide"))
+    .filter(s => s.id !== "indexOverlay"); // exclude overlay from normal deck
+  const overlay = document.getElementById("indexOverlay");
+  const indexList = document.getElementById("indexList");
+
+  let i = 0;
+
+  function showSlide(idx){
+    i = Math.max(0, Math.min(slides.length - 1, idx));
+    slides.forEach((s, k) => s.classList.toggle("active", k === i));
+    overlay.style.display = "none";
+    document.getElementById("progress").textContent = `Slide ${i+1} / ${slides.length}`;
+    // Re-typeset math for the active slide if MathJax is ready
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      MathJax.typesetPromise([slides[i]]).catch(()=>{});
+    }
+    window.location.hash = `#${i+1}`;
+  }
+
+  function next(){ showSlide(i + 1); }
+  function prev(){ showSlide(i - 1); }
+
+  document.getElementById("nextBtn").addEventListener("click", next);
+  document.getElementById("prevBtn").addEventListener("click", prev);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight" || e.key === "PageDown") next();
+    if (e.key === "ArrowLeft"  || e.key === "PageUp") prev();
+    if (e.key.toLowerCase() === "g") toggleIndex();
+  });
+
+  function toggleIndex(){
+    if (overlay.style.display === "none" || overlay.style.display === ""){
+      // build index
+      indexList.innerHTML = "";
+      slides.forEach((s, k) => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = "javascript:void(0)";
+        a.textContent = `${k+1}. ${s.dataset.title || "Slide"}`;
+        a.style.color = "var(--accent)";
+        a.style.textDecoration = "none";
+        a.addEventListener("click", () => showSlide(k));
+        li.appendChild(a);
+        indexList.appendChild(li);
+      });
+      slides.forEach(s => s.classList.remove("active"));
+      overlay.style.display = "block";
+      overlay.classList.add("active");
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([overlay]).catch(()=>{});
+      }
+    } else {
+      overlay.style.display = "none";
+      showSlide(i);
+    }
+  }
+
+  // hash navigation
+  const hash = window.location.hash.replace("#","");
+  const n = parseInt(hash, 10);
+  if (!Number.isNaN(n) && n >= 1 && n <= slides.length) showSlide(n-1);
+  else showSlide(0);
+</script>
+</body>
+</html>
+```
