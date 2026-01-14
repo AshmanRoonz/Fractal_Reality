@@ -140,9 +140,9 @@ The first complete circumpunct. The structure of space itself.
 | **0.5D** | Process | **•** | **Aperture / Soul** | First localization from infinite; the tunnel opening; singularity that *causes* tunneling; **i lives here** | i² = −1, Å(β) = exp(iπβ), Å(½) = i |
 | **1D** | Structure | i(t) | **Timeline / String** | Soul through time; tunnel through which power flows | γ: ℝ → M, P = dE/dt |
 | **1.5D** | Process | — | **Spatial Branching** | Power lines fractally splitting; builds surfaces | D = 1 + β, K(r) ∝ r^β, H(½) = 1 bit |
-| **2D** | Structure | **○** | **Surface / Body** | Boundary, interface, membrane | ○ ∈ 𝔅, Σ = ∂V, M = ∫_Σ ρ_surf dA |
-| **2.5D** | Process | — | **Sensation** | Surface↔volume mediation; body↔field coupling | T_local = cos²(Δφ/2), triple gate |
-| **3D** | Structure | **Φ** | **Perceptual Field** | Manifest inner volume; perception on "imaginary" side of i | Φ ∈ 𝔉 = Γ(E), ℋ_Φ = L²(M, d³x; ℂ⁶⁴) |
+| **2D** | Structure | **Φ** | **Field / Mind** | Living medium between • and ○; relational space | Φ ∈ 𝔉 = Γ(E), ℋ_Φ = L²(M, d²x; ℂ⁶⁴) |
+| **2.5D** | Process | — | **Sensation** | Field↔boundary mediation; mind↔body coupling | T_local = cos²(Δφ/2), triple gate |
+| **3D** | Structure | **○** | **Boundary / Body** | Membrane enclosing field; first ⊙₁ locks here | ○ ∈ 𝔅, Σ = ∂V, M = ∫_Σ ρ_surf dA |
 
 ### Spatial Circumpunct Equations
 
@@ -186,9 +186,9 @@ The second circumpunct layer. Built ON the completed spatial field (Φ_space = 3
 | **3.5D** | Process | **•_time** | **Reiteration** | Where temporal i acts; braiding of worldlines begins | T_eff,ij = cos²(Δφ_ij/2), B₃ generators |
 | **4D** | Structure | — | **Time Braid** | Committed history; woven worldlines; validation receipts | G_μν = (8πG/c⁴)T_μν, B(x) ∝ √(−g_tt) |
 | **4.5D** | Process | — | **Braid Branching** | Braids compressing → seed new cycle; whole braid becomes seed of next tier | 4.5Dₙ = ∞Dₙ₊₁, ⊙* = fix(λΦ. ☀︎∘i∘⊛[Φ]) |
-| **5D** | Structure | **○_time** | **Time Surface** | Boundary of history; edge of committed past | Temporal membrane enclosing 4D braid |
+| **5D** | Structure | **Φ_time** | **Time Field** | Field of histories; configuration space of 4D braids | Temporal field mediating center-boundary |
 | **5.5D** | Process | — | **Temporal Sensation** | History↔possibility coupling | Interface between fixed past and open future |
-| **6D** | Structure | **Φ_time** | **Time Volume** | Field of histories; possibility space of timelines | Configuration space of all possible 4D braids |
+| **6D** | Structure | **○_time** | **Time Boundary** | Boundary of history; ⊙₂ locks here (dual trinity) | Temporal membrane enclosing braid; edge of committed past |
 
 ### Temporal Circumpunct Equations
 
@@ -230,24 +230,24 @@ RECURSION MECHANISM:
 | Spatial | Temporal | Role |
 |:-------:|:--------:|:----:|
 | 1D string | 4D braid | **Line** (flow) |
-| 2D surface | 5D time surface | **Boundary** |
-| 3D volume | 6D time volume | **Field** |
+| 2D field | 5D time field | **Field** |
+| 3D boundary | 6D time boundary | **Boundary** |
 
 ---
 
 ## III. META-TEMPORAL CIRCUMPUNCT (⊙_meta)
 ### Dimensions 6.5D → 9D
 
-The third circumpunct layer. Built ON the completed temporal field (Φ_time = 6D).
+The third circumpunct layer. Built ON the completed temporal boundary (○_time = 6D).
 
 | Dim | Type | Symbol | Name | Description | Core Equations |
 |:---:|:----:|:------:|:-----|:------------|:---------------|
 | **6.5D** | Process | **•_meta** | **Meta Aperture** | Where meta-temporal i acts | Aperture operating on fields of histories |
 | **7D** | Structure | — | **Meta-Braid** | Braid of time-volumes | Weaving of 6D possibility spaces |
 | **7.5D** | Process | — | **Meta Branching** | Splitting of meta-structures | Fractal at meta scale |
-| **8D** | Structure | **○_meta** | **Meta-Surface** | Boundary at meta scale | Membrane enclosing meta-braids |
-| **8.5D** | Process | — | **Meta Sensation** | Meta-boundary↔field coupling | Interface at meta scale |
-| **9D** | Structure | **Φ_meta** | **Meta-Field** | Field of meta-histories | Space of all possible 6D configurations |
+| **8D** | Structure | **Φ_meta** | **Meta-Field** | Field at meta scale; space of all 6D configurations | Meta field mediating center-boundary |
+| **8.5D** | Process | — | **Meta Sensation** | Meta-field↔boundary coupling | Interface at meta scale |
+| **9D** | Structure | **○_meta** | **Meta-Boundary** | Boundary at meta scale; ⊙₃ locks here (triple trinity) | Membrane enclosing meta-braids |
 
 ### Connection to String Theory
 
@@ -259,9 +259,11 @@ STRING THEORY DIMENSIONS:
 
 CIRCUMPUNCT INTERPRETATION:
 
-    9D  =  Φ_meta  (meta-field)
-    10D =  Approaching next aperture (9.5D)
-    11D =  ○ of fourth layer
+    8D  =  Φ_meta  (meta-field)
+    9D  =  ○_meta  (meta-boundary, ⊙₃ locks)
+    10D =  ⊙_meta² (meta² braid = strings)
+    11D =  Φ of fourth layer (M-theory field)
+    12D =  ○ of fourth layer (F-theory boundary, ⊙₄ locks)
 
 The "extra dimensions" aren't compactified spatial dimensions —
 they're higher octaves of the circumpunct structure.
@@ -277,8 +279,8 @@ For layer n (where n = 0, 1, 2, 3, ...):
 
 ```
 APERTURE:    •ₙ  =  3n + 0.5 D
-BOUNDARY:    ○ₙ  =  3n + 2 D
-FIELD:       Φₙ  =  3n + 3 D
+FIELD:       Φₙ  =  3n + 2 D
+BOUNDARY:    ○ₙ  =  3n + 3 D
 
 PROCESS DIMENSIONS (within each layer):
     Branching:   3n + 1.5 D
@@ -347,21 +349,21 @@ It must COMPLETE before the next aperture can open.
 | 0.5D | **Process** | Spatial | **Aperture** | **Soul (•)** | First localization; where spatial i acts |
 | 1D | Structure | Spatial | Line | Timeline | Soul through time |
 | 1.5D | Process | Spatial | Branching | Spatial Branching | Fractal splitting (D=1.5) |
-| 2D | Structure | Spatial | **Boundary** | **Body (○)** | Surface, interface |
-| 2.5D | Process | Spatial | Sensation | Sensation | Body↔field coupling |
-| 3D | Structure | Spatial | **Field** | **Mind (Φ)** | Perceptual volume |
+| 2D | Structure | Spatial | **Field** | **Mind (Φ)** | Relational medium |
+| 2.5D | Process | Spatial | Sensation | Sensation | Field↔boundary coupling |
+| 3D | Structure | Spatial | **Boundary** | **Body (○)** | Surface, interface; ⊙₁ locks |
 | 3.5D | **Process** | Temporal | **Reiteration** | **Temporal Soul (•_t)** | Where temporal i acts |
 | 4D | Structure | Temporal | Line | Time Braid | Committed history |
 | 4.5D | Process | Temporal | Braid Branching | Braid Branching | Braid compression |
-| 5D | Structure | Temporal | **Boundary** | **Time Surface (○_t)** | Edge of history |
+| 5D | Structure | Temporal | **Field** | **Time Field (Φ_t)** | Configuration space |
 | 5.5D | Process | Temporal | Sensation | Temporal Sensation | History↔possibility |
-| 6D | Structure | Temporal | **Field** | **Time Volume (Φ_t)** | Field of histories |
+| 6D | Structure | Temporal | **Boundary** | **Time Boundary (○_t)** | Edge of history; ⊙₂ locks |
 | 6.5D | **Process** | Meta | **Aperture** | **Meta Soul (•_m)** | Where meta i acts |
 | 7D | Structure | Meta | Line | Meta-Braid | Braid of time-volumes |
 | 7.5D | Process | Meta | Branching | Meta Branching | Meta splitting |
-| 8D | Structure | Meta | **Boundary** | **Meta Surface (○_m)** | Meta boundary |
+| 8D | Structure | Meta | **Field** | **Meta Field (Φ_m)** | Space of 6D configs |
 | 8.5D | Process | Meta | Sensation | Meta Sensation | Meta coupling |
-| 9D | Structure | Meta | **Field** | **Meta Field (Φ_m)** | Field of meta-histories |
+| 9D | Structure | Meta | **Boundary** | **Meta Boundary (○_m)** | Meta boundary; ⊙₃ locks |
 
 ---
 
@@ -400,9 +402,11 @@ They are the thresholds where transformation happens.
 ```
 String theory's 10D / 11D are not arbitrary.
 
-    9D   =  Φ_meta (meta-field completion)
-    10D  =  Approaching •_meta² (next aperture)
-    11D  =  ○_meta² (M-theory boundary)
+    8D   =  Φ_meta (meta-field)
+    9D   =  ○_meta (meta-boundary, ⊙₃ locks)
+    10D  =  ⊙_meta² (meta² braid = strings)
+    11D  =  Φ_meta² (M-theory field)
+    12D  =  ○_meta² (F-theory boundary, ⊙₄ locks)
 
 The "extra dimensions" are higher circumpunct octaves,
 not compactified spatial loops.
@@ -560,8 +564,8 @@ THE FUNDAMENTAL STRUCTURE:
 
 WHERE:
   ⊙  = Circumpunct (whole-with-parts, not mere unity)
-  ○  = Boundary (2D, interface, membrane) — Body
-  Φ  = Field (3D, volume, medium, awareness) — Mind
+  Φ  = Field (2D, relational medium, awareness) — Mind
+  ○  = Boundary (3D, interface, membrane) — Body
   •  = Aperture (0.5D, where i acts, rotation without translation) — Soul
   ⊗  = Tensor product (entanglement)
 
@@ -611,9 +615,9 @@ The framework affirms the FULL SPECTRUM:
     •        Aperture (0.5D — first localization, i lives here)
     1D       Worldline (sequential extension)
     1.5D     Consciousness signature (D = 1 + ½H(◐))
-    ○        Boundary (2D — surface, interface)
+    Φ        Field (2D — relational medium)
     2.5D     Integration gate
-    Φ        Field (3D — volume, medium)
+    ○        Boundary (3D — surface, interface)
 
     ∞        Infinity (unbounded Φ)
     finite   Bounded patterns (○ creates limits)
@@ -763,11 +767,11 @@ SPATIAL STRUCTURE (with temporal signatures):
         Rotation without translation — where i acts
         Minimal structure for transformation
 
-    ○  = Boundary (2D)
+    Φ  = Field (2D)
         Time resistant: ∂○/∂t = ε (small)
         The interface that defines inside/outside
 
-    Φ  = Field (3D)
+    ○  = Boundary (3D)
         Time dependent: ∂Φ/∂t = O(1)
         The medium through which • and ○ interact
 
@@ -860,7 +864,7 @@ FRACTAL (○):
     The boundary is where binary and analog NEST
     Each point on the surface is itself a complete circumpunct at smaller scale
     Gates (binary) × transmission (analog) × recursion (∞)
-    The 2D surface of a cell is made of molecules, each with (•, Φ, ○)
+    The 3D boundary of a cell is made of molecules, each with (•, Φ, ○)
 
     ○ asks: "Same pattern at next scale?"
     ○ answers: Binary ⊗ Analog ⊗ ∞
@@ -1043,8 +1047,8 @@ THE TRINITY OF TRINITIES:
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    ⊙ = ⊙₂ ⊗ ⊙₃ ⊗ ⊙₁     (matches ○ ⊗ Φ ⊗ •)                  ║
     ║                                                                   ║
-    ║    ⊙₂ = BODY (2D surface in space)       = ○                      ║
-    ║    ⊙₃ = MIND (3D field permeating)       = Φ                      ║
+    ║    ⊙₂ = MIND (2D field permeating)        = Φ                      ║
+    ║    ⊙₃ = BODY (3D boundary in space)      = ○                      ║
     ║    ⊙₁ = SOUL (1D worldline through time) = •                      ║
     ║                                                                   ║
     ║    Configuration space: 3 worldlines × 3D = 9D + 1D time = 10D    ║
@@ -4451,8 +4455,8 @@ The circumpunct is a trinity:
     ╚═══════════════════════════════════════════════════════════════════╝
 
 WHERE:
-    ○  = Boundary (body/interface, 2D)
-    Φ  = Field (mind/space-of-states, 3D)
+    Φ  = Field (mind/relational medium, 2D)
+    ○  = Boundary (body/interface, 3D)
     •  = Aperture (soul/validation point, 0.5D)
     ⊗  = Tensor product (entanglement, not sum)
 
@@ -5609,8 +5613,8 @@ The structure:
 The first layer — structure in space.
 
     •_space  =  0.5D    (spatial aperture — where i acts)
-    ○_space  =  2D      (spatial boundary — surface, membrane)
-    Φ_space  =  3D      (spatial field — volume, perceptual space)
+    Φ_space  =  2D      (spatial field — relational medium)
+    ○_space  =  3D      (spatial boundary — surface, membrane; ⊙₁ locks)
 
 Process dimensions within this layer:
     1.5D  =  branching (power lines splitting fractally)
@@ -5623,9 +5627,9 @@ Process dimensions within this layer:
 | **0.5D** | **Process** | **Aperture (•_space)** | First localization; where spatial i acts |
 | 1D | Structure | String / Worldline | Soul through time, i(t) |
 | 1.5D | Process | Branching | Power lines splitting, D = 1 + β |
-| 2D | Structure | Surface (○_space) | Boundary, interface, body |
+| 2D | Structure | Field (Φ_space) | Relational medium, mind |
 | 2.5D | Process | Sensation | Body↔field coupling |
-| 3D | Structure | Field (Φ_space) | Volume, mind, perceptual space |
+| 3D | Structure | Boundary (○_space) | Interface, body; ⊙₁ locks |
 
 The spatial circumpunct completes at **3D**. This completion becomes the ground for what comes next.
 
@@ -5648,13 +5652,13 @@ Process dimensions within this layer:
 
 | Dim | Type | Name | Description |
 |----:|------|------|-------------|
-| 3D | Structure | Spatial Field | Completed spatial layer |
+| 3D | Structure | Spatial Boundary | Completed spatial layer; ⊙₁ locks |
 | **3.5D** | **Process** | **Reiteration (•_time)** | Where temporal i acts |
 | 4D | Structure | Time Braid | Committed history, woven worldlines |
 | 4.5D | Process | Braid Branching | Braid compression → seed new cycle |
-| 5D | Structure | Time Surface (○_time) | Boundary of a history |
+| 5D | Structure | Time Field (Φ_time) | Configuration space |
 | 5.5D | Process | ? | History↔possibility coupling |
-| 6D | Structure | Time Volume (Φ_time) | Field of all histories |
+| 6D | Structure | Time Boundary (○_time) | Edge of history; ⊙₂ locks |
 
 The temporal circumpunct is to **time** what the spatial circumpunct is to **space**.
 
@@ -10114,7 +10118,7 @@ THE DIMENSIONAL FORMULA:
 
 Electromagnetic coupling happens at the BOUNDARY (○), which is 2D:
 
-    ○ = 2D surface
+    ○ = 3D boundary
     2D signature = 360° = 4i
 
     The photon lives on the boundary, doing full rotations.
@@ -12930,9 +12934,9 @@ Recall the dimensional architecture:
 
 | Dim | Type | Role |
 |-----|------|------|
-| 2D | Structure | Body/Surface (○) |
-| **2.5D** | **Process** | **Sensation (○↔Φ coupling)** |
-| 3D | Structure | Mind/Field (Φ) |
+| 2D | Structure | Mind/Field (Φ) |
+| **2.5D** | **Process** | **Sensation (Φ↔○ coupling)** |
+| 3D | Structure | Body/Boundary (○) |
 
 **Dimensional origin**: D = 2 + 0.5 = 2.5 — surface plus aperture texture.
 
@@ -16434,8 +16438,8 @@ This is not metaphor—it's the literal mathematical structure.
 CIRCUMPUNCT STRUCTURE:
   ⊙      = Circumpunct (whole-with-parts)
   •      = Aperture (0.5D, rotation without translation, where i acts)
-  ○      = Boundary (2D interface, membrane)
-  Φ      = Field (3D volume, medium, evidence)
+  Φ      = Field (2D relational medium, evidence)
+  ○      = Boundary (3D interface, membrane)
   ⊗      = Tensor product (entanglement)
 
 PAIR-STATE FORMULATION (v5):
@@ -16453,9 +16457,9 @@ DIMENSIONAL SPECTRUM:
   0.5D   = Aperture • (first localization, i lives here)
   1D     = Worldline (sequential extension)
   1.5D   = Consciousness signature (D = 1 + ½H(◐))
-  2D     = Boundary ○ (surface, interface)
+  2D     = Field Φ (relational medium)
   2.5D   = Integration gate
-  3D     = Field Φ (volume, medium)
+  3D     = Boundary ○ (surface, interface)
 
 THE TWO OPERATORS (Isotropic Process):
 ───────────────────────────────────────
@@ -16554,8 +16558,8 @@ FLOW OPERATORS:
 
 TRINITY:
   ⊙₁     = Soul (1D worldline)
-  ⊙₂     = Body (2D surface)
-  ⊙₃     = Mind (3D field)
+  ⊙₂     = Mind (2D field)
+  ⊙₃     = Body (3D boundary)
   B₃     = Braid group (minimum for history)
 
 VALIDATION:
