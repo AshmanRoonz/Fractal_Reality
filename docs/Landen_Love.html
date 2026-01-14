@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Real You - A Story for Landen</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Pacifico&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: #0a0a1a;
+        }
+
+        .book-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            perspective: 2000px;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+            overflow: hidden;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Page backgrounds inspired by KPDH */
+        .page-1 { 
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+        }
+        
+        .page-2 { 
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b3a5f 50%, #0d1b2a 100%);
+        }
+        
+        .page-3 { 
+            background: linear-gradient(135deg, #2d1b4e 0%, #4a2c7a 50%, #2d1b4e 100%);
+        }
+        
+        .page-4 { 
+            background: linear-gradient(135deg, #1a3a2a 0%, #2d5a4a 50%, #1a3a2a 100%);
+        }
+        
+        .page-5 { 
+            background: linear-gradient(135deg, #3d1a1a 0%, #5a2d2d 50%, #3d1a1a 100%);
+        }
+        
+        .page-6 { 
+            background: linear-gradient(135deg, #1a2a3d 0%, #2d4a6a 50%, #1a2a3d 100%);
+        }
+        
+        .page-7 { 
+            background: linear-gradient(135deg, #2a1a3d 0%, #4a2d6a 50%, #2a1a3d 100%);
+        }
+        
+        .page-8 { 
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5a 50%, #1a1a2e 100%);
+        }
+        
+        .page-9 { 
+            background: linear-gradient(135deg, #1a2a2a 0%, #2d4a4a 50%, #1a2a2a 100%);
+        }
+        
+        .page-10 { 
+            background: linear-gradient(135deg, #2e1a2e 0%, #5a2d5a 50%, #2e1a2e 100%);
+        }
+        
+        .page-11 { 
+            background: linear-gradient(135deg, #1a1a3d 0%, #2d2d7a 50%, #1a1a3d 100%);
+        }
+        
+        .page-12 { 
+            background: linear-gradient(135deg, #0d0d1a 0%, #1a1a4a 50%, #0d0d1a 100%);
+        }
+        
+        .page-13 {
+            background: radial-gradient(ellipse at center, #4a2d7a 0%, #2d1b4e 40%, #1a0a2e 70%, #0a0a1a 100%);
+        }
+
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            50% { transform: translateY(-100px) translateX(20px); }
+        }
+
+        /* Character illustration - simplified Rumi inspired */
+        .character {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .character-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(199, 125, 255, 0.4) 0%, transparent 70%);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        /* Simple emoji-based illustrations */
+        .illustration {
+            font-size: 120px;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 30px rgba(199, 125, 255, 0.8));
+            animation: gentle-bounce 3s infinite ease-in-out;
+        }
+
+        @keyframes gentle-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Main text */
+        .page-text {
+            font-size: clamp(28px, 6vw, 48px);
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 
+                0 0 20px rgba(199, 125, 255, 0.8),
+                0 0 40px rgba(199, 125, 255, 0.4);
+            line-height: 1.4;
+            max-width: 800px;
+            animation: text-glow 2s infinite ease-in-out;
+        }
+
+        @keyframes text-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(199, 125, 255, 0.8), 0 0 40px rgba(199, 125, 255, 0.4); }
+            50% { text-shadow: 0 0 30px rgba(199, 125, 255, 1), 0 0 60px rgba(199, 125, 255, 0.6); }
+        }
+
+        /* Title page special styling */
+        .title-text {
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(48px, 10vw, 80px);
+            background: linear-gradient(135deg, #ff6b9d, #c77dff, #7b68ee, #00d4ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 4s ease infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .subtitle-text {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 20px;
+        }
+
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #c77dff, #7b68ee);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(199, 125, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(199, 125, 255, 0.8);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Page indicator */
+        .page-indicator {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        /* Decorative elements */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Magic circles - demon hunter inspired */
+        .magic-circle {
+            position: absolute;
+            border: 2px solid rgba(199, 125, 255, 0.3);
+            border-radius: 50%;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Rainbow honmoon effect for final pages */
+        .rainbow-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #ff6b6b,
+                #feca57,
+                #48dbfb,
+                #ff9ff3,
+                #54a0ff,
+                #5f27cd,
+                #ff6b6b
+            );
+            filter: blur(60px);
+            opacity: 0.4;
+            animation: rainbow-spin 10s linear infinite;
+        }
+
+        @keyframes rainbow-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Heart animation for final page */
+        .heart-container {
+            position: relative;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 30px;
+            animation: float-up 3s infinite ease-out;
+            opacity: 0;
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            20% { opacity: 1; transform: scale(1); }
+            100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
+        }
+
+        /* Honmoon barrier visualization */
+        .honmoon {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .honmoon-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            border: 3px solid;
+            transform: translate(-50%, -50%);
+            animation: honmoon-pulse 2s infinite ease-in-out;
+        }
+
+        .honmoon-ring:nth-child(1) {
+            width: 100%;
+            height: 100%;
+            border-color: rgba(255, 107, 107, 0.6);
+            animation-delay: 0s;
+        }
+
+        .honmoon-ring:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            border-color: rgba(254, 202, 87, 0.6);
+            animation-delay: 0.2s;
+        }
+
+        .honmoon-ring:nth-child(3) {
+            width: 60%;
+            height: 60%;
+            border-color: rgba(72, 219, 251, 0.6);
+            animation-delay: 0.4s;
+        }
+
+        .honmoon-ring:nth-child(4) {
+            width: 40%;
+            height: 40%;
+            border-color: rgba(255, 159, 243, 0.6);
+            animation-delay: 0.6s;
+        }
+
+        .honmoon-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, #ffffff 0%, #c77dff 50%, transparent 100%);
+            border-radius: 50%;
+            animation: core-glow 1.5s infinite ease-in-out;
+        }
+
+        @keyframes honmoon-pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+        }
+
+        @keyframes core-glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(199, 125, 255, 0.8); }
+            50% { box-shadow: 0 0 50px rgba(199, 125, 255, 1), 0 0 80px rgba(199, 125, 255, 0.5); }
+        }
+
+        /* Costume/mask illustration */
+        .costume-illustration {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+        }
+
+        .face {
+            width: 150px;
+            height: 150px;
+            background: #ffcc99;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px rgba(255, 204, 153, 0.5);
+        }
+
+        .mask {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 160px;
+            height: 100px;
+            background: linear-gradient(135deg, #c77dff, #7b68ee);
+            border-radius: 80px 80px 40px 40px;
+            opacity: 0.8;
+            animation: mask-float 3s infinite ease-in-out;
+        }
+
+        @keyframes mask-float {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-20px); }
+        }
+
+        .eyes {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 30px;
+        }
+
+        .eye {
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        .smile {
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 20px;
+            border: none;
+            border-bottom: 4px solid #333;
+            border-radius: 0 0 40px 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="book-container">
+        
+        <!-- Page 1: Title -->
+        <div class="page page-1 active" data-page="1">
+            <div class="stars"></div>
+            <div class="illustration">✨🎤✨</div>
+            <div class="title-text">The Real You</div>
+            <div class="subtitle-text">A story for Landen, from Dad</div>
+            <div class="particles"></div>
+        </div>
+
+        <!-- Page 2 -->
+        <div class="page page-2" data-page="2">
+            <div class="stars"></div>
+            <div class="illustration">💭</div>
+            <div class="page-text">Hey buddy, you're not in trouble.</div>
+        </div>
+
+        <!-- Page 3 -->
+        <div class="page page-3" data-page="3">
+            <div class="stars"></div>
+            <div class="illustration">🤔</div>
+            <div class="page-text">I've just been wondering about something.</div>
+        </div>
+
+        <!-- Page 4 -->
+        <div class="page page-4" data-page="4">
+            <div class="stars"></div>
+            <div class="illustration">📖</div>
+            <div class="page-text">Sometimes you tell me stories about things that didn't quite happen.</div>
+        </div>
+
+        <!-- Page 5 -->
+        <div class="page page-5" data-page="5">
+            <div class="stars"></div>
+            <div class="illustration">⭐</div>
+            <div class="page-text">And I think I know why.</div>
+        </div>
+
+        <!-- Page 6 -->
+        <div class="page page-6" data-page="6">
+            <div class="stars"></div>
+            <div class="illustration">🌟</div>
+            <div class="page-text">You want me to think you're amazing.</div>
+        </div>
+
+        <!-- Page 7 -->
+        <div class="page page-7" data-page="7">
+            <div class="stars"></div>
+            <div class="illustration">👀</div>
+            <div class="page-text">You want me to be excited about you.</div>
+        </div>
+
+        <!-- Page 8 -->
+        <div class="page page-8" data-page="8">
+            <div class="stars"></div>
+            <div class="illustration">💜</div>
+            <div class="page-text">That makes total sense.</div>
+        </div>
+
+        <!-- Page 9: The Secret -->
+        <div class="page page-9" data-page="9">
+            <div class="stars"></div>
+            <div class="honmoon">
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-core"></div>
+            </div>
+            <div class="page-text">But here's a secret...</div>
+        </div>
+
+        <!-- Page 10 -->
+        <div class="page page-10" data-page="10">
+            <div class="stars"></div>
+            <div class="rainbow-glow"></div>
+            <div class="illustration">🤩</div>
+            <div class="page-text">I already think you're amazing.</div>
+        </div>
+
+        <!-- Page 11 -->
+        <div class="page page-11" data-page="11">
+            <div class="stars"></div>
+            <div class="illustration">🎭</div>
+            <div class="page-text">You don't have to add anything extra.</div>
+        </div>
+
+        <!-- Page 12: The Costume -->
+        <div class="page page-12" data-page="12">
+            <div class="stars"></div>
+            <div class="costume-illustration">
+                <div class="face">
+                    <div class="eyes">
+                        <div class="eye"></div>
+                        <div class="eye"></div>
+                    </div>
+                    <div class="smile"></div>
+                </div>
+                <div class="mask"></div>
+            </div>
+            <div class="page-text">Made-up stories are like costumes over the real you.</div>
+        </div>
+
+        <!-- Page 13 -->
+        <div class="page page-3" data-page="13">
+            <div class="stars"></div>
+            <div class="illustration">👁️</div>
+            <div class="page-text">But I want to see the real you.</div>
+        </div>
+
+        <!-- Page 14 -->
+        <div class="page page-6" data-page="14">
+            <div class="stars"></div>
+            <div class="illustration">💕</div>
+            <div class="page-text">The real you is who I love.</div>
+        </div>
+
+        <!-- Page 15: Magic Words -->
+        <div class="page page-7" data-page="15">
+            <div class="stars"></div>
+            <div class="honmoon">
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-core"></div>
+            </div>
+            <div class="page-text">So here are some magic words...</div>
+        </div>
+
+        <!-- Page 16 -->
+        <div class="page page-8" data-page="16">
+            <div class="stars"></div>
+            <div class="illustration">🗣️</div>
+            <div class="page-text">"Dad, I want you to notice me."</div>
+        </div>
+
+        <!-- Page 17 -->
+        <div class="page page-9" data-page="17">
+            <div class="stars"></div>
+            <div class="illustration">✨</div>
+            <div class="page-text">If you say that, I promise I will look.</div>
+        </div>
+
+        <!-- Page 18 -->
+        <div class="page page-10" data-page="18">
+            <div class="stars"></div>
+            <div class="illustration">🔄</div>
+            <div class="page-text">Every. Single. Time.</div>
+        </div>
+
+        <!-- Page 19: Final -->
+        <div class="page page-13" data-page="19">
+            <div class="stars"></div>
+            <div class="rainbow-glow"></div>
+            <div class="heart-container">
+                <div class="illustration">🌈</div>
+                <div class="floating-heart" style="left: -30px; animation-delay: 0s;">💜</div>
+                <div class="floating-heart" style="left: 30px; animation-delay: 0.5s;">💙</div>
+                <div class="floating-heart" style="left: 0px; animation-delay: 1s;">💖</div>
+            </div>
+            <div class="page-text">You are the real thing.</div>
+            <div class="subtitle-text" style="margin-top: 20px;">And the real thing is exactly what I want.</div>
+            <div class="subtitle-text" style="margin-top: 40px; font-size: 28px; color: #ff9ff3;">Love, Dad ❤️</div>
+        </div>
+
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-container">
+        <button class="nav-btn" id="prevBtn" disabled>◀</button>
+        <button class="nav-btn" id="nextBtn">▶</button>
+    </div>
+
+    <!-- Page indicator -->
+    <div class="page-indicator">
+        <span id="currentPage">1</span> / <span id="totalPages">19</span>
+    </div>
+
+    <script>
+        const pages = document.querySelectorAll('.page');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentPageSpan = document.getElementById('currentPage');
+        const totalPagesSpan = document.getElementById('totalPages');
+        
+        let currentPage = 1;
+        const totalPages = pages.length;
+        
+        totalPagesSpan.textContent = totalPages;
+
+        // Create stars for each page
+        document.querySelectorAll('.stars').forEach(starContainer => {
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starContainer.appendChild(star);
+            }
+        });
+
+        // Create particles
+        document.querySelectorAll('.particles').forEach(particleContainer => {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.background = `hsl(${Math.random() * 60 + 260}, 70%, 70%)`;
+                particleContainer.appendChild(particle);
+            }
+        });
+
+        function updatePage() {
+            pages.forEach((page, index) => {
+                page.classList.remove('active');
+                if (index + 1 === currentPage) {
+                    page.classList.add('active');
+                }
+            });
+            
+            currentPageSpan.textContent = currentPage;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePage();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePage();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePage();
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePage();
+                }
+            }
+        });
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold && currentPage < totalPages) {
+                currentPage++;
+                updatePage();
+            }
+            if (touchEndX > touchStartX + swipeThreshold && currentPage > 1) {
+                currentPage--;
+                updatePage();
+            }
+        }
+
+        // Animate floating hearts on last page
+        setInterval(() => {
+            document.querySelectorAll('.floating-heart').forEach(heart => {
+                heart.style.animation = 'none';
+                heart.offsetHeight; // Trigger reflow
+                heart.style.animation = null;
+            });
+        }, 3000);
+    </script>
+</body>
+</html>
