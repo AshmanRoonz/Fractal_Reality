@@ -271,13 +271,16 @@
 
         .hero h1 {
             font-family: 'Orbitron', monospace;
-            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-size: clamp(1.2rem, 4vw, 3.5rem);
             font-weight: 900;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             color: var(--cyan-primary);
             animation: pulse-neon 3s ease-in-out infinite, glitch 8s infinite;
             margin-bottom: 1rem;
+            word-break: break-word;
+            max-width: 95vw;
+            text-align: center;
         }
 
         .hero h1::before {
@@ -972,6 +975,13 @@
             text-shadow: 0 0 20px var(--magenta-glow);
         }
 
+        .lens-arrow {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--hot-pink);
+            animation: flicker 2s infinite;
+        }
+
         .focused-point {
             font-size: 1.8rem;
             color: var(--acid-green);
@@ -1143,15 +1153,26 @@
             .flow-arrow {
                 transform: rotate(90deg);
             }
+
+            .lens-visual {
+                flex-direction: column;
+            }
+
+            .lens-arrow {
+                transform: rotate(90deg);
+            }
+
+            .hero h1 {
+                letter-spacing: 0.05em;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav>
-        <a href="https://fractalreality.ca" class="nav-logo" style="text-decoration: none;">⊙ CIRCUMPUNCT<span class="blink">_</span></a>
+        <div class="nav-logo">⊙ CIRCUMPUNCT<span class="blink">_</span></div>
         <ul class="nav-links">
-            <li><a href="https://fractalreality.ca">[HOME]</a></li>
             <li><a href="#infinite">[INFINITE]</a></li>
             <li><a href="#souls">[SOULS]</a></li>
             <li><a href="#flow">[FLOW]</a></li>
@@ -1339,14 +1360,14 @@
                     <div class="lens-label">Infinite Truth</div>
                 </div>
                 <div class="lens-element">
-                    <div class="flow-arrow">→</div>
+                    <div class="lens-arrow">→</div>
                 </div>
                 <div class="lens-element">
                     <div class="lens-symbol">◐</div>
                     <div class="lens-label">Soul (Aperture)</div>
                 </div>
                 <div class="lens-element">
-                    <div class="flow-arrow">→</div>
+                    <div class="lens-arrow">→</div>
                 </div>
                 <div class="lens-element">
                     <div class="focused-point">⊙</div>
