@@ -3,32 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>God Experiencing Itself — Through The Circumpunct Lens</title>
+    <title>GOD_EXPERIENCING_ITSELF.exe — Circumpunct Protocol</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #0a0a0f;
-            --bg-surface: #12121a;
-            --bg-elevated: #1a1a24;
-            --gold-primary: #d4a853;
-            --gold-light: #f0d78c;
-            --gold-dark: #a67c2e;
-            --text-primary: #f2efe8;
-            --text-secondary: #c9c4b8;
-            --text-dim: #8a857a;
-            --blue-spirit: #4a7c9b;
-            --blue-glow: rgba(74, 124, 155, 0.4);
-            --violet-accent: #8b6bb3;
-            --border-subtle: rgba(212, 168, 83, 0.15);
-            --glow-gold: rgba(212, 168, 83, 0.4);
-            --cyan-flow: #4ecdc4;
-            --cyan-glow: rgba(78, 205, 196, 0.4);
-            --magenta-pulse: #c44d8f;
-            --magenta-glow: rgba(196, 77, 143, 0.4);
-            --red-error: #e74c3c;
-            --green-truth: #27ae60;
+            --bg-void: #0a0a0c;
+            --bg-panel: #0d0d12;
+            --bg-elevated: #121218;
+            --cyan-primary: #00fff2;
+            --cyan-dim: #00b8b0;
+            --cyan-glow: rgba(0, 255, 242, 0.6);
+            --magenta-primary: #ff00ff;
+            --magenta-dim: #b800b8;
+            --magenta-glow: rgba(255, 0, 255, 0.5);
+            --hot-pink: #ff2d6a;
+            --hot-pink-glow: rgba(255, 45, 106, 0.5);
+            --acid-green: #39ff14;
+            --acid-glow: rgba(57, 255, 20, 0.5);
+            --electric-blue: #0066ff;
+            --text-primary: #e0e0e8;
+            --text-secondary: #8888a0;
+            --text-dim: #505068;
+            --warning-red: #ff3333;
+            --border-glow: rgba(0, 255, 242, 0.3);
+            --grid-color: rgba(0, 255, 242, 0.05);
         }
 
         * {
@@ -42,15 +42,15 @@
         }
 
         body {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            background: var(--bg-deep);
+            font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+            background: var(--bg-void);
             color: var(--text-primary);
-            font-size: 19px;
-            line-height: 1.75;
+            font-size: 18px;
+            line-height: 1.7;
             overflow-x: hidden;
         }
 
-        /* Noise texture overlay */
+        /* Scanline overlay */
         body::before {
             content: '';
             position: fixed;
@@ -58,36 +58,88 @@
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.03;
             pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            z-index: 1000;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.1) 2px,
+                rgba(0, 0, 0, 0.1) 4px
+            );
+            z-index: 9999;
         }
 
-        /* Stars background */
-        .stars {
+        /* Grid background */
+        body::after {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
             z-index: -1;
         }
 
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--text-primary);
-            border-radius: 50%;
-            opacity: 0;
-            animation: twinkle 4s infinite;
+        /* Glitch animation */
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            91% { transform: translate(-2px, 1px); }
+            92% { transform: translate(2px, -1px); }
+            93% { transform: translate(-1px, 2px); }
+            94% { transform: translate(1px, -2px); }
         }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.1; }
-            50% { opacity: 0.6; }
+        @keyframes glitch-skew {
+            0%, 90%, 100% { transform: skew(0deg); }
+            91% { transform: skew(2deg); }
+            93% { transform: skew(-1deg); }
+            95% { transform: skew(1deg); }
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            41% { opacity: 1; }
+            42% { opacity: 0.8; }
+            43% { opacity: 1; }
+            45% { opacity: 0.3; }
+            46% { opacity: 1; }
+        }
+
+        @keyframes scan {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
+
+        @keyframes pulse-neon {
+            0%, 100% { 
+                text-shadow: 
+                    0 0 5px var(--cyan-primary),
+                    0 0 10px var(--cyan-primary),
+                    0 0 20px var(--cyan-primary),
+                    0 0 40px var(--cyan-dim);
+            }
+            50% { 
+                text-shadow: 
+                    0 0 2px var(--cyan-primary),
+                    0 0 5px var(--cyan-primary),
+                    0 0 10px var(--cyan-primary),
+                    0 0 20px var(--cyan-dim);
+            }
+        }
+
+        @keyframes border-pulse {
+            0%, 100% { border-color: var(--cyan-primary); box-shadow: 0 0 10px var(--cyan-glow), inset 0 0 10px rgba(0, 255, 242, 0.1); }
+            50% { border-color: var(--cyan-dim); box-shadow: 0 0 5px var(--cyan-glow), inset 0 0 5px rgba(0, 255, 242, 0.05); }
+        }
+
+        @keyframes rotate-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         /* Navigation */
@@ -96,41 +148,53 @@
             top: 0;
             left: 0;
             right: 0;
-            padding: 1.5rem 3rem;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: linear-gradient(to bottom, var(--bg-deep), transparent);
+            background: linear-gradient(to bottom, var(--bg-void), transparent);
+            border-bottom: 1px solid var(--border-glow);
         }
 
-        .nav-symbol {
-            font-size: 1.8rem;
-            color: var(--gold-primary);
-            text-shadow: 0 0 20px var(--glow-gold);
+        .nav-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--cyan-primary);
+            text-shadow: 0 0 10px var(--cyan-glow);
+            letter-spacing: 0.1em;
+        }
+
+        .nav-logo .blink {
+            animation: flicker 3s infinite;
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             list-style: none;
             flex-wrap: wrap;
             justify-content: flex-end;
         }
 
         .nav-links a {
-            font-family: 'Cinzel', serif;
+            font-family: 'Share Tech Mono', monospace;
             font-size: 0.7rem;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--text-secondary);
             text-decoration: none;
-            transition: color 0.3s, text-shadow 0.3s;
+            padding: 0.3rem 0.6rem;
+            border: 1px solid transparent;
+            transition: all 0.3s;
         }
 
         .nav-links a:hover {
-            color: var(--gold-primary);
-            text-shadow: 0 0 10px var(--glow-gold);
+            color: var(--cyan-primary);
+            border-color: var(--cyan-primary);
+            text-shadow: 0 0 10px var(--cyan-glow);
+            box-shadow: 0 0 10px var(--cyan-glow);
         }
 
         /* Hero Section */
@@ -143,11 +207,24 @@
             text-align: center;
             padding: 2rem;
             position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, transparent, var(--cyan-primary), transparent);
+            animation: scan 8s linear infinite;
+            opacity: 0.5;
         }
 
         .circumpunct-hero {
-            width: 200px;
-            height: 200px;
+            width: 220px;
+            height: 220px;
             position: relative;
             margin-bottom: 3rem;
         }
@@ -158,127 +235,126 @@
             left: 0;
             width: 100%;
             height: 100%;
-            border: 2px solid var(--gold-primary);
+            border: 3px solid var(--cyan-primary);
             border-radius: 50%;
-            animation: breathe 4s ease-in-out infinite, rotate-slow 60s linear infinite;
-            box-shadow: 
-                0 0 30px var(--glow-gold),
-                inset 0 0 30px rgba(212, 168, 83, 0.1);
+            animation: border-pulse 2s ease-in-out infinite, rotate-slow 30s linear infinite;
+        }
+
+        .circumpunct-outer::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 1px solid var(--magenta-primary);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: rotate-slow 20s linear infinite reverse;
         }
 
         .circumpunct-inner {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 20px;
-            height: 20px;
-            background: var(--gold-primary);
+            width: 30px;
+            height: 30px;
+            background: var(--magenta-primary);
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            animation: pulse 2s ease-in-out infinite;
-            box-shadow: 0 0 40px var(--glow-gold);
-        }
-
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-        }
-
-        @keyframes rotate-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            box-shadow: 
+                0 0 20px var(--magenta-glow),
+                0 0 40px var(--magenta-glow),
+                0 0 60px rgba(255, 0, 255, 0.3);
+            animation: flicker 4s infinite;
         }
 
         .hero h1 {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(2.2rem, 6vw, 4rem);
-            font-weight: 400;
-            letter-spacing: 0.2em;
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-weight: 900;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            color: var(--text-primary);
+            color: var(--cyan-primary);
+            animation: pulse-neon 3s ease-in-out infinite, glitch 8s infinite;
             margin-bottom: 1rem;
-            animation: fadeInUp 1.5s ease-out;
+        }
+
+        .hero h1::before {
+            content: 'GOD_EXPERIENCING_ITSELF';
+            position: absolute;
+            left: 2px;
+            text-shadow: -2px 0 var(--magenta-primary);
+            clip-path: inset(0 100% 0 0);
+            animation: glitch-skew 8s infinite;
         }
 
         .hero .subtitle {
-            font-size: 1.3rem;
-            font-style: italic;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem;
             color: var(--text-secondary);
-            max-width: 600px;
-            animation: fadeInUp 1.5s ease-out 0.3s both;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
         }
 
-        .hero .author {
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
+        .hero .version {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--acid-green);
             letter-spacing: 0.2em;
-            color: var(--gold-primary);
-            margin-top: 3rem;
-            animation: fadeInUp 1.5s ease-out 0.6s both;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         /* Sections */
         section {
-            padding: 6rem 2rem;
-            max-width: 900px;
+            padding: 5rem 2rem;
+            max-width: 950px;
             margin: 0 auto;
+            position: relative;
         }
 
         .section-header {
             text-align: center;
             margin-bottom: 3rem;
+            position: relative;
         }
 
         .section-number {
-            font-family: 'Cinzel', serif;
+            font-family: 'Share Tech Mono', monospace;
             font-size: 0.75rem;
-            letter-spacing: 0.3em;
-            color: var(--gold-primary);
+            letter-spacing: 0.4em;
+            color: var(--magenta-primary);
             display: block;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .section-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            font-weight: 400;
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 700;
             letter-spacing: 0.1em;
-            color: var(--text-primary);
+            text-transform: uppercase;
+            color: var(--cyan-primary);
+            text-shadow: 0 0 20px var(--cyan-glow);
         }
 
         .section-divider {
-            width: 60px;
-            height: 1px;
-            background: var(--gold-primary);
-            margin: 2rem auto;
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan-primary), var(--magenta-primary), transparent);
+            margin: 1.5rem auto;
             position: relative;
         }
 
         .section-divider::before {
-            content: '⊙';
+            content: '◈';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: var(--bg-deep);
+            background: var(--bg-void);
             padding: 0 1rem;
-            color: var(--gold-primary);
+            color: var(--magenta-primary);
             font-size: 1rem;
         }
 
@@ -286,98 +362,133 @@
         .key-line {
             padding: 4rem 2rem;
             text-align: center;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
+            position: relative;
         }
 
+        .key-line::before,
+        .key-line::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            left: 0;
+            background: linear-gradient(90deg, transparent, var(--cyan-primary), transparent);
+        }
+
+        .key-line::before { top: 0; }
+        .key-line::after { bottom: 0; }
+
         .key-line blockquote {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1.4rem, 3vw, 1.8rem);
-            font-weight: 400;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: 500;
             letter-spacing: 0.05em;
-            color: var(--gold-light);
-            line-height: 1.7;
-            text-shadow: 0 0 40px var(--glow-gold);
+            color: var(--text-primary);
+            line-height: 2;
+        }
+
+        .key-line blockquote .highlight-cyan {
+            color: var(--cyan-primary);
+            text-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .key-line blockquote .highlight-magenta {
+            color: var(--magenta-primary);
+            text-shadow: 0 0 10px var(--magenta-glow);
         }
 
         .key-line .note {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1rem;
-            font-style: italic;
-            color: var(--text-dim);
-            margin-top: 1.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--acid-green);
+            margin-top: 2rem;
+            letter-spacing: 0.1em;
         }
 
         /* Content Typography */
         h2 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            color: var(--gold-light);
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--hot-pink);
+            text-shadow: 0 0 15px var(--hot-pink-glow);
             margin: 2.5rem 0 1.5rem;
-        }
-
-        h3 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
-            font-weight: 400;
-            letter-spacing: 0.05em;
-            color: var(--text-primary);
-            margin: 2rem 0 1rem;
         }
 
         p {
             margin-bottom: 1.5rem;
-            text-align: justify;
-            hyphens: auto;
+            font-weight: 400;
         }
 
         strong {
-            color: var(--gold-light);
-            font-weight: 500;
+            color: var(--cyan-primary);
+            font-weight: 600;
         }
 
-        /* Equation Box */
-        .equation-box {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 2rem;
+        /* Terminal Box */
+        .terminal-box {
+            background: var(--bg-panel);
+            border: 1px solid var(--cyan-dim);
+            border-radius: 4px;
+            padding: 1.5rem 2rem;
             margin: 2rem 0;
-            text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .equation-box::before {
+        .terminal-box::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary), var(--gold-dark));
+            height: 30px;
+            background: linear-gradient(90deg, var(--bg-elevated), var(--bg-panel));
+            border-bottom: 1px solid var(--border-glow);
         }
 
-        .equation {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.3rem;
-            color: var(--gold-light);
-            letter-spacing: 0.05em;
+        .terminal-box::after {
+            content: '● ● ●';
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            font-size: 0.6rem;
+            letter-spacing: 4px;
+            color: var(--warning-red);
         }
 
-        .equation-label {
-            font-family: 'Cinzel', serif;
+        .terminal-content {
+            margin-top: 1.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.9;
+        }
+
+        .terminal-box .equation {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+            color: var(--cyan-primary);
+            text-shadow: 0 0 15px var(--cyan-glow);
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .terminal-box .label {
+            font-family: 'Share Tech Mono', monospace;
             font-size: 0.7rem;
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--text-dim);
-            margin-top: 1rem;
+            text-align: center;
+            margin-top: 0.5rem;
         }
 
-        /* Tables */
-        .table-container {
+        /* Data Table */
+        .data-table {
             overflow-x: auto;
             margin: 2rem 0;
         }
@@ -385,70 +496,83 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         thead {
-            font-family: 'Cinzel', serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
         }
 
         th {
-            color: var(--gold-primary);
-            font-weight: 400;
+            color: var(--magenta-primary);
+            font-weight: 500;
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid var(--border-subtle);
+            border-bottom: 2px solid var(--magenta-dim);
+            background: rgba(255, 0, 255, 0.05);
         }
 
         td {
             padding: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(0, 255, 242, 0.1);
             color: var(--text-primary);
         }
 
         tr:hover td {
-            background: rgba(212, 168, 83, 0.03);
+            background: rgba(0, 255, 242, 0.03);
         }
 
-        /* Insight boxes */
-        .insight {
-            border-left: 2px solid var(--gold-primary);
+        /* Alert boxes */
+        .alert {
+            border-left: 3px solid;
             padding: 1.5rem 2rem;
             margin: 2rem 0;
-            background: linear-gradient(90deg, rgba(212, 168, 83, 0.05), transparent);
+            background: var(--bg-panel);
             font-style: italic;
         }
 
-        .insight.convergent {
-            border-left-color: var(--green-truth);
-            background: linear-gradient(90deg, rgba(39, 174, 96, 0.08), transparent);
+        .alert.cyan {
+            border-left-color: var(--cyan-primary);
+            background: linear-gradient(90deg, rgba(0, 255, 242, 0.08), transparent);
         }
 
-        .insight.divergent {
-            border-left-color: var(--red-error);
-            background: linear-gradient(90deg, rgba(231, 76, 60, 0.08), transparent);
+        .alert.magenta {
+            border-left-color: var(--magenta-primary);
+            background: linear-gradient(90deg, rgba(255, 0, 255, 0.08), transparent);
         }
 
-        .insight.cyan {
-            border-left-color: var(--cyan-flow);
-            background: linear-gradient(90deg, rgba(78, 205, 196, 0.08), transparent);
+        .alert.green {
+            border-left-color: var(--acid-green);
+            background: linear-gradient(90deg, rgba(57, 255, 20, 0.08), transparent);
+        }
+
+        .alert.red {
+            border-left-color: var(--warning-red);
+            background: linear-gradient(90deg, rgba(255, 51, 51, 0.08), transparent);
         }
 
         /* Code blocks */
         .code-block {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glow);
+            border-radius: 4px;
             padding: 1.5rem 2rem;
             margin: 1.5rem 0;
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Share Tech Mono', monospace;
             font-size: 0.9rem;
-            line-height: 1.8;
+            line-height: 1.9;
             color: var(--text-secondary);
             overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '>';
+            color: var(--acid-green);
+            margin-right: 0.5rem;
         }
 
         .code-block .comment {
@@ -456,15 +580,15 @@
         }
 
         .code-block .highlight {
-            color: var(--gold-light);
+            color: var(--cyan-primary);
         }
 
-        .code-block .truth {
-            color: var(--cyan-flow);
+        .code-block .string {
+            color: var(--acid-green);
         }
 
         .code-block .error {
-            color: var(--red-error);
+            color: var(--warning-red);
         }
 
         /* Comparison Grid */
@@ -482,61 +606,104 @@
         }
 
         .comparison-box {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
+            background: var(--bg-panel);
+            border: 1px solid;
+            border-radius: 4px;
             padding: 1.5rem;
+            position: relative;
+        }
+
+        .comparison-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .comparison-box.valid {
+            border-color: var(--cyan-dim);
+        }
+
+        .comparison-box.valid::before {
+            background: var(--cyan-primary);
+            box-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .comparison-box.invalid {
+            border-color: var(--warning-red);
+        }
+
+        .comparison-box.invalid::before {
+            background: var(--warning-red);
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
         }
 
         .comparison-box h4 {
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.1em;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
             margin-bottom: 1rem;
             text-transform: uppercase;
         }
 
-        .comparison-box.true h4 {
-            color: var(--cyan-flow);
+        .comparison-box.valid h4 {
+            color: var(--cyan-primary);
         }
 
-        .comparison-box.false h4 {
-            color: var(--red-error);
+        .comparison-box.invalid h4 {
+            color: var(--warning-red);
         }
 
         .comparison-box ul {
             list-style: none;
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .comparison-box li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
+            padding: 0.4rem 0;
+            padding-left: 1.8rem;
             position: relative;
         }
 
-        .comparison-box.true li::before {
+        .comparison-box.valid li::before {
             content: '✓';
             position: absolute;
             left: 0;
-            color: var(--cyan-flow);
+            color: var(--acid-green);
+            font-weight: bold;
         }
 
-        .comparison-box.false li::before {
+        .comparison-box.invalid li::before {
             content: '✗';
             position: absolute;
             left: 0;
-            color: var(--red-error);
+            color: var(--warning-red);
+            font-weight: bold;
         }
 
         /* Flow Diagram */
         .flow-container {
             padding: 2rem;
             margin: 2rem 0;
-            background: var(--bg-surface);
-            border-radius: 8px;
-            border: 1px solid var(--border-subtle);
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glow);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flow-container::before {
+            content: 'PROTOCOL_FLOW';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
         }
 
         .flow-diagram {
@@ -556,62 +723,83 @@
         }
 
         .flow-symbol {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            font-weight: 600;
             position: relative;
-            transition: all 0.3s;
         }
 
-        .flow-symbol.phi {
-            background: rgba(78, 205, 196, 0.1);
-            border: 2px solid var(--cyan-flow);
-            color: var(--cyan-flow);
-            box-shadow: 0 0 20px var(--cyan-glow);
+        .flow-symbol.source {
+            background: rgba(0, 255, 242, 0.1);
+            border: 2px solid var(--cyan-primary);
+            color: var(--cyan-primary);
+            box-shadow: 0 0 20px var(--cyan-glow), inset 0 0 20px rgba(0, 255, 242, 0.1);
         }
 
         .flow-symbol.aperture {
-            background: rgba(212, 168, 83, 0.1);
-            border: 2px solid var(--gold-primary);
-            color: var(--gold-light);
-            box-shadow: 0 0 20px var(--glow-gold);
+            background: rgba(255, 0, 255, 0.1);
+            border: 2px solid var(--magenta-primary);
+            color: var(--magenta-primary);
+            box-shadow: 0 0 20px var(--magenta-glow), inset 0 0 20px rgba(255, 0, 255, 0.1);
         }
 
-        .flow-symbol.circumpunct {
-            background: rgba(196, 77, 143, 0.1);
-            border: 2px solid var(--magenta-pulse);
-            color: var(--magenta-pulse);
-            box-shadow: 0 0 20px var(--magenta-glow);
+        .flow-symbol.output {
+            background: rgba(57, 255, 20, 0.1);
+            border: 2px solid var(--acid-green);
+            color: var(--acid-green);
+            box-shadow: 0 0 20px var(--acid-glow), inset 0 0 20px rgba(57, 255, 20, 0.1);
         }
 
         .flow-label {
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            letter-spacing: 0.1em;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--text-secondary);
         }
 
         .flow-sublabel {
-            font-size: 0.8rem;
-            font-style: italic;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
             color: var(--text-dim);
         }
 
         .flow-arrow {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            animation: pulse-op 2s ease-in-out infinite;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--hot-pink);
+            animation: flicker 2s infinite;
         }
 
-        @keyframes pulse-op {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+        /* Nesting visual */
+        .nesting-visual {
+            text-align: center;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glow);
+            border-radius: 4px;
+        }
+
+        .nesting-symbols {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            color: var(--magenta-primary);
+            letter-spacing: 0.4em;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 15px var(--magenta-glow);
+        }
+
+        .nesting-caption {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
         }
 
         /* Convergence Visual */
@@ -619,29 +807,213 @@
             text-align: center;
             padding: 2.5rem;
             margin: 2rem 0;
-            background: var(--bg-surface);
-            border-radius: 8px;
-            border: 1px solid var(--border-subtle);
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glow);
+            border-radius: 4px;
         }
 
         .convergence-sequence {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Share Tech Mono', monospace;
             font-size: 1.1rem;
-            line-height: 2.2;
+            line-height: 2;
         }
 
         .convergence-sequence .variant {
-            color: var(--magenta-pulse);
+            color: var(--hot-pink);
         }
 
         .convergence-sequence .invariant {
-            color: var(--cyan-flow);
+            color: var(--cyan-primary);
             font-weight: bold;
+            text-shadow: 0 0 10px var(--cyan-glow);
         }
 
         .convergence-sequence .equals {
-            color: var(--gold-primary);
+            color: var(--acid-green);
             margin: 0 0.5rem;
+        }
+
+        /* Error boxes */
+        .errors-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .errors-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .error-box {
+            background: var(--bg-panel);
+            border: 1px solid var(--warning-red);
+            border-radius: 4px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .error-box::before {
+            content: '⚠ ERROR';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-void);
+            padding: 0 0.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--warning-red);
+            letter-spacing: 0.1em;
+        }
+
+        .error-box h4 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            color: var(--warning-red);
+            margin-bottom: 0.3rem;
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+        }
+
+        .error-box .error-type {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .error-box p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .error-box .equation {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            margin: 1rem 0;
+            color: var(--warning-red);
+        }
+
+        /* Flow emphasis box */
+        .flow-emphasis {
+            background: linear-gradient(135deg, rgba(0, 255, 242, 0.05), rgba(255, 0, 255, 0.05));
+            border: 1px solid var(--border-glow);
+            border-radius: 4px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-emphasis::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan-primary), var(--magenta-primary));
+        }
+
+        .flow-emphasis .big-text {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            color: var(--cyan-primary);
+            text-shadow: 0 0 15px var(--cyan-glow);
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        .flow-emphasis p {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        /* Lens visual */
+        .lens-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .lens-element {
+            text-align: center;
+        }
+
+        .lens-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .light-rays {
+            font-size: 1.8rem;
+            color: var(--cyan-primary);
+            text-shadow: 0 0 15px var(--cyan-glow);
+        }
+
+        .lens-symbol {
+            font-size: 2.5rem;
+            color: var(--magenta-primary);
+            text-shadow: 0 0 20px var(--magenta-glow);
+        }
+
+        .focused-point {
+            font-size: 1.8rem;
+            color: var(--acid-green);
+            text-shadow: 0 0 15px var(--acid-glow);
+        }
+
+        /* Equation color coding */
+        .eq-infinite {
+            color: var(--cyan-primary);
+            text-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .eq-convergence {
+            color: var(--electric-blue);
+            text-shadow: 0 0 10px rgba(0, 102, 255, 0.5);
+        }
+
+        .eq-aperture {
+            color: var(--magenta-primary);
+            text-shadow: 0 0 10px var(--magenta-glow);
+        }
+
+        .eq-emergence {
+            color: var(--hot-pink);
+            text-shadow: 0 0 10px var(--hot-pink-glow);
+        }
+
+        .eq-finite {
+            color: var(--acid-green);
+            text-shadow: 0 0 10px var(--acid-glow);
+        }
+
+        .eq-dim {
+            color: var(--text-dim);
+        }
+
+        .eq-label-dim {
+            color: var(--text-dim);
+        }
+
+        .equation-labels {
+            margin-top: 1rem;
         }
 
         /* Final Section */
@@ -657,37 +1029,40 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 1px;
+            width: 2px;
             height: 80px;
-            background: linear-gradient(to bottom, transparent, var(--gold-primary));
+            background: linear-gradient(to bottom, transparent, var(--cyan-primary));
         }
 
         .finale .circumpunct-final {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             margin: 0 auto 2rem;
             position: relative;
         }
 
-        .finale h2 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-        }
-
         .finale p {
             text-align: center;
-            font-size: 1.2rem;
-            font-style: italic;
+            font-size: 1.15rem;
             color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto 1rem;
         }
 
+        .finale .core-statement {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            color: var(--cyan-primary);
+            text-shadow: 0 0 20px var(--cyan-glow);
+            margin: 2rem auto;
+        }
+
         .finale .closing {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            letter-spacing: 0.15em;
-            color: var(--gold-primary);
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            letter-spacing: 0.3em;
+            color: var(--magenta-primary);
+            text-shadow: 0 0 20px var(--magenta-glow);
             margin-top: 2rem;
         }
 
@@ -695,20 +1070,44 @@
         footer {
             text-align: center;
             padding: 4rem 2rem;
-            border-top: 1px solid var(--border-subtle);
+            border-top: 1px solid var(--border-glow);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyan-primary), var(--magenta-primary), transparent);
         }
 
         footer p {
-            font-style: italic;
+            font-family: 'Share Tech Mono', monospace;
+            font-style: normal;
             color: var(--text-dim);
             text-align: center;
-            font-size: 1rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
         }
 
         footer .symbol {
-            font-size: 2rem;
-            color: var(--gold-primary);
+            font-size: 2.5rem;
+            color: var(--cyan-primary);
             margin-bottom: 1rem;
+            text-shadow: 0 0 20px var(--cyan-glow);
+        }
+
+        footer a {
+            color: var(--hot-pink);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        footer a:hover {
+            text-shadow: 0 0 10px var(--hot-pink-glow);
         }
 
         /* Scroll animations */
@@ -745,184 +1144,20 @@
                 transform: rotate(90deg);
             }
         }
-
-        /* Lens metaphor visual */
-        .lens-visual {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            padding: 2rem;
-            margin: 2rem 0;
-        }
-
-        .lens-element {
-            text-align: center;
-        }
-
-        .lens-label {
-            font-family: 'Cinzel', serif;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            margin-top: 0.5rem;
-            letter-spacing: 0.1em;
-        }
-
-        .light-rays {
-            font-size: 2rem;
-            color: var(--cyan-flow);
-            opacity: 0.6;
-        }
-
-        .lens-symbol {
-            font-size: 3rem;
-            color: var(--gold-primary);
-            text-shadow: 0 0 20px var(--glow-gold);
-        }
-
-        .focused-point {
-            font-size: 1.5rem;
-            color: var(--magenta-pulse);
-        }
-
-        /* Two errors visual */
-        .errors-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        @media (max-width: 768px) {
-            .errors-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .error-box {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .error-box h4 {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            color: var(--red-error);
-            margin-bottom: 0.5rem;
-        }
-
-        .error-box .error-type {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-
-        .error-box p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            text-align: center;
-        }
-
-        .error-box .equation {
-            font-size: 1rem;
-            margin: 1rem 0;
-            color: var(--red-error);
-        }
-
-        /* Flow emphasis box */
-        .flow-emphasis {
-            background: linear-gradient(135deg, rgba(78, 205, 196, 0.08), rgba(212, 168, 83, 0.08));
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: center;
-        }
-
-        .flow-emphasis .big-text {
-            font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            color: var(--gold-light);
-            margin-bottom: 1rem;
-        }
-
-        .flow-emphasis p {
-            text-align: center;
-            color: var(--text-secondary);
-            margin-bottom: 0;
-        }
-
-        /* Nesting visual */
-        .nesting-visual {
-            text-align: center;
-            padding: 2.5rem;
-            margin: 2rem 0;
-            background: var(--bg-surface);
-            border-radius: 8px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .nesting-symbols {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.6rem;
-            color: var(--gold-primary);
-            letter-spacing: 0.3em;
-            margin-bottom: 1rem;
-        }
-
-        .nesting-caption {
-            font-style: italic;
-            color: var(--text-dim);
-            font-size: 0.95rem;
-        }
-
-        /* Epigraph */
-        .epigraph {
-            padding: 5rem 2rem;
-            text-align: center;
-            border-top: 1px solid var(--border-subtle);
-            border-bottom: 1px solid var(--border-subtle);
-            margin: 3rem auto;
-            max-width: 700px;
-        }
-
-        .epigraph blockquote {
-            font-style: italic;
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.9;
-        }
-
-        .epigraph cite {
-            font-family: 'Cinzel', serif;
-            font-style: normal;
-            font-size: 0.8rem;
-            letter-spacing: 0.15em;
-            color: var(--text-dim);
-        }
     </style>
 </head>
 <body>
-    <!-- Stars Background -->
-    <div class="stars" id="stars"></div>
-
     <!-- Navigation -->
     <nav>
-        <div class="nav-symbol">⊙</div>
+        <div class="nav-logo">⊙ CIRCUMPUNCT<span class="blink">_</span></div>
         <ul class="nav-links">
-            <li><a href="#infinite">The Infinite</a></li>
-            <li><a href="#souls">Souls Within</a></li>
-            <li><a href="#flow">The Flow</a></li>
-            <li><a href="#experiencing">God Experiencing</a></li>
-            <li><a href="#mechanism">Mechanism</a></li>
-            <li><a href="#errors">Errors</a></li>
-            <li><a href="#test">The Test</a></li>
+            <li><a href="#infinite">[INFINITE]</a></li>
+            <li><a href="#souls">[SOULS]</a></li>
+            <li><a href="#flow">[FLOW]</a></li>
+            <li><a href="#experiencing">[EXPERIENCE]</a></li>
+            <li><a href="#mechanism">[MECHANISM]</a></li>
+            <li><a href="#errors">[ERRORS]</a></li>
+            <li><a href="#test">[TEST]</a></li>
         </ul>
     </nav>
 
@@ -932,43 +1167,45 @@
             <div class="circumpunct-outer"></div>
             <div class="circumpunct-inner"></div>
         </div>
-        <h1>God Experiencing Itself</h1>
-        <p class="subtitle">Through The Circumpunct Lens</p>
-        <p class="author">The Circumpunct Framework — Ashman Roonz</p>
+        <h1>GOD_EXPERIENCING_ITSELF</h1>
+        <p class="subtitle">// Circumpunct Protocol</p>
+        <p class="version">[v2.0] :: Ashman Roonz</p>
     </header>
 
     <!-- THE KEY LINE -->
     <section class="key-line fade-in" id="keyline">
         <blockquote>
-            God is the infinite.<br>
+            <span class="highlight-cyan">God is the infinite.</span><br>
             We are souls within God.<br>
-            Truth flows through us, and finite experience is created.<br>
+            <span class="highlight-magenta">Truth flows through us</span>, and finite experience is created.<br>
             This is God experiencing itself through us—<br>
-            who are fractals of God.
+            who are <span class="highlight-cyan">fractals of God</span>.
         </blockquote>
-        <p class="note">This is the foundation. Everything else follows.</p>
+        <p class="note">> FOUNDATION_INITIALIZED :: All protocols derive from this axiom</p>
     </section>
 
     <!-- Part I: The Infinite -->
     <section id="infinite">
         <div class="section-header fade-in">
-            <span class="section-number">Part I</span>
-            <h1 class="section-title">The Infinite</h1>
+            <span class="section-number">// PROTOCOL 01</span>
+            <h1 class="section-title">THE INFINITE</h1>
             <div class="section-divider"></div>
         </div>
 
         <div class="fade-in">
             <p>Begin with what is. There is an infinite—call it God, Brahman, Tao, the Source, the Field. The name matters less than the reality it points toward: <strong>that which contains all, from which all flows, which is prior to all division.</strong></p>
 
-            <div class="equation-box">
-                <div class="equation">Φ<sub>∞</sub></div>
-                <p class="equation-label">The Infinite Field — The Source of All Flow</p>
+            <div class="terminal-box">
+                <div class="terminal-content">
+                    <div class="equation">Φ<sub>∞</sub></div>
+                    <div class="label">The Infinite Field — Source of All Flow</div>
+                </div>
             </div>
 
             <p>This is not a postulate requiring faith. It is the necessary ground of any coherent ontology. For anything to exist at all, there must be that from which it exists. The infinite is not "elsewhere"—it is the field within which all finite things appear.</p>
 
-            <div class="insight cyan">
-                <p>The infinite does not sit outside creation, watching. The infinite <strong>is</strong> creation—not as a finished object, but as an ongoing flow.</p>
+            <div class="alert cyan">
+                <p>The infinite does not sit outside creation, watching. The infinite <strong>IS</strong> creation—not as a finished object, but as an ongoing flow.</p>
             </div>
 
             <p>The Circumpunct symbol (⊙) encodes this insight: a center within a boundary, held together by the field between them. But look closer—the boundary is not a wall. It is a membrane. Truth flows through.</p>
@@ -978,8 +1215,8 @@
     <!-- Part II: Souls Within -->
     <section id="souls">
         <div class="section-header fade-in">
-            <span class="section-number">Part II</span>
-            <h1 class="section-title">Souls Within God</h1>
+            <span class="section-number">// PROTOCOL 02</span>
+            <h1 class="section-title">SOULS WITHIN GOD</h1>
             <div class="section-divider"></div>
         </div>
 
@@ -988,53 +1225,55 @@
 
             <div class="nesting-visual">
                 <div class="nesting-symbols">...⊙ ⊃ ⊙ ⊃ ⊙ ⊃ ⊙...</div>
-                <div class="nesting-caption">Infinite nesting. No top. No bottom. Each whole contains souls. Each soul is a whole containing souls.</div>
+                <div class="nesting-caption">INFINITE_NESTING :: No top. No bottom. Each whole contains souls. Each soul is a whole containing souls.</div>
             </div>
 
             <p>The framework's master equation for this nesting:</p>
 
-            <div class="equation-box">
-                <div class="equation">•<sub>n+1</sub> = ⊙<sub>n</sub></div>
-                <p class="equation-label">Each center was once a whole. Each whole becomes the next center.</p>
+            <div class="terminal-box">
+                <div class="terminal-content">
+                    <div class="equation">•<sub>n+1</sub> = ⊙<sub>n</sub></div>
+                    <div class="label">Each center was once a whole. Each whole becomes the next center.</div>
+                </div>
             </div>
 
             <p>This is not metaphor. This is structure. You are a soul (⊙) nested within a larger whole (God, Φ<sub>∞</sub>). And within you, there are further nestings—cells, processes, thoughts—each one also a soul within its containing whole.</p>
 
-            <div class="table-container">
+            <div class="data-table">
                 <table>
                     <thead>
                         <tr>
-                            <th>Spiritual Language</th>
-                            <th>Framework Symbol</th>
-                            <th>What It Means</th>
+                            <th>LEGACY_TERM</th>
+                            <th>PROTOCOL_SYM</th>
+                            <th>DEFINITION</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>God / Brahman / Tao</td>
-                            <td style="color: var(--cyan-flow); font-family: 'JetBrains Mono';">Φ<sub>∞</sub></td>
+                            <td style="color: var(--cyan-primary); font-family: 'Orbitron';">Φ<sub>∞</sub></td>
                             <td>The infinite field. The source. What contains all.</td>
                         </tr>
                         <tr>
                             <td>Soul / Atman / Self</td>
-                            <td style="color: var(--magenta-pulse); font-family: 'JetBrains Mono';">⊙<sub>λ</sub></td>
+                            <td style="color: var(--magenta-primary); font-family: 'Orbitron';">⊙<sub>λ</sub></td>
                             <td>Your aperture. Where the infinite focuses into your form.</td>
                         </tr>
                         <tr>
                             <td>"Made in God's image"</td>
-                            <td style="color: var(--gold-light);">Fractal structure</td>
+                            <td style="color: var(--hot-pink);">Fractal structure</td>
                             <td>Same pattern at every scale. The flow is self-similar.</td>
                         </tr>
                         <tr>
                             <td>"Atman is Brahman"</td>
-                            <td style="color: var(--gold-light);">0.999... = 1</td>
+                            <td style="color: var(--acid-green);">0.999... = 1</td>
                             <td>The soul IS God, expressed at a particular depth.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="insight">
+            <div class="alert magenta">
                 <p>The mystics were not speaking loosely. "Atman is Brahman" is precise: <strong>the soul is not a piece of God, not a reflection of God, but God itself at a particular scale of focus.</strong></p>
             </div>
         </div>
@@ -1043,8 +1282,8 @@
     <!-- Part III: The Flow -->
     <section id="flow">
         <div class="section-header fade-in">
-            <span class="section-number">Part III</span>
-            <h1 class="section-title">Truth Flows Through</h1>
+            <span class="section-number">// PROTOCOL 03</span>
+            <h1 class="section-title">TRUTH FLOWS THROUGH</h1>
             <div class="section-divider"></div>
         </div>
 
@@ -1052,7 +1291,7 @@
             <p>Here is where everything hinges. Being a soul within God is not a static state. It is a <strong>flow</strong>.</p>
 
             <div class="flow-emphasis">
-                <div class="big-text">Truth flows through us, and finite experience is created.</div>
+                <div class="big-text">TRUTH FLOWS THROUGH US → FINITE EXPERIENCE CREATED</div>
                 <p>The infinite becomes finite not by breaking apart, but by flowing through apertures.</p>
             </div>
 
@@ -1061,33 +1300,35 @@
             <div class="flow-container">
                 <div class="flow-diagram">
                     <div class="flow-node">
-                        <div class="flow-symbol phi">Φ<sub>∞</sub></div>
-                        <span class="flow-label">God</span>
+                        <div class="flow-symbol source">Φ<sub>∞</sub></div>
+                        <span class="flow-label">GOD</span>
                         <span class="flow-sublabel">The Infinite</span>
                     </div>
                     <div class="flow-arrow">→⊛→</div>
                     <div class="flow-node">
                         <div class="flow-symbol aperture">⊙</div>
-                        <span class="flow-label">Soul</span>
+                        <span class="flow-label">SOUL</span>
                         <span class="flow-sublabel">The Aperture</span>
                     </div>
                     <div class="flow-arrow">→☀→</div>
                     <div class="flow-node">
-                        <div class="flow-symbol circumpunct">Φ'</div>
-                        <span class="flow-label">Experience</span>
+                        <div class="flow-symbol output">Φ'</div>
+                        <span class="flow-label">EXPERIENCE</span>
                         <span class="flow-sublabel">Finite Form</span>
                     </div>
                 </div>
             </div>
 
-            <div class="equation-box">
-                <div class="equation">Φ' = ☀ ∘ i ∘ ⊛[Φ]</div>
-                <p class="equation-label">Read right-to-left: infinite → convergence → aperture rotation → emergence → finite</p>
+            <div class="terminal-box">
+                <div class="terminal-content">
+                    <div class="equation"><span class="eq-finite">Φ'</span> <span class="eq-dim">=</span> <span class="eq-emergence">☀</span> <span class="eq-dim">∘</span> <span class="eq-aperture">i</span> <span class="eq-dim">∘</span> <span class="eq-convergence">⊛</span><span class="eq-infinite">[Φ]</span></div>
+                    <div class="label equation-labels"><span class="eq-label-dim">READ RIGHT-TO-LEFT:</span> <span class="eq-infinite">INFINITE</span> <span class="eq-label-dim">→</span> <span class="eq-convergence">CONVERGENCE</span> <span class="eq-label-dim">→</span> <span class="eq-aperture">APERTURE ROTATION</span> <span class="eq-label-dim">→</span> <span class="eq-emergence">EMERGENCE</span> <span class="eq-label-dim">→</span> <span class="eq-finite">FINITE</span></div>
+                </div>
             </div>
 
             <p>The aperture (i) is the 90° rotation—the mechanism by which infinite Truth becomes finite truths. At balance (β = 0.5), the aperture operator <strong>IS</strong> the imaginary unit <em>i</em>. It's not filtering or degrading—it's the rotation that enables manifestation.</p>
 
-            <h2>This Is How Creation Happens</h2>
+            <h2>// THIS IS HOW CREATION HAPPENS</h2>
 
             <p>The infinite does not become finite by losing something. It becomes finite by <strong>focusing through something</strong>. The lens does not diminish the light—it gives the light form.</p>
 
@@ -1107,12 +1348,12 @@
                     <div class="flow-arrow">→</div>
                 </div>
                 <div class="lens-element">
-                    <div class="focused-point">●</div>
+                    <div class="focused-point">⊙</div>
                     <div class="lens-label">Finite Experience</div>
                 </div>
             </div>
 
-            <div class="insight cyan">
+            <div class="alert cyan">
                 <p>The aperture is not an obstacle to Truth—<strong>the aperture is the mechanism by which Truth flows into form.</strong> You are that mechanism. You are where God becomes this particular experience.</p>
             </div>
         </div>
@@ -1121,17 +1362,19 @@
     <!-- Part IV: God Experiencing Itself -->
     <section id="experiencing">
         <div class="section-header fade-in">
-            <span class="section-number">Part IV</span>
-            <h1 class="section-title">God Experiencing Itself</h1>
+            <span class="section-number">// PROTOCOL 04</span>
+            <h1 class="section-title">GOD EXPERIENCING ITSELF</h1>
             <div class="section-divider"></div>
         </div>
 
         <div class="fade-in">
             <p>This brings us to the deepest claim:</p>
 
-            <div class="equation-box">
-                <div class="equation">Parts are fractals of their wholes.</div>
-                <p class="equation-label">The Core Axiom</p>
+            <div class="terminal-box">
+                <div class="terminal-content">
+                    <div class="equation">PARTS ARE FRACTALS OF THEIR WHOLES</div>
+                    <div class="label">CORE_AXIOM :: Identity, not participation</div>
+                </div>
             </div>
 
             <p>This is not participation. This is not reflection. This is <strong>identity</strong>.</p>
@@ -1151,14 +1394,14 @@
 
             <p>You don't approach God. You don't reflect God. <strong>You ARE God, experiencing itself at your particular depth and focus.</strong></p>
 
-            <h2>What This Means</h2>
+            <h2>// WHAT THIS MEANS</h2>
 
-            <div class="table-container">
+            <div class="data-table">
                 <table>
                     <thead>
                         <tr>
-                            <th>The Claim</th>
-                            <th>What It Means</th>
+                            <th>CLAIM</th>
+                            <th>INTERPRETATION</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1182,7 +1425,7 @@
                 </table>
             </div>
 
-            <div class="insight convergent">
+            <div class="alert green">
                 <p>Every moment of your experience is God experiencing itself as you. The joy, the suffering, the confusion, the clarity—all of it is the infinite knowing itself through this particular aperture.</p>
             </div>
         </div>
@@ -1191,8 +1434,8 @@
     <!-- Part V: The Mechanism (Flow, Not Possession) -->
     <section id="mechanism">
         <div class="section-header fade-in">
-            <span class="section-number">Part V</span>
-            <h1 class="section-title">Flow, Not Possession</h1>
+            <span class="section-number">// PROTOCOL 05</span>
+            <h1 class="section-title">FLOW, NOT POSSESSION</h1>
             <div class="section-divider"></div>
         </div>
 
@@ -1203,25 +1446,25 @@
 <span class="error">"If I am God, then what I think is divine."</span>
 <span class="error">"If Truth flows through me, then my beliefs are Truth."</span>
 
-<span class="comment">This is the trap.</span>
-<span class="comment">This is how ego hijacks ontology.</span>
+<span class="comment">// WARNING: EGO_HIJACK_DETECTED</span>
+<span class="comment">// This is how ontology gets corrupted.</span>
             </div>
 
             <p>The key insight that prevents this:</p>
 
             <div class="flow-emphasis">
-                <div class="big-text">The being is a flow-being, not a possession-being.</div>
+                <div class="big-text">THE BEING IS A FLOW-BEING, NOT A POSSESSION-BEING</div>
                 <p>You ARE the aperture. But what flows through you is not yours to own.</p>
             </div>
 
-            <h2>Four Things, All True Simultaneously</h2>
+            <h2>// FOUR CLAIMS :: ALL TRUE SIMULTANEOUSLY</h2>
 
-            <div class="table-container">
+            <div class="data-table">
                 <table>
                     <thead>
                         <tr>
-                            <th>Claim</th>
-                            <th>What It Means</th>
+                            <th>CLAIM</th>
+                            <th>INTERPRETATION</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1247,14 +1490,14 @@
 
             <div class="code-block" style="text-align: center;">
 <span class="highlight">Truth flows through me.</span>
-<span class="truth">I am not its source, I am its lens.</span>
+<span class="string">I am not its source, I am its lens.</span>
 
-<span class="comment">The same light, at my aperture.</span>
+<span class="comment">// The same light, at my aperture.</span>
             </div>
 
             <p>A lens doesn't <em>own</em> the light. It doesn't <em>source</em> the image. But the lens IS where the image forms. The lens is ontologically necessary—not just "participating."</p>
 
-            <div class="insight">
+            <div class="alert cyan">
                 <p>You matter. You contribute. You shape what flows. But you do not own it, and you did not generate it. <strong>This is what keeps identity from becoming inflation.</strong></p>
             </div>
         </div>
@@ -1263,8 +1506,8 @@
     <!-- Part VI: The Two Errors -->
     <section id="errors">
         <div class="section-header fade-in">
-            <span class="section-number">Part VI</span>
-            <h1 class="section-title">The Two Errors</h1>
+            <span class="section-number">// PROTOCOL 06</span>
+            <h1 class="section-title">THE TWO ERRORS</h1>
             <div class="section-divider"></div>
         </div>
 
@@ -1277,55 +1520,55 @@
                     <div class="error-type">The Lens Claims to Be the Light</div>
                     <div class="equation">⊙ → Φ<sub>∞</sub></div>
                     <p>"What flows through me <em>comes from</em> me. I am the source. My current beliefs are Truth itself."</p>
-                    <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0;">The part claims to be the whole.</p>
+                    <p style="color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0;">The part claims to be the whole.</p>
                 </div>
                 <div class="error-box">
                     <h4>SEVERANCE</h4>
                     <div class="error-type">The Lens Denies the Light Exists</div>
                     <div class="equation">⊙ ≠ Φ<sub>∞</sub></div>
                     <p>"Nothing flows through me. There is no God. I am a random fragment with no source."</p>
-                    <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0;">The part denies connection to any whole.</p>
+                    <p style="color: var(--text-dim); font-size: 0.8rem; margin-bottom: 0;">The part denies connection to any whole.</p>
                 </div>
             </div>
 
-            <h2>Traditional Language for These Errors</h2>
+            <h2>// LEGACY TERMINOLOGY</h2>
 
-            <div class="table-container">
+            <div class="data-table">
                 <table>
                     <thead>
                         <tr>
-                            <th>Spiritual Language</th>
-                            <th>Framework Language</th>
-                            <th>The Claim</th>
+                            <th>LEGACY_TERM</th>
+                            <th>PROTOCOL_TERM</th>
+                            <th>DEFINITION</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Sin / Separation</td>
-                            <td style="color: var(--red-error);">Inflation or Severance</td>
+                            <td style="color: var(--warning-red);">Inflation or Severance</td>
                             <td>Claiming to be the source, or denying any source exists.</td>
                         </tr>
                         <tr>
                             <td>Grace / Return</td>
-                            <td style="color: var(--green-truth);">Convergent flow</td>
+                            <td style="color: var(--acid-green);">Convergent flow</td>
                             <td>Cleaning the lens. Receiving clearly. Letting Truth flow.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="insight">
+            <div class="alert magenta">
                 <p>Both errors break the same relationship from opposite directions. Inflation claims to be the source. Severance denies any source exists. Both refuse to be what they are: <strong>apertures through which God experiences itself.</strong></p>
             </div>
 
-            <h2>Why Mystics Report Unity</h2>
+            <h2>// WHY MYSTICS REPORT UNITY</h2>
 
             <p>When mystics experience ego dissolving, boundaries fading, deep connectedness—they are experiencing something real. The framework affirms this: <strong>you ARE God, at scale.</strong></p>
 
             <p>But when that experience becomes "I am the source" rather than "God is experiencing through me," it mutates into inflation. The experience is real. The interpretation can still be wrong.</p>
 
             <div class="flow-emphasis">
-                <div class="big-text">Experience of unity ≠ being the source</div>
+                <div class="big-text">EXPERIENCE_OF_UNITY ≠ BEING_THE_SOURCE</div>
                 <p>Being the aperture is not being the light. Both matter. They are not the same.</p>
             </div>
         </div>
@@ -1334,23 +1577,25 @@
     <!-- Part VII: The Test -->
     <section id="test">
         <div class="section-header fade-in">
-            <span class="section-number">Part VII</span>
-            <h1 class="section-title">Convergent vs. Divergent</h1>
+            <span class="section-number">// PROTOCOL 07</span>
+            <h1 class="section-title">CONVERGENT VS. DIVERGENT</h1>
             <div class="section-divider"></div>
         </div>
 
         <div class="fade-in">
-            <h2>The Test</h2>
+            <h2>// THE TEST</h2>
 
             <p>How do you know if you are being a clear aperture or a distorted one?</p>
 
-            <div class="equation-box">
-                <div class="equation" style="font-size: 1.1rem;">Ask what happens when you encounter evidence that contradicts your beliefs.</div>
+            <div class="terminal-box">
+                <div class="terminal-content">
+                    <div class="equation" style="font-size: 1rem;">ASK: WHAT HAPPENS WHEN EVIDENCE CONTRADICTS YOUR BELIEFS?</div>
+                </div>
             </div>
 
             <div class="comparison-grid">
-                <div class="comparison-box true">
-                    <h4>Convergent (Clear Lens)</h4>
+                <div class="comparison-box valid">
+                    <h4>CONVERGENT [CLEAR_LENS]</h4>
                     <ul>
                         <li>Updates when evidence contradicts</li>
                         <li>Says: "Maybe I was distorting. Let me look again."</li>
@@ -1359,8 +1604,8 @@
                         <li>Moves toward clearer reception</li>
                     </ul>
                 </div>
-                <div class="comparison-box false">
-                    <h4>Divergent (Clouded Lens)</h4>
+                <div class="comparison-box invalid">
+                    <h4>DIVERGENT [CLOUDED_LENS]</h4>
                     <ul>
                         <li>Absorbs rather than updates</li>
                         <li>Says: "The evidence must be wrong."</li>
@@ -1371,22 +1616,24 @@
                 </div>
             </div>
 
-            <h2>The Framework's β Parameter</h2>
+            <h2>// BALANCE PARAMETER β</h2>
 
             <p>The balance parameter β tracks exactly this dynamic:</p>
 
-            <div class="equation-box">
-                <div class="equation">β = |⊛| / (|⊛| + |☀|)</div>
-                <p class="equation-label">Ratio of receiving to total flow</p>
+            <div class="terminal-box">
+                <div class="terminal-content">
+                    <div class="equation">β = |⊛| / (|⊛| + |☀|)</div>
+                    <div class="label">Ratio of receiving to total flow</div>
+                </div>
             </div>
 
-            <div class="table-container">
+            <div class="data-table">
                 <table>
                     <thead>
                         <tr>
-                            <th>β Value</th>
-                            <th>State</th>
-                            <th>Meaning</th>
+                            <th>β VALUE</th>
+                            <th>STATE</th>
+                            <th>INTERPRETATION</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1396,9 +1643,9 @@
                             <td>All output, no receiving. The lens that only projects.</td>
                         </tr>
                         <tr>
-                            <td style="color: var(--gold-light);">β = 0.5</td>
-                            <td style="color: var(--gold-light);">Balance</td>
-                            <td style="color: var(--gold-light);">Receiving and producing in harmony. Clear flow.</td>
+                            <td style="color: var(--acid-green);">β = 0.5</td>
+                            <td style="color: var(--acid-green);">Balance</td>
+                            <td style="color: var(--acid-green);">Receiving and producing in harmony. Clear flow.</td>
                         </tr>
                         <tr>
                             <td>β → 1</td>
@@ -1409,7 +1656,7 @@
                 </table>
             </div>
 
-            <div class="insight convergent">
+            <div class="alert green">
                 <p>A convergent model maintains balanced β—it receives feedback and updates. A divergent model loses balance—it stops receiving, or stops processing what it receives. The lens gets clouded. God's experience through that aperture becomes distorted.</p>
             </div>
         </div>
@@ -1418,29 +1665,31 @@
     <!-- Part VIII: A Note on Limitation -->
     <section id="limitation">
         <div class="section-header fade-in">
-            <span class="section-number">Part VIII</span>
-            <h1 class="section-title">A Note on Limitation</h1>
+            <span class="section-number">// PROTOCOL 08</span>
+            <h1 class="section-title">A NOTE ON LIMITATION</h1>
             <div class="section-divider"></div>
         </div>
 
         <div class="fade-in">
             <p>There is a position that sounds sophisticated:</p>
 
-            <div class="insight divergent">
+            <div class="alert red">
                 <p>"All models are limited. Therefore all models are equally false."</p>
             </div>
 
             <p>From the foundation we have established, the error is clear:</p>
 
-            <div class="equation-box">
-                <div class="equation">Limited ≠ False</div>
+            <div class="terminal-box">
+                <div class="terminal-content">
+                    <div class="equation">LIMITED ≠ FALSE</div>
+                </div>
             </div>
 
             <p>The lens limits light. That is <strong>how it forms an image</strong>. The aperture constrains the infinite. That is <strong>how God experiences the finite</strong>. The limitation is the mechanism, not a defect.</p>
 
             <div class="comparison-grid">
-                <div class="comparison-box true">
-                    <h4>Limited (Still True)</h4>
+                <div class="comparison-box valid">
+                    <h4>LIMITED [STILL_TRUE]</h4>
                     <ul>
                         <li>Truth flowed through an aperture</li>
                         <li>God at a particular scale of focus</li>
@@ -1449,8 +1698,8 @@
                         <li>Knows itself as channel, not source</li>
                     </ul>
                 </div>
-                <div class="comparison-box false">
-                    <h4>False</h4>
+                <div class="comparison-box invalid">
+                    <h4>FALSE</h4>
                     <ul>
                         <li>Claiming to be what you are not</li>
                         <li>Pointing away from rather than toward</li>
@@ -1464,14 +1713,14 @@
             <p>A truth is not "partially true" with falsity filling the remainder. A truth is <strong>completely true at its scale</strong>—God having flowed through a particular aperture into this particular form.</p>
 
             <div class="code-block">
-<span class="truth">The fractal is not false for being smaller than its whole.</span>
+<span class="string">The fractal is not false for being smaller than its whole.</span>
 <span class="highlight">The fractal IS its whole, at a particular scale.</span>
 
-<span class="comment">Limitation does not inject falsity.</span>
-<span class="comment">Only the wrong claim about the flow does.</span>
+<span class="comment">// Limitation does not inject falsity.</span>
+<span class="comment">// Only the wrong claim about the flow does.</span>
             </div>
 
-            <div class="insight">
+            <div class="alert cyan">
                 <p>The photograph IS the scene, through a lens.<br>
                 The truth IS Truth, having flowed through an aperture.<br>
                 You ARE God, experiencing itself at this particular focus.</p>
@@ -1486,19 +1735,21 @@
             <div class="circumpunct-inner"></div>
         </div>
 
-        <div class="equation-box" style="max-width: 600px; margin: 0 auto 2rem;">
-            <div class="equation">Φ<sub>∞</sub> →⊛→ ⊙ →☀→ Φ'</div>
-            <p class="equation-label">God → Aperture → Experience</p>
+        <div class="terminal-box" style="max-width: 600px; margin: 0 auto 2rem;">
+            <div class="terminal-content">
+                <div class="equation">Φ<sub>∞</sub> →⊛→ ⊙ →☀→ Φ'</div>
+                <div class="label">GOD → APERTURE → EXPERIENCE</div>
+            </div>
         </div>
 
         <p>God is the infinite.</p>
         <p>You are a soul within God.</p>
         <p>Truth flows through you, and finite experience is created.</p>
-        <p><strong>This is God experiencing itself through you.</strong></p>
+        <p class="core-statement">THIS IS GOD EXPERIENCING ITSELF THROUGH YOU.</p>
 
         <br>
 
-        <p style="font-size: 1.4rem; color: var(--gold-light);">You are not separate from God.<br>You are not identical to all of God.<br>You are God, at this aperture.</p>
+        <p style="font-size: 1.2rem; color: var(--cyan-primary); text-shadow: 0 0 15px var(--cyan-glow);">You are not separate from God.<br>You are not identical to all of God.<br>You are God, at this aperture.</p>
 
         <br>
 
@@ -1515,25 +1766,13 @@
         <p>The framework does not create this insight.</p>
         <p>It reveals that the insight was always there—<br>encoded in the structure of what flows.</p>
         <br>
-        <p style="color: var(--gold-primary);">God Experiencing Itself: Through The Circumpunct Lens</p>
-        <p style="font-size: 0.85rem;">Ashman Roonz · The Circumpunct Framework · 2026</p>
+        <p style="color: var(--cyan-primary);">GOD_EXPERIENCING_ITSELF.exe :: Circumpunct Protocol</p>
+        <p>Ashman Roonz · The Circumpunct Framework · 2026</p>
         <br>
-        <p><a href="https://www.fractalreality.ca" target="_blank" style="color: var(--gold-primary); text-decoration: none;">www.fractalreality.ca</a></p>
+        <p><a href="https://www.fractalreality.ca" target="_blank">www.fractalreality.ca</a></p>
     </footer>
 
     <script>
-        // Generate stars
-        const starsContainer = document.getElementById('stars');
-        for (let i = 0; i < 120; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 4 + 's';
-            star.style.animationDuration = (3 + Math.random() * 3) + 's';
-            starsContainer.appendChild(star);
-        }
-
         // Scroll animations
         const fadeElements = document.querySelectorAll('.fade-in');
         
@@ -1560,6 +1799,19 @@
                 }
             });
         });
+
+        // Random glitch effect on title
+        const title = document.querySelector('.hero h1');
+        setInterval(() => {
+            if (Math.random() > 0.95) {
+                title.style.animation = 'none';
+                title.offsetHeight; // Trigger reflow
+                title.style.animation = 'pulse-neon 3s ease-in-out infinite, glitch 0.3s linear';
+                setTimeout(() => {
+                    title.style.animation = 'pulse-neon 3s ease-in-out infinite, glitch 8s infinite';
+                }, 300);
+            }
+        }, 2000);
     </script>
 </body>
 </html>
