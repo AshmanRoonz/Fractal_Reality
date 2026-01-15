@@ -287,7 +287,7 @@ PROCESS DIMENSIONS (within each layer):
     Sensation:   3n + 2.5 D
 ```
 
-| n | Layer | •ₙ | ○ₙ | Φₙ |
+| n | Layer | •ₙ | Φₙ | ○ₙ |
 |:-:|:-----:|:--:|:--:|:--:|
 | 0 | Spatial | 0.5D | 2D | 3D |
 | 1 | Temporal | 3.5D | 5D | 6D |
