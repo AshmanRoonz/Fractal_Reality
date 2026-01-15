@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSYCHOLOGICAL INFECTION ALERT — Noble Lie Virus Outbreak</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --alert-red: #c41e3a;
+            --alert-red-dark: #8b0000;
+            --alert-orange: #ff6b35;
+            --alert-yellow: #ffc107;
+            --bg-light: #f5f5f5;
+            --bg-white: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-gray: #4a4a4a;
+            --border-gray: #ddd;
+            --success-green: #28a745;
+            --info-blue: #0056b3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            background: linear-gradient(135deg, var(--alert-red-dark) 0%, var(--alert-red) 100%);
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .alert-banner .warning-icon {
+            font-size: 1.2rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Header */
+        header {
+            background: var(--bg-white);
+            border-bottom: 4px solid var(--alert-red);
+            padding: 1.5rem 2rem;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border: 3px solid var(--alert-red);
+            border-radius: 8px;
+            min-width: 100px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+        }
+
+        .logo-text {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--alert-red);
+            margin-top: 0.25rem;
+        }
+
+        .header-text h1 {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--alert-red-dark);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-text .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-top: 0.25rem;
+        }
+
+        .alert-level {
+            margin-left: auto;
+            background: var(--alert-red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .alert-level-text {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .alert-level-status {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        /* Back link */
+        .back-link {
+            background: var(--bg-white);
+            padding: 0.5rem 2rem;
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .back-link a {
+            font-size: 0.85rem;
+            color: var(--info-blue);
+            text-decoration: none;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid var(--alert-yellow);
+            border-left: 6px solid var(--alert-orange);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+        }
+
+        .warning-box-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .warning-box p {
+            color: var(--text-gray);
+            margin-bottom: 0;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: var(--bg-white);
+            border: 1px solid var(--border-gray);
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .info-box-header {
+            background: var(--alert-red);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-box-header.orange {
+            background: var(--alert-orange);
+        }
+
+        .info-box-header.blue {
+            background: var(--info-blue);
+        }
+
+        .info-box-header.green {
+            background: var(--success-green);
+        }
+
+        .info-box-content {
+            padding: 1.5rem;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--alert-red-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--alert-red);
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-gray);
+        }
+
+        /* Symptom Pattern Box */
+        .symptom-pattern {
+            background: #ffebee;
+            border-left: 4px solid var(--alert-red);
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95rem;
+        }
+
+        .symptom-pattern .accusation {
+            color: var(--alert-red-dark);
+            font-weight: 500;
+        }
+
+        .symptom-pattern .arrow {
+            color: var(--text-gray);
+            margin: 0 0.5rem;
+        }
+
+        .symptom-pattern .suppression {
+            color: var(--alert-orange);
+        }
+
+        .symptom-pattern .explosion {
+            color: var(--alert-red);
+            font-weight: 700;
+        }
+
+        .symptom-pattern .proof {
+            color: var(--alert-red-dark);
+            font-style: italic;
+        }
+
+        /* Stages */
+        .stage {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .stage:last-child {
+            border-bottom: none;
+        }
+
+        .stage-number {
+            background: var(--alert-red);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .stage-content h4 {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .stage-content p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Critical Alert */
+        .critical-alert {
+            background: var(--alert-red);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+
+        .critical-alert h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin: 0 0 0.5rem 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .critical-alert p {
+            color: rgba(255,255,255,0.9);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 0.75rem 0 0.75rem 2.5rem;
+            position: relative;
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0.75rem;
+            width: 24px;
+            height: 24px;
+            background: var(--success-green);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* Questions */
+        .diagnostic-question {
+            background: #e3f2fd;
+            border-left: 4px solid var(--info-blue);
+            padding: 1rem 1.5rem;
+            margin: 0.75rem 0;
+            font-style: italic;
+            color: var(--text-dark);
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th {
+            background: var(--alert-red);
+            color: white;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-gray);
+            vertical-align: top;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: var(--bg-light);
+        }
+
+        .data-table .lie {
+            color: var(--alert-red-dark);
+            font-weight: 500;
+        }
+
+        .data-table .result {
+            color: var(--alert-orange);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-content p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-content .project-name {
+            font-weight: 700;
+            color: white;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Final Message */
+        .final-message {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 2rem;
+            border-radius: 4px;
+        }
+
+        .final-message h3 {
+            color: var(--alert-yellow);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .final-message p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 1rem;
+        }
+
+        .final-message .tagline {
+            font-style: italic;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+            margin-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .alert-level {
+                margin-left: 0;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .stage {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="alert-banner">
+    <span class="warning-icon">⚠️</span>
+    <span>Psychological Infection Alert — High Transmission Rate — Protect Yourself Now</span>
+    <span class="warning-icon">⚠️</span>
+</div>
+
+<header>
+    <div class="header-content">
+        <div class="logo">
+            <div class="logo-icon">🧠</div>
+            <div class="logo-text">CPDC</div>
+        </div>
+        <div class="header-text">
+            <h1>Noble Lie Virus Outbreak</h1>
+            <p class="subtitle">Center for Psychological Defense and Clarity</p>
+        </div>
+        <div class="alert-level">
+            <div class="alert-level-text">Alert Level</div>
+            <div class="alert-level-status">SEVERE</div>
+        </div>
+    </div>
+</header>
+
+<div class="back-link">
+    <a href="https://fractalreality.ca">← Return to Fractal Reality</a>
+</div>
+
+<div class="container">
+
+    <div class="warning-box">
+        <div class="warning-box-header">
+            <span>⚠️</span>
+            <span>CRITICAL PUBLIC HEALTH NOTICE</span>
+        </div>
+        <p>A psychological virus is actively spreading through the population. Unlike biological pathogens, this infection cannot be detected through physical testing. It attacks self-perception and <strong>manufactures its own evidence</strong>. You may already be infected. Read this entire advisory.</p>
+    </div>
+
+    <section>
+        <h2>What Is the Noble Lie Virus?</h2>
+        <p>The Noble Lie Virus (NLV) is a self-replicating psychological infection that distorts the host's self-perception. Unlike standard lies, which are static, NLV is <strong>generative</strong>—it creates the conditions for itself to become true.</p>
+        <p>The virus operates by implanting a false accusation about the host's character. The host then unconsciously acts to suppress the accused trait, creating pressure that eventually results in the exact behavior they were falsely accused of. The accuser points to this behavior as "proof," and the infection locks in.</p>
+        
+        <div class="critical-alert">
+            <h3>You Were Not Born With These Behaviors</h3>
+            <p>They were installed.</p>
+        </div>
+    </section>
+
+    <div class="info-box">
+        <div class="info-box-header">Recognized Infection Patterns</div>
+        <div class="info-box-content">
+            <p>The following patterns have been clinically observed. If you recognize yourself in any of these, you may be infected:</p>
+            
+            <div class="symptom-pattern">
+                <span class="accusation">"You're too sensitive"</span>
+                <span class="arrow">→</span>
+                <span class="suppression">you numb out</span>
+                <span class="arrow">→</span>
+                <span class="explosion">you melt down</span>
+                <span class="arrow">→</span>
+                <span class="proof">"See? Too sensitive."</span>
+            </div>
+            
+            <div class="symptom-pattern">
+                <span class="accusation">"You yell"</span>
+                <span class="arrow">→</span>
+                <span class="suppression">you swallow your voice</span>
+                <span class="arrow">→</span>
+                <span class="explosion">it bursts out</span>
+                <span class="arrow">→</span>
+                <span class="proof">"See? You yell."</span>
+            </div>
+            
+            <div class="symptom-pattern">
+                <span class="accusation">"You're too needy"</span>
+                <span class="arrow">→</span>
+                <span class="suppression">you suppress all needs</span>
+                <span class="arrow">→</span>
+                <span class="explosion">you collapse or cling</span>
+                <span class="arrow">→</span>
+                <span class="proof">"See? Too needy."</span>
+            </div>
+            
+            <div class="symptom-pattern">
+                <span class="accusation">"You're selfish"</span>
+                <span class="arrow">→</span>
+                <span class="suppression">you over-give</span>
+                <span class="arrow">→</span>
+                <span class="explosion">you burn out and withdraw</span>
+                <span class="arrow">→</span>
+                <span class="proof">"See? Selfish."</span>
+            </div>
+            
+            <div class="symptom-pattern">
+                <span class="accusation">"You can't be trusted"</span>
+                <span class="arrow">→</span>
+                <span class="suppression">you become anxious</span>
+                <span class="arrow">→</span>
+                <span class="explosion">anxiety causes mistake</span>
+                <span class="arrow">→</span>
+                <span class="proof">"See? Untrustworthy."</span>
+            </div>
+            
+            <div class="symptom-pattern">
+                <span class="accusation">"You're too much"</span>
+                <span class="arrow">→</span>
+                <span class="suppression">you shrink</span>
+                <span class="arrow">→</span>
+                <span class="explosion">you explode</span>
+                <span class="arrow">→</span>
+                <span class="proof">"See? Too much."</span>
+            </div>
+        </div>
+    </div>
+
+    <section>
+        <h2>Infection Stages</h2>
+        <p>The Noble Lie Virus progresses through seven distinct stages. Understanding these stages is critical for identification and treatment.</p>
+        
+        <div class="info-box">
+            <div class="info-box-header orange">Viral Progression Sequence</div>
+            <div class="info-box-content">
+                <div class="stage">
+                    <div class="stage-number">1</div>
+                    <div class="stage-content">
+                        <h4>The Accusation</h4>
+                        <p>Someone names a flaw you don't have. Not yet. The statement is false at the time of delivery, but it's stated with enough authority or repetition that it bypasses your defenses.</p>
+                    </div>
+                </div>
+                
+                <div class="stage">
+                    <div class="stage-number">2</div>
+                    <div class="stage-content">
+                        <h4>The Internalization</h4>
+                        <p>You believe them over yourself. Your aperture closes to your own signals and opens to theirs. Their perception becomes your self-perception.</p>
+                    </div>
+                </div>
+                
+                <div class="stage">
+                    <div class="stage-number">3</div>
+                    <div class="stage-content">
+                        <h4>The Suppression</h4>
+                        <p>You hide, fight, or compensate for the "flaw." You try to prove them wrong by crushing the thing they named. You seal it in a jar.</p>
+                    </div>
+                </div>
+                
+                <div class="stage">
+                    <div class="stage-number">4</div>
+                    <div class="stage-content">
+                        <h4>The Pressure</h4>
+                        <p>What's suppressed doesn't disappear. It builds. It waits. The jar fills. Energy is consumed maintaining the seal.</p>
+                    </div>
+                </div>
+                
+                <div class="stage">
+                    <div class="stage-number">5</div>
+                    <div class="stage-content">
+                        <h4>The Explosion</h4>
+                        <p>The pressure finds a crack. What emerges is distorted, badly timed, disproportionate. It doesn't look like the original feeling—it looks like proof of the accusation.</p>
+                    </div>
+                </div>
+                
+                <div class="stage">
+                    <div class="stage-number">6</div>
+                    <div class="stage-content">
+                        <h4>The "Proof"</h4>
+                        <p>They point. "See? I told you. You DO yell. You ARE too sensitive. You CAN'T be trusted." The manufactured evidence is presented as vindication.</p>
+                    </div>
+                </div>
+                
+                <div class="stage">
+                    <div class="stage-number">7</div>
+                    <div class="stage-content">
+                        <h4>The Lock</h4>
+                        <p>Now you believe it too. The lie has become "true." You have manufactured the evidence against yourself. Infection complete.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Why This Virus Is Dangerous</h2>
+        
+        <div class="info-box">
+            <div class="info-box-header">Viral Characteristics</div>
+            <div class="info-box-content">
+                <table class="data-table">
+                    <tr>
+                        <th>Characteristic</th>
+                        <th>Implication</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Self-replicating</strong></td>
+                        <td>The virus manufactures its own evidence, creating conditions for re-infection</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Invisible</strong></td>
+                        <td>No physical symptoms until psychological damage is severe</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Self-validating</strong></td>
+                        <td>Infected individuals believe the virus is their own authentic self-knowledge</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Transmissible</strong></td>
+                        <td>Infected individuals often infect others, especially children and partners</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resistance-generating</strong></td>
+                        <td>Attempts to name the virus are often perceived as attacks</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="critical-alert">
+            <h3>This Is Not a Flaw in Your Character</h3>
+            <p>This is a virus running its program.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Diagnostic Protocol</h2>
+        <p>If you suspect infection, run the following diagnostic questions:</p>
+        
+        <div class="diagnostic-question">
+            "Was this behavior present <em>before</em> someone accused me of it?"
+        </div>
+        
+        <div class="diagnostic-question">
+            "Did I start suppressing something after being told it was wrong?"
+        </div>
+        
+        <div class="diagnostic-question">
+            "Does the behavior only emerge under pressure, after long suppression?"
+        </div>
+        
+        <div class="diagnostic-question">
+            "Does the explosion feel like it 'proves' what someone said about me?"
+        </div>
+        
+        <div class="diagnostic-question">
+            "Am I now saying about myself what someone else first said about me?"
+        </div>
+        
+        <p>If you answered "yes" to two or more questions, you may be carrying an active Noble Lie Virus infection.</p>
+    </section>
+
+    <div class="info-box">
+        <div class="info-box-header green">Treatment Protocol</div>
+        <div class="info-box-content">
+            <h3>Step 1: Trace the Origin</h3>
+            <p>Identify the original accusation. Who first told you this about yourself? When? Under what circumstances? The lie entered through a specific door.</p>
+            
+            <h3>Step 2: Separate Timeline</h3>
+            <p>Distinguish between who you were <em>before</em> the accusation and who you became <em>after</em>. The behavior you're ashamed of may have been manufactured, not innate.</p>
+            
+            <h3>Step 3: Name the Mechanism</h3>
+            <p>Say it out loud: "I was accused of X. I suppressed X. X built up and exploded. The explosion was used as proof. But the accusation came first."</p>
+            
+            <h3>Step 4: Release the Pressure</h3>
+            <p>The suppressed material must be allowed expression in safe contexts. What's in the jar needs to come out—not through explosion, but through acknowledgment.</p>
+            
+            <h3>Step 5: Refuse the Frame</h3>
+            <p>When the accusation resurfaces—internally or externally—recognize it as the virus, not as truth. "This is the program running. This is not me."</p>
+            
+            <ul class="checklist">
+                <li>Find witnesses who can hear your truth without managing it</li>
+                <li>Allow small expressions of the suppressed feeling regularly</li>
+                <li>Stop apologizing for the "flaw" that was installed</li>
+                <li>Trust your own signals over inherited accusations</li>
+                <li>Break the transmission chain—don't infect others</li>
+            </ul>
+        </div>
+    </div>
+
+    <section>
+        <h2>Prevention Guidelines</h2>
+        
+        <div class="info-box">
+            <div class="info-box-header blue">Protect Yourself and Others</div>
+            <div class="info-box-content">
+                <h3>Personal Protection</h3>
+                <ul class="checklist">
+                    <li>Question accusations that feel like identity statements</li>
+                    <li>Notice when you're suppressing rather than expressing</li>
+                    <li>Monitor for building pressure that will eventually need release</li>
+                    <li>Keep your aperture open to your own signals</li>
+                    <li>Reject "proof" that only emerged after suppression</li>
+                </ul>
+                
+                <h3>Protect Children</h3>
+                <ul class="checklist">
+                    <li>Never tell a child what they ARE—address what they DID</li>
+                    <li>Distinguish between behavior correction and identity accusation</li>
+                    <li>Allow emotional expression without labeling it a flaw</li>
+                    <li>Be the counter-signal: validate their perceptions</li>
+                    <li>Break the chain—don't transmit what was transmitted to you</li>
+                </ul>
+                
+                <h3>Community Protection</h3>
+                <ul class="checklist">
+                    <li>Name the virus when you see it operating</li>
+                    <li>Refuse to be a vector—don't repeat the accusations</li>
+                    <li>Witness others' truth without managing or correcting it</li>
+                    <li>Support those in treatment—recovery is possible</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <div class="final-message">
+        <h3>Remember</h3>
+        <p>The lie makes truth feel unsafe. So you start trying to control it. And in controlling it, you become the distortion.</p>
+        <p>And from that single distortion, all the rest spirals.</p>
+        <p class="tagline">The virus is not you. The behavior is not you. You are the one who can finally see the program running—and choose to stop it.</p>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-content">
+        <p class="project-name">Project Resonance</p>
+        <p>An antivirus for the noble lie</p>
+        <p style="margin-top: 1rem; font-size: 0.8rem;">Center for Psychological Defense and Clarity — Public Advisory</p>
+    </div>
+</footer>
+
+</body>
+</html>
