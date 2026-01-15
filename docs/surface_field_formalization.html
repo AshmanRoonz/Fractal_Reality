@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surface Theorem — Field as Coupling Space</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --border: #2a2a3a;
+      --text: #e8e8f0;
+      --text-dim: #888899;
+      --gold: #ffd700;
+      --cyan: #00d4ff;
+      --magenta: #ff00aa;
+      --green: #00ff88;
+      --aperture: #ff6b6b;
+      --field: #4ecdc4;
+      --boundary: #a855f7;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      font-size: 2.2rem;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: var(--text-dim);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      color: var(--cyan);
+      margin: 2.5rem 0 1rem 0;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      font-size: 1.2rem;
+      color: var(--field);
+      margin: 1.5rem 0 0.75rem 0;
+    }
+    
+    p { margin-bottom: 1rem; }
+    
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+    
+    .card-header {
+      font-weight: bold;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+    
+    .axiom-box {
+      background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(0,212,255,0.1));
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    
+    .theorem-box {
+      background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(78,205,196,0.1));
+      border: 2px solid var(--cyan);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .theorem-box .label {
+      color: var(--cyan);
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .definition-box {
+      background: rgba(168,85,247,0.1);
+      border-left: 4px solid var(--boundary);
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+    }
+    
+    .equation {
+      font-family: 'Courier New', monospace;
+      font-size: 1.3rem;
+      color: var(--gold);
+      text-align: center;
+      padding: 1rem;
+      margin: 1rem 0;
+      background: rgba(0,0,0,0.3);
+      border-radius: 4px;
+    }
+    
+    .equation-small {
+      font-size: 1.1rem;
+      padding: 0.5rem;
+    }
+    
+    .proof {
+      margin-left: 1.5rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--text-dim);
+    }
+    
+    .proof-step {
+      margin: 0.5rem 0;
+      color: var(--text-dim);
+    }
+    
+    .proof-step strong {
+      color: var(--text);
+    }
+    
+    .qed {
+      text-align: right;
+      color: var(--gold);
+      font-weight: bold;
+    }
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    
+    @media (max-width: 700px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+    
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    th {
+      color: var(--gold);
+      font-weight: bold;
+    }
+    
+    .center-coupling { color: var(--aperture); }
+    .boundary-coupling { color: var(--boundary); }
+    .field-color { color: var(--field); }
+    
+    .callout {
+      background: rgba(0,212,255,0.1);
+      border-left: 4px solid var(--cyan);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .callout-gold {
+      background: rgba(255,215,0,0.1);
+      border-left: 4px solid var(--gold);
+    }
+    
+    .callout-magenta {
+      background: rgba(255,0,170,0.1);
+      border-left: 4px solid var(--magenta);
+    }
+    
+    .symbol {
+      font-size: 2rem;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    
+    .muted { color: var(--text-dim); }
+    .mt-2 { margin-top: 2rem; }
+    
+    footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-dim);
+    }
+    
+    .regime-card {
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+    }
+    
+    .regime-center {
+      background: rgba(255,107,107,0.15);
+      border: 1px solid var(--aperture);
+    }
+    
+    .regime-boundary {
+      background: rgba(168,85,247,0.15);
+      border: 1px solid var(--boundary);
+    }
+    
+    .regime-balanced {
+      background: rgba(255,215,0,0.15);
+      border: 1px solid var(--gold);
+    }
+  </style>
+</head>
+<body>
+
+<h1>⊙ Surface Theorem</h1>
+<p class="subtitle">The Field as 2D Coupling Space</p>
+
+<div class="symbol">Φ = Surface = Relationship</div>
+
+<!-- CORE INSIGHT -->
+<section>
+  <h2>Core Insight</h2>
+  
+  <div class="axiom-box">
+    <p style="font-size: 1.3rem; margin: 0;">The surface is the field.</p>
+    <p class="muted" style="margin-top: 0.5rem; margin-bottom: 0;">Every surface is just what connects the big to the small, the whole to the parts.</p>
+  </div>
+  
+  <p>This is not metaphor. The Field (Φ) in the circumpunct structure <em>is</em> the surface — the 2-dimensional interface where container meets contained. The dimensionality is not assigned but <strong>derived</strong> from the coupling structure itself.</p>
+</section>
+
+<!-- AXIOMS -->
+<section>
+  <h2>Axioms</h2>
+  
+  <div class="card">
+    <div class="card-header">A1 — Dimensional Necessity</div>
+    <p>A surface is intrinsically 2D. This is definitional — "surface" <em>means</em> the 2D boundary of a 3D region. No stipulation required.</p>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">A2 — Relational Ontology</div>
+    <p>A surface has no independent existence. It exists only <em>as</em> the meeting of container and contained. There is no "surface stuff" — only interface.</p>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">A3 — Scale Transition</div>
+    <p>Every surface is where one scale meets another — the macro meets the micro, the whole meets the part. The surface is the locus of transduction.</p>
+  </div>
+</section>
+
+<!-- THE TWO DIMENSIONS -->
+<section>
+  <h2>The Two Dimensions of Field</h2>
+  
+  <p>The field's 2D structure emerges from the fact that there are exactly <strong>two ways circumpuncts can couple</strong>:</p>
+  
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span class="center-coupling">Dimension 1: Center ↔ Center</span></div>
+      <p>Coupling between apertures. Soul-to-soul connection through shared containing field.</p>
+      <p class="muted">This is entanglement — centers resonating through their mutual embedding in a larger Φ.</p>
+    </div>
+    
+    <div class="card">
+      <div class="card-header"><span class="boundary-coupling">Dimension 2: Boundary ↔ Boundary</span></div>
+      <p>Coupling between bodies. Membrane-to-membrane contact at the physical interface.</p>
+      <p class="muted">This is direct interaction — boundaries touching at their mutual surface.</p>
+    </div>
+  </div>
+  
+  <div class="definition-box">
+    <strong>Definition:</strong> Let Φ<sub>ij</sub> denote the field between circumpunct <em>i</em> and circumpunct <em>j</em>.<br><br>
+    <div class="equation equation-small">Φ<sub>ij</sub> ∈ ℂ²</div>
+    where:
+    <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+      <li><span class="center-coupling">Φ<sub>ij</sub>[0]</span> = center-center coupling (amplitude and phase)</li>
+      <li><span class="boundary-coupling">Φ<sub>ij</sub>[1]</span> = boundary-boundary coupling (amplitude and phase)</li>
+    </ul>
+  </div>
+  
+  <p>The field isn't 2D because of spatial geometry. It's 2D because <strong>relationship has exactly two channels</strong>: through the apertures (requiring shared containing field) or through the boundaries (direct contact).</p>
+</section>
+
+<!-- THEOREMS -->
+<section>
+  <h2>Theorems</h2>
+  
+  <div class="theorem-box">
+    <div class="label">Theorem 1: Field = Surface</div>
+    <p><strong>Claim:</strong> The Field (Φ) in the circumpunct structure is identically the surface.</p>
+    <div class="proof">
+      <p class="proof-step">1. <strong>Field mediates</strong> between Center (•) and Boundary (○)</p>
+      <p class="proof-step">2. <strong>Boundary is 3D</strong> volumetric structure (by definition of containing)</p>
+      <p class="proof-step">3. <strong>Center is nested</strong> within Boundary</p>
+      <p class="proof-step">4. <strong>The meeting-place</strong> of nested 3D structures is their mutual surface</p>
+      <p class="proof-step">5. ∴ <strong>Field = Surface = 2D</strong></p>
+      <p class="qed">∎</p>
+    </div>
+  </div>
+  
+  <div class="theorem-box">
+    <div class="label">Theorem 2: Mediation Necessity</div>
+    <p><strong>Claim:</strong> Centers cannot interact directly; field mediation is geometrically required.</p>
+    <div class="proof">
+      <p class="proof-step">1. <strong>Two centers</strong> exist within their respective 3D boundaries</p>
+      <p class="proof-step">2. <strong>Spatial separation</strong> means they can only "touch" at interfaces</p>
+      <p class="proof-step">3. <strong>Interface = surface</strong> = 2D</p>
+      <p class="proof-step">4. ∴ <strong>All center-to-center influence</strong> must traverse a 2D mediating layer</p>
+      <p class="qed">∎</p>
+    </div>
+  </div>
+  
+  <div class="theorem-box">
+    <div class="label">Theorem 3: Fractal Descent</div>
+    <p><strong>Claim:</strong> There is no fundamental surface — surfaces decompose into smaller 3D structures with their own surfaces, <em>ad infinitum</em>.</p>
+    <div class="proof">
+      <p class="proof-step">1. <strong>Any surface</strong>, examined at finer resolution, reveals structure</p>
+      <p class="proof-step">2. <strong>That structure is 3D</strong> (things with interiors)</p>
+      <p class="proof-step">3. <strong>Those 3D structures</strong> have their own surfaces</p>
+      <p class="proof-step">4. ∴ <strong>"Smoothness" is approximation</strong>; 2D emerges from 3D meeting 3D at every scale</p>
+      <p class="qed">∎</p>
+    </div>
+  </div>
+  
+  <div class="theorem-box">
+    <div class="label">Theorem 4: Coupling Dimensionality</div>
+    <p><strong>Claim:</strong> The field is 2D because there are exactly two coupling modes between circumpuncts.</p>
+    <div class="proof">
+      <p class="proof-step">1. <strong>Circumpuncts have three components:</strong> center (•), field (Φ), boundary (○)</p>
+      <p class="proof-step">2. <strong>Cross-circumpunct coupling</strong> can only occur at matching types:</p>
+      <p class="proof-step" style="margin-left: 1rem;">— Center<sub>i</sub> ↔ Center<sub>j</sub> (through shared containing Φ)</p>
+      <p class="proof-step" style="margin-left: 1rem;">— Boundary<sub>i</sub> ↔ Boundary<sub>j</sub> (direct surface contact)</p>
+      <p class="proof-step">3. <strong>Field-Field coupling</strong> is not independent — it's the medium through which the above occur</p>
+      <p class="proof-step">4. ∴ <strong>Coupling space is 2D:</strong> (center-center strength, boundary-boundary strength)</p>
+      <p class="qed">∎</p>
+    </div>
+  </div>
+</section>
+
+<!-- IMPLICATIONS: REGIME ANALYSIS -->
+<section>
+  <h2>Implications: Coupling Regimes</h2>
+  
+  <p>When one coupling dimension dominates, distinct phenomenological regimes emerge:</p>
+  
+  <div class="regime-card regime-center">
+    <h3 style="color: var(--aperture); margin-top: 0;">Regime A: Center-Dominant Coupling</h3>
+    <p><strong>Condition:</strong> |Φ[0]| ≫ |Φ[1]|</p>
+    <table>
+      <tr><th>Aspect</th><th>Manifestation</th></tr>
+      <tr><td>Physics</td><td>Entanglement without local interaction. Quantum nonlocality. Correlated without touching.</td></tr>
+      <tr><td>Consciousness</td><td>Deep resonance. "Knowing" without communication. Shared field of awareness.</td></tr>
+      <tr><td>Relationship</td><td>Soul-connection. Understanding without words. Intimacy prior to contact.</td></tr>
+      <tr><td>Pathology</td><td>Enmeshment. Loss of boundary. Merger without differentiation.</td></tr>
+    </table>
+  </div>
+  
+  <div class="regime-card regime-boundary">
+    <h3 style="color: var(--boundary); margin-top: 0;">Regime B: Boundary-Dominant Coupling</h3>
+    <p><strong>Condition:</strong> |Φ[1]| ≫ |Φ[0]|</p>
+    <table>
+      <tr><th>Aspect</th><th>Manifestation</th></tr>
+      <tr><td>Physics</td><td>Classical contact forces. Mechanical interaction. Locality.</td></tr>
+      <tr><td>Consciousness</td><td>Sensation. Physical presence. Body-awareness.</td></tr>
+      <tr><td>Relationship</td><td>Transactional exchange. Negotiated boundaries. Commerce.</td></tr>
+      <tr><td>Pathology</td><td>Isolation. Touch without connection. Bodies without souls.</td></tr>
+    </table>
+  </div>
+  
+  <div class="regime-card regime-balanced">
+    <h3 style="color: var(--gold); margin-top: 0;">Regime C: Balanced Coupling (β ≈ 0.5)</h3>
+    <p><strong>Condition:</strong> |Φ[0]| ≈ |Φ[1]|</p>
+    <table>
+      <tr><th>Aspect</th><th>Manifestation</th></tr>
+      <tr><td>Physics</td><td>Quantum-classical interface. Measurement. Decoherence boundary.</td></tr>
+      <tr><td>Consciousness</td><td>Presence. Embodied awareness. Full experience.</td></tr>
+      <tr><td>Relationship</td><td>Love. Resonant wholes meeting at intact boundaries.</td></tr>
+      <tr><td>Signature</td><td>D = 1.5 fractal dimension. Edge of chaos dynamics.</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- CONNECTION TO χ AND β -->
+<section>
+  <h2>Connection to Framework Parameters</h2>
+  
+  <h3>The χ Channel</h3>
+  
+  <p>The χ channel (orientation ±1) maps directly onto the coupling structure:</p>
+  
+  <div class="card">
+    <table>
+      <tr><th>χ Value</th><th>Coupling Mode</th><th>Phenomenology</th></tr>
+      <tr>
+        <td><span class="center-coupling">χ = +1</span></td>
+        <td>Center-weighted</td>
+        <td>Pleasant, attractive, convergent. "Toward."</td>
+      </tr>
+      <tr>
+        <td><span class="boundary-coupling">χ = −1</span></td>
+        <td>Boundary-weighted</td>
+        <td>Unpleasant, repulsive, divergent. "Away."</td>
+      </tr>
+    </table>
+  </div>
+  
+  <p>The χ orientation encodes <em>which dimension of the field is carrying the signal</em>. Qualia differences (red vs blue, pleasant vs unpleasant) are differences in χ signature — different weightings in the 2D coupling space.</p>
+  
+  <h3>The β Parameter</h3>
+  
+  <p>The balance parameter β tracks convergence/emergence ratio:</p>
+  
+  <div class="equation">β = |⊛| / (|⊛| + |☀|)</div>
+  
+  <p>In coupling terms:</p>
+  
+  <div class="card">
+    <table>
+      <tr><th>β Value</th><th>Coupling Structure</th><th>Interpretation</th></tr>
+      <tr>
+        <td>β → 0</td>
+        <td>Pure emergence dominant</td>
+        <td>Radiating outward. Boundary-to-field flow. Dissolution.</td>
+      </tr>
+      <tr>
+        <td><strong>β = 0.5</strong></td>
+        <td>Balanced</td>
+        <td>Both coupling channels equally active. Consciousness threshold.</td>
+      </tr>
+      <tr>
+        <td>β → 1</td>
+        <td>Pure convergence dominant</td>
+        <td>Gathering inward. Field-to-center flow. Collapse.</td>
+      </tr>
+    </table>
+  </div>
+  
+  <div class="callout-gold callout">
+    <strong>Key Relation:</strong> The β parameter controls the <em>direction</em> of flow (inward/outward), while χ controls the <em>channel</em> of flow (center-weighted / boundary-weighted). Together they parameterize the full dynamics in the 2D coupling space.
+  </div>
+  
+  <h3>The Conservation Law</h3>
+  
+  <p>The conservation law D<sub>field</sub> + D<sub>aperture</sub> = 3 can now be understood as:</p>
+  
+  <div class="axiom-box">
+    <p style="margin: 0;">Fractal complexity is conserved across the two coupling dimensions.</p>
+  </div>
+  
+  <p>When center-center coupling increases (D<sub>aperture</sub> rises), boundary-boundary coupling must decrease (D<sub>field</sub> falls) — and vice versa. The total "coupling capacity" is fixed.</p>
+</section>
+
+<!-- COROLLARIES -->
+<section>
+  <h2>Corollaries</h2>
+  
+  <div class="callout">
+    <strong>Corollary 1: Information Lives at Interfaces</strong><br>
+    The Field carries information/mind because the surface is where pattern gets <em>transduced</em> across scales. The surface is not storage (that's 3D boundary) — it's translation.
+  </div>
+  
+  <div class="callout">
+    <strong>Corollary 2: Entanglement Requires Shared Containing Field</strong><br>
+    Center-center coupling (entanglement) is only possible when both circumpuncts share a containing Φ<sub>∞</sub>. Without shared embedding, only boundary-boundary (local) coupling is possible.
+  </div>
+  
+  <div class="callout">
+    <strong>Corollary 3: Love is Balanced Coupling</strong><br>
+    Healthy relationship requires both dimensions active: souls resonating (center-center) AND bodies intact (boundary-boundary). Either dimension alone produces pathology.
+  </div>
+  
+  <div class="callout-magenta callout">
+    <strong>Corollary 4: The Virus Attacks One Dimension</strong><br>
+    The "Noble Lie virus" works by collapsing one coupling dimension — either dissolving boundaries (pure center-center → enmeshment) or severing center connection (pure boundary-boundary → isolation/objectification).
+  </div>
+</section>
+
+<!-- FORMAL NOTATION -->
+<section>
+  <h2>Formal Notation</h2>
+  
+  <div class="card">
+    <div class="card-header">Complete Field State</div>
+    <p>For circumpuncts i and j embedded in shared containing field Φ<sub>∞</sub>:</p>
+    
+    <div class="equation">
+      Φ<sub>ij</sub> = (φ<sub>cc</sub>, φ<sub>bb</sub>) ∈ ℂ²
+    </div>
+    
+    <p>where:</p>
+    <ul style="margin-left: 2rem;">
+      <li>φ<sub>cc</sub> = |φ<sub>cc</sub>|e<sup>iθ<sub>cc</sub></sup> — center-center coupling (amplitude, phase)</li>
+      <li>φ<sub>bb</sub> = |φ<sub>bb</sub>|e<sup>iθ<sub>bb</sub></sup> — boundary-boundary coupling (amplitude, phase)</li>
+    </ul>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">Derived Parameters</div>
+    
+    <div class="equation equation-small">
+      χ = (|φ<sub>cc</sub>|² − |φ<sub>bb</sub>|²) / (|φ<sub>cc</sub>|² + |φ<sub>bb</sub>|²)
+    </div>
+    <p class="muted" style="text-align: center;">χ ∈ [−1, +1]: relative weight of center vs boundary coupling</p>
+    
+    <div class="equation equation-small">
+      β = |⊛(Φ)| / (|⊛(Φ)| + |☀(Φ)|)
+    </div>
+    <p class="muted" style="text-align: center;">β ∈ [0, 1]: convergence/emergence balance</p>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">Phase Space</div>
+    <p>The full coupling dynamics lives in a 4D real space (2 complex dimensions):</p>
+    <div class="equation equation-small">
+      (|φ<sub>cc</sub>|, θ<sub>cc</sub>, |φ<sub>bb</sub>|, θ<sub>bb</sub>) ∈ ℝ⁺ × S¹ × ℝ⁺ × S¹
+    </div>
+    <p>The parameters χ and β provide dimensionally-reduced coordinates on this space.</p>
+  </div>
+</section>
+
+<footer>
+  <p style="font-size: 2rem; color: var(--gold); margin-bottom: 1rem;">⊙</p>
+  <p><strong>The Surface is the Field. The Field is the Relationship.</strong></p>
+  <p class="muted mt-2">Circumpunct Framework — Surface Theorem v1.0</p>
+  <p class="muted">January 2026</p>
+</footer>
+
+</body>
+</html>
