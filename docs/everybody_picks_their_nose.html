@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everybody Picks Their Nose</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1a1f1a;
+            --bg-card: #232823;
+            --bg-highlight: #2d352d;
+            --text-main: #e8f0e8;
+            --text-soft: #b8c8b8;
+            --text-dim: #7a8a7a;
+            --snot-green: #8fbf4a;
+            --snot-dark: #5a8a2a;
+            --snot-light: #b4e455;
+            --snot-glow: rgba(143, 191, 74, 0.3);
+            --tissue-white: #f5f5f0;
+            --nose-pink: #e8a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 18px;
+            overflow-x: hidden;
+        }
+
+        /* Booger float animation */
+        .booger {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle at 30% 30%, var(--snot-light), var(--snot-green), var(--snot-dark));
+            border-radius: 50% 60% 40% 70%;
+            opacity: 0.15;
+            pointer-events: none;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .booger:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+        .booger:nth-child(2) { top: 30%; left: 90%; animation-delay: 3s; width: 8px; height: 8px; }
+        .booger:nth-child(3) { top: 60%; left: 8%; animation-delay: 7s; width: 15px; height: 15px; }
+        .booger:nth-child(4) { top: 80%; left: 85%; animation-delay: 11s; }
+        .booger:nth-child(5) { top: 45%; left: 95%; animation-delay: 15s; width: 10px; height: 10px; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(10deg); }
+            50% { transform: translateY(10px) rotate(-5deg); }
+            75% { transform: translateY(-15px) rotate(8deg); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Back link */
+        .back-link {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .back-link a {
+            font-size: 0.9rem;
+            color: var(--text-soft);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .back-link a:hover {
+            opacity: 1;
+            color: var(--snot-green);
+        }
+
+        .back-link a::before {
+            content: "← ";
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 3rem 2rem 4rem;
+            background: linear-gradient(180deg, #2d352d 0%, var(--bg-dark) 100%);
+        }
+
+        .nose-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: wiggle 3s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(3deg); }
+            75% { transform: rotate(-3deg); }
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: var(--snot-green);
+            text-shadow: 0 0 30px var(--snot-glow);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-soft);
+            font-style: italic;
+        }
+
+        .snot-bar {
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--snot-green), var(--snot-light), var(--snot-green), transparent);
+            border-radius: 2px;
+            margin: 2rem auto;
+            max-width: 200px;
+        }
+
+        /* Sections */
+        section {
+            padding: 2rem 0;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--snot-light);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        /* Divider */
+        .divider {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--snot-green);
+            padding: 2rem 0;
+            opacity: 0.6;
+        }
+
+        /* Confession boxes */
+        .confession {
+            background: var(--bg-card);
+            border-left: 4px solid var(--snot-green);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .confession.pink {
+            border-left-color: var(--nose-pink);
+        }
+
+        .confession.highlight {
+            border-left-color: var(--snot-light);
+            background: rgba(143, 191, 74, 0.08);
+        }
+
+        .confession p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Insight boxes */
+        .insight {
+            background: var(--bg-highlight);
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            text-align: center;
+            border: 1px solid var(--snot-dark);
+        }
+
+        .insight p {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .insight p:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight .big {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--snot-light);
+            font-style: italic;
+        }
+
+        /* List styling */
+        .truth-list {
+            margin: 1.5rem 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .truth-list li {
+            padding: 0.5rem 0 0.5rem 2rem;
+            position: relative;
+            color: var(--text-soft);
+        }
+
+        .truth-list li::before {
+            content: "●";
+            position: absolute;
+            left: 0;
+            color: var(--snot-green);
+        }
+
+        /* The museum */
+        .museum {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-highlight));
+            border: 1px solid var(--snot-dark);
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .museum h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--snot-light);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .jar {
+            display: inline-block;
+            background: rgba(143, 191, 74, 0.1);
+            border: 1px solid var(--snot-dark);
+            padding: 0.5rem 1rem;
+            margin: 0.3rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--text-soft);
+        }
+
+        /* Finale */
+        .finale {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .finale .final-words {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--snot-green);
+            margin-top: 2rem;
+            font-weight: 400;
+            text-shadow: 0 0 20px var(--snot-glow);
+        }
+
+        /* The key passage */
+        .key-passage {
+            font-style: italic;
+            color: var(--text-soft);
+            border-left: 2px solid var(--snot-green);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--snot-green);
+            color: var(--bg-dark);
+        }
+
+        /* Emphasis */
+        strong {
+            color: var(--snot-light);
+            font-weight: 600;
+        }
+
+        em {
+            color: var(--nose-pink);
+            font-style: italic;
+        }
+
+        /* Opening statement */
+        .opening {
+            font-size: 1.25rem;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .opening p {
+            margin-bottom: 0.8rem;
+        }
+
+        .punchline {
+            font-size: 1.1rem;
+            color: var(--snot-green);
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Floating boogers -->
+<div class="booger"></div>
+<div class="booger"></div>
+<div class="booger"></div>
+<div class="booger"></div>
+<div class="booger"></div>
+
+<div class="back-link">
+    <a href="https://fractalreality.ca">fractalreality.ca</a>
+</div>
+
+<header>
+    <div class="nose-icon">👃</div>
+    <h1>Everybody Picks Their Nose</h1>
+    <p class="subtitle">A meditation on the lies we live</p>
+    <div class="snot-bar"></div>
+</header>
+
+<div class="container">
+
+    <section class="opening">
+        <p>You do it. I do it. The Queen did it. The Pope does it.</p>
+        <p>Every CEO, every saint, every person who ever made you feel small—they all do it.</p>
+        <p class="punchline">And we all pretend we don't.</p>
+    </section>
+
+    <div class="divider">●</div>
+
+    <section>
+        <p>This is the first lie. Not the worst. Not dangerous. But the template.</p>
+
+        <p>There's what you do in private.<br>
+        There's what you admit in public.<br>
+        And there's a gap between them.</p>
+
+        <div class="insight">
+            <p class="big">That gap is where performance begins.</p>
+        </div>
+    </section>
+
+    <div class="divider">●</div>
+
+    <section>
+        <h2>The Fart in the Elevator</h2>
+
+        <p>You know the move.</p>
+
+        <p>Doors close. Silence. Then... <em>it arrives</em>. And everyone stares straight ahead, breathing shallow, pretending they're alone. Pretending it didn't happen. Pretending they've never produced one themselves.</p>
+
+        <p>Eleven strangers, united in a shared lie.</p>
+
+        <div class="confession">
+            <p>This is the social contract at its most absurd. We all know. We all pretend we don't know. And somehow, this feels less awkward than just saying "sorry, that was me."</p>
+        </div>
+
+        <p>Why?</p>
+
+        <p>Because admission costs something. It breaks the performance. It says: <em>I am a body. I am human. I am not above the mess of being alive.</em></p>
+
+        <p>And somewhere along the way, we learned that being human is embarrassing.</p>
+    </section>
+
+    <div class="divider">●</div>
+
+    <section>
+        <h2>The Gap Grows</h2>
+
+        <p>At farts and boogers, the gap is comedy. We laugh because it's harmless. Nobody's hurt by pretending they didn't hear that.</p>
+
+        <p>But the gap doesn't stay harmless.</p>
+
+        <ul class="truth-list">
+            <li>"I'm fine." <em>(You're not.)</em></li>
+            <li>"That doesn't bother me." <em>(It does.)</em></li>
+            <li>"I don't care what people think." <em>(You do. Desperately.)</em></li>
+            <li>"I'm over it." <em>(It lives in your chest.)</em></li>
+        </ul>
+
+        <p>Same structure. Same performance. But now something's at stake.</p>
+
+        <div class="insight">
+            <p>Now you're not just hiding a booger.</p>
+            <p class="big">You're hiding yourself.</p>
+        </div>
+    </section>
+
+    <div class="divider">●</div>
+
+    <section>
+        <h2>The Cry You Choked Back</h2>
+
+        <p>Remember one?</p>
+
+        <p>Maybe at work. Maybe at a funeral where you weren't "close enough" to the person to earn your grief. Maybe in an argument where tears would've meant losing.</p>
+
+        <p>You felt it rise. And you crushed it.</p>
+
+        <p>Swallowed it. Clenched your jaw. Blinked fast. Did that thing where you look up at the ceiling like something fascinating is happening up there.</p>
+
+        <p>And it worked. Nobody saw.</p>
+
+        <p style="text-align: center; font-size: 1.3rem; color: var(--nose-pink); margin: 2rem 0;">Victory?</p>
+
+        <div class="confession highlight">
+            <p>Here's what actually happened: a true signal tried to transmit. Your body knew something and tried to say it. And you—loyal to the performance—closed the connection.</p>
+            <p><strong>You shut the aperture. You stayed on broadcast. And something that was trying to be real got shoved back into the dark.</strong></p>
+        </div>
+
+        <p>One time? No big deal.</p>
+
+        <p>But you've done it more than once, haven't you?</p>
+    </section>
+
+    <div class="divider">●</div>
+
+    <section>
+        <h2>The Museum of Swallowed Truths</h2>
+
+        <div class="museum">
+            <h3>Imagine if every choked-back truth went somewhere...</h3>
+            <p>A warehouse. A museum. Rows and rows of glass jars, each one containing a truth you didn't let yourself have.</p>
+            <div style="margin-top: 1rem;">
+                <span class="jar">The grief you didn't earn</span>
+                <span class="jar">The anger you weren't allowed</span>
+                <span class="jar">The joy you suppressed because it wasn't cool</span>
+                <span class="jar">The love you didn't say</span>
+                <span class="jar">The no you swallowed</span>
+                <span class="jar">The yes you were afraid of</span>
+            </div>
+        </div>
+
+        <p>That museum is in you. You've been building it your whole life.</p>
+
+        <p>And here's the thing about museums: they require maintenance. Security. Climate control. It takes <em>energy</em> to keep all those jars sealed.</p>
+
+        <p style="text-align: center; color: var(--snot-light); font-size: 1.2rem;">Where do you think that energy comes from?</p>
+    </section>
+
+    <div class="divider">●</div>
+
+    <section>
+        <h2>Why You're Tired</h2>
+
+        <p>You thought it was work. Or the kids. Or not enough sleep.</p>
+
+        <p>And sure. Those are real.</p>
+
+        <div class="confession pink">
+            <p>But underneath—there's a leak. A constant, low-grade drain. The power required to keep the performance running. To maintain the gap between what you feel and what you show.</p>
+        </div>
+
+        <p>Every "I'm fine" costs something.<br>
+        Every swallowed truth takes a little more.<br>
+        The museum gets bigger. The energy bill goes up.</p>
+
+        <p>And one day you're exhausted for "no reason."</p>
+    </section>
+
+    <div class="divider">●</div>
+
+    <section>
+        <h2>The Body Knows</h2>
+
+        <p>Here's the part that'll get you:</p>
+
+        <p>You can lie to your mind. You can lie to others. But your body keeps the score.</p>
+
+        <ul class="truth-list">
+            <li>The tension in your shoulders? That's not "stress." That's <em>storage</em>. That's where you put the thing you didn't say in 2019.</li>
+            <li>The knot in your stomach before family dinners? That's not nerves. That's <em>pattern recognition</em>. Your gut remembers what your mind agreed to forget.</li>
+            <li>The sickness that shows up when you "should" be fine? That's the museum running out of space.</li>
+        </ul>
+
+        <div class="insight">
+            <p class="big">The body doesn't lie. It can't.</p>
+            <p>It just holds what you won't.</p>
+        </div>
+    </section>
+
+    <div class="divider">●</div>
+
+    <section>
+        <h2>The First Honest Thing</h2>
+
+        <p>So here's an invitation.</p>
+
+        <p>Not to spill your guts to everyone. Not to abandon all social grace and become a fart-announcing, nose-picking, oversharing menace.</p>
+
+        <p>Just... <strong>one honest thing</strong>. One small truth you've been holding.</p>
+
+        <div class="confession">
+            <p>Maybe you say it out loud to yourself.<br>
+            Maybe you write it down.<br>
+            Maybe you just let yourself <em>feel it</em> without the commentary about whether you're allowed to.</p>
+        </div>
+
+        <p>Not because it'll fix everything.</p>
+
+        <p>But because that's how the museum starts to empty. One jar at a time. One "actually, I'm not fine" at a time. One real thing allowed to be real.</p>
+    </section>
+
+    <div class="divider">●</div>
+
+    <section>
+        <h2>The Lie and the Door</h2>
+
+        <p>Remember: not all lies are equal.</p>
+
+        <p><strong>Pretending you didn't fart in the elevator?</strong> That lie has a door. Everyone knows. No one's trapped. We move on.</p>
+
+        <p><strong>Pretending you're fine when you're drowning?</strong> That door is starting to close.</p>
+
+        <p><strong>Pretending so long you forget you're pretending?</strong> The door is gone. Now you're locked in with a story that isn't true, and you've lost the key.</p>
+
+        <div class="insight">
+            <p>The gap between booger and breakdown isn't as big as you think.</p>
+            <p class="big">It's the same muscle. The same move.</p>
+            <p>Just practiced at higher and higher stakes until you can't tell performance from self.</p>
+        </div>
+    </section>
+
+    <div class="divider">●</div>
+
+    <section class="finale">
+        <h2>The Way Back</h2>
+
+        <div class="snot-bar" style="max-width: 300px;"></div>
+
+        <p>The good news: the door can be reopened.</p>
+
+        <p>Every truth you let yourself have—even the small ones—is a step back toward real. Every "actually, that hurt" is a crack in the performance. Every feeling you feel instead of swallow is a jar removed from the museum.</p>
+
+        <p>You don't have to do it all at once.</p>
+
+        <p style="font-size: 1.2rem; color: var(--snot-light); margin: 2rem 0;"><strong>Start with a booger. Work your way up.</strong></p>
+
+        <div class="snot-bar" style="max-width: 300px;"></div>
+
+        <div class="key-passage">
+            <p>The lie makes truth feel unsafe. So you start trying to control it. And in controlling it, you become the distortion.</p>
+            <p>And from that single distortion, all the rest spirals.</p>
+        </div>
+
+        <div class="snot-bar" style="max-width: 300px;"></div>
+
+        <p class="final-words">👃 Begin there. 👃</p>
+    </section>
+
+</div>
+
+<footer>
+    <div class="snot-bar" style="max-width: 100px;"></div>
+    <p>Project Resonance</p>
+    <p style="margin-top: 0.5rem; font-size: 0.85rem;">An antivirus for the noble lie</p>
+</footer>
+
+</body>
+</html>
