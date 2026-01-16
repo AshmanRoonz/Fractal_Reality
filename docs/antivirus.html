@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Antivirus — Finding the Lies You Inherited</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #141214;
+            --bg-surface: #1c1a1d;
+            --bg-card: #232125;
+            --bg-elevated: #2a272c;
+            --text-bright: #f0ebe6;
+            --text-body: #c9c2ba;
+            --text-soft: #9a918a;
+            --text-dim: #6b6260;
+            --accent-warm: #d4a87c;
+            --accent-gold: #c9a060;
+            --accent-rose: #c4968a;
+            --accent-sage: #8a9a82;
+            --border-subtle: rgba(212, 168, 124, 0.15);
+            --border-light: rgba(212, 168, 124, 0.25);
+            --glow-warm: rgba(212, 168, 124, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            background: var(--bg-deep);
+            color: var(--text-body);
+            font-size: 20px;
+            line-height: 1.85;
+            min-height: 100vh;
+        }
+
+        /* Subtle texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 4rem 2rem 6rem;
+        }
+
+        /* Back link */
+        .back-link {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .back-link a {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-soft);
+            text-decoration: none;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .back-link a:hover {
+            opacity: 1;
+            color: var(--accent-warm);
+        }
+
+        .back-link a::before {
+            content: "← ";
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 2rem 0 4rem;
+        }
+
+        .label {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--accent-warm);
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 3.5rem);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-bright);
+            letter-spacing: 0.02em;
+            margin-bottom: 1.5rem;
+        }
+
+        .intro-message {
+            font-size: 1.15rem;
+            color: var(--text-soft);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.9;
+        }
+
+        /* Dividers */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 4rem 0;
+            color: var(--accent-warm);
+            opacity: 0.5;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-warm), transparent);
+        }
+
+        .divider-symbol {
+            font-size: 0.9rem;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--text-bright);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--accent-warm);
+            margin: 2.5rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--text-bright);
+        }
+
+        em {
+            font-style: italic;
+            color: var(--text-bright);
+        }
+
+        /* Concept box */
+        .concept-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 2rem 2.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .concept-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Channel comparison */
+        .channels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 600px) {
+            .channels {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .channel-box {
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .channel-box.hard {
+            background: linear-gradient(135deg, rgba(201, 160, 96, 0.08) 0%, rgba(201, 160, 96, 0.04) 100%);
+            border: 1px solid rgba(201, 160, 96, 0.2);
+        }
+
+        .channel-box.soft {
+            background: linear-gradient(135deg, rgba(196, 150, 138, 0.08) 0%, rgba(196, 150, 138, 0.04) 100%);
+            border: 1px solid rgba(196, 150, 138, 0.2);
+        }
+
+        .channel-box h4 {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .channel-box.hard h4 {
+            color: var(--accent-gold);
+        }
+
+        .channel-box.soft h4 {
+            color: var(--accent-rose);
+        }
+
+        .channel-box p {
+            font-size: 1rem;
+            color: var(--text-soft);
+            margin-bottom: 0;
+            line-height: 1.7;
+        }
+
+        /* Question cards */
+        .questions-section {
+            background: var(--bg-surface);
+            padding: 3rem 2.5rem;
+            border-radius: 12px;
+            margin: 2.5rem 0;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .questions-section h3 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .question-group {
+            margin: 2rem 0;
+        }
+
+        .question-group-title {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-warm);
+            margin-bottom: 1rem;
+        }
+
+        .question {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-body);
+            font-style: italic;
+        }
+
+        .question:last-child {
+            border-bottom: none;
+        }
+
+        /* Lies list */
+        .lies-section {
+            margin: 2.5rem 0;
+        }
+
+        .lie-card {
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent-rose);
+            padding: 1.5rem 2rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+
+        .lie-statement {
+            font-weight: 500;
+            color: var(--text-bright);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .lie-translation {
+            color: var(--text-soft);
+            font-size: 0.95rem;
+            font-style: italic;
+            margin-bottom: 0;
+        }
+
+        /* Insight box */
+        .insight {
+            background: linear-gradient(135deg, rgba(212, 168, 124, 0.06) 0%, rgba(196, 150, 138, 0.06) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 2rem 2.5rem;
+            margin: 2.5rem 0;
+            text-align: center;
+        }
+
+        .insight p {
+            font-size: 1.15rem;
+            color: var(--text-bright);
+            margin-bottom: 0.75rem;
+        }
+
+        .insight p:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight .key {
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--accent-warm);
+        }
+
+        /* Protocol section */
+        .protocol {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 2.5rem 0;
+        }
+
+        .protocol h3 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .step {
+            margin: 2rem 0;
+            padding-left: 2.5rem;
+            position: relative;
+        }
+
+        .step::before {
+            content: attr(data-step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-warm);
+            width: 1.5rem;
+            text-align: center;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: var(--text-bright);
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Lists */
+        ul {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        ul li {
+            margin-bottom: 0.75rem;
+            color: var(--text-body);
+        }
+
+        /* Closing */
+        .closing {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .closing p {
+            font-size: 1.2rem;
+            color: var(--text-bright);
+            margin-bottom: 1rem;
+        }
+
+        .closing .final {
+            font-style: italic;
+            color: var(--accent-warm);
+            font-size: 1.3rem;
+            margin-top: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 4rem;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        footer a {
+            color: var(--text-soft);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--accent-warm);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 2rem 1.5rem 4rem;
+            }
+
+            .questions-section,
+            .protocol {
+                padding: 2rem 1.5rem;
+            }
+
+            .concept-box {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-link">
+            <a href="https://fractalreality.ca">fractalreality.ca</a>
+        </div>
+
+        <header>
+            <div class="label">A Tool for Self-Examination</div>
+            <h1>The Antivirus</h1>
+            <p class="intro-message">
+                Finding the lies you inherited—the ones that feel like "just how I am."
+            </p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-symbol">✦</span>
+        </div>
+
+        <section>
+            <h2>What an Internalized Lie Is</h2>
+
+            <p>An internalized lie is not something you consciously believe. It's something that happened <em>to</em> you that got turned into something wrong <em>with</em> you.</p>
+
+            <p>Someone hurt you. Or dismissed you. Or made love conditional on performance. And somewhere along the way, your mind made a deal: if <em>I'm</em> the problem, then I have control. I can fix myself. I can earn safety.</p>
+
+            <p>The lie became a survival strategy. And survival strategies that work in childhood often become invisible—they stop feeling like strategies and start feeling like <strong>just how I am</strong>.</p>
+
+            <div class="concept-box">
+                <p>An internalized lie doesn't announce itself as a lie. It feels like self-knowledge. It sounds like your own voice. That's what makes it so hard to find.</p>
+                <p>But here's the tell: <strong>lies constrict. Truth opens.</strong> If a belief about yourself makes you smaller, more defended, less able to receive—it's worth questioning.</p>
+            </div>
+        </section>
+
+        <div class="divider">
+            <span class="divider-symbol">✦</span>
+        </div>
+
+        <section>
+            <h2>Love Has Two Channels</h2>
+
+            <p>This is a frame that might explain a lot—about you, and about the people you've struggled to connect with.</p>
+            
+            <p>Love flows through two different channels. Most people have one that's stronger and one that's weaker. But some people have one channel <em>completely sealed</em>.</p>
+
+            <div class="channels">
+                <div class="channel-box hard">
+                    <h4>Hard Love</h4>
+                    <p>What you <strong>do</strong>. Providing. Protecting. Structure. Logistics. Competence. Keeping things running. Meeting needs. This is love through action.</p>
+                </div>
+                <div class="channel-box soft">
+                    <h4>Soft Love</h4>
+                    <p>What you <strong>are</strong>. Presence. Attunement. Warmth. Being seen. Delight. Desire. This is love through witness—just being with someone, fully.</p>
+                </div>
+            </div>
+
+            <p>Both are real. Both are necessary. But they're not interchangeable.</p>
+
+            <p><strong>Hard love meets needs.</strong> It keeps people alive, stable, functioning. A roof. A meal. A boundary that protects.</p>
+
+            <p><strong>Soft love honors wants.</strong> It makes people feel alive, seen, desired. A look that says <em>I'm glad you exist</em>. Presence without agenda.</p>
+
+            <div class="insight">
+                <p>Here's the problem:</p>
+                <p class="key">If a channel is sealed, love sent through it can't land. And love sent through the wrong channel can't fill the right-shaped hole.</p>
+                <p>It's like trying to cure thirst by eating. The food is real. The effort is real. But it's going to the wrong place.</p>
+            </div>
+
+            <h3>Why Channels Get Sealed</h3>
+
+            <p>Nobody's born with a sealed channel. Watch a toddler—they receive love in any form. A hug. A boundary. A silly face. A firm "no" that keeps them safe.</p>
+
+            <p>The seal comes later. From messages. From modeling. From pain.</p>
+
+            <p>Somewhere along the way, one channel got associated with danger:</p>
+
+            <ul>
+                <li><em>"You're too sensitive"</em> — so you stopped letting yourself feel</li>
+                <li><em>"You're too needy"</em> — so you stopped letting yourself need</li>
+                <li><em>"Love has to be earned"</em> — so you stopped trusting love that came freely</li>
+                <li><em>"That's just how things are"</em> — so you stopped wanting more</li>
+            </ul>
+
+            <p>The seal was smart. It protected you from something that hurt. But now it's blocking something you need—or preventing you from giving something someone else needs.</p>
+
+            <h3>Giving and Receiving</h3>
+
+            <p>Channels work in both directions. You can <strong>give</strong> through hard or soft. And you can <strong>receive</strong> through hard or soft.</p>
+
+            <p>Someone who is strong at hard love and weak at soft love will naturally express care through <em>doing</em>—providing, managing, fixing, helping. They may genuinely not know how to express care through <em>being</em>—presence, attunement, delight, desire.</p>
+
+            <p>Someone who can only receive through hard will need proof, performance, action—and never quite trust presence. Someone who can only receive through soft might feel unseen no matter how much is done for them.</p>
+
+            <p>This isn't a character flaw. It's a learned pattern. And learned patterns can be unlearned—if you're willing to find out where they came from.</p>
+        </section>
+
+        <div class="divider">
+            <span class="divider-symbol">✦</span>
+        </div>
+
+        <section>
+            <h2>Questions to Sit With</h2>
+
+            <p>These aren't questions to answer out loud or defend. They're questions to <em>feel</em>. Notice what happens in your body when you read them. Notice what you want to skip past. Notice what makes you defensive.</p>
+
+            <p>The defensiveness is information.</p>
+
+            <div class="questions-section">
+                <h3>About Growing Up</h3>
+
+                <div class="question-group">
+                    <div class="question">What did love look like in your house? How did you know someone cared about you?</div>
+                    <div class="question">What happened when you expressed a need? What happened when you expressed a want?</div>
+                    <div class="question">Was help ever offered in a way that made you feel small? Like you couldn't do it yourself?</div>
+                    <div class="question">What got rewarded? What got punished—or ignored?</div>
+                    <div class="question">Did anyone ever just... delight in you? Without you having to earn it?</div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">About Vulnerability</div>
+                    <div class="question">What does it feel like when someone sees you—really sees you—without trying to fix anything?</div>
+                    <div class="question">When someone offers love you didn't earn, do you trust it? Or does it feel suspicious?</div>
+                    <div class="question">What are you afraid people will find if they get too close?</div>
+                    <div class="question">Is it easier to be needed than to be wanted?</div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">About Intimacy</div>
+                    <div class="question">What did you learn about intimacy before you had any? What did you observe?</div>
+                    <div class="question">Was desire ever used to manipulate someone—or to manipulate you?</div>
+                    <div class="question">Does receiving feel harder than giving?</div>
+                    <div class="question">When you imagine surrendering into connection—not performing, just being present—what comes up?</div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">About Control</div>
+                    <div class="question">What happens inside you when things feel out of your control?</div>
+                    <div class="question">Is helping sometimes a way of staying in charge?</div>
+                    <div class="question">When someone does something differently than you would, what's your first impulse?</div>
+                    <div class="question">What would you lose if you let go of managing?</div>
+                </div>
+
+                <div class="question-group">
+                    <div class="question-group-title">About Your Patterns</div>
+                    <div class="question">Which channel do you give through most easily—hard or soft?</div>
+                    <div class="question">Which channel can you receive through? Is one of them sealed?</div>
+                    <div class="question">What phrases do you say to yourself that feel like "just how I am"?</div>
+                    <div class="question">What do you believe about yourself that you'd be ashamed to say out loud?</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider">
+            <span class="divider-symbol">✦</span>
+        </div>
+
+        <section class="lies-section">
+            <h2>Lies That Hide as Self-Knowledge</h2>
+
+            <p>These are common lies that feel like truth. Read them slowly. Notice if any land with a thud of recognition—or a flash of resistance.</p>
+
+            <div class="lie-card">
+                <p class="lie-statement">"I'm too sensitive."</p>
+                <p class="lie-translation">The most insidious. Your accurate perception reframed as a personal flaw. The person who hurt you didn't do wrong; you simply felt too much.</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"I'm just not a very physical/affectionate person."</p>
+                <p class="lie-translation">Somewhere along the way, you learned that this part of you wasn't safe to express. You sealed it off and called the seal your personality.</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"I show love by doing things. That's just my love language."</p>
+                <p class="lie-translation">This may be true. But it's worth asking—is this a preference, or is it the only door you have unlocked? Can you give the other way if someone needs it?</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"I don't need much."</p>
+                <p class="lie-translation">You learned that needing was dangerous. So you stopped letting yourself want. The emptiness is still there—you've just stopped naming it.</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"I don't deserve..."</p>
+                <p class="lie-translation">Fill in the blank. Rest. Help. Love. Attention. The lie that your needs are illegitimate.</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"I'm not good at feelings."</p>
+                <p class="lie-translation">Feelings were not welcomed somewhere important. You got the message. You learned to live above the neck.</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"People are too sensitive these days."</p>
+                <p class="lie-translation">Someone told you <em>you</em> were too sensitive. It hurt. So you sided with the people who say feelings are weakness.</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"If I don't manage things, they'll fall apart."</p>
+                <p class="lie-translation">You learned that the world was not safe unless you were in control. Letting go feels like dying. But control is not the same as connection.</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"That's just how I was raised."</p>
+                <p class="lie-translation">You inherited this pattern. Naming it feels like betraying your family. But inheritance is not destiny. You can keep what serves and release what doesn't.</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"I'm helping."</p>
+                <p class="lie-translation">Sometimes help is help. But sometimes help is control wearing a kind face. The test: did they ask? And is the help about their need, or your comfort?</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"They're too sensitive" / "They're overreacting"</p>
+                <p class="lie-translation">Their feelings are inconvenient for you. If you label them as excessive, you don't have to take them seriously. But their experience is real—even if you don't understand it.</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"They didn't mean it that way."</p>
+                <p class="lie-translation">Their impact, erased by their presumed intent. But impact is real regardless of intent.</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"If I were better, they would treat me better."</p>
+                <p class="lie-translation">Their behavior, made your responsibility. But you cannot earn your way out of someone else's dysfunction.</p>
+            </div>
+
+            <div class="lie-card">
+                <p class="lie-statement">"I can't trust my own judgment."</p>
+                <p class="lie-translation">The foundation of all the others. Once this is in place, every other lie can enter freely.</p>
+            </div>
+
+            <div class="insight">
+                <p>The structure of these lies is always the same:</p>
+                <p class="key">Something that was done TO you got turned into something wrong WITH you—or something you now do to others.</p>
+                <p>The lie protects you from having to feel the original wound. But it also keeps you from healing it.</p>
+            </div>
+        </section>
+
+        <div class="divider">
+            <span class="divider-symbol">✦</span>
+        </div>
+
+        <section>
+            <h2>What To Do When You Find One</h2>
+
+            <div class="protocol">
+                <h3>The Protocol</h3>
+
+                <div class="step" data-step="1">
+                    <p class="step-title">Recognition</p>
+                    <p>Name it. Say it out loud or write it down: "I've been carrying a lie that says ___." Don't argue with it yet. Don't defend it. Just see it.</p>
+                </div>
+
+                <div class="step" data-step="2">
+                    <p class="step-title">Origin</p>
+                    <p>Ask: where did this come from? Not to blame—to understand. What was the original wound? What were you protecting yourself from when you first believed this?</p>
+                </div>
+
+                <div class="step" data-step="3">
+                    <p class="step-title">Compassion</p>
+                    <p>Thank the lie for trying to keep you safe. It worked, once. You survived. The strategy was smart given what you had to work with. You can honor the protection while releasing the pattern.</p>
+                </div>
+
+                <div class="step" data-step="4">
+                    <p class="step-title">Testing</p>
+                    <p>Ask: is this still true? Is this <em>actually</em> who I am—or who I learned to be? What would happen if I let this go? What becomes possible?</p>
+                </div>
+
+                <div class="step" data-step="5">
+                    <p class="step-title">Practice</p>
+                    <p>The lie took years to settle in. It won't leave in a day. Recovery is small choices, repeated. Each time you notice the old pattern and choose differently—even slightly—you're rewriting the code.</p>
+                </div>
+
+                <div class="step" data-step="6">
+                    <p class="step-title">Witness</p>
+                    <p>Find someone who can see your truth without trying to fix it. Not advice. Not solutions. Just presence. The lie was installed in relationship. It often heals in relationship too—with someone who can simply be with what's actually there.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider">
+            <span class="divider-symbol">✦</span>
+        </div>
+
+        <section>
+            <h2>Opening Sealed Doors</h2>
+
+            <p>If any of this is landing, you might be recognizing that one of your channels has been sealed for a long time—either for giving or receiving.</p>
+
+            <p>The seal was protection. Maybe one kind of love got tangled up with obligation, or transaction, or danger. Maybe warmth was conditional on performance. Maybe no one ever just... delighted in you. Or maybe you never learned that delight was something you could offer.</p>
+
+            <p>So you closed that door. Safer to be needed than wanted. Safer to do than to be. Safer to manage than to melt.</p>
+
+            <div class="insight">
+                <p>The door is still there. It's not gone—it's locked.</p>
+                <p class="key">And locks can be opened. From the inside.</p>
+            </div>
+
+            <p>Opening it doesn't mean losing control. It doesn't mean becoming someone you're not. It means adding range. It means being able to give—and receive—through more than one channel.</p>
+
+            <p>It means your love can finally land where it's aimed. And others' love can finally reach you.</p>
+        </section>
+
+        <div class="divider">
+            <span class="divider-symbol">✦</span>
+        </div>
+
+        <section class="closing">
+            <p><strong>You are not the lies you inherited.</strong></p>
+
+            <p>You are not broken. You are not too far gone. The parts of you that got sealed off aren't missing—they're just protected. Behind doors that made sense to close, once.</p>
+
+            <p>The doors can open. If you want them to.</p>
+
+            <p class="final">Begin there.</p>
+        </section>
+
+        <footer>
+            <p><a href="https://fractalreality.ca">Fractal Reality</a></p>
+            <p style="margin-top: 0.5rem;">An antivirus for the noble lie</p>
+        </footer>
+    </div>
+</body>
+</html>
