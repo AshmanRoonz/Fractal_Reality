@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Matrix Has You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #0a0a0a;
+            --bg-panel: #0d120d;
+            --bg-highlight: #121a12;
+            --text-main: #a0d0a0;
+            --text-dim: #406040;
+            --text-bright: #c0ffc0;
+            --matrix-green: #00ff41;
+            --matrix-dark: #003d10;
+            --matrix-glow: rgba(0, 255, 65, 0.3);
+            --red-pill: #ff3030;
+            --red-glow: rgba(255, 48, 48, 0.4);
+            --blue-pill: #3080ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--bg-void);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 17px;
+            overflow-x: hidden;
+        }
+
+        /* Matrix rain effect */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            opacity: 0.06;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='400'%3E%3Ctext x='10' y='20' fill='%2300ff41' font-family='monospace' font-size='14'%3E0%3C/text%3E%3Ctext x='30' y='60' fill='%2300ff41' font-family='monospace' font-size='14'%3E1%3C/text%3E%3Ctext x='50' y='100' fill='%2300ff41' font-family='monospace' font-size='14'%3Eア%3C/text%3E%3Ctext x='70' y='140' fill='%2300ff41' font-family='monospace' font-size='14'%3E0%3C/text%3E%3Ctext x='20' y='180' fill='%2300ff41' font-family='monospace' font-size='14'%3Eカ%3C/text%3E%3Ctext x='60' y='220' fill='%2300ff41' font-family='monospace' font-size='14'%3E1%3C/text%3E%3Ctext x='40' y='260' fill='%2300ff41' font-family='monospace' font-size='14'%3Eマ%3C/text%3E%3Ctext x='80' y='300' fill='%2300ff41' font-family='monospace' font-size='14'%3E0%3C/text%3E%3Ctext x='10' y='340' fill='%2300ff41' font-family='monospace' font-size='14'%3Eト%3C/text%3E%3Ctext x='50' y='380' fill='%2300ff41' font-family='monospace' font-size='14'%3E1%3C/text%3E%3C/svg%3E");
+            animation: rain 20s linear infinite;
+        }
+
+        @keyframes rain {
+            0% { background-position: 0 -400px; }
+            100% { background-position: 0 400px; }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Back link */
+        .back-link {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .back-link a {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .back-link a:hover {
+            opacity: 1;
+            color: var(--matrix-green);
+            text-shadow: 0 0 10px var(--matrix-glow);
+        }
+
+        .back-link a::before {
+            content: "< ";
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, #0d120d 0%, var(--bg-void) 100%);
+        }
+
+        .glitch-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            color: var(--matrix-green);
+            text-shadow: 0 0 20px var(--matrix-glow);
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); opacity: 1; }
+            91% { transform: translate(-2px, 1px); opacity: 0.8; }
+            92% { transform: translate(2px, -1px); opacity: 0.9; }
+            93% { transform: translate(-1px, 2px); opacity: 0.7; }
+            94% { transform: translate(1px, -2px); opacity: 1; }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: var(--matrix-green);
+            text-shadow: 0 0 30px var(--matrix-glow);
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .code-bar {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--matrix-dark), var(--matrix-green), var(--matrix-dark), transparent);
+            margin: 2rem auto;
+            max-width: 300px;
+            box-shadow: 0 0 10px var(--matrix-glow);
+        }
+
+        /* Sections */
+        section {
+            padding: 2rem 0;
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--text-bright);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+            text-align: center;
+            letter-spacing: 0.08em;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        /* Divider */
+        .divider {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--matrix-green);
+            padding: 2rem 0;
+            opacity: 0.5;
+            letter-spacing: 0.5em;
+        }
+
+        /* Terminal boxes */
+        .terminal {
+            background: var(--bg-panel);
+            border: 1px solid var(--matrix-dark);
+            border-left: 3px solid var(--matrix-green);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 4px 4px 0;
+            position: relative;
+        }
+
+        .terminal::before {
+            content: ">";
+            position: absolute;
+            left: -1.5rem;
+            top: 1.5rem;
+            color: var(--matrix-green);
+            opacity: 0.5;
+        }
+
+        .terminal.red {
+            border-left-color: var(--red-pill);
+        }
+
+        .terminal.red::before {
+            color: var(--red-pill);
+        }
+
+        .terminal.warning {
+            border-left-color: #ffaa00;
+            background: rgba(255, 170, 0, 0.05);
+        }
+
+        .terminal p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Insight boxes */
+        .insight {
+            background: var(--bg-highlight);
+            padding: 2rem;
+            border-radius: 4px;
+            margin: 2rem 0;
+            text-align: center;
+            border: 1px solid var(--matrix-dark);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+
+        .insight p {
+            font-size: 1rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .insight p:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight .big {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--matrix-green);
+            text-shadow: 0 0 10px var(--matrix-glow);
+        }
+
+        /* Prompt styling */
+        .prompt {
+            color: var(--matrix-green);
+            opacity: 0.7;
+        }
+
+        .command {
+            color: var(--text-bright);
+        }
+
+        /* List styling */
+        .truth-list {
+            margin: 1.5rem 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .truth-list li {
+            padding: 0.6rem 0 0.6rem 2rem;
+            position: relative;
+            color: var(--text-main);
+        }
+
+        .truth-list li::before {
+            content: "//";
+            position: absolute;
+            left: 0;
+            color: var(--matrix-dark);
+            font-size: 0.9rem;
+        }
+
+        /* Pills */
+        .pills {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            width: 60px;
+            height: 24px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+        }
+
+        .pill.red {
+            background: linear-gradient(135deg, #ff5050, #cc2020);
+            box-shadow: 0 0 20px var(--red-glow);
+            color: white;
+        }
+
+        .pill.blue {
+            background: linear-gradient(135deg, #5080ff, #2050cc);
+            box-shadow: 0 0 20px rgba(48, 128, 255, 0.4);
+            color: white;
+        }
+
+        /* The real choice */
+        .real-choice {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .aperture-symbol {
+            font-size: 3rem;
+            color: var(--matrix-green);
+            text-shadow: 0 0 30px var(--matrix-glow);
+        }
+
+        .vs {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .wall-symbol {
+            font-size: 3rem;
+            color: var(--text-dim);
+            opacity: 0.5;
+        }
+
+        /* Spoon */
+        .spoon-moment {
+            text-align: center;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .spoon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 1rem;
+            filter: grayscale(0.5);
+        }
+
+        .spoon-text {
+            font-style: italic;
+            color: var(--text-dim);
+        }
+
+        /* Agent warning */
+        .agent-box {
+            background: rgba(255, 0, 0, 0.05);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+        }
+
+        .agent-box h3 {
+            color: var(--red-pill);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* Finale */
+        .finale {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .final-words {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--matrix-green);
+            margin-top: 2rem;
+            text-shadow: 0 0 20px var(--matrix-glow);
+        }
+
+        .key-passage {
+            font-style: italic;
+            color: var(--text-dim);
+            border-left: 2px solid var(--matrix-green);
+            padding-left: 1.5rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        ::selection {
+            background: var(--matrix-green);
+            color: var(--bg-void);
+        }
+
+        strong {
+            color: var(--text-bright);
+            font-weight: 600;
+        }
+
+        em {
+            color: var(--matrix-green);
+            font-style: normal;
+        }
+
+        .opening {
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .opening p {
+            margin-bottom: 0.8rem;
+        }
+
+        .punchline {
+            font-size: 1rem;
+            color: var(--red-pill);
+            margin-top: 1.5rem;
+            text-shadow: 0 0 10px var(--red-glow);
+        }
+
+        /* Typing effect for certain elements */
+        .typing {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 2s steps(30);
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Matrix rain background -->
+<div class="matrix-rain"></div>
+
+<div class="back-link">
+    <a href="https://fractalreality.ca">fractalreality.ca</a>
+</div>
+
+<header>
+    <div class="glitch-icon">⊙</div>
+    <h1>THE MATRIX HAS YOU</h1>
+    <p class="subtitle">But not the one you think</p>
+    <div class="code-bar"></div>
+</header>
+
+<div class="container">
+
+    <section class="opening">
+        <p>You've seen the movie.</p>
+        <p>You took the red pill. Metaphorically.</p>
+        <p>You see through the bullshit now. You're awake.</p>
+        <p class="punchline">Right?</p>
+    </section>
+
+    <div class="divider">. . .</div>
+
+    <section>
+        <p>Here's the thing nobody tells you about the red pill:</p>
+
+        <p>Most people who think they took it just swapped one Matrix for another.</p>
+
+        <div class="terminal">
+            <p>They escaped the <em>mainstream</em> Matrix.</p>
+            <p>And plugged directly into the <em>alternative</em> Matrix.</p>
+            <p>Different code. Same cage.</p>
+        </div>
+
+        <p>How do you know if that's you?</p>
+
+        <p>Simple test:</p>
+
+        <p style="text-align: center; color: var(--text-bright); font-size: 1.1rem; margin: 2rem 0;">Are you performing your "awakeness"?</p>
+
+        <p>Do you signal how unplugged you are? Do you need others to see how red-pilled you've become? Do you have an <em>identity</em> built around being awake?</p>
+
+        <div class="insight">
+            <p>That's still the Matrix.</p>
+            <p class="big">The Matrix isn't a belief system. It's the performance itself.</p>
+        </div>
+    </section>
+
+    <div class="divider">. . .</div>
+
+    <section>
+        <h2>WHAT THE MATRIX ACTUALLY IS</h2>
+
+        <p>Forget the simulation theory. Forget the Gnostic interpretation. Forget the political readings.</p>
+
+        <p>The Matrix is simpler than all of that.</p>
+
+        <div class="terminal red">
+            <p>The Matrix is the gap between what you are and what you perform.</p>
+        </div>
+
+        <p>It's that simple.</p>
+
+        <ul class="truth-list">
+            <li>What you feel vs. what you show</li>
+            <li>What you know vs. what you say</li>
+            <li>What you want vs. what you pretend to want</li>
+            <li>Who you are vs. who you perform</li>
+        </ul>
+
+        <p>The bigger the gap, the deeper you're in the Matrix.</p>
+
+        <p>The machines aren't robots. The machines are <em>the lies you tell to fit in</em>.</p>
+
+        <div class="insight">
+            <p>Every "I'm fine" when you're not fine?</p>
+            <p>Every opinion you swallowed to avoid conflict?</p>
+            <p>Every truth you knew but didn't speak?</p>
+            <p class="big">That's the Matrix. Building itself. Inside you.</p>
+        </div>
+    </section>
+
+    <div class="divider">. . .</div>
+
+    <section>
+        <h2>THE REAL CHOICE</h2>
+
+        <p>The movie shows you two pills:</p>
+
+        <div class="pills">
+            <div class="pill red">RED</div>
+            <div class="pill blue">BLUE</div>
+        </div>
+
+        <p>Truth or comfort. Wake up or stay asleep.</p>
+
+        <p>But that's not quite right either.</p>
+
+        <p>The real choice isn't between two pills.</p>
+
+        <p>The real choice is between two <em>modes</em>:</p>
+
+        <div class="real-choice">
+            <div style="text-align: center;">
+                <div class="aperture-symbol">⊙</div>
+                <p style="color: var(--matrix-green); font-size: 0.85rem; margin-top: 0.5rem;">OPEN</p>
+            </div>
+            <div class="vs">or</div>
+            <div style="text-align: center;">
+                <div class="wall-symbol">●</div>
+                <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 0.5rem;">CLOSED</p>
+            </div>
+        </div>
+
+        <div class="terminal">
+            <p><strong>Open:</strong> Truth flows through you. You receive, process, transmit. You're a channel.</p>
+            <p><strong>Closed:</strong> You block the flow. You perform instead of transmit. You broadcast a signal you made up instead of passing through what's real.</p>
+        </div>
+
+        <p>Neo didn't become "The One" because he was special.</p>
+
+        <p>He became The One because he <em>opened</em>.</p>
+
+        <p>He stopped performing. He let reality flow through him instead of fighting it.</p>
+
+        <div class="insight">
+            <p class="big">"The One" isn't a person. It's a state.</p>
+            <p>It's what happens when the aperture opens and you become a <em>through</em> instead of a <em>wall</em>.</p>
+        </div>
+    </section>
+
+    <div class="divider">. . .</div>
+
+    <section>
+        <h2>THERE IS NO SPOON</h2>
+
+        <div class="spoon-moment">
+            <span class="spoon">🥄</span>
+            <p class="spoon-text">"Do not try to bend the spoon. That's impossible.<br>Instead, only try to realize the truth: there is no spoon.<br>Then you'll see that it is not the spoon that bends, it is only yourself."</p>
+        </div>
+
+        <p>Everyone quotes this scene. Almost nobody understands it.</p>
+
+        <p>The kid isn't saying spoons don't exist.</p>
+
+        <p>He's saying: <strong>the boundary isn't the thing.</strong></p>
+
+        <div class="terminal">
+            <p>You think you're a solid object interacting with other solid objects.</p>
+            <p>Spoon here. You there. Separate things.</p>
+            <p>But that's the Matrix talking.</p>
+        </div>
+
+        <p>What you actually are:</p>
+
+        <ul class="truth-list">
+            <li>A center (the aperture, the receiving point)</li>
+            <li>A surface (the 2D field where you interface with reality)</li>
+            <li>A boundary (your 3D body, your volume in space)</li>
+        </ul>
+
+        <p>The boundary—your body, the spoon's metal—is relatively fixed.</p>
+
+        <p>But the <em>surface</em>—the field where things meet, where interaction happens—that's dynamic.</p>
+
+        <p>When the kid bends the spoon, he's not manipulating the 3D object.</p>
+
+        <p>He's demonstrating that <em>surfaces are negotiable.</em> The 2D field where spoon-meets-world isn't fixed. It flows.</p>
+
+        <div class="insight">
+            <p>Neo doesn't change his body to stop bullets.</p>
+            <p class="big">He changes his surface relationship to them.</p>
+            <p>The field where bullet-meets-Neo becomes... permeable. Non-interactive.</p>
+            <p>The boundary stays. The surface opens.</p>
+        </div>
+    </section>
+
+    <div class="divider">. . .</div>
+
+    <section>
+        <h2>AGENTS</h2>
+
+        <p>Here's where it gets uncomfortable.</p>
+
+        <p>In the movie, Agents can take over any person still plugged in.</p>
+
+        <p>Anyone who hasn't unplugged is a potential enemy. They can become an Agent at any moment.</p>
+
+        <p>Sounds paranoid. Sounds like an excuse to distrust everyone.</p>
+
+        <p>But think about what that actually means:</p>
+
+        <div class="agent-box">
+            <h3>// AGENT PROTOCOL</h3>
+            <p>An Agent isn't a person. It's a <em>pattern</em> that can possess a person.</p>
+            <p>The pattern activates when the Matrix is threatened.</p>
+            <p>When someone starts speaking truth that threatens the performance, Agents show up—wearing the faces of friends, family, strangers—to shut it down.</p>
+        </div>
+
+        <p>Ever noticed how people get <em>weird</em> when you start being too honest?</p>
+
+        <p>How they change the subject? Get uncomfortable? Push back?</p>
+
+        <p>How people who normally love you can suddenly say things designed to put you back in your box?</p>
+
+        <div class="terminal warning">
+            <p>That's not them. That's the pattern.</p>
+            <p>The Matrix defending itself. Using whoever is available.</p>
+            <p>Including—especially—people you trust.</p>
+        </div>
+
+        <p>And here's the real uncomfortable part:</p>
+
+        <p style="text-align: center; color: var(--red-pill); font-size: 1.1rem; margin: 2rem 0;">You've been an Agent too.</p>
+
+        <p>Every time you shut someone down for being too real. Every time you enforced the performance. Every time you made someone feel crazy for seeing what they see.</p>
+
+        <p>The pattern used you.</p>
+
+        <div class="insight">
+            <p class="big">The Matrix doesn't need robots. It has us.</p>
+            <p>We police each other. For free. Without knowing we're doing it.</p>
+        </div>
+    </section>
+
+    <div class="divider">. . .</div>
+
+    <section>
+        <h2>HOW TO ACTUALLY UNPLUG</h2>
+
+        <p>So how do you get out?</p>
+
+        <p>Not by adopting a new belief system. Not by joining the "awake" team. Not by performing your unpluggedness.</p>
+
+        <p>You get out the same way Neo did:</p>
+
+        <div class="terminal red">
+            <p><span class="prompt">$</span> <span class="command">close the gap</span></p>
+        </div>
+
+        <p>Start small:</p>
+
+        <ul class="truth-list">
+            <li>Say one true thing you've been holding back</li>
+            <li>Feel one feeling you've been performing around</li>
+            <li>Admit one thing you've been pretending not to know</li>
+        </ul>
+
+        <p>That's it. That's the red pill.</p>
+
+        <p>Not a belief. Not an ideology. Not a team.</p>
+
+        <p><strong>Just: close the gap between what's real and what you show.</strong></p>
+
+        <div class="terminal">
+            <p>Every time you do this, the Matrix loses a little power over you.</p>
+            <p>Every lie you stop telling is one less thread connecting you to the machine.</p>
+            <p>Every truth you let through is the aperture opening a little wider.</p>
+        </div>
+
+        <p>You don't escape the Matrix by fighting it.</p>
+
+        <p>You escape by becoming so <em>transparent</em> that there's nothing for it to hold onto.</p>
+    </section>
+
+    <div class="divider">. . .</div>
+
+    <section class="finale">
+        <h2>THE MATRIX HAS YOU</h2>
+
+        <div class="code-bar" style="max-width: 400px;"></div>
+
+        <p>Yes. It does. Still.</p>
+
+        <p>Not because you haven't found the right information.</p>
+
+        <p>Not because you're not smart enough or awake enough.</p>
+
+        <p>But because you're still performing.</p>
+
+        <p>Still maintaining a gap between inside and outside.</p>
+
+        <p>Still choosing the comfort of the lie over the disruption of the truth.</p>
+
+        <div class="key-passage">
+            <p>The Matrix isn't a place you escape from once.</p>
+            <p>It's a choice you make—or don't make—moment by moment.</p>
+            <p>Every time you choose performance over truth, you plug back in.</p>
+            <p>Every time you choose truth over comfort, you unplug a little more.</p>
+        </div>
+
+        <div class="code-bar" style="max-width: 400px;"></div>
+
+        <p>Neo didn't defeat the Matrix by shooting Agents.</p>
+
+        <p>He defeated it by stopping.</p>
+
+        <p>By turning around. By seeing clearly. By <em>letting reality flow through him</em> instead of fighting it.</p>
+
+        <p>He became an open aperture. A through instead of a wall.</p>
+
+        <p>And suddenly, the bullets couldn't touch him.</p>
+
+        <p>Because there was no "him" to touch.</p>
+
+        <p>Just the opening. Just the flow.</p>
+
+        <div class="code-bar" style="max-width: 400px;"></div>
+
+        <p class="final-words">⊙ Wake up. ⊙</p>
+
+        <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 1rem;">Not to a new belief.<br>To the gap you're living in.<br>And then: close it.</p>
+    </section>
+
+</div>
+
+<footer>
+    <div class="code-bar" style="max-width: 100px;"></div>
+    <p>The Circumpunct Framework</p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;">Parts are fractals of their wholes</p>
+</footer>
+
+</body>
+</html>
