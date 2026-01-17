@@ -176,29 +176,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    order: 1;
-}
-
-/* Mobile: Ensure proper stacking order */
-@media (max-width: 899px) {
-    .main-layout {
-        display: flex !important;
-        flex-direction: column !important;
-    }
-
-    .left-panel {
-        order: 2;
-        text-align: center;
-    }
-
-    .center-panel {
-        order: 1;
-    }
-
-    .right-panel {
-        order: 3;
-        text-align: center;
-    }
 }
 
 /* Header - Hero Equation Section */
