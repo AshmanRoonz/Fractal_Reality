@@ -100,11 +100,11 @@ body {
 
 .mobile-nav-menu a {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.55rem;
+    font-size: 0.75rem;
     font-weight: 400;
     color: var(--text-dim);
     text-decoration: none;
-    padding: 0.25rem 0.4rem;
+    padding: 0.35rem 0.55rem;
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 8px;
     background: transparent;
@@ -124,8 +124,8 @@ body {
         gap: 0.25rem;
     }
     .mobile-nav-menu a {
-        font-size: 0.5rem;
-        padding: 0.2rem 0.35rem;
+        font-size: 0.65rem;
+        padding: 0.3rem 0.45rem;
     }
 }
 
