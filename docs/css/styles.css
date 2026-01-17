@@ -85,34 +85,67 @@ body {
     text-shadow: 0 0 8px var(--mind-color);
 }
 
-/* Responsive nav */
+/* ===================================
+   MOBILE NAVIGATION MENU (below dimensions)
+   =================================== */
+.mobile-nav-menu {
+    display: none; /* Hidden by default, shown on mobile */
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 1rem 0.5rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+.mobile-nav-menu a {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.mobile-nav-menu a:hover,
+.mobile-nav-menu a:active {
+    color: var(--text);
+    border-color: var(--soul-color);
+    background: rgba(88, 166, 255, 0.1);
+}
+
+/* Responsive nav - hide top menu on mobile, show mobile menu */
 @media (max-width: 700px) {
     .top-nav {
         padding: 0.5rem 1rem;
+        justify-content: center;
     }
 
     .nav-home {
-        font-size: 0.8rem;
+        font-size: 0.85rem;
     }
 
+    /* Hide top nav menu on mobile */
     .nav-menu {
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        justify-content: flex-end;
+        display: none;
     }
 
-    .nav-menu a {
-        font-size: 0.6rem;
+    /* Show mobile nav menu below dimensions */
+    .mobile-nav-menu {
+        display: flex;
     }
 }
 
 @media (max-width: 400px) {
-    .nav-menu a {
-        font-size: 0.55rem;
-    }
-
-    .nav-menu {
-        gap: 0.4rem;
+    .mobile-nav-menu a {
+        font-size: 0.6rem;
+        padding: 0.3rem 0.5rem;
     }
 }
 
