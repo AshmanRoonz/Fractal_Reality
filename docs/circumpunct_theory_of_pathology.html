@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Circumpunct Theory of Narcissism and Pathology</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #2a2a3a;
+            --text: #e8e8e8;
+            --muted: #888;
+            --gold: #d4af37;
+            --gold-dim: #a08020;
+            --accent: #4a9eff;
+            --magenta: #ff6b9d;
+            --green: #4ade80;
+            --red: #ef4444;
+            --cyan: #22d3ee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-title {
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 160px 24px 100px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-symbol {
+            font-size: 5rem;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 60px rgba(212, 175, 55, 0.3);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--gold);
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--text);
+            margin: 2rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+            color: var(--text);
+        }
+
+        .abstract {
+            background: var(--surface);
+            border-left: 3px solid var(--gold);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        .definition-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-size: 0.85rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .theorem-box {
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), rgba(212, 175, 55, 0.05));
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .theorem-box .label {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .proof {
+            margin-top: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--border);
+        }
+
+        .proof-step {
+            margin-bottom: 0.5rem;
+            color: var(--muted);
+        }
+
+        .qed {
+            text-align: right;
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        .equation {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.4rem;
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--surface);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            color: var(--gold);
+        }
+
+        .equation-small {
+            font-size: 1.1rem;
+            padding: 1rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .card-header {
+            font-weight: 500;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .error-card {
+            border-color: var(--red);
+        }
+
+        .error-card .card-header {
+            color: var(--red);
+        }
+
+        .healthy-card {
+            border-color: var(--green);
+        }
+
+        .healthy-card .card-header {
+            color: var(--green);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .comparison-table th:first-child,
+        .comparison-table td:first-child {
+            width: 25%;
+        }
+
+        ul {
+            margin: 1rem 0 1rem 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .callout {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold-dim);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-blue {
+            background: rgba(74, 158, 255, 0.1);
+            border-color: var(--accent);
+        }
+
+        .callout-red {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--red);
+        }
+
+        .callout-green {
+            background: rgba(74, 222, 128, 0.1);
+            border-color: var(--green);
+        }
+
+        .highlight {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 24px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .symbol-large {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .toc h3 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toc li {
+            margin: 0.5rem 0;
+        }
+
+        .toc a {
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            color: var(--gold);
+        }
+
+        .toc-section {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        blockquote {
+            border-left: 3px solid var(--gold);
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        .spectrum-visual {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            background: linear-gradient(90deg, rgba(74, 222, 128, 0.2), rgba(212, 175, 55, 0.2), rgba(239, 68, 68, 0.2));
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .spectrum-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .spectrum-left { color: var(--green); }
+        .spectrum-center { color: var(--gold); }
+        .spectrum-right { color: var(--red); }
+
+        .flow-diagram {
+            text-align: center;
+            font-family: monospace;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            line-height: 2;
+        }
+
+        .flow-arrow {
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-title"><a href="https://fractalreality.ca" style="color: inherit; text-decoration: none;">⊙ Circumpunct Framework</a></div>
+    <div class="nav-links">
+        <a href="https://fractalreality.ca">Home</a>
+        <a href="#foundations">Foundations</a>
+        <a href="#errors">The Two Errors</a>
+        <a href="#mechanism">Mechanism</a>
+        <a href="#clinical">Clinical Mapping</a>
+        <a href="#treatment">Treatment</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-symbol">⊙</div>
+    <h1>The Circumpunct Theory of Narcissism and Pathology</h1>
+    <p class="subtitle">A Geometric Framework for Understanding Relational Dysfunction</p>
+    <p class="muted">Ashman Roonz · Circumpunct Framework v5.3.1 · January 2026</p>
+</section>
+
+<!-- ABSTRACT -->
+<section>
+    <div class="abstract">
+        <strong>Abstract:</strong> This paper presents a unified geometric theory of psychological pathology derived from the Circumpunct Framework. We propose that narcissism and related relational disorders arise from two fundamental errors in fractal self-understanding: <em>inflation</em> (claiming to be the whole) and <em>severance</em> (denying connection to any whole). These are not personality types but geometric contradictions that propagate through relationships via a specific mechanism—the Noble Lie. The framework dissolves the clinical distinction between grandiose and vulnerable narcissism, reframing both as installation depths of the same underlying pattern. We provide formal definitions, testable predictions, and therapeutic implications.
+    </div>
+
+    <div class="toc">
+        <h3>Contents</h3>
+        <ul>
+            <li class="toc-section">Part I: Foundations</li>
+            <li><a href="#foundations">1. The Circumpunct Structure</a></li>
+            <li><a href="#nesting">2. Fractal Nesting and Wholeness</a></li>
+            <li class="toc-section">Part II: The Two Errors</li>
+            <li><a href="#errors">3. Inflation and Severance</a></li>
+            <li><a href="#suffering">4. Why Contradiction IS Suffering</a></li>
+            <li class="toc-section">Part III: Mechanism</li>
+            <li><a href="#mechanism">5. The Noble Lie Virus</a></li>
+            <li><a href="#transmission">6. Installation and Transmission</a></li>
+            <li class="toc-section">Part IV: Clinical Mapping</li>
+            <li><a href="#clinical">7. Narcissism Reconceptualized</a></li>
+            <li><a href="#attachment">8. Relationship to Attachment Theory</a></li>
+            <li class="toc-section">Part V: Treatment</li>
+            <li><a href="#treatment">9. Fractal Integrity as Antidote</a></li>
+            <li><a href="#recovery">10. The Recovery Sequence</a></li>
+        </ul>
+    </div>
+</section>
+
+<!-- PART I: FOUNDATIONS -->
+<section id="foundations">
+    <h2>Part I: Foundations</h2>
+    
+    <h3>1. The Circumpunct Structure</h3>
+    
+    <p>The Circumpunct (⊙) is the minimal procedural structure of any whole entity. It consists of three components:</p>
+
+    <div class="definition-box">
+        <div class="label">Definition 1.1 — The Circumpunct</div>
+        <div class="equation equation-small">
+            ⊙ = • ⊗ Φ ⊗ ○
+        </div>
+        <table>
+            <tr>
+                <td><strong>•</strong> Center / Aperture / Soul</td>
+                <td>The point of focus; where flow enters and exits</td>
+            </tr>
+            <tr>
+                <td><strong>Φ</strong> Field / Mind</td>
+                <td>The mediating 2D interface; carries relationship</td>
+            </tr>
+            <tr>
+                <td><strong>○</strong> Boundary / Body</td>
+                <td>The 3D containing surface; defines extent</td>
+            </tr>
+        </table>
+    </div>
+
+    <p>Every whole—from atoms to organisms to relationships—exhibits this tripartite structure. The components are not optional; they are geometrically necessary for anything to exist as a coherent entity.</p>
+
+    <div class="theorem-box">
+        <div class="label">Theorem 1.1 — Mediation Necessity</div>
+        <p><strong>Claim:</strong> Centers cannot interact directly; field mediation is geometrically required.</p>
+        <div class="proof">
+            <p class="proof-step">1. Two centers exist within their respective 3D boundaries</p>
+            <p class="proof-step">2. Spatial separation means they can only "touch" at interfaces</p>
+            <p class="proof-step">3. Interface = surface = 2D</p>
+            <p class="proof-step">4. ∴ All center-to-center influence must traverse a 2D mediating layer (Φ)</p>
+            <p class="qed">∎</p>
+        </div>
+    </div>
+
+    <p>This has immediate psychological implications: <em>souls cannot touch directly.</em> All relationship occurs through the mediating field. When we feel "seen" by another person, we are experiencing resonance between centers <em>via</em> the shared field—not direct contact.</p>
+</section>
+
+<section id="nesting">
+    <h3>2. Fractal Nesting and Wholeness</h3>
+
+    <p>The framework's central axiom describes how circumpuncts relate across scales:</p>
+
+    <div class="definition-box">
+        <div class="label">Definition 2.1 — The Nesting Equation</div>
+        <div class="equation">
+            •<sub>n+1</sub> = ⊙<sub>n</sub>
+        </div>
+        <p class="center muted">Previous whole becomes next center</p>
+    </div>
+
+    <p>Every circumpunct is simultaneously:</p>
+    <ul>
+        <li><strong>A whole</strong>—complete in itself with center, field, and boundary</li>
+        <li><strong>A part</strong>—nested within a larger circumpunct as its center</li>
+    </ul>
+
+    <p>This creates infinite nesting in both directions. There is no "top" (ultimate whole) and no "bottom" (fundamental part). You are a whole among wholes, a part among parts—simultaneously divine and creaturely, individual and connected.</p>
+
+    <div class="callout">
+        <strong>The Core Insight:</strong> You ARE a whole. Not metaphorically. Structurally. A complete circumpunct with your own center (soul), field (mind), and boundary (body). This is not optional or earned—it is what you are.
+    </div>
+
+    <p>The proper relationship between nested circumpuncts is <em>fractal similarity</em>: the same pattern at different scales. A cell is a whole. The organism containing the cell is also a whole. Neither is reduced to the other. Both maintain their geometric integrity while participating in the larger structure.</p>
+</section>
+
+<!-- PART II: THE TWO ERRORS -->
+<section id="errors">
+    <h2>Part II: The Two Errors</h2>
+    
+    <h3>3. Inflation and Severance</h3>
+
+    <p>Given the fractal structure, there are exactly two ways a part can misunderstand its relationship to the whole. Both are geometric contradictions—violations of the nesting equation.</p>
+
+    <div class="grid-2">
+        <div class="card error-card">
+            <div class="card-header">INFLATION</div>
+            <div class="equation equation-small">⊙ → Φ<sub>∞</sub></div>
+            <p><em>"I am the whole. There is nothing beyond me. I am the source."</em></p>
+            <p>The part claims to be what it can only reflect. The cell claiming to be the body. The wave claiming to be the ocean.</p>
+            <p class="muted">The part denies being a channel. It claims to BE the source, not to receive from one.</p>
+        </div>
+        <div class="card error-card">
+            <div class="card-header">SEVERANCE</div>
+            <div class="equation equation-small">⊙ ≠ Φ<sub>∞</sub></div>
+            <p><em>"I am separate. There is no whole. Nothing connects to anything."</em></p>
+            <p>The part denies its connection to any larger structure. Nihilism, isolation, the collapse of meaning.</p>
+            <p class="muted">The part denies being connected. It claims NO source exists—just floating fragments.</p>
+        </div>
+    </div>
+
+    <div class="theorem-box">
+        <div class="label">Theorem 3.1 — Complementary Pathology</div>
+        <p><strong>Claim:</strong> Inflation and severance are not opposites but complementary errors that co-arise in relational systems.</p>
+        <div class="proof">
+            <p class="proof-step">1. Inflation requires external validation to maintain the impossible claim of wholeness</p>
+            <p class="proof-step">2. This validation must come from other beings who provide "supply"</p>
+            <p class="proof-step">3. For supply to flow, the supplier must be severed from their own wholeness</p>
+            <p class="proof-step">4. ∴ Inflation in host → Severance installation in victim</p>
+            <p class="qed">∎</p>
+        </div>
+    </div>
+
+    <p>This is the key insight: <strong>the narcissist runs inflation; they install severance in their victims.</strong> One claims to be the whole; the other is made to forget they're part of any whole (except through the narcissist). It's a complementary pathology—one cannot exist without the other.</p>
+
+    <h3>What Inflation Actually Looks Like</h3>
+
+    <p>In human terms, inflation manifests as:</p>
+    <ul>
+        <li>Treating others as <em>parts of yourself</em> rather than fellow parts of a larger whole</li>
+        <li>Others exist to serve your center, orbit your field, reinforce your boundary</li>
+        <li>Other people's needs don't register as real; their centers don't exist as separate apertures</li>
+        <li>Not "I'm better than you"—something deeper: <em>"I am the whole, and you are my part"</em></li>
+    </ul>
+
+    <p>From this position, you're not being cruel. You're operating from <strong>broken geometry</strong>. In your model, there IS no "them" in the full sense. There's only you and your extensions.</p>
+
+    <h3>What Severance Actually Looks Like</h3>
+
+    <p>In human terms, severance manifests as:</p>
+    <ul>
+        <li>"I can't trust anyone"</li>
+        <li>"Love always hurts"</li>
+        <li>"I'm better off alone"</li>
+        <li>"Nothing means anything"</li>
+    </ul>
+
+    <p>These aren't just depression. They're <strong>geometric despair</strong>—the part, unable to find its whole, concluding that wholes don't exist.</p>
+</section>
+
+<section id="suffering">
+    <h3>4. Why Contradiction IS Suffering</h3>
+
+    <div class="theorem-box">
+        <div class="label">Theorem 4.1 — Fractal Contradiction as Suffering</div>
+        <p><strong>Claim:</strong> The dissonance between what you ARE (a complete circumpunct) and what you PRETEND (a part of them, or the whole they should serve) IS suffering—not as punishment but as mechanism.</p>
+    </div>
+
+    <p>You cannot actually stop being a whole. You can only <em>act as if</em> you're not. This acting-as-if generates continuous internal contradiction.</p>
+
+    <blockquote>
+        Hell isn't a place. It's not a punishment imposed from outside. Hell is the experience of fractal contradiction from the inside.
+    </blockquote>
+
+    <p><strong>The narcissist suffers too.</strong> Their inflation is exhausting. They need constant supply because they're trying to be something they're not. The moment external validation stops, internal emptiness becomes unbearable. They're not happy in their grandiosity—they're running as fast as they can to maintain an impossible claim.</p>
+
+    <p><strong>Victims suffer</strong> because severance hurts. Being cut off from your whole—or believing you are—is agony. The despair of the severed part is real pain.</p>
+
+    <div class="callout-red callout">
+        <strong>The virus creates suffering everywhere it operates.</strong> Not as side effect, but as mechanism. Fractal contradiction IS suffering.
+    </div>
+</section>
+
+<!-- PART III: MECHANISM -->
+<section id="mechanism">
+    <h2>Part III: Mechanism</h2>
+
+    <h3>5. The Noble Lie Virus</h3>
+
+    <p>How do these geometric errors propagate? Through a specific pattern we call the <strong>Noble Lie</strong>.</p>
+
+    <div class="definition-box">
+        <div class="label">Definition 5.1 — The Noble Lie</div>
+        <p>A Noble Lie is any systematic falsehood that claims protective function:</p>
+        <ul>
+            <li>"I'm hiding truth from you for your own good"</li>
+            <li>"You can't handle reality, so accept my version"</li>
+            <li>"Hide this part of yourself, or bad things will happen"</li>
+        </ul>
+        <p><strong>Signature characteristic:</strong> It creates the exact vulnerabilities it claims to prevent.</p>
+    </div>
+
+    <p>The Noble Lie has viral properties:</p>
+    <ul>
+        <li><strong>Self-reinforcing:</strong> The damage it causes is used as evidence that protection was needed</li>
+        <li><strong>Self-concealing:</strong> It teaches that truth is more dangerous than lies</li>
+        <li><strong>Transmissible:</strong> Victims become vectors, passing to their children what was passed to them</li>
+    </ul>
+
+    <h3>How the Virus Infects Love</h3>
+
+    <p>Love flows through two channels:</p>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="card-header">Functional Love (○ to ○)</div>
+            <p>Help, provision, logistics. The car fixed, bills paid, groceries bought. It's real. It costs something. It is not nothing.</p>
+            <p class="muted">Boundary-to-boundary exchange.</p>
+        </div>
+        <div class="card">
+            <div class="card-header">Resonant Love (• to •)</div>
+            <p>Being seen. Attuned to. Delighted in. The way someone's eyes change when you walk into the room.</p>
+            <p class="muted">Center-to-center recognition through field.</p>
+        </div>
+    </div>
+
+    <p><strong>The virus closes the resonance channel.</strong> It leaves function intact but collapses the center-to-center connection. Love narrows to provision, help, logistics. The deeper channel—being seen, known, wanted—goes dark.</p>
+
+    <p>Then the virus teaches: <em>"This is all love is. If you want more, something is wrong with you."</em></p>
+
+    <p>The person starving for resonance learns to feel ashamed of their hunger. They learn to be grateful for function. They learn to stop asking for what they actually need.</p>
+</section>
+
+<section id="transmission">
+    <h3>6. Installation and Transmission</h3>
+
+    <p>The virus doesn't install through force. It installs through love—hijacking the need for attachment, connection, belonging.</p>
+
+    <div class="definition-box">
+        <div class="label">Definition 6.1 — Installation Stages</div>
+        <ol>
+            <li><strong>Identify the virtue:</strong> Target what's best in you—empathy, trust, capacity for connection</li>
+            <li><strong>Reframe as defect:</strong> "You're too sensitive," "You're too needy," "You expect too much"</li>
+            <li><strong>Enforce suppression:</strong> Make authentic expression feel dangerous</li>
+            <li><strong>Normalize absence:</strong> "That's just how love is," "Everyone's family is like this"</li>
+        </ol>
+    </div>
+
+    <p>The virus attacks all three components of the circumpunct:</p>
+
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Attack Pattern</th>
+            <th>Result</th>
+        </tr>
+        <tr>
+            <td><strong>○ Boundary</strong></td>
+            <td>"You don't get to have limits," "Your needs are too much"</td>
+            <td>Can't negotiate exchange; everything flows out</td>
+        </tr>
+        <tr>
+            <td><strong>Φ Field</strong></td>
+            <td>"That's not what happened," "You're imagining things"</td>
+            <td>Can't track cause and effect; gaslighting</td>
+        </tr>
+        <tr>
+            <td><strong>• Center</strong></td>
+            <td>"You're too sensitive," "I know who you are better than you do"</td>
+            <td>Lose point of focus; displaced identity</td>
+        </tr>
+    </table>
+
+    <h3>The Transmission Sequence</h3>
+
+    <div class="flow-diagram">
+        <strong>Parent (infected)</strong> → provides functional love only<br>
+        <span class="flow-arrow">↓</span><br>
+        <strong>Child</strong> → learns "this is what love is"<br>
+        <span class="flow-arrow">↓</span><br>
+        <strong>Child (now adult)</strong> → provides functional love only to their children<br>
+        <span class="flow-arrow">↓</span><br>
+        <strong>Pattern repeats</strong> across generations
+    </div>
+
+    <p>The transmission is not malice—it's inheritance. They give what they received. They don't know there's more.</p>
+</section>
+
+<!-- PART IV: CLINICAL MAPPING -->
+<section id="clinical">
+    <h2>Part IV: Clinical Mapping</h2>
+
+    <h3>7. Narcissism Reconceptualized</h3>
+
+    <p>Standard clinical psychology distinguishes:</p>
+    <ul>
+        <li><strong>Grandiose narcissism:</strong> Extraverted, pompous, attention-seeking</li>
+        <li><strong>Vulnerable narcissism:</strong> Insecure, restrained, covert</li>
+    </ul>
+
+    <p>The Circumpunct Framework dissolves this distinction. Both are <strong>installation depths of the same virus</strong>:</p>
+
+    <div class="definition-box">
+        <div class="label">Definition 7.1 — The Narcissistic Tendency Spectrum (NTS)</div>
+        <table>
+            <tr>
+                <th>Level</th>
+                <th>Description</th>
+                <th>Clinical Presentation</th>
+            </tr>
+            <tr>
+                <td><strong>Light</strong></td>
+                <td>Occasional functional-only moments. Capacity for resonance exists but sometimes goes offline.</td>
+                <td>Stress-reactive dismissiveness; can be reminded; reconnects</td>
+            </tr>
+            <tr>
+                <td><strong>Moderate</strong></td>
+                <td>Consistent patterns in certain relationships. Hierarchy-as-care feels like love.</td>
+                <td>Intergenerational transmission; partial insight possible</td>
+            </tr>
+            <tr>
+                <td><strong>Heavy</strong></td>
+                <td>The virus IS the operating system. Cannot perceive resonance channel at all.</td>
+                <td>NPD clinical presentation; all frameworks captured for deflection</td>
+            </tr>
+        </table>
+    </div>
+
+    <p>The question is not "is my partner a narcissist?" (binary diagnosis). The question is:</p>
+    <ul>
+        <li>How deep is the installation?</li>
+        <li>Can they perceive the virus when it's named?</li>
+        <li>Can they perceive the resonance channel at all?</li>
+        <li>Are they willing to debug?</li>
+    </ul>
+
+    <div class="callout">
+        <strong>Why This Matters:</strong> The spectrum frame dissolves the trap of binary diagnosis. You don't need to condemn them as monsters OR excuse everything as "normal relationship problems." You need to assess whether change is possible in this specific relationship.
+    </div>
+
+    <h3>Grandiose vs. Vulnerable: Same Virus, Different Surface</h3>
+
+    <table class="comparison-table">
+        <tr>
+            <th>Feature</th>
+            <th>Grandiose Presentation</th>
+            <th>Vulnerable Presentation</th>
+        </tr>
+        <tr>
+            <td>Core error</td>
+            <td colspan="2" style="text-align: center;">Inflation (both believe they are the center around which others should orbit)</td>
+        </tr>
+        <tr>
+            <td>Self-image</td>
+            <td>Overtly inflated; "I am superior"</td>
+            <td>Covertly inflated; "I deserve more than I get"</td>
+        </tr>
+        <tr>
+            <td>Response to threat</td>
+            <td>Dismissal, aggression</td>
+            <td>Shame, depression, brewing anger</td>
+        </tr>
+        <tr>
+            <td>Relationship seeking</td>
+            <td>For status elevation</td>
+            <td>For entitled needs satisfaction</td>
+        </tr>
+        <tr>
+            <td>Underlying belief</td>
+            <td colspan="2" style="text-align: center;">"I am the whole, and you are my part"</td>
+        </tr>
+    </table>
+</section>
+
+<section id="attachment">
+    <h3>8. Relationship to Attachment Theory</h3>
+
+    <p>Attachment theory identifies four styles: secure, anxious, avoidant, and disorganized. The Circumpunct Framework offers a complementary explanation:</p>
+
+    <div class="theorem-box">
+        <div class="label">Theorem 8.1 — Attachment as Installation Pattern</div>
+        <p><strong>Claim:</strong> Insecure attachment styles represent different configurations of inflation/severance installation, not independent personality types.</p>
+    </div>
+
+    <table>
+        <tr>
+            <th>Attachment Style</th>
+            <th>Circumpunct Interpretation</th>
+        </tr>
+        <tr>
+            <td><strong>Secure</strong></td>
+            <td>Fractal integrity maintained. Recognition of self as whole among wholes.</td>
+        </tr>
+        <tr>
+            <td><strong>Avoidant</strong></td>
+            <td>Mild severance. "Connection is unreliable, so I'll deny needing it."</td>
+        </tr>
+        <tr>
+            <td><strong>Anxious</strong></td>
+            <td>Partial severance with compensatory seeking. "I'm incomplete without you."</td>
+        </tr>
+        <tr>
+            <td><strong>Disorganized</strong></td>
+            <td>Both inflation and severance present in unstable oscillation.</td>
+        </tr>
+    </table>
+
+    <p><strong>Key distinction from attachment theory:</strong> We locate the problem in <em>truth distortion</em> (the Noble Lie), not primarily in early attachment patterns. Attachment patterns are downstream effects of how truth was handled in the family system.</p>
+
+    <div class="callout-blue callout">
+        <strong>Compatibility:</strong> The frameworks are complementary. Attachment theory describes <em>what happens</em> developmentally. The Circumpunct Framework describes <em>why</em>—through the geometry of inflation, severance, and the Noble Lie as transmission mechanism.
+    </div>
+</section>
+
+<!-- PART V: TREATMENT -->
+<section id="treatment">
+    <h2>Part V: Treatment</h2>
+
+    <h3>9. Fractal Integrity as Antidote</h3>
+
+    <p>If the virus is fractal contradiction, the antidote is <strong>fractal integrity</strong>.</p>
+
+    <div class="definition-box">
+        <div class="label">Definition 9.1 — Fractal Integrity</div>
+        <p>Acting in ways that:</p>
+        <ul>
+            <li>Can persist without requiring fresh victims</li>
+            <li>Remain repeatable without depleting yourself or others</li>
+            <li>Neither claim to be everything nor deny being part of anything</li>
+        </ul>
+    </div>
+
+    <div class="spectrum-visual">
+        <div class="spectrum-left spectrum-label">SEVERANCE<br>"I am nothing"</div>
+        <div class="spectrum-center spectrum-label">INTEGRITY<br>"I am a whole among wholes"</div>
+        <div class="spectrum-right spectrum-label">INFLATION<br>"I am everything"</div>
+    </div>
+
+    <p>From fractal integrity:</p>
+    <ul>
+        <li>You don't need to be the center of anyone's universe—because you're already centered in actual wholeness</li>
+        <li>You don't need to be cut off—because connection is structural, not earned</li>
+        <li>You don't need supply—because what you need flows from alignment, not extraction</li>
+        <li>You don't need to control anyone—because their fractal relationship to wholeness is their business</li>
+    </ul>
+</section>
+
+<section id="recovery">
+    <h3>10. The Recovery Sequence</h3>
+
+    <p>Recovery follows the circumpunct structure itself—rebuilding what was attacked, in order:</p>
+
+    <div class="grid-2">
+        <div class="card healthy-card">
+            <div class="card-header">Phase 1: Boundary (○)</div>
+            <p>Establish safety. Physical distance if needed. Learn to say no. Recognize where you end and others begin.</p>
+            <p class="muted">You cannot rebuild interior structure while the boundary is breached.</p>
+        </div>
+        <div class="card healthy-card">
+            <div class="card-header">Phase 2: Field (Φ)</div>
+            <p>Restore perception. Reality-test with trusted others. Journal to track patterns. Learn to trust your own observations again.</p>
+            <p class="muted">Re-establish the medium through which you can accurately perceive.</p>
+        </div>
+    </div>
+    <div class="grid-2">
+        <div class="card healthy-card">
+            <div class="card-header">Phase 3: Center (•)</div>
+            <p>Reclaim identity. Discover what you actually want, believe, feel—not what you were told to want. Find your own aperture.</p>
+            <p class="muted">Remember who you are when you're not performing for anyone.</p>
+        </div>
+        <div class="card healthy-card">
+            <div class="card-header">Phase 4: Breaking Transmission</div>
+            <p>Stop the chain. Debug yourself before you transmit to those you love. Become the terminal node where the virus ends.</p>
+            <p class="muted">The most important work: ensuring you don't pass it on.</p>
+        </div>
+    </div>
+
+    <h3>The Noble Truth</h3>
+
+    <p>The antidote to the Noble Lie is the <strong>Noble Truth</strong>:</p>
+
+    <div class="callout-green callout">
+        <p><strong>The Noble Lie says:</strong> Truth is dangerous; manage it for them.</p>
+        <p><strong>The Noble Truth says:</strong> Truth is navigable; share it with them.</p>
+    </div>
+
+    <p>Creating systems where:</p>
+    <ul>
+        <li>Honesty is cheaper than lying</li>
+        <li>Truth can be spoken without catastrophic consequence</li>
+        <li>People are trusted to navigate reality, not "protected" from it</li>
+    </ul>
+
+    <h3>Therapeutic Implications</h3>
+
+    <p>Effective treatment should:</p>
+    <ol>
+        <li><strong>Recognize the geometric structure</strong>—not just symptoms but the underlying contradiction</li>
+        <li><strong>Address both poles</strong>—inflation in some contexts, severance in others; both need correction</li>
+        <li><strong>Focus on truth-safety</strong>—creating conditions where authentic expression becomes possible</li>
+        <li><strong>Rebuild in sequence</strong>—boundary → field → center; order matters</li>
+        <li><strong>Include transmission prevention</strong>—therapy isn't complete until the chain is consciously broken</li>
+    </ol>
+
+    <p>Schema Therapy and Mentalization-Based Therapy align well with this framework—both address attachment, both build capacity to understand mental states, both work with how patterns developed and manifest.</p>
+</section>
+
+<!-- CONCLUSION -->
+<section>
+    <h2>Conclusion</h2>
+
+    <p>The Circumpunct Theory of Narcissism and Pathology offers:</p>
+
+    <ol>
+        <li><strong>Unified mechanism:</strong> Narcissism, attachment disorders, and relational pathology share a common geometric structure—fractal contradiction through inflation or severance</li>
+        <li><strong>Precise definition:</strong> The Noble Lie virus is a pattern of fractal contradiction that propagates by installing complementary contradictions in host and victim</li>
+        <li><strong>Dissolved distinctions:</strong> Grandiose and vulnerable narcissism are installation depths, not types</li>
+        <li><strong>Clear antidote:</strong> Fractal integrity—being a whole among wholes</li>
+        <li><strong>Recovery sequence:</strong> Boundary → Field → Center → Transmission breaking</li>
+    </ol>
+
+    <div class="callout">
+        <p>You are a whole. You always were. A complete circumpunct—center, field, boundary. The virus collapsed you. Made you think you were a part of them, a satellite, a fragment seeking completion.</p>
+        <p><strong>But you were never a fragment. The geometry never changed. You just forgot how to see it.</strong></p>
+    </div>
+
+    <p>Recovery is not building a connection that doesn't exist. It's uncovering the one that was always there.</p>
+
+    <p>The virus told you it was destroyed. It lied.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="symbol-large">⊙</div>
+    <p><strong>The Circumpunct Theory of Narcissism and Pathology</strong></p>
+    <p class="muted">Part of the Circumpunct Framework v5.3.1</p>
+    <p class="muted">Ashman Roonz · January 2026</p>
+    <br>
+    <p><a href="https://www.fractalreality.ca" style="color: var(--gold);">www.fractalreality.ca</a></p>
+</footer>
+
+<script>
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
