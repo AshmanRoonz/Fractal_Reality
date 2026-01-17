@@ -912,6 +912,37 @@ body {
    Responsive
    =================================== */
 
+/* MOBILE: Force vertical stacking */
+@media screen and (max-width: 899px) {
+    .main-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 1rem;
+    }
+
+    .side-panel,
+    .left-panel,
+    .right-panel,
+    .center-panel {
+        width: 100% !important;
+        max-width: 100% !important;
+        text-align: center !important;
+    }
+
+    .header {
+        order: 1;
+    }
+
+    .center-panel {
+        order: 2;
+    }
+
+    .dimension-section {
+        order: 3;
+    }
+}
+
 /* Small mobile */
 @media (max-width: 400px) {
     .dimension-text {
