@@ -443,14 +443,11 @@ body {
    =================================== */
 .circumpunct-container {
     position: relative;
-    width: 80vw;
-    height: 80vw;
-    max-width: 340px;
-    max-height: 340px;
-    margin: 3rem 0;
-    /* Extra space for outer orbit */
-    padding: 60px;
-    box-sizing: content-box;
+    width: 90vw;
+    height: 90vw;
+    max-width: 420px;
+    max-height: 420px;
+    margin: 1rem 0;
 }
 
 .circumpunct {
@@ -602,76 +599,55 @@ body {
 .nav-arc-theory .arc-bg { animation-delay: 4.5s; }
 
 /* ===================================
-   OUTER ORBITAL RING - Link Buttons
+   OUTER NAVIGATION RING (SVG-based)
    =================================== */
-.outer-orbit-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
-
-.orbit-link {
-    position: absolute;
-    transform: translate(-50%, -50%);
+.outer-nav-ring {
     pointer-events: all;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 500;
-    color: #00ffff;
+}
+
+.nav-arc-outer {
+    cursor: pointer;
     text-decoration: none;
-    padding: 0.35rem 0.6rem;
-    background: rgba(0, 255, 255, 0.08);
-    border: 1px solid rgba(0, 255, 255, 0.4);
-    border-radius: 12px;
-    white-space: nowrap;
-    transition: all 0.3s ease;
-    text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
-    box-shadow:
-        0 0 10px rgba(0, 255, 255, 0.2),
-        inset 0 0 10px rgba(0, 255, 255, 0.05);
-    animation: orbit-pulse 4s ease-in-out infinite;
 }
 
-.orbit-link:hover {
-    color: #ffffff;
-    background: rgba(0, 255, 255, 0.2);
-    border-color: #00ffff;
-    text-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
-    box-shadow:
-        0 0 20px rgba(0, 255, 255, 0.5),
-        0 0 40px rgba(0, 255, 255, 0.3),
-        inset 0 0 15px rgba(0, 255, 255, 0.1);
-    transform: translate(-50%, -50%) scale(1.1);
+.nav-arc-outer .arc-bg-outer {
+    transition: stroke 0.3s ease, stroke-opacity 0.3s ease;
+    animation: arc-pulse-outer 5s ease-in-out infinite;
 }
 
-@keyframes orbit-pulse {
-    0%, 100% {
-        box-shadow:
-            0 0 10px rgba(0, 255, 255, 0.2),
-            inset 0 0 10px rgba(0, 255, 255, 0.05);
-    }
-    50% {
-        box-shadow:
-            0 0 15px rgba(0, 255, 255, 0.35),
-            inset 0 0 12px rgba(0, 255, 255, 0.1);
-    }
+.nav-arc-outer .arc-text-outer {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    fill: #00ffff;
+    filter: url(#glow-cyber);
+    transition: fill 0.3s ease, filter 0.3s ease;
 }
 
-/* Position each orbit link around the circle - 9 links at 40° intervals */
-/* Using percentage positions relative to circumpunct-container */
+/* Hover states for outer arc buttons */
+.nav-arc-outer:hover .arc-bg-outer {
+    stroke: rgba(0, 255, 255, 0.5);
+}
 
-.orbit-link:nth-child(1) { top: -15%; left: 50%; animation-delay: 0s; }       /* Top */
-.orbit-link:nth-child(2) { top: -2%; left: 90%; animation-delay: 0.45s; }     /* Top-right */
-.orbit-link:nth-child(3) { top: 35%; left: 110%; animation-delay: 0.9s; }     /* Right */
-.orbit-link:nth-child(4) { top: 75%; left: 100%; animation-delay: 1.35s; }    /* Bottom-right */
-.orbit-link:nth-child(5) { top: 108%; left: 70%; animation-delay: 1.8s; }     /* Bottom */
-.orbit-link:nth-child(6) { top: 108%; left: 30%; animation-delay: 2.25s; }    /* Bottom-left */
-.orbit-link:nth-child(7) { top: 75%; left: 0%; animation-delay: 2.7s; }       /* Left-bottom */
-.orbit-link:nth-child(8) { top: 35%; left: -10%; animation-delay: 3.15s; }    /* Left */
-.orbit-link:nth-child(9) { top: -2%; left: 10%; animation-delay: 3.6s; }      /* Top-left */
+.nav-arc-outer:hover .arc-text-outer {
+    fill: #ffffff;
+}
+
+/* Staggered pulse animation for outer ring */
+@keyframes arc-pulse-outer {
+    0%, 100% { stroke-opacity: 1; }
+    50% { stroke-opacity: 0.5; }
+}
+
+.outer-nav-ring .nav-arc-outer:nth-child(1) .arc-bg-outer { animation-delay: 0s; }
+.outer-nav-ring .nav-arc-outer:nth-child(2) .arc-bg-outer { animation-delay: 0.6s; }
+.outer-nav-ring .nav-arc-outer:nth-child(3) .arc-bg-outer { animation-delay: 1.2s; }
+.outer-nav-ring .nav-arc-outer:nth-child(4) .arc-bg-outer { animation-delay: 1.8s; }
+.outer-nav-ring .nav-arc-outer:nth-child(5) .arc-bg-outer { animation-delay: 2.4s; }
+.outer-nav-ring .nav-arc-outer:nth-child(6) .arc-bg-outer { animation-delay: 3s; }
+.outer-nav-ring .nav-arc-outer:nth-child(7) .arc-bg-outer { animation-delay: 3.6s; }
+.outer-nav-ring .nav-arc-outer:nth-child(8) .arc-bg-outer { animation-delay: 4.2s; }
 
 /* Zone Labels - Always visible */
 .zone-labels {
@@ -1056,53 +1032,23 @@ body {
         font-size: 9px;
     }
 
+    .nav-arc-outer .arc-text-outer {
+        font-size: 7px;
+    }
+
     .label {
         font-size: 0.6rem;
         padding: 0.15rem 0.4rem;
-    }
-
-    .orbit-link {
-        font-size: 0.5rem;
-        padding: 0.25rem 0.4rem;
-    }
-
-    .circumpunct-container {
-        padding: 40px;
-        margin: 2rem 0;
     }
 
     .equation-title,
     .equation-summary {
         font-size: 0.9rem;
     }
-}
-
-/* Extra small mobile - stack orbit links below */
-@media (max-width: 350px) {
-    .outer-orbit-ring {
-        position: relative;
-        top: auto;
-        left: auto;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.3rem;
-        margin-top: 1rem;
-        width: 100%;
-        height: auto;
-    }
-
-    .orbit-link {
-        position: static !important;
-        transform: none !important;
-    }
-
-    .orbit-link:hover {
-        transform: scale(1.05) !important;
-    }
 
     .circumpunct-container {
-        padding: 20px;
+        max-width: 320px;
+        max-height: 320px;
     }
 }
 
@@ -1163,17 +1109,14 @@ body {
     }
 
     .circumpunct-container {
-        width: 320px;
-        height: 320px;
-        max-width: 320px;
-        max-height: 320px;
-        padding: 70px;
-        margin: 2rem 0;
+        width: 420px;
+        height: 420px;
+        max-width: 420px;
+        max-height: 420px;
     }
 
-    .orbit-link {
-        font-size: 0.7rem;
-        padding: 0.4rem 0.7rem;
+    .nav-arc-outer .arc-text-outer {
+        font-size: 11px;
     }
 
     .dimension-text {
