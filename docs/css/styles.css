@@ -188,14 +188,41 @@ body {
     margin-bottom: 0.5rem;
 }
 
-.equation-title {
+/* Cyberpunk glowing text - uniform style */
+.equation-title,
+.equation-summary {
     font-family: 'Space Grotesk', monospace;
-    font-size: 1.3rem;
-    font-weight: 500;
-    color: var(--soul-color);
-    margin-bottom: 0.75rem;
-    letter-spacing: 0.02em;
-    text-shadow: 0 0 20px rgba(88, 166, 255, 0.4);
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #00ffff;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.03em;
+    text-shadow:
+        0 0 5px #00ffff,
+        0 0 10px #00ffff,
+        0 0 20px #00ffff,
+        0 0 40px #0088ff,
+        0 0 80px #0088ff;
+    animation: cyberpunk-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes cyberpunk-glow {
+    0% {
+        text-shadow:
+            0 0 5px #00ffff,
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 40px #0088ff,
+            0 0 80px #0088ff;
+    }
+    100% {
+        text-shadow:
+            0 0 10px #00ffff,
+            0 0 20px #00ffff,
+            0 0 30px #00ffff,
+            0 0 60px #0088ff,
+            0 0 100px #0088ff;
+    }
 }
 
 .equation-explanation {
@@ -203,13 +230,6 @@ body {
     color: var(--text-dim);
     line-height: 1.6;
     margin-bottom: 0.75rem;
-}
-
-.equation-summary {
-    font-size: 1rem;
-    font-style: italic;
-    color: var(--text);
-    font-weight: 400;
 }
 
 .tagline {
@@ -427,7 +447,10 @@ body {
     height: 80vw;
     max-width: 340px;
     max-height: 340px;
-    margin: 0.5rem 0;
+    margin: 3rem 0;
+    /* Extra space for outer orbit */
+    padding: 60px;
+    box-sizing: content-box;
 }
 
 .circumpunct {
@@ -577,6 +600,78 @@ body {
 .nav-arc-consciousness .arc-bg { animation-delay: 1.5s; }
 .nav-arc-ethics .arc-bg { animation-delay: 3s; }
 .nav-arc-theory .arc-bg { animation-delay: 4.5s; }
+
+/* ===================================
+   OUTER ORBITAL RING - Link Buttons
+   =================================== */
+.outer-orbit-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.orbit-link {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    pointer-events: all;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: #00ffff;
+    text-decoration: none;
+    padding: 0.35rem 0.6rem;
+    background: rgba(0, 255, 255, 0.08);
+    border: 1px solid rgba(0, 255, 255, 0.4);
+    border-radius: 12px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+    box-shadow:
+        0 0 10px rgba(0, 255, 255, 0.2),
+        inset 0 0 10px rgba(0, 255, 255, 0.05);
+    animation: orbit-pulse 4s ease-in-out infinite;
+}
+
+.orbit-link:hover {
+    color: #ffffff;
+    background: rgba(0, 255, 255, 0.2);
+    border-color: #00ffff;
+    text-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+    box-shadow:
+        0 0 20px rgba(0, 255, 255, 0.5),
+        0 0 40px rgba(0, 255, 255, 0.3),
+        inset 0 0 15px rgba(0, 255, 255, 0.1);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+@keyframes orbit-pulse {
+    0%, 100% {
+        box-shadow:
+            0 0 10px rgba(0, 255, 255, 0.2),
+            inset 0 0 10px rgba(0, 255, 255, 0.05);
+    }
+    50% {
+        box-shadow:
+            0 0 15px rgba(0, 255, 255, 0.35),
+            inset 0 0 12px rgba(0, 255, 255, 0.1);
+    }
+}
+
+/* Position each orbit link around the circle - 9 links at 40° intervals */
+/* Using percentage positions relative to circumpunct-container */
+
+.orbit-link:nth-child(1) { top: -15%; left: 50%; animation-delay: 0s; }       /* Top */
+.orbit-link:nth-child(2) { top: -2%; left: 90%; animation-delay: 0.45s; }     /* Top-right */
+.orbit-link:nth-child(3) { top: 35%; left: 110%; animation-delay: 0.9s; }     /* Right */
+.orbit-link:nth-child(4) { top: 75%; left: 100%; animation-delay: 1.35s; }    /* Bottom-right */
+.orbit-link:nth-child(5) { top: 108%; left: 70%; animation-delay: 1.8s; }     /* Bottom */
+.orbit-link:nth-child(6) { top: 108%; left: 30%; animation-delay: 2.25s; }    /* Bottom-left */
+.orbit-link:nth-child(7) { top: 75%; left: 0%; animation-delay: 2.7s; }       /* Left-bottom */
+.orbit-link:nth-child(8) { top: 35%; left: -10%; animation-delay: 3.15s; }    /* Left */
+.orbit-link:nth-child(9) { top: -2%; left: 10%; animation-delay: 3.6s; }      /* Top-left */
 
 /* Zone Labels - Always visible */
 .zone-labels {
@@ -965,6 +1060,50 @@ body {
         font-size: 0.6rem;
         padding: 0.15rem 0.4rem;
     }
+
+    .orbit-link {
+        font-size: 0.5rem;
+        padding: 0.25rem 0.4rem;
+    }
+
+    .circumpunct-container {
+        padding: 40px;
+        margin: 2rem 0;
+    }
+
+    .equation-title,
+    .equation-summary {
+        font-size: 0.9rem;
+    }
+}
+
+/* Extra small mobile - stack orbit links below */
+@media (max-width: 350px) {
+    .outer-orbit-ring {
+        position: relative;
+        top: auto;
+        left: auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.3rem;
+        margin-top: 1rem;
+        width: 100%;
+        height: auto;
+    }
+
+    .orbit-link {
+        position: static !important;
+        transform: none !important;
+    }
+
+    .orbit-link:hover {
+        transform: scale(1.05) !important;
+    }
+
+    .circumpunct-container {
+        padding: 20px;
+    }
 }
 
 /* Desktop / Wide screens */
@@ -1028,6 +1167,13 @@ body {
         height: 320px;
         max-width: 320px;
         max-height: 320px;
+        padding: 70px;
+        margin: 2rem 0;
+    }
+
+    .orbit-link {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.7rem;
     }
 
     .dimension-text {
