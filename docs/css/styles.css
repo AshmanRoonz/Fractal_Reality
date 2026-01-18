@@ -365,6 +365,29 @@ body {
     color: var(--text);
 }
 
+/* Header symbols - bigger and glowing */
+.header-symbol {
+    font-size: 1.1rem;
+    margin-right: 0.2rem;
+    vertical-align: middle;
+}
+
+.header-symbol.symbol-whole {
+    text-shadow: 0 0 8px var(--soul-color), 0 0 15px var(--soul-color);
+}
+
+.header-symbol.symbol-soul {
+    text-shadow: 0 0 8px var(--soul-color), 0 0 15px var(--soul-color);
+}
+
+.header-symbol.symbol-mind {
+    text-shadow: 0 0 8px var(--mind-color), 0 0 15px var(--mind-color);
+}
+
+.header-symbol.symbol-body {
+    text-shadow: 0 0 8px var(--body-color), 0 0 15px var(--body-color);
+}
+
 .scale-table tbody tr {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     transition: background 0.2s ease;
