@@ -390,8 +390,9 @@
     function drawMindField() {
         const fieldInner = soulRadius + 3;
         const fieldOuter = boundaryRadius - 3;
-        const rings = 12;
-        const segments = 36;
+        // Fewer rings/segments on mobile for performance
+        const rings = isMobile ? 8 : 12;
+        const segments = isMobile ? 24 : 36;
 
         for (let ringIdx = 0; ringIdx < rings; ringIdx++) {
             const r = fieldInner + (fieldOuter - fieldInner) * (ringIdx / rings);
@@ -489,13 +490,13 @@
                 // Spawn aimed at the circumpunct for guaranteed collision
                 // Stagger distances so they don't all arrive at once
                 const angle = Math.random() * Math.PI * 2;
-                const staggerDist = 100 + staggerIndex * 80; // Each one starts further out
-                const startDist = boundaryRadius + staggerDist + Math.random() * 50;
+                const staggerDist = 80 + staggerIndex * 60; // Each one starts further out
+                const startDist = boundaryRadius + staggerDist + Math.random() * 40;
                 this.x = centerX + Math.cos(angle) * startDist;
                 this.y = centerY + Math.sin(angle) * startDist;
 
-                // Use SAME speed as normal particles - no speedup
-                const speed = 0.15 + Math.random() * 0.15; // 0.15 to 0.3 toward center
+                // Faster speed toward center for more action
+                const speed = 0.4 + Math.random() * 0.3; // 0.4 to 0.7 toward center
                 this.speedX = -Math.cos(angle) * speed;
                 this.speedY = -Math.sin(angle) * speed;
             } else {
@@ -505,8 +506,9 @@
                     this.y = Math.random() * canvas.height;
                 } while (this.isInsideBoundary());
 
-                this.speedX = (Math.random() - 0.5) * 0.4;
-                this.speedY = (Math.random() - 0.5) * 0.4;
+                // Faster base movement
+                this.speedX = (Math.random() - 0.5) * 0.8;
+                this.speedY = (Math.random() - 0.5) * 0.8;
             }
 
             this.baseSize = Math.random() * 2.5 + 1.5;
@@ -529,25 +531,35 @@
                 this.trail.pop();
             }
 
+            // Gentle gravity toward the circumpunct center
+            const dx = centerX - this.x;
+            const dy = centerY - this.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > boundaryRadius) {
+                const gravity = 0.003; // Subtle pull
+                this.speedX += (dx / dist) * gravity;
+                this.speedY += (dy / dist) * gravity;
+            }
+
             this.x += this.speedX;
             this.y += this.speedY;
 
             // Bounce off the boundary (○) - particles cannot cross it
             // Bounce BEFORE entering the purple ring visually
-            const dx = this.x - centerX;
-            const dy = this.y - centerY;
-            const dist = Math.sqrt(dx * dx + dy * dy);
+            const bdx = this.x - centerX;
+            const bdy = this.y - centerY;
+            const bdist = Math.sqrt(bdx * bdx + bdy * bdy);
             const bounceRadius = boundaryRadius + 18; // Stay outside the purple ring
 
-            if (dist < bounceRadius) {
+            if (bdist < bounceRadius) {
                 // Push particle back outside and reflect velocity
-                const angle = Math.atan2(dy, dx);
+                const angle = Math.atan2(bdy, bdx);
                 this.x = centerX + Math.cos(angle) * (bounceRadius + 2);
                 this.y = centerY + Math.sin(angle) * (bounceRadius + 2);
 
                 // Reflect velocity away from center
-                const normalX = dx / dist;
-                const normalY = dy / dist;
+                const normalX = bdx / bdist;
+                const normalY = bdy / bdist;
                 const dot = this.speedX * normalX + this.speedY * normalY;
                 this.speedX = this.speedX - 2 * dot * normalX;
                 this.speedY = this.speedY - 2 * dot * normalY;
@@ -635,19 +647,24 @@
         }
     }
 
+    // Detect mobile for performance optimization
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+                     || window.innerWidth < 768;
+
     function initParticles() {
-        const count = Math.min(50, Math.floor((canvas.width * canvas.height) / 25000));
+        // Fewer particles on mobile for better performance
+        const maxParticles = isMobile ? 25 : 50;
+        const count = Math.min(maxParticles, Math.floor((canvas.width * canvas.height) / 25000));
         particles = [];
 
         // Spawn most particles normally
-        const normalCount = Math.floor(count * 0.85);
+        const normalCount = Math.floor(count * 0.7);
         for (let i = 0; i < normalCount; i++) {
             particles.push(new Particle(false));
         }
 
-        // Spawn just a few particles aimed at the circumpunct for initial collisions
-        // Staggered distances so they arrive one at a time over ~10 seconds
-        const collisionCount = Math.min(5, count - normalCount);
+        // Spawn more particles aimed at the circumpunct for more collisions
+        const collisionCount = count - normalCount;
         for (let i = 0; i < collisionCount; i++) {
             particles.push(new Particle(true, i));
         }
