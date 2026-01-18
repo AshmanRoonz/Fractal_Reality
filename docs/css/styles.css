@@ -620,7 +620,7 @@ body {
     font-size: 10px;
     font-weight: 500;
     letter-spacing: 0.04em;
-    fill: #ffffff;
+    fill: #00ffff;
     filter: url(#glow-cyber);
     transition: fill 0.3s ease, filter 0.3s ease;
 }
