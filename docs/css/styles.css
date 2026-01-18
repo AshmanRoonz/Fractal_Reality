@@ -321,44 +321,79 @@ body {
     margin-top: 0.5rem;
 }
 
-/* Helix principle header */
-.helix-principle {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.02em;
+/* ===================================
+   SCALE TABLE (Fractal Pattern)
+   =================================== */
+.equation-header {
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
-.helix-principle strong {
-    color: var(--soul-color);
-}
-
-/* Full helix table */
-.helix-full {
-    width: 100%;
-    font-size: 0.75rem;
-}
-
-.helix-full thead th {
-    font-size: 0.65rem;
+.circumpunct-equation {
+    font-size: 1.4rem;
     font-weight: 500;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.25rem;
+}
+
+.equation-subtitle {
+    font-size: 0.8rem;
     color: var(--text-dim);
-    text-align: left;
-    padding: 0.2rem 0.3rem;
-    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.05em;
 }
 
-.helix-full tbody td {
-    padding: 0.2rem 0.3rem;
-    vertical-align: middle;
-    text-align: left;
+.scale-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
 }
 
-.helix-full code {
-    font-family: 'Space Grotesk', monospace;
+.scale-table thead {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.scale-table thead th {
     font-size: 0.7rem;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.5rem 0.4rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+}
+
+.scale-table thead th:first-child {
+    color: var(--text);
+}
+
+.scale-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s ease;
+}
+
+.scale-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.scale-table tbody td {
+    padding: 0.4rem;
+    vertical-align: middle;
+}
+
+.scale-name {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.col-soul {
     color: var(--soul-color);
-    opacity: 0.8;
+}
+
+.col-mind {
+    color: var(--mind-color);
+}
+
+.col-body {
+    color: var(--body-color);
 }
 
 .helix-full sub {
