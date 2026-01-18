@@ -1047,7 +1047,7 @@ body {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        gap: 1rem;
+        gap: 0.5rem;
     }
 
     .side-panel,
@@ -1076,6 +1076,24 @@ body {
 
     .dimension-section {
         order: 3;
+        margin-top: 0.25rem;
+    }
+
+    /* Reduce spacing on mobile portrait */
+    .hero-equation {
+        margin-bottom: 0.25rem;
+    }
+
+    .equation-title:last-child {
+        margin-bottom: 0.25rem;
+    }
+
+    .circumpunct-container {
+        margin: 0.5rem 0;
+    }
+
+    .circumpunct-equation {
+        margin-bottom: 0.15rem;
     }
 }
 
