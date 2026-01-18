@@ -1059,6 +1059,13 @@ body {
         text-align: center !important;
     }
 
+    /* Keep scale table left-aligned on mobile */
+    .scale-table,
+    .scale-table th,
+    .scale-table td {
+        text-align: left !important;
+    }
+
     .header {
         order: 1;
     }
