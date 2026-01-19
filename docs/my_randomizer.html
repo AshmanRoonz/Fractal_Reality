@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>My Randomizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --bg-dark: #1a1a2e;
+            --bg-card: #16213e;
+            --accent: #e94560;
+            --accent-glow: rgba(233, 69, 96, 0.4);
+            --text: #eee;
+            --text-dim: #888;
+            --success: #4ecca3;
+            --warning: #ffc857;
+        }
+        
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: var(--bg-dark);
+            font-family: 'Nunito', sans-serif;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--warning));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .icon-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: var(--text);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+        
+        .icon-btn:hover, .icon-btn:active {
+            background: var(--accent);
+            transform: scale(1.05);
+        }
+        
+        /* Deck Selector */
+        .deck-selector {
+            padding: 15px 20px;
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .deck-selector select {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--bg-card);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+        
+        /* Main Display */
+        .display-area {
+            padding: 20px;
+            min-height: 280px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: var(--text-dim);
+            padding: 40px 20px;
+        }
+        
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .empty-state small {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        .item-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 10px;
+            border: 2px solid rgba(255,255,255,0.1);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+            max-width: 45%;
+        }
+        
+        .item-card:nth-child(1) { animation-delay: 0s; }
+        .item-card:nth-child(2) { animation-delay: 0.08s; }
+        .item-card:nth-child(3) { animation-delay: 0.16s; }
+        .item-card:nth-child(4) { animation-delay: 0.24s; }
+        
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5) rotate(-5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0); }
+        }
+        
+        .item-card img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+        }
+        
+        .item-card .label {
+            text-align: center;
+            margin-top: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Roll Button */
+        .roll-section {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .roll-settings {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+        
+        .roll-settings input {
+            width: 50px;
+            padding: 8px;
+            background: var(--bg-card);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .roll-btn {
+            background: linear-gradient(135deg, var(--accent), #ff6b6b);
+            color: white;
+            border: none;
+            padding: 18px 70px;
+            font-size: 1.5rem;
+            font-family: inherit;
+            font-weight: 800;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 8px 30px var(--accent-glow);
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .roll-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px var(--accent-glow);
+        }
+        
+        .roll-btn:active {
+            transform: translateY(2px) scale(0.98);
+        }
+        
+        .roll-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Items Grid */
+        .items-section {
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dim);
+        }
+        
+        .item-count {
+            background: rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+        }
+        
+        .grid-item {
+            aspect-ratio: 1;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .grid-item:hover {
+            border-color: var(--accent);
+            transform: scale(1.03);
+        }
+        
+        .grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .grid-item .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.7);
+            border: none;
+            color: var(--accent);
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .grid-item:hover .delete-btn {
+            opacity: 1;
+        }
+        
+        .grid-item .item-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 20px 8px 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .add-item-btn {
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.05);
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        
+        .add-item-btn:hover {
+            border-color: var(--success);
+            color: var(--success);
+            background: rgba(78, 204, 163, 0.1);
+        }
+        
+        .add-item-btn .plus {
+            font-size: 2rem;
+            line-height: 1;
+        }
+        
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .modal-field {
+            margin-bottom: 18px;
+        }
+        
+        .modal-field label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+        
+        .modal-field input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        
+        .modal-field input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .photo-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .photo-btn {
+            flex: 1;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .photo-btn:hover {
+            border-color: var(--accent);
+            background: rgba(233, 69, 96, 0.1);
+        }
+        
+        .photo-btn .icon {
+            font-size: 1.8rem;
+        }
+        
+        .preview-container {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .preview-container.active {
+            display: block;
+        }
+        
+        .preview-container img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.3);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn.cancel {
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+        }
+        
+        .modal-btn.confirm {
+            background: var(--success);
+            color: var(--bg-dark);
+        }
+        
+        .modal-btn.danger {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .modal-btn:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Deck list in modal */
+        .deck-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .deck-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .deck-list-item span {
+            font-weight: 600;
+        }
+        
+        .deck-list-item small {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        
+        .deck-list-item button {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+        }
+        
+        /* Hidden file input */
+        .hidden-input {
+            display: none;
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.4);
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s;
+            border: 2px solid var(--success);
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        @media (min-width: 600px) {
+            .item-card img {
+                width: 180px;
+                height: 180px;
+            }
+            .items-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">My Randomizer</div>
+        <div class="header-actions">
+            <button class="icon-btn" onclick="openDeckManager()" title="Manage Decks">📚</button>
+            <button class="icon-btn" onclick="openNewDeckModal()" title="New Deck">➕</button>
+        </div>
+    </header>
+    
+    <!-- Deck Selector -->
+    <div class="deck-selector">
+        <select id="deckSelect" onchange="switchDeck()"></select>
+    </div>
+    
+    <!-- Display Area -->
+    <div class="display-area" id="displayArea">
+        <div class="empty-state">
+            <div class="icon">🎲</div>
+            <p>Ready to roll!</p>
+            <small>Add some items below, then hit ROLL</small>
+        </div>
+    </div>
+    
+    <!-- Roll Section -->
+    <div class="roll-section">
+        <div class="roll-settings">
+            <span>Roll</span>
+            <input type="number" id="minItems" value="1" min="1" max="10">
+            <span>to</span>
+            <input type="number" id="maxItems" value="4" min="1" max="10">
+            <span>items</span>
+        </div>
+        <button class="roll-btn" id="rollBtn" onclick="rollItems()">ROLL!</button>
+    </div>
+    
+    <!-- Items Section -->
+    <div class="items-section">
+        <div class="section-header">
+            <span class="section-title">YOUR ITEMS</span>
+            <span class="item-count" id="itemCount">0 items</span>
+        </div>
+        <div class="items-grid" id="itemsGrid">
+            <div class="add-item-btn" onclick="openAddItemModal()">
+                <span class="plus">+</span>
+                <span>Add Item</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Item Modal -->
+    <div class="modal-overlay" id="addItemModal">
+        <div class="modal">
+            <div class="modal-title">Add New Item</div>
+            <div class="modal-field">
+                <label>Item Name</label>
+                <input type="text" id="itemName" placeholder="e.g., Red Sock, Tomato...">
+            </div>
+            <div class="modal-field">
+                <label>Photo</label>
+                <div class="photo-options">
+                    <button class="photo-btn" onclick="triggerCamera()">
+                        <span class="icon">📷</span>
+                        Camera
+                    </button>
+                    <button class="photo-btn" onclick="triggerGallery()">
+                        <span class="icon">🖼️</span>
+                        Gallery
+                    </button>
+                </div>
+                <div class="preview-container" id="previewContainer">
+                    <img id="imagePreview" src="" alt="Preview">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeAddItemModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="saveItem()">Add Item</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New Deck Modal -->
+    <div class="modal-overlay" id="newDeckModal">
+        <div class="modal">
+            <div class="modal-title">Create New Deck</div>
+            <div class="modal-field">
+                <label>Deck Name</label>
+                <input type="text" id="deckName" placeholder="e.g., Workout, Cooking...">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeNewDeckModal()">Cancel</button>
+                <button class="modal-btn confirm" onclick="createDeck()">Create</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Deck Manager Modal -->
+    <div class="modal-overlay" id="deckManagerModal">
+        <div class="modal">
+            <div class="modal-title">Manage Decks</div>
+            <div class="deck-list" id="deckList"></div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeDeckManager()" style="flex: 1;">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden File Inputs -->
+    <input type="file" accept="image/*" capture="environment" class="hidden-input" id="cameraInput" onchange="handleImageSelect(event)">
+    <input type="file" accept="image/*" class="hidden-input" id="galleryInput" onchange="handleImageSelect(event)">
+    
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+    
+    <script>
+        // State
+        let currentDeckId = null;
+        let currentImageData = null;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeApp();
+        });
+        
+        function initializeApp() {
+            // Create default deck if none exists
+            let decks = getDecks();
+            if (decks.length === 0) {
+                const defaultDeck = {
+                    id: generateId(),
+                    name: 'My First Deck',
+                    items: [],
+                    minItems: 1,
+                    maxItems: 4
+                };
+                decks.push(defaultDeck);
+                saveDecks(decks);
+            }
+            
+            currentDeckId = decks[0].id;
+            renderDeckSelector();
+            renderItems();
+            loadSettings();
+        }
+        
+        // Storage
+        function getDecks() {
+            const data = localStorage.getItem('randomizer_decks');
+            return data ? JSON.parse(data) : [];
+        }
+        
+        function saveDecks(decks) {
+            localStorage.setItem('randomizer_decks', JSON.stringify(decks));
+        }
+        
+        function getCurrentDeck() {
+            const decks = getDecks();
+            return decks.find(d => d.id === currentDeckId);
+        }
+        
+        function updateCurrentDeck(updates) {
+            const decks = getDecks();
+            const index = decks.findIndex(d => d.id === currentDeckId);
+            if (index !== -1) {
+                decks[index] = { ...decks[index], ...updates };
+                saveDecks(decks);
+            }
+        }
+        
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+        
+        // Deck Management
+        function renderDeckSelector() {
+            const select = document.getElementById('deckSelect');
+            const decks = getDecks();
+            
+            select.innerHTML = decks.map(deck => 
+                `<option value="${deck.id}" ${deck.id === currentDeckId ? 'selected' : ''}>${deck.name} (${deck.items.length})</option>`
+            ).join('');
+        }
+        
+        function switchDeck() {
+            const select = document.getElementById('deckSelect');
+            currentDeckId = select.value;
+            renderItems();
+            loadSettings();
+            resetDisplay();
+        }
+        
+        function openNewDeckModal() {
+            document.getElementById('newDeckModal').classList.add('active');
+            document.getElementById('deckName').value = '';
+            document.getElementById('deckName').focus();
+        }
+        
+        function closeNewDeckModal() {
+            document.getElementById('newDeckModal').classList.remove('active');
+        }
+        
+        function createDeck() {
+            const name = document.getElementById('deckName').value.trim();
+            if (!name) {
+                showToast('Please enter a deck name');
+                return;
+            }
+            
+            const decks = getDecks();
+            const newDeck = {
+                id: generateId(),
+                name: name,
+                items: [],
+                minItems: 1,
+                maxItems: 4
+            };
+            decks.push(newDeck);
+            saveDecks(decks);
+            
+            currentDeckId = newDeck.id;
+            renderDeckSelector();
+            renderItems();
+            loadSettings();
+            closeNewDeckModal();
+            showToast('Deck created!');
+        }
+        
+        function openDeckManager() {
+            const modal = document.getElementById('deckManagerModal');
+            const list = document.getElementById('deckList');
+            const decks = getDecks();
+            
+            list.innerHTML = decks.map(deck => `
+                <div class="deck-list-item">
+                    <div>
+                        <span>${deck.name}</span><br>
+                        <small>${deck.items.length} items</small>
+                    </div>
+                    ${decks.length > 1 ? `<button onclick="deleteDeck('${deck.id}')" title="Delete">🗑️</button>` : ''}
+                </div>
+            `).join('');
+            
+            modal.classList.add('active');
+        }
+        
+        function closeDeckManager() {
+            document.getElementById('deckManagerModal').classList.remove('active');
+        }
+        
+        function deleteDeck(id) {
+            if (!confirm('Delete this deck and all its items?')) return;
+            
+            let decks = getDecks();
+            decks = decks.filter(d => d.id !== id);
+            saveDecks(decks);
+            
+            if (currentDeckId === id) {
+                currentDeckId = decks[0].id;
+            }
+            
+            renderDeckSelector();
+            renderItems();
+            openDeckManager(); // Refresh list
+            showToast('Deck deleted');
+        }
+        
+        // Items
+        function renderItems() {
+            const grid = document.getElementById('itemsGrid');
+            const deck = getCurrentDeck();
+            const count = document.getElementById('itemCount');
+            
+            if (!deck) return;
+            
+            count.textContent = `${deck.items.length} item${deck.items.length !== 1 ? 's' : ''}`;
+            
+            const itemsHtml = deck.items.map((item, index) => `
+                <div class="grid-item" title="${item.name}">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="item-name">${item.name}</div>
+                    <button class="delete-btn" onclick="deleteItem(${index})">×</button>
+                </div>
+            `).join('');
+            
+            grid.innerHTML = itemsHtml + `
+                <div class="add-item-btn" onclick="openAddItemModal()">
+                    <span class="plus">+</span>
+                    <span>Add Item</span>
+                </div>
+            `;
+            
+            // Update roll button state
+            document.getElementById('rollBtn').disabled = deck.items.length === 0;
+        }
+        
+        function openAddItemModal() {
+            document.getElementById('addItemModal').classList.add('active');
+            document.getElementById('itemName').value = '';
+            document.getElementById('previewContainer').classList.remove('active');
+            currentImageData = null;
+            document.getElementById('itemName').focus();
+        }
+        
+        function closeAddItemModal() {
+            document.getElementById('addItemModal').classList.remove('active');
+        }
+        
+        function triggerCamera() {
+            document.getElementById('cameraInput').click();
+        }
+        
+        function triggerGallery() {
+            document.getElementById('galleryInput').click();
+        }
+        
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                // Resize image to save storage space
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const maxSize = 400;
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > height && width > maxSize) {
+                        height = (height * maxSize) / width;
+                        width = maxSize;
+                    } else if (height > maxSize) {
+                        width = (width * maxSize) / height;
+                        height = maxSize;
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    currentImageData = canvas.toDataURL('image/jpeg', 0.8);
+                    document.getElementById('imagePreview').src = currentImageData;
+                    document.getElementById('previewContainer').classList.add('active');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            
+            // Reset input
+            event.target.value = '';
+        }
+        
+        function saveItem() {
+            const name = document.getElementById('itemName').value.trim() || 'Unnamed Item';
+            
+            if (!currentImageData) {
+                showToast('Please add a photo');
+                return;
+            }
+            
+            const deck = getCurrentDeck();
+            deck.items.push({
+                id: generateId(),
+                name: name,
+                image: currentImageData
+            });
+            updateCurrentDeck({ items: deck.items });
+            
+            renderItems();
+            renderDeckSelector();
+            closeAddItemModal();
+            showToast('Item added!');
+        }
+        
+        function deleteItem(index) {
+            const deck = getCurrentDeck();
+            deck.items.splice(index, 1);
+            updateCurrentDeck({ items: deck.items });
+            renderItems();
+            renderDeckSelector();
+        }
+        
+        // Roll
+        function loadSettings() {
+            const deck = getCurrentDeck();
+            if (deck) {
+                document.getElementById('minItems').value = deck.minItems || 1;
+                document.getElementById('maxItems').value = deck.maxItems || 4;
+            }
+        }
+        
+        function saveSettings() {
+            const min = parseInt(document.getElementById('minItems').value) || 1;
+            const max = parseInt(document.getElementById('maxItems').value) || 4;
+            updateCurrentDeck({ minItems: min, maxItems: max });
+        }
+        
+        document.getElementById('minItems').addEventListener('change', saveSettings);
+        document.getElementById('maxItems').addEventListener('change', saveSettings);
+        
+        function rollItems() {
+            const deck = getCurrentDeck();
+            if (!deck || deck.items.length === 0) return;
+            
+            saveSettings();
+            
+            let min = parseInt(document.getElementById('minItems').value) || 1;
+            let max = parseInt(document.getElementById('maxItems').value) || 4;
+            
+            // Clamp to available items
+            min = Math.min(min, deck.items.length);
+            max = Math.min(max, deck.items.length);
+            if (min > max) [min, max] = [max, min];
+            
+            // Random count in range
+            const count = Math.floor(Math.random() * (max - min + 1)) + min;
+            
+            // Shuffle and pick
+            const shuffled = [...deck.items].sort(() => Math.random() - 0.5);
+            const selected = shuffled.slice(0, count);
+            
+            // Display
+            const displayArea = document.getElementById('displayArea');
+            displayArea.innerHTML = selected.map((item, i) => `
+                <div class="item-card" style="animation-delay: ${i * 0.08}s">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="label">${item.name}</div>
+                </div>
+            `).join('');
+        }
+        
+        function resetDisplay() {
+            document.getElementById('displayArea').innerHTML = `
+                <div class="empty-state">
+                    <div class="icon">🎲</div>
+                    <p>Ready to roll!</p>
+                    <small>Add some items below, then hit ROLL</small>
+                </div>
+            `;
+        }
+        
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+        
+        // Close modals on backdrop click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
