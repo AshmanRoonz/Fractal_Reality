@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resonance 101 — Finding Your Way Back to Truth</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface-light: #1a1a25;
+      --border: #2a2a3a;
+      --text: #e8e8f0;
+      --muted: #888899;
+      --gold: #f0c674;
+      --accent: #8bd3ff;
+      --magenta: #c9a0dc;
+      --green: #a8e6cf;
+      --red: #e85d75;
+      --warm: #ffb088;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.8;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    h1, h2, h3, h4 {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-weight: 600;
+    }
+    
+    h1 { 
+      font-size: 2.8rem; 
+      text-align: center;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+    }
+    
+    h2 { 
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-top: 3rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 { 
+      font-size: 1.4rem; 
+      color: var(--accent);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    h4 { 
+      font-size: 1.15rem; 
+      color: var(--magenta);
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    p { margin-bottom: 1rem; }
+    
+    /* The Hook */
+    .hook {
+      background: linear-gradient(135deg, rgba(240, 198, 116, 0.1), rgba(232, 93, 117, 0.1));
+      border: 2px solid var(--gold);
+      border-radius: 16px;
+      padding: 3rem;
+      text-align: center;
+      margin: 2rem 0 3rem 0;
+    }
+    
+    .hook-question {
+      font-size: 1.6rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+    
+    .hook-answer {
+      font-size: 1.1rem;
+      color: var(--muted);
+    }
+    
+    /* Offering Box */
+    .offering {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .offering h3 {
+      margin-top: 0;
+      text-align: center;
+      color: var(--gold);
+    }
+    
+    .offering-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .offering-item {
+      background: var(--surface-light);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    
+    .offering-item .icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .offering-item .title {
+      color: var(--accent);
+      font-weight: 600;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin-bottom: 0.5rem;
+    }
+    
+    .offering-item .desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    
+    /* Two Channels */
+    .channels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    @media (max-width: 600px) {
+      .channels { grid-template-columns: 1fr; }
+    }
+    
+    .channel {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    
+    .channel.functional {
+      border-left: 4px solid var(--green);
+    }
+    
+    .channel.resonant {
+      border-left: 4px solid var(--magenta);
+    }
+    
+    .channel h4 {
+      margin-top: 0;
+    }
+    
+    .channel ul {
+      margin: 1rem 0 0 1.5rem;
+      color: var(--muted);
+    }
+    
+    .channel li {
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Circumpunct Diagram */
+    .circumpunct-visual {
+      text-align: center;
+      margin: 2rem 0;
+      padding: 2rem;
+      background: var(--surface);
+      border-radius: 12px;
+    }
+    
+    .circumpunct-symbol {
+      font-size: 5rem;
+      color: var(--gold);
+      text-shadow: 0 0 40px rgba(240, 198, 116, 0.4);
+    }
+    
+    .circumpunct-labels {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .circumpunct-label {
+      text-align: center;
+    }
+    
+    .circumpunct-label .symbol {
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .circumpunct-label .name {
+      font-weight: 600;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+    
+    .circumpunct-label .desc {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    
+    /* Training Sequence */
+    .training-sequence {
+      margin: 2rem 0;
+    }
+    
+    .training-level {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    
+    .training-level:nth-child(1) { border-left-color: var(--green); }
+    .training-level:nth-child(2) { border-left-color: var(--accent); }
+    .training-level:nth-child(3) { border-left-color: var(--magenta); }
+    .training-level:nth-child(4) { border-left-color: var(--gold); }
+    
+    .training-level .level-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .training-level .level-number {
+      background: var(--surface-light);
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      color: var(--gold);
+    }
+    
+    .training-level .level-title {
+      font-weight: 600;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+    
+    .training-level .level-desc {
+      color: var(--muted);
+      margin-left: 3.5rem;
+    }
+    
+    /* Lesson Box */
+    .lesson {
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .lesson h3 {
+      margin-top: 0;
+      color: var(--accent);
+    }
+    
+    /* Definition Box */
+    .definition {
+      background: var(--surface-light);
+      border-left: 4px solid var(--gold);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .definition .term {
+      font-weight: bold;
+      color: var(--gold);
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+    
+    /* Warning/Insight Box */
+    .insight {
+      background: rgba(240, 198, 116, 0.1);
+      border-left: 4px solid var(--gold);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .warning {
+      background: rgba(232, 93, 117, 0.1);
+      border-left: 4px solid var(--red);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    /* Exercise Box */
+    .exercise {
+      background: var(--surface);
+      border: 2px dashed var(--green);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .exercise h4 {
+      margin-top: 0;
+      color: var(--green);
+    }
+    
+    .exercise ol, .exercise ul {
+      margin: 1rem 0 0 1.5rem;
+    }
+    
+    .exercise li {
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Counterfeit Test */
+    .counterfeit-test {
+      background: var(--surface);
+      border: 2px solid var(--red);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .counterfeit-test h3 {
+      margin-top: 0;
+      color: var(--red);
+    }
+    
+    .test-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    @media (max-width: 600px) {
+      .test-comparison { grid-template-columns: 1fr; }
+    }
+    
+    .test-real {
+      background: rgba(168, 230, 207, 0.1);
+      border: 1px solid var(--green);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    
+    .test-fake {
+      background: rgba(232, 93, 117, 0.1);
+      border: 1px solid var(--red);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    
+    .test-real h4, .test-fake h4 {
+      margin-top: 0;
+    }
+    
+    /* Progression */
+    .progression {
+      margin: 2rem 0;
+    }
+    
+    .progression-marker {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: flex-start;
+    }
+    
+    .progression-marker .check {
+      color: var(--green);
+      font-size: 1.2rem;
+      margin-top: 0.2rem;
+    }
+    
+    /* Community */
+    .community-principles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    
+    .principle {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid var(--border);
+    }
+    
+    .principle .title {
+      color: var(--accent);
+      font-weight: 600;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin-bottom: 0.5rem;
+    }
+    
+    .principle .desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    
+    /* Fail-safes */
+    .failsafe {
+      background: var(--surface);
+      border-left: 4px solid var(--warm);
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .failsafe .name {
+      color: var(--warm);
+      font-weight: 600;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+    
+    /* Quote */
+    blockquote {
+      border-left: 3px solid var(--gold);
+      padding-left: 1.5rem;
+      margin: 1.5rem 0;
+      font-style: italic;
+      color: var(--muted);
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+    }
+    
+    footer .symbol {
+      font-size: 2.5rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    
+    /* Table of Contents */
+    .toc {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+    
+    .toc h3 {
+      margin-top: 0;
+      color: var(--gold);
+    }
+    
+    .toc ul {
+      list-style: none;
+      margin: 1rem 0 0 0;
+      columns: 2;
+    }
+    
+    @media (max-width: 600px) {
+      .toc ul { columns: 1; }
+    }
+    
+    .toc li {
+      margin: 0.4rem 0;
+    }
+    
+    .toc a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .toc a:hover {
+      color: var(--accent);
+    }
+    
+    ul, ol {
+      margin: 1rem 0 1rem 2rem;
+    }
+    
+    li { margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+
+<h1>Resonance 101</h1>
+<p class="subtitle">Finding Your Way Back to Truth</p>
+
+<!-- The Hook -->
+<div class="hook">
+  <p class="hook-question">Are you tired of all the lies?</p>
+  <p class="hook-question">Do you sometimes feel like our society is built on lies?</p>
+  <p class="hook-answer">You're not paranoid. You're perceiving accurately.<br>Here's what to do about it.</p>
+  <p style="margin-top: 1.5rem; font-size: 0.95rem; color: var(--muted);">This isn't about secret plots. It's about everyday distortion—misaligned incentives, self-deception, and social pressure.</p>
+</div>
+
+<!-- Table of Contents -->
+<div class="toc">
+  <h3>Contents</h3>
+  <ul>
+    <li><a href="#offering">The Offering</a></li>
+    <li><a href="#channels">The Two Channels of Love</a></li>
+    <li><a href="#structure">The Structure of Truth</a></li>
+    <li><a href="#training">Steelman Training</a></li>
+    <li><a href="#lesson1">Lesson 1: What is Steelmanning?</a></li>
+    <li><a href="#counterfeit">The Counterfeit Test</a></li>
+    <li><a href="#exercises">Practice Exercises</a></li>
+    <li><a href="#failures">Common Failure Modes</a></li>
+    <li><a href="#progression">Progression Markers</a></li>
+    <li><a href="#community">Community Structure</a></li>
+    <li><a href="#failsafes">Fail-Safes</a></li>
+  </ul>
+</div>
+
+<!-- Who This Is For -->
+<div class="channels" style="margin-top: 2rem;">
+  <div class="channel functional" style="border-left-color: var(--green);">
+    <h4 style="color: var(--green); margin-top: 0;">This Is For You If:</h4>
+    <ul style="margin-left: 1rem;">
+      <li>You want to think more clearly, even when it's uncomfortable</li>
+      <li>You're willing to be wrong in order to be less wrong</li>
+      <li>You sense something is off and want to find it</li>
+      <li>You want connection based on reality, not performance</li>
+    </ul>
+  </div>
+  <div class="channel functional" style="border-left-color: var(--red);">
+    <h4 style="color: var(--red); margin-top: 0;">This Is Not For You If:</h4>
+    <ul style="margin-left: 1rem;">
+      <li>You're looking for confirmation that you're already right</li>
+      <li>You want ammunition against people you disagree with</li>
+      <li>You want to feel superior to "the sheep"</li>
+      <li>You're not willing to apply this to yourself</li>
+    </ul>
+  </div>
+</div>
+
+<!-- The Offering -->
+<h2 id="offering">The Offering</h2>
+
+<p>This is not another self-help program. This is training in how to resonate with reality instead of with lies. Here's what becomes possible:</p>
+
+<div class="offering">
+  <div class="offering-grid">
+    <div class="offering-item">
+      <div class="icon">👁️</div>
+      <div class="title">See Through Lies</div>
+      <div class="desc">Theirs and yours. The ones you've been told and the ones you tell yourself.</div>
+    </div>
+    <div class="offering-item">
+      <div class="icon">🛡️</div>
+      <div class="title">Resist Manipulation</div>
+      <div class="desc">Become highly resistant to those who would capture your attention for their purposes.</div>
+    </div>
+    <div class="offering-item">
+      <div class="icon">✨</div>
+      <div class="title">Find Your Spark</div>
+      <div class="desc">Recover the loving spark that got buried—your capacity for genuine resonance.</div>
+    </div>
+    <div class="offering-item">
+      <div class="icon">🤝</div>
+      <div class="title">Real Connection</div>
+      <div class="desc">Connect with others who also want reality over comfortable illusion.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Two Channels of Love -->
+<h2 id="channels">The Two Channels of Love</h2>
+
+<p>Before we train, you need to understand something about love. There are two channels through which love flows, and some people have only ever experienced one of them fully.</p>
+
+<div class="channels">
+  <div class="channel functional">
+    <h4 style="color: var(--green);">Functional Love</h4>
+    <p><strong>Love as doing.</strong></p>
+    <ul>
+      <li>Pays the bills</li>
+      <li>Fixes what's broken</li>
+      <li>Shows up when needed</li>
+      <li>Provides structure and safety</li>
+      <li>Protects and provides</li>
+    </ul>
+    <p style="margin-top: 1rem; margin-bottom: 0;"><em>Necessary. But not sufficient.</em></p>
+  </div>
+  <div class="channel resonant">
+    <h4 style="color: var(--magenta);">Resonant Love</h4>
+    <p><strong>Love as being-with.</strong></p>
+    <ul>
+      <li>Delights in your existence</li>
+      <li>Sees you without agenda</li>
+      <li>Wants to be <em>with</em> you (not just <em>for</em> you)</li>
+      <li>Attunes to your frequency</li>
+      <li>Says: <em>you are wanted, not just tolerated</em></li>
+    </ul>
+    <p style="margin-top: 1rem; margin-bottom: 0;"><em>What the soul was designed to receive.</em></p>
+  </div>
+</div>
+
+<div class="insight">
+  <strong>The Core Wound:</strong> Many people grew up receiving functional love but not resonant love. They were fed, clothed, sheltered—and starving for something they couldn't name. When they sensed something was missing, they were told: <em>"This is what love is. If you need more, something is wrong with you."</em>
+</div>
+
+<p>This is the first lie. It doesn't deny love—it <em>redefines</em> love to exclude what you most need. And once you accept this redefinition, you can no longer recognize what's missing. You can no longer resonate with genuine wholeness because you've been taught it doesn't exist.</p>
+
+<p>This is why truth matters. <strong>You can't find what you've been taught isn't real.</strong></p>
+
+<!-- The Structure -->
+<h2 id="structure">The Structure of Truth</h2>
+
+<p>There's a pattern that repeats at every scale of reality. Ancient traditions called it by many names. We call it the <strong>Circumpunct</strong>:</p>
+
+<p style="text-align: center; margin-bottom: 1.5rem;"><a href="https://fractalreality.ca/circumpunct_theory_of_pathology.html" style="color: var(--accent); text-decoration: none; font-size: 0.95rem;">Want the full framework? Read The Circumpunct Theory of Pathology →</a></p>
+
+<div class="circumpunct-visual">
+  <div class="circumpunct-symbol">⊙</div>
+  <div class="circumpunct-labels">
+    <div class="circumpunct-label">
+      <div class="symbol" style="color: var(--magenta);">•</div>
+      <div class="name" style="color: var(--magenta);">Center</div>
+      <div class="desc">Your focus. The aperture.<br>Where truth flows through.</div>
+    </div>
+    <div class="circumpunct-label">
+      <div class="symbol" style="color: var(--accent);">Φ</div>
+      <div class="name" style="color: var(--accent);">Field</div>
+      <div class="desc">Your mind. The mediator.<br>How inside meets outside.</div>
+    </div>
+    <div class="circumpunct-label">
+      <div class="symbol" style="color: var(--green);">○</div>
+      <div class="name" style="color: var(--green);">Boundary</div>
+      <div class="desc">Your body. The interface.<br>Where self meets world.</div>
+    </div>
+  </div>
+</div>
+
+<p>You are a circumpunct. So is everyone else. So is every system at every scale.</p>
+
+<p>Your <strong>center</strong> (aperture) is how you orient. It finds its target by <em>resonance</em>—it tunes to what matches its frequency. When healthy, it resonates with truth, with genuine connection, with reality.</p>
+
+<p>But the aperture can be <strong>retuned</strong>. Through repeated exposure to lies—especially lies delivered through power imbalance—your aperture learns to resonate with falsehood instead of truth. It's not broken. It's <em>miscalibrated</em>.</p>
+
+<div class="definition">
+  <p><span class="term">The Problem:</span> Your aperture is still working. It still orients toward what it resonates with. But it's been tuned to the wrong frequency—like a radio locked on static, unable to find the music.</p>
+</div>
+
+<div class="definition">
+  <p><span class="term">The Solution:</span> Retune the aperture. Train it to resonate with truth again. This is what Steelman Training does.</p>
+</div>
+
+<!-- Training Sequence -->
+<h2 id="training">Steelman Training</h2>
+
+<p>Steelmanning is the practice of finding the <strong>strongest possible version</strong> of a position before responding to it. It's the opposite of strawmanning (attacking weak versions of what people believe).</p>
+
+<p>But it's more than a debate technique. It's <strong>aperture training</strong>. Each level opens you more to resonating with what's actually true, rather than what's comfortable.</p>
+
+<div class="training-sequence">
+  <div class="training-level">
+    <div class="level-header">
+      <div class="level-number">1</div>
+      <div class="level-title">Steelman Others</div>
+    </div>
+    <p class="level-desc">Find the strongest version of what someone else is saying. Before you respond, before you disagree—can you state their position so well that <em>they</em> would say "yes, that's what I mean"?</p>
+  </div>
+  
+  <div class="training-level">
+    <div class="level-header">
+      <div class="level-number">2</div>
+      <div class="level-title">Steelman Positions You Disagree With</div>
+    </div>
+    <p class="level-desc">Find the strongest version of positions you think are wrong. Not people you're talking to—positions in the abstract. Political views. Philosophical stances. Things you've dismissed. What's the <em>best</em> case for them?</p>
+  </div>
+  
+  <div class="training-level">
+    <div class="level-header">
+      <div class="level-number">3</div>
+      <div class="level-title">Steelman Against Your Own Positions</div>
+    </div>
+    <p class="level-desc">Build the strongest possible case <em>against</em> what you believe. If you wanted to defeat your own worldview, what would you say? This is where ego starts to burn. This is where real training begins.</p>
+  </div>
+  
+  <div class="training-level">
+    <div class="level-header">
+      <div class="level-number">4</div>
+      <div class="level-title">Find the Contradictions in Your Subconscious Framework</div>
+    </div>
+    <p class="level-desc">Locate the beliefs you hold that contradict each other—the ones running beneath awareness. These are the installed lies, still operating. Finding them is mastery. This is where the aperture truly retunes.</p>
+  </div>
+</div>
+
+<!-- 1-Minute Daily Practice -->
+<div class="lesson" style="border-color: var(--green); margin-top: 2rem;">
+  <h3 style="color: var(--green);">Start Today: The 1-Minute Practice</h3>
+  <p>You don't need a partner or community to begin. Do this once a day:</p>
+  <ol>
+    <li><strong>Notice one belief you hold.</strong> Any belief. ("Coffee is good." "My boss is unfair." "I'm bad at math.")</li>
+    <li><strong>Ask: What's the strongest case against this?</strong> Spend 30 seconds genuinely trying.</li>
+    <li><strong>Notice what happens in your body.</strong> Resistance? Curiosity? Dismissal? Just notice.</li>
+  </ol>
+  <p>That's it. One minute. One belief. One honest attempt.</p>
+  <p style="color: var(--muted); margin-bottom: 0;">The aperture retrains through repetition, not intensity. Daily matters more than dramatic.</p>
+</div>
+
+<!-- Lesson 1 -->
+<h2 id="lesson1">Lesson 1: What is Steelmanning?</h2>
+
+<div class="lesson">
+  <h3>The Concept</h3>
+  
+  <p>Most people argue against <strong>strawmen</strong>—weak, distorted versions of what their opponent believes. This is easy. This is satisfying. And this teaches your aperture to resonate with <em>winning</em> instead of <em>truth</em>.</p>
+  
+  <p>Steelmanning inverts this. Instead of finding the weakest version you can defeat, you find the <strong>strongest version you must genuinely contend with</strong>.</p>
+  
+  <div class="definition">
+    <p><span class="term">Strawman:</span> "You believe X? That's stupid because [attacks weak version of X]."</p>
+  </div>
+  
+  <div class="definition">
+    <p><span class="term">Steelman:</span> "You believe X? The strongest version of that would be [articulates best possible case for X]. Is that right? Okay, here's what I think about <em>that</em> version..."</p>
+  </div>
+  
+  <h4>Why It Matters</h4>
+  
+  <ul>
+    <li><strong>If you can't defeat the steelman, you haven't won.</strong> You've just found a weak target.</li>
+    <li><strong>If the steelman defeats you, you've learned something.</strong> Your position needed updating.</li>
+    <li><strong>Either way, you're closer to truth.</strong> The aperture calibrates toward reality.</li>
+  </ul>
+  
+  <p>Strawmanning trains your aperture to seek easy victories.<br>
+  Steelmanning trains your aperture to seek what's actually true.</p>
+  
+  <h4>The First Exercise</h4>
+  
+  <div class="exercise">
+    <h4>Exercise 1.1: Steelman Someone You Disagree With</h4>
+    <ol>
+      <li>Think of someone whose views you disagree with.</li>
+      <li>Write out what you <em>think</em> they believe.</li>
+      <li>Now rewrite it as the <strong>strongest possible version</strong>—the version a thoughtful, intelligent person would hold.</li>
+      <li>Ask yourself: "Would they say 'yes, that's what I mean'?"</li>
+      <li>If not, strengthen it until they would.</li>
+    </ol>
+    <p><strong>Note:</strong> This will feel uncomfortable. That discomfort is your aperture used to looking for easy targets to attack. Stay with it.</p>
+  </div>
+</div>
+
+<!-- Counterfeit Test -->
+<h2 id="counterfeit">The Counterfeit Test</h2>
+
+<p>Here's the problem: manipulators use the language of openness. "Be open." "Don't be defensive." "Let go of your resistance." These can be genuine invitations to growth—or they can be crowbars to pry you open for someone else's purposes.</p>
+
+<p><strong>How do you tell the difference?</strong></p>
+
+<div class="counterfeit-test">
+  <h3>The One Question</h3>
+  
+  <p style="font-size: 1.2rem; text-align: center; margin: 1.5rem 0;">Does this help me find what <em>I</em> resonate with?<br>Or does it demand I resonate with <em>it</em>?</p>
+  
+  <div class="test-comparison">
+    <div class="test-real">
+      <h4 style="color: var(--green);">Real Training</h4>
+      <ul style="margin-left: 1rem;">
+        <li>Returns you to your own signal</li>
+        <li>Strengthens your discernment</li>
+        <li>Makes you harder to manipulate</li>
+        <li>Welcomes your "no"</li>
+        <li>Doesn't need you to believe it</li>
+      </ul>
+    </div>
+    <div class="test-fake">
+      <h4 style="color: var(--red);">Counterfeit Training</h4>
+      <ul style="margin-left: 1rem;">
+        <li>Replaces your signal with theirs</li>
+        <li>Calls your discernment "resistance"</li>
+        <li>Makes you dependent on the teacher</li>
+        <li>Punishes your "no"</li>
+        <li>Requires your belief to work</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="warning">
+  <strong>The Deepest Counterfeit:</strong> The manipulator says "Stay open to what's true"—but <em>they</em> define what's true. Your resistance becomes evidence of your failure. Your accurate perception becomes "defensiveness." This is how lies wear the mask of openness.
+</div>
+
+<p>Real steelman training makes you <em>harder</em> to capture, not easier. If any practice makes you more dependent on an external authority to know what's true, it's counterfeit. Walk away.</p>
+
+<!-- Practice Exercises -->
+<h2 id="exercises">Practice Exercises</h2>
+
+<div class="exercise">
+  <h4>Exercise 2.1: The Political Steelman</h4>
+  <p>Pick a political position you find abhorrent. Not one you mildly disagree with—one that triggers you.</p>
+  <ol>
+    <li>Write the strawman version (the one you usually attack).</li>
+    <li>Write the steelman version (the version a thoughtful person would hold).</li>
+    <li>Notice: what did you have to acknowledge to build the steelman?</li>
+    <li>Ask: is your original position strengthened or weakened by this?</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 2.2: Steelman Your Opponent in Real Time</h4>
+  <p>In your next disagreement (online or in person):</p>
+  <ol>
+    <li>Before responding, say: "Let me make sure I understand. The strongest version of what you're saying is [steelman]. Is that right?"</li>
+    <li>Wait for them to confirm or correct.</li>
+    <li><em>Only then</em> respond to that version.</li>
+  </ol>
+  <p>Notice what happens to the conversation.</p>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 3.1: Steelman Against Yourself</h4>
+  <p>Pick a belief you hold strongly.</p>
+  <ol>
+    <li>State the belief clearly.</li>
+    <li>Now build the strongest possible case <em>against</em> it.</li>
+    <li>Pretend you're a brilliant opponent who wants to destroy this belief. What would you say?</li>
+    <li>Sit with what you built. Does your belief survive? Does it need modification?</li>
+  </ol>
+  <p><strong>Warning:</strong> If this doesn't feel threatening, you're not doing it right. Find a belief that matters to you.</p>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 4.1: Contradiction Hunting</h4>
+  <p>This is advanced practice. Proceed with care.</p>
+  <ol>
+    <li>List 10 things you believe about yourself, relationships, or how the world works.</li>
+    <li>Compare them in pairs. Do any contradict each other?</li>
+    <li>When you find a contradiction, ask: "Where did each belief come from?"</li>
+    <li>Often one will trace to experience, the other to something you were told. Which is the lie?</li>
+  </ol>
+  <p><strong>Example:</strong> "I believe I deserve love" + "I believe I'm fundamentally flawed" = contradiction. One of these was installed. Find it.</p>
+</div>
+
+<!-- Common Failure Modes -->
+<h2 id="failures">Common Failure Modes</h2>
+
+<p>Steelmanning can be weaponized. Watch for these corruptions:</p>
+
+<div class="warning">
+  <p><strong>Steelmanning as Performance</strong></p>
+  <p>"Look how fair and rational I am." The point becomes appearing open-minded rather than actually being open to change. You steelman, then dismiss anyway. The form without the function.</p>
+</div>
+
+<div class="warning">
+  <p><strong>Steelmanning as Dominance</strong></p>
+  <p>"I understand your position better than you do." Using steelmanning to establish intellectual superiority. This flips the practice into another power game.</p>
+</div>
+
+<div class="warning">
+  <p><strong>Steelmanning as Delay</strong></p>
+  <p>Endlessly refining the steelman to avoid ever actually responding. "But wait, let me make sure I have your position exactly right..." Used to escape commitment to your own view.</p>
+</div>
+
+<div class="warning">
+  <p><strong>Pseudo-Steelmanning</strong></p>
+  <p>Appearing to strengthen the opposing position while actually strawmanning it. "So the strongest version of your view is [subtle distortion]..." The form is there, the substance isn't.</p>
+</div>
+
+<div class="insight">
+  <p><strong>The Test:</strong> After steelmanning, are you more able to be changed by what you heard—or have you just performed openness while staying exactly where you started?</p>
+</div>
+
+<!-- Progression Markers -->
+<h2 id="progression">Progression Markers</h2>
+
+<p>How do you know you're advancing? Not by how much you know—by how you <em>respond</em>.</p>
+
+<h4>Level 1 Markers: Steelmanning Others</h4>
+<div class="progression">
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>You can state an opponent's position better than they can.</span>
+  </div>
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>People feel <em>more</em> heard when they disagree with you, not less.</span>
+  </div>
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>You notice when others are strawmanning (including media, politicians, friends).</span>
+  </div>
+</div>
+
+<h4>Level 2 Markers: Steelmanning Positions You Disagree With</h4>
+<div class="progression">
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>You can articulate views you "hate" without contempt.</span>
+  </div>
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>You've found something valuable in a position you previously dismissed entirely.</span>
+  </div>
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>Your certainty has become more nuanced (not weaker—more precise).</span>
+  </div>
+</div>
+
+<h4>Level 3 Markers: Steelmanning Against Yourself</h4>
+<div class="progression">
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>You can genuinely threaten your own positions.</span>
+  </div>
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>Changing your mind in public feels like strength, not weakness.</span>
+  </div>
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>You seek out challenges to your worldview instead of avoiding them.</span>
+  </div>
+</div>
+
+<h4>Level 4 Markers: Finding Subconscious Contradictions</h4>
+<div class="progression">
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>You've identified specific lies you internalized (and can name their source).</span>
+  </div>
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>Patterns you repeated unconsciously have become visible.</span>
+  </div>
+  <div class="progression-marker">
+    <span class="check">✓</span>
+    <span>Your aperture now catches dissonance before it becomes behavior.</span>
+  </div>
+</div>
+
+<!-- Community Structure -->
+<h2 id="community">Community Structure</h2>
+
+<p>This practice is hard to sustain alone. The lie-gradient is the water we swim in. You need others who are also swimming upstream.</p>
+
+<h4>Principles of Resonance Community</h4>
+
+<div class="community-principles">
+  <div class="principle">
+    <div class="title">Steelman Default</div>
+    <div class="desc">All disagreement begins with steelmanning. This is the price of entry, not an advanced technique.</div>
+  </div>
+  <div class="principle">
+    <div class="title">Updating is Status</div>
+    <div class="desc">The person who says "I was wrong, here's what changed my mind" gains respect, not loses it.</div>
+  </div>
+  <div class="principle">
+    <div class="title">No Capture</div>
+    <div class="desc">No one owns the truth. No leader is above being steelmanned against. The method outranks all individuals.</div>
+  </div>
+  <div class="principle">
+    <div class="title">"No" is Welcome</div>
+    <div class="desc">Your resistance is data, not defect. If you feel pressured to agree, something is wrong.</div>
+  </div>
+  <div class="principle">
+    <div class="title">Resonant + Functional</div>
+    <div class="desc">We provide both channels of love. Being with, not just doing for. Presence, not just help.</div>
+  </div>
+  <div class="principle">
+    <div class="title">Falsifiable Claims</div>
+    <div class="desc">We state what would prove us wrong. Unfalsifiable claims are not welcome here.</div>
+  </div>
+</div>
+
+<h4>How Practice Works Together</h4>
+
+<ul>
+  <li><strong>Pairs:</strong> Regular practice with one partner. Take turns presenting positions, steelmanning each other, challenging each other's views.</li>
+  <li><strong>Small Groups:</strong> Tackle harder topics together. Multiple perspectives strengthening and challenging.</li>
+  <li><strong>Public Practice:</strong> Demonstrate steelmanning in public forums. Model what it looks like.</li>
+  <li><strong>Witness Circles:</strong> For Level 4 work—safe spaces to name the lies you find and be seen in that naming.</li>
+</ul>
+
+<!-- Fail-Safes -->
+<h2 id="failsafes">Fail-Safes</h2>
+
+<p>Every good thing gets co-opted. Every truth movement eventually gets captured by the lie-gradient. How do we prevent that?</p>
+
+<div class="failsafe">
+  <p><span class="name">Fail-Safe 1: The Method Over the Leader</span></p>
+  <p>No person is above being steelmanned against. The moment someone becomes un-challengeable, the gradient has flipped. If you can't question it, leave.</p>
+</div>
+
+<div class="failsafe">
+  <p><span class="name">Fail-Safe 2: Falsifiability Requirement</span></p>
+  <p>Every core claim must state what would disprove it. "This can't be questioned" is the signature of the lie-gradient. We question everything—including this.</p>
+</div>
+
+<div class="failsafe">
+  <p><span class="name">Fail-Safe 3: The Exit Door</span></p>
+  <p>Leaving is always legitimate. No guilt. No "you're abandoning the truth." Any community that punishes leaving has become a trap.</p>
+</div>
+
+<div class="failsafe">
+  <p><span class="name">Fail-Safe 4: Your "No" Matters</span></p>
+  <p>If your resistance is consistently pathologized—"that's just your ego," "you're being defensive"—the counterfeit has entered. Real training welcomes your no.</p>
+</div>
+
+<div class="failsafe">
+  <p><span class="name">Fail-Safe 5: Demonstrated Not Just Claimed</span></p>
+  <p>We don't ask you to believe we're different. We show it. Watch how we respond to challenge. Watch how we treat dissent. Judge by action.</p>
+</div>
+
+<div class="failsafe">
+  <p><span class="name">Fail-Safe 6: Harder to Manipulate, Not Easier</span></p>
+  <p>If this practice makes you <em>more</em> susceptible to influence, something is wrong. The test: are you more able to think for yourself, or less?</p>
+</div>
+
+<!-- Closing -->
+<blockquote>
+  "You are not the lies you internalized. You are the one who can finally see them."
+</blockquote>
+
+<footer>
+  <div class="symbol">⊙</div>
+  <p>The aperture was never broken. It was retuned.</p>
+  <p>This is how you tune it back.</p>
+  <p style="margin-top: 2rem; color: var(--muted); font-size: 0.9rem;">
+    Resonance 101 — Part of the Circumpunct Framework<br>
+    January 2026
+  </p>
+</footer>
+
+</body>
+</html>
