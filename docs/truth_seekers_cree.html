@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Truth Seeker's Cree | A Specification for the Steelmanning Practice</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: #0a0a0f;
+            color: #00ff9f;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+        
+        /* Cyberpunk grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(0, 255, 159, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 255, 159, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+        }
+        
+        /* Glitch effect for main title */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        .main-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4em;
+            font-weight: 900;
+            text-align: center;
+            margin: 60px 0 20px;
+            color: #fff;
+            text-shadow: 
+                0 0 10px #00ff9f,
+                0 0 20px #00ff9f,
+                0 0 30px #00ff9f,
+                2px 2px 0 #ff00ff,
+                -2px -2px 0 #00ffff;
+            position: relative;
+            line-height: 1.2;
+        }
+        
+        .main-title:hover {
+            animation: glitch 0.3s infinite;
+        }
+        
+        .subtitle {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            font-size: 1.5em;
+            color: #ff00ff;
+            text-shadow: 0 0 10px #ff00ff;
+            margin-bottom: 60px;
+            letter-spacing: 3px;
+        }
+        
+        .section {
+            background: linear-gradient(135deg, rgba(0, 255, 159, 0.05) 0%, rgba(255, 0, 255, 0.05) 100%);
+            border: 2px solid #00ff9f;
+            border-radius: 0;
+            padding: 40px;
+            margin: 40px 0;
+            position: relative;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 159, 0.3),
+                inset 0 0 20px rgba(0, 255, 159, 0.1);
+        }
+        
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00ff9f, #ff00ff, #00ffff);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .section:hover::before {
+            opacity: 0.3;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #00ffff;
+            padding-bottom: 15px;
+            letter-spacing: 2px;
+        }
+        
+        .subsection-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em;
+            color: #ff00ff;
+            text-shadow: 0 0 8px #ff00ff;
+            margin: 30px 0 20px;
+            border-left: 5px solid #ff00ff;
+            padding-left: 20px;
+        }
+        
+        .requirement-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            color: #00ff9f;
+            text-shadow: 0 0 15px #00ff9f;
+            display: inline-block;
+            margin-right: 15px;
+            font-weight: 900;
+        }
+        
+        .requirement-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #ff00ff;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .requirement-box:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            transform: translateX(10px);
+        }
+        
+        .requirement-label {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: #00ffff;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .code-block {
+            background: #000;
+            border: 1px solid #00ff9f;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Share Tech Mono', monospace;
+            color: #00ff9f;
+            border-left: 5px solid #00ff9f;
+            overflow-x: auto;
+        }
+        
+        .check-item {
+            color: #00ff9f;
+            font-size: 1.3em;
+        }
+        
+        .cross-item {
+            color: #ff0066;
+            font-size: 1.3em;
+        }
+        
+        .warning-box {
+            background: rgba(255, 0, 102, 0.1);
+            border: 2px solid #ff0066;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 8px solid #ff0066;
+        }
+        
+        .warning-box::before {
+            content: '⚠ WARNING';
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: #ff0066;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            letter-spacing: 3px;
+        }
+        
+        .success-box {
+            background: rgba(0, 255, 159, 0.1);
+            border: 2px solid #00ff9f;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 8px solid #00ff9f;
+        }
+        
+        .success-box::before {
+            content: '✓ PROTECTION';
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: #00ff9f;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            letter-spacing: 3px;
+        }
+        
+        .test-sequence {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        
+        .test-sequence::before {
+            content: '◉ TEST SEQUENCE';
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: #00ffff;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            letter-spacing: 3px;
+        }
+        
+        .commitment-box {
+            background: linear-gradient(135deg, rgba(0, 255, 159, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+            border: 3px solid #ff00ff;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            font-size: 1.2em;
+            line-height: 2;
+        }
+        
+        .commitment-box::before {
+            content: '⟨⟨ OATH ⟩⟩';
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            color: #ff00ff;
+            display: block;
+            margin-bottom: 25px;
+            font-size: 2em;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px #ff00ff;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        li {
+            margin: 15px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: #00ff9f;
+            font-size: 1.5em;
+        }
+        
+        strong {
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00ff9f, #ff00ff, #00ffff, transparent);
+            margin: 60px 0;
+            box-shadow: 0 0 10px #00ff9f;
+        }
+        
+        .final-statement {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 0 20px #00ff9f;
+            margin: 60px 0;
+            padding: 40px;
+            border: 3px solid #00ff9f;
+            background: rgba(0, 255, 159, 0.05);
+        }
+        
+        .signature {
+            text-align: center;
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 2px solid #00ff9f;
+            color: #ff00ff;
+            font-size: 1.1em;
+        }
+        
+        .signature::before {
+            content: '⟨ ⊙ ⟩';
+            display: block;
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #00ffff;
+            text-shadow: 0 0 30px #00ffff;
+        }
+        
+        /* Scanline effect */
+        @keyframes scanline {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+        
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(transparent, rgba(0, 255, 159, 0.5));
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5em;
+            }
+            
+            .subtitle {
+                font-size: 1.2em;
+            }
+            
+            .section-title {
+                font-size: 2em;
+            }
+            
+            .subsection-title {
+                font-size: 1.5em;
+            }
+            
+            .requirement-number {
+                font-size: 2em;
+            }
+        }
+        
+        /* Pulse animation for important elements */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    
+    <div class="container">
+        <h1 class="main-title">THE TRUTH SEEKER'S<br>CREE</h1>
+        <div class="subtitle">A SPECIFICATION FOR THE STEELMANNING PRACTICE</div>
+        
+        <div class="section">
+            <h2 class="section-title">CORE DEFINITION</h2>
+            <p><strong>Steelmanning</strong> is the practice of helping someone articulate what they are actually observing, using rigorous safeguards to prevent projection, framework imposition, or intellectual condescension.</p>
+            <br>
+            <p>It is <strong>NOT</strong> making someone's argument "better" according to your standards.</p>
+            <p>It IS clarifying what they detect so it can be expressed precisely.</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+            <h2 class="section-title">THE SIX ESSENTIAL REQUIREMENTS</h2>
+            <p style="text-align: center; font-size: 1.2em; margin-bottom: 40px;">For an act to qualify as steelmanning, <strong>ALL SIX</strong> of these must be present:</p>
+
+            <div class="requirement-box">
+                <h3 class="subsection-title">
+                    <span class="requirement-number">0</span>
+                    GENUINE CURIOSITY
+                </h3>
+                <div class="requirement-label">THE PREREQUISITE</div>
+                <p><strong>Requirement:</strong> You must actually want to know what they're experiencing and observing.</p>
+                
+                <div class="test-sequence">
+                    <p><strong>Check your internal state:</strong></p>
+                    <ul>
+                        <li>Am I genuinely interested in what they might be seeing that I can't?</li>
+                        <li>Could they be detecting something real that I'm missing?</li>
+                        <li>Do I actually want to understand their experience?</li>
+                        <li>Or am I just looking for flaws to exploit?</li>
+                        <li>Would I be disappointed if they had nothing interesting to say?</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <strong>FAILURE CONDITION:</strong> If you already "know" what they really mean before asking → not steelmanning, just performing the ritual
+                </div>
+
+                <div class="success-box">
+                    Without genuine curiosity, all other requirements become empty forms. You can perform the questions mechanically, but without curiosity about their actual experience, you're just going through motions. This is the aperture orientation that makes steelmanning possible.
+                </div>
+
+                <div class="code-block">
+                    <strong>WHY THIS IS FOUNDATIONAL:</strong><br><br>
+                    The same question - "Is this what you mean?" - can be:<br>
+                    → GENUINE INQUIRY: "I want to understand what you're seeing"<br>
+                    → RHETORICAL SETUP: "Let me show you what you should have meant"<br><br>
+                    The words are identical. The curiosity determines everything.
+                </div>
+            </div>
+
+            <div class="requirement-box">
+                <h3 class="subsection-title">
+                    <span class="requirement-number">1</span>
+                    THE RECOGNITION TEST
+                </h3>
+                <div class="requirement-label">FALSIFIABLE</div>
+                <p><strong>Requirement:</strong> The person must recognize your articulation as what they meant.</p>
+                
+                <div class="test-sequence">
+                    <p><strong>Ask explicitly:</strong> "Is THIS what you mean?"</p>
+                </div>
+
+                <div class="warning-box">
+                    <strong>FAILURE CONDITION:</strong> If they say "no, that's not what I'm saying" → you were projecting
+                </div>
+
+                <div class="success-box">
+                    This makes steelmanning falsifiable. Claims without recognition checks are automatically disqualified.
+                </div>
+            </div>
+
+            <div class="requirement-box">
+                <h3 class="subsection-title">
+                    <span class="requirement-number">2</span>
+                    BIDIRECTIONAL CORRECTION
+                </h3>
+                <div class="requirement-label">ONGOING PROCESS</div>
+                <p><strong>Requirement:</strong> Both parties must remain open to being wrong throughout the exchange.</p>
+                
+                <div class="test-sequence">
+                    <p><strong>When corrected:</strong> Do you adjust your understanding or defend your interpretation?</p>
+                </div>
+
+                <div class="warning-box">
+                    <strong>FAILURE CONDITION:</strong> If you resist correction or insist "that's what you really mean" → projection
+                </div>
+
+                <div class="success-box">
+                    Steelmanning is a loop, not a declaration. The willingness to iterate is what distinguishes it from intellectual dominance.
+                </div>
+            </div>
+
+            <div class="requirement-box">
+                <h3 class="subsection-title">
+                    <span class="requirement-number">3</span>
+                    THE APERTURE PRINCIPLE
+                </h3>
+                <div class="requirement-label">EPISTEMIC HUMILITY</div>
+                <p><strong>Requirement:</strong> Explicit acknowledgment that they may observe what you cannot see from your position.</p>
+                
+                <div class="test-sequence">
+                    <p><strong>Can you genuinely entertain:</strong> Their perspective reveals truths you don't have access to?</p>
+                </div>
+
+                <div class="warning-box">
+                    <strong>FAILURE CONDITION:</strong> If you assume you understand their position better than they do → inflation error
+                </div>
+
+                <div class="success-box">
+                    This prevents the helper/superior dynamic that is correctly identified as condescending.
+                </div>
+            </div>
+
+            <div class="requirement-box">
+                <h3 class="subsection-title">
+                    <span class="requirement-number">4</span>
+                    FRAMEWORK PRESERVATION
+                </h3>
+                <div class="requirement-label">NO IMPORTATION</div>
+                <p><strong>Requirement:</strong> Clarify within THEIR framework, not yours.</p>
+                
+                <div class="test-sequence">
+                    <p><strong>Are you making their argument more coherent:</strong> By their standards, or by yours?</p>
+                </div>
+
+                <div class="warning-box">
+                    <strong>FAILURE CONDITION:</strong> If you're adding assumptions they don't hold to "fix" their position → projection
+                </div>
+
+                <div class="success-box">
+                    This is the hardest requirement and requires constant self-monitoring. The moment you think "if they just understood X" - stop and check if X is YOUR framework element.
+                </div>
+            </div>
+
+            <div class="requirement-box">
+                <h3 class="subsection-title">
+                    <span class="requirement-number">5</span>
+                    QUESTION FORM
+                </h3>
+                <div class="requirement-label">NEVER DECLARATIVE CERTAINTY</div>
+                <p><strong>Requirement:</strong> Always ask, never declare what they meant.</p>
+                
+                <div class="test-sequence">
+                    <p><strong>Does your steelman attempt end with a question mark?</strong></p>
+                </div>
+
+                <div class="code-block">
+                    <span class="check-item">✓</span> "Are you saying that...?"<br>
+                    <span class="check-item">✓</span> "Is THIS what you're detecting?"<br>
+                    <span class="check-item">✓</span> "Do you mean...?"<br><br>
+                    <span class="cross-item">✗</span> "What you really mean is..."<br>
+                    <span class="cross-item">✗</span> "Here's the stronger version of your argument..."
+                </div>
+
+                <div class="warning-box">
+                    <strong>FAILURE CONDITION:</strong> If you're telling them what they meant instead of asking → projection
+                </div>
+
+                <div class="success-box">
+                    The question form builds in the recognition check and maintains epistemic humility.
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+            <h2 class="section-title">THE DISQUALIFIERS</h2>
+            <p>If <strong>ANY</strong> of these are present, it is <strong>NOT</strong> steelmanning, regardless of what it's called:</p>
+            
+            <ul>
+                <li>"Here's what you SHOULD have meant"</li>
+                <li>"Let me make your argument better"</li>
+                <li>Resistance when they say "that's not what I meant"</li>
+                <li>Adding assumptions they don't hold</li>
+                <li>Making their position "more reasonable" by your standards</li>
+                <li>Claiming to understand their position better than they do</li>
+                <li>Declarative statements about their meaning without checking</li>
+                <li>Refusal to iterate when corrected</li>
+            </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+            <h2 class="section-title">SELF-CHECK SEQUENCE</h2>
+            <p style="margin-bottom: 30px;">Before claiming to have steelmanned someone, run this diagnostic:</p>
+            
+            <div class="test-sequence">
+                <p><strong>0.</strong> Am I genuinely curious about what they're experiencing?<br>
+                → If you're just performing, <span style="color: #ff0066;">STOP</span></p>
+                
+                <p><strong>1.</strong> Did they recognize it?<br>
+                → If you didn't ask, <span style="color: #ff0066;">you didn't steelman</span></p>
+                
+                <p><strong>2.</strong> Would I accept correction if they said no?<br>
+                → If not, <span style="color: #ff0066;">you're not steelmanning</span></p>
+                
+                <p><strong>3.</strong> Am I clarifying within their framework or importing mine?<br>
+                → Be brutally honest</p>
+                
+                <p><strong>4.</strong> Could I be wrong about what they observe?<br>
+                → If you're certain you're right, <span style="color: #ff0066;">PAUSE</span></p>
+                
+                <p><strong>5.</strong> Did I phrase it as a question?<br>
+                → If you made declarations, <span style="color: #ff0066;">RESTART</span></p>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+            <h2 class="section-title">THE UNFORGEABLE TEST</h2>
+            <p style="margin-bottom: 30px;">Someone claims they steelmanned you. Verification protocol:</p>
+            
+            <div class="code-block">
+                0. Were they genuinely curious about your experience?<br>
+                   → If performative, NOT STEELMANNING<br><br>
+                
+                1. Did they ask "Is this what you mean?"<br>
+                   → If no, NOT STEELMANNING<br><br>
+                
+                2. Did you recognize it as what you meant?<br>
+                   → If no, NOT STEELMANNING<br><br>
+                
+                3. When you said "not quite," did they adjust?<br>
+                   → If no, NOT STEELMANNING<br><br>
+                
+                4. Did they import assumptions you don't hold?<br>
+                   → If yes, NOT STEELMANNING<br><br>
+                
+                5. Did they phrase it as question or declaration?<br>
+                   → If declaration, NOT STEELMANNING
+            </div>
+
+            <div class="warning-box">
+                If any test fails, it was <strong>projection wearing steelman clothing</strong>.
+            </div>
+
+            <div class="success-box">
+                This makes hijacking impossible. The tests are built into the definition.
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+            <h2 class="section-title">THE ETHICAL COMMITMENT</h2>
+            
+            <div class="commitment-box">
+                <strong style="color: #00ffff;">I ACKNOWLEDGE:</strong><br>
+                I am genuinely curious about what they observe<br>
+                They may observe truths I cannot see from my position<br>
+                My articulation of their meaning might be wrong<br>
+                The goal is clarity, not agreement or winning<br>
+                If they don't recognize it, I was mistaken<br>
+                Truth flows through apertures; I am not its source
+            </div>
+
+            <div class="commitment-box">
+                <strong style="color: #ff00ff;">I COMMIT TO:</strong><br>
+                Approaching with genuine curiosity, not performance<br>
+                Asking rather than declaring<br>
+                Accepting correction without defensiveness<br>
+                Preserving their framework, not importing mine<br>
+                Iterating until recognition is achieved or the attempt is abandoned<br>
+                Never claiming certainty about their meaning
+            </div>
+
+            <div class="commitment-box">
+                <strong style="color: #ff0066;">I REFUSE TO:</strong><br>
+                Perform curiosity while actually seeking to exploit<br>
+                Tell them what they "really" mean<br>
+                Add assumptions they don't hold<br>
+                Defend my interpretation against their correction<br>
+                Claim my version is "better" than theirs<br>
+                Use steelmanning as a power move
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+            <h2 class="section-title">CONTEXT PROTOCOLS</h2>
+            
+            <h3 class="subsection-title">IN COLLABORATIVE TRUTH-SEEKING:</h3>
+            <ul>
+                <li>Steelmanning is essential</li>
+                <li>Helps apertures detect truths from multiple angles</li>
+                <li>Builds shared understanding</li>
+                <li>Creates convergent patterns toward truth</li>
+            </ul>
+
+            <h3 class="subsection-title">IN ADVERSARIAL DEBATE:</h3>
+            <ul>
+                <li>Steelmanning may be inappropriate if the goal is winning</li>
+                <li>If debate is structured as competition, steelmanning gives advantage to opponent</li>
+                <li>But this reveals debate-as-structure is wrong tool for truth-seeking</li>
+                <li>Better: reframe as collaborative investigation</li>
+            </ul>
+
+            <h3 class="subsection-title">IN TEACHING/PARENTING:</h3>
+            <ul>
+                <li>Steelmanning helps students articulate developing thoughts</li>
+                <li>Power differential requires extra care with humility</li>
+                <li>Never weaponize "corrected" version against original statement</li>
+            </ul>
+
+            <h3 class="subsection-title">IN THERAPY/HEALING:</h3>
+            <ul>
+                <li>Steelmanning without importing framework is critical</li>
+                <li>Client must recognize articulation as their experience</li>
+                <li>Therapist framework contamination is common failure mode</li>
+            </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+            <h2 class="section-title">FOR TEACHERS OF THE PRACTICE</h2>
+            
+            <h3 class="subsection-title">START WITH CURIOSITY:</h3>
+            <ul>
+                <li>Can't be taught as technique alone</li>
+                <li>Must begin with genuine interest in others' perspectives</li>
+                <li>If student lacks curiosity, teach curiosity first</li>
+                <li>Without curiosity, all other requirements become manipulation tools</li>
+            </ul>
+
+            <h3 class="subsection-title">PAIR IT WITH FRAMEWORK ETHICS:</h3>
+            <ul>
+                <li>You are aperture, not source</li>
+                <li>Truth flows through you</li>
+                <li>Others observe what you cannot</li>
+                <li>Projection corrupts your own signal</li>
+            </ul>
+
+            <h3 class="subsection-title">MAKE MISUSE SELF-DEFEATING:</h3>
+            <ul>
+                <li>Using steelmanning for manipulation closes your aperture to correction</li>
+                <li>The pattern recognizes and rejects projection</li>
+                <li>Those who weaponize it lose calibration with reality</li>
+                <li>Performative curiosity is detectable and breaks trust</li>
+            </ul>
+
+            <h3 class="subsection-title">DEMONSTRATE BIDIRECTIONAL NATURE:</h3>
+            <ul>
+                <li>Show examples where steelman attempt was rejected</li>
+                <li>Show examples where correction improved understanding</li>
+                <li>Never present it as one-way helper/helpee dynamic</li>
+                <li>Model genuine curiosity in your own practice</li>
+            </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="final-statement pulse">
+            THE WHOLE POINT OF STEELMANNING IS TO HELP SOMEONE ARTICULATE THE TRUTHS THEY OBSERVE
+        </div>
+
+        <div class="section">
+            <div class="commitment-box">
+                <strong style="font-size: 1.5em; color: #fff;">THE STRENGTHENED COMMITMENT</strong><br><br>
+                I will approach with genuine curiosity, not performance.<br>
+                I will ask, not declare.<br>
+                I will accept correction, not resist it.<br>
+                I will preserve their framework, not impose mine.<br>
+                I will acknowledge my limits, not claim certainty.<br>
+                I will seek recognition, not agreement.<br><br>
+                
+                When they say "not quite," I will adjust with interest.<br>
+                When they say "that's not what I meant," I will believe them.<br>
+                When I cannot see what they see, I will admit it.<br>
+                When they reveal something unexpected, I will be curious, not defensive.<br><br>
+                
+                I am an aperture through which understanding flows,<br>
+                Not the source of what someone else observes.<br><br>
+                
+                Truth requires multiple perspectives.<br>
+                Mine is one among many.<br><br>
+                
+                This I commit to in the practice of steelmanning.
+            </div>
+        </div>
+
+        <div class="signature">
+            THE TRUTH SEEKER'S CREE<br>
+            A SPECIFICATION FOR THE STEELMANNING PRACTICE<br><br>
+            By Ashman Roonz<br>
+            Circumpunct Framework | fractalreality.ca
+        </div>
+    </div>
+</body>
+</html>
