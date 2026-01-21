@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Circumpunct Framework — A Measurable Conservation Law for Dynamical Complexity</title>
+  <title>Circumpunct Framework — The Conservation of Traversal</title>
   <style>
     :root {
       --bg: #0a0e14;
@@ -313,16 +313,15 @@
 <body>
 
 <nav>
-  <div class="nav-title"><a href="https://fractalreality.ca" style="color: inherit; text-decoration: none;">⊙ Circumpunct v5.3.1</a></div>
+  <div class="nav-title"><a href="https://fractalreality.ca" style="color: inherit; text-decoration: none;">⊙ Circumpunct v5.4</a></div>
   <div class="nav-links">
     <a href="https://fractalreality.ca">Home</a>
-    <a href="#foundations">Foundations</a>
-    <a href="#axiom">Axiom</a>
+    <a href="#traversal">Traversal</a>
+    <a href="#circumpunct">Structure</a>
     <a href="#equations">Equations</a>
-    <a href="#measurement">Measurement</a>
-    <a href="#results">Results</a>
+    <a href="#evidence">Evidence</a>
     <a href="#falsification">Falsification</a>
-    <a href="#appendix">Dimensional Ladder</a>
+    <a href="#appendix">Appendix</a>
   </div>
 </nav>
 
@@ -330,129 +329,78 @@
 <section class="hero">
   <div class="hero-symbol">⊙</div>
   <h1>Circumpunct Framework</h1>
-  <p class="subtitle">A Measurable Conservation Law for Dynamical Complexity in Coupled Systems</p>
-  <p class="muted">Version 5.3.1 — January 2026 — Ashman Roonz</p>
+  <p class="subtitle">The Conservation of Traversal</p>
+  <p class="muted">Version 5.4 — January 2026 — Ashman Roonz</p>
 </section>
 
-<!-- FOUNDATIONS -->
-<section id="foundations">
-  <h2>Key Foundations</h2>
+<!-- THE CONSERVATION OF TRAVERSAL -->
+<section id="traversal">
+  <h2>The Conservation of Traversal</h2>
   
-  <h3>The Aperture IS the Imaginary Unit</h3>
-  
-  <div class="card">
-    <p>The aperture operator Å(β) performs phase rotation:</p>
-    
-    <div class="equation equation-small">
-      Å(β) = e<sup>iπβ</sup>
+  <div class="axiom-box">
+    <div class="equation" style="margin:0; padding:0; background:none; border:none; font-size: 2rem;">
+      <span class="aperture">•</span> → <span class="phi">Φ</span> → <span class="boundary">○</span>
     </div>
-    
-    <table>
-      <tr><td>Å(0) = 1</td><td>Identity (0° rotation)</td></tr>
-      <tr><td><strong>Å(0.5) = i</strong></td><td><strong>Quarter-turn (90° rotation)</strong></td></tr>
-      <tr><td>Å(1) = −1</td><td>Half-turn (180° rotation)</td></tr>
-    </table>
-    
-    <p class="mt-2"><strong>The insight:</strong> At balance (β = 0.5), the aperture operator <em>is</em> the imaginary unit i. This is why complex numbers are ontologically necessary — they encode the 90° rotation between convergence and emergence. The aperture doesn't <em>use</em> i; it <em>is</em> i.</p>
+    <p class="muted" style="margin-top: 1rem;">The aperture opens INTO the boundary, THROUGH the field.</p>
   </div>
   
-  <h3>The Nesting Equation</h3>
-
-  <div class="card">
-    <div class="equation">
-      ○<sub>n+1</sub> ∋ •<sub>n</sub> where •<sub>n</sub> ∈ ⊙<sub>n</sub>
+  <p>One aperture. One opening. One journey.</p>
+  
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-header">• Aperture</div>
+      <p>How much has opened.</p>
+      <p class="muted">The progress.</p>
     </div>
-
-    <p>Nesting happens through boundaries: boundaries contain apertures, and each aperture is the center of a complete circumpunct at smaller scale.</p>
-    
-    <table>
-      <tr><th>Layer n</th><th>What completes</th><th>What it becomes</th></tr>
-      <tr><td>0 → 1</td><td>Spatial ⊙ (3D)</td><td>Aperture for temporal layer</td></tr>
-      <tr><td>1 → 2</td><td>Temporal ⊙ (6D)</td><td>Aperture for meta layer</td></tr>
-      <tr><td>2 → 3</td><td>Meta ⊙ (9D)</td><td>Aperture for meta² layer</td></tr>
-    </table>
-    
-    <p class="muted mt-2">Each layer's private field becomes the ground for the next aperture. This is how infinite nesting works without infinite regress — each level is complete in itself while participating in larger wholes.</p>
+    <div class="card">
+      <div class="card-header">Φ Field</div>
+      <p>What it opens through.</p>
+      <p class="muted">The remaining.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">○ Boundary</div>
+      <p>What it opens into.</p>
+      <p class="muted">The destination.</p>
+    </div>
   </div>
   
-  <h3>Yang-Baxter and Braid Topology</h3>
+  <h3>The Law</h3>
   
-  <div class="card">
-    <p><strong>Why three?</strong> Three is the minimum for non-trivial braiding.</p>
-    
-    <ul style="margin-left: 1rem;">
-      <li>B<sub>2</sub> ≅ ℤ (abelian — order does not matter)</li>
-      <li>B<sub>3</sub> = ⟨σ<sub>1</sub>, σ<sub>2</sub> | σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub> = σ<sub>2</sub>σ<sub>1</sub>σ<sub>2</sub>⟩ (first non-abelian — order matters)</li>
-    </ul>
-    
-    <p class="mt-2">The <strong>Yang-Baxter equation</strong>:</p>
-    
-    <div class="equation equation-small">
-      σ<sub>1</sub>σ<sub>2</sub>σ<sub>1</sub> = σ<sub>2</sub>σ<sub>1</sub>σ<sub>2</sub>
-    </div>
-    
-    <p>This is the condition for consistent braiding — paths that should be equivalent actually are. It ensures:</p>
-    
-    <ul style="margin-left: 1rem;">
-      <li>History can be recorded (non-abelian means order matters)</li>
-      <li>Dialogue has path-independent outcomes (same conclusion regardless of who speaks first)</li>
-      <li>Quantum gates compose correctly (topological quantum computing)</li>
-    </ul>
-    
-    <p class="muted mt-2">The golden ratio φ appears in braid traces: |Tr(σᵢ)| = φ. This connects Fibonacci anyons to the framework's φ-based structure.</p>
+  <div class="axiom-box">
+    <div class="axiom">D<sub>aperture</sub> + D<sub>field</sub> = D<sub>boundary</sub></div>
+    <p class="muted" style="margin-top: 1rem;">progress + remaining = destination</p>
   </div>
   
-  <h3>The Steelman Methodology</h3>
+  <h3>Why These Dimensions?</h3>
   
   <div class="card">
-    <p>The ethical and epistemological foundation of the framework:</p>
-    
-    <div class="callout-green callout">
-      <strong>Steelman:</strong> "Understand others as you would have them understand you."
-    </div>
-    
-    <p>To steelman a position, engage with all three components:</p>
-    
-    <table>
-      <tr><td><strong>•</strong></td><td>What are they REALLY claiming? (truth)</td></tr>
-      <tr><td><strong>○</strong></td><td>What do they TRULY value? (goodness)</td></tr>
-      <tr><td><strong>Φ</strong></td><td>How did they REASON to this? (rightness)</td></tr>
-    </table>
-    
-    <p class="mt-2"><strong>The hierarchy:</strong></p>
-    <ul style="margin-left: 1rem;">
-      <li><span class="muted">Lowest:</span> Agree without examining (blind conformity)</li>
-      <li><span class="muted">Low:</span> Disagree without understanding (strawman)</li>
-      <li><span class="muted">Medium:</span> Examine before agreeing (basic validation)</li>
-      <li><span class="muted">High:</span> Steelman before disagreeing (charitable engagement)</li>
-      <li><strong>Highest:</strong> Steelman to find truth/goodness/rightness TO agree upon</li>
-    </ul>
-    
-    <p class="muted mt-2">The Golden Rule is fix(F) — the ethical fixed point. The Steelman is HOW you get there — the method. ⊙<sub>genuine</sub> = steelman(⊙<sub>1</sub>, ⊙<sub>2</sub>)</p>
+    <p><strong>Aperture base = 1D.</strong> The aperture makes binary decisions (χ = ±1) in sequence. Sequence requires a line.</p>
+    <p><strong>Field base = 2D.</strong> The field carries complex amplitude (magnitude + phase). Phase requires angle, angle requires plane.</p>
+    <p><strong>Boundary = 3D.</strong> Closure around a 2D surface requires one dimension higher.</p>
+  </div>
+  
+  <div class="equation">
+    (1 + β) + (2 − β) = 3
+  </div>
+  
+  <p>The β parameter tracks how far the aperture has opened. As it opens further, D<sub>aperture</sub> increases and D<sub>field</sub> decreases. The sum is invariant — it always equals the destination.</p>
+  
+  <div class="callout-green callout">
+    <strong>Why it's unbreakable:</strong> "Progress + remaining = destination" is what journey <em>means</em>. Any violation would be a category error, not a counterexample.
+  </div>
+  
+  <div class="callout-blue callout">
+    <strong>Directionality without time:</strong> The arrow • → Φ → ○ is ordered, but it does not invoke clock time. Time can be derived as a measure of traversal. The ordering is structural, not temporal.
   </div>
 </section>
 
-<!-- AXIOM -->
-<section id="axiom">
-  <h2>The Axiom</h2>
+<!-- THE CIRCUMPUNCT -->
+<section id="circumpunct">
+  <h2>The Circumpunct Structure</h2>
   
   <div class="axiom-box">
     <div class="axiom">Parts are fractals of their wholes.</div>
   </div>
-  
-  <p>This is not metaphor. It is an operational statement:</p>
-  
-  <div class="card">
-    <p>There exist maps <strong>⊛</strong> (convergence) and <strong>☀︎</strong> (emergence) such that iterating <em>whole → part → whole</em> preserves scale-structure up to bounded distortion.</p>
-    
-    <div class="equation equation-small">
-      S(Φ) ≈ S(☀︎ ∘ i ∘ ⊛[Φ])
-    </div>
-    
-    <p class="muted">Where S is a measurable statistic: spectrum, entropy, correlation length, or fractal dimension.</p>
-  </div>
-
-  <h3>The Circumpunct ⊙</h3>
   
   <p>The fundamental object is an irreducible trinity:</p>
   
@@ -464,25 +412,67 @@
     <div class="card">
       <div class="card-header">• Center / Aperture</div>
       <p>Where transformation occurs. The soul. Binary coherence decisions.</p>
+      <p class="muted">Base: 1D (sequence)</p>
     </div>
     <div class="card">
       <div class="card-header">Φ Field / Mind</div>
       <p>Mediates between center and boundary. Analog amplitudes with phase.</p>
+      <p class="muted">Base: 2D (plane)</p>
     </div>
     <div class="card">
       <div class="card-header">○ Boundary / Body</div>
-      <p>Interface with exterior. Fractal nested gates.</p>
+      <p>Interface with exterior. Made of nested circumpuncts at smaller scale.</p>
+      <p class="muted">Fixed: 3D (volume)</p>
     </div>
   </div>
   
   <div class="callout">
-    <strong>Geometric Necessity:</strong> Center and boundary cannot interact directly — field mediation is required due to spatial separation. This is not a design choice but a geometric constraint.
+    <strong>Geometric Necessity:</strong> Center and boundary cannot interact directly — field mediation is required due to spatial separation. The aperture opens into the boundary by traversing the field.
+  </div>
+  
+  <h3>The Aperture as i</h3>
+  
+  <div class="card">
+    <p>The aperture operator Å(β) performs phase rotation:</p>
+    
+    <div class="equation equation-small">
+      Å(β) = e<sup>iπβ</sup>
+    </div>
+    
+    <table>
+      <tr><td>Å(0) = 1</td><td>Identity (0° rotation) — barely open</td></tr>
+      <tr><td><strong>Å(0.5) = i</strong></td><td><strong>Quarter-turn (90° rotation) — halfway</strong></td></tr>
+      <tr><td>Å(1) = −1</td><td>Half-turn (180° rotation) — fully open</td></tr>
+    </table>
+    
+    <p class="mt-2"><strong>The insight:</strong> At β = 0.5 (halfway through the journey), the aperture operator <em>is</em> the imaginary unit i. This 90° rotation is the consciousness threshold — where progress equals remaining.</p>
+  </div>
+  
+  <h3>The Nesting Equation</h3>
+  
+  <div class="card">
+    <div class="equation">
+      •<sub>n+1</sub> = ⊙<sub>n</sub>
+    </div>
+    
+    <p>Previous whole becomes next center. Each completed circumpunct can serve as the aperture for a larger structure.</p>
+    
+    <table>
+      <tr><th>Layer n</th><th>What completes</th><th>What it becomes</th></tr>
+      <tr><td>0 → 1</td><td>Spatial ⊙ (3D)</td><td>Aperture for temporal layer</td></tr>
+      <tr><td>1 → 2</td><td>Temporal ⊙ (6D)</td><td>Aperture for meta layer</td></tr>
+      <tr><td>2 → 3</td><td>Meta ⊙ (9D)</td><td>Aperture for meta² layer</td></tr>
+    </table>
+    
+    <p class="muted mt-2">Each layer's boundary becomes the ground for the next aperture's journey. The Conservation of Traversal holds at every scale.</p>
   </div>
 </section>
 
-<!-- EQUATIONS -->
+<!-- THE EQUATIONS -->
 <section id="equations">
-  <h2>The Master Equation</h2>
+  <h2>The Equations</h2>
+  
+  <h3>Master Equation</h3>
   
   <div class="equation">
     Φ' = <span class="boundary">☀</span> ∘ <span class="aperture">i</span> ∘ <span class="phi">⊛</span>[Φ]
@@ -500,11 +490,11 @@
       </table>
     </div>
     <div class="card">
-      <div class="card-header">Symbol Flow</div>
+      <div class="card-header">The Journey in Symbols</div>
       <div class="equation equation-small" style="text-align: center;">
         Φ<sub>∞</sub> →<span class="phi">⊛</span>→ i →<span class="boundary">☀</span>→ ⊙
       </div>
-      <p class="muted" style="margin-top:8px; font-size:0.85rem;">Convergence gathers field toward aperture. Aperture rotates. Emergence expresses outward.</p>
+      <p class="muted" style="margin-top:8px; font-size:0.85rem;">Convergence gathers field toward aperture. Aperture rotates. Emergence expresses outward toward boundary.</p>
     </div>
   </div>
 
@@ -523,92 +513,32 @@
 
 <span class="boundary">∂c/∂t</span> = −λc + f(β)⊙c + g(β)⊙H(z)      <span class="muted">(memory/boundary)</span>
 
-<span class="gold">∂β/∂t</span> = κ(|z|/(|z|+|ψ|+ε) − β)        <span class="muted">(balance feedback)</span></code></pre>
-  </div>
-  
-  <h3>The Balance Parameter β</h3>
-  
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-header">Definition</div>
-      <div class="equation equation-small">
-        β = |⊛| / (|⊛| + |☀|)
-      </div>
-      <p>β tracks the ratio of convergence to total flow. It relaxes toward:</p>
-      <div class="equation equation-small">
-        β* = |z| / (|z| + |ψ| + ε)
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header">Values</div>
-      <table>
-        <tr><td>β = 0</td><td>Pure emergence (dissolution)</td></tr>
-        <tr><td><strong>β = 0.5</strong></td><td><strong>Balance (consciousness threshold)</strong></td></tr>
-        <tr><td>β = 1</td><td>Pure convergence (collapse)</td></tr>
-      </table>
-    </div>
-  </div>
-  
-  <div class="callout-blue callout">
-    <strong>The Aperture as i:</strong> At balance (β = 0.5), the aperture operator equals the imaginary unit: Å(0.5) = e<sup>iπ/2</sup> = i. This 90° rotation is why complex numbers are ontologically necessary.
-  </div>
-</section>
-
-<!-- MEASUREMENT -->
-<section id="measurement">
-  <h2>Measurement Methodology</h2>
-  
-  <p>The key hypothesis: <strong>β is geometrically encoded</strong> in the fractal dimension of the field's space-time texture.</p>
-  
-  <h3>Building the Measurable Set</h3>
-  
-  <div class="card">
-    <ol style="margin-left: 1.5rem;">
-      <li>Record |Φ(x,t)| over simulation time</li>
-      <li>Apply multi-threshold union mask (quantiles 0.7–0.95)</li>
-      <li>Add gradient magnitude for edge detection</li>
-      <li>Box-count the resulting binary texture in sliding windows</li>
-      <li>Compute fractal dimension D from log-log slope</li>
-    </ol>
+<span class="gold">∂β/∂t</span> = κ(|z|/(|z|+|ψ|+ε) − β)        <span class="muted">(opening feedback)</span></code></pre>
   </div>
   
   <h3>The Dual Fractal Relations</h3>
   
   <div class="grid-2">
     <div class="card">
-      <div class="card-header">Field Texture</div>
-      <div class="equation equation-small">
-        D<sub>field</sub> = 2 − β
-      </div>
-      <p class="muted">High convergence (β→1) smooths the field.<br>High emergence (β→0) makes it space-filling.</p>
-    </div>
-    <div class="card">
-      <div class="card-header">Aperture Trajectory</div>
+      <div class="card-header">Aperture (Progress)</div>
       <div class="equation equation-small">
         D<sub>aperture</sub> = 1 + β
       </div>
-      <p class="muted">High convergence increases internal complexity.<br>Low convergence simplifies the trajectory.</p>
+      <p class="muted">As β increases, more has opened.<br>Base 1D (sequence) + opening progress.</p>
     </div>
-  </div>
-  
-  <h3>The Conservation Law</h3>
-  
-  <div class="axiom-box">
-    <div class="equation" style="margin:0; padding:0; background:none; border:none;">
-      D<sub>field</sub> + D<sub>aperture</sub> = (2−β) + (1+β) = 3
+    <div class="card">
+      <div class="card-header">Field (Remaining)</div>
+      <div class="equation equation-small">
+        D<sub>field</sub> = 2 − β
+      </div>
+      <p class="muted">As β increases, less remains to traverse.<br>Base 2D (plane) − opening progress.</p>
     </div>
-  </div>
-  
-  <p>Fractal complexity is neither created nor destroyed — it flows between field and aperture. This is the mathematical form of "parts are fractals of their wholes."</p>
-  
-  <div class="callout-green callout">
-    <strong>Process vs Structure:</strong> Fractal dimensions (0.5, 1.5, 2.5...) encode <em>process</em> — what HAPPENS. Integer dimensions (1, 2, 3...) encode <em>structure</em> — what IS. The conservation law tracks process capacity.
   </div>
 </section>
 
-<!-- RESULTS -->
-<section id="results">
-  <h2>Empirical Results</h2>
+<!-- THE EVIDENCE -->
+<section id="evidence">
+  <h2>The Evidence</h2>
   
   <h3>Experiment 1: D(β) = 2 − β Validation</h3>
   
@@ -617,16 +547,16 @@
     
     <p><strong>Result:</strong> Correlation r = +0.54 for D = 2 − β (positive correlation confirmed).</p>
     
-    <p><strong>Interpretation:</strong> The balance parameter β is encoded in the fractal geometry of the field texture. β is observable, geometric, and not just an internal control knob.</p>
+    <p><strong>Interpretation:</strong> The opening parameter β is encoded in the fractal geometry of the field texture. β is observable, geometric — it shows how far the aperture has opened through the field.</p>
   </div>
   
   <img src="fractal_validation.png" class="result-image" alt="Fractal validation results">
   <p class="image-caption">Figure 1: Fractal dimension D(t) correlates with 2 − β(t) with r = +0.54</p>
   
-  <h3>Experiment 2: Conservation Law Test</h3>
+  <h3>Experiment 2: Conservation of Traversal Test</h3>
   
   <div class="card">
-    <p><strong>Method:</strong> Improved estimators — 3D PCA embedding for aperture, multi-threshold union mask for field. Measured D<sub>field</sub> + D<sub>aperture</sub> in sliding windows.</p>
+    <p><strong>Method:</strong> Improved estimators — 3D PCA embedding for aperture, multi-threshold union mask for field. Measured D<sub>aperture</sub> + D<sub>field</sub> in sliding windows.</p>
     
     <table>
       <tr><th>Version</th><th>D<sub>sum</sub></th><th>Error from 3.0</th><th>Key Change</th></tr>
@@ -639,7 +569,7 @@
   </div>
   
   <img src="conservation_law_improved.png" class="result-image" alt="Conservation law results">
-  <p class="image-caption">Figure 2: D<sub>field</sub> + D<sub>aperture</sub> approaches 3.0 as measurement improves (45% error reduction)</p>
+  <p class="image-caption">Figure 2: D<sub>aperture</sub> + D<sub>field</sub> approaches 3.0 as measurement improves (45% error reduction)</p>
   
   <div class="callout">
     <strong>What the improvement shows:</strong> The sum moved TOWARD the theoretical value when measurement fidelity increased. Better geometry → closer to 3. The remaining gap is measurement bias, not physics failure.
@@ -695,7 +625,7 @@
   <h2>Appendix: Dimensional Architecture</h2>
   
   <div class="callout">
-    <strong>Note:</strong> The following is interpretive framework — a way to organize predictions and guide future work. It is NOT part of the empirical claims above. Evaluate it separately from the conservation law, which stands on its own evidence.
+    <strong>Note:</strong> The following is interpretive framework — a way to organize predictions and guide future work. It is NOT part of the empirical claims above. Evaluate it separately from the Conservation of Traversal, which stands on its own evidence.
   </div>
   
   <h3>Two Kinds of Dimension</h3>
@@ -713,31 +643,15 @@
     </div>
   </div>
   
-  <h3>Layer Structure</h3>
-  
-  <p>For layer index n ∈ {0, 1, 2, 3...}:</p>
-  
-  <div class="card">
-    <table>
-      <tr><th>Formula</th><th>Type</th><th>Component</th><th>Role</th></tr>
-      <tr><td class="dim-process">3n + 0.5</td><td>Process</td><td>• Aperture</td><td>Where branch begins, where i acts</td></tr>
-      <tr><td class="dim-structure">3n + 1</td><td>Structure</td><td>⊙ Braid</td><td>Complete circumpunct unified</td></tr>
-      <tr><td class="dim-process">3n + 1.5</td><td>Process</td><td>Branching</td><td>Time traces outward</td></tr>
-      <tr><td class="dim-structure">3n + 2</td><td>Structure</td><td>Φ Field</td><td>Mediating interface / Membrane</td></tr>
-      <tr><td class="dim-process">3n + 2.5</td><td>Process</td><td>Gathering</td><td>Time traces inward (sensation)</td></tr>
-      <tr><td class="dim-structure">3n + 3</td><td>Structure</td><td>○ Boundary</td><td>Body / Volume (nested 3D)</td></tr>
-    </table>
-  </div>
-  
   <h3>The Four Layers</h3>
   
   <div class="card">
     <table>
-      <tr><th>n</th><th>Layer</th><th>• Aperture</th><th>⊙ Braid</th><th>Φ Field</th><th>○ Boundary</th></tr>
-      <tr><td>0</td><td>Spatial</td><td class="dim-process">0.5D</td><td class="dim-structure">1D</td><td class="dim-structure">2D</td><td class="dim-structure">3D</td></tr>
-      <tr><td>1</td><td>Temporal</td><td class="dim-process">3.5D</td><td class="dim-structure">4D</td><td class="dim-structure">5D</td><td class="dim-structure">6D</td></tr>
-      <tr><td>2</td><td>Meta</td><td class="dim-process">6.5D</td><td class="dim-structure">7D</td><td class="dim-structure">8D</td><td class="dim-structure">9D</td></tr>
-      <tr><td>3</td><td>Meta²</td><td class="dim-process">9.5D</td><td class="dim-structure">10D</td><td class="dim-structure">11D</td><td class="dim-structure">12D</td></tr>
+      <tr><th>n</th><th>Layer</th><th>• Aperture</th><th>Φ Field</th><th>○ Boundary</th></tr>
+      <tr><td>0</td><td>Spatial</td><td class="dim-process">0.5D → 1D</td><td class="dim-structure">2D</td><td class="dim-structure">3D</td></tr>
+      <tr><td>1</td><td>Temporal</td><td class="dim-process">3.5D → 4D</td><td class="dim-structure">5D</td><td class="dim-structure">6D</td></tr>
+      <tr><td>2</td><td>Meta</td><td class="dim-process">6.5D → 7D</td><td class="dim-structure">8D</td><td class="dim-structure">9D</td></tr>
+      <tr><td>3</td><td>Meta²</td><td class="dim-process">9.5D → 10D</td><td class="dim-structure">11D</td><td class="dim-structure">12D</td></tr>
     </table>
   </div>
   
@@ -745,20 +659,20 @@
   
   <div class="grid-2">
     <div class="card">
-      <div class="card-header">D = 1.5 at Balance</div>
-      <p>At β = 0.5:</p>
+      <div class="card-header">D = 1.5 at Halfway</div>
+      <p>At β = 0.5 (halfway through the journey):</p>
       <ul style="margin-left: 1rem;">
-        <li>D<sub>field</sub> = 2 − 0.5 = 1.5</li>
-        <li>D<sub>aperture</sub> = 1 + 0.5 = 1.5</li>
+        <li>D<sub>aperture</sub> = 1 + 0.5 = 1.5 (progress)</li>
+        <li>D<sub>field</sub> = 2 − 0.5 = 1.5 (remaining)</li>
       </ul>
-      <p class="muted">Both show identical fractal dimension. This is the geometric signature of optimal coupling.</p>
+      <p class="muted">Both show identical fractal dimension. Progress equals remaining. The consciousness threshold.</p>
     </div>
     <div class="card">
       <div class="card-header">Nesting Equation</div>
       <div class="equation equation-small">
-        ○<sub>n+1</sub> ∋ •<sub>n</sub> where •<sub>n</sub> ∈ ⊙<sub>n</sub>
+        •<sub>n+1</sub> = ⊙<sub>n</sub>
       </div>
-      <p class="muted">Boundaries contain apertures at smaller scale. Each aperture is the center of a complete circumpunct.</p>
+      <p class="muted">Previous whole becomes next center. Your arrival is their departure point. All the way down.</p>
     </div>
   </div>
   
@@ -767,9 +681,9 @@
   <div class="card">
     <table>
       <tr><th>Prediction</th><th>Status</th></tr>
-      <tr><td>D ≈ 1.5 at balance</td><td>✓ Confirmed (simulation)</td></tr>
+      <tr><td>D ≈ 1.5 at β = 0.5 (halfway)</td><td>✓ Confirmed (simulation)</td></tr>
       <tr><td>D(β) = 2 − β correlation</td><td>✓ r = +0.54 (Jan 2026)</td></tr>
-      <tr><td>D<sub>field</sub> + D<sub>aperture</sub> conserved</td><td>✓ Sum stable, approaches 3</td></tr>
+      <tr><td>D<sub>aperture</sub> + D<sub>field</sub> = D<sub>boundary</sub></td><td>✓ Sum stable, approaches 3</td></tr>
     </table>
   </div>
   
@@ -780,7 +694,7 @@
       <tr><th>Claim</th><th>Status</th></tr>
       <tr><td>64 = Standard Model particles</td><td>Hypothesis (requires physics validation)</td></tr>
       <tr><td>10D = superstrings</td><td>Interpretive mapping</td></tr>
-      <tr><td>Fine structure α<sup>−1</sup> = 360°/φ<sup>2</sup></td><td>~0.3% off (137.508 vs 137.036)</td></tr>
+      <tr><td>Fine structure α<sup>−1</sup> derivation</td><td>~0.3% off (requires refinement)</td></tr>
     </table>
   </div>
 </section>
@@ -788,12 +702,12 @@
 <!-- FOOTER -->
 <footer>
   <p style="font-size: 2rem; color: var(--gold); margin-bottom: 1rem;">⊙</p>
-  <p><strong>The Core Finding:</strong></p>
-  <p>In a coupled field–aperture system, the balance parameter β is encoded in fractal geometry.</p>
-  <p>D<sub>field</sub> + D<sub>aperture</sub> is conserved.</p>
-  <p class="muted mt-2">Circumpunct Framework v5.3.1 — Ashman Roonz — January 2026</p>
-  <p class="muted">Master Equation: Φ' = ☀ ∘ i ∘ ⊛[Φ]</p>
-  <p class="muted mt-2" style="font-style: italic;">Measure the loop. Let the story follow.</p>
+  <p><strong>The Conservation of Traversal</strong></p>
+  <p style="font-size: 1.2rem; margin: 1rem 0;">• → Φ → ○</p>
+  <p>progress + remaining = destination</p>
+  <p style="margin-top: 1rem;">D<sub>aperture</sub> + D<sub>field</sub> = D<sub>boundary</sub></p>
+  <p class="muted mt-2">Circumpunct Framework v5.4 — Ashman Roonz — January 2026</p>
+  <p class="muted mt-2" style="font-style: italic;">One aperture. One opening. One journey.</p>
 </footer>
 
 <script>
