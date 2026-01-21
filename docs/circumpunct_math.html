@@ -319,6 +319,8 @@
     <a href="#traversal">Traversal</a>
     <a href="#circumpunct">Structure</a>
     <a href="#equations">Equations</a>
+    <a href="#formalization">Formalization</a>
+    <a href="#theorem">Theorem</a>
     <a href="#evidence">Evidence</a>
     <a href="#falsification">Falsification</a>
     <a href="#appendix">Appendix</a>
@@ -533,6 +535,126 @@
       </div>
       <p class="muted">As β increases, less remains to traverse.<br>Base 2D (plane) − opening progress.</p>
     </div>
+  </div>
+</section>
+
+<!-- FORMALIZATION -->
+<section id="formalization">
+  <h2>Hilbert Space Formalization</h2>
+  
+  <p>The circumpunct maps directly onto quantum operator formalism.</p>
+  
+  <h3>Operator Form</h3>
+  
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-header">• Aperture Operator</div>
+      <div class="equation equation-small" style="text-align: center;">
+        Â(β) = e<sup>iπβ</sup>
+      </div>
+      <p class="muted">Unitary phase gate. Injects discrete choice as phase-structure.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">Φ Field Operator</div>
+      <div class="equation equation-small" style="text-align: center;">
+        Û(t) = e<sup>−iĤt</sup>
+      </div>
+      <p class="muted">Continuous evolution. The relation engine where phase/amplitude interfere and cohere.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">○ Boundary Operator</div>
+      <div class="equation equation-small" style="text-align: center;">
+        B̂ = Σ<sub>k</sub> Π<sub>k</sub>
+      </div>
+      <p class="muted">Projection / closure. Produces observable outcome. Implements inside vs outside.</p>
+    </div>
+  </div>
+  
+  <h3>Full Circumpunct Update (One Cycle)</h3>
+  
+  <div class="equation">
+    |ψ'⟩ = B̂ · Û(t) · Â(β) |ψ⟩
+  </div>
+  
+  <p class="center muted">Aperture injects choice → Field spreads/relates → Boundary closes into stable interface</p>
+  
+  <h3>Hilbert Space Factorization</h3>
+  
+  <div class="card">
+    <p>The circumpunct as a structured partition of degrees of freedom:</p>
+    <div class="equation">
+      ℋ ≅ ℋ<sub>•</sub> ⊗ ℋ<sub>Φ</sub> ⊗ ℋ<sub>○</sub>
+    </div>
+    <table>
+      <tr><td><strong>ℋ<sub>•</sub></strong></td><td>Aperture DOF</td><td>Minimal decision/gate (qubit-like)</td></tr>
+      <tr><td><strong>ℋ<sub>Φ</sub></strong></td><td>Field DOF</td><td>Coherent relational (phases, superpositions, interference)</td></tr>
+      <tr><td><strong>ℋ<sub>○</sub></strong></td><td>Boundary DOF</td><td>Interface (constraints, environment coupling, readout)</td></tr>
+    </table>
+  </div>
+  
+  <h3>Conservation Law (Hilbert Space Version)</h3>
+  
+  <div class="axiom-box">
+    <div class="axiom">ΔC<sub>•</sub> + ΔC<sub>Φ</sub> = ΔC<sub>○</sub></div>
+    <p class="muted" style="margin-top: 1rem;">where C = log dim(ℋ) is the capacity</p>
+  </div>
+  
+  <p>Increasing boundary/interface capacity requires increasing either decision resolution (aperture space) or relational richness (field space).</p>
+  
+  <div class="callout">
+    <strong>No free emergence:</strong> You can't increase what the boundary can stably express unless you pay for it in gate capacity and/or coherent relational capacity.
+  </div>
+</section>
+
+<!-- THE DIMENSION THEOREM -->
+<section id="theorem">
+  <h2>The Dimension Theorem</h2>
+  
+  <div class="axiom-box">
+    <div class="axiom">Dimension is not assumed — it is forced by the triad's functional irreducibility.</div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">Theorem (Minimum Dimensional Realization)</div>
+    <p>Any system implementing the circumpunct triad must realize, at minimum: <strong>1D for aperture</strong>, <strong>2D for field</strong>, <strong>3D for boundary</strong> — in the sense of minimal degrees required for each role to be non-degenerate.</p>
+  </div>
+  
+  <h3>Proof</h3>
+  
+  <div class="card">
+    <p><strong>(1) Aperture ⇒ 1D minimum</strong></p>
+    <p>An aperture is a sequence of discrete decisions. Sequencing requires an order parameter. The minimal structure supporting order is a <strong>line</strong>.</p>
+    <div class="equation equation-small" style="text-align: center;">
+      • ⇒ ordered sequence ⇒ 1D
+    </div>
+  </div>
+  
+  <div class="card">
+    <p><strong>(2) Field ⇒ 2D minimum</strong></p>
+    <p>A field must carry magnitude + phase (complex amplitude). Phase is angular: an angle requires a plane. The minimal representation of amplitude + phase is <strong>2D</strong> (polar coordinates).</p>
+    <div class="equation equation-small" style="text-align: center;">
+      Φ ⇒ (r, θ) ⇒ 2D
+    </div>
+  </div>
+  
+  <div class="card">
+    <p><strong>(3) Boundary ⇒ 3D minimum</strong></p>
+    <p>A boundary must enact inside/outside closure around the field. Closing a 2D field into a separable inside/outside requires one extra dimension.</p>
+    <div class="equation equation-small" style="text-align: center;">
+      ○ ⇒ closure of 2D field ⇒ 3D
+    </div>
+  </div>
+  
+  <div class="axiom-box">
+    <p style="font-size: 1.2rem; margin-bottom: 0.5rem;"><strong>Therefore:</strong></p>
+    <div class="equation" style="margin:0; padding: 1rem; background:none; border:none;">
+      1D → 2D → 3D
+    </div>
+    <p class="muted">The dimensional ladder is forced by the circumpunct structure. ∎</p>
+  </div>
+  
+  <div class="callout-green callout">
+    <strong>Corollary:</strong> The Conservation of Traversal (D<sub>aperture</sub> + D<sub>field</sub> = D<sub>boundary</sub>) follows directly. The base dimensions (1 + 2 = 3) are not postulated — they are derived from the functional requirements of the triad.
   </div>
 </section>
 
