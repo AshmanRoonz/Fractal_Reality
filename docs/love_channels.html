@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Two Channels of Love — A Quick Guide</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Source+Sans+3:wght@300;400;500&display=swap');
+    
+    :root {
+      --bg: #0f0e0d;
+      --surface: #1a1917;
+      --text: #e8e4df;
+      --text-dim: #9a948b;
+      --accent: #d4a574;
+      --accent-soft: rgba(212, 165, 116, 0.15);
+      --functional: #7ab8c4;
+      --resonant: #c4a07a;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 17px;
+      font-weight: 300;
+    }
+    
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 3rem 2rem 4rem;
+    }
+    
+    /* Header */
+    header {
+      text-align: center;
+      padding: 4rem 0 3rem;
+      border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+      margin-bottom: 3rem;
+    }
+    
+    .symbol {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+    }
+    
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 2.2rem;
+      font-weight: 300;
+      color: var(--accent);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+    }
+    
+    .tagline {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+    }
+    
+    /* Sections */
+    section {
+      margin-bottom: 3.5rem;
+    }
+    
+    h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(212, 165, 116, 0.15);
+    }
+    
+    p {
+      margin-bottom: 1.2rem;
+      color: var(--text);
+    }
+    
+    p:last-child { margin-bottom: 0; }
+    
+    /* Channel Cards */
+    .channels {
+      display: grid;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .channel {
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    
+    .channel.functional {
+      background: linear-gradient(135deg, rgba(122, 184, 196, 0.08) 0%, rgba(122, 184, 196, 0.02) 100%);
+      border-color: rgba(122, 184, 196, 0.15);
+    }
+    
+    .channel.resonant {
+      background: linear-gradient(135deg, rgba(196, 160, 122, 0.08) 0%, rgba(196, 160, 122, 0.02) 100%);
+      border-color: rgba(196, 160, 122, 0.15);
+    }
+    
+    .channel h3 {
+      font-family: 'Fraunces', serif;
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .channel.functional h3 { color: var(--functional); }
+    .channel.resonant h3 { color: var(--resonant); }
+    
+    .channel p {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      margin-bottom: 0.8rem;
+    }
+    
+    .channel .question {
+      font-style: italic;
+      color: var(--text);
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    /* Key insight boxes */
+    .insight {
+      background: var(--accent-soft);
+      border-left: 3px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      font-style: italic;
+    }
+    
+    .insight p {
+      color: var(--text);
+      margin: 0;
+    }
+    
+    /* Lists */
+    .patterns {
+      margin: 1.5rem 0;
+    }
+    
+    .pattern {
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    
+    .pattern:last-child { border-bottom: none; }
+    
+    .pattern-label {
+      font-weight: 500;
+      color: var(--accent);
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+    
+    .pattern p {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+    
+    /* Steps */
+    .steps {
+      counter-reset: step;
+      margin: 1.5rem 0;
+    }
+    
+    .step {
+      position: relative;
+      padding-left: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0.1rem;
+      width: 1.6rem;
+      height: 1.6rem;
+      background: var(--accent-soft);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    
+    .step strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+    
+    .step p {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+    }
+    
+    /* Divider */
+    .divider {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--accent);
+      opacity: 0.4;
+      letter-spacing: 0.5em;
+    }
+    
+    /* Two-column comparison */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    @media (max-width: 500px) {
+      .comparison { grid-template-columns: 1fr; }
+    }
+    
+    .comparison-col h4 {
+      font-family: 'Fraunces', serif;
+      font-weight: 400;
+      font-size: 0.95rem;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(212, 165, 116, 0.15);
+    }
+    
+    .comparison-col ul {
+      list-style: none;
+    }
+    
+    .comparison-col li {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      padding: 0.4rem 0;
+      padding-left: 1rem;
+      position: relative;
+    }
+    
+    .comparison-col li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding-top: 3rem;
+      margin-top: 2rem;
+      border-top: 1px solid rgba(212, 165, 116, 0.2);
+    }
+    
+    footer .symbol {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    footer p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+    
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div class="symbol">⊙</div>
+    <h1>The Two Channels of Love</h1>
+    <p class="tagline">A Quick Guide</p>
+  </header>
+
+  <!-- SECTION 1: WHAT THEY ARE -->
+  <section>
+    <h2>What They Are</h2>
+    
+    <p>Love flows through two distinct channels. Both are necessary. Neither can substitute for the other.</p>
+    
+    <div class="channels">
+      <div class="channel functional">
+        <h3>Functional Love</h3>
+        <p>Love as <strong>doing</strong>. It pays the rent. Makes dinner. Shows up when you're sick. Protects what's vulnerable. This is love that provides, that functions, that accomplishes.</p>
+        <p class="question">It answers: "What can I do for you?"</p>
+      </div>
+      
+      <div class="channel resonant">
+        <h3>Resonant Love</h3>
+        <p>Love as <strong>being-with</strong>. It doesn't do anything—it simply delights in your existence. It sees you without agenda. It wants to be <em>with</em> you, not just <em>for</em> you.</p>
+        <p class="question">It answers: "Do you want me here?"</p>
+      </div>
+    </div>
+    
+    <div class="insight">
+      <p>When someone provides for you, you know you are <em>useful</em>.<br>
+      When someone delights in you, you know you are <em>wanted</em>.<br>
+      These are not the same knowing.</p>
+    </div>
+    
+    <p>A child can be fed, clothed, and sheltered—every need met—and still feel empty. The absence has no name because everything countable has been given. What's missing is the second channel: seeing a parent's face light up not because you achieved something, but just because you exist.</p>
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <!-- SECTION 2: HOW THEY GET BLOCKED -->
+  <section>
+    <h2>How They Get Blocked</h2>
+    
+    <p>The aperture—your capacity to receive and transmit love—learns from its environment. It tunes to whatever signal is available, because tuning to something is better than nothing.</p>
+    
+    <p>If only functional love was available, the aperture calibrates to that. And it keeps seeking that frequency in adulthood.</p>
+    
+    <div class="patterns">
+      <div class="pattern">
+        <div class="pattern-label">The Achiever</div>
+        <p>Tuned to performance. Learned: "I am loved when I accomplish." Achievement becomes the substitute signal. Resting feels like danger.</p>
+      </div>
+      
+      <div class="pattern">
+        <div class="pattern-label">The Caretaker</div>
+        <p>Tuned to being useful. Learned: "I am loved when I am needed." Giving becomes compulsive. Not being useful feels like abandonment.</p>
+      </div>
+      
+      <div class="pattern">
+        <div class="pattern-label">The Hypervigilant</div>
+        <p>Tuned to threat. Learned: "I survive by anticipating danger." Always scanning. Peace feels boring or suspicious.</p>
+      </div>
+    </div>
+    
+    <div class="insight">
+      <p>Patterns repeat not because you're choosing badly—but because you're tuning accurately to the frequency you were calibrated to recognize as love.</p>
+    </div>
+    
+    <p><strong>There's a second door:</strong> some people's apertures are fine—they know what love feels like. But their <em>boundary</em> collapsed. They never learned to reject what isn't love. They absorb mistreatment instead of filtering it out.</p>
+    
+    <div class="comparison">
+      <div class="comparison-col">
+        <h4>Aperture Wound</h4>
+        <ul>
+          <li>Doesn't know what real love feels like</li>
+          <li>Mistakes intensity for depth</li>
+          <li>Recovery: exposure to genuine signal</li>
+        </ul>
+      </div>
+      <div class="comparison-col">
+        <h4>Boundary Wound</h4>
+        <ul>
+          <li>Knows what love feels like</li>
+          <li>Accepts what it shouldn't</li>
+          <li>Recovery: learning to reject</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider">· · ·</div>
+
+  <!-- SECTION 3: HOW TO RECOVER -->
+  <section>
+    <h2>How to Recover</h2>
+    
+    <p>The aperture learned the wrong frequency. It can learn a new one. What was calibrated can be recalibrated. The capacity for resonance doesn't disappear—it waits.</p>
+    
+    <h3 style="font-family: 'Fraunces', serif; font-weight: 400; font-size: 1.1rem; color: var(--resonant); margin: 2rem 0 1rem;">If your wound is the aperture:</h3>
+    
+    <div class="steps">
+      <div class="step">
+        <p><strong>Notice what you currently tune to.</strong><br>
+        What feels like love to you—even when you know it isn't good for you? The achiever feels most loved when impressive. The caretaker feels most loved when needed. No judgment. This is information.</p>
+      </div>
+      
+      <div class="step">
+        <p><strong>Recognize the tuning as learned, not natural.</strong><br>
+        You were not born needing to achieve to feel loved. You learned it. What was learned can be unlearned.</p>
+      </div>
+      
+      <div class="step">
+        <p><strong>Find the witness.</strong><br>
+        Someone who offers both channels. Who stays consistent. Who welcomes your resistance. Who doesn't need you to be different. Stay near them.</p>
+      </div>
+      
+      <div class="step">
+        <p><strong>Let it feel wrong.</strong><br>
+        Genuine love won't match your tuning at first. You may feel bored, suspicious, numb. This is the aperture resisting recalibration—not evidence that the new signal is wrong.</p>
+      </div>
+      
+      <div class="step">
+        <p><strong>Stay.</strong><br>
+        Stay in the relationship that feels "too easy." Each time you let genuine signal in, you're teaching the aperture a new frequency. It's slow. It works.</p>
+      </div>
+    </div>
+    
+    <h3 style="font-family: 'Fraunces', serif; font-weight: 400; font-size: 1.1rem; color: var(--functional); margin: 2rem 0 1rem;">If your wound is the boundary:</h3>
+    
+    <div class="steps">
+      <div class="step">
+        <p><strong>Notice when you absorb what should be filtered.</strong><br>
+        The comment that lands and stays. The treatment you accept while knowing it's not okay. The silence where a "no" should live.</p>
+      </div>
+      
+      <div class="step">
+        <p><strong>Recognize the collapse as learned.</strong><br>
+        You weren't born without a filter. You learned to stop using it. Whatever the source, this is not who you are.</p>
+      </div>
+      
+      <div class="step">
+        <p><strong>Practice the smallest no.</strong><br>
+        The request you don't want to fulfill—decline it. The opinion you've been hiding—voice it. Each small no teaches the boundary that filtering is permitted.</p>
+      </div>
+      
+      <div class="step">
+        <p><strong>Tell someone.</strong><br>
+        If your pattern was "I handle this alone," then reaching out is itself recovery. The boundary regulates calls for help too.</p>
+      </div>
+      
+      <div class="step">
+        <p><strong>Find models.</strong><br>
+        People who say no cleanly. Who reject mistreatment without cruelty. Let your boundary learn that this is possible.</p>
+      </div>
+    </div>
+    
+    <div class="insight">
+      <p>Recovery isn't the absence of old patterns. It's the presence of new capacity. The aperture can learn. It's learning now.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="symbol">⊙</div>
+    <p>From <em>Love Harmonics</em> — Part of the Circumpunct Framework</p>
+    <p style="margin-top: 0.5rem;"><a href="https://fractalreality.ca">fractalreality.ca</a></p>
+  </footer>
+
+</div>
+
+</body>
+</html>
