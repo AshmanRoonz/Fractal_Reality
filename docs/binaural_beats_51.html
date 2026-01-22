@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binaural Beats — 5.1 Surround Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0a0f;
+            --bg-panel: #12131a;
+            --bg-channel: #1a1b24;
+            --accent-cyan: #00f0ff;
+            --accent-magenta: #ff00aa;
+            --accent-yellow: #f0ff00;
+            --accent-green: #00ff88;
+            --accent-orange: #ff8800;
+            --accent-purple: #aa00ff;
+            --text-primary: #e8e8f0;
+            --text-muted: #6a6a7a;
+            --glow-intensity: 0.6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-magenta) 50%, var(--accent-yellow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        /* Master Controls */
+        .master-section {
+            background: var(--bg-panel);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .power-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-cyan);
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .power-button::before {
+            content: '';
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--accent-cyan);
+            border-radius: 50%;
+            border-top-color: transparent;
+        }
+
+        .power-button::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            height: 20px;
+            background: var(--accent-cyan);
+            top: 22px;
+        }
+
+        .power-button:hover {
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .power-button.active {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.4);
+        }
+
+        .power-button.active::before,
+        .power-button.active::after {
+            border-color: var(--accent-green);
+            background: var(--accent-green);
+        }
+
+        .master-volume {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 200px;
+        }
+
+        .master-volume label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: var(--bg-channel);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        }
+
+        .volume-value {
+            text-align: right;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+        }
+
+        /* Preset selector */
+        .preset-section {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 10px 20px;
+            background: var(--bg-channel);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+        }
+
+        /* Channel Grid */
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .channel-card {
+            background: var(--bg-panel);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .channel-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--channel-color);
+            opacity: 0.8;
+        }
+
+        .channel-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .channel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .channel-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--channel-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .channel-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--channel-color);
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+
+        .channel-card.active .channel-indicator {
+            opacity: 1;
+            box-shadow: 0 0 15px var(--channel-color);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .channel-toggle {
+            width: 50px;
+            height: 26px;
+            background: var(--bg-channel);
+            border-radius: 13px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .channel-toggle::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .channel-toggle.active {
+            background: var(--channel-color);
+        }
+
+        .channel-toggle.active::after {
+            left: 27px;
+            background: white;
+        }
+
+        .frequency-control {
+            margin-bottom: 15px;
+        }
+
+        .freq-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .freq-label span {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .freq-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--bg-channel);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .freq-input:focus {
+            outline: none;
+            border-color: var(--channel-color);
+            box-shadow: 0 0 20px rgba(var(--channel-color-rgb), 0.2);
+        }
+
+        .freq-unit {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .channel-volume {
+            margin-top: 15px;
+        }
+
+        .channel-volume label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .channel-slider {
+            width: 100%;
+            margin-top: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            background: var(--bg-channel);
+            border-radius: 2px;
+        }
+
+        .channel-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--channel-color);
+            cursor: pointer;
+        }
+
+        /* Waveform visualization */
+        .visualizer-section {
+            background: var(--bg-panel);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .visualizer-header {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 20px;
+        }
+
+        .waveform-canvas {
+            width: 100%;
+            height: 150px;
+            background: var(--bg-deep);
+            border-radius: 8px;
+        }
+
+        /* Channel colors */
+        .channel-card[data-channel="fl"] { --channel-color: var(--accent-cyan); --channel-color-rgb: 0, 240, 255; }
+        .channel-card[data-channel="fr"] { --channel-color: var(--accent-magenta); --channel-color-rgb: 255, 0, 170; }
+        .channel-card[data-channel="c"] { --channel-color: var(--accent-yellow); --channel-color-rgb: 240, 255, 0; }
+        .channel-card[data-channel="lfe"] { --channel-color: var(--accent-orange); --channel-color-rgb: 255, 136, 0; }
+        .channel-card[data-channel="sl"] { --channel-color: var(--accent-green); --channel-color-rgb: 0, 255, 136; }
+        .channel-card[data-channel="sr"] { --channel-color: var(--accent-purple); --channel-color-rgb: 170, 0, 255; }
+
+        /* Info panel */
+        .info-panel {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--bg-panel);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .info-panel h3 {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            font-size: 0.8rem;
+        }
+
+        .info-item strong {
+            color: var(--accent-cyan);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .master-section {
+                flex-direction: column;
+            }
+            
+            .channels-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Binaural Beats</h1>
+            <p class="subtitle">5.1 Surround Channel Generator</p>
+        </header>
+
+        <section class="master-section">
+            <button class="power-button" id="powerBtn" title="Start/Stop">
+            </button>
+
+            <div class="master-volume">
+                <label>Master Volume</label>
+                <input type="range" class="volume-slider" id="masterVolume" min="0" max="100" value="50">
+                <div class="volume-value"><span id="masterVolumeValue">50</span>%</div>
+            </div>
+
+            <div class="preset-section">
+                <button class="preset-btn" data-preset="focus">Focus (40Hz)</button>
+                <button class="preset-btn" data-preset="relax">Relax (10Hz)</button>
+                <button class="preset-btn" data-preset="deep">Deep (4Hz)</button>
+                <button class="preset-btn" data-preset="immersive">Immersive</button>
+            </div>
+        </section>
+
+        <section class="channels-grid" id="channelsGrid">
+            <!-- Channels will be generated by JS -->
+        </section>
+
+        <section class="visualizer-section">
+            <div class="visualizer-header">Waveform Output</div>
+            <canvas class="waveform-canvas" id="waveformCanvas"></canvas>
+        </section>
+
+        <section class="info-panel">
+            <h3>Quick Reference</h3>
+            <div class="info-grid">
+                <div class="info-item"><strong>Delta (0.5-4 Hz)</strong> — Deep sleep, healing</div>
+                <div class="info-item"><strong>Theta (4-8 Hz)</strong> — Meditation, creativity</div>
+                <div class="info-item"><strong>Alpha (8-13 Hz)</strong> — Relaxation, calm focus</div>
+                <div class="info-item"><strong>Beta (13-30 Hz)</strong> — Alertness, concentration</div>
+                <div class="info-item"><strong>Gamma (30-100 Hz)</strong> — Peak awareness, cognition</div>
+                <div class="info-item"><strong>Binaural effect</strong> — Difference between L/R frequencies</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Channel configuration
+        const channelConfig = [
+            { id: 'fl', name: 'Front Left', defaultFreq: 200 },
+            { id: 'fr', name: 'Front Right', defaultFreq: 210 },
+            { id: 'c', name: 'Center', defaultFreq: 205 },
+            { id: 'lfe', name: 'LFE / Sub', defaultFreq: 40 },
+            { id: 'sl', name: 'Surround Left', defaultFreq: 200 },
+            { id: 'sr', name: 'Surround Right', defaultFreq: 210 }
+        ];
+
+        // Audio context and nodes
+        let audioContext = null;
+        let oscillators = {};
+        let gainNodes = {};
+        let channelGains = {};
+        let masterGain = null;
+        let analyser = null;
+        let isPlaying = false;
+
+        // Initialize UI
+        function initializeUI() {
+            const grid = document.getElementById('channelsGrid');
+            
+            channelConfig.forEach(channel => {
+                const card = document.createElement('div');
+                card.className = 'channel-card';
+                card.dataset.channel = channel.id;
+                card.innerHTML = `
+                    <div class="channel-header">
+                        <div class="channel-name">
+                            <span class="channel-indicator"></span>
+                            ${channel.name}
+                        </div>
+                        <div class="channel-toggle active" data-channel="${channel.id}"></div>
+                    </div>
+                    <div class="frequency-control">
+                        <div class="freq-label">
+                            <span>Frequency</span>
+                        </div>
+                        <input type="number" class="freq-input" id="freq-${channel.id}" 
+                               value="${channel.defaultFreq}" min="20" max="20000" step="0.1">
+                        <div class="freq-unit">Hz</div>
+                    </div>
+                    <div class="channel-volume">
+                        <label>Channel Volume</label>
+                        <input type="range" class="channel-slider" id="vol-${channel.id}" 
+                               min="0" max="100" value="80">
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Event listeners for toggles
+            document.querySelectorAll('.channel-toggle').forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    toggle.classList.toggle('active');
+                    const card = toggle.closest('.channel-card');
+                    card.classList.toggle('active', toggle.classList.contains('active') && isPlaying);
+                    updateChannel(toggle.dataset.channel);
+                });
+            });
+
+            // Event listeners for frequency inputs
+            document.querySelectorAll('.freq-input').forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const channelId = e.target.id.replace('freq-', '');
+                    updateChannel(channelId);
+                });
+            });
+
+            // Event listeners for channel volume
+            document.querySelectorAll('.channel-slider').forEach(slider => {
+                slider.addEventListener('input', (e) => {
+                    const channelId = e.target.id.replace('vol-', '');
+                    updateChannelVolume(channelId);
+                });
+            });
+        }
+
+        // Initialize audio context
+        function initAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Create master gain
+            masterGain = audioContext.createGain();
+            masterGain.gain.value = 0.5;
+            
+            // Create analyser for visualization
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 2048;
+            
+            masterGain.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            // Create oscillators and gains for each channel
+            channelConfig.forEach(channel => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = channel.defaultFreq;
+                
+                gainNode.gain.value = 0;
+                
+                // Create channel-specific gain
+                const channelGain = audioContext.createGain();
+                channelGain.gain.value = 0.8;
+                
+                // Create stereo panner for spatial positioning
+                const panner = audioContext.createStereoPanner();
+                
+                // Set panning based on channel
+                switch(channel.id) {
+                    case 'fl': panner.pan.value = -1; break;
+                    case 'fr': panner.pan.value = 1; break;
+                    case 'c': panner.pan.value = 0; break;
+                    case 'lfe': panner.pan.value = 0; break;
+                    case 'sl': panner.pan.value = -0.7; break;
+                    case 'sr': panner.pan.value = 0.7; break;
+                }
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(channelGain);
+                channelGain.connect(panner);
+                panner.connect(masterGain);
+                
+                oscillator.start();
+                
+                oscillators[channel.id] = oscillator;
+                gainNodes[channel.id] = gainNode;
+                channelGains[channel.id] = channelGain;
+            });
+        }
+
+        // Update channel
+        function updateChannel(channelId) {
+            if (!audioContext) return;
+            
+            const freqInput = document.getElementById(`freq-${channelId}`);
+            const toggle = document.querySelector(`.channel-toggle[data-channel="${channelId}"]`);
+            const card = document.querySelector(`.channel-card[data-channel="${channelId}"]`);
+            
+            const freq = parseFloat(freqInput.value) || 200;
+            const isEnabled = toggle.classList.contains('active');
+            
+            oscillators[channelId].frequency.setValueAtTime(freq, audioContext.currentTime);
+            
+            const targetGain = isPlaying && isEnabled ? 0.3 : 0;
+            gainNodes[channelId].gain.setTargetAtTime(targetGain, audioContext.currentTime, 0.1);
+            
+            card.classList.toggle('active', isPlaying && isEnabled);
+        }
+
+        // Update channel volume
+        function updateChannelVolume(channelId) {
+            if (!audioContext) return;
+            
+            const slider = document.getElementById(`vol-${channelId}`);
+            const volume = slider.value / 100;
+            channelGains[channelId].gain.setValueAtTime(volume, audioContext.currentTime);
+        }
+
+        // Toggle play/pause
+        function togglePlay() {
+            if (!audioContext) {
+                initAudio();
+            }
+
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+
+            isPlaying = !isPlaying;
+            
+            const powerBtn = document.getElementById('powerBtn');
+            powerBtn.classList.toggle('active', isPlaying);
+            
+            channelConfig.forEach(channel => {
+                updateChannel(channel.id);
+            });
+
+            if (isPlaying) {
+                drawWaveform();
+            }
+        }
+
+        // Master volume control
+        function updateMasterVolume() {
+            const slider = document.getElementById('masterVolume');
+            const display = document.getElementById('masterVolumeValue');
+            const volume = slider.value / 100;
+            
+            display.textContent = slider.value;
+            
+            if (masterGain) {
+                masterGain.gain.setValueAtTime(volume, audioContext.currentTime);
+            }
+        }
+
+        // Presets
+        const presets = {
+            focus: { fl: 200, fr: 240, c: 220, lfe: 40, sl: 200, sr: 240 },
+            relax: { fl: 200, fr: 210, c: 205, lfe: 30, sl: 200, sr: 210 },
+            deep: { fl: 100, fr: 104, c: 102, lfe: 20, sl: 100, sr: 104 },
+            immersive: { fl: 180, fr: 190, c: 185, lfe: 60, sl: 220, sr: 230 }
+        };
+
+        function applyPreset(presetName) {
+            const preset = presets[presetName];
+            if (!preset) return;
+            
+            Object.entries(preset).forEach(([channelId, freq]) => {
+                const input = document.getElementById(`freq-${channelId}`);
+                if (input) {
+                    input.value = freq;
+                    updateChannel(channelId);
+                }
+            });
+        }
+
+        // Waveform visualization
+        function drawWaveform() {
+            if (!isPlaying || !analyser) return;
+            
+            const canvas = document.getElementById('waveformCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+            canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            
+            const width = canvas.offsetWidth;
+            const height = canvas.offsetHeight;
+            
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            
+            function draw() {
+                if (!isPlaying) return;
+                requestAnimationFrame(draw);
+                
+                analyser.getByteTimeDomainData(dataArray);
+                
+                ctx.fillStyle = '#0a0a0f';
+                ctx.fillRect(0, 0, width, height);
+                
+                // Draw grid
+                ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < height; i += 20) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, i);
+                    ctx.lineTo(width, i);
+                    ctx.stroke();
+                }
+                
+                // Draw waveform
+                const gradient = ctx.createLinearGradient(0, 0, width, 0);
+                gradient.addColorStop(0, '#00f0ff');
+                gradient.addColorStop(0.5, '#ff00aa');
+                gradient.addColorStop(1, '#f0ff00');
+                
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = gradient;
+                ctx.beginPath();
+                
+                const sliceWidth = width / bufferLength;
+                let x = 0;
+                
+                for (let i = 0; i < bufferLength; i++) {
+                    const v = dataArray[i] / 128.0;
+                    const y = v * height / 2;
+                    
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                    
+                    x += sliceWidth;
+                }
+                
+                ctx.lineTo(width, height / 2);
+                ctx.stroke();
+                
+                // Glow effect
+                ctx.shadowColor = '#00f0ff';
+                ctx.shadowBlur = 10;
+            }
+            
+            draw();
+        }
+
+        // Event listeners
+        document.getElementById('powerBtn').addEventListener('click', togglePlay);
+        document.getElementById('masterVolume').addEventListener('input', updateMasterVolume);
+
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                applyPreset(btn.dataset.preset);
+            });
+        });
+
+        // Initialize
+        initializeUI();
+
+        // Handle window resize for canvas
+        window.addEventListener('resize', () => {
+            if (isPlaying) {
+                drawWaveform();
+            }
+        });
+    </script>
+</body>
+</html>
