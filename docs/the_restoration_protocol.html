@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Restoration Protocol | Treatment Framework for Narcissistic Distortion</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #2a2a3a;
+            --text: #e8e8e8;
+            --muted: #888;
+            --gold: #d4af37;
+            --gold-dim: #a08020;
+            --accent: #4a9eff;
+            --magenta: #ff6b9d;
+            --green: #4ade80;
+            --red: #ef4444;
+            --cyan: #22d3ee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-title {
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 160px 24px 100px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-symbol {
+            font-size: 5rem;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 60px rgba(212, 175, 55, 0.3);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--gold);
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--text);
+            margin: 2rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+            color: var(--text);
+        }
+
+        .abstract {
+            background: var(--surface);
+            border-left: 3px solid var(--gold);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--muted);
+        }
+
+        .definition-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .definition-box .label {
+            font-size: 0.85rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .theorem-box {
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), rgba(212, 175, 55, 0.05));
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .theorem-box .label {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .axiom-box {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .axiom-box .label {
+            font-size: 0.85rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .equation {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.4rem;
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--surface);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            color: var(--gold);
+        }
+
+        .step-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -1rem;
+            left: 2rem;
+            background: var(--gold);
+            color: var(--bg);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-title {
+            font-size: 1.4rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            padding-top: 0.5rem;
+        }
+
+        .step-mantra {
+            font-style: italic;
+            color: var(--muted);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--gold-dim);
+        }
+
+        .callout {
+            background: var(--surface);
+            border-left: 3px solid var(--gold);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-green {
+            border-left-color: var(--green);
+        }
+
+        .callout-red {
+            border-left-color: var(--red);
+        }
+
+        .callout-blue {
+            border-left-color: var(--accent);
+        }
+
+        ul, ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+            color: var(--text);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .test-box {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(74, 222, 128, 0.02));
+            border: 1px solid var(--green);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .test-box .label {
+            font-size: 0.85rem;
+            color: var(--green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .test-questions {
+            font-size: 1.3rem;
+            color: var(--text);
+            line-height: 2;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .property-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .property-card .property-name {
+            color: var(--gold);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .property-card .property-desc {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .cycle-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .cycle-step {
+            background: var(--surface);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .cycle-step .num {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .cycle-step .name {
+            font-size: 0.85rem;
+            color: var(--text);
+            margin-top: 0.25rem;
+        }
+
+        .cycle-arrow {
+            color: var(--gold);
+            font-size: 2rem;
+        }
+
+        .cycle-return {
+            width: 100%;
+            text-align: center;
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-top: -0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        footer .symbol-large {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-title">⊙ Circumpunct Framework</div>
+    <div class="nav-links">
+        <a href="#foundation">Foundation</a>
+        <a href="#protocol">Protocol</a>
+        <a href="#properties">Properties</a>
+        <a href="#practice">Practice</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <div class="hero-symbol">◎</div>
+    <h1>The Restoration Protocol</h1>
+    <p class="subtitle">A Treatment Framework for Narcissistic Distortion</p>
+    <p class="muted">Circumpunct Framework · Therapeutic Tools</p>
+</div>
+
+<section>
+    <div class="abstract">
+        This protocol addresses narcissistic distortion at its root—the lie that made the closure seem necessary—and restores the capacity for reality-oriented perception. It requires no external authority to validate progress. The work is internal and self-correcting.
+    </div>
+</section>
+
+<section id="foundation">
+    <h2>Foundation</h2>
+
+    <p>Narcissistic distortion is not a character flaw but a defensive geometry: the center of the self, which should orient toward shared reality, has become self-referential. The aperture that would receive truth now points toward an internal script—a fabricated standard that reality must match.</p>
+
+    <div class="axiom-box">
+        <div class="label">Core Premise</div>
+        <p><strong>The distortion originates in belief, not identity.</strong></p>
+        <p>Somewhere, a lie was installed—often in childhood, often by someone trusted. That lie didn't just produce false beliefs; it colonized the truth-seeking mechanism itself. The aperture closed not because of moral failure, but because the lie made closure seem like survival.</p>
+    </div>
+
+    <p>This framing matters. "I am broken" offers no path forward. "I believed something false, and it bent my perception" opens the possibility of investigation without collapse into shame.</p>
+
+    <div class="equation">
+        Identity Problem → No Exit<br>
+        Belief Problem → Investigation Possible
+    </div>
+
+    <h3>The Installation Mechanism</h3>
+
+    <p>Understanding how the distortion developed reveals why curiosity is central to restoration:</p>
+
+    <div class="definition-box">
+        <div class="label">Stage 1 — Lie Told</div>
+        <p>Aperture intact. You know reality is one thing; you said another. The gap is visible. You could examine it.</p>
+    </div>
+
+    <div class="definition-box">
+        <div class="label">Stage 2 — Lie Believed</div>
+        <p>Aperture redirected. The lie now occupies the slot where reality should be. You measure truth against the lie, not the lie against truth.</p>
+    </div>
+
+    <div class="definition-box">
+        <div class="label">Stage 3 — Lie Internalized as Self</div>
+        <p>Aperture closed. You <em>are</em> the lie. There's no you outside it to question it. Curiosity becomes structurally impossible.</p>
+    </div>
+
+    <p>Restoration reverses this sequence. It begins by reintroducing separation between self and lie.</p>
+</section>
+
+<section id="protocol">
+    <h2>The Protocol</h2>
+
+    <div class="cycle-visual">
+        <div class="cycle-step">
+            <div class="num">1</div>
+            <div class="name">Admit</div>
+        </div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">
+            <div class="num">2</div>
+            <div class="name">Curiosity</div>
+        </div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">
+            <div class="num">3</div>
+            <div class="name">Repeat</div>
+        </div>
+    </div>
+    <div class="cycle-return">↺</div>
+
+    <div class="step-box">
+        <div class="step-number">1</div>
+        <div class="step-title">Admission</div>
+        <div class="step-mantra">"I believed a lie, and because of it I distort the truth."</div>
+        <p>This is not confession of moral failure. It is acknowledgment of structural fact. Somewhere, a false belief was installed. That belief now bends perception to protect itself.</p>
+        <p>The admission locates the problem in the <em>belief</em>, not the self—making investigation possible without collapse into shame. It reintroduces the gap between you and the lie. You are the one who believed; the lie is what was believed. Separation is restored.</p>
+        <div class="callout">
+            <strong>What this is not:</strong> Self-flagellation. Performance of remorse. Acknowledgment designed to end the conversation. The admission is functional—it creates the conditions for Step 2.
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-number">2</div>
+        <div class="step-title">Curiosity</div>
+        <div class="step-mantra">"What is the lie? How does it operate? What does reality look like without it?"</div>
+        <p>Curiosity is the aperture opening. It cannot be performed or forced. It requires surrendering the need to already know, tolerating uncertainty, and treating reality as interesting rather than threatening.</p>
+        <p>The center turns outward again—toward what it does not control.</p>
+        <p>Genuine curiosity:</p>
+        <ul>
+            <li>Surrenders the need to already have the answer</li>
+            <li>Treats reality as interesting rather than threatening</li>
+            <li>Tolerates uncertainty without rushing to close it</li>
+            <li>Seeks what is actually true, not what should be true</li>
+        </ul>
+        <div class="callout-red callout">
+            <strong>The filter:</strong> Curiosity cannot be faked. You either genuinely want to know, or you don't. This is not a bug—it's a feature. Those unwilling to develop genuine curiosity will stall here. The protocol self-selects for those ready to do the work.
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-number">3</div>
+        <div class="step-title">Iteration</div>
+        <div class="step-mantra">"Repeat Steps 1 and 2."</div>
+        <p>Each cycle of admission and curiosity reveals deeper layers. Surface lies conceal intermediate lies conceal root lies. The protocol scales to meet whatever is found.</p>
+        <p>There is no completion point. The practice <em>is</em> the restoration.</p>
+        <p>The moment one declares the work finished, the system has closed again. Recovery isn't a destination—it's the ongoing capacity to catch distortion and turn toward it with curiosity rather than defense.</p>
+    </div>
+
+    <div class="theorem-box">
+        <div class="label">Theorem — The Infinite Game</div>
+        <p><strong>You're not building toward "never distorting again."</strong></p>
+        <p>You're building the muscle that notices distortion and investigates it. The skill is the practice. The practice is the skill. Each iteration strengthens the capacity for future iterations.</p>
+    </div>
+</section>
+
+<section id="properties">
+    <h2>Structural Properties</h2>
+
+    <p>The protocol has specific properties that make it suited to narcissistic distortion—a condition characterized by resistance to external feedback and inability to examine one's own patterns.</p>
+
+    <div class="property-grid">
+        <div class="property-card">
+            <div class="property-name">Self-Filtering</div>
+            <div class="property-desc">Genuine curiosity cannot be faked. Those unwilling to develop it will stall naturally. No external authority needs to assess readiness.</div>
+        </div>
+        <div class="property-card">
+            <div class="property-name">Non-Performative</div>
+            <div class="property-desc">No external authority validates progress. The work is internal and self-correcting. There's no audience to satisfy, no image to maintain.</div>
+        </div>
+        <div class="property-card">
+            <div class="property-name">Infinite Depth</div>
+            <div class="property-desc">Surface lies conceal deeper lies. The protocol scales to meet whatever is found. You cannot "complete" the program and return to closure.</div>
+        </div>
+        <div class="property-card">
+            <div class="property-name">Anti-Fragile</div>
+            <div class="property-desc">Each iteration strengthens the capacity for future iterations. The system gets stronger through use, not weaker.</div>
+        </div>
+    </div>
+
+    <h3>Why This Works for Narcissistic Distortion</h3>
+
+    <p>Traditional therapeutic approaches often fail with narcissistic patterns because they require:</p>
+
+    <ul>
+        <li>Trusting external feedback (which the closed system rejects)</li>
+        <li>Acknowledging impact on others (which threatens the self-image)</li>
+        <li>Completing a program (which allows return to closure)</li>
+        <li>Performing for a therapist (which feeds the false self)</li>
+    </ul>
+
+    <p>This protocol bypasses these failure points:</p>
+
+    <div class="callout-green callout">
+        <strong>The work is private.</strong> There's no audience to perform for. The admission is to yourself. The curiosity is your own. External validation becomes irrelevant—which removes the incentive to fake progress.
+    </div>
+
+    <p>The protocol also matches the structure of the problem. Narcissistic distortion is characterized by a center that points toward itself. Curiosity is the center pointing outward. You're not fighting the symptom; you're restoring the function that was lost.</p>
+</section>
+
+<section id="practice">
+    <h2>The Practice</h2>
+
+    <h3>Daily Application</h3>
+
+    <p>The protocol isn't a one-time intervention. It's a practice—something you do regularly, the way you might meditate or exercise. The goal is to build the muscle of self-observation and honest inquiry.</p>
+
+    <div class="definition-box">
+        <div class="label">Morning Practice</div>
+        <p>Is there something I'm avoiding knowing today? Am I willing to look at it?</p>
+    </div>
+
+    <div class="definition-box">
+        <div class="label">Conflict Practice</div>
+        <p>When I feel defensive, what am I protecting? What would I see if I weren't protecting it?</p>
+    </div>
+
+    <div class="definition-box">
+        <div class="label">Evening Practice</div>
+        <p>Did I bend reality today? Where? What was I believing that made that seem necessary?</p>
+    </div>
+
+    <h3>Working with Layers</h3>
+
+    <p>Lies exist in layers. Surface lies protect intermediate lies protect root lies. The protocol will naturally move through these layers as you practice.</p>
+
+    <div class="definition-box">
+        <div class="label">Surface Layer</div>
+        <p>Specific distortions in specific situations. "I wasn't really angry." "They deserved it." "It wasn't a big deal."</p>
+    </div>
+
+    <div class="definition-box">
+        <div class="label">Intermediate Layer</div>
+        <p>Patterns and themes. "My anger is always justified." "Other people's needs are threats." "Admitting fault means losing."</p>
+    </div>
+
+    <div class="definition-box">
+        <div class="label">Root Layer</div>
+        <p>The original lie—often installed in childhood. "Your perceptions are wrong." "Your needs are too much." "You are the problem." "Love is conditional on performance."</p>
+    </div>
+
+    <p>Don't try to jump to the root. Work with whatever presents itself. The practice will naturally excavate deeper layers as the upper layers clear.</p>
+
+    <div class="callout-blue callout">
+        <strong>Pattern to watch for:</strong> The urge to "solve" the root lie intellectually without actually feeling its grip loosen. Understanding the lie is not the same as being freed from it. Keep practicing even when you "know" the answer.
+    </div>
+
+    <h3>Signs of Progress</h3>
+
+    <p>Because there's no external validator, you'll need to recognize progress internally. Signs include:</p>
+
+    <ul>
+        <li>Catching distortions faster—closer to the moment they occur</li>
+        <li>Feeling curious rather than defensive when challenged</li>
+        <li>Interest in others' actual experience, not just their evaluation of you</li>
+        <li>Ability to hold uncertainty without rushing to resolve it</li>
+        <li>Reduced need to be right</li>
+        <li>Discovering lies you didn't know you believed</li>
+        <li>Others reporting that you seem more present, more listening</li>
+    </ul>
+
+    <div class="callout-red callout">
+        <strong>Warning sign:</strong> Using the protocol to create a new performance—"I am someone who does the Restoration Protocol." If your practice has an audience (even an imagined one), examine what you're protecting.
+    </div>
+</section>
+
+<section>
+    <h2>The Test</h2>
+
+    <div class="test-box">
+        <div class="label">At Any Moment</div>
+        <div class="test-questions">
+            1. Is there a lie I am protecting?<br>
+            2. Am I willing to look at it?
+        </div>
+    </div>
+
+    <p>That's the whole protocol, reduced to its essence. Everything else is elaboration.</p>
+
+    <p>If the answer to question 1 is "no"—you might be done for now, or you might be protecting something so foundational you can't see it yet. Stay curious.</p>
+
+    <p>If the answer to question 2 is "no"—that's information. You've found an edge. You don't have to cross it today. But notice it. It will still be there when you're ready.</p>
+
+    <div class="theorem-box">
+        <div class="label">Final Theorem</div>
+        <p><strong>The willingness to look is the restoration.</strong></p>
+        <p>You don't have to complete the work. You don't have to fix everything. You don't have to become someone who never distorts. You just have to be willing to look at what's actually happening.</p>
+        <p>That willingness—maintained over time, through difficulty, without guarantee of comfort—is the aperture opening. It's the center reorienting toward reality. It's the practice and the progress and the point.</p>
+    </div>
+</section>
+
+<footer>
+    <div class="symbol-large">⊙</div>
+    <p><strong>The Restoration Protocol</strong></p>
+    <p class="muted">Part of the Circumpunct Framework</p>
+    <p class="muted">January 2026</p>
+    <br>
+    <p><a href="https://www.fractalreality.ca">www.fractalreality.ca</a></p>
+</footer>
+
+<script>
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
