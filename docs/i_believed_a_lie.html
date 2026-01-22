@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Believed a Lie</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0908;
+            --text: #e8e4e0;
+            --text-dim: #a09a94;
+            --accent: #d4a574;
+            --accent-dim: #8b6914;
+            --glow: rgba(212, 165, 116, 0.15);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 1.4rem;
+            font-weight: 300;
+            line-height: 1.9;
+            min-height: 100vh;
+        }
+
+        /* Subtle texture overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .slide-content {
+            max-width: 720px;
+            width: 100%;
+        }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 3.5rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--accent);
+            letter-spacing: 0.02em;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 60px var(--glow);
+        }
+
+        .title-slide .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            opacity: 0.5;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .scroll-hint::after {
+            content: "↓";
+            display: block;
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.2; }
+        }
+
+        /* Content slides */
+        p {
+            margin-bottom: 1.8rem;
+        }
+
+        .mantra {
+            font-size: 1.6rem;
+            font-style: italic;
+            color: var(--accent);
+            text-align: center;
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        .mantra.large {
+            font-size: 2rem;
+        }
+
+        .mantra::before,
+        .mantra::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+            margin: 0 auto 1.5rem;
+        }
+
+        .mantra::after {
+            margin: 1.5rem auto 0;
+        }
+
+        .call-response {
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .call-response .call {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .call-response .response {
+            font-style: italic;
+            color: var(--accent);
+            font-size: 1.5rem;
+        }
+
+        /* The lies list */
+        .lies {
+            padding: 2rem 0;
+        }
+
+        .lie {
+            font-style: italic;
+            color: var(--text-dim);
+            padding: 0.8rem 0;
+            padding-left: 1.5rem;
+            border-left: 2px solid var(--accent-dim);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .lie:hover {
+            color: var(--text);
+            border-left-color: var(--accent);
+            background: linear-gradient(90deg, var(--glow), transparent);
+        }
+
+        /* Emphasis */
+        em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        strong {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* Section divider */
+        .divider {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .divider-mark {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--glow), 0 0 60px var(--glow);
+        }
+
+        /* The door */
+        .door-text {
+            font-size: 1.8rem;
+            text-align: center;
+            font-style: italic;
+            color: var(--accent);
+            padding: 1rem 0 2rem;
+        }
+
+        /* Final slide */
+        .final-slide {
+            text-align: center;
+        }
+
+        .final-slide .closing-mantra {
+            font-size: 1.8rem;
+            font-style: italic;
+            color: var(--accent);
+            margin-bottom: 3rem;
+        }
+
+        .final-slide .liberation {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        .final-slide .final-words {
+            font-size: 1.3rem;
+            color: var(--text);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .final-slide .last-line {
+            margin-top: 3rem;
+            font-size: 1.1rem;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* Back link */
+        .back-link {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 100;
+        }
+
+        .back-link a {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            text-decoration: none;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .back-link a:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body {
+                font-size: 1.2rem;
+            }
+
+            .slide {
+                padding: 3rem 1.5rem;
+            }
+
+            .title-slide h1 {
+                font-size: 2.5rem;
+            }
+
+            .mantra {
+                font-size: 1.3rem;
+            }
+
+            .mantra.large {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--accent);
+            color: var(--bg);
+        }
+    </style>
+</head>
+<body>
+    <div class="back-link">
+        <a href="https://fractalreality.ca">fractalreality.ca</a>
+    </div>
+
+    <!-- Title -->
+    <section class="slide title-slide">
+        <div class="slide-content">
+            <h1>I Believed a Lie</h1>
+            <p class="subtitle">a speech</p>
+        </div>
+        <div class="scroll-hint">scroll</div>
+    </section>
+
+    <!-- Opening -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="mantra large">I believed a lie, and because of it I distorted the truth.</p>
+            
+            <div class="call-response">
+                <p class="call">Say it with me.</p>
+                <p class="response">I believed a lie, and because of it I distorted the truth.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- This isn't confession -->
+    <section class="slide">
+        <div class="slide-content">
+            <p>This isn't confession. This isn't guilt. This is just... what happened. To me. To you. To everyone in this room.</p>
+            
+            <p>Somewhere along the way, someone handed you something false and you swallowed it. Maybe you were five. Maybe you were fifteen. Maybe it was yesterday. And because you believed it, you couldn't see straight anymore. You bent the world to fit the lie. You bent <em>yourself</em> to fit the lie.</p>
+            
+            <p>This isn't your fault.</p>
+            
+            <p>But it <em>is</em> your situation.</p>
+        </div>
+    </section>
+
+    <div class="divider"><div class="divider-mark"></div></div>
+
+    <!-- How lies arrive -->
+    <section class="slide">
+        <div class="slide-content">
+            <p>Here's the thing about lies: they don't announce themselves. They don't show up wearing a sign that says "I'm the thing that's going to warp your entire life." They show up wearing the face of someone you trusted. They show up sounding like common sense. They show up feeling like safety.</p>
+            
+            <div class="lies">
+                <div class="lie">You're too much.</div>
+                <div class="lie">You're not enough.</div>
+                <div class="lie">Love has to be earned.</div>
+                <div class="lie">If they really knew you, they'd leave.</div>
+            </div>
+            
+            <p>You didn't choose these. They were <em>installed</em>.</p>
+        </div>
+    </section>
+
+    <!-- The mechanism -->
+    <section class="slide">
+        <div class="slide-content">
+            <p>And then you followed them. Everywhere they led. You followed them into relationships that confirmed them. Into silences that protected them. Into performances that served them.</p>
+            
+            <p>The lie led. You followed. And in following, you became the author of your own evidence.</p>
+        </div>
+    </section>
+
+    <div class="divider"><div class="divider-mark"></div></div>
+
+    <!-- The trap -->
+    <section class="slide">
+        <div class="slide-content">
+            <p>That's the trap. That's how it works. The lie doesn't distort reality <em>for</em> you—it leads, and you do the distorting. You select. You interpret. You act in ways that create the very thing you believed was already true.</p>
+            
+            <p>You believed you were unlovable, so you hid the parts that needed love. And when no one loved those parts? <em>See? Proof.</em></p>
+            
+            <p>You believed you had to perform to be worthy, so you performed. And when people valued the performance? <em>See? That's all they want.</em></p>
+            
+            <p>The lie leads. You follow. You write the evidence with your own hand. And then you point to what you wrote and say, "Look—it was true all along."</p>
+        </div>
+    </section>
+
+    <div class="divider"><div class="divider-mark"></div></div>
+
+    <!-- The door -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="door-text">But here's the door inside the trap:</p>
+            
+            <p>If the lie just <em>distorted</em>—if it was just bad glasses, faulty wiring, broken perception—you'd be stuck. Victim of machinery. Nothing to do but wait for someone to fix you.</p>
+            
+            <p>But that's not what's happening.</p>
+            
+            <p>You're <em>following</em>. You're <em>authoring</em>. There's agency in the mechanism.</p>
+            
+            <p>Which means you can stop.</p>
+        </div>
+    </section>
+
+    <!-- How to stop -->
+    <section class="slide">
+        <div class="slide-content">
+            <p>Not by trying harder. Not by positive thinking. Not by replacing the old lie with a new, shinier belief.</p>
+            
+            <p>You stop by <em>seeing</em>.</p>
+            
+            <p>Just seeing. The lie is leading. I am following. Here is how I'm distorting.</p>
+            
+            <p>Not judging. Not fixing. Just seeing.</p>
+            
+            <p>Because a lie can only lead you in the dark. The moment you see it—really see it—it loses its authority. It's still there. It still whispers. But you're no longer following blind.</p>
+        </div>
+    </section>
+
+    <div class="divider"><div class="divider-mark"></div></div>
+
+    <!-- Declaration -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="mantra">I believed a lie, and because of it I distorted the truth.</p>
+            
+            <p>I'm not saying this to shame myself. I'm saying it because it's true. Because saying it out loud breaks something open. Because the lie depends on me not noticing.</p>
+            
+            <p>So I'm noticing. Out loud. With witnesses.</p>
+            
+            <p>And I'm inviting you to notice too.</p>
+        </div>
+    </section>
+
+    <!-- Questions -->
+    <section class="slide">
+        <div class="slide-content">
+            <p>What lie are you following?</p>
+            
+            <p>What truth are you distorting to keep it alive?</p>
+            
+            <p>You don't have to answer out loud. You don't have to fix it tonight. You just have to <em>see</em>.</p>
+            
+            <p style="text-align: center; font-style: italic; margin-top: 2rem;">The seeing is the beginning.</p>
+        </div>
+    </section>
+
+    <div class="divider"><div class="divider-mark"></div></div>
+
+    <!-- Closing -->
+    <section class="slide final-slide">
+        <div class="slide-content">
+            <p class="closing-mantra">I believed a lie, and because of it I distorted the truth.</p>
+            
+            <p class="liberation">Say it one more time. Not as confession. As liberation.</p>
+            
+            <p class="closing-mantra">I believed a lie, and because of it I distorted the truth.</p>
+            
+            <p class="final-words">Now you know.<br>Now you can stop following.</p>
+            
+            <p class="last-line">⊙</p>
+        </div>
+    </section>
+
+</body>
+</html>
