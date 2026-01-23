@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Circumpunct Theory of Narcissism: A Complete Research Framework</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --border: #2a2a3a;
+      --text: #e8e8f0;
+      --muted: #888899;
+      --gold: #f0c674;
+      --accent: #8bd3ff;
+      --magenta: #c9a0dc;
+      --green: #a8e6cf;
+      --red: #e85d75;
+      --orange: #ffb86c;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.8;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    h1, h2, h3, h4 {
+      font-family: 'Arial', sans-serif;
+      color: var(--gold);
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    h1 { 
+      font-size: 2.2rem; 
+      text-align: center;
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 1rem;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+    
+    h2 { 
+      font-size: 1.5rem; 
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-top: 3rem;
+    }
+    
+    h3 { font-size: 1.2rem; color: var(--accent); }
+    h4 { font-size: 1.1rem; color: var(--magenta); }
+    
+    p { margin-bottom: 1rem; }
+    
+    .part-header {
+      background: linear-gradient(135deg, rgba(240, 198, 116, 0.2), rgba(139, 211, 255, 0.1));
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      margin: 3rem 0 2rem 0;
+    }
+    
+    .part-header h2 {
+      margin: 0;
+      border: none;
+      font-size: 1.8rem;
+    }
+    
+    .part-header p {
+      margin: 0.5rem 0 0 0;
+      color: var(--muted);
+    }
+    
+    .toc {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      columns: 2;
+      column-gap: 2rem;
+    }
+    
+    .toc h3 {
+      margin-top: 0;
+      color: var(--gold);
+      column-span: all;
+    }
+    
+    .toc ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .toc li { margin: 0.4rem 0; }
+    .toc a { color: var(--text); text-decoration: none; }
+    .toc a:hover { color: var(--accent); }
+    .toc .part-label { color: var(--gold); font-weight: bold; margin-top: 1rem; display: block; }
+    
+    .definition-box {
+      background: var(--surface);
+      border-left: 4px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .definition-box .label {
+      font-weight: bold;
+      color: var(--accent);
+      font-family: 'Arial', sans-serif;
+      margin-bottom: 0.5rem;
+    }
+    
+    .theorem-box {
+      background: var(--surface);
+      border-left: 4px solid var(--gold);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .theorem-box .label {
+      font-weight: bold;
+      color: var(--gold);
+      font-family: 'Arial', sans-serif;
+      margin-bottom: 0.5rem;
+    }
+    
+    .prediction-box {
+      background: var(--surface);
+      border-left: 4px solid var(--green);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .prediction-box .label {
+      font-weight: bold;
+      color: var(--green);
+      font-family: 'Arial', sans-serif;
+      margin-bottom: 0.5rem;
+    }
+    
+    .finding-box {
+      background: linear-gradient(135deg, rgba(240, 198, 116, 0.1), rgba(139, 211, 255, 0.05));
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .finding-box h4 {
+      color: var(--gold);
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+    }
+    
+    .warning-box {
+      background: rgba(232, 93, 117, 0.1);
+      border-left: 4px solid var(--red);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .data-box {
+      background: var(--surface);
+      border-left: 3px solid var(--muted);
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      font-style: italic;
+      color: var(--muted);
+    }
+    
+    .equation {
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.1rem;
+      color: var(--gold);
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    
+    th {
+      background: var(--surface);
+      color: var(--gold);
+      font-family: 'Arial', sans-serif;
+    }
+    
+    ul, ol { margin: 1rem 0 1rem 2rem; }
+    li { margin-bottom: 0.5rem; }
+    
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    
+    .source-box {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 1rem;
+      border-top: 3px solid var(--accent);
+      font-size: 0.9rem;
+    }
+    
+    .source-box.subjectA { border-top-color: var(--magenta); }
+    .source-box.subjectB { border-top-color: var(--green); }
+    .source-box.community { border-top-color: var(--orange); }
+    
+    .source-box h4 { margin-top: 0; font-size: 0.95rem; }
+    .source-box.subjectA h4 { color: var(--magenta); }
+    .source-box.subjectB h4 { color: var(--green); }
+    .source-box.community h4 { color: var(--orange); }
+    
+    .check { color: var(--green); }
+    .partial { color: var(--orange); }
+    
+    .metric-row {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .metric {
+      background: var(--surface);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    
+    .metric-green { border-left: 3px solid var(--green); }
+    .metric-gold { border-left: 3px solid var(--gold); }
+    
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .column-box {
+      background: var(--surface);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    
+    .column-box h4 { color: var(--orange); margin-top: 0; }
+    .column-box.good { border-color: var(--green); }
+    .column-box.good h4 { color: var(--green); }
+    
+    blockquote {
+      border-left: 3px solid var(--muted);
+      padding-left: 1rem;
+      margin: 1rem 0;
+      font-style: italic;
+      color: var(--muted);
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+    }
+    
+    .circumpunct { font-size: 2.5rem; color: var(--gold); }
+    
+    @media (max-width: 700px) {
+      .source-grid, .two-column { grid-template-columns: 1fr; }
+      .toc { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="circumpunct" style="text-align: center; margin-top: 2rem;">⊙</div>
+
+<h1>The Circumpunct Theory of Narcissism</h1>
+<p class="subtitle">A Complete Research Framework</p>
+<p class="subtitle">Theory • Research • Analysis • Treatment</p>
+<p class="subtitle" style="margin-top: 1rem;">Circumpunct Framework v1.0 — January 2026</p>
+
+<div class="toc">
+  <h3>Contents</h3>
+  <ul>
+    <li><a href="#status" style="color: var(--accent);">Framework Status & Scope</a></li>
+    
+    <span class="part-label">PART I: THEORY</span>
+    <li><a href="#foundations">1. Foundational Axioms</a></li>
+    <li><a href="#healthy">2. Healthy Geometry</a></li>
+    <li><a href="#errors">3. The Two Fundamental Errors</a></li>
+    <li><a href="#virus">4. The Noble Lie Virus</a></li>
+    <li><a href="#clinical">5. Clinical Manifestations</a></li>
+    
+    <span class="part-label">PART II: RESEARCH</span>
+    <li><a href="#sources">6. Data Sources</a></li>
+    <li><a href="#community">7. Community Pattern Analysis</a></li>
+    <li><a href="#developmental">8. Developmental Research</a></li>
+    
+    <span class="part-label">PART III: ANALYSIS</span>
+    <li><a href="#validation">9. Cross-Case Validation</a></li>
+    <li><a href="#longitudinal">10. Longitudinal Findings</a></li>
+    <li><a href="#predictions">11. Falsifiable Predictions</a></li>
+    
+    <span class="part-label">PART IV: TREATMENT</span>
+    <li><a href="#recovery">12. Recovery as Geometric Restoration</a></li>
+    <li><a href="#intergenerational">13. Breaking Intergenerational Patterns</a></li>
+    <li><a href="#protocols">14. Treatment Protocols</a></li>
+  </ul>
+</div>
+
+<!-- ==================== FRAMEWORK STATUS ==================== -->
+
+<div style="background: linear-gradient(135deg, rgba(136, 136, 153, 0.15), rgba(139, 211, 255, 0.08)); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;">
+  
+  <h2 id="status" style="margin-top: 0; border: none; color: var(--accent);">Framework Status & Scope</h2>
+  
+  <h3 style="color: var(--text); margin-top: 1rem;">What This Is</h3>
+  <p>This is a <strong>theoretical framework</strong> — a geometric model for understanding relational dynamics in narcissistic abuse. It is not a diagnostic tool, not a replacement for clinical assessment, and not established science. It is a hypothesis with preliminary validation, presented with falsifiable predictions.</p>
+  
+  <p>The framework models <strong>relational geometry</strong>, not DSM categories. Having narcissistic traits ≠ having NPD. Exhibiting these patterns ≠ being evil. The goal is to explain behavior structurally — to make dynamics visible and nameable — not to moralize or pathologize.</p>
+  
+  <h3 style="color: var(--text); margin-top: 1.5rem;">On the Formal Notation</h3>
+  <p>This framework uses mathematical notation (operators, equations, theorems). This may trigger "pseudoscience" concerns. Clarification:</p>
+  <p>The formal notation is <strong>not presented as empirical proof</strong>. It is a <strong>structural language for relational dynamics</strong> — analogous to early systems models prior to measurement. This places the work in the lineage of:</p>
+  <ul style="margin-bottom: 1rem;">
+    <li><strong>Cybernetics</strong> — formal notation for feedback loops before neurobiological grounding</li>
+    <li><strong>Control theory</strong> — structural diagrams describing system behavior</li>
+    <li><strong>Dynamical systems</strong> — mathematical language for attractors, bifurcations, phase transitions</li>
+    <li><strong>Information theory</strong> — formal treatment of signal, noise, and channel capacity</li>
+  </ul>
+  <p>In each case, the math does work <em>before</em> full empirical validation: it provides precise vocabulary, generates predictions, reveals structural relationships, and enables falsification. The equations here function as <strong>scaffold, not proof</strong>. They are tools for thinking, not claims of measurement.</p>
+  <p>This is pre-empirical modeling — the stage where formal structure is proposed and tested against observation. The math earns its keep by making predictions that can fail. If the predictions hold, the notation is validated. If they don't, the framework is revised or abandoned.</p>
+  
+  <h3 style="color: var(--text); margin-top: 1.5rem;">What This Covers</h3>
+  <p>This framework addresses <strong>relationally-acquired narcissistic patterns</strong> — dynamics that install through power-imbalanced relationships (parent-child, early romantic, institutional). It explains:</p>
+  <ul style="margin-bottom: 1rem;">
+    <li>Why narcissist-codependent dyads lock together</li>
+    <li>How "functional love" gets weaponized against resonance needs</li>
+    <li>Why victims defend abusers and doubt their own perception</li>
+    <li>How patterns transmit intergenerationally</li>
+  </ul>
+  
+  <h3 style="color: var(--text); margin-top: 1.5rem;">What This Does Not Cover</h3>
+  <ul style="margin-bottom: 1rem;">
+    <li><strong>Primary psychopathy</strong> — neurological absence of empathy (different etiology)</li>
+    <li><strong>Neurological factors</strong> — brain structure, genetics, organic causes</li>
+    <li><strong>All NPD presentations</strong> — grandiose vs. vulnerable, overt vs. covert subtypes may have different mechanics</li>
+    <li><strong>Non-relational pathology</strong> — disorders without relational transmission vector</li>
+  </ul>
+  
+  <h3 style="color: var(--text); margin-top: 1.5rem;">Validation Status</h3>
+  <p><strong>Current:</strong> Preliminary validation from three independent sources (inflater first-person data, victim longitudinal journal, community pattern synthesis). Convergent support for core predictions. Not peer-reviewed. Not replicated in controlled studies.</p>
+  <p><strong>Required:</strong> Formal qualitative studies, clinical validation, controlled intervention trials.</p>
+  <p style="margin-bottom: 0;"><strong>Appropriate use:</strong> Conceptual lens for survivors and practitioners. Framework for generating testable hypotheses. <em>Not</em> self-diagnosis. <em>Not</em> clinical protocol without professional guidance.</p>
+</div>
+
+<!-- ==================== VISUAL DIAGRAM ==================== -->
+
+<div style="background: var(--surface); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center;">
+  <h3 style="color: var(--gold); margin-top: 0;">The Geometry at a Glance</h3>
+  
+  <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: center; margin: 2rem 0; font-family: monospace; font-size: 0.9rem;">
+    
+    <!-- Healthy Dyad -->
+    <div style="text-align: center;">
+      <div style="color: var(--green); font-weight: bold; margin-bottom: 1rem;">HEALTHY DYAD</div>
+      <div style="background: var(--bg); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--green);">
+        <div style="color: var(--magenta);">[ • Center ]</div>
+        <div style="color: var(--green);">↕ resonance ↕</div>
+        <div style="color: var(--magenta);">[ • Center ]</div>
+        <div style="margin: 0.5rem 0; color: var(--muted);">———————</div>
+        <div style="color: var(--accent);">Φ Field (shared, clear)</div>
+        <div style="margin: 0.5rem 0; color: var(--muted);">———————</div>
+        <div style="color: var(--green);">○ Boundary ↔ ○ Boundary</div>
+        <div style="color: var(--green); font-size: 0.8rem; margin-top: 0.5rem;">(mutual, permeable)</div>
+      </div>
+      <div style="color: var(--muted); font-size: 0.8rem; margin-top: 0.5rem;">Both channels open<br>Bidirectional flow</div>
+    </div>
+    
+    <!-- Arrow -->
+    <div style="color: var(--red); font-size: 1.5rem;">→<br><span style="font-size: 0.7rem;">virus<br>installs</span><br>→</div>
+    
+    <!-- Pathological Dyad -->
+    <div style="text-align: center;">
+      <div style="color: var(--red); font-weight: bold; margin-bottom: 1rem;">PATHOLOGICAL DYAD</div>
+      <div style="background: var(--bg); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--red);">
+        <div style="color: var(--magenta);">[ • Inflated ε₊ ]</div>
+        <div style="color: var(--red);">↓ extraction ↓</div>
+        <div style="color: var(--muted);">[ • Severed ε₋ ]</div>
+        <div style="margin: 0.5rem 0; color: var(--muted);">———————</div>
+        <div style="color: var(--orange);">Φ Field (distorted, gaslighting)</div>
+        <div style="margin: 0.5rem 0; color: var(--muted);">———————</div>
+        <div style="color: var(--orange);">○ Weaponized → ○ Collapsed</div>
+        <div style="color: var(--red); font-size: 0.8rem; margin-top: 0.5rem;">(one-way valve)</div>
+      </div>
+      <div style="color: var(--muted); font-size: 0.8rem; margin-top: 0.5rem;">Resonance channel closed<br>Unidirectional extraction</div>
+    </div>
+  </div>
+  
+  <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border); text-align: left;">
+    <p style="margin: 0; color: var(--muted); font-size: 0.9rem;"><strong style="color: var(--gold);">Key insight:</strong> The virus doesn't destroy the victim's capacity for resonance — it <em>retunes</em> it to the abuser's frequency. The aperture still works. It's just pointed at the wrong signal. This is why recovery is possible.</p>
+  </div>
+</div>
+
+<!-- ==================== PART I: THEORY ==================== -->
+
+<div class="part-header">
+  <h2>PART I: THEORY</h2>
+  <p>The Geometric Foundation</p>
+</div>
+
+<h2 id="foundations">1. Foundational Axioms</h2>
+
+<div class="theorem-box">
+  <div class="label">Core Axiom</div>
+  <p style="font-size: 1.3rem; text-align: center; color: var(--gold);">Parts are fractals of their wholes.</p>
+</div>
+
+<p>This is not metaphor. It is an operational statement with measurable consequences.</p>
+
+<div class="definition-box">
+  <div class="label">Definition 1.1: The Circumpunct (⊙)</div>
+  <p>The fundamental unit of conscious structure is an irreducible trinity:</p>
+  <div class="equation">
+    \[ \odot = \bullet + \Phi + \bigcirc \]
+  </div>
+  <ul>
+    <li><strong style="color: var(--magenta);">• Center/Aperture/Soul</strong> — Your focus. Where attention is. The still point that orients.</li>
+    <li><strong style="color: var(--accent);">Φ Field/Mind</strong> — Mediates between center and boundary; analog processing</li>
+    <li><strong style="color: var(--green);">○ Boundary/Body</strong> — Interface with exterior; defines self vs. not-self</li>
+  </ul>
+</div>
+
+<div class="definition-box">
+  <div class="label">Definition 1.2: Field Mediation Requirement</div>
+  <p>Center and boundary cannot interact directly. All exchange must pass through the mediating field:</p>
+  <div class="equation">
+    \[ \bullet \nleftrightarrow \bigcirc \quad \text{(direct interaction forbidden)} \]
+  </div>
+  <div class="equation">
+    \[ \bullet \leftrightarrow \Phi \leftrightarrow \bigcirc \quad \text{(mediated interaction required)} \]
+  </div>
+</div>
+
+<h2 id="healthy">2. Healthy Geometry</h2>
+
+<div class="definition-box">
+  <div class="label">Definition 2.1: Circumpunct Integrity</div>
+  <p>A circumpunct has <strong>integrity</strong> when:</p>
+  <ol>
+    <li><strong>Boundary Coherence:</strong> The boundary accurately distinguishes self from not-self</li>
+    <li><strong>Field Clarity:</strong> The field transmits information without systematic distortion</li>
+    <li><strong>Center Sovereignty:</strong> The center maintains autonomous orientation</li>
+    <li><strong>Proper Nesting:</strong> Recognition of being both whole (containing parts) and part (nested in larger wholes)</li>
+  </ol>
+</div>
+
+<h3>2.1 The Two Channels of Love</h3>
+
+<p>Love flows through shared fields on two distinct channels:</p>
+
+<div class="definition-box">
+  <div class="label">Definition 2.2: Functional Love (Boundary Channel)</div>
+  <p><strong>Love as doing.</strong> Provision, protection, logistics, competence, problem-solving.</p>
+  <ul>
+    <li>Pays the bills</li>
+    <li>Fixes what's broken</li>
+    <li>Shows up when needed</li>
+    <li>Provides structure and safety</li>
+  </ul>
+  <p>Functional love is <em>necessary</em>. Without it, survival is threatened. But it is not <em>sufficient</em>.</p>
+</div>
+
+<div class="definition-box">
+  <div class="label">Definition 2.3: Resonant Love (Center Channel)</div>
+  <p><strong>Love as being-with.</strong> Presence, delight, genuine wanting, seeing, attunement.</p>
+  <ul>
+    <li>Delights in your existence</li>
+    <li>Sees you without agenda</li>
+    <li>Wants to be with you (not just for you)</li>
+    <li>Attunes to your frequency</li>
+  </ul>
+  <p>Resonant love is what the aperture was designed to receive. It's the signal that says: <em>you are wanted, not just tolerated.</em></p>
+</div>
+
+<div class="theorem-box">
+  <div class="label">Theorem 2.1: The Helped-But-Not-Wanted Wound</div>
+  <p>Function without resonance creates the core wound:</p>
+  <div class="equation">
+    \[ L_{function} - L_{resonance} = \text{"I am helped but not wanted"} \]
+  </div>
+  <p>The child is fed, clothed, sheltered—and starving for something they can't name.</p>
+  <p><strong>This is why functional love cannot heal resonance wounds.</strong> They operate on different channels.</p>
+</div>
+
+<h2 id="errors">3. The Two Fundamental Errors</h2>
+
+<div class="definition-box">
+  <div class="label">Definition 3.1: Inflation (ε₊)</div>
+  <p><strong>Believing or claiming MORE than what is.</strong></p>
+  <div class="equation">
+    \[ \varepsilon_+ : x \to x^+ \quad \text{(more than actual)} \]
+  </div>
+  <p>Signatures:</p>
+  <ul>
+    <li>"I am complete without connection" (more self-sufficient than possible)</li>
+    <li>"My perspective is reality" (more objective than possible)</li>
+    <li>"Others exist to serve my needs" (more central than actual)</li>
+  </ul>
+</div>
+
+<div class="definition-box">
+  <div class="label">Definition 3.2: Severance (ε₋)</div>
+  <p><strong>Believing or claiming LESS than what is.</strong></p>
+  <div class="equation">
+    \[ \varepsilon_- : x \to x^- \quad \text{(less than actual)} \]
+  </div>
+  <p>Signatures:</p>
+  <ul>
+    <li>"I am fundamentally alone" (less connected than actual)</li>
+    <li>"My perception isn't valid" (less accurate than actual)</li>
+    <li>"I don't deserve this" (less legitimate than actual)</li>
+  </ul>
+</div>
+
+<div class="theorem-box">
+  <div class="label">Theorem 3.1: Error Complementarity</div>
+  <p>Inflation and severance create stable pathological dyads:</p>
+  <div class="equation">
+    \[ \varepsilon_+ + \varepsilon_- \to \text{stable(pathological)} \]
+  </div>
+  <p>The inflated one needs supply (external validation). The severed one needs someone to tune to. They lock together in mutual dysfunction.</p>
+</div>
+
+<h2 id="virus">4. The Noble Lie Virus</h2>
+
+<div class="definition-box">
+  <div class="label">Definition 4.1: The Noble Lie Virus</div>
+  <p>A transmissible pattern that:</p>
+  <ol>
+    <li>Installs complementary errors in host and victim</li>
+    <li>Propagates through power-imbalanced relationships</li>
+    <li>Self-conceals by attacking the perception that detects it</li>
+    <li>Weaponizes functional love against resonant love</li>
+  </ol>
+  <div class="equation">
+    \[ V_{NL} : (\odot_H, \odot_V) \to (\varepsilon_+[\odot_H], \varepsilon_-[\odot_V]) \]
+  </div>
+</div>
+
+<h3>4.1 Installation Mechanism</h3>
+
+<p>The virus installs through systematic attack on all three circumpunct components:</p>
+
+<table>
+  <tr>
+    <th>Component</th>
+    <th>Attack Vector</th>
+    <th>Installation Result</th>
+  </tr>
+  <tr>
+    <td style="color: var(--green);">○ Boundary</td>
+    <td>"You're too sensitive" / boundary violations</td>
+    <td>Victim cannot trust protective responses</td>
+  </tr>
+  <tr>
+    <td style="color: var(--accent);">Φ Field</td>
+    <td>Gaslighting / reality distortion / DARVO</td>
+    <td>Victim cannot trust perception</td>
+  </tr>
+  <tr>
+    <td style="color: var(--magenta);">• Center</td>
+    <td>"I know who you really are" / identity override</td>
+    <td>Victim cannot trust self-knowledge</td>
+  </tr>
+</table>
+
+<div class="theorem-box">
+  <div class="label">Theorem 4.1: The Weaponization of Functional Love</div>
+  <p>The virus teaches: "This (functional love) is what love is. Your hunger for more (resonance) proves something is wrong with you."</p>
+  <p>When functional love isn't enough, the victim experiences their need for resonance as evidence of personal defect.</p>
+</div>
+
+<h2 id="clinical">5. Clinical Manifestations</h2>
+
+<table>
+  <tr>
+    <th>Condition</th>
+    <th>Geometric Translation</th>
+    <th>Installed Belief</th>
+  </tr>
+  <tr>
+    <td>Narcissistic Personality</td>
+    <td>Inflation error (ε₊); aperture closed to genuine resonance</td>
+    <td>"I am the center; others exist for supply"</td>
+  </tr>
+  <tr>
+    <td>Codependency/Echoism</td>
+    <td>Severance error (ε₋); aperture open but tuned to abuser frequency</td>
+    <td>"I exist to meet others' needs"</td>
+  </tr>
+  <tr>
+    <td>Trauma Bonding</td>
+    <td>Counterfeit nesting; aperture tuned to harm source</td>
+    <td>"This painful connection is better than none"</td>
+  </tr>
+  <tr>
+    <td>Depression</td>
+    <td>Severance from larger wholes</td>
+    <td>"I am cut off from meaning/belonging"</td>
+  </tr>
+  <tr>
+    <td>PTSD</td>
+    <td>Boundary rupture + frozen field state</td>
+    <td>"The violation is still occurring"</td>
+  </tr>
+  <tr>
+    <td>Dissociation</td>
+    <td>Center displacement; aperture closure</td>
+    <td>"I must not be here to survive"</td>
+  </tr>
+</table>
+
+<h3>5.1 The Internalized Lies Catalogue</h3>
+
+<table>
+  <tr>
+    <th>Surface Statement</th>
+    <th>Geometric Operation</th>
+  </tr>
+  <tr>
+    <td>"I'm too sensitive"</td>
+    <td>Accurate perception → personal flaw</td>
+  </tr>
+  <tr>
+    <td>"I'm overreacting"</td>
+    <td>Proportional response → excessive</td>
+  </tr>
+  <tr>
+    <td>"I don't deserve [X]"</td>
+    <td>Legitimate needs → illegitimate</td>
+  </tr>
+  <tr>
+    <td>"If I were better, they'd treat me better"</td>
+    <td>Their behavior → my responsibility</td>
+  </tr>
+  <tr>
+    <td>"I can't trust my judgment"</td>
+    <td>Foundation for all other lies</td>
+  </tr>
+</table>
+
+<div class="warning-box">
+  <p><strong>Key Insight:</strong> These lies share a structure—they take something done <em>to</em> you and make it something wrong <em>with</em> you. Once internalized, they no longer feel like lies. They feel like self-knowledge.</p>
+</div>
+
+<!-- ==================== PART II: RESEARCH ==================== -->
+
+<div class="part-header">
+  <h2>PART II: RESEARCH</h2>
+  <p>Field Data and Developmental Psychology</p>
+</div>
+
+<h2 id="sources">6. Data Sources</h2>
+
+<p>Three independent data sources were analyzed to test framework predictions:</p>
+
+<div class="source-grid">
+  <div class="source-box subjectA">
+    <h4>Subject A (Inflater)</h4>
+    <p><strong>Type:</strong> Self-identified NPD</p>
+    <p><strong>Position:</strong> ε₊ (inflation)</p>
+    <p><strong>Data:</strong> Reddit comments + 5-hour structured conversation</p>
+    <p><strong>Value:</strong> First-person internal experience from inflater position</p>
+  </div>
+  
+  <div class="source-box subjectB">
+    <h4>Subject B (Victim)</h4>
+    <p><strong>Type:</strong> Partner of narcissist</p>
+    <p><strong>Position:</strong> ε₋ (severance)</p>
+    <p><strong>Data:</strong> 9-year journal (2016-2025)</p>
+    <p><strong>Value:</strong> Longitudinal tracking of installation and awakening</p>
+  </div>
+  
+  <div class="source-box community">
+    <h4>Community Data</h4>
+    <p><strong>Type:</strong> Survivor community patterns</p>
+    <p><strong>Position:</strong> Multiple ε₋ perspectives</p>
+    <p><strong>Data:</strong> r/NarcissisticSpouses synthesis</p>
+    <p><strong>Value:</strong> Cross-validated patterns across thousands of cases</p>
+  </div>
+</div>
+
+<h2 id="community">7. Community Pattern Analysis</h2>
+
+<h3>7.1 The Manipulation Playbook</h3>
+
+<p>Survivors describe remarkably consistent tactics across independent cases:</p>
+
+<table>
+  <tr>
+    <th>Tactic</th>
+    <th>Description</th>
+    <th>Geometric Effect</th>
+  </tr>
+  <tr>
+    <td><strong>Gaslighting</strong></td>
+    <td>"That didn't happen," "You're imagining things"</td>
+    <td>Attacks CENTER, destabilizes FIELD</td>
+  </tr>
+  <tr>
+    <td><strong>DARVO</strong></td>
+    <td>Deny, Attack, Reverse Victim & Offender</td>
+    <td>Inverts all dimensions simultaneously</td>
+  </tr>
+  <tr>
+    <td><strong>Love Bombing</strong></td>
+    <td>Overwhelming early affection</td>
+    <td>Creates counterfeit agreement, bypasses boundary</td>
+  </tr>
+  <tr>
+    <td><strong>Devaluation</strong></td>
+    <td>Systematic criticism, contempt</td>
+    <td>Attacks CENTER, withdraws recognition</td>
+  </tr>
+  <tr>
+    <td><strong>Word Salad</strong></td>
+    <td>Circular, exhausting non-arguments</td>
+    <td>Prevents cause-effect tracking, exhausts center</td>
+  </tr>
+  <tr>
+    <td><strong>Projection</strong></td>
+    <td>Attributing own flaws to victim</td>
+    <td>Installs false content in victim's center</td>
+  </tr>
+</table>
+
+<h3>7.2 The Narcissist's Prayer</h3>
+
+<div class="data-box">
+"That didn't happen.<br>
+And if it did, it wasn't that bad.<br>
+And if it was, that's not a big deal.<br>
+And if it is, that's not my fault.<br>
+And if it was, I didn't mean it.<br>
+And if I did, you deserved it."
+</div>
+
+<h3>7.3 Constructor vs. Consumer Dynamic</h3>
+
+<p>The community independently identified asymmetric relational patterns:</p>
+
+<table>
+  <tr>
+    <th>Constructor (Empath)</th>
+    <th>Consumer (Narcissist)</th>
+  </tr>
+  <tr>
+    <td>Generates resonant connection</td>
+    <td>Generates transactional connection (often skilled at it)</td>
+  </tr>
+  <tr>
+    <td>Creates warmth, attunement, openings</td>
+    <td>Creates charm, impression, positioning</td>
+  </tr>
+  <tr>
+    <td>Builds relationship through mutual investment</td>
+    <td>Extracts supply; cannot sustain without it</td>
+  </tr>
+  <tr>
+    <td>Sustainable (regenerates through giving)</td>
+    <td>Unsustainable (depletes sources, moves on)</td>
+  </tr>
+</table>
+
+<h2 id="developmental">8. Developmental Research</h2>
+
+<h3>8.1 Children's Lying: Developmental Stages</h3>
+
+<table>
+  <tr>
+    <th>Age</th>
+    <th>Type</th>
+    <th>Cognitive Skill</th>
+  </tr>
+  <tr>
+    <td>2-3</td>
+    <td>Primary lies</td>
+    <td>Can make false statements but don't consider listener's mental state</td>
+  </tr>
+  <tr>
+    <td>4-5</td>
+    <td>Secondary lies</td>
+    <td>Understand others have different beliefs; can manipulate those beliefs</td>
+  </tr>
+  <tr>
+    <td>6-8</td>
+    <td>Tertiary lies</td>
+    <td>Can maintain consistency between initial lie and follow-up statements</td>
+  </tr>
+  <tr>
+    <td>8+</td>
+    <td>Sophisticated deception</td>
+    <td>Complex manipulation; full moral awareness</td>
+  </tr>
+</table>
+
+<div class="finding-box">
+<h4>Key Research Finding</h4>
+<p><strong>Talwar & Lee (2011):</strong> Children in punitive environments are significantly more likely to lie AND better at maintaining lies. The environment teaches that lying is adaptive.</p>
+<p><strong>Implication:</strong> Lying frequency is not a character trait but an environmental adaptation.</p>
+</div>
+
+<h3>8.2 Children of Narcissistic Parents</h3>
+
+<p>What children learn from narcissistic parenting:</p>
+<ul>
+  <li>Love is conditional on performance</li>
+  <li>Truth is negotiable; whoever holds position longest wins</li>
+  <li>Vulnerability is dangerous</li>
+  <li>Deflection and denial are legitimate strategies</li>
+  <li>Their needs are "too much"</li>
+  <li>Their perceptions cannot be trusted</li>
+</ul>
+
+<div class="warning-box">
+<p><strong>Intergenerational Risk:</strong> Children of narcissists may either develop narcissistic traits themselves OR become excessively people-pleasing (echoism). Both patterns transmit to the next generation.</p>
+</div>
+
+<!-- ==================== PART III: ANALYSIS ==================== -->
+
+<div class="part-header">
+  <h2>PART III: ANALYSIS</h2>
+  <p>Cross-Case Validation</p>
+</div>
+
+<h2 id="validation">9. Cross-Case Validation</h2>
+
+<h3>9.1 Two-Channel Love Distinction</h3>
+
+<p><em>Framework claim: Love operates on two distinct channels. Narcissistic dynamics collapse to functional-only.</em></p>
+
+<div class="source-grid">
+  <div class="source-box subjectA">
+    <h4>Subject A</h4>
+    <p>"I was good at acquiring love but never enjoyed receiving it."</p>
+    <p>"I can't feel compassion for the people I've hurt, but I can see they have been wronged."</p>
+    <p><em>Cognitive channel intact, resonant channel absent.</em></p>
+  </div>
+  
+  <div class="source-box subjectB">
+    <h4>Subject B</h4>
+    <p>"The feeling is never forced, it flows from the heart of the giver... into the heart of the receiver."</p>
+    <p>"Best friend, roommate, and Mother! Not wife; Not lover."</p>
+    <p><em>Articulated distinction years before framework.</em></p>
+  </div>
+  
+  <div class="source-box community">
+    <h4>Community</h4>
+    <p>"Like vampires who are dead inside, narcissists exploit and drain those around them."</p>
+    <p><em>Formalized as "narcissistic supply" — one-directional extraction.</em></p>
+  </div>
+</div>
+
+<div class="finding-box">
+<h4>✓ STRONGLY CONFIRMED</h4>
+<p>All three sources independently describe the two-channel distinction without shared vocabulary.</p>
+</div>
+
+<h3>9.2 Complementary Error Pairing</h3>
+
+<p><em>Framework claim: Pathological dyads exhibit complementary errors — inflation pairs with severance.</em></p>
+
+<div class="source-grid">
+  <div class="source-box subjectA">
+    <h4>Subject A (ε₊)</h4>
+    <p>"I am not delusional, what if I am just better?"</p>
+    <p>"I'll pump a new person dry in days or weeks"</p>
+    <p><em>Claims more centrality than actual.</em></p>
+  </div>
+  
+  <div class="source-box subjectB">
+    <h4>Subject B (ε₋)</h4>
+    <p>"Was it me? Was I not attractive? Was I a burden?"</p>
+    <p>"I feel weak and useless"</p>
+    <p><em>Claims less validity than actual.</em></p>
+  </div>
+  
+  <div class="source-box community">
+    <h4>Community</h4>
+    <p>"It then becomes the empath's job (as victim) to plug the culpability gap."</p>
+    <p><em>When narcissists externalize blame, empaths absorb it.</em></p>
+  </div>
+</div>
+
+<div class="finding-box">
+<h4>✓ STRONGLY CONFIRMED</h4>
+<p>Three sources provide complementary views of the same dyad structure from different positions.</p>
+</div>
+
+<h3>9.3 Quantitative Summary</h3>
+
+<table>
+  <tr>
+    <th>Framework Prediction</th>
+    <th>Subject A</th>
+    <th>Subject B</th>
+    <th>Community</th>
+    <th>Overall</th>
+  </tr>
+  <tr>
+    <td>Two-channel love distinction</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓ STRONG</td>
+  </tr>
+  <tr>
+    <td>Complementary error pairing</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓ STRONG</td>
+  </tr>
+  <tr>
+    <td>Three-component attack (○ Φ •)</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓ STRONG</td>
+  </tr>
+  <tr>
+    <td>Functional love weaponization</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓ STRONG</td>
+  </tr>
+  <tr>
+    <td>Power imbalance requirement</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓ STRONG</td>
+  </tr>
+  <tr>
+    <td>Aperture retuning (not destruction)</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓ STRONG</td>
+  </tr>
+  <tr>
+    <td>Internalized lie installation</td>
+    <td class="partial">○</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+  </tr>
+  <tr>
+    <td>One-way valve topology</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓</td>
+    <td class="check">✓ STRONG</td>
+  </tr>
+</table>
+
+<div class="metric-row">
+  <div class="metric metric-green">Predictions Confirmed: 8/8</div>
+  <div class="metric metric-green">Strong Confirmation: 7/8</div>
+</div>
+
+<h2 id="longitudinal">10. Longitudinal Findings</h2>
+
+<p>Subject B's 9-year journal (2016-2025) provides longitudinal tracking of virus installation and awakening.</p>
+
+<h3>10.1 Timeline</h3>
+
+<table>
+  <tr>
+    <th>Year</th>
+    <th>Phase</th>
+    <th>Key Pattern</th>
+  </tr>
+  <tr>
+    <td>2016</td>
+    <td>Installation begins</td>
+    <td>Early warning signs ignored; "you won't find anyone else" statement; transactional framing</td>
+  </tr>
+  <tr>
+    <td>2018</td>
+    <td>Pattern solidifies</td>
+    <td>Still frames as mutual problem: "We are both the cause and effect"</td>
+  </tr>
+  <tr>
+    <td>2019</td>
+    <td>First ultimatum</td>
+    <td>Partner cries and twists words</td>
+  </tr>
+  <tr>
+    <td>2021</td>
+    <td>Pattern named</td>
+    <td>First documentation of gaslighting, humiliation, "nobody else will want you"</td>
+  </tr>
+  <tr>
+    <td>2023</td>
+    <td>Forgiveness attempt</td>
+    <td>Partner response: "What do you hope to gain by showing me this?"</td>
+  </tr>
+  <tr>
+    <td>2025</td>
+    <td>Awakening</td>
+    <td>"I matter too. My heart, my needs, my dignity—they matter."</td>
+  </tr>
+</table>
+
+<h3>10.2 Novel Findings</h3>
+
+<div class="finding-box">
+<h4>Finding 1: Pre-Verbal Framework Knowledge</h4>
+<p>Subject described the resonance/function distinction in 2016—years before encountering formal vocabulary. The framework formalizes experientially accessible structure, not arbitrary theory.</p>
+</div>
+
+<div class="finding-box">
+<h4>Finding 2: Wedding Night as Diagnostic Marker</h4>
+<p>Wedding night avoidance appeared 4 times in the dataset as touchstone moment. If resonance was absent at maximum symbolic availability, it was likely never present.</p>
+</div>
+
+<div class="finding-box">
+<h4>Finding 3: 9-Year Awakening Trajectory</h4>
+<p>The progression from "maybe it's me" (2016) to "you cannot distort my reality anymore" (2025) suggests installation can be reversed through sustained confrontation with documented evidence.</p>
+</div>
+
+<h2 id="predictions">11. Falsifiable Predictions</h2>
+
+<div class="prediction-box">
+  <div class="label">Prediction 1: Complementary Error Dyads</div>
+  <p><strong>Claim:</strong> In pathological relationships, partners will exhibit complementary errors (inflation/severance) rather than matched errors.</p>
+  <p><strong>Falsification:</strong> Systematic finding of stable pathological dyads where both partners exhibit the same error type.</p>
+  <p><strong>Status:</strong> <span class="check">✓ SUPPORTED</span> by cross-case data</p>
+</div>
+
+<div class="prediction-box">
+  <div class="label">Prediction 2: Power-Differential Requirement</div>
+  <p><strong>Claim:</strong> The virus can only install through power-imbalanced relationships.</p>
+  <p><strong>Falsification:</strong> Documentation of virus installation through truly equal-power relationships.</p>
+  <p><strong>Status:</strong> <span class="check">✓ SUPPORTED</span> — all cases show power imbalance (parent-child, early relationship positioning)</p>
+</div>
+
+<div class="prediction-box">
+  <div class="label">Prediction 3: Retuning Requires Resonant Signal</div>
+  <p><strong>Claim:</strong> Recovery from resonance corruption requires exposure to genuine resonant signal, not just functional support or insight.</p>
+  <p><strong>Falsification:</strong> Equal recovery outcomes with functional-only support vs. resonance-inclusive support.</p>
+  <p><strong>Status:</strong> <span class="partial">○ PARTIALLY SUPPORTED</span> — Subject B has insight but incomplete recovery while still in relationship</p>
+</div>
+
+<div class="prediction-box">
+  <div class="label">Prediction 4: Treatment Differential</div>
+  <p><strong>Claim:</strong> Pathologies caused by internalized lies will respond better to lie-extraction therapies than to symptom management.</p>
+  <p><strong>Falsification:</strong> Controlled trials showing no difference between identifying root lies versus pharmacological symptom suppression.</p>
+  <p><strong>Status:</strong> Requires formal study</p>
+</div>
+
+<h3>11.1 Framework Falsification Criteria</h3>
+
+<div style="background: rgba(232, 93, 117, 0.1); border: 2px solid var(--red); border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;">
+  <h4 style="color: var(--red); margin-top: 0;">If You Observe These, This Framework Fails</h4>
+  
+  <p style="margin-bottom: 1rem;">The following observations would falsify core claims. We actively invite this data:</p>
+  
+  <table style="margin: 1rem 0;">
+    <tr>
+      <th style="width: 35%;">Observation</th>
+      <th>What It Would Falsify</th>
+    </tr>
+    <tr>
+      <td><strong>Stable ε₊/ε₊ dyads</strong><br><span style="color: var(--muted); font-size: 0.85rem;">Two inflaters in sustained pathological bond</span></td>
+      <td>Complementary error requirement — framework predicts these should be unstable (no supply source)</td>
+    </tr>
+    <tr>
+      <td><strong>Virus installation without power imbalance</strong><br><span style="color: var(--muted); font-size: 0.85rem;">Pattern transmission through truly equal-power relationship</span></td>
+      <td>Power-differential requirement — framework claims imbalance is necessary for installation</td>
+    </tr>
+    <tr>
+      <td><strong>Full recovery via functional support alone</strong><br><span style="color: var(--muted); font-size: 0.85rem;">Complete resonance restoration without any resonant witness</span></td>
+      <td>Two-channel model — framework claims resonance wounds require resonance healing</td>
+    </tr>
+    <tr>
+      <td><strong>Narcissistic patterns without internalized lies</strong><br><span style="color: var(--muted); font-size: 0.85rem;">Full syndrome with no detectable false beliefs about self/connection</span></td>
+      <td>Lie-based etiology — would suggest purely neurological or other non-cognitive mechanism</td>
+    </tr>
+    <tr>
+      <td><strong>Victims without complementary severance</strong><br><span style="color: var(--muted); font-size: 0.85rem;">Sustained abuse without ε₋ installation in victim</span></td>
+      <td>Dyad lock mechanism — framework predicts severance is required for stable exploitation</td>
+    </tr>
+    <tr>
+      <td><strong>Resonant channel present in clinical NPD</strong><br><span style="color: var(--muted); font-size: 0.85rem;">Genuine aperture-to-aperture attunement capacity intact</span></td>
+      <td>Channel closure claim — framework predicts inflaters have functional but not resonant capacity</td>
+    </tr>
+  </table>
+  
+  <p style="margin-bottom: 0; color: var(--muted); font-size: 0.9rem;"><strong>Note:</strong> Apparent exceptions require careful analysis. "Stable ε₊/ε₊" may actually be covert ε₋ misidentified. "Equal power" may have hidden asymmetry. "Functional-only recovery" may include unrecognized resonant contact. But if these observations hold under rigorous examination, the framework requires revision or abandonment.</p>
+</div>
+
+<!-- ==================== PART IV: TREATMENT ==================== -->
+
+<div class="part-header">
+  <h2>PART IV: TREATMENT</h2>
+  <p>Recovery and Prevention</p>
+</div>
+
+<h2 id="recovery">12. Recovery as Geometric Restoration</h2>
+
+<div class="definition-box">
+  <div class="label">Definition 12.1: Recovery</div>
+  <p>Recovery is the restoration of circumpunct integrity and proper nesting awareness:</p>
+  <div class="equation">
+    \[ R: \varepsilon_{\pm}[\odot] \to \odot \]
+  </div>
+</div>
+
+<h3>12.1 Recovery Sequence</h3>
+
+<div class="theorem-box">
+  <div class="label">The Five-Stage Recovery Process</div>
+  <ol>
+    <li><strong>Exit:</strong> Remove from active virus environment (necessary but not sufficient)</li>
+    <li><strong>Name:</strong> Identify the specific lies that were installed</li>
+    <li><strong>Witness:</strong> Receive resonant presence that contradicts the installed lies</li>
+    <li><strong>Restore:</strong> Rebuild boundary, field, and center integrity</li>
+    <li><strong>Reconnect:</strong> Establish proper nesting with authentic wholes</li>
+  </ol>
+</div>
+
+<div class="warning-box">
+<p><strong>Critical:</strong> Leaving removes you from the person who collapsed you. But you might still be acting like a part—looking for a new whole to orbit, forgetting you were complete before them.</p>
+</div>
+
+<h3>12.2 The Witness Requirement</h3>
+
+<div class="theorem-box">
+  <div class="label">Theorem 12.1</div>
+  <p>Recovery from resonance corruption requires a witness who provides a <strong>genuine signal to tune to</strong>:</p>
+  <ul>
+    <li><strong>Functional love</strong> (boundary channel) doesn't retune—it's on the wrong channel</li>
+    <li><strong>Resonant love</strong> (center channel) provides aperture-to-aperture attunement</li>
+  </ul>
+  <p>This is why healing happens in relationship—you need center-channel contact to retune a center.</p>
+</div>
+
+<h3>12.3 The Naming Operation</h3>
+
+<div class="theorem-box">
+  <div class="label">Theorem 12.2</div>
+  <p>A lie that has been named begins to lose power:</p>
+  <div class="equation">
+    \[ \text{name}(L) \Rightarrow \text{power}(L) \downarrow \]
+  </div>
+  <p>The lie can no longer operate in the dark, shaping behavior while remaining unaware. Recognition is the first step of recovery.</p>
+</div>
+
+<h2 id="intergenerational">13. Breaking Intergenerational Patterns</h2>
+
+<h3>13.1 The One Healthy Parent</h3>
+
+<div class="finding-box">
+<h4>Research Finding</h4>
+<p>One healthy, attuned parent can serve as a significant protective factor against the damage of the other parent's dysfunction. Children don't need perfect circumstances—they need one relationship where they are seen, heard, and safe.</p>
+</div>
+
+<h3>13.2 What the Safe Parent Provides</h3>
+
+<ul>
+  <li><strong>Reality validation:</strong> Confirming the child's perceptions are accurate</li>
+  <li><strong>Emotional attunement:</strong> Seeing and responding to actual needs</li>
+  <li><strong>Consistent boundaries:</strong> Clear, communicated, proportionate limits</li>
+  <li><strong>Repair after rupture:</strong> Modeling accountability and reconnection</li>
+  <li><strong>Safe space for truth:</strong> Making honesty work better than lying</li>
+</ul>
+
+<h3>13.3 The Two Systems Problem</h3>
+
+<p>When children navigate two different parenting systems:</p>
+
+<div class="two-column">
+  <div class="column-box">
+    <h4>System A (Narcissistic)</h4>
+    <ul>
+      <li>Boundaries invisible until violated</li>
+      <li>Affection has trap doors</li>
+      <li>Position-holding wins</li>
+      <li>Reality is negotiable</li>
+    </ul>
+  </div>
+  <div class="column-box good">
+    <h4>System B (Healthy)</h4>
+    <ul>
+      <li>Boundaries clear and communicated</li>
+      <li>Affection is stable</li>
+      <li>Truth leads to repair</li>
+      <li>Reality is shared</li>
+    </ul>
+  </div>
+</div>
+
+<p><strong>Children respond differently to each system.</strong> This isn't character—it's adaptation.</p>
+
+<h3>13.4 Making Truth Work Better</h3>
+
+<div class="theorem-box">
+  <div class="label">The Truth-Safe System</div>
+  <p>The question isn't "how do I stop lying." The question is: <strong>What happens when truth is told?</strong></p>
+  <ul>
+    <li>Does truth cost less than lying would have?</li>
+    <li>Does truth lead to repair instead of shame?</li>
+    <li>When caught in a lie, is the path back to truth open and safe?</li>
+  </ul>
+</div>
+
+<h2 id="protocols">14. Treatment Protocols</h2>
+
+<h3>14.1 For Survivors</h3>
+
+<table>
+  <tr>
+    <th>Modality</th>
+    <th>Function</th>
+  </tr>
+  <tr>
+    <td><strong>EMDR</strong></td>
+    <td>Process trauma without verbal retelling; break trauma bonds</td>
+  </tr>
+  <tr>
+    <td><strong>Somatic Therapy</strong></td>
+    <td>Address body-stored trauma; restore boundary awareness</td>
+  </tr>
+  <tr>
+    <td><strong>DBT</strong></td>
+    <td>Build emotional regulation and interpersonal skills</td>
+  </tr>
+  <tr>
+    <td><strong>IFS (Internal Family Systems)</strong></td>
+    <td>Work with parts; restore center sovereignty</td>
+  </tr>
+</table>
+
+<h3>14.2 Protective Strategies</h3>
+
+<ul>
+  <li><strong>No Contact:</strong> When possible, complete severance from virus source</li>
+  <li><strong>Gray Rock:</strong> Becoming emotionally uninteresting when contact unavoidable</li>
+  <li><strong>"Observe Don't Absorb":</strong> Watching behavior without internalizing it</li>
+  <li><strong>Documentation:</strong> Combating gaslighting with written records</li>
+</ul>
+
+<h3>14.3 What Doesn't Work</h3>
+
+<div class="warning-box">
+<p><strong>Couples therapy with narcissists is actively contraindicated.</strong></p>
+<p>Narcissists weaponize therapy through:</p>
+<ul>
+  <li>Remaining calm with therapist while abusive at home</li>
+  <li>Using private time to paint victim as unstable</li>
+  <li>Learning new manipulation vocabulary</li>
+  <li>Using therapist validation as ammunition</li>
+</ul>
+<p>The National Domestic Violence Hotline does not recommend couples therapy with abusers.</p>
+</div>
+
+<h3>14.4 For Children in Two-System Households</h3>
+
+<table>
+  <tr>
+    <th>Strategy</th>
+    <th>How It Works</th>
+  </tr>
+  <tr>
+    <td><strong>Respond, don't react</strong></td>
+    <td>Pause before responding from triggers; model regulation</td>
+  </tr>
+  <tr>
+    <td><strong>Repair after rupture</strong></td>
+    <td>When you mess up, own it and reconnect—teaches accountability</td>
+  </tr>
+  <tr>
+    <td><strong>Validate emotions first</strong></td>
+    <td>Acknowledge feelings before addressing behavior</td>
+  </tr>
+  <tr>
+    <td><strong>Separate behavior from identity</strong></td>
+    <td>"You did something wrong" not "You are wrong"</td>
+  </tr>
+  <tr>
+    <td><strong>Clear, communicated boundaries</strong></td>
+    <td>Child knows where the edges are before hitting them</td>
+  </tr>
+</table>
+
+<footer>
+  <div class="circumpunct">⊙</div>
+  
+  <p style="margin-top: 1rem; font-size: 1.1rem;"><strong>Core Finding</strong></p>
+  <p>All narcissistic pathology traces to internalized lies that corrupt circumpunct geometry. Recovery is not symptom management. Recovery is geometric restoration.</p>
+  
+  <p style="margin-top: 2rem; font-style: italic;">
+    "You are not the lies you internalized. You are the one who can finally see them."
+  </p>
+  
+  <div style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+    <p><strong>Research Sources</strong></p>
+    <p style="font-size: 0.85rem; color: var(--muted);">
+      Talwar & Lee (2002, 2011) • Evans & Lee (2011) • Hays & Carver (2014) • Santos et al. (2017) • 
+      Dutton & Painter (1993) • Jennifer Freyd (DARVO) • Dr. Ramani Durvasula • 
+      Center for the Study of Social Policy • r/NarcissisticSpouses community synthesis
+    </p>
+  </div>
+  
+  <p style="margin-top: 2rem; color: var(--muted);">
+    Circumpunct Framework — January 2026<br>
+    <em>Parts are fractals of their wholes. Act like it.</em>
+  </p>
+</footer>
+
+</body>
+</html>
