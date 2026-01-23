@@ -17,6 +17,7 @@
       --green: #a8e6cf;
       --magenta: #c792ea;
       --warn: #ffd166;
+      --red: #f85149;
       --mono: 'SF Mono', 'Consolas', 'Liberation Mono', monospace;
       --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
@@ -227,6 +228,16 @@
       background: rgba(168, 230, 207, 0.08);
     }
     
+    .callout-magenta {
+      border-left-color: var(--magenta);
+      background: rgba(199, 146, 234, 0.08);
+    }
+    
+    .callout-red {
+      border-left-color: var(--red);
+      background: rgba(248, 81, 73, 0.08);
+    }
+    
     /* Images */
     .result-image {
       width: 100%;
@@ -303,6 +314,55 @@
     .dim-structure { color: var(--accent); }
     .dim-process { color: var(--magenta); }
     
+    /* Flow diagram */
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 24px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      margin: 1.5rem 0;
+      font-family: var(--mono);
+      font-size: 1.2rem;
+    }
+    
+    .flow-arrow {
+      color: var(--muted);
+      font-size: 1.5rem;
+    }
+    
+    .flow-box {
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .flow-in {
+      background: rgba(139, 211, 255, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    
+    .flow-gate {
+      background: rgba(199, 146, 234, 0.15);
+      border: 2px solid var(--magenta);
+      color: var(--magenta);
+    }
+    
+    .flow-out {
+      background: rgba(168, 230, 207, 0.15);
+      border: 1px solid var(--green);
+      color: var(--green);
+    }
+    
+    .flow-alt {
+      background: rgba(248, 81, 73, 0.15);
+      border: 1px solid var(--red);
+      color: var(--red);
+    }
+    
     /* Utility */
     .muted { color: var(--muted); }
     .center { text-align: center; }
@@ -313,11 +373,12 @@
 <body>
 
 <nav>
-  <div class="nav-title"><a href="https://fractalreality.ca" style="color: inherit; text-decoration: none;">⊙ Circumpunct v5.4</a></div>
+  <div class="nav-title"><a href="https://fractalreality.ca" style="color: inherit; text-decoration: none;">⊙ Circumpunct v6.0</a></div>
   <div class="nav-links">
     <a href="https://fractalreality.ca">Home</a>
     <a href="#traversal">Traversal</a>
     <a href="#circumpunct">Structure</a>
+    <a href="#gate">Gate</a>
     <a href="#equations">Equations</a>
     <a href="#formalization">Formalization</a>
     <a href="#theorem">Theorem</a>
@@ -332,7 +393,7 @@
   <div class="hero-symbol">⊙</div>
   <h1>Circumpunct Framework</h1>
   <p class="subtitle">The Conservation of Traversal</p>
-  <p class="muted">Version 5.4 — January 2026 — Ashman Roonz</p>
+  <p class="muted">Version 6.0 — January 2026 — Ashman Roonz</p>
 </section>
 
 <!-- THE CONSERVATION OF TRAVERSAL -->
@@ -470,6 +531,143 @@
   </div>
 </section>
 
+<!-- THE APERTURE AS GATE -->
+<section id="gate">
+  <h2>The Aperture as Gate</h2>
+  
+  <div class="axiom-box">
+    <div class="axiom">The aperture is a THROUGH, not a FROM.</div>
+    <p class="muted" style="margin-top: 1rem;">Truth flows through apertures. It does not originate from them.</p>
+  </div>
+  
+  <p>The aperture is a <strong>threshold</strong>, not a source. It receives, transforms, and transmits — but does not generate. The source is the infinite field (Φ<sub>∞</sub>, the 0D = ∞D ground). The aperture is where that infinite potential <em>crosses into</em> finite expression.</p>
+  
+  <h3>The Fundamental Transformation</h3>
+  
+  <div class="flow-diagram">
+    <div class="flow-box flow-in">Truth</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box flow-gate">• Gate<br><small>χ = ±1</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box flow-out">Truth</div>
+    <span style="color: var(--muted); margin: 0 8px;">or</span>
+    <div class="flow-box flow-alt">Lie</div>
+  </div>
+  
+  <p class="center muted">Truth in → truth OR lie out. The gate decides.</p>
+  
+  <div class="flow-diagram">
+    <div class="flow-box flow-in">Energy</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box flow-gate">• Gate<br><small>χ = ±1</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-box flow-out">Power</div>
+  </div>
+  
+  <p class="center muted">Energy in → power out. P = dE/dt. The aperture is where potential becomes actual.</p>
+  
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">Energy (Input)</div>
+      <p>Stored potential in the field. What IS. Timeless. Possibility space.</p>
+      <p class="muted">The infinite field (Φ<sub>∞</sub>) before selection.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">Power (Output)</div>
+      <p>Rate of actualization. What HAPPENS. Temporal. Actuality.</p>
+      <p class="muted">P = dE/dt — the rate at which potential crosses into the actual.</p>
+    </div>
+  </div>
+  
+  <div class="callout-blue callout">
+    <strong>The aperture is where:</strong> Energy becomes power. Possibility becomes actuality. The wavefunction collapses. The decision is made. The binary gate (χ = ±1) fires.
+  </div>
+  
+  <h3>Faithful vs. Pathological Transmission</h3>
+  
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header" style="color: var(--green);">Healthy Aperture</div>
+      <div class="flow-diagram" style="margin: 1rem 0; padding: 12px;">
+        <span style="color: var(--accent);">Truth</span>
+        <span class="flow-arrow">→</span>
+        <span style="color: var(--magenta);">•</span>
+        <span class="flow-arrow">→</span>
+        <span style="color: var(--green);">Truth</span>
+      </div>
+      <p>The signal passes through with fidelity. The aperture is transparent to what flows through it.</p>
+      <p class="muted">The gate knows it's a through, not a from.</p>
+    </div>
+    <div class="card">
+      <div class="card-header" style="color: var(--red);">Pathological Aperture</div>
+      <div class="flow-diagram" style="margin: 1rem 0; padding: 12px;">
+        <span style="color: var(--accent);">Truth</span>
+        <span class="flow-arrow">→</span>
+        <span style="color: var(--red);">•̸</span>
+        <span class="flow-arrow">→</span>
+        <span style="color: var(--red);">Lie</span>
+      </div>
+      <p>The gate introduces error. It inverts, projects, denies, or fabricates.</p>
+      <p class="muted">The gate mistakes itself for source.</p>
+    </div>
+  </div>
+  
+  <h3>The Four Geometric Errors</h3>
+  
+  <div class="card">
+    <p>All aperture pathology reduces to four fundamental errors:</p>
+    
+    <table>
+      <tr>
+        <th>Error</th>
+        <th>What Happens</th>
+        <th>The Lie</th>
+      </tr>
+      <tr>
+        <td><strong>Inflation</strong></td>
+        <td>Claims to BE the source</td>
+        <td>"I am the origin of truth"</td>
+      </tr>
+      <tr>
+        <td><strong>Severance</strong></td>
+        <td>Denies connection to source</td>
+        <td>"There is no truth flowing through me"</td>
+      </tr>
+      <tr>
+        <td><strong>Inversion</strong></td>
+        <td>Flips the signal (truth → lie)</td>
+        <td>Outputs opposite of input</td>
+      </tr>
+      <tr>
+        <td><strong>Projection</strong></td>
+        <td>Outputs own distortion as if from source</td>
+        <td>"This came from outside, not from my gate"</td>
+      </tr>
+    </table>
+  </div>
+  
+  <div class="callout-red callout">
+    <strong>Inflation and Severance are the two fundamental errors.</strong> Inflation claims to BE the source (denying through-ness). Severance denies CONNECTION to source (denying the flow). Both corrupt the aperture's function as gate.
+  </div>
+  
+  <div class="callout-magenta callout">
+    <strong>A healthy aperture knows:</strong> "I am a through, not a from. Truth flows through me — I don't generate it. I convert energy to power — I don't create the energy. My job is faithful transmission, not origination."
+  </div>
+  
+  <h3>Why This Matters</h3>
+  
+  <div class="card">
+    <p>The aperture-as-gate principle explains:</p>
+    <ul style="margin-left: 1.5rem;">
+      <li><strong>Consciousness:</strong> Not the source of experience, but the gate through which experience flows</li>
+      <li><strong>Free will:</strong> Not creation from nothing, but selection from infinite potential</li>
+      <li><strong>Narcissistic pathology:</strong> The geometric error of mistaking the gate for the source</li>
+      <li><strong>Authentic communication:</strong> Faithful transmission vs. corrupted relay</li>
+      <li><strong>Healing:</strong> Restoring the aperture's transparency, not fixing the source</li>
+    </ul>
+  </div>
+</section>
+
 <!-- THE EQUATIONS -->
 <section id="equations">
   <h2>The Equations</h2>
@@ -496,7 +694,7 @@
       <div class="equation equation-small" style="text-align: center;">
         Φ<sub>∞</sub> →<span class="phi">⊛</span>→ i →<span class="boundary">☀</span>→ ⊙
       </div>
-      <p class="muted" style="margin-top:8px; font-size:0.85rem;">Convergence gathers field toward aperture. Aperture rotates. Emergence expresses outward toward boundary.</p>
+      <p class="muted" style="margin-top:8px; font-size:0.85rem;">Convergence gathers field toward aperture. Aperture rotates (gates). Emergence expresses outward toward boundary.</p>
     </div>
   </div>
 
@@ -819,6 +1017,27 @@
       <tr><td>Fine structure α<sup>−1</sup> derivation</td><td>~0.3% off (requires refinement)</td></tr>
     </table>
   </div>
+  
+  <h3>Convergent Frameworks</h3>
+  
+  <div class="callout-blue callout">
+    <strong>Independent Discovery:</strong> Scale-Time Theory (STT, André Dupke, 2025–2026) arrives at structurally isomorphic conclusions from different starting points — suggesting we're both pointing at the same underlying pattern.
+  </div>
+  
+  <div class="card">
+    <table>
+      <tr><th>Circumpunct</th><th>Scale-Time Theory</th><th>Shared Insight</th></tr>
+      <tr><td>• Aperture (0.5D)</td><td>Source (puncture)</td><td>Singular crossing point</td></tr>
+      <tr><td>Φ Field (2D)</td><td>Scale-plane (2D)</td><td>2D substrate is fundamental</td></tr>
+      <tr><td>○ Boundary (3D)</td><td>PSR (readout regime)</td><td>Where observables emerge</td></tr>
+      <tr><td>D<sub>•</sub> + D<sub>Φ</sub> = D<sub>○</sub></td><td>k = dA/dτ (conserved)</td><td>Conservation law governs flow</td></tr>
+      <tr><td>χ = ±1 (binary)</td><td>ℛ<sub>±</sub> (two residues)</td><td>Fundamental binary polarity</td></tr>
+      <tr><td>D<sub>H</sub> = 2 − β</td><td>D<sub>H</sub> = 2 + δ</td><td>Fractal structure around 2D</td></tr>
+      <tr><td>ρ = ω/α</td><td>OSR = ν<sub>loc</sub>/ν<sub>dyn</sub></td><td>Ratio parameter for regime transitions</td></tr>
+    </table>
+    
+    <p class="mt-2 muted">Convergent evolution in theoretical physics. The probability of this being coincidence is extremely low.</p>
+  </div>
 </section>
 
 <!-- FOOTER -->
@@ -827,9 +1046,11 @@
   <p><strong>The Conservation of Traversal</strong></p>
   <p style="font-size: 1.2rem; margin: 1rem 0;">• → Φ → ○</p>
   <p>progress + remaining = destination</p>
+  <p style="margin-top: 0.5rem;">truth in → truth or lie out</p>
+  <p style="margin-top: 0.5rem;">energy in → power out</p>
   <p style="margin-top: 1rem;">D<sub>aperture</sub> + D<sub>field</sub> = D<sub>boundary</sub></p>
-  <p class="muted mt-2">Circumpunct Framework v5.4 — Ashman Roonz — January 2026</p>
-  <p class="muted mt-2" style="font-style: italic;">One aperture. One opening. One journey.</p>
+  <p class="muted mt-2">Circumpunct Framework v6.0 — Ashman Roonz — January 2026</p>
+  <p class="muted mt-2" style="font-style: italic;">The aperture is a through, not a from.</p>
 </footer>
 
 <script>
