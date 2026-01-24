@@ -292,6 +292,8 @@
                     </tbody>
                 </table>
 
+                <button class="explore-more-btn" id="exploreMoreBtn">Explore All Visualizations</button>
+
             </div>
         </div><!-- /main-layout -->
     </main>
@@ -617,6 +619,164 @@
         </div>
     </div>
 
+    <!-- Explore More Popup -->
+    <div class="explore-popup-overlay" id="explorePopup">
+        <div class="explore-popup">
+            <button class="explore-popup-close" id="explorePopupClose">&times;</button>
+            <h2>All Visualizations</h2>
+
+            <div class="explore-section">
+                <h3>Main Pages</h3>
+                <ul>
+                    <li><a href="index.html">index.html</a> — Main homepage</li>
+                    <li><a href="pages/experience.html">experience.html</a> — Experiential path</li>
+                    <li><a href="pages/understand.html">understand.html</a> — Understanding path</li>
+                    <li><a href="pages/prove.html">prove.html</a> — Mathematical path</li>
+                </ul>
+            </div>
+
+            <div class="explore-section">
+                <h3>Circumpunct & Framework</h3>
+                <ul>
+                    <li><a href="circumpunct-presentation.html">circumpunct-presentation.html</a> — Slideshow presentation</li>
+                    <li><a href="circumpunct-v3.html">circumpunct-v3.html</a> — Version 3 visualization</li>
+                    <li><a href="circumpunct-v5.html">circumpunct-v5.html</a> — Version 5 visualization</li>
+                    <li><a href="circumpunct_interactive_theory.html">circumpunct_interactive_theory.html</a> — Interactive predictions</li>
+                    <li><a href="circumpunct_math.html">circumpunct_math.html</a> — Mathematical foundations</li>
+                    <li><a href="circumath.html">circumath.html</a> — Math explorer</li>
+                    <li><a href="circumpunct-swarm.html">circumpunct-swarm.html</a> — Swarm dynamics</li>
+                    <li><a href="circumpunct_dimensions.html">circumpunct_dimensions.html</a> — Dimensional analysis</li>
+                </ul>
+            </div>
+
+            <div class="explore-section">
+                <h3>64-State Architecture</h3>
+                <ul>
+                    <li><a href="64-state_circumpunct_particle_table.html">64-state_circumpunct_particle_table.html</a> — Topological quantum computer</li>
+                    <li><a href="iching_64state_visualizer.html">iching_64state_visualizer.html</a> — I Ching ↔ 64-state explorer</li>
+                    <li><a href="master-table.html">master-table.html</a> — Master reference table</li>
+                </ul>
+            </div>
+
+            <div class="explore-section">
+                <h3>Physics & Mathematics</h3>
+                <ul>
+                    <li><a href="quantum.html">quantum.html</a> — Mandelbrot boundary walker</li>
+                    <li><a href="braid-visualizer.html">braid-visualizer.html</a> — Braid group B₃</li>
+                    <li><a href="trinity_braid.html">trinity_braid.html</a> — Trinity braid topology</li>
+                    <li><a href="entropy-foundation.html">entropy-foundation.html</a> — Entropy argument</li>
+                    <li><a href="energy_scale_phase_visualization.html">energy_scale_phase_visualization.html</a> — Energy scale phases</li>
+                    <li><a href="surface_field_formalization.html">surface_field_formalization.html</a> — Surface field math</li>
+                    <li><a href="geometric_periodic_table.html">geometric_periodic_table.html</a> — Musical periodic table</li>
+                    <li><a href="aperture_falsification_presentation.html">aperture_falsification_presentation.html</a> — Falsification criteria</li>
+                    <li><a href="phi_resonance.html">phi_resonance.html</a> — Golden ratio φ resonance</li>
+                    <li><a href="hypercube.html">hypercube.html</a> — 4D hypercube</li>
+                    <li><a href="dimensions.html">dimensions.html</a> — Dimensional exploration</li>
+                    <li><a href="lens.html">lens.html</a> — Lens/aperture visualization</li>
+                </ul>
+            </div>
+
+            <div class="explore-section">
+                <h3>Wholeness & Structure</h3>
+                <ul>
+                    <li><a href="wholes-parts.html">wholes-parts.html</a> — Wholes and parts explorer</li>
+                    <li><a href="wholeness_field_evolution.html">wholeness_field_evolution.html</a> — Field evolution</li>
+                    <li><a href="soul_array_visualization.html">soul_array_visualization.html</a> — Soul array</li>
+                    <li><a href="mind_matter.html">mind_matter.html</a> — Mind-matter interface</li>
+                    <li><a href="you_are_a_donut.html">you_are_a_donut.html</a> — Toroidal self-reference</li>
+                </ul>
+            </div>
+
+            <div class="explore-section">
+                <h3>Consciousness & Spirituality</h3>
+                <ul>
+                    <li><a href="chakras.html">chakras.html</a> — Chakras as frequency bands</li>
+                    <li><a href="consciousness-path-sim.html">consciousness-path-sim.html</a> — Consciousness path</li>
+                    <li><a href="the_bridge_presentation.html">the_bridge_presentation.html</a> — Science-spirituality bridge</li>
+                    <li><a href="framework_bridge_visual.html">framework_bridge_visual.html</a> — Framework bridge</li>
+                    <li><a href="binaural_beats_51.html">binaural_beats_51.html</a> — Binaural beats</li>
+                    <li><a href="resonance_101.html">resonance_101.html</a> — Resonance intro</li>
+                    <li><a href="path_narrated.html">path_narrated.html</a> — Narrated path</li>
+                </ul>
+            </div>
+
+            <div class="explore-section">
+                <h3>Ethics & Truth</h3>
+                <ul>
+                    <li><a href="ethics.html">ethics.html</a> — Ethical framework</li>
+                    <li><a href="truth_and_god.html">truth_and_god.html</a> — Truth and divinity</li>
+                    <li><a href="truth_and_us.html">truth_and_us.html</a> — Truth in relationships</li>
+                    <li><a href="truth_seekers_cree.html">truth_seekers_cree.html</a> — Truth seeker's creed</li>
+                    <li><a href="the_steelman_way.html">the_steelman_way.html</a> — Steelmanning practice</li>
+                    <li><a href="how_to_realize_real_lies.html">how_to_realize_real_lies.html</a> — Recognizing deception</li>
+                </ul>
+            </div>
+
+            <div class="explore-section">
+                <h3>Personal Healing</h3>
+                <ul>
+                    <li><a href="love_harmonics_ebook%20(6).html">love_harmonics_ebook.html</a> — Love Harmonics ebook</li>
+                    <li><a href="love_channels.html">love_channels.html</a> — Channels of love</li>
+                    <li><a href="love_kungfu.html">love_kungfu.html</a> — Love as practice</li>
+                    <li><a href="UNDERSTANDING_NARCISSISTIC_ABUSE.html">UNDERSTANDING_NARCISSISTIC_ABUSE.html</a> — Narcissistic abuse guide</li>
+                    <li><a href="circumpunct_narcissism.html">circumpunct_narcissism.html</a> — Narcissism analysis</li>
+                    <li><a href="the_restoration_protocol.html">the_restoration_protocol.html</a> — Healing guide</li>
+                </ul>
+            </div>
+
+            <div class="explore-section">
+                <h3>Philosophical</h3>
+                <ul>
+                    <li><a href="demon_hunter.html">demon_hunter.html</a> — What Rumi Taught Us</li>
+                    <li><a href="jedi.html">jedi.html</a> — Jedi philosophy</li>
+                    <li><a href="the_matrix_has_you.html">the_matrix_has_you.html</a> — Matrix metaphor</li>
+                    <li><a href="noble_lie_virus_outbreak.html">noble_lie_virus_outbreak.html</a> — Noble lie pattern</li>
+                </ul>
+            </div>
+
+            <div class="explore-section">
+                <h3>Tools & Games</h3>
+                <ul>
+                    <li><a href="chess.html">chess.html</a> — Pokemon Chess</li>
+                    <li><a href="checkers.html">checkers.html</a> — Checkers</li>
+                    <li><a href="pokemon-battle-helper.html">pokemon-battle-helper.html</a> — Pokemon battle helper</li>
+                    <li><a href="my_randomizer.html">my_randomizer.html</a> — Randomizer</li>
+                    <li><a href="simulators.html">simulators.html</a> — Simulations</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <script src="js/circumpunct.js"></script>
+    <script>
+        // Explore More Popup
+        const exploreBtn = document.getElementById('exploreMoreBtn');
+        const explorePopup = document.getElementById('explorePopup');
+        const explorePopupClose = document.getElementById('explorePopupClose');
+
+        exploreBtn.addEventListener('click', () => {
+            explorePopup.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        explorePopupClose.addEventListener('click', () => {
+            explorePopup.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        explorePopup.addEventListener('click', (e) => {
+            if (e.target === explorePopup) {
+                explorePopup.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && explorePopup.classList.contains('active')) {
+                explorePopup.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
 </body>
 </html>
