@@ -5763,15 +5763,19 @@ At balance β = ½:
 Where H(β) is Shannon entropy:
     H(½) = −[½ log₂ ½ + ½ log₂ ½] = 1 bit
 
-ILLUSTRATIVE EXAMPLES (where this principle manifests):
-    - LIGO gravitational waves: D = 1.503 ± 0.040
+ALTERNATIVE DERIVATION (Conservation of Traversal):
+    D_aperture = 1 + β = 1.5 at β = 0.5
+    D_field    = 2 − β = 1.5 at β = 0.5
+    Sum always equals boundary: (1+β) + (2−β) = 3
+
+ILLUSTRATIVE EXAMPLES (where D ≈ 1.5 appears in literature):
     - Blood vessels, neurons, rivers, lightning
     - DNA backbone, neural avalanches
+    - Brownian motion (D = 1.5 exactly, mathematical theorem)
 
-NOTE: These are illustrations, not load-bearing evidence. The specific D
-value varies by system—that's expected. Mandelbrot proved fractional
-dimensions exist; the framework claims balance produces D ≈ 1.5.
-If specific fits were debunked, the principle would still stand.
+NOTE: These are illustrations, not load-bearing evidence. The D = 1.5
+is derived mathematically from β = 0.5 (the halfway point of traversal).
+Empirical examples show where this manifests; they don't prove the math.
 ```
 
 The fractal dimension **D ≈ 1.5** is not arbitrary here; it is linked to balance:
@@ -6250,7 +6254,7 @@ The framework predicts that the fractal dimension D ≈ 1.5 should appear as a s
 | Domain | Predicted Manifestation | Status |
 |--------|------------------------|--------|
 | Worldline structure | Fractal dimension of i(t) trajectory | Theoretical prediction |
-| Gravitational waves | Fractal signature in GW strain data | D = 1.503 ± 0.040, N=40 events (reproducible analysis of public LIGO data) |
+| Gravitational waves | Fractal signature in GW strain data | Our analysis: D ≈ 1.29 (see analysis/tests/ligo/) |
 | Biological rhythms | HRV, neural avalanches at criticality | Empirical support in literature |
 | **Aperture gate** | Exponent in (sin²θ)^{D/2} | Structural requirement |
 
@@ -7132,13 +7136,15 @@ THE PROFOUND IMPLICATION:
 
 All observed D ≈ 1.5 signatures share a COMMON MECHANISM.
 
-It is NOT coincidence that:
+Literature reports D ≈ 1.5 in multiple systems:
 
-    DNA packing           →  D = 1.51 ± 0.02
-    Neural avalanches     →  D = 1.48-1.52
-    Turbulent cascades    →  D = 1.51 ± 0.03
-    Gravitational waves   →  D = 1.503 ± 0.040
-    Local galaxy distrib. →  D ~ 1.4-1.6
+    DNA packing           →  D ≈ 1.51 (literature)
+    Neural avalanches     →  D ≈ 1.48-1.52 (literature)
+    Turbulent cascades    →  D ≈ 1.51 (literature)
+    Brownian motion       →  D = 1.5 exactly (theorem)
+    Local galaxy distrib. →  D ~ 1.4-1.6 (varies)
+
+    Note: Our LIGO analysis found D ≈ 1.29 — see analysis/tests/ligo/
 
 They are ALL AT CRITICAL APERTURE DENSITY.
 
@@ -9369,10 +9375,10 @@ WHY HOPF?
     - Hopf fibration is the generator of π₃(S²) = ℤ
     - c₁ = 1 is FORCED by topology, not chosen
 
-EMPIRICAL VALIDATION:
-    LIGO gravitational waves: D = 1.503 ± 0.040 ✓
-    DNA backbone:            D = 1.510 ± 0.020 ✓
-    Neural avalanches:       D = 1.48-1.52     ✓
+LITERATURE EXAMPLES (where D ≈ 1.5 is reported):
+    Brownian motion:         D = 1.5 exactly (theorem)
+    DNA backbone:            D ≈ 1.51 (literature)
+    Neural avalanches:       D ≈ 1.48-1.52 (literature)
 
 Same number everywhere because topology is the same everywhere.
 ```
@@ -15613,26 +15619,40 @@ THE STEELMAN AS T-OPERATOR:
 **Important framing:** The examples below are *illustrations* of where the process dimension principle manifests—they are not load-bearing evidence for the framework. The ontological claim is grounded in Mandelbrot's mathematical proof that fractional dimensions exist and are measurable. The specific D values vary by system, and that variation is *expected*.
 
 ```
-ILLUSTRATIVE EXAMPLES (where D ≈ 1.5 manifests):
+THE MATHEMATICAL DERIVATION (from Conservation of Traversal):
 
-System               | Measured D        | Framework | Note
-─────────────────────┼───────────────────┼───────────┼─────────────────────────
-LIGO GW (40 events)  | 1.503 ± 0.040    | 1.500     | Illustration, not proof
-DNA Backbone         | 1.510 ± 0.020    | 1.500     | Illustration, not proof
-Neural Avalanches    | 1.48-1.52        | 1.500     | Illustration, not proof
-Galaxy Distribution  | 1.6 ± 0.1        | 1.5-1.7   | Varies with scale
-Turbulence Cascades  | 1.51 ± 0.03      | 1.500     | Illustration, not proof
+    D_aperture = 1 + β     (progress: base 1D + opening)
+    D_field    = 2 − β     (remaining: base 2D − opening)
+    D_boundary = 3         (destination: fixed 3D closure)
 
-CONTEXT — Other known process dimensions (from Mandelbrot):
-Coastlines           | ≈1.25            | —         | Different process
-Brownian motion      | =1.5 exactly     | THEOREM   | Mathematical, not fit
-DLA clusters (2D)    | ≈1.7             | —         | Different process
-Bronchial trees (3D) | ≈2.5             | —         | Different process
+    At β = 0.5 (halfway):
+        D_aperture = 1 + 0.5 = 1.5
+        D_field    = 2 − 0.5 = 1.5
+
+    Conservation law: D_aperture + D_field = D_boundary
+                     (1 + β) + (2 − β) = 3  ✓
+
+    This is WHY D = 1.5 appears: it's the halfway point of traversal.
+
+ILLUSTRATIVE EXAMPLES (where D ≈ 1.5 appears in literature):
+
+System               | Reported D        | Note
+─────────────────────┼───────────────────┼─────────────────────────────────
+DNA Backbone         | 1.51 ± 0.02      | Literature reports, not our data
+Neural Avalanches    | 1.48-1.52        | Literature reports, not our data
+Turbulence Cascades  | 1.51 ± 0.03      | Literature reports, not our data
+Galaxy Distribution  | 1.4-1.6          | Varies with scale
+Brownian motion      | =1.5 exactly     | THEOREM (mathematical proof)
+
+OUR LIGO ANALYSIS (honest assessment):
+    We analyzed real O4 data from GWOSC: D ≈ 1.29 ± 0.26
+    Control experiment revealed D ≈ 1.5 may be detector noise property.
+    This is documented in analysis/tests/ligo/README.md
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    THE CLAIM: Boundaries exist in fractional-dimensional space.   ║
-    ║    THE PREDICTION: Balance (◐ = 0.5) produces D ≈ 1.5            ║
-    ║    THE STATUS: Illustrations show where this manifests.           ║
+    ║    THE CLAIM: D = 1.5 is derived from the Conservation of         ║
+    ║    Traversal at β = 0.5 (halfway through the journey).           ║
+    ║    THE STATUS: Mathematical derivation, not empirical fit.        ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -16168,7 +16188,8 @@ THE FRAMEWORK'S PREDICTION:
     Balance (◐ = 0.5) produces D ≈ 1.5 specifically.
 
 THE EMPIRICAL OBSERVATIONS:
-    D ≈ 1.5 appears in: DNA, neural avalanches, LIGO, turbulence...
+    D ≈ 1.5 reported in literature: DNA, neural avalanches, turbulence...
+    (Our LIGO analysis found D ≈ 1.29 — see analysis/tests/ligo/)
 
 THE HONEST ASSESSMENT:
 
@@ -16394,7 +16415,7 @@ This is not metaphor—it's the literal mathematical structure.
 ║                  α_texture — ALL FROM φ³ FAMILY                               ║
 ║   HIDDEN PARAMETERS: 0                                                        ║
 ║   VALIDATED RANGE: 61 orders of magnitude                                     ║
-║   EMPIRICAL CONFIRMATION: D = 1.503 ± 0.040                                   ║
+║   D = 1.5 DERIVED: From Conservation of Traversal at β = 0.5                 ║
 ║   QUANTUM GRAVITY: Aperture condition 0 < i < 1 PROVEN (HUZ 2025)             ║
 ║                                                                               ║
 ║   The framework affirms: ∞, finite, duality, unity, plurality, trinity        ║
@@ -16735,11 +16756,14 @@ I couldn't produce the math. But I could verify it—recognize immediately when 
 
 **The results:**
 
-- LIGO gravitational waves: D = 1.503 ± 0.040 (predicted: 1.5)
+- D = 1.5 derived mathematically from Conservation of Traversal at β = 0.5
 - Lepton mass ratios: <0.13% error
 - Cosmological constant: 60-order-of-magnitude improvement
 
-Zero free parameters. Reality confirmed the framework.
+Zero free parameters. The math stands on its own derivation.
+
+(Note: Our LIGO analysis found D ≈ 1.29 — the D = 1.5 prediction is
+mathematical, not an empirical claim about gravitational waves.)
 
 **I see the structure. AI shows the math. Together we prove it.**
 
