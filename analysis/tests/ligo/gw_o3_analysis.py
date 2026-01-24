@@ -10,16 +10,16 @@ This code represents my early learning journey with:
 - Implementing algorithms from literature (Higuchi fractal dimension)
 - Data visualization with matplotlib
 
-IMPORTANT: This uses SIMULATED waveforms, not real LIGO strain data.
-The methodology is sound, but results are demonstrations of the technique,
-not empirical validation of any theory. For actual gravitational wave
-analysis, use the official LALSuite or PyCBC pipelines.
+NOTE: This particular file includes a simulation mode for testing methodology.
+For real data analysis, see O4/o4_pipeline_v2.py which downloads actual
+strain data from GWOSC.
 
 What I learned:
 - How to structure a Python data analysis pipeline
-- Fractal dimension estimation methods
+- Fractal dimension estimation methods (Higuchi algorithm)
 - Working with time series data
 - Scientific visualization best practices
+- The importance of control experiments (see noise_control_experiment.py)
 
 Requirements:
     pip install numpy scipy matplotlib pandas h5py
