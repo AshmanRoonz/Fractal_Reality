@@ -160,9 +160,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 
 ### Core Path Pages (in `/pages`)
 
-- [**pages/experience.html**](https://fractalreality.ca/pages/experience.html) — Experiential path: Fractal Wholeness Principle
-- [**pages/understand.html**](https://fractalreality.ca/pages/understand.html) — Understanding path: Convergence & Emergence
-- [**pages/prove.html**](https://fractalreality.ca/pages/prove.html) — Mathematical path: Proofs and validation
+- [**pages/experience.html**](https://fractalreality.ca/pages/experience.html) — Visualization
 
 ---
 
