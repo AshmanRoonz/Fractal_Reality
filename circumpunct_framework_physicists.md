@@ -2218,6 +2218,8 @@ predict Δφ → 0 between participants.
 
 ### 7.5 Critical Falsification Tests
 
+> **See also: [Methodological Status](https://fractalreality.ca/methodological_status.html)** — Detailed epistemic categorization distinguishing internal consistency checks, structural invariants, and external validation criteria.
+
 The framework is falsified if:
 
 1. **D(◐) relationship fails:** Systems at measured ◐ don't show D = 1 + ◐

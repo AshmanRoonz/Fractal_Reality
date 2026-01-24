@@ -12,6 +12,7 @@
 |----------|-------------|
 | **[THEORY_OF_EVERYTHING.md](THEORY_OF_EVERYTHING.md)** | The complete unified framework (18 chapters) |
 | **[circumpunct_framework_physicists.md](circumpunct_framework_physicists.md)** | Rigorous formulation for working physicists |
+| **[Methodological Status](https://fractalreality.ca/methodological_status.html)** | Epistemic categories & validation pathways |
 | **[docs/](docs/)** | Interactive website visualizations at [fractalreality.ca](https://fractalreality.ca) |
 
 *The [Path_of_Learning/](Path_of_Learning/) folder contains the development journey and supporting materials.*
@@ -186,6 +187,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 
 ### Physics & Mathematics
 
+- [**methodological_status.html**](https://fractalreality.ca/methodological_status.html) — Epistemic categories & validation pathways
 - [**quantum.html**](https://fractalreality.ca/quantum.html) — Living Mandelbrot boundary walker visualization
 - [**braid-visualizer.html**](https://fractalreality.ca/braid-visualizer.html) — Topological quantum computer with braid group B₃
 - [**trinity_braid.html**](https://fractalreality.ca/trinity_braid.html) — Trinity braid topology visualization

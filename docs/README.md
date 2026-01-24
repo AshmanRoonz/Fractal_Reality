@@ -38,6 +38,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 
 ### Physics & Mathematics
 
+- [**methodological_status.html**](https://fractalreality.ca/methodological_status.html) — Epistemic categories & validation pathways
 - [**quantum.html**](https://fractalreality.ca/quantum.html) — Living Mandelbrot boundary walker visualization
 - [**braid-visualizer.html**](https://fractalreality.ca/braid-visualizer.html) — Topological quantum computer with braid group B₃
 - [**trinity_braid.html**](https://fractalreality.ca/trinity_braid.html) — Trinity braid topology visualization

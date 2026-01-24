@@ -16358,6 +16358,8 @@ STATUS KEY:
 
 ## CHAPTER 28: FALSIFICATION
 
+> **See also: [Methodological Status](https://fractalreality.ca/methodological_status.html)** — A detailed breakdown of epistemic categories (internal consistency, structural invariants, and external validation) with explicit criteria for each claim type.
+
 ```
 THE D(◐) RELATIONSHIP — EMPIRICALLY TESTABLE:
 
