@@ -1,299 +1,159 @@
 # Fractal Reality Website
 
-**Interactive website centered on the Circumpunct Theory and Fractal Wholeness Principle**
+Interactive visualizations and tools for exploring The Circumpunct Theory.
 
-## Overview
-
-This website presents the Fractal Reality framework through an experiential, visually stunning interface. The design philosophy centers on **you ARE the fractal** — making the mathematics and philosophy feel lived rather than just understood.
-
-### ⊙ The Circumpunct Theory - Core Foundation
-
-The website is now organized around **The Circumpunct Theory**, presenting the complete framework through the symbol ⊙:
-
-**[Circumpunct Quick Reference](../Energy_Aperture_Power/Circumpunct_Quick_Reference.md)** - Essential guide to symbols, constants, and predictions
-
-**[Circumpunct Theory Complete](../Energy_Aperture_Power/Circumpunct_Theory_Complete.md)** - Full theoretical foundation with proofs
-
-**Core principle:** ⊙ = M·Å·Φ configuration
-- M = Matter boundary
-- Å = Aperture (energy-power conversion site)
-- Φ = Field structure
-
-**Universal constants:**
-- D = 1.5 (fractal dimension at all conversion sites)
-- β = 0.5 (branching parameter in all tree structures)
-- 64 states (from binary M·Å·Φ configurations)
-- 3 generations (maximum stable particle families)
-
-## Design Philosophy
-
-### The Core Structure
-
-The website is organized around **three exploration paths**:
-
-1. **EXPERIENCE IT** → [Fractal Wholeness Principle](pages/experience.html)
-   - For seekers, contemplatives, anyone asking "What am I?"
-   - Experiential bridge between mathematics and lived reality
-   - Meditation, ethics, and direct recognition
-
-2. **UNDERSTAND IT** → [Convergence & Emergence](pages/understand.html)
-   - For those wanting to understand the process
-   - How reality maintains itself through ∇ ⊗ ℰ
-   - Why β = 0.5 and D = 1.5 are necessary
-
-3. **PROVE IT** → [Mathematical Foundations](pages/prove.html)
-   - For scientists and skeptics
-   - Wholeness Structure Theorem, empirical validation
-   - Zero free parameters, all predictions derived
-
-### Visual Theme
-
-**Cosmic Consciousness Aesthetic:**
-- Deep space colors (purples, cyans, golds)
-- Animated fractal particle background representing ∇ ⊗ ℰ
-- Smooth transitions and interactive elements
-- Symbols (∞, X, ⊙, ⊗) used visually throughout
-
-## File Structure
-
-```
-website/
-├── index.html              # Homepage - "You ARE the Fractal"
-├── css/
-│   └── styles.css          # Complete styling with cosmic theme
-├── js/
-│   ├── fractal-background.js    # Animated fractal particle system
-│   └── interactions.js          # Scale explorer and interactivity
-├── pages/
-│   ├── experience.html     # Path 1: Fractal Wholeness Principle
-│   ├── understand.html     # Path 2: Convergence & Emergence
-│   └── prove.html          # Path 3: Mathematical Foundations
-└── images/                 # (Reserved for future assets)
-```
-
-## Features
-
-### Homepage (index.html)
-
-1. **Hero Section**
-   - Large animated title: "You ARE the Fractal"
-   - Core equation: ⊙ = ∞ ⊗ X
-   - Immediately establishes the experiential nature
-
-2. **The Triple Identity**
-   - Three interactive cards (Whole, Part, Connection)
-   - Hover effects and click animations
-   - Shows simultaneous nature of ⊙
-
-3. **Interactive Scale Explorer**
-   - Click through 5 scales: Cosmic → Planetary → Human → Cellular → Quantum
-   - Live updates showing formula and description
-   - Demonstrates fractal nesting
-
-4. **Three Paths**
-   - Beautiful cards linking to the three exploration pages
-   - 3D tilt effects on hover
-   - Clear descriptions of what each path offers
-
-5. **What This Resolves**
-   - Grid of 6 major problems solved
-   - Hard problem, measurement problem, free will, etc.
-   - Shows philosophical implications
-
-6. **The Recognition**
-   - Poetic presentation of the core realization
-   - "You ARE universe manifesting"
-   - Validation frequency information
-
-### Path Pages
-
-Each path page includes:
-- Consistent navigation (back to home)
-- Themed color scheme
-- Deep dive into specific aspect
-- Links to full documents in repository
-- Cross-links to other paths
-
-### Interactive Elements
-
-1. **Fractal Background Animation**
-   - Canvas-based particle system
-   - Particles represent ⊙ (wholes)
-   - Connections represent ⊗ (validated links)
-   - Moves according to ∇ ⊗ ℰ dynamics
-   - Central pulsing ⊙ symbol
-
-2. **Scale Explorer**
-   - Click markers to switch scales
-   - Smooth transitions
-   - Live formula updates
-   - Shows your triple identity at each level
-
-3. **Card Interactions**
-   - Identity cards pulse on click
-   - Path cards have 3D tilt effect
-   - Smooth hover transitions
-
-4. **Scroll Animations**
-   - Sections fade in as you scroll
-   - Smooth reveal effects
-   - Maintains engagement
-
-## Typography & Colors
-
-### Fonts
-- **Main text:** Space Grotesk (modern, geometric, spacious)
-- **Code/formulas:** JetBrains Mono (clean monospace)
-
-### Color Palette
-```css
---primary-bg: #0a0e1a      (Deep space black)
---accent-purple: #a78bfa   (∞ - Infinite/subjective)
---accent-cyan: #22d3ee     (X - Thing/objective)
---accent-gold: #fbbf24     (⊙ - Wholeness)
---connection-color: #f472b6 (⊗ - Connection/validation)
-```
-
-### Symbol Meanings
-- **∞** (purple) = Openness, Subjectivity, Infinite
-- **X** (cyan) = Thing, Objectivity, Finite
-- **⊙** (gold) = Wholeness, Complete Being
-- **⊗** (pink/purple) = Connection, Validation, Consciousness
-
-## Deployment
-
-### Local Testing
-
-Simply open `index.html` in a modern web browser. All assets are relative paths.
-
-```bash
-# Navigate to website directory
-cd /path/to/Fractal_Reality/website
-
-# Open in browser (macOS)
-open index.html
-
-# Open in browser (Linux)
-xdg-open index.html
-
-# Or use a local server
-python -m http.server 8000
-# Then visit http://localhost:8000
-```
-
-### Production Deployment
-
-**Option 1: GitHub Pages**
-1. Enable GitHub Pages in repository settings
-2. Set source to `main` branch, `/website` folder
-3. Site will be available at `https://username.github.io/Fractal_Reality/`
-
-**Option 2: Custom Domain (FractalReality.ca)**
-1. Deploy to Netlify, Vercel, or similar
-2. Point custom domain DNS
-3. Configure SSL certificate
-
-**Option 3: Static Hosting**
-- Upload entire `website/` directory to any static host
-- No server-side processing required
-- Pure HTML/CSS/JS
-
-## Browser Compatibility
-
-**Fully supported:**
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-
-**Features used:**
-- CSS Grid & Flexbox
-- CSS Custom Properties (variables)
-- Canvas API
-- ES6 JavaScript
-- CSS backdrop-filter (graceful degradation)
-
-## Performance Considerations
-
-### Optimizations
-- Minimal external dependencies (only Google Fonts)
-- Canvas animation at 60fps with requestAnimationFrame
-- CSS transforms for smooth animations (GPU accelerated)
-- Lazy loading for off-screen content
-
-### Load Time
-- Initial load: ~100KB (gzipped)
-- Fonts: ~50KB (Google Fonts CDN)
-- No images currently (pure CSS/Canvas graphics)
-
-## Customization
-
-### Adjusting Colors
-Edit CSS custom properties in `css/styles.css`:
-```css
-:root {
-    --accent-purple: #a78bfa;  /* Change ∞ color */
-    --accent-cyan: #22d3ee;    /* Change X color */
-    --accent-gold: #fbbf24;    /* Change ⊙ color */
-}
-```
-
-### Adjusting Fractal Animation
-Edit parameters in `js/fractal-background.js`:
-```javascript
-this.particleCount = 100;     // Number of particles
-this.maxDistance = 150;       // Connection distance
-```
-
-### Adding Content
-- Edit HTML directly in `index.html` or page files
-- Follow existing structure for consistency
-- Maintain the cosmic theme
-
-## Future Enhancements
-
-**Planned:**
-- [ ] 3D WebGL fractal visualization
-- [ ] Interactive D(Θ) calculator
-- [ ] Live LIGO data integration
-- [ ] Meditation timer with β = 0.5 feedback
-- [ ] Mobile-optimized touch interactions
-- [ ] Dark/light mode toggle
-- [ ] Accessibility improvements (WCAG 2.1 AA)
-- [ ] Internationalization (i18n)
-
-**Possible:**
-- [ ] WebGL shader for ∇ ⊗ ℰ process visualization
-- [ ] Real-time β calculation from user biometrics
-- [ ] Interactive proof explorer
-- [ ] Community contributions section
-- [ ] Blog/updates section
-
-## Philosophy
-
-This website embodies the framework it presents:
-
-- **Whole:** Complete presentation of the theory
-- **Part:** Each page is part of larger whole
-- **Connection:** Interactive elements create validation (⊗)
-- **Fractal:** Same structure at every scale (homepage → pages → sections)
-- **β = 0.5:** Balance between content (∇) and space (ℰ)
-- **D = 1.5:** Design is neither too sparse nor too dense
-
-The website itself IS a ⊙—containing ∞ (the experiential) and X (the mathematical), connected through ⊗ (the interactive experience).
-
-## Credits
-
-**Design & Development:** Claude Code (Anthropic)
-**Framework:** Ashman Roonz
-**Mathematics of Wholeness:** Fractal Reality Research Group
-
-## License
-
-This website is part of the Fractal Reality repository.
-See main repository for license information.
+**Live site: [fractalreality.ca](https://fractalreality.ca)**
 
 ---
 
-**Version 1.0 — November 2025**
+## Main Pages
 
-*You ARE the fractal. This website helps you recognize it.*
+- [**index.html**](https://fractalreality.ca/index.html) — Main homepage with interactive circumpunct symbol
+- [**index_new.html**](https://fractalreality.ca/index_new.html) — Alternate homepage design
+- [**index_old.html**](https://fractalreality.ca/index_old.html) — Original homepage version
+- [**index-no_animation.html**](https://fractalreality.ca/index-no_animation.html) — Homepage without particle animations
+
+### Core Path Pages (in `/pages`)
+
+- [**pages/experience.html**](https://fractalreality.ca/pages/experience.html) — Experiential path: Fractal Wholeness Principle
+- [**pages/understand.html**](https://fractalreality.ca/pages/understand.html) — Understanding path: Convergence & Emergence
+- [**pages/prove.html**](https://fractalreality.ca/pages/prove.html) — Mathematical path: Proofs and validation
+
+---
+
+## Theory Visualizations
+
+### Circumpunct & Framework
+
+- [**circumpunct-presentation.html**](https://fractalreality.ca/circumpunct-presentation.html) — Slideshow presentation of the theory
+- [**circumpunct_presentation.html**](https://fractalreality.ca/circumpunct_presentation.html) — Alternative theory presentation
+- [**circumpunct-v3.html**](https://fractalreality.ca/circumpunct-v3.html) — Version 3 interactive visualization
+- [**circumpunct-v5.html**](https://fractalreality.ca/circumpunct-v5.html) — Version 5 interactive visualization
+- [**circumpunct_interactive_theory.html**](https://fractalreality.ca/circumpunct_interactive_theory.html) — Interactive predictions explorer with live calculations
+- [**circumpunct_math.html**](https://fractalreality.ca/circumpunct_math.html) — Mathematical foundations visualization
+- [**circumath.html**](https://fractalreality.ca/circumath.html) — Circumpunct mathematics explorer
+- [**circumpunct-swarm.html**](https://fractalreality.ca/circumpunct-swarm.html) — Swarm dynamics visualization
+- [**circumpunct_dimensions.html**](https://fractalreality.ca/circumpunct_dimensions.html) — Dimensional analysis tool
+
+### 64-State Architecture
+
+- [**64-state_circumpunct_particle_table.html**](https://fractalreality.ca/64-state_circumpunct_particle_table.html) — Topological quantum computer with B₃ braid visualization
+- [**iching_64state_visualizer.html**](https://fractalreality.ca/iching_64state_visualizer.html) — I Ching ↔ Circumpunct 64-state isomorphism explorer
+- [**master-table.html**](https://fractalreality.ca/master-table.html) — Master reference table of all 64 states
+
+### Physics & Mathematics
+
+- [**quantum.html**](https://fractalreality.ca/quantum.html) — Living Mandelbrot boundary walker visualization
+- [**braid-visualizer.html**](https://fractalreality.ca/braid-visualizer.html) — Topological quantum computer with braid group B₃
+- [**trinity_braid.html**](https://fractalreality.ca/trinity_braid.html) — Trinity braid topology visualization
+- [**entropy-foundation.html**](https://fractalreality.ca/entropy-foundation.html) — The entropy argument: why reality requires the circumpunct
+- [**energy_scale_phase_visualization.html**](https://fractalreality.ca/energy_scale_phase_visualization.html) — Energy scale and phase transitions
+- [**surface_field_formalization.html**](https://fractalreality.ca/surface_field_formalization.html) — Surface field mathematical formalization
+- [**geometric_periodic_table.html**](https://fractalreality.ca/geometric_periodic_table.html) — Musical periodic table with Fibonacci + 7-note scale
+- [**aperture_falsification_presentation.html**](https://fractalreality.ca/aperture_falsification_presentation.html) — Falsification criteria presentation
+- [**phi_resonance.html**](https://fractalreality.ca/phi_resonance.html) — Golden ratio φ resonance patterns
+- [**fractal-tesla-resonator-simulation.html**](https://fractalreality.ca/fractal-tesla-resonator-simulation.html) — Tesla resonator fractal simulation
+- [**hypercube.html**](https://fractalreality.ca/hypercube.html) — 4D hypercube visualization
+- [**dimensions.html**](https://fractalreality.ca/dimensions.html) — Dimensional exploration tool
+- [**lens.html**](https://fractalreality.ca/lens.html) — Lens/aperture visualization
+
+### Wholeness & Structure
+
+- [**wholes-parts.html**](https://fractalreality.ca/wholes-parts.html) — Wholes and parts relationship explorer
+- [**wholeness_field_evolution.html**](https://fractalreality.ca/wholeness_field_evolution.html) — Field evolution dynamics
+- [**soul_array_visualization.html**](https://fractalreality.ca/soul_array_visualization.html) — Soul array structure visualization
+- [**mind_matter.html**](https://fractalreality.ca/mind_matter.html) — Mind-matter interface exploration
+- [**you_are_a_donut.html**](https://fractalreality.ca/you_are_a_donut.html) — Toroidal self-reference topology
+
+---
+
+## Consciousness & Spirituality
+
+- [**chakras.html**](https://fractalreality.ca/chakras.html) — Chakras as frequency bands of the one aperture
+- [**consciousness-path-sim.html**](https://fractalreality.ca/consciousness-path-sim.html) — Consciousness path simulation
+- [**the_bridge_presentation.html**](https://fractalreality.ca/the_bridge_presentation.html) — Bridge between science and spirituality
+- [**framework_bridge_visual.html**](https://fractalreality.ca/framework_bridge_visual.html) — Framework bridge visualization
+- [**binaural_beats_51.html**](https://fractalreality.ca/binaural_beats_51.html) — Binaural beats audio tool
+- [**resonance_101.html**](https://fractalreality.ca/resonance_101.html) — Introduction to resonance concepts
+- [**path_narrated.html**](https://fractalreality.ca/path_narrated.html) — Narrated spiritual path guide
+
+---
+
+## Ethics & Truth
+
+- [**ethics.html**](https://fractalreality.ca/ethics.html) — Ethical framework derived from circumpunct
+- [**truth_and_god.html**](https://fractalreality.ca/truth_and_god.html) — Truth and divinity exploration
+- [**truth_and_us.html**](https://fractalreality.ca/truth_and_us.html) — Truth in human relationships
+- [**truth_seekers_cree.html**](https://fractalreality.ca/truth_seekers_cree.html) — Truth seeker's creed
+- [**the_steelman_way.html**](https://fractalreality.ca/the_steelman_way.html) — Steelmanning as ethical practice
+- [**how_to_realize_real_lies.html**](https://fractalreality.ca/how_to_realize_real_lies.html) — Recognizing deception patterns
+
+---
+
+## Personal Healing & Relationships
+
+- [**love_harmonics_ebook (6).html**](https://fractalreality.ca/love_harmonics_ebook%20(6).html) — Love Harmonics: Resonance Between Souls ebook
+- [**love_channels.html**](https://fractalreality.ca/love_channels.html) — Channels of love and connection
+- [**love_kungfu.html**](https://fractalreality.ca/love_kungfu.html) — Love as martial art/practice
+- [**Landen_Love.html**](https://fractalreality.ca/Landen_Love.html) — Personal reflection on love
+- [**Landen_Love2.html**](https://fractalreality.ca/Landen_Love2.html) — Continued reflection on love
+- [**Love_Infected.html**](https://fractalreality.ca/Love_Infected.html) — Love as transformative infection
+- [**UNDERSTANDING_NARCISSISTIC_ABUSE.html**](https://fractalreality.ca/UNDERSTANDING_NARCISSISTIC_ABUSE.html) — Guide to understanding narcissistic abuse
+- [**circumpunct_narcissism.html**](https://fractalreality.ca/circumpunct_narcissism.html) — Narcissism through circumpunct lens
+- [**circumpunct_theory_of_pathology.html**](https://fractalreality.ca/circumpunct_theory_of_pathology.html) — Pathology as circumpunct imbalance
+- [**the_restoration_protocol.html**](https://fractalreality.ca/the_restoration_protocol.html) — Healing and restoration guide
+
+---
+
+## Philosophical Explorations
+
+- [**demon_hunter.html**](https://fractalreality.ca/demon_hunter.html) — What Rumi Taught Us: seeing clearly
+- [**the_demon_hunter_trap.html**](https://fractalreality.ca/the_demon_hunter_trap.html) — The trap of demon hunting
+- [**jedi.html**](https://fractalreality.ca/jedi.html) — Jedi philosophy through circumpunct lens
+- [**the_matrix_has_you.html**](https://fractalreality.ca/the_matrix_has_you.html) — Matrix metaphor exploration
+- [**noble_lie_virus_outbreak.html**](https://fractalreality.ca/noble_lie_virus_outbreak.html) — The noble lie as viral pattern
+- [**lie_trap.html**](https://fractalreality.ca/lie_trap.html) — How lies trap consciousness
+- [**i_believed_a_lie.html**](https://fractalreality.ca/i_believed_a_lie.html) — Personal reflection on deception
+- [**I_cant_say.html**](https://fractalreality.ca/I_cant_say.html) — The unspeakable in language
+- [**everybody_picks_their_nose.html**](https://fractalreality.ca/everybody_picks_their_nose.html) — Universal human behaviors
+- [**reality_manipulation_sandbox.html**](https://fractalreality.ca/reality_manipulation_sandbox.html) — Reality manipulation concepts
+- [**varpet_tribute.html**](https://fractalreality.ca/varpet_tribute.html) — Tribute page
+
+---
+
+## Interactive Tools & Games
+
+- [**chess.html**](https://fractalreality.ca/chess.html) — Pokemon Chess game
+- [**checkers.html**](https://fractalreality.ca/checkers.html) — Checkers game
+- [**pokemon-battle-helper.html**](https://fractalreality.ca/pokemon-battle-helper.html) — Pokemon battle type calculator
+- [**pokemon-battler.html**](https://fractalreality.ca/pokemon-battler.html) — Pokemon battle simulator
+- [**my_randomizer.html**](https://fractalreality.ca/my_randomizer.html) — Random selection tool
+- [**number-reader.html**](https://fractalreality.ca/number-reader.html) — Number reading utility
+- [**ratebid.html**](https://fractalreality.ca/ratebid.html) — Rate/bid calculator
+- [**simulators.html**](https://fractalreality.ca/simulators.html) — Collection of simulations
+- [**bluetooth-finder-directional.html**](https://fractalreality.ca/bluetooth-finder-directional.html) — Bluetooth device finder
+- [**antivirus.html**](https://fractalreality.ca/antivirus.html) — Antivirus metaphor tool
+
+---
+
+## Miscellaneous
+
+- [**a.html**](https://fractalreality.ca/a.html) — Test/experimental page
+
+---
+
+## Directory Structure
+
+```
+docs/
+├── index.html              # Main homepage
+├── css/                    # Stylesheets
+├── js/                     # JavaScript files
+├── pages/                  # Core path pages (experience, understand, prove)
+├── images/                 # Image assets
+└── simulations/            # Interactive simulations
+```
+
+---
+
+*Part of the Fractal Reality project — [fractalreality.ca](https://fractalreality.ca)*
