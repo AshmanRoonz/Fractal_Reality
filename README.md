@@ -118,7 +118,7 @@ The framework predicts D = 1.5 at β = 0.5 (the "halfway" point). This is derive
 - D_aperture = 1 + β = 1.5 at β = 0.5
 - D_field = 2 − β = 1.5 at β = 0.5
 
-**Note on LIGO analysis:** The LIGO code in this repository was my learning exercise for scientific data pipelines (Python, GWOSC API, HDF5 files). It uses simulated waveforms, not real strain data. See [analysis/tests/ligo/README.md](analysis/tests/ligo/README.md). The D = 1.5 prediction stands on its mathematical derivation.
+**Note on LIGO analysis:** The LIGO code was my learning exercise for scientific data pipelines. We downloaded and analyzed real O4 strain data from GWOSC, but found D ≈ 1.29 (not 1.5). A control experiment suggested D ≈ 1.5 in earlier runs may have been detector noise. See [analysis/tests/ligo/README.md](analysis/tests/ligo/README.md). The D = 1.5 prediction stands on its mathematical derivation, independent of this empirical exploration.
 
 D ≈ 1.5 has been reported in various systems in the literature (turbulence cascades, neural avalanches, some biological structures). Whether these reflect this framework specifically or a more general property is an open question.
 
