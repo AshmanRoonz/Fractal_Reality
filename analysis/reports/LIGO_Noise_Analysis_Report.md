@@ -1,8 +1,10 @@
 # LIGO Fractal Dimension Analysis: Noise Control Experiment
 
 **Date:** January 3, 2026
-**Status:** Critical methodological finding
-**Evidence:** Real LIGO O4 data analysis (N=36 observations)
+**Status:** Learning Exercise - Methodological Exploration
+**Context:** This analysis was part of my journey learning scientific data pipelines, Python, and GitHub.
+
+> **Note:** This entire LIGO analysis directory represents my early learning experiments with scientific computing. The analysis below documents what I learned about proper control experiments and methodology - valuable lessons even though the results don't validate any particular theory. The Circumpunct Framework's mathematical foundations (D = 1.5 at β = 0.5) are derived from dimensional requirements, not from this exploratory data analysis.
 
 ---
 

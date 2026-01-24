@@ -1,12 +1,25 @@
 """
 LIGO O3 Gravitational Wave Fractal Dimension Analysis
 =====================================================
-SIMPLIFIED VERSION - Uses pre-downloaded data or simulation
+LEARNING EXERCISE - My First Scientific Data Pipeline
 
-This version works WITHOUT gwpy (avoids C++ compiler requirement).
-Two modes:
-1. Load pre-downloaded HDF5 files from GWOSC
-2. Simulate realistic GW signals for testing methodology
+This code represents my early learning journey with:
+- GitHub and version control
+- Python scientific computing (numpy, scipy, pandas)
+- Accessing real research data (GWOSC API, HDF5 files)
+- Implementing algorithms from literature (Higuchi fractal dimension)
+- Data visualization with matplotlib
+
+IMPORTANT: This uses SIMULATED waveforms, not real LIGO strain data.
+The methodology is sound, but results are demonstrations of the technique,
+not empirical validation of any theory. For actual gravitational wave
+analysis, use the official LALSuite or PyCBC pipelines.
+
+What I learned:
+- How to structure a Python data analysis pipeline
+- Fractal dimension estimation methods
+- Working with time series data
+- Scientific visualization best practices
 
 Requirements:
     pip install numpy scipy matplotlib pandas h5py

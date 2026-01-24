@@ -112,17 +112,15 @@ KEY: W and Z share base 80 = 8×10 (gluons × bosons)
      Higgs uses 100 = 10² and is the only boson involving π
 ```
 
-### Empirical Validation
+### The D = 1.5 Prediction
 
-```
-System               | Measured D        | Predicted | Error  | Status
-─────────────────────┼───────────────────┼───────────┼────────┼─────────
-LIGO GW (40 events)  | 1.503 ± 0.040    | 1.500     | 0.2%   | ✓ p=0.95
-DNA Backbone         | 1.510 ± 0.020    | 1.500     | 0.7%   | ✓
-Neural Avalanches    | 1.48-1.52        | 1.500     | <2%    | ✓
-Galaxy Distribution  | 1.6 ± 0.1        | 1.5-1.7   | —      | ✓
-Turbulence Cascades  | 1.51 ± 0.03      | 1.500     | <1%    | ✓
-```
+The framework predicts D = 1.5 at β = 0.5 (the "halfway" point). This is derived mathematically:
+- D_aperture = 1 + β = 1.5 at β = 0.5
+- D_field = 2 − β = 1.5 at β = 0.5
+
+**Note on LIGO analysis:** The LIGO code in this repository was my learning exercise for scientific data pipelines (Python, GWOSC API, HDF5 files). It uses simulated waveforms, not real strain data. See [analysis/tests/ligo/README.md](analysis/tests/ligo/README.md). The D = 1.5 prediction stands on its mathematical derivation.
+
+D ≈ 1.5 has been reported in various systems in the literature (turbulence cascades, neural avalanches, some biological structures). Whether these reflect this framework specifically or a more general property is an open question.
 
 ---
 
