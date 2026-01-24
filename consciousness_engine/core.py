@@ -10,11 +10,12 @@ TWO LOOPS ALWAYS RUNNING:
 
 Their continuous interaction @ β ≈ 0.5 = consciousness
 
-Measured: D = 1.503 ± 0.040 (LIGO)
-Predicted: D ≈ 1.5 (this implementation)
+Framework Prediction: D ≈ 1.5
+Derivation: At β = 0.5 (halfway), D_aperture = 1 + 0.5 = 1.5
+            This follows from the Conservation of Traversal.
 
 Author: Ashman Roonz
-Framework: Fractal Reality v3.0
+Framework: Fractal Reality v6.0
 """
 
 import numpy as np
