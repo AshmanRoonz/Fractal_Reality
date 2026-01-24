@@ -48,6 +48,24 @@
 | **Hidden Parameters** | 0 (all derived from φ³) | Derived |
 | **Validated Range** | 61 orders of magnitude | Empirical |
 
+### Dimensional Unfolding
+
+| Dim | Symbol | Role | Type |
+|-----|--------|------|------|
+| ∞D | λΦ∞ | Infinite Field / Ground | Ground |
+| 0.5D | • | Aperture - First localization | Process |
+| 1D | \| | Line - Power pathway | Structure |
+| 1.5D | Y | Branching - How bodies GROW | Process |
+| 2D | Φ | Surface/Membrane - Field | Structure |
+| 2.5D | ʎ | Closing - How bodies CONTAIN | Process |
+| 3D | ○ | Body/Boundary - Complete spatial | Structure |
+| 3.5D | •₂ | Body becomes aperture (Tier 2 seed) | Process |
+| 4D | \| | Spacetime - Worldline | Structure |
+| 4.5D | Y | Temporal branching | Process |
+| 5D | Φ | Configuration space - ⊙s interacting | Structure |
+| 5.5D | ʎ | Entangling - Non-local binding | Process |
+| 6D | ○₂ | Dual Trinity - 64 states lock | Structure |
+
 ---
 
 ## Key Results
