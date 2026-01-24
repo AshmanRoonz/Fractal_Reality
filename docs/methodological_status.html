@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ Methodological Status — Circumpunct Framework</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+            options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --bg-deep: #08090c;
+            --bg-surface: #0d1117;
+            --bg-card: #151b23;
+            --bg-elevated: #1c232d;
+            
+            --gold: #d4a853;
+            --gold-dim: #a67c2e;
+            --gold-glow: rgba(212, 168, 83, 0.15);
+            
+            --cyan: #58a6ff;
+            --cyan-dim: #388bfd;
+            --cyan-glow: rgba(88, 166, 255, 0.12);
+            
+            --red: #f85149;
+            --red-dim: #da3633;
+            --red-glow: rgba(248, 81, 73, 0.12);
+            
+            --green: #3fb950;
+            --green-dim: #238636;
+            --green-glow: rgba(63, 185, 80, 0.12);
+            
+            --purple: #a371f7;
+            --purple-glow: rgba(163, 113, 247, 0.12);
+            
+            --orange: #f0883e;
+            --orange-glow: rgba(240, 136, 62, 0.12);
+            
+            --text: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-dim: #6e7681;
+            
+            --border: rgba(240, 246, 252, 0.1);
+            --border-accent: rgba(212, 168, 83, 0.3);
+            
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Crimson Pro', Georgia, serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            background: var(--bg-deep);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 19px;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 20%, rgba(212, 168, 83, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(88, 166, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 32px 100px;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding-bottom: 60px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 60px;
+        }
+        
+        .header-symbol {
+            font-size: 4rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 40px var(--gold-glow);
+        }
+        
+        h1 {
+            font-family: var(--font-display);
+            font-size: 2.8rem;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        /* Sections */
+        section {
+            margin-bottom: 4rem;
+        }
+        
+        h2 {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        h3 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--cyan);
+            margin: 2rem 0 1rem 0;
+        }
+        
+        p {
+            margin-bottom: 1.2rem;
+            color: var(--text-secondary);
+        }
+        
+        p strong {
+            color: var(--text);
+        }
+        
+        /* Status box */
+        .status-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .status-box.gold {
+            border-left: 4px solid var(--gold);
+            background: linear-gradient(135deg, var(--gold-glow), transparent);
+        }
+        
+        .status-box.cyan {
+            border-left: 4px solid var(--cyan);
+            background: linear-gradient(135deg, var(--cyan-glow), transparent);
+        }
+        
+        .status-box.green {
+            border-left: 4px solid var(--green);
+            background: linear-gradient(135deg, var(--green-glow), transparent);
+        }
+        
+        .status-box.red {
+            border-left: 4px solid var(--red);
+            background: linear-gradient(135deg, var(--red-glow), transparent);
+        }
+        
+        .status-box.orange {
+            border-left: 4px solid var(--orange);
+            background: linear-gradient(135deg, var(--orange-glow), transparent);
+        }
+        
+        .status-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+            color: inherit;
+            opacity: 0.8;
+        }
+        
+        .status-box.gold .status-label { color: var(--gold); }
+        .status-box.cyan .status-label { color: var(--cyan); }
+        .status-box.green .status-label { color: var(--green); }
+        .status-box.red .status-label { color: var(--red); }
+        .status-box.orange .status-label { color: var(--orange); }
+        
+        .status-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Equation display */
+        .equation {
+            font-family: var(--font-mono);
+            font-size: 1.3rem;
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            color: var(--gold);
+            border: 1px solid var(--border);
+        }
+        
+        /* Table */
+        .validation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+        }
+        
+        .validation-table th,
+        .validation-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .validation-table th {
+            font-family: var(--font-display);
+            font-weight: 500;
+            color: var(--gold);
+            background: var(--bg-card);
+        }
+        
+        .validation-table td {
+            color: var(--text-secondary);
+        }
+        
+        .validation-table tr:hover td {
+            background: var(--bg-card);
+        }
+        
+        .tag {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .tag.internal {
+            background: var(--cyan-glow);
+            color: var(--cyan);
+            border: 1px solid var(--cyan-dim);
+        }
+        
+        .tag.structural {
+            background: var(--gold-glow);
+            color: var(--gold);
+            border: 1px solid var(--gold-dim);
+        }
+        
+        .tag.external {
+            background: var(--green-glow);
+            color: var(--green);
+            border: 1px solid var(--green-dim);
+        }
+        
+        .tag.pending {
+            background: var(--orange-glow);
+            color: var(--orange);
+            border: 1px solid var(--orange);
+        }
+        
+        /* Falsification list */
+        .falsification-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .falsification-list li {
+            position: relative;
+            padding: 1rem 1rem 1rem 2.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        
+        .falsification-list li::before {
+            content: '✕';
+            position: absolute;
+            left: 1rem;
+            color: var(--red);
+            font-weight: bold;
+        }
+        
+        /* Quote box */
+        .quote-box {
+            border-left: 3px solid var(--text-dim);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--text-dim);
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        
+        .footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header class="header">
+            <div class="header-symbol">⊙</div>
+            <h1>Methodological Status</h1>
+            <p class="subtitle">Epistemic Categories & Validation Pathways</p>
+        </header>
+
+        <!-- Overview -->
+        <section>
+            <h2>What Kind of Framework Is This?</h2>
+            
+            <p>The Circumpunct Framework is a <strong>structural synthesis framework</strong> at an early stage of development. It is not yet empirical physics, not pure metaphysics, not psychology, not theology. It occupies the developmental space between:</p>
+            
+            <div class="status-box gold">
+                <div class="status-label">Current Status</div>
+                <p><strong>Structural synthesis framework</strong> that generates internal invariants, proposes external mappings, and explicitly invites falsification at the structural level first — with an empirical validation program in progress.</p>
+            </div>
+            
+            <p>This places the work in the same developmental category as early information theory, pre-empirical cybernetics, and control theory before standardized physical instantiations. The critical distinction is that we <em>name this status explicitly</em> rather than claiming what hasn't yet been demonstrated.</p>
+        </section>
+
+        <!-- Three Types of Validation -->
+        <section>
+            <h2>Three Types of Validation</h2>
+            
+            <p>Not all claims within the framework have the same epistemic status. We distinguish three categories:</p>
+            
+            <table class="validation-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>What It Tests</th>
+                        <th>What It Proves</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="tag internal">Internal</span></td>
+                        <td>Do the definitions hang together? Do operators behave stably under perturbation?</td>
+                        <td>Self-consistency of the formal system</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag structural">Structural</span></td>
+                        <td>Are claimed invariants genuinely invariant? What would constitute a category error?</td>
+                        <td>Logical necessity given the definitions</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag external">External</span></td>
+                        <td>Do framework predictions match independently measurable physical parameters?</td>
+                        <td>Correspondence with reality</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>Conflating these categories is a common error in both directions: critics dismiss internal consistency as meaningless, while proponents present it as empirical proof. Both are wrong.</p>
+        </section>
+
+        <!-- Internal Consistency -->
+        <section>
+            <h2>Internal Consistency Validation</h2>
+            
+            <h3>The β-Dimension Correlation (r ≈ 0.54)</h3>
+            
+            <div class="equation">D(β) = 2 − β</div>
+            
+            <div class="status-box cyan">
+                <div class="status-label">Epistemic Status: Internal Consistency Check</div>
+                <p>The observed correlation between β and fractal dimension D constitutes an <strong>internal consistency validation</strong>, not an external empirical confirmation. It demonstrates that the framework's operators, definitions, and measures behave coherently under simulation.</p>
+            </div>
+            
+            <p>This matters because incoherent formal systems cannot be developed further — they collapse under their own contradictions. But internal coherence is <strong>necessary, not sufficient</strong>. A perfectly consistent system can still fail to correspond to reality.</p>
+            
+            <h3>What Internal Validation Answers</h3>
+            <p>These checks confirm that:</p>
+            <p>• The operators behave stably under perturbation<br>
+            • Claimed invariants remain invariant across transformations<br>
+            • Definitions don't generate contradictions<br>
+            • The system is worth developing further</p>
+            
+            <h3>What It Does Not Answer</h3>
+            <p>Whether the framework describes anything real. That requires external validation.</p>
+        </section>
+
+        <!-- Structural Invariants -->
+        <section>
+            <h2>Structural Invariants</h2>
+            
+            <h3>The Conservation of Traversal</h3>
+            
+            <div class="equation">D<sub>aperture</sub> + D<sub>field</sub> = D<sub>boundary</sub></div>
+            
+            <div class="status-box gold">
+                <div class="status-label">Epistemic Status: Structural Invariant</div>
+                <p>This relation is not an empirical conservation law discovered by measurement. It is a <strong>structural invariant</strong> derived from the definition of traversal itself — expressing a necessary tradeoff between degrees of openness (aperture), mediation (field), and closure (boundary).</p>
+            </div>
+            
+            <h3>Why This Is Not a Tautology</h3>
+            
+            <p>The objection "you designed it to sum to 3" would be valid if we claimed to have <em>discovered</em> this through measurement. We don't. The claim is:</p>
+            
+            <div class="quote-box">
+                "If traversal is coherent, this invariant must hold. If it doesn't hold, the traversal model has broken."
+            </div>
+            
+            <p>This is <strong>structural falsifiability</strong>, not empirical. Compare: "A closed 2D surface embedded in space requires 3 dimensions" is not discovered by experiment — it is violated only by category error.</p>
+            
+            <h3>What Would Violate It?</h3>
+            
+            <p>The framework would be falsified by any system exhibiting:</p>
+            
+            <ul class="falsification-list">
+                <li>Coherent transformation without mediation (center-to-boundary direct coupling)</li>
+                <li>Mediation without dimensional cost (field traversal with no aperture reduction)</li>
+                <li>Boundary formation without corresponding field compression</li>
+                <li>Traversal that doesn't conserve total dimensional budget</li>
+            </ul>
+            
+            <p>No such system is currently known. Their discovery would invalidate the traversal model.</p>
+        </section>
+
+        <!-- External Validation -->
+        <section>
+            <h2>External Validation Program</h2>
+            
+            <div class="status-box green">
+                <div class="status-label">Status: In Progress</div>
+                <p>External validation requires mapping framework parameters to independently measurable physical quantities. The primary experimental program targets <strong>copper electrowinning</strong> as a concrete test system.</p>
+            </div>
+            
+            <h3>The Electrochemistry Protocol</h3>
+            
+            <p>The framework predicts that the ρ parameter (rotation rate / growth rate) will produce measurable effects on crystal formation:</p>
+            
+            <table class="validation-table">
+                <thead>
+                    <tr>
+                        <th>Prediction</th>
+                        <th>Observable</th>
+                        <th>Measurement Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ρ transition points</td>
+                        <td>Crystal grain size discontinuities</td>
+                        <td>Optical/electron microscopy</td>
+                    </tr>
+                    <tr>
+                        <td>Field compression signature</td>
+                        <td>Surface roughness vs. current density</td>
+                        <td>Profilometry</td>
+                    </tr>
+                    <tr>
+                        <td>Fractal dimension correlation</td>
+                        <td>Dendrite pattern complexity</td>
+                        <td>Box-counting analysis</td>
+                    </tr>
+                    <tr>
+                        <td>Phase coherence effects</td>
+                        <td>Crystal orientation distribution</td>
+                        <td>EBSD / X-ray diffraction</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>What Would Falsify Externally</h3>
+            
+            <ul class="falsification-list">
+                <li>No correlation between ρ and crystal morphology at any current density</li>
+                <li>Fractal dimensions inconsistent with predicted D(β) relationship</li>
+                <li>Phase transition points not corresponding to predicted ρ thresholds</li>
+                <li>System behaves as if field mediation is unnecessary</li>
+            </ul>
+            
+            <div class="status-box orange">
+                <div class="status-label">Honest Statement</div>
+                <p>This experimental program is planned, not completed. The framework's external validity is <strong>currently untested</strong>. We state this explicitly because intellectual honesty requires distinguishing between "internally coherent and structurally sound" and "empirically confirmed."</p>
+            </div>
+        </section>
+
+        <!-- Classification Table -->
+        <section>
+            <h2>Claim Classification</h2>
+            
+            <p>For transparency, here is how major framework claims are categorized:</p>
+            
+            <table class="validation-table">
+                <thead>
+                    <tr>
+                        <th>Claim</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>⊙ = • ⊗ Φ ⊗ ○ (triadic structure)</td>
+                        <td><span class="tag structural">Structural</span></td>
+                        <td>Definitional axiom</td>
+                    </tr>
+                    <tr>
+                        <td>D<sub>aperture</sub> + D<sub>field</sub> = D<sub>boundary</sub></td>
+                        <td><span class="tag structural">Structural</span></td>
+                        <td>Invariant from definitions</td>
+                    </tr>
+                    <tr>
+                        <td>r ≈ 0.54 correlation</td>
+                        <td><span class="tag internal">Internal</span></td>
+                        <td>Consistency validated</td>
+                    </tr>
+                    <tr>
+                        <td>Å(β) = e<sup>iπβ</sup> operator behavior</td>
+                        <td><span class="tag internal">Internal</span></td>
+                        <td>Consistency validated</td>
+                    </tr>
+                    <tr>
+                        <td>ρ predicts crystal morphology</td>
+                        <td><span class="tag external">External</span></td>
+                        <td><span class="tag pending">Pending</span></td>
+                    </tr>
+                    <tr>
+                        <td>Fine structure constant derivation</td>
+                        <td><span class="tag external">External</span></td>
+                        <td><span class="tag pending">Pending verification</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Addressing Common Critiques -->
+        <section>
+            <h2>Addressing Common Critiques</h2>
+            
+            <h3>"This is unfalsifiable"</h3>
+            <p>Falsification conditions are stated above. The framework can fail at three levels: internal consistency, structural integrity, and external correspondence. Each has explicit criteria.</p>
+            
+            <h3>"The math is just decoration"</h3>
+            <p>The mathematics serves two functions: (1) ensuring internal consistency through formal constraints, and (2) generating quantitative predictions for external testing. If the predictions fail, the mathematics was wrong.</p>
+            
+            <h3>"No neuroscience model supports this"</h3>
+            <p>Correct. This is a proposed framework, not a restatement of existing models. The appropriate question is whether it generates testable predictions that existing models do not — and whether those predictions succeed or fail.</p>
+            
+            <h3>"You validated your own system with your own definitions"</h3>
+            <p>Yes — at the internal consistency level. That's what internal validation means. External validation requires independent observables, which is why the electrochemistry program exists.</p>
+            
+            <h3>"Disagreement gets labeled as 'closed aperture'"</h3>
+            <p>Disagreement accompanied by evidence and logical argument is engagement. Disagreement accompanied by hostility and refusal to engage with stated falsification conditions is a different phenomenon. The framework distinguishes these — and critics are invited to test whether the distinction holds.</p>
+        </section>
+
+        <!-- Commitment -->
+        <section>
+            <h2>Our Commitment</h2>
+            
+            <div class="status-box gold">
+                <div class="status-label">Epistemic Commitment</div>
+                <p>We commit to updating this page as validation progresses. If external tests fail, we will report that failure. If structural assumptions prove untenable, we will revise them. The goal is truth, not confirmation.</p>
+            </div>
+            
+            <p>Science is not a destination but a method. The Circumpunct Framework is offered as a serious hypothesis with explicit falsification conditions — not as revealed truth immune to correction.</p>
+        </section>
+
+        <footer class="footer">
+            <p>Circumpunct Framework — <a href="https://fractalreality.ca">fractalreality.ca</a></p>
+            <p>Version 1.0 — January 2026</p>
+        </footer>
+    </main>
+</body>
+</html>
