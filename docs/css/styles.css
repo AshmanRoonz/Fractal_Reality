@@ -329,11 +329,20 @@ body {
     text-align: center;
 }
 
+/* Equation row with button inline */
+.equation-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 0.25rem;
+}
+
 .circumpunct-equation {
     font-size: 1.4rem;
     font-weight: 500;
     letter-spacing: 0.1em;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0;
 }
 
 .equation-subtitle {
@@ -1269,27 +1278,26 @@ body {
    EXPLORE MORE BUTTON & POPUP
    =================================== */
 .explore-more-btn {
-    display: block;
-    margin: 1rem auto 0;
-    padding: 0.6rem 1.2rem;
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.65rem;
     font-weight: 500;
     color: #00ffff;
     background: rgba(0, 255, 255, 0.1);
     border: 1px solid rgba(0, 255, 255, 0.4);
-    border-radius: 20px;
+    border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
 }
 
 .explore-more-btn:hover {
     color: #fff;
     background: rgba(0, 255, 255, 0.2);
     border-color: #00ffff;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), 0 0 30px rgba(0, 255, 255, 0.15);
-    transform: translateY(-1px);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
 }
 
 /* Popup Overlay */
