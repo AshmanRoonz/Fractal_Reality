@@ -157,9 +157,6 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 ## Main Pages
 
 - [**index.html**](https://fractalreality.ca/index.html) — Main homepage with interactive circumpunct symbol
-- [**index_new.html**](https://fractalreality.ca/index_new.html) — Alternate homepage design
-- [**index_old.html**](https://fractalreality.ca/index_old.html) — Original homepage version
-- [**index-no_animation.html**](https://fractalreality.ca/index-no_animation.html) — Homepage without particle animations
 
 ### Core Path Pages (in `/pages`)
 
