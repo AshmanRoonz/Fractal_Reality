@@ -11,10 +11,10 @@
 | Document | Description |
 |----------|-------------|
 | **[THEORY_OF_EVERYTHING.md](THEORY_OF_EVERYTHING.md)** | The complete unified framework (18 chapters) |
-| **[papers/circumpunct_framework_physicists.md](papers/circumpunct_framework_physicists.md)** | Rigorous formulation for working physicists |
+| **[circumpunct_framework_physicists.md](circumpunct_framework_physicists.md)** | Rigorous formulation for working physicists |
 | **[docs/](docs/)** | Interactive website visualizations at [fractalreality.ca](https://fractalreality.ca) |
 
-*Everything else in this repository represents the learning journey and development process leading to these documents.*
+*The [Path_of_Learning/](Path_of_Learning/) folder contains the development journey and supporting materials.*
 
 ---
 
