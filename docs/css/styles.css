@@ -619,13 +619,13 @@ body {
     cursor: pointer;
 }
 
-/* Scale indicator below circumpunct */
+/* Scale indicator above circumpunct */
 .scale-indicator {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
-    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
     padding: 0.4rem 0.8rem;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(0, 255, 255, 0.2);
@@ -981,14 +981,26 @@ body {
     color: inherit;
     text-decoration: none;
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .circumpunct-link:hover {
-    text-shadow: 0 0 8px var(--soul-color), 0 0 16px var(--mind-color);
+    text-shadow: 0 0 12px #fff, 0 0 24px var(--soul-color), 0 0 36px var(--mind-color);
+    color: #fff;
 }
 
 .circumpunct-link strong {
     color: var(--text);
+}
+
+/* Hero equation circumpunct link - subtle underline hint */
+.equation-title .circumpunct-link {
+    border-bottom: 1px dotted rgba(0, 255, 255, 0.4);
+    padding-bottom: 2px;
+}
+
+.equation-title .circumpunct-link:hover {
+    border-bottom-color: #fff;
 }
 
 /* Essay Styles */
