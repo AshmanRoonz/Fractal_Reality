@@ -21,7 +21,7 @@
             <header class="header side-panel left-panel">
                 <div class="hero-equation">
                     <p class="equation-title">Reality is fractal.</p>
-                    <p class="equation-title">⊙ (the circumpunct) is its pattern.</p>
+                    <p class="equation-title"><a href="#" class="circumpunct-link">⊙ (the circumpunct)</a> is its pattern.</p>
                     <p class="equation-title">Every ⊙ is a part of a greater ⊙.</p>
                     <p class="equation-title">You are ⊙. I am ⊙.</p>
                 </div>
@@ -29,7 +29,12 @@
 
             <!-- Center Column: Circumpunct -->
             <div class="center-panel">
-                <p class="tagline"><a href="#" class="circumpunct-link" style="color: white;">⊙ The Circumpunct</a> — Click to explore.</p>
+                <!-- Scale indicator - shows current fractal scale -->
+                <div class="scale-indicator" id="scaleIndicator">
+                    <span class="scale-label">Scale: </span>
+                    <span class="scale-name" id="scaleName">Eye</span>
+                    <span class="scale-description" id="scaleDescription">(Organism)</span>
+                </div>
 
         <!-- The Big Interactive Circumpunct -->
         <div class="circumpunct-container">
@@ -382,13 +387,6 @@
                 <span class="label label-body">○ BODY</span>
                 <span class="label label-mind">Φ MIND</span>
                 <span class="label label-soul">• SOUL</span>
-            </div>
-
-            <!-- Scale indicator - shows current fractal scale -->
-            <div class="scale-indicator" id="scaleIndicator">
-                <span class="scale-label">Scale: </span>
-                <span class="scale-name" id="scaleName">Eye</span>
-                <span class="scale-description" id="scaleDescription">(Organism)</span>
             </div>
         </div>
             </div><!-- /center-panel -->
