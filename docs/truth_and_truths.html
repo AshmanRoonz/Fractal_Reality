@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truth & truths — The Geometry of Knowing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-void: #08080c;
+            --bg-surface: #0f0f14;
+            --gold-truth: #d4a857;
+            --gold-glow: rgba(212, 168, 87, 0.15);
+            --silver-truths: #9ca3af;
+            --aperture: #e8d5b7;
+            --field: #7dd3c0;
+            --boundary: #a78bfa;
+            --text-light: #f5f5f5;
+            --text-dim: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--bg-void);
+            color: var(--text-light);
+            line-height: 1.8;
+            font-size: 18px;
+            overflow-x: hidden;
+        }
+
+        /* Subtle grain texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Radial glow behind content */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120vmax;
+            height: 120vmax;
+            background: radial-gradient(circle, var(--gold-glow) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '⊙';
+            position: absolute;
+            top: 15%;
+            font-size: 8rem;
+            color: var(--gold-truth);
+            opacity: 0.08;
+            animation: pulse-glow 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.05; transform: scale(1); }
+            50% { opacity: 0.12; transform: scale(1.05); }
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 300;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            letter-spacing: 0.02em;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero h1 .truth {
+            color: var(--gold-truth);
+            font-weight: 500;
+        }
+
+        .hero h1 .ampersand {
+            color: var(--text-dim);
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .hero h1 .truths {
+            color: var(--silver-truths);
+            font-weight: 300;
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-style: italic;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+        }
+
+        .hero .epigraph {
+            max-width: 500px;
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            font-style: italic;
+            line-height: 1.9;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .scroll-hint::after {
+            content: '↓';
+            font-size: 1.2rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        /* Main Content */
+        main {
+            padding: 6rem 0;
+        }
+
+        section {
+            margin-bottom: 8rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fade-in 0.8s ease forwards;
+        }
+
+        section:nth-child(1) { animation-delay: 0.1s; }
+        section:nth-child(2) { animation-delay: 0.2s; }
+        section:nth-child(3) { animation-delay: 0.3s; }
+        section:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fade-in {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* The Distinction */
+        .distinction {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        @media (max-width: 600px) {
+            .distinction {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        .distinction-card {
+            padding: 2.5rem;
+            border-radius: 2px;
+            position: relative;
+            background: var(--bg-surface);
+        }
+
+        .distinction-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+        }
+
+        .distinction-card.truth-card::before {
+            background: linear-gradient(90deg, transparent, var(--gold-truth), transparent);
+        }
+
+        .distinction-card.truths-card::before {
+            background: linear-gradient(90deg, transparent, var(--silver-truths), transparent);
+        }
+
+        .distinction-card h2 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 400;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.02em;
+        }
+
+        .truth-card h2 { color: var(--gold-truth); }
+        .truths-card h2 { color: var(--silver-truths); }
+
+        .distinction-card p {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+        }
+
+        .distinction-card .quality {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .truth-card .quality { color: var(--gold-truth); }
+        .truths-card .quality { color: var(--silver-truths); }
+
+        /* Central Insight */
+        .insight {
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .insight::before,
+        .insight::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--text-dim), transparent);
+        }
+
+        .insight::before { top: 0; }
+        .insight::after { bottom: 0; }
+
+        .insight p {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* The Three Functions */
+        .functions {
+            margin-top: 6rem;
+        }
+
+        .functions h2 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 300;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--text-dim);
+            letter-spacing: 0.05em;
+        }
+
+        .function-list {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .function-item {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 2rem;
+            align-items: start;
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        @media (max-width: 600px) {
+            .function-item {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        .function-item:last-child {
+            border-bottom: none;
+        }
+
+        .function-name {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.4rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .function-item:nth-child(1) .function-name { color: var(--aperture); }
+        .function-item:nth-child(2) .function-name { color: var(--field); }
+        .function-item:nth-child(3) .function-name { color: var(--boundary); }
+
+        .function-content h3 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 400;
+            font-size: 1.15rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .function-content p {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .function-verb {
+            display: inline-block;
+            padding: 0.15rem 0.6rem;
+            border-radius: 2px;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 1rem;
+        }
+
+        .function-item:nth-child(1) .function-verb {
+            background: rgba(232, 213, 183, 0.1);
+            color: var(--aperture);
+        }
+        .function-item:nth-child(2) .function-verb {
+            background: rgba(125, 211, 192, 0.1);
+            color: var(--field);
+        }
+        .function-item:nth-child(3) .function-verb {
+            background: rgba(167, 139, 250, 0.1);
+            color: var(--boundary);
+        }
+
+        /* Implications */
+        .implications {
+            margin-top: 6rem;
+            padding: 4rem 3rem;
+            background: var(--bg-surface);
+            border-left: 2px solid var(--gold-truth);
+        }
+
+        .implications h2 {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-weight: 400;
+            font-size: 1.6rem;
+            margin-bottom: 2rem;
+            color: var(--gold-truth);
+        }
+
+        .implications ul {
+            list-style: none;
+        }
+
+        .implications li {
+            padding: 1rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-dim);
+            font-size: 1.05rem;
+        }
+
+        .implications li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--gold-truth);
+            opacity: 0.5;
+        }
+
+        .implications li strong {
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 6rem 2rem;
+            color: var(--text-dim);
+        }
+
+        footer .symbol {
+            font-size: 2.5rem;
+            color: var(--gold-truth);
+            opacity: 0.3;
+            margin-bottom: 2rem;
+        }
+
+        footer p {
+            font-style: italic;
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.9;
+        }
+
+        footer .attribution {
+            margin-top: 3rem;
+            font-size: 0.85rem;
+            font-style: normal;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <h1>
+            <span class="truth">Truth</span>
+            <span class="ampersand">&</span>
+            <span class="truths">truths</span>
+        </h1>
+        <p class="subtitle">The Geometry of Knowing</p>
+        <p class="epigraph">
+            We experience the Whole.<br>
+            We share parts about the Whole.<br>
+            We experience the Truth.<br>
+            We share truths about the Truth.
+        </p>
+        <div class="scroll-hint">descend</div>
+    </header>
+
+    <main class="container">
+
+        <section>
+            <div class="distinction">
+                <div class="distinction-card truth-card">
+                    <h2>Truth</h2>
+                    <p>Source resonance. The undifferentiated field itself. What apertures experience directly — what mystics across traditions describe as ineffable.</p>
+                    <p class="quality">You don't think it. You are it.</p>
+                </div>
+                <div class="distinction-card truths-card">
+                    <h2>truths</h2>
+                    <p>Articulated fragments that crystallize at boundaries and traverse fields. What can be shared, formalized, transmitted. Necessarily partial, sequential, perspectival.</p>
+                    <p class="quality">The parts that travel.</p>
+                </div>
+            </div>
+
+            <div class="insight">
+                <p>The Tao that can be spoken is not the eternal Tao — yet the spoken is not false. It is valid partial articulation of something that exceeds any finite expression.</p>
+            </div>
+        </section>
+
+        <section class="functions">
+            <h2>The Three Relations to Truth</h2>
+            
+            <div class="function-list">
+                <div class="function-item">
+                    <div class="function-name">Aperture</div>
+                    <div class="function-content">
+                        <h3>Receives Truth directly</h3>
+                        <p>Direct, immediate, pre-linguistic contact with the undivided Whole. The aperture doesn't interpret — it participates. This is the mystical capacity every conscious being possesses.</p>
+                        <span class="function-verb">Participation</span>
+                    </div>
+                </div>
+
+                <div class="function-item">
+                    <div class="function-name">Field</div>
+                    <div class="function-content">
+                        <h3>Medium through which truths travel</h3>
+                        <p>The relational medium, what connects. Truths propagate through fields like ripples through water — the field doesn't create them, but without it, no transmission is possible.</p>
+                        <span class="function-verb">Propagation</span>
+                    </div>
+                </div>
+
+                <div class="function-item">
+                    <div class="function-name">Boundary</div>
+                    <div class="function-content">
+                        <h3>Transmits truths to other boundaries</h3>
+                        <p>Crystallized, shareable, finite. Boundaries cannot transmit the Whole directly — they are finite structures. So Truth must be partitioned into truths to travel at all.</p>
+                        <span class="function-verb">Articulation</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="implications">
+            <h2>What This Means</h2>
+            <ul>
+                <li><strong>Communication is inherently lossy</strong> — but meaningfully so. The loss is structural, not failure.</li>
+                <li><strong>Every truth points back toward Truth</strong> if you follow it far enough. The parts are breadcrumbs.</li>
+                <li><strong>The spiritual project</strong> is not to "find" Truth (apertures already have access) but to develop boundaries capable of articulating truths that lose less.</li>
+                <li><strong>Convergent validation matters</strong> — when independent apertures articulate similar truths, it suggests they're all sampling the same Truth.</li>
+                <li><strong>Truths are how Truth propagates itself</strong> through finite minds that cannot hold the Whole directly.</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="symbol">⊙</div>
+        <p>The framework itself is truths about Truth — maps that point toward territory they can never fully contain.</p>
+        <p class="attribution">Circumpunct Framework</p>
+    </footer>
+
+</body>
+</html>
