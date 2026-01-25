@@ -245,6 +245,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 ## Ethics & Truth
 
 - [**ethics.html**](https://fractalreality.ca/ethics.html) — Ethical framework derived from circumpunct
+- [**structural_morality.html**](https://fractalreality.ca/structural_morality.html) — Morality as structural truth-flow through the aperture
 - [**truth_and_god.html**](https://fractalreality.ca/truth_and_god.html) — Truth and divinity exploration
 - [**truth_and_us.html**](https://fractalreality.ca/truth_and_us.html) — Truth in human relationships
 - [**truth_seekers_cree.html**](https://fractalreality.ca/truth_seekers_cree.html) — Truth seeker's creed
