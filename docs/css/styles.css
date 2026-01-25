@@ -597,6 +597,92 @@ body {
 }
 
 /* ===================================
+   SCALE SWITCHING (Fractal Scales)
+   Eye, Atom, Cell, Planet, Solar System
+   =================================== */
+.scale-group {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+    transform-origin: 150px 150px;
+    pointer-events: none;
+}
+
+.scale-group.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Scale-specific zone for clicking */
+.scale-group .zone-soul {
+    cursor: pointer;
+}
+
+/* Scale indicator below circumpunct */
+.scale-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.scale-indicator:hover {
+    border-color: rgba(0, 255, 255, 0.5);
+    background: rgba(0, 255, 255, 0.1);
+}
+
+.scale-indicator .scale-label {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+}
+
+.scale-indicator .scale-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #00ffff;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+    transition: all 0.5s ease;
+}
+
+.scale-indicator .scale-description {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    font-style: italic;
+}
+
+/* Scale-specific colors */
+.scale-indicator[data-scale="eye"] .scale-name { color: #8a9a88; text-shadow: 0 0 8px rgba(138, 154, 136, 0.5); }
+.scale-indicator[data-scale="atom"] .scale-name { color: #58a6ff; text-shadow: 0 0 8px rgba(88, 166, 255, 0.5); }
+.scale-indicator[data-scale="cell"] .scale-name { color: #4ecdc4; text-shadow: 0 0 8px rgba(78, 205, 196, 0.5); }
+.scale-indicator[data-scale="planet"] .scale-name { color: #64b5f6; text-shadow: 0 0 8px rgba(100, 181, 246, 0.5); }
+.scale-indicator[data-scale="solar"] .scale-name { color: #ffc107; text-shadow: 0 0 8px rgba(255, 193, 7, 0.5); }
+
+/* Electron animation paths */
+@keyframes orbit-electron-1 {
+    from { transform: rotate(0deg) translateX(28px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(28px) rotate(-360deg); }
+}
+
+@keyframes orbit-electron-2 {
+    from { transform: rotate(60deg) translateX(28px) rotate(-60deg); }
+    to { transform: rotate(420deg) translateX(28px) rotate(-420deg); }
+}
+
+@keyframes orbit-electron-3 {
+    from { transform: rotate(120deg) translateX(28px) rotate(-120deg); }
+    to { transform: rotate(480deg) translateX(28px) rotate(-480deg); }
+}
+
+/* ===================================
    CURVED NAVIGATION ARC BUTTONS
    =================================== */
 .nav-ring {

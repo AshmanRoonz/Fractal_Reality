@@ -930,4 +930,97 @@
         // Start in idle mode
         lastWanderTime = performance.now();
     }
+
+    // =========================================
+    // Scale Switching System
+    // Cycles through: Eye, Atom, Cell, Planet, Solar System
+    // =========================================
+    const scaleGroups = document.querySelectorAll('.scale-group');
+    const scaleIndicator = document.getElementById('scaleIndicator');
+    const scaleNameEl = document.getElementById('scaleName');
+    const scaleDescEl = document.getElementById('scaleDescription');
+
+    if (scaleGroups.length > 0 && scaleIndicator) {
+        const scales = [
+            { id: 'eye', name: 'Eye', description: '(Organism)' },
+            { id: 'atom', name: 'Atom', description: '(Quantum)' },
+            { id: 'cell', name: 'Cell', description: '(Cellular)' },
+            { id: 'planet', name: 'Planet', description: '(Planetary)' },
+            { id: 'solar', name: 'Solar System', description: '(Solar)' }
+        ];
+
+        let currentScaleIndex = 0;
+        let scaleInterval = null;
+        const SCALE_INTERVAL_MS = 5000; // Switch every 5 seconds
+
+        function setScale(index) {
+            // Wrap around
+            if (index >= scales.length) index = 0;
+            if (index < 0) index = scales.length - 1;
+
+            currentScaleIndex = index;
+            const scale = scales[index];
+
+            // Update SVG groups
+            scaleGroups.forEach(group => {
+                if (group.dataset.scale === scale.id) {
+                    group.classList.add('active');
+                } else {
+                    group.classList.remove('active');
+                }
+            });
+
+            // Update indicator
+            scaleIndicator.dataset.scale = scale.id;
+            scaleNameEl.textContent = scale.name;
+            scaleDescEl.textContent = scale.description;
+        }
+
+        function nextScale() {
+            setScale(currentScaleIndex + 1);
+        }
+
+        function startScaleCycle() {
+            if (scaleInterval) clearInterval(scaleInterval);
+            scaleInterval = setInterval(nextScale, SCALE_INTERVAL_MS);
+        }
+
+        function resetScaleCycle() {
+            // Reset timer when user interacts
+            startScaleCycle();
+        }
+
+        // Click on indicator to advance to next scale
+        scaleIndicator.addEventListener('click', () => {
+            nextScale();
+            resetScaleCycle();
+        });
+
+        // Click on the soul/center area to advance scale
+        scaleGroups.forEach(group => {
+            const soulZone = group.querySelector('.zone-soul, .nucleus-base, .nuclear-envelope, .inner-core, .sun-surface');
+            if (soulZone) {
+                soulZone.addEventListener('click', (e) => {
+                    // Don't trigger if it's supposed to open a panel
+                    // Only advance scale if clicking directly on the soul representation
+                    e.stopPropagation();
+                    nextScale();
+                    resetScaleCycle();
+                });
+            }
+        });
+
+        // Initialize
+        setScale(0);
+        startScaleCycle();
+
+        // Pause when page is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                if (scaleInterval) clearInterval(scaleInterval);
+            } else {
+                startScaleCycle();
+            }
+        });
+    }
 })();

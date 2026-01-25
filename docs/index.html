@@ -78,6 +78,21 @@
                         <stop offset="100%" stop-color="#000000"/>
                     </radialGradient>
 
+                    <!-- Planet gradient (Earth-like) -->
+                    <radialGradient id="planet-gradient" cx="40%" cy="40%" r="60%">
+                        <stop offset="0%" stop-color="#64b5f6"/>
+                        <stop offset="50%" stop-color="#42a5f5"/>
+                        <stop offset="100%" stop-color="#1565c0"/>
+                    </radialGradient>
+
+                    <!-- Sun gradient -->
+                    <radialGradient id="sun-gradient" cx="40%" cy="40%" r="60%">
+                        <stop offset="0%" stop-color="#fff59d"/>
+                        <stop offset="40%" stop-color="#ffee58"/>
+                        <stop offset="70%" stop-color="#ffc107"/>
+                        <stop offset="100%" stop-color="#ff9800"/>
+                    </radialGradient>
+
                     <!-- Arc paths for inner navigation buttons (radius 130) -->
                     <path id="arc-top" d="M 58 58 A 130 130 0 0 1 242 58" fill="none"/>
                     <path id="arc-right" d="M 242 58 A 130 130 0 0 1 242 242" fill="none"/>
@@ -106,18 +121,155 @@
                 <circle class="zone zone-mind" cx="150" cy="150" r="60"
                     fill="rgba(240, 180, 41, 0.15)" stroke="rgba(240, 180, 41, 0.4)" stroke-width="2" data-zone="mind"/>
 
-                <!-- The moving soul group (follows cursor) - styled as small eye/iris -->
+                <!-- The moving soul group (follows cursor) - switches between scales -->
                 <g class="soul-moving" id="eye-moving">
-                    <!-- • SOUL - The watching eye -->
-                    <!-- Iris (outer part of soul-eye) -->
-                    <circle class="zone zone-soul soul-iris" cx="150" cy="150" r="32"
-                        fill="url(#soul-iris-gradient)" data-zone="soul"/>
-                    <!-- Limbal ring (dark edge around iris) -->
-                    <circle cx="150" cy="150" r="30" fill="none" stroke="rgba(40,50,40,0.5)" stroke-width="3" class="soul-limbal"/>
-                    <!-- Pupil (center) -->
-                    <circle cx="150" cy="150" r="12" fill="url(#soul-pupil-gradient)" class="soul-pupil"/>
-                    <!-- Highlight -->
-                    <circle cx="142" cy="144" r="5" fill="rgba(255,255,255,0.7)" class="soul-highlight"/>
+
+                    <!-- SCALE 1: EYE (Organism) - The watching eye -->
+                    <g class="scale-group scale-eye active" data-scale="eye">
+                        <circle class="zone zone-soul soul-iris" cx="150" cy="150" r="32"
+                            fill="url(#soul-iris-gradient)" data-zone="soul"/>
+                        <circle cx="150" cy="150" r="30" fill="none" stroke="rgba(40,50,40,0.5)" stroke-width="3" class="soul-limbal"/>
+                        <circle cx="150" cy="150" r="12" fill="url(#soul-pupil-gradient)" class="soul-pupil"/>
+                        <circle cx="142" cy="144" r="5" fill="rgba(255,255,255,0.7)" class="soul-highlight"/>
+                    </g>
+
+                    <!-- SCALE 2: ATOM - Nucleus + Electron Cloud -->
+                    <g class="scale-group scale-atom" data-scale="atom">
+                        <!-- Electron cloud glow -->
+                        <circle cx="150" cy="150" r="30" fill="rgba(88,166,255,0.15)" class="electron-cloud"/>
+                        <!-- Electron orbits -->
+                        <ellipse cx="150" cy="150" rx="28" ry="12" fill="none" stroke="rgba(88,166,255,0.5)" stroke-width="1" class="orbit orbit-1">
+                            <animateTransform attributeName="transform" type="rotate" from="0 150 150" to="360 150 150" dur="3s" repeatCount="indefinite"/>
+                        </ellipse>
+                        <ellipse cx="150" cy="150" rx="28" ry="12" fill="none" stroke="rgba(163,113,247,0.5)" stroke-width="1" class="orbit orbit-2" transform="rotate(60 150 150)">
+                            <animateTransform attributeName="transform" type="rotate" from="60 150 150" to="420 150 150" dur="4s" repeatCount="indefinite"/>
+                        </ellipse>
+                        <ellipse cx="150" cy="150" rx="28" ry="12" fill="none" stroke="rgba(240,180,41,0.5)" stroke-width="1" class="orbit orbit-3" transform="rotate(120 150 150)">
+                            <animateTransform attributeName="transform" type="rotate" from="120 150 150" to="480 150 150" dur="5s" repeatCount="indefinite"/>
+                        </ellipse>
+                        <!-- Electrons -->
+                        <circle cx="178" cy="150" r="3" fill="#58a6ff" class="electron electron-1">
+                            <animateMotion dur="3s" repeatCount="indefinite" path="M0,0 A28,12 0 1,1 0,0.1 A28,12 0 1,1 0,0"/>
+                        </circle>
+                        <circle cx="164" cy="138" r="3" fill="#a371f7" class="electron electron-2">
+                            <animateMotion dur="4s" repeatCount="indefinite" path="M14,-12 A28,12 60 1,1 14.1,-12 A28,12 60 1,1 14,-12"/>
+                        </circle>
+                        <circle cx="136" cy="138" r="3" fill="#f0b429" class="electron electron-3">
+                            <animateMotion dur="5s" repeatCount="indefinite" path="M-14,-12 A28,12 120 1,1 -13.9,-12 A28,12 120 1,1 -14,-12"/>
+                        </circle>
+                        <!-- Nucleus (protons & neutrons) -->
+                        <circle cx="150" cy="150" r="8" fill="url(#soul-pupil-gradient)" class="nucleus-base"/>
+                        <circle cx="147" cy="148" r="4" fill="#ff6b6b" class="proton"/>
+                        <circle cx="153" cy="148" r="4" fill="#4ecdc4" class="neutron"/>
+                        <circle cx="150" cy="153" r="4" fill="#ff6b6b" class="proton"/>
+                        <circle cx="146" cy="146" r="2" fill="rgba(255,255,255,0.6)" class="nucleus-highlight"/>
+                    </g>
+
+                    <!-- SCALE 3: CELL - DNA + Cytoplasm + Membrane -->
+                    <g class="scale-group scale-cell" data-scale="cell">
+                        <!-- Cytoplasm -->
+                        <circle cx="150" cy="150" r="30" fill="rgba(163,220,163,0.2)" class="cytoplasm"/>
+                        <!-- Organelles floating -->
+                        <ellipse cx="135" cy="140" rx="5" ry="3" fill="rgba(163,113,247,0.4)" class="organelle mitochondria">
+                            <animate attributeName="cx" values="135;138;135" dur="4s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="140;143;140" dur="5s" repeatCount="indefinite"/>
+                        </ellipse>
+                        <ellipse cx="168" cy="155" rx="4" ry="2.5" fill="rgba(163,113,247,0.4)" class="organelle mitochondria">
+                            <animate attributeName="cx" values="168;165;168" dur="5s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="155;158;155" dur="4s" repeatCount="indefinite"/>
+                        </ellipse>
+                        <circle cx="140" cy="162" r="2" fill="rgba(88,166,255,0.5)" class="organelle ribosome">
+                            <animate attributeName="cx" values="140;143;140" dur="3s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="162" cy="142" r="2" fill="rgba(88,166,255,0.5)" class="organelle ribosome">
+                            <animate attributeName="cy" values="142;145;142" dur="3.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- Nuclear envelope -->
+                        <circle cx="150" cy="150" r="12" fill="rgba(240,180,41,0.2)" stroke="rgba(240,180,41,0.5)" stroke-width="1.5" class="nuclear-envelope"/>
+                        <!-- DNA double helix (simplified) -->
+                        <path d="M145,142 Q150,146 145,150 Q150,154 145,158" fill="none" stroke="#ff6b6b" stroke-width="2" class="dna-strand-1">
+                            <animate attributeName="d" values="M145,142 Q150,146 145,150 Q150,154 145,158;M145,142 Q140,146 145,150 Q140,154 145,158;M145,142 Q150,146 145,150 Q150,154 145,158" dur="3s" repeatCount="indefinite"/>
+                        </path>
+                        <path d="M155,142 Q150,146 155,150 Q150,154 155,158" fill="none" stroke="#4ecdc4" stroke-width="2" class="dna-strand-2">
+                            <animate attributeName="d" values="M155,142 Q150,146 155,150 Q150,154 155,158;M155,142 Q160,146 155,150 Q160,154 155,158;M155,142 Q150,146 155,150 Q150,154 155,158" dur="3s" repeatCount="indefinite"/>
+                        </path>
+                        <!-- Base pairs -->
+                        <line x1="146" y1="144" x2="154" y2="144" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+                        <line x1="146" y1="150" x2="154" y2="150" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+                        <line x1="146" y1="156" x2="154" y2="156" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+                        <!-- Cell membrane highlight -->
+                        <circle cx="150" cy="150" r="30" fill="none" stroke="rgba(163,220,163,0.3)" stroke-width="2" stroke-dasharray="3,2" class="membrane-hint"/>
+                    </g>
+
+                    <!-- SCALE 4: PLANET - Core + Magnetic Field + Atmosphere -->
+                    <g class="scale-group scale-planet" data-scale="planet">
+                        <!-- Outer atmosphere glow -->
+                        <circle cx="150" cy="150" r="32" fill="rgba(88,166,255,0.1)" class="atmosphere"/>
+                        <!-- Magnetic field lines -->
+                        <path d="M150,118 Q180,135 180,150 Q180,165 150,182" fill="none" stroke="rgba(163,113,247,0.4)" stroke-width="1.5" class="field-line">
+                            <animate attributeName="stroke-opacity" values="0.4;0.7;0.4" dur="2s" repeatCount="indefinite"/>
+                        </path>
+                        <path d="M150,118 Q120,135 120,150 Q120,165 150,182" fill="none" stroke="rgba(163,113,247,0.4)" stroke-width="1.5" class="field-line">
+                            <animate attributeName="stroke-opacity" values="0.4;0.7;0.4" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+                        </path>
+                        <path d="M150,122 Q172,137 172,150 Q172,163 150,178" fill="none" stroke="rgba(88,166,255,0.3)" stroke-width="1" class="field-line-inner"/>
+                        <path d="M150,122 Q128,137 128,150 Q128,163 150,178" fill="none" stroke="rgba(88,166,255,0.3)" stroke-width="1" class="field-line-inner"/>
+                        <!-- Planet surface -->
+                        <circle cx="150" cy="150" r="22" fill="url(#planet-gradient)" class="planet-surface"/>
+                        <!-- Continental hints -->
+                        <ellipse cx="145" cy="145" rx="8" ry="5" fill="rgba(76,175,80,0.6)" transform="rotate(-20 145 145)" class="continent"/>
+                        <ellipse cx="158" cy="155" rx="6" ry="4" fill="rgba(76,175,80,0.5)" transform="rotate(30 158 155)" class="continent"/>
+                        <!-- Mantle layer -->
+                        <circle cx="150" cy="150" r="14" fill="rgba(255,152,0,0.4)" class="mantle"/>
+                        <!-- Outer core -->
+                        <circle cx="150" cy="150" r="9" fill="rgba(255,87,34,0.6)" class="outer-core"/>
+                        <!-- Inner core (soul) -->
+                        <circle cx="150" cy="150" r="5" fill="#ffeb3b" class="inner-core">
+                            <animate attributeName="r" values="5;5.5;5" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="148" cy="148" r="2" fill="rgba(255,255,255,0.5)" class="core-highlight"/>
+                    </g>
+
+                    <!-- SCALE 5: SOLAR SYSTEM - Sun + Orbits + Heliosphere -->
+                    <g class="scale-group scale-solar" data-scale="solar">
+                        <!-- Heliosphere boundary hint -->
+                        <circle cx="150" cy="150" r="32" fill="none" stroke="rgba(163,113,247,0.2)" stroke-width="1" stroke-dasharray="4,4" class="heliosphere"/>
+                        <!-- Orbital paths -->
+                        <circle cx="150" cy="150" r="14" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.5" class="orbit-path"/>
+                        <circle cx="150" cy="150" r="20" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.5" class="orbit-path"/>
+                        <circle cx="150" cy="150" r="26" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.5" class="orbit-path"/>
+                        <!-- Planets orbiting -->
+                        <circle cx="164" cy="150" r="2" fill="#b0bec5" class="planet-mercury">
+                            <animateTransform attributeName="transform" type="rotate" from="0 150 150" to="360 150 150" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="170" cy="150" r="2.5" fill="#ffcc80" class="planet-venus">
+                            <animateTransform attributeName="transform" type="rotate" from="0 150 150" to="360 150 150" dur="3.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="176" cy="150" r="3" fill="#64b5f6" class="planet-earth">
+                            <animateTransform attributeName="transform" type="rotate" from="0 150 150" to="360 150 150" dur="5s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- Solar wind particles -->
+                        <circle cx="155" cy="145" r="1" fill="rgba(255,235,59,0.6)" class="solar-wind">
+                            <animate attributeName="cx" values="155;175;155" dur="3s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.8;0;0.8" dur="3s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="145" cy="158" r="1" fill="rgba(255,235,59,0.6)" class="solar-wind">
+                            <animate attributeName="cx" values="145;125;145" dur="3.5s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.8;0;0.8" dur="3.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- Sun corona -->
+                        <circle cx="150" cy="150" r="10" fill="rgba(255,193,7,0.3)" class="corona">
+                            <animate attributeName="r" values="10;11;10" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- Sun surface -->
+                        <circle cx="150" cy="150" r="7" fill="url(#sun-gradient)" class="sun-surface"/>
+                        <!-- Sun core -->
+                        <circle cx="150" cy="150" r="3" fill="#fff9c4" class="sun-core">
+                            <animate attributeName="opacity" values="1;0.8;1" dur="1s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="148" cy="148" r="1.5" fill="rgba(255,255,255,0.7)" class="sun-highlight"/>
+                    </g>
+
                 </g>
 
                 <!-- Decorative ring -->
@@ -230,6 +382,13 @@
                 <span class="label label-body">○ BODY</span>
                 <span class="label label-mind">Φ MIND</span>
                 <span class="label label-soul">• SOUL</span>
+            </div>
+
+            <!-- Scale indicator - shows current fractal scale -->
+            <div class="scale-indicator" id="scaleIndicator">
+                <span class="scale-label">Scale: </span>
+                <span class="scale-name" id="scaleName">Eye</span>
+                <span class="scale-description" id="scaleDescription">(Organism)</span>
             </div>
         </div>
             </div><!-- /center-panel -->
