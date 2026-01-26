@@ -207,7 +207,7 @@
     }
 
     .instance .domain {
-      color: var(--text-muted);
+      color: var(--gold);
       min-width: 140px;
     }
 
@@ -344,13 +344,13 @@
       <span class="sym-phi">Φ</span>
       <span class="sym-ring">○</span>
     </div>
-    <div class="gloss">discrete — through — continuous</div>
+    <div class="gloss"><span class="sym-dot">discrete</span> — <span class="sym-phi">through</span> — <span class="sym-ring">continuous</span></div>
   </div>
 
   <div class="def-block">
     <div class="def-symbol sym-dot">•</div>
     <div class="def-content">
-      <h4>Operand: Discrete</h4>
+      <h4 style="color: var(--discrete);">Operand: Discrete</h4>
       <p>The digital channel. Binary. Present or absent. Yes or no.</p>
       <p class="muted">What IS or IS NOT.</p>
     </div>
@@ -359,7 +359,7 @@
   <div class="def-block">
     <div class="def-symbol sym-phi">Φ</div>
     <div class="def-content">
-      <h4>Operator: Through</h4>
+      <h4 style="color: var(--operator);">Operator: Through</h4>
       <p>The mediation. Not a thing — an action. The reconciliation of discrete and continuous.</p>
       <p class="muted">The verb between two nouns.</p>
     </div>
@@ -368,7 +368,7 @@
   <div class="def-block">
     <div class="def-symbol sym-ring">○</div>
     <div class="def-content">
-      <h4>Operand: Continuous</h4>
+      <h4 style="color: var(--continuous);">Operand: Continuous</h4>
       <p>The analog channel. Graduated. Degrees and magnitudes.</p>
       <p class="muted">HOW MUCH exists.</p>
     </div>
@@ -416,14 +416,14 @@
 
   <div class="theorem">
     <div class="theorem-label">Definition</div>
-    <p><strong>Φ</strong> is the binary operator of reconciliation. Given discrete operand <em>D</em> and continuous operand <em>C</em>:</p>
+    <p><span class="sym-phi"><strong>Φ</strong></span> is the binary operator of reconciliation. Given discrete operand <span class="sym-dot"><em>D</em></span> and continuous operand <span class="sym-ring"><em>C</em></span>:</p>
     <p style="font-family: 'JetBrains Mono', monospace; text-align: center; font-size: 1.2rem; margin: 1rem 0;">
-      D <span class="sym-phi">Φ</span> C = the complete structure in which D and C are mediated
+      <span class="sym-dot">D</span> <span class="sym-phi">Φ</span> <span class="sym-ring">C</span> = the complete structure in which <span class="sym-dot">D</span> and <span class="sym-ring">C</span> are mediated
     </p>
   </div>
 
   <div class="callout">
-    <strong>Field is not a noun.</strong> It's a verb — the action of mediation itself. "Mind" is not a thing between brain and behavior. Mind is what <em>happens</em> when discrete and continuous interface. The operation, not the operand.
+    <strong>Field is not a noun.</strong> It's a verb — the action of mediation itself. <span class="sym-phi">Mind</span> is not a thing between brain and behavior. Mind is what <em>happens</em> when <span class="sym-dot">discrete</span> and <span class="sym-ring">continuous</span> interface. The operation, not the operand.
   </div>
 </section>
 
@@ -547,16 +547,16 @@
     <div class="theorem-label">Property 2 — Non-derivability</div>
     <p>Neither operand can be derived from the other:</p>
     <p style="font-family: 'JetBrains Mono', monospace; text-align: center; margin: 1rem 0;">
-      <span class="sym-dot">•</span> ⇏ <span class="sym-ring">○</span>   and   <span class="sym-ring">○</span> ⇏ <span class="sym-dot">•</span>
+      <span class="sym-dot">•</span> ⇏ <span class="sym-ring">○</span> &nbsp; and &nbsp; <span class="sym-ring">○</span> ⇏ <span class="sym-dot">•</span>
     </p>
-    <p>Φ does not generate either operand. It <em>relates</em> what is already co-primary.</p>
+    <p><span class="sym-phi">Φ</span> does not generate either operand. It <em>relates</em> what is already co-primary.</p>
   </div>
 
   <div class="theorem">
     <div class="theorem-label">Property 3 — Completeness Requirement</div>
-    <p>A structure is complete if and only if it has the form D Φ C:</p>
+    <p>A structure is complete if and only if it has the form <span class="sym-dot">D</span> <span class="sym-phi">Φ</span> <span class="sym-ring">C</span>:</p>
     <p style="font-family: 'JetBrains Mono', monospace; text-align: center; margin: 1rem 0;">
-      Complete(S) ⟺ S = D <span class="sym-phi">Φ</span> C
+      Complete(S) ⟺ S = <span class="sym-dot">D</span> <span class="sym-phi">Φ</span> <span class="sym-ring">C</span>
     </p>
     <p>A single operand without the operator is incomplete. The operator without both operands is undefined.</p>
   </div>
@@ -578,9 +578,9 @@
   <p>The symbol ⊙ is not arbitrary. It <em>is</em> the equation:</p>
 
   <div class="proof">
-    <p class="proof-step" data-n="•">The center dot — discrete operand</p>
-    <p class="proof-step" data-n="○">The outer ring — continuous operand</p>
-    <p class="proof-step" data-n="Φ">The space between — the operator itself</p>
+    <p class="proof-step" style="padding-left: 2rem;"><span class="sym-dot" style="position: absolute; left: 0;">•</span>The center dot — discrete operand — <em>soul</em></p>
+    <p class="proof-step" style="padding-left: 2rem;"><span class="sym-phi" style="position: absolute; left: 0;">Φ</span>The space between — the operator — <em>mind</em></p>
+    <p class="proof-step" style="padding-left: 2rem;"><span class="sym-ring" style="position: absolute; left: 0;">○</span>The outer ring — continuous operand — <em>body</em></p>
     <p class="qed">∎</p>
   </div>
 
@@ -602,19 +602,19 @@
 
   <div class="proof">
     <p class="proof-step" data-n="1">The question assumes one operand derives from the other.</p>
-    <p class="proof-step" data-n="2">But D ⇏ C and C ⇏ D (non-derivability).</p>
+    <p class="proof-step" data-n="2">But <span class="sym-dot">D</span> ⇏ <span class="sym-ring">C</span> and <span class="sym-ring">C</span> ⇏ <span class="sym-dot">D</span> (non-derivability).</p>
     <p class="proof-step" data-n="3">The question has no answer because the premise is false.</p>
-    <p class="proof-step" data-n="4">The correct statement is: D Φ C — they are related, not derived.</p>
+    <p class="proof-step" data-n="4">The correct statement is: <span class="sym-dot">D</span> <span class="sym-phi">Φ</span> <span class="sym-ring">C</span> — they are related, not derived.</p>
     <p class="qed">∎</p>
   </div>
 
-  <p>The hard problem of consciousness asks how brain (continuous) gives rise to qualia (discrete). Wrong question. The right notation:</p>
+  <p>The hard problem of consciousness asks how <span class="sym-ring">brain</span> (continuous) gives rise to <span class="sym-dot">qualia</span> (discrete). Wrong question. The right notation:</p>
 
   <p style="font-family: 'JetBrains Mono', monospace; text-align: center; font-size: 1.3rem; margin: 2rem 0;">
-    consciousness = <span class="sym-dot">qualia</span> <span class="sym-phi">Φ</span> <span class="sym-ring">quantity</span> = <span class="sym-circ">⊙</span>
+    <span class="sym-circ">consciousness</span> = <span class="sym-dot">qualia</span> <span class="sym-phi">Φ</span> <span class="sym-ring">quantity</span>
   </p>
 
-  <p>Neither side generates the other. Φ is <em>mind</em> — the operation of mediation. Consciousness is the <em>whole</em> — the complete circumpunct.</p>
+  <p>Neither side generates the other. <span class="sym-phi">Φ</span> is <em>mind</em> — the operation of mediation. <span class="sym-circ">⊙</span> is <em>consciousness</em> — the complete circumpunct.</p>
 </section>
 
 <!-- SECTION 7: SELF-INSTANTIATION -->
@@ -625,20 +625,27 @@
 
   <p style="font-size: 5rem; text-align: center; color: var(--gold); margin: 2rem 0;">⊙</p>
 
-  <div class="theorem">
-    <div class="theorem-label">The dot is literally discrete</div>
-    <p>Indivisible. Either present or absent. A point — dimensionless, ungraduated, binary.</p>
+  <div class="theorem" style="background: var(--discrete-dim); border-left-color: var(--discrete);">
+    <div class="theorem-label" style="color: var(--discrete);">The dot is literally discrete</div>
+    <p>Indivisible. Either present or absent. A point — dimensionless, ungraduated, binary. <em>Soul.</em></p>
   </div>
 
-  <div class="theorem">
-    <div class="theorem-label">The circle is literally continuous</div>
-    <p>Unbroken line. Every point flows into the next. No gaps, no jumps — pure continuity.</p>
+  <div class="theorem" style="background: var(--operator-dim); border-left-color: var(--operator);">
+    <div class="theorem-label" style="color: var(--operator);">The space between is literally the field</div>
+    <p>The medium of their relation. Where center and boundary meet. The between made visible. <em>Mind.</em></p>
   </div>
 
-  <div class="theorem">
-    <div class="theorem-label">The space between is literally the field</div>
-    <p>The medium of their relation. Where center and boundary meet. The between made visible.</p>
+  <div class="theorem" style="background: var(--continuous-dim); border-left-color: var(--continuous);">
+    <div class="theorem-label" style="color: var(--continuous);">The circle is literally continuous</div>
+    <p>Unbroken line. Every point flows into the next. No gaps, no jumps — pure continuity. <em>Body.</em></p>
   </div>
+
+  <p style="font-family: 'JetBrains Mono', monospace; text-align: center; font-size: 1.2rem; line-height: 2.2; margin: 2.5rem 0;">
+    <span class="sym-dot">•</span> = Soul<br>
+    <span class="sym-phi">Φ</span> = Mind<br>
+    <span class="sym-ring">○</span> = Body<br>
+    <span class="sym-circ">⊙</span> = Consciousness
+  </p>
 
   <div class="callout">
     <strong>The symbol doesn't represent discrete-through-continuous. It IS discrete-through-continuous.</strong> The glyph enacts what it denotes. The map is the territory. The notation is the model is the thing.
@@ -656,7 +663,7 @@
     Notation for reality.<br>
     Model of reality.<br>
     Instance of reality.<br><br>
-    <span style="font-family: 'JetBrains Mono', monospace; color: var(--text); font-style: normal;">• Φ ○</span>
+    <span style="font-family: 'JetBrains Mono', monospace; font-style: normal;"><span class="sym-dot">•</span> <span class="sym-phi">Φ</span> <span class="sym-ring">○</span></span>
   </p>
 </section>
 
