@@ -46,7 +46,12 @@
       inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
       pointer-events: none;
-      z-index: 1000;
+      z-index: 1;
+    }
+
+    .hero, section, .final {
+      position: relative;
+      z-index: 2;
     }
 
     section {
@@ -57,7 +62,7 @@
 
     /* Hero */
     .hero {
-      min-height: 100vh;
+      min-height: 100svh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -69,7 +74,7 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 4.5rem;
       font-weight: 500;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.08em;
       margin-bottom: 3rem;
     }
 
@@ -203,7 +208,12 @@
       font-size: 1rem;
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 0.5rem;
+    }
+
+    .instance span {
+      word-break: break-word;
     }
 
     .instance .domain {
@@ -245,18 +255,31 @@
     }
 
     .proof-step {
-      margin-bottom: 1rem;
-      padding-left: 1.5rem;
       position: relative;
+      margin-bottom: 1rem;
+      padding-left: 2.5rem;
     }
 
     .proof-step::before {
       content: attr(data-n);
       position: absolute;
       left: 0;
+      top: 0.05rem;
+      width: 2rem;
+      text-align: center;
       color: var(--operator);
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.85rem;
+    }
+
+    .proof-icon {
+      position: absolute;
+      left: 0;
+      top: 0.05rem;
+      width: 2rem;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
     }
 
     .qed {
@@ -305,11 +328,21 @@
 
     /* Responsive */
     @media (max-width: 600px) {
-      .hero-equation { font-size: 2.5rem; }
+      .hero-equation { font-size: 2.5rem; letter-spacing: 0.05em; }
       .def-block { grid-template-columns: 1fr; }
       .def-symbol { text-align: left; font-size: 2rem; }
       .instance { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
       .instance .domain { min-width: auto; }
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation: none !important; transition: none !important; }
+    }
+
+    @media (prefers-contrast: more) {
+      :root { --text-muted: #a1a1aa; }
     }
   </style>
 </head>
@@ -578,9 +611,18 @@
   <p>The symbol ⊙ is not arbitrary. It <em>is</em> the equation:</p>
 
   <div class="proof">
-    <p class="proof-step" style="padding-left: 2rem;"><span class="sym-dot" style="position: absolute; left: 0;">•</span>The center dot — discrete operand — <em>soul</em></p>
-    <p class="proof-step" style="padding-left: 2rem;"><span class="sym-phi" style="position: absolute; left: 0;">Φ</span>The space between — the operator — <em>mind</em></p>
-    <p class="proof-step" style="padding-left: 2rem;"><span class="sym-ring" style="position: absolute; left: 0;">○</span>The outer ring — continuous operand — <em>body</em></p>
+    <p class="proof-step">
+      <span class="proof-icon sym-dot">•</span>
+      The center dot — discrete operand — <em>soul</em>
+    </p>
+    <p class="proof-step">
+      <span class="proof-icon sym-phi">Φ</span>
+      The space between — the operator — <em>mind</em>
+    </p>
+    <p class="proof-step">
+      <span class="proof-icon sym-ring">○</span>
+      The outer ring — continuous operand — <em>body</em>
+    </p>
     <p class="qed">∎</p>
   </div>
 
