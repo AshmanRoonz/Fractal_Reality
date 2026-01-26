@@ -212,6 +212,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**entropy-foundation.html**](https://fractalreality.ca/entropy-foundation.html) — The entropy argument: why reality requires the circumpunct
 - [**energy_scale_phase_visualization.html**](https://fractalreality.ca/energy_scale_phase_visualization.html) — Energy scale and phase transitions
 - [**surface_field_formalization.html**](https://fractalreality.ca/surface_field_formalization.html) — Surface field mathematical formalization
+- [**circumpunct_operator_formalization.html**](https://fractalreality.ca/circumpunct_operator_formalization.html) — Circumpunct operator formalization
 - [**geometric_periodic_table.html**](https://fractalreality.ca/geometric_periodic_table.html) — Musical periodic table with Fibonacci + 7-note scale
 - [**aperture_falsification_presentation.html**](https://fractalreality.ca/aperture_falsification_presentation.html) — Falsification criteria presentation
 - [**phi_resonance.html**](https://fractalreality.ca/phi_resonance.html) — Golden ratio φ resonance patterns
