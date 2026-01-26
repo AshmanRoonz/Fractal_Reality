@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⊙ = • Φ ○</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --bg-elevated: #111114;
+      --bg-card: #18181b;
+      --text: #fafafa;
+      --text-muted: #71717a;
+      --gold: #fbbf24;
+      --gold-dim: rgba(251, 191, 36, 0.1);
+      --discrete: #f472b6;
+      --discrete-dim: rgba(244, 114, 182, 0.1);
+      --continuous: #34d399;
+      --continuous-dim: rgba(52, 211, 153, 0.1);
+      --operator: #60a5fa;
+      --operator-dim: rgba(96, 165, 250, 0.12);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 19px;
+      min-height: 100vh;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 4.5rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      margin-bottom: 3rem;
+    }
+
+    .sym-circ { color: var(--gold); }
+    .sym-dot { color: var(--discrete); }
+    .sym-phi { color: var(--operator); }
+    .sym-ring { color: var(--continuous); }
+    .sym-eq { color: var(--text-muted); }
+
+    .hero-subtitle {
+      font-size: 1.6rem;
+      color: var(--text-muted);
+      font-style: italic;
+      max-width: 500px;
+    }
+
+    /* Section titles */
+    h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 3rem 0 1.5rem;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+    }
+
+    /* Primary axiom box */
+    .axiom-primary {
+      background: var(--bg-elevated);
+      border: 1px solid var(--gold);
+      padding: 3rem;
+      margin: 3rem 0;
+      text-align: center;
+    }
+
+    .axiom-primary .equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+
+    .axiom-primary .gloss {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      font-style: italic;
+    }
+
+    /* Definition blocks */
+    .def-block {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .def-symbol {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.5rem;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .def-content h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .def-content p {
+      margin-bottom: 0.5rem;
+    }
+
+    .def-content .muted {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Operator comparison table */
+    .op-table {
+      width: 100%;
+      margin: 2rem 0;
+      border-collapse: collapse;
+    }
+
+    .op-table th,
+    .op-table td {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .op-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .op-table .op-sym {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--operator);
+    }
+
+    /* Instance list */
+    .instance {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-card);
+      padding: 1rem 1.5rem;
+      margin: 0.75rem 0;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .instance .domain {
+      color: var(--text-muted);
+      min-width: 140px;
+    }
+
+    .instance .eq {
+      color: var(--text-muted);
+    }
+
+    /* Theorem box */
+    .theorem {
+      background: var(--gold-dim);
+      border-left: 3px solid var(--gold);
+      padding: 2rem;
+      margin: 2.5rem 0;
+    }
+
+    .theorem-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .theorem p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Proof */
+    .proof {
+      background: var(--bg-card);
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .proof-step {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .proof-step::before {
+      content: attr(data-n);
+      position: absolute;
+      left: 0;
+      color: var(--operator);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    .qed {
+      text-align: right;
+      color: var(--gold);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 1rem;
+    }
+
+    /* Callout */
+    .callout {
+      background: var(--operator-dim);
+      border-left: 3px solid var(--operator);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .callout strong {
+      color: var(--operator);
+    }
+
+    /* Final */
+    .final {
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+
+    .final-symbol {
+      font-size: 6rem;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      text-shadow: 0 0 80px rgba(251, 191, 36, 0.3);
+    }
+
+    .final-text {
+      font-size: 1.3rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Code inline */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9em;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero-equation { font-size: 2.5rem; }
+      .def-block { grid-template-columns: 1fr; }
+      .def-symbol { text-align: left; font-size: 2rem; }
+      .instance { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+      .instance .domain { min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-equation">
+    <span class="sym-circ">⊙</span>
+    <span class="sym-eq">=</span>
+    <span class="sym-dot">•</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">○</span>
+  </div>
+  <p class="hero-subtitle">
+    One symbol. Two operands. One operator.<br>
+    The notation for reality.
+  </p>
+</section>
+
+<!-- SECTION 1: THE REDUCTION -->
+<section>
+  <h2>§1 — The Reduction</h2>
+
+  <p>The circumpunct is not three components. It is two operands joined by one operator.</p>
+
+  <div class="axiom-primary">
+    <div class="equation">
+      <span class="sym-circ">⊙</span>
+      <span class="sym-eq">=</span>
+      <span class="sym-dot">•</span>
+      <span class="sym-phi">Φ</span>
+      <span class="sym-ring">○</span>
+    </div>
+    <div class="gloss">discrete — through — continuous</div>
+  </div>
+
+  <div class="def-block">
+    <div class="def-symbol sym-dot">•</div>
+    <div class="def-content">
+      <h4>Operand: Discrete</h4>
+      <p>The digital channel. Binary. Present or absent. Yes or no.</p>
+      <p class="muted">What IS or IS NOT.</p>
+    </div>
+  </div>
+
+  <div class="def-block">
+    <div class="def-symbol sym-phi">Φ</div>
+    <div class="def-content">
+      <h4>Operator: Through</h4>
+      <p>The mediation. Not a thing — an action. The reconciliation of discrete and continuous.</p>
+      <p class="muted">The verb between two nouns.</p>
+    </div>
+  </div>
+
+  <div class="def-block">
+    <div class="def-symbol sym-ring">○</div>
+    <div class="def-content">
+      <h4>Operand: Continuous</h4>
+      <p>The analog channel. Graduated. Degrees and magnitudes.</p>
+      <p class="muted">HOW MUCH exists.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: PHI AS OPERATOR -->
+<section>
+  <h2>§2 — Φ as Operator</h2>
+
+  <p>Φ belongs to the same category as arithmetic and logical operators:</p>
+
+  <table class="op-table">
+    <tr>
+      <th>Operator</th>
+      <th>Meaning</th>
+      <th>Action</th>
+    </tr>
+    <tr>
+      <td class="op-sym">+</td>
+      <td>combined with</td>
+      <td>addition</td>
+    </tr>
+    <tr>
+      <td class="op-sym">×</td>
+      <td>scaled by</td>
+      <td>multiplication</td>
+    </tr>
+    <tr>
+      <td class="op-sym">→</td>
+      <td>maps to</td>
+      <td>function</td>
+    </tr>
+    <tr>
+      <td class="op-sym">∧</td>
+      <td>and</td>
+      <td>conjunction</td>
+    </tr>
+    <tr>
+      <td class="op-sym" style="color: var(--operator);">Φ</td>
+      <td>reconciled through</td>
+      <td>mediation</td>
+    </tr>
+  </table>
+
+  <div class="theorem">
+    <div class="theorem-label">Definition</div>
+    <p><strong>Φ</strong> is the binary operator of reconciliation. Given discrete operand <em>D</em> and continuous operand <em>C</em>:</p>
+    <p style="font-family: 'JetBrains Mono', monospace; text-align: center; font-size: 1.2rem; margin: 1rem 0;">
+      D <span class="sym-phi">Φ</span> C = the complete structure in which D and C are mediated
+    </p>
+  </div>
+
+  <div class="callout">
+    <strong>Field is not a noun.</strong> It's a verb — the action of mediation itself. "Mind" is not a thing between brain and behavior. Mind is what <em>happens</em> when discrete and continuous interface. The operation, not the operand.
+  </div>
+</section>
+
+<!-- SECTION 3: THE INSTANCES -->
+<section>
+  <h2>§3 — Universal Instances</h2>
+
+  <p>Every domain that appears to have "two kinds of thing" is one operator applied to two operands:</p>
+
+  <div class="instance">
+    <span class="domain">love</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">presence</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">provision</span>
+  </div>
+
+  <div class="instance">
+    <span class="domain">justice</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">recognition</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">distribution</span>
+  </div>
+
+  <div class="instance">
+    <span class="domain">physics</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">particle</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">wave</span>
+  </div>
+
+  <div class="instance">
+    <span class="domain">biology</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">genotype</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">phenotype</span>
+  </div>
+
+  <div class="instance">
+    <span class="domain">music</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">note</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">timbre</span>
+  </div>
+
+  <div class="instance">
+    <span class="domain">language</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">word</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">voice</span>
+  </div>
+
+  <div class="instance">
+    <span class="domain">economics</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">price</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">value</span>
+  </div>
+
+  <div class="instance">
+    <span class="domain">time</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">moment</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">duration</span>
+  </div>
+
+  <div class="instance">
+    <span class="domain">mathematics</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">integer</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">real</span>
+  </div>
+
+  <div class="instance">
+    <span class="domain">information</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">symbol</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">signal</span>
+  </div>
+
+  <div class="instance">
+    <span class="domain">consciousness</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">qualia</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">quantity</span>
+  </div>
+
+  <div class="instance">
+    <span class="domain">self</span>
+    <span class="eq">=</span>
+    <span class="sym-dot">soul</span>
+    <span class="sym-phi">Φ</span>
+    <span class="sym-ring">body</span>
+  </div>
+</section>
+
+<!-- SECTION 4: OPERATOR PROPERTIES -->
+<section>
+  <h2>§4 — Operator Properties</h2>
+
+  <div class="theorem">
+    <div class="theorem-label">Property 1 — Non-commutativity</div>
+    <p>The operator Φ is non-commutative. Order matters:</p>
+    <p style="font-family: 'JetBrains Mono', monospace; text-align: center; margin: 1rem 0;">
+      <span class="sym-dot">•</span> <span class="sym-phi">Φ</span> <span class="sym-ring">○</span> ≠ <span class="sym-ring">○</span> <span class="sym-phi">Φ</span> <span class="sym-dot">•</span>
+    </p>
+    <p>The discrete opens <em>into</em> the continuous. The aperture traverses <em>toward</em> the boundary. Reversing the operands reverses the direction of becoming.</p>
+  </div>
+
+  <div class="theorem">
+    <div class="theorem-label">Property 2 — Non-derivability</div>
+    <p>Neither operand can be derived from the other:</p>
+    <p style="font-family: 'JetBrains Mono', monospace; text-align: center; margin: 1rem 0;">
+      <span class="sym-dot">•</span> ⇏ <span class="sym-ring">○</span>   and   <span class="sym-ring">○</span> ⇏ <span class="sym-dot">•</span>
+    </p>
+    <p>Φ does not generate either operand. It <em>relates</em> what is already co-primary.</p>
+  </div>
+
+  <div class="theorem">
+    <div class="theorem-label">Property 3 — Completeness Requirement</div>
+    <p>A structure is complete if and only if it has the form D Φ C:</p>
+    <p style="font-family: 'JetBrains Mono', monospace; text-align: center; margin: 1rem 0;">
+      Complete(S) ⟺ S = D <span class="sym-phi">Φ</span> C
+    </p>
+    <p>A single operand without the operator is incomplete. The operator without both operands is undefined.</p>
+  </div>
+
+  <div class="theorem">
+    <div class="theorem-label">Property 4 — Scale Invariance</div>
+    <p>At every scale n, the same operator applies:</p>
+    <p style="font-family: 'JetBrains Mono', monospace; text-align: center; margin: 1rem 0;">
+      ⊙<sub>n</sub> = •<sub>n</sub> <span class="sym-phi">Φ</span> ○<sub>n</sub>
+    </p>
+    <p>And the continuous operand ○<sub>n</sub> is composed of circumpuncts at scale n−1. Recursion all the way down.</p>
+  </div>
+</section>
+
+<!-- SECTION 5: THE GLYPH -->
+<section>
+  <h2>§5 — The Glyph</h2>
+
+  <p>The symbol ⊙ is not arbitrary. It <em>is</em> the equation:</p>
+
+  <div class="proof">
+    <p class="proof-step" data-n="•">The center dot — discrete operand</p>
+    <p class="proof-step" data-n="○">The outer ring — continuous operand</p>
+    <p class="proof-step" data-n="Φ">The space between — the operator itself</p>
+    <p class="qed">∎</p>
+  </div>
+
+  <p>The glyph is the equation written in geometry rather than typography. Both valid. Both the same structure.</p>
+
+  <div class="callout">
+    <strong>⊙ is self-documenting.</strong> Center-through-boundary. Discrete-operator-continuous. The ancient symbol encodes the complete equation in a single mark.
+  </div>
+</section>
+
+<!-- SECTION 6: DISSOLUTION -->
+<section>
+  <h2>§6 — Hard Problem Dissolution</h2>
+
+  <div class="theorem">
+    <div class="theorem-label">Theorem</div>
+    <p>Every "hard problem" of the form <em>"How does X give rise to Y?"</em> — where X is discrete and Y is continuous (or vice versa) — dissolves under operator notation.</p>
+  </div>
+
+  <div class="proof">
+    <p class="proof-step" data-n="1">The question assumes one operand derives from the other.</p>
+    <p class="proof-step" data-n="2">But D ⇏ C and C ⇏ D (non-derivability).</p>
+    <p class="proof-step" data-n="3">The question has no answer because the premise is false.</p>
+    <p class="proof-step" data-n="4">The correct statement is: D Φ C — they are related, not derived.</p>
+    <p class="qed">∎</p>
+  </div>
+
+  <p>The hard problem of consciousness asks how brain (continuous) gives rise to qualia (discrete). Wrong question. The right notation:</p>
+
+  <p style="font-family: 'JetBrains Mono', monospace; text-align: center; font-size: 1.3rem; margin: 2rem 0;">
+    consciousness = <span class="sym-dot">qualia</span> <span class="sym-phi">Φ</span> <span class="sym-ring">quantity</span> = <span class="sym-circ">⊙</span>
+  </p>
+
+  <p>Neither side generates the other. Φ is <em>mind</em> — the operation of mediation. Consciousness is the <em>whole</em> — the complete circumpunct.</p>
+</section>
+
+<!-- SECTION 7: SELF-INSTANTIATION -->
+<section>
+  <h2>§7 — Self-Instantiation</h2>
+
+  <p>Look at the symbol:</p>
+
+  <p style="font-size: 5rem; text-align: center; color: var(--gold); margin: 2rem 0;">⊙</p>
+
+  <div class="theorem">
+    <div class="theorem-label">The dot is literally discrete</div>
+    <p>Indivisible. Either present or absent. A point — dimensionless, ungraduated, binary.</p>
+  </div>
+
+  <div class="theorem">
+    <div class="theorem-label">The circle is literally continuous</div>
+    <p>Unbroken line. Every point flows into the next. No gaps, no jumps — pure continuity.</p>
+  </div>
+
+  <div class="theorem">
+    <div class="theorem-label">The space between is literally the field</div>
+    <p>The medium of their relation. Where center and boundary meet. The between made visible.</p>
+  </div>
+
+  <div class="callout">
+    <strong>The symbol doesn't represent discrete-through-continuous. It IS discrete-through-continuous.</strong> The glyph enacts what it denotes. The map is the territory. The notation is the model is the thing.
+  </div>
+
+  <p>This is why ⊙ is irreducible. Any attempt to find a more primitive symbol would require... a dot, a circle, and the space between.</p>
+
+  <p>The ancients didn't <em>invent</em> a clever symbol. They <em>discovered</em> the minimal complete form.</p>
+</section>
+
+<!-- FINAL -->
+<section class="final">
+  <div class="final-symbol">⊙</div>
+  <p class="final-text">
+    Notation for reality.<br>
+    Model of reality.<br>
+    Instance of reality.<br><br>
+    <span style="font-family: 'JetBrains Mono', monospace; color: var(--text); font-style: normal;">• Φ ○</span>
+  </p>
+</section>
+
+</body>
+</html>
