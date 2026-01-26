@@ -68,6 +68,7 @@
       justify-content: center;
       align-items: center;
       text-align: center;
+      padding-top: 4rem;
     }
 
     .hero-equation {
@@ -348,6 +349,11 @@
 </head>
 <body>
 
+<nav style="position: fixed; top: 0; left: 0; right: 0; background: rgba(9,9,11,0.95); backdrop-filter: blur(10px); padding: 1rem 2rem; z-index: 100; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(251,191,36,0.2);">
+  <a href="https://fractalreality.ca" style="color: var(--gold); text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">← fractalreality.ca</a>
+  <span style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">⊙ = • Φ ○</span>
+</nav>
+
 <!-- HERO -->
 <section class="hero">
   <div class="hero-equation">
@@ -620,12 +626,16 @@
   </div>
 
   <div class="theorem">
-    <div class="theorem-label">Property 4 — Scale Invariance</div>
+    <div class="theorem-label">Property 4 — Scale Invariance (The Recursion)</div>
     <p>At every scale n, the same operator applies:</p>
     <p style="font-family: 'JetBrains Mono', monospace; text-align: center; margin: 1rem 0;">
       ⊙<sub>n</sub> = •<sub>n</sub> <span class="sym-phi">Φ</span> ○<sub>n</sub>
     </p>
-    <p>And the continuous operand ○<sub>n</sub> is composed of circumpuncts at scale n−1. Recursion all the way down.</p>
+    <p>The recursion lives in the <span class="sym-ring">boundary</span>:</p>
+    <p style="font-family: 'JetBrains Mono', monospace; text-align: center; margin: 1rem 0;">
+      <span class="sym-ring">○<sub>n</sub></span> = { <span class="sym-circ">⊙<sub>n-1</sub></span> }
+    </p>
+    <p>The boundary at scale n is a population of circumpuncts at scale n-1. The <span class="sym-dot">discrete</span> doesn't decompose — it's irreducible. The <span class="sym-phi">operator</span> isn't made of parts. The <span class="sym-ring">continuous</span> is where the fractal lives.</p>
   </div>
 </section>
 
