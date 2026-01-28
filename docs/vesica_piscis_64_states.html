@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⊙ ∩ ⊙ = 64 | The Vesica Piscis Formalization</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --bg-elevated: #111114;
+      --bg-card: #18181b;
+      --text: #fafafa;
+      --text-muted: #71717a;
+      --gold: #fbbf24;
+      --gold-dim: rgba(251, 191, 36, 0.1);
+      --aperture: #f472b6;
+      --aperture-dim: rgba(244, 114, 182, 0.1);
+      --field: #34d399;
+      --field-dim: rgba(52, 211, 153, 0.1);
+      --boundary: #a78bfa;
+      --boundary-dim: rgba(167, 139, 250, 0.12);
+      --cyan: #22d3ee;
+      --vesica: #60a5fa;
+      --vesica-dim: rgba(96, 165, 250, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 19px;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero, section, .final { position: relative; z-index: 2; }
+
+    section {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .hero {
+      min-height: 85svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .hero-equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3.2rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-bottom: 2rem;
+    }
+
+    .sym-circ { color: var(--gold); }
+    .sym-aperture { color: var(--aperture); }
+    .sym-field { color: var(--field); }
+    .sym-boundary { color: var(--boundary); }
+    .sym-vesica { color: var(--vesica); }
+    .sym-eq { color: var(--text-muted); }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      font-style: italic;
+      max-width: 600px;
+      margin-bottom: 1rem;
+    }
+
+    .hero-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.15em;
+      margin-top: 2rem;
+    }
+
+    h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 2.5rem 0 1.2rem;
+    }
+
+    p { margin-bottom: 1.4rem; }
+
+    .axiom-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--gold);
+      padding: 2.5rem;
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+
+    .axiom-box .equation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    .axiom-box .gloss {
+      color: var(--text-muted);
+      font-size: 1rem;
+      font-style: italic;
+    }
+
+    .definition {
+      background: var(--bg-card);
+      border-left: 3px solid var(--gold);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .definition-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .definition p:last-child { margin-bottom: 0; }
+
+    .theorem {
+      background: var(--gold-dim);
+      border-left: 3px solid var(--gold);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .theorem-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+
+    .proof {
+      background: var(--bg-card);
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0;
+    }
+
+    .proof-step {
+      position: relative;
+      margin-bottom: 0.8rem;
+      padding-left: 2rem;
+    }
+
+    .proof-step::before {
+      content: attr(data-n);
+      position: absolute;
+      left: 0;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    .qed {
+      text-align: right;
+      color: var(--gold);
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 0.5rem;
+    }
+
+    .formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      text-align: center;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      background: rgba(0,0,0,0.3);
+      border-radius: 4px;
+    }
+
+    .formula-note {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 0.8rem;
+      font-style: italic;
+    }
+
+    .diagram {
+      text-align: center;
+      padding: 2rem;
+      margin: 2rem 0;
+      background: var(--bg-card);
+      border-radius: 8px;
+    }
+
+    .diagram svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .diagram-caption {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+
+    th, td {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .callout {
+      background: var(--vesica-dim);
+      border-left: 3px solid var(--vesica);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .callout strong { color: var(--vesica); }
+
+    .point-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    @media (max-width: 600px) {
+      .point-grid { grid-template-columns: 1fr; }
+    }
+
+    .point-card {
+      background: var(--bg-card);
+      padding: 1.2rem;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .point-card .symbol {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .point-card .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    .final {
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+
+    .final-symbol {
+      font-size: 4rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .final-text {
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+
+    nav {
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    nav a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    nav a:hover { text-decoration: underline; }
+
+    ul { margin: 1rem 0 1.5rem 2rem; }
+    li { margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="https://fractalreality.ca">← Back to FractalReality.ca</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-equation">
+    <span class="sym-circ">⊙</span>
+    <span class="sym-eq">∩</span>
+    <span class="sym-circ">⊙</span>
+    <span class="sym-eq">=</span>
+    <span class="sym-vesica">64</span>
+  </div>
+  <p class="hero-subtitle">
+    The Vesica Piscis Formalization:<br>
+    Two Circumpuncts in Relation
+  </p>
+  <p style="color: var(--text-muted); max-width: 550px; font-size: 1.1rem;">
+    How the geometry of relation generates exactly 6 apertures,<br>
+    yielding 2⁶ = 64 binary states
+  </p>
+  <p class="hero-meta">CIRCUMPUNCT FRAMEWORK — JANUARY 2026</p>
+</div>
+
+<!-- §1 THE VESICA PISCIS -->
+<section>
+  <h2>§1 — The Vesica Piscis</h2>
+
+  <p>When two circumpuncts enter relation, their geometry is not arbitrary. Each passes through the other's center. This is the <strong>vesica piscis</strong>—the shape of relation itself.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 400 280" width="400" height="280">
+      <!-- Left circle -->
+      <circle cx="140" cy="140" r="100" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.6"/>
+      <!-- Right circle -->
+      <circle cx="260" cy="140" r="100" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.6"/>
+      
+      <!-- Vesica piscis fill -->
+      <path d="M200 53.6 A100 100 0 0 1 200 226.4 A100 100 0 0 1 200 53.6" fill="rgba(96, 165, 250, 0.15)" stroke="none"/>
+      
+      <!-- The 6 aperture points -->
+      <!-- Center 1 -->
+      <circle cx="140" cy="140" r="8" fill="#f472b6"/>
+      <text x="140" y="170" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="11">•₁</text>
+      
+      <!-- Center 2 -->
+      <circle cx="260" cy="140" r="8" fill="#f472b6"/>
+      <text x="260" y="170" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="11">•₂</text>
+      
+      <!-- Top intersection -->
+      <circle cx="200" cy="53.6" r="8" fill="#f472b6"/>
+      <text x="200" y="40" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="11">∩₁</text>
+      
+      <!-- Bottom intersection -->
+      <circle cx="200" cy="226.4" r="8" fill="#f472b6"/>
+      <text x="200" y="260" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="11">∩₂</text>
+      
+      <!-- Left lens point -->
+      <circle cx="160" cy="140" r="6" fill="#f472b6" opacity="0.8"/>
+      <text x="160" y="125" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="11">⋈₁</text>
+      
+      <!-- Right lens point -->
+      <circle cx="240" cy="140" r="6" fill="#f472b6" opacity="0.8"/>
+      <text x="240" y="125" text-anchor="middle" fill="#f472b6" font-family="JetBrains Mono" font-size="11">⋈₂</text>
+    </svg>
+    <p class="diagram-caption">The vesica piscis: two ⊙'s each passing through the other's center, generating 6 singular points</p>
+  </div>
+
+  <div class="definition">
+    <div class="definition-label">Definition 1.1 — Vesica Piscis</div>
+    <p>Let ⊙₁ and ⊙₂ be two circumpuncts with centers •₁ and •₂ and boundaries ○₁ and ○₂.</p>
+    <p>The <strong>vesica piscis</strong> V is their intersection when each center lies on the other's boundary:</p>
+    <p style="text-align: center; font-family: 'JetBrains Mono', monospace;">
+      •₁ ∈ ○₂ ∧ •₂ ∈ ○₁
+    </p>
+    <p style="margin-bottom: 0;">This is the geometry of <em>mutual relation</em>—each fully inside the other's field, each touching the other's aperture.</p>
+  </div>
+
+  <div class="definition">
+    <div class="definition-label">Definition 1.2 — The Six Apertures</div>
+    <p>The vesica piscis generates exactly <strong>six singular points</strong>:</p>
+  </div>
+
+  <div class="point-grid">
+    <div class="point-card">
+      <div class="symbol" style="color: var(--aperture);">•₁</div>
+      <div class="label">CENTER OF ⊙₁</div>
+      <p style="font-size: 0.9rem; margin: 0.5rem 0 0 0; color: var(--text-muted);">aperture of self</p>
+    </div>
+    <div class="point-card">
+      <div class="symbol" style="color: var(--aperture);">•₂</div>
+      <div class="label">CENTER OF ⊙₂</div>
+      <p style="font-size: 0.9rem; margin: 0.5rem 0 0 0; color: var(--text-muted);">aperture of other</p>
+    </div>
+    <div class="point-card">
+      <div class="symbol" style="color: var(--aperture);">∩₁</div>
+      <div class="label">TOP INTERSECTION</div>
+      <p style="font-size: 0.9rem; margin: 0.5rem 0 0 0; color: var(--text-muted);">where ○₁ meets ○₂</p>
+    </div>
+    <div class="point-card">
+      <div class="symbol" style="color: var(--aperture);">∩₂</div>
+      <div class="label">BOTTOM INTERSECTION</div>
+      <p style="font-size: 0.9rem; margin: 0.5rem 0 0 0; color: var(--text-muted);">where ○₁ meets ○₂</p>
+    </div>
+    <div class="point-card">
+      <div class="symbol" style="color: var(--aperture);">⋈₁</div>
+      <div class="label">LEFT LENS POINT</div>
+      <p style="font-size: 0.9rem; margin: 0.5rem 0 0 0; color: var(--text-muted);">○₂ crosses •₁–•₂ axis</p>
+    </div>
+    <div class="point-card">
+      <div class="symbol" style="color: var(--aperture);">⋈₂</div>
+      <div class="label">RIGHT LENS POINT</div>
+      <p style="font-size: 0.9rem; margin: 0.5rem 0 0 0; color: var(--text-muted);">○₁ crosses •₁–•₂ axis</p>
+    </div>
+  </div>
+
+  <p>Each of these 6 points is a <strong>potential aperture</strong>—a place where signal can cross between the two circumpuncts. Each is binary: open or closed.</p>
+</section>
+
+<!-- §2 THE 64 STATES -->
+<section>
+  <h2>§2 — The 64 States</h2>
+
+  <div class="axiom-box">
+    <div class="equation">
+      2⁶ = 64
+    </div>
+    <div class="gloss">Six binary apertures → 64 possible configurations</div>
+  </div>
+
+  <div class="theorem">
+    <div class="theorem-label">Theorem 2.1 — State Space Cardinality</div>
+    <p>The state space of two circumpuncts in vesica piscis relation has exactly 64 elements.</p>
+  </div>
+
+  <div class="proof">
+    <p class="proof-step" data-n="1.">The vesica piscis generates 6 singular points (Def 1.2).</p>
+    <p class="proof-step" data-n="2.">Each point is an aperture with binary state: ε ∈ {0, 1}.</p>
+    <p class="proof-step" data-n="3.">Apertures are independent—any combination is possible.</p>
+    <p class="proof-step" data-n="4.">State space S = {0, 1}⁶.</p>
+    <p class="proof-step" data-n="5.">|S| = 2⁶ = 64.</p>
+    <p class="qed">∎</p>
+  </div>
+
+  <div class="definition">
+    <div class="definition-label">Definition 2.1 — State Vector</div>
+    <p>A <strong>state</strong> σ ∈ S is a 6-tuple:</p>
+    <p style="text-align: center; font-family: 'JetBrains Mono', monospace;">
+      σ = (ε₁, ε₂, ε₃, ε₄, ε₅, ε₆)
+    </p>
+    <p>where each εᵢ ∈ {0, 1} indicates whether aperture i is open (1) or closed (0).</p>
+    <p style="margin-bottom: 0;">The state answers: <em>which gates between us are open right now?</em></p>
+  </div>
+
+  <div class="formula">
+    σ = (•₁, •₂, ∩₁, ∩₂, ⋈₁, ⋈₂) ∈ {0,1}⁶
+    <div class="formula-note">Each state is a binary vector over the 6 apertures</div>
+  </div>
+
+  <h3>Interpretation of Apertures</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Aperture</th>
+        <th>Location</th>
+        <th>When Open</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color: var(--aperture);">•₁</td>
+        <td>Center of self</td>
+        <td>Self is present, attending</td>
+      </tr>
+      <tr>
+        <td style="color: var(--aperture);">•₂</td>
+        <td>Center of other</td>
+        <td>Other is present, attending</td>
+      </tr>
+      <tr>
+        <td style="color: var(--aperture);">∩₁, ∩₂</td>
+        <td>Boundary crossings</td>
+        <td>Mutual boundary permeability</td>
+      </tr>
+      <tr>
+        <td style="color: var(--aperture);">⋈₁, ⋈₂</td>
+        <td>Lens axis crossings</td>
+        <td>Direct center-to-center channel</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- §3 STRUCTURE OF THE STATE SPACE -->
+<section>
+  <h2>§3 — Structure of the State Space</h2>
+
+  <p>The 64 states are not undifferentiated. They partition into meaningful subspaces.</p>
+
+  <div class="theorem">
+    <div class="theorem-label">Theorem 3.1 — Null and Full States</div>
+    <p>Two extreme states bound the space:</p>
+    <ul style="margin-top: 0.5rem;">
+      <li><strong>σ₀ = (0,0,0,0,0,0)</strong> — all gates closed, no relation</li>
+      <li><strong>σ₆₃ = (1,1,1,1,1,1)</strong> — all gates open, full communion</li>
+    </ul>
+  </div>
+
+  <div class="theorem">
+    <div class="theorem-label">Theorem 3.2 — Hamming Distance as Relational Measure</div>
+    <p>The <strong>Hamming distance</strong> d(σ, σ') counts the number of apertures that differ between two states. This measures the "cost" of transitioning between relational configurations.</p>
+    <p style="margin-bottom: 0;">The distance from null to full: d(σ₀, σ₆₃) = 6 (maximum).</p>
+  </div>
+
+  <h3>Partitioning by Openness</h3>
+
+  <p>States partition by how many apertures are open:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Open Count</th>
+        <th>States</th>
+        <th>Interpretation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>0</td>
+        <td>C(6,0) = 1</td>
+        <td>No relation</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>C(6,1) = 6</td>
+        <td>Minimal contact</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>C(6,2) = 15</td>
+        <td>Partial exchange</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>C(6,3) = 20</td>
+        <td>Balanced relation</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>C(6,4) = 15</td>
+        <td>Deep exchange</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>C(6,5) = 6</td>
+        <td>Near-full communion</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>C(6,6) = 1</td>
+        <td>Complete union</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="formula">
+    1 + 6 + 15 + 20 + 15 + 6 + 1 = 64
+    <div class="formula-note">Pascal's row 6 — the binomial distribution over openness</div>
+  </div>
+
+  <div class="callout">
+    <strong>The middle is largest.</strong> With 20 states at openness = 3, balanced relation is the most differentiated regime. This is where the subtlety of relationship lives—neither closed off nor dissolved.
+  </div>
+</section>
+
+<!-- §4 ANALOG AND FRACTAL -->
+<section>
+  <h2>§4 — Analog and Fractal Completion</h2>
+
+  <p>The 64 states are the <strong>binary skeleton</strong>. They answer <em>which</em> gates are open. Two more layers complete the structure:</p>
+
+  <div class="definition" style="border-color: var(--field);">
+    <div class="definition-label" style="color: var(--field);">Definition 4.1 — Analog Content</div>
+    <p>For each open aperture, <strong>analog content</strong> φᵢ ∈ ℂ specifies:</p>
+    <ul>
+      <li>|φᵢ| = amplitude (how much flows through)</li>
+      <li>arg(φᵢ) = phase (what kind, orientation)</li>
+    </ul>
+    <p style="margin-bottom: 0;">The full analog state is φ ∈ ℂ⁶, but only components where εᵢ = 1 are active.</p>
+  </div>
+
+  <div class="definition" style="border-color: var(--boundary);">
+    <div class="definition-label" style="color: var(--boundary);">Definition 4.2 — Fractal Nesting</div>
+    <p>Each aperture point in the vesica piscis is itself a <strong>complete circumpunct at smaller scale</strong>. The 6-aperture structure recurses:</p>
+    <p style="text-align: center; font-family: 'JetBrains Mono', monospace; margin: 1rem 0;">
+      ∀ aperture p : p ≅ ⊙(s-1)
+    </p>
+    <p style="margin-bottom: 0;">Every gate is a whole. Surfaces all the way down.</p>
+  </div>
+
+  <div class="theorem">
+    <div class="theorem-label">Theorem 4.1 — Complete Relational State</div>
+    <p>A complete relational state between two circumpuncts is the triple:</p>
+    <p style="text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; margin: 1rem 0;">
+      Σ = (σ, φ, n)
+    </p>
+    <ul>
+      <li><strong>σ ∈ {0,1}⁶</strong> — which gates are open (binary)</li>
+      <li><strong>φ ∈ ℂ⁶</strong> — what flows through open gates (analog)</li>
+      <li><strong>n ∈ ℕ</strong> — scale depth of nesting (fractal)</li>
+    </ul>
+  </div>
+
+  <div class="formula">
+    Σ = <span class="sym-aperture">σ</span> ⊗ <span class="sym-field">φ</span> ⊗ <span class="sym-boundary">n</span>
+    <div class="formula-note">Binary selects · Analog fills · Fractal nests</div>
+  </div>
+</section>
+
+<!-- §5 TEMPORAL DYNAMICS -->
+<section>
+  <h2>§5 — Temporal Dynamics</h2>
+
+  <p>The aperture heads the arrow of time. Each binary decision ε: 0→1 or 1→0 is <strong>irreversible</strong>—a moment created.</p>
+
+  <div class="theorem">
+    <div class="theorem-label">Theorem 5.1 — State Transitions as Time</div>
+    <p>A <strong>transition</strong> σ → σ' is a change in which apertures are open. Each transition:</p>
+    <ul>
+      <li>Requires at least one aperture to flip (d(σ, σ') ≥ 1)</li>
+      <li>Creates a moment (entry in the 1D braid)</li>
+      <li>Is irreversible (you can return to a state, but not un-experience the path)</li>
+    </ul>
+  </div>
+
+  <p>The <strong>history</strong> of a relation is the sequence of states:</p>
+
+  <div class="formula">
+    H = σ(t₀) → σ(t₁) → σ(t₂) → ...
+    <div class="formula-note">The 1D braid: accumulated binary decisions</div>
+  </div>
+
+  <p>The analog content φ(t) <strong>flows through</strong> whichever configuration σ(t) permits. The fractal structure means this same dynamic plays out at every scale of the relationship—cellular, personal, social, cosmic.</p>
+
+  <div class="callout">
+    <strong>The present moment is σ(now).</strong> Which gates are open between us right now? That's the complete answer to "what is our relationship in this instant?" The past is the sequence that led here. The future is the field of possible σ' we might transition to.
+  </div>
+</section>
+
+<!-- §6 CORRESPONDENCES -->
+<section>
+  <h2>§6 — Correspondences</h2>
+
+  <p>The 64 states appear across domains—not by coincidence, but because the vesica piscis is the universal geometry of relation.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Domain</th>
+        <th>64 States</th>
+        <th>6 Binary Elements</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>I Ching</td>
+        <td>64 hexagrams</td>
+        <td>6 yao (lines): yin/yang</td>
+      </tr>
+      <tr>
+        <td>Genetics</td>
+        <td>64 codons</td>
+        <td>3 nucleotide pairs × 2 strands</td>
+      </tr>
+      <tr>
+        <td>Chess</td>
+        <td>64 squares</td>
+        <td>8×8 = 2⁶ board positions</td>
+      </tr>
+      <tr>
+        <td>Computing</td>
+        <td>64-bit architecture</td>
+        <td>2⁶ bits per word</td>
+      </tr>
+      <tr>
+        <td>Standard Model</td>
+        <td>64 = 48+12+4</td>
+        <td>Fermions + Gauge + Higgs</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="theorem">
+    <div class="theorem-label">Theorem 6.1 — Universality of 64</div>
+    <p>Any system encoding the full state space of two entities in mutual relation will exhibit 64-fold structure, because:</p>
+    <ul>
+      <li>Two-ness generates the vesica piscis</li>
+      <li>The vesica piscis generates 6 apertures</li>
+      <li>6 binary apertures generate 64 states</li>
+    </ul>
+    <p style="margin-bottom: 0;">This is geometric necessity, not numerology.</p>
+  </div>
+</section>
+
+<!-- §7 FALSIFICATION -->
+<section>
+  <h2>§7 — Falsification Criteria</h2>
+
+  <p>The framework fails if:</p>
+
+  <div class="theorem" style="background: rgba(248, 113, 113, 0.1); border-left-color: #f87171;">
+    <div class="theorem-label" style="color: #f87171;">Falsification Conditions</div>
+    <p class="proof-step" data-n="F1.">The vesica piscis of two equal circles generates ≠ 6 singular points.</p>
+    <p class="proof-step" data-n="F2.">Two circumpuncts in relation require more or fewer than 6 binary variables to fully specify their interface state.</p>
+    <p class="proof-step" data-n="F3.">A relational system exists where 64-fold structure is demonstrably inappropriate or incomplete.</p>
+    <p class="proof-step" data-n="F4.">The correspondence to I Ching / genetics / Standard Model is shown to be spurious rather than structural.</p>
+  </div>
+
+  <p><strong>Claim:</strong> The vesica piscis uniquely generates exactly 6 points, and any complete description of binary relational state requires exactly these 6 degrees of freedom. The 64 is not imposed—it emerges from the geometry of two wholes meeting.</p>
+</section>
+
+<!-- FINAL -->
+<section class="final">
+  <div class="final-symbol">⊙ ∩ ⊙</div>
+  <p class="final-text">
+    Two circumpuncts in relation.<br>
+    Six apertures at their interface.<br>
+    Sixty-four ways to be together.<br><br>
+    <span style="font-family: 'JetBrains Mono', monospace; font-style: normal;">
+      Which gates between us are open now?
+    </span>
+  </p>
+  <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--text-muted);">
+    The vesica piscis is the shape of relation.<br>
+    The 64 states are its alphabet.<br>
+    The analog is what we say.<br>
+    The fractal is that we say it at every scale.
+  </p>
+</section>
+
+</body>
+</html>
