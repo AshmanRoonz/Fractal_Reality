@@ -202,6 +202,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**64-state_circumpunct_particle_table.html**](https://fractalreality.ca/64-state_circumpunct_particle_table.html) — Topological quantum computer with B₃ braid visualization
 - [**iching_64state_visualizer.html**](https://fractalreality.ca/iching_64state_visualizer.html) — I Ching ↔ Circumpunct 64-state isomorphism explorer
 - [**master-table.html**](https://fractalreality.ca/master-table.html) — Master reference table of all 64 states
+- [**vesica_piscis_64_states.html**](https://fractalreality.ca/vesica_piscis_64_states.html) — The Vesica Piscis formalization: ⊙ ∩ ⊙ = 64
 
 ### Physics & Mathematics
 
