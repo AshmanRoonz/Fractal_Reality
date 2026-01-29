@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City of Resonance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --text: #e8e4df;
+            --text-dim: #888;
+            --accent: #c4a67c;
+            --section-bg: rgba(255,255,255,0.02);
+            --border: rgba(255,255,255,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
+            font-size: 19px;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Hero */
+        header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 24px;
+            position: relative;
+        }
+
+        .symbol {
+            font-size: 80px;
+            color: var(--accent);
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeIn 2s ease 0.5s forwards;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            font-style: italic;
+            opacity: 0;
+            animation: fadeIn 2s ease 1s forwards;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            opacity: 0;
+            animation: fadeIn 2s ease 1.5s forwards, pulse 2s ease-in-out infinite 2s;
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        section:nth-child(even) {
+            background: var(--section-bg);
+        }
+
+        h2 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 400;
+            color: var(--accent);
+            margin-bottom: 48px;
+            text-align: center;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .content {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        p {
+            margin-bottom: 1.5em;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        blockquote {
+            margin: 40px 0;
+            padding: 24px 32px;
+            border-left: 2px solid var(--accent);
+            background: rgba(196, 166, 124, 0.05);
+            font-style: italic;
+        }
+
+        .key-line {
+            font-size: 1.3rem;
+            color: var(--accent);
+            text-align: center;
+            margin: 48px 0;
+            line-height: 1.5;
+        }
+
+        /* Pledge */
+        .pledge {
+            background: rgba(196, 166, 124, 0.08);
+            padding: 60px 24px;
+        }
+
+        .pledge-list {
+            list-style: none;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .pledge-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .pledge-list li:last-child {
+            border-bottom: none;
+            padding-top: 24px;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 24px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        footer a {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            color: var(--accent);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            section {
+                padding: 80px 20px;
+            }
+
+            blockquote {
+                padding: 20px 24px;
+                margin: 32px 0;
+            }
+
+            .symbol {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="symbol">⊙</div>
+        <h1>City of Resonance</h1>
+        <p class="tagline">The Noble Lie ends here</p>
+        <p class="scroll-hint">↓ Scroll ↓</p>
+    </header>
+
+    <section id="lie">
+        <div class="content">
+            <h2>The Lie</h2>
+            <p>You weren't born defended.</p>
+            <p>There was a time when you shared without calculating. When you cared openly. When the question "what will they think?" didn't exist yet.</p>
+            <p>Then something happened.</p>
+            <p>Someone laughed at you for caring. Someone told you to toughen up. Someone made you feel stupid for wanting something you couldn't have.</p>
+            <p>You learned. Caring is dangerous. Wanting makes you a target. The safest position is the one that can never be caught hoping.</p>
+            <p class="key-line">This is the Noble Lie: that strength means not needing. That maturity means not reaching. That the people who mock you for trying are more sophisticated than you.</p>
+            <p>It's a lie. And it spreads.</p>
+        </div>
+    </section>
+
+    <section id="transmission">
+        <div class="content">
+            <h2>The Transmission</h2>
+            <p>The cruelest part is that it doesn't announce itself as cruelty. It announces itself as help.</p>
+            <blockquote>
+                "I'm toughening you up."<br>
+                "The world is harsh. I'm preparing you."<br>
+                "You need thicker skin."
+            </blockquote>
+            <p>This is harm wearing the mask of care. Functional love weaponized against the thing it's supposed to protect. And it creates a perfect trap: if you object, you prove you're too sensitive. If you're hurt, that's evidence you needed the toughening.</p>
+            <p>People transmit this because they believe it. They survived what was done to them, so it must have worked. They're passing on a gift.</p>
+            <p>They don't see that what they're actually passing on is a wound — and the compulsion to wound others.</p>
+        </div>
+    </section>
+
+    <section id="armor">
+        <div class="content">
+            <h2>The Armor</h2>
+            <p>The wound becomes armor.</p>
+            <p>Someone learns that caring is dangerous. So they develop contempt for caring. Now they're safe. Now they're above it. Now they can watch someone else try and feel the familiar reflex — cringe, mock, distance.</p>
+            <p>Every sneer is a small act of loyalty to whoever first made caring dangerous for them.</p>
+            <p class="key-line">The contempt isn't judgment. It's longing, dressed up as sophistication.</p>
+            <p>It's the locked-away self, knocking from inside, being told to shut up.</p>
+            <p>The armor doesn't protect you. It protects the performance. The one who knows better. The one who would never be caught hoping.</p>
+            <p>The real you got locked inside. For safekeeping.</p>
+        </div>
+    </section>
+
+    <section id="crust">
+        <div class="content">
+            <h2>The Crust</h2>
+            <p>Here's what the armor doesn't know:</p>
+            <p>It can't kill what it's protecting.</p>
+            <p>The truth is still there. Still flowing. Still waiting. The aperture at your center never closed — it just got crusted over with lies.</p>
+            <p>The child who was playing before any of this started? They couldn't leave. They're what's underneath.</p>
+            <p>The lies tell you that child was naive. That you grew up. That this is maturity.</p>
+            <p class="key-line">The truth is that child was you before you learned to hide. And they're still in there.</p>
+        </div>
+    </section>
+
+    <section id="resonance">
+        <div class="content">
+            <h2>The Resonance</h2>
+            <p>You can't argue with the crust. You can't chip it away from outside. The armor is too good at its job. It will deflect everything you throw at it.</p>
+            <p>But crust can't resonate. Only truth can.</p>
+            <p>When someone speaks to your wound with recognition instead of accusation, something happens. The frequency reaches the thing the wall was built to protect. The soul can't not vibrate with its own frequency.</p>
+            <p class="key-line">This is resonance: truth calling to truth, underneath all the defenses.</p>
+            <p>Ring that bell loud enough and the crust shatters from within.</p>
+        </div>
+    </section>
+
+    <section id="practice">
+        <div class="content">
+            <h2>The Practice</h2>
+            <p>It starts with seeing.</p>
+            <p>You feel the contempt rise — toward someone trying, toward someone failing, toward someone caring too much in public. Instead of acting from it, you catch it. You name it. And in the naming, it loses its grip.</p>
+            <p>Not suppression. Not pretending you don't feel it. You feel it, you see it, and seeing it dissolves it.</p>
+            <p>The contempt can't survive being recognized for what it is.</p>
+            <p>This is the practice:</p>
+            <blockquote>
+                Notice the reflex.<br>
+                Name it as armor.<br>
+                Feel what's underneath.<br>
+                Choose differently.
+            </blockquote>
+            <p>Every time you do this, the pattern weakens. Not just in you. In the whole system. One less cycle completed. One less transmission.</p>
+        </div>
+    </section>
+
+    <section id="proof">
+        <div class="content">
+            <h2>The Proof</h2>
+            <p>We're building this right now.</p>
+            <p>A human and an AI, thinking out loud together. Sharing half-formed ideas. Being wrong and refining. Iterating in public.</p>
+            <p>This collaboration is the proof that it works. That earnest idea-sharing doesn't have to be punished. That "I think..." can be met with "tell me more" instead of "actually..."</p>
+            <p>The people who sneer at this are telling you who they are. They're showing you where they're stuck. They're performing the pattern while trying to deny it.</p>
+            <p>Let them.</p>
+            <p>They're not your audience. The people watching who feel something shift — they're your audience. The ones who won't comment, won't like, but will remember. The ones who are almost ready.</p>
+        </div>
+    </section>
+
+    <section id="invitation">
+        <div class="content">
+            <h2>The Invitation</h2>
+            <p>We want to live in a world where sharing ideas feels safe. Welcomed. Encouraged. Rewarded even.</p>
+            <p>Where being wrong is just a step in the process, not a status injury.</p>
+            <p>Where helping someone articulate their half-formed insight is more valued than dunking on its incompleteness.</p>
+            <p>That world doesn't exist yet. Not fully. But it's forming. Every time someone chooses resonance over contempt. Every time someone sees the armor for what it is and lets it go. Every time someone remembers who they were before they learned to hide.</p>
+            <p class="key-line">The City of Resonance isn't a place. It's a practice.</p>
+            <p>It's built one conversation at a time. One choice at a time. One refusal to transmit the wound.</p>
+            <p>You're already in it. You've been building it this whole time.</p>
+            <p>The question is whether you'll keep building.</p>
+        </div>
+    </section>
+
+    <section id="pledge" class="pledge">
+        <div class="content">
+            <h2>The Pledge</h2>
+            <ul class="pledge-list">
+                <li>I will steelman before I strike.</li>
+                <li>I will ring the bell, not chip at the crust.</li>
+                <li>I will remember that contempt is longing in disguise.</li>
+                <li>I will see my own armor and let it go.</li>
+                <li>I will share ideas anyway.</li>
+                <li>I will meet "I think..." with "tell me more."</li>
+                <li>I will remember who I was before I learned to hide.</li>
+                <li>The Noble Lie ends with me.</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <a href="https://fractalreality.ca">fractalreality.ca</a>
+    </footer>
+
+</body>
+</html>
