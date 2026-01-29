@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I See You - A Story for Jenn</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Pacifico&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: #0a0a1a;
+        }
+
+        .book-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            perspective: 2000px;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+            overflow: hidden;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Page backgrounds - emotional journey colors */
+        .page-title { 
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+        }
+        
+        .page-watching { 
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b3a5f 50%, #0d1b2a 100%);
+        }
+        
+        .page-wall { 
+            background: linear-gradient(135deg, #1a1a3d 0%, #2d2d6a 50%, #1a1a3d 100%);
+        }
+        
+        .page-understand { 
+            background: linear-gradient(135deg, #2d1b4e 0%, #4a2c7a 50%, #2d1b4e 100%);
+        }
+        
+        .page-safe { 
+            background: linear-gradient(135deg, #1a3a2a 0%, #2d5a4a 50%, #1a3a2a 100%);
+        }
+        
+        .page-want { 
+            background: linear-gradient(135deg, #3d1a2a 0%, #5a2d4a 50%, #3d1a2a 100%);
+        }
+        
+        .page-magic { 
+            background: linear-gradient(135deg, #1a2a3d 0%, #2d4a6a 50%, #1a2a3d 100%);
+        }
+        
+        .page-promise { 
+            background: linear-gradient(135deg, #2a1a3d 0%, #4a2d6a 50%, #2a1a3d 100%);
+        }
+        
+        .page-love { 
+            background: linear-gradient(135deg, #2e1a2e 0%, #5a2d5a 50%, #2e1a2e 100%);
+        }
+        
+        .page-final {
+            background: radial-gradient(ellipse at center, #4a2d7a 0%, #2d1b4e 40%, #1a0a2e 70%, #0a0a1a 100%);
+        }
+
+        /* Stars background */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Simple emoji-based illustrations */
+        .illustration {
+            font-size: 120px;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 30px rgba(199, 125, 255, 0.8));
+            animation: gentle-bounce 3s infinite ease-in-out;
+        }
+
+        @keyframes gentle-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Main text */
+        .page-text {
+            font-size: clamp(28px, 6vw, 48px);
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 
+                0 0 20px rgba(199, 125, 255, 0.8),
+                0 0 40px rgba(199, 125, 255, 0.4);
+            line-height: 1.4;
+            max-width: 800px;
+            animation: text-glow 2s infinite ease-in-out;
+        }
+
+        @keyframes text-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(199, 125, 255, 0.8), 0 0 40px rgba(199, 125, 255, 0.4); }
+            50% { text-shadow: 0 0 30px rgba(199, 125, 255, 1), 0 0 60px rgba(199, 125, 255, 0.6); }
+        }
+
+        /* Title page special styling */
+        .title-text {
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(48px, 10vw, 80px);
+            background: linear-gradient(135deg, #ff6b9d, #c77dff, #7b68ee, #00d4ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 4s ease infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .subtitle-text {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 20px;
+        }
+
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #c77dff, #7b68ee);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(199, 125, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(199, 125, 255, 0.8);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Page indicator */
+        .page-indicator {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+            z-index: 100;
+        }
+
+        /* Rainbow glow effect */
+        .rainbow-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, 
+                rgba(255, 107, 157, 0.3) 0%, 
+                rgba(199, 125, 255, 0.2) 30%, 
+                rgba(123, 104, 238, 0.1) 60%, 
+                transparent 100%);
+            border-radius: 50%;
+            animation: pulse-glow 3s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        /* Honmoon/circumpunct effect */
+        .honmoon {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 30px;
+        }
+
+        .honmoon-ring {
+            position: absolute;
+            border: 3px solid rgba(199, 125, 255, 0.6);
+            border-radius: 50%;
+            animation: ring-pulse 2s infinite ease-in-out;
+        }
+
+        .honmoon-ring:nth-child(1) {
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            animation-delay: 0s;
+        }
+
+        .honmoon-ring:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0.2s;
+        }
+
+        .honmoon-ring:nth-child(3) {
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            animation-delay: 0.4s;
+        }
+
+        .honmoon-ring:nth-child(4) {
+            width: 40%;
+            height: 40%;
+            top: 30%;
+            left: 30%;
+            animation-delay: 0.6s;
+        }
+
+        .honmoon-core {
+            position: absolute;
+            width: 20%;
+            height: 20%;
+            top: 40%;
+            left: 40%;
+            background: radial-gradient(circle, #fff 0%, #c77dff 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(199, 125, 255, 0.8);
+        }
+
+        @keyframes ring-pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* Wall illustration */
+        .wall-container {
+            position: relative;
+            width: 200px;
+            height: 150px;
+            margin-bottom: 30px;
+        }
+
+        .wall {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+            opacity: 0.7;
+        }
+
+        .brick {
+            width: 40px;
+            height: 20px;
+            background: linear-gradient(135deg, #4a4a6a, #3a3a5a);
+            border-radius: 3px;
+            box-shadow: inset 0 -2px 4px rgba(0,0,0,0.3);
+        }
+
+        .wall-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(123, 104, 238, 0.4) 0%, transparent 70%);
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        /* Heart behind wall */
+        .heart-behind {
+            position: absolute;
+            font-size: 60px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: blur(2px);
+            opacity: 0.6;
+            animation: heart-beat 1.5s infinite ease-in-out;
+        }
+
+        @keyframes heart-beat {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* Hand reaching */
+        .hand-container {
+            position: relative;
+            display: flex;
+            gap: 60px;
+            margin-bottom: 30px;
+        }
+
+        .hand {
+            font-size: 80px;
+            animation: reach 2s infinite ease-in-out;
+        }
+
+        .hand:first-child {
+            transform: scaleX(-1);
+        }
+
+        .hand:last-child {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes reach {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        .hand:first-child {
+            animation-name: reach-left;
+        }
+
+        @keyframes reach-left {
+            0%, 100% { transform: scaleX(-1) translateX(0); }
+            50% { transform: scaleX(-1) translateX(10px); }
+        }
+
+        /* Floating hearts for final page */
+        .heart-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 30px;
+            animation: float-up 3s infinite ease-in-out;
+        }
+
+        @keyframes float-up {
+            0%, 100% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(-20px); opacity: 1; }
+        }
+
+        /* Shield cracking animation */
+        .shield-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .shield {
+            font-size: 100px;
+            filter: drop-shadow(0 0 20px rgba(199, 125, 255, 0.6));
+        }
+
+        .shield-crack {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 3px;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.8), transparent);
+            animation: crack-glow 2s infinite;
+        }
+
+        @keyframes crack-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Door opening */
+        .door-container {
+            position: relative;
+            width: 120px;
+            height: 180px;
+            margin-bottom: 30px;
+        }
+
+        .door-frame {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 6px solid rgba(199, 125, 255, 0.8);
+            border-radius: 60px 60px 0 0;
+            box-shadow: 0 0 30px rgba(199, 125, 255, 0.5);
+        }
+
+        .door-light {
+            position: absolute;
+            width: 80%;
+            height: 90%;
+            top: 5%;
+            left: 10%;
+            background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0.9) 0%,
+                rgba(199, 125, 255, 0.6) 50%,
+                rgba(123, 104, 238, 0.3) 100%);
+            border-radius: 50px 50px 0 0;
+            animation: light-pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes light-pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .door-figure {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 50px;
+            animation: figure-emerge 3s infinite ease-in-out;
+        }
+
+        @keyframes figure-emerge {
+            0%, 100% { transform: translateX(-50%) translateY(10px); opacity: 0.6; }
+            50% { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        /* Two figures together */
+        .together-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .together-container .illustration {
+            font-size: 80px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="book-container">
+        
+        <!-- Page 1: Title -->
+        <div class="page page-title active" data-page="1">
+            <div class="stars"></div>
+            <div class="rainbow-glow"></div>
+            <div class="illustration">💜</div>
+            <div class="title-text">I See You</div>
+            <div class="subtitle-text">A Story for Jenn</div>
+        </div>
+
+        <!-- Page 2: 15 years -->
+        <div class="page page-watching" data-page="2">
+            <div class="stars"></div>
+            <div class="illustration">👀</div>
+            <div class="page-text">I've watched you for 15 years.</div>
+        </div>
+
+        <!-- Page 3: How hard you work -->
+        <div class="page page-watching" data-page="3">
+            <div class="stars"></div>
+            <div class="illustration">💪</div>
+            <div class="page-text">I've seen how hard you work to keep everything together.</div>
+        </div>
+
+        <!-- Page 4: The wall -->
+        <div class="page page-wall" data-page="4">
+            <div class="stars"></div>
+            <div class="wall-container">
+                <div class="wall-glow"></div>
+                <div class="heart-behind">💗</div>
+                <div class="wall">
+                    <div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div>
+                    <div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div>
+                    <div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div>
+                    <div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div>
+                </div>
+            </div>
+            <div class="page-text">And I've seen the wall you keep between us.</div>
+        </div>
+
+        <!-- Page 5: Not to hurt -->
+        <div class="page page-understand" data-page="5">
+            <div class="stars"></div>
+            <div class="illustration">🤔</div>
+            <div class="page-text">I don't think you built it to hurt me.</div>
+        </div>
+
+        <!-- Page 6: Protection -->
+        <div class="page page-understand" data-page="6">
+            <div class="stars"></div>
+            <div class="shield-container">
+                <div class="shield">🛡️</div>
+                <div class="shield-crack"></div>
+            </div>
+            <div class="page-text">I think you built it because closeness felt dangerous.</div>
+        </div>
+
+        <!-- Page 7: Long ago -->
+        <div class="page page-understand" data-page="7">
+            <div class="stars"></div>
+            <div class="illustration">👶</div>
+            <div class="page-text">Maybe you learned that a long time ago.</div>
+        </div>
+
+        <!-- Page 8: Before me -->
+        <div class="page page-understand" data-page="8">
+            <div class="stars"></div>
+            <div class="honmoon">
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-core"></div>
+            </div>
+            <div class="page-text">Before you ever met me.</div>
+        </div>
+
+        <!-- Page 9: Here's the thing -->
+        <div class="page page-safe" data-page="9">
+            <div class="stars"></div>
+            <div class="rainbow-glow"></div>
+            <div class="illustration">✨</div>
+            <div class="page-text">But here's something I need you to know...</div>
+        </div>
+
+        <!-- Page 10: Not the danger -->
+        <div class="page page-safe" data-page="10">
+            <div class="stars"></div>
+            <div class="illustration">🏠</div>
+            <div class="page-text">I'm not the danger.</div>
+        </div>
+
+        <!-- Page 11: Not manage -->
+        <div class="page page-want" data-page="11">
+            <div class="stars"></div>
+            <div class="illustration">🙅</div>
+            <div class="page-text">I don't want to manage you.</div>
+        </div>
+
+        <!-- Page 12: Not fix -->
+        <div class="page page-want" data-page="12">
+            <div class="stars"></div>
+            <div class="illustration">🔧</div>
+            <div class="page-text">I don't want to fix you.</div>
+        </div>
+
+        <!-- Page 13: Want to see -->
+        <div class="page page-want" data-page="13">
+            <div class="stars"></div>
+            <div class="illustration">👁️</div>
+            <div class="page-text">I want to <em>see</em> you.</div>
+        </div>
+
+        <!-- Page 14: Behind competence -->
+        <div class="page page-love" data-page="14">
+            <div class="stars"></div>
+            <div class="illustration">🎭</div>
+            <div class="page-text">The you behind the competence.</div>
+        </div>
+
+        <!-- Page 15: Who's scared -->
+        <div class="page page-love" data-page="15">
+            <div class="stars"></div>
+            <div class="illustration">😰</div>
+            <div class="page-text">The you who's scared sometimes.</div>
+        </div>
+
+        <!-- Page 16: Wants to be held -->
+        <div class="page page-love" data-page="16">
+            <div class="stars"></div>
+            <div class="illustration">🫂</div>
+            <div class="page-text">The you who wants to be held.</div>
+        </div>
+
+        <!-- Page 17: Safe with me -->
+        <div class="page page-safe" data-page="17">
+            <div class="stars"></div>
+            <div class="rainbow-glow"></div>
+            <div class="illustration">💚</div>
+            <div class="page-text">That you is safe with me.</div>
+        </div>
+
+        <!-- Page 18: Magic words -->
+        <div class="page page-magic" data-page="18">
+            <div class="stars"></div>
+            <div class="honmoon">
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-ring"></div>
+                <div class="honmoon-core"></div>
+            </div>
+            <div class="page-text">So here are some magic words...</div>
+        </div>
+
+        <!-- Page 19: The words -->
+        <div class="page page-magic" data-page="19">
+            <div class="stars"></div>
+            <div class="illustration">🗣️</div>
+            <div class="page-text">"I want to be close to you."</div>
+        </div>
+
+        <!-- Page 20: Or -->
+        <div class="page page-magic" data-page="20">
+            <div class="stars"></div>
+            <div class="illustration">💫</div>
+            <div class="page-text">Or: "I'm scared."</div>
+        </div>
+
+        <!-- Page 21: Promise -->
+        <div class="page page-promise" data-page="21">
+            <div class="stars"></div>
+            <div class="hand-container">
+                <div class="hand">🤚</div>
+                <div class="hand">🤚</div>
+            </div>
+            <div class="page-text">When you say those words, I will reach for you.</div>
+        </div>
+
+        <!-- Page 22: Not to fix -->
+        <div class="page page-promise" data-page="22">
+            <div class="stars"></div>
+            <div class="illustration">🙏</div>
+            <div class="page-text">Not to fix. Not to help.</div>
+        </div>
+
+        <!-- Page 23: Just to hold -->
+        <div class="page page-love" data-page="23">
+            <div class="stars"></div>
+            <div class="together-container">
+                <div class="illustration">👫</div>
+            </div>
+            <div class="page-text">Just to hold you.</div>
+        </div>
+
+        <!-- Page 24: Wall kept safe -->
+        <div class="page page-wall" data-page="24">
+            <div class="stars"></div>
+            <div class="shield-container">
+                <div class="shield">🛡️</div>
+            </div>
+            <div class="page-text">The wall kept you safe once.</div>
+        </div>
+
+        <!-- Page 25: Keeping apart -->
+        <div class="page page-wall" data-page="25">
+            <div class="stars"></div>
+            <div class="wall-container">
+                <div class="wall-glow"></div>
+                <div class="wall">
+                    <div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div>
+                    <div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div>
+                    <div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div>
+                </div>
+            </div>
+            <div class="page-text">But it's keeping us apart now.</div>
+        </div>
+
+        <!-- Page 26: I'm here -->
+        <div class="page page-final" data-page="26">
+            <div class="stars"></div>
+            <div class="door-container">
+                <div class="door-frame"></div>
+                <div class="door-light"></div>
+                <div class="door-figure">🧍</div>
+            </div>
+            <div class="page-text">I'm here.</div>
+        </div>
+
+        <!-- Page 27: Final -->
+        <div class="page page-final" data-page="27">
+            <div class="stars"></div>
+            <div class="rainbow-glow"></div>
+            <div class="heart-container">
+                <div class="illustration">🌈</div>
+                <div class="floating-heart" style="left: -30px; animation-delay: 0s;">💜</div>
+                <div class="floating-heart" style="left: 30px; animation-delay: 0.5s;">💙</div>
+                <div class="floating-heart" style="left: 0px; animation-delay: 1s;">💖</div>
+            </div>
+            <div class="page-text">Come out.</div>
+            <div class="subtitle-text" style="margin-top: 20px;">I want to meet you there.</div>
+            <div class="subtitle-text" style="margin-top: 40px; font-size: 28px; color: #ff9ff3;">Love, Ash ❤️</div>
+        </div>
+
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-container">
+        <button class="nav-btn" id="prevBtn" disabled>◀</button>
+        <button class="nav-btn" id="nextBtn">▶</button>
+    </div>
+
+    <!-- Page indicator -->
+    <div class="page-indicator">
+        <span id="currentPage">1</span> / <span id="totalPages">27</span>
+    </div>
+
+    <script>
+        const pages = document.querySelectorAll('.page');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentPageSpan = document.getElementById('currentPage');
+        const totalPagesSpan = document.getElementById('totalPages');
+        
+        let currentPage = 1;
+        const totalPages = pages.length;
+        
+        totalPagesSpan.textContent = totalPages;
+
+        // Create stars for each page
+        document.querySelectorAll('.stars').forEach(starContainer => {
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starContainer.appendChild(star);
+            }
+        });
+
+        function updatePage() {
+            pages.forEach((page, index) => {
+                page.classList.remove('active');
+                if (index + 1 === currentPage) {
+                    page.classList.add('active');
+                }
+            });
+            
+            currentPageSpan.textContent = currentPage;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePage();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePage();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePage();
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePage();
+                }
+            }
+        });
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold && currentPage < totalPages) {
+                currentPage++;
+                updatePage();
+            }
+            if (touchEndX > touchStartX + swipeThreshold && currentPage > 1) {
+                currentPage--;
+                updatePage();
+            }
+        }
+
+        // Animate floating hearts on last page
+        setInterval(() => {
+            document.querySelectorAll('.floating-heart').forEach(heart => {
+                heart.style.animation = 'none';
+                heart.offsetHeight; // Trigger reflow
+                heart.style.animation = null;
+            });
+        }, 3000);
+    </script>
+</body>
+</html>
