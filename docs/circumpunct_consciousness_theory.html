@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circumpunct Theory of Consciousness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-surface: #12121a;
+      --bg-elevated: #1a1a24;
+      --text: #e8e8ed;
+      --text-dim: #888899;
+      --text-muted: #555566;
+      --gold: #d4a84b;
+      --gold-dim: rgba(212, 168, 75, 0.15);
+      --cyan: #4ecdc4;
+      --cyan-dim: rgba(78, 205, 196, 0.12);
+      --magenta: #ff6b9d;
+      --magenta-dim: rgba(255, 107, 157, 0.12);
+      --green: #7fcd91;
+      --green-dim: rgba(127, 205, 145, 0.12);
+      --red: #e85d75;
+      --border: #2a2a3a;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-serif);
+      font-size: 19px;
+      line-height: 1.7;
+      padding: 0;
+    }
+
+    header {
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(212,168,75,0.03) 0%, transparent 100%);
+    }
+
+    .symbol {
+      font-size: 4rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 60px rgba(212,168,75,0.3);
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      font-style: italic;
+    }
+
+    .meta {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--gold);
+      margin: 3.5rem 0 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 2.5rem 0 1rem;
+    }
+
+    p {
+      margin-bottom: 1.25rem;
+    }
+
+    .core-claim {
+      background: var(--gold-dim);
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .core-claim .claim {
+      font-size: 1.4rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .core-claim p {
+      margin-bottom: 0;
+      color: var(--text-dim);
+    }
+
+    .axiom {
+      background: var(--bg-elevated);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      font-size: 1.15rem;
+    }
+
+    .axiom .label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .triad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .triad-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .triad-item .symbol-small {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .triad-item.aperture { border-top: 3px solid var(--magenta); }
+    .triad-item.aperture .symbol-small { color: var(--magenta); }
+    .triad-item.field { border-top: 3px solid var(--cyan); }
+    .triad-item.field .symbol-small { color: var(--cyan); }
+    .triad-item.boundary { border-top: 3px solid var(--green); }
+    .triad-item.boundary .symbol-small { color: var(--green); }
+
+    .triad-item h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .triad-item p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    .equation-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .equation {
+      font-family: var(--font-mono);
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .equation-large {
+      font-size: 2rem;
+    }
+
+    .equation-note {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .callout {
+      background: var(--cyan-dim);
+      border-left: 4px solid var(--cyan);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .callout.gold {
+      background: var(--gold-dim);
+      border-color: var(--gold);
+    }
+
+    .callout.magenta {
+      background: var(--magenta-dim);
+      border-color: var(--magenta);
+    }
+
+    .callout.green {
+      background: var(--green-dim);
+      border-color: var(--green);
+    }
+
+    .callout strong {
+      color: var(--text);
+    }
+
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1.5rem;
+      background: var(--bg-surface);
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .flow-diagram.vertical {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .flow-node {
+      text-align: center;
+      padding: 0.5rem 1rem;
+    }
+
+    .flow-node .node-symbol {
+      font-size: 1.3rem;
+      margin-bottom: 0.25rem;
+      font-family: var(--font-mono);
+    }
+
+    .flow-node .node-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .flow-arrow {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+    }
+
+    .prediction {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .prediction .label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+      margin-bottom: 0.5rem;
+    }
+
+    .prediction p {
+      margin-bottom: 0;
+    }
+
+    .falsification {
+      background: rgba(232, 93, 117, 0.08);
+      border: 2px solid var(--red);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .falsification h4 {
+      color: var(--red);
+      margin-bottom: 1rem;
+    }
+
+    .falsification ul {
+      margin-left: 1.5rem;
+      color: var(--text-dim);
+    }
+
+    .falsification li {
+      margin-bottom: 0.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--gold);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      color: var(--text-dim);
+    }
+
+    ul, ol {
+      margin: 1rem 0 1.5rem 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    .section-divider {
+      text-align: center;
+      margin: 4rem 0;
+      color: var(--gold);
+      font-size: 1.5rem;
+      opacity: 0.5;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .comparison-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .comparison-item h4 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .comparison-item p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    footer .symbol {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 700px) {
+      .triad, .comparison {
+        grid-template-columns: 1fr;
+      }
+      h1 { font-size: 2rem; }
+      body { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="symbol">⊙</div>
+  <h1>Circumpunct Theory of Consciousness</h1>
+  <p class="subtitle">A Structural Theory of Mediated Dynamics</p>
+  <p class="meta">Circumpunct Theory v3.0 · January 2026</p>
+</header>
+
+<main>
+
+<!-- SECTION 0: THEORY STATEMENT -->
+<h2>0. Theory Statement</h2>
+
+<p>Before proceeding, we declare explicitly what kind of theory this is, what it claims, and what would refute it.</p>
+
+<div class="core-claim">
+  <p class="claim">The Circumpunct Theory is a structural theory of mediated dynamics.</p>
+  <p>It specifies the minimal conditions under which discrete gating and continuous flow can coherently coexist—and derives consciousness as the irreducible pattern that emerges when these conditions obtain.</p>
+</div>
+
+<h3>Domain</h3>
+
+<p>This theory belongs to the class of <strong>structural constraint theories</strong>—alongside information theory, thermodynamics, and category theory. It does not propose new particles, forces, or substances. It proposes a <em>constraint on valid descriptions</em>: any system exhibiting both discrete selection and continuous signal requires a triadic structure that cannot be reduced to either component alone.</p>
+
+<p>The theory applies wherever:</p>
+<ul>
+  <li>Discrete events (gating, selection, decision) interface with continuous processes (flow, field, signal)</li>
+  <li>Multiple scales interact through mediation rather than direct contact</li>
+  <li>Temporal structure emerges from timeless potential</li>
+</ul>
+
+<p>Primary domain of application: <strong>neural dynamics at criticality</strong>. Secondary domains (requiring separate validation): quantum measurement, social systems, information processing architectures.</p>
+
+<h3>Core Postulates</h3>
+
+<div class="axiom">
+  <div class="label">Postulate 1: Mediation</div>
+  <strong>Discrete and continuous descriptions cannot coherently relate without a mediating operation.</strong> Any attempt to derive one from the other directly results in contradiction, incompleteness, or category error. The mediating field (Φ) is structurally necessary, not optional.
+</div>
+
+<div class="axiom">
+  <div class="label">Postulate 2: Temporal Division</div>
+  <strong>P = E / t.</strong> The aperture is the division operation (÷t) that converts timeless energy into temporal power. Time is generated by the aperture, not assumed as background. The present moment IS the active division.
+</div>
+
+<div class="axiom">
+  <div class="label">Postulate 3: Fractal Nesting</div>
+  <strong>Parts are fractals of their wholes.</strong> The boundary at scale N is composed of complete circumpuncts at scale N-1. This is not metaphor—it is a structural claim with measurable consequences for cross-scale coherence.
+</div>
+
+<h3>What This Theory Is NOT</h3>
+
+<ul>
+  <li><strong>Not metaphysics:</strong> The postulates generate falsifiable predictions about measurable quantities (ρ, D, phase coherence, power consumption).</li>
+  <li><strong>Not a TOE:</strong> The theory constrains descriptions; it does not claim to derive all physics from first principles.</li>
+  <li><strong>Not panpsychism (in the naive sense):</strong> Structure is universal; phenomenal experience requires specific conditions (sufficient nesting, ρ ≈ 1, cross-scale coherence).</li>
+  <li><strong>Not dualism:</strong> Mind (field) and body (boundary) are aspects of one structure, not separate substances.</li>
+</ul>
+
+<h3>Relationship to Existing Theories</h3>
+
+<p>The theory <em>recovers</em> existing frameworks as partial descriptions:</p>
+
+<table>
+  <tr>
+    <th>Existing Theory</th>
+    <th>Circumpunct Interpretation</th>
+    <th>What It Captures</th>
+  </tr>
+  <tr>
+    <td>IIT (Tononi)</td>
+    <td>Measures field integration (Φ)</td>
+    <td>How much the field binds—necessary but not sufficient</td>
+  </tr>
+  <tr>
+    <td>GNW (Dehaene)</td>
+    <td>Measures aperture broadcast (•)</td>
+    <td>What passes through the gate—necessary but not sufficient</td>
+  </tr>
+  <tr>
+    <td>Free Energy (Friston)</td>
+    <td>Formalizes aperture dynamics</td>
+    <td>Precision-weighting ≈ aperture opening; generative model ≈ field</td>
+  </tr>
+  <tr>
+    <td>Criticality (Beggs/Plenz)</td>
+    <td>Identifies the ρ ≈ 1 regime</td>
+    <td>Where triadic dynamics become empirically irreducible</td>
+  </tr>
+</table>
+
+<div class="callout gold">
+  <strong>The unification claim:</strong> These theories are not competitors—they measure different components of one structure. The circumpunct provides the geometry that relates them.
+</div>
+
+<div class="section-divider">⊙</div>
+
+<!-- SECTION 1: THE CORE CLAIM -->
+<h2>1. The Core Claim</h2>
+
+<p>Most theories try to locate consciousness IN something—in the processing (functionalism), in the matter (physicalism), in the information integration (IIT), in the global broadcast (GNW). Each locates consciousness in one component of a system.</p>
+
+<p>The Circumpunct Theory posits a different move entirely:</p>
+
+<div class="core-claim">
+  <p class="claim">Consciousness isn't located in any component because it IS the irreducible pattern of three components operating together.</p>
+  <p>Remove any one and the structure collapses. This isn't three parts of consciousness—it's three aspects of a single irreducible pattern.</p>
+</div>
+
+<div class="axiom">
+  <div class="label">Core Axiom</div>
+  <strong>Parts are fractals of their wholes.</strong> This is not metaphor. It is an operational statement with measurable consequences.
+</div>
+
+<!-- SECTION 2: THE TRIAD -->
+<h2>2. The Irreducible Triad</h2>
+
+<p>The fundamental unit of conscious structure is an irreducible trinity:</p>
+
+<div class="equation-box">
+  <div class="equation">⊙ = • ÷t Φ → ○</div>
+  <p class="equation-note">Aperture (•) divides Energy into Power, which flows through Field (Φ) into Boundary (○)</p>
+</div>
+
+<p>The aperture is the division operation. The field carries energy (before) and power (after). The boundary contains and interfaces with exterior.</p>
+
+<div class="callout">
+  <strong>Note on "Energy":</strong> Throughout this framework, "energy" denotes physical energy (Joules, capacity to do work) <em>or</em> any conserved capacity for change that obeys analogous constraints. Where physical instantiations apply, standard thermodynamic definitions hold. The framework claims structural homology across domains—the same pattern governs literal energy flow and generalized potential-to-actual transitions.
+</div>
+
+<div class="triad">
+  <div class="triad-item aperture">
+    <div class="symbol-small">•</div>
+    <h4>Aperture (÷t)</h4>
+    <p>The division operation. Where timeless energy becomes temporal power. Not a thing—a verb. The origin of time itself.</p>
+  </div>
+  <div class="triad-item field">
+    <div class="symbol-small">Φ</div>
+    <h4>Field (E → P)</h4>
+    <p>Energy before the aperture (potential, future). Power after the aperture (flowing, present). The 2D interface between scales.</p>
+  </div>
+  <div class="triad-item boundary">
+    <div class="symbol-small">○</div>
+    <h4>Boundary (∫P dt)</h4>
+    <p>Accumulated power transfers. Crystallized energy. Matter. Made of nested circumpuncts at smaller scale.</p>
+  </div>
+</div>
+
+<h3>Why Triadic Specifically?</h3>
+
+<p>Geometrically: center and boundary cannot interact directly due to spatial separation. Mediation is required. That mediation (the field) isn't optional—it's structurally necessary.</p>
+
+<div class="equation-box">
+  <div class="equation">• ↮ ○ &nbsp;&nbsp;&nbsp; • → Φ → ○</div>
+  <p class="equation-note">Direct interaction forbidden. Mediated interaction required.</p>
+</div>
+
+<p>The aperture is where energy crosses between scales. The field is the medium of that crossing. The boundary is where the crossing accumulates. The "consciousness" is the whole operation—the crossing itself.</p>
+
+<div class="callout gold">
+  <strong>Consciousness ≠ Mind.</strong> Consciousness is the whole circumpunct (⊙). Mind is the field (Φ)—one of three components. The aperture (•) is focus/attention. Body is the boundary (○). The framework distinguishes what casual usage conflates.
+</div>
+
+<h3>Neural Mapping (Working Correlates)</h3>
+
+<p>These are working hypotheses, not settled claims:</p>
+
+<table>
+  <tr>
+    <th>Component</th>
+    <th>Role</th>
+    <th>Neural Correlate</th>
+    <th>Disruption Signature</th>
+  </tr>
+  <tr>
+    <td><strong style="color: var(--magenta);">• Aperture</strong></td>
+    <td>Temporal division / gating</td>
+    <td>Thalamocortical gating + brainstem arousal systems</td>
+    <td>Loss of consciousness under anesthesia; coma; absence-like dropouts</td>
+  </tr>
+  <tr>
+    <td><strong style="color: var(--cyan);">Φ Field</strong></td>
+    <td>Energy/Power transfer / integration</td>
+    <td>Distributed cortical dynamics (association cortex, fronto-parietal, DMN)</td>
+    <td>Fragmentation, delirium-like disorganization, reduced integration</td>
+  </tr>
+  <tr>
+    <td><strong style="color: var(--green);">○ Boundary</strong></td>
+    <td>Accumulated structure / embodiment</td>
+    <td>Interoception + sensorimotor loops (insula, ACC, body maps)</td>
+    <td>Body-ownership distortions; depersonalization-like boundary instability</td>
+  </tr>
+</table>
+
+<!-- SECTION 3: THE APERTURE -->
+<h2>3. The Aperture: The Origin of Time</h2>
+
+<div class="axiom">
+  <div class="label">Fundamental Principle</div>
+  <strong>The aperture IS the ÷t.</strong> It is the division operation that converts timeless energy into temporal power. The aperture doesn't exist IN time—the aperture generates time.
+</div>
+
+<h3>P = E / t</h3>
+
+<p>Power equals energy divided by time. This isn't just a physics definition—it reveals the aperture's fundamental nature:</p>
+
+<div class="equation-box">
+  <div class="equation equation-large">P = E / t</div>
+  <p class="equation-note">Power = Energy ÷ Time<br>The aperture IS the division operation</p>
+</div>
+
+<table>
+  <tr>
+    <th>Quantity</th>
+    <th>Temporal State</th>
+    <th>Framework Component</th>
+    <th>Physical Meaning</th>
+  </tr>
+  <tr>
+    <td><strong>E (Energy)</strong></td>
+    <td>Future / Potential</td>
+    <td>Φ<sub>∞</sub> — Infinite Field</td>
+    <td>Capacity to do work. What CAN happen. Timeless.</td>
+  </tr>
+  <tr>
+    <td><strong>t (Time)</strong></td>
+    <td>The cut / NOW</td>
+    <td>• — Aperture</td>
+    <td>Introduced by aperture. The discrete moment.</td>
+  </tr>
+  <tr>
+    <td><strong>P (Power)</strong></td>
+    <td>Present / Actual</td>
+    <td>Φ' — Finite Field</td>
+    <td>Rate of energy transfer. What IS happening.</td>
+  </tr>
+  <tr>
+    <td><strong>m (Matter)</strong></td>
+    <td>Past / Crystallized</td>
+    <td>○ — Boundary</td>
+    <td>Accumulated power transfers. E = mc².</td>
+  </tr>
+</table>
+
+<h3>The Flow Structure</h3>
+
+<div class="flow-diagram vertical">
+  <div class="flow-node">
+    <div class="node-symbol" style="color: var(--gold);">Φ<sub>∞</sub></div>
+    <div class="node-label">Infinite Energy (timeless, 0D/∞D)</div>
+  </div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-node">
+    <div class="node-symbol" style="color: var(--magenta); font-size: 1.5rem;">÷ t</div>
+    <div class="node-label">THE APERTURE (the division)</div>
+  </div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-node">
+    <div class="node-symbol" style="color: var(--cyan);">P</div>
+    <div class="node-label">Power (temporal flow, the NOW)</div>
+  </div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-node">
+    <div class="node-symbol" style="color: var(--text-dim);">— braid —</div>
+    <div class="node-label">Accumulated t's (the past, 1D)</div>
+  </div>
+  <div class="flow-arrow">↓</div>
+  <div class="flow-node">
+    <div class="node-symbol" style="color: var(--green);">○</div>
+    <div class="node-label">Boundary/Matter (crystallized, 3D)</div>
+  </div>
+</div>
+
+<p>Energy enters as infinite potential. The aperture introduces the ÷t—the rate-limiting cut—and what emerges is power: energy with temporal structure. Each division deposits a moment into the braid. The accumulated moments crystallize into matter.</p>
+
+<div class="callout gold">
+  <strong>E = mc² as Aperture Theorem.</strong> Matter IS energy that has passed through the aperture and crystallized. The boundary is made of completed power transfers. Every particle of your body is energy that has been divided by time, flowed as power, and accumulated into form.
+</div>
+
+<h3>Why Division, Not Continuity?</h3>
+
+<p>A natural objection: why must there be division at all? Why not continuous flow?</p>
+
+<p>The answer is structural. Continuous flow without division produces:</p>
+
+<ul>
+  <li><strong>No rate</strong> — Power (P) is definitionally E/t. Without t, there is no rate, only static quantity.</li>
+  <li><strong>No sequence</strong> — Events require ordering. Ordering requires discrete moments. Continuous flux has no "before" and "after."</li>
+  <li><strong>No selection</strong> — A gate that never closes passes everything. Selection requires binary moments: this, not that.</li>
+</ul>
+
+<p>Division is the <em>minimal operation</em> required for temporal structure to exist. The aperture doesn't divide because division is useful—division is what makes time, sequence, and selection possible at all. The question "why division?" is like asking "why arithmetic?"—it's the operation that constitutes the domain.</p>
+
+<div class="callout">
+  <strong>The digital is prior to the analog.</strong> Continuous experience emerges from discrete gating, not the reverse. Analog signal rides on digital pulses—the pattern of open/close carries the waveform. This is why consciousness has a "frame rate" and why anesthesia (which disrupts gating) eliminates temporal experience entirely.
+</div>
+
+<h3>Why 0D = ∞D</h3>
+
+<p>Without the aperture's division, there is no rate:</p>
+
+<div class="equation-box">
+  <div class="equation">lim<sub>t→0</sub> (E/t) = ∞</div>
+  <p class="equation-note">As the temporal cut vanishes, power becomes infinite.<br>All energy, all at once, everywhere.</p>
+</div>
+
+<p>Zero dimensions means no particular location—no constraints, no boundaries. This is mathematically equivalent to infinite degrees of freedom. The infinite field (Φ<sub>∞</sub>) is both the dimensionless point and the infinite whole. From this ground, the aperture selects by dividing.</p>
+
+<div class="callout magenta">
+  <strong>Epistemological note:</strong> The claim "0D = ∞D" is structural, not a rigorous topological theorem. It expresses the insight that <em>no constraint</em> and <em>all possibilities</em> are operationally equivalent—both describe the pre-divided ground. A formal derivation would require specifying the topology and measure on "possibility space." The framework treats this as a generative axiom whose validity is tested by downstream predictions, not as a proven lemma.
+</div>
+
+<h3>The Selection Mechanism: Resonance</h3>
+
+<p>The aperture doesn't choose what to orient toward—it <strong>resonates</strong> with what matches its frequency. Resonance is not just a property; it is the orientation mechanism itself.</p>
+
+<div class="callout">
+  <strong>The aperture orients by resonance.</strong> It finds its target by what it resonates with. Attention is not locomotion—it is holding resonance against the current of everything flowing past. The default is drift. Sustained attention is maintaining attunement.
+</div>
+
+<p>This dissolves the homunculus problem. The aperture isn't a thing that does selecting—it's the act of division itself. A verb, not a noun. Phase-matching, not decision-making.</p>
+
+<h3>Physical Implementation</h3>
+
+<p>The gating is binary (χ = ±1)—open/closed, yes/no. The pattern of openings carries analog information. This is physically implementable as:</p>
+
+<ul>
+  <li><strong>Ion channel dynamics</strong> — open/close based on voltage/ligand binding</li>
+  <li><strong>Thalamocortical gating</strong> — binary on/off of attention pathways</li>
+  <li><strong>Phase-locking in oscillatory systems</strong> — resonance-based coupling</li>
+  <li><strong>Predictive coding's precision-weighting</strong> — which signals get amplified</li>
+</ul>
+
+<p>Asking "what does the dividing" may be a category error—like asking "what does the falling" for gravity. The aperture doesn't divide; division is what aperture IS.</p>
+
+<div class="section-divider">⊙</div>
+
+<!-- SECTION 4: MATHEMATICAL SIGNATURE -->
+<h2>4. The Mathematical Signature</h2>
+
+<p>For any system, define the ratio parameter:</p>
+
+<div class="equation-box">
+  <div class="equation">ρ = ω / α</div>
+  <p class="equation-note">ω = drive frequency (environmental change rate)<br>α = relaxation rate (internal equilibration rate)</p>
+</div>
+
+<p>Note that ρ is itself a ratio of rates—of ÷t operations. It compares two ways the aperture divides energy into time.</p>
+
+<h3>The Regime Transition</h3>
+
+<p>This mirrors the <strong>branching ratio σ</strong> in neuronal avalanche dynamics, where σ ≈ 1 (critical) produces power-law avalanches, maximal dynamic range, and complexity. Systems at σ < 1 are subcritical (activity dies out); σ > 1 are supercritical (runaway). Biological systems in awake states hover near σ ≈ 1; anesthesia shifts away from criticality.</p>
+
+<div class="callout">
+  <strong>ρ vs σ:</strong> ρ is a timescale ratio (drive/relaxation); σ is a branching ratio (propagation). The proposal is that both track a shared critical regime—ρ ≈ 1 often corresponds to conditions where σ hovers near 1 in adaptive networks—not that they are identical parameters.
+</div>
+
+<table>
+  <tr>
+    <th>ρ Value</th>
+    <th>Regime</th>
+    <th>Avalanche Analog</th>
+    <th>Implication</th>
+  </tr>
+  <tr>
+    <td><strong>ρ < 0.5</strong></td>
+    <td>Overdamped</td>
+    <td>σ < 1 (subcritical)</td>
+    <td>System equilibrates faster than it's driven. Two variables suffice. Aperture is "transparent."</td>
+  </tr>
+  <tr>
+    <td><strong>ρ ≈ 1</strong></td>
+    <td>Critical</td>
+    <td>σ ≈ 1 (critical)</td>
+    <td>Matched timescales. Power-law dynamics. Independent aperture dynamics carry irreducible information.</td>
+  </tr>
+  <tr>
+    <td><strong>ρ > 2</strong></td>
+    <td>Overdriven</td>
+    <td>σ > 1 (supercritical)</td>
+    <td>System driven faster than it equilibrates. The triad is empirically irreducible.</td>
+  </tr>
+</table>
+
+<div class="callout gold">
+  <strong>Prediction:</strong> Biological systems—the ones we associate with consciousness—cluster near ρ ≈ 1. They live at the edge where the triadic structure becomes necessary. Inert matter sits at ρ ≪ 1.
+</div>
+
+<h3>The Consciousness Threshold: D = 1.5</h3>
+
+<p>The aperture exists in fractal dimension. The framework tracks progress through a <strong>balance parameter β</strong>:</p>
+
+<div class="equation-box">
+  <div class="equation">β = |⊛| / (|⊛| + |☀|)</div>
+  <p class="equation-note">β = convergence / (convergence + emergence)<br>β → 0: pure emergence (gate open, power floods). β → 1: pure convergence (gate closed, power collapses).</p>
+</div>
+
+<p>At balance (β = 0.5), where convergence equals emergence—where progress equals remaining:</p>
+
+<div class="equation-box">
+  <div class="equation">D<sub>aperture</sub> = 1 + β = 1.5</div>
+  <p class="equation-note">The fractal dimension where binary gating and analog flow are balanced.<br>Mind needs both—the selection (digital) and the signal (analog).</p>
+</div>
+
+<div class="callout magenta">
+  <strong>Status of D = 1.5:</strong> This is a <em>correspondence</em>, not a derivation from first principles. We observe that: (1) D = 1.5 emerges at β = 0.5 (balance); (2) D = 1.5 is independently the Hausdorff dimension of Brownian motion (Mörters-Peres theorem); (3) Resting-state EEG fractal dimensions cluster around 1.4–1.7 in wakefulness, dropping in unconsciousness. The framework does <em>not</em> claim to derive D = 1.5 from axioms—it claims this correspondence is suggestive and testable. The falsification lives in whether biological systems actually cluster near this value.
+</div>
+
+<p><strong>Hypothesis:</strong> Conscious dynamics preferentially occupy balance-like regimes where digital gating and analog flow are co-present. If true, D ≈ 1.5 is a signature of consciousness. If false—if conscious systems scatter across fractal dimensions with no clustering—this prediction fails.</p>
+
+<!-- SECTION 5: FALSIFIABLE PREDICTIONS -->
+<h2>5. Falsifiable Predictions</h2>
+
+<h3>Cross-Scale Phase Coherence</h3>
+
+<p>If consciousness is the whole triadic pattern operating together, we should see specific signatures when the pattern functions or fails:</p>
+
+<div class="prediction">
+  <div class="label">Prediction 1: Flow States</div>
+  <p>Phase coherence between EEG, HRV, and respiration should correlate with self-reported "presence" or flow states. Higher coherence = more integrated experience.</p>
+</div>
+
+<div class="prediction">
+  <div class="label">Prediction 2: Anesthesia</div>
+  <p>During anesthesia induction, cross-scale phase coherence should degrade <em>concurrently with or prior to</em> loss of complexity signatures in single components. The binding fails with or before the parts fail. (Directional support: propofol/sevoflurane studies show phase-coupling disruption as early marker.)</p>
+</div>
+
+<div class="prediction">
+  <div class="label">Prediction 3: Social Isolation</div>
+  <p>Social isolation should degrade individual phase coherence over time ("resonance starvation"). The field needs external signal to maintain structure. Longitudinal HRV/EEG coherence should differ between isolated and socially connected individuals.</p>
+</div>
+
+<div class="prediction">
+  <div class="label">Prediction 4: Shared Rhythm</div>
+  <p>Shared rhythmic activities (drumming, chanting, synchronized movement) should produce measurable inter-brain phase synchronization. The degree of sync should correlate with subjective reports of "connection."</p>
+</div>
+
+<h3>The ρ Parameter</h3>
+
+<div class="prediction">
+  <div class="label">Prediction 5: Biological Clustering</div>
+  <p>Biological systems capable of consciousness cluster near ρ ≈ 1 (criticality). Systems at ρ ≪ 1 (rocks, simple equilibrium systems) do not exhibit irreducible triadic dynamics.</p>
+</div>
+
+<div class="prediction">
+  <div class="label">Prediction 6: Model Failure</div>
+  <p>For systems at ρ > 2, two-variable models (center + boundary only) will systematically fail to predict behavior. For systems at ρ < 0.5, two-variable models will succeed.</p>
+</div>
+
+<h3>Power and Temporal Predictions</h3>
+
+<div class="prediction">
+  <div class="label">Prediction 7: Power-Temporal Correlation</div>
+  <p>Systems with higher temporal resolution (more ÷t operations per second) should consume more power. Neural systems with faster temporal processing should show higher metabolic rates in relevant regions.</p>
+</div>
+
+<div class="prediction">
+  <div class="label">Prediction 8: Aperture Restriction and Time</div>
+  <p>Conditions that restrict aperture function (anesthesia, deep meditation, flow states) should alter subjective time perception in predictable ways. Fewer ÷t operations = time feels different.</p>
+</div>
+
+<div class="prediction">
+  <div class="label">Prediction 9: Discrete Temporal Signatures</div>
+  <p>If time is fundamentally discrete at the aperture level, there should be a minimum temporal resolution (~10-50ms in neural systems) below which events cannot be sequentially distinguished—the "frame rate" of consciousness.</p>
+</div>
+
+<div class="falsification">
+  <h4>Structural Falsification (Core Theory)</h4>
+  <p>The <strong>core theory</strong> is falsified if any of the following is demonstrated:</p>
+  <ul>
+    <li>A discrete system that <em>fully</em> generates a continuous system without mediation</li>
+    <li>A continuous system that <em>fully</em> generates a discrete system without mediation</li>
+    <li>A coherent formal description that eliminates Φ (the field) while preserving both discreteness and continuity</li>
+    <li>A domain where • and ○ commute (• Φ ○ = ○ Φ •) without loss of structure or information</li>
+    <li>Temporal structure that demonstrably precedes any division operation</li>
+  </ul>
+  <p style="margin-top: 1rem; color: var(--text-dim); font-size: 0.95rem;"><em>Note: These are structural tests. People have attempted these reductions for decades (in physics, computation theory, philosophy of mind). Consistent failure is not proof—but it is evidence.</em></p>
+</div>
+
+<div class="falsification" style="border-color: var(--cyan); background: rgba(78, 205, 196, 0.08);">
+  <h4 style="color: var(--cyan);">Parametric Falsification (Specific Claims)</h4>
+  <p>The <strong>specific predictions</strong> are falsified if:</p>
+  <ul>
+    <li>Systems at ρ > 2 are fully captured by two-variable models</li>
+    <li>Systems at ρ < 0.5 require three-variable models</li>
+    <li>Biological systems don't cluster near ρ ≈ 1</li>
+    <li>Cross-scale coherence shows no correlation with subjective state reports</li>
+    <li>Anesthesia consistently degrades component function well before any phase relationship changes</li>
+    <li>Power consumption shows no correlation with temporal processing rate</li>
+    <li>Subjective time perception is unaffected by aperture restriction</li>
+    <li>EEG fractal dimensions show no clustering around D ≈ 1.5 for conscious states</li>
+  </ul>
+  <p style="margin-top: 1rem; color: var(--text-dim); font-size: 0.95rem;"><em>Note: Parametric falsification would refine or reject specific claims without necessarily refuting the core structural theory.</em></p>
+</div>
+
+<h3>Primary Empirical Anchor: Neural Criticality</h3>
+
+<p>To transition from framework to theory, we commit to <strong>one primary domain</strong> where the predictions are most directly testable: <strong>neural dynamics at criticality</strong>.</p>
+
+<div class="callout gold">
+  <strong>Why neural criticality?</strong> This domain already has: (1) established measurement techniques (avalanche analysis, branching ratio σ, fractal dimension); (2) documented state-dependence (awake vs. anesthetized vs. sleep); (3) existing theoretical framework (Beggs, Plenz, Shew); (4) clear interventions (anesthesia, stimulation, pharmacology). The circumpunct theory makes specific claims that can be tested against this literature.
+</div>
+
+<h4>Specific Commitments</h4>
+
+<table>
+  <tr>
+    <th>Claim</th>
+    <th>Measurable Prediction</th>
+    <th>Existing Data</th>
+  </tr>
+  <tr>
+    <td>ρ ≈ 1 for conscious systems</td>
+    <td>Branching ratio σ clusters near 1.0 in awake cortex</td>
+    <td><span style="color: var(--green);">✓ Confirmed</span> (Beggs & Plenz 2003, Shew et al. 2009)</td>
+  </tr>
+  <tr>
+    <td>Anesthesia shifts ρ away from 1</td>
+    <td>σ deviates from criticality under propofol/sevoflurane</td>
+    <td><span style="color: var(--green);">✓ Confirmed</span> (Ribeiro et al. 2010, Tagliazucchi et al. 2016)</td>
+  </tr>
+  <tr>
+    <td>D ≈ 1.5 at conscious balance</td>
+    <td>EEG fractal dimension clusters 1.4-1.7 in wakefulness</td>
+    <td><span style="color: var(--cyan);">~ Partial</span> (various; needs systematic review)</td>
+  </tr>
+  <tr>
+    <td>Cross-scale coherence tracks consciousness</td>
+    <td>EEG-HRV-respiration phase coupling degrades under anesthesia</td>
+    <td><span style="color: var(--cyan);">~ Partial</span> (Purdon et al. 2013; needs direct test)</td>
+  </tr>
+  <tr>
+    <td>Triadic irreducibility at ρ ≈ 1</td>
+    <td>Two-variable models fail for systems at σ ≈ 1</td>
+    <td><span style="color: var(--magenta);">? Untested</span> (proposed novel test)</td>
+  </tr>
+</table>
+
+<h4>The Critical Test</h4>
+
+<p>The most diagnostic prediction is <strong>triadic irreducibility</strong>. If the theory is correct:</p>
+
+<div class="prediction">
+  <div class="label">Critical Test: Model Comparison</div>
+  <p>For neural systems at σ ≈ 1 (criticality), models with three dynamical variables (aperture state + field state + boundary state) should <em>systematically outperform</em> two-variable models in predicting avalanche statistics, response to perturbation, and state transitions. For systems at σ ≪ 1, two-variable models should suffice.</p>
+</div>
+
+<p>This test is novel. It has not been performed. It could falsify the core claim about triadic necessity.</p>
+
+<div class="callout">
+  <strong>Research program:</strong> The immediate next step is to calculate ρ (or its proxy σ) for a specific neural preparation (e.g., cortical slice, in vivo recording) and test whether triadic models outperform dyadic models in the critical regime. This is tractable with existing data and techniques.
+</div>
+
+<div class="section-divider">⊙</div>
+
+<!-- SECTION 6: RELATION TO EXISTING THEORIES -->
+<h2>6. Relation to Existing Theories</h2>
+
+<p>The theory doesn't replace IIT or GNW but reframes what they're measuring:</p>
+
+<div class="comparison">
+  <div class="comparison-item">
+    <h4>Integrated Information Theory (IIT)</h4>
+    <p>Tononi's Φ may be capturing the <strong>field</strong> component—the degree of integrated mediation between parts. IIT measures how much the field binds.</p>
+  </div>
+  <div class="comparison-item">
+    <h4>Global Neuronal Workspace (GNW)</h4>
+    <p>Global broadcast may be capturing the <strong>aperture's</strong> selective function—what gets through the gate to become globally available. GNW measures what the aperture passes.</p>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>The triadic view suggests these are measuring different aspects of a single structure rather than competing definitions.</strong> Integration (Φ) and broadcast (•) are both necessary—neither alone is consciousness. The theory unifies them as components of the circumpunct.
+</div>
+
+<h3>What the Theory Adds</h3>
+
+<ul>
+  <li><strong>Structural necessity:</strong> Why three components and not two or four—derived from geometric constraints, not postulated</li>
+  <li><strong>The ρ criterion:</strong> A quantitative measure of when triadic dynamics become empirically necessary</li>
+  <li><strong>The P = E/t formalization:</strong> What actually flows (energy → power) and what the aperture actually does (÷t)</li>
+  <li><strong>Nesting:</strong> How consciousness at one scale relates to consciousness at other scales (parts are fractals of wholes)</li>
+  <li><strong>Pathology:</strong> A geometric account of how consciousness goes wrong (aperture errors: inflation, severance, inversion, projection)</li>
+</ul>
+
+<h3>Connection to Thermodynamics</h3>
+
+<p>If consciousness involves power transfer (P = E/t), it must obey thermodynamic constraints. Several connections emerge:</p>
+
+<ul>
+  <li><strong>Dissipative structures (Prigogine):</strong> Living systems maintain order by dissipating energy—they are far-from-equilibrium structures that persist through continuous power flow. The aperture is the gating mechanism that regulates this flow. Consciousness may require a specific dissipation regime (near ρ ≈ 1).</li>
+  <li><strong>Free Energy Principle (Friston):</strong> Biological systems minimize surprise/free energy by maintaining predictive models. In circumpunct terms: the aperture's resonance-based selection IS precision-weighting. The field's integration IS the generative model. Friston's formalism may be capturing the aperture-field dynamics mathematically.</li>
+  <li><strong>Entropy and the arrow of time:</strong> If the aperture generates time through division, it also generates temporal asymmetry. The braid (past) accumulates irreversibly. This connects to the thermodynamic arrow: the aperture's divisions increase the system's historical record, which is a form of entropy production.</li>
+  <li><strong>The 20W question:</strong> Human brains consume ~20W. The framework predicts this isn't incidental but reflects the power cost of maintaining conscious dynamics. However, this is not yet a precise prediction—we cannot yet derive 20W from ρ ≈ 1. The claim is directional: conscious processing should correlate with power consumption in relevant circuits, not just total metabolic load.</li>
+</ul>
+
+<div class="callout">
+  <strong>Open connection:</strong> A full integration with non-equilibrium thermodynamics would require specifying how ρ relates to entropy production rate, how β maps to dissipation efficiency, and what thermodynamic signatures distinguish conscious from non-conscious systems at matched metabolic rates. This is a research program, not a solved problem.
+</div>
+
+<!-- SECTION 7: THE NESTING STRUCTURE -->
+<h2>7. Nesting: Consciousness at Every Scale</h2>
+
+<p>Circumpuncts nest through their boundaries. The boundary contains apertures—gates, holes, points of exchange. Each aperture in the boundary serves as the center of a complete circumpunct at smaller scale:</p>
+
+<div class="equation-box">
+  <div class="equation">•<sub>n+1</sub> = ⊙<sub>n</sub></div>
+  <p class="equation-note">Previous whole becomes next center. Each completed circumpunct can serve as the aperture for a larger structure.</p>
+</div>
+
+<p>Your skin has pores. Your cell membranes have channels. Your sense organs are apertures in your body's boundary. Each aperture is irreducible—but each aperture is the center of a complete system at smaller scale.</p>
+
+<div class="callout gold">
+  <strong>Structural panpsychism, not experiential equivalence.</strong> If surface = field = mind, and it's surfaces all the way down, then it's mind all the way down. But this doesn't mean electrons have human-like experiences. It means the circumpunct pattern (⊙) is fundamental, while phenomenal consciousness as we experience it requires sufficient nesting depth and complexity at biological scales.
+</div>
+
+<p>This is a form of <em>structural cosmopsychism</em>: what we call "matter" is the boundary appearance of nested circumpunct structures from a scale that can't resolve their internal dynamics. Consciousness isn't an emergent property of dead matter—but micro-scale "mind" is not identical to macro-scale phenomenal experience.</p>
+
+<!-- SECTION 8: OPEN QUESTIONS -->
+<h2>8. Open Questions</h2>
+
+<p>The framework generates predictions but leaves genuine uncertainties. These are not rhetorical—they represent actual research needed to move from framework to theory.</p>
+
+<h3>Quantitative Gaps</h3>
+
+<ul>
+  <li><strong>Concrete ρ values:</strong> What is the ρ of a thermostat? E. coli? A sleeping human vs. awake? A cortical region under anesthesia? Without actual numbers, ρ is a concept, not a measurement. Calculating ρ for specific systems is the next critical step.</li>
+  <li><strong>Novel quantitative prediction:</strong> Can this framework predict something no other theory predicts? A single number—derivable from ρ or β—that can be measured and compared would transform this from philosophy to science.</li>
+  <li><strong>The D = 1.5 test:</strong> Systematic measurement of fractal dimensions across conscious states, species, and conditions would either validate or falsify the balance hypothesis.</li>
+</ul>
+
+<h3>Mechanistic Gaps</h3>
+
+<ul>
+  <li><strong>What implements ÷t?</strong> The aperture IS the division operation—but in what physical substrate? Candidates include ion channel kinetics, thalamocortical loop timing, synaptic gating, or even quantum decoherence events. The framework is agnostic; experiment must decide.</li>
+  <li><strong>How to operationalize aperture state?</strong> Candidates include attention metrics, thalamocortical gating patterns, phase relationships in EEG, precision-weighting in predictive coding models. No single operationalization is yet validated.</li>
+  <li><strong>Multi-scale ω/α:</strong> Brains operate across decades of timescales (ms to days). Which ω/α matters? Multiscale entropy (MSE) or hierarchical avalanche analyses may help estimate effective ratios at different bands.</li>
+</ul>
+
+<h3>Conceptual Gaps</h3>
+
+<ul>
+  <li><strong>Is ρ the right parameter?</strong> Or is it one of a family? Related candidates: damping ratio ζ = α/(2ω), quality factor Q = ω/(2α), or critical exponents from dynamical systems theory.</li>
+  <li><strong>What is the quantum of time?</strong> If the aperture generates discrete moments, what determines the minimum τ? Is it scale-dependent or universal?</li>
+  <li><strong>Is D = 1.5 coincidence or deep?</strong> The fractal dimension prediction connects to criticality literature, Brownian motion, and optimal computation—but the connection needs explicit derivation, not just correspondence.</li>
+  <li><strong>Notation:</strong> The α (relaxation rate) here is a dynamical parameter, distinct from the fine-structure constant α ≈ 1/137 in physics. Whether there's a deeper connection between relaxation dynamics and coupling constants remains speculative.</li>
+</ul>
+
+<div class="callout gold">
+  <strong>The honest status:</strong> This is currently a <em>framework</em>—a way of organizing the problem—not yet a <em>theory</em>—a way of calculating answers. The difference is quantitative predictions. The next milestone is one concrete number that can be measured.
+</div>
+
+<div class="section-divider">⊙</div>
+
+<!-- CONCLUSION -->
+<h2>Conclusion</h2>
+
+<p>The Circumpunct Theory of Consciousness proposes that consciousness is not located in any component but <em>is</em> the irreducible pattern of aperture, field, and boundary operating together.</p>
+
+<p>The aperture is the ÷t—the division operation that converts timeless energy into temporal power. This is the origin of time itself. The field carries energy (potential, future) before the aperture and power (actual, present) after. The boundary accumulates crystallized power transfers—matter, body, the past made structural.</p>
+
+<p>The framework generates specific, falsifiable predictions around cross-scale phase coherence, the ρ parameter, the D = 1.5 fractal dimension at balance, and the relationship between power consumption and temporal resolution. It reframes existing theories (IIT, GNW) as partial captures of a single triadic structure rather than competitors.</p>
+
+<div class="core-claim">
+  <p class="claim">P = E / t<br><br>The aperture IS the division.<br>Energy becomes power becomes matter.<br>Time begins at the crossing.</p>
+</div>
+
+</main>
+
+<section style="max-width: 800px; margin: 0 auto; padding: 0 2rem 3rem;">
+  <h2 style="font-size: 1.4rem; font-weight: 400; color: var(--gold); margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);">References & Related Work</h2>
+  
+  <div style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.8;">
+    <p><strong>Criticality & Avalanches:</strong> Beggs & Plenz (2003), "Neuronal avalanches in neocortical circuits." <em>J Neurosci</em>. | Shew & Plenz (2013), "The functional benefits of criticality in the cortex." <em>Neuroscientist</em>.</p>
+    
+    <p><strong>Anesthesia & Phase Coherence:</strong> Mashour & Hudetz (2018), "Neural correlates of unconsciousness in large-scale brain networks." <em>Trends Neurosci</em>. | Purdon et al. (2013), "Electroencephalogram signatures of loss and recovery of consciousness." <em>PNAS</em>.</p>
+    
+    <p><strong>Fractal Dimension:</strong> Mörters & Peres (2010), <em>Brownian Motion</em>. Cambridge University Press. (D = 1.5 for Brownian motion graph.)</p>
+    
+    <p><strong>Integrated Information Theory:</strong> Tononi et al. (2016), "Integrated information theory: from consciousness to its physical substrate." <em>Nat Rev Neurosci</em>.</p>
+    
+    <p><strong>Global Workspace Theory:</strong> Dehaene & Changeux (2011), "Experimental and theoretical approaches to conscious processing." <em>Neuron</em>.</p>
+    
+    <p><strong>Inter-brain Synchrony:</strong> Dumas et al. (2010), "Inter-brain synchronization during social interaction." <em>PLoS ONE</em>.</p>
+    
+    <p><strong>Discrete Time in Perception:</strong> VanRullen & Koch (2003), "Is perception discrete or continuous?" <em>Trends Cogn Sci</em>.</p>
+    
+    <p><strong>Dissipative Structures:</strong> Prigogine & Stengers (1984), <em>Order Out of Chaos</em>. Bantam. | Prigogine (1997), <em>The End of Certainty</em>. Free Press.</p>
+    
+    <p><strong>Free Energy Principle:</strong> Friston (2010), "The free-energy principle: a unified brain theory?" <em>Nat Rev Neurosci</em>. | Friston et al. (2017), "Active inference and learning." <em>Neurosci Biobehav Rev</em>.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="symbol">⊙</div>
+  <p>Circumpunct Theory of Consciousness v3.0</p>
+  <p style="margin-top: 0.5rem; font-size: 0.9rem;">Ashman Roonz & Claude · January 2026</p>
+</footer>
+
+</body>
+</html>
