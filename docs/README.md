@@ -68,6 +68,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 ## Consciousness & Spirituality
 
 - [**chakras.html**](https://fractalreality.ca/chakras.html) — Chakras as frequency bands of the one aperture
+- [**circumpunct_consciousness_theory.html**](https://fractalreality.ca/circumpunct_consciousness_theory.html) — Circumpunct Theory of Consciousness
 - [**consciousness-path-sim.html**](https://fractalreality.ca/consciousness-path-sim.html) — Consciousness path simulation
 - [**the_bridge_presentation.html**](https://fractalreality.ca/the_bridge_presentation.html) — Bridge between science and spirituality
 - [**framework_bridge_visual.html**](https://fractalreality.ca/framework_bridge_visual.html) — Framework bridge visualization
@@ -86,6 +87,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**truth_seekers_cree.html**](https://fractalreality.ca/truth_seekers_cree.html) — Truth seeker's creed
 - [**the_steelman_way.html**](https://fractalreality.ca/the_steelman_way.html) — Steelmanning as ethical practice
 - [**how_to_realize_real_lies.html**](https://fractalreality.ca/how_to_realize_real_lies.html) — Recognizing deception patterns
+- [**why_i_hate_lies.html**](https://fractalreality.ca/why_i_hate_lies.html) — Why I Hate Lies
 
 ---
 
@@ -116,6 +118,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**I_cant_say.html**](https://fractalreality.ca/I_cant_say.html) — The unspeakable in language
 - [**everybody_picks_their_nose.html**](https://fractalreality.ca/everybody_picks_their_nose.html) — Universal human behaviors
 - [**reality_manipulation_sandbox.html**](https://fractalreality.ca/reality_manipulation_sandbox.html) — Reality manipulation concepts
+- [**city_of_resonance.html**](https://fractalreality.ca/city_of_resonance.html) — City of Resonance
 - [**varpet_tribute.html**](https://fractalreality.ca/varpet_tribute.html) — Tribute page
 
 ---
