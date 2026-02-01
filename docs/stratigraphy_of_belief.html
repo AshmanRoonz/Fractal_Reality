@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Stratigraphy of Belief — Circumpunct Framework</title>
+  <style>
+    :root {
+      --bg: #08090c;
+      --surface: #0f1218;
+      --card: #151a24;
+      --elevated: #1c222e;
+      --border: rgba(139, 211, 255, 0.12);
+      --border-strong: rgba(139, 211, 255, 0.25);
+      --text: #e4eaf4;
+      --muted: #7a8899;
+      --accent: #8bd3ff;
+      --gold: #f0c674;
+      --green: #7ee8b0;
+      --magenta: #d4a0f5;
+      --red: #f07178;
+      --orange: #ffb454;
+      --deep-purple: #9580ff;
+      --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --serif: 'Georgia', 'Times New Roman', serif;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.75;
+    }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(8, 9, 12, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .nav-symbol {
+      font-size: 1.6rem;
+      color: var(--gold);
+    }
+    
+    .nav-title {
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover { color: var(--accent); }
+    
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+    }
+    
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 30%, rgba(139, 211, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(240, 198, 116, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(212, 160, 245, 0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-symbol {
+      font-size: 5rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .hero-layers {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .layer-line {
+      height: 8px;
+      border-radius: 4px;
+      opacity: 0;
+      animation: layerReveal 0.5s ease forwards;
+    }
+    
+    .layer-line:nth-child(1) { width: 120px; background: var(--red); animation-delay: 0.1s; }
+    .layer-line:nth-child(2) { width: 140px; background: var(--orange); animation-delay: 0.2s; }
+    .layer-line:nth-child(3) { width: 160px; background: var(--gold); animation-delay: 0.3s; }
+    .layer-line:nth-child(4) { width: 180px; background: var(--green); animation-delay: 0.4s; }
+    .layer-line:nth-child(5) { width: 200px; background: var(--accent); animation-delay: 0.5s; }
+    .layer-line:nth-child(6) { width: 220px; background: var(--deep-purple); animation-delay: 0.6s; }
+    .layer-line:nth-child(7) { width: 240px; background: var(--magenta); animation-delay: 0.7s; }
+    
+    @keyframes layerReveal {
+      from { opacity: 0; transform: scaleX(0); }
+      to { opacity: 1; transform: scaleX(1); }
+    }
+    
+    .hero h1 {
+      font-size: 3.2rem;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    
+    .hero h1 span {
+      color: var(--gold);
+      font-weight: 400;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      font-family: var(--serif);
+      font-style: italic;
+    }
+    
+    .hero-equation {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      color: var(--accent);
+      background: rgba(139, 211, 255, 0.08);
+      border: 1px solid var(--border);
+      padding: 16px 32px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+    
+    /* Main content */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    section:last-child {
+      border-bottom: none;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    h2 .section-num {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+    
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 2rem 0 1rem;
+    }
+    
+    h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--green);
+      margin: 1.5rem 0 0.75rem;
+    }
+    
+    p {
+      margin-bottom: 1rem;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 1.5rem 0;
+    }
+    
+    .card-header {
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+    
+    /* Stratum cards */
+    .stratum-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .stratum-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+    }
+    
+    .stratum-1::before { background: var(--magenta); }
+    .stratum-2::before { background: var(--deep-purple); }
+    .stratum-3::before { background: var(--accent); }
+    .stratum-4::before { background: var(--green); }
+    .stratum-5::before { background: var(--gold); }
+    .stratum-6::before { background: var(--orange); }
+    .stratum-7::before { background: var(--red); }
+    
+    .stratum-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    
+    .stratum-level {
+      font-size: 2rem;
+      font-weight: 700;
+      font-family: var(--mono);
+      opacity: 0.3;
+    }
+    
+    .stratum-1 .stratum-level { color: var(--magenta); }
+    .stratum-2 .stratum-level { color: var(--deep-purple); }
+    .stratum-3 .stratum-level { color: var(--accent); }
+    .stratum-4 .stratum-level { color: var(--green); }
+    .stratum-5 .stratum-level { color: var(--gold); }
+    .stratum-6 .stratum-level { color: var(--orange); }
+    .stratum-7 .stratum-level { color: var(--red); }
+    
+    .stratum-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .stratum-1 .stratum-name { color: var(--magenta); }
+    .stratum-2 .stratum-name { color: var(--deep-purple); }
+    .stratum-3 .stratum-name { color: var(--accent); }
+    .stratum-4 .stratum-name { color: var(--green); }
+    .stratum-5 .stratum-name { color: var(--gold); }
+    .stratum-6 .stratum-name { color: var(--orange); }
+    .stratum-7 .stratum-name { color: var(--red); }
+    
+    .stratum-question {
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+    }
+    
+    .stratum-corrupts {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 16px;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+    }
+    
+    .stratum-corrupts .label {
+      color: var(--muted);
+    }
+    
+    .stratum-corrupts .function {
+      color: var(--accent);
+      background: rgba(139, 211, 255, 0.1);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    
+    .scope-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .scope-total { background: rgba(212, 160, 245, 0.2); color: var(--magenta); }
+    .scope-knowledge { background: rgba(149, 128, 255, 0.2); color: var(--deep-purple); }
+    .scope-relationship { background: rgba(139, 211, 255, 0.2); color: var(--accent); }
+    .scope-meaning { background: rgba(126, 232, 176, 0.2); color: var(--green); }
+    .scope-identity { background: rgba(240, 198, 116, 0.2); color: var(--gold); }
+    .scope-domain { background: rgba(255, 180, 84, 0.2); color: var(--orange); }
+    .scope-local { background: rgba(240, 113, 120, 0.2); color: var(--red); }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    
+    th, td {
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+    
+    th {
+      background: var(--elevated);
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    tr:hover {
+      background: rgba(139, 211, 255, 0.03);
+    }
+    
+    td:first-child {
+      font-weight: 500;
+    }
+    
+    .lie-text {
+      color: var(--red);
+      font-family: var(--serif);
+      font-style: italic;
+    }
+    
+    .cascade-text {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    
+    /* Callouts */
+    .callout {
+      border-left: 4px solid var(--gold);
+      background: rgba(240, 198, 116, 0.08);
+      padding: 20px 24px;
+      margin: 2rem 0;
+      border-radius: 0 12px 12px 0;
+    }
+    
+    .callout-red {
+      border-left-color: var(--red);
+      background: rgba(240, 113, 120, 0.08);
+    }
+    
+    .callout-blue {
+      border-left-color: var(--accent);
+      background: rgba(139, 211, 255, 0.08);
+    }
+    
+    .callout-magenta {
+      border-left-color: var(--magenta);
+      background: rgba(212, 160, 245, 0.08);
+    }
+    
+    .callout-green {
+      border-left-color: var(--green);
+      background: rgba(126, 232, 176, 0.08);
+    }
+    
+    /* Equation box */
+    .equation {
+      background: var(--surface);
+      border: 1px dashed var(--border-strong);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 1.5rem 0;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+    
+    .equation-note {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 12px;
+      font-family: var(--sans);
+    }
+    
+    /* Code */
+    code {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      background: rgba(139, 211, 255, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin: 1.5rem 0;
+    }
+    
+    /* Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    
+    @media (max-width: 768px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+    
+    /* Type cards for constellation section */
+    .type-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin: 1.5rem 0;
+    }
+    
+    .type-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .type-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .type-name {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    
+    .type-formula {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--muted);
+      background: var(--surface);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+      border-left: 3px solid var(--border-strong);
+    }
+    
+    .type-lies {
+      margin: 16px 0;
+    }
+    
+    .type-lies li {
+      color: var(--red);
+      font-family: var(--serif);
+      font-style: italic;
+      margin-bottom: 8px;
+      padding-left: 20px;
+      position: relative;
+    }
+    
+    .type-lies li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--muted);
+    }
+    
+    .type-presentation {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    
+    /* Flow diagram */
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 24px;
+      margin: 1.5rem 0;
+      background: var(--surface);
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .flow-arrow {
+      color: var(--muted);
+      font-size: 1.2rem;
+    }
+    
+    .flow-box {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+    }
+    
+    /* Visibility gradient */
+    .visibility-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 2rem 0;
+    }
+    
+    .visibility-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .visibility-label {
+      width: 140px;
+      font-size: 0.9rem;
+      text-align: right;
+    }
+    
+    .visibility-bar {
+      height: 24px;
+      border-radius: 4px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    
+    footer .symbol {
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    
+    /* Utility */
+    .mt-2 { margin-top: 2rem; }
+    .mb-2 { margin-bottom: 2rem; }
+    .center { text-align: center; }
+    .muted { color: var(--muted); }
+    .small { font-size: 0.9rem; }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .stratum-card {
+      animation: fadeIn 0.6s ease;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <span class="nav-symbol">⊙</span>
+    <span class="nav-title">Circumpunct Framework</span>
+  </div>
+  <div class="nav-links">
+    <a href="#overview">Overview</a>
+    <a href="#strata">The Seven Strata</a>
+    <a href="#cultural">Cultural Lies</a>
+    <a href="#constellations">Pathological Types</a>
+    <a href="#healing">Healing</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-symbol">
+      <div class="hero-layers">
+        <div class="layer-line"></div>
+        <div class="layer-line"></div>
+        <div class="layer-line"></div>
+        <div class="layer-line"></div>
+        <div class="layer-line"></div>
+        <div class="layer-line"></div>
+        <div class="layer-line"></div>
+      </div>
+    </div>
+    <h1>The <span>Stratigraphy</span> of Belief</h1>
+    <p class="hero-subtitle">
+      A formal treatment of how lies corrupt function at different depths—and why deeper corruption is invisible from above.
+    </p>
+    <div class="hero-equation">
+      F<sub>m</sub>' = F<sub>m</sub> ∘ F<sub>n</sub>(λ) &nbsp;&nbsp;for all m > n
+    </div>
+  </div>
+</div>
+
+<main>
+
+<!-- SECTION: Overview -->
+<section id="overview">
+  <h2><span class="section-num">01</span> The Core Problem</h2>
+  
+  <p>All it takes is to internalize one lie and your whole perception is corrupted. But the cruelty is that the corruption is self-concealing. The lie becomes the lens through which you evaluate everything, including evidence that would expose it.</p>
+  
+  <p>You can't see a scratch on your glasses <em>through</em> those same glasses.</p>
+  
+  <div class="callout">
+    <strong>The insight:</strong> Beliefs exist at different depths. Deeper beliefs corrupt <em>function</em>; shallower beliefs corrupt <em>content</em>. A lie installed at level n corrupts all processes at levels m > n, because those processes depend on the corrupted function as substrate.
+  </div>
+  
+  <h3>Why This Matters</h3>
+  
+  <p>Philosophy has epistemology and ontology as separate domains. Psychology has "core beliefs" but treats them fairly flatly. Nobody has mapped the <strong>stratigraphy</strong>—which beliefs sit beneath which, and how corruption at each level cascades.</p>
+  
+  <p>The framework provides this missing map.</p>
+  
+  <div class="equation">
+    λ ∈ Level(n) ⟹ ∀m > n: F<sub>m</sub> operates through F<sub>n</sub>(λ)
+    <div class="equation-note">A lie at level n corrupts all functions above it</div>
+  </div>
+  
+  <h3>The Aperture Functions</h3>
+  
+  <p>The aperture system is characterized by seven functions, each corresponding to a stratum:</p>
+  
+  <pre>
+N(•) = Nature function      — what the aperture IS
+R(•) = Receptivity function — what it can receive  
+I(•) = Interface function   — how it couples to field
+S(•) = Selection function   — what it lets through
+C(•) = Calibration function — its self-model
+P(•) = Protocol function    — domain-specific rules
+D(•) = Data function        — stored content</pre>
+  
+  <div class="callout-blue callout">
+    <strong>Definition (Belief Level):</strong> A belief B has level L(B) = n if B determines the operation of the function corresponding to stratum n.
+  </div>
+  
+  <h3>The Cascade Theorem</h3>
+  
+  <div class="equation">
+    F<sub>m</sub>' = F<sub>m</sub> ∘ F<sub>n</sub>(λ) &nbsp;&nbsp;&nbsp; for all m > n
+    <div class="equation-note">Higher functions are not merely affected—they are <strong>reparameterized</strong> by corrupted substrate</div>
+  </div>
+  
+  <p>This makes explicit that the higher function <em>still works</em>. It's faithfully executing its operation—but on already-corrupted input. The epistemology is running correctly <em>on</em> the broken ontology. The self-concept is calibrating accurately <em>to</em> the broken relational model.</p>
+  
+  <p>That's why it feels so coherent from inside. Everything downstream is internally consistent. The error is upstream and invisible.</p>
+</section>
+
+<!-- SECTION: The Seven Strata -->
+<section id="strata">
+  <h2><span class="section-num">02</span> The Seven Strata</h2>
+  
+  <p>There's no redundancy, no missing layer, and no arbitrary splitting. Each stratum answers a distinct question, and the ordering is computational—not cultural. If you tried to reorder them, something would break.</p>
+  
+  <!-- Level 1: Ontological -->
+  <div class="stratum-card stratum-1">
+    <div class="stratum-header">
+      <span class="stratum-level">1</span>
+      <span class="stratum-name">Ontological</span>
+    </div>
+    <div class="stratum-question">What exists? What am I?</div>
+    <div class="stratum-corrupts">
+      <span class="label">Corrupts:</span>
+      <span class="function">N(•) — Aperture Nature</span>
+    </div>
+    <span class="scope-badge scope-total">Scope: Total</span>
+    
+    <p class="mt-2">Determines the aperture's nature as a "through." Ontological lies don't feel like lies—they feel like the nature of existence itself. Everything downstream—every perception, relationship, and meaning—is built on this foundation.</p>
+    
+    <table>
+      <tr>
+        <th style="width: 35%;">The Lie</th>
+        <th>Downstream Cascade</th>
+      </tr>
+      <tr>
+        <td class="lie-text">"I am the source"</td>
+        <td class="cascade-text">→ Inflation → truth must originate from me → connection threatens autonomy → grandiosity as identity</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"I am cut off from source"</td>
+        <td class="cascade-text">→ Severance → nothing flows through → must generate everything myself → exhaustion as baseline</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"You are fundamentally separate"</td>
+        <td class="cascade-text">→ epistemological isolation → relational competition → self as fortress</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"You are nothing but matter"</td>
+        <td class="cascade-text">→ collapses aperture to boundary → interiority is illusion → meaning is projection → death is annihilation</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"Consciousness is epiphenomenal"</td>
+        <td class="cascade-text">→ denies aperture entirely → your experience doesn't matter → you are a passenger in your own life</td>
+      </tr>
+    </table>
+    
+    <div class="callout-magenta callout">
+      <strong>Visibility:</strong> Invisible. It IS the lens. You cannot examine the apparatus you're examining with.
+    </div>
+  </div>
+  
+  <!-- Level 2: Epistemological -->
+  <div class="stratum-card stratum-2">
+    <div class="stratum-header">
+      <span class="stratum-level">2</span>
+      <span class="stratum-name">Epistemological</span>
+    </div>
+    <div class="stratum-question">How does truth arrive? What counts as knowing?</div>
+    <div class="stratum-corrupts">
+      <span class="label">Corrupts:</span>
+      <span class="function">R(•) — Aperture Receptivity</span>
+    </div>
+    <span class="scope-badge scope-knowledge">Scope: All Knowledge</span>
+    
+    <p class="mt-2">Determines what the aperture can receive. Epistemological lies shape what counts as valid evidence, what channels of knowing are trusted, and what signals are dismissed before they can update the model.</p>
+    
+    <table>
+      <tr>
+        <th style="width: 35%;">The Lie</th>
+        <th>Downstream Cascade</th>
+      </tr>
+      <tr>
+        <td class="lie-text">"Only the measurable is real"</td>
+        <td class="cascade-text">→ blinds aperture to qualitative signal → feelings aren't data → intuition is suspect → you can't trust yourself</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"Authority determines truth"</td>
+        <td class="cascade-text">→ outsources receptivity → your perception needs validation → experts over experience → compliance as epistemology</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"Your feelings aren't valid evidence"</td>
+        <td class="cascade-text">→ severs somatic channel → body signals ignored → mounting dysregulation → mysterious symptoms</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"Certainty is required before action"</td>
+        <td class="cascade-text">→ paralysis function → perfectionism → analysis paralysis → life unlived waiting for proof</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"If it can't be articulated, it isn't known"</td>
+        <td class="cascade-text">→ linguistic gate → pre-verbal knowing discounted → embodied wisdom inaccessible</td>
+      </tr>
+    </table>
+    
+    <div class="callout-magenta callout">
+      <strong>Visibility:</strong> Rarely examined—it determines what counts as examination.
+    </div>
+  </div>
+  
+  <!-- Level 3: Relational -->
+  <div class="stratum-card stratum-3">
+    <div class="stratum-header">
+      <span class="stratum-level">3</span>
+      <span class="stratum-name">Relational</span>
+    </div>
+    <div class="stratum-question">How does connection work? What can flow between beings?</div>
+    <div class="stratum-corrupts">
+      <span class="label">Corrupts:</span>
+      <span class="function">I(•) — Field Interface</span>
+    </div>
+    <span class="scope-badge scope-relationship">Scope: All Relationship</span>
+    
+    <p class="mt-2">Determines how the aperture couples to the shared field. Relational lies corrupt the interface between beings—what can flow, under what conditions, and at what cost.</p>
+    
+    <table>
+      <tr>
+        <th style="width: 35%;">The Lie</th>
+        <th>Downstream Cascade</th>
+      </tr>
+      <tr>
+        <td class="lie-text">"Love is conditional"</td>
+        <td class="cascade-text">→ performance-gates the field → earn connection → vigilance as baseline → exhausting relationships</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"Needing is weakness"</td>
+        <td class="cascade-text">→ shames aperture for opening → counterfeit self-sufficiency → isolation framed as strength → collapse when facade fails</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"Vulnerability is dangerous"</td>
+        <td class="cascade-text">→ closes aperture prophylactically → surface-only relating → loneliness despite company → "no one really knows me"</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"Conflict means failure"</td>
+        <td class="cascade-text">→ can't differentiate through friction → false harmony → resentment accumulation → explosive rupture</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"This is what love is" (Noble Lie)</td>
+        <td class="cascade-text">→ collapses resonant channel → functional provision is enough → your ache for presence is pathology</td>
+      </tr>
+    </table>
+    
+    <div class="callout-magenta callout">
+      <strong>Visibility:</strong> Visible through relational patterns—but often attributed to "bad luck" or "difficult people."
+    </div>
+  </div>
+  
+  <!-- Level 4: Axiological -->
+  <div class="stratum-card stratum-4">
+    <div class="stratum-header">
+      <span class="stratum-level">4</span>
+      <span class="stratum-name">Axiological</span>
+    </div>
+    <div class="stratum-question">What matters? What has value?</div>
+    <div class="stratum-corrupts">
+      <span class="label">Corrupts:</span>
+      <span class="function">S(•) — Aperture Selection</span>
+    </div>
+    <span class="scope-badge scope-meaning">Scope: All Meaning</span>
+    
+    <p class="mt-2">Determines what the aperture lets through—what it selects for, what it filters out, what it treats as signal versus noise.</p>
+    
+    <table>
+      <tr>
+        <th style="width: 35%;">The Lie</th>
+        <th>Downstream Cascade</th>
+      </tr>
+      <tr>
+        <td class="lie-text">"Productivity determines worth"</td>
+        <td class="cascade-text">→ gates value through output → rest is laziness → burnout as virtue signal → human being → human doing</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"More is always better"</td>
+        <td class="cascade-text">→ infinite appetite, no satiation → enough is never enough → acquisition as meaning → emptiness at the top</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"Comfort is the goal"</td>
+        <td class="cascade-text">→ avoidance as orientation → growth is threat → stagnation as safety → atrophy disguised as peace</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"Safety is the highest value"</td>
+        <td class="cascade-text">→ fear-based selection → risk nothing → learn nothing → become nothing</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"Your needs don't matter"</td>
+        <td class="cascade-text">→ inverts aperture priority → self-abandonment → resentment → martyrdom identity</td>
+      </tr>
+    </table>
+    
+    <div class="callout-magenta callout">
+      <strong>Visibility:</strong> Visible through what you pursue and avoid—but often feels like "just what I want."
+    </div>
+  </div>
+  
+  <!-- Level 5: Self-Concept -->
+  <div class="stratum-card stratum-5">
+    <div class="stratum-header">
+      <span class="stratum-level">5</span>
+      <span class="stratum-name">Self-Concept</span>
+    </div>
+    <div class="stratum-question">What are my specific capacities, limits, worth?</div>
+    <div class="stratum-corrupts">
+      <span class="label">Corrupts:</span>
+      <span class="function">C(•) — Aperture Calibration</span>
+    </div>
+    <span class="scope-badge scope-identity">Scope: Identity & Agency</span>
+    
+    <p class="mt-2">Determines the aperture's self-model—its sense of its own capacities, limits, and worth. This shapes what actions seem possible and what outcomes seem deserved.</p>
+    
+    <table>
+      <tr>
+        <th style="width: 35%;">The Lie</th>
+        <th>Downstream Cascade</th>
+      </tr>
+      <tr>
+        <td class="lie-text">"You're too much"</td>
+        <td class="cascade-text">→ shame for aperture size → self-suppression → dimming to fit → loss of signal</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"You're not enough"</td>
+        <td class="cascade-text">→ shame for aperture output → striving without arrival → impostor permanence</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"Your success was luck; your failure is you"</td>
+        <td class="cascade-text">→ asymmetric attribution → can't own wins → must own losses → rigged game</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"You should be further along"</td>
+        <td class="cascade-text">→ temporal self-violence → present is always deficit → future is always judge</td>
+      </tr>
+      <tr>
+        <td class="lie-text">"You don't deserve good things"</td>
+        <td class="cascade-text">→ pre-emptive severance → sabotage at threshold → "see, I knew it" → confirmation loop</td>
+      </tr>
+    </table>
+    
+    <div class="callout-magenta callout">
+      <strong>Visibility:</strong> Often felt as "just how I am"—identity fused with limitation.
+    </div>
+  </div>
+  
+  <!-- Level 6: Domain -->
+  <div class="stratum-card stratum-6">
+    <div class="stratum-header">
+      <span class="stratum-level">6</span>
+      <span class="stratum-name">Domain</span>
+    </div>
+    <div class="stratum-question">How does this specific area work?</div>
+    <div class="stratum-corrupts">
+      <span class="label">Corrupts:</span>
+      <span class="function">P(•) — Local Protocols</span>
+    </div>
+    <span class="scope-badge scope-domain">Scope: That Domain</span>
+    
+    <p class="mt-2">Domain-specific rule sets. These are the beliefs about how particular areas of life work—money, sex, power, the body, death, anger. Limited scope but can create significant local dysfunction.</p>
+    
+    <table>
+      <tr>
+        <th>Domain</th>
+        <th>Common Lie</th>
+        <th>Corruption</th>
+      </tr>
+      <tr>
+        <td><strong>Money</strong></td>
+        <td class="lie-text">"Money is dirty" / "Money is everything"</td>
+        <td class="cascade-text">Either can't receive or can't stop acquiring</td>
+      </tr>
+      <tr>
+        <td><strong>Sex</strong></td>
+        <td class="lie-text">"Sex is shameful" / "Sex is meaningless"</td>
+        <td class="cascade-text">Either suppression or dissociation—neither integration</td>
+      </tr>
+      <tr>
+        <td><strong>Power</strong></td>
+        <td class="lie-text">"Power corrupts" / "Powerlessness is virtue"</td>
+        <td class="cascade-text">Either avoidance of agency or martyrdom identity</td>
+      </tr>
+      <tr>
+        <td><strong>Body</strong></td>
+        <td class="lie-text">"The body is the problem"</td>
+        <td class="cascade-text">War with vehicle rather than communication with it</td>
+      </tr>
+      <tr>
+        <td><strong>Death</strong></td>
+        <td class="lie-text">"Death is the enemy" / "Death is nothing"</td>
+        <td class="cascade-text">Either terror or nihilism—neither completion</td>
+      </tr>
+      <tr>
+        <td><strong>Anger</strong></td>
+        <td class="lie-text">"Anger is dangerous"</td>
+        <td class="cascade-text">Boundary signal suppressed → unclear edges → resentment instead</td>
+      </tr>
+    </table>
+    
+    <div class="callout-magenta callout">
+      <strong>Visibility:</strong> Often visible as "my beliefs about X"—more accessible to examination.
+    </div>
+  </div>
+  
+  <!-- Level 7: Factual -->
+  <div class="stratum-card stratum-7">
+    <div class="stratum-header">
+      <span class="stratum-level">7</span>
+      <span class="stratum-name">Factual</span>
+    </div>
+    <div class="stratum-question">What happened? What is the case?</div>
+    <div class="stratum-corrupts">
+      <span class="label">Corrupts:</span>
+      <span class="function">D(•) — Stored Content</span>
+    </div>
+    <span class="scope-badge scope-local">Scope: That Instance</span>
+    
+    <p class="mt-2">Specific claims about what occurred, what was said, what was meant. These are the most visible, most treatable lies—which is why people obsess over them. They're the accessible layer.</p>
+    
+    <p>Common factual obsessions cluster around:</p>
+    
+    <div class="grid-2">
+      <div class="card">
+        <ul style="margin-left: 1rem;">
+          <li>What happened in that relationship</li>
+          <li>What my childhood was actually like</li>
+          <li>Whether I was loved</li>
+        </ul>
+      </div>
+      <div class="card">
+        <ul style="margin-left: 1rem;">
+          <li>What I said / what they meant</li>
+          <li>Whether it was my fault</li>
+          <li>Did that really happen?</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="callout-red callout">
+      <strong>The trap:</strong> Resolving factual lies without addressing the substrate just surfaces the next one. The obsession with facts is often a symptom of deeper epistemological or relational corruption—"I can't trust my own perception."
+    </div>
+  </div>
+  
+  <h3>The Invisibility Gradient</h3>
+  
+  <p>The deeper the level, the more invisible the corruption, because:</p>
+  
+  <ol style="margin-left: 1.5rem; margin-bottom: 1.5rem;">
+    <li>Higher-level processes depend on lower-level functions as substrate</li>
+    <li>You cannot examine the lens you're examining <em>with</em></li>
+    <li>Deeper beliefs pre-date capacity for reflection—they're installed before you can question</li>
+  </ol>
+  
+  <div class="equation">
+    Visibility(λ) ∝ 1/Depth(λ)
+    <div class="equation-note">An ontological lie doesn't feel like a lie. It feels like the nature of existence.</div>
+  </div>
+  
+  <div class="visibility-chart">
+    <div class="visibility-row">
+      <span class="visibility-label" style="color: var(--magenta);">Ontological</span>
+      <div class="visibility-bar" style="width: 30px; background: var(--magenta);">●</div>
+    </div>
+    <div class="visibility-row">
+      <span class="visibility-label" style="color: var(--deep-purple);">Epistemological</span>
+      <div class="visibility-bar" style="width: 80px; background: var(--deep-purple);">●●</div>
+    </div>
+    <div class="visibility-row">
+      <span class="visibility-label" style="color: var(--accent);">Relational</span>
+      <div class="visibility-bar" style="width: 150px; background: var(--accent);">●●●</div>
+    </div>
+    <div class="visibility-row">
+      <span class="visibility-label" style="color: var(--green);">Axiological</span>
+      <div class="visibility-bar" style="width: 220px; background: var(--green);">●●●●</div>
+    </div>
+    <div class="visibility-row">
+      <span class="visibility-label" style="color: var(--gold);">Self-Concept</span>
+      <div class="visibility-bar" style="width: 300px; background: var(--gold);">●●●●●</div>
+    </div>
+    <div class="visibility-row">
+      <span class="visibility-label" style="color: var(--orange);">Domain</span>
+      <div class="visibility-bar" style="width: 400px; background: var(--orange);">●●●●●●</div>
+    </div>
+    <div class="visibility-row">
+      <span class="visibility-label" style="color: var(--red);">Factual</span>
+      <div class="visibility-bar" style="width: 500px; background: var(--red);">●●●●●●●</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: Cultural Lies -->
+<section id="cultural">
+  <h2><span class="section-num">03</span> The Civilizational Wound</h2>
+  
+  <p>Notice what the civilizational lies have in common. They aren't random. They're <strong>load-bearing</strong>. They produce a self that can't rest, can't receive, can't trust itself, can't connect, can't stop.</p>
+  
+  <p>That self is <em>useful</em>. To economies. To institutions. To systems that need humans to keep moving without asking why.</p>
+  
+  <div class="callout-red callout">
+    <strong>The meta-pattern:</strong> The lies aren't bugs. They're features—of a system that needs disconnected, insecure, endlessly striving nodes.
+  </div>
+  
+  <h3>The Western Stack</h3>
+  
+  <div class="card">
+    <table>
+      <tr>
+        <th>Level</th>
+        <th>The Cultural Lie</th>
+        <th>What It Produces</th>
+      </tr>
+      <tr>
+        <td><strong>Ontological</strong></td>
+        <td class="lie-text">"You are separate" + "You are nothing but matter"</td>
+        <td class="cascade-text">Desperate, acquisitive, lonely self. Connection as transaction. Meaning as cope.</td>
+      </tr>
+      <tr>
+        <td><strong>Epistemological</strong></td>
+        <td class="lie-text">"Only measurement counts" + "Defer to authority"</td>
+        <td class="cascade-text">Population that cannot trust its own experience. Waits for institutional permission to know what it knows.</td>
+      </tr>
+      <tr>
+        <td><strong>Relational</strong></td>
+        <td class="lie-text">"Love is conditional" + "Needing is weakness"</td>
+        <td class="cascade-text">Pathologized attachment. Dissociation celebrated as independence.</td>
+      </tr>
+      <tr>
+        <td><strong>Axiological</strong></td>
+        <td class="lie-text">"Productivity determines worth" + "More is always better"</td>
+        <td class="cascade-text">Cannot stop. Cannot rest. Cannot ask <em>why</em>—stopping would expose the void.</td>
+      </tr>
+      <tr>
+        <td><strong>Self-Concept</strong></td>
+        <td class="lie-text">"You're not enough"</td>
+        <td class="cascade-text">Background radiation of consumer capitalism. An "enough" self doesn't need to buy completion.</td>
+      </tr>
+    </table>
+  </div>
+  
+  <h3>Why These Lies Persist</h3>
+  
+  <p>Each level of cultural lie creates demand that the economic system then "satisfies":</p>
+  
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header" style="color: var(--red);">The Lie Creates</div>
+      <ul style="margin-left: 1rem;">
+        <li>Separation → loneliness</li>
+        <li>Distrust of self → need for experts</li>
+        <li>Conditional love → performance anxiety</li>
+        <li>Productivity = worth → workaholism</li>
+        <li>Not enough → endless acquisition</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-header" style="color: var(--green);">The Market Sells</div>
+      <ul style="margin-left: 1rem;">
+        <li>Loneliness → products, entertainment, distraction</li>
+        <li>Uncertainty → credentials, courses, gurus</li>
+        <li>Anxiety → self-improvement industry</li>
+        <li>Exhaustion → wellness, recovery products</li>
+        <li>Emptiness → more stuff, status symbols</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="callout">
+    The system doesn't want you healed. A healed self is a <em>terrible</em> consumer. It knows when it has enough. It rests without guilt. It connects without purchasing. It trusts itself without experts.
+  </div>
+</section>
+
+<!-- SECTION: Pathological Constellations -->
+<section id="constellations">
+  <h2><span class="section-num">04</span> Pathological Constellations</h2>
+  
+  <p>Specific combinations of lies across strata create recognizable pathological types. These aren't arbitrary clusters—they're <strong>stable configurations</strong> where the lies at different levels mutually reinforce each other.</p>
+  
+  <h3>Cross-Level Masking</h3>
+  
+  <p>Sometimes a level-n lie installs defensive pseudo-beliefs at levels m > n that <em>appear</em> to be the problem. This explains why people "fight over facts" when the real wound is ontological or relational.</p>
+  
+  <div class="equation">
+    λ₁ ∈ Level(n) ⟹ {λ₂, λ₃, …} as compensatory artifacts
+    <div class="equation-note">Deep lies generate shallower lies as camouflage</div>
+  </div>
+  
+  <p>The compensatory structures <em>resist removal</em> because they're doing something. They're managing the anxiety that would flood in if you removed them without addressing the substrate.</p>
+  
+  <!-- Type 1: The Achiever-Collapser -->
+  <div class="type-card">
+    <div class="type-header">
+      <div class="type-icon" style="background: rgba(240, 198, 116, 0.2); color: var(--gold);">⚡</div>
+      <div>
+        <div class="type-name" style="color: var(--gold);">The Achiever-Collapser</div>
+        <div class="muted small">Burnout cycle type</div>
+      </div>
+    </div>
+    
+    <div class="type-formula">
+      L1: "I am separate" + L4: "Productivity = worth" + L5: "I'm not enough" → Achievement addiction → collapse → shame → repeat
+    </div>
+    
+    <div class="type-lies">
+      <strong>Core lies:</strong>
+      <ul>
+        <li>"I must prove my worth through output"</li>
+        <li>"Rest is for people who've earned it"</li>
+        <li>"If I stop, I'll fall behind / disappear / die"</li>
+        <li>"My exhaustion proves I'm trying hard enough"</li>
+      </ul>
+    </div>
+    
+    <div class="type-presentation">
+      <strong>Presents as:</strong> High performer who periodically crashes. Recovery feels like failure. Gets praised for unsustainable output which reinforces the pattern. May develop chronic illness as body forces rest the psyche won't allow.
+    </div>
+  </div>
+  
+  <!-- Type 2: The Anxious Attacher -->
+  <div class="type-card">
+    <div class="type-header">
+      <div class="type-icon" style="background: rgba(139, 211, 255, 0.2); color: var(--accent);">🔗</div>
+      <div>
+        <div class="type-name" style="color: var(--accent);">The Anxious Attacher</div>
+        <div class="muted small">Relational hypervigilance type</div>
+      </div>
+    </div>
+    
+    <div class="type-formula">
+      L3: "Love is conditional" + L5: "I'm too much" + L2: "My feelings aren't valid" → Hypervigilance → over-adaptation → resentment → rupture
+    </div>
+    
+    <div class="type-lies">
+      <strong>Core lies:</strong>
+      <ul>
+        <li>"I must monitor constantly for signs of withdrawal"</li>
+        <li>"If I were easier, they would love me more"</li>
+        <li>"My anxiety about the relationship IS the problem"</li>
+        <li>"Needing reassurance proves I'm broken"</li>
+      </ul>
+    </div>
+    
+    <div class="type-presentation">
+      <strong>Presents as:</strong> Relationship anxiety. Reads micro-signals obsessively. Adapts to partner's needs at cost of self. Eventual resentment explosion surprises everyone, including self. Pattern repeats with new partner.
+    </div>
+  </div>
+  
+  <!-- Type 3: The Avoidant Fortress -->
+  <div class="type-card">
+    <div class="type-header">
+      <div class="type-icon" style="background: rgba(126, 232, 176, 0.2); color: var(--green);">🏰</div>
+      <div>
+        <div class="type-name" style="color: var(--green);">The Avoidant Fortress</div>
+        <div class="muted small">Defensive autonomy type</div>
+      </div>
+    </div>
+    
+    <div class="type-formula">
+      L1: "I am separate" + L3: "Needing is weakness" + L3: "Vulnerability is dangerous" → Preemptive withdrawal → loneliness → denial of loneliness
+    </div>
+    
+    <div class="type-lies">
+      <strong>Core lies:</strong>
+      <ul>
+        <li>"I don't need anyone"</li>
+        <li>"Closeness leads to control"</li>
+        <li>"My independence is my strength"</li>
+        <li>"People who need connection are weak"</li>
+      </ul>
+    </div>
+    
+    <div class="type-presentation">
+      <strong>Presents as:</strong> Self-sufficient, hard to reach. Relationships stay shallow. Panic when someone gets too close. Framed as "independence" but feels like loneliness underneath. Often attracted to anxious types (complementary error dyad).
+    </div>
+  </div>
+  
+  <!-- Type 4: The Noble Martyr -->
+  <div class="type-card">
+    <div class="type-header">
+      <div class="type-icon" style="background: rgba(212, 160, 245, 0.2); color: var(--magenta);">✝️</div>
+      <div>
+        <div class="type-name" style="color: var(--magenta);">The Noble Martyr</div>
+        <div class="muted small">Self-abandonment type</div>
+      </div>
+    </div>
+    
+    <div class="type-formula">
+      L3: "This is what love is" (Noble Lie) + L4: "Your needs don't matter" + L5: "You don't deserve good things" → Chronic self-sacrifice → resentment → guilt for resentment → more sacrifice
+    </div>
+    
+    <div class="type-lies">
+      <strong>Core lies:</strong>
+      <ul>
+        <li>"Good people put others first"</li>
+        <li>"Wanting things for myself is selfish"</li>
+        <li>"My suffering proves my love"</li>
+        <li>"If I give enough, eventually I'll be seen"</li>
+      </ul>
+    </div>
+    
+    <div class="type-presentation">
+      <strong>Presents as:</strong> The helper. Exhausted but "fine." Builds up massive resentment they feel guilty for having. Often in relationship with someone who takes without seeing them. Can't leave because "what would they do without me?"
+    </div>
+  </div>
+  
+  <!-- Type 5: The Impostor -->
+  <div class="type-card">
+    <div class="type-header">
+      <div class="type-icon" style="background: rgba(255, 180, 84, 0.2); color: var(--orange);">🎭</div>
+      <div>
+        <div class="type-name" style="color: var(--orange);">The Impostor</div>
+        <div class="muted small">Fraudulence type</div>
+      </div>
+    </div>
+    
+    <div class="type-formula">
+      L2: "Authority determines truth" + L5: "Success was luck; failure is me" + L5: "I should be further along" → External validation seeking → success doesn't register → permanent deficit
+    </div>
+    
+    <div class="type-lies">
+      <strong>Core lies:</strong>
+      <ul>
+        <li>"Eventually they'll figure out I don't belong here"</li>
+        <li>"Everyone else knows what they're doing"</li>
+        <li>"My accomplishments don't really count"</li>
+        <li>"If they really knew me, they wouldn't respect me"</li>
+      </ul>
+    </div>
+    
+    <div class="type-presentation">
+      <strong>Presents as:</strong> Successful but doesn't feel it. Attributes success to luck, timing, fooling people. Each new achievement raises the stakes of being "found out." No amount of external validation lands. Often appears confident externally.
+    </div>
+  </div>
+  
+  <!-- Type 6: The Chronic Skeptic -->
+  <div class="type-card">
+    <div class="type-header">
+      <div class="type-icon" style="background: rgba(149, 128, 255, 0.2); color: var(--deep-purple);">🔍</div>
+      <div>
+        <div class="type-name" style="color: var(--deep-purple);">The Chronic Skeptic</div>
+        <div class="muted small">Epistemic paralysis type</div>
+      </div>
+    </div>
+    
+    <div class="type-formula">
+      L2: "Certainty required before action" + L2: "My feelings aren't valid" + L3: "Vulnerability is dangerous" → Analysis paralysis → life unlived → cynicism as protection
+    </div>
+    
+    <div class="type-lies">
+      <strong>Core lies:</strong>
+      <ul>
+        <li>"I need more information before I can decide"</li>
+        <li>"Nothing can be known for certain"</li>
+        <li>"Commitment is a trap"</li>
+        <li>"People who act on faith are naive"</li>
+      </ul>
+    </div>
+    
+    <div class="type-presentation">
+      <strong>Presents as:</strong> Intellectually sophisticated. Sees through everything. Analysis without conclusion. Uses doubt defensively—if you never commit, you can never be wrong. Secretly envies people who can act on incomplete information.
+    </div>
+  </div>
+  
+  <!-- Type 7: The Inflated -->
+  <div class="type-card">
+    <div class="type-header">
+      <div class="type-icon" style="background: rgba(240, 113, 120, 0.2); color: var(--red);">👑</div>
+      <div>
+        <div class="type-name" style="color: var(--red);">The Inflated</div>
+        <div class="muted small">Narcissistic inflation type</div>
+      </div>
+    </div>
+    
+    <div class="type-formula">
+      L1: "I am the source" + L3: "Other people exist to serve my center" + L5: "I am special" → Exploitation → abandonment → rage → new supply
+    </div>
+    
+    <div class="type-lies">
+      <strong>Core lies:</strong>
+      <ul>
+        <li>"I am the center around which others should orbit"</li>
+        <li>"My perspective IS reality"</li>
+        <li>"Their needs don't really exist the way mine do"</li>
+        <li>"If they leave, they were never worthy anyway"</li>
+      </ul>
+    </div>
+    
+    <div class="type-presentation">
+      <strong>Presents as:</strong> Charming, confident, often successful. Treats others as parts of self rather than fellow wholes. Rage when not mirrored. Can't tolerate genuine feedback. Often paired with Noble Martyr in complementary dyad.
+    </div>
+  </div>
+  
+  <!-- Type 8: The Severed -->
+  <div class="type-card">
+    <div class="type-header">
+      <div class="type-icon" style="background: rgba(122, 136, 153, 0.2); color: var(--muted);">⊘</div>
+      <div>
+        <div class="type-name" style="color: var(--muted);">The Severed</div>
+        <div class="muted small">Nihilistic severance type</div>
+      </div>
+    </div>
+    
+    <div class="type-formula">
+      L1: "I am cut off from source" + L1: "There is no whole" + L4: "Nothing matters" → Isolation → meaninglessness → existence as burden
+    </div>
+    
+    <div class="type-lies">
+      <strong>Core lies:</strong>
+      <ul>
+        <li>"Connection is illusion"</li>
+        <li>"I am fundamentally alone"</li>
+        <li>"Nothing larger holds me"</li>
+        <li>"Meaning is just cope"</li>
+      </ul>
+    </div>
+    
+    <div class="type-presentation">
+      <strong>Presents as:</strong> Withdrawn, often intellectualizes nihilism. May have been victim of inflation (learned that connection = exploitation). Protective hopelessness. Secretly longs for connection but believes it doesn't exist.
+    </div>
+  </div>
+  
+  <h3>Complementary Dyads</h3>
+  
+  <p>Pathological types often pair up in stable but dysfunctional configurations where each partner's lies reinforce the other's:</p>
+  
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header" style="color: var(--red);">Inflated + Noble Martyr</div>
+      <p>The inflated needs supply; the martyr needs to be needed. Each validates the other's lie. The martyr's sacrifice proves the inflated's specialness. The inflated's demands prove the martyr's virtue.</p>
+    </div>
+    <div class="card">
+      <div class="card-header" style="color: var(--accent);">Anxious + Avoidant</div>
+      <p>The anxious chases; the avoidant withdraws. The chasing confirms the avoidant's belief that closeness is dangerous. The withdrawal confirms the anxious's belief that they're too much.</p>
+    </div>
+  </div>
+  
+  <div class="callout">
+    <strong>Key insight:</strong> In pathological dyads, partners exhibit <em>complementary</em> errors (inflation/severance, anxious/avoidant), not matched errors. The errors interlock. This is why "finding someone new" often reproduces the pattern—the new partner has the complementary lie.
+  </div>
+</section>
+
+<!-- SECTION: Healing -->
+<section id="healing">
+  <h2><span class="section-num">05</span> Level-Appropriate Intervention</h2>
+  
+  <p>Interventions must match the level of corruption. Applying a shallower intervention to a deeper corruption cannot work.</p>
+  
+  <div class="callout-red callout">
+    Evidence doesn't fix epistemology.<br>
+    Therapy doesn't fix ontology.<br>
+    The tool must reach the depth of the wound.
+  </div>
+  
+  <table>
+    <tr>
+      <th>Level</th>
+      <th>Effective Intervention</th>
+      <th>Why It Works</th>
+    </tr>
+    <tr>
+      <td style="color: var(--red);"><strong>7. Factual</strong></td>
+      <td>Evidence, correction</td>
+      <td>Content can be updated with better content</td>
+    </tr>
+    <tr>
+      <td style="color: var(--orange);"><strong>6. Domain</strong></td>
+      <td>Education, reframing</td>
+      <td>Local rules can be learned and unlearned</td>
+    </tr>
+    <tr>
+      <td style="color: var(--gold);"><strong>5. Self-Concept</strong></td>
+      <td>Reflection, good therapy</td>
+      <td>Self-model can be examined and recalibrated</td>
+    </tr>
+    <tr>
+      <td style="color: var(--green);"><strong>4. Axiological</strong></td>
+      <td>Values clarification, crisis</td>
+      <td>What matters can be questioned when survival isn't threatened</td>
+    </tr>
+    <tr>
+      <td style="color: var(--accent);"><strong>3. Relational</strong></td>
+      <td>Witness, resonant presence</td>
+      <td>Interface corruption requires new signal to tune to</td>
+    </tr>
+    <tr>
+      <td style="color: var(--deep-purple);"><strong>2. Epistemological</strong></td>
+      <td>Paradigm shift, contemplative inquiry</td>
+      <td>The way of knowing must itself become object of knowing</td>
+    </tr>
+    <tr>
+      <td style="color: var(--magenta);"><strong>1. Ontological</strong></td>
+      <td>Direct recognition (grace, awakening)</td>
+      <td>What you ARE cannot be achieved—only recognized</td>
+    </tr>
+  </table>
+  
+  <h3>Why Level 1 Is Different</h3>
+  
+  <p>Notice: Level 1 healing is not <em>achieved</em>. It is <em>recognized</em>.</p>
+  
+  <p>Anything else would contradict the system. You cannot fix your ontological nature because there's nothing broken at that level—only a lie about what you are. The aperture never stopped being a through. It just believed it was a from (inflation) or believed it was cut off (severance).</p>
+  
+  <div class="callout-green callout">
+    <strong>The aperture already works.</strong> It already transmits. The lie doesn't damage the aperture's nature—it corrupts the aperture's <em>belief about</em> its nature. Recognition restores accurate self-knowledge, not function. The function was never broken.
+  </div>
+  
+  <h3>Why Relational Healing Requires Witness</h3>
+  
+  <p>Recovery from relational corruption (Level 3) cannot be a solo cognitive project. You cannot retune an aperture by thinking about retuning. You need a <em>genuine signal to tune to</em>.</p>
+  
+  <p>This is why:</p>
+  
+  <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem;">
+    <li>Functional support (boundary channel) doesn't retune—it's on the wrong channel</li>
+    <li>Resonant presence (aperture channel) provides the signal the aperture was designed to receive</li>
+    <li>The witness demonstrates that the original frequency still exists</li>
+  </ul>
+  
+  <p>The aperture, exposed to genuine resonance, can begin to remember what it was meant to receive.</p>
+  
+  <h3>The Diagnostic Protocol</h3>
+  
+  <p>When someone presents with a problem:</p>
+  
+  <div class="card">
+    <ol style="margin-left: 1.5rem;">
+      <li><strong>Identify the presenting level.</strong> What stratum does the complaint seem to be at?</li>
+      <li><strong>Check for masking.</strong> Is this a compensatory artifact protecting a deeper wound?</li>
+      <li><strong>Find the root level.</strong> What's the deepest corrupted function?</li>
+      <li><strong>Match the intervention.</strong> Use a tool that can reach that depth.</li>
+      <li><strong>Stabilize shallower levels.</strong> As the root heals, compensatory structures may destabilize. Support them as they reorganize.</li>
+    </ol>
+  </div>
+  
+  <div class="callout-blue callout">
+    <strong>The test:</strong> If resolving a problem at level n immediately generates a new problem at the same level, look deeper. The presenting issue is probably masking something below.
+  </div>
+</section>
+
+<!-- SECTION: Summary -->
+<section id="summary">
+  <h2><span class="section-num">06</span> Summary</h2>
+  
+  <div class="card" style="background: var(--elevated); padding: 32px;">
+    <h3 style="margin-top: 0;">The Core Claims</h3>
+    
+    <ol style="margin-left: 1.5rem;">
+      <li><strong>Beliefs exist at different depths.</strong> Seven strata, from ontological (deepest) to factual (shallowest).</li>
+      <li><strong>Deeper beliefs corrupt function; shallower beliefs corrupt content.</strong> This is a categorical, not quantitative, difference.</li>
+      <li><strong>Lies cascade downward.</strong> F<sub>m</sub>' = F<sub>m</sub> ∘ F<sub>n</sub>(λ) — higher functions operate on corrupted substrate.</li>
+      <li><strong>Deeper lies are more invisible.</strong> Visibility(λ) ∝ 1/Depth(λ). You can't see the lens you're seeing through.</li>
+      <li><strong>Interventions must match depth.</strong> Evidence doesn't fix epistemology. Therapy doesn't fix ontology.</li>
+      <li><strong>Cultural lies are load-bearing.</strong> They produce selves that are useful to systems, not selves that are whole.</li>
+      <li><strong>Pathological types are stable constellations</strong> of lies across strata that mutually reinforce.</li>
+    </ol>
+  </div>
+  
+  <div class="equation">
+    λ ∈ Level(n) ⟹ ∀m > n: F<sub>m</sub>' = F<sub>m</sub> ∘ F<sub>n</sub>(λ)
+    <div class="equation-note">This is why one lie can corrupt everything—if it's deep enough.</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="symbol">⊙</div>
+  <p>The Stratigraphy of Belief</p>
+  <p class="small" style="margin-top: 8px;">Circumpunct Framework • Ashman Roonz & Claude • 2026</p>
+  <p class="small muted" style="margin-top: 16px;">
+    Truth flows through apertures.<br>
+    Lies corrupt the flow at different depths.<br>
+    Healing requires matching the tool to the wound.
+  </p>
+</footer>
+
+</body>
+</html>
