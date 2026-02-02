@@ -29,6 +29,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**circumath.html**](https://fractalreality.ca/circumath.html) — Circumpunct mathematics explorer
 - [**circumpunct-swarm.html**](https://fractalreality.ca/circumpunct-swarm.html) — Swarm dynamics visualization
 - [**circumpunct_dimensions.html**](https://fractalreality.ca/circumpunct_dimensions.html) — Dimensional analysis tool
+- [**circumpunct_encyclopedia.html**](https://fractalreality.ca/circumpunct_encyclopedia.html) — The Circumpunct Encyclopedia v2.0: complete formalized reference
 
 ### 64-State Architecture
 
@@ -88,6 +89,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**the_steelman_way.html**](https://fractalreality.ca/the_steelman_way.html) — Steelmanning as ethical practice
 - [**how_to_realize_real_lies.html**](https://fractalreality.ca/how_to_realize_real_lies.html) — Recognizing deception patterns
 - [**why_i_hate_lies.html**](https://fractalreality.ca/why_i_hate_lies.html) — Why I Hate Lies
+- [**high_power_influence.html**](https://fractalreality.ca/high_power_influence.html) — High-Power Aperture Protocol: truth-preserving governance for influential individuals
 
 ---
 
