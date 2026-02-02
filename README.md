@@ -269,6 +269,8 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**UNDERSTANDING_NARCISSISTIC_ABUSE.html**](https://fractalreality.ca/UNDERSTANDING_NARCISSISTIC_ABUSE.html) — Guide to understanding narcissistic abuse
 - [**circumpunct_narcissism.html**](https://fractalreality.ca/circumpunct_narcissism.html) — Narcissism through circumpunct lens
 - [**circumpunct_theory_of_pathology.html**](https://fractalreality.ca/circumpunct_theory_of_pathology.html) — Pathology as circumpunct imbalance
+- [**stratigraphy_of_belief.html**](https://fractalreality.ca/stratigraphy_of_belief.html) — The Stratigraphy of Belief: how lies corrupt function at different depths
+- [**etiology_of_installation.html**](https://fractalreality.ca/etiology_of_installation.html) — The Etiology of Installation: how survival lies become structural corruption
 - [**the_restoration_protocol.html**](https://fractalreality.ca/the_restoration_protocol.html) — Healing and restoration guide
 
 ---
