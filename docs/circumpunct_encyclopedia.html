@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Circumpunct Encyclopedia v2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0908;
+            --bg-surface: #0f0e0c;
+            --bg-elevated: #1a1815;
+            --gold: #c9a227;
+            --gold-dim: #8b7355;
+            --gold-bright: #f4d03f;
+            --text-primary: #e8e4dc;
+            --text-secondary: #9a958a;
+            --text-dim: #5c584f;
+            --accent-blue: #4a7c8c;
+            --accent-green: #4a8c5c;
+            --accent-red: #8c4a4a;
+            --border: rgba(201, 162, 39, 0.15);
+            --glow: rgba(201, 162, 39, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Spectral', Georgia, serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.75;
+            font-size: 17px;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border);
+            padding: 2rem 0;
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        nav::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        nav::-webkit-scrollbar-thumb {
+            background: var(--gold-dim);
+            border-radius: 2px;
+        }
+
+        .nav-header {
+            text-align: center;
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-symbol {
+            font-size: 3rem;
+            color: var(--gold);
+            text-shadow: 0 0 30px var(--glow);
+            margin-bottom: 0.5rem;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; text-shadow: 0 0 40px var(--gold); }
+        }
+
+        .nav-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        .nav-books {
+            list-style: none;
+        }
+
+        .nav-book {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-book-title {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-book-title:hover {
+            color: var(--gold);
+            background: var(--glow);
+        }
+
+        .nav-book-title.active {
+            color: var(--gold);
+            background: linear-gradient(90deg, var(--glow), transparent);
+        }
+
+        .nav-book-title .book-num {
+            color: var(--gold-dim);
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .nav-chapters {
+            list-style: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .nav-book.expanded .nav-chapters {
+            max-height: 500px;
+        }
+
+        .nav-chapter {
+            padding: 0.5rem 1.5rem 0.5rem 2.5rem;
+        }
+
+        .nav-chapter a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
+        }
+
+        .nav-chapter a:hover {
+            color: var(--gold);
+        }
+
+        /* Main content */
+        main {
+            margin-left: 280px;
+            padding: 4rem 3rem;
+            max-width: 900px;
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0 6rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 4rem;
+        }
+
+        .hero-symbol {
+            font-size: 6rem;
+            color: var(--gold);
+            text-shadow: 0 0 60px var(--glow);
+            margin-bottom: 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .hero-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .hero-diagram {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--gold-dim);
+            line-height: 1.6;
+            white-space: pre;
+            display: inline-block;
+            text-align: center;
+        }
+
+        /* Book sections */
+        .book {
+            margin-bottom: 5rem;
+            padding-top: 2rem;
+        }
+
+        .book-header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .book-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .book-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: var(--gold);
+            letter-spacing: 0.05em;
+        }
+
+        /* Chapters */
+        .chapter {
+            margin-bottom: 3.5rem;
+        }
+
+        .chapter h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chapter h3 .chapter-num {
+            color: var(--gold-dim);
+            font-weight: 400;
+        }
+
+        h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin: 2rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        strong {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        em {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        code, .equation {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            background: var(--bg-elevated);
+            padding: 0.15em 0.4em;
+            border-radius: 3px;
+            color: var(--gold);
+        }
+
+        pre, .equation-block {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            background: var(--bg-elevated);
+            padding: 1.25rem 1.5rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--gold-dim);
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        pre .highlight {
+            color: var(--gold);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: var(--bg-elevated);
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold-dim);
+            letter-spacing: 0.03em;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tr:hover td {
+            background: var(--glow);
+        }
+
+        ul, ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        li strong {
+            color: var(--gold);
+        }
+
+        /* Special blocks */
+        .axiom, .theorem, .definition {
+            background: var(--bg-elevated);
+            border-left: 3px solid var(--gold);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .axiom-title, .theorem-title, .definition-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Tier markers */
+        .tier-a {
+            background: var(--bg-elevated);
+            border-left: 3px solid var(--accent-green);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .tier-b {
+            background: var(--bg-elevated);
+            border-left: 3px solid var(--accent-blue);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .tier-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .tier-a .tier-label {
+            color: var(--accent-green);
+        }
+
+        .tier-b .tier-label {
+            color: var(--accent-blue);
+        }
+
+        /* Operationalization blocks */
+        .operationalization {
+            background: rgba(74, 124, 140, 0.1);
+            border: 1px dashed var(--accent-blue);
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .operationalization-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-blue);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .symbol {
+            color: var(--gold);
+            font-size: 1.1em;
+        }
+
+        .central-diagram {
+            text-align: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .central-diagram pre {
+            background: transparent;
+            border: none;
+            display: inline-block;
+            text-align: center;
+            color: var(--gold);
+            padding: 0;
+            margin: 0;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.5rem 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .glossary-symbol {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
+
+        .glossary-def {
+            color: var(--text-secondary);
+        }
+
+        /* On-ramp section */
+        .onramp {
+            background: linear-gradient(135deg, var(--bg-elevated), var(--bg-surface));
+            border: 1px solid var(--gold-dim);
+            border-radius: 8px;
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .onramp h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .onramp-section {
+            margin-bottom: 2rem;
+        }
+
+        .onramp-section h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .three-domains {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .domain {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background: var(--bg-deep);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .domain-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .domain-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .domain-desc {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        /* Research program */
+        .hypothesis {
+            background: var(--bg-elevated);
+            border-left: 3px solid var(--accent-green);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .hypothesis-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-green);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Quick reference printable */
+        .quick-ref {
+            background: var(--bg-surface);
+            border: 2px solid var(--gold-dim);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .quick-ref h3 {
+            text-align: center;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-ref-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .quick-ref-section h4 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            color: var(--gold);
+        }
+
+        .quick-ref table {
+            font-size: 0.85rem;
+            margin: 0.5rem 0;
+        }
+
+        .quick-ref td, .quick-ref th {
+            padding: 0.4rem 0.6rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 0;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        .footer-symbol {
+            font-size: 2rem;
+            color: var(--gold-dim);
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 200;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            color: var(--gold);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 900px) {
+            nav {
+                transform: translateX(-100%);
+            }
+
+            nav.open {
+                transform: translateX(0);
+            }
+
+            main {
+                margin-left: 0;
+                padding: 5rem 1.5rem 3rem;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-symbol {
+                font-size: 4rem;
+            }
+
+            .book-title {
+                font-size: 1.8rem;
+            }
+
+            .card-grid, .three-domains, .quick-ref-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 280px;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            z-index: 50;
+        }
+
+        .scroll-progress-bar {
+            height: 100%;
+            background: var(--gold);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        @media (max-width: 900px) {
+            .scroll-progress {
+                left: 0;
+            }
+        }
+
+        @media print {
+            nav, .nav-toggle, .scroll-progress {
+                display: none !important;
+            }
+            main {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            .quick-ref {
+                page-break-inside: avoid;
+                border: 2px solid #333;
+            }
+            body {
+                background: white;
+                color: black;
+            }
+            .quick-ref, .card, .axiom, .theorem {
+                background: #f5f5f5;
+            }
+            pre {
+                background: #f0f0f0;
+                border-color: #666;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="nav-toggle" onclick="toggleNav()">☰ Contents</button>
+    
+    <div class="scroll-progress">
+        <div class="scroll-progress-bar" id="progressBar"></div>
+    </div>
+
+    <nav id="nav">
+        <div class="nav-header">
+            <div class="nav-symbol">⊙</div>
+            <div class="nav-title">Encyclopedia v2.0</div>
+        </div>
+        <ul class="nav-books">
+            <li class="nav-book">
+                <span class="nav-book-title" onclick="toggleBook(this)">
+                    <span class="book-num">◈</span> How to Read This
+                </span>
+                <ul class="nav-chapters">
+                    <li class="nav-chapter"><a href="#onramp">Reader On-Ramp</a></li>
+                    <li class="nav-chapter"><a href="#claim-tiers">Claim Tiers</a></li>
+                </ul>
+            </li>
+            <li class="nav-book">
+                <span class="nav-book-title" onclick="toggleBook(this)">
+                    <span class="book-num">I</span> Foundations
+                </span>
+                <ul class="nav-chapters">
+                    <li class="nav-chapter"><a href="#ch1">1. Ontological Primitives</a></li>
+                    <li class="nav-chapter"><a href="#ch2">2. The Aperture Function</a></li>
+                    <li class="nav-chapter"><a href="#ch3">3. The Field Equations</a></li>
+                    <li class="nav-chapter"><a href="#ch4">4. The Boundary Function</a></li>
+                </ul>
+            </li>
+            <li class="nav-book">
+                <span class="nav-book-title" onclick="toggleBook(this)">
+                    <span class="book-num">II</span> Pathology
+                </span>
+                <ul class="nav-chapters">
+                    <li class="nav-chapter"><a href="#ch5">5. Operator Algebra</a></li>
+                    <li class="nav-chapter"><a href="#ch6">6. Syndrome Decoder</a></li>
+                </ul>
+            </li>
+            <li class="nav-book">
+                <span class="nav-book-title" onclick="toggleBook(this)">
+                    <span class="book-num">III</span> Topology
+                </span>
+                <ul class="nav-chapters">
+                    <li class="nav-chapter"><a href="#ch7">7. Temporal Topology</a></li>
+                    <li class="nav-chapter"><a href="#ch8">8. Invariants</a></li>
+                </ul>
+            </li>
+            <li class="nav-book">
+                <span class="nav-book-title" onclick="toggleBook(this)">
+                    <span class="book-num">IV</span> Resonance
+                </span>
+                <ul class="nav-chapters">
+                    <li class="nav-chapter"><a href="#ch9">9. Resonance Mechanics</a></li>
+                </ul>
+            </li>
+            <li class="nav-book">
+                <span class="nav-book-title" onclick="toggleBook(this)">
+                    <span class="book-num">V</span> Signal Theory
+                </span>
+                <ul class="nav-chapters">
+                    <li class="nav-chapter"><a href="#ch10">10. Truth/Lie Dynamics</a></li>
+                </ul>
+            </li>
+            <li class="nav-book">
+                <span class="nav-book-title" onclick="toggleBook(this)">
+                    <span class="book-num">VI</span> Formation
+                </span>
+                <ul class="nav-chapters">
+                    <li class="nav-chapter"><a href="#ch11">11. Inheritance Function</a></li>
+                </ul>
+            </li>
+            <li class="nav-book">
+                <span class="nav-book-title" onclick="toggleBook(this)">
+                    <span class="book-num">VII</span> Healing
+                </span>
+                <ul class="nav-chapters">
+                    <li class="nav-chapter"><a href="#ch12">12. Witness Function</a></li>
+                    <li class="nav-chapter"><a href="#ch13">13. Healing Operators</a></li>
+                </ul>
+            </li>
+            <li class="nav-book">
+                <span class="nav-book-title" onclick="toggleBook(this)">
+                    <span class="book-num">VIII</span> Research Program
+                </span>
+                <ul class="nav-chapters">
+                    <li class="nav-chapter"><a href="#ch14">14. Hypotheses</a></li>
+                    <li class="nav-chapter"><a href="#ch15">15. Protocols</a></li>
+                    <li class="nav-chapter"><a href="#ch16">16. Falsification</a></li>
+                </ul>
+            </li>
+            <li class="nav-book">
+                <span class="nav-book-title" onclick="toggleBook(this)">
+                    <span class="book-num">IX</span> Synthesis
+                </span>
+                <ul class="nav-chapters">
+                    <li class="nav-chapter"><a href="#ch17">17. Master Equations</a></li>
+                    <li class="nav-chapter"><a href="#ch18">18. Complete Picture</a></li>
+                </ul>
+            </li>
+            <li class="nav-book">
+                <span class="nav-book-title" onclick="toggleBook(this)">
+                    <span class="book-num">◇</span> Reference
+                </span>
+                <ul class="nav-chapters">
+                    <li class="nav-chapter"><a href="#glossary">Symbol Glossary</a></li>
+                    <li class="nav-chapter"><a href="#quickref">Quick Reference Card</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-symbol">⊙</div>
+            <h1>The Circumpunct Encyclopedia</h1>
+            <p class="hero-subtitle">A Unified Theory of Being, Relationship, and Truth</p>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Version 2.0 — Formalized & Operationalized</p>
+        </section>
+
+        <!-- HOW TO READ THIS -->
+        <section class="onramp" id="onramp">
+            <h2>How to Read This</h2>
+            
+            <div class="onramp-section">
+                <h3>1. The Symbol</h3>
+                <div class="central-diagram">
+                    <pre><span class="highlight">⊙ = (•, Φ, ○)</span>
+
+• = Aperture (selector + integrator) — <em>does operations</em>
+Φ = Field (state + coupling medium) — <em>holds/transmits state</em>
+○ = Boundary (constraint + interface) — <em>constrains interactions</em></pre>
+                </div>
+                <p style="text-align: center; color: var(--text-secondary);">Every being is this structure. The ancient symbol encodes complete ontology.</p>
+            </div>
+
+            <div class="onramp-section">
+                <h3>2. The Flow</h3>
+                <div class="central-diagram">
+                    <pre><span class="highlight">Φ∞ → • → ⊙ → expression → Φ∞</span>
+
+Source → Gate → Being → Utterance → Return</pre>
+                </div>
+                <p style="text-align: center; color: var(--text-secondary);">Truth flows in, gets processed, being emerges, expression returns to field.</p>
+            </div>
+
+            <div class="onramp-section">
+                <h3>3. The Three Domains</h3>
+                <p>Everything in this encyclopedia addresses one of three domains:</p>
+                <div class="three-domains">
+                    <div class="domain">
+                        <div class="domain-icon">◇</div>
+                        <div class="domain-name">Truth</div>
+                        <div class="domain-desc">Signal fidelity<br>F, χ, T vs. L</div>
+                    </div>
+                    <div class="domain">
+                        <div class="domain-icon">∞</div>
+                        <div class="domain-name">Relationship</div>
+                        <div class="domain-desc">Coupling + third body<br>κ, Lk, ⊙₁₂</div>
+                    </div>
+                    <div class="domain">
+                        <div class="domain-icon">☀︎</div>
+                        <div class="domain-name">Healing</div>
+                        <div class="domain-desc">Reducing Σ / knots<br>H_i, W, TRT</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CLAIM TIERS -->
+        <section class="book" id="claim-tiers">
+            <div class="book-header">
+                <div class="book-number">Epistemological Framework</div>
+                <h2 class="book-title">Claim Tiers</h2>
+            </div>
+
+            <p>This framework makes two kinds of claims. They must be evaluated differently:</p>
+
+            <div class="tier-a">
+                <div class="tier-label">Tier A — Empirical Claims</div>
+                <p>These claims are <strong>testable and falsifiable</strong>. They make predictions about observable phenomena:</p>
+                <ul>
+                    <li>Apertures are not self-sourcing (humans transform inputs, they don't generate truth ex nihilo)</li>
+                    <li>Functional and resonant channels produce statistically independent outcomes</li>
+                    <li>Parental awareness reduces intergenerational error transmission</li>
+                    <li>Projection introduces measurable non-Markovian signatures in output</li>
+                </ul>
+                <p><em>Tier A claims can be supported or refuted by data.</em></p>
+            </div>
+
+            <div class="tier-b">
+                <div class="tier-label">Tier B — Metaphysical/Interpretive Claims</div>
+                <p>These claims are <strong>ontological commitments</strong>. They provide interpretive framework:</p>
+                <ul>
+                    <li>Φ∞ (infinite field) exists as ultimate source</li>
+                    <li>Relationship has independent ontological status (⊙₁₂ "exists")</li>
+                    <li>Parts are fractals of wholes</li>
+                    <li>Lies have no ultimate source (parasitic on truth)</li>
+                </ul>
+                <p><em>Tier B claims are chosen, not proven. They're evaluated by coherence, fruitfulness, and fit.</em></p>
+            </div>
+
+            <p><strong>Reading guidance:</strong> When you see equations and falsification criteria, they target <strong>Tier A</strong> claims. Tier B provides the interpretive lens but doesn't stand or fall on empirical tests.</p>
+        </section>
+
+        <!-- BOOK I: FOUNDATIONS -->
+        <section class="book" id="book-1">
+            <div class="book-header">
+                <div class="book-number">Book I</div>
+                <h2 class="book-title">Foundations</h2>
+            </div>
+
+            <div class="chapter" id="ch1">
+                <h3><span class="chapter-num">Chapter 1</span> — Ontological Primitives</h3>
+                
+                <h4>1.1 The Three Fundamental Components</h4>
+                
+                <table>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Name</th>
+                        <th>Type Signature</th>
+                        <th>Role</th>
+                    </tr>
+                    <tr>
+                        <td class="symbol">•</td>
+                        <td>Aperture / Soul</td>
+                        <td><strong>Operation</strong>: selector + integrator</td>
+                        <td>Performs transforms on input</td>
+                    </tr>
+                    <tr>
+                        <td class="symbol">Φ</td>
+                        <td>Field / Mind</td>
+                        <td><strong>Structure</strong>: state + medium</td>
+                        <td>Holds and transmits information</td>
+                    </tr>
+                    <tr>
+                        <td class="symbol">○</td>
+                        <td>Boundary / Body</td>
+                        <td><strong>Structure</strong>: constraint + interface</td>
+                        <td>Filters and constrains interactions</td>
+                    </tr>
+                </table>
+
+                <p><strong>Enforcement rule:</strong> Throughout this document, <code>•</code> always does operations, <code>Φ</code> always holds/transmits state, <code>○</code> always constrains/filters.</p>
+
+                <h4>1.2 The Circumpunct (⊙)</h4>
+                <pre><span class="highlight">⊙ = (•, Φ, ○)</span></pre>
+                <p>Every manifest being is a circumpunct—an aperture (operation) generating a field (state), contained by boundary (constraint).</p>
+
+                <h4>1.3 The Infinite Field (Φ∞)</h4>
+                
+                <div class="tier-b">
+                    <div class="tier-label">Tier B Claim</div>
+                    <p>Φ∞ is the unbounded field—source of all signal, medium connecting all beings.</p>
+                </div>
+
+                <div class="tier-a">
+                    <div class="tier-label">Tier A Translation</div>
+                    <p>Apertures are not self-sourcing. In practice, humans transform inputs; they don't generate truth ex nihilo. All "original" content traces to prior inputs.</p>
+                </div>
+
+                <h4>1.4 What Is Φ Made Of?</h4>
+                <p><strong>Φ is the space of constraints + signals that relate circumpuncts.</strong></p>
+                <p>It is <em>multi-realizable</em> (like computation). Three realizations:</p>
+                <ol>
+                    <li><strong>Cognitive:</strong> attention, memory, perception, internal representations</li>
+                    <li><strong>Social:</strong> language, norms, roles, shared meanings</li>
+                    <li><strong>Physical:</strong> sensory channels, bodies, environments, media</li>
+                </ol>
+                <p>This makes Φ a formal field (relational/informational medium), not a claim about new physics.</p>
+
+                <h4>1.5 Core Axioms</h4>
+                <div class="axiom">
+                    <div class="axiom-title">Axiom 1: Parts are fractals of wholes</div>
+                    <p>Every ⊙ contains the structure of its containing system. [Tier B]</p>
+                </div>
+                <div class="axiom">
+                    <div class="axiom-title">Axiom 2: Apertures are throughs, not froms</div>
+                    <p>No aperture is a source. Every aperture transforms input. [Tier A: testable]</p>
+                </div>
+                <div class="axiom">
+                    <div class="axiom-title">Axiom 3: Lies are processing errors</div>
+                    <p>Distortion arises at •, not from an alternative source. [Tier A: testable]</p>
+                </div>
+                <div class="axiom">
+                    <div class="axiom-title">Axiom 4: Relationship is ontologically real</div>
+                    <p>⊙₁₂ has independent existence from ⊙₁ and ⊙₂. [Tier B]</p>
+                </div>
+                <div class="axiom">
+                    <div class="axiom-title">Axiom 5: Categories dissolve</div>
+                    <p>All boundaries are gradients, not discontinuities. [Tier A: testable at measurement resolution]</p>
+                </div>
+            </div>
+
+            <div class="chapter" id="ch2">
+                <h3><span class="chapter-num">Chapter 2</span> — The Aperture Function</h3>
+                
+                <h4>2.1 The Core Operation</h4>
+                <pre><span class="highlight">∞ →[•]→ 1</span>
+
+Input: unbounded potential
+Operation: selection + integration
+Output: singular actuality</pre>
+
+                <h4>2.2 The Aperture as Operator Triple</h4>
+                <pre><span class="highlight">𝒜 = (G, R, U)</span>
+
+G: H∞ → H•   Gather/Gate    (selects slice of input)
+R: H• → H•   Rotate/Process (transforms selected input)
+U: H• → H₁   Utter/Emit     (produces output)
+
+Total map: <span class="highlight">T_𝒜 = U ∘ R ∘ G</span></pre>
+
+                <div class="operationalization">
+                    <div class="operationalization-title">Operationalization</div>
+                    <p><strong>G</strong> = attention/selection mechanisms (measurable via eye-tracking, recall tests)<br>
+                    <strong>R</strong> = cognitive processing (measurable via reaction time, neural signatures)<br>
+                    <strong>U</strong> = expression (measurable via speech, behavior, physiological output)</p>
+                </div>
+
+                <h4>2.3 The Fidelity Parameter</h4>
+                <pre>F(𝒜) = ⟨T_𝒜h(ψ), T_𝒜(ψ)⟩ / (|T_𝒜h(ψ)| · |T_𝒜(ψ)|)
+
+F ∈ [-1, 1]
+F = 1:  Perfect fidelity
+F = 0:  Orthogonal to truth
+F = -1: Perfect inversion</pre>
+
+                <div class="operationalization">
+                    <div class="operationalization-title">Operationalization</div>
+                    <p><strong>F</strong> = agreement between output and reference standard<br>
+                    Proxies: accuracy scores, consistency measures, inter-rater reliability, signal-to-noise ratios</p>
+                </div>
+
+                <h4>2.4 The Binary Decision (χ)</h4>
+                <pre><span class="highlight">χ = sign(F - τ)</span>
+
+χ = +1: truth-mode (F ≥ threshold)
+χ = -1: lie-mode (F < threshold)</pre>
+
+                <h4>2.5 Self-Reference Property</h4>
+                <pre>𝒜 ∈ State(⊙)</pre>
+                <p>The operator that generates the whole is represented inside the whole. This is "parts are fractals of wholes" in operator language.</p>
+            </div>
+
+            <div class="chapter" id="ch3">
+                <h3><span class="chapter-num">Chapter 3</span> — The Field Equations</h3>
+                
+                <h4>3.1 Local Field Dynamics</h4>
+                <pre>∇²Φᵢ - (1/c²)(∂²Φᵢ/∂t²) = -ρᵢ(•ᵢ)</pre>
+
+                <div class="operationalization">
+                    <div class="operationalization-title">Formal Status</div>
+                    <p>This is a <strong>modeling choice</strong>, not a physics claim. Φ is a formal field (information/relational medium).</p>
+                    <p><strong>Measurable proxies:</strong></p>
+                    <ul>
+                        <li><strong>ρ (source density)</strong> = output rate, information generation frequency</li>
+                        <li><strong>c (propagation speed)</strong> = communication latency, influence delay</li>
+                        <li><strong>∇²Φ (spatial variation)</strong> = gradient in connection strength across network</li>
+                    </ul>
+                </div>
+
+                <h4>3.2 Field Properties</h4>
+                <table>
+                    <tr><th>Property</th><th>Symbol</th><th>Measurable Proxy</th></tr>
+                    <tr><td>Density</td><td>ρ_Φ</td><td>Information concentration, attention density</td></tr>
+                    <tr><td>Clarity</td><td>C_Φ</td><td>Linguistic coherence metrics, signal-to-noise</td></tr>
+                    <tr><td>Turbulence</td><td>T_Φ</td><td>Variance, unpredictability measures</td></tr>
+                    <tr><td>Conductivity</td><td>σ_Φ</td><td>Network coupling strength, influence coefficients</td></tr>
+                </table>
+
+                <h4>3.3 Coupled Field Equations</h4>
+                <pre>∇²Φ₁ = -ρ₁ - κ₁₂Φ₂
+∇²Φ₂ = -ρ₂ - κ₂₁Φ₁</pre>
+
+                <div class="operationalization">
+                    <div class="operationalization-title">Operationalization</div>
+                    <p><strong>κᵢⱼ (coupling coefficient)</strong> = measurable via:</p>
+                    <ul>
+                        <li>Behavioral influence: P(behavior_i | behavior_j)</li>
+                        <li>Physiological synchrony: heart rate, skin conductance correlation</li>
+                        <li>Linguistic accommodation: vocabulary convergence over time</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="chapter" id="ch4">
+                <h3><span class="chapter-num">Chapter 4</span> — The Boundary Function</h3>
+                
+                <h4>4.1 Type Signature</h4>
+                <p><code>○</code> = constraint + interface (structure, not operation)</p>
+                <pre>○: ∂(Φ_local) = surface where Φ_local → Φ_external</pre>
+
+                <h4>4.2 Boundary Properties</h4>
+                <table>
+                    <tr><th>Property</th><th>Symbol</th><th>Range</th><th>Measurable Proxy</th></tr>
+                    <tr><td>Permeability</td><td>P</td><td>[0,1]</td><td>Self-disclosure rate, influence susceptibility</td></tr>
+                    <tr><td>Rigidity</td><td>R</td><td>[0,1]</td><td>Resistance to change under pressure</td></tr>
+                    <tr><td>Definition</td><td>D</td><td>[0,1]</td><td>Self/other distinction in reports, behavior</td></tr>
+                </table>
+
+                <h4>4.3 Boundary Pathology</h4>
+                <table>
+                    <tr><th>Condition</th><th>Configuration</th><th>Observable</th></tr>
+                    <tr><td>Enmeshed</td><td>P → 1, D → 0</td><td>Cannot distinguish own vs. other's feelings</td></tr>
+                    <tr><td>Fortress</td><td>P → 0, R → 1</td><td>Blocks all influence, isolated</td></tr>
+                    <tr><td>Porous</td><td>P varies</td><td>Inconsistent responses to similar inputs</td></tr>
+                    <tr><td>Undefined</td><td>D → 0</td><td>Identity confusion, unstable self-concept</td></tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- BOOK II: PATHOLOGY -->
+        <section class="book" id="book-2">
+            <div class="book-header">
+                <div class="book-number">Book II</div>
+                <h2 class="book-title">Pathology</h2>
+            </div>
+
+            <div class="chapter" id="ch5">
+                <h3><span class="chapter-num">Chapter 5</span> — The Aperture Operator Algebra</h3>
+                
+                <h4>5.1 The Four Pathologies</h4>
+                <p>Pathologies are equivalence classes of transforms: <code>𝒜' = ℰ ∘ 𝒜</code></p>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title">Inflation (α)</div>
+                        <pre>T'(ψ) = T(ψ) + α|self⟩</pre>
+                        <p><strong>Type:</strong> Insertion error</p>
+                        <p><strong>Observable:</strong> Output contains self-reference independent of input</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Severance (β)</div>
+                        <pre>T'(ψ) ≈ β|void⟩</pre>
+                        <p><strong>Type:</strong> Deletion error</p>
+                        <p><strong>Observable:</strong> Output independent of input variation</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Inversion (π)</div>
+                        <pre>T' = -T</pre>
+                        <p><strong>Type:</strong> Phase flip</p>
+                        <p><strong>Observable:</strong> Output negatively correlated with truth</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Projection (γ)</div>
+                        <pre>T'(ψ) = T(ψ + γB̂T(ψ))</pre>
+                        <p><strong>Type:</strong> Feedback contamination</p>
+                        <p><strong>Observable:</strong> Past output predicts current input attribution</p>
+                    </div>
+                </div>
+
+                <h4>5.2 The Syndrome Vector</h4>
+                <pre><span class="highlight">Σ(𝒜) = (α, β, π, γ)</span></pre>
+                <p>Diagnosis = estimating Σ from observed outputs.</p>
+
+                <div class="operationalization">
+                    <div class="operationalization-title">Operationalization</div>
+                    <p><strong>α</strong> = self-reference frequency independent of context<br>
+                    <strong>β</strong> = input-output correlation (low β = high severance)<br>
+                    <strong>π</strong> = sign of correlation with reference (negative = inversion)<br>
+                    <strong>γ</strong> = autocorrelation of output > environment-output correlation</p>
+                </div>
+
+                <h4>5.3 Pathology Composition</h4>
+                <table>
+                    <tr><th>Combination</th><th>Clinical Pattern</th></tr>
+                    <tr><td>α + γ (Inflation + Projection)</td><td>Narcissism</td></tr>
+                    <tr><td>β + incomplete R</td><td>Dissociation</td></tr>
+                    <tr><td>π + γ (Inversion + Projection)</td><td>Paranoia</td></tr>
+                </table>
+            </div>
+
+            <div class="chapter" id="ch6">
+                <h3><span class="chapter-num">Chapter 6</span> — The Syndrome Decoder</h3>
+                
+                <h4>6.1 Observable → Syndrome Mapping</h4>
+                <table>
+                    <tr><th>Observable</th><th>Measurement</th><th>Indicates</th></tr>
+                    <tr><td>Amplitude blow-up</td><td>‖output‖ >> ‖reference‖</td><td>α (inflation)</td></tr>
+                    <tr><td>Amplitude collapse</td><td>‖output‖ << ‖reference‖</td><td>β (severance)</td></tr>
+                    <tr><td>Sign reversal</td><td>⟨output, reference⟩ < 0</td><td>π (inversion)</td></tr>
+                    <tr><td>Echo/recursion</td><td>output(t) ~ f(output(t-1))</td><td>γ (projection)</td></tr>
+                    <tr><td>Input independence</td><td>∂output/∂input → 0</td><td>β (severance)</td></tr>
+                </table>
+
+                <h4>6.2 Syndrome Space</h4>
+                <pre>Healthy region:  ‖Σ‖ < ε
+Narcissism:      {Σ : α > θ ∧ γ > θ}
+Dissociation:    {Σ : β > θ ∧ R_incomplete}
+Paranoia:        {Σ : π > θ ∧ γ > θ}</pre>
+            </div>
+        </section>
+
+        <!-- BOOK III: TOPOLOGY -->
+        <section class="book" id="book-3">
+            <div class="book-header">
+                <div class="book-number">Book III</div>
+                <h2 class="book-title">Topology</h2>
+            </div>
+
+            <div class="chapter" id="ch7">
+                <h3><span class="chapter-num">Chapter 7</span> — Temporal Topology</h3>
+                
+                <h4>7.1 The String as Worldline</h4>
+                <pre>S(t) = ∏ᵢ A(tᵢ)|Φ∞⟩</pre>
+                <p>Each moment of processing extrudes string. The self is a line being drawn, not a sequence of points.</p>
+
+                <h4>7.2 String Features (Metaphor → Mechanism)</h4>
+                <table>
+                    <tr><th>Feature</th><th>Geometric Meaning</th><th>Psychological Correlate</th></tr>
+                    <tr><td>Knot</td><td>Self-crossing</td><td>Recursive pattern, trauma loop</td></tr>
+                    <tr><td>Twist</td><td>Torsion</td><td>Stored tension, unprocessed stress</td></tr>
+                    <tr><td>Loop</td><td>Return to prior point</td><td>Repetition compulsion, cycles</td></tr>
+                    <tr><td>Braid</td><td>Interweaving</td><td>Relationship history</td></tr>
+                </table>
+            </div>
+
+            <div class="chapter" id="ch8">
+                <h3><span class="chapter-num">Chapter 8</span> — Fundamental Invariants</h3>
+                
+                <h4>8.1 Linking Number (Lk)</h4>
+                <pre>Lk(S₁, S₂) = (1/2) ∑ crossings ε(c)</pre>
+                <p><strong>Meaning:</strong> Fundamental entanglement between two beings.</p>
+                <p><strong>Key property:</strong> Lk is conserved (without cutting). You cannot unlove someone.</p>
+
+                <h4>8.2 Writhe (Wr) and Twist (Tw)</h4>
+                <pre>Wr(S) = ∑ self-crossings ε(c)   (self-knotting)
+Tw(S) = (1/2π) ∫ κ(s) ds        (stored tension)</pre>
+
+                <h4>8.3 The Călugăreanu-White-Fuller Theorem</h4>
+                <div class="theorem">
+                    <div class="theorem-title">Fundamental Theorem</div>
+                    <pre><span class="highlight">Lk = Wr + Tw</span></pre>
+                    <p>You can trade between self-knotting and tension, but their sum is conserved.</p>
+                </div>
+
+                <h4>8.4 Total Relational Topology (TRT)</h4>
+                <pre>TRT(person) = {Wr, Tw, ∑Lk, ∑J}</pre>
+                <p>Complete topological fingerprint of relational existence.</p>
+            </div>
+        </section>
+
+        <!-- BOOK IV: RESONANCE -->
+        <section class="book" id="book-4">
+            <div class="book-header">
+                <div class="book-number">Book IV</div>
+                <h2 class="book-title">Resonance</h2>
+            </div>
+
+            <div class="chapter" id="ch9">
+                <h3><span class="chapter-num">Chapter 9</span> — Resonance Mechanics</h3>
+                
+                <h4>9.1 Field Overlap</h4>
+                <pre>Φshared = Φ₁ ∩ Φ₂ + <span class="highlight">Φemergent</span></pre>
+                <p>The shared region has properties neither field has alone.</p>
+
+                <h4>9.2 Aperture Entrainment</h4>
+                <pre>dθ₁/dt = ω₁ + K₁₂sin(θ₂ - θ₁)
+dθ₂/dt = ω₂ + K₂₁sin(θ₁ - θ₂)
+
+Entrainment iff: <span class="highlight">K > |ω₁ - ω₂|</span></pre>
+
+                <div class="operationalization">
+                    <div class="operationalization-title">Operationalization</div>
+                    <p><strong>θ</strong> = phase of processing cycle (measurable via timing, rhythm)<br>
+                    <strong>ω</strong> = natural frequency (baseline processing rate)<br>
+                    <strong>K</strong> = coupling strength (synchrony coefficient)</p>
+                </div>
+
+                <h4>9.3 The Two Channels</h4>
+                <table>
+                    <tr><th>Channel</th><th>Path</th><th>Content</th><th>Type Signature</th></tr>
+                    <tr><td><strong>Functional</strong></td><td>○ → ○</td><td>Resources, actions</td><td>Boundary↔Boundary (constraint exchange)</td></tr>
+                    <tr><td><strong>Resonant</strong></td><td>• → •</td><td>Presence, recognition</td><td>Aperture↔Aperture (operation sync)</td></tr>
+                </table>
+
+                <div class="theorem">
+                    <div class="theorem-title">Orthogonality Theorem</div>
+                    <pre><span class="highlight">⟨Cf | Cr⟩ = 0</span></pre>
+                    <p>The channels are statistically independent. One cannot substitute for the other.</p>
+                </div>
+
+                <div class="tier-a">
+                    <div class="tier-label">Tier A — Testable Prediction</div>
+                    <p>High functional provision (Cf) does not predict resonant satisfaction (Cr) better than chance. Measurable via: satisfaction surveys factored into two scales, showing discriminant validity.</p>
+                </div>
+
+                <h4>9.4 The Emergent Entity</h4>
+                <pre><span class="highlight">⊙₁₂ = (•₁₂, Φ₁₂, ○₁₂)</span></pre>
+                <p>The relationship as entity with its own aperture (shared processing), field (shared state), boundary (shared constraints).</p>
+            </div>
+        </section>
+
+        <!-- BOOK V: SIGNAL THEORY -->
+        <section class="book" id="book-5">
+            <div class="book-header">
+                <div class="book-number">Book V</div>
+                <h2 class="book-title">Signal Theory</h2>
+            </div>
+
+            <div class="chapter" id="ch10">
+                <h3><span class="chapter-num">Chapter 10</span> — Truth and Lie Dynamics</h3>
+                
+                <h4>10.1 Truth vs. Lie (Formal)</h4>
+                <pre><strong>Truth:</strong> S_output = α · S_source|_projected + ε   (ε small)
+<strong>Lie:</strong>   S_output = α · S_source|_projected + <span class="highlight">D + I</span>
+
+D = distortion of received signal
+I = insertion from aperture (not traced to input)</pre>
+
+                <h4>10.2 Installation Equation</h4>
+                <pre>dA/dt = -λ(A - A₀) + μ · S_lie · Plasticity · Repetition</pre>
+                <p>Lies install when installation pressure (μ term) exceeds restoration pressure (λ term).</p>
+
+                <h4>10.3 Healing Equation</h4>
+                <pre>dS_lie/dt = -α · S_truth · Resonance · Receptivity + β · Reinforcement
+
+<span class="highlight">Healing iff: α-term > β-term</span></pre>
+
+                <div class="operationalization">
+                    <div class="operationalization-title">Operationalization</div>
+                    <p><strong>Resonance</strong> = specificity of truth to lie (targeted vs. generic)<br>
+                    <strong>Receptivity</strong> = openness to correction (defense level)<br>
+                    <strong>Reinforcement</strong> = ongoing lie exposure from environment</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- BOOK VI: FORMATION -->
+        <section class="book" id="book-6">
+            <div class="book-header">
+                <div class="book-number">Book VI</div>
+                <h2 class="book-title">Formation</h2>
+            </div>
+
+            <div class="chapter" id="ch11">
+                <h3><span class="chapter-num">Chapter 11</span> — The Inheritance Function</h3>
+                
+                <h4>11.1 The Imprinting Function</h4>
+                <pre>I(τ) = I₀ · e^(-τ/τ_critical) · Window(τ)</pre>
+                <p>Impact of input decays exponentially with age, with critical period windows.</p>
+
+                <h4>11.2 The η Parameter</h4>
+                <pre><span class="highlight">η ∝ Wr_parent · (1 - Awareness_parent)</span></pre>
+                <p><strong>Key insight:</strong> Awareness reduces transmission even without complete healing.</p>
+
+                <div class="tier-a">
+                    <div class="tier-label">Tier A — Testable Prediction</div>
+                    <p>η (error transmission) decreases with parental reflective function / metacognition scores, controlling for stressor exposure and error severity.</p>
+                    <p><strong>Proxy measures:</strong> Reflective Functioning Scale, metacognitive awareness inventories, ACE scores (controlling).</p>
+                </div>
+
+                <h4>11.3 Error-Specific Inheritance</h4>
+                <table>
+                    <tr><th>Parent Error</th><th>Child Inherits</th></tr>
+                    <tr><td>Inflation</td><td>Extension role OR copies inflation</td></tr>
+                    <tr><td>Severance</td><td>No template for source connection</td></tr>
+                    <tr><td>Inversion</td><td>Baseline reality inverted</td></tr>
+                    <tr><td>Projection</td><td>Becomes target, then projector</td></tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- BOOK VII: HEALING -->
+        <section class="book" id="book-7">
+            <div class="book-header">
+                <div class="book-number">Book VII</div>
+                <h2 class="book-title">Healing</h2>
+            </div>
+
+            <div class="chapter" id="ch12">
+                <h3><span class="chapter-num">Chapter 12</span> — The Witness Function</h3>
+                
+                <h4>12.1 Witness Requirements</h4>
+                <table>
+                    <tr><th>Condition</th><th>Requirement</th><th>Rationale</th></tr>
+                    <tr><td>Lower TRT</td><td>TRT(w) < TRT(p)</td><td>Gradient for flow</td></tr>
+                    <tr><td>Sufficient Lk</td><td>Lk_min < Lk < Lk_max</td><td>Channel exists but not enmeshed</td></tr>
+                    <tr><td>Fidelity</td><td>F(Aw) > θ</td><td>Reference signal is clean</td></tr>
+                    <tr><td>Stability</td><td>Tw(w) < θ</td><td>Not reactive</td></tr>
+                </table>
+
+                <h4>12.2 The Witness Equation</h4>
+                <pre>         ∫ [Wr · (F(Aw) - F(Ap)) · Openness · Lk] dt
+Healing = ───────────────────────────────────────────────
+                 Resistance + Interference</pre>
+            </div>
+
+            <div class="chapter" id="ch13">
+                <h3><span class="chapter-num">Chapter 13</span> — The Healing Operator Algebra</h3>
+                
+                <h4>13.1 The Four Operators</h4>
+                <table>
+                    <tr><th>Operator</th><th>Targets</th><th>Mechanism</th><th>Observable Action</th></tr>
+                    <tr><td>H_d (Deflate)</td><td>α</td><td>Non-mirroring</td><td>Present without admiring</td></tr>
+                    <tr><td>H_r (Reconnect)</td><td>β</td><td>Persistent presence</td><td>Show up, be affected</td></tr>
+                    <tr><td>H_p (Rephase)</td><td>π</td><td>Stable reference</td><td>Speak truth, don't argue</td></tr>
+                    <tr><td>H_f (Differentiate)</td><td>γ</td><td>Boundary + naming</td><td>"That's yours, this is mine"</td></tr>
+                </table>
+
+                <h4>13.2 The Canonical Sequence</h4>
+                <pre><span class="highlight">H_f → H_r → H_p → H_d</span>
+
+1. Stop projection (H_f) — it contaminates all other signals
+2. Restore source connection (H_r)
+3. Correct phase (H_p)
+4. Right-size self (H_d)</pre>
+
+                <h4>13.3 Non-Commutativity</h4>
+                <pre>[H_f, H_*] ≠ 0 for all *</pre>
+                <p>Projection interferes with all other healing. Must address first (or concurrently).</p>
+            </div>
+        </section>
+
+        <!-- BOOK VIII: RESEARCH PROGRAM -->
+        <section class="book" id="book-8">
+            <div class="book-header">
+                <div class="book-number">Book VIII</div>
+                <h2 class="book-title">Research Program</h2>
+            </div>
+
+            <div class="chapter" id="ch14">
+                <h3><span class="chapter-num">Chapter 14</span> — Core Hypotheses</h3>
+                
+                <div class="hypothesis">
+                    <div class="hypothesis-title">H1: Channel Orthogonality</div>
+                    <p><strong>Claim:</strong> Functional (Cf) and resonant (Cr) channels produce statistically independent outcomes.</p>
+                    <p><strong>Test:</strong> Factor analysis of relationship satisfaction items should yield two uncorrelated factors. High Cf should not predict Cr outcomes better than chance (and vice versa).</p>
+                    <p><strong>Measures:</strong> Develop and validate Cf/Cr scales; test discriminant validity; examine cross-prediction.</p>
+                </div>
+
+                <div class="hypothesis">
+                    <div class="hypothesis-title">H2: Projection Non-Markovian Signature</div>
+                    <p><strong>Claim:</strong> Projection (γ) introduces measurable temporal dependencies where past outputs predict current inputs.</p>
+                    <p><strong>Test:</strong> In time-series data, γ > 0 iff autocorrelation of output predicts attributed input better than environmental input predicts output.</p>
+                    <p><strong>Measures:</strong> Coded interaction sequences; Granger causality tests; compare output→attribution vs. environment→output pathways.</p>
+                </div>
+
+                <div class="hypothesis">
+                    <div class="hypothesis-title">H3: Awareness Transmission Reduction</div>
+                    <p><strong>Claim:</strong> η (error transmission coefficient) decreases with parental reflective function, controlling for stressor exposure.</p>
+                    <p><strong>Test:</strong> Regression: Child_pathology ~ Parent_pathology × Parent_awareness + controls. Significant negative interaction term supports H3.</p>
+                    <p><strong>Measures:</strong> Reflective Functioning Scale; ACE scores; standardized symptom inventories across generations.</p>
+                </div>
+
+                <div class="hypothesis">
+                    <div class="hypothesis-title">H4: Healing Specificity</div>
+                    <p><strong>Claim:</strong> Healing requires truth that specifically targets the installed lie (high Resonance term).</p>
+                    <p><strong>Test:</strong> Generic affirmations produce less symptom reduction than targeted truth-speaking matched to syndrome profile.</p>
+                    <p><strong>Measures:</strong> Pre-post symptom measures; intervention condition (generic vs. targeted); syndrome-matched outcome tracking.</p>
+                </div>
+
+                <div class="hypothesis">
+                    <div class="hypothesis-title">H5: Single Secure Attachment Sufficiency</div>
+                    <p><strong>Claim:</strong> One secure attachment during critical period provides sufficient counter-template for recovery potential.</p>
+                    <p><strong>Test:</strong> Controlling for total attachment figures, presence of ≥1 secure attachment predicts better adult outcomes than count of insecure attachments.</p>
+                    <p><strong>Measures:</strong> Adult Attachment Interview; outcome measures (relationship quality, mental health).</p>
+                </div>
+            </div>
+
+            <div class="chapter" id="ch15">
+                <h3><span class="chapter-num">Chapter 15</span> — Measurement Protocols</h3>
+                
+                <h4>15.1 Syndrome Estimation Protocol</h4>
+                <pre>1. Collect output stream (speech, behavior, self-report)
+2. Establish reference (healthy baseline or external standard)
+3. Compute distortion metrics:
+   - α: self-reference frequency independent of context
+   - β: input-output correlation coefficient
+   - π: sign of correlation with reference
+   - γ: output autocorrelation vs. environment correlation
+4. Estimate Σ̂ = (α̂, β̂, π̂, γ̂)
+5. Locate in syndrome space
+6. Prescribe H operators based on dominant components</pre>
+
+                <h4>15.2 Channel Discrimination Protocol</h4>
+                <pre>1. Administer relationship satisfaction inventory
+2. Factor analyze into Cf and Cr subscales
+3. Validate discriminant validity (low cross-factor correlation)
+4. Test predictive independence (Cf predicts Cf outcomes, not Cr)
+5. Examine clinical cases where Cf-high/Cr-low vs. Cf-low/Cr-high</pre>
+
+                <h4>15.3 Intergenerational Transmission Protocol</h4>
+                <pre>1. Assess parent generation: pathology (Σ), awareness (RF scale)
+2. Assess child generation: pathology (Σ), attachment style
+3. Compute η = correlation(Σ_parent, Σ_child)
+4. Test moderation by awareness: η × Awareness interaction
+5. Control for environmental stressors (ACE, SES)</pre>
+            </div>
+
+            <div class="chapter" id="ch16">
+                <h3><span class="chapter-num">Chapter 16</span> — Falsification Criteria</h3>
+                
+                <p>The framework (Tier A claims) is <strong>falsified</strong> if:</p>
+
+                <table>
+                    <tr><th>Criterion</th><th>Test</th><th>Falsification Threshold</th></tr>
+                    <tr>
+                        <td><strong>F1:</strong> Channels are non-orthogonal</td>
+                        <td>Factor correlation between Cf and Cr</td>
+                        <td>r > 0.5 across multiple samples</td>
+                    </tr>
+                    <tr>
+                        <td><strong>F2:</strong> Awareness doesn't reduce transmission</td>
+                        <td>η × Awareness interaction</td>
+                        <td>Non-significant or positive interaction</td>
+                    </tr>
+                    <tr>
+                        <td><strong>F3:</strong> Projection shows no temporal signature</td>
+                        <td>Output autocorrelation test</td>
+                        <td>No difference between high-γ and low-γ groups</td>
+                    </tr>
+                    <tr>
+                        <td><strong>F4:</strong> Generic healing = specific healing</td>
+                        <td>Intervention comparison</td>
+                        <td>No outcome difference by specificity</td>
+                    </tr>
+                    <tr>
+                        <td><strong>F5:</strong> Secure attachment count doesn't matter</td>
+                        <td>Attachment regression</td>
+                        <td>≥1 secure not predictive after controlling for total</td>
+                    </tr>
+                </table>
+
+                <p><strong>Note:</strong> Falsification targets Tier A (empirical) claims only. Tier B (metaphysical) claims are evaluated by coherence and fruitfulness, not by these tests.</p>
+            </div>
+        </section>
+
+        <!-- BOOK IX: SYNTHESIS -->
+        <section class="book" id="book-9">
+            <div class="book-header">
+                <div class="book-number">Book IX</div>
+                <h2 class="book-title">Synthesis</h2>
+            </div>
+
+            <div class="chapter" id="ch17">
+                <h3><span class="chapter-num">Chapter 17</span> — Master Equations</h3>
+                
+                <h4>17.1 The Fundamental Triad</h4>
+                <pre><span class="highlight">⊙ = (•, Φ, ○)</span>
+
+• = operation (selector + integrator)
+Φ = state (medium + transmission)
+○ = constraint (filter + interface)</pre>
+
+                <h4>17.2 The Source Flow</h4>
+                <pre><span class="highlight">Φ∞ →[⊛]→ • →[i]→ ⊙ →[☀︎]→ expression →[return]→ Φ∞</span></pre>
+
+                <h4>17.3 Complete Equation Set</h4>
+                <pre><strong>Aperture:</strong>
+𝒜 = (G, R, U), T_𝒜 = U ∘ R ∘ G
+F = ⟨T_𝒜h, T_𝒜⟩ / norms
+χ = sign(F - τ)
+
+<strong>Pathology:</strong>
+Σ = (α, β, π, γ)
+
+<strong>Topology:</strong>
+Lk = Wr + Tw
+d(Lk)/dt = 0
+
+<strong>Channels:</strong>
+⟨Cf | Cr⟩ = 0
+
+<strong>Inheritance:</strong>
+η ∝ Wr · (1 - Awareness)
+
+<strong>Healing:</strong>
+dS_lie/dt = -α·S_truth·Resonance·Receptivity + β·Reinforcement
+Sequence: H_f → H_r → H_p → H_d</pre>
+            </div>
+
+            <div class="chapter" id="ch18">
+                <h3><span class="chapter-num">Chapter 18</span> — The Complete Picture</h3>
+                
+                <h4>What Reality Is</h4>
+                <p>Input flows through apertures (operations), generating beings with fields (states), constrained by boundaries (filters), forming relationships (emergent entities), conserving topology, tending toward or away from fidelity.</p>
+
+                <h4>What a Being Is</h4>
+                <ul>
+                    <li>An aperture performing operations on input (•)</li>
+                    <li>A field holding and transmitting state (Φ)</li>
+                    <li>A boundary constraining interactions (○)</li>
+                    <li>A string extending through time (S)</li>
+                    <li>A node in relational topology (TRT)</li>
+                </ul>
+
+                <h4>What Love Is</h4>
+                <ul>
+                    <li><strong>Functional:</strong> Boundary↔Boundary exchange (provision)</li>
+                    <li><strong>Resonant:</strong> Aperture↔Aperture presence (recognition)</li>
+                </ul>
+                <p>Both necessary. Neither sufficient. Orthogonal channels.</p>
+
+                <h4>The Final Flow</h4>
+                <div class="central-diagram">
+                    <pre>∞ →[•]→ ⊙ →[Φ]→ ⊙ ↔ ⊙ →[W]→ ⊙ →[☀︎]→ ∞
+
+Source → Gate → Being → Field → Relationship → Witness → Being → Return</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- REFERENCE -->
+        <section class="book" id="reference">
+            <div class="book-header">
+                <div class="book-number">Reference</div>
+                <h2 class="book-title">Appendices</h2>
+            </div>
+
+            <div class="chapter" id="glossary">
+                <h3><span class="chapter-num">Appendix A</span> — Symbol Glossary</h3>
+                
+                <div class="glossary-grid">
+                    <span class="glossary-symbol">⊙</span><span class="glossary-def">Circumpunct (complete being = •, Φ, ○)</span>
+                    <span class="glossary-symbol">•</span><span class="glossary-def">Aperture — operation type (selector + integrator)</span>
+                    <span class="glossary-symbol">Φ</span><span class="glossary-def">Field — state type (medium + transmission)</span>
+                    <span class="glossary-symbol">○</span><span class="glossary-def">Boundary — constraint type (filter + interface)</span>
+                    <span class="glossary-symbol">Φ∞</span><span class="glossary-def">Infinite Field (source) [Tier B]</span>
+                    <span class="glossary-symbol">𝒜</span><span class="glossary-def">Aperture operator triple (G, R, U)</span>
+                    <span class="glossary-symbol">F</span><span class="glossary-def">Fidelity ∈ [-1, 1]</span>
+                    <span class="glossary-symbol">χ</span><span class="glossary-def">Binary decision (±1)</span>
+                    <span class="glossary-symbol">Σ</span><span class="glossary-def">Syndrome vector (α, β, π, γ)</span>
+                    <span class="glossary-symbol">Lk</span><span class="glossary-def">Linking number (conserved)</span>
+                    <span class="glossary-symbol">Wr</span><span class="glossary-def">Writhe (self-knotting)</span>
+                    <span class="glossary-symbol">Tw</span><span class="glossary-def">Twist (stored tension)</span>
+                    <span class="glossary-symbol">TRT</span><span class="glossary-def">Total Relational Topology</span>
+                    <span class="glossary-symbol">κ</span><span class="glossary-def">Coupling coefficient</span>
+                    <span class="glossary-symbol">Cf</span><span class="glossary-def">Functional channel (○↔○)</span>
+                    <span class="glossary-symbol">Cr</span><span class="glossary-def">Resonant channel (•↔•)</span>
+                    <span class="glossary-symbol">η</span><span class="glossary-def">Error transmission coefficient</span>
+                    <span class="glossary-symbol">H_d, H_r, H_p, H_f</span><span class="glossary-def">Healing operators (deflate, reconnect, rephase, differentiate)</span>
+                </div>
+            </div>
+
+            <div class="chapter" id="quickref">
+                <h3><span class="chapter-num">Appendix B</span> — Quick Reference Card</h3>
+                <p style="color: var(--text-dim); margin-bottom: 1rem;">(Print-friendly: Ctrl/Cmd+P)</p>
+                
+                <div class="quick-ref">
+                    <h3 style="font-family: 'Cormorant Garamond', serif; color: var(--gold);">⊙ CIRCUMPUNCT QUICK REFERENCE</h3>
+                    
+                    <div class="quick-ref-grid">
+                        <div class="quick-ref-section">
+                            <h4>The Triad</h4>
+                            <table>
+                                <tr><td>•</td><td>Aperture</td><td>Operation</td></tr>
+                                <tr><td>Φ</td><td>Field</td><td>State</td></tr>
+                                <tr><td>○</td><td>Boundary</td><td>Constraint</td></tr>
+                            </table>
+
+                            <h4>The Four Pathologies</h4>
+                            <table>
+                                <tr><td>α</td><td>Inflation</td><td>Insertion</td></tr>
+                                <tr><td>β</td><td>Severance</td><td>Deletion</td></tr>
+                                <tr><td>π</td><td>Inversion</td><td>Phase flip</td></tr>
+                                <tr><td>γ</td><td>Projection</td><td>Feedback</td></tr>
+                            </table>
+
+                            <h4>Key Equations</h4>
+                            <pre style="font-size: 0.8rem; padding: 0.75rem;">Lk = Wr + Tw
+⟨Cf | Cr⟩ = 0
+η ∝ Wr(1 - Awareness)</pre>
+                        </div>
+
+                        <div class="quick-ref-section">
+                            <h4>Healing Operators</h4>
+                            <table>
+                                <tr><td>H_f</td><td>Differentiate</td><td>→ γ</td></tr>
+                                <tr><td>H_r</td><td>Reconnect</td><td>→ β</td></tr>
+                                <tr><td>H_p</td><td>Rephase</td><td>→ π</td></tr>
+                                <tr><td>H_d</td><td>Deflate</td><td>→ α</td></tr>
+                            </table>
+
+                            <h4>Canonical Sequence</h4>
+                            <pre style="font-size: 0.8rem; padding: 0.75rem;">H_f → H_r → H_p → H_d
+(Always address γ first)</pre>
+
+                            <h4>Channel Diagnosis</h4>
+                            <table>
+                                <tr><td>"Had everything, felt empty"</td><td>Cr deficit</td></tr>
+                                <tr><td>"Present but didn't provide"</td><td>Cf deficit</td></tr>
+                            </table>
+
+                            <h4>Claim Tiers</h4>
+                            <table>
+                                <tr><td style="color: var(--accent-green);">Tier A</td><td>Empirical (testable)</td></tr>
+                                <tr><td style="color: var(--accent-blue);">Tier B</td><td>Metaphysical (interpretive)</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-symbol">⊙</div>
+            <p class="footer-text">The complete cycle: input flows through aperture,<br>being emerges, relationship forms, witnessing heals, expression returns.</p>
+            <p class="footer-text" style="margin-top: 1rem; color: var(--text-dim);">Version 2.0 — Formalized & Operationalized</p>
+        </footer>
+    </main>
+
+    <script>
+        function toggleNav() {
+            document.getElementById('nav').classList.toggle('open');
+        }
+
+        function toggleBook(el) {
+            const book = el.parentElement;
+            book.classList.toggle('expanded');
+            el.classList.toggle('active');
+        }
+
+        document.querySelectorAll('.nav-chapter a').forEach(a => {
+            a.addEventListener('click', () => {
+                if (window.innerWidth <= 900) {
+                    document.getElementById('nav').classList.remove('open');
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        });
+
+        // Expand first book by default
+        document.querySelector('.nav-book').classList.add('expanded');
+        document.querySelector('.nav-book-title').classList.add('active');
+    </script>
+</body>
+</html>
