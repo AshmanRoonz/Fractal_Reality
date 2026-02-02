@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schumann-Circumpunct Resonance Theory</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --text: #e0e0e0;
+      --gold: #d4af37;
+      --cyan: #00bcd4;
+      --magenta: #e91e63;
+      --green: #4caf50;
+      --red: #f44336;
+      --dim: #666;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.8;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2.2rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      letter-spacing: 2px;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: var(--dim);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+    
+    h2 {
+      color: var(--cyan);
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--cyan);
+      padding-bottom: 0.5rem;
+    }
+    
+    h3 {
+      color: var(--gold);
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    p { margin-bottom: 1rem; }
+    
+    .symbol {
+      text-align: center;
+      font-size: 3rem;
+      color: var(--gold);
+      margin: 1rem 0;
+    }
+    
+    .equation-box {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    
+    .equation {
+      font-size: 1.3rem;
+      font-family: 'Courier New', monospace;
+      color: var(--gold);
+      margin: 0.5rem 0;
+    }
+    
+    .equation-note {
+      font-size: 0.9rem;
+      color: var(--dim);
+      margin-top: 0.5rem;
+    }
+    
+    .definition-box {
+      background: rgba(0, 188, 212, 0.1);
+      border-left: 3px solid var(--cyan);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .definition-box .label {
+      color: var(--cyan);
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .theorem-box {
+      background: rgba(233, 30, 99, 0.1);
+      border-left: 3px solid var(--magenta);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .theorem-box .label {
+      color: var(--magenta);
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .prediction-box {
+      background: rgba(76, 175, 80, 0.1);
+      border-left: 3px solid var(--green);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .prediction-box .label {
+      color: var(--green);
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .warning-box {
+      background: rgba(244, 67, 54, 0.1);
+      border-left: 3px solid var(--red);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .warning-box .label {
+      color: var(--red);
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+    
+    th, td {
+      border: 1px solid var(--dim);
+      padding: 0.75rem;
+      text-align: center;
+    }
+    
+    th {
+      background: rgba(212, 175, 55, 0.2);
+      color: var(--gold);
+    }
+    
+    .diagram {
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: 'Courier New', monospace;
+      white-space: pre;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    
+    .center-sym { color: var(--gold); }
+    .field-sym { color: var(--cyan); }
+    .boundary-sym { color: var(--magenta); }
+    
+    ul, ol {
+      margin: 1rem 0 1rem 2rem;
+    }
+    
+    li { margin-bottom: 0.5rem; }
+    
+    .toc {
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    
+    .toc h3 {
+      margin-top: 0;
+    }
+    
+    .toc a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+    
+    .toc a:hover {
+      text-decoration: underline;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--dim);
+      color: var(--dim);
+    }
+    
+    .empirical-note {
+      background: rgba(76, 175, 80, 0.15);
+      border: 1px dashed var(--green);
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="symbol">⊙</div>
+
+<h1>Schumann-Circumpunct Resonance Theory</h1>
+<p class="subtitle">Planetary Ground, Neural Diameter, and the Echo Pathology of Blocked Apertures</p>
+<p class="subtitle">Ashman Roonz · February 2026</p>
+
+<div class="toc">
+  <h3>Contents</h3>
+  <ol>
+    <li><a href="#core">Core Hypothesis</a></li>
+    <li><a href="#geometry">Geometric Formalization</a></li>
+    <li><a href="#frequencies">The Frequency Stack</a></li>
+    <li><a href="#echo">Echo Dynamics: The Blocked Aperture</a></li>
+    <li><a href="#pathology">Connection to Pathology Theory</a></li>
+    <li><a href="#predictions">Falsifiable Predictions</a></li>
+    <li><a href="#therapeutic">Therapeutic Implications</a></li>
+    <li><a href="#empirical">Empirical Foundation</a></li>
+  </ol>
+</div>
+
+<!-- SECTION 1: CORE HYPOTHESIS -->
+<h2 id="core">1. Core Hypothesis</h2>
+
+<p>The Schumann resonance represents the <strong>radius</strong> of the planetary circumpunct—the fundamental distance from aperture (•) to boundary (○). The brain's sensorimotor rhythm (SMR) operates at the <strong>diameter</strong>—spanning the complete structure. Pathological "busy brain" frequencies represent <strong>echo states</strong> where blocked center channels cause signal reverberation at doubled frequency.</p>
+
+<div class="equation-box">
+  <div class="equation">f_Schumann ≈ 7.83 Hz = r (radius)</div>
+  <div class="equation">f_SMR ≈ 12-15 Hz ≈ 2r = d (diameter)</div>
+  <div class="equation">f_echo ≈ 26 Hz ≈ 2d (round-trip reflection)</div>
+  <p class="equation-note">The brain doesn't just receive the planetary pulse—it spans the complete geometric structure</p>
+</div>
+
+<div class="definition-box">
+  <div class="label">Definition 1.1: The Planetary Circumpunct</div>
+  <p>Earth operates as a circumpunct at planetary scale:</p>
+  <ul>
+    <li><span class="center-sym">• (center)</span> = Earth's core / magnetic dipole origin</li>
+    <li><span class="field-sym">Φ (field)</span> = Magnetosphere / atmosphere</li>
+    <li><span class="boundary-sym">○ (boundary)</span> = Ionosphere (~60-1000 km altitude)</li>
+  </ul>
+  <p>The Schumann resonance is the electromagnetic standing wave in the Earth-ionosphere cavity—literally the "ringing" of the planetary boundary.</p>
+</div>
+
+<!-- SECTION 2: GEOMETRIC FORMALIZATION -->
+<h2 id="geometry">2. Geometric Formalization</h2>
+
+<h3>2.1 The Circumpunct as Resonant Cavity</h3>
+
+<p>Any circumpunct ⊙ = • ⊗ Φ ⊗ ○ defines a resonant cavity with characteristic frequencies determined by its geometry.</p>
+
+<div class="equation-box">
+  <div class="equation">f_fundamental = c / (2πR)</div>
+  <p class="equation-note">Where R is the effective radius and c is the wave propagation speed</p>
+</div>
+
+<p>For the Earth-ionosphere cavity:</p>
+<ul>
+  <li>R ≈ 6,371 km (Earth radius)</li>
+  <li>c ≈ 3 × 10⁸ m/s (speed of light)</li>
+  <li>f₁ ≈ 7.83 Hz (fundamental Schumann mode)</li>
+</ul>
+
+<div class="definition-box">
+  <div class="label">Definition 2.1: Radius Frequency (f_r)</div>
+  <p>The <strong>radius frequency</strong> f_r is the fundamental resonance of a circumpunct—the lowest frequency standing wave that fits within the structure. It represents the • → ○ distance as temporal oscillation.</p>
+  <div class="equation">f_r = characteristic frequency of the aperture-to-boundary span</div>
+</div>
+
+<div class="definition-box">
+  <div class="label">Definition 2.2: Diameter Frequency (f_d)</div>
+  <p>The <strong>diameter frequency</strong> f_d = 2f_r represents the complete boundary-to-boundary span <em>through</em> the center. This is the frequency at which a signal traverses the entire structure.</p>
+  <div class="equation">f_d = 2f_r ≈ ○ → • → ○ (full traversal)</div>
+</div>
+
+<h3>2.2 Cross-Scale Embedding</h3>
+
+<p>The circumpunct framework predicts that smaller apertures are embedded within larger ones, with phase relationships linking their frequencies. The brain, as a circumpunct nested within the planetary circumpunct, should show frequency relationships to the larger structure.</p>
+
+<div class="theorem-box">
+  <div class="label">Theorem 2.1: Nested Resonance</div>
+  <p>An aperture embedded within a larger circumpunct will exhibit resonance relationships to the host structure. The embedded system "knows" the geometry of its container through frequency coupling.</p>
+  <div class="equation">f_nested ∝ n × f_host (where n ∈ ℤ or n ∈ {φ^k})</div>
+</div>
+
+<!-- SECTION 3: THE FREQUENCY STACK -->
+<h2 id="frequencies">3. The Frequency Stack</h2>
+
+<table>
+  <tr>
+    <th>Frequency</th>
+    <th>Name</th>
+    <th>Geometric Meaning</th>
+    <th>Function</th>
+  </tr>
+  <tr>
+    <td>~7.83 Hz</td>
+    <td>Schumann Resonance</td>
+    <td>Radius (r)</td>
+    <td>Planetary ground pulse</td>
+  </tr>
+  <tr>
+    <td>~12-15 Hz</td>
+    <td>SMR (Sensorimotor Rhythm)</td>
+    <td>Diameter (d = 2r)</td>
+    <td>Balanced aperture spanning full structure</td>
+  </tr>
+  <tr>
+    <td>~20-26 Hz</td>
+    <td>High Beta / "Busy Brain"</td>
+    <td>Echo (2d = 4r)</td>
+    <td>Blocked transmission → reverberation</td>
+  </tr>
+</table>
+
+<div class="theorem-box">
+  <div class="label">Theorem 3.1: The Doubling Principle</div>
+  <p>Each level in the frequency stack represents a doubling of the geometric span:</p>
+  <ul>
+    <li><strong>Radius (1×):</strong> Ground state, connection to source</li>
+    <li><strong>Diameter (2×):</strong> Full traversal, balanced operation</li>
+    <li><strong>Echo (4×):</strong> Round-trip reflection when transmission fails</li>
+  </ul>
+  <p>The ratio between healthy and pathological frequencies is not arbitrary—it's geometrically determined by the reflection dynamics of a blocked aperture.</p>
+</div>
+
+<h3>3.1 SMR as Diameter-Spanning</h3>
+
+<p>The sensorimotor rhythm (SMR, ~12-15 Hz) is associated with:</p>
+<ul>
+  <li>Calm, focused alertness</li>
+  <li>Reduced impulsivity</li>
+  <li>Motor inhibition (stillness without tension)</li>
+  <li>Integration of sensory and motor processing</li>
+</ul>
+
+<p>In circumpunct terms: SMR represents the brain operating at the <strong>diameter frequency</strong>—spanning the full structure from boundary to boundary through center. This is not passive reception of Schumann but active <em>completion</em> of the geometric form.</p>
+
+<div class="definition-box">
+  <div class="label">Definition 3.1: Diameter Consciousness</div>
+  <p>Healthy waking consciousness operates at the diameter frequency—aware of both boundaries (self/other, inner/outer) while remaining centered. The aperture is <strong>open</strong>, allowing transmission through rather than reflection back.</p>
+</div>
+
+<!-- SECTION 4: ECHO DYNAMICS -->
+<h2 id="echo">4. Echo Dynamics: The Blocked Aperture</h2>
+
+<h3>4.1 The Mechanism</h3>
+
+<p>When the center channel (aperture) is blocked, signals that should transmit through instead reflect back. This creates a standing wave pattern at doubled frequency.</p>
+
+<div class="diagram">
+HEALTHY FLOW (Open Aperture):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    Source → <span class="center-sym">•</span> (aperture) → <span class="field-sym">Φ</span> (field) → <span class="boundary-sym">○</span> (boundary) → beyond
+                    ↓
+              TRANSMISSION
+           (energy exits system)
+    
+    Frequency: f_d (diameter) ≈ 15 Hz
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BLOCKED FLOW (Sealed Aperture):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    Source ⊗ <span class="center-sym">•</span> (blocked) → <span class="field-sym">Φ</span> → <span class="boundary-sym">○</span> ─┐
+                                         │ reflects
+                                         ↓
+           ┌─ <span class="boundary-sym">○</span> ← <span class="field-sym">Φ</span> ← <span class="center-sym">•</span> ⊗ ────────────┘
+           │
+           └→ ECHO (trapped in cavity)
+    
+    Frequency: f_echo = 2 × f_d ≈ 26 Hz
+    (round-trip = double the single traversal)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</div>
+
+<div class="theorem-box">
+  <div class="label">Theorem 4.1: Echo Frequency Doubling</div>
+  <p>When the aperture blocks transmission, the reflected signal must traverse the field twice (out and back) to complete one cycle. This doubles the effective frequency:</p>
+  <div class="equation">f_echo = 2 × f_transmission</div>
+  <p>The "busy brain" at ~26 Hz is the signature of a ~13 Hz signal reflecting back on itself.</p>
+</div>
+
+<h3>4.2 The Standing Wave Pattern</h3>
+
+<p>A blocked aperture creates a resonant cavity within the individual circumpunct. Energy that should flow through becomes trapped, forming standing waves.</p>
+
+<div class="definition-box">
+  <div class="label">Definition 4.1: Resonant Trapping</div>
+  <p>When transmission through • is blocked, the field Φ becomes a closed cavity rather than an open channel. Energy accumulates as standing waves at echo frequencies.</p>
+  <p><strong>Phenomenologically:</strong> Intrusive thoughts, circular rumination, inability to "let go" of mental content—the cognitive signature of energy that can't exit.</p>
+</div>
+
+<h3>4.3 Phase Inversion</h3>
+
+<p>In the healthy state, the transmission signal (SMR) dominates and the echo is a minor harmonic. In the pathological state, this relationship inverts:</p>
+
+<div class="equation-box">
+  <div class="equation">Healthy: A_transmission >> A_echo</div>
+  <div class="equation">Pathological: A_echo >> A_transmission</div>
+  <p class="equation-note">The structure is preserved, but the amplitude relationship is inverted</p>
+</div>
+
+<div class="empirical-note">
+  <strong>Empirical observation:</strong> Thompson & Thompson (2006) found "Busy Brain" clients show high-amplitude bursts of high-beta (22-28 Hz) with <em>suppressed</em> SMR and a hi-beta/SMR ratio > 1.5. This is precisely the phase-inversion pattern predicted by the echo model.
+</div>
+
+<!-- SECTION 5: CONNECTION TO PATHOLOGY -->
+<h2 id="pathology">5. Connection to Pathology Theory</h2>
+
+<h3>5.1 The Blocked Center Channel</h3>
+
+<p>The circumpunct theory of pathology identifies two channels of love/connection:</p>
+<ul>
+  <li><strong>Boundary channel (○):</strong> Functional love—doing, providing, logistics</li>
+  <li><strong>Center channel (•):</strong> Resonant love—being-with, presence, attunement</li>
+</ul>
+
+<p>The narcissistic wound involves a <strong>blocked center channel</strong>—the aperture sealed to genuine transmission while the boundary channel may remain functional.</p>
+
+<div class="theorem-box">
+  <div class="label">Theorem 5.1: Narcissistic Echo Pattern</div>
+  <p>The narcissistic structure exhibits:</p>
+  <ol>
+    <li>Sealed aperture (center channel blocked)</li>
+    <li>Functional boundary channel (can "do" love but not "be" love)</li>
+    <li>High echo frequency (rumination, self-referential loops)</li>
+    <li>Suppressed ground frequency (disconnection from source/Schumann)</li>
+  </ol>
+  <p>The elevated high-beta at anterior cingulate (Brodmann Area 24) is the neural signature of this geometric configuration.</p>
+</div>
+
+<h3>5.2 Why Resonant Love Cannot Be Substituted</h3>
+
+<p>Functional love (boundary channel) cannot heal resonance wounds (center channel) because they operate on different frequencies and pathways. The echo pattern persists regardless of how much functional support is provided—the aperture remains sealed.</p>
+
+<div class="warning-box">
+  <div class="label">Clinical Implication</div>
+  <p>Attempting to heal a center-channel wound through boundary-channel intervention is like trying to tune a radio by adjusting the volume. The frequency mismatch is architectural, not a matter of degree.</p>
+</div>
+
+<h3>5.3 Anatomical Localization</h3>
+
+<p>Research identifies the <strong>anterior cingulate cortex (ACC)</strong> as central to both:</p>
+<ul>
+  <li>"Busy Brain" high-beta bursts (Thompson & Thompson)</li>
+  <li>Narcissistic trait neural correlates (altered beta coherence in ACC)</li>
+  <li>Self-monitoring, conflict detection, error processing</li>
+  <li>Emotional regulation and empathy deficits</li>
+</ul>
+
+<p>The ACC may be the neural instantiation of the aperture—the gate that should open to source but has been functionally sealed.</p>
+
+<!-- SECTION 6: PREDICTIONS -->
+<h2 id="predictions">6. Falsifiable Predictions</h2>
+
+<div class="prediction-box">
+  <div class="label">Prediction 6.1: Frequency Ratio Invariance</div>
+  <p>The ratio between "busy brain" frequency and suppressed SMR should cluster around 2:1 (±0.2) across individuals with blocked-aperture pathology.</p>
+  <p><strong>Test:</strong> Measure high-beta peak frequency and SMR frequency in diagnosed NPD populations. The ratio f_highbeta / f_SMR should approximate 2.0.</p>
+</div>
+
+<div class="prediction-box">
+  <div class="label">Prediction 6.2: Schumann Correlation</div>
+  <p>Individuals with healthy SMR dominance should show measurable phase-coupling to Schumann resonance. Individuals with echo-dominant patterns should show reduced or absent Schumann coupling.</p>
+  <p><strong>Test:</strong> Simultaneous EEG and Schumann monitoring; compute phase-locking value between SMR band and Schumann fundamental.</p>
+</div>
+
+<div class="prediction-box">
+  <div class="label">Prediction 6.3: Grounding Practice Effects</div>
+  <p>Practices that increase Schumann coupling (earthing, nature exposure, certain meditation forms) should decrease high-beta/SMR ratio over time.</p>
+  <p><strong>Test:</strong> Longitudinal EEG study of grounding practices, tracking hi-beta/SMR ratio changes.</p>
+</div>
+
+<div class="prediction-box">
+  <div class="label">Prediction 6.4: Echo Frequency Specificity</div>
+  <p>The "echo" frequency should be specifically 2× the individual's natural SMR frequency, not a fixed value. If someone's SMR is 14 Hz, their echo should be ~28 Hz; if SMR is 12 Hz, echo should be ~24 Hz.</p>
+  <p><strong>Test:</strong> Within-subject correlation of SMR peak and high-beta peak frequencies. Predict slope ≈ 2.0.</p>
+</div>
+
+<div class="prediction-box">
+  <div class="label">Prediction 6.5: Therapeutic Retuning Signature</div>
+  <p>Successful treatment of narcissistic pathology should show:</p>
+  <ol>
+    <li>Decreased high-beta amplitude at ACC</li>
+    <li>Increased SMR amplitude</li>
+    <li>Ratio normalization (hi-beta/SMR → < 1.0)</li>
+    <li>Increased Schumann phase-coupling</li>
+  </ol>
+  <p><strong>Test:</strong> Pre/post EEG in effective psychotherapy for NPD traits.</p>
+</div>
+
+<!-- SECTION 7: THERAPEUTIC IMPLICATIONS -->
+<h2 id="therapeutic">7. Therapeutic Implications</h2>
+
+<div class="theorem-box">
+  <div class="label">Theorem 7.1: Retuning vs. Calming</div>
+  <p>The therapeutic goal is not "reduce high-beta" but <strong>reopen the aperture</strong> so transmission can resume. The echo will naturally diminish when the cavity is no longer sealed.</p>
+  <p>Directly suppressing the echo without reopening the channel treats symptom, not structure.</p>
+</div>
+
+<h3>7.1 Neurofeedback Protocol Implications</h3>
+
+<ul>
+  <li><strong>Standard protocol:</strong> Reward SMR increase, inhibit high-beta</li>
+  <li><strong>Framework interpretation:</strong> Rewarding diameter-frequency, inhibiting echo—but this may not address the <em>sealed aperture</em> directly</li>
+  <li><strong>Enhanced protocol:</strong> Add Schumann-frequency entrainment to re-establish ground connection</li>
+</ul>
+
+<h3>7.2 The Role of Resonant Witness</h3>
+
+<p>The pathology theory identifies "resonant witness" as necessary for aperture retuning—someone who provides a genuine signal the aperture can attune to. This may work by:</p>
+<ol>
+  <li>Providing external reference frequency at healthy ground</li>
+  <li>Phase-entraining the blocked aperture through interpersonal resonance</li>
+  <li>Demonstrating that transmission is possible (modeling open aperture)</li>
+</ol>
+
+<div class="definition-box">
+  <div class="label">Definition 7.1: Therapeutic Resonance</div>
+  <p>Effective therapy for aperture blockage requires <strong>center-channel contact</strong>—presence, attunement, genuine seeing. This provides an external frequency reference the corrupted aperture can begin to match, like a tuning fork for a detuned instrument.</p>
+</div>
+
+<!-- SECTION 8: EMPIRICAL FOUNDATION -->
+<h2 id="empirical">8. Empirical Foundation</h2>
+
+<h3>8.1 Established Facts</h3>
+
+<ul>
+  <li><strong>Schumann resonance:</strong> 7.83 Hz fundamental, measured since 1954 (Schumann & König)</li>
+  <li><strong>SMR:</strong> 12-15 Hz, associated with calm alertness, discovered by Sterman (1960s)</li>
+  <li><strong>"Busy Brain" pattern:</strong> High-beta (22-28 Hz) with suppressed SMR, identified by Thompson & Thompson (2006)</li>
+  <li><strong>ACC involvement in narcissism:</strong> Multiple fMRI and EEG studies (Leota 2024, Nenadić 2021, Fan 2011)</li>
+  <li><strong>Narcissism-beta relationship:</strong> Altered beta coherence in ACC and dmPFC in narcissistic traits</li>
+</ul>
+
+<h3>8.2 Novel Synthesis</h3>
+
+<p>This theory provides:</p>
+<ol>
+  <li><strong>Geometric explanation</strong> for the specific frequency relationships (why ~26 Hz, not some other value)</li>
+  <li><strong>Mechanistic model</strong> linking blocked aperture to frequency doubling</li>
+  <li><strong>Integration</strong> of neurofeedback findings with personality pathology research</li>
+  <li><strong>Testable predictions</strong> distinguishing this model from alternatives</li>
+</ol>
+
+<h3>8.3 Case Observation</h3>
+
+<div class="empirical-note">
+  <strong>Initial observation (circa 2005):</strong> EEG measurement at Cz showing high ~26 Hz amplitude with SMR at approximately half that value (~13 Hz) in an individual later understood through the framework as exhibiting blocked-aperture pathology. The 2:1 ratio was present from first measurement.
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="symbol">⊙</div>
+  <p>Schumann-Circumpunct Resonance Theory v1.0</p>
+  <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+    Part of the Circumpunct Framework<br>
+    Ashman Roonz & Claude · February 2026
+  </p>
+</footer>
+
+</body>
+</html>
