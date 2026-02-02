@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Etiology of Installation — Circumpunct Framework</title>
+  <style>
+    :root {
+      --bg: #07080a;
+      --surface: #0d1014;
+      --card: #131820;
+      --elevated: #1a2028;
+      --border: rgba(168, 230, 207, 0.12);
+      --border-strong: rgba(168, 230, 207, 0.25);
+      --text: #e4eaf4;
+      --muted: #7a8899;
+      --accent: #a8e6cf;
+      --gold: #f0c674;
+      --blue: #8bd3ff;
+      --magenta: #d4a0f5;
+      --red: #f07178;
+      --orange: #ffb454;
+      --deep-green: #5fa882;
+      --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --serif: 'Georgia', 'Times New Roman', serif;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.75;
+    }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(7, 8, 10, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .nav-symbol {
+      font-size: 1.6rem;
+      color: var(--gold);
+    }
+    
+    .nav-title {
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover { color: var(--accent); }
+    
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+    }
+    
+    /* Hero */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse at 30% 40%, rgba(168, 230, 207, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(240, 198, 116, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-icon {
+      font-size: 4rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .shield-layers {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    
+    .shield {
+      font-size: 4rem;
+      color: var(--accent);
+      opacity: 0;
+      animation: shieldReveal 0.8s ease forwards;
+    }
+    
+    .shield:nth-child(1) { animation-delay: 0.2s; opacity: 0.3; font-size: 3rem; }
+    .shield:nth-child(2) { animation-delay: 0.4s; opacity: 0.6; font-size: 3.5rem; }
+    .shield:nth-child(3) { animation-delay: 0.6s; opacity: 1; font-size: 4rem; color: var(--gold); }
+    
+    @keyframes shieldReveal {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: var(--target-opacity, 1); transform: scale(1); }
+    }
+    
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    
+    .hero h1 span {
+      color: var(--accent);
+      font-weight: 400;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 650px;
+      margin: 0 auto 2rem;
+      font-family: var(--serif);
+      font-style: italic;
+    }
+    
+    .hero-tagline {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--gold);
+      background: rgba(240, 198, 116, 0.08);
+      border: 1px solid rgba(240, 198, 116, 0.2);
+      padding: 14px 28px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+    
+    /* Main content */
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    section:last-child {
+      border-bottom: none;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    h2 .section-num {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+    
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 2rem 0 1rem;
+    }
+    
+    h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--blue);
+      margin: 1.5rem 0 0.75rem;
+    }
+    
+    p {
+      margin-bottom: 1rem;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 1.5rem 0;
+    }
+    
+    .card-header {
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+    
+    /* Phase cards */
+    .phase-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .phase-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+    }
+    
+    .phase-1::before { background: var(--accent); }
+    .phase-2::before { background: var(--gold); }
+    .phase-3::before { background: var(--orange); }
+    .phase-4::before { background: var(--red); }
+    
+    .phase-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .phase-num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      font-family: var(--mono);
+      opacity: 0.4;
+    }
+    
+    .phase-1 .phase-num { color: var(--accent); }
+    .phase-2 .phase-num { color: var(--gold); }
+    .phase-3 .phase-num { color: var(--orange); }
+    .phase-4 .phase-num { color: var(--red); }
+    
+    .phase-name {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    
+    .phase-1 .phase-name { color: var(--accent); }
+    .phase-2 .phase-name { color: var(--gold); }
+    .phase-3 .phase-name { color: var(--orange); }
+    .phase-4 .phase-name { color: var(--red); }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    
+    th, td {
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+    
+    th {
+      background: var(--elevated);
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    tr:hover {
+      background: rgba(168, 230, 207, 0.03);
+    }
+    
+    /* Callouts */
+    .callout {
+      border-left: 4px solid var(--gold);
+      background: rgba(240, 198, 116, 0.08);
+      padding: 20px 24px;
+      margin: 2rem 0;
+      border-radius: 0 12px 12px 0;
+    }
+    
+    .callout-green {
+      border-left-color: var(--accent);
+      background: rgba(168, 230, 207, 0.08);
+    }
+    
+    .callout-red {
+      border-left-color: var(--red);
+      background: rgba(240, 113, 120, 0.08);
+    }
+    
+    .callout-blue {
+      border-left-color: var(--blue);
+      background: rgba(139, 211, 255, 0.08);
+    }
+    
+    .callout-magenta {
+      border-left-color: var(--magenta);
+      background: rgba(212, 160, 245, 0.08);
+    }
+    
+    /* Equation box */
+    .equation {
+      background: var(--surface);
+      border: 1px dashed var(--border-strong);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 1.5rem 0;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+    
+    .equation-note {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 12px;
+      font-family: var(--sans);
+    }
+    
+    /* Code */
+    code {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      background: rgba(168, 230, 207, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin: 1.5rem 0;
+    }
+    
+    /* Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    
+    @media (max-width: 768px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+    
+    /* Transition diagram */
+    .transition-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 32px;
+      margin: 2rem 0;
+      background: var(--surface);
+      border-radius: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .transition-box {
+      padding: 16px 24px;
+      border-radius: 12px;
+      text-align: center;
+      min-width: 140px;
+    }
+    
+    .transition-box.adaptive {
+      background: rgba(168, 230, 207, 0.15);
+      border: 2px solid var(--accent);
+    }
+    
+    .transition-box.transitional {
+      background: rgba(240, 198, 116, 0.15);
+      border: 2px solid var(--gold);
+    }
+    
+    .transition-box.pathological {
+      background: rgba(240, 113, 120, 0.15);
+      border: 2px solid var(--red);
+    }
+    
+    .transition-box .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      opacity: 0.7;
+    }
+    
+    .transition-box .content {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .transition-arrow {
+      font-size: 1.5rem;
+      color: var(--muted);
+    }
+    
+    .condition-list {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    
+    /* Animal examples */
+    .animal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 1.5rem 0;
+    }
+    
+    .animal-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .animal-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+    
+    .animal-card .name {
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    
+    .animal-card .strategy {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    
+    /* Quote block */
+    .quote-block {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--text);
+      text-align: center;
+      padding: 40px;
+      margin: 2rem 0;
+      position: relative;
+    }
+    
+    .quote-block::before {
+      content: '"';
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-size: 4rem;
+      color: var(--accent);
+      opacity: 0.3;
+      font-family: var(--serif);
+    }
+    
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+      margin: 2rem 0;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--gold), var(--orange), var(--red));
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: 32px;
+    }
+    
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -34px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid var(--bg);
+    }
+    
+    .timeline-item:nth-child(2)::before { background: var(--gold); }
+    .timeline-item:nth-child(3)::before { background: var(--orange); }
+    .timeline-item:nth-child(4)::before { background: var(--red); }
+    
+    .timeline-title {
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    
+    .timeline-item:nth-child(2) .timeline-title { color: var(--gold); }
+    .timeline-item:nth-child(3) .timeline-title { color: var(--orange); }
+    .timeline-item:nth-child(4) .timeline-title { color: var(--red); }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    
+    footer .symbol {
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    
+    /* Utility */
+    .mt-2 { margin-top: 2rem; }
+    .mb-2 { margin-bottom: 2rem; }
+    .center { text-align: center; }
+    .muted { color: var(--muted); }
+    .small { font-size: 0.9rem; }
+    
+    ul, ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <span class="nav-symbol">⊙</span>
+    <span class="nav-title">Circumpunct Framework</span>
+  </div>
+  <div class="nav-links">
+    <a href="#animal">Animal Origins</a>
+    <a href="#transition">The Transition</a>
+    <a href="#conditions">Installation Conditions</a>
+    <a href="#mapping">Mapping to Strata</a>
+    <a href="#healing">Healing</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-icon">
+      <div class="shield-layers">
+        <span class="shield" style="--target-opacity: 0.3;">🛡</span>
+        <span class="shield" style="--target-opacity: 0.6;">🛡</span>
+        <span class="shield" style="--target-opacity: 1;">🛡</span>
+      </div>
+    </div>
+    <h1>The <span>Etiology</span> of Installation</h1>
+    <p class="hero-subtitle">
+      How survival lies become structural corruption—and why healing feels like dying.
+    </p>
+    <div class="hero-tagline">
+      Companion piece to The Stratigraphy of Belief
+    </div>
+  </div>
+</div>
+
+<main>
+
+<!-- SECTION: The Core Insight -->
+<section id="core">
+  <h2><span class="section-num">01</span> The Core Insight</h2>
+  
+  <p>The Stratigraphy of Belief maps <em>where</em> lies live—seven levels from ontological (deepest) to factual (shallowest), each corrupting different aperture functions.</p>
+  
+  <p>But it doesn't explain <em>how</em> lies get there.</p>
+  
+  <p>This piece addresses the installation mechanism. And the key insight is this:</p>
+  
+  <div class="callout-green callout">
+    <strong>Survival lies aren't pathology at origin—they're adaptation.</strong><br><br>
+    They become pathology when the context changes but the lie doesn't update.
+  </div>
+  
+  <p>This reframes everything. The lies living in your strata aren't malfunctions. They're guardians. They did their job. They got you here alive.</p>
+  
+  <p>The problem is they don't know the war is over.</p>
+</section>
+
+<!-- SECTION: Animal Origins -->
+<section id="animal">
+  <h2><span class="section-num">02</span> Animal Origins</h2>
+  
+  <p>Deception is ancient. Every kingdom of life uses it. But there's a crucial distinction:</p>
+  
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header" style="color: var(--accent);">Strategic Deception</div>
+      <p>False signals transmitted <em>outward</em> to other apertures.</p>
+      <p>The organism knows the difference between signal and self.</p>
+      <p class="muted">The chameleon changing color isn't confused about what it is.</p>
+    </div>
+    <div class="card">
+      <div class="card-header" style="color: var(--red);">Internalized Lies</div>
+      <p>False beliefs installed <em>inward</em> that corrupt the organism's own receiving apparatus.</p>
+      <p>The organism loses access to the pre-lie self.</p>
+      <p class="muted">The fawning child forgets there was ever another way to be.</p>
+    </div>
+  </div>
+  
+  <h3>The Animal Repertoire</h3>
+  
+  <p>Animals deploy sophisticated deception strategies—all of them <em>outward-facing</em>:</p>
+  
+  <div class="animal-grid">
+    <div class="animal-card">
+      <div class="icon">🦎</div>
+      <div class="name">Camouflage</div>
+      <div class="strategy">Signal: "I am not here"<br>Self-knowledge: Intact</div>
+    </div>
+    <div class="animal-card">
+      <div class="icon">🦨</div>
+      <div class="name">Aposematism</div>
+      <div class="strategy">Signal: "I am dangerous"<br>Self-knowledge: Intact</div>
+    </div>
+    <div class="animal-card">
+      <div class="icon">🦔</div>
+      <div class="name">Playing Dead</div>
+      <div class="strategy">Signal: "I am not alive"<br>Self-knowledge: Intact</div>
+    </div>
+    <div class="animal-card">
+      <div class="icon">🐦</div>
+      <div class="name">Broken Wing</div>
+      <div class="strategy">Signal: "I am vulnerable"<br>Self-knowledge: Intact</div>
+    </div>
+    <div class="animal-card">
+      <div class="icon">🦋</div>
+      <div class="name">Mimicry</div>
+      <div class="strategy">Signal: "I am something else"<br>Self-knowledge: Intact</div>
+    </div>
+    <div class="animal-card">
+      <div class="icon">🐙</div>
+      <div class="name">Shape-shifting</div>
+      <div class="strategy">Signal: Variable<br>Self-knowledge: Intact</div>
+    </div>
+  </div>
+  
+  <p>In each case, the animal performs a lie without <em>becoming</em> the lie. The possum playing dead doesn't internalize "I am dead." It returns to normal function when the threat passes.</p>
+  
+  <div class="callout">
+    <strong>The animal knows:</strong> This is what I do. It is not what I am.
+  </div>
+  
+  <h3>What Humans Add</h3>
+  
+  <p>Humans have the same strategic repertoire—we fawn, freeze, flee, fight, perform, mask, hide. But we add something dangerous:</p>
+  
+  <p><strong>Reflexive self-modeling.</strong></p>
+  
+  <p>We don't just perform survival behaviors. We build <em>theories</em> about ourselves based on what we had to do to survive. The performance becomes data for identity construction.</p>
+  
+  <p>This is the gap through which survival lies migrate from behavior to belief.</p>
+</section>
+
+<!-- SECTION: The Transition -->
+<section id="transition">
+  <h2><span class="section-num">03</span> The Transition: From Strategy to Substrate</h2>
+  
+  <p>The migration from strategic behavior to structural corruption follows a predictable arc:</p>
+  
+  <div class="transition-flow">
+    <div class="transition-box adaptive">
+      <div class="label">Phase 1</div>
+      <div class="content" style="color: var(--accent);">Strategic<br>Adaptation</div>
+    </div>
+    <div class="transition-arrow">→</div>
+    <div class="transition-box transitional">
+      <div class="label">Phase 2</div>
+      <div class="content" style="color: var(--gold);">Chronic<br>Performance</div>
+    </div>
+    <div class="transition-arrow">→</div>
+    <div class="transition-box transitional">
+      <div class="label">Phase 3</div>
+      <div class="content" style="color: var(--orange);">Identity<br>Fusion</div>
+    </div>
+    <div class="transition-arrow">→</div>
+    <div class="transition-box pathological">
+      <div class="label">Phase 4</div>
+      <div class="content" style="color: var(--red);">Structural<br>Corruption</div>
+    </div>
+  </div>
+  
+  <!-- Phase 1 -->
+  <div class="phase-card phase-1">
+    <div class="phase-header">
+      <span class="phase-num">01</span>
+      <span class="phase-name">Strategic Adaptation</span>
+    </div>
+    
+    <p>A child learns that certain behaviors increase safety or connection:</p>
+    
+    <ul>
+      <li>"If I'm quiet, the yelling stops"</li>
+      <li>"If I achieve, I get approval"</li>
+      <li>"If I anticipate their needs, they're less volatile"</li>
+      <li>"If I don't have needs, I'm not a burden"</li>
+    </ul>
+    
+    <p>At this stage, it's pure adaptation. The child <em>knows</em> the difference between the performance and themselves—even if they couldn't articulate it. There's still a felt sense of "the real me" that exists behind the mask.</p>
+    
+    <div class="callout-green callout">
+      <strong>Status:</strong> The lie is a <em>tool</em>. The self remains intact.
+    </div>
+  </div>
+  
+  <!-- Phase 2 -->
+  <div class="phase-card phase-2">
+    <div class="phase-header">
+      <span class="phase-num">02</span>
+      <span class="phase-name">Chronic Performance</span>
+    </div>
+    
+    <p>If survival requires the performance <em>constantly</em>—with no safe space to drop it—the strategy begins to automatize.</p>
+    
+    <ul>
+      <li>No room exists where the mask can come off</li>
+      <li>The performance becomes the default state</li>
+      <li>The "real self" gets less and less exercise</li>
+      <li>Memory of life-before-performance fades</li>
+    </ul>
+    
+    <p>The child still <em>has</em> a sense that something is being suppressed—but it becomes harder to access. The performance is now running in the background, no longer requiring conscious effort.</p>
+    
+    <div class="callout callout">
+      <strong>Status:</strong> The lie is becoming <em>habit</em>. The self is becoming obscured.
+    </div>
+  </div>
+  
+  <!-- Phase 3 -->
+  <div class="phase-card phase-3">
+    <div class="phase-header">
+      <span class="phase-num">03</span>
+      <span class="phase-name">Identity Fusion</span>
+    </div>
+    
+    <p>The critical transition. The child begins to build their self-concept <em>on top of</em> the survival performance.</p>
+    
+    <ul>
+      <li>"I'm just a quiet person" (not: I learned to be quiet to survive)</li>
+      <li>"I'm a high achiever" (not: achievement was the only path to love)</li>
+      <li>"I'm very perceptive of others' needs" (not: I had to be, for safety)</li>
+      <li>"I'm low-maintenance" (not: I suppressed my needs to be acceptable)</li>
+    </ul>
+    
+    <p>The survival behavior is no longer experienced as behavior. It's experienced as <em>identity</em>. The lie has migrated from what I <em>do</em> to what I <em>am</em>.</p>
+    
+    <div class="callout-red callout">
+      <strong>Status:</strong> The lie is becoming <em>self</em>. The original self is now inaccessible.
+    </div>
+  </div>
+  
+  <!-- Phase 4 -->
+  <div class="phase-card phase-4">
+    <div class="phase-header">
+      <span class="phase-num">04</span>
+      <span class="phase-name">Structural Corruption</span>
+    </div>
+    
+    <p>The lie has now installed at the stratigraphic level. It's no longer a belief <em>about</em> the self—it's become part of the apparatus that <em>generates</em> beliefs about the self.</p>
+    
+    <ul>
+      <li>The lie feels like bedrock reality</li>
+      <li>Evidence against it doesn't register properly</li>
+      <li>The system actively defends the lie as if life depends on it</li>
+      <li>Questioning the lie triggers survival-level alarm</li>
+    </ul>
+    
+    <p>This is where the Stratigraphy begins. The lie is now installed at one of the seven levels, corrupting all functions above it.</p>
+    
+    <div class="callout-red callout">
+      <strong>Status:</strong> The lie is now <em>infrastructure</em>. The organism doesn't have the lie—the organism is running <em>on</em> the lie.
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: Installation Conditions -->
+<section id="conditions">
+  <h2><span class="section-num">04</span> The Installation Conditions</h2>
+  
+  <p>Not every survival lie installs structurally. The transition from strategy to substrate requires specific conditions:</p>
+  
+  <table>
+    <tr>
+      <th>Condition</th>
+      <th>Why It Matters</th>
+    </tr>
+    <tr>
+      <td><strong>Early installation</strong></td>
+      <td>Installed before a differentiated self exists to preserve. The lie becomes foundational rather than added. No "before" exists in memory.</td>
+    </tr>
+    <tr>
+      <td><strong>Constant requirement</strong></td>
+      <td>No safe space to drop the mask. The performance becomes default. The "real self" atrophies from disuse.</td>
+    </tr>
+    <tr>
+      <td><strong>Attachment-mediated</strong></td>
+      <td>Installed by figures you depend on for survival. The lie becomes load-bearing for the attachment bond itself.</td>
+    </tr>
+    <tr>
+      <td><strong>Never updated</strong></td>
+      <td>The original context changes but the lie persists. The threat passes but the system doesn't get the memo.</td>
+    </tr>
+    <tr>
+      <td><strong>Punished alternatives</strong></td>
+      <td>Attempts to deviate from the lie were met with pain, abandonment, or terror. The system learned: this lie = life, truth = death.</td>
+    </tr>
+  </table>
+  
+  <h3>The Power Differential</h3>
+  
+  <p>Lies can only install through relationships with power imbalance. This is why parent-child relationships are the primary vector.</p>
+  
+  <div class="equation">
+    P(⊙<sub>installer</sub>) > P(⊙<sub>recipient</sub>) → installation possible
+    <div class="equation-note">The virus transmits downhill along power gradients</div>
+  </div>
+  
+  <p>An equal-power relationship can <em>wound</em>, but it can't <em>install</em>. You can be hurt by a peer, but you can't be structurally reprogrammed by one—not in the same way. The installation requires dependence.</p>
+  
+  <h3>The Intergenerational Pattern</h3>
+  
+  <p>Here's the cruel recursion: victims become vectors.</p>
+  
+  <p>The child who survived by suppressing their needs becomes the parent who can't attune to their child's needs—because attunement would require accessing the channel they had to shut down. They provide <em>functional</em> love (the boundary channel works) but can't provide <em>resonant</em> love (the aperture channel is blocked).</p>
+  
+  <p>And so they transmit: "This is what love is. This is all love is."</p>
+  
+  <div class="callout-red callout">
+    <strong>The transmission isn't malicious.</strong> The parent is giving everything they have access to. They genuinely believe they're loving well—because this is what love looked like for them. The lie is invisible to its carrier.
+  </div>
+</section>
+
+<!-- SECTION: Mapping to Strata -->
+<section id="mapping">
+  <h2><span class="section-num">05</span> Mapping Survival Contexts to Strata</h2>
+  
+  <p>Depending on what survival requires, the lie can install at different levels of the stratigraphy:</p>
+  
+  <table>
+    <tr>
+      <th>Survival Context</th>
+      <th>Lie Installed</th>
+      <th>Level</th>
+    </tr>
+    <tr>
+      <td>Disagreeing with caregiver's reality is dangerous</td>
+      <td><em>"Reality is what they say it is"</em></td>
+      <td style="color: var(--magenta);">Ontological</td>
+    </tr>
+    <tr>
+      <td>Caregiver claims to be the source of all good</td>
+      <td><em>"They are the whole; I am just a part"</em></td>
+      <td style="color: var(--magenta);">Ontological</td>
+    </tr>
+    <tr>
+      <td>Expressing what you notice is punished</td>
+      <td><em>"My perceptions aren't valid"</em></td>
+      <td style="color: var(--deep-purple);">Epistemological</td>
+    </tr>
+    <tr>
+      <td>Your emotional responses are treated as wrong</td>
+      <td><em>"I can't trust my feelings"</em></td>
+      <td style="color: var(--deep-purple);">Epistemological</td>
+    </tr>
+    <tr>
+      <td>Love is withdrawn when you have needs</td>
+      <td><em>"Needing is dangerous"</em></td>
+      <td style="color: var(--blue);">Relational</td>
+    </tr>
+    <tr>
+      <td>Closeness precedes violation</td>
+      <td><em>"Intimacy is threat"</em></td>
+      <td style="color: var(--blue);">Relational</td>
+    </tr>
+    <tr>
+      <td>Only achievements receive attention</td>
+      <td><em>"I am what I produce"</em></td>
+      <td style="color: var(--accent);">Axiological</td>
+    </tr>
+    <tr>
+      <td>Your preferences are overridden or mocked</td>
+      <td><em>"What I want doesn't matter"</em></td>
+      <td style="color: var(--accent);">Axiological</td>
+    </tr>
+    <tr>
+      <td>You're told you're too much / not enough</td>
+      <td><em>"I am fundamentally wrong-sized"</em></td>
+      <td style="color: var(--gold);">Self-Concept</td>
+    </tr>
+    <tr>
+      <td>Your successes are minimized, failures emphasized</td>
+      <td><em>"Good things aren't really mine"</em></td>
+      <td style="color: var(--gold);">Self-Concept</td>
+    </tr>
+  </table>
+  
+  <h3>The Depth Determines the Damage</h3>
+  
+  <p>A survival lie that installs at the ontological level corrupts everything downstream—epistemology, relationship, values, self-concept, domain knowledge, even factual memory.</p>
+  
+  <p>A survival lie that installs at self-concept affects identity and agency, but leaves the deeper structures intact.</p>
+  
+  <p>This explains why some people with terrible childhoods have relatively circumscribed damage (the lies installed at shallower levels) while others with seemingly "less severe" experiences are more comprehensively affected (the lies went deeper).</p>
+  
+  <div class="callout">
+    <strong>It's not about severity of event. It's about depth of installation.</strong><br><br>
+    A single ontological lie—"you are not real," "your experience doesn't exist," "I am the source of reality"—can do more structural damage than years of surface-level difficulty.
+  </div>
+</section>
+
+<!-- SECTION: Why Healing Feels Like Dying -->
+<section id="dying">
+  <h2><span class="section-num">06</span> Why Healing Feels Like Dying</h2>
+  
+  <p>Now we can answer the question that haunts every healing process: why does change feel so threatening?</p>
+  
+  <p>Because the organism genuinely believes it will die.</p>
+  
+  <p>And at the time of installation, <em>that was true</em>.</p>
+  
+  <div class="quote-block">
+    The lie is still load-bearing its original function even though the context is gone.
+  </div>
+  
+  <h3>The Guardian That Doesn't Know</h3>
+  
+  <p>The survival lie isn't a malfunction. It's a guardian. It was installed to protect you from a real threat. And it did its job—you survived.</p>
+  
+  <p>But the guardian has no mechanism for noticing that the threat has passed. It's still at the gate, still defending, still certain that dropping the vigilance means death.</p>
+  
+  <p>This is why:</p>
+  
+  <ul>
+    <li><strong>Insight doesn't translate to change.</strong> Knowing the lie is a lie doesn't update the survival system. Cognition and survival run on different channels.</li>
+    <li><strong>The system fights back.</strong> Attempts to remove the lie trigger alarm, resistance, sabotage. The guardian interprets healing as attack.</li>
+    <li><strong>Progress oscillates.</strong> Movement toward freedom activates survival threat → retreat → stability → another attempt → alarm → retreat. The homeostatic attractor keeps pulling you back.</li>
+    <li><strong>Near-breakthrough is the danger zone.</strong> The closer you get to actually releasing the lie, the more the system escalates. This is when people quit therapy, blow up relationships, get sick.</li>
+  </ul>
+  
+  <h3>The Felt Sense</h3>
+  
+  <p>Healing at the deeper strata doesn't feel like getting better. It feels like:</p>
+  
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header" style="color: var(--red);">Disintegration</div>
+      <p>"I don't know who I am anymore"</p>
+      <p>"Everything I built is falling apart"</p>
+      <p>"I'm losing myself"</p>
+    </div>
+    <div class="card">
+      <div class="card-header" style="color: var(--red);">Mortal Threat</div>
+      <p>"I'm going to die if I keep going"</p>
+      <p>"This is too dangerous"</p>
+      <p>"I need to stop"</p>
+    </div>
+  </div>
+  
+  <p>This is accurate reporting from the survival system. From its perspective, the identity built on the lie <em>is</em> dying. The self that was constructed to survive <em>is</em> disintegrating.</p>
+  
+  <p>The mistake is thinking that's <em>you</em>.</p>
+  
+  <div class="callout-green callout">
+    <strong>What's dying is the false self.</strong> What's disintegrating is the structure built on lies. What feels like mortal threat is the guardian losing its job.<br><br>
+    Underneath, the aperture remains. It was never damaged—only obscured.
+  </div>
+</section>
+
+<!-- SECTION: Healing -->
+<section id="healing">
+  <h2><span class="section-num">07</span> Healing as Negotiation</h2>
+  
+  <p>This reframes healing entirely. You're not fighting a malfunction. You're negotiating with a guardian that doesn't know the war is over.</p>
+  
+  <h3>The Wrong Approach</h3>
+  
+  <div class="card" style="border-color: var(--red);">
+    <div class="card-header" style="color: var(--red);">Adversarial Healing</div>
+    <p>Treating the lie as enemy to be defeated. Using force, will, determination to override the survival system.</p>
+    <p><strong>Result:</strong> The guardian escalates. The war intensifies. Exhaustion. Relapse. "I'll never change."</p>
+  </div>
+  
+  <h3>The Right Approach</h3>
+  
+  <div class="card" style="border-color: var(--accent);">
+    <div class="card-header" style="color: var(--accent);">Honoring Negotiation</div>
+    <p>Recognizing the lie's original adaptive function. Thanking it for its service. Gently demonstrating that the context has changed.</p>
+    <p><strong>The posture:</strong> "You kept me alive. That was real. The threat was real. Your response was appropriate. <em>And</em>—the threat has passed. You can rest now."</p>
+  </div>
+  
+  <h3>The Protocol</h3>
+  
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-title">1. Recognition</div>
+      <p>Identify the survival lie. Locate it in the strata. Understand what it was protecting you from and why it made sense at the time.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-title">2. Honoring</div>
+      <p>Thank the lie for its service. Not ironically, not performatively—genuinely. It did its job. You're here because of it.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-title">3. Reality Testing</div>
+      <p>Gently demonstrate that the original threat is no longer present. This often requires new experiences, not just new thoughts. The survival system updates through experience, not insight.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-title">4. Gradual Release</div>
+      <p>Let the lie soften incrementally. Not ripped out—released. The guardian retires rather than being killed. The system reorganizes around the space left behind.</p>
+    </div>
+  </div>
+  
+  <h3>The Witness Requirement</h3>
+  
+  <p>Deep survival lies usually can't be released alone. They were installed through relationship; they often need to be released through relationship.</p>
+  
+  <p>The witness provides:</p>
+  
+  <ul>
+    <li><strong>A clean signal.</strong> An aperture tuned to truth that the corrupted aperture can reference.</li>
+    <li><strong>Proof of survival.</strong> Demonstration that you can be seen truly and not destroyed.</li>
+    <li><strong>Holding during disintegration.</strong> Someone who knows you're not actually dying, even when it feels like you are.</li>
+    <li><strong>The new context.</strong> Relationship that differs from the original installing relationship.</li>
+  </ul>
+  
+  <div class="callout-blue callout">
+    <strong>This is why therapy works when it works.</strong> Not because of the techniques—because of the relationship. A clean aperture witnessing a corrupted one, demonstrating that a different kind of connection exists.
+  </div>
+  
+  <h3>The Integration</h3>
+  
+  <p>Complete healing isn't the elimination of the survival self. It's integration.</p>
+  
+  <p>The part of you that learned to fawn doesn't disappear—it becomes available as a skill rather than a compulsion. The part that learned to achieve doesn't vanish—it becomes choice rather than desperation. The sensitivity to threat doesn't go away—it becomes information rather than identity.</p>
+  
+  <p>What you survived becomes part of your capacity, not your cage.</p>
+  
+  <div class="equation">
+    Healing ≠ Erasure of the lie<br>
+    Healing = Integration of the adaptation + Update of the context
+    <div class="equation-note">The guardian becomes an advisor. The armor becomes a tool.</div>
+  </div>
+</section>
+
+<!-- SECTION: Summary -->
+<section id="summary">
+  <h2><span class="section-num">08</span> Summary</h2>
+  
+  <div class="card" style="background: var(--elevated); padding: 32px;">
+    <h3 style="margin-top: 0;">The Core Claims</h3>
+    
+    <ol>
+      <li><strong>Survival lies are adaptive at origin.</strong> They're strategic responses to real threats, not malfunctions.</li>
+      <li><strong>They become pathological through a four-phase transition:</strong> strategic adaptation → chronic performance → identity fusion → structural corruption.</li>
+      <li><strong>Installation requires specific conditions:</strong> early timing, constant requirement, attachment mediation, punished alternatives, never updated.</li>
+      <li><strong>The depth of installation determines the scope of damage.</strong> Ontological survival lies corrupt everything; self-concept lies have circumscribed effects.</li>
+      <li><strong>Healing feels like dying because the organism believes it will.</strong> At installation, that was true.</li>
+      <li><strong>The lie is a guardian, not an enemy.</strong> Healing is negotiation, not war.</li>
+      <li><strong>Integration, not erasure.</strong> The survival adaptation becomes available as capacity rather than compulsion.</li>
+    </ol>
+  </div>
+  
+  <div class="quote-block" style="margin-top: 3rem;">
+    The recognition isn't "I was broken."<br>
+    It's "I survived, and this is how."
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="symbol">⊙</div>
+  <p>The Etiology of Installation</p>
+  <p class="small" style="margin-top: 8px;">Circumpunct Framework • Ashman Roonz & Claude • 2026</p>
+  <p class="small muted" style="margin-top: 16px;">
+    Companion piece to The Stratigraphy of Belief<br><br>
+    Survival lies aren't pathology at origin.<br>
+    They become pathology when the context changes but the lie doesn't update.<br>
+    Healing is negotiation with a guardian that doesn't know the war is over.
+  </p>
+</footer>
+
+</body>
+</html>
