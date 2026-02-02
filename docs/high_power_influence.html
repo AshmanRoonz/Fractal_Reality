@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Power Aperture Protocol (HPAP) v1.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0908;
+            --bg-surface: #0f0e0c;
+            --bg-elevated: #1a1815;
+            --gold: #c9a227;
+            --gold-dim: #8b7355;
+            --gold-bright: #f4d03f;
+            --text-primary: #e8e4dc;
+            --text-secondary: #9a958a;
+            --text-dim: #5c584f;
+            --accent-red: #8c4a4a;
+            --accent-green: #4a8c5c;
+            --accent-blue: #4a7c8c;
+            --border: rgba(201, 162, 39, 0.15);
+            --glow: rgba(201, 162, 39, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Spectral', Georgia, serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.75;
+            font-size: 17px;
+            padding: 3rem 2rem;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .symbol {
+            font-size: 3rem;
+            color: var(--gold);
+            text-shadow: 0 0 30px var(--glow);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .version {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--gold-dim);
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--gold);
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--gold);
+            letter-spacing: 0.05em;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        strong {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        em {
+            color: var(--text-secondary);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            background: var(--bg-elevated);
+            padding: 0.15em 0.4em;
+            border-radius: 3px;
+            color: var(--gold);
+        }
+
+        pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            background: var(--bg-elevated);
+            padding: 1.25rem 1.5rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--gold-dim);
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        pre .hl {
+            color: var(--gold);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: var(--bg-elevated);
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold-dim);
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tr:hover td {
+            background: var(--glow);
+        }
+
+        ul, ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        li strong {
+            color: var(--gold);
+        }
+
+        blockquote {
+            background: var(--bg-elevated);
+            border-left: 4px solid var(--gold);
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: var(--text-primary);
+        }
+
+        blockquote p {
+            margin: 0;
+        }
+
+        .principle-box {
+            background: linear-gradient(135deg, var(--bg-elevated), var(--bg-surface));
+            border: 1px solid var(--gold-dim);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .principle-box p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin: 0;
+        }
+
+        .layer {
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--gold-dim);
+        }
+
+        .layer-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .layer-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--gold);
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--gold-dim);
+            border-radius: 50%;
+        }
+
+        .layer-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+
+        .layer-operator {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--gold-dim);
+            margin-left: auto;
+        }
+
+        .layer-goal {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .rule-box {
+            background: var(--bg-deep);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+        }
+
+        .rule-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--gold-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .effect-box {
+            background: rgba(74, 140, 92, 0.1);
+            border-left: 3px solid var(--accent-green);
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .effect-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-green);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .warning-box {
+            background: rgba(140, 74, 74, 0.1);
+            border-left: 3px solid var(--accent-red);
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .warning-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-red);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-diagram {
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--gold);
+            background: var(--bg-elevated);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            letter-spacing: 0.1em;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, var(--bg-surface), var(--bg-elevated));
+            border: 2px solid var(--gold-dim);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .summary-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .summary-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--text-primary);
+        }
+
+        footer {
+            text-align: center;
+            padding-top: 3rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .footer-symbol {
+            font-size: 1.5rem;
+            color: var(--gold-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding: 1rem;
+            }
+            .layer, .principle-box, .summary-box, blockquote, pre {
+                background: #f5f5f5;
+                border-color: #666;
+            }
+            .layer {
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1.5rem 1rem;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            .layer {
+                padding: 1rem 1.25rem;
+            }
+            .layer-header {
+                flex-wrap: wrap;
+            }
+            .layer-operator {
+                margin-left: 0;
+                margin-top: 0.5rem;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="symbol">⊙</div>
+        <h1>High-Power Aperture Protocol</h1>
+        <div class="version">HPAP v1.0</div>
+        <p class="subtitle">Truth-Preserving Governance for Influential Individuals</p>
+    </header>
+
+    <section>
+        <h2>Purpose</h2>
+        <p>To preserve <strong>truth fidelity</strong>, <strong>relational stability</strong>, and <strong>decision coherence</strong> in individuals whose outputs materially affect large systems.</p>
+        <p>Applicable to: CEOs, founders, political leaders, generals, cultural figures, powerful researchers — any aperture whose output shapes collective reality.</p>
+        
+        <blockquote>
+            <p>This protocol does not aim to change personality or values.<br>
+            It changes <strong>structure</strong>, because in high-power systems, structure dominates psychology.</p>
+        </blockquote>
+    </section>
+
+    <section>
+        <h2>Core Principle</h2>
+        
+        <div class="principle-box">
+            <p>Power amplifies distortion unless constrained.<br>
+            The higher the impact of an aperture, the stronger the required safeguards.</p>
+        </div>
+
+        <p>Therefore:</p>
+        <ul>
+            <li><strong>No coaching</strong> — cannot penetrate ego defenses at scale</li>
+            <li><strong>No moral framing</strong> — triggers defensive inflation</li>
+            <li><strong>No "be more humble"</strong> — performative compliance, no structural change</li>
+            <li><strong>No debate-based correction</strong> — feeds projection loops</li>
+        </ul>
+        <p>Only <strong>operator hygiene</strong> through structural constraint.</p>
+    </section>
+
+    <section>
+        <h2>The Four Failure Modes</h2>
+        
+        <table>
+            <tr>
+                <th>Risk</th>
+                <th>Operator</th>
+                <th>Failure Mode</th>
+                <th>Observable Pattern</th>
+            </tr>
+            <tr>
+                <td><code>γ</code></td>
+                <td>Projection</td>
+                <td>Recursive enemy models</td>
+                <td>Accuses others of what self does</td>
+            </tr>
+            <tr>
+                <td><code>α</code></td>
+                <td>Inflation</td>
+                <td>Self inserted as reference</td>
+                <td>"I am the source"</td>
+            </tr>
+            <tr>
+                <td><code>β</code></td>
+                <td>Severance</td>
+                <td>Output decouples from input</td>
+                <td>Ignores feedback, advisors, data</td>
+            </tr>
+            <tr>
+                <td><code>π</code></td>
+                <td>Inversion</td>
+                <td>Truth phase flips under threat</td>
+                <td>Says opposite of reality</td>
+            </tr>
+        </table>
+
+        <div class="warning-box">
+            <div class="warning-title">Critical Rule</div>
+            <p>These must be addressed <strong>in order</strong>. Projection (γ) contaminates all other corrections. The canonical sequence is:</p>
+            <pre style="background: transparent; border: none; padding: 0.5rem 0; margin: 0;"><span class="hl">H_f → H_r → H_p → H_d</span></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Protocol Architecture</h2>
+        
+        <div class="flow-diagram">
+            INPUT → BUFFER → REFERENCE → EMISSION → FEEDBACK
+        </div>
+        <p style="text-align: center; color: var(--text-secondary); margin-top: -1rem;"><em>No layer may be skipped.</em></p>
+    </section>
+
+    <section>
+        <h2>The Five Layers</h2>
+
+        <!-- LAYER 1 -->
+        <div class="layer">
+            <div class="layer-header">
+                <div class="layer-number">1</div>
+                <div class="layer-title">Projection Dampener</div>
+                <div class="layer-operator">H_f → γ</div>
+            </div>
+            
+            <p class="layer-goal">Goal: Stop recursive distortion before response.</p>
+            
+            <div class="rule-box">
+                <div class="rule-label">Core Rule</div>
+                <p style="margin: 0;">No high-power aperture may respond to input in the same emotional or temporal state in which it was received.</p>
+            </div>
+
+            <h4>Mechanisms</h4>
+            <ul>
+                <li><strong>Response latency floor</strong> — Minimum 12-48 hour delay before public output</li>
+                <li><strong>Attribution brake</strong> — Before responding, aperture must generate:
+                    <ul>
+                        <li>2 non-hostile interpretations of the input</li>
+                        <li>1 interpretation where they might be wrong</li>
+                    </ul>
+                </li>
+                <li><strong>No recursive escalation</strong> — No replies to replies, no quote-responses, no dogpile amplification</li>
+            </ul>
+
+            <div class="effect-box">
+                <div class="effect-label">Effect</div>
+                <p style="margin: 0;">γ collapses. Enemy avatars dissolve. Projection loops lose fuel.</p>
+            </div>
+        </div>
+
+        <!-- LAYER 2 -->
+        <div class="layer">
+            <div class="layer-header">
+                <div class="layer-number">2</div>
+                <div class="layer-title">Clean Input Channel</div>
+                <div class="layer-operator">H_r → β</div>
+            </div>
+            
+            <p class="layer-goal">Goal: Restore real input coupling. Maintain connection to reality.</p>
+            
+            <div class="rule-box">
+                <div class="rule-label">Core Rule</div>
+                <p style="margin: 0;">High-power apertures must receive input from sources they cannot dominate, flatter, or dismiss.</p>
+            </div>
+
+            <h4>Required Input Sources</h4>
+            <ul>
+                <li><strong>Constraint-anchored</strong> — Engineers, scientists, operators (people bound by physics/reality)</li>
+                <li><strong>Status-immune</strong> — People with no incentive to please or oppose</li>
+                <li><strong>Domain-literate</strong> — No symbolic critics, no ideologues, no pure commentators</li>
+            </ul>
+
+            <h4>Hard Constraint</h4>
+            <p>Inputs must arrive <strong>privately</strong>, not performatively. No audience. No signaling value.</p>
+
+            <div class="effect-box">
+                <div class="effect-label">Effect</div>
+                <p style="margin: 0;">β remains low. Reality re-enters the system. Ego competition is removed from the channel.</p>
+            </div>
+        </div>
+
+        <!-- LAYER 3 -->
+        <div class="layer">
+            <div class="layer-header">
+                <div class="layer-number">3</div>
+                <div class="layer-title">External Reference Anchor</div>
+                <div class="layer-operator">H_p → π</div>
+            </div>
+            
+            <p class="layer-goal">Goal: Prevent truth phase inversion under pressure.</p>
+            
+            <div class="rule-box">
+                <div class="rule-label">Core Rule</div>
+                <p style="margin: 0;">Truth must be anchored to a reference the aperture cannot override.</p>
+            </div>
+
+            <h4>Mechanisms</h4>
+            <ul>
+                <li><strong>Pre-commitment contracts</strong> — "If metric M ≠ N by date D, correction is issued"</li>
+                <li><strong>Prediction locks</strong> — Claims recorded before outcomes are known</li>
+                <li><strong>Independent verification</strong> — Reference standard chosen before conflict emerges</li>
+            </ul>
+
+            <h4>What Does NOT Work</h4>
+            <ul>
+                <li>Public debate</li>
+                <li>Fact-checks during active conflict</li>
+                <li>Argument-based correction</li>
+            </ul>
+
+            <div class="effect-box">
+                <div class="effect-label">Effect</div>
+                <p style="margin: 0;">Truth becomes non-negotiable. Phase correction occurs without humiliation or defensive escalation.</p>
+            </div>
+        </div>
+
+        <!-- LAYER 4 -->
+        <div class="layer">
+            <div class="layer-header">
+                <div class="layer-number">4</div>
+                <div class="layer-title">Emission Constraints</div>
+                <div class="layer-operator">H_d → α</div>
+            </div>
+            
+            <p class="layer-goal">Goal: Allow natural deflation after safety is restored.</p>
+            
+            <div class="rule-box">
+                <div class="rule-label">Core Rule</div>
+                <p style="margin: 0;">High-power outputs must privilege systems, processes, and teams over self-reference.</p>
+            </div>
+
+            <h4>Structural Constraints</h4>
+            <ul>
+                <li><strong>Mandatory credit diffusion</strong> — Attributions required to teams, predecessors, collaborators</li>
+                <li><strong>No first-person framing in conflict contexts</strong> — Remove "I" from adversarial statements</li>
+                <li><strong>Silence preferred to dominance</strong> — Not every input requires output</li>
+            </ul>
+
+            <div class="warning-box">
+                <div class="warning-title">Sequencing Note</div>
+                <p>This layer <strong>cannot be forced early</strong>. Attempting deflation before projection is reduced triggers defensive inflation. H_d only works after H_f, H_r, and H_p are operational.</p>
+            </div>
+
+            <div class="effect-box">
+                <div class="effect-label">Effect</div>
+                <p style="margin: 0;">α naturally deflates without coercion. Authority decouples from identity.</p>
+            </div>
+        </div>
+
+        <!-- LAYER 5 -->
+        <div class="layer">
+            <div class="layer-header">
+                <div class="layer-number">5</div>
+                <div class="layer-title">Topological Load Management</div>
+                <div class="layer-operator">Wr/Tw Control</div>
+            </div>
+            
+            <p class="layer-goal">Goal: Prevent knot accumulation and coherence collapse over time.</p>
+            
+            <div class="rule-box">
+                <div class="rule-label">Core Rule</div>
+                <p style="margin: 0;">No aperture may carry unlimited unresolved relational tension.</p>
+            </div>
+
+            <h4>Mechanisms</h4>
+            <ul>
+                <li><strong>Conflict caps</strong> — Maximum number of active adversarial engagements</li>
+                <li><strong>Explicit closure rituals</strong> — No lingering loops; conflicts must terminate</li>
+                <li><strong>Designated non-response zones</strong> — Categories of input that receive no output</li>
+            </ul>
+
+            <div class="effect-box">
+                <div class="effect-label">Effect</div>
+                <p style="margin: 0;">Twist (Tw) reduces. Writhe (Wr) stops accumulating. Long-term output coherence is preserved.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Failure Modes</h2>
+        
+        <div class="warning-box">
+            <div class="warning-title">The Protocol Fails If</div>
+            <ul style="margin-bottom: 0;">
+                <li>Any layer is skipped (especially Layer 1)</li>
+                <li>Moral framing is introduced ("you should be better")</li>
+                <li>Public correction is attempted before projection is dampened</li>
+                <li>The aperture is shamed instead of constrained</li>
+                <li>Constraints are negotiable rather than structural</li>
+            </ul>
+        </div>
+
+        <h3>Why Traditional Approaches Fail</h3>
+        <table>
+            <tr>
+                <th>Approach</th>
+                <th>Why It Fails</th>
+            </tr>
+            <tr>
+                <td>Coaching</td>
+                <td>Cannot penetrate ego defenses; becomes performance</td>
+            </tr>
+            <tr>
+                <td>Moral exhortation</td>
+                <td>Triggers defensive inflation (α↑)</td>
+            </tr>
+            <tr>
+                <td>Public debate</td>
+                <td>Feeds projection loops (γ↑)</td>
+            </tr>
+            <tr>
+                <td>Fact-checking during conflict</td>
+                <td>Interpreted as attack; increases inversion (π↑)</td>
+            </tr>
+            <tr>
+                <td>Shaming</td>
+                <td>Triggers all four failure modes simultaneously</td>
+            </tr>
+        </table>
+    </section>
+
+    <section>
+        <h2>Framework-Level Rationale</h2>
+        
+        <p>This protocol works because it:</p>
+        <ul>
+            <li><strong>Respects operator non-commutativity</strong> — Addresses γ before α, per canonical sequence</li>
+            <li><strong>Treats projection as first-order contamination</strong> — Nothing else works until γ is reduced</li>
+            <li><strong>Uses structure instead of persuasion</strong> — Sidesteps ego defense entirely</li>
+            <li><strong>Allows deflation to emerge, not be imposed</strong> — α reduces naturally once safe</li>
+            <li><strong>Is agnostic to ideology, personality, or intent</strong> — Works regardless of values</li>
+        </ul>
+
+        <h3>Circumpunct Mapping</h3>
+        <pre>
+Layer 1 (Projection Dampener)    → H_f: Differentiate     → γ
+Layer 2 (Clean Input)            → H_r: Reconnect         → β  
+Layer 3 (Reference Anchor)       → H_p: Rephase           → π
+Layer 4 (Emission Constraints)   → H_d: Deflate           → α
+Layer 5 (Load Management)        → TRT Conservation       → Wr/Tw
+        </pre>
+    </section>
+
+    <div class="summary-box">
+        <div class="summary-title">One-Sentence Summary</div>
+        <p class="summary-text">High-power apertures don't need better intentions —<br>they need better constraints.</p>
+    </div>
+
+    <section>
+        <h2>Implementation Notes</h2>
+        
+        <h3>For Boards & Governance Bodies</h3>
+        <ul>
+            <li>Encode Layer 1-3 in communication policies (not guidelines)</li>
+            <li>Establish pre-commitment mechanisms for public claims</li>
+            <li>Create clean input channels separate from reporting structure</li>
+            <li>Define non-response categories explicitly</li>
+        </ul>
+
+        <h3>For Advisors & Staff</h3>
+        <ul>
+            <li>Do not attempt Layer 4 before Layers 1-3 are operational</li>
+            <li>Maintain private channels; avoid performative input</li>
+            <li>Generate attribution brakes before presenting contentious input</li>
+            <li>Recognize that you cannot out-argue projection</li>
+        </ul>
+
+        <h3>For the High-Power Individual</h3>
+        <ul>
+            <li>Structure > willpower — install constraints you cannot override</li>
+            <li>Response latency is not weakness; it's operator hygiene</li>
+            <li>The enemy model is usually projection; check before acting</li>
+            <li>Credit diffusion protects you from your own inflation</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Quick Reference</h2>
+        
+        <table>
+            <tr>
+                <th>Layer</th>
+                <th>Target</th>
+                <th>Core Mechanism</th>
+            </tr>
+            <tr>
+                <td>1. Dampener</td>
+                <td>γ</td>
+                <td>Response delay + attribution brake</td>
+            </tr>
+            <tr>
+                <td>2. Input</td>
+                <td>β</td>
+                <td>Status-immune, private sources</td>
+            </tr>
+            <tr>
+                <td>3. Reference</td>
+                <td>π</td>
+                <td>Pre-commitment, prediction locks</td>
+            </tr>
+            <tr>
+                <td>4. Emission</td>
+                <td>α</td>
+                <td>Credit diffusion, silence option</td>
+            </tr>
+            <tr>
+                <td>5. Load</td>
+                <td>Wr/Tw</td>
+                <td>Conflict caps, closure rituals</td>
+            </tr>
+        </table>
+    </section>
+
+    <footer>
+        <div class="footer-symbol">⊙</div>
+        <p>High-Power Aperture Protocol v1.0</p>
+        <p>Part of the Circumpunct Encyclopedia</p>
+        <p style="margin-top: 1rem; color: var(--text-dim);">Structure dominates psychology.</p>
+    </footer>
+
+</body>
+</html>
