@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Isomorphism of the Circumpunct — Formal Axiomatization</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+    :root {
+      --bg: #06060b;
+      --surface: #0d0d15;
+      --surface-raised: #13131f;
+      --border: #1e1e30;
+      --border-light: #2a2a44;
+      --text: #d8d8e8;
+      --text-dim: #7a7a96;
+      --text-faint: #4a4a66;
+      --gold: #d4a843;
+      --gold-bright: #f0c050;
+      --gold-dim: rgba(212, 168, 67, 0.08);
+      --cyan: #3da8c7;
+      --cyan-dim: rgba(61, 168, 199, 0.08);
+      --magenta: #c74a8a;
+      --magenta-dim: rgba(199, 74, 138, 0.08);
+      --aperture: #d45a5a;
+      --field: #7a6ad4;
+      --boundary: #4aab6a;
+      --red: #c74a4a;
+      --red-dim: rgba(199, 74, 74, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.82;
+      font-size: 1.05rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    /* ── TITLE BLOCK ── */
+    .title-block {
+      text-align: center;
+      padding: 4rem 0 3rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .title-symbol {
+      font-size: 4.5rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      opacity: 0.85;
+    }
+
+    h1 {
+      font-family: 'Crimson Pro', serif;
+      font-size: 2.4rem;
+      font-weight: 300;
+      color: var(--text);
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+      margin-bottom: 0.75rem;
+    }
+
+    .title-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .title-meta {
+      font-style: italic;
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      margin-bottom: 3.5rem;
+    }
+
+    h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1.8rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2 .section-num {
+      color: var(--gold);
+      margin-right: 0.5em;
+    }
+
+    h3 {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 2rem 0 1rem;
+    }
+
+    p { margin-bottom: 1.1rem; }
+
+    /* ── FORMAL BOXES ── */
+    .axiom {
+      background: var(--gold-dim);
+      border-left: 3px solid var(--gold);
+      padding: 1.5rem 1.8rem;
+      margin: 1.5rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .axiom .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+
+    .definition {
+      background: var(--cyan-dim);
+      border-left: 3px solid var(--cyan);
+      padding: 1.5rem 1.8rem;
+      margin: 1.5rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .definition .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 0.8rem;
+    }
+
+    .theorem {
+      background: var(--magenta-dim);
+      border-left: 3px solid var(--magenta);
+      padding: 1.5rem 1.8rem;
+      margin: 1.5rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .theorem .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--magenta);
+      margin-bottom: 0.8rem;
+    }
+
+    .proof {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.5rem 1.8rem;
+      margin: 1.5rem 0;
+      border-radius: 6px;
+    }
+
+    .proof .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.8rem;
+    }
+
+    .proof-step {
+      margin: 0.6rem 0;
+      padding-left: 1.2rem;
+    }
+
+    .qed {
+      text-align: right;
+      color: var(--gold);
+      font-size: 1.1rem;
+      margin-top: 0.8rem;
+    }
+
+    .corollary {
+      background: var(--surface-raised);
+      border-left: 3px solid var(--field);
+      padding: 1.5rem 1.8rem;
+      margin: 1.5rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .corollary .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--field);
+      margin-bottom: 0.8rem;
+    }
+
+    .failure {
+      background: var(--red-dim);
+      border-left: 3px solid var(--red);
+      padding: 1.5rem 1.8rem;
+      margin: 1.5rem 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .failure .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── EQUATIONS ── */
+    .eq {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.15rem;
+      text-align: center;
+      padding: 1.2rem;
+      margin: 1.2rem 0;
+      color: var(--gold-bright);
+      background: rgba(0,0,0,0.25);
+      border-radius: 6px;
+    }
+
+    .eq-sm {
+      font-size: 0.95rem;
+      padding: 0.8rem;
+    }
+
+    .eq .sym-dot { color: var(--aperture); }
+    .eq .sym-phi { color: var(--field); }
+    .eq .sym-ring { color: var(--boundary); }
+    .eq .sym-loop { color: var(--magenta); }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-align: left;
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    /* ── NOTE ── */
+    .note {
+      background: var(--surface);
+      padding: 1.2rem 1.5rem;
+      border-radius: 6px;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .note strong { color: var(--text); font-style: normal; }
+
+    /* ── CALLOUT ── */
+    .callout {
+      text-align: center;
+      padding: 2rem;
+      margin: 2rem 0;
+      font-size: 1.15rem;
+      color: var(--gold);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      font-style: italic;
+    }
+
+    /* ── INVARIANT TABLE ── */
+    .inv-table {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .inv-col {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.2rem 1.5rem;
+    }
+
+    .inv-col h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .inv-col ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .inv-col li {
+      padding: 0.3rem 0;
+      font-size: 0.95rem;
+    }
+
+    .inv-col li::before {
+      margin-right: 0.5em;
+    }
+
+    .inv-preserved h4 { color: var(--boundary); }
+    .inv-preserved li::before { content: "■"; color: var(--boundary); }
+
+    .inv-variant h4 { color: var(--text-dim); }
+    .inv-variant li::before { content: "□"; color: var(--text-faint); }
+
+    /* ── SEPARATOR ── */
+    .sep {
+      text-align: center;
+      color: var(--text-faint);
+      margin: 3rem 0;
+      font-size: 1.5rem;
+      letter-spacing: 1em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    footer .f-symbol {
+      font-size: 2.5rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      opacity: 0.7;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .page { padding: 2rem 1.2rem 4rem; }
+      h1 { font-size: 1.8rem; }
+      .eq { font-size: 0.9rem; }
+      .title-symbol { font-size: 3rem; }
+      .inv-table { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- TITLE -->
+<!-- ═══════════════════════════════════════ -->
+<div class="title-block">
+  <div class="title-symbol">⊙</div>
+  <h1>The Isomorphism of the Circumpunct</h1>
+  <div class="title-sub">Formal Axiomatization · Structural Invariance</div>
+  <p class="title-meta">
+    Ashman Roonz — Circumpunct Framework v7.0<br>
+    February 2026 · <a href="https://fractalreality.ca" style="color: var(--gold); text-decoration: none;">fractalreality.ca</a>
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 0. ABSTRACT -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§0</span> Abstract</h2>
+
+  <p>This paper formalizes the central claim of the Circumpunct Framework: that the triadic structure <em>center–field–boundary</em> constitutes a <strong>structural invariance</strong> that recurs across all coherent systems, not by analogy but by geometric necessity.</p>
+
+  <p>We define circumpunct realizations, extract their abstract <strong>skeleton</strong> (the closure loop and its role-operators), construct the <strong>closure loop operator</strong> 𝓛 whose fixed points are coherent states, prove that closure is the conserved quantity across all skeleton isomorphisms, and demonstrate that standing modes arise as a forced consequence of the loop's spectral structure. The skeleton abstraction ensures that the isomorphism claim is precise: we do not claim all realizations are literally identical, but that anything derivable from the shared loop structure holds across domains.</p>
+
+  <p>The Schumann resonance serves as a concrete, measurable instantiation. The framework predicts that all bounded fields with center and reflective boundary must support natural modes whose fundamental frequency is determined by center–boundary traversal. This is not claimed as discovery but as <em>recognition</em>: the formalization of a structural necessity already implicit in cavity physics, wave mechanics, and systems theory.</p>
+
+  <div class="callout">
+    The circumpunct is the minimal isomorphic structure required for coherence across all domains.<br>
+    Scale and medium change the expression, but not the architecture.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 1. PRIMITIVES -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§1</span> Primitives</h2>
+
+  <p>We begin with three undefined terms. Their meaning is fixed entirely by the axioms that constrain them. They are <em>functional roles</em>, not substances. Any system that instantiates all three — regardless of what it is "made of" — is a circumpunct system.</p>
+
+  <div class="definition">
+    <div class="label">Primitive 1 — Center (•)</div>
+    <p style="margin-bottom:0;">A <strong>center</strong> is that which selects, gates, or focuses. It enacts binary distinction: open/closed, yes/no, this/that. It may be a point, a region, a rule, or a functional. Its minimal realization requires an ordered sequence — a line.</p>
+  </div>
+
+  <div class="definition">
+    <div class="label">Primitive 2 — Field (Φ)</div>
+    <p style="margin-bottom:0;">A <strong>field</strong> is that which propagates, mediates, and relates. It is a space of states equipped with a transport law. It carries continuous amplitude and phase. Its minimal realization requires a plane — one degree of freedom for magnitude, one for angle.</p>
+  </div>
+
+  <div class="definition">
+    <div class="label">Primitive 3 — Boundary (○)</div>
+    <p style="margin-bottom:0;">A <strong>boundary</strong> is that which reflects, constrains, and closes. It enacts inside/outside separation around the field and imposes boundary conditions. Its minimal realization requires one dimension beyond the field — a volume.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 2. AXIOMS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§2</span> Axioms</h2>
+
+  <div class="axiom">
+    <div class="label">Axiom 1 — Triadic Irreducibility</div>
+    <p style="margin-bottom:0;">A circumpunct ⊙ is an irreducible triple of center, field, and boundary. No component can be removed without destroying the system's coherence. No component can be reduced to either of the others.</p>
+    <div class="eq eq-sm">⊙ = <span class="sym-dot">•</span> ⊗ <span class="sym-phi">Φ</span> ⊗ <span class="sym-ring">○</span></div>
+  </div>
+
+  <div class="axiom">
+    <div class="label">Axiom 2 — Mediated Traversal</div>
+    <p style="margin-bottom:0;">Center and boundary cannot interact directly. All coupling is mediated by the field. The center opens <em>into</em> the boundary <em>through</em> the field.</p>
+    <div class="eq eq-sm"><span class="sym-dot">•</span> → <span class="sym-phi">Φ</span> → <span class="sym-ring">○</span></div>
+  </div>
+
+  <div class="axiom">
+    <div class="label">Axiom 3 — Closure</div>
+    <p>The boundary reflects the field back toward the center. This creates a closed traversal loop: center → field → boundary → field → center. Without closure, energy dissipates and no stable pattern forms.</p>
+    <div class="eq eq-sm"><span class="sym-dot">•</span> → <span class="sym-phi">Φ</span> → <span class="sym-ring">○</span> → <span class="sym-phi">Φ</span> → <span class="sym-dot">•</span></div>
+    <p style="margin-bottom:0;">Closure is what makes a circumpunct a <em>system</em> rather than a collection of parts.</p>
+  </div>
+
+  <div class="axiom">
+    <div class="label">Axiom 4 — Fractal Recursion (Optional; Defining for "Fractal")</div>
+    <p style="margin-bottom:0;">The boundary of any circumpunct at scale <em>n</em> is composed of circumpuncts at scale <em>n</em>−1. Each sub-circumpunct satisfies the same axioms. Parts are fractals of their wholes. This axiom is not required for the core isomorphism — Theorems 4.2, 5.2, and 6.4 follow from Axioms 1–3 alone — but it is what makes the framework <em>fractal</em> rather than merely triadic.</p>
+  </div>
+
+  <div class="axiom">
+    <div class="label">Axiom 5 — Conservation of Traversal</div>
+    <p>For any circumpunct with opening parameter β ∈ [0, 1]:</p>
+    <div class="eq">D<sub>center</sub> + D<sub>field</sub> = D<sub>boundary</sub></div>
+    <div class="eq eq-sm">(1 + β) + (2 − β) = 3</div>
+    <p style="margin-bottom:0;">Progress plus remaining equals destination. The sum is invariant under change of β. This is what "journey" means — it is analytically true given Axioms 1–3.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 3. OBJECTS AND OPERATORS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§3</span> Objects and Operators</h2>
+
+  <div class="definition">
+    <div class="label">Definition 3.1 — Circumpunct System</div>
+    <p style="margin-bottom:0;">A <strong>circumpunct system</strong> is a tuple 𝒞 := (•, Φ, ○, G, U, R) where • is a center, Φ is a field (space of states + transport law), ○ is a boundary, and the three <strong>component operators</strong> act on the field:</p>
+    <div class="eq eq-sm">
+      <span class="sym-dot">G</span> : Φ → Φ &nbsp;&nbsp; (gating / selection by center)<br>
+      <span class="sym-phi">U<sub>T</sub></span> : Φ → Φ &nbsp;&nbsp; (propagation through field for traversal scale T)<br>
+      <span class="sym-ring">R</span> : Φ → Φ &nbsp;&nbsp; (reflection / constraint by boundary)
+    </div>
+  </div>
+
+  <p>These three operators formalize the three components. G is what the center <em>does</em>: it selects, gates, filters. U<sub>T</sub> is what the field <em>does</em>: it evolves, propagates, mediates. R is what the boundary <em>does</em>: it reflects, constrains, returns. The parameter T is the traversal scale — not necessarily clock time. It may be interaction length, step depth, relational distance, or any appropriate measure of "how far the signal travels."</p>
+
+  <div class="definition">
+    <div class="label">Definition 3.2 — The Closure Loop 𝓛</div>
+    <p>The <strong>closure loop operator</strong> is the composite:</p>
+    <div class="eq"><span class="sym-loop">𝓛</span> := <span class="sym-dot">G</span> ∘ <span class="sym-ring">R</span> ∘ <span class="sym-phi">U<sub>T</sub></span></div>
+    <p style="margin-bottom:0;">This is one complete traversal cycle: the center gates a signal into the field (G), the field propagates it to the boundary (U<sub>T</sub>), the boundary reflects it back (R), and it returns to the center for the next gating. 𝓛 encodes the entire circumpunct dynamic in a single operator.</p>
+  </div>
+
+  <div class="note">
+    <strong>Why this formulation matters:</strong> By collapsing center–field–boundary dynamics into a single composite operator 𝓛, we gain access to the full machinery of operator theory — spectra, eigenvalues, fixed points, stability classification. Everything that follows is derived from 𝓛.
+  </div>
+
+  <h3>3.2 — The Skeleton Abstraction</h3>
+
+  <p>The strongest way to formalize "same structure, different stuff" is to separate <em>realizations</em> from an abstract <em>skeleton</em>. This prevents the overclaim that all circumpunct systems are literally isomorphic — an EM cavity and a neural oscillator have very different state spaces — while preserving the real claim: that anything derivable from the closure loop applies to both.</p>
+
+  <div class="definition">
+    <div class="label">Definition 3.3 — The Circumpunct Skeleton (Skel)</div>
+    <p>The <strong>skeleton</strong> of a realization 𝒞 is the abstract data of roles plus loop:</p>
+    <div class="eq eq-sm">Skel(𝒞) := (<span class="sym-dot">•</span>, <span class="sym-phi">Φ̂</span>, <span class="sym-ring">○</span>, <span class="sym-loop">𝓛̂</span>)</div>
+    <p style="margin-bottom:0;">where Φ̂ is "the space the loop acts on" and 𝓛̂ is the closure loop up to structure. The skeleton <em>forgets</em> medium-specific details — material constants, propagation speed, physical dimensions — and retains only the loop architecture and role relations. Any theorem proved from skeleton data alone is valid for every realization whose skeleton satisfies the axioms.</p>
+  </div>
+
+  <div class="definition">
+    <div class="label">Definition 3.4 — Effective Closure Length</div>
+    <p>Let <strong>L<sub>eff</sub></strong> be the effective traversal length of a closed loop — the total path a signal travels from center through field to boundary and back. This is geometry-dependent:</p>
+    <div class="eq eq-sm">
+      1D cavity: L<sub>eff</sub> ≈ 2L &nbsp;&nbsp;|&nbsp;&nbsp; Spherical cavity: L<sub>eff</sub> ≈ 2πR (with corrections) &nbsp;&nbsp;|&nbsp;&nbsp; General: L<sub>eff</sub> = ∮ ds
+    </div>
+    <p style="margin-bottom:0;">Given propagation speed v in the medium, the mode scale obeys f<sub>n</sub> ∝ n · v / L<sub>eff</sub>. The specific L<sub>eff</sub> is variant (it changes across domains). The <em>relationship</em> between L<sub>eff</sub> and mode structure is invariant — it holds for every realization.</p>
+  </div>
+
+  <div class="note">
+    <strong>Why the skeleton matters:</strong> This is the mathematical core of "not analogy." We are not matching substances — we are matching closure loop structure. Two realizations are structurally equivalent when their skeletons are isomorphic: Skel(𝒞₁) ≅ Skel(𝒞₂). The skeleton formalism is exactly what prevents hand-waving.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 4. COHERENCE AS FIXED POINT -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§4</span> Coherence as Fixed Point</h2>
+
+  <p>The central insight of this formalization: <strong>coherence is not a property you add to a system — it is what happens when the closure loop has a nontrivial fixed point.</strong></p>
+
+  <div class="definition">
+    <div class="label">Definition 4.1 — Circumpunct Coherence</div>
+    <p>A circumpunct system 𝒞 is <strong>coherent</strong> if and only if the closure loop 𝓛 admits a nontrivial invariant state:</p>
+    <div class="eq">∃ φ* ∈ Φ, &nbsp; φ* ≠ 0 &nbsp; such that &nbsp; <span class="sym-loop">𝓛</span>(φ*) = φ*</div>
+    <p style="margin-bottom:0;">A coherent state is one that <em>survives its own traversal</em>. It passes through gating, propagation, and reflection and returns unchanged. This is the formal meaning of "standing mode," "resonance," and "stable pattern."</p>
+  </div>
+
+  <div class="theorem">
+    <div class="label">Theorem 4.2 — Coherence from Closure</div>
+    <p>Any closed circumpunct system satisfying Axioms 1–5, with bounded operators G, U<sub>T</sub>, R on a complete field space Φ, must admit at least one nontrivial fixed point of 𝓛.</p>
+  </div>
+
+  <div class="proof">
+    <div class="label">Proof</div>
+    <p class="proof-step">1. By Axiom 2, the center emits signal that propagates through the field. Let the propagation speed be v. U<sub>T</sub> evolves the field for traversal scale T.</p>
+    <p class="proof-step">2. By Axiom 3, the boundary reflects. The return map R sends the signal back through the field toward the center. The complete loop has effective closure length L<sub>eff</sub> (geometry-dependent; see Definition 3.4).</p>
+    <p class="proof-step">3. For a state φ to satisfy 𝓛(φ) = φ, the round-trip must produce constructive interference — the phase accumulated over L<sub>eff</sub> must be an integer multiple of 2π. This selects wavelengths λ<sub>n</sub> = L<sub>eff</sub>/n, giving frequencies f<sub>n</sub> = nv/L<sub>eff</sub>.</p>
+    <p class="proof-step">4. The fundamental mode (n = 1) has f₁ = v/L<sub>eff</sub>. This is the lowest-frequency fixed point — the ground mode of the system.</p>
+    <p class="proof-step">5. States that are <em>not</em> fixed points of 𝓛 undergo destructive interference on return. They decay under repeated application of 𝓛. Only the commensurate modes survive.</p>
+    <p class="proof-step">6. This selection process IS coherence — the system self-organizes into patterns that survive their own traversal. The loop does the selecting; no external agent is required.</p>
+    <p class="proof-step">7. Steps 1–6 invoke only Axioms 1–3. No specific medium, substance, or scale was assumed. The result holds for any closed circumpunct system.</p>
+    <p class="qed">∎</p>
+  </div>
+
+  <div class="corollary">
+    <div class="label">Corollary 4.3 — Spectral Structure</div>
+    <p style="margin-bottom:0;">The fixed points of 𝓛 form a discrete spectrum {φ*<sub>n</sub>} indexed by mode number n. The spectral structure — the <em>set of mode relationships</em> — is determined entirely by the geometry of the closure loop, not by the medium. Two systems with different media but the same loop geometry have conjugate spectra.</p>
+  </div>
+
+  <div class="corollary">
+    <div class="label">Corollary 4.4 — Coherence Without Complexity</div>
+    <p style="margin-bottom:0;">The theorem requires only closure — center, field, and reflective boundary. It does not require life, consciousness, intention, or complexity. An empty electromagnetic cavity is as valid a circumpunct system as a living brain. Coherence is geometric, not biological.</p>
+  </div>
+
+  <div class="callout">
+    A circumpunct is not a thing. It is a closure condition.<br>
+    Coherence is not a property. It is a fixed point of the loop.<br>
+    ⊙ names the fact that 𝓛 has a nontrivial kernel — not what 𝓛 is made of.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 5. THE CONSERVED QUANTITY -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§5</span> The Conserved Quantity</h2>
+
+  <p>Every conservation law names what does not change under transformation. The Conservation of Traversal (Axiom 5) conserves a dimensional sum. But the deeper invariant is the closure condition itself.</p>
+
+  <div class="definition">
+    <div class="label">Definition 5.1 — Closure</div>
+    <p style="margin-bottom:0;"><strong>Closure</strong> is the condition in which the loop operator 𝓛 = G ∘ R ∘ U<sub>T</sub> is well-defined and admits nontrivial fixed points. It is not a substance. It is a <em>relational condition</em> — the fact that the loop closes and coherent states exist.</p>
+  </div>
+
+  <div class="theorem">
+    <div class="label">Theorem 5.2 — Closure is the Conserved Quantity</div>
+    <p>What is conserved across all circumpunct isomorphisms is not energy, not frequency, not information, and not substance. What is conserved is <strong>center–field–boundary closure itself</strong> — the existence of the loop and its fixed-point structure.</p>
+  </div>
+
+  <div class="proof">
+    <div class="label">Proof</div>
+    <p class="proof-step">1. Let 𝒞₁ be a closed circumpunct system with loop 𝓛₁ that admits fixed point φ*.</p>
+    <p class="proof-step">2. Let f<sub>Φ</sub>: Φ₁ → Φ₂ be a structure-preserving map (see §6) such that f<sub>Φ</sub> ∘ 𝓛₁ = 𝓛₂ ∘ f<sub>Φ</sub>.</p>
+    <p class="proof-step">3. Then 𝓛₂(f<sub>Φ</sub>(φ*)) = f<sub>Φ</sub>(𝓛₁(φ*)) = f<sub>Φ</sub>(φ*).</p>
+    <p class="proof-step">4. Therefore f<sub>Φ</sub>(φ*) is a fixed point of 𝓛₂. Coherence maps across.</p>
+    <p class="proof-step">5. The same argument runs in reverse (f<sub>Φ</sub> is invertible for isomorphisms). Closure is preserved in both directions.</p>
+    <p class="proof-step">6. Scale changes, medium changes, content changes — the loop's fixed-point structure does not.</p>
+    <p class="qed">∎</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 6. THE ISOMORPHISM -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§6</span> The Isomorphism</h2>
+
+  <h3>6.1 — Morphisms in Circ</h3>
+
+  <p>The isomorphism operates at the level of <em>skeletons</em>, not raw realizations. We do not claim that an EM cavity and a neural oscillator have literally bijectable state spaces — they obviously don't. We claim their skeletons are isomorphic: the loop architecture, role relations, and closure conditions are structurally equivalent. This is the precise distinction between overclaiming and the real claim.</p>
+
+  <div class="definition">
+    <div class="label">Definition 6.1 — Circumpunct Morphism</div>
+    <p>Let Skel(𝒞₁) and Skel(𝒞₂) be circumpunct skeletons with loops 𝓛̂₁ and 𝓛̂₂. A <strong>morphism</strong> is a map f<sub>Φ</sub>: Φ̂₁ → Φ̂₂ satisfying the <strong>intertwining condition</strong>:</p>
+    <div class="eq">f<sub>Φ</sub> ∘ <span class="sym-loop">𝓛̂₁</span> = <span class="sym-loop">𝓛̂₂</span> ∘ f<sub>Φ</sub></div>
+    <p style="margin-bottom:0;">This single equation says: it doesn't matter whether you first loop in system 1 and then map across, or first map across and then loop in system 2. The result is the same. The loop structure is preserved.</p>
+  </div>
+
+  <div class="note">
+    <strong>Why one equation suffices.</strong> Because 𝓛 = G ∘ R ∘ U<sub>T</sub> already encodes all three components, the intertwining condition implicitly preserves how each component acts. A morphism that commutes with the full loop necessarily respects the gating, propagation, and reflection substructure. One line carries the weight of three commutation diagrams.
+  </div>
+
+  <div class="definition">
+    <div class="label">Definition 6.2 — Circumpunct Isomorphism (Skeleton Level)</div>
+    <p>A morphism f<sub>Φ</sub> is an <strong>isomorphism</strong> if it is invertible — there exists g<sub>Φ</sub>: Φ̂₂ → Φ̂₁ such that g<sub>Φ</sub> ∘ f<sub>Φ</sub> = id₁ and f<sub>Φ</sub> ∘ g<sub>Φ</sub> = id₂, with g<sub>Φ</sub> also satisfying the intertwining condition. This is a structure-preserving bijection <em>on skeletons</em>: same loop architecture, different medium.</p>
+    <p>In dynamical systems language: two circumpunct skeletons are isomorphic when their loops are <strong>conjugate</strong> — the same operator up to change of coordinates. Every circumpunct system reduces to a single endomorphism 𝓛 ∈ End(Φ̂), and "isomorphism" means "same 𝓛 up to a coordinate transform f." This is a standard and well-understood mathematical relationship.</p>
+    <p style="margin-bottom:0;">A weaker notion — <strong>homomorphism</strong> — requires only that f<sub>Φ</sub> satisfy the intertwining condition without being invertible. This is appropriate when one circumpunct system is embedded in or projected from another (as in Axiom 4, where a sub-circumpunct maps into its parent), or when cross-domain maps are approximate rather than exact.</p>
+  </div>
+
+  <div class="definition">
+    <div class="label">Definition 6.3 — The Category Circ</div>
+    <p style="margin-bottom:0;">The <strong>category Circ</strong> has circumpunct skeletons as objects and circumpunct morphisms as arrows. Composition is function composition of the f<sub>Φ</sub> maps. Identity morphisms are identity maps on each skeleton field space. Two realizations are <strong>structurally equivalent</strong> — their loops are <strong>conjugate</strong> — if and only if Skel(𝒞₁) ≅ Skel(𝒞₂).</p>
+  </div>
+
+  <h3>6.2 — The Structural Invariance Theorem</h3>
+
+  <div class="theorem">
+    <div class="label">Theorem 6.4 — Circumpunct Structural Invariance (Conjugacy Theorem)</div>
+    <p>Let 𝒞₁ and 𝒞₂ be circumpunct realizations satisfying Axioms 1–3. If their skeletons are isomorphic — there exists an invertible f<sub>Φ</sub> such that f<sub>Φ</sub> ∘ 𝓛̂₁ = 𝓛̂₂ ∘ f<sub>Φ</sub> — then:</p>
+    <p style="padding-left: 1.2rem;">
+      <strong>(i) Fixed points correspond:</strong> 𝓛̂₁(φ*) = φ* &nbsp;⟺&nbsp; 𝓛̂₂(f<sub>Φ</sub>(φ*)) = f<sub>Φ</sub>(φ*)<br>
+      <strong>(ii) Stability type is preserved:</strong> attractor, repeller, and oscillator classifications map across.<br>
+      <strong>(iii) Spectral structure is preserved up to conjugacy:</strong> the mode families of 𝒞₁ and 𝒞₂ are in one-to-one correspondence. Qualitative resonance structure is identical; quantitative frequencies differ by v and L<sub>eff</sub>.</p>
+    <p style="margin-bottom:0;">Moreover, any theorem derived purely from skeleton data (roles + closure loop) applies to <em>every</em> realization whose skeleton satisfies the axioms. This is the formal statement of: <strong>the same wholeness can exist in different substrates.</strong></p>
+  </div>
+
+  <div class="proof">
+    <div class="label">Proof</div>
+    <p class="proof-step"><strong>(i)</strong> 𝓛̂₁(φ*) = φ* &nbsp;⟹&nbsp; 𝓛̂₂(f<sub>Φ</sub>(φ*)) = f<sub>Φ</sub>(𝓛̂₁(φ*)) = f<sub>Φ</sub>(φ*). Converse by applying g<sub>Φ</sub>.</p>
+    <p class="proof-step"><strong>(ii)</strong> Let φ* be a fixed point of 𝓛̂₁ and let D𝓛̂₁|<sub>φ*</sub> be its linearization (Jacobian). By the intertwining condition, D𝓛̂₂|<sub>f(φ*)</sub> = f<sub>Φ</sub> ∘ D𝓛̂₁|<sub>φ*</sub> ∘ g<sub>Φ</sub>. These are conjugate operators, so they share eigenvalue moduli. Stability (|λ| &lt; 1, = 1, &gt; 1) is preserved.</p>
+    <p class="proof-step"><strong>(iii)</strong> Spectral conjugacy: if 𝓛̂₁ has eigenvalues {λ<sub>n</sub>} then 𝓛̂₂ has the same eigenvalues (similarity transformation preserves spectrum). Mode <em>structure</em> is identical; mode <em>frequencies</em> depend on v and L<sub>eff</sub>, which are realization-specific.</p>
+    <p class="proof-step"><strong>(Transfer principle)</strong> Any property P derivable from the axioms and skeleton data holds for Skel(𝒞₁) iff it holds for Skel(𝒞₂), because the isomorphism preserves all structural relations. This is not a claim about appearances — it is a claim about derivability from shared constraints.</p>
+    <p class="qed">∎</p>
+  </div>
+
+  <h3>6.3 — What Changes vs What Doesn't</h3>
+
+  <div class="inv-table">
+    <div class="inv-col inv-preserved">
+      <h4>Invariant (Structure)</h4>
+      <ul>
+        <li>Closure loop existence</li>
+        <li>Coherence as fixed point</li>
+        <li>Mode families / resonance classes</li>
+        <li>Stability classifications</li>
+        <li>Spectral structure (up to conjugacy)</li>
+        <li>Conservation of traversal (D sum = 3)</li>
+        <li>Failure mode classification</li>
+      </ul>
+    </div>
+    <div class="inv-col inv-variant">
+      <h4>Variant (Expression)</h4>
+      <ul>
+        <li>Actual frequencies (scale-dependent)</li>
+        <li>Material constants (v, L<sub>eff</sub>)</li>
+        <li>Measurement units</li>
+        <li>Implementation of G, U, R</li>
+        <li>Medium (EM, neural, acoustic…)</li>
+        <li>Complexity (nested depth)</li>
+        <li>Content (what is propagated)</li>
+      </ul>
+    </div>
+  </div>
+
+  <p>This is the formal statement of: <strong>scale changes the numbers; the circumpunct structure stays.</strong></p>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 7. INSTANTIATIONS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§7</span> Instantiations</h2>
+
+  <p>The theorem predicts that every bounded field system will exhibit the same triadic architecture. Each row below is a different realization in Circ. The isomorphism says the <em>columns</em> — the functional roles and their operators — are what's preserved. The specific L<sub>eff</sub> and v differ; the skeleton is identical.</p>
+
+  <table>
+    <tr>
+      <th>Domain</th>
+      <th style="color:var(--aperture);">G (center gates)</th>
+      <th style="color:var(--field);">U<sub>T</sub> (field propagates)</th>
+      <th style="color:var(--boundary);">R (boundary reflects)</th>
+      <th>L<sub>eff</sub> → Fundamental</th>
+    </tr>
+    <tr>
+      <td>Earth</td>
+      <td>Core dipole excitation</td>
+      <td>EM propagation in cavity</td>
+      <td>Ionospheric reflection</td>
+      <td>≈ 2πR → 7.83 Hz</td>
+    </tr>
+    <tr>
+      <td>Organ pipe</td>
+      <td>Reed excitation</td>
+      <td>Acoustic wave in air column</td>
+      <td>Pipe end reflection</td>
+      <td>≈ 2L → v/2L</td>
+    </tr>
+    <tr>
+      <td>Laser cavity</td>
+      <td>Gain medium pumping</td>
+      <td>Optical field propagation</td>
+      <td>Mirror reflection</td>
+      <td>≈ 2L → c/2L</td>
+    </tr>
+    <tr>
+      <td>Cell</td>
+      <td>Nuclear transcription</td>
+      <td>Cytoplasmic signaling</td>
+      <td>Membrane feedback</td>
+      <td>Metabolic period</td>
+    </tr>
+    <tr>
+      <td>Brain</td>
+      <td>Thalamic gating</td>
+      <td>Cortico-thalamic propagation</td>
+      <td>Cortical feedback</td>
+      <td>~10 Hz (alpha)</td>
+    </tr>
+    <tr>
+      <td>Conversation</td>
+      <td>Speaker's intention (selection)</td>
+      <td>Shared meaning-propagation</td>
+      <td>Listener interpretation (return)</td>
+      <td>Turn-taking rhythm</td>
+    </tr>
+    <tr>
+      <td>Atom</td>
+      <td>Nuclear charge (selection rule)</td>
+      <td>Electron probability field</td>
+      <td>Potential well boundary</td>
+      <td>Orbital frequencies</td>
+    </tr>
+  </table>
+
+  <h3>The Schumann Demonstration</h3>
+
+  <p>Schumann resonance is the preferred pedagogical anchor because it is global, measurable, geometric, and unavoidable. It demonstrates that you do not need complexity, life, or intention to get coherent modes — only closure.</p>
+
+  <p>The Earth–ionosphere cavity satisfies all five axioms. Its loop operator 𝓛<sub>Earth</sub> = G<sub>core</sub> ∘ R<sub>ionosphere</sub> ∘ U<sub>EM</sub> admits fixed points at f<sub>n</sub> ∝ nv/L<sub>eff</sub>, where L<sub>eff</sub> ≈ 2πR with geometry corrections — and the observed fundamental of 7.83 Hz confirms this. Schumann proves the theorem works for electromagnetic systems. The Structural Invariance Theorem (6.4) then extends the same skeleton to every other row in the table — not by analogy, but because any realization satisfying Axioms 1–3 inherits the same loop consequences.</p>
+
+  <h3>Empirical Status</h3>
+
+  <p>Two predictions of the framework are under active experimental investigation:</p>
+
+  <table>
+    <tr>
+      <th>Prediction</th>
+      <th>Test</th>
+      <th>Result</th>
+    </tr>
+    <tr>
+      <td>D<sub>field</sub> = 2 − β</td>
+      <td>Box-counting on field texture |Φ(x,t)|</td>
+      <td>r = +0.54 (positive correlation confirmed)</td>
+    </tr>
+    <tr>
+      <td>D<sub>center</sub> + D<sub>field</sub> = 3</td>
+      <td>Improved estimators (3D PCA + multi-threshold)</td>
+      <td>D<sub>sum</sub> = 2.77 ± 0.04 → converging toward 3.0</td>
+    </tr>
+  </table>
+
+  <p>The sum is <em>more stable</em> than the individual terms (σ = 0.04 vs 0.032, 0.018). This is the signature of a conservation law — the parts fluctuate, but the whole is constrained.</p>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 8. FAILURE MODES -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§8</span> Failure Modes — Degeneration Theorems</h2>
+
+  <p>The isomorphism holds only when all five axioms are satisfied. Removing any component produces a degenerate loop with characteristic failure. These are not speculative — they correspond to known phenomena across every domain, and they are <em>derived</em> from the loop structure.</p>
+
+  <div class="failure">
+    <div class="label">Degeneration 1 — No Center (G removed → 𝓛 = R ∘ U<sub>T</sub>)</div>
+    <p>Without gating, no mode is selected. All frequencies propagate and reflect equally. The loop exists but has no selectivity — every state is a fixed point or none is.</p>
+    <p><strong>Physical:</strong> Thermal noise. A cavity with no excitation source produces blackbody radiation — all modes at once, no coherence.</p>
+    <p><strong>Psychological:</strong> Dissociation. Field activity without focal attention. Experience without witness. Sensation floods in but nothing selects or organizes it.</p>
+    <p style="margin-bottom:0;"><strong>Relational:</strong> Talking past each other. Signal propagates but nobody is listening from a center.</p>
+  </div>
+
+  <div class="failure">
+    <div class="label">Degeneration 2 — No Field (U<sub>T</sub> removed → 𝓛 = G ∘ R)</div>
+    <p>Without propagation, center and boundary cannot communicate. Selection occurs and reflection occurs, but there is no medium connecting them. The loop collapses to a point — G and R compose but have nothing to act on.</p>
+    <p><strong>Physical:</strong> A cavity pumped to vacuum. No medium, no propagation, no resonance.</p>
+    <p><strong>Psychological:</strong> Depersonalization. Awareness exists (center), body exists (boundary), but the felt connection between them is absent. Mind IS the field — without it, soul and body are isolated.</p>
+    <p style="margin-bottom:0;"><strong>Relational:</strong> No shared language, no shared context. Two people in the same room with no medium for meaning to traverse.</p>
+  </div>
+
+  <div class="failure">
+    <div class="label">Degeneration 3 — No Boundary (R removed → 𝓛 = G ∘ U<sub>T</sub>)</div>
+    <p>Without reflection, the center emits through the field and the signal propagates outward forever. There is no return, no loop, no fixed point. 𝓛 becomes a one-way operator with no invariant states.</p>
+    <p><strong>Physical:</strong> Free-space radiation. An antenna in open space radiates but does not resonate. Energy dissipates.</p>
+    <p><strong>Psychological:</strong> Mania. Unbounded expression. Energy pours out with no container to reflect it back into form. No standing pattern forms.</p>
+    <p style="margin-bottom:0;"><strong>Relational:</strong> Monologue. One party emits endlessly into space that never returns the signal.</p>
+  </div>
+
+  <div class="failure">
+    <div class="label">Degeneration 4 — Sealed Loop (G, U<sub>T</sub>, R present but R absorbs rather than reflects)</div>
+    <p>All three components exist, but the boundary absorbs rather than reflects. Technically R ≈ 0 — it damps rather than returns. Traversal occurs once but never completes the loop. The system runs down exponentially; 𝓛<sup>n</sup> → 0 as n → ∞. No stable fixed point.</p>
+    <p><strong>Physical:</strong> An anechoic chamber. Boundaries exist but absorb all signal. No echo, no standing mode, no resonance.</p>
+    <p><strong>Psychological:</strong> The narcissistic configuration. The aperture is sealed — the center channel is blocked. Signal enters the field but cannot complete the loop through the center. Energy accumulates as echo (rumination at doubled frequency) rather than flowing as resonance. This is precisely the "busy brain" pattern: high-beta trapped reverberations at ~26 Hz with suppressed fundamental at ~7.83 Hz.</p>
+    <p style="margin-bottom:0;"><strong>Relational:</strong> The functional-only relationship. Provision occurs (boundary-to-boundary), but the center channel is blocked. Resonant love cannot complete the loop.</p>
+  </div>
+
+  <div class="note">
+    <strong>Diagnostic principle:</strong> Every coherence failure can be classified by <em>which operator is missing or degraded</em>. From the loop structure alone, you can identify what is broken and what restoration requires. This is the framework's predictive power — geometry diagnoses pathology.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 9. WHY THIS IS NOT ANALOGY -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§9</span> Why This Is Not Analogy</h2>
+
+  <h3>Analogy compares appearances</h3>
+  <p>An analogy says: "X <em>looks like</em> Y." The heart <em>looks like</em> a pump. The brain <em>looks like</em> a computer. These comparisons are useful but contingent — they depend on the observer's perspective, and they break down under scrutiny because the compared systems do not share structural constraints.</p>
+
+  <h3>Isomorphism compares constraints</h3>
+  <p>An isomorphism says: "X and Y satisfy the <em>same axioms</em> and their skeleton loop operators are <strong>conjugate</strong> — the same operator up to change of coordinates." This is not a claim about appearance — it is a claim about the rules that govern both systems. If two systems have conjugate loops, they must exhibit the same fixed-point structure, the same stability classification, and the same spectral families. Any theorem derived from skeleton data alone applies to both.</p>
+
+  <h3>The test</h3>
+  <p>Analogies <em>break</em> when you push them. You can always find a point where the heart stops being like a pump. Skeleton isomorphisms do not break under scrutiny — they hold for any property derivable from the shared loop structure. If the Earth–ionosphere system and a neural oscillator both have skeletons with conjugate spectra, then <em>every theorem about fixed-point behavior</em> applies to both. This is not resemblance. It is logical necessity.</p>
+
+  <div class="note">
+    <strong>The three assumptions this quietly removes:</strong> (1) That mind needs special ingredients beyond closure. (2) That physics is ontologically privileged over other domains. (3) That analogy is the only bridge between domains. The skeleton isomorphism replaces analogy with structural necessity. Different realizations, same skeleton, same closure rules, same invariants under transformation.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 10. FALSIFICATION -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§10</span> Falsification</h2>
+
+  <p>The isomorphism is a testable claim. It fails if any of the following can be demonstrated:</p>
+
+  <div class="failure">
+    <div class="label">Falsification Criterion 1 — Dyadic Coherence</div>
+    <p style="margin-bottom:0;">A coherent system is exhibited that achieves stable fixed points of a loop operator constructed from only <em>two</em> of the three components. If coherence can arise from a dyad (e.g., center + boundary with no field), Axiom 1 falls.</p>
+  </div>
+
+  <div class="failure">
+    <div class="label">Falsification Criterion 2 — Non-Geometric Modes</div>
+    <p style="margin-bottom:0;">A closed triadic system is exhibited whose coherent modes are <em>not</em> determined by effective closure length L<sub>eff</sub>. If standing modes arise from something other than the closure geometry, Theorem 4.2 is falsified.</p>
+  </div>
+
+  <div class="failure">
+    <div class="label">Falsification Criterion 3 — Skeleton Theorem Failure</div>
+    <p style="margin-bottom:0;">A skeleton-derived theorem is shown to fail in a realization that provably satisfies the skeleton axioms. Equivalently: two systems with isomorphic skeletons are shown to have non-conjugate spectral structures. Either outcome falsifies Theorem 6.4.</p>
+  </div>
+
+  <div class="failure">
+    <div class="label">Falsification Criterion 4 — Unclassifiable Failure</div>
+    <p style="margin-bottom:0;">A failure of coherence is exhibited that does <em>not</em> correspond to a missing or degraded G, U, or R operator. If coherence can break in a way not classifiable as one of the four degenerations, the framework's diagnostic completeness is falsified.</p>
+  </div>
+
+  <div class="failure">
+    <div class="label">Falsification Criterion 5 — Conservation Divergence</div>
+    <p style="margin-bottom:0;">The Conservation of Traversal (D<sub>center</sub> + D<sub>field</sub> = 3) is shown to diverge from 3.0 under improved measurement. Current experiments show convergence (2.77 ± 0.04 → 3.0 with better estimators). Reversal of this trend would falsify Axiom 5.</p>
+  </div>
+
+  <p>These criteria are specific, empirical, and in several cases already under active investigation. The framework invites its own destruction. That is what makes it science, not poetry.</p>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- 11. SUMMARY -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <h2><span class="section-num">§11</span> Summary of Results</h2>
+
+  <table>
+    <tr>
+      <th>Result</th>
+      <th>Statement</th>
+      <th>Status</th>
+    </tr>
+    <tr>
+      <td style="color:var(--gold);">Axioms 1–5</td>
+      <td>Triadic irreducibility, mediated traversal, closure, fractal recursion (optional), conservation of traversal</td>
+      <td>Stated</td>
+    </tr>
+    <tr>
+      <td style="color:var(--cyan);">Loop Operator 𝓛</td>
+      <td>𝓛 = G ∘ R ∘ U<sub>T</sub> — the full circumpunct dynamic in one operator</td>
+      <td>Defined</td>
+    </tr>
+    <tr>
+      <td style="color:var(--cyan);">Skeleton Skel(𝒞)</td>
+      <td>Abstract loop structure, stripped of medium-specific detail — the level at which isomorphism holds</td>
+      <td>Defined</td>
+    </tr>
+    <tr>
+      <td style="color:var(--cyan);">Coherence</td>
+      <td>Fixed point of 𝓛 — a state that survives its own traversal</td>
+      <td>Defined</td>
+    </tr>
+    <tr>
+      <td style="color:var(--magenta);">Theorem 4.2</td>
+      <td>Closure forces nontrivial fixed points (standing modes via L<sub>eff</sub>)</td>
+      <td>Proved</td>
+    </tr>
+    <tr>
+      <td style="color:var(--magenta);">Theorem 5.2</td>
+      <td>Closure is the conserved quantity across all skeleton isomorphisms</td>
+      <td>Proved</td>
+    </tr>
+    <tr>
+      <td style="color:var(--magenta);">Theorem 6.4</td>
+      <td>Skeleton conjugacy preserves fixed points, stability, spectral structure, and all derivable consequences</td>
+      <td>Proved</td>
+    </tr>
+    <tr>
+      <td style="color:var(--field);">Corollary 4.3</td>
+      <td>Spectral structure is determined by loop geometry, not medium</td>
+      <td>Derived</td>
+    </tr>
+    <tr>
+      <td style="color:var(--field);">Corollary 4.4</td>
+      <td>Coherence requires only closure — not life, intention, or complexity</td>
+      <td>Derived</td>
+    </tr>
+    <tr>
+      <td style="color:var(--red);">Degenerations 1–4</td>
+      <td>No G, no U, no R, sealed R — four classified failure modes</td>
+      <td>Derived</td>
+    </tr>
+    <tr>
+      <td style="color:var(--red);">Falsification 1–5</td>
+      <td>Five specific, empirical criteria that would destroy the framework</td>
+      <td>Stated</td>
+    </tr>
+  </table>
+</div>
+
+<div class="sep">· · ·</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- CLOSING -->
+<!-- ═══════════════════════════════════════ -->
+<div class="section">
+  <div class="callout" style="font-size: 1.05rem;">
+    The circumpunct does not describe what exists.<br>
+    It describes what must be true for anything to exist as a coherent system.<br><br>
+    Not a model. Not a metaphor.<br>
+    A closure skeleton — and the minimal one.<br><br>
+    <span style="font-size: 1.4rem;">𝓛(φ*) = φ*</span>
+  </div>
+
+  <div class="note" style="text-align: center; font-style: normal;">
+    <strong>Disclaimer:</strong> This model does not claim that Schumann resonance causes consciousness or brain activity. It uses Schumann resonance as a concrete, measurable example of center–boundary mode formation in a bounded field. The isomorphism is structural, not causal. Scale and medium determine expression; closure determines architecture.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ═══════════════════════════════════════ -->
+<footer>
+  <div class="f-symbol">⊙</div>
+  <p><strong>The Isomorphism of the Circumpunct</strong></p>
+  <p>Structural Invariance · Closure · Coherence — v7.1</p>
+  <p style="margin-top: 0.5rem;">Ashman Roonz · February 2026</p>
+  <p style="margin-top: 0.5rem;"><a href="https://fractalreality.ca" style="color: var(--gold); text-decoration: none;">fractalreality.ca</a></p>
+</footer>
+
+</div>
+</body>
+</html>
