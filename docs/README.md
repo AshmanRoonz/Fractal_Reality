@@ -56,6 +56,8 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**hypercube.html**](https://fractalreality.ca/hypercube.html) — 4D hypercube visualization
 - [**dimensions.html**](https://fractalreality.ca/dimensions.html) — Dimensional exploration tool
 - [**lens.html**](https://fractalreality.ca/lens.html) — Lens/aperture visualization
+- [**circumpunct_physics.html**](https://fractalreality.ca/circumpunct_physics.html) — The Circumpunct Framework: a mathematical formulation for working physicists
+- [**circumpunct_schumann.html**](https://fractalreality.ca/circumpunct_schumann.html) — Schumann-Circumpunct Resonance Theory
 
 ### Wholeness & Structure
 
