@@ -197,6 +197,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**circumpunct-swarm.html**](https://fractalreality.ca/circumpunct-swarm.html) — Swarm dynamics visualization
 - [**circumpunct_dimensions.html**](https://fractalreality.ca/circumpunct_dimensions.html) — Dimensional analysis tool
 - [**circumpunct_encyclopedia.html**](https://fractalreality.ca/circumpunct_encyclopedia.html) — The Circumpunct Encyclopedia v2.0: complete formalized reference
+- [**circumpunct_isomorphism.html**](https://fractalreality.ca/circumpunct_isomorphism.html) — The Isomorphism of the Circumpunct: structural invariance across all domains
 
 ### 64-State Architecture
 
