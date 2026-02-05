@@ -350,10 +350,10 @@
     }
 
     .inv-preserved h4 { color: var(--boundary); }
-    .inv-preserved li::before { content: "■"; color: var(--boundary); }
+    .inv-preserved li::before { content: "â– "; color: var(--boundary); }
 
     .inv-variant h4 { color: var(--text-dim); }
-    .inv-variant li::before { content: "□"; color: var(--text-faint); }
+    .inv-variant li::before { content: "â–¡"; color: var(--text-faint); }
 
     /* ── SEPARATOR ── */
     .sep {
@@ -542,9 +542,9 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
+<!-- ═══════════════════════════════════ -->
 <!-- 4. COHERENCE AS FIXED POINT -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ═══════════════════════════════════ -->
 <div class="section">
   <h2><span class="section-num">§4</span> Coherence as Fixed Point</h2>
 
@@ -554,40 +554,94 @@
     <div class="label">Definition 4.1 — Circumpunct Coherence</div>
     <p>A circumpunct system 𝒞 is <strong>coherent</strong> if and only if the closure loop 𝓛 admits a nontrivial invariant state:</p>
     <div class="eq">∃ φ* ∈ Φ, &nbsp; φ* ≠ 0 &nbsp; such that &nbsp; <span class="sym-loop">𝓛</span>(φ*) = φ*</div>
-    <p style="margin-bottom:0;">A coherent state is one that <em>survives its own traversal</em>. It passes through gating, propagation, and reflection and returns unchanged. This is the formal meaning of "standing mode," "resonance," and "stable pattern."</p>
+    <p style="margin-bottom:0;">A coherent state is one that <em>survives its own traversal</em>. It passes through gating, propagation, and reflection and returns unchanged. The fixed point may be a standing wave, a stable equilibrium, a steady distribution, or a consistent interpretation — the theorem is agnostic about the medium.</p>
   </div>
 
+  <h3>4.2 — The General Fixed-Point Theorem</h3>
+
+  <p>Closure alone does not force fixed points. A rotation on a circle by an irrational angle is a closed loop dynamic with no invariant point. What forces fixed points is closure <em>together with topological constraints on the state space</em>. The following theorem makes the required assumptions explicit.</p>
+
   <div class="theorem">
-    <div class="label">Theorem 4.2 — Coherence from Closure</div>
-    <p>Any closed circumpunct system satisfying Axioms 1–5, with bounded operators G, U<sub>T</sub>, R on a complete field space Φ, must admit at least one nontrivial fixed point of 𝓛.</p>
+    <div class="label">Theorem 4.2 — Coherence from Closure (General Form)</div>
+    <p>Let 𝒞 be a circumpunct system satisfying Axioms 1–3, with closure loop 𝓛 := G ∘ R ∘ U<sub>T</sub> acting on a state space X ⊆ Φ. Assume:</p>
+    <p style="margin-left: 1.2rem;">(i) X is a nonempty, compact, convex subset of a normed vector space.</p>
+    <p style="margin-left: 1.2rem;">(ii) 𝓛 : X → X is continuous (the loop maps the state space into itself without discontinuity).</p>
+    <p style="margin-bottom:0;">Then 𝓛 admits at least one fixed point: ∃ φ* ∈ X such that 𝓛(φ*) = φ*.</p>
   </div>
 
   <div class="proof">
     <div class="label">Proof</div>
-    <p class="proof-step">1. By Axiom 2, the center emits signal that propagates through the field. Let the propagation speed be v. U<sub>T</sub> evolves the field for traversal scale T.</p>
-    <p class="proof-step">2. By Axiom 3, the boundary reflects. The return map R sends the signal back through the field toward the center. The complete loop has effective closure length L<sub>eff</sub> (geometry-dependent; see Definition 3.4).</p>
-    <p class="proof-step">3. For a state φ to satisfy 𝓛(φ) = φ, the round-trip must produce constructive interference — the phase accumulated over L<sub>eff</sub> must be an integer multiple of 2π. This selects wavelengths λ<sub>n</sub> = L<sub>eff</sub>/n, giving frequencies f<sub>n</sub> = nv/L<sub>eff</sub>.</p>
-    <p class="proof-step">4. The fundamental mode (n = 1) has f₁ = v/L<sub>eff</sub>. This is the lowest-frequency fixed point — the ground mode of the system.</p>
-    <p class="proof-step">5. States that are <em>not</em> fixed points of 𝓛 undergo destructive interference on return. They decay under repeated application of 𝓛. Only the commensurate modes survive.</p>
-    <p class="proof-step">6. This selection process IS coherence — the system self-organizes into patterns that survive their own traversal. The loop does the selecting; no external agent is required.</p>
-    <p class="proof-step">7. Steps 1–6 invoke only Axioms 1–3. No specific medium, substance, or scale was assumed. The result holds for any closed circumpunct system.</p>
+    <p class="proof-step">1. By Axiom 3, the loop closes: 𝓛 maps X into itself. By hypothesis (ii), this map is continuous.</p>
+    <p class="proof-step">2. If X ⊆ ℝ<sup>n</sup> (finite-dimensional), this is exactly <strong>Brouwer's fixed-point theorem</strong>: any continuous self-map of a nonempty compact convex subset of ℝ<sup>n</sup> has a fixed point.</p>
+    <p class="proof-step">3. If Φ is infinite-dimensional (a Banach or Hilbert space), apply <strong>Schauder's fixed-point theorem</strong>: any continuous self-map of a nonempty compact convex subset of a Banach space has a fixed point. (If X is only closed and bounded rather than compact, it suffices that 𝓛 is a compact operator — mapping bounded sets to precompact ones.)</p>
+    <p class="proof-step">4. In either case, the fixed point φ* satisfies 𝓛(φ*) = φ*. This state survives its own traversal — gating, propagation, and reflection return it unchanged. This <em>is</em> coherence (Definition 4.1).</p>
+    <p class="proof-step">5. The proof invokes only Axioms 1–3 plus hypotheses (i)–(ii). No specific medium, propagation mechanism, or scale was assumed. The result holds for any closed circumpunct system whose state space and loop satisfy these topological conditions.</p>
     <p class="qed">∎</p>
   </div>
 
-  <div class="corollary">
-    <div class="label">Corollary 4.3 — Spectral Structure</div>
-    <p style="margin-bottom:0;">The fixed points of 𝓛 form a discrete spectrum {φ*<sub>n</sub>} indexed by mode number n. The spectral structure — the <em>set of mode relationships</em> — is determined entirely by the geometry of the closure loop, not by the medium. Two systems with different media but the same loop geometry have conjugate spectra.</p>
+  <div class="note">
+    <strong>What the hypotheses mean physically.</strong> Compactness says the state space is bounded — there are finite resources, finite attentional capacity, finite energy. Convexity says mixtures of states are still states — weighted superpositions, blended interpretations, intermediate configurations. Continuity says small changes in input produce small changes in output — the loop doesn't teleport. These are empirical claims about the domain, not mathematical freebies. A system whose state space fails compactness (truly unbounded dynamics) is not guaranteed coherence — and that failure is itself a prediction of the framework.
+  </div>
+
+  <h3>4.3 — Convergence: Why Repeated Traversal Selects Coherence</h3>
+
+  <p>Theorem 4.2 guarantees existence of a fixed point. The following theorem addresses the stronger claim: that repeated application of the loop <em>converges</em> to coherence from any starting state.</p>
+
+  <div class="theorem">
+    <div class="label">Theorem 4.3 — Self-Organization via Contraction</div>
+    <p>Let (X, d) be a complete metric space and 𝓛 : X → X a <strong>contraction</strong>:</p>
+    <div class="eq">d(𝓛(x), 𝓛(y)) ≤ c · d(x, y) &nbsp;&nbsp; for all x, y ∈ X, &nbsp; 0 &lt; c &lt; 1</div>
+    <p style="margin-bottom:0;">Then 𝓛 has a <strong>unique</strong> fixed point φ*, and the sequence 𝓛<sup>n</sup>(x) converges to φ* from any initial state x ∈ X. The rate of convergence is geometric: d(𝓛<sup>n</sup>(x), φ*) ≤ c<sup>n</sup> · d(x, φ*).</p>
+  </div>
+
+  <div class="proof">
+    <div class="label">Proof</div>
+    <p class="proof-step">This is the <strong>Banach contraction mapping theorem</strong>. The contraction condition means each traversal brings every state closer to the fixed point. After n traversals, the distance has shrunk by a factor of c<sup>n</sup>. Since 0 &lt; c &lt; 1, this converges to zero. Uniqueness follows because two distinct fixed points would have d(φ<sub>1</sub>*, φ<sub>2</sub>*) = d(𝓛(φ<sub>1</sub>*), 𝓛(φ<sub>2</sub>*)) ≤ c · d(φ<sub>1</sub>*, φ<sub>2</sub>*), which forces d = 0.</p>
+    <p class="qed">∎</p>
+  </div>
+
+  <div class="note">
+    <strong>What contraction means physically.</strong> The loop is lossy — each traversal dissipates a fraction of the distance from equilibrium. Boundary absorption, field attenuation, gating selectivity: these are the mechanisms by which c &lt; 1 is achieved. A system with no loss (c = 1) may have fixed points (Theorem 4.2) but won't necessarily converge to them. A system with total loss (c = 0) converges in one step but to a trivial state. The interesting regime is 0 &lt; c &lt; 1: enough loss to select, not enough to extinguish. This is the formal content of "repeated traversals select coherence."
+  </div>
+
+  <h3>4.4 — Spectral Specialization: Wave Systems</h3>
+
+  <p>In physical systems where the field supports wave-like propagation — electromagnetic cavities, acoustic resonators, quantum wells — the general fixed-point result specializes to a richer structure: discrete standing modes determined by closure geometry.</p>
+
+  <div class="theorem">
+    <div class="label">Theorem 4.4 — Spectral Modes from Wave Closure</div>
+    <p>Let 𝒞 be a circumpunct system satisfying Axioms 1–3, where the field Φ supports wave propagation with speed v and the operators G, U<sub>T</sub>, R are linear. Then the fixed points of 𝓛 form a discrete spectrum indexed by mode number n:</p>
+    <div class="eq">f<sub>n</sub> = n · v / L<sub>eff</sub> &nbsp;&nbsp; (n = 1, 2, 3, …)</div>
+    <p style="margin-bottom:0;">The spectral structure is determined entirely by the closure geometry (L<sub>eff</sub>) and propagation speed (v), not by the medium composition.</p>
+  </div>
+
+  <div class="proof">
+    <div class="label">Proof</div>
+    <p class="proof-step">1. By Axiom 2, the center emits signal into the field. U<sub>T</sub> propagates it with speed v. By Axiom 3, R reflects it at the boundary. The complete loop has effective closure length L<sub>eff</sub> (Definition 3.4).</p>
+    <p class="proof-step">2. For a wave state φ to satisfy 𝓛(φ) = φ, the phase accumulated over the round-trip L<sub>eff</sub> must be an integer multiple of 2π. This selects wavelengths λ<sub>n</sub> = L<sub>eff</sub>/n, giving frequencies f<sub>n</sub> = nv/L<sub>eff</sub>.</p>
+    <p class="proof-step">3. States not commensurate with L<sub>eff</sub> undergo destructive interference on return. Under repeated application of 𝓛, they decay. Only the commensurate modes survive — these are the fixed points.</p>
+    <p class="proof-step">4. The fundamental mode (n = 1) has f₁ = v/L<sub>eff</sub>. Higher modes are integer harmonics. The spectral structure depends on L<sub>eff</sub> and v, not on the material that carries the wave.</p>
+    <p class="qed">∎</p>
+  </div>
+
+  <div class="note">
+    <strong>Scope.</strong> Theorem 4.4 applies to systems with wave-like transport: EM cavities, acoustic resonators, the Earth–ionosphere cavity, quantum wells, laser cavities. It does <em>not</em> apply directly to conversations, psychological dynamics, or relationships — those systems achieve coherence via the general mechanism (Theorem 4.2) or convergent self-organization (Theorem 4.3), not through phase interference. The framework covers both, but through different theorems, because honesty requires distinguishing what the proof actually assumes.
   </div>
 
   <div class="corollary">
-    <div class="label">Corollary 4.4 — Coherence Without Complexity</div>
-    <p style="margin-bottom:0;">The theorem requires only closure — center, field, and reflective boundary. It does not require life, consciousness, intention, or complexity. An empty electromagnetic cavity is as valid a circumpunct system as a living brain. Coherence is geometric, not biological.</p>
+    <div class="label">Corollary 4.5 — Spectral Structure (Wave Systems)</div>
+    <p style="margin-bottom:0;">In wave systems, the fixed points of 𝓛 form a discrete spectrum {φ*<sub>n</sub>} indexed by mode number n. The spectral structure — the <em>set of mode relationships</em> — is determined entirely by the geometry of the closure loop, not by the medium. Two wave systems with different media but the same loop geometry have conjugate spectra.</p>
+  </div>
+
+  <div class="corollary">
+    <div class="label">Corollary 4.6 — Coherence Without Complexity</div>
+    <p style="margin-bottom:0;">Neither Theorem 4.2 nor Theorem 4.4 requires life, consciousness, intention, or complexity. An empty electromagnetic cavity is as valid a circumpunct system as a living brain, and a probability simplex of interpretations is as valid a state space as a Hilbert space of wavefunctions. Coherence is topological, not biological.</p>
   </div>
 
   <div class="callout">
     A circumpunct is not a thing. It is a closure condition.<br>
     Coherence is not a property. It is a fixed point of the loop.<br>
-    ⊙ names the fact that 𝓛 has a nontrivial kernel — not what 𝓛 is made of.
+    ⊙ names the fact that 𝓛 has a nontrivial fixed point — not what 𝓛 is made of.
   </div>
 </div>
 
@@ -841,7 +895,7 @@
   <div class="theorem">
     <div class="label">Scope Theorem — Three Tiers of Transfer</div>
 
-    <p><strong>Tier 1 — Universal (all circumpunct systems).</strong> Any system satisfying Axioms 1–3 inherits: loop existence, fixed-point existence (Theorem 4.2), closure as conserved quantity (Theorem 5.2), the five failure-mode degenerations, and dimensional conservation D<sub>•</sub> + D<sub>Φ</sub> = D<sub>○</sub> (Axiom 5). These hold regardless of geometry, medium, or scale. This is what crosses domains.</p>
+    <p><strong>Tier 1 — Universal (all circumpunct systems).</strong> Any system satisfying Axioms 1–3 inherits: loop existence, fixed-point existence (Theorem 4.2), convergent self-organization (Theorem 4.3), closure as conserved quantity (Theorem 5.2), the five failure-mode degenerations, and dimensional conservation D<sub>•</sub> + D<sub>Φ</sub> = D<sub>○</sub> (Axiom 5). These hold regardless of geometry, medium, or scale. This is what crosses domains.</p>
 
     <p><strong>Tier 2 — Geometry-class (systems sharing L<sub>eff</sub> functional form).</strong> Systems whose effective closure paths have the same functional dependence on mode index — e.g., all 1D cavities (f<sub>n</sub> ∝ n), all spherical cavities (f<sub>ℓ</sub> ∝ √(ℓ(ℓ+1))) — are strictly conjugate in Circ. Theorem 6.4 applies in full force: spectral structure, mode spacing, stability classification, and all skeleton-derivable properties are preserved under an explicit, computable intertwining map. This is the strong isomorphism.</p>
 
@@ -942,7 +996,7 @@
 
   <div class="failure">
     <div class="label">Falsification Criterion 2 — Non-Geometric Modes</div>
-    <p style="margin-bottom:0;">A closed triadic system is exhibited whose coherent modes are <em>not</em> determined by effective closure length L<sub>eff</sub>. If standing modes arise from something other than the closure geometry, Theorem 4.2 is falsified.</p>
+    <p style="margin-bottom:0;">A closed triadic system with wave-like transport is exhibited whose coherent modes are <em>not</em> determined by effective closure length L<sub>eff</sub>. If standing modes arise from something other than the closure geometry, Theorem 4.4 is falsified. Separately: a circumpunct system satisfying hypotheses (i)–(ii) of Theorem 4.2 is exhibited that admits no fixed point of 𝓛. Either outcome falsifies the corresponding theorem.</p>
   </div>
 
   <div class="failure">
@@ -997,7 +1051,17 @@
     </tr>
     <tr>
       <td style="color:var(--magenta);">Theorem 4.2</td>
-      <td>Closure forces nontrivial fixed points (standing modes via L<sub>eff</sub>)</td>
+      <td>Continuous self-map on compact convex state space forces nontrivial fixed points (Brouwer/Schauder)</td>
+      <td>Proved</td>
+    </tr>
+    <tr>
+      <td style="color:var(--magenta);">Theorem 4.3</td>
+      <td>Contraction loop converges to unique fixed point from any initial state (Banach)</td>
+      <td>Proved</td>
+    </tr>
+    <tr>
+      <td style="color:var(--magenta);">Theorem 4.4</td>
+      <td>Wave closure forces discrete spectral modes via L<sub>eff</sub></td>
       <td>Proved</td>
     </tr>
     <tr>
@@ -1011,12 +1075,12 @@
       <td>Proved</td>
     </tr>
     <tr>
-      <td style="color:var(--field);">Corollary 4.3</td>
-      <td>Spectral structure is determined by loop geometry, not medium</td>
+      <td style="color:var(--field);">Corollary 4.5</td>
+      <td>Spectral structure (wave systems) is determined by loop geometry, not medium</td>
       <td>Derived</td>
     </tr>
     <tr>
-      <td style="color:var(--field);">Corollary 4.4</td>
+      <td style="color:var(--field);">Corollary 4.6</td>
       <td>Coherence requires only closure — not life, intention, or complexity</td>
       <td>Derived</td>
     </tr>
