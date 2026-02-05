@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curiosity Is the Cure</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --amber: #E8913A;
+    --coral: #E85D5D;
+    --teal: #2A9D8F;
+    --violet: #7B5EA7;
+    --gold: #D4A843;
+    --sage: #6B9080;
+    --rose: #C97B84;
+    --deep: #1A1A2E;
+    --warm-bg: #FFF8F0;
+    --cream: #FEF3E2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--warm-bg);
+    color: #2C2C2C;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1.15rem;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    background: linear-gradient(160deg, #1A1A2E 0%, #16213E 30%, #0F3460 60%, #2A9D8F 100%);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 600px 600px at 20% 30%, rgba(232,145,58,0.25), transparent),
+      radial-gradient(ellipse 500px 500px at 80% 70%, rgba(123,94,167,0.2), transparent),
+      radial-gradient(ellipse 400px 400px at 50% 50%, rgba(42,157,143,0.15), transparent);
+    animation: heroGlow 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes heroGlow {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; }
+  }
+
+  /* Floating particles */
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    animation: titleIn 1.2s ease-out both;
+  }
+
+  .hero h1 span {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--amber), var(--gold), var(--coral));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero .subtitle {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    color: rgba(255,255,255,0.7);
+    animation: fadeUp 1s 0.4s ease-out both;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.4);
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: pulse 2s ease-in-out infinite;
+    z-index: 2;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,0.3);
+    margin: 0.5rem auto 0;
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollLine {
+    0%, 100% { transform: scaleY(0.3); opacity: 0.3; }
+    50% { transform: scaleY(1); opacity: 1; }
+  }
+
+  @keyframes titleIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+
+  /* ---- Sections ---- */
+  .sections-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  section {
+    padding: 5rem 0 3rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Color accents per section */
+  section:nth-child(1) { --accent: var(--coral); }
+  section:nth-child(2) { --accent: var(--teal); }
+  section:nth-child(3) { --accent: var(--violet); }
+  section:nth-child(4) { --accent: var(--amber); }
+  section:nth-child(5) { --accent: var(--coral); }
+  section:nth-child(6) { --accent: var(--sage); }
+  section:nth-child(7) { --accent: var(--rose); }
+  section:nth-child(8) { --accent: var(--teal); }
+  section:nth-child(9) { --accent: var(--gold); }
+  section:nth-child(10) { --accent: var(--violet); }
+
+  section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    position: relative;
+    line-height: 1.2;
+  }
+
+  section h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+    margin-top: 0.75rem;
+    opacity: 0.6;
+  }
+
+  section p {
+    margin-bottom: 1.2rem;
+    color: #3A3A3A;
+  }
+
+  /* Indented poetic lines */
+  .voice {
+    padding-left: 2rem;
+    border-left: 3px solid var(--accent);
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #555;
+    opacity: 0.92;
+  }
+
+  .voice p {
+    margin-bottom: 0.4rem;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+  }
+
+  /* Highlight blocks */
+  .highlight-block {
+    background: linear-gradient(135deg, rgba(0,0,0,0.02), rgba(0,0,0,0.04));
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .highlight-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 5px 0 0 5px;
+  }
+
+  /* Emphasis */
+  .em {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Separator */
+  .sep {
+    text-align: center;
+    padding: 3rem 0;
+    font-size: 1.5rem;
+    color: var(--accent);
+    opacity: 0.4;
+    letter-spacing: 0.5em;
+  }
+
+  /* Closing section */
+  .closing {
+    text-align: center;
+    padding: 5rem 2rem 6rem;
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  .closing blockquote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-style: italic;
+    color: var(--violet);
+    line-height: 1.5;
+    position: relative;
+    padding: 2rem 0;
+  }
+
+  .closing blockquote::before,
+  .closing blockquote::after {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    color: var(--violet);
+    opacity: 0.15;
+    position: absolute;
+    line-height: 1;
+  }
+
+  .closing blockquote::before { top: -0.5rem; left: -0.5rem; }
+  .closing blockquote::after { content: '"'; bottom: -1rem; right: -0.5rem; }
+
+  .closing .final {
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    color: #888;
+    margin-top: 2rem;
+  }
+
+  /* Color strip decoration */
+  .color-strip {
+    height: 6px;
+    background: linear-gradient(90deg, var(--coral), var(--amber), var(--gold), var(--teal), var(--sage), var(--violet), var(--rose));
+    border-radius: 3px;
+    margin: 4rem 0 2rem;
+    opacity: 0.5;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.85rem;
+    color: #aaa;
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 600px) {
+    .sections-wrapper { padding: 0 1.2rem; }
+    section { padding: 3.5rem 0 2rem; }
+    .highlight-block { padding: 1.5rem; }
+    .voice { padding-left: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <h1>Curiosity Is<br>the <span>Cure</span></h1>
+    <p class="subtitle">Most harm does not begin with cruelty. It begins with certainty.</p>
+  </div>
+  <div class="scroll-hint">read on</div>
+  <!-- Particles generated by JS -->
+</div>
+
+<!-- BODY -->
+<div class="sections-wrapper">
+
+  <!-- 1 -->
+  <section>
+    <h2>The Death of Wonder</h2>
+    <p>Curiosity is the willingness to stay open to another person's interior.</p>
+    <div class="voice">
+      <p>"There is more here than I understand."</p>
+      <p>"You are still unfolding."</p>
+      <p>"Teach me who you are."</p>
+    </div>
+    <p>Judgment says the opposite:</p>
+    <div class="voice">
+      <p>"I've seen enough."</p>
+      <p>"You are just what I thought you are."</p>
+      <p>"I'm done learning."</p>
+    </div>
+    <p>We tend to think judgment is about being <span class="em">"right."</span> It isn't. It's about <span class="em">closing</span>. When curiosity collapses, relationship collapses with it.</p>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 2 -->
+  <section>
+    <h2>Closed Systems Can Function.<br>They Cannot Love.</h2>
+    <p>A closed system can provide. It can pay bills. It can show up. It can perform roles.</p>
+    <p>But it <span class="em">cannot see</span>.</p>
+    <p>Love requires permeability. It requires letting another person affect you. Without that openness, what remains is management. Not meeting. Not mutuality. <span class="em">Maintenance.</span></p>
+    <div class="highlight-block">
+      <p>Many people grow up believing this is what love looks like. That's not what love looks like. That's what emotional suppression looks like, wrapped in performance.</p>
+    </div>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 3 -->
+  <section>
+    <h2>What Abuse Really Is</h2>
+    <p>We usually imagine abuse as something loud. Shouting. Insults. Threats.</p>
+    <p>But the deepest damage is <span class="em">quieter</span>.</p>
+    <p>It is being forced into constant self-protection. Walking on eggshells. Monitoring tone. Filtering truth. Living in readiness to block.</p>
+    <div class="highlight-block">
+      <p>The abuse isn't the words. It's the <span class="em">posture</span>. A posture where openness is unsafe. Over time, that posture becomes identity. You don't just guard yourself. You forget how to be open at all.</p>
+    </div>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 4 -->
+  <section>
+    <h2>Why Narcissism Feels So Empty</h2>
+    <p>People often misunderstand narcissism. They think it's vanity. It isn't.</p>
+    <p>It's <span class="em">sealed curiosity</span>.</p>
+    <p>A person who cannot tolerate being affected. Who cannot stay present with another's reality. Who replaces wonder with control.</p>
+    <p>They may appear confident. But inside, nothing new is allowed to enter. No deep learning, surface stuff only. No repair, not even an attempt. No deep intimacy, just breadcrumbs. Only repetition.</p>
+    <div class="highlight-block">
+      <p>They never wondered about you, only wondered if you <span class="em">fit</span>. That's why it hurts.</p>
+    </div>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 5 -->
+  <section>
+    <h2>How Children Learn to Close</h2>
+    <p>No child is born defended.</p>
+    <p>Children are naturally open. They show you their feelings without strategy. They reach without calculation. They trust without proof.</p>
+    <p>They begin to close when openness is <span class="em">punished</span>. When curiosity is met with dismissal. When vulnerability is met with mockery. When expression is met with <em>"stop that."</em></p>
+    <p>Slowly, the aperture narrows.</p>
+    <div class="highlight-block">
+      <p>By adulthood, many people no longer remember their curiosity. They think guardedness is maturity. It isn't. It's <span class="em">scar tissue</span>.</p>
+    </div>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 6 -->
+  <section>
+    <h2>The Moral Weight of Curiosity</h2>
+    <p>We rarely treat curiosity as an ethical issue. We should.</p>
+    <p>To stop being curious about someone is to <span class="em">withdraw recognition</span>.</p>
+    <div class="voice">
+      <p>"I no longer acknowledge your interior."</p>
+    </div>
+    <p>It reduces a person to a role, a label, a function. That is how dehumanization begins. Not with hatred. With <span class="em">indifference</span>.</p>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 7 -->
+  <section>
+    <h2>Healing Is Reopening</h2>
+    <p>Healing is not positive thinking. It is not affirmations. It is not "moving on."</p>
+    <p>Healing is learning, slowly and safely, that openness will not be punished. That your truth will not be used against you. That your feelings will not be minimized. That curiosity can flow again without danger.</p>
+    <div class="highlight-block">
+      <p>This takes time. It takes consistency in curiosity. It takes asking real questions and waiting for real answers. There is <span class="em">no shortcut</span>.</p>
+    </div>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 8 -->
+  <section>
+    <h2>Why Curiosity Is the Cure</h2>
+    <p>Curiosity keeps systems alive. It allows updating. It allows repair. It allows growth. It allows <span class="em">surprise</span>.</p>
+    <p>Every healthy relationship, community, and society depends on it.</p>
+    <p>Where curiosity flows, meaning grows. Where curiosity dies, <span class="em">power fills the gap</span>. Control replaces connection. Certainty replaces care.</p>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 9 -->
+  <section>
+    <h2>Love With Its Eyes Open</h2>
+    <p>Curiosity is love with its eyes open.</p>
+    <p>It does not excuse harm. It does not ignore boundaries. It does not abandon discernment. It simply refuses to close prematurely. It stays in relationship with complexity.</p>
+    <p>Curiosity will resolve contradictions. Curiosity integrates. Disrespect is a closed conclusion about someone.</p>
+    <p>Curiosity and Respect say together:</p>
+  </section>
+
+  <!-- Final quote -->
+  <div class="closing">
+    <div class="color-strip"></div>
+    <blockquote>You are still more than my understanding of you.</blockquote>
+    <p class="final">And that sentence, lived consistently, heals more than any theory ever could.</p>
+  </div>
+
+</div>
+
+<footer>
+  fractalreality.ca
+</footer>
+
+<script>
+  // Floating particles in hero
+  const hero = document.querySelector('.hero');
+  const colors = ['#E8913A','#E85D5D','#2A9D8F','#7B5EA7','#D4A843','#6B9080','#C97B84'];
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    const size = Math.random() * 6 + 2;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDuration = (Math.random() * 10 + 8) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    hero.appendChild(p);
+  }
+
+  // Scroll reveal
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
