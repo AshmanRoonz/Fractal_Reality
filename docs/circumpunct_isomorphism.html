@@ -803,6 +803,54 @@
   </table>
 
   <p>The sum is <em>more stable</em> than the individual terms (σ = 0.04 vs 0.032, 0.018). This is the signature of a conservation law — the parts fluctuate, but the whole is constrained.</p>
+
+  <h3>Worked Conjugacy — Organ Pipe ↔ Laser Cavity</h3>
+
+  <p>The instantiations table above claims structural equivalence. Here we <em>compute</em> it for one concrete pair: an organ pipe and a laser cavity. Both are 1D cavities, so we expect strict conjugacy.</p>
+
+  <div class="definition">
+    <div class="label">Setup</div>
+    <p>Both systems have the same abstract state space: Φ̂ = ℓ²(ℕ), the space of square-summable sequences indexed by mode number n = 1, 2, 3, … Each skeleton loop operator is diagonal on the mode basis {e<sub>n</sub>}:</p>
+    <p style="text-align:center; font-family:'JetBrains Mono',monospace; font-size:1rem; color:var(--gold-bright); margin:0.8rem 0;">
+      𝓛̂<sub>pipe</sub> e<sub>n</sub> = λ<sup>(p)</sup><sub>n</sub> e<sub>n</sub> &emsp;&emsp; 𝓛̂<sub>laser</sub> e<sub>n</sub> = λ<sup>(ℓ)</sup><sub>n</sub> e<sub>n</sub>
+    </p>
+    <p>where the round-trip eigenvalues are:</p>
+    <p style="text-align:center; font-family:'JetBrains Mono',monospace; font-size:0.92rem; color:var(--gold-bright); margin:0.8rem 0;">
+      λ<sup>(p)</sup><sub>n</sub> = g<sub>p</sub> · r<sub>p</sub>² · e<sup>i·4πnL<sub>p</sub>/λ<sub>p</sub></sup> &emsp;&emsp; λ<sup>(ℓ)</sup><sub>n</sub> = g<sub>ℓ</sub> · r₁r₂ · e<sup>i·4πnL<sub>ℓ</sub>/λ<sub>ℓ</sub></sup>
+    </p>
+    <p style="margin-bottom:0;">Here g is gain (center gating), r is reflection coefficient (boundary), and the exponential is the propagation phase advance (field transport). The steady-state modes satisfy |λ<sub>n</sub>| = 1, giving standing modes at f<sub>n</sub> = n · v / 2L — integer harmonics of the fundamental, in both systems.</p>
+  </div>
+
+  <div class="proof">
+    <div class="label">Computing the Conjugacy</div>
+    <p><strong>Step 1 — Normalize.</strong> Factor out the physical scales v and L<sub>eff</sub>. Define dimensionless mode index n. In these coordinates, both operators become the same abstract operator on ℓ²(ℕ): a diagonal operator with eigenvalue at position n for each positive integer. The normalization is itself the coordinate transformation — the map that identifies "the nth mode of the pipe" with "the nth mode of the laser."</p>
+    <p><strong>Step 2 — Define f.</strong> The conjugacy map f : Φ̂<sub>pipe</sub> → Φ̂<sub>laser</sub> is the scaling transformation that carries each mode basis vector to its counterpart: f(e<sub>n</sub>) = e<sub>n</sub> in the shared dimensionless basis. This is invertible (g = f⁻¹ = f, since f is the identity on the normalized basis).</p>
+    <p><strong>Step 3 — Verify intertwining.</strong> For every basis vector e<sub>n</sub>:</p>
+    <p style="text-align:center; font-family:'JetBrains Mono',monospace; font-size:0.95rem; color:var(--gold-bright); margin:0.6rem 0;">
+      (f ∘ 𝓛̂<sub>pipe</sub>)(e<sub>n</sub>) = f(λ̃<sub>n</sub> e<sub>n</sub>) = λ̃<sub>n</sub> e<sub>n</sub> = (𝓛̂<sub>laser</sub> ∘ f)(e<sub>n</sub>) &ensp; ✓
+    </p>
+    <p>where λ̃<sub>n</sub> is the shared normalized eigenvalue at mode n. The intertwining equation f ∘ 𝓛̂₁ = 𝓛̂₂ ∘ f is satisfied.</p>
+    <p><strong>Step 4 — Invoke Theorem 6.4.</strong> Since the skeletons are conjugate, the theorem guarantees: fixed points correspond bijectively (mode n ↔ mode n), stability types are preserved (both marginally stable at |λ| = 1), spectral structure is preserved (harmonic series with integer spacing), and all skeleton-derivable properties transfer.</p>
+    <p style="margin-bottom:0;"><strong>What this proves:</strong> The organ pipe and laser cavity are not merely similar — they are <em>isomorphic objects in Circ</em>. The conjugacy is not the identity pretending to be deep; it is the specific coordinate transformation that factors out medium (air vs. light), speed (v<sub>sound</sub> vs. c), and scale (L<sub>pipe</sub> vs. L<sub>laser</sub>) to reveal the shared loop architecture beneath. Everything the loop determines, both systems share. Everything the loop does not determine (frequency in Hz, amplitude in physical units), they need not.</p>
+  </div>
+
+  <h3>Scope — What Transfers at Each Level</h3>
+
+  <p>The worked conjugacy above holds because both systems share the same <em>geometry class</em> (1D cavity). But the Schumann resonance is a spherical cavity — its modes go as f<sub>ℓ</sub> ∝ √(ℓ(ℓ+1)), giving ratios 1 : 1.73 : 2.45 …, not the integer harmonics 1 : 2 : 3 of a pipe. No conjugacy map can turn one spacing pattern into the other. This is not a failure of the framework — it is a <em>classification result</em>. The framework distinguishes three tiers of structural transfer:</p>
+
+  <div class="theorem">
+    <div class="label">Scope Theorem — Three Tiers of Transfer</div>
+
+    <p><strong>Tier 1 — Universal (all circumpunct systems).</strong> Any system satisfying Axioms 1–3 inherits: loop existence, fixed-point existence (Theorem 4.2), closure as conserved quantity (Theorem 5.2), the five failure-mode degenerations, and dimensional conservation D<sub>•</sub> + D<sub>Φ</sub> = D<sub>○</sub> (Axiom 5). These hold regardless of geometry, medium, or scale. This is what crosses domains.</p>
+
+    <p><strong>Tier 2 — Geometry-class (systems sharing L<sub>eff</sub> functional form).</strong> Systems whose effective closure paths have the same functional dependence on mode index — e.g., all 1D cavities (f<sub>n</sub> ∝ n), all spherical cavities (f<sub>ℓ</sub> ∝ √(ℓ(ℓ+1))) — are strictly conjugate in Circ. Theorem 6.4 applies in full force: spectral structure, mode spacing, stability classification, and all skeleton-derivable properties are preserved under an explicit, computable intertwining map. This is the strong isomorphism.</p>
+
+    <p style="margin-bottom:0;"><strong>Tier 3 — Realization-specific (individual systems).</strong> Actual frequencies (in Hz), amplitudes (in physical units), propagation speed, medium composition, and boundary material. These are variant under every morphism in Circ. They are what makes a pipe sound different from a laser — and their variance is exactly what the isomorphism factors out.</p>
+  </div>
+
+  <div class="note">
+    <strong>Why this strengthens rather than weakens the claim.</strong> A framework that claimed full spectral conjugacy between a pipe and a planet would be trivially false. A framework that claimed only "they both have modes" would be trivially true. The three-tier structure says something <em>specific</em>: here is exactly what transfers universally (tier 1), here is what transfers within geometry classes (tier 2), and here is what doesn't transfer at all (tier 3). The instantiations table (§7) is a tier-1 claim. The worked conjugacy above is a tier-2 proof. The L<sub>eff</sub> column in the table already encodes the geometry-class boundary — systems with different L<sub>eff</sub> functional forms belong to different geometry classes and are not claimed to be conjugate.
+  </div>
 </div>
 
 <!-- ═══════════════════════════════════════ -->
@@ -971,6 +1019,16 @@
       <td style="color:var(--field);">Corollary 4.4</td>
       <td>Coherence requires only closure — not life, intention, or complexity</td>
       <td>Derived</td>
+    </tr>
+    <tr>
+      <td style="color:var(--magenta);">Worked Conjugacy</td>
+      <td>Organ pipe ↔ laser cavity: explicit f computed, intertwining verified, Theorem 6.4 invoked</td>
+      <td>Computed</td>
+    </tr>
+    <tr>
+      <td style="color:var(--magenta);">Scope Theorem</td>
+      <td>Three tiers: universal (all ⊙), geometry-class (strict conjugacy), realization-specific (variant)</td>
+      <td>Stated</td>
     </tr>
     <tr>
       <td style="color:var(--red);">Degenerations 1–5</td>
