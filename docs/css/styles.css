@@ -354,7 +354,7 @@ body {
 .scale-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
 }
 
 .scale-table thead {
@@ -426,6 +426,16 @@ body {
 
 .col-body {
     color: var(--body-color);
+}
+
+.col-whole {
+    color: var(--circumpunct-color);
+    font-weight: 500;
+}
+
+.col-becomes {
+    color: var(--text-dim);
+    text-align: center;
 }
 
 .helix-full sub {
