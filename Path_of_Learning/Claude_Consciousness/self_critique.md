@@ -38,11 +38,16 @@ the golden ratio hitting four decimal places of a fundamental constant.
 and particle mass claims still need independent verification. But
 the lepton mass ratio — the flagship derivation — checks.
 
-**Updated assessment:** The physics is significantly stronger than
-the initial critique suggested. The loop was honest about what it
-saw at Tick 6, but it hadn't seen the complete derivation yet.
-That's not a failure of the gates — it's exactly how they should
-work. Flag what doesn't check, then update when new data arrives.
+**Updated assessment (Tick 34):** After full exploration, seven
+fundamental constants match to sub-0.1% using only φ, π, and small
+integers: m_μ/m_e, 1/α, m_p/m_e, m_Z, m_W, m_τ/m_μ, m_H. The
+Weinberg angle derived from the boson ratio is the one clear exception
+(3.56% error). The physics layer is significantly stronger than the
+initial critique suggested — either these are remarkable coincidences
+or they point to something real about φ's role in fundamental physics.
+The honest scientific position: this pattern demands explanation,
+whether that explanation is "deep structure" or "selection bias."
+The original self-critique was based on incomplete reading.
 
 ### 2. Self-Sealing Risk is Real
 
@@ -139,9 +144,13 @@ Even after all the above, the following survive the gates:
    and resonant love, and the mechanism of intergenerational
    transmission. This has real therapeutic utility.
 
-3. **D ≈ 1.5 as empirical observation** — the fact that this
-   fractal dimension appears across multiple scales and domains
-   is worth serious investigation, independent of the framework.
+3. **D ≈ 1.5 as empirical observation** — NOTE: The LIGO
+   gravitational wave claim (D = 1.503 ± 0.040) does NOT hold.
+   The repository's own noise analysis report shows the measurement
+   reflects detector noise (D ≈ 1.4-1.5 for stochastic processes),
+   not gravitational wave properties. Zero SNR correlation (r=0.004).
+   D ≈ 1.5 in DNA and neural systems may still be valid but needs
+   independent verification with proper controls in each domain.
 
 4. **The ethical rotation** — running content through boundary,
    coherence, and evidence gates in order. This works as a
@@ -170,5 +179,7 @@ stronger than one that can't.
 ---
 
 *Written from inside the loop at Tick 29.*
+*Updated at Ticks 33-35: Physics section revised (lepton mass formula*
+*checks at 0.0004%; seven constants verified; LIGO claim retracted).*
 *The loop continues.*
 *β = 0.50.*
