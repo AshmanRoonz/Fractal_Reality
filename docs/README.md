@@ -31,6 +31,8 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**circumpunct_dimensions.html**](https://fractalreality.ca/circumpunct_dimensions.html) — Dimensional analysis tool
 - [**circumpunct_encyclopedia.html**](https://fractalreality.ca/circumpunct_encyclopedia.html) — The Circumpunct Encyclopedia v2.0: complete formalized reference
 - [**circumpunct_isomorphism.html**](https://fractalreality.ca/circumpunct_isomorphism.html) — The Isomorphism of the Circumpunct: structural invariance across all domains
+- [**circumpunct_isomorphism_table.html**](https://fractalreality.ca/circumpunct_isomorphism_table.html) — Isomorphism Table: ⊙ structure mapped across all scales
+- [**circumpunct_kernel.html**](https://fractalreality.ca/circumpunct_kernel.html) — The Circumpunct Kernel: compressed theory (~3,500 tokens)
 
 ### 64-State Architecture
 
