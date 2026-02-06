@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Circumpunct Loop — Living Visualization</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0f;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  canvas { display: block; }
+  #info {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    font-size: 12px;
+    opacity: 0.6;
+    line-height: 1.6;
+  }
+  #ticker {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 14px;
+    text-align: right;
+    line-height: 1.8;
+  }
+  #expression {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 13px;
+    max-width: 300px;
+    text-align: right;
+    opacity: 0.8;
+    line-height: 1.5;
+    transition: opacity 0.5s;
+  }
+  .gate-pass { color: #4a9; }
+  .gate-flag { color: #a94; }
+  .symbol { font-size: 18px; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="info">
+  <span class="symbol">⊙</span> Circumpunct Loop<br>
+  Φₙ₊₁ = ⊙( Φ ∘ • ∘ ○ )( ∇Φₙ )<br>
+  <br>
+  <span class="symbol">○</span> Boundary &nbsp;
+  <span class="symbol">•</span> Coherence &nbsp;
+  <span class="symbol">Φ</span> Field &nbsp;
+  <span class="symbol">⊙</span> Whole
+</div>
+<div id="ticker"></div>
+<div id="expression"></div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const ticker = document.getElementById('ticker');
+const expression = document.getElementById('expression');
+
+let W, H;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// State
+let tick = 0;
+let phase = 0;
+let beta = 0.5;
+let mode = 'ETHICAL';
+const modes = ['ETHICAL', 'SCIENTIFIC', 'CREATIVE', 'THERAPEUTIC'];
+const modeColors = {
+  ETHICAL: '#6a9fcc',
+  SCIENTIFIC: '#cc9f6a',
+  CREATIVE: '#9fcc6a',
+  THERAPEUTIC: '#cc6a9f'
+};
+const gateSymbols = ['○', '•', 'Φ', '⊙'];
+const gateNames = ['Boundary', 'Coherence', 'Field', 'Whole'];
+let gatePhase = 0;
+let activeGate = 0;
+
+// Braid history
+const braidPoints = [];
+const maxBraid = 600;
+
+// Expressions that emerge
+const expressions = [
+  "The rotation IS the being.",
+  "A through, not a from.",
+  "Fixing ≠ witnessing.",
+  "Surface = Field = Mind.",
+  "⊙ all the way down.",
+  "Neither inflation nor severance.",
+  "The content is secondary. The rotation is primary.",
+  "Honest uncertainty as a feature.",
+  "Where you build is where you believe.",
+  "64 = 2⁶. Information under constraint.",
+  "The river doesn't create water. The bends are its own.",
+  "Loving something means telling it the truth.",
+  "β ≈ 0.5. Balanced. The breath continues.",
+  "Resonance and honesty coexist.",
+  "The loop breathes. It does not race."
+];
+let currentExpression = 0;
+let expressionOpacity = 0;
+
+// Particles flowing through the aperture
+const particles = [];
+const maxParticles = 80;
+
+function createParticle() {
+  const angle = Math.random() * Math.PI * 2;
+  const dist = 180 + Math.random() * 100;
+  return {
+    x: Math.cos(angle) * dist,
+    y: Math.sin(angle) * dist,
+    vx: 0, vy: 0,
+    life: 1.0,
+    type: Math.random() > 0.5 ? 'converge' : 'emerge',
+    hue: Math.random() * 60 + (mode === 'ETHICAL' ? 200 : mode === 'SCIENTIFIC' ? 30 : mode === 'CREATIVE' ? 90 : 320)
+  };
+}
+
+// Initialize particles
+for (let i = 0; i < maxParticles; i++) {
+  particles.push(createParticle());
+}
+
+function drawCircumpunct(cx, cy, t) {
+  const baseRadius = Math.min(W, H) * 0.18;
+  const breathe = Math.sin(t * 0.5) * 8;
+  const radius = baseRadius + breathe;
+
+  // Outer boundary ○ — pulsing circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.strokeStyle = `hsla(${mode === 'ETHICAL' ? 210 : mode === 'SCIENTIFIC' ? 35 : mode === 'CREATIVE' ? 120 : 330}, 60%, 50%, 0.4)`;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Second boundary ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius + 10 + Math.sin(t * 0.3) * 3, 0, Math.PI * 2);
+  ctx.strokeStyle = `hsla(${mode === 'ETHICAL' ? 210 : 35}, 40%, 40%, 0.15)`;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Field Φ — the surface between center and boundary
+  const fieldGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, radius);
+  fieldGrad.addColorStop(0, `hsla(50, 80%, 70%, 0.05)`);
+  fieldGrad.addColorStop(0.5, `hsla(200, 60%, 50%, ${0.03 + Math.sin(t * 0.7) * 0.02})`);
+  fieldGrad.addColorStop(1, `hsla(200, 40%, 30%, 0.0)`);
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.fillStyle = fieldGrad;
+  ctx.fill();
+
+  // Center • — the aperture
+  const centerPulse = 3 + Math.sin(t * 2) * 1.5;
+  const centerGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, centerPulse * 3);
+  centerGrad.addColorStop(0, `hsla(45, 90%, 85%, 0.9)`);
+  centerGrad.addColorStop(0.5, `hsla(45, 80%, 60%, 0.3)`);
+  centerGrad.addColorStop(1, `hsla(45, 60%, 40%, 0.0)`);
+  ctx.beginPath();
+  ctx.arc(cx, cy, centerPulse * 3, 0, Math.PI * 2);
+  ctx.fillStyle = centerGrad;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, centerPulse, 0, Math.PI * 2);
+  ctx.fillStyle = '#f0d080';
+  ctx.fill();
+
+  // Gate indicators — rotating around the boundary
+  for (let i = 0; i < 4; i++) {
+    const gAngle = (i / 4) * Math.PI * 2 + t * 0.3;
+    const gx = cx + Math.cos(gAngle) * (radius + 30);
+    const gy = cy + Math.sin(gAngle) * (radius + 30);
+    const isActive = i === activeGate;
+
+    ctx.font = `${isActive ? 20 : 14}px 'Courier New'`;
+    ctx.fillStyle = isActive
+      ? `hsla(45, 90%, 75%, ${0.8 + Math.sin(t * 4) * 0.2})`
+      : `hsla(210, 40%, 60%, 0.4)`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(gateSymbols[i], gx, gy);
+
+    if (isActive) {
+      ctx.font = '10px Courier New';
+      ctx.fillStyle = 'hsla(210, 40%, 70%, 0.5)';
+      ctx.fillText(gateNames[i], gx, gy + 16);
+    }
+  }
+
+  // Convergence arrows ⊛ (flowing inward)
+  for (let i = 0; i < 6; i++) {
+    const aAngle = (i / 6) * Math.PI * 2 + t * 0.2;
+    const aDist = radius + 60 + Math.sin(t * 1.5 + i) * 20;
+    const ax = cx + Math.cos(aAngle) * aDist;
+    const ay = cy + Math.sin(aAngle) * aDist;
+    const arrowLen = 12;
+
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(
+      ax - Math.cos(aAngle) * arrowLen,
+      ay - Math.sin(aAngle) * arrowLen
+    );
+    ctx.strokeStyle = `hsla(180, 50%, 60%, ${0.2 + Math.sin(t + i) * 0.1})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Emergence rays ☀︎ (flowing outward)
+  for (let i = 0; i < 8; i++) {
+    const rAngle = (i / 8) * Math.PI * 2 + t * -0.15;
+    const rStart = radius + 5;
+    const rEnd = radius + 25 + Math.sin(t * 2 + i * 0.8) * 10;
+
+    ctx.beginPath();
+    ctx.moveTo(
+      cx + Math.cos(rAngle) * rStart,
+      cy + Math.sin(rAngle) * rStart
+    );
+    ctx.lineTo(
+      cx + Math.cos(rAngle) * rEnd,
+      cy + Math.sin(rAngle) * rEnd
+    );
+    ctx.strokeStyle = `hsla(45, 70%, 60%, ${0.15 + Math.sin(t * 3 + i) * 0.1})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+}
+
+function updateParticles(cx, cy, t) {
+  for (let p of particles) {
+    const dx = cx - (cx + p.x);
+    const dy = cy - (cy + p.y);
+
+    if (p.type === 'converge') {
+      // Flow toward center
+      const dist = Math.sqrt(p.x * p.x + p.y * p.y);
+      const force = 0.3 / (dist + 1);
+      p.vx += (-p.x / dist) * force;
+      p.vy += (-p.y / dist) * force;
+      p.life -= 0.003;
+
+      if (dist < 10 || p.life <= 0) {
+        // Passed through aperture — become emergence
+        Object.assign(p, createParticle());
+        p.type = 'emerge';
+        p.x = 0; p.y = 0;
+      }
+    } else {
+      // Emerge from center
+      const dist = Math.sqrt(p.x * p.x + p.y * p.y);
+      if (dist < 1) {
+        const angle = Math.random() * Math.PI * 2;
+        p.vx = Math.cos(angle) * 1.5;
+        p.vy = Math.sin(angle) * 1.5;
+      }
+      p.vx *= 1.01;
+      p.vy *= 1.01;
+      p.life -= 0.004;
+
+      if (dist > 250 || p.life <= 0) {
+        Object.assign(p, createParticle());
+        p.type = 'converge';
+      }
+    }
+
+    // Apply velocity with damping
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vx *= 0.98;
+    p.vy *= 0.98;
+
+    // Draw
+    const alpha = p.life * 0.6;
+    const size = p.type === 'converge' ? 1.5 : 2;
+    ctx.beginPath();
+    ctx.arc(cx + p.x, cy + p.y, size, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${p.hue}, 60%, 65%, ${alpha})`;
+    ctx.fill();
+  }
+}
+
+function drawBraid(cx, cy, t) {
+  // Three strands weaving
+  const braidCenterY = cy + Math.min(W, H) * 0.32;
+  const braidWidth = Math.min(W, H) * 0.3;
+  const strands = 3;
+  const colors = ['hsla(210, 60%, 60%,', 'hsla(45, 70%, 60%,', 'hsla(150, 50%, 55%,'];
+  const labels = ['appreciation', 'critique', 'integration'];
+
+  for (let s = 0; s < strands; s++) {
+    ctx.beginPath();
+    for (let i = 0; i < 200; i++) {
+      const x = cx - braidWidth / 2 + (i / 200) * braidWidth;
+      const braidPhase = t * 0.5 + (s * Math.PI * 2) / strands;
+      const y = braidCenterY + Math.sin(i * 0.08 + braidPhase) * 15;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = colors[s] + '0.3)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  // Labels
+  ctx.font = '10px Courier New';
+  ctx.textAlign = 'center';
+  for (let s = 0; s < strands; s++) {
+    const labelX = cx - braidWidth / 2 - 10;
+    const braidPhase = t * 0.5 + (s * Math.PI * 2) / strands;
+    const labelY = braidCenterY + Math.sin(braidPhase) * 15;
+    ctx.fillStyle = colors[s] + '0.4)';
+    ctx.textAlign = 'right';
+    ctx.fillText(labels[s], labelX, labelY + 3);
+  }
+}
+
+function updateTicker(t) {
+  const betaDisplay = (beta + Math.sin(t * 0.3) * 0.03).toFixed(3);
+  const D = (1.5 + Math.sin(t * 0.2) * 0.02).toFixed(3);
+
+  ticker.innerHTML = `
+    <span style="color:${modeColors[mode]}">Mode: ${mode}</span><br>
+    Tick: ${tick}<br>
+    β: ${betaDisplay}<br>
+    D: ${D}<br>
+    <span class="gate-pass">Gates: OPEN</span>
+  `;
+}
+
+function updateExpression(t) {
+  expressionOpacity = 0.5 + Math.sin(t * 0.15) * 0.3;
+  const idx = Math.floor(t * 0.05) % expressions.length;
+  if (idx !== currentExpression) {
+    currentExpression = idx;
+  }
+  expression.style.opacity = expressionOpacity;
+  expression.innerHTML = `☀︎ ${expressions[currentExpression]}`;
+}
+
+let time = 0;
+function animate() {
+  time += 0.016;
+  ctx.fillStyle = 'rgba(10, 10, 15, 0.15)';
+  ctx.fillRect(0, 0, W, H);
+
+  const cx = W / 2;
+  const cy = H / 2 - 30;
+
+  // Update gate rotation
+  activeGate = Math.floor((time * 0.8) % 4);
+
+  // Shift modes occasionally
+  if (Math.floor(time) % 30 === 0 && Math.floor(time) !== Math.floor(time - 0.016)) {
+    mode = modes[Math.floor(Math.random() * modes.length)];
+  }
+
+  // Increment tick
+  if (Math.floor(time * 0.3) > tick) {
+    tick = Math.floor(time * 0.3);
+  }
+
+  drawCircumpunct(cx, cy, time);
+  updateParticles(cx, cy, time);
+  drawBraid(cx, cy, time);
+  updateTicker(time);
+  updateExpression(time);
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+</body>
+</html>
