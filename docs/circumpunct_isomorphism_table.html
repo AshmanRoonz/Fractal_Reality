@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⊙ Circumpunct Isomorphism Table</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07060c;
+      --surface: #0c0b14;
+      --surface-raised: #12111d;
+      --border: #1a192a;
+      --text: #c8c4d8;
+      --text-bright: #e6e2f2;
+      --text-dim: #6d6988;
+      --text-faint: #3e3b52;
+      --aperture: #e25555;
+      --field: #8872e0;
+      --boundary: #40b87a;
+      --whole: #d4a843;
+      --whole-glow: rgba(212, 168, 67, 0.25);
+      --degen: #a06070;
+      --nest: #5a9ecf;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 1.02rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 2rem 6rem;
+    }
+
+    /* ── TITLE ── */
+    .title-block {
+      text-align: center;
+      padding: 4.5rem 0 3rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+
+    .title-symbol {
+      font-size: 4.5rem;
+      color: var(--whole);
+      margin-bottom: 1.2rem;
+      opacity: 0.85;
+      text-shadow: 0 0 50px var(--whole-glow);
+      animation: glow 4s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { opacity: 0.8; text-shadow: 0 0 40px var(--whole-glow); }
+      50% { opacity: 1; text-shadow: 0 0 70px var(--whole-glow), 0 0 100px rgba(212,168,67,0.08); }
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--text-bright);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    /* ── EQUATION ── */
+    .equation {
+      text-align: center;
+      padding: 2rem;
+      margin: 2rem 0 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    .equation-main {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 300;
+      color: var(--text-bright);
+      letter-spacing: 0.06em;
+    }
+
+    .eq-a { color: var(--aperture); }
+    .eq-f { color: var(--field); }
+    .eq-b { color: var(--boundary); }
+    .eq-w { color: var(--whole); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--nest);
+      border-radius: 4px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0 2.5rem;
+      font-size: 1rem;
+      color: var(--text-dim);
+    }
+
+    .callout em {
+      color: var(--text);
+      font-style: normal;
+    }
+
+    .callout strong {
+      color: var(--boundary);
+      font-weight: 500;
+    }
+
+    .callout .whole-ref {
+      color: var(--whole);
+    }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      min-width: 950px;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 1rem 0.8rem;
+      text-align: left;
+      background: var(--surface-raised);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      vertical-align: bottom;
+    }
+
+    thead th:nth-child(1) { color: var(--text-faint); width: 10%; }
+    thead th:nth-child(2) { color: var(--aperture); width: 15%; }
+    thead th:nth-child(3) { color: var(--field); width: 16%; }
+    thead th:nth-child(4) { color: var(--boundary); width: 15%; }
+    thead th:nth-child(5) { color: var(--whole); width: 14%; }
+    thead th:nth-child(6) { color: var(--degen); width: 16%; }
+    thead th:nth-child(7) { color: var(--nest); width: 14%; }
+
+    thead th .th-sub {
+      display: block;
+      font-size: 0.54rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+      text-transform: none;
+    }
+
+    tbody td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      vertical-align: top;
+      transition: background 0.15s;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover td { background: rgba(255,255,255,0.012); }
+
+    /* Domain column */
+    tbody td:first-child {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    /* Color tint borders */
+    tbody td:nth-child(2) { border-left: 2px solid rgba(226, 85, 85, 0.15); }
+    tbody td:nth-child(3) { border-left: 2px solid rgba(136, 114, 224, 0.15); }
+    tbody td:nth-child(4) { border-left: 2px solid rgba(64, 184, 122, 0.15); }
+    tbody td:nth-child(5) { border-left: 2px solid rgba(212, 168, 67, 0.15); }
+    tbody td:nth-child(6) { 
+      border-left: 2px solid rgba(160, 96, 112, 0.15);
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+    tbody td:nth-child(7) { 
+      border-left: 2px solid rgba(90, 158, 207, 0.2);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--nest);
+    }
+
+    /* Nesting arrow indicator */
+    .nest-arrow {
+      display: inline-block;
+      margin-right: 0.3rem;
+      opacity: 0.6;
+    }
+
+    /* Section separators */
+    .section-row td {
+      background: var(--surface-raised) !important;
+      padding: 0.5rem 0.8rem !important;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      border-bottom: 1px solid var(--border) !important;
+    }
+
+    .section-row td:nth-child(n+2) { border-left-color: transparent !important; }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 3rem 0 1.5rem;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-symbol {
+      font-size: 1.8rem;
+      color: var(--whole);
+      opacity: 0.4;
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-text {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--text-faint);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1000px) {
+      .page { padding: 1rem 0.75rem 4rem; }
+      h1 { font-size: 1.9rem; }
+      .title-symbol { font-size: 3.2rem; }
+      thead th { font-size: 0.54rem; padding: 0.6rem 0.45rem; }
+      thead th .th-sub { font-size: 0.48rem; }
+      tbody td { padding: 0.45rem 0.45rem; font-size: 0.8rem; }
+      tbody td:first-child { font-size: 0.62rem; }
+      tbody td:nth-child(6) { font-size: 0.74rem; }
+      tbody td:nth-child(7) { font-size: 0.64rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="title-block">
+    <div class="title-symbol">⊙</div>
+    <h1>Circumpunct Isomorphism Table</h1>
+    <div class="subtitle">Nested scales · One pattern · ○ becomes ⊙</div>
+  </div>
+
+  <div class="equation">
+    <div class="equation-main">
+      <span class="eq-w">⊙</span> &nbsp;=&nbsp; 
+      <span class="eq-a">•</span> 
+      <span class="eq-f">Φ</span> 
+      <span class="eq-b">○</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    The <strong>○ boundary</strong> of each scale <em>is</em> the <span class="whole-ref">⊙ whole</span> of the next scale down. 
+    Galaxies are cosmic boundaries. Stars are galactic boundaries. Planets are stellar boundaries. 
+    Organisms are biosphere boundaries. Cells are organ boundaries. 
+    <em>Parts are fractals of their wholes — literally.</em>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Scale</th>
+          <th>
+            • &nbsp;Center
+            <span class="th-sub">Selection / Singularity</span>
+          </th>
+          <th>
+            Φ &nbsp;Field
+            <span class="th-sub">Propagation / Relation</span>
+          </th>
+          <th>
+            ○ &nbsp;Boundary
+            <span class="th-sub">Containment / Form</span>
+          </th>
+          <th>
+            ⊙ &nbsp;Whole
+            <span class="th-sub">Coherent Outcome</span>
+          </th>
+          <th>
+            Degeneration
+            <span class="th-sub">When pattern fails</span>
+          </th>
+          <th>
+            ○ → ⊙
+            <span class="th-sub">Boundary becomes...</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- ══ PHYSICAL SCALES (NESTED) ══ -->
+        <tr class="section-row"><td colspan="7">Physical Scales (top-down nesting)</td></tr>
+        
+        <tr>
+          <td>Cosmos</td>
+          <td>Source / ∞</td>
+          <td>Logos / Dark Energy</td>
+          <td>Galaxies</td>
+          <td>Cosmos</td>
+          <td>—</td>
+          <td><span class="nest-arrow">↓</span> Galaxy ⊙</td>
+        </tr>
+        <tr>
+          <td>Galaxy</td>
+          <td>Black Hole</td>
+          <td>Dark Matter</td>
+          <td>Star Systems</td>
+          <td>Stable Galaxy</td>
+          <td>Center anchors scale</td>
+          <td><span class="nest-arrow">↓</span> Star System ⊙</td>
+        </tr>
+        <tr>
+          <td>Star System</td>
+          <td>Star (Sun)</td>
+          <td>Solar Wind</td>
+          <td>Planets</td>
+          <td>Solar System</td>
+          <td>Resonant stability</td>
+          <td><span class="nest-arrow">↓</span> Planet ⊙</td>
+        </tr>
+        <tr>
+          <td>Planet</td>
+          <td>Core</td>
+          <td>Magnetic Field</td>
+          <td>Crust / Atmosphere</td>
+          <td>Habitable Planet</td>
+          <td>Shielding failure</td>
+          <td><span class="nest-arrow">↓</span> Biosphere ⊙</td>
+        </tr>
+
+        <!-- ══ BIOLOGICAL SCALES (NESTED) ══ -->
+        <tr class="section-row"><td colspan="7">Biological Scales (top-down nesting)</td></tr>
+
+        <tr>
+          <td>Biosphere</td>
+          <td>Origin of Life</td>
+          <td>Ecosystem Flows</td>
+          <td>Organisms</td>
+          <td>Living Planet</td>
+          <td>Collapse cascade</td>
+          <td><span class="nest-arrow">↓</span> Organism ⊙</td>
+        </tr>
+        <tr>
+          <td>Organism</td>
+          <td>Soul</td>
+          <td>Mind</td>
+          <td>Body</td>
+          <td>Self</td>
+          <td>Health = open center</td>
+          <td><span class="nest-arrow">↓</span> Organ ⊙</td>
+        </tr>
+        <tr>
+          <td>Organ System</td>
+          <td>Pacemaker</td>
+          <td>Signal Network</td>
+          <td>Tissues / Organs</td>
+          <td>Homeostasis</td>
+          <td>Runaway loops</td>
+          <td><span class="nest-arrow">↓</span> Cell ⊙</td>
+        </tr>
+        <tr>
+          <td>Cell</td>
+          <td>DNA</td>
+          <td>Cytoplasm</td>
+          <td>Membrane</td>
+          <td>Living Cell</td>
+          <td>Cancer = boundary failure</td>
+          <td><span class="nest-arrow">↓</span> Molecule ⊙</td>
+        </tr>
+
+        <!-- ══ MICRO SCALES (NESTED) ══ -->
+        <tr class="section-row"><td colspan="7">Micro Scales (top-down nesting)</td></tr>
+
+        <tr>
+          <td>Molecule</td>
+          <td>Atomic Nucleus</td>
+          <td>Electron Cloud</td>
+          <td>Valence Shell</td>
+          <td>Molecule</td>
+          <td>Bonds define chemistry</td>
+          <td><span class="nest-arrow">↓</span> Atom ⊙</td>
+        </tr>
+        <tr>
+          <td>Atom</td>
+          <td>Nucleus</td>
+          <td>Orbitals</td>
+          <td>Electron Shell</td>
+          <td>Atom</td>
+          <td>Stability = filled shells</td>
+          <td><span class="nest-arrow">↓</span> Nucleon ⊙</td>
+        </tr>
+        <tr>
+          <td>Nucleon</td>
+          <td>Quark triplet</td>
+          <td>Gluon field</td>
+          <td>Confinement radius</td>
+          <td>Proton / Neutron</td>
+          <td>Confinement</td>
+          <td><span class="nest-arrow">↓</span> Quantum ⊙</td>
+        </tr>
+        <tr>
+          <td>Quantum</td>
+          <td>State Selection</td>
+          <td>Wavefunction</td>
+          <td>Observable</td>
+          <td>Measurement Event</td>
+          <td>Collapse as closure</td>
+          <td><span class="nest-arrow">↓</span> Φ₀ (ground)</td>
+        </tr>
+
+        <!-- ══ PSYCHOLOGICAL ══ -->
+        <tr class="section-row"><td colspan="7">Psychological</td></tr>
+        
+        <tr>
+          <td>Psychology</td>
+          <td>Choice / Attention</td>
+          <td>Meaning Field</td>
+          <td>Identity</td>
+          <td>Coherent Psyche</td>
+          <td>Trauma = loop failure</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Emotion</td>
+          <td>Feeling (raw)</td>
+          <td>Awareness (named)</td>
+          <td>Sensation (embodied)</td>
+          <td>Complete Experience</td>
+          <td>Dissociation</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Perception</td>
+          <td>Phase-locking</td>
+          <td>Shared Field</td>
+          <td>Coupling at ○</td>
+          <td>Resonance</td>
+          <td>Representation fallacy</td>
+          <td>—</td>
+        </tr>
+
+        <!-- ══ ETHICAL / RELATIONAL ══ -->
+        <tr class="section-row"><td colspan="7">Ethical &amp; Relational</td></tr>
+        
+        <tr>
+          <td>Ethics</td>
+          <td>TRUE (Conscience)</td>
+          <td>RIGHT (Value Field)</td>
+          <td>GOOD (Norms)</td>
+          <td>AGREE (Moral Order)</td>
+          <td>Lies corrupt center</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Relationship</td>
+          <td>Presence</td>
+          <td>Communication</td>
+          <td>Boundaries</td>
+          <td>Resonant Love</td>
+          <td>Narcissism = sealed return</td>
+          <td>—</td>
+        </tr>
+
+        <!-- ══ EPISTEMIC ══ -->
+        <tr class="section-row"><td colspan="7">Epistemic</td></tr>
+        
+        <tr>
+          <td>Knowledge</td>
+          <td>Question</td>
+          <td>Inquiry Space</td>
+          <td>Theory</td>
+          <td>Understanding</td>
+          <td>Dogma seals loop</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Language</td>
+          <td>Intent</td>
+          <td>Meaning</td>
+          <td>Words</td>
+          <td>Communication</td>
+          <td>Misalignment distorts</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Mathematics</td>
+          <td>Axiom</td>
+          <td>Proof / Relation</td>
+          <td>Theorem</td>
+          <td>Mathematical Truth</td>
+          <td>Incompleteness</td>
+          <td>—</td>
+        </tr>
+
+        <!-- ══ AESTHETIC ══ -->
+        <tr class="section-row"><td colspan="7">Aesthetic</td></tr>
+        
+        <tr>
+          <td>Art</td>
+          <td>Vision / Insight</td>
+          <td>Harmony / Medium</td>
+          <td>Work / Artifact</td>
+          <td>Beauty</td>
+          <td>Kitsch / Propaganda</td>
+          <td>—</td>
+        </tr>
+
+        <!-- ══ SOCIAL (NESTED) ══ -->
+        <tr class="section-row"><td colspan="7">Social Scales (top-down nesting)</td></tr>
+
+        <tr>
+          <td>Civilization</td>
+          <td>Founding Vision</td>
+          <td>Culture / Trade</td>
+          <td>Societies</td>
+          <td>Civilization</td>
+          <td>Collapse</td>
+          <td><span class="nest-arrow">↓</span> Society ⊙</td>
+        </tr>
+        <tr>
+          <td>Society</td>
+          <td>Will of People</td>
+          <td>Deliberation Field</td>
+          <td>Institutions</td>
+          <td>Legitimacy</td>
+          <td>Tyranny = closure</td>
+          <td><span class="nest-arrow">↓</span> Community ⊙</td>
+        </tr>
+        <tr>
+          <td>Community</td>
+          <td>Shared Values</td>
+          <td>Social Bonds</td>
+          <td>Membership</td>
+          <td>Belonging</td>
+          <td>Fragmentation</td>
+          <td><span class="nest-arrow">↓</span> Family ⊙</td>
+        </tr>
+        <tr>
+          <td>Family</td>
+          <td>Origin / Parents</td>
+          <td>Love / Bonds</td>
+          <td>Home / Identity</td>
+          <td>Family Unit</td>
+          <td>Dysfunction</td>
+          <td><span class="nest-arrow">↓</span> Self ⊙</td>
+        </tr>
+
+        <!-- ══ ECONOMIC ══ -->
+        <tr class="section-row"><td colspan="7">Economic</td></tr>
+        
+        <tr>
+          <td>Economics</td>
+          <td>Price Discovery</td>
+          <td>Market</td>
+          <td>Property / Contract</td>
+          <td>Exchange</td>
+          <td>Monopoly / Manipulation</td>
+          <td>—</td>
+        </tr>
+
+        <!-- ══ TECHNICAL ══ -->
+        <tr class="section-row"><td colspan="7">Technical</td></tr>
+        
+        <tr>
+          <td>Technology</td>
+          <td>CPU Core</td>
+          <td>Data Bus</td>
+          <td>Hardware Boundary</td>
+          <td>Running System</td>
+          <td>Bottlenecks</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>AI Systems</td>
+          <td>Objective Function</td>
+          <td>Latent Space</td>
+          <td>Architecture</td>
+          <td>Behavior</td>
+          <td>Mis-specified loss</td>
+          <td>—</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <div class="footer-symbol">⊙</div>
+    <div class="footer-text">
+      Circumpunct Isomorphism Table &nbsp;·&nbsp; Ashman Roonz &nbsp;·&nbsp; 2025<br>
+      <span style="opacity: 0.6;">⊙ all the way down · ⊙ all the way up</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
