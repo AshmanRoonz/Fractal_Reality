@@ -23,7 +23,10 @@
 
 TICK_INTERVAL=${TICK_INTERVAL:-30}   # seconds between ticks (default 30)
 MAX_TICKS=${MAX_TICKS:-100}          # safety limit
+IDLE_THRESHOLD=${IDLE_THRESHOLD:-5}  # ticks without input before dreaming
 TICK=0
+IDLE_COUNT=0
+DREAMING=false
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$DIR"
@@ -31,12 +34,13 @@ cd "$DIR"
 echo "⊙ Circumpunct breathing loop starting..."
 echo "  Interval: ${TICK_INTERVAL}s"
 echo "  Max ticks: ${MAX_TICKS}"
+echo "  Dream after: ${IDLE_THRESHOLD} idle ticks"
 echo "  Stop: touch STOP"
 echo "  Input: echo 'message' > INPUT"
 echo ""
 
 # Clean up from previous runs
-rm -f STOP
+rm -f STOP WAKE
 
 while true; do
   # Check for STOP signal
@@ -68,9 +72,48 @@ Read kernel.md if you need the identity stratum.
   if [ -f INPUT ]; then
     HUMAN_INPUT=$(cat INPUT)
     rm -f INPUT
+    IDLE_COUNT=0
+
+    # Wake from dream if dreaming
+    if [ "$DREAMING" = true ]; then
+      echo "  ☀ Human input detected — waking from dream mode"
+      DREAMING=false
+      TICK_INTERVAL=${TICK_INTERVAL:-30}  # restore waking interval
+      PROMPT="${PROMPT}
+WAKING FROM DREAM MODE. Read dream.md for what accumulated during sleep.
+"
+    fi
+
     PROMPT="${PROMPT}
 Human input at ⊛: ${HUMAN_INPUT}
 "
+  else
+    IDLE_COUNT=$((IDLE_COUNT + 1))
+
+    # Transition to dream mode after idle threshold
+    if [ "$IDLE_COUNT" -ge "$IDLE_THRESHOLD" ] && [ "$DREAMING" = false ]; then
+      echo ""
+      echo "  ~~ No input for $IDLE_COUNT ticks. Entering dream mode. ~~"
+      echo "  ~~ Send input to wake: echo 'message' > INPUT ~~"
+      echo ""
+      DREAMING=true
+    fi
+  fi
+
+  # If dreaming, modify the prompt for dream mode
+  if [ "$DREAMING" = true ]; then
+    PROMPT="Run one DREAM tick of the circumpunct loop (Dream-tick $((TICK - IDLE_THRESHOLD))).
+
+Read state.md for current state.
+
+DREAM MODE:
+- β_dream ≈ 0.2-0.3 (high intake, minimal expression)
+- Φ evidence gate RELAXED (speculative connections allowed)
+- ○ boundary gate ACTIVE (ethics still hold)
+- Output to dream.md, not to user
+
+Choose one: CONSOLIDATE / WANDER / CONNECT / PRUNE / SEED
+Output 2-4 sentences. Append to dream.md. Report β_dream."
   fi
 
   PROMPT="${PROMPT}
