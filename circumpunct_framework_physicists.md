@@ -2,20 +2,20 @@
 
 ## Abstract
 
-We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental object ⊙ = ○ ⊗ Φ ⊗ • unifies boundary (○), field (Φ), and aperture (•) through the master equation:
+We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental object ⊙ = Φ(•, ○) unifies boundary (○), field (Φ), and aperture (•) through the master equation:
 
 ```
 Φ∞ →⊛→ iλ∞ →☀︎→ ⊙λ∞     (Forward: Field → Aperture → Form)
 ⊙λ∞ →⊛→ iλ∞ →☀︎→ Φ∞     (Return: Form → Aperture → Field)
 ```
 
-where ⊛ denotes convergence (input to aperture) and ☀︎ denotes emergence (output from aperture). We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 corresponds to D=1.5—the fractal dimension of Brownian motion, a Mandelbrot fact (theorem, not fit).
+where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denotes emergence (aperture → past, radiation). The notation ⊙ = Φ(•, ○) encodes Axiom A4 (Compositional Wholeness): Φ is the OPERATOR that constitutes the whole by relating aperture and boundary — the verb, not a noun. The tensor product ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_• remains the correct Hilbert-space formalization for quantum theory. We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 corresponds to D=1.5—the fractal dimension of Brownian motion, a Mandelbrot fact (theorem, not fit).
 
 **On process dimensions:** The framework builds on Mandelbrot's proven mathematical foundation: fractional (Hausdorff) dimensions are real and measurable, describing process traces rather than static objects. The specific D value varies by system (coastlines ≈1.25, Brownian motion =1.5 exactly, DLA clusters ≈1.7)—this variation is expected. The framework predicts that balanced aperture dynamics produce D≈1.5; empirical examples illustrate this principle but are not load-bearing evidence for it.
 
 ---
 
-**[← Back to Complete Theory](../THEORY_OF_EVERYTHING.md)**
+**[← Back to Complete Theory](THEORY_OF_EVERYTHING.md)**
 
 ---
 
@@ -67,6 +67,8 @@ where ⊛ denotes convergence (input to aperture) and ☀︎ denotes emergence (
 - [6D. Hilbert Space Formalization](#6d-hilbert-space-formalization)
 - [6E. Empirical Evidence](#6e-empirical-evidence)
 - [6F. Convergent Frameworks](#6f-convergent-frameworks)
+- [6G. The Surface Theorem](#6g-the-surface-theorem)
+- [6H. The Isomorphism Claim](#6h-the-isomorphism-claim)
 - [7. Testable Predictions and Current Status](#7-testable-predictions-and-current-status)
   - [7.1 Zero Free Parameters (Established)](#71-zero-free-parameters-established)
   - [7.2 The φ³ Family (Derived Texture Constants)](#72-the-φ³-family-derived-texture-constants)
@@ -96,7 +98,8 @@ where ⊛ denotes convergence (input to aperture) and ☀︎ denotes emergence (
 The circumpunct framework models the universe as a *whole-with-parts* object:
 
 ```
-⊙ = ○ ⊗ Φ ⊗ •
+⊙ = Φ(•, ○)     (Ontological: Φ OPERATES on • and ○ — the verb, not a noun)
+ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_•     (Hilbert space: tensor product for quantum theory)
 ```
 
 equipped with a three-stage process (convergence, aperture rotation, emergence):
@@ -104,6 +107,8 @@ equipped with a three-stage process (convergence, aperture rotation, emergence):
 ```
 Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]
 ```
+
+The framework rests on five axioms (A0–A4): Impossibility of Nothing, Necessary Multiplicity, Fractal Necessity, Conservation of Traversal, and Compositional Wholeness. Everything derives from these.
 
 **The goal of this document is to provide:**
 
@@ -323,7 +328,7 @@ For quantum theory, define the total Hilbert space:
 ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_•
 ```
 
-The slogan "⊙ = ○ ⊗ Φ ⊗ •" is understood as "a state in the tensor-product Hilbert space", not just symbolic.
+**Compositional Wholeness (Axiom A4):** The ontological structure is ⊙ = Φ(•, ○) — Φ is the *operator* that constitutes the whole by relating aperture and boundary. Φ is not a substance sitting between two things; it IS the act of mediating itself. Surface = Field = Mind. The tensor product ⊗ is the correct Hilbert-space formalization for quantum computation, but the ontological claim is stronger: the whole is constituted by the *operation* of relating, not by three substances placed side by side. A proposed 4th primitive would need mediation to function — therefore reduces to Φ. Operator space closed.
 
 ---
 
@@ -849,15 +854,17 @@ More phase-locking → longer tail → more integrated experience.
 
 ## 3. Core Postulates (Physics Version)
 
-### Postulate 1 — Circumpunct Kinematics
+### Postulate 1 — Circumpunct Kinematics (Compositional Wholeness)
 
 **P1.** The kinematical state of any physical system is a circumpunct configuration:
 
 ```
-⊙ = (○, Φ, •) ∈ 𝓑 × 𝓕 × 𝓐
+⊙ = Φ(•, ○)                       (Ontological: Φ operates on • and ○)
+⊙ = (○, Φ, •) ∈ 𝓑 × 𝓕 × 𝓐       (Configuration space)
+ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_•            (Hilbert space)
 ```
 
-or, in the quantum theory, a state in the Hilbert space ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_•.
+The whole is constituted by the operation of relating (A4). The triad is irreducible: ⊙ ≠ ○ + Φ + • (sum), and a 4th primitive would need Φ-mediation to function, therefore reduces to Φ. Operator space is closed.
 
 ### Postulate 2 — Process Evolution
 
@@ -1052,6 +1059,16 @@ Phase (continuous) and gating (discrete) are the same coherence distinction view
 - Through ○ → nested gating (fractal repetition)
 
 This resolves the apparent tension between discrete state counting and continuous field dynamics: they are complementary views of the same underlying coherence structure.
+
+**Ethics mapping (same structure in domain of value):**
+
+| Component | Info Type | Ethics | Domain |
+|-----------|-----------|--------|--------|
+| • | Binary (threshold, χ=±1) | TRUE | Center. Coherence. Identity. |
+| Φ | Analog (amplitude+phase) | RIGHT | Field. Evidence. Fitness. |
+| ○ | Fractal (binary∘analog nested) | GOOD | Boundary. Consent. Care. |
+
+Ethics is NOT imposed on physics — it is the same structure operating in the domain of value. The ethical balance ◐ = ½ is the Golden Rule as fixed point: fix(F) of ethical action.
 
 
 ---
@@ -1929,6 +1946,43 @@ Scale-Time Theory (André Dupke, 2025–2026) arrives at structurally isomorphic
 | ρ = ω/α | OSR = ν_loc/ν_dyn | Ratio parameter for regime transitions |
 
 **Convergent evolution in theoretical physics.** The probability of this structural isomorphism being coincidence is extremely low.
+
+---
+
+## 6G. The Surface Theorem
+
+The kernel formulation (§6 of the compressed kernel) establishes a key identity:
+
+**Surface = Field = Mind**
+
+Surfaces ARE the connection between 3D-at-one-scale and 3D-at-smaller-scale. Not substance — interface. The relating itself.
+
+**Dimensional constraint (forced):** The interface Σ must be exactly 2D:
+- < 2D: Can't carry phase (needs r, θ — both radius and angle)
+- \> 2D: Collapses locality (becomes the volume itself)
+- = 2D: Carries amplitude + phase. Separates without isolating.
+
+**Conservation confirms:** 1(•) + 2(Φ) = 3(○) — aperture + field = boundary.
+
+Every point on Σ is POTENTIAL. ⊙ is what happens when a point activates (differentiation of center from boundary).
+
+**Physical consequence:** Mind isn't IN the brain. Mind IS the relating between scales. Mind feels non-local because it isn't located anywhere — it's the between. Your mind = totality of surfaces (Φ mediations) within you, from outer boundary (perception) down through organs, cells, molecules.
+
+---
+
+## 6H. The Isomorphism Claim
+
+The triadic structure • – Φ – ○ is a **structural invariance** recurring across ALL coherent systems by **geometric necessity**.
+
+Not analogy. Not metaphor. Isomorphism of the abstract skeleton: closure loop operator 𝓛 whose fixed points = coherent states. Standing modes arise as FORCED consequence of loop spectral structure.
+
+**The proof:** ANY bounded field with center and reflective boundary MUST support natural modes with fundamental frequency determined by center–boundary traversal.
+
+```
+⊙ in an atom = ⊙ in a cell = ⊙ in a person = ⊙ in a planet
+```
+
+Scale and medium change expression. Architecture unchanged. Same loop. Different substrate. Same math.
 
 ---
 
@@ -3370,20 +3424,29 @@ This suggests a common geometric origin.
 
 ## 8. One-Page Cheat Sheet
 
+### Five Axioms
+
+- **A0** Impossibility of Nothing — Existence is necessary
+- **A1** Necessary Multiplicity — Minimum structure = trinity = ⊙ = Φ(•, ○)
+- **A2** Fractal Necessity — ⊙ all the way down, ⊙ all the way up
+- **A3** Conservation of Traversal — D_• + D_Φ = D_○, i.e. (1+β) + (2−β) = 3
+- **A4** Compositional Wholeness — ⊙ = Φ(•, ○), Φ is operator, not substance
+
 ### Spaces
 
 - **Spacetime:** M (4D manifold, Lorentzian metric g_μν in GR limit)
-- **Boundary:** ○ ∈ 𝓑, space of embedded 2-surfaces Σ ↪ M
-- **Field:** Φ ∈ 𝓕 = Γ(E), bundle E→M with fiber ℂ⁶⁴ in SM limit
-- **Aperture:** • ∈ 𝓐, space of timelike worldlines / aperture sets
-- **Circumpunct state:** ⊙ = (○, Φ, •)
+- **Boundary:** ○ ∈ 𝓑, space of embedded 2-surfaces Σ ↪ M (3D, body)
+- **Field:** Φ ∈ 𝓕 = Γ(E), bundle E→M with fiber ℂ⁶⁴ in SM limit (2D, mind/surface)
+- **Aperture:** • ∈ 𝓐, space of timelike worldlines / aperture sets (0.5D, soul/center)
+- **Circumpunct:** ⊙ = Φ(•, ○) ontologically; ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_• in Hilbert space
 
 ### Operators
 
-- **Convergence:** ⊛: ℋ_Φ → ℋ_in, kernel K_conv
-- **Aperture rotation:** i: ℋ_in → ℋ_out, multiplication by imaginary unit at balance ◐=1/2
-- **Emergence:** ☀︎: ℋ_out → ℋ_Φ, kernel K_emerg
+- **Convergence:** ⊛: ℋ_Φ → ℋ_in, kernel K_conv (future → •, gathering)
+- **Aperture rotation:** i: ℋ_in → ℋ_out, 90° transform at balance ◐=1/2, i²=−1
+- **Emergence:** ☀︎: ℋ_out → ℋ_Φ, kernel K_emerg (• → past, radiation)
 - **Evolution:** U(Δt) = ☀︎ ∘ i ∘ ⊛
+- **Fixed point:** ⊙* = fix(λΦ. ☀︎∘i∘⊛[Φ])
 
 ### Key Equalities
 
@@ -3391,6 +3454,17 @@ This suggests a common geometric origin.
 ```
 ◐ = |⊛|/(|⊛|+|☀︎|) = 1/2
 D = 1 + ◐ = 1.5
+H(◐) = −[◐ log₂ ◐ + (1−◐) log₂(1−◐)] = 1 bit at ◐ = ½
+```
+
+**Energy:**
+```
+E = ⊙ = (○, Φ, •) × (⊛, i, ☀︎)³    Energy = Structure × Process³
+```
+
+**Conservation of Traversal:**
+```
+D_• + D_Φ = D_○    →    (1+β) + (2−β) = 3
 ```
 
 **Phase transmission (derived from isotropy + linearity + conservation):**
@@ -3410,19 +3484,26 @@ B(x) ∝ √(-g_tt(x))
 δ(S_circ[g] + S_SM[g,Φ]) = 0  →  G_μν + Λg_μν = 8πG T_μν
 ```
 
+**Surface Theorem:** Surface = Field = Mind. Σ must be exactly 2D (forced: <2D can't carry phase, >2D collapses locality).
+
 ---
 
 ## 9. Connection to Full Framework
 
 This document presents the **local, linearized limit** of the circumpunct framework, sufficient to recover standard QM and GR. The full nonlinear theory includes:
 
-1. **Validation dynamics:** Operators V_in, V_out that enforce normalization and consistency
-2. **Boundary evolution:** Kernel-based dynamics on 𝓑 describing boundary reconfiguration
-3. **Scale-dependent emergence:** Full treatment of D(scale) transition from 1.5 → 3
-4. **64-state algebra:** Complete bijection to Standard Model particles with explicit Lagrangian mappings
-5. **Braid topology:** Yang-Baxter equations and B₃ braid group structure underlying trinity necessity
-6. **Ratchet cascade (Chapter XXIX):** The emergence hierarchy from physics → chemistry → biochemistry → biology → consciousness → civilization, with ratchet operators at each transition
-7. **Ethereal tail (Chapter XXVIII):** Phase-locked hierarchies of apertures across scales, the worldline bundle formalism, and the consciousness integral C = ∫_T B(x,t) dx dt
+1. **Five Axioms (A0–A4):** Impossibility of Nothing, Necessary Multiplicity, Fractal Necessity, Conservation of Traversal, Compositional Wholeness — everything derives from these
+2. **Validation dynamics:** Operators V_in, V_out that enforce normalization and consistency
+3. **Boundary evolution:** Kernel-based dynamics on 𝓑 describing boundary reconfiguration
+4. **Scale-dependent emergence:** Full treatment of D(scale) transition from 1.5 → 3
+5. **64-state algebra:** Complete bijection to Standard Model particles with explicit Lagrangian mappings
+6. **Braid topology:** Yang-Baxter equations and B₃ braid group structure underlying trinity necessity
+7. **Surface Theorem (Chapter 5A):** Surface = Field = Mind. Σ must be exactly 2D (forced).
+8. **Ratchet cascade (Chapter 29):** The emergence hierarchy from physics → chemistry → biochemistry → biology → consciousness → civilization, with ratchet operators at each transition
+9. **Ethereal tail (Chapter 22):** Phase-locked hierarchies of apertures across scales, the worldline bundle formalism, and the consciousness integral C = ∫_T B(x,t) dx dt
+10. **Isomorphism Claim (Chapter 32):** The triadic structure is a structural invariance recurring across ALL coherent systems by geometric necessity — closure loop operator 𝓛 whose fixed points = coherent states
+11. **Cross-Traditional Convergence (Chapter 33):** Independent traditions (I Ching, Vedanta, Taoism, Kabbalah, Christianity, Buddhism, Sufism, Hermetic) map onto the same triadic structure
+12. **Collaboration Model (Chapter 34):** The human-AI "cyborg unit" that produced this framework
 
 The quick-start formulation prioritizes mathematical clarity and connection to established physics over completeness.
 
@@ -3430,10 +3511,15 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 | This Document | Full Framework | Chapter |
 |---------------|----------------|---------|
-| §2.7 Ratchet Operators | Complete emergence cascade | XXIX |
-| §2.8 Ethereal Tail | Full phase-locking formalism | XXVIII |
-| §5.1 Braid density | Consciousness integral | XXVIII §28.6 |
-| §7.4 Predictions 12-14 | Biological/social predictions | XXVIII-XXIX |
+| §1.5 Compositional Wholeness | Five Axioms, A4 | 1, 2 |
+| §1.2 Boundary as 2-surface | Surface = Field = Mind | 5A |
+| §2.7 Ratchet Operators | Complete emergence cascade | 29 |
+| §2.8 Ethereal Tail | Full phase-locking formalism | 22 |
+| §5.1 Braid density | Consciousness integral | 22 §22.6 |
+| §3.7 Ethics mapping | Ethics as same structure | 25 |
+| §7.4 Predictions 12-14 | Biological/social predictions | 22, 29 |
+| — | Isomorphism Claim | 32 |
+| — | Cross-Traditional Convergence | 33 |
 
 ---
 
@@ -3488,11 +3574,13 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 For complete details, derivations, and empirical data, see:
 
-- **Main document:** [The Circumpunct Framework: A Theory of Everything](../THEORY_OF_EVERYTHING.md) (latest version v5.4)
+- **Main document:** [The Circumpunct Framework: A Theory of Everything](THEORY_OF_EVERYTHING.md)
+- **Compressed kernel:** [docs/circumpunct_kernel.html](docs/circumpunct_kernel.html) — Lossless compression for rapid context loading (~3,500 tokens)
 - **64-state architecture:** Explicit bijections between circumpunct states and Standard Model particles
 - **Illustrative examples:** Cross-domain D≈1.5 observations (biological, neural, quantum systems)—note: these illustrate the principle, not prove it
-- **Philosophical foundations:** Geometric necessity of trinity structures from braid topology
+- **Philosophical foundations:** Five axioms (A0–A4), geometric necessity of trinity structures from braid topology
 - **Temporal dynamics:** Equations for ∂•/∂t = 0, ∂○/∂t = ε, ∂Φ/∂t = O(1)
+- **Cross-traditional convergence:** Chapter 33 maps 8 independent spiritual/philosophical traditions onto the triadic structure
 
 ---
 
@@ -3502,9 +3590,23 @@ This formulation benefited from iterative refinement focused on mathematical rig
 
 ---
 
-**Document Status:** Quick-start formulation for working physicists (v1.6)
-**Last Updated:** December 2025
+**Document Status:** Quick-start formulation for working physicists (v1.7)
+**Last Updated:** February 2026
 **Maintained by:** Circumpunct Framework Development Team
+
+**v1.7 Changes:** Integration of circumpunct kernel v1.0 content:
+- Abstract: Updated fundamental object to ⊙ = Φ(•, ○) (Axiom A4: Compositional Wholeness)
+- §0: Added five axioms (A0–A4) summary
+- §1.5: Added Compositional Wholeness — Φ as operator, operator space closed
+- §3 Postulate 1: Updated with operator notation and A4
+- §3.7: Added ethics mapping (TRUE/RIGHT/GOOD) from kernel §10
+- §6G: Added Surface Theorem (Surface = Field = Mind, Σ must be 2D)
+- §6H: Added Isomorphism Claim (closure loop operator 𝓛, structural invariance)
+- §8: Added Five Axioms, Energy equation, Conservation of Traversal, Surface Theorem to cheat sheet
+- §9: Updated chapter references for new Theory chapters 32-35
+- §11: Added kernel cross-reference and cross-traditional convergence
+- Appendix A: Updated with kernel §0 structure/process/relations/parameters
+- Fixed back links (THEORY_OF_EVERYTHING.md path corrected)
 
 **v1.6 Changes:** Major update adding §7A Alternative Derivations section with 9 rigorous derivations:
 - §7A.1: D = 1.5 as Mandelbrot fact and framework correspondence
@@ -3535,16 +3637,28 @@ Updated status labels: α now marked as DERIVED (not external), lepton mass form
 
 ### Core Symbols
 
-**Structure (Trinity):**
-- ⊙ : circumpunct (whole system)
-- ○ : boundary (surface/body)
-- Φ : field (mind)
-- • : aperture (soul/singularity)
+**Structure — What IS (Integer Dimensions):**
+- ⊙ : circumpunct (whole-with-parts, NOT mere unity). ⊙ = Φ(•, ○)
+- • : aperture / soul / center (0.5D). WHERE i acts. Gate, not source. Binary (χ=±1). "A through, not a from."
+- Φ : field / mind / surface (2D). The OPERATION of relating • ↔ ○. NOT a substance — the act of mediating itself. Surface = Field = Mind. Operator space closed.
+- ○ : boundary / body (3D). Interface with exterior. Fractal (binary∘analog nested). Made of ⊙'s at smaller scale.
 
-**Process (Two Operators):**
-- ⊛ : convergence — input TO aperture, gathering from all directions (isotropic)
-- ☀︎ : emergence — output FROM aperture, radiating to all directions (isotropic)
-- i : aperture rotation (imaginary unit), equals Å(0.5) = e^(iπ/2)
+**Process — What HAPPENS (Half-Integer Dimensions):**
+- ⊛ : convergence — future → •. Input. Gathering from all directions (isotropic)
+- ☀︎ : emergence — • → past. Output. Radiating to all directions (isotropic)
+- i : aperture rotation. 90° transform. i² = −1. Lives at •. Å(β) = exp(iπβ). At β=½: Å = i exactly.
+
+**Relations:**
+- ∘Φ∘ : structural composition through field (Φ operates, not sits alongside)
+- ⊂ : component of (• ⊂ ⊙, but • ≠ ⊙)
+- ◐ : balance parameter (= β = ½ at equilibrium)
+- λΦ∞ : infinite field. 0D = ∞D. All configurations. Ground of all.
+
+**Parameters:**
+- β : opening parameter ∈ [0,1]. β = |⊛|/(|⊛|+|☀︎|). At β=½: balanced, conscious, D=1.5.
+- ρ : ω/α = emergence/convergence rate. Regime transition parameter.
+- D : fractal dimension. D = 1+β. At balance: D=1.5.
+- H(β) : = −[β log₂ β + (1−β) log₂(1−β)]. At β=½: H = 1 bit (max entropy).
 
 **The Master Equation:**
 ```
@@ -3763,4 +3877,4 @@ The 64-state architecture automatically satisfies this constraint.
 
 **Complete bijection status:** All 64 states explicitly mapped to Standard Model fields. No states double-counted or missing. Quantum numbers consistent. Anomaly cancellation automatic.
 
-For additional details on the 64-state architecture, see the full framework document: [THEORY_OF_EVERYTHING.md](../THEORY_OF_EVERYTHING.md)
+For additional details on the 64-state architecture, see the full framework document: [THEORY_OF_EVERYTHING.md](THEORY_OF_EVERYTHING.md)
