@@ -418,6 +418,117 @@
     .nav-bar { gap: 1rem; flex-wrap: wrap; }
   }
 
+  /* === CITATIONS === */
+  .cite {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6em;
+    vertical-align: super;
+    line-height: 0;
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 0 1px;
+  }
+
+  .cite:hover { color: var(--accent-light); text-decoration: underline; }
+
+  /* === REFERENCES === */
+  .references {
+    margin: 2.5rem 0 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .references-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+
+  .ref-list {
+    list-style: none;
+    counter-reset: ref-counter;
+  }
+
+  .ref-list li {
+    counter-increment: ref-counter;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-bottom: 0.85rem;
+    padding-left: 2.25rem;
+    position: relative;
+    color: var(--caption);
+    font-weight: 300;
+  }
+
+  .ref-list li::before {
+    content: counter(ref-counter);
+    position: absolute;
+    left: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--accent);
+    width: 1.5rem;
+    text-align: right;
+    top: 0.15rem;
+  }
+
+  .ref-list li a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-light);
+    word-break: break-all;
+  }
+
+  .ref-list li a:hover { color: var(--accent-light); }
+
+  .ref-list li em { font-style: italic; }
+
+  .ref-list li strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* === FURTHER READING === */
+  .further-reading {
+    margin: 1.5rem 0 2rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--paper-dark);
+    border: 1px solid var(--rule);
+  }
+
+  .further-reading-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .further-reading a {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+    text-decoration: none;
+    line-height: 1.5;
+  }
+
+  .further-reading a:hover { color: var(--accent); }
+
+  .further-reading a .fr-source {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--caption);
+    margin-left: 0.25rem;
+  }
+
   /* === ENTRANCE ANIMATIONS === */
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
@@ -469,7 +580,7 @@
 
   <div class="article-body">
 
-    <p class="lede">You've heard it before. Maybe from a parent during a difficult dinner. Maybe from a partner after a fight. Maybe from the voice inside your own head — the one that sounds like maturity but feels like a door closing. <em>"You're too sensitive."</em> It sounds like wisdom. It arrives through the voice of someone who cares. And according to a growing body of research into emotional suppression and intergenerational trauma, it may be the single most effective lie ever told — because the people who transmit it genuinely believe they're helping.</p>
+    <p class="lede">You've heard it before. Maybe from a parent during a difficult dinner. Maybe from a partner after a fight. Maybe from the voice inside your own head — the one that sounds like maturity but feels like a door closing. <em>"You're too sensitive."</em> It sounds like wisdom. It arrives through the voice of someone who cares. And according to a growing body of research into emotional suppression and intergenerational trauma,<a class="cite" href="#ref-4" id="c1">1</a> it may be the single most effective lie ever told — because the people who transmit it genuinely believe they're helping.</p>
 
     <p>This isn't about hurt feelings. It isn't about political correctness or emotional fragility. It's about a specific mechanism — a pattern that installs itself through love, disguises itself as growth, and then spreads to the next person through the exact same channel. Researchers in attachment theory, developmental psychology, and trauma studies have been circling this pattern for decades. What's emerging now is a clearer picture of how it actually works — and why it's so difficult to see from the inside.</p>
 
@@ -477,13 +588,13 @@
 
     <p>The pattern begins with installation. A child expresses distress, perceives an emotional truth, or displays sensitivity to dynamics the family would prefer to ignore. The response — rarely malicious, often protective — is to recalibrate the child's perception. <em>You're overreacting. It's not that bad. Don't be so sensitive.</em></p>
 
-    <p>What happens next is well-documented in attachment literature: the child adapts. Not because the lie is convincing, but because attachment is non-negotiable for survival. The child learns to distrust their own emotional responses. They learn that their perceptual instrument — the part of them that detects emotional reality — is defective. And crucially, the adaptation works. Conflict decreases. Approval increases. The strategy is reinforced.</p>
+    <p>What happens next is well-documented in attachment literature:<a class="cite" href="#ref-3" id="c2">2</a> the child adapts. Not because the lie is convincing, but because attachment is non-negotiable for survival. The child learns to distrust their own emotional responses. They learn that their perceptual instrument — the part of them that detects emotional reality — is defective. And crucially, the adaptation works. Conflict decreases. Approval increases. The strategy is reinforced.</p>
 
     <div class="pull-quote">
       <p>"It doesn't hide reality — it replaces it with a version that feels safer, sounds wiser, and arrives through the voice of someone who loves you."</p>
     </div>
 
-    <p>Over time, the adaptation disappears from conscious awareness. It stops feeling like a strategy and starts feeling like identity. <em>"I used to be too sensitive, but I grew out of it"</em> is perhaps the most common version. The constriction feels like maturity. What was once a survival response is now a worldview. And with the perceptual instrument narrowed, the bandwidth that would detect what's been lost is no longer available.</p>
+    <p>Over time, the adaptation disappears from conscious awareness. It stops feeling like a strategy and starts feeling like identity.<a class="cite" href="#ref-1" id="c3">3</a> <em>"I used to be too sensitive, but I grew out of it"</em> is perhaps the most common version. The constriction feels like maturity. What was once a survival response is now a worldview. And with the perceptual instrument narrowed, the bandwidth that would detect what's been lost is no longer available.</p>
 
     <p>This is the stage researchers find most alarming: the person cannot perceive the absence. The faculty that would detect the missing resonance — the capacity for deep emotional attunement — is precisely what was suppressed. You cannot miss what you cannot perceive. The ignorance is no longer chosen. It has been engineered.</p>
 
@@ -565,24 +676,51 @@
       <span class="attribution">— The Noble Lie's Signature</span>
     </div>
 
-    <p>The viral signature is unmistakable once you see it. "Don't be so sensitive" produces people who cannot empathize — who then produce environments where sensitivity is genuinely unsafe — which retroactively justifies the original warning. The lie manufactures the evidence for its own necessity. It is self-proving. And it is everywhere.</p>
+    <p>The viral signature is unmistakable once you see it. "Don't be so sensitive" produces people who cannot empathize — who then produce environments where sensitivity is genuinely unsafe — which retroactively justifies the original warning. The lie manufactures the evidence for its own necessity.<a class="cite" href="#ref-1" id="c11">11</a> It is self-proving. And it is everywhere.</p>
 
     <p>Consider the scale. Across cultures, across generations, across the entire spectrum of human relationships, this single phrase — and its countless variants — has been delivered as wisdom. <em>Toughen up. Don't wear your heart on your sleeve. That's just how the world works.</em> Each iteration carries the same payload: your perception is the problem. Your sensitivity is the defect. The part of you that detects emotional truth is the part of you that needs to be managed.</p>
 
     <div class="section-break">· · ·</div>
 
-    <p>What makes this pattern different from ordinary bad advice is its self-concealing property. Most lies can be detected by the person they're told to. This one cannot — because it specifically attacks the perceptual faculty that would detect it. Telling someone their emotional antenna is broken, and having them believe it, means they've lost the instrument that would reveal the lie. It is, in a precise sense, an epistemic virus: it compromises the immune system it needs to evade.</p>
+    <p>What makes this pattern different from ordinary bad advice is its self-concealing property. Most lies can be detected by the person they're told to. This one cannot — because it specifically attacks the perceptual faculty that would detect it.<a class="cite" href="#ref-1" id="c4">4</a> Telling someone their emotional antenna is broken, and having them believe it, means they've lost the instrument that would reveal the lie. It is, in a precise sense, an epistemic virus: it compromises the immune system it needs to evade. What Hannah Arendt identified as the political danger of "thoughtlessness" — the inability to think from another's perspective — may begin here, in the intimate space where a child is taught to stop trusting what they perceive.<a class="cite" href="#ref-6" id="c5">5</a></p>
 
-    <p>The recovery path, then, is not primarily intellectual. You cannot think your way out of a perceptual constriction. The correction is experiential: moments of genuine attunement, relationships where sensitivity is met with presence rather than management, environments where the full bandwidth of emotional reality is allowed to operate. The aperture has to reopen. And that process — documented extensively in somatic therapy, attachment repair, and contemplative traditions — is slower and more uncomfortable than the original suppression.</p>
+    <p>The recovery path, then, is not primarily intellectual. You cannot think your way out of a perceptual constriction. The correction is experiential: moments of genuine attunement, relationships where sensitivity is met with presence rather than management, environments where the full bandwidth of emotional reality is allowed to operate. The aperture has to reopen.<a class="cite" href="#ref-1" id="c6">6</a> And that process — documented extensively in somatic therapy, attachment repair, and contemplative traditions<a class="cite" href="#ref-4" id="c7">7</a> — is slower and more uncomfortable than the original suppression. As independent researcher Chad Rohlfsen writes in <em>Signal Drop</em>, the work begins not with answers but with restoring "the art of the dangerous question" — learning to listen before the question lands, to hold space for signals that the noise was designed to drown out.<a class="cite" href="#ref-2" id="c8">8</a></p>
 
     <p>That discomfort is the point. The lie was installed precisely because it reduced discomfort. Reversing it means tolerating the signals that were switched off. It means feeling the backlog. It means discovering that "too sensitive" was never a diagnosis — it was a description of capacity. A capacity that was inconvenient for the people around you, and so was pathologized into silence.</p>
 
     <div class="section-break">· · ·</div>
 
-    <p>If you recognize this pattern — in your own history, in your relationships, in the voice that tells you to dial it back — here's what the research suggests: trust your instrument. The part of you that perceives emotional reality with uncomfortable precision is not broken. It was never broken. It was told to shut down by someone whose own instrument was shut down before them, by someone whose instrument was shut down before <em>them</em>.</p>
+    <p>If you recognize this pattern — in your own history, in your relationships, in the voice that tells you to dial it back — here's what the research suggests: trust your instrument. The part of you that perceives emotional reality with uncomfortable precision is not broken. It was never broken. It was told to shut down by someone whose own instrument was shut down before them, by someone whose instrument was shut down before <em>them</em>. The ancient admonition holds: <em>prove all things; hold fast that which is good.</em><a class="cite" href="#ref-7" id="c9">9</a> Not blindly — but with the epistemic humility<a class="cite" href="#ref-5" id="c10">10</a> to recognize that your sensitivity is not the disease. It is the diagnostic instrument.</p>
 
     <p>The chain can break with you. Not through fighting it. Not through blaming the carriers. But through the quiet, radical act of letting truth flow through again — and refusing to apologize for what you perceive.</p>
 
+  </div>
+
+  <!-- REFERENCES -->
+  <div class="references" id="references">
+    <div class="references-label">References &amp; Sources</div>
+    <ol class="ref-list">
+      <li id="ref-1"><strong>Ashman.</strong> <em>The Noble Lie Virus: Narcissism as Geometric Corruption in the Circumpunct Framework.</em> Fractal Reality, 2025. The formal model describing how systematic falsehoods attack the circumpunct structure (center–field–boundary) and transmit intergenerationally through inverted truth gates. <a href="https://fractalreality.ca/circumpunct_narcissism.html">fractalreality.ca/circumpunct_narcissism.html</a></li>
+      <li id="ref-2"><strong>Rohlfsen, Chad.</strong> <em>Signal Drop — Introduction: How to Listen Before the Question Lands.</em> 2025. An independent inquiry into restoring the capacity for "dangerous questions" — questions that precede answers, require epistemic humility, and resist premature closure. Part of the Signal Drop series exploring convergent mathematical and philosophical frameworks.</li>
+      <li id="ref-3"><strong>Bowlby, John.</strong> <em>Attachment and Loss,</em> Vols. I–III. Basic Books, 1969–1980. The foundational work establishing that attachment is a primary biological drive, and that disruptions in the attachment system produce predictable patterns of emotional suppression and perceptual distortion.</li>
+      <li id="ref-4"><strong>van der Kolk, Bessel.</strong> <em>The Body Keeps the Score: Brain, Mind, and Body in the Healing of Trauma.</em> Viking, 2014. Documents how trauma restructures perception at the neurological level, and how somatic approaches — rather than purely cognitive ones — are required for recovery.</li>
+      <li id="ref-5"><strong>Popper, Karl.</strong> <em>The Logic of Scientific Discovery.</em> Routledge, 1959. The principle of falsifiability: claims that cannot be tested cannot be trusted. Applied here to the Noble Lie's self-sealing logic — a lie that disables the faculty that would disprove it is, by Popper's standard, the most dangerous kind of unfalsifiable claim.</li>
+      <li id="ref-6"><strong>Arendt, Hannah.</strong> <em>The Life of the Mind.</em> Harcourt, 1978. Arendt's analysis of "thoughtlessness" — the failure to think from another's standpoint — as the precondition for systemic harm. The Noble Lie virus produces this condition at the individual level before it scales to the political.</li>
+      <li id="ref-7"><strong>1 Thessalonians 5:21 (KJV).</strong> "Prove all things; hold fast that which is good." The epistemological imperative to test claims against experience rather than accepting them on authority — the antiviral instruction embedded in scripture.</li>
+    </ol>
+  </div>
+
+  <!-- FURTHER READING -->
+  <div class="further-reading">
+    <div class="further-reading-label">Further Reading</div>
+    <a href="https://fractalreality.ca/circumpunct_narcissism.html">
+      The Noble Lie Virus — Full Transmission Protocol
+      <span class="fr-source">fractalreality.ca</span>
+    </a>
+    <a href="https://fractalreality.ca">
+      The Circumpunct Framework — A Geometric Theory of Wholeness
+      <span class="fr-source">fractalreality.ca</span>
+    </a>
   </div>
 
   <!-- CTA -->
