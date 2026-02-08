@@ -172,35 +172,35 @@
         .aperture-ring {
             position: absolute;
             border-radius: 50%;
-            border: 1px solid var(--amber);
+            border: 1.5px solid var(--amber);
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             animation: aperture-breathe 6s ease-in-out infinite;
         }
 
-        .ring-1 { width: 140px; height: 140px; opacity: 0.2; animation-delay: 0s; }
-        .ring-2 { width: 105px; height: 105px; opacity: 0.35; animation-delay: 0.4s; }
-        .ring-3 { width: 70px; height: 70px; opacity: 0.55; animation-delay: 0.8s; }
-        .ring-4 { width: 35px; height: 35px; opacity: 0.8; animation-delay: 1.2s; }
+        .ring-1 { width: 140px; height: 140px; --ring-opacity: 0.4; animation-delay: 0s; box-shadow: 0 0 12px rgba(255,170,0,0.15); }
+        .ring-2 { width: 105px; height: 105px; --ring-opacity: 0.55; animation-delay: 0.4s; box-shadow: 0 0 10px rgba(255,170,0,0.2); }
+        .ring-3 { width: 70px; height: 70px; --ring-opacity: 0.7; animation-delay: 0.8s; box-shadow: 0 0 8px rgba(255,170,0,0.25); }
+        .ring-4 { width: 35px; height: 35px; --ring-opacity: 0.9; animation-delay: 1.2s; box-shadow: 0 0 6px rgba(255,170,0,0.35); }
 
         .aperture-center {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 10px;
+            font-size: 12px;
             color: var(--amber);
             letter-spacing: 0.2em;
             animation: center-glow 6s ease-in-out infinite;
         }
 
         @keyframes aperture-breathe {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: var(--ring-opacity, 0.3); }
-            50% { transform: translate(-50%, -50%) scale(1.08); opacity: calc(var(--ring-opacity, 0.3) + 0.15); }
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: var(--ring-opacity, 0.5); box-shadow: 0 0 6px rgba(255,170,0,0.1); }
+            50% { transform: translate(-50%, -50%) scale(1.08); opacity: calc(var(--ring-opacity, 0.5) + 0.1); box-shadow: 0 0 18px rgba(255,170,0,0.35); }
         }
 
         @keyframes center-glow {
-            0%, 100% { text-shadow: 0 0 5px rgba(255,170,0,0.3); }
-            50% { text-shadow: 0 0 15px rgba(255,170,0,0.8); }
+            0%, 100% { text-shadow: 0 0 8px rgba(255,170,0,0.5); }
+            50% { text-shadow: 0 0 22px rgba(255,170,0,0.9), 0 0 40px rgba(255,170,0,0.3); }
         }
 
         .hero-title {
@@ -524,7 +524,7 @@
                     <div class="hero-title">CURIOSITY IS THE CURE</div>
                     <div class="hero-subtitle">The Living Properties of Ethics · The Antidote to the Noble Lie</div>
                 </div>
-                <p>The <a href="ethics.html" style="color: var(--cyan); text-decoration: none;">Ethics of the Circumpunct</a> established four pillars: <span class="cyan">Good</span>, <span class="magenta">Right</span>, <span class="green">True</span>, <span class="yellow">Agreement</span>. It showed that ethics is geometry—the structure of what can persist.</p>
+                <p>The <a href="ethics.html" style="color: var(--cyan); text-decoration: underline;">Ethics of the Circumpunct</a> established four pillars: <span class="cyan">Good</span>, <span class="magenta">Right</span>, <span class="green">True</span>, <span class="yellow">Agreement</span>. It showed that ethics is geometry—the structure of what can persist.</p>
                 <p>But there is a problem. <span class="highlight"><a href="https://fractalreality.ca/noble_lie_article.html" style="color: #fff; text-decoration: underline;">The Noble Lie virus</a> can mimic every pillar.</span></p>
                 <p>Care, evidence, coherence, consensus—all can be performed without being inhabited. The virus passes through the four-pillar test wearing the skin of each.</p>
                 <p>What it cannot mimic is the <span class="amber">living properties</span> of each component—the virtues that keep the geometry alive rather than frozen into form.</p>
