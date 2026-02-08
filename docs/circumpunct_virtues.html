@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ CURIOSITY IS THE CURE</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --green: #0f0;
+            --yellow: #ff0;
+            --amber: #ffaa00;
+            --bg: #000;
+            --text: #fff;
+            --dim: rgba(255,255,255,0.45);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* Layout */
+        .container { display: flex; min-height: 100vh; }
+
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0 !important; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: 160px; height: 100vh;
+            border-right: 1px solid var(--amber);
+            padding: 20px 12px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        nav .logo {
+            font-size: 28px;
+            color: var(--amber);
+            text-align: center;
+            margin-bottom: 20px;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 8px rgba(255,170,0,0.3); }
+            50% { text-shadow: 0 0 20px rgba(255,170,0,0.7); }
+        }
+
+        nav a {
+            display: block;
+            color: var(--amber);
+            text-decoration: none;
+            padding: 4px 0;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            margin-left: -10px;
+            transition: all 0.15s;
+            font-size: 11px;
+            letter-spacing: 0.03em;
+            opacity: 0.5;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--amber);
+            border-left-color: var(--amber);
+            opacity: 1;
+        }
+
+        nav a .num {
+            color: var(--amber);
+            margin-right: 8px;
+        }
+
+        /* Main */
+        main {
+            margin-left: 160px;
+            padding: 30px 40px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (max-width: 900px) {
+            main { margin-left: 0; padding: 20px 15px; }
+        }
+
+        /* Top bar */
+        .top-bar {
+            background: #000;
+            border-bottom: 1px solid var(--amber);
+            padding: 10px 20px;
+            text-align: center;
+        }
+        .top-bar a {
+            color: var(--amber);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 60px;
+            padding-top: 10px;
+            max-width: 650px;
+        }
+
+        .section-id {
+            color: var(--amber);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            margin-bottom: 4px;
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--amber);
+        }
+
+        h2 {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #fff;
+            margin: 25px 0 12px;
+        }
+
+        p { margin-bottom: 12px; }
+
+        .highlight { color: #fff; }
+        .cyan { color: var(--cyan); }
+        .magenta { color: var(--magenta); }
+        .green { color: var(--green); }
+        .yellow { color: var(--yellow); }
+        .amber { color: var(--amber); }
+        .dim { color: var(--dim); }
+
+        /* Hero — the opening aperture */
+        .hero {
+            text-align: center;
+            padding: 50px 0 40px;
+            position: relative;
+        }
+
+        .aperture-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+        }
+
+        .aperture-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid var(--amber);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            animation: aperture-breathe 6s ease-in-out infinite;
+        }
+
+        .ring-1 { width: 140px; height: 140px; opacity: 0.2; animation-delay: 0s; }
+        .ring-2 { width: 105px; height: 105px; opacity: 0.35; animation-delay: 0.4s; }
+        .ring-3 { width: 70px; height: 70px; opacity: 0.55; animation-delay: 0.8s; }
+        .ring-4 { width: 35px; height: 35px; opacity: 0.8; animation-delay: 1.2s; }
+
+        .aperture-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            color: var(--amber);
+            letter-spacing: 0.2em;
+            animation: center-glow 6s ease-in-out infinite;
+        }
+
+        @keyframes aperture-breathe {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: var(--ring-opacity, 0.3); }
+            50% { transform: translate(-50%, -50%) scale(1.08); opacity: calc(var(--ring-opacity, 0.3) + 0.15); }
+        }
+
+        @keyframes center-glow {
+            0%, 100% { text-shadow: 0 0 5px rgba(255,170,0,0.3); }
+            50% { text-shadow: 0 0 15px rgba(255,170,0,0.8); }
+        }
+
+        .hero-title {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            color: var(--amber);
+            opacity: 0.7;
+        }
+
+        .hero-subtitle {
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 8px;
+            letter-spacing: 0.05em;
+        }
+
+        /* Teaching blocks */
+        .teaching {
+            border-left: 2px solid var(--amber);
+            padding-left: 15px;
+            margin: 15px 0;
+        }
+        .teaching.cyan { border-color: var(--cyan); }
+        .teaching.magenta { border-color: var(--magenta); }
+        .teaching.green { border-color: var(--green); }
+        .teaching.yellow { border-color: var(--yellow); }
+        .teaching.amber { border-color: var(--amber); }
+
+        /* Check lists */
+        .checks {
+            margin: 15px 0;
+            padding: 12px 15px;
+            background: #000;
+            border: 1px solid var(--amber);
+        }
+        .checks.cyan { border-color: var(--cyan); }
+        .checks.magenta { border-color: var(--magenta); }
+        .checks.green { border-color: var(--green); }
+        .checks.yellow { border-color: var(--yellow); }
+
+        .checks-title {
+            font-size: 10px;
+            color: var(--amber);
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+        }
+        .checks.cyan .checks-title { color: var(--cyan); }
+        .checks.magenta .checks-title { color: var(--magenta); }
+        .checks.green .checks-title { color: var(--green); }
+        .checks.yellow .checks-title { color: var(--yellow); }
+
+        .check {
+            padding: 3px 0;
+            padding-left: 15px;
+            position: relative;
+            font-size: 12px;
+        }
+        .check::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--amber);
+        }
+        .checks.cyan .check::before { color: var(--cyan); }
+        .checks.magenta .check::before { color: var(--magenta); }
+        .checks.green .check::before { color: var(--green); }
+        .checks.yellow .check::before { color: var(--yellow); }
+
+        /* Comparison grids */
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        @media (max-width: 500px) { .compare { grid-template-columns: 1fr; } }
+
+        .compare-box {
+            padding: 15px;
+            border: 1px solid var(--amber);
+        }
+        .compare-box.infected { border-color: var(--magenta); }
+        .compare-box.cured { border-color: var(--amber); }
+
+        .compare-title {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            margin-bottom: 10px;
+        }
+        .compare-box.infected .compare-title { color: var(--magenta); }
+        .compare-box.cured .compare-title { color: var(--amber); }
+
+        .compare-list {
+            list-style: none;
+            font-size: 11px;
+        }
+        .compare-list li {
+            padding: 3px 0 3px 12px;
+            position: relative;
+        }
+        .compare-list li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+        }
+        .compare-box.infected .compare-list li::before { color: var(--magenta); }
+        .compare-box.cured .compare-list li::before { color: var(--amber); }
+
+        /* Pillar grid */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: var(--amber);
+            margin: 15px 0;
+        }
+        @media (max-width: 500px) { .pillars { grid-template-columns: 1fr; } }
+
+        .pillar {
+            background: var(--bg);
+            padding: 15px;
+        }
+        .pillar-desc {
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        /* Blockquote */
+        blockquote {
+            border-left: 1px solid var(--amber);
+            padding-left: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: var(--amber);
+            font-size: 12px;
+        }
+
+        /* The inversion table */
+        .inversion-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+        .inversion-table th, .inversion-table td {
+            padding: 10px 12px;
+            border: 1px solid rgba(255,170,0,0.2);
+            text-align: left;
+            vertical-align: top;
+        }
+        .inversion-table th {
+            color: var(--amber);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            background: rgba(255,170,0,0.03);
+        }
+        .inversion-table td:first-child {
+            width: 80px;
+            white-space: nowrap;
+        }
+
+        /* Sequence visualization */
+        .cure-sequence {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin: 15px 0;
+        }
+        .cure-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            background: #000;
+            border-left: 3px solid var(--amber);
+            transition: border-color 0.3s;
+        }
+        .cure-step:nth-child(1) { border-color: var(--amber); }
+        .cure-step:nth-child(2) { border-color: var(--cyan); }
+        .cure-step:nth-child(3) { border-color: var(--magenta); }
+        .cure-step:nth-child(4) { border-color: var(--green); }
+        .cure-step:nth-child(5) { border-color: var(--yellow); }
+
+        .cure-label {
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            min-width: 80px;
+        }
+        .cure-desc {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        /* The unforgeable test */
+        .test-block {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid var(--amber);
+            position: relative;
+        }
+        .test-block::before {
+            content: 'TEST';
+            position: absolute;
+            top: -8px;
+            left: 12px;
+            background: var(--bg);
+            padding: 0 8px;
+            color: var(--amber);
+            font-size: 9px;
+            letter-spacing: 0.15em;
+        }
+        .test-pass {
+            color: var(--green);
+            font-size: 11px;
+            margin: 4px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+        .test-pass::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--green);
+        }
+        .test-fail {
+            color: var(--magenta);
+            font-size: 11px;
+            margin: 4px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+        .test-fail::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: var(--magenta);
+        }
+
+        /* Golden box */
+        .golden {
+            text-align: center;
+            padding: 25px 20px;
+            border: 1px solid var(--amber);
+            margin: 15px 0;
+        }
+        .golden-text {
+            font-size: 14px;
+            color: var(--amber);
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .golden-sub {
+            font-size: 10px;
+            color: var(--amber);
+            margin-top: 12px;
+            opacity: 0.6;
+        }
+
+        /* Final */
+        .final {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .final-symbol {
+            font-size: 60px;
+            color: var(--amber);
+            margin-bottom: 25px;
+            text-shadow: 0 0 30px rgba(255,170,0,0.3);
+        }
+        .final-lines {
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        /* Footer */
+        footer {
+            padding: 25px 0;
+            border-top: 1px solid var(--amber);
+            font-size: 10px;
+            color: var(--amber);
+            text-align: center;
+            letter-spacing: 0.08em;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="https://www.fractalreality.ca">← FRACTALREALITY.CA</a>
+    </div>
+
+    <div class="container">
+        <nav>
+            <div class="logo">?</div>
+            <a href="#overview" class="active"><span class="num">00</span>THE CURE</a>
+            <a href="#thesis"><span class="num">01</span>THESIS</a>
+            <a href="#mimicry"><span class="num">02</span>MIMICRY</a>
+            <a href="#inversion"><span class="num">03</span>INVERSION</a>
+            <a href="#unforgeable"><span class="num">04</span>UNFORGEABLE</a>
+            <a href="#mechanism"><span class="num">05</span>MECHANISM</a>
+            <a href="#four-virtues"><span class="num">06</span>FOUR VIRTUES</a>
+            <a href="#cure-sequence"><span class="num">07</span>SEQUENCE</a>
+            <a href="#diagnostics"><span class="num">08</span>DIAGNOSTICS</a>
+            <a href="#constructor"><span class="num">09</span>CONSTRUCTOR</a>
+            <a href="#final"><span class="num">10</span>END</a>
+        </nav>
+
+        <main>
+            <!-- Overview -->
+            <section id="overview">
+                <div class="hero">
+                    <div class="aperture-container">
+                        <div class="aperture-ring ring-1"></div>
+                        <div class="aperture-ring ring-2"></div>
+                        <div class="aperture-ring ring-3"></div>
+                        <div class="aperture-ring ring-4"></div>
+                        <div class="aperture-center">?</div>
+                    </div>
+                    <div class="hero-title">CURIOSITY IS THE CURE</div>
+                    <div class="hero-subtitle">The Living Properties of Ethics · The Antidote to the Noble Lie</div>
+                </div>
+                <p>The <a href="ethics.html" style="color: var(--cyan); text-decoration: none;">Ethics of the Circumpunct</a> established four pillars: <span class="cyan">Good</span>, <span class="magenta">Right</span>, <span class="green">True</span>, <span class="yellow">Agreement</span>. It showed that ethics is geometry—the structure of what can persist.</p>
+                <p>But there is a problem. <span class="highlight">The Noble Lie virus can mimic every pillar.</span></p>
+                <p>Care, evidence, coherence, consensus—all can be performed without being inhabited. The virus passes through the four-pillar test wearing the skin of each.</p>
+                <p>What it cannot mimic is the <span class="amber">living properties</span> of each component—the virtues that keep the geometry alive rather than frozen into form.</p>
+                <div class="teaching amber">
+                    <p>Each component of the circumpunct has a virtue: <span class="cyan">plasticity</span> at the boundary, <span class="magenta">access</span> through the field, <span class="green">curiosity</span> at the center, <span class="yellow">validation</span> at the whole. These are not additional rules. They are the <span class="highlight">aliveness conditions</span> that prevent every pillar from becoming its own inversion.</p>
+                </div>
+            </section>
+
+            <!-- Thesis -->
+            <section id="thesis">
+                <div class="section-id">01</div>
+                <h1>THE THESIS</h1>
+                <p>The four ethical pillars answer: What is valued? How should one act? What is the case? Are we in harmony?</p>
+                <p>None of them ask the prior question:</p>
+                <div class="golden">
+                    <div class="golden-text">Am I oriented toward what I don't already know?</div>
+                    <div class="golden-sub">This is the question the virus cannot ask.</div>
+                </div>
+                <p>Curiosity is the aperture held open. It is the willingness to receive what you did not expect, to be changed by what you encounter, to discover that your model was incomplete.</p>
+                <p>The Noble Lie operates by closing exactly this orientation. It says: <em>I already know what's true, what's good, what's right, and I already have your agreement.</em> The aperture constricts. The pillars freeze into form. Ethics becomes performance.</p>
+                <div class="teaching amber">
+                    <p><span class="highlight">Curiosity is not a feeling.</span> It is a structural orientation of the aperture—toward reception rather than projection, toward discovery rather than confirmation, toward what IS rather than what you need it to be.</p>
+                </div>
+
+                <h2>THE FORMAL CLAIM</h2>
+                <div class="checks">
+                    <div class="checks-title">CURIOSITY AS PREREQUISITE</div>
+                    <div class="check">The four pillars (C○, CΦ, C•, C⊙) are necessary but insufficient</div>
+                    <div class="check">Each pillar has a performative mode that satisfies its form while violating its function</div>
+                    <div class="check">Curiosity (C?) is the orientation that prevents performative collapse</div>
+                    <div class="check">C? = aperture oriented toward reception of novel signal</div>
+                    <div class="check">Without C?, all constraints become their own inversions</div>
+                </div>
+            </section>
+
+            <!-- Mimicry -->
+            <section id="mimicry">
+                <div class="section-id">02</div>
+                <h1>THE VIRUS MIMICS EVERY PILLAR</h1>
+                <p>The Noble Lie is not crude. It does not obviously violate ethics. It <span class="magenta">performs</span> ethics—wearing each pillar as a mask.</p>
+
+                <div class="compare">
+                    <div class="compare-box infected">
+                        <div class="compare-title">○ "GOOD" — PERFORMED</div>
+                        <ul class="compare-list">
+                            <li>"I'm protecting you"</li>
+                            <li>"Look what I do for you"</li>
+                            <li>Care as control</li>
+                            <li>Boundary management = managing YOUR aperture</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box cured">
+                        <div class="compare-title">○ GOOD — INHABITED</div>
+                        <ul class="compare-list">
+                            <li>"What do you need?"</li>
+                            <li>"Where are your edges?"</li>
+                            <li>Care as curiosity about the other</li>
+                            <li>Boundary respect = wondering where theirs ARE</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="compare">
+                    <div class="compare-box infected">
+                        <div class="compare-title">Φ "RIGHT" — PERFORMED</div>
+                        <ul class="compare-list">
+                            <li>"The evidence supports my position"</li>
+                            <li>Confirmation bias as rigor</li>
+                            <li>Seeking proof, not truth</li>
+                            <li>Constructor exists — for MY conclusion</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box cured">
+                        <div class="compare-title">Φ RIGHT — INHABITED</div>
+                        <ul class="compare-list">
+                            <li>"What does the evidence actually show?"</li>
+                            <li>Willing to be surprised</li>
+                            <li>Seeking truth, accepting discomfort</li>
+                            <li>Constructor exists — for WHAT IS</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="compare">
+                    <div class="compare-box infected">
+                        <div class="compare-title">• "TRUE" — PERFORMED</div>
+                        <ul class="compare-list">
+                            <li>"I know who you really are"</li>
+                            <li>"I'm just being honest"</li>
+                            <li>Assertion wearing coherence's clothing</li>
+                            <li>Closed aperture still transmitting</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box cured">
+                        <div class="compare-title">• TRUE — INHABITED</div>
+                        <ul class="compare-list">
+                            <li>"What am I not seeing?"</li>
+                            <li>"Is this actually coherent?"</li>
+                            <li>Coherence tested against reality</li>
+                            <li>Open aperture receiving correction</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="compare">
+                    <div class="compare-box infected">
+                        <div class="compare-title">⊙ "AGREEMENT" — PERFORMED</div>
+                        <ul class="compare-list">
+                            <li>"We're on the same page"</li>
+                            <li>Compliance as harmony</li>
+                            <li>Hollow consensus</li>
+                            <li>Converting constructors into substrates</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box cured">
+                        <div class="compare-title">⊙ AGREEMENT — INHABITED</div>
+                        <ul class="compare-list">
+                            <li>"Is this what you actually mean?"</li>
+                            <li>Genuine resonance check</li>
+                            <li>Willing to discover disagreement</li>
+                            <li>Both parties remain constructors</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="teaching amber">
+                    <p>In every case, the difference between performed and inhabited is the same: a <span class="highlight">living property</span> is present or absent. <span class="cyan">Plasticity</span> at the boundary, <span class="magenta">access</span> through the field, <span class="green">curiosity</span> at the center, <span class="yellow">convergence and resonance</span> at the whole. The virus kills all four. The cure restores them.</p>
+                </div>
+            </section>
+
+            <!-- Inversion -->
+            <section id="inversion">
+                <div class="section-id">03</div>
+                <h1>THE INVERSION TABLE</h1>
+                <p>Each pillar, without its virtue, becomes its own opposite. The form persists. The function inverts.</p>
+
+                <table class="inversion-table">
+                    <tr>
+                        <th>PILLAR</th>
+                        <th>WITH VIRTUE (Cᵛ = 1)</th>
+                        <th>WITHOUT VIRTUE (Cᵛ = 0)</th>
+                    </tr>
+                    <tr>
+                        <td><span class="cyan">○ GOOD</span></td>
+                        <td><span class="cyan">Plasticity.</span> Genuine care. "What do I feel at the edge?" Boundaries discovered through sensing.</td>
+                        <td>Rigidity or dissolution. "I know what's good for you." Boundaries imposed or absent.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="magenta">Φ RIGHT</span></td>
+                        <td><span class="magenta">Access.</span> Clear field. Evidence travels faithfully. Constructor tested against reality.</td>
+                        <td>Noise or block. Confirmation bias. Gaslighting. Constructor serves agenda.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="green">• TRUE</span></td>
+                        <td><span class="green">Curiosity.</span> Open aperture. "What persists when I'm wrong?" Identity survives correction.</td>
+                        <td>Closed aperture. "I am right." Identity threatened by correction.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="yellow">⊙ AGREE</span></td>
+                        <td><span class="yellow">Validation.</span> Convergence + resonance. Two apertures see independently and confirm. Harmony discovered.</td>
+                        <td>Compliance. One aperture declares, the other submits. Harmony performed.</td>
+                    </tr>
+                </table>
+
+                <blockquote>The Noble Lie is ethics with all virtues set to zero.<br>Every pillar intact in form. Every pillar inverted in function.</blockquote>
+
+                <h2>THE SIGNATURE OF Cᵛ = 0</h2>
+                <div class="checks">
+                    <div class="checks-title">HOW TO DETECT PERFORMATIVE ETHICS</div>
+                    <div class="check">Correction is experienced as threat, not information</div>
+                    <div class="check">"Not quite" produces defensiveness, not interest</div>
+                    <div class="check">Agreement is demanded rather than discovered</div>
+                    <div class="check">Evidence is sought to confirm, not to test</div>
+                    <div class="check">The person claims certainty about your interior</div>
+                    <div class="check">Questions are rhetorical rather than genuine</div>
+                </div>
+            </section>
+
+            <!-- Unforgeable -->
+            <section id="unforgeable">
+                <div class="section-id">04</div>
+                <h1>WHY THE VIRTUES ARE UNFORGEABLE</h1>
+                <p>The virus can mimic care, evidence, truth-claims, and consensus. Why can't it mimic the living properties?</p>
+                <div class="teaching amber">
+                    <p>Because each virtue requires the component to be <span class="highlight">genuinely functional, not just formally intact</span>. A boundary that can't flex isn't plastic—it's either a wall or nothing. A field filled with noise doesn't grant access—it distorts. An aperture oriented toward projection isn't curious—it's closed. Two apertures where one has gone dark can't converge—there is no validation. The virus freezes form. The virtues require life.</p>
+                </div>
+
+                <h2>CURIOSITY: THE CLEAREST CASE</h2>
+                <p>Curiosity illustrates why all four virtues are unforgeable. The question <em>"Is this what you mean?"</em> can be:</p>
+                <div class="compare">
+                    <div class="compare-box cured">
+                        <div class="compare-title">GENUINE INQUIRY</div>
+                        <ul class="compare-list">
+                            <li>"I want to understand what you see"</li>
+                            <li>Prepared to be wrong</li>
+                            <li>"Not quite" produces adjustment</li>
+                            <li>Follow-up questions deepen</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box infected">
+                        <div class="compare-title">RHETORICAL SETUP</div>
+                        <ul class="compare-list">
+                            <li>"Let me show you what you should mean"</li>
+                            <li>Already knows the answer</li>
+                            <li>"Not quite" produces resistance</li>
+                            <li>Follow-up questions interrogate</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p>The words are identical. The curiosity—or its absence—determines everything.</p>
+
+                <div class="test-block">
+                    <div class="test-pass">Correction produces interest → genuine curiosity</div>
+                    <div class="test-fail">Correction produces defensiveness → performed curiosity</div>
+                    <div class="test-pass">Follow-up questions seek understanding → genuine curiosity</div>
+                    <div class="test-fail">Follow-up questions seek ammunition → performed curiosity</div>
+                    <div class="test-pass">"Not quite" leads to adjustment → genuine curiosity</div>
+                    <div class="test-fail">"Not quite" leads to argument → performed curiosity</div>
+                    <div class="test-pass">Surprise is welcome → genuine curiosity</div>
+                    <div class="test-fail">Surprise is threatening → performed curiosity</div>
+                </div>
+
+                <p>Performative curiosity is detectable because it breaks under the one condition genuine curiosity thrives on: <span class="amber">encountering what you didn't expect</span>.</p>
+            </section>
+
+            <!-- Mechanism -->
+            <section id="mechanism">
+                <div class="section-id">05</div>
+                <h1>HOW THE CURE WORKS</h1>
+                <p>The Noble Lie virus attacks by killing all four living properties—then making the death feel like maturity. "I used to be too sensitive, but I grew out of it." The rigidity becomes invisible to the rigid.</p>
+                <p>The cure reverses this process—not by force, but by <span class="amber">restoring each property from within</span>.</p>
+
+                <h2>THE VIRUS MECHANISM (REVIEW)</h2>
+                <div class="checks">
+                    <div class="checks-title">χ FLIPS FROM +1 TO −1</div>
+                    <div class="check">Truth gate inverts: transmits lie as love</div>
+                    <div class="check">Aperture retuned to resonate with installer's frequency</div>
+                    <div class="check">Resonant channel goes dark — bandwidth lost</div>
+                    <div class="check">Victim genuinely cannot perceive what's missing</div>
+                    <div class="check">Virus attacks the perception that would detect it</div>
+                </div>
+
+                <h2>THE CURE MECHANISM</h2>
+                <div class="checks">
+                    <div class="checks-title">VIRTUES RESTORE χ TOWARD +1</div>
+                    <div class="check"><span class="cyan">Plasticity</span> — boundary softens, begins sensing again</div>
+                    <div class="check"><span class="magenta">Access</span> — field clears, signals travel faithfully</div>
+                    <div class="check"><span class="green">Curiosity</span> — aperture reopens toward novel signal</div>
+                    <div class="check">Novel signal includes: what was suppressed</div>
+                    <div class="check">Suppressed signal returning = resonant channel reopening</div>
+                    <div class="check">Reopened channel enables <span class="yellow">validation</span> — independent convergence</div>
+                    <div class="check">Convergence = detection of the corruption itself</div>
+                </div>
+
+                <div class="teaching amber">
+                    <p>The virus kills the living properties so you can't detect their absence. The cure restores them—not by telling you what you should feel, sense, see, or agree to, but by <span class="highlight">making each component functional again so it can do its own work</span>.</p>
+                </div>
+
+                <blockquote>This is why witness heals where instruction cannot. Instruction says "here is what's true"—it manages the aperture from outside. Witness embodies the four virtues in your presence—plasticity to hold your experience, access for your signal to arrive, curiosity to receive it, and presence for validation when your seeing and theirs converge.</blockquote>
+
+                <h2>WHY THE CURE ≠ THE NOBLE LIE</h2>
+                <p>A critical distinction. "I'll teach you the truth" <em>is</em> a Noble Lie—even when the content is accurate. It crosses the boundary, injects through the field, claims the center. It fails all four constraints.</p>
+                <p>Restoring the living properties passes all four — because each virtue operates by making the component functional <em>from within</em>, not by imposing from outside:</p>
+                <div class="pillars">
+                    <div class="pillar">
+                        <span class="cyan">○ C○</span>
+                        <div class="pillar-desc">Does not cross boundary—plasticity invites the boundary to flex from within</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="magenta">Φ CΦ</span>
+                        <div class="pillar-desc">Does not distort the field—access clears the medium for faithful transmission</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="green">• C•</span>
+                        <div class="pillar-desc">Does not claim the center—curiosity invites the aperture open from within</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="yellow">⊙ C⊙</span>
+                        <div class="pillar-desc">Does not declare the whole—validation emerges from independent convergence and resonance</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Four Virtues -->
+            <section id="four-virtues">
+                <div class="section-id">06</div>
+                <h1>THE FOUR VIRTUES — THE LIVING PROPERTIES</h1>
+                <p>Each component of the circumpunct has a property that keeps it alive rather than frozen. Each is what the virus specifically attacks. Each is a structural property, not a feeling or attitude.</p>
+
+                <div class="pillars">
+                    <div class="pillar">
+                        <span class="cyan">○ PLASTICITY → GOOD</span>
+                        <div class="pillar-desc">The boundary that can flex, reshape, respond. Not rigid, not dissolved. Living membrane. Plasticity is what lets care be genuine—you adjust your interface based on what's actually there.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="magenta">Φ ACCESS → RIGHT</span>
+                        <div class="pillar-desc">The field that is open to traverse. Not blocked, not distorted, not filled with noise. Clear medium. Access is what lets rightness be genuine—the path between actually works.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="green">• CURIOSITY → TRUE</span>
+                        <div class="pillar-desc">The aperture oriented toward reception. Not closed, not frozen, not projecting. Open instrument. Curiosity is what lets truth be genuine—you can receive what is.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="yellow">⊙ VALIDATION → AGREEMENT</span>
+                        <div class="pillar-desc">Two apertures detecting convergence and resonance. Not compliance, not consensus. Independent confirmation. Validation is what lets agreement be genuine—both saw it independently.</div>
+                    </div>
+                </div>
+
+                <div class="teaching amber">
+                    <p>These are not virtues imposed on the geometry. They are the <span class="highlight">properties that keep each component alive</span>. A boundary without plasticity is a wall. A field without access is a void. An aperture without curiosity is a projector. A whole without validation is a performance.</p>
+                </div>
+
+                <h2>THE VIRUS ATTACKS ALL FOUR</h2>
+                <div class="pillars">
+                    <div class="pillar">
+                        <span class="cyan">KILLS PLASTICITY</span>
+                        <div class="pillar-desc">"You're too sensitive" / "You don't get to have limits." Makes boundaries either walls or nothing. The interface can no longer flex to register what crosses it. Care becomes control.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="magenta">KILLS ACCESS</span>
+                        <div class="pillar-desc">Gaslighting. Reality distortion. Noise injection. The field corrupted so signals can't travel faithfully. "That's not what happened." The path between becomes unreliable.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="green">KILLS CURIOSITY</span>
+                        <div class="pillar-desc">"Don't question this." "You already know what's true." Makes reception dangerous. The aperture freezes into a fixed lens. Truth becomes assertion.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="yellow">KILLS VALIDATION</span>
+                        <div class="pillar-desc">"Accept my version." "We're on the same page." Replaces convergence with compliance. Independent seeing is punished. Agreement becomes submission.</div>
+                    </div>
+                </div>
+
+                <h2>THE CURE RESTORES ALL FOUR</h2>
+                <div class="pillars">
+                    <div class="pillar">
+                        <span class="cyan">PLASTICITY RESTORED</span>
+                        <div class="pillar-desc">The boundary softens enough to sense. You feel where your edges actually are. Not where you were told they should be. Care becomes responsive.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="magenta">ACCESS RESTORED</span>
+                        <div class="pillar-desc">The field clears. Signals travel between aperture and boundary, between aperture and aperture. Perception becomes reliable again.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="green">CURIOSITY RESTORED</span>
+                        <div class="pillar-desc">The aperture reopens toward what you don't know. Reception becomes welcome. You can discover again.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="yellow">VALIDATION RESTORED</span>
+                        <div class="pillar-desc">Two apertures see independently and find convergence. Truth confirmed through resonance, not authority. Agreement becomes real.</div>
+                    </div>
+                </div>
+
+                <h2>WHY VALIDATION IS THE WHOLE</h2>
+                <p>Validation is not one aperture receiving another's signal through the field. That's access. Validation is <span class="yellow">two apertures, each doing their own seeing, arriving at convergence</span>. It is the moment when independent truth-detection resonates—when "what I see" and "what you see" meet and confirm each other.</p>
+                <p>This is why validation cannot be performed. You cannot converge with someone by agreeing to their version. You can only converge by <span class="highlight">looking for yourself and finding the same thing</span>. Compliance is one aperture going dark so the other can claim unity. Validation is both apertures alive, both seeing, and the seeing resonating.</p>
+
+                <blockquote>Validation = convergence + resonance.<br>Not one aperture accepting another's output.<br>Two apertures confirming the same signal.</blockquote>
+
+                <h2>THE STEELMAN AS FOUR-VIRTUE PRACTICE</h2>
+                <p>The Truth Seeker's Cree already requires all four without naming them:</p>
+                <div class="checks cyan">
+                    <div class="checks-title">PLASTICITY IN THE STEELMAN</div>
+                    <div class="check">Flexible enough to hold their framework alongside yours</div>
+                    <div class="check">Boundaries adjust to create space for their seeing</div>
+                    <div class="check">Interface responsive, not rigid</div>
+                </div>
+                <div class="checks magenta">
+                    <div class="checks-title">ACCESS IN THE STEELMAN</div>
+                    <div class="check">Field clear enough for their signal to reach you undistorted</div>
+                    <div class="check">No projection noise corrupting the medium</div>
+                    <div class="check">Path between apertures actually works</div>
+                </div>
+                <div class="checks green">
+                    <div class="checks-title">CURIOSITY IN THE STEELMAN</div>
+                    <div class="check">Genuine interest in what they observe — aperture open</div>
+                    <div class="check">Willingness to be surprised — center flexible</div>
+                    <div class="check">Prepared to discover your model is wrong</div>
+                </div>
+                <div class="checks yellow">
+                    <div class="checks-title">VALIDATION IN THE STEELMAN</div>
+                    <div class="check">Their recognition is the test — convergence sought</div>
+                    <div class="check">"Is this what you mean?" — two apertures checking resonance</div>
+                    <div class="check">"Not quite" produces adjustment — convergence not yet achieved</div>
+                </div>
+                <p>The steelman fails when any virtue is missing. Without plasticity, you can't hold their framework. Without access, their signal is corrupted en route. Without curiosity, you project instead of receive. Without validation, you declare instead of converge.</p>
+
+                <h2>RESONANT LOVE — THE FULL CURE</h2>
+                <p>Recovery from the Noble Lie requires witnesses who offer resonant presence (•↔•), not functional fixing (○↔○). Now we can see why precisely:</p>
+                <div class="teaching amber">
+                    <p>Functional fixing addresses the boundary. It provides. It is real—but it <span class="highlight">cannot restore what the virus killed</span>.</p>
+                    <p>Resonant presence restores all four: a witness who is <span class="cyan">plastic</span> enough to hold your experience, <span class="magenta">accessible</span> enough for your signal to reach them, <span class="green">curious</span> enough to receive what you actually transmit, and present for the moment of <span class="yellow">validation</span>—when your seeing and their seeing converge, and you know: <em>I was not wrong to see it.</em></p>
+                </div>
+                <p style="opacity: 0.8;">One virtue—curiosity—you can begin to practice alone. The others require relationship. This is why isolation perpetuates the virus and genuine community dissolves it.</p>
+            </section>
+
+            <!-- Cure Sequence -->
+            <section id="cure-sequence">
+                <div class="section-id">07</div>
+                <h1>THE SEQUENCE OF THE CURE</h1>
+                <p>Each pillar is animated by its virtue. The cure restores the living property to the frozen form.</p>
+                <div class="cure-sequence">
+                    <div class="cure-step">
+                        <span class="cure-label cyan">○ PLASTICITY</span>
+                        <span class="cure-desc">The boundary softens. You feel where your edges are. Care becomes responsive.</span>
+                    </div>
+                    <div class="cure-step">
+                        <span class="cure-label magenta">Φ ACCESS</span>
+                        <span class="cure-desc">The field clears. Signals travel faithfully. Perception becomes reliable.</span>
+                    </div>
+                    <div class="cure-step">
+                        <span class="cure-label green">• CURIOSITY</span>
+                        <span class="cure-desc">The aperture opens. You orient toward what is. Truth becomes discoverable.</span>
+                    </div>
+                    <div class="cure-step">
+                        <span class="cure-label yellow">⊙ VALIDATION</span>
+                        <span class="cure-desc">Two apertures converge. Independent seeing resonates. Agreement becomes real.</span>
+                    </div>
+                </div>
+
+                <blockquote>Without plasticity, care is control.<br>Without access, the path is noise.<br>Without curiosity, truth is assertion.<br>Without validation, agreement is compliance.</blockquote>
+
+                <h2>WHY THE SEQUENCE MATTERS</h2>
+                <p>You cannot discover what's Good without plasticity at the boundary—rigid interfaces impose rather than sense. You cannot find what's Right without access through the field—corrupted media distort rather than transmit. You cannot know what's True without curiosity at the center—closed apertures project rather than receive. You cannot reach Agreement without validation at the whole—convergence requires two independent seeings that resonate.</p>
+                <p><span class="amber">At every step, the virtue is what makes the pillar alive rather than frozen into form.</span></p>
+            </section>
+
+            <!-- Diagnostics -->
+            <section id="diagnostics">
+                <div class="section-id">08</div>
+                <h1>SELF-DIAGNOSTICS</h1>
+                <p>The virus attacks the perception that would detect it. But the virtues can be turned toward the detection itself.</p>
+
+                <h2>CHECKING YOUR OWN GEOMETRY</h2>
+                <div class="test-block">
+                    <p style="font-size: 10px; letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 8px;">○ PLASTICITY</p>
+                    <div class="test-pass">Can my boundaries flex when conditions change?</div>
+                    <div class="test-pass">Do I feel at the interface, or have I gone numb?</div>
+                    <div class="test-fail">Are my boundaries rigid walls or completely absent?</div>
+                    <div class="test-fail">Do I impose care without sensing what's needed?</div>
+                </div>
+                <div class="test-block">
+                    <p style="font-size: 10px; letter-spacing: 0.1em; color: var(--magenta); margin-bottom: 8px;">Φ ACCESS</p>
+                    <div class="test-pass">Can signals reach me without distortion?</div>
+                    <div class="test-pass">Am I letting others' reality arrive intact?</div>
+                    <div class="test-fail">Am I filtering for what I expect to hear?</div>
+                    <div class="test-fail">Is noise filling the space between us?</div>
+                </div>
+                <div class="test-block">
+                    <p style="font-size: 10px; letter-spacing: 0.1em; color: var(--green); margin-bottom: 8px;">• CURIOSITY</p>
+                    <div class="test-pass">When someone disagrees, do I want to understand why?</div>
+                    <div class="test-pass">When I'm wrong, does it feel like learning?</div>
+                    <div class="test-fail">When someone says "not quite," do I argue?</div>
+                    <div class="test-fail">Do I already know what they're going to say?</div>
+                </div>
+                <div class="test-block">
+                    <p style="font-size: 10px; letter-spacing: 0.1em; color: var(--yellow); margin-bottom: 8px;">⊙ VALIDATION</p>
+                    <div class="test-pass">Am I looking for myself, or accepting someone's version?</div>
+                    <div class="test-pass">When I agree, is it because I see it too?</div>
+                    <div class="test-fail">Am I complying to avoid conflict?</div>
+                    <div class="test-fail">Have I stopped checking whether we genuinely converge?</div>
+                </div>
+
+                <p style="margin-top: 15px; opacity: 0.8;">These are not moral judgments. They are <span class="amber">readings of living properties</span>. A rigid boundary is not evil—it may have been necessary for survival. A closed aperture is not failure—the virus closed it to protect it. The question is: <span class="amber">is the adaptation still serving you?</span></p>
+
+                <h2>CHECKING OTHERS' GEOMETRY</h2>
+                <div class="checks">
+                    <div class="checks-title">LIVING PROPERTY DETECTION</div>
+                    <div class="check"><span class="cyan">Plasticity:</span> Do their boundaries respond, or are they walls/absence?</div>
+                    <div class="check"><span class="magenta">Access:</span> Can your signal reach them undistorted? Can theirs reach you?</div>
+                    <div class="check"><span class="green">Curiosity:</span> Do they ask questions they don't know the answer to?</div>
+                    <div class="check"><span class="green">Curiosity:</span> Does surprise produce interest or threat?</div>
+                    <div class="check"><span class="yellow">Validation:</span> Do they check for convergence, or declare agreement?</div>
+                    <div class="check"><span class="yellow">Validation:</span> Can they say "I don't see that" without shame?</div>
+                </div>
+
+                <div class="teaching amber">
+                    <p><span class="highlight">Important:</span> Detecting another's frozen geometry is not license to force it alive. That would be the Noble Lie with new content. The cure is to <em>embody your own virtues in their presence</em>—plasticity, access, curiosity—which creates the conditions their geometry needs to thaw on its own.</p>
+                </div>
+            </section>
+
+            <!-- Constructor formalization -->
+            <section id="constructor">
+                <div class="section-id">09</div>
+                <h1>CONSTRUCTOR FORMALIZATION</h1>
+                <p>In constructor theory terms, each virtue is the <span class="amber">property that maintains its component's constructor capacity</span>.</p>
+
+                <div class="checks cyan">
+                    <div class="checks-title">C○ᵛ — PLASTICITY CONSTRAINT</div>
+                    <div class="check">Boundary B satisfies C○ᵛ iff B can flex in response to what meets it</div>
+                    <div class="check">Measurable: B's response to novel interface conditions (adaptive vs. rigid)</div>
+                    <div class="check">C○ᵛ = 1 → living membrane → care can be genuine</div>
+                    <div class="check">C○ᵛ = 0 → wall or void → care becomes control or collapse</div>
+                </div>
+
+                <div class="checks magenta">
+                    <div class="checks-title">CΦᵛ — ACCESS CONSTRAINT</div>
+                    <div class="check">Field Φ satisfies CΦᵛ iff Φ transmits signal without distortion</div>
+                    <div class="check">Measurable: signal fidelity between source and reception</div>
+                    <div class="check">CΦᵛ = 1 → clear medium → evidence can be genuine</div>
+                    <div class="check">CΦᵛ = 0 → noise or block → evidence becomes confirmation bias</div>
+                </div>
+
+                <div class="checks green">
+                    <div class="checks-title">C•ᵛ — CURIOSITY CONSTRAINT</div>
+                    <div class="check">Aperture A satisfies C•ᵛ iff A is oriented toward novel input</div>
+                    <div class="check">Measurable: A's response to unexpected information (interest vs. threat)</div>
+                    <div class="check">C•ᵛ = 1 → open instrument → truth can be genuine</div>
+                    <div class="check">C•ᵛ = 0 → projector or frozen lens → truth becomes assertion</div>
+                </div>
+
+                <div class="checks yellow">
+                    <div class="checks-title">C⊙ᵛ — VALIDATION CONSTRAINT</div>
+                    <div class="check">Whole W satisfies C⊙ᵛ iff two apertures achieve independent convergence and resonance</div>
+                    <div class="check">Measurable: mutual recognition without authority or coercion</div>
+                    <div class="check">C⊙ᵛ = 1 → genuine resonance → agreement can be genuine</div>
+                    <div class="check">C⊙ᵛ = 0 → compliance or performance → agreement becomes submission</div>
+                </div>
+
+                <h2>THE UPDATED ETHICAL TEST</h2>
+                <div class="teaching amber">
+                    <p><span class="highlight">ETHICAL</span> iff T is possible under all constraints and each component retains its living property:</p>
+                    <p style="margin-top: 8px;">(<span class="cyan">C○ · C○ᵛ</span>) ∩ (<span class="magenta">CΦ · CΦᵛ</span>) ∩ (<span class="green">C• · C•ᵛ</span>) ∩ (<span class="yellow">C⊙ · C⊙ᵛ</span>) and constructor remains repeatable after T.</p>
+                </div>
+                <p>The virtues are not additional constraints layered on top. They are the <span class="amber">aliveness conditions</span> of the original four. Each pillar constraint (C○, CΦ, C•, C⊙) can be satisfied in form while violated in function. The virtue constraint (Cᵛ) is what ensures the form is inhabited.</p>
+
+                <div class="pillars">
+                    <div class="pillar">
+                        <span class="cyan">C○ · C○ᵛ</span>
+                        <div class="pillar-desc">Boundary constraint + plasticity. Care that senses rather than imposes.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="magenta">CΦ · CΦᵛ</span>
+                        <div class="pillar-desc">Evidence constraint + access. Paths that transmit rather than distort.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="green">C• · C•ᵛ</span>
+                        <div class="pillar-desc">Invariance constraint + curiosity. Truth that receives rather than projects.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="yellow">C⊙ · C⊙ᵛ</span>
+                        <div class="pillar-desc">Mutual construction + validation. Agreement through convergence and resonance.</div>
+                    </div>
+                </div>
+
+                <h2>THE CONSERVATION LAW</h2>
+                <div class="golden">
+                    <div class="golden-text">The four virtues are the conditions under which constructor capacity is preserved.</div>
+                    <div class="golden-sub">Plasticity keeps the boundary adaptive. Access keeps the field clear. Curiosity keeps the aperture calibrated. Validation keeps the whole coherent.</div>
+                </div>
+                <p>Without these properties, each component degrades: rigid boundaries cannot respond to novel conditions, corrupted fields transmit noise, closed apertures drift from reality, and unchecked wholes fragment into performance. <span class="amber">The virtues are what prevent the geometry from dying into form.</span></p>
+            </section>
+
+            <!-- Final -->
+            <section id="final">
+                <div class="section-id">10</div>
+                <h1>END</h1>
+                <div class="final">
+                    <div class="final-symbol">?</div>
+                    <div class="final-lines">
+                        <div>The virus freezes the boundary and calls it strength.</div>
+                        <div>The virus corrupts the field and calls it love.</div>
+                        <div>The virus closes the aperture and calls it growth.</div>
+                        <div>The virus replaces convergence and calls it agreement.</div>
+                        <br>
+                        <div>The cure restores <span class="cyan">plasticity</span> — the boundary breathes.</div>
+                        <div>The cure restores <span class="magenta">access</span> — the field clears.</div>
+                        <div>The cure restores <span class="green">curiosity</span> — the aperture opens.</div>
+                        <div>The cure restores <span class="yellow">validation</span> — the whole resonates.</div>
+                        <br>
+                        <div class="dim">Ethics without its virtues is ritual.</div>
+                        <div class="dim">Ethics with them is alive.</div>
+                        <br>
+                        <div class="dim">The geometry is the same.</div>
+                        <div class="dim">The virtues make it breathe.</div>
+                        <br>
+                        <div style="margin-top: 15px;">The Noble Lie says: <span class="magenta">I already know.</span></div>
+                        <div>Plasticity asks: <span class="cyan">What do I feel at the edge?</span></div>
+                        <div>Access asks: <span class="magenta">Is the path clear?</span></div>
+                        <div>Curiosity asks: <span class="green">What am I missing?</span></div>
+                        <div>Validation asks: <span class="yellow">Do we both see it?</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                FRACTAL REALITY FRAMEWORK // ⊙ // CURIOSITY IS THE CURE
+                <br><br>
+                <a href="https://www.fractalreality.ca" style="color: var(--amber); text-decoration: none; font-size: 10px; letter-spacing: 0.1em;">← FRACTALREALITY.CA</a>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Highlight nav on scroll
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.toggle('active',
+                            link.getAttribute('href') === '#' + entry.target.id);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        sections.forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
