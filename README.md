@@ -260,6 +260,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**how_to_realize_real_lies.html**](https://fractalreality.ca/how_to_realize_real_lies.html) — Recognizing deception patterns
 - [**why_i_hate_lies.html**](https://fractalreality.ca/why_i_hate_lies.html) — Why I Hate Lies
 - [**high_power_influence.html**](https://fractalreality.ca/high_power_influence.html) — High-Power Aperture Protocol: truth-preserving governance for influential individuals
+- [**circumpunct_virtues.html**](https://fractalreality.ca/circumpunct_virtues.html) — Curiosity Is The Cure: the four virtues that keep the circumpunct alive
 
 ---
 
