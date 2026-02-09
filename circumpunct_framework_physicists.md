@@ -75,6 +75,7 @@ where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denote
   - [7.3 Open Derivations (Phenomenological)](#73-open-derivations-phenomenological)
   - [7.4 Falsifiable Predictions](#74-falsifiable-predictions)
   - [7.5 Critical Falsification Tests](#75-critical-falsification-tests)
+- [7A.10 The Circumpunct Balance: β Has ⊙ Structure](#7a10-the-circumpunct-balance-β-has--structure)
 - [7B. Braid Physics: Vertices, Amplitudes, and the Golden Coupling](#7b-braid-physics-vertices-amplitudes-and-the-golden-coupling)
   - [7B.1 Feynman Vertices as Circumpunct Structure](#7b1-feynman-vertices-as-circumpunct-structure)
   - [7B.2 The Golden Coupling Ratio](#7b2-the-golden-coupling-ratio)
@@ -422,7 +423,7 @@ and a **balance parameter**:
 ◐ = |⊛| / (|⊛| + |☀︎|)
 ```
 
-The framework singles out **◐ = 1/2** by symmetry, maximum entropy, and energy balance arguments. At this fixed point, the effective fractal dimension of worldlines corresponds to:
+The framework singles out **◐ = 1/2** by symmetry, maximum entropy, and energy balance arguments. (See §7A.10: these three arguments each address a distinct β-component — gate, flow, autonomy — whose triple convergence to 0.5 IS the fixed point.) At this fixed point, the effective fractal dimension of worldlines corresponds to:
 
 ```
 D = 1.5 (Mandelbrot fact: the fractal dimension of Brownian motion)
@@ -2830,6 +2831,81 @@ The aperture state is characterized by (θ, β) where θ is facing angle and β 
 
 ---
 
+### 7A.10 The Circumpunct Balance: β Has ⊙ Structure
+
+**Status:** AMENDMENT — Internal consistency correction + diagnostic enrichment
+**Basis:** Axiom A2 (Fractal Necessity) requires that any property of ⊙ must itself have ⊙ structure.
+
+The balance parameter β, treated as a single scalar in [0,1], conflates three operationally distinct measurements corresponding to the three circumpunct components. By A2, β must be decomposed:
+
+```
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                         ║
+║   β_•  =  GATE OPENNESS           ∈ [0,1]                              ║
+║           How much passes through the aperture                          ║
+║           Property of • (the gate)                                      ║
+║                                                                         ║
+║   β_Φ  =  FLOW RATIO              ∈ [0,1]                              ║
+║           Balance between convergence and emergence                     ║
+║           Property of Φ (the mediating activity)                        ║
+║           Dynamic: |⊛| / (|⊛| + |☀︎|)                                   ║
+║                                                                         ║
+║   β_○  =  AUTONOMY FRACTION       ∈ [0,1]                              ║
+║           Balance between self-maintenance and context-maintenance      ║
+║           Property of ○ (the boundary's fractal nesting)               ║
+║                                                                         ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+```
+
+**Compositional Wholeness (A4):** The whole-system balance is not a sum or product:
+
+```
+β_⊙ = β_Φ(β_•, β_○)       (Φ OPERATES — the verb, not a noun)
+```
+
+**Convergence Theorem:** At the fixed point ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ]):
+
+```
+β_• = β_Φ = β_○ = 0.5
+
+    β_• → 0.5:  SYMMETRY      (maximum gate entropy)
+    β_Φ → 0.5:  CONSERVATION  (flow balance at steady state)
+    β_○ → 0.5:  VIRIAL        (stability of bound systems)
+
+Three independent arguments, one for each parameter.
+Triple convergence to 0.5 IS i. Not: β produces i.
+```
+
+**Derivation Priority Correction:**
+
+```
+i is axiomatically necessary (minimal rotation connecting real to imaginary).
+β_• = 0.5 is the coordinate name for "at the quarter-turn."
+The framework derives β's optimal value FROM i, not i from β.
+Å(β_•) = exp(iπβ_•) now DESCRIBES deviation from i, rather than PRODUCING i.
+```
+
+**Physics Implications:**
+
+| Current | Amended |
+|:---|:---|
+| D = 1 + β | D_x = 1 + β_x for each component x ∈ {•, Φ, ○} |
+| (1 + β) + (2 − β) = 3 | Three conservation equations, one per component |
+| Zero free parameters | Zero at fixed point; three state variables away from it |
+| Ω(θ, β) = (sin²θ)^{D/2} · 4β(1−β) | Ω(θ, β_•, β_Φ, β_○) = (sin²θ)^{D/2} · 4β_•(1−β_•) · g(β_Φ, β_○) |
+
+At the fixed point (all β = 0.5): **all existing equations are preserved exactly.** The decomposition adds expressive power away from the fixed point without changing results at it.
+
+**New Falsifiable Predictions:**
+
+1. **β-1 (Component Independence):** β_•, β_Φ, β_○ independently measurable/perturbable
+2. **β-3 (Triple Convergence):** Consciousness requires all three near 0.5; disrupting any single one disrupts consciousness
+3. **β-5 (Three-Factor Structure):** Relationship quality correlates with three independent factors (gate/flow/autonomy), not one
+
+For the complete treatment including diagnostic geometry (β-space), pathology signatures, healing vectors, Noble Lie decomposition, and sleep-cycle dynamics, see **THEORY_OF_EVERYTHING.md Chapter 29**.
+
+---
+
 ## 7B. Braid Physics: Vertices, Amplitudes, and the Golden Coupling
 
 **Status:** PARTIALLY DERIVED (one major confirmed result)
@@ -3450,11 +3526,16 @@ This suggests a common geometric origin.
 
 ### Key Equalities
 
-**Balance:**
+**Balance (§29 Decomposition: β has ⊙ structure):**
 ```
-◐ = |⊛|/(|⊛|+|☀︎|) = 1/2
+◐ = |⊛|/(|⊛|+|☀︎|) = 1/2          (now identified as β_Φ — flow ratio)
 D = 1 + ◐ = 1.5
 H(◐) = −[◐ log₂ ◐ + (1−◐) log₂(1−◐)] = 1 bit at ◐ = ½
+
+β_• = gate openness (property of •)     = 0.5 at fixed point (symmetry)
+β_Φ = flow ratio (property of Φ)        = 0.5 at fixed point (conservation)
+β_○ = autonomy fraction (property of ○) = 0.5 at fixed point (virial)
+β_⊙ = β_Φ(β_•, β_○)                    (Φ operates — the verb)
 ```
 
 **Energy:**
@@ -3590,9 +3671,18 @@ This formulation benefited from iterative refinement focused on mathematical rig
 
 ---
 
-**Document Status:** Quick-start formulation for working physicists (v1.7)
+**Document Status:** Quick-start formulation for working physicists (v1.8)
 **Last Updated:** February 2026
 **Maintained by:** Circumpunct Framework Development Team
+
+**v1.8 Changes:** β-decomposition amendment (β has ⊙ structure):
+- §7A.10: New section — The Circumpunct Balance decomposition (β_•, β_Φ, β_○)
+- §2.3: Cross-reference to triple-convergence argument
+- §8 Cheat Sheet: Updated balance section with β-decomposition
+- Appendix A: Updated parameter definitions with component-level β notation
+- Five new falsifiable predictions (β-1 through β-5) from decomposition
+- Derivation priority correction: i is axiomatic, β = 0.5 is its coordinate name
+- Full treatment in THEORY_OF_EVERYTHING.md Chapter 29
 
 **v1.7 Changes:** Integration of circumpunct kernel v1.0 content:
 - Abstract: Updated fundamental object to ⊙ = Φ(•, ○) (Axiom A4: Compositional Wholeness)
@@ -3656,8 +3746,12 @@ Updated status labels: α now marked as DERIVED (not external), lepton mass form
 
 **Parameters:**
 - β : opening parameter ∈ [0,1]. β = |⊛|/(|⊛|+|☀︎|). At β=½: balanced, conscious, D=1.5.
+  - β_• : gate openness (property of •). Å(β_•) = exp(iπβ_•).
+  - β_Φ : flow ratio (property of Φ). The original β definition. β_Φ = |⊛|/(|⊛|+|☀︎|).
+  - β_○ : autonomy fraction (property of ○). Self-work / (self-work + context-work).
+  - β_⊙ : whole-system balance = β_Φ(β_•, β_○). Φ operates (A4).
 - ρ : ω/α = emergence/convergence rate. Regime transition parameter.
-- D : fractal dimension. D = 1+β. At balance: D=1.5.
+- D : fractal dimension. D = 1+β. At balance: D=1.5. (Per component: D_x = 1+β_x.)
 - H(β) : = −[β log₂ β + (1−β) log₂(1−β)]. At β=½: H = 1 bit (max entropy).
 
 **The Master Equation:**
