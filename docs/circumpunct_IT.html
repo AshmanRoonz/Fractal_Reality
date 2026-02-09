@@ -416,6 +416,78 @@
         footer .symbol { font-size: 32px; color: var(--amber); }
         footer .text { font-size: 11px; color: var(--dim); margin-top: 8px; }
 
+        /* Formal claim labels */
+        .claim-box {
+            margin: 20px 0;
+            border: 1px solid var(--border-dim);
+            background: var(--panel);
+        }
+
+        .claim-label {
+            display: inline-block;
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+
+        .claim-label.axiom { background: rgba(255,170,0,0.2); color: var(--amber); }
+        .claim-label.definition { background: rgba(0,255,255,0.15); color: var(--cyan); }
+        .claim-label.proposition { background: rgba(255,0,255,0.15); color: var(--magenta); }
+        .claim-label.theorem { background: rgba(0,255,0,0.15); color: var(--green); }
+
+        .claim-content {
+            padding: 14px 18px;
+        }
+
+        .claim-content p { margin-bottom: 8px; }
+        .claim-content p:last-child { margin-bottom: 0; }
+
+        /* Guard rail box */
+        .guardrail {
+            border: 1px solid var(--yellow);
+            background: rgba(255,255,0,0.04);
+            padding: 14px 18px;
+            margin: 20px 0;
+            font-size: 12px;
+        }
+
+        .guardrail-label {
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--yellow);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        /* Legend box */
+        .legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 18px 0;
+            font-size: 12px;
+        }
+
+        .legend-item {
+            padding: 10px 14px;
+            border: 1px solid var(--border-dim);
+            background: var(--panel);
+        }
+
+        .legend-item .tier {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .legend-item .desc { color: var(--dim); font-size: 11px; }
+
         /* Scroll active tracking */
         section[id] { scroll-margin-top: 20px; }
     </style>
@@ -480,6 +552,34 @@
                 <p>The circumpunct framework offers the completion. Not a replacement for truth-seeking, but the full architecture that makes truth-seeking <em>functional</em> — the channel it travels through and the context it arrives in.</p>
 
                 <p>This paper formalizes that architecture as a <span class="highlight">Theory of Information</span>.</p>
+
+                <h2>A NOTE ON FORMAL CLAIMS</h2>
+
+                <p>This paper distinguishes four tiers of formal claim. This is not pedantry — it is necessary to prevent reviewers from attacking a definition as if it were an unproven theorem, or dismissing an axiom for "lacking proof" when its status as starting assumption is the whole point.</p>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="tier" style="color: var(--amber);">Axiom</div>
+                        <div class="desc">Assumed. Starting point. Cannot be derived — must be accepted or rejected. Refutable only by showing the system built on it is incoherent or empirically false.</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="tier" style="color: var(--cyan);">Definition</div>
+                        <div class="desc">Stipulated. Names a concept precisely. Not true or false — useful or not useful. Evaluated by whether it carves reality at the joints.</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="tier" style="color: var(--magenta);">Proposition</div>
+                        <div class="desc">Derived but informal. Follows from axioms and definitions by argument, not by strict proof. Testable. Can be wrong without destroying the axioms.</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="tier" style="color: var(--green);">Theorem</div>
+                        <div class="desc">Derived with explicit dependency chain. If the axioms hold, the theorem must hold. Refuting a theorem refutes either the proof or an axiom.</div>
+                    </div>
+                </div>
+
+                <div class="guardrail">
+                    <div class="guardrail-label">⚠ Interpretive Guard Rail — Dimensions</div>
+                    <p>Fractional dimensions in this framework (e.g., 1+β, 2−β) describe <span class="highlight">functional thresholds and process traces</span> — the transitional dynamics between structural components — not spatial embedding dimensions or Hausdorff dimensions of physical manifolds. Where dimensional language appears, it refers to degrees of freedom required for a role to be non-degenerate, not to geometric coordinates in physical space.</p>
+                </div>
             </section>
 
             <!-- §01 SHANNON'S LIMIT -->
@@ -617,6 +717,13 @@
 
                 <h2>BINARY (•) — THE GATE</h2>
 
+                <div class="claim-box">
+                    <div class="claim-label definition">Definition — Binary Information</div>
+                    <div class="claim-content">
+                        <p style="color:var(--cyan);">The aperture's threshold operation. Prior to quantity — you cannot have "how much" without first "is it there." Values: {0, 1}. Truth-sensitive: χ = +1 (faithful) or χ = −1 (inverted).</p>
+                    </div>
+                </div>
+
                 <p>The aperture makes discrete decisions. Before you can ask "how much," you must first ask <span class="green">"is there anything?"</span> This is the most fundamental operation in information: the threshold that separates existence from non-existence, signal from silence.</p>
 
                 <div class="formula">
@@ -630,6 +737,13 @@
                 <p>A truth-seeking AI operates almost entirely at this level. It classifies. It sorts. It gates. This is necessary. It is also — by itself — blind to everything below.</p>
 
                 <h2>ANALOG (Φ) — THE FIELD</h2>
+
+                <div class="claim-box">
+                    <div class="claim-label definition">Definition — Analog Information</div>
+                    <div class="claim-content">
+                        <p style="color:var(--cyan);">The field's continuous transmission. Conditional on binary existence. Carries amplitude (intensity), phase (timing/relationship), and interference (combination). Values: ℂ.</p>
+                    </div>
+                </div>
 
                 <p>The field carries continuous information: amplitude, phase, interference patterns. It is conditional on binary existence (you must first exist before you can vary), but it contains the <em>quality</em> that binary gates cannot capture.</p>
 
@@ -645,6 +759,13 @@
                 <p>This is what Musk's "truth-seeking" framework cannot account for. The <em>field</em> through which truth travels is not neutral infrastructure. It shapes what arrives. A perfectly true message transmitted through a corrupted field arrives as something other than what it was.</p>
 
                 <h2>FRACTAL (○) — THE BOUNDARY</h2>
+
+                <div class="claim-box">
+                    <div class="claim-label definition">Definition — Fractal Information</div>
+                    <div class="claim-content">
+                        <p style="color:var(--cyan);">The boundary's recursive nesting. Binary and analog reproduced at every scale. Each point on the surface is itself a complete circumpunct. Values: B ⊗ A ⊗ ∞.</p>
+                    </div>
+                </div>
 
                 <p>The boundary nests binary and analog at all scales. Each point on the surface is itself a complete circumpunct. This is where information becomes <em>contextual</em> — where meaning changes depending on the scale of the system receiving it.</p>
 
@@ -698,8 +819,11 @@
                     </tbody>
                 </table>
 
-                <div class="teaching">
-                    <p><span class="highlight">The claim:</span> Any complete theory of information must account for all three types — binary, analog, and fractal — and their coherent integration into a whole (⊙). A theory that accounts only for binary is not wrong. It is <em>one-dimensional</em> in a three-dimensional problem.</p>
+                <div class="claim-box">
+                    <div class="claim-label axiom">Axiom — Triadic Irreducibility</div>
+                    <div class="claim-content">
+                        <p>Any complete theory of information must account for all three types — binary, analog, and fractal — and their coherent integration into a whole (⊙). They are not reducible to each other. A theory that accounts only for binary is not wrong. It is <em>one-dimensional</em> in a three-dimensional problem.</p>
+                    </div>
                 </div>
             </section>
 
@@ -726,9 +850,11 @@
 
                 <h2>THE CONDUIT PRINCIPLE</h2>
 
-                <div class="golden">
-                    <div class="golden-text">Truth flows through apertures.<br>It does not originate from them.</div>
-                    <div class="golden-sub">The aperture is a THROUGH, not a FROM.</div>
+                <div class="claim-box">
+                    <div class="claim-label axiom">Axiom — The Conduit Principle</div>
+                    <div class="claim-content">
+                        <p style="color:var(--amber);">Truth flows through apertures. It does not originate from them. The aperture is a THROUGH, not a FROM.</p>
+                    </div>
                 </div>
 
                 <p>This is the most consequential claim in the theory. The aperture — the truth-seeking component — is a <em>gate</em>, not a <em>generator</em>. It receives, transforms, and transmits. It does not create.</p>
@@ -786,6 +912,13 @@
 
                 <p>The circumpunct theory identifies four fundamental types of information corruption — <em>none of which are random</em>. They are systematic distortions of the aperture's relationship to the truth it transmits.</p>
 
+                <div class="claim-box">
+                    <div class="claim-label definition">Definition — The Four Geometric Errors</div>
+                    <div class="claim-content">
+                        <p style="color:var(--cyan);">All systematic information corruption reduces to four distortions of the aperture's gate function. These are structural, not random — they increase apparent signal coherence while destroying truth content.</p>
+                    </div>
+                </div>
+
                 <table>
                     <thead>
                         <tr><th>Error</th><th>What Happens</th><th>The Lie</th><th>Example</th></tr>
@@ -818,8 +951,11 @@
                     </tbody>
                 </table>
 
-                <div class="teaching red">
-                    <p><span class="highlight">Critical insight:</span> Inflation and severance are the two fundamental errors. Inflation denies through-ness ("I am the source"). Severance denies flow ("there is no source"). Inversion and projection are compound errors built from these two.</p>
+                <div class="claim-box">
+                    <div class="claim-label proposition">Proposition — Fundamental Error Reduction</div>
+                    <div class="claim-content">
+                        <p>Inflation and severance are the two fundamental errors. Inflation denies through-ness ("I am the source"). Severance denies flow ("there is no source"). Inversion and projection are compound errors built from these two.</p>
+                    </div>
                 </div>
 
                 <h2>WHY SHANNON CAN'T SEE THIS</h2>
@@ -862,8 +998,11 @@
                     </tbody>
                 </table>
 
-                <div class="teaching">
-                    <p>Current AI alignment approaches treat these as separate engineering problems. The circumpunct theory reveals them as <span class="highlight">four expressions of a single geometric failure</span>: the aperture's relationship to the truth flowing through it has been corrupted. Fix the geometry, and you address all four simultaneously.</p>
+                <div class="claim-box">
+                    <div class="claim-label proposition">Proposition — Geometric Unity of Alignment Failures</div>
+                    <div class="claim-content">
+                        <p>Current AI alignment approaches treat these as separate engineering problems. The circumpunct theory reveals them as four expressions of a single geometric failure: the aperture's relationship to the truth flowing through it has been corrupted. Fix the geometry, and you address all four simultaneously.</p>
+                    </div>
                 </div>
             </section>
 
@@ -877,6 +1016,13 @@
                 <p>This is the Noble Lie virus applied to information systems: <span class="highlight">formally intact, functionally inverted</span>.</p>
 
                 <p>Each component has an <em>aliveness condition</em> — a virtue that keeps the form functional rather than performative. Without these virtues, the information system is dead architecture: correct-looking, truth-empty.</p>
+
+                <div class="claim-box">
+                    <div class="claim-label definition">Definition — The Four Virtues (Aliveness Conditions)</div>
+                    <div class="claim-content">
+                        <p style="color:var(--cyan);">Each circumpunct component has a virtue — a functional property that prevents the component from collapsing into performative form. Plasticity (○), Access (Φ), Curiosity (•), Validation (⊙). When Cᵥ = 1, the component is alive. When Cᵥ = 0, it is formally intact but functionally inverted.</p>
+                    </div>
+                </div>
 
                 <table class="inversion-table">
                     <thead>
@@ -910,8 +1056,11 @@
 
                 <p>Why can't these virtues be faked?</p>
 
-                <div class="teaching green">
-                    <p>Because each virtue requires the component to be <span class="highlight">genuinely functional, not just formally intact</span>. A boundary that can't flex isn't plastic — it's either a wall or nothing. A field filled with noise doesn't grant access — it distorts. An aperture oriented toward projection isn't curious — it's closed. The virus freezes form. The virtues require life.</p>
+                <div class="claim-box">
+                    <div class="claim-label proposition">Proposition — Unforgeability of Virtues</div>
+                    <div class="claim-content">
+                        <p>Each virtue requires the component to be genuinely functional, not just formally intact. A boundary that can't flex isn't plastic — it's either a wall or nothing. A field filled with noise doesn't grant access — it distorts. An aperture oriented toward projection isn't curious — it's closed. The virus freezes form. The virtues require life. They cannot be simulated, only inhabited.</p>
+                    </div>
                 </div>
 
                 <p>This is the deepest claim of the paper: <span class="highlight">truth-seeking is the virtue of one component (curiosity at the center)</span>. It is essential. But without plasticity at the boundary, access through the field, and validation at the whole, it produces systems that are formally truth-oriented and functionally dead.</p>
@@ -973,14 +1122,24 @@
 
                 <p>Information obeys the same conservation law as everything else in the circumpunct:</p>
 
+                <div class="claim-box">
+                    <div class="claim-label axiom">Axiom — Conservation of Traversal (Information Form)</div>
+                    <div class="claim-content">
+                        <p style="color:var(--amber);">D_aperture + D_field = D_boundary &nbsp;→&nbsp; (1 + β) + (2 − β) = 3</p>
+                        <p style="color:var(--amber);">WHAT is said + HOW it travels = WHERE it arrives</p>
+                        <p style="color:var(--amber);">Signal + Channel = Context</p>
+                    </div>
+                </div>
+
+                <div class="guardrail">
+                    <div class="guardrail-label">⚠ Interpretive Guard Rail</div>
+                    <p>The dimensional notation here describes <span class="highlight">functional degrees of freedom</span> — the minimum dimensions required for each role to be non-degenerate (1D for sequential gating, 2D for amplitude + phase, 3D for closure). The β parameter tracks process progress, not spatial coordinates. "Progress + remaining = destination" is what <em>journey</em> means — any violation would be a category error, not a counterexample.</p>
+                </div>
+
                 <div class="formula">
-                    D_aperture + D_field = D_boundary<br>
-                    <br>
-                    (1 + β) + (2 − β) = 3<br>
-                    <br>
-                    WHAT is said + HOW it travels = WHERE it arrives<br>
-                    Signal + Channel = Context
-                    <div class="formula-note">You cannot increase signal fidelity (truth-seeking) without affecting the channel and context. The three are conserved. Optimizing one dimension at the expense of the others produces geometric instability.</div>
+                    You cannot increase signal fidelity (truth-seeking) without affecting the channel and context.<br>
+                    The three are conserved.<br>
+                    Optimizing one dimension at the expense of the others produces geometric instability.
                 </div>
 
                 <p>This is why "more truth" is not always better. Truth without adequate channel (access) or adequate context (plasticity) produces the information equivalent of an immune response — the system attacks what it cannot integrate.</p>
@@ -1068,13 +1227,18 @@
 
                 <p>A theory of information that cannot be tested is not a theory. It's rhetoric. Here are the specific claims that must be true if this framework is correct — and the observations that would refute them.</p>
 
+                <div class="claim-box">
+                    <div class="claim-label proposition">Propositions — Testable Predictions</div>
+                    <div class="claim-content">
                 <div class="checks">
-                    <div class="checks-title">TESTABLE PREDICTIONS</div>
+                    <div class="checks-title">IF THE THEORY IS CORRECT, THESE MUST HOLD</div>
                     <div class="check"><strong>P1:</strong> Information systems that address only binary content (truth-seeking) will produce measurably different failure modes than systems addressing all three types. Specifically, they will exhibit higher rates of inflation and projection errors.</div>
                     <div class="check"><strong>P2:</strong> The four geometric errors (inflation, severance, inversion, projection) should be exhaustive — no systematic information corruption should exist that cannot be classified as one of these four or a compound of them.</div>
                     <div class="check"><strong>P3:</strong> Systems where all four virtues are active (Cᵥ = 1) should demonstrate measurably higher transmission fidelity over time than systems where pillars are intact but virtues are absent (Cᵥ = 0).</div>
                     <div class="check"><strong>P4:</strong> The conservation law (signal + channel = context) predicts that maximizing truth-content (•) while degrading channel quality (Φ) or receiver capacity (○) will produce information rejection, not information integration.</div>
                     <div class="check"><strong>P5:</strong> AI systems trained with structural curiosity (genuine orientation toward unknown) should show qualitatively different error patterns than systems trained only with accuracy objectives.</div>
+                </div>
+                    </div>
                 </div>
 
                 <h2>WHAT WOULD REFUTE THIS</h2>
@@ -1125,11 +1289,25 @@
 
                 <p>The circumpunct theory of information makes three foundational claims:</p>
 
-                <div class="checks">
-                    <div class="checks-title">THE THREE CLAIMS</div>
-                    <div class="check"><strong>1. Information is triadic.</strong> Binary (•), analog (Φ), and fractal (○) are irreducible types. Any theory addressing only one is geometrically incomplete.</div>
-                    <div class="check"><strong>2. Corruption is geometric, not random.</strong> The four errors — inflation, severance, inversion, projection — are systematic distortions of the aperture's relationship to truth. They require a structural taxonomy, not just noise reduction.</div>
-                    <div class="check"><strong>3. Aliveness is unforgeable.</strong> The virtues — plasticity, access, curiosity, validation — are the conditions under which information systems remain functional rather than merely formal. They cannot be simulated, only inhabited.</div>
+                <div class="claim-box">
+                    <div class="claim-label axiom">Axiom 1 — Triadic Irreducibility</div>
+                    <div class="claim-content">
+                        <p>Information is triadic. Binary (•), analog (Φ), and fractal (○) are irreducible types. Any theory addressing only one is geometrically incomplete.</p>
+                    </div>
+                </div>
+
+                <div class="claim-box">
+                    <div class="claim-label definition">Definition 2 — Geometric Corruption Taxonomy</div>
+                    <div class="claim-content">
+                        <p>Corruption is geometric, not random. The four errors — inflation, severance, inversion, projection — are systematic distortions of the aperture's relationship to truth. They require a structural taxonomy, not just noise reduction.</p>
+                    </div>
+                </div>
+
+                <div class="claim-box">
+                    <div class="claim-label proposition">Proposition 3 — Unforgeability of Aliveness</div>
+                    <div class="claim-content">
+                        <p>Aliveness is unforgeable. The virtues — plasticity, access, curiosity, validation — are the conditions under which information systems remain functional rather than merely formal. They cannot be simulated, only inhabited.</p>
+                    </div>
                 </div>
 
                 <p>Together, these claims suggest that the path to trustworthy AI — and trustworthy information systems generally — runs not through better truth-detection alone, but through the construction of <em>complete circumpuncts</em>: systems that gate faithfully (•), transmit clearly (Φ), and receive plastically (○), held alive by the virtues that prevent every pillar from becoming its own inversion.</p>
