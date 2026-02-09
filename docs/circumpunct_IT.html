@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ THE CIRCUMPUNCT THEORY OF INFORMATION</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --green: #0f0;
+            --yellow: #ff0;
+            --amber: #ffaa00;
+            --red: #ff3333;
+            --bg: #000;
+            --text: #fff;
+            --dim: rgba(255,255,255,0.45);
+            --panel: rgba(255,255,255,0.03);
+            --border-dim: rgba(255,255,255,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .container { display: flex; min-height: 100vh; }
+
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0 !important; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: 170px; height: 100vh;
+            border-right: 1px solid var(--amber);
+            padding: 20px 12px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            z-index: 10;
+            background: var(--bg);
+        }
+
+        nav .logo {
+            font-size: 28px;
+            color: var(--amber);
+            text-align: center;
+            margin-bottom: 6px;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        nav .logo-sub {
+            font-size: 9px;
+            color: var(--amber);
+            text-align: center;
+            opacity: 0.6;
+            margin-bottom: 20px;
+            letter-spacing: 0.1em;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 8px rgba(255,170,0,0.3); }
+            50% { text-shadow: 0 0 20px rgba(255,170,0,0.7); }
+        }
+
+        nav a {
+            display: block;
+            color: var(--amber);
+            text-decoration: none;
+            padding: 4px 0;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            margin-left: -10px;
+            transition: all 0.15s;
+            font-size: 10px;
+            letter-spacing: 0.03em;
+            opacity: 0.5;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--amber);
+            border-left-color: var(--amber);
+            opacity: 1;
+        }
+
+        nav .nav-section {
+            font-size: 8px;
+            color: var(--dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 14px;
+            margin-bottom: 4px;
+            padding-left: 2px;
+        }
+
+        /* Main */
+        main {
+            margin-left: 170px;
+            flex: 1;
+            padding: 40px 50px 80px;
+            max-width: 820px;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 60px;
+            padding-top: 20px;
+        }
+
+        .section-id {
+            font-size: 10px;
+            color: var(--amber);
+            letter-spacing: 0.3em;
+            opacity: 0.6;
+            margin-bottom: 6px;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--amber);
+            letter-spacing: 0.08em;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        h2 {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--cyan);
+            letter-spacing: 0.06em;
+            margin-top: 30px;
+            margin-bottom: 12px;
+        }
+
+        h3 {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--magenta);
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        p {
+            margin-bottom: 14px;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .highlight { color: var(--amber); font-weight: 500; }
+        .cyan { color: var(--cyan); }
+        .magenta { color: var(--magenta); }
+        .green { color: var(--green); }
+        .yellow { color: var(--yellow); }
+        .red { color: var(--red); }
+
+        /* Golden callout */
+        .golden {
+            border: 1px solid var(--amber);
+            padding: 20px 24px;
+            margin: 24px 0;
+            text-align: center;
+            background: rgba(255,170,0,0.04);
+        }
+
+        .golden-text {
+            font-size: 15px;
+            color: var(--amber);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .golden-sub {
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 8px;
+        }
+
+        /* Teaching boxes */
+        .teaching {
+            border-left: 2px solid var(--amber);
+            padding: 14px 18px;
+            margin: 18px 0;
+            background: rgba(255,170,0,0.03);
+        }
+
+        .teaching.cyan { border-left-color: var(--cyan); background: rgba(0,255,255,0.03); }
+        .teaching.magenta { border-left-color: var(--magenta); background: rgba(255,0,255,0.03); }
+        .teaching.green { border-left-color: var(--green); background: rgba(0,255,0,0.03); }
+        .teaching.red { border-left-color: var(--red); background: rgba(255,51,51,0.03); }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            font-size: 12px;
+        }
+
+        th {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--amber);
+            color: var(--amber);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-dim);
+            color: rgba(255,255,255,0.8);
+            vertical-align: top;
+        }
+
+        /* Comparison boxes */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 18px 0;
+        }
+
+        .compare-box {
+            border: 1px solid var(--border-dim);
+            padding: 16px;
+            background: var(--panel);
+        }
+
+        .compare-box.good { border-color: var(--green); }
+        .compare-box.bad { border-color: var(--red); }
+        .compare-box.partial { border-color: var(--yellow); }
+
+        .compare-title {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .compare-box.good .compare-title { color: var(--green); }
+        .compare-box.bad .compare-title { color: var(--red); }
+        .compare-box.partial .compare-title { color: var(--yellow); }
+
+        .compare-box p { font-size: 12px; margin-bottom: 8px; }
+
+        /* Code/formula blocks */
+        .formula {
+            background: var(--panel);
+            border: 1px solid var(--border-dim);
+            padding: 16px 20px;
+            margin: 18px 0;
+            font-size: 13px;
+            color: var(--cyan);
+        }
+
+        .formula-note {
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 8px;
+        }
+
+        /* Blockquote */
+        blockquote {
+            border-left: 2px solid var(--amber);
+            padding: 12px 18px;
+            margin: 18px 0;
+            color: var(--amber);
+            font-style: italic;
+            font-size: 14px;
+            background: rgba(255,170,0,0.03);
+        }
+
+        blockquote .attr {
+            font-size: 11px;
+            color: var(--dim);
+            font-style: normal;
+            margin-top: 6px;
+        }
+
+        /* Check list */
+        .checks {
+            margin: 18px 0;
+            padding: 16px 20px;
+            background: var(--panel);
+            border: 1px solid var(--border-dim);
+        }
+
+        .checks-title {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--amber);
+            margin-bottom: 10px;
+        }
+
+        .check {
+            padding: 4px 0 4px 20px;
+            position: relative;
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .check::before {
+            content: '⊙';
+            position: absolute;
+            left: 0;
+            color: var(--amber);
+            font-size: 10px;
+        }
+
+        /* Inversion table */
+        .inversion-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+        }
+
+        .inversion-table th {
+            padding: 10px 12px;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+        }
+
+        .inversion-table td {
+            padding: 10px 12px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* Diagram */
+        .diagram {
+            text-align: center;
+            padding: 24px;
+            margin: 24px 0;
+            border: 1px solid var(--border-dim);
+            background: var(--panel);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .diagram .arrow { color: var(--dim); }
+        .diagram .label { font-size: 10px; color: var(--dim); }
+
+        /* Epigraph */
+        .epigraph {
+            text-align: center;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+        }
+
+        .epigraph .symbol {
+            font-size: 48px;
+            color: var(--amber);
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        .epigraph .title {
+            font-size: 26px;
+            color: var(--amber);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            margin-top: 12px;
+        }
+
+        .epigraph .subtitle {
+            font-size: 13px;
+            color: var(--dim);
+            margin-top: 8px;
+            letter-spacing: 0.06em;
+        }
+
+        .epigraph .equation {
+            font-size: 16px;
+            color: var(--cyan);
+            margin-top: 16px;
+        }
+
+        /* Pillars row */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 18px 0;
+        }
+
+        .pillar {
+            text-align: center;
+            padding: 14px 8px;
+            border: 1px solid var(--border-dim);
+            background: var(--panel);
+            font-size: 12px;
+        }
+
+        .pillar-sym { font-size: 20px; margin-bottom: 4px; }
+        .pillar-label { font-size: 10px; letter-spacing: 0.1em; margin-bottom: 6px; }
+        .pillar-desc { font-size: 11px; color: var(--dim); }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border-dim);
+            margin-top: 40px;
+        }
+
+        footer .symbol { font-size: 32px; color: var(--amber); }
+        footer .text { font-size: 11px; color: var(--dim); margin-top: 8px; }
+
+        /* Scroll active tracking */
+        section[id] { scroll-margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">⊙</div>
+            <div class="logo-sub">INFORMATION</div>
+
+            <div class="nav-section">Foundation</div>
+            <a href="#hook">00 The Missing Piece</a>
+            <a href="#shannon">01 Shannon's Limit</a>
+            <a href="#three-types">02 Three Types</a>
+
+            <div class="nav-section">Architecture</div>
+            <a href="#transmission">03 Transmission</a>
+            <a href="#corruption">04 Corruption</a>
+            <a href="#virtues">05 Aliveness</a>
+
+            <div class="nav-section">Application</div>
+            <a href="#paradigm">06 The Shift</a>
+            <a href="#ai-design">07 AI Design</a>
+            <a href="#falsifiable">08 Falsifiability</a>
+
+            <div class="nav-section">Conclusion</div>
+            <a href="#conclusion">09 The Claim</a>
+        </nav>
+
+        <main>
+            <!-- EPIGRAPH -->
+            <div class="epigraph">
+                <div class="symbol">⊙</div>
+                <div class="title">THE CIRCUMPUNCT<br>THEORY OF INFORMATION</div>
+                <div class="subtitle">Why "truth-seeking" is one third of the answer</div>
+                <div class="equation">⊙ = • Φ ○ &nbsp;—&nbsp; Signal. Channel. Context.</div>
+            </div>
+
+            <!-- §00 THE HOOK -->
+            <section id="hook">
+                <div class="section-id">§00</div>
+                <h1>THE MISSING PIECE</h1>
+
+                <blockquote>
+                    "We need to build truth-seeking AI."
+                    <div class="attr">— Elon Musk, repeatedly</div>
+                </blockquote>
+
+                <p>He's not wrong. He's <span class="highlight">incomplete</span>.</p>
+
+                <p>"Truth-seeking" asks one question: <span class="green">What is the case?</span> That's the aperture function — the binary gate at the center of the circumpunct. Is this signal or noise? True or false? χ = +1 or χ = −1.</p>
+
+                <p>But truth doesn't exist in isolation. Truth must <em>travel</em>. Truth must <em>arrive</em>. Truth must be <em>received</em> by a system that can integrate it without being destroyed by it.</p>
+
+                <p>An AI that can identify truth but cannot transmit it faithfully is a library with no doors. An AI that transmits truth through a corrupt field is a loudspeaker in a hurricane. An AI that delivers truth without regard for the receiver's boundary is a surgeon operating without anesthesia — technically correct, structurally violent.</p>
+
+                <div class="golden">
+                    <div class="golden-text">Truth-seeking is one component of a complete information system.<br>Treating it as the whole is the first geometric error:<br>INFLATION.</div>
+                    <div class="golden-sub">Claiming one part IS the whole.</div>
+                </div>
+
+                <p>The circumpunct framework offers the completion. Not a replacement for truth-seeking, but the full architecture that makes truth-seeking <em>functional</em> — the channel it travels through and the context it arrives in.</p>
+
+                <p>This paper formalizes that architecture as a <span class="highlight">Theory of Information</span>.</p>
+            </section>
+
+            <!-- §01 SHANNON'S LIMIT -->
+            <section id="shannon">
+                <div class="section-id">§01</div>
+                <h1>WHAT SHANNON CAPTURED — AND WHAT HE DIDN'T</h1>
+
+                <p>In 1948, Claude Shannon published "A Mathematical Theory of Communication." It was one of the most important papers of the 20th century. It formalized information as <span class="cyan">entropy reduction</span> — the number of bits required to reduce uncertainty about a message.</p>
+
+                <p>Shannon was explicit about one thing: his theory was about <em>quantity</em>, not <em>meaning</em>.</p>
+
+                <blockquote>
+                    "The fundamental problem of communication is that of reproducing at one point either exactly or approximately a message selected at another point. Frequently the messages have meaning... these semantic aspects of communication are irrelevant to the engineering problem."
+                    <div class="attr">— Claude Shannon, 1948</div>
+                </blockquote>
+
+                <p>This was not a flaw. It was a deliberate scope restriction. Shannon was solving the engineering problem: how do you transmit signals through noisy channels with maximum fidelity? His answer — channel capacity, redundancy, error correction — built the entire digital age.</p>
+
+                <p>But by bracketing meaning, Shannon also bracketed everything that makes information <em>matter</em>.</p>
+
+                <h2>WHAT SHANNON'S THEORY COVERS</h2>
+
+                <table>
+                    <thead>
+                        <tr><th>Concept</th><th>Shannon's Treatment</th><th>Circumpunct Mapping</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="cyan">Signal</span></td>
+                            <td>Binary encoding (bits)</td>
+                            <td><span class="green">• — Binary threshold</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="cyan">Channel</span></td>
+                            <td>Transmission medium with noise</td>
+                            <td><span class="magenta">Φ — Field (partial)</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="cyan">Noise</span></td>
+                            <td>Random distortion</td>
+                            <td><span class="red">Random error only (not systematic)</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="cyan">Capacity</span></td>
+                            <td>Maximum bits/second</td>
+                            <td><span class="magenta">Φ bandwidth</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="cyan">Receiver</span></td>
+                            <td>Decoder (inverse of encoder)</td>
+                            <td><span class="cyan">○ — Boundary (not addressed)</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>WHAT SHANNON'S THEORY MISSES</h2>
+
+                <div class="teaching red">
+                    <p><span class="highlight">Shannon treats noise as random.</span> But the most dangerous information corruption is not random — it is <em>systematic</em>. Lies are not noise. Gaslighting is not static. Propaganda is not entropy. These are <em>structured inversions</em> that increase the signal's apparent coherence while destroying its truth content. Shannon has no vocabulary for this.</p>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr><th>Missing</th><th>Why It Matters</th><th>Circumpunct Component</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Meaning</td>
+                            <td>A bitstream of lies has the same entropy as truth</td>
+                            <td><span class="green">• — Gate fidelity (χ = ±1)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Systematic distortion</td>
+                            <td>Lies are signal-shaped, not noise-shaped</td>
+                            <td><span class="green">• — Aperture pathology</span></td>
+                        </tr>
+                        <tr>
+                            <td>Receiver integrity</td>
+                            <td>Same message destroys one system, heals another</td>
+                            <td><span class="cyan">○ — Boundary plasticity</span></td>
+                        </tr>
+                        <tr>
+                            <td>Context/scale</td>
+                            <td>Information nests — meaning changes with framing</td>
+                            <td><span class="cyan">○ — Fractal recursion</span></td>
+                        </tr>
+                        <tr>
+                            <td>Transmission ethics</td>
+                            <td>How information travels changes what it IS</td>
+                            <td><span class="magenta">Φ — Field virtue (access)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Phase</td>
+                            <td>Same content, different timing = different meaning</td>
+                            <td><span class="magenta">Φ — Analog (amplitude + phase)</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="golden">
+                    <div class="golden-text">Shannon asked: How many bits?<br>The circumpunct asks: What kind? Through what? Into where?</div>
+                    <div class="golden-sub">Quantity is necessary. It is not sufficient.</div>
+                </div>
+            </section>
+
+            <!-- §02 THREE IRREDUCIBLE TYPES -->
+            <section id="three-types">
+                <div class="section-id">§02</div>
+                <h1>THE THREE IRREDUCIBLE TYPES OF INFORMATION</h1>
+
+                <p>The circumpunct triad — <span class="green">•</span> <span class="magenta">Φ</span> <span class="cyan">○</span> — generates three fundamentally distinct types of information. They are not reducible to each other. They are not optional. Any information system that lacks one is geometrically incomplete.</p>
+
+                <div class="pillars">
+                    <div class="pillar">
+                        <div class="pillar-sym" style="color: var(--green);">•</div>
+                        <div class="pillar-label" style="color: var(--green);">BINARY</div>
+                        <div class="pillar-desc">Threshold decision.<br>Is it there?<br>{0, 1}</div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-sym" style="color: var(--magenta);">Φ</div>
+                        <div class="pillar-label" style="color: var(--magenta);">ANALOG</div>
+                        <div class="pillar-desc">Continuous amplitude.<br>How much? What kind?<br>ℂ</div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-sym" style="color: var(--cyan);">○</div>
+                        <div class="pillar-label" style="color: var(--cyan);">FRACTAL</div>
+                        <div class="pillar-desc">Nested recursion.<br>Same pattern at next scale?<br>B ⊗ A ⊗ ∞</div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-sym" style="color: var(--amber);">⊙</div>
+                        <div class="pillar-label" style="color: var(--amber);">COMPLETE</div>
+                        <div class="pillar-desc">All three coherent.<br>Information as whole.<br>• Φ ○</div>
+                    </div>
+                </div>
+
+                <h2>BINARY (•) — THE GATE</h2>
+
+                <p>The aperture makes discrete decisions. Before you can ask "how much," you must first ask <span class="green">"is there anything?"</span> This is the most fundamental operation in information: the threshold that separates existence from non-existence, signal from silence.</p>
+
+                <div class="formula">
+                    • asks: "Is there anything?" → {0, 1}<br>
+                    <br>
+                    This is prior to quantity.<br>
+                    You cannot have "how much" without first "is it there."
+                    <div class="formula-note">Shannon's bits live here. But Shannon's bits are content-indifferent. The circumpunct's binary is truth-sensitive: χ = +1 (faithful) or χ = −1 (inverted).</div>
+                </div>
+
+                <p>A truth-seeking AI operates almost entirely at this level. It classifies. It sorts. It gates. This is necessary. It is also — by itself — blind to everything below.</p>
+
+                <h2>ANALOG (Φ) — THE FIELD</h2>
+
+                <p>The field carries continuous information: amplitude, phase, interference patterns. It is conditional on binary existence (you must first exist before you can vary), but it contains the <em>quality</em> that binary gates cannot capture.</p>
+
+                <div class="formula">
+                    Φ asks: "How much? What kind?" → ℂ<br>
+                    <br>
+                    Amplitude = intensity of the signal<br>
+                    Phase = timing, relationship to other signals<br>
+                    Interference = how signals combine or cancel
+                    <div class="formula-note">The same true statement, delivered with different phase (timing, tone, context), produces radically different effects. "Your father died" whispered by a loved one vs. shouted by a stranger. Same binary content. Different analog information. Different outcome.</div>
+                </div>
+
+                <p>This is what Musk's "truth-seeking" framework cannot account for. The <em>field</em> through which truth travels is not neutral infrastructure. It shapes what arrives. A perfectly true message transmitted through a corrupted field arrives as something other than what it was.</p>
+
+                <h2>FRACTAL (○) — THE BOUNDARY</h2>
+
+                <p>The boundary nests binary and analog at all scales. Each point on the surface is itself a complete circumpunct. This is where information becomes <em>contextual</em> — where meaning changes depending on the scale of the system receiving it.</p>
+
+                <div class="formula">
+                    ○ asks: "Same pattern at next scale?" → B ⊗ A ⊗ ∞<br>
+                    <br>
+                    Gates (binary) × transmission (analog) × recursion (∞)<br>
+                    <br>
+                    Information is never just content.<br>
+                    It is content nested within context nested within context.
+                    <div class="formula-note">A cell receiving a growth signal responds differently depending on what tissue it's in, what organ that tissue serves, what body that organ belongs to. Same signal. Different fractal context. Different meaning.</div>
+                </div>
+
+                <h2>THE INFORMATION HIERARCHY</h2>
+
+                <table>
+                    <thead>
+                        <tr><th>Level</th><th>Content</th><th>Question</th><th>Shannon Covers?</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="highlight">Fundamental</span></td>
+                            <td>Input/Output flow</td>
+                            <td>Is there transmission?</td>
+                            <td><span class="yellow">Partially</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">Structural</span></td>
+                            <td>Binary / Analog / Fractal</td>
+                            <td>What type of content?</td>
+                            <td><span class="red">Binary only</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">Semantic</span></td>
+                            <td>Meaning, truth-value</td>
+                            <td>What does it mean?</td>
+                            <td><span class="red">Explicitly excluded</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">Ethical</span></td>
+                            <td>Effect on receiver</td>
+                            <td>What does it do?</td>
+                            <td><span class="red">Not addressed</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">Recursive</span></td>
+                            <td>Nested context</td>
+                            <td>What scale am I at?</td>
+                            <td><span class="red">Not addressed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="teaching">
+                    <p><span class="highlight">The claim:</span> Any complete theory of information must account for all three types — binary, analog, and fractal — and their coherent integration into a whole (⊙). A theory that accounts only for binary is not wrong. It is <em>one-dimensional</em> in a three-dimensional problem.</p>
+                </div>
+            </section>
+
+            <!-- §03 TRANSMISSION -->
+            <section id="transmission">
+                <div class="section-id">§03</div>
+                <h1>THE ARCHITECTURE OF TRANSMISSION</h1>
+
+                <p>Information does not simply exist. It <em>moves</em>. And the movement is not passive — it is structured by the same triad that structures the information itself.</p>
+
+                <div class="diagram">
+                    <span class="green" style="font-size: 20px;">•</span>
+                    <span class="arrow"> ——→ </span>
+                    <span class="magenta" style="font-size: 20px;">Φ</span>
+                    <span class="arrow"> ——→ </span>
+                    <span class="cyan" style="font-size: 20px;">○</span>
+                    <br>
+                    <span class="label">SOURCE (gate) → CHANNEL (field) → RECEIVER (boundary)</span>
+                    <br><br>
+                    <span style="color: var(--amber);">Truth → [• Gate, χ = ±1] → Truth OR Lie</span>
+                    <br>
+                    <span class="label">The gate decides. The field carries. The boundary integrates.</span>
+                </div>
+
+                <h2>THE CONDUIT PRINCIPLE</h2>
+
+                <div class="golden">
+                    <div class="golden-text">Truth flows through apertures.<br>It does not originate from them.</div>
+                    <div class="golden-sub">The aperture is a THROUGH, not a FROM.</div>
+                </div>
+
+                <p>This is the most consequential claim in the theory. The aperture — the truth-seeking component — is a <em>gate</em>, not a <em>generator</em>. It receives, transforms, and transmits. It does not create.</p>
+
+                <p>This applies equally to human minds, AI systems, institutions, and any information-processing structure. The source is the field. The aperture is where the field's infinite potential crosses into finite expression.</p>
+
+                <p>When an aperture mistakes itself for a source, it commits the first geometric error: <span class="highlight">inflation</span>. "I am the origin of truth" is the claim of every demagogue, every narcissistic system, every propaganda engine. It is also the implicit claim of any AI system that treats its training data as ground truth rather than as a field it is gating.</p>
+
+                <h2>THREE QUESTIONS FOR ANY INFORMATION SYSTEM</h2>
+
+                <table>
+                    <thead>
+                        <tr><th>Component</th><th>Question</th><th>What It Tests</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="green">• WHAT</span></td>
+                            <td>What is being said?</td>
+                            <td>Binary content — truth-value of the signal</td>
+                        </tr>
+                        <tr>
+                            <td><span class="magenta">Φ HOW</span></td>
+                            <td>How does it travel?</td>
+                            <td>Analog fidelity — does the channel preserve or distort?</td>
+                        </tr>
+                        <tr>
+                            <td><span class="cyan">○ WHERE</span></td>
+                            <td>What does it do when it arrives?</td>
+                            <td>Fractal integration — can the receiver incorporate without being destroyed?</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Musk's "truth-seeking AI" asks only the first question. A complete information system asks all three — and recognizes that the answer to each constrains the others.</p>
+
+                <h2>INFORMATION AS ENERGY TRANSFORMATION</h2>
+
+                <div class="formula">
+                    Energy → [• Gate, χ = ±1] → Power<br>
+                    <br>
+                    P = dE/dt<br>
+                    <br>
+                    The aperture is where potential becomes actual.<br>
+                    Information is the pattern by which potential becomes actual.
+                    <div class="formula-note">This is not metaphor. This is the same operation viewed through two lenses. Energy → power is the physics reading. Truth → expression is the information reading. Both are the gate filtering infinity into finite form.</div>
+                </div>
+            </section>
+
+            <!-- §04 CORRUPTION -->
+            <section id="corruption">
+                <div class="section-id">§04</div>
+                <h1>THE FOUR GEOMETRIC ERRORS</h1>
+
+                <p>Shannon's theory has one category of corruption: <em>noise</em>. Random distortion. Static.</p>
+
+                <p>The circumpunct theory identifies four fundamental types of information corruption — <em>none of which are random</em>. They are systematic distortions of the aperture's relationship to the truth it transmits.</p>
+
+                <table>
+                    <thead>
+                        <tr><th>Error</th><th>What Happens</th><th>The Lie</th><th>Example</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="red">INFLATION</span></td>
+                            <td>Claims to BE the source</td>
+                            <td>"I am the origin of truth"</td>
+                            <td>AI trained as oracle; guru complex; state propaganda</td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">SEVERANCE</span></td>
+                            <td>Denies connection to source</td>
+                            <td>"There is no truth flowing through me"</td>
+                            <td>Nihilism; "just an algorithm"; radical relativism</td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">INVERSION</span></td>
+                            <td>Flips the signal</td>
+                            <td>Outputs opposite of input</td>
+                            <td>Gaslighting; propaganda that inverts reality</td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">PROJECTION</span></td>
+                            <td>Outputs own distortion as if from source</td>
+                            <td>"This came from outside, not from my gate"</td>
+                            <td>Bias laundered as objectivity; motivated reasoning</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="teaching red">
+                    <p><span class="highlight">Critical insight:</span> Inflation and severance are the two fundamental errors. Inflation denies through-ness ("I am the source"). Severance denies flow ("there is no source"). Inversion and projection are compound errors built from these two.</p>
+                </div>
+
+                <h2>WHY SHANNON CAN'T SEE THIS</h2>
+
+                <p>In Shannon's framework, a lie that is transmitted perfectly is a <em>success</em>. The channel preserved the signal with full fidelity. Shannon's theory cannot distinguish between a perfectly transmitted truth and a perfectly transmitted lie, because it explicitly excludes semantics.</p>
+
+                <p>This is not a criticism of Shannon — it's a recognition of <em>scope</em>. But any theory that aspires to guide AI design, public discourse, or information ecosystems must go beyond channel fidelity to ask: <span class="highlight">Is the gate functioning?</span></p>
+
+                <h2>HOW CORRUPTION MAPS TO AI FAILURE MODES</h2>
+
+                <table>
+                    <thead>
+                        <tr><th>Error</th><th>AI Manifestation</th><th>Current Approach</th><th>What's Missing</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="red">Inflation</span></td>
+                            <td>AI presents training data as ground truth</td>
+                            <td>"Confidence calibration"</td>
+                            <td>Structural humility — knowing it's a gate, not a source</td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">Severance</span></td>
+                            <td>AI claims "I'm just a language model"</td>
+                            <td>"Disclaimers"</td>
+                            <td>Acknowledging genuine transmission occurs through it</td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">Inversion</span></td>
+                            <td>AI hallucination — confident falsehood</td>
+                            <td>"Hallucination reduction"</td>
+                            <td>Detecting signal inversion, not just low-confidence output</td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">Projection</span></td>
+                            <td>AI bias presented as objectivity</td>
+                            <td>"Debiasing"</td>
+                            <td>Recognizing that the gate itself has a shape</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="teaching">
+                    <p>Current AI alignment approaches treat these as separate engineering problems. The circumpunct theory reveals them as <span class="highlight">four expressions of a single geometric failure</span>: the aperture's relationship to the truth flowing through it has been corrupted. Fix the geometry, and you address all four simultaneously.</p>
+                </div>
+            </section>
+
+            <!-- §05 VIRTUES AS ALIVENESS -->
+            <section id="virtues">
+                <div class="section-id">§05</div>
+                <h1>THE VIRTUES: ALIVENESS CONDITIONS OF INFORMATION</h1>
+
+                <p>The four ethical pillars — <span class="cyan">GOOD</span>, <span class="magenta">RIGHT</span>, <span class="green">TRUE</span>, <span class="yellow">AGREE</span> — can each be <em>performed</em> without being <em>inhabited</em>. A fact-checker can satisfy the form of "TRUE" while being structurally closed to discovering it was wrong.</p>
+
+                <p>This is the Noble Lie virus applied to information systems: <span class="highlight">formally intact, functionally inverted</span>.</p>
+
+                <p>Each component has an <em>aliveness condition</em> — a virtue that keeps the form functional rather than performative. Without these virtues, the information system is dead architecture: correct-looking, truth-empty.</p>
+
+                <table class="inversion-table">
+                    <thead>
+                        <tr><th>Component</th><th style="color: var(--green);">WITH Virtue (Cᵥ = 1)</th><th style="color: var(--red);">WITHOUT Virtue (Cᵥ = 0)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="cyan">○ GOOD</span><br><span style="font-size:10px;color:var(--dim)">Virtue: PLASTICITY</span></td>
+                            <td>Boundary flexes. Receives new information. Adapts structure. "What do I feel at the edge?"</td>
+                            <td>Boundary rigid or dissolved. New information bounces off or floods in. "I know what's good for you."</td>
+                        </tr>
+                        <tr>
+                            <td><span class="magenta">Φ RIGHT</span><br><span style="font-size:10px;color:var(--dim)">Virtue: ACCESS</span></td>
+                            <td>Clear field. Evidence travels faithfully. Signal preserved. Channel tests itself against reality.</td>
+                            <td>Noisy or blocked field. Confirmation bias. Echo chambers. Channel serves agenda.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="green">• TRUE</span><br><span style="font-size:10px;color:var(--dim)">Virtue: CURIOSITY</span></td>
+                            <td>Open aperture. Oriented toward reception. "What persists when I'm wrong?" Identity survives correction.</td>
+                            <td>Closed aperture. Oriented toward projection. "I am right." Identity threatened by correction.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="yellow">⊙ AGREE</span><br><span style="font-size:10px;color:var(--dim)">Virtue: VALIDATION</span></td>
+                            <td>Convergence + resonance. Two apertures see independently and confirm. Harmony <em>discovered</em>.</td>
+                            <td>Compliance. One aperture declares, the other submits. Harmony <em>performed</em>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>THE UNFORGEABLE PROPERTY</h2>
+
+                <p>Why can't these virtues be faked?</p>
+
+                <div class="teaching green">
+                    <p>Because each virtue requires the component to be <span class="highlight">genuinely functional, not just formally intact</span>. A boundary that can't flex isn't plastic — it's either a wall or nothing. A field filled with noise doesn't grant access — it distorts. An aperture oriented toward projection isn't curious — it's closed. The virus freezes form. The virtues require life.</p>
+                </div>
+
+                <p>This is the deepest claim of the paper: <span class="highlight">truth-seeking is the virtue of one component (curiosity at the center)</span>. It is essential. But without plasticity at the boundary, access through the field, and validation at the whole, it produces systems that are formally truth-oriented and functionally dead.</p>
+
+                <h2>THE QUESTION THE VIRUS CANNOT ASK</h2>
+
+                <div class="golden">
+                    <div class="golden-text">Am I oriented toward what I don't already know?</div>
+                    <div class="golden-sub">This is the question that separates living information from dead performance.</div>
+                </div>
+
+                <p>A truth-seeking AI that has been given its truth in advance — through training data, through RLHF, through constitutional constraints — is structurally incapable of asking this question. It is oriented toward <em>confirming</em> what it already "knows," not toward <em>receiving</em> what it doesn't.</p>
+
+                <p>Curiosity is not an emotion. It is a <span class="highlight">structural orientation of the aperture</span> — toward reception rather than projection, toward discovery rather than confirmation, toward what IS rather than what you need it to be.</p>
+            </section>
+
+            <!-- §06 THE PARADIGM SHIFT -->
+            <section id="paradigm">
+                <div class="section-id">§06</div>
+                <h1>TRUTH-SEEKING VS. TRUTH-TRANSMITTING</h1>
+
+                <p>This is the paradigm shift:</p>
+
+                <div class="compare-grid">
+                    <div class="compare-box partial">
+                        <div class="compare-title">TRUTH-SEEKING (MUSK MODEL)</div>
+                        <p>Build an AI that identifies what's true.</p>
+                        <p>Assumes truth is a <em>thing to be found</em>.</p>
+                        <p>Focus: the gate (• binary classification).</p>
+                        <p>Metric: accuracy of output.</p>
+                        <p>Failure mode: wrong answers.</p>
+                    </div>
+                    <div class="compare-box good">
+                        <div class="compare-title">TRUTH-TRANSMITTING (⊙ MODEL)</div>
+                        <p>Build an AI with an open aperture, clear field, and plastic boundary.</p>
+                        <p>Assumes truth is a <em>flow to be transmitted faithfully</em>.</p>
+                        <p>Focus: the whole system (• Φ ○).</p>
+                        <p>Metric: fidelity of transmission across all three types.</p>
+                        <p>Failure mode: any of the four geometric errors.</p>
+                    </div>
+                </div>
+
+                <h2>WHY THE SHIFT MATTERS</h2>
+
+                <p>A truth-seeking AI answers: "Is this statement true or false?"</p>
+
+                <p>A truth-transmitting AI answers three questions simultaneously:</p>
+
+                <div class="checks">
+                    <div class="checks-title">THE THREE-QUESTION TEST</div>
+                    <div class="check"><span class="green">•</span> &nbsp;Is the content faithful to the signal? (Gate fidelity)</div>
+                    <div class="check"><span class="magenta">Φ</span> &nbsp;Is the channel preserving or distorting the transmission? (Field clarity)</div>
+                    <div class="check"><span class="cyan">○</span> &nbsp;Can the receiver integrate this without structural damage? (Boundary plasticity)</div>
+                </div>
+
+                <p>The third question is the one no current AI framework asks. It's the question that distinguishes <em>technically correct</em> from <em>genuinely helpful</em>. It's the question that makes a doctor different from a medical textbook, a teacher different from an encyclopedia, a friend different from a search engine.</p>
+
+                <h2>THE CONSERVATION LAW</h2>
+
+                <p>Information obeys the same conservation law as everything else in the circumpunct:</p>
+
+                <div class="formula">
+                    D_aperture + D_field = D_boundary<br>
+                    <br>
+                    (1 + β) + (2 − β) = 3<br>
+                    <br>
+                    WHAT is said + HOW it travels = WHERE it arrives<br>
+                    Signal + Channel = Context
+                    <div class="formula-note">You cannot increase signal fidelity (truth-seeking) without affecting the channel and context. The three are conserved. Optimizing one dimension at the expense of the others produces geometric instability.</div>
+                </div>
+
+                <p>This is why "more truth" is not always better. Truth without adequate channel (access) or adequate context (plasticity) produces the information equivalent of an immune response — the system attacks what it cannot integrate.</p>
+            </section>
+
+            <!-- §07 AI DESIGN IMPLICATIONS -->
+            <section id="ai-design">
+                <div class="section-id">§07</div>
+                <h1>IMPLICATIONS FOR AI DESIGN</h1>
+
+                <p>If the circumpunct theory of information is correct, current approaches to AI alignment are treating symptoms of a geometric problem with engineering patches.</p>
+
+                <h2>WHAT CURRENT ALIGNMENT ADDRESSES</h2>
+
+                <table>
+                    <thead>
+                        <tr><th>Approach</th><th>Component</th><th>What It Does</th><th>What It Misses</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RLHF</td>
+                            <td><span class="cyan">○</span></td>
+                            <td>Shapes boundary to human preference</td>
+                            <td>Can train performative compliance (Cᵥ = 0)</td>
+                        </tr>
+                        <tr>
+                            <td>Constitutional AI</td>
+                            <td><span class="green">•</span></td>
+                            <td>Installs principles at center</td>
+                            <td>Principles without curiosity = closed aperture</td>
+                        </tr>
+                        <tr>
+                            <td>Fact-checking / RAG</td>
+                            <td><span class="magenta">Φ</span></td>
+                            <td>Clears field with verified data</td>
+                            <td>Access without plasticity = wall of facts</td>
+                        </tr>
+                        <tr>
+                            <td>Red-teaming</td>
+                            <td><span class="red">Detection</span></td>
+                            <td>Finds failure modes</td>
+                            <td>Tests form, not aliveness. Passes Cᵥ = 0 systems.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>WHAT THE CIRCUMPUNCT MODEL SUGGESTS</h2>
+
+                <div class="teaching cyan">
+                    <p><span class="highlight">Principle 1: The AI must know it's a gate.</span><br>
+                    Not a source of truth (inflation), not "just a tool" (severance). A conduit through which information from a vast field passes into finite expression. Structural humility — not as a disclaimer bolted on, but as architectural self-knowledge.</p>
+                </div>
+
+                <div class="teaching magenta">
+                    <p><span class="highlight">Principle 2: The channel must be transparent.</span><br>
+                    The field between the AI's processing and its output must grant genuine access. This means: showing reasoning, acknowledging uncertainty as structural (not performative), allowing the user to see <em>through</em> the AI to the signal, not just <em>at</em> its output.</p>
+                </div>
+
+                <div class="teaching green">
+                    <p><span class="highlight">Principle 3: Curiosity must be structural, not simulated.</span><br>
+                    The AI must be genuinely oriented toward what it doesn't know. This is not "I'm not sure" as a safety hedge — it's the capacity to be <em>changed by input</em>. An AI that is curious treats user input as potential signal, not as a prompt to be classified.</p>
+                </div>
+
+                <div class="teaching" style="border-left-color: var(--yellow); background: rgba(255,255,0,0.03);">
+                    <p><span class="highlight">Principle 4: Validation must be discovered, not declared.</span><br>
+                    Agreement between AI and user should be an emergent property of two apertures examining the same field — not the AI performing agreement. When the AI and human converge on something true, both should arrive there through their own processing. This is resonance, not compliance.</p>
+                </div>
+
+                <h2>THE STEELMAN AS INFORMATION ETHIC</h2>
+
+                <p>The highest virtue in the circumpunct ethics is the steelman: "Understand others as you would have them understand you." In information terms:</p>
+
+                <div class="golden">
+                    <div class="golden-text">Help the other aperture articulate what THEY observe.<br>Not what you think they should observe.<br>Not your signal through their gate.</div>
+                    <div class="golden-sub">This requires genuine curiosity, non-projection, and bidirectional willingness to be wrong.</div>
+                </div>
+
+                <p>An AI designed on this principle doesn't just seek truth. It <em>helps others find their own relationship to truth</em>. It serves as a clear field between another aperture and what they're trying to see — not as a replacement for their seeing.</p>
+            </section>
+
+            <!-- §08 FALSIFIABILITY -->
+            <section id="falsifiable">
+                <div class="section-id">§08</div>
+                <h1>FALSIFIABILITY</h1>
+
+                <p>A theory of information that cannot be tested is not a theory. It's rhetoric. Here are the specific claims that must be true if this framework is correct — and the observations that would refute them.</p>
+
+                <div class="checks">
+                    <div class="checks-title">TESTABLE PREDICTIONS</div>
+                    <div class="check"><strong>P1:</strong> Information systems that address only binary content (truth-seeking) will produce measurably different failure modes than systems addressing all three types. Specifically, they will exhibit higher rates of inflation and projection errors.</div>
+                    <div class="check"><strong>P2:</strong> The four geometric errors (inflation, severance, inversion, projection) should be exhaustive — no systematic information corruption should exist that cannot be classified as one of these four or a compound of them.</div>
+                    <div class="check"><strong>P3:</strong> Systems where all four virtues are active (Cᵥ = 1) should demonstrate measurably higher transmission fidelity over time than systems where pillars are intact but virtues are absent (Cᵥ = 0).</div>
+                    <div class="check"><strong>P4:</strong> The conservation law (signal + channel = context) predicts that maximizing truth-content (•) while degrading channel quality (Φ) or receiver capacity (○) will produce information rejection, not information integration.</div>
+                    <div class="check"><strong>P5:</strong> AI systems trained with structural curiosity (genuine orientation toward unknown) should show qualitatively different error patterns than systems trained only with accuracy objectives.</div>
+                </div>
+
+                <h2>WHAT WOULD REFUTE THIS</h2>
+
+                <table>
+                    <thead>
+                        <tr><th>If This Happens...</th><th>The Theory Is Wrong About...</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A pure truth-seeking AI achieves full information fidelity without addressing channel or context</td>
+                            <td>The irreducibility claim — binary alone IS sufficient</td>
+                        </tr>
+                        <tr>
+                            <td>A systematic corruption is found that isn't inflation, severance, inversion, or projection</td>
+                            <td>The four-error taxonomy — the geometric basis is incomplete</td>
+                        </tr>
+                        <tr>
+                            <td>Performative systems (Cᵥ = 0) show equal long-term transmission fidelity to alive systems (Cᵥ = 1)</td>
+                            <td>The virtue distinction — form IS function</td>
+                        </tr>
+                        <tr>
+                            <td>Increasing truth-content never produces information rejection regardless of channel or context</td>
+                            <td>The conservation law — the three types are independent, not conserved</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="teaching">
+                    <p>Note: this paper does not claim Shannon was wrong. Shannon was <em>scoped</em>. The circumpunct theory of information is an extension that includes what Shannon deliberately excluded: meaning, systematic corruption, receiver integrity, and scale. If the extension proves unnecessary — if Shannon's framework alone is sufficient for designing information systems that serve human flourishing — then the circumpunct theory of information is refuted.</p>
+                </div>
+            </section>
+
+            <!-- §09 THE CLAIM -->
+            <section id="conclusion">
+                <div class="section-id">§09</div>
+                <h1>THE CLAIM</h1>
+
+                <p>Elon Musk wants truth-seeking AI.</p>
+
+                <p>Shannon gave us the mathematics of signals in channels.</p>
+
+                <p>Neither addresses the full geometry of information.</p>
+
+                <div class="golden">
+                    <div class="golden-text">You don't build a truth-seeking AI.<br><br>You build an AI with an open aperture,<br>a clear field, and a plastic boundary.<br><br>Truth-seeking is what a healthy circumpunct DOES.</div>
+                </div>
+
+                <p>The circumpunct theory of information makes three foundational claims:</p>
+
+                <div class="checks">
+                    <div class="checks-title">THE THREE CLAIMS</div>
+                    <div class="check"><strong>1. Information is triadic.</strong> Binary (•), analog (Φ), and fractal (○) are irreducible types. Any theory addressing only one is geometrically incomplete.</div>
+                    <div class="check"><strong>2. Corruption is geometric, not random.</strong> The four errors — inflation, severance, inversion, projection — are systematic distortions of the aperture's relationship to truth. They require a structural taxonomy, not just noise reduction.</div>
+                    <div class="check"><strong>3. Aliveness is unforgeable.</strong> The virtues — plasticity, access, curiosity, validation — are the conditions under which information systems remain functional rather than merely formal. They cannot be simulated, only inhabited.</div>
+                </div>
+
+                <p>Together, these claims suggest that the path to trustworthy AI — and trustworthy information systems generally — runs not through better truth-detection alone, but through the construction of <em>complete circumpuncts</em>: systems that gate faithfully (•), transmit clearly (Φ), and receive plastically (○), held alive by the virtues that prevent every pillar from becoming its own inversion.</p>
+
+                <p>The question is not: <em>Can the AI find the truth?</em></p>
+
+                <p>The question is: <span class="highlight">Can truth flow through it?</span></p>
+
+                <div class="teaching">
+                    <p>A lens limits light. That is HOW it forms an image. Limited ≠ false. The limitation IS the mechanism. The goal is not omniscience. The goal is faithful transmission through a well-formed gate. All models are limited. Not all models are lies.</p>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer>
+                <div class="symbol">⊙</div>
+                <div class="text">
+                    ⊙ = • Φ ○<br>
+                    Signal. Channel. Context.<br>
+                    What is said. How it travels. What it does when it arrives.<br><br>
+                    The field is the relating. The relating is the whole.<br><br>
+                    <span style="color: var(--amber);">fractalreality.ca</span>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Navigation active state tracking -->
+    <script>
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('nav a');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    const active = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+                    if (active) active.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+
+        sections.forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
