@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Bottomless Soda Pop — Why You Stay When Love Starves You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0c0a10;
+            --bg-surface: #14111a;
+            --bg-raised: #1c1826;
+            --bg-glow: #241e30;
+            --text: #e8e0f0;
+            --text-soft: #b8adc8;
+            --text-dim: #7a6f8c;
+            --bleed: #ff3366;
+            --bleed-soft: #ff6b8a;
+            --bleed-glow: rgba(255, 51, 102, 0.15);
+            --gold: #d4a853;
+            --gold-soft: #c49a42;
+            --gold-glow: rgba(212, 168, 83, 0.12);
+            --ice: #7eb8c9;
+            --ice-glow: rgba(126, 184, 201, 0.1);
+            --violet: #9b6dff;
+            --violet-glow: rgba(155, 109, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.85;
+            font-size: 18px;
+            font-weight: 300;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--bleed);
+            color: white;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--bleed-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-icon {
+            position: relative;
+            width: 120px;
+            height: 160px;
+            margin-bottom: 3rem;
+        }
+
+        .cup {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 80px;
+            border: 2px solid var(--text-dim);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            overflow: hidden;
+        }
+
+        .cup-liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, var(--bleed) 0%, var(--bleed-soft) 100%);
+            animation: pour 3s ease-in-out infinite;
+        }
+
+        .cup-overflow {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 20px;
+            background: radial-gradient(ellipse, var(--bleed-glow) 0%, transparent 70%);
+            animation: overflow-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pour {
+            0%, 100% { height: 60%; }
+            50% { height: 100%; }
+        }
+
+        @keyframes overflow-pulse {
+            0%, 40% { opacity: 0; transform: translateX(-50%) scale(0.8); }
+            50%, 80% { opacity: 1; transform: translateX(-50%) scale(1.3); }
+            100% { opacity: 0; transform: translateX(-50%) scale(0.8); }
+        }
+
+        .straw {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            width: 2px;
+            height: 120px;
+            background: var(--text-dim);
+            transform: rotate(-8deg);
+            transform-origin: bottom center;
+        }
+
+        .straw-bend {
+            position: absolute;
+            top: 40px;
+            right: 16px;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-dim);
+            border-bottom: none;
+            border-left: none;
+            border-radius: 0 8px 0 0;
+            transform: rotate(-8deg);
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.4rem, 6vw, 4rem);
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        h1 .accent {
+            color: var(--bleed);
+            font-style: italic;
+        }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            color: var(--text-soft);
+            max-width: 520px;
+            margin-bottom: 3rem;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            animation: drift 2s ease-in-out infinite;
+        }
+
+        .scroll-hint::after {
+            content: '';
+            width: 1px;
+            height: 30px;
+            background: linear-gradient(to bottom, var(--text-dim), transparent);
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(6px); }
+        }
+
+        /* ── Content ── */
+        .content {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+        }
+
+        /* ── Sections ── */
+        .section {
+            padding: 4rem 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section + .section {
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 400;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            letter-spacing: -0.01em;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-soft);
+        }
+
+        p:last-child { margin-bottom: 0; }
+
+        strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        em {
+            color: var(--bleed-soft);
+            font-style: italic;
+        }
+
+        /* ── Two Channels ── */
+        .channels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+
+        @media (max-width: 580px) {
+            .channels { grid-template-columns: 1fr; }
+        }
+
+        .channel {
+            padding: 2rem;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .channel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+        }
+
+        .channel-func {
+            background: var(--bg-raised);
+            border: 1px solid rgba(126, 184, 201, 0.15);
+        }
+
+        .channel-func::before {
+            background: var(--ice);
+        }
+
+        .channel-res {
+            background: var(--bg-raised);
+            border: 1px solid rgba(255, 51, 102, 0.15);
+        }
+
+        .channel-res::before {
+            background: var(--bleed);
+        }
+
+        .channel-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .channel-func .channel-label { color: var(--ice); }
+        .channel-res .channel-label { color: var(--bleed-soft); }
+
+        .channel-desc {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .channel-symbol {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.6;
+        }
+
+        /* ── Pull Quote ── */
+        .pull {
+            margin: 3rem 0;
+            padding: 2rem 2.5rem;
+            position: relative;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--text);
+            font-style: italic;
+        }
+
+        .pull::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--bleed), var(--gold));
+            border-radius: 2px;
+        }
+
+        .pull .attr {
+            display: block;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            font-family: 'Outfit', sans-serif;
+            font-style: normal;
+            color: var(--text-dim);
+            letter-spacing: 0.05em;
+        }
+
+        /* ── Mechanism Steps ── */
+        .mechanism {
+            margin: 2.5rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .mech-step {
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+            position: relative;
+        }
+
+        .mech-step + .mech-step {
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .mech-num {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .mech-step:nth-child(1) .mech-num { background: var(--gold-glow); color: var(--gold); border: 1px solid rgba(212,168,83,0.3); }
+        .mech-step:nth-child(2) .mech-num { background: var(--bleed-glow); color: var(--bleed-soft); border: 1px solid rgba(255,51,102,0.3); }
+        .mech-step:nth-child(3) .mech-num { background: var(--violet-glow); color: var(--violet); border: 1px solid rgba(155,109,255,0.3); }
+        .mech-step:nth-child(4) .mech-num { background: var(--ice-glow); color: var(--ice); border: 1px solid rgba(126,184,201,0.3); }
+
+        .mech-title {
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.4rem;
+        }
+
+        .mech-desc {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* ── Virus Box ── */
+        .virus-box {
+            background: linear-gradient(135deg, rgba(255,51,102,0.06) 0%, rgba(155,109,255,0.04) 100%);
+            border: 1px solid rgba(255,51,102,0.12);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin: 2.5rem 0;
+            text-align: center;
+        }
+
+        .virus-box .label {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--bleed-soft);
+            margin-bottom: 1rem;
+        }
+
+        .virus-box .statement {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: var(--text);
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* ── Truth Box ── */
+        .truth-box {
+            background: linear-gradient(135deg, rgba(212,168,83,0.06) 0%, rgba(126,184,201,0.04) 100%);
+            border: 1px solid rgba(212,168,83,0.15);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin: 2.5rem 0;
+            text-align: center;
+        }
+
+        .truth-box .label {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .truth-box .statement {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        /* ── Lie List ── */
+        .lie-list {
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .lie-item {
+            padding: 1rem 1.5rem;
+            background: var(--bg-surface);
+            border-left: 2px solid var(--bleed);
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: var(--text-soft);
+            font-size: 0.95rem;
+        }
+
+        /* ── Separator ── */
+        .sep {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            letter-spacing: 0.5em;
+        }
+
+        /* ── Footer ── */
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+
+        footer p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--gold-soft);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            body { font-size: 16px; }
+            .content { padding: 0 1.25rem 4rem; }
+            .pull { padding: 1.5rem 1.5rem; font-size: 1.3rem; }
+            .virus-box, .truth-box { padding: 2rem 1.5rem; }
+            .virus-box .statement, .truth-box .statement { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero">
+    <div class="hero-icon">
+        <div class="cup">
+            <div class="cup-liquid"></div>
+        </div>
+        <div class="cup-overflow"></div>
+        <div class="straw"></div>
+    </div>
+    <h1>The Bottomless <span class="accent">Soda Pop</span></h1>
+    <p class="hero-sub">Why people stay in relationships with no intimacy — and why it's not weakness.</p>
+    <div class="scroll-hint">Read</div>
+</div>
+
+<!-- ═══════════ CONTENT ═══════════ -->
+<div class="content">
+
+    <!-- § TWO CHANNELS -->
+    <div class="section">
+        <h2>Two Channels, Not One</h2>
+
+        <p>Love flows through two fundamentally different channels. A relationship can be completely saturated in one and totally starved in the other.</p>
+
+        <div class="channels">
+            <div class="channel channel-func">
+                <div class="channel-symbol">○ ↔ ○</div>
+                <div class="channel-label">Functional Love</div>
+                <div class="channel-desc">What someone <strong>does.</strong> Bills paid. Meals cooked. Car fixed. Kid driven to practice. Real labor. Real cost. Not nothing.</div>
+            </div>
+            <div class="channel channel-res">
+                <div class="channel-symbol">• ↔ •</div>
+                <div class="channel-label">Resonant Love</div>
+                <div class="channel-desc">What someone <strong>sees.</strong> The way their eyes change when you walk in. Being delighted in. Being <em>wanted</em>, not just needed.</div>
+            </div>
+        </div>
+
+        <p>A person can genuinely love you through function while being completely absent in resonance. They're not faking the help. That <strong>is</strong> their love. It's how they learned love works. Help someone — that's love. Provide — that's love. Fix the problem — that's love.</p>
+
+        <p>But you can't be <em>seen</em> by someone who only knows how to help. You can't be delighted in by someone who only knows how to provide. You can't feel wanted by someone who only knows how to need.</p>
+
+        <div class="pull">
+            You're starving because they're giving you water when you need food. Both sustain life. They're not interchangeable. And no amount of water will satisfy hunger.
+        </div>
+    </div>
+
+    <div class="sep">· · ·</div>
+
+    <!-- § THE WEAPONIZATION -->
+    <div class="section">
+        <h2>The Trap</h2>
+
+        <p>When you try to name the starvation, the functional love gets weaponized against you.</p>
+
+        <div class="lie-list">
+            <div class="lie-item">"But look at everything I do for you."</div>
+            <div class="lie-item">"I work all day and it's never enough."</div>
+            <div class="lie-item">"What more do you want from me?"</div>
+        </div>
+
+        <p>Because function is visible, countable, and real — you start to believe your hunger for resonance is the problem. That you're ungrateful. Too needy. That something is wrong with <em>you.</em></p>
+
+        <div class="virus-box">
+            <div class="label">The Lie That Installs</div>
+            <div class="statement">"This is what love is. This is all love is. If you need more, something is wrong with you."</div>
+        </div>
+
+        <p>It takes something done <strong>to</strong> you and makes it something wrong <strong>with</strong> you. Once internalized, it no longer feels like a lie. It feels like self-knowledge.</p>
+    </div>
+
+    <div class="sep">· · ·</div>
+
+    <!-- § THE SODA POP -->
+    <div class="section">
+        <h2>You're Being Drunk</h2>
+
+        <p>Here's what's actually happening underneath the guilt and confusion.</p>
+
+        <p>People with high empathy, big hearts, natural openness — they don't get targeted because they're weak. <strong>They get targeted because they have exactly what the other person needs and can't generate themselves.</strong></p>
+
+        <p>Your capacity to love, to attune, to see someone deeply, to keep showing up — that's not a flaw. That's the resource being consumed.</p>
+
+        <div class="pull">
+            You become the bottomless soda pop. You keep pouring. They keep drinking. And because you regenerate through giving — because love actually does flow through you — the supply doesn't run out. You're a renewable resource. So they never have to stop.
+            <span class="attr">— <a href="https://www.youtube.com/watch?v=983bBbJx0Mk" target="_blank" style="color: var(--bleed-soft); text-decoration: underline; text-decoration-color: rgba(255,107,138,0.4); text-underline-offset: 3px;">"Soda Pop" — Saja Boys, KPop Demon Hunters</a></span>
+        </div>
+
+        <p>The person drinking doesn't generate resonance. They consume it. They may be extremely skilled at generating <em>functional</em> connection — charm, provision, performance. But the center-to-center seeing? The actual intimacy? They can only receive it, never produce it.</p>
+
+        <p>So they found someone who can. You.</p>
+    </div>
+
+    <div class="sep">· · ·</div>
+
+    <!-- § THE LOCK -->
+    <div class="section">
+        <h2>Why You Stay</h2>
+
+        <p>Then the real trap locks in. <strong>Your identity gets reorganized around pouring.</strong></p>
+
+        <p>You start to believe your purpose in the relationship is to generate love for them to consume. Your needs become invisible — not just to them, but to you. You monitor their mood. You adjust constantly. You work harder and harder to earn a moment of real seeing that should be freely given.</p>
+
+        <p>The rare flash of resonance — a genuine laugh, a moment of softness, a flicker of actually being <em>seen</em> — becomes the hit you're chasing. Just enough to maintain hope. Never enough to feel secure.</p>
+
+        <div class="mechanism">
+            <div class="mech-step">
+                <div class="mech-num">1</div>
+                <div>
+                    <div class="mech-title">Your hunger gets relabeled</div>
+                    <div class="mech-desc">The need for resonance — for intimacy, for being seen — is called neediness, ingratitude, your defect. You learn to feel ashamed of the hunger itself.</div>
+                </div>
+            </div>
+            <div class="mech-step">
+                <div class="mech-num">2</div>
+                <div>
+                    <div class="mech-title">Your best qualities become the door</div>
+                    <div class="mech-desc">Empathy, trust, openness — the virus enters through your virtues. Then it tells you those virtues were the problem all along. "You're too sensitive." "You trust too easily."</div>
+                </div>
+            </div>
+            <div class="mech-step">
+                <div class="mech-num">3</div>
+                <div>
+                    <div class="mech-title">You get converted from whole to supply</div>
+                    <div class="mech-desc">You were a complete person. Now you're a function — a fountain. Your identity reorganizes around pouring. You become a part orbiting their whole.</div>
+                </div>
+            </div>
+            <div class="mech-step">
+                <div class="mech-num">4</div>
+                <div>
+                    <div class="mech-title">The world narrows to one person</div>
+                    <div class="mech-desc">Outside perspectives get cut off. "They don't understand us." "Your friends don't have your best interests at heart." The person consuming you becomes the only one you pour for — the only structure you have left.</div>
+                </div>
+            </div>
+        </div>
+
+        <p>That last part is the Stockholm lock. When your whole world has been narrowed to one person, and that person gives you just enough connection to survive on, you bond to them <em>because</em> they're your only remaining structure — not despite the deprivation, but because of it.</p>
+
+        <div class="virus-box">
+            <div class="label">Why it's not weakness</div>
+            <div class="statement">You're a whole person who got collapsed into a part. You keep trying to orbit them correctly, become small enough to stop causing friction. But it never works — because you're not a part. You're a whole pretending to be a part, and the pretending is what's killing you.</div>
+        </div>
+    </div>
+
+    <div class="sep">· · ·</div>
+
+    <!-- § THE WAY OUT -->
+    <div class="section">
+        <h2>The Way Out</h2>
+
+        <p>You cannot see a pattern you're inside of using only the tools the pattern gave you. If your perception has been corrupted, you can't trust your perception to reveal the corruption. You need something outside the system.</p>
+
+        <p>A therapist. A book. A friend who knew you before. A community of people who've lived this. Any clear mirror that isn't running the same code.</p>
+
+        <p>The virus attacks these resources — <em>"therapists just want your money," "those books are for weak people," "your friends don't understand us"</em> — precisely because every external reference is a threat to its operation. If the pattern discredits every mirror you might look into, ask yourself why it needs you to stay blind.</p>
+
+        <div class="truth-box">
+            <div class="label">The Truth</div>
+            <div class="statement">Nothing is wrong with you. Your capacity to love was never the problem. It was the target.</div>
+        </div>
+
+        <p>You're not ungrateful. You're not asking for too much. You're not failing to appreciate what they give.</p>
+
+        <p>You're getting water when you need food. Both are essential. Both sustain life. But they're not interchangeable.</p>
+
+        <p>And you are not a soda pop. You are a whole.</p>
+    </div>
+
+</div>
+
+<footer>
+    <p>From <a href="https://fractalreality.ca" target="_blank">fractalreality.ca</a></p>
+    <p style="margin-top: 0.5rem;">For the ones still pouring</p>
+</footer>
+
+<script>
+    // Intersection Observer for fade-in
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    document.querySelectorAll('.section').forEach(section => {
+        observer.observe(section);
+    });
+</script>
+
+</body>
+</html>
