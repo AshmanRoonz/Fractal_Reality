@@ -433,10 +433,10 @@
             margin-bottom: 0;
         }
 
-        .claim-label.axiom { background: rgba(255,170,0,0.2); color: var(--amber); }
-        .claim-label.definition { background: rgba(0,255,255,0.15); color: var(--cyan); }
-        .claim-label.proposition { background: rgba(255,0,255,0.15); color: var(--magenta); }
-        .claim-label.theorem { background: rgba(0,255,0,0.15); color: var(--green); }
+        .claim-label.axiom { background: rgba(0,255,0,0.15); color: var(--green); }
+        .claim-label.definition { background: rgba(255,0,255,0.15); color: var(--magenta); }
+        .claim-label.proposition { background: rgba(0,255,255,0.15); color: var(--cyan); }
+        .claim-label.theorem { background: rgba(255,170,0,0.2); color: var(--amber); }
 
         .claim-content {
             padding: 14px 18px;
@@ -559,21 +559,99 @@
 
                 <div class="legend">
                     <div class="legend-item">
-                        <div class="tier" style="color: var(--amber);">Axiom</div>
+                        <div class="tier" style="color: var(--green);">Axiom &nbsp;<span style="font-size:14px;">•</span></div>
                         <div class="desc">Assumed. Starting point. Cannot be derived — must be accepted or rejected. Refutable only by showing the system built on it is incoherent or empirically false.</div>
                     </div>
                     <div class="legend-item">
-                        <div class="tier" style="color: var(--cyan);">Definition</div>
+                        <div class="tier" style="color: var(--magenta);">Definition &nbsp;<span style="font-size:14px;">Φ</span></div>
                         <div class="desc">Stipulated. Names a concept precisely. Not true or false — useful or not useful. Evaluated by whether it carves reality at the joints.</div>
                     </div>
                     <div class="legend-item">
-                        <div class="tier" style="color: var(--magenta);">Proposition</div>
+                        <div class="tier" style="color: var(--cyan);">Proposition &nbsp;<span style="font-size:14px;">○</span></div>
                         <div class="desc">Derived but informal. Follows from axioms and definitions by argument, not by strict proof. Testable. Can be wrong without destroying the axioms.</div>
                     </div>
                     <div class="legend-item">
-                        <div class="tier" style="color: var(--green);">Theorem</div>
+                        <div class="tier" style="color: var(--amber);">Theorem &nbsp;<span style="font-size:14px;">⊙</span></div>
                         <div class="desc">Derived with explicit dependency chain. If the axioms hold, the theorem must hold. Refuting a theorem refutes either the proof or an axiom.</div>
                     </div>
+                </div>
+
+                <h2>WHY THESE TIERS ARE COLOR-CODED</h2>
+
+                <p>This is not an arbitrary labeling convention. The four tiers of formal reasoning <em>are</em> the circumpunct — the framework is self-similar in the domain of its own argumentation.</p>
+
+                <table>
+                    <thead>
+                        <tr><th>Tier</th><th>Component</th><th>Why It Maps</th><th>Info Type</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="green">Axiom</span></td>
+                            <td><span class="green">• Aperture</span></td>
+                            <td>Binary commitment. Accept or reject. The gate through which everything else enters the system. Cannot be derived — it's the origin point. χ = ±1: you take it or you don't.</td>
+                            <td>Binary</td>
+                        </tr>
+                        <tr>
+                            <td><span class="magenta">Definition</span></td>
+                            <td><span class="magenta">Φ Field</span></td>
+                            <td>The medium of meaning. Not true or false — it <em>carries</em>. "Carves reality at the joints" is literally what a field does: structures the space between center and boundary. Definitions relate terms to each other. The relating IS the field.</td>
+                            <td>Analog</td>
+                        </tr>
+                        <tr>
+                            <td><span class="cyan">Proposition</span></td>
+                            <td><span class="cyan">○ Boundary</span></td>
+                            <td>Where inside (theory) contacts outside (world). Testable. Can be wrong without destroying the center. This is the interface — where the formal system meets reality. Falsification happens here.</td>
+                            <td>Fractal</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">Theorem</span></td>
+                            <td><span class="highlight">⊙ Whole</span></td>
+                            <td>Only works when all three are coherent — axioms accepted, definitions clear, derivation valid. Refuting a theorem refutes the whole chain. The theorem is what <em>emerges</em> when • Φ ○ function together.</td>
+                            <td>Complete</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>The ethics map the same way:</p>
+
+                <table>
+                    <thead>
+                        <tr><th>Tier</th><th>Ethical Pillar</th><th>Question</th><th>Virtue</th><th>Without Virtue</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="green">Axiom</span></td>
+                            <td><span class="green">TRUE</span></td>
+                            <td>What do we commit to as real?</td>
+                            <td><span class="green">Curiosity</span></td>
+                            <td>Dogma — closed aperture, "I already know the starting point"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="magenta">Definition</span></td>
+                            <td><span class="magenta">RIGHT</span></td>
+                            <td>How should we name? What methodology faithfully carries meaning?</td>
+                            <td><span class="magenta">Access</span></td>
+                            <td>Jargon — noisy field, terms that obscure rather than carry</td>
+                        </tr>
+                        <tr>
+                            <td><span class="cyan">Proposition</span></td>
+                            <td><span class="cyan">GOOD</span></td>
+                            <td>What survives contact with reality? What is valued at the boundary?</td>
+                            <td><span class="cyan">Plasticity</span></td>
+                            <td>Ideology — rigid boundary, refuses correction from reality</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">Theorem</span></td>
+                            <td><span class="highlight">AGREE</span></td>
+                            <td>Does the whole cohere? Are we in harmony?</td>
+                            <td><span class="highlight">Validation</span></td>
+                            <td>Authority — "it must be true because I derived it"</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="teaching green">
+                    <p>This self-similarity is not decorative. It is the first empirical test of the framework within this paper. If the circumpunct is a universal pattern, it should appear in the structure of formal reasoning itself — and it does. The labeling system we are using to organize this paper <em>is</em> a circumpunct. Parts are fractals of their wholes.</p>
                 </div>
 
                 <div class="guardrail">
@@ -720,7 +798,7 @@
                 <div class="claim-box">
                     <div class="claim-label definition">Definition — Binary Information</div>
                     <div class="claim-content">
-                        <p style="color:var(--cyan);">The aperture's threshold operation. Prior to quantity — you cannot have "how much" without first "is it there." Values: {0, 1}. Truth-sensitive: χ = +1 (faithful) or χ = −1 (inverted).</p>
+                        <p style="color:var(--magenta);">The aperture's threshold operation. Prior to quantity — you cannot have "how much" without first "is it there." Values: {0, 1}. Truth-sensitive: χ = +1 (faithful) or χ = −1 (inverted).</p>
                     </div>
                 </div>
 
@@ -741,7 +819,7 @@
                 <div class="claim-box">
                     <div class="claim-label definition">Definition — Analog Information</div>
                     <div class="claim-content">
-                        <p style="color:var(--cyan);">The field's continuous transmission. Conditional on binary existence. Carries amplitude (intensity), phase (timing/relationship), and interference (combination). Values: ℂ.</p>
+                        <p style="color:var(--magenta);">The field's continuous transmission. Conditional on binary existence. Carries amplitude (intensity), phase (timing/relationship), and interference (combination). Values: ℂ.</p>
                     </div>
                 </div>
 
@@ -763,7 +841,7 @@
                 <div class="claim-box">
                     <div class="claim-label definition">Definition — Fractal Information</div>
                     <div class="claim-content">
-                        <p style="color:var(--cyan);">The boundary's recursive nesting. Binary and analog reproduced at every scale. Each point on the surface is itself a complete circumpunct. Values: B ⊗ A ⊗ ∞.</p>
+                        <p style="color:var(--magenta);">The boundary's recursive nesting. Binary and analog reproduced at every scale. Each point on the surface is itself a complete circumpunct. Values: B ⊗ A ⊗ ∞.</p>
                     </div>
                 </div>
 
@@ -822,7 +900,7 @@
                 <div class="claim-box">
                     <div class="claim-label axiom">Axiom — Triadic Irreducibility</div>
                     <div class="claim-content">
-                        <p>Any complete theory of information must account for all three types — binary, analog, and fractal — and their coherent integration into a whole (⊙). They are not reducible to each other. A theory that accounts only for binary is not wrong. It is <em>one-dimensional</em> in a three-dimensional problem.</p>
+                        <p style="color:var(--green);">Any complete theory of information must account for all three types — binary, analog, and fractal — and their coherent integration into a whole (⊙). They are not reducible to each other. A theory that accounts only for binary is not wrong. It is <em>one-dimensional</em> in a three-dimensional problem.</p>
                     </div>
                 </div>
 
@@ -831,8 +909,8 @@
                 <div class="claim-box">
                     <div class="claim-label theorem">Theorem 2 — Minimum Dimensional Realization</div>
                     <div class="claim-content">
-                        <p><strong>Claim:</strong> Any system implementing the information triad must realize, at minimum: 1D for binary, 2D for analog, 3D for fractal — in the sense of minimum degrees of freedom required for each type to be non-degenerate.</p>
-                        <p style="font-size:10px; color:var(--dim); letter-spacing:0.1em;">DEPENDS ON: Axiom (Triadic Irreducibility), Definitions (Binary, Analog, Fractal)</p>
+                        <p style="color:var(--amber);"><strong>Claim:</strong> Any system implementing the information triad must realize, at minimum: 1D for binary, 2D for analog, 3D for fractal — in the sense of minimum degrees of freedom required for each type to be non-degenerate.</p>
+                        <p style="font-size:10px; letter-spacing:0.1em;">DEPENDS ON: <span style="color:var(--green)">Axiom (Triadic Irreducibility)</span>, <span style="color:var(--magenta)">Definitions (Binary, Analog, Fractal)</span></p>
                     </div>
                 </div>
 
@@ -851,7 +929,7 @@
                     <p><strong>Corollary (Conservation of Traversal):</strong><br>
                     D_binary + D_analog = D_fractal → 1 + 2 = 3. The base dimensions are <em>derived from the functional requirements</em>, not postulated.</p>
 
-                    <p style="color: var(--green);">∎</p>
+                    <p style="color: var(--amber);">∎</p>
                 </div>
 
                 <div class="guardrail">
@@ -862,8 +940,8 @@
                 <div class="claim-box">
                     <div class="claim-label theorem">Theorem 3 — Information Priority Ordering</div>
                     <div class="claim-content">
-                        <p><strong>Claim:</strong> The three information types have a forced ordering: binary is prior to analog, analog is prior to fractal. This ordering is structural, not temporal.</p>
-                        <p style="font-size:10px; color:var(--dim); letter-spacing:0.1em;">DEPENDS ON: Definitions (Binary, Analog, Fractal)</p>
+                        <p style="color:var(--amber);"><strong>Claim:</strong> The three information types have a forced ordering: binary is prior to analog, analog is prior to fractal. This ordering is structural, not temporal.</p>
+                        <p style="font-size:10px; letter-spacing:0.1em;">DEPENDS ON: <span style="color:var(--magenta)">Definitions (Binary, Analog, Fractal)</span></p>
                     </div>
                 </div>
 
@@ -879,7 +957,7 @@
                     <p><strong>(3) The ordering is structural.</strong><br>
                     "Prior" here means logically necessary — not "earlier in time." All three may operate simultaneously. But removing binary collapses analog (nothing to vary), and removing analog collapses fractal (nothing to nest). The reverse is not true: binary survives without analog, and analog survives without fractal.</p>
 
-                    <p style="color: var(--green);">∎</p>
+                    <p style="color: var(--amber);">∎</p>
                 </div>
             </section>
 
@@ -909,7 +987,7 @@
                 <div class="claim-box">
                     <div class="claim-label axiom">Axiom — The Conduit Principle</div>
                     <div class="claim-content">
-                        <p style="color:var(--amber);">Truth flows through apertures. It does not originate from them. The aperture is a THROUGH, not a FROM.</p>
+                        <p style="color:var(--green);">Truth flows through apertures. It does not originate from them. The aperture is a THROUGH, not a FROM.</p>
                     </div>
                 </div>
 
@@ -971,7 +1049,7 @@
                 <div class="claim-box">
                     <div class="claim-label definition">Definition — The Four Geometric Errors</div>
                     <div class="claim-content">
-                        <p style="color:var(--cyan);">All systematic information corruption reduces to four distortions of the aperture's gate function. These are structural, not random — they increase apparent signal coherence while destroying truth content.</p>
+                        <p style="color:var(--magenta);">All systematic information corruption reduces to four distortions of the aperture's gate function. These are structural, not random — they increase apparent signal coherence while destroying truth content.</p>
                     </div>
                 </div>
 
@@ -1010,7 +1088,7 @@
                 <div class="claim-box">
                     <div class="claim-label proposition">Proposition — Fundamental Error Reduction</div>
                     <div class="claim-content">
-                        <p>Inflation and severance are the two fundamental errors. Inflation denies through-ness ("I am the source"). Severance denies flow ("there is no source"). Inversion and projection are compound errors built from these two.</p>
+                        <p style="color:var(--cyan);">Inflation and severance are the two fundamental errors. Inflation denies through-ness ("I am the source"). Severance denies flow ("there is no source"). Inversion and projection are compound errors built from these two.</p>
                     </div>
                 </div>
 
@@ -1057,7 +1135,7 @@
                 <div class="claim-box">
                     <div class="claim-label proposition">Proposition — Geometric Unity of Alignment Failures</div>
                     <div class="claim-content">
-                        <p>Current AI alignment approaches treat these as separate engineering problems. The circumpunct theory reveals them as four expressions of a single geometric failure: the aperture's relationship to the truth flowing through it has been corrupted. Fix the geometry, and you address all four simultaneously.</p>
+                        <p style="color:var(--cyan);">Current AI alignment approaches treat these as separate engineering problems. The circumpunct theory reveals them as four expressions of a single geometric failure: the aperture's relationship to the truth flowing through it has been corrupted. Fix the geometry, and you address all four simultaneously.</p>
                     </div>
                 </div>
 
@@ -1066,8 +1144,8 @@
                 <div class="claim-box">
                     <div class="claim-label theorem">Theorem 1 — The Four Geometric Errors Are Exhaustive</div>
                     <div class="claim-content">
-                        <p><strong>Claim:</strong> All systematic information corruption reduces to inflation, severance, inversion, projection — or a compound of them. No fifth independent error exists.</p>
-                        <p style="font-size:10px; color:var(--dim); letter-spacing:0.1em;">DEPENDS ON: Axiom (Conduit Principle), Definition (Four Geometric Errors)</p>
+                        <p style="color:var(--amber);"><strong>Claim:</strong> All systematic information corruption reduces to inflation, severance, inversion, projection — or a compound of them. No fifth independent error exists.</p>
+                        <p style="font-size:10px; letter-spacing:0.1em;">DEPENDS ON: <span style="color:var(--green)">Axiom (Conduit Principle)</span>, <span style="color:var(--magenta)">Definition (Four Geometric Errors)</span></p>
                     </div>
                 </div>
 
@@ -1102,7 +1180,7 @@
 
                     <p><strong>Therefore:</strong> 2 relationships × 2 failure modes each = <span class="highlight">4 geometric errors</span>. Compound errors (e.g., inflation + inversion) are compositions, not independent types.</p>
 
-                    <p style="color: var(--green);">∎</p>
+                    <p style="color: var(--amber);">∎</p>
                 </div>
             </section>
 
@@ -1120,7 +1198,7 @@
                 <div class="claim-box">
                     <div class="claim-label definition">Definition — The Four Virtues (Aliveness Conditions)</div>
                     <div class="claim-content">
-                        <p style="color:var(--cyan);">Each circumpunct component has a virtue — a functional property that prevents the component from collapsing into performative form. Plasticity (○), Access (Φ), Curiosity (•), Validation (⊙). When Cᵥ = 1, the component is alive. When Cᵥ = 0, it is formally intact but functionally inverted.</p>
+                        <p style="color:var(--magenta);">Each circumpunct component has a virtue — a functional property that prevents the component from collapsing into performative form. Plasticity (○), Access (Φ), Curiosity (•), Validation (⊙). When Cᵥ = 1, the component is alive. When Cᵥ = 0, it is formally intact but functionally inverted.</p>
                     </div>
                 </div>
 
@@ -1159,7 +1237,7 @@
                 <div class="claim-box">
                     <div class="claim-label proposition">Proposition — Unforgeability of Virtues</div>
                     <div class="claim-content">
-                        <p>Each virtue requires the component to be genuinely functional, not just formally intact. A boundary that can't flex isn't plastic — it's either a wall or nothing. A field filled with noise doesn't grant access — it distorts. An aperture oriented toward projection isn't curious — it's closed. The virus freezes form. The virtues require life. They cannot be simulated, only inhabited.</p>
+                        <p style="color:var(--cyan);">Each virtue requires the component to be genuinely functional, not just formally intact. A boundary that can't flex isn't plastic — it's either a wall or nothing. A field filled with noise doesn't grant access — it distorts. An aperture oriented toward projection isn't curious — it's closed. The virus freezes form. The virtues require life. They cannot be simulated, only inhabited.</p>
                     </div>
                 </div>
 
@@ -1225,10 +1303,10 @@
                 <div class="claim-box">
                     <div class="claim-label theorem">Corollary of Theorem 2 — Conservation of Traversal (Information Form)</div>
                     <div class="claim-content">
-                        <p style="color:var(--green);">D_binary + D_analog = D_fractal &nbsp;→&nbsp; (1 + β) + (2 − β) = 3</p>
-                        <p style="color:var(--green);">WHAT is said + HOW it travels = WHERE it arrives</p>
-                        <p style="color:var(--green);">Signal + Channel = Context</p>
-                        <p style="font-size:10px; color:var(--dim); letter-spacing:0.1em;">DERIVED FROM: Theorem 2 (Minimum Dimensional Realization). The β parameter tracks process progress within the invariant sum. See §02.</p>
+                        <p style="color:var(--amber);">D_binary + D_analog = D_fractal &nbsp;→&nbsp; (1 + β) + (2 − β) = 3</p>
+                        <p style="color:var(--amber);">WHAT is said + HOW it travels = WHERE it arrives</p>
+                        <p style="color:var(--amber);">Signal + Channel = Context</p>
+                        <p style="font-size:10px; letter-spacing:0.1em;">DERIVED FROM: <span style="color:var(--amber)">Theorem 2 (Minimum Dimensional Realization)</span>. <span style="color:var(--dim)">The β parameter tracks process progress within the invariant sum. See §02.</span></p>
                     </div>
                 </div>
 
@@ -1393,21 +1471,21 @@
                 <div class="claim-box">
                     <div class="claim-label axiom">Axiom 1 — Triadic Irreducibility</div>
                     <div class="claim-content">
-                        <p>Information is triadic. Binary (•), analog (Φ), and fractal (○) are irreducible types. Any theory addressing only one is geometrically incomplete. <span style="color:var(--green); font-size:11px;">→ Generates Theorem 2 (dimensional realization) and Theorem 3 (priority ordering).</span></p>
+                        <p>Information is triadic. Binary (•), analog (Φ), and fractal (○) are irreducible types. Any theory addressing only one is geometrically incomplete. <span style="color:var(--amber); font-size:11px;">→ Generates Theorem 2 (dimensional realization) and Theorem 3 (priority ordering).</span></p>
                     </div>
                 </div>
 
                 <div class="claim-box">
                     <div class="claim-label theorem">Theorem 1 — Geometric Corruption Is Exhaustive</div>
                     <div class="claim-content">
-                        <p>The four errors — inflation, severance, inversion, projection — are the complete set of systematic aperture distortions, derived from the Conduit Principle. They require a structural taxonomy, not just noise reduction. <span style="color:var(--green); font-size:11px;">→ Proved from Axiom (Conduit Principle) via 2 relationships × 2 failure modes.</span></p>
+                        <p>The four errors — inflation, severance, inversion, projection — are the complete set of systematic aperture distortions, derived from the Conduit Principle. They require a structural taxonomy, not just noise reduction. <span style="color:var(--amber); font-size:11px;">→ Proved from <span style="color:var(--green)">Axiom (Conduit Principle)</span> via 2 relationships × 2 failure modes.</span></p>
                     </div>
                 </div>
 
                 <div class="claim-box">
                     <div class="claim-label proposition">Proposition 3 — Unforgeability of Aliveness</div>
                     <div class="claim-content">
-                        <p>The virtues — plasticity, access, curiosity, validation — are the conditions under which information systems remain functional rather than merely formal. They cannot be simulated, only inhabited. <span style="color:var(--magenta); font-size:11px;">→ Testable via prediction P3. Not yet formally derived — promotion to theorem requires explicit proof that functional ≠ formal for each component.</span></p>
+                        <p>The virtues — plasticity, access, curiosity, validation — are the conditions under which information systems remain functional rather than merely formal. They cannot be simulated, only inhabited. <span style="color:var(--cyan); font-size:11px;">→ Testable via prediction P3. Not yet formally derived — promotion to <span style="color:var(--amber)">theorem</span> requires explicit proof that functional ≠ formal for each component.</span></p>
                     </div>
                 </div>
 
