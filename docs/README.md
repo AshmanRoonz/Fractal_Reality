@@ -58,6 +58,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**lens.html**](https://fractalreality.ca/lens.html) — Lens/aperture visualization
 - [**circumpunct_physics.html**](https://fractalreality.ca/circumpunct_physics.html) — The Circumpunct Framework: a mathematical formulation for working physicists
 - [**circumpunct_schumann.html**](https://fractalreality.ca/circumpunct_schumann.html) — Schumann-Circumpunct Resonance Theory
+- [**circumpunct_IT.html**](https://fractalreality.ca/circumpunct_IT.html) — Information Theory through the circumpunct
 
 ### Wholeness & Structure
 
@@ -66,6 +67,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**soul_array_visualization.html**](https://fractalreality.ca/soul_array_visualization.html) — Soul array structure visualization
 - [**mind_matter.html**](https://fractalreality.ca/mind_matter.html) — Mind-matter interface exploration
 - [**you_are_a_donut.html**](https://fractalreality.ca/you_are_a_donut.html) — Toroidal self-reference topology
+- [**cross_scale_agency.html**](https://fractalreality.ca/cross_scale_agency.html) — How We Control Our Bodies
 
 ---
 
@@ -111,6 +113,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**stratigraphy_of_belief.html**](https://fractalreality.ca/stratigraphy_of_belief.html) — The Stratigraphy of Belief: how lies corrupt function at different depths
 - [**etiology_of_installation.html**](https://fractalreality.ca/etiology_of_installation.html) — The Etiology of Installation: how survival lies become structural corruption
 - [**the_restoration_protocol.html**](https://fractalreality.ca/the_restoration_protocol.html) — Healing and restoration guide
+- [**rephase_meditation.html**](https://fractalreality.ca/rephase_meditation.html) — Cancer Rephase Meditation
 
 ---
 
