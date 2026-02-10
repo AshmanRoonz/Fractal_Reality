@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cross-Scale Agency — Why Parts Move With Their Wholes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg-card: #0f0f18;
+    --bg-card-hover: #141422;
+    --border: #1a1a2e;
+    --gold: #d4a853;
+    --gold-dim: rgba(212, 168, 83, 0.15);
+    --gold-glow: rgba(212, 168, 83, 0.08);
+    --cyan: #7ecbcb;
+    --cyan-dim: rgba(126, 203, 203, 0.12);
+    --magenta: #c77dba;
+    --magenta-dim: rgba(199, 125, 186, 0.12);
+    --red: #d45a5a;
+    --red-dim: rgba(212, 90, 90, 0.1);
+    --text: #d4d0c8;
+    --text-dim: #8a8678;
+    --text-bright: #eae6de;
+    --aperture: #d4a853;
+    --field: #7ecbcb;
+    --boundary: #c77dba;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 1.15rem;
+    min-height: 100vh;
+  }
+
+  /* Subtle grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header .symbol {
+    font-size: 3.5rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 30px var(--gold-glow);
+    letter-spacing: 0.3em;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+  }
+
+  .epigraph {
+    font-style: italic;
+    color: var(--text-dim);
+    margin: 2rem auto 0;
+    max-width: 500px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  /* ─── SECTIONS ─── */
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--gold);
+    margin: 3rem 0 1.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin: 2rem 0 1rem;
+  }
+
+  p { margin-bottom: 1.2rem; }
+
+  /* ─── FORMAL BLOCKS ─── */
+  .axiom, .definition, .theorem, .lemma, .corollary, .proof {
+    border-left: 3px solid var(--border);
+    padding: 1.2rem 1.5rem;
+    margin: 1.8rem 0;
+    background: var(--bg-card);
+    border-radius: 0 6px 6px 0;
+  }
+
+  .axiom { border-left-color: var(--gold); background: var(--gold-dim); }
+  .definition { border-left-color: var(--cyan); background: var(--cyan-dim); }
+  .theorem { border-left-color: var(--magenta); background: var(--magenta-dim); }
+  .lemma { border-left-color: var(--cyan); background: var(--cyan-dim); }
+  .corollary { border-left-color: var(--field); background: rgba(126, 203, 203, 0.06); }
+  .proof { border-left-color: var(--text-dim); background: rgba(138, 134, 120, 0.06); }
+
+  .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.6rem;
+  }
+
+  .axiom .label { color: var(--gold); }
+  .definition .label { color: var(--cyan); }
+  .theorem .label { color: var(--magenta); }
+  .lemma .label { color: var(--cyan); }
+  .corollary .label { color: var(--field); }
+  .proof .label { color: var(--text-dim); }
+
+  /* ─── EQUATIONS ─── */
+  .eq {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+    color: var(--text-bright);
+    background: rgba(255,255,255,0.03);
+    padding: 0.8rem 1.2rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+    text-align: center;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+
+  .eq-big {
+    font-size: 1.3rem;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+
+  .eq-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    text-align: center;
+    font-style: italic;
+    margin-top: 0.4rem;
+  }
+
+  /* ─── PROOF STEPS ─── */
+  .step {
+    padding-left: 1.5rem;
+    margin-bottom: 0.6rem;
+    position: relative;
+  }
+
+  .step::before {
+    content: attr(data-n) '.';
+    position: absolute;
+    left: 0;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+  }
+
+  .qed {
+    text-align: right;
+    color: var(--gold);
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+  }
+
+  /* ─── CALLOUTS ─── */
+  .insight {
+    text-align: center;
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-bright);
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.6;
+  }
+
+  .nesting-diagram {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--text);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+    line-height: 2;
+    text-align: center;
+    overflow-x: auto;
+  }
+
+  .scale-label {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+  }
+
+  /* ─── DIVIDERS ─── */
+  .divider {
+    text-align: center;
+    color: var(--gold);
+    margin: 3rem 0;
+    font-size: 1.5rem;
+    letter-spacing: 1em;
+    opacity: 0.4;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.95rem;
+  }
+
+  footer .symbol { font-size: 2rem; color: var(--gold); margin-bottom: 0.5rem; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    .container { padding: 2rem 1.2rem 4rem; }
+    h1 { font-size: 1.8rem; }
+    .eq { font-size: 0.9rem; padding: 0.6rem 0.8rem; }
+    .nesting-diagram { font-size: 0.75rem; padding: 1rem; }
+  }
+
+  /* Aperture/field/boundary color coding */
+  .sym-a { color: var(--aperture); }
+  .sym-f { color: var(--field); }
+  .sym-b { color: var(--boundary); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- HEADER -->
+<!-- ═══════════════════════════════════════════ -->
+<header class="header">
+  <div class="symbol">⊙ ⊃ ⊙ ⊃ ⊙</div>
+  <h1>Cross-Scale Agency</h1>
+  <p class="subtitle">Why Parts Move With Their Wholes</p>
+  <p class="epigraph">"Why do your cells let you move them around?"<br>
+  Because they are not other than you.</p>
+</header>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- §0: THE QUESTION -->
+<!-- ═══════════════════════════════════════════ -->
+<h2>§0 — The Question</h2>
+
+<p>When you raise your arm, trillions of cells move. Quadrillions of atoms rearrange. None of them resist. Why?</p>
+
+<p>The standard answer is mechanism: nerve signals trigger biochemical cascades trigger molecular motors trigger atomic displacements. This describes the <em>how</em>. It does not answer the deeper question: <strong>why is coordinated cross-scale action possible at all?</strong></p>
+
+<p>The framework's answer: because parts are not <em>subjects of</em> their wholes. They are <em>fractals of</em> their wholes. Movement at one scale <em>is</em> coherent movement at every scale — not by command, but by structural identity.</p>
+
+<p>This document formalizes that claim.</p>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- §1: PREREQUISITES -->
+<!-- ═══════════════════════════════════════════ -->
+<h2>§1 — Prerequisites (From Existing Framework)</h2>
+
+<div class="axiom">
+  <div class="label">Axiom A2 — Fractal Necessity</div>
+  <p>Parts are fractals of their wholes. A circumpunct's boundary is composed of complete circumpuncts at smaller scale. There is no bottom level; there is no top level.</p>
+  <div class="eq">○<sub>n+1</sub> ∋ •<sub>n</sub> where •<sub>n</sub> ∈ ⊙<sub>n</sub></div>
+</div>
+
+<div class="axiom">
+  <div class="label">Axiom A3 — Conservation of Traversal</div>
+  <p>The dimensional sum across components is conserved at every scale:</p>
+  <div class="eq">D<sub>•</sub> + D<sub>Φ</sub> = D<sub>○</sub><br>(1 + β) + (2 − β) = 3</div>
+</div>
+
+<div class="axiom">
+  <div class="label">Axiom A4 — Compositional Wholeness</div>
+  <p>The whole is constituted by the operation of relating. Φ <em>operates on</em> • and ○ — it is the verb, not a noun.</p>
+  <div class="eq">⊙ = Φ(•, ○) ≠ • + Φ + ○</div>
+</div>
+
+<div class="definition">
+  <div class="label">Definition 1.1 — Closure Loop (from Isomorphism §3)</div>
+  <p>The closure loop operator 𝓛 maps a field state through the full cycle: gating (G), propagation (U<sub>T</sub>), reflection (R).</p>
+  <div class="eq">𝓛 = G ∘ R ∘ U<sub>T</sub></div>
+</div>
+
+<div class="definition">
+  <div class="label">Definition 1.2 — Coherence (from Isomorphism §4)</div>
+  <p>A circumpunct is coherent iff its closure loop admits a nontrivial fixed point — a state that <em>survives its own traversal</em>:</p>
+  <div class="eq">∃ φ* ∈ Φ, φ* ≠ 0 such that 𝓛(φ*) = φ*</div>
+</div>
+
+<div class="definition">
+  <div class="label">Definition 1.3 — Ethereal Tail (from Physicists §2.8)</div>
+  <p>A phase-locked hierarchy of apertures across nested scales:</p>
+  <div class="eq">T = {•<sub>n</sub> : Δφ<sub>n,n+1</sub> ≈ 0 (mod 2π) for all adjacent pairs}</div>
+  <p>Where Δφ<sub>n,n+1</sub> is the phase difference between pumping cycles at scales n and n+1.</p>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- §2: NESTING STRUCTURE -->
+<!-- ═══════════════════════════════════════════ -->
+<h2>§2 — The Nesting Structure of Agency</h2>
+
+<p>Consider a concrete hierarchy. Each level is a complete circumpunct:</p>
+
+<div class="nesting-diagram">
+<span class="scale-label">SCALE</span>
+
+<span class="sym-b">○<sub>organism</sub></span>  ⊃  <span class="sym-a">•<sub>organ</sub></span>  =  <span class="sym-b">○<sub>organ</sub></span>  ⊃  <span class="sym-a">•<sub>cell</sub></span>  =  <span class="sym-b">○<sub>cell</sub></span>  ⊃  <span class="sym-a">•<sub>molecule</sub></span>  =  <span class="sym-b">○<sub>molecule</sub></span>  ⊃  <span class="sym-a">•<sub>atom</sub></span>
+
+<br><span class="scale-label">Each • at scale n is the center of a complete ⊙ at scale n</span>
+<br><span class="scale-label">Each ○ at scale n+1 is composed of ⊙'s at scale n</span>
+</div>
+
+<div class="definition">
+  <div class="label">Definition 2.1 — Scale Hierarchy</div>
+  <p>Let {⊙<sub>n</sub>}<sub>n=1</sub><sup>N</sup> be a hierarchy of circumpuncts indexed by scale, where ⊙<sub>1</sub> is smallest and ⊙<sub>N</sub> is largest. The nesting relation is:</p>
+  <div class="eq">⊙<sub>n</sub> ∈ ○<sub>n+1</sub> for all 1 ≤ n &lt; N</div>
+  <p>Each part-circumpunct lives <em>inside the boundary</em> of its whole-circumpunct. The boundary is the site of composition.</p>
+</div>
+
+<div class="definition">
+  <div class="label">Definition 2.2 — Cross-Scale Closure Loop</div>
+  <p>The closure loop at scale n+1 <em>includes</em> the dynamics of all ⊙<sub>n</sub> composing its boundary. Define:</p>
+  <div class="eq">𝓛<sub>n+1</sub> = G<sub>n+1</sub> ∘ R<sub>n+1</sub> ∘ U<sub>T,n+1</sub></div>
+  <p>where R<sub>n+1</sub> (the reflection operator at the boundary) is itself constituted by the collective coherence of {⊙<sub>n</sub>}. The boundary doesn't just bounce — it is <em>made of</em> active circumpuncts.</p>
+  <div class="eq">R<sub>n+1</sub> = ℱ({𝓛<sub>n</sub>(φ*<sub>n</sub>)}) = ℱ({φ*<sub>n</sub>})</div>
+  <p class="eq-note">The boundary's reflection is a function of the parts' coherent states</p>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- §3: THE CORE THEOREM -->
+<!-- ═══════════════════════════════════════════ -->
+<h2>§3 — The Agency Coherence Theorem</h2>
+
+<p>We can now state the central result.</p>
+
+<div class="theorem">
+  <div class="label">Theorem 3.1 — Cross-Scale Agency Is Resonance, Not Command</div>
+  <p>In a nested hierarchy of coherent circumpuncts, agency at scale n+1 does not act <em>upon</em> the circumpuncts at scale n as external force. Rather, the fixed-point state at scale n+1 <strong>is constituted by</strong> the phase-locked fixed-point states at scale n. "Moving" the parts is indistinguishable from the whole being coherent.</p>
+</div>
+
+<div class="proof">
+  <div class="label">Proof</div>
+
+  <p class="step" data-n="1">By Definition 1.2, ⊙<sub>n+1</sub> is coherent iff 𝓛<sub>n+1</sub>(φ*<sub>n+1</sub>) = φ*<sub>n+1</sub>. The whole has a standing pattern that survives its own traversal.</p>
+
+  <p class="step" data-n="2">By Definition 2.2, 𝓛<sub>n+1</sub> includes R<sub>n+1</sub>, which is constituted by the coherent states {φ*<sub>n</sub>} of the parts. The boundary is not passive — it is the collective behavior of scale-n circumpuncts.</p>
+
+  <p class="step" data-n="3">Therefore, φ*<sub>n+1</sub> exists <em>only if</em> the parts' states {φ*<sub>n</sub>} collectively produce the reflection function R<sub>n+1</sub> that makes the whole's loop close. The whole's coherence <em>requires</em> the parts' coherence in a specific configuration.</p>
+
+  <p class="step" data-n="4">Conversely: if the whole is in state φ*<sub>n+1</sub>, this <em>determines</em> the constraint on R<sub>n+1</sub>, which determines the configuration of {φ*<sub>n</sub>}. The parts' states are not forced externally — they are the <em>constitutive content</em> of the whole's state.</p>
+
+  <p class="step" data-n="5">There is no moment where the whole "sends a command" and the parts "obey." The whole's fixed-point IS the parts' coordinated fixed-points. They are the same mathematical object described at different resolutions.</p>
+
+  <p class="step" data-n="6">By A2 (Fractal Necessity), this recursion holds at every scale. The argument in steps 1–5 applies between any adjacent scales in the hierarchy. Therefore cross-scale agency is resonance all the way up and all the way down.</p>
+
+  <p class="qed">∎</p>
+</div>
+
+<div class="insight">
+"Moving your cells" is what whole-coherence <em>looks like</em><br>
+from the resolution of cells.<br>
+It is not an additional operation imposed on them.
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- §4: FORMAL CONSEQUENCES -->
+<!-- ═══════════════════════════════════════════ -->
+<h2>§4 — Formal Consequences</h2>
+
+<div class="corollary">
+  <div class="label">Corollary 4.1 — Agency Is Not Causal Hierarchy</div>
+  <p>Cross-scale agency does not propagate downward through a causal chain (whole → organ → cell → molecule → atom). Rather, the phase-locked fixed point exists <em>simultaneously at all scales</em>. The ethereal tail T is the formal object:</p>
+  <div class="eq">T = {•<sub>n</sub>}<sub>n=1</sub><sup>N</sup> with Δφ<sub>n,n+1</sub> ≈ 0</div>
+  <p>Simultaneity of phase-locking means there is no propagation delay of "commands." There is coherence or its absence.</p>
+</div>
+
+<div class="corollary">
+  <div class="label">Corollary 4.2 — Parts Don't "Let" — They Constitute</div>
+  <p>The question "why do parts let the whole move them?" commits a category error. It presupposes that parts have independent states that the whole must override. But by Theorem 3.1, the whole's state <em>is</em> the parts' coordinated states. There is nothing to override. Asking "why do cells let you move them?" is like asking "why does the wave let the water move?" — the wave <em>is</em> the coordinated movement of water.</p>
+</div>
+
+<div class="corollary">
+  <div class="label">Corollary 4.3 — The Upward Case: You and God</div>
+  <p>By A2, the nesting has no top. You (⊙<sub>n</sub>) are nested within larger wholes (⊙<sub>n+1</sub>, ...). The same theorem applies: the whole's coherent state at scale n+1 is constituted by the coordinated states at scale n.</p>
+  <div class="eq">φ*<sub>cosmos</sub> exists iff {φ*<sub>you</sub>, φ*<sub>others</sub>, ...} collectively close the loop</div>
+  <p>You do not "obey" God as an external commander. You <strong>constitute</strong> the coherent state of the whole you are fractal of — exactly as your cells constitute yours. This is the structural content of "Atman is Brahman," "In Him we live and move and have our being," and "As above, so below."</p>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- §5: PATHOLOGY -->
+<!-- ═══════════════════════════════════════════ -->
+<h2>§5 — Pathology: What Happens When Parts Decohere</h2>
+
+<p>If agency is resonance, then <em>loss of agency</em> is decoherence — the breakdown of phase-locking between scales.</p>
+
+<div class="lemma">
+  <div class="label">Lemma 5.1 — Cancer as Decoherence</div>
+  <p>A cancer cell is a circumpunct ⊙<sub>n</sub> whose closure loop has decoupled from the whole's loop at scale n+1. Formally:</p>
+  <div class="eq">Δφ<sub>n,n+1</sub> ≠ 0 (mod 2π)</div>
+  <p>The cell is still coherent <em>at its own scale</em> (it is very much alive — it proliferates). But it has severed phase-locking with the organism. Its fixed point φ*<sub>cell</sub> no longer participates in constituting φ*<sub>organism</sub>.</p>
+  <p>Result: the whole's boundary R<sub>n+1</sub> degrades. The whole loses coherence. We call this "disease."</p>
+</div>
+
+<div class="lemma">
+  <div class="label">Lemma 5.2 — The Noble Lie as Psychological Decoherence</div>
+  <p>The Noble Lie virus operates by the same mechanism at the psychological scale. It installs a false premise — "you are separate from your whole" — which is formally equivalent to:</p>
+  <div class="eq">Δφ<sub>person, community</sub> → π (anti-phase)</div>
+  <p>The infected person still has internal coherence (they function) but has been rotated out of phase with their constitutive whole. They experience this as isolation, meaninglessness, or the conviction that "needing connection is weakness."</p>
+  <p>Healing = phase restoration. Not obedience. Not submission. <em>Re-coherence</em>.</p>
+</div>
+
+<div class="theorem">
+  <div class="label">Theorem 5.3 — Autonomy and Coherence Are Not Opposites</div>
+  <p>A part's having its own closure loop (internal coherence, φ*<sub>n</sub>) is <em>necessary</em> for its participation in the whole's coherence. The boundary R<sub>n+1</sub> requires active, functioning parts — not passive substrates. Therefore:</p>
+  <div class="eq">∂CC<sub>whole</sub>/∂CC<sub>part</sub> > 0</div>
+  <p class="eq-note">Constructor capacity of the whole increases with constructor capacity of the parts</p>
+  <p>Increasing a part's agency increases the whole's agency. Decreasing it (coercion, suppression, homogenization) degrades the boundary and therefore the whole. <strong>Domination is structurally self-defeating.</strong></p>
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- §6: THE COMPLETE PICTURE -->
+<!-- ═══════════════════════════════════════════ -->
+<h2>§6 — The Complete Picture</h2>
+
+<div class="nesting-diagram" style="line-height: 2.2;">
+<span class="scale-label">INFINITE NESTING — NO TOP, NO BOTTOM</span>
+<br><br>
+... ⊙<sub>cosmos</sub> ⊃ ⊙<sub>galaxy</sub> ⊃ ⊙<sub>star</sub> ⊃ ⊙<sub>planet</sub> ⊃ ⊙<sub>ecosystem</sub> ⊃ ⊙<sub>organism</sub> ⊃ ⊙<sub>organ</sub> ⊃ ⊙<sub>cell</sub> ⊃ ⊙<sub>molecule</sub> ⊃ ⊙<sub>atom</sub> ⊃ ...
+<br><br>
+<span class="scale-label">At every boundary: the same theorem applies.</span>
+<br>
+<span class="scale-label">The whole's coherence IS the parts' coordinated coherence.</span>
+<br>
+<span class="scale-label">Agency flows by resonance, not by command.</span>
+</div>
+
+<div class="eq-big">
+φ*<sub>n+1</sub> = 𝓛<sub>n+1</sub>(φ*<sub>n+1</sub>) where R<sub>n+1</sub> = ℱ({φ*<sub>n</sub>})
+</div>
+<p class="eq-note">The whole's standing pattern requires — and is constituted by — the parts' standing patterns</p>
+
+<div class="insight">
+Your cells don't let you move them.<br>
+Your movement <em>is</em> their coordinated coherence.<br><br>
+You don't obey God.<br>
+God's coherence <em>is</em> the coordinated coherence of all that constitutes God.<br><br>
+Same theorem. Same structure. Every scale.
+</div>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- §7: FALSIFICATION -->
+<!-- ═══════════════════════════════════════════ -->
+<h2>§7 — Falsification Criteria</h2>
+
+<p>This formalization is falsified if:</p>
+
+<div class="proof" style="border-left-color: var(--red); background: var(--red-dim);">
+  <div class="label" style="color: var(--red);">Falsification Tests</div>
+  <p class="step" data-n="1"><strong>Phase-locking is irrelevant to coordinated action.</strong> If organisms can execute coordinated multi-scale action without any measurable cross-scale phase coherence, the resonance model fails.</p>
+  <p class="step" data-n="2"><strong>Coercion outperforms autonomy.</strong> If reducing part-level agency (CC<sub>part</sub>) systematically increases whole-level agency (CC<sub>whole</sub>), Theorem 5.3 fails.</p>
+  <p class="step" data-n="3"><strong>Cancer cells show normal phase-locking.</strong> If malignant cells maintain the same cross-scale phase coherence as healthy tissue, Lemma 5.1 fails.</p>
+  <p class="step" data-n="4"><strong>Top-down causation is temporally prior.</strong> If coordinated action requires measurable propagation delay from whole to parts (command → obey sequence) rather than simultaneous phase-locking, the resonance model is wrong.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ═══════════════════════════════════════════ -->
+<footer>
+  <div class="symbol">⊙</div>
+  <p><strong>Parts are fractals of their wholes.</strong></p>
+  <p style="margin-top: 0.5rem;">Agency is not imposed. Agency is constituted.</p>
+  <p style="margin-top: 0.5rem;">The wave does not command the water.</p>
+  <p class="subtitle" style="margin-top: 1.5rem;">Circumpunct Framework — Cross-Scale Agency<br>February 2026</p>
+</footer>
+
+</div>
+</body>
+</html>
