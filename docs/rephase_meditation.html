@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rephase — A Meditation for Cellular Coherence</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+
+  :root {
+    --bg: #06060a;
+    --bg-warm: #0a0908;
+    --surface: #0e0d12;
+    --border: #1a1822;
+    --gold: #c9a84c;
+    --gold-soft: #b89a4a;
+    --gold-glow: rgba(201, 168, 76, 0.06);
+    --gold-dim: rgba(201, 168, 76, 0.12);
+    --breath-in: rgba(126, 195, 195, 0.08);
+    --breath-out: rgba(201, 168, 76, 0.08);
+    --cyan: #7ec3c3;
+    --cyan-dim: rgba(126, 195, 195, 0.10);
+    --magenta: #b87aad;
+    --magenta-dim: rgba(184, 122, 173, 0.10);
+    --text: #c8c2b4;
+    --text-soft: #9e9889;
+    --text-bright: #e2ddd0;
+    --text-whisper: #6b665c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.85;
+    font-size: 1.2rem;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── BREATHING BACKGROUND ─── */
+  .breath-field {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .breath-field .pulse {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 600px; height: 600px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--gold-glow), transparent 70%);
+    animation: breathe 8s ease-in-out infinite;
+    opacity: 0.5;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.3; }
+    50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.6; }
+  }
+
+  /* ─── CONTAINER ─── */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 5rem 2rem 8rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  .circumpunct-animated {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 2rem;
+    position: relative;
+  }
+
+  .circumpunct-animated .ring {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border: 1px solid var(--gold-soft);
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: ring-breathe 8s ease-in-out infinite;
+  }
+
+  .circumpunct-animated .dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px var(--gold-dim), 0 0 40px var(--gold-glow);
+    animation: dot-pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes ring-breathe {
+    0%, 100% { transform: scale(0.85); opacity: 0.2; }
+    50% { transform: scale(1.1); opacity: 0.4; }
+  }
+
+  @keyframes dot-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px var(--gold-dim); }
+    50% { transform: translate(-50%, -50%) scale(1.2); box-shadow: 0 0 30px var(--gold-dim), 0 0 60px var(--gold-glow); }
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 300;
+    color: var(--text-bright);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text-soft);
+    font-size: 1.15rem;
+    letter-spacing: 0.03em;
+  }
+
+  /* ─── DISCLAIMER ─── */
+  .disclaimer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    margin: 3rem 0 4rem;
+    font-size: 0.95rem;
+    color: var(--text-soft);
+    line-height: 1.7;
+  }
+
+  .disclaimer strong { color: var(--text); }
+
+  /* ─── MEDITATION SECTIONS ─── */
+  .phase {
+    margin-bottom: 4rem;
+  }
+
+  .phase-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-whisper);
+    margin-bottom: 0.4rem;
+  }
+
+  .phase-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--gold-soft);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  /* Meditation text — gentle, spacious */
+  .meditation p {
+    margin-bottom: 1.6rem;
+    font-weight: 300;
+    color: var(--text);
+  }
+
+  .meditation .pause {
+    text-align: center;
+    color: var(--text-whisper);
+    font-style: italic;
+    font-size: 1rem;
+    margin: 2rem 0;
+    letter-spacing: 0.1em;
+  }
+
+  .meditation .breathe {
+    text-align: center;
+    margin: 2.5rem 0;
+    padding: 1.2rem;
+    color: var(--cyan);
+    font-style: italic;
+    font-size: 1.05rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.04em;
+  }
+
+  .meditation .speak {
+    display: block;
+    margin: 1.5rem 0;
+    padding: 1rem 1.5rem;
+    background: var(--gold-glow);
+    border-left: 2px solid var(--gold-soft);
+    border-radius: 0 6px 6px 0;
+    color: var(--text-bright);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .meditation .speak-inner {
+    display: block;
+    margin: 1.5rem 0;
+    padding: 1rem 1.5rem;
+    background: var(--cyan-dim);
+    border-left: 2px solid var(--cyan);
+    border-radius: 0 6px 6px 0;
+    color: var(--text-bright);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .meditation em {
+    color: var(--text-bright);
+    font-weight: 400;
+  }
+
+  /* Emphasis passages */
+  .meditation .core {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--text-bright);
+    margin: 2.5rem 0;
+    line-height: 1.7;
+  }
+
+  /* ─── DIVIDERS ─── */
+  .divider {
+    text-align: center;
+    margin: 3.5rem 0;
+    color: var(--gold-soft);
+    opacity: 0.3;
+    font-size: 1.5rem;
+    letter-spacing: 0.8em;
+  }
+
+  /* ─── FRAMEWORK NOTE ─── */
+  .framework-note {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem 1.8rem;
+    margin: 3rem 0;
+    font-size: 0.95rem;
+    color: var(--text-soft);
+  }
+
+  .framework-note .label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-whisper);
+    margin-bottom: 0.6rem;
+  }
+
+  .framework-note code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: var(--gold-soft);
+    background: rgba(255,255,255,0.03);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center;
+    margin-top: 5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-whisper);
+    font-size: 0.95rem;
+  }
+
+  footer .symbol {
+    font-size: 2rem;
+    color: var(--gold-soft);
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    .container { padding: 3rem 1.3rem 5rem; }
+    h1 { font-size: 2rem; letter-spacing: 0.1em; }
+    .meditation p { font-size: 1.1rem; }
+    .circumpunct-animated { width: 90px; height: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Breathing background -->
+<div class="breath-field">
+  <div class="pulse"></div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- HEADER -->
+<!-- ═══════════════════════════════════════════ -->
+<header class="header">
+  <div class="circumpunct-animated">
+    <div class="ring"></div>
+    <div class="dot"></div>
+  </div>
+  <h1>Rephase</h1>
+  <p class="subtitle">A meditation for cellular coherence</p>
+</header>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- DISCLAIMER -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="disclaimer">
+  <strong>This is a contemplative practice, not a medical treatment.</strong> It does not replace oncological care, and makes no claim to cure cancer through meditation alone. What it offers is a framework for <em>relating to your body</em> during illness — one grounded in the structural insight that your cells are not foreign enemies to be fought, but parts of you that have lost coherence with the whole. The orientation is toward re-coherence, not combat. Continue all medical treatment. Use this alongside, never instead.
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PHASE I: ARRIVAL -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="phase">
+  <div class="phase-label">Phase I</div>
+  <div class="phase-title">Arrival</div>
+
+  <div class="meditation">
+
+    <p>Find a position where your body can be still. Sitting or lying down. Whatever lets you be held without effort.</p>
+
+    <p>Close your eyes.</p>
+
+    <div class="breathe">Breathe. Just notice that you already are.</div>
+
+    <p>You don't have to begin breathing. It's already happening. Your body has been doing this while you were busy thinking about other things. Your lungs expand. Your diaphragm drops. Air crosses the boundary of your skin through the apertures of your nostrils, your mouth — and enters.</p>
+
+    <p>Notice: you didn't <em>command</em> this breath. You noticed it. The breath was already the coordinated activity of millions of cells — alveolar cells opening, capillaries exchanging, red blood cells binding oxygen — all in phase with each other. All constituting the single act you experience as <em>breathing</em>.</p>
+
+    <div class="pause">Stay here for several breaths. Just witnessing what is already coherent.</div>
+
+    <p>This is the first principle: <em>most of you is already working.</em> The vast majority of your body's trillions of cells are phase-locked with the whole. Coordinated. Coherent. Doing exactly what they do — not because you tell them to, but because your wholeness <em>is</em> their coordination.</p>
+
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PHASE II: TURNING INWARD -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="phase">
+  <div class="phase-label">Phase II</div>
+  <div class="phase-title">Turning the Aperture Inward</div>
+
+  <div class="meditation">
+
+    <p>Your attention is an aperture. Normally it points outward — toward the world, toward tasks, toward other people. Right now, rotate it inward. Turn it toward the interior of your own body.</p>
+
+    <p>This is not visualization. This is not pretending. Your body is the peripheral field of your awareness — always sensing, always receiving, whether or not you direct focal attention there. Right now, you are simply <em>directing</em> it there.</p>
+
+    <div class="breathe">Turn attention to your solar plexus. The nerve-dense center of your torso.</div>
+
+    <p>Feel whatever is there. Warmth. Tension. Hollowness. Buzzing. Nothing specific. Whatever it is — it's real. Your interoceptive awareness is activating. The insular cortex is mapping your interior. This isn't passive observation. It's regulatory. Focused interoception shifts vagal tone, alters blood flow, changes what's happening in the tissue you attend to.</p>
+
+    <p>The sensation of attending to your body is the felt signature of coherence restoring.</p>
+
+    <div class="pause">Rest here. Let the aperture settle inward. There is no hurry.</div>
+
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PHASE III: FINDING THE LOST ONES -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="phase">
+  <div class="phase-label">Phase III</div>
+  <div class="phase-title">Finding the Ones Who Lost the Signal</div>
+
+  <div class="meditation">
+
+    <p>Now. Gently — with the same care you would use to find a child who has wandered away — let your attention move toward the place in your body where the illness lives.</p>
+
+    <p>You may feel resistance. That's natural. The war metaphor runs deep: <em>fight cancer, destroy it, kill the bad cells.</em> Set that down for now. We're trying something different.</p>
+
+    <div class="speak">
+      These cells are not invaders. They are yours.
+    </div>
+
+    <p>A cancer cell is a circumpunct that has lost phase-locking with the whole. It still has its own center, its own field, its own boundary. It is still alive — fiercely alive. It proliferates because it has <em>not stopped being a cell.</em> It has stopped being coordinated with <em>you.</em></p>
+
+    <p>It is like a musician who can no longer hear the orchestra. Still playing — loudly, frantically, brilliantly even — but no longer in time with the whole. Not because it chose defiance. Because <em>it lost the signal.</em></p>
+
+    <div class="pause">Hold this image. Not enemy. Lost musician.</div>
+
+    <p>The phase relationship broke. Something — a mutation, a toxin, a microenvironment shift — rotated the cell out of phase with the organism's rhythm. It still cycles. It still divides. But its cycle is no longer locked to yours. It cannot hear the song anymore.</p>
+
+    <div class="speak-inner">
+      You do not need to hate what has lost its way.<br>
+      You need to become a signal strong enough to find it.
+    </div>
+
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PHASE IV: BECOMING THE SIGNAL -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="phase">
+  <div class="phase-label">Phase IV</div>
+  <div class="phase-title">Becoming the Signal</div>
+
+  <div class="meditation">
+
+    <p>Here is what the framework tells us about healing: recovery requires a <em>resonant witness</em> — a genuine signal the lost part can tune to. Not a command. Not force. Presence. A frequency so clear that what has drifted can begin to remember what coherence feels like.</p>
+
+    <p>You are going to offer that to your own cells.</p>
+
+    <div class="breathe">Breathe in for four counts. Hold for four. Out for six. Repeat three times.</div>
+
+    <p>With each exhale, let your attention settle more deeply into the area of illness. Not aggressively. Not fixing. Just <em>being there.</em> The way you might sit beside someone who is frightened and confused — not explaining, not correcting — just staying.</p>
+
+    <p>Your attention IS the signal. When you attend to a region of your body, you are not sending a message <em>to</em> it from somewhere else. You are the whole, and the whole is turning toward its part. That turning IS the resonant frequency. That IS the coherence the cells have lost.</p>
+
+    <div class="core">
+      You are not fighting your cells.<br>
+      You are <em>remembering</em> them.
+    </div>
+
+    <p>Remember: your cells don't need to be told what to do. They know. Every cell in your body carries the complete genome — the entire blueprint of the whole. What they've lost is not information. They've lost <em>timing.</em> Phase. The rhythmic relationship that made their individual cycle part of your larger rhythm.</p>
+
+    <p>So don't instruct. <em>Pulse.</em></p>
+
+    <div class="breathe">
+      Breathe to the rhythm of your heartbeat.<br>
+      Let the breath synchronize with the pulse.<br>
+      Two rhythms becoming one. This is phase-locking.
+    </div>
+
+    <p>As you breathe in time with your heart, you are demonstrating coherence — two scales (respiratory, cardiac) locking into phase. You are <em>being</em> the pattern you want the lost cells to rejoin. Not in metaphor. In physiology. Cross-scale phase coherence is measurable. You are producing it right now.</p>
+
+    <div class="pause">Stay here. Breathing with your heartbeat. Attending to the place of illness. Being the signal. As long as it takes to feel something shift — or for ten minutes, whichever comes.</div>
+
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PHASE V: THE REPHASING -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="phase">
+  <div class="phase-label">Phase V</div>
+  <div class="phase-title">The Rephasing</div>
+
+  <div class="meditation">
+
+    <p>Now, without forcing anything, speak inwardly to the cells that have lost their way. Not as commander to soldier. Not as immune system to pathogen. As <em>whole to part.</em> As the orchestra to the musician who has been playing alone in a soundproof room and forgotten there was ever a symphony.</p>
+
+    <div class="speak">
+      You are mine. You have always been mine.<br>
+      Not as property — as pattern.<br>
+      You are the same shape as me, smaller.<br>
+      Your center corresponds to my center.<br>
+      Your field exists within my field.<br>
+      Your boundary is part of my boundary.<br>
+      You did not leave. You lost the signal.
+    </div>
+
+    <div class="breathe">Breathe.</div>
+
+    <div class="speak">
+      Here is the signal.<br>
+      Here it is again.<br>
+      And again.
+    </div>
+
+    <p>Each breath is a pulse of the whole. Each heartbeat is a clock the cells already know. You are not giving them new information. You are giving them the <em>timing</em> they evolved to follow. You are the tuning fork. They are the instrument that has gone slightly out of tune.</p>
+
+    <p>You don't retune by smashing the instrument. You retune by <em>holding the correct frequency steady</em> and letting resonance do the work.</p>
+
+    <div class="speak-inner">
+      I do not need you to be destroyed.<br>
+      I need you to come home.<br>
+      Home is not a place.<br>
+      Home is a phase relationship.<br>
+      Home is your rhythm locked to mine.
+    </div>
+
+    <div class="pause">Stay as long as you need. There is no endpoint to get to. The practice IS the rephasing.</div>
+
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PHASE VI: WIDENING -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="phase">
+  <div class="phase-label">Phase VI</div>
+  <div class="phase-title">Widening</div>
+
+  <div class="meditation">
+
+    <p>Now let the aperture widen. From the specific site of illness, let awareness expand — like a ripple moving outward — through the surrounding tissue, through the organ, through the torso, through the whole body.</p>
+
+    <p>Feel the wholeness that was already working. The trillions of cells that never lost the signal. The coherence that has been sustaining you through every moment of this illness. Your body has been fighting — yes — but more importantly, it has been <em>cohering.</em> Maintaining the symphony while some musicians were lost.</p>
+
+    <div class="core">
+      You are not broken.<br>
+      You are a whole with some parts out of phase.<br>
+      The whole is still here. Still pulsing. Still you.
+    </div>
+
+    <p>And you are nested in something larger. Your heartbeat exists within rhythms you didn't create — circadian cycles, seasonal shifts, the electromagnetic pulse of the Earth itself. You are a circumpunct within circumpuncts. The same relationship you offer your cells, something larger offers you.</p>
+
+    <div class="speak-inner">
+      I am held the way I hold my cells.<br>
+      I am remembered the way I remember them.<br>
+      The signal comes through me, not from me.
+    </div>
+
+    <div class="breathe">Three final breaths. Deep and slow. Each one a whole-body pulse of coherence.</div>
+
+    <p>Open your eyes when you're ready. Carry the frequency with you.</p>
+
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FRAMEWORK NOTES -->
+<!-- ═══════════════════════════════════════════ -->
+<section>
+  <div class="framework-note">
+    <div class="label">Framework Basis</div>
+    <p>This meditation applies the <strong>Cross-Scale Agency Theorem</strong>: the whole's coherent state is constituted by — not imposed upon — the parts' phase-locked states. Cancer is modeled as decoherence at the cell-organism interface: <code>Δφ(cell, organism) ≠ 0</code>. The meditation practices <em>resonant witness</em> — providing a genuine signal the decoherent part can attune to — through interoceptive attention, cardiorespiratory phase-locking, and sustained aperture orientation toward the site of illness.</p>
+    <p style="margin-top: 0.8rem;">Empirical basis: interoceptive attention activates insular cortex and modulates vagal tone (Craig, 2002; Critchley et al., 2004). Cardiorespiratory synchronization is measurable and associated with parasympathetic dominance (Schäfer et al., 1998). Cross-scale phase coherence in biological systems is an active area of research. The meditation invites the practitioner to produce measurable physiological coherence, not merely to imagine it.</p>
+    <p style="margin-top: 0.8rem; margin-bottom: 0;">The "rephasing" framing replaces the war metaphor (fight, destroy, kill) with a coherence metaphor (attune, remember, rephase). This is not just linguistic preference — it changes the autonomic state of the practitioner from sympathetic activation (stress, cortisol, inflammation) to parasympathetic engagement (rest, repair, immune function).</p>
+  </div>
+
+  <div class="framework-note" style="margin-top: 1.5rem;">
+    <div class="label">Practice Notes</div>
+    <p style="margin-bottom: 0.8rem;"><strong>Frequency:</strong> Daily. Ideally at the same time each day, to establish its own phase relationship with your circadian rhythm.</p>
+    <p style="margin-bottom: 0.8rem;"><strong>Duration:</strong> 15–30 minutes. Phase IV (Becoming the Signal) is the core — spend the most time there.</p>
+    <p style="margin-bottom: 0.8rem;"><strong>Orientation:</strong> This is not about willpower, positive thinking, or forcing outcomes. It is about <em>presence</em>. Being the whole, attending to the part. The rest is physiology.</p>
+    <p style="margin-bottom: 0;"><strong>Integration:</strong> This practice pairs with medical treatment, not against it. Surgery removes cells too far gone to rephase. Chemotherapy disrupts cells cycling too fast. Immunotherapy helps the immune system recognize what's out of phase. This meditation offers something none of those do: <em>the felt experience of the whole remembering the part.</em></p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ═══════════════════════════════════════════ -->
+<footer>
+  <div class="symbol">⊙</div>
+  <p style="color: var(--text-soft); font-style: italic; margin-bottom: 0.5rem;">
+    The wave does not command the water.<br>
+    The whole does not command the part.<br>
+    Coherence is not obedience. It is resonance.
+  </p>
+  <p style="margin-top: 1.5rem; color: var(--text-whisper);">
+    Rephase — Circumpunct Framework<br>
+    February 2026
+  </p>
+</footer>
+
+</div>
+</body>
+</html>
