@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workplace Kung Fu — Two Channels of Human Treatment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #1a1a1e;
+            --bg-card: #222228;
+            --bg-highlight: #2a2a32;
+            --hard: #c44b3f;
+            --hard-glow: rgba(196, 75, 63, 0.15);
+            --soft: #3fa7c4;
+            --soft-glow: rgba(63, 167, 196, 0.15);
+            --balance: #d4a843;
+            --balance-glow: rgba(212, 168, 67, 0.2);
+            --text: #e8e4df;
+            --text-dim: #9a958e;
+            --text-faint: #6a655e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* === HERO === */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--balance-glow) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            animation: hero-glow 6s ease-in-out infinite;
+        }
+
+        @keyframes hero-glow {
+            0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.15); }
+        }
+
+        .belt-icon {
+            position: relative;
+            z-index: 1;
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 20px var(--balance-glow));
+        }
+
+        .hero h1 {
+            font-family: 'Bitter', serif;
+            font-size: clamp(2.2rem, 6vw, 3.4rem);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 .hard-word { color: var(--hard); }
+        .hero h1 .soft-word { color: var(--soft); }
+
+        .hero .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            font-style: italic;
+            max-width: 480px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            font-size: 0.8rem;
+            color: var(--text-faint);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            animation: bob 2s ease-in-out infinite;
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        /* === SECTIONS === */
+        section {
+            padding: 4rem 0;
+        }
+
+        section + section {
+            border-top: 1px solid var(--bg-highlight);
+        }
+
+        h2 {
+            font-family: 'Bitter', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        h3 {
+            font-family: 'Bitter', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            margin-top: 2rem;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--text);
+        }
+
+        p.dim { color: var(--text-dim); }
+
+        .hook {
+            font-family: 'Bitter', serif;
+            font-size: 1.35rem;
+            font-style: italic;
+            color: var(--balance);
+            text-align: center;
+            max-width: 560px;
+            margin: 0 auto 2rem;
+            line-height: 1.5;
+        }
+
+        /* === DIVIDER === */
+        .divider {
+            text-align: center;
+            padding: 2.5rem 0;
+            font-size: 1.4rem;
+            color: var(--text-faint);
+            letter-spacing: 0.5em;
+        }
+
+        /* === KEY PASSAGE === */
+        .key-passage {
+            background: var(--bg-card);
+            border-left: 3px solid var(--balance);
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .key-passage p { 
+            margin-bottom: 0.5rem; 
+            color: var(--text);
+        }
+        .key-passage p:last-child { margin-bottom: 0; }
+
+        /* === TWO COLUMNS === */
+        .two-styles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 600px) {
+            .two-styles { grid-template-columns: 1fr; }
+        }
+
+        .style-card {
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid;
+        }
+
+        .style-card.hard {
+            border-color: var(--hard);
+            background: var(--hard-glow);
+        }
+
+        .style-card.soft {
+            border-color: var(--soft);
+            background: var(--soft-glow);
+        }
+
+        .style-card.balance {
+            border-color: var(--balance);
+            background: var(--balance-glow);
+            grid-column: 1 / -1;
+        }
+
+        .style-card h4 {
+            font-family: 'Bitter', serif;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .style-card.hard h4 { color: var(--hard); }
+        .style-card.soft h4 { color: var(--soft); }
+        .style-card.balance h4 { color: var(--balance); }
+
+        .style-card p {
+            font-size: 0.92rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+        .style-card p:last-child { margin-bottom: 0; }
+
+        /* === SCENARIO BLOCKS === */
+        .scenario {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 1.5rem 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .scenario-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.75rem;
+            color: var(--text-faint);
+        }
+
+        .scenario .voice {
+            font-style: italic;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--bg-highlight);
+        }
+
+        .scenario .voice.hard-voice { border-color: var(--hard); }
+        .scenario .voice.soft-voice { border-color: var(--soft); }
+        .scenario .voice.balance-voice { border-color: var(--balance); }
+
+        /* === RECOGNITION LIST === */
+        .recognition-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 600px) {
+            .recognition-grid { grid-template-columns: 1fr; }
+        }
+
+        .recognition-item {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            color: var(--text-dim);
+        }
+
+        .recognition-item.hard {
+            background: var(--hard-glow);
+            border-left: 3px solid var(--hard);
+        }
+
+        .recognition-item.soft {
+            background: var(--soft-glow);
+            border-left: 3px solid var(--soft);
+        }
+
+        /* === PRACTICE SECTION === */
+        .practice {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .practice h4 {
+            font-family: 'Bitter', serif;
+            color: var(--balance);
+            margin-bottom: 1rem;
+        }
+
+        .practice-step {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .practice-step:last-child { margin-bottom: 0; }
+
+        .step-num {
+            font-family: 'Bitter', serif;
+            font-weight: 600;
+            color: var(--balance);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            width: 28px;
+        }
+
+        .step-text {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        /* === FINALE === */
+        .finale {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .finale h2 {
+            color: var(--balance);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .finale p {
+            max-width: 520px;
+            margin: 0 auto 1rem;
+        }
+
+        .final-words {
+            font-family: 'Bitter', serif;
+            font-size: 1.5rem;
+            color: var(--balance);
+            margin-top: 2rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* === BALANCE BAR === */
+        .balance-bar {
+            height: 2px;
+            margin: 1.5rem auto;
+            border-radius: 1px;
+            background: linear-gradient(to right, var(--hard), var(--balance), var(--soft));
+            opacity: 0.5;
+        }
+
+        /* === FOOTER === */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-faint);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--balance);
+            text-decoration: none;
+        }
+
+        /* === ANIMATIONS === */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <div class="belt-icon">🥋</div>
+        <h1>Workplace <span class="hard-word">Kung</span> <span class="soft-word">Fu</span></h1>
+        <p class="subtitle">A guide to how we treat each other — because most workplace dysfunction isn't about skill. It's about style.</p>
+        <div class="scroll-hint">↓ scroll ↓</div>
+    </div>
+
+    <div class="container">
+
+        <!-- === THE SETUP === -->
+        <section class="fade-in">
+            <p class="hook">"You've mishandled someone at work. Not because you're bad at your job. Because you only know one style."</p>
+
+            <p>There's a fight that happens in every workplace. It sounds like this:</p>
+
+            <div class="scenario">
+                <div class="scenario-label">The meeting after the project failed</div>
+                <p class="voice hard-voice">"I gave them everything they needed — clear deadlines, weekly check-ins, detailed expectations. I don't know what else they wanted from me."</p>
+                <p class="voice soft-voice">"They managed every task perfectly but never once asked how I was doing. I didn't feel like a person on that team. I felt like a task."</p>
+            </div>
+
+            <p>Both people are telling the truth. Neither is wrong. And neither can understand why their best effort isn't landing.</p>
+
+            <p>That's because there are two fundamentally different channels through which human treatment flows. And most of us — most teams, most organizations — are only fluent in one.</p>
+        </section>
+
+        <div class="divider">☯</div>
+
+        <!-- === THE TWO STYLES === -->
+        <section class="fade-in">
+            <h2>The Two Styles</h2>
+
+            <p>In martial arts, there are hard styles and soft styles. Karate strikes through force. Aikido redirects through flow. A complete fighter needs both — pure rigidity breaks, pure yielding dissipates.</p>
+
+            <p>Workplaces have the same two channels.</p>
+
+            <div class="two-styles">
+                <div class="style-card hard">
+                    <h4>🥊 HARD STYLE — Structure</h4>
+                    <p>Clear expectations. Honest feedback. Accountability. Deadlines met. Standards held. Roles defined. Problems named directly.</p>
+                    <p>This is the love of <em>function</em>. It keeps the machine running. It answers the question: <strong>"What do you need from me?"</strong></p>
+                </div>
+                <div class="style-card soft">
+                    <h4>🌊 SOFT STYLE — Resonance</h4>
+                    <p>Being genuinely seen. Recognized. Asked about — not just your output, but you. Trusted with context. Included in why, not just what. Celebrated when it matters.</p>
+                    <p>This is the love of <em>presence</em>. It keeps the humans running. It answers the question: <strong>"Do I actually matter here?"</strong></p>
+                </div>
+            </div>
+
+            <p>Both are real. Both are work. Both cost something to give. Neither is optional.</p>
+
+            <div class="key-passage">
+                <p>A workplace saturated in structure but starved of resonance produces burnout, quiet quitting, and talented people leaving for "no reason."</p>
+                <p>A workplace saturated in resonance but starved of structure produces chaos, resentment, and talented people drowning without guardrails.</p>
+            </div>
+        </section>
+
+        <div class="divider">☯</div>
+
+        <!-- === THE DIRTY LENS === -->
+        <section class="fade-in">
+            <h2>The Dirty Lens</h2>
+
+            <p>Here's what makes this hard: most people default to one style. Not because they're lazy. Because one of their channels got blocked — usually a long time ago.</p>
+
+            <p>Maybe you grew up in a house where feelings were "unprofessional." Where you learned that competence was the only currency that mattered. So you became fluent in structure and went functionally deaf to resonance.</p>
+
+            <p>Or maybe you grew up where warmth was the only safe thing. Where holding someone accountable felt like cruelty. So you became fluent in resonance and lost the ability to say "this isn't good enough" without feeling like a monster.</p>
+
+            <p>You bring that default to work. You manage the way you survived. You lead the way you were led. You treat people the way you learned love works.</p>
+
+            <div class="key-passage">
+                <p>The manager who gives brilliant feedback but never learns your name — that's not a management style. That's a blocked channel.</p>
+                <p>The team lead who makes everyone feel amazing but can't hold a deadline — that's not kindness. That's a blocked channel.</p>
+            </div>
+
+            <p>And here's the part that stings: <em>you can't tell from inside the block.</em> From inside, it feels like you're doing everything right. The other channel feels unnecessary. Soft. Indulgent. Or cold. Harsh. Corporate.</p>
+
+            <p>That feeling — that the other style is wrong — is the dirty lens talking.</p>
+        </section>
+
+        <div class="divider">☯</div>
+
+        <!-- === THE WORKPLACE LIE === -->
+        <section class="fade-in">
+            <h2>The Lie We Installed</h2>
+
+            <p>There's a lie that runs through most workplace culture. It sounds professional. It sounds mature. It sounds like this:</p>
+
+            <div class="scenario">
+                <div class="scenario-label">The Noble Lie at Work</div>
+                <p class="voice hard-voice">"We're not here to be friends. We're here to deliver results."</p>
+                <p class="voice hard-voice">"Leave your personal stuff at the door."</p>
+                <p class="voice hard-voice">"The work should speak for itself."</p>
+            </div>
+
+            <p>Translation: <em>structure should be enough. If you need resonance too, that's your problem. Deal with it on your own time.</em></p>
+
+            <p>This lie is installed early and reinforced everywhere. It tells people that needing to be seen, recognized, genuinely valued — not just compensated — is weakness. Neediness. Unprofessional.</p>
+
+            <p>And people believe it. They feel the emptiness and blame themselves. "The pay is good, the role is clear, my manager gives great feedback — why do I still want to leave?"</p>
+
+            <p>Because <strong>structure without resonance is a machine you work inside, not a team you belong to.</strong></p>
+
+            <p class="dim">The lie also has a softer version. Some workplaces install the opposite: "We're a family here." Translation: resonance should be enough. Don't ask for clarity, accountability, or honest feedback — that would break the vibe. This version is equally corrosive. It uses warmth to mask dysfunction.</p>
+        </section>
+
+        <div class="divider">☯</div>
+
+        <!-- === RECOGNITION === -->
+        <section class="fade-in">
+            <h2>Know Your Default</h2>
+
+            <p>Honest question. Which of these sounds more like you?</p>
+
+            <div class="recognition-grid">
+                <div class="recognition-item hard">I lead with clarity, process, and expectations</div>
+                <div class="recognition-item soft">I lead with check-ins, trust, and rapport</div>
+                <div class="recognition-item hard">I think people should know they're valued — the work shows it</div>
+                <div class="recognition-item soft">I think clear expectations feel cold without relationship first</div>
+                <div class="recognition-item hard">I'd rather give honest feedback than empty encouragement</div>
+                <div class="recognition-item soft">I'd rather build safety than demand accountability</div>
+                <div class="recognition-item hard">When someone struggles, I give them a plan</div>
+                <div class="recognition-item soft">When someone struggles, I give them space</div>
+            </div>
+
+            <p>Neither column is wrong. But if one column feels obviously correct and the other feels like a waste of time — that's the block.</p>
+
+            <p>That's your dirty lens.</p>
+        </section>
+
+        <div class="divider">☯</div>
+
+        <!-- === WHAT IT LOOKS LIKE === -->
+        <section class="fade-in">
+            <h2>What It Looks Like Broken</h2>
+
+            <h3 style="color: var(--hard);">Hard-Only Workplaces</h3>
+            <div class="scenario">
+                <p>Meetings start on time and end with action items. Performance is tracked. Expectations are crystal clear. And nobody wants to be there.</p>
+                <p>People perform but don't contribute. They execute but don't innovate. They stay as long as the paycheck justifies it and leave the moment something better appears. Exit interviews say "culture" and leadership genuinely doesn't understand what that means.</p>
+                <p class="dim">The structure is perfect. The humans are gone.</p>
+            </div>
+
+            <h3 style="color: var(--soft);">Soft-Only Workplaces</h3>
+            <div class="scenario">
+                <p>Everyone loves each other. Slack is full of hearts and praise. Feedback is gentle, always sandwiched, usually avoided. Nobody knows what's actually expected of them.</p>
+                <p>High performers leave because they can't grow without honest feedback. Low performers stay because no one will tell them the truth. The kindest people burn out first because they absorb everyone else's slack. "We're a family" becomes "we enable each other."</p>
+                <p class="dim">The warmth is real. The work is collapsing.</p>
+            </div>
+
+            <h3 style="color: var(--balance);">What Balance Looks Like</h3>
+            <div class="scenario">
+                <p>Expectations are clear <em>and</em> people feel safe to say they're struggling. Feedback is direct <em>and</em> delivered with genuine care. You know your role <em>and</em> you feel known as a person. The work is rigorous <em>and</em> the humans doing it are actually okay.</p>
+                <p class="dim">This is rare. Not because it's impossible. Because most people — most leaders — can only do one.</p>
+            </div>
+        </section>
+
+        <div class="divider">☯</div>
+
+        <!-- === THE SKILL === -->
+        <section class="fade-in">
+            <h2>The Skill</h2>
+
+            <p>Kung fu doesn't mean martial arts. It means <em>skill acquired through effort over time.</em></p>
+
+            <p>This is workplace kung fu: the ability to read what a moment — what a person — actually needs, and give it. Even when it's not your default. Even when it's uncomfortable. Even when it means opening the channel you sealed shut for very good reasons a long time ago.</p>
+
+            <div class="two-styles">
+                <div class="style-card hard">
+                    <h4>If You Default to Hard</h4>
+                    <p>Your growth edge is resonance. Start here:</p>
+                    <p>Before a 1:1, ask yourself: "Do I know one non-work thing about this person?" If not — find out.</p>
+                    <p>When someone delivers good work, don't just approve it. Tell them what specifically impressed you. Name what you saw.</p>
+                    <p>When someone struggles, before you problem-solve, ask: <em>"Do you want me to help fix this, or do you need me to just hear it first?"</em></p>
+                </div>
+                <div class="style-card soft">
+                    <h4>If You Default to Soft</h4>
+                    <p>Your growth edge is structure. Start here:</p>
+                    <p>Before a project kick-off, write down exactly what "done" looks like. Share it. Let people disagree. But make it concrete.</p>
+                    <p>When you notice a problem, name it within 48 hours. Kindly. Directly. Without the sandwich.</p>
+                    <p>When someone underperforms, remember: avoiding the hard conversation isn't protecting them. It's protecting you from discomfort.</p>
+                </div>
+            </div>
+
+            <div class="practice">
+                <h4>The One Question</h4>
+                <p style="color: var(--text-dim); margin-bottom: 1rem;">In any interaction where something feels off — where your effort isn't landing — ask yourself:</p>
+                <div class="practice-step">
+                    <span class="step-num">→</span>
+                    <span class="step-text"><strong>"Am I giving them what I'm good at? Or what they actually need?"</strong></span>
+                </div>
+                <p style="color: var(--text-dim); margin-top: 1rem;">If the answer is "what I'm good at" — switch channels. Just for a moment. See what happens.</p>
+            </div>
+        </section>
+
+        <div class="divider">☯</div>
+
+        <!-- === THE TEAM GUIDE === -->
+        <section class="fade-in">
+            <h2>A Guide for Teams</h2>
+
+            <p>This isn't just individual work. Teams have defaults too. Here's how to use this together.</p>
+
+            <div class="practice">
+                <h4>1. Name the channels openly</h4>
+                <p style="color: var(--text-dim);">Give your team language for this. "Are we giving structure or resonance right now? Which one does this situation need?" Once the channels are named, people can ask for what they need without it feeling like weakness.</p>
+            </div>
+
+            <div class="practice">
+                <h4>2. Normalize the ask</h4>
+                <p style="color: var(--text-dim);">Make it safe to say: "I need more clarity on expectations" (asking for structure) or "I need to feel like my contribution actually matters here" (asking for resonance). Neither request is unprofessional. Both are human. Both make teams stronger.</p>
+            </div>
+
+            <div class="practice">
+                <h4>3. Audit your rituals</h4>
+                <p style="color: var(--text-dim);">Look at your recurring meetings, reviews, and check-ins. Are they all structure? (Agenda, action items, metrics.) Or all resonance? (Vibes, gratitude, feelings.) The best rituals hold both — a standup that starts with "how are you actually doing?" <em>and</em> ends with clear commitments.</p>
+            </div>
+
+            <div class="practice">
+                <h4>4. Watch for the collapse</h4>
+                <p style="color: var(--text-dim);">Under stress, teams regress to their default channel. Hard-default teams tighten control. Soft-default teams retreat into false harmony. The test of workplace kung fu is maintaining both channels precisely when pressure makes you want to abandon one.</p>
+            </div>
+
+            <div class="practice">
+                <h4>5. Build the bridge pair</h4>
+                <p style="color: var(--text-dim);">The most functional teams pair people with complementary defaults — a structure-oriented and a resonance-oriented voice in every room. Not to cancel each other out, but to cover blind spots. The hard leader who says "we need a deadline" and the soft voice who says "we also need to know why this matters" — together, they're complete.</p>
+            </div>
+        </section>
+
+        <div class="divider">☯</div>
+
+        <!-- === FINALE === -->
+        <section class="finale fade-in">
+            <h2>Workplace Kung Fu</h2>
+
+            <div class="balance-bar" style="max-width: 300px;"></div>
+
+            <p>Good workplace culture isn't a style. It's a skill.</p>
+
+            <p>The skill of reading what this moment — this person — actually needs. And being able to give it. Even when it's not your default. Even when it costs something. Even when it means opening the channel you locked up because the last place you worked made it feel dangerous.</p>
+
+            <div class="key-passage" style="text-align: left; max-width: 480px; margin: 2rem auto;">
+                <p>Structure without resonance becomes control.</p>
+                <p>Resonance without structure becomes chaos.</p>
+                <p>The balance is where good work actually happens.</p>
+            </div>
+
+            <div class="balance-bar" style="max-width: 300px;"></div>
+
+            <p>You don't have to master both overnight.</p>
+
+            <p>Start by noticing which channel you default to. Start by asking what the moment actually needs. Start by opening — just a crack — the door you closed for good reasons at a job that broke your trust.</p>
+
+            <p class="final-words">🥋 Begin there. 🥋</p>
+        </section>
+
+    </div>
+
+    <footer>
+        <div class="balance-bar" style="max-width: 100px;"></div>
+        <p><a href="https://fractalreality.ca">fractalreality.ca</a></p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-faint);">Adapted from Love Kung Fu — Two channels of human treatment</p>
+    </footer>
+
+    <script>
+        // Scroll-triggered fade-in
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>
