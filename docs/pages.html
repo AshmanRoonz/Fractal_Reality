@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Pages — Fractal Reality</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-hover: #1a1a25;
+            --text: #e0e0e8;
+            --text-dim: #888;
+            --gold: #d4af37;
+            --cyan: #58a6ff;
+            --purple: #a371f7;
+            --green: #4caf50;
+            --magenta: #e91e63;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #12121a 0%, #1a1a25 100%);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .home-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--cyan);
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--cyan);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .home-link:hover {
+            background: var(--cyan);
+            color: var(--bg);
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--gold);
+            padding: 0.75rem 1rem;
+            background: var(--bg-card);
+            border-left: 3px solid var(--gold);
+            margin-bottom: 0.5rem;
+            position: sticky;
+            top: 120px;
+            z-index: 10;
+        }
+
+        .section ul {
+            list-style: none;
+        }
+
+        .section li {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section a {
+            display: block;
+            padding: 0.9rem 1rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+
+        .section a:hover {
+            background: var(--bg-hover);
+            padding-left: 1.5rem;
+        }
+
+        .section a:active {
+            background: rgba(88, 166, 255, 0.1);
+        }
+
+        .page-name {
+            color: var(--cyan);
+            font-weight: 500;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .page-desc {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        /* Category colors */
+        .section.framework h2 { border-color: var(--purple); color: var(--purple); }
+        .section.states h2 { border-color: var(--cyan); color: var(--cyan); }
+        .section.physics h2 { border-color: var(--green); color: var(--green); }
+        .section.wholeness h2 { border-color: #ff9800; color: #ff9800; }
+        .section.consciousness h2 { border-color: var(--magenta); color: var(--magenta); }
+        .section.ethics h2 { border-color: var(--gold); color: var(--gold); }
+        .section.healing h2 { border-color: #f44336; color: #f44336; }
+        .section.philosophical h2 { border-color: #9c27b0; color: #9c27b0; }
+        .section.tools h2 { border-color: #00bcd4; color: #00bcd4; }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 1.5rem 1rem; }
+            header h1 { font-size: 1.5rem; }
+            .section h2 { font-size: 1rem; top: 100px; }
+            .section a { padding: 0.8rem 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>All Pages</h1>
+        <p>Complete index of Fractal Reality visualizations and documents</p>
+        <a href="index.html" class="home-link">Back to Home</a>
+    </header>
+
+    <main>
+        <section class="section framework">
+            <h2>Circumpunct & Framework</h2>
+            <ul>
+                <li><a href="circumpunct-presentation.html"><span class="page-name">circumpunct-presentation.html</span><span class="page-desc">Slideshow presentation of the theory</span></a></li>
+                <li><a href="circumpunct_presentation.html"><span class="page-name">circumpunct_presentation.html</span><span class="page-desc">Alternative theory presentation</span></a></li>
+                <li><a href="circumpunct-v3.html"><span class="page-name">circumpunct-v3.html</span><span class="page-desc">Version 3 interactive visualization</span></a></li>
+                <li><a href="circumpunct-v5.html"><span class="page-name">circumpunct-v5.html</span><span class="page-desc">Version 5 interactive visualization</span></a></li>
+                <li><a href="circumpunct_interactive_theory.html"><span class="page-name">circumpunct_interactive_theory.html</span><span class="page-desc">Interactive predictions explorer with live calculations</span></a></li>
+                <li><a href="circumpunct_math.html"><span class="page-name">circumpunct_math.html</span><span class="page-desc">Mathematical foundations visualization</span></a></li>
+                <li><a href="circumath.html"><span class="page-name">circumath.html</span><span class="page-desc">Field-Aperture dynamical system</span></a></li>
+                <li><a href="circumpunct-swarm.html"><span class="page-name">circumpunct-swarm.html</span><span class="page-desc">Swarm Protocol simulation</span></a></li>
+                <li><a href="circumpunct_dimensions.html"><span class="page-name">circumpunct_dimensions.html</span><span class="page-desc">Dimensional Architecture explorer</span></a></li>
+                <li><a href="circumpunct_encyclopedia.html"><span class="page-name">circumpunct_encyclopedia.html</span><span class="page-desc">The Circumpunct Encyclopedia v2.0</span></a></li>
+                <li><a href="circumpunct_isomorphism.html"><span class="page-name">circumpunct_isomorphism.html</span><span class="page-desc">Structural invariance across all domains</span></a></li>
+                <li><a href="human.html"><span class="page-name">human.html</span><span class="page-desc">The Human Circumpunct: you are ⊙</span></a></li>
+            </ul>
+        </section>
+
+        <section class="section states">
+            <h2>64-State Architecture</h2>
+            <ul>
+                <li><a href="64-state_circumpunct_particle_table.html"><span class="page-name">64-state_circumpunct_particle_table.html</span><span class="page-desc">Topological Quantum Computer (B₃ braids)</span></a></li>
+                <li><a href="iching_64state_visualizer.html"><span class="page-name">iching_64state_visualizer.html</span><span class="page-desc">Circumpunct ↔ I Ching 64-state isomorphism</span></a></li>
+                <li><a href="master-table.html"><span class="page-name">master-table.html</span><span class="page-desc">The Golden Structure of Physics reference table</span></a></li>
+                <li><a href="vesica_piscis_64_states.html"><span class="page-name">vesica_piscis_64_states.html</span><span class="page-desc">Vesica Piscis formalization (⊙ ∩ ⊙ = 64)</span></a></li>
+            </ul>
+        </section>
+
+        <section class="section physics">
+            <h2>Physics & Mathematics</h2>
+            <ul>
+                <li><a href="circumpunct_physics.html"><span class="page-name">circumpunct_physics.html</span><span class="page-desc">The Circumpunct Framework: for working physicists</span></a></li>
+                <li><a href="methodological_status.html"><span class="page-name">methodological_status.html</span><span class="page-desc">Epistemic status & validation pathways</span></a></li>
+                <li><a href="quantum.html"><span class="page-name">quantum.html</span><span class="page-desc">Living Mandelbrot boundary walker</span></a></li>
+                <li><a href="braid-visualizer.html"><span class="page-name">braid-visualizer.html</span><span class="page-desc">Topological Quantum Computer (braid group B₃)</span></a></li>
+                <li><a href="trinity_braid.html"><span class="page-name">trinity_braid.html</span><span class="page-desc">Trinity Braid simulation</span></a></li>
+                <li><a href="entropy-foundation.html"><span class="page-name">entropy-foundation.html</span><span class="page-desc">Why reality requires the circumpunct</span></a></li>
+                <li><a href="energy_scale_phase_visualization.html"><span class="page-name">energy_scale_phase_visualization.html</span><span class="page-desc">Energy-Scale-Phase triangle</span></a></li>
+                <li><a href="surface_field_formalization.html"><span class="page-name">surface_field_formalization.html</span><span class="page-desc">Surface Theorem: The Geometry of Mind</span></a></li>
+                <li><a href="circumpunct_operator_formalization.html"><span class="page-name">circumpunct_operator_formalization.html</span><span class="page-desc">⊙ = • Φ ○ operator formalization</span></a></li>
+                <li><a href="geometric_periodic_table.html"><span class="page-name">geometric_periodic_table.html</span><span class="page-desc">Musical Periodic Table (Fibonacci + 7-Note Scale)</span></a></li>
+                <li><a href="aperture_falsification_presentation.html"><span class="page-name">aperture_falsification_presentation.html</span><span class="page-desc">Aperture falsification & the Pisces Model</span></a></li>
+                <li><a href="phi_resonance.html"><span class="page-name">phi_resonance.html</span><span class="page-desc">φ-Entrainment binaural consciousness tool</span></a></li>
+                <li><a href="hypercube.html"><span class="page-name">hypercube.html</span><span class="page-desc">Why 64 states require 6 dimensions</span></a></li>
+                <li><a href="dimensions.html"><span class="page-name">dimensions.html</span><span class="page-desc">The Dimensional Cascade — From God to Us</span></a></li>
+                <li><a href="lens.html"><span class="page-name">lens.html</span><span class="page-desc">You Are the Lens: a guide to truth</span></a></li>
+                <li><a href="circumpunct_schumann.html"><span class="page-name">circumpunct_schumann.html</span><span class="page-desc">Schumann-Circumpunct Resonance Theory</span></a></li>
+                <li><a href="circumpunct_IT.html"><span class="page-name">circumpunct_IT.html</span><span class="page-desc">Information Theory through the circumpunct</span></a></li>
+            </ul>
+        </section>
+
+        <section class="section wholeness">
+            <h2>Wholeness & Structure</h2>
+            <ul>
+                <li><a href="wholes-parts.html"><span class="page-name">wholes-parts.html</span><span class="page-desc">WHOLES_PARTS.exe interactive</span></a></li>
+                <li><a href="wholeness_field_evolution.html"><span class="page-name">wholeness_field_evolution.html</span><span class="page-desc">Wholeness field evolution dynamics</span></a></li>
+                <li><a href="soul_array_visualization.html"><span class="page-name">soul_array_visualization.html</span><span class="page-desc">The Infinite Soul Array</span></a></li>
+                <li><a href="mind_matter.html"><span class="page-name">mind_matter.html</span><span class="page-desc">Mind Over Matter: The Two Types of Love</span></a></li>
+                <li><a href="you_are_a_donut.html"><span class="page-name">you_are_a_donut.html</span><span class="page-desc">Toroidal self-reference topology</span></a></li>
+                <li><a href="cross_scale_agency.html"><span class="page-name">cross_scale_agency.html</span><span class="page-desc">How We Control Our Bodies</span></a></li>
+            </ul>
+        </section>
+
+        <section class="section consciousness">
+            <h2>Consciousness & Spirituality</h2>
+            <ul>
+                <li><a href="chakras.html"><span class="page-name">chakras.html</span><span class="page-desc">Frequency bands of the one aperture</span></a></li>
+                <li><a href="circumpunct_consciousness_theory.html"><span class="page-name">circumpunct_consciousness_theory.html</span><span class="page-desc">Circumpunct Theory of Consciousness</span></a></li>
+                <li><a href="consciousness-path-sim.html"><span class="page-name">consciousness-path-sim.html</span><span class="page-desc">A path through the lattice</span></a></li>
+                <li><a href="the_bridge_presentation.html"><span class="page-name">the_bridge_presentation.html</span><span class="page-desc">Science and spirituality unified</span></a></li>
+                <li><a href="framework_bridge_visual.html"><span class="page-name">framework_bridge_visual.html</span><span class="page-desc">Framework bridge visualization</span></a></li>
+                <li><a href="binaural_beats_51.html"><span class="page-name">binaural_beats_51.html</span><span class="page-desc">5.1 Surround binaural generator</span></a></li>
+                <li><a href="resonance_101.html"><span class="page-name">resonance_101.html</span><span class="page-desc">Finding your way back to truth</span></a></li>
+                <li><a href="path_narrated.html"><span class="page-name">path_narrated.html</span><span class="page-desc">The Path of the Circumpunct</span></a></li>
+            </ul>
+        </section>
+
+        <section class="section ethics">
+            <h2>Ethics & Truth</h2>
+            <ul>
+                <li><a href="circumpunct_virtues.html"><span class="page-name">circumpunct_virtues.html</span><span class="page-desc">Curiosity Is The Cure: the four virtues</span></a></li>
+                <li><a href="ethics.html"><span class="page-name">ethics.html</span><span class="page-desc">Circumpunct ethics</span></a></li>
+                <li><a href="structural_morality.html"><span class="page-name">structural_morality.html</span><span class="page-desc">Why truth-flow is ethics</span></a></li>
+                <li><a href="truth_and_god.html"><span class="page-name">truth_and_god.html</span><span class="page-desc">God experiencing itself</span></a></li>
+                <li><a href="truth_and_us.html"><span class="page-name">truth_and_us.html</span><span class="page-desc">Truth in human relationships</span></a></li>
+                <li><a href="truth_seekers_cree.html"><span class="page-name">truth_seekers_cree.html</span><span class="page-desc">Steelmanning practice specification</span></a></li>
+                <li><a href="the_steelman_way.html"><span class="page-name">the_steelman_way.html</span><span class="page-desc">Bye strawmen: the steelman guide</span></a></li>
+                <li><a href="how_to_realize_real_lies.html"><span class="page-name">how_to_realize_real_lies.html</span><span class="page-desc">Curiosity as diagnostic</span></a></li>
+                <li><a href="why_i_hate_lies.html"><span class="page-name">why_i_hate_lies.html</span><span class="page-desc">Why I Hate Lies</span></a></li>
+                <li><a href="high_power_influence.html"><span class="page-name">high_power_influence.html</span><span class="page-desc">High-Power Aperture Protocol</span></a></li>
+            </ul>
+        </section>
+
+        <section class="section healing">
+            <h2>Personal Healing</h2>
+            <ul>
+                <li><a href="love_harmonics_ebook%20(6).html"><span class="page-name">love_harmonics_ebook.html</span><span class="page-desc">Resonance Between Souls ebook</span></a></li>
+                <li><a href="love_channels.html"><span class="page-name">love_channels.html</span><span class="page-desc">The Two Channels of Love</span></a></li>
+                <li><a href="love_kungfu.html"><span class="page-name">love_kungfu.html</span><span class="page-desc">Love Kung Fu</span></a></li>
+                <li><a href="UNDERSTANDING_NARCISSISTIC_ABUSE.html"><span class="page-name">UNDERSTANDING_NARCISSISTIC_ABUSE.html</span><span class="page-desc">Understanding narcissistic abuse</span></a></li>
+                <li><a href="circumpunct_narcissism.html"><span class="page-name">circumpunct_narcissism.html</span><span class="page-desc">Complete research framework for narcissism</span></a></li>
+                <li><a href="circumpunct_theory_of_pathology.html"><span class="page-name">circumpunct_theory_of_pathology.html</span><span class="page-desc">Theory of pathology</span></a></li>
+                <li><a href="stratigraphy_of_belief.html"><span class="page-name">stratigraphy_of_belief.html</span><span class="page-desc">How lies corrupt function at different depths</span></a></li>
+                <li><a href="etiology_of_installation.html"><span class="page-name">etiology_of_installation.html</span><span class="page-desc">How survival lies become structural corruption</span></a></li>
+                <li><a href="the_restoration_protocol.html"><span class="page-name">the_restoration_protocol.html</span><span class="page-desc">Treatment for narcissistic distortion</span></a></li>
+                <li><a href="rephase_meditation.html"><span class="page-name">rephase_meditation.html</span><span class="page-desc">Cancer Rephase Meditation</span></a></li>
+            </ul>
+        </section>
+
+        <section class="section philosophical">
+            <h2>Philosophical Explorations</h2>
+            <ul>
+                <li><a href="belief_theory.html"><span class="page-name">belief_theory.html</span><span class="page-desc">Fractal Reality Belief Theory</span></a></li>
+                <li><a href="demon_hunter.html"><span class="page-name">demon_hunter.html</span><span class="page-desc">What Rumi Taught Us: seeing clearly</span></a></li>
+                <li><a href="the_demon_hunter_trap.html"><span class="page-name">the_demon_hunter_trap.html</span><span class="page-desc">The trap of demon hunting</span></a></li>
+                <li><a href="jedi.html"><span class="page-name">jedi.html</span><span class="page-desc">Jedi Master Manual: aperture training</span></a></li>
+                <li><a href="the_matrix_has_you.html"><span class="page-name">the_matrix_has_you.html</span><span class="page-desc">The Matrix Has You</span></a></li>
+                <li><a href="noble_lie_virus_outbreak.html"><span class="page-name">noble_lie_virus_outbreak.html</span><span class="page-desc">Psychological infection alert</span></a></li>
+                <li><a href="lie_trap.html"><span class="page-name">lie_trap.html</span><span class="page-desc">How lies trap consciousness</span></a></li>
+                <li><a href="i_believed_a_lie.html"><span class="page-name">i_believed_a_lie.html</span><span class="page-desc">Personal reflection on deception</span></a></li>
+                <li><a href="I_cant_say.html"><span class="page-name">I_cant_say.html</span><span class="page-desc">The unspeakable in language</span></a></li>
+                <li><a href="everybody_picks_their_nose.html"><span class="page-name">everybody_picks_their_nose.html</span><span class="page-desc">Universal human behaviors</span></a></li>
+                <li><a href="city_of_resonance.html"><span class="page-name">city_of_resonance.html</span><span class="page-desc">City of Resonance</span></a></li>
+            </ul>
+        </section>
+
+        <section class="section tools">
+            <h2>Tools & Games</h2>
+            <ul>
+                <li><a href="chess.html"><span class="page-name">chess.html</span><span class="page-desc">Pokemon Chess</span></a></li>
+                <li><a href="checkers.html"><span class="page-name">checkers.html</span><span class="page-desc">Pokemon Checkers</span></a></li>
+                <li><a href="pokemon-battle-helper.html"><span class="page-name">pokemon-battle-helper.html</span><span class="page-desc">Pokemon GO Battle Helper</span></a></li>
+                <li><a href="pokemon-battler.html"><span class="page-name">pokemon-battler.html</span><span class="page-desc">Pokemon battle simulator</span></a></li>
+                <li><a href="my_randomizer.html"><span class="page-name">my_randomizer.html</span><span class="page-desc">My Randomizer</span></a></li>
+                <li><a href="simulators.html"><span class="page-name">simulators.html</span><span class="page-desc">Interactive demonstrations</span></a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p><a href="index.html">fractalreality.ca</a> — The Circumpunct Theory</p>
+    </footer>
+</body>
+</html>

@@ -31,6 +31,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**circumpunct_dimensions.html**](https://fractalreality.ca/circumpunct_dimensions.html) — Dimensional analysis tool
 - [**circumpunct_encyclopedia.html**](https://fractalreality.ca/circumpunct_encyclopedia.html) — The Circumpunct Encyclopedia v2.0: complete formalized reference
 - [**circumpunct_isomorphism.html**](https://fractalreality.ca/circumpunct_isomorphism.html) — The Isomorphism of the Circumpunct: structural invariance across all domains
+- [**human.html**](https://fractalreality.ca/human.html) — The Human Circumpunct: you are ⊙
 
 ### 64-State Architecture
 
@@ -131,6 +132,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**reality_manipulation_sandbox.html**](https://fractalreality.ca/reality_manipulation_sandbox.html) — Reality manipulation concepts
 - [**city_of_resonance.html**](https://fractalreality.ca/city_of_resonance.html) — City of Resonance
 - [**varpet_tribute.html**](https://fractalreality.ca/varpet_tribute.html) — Tribute page
+- [**belief_theory.html**](https://fractalreality.ca/belief_theory.html) — Fractal Reality Belief Theory
 
 ---
 
