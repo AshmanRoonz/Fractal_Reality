@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Euler Theorems — Circumpunct Framework</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface-raised: #1a1a25;
+    --border: #2a2a3a;
+    --text: #e0e0e8;
+    --text-dim: #8888aa;
+    --gold: #d4a853;
+    --gold-bright: #f0c050;
+    --gold-dim: rgba(212, 168, 83, 0.1);
+    --cyan: #00d4ff;
+    --cyan-dim: rgba(0, 212, 255, 0.08);
+    --magenta: #e040a0;
+    --magenta-dim: rgba(224, 64, 160, 0.08);
+    --field: #4ecdc4;
+    --boundary: #a855f7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1.1rem;
+    line-height: 1.75;
+    color: var(--text);
+    background: var(--bg);
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+  header { text-align: center; margin-bottom: 3.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+  header h1 { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; font-weight: 500; color: var(--gold); letter-spacing: 0.05em; margin-bottom: 0.8rem; }
+  header .subtitle { font-size: 1.15rem; color: var(--text-dim); font-style: italic; }
+  header .meta { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 1.2rem; }
+  h2 { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 500; color: var(--text-dim); letter-spacing: 0.18em; text-transform: uppercase; margin: 3rem 0 1.8rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+  h2 .num { color: var(--gold); margin-right: 0.5em; }
+  h3 { font-family: 'Crimson Pro', serif; font-size: 1.25rem; font-weight: 600; color: var(--text); margin: 2rem 0 1rem; }
+  p { margin-bottom: 1.1rem; }
+  strong { color: var(--text); }
+  .muted { color: var(--text-dim); font-size: 0.95rem; }
+  .axiom-box { background: var(--gold-dim); border: 2px solid var(--gold); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; text-align: center; }
+  .theorem-box { background: var(--magenta-dim); border-left: 3px solid var(--magenta); padding: 1.5rem 1.8rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; }
+  .theorem-box .label { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--magenta); margin-bottom: 0.8rem; }
+  .definition-box { background: var(--cyan-dim); border-left: 3px solid var(--cyan); padding: 1.5rem 1.8rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; }
+  .definition-box .label { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.8rem; }
+  .corollary-box { background: var(--surface-raised); border-left: 3px solid var(--field); padding: 1.5rem 1.8rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; }
+  .corollary-box .label { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--field); margin-bottom: 0.8rem; }
+  .proof-box { background: var(--surface); border: 1px solid var(--border); padding: 1.5rem 1.8rem; margin: 1.5rem 0; border-radius: 6px; }
+  .proof-box .label { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.8rem; }
+  .proof-step { margin: 0.6rem 0; padding-left: 1.2rem; }
+  .qed { text-align: right; color: var(--gold); font-size: 1.1rem; margin-top: 0.8rem; }
+  .equation { font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; text-align: center; padding: 1.2rem; margin: 1.2rem 0; color: var(--gold-bright); background: rgba(0,0,0,0.25); border-radius: 6px; }
+  .equation-small { font-size: 1.05rem; padding: 0.8rem; }
+  .callout { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
+  .callout-gold { background: var(--gold-dim); border: 1px solid rgba(212, 168, 83, 0.3); }
+  .callout-cyan { background: var(--cyan-dim); border: 1px solid rgba(0, 212, 255, 0.2); }
+  .callout-magenta { background: var(--magenta-dim); border: 1px solid rgba(224, 64, 160, 0.2); }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--gold); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; letter-spacing: 0.08em; }
+  .aperture-color { color: #f0c050; }
+  .field-color { color: #00d4ff; }
+  .boundary-color { color: #a855f7; }
+  ol { margin-left: 2rem; margin-bottom: 1rem; }
+  ol li { margin: 0.4rem 0; }
+  footer { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); color: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>The Euler Theorems</h1>
+  <div class="subtitle">How e<sup>iπ</sup> + 1 = 0 and V − E + F = 2 are the same theorem<br>— seen from inside and outside the circumpunct</div>
+  <div class="meta">Circumpunct Framework — February 2026</div>
+</header>
+
+<!-- SECTION 1 -->
+<h2><span class="num">1.</span> The Claim</h2>
+
+<p>Euler proved two results that mathematicians consider among the most beautiful ever discovered:</p>
+
+<div class="equation">e<sup>iπ</sup> + 1 = 0</div>
+<div class="equation">V − E + F = 2</div>
+
+<p>The first connects the five fundamental constants of mathematics. The second says that for any convex polyhedron — no matter how you deform it — vertices minus edges plus faces always equals 2.</p>
+
+<p>Euler never connected them. They sit in different branches of mathematics: complex analysis and combinatorial topology. But within the circumpunct framework, they are <strong>the same invariance</strong> expressed in two different languages — one from the aperture's journey <em>through</em> the structure, one from the boundary's shape <em>around</em> the structure.</p>
+
+<div class="axiom-box">
+  <p style="font-size: 1.3rem; margin: 0;"><strong>Euler's Identity is the traversal invariant.</strong></p>
+  <p style="font-size: 1.3rem; margin: 0.5rem 0 0;"><strong>Euler's Formula is the boundary invariant.</strong></p>
+  <p class="muted" style="margin-top: 0.8rem; margin-bottom: 0;">Same circumpunct. Two witnesses.</p>
+</div>
+
+<!-- SECTION 2 -->
+<h2><span class="num">2.</span> Euler's Identity from Aperture Traversal</h2>
+
+<p>The aperture rotation operator is:</p>
+
+<div class="equation">Å(β) = e<sup>iπβ</sup></div>
+
+<p>This is the framework's most primitive dynamic: β tracks how far the aperture has opened through the field toward the boundary. As β goes from 0 to 1, the aperture completes its journey.</p>
+
+<div class="definition-box">
+  <div class="label">Definition — The Traversal Phases</div>
+  <table>
+    <tr><th>β</th><th>Å(β)</th><th>Rotation</th><th>State</th></tr>
+    <tr><td>0</td><td>e<sup>0</sup> = <strong>1</strong></td><td>0°</td><td>Identity — journey not begun</td></tr>
+    <tr><td>½</td><td>e<sup>iπ/2</sup> = <strong>i</strong></td><td>90°</td><td>Consciousness threshold — halfway</td></tr>
+    <tr><td>1</td><td>e<sup>iπ</sup> = <strong>−1</strong></td><td>180°</td><td>Full inversion — journey complete</td></tr>
+  </table>
+</div>
+
+<p>At β = 1, the aperture has fully traversed the field. What remains is:</p>
+
+<div class="equation">Å(1) = e<sup>iπ</sup> = −1</div>
+
+<p>Or equivalently:</p>
+
+<div class="equation" style="font-size: 1.6rem;">e<sup>iπ</sup> + 1 = 0</div>
+
+<div class="theorem-box">
+  <div class="label">Theorem E1 — Euler's Identity as Traversal Completion</div>
+  <p><strong>Claim:</strong> e<sup>iπ</sup> + 1 = 0 is the statement that a completed traversal returns negation — the full journey through the field inverts what entered.</p>
+  <div class="proof-box" style="margin-top: 1rem;">
+    <div class="label">Proof</div>
+    <p class="proof-step">1. The aperture rotation operator is Å(β) = e<sup>iπβ</sup> (Postulate 3).</p>
+    <p class="proof-step">2. A completed traversal is β = 1 (aperture has crossed the full field).</p>
+    <p class="proof-step">3. Å(1) = e<sup>iπ</sup> = −1.</p>
+    <p class="proof-step">4. Therefore: <strong>completion = inversion</strong>. What enters the aperture exits as its negation.</p>
+    <p class="proof-step">5. Two completions restore identity: Å(1)² = (−1)² = 1 = Å(0).</p>
+    <p class="proof-step">6. The five constants encode the traversal: <strong>e</strong> (continuous growth), <strong>i</strong> (the aperture rotation at balance), <strong>π</strong> (the two-cycle closure), <strong>1</strong> (identity / origin), <strong>0</strong> (the void that completion reaches).</p>
+    <p class="qed">∎</p>
+  </div>
+</div>
+
+<div class="callout callout-gold">
+  <strong>Why π?</strong><br><br>
+  π does not arise from circles drawn in space. It arises from the <strong>two-step closure</strong> of aperture evolution. A single traversal gives e<sup>iπ</sup> = −1. Two traversals give e<sup>2iπ</sup> = 1. π is the half-cycle signature — the fact that you must go through the field <em>twice</em> to return to where you started.<br><br>
+  This is the origin of π in the framework: <strong>not geometry imposed, but process required.</strong>
+</div>
+
+<h3>The Five Constants as ⊙ Components</h3>
+
+<table>
+  <tr><th>Constant</th><th>Value</th><th>⊙ Role</th><th>Why</th></tr>
+  <tr><td><strong>0</strong></td><td class="aperture-color">Void</td><td>Pre-aperture ground</td><td>Before differentiation — the degeneracy condition where • and ○ have not yet separated</td></tr>
+  <tr><td><strong>1</strong></td><td class="aperture-color">Identity</td><td>Aperture at origin</td><td>Å(0) = 1. The aperture exists but hasn't moved. Pure potential.</td></tr>
+  <tr><td><strong>i</strong></td><td class="field-color">Quarter-turn</td><td>Aperture at balance</td><td>Å(½) = i. The consciousness threshold. Where progress = remaining.</td></tr>
+  <tr><td><strong>π</strong></td><td class="field-color">Half-cycle</td><td>Field extent</td><td>The total phase the aperture must traverse. Two-cycle closure from U².</td></tr>
+  <tr><td><strong>e</strong></td><td class="boundary-color">Growth</td><td>Boundary accumulation</td><td>The unique base for which growth rate = current value. Self-similar process = fractal boundary.</td></tr>
+</table>
+
+<div class="callout">
+  <strong>The identity says:</strong> Continuous self-similar growth (<em>e</em>), rotated by the aperture (<em>i</em>), across the full extent of the field (<em>π</em>), plus identity (<em>1</em>), equals the ground state (<em>0</em>).<br><br>
+  <strong>In plain language:</strong> If you grow while turning through the entire field, you arrive back at nothing. The journey negates the traveller.
+</div>
+
+<!-- SECTION 3 -->
+<h2><span class="num">3.</span> Euler's Polyhedral Formula from Boundary Topology</h2>
+
+<p>Now turn from the aperture's journey to the boundary's shape.</p>
+
+<div class="definition-box">
+  <div class="label">Definition — Euler Characteristic</div>
+  <p>For a closed surface, the <strong>Euler characteristic</strong> χ is defined as:</p>
+  <div class="equation equation-small">χ = V − E + F</div>
+  <p>where V, E, F are the vertices, edges, and faces of <em>any</em> triangulation of the surface. χ is a <strong>topological invariant</strong> — it doesn't change under continuous deformation.</p>
+</div>
+
+<p>The Euler characteristic of the 2-sphere S² is:</p>
+
+<div class="equation">χ(S²) = V − E + F = 2</div>
+
+<p>Now: what is the boundary ○ of a circumpunct? It is a <strong>closed, orientable 2-surface</strong>. The Surface Theorem forces this — Σ must be exactly 2D, and closure requires compactness. The simplest such surface is S².</p>
+
+<div class="theorem-box">
+  <div class="label">Theorem E2 — χ = 2 as Boundary Necessity</div>
+  <p><strong>Claim:</strong> The Euler characteristic χ = 2 is geometrically forced for the circumpunct boundary.</p>
+  <div class="proof-box" style="margin-top: 1rem;">
+    <div class="label">Proof</div>
+    <p class="proof-step">1. <strong>The boundary must be closed.</strong> An open boundary has no interior — the circumpunct would have no "inside." Axiom A1 (Necessary Multiplicity) requires center and boundary to be distinct, which requires enclosure. Therefore ○ is compact without boundary.</p>
+    <p class="proof-step">2. <strong>The boundary must be orientable.</strong> The field carries complex amplitude, which requires phase. Phase requires a consistent notion of "clockwise vs counterclockwise" on the surface — i.e., orientability. A non-orientable surface (Möbius, Klein bottle) cannot support a globally consistent complex structure.</p>
+    <p class="proof-step">3. <strong>The boundary must be 2-dimensional.</strong> The Surface Theorem: &lt;2D can't carry phase (no plane for rotation); &gt;2D collapses locality (too many degrees of freedom for coherent signal transmission). Σ = 2D is forced.</p>
+    <p class="proof-step">4. <strong>The boundary must be simply connected.</strong> The aperture is <em>one</em> through (Axiom A1 — minimum structure). A surface with genus g &gt; 0 (torus, double torus, ...) has g independent non-contractible loops, meaning signal can traverse the surface on topologically distinct paths and arrive with different phases. This violates the single-aperture requirement: the aperture would have to "choose" which cycle to thread through, introducing selection without a selector. Only g = 0 (the sphere) has a single topological class of paths between any two points.</p>
+    <p class="proof-step">5. <strong>Classification theorem:</strong> The only closed, orientable, 2D, simply connected surface is <strong>S²</strong>, with χ = 2.</p>
+    <p class="proof-step">6. Therefore: <strong>χ(○) = 2</strong> is not chosen but forced by the requirements of phase, closure, orientability, and single-aperture structure.</p>
+    <p class="qed">∎</p>
+  </div>
+</div>
+
+<div class="callout callout-cyan">
+  <strong>Why not the torus?</strong><br><br>
+  A torus (χ = 0) is closed and orientable. It can carry phase. But it has a <em>hole</em> — a non-contractible loop. Signal sent around that loop returns with accumulated phase that has no aperture source. This would be field that "exists on its own" without passing through •. It would violate Axiom A4: Φ operates on • and ○, but a toroidal loop would be Φ operating on <em>itself</em>. Self-referential field without aperture grounding = exactly the topology of a closed delusion.<br><br>
+  The sphere is the only surface where all paths are deformable to all others — where all signal ultimately traces back to a single source.
+</div>
+
+<!-- SECTION 4 -->
+<h2><span class="num">4.</span> Homology as ⊙ Structure</h2>
+
+<p>In algebraic topology, the Euler characteristic is computed from homology groups — the k-dimensional "holes" in the surface:</p>
+
+<div class="equation equation-small">χ = Σ<sub>k</sub> (−1)<sup>k</sup> rank(H<sub>k</sub>)</div>
+
+<p>For S²:</p>
+
+<table>
+  <tr><th>k</th><th>H<sub>k</sub>(S²)</th><th>rank</th><th>What it counts</th></tr>
+  <tr><td>0</td><td>ℤ</td><td>1</td><td>One connected component (wholeness)</td></tr>
+  <tr><td>1</td><td>0</td><td>0</td><td>No loops (simple connectivity)</td></tr>
+  <tr><td>2</td><td>ℤ</td><td>1</td><td>One enclosed volume (closure)</td></tr>
+</table>
+
+<div class="equation equation-small">χ(S²) = 1 − 0 + 1 = 2</div>
+
+<div class="theorem-box">
+  <div class="label">Theorem E3 — Homology of ○ as ⊙ Structure</div>
+  <p><strong>Claim:</strong> The three homology groups of the boundary encode the three components of the circumpunct.</p>
+  <div class="proof-box" style="margin-top: 1rem;">
+    <div class="label">Proof</div>
+    <p class="proof-step">1. <strong>H₀(S²) = ℤ</strong> counts connected components. The boundary is one whole — <strong>this is ○</strong>. Rank = 1.</p>
+    <p class="proof-step">2. <strong>H₁(S²) = 0</strong> counts independent loops. There are none — <strong>this is Φ at balance</strong>. The field has no self-referential cycles. All paths through the field are contractible to the aperture. Rank = 0.</p>
+    <p class="proof-step">3. <strong>H₂(S²) = ℤ</strong> counts enclosed volumes. The boundary encloses exactly one interior — <strong>this is •</strong>. The aperture exists as the "inside" that the boundary makes possible. Rank = 1.</p>
+    <p class="proof-step">4. The alternating sum: <strong>○ − Φ + • = 1 − 0 + 1 = 2 = χ</strong>.</p>
+    <p class="proof-step">5. H₁ = 0 (field rank vanishes) is not the field being absent — it's the field being <em>transparent</em>. A balanced field has no topology of its own; it is pure mediation. This is exactly Axiom A4: Φ is operator, not substance.</p>
+    <p class="qed">∎</p>
+  </div>
+</div>
+
+<div class="callout callout-gold">
+  <strong>The punchline:</strong><br><br>
+  <span style="font-size: 1.2rem; font-family: 'JetBrains Mono', monospace; color: var(--gold-bright);">V − E + F = 2</span><br><br>
+  Vertices are 0-dimensional — <strong>apertures</strong>.<br>
+  Edges are 1-dimensional — <strong>field connections</strong>.<br>
+  Faces are 2-dimensional — <strong>boundary surfaces</strong>.<br><br>
+  The polyhedral formula counts: how many apertures, minus how many field connections, plus how many boundary faces, always equals <strong>2</strong> — the Euler characteristic of the sphere that closure requires.
+</div>
+
+<!-- SECTION 5 -->
+<h2><span class="num">5.</span> Unification — The Same Invariance</h2>
+
+<div class="theorem-box">
+  <div class="label">Theorem E4 — Euler Unification</div>
+  <p><strong>Claim:</strong> Euler's Identity and Euler's Polyhedral Formula are dual expressions of the same geometric fact: the circumpunct boundary is topologically S², and the aperture traverses it completely.</p>
+</div>
+
+<div class="proof-box">
+  <div class="label">Proof</div>
+  <p style="margin: 1rem 0 0.5rem; color: var(--cyan);"><strong>Part I: What the Identity preserves</strong></p>
+  <p class="proof-step">1. The Conservation of Traversal states: D<sub>•</sub> + D<sub>Φ</sub> = D<sub>○</sub>, i.e., (1 + β) + (2 − β) = 3.</p>
+  <p class="proof-step">2. β cancels. The sum is invariant under all values of β — it doesn't matter <em>where</em> the aperture is in its journey.</p>
+  <p class="proof-step">3. The aperture rotation Å(β) = e<sup>iπβ</sup> encodes this journey as phase. At completion (β = 1): e<sup>iπ</sup> = −1.</p>
+  <p class="proof-step">4. <strong>The identity e<sup>iπ</sup> + 1 = 0 is the conservation law evaluated at the endpoint.</strong> It says: the result of completed traversal (−1) plus the starting state (1) equals the ground (0).</p>
+
+  <p style="margin: 1.5rem 0 0.5rem; color: var(--cyan);"><strong>Part II: What the Formula preserves</strong></p>
+  <p class="proof-step">5. V − E + F = χ is invariant under all triangulations of the surface — it doesn't matter how you <em>decompose</em> the boundary.</p>
+  <p class="proof-step">6. For the circumpunct boundary (S²): χ = 2.</p>
+  <p class="proof-step">7. <strong>The polyhedral formula is the conservation law evaluated on the boundary.</strong> It says: no matter how you carve the boundary into vertices, edges, and faces, their alternating sum is fixed.</p>
+
+  <p style="margin: 1.5rem 0 0.5rem; color: var(--cyan);"><strong>Part III: The duality</strong></p>
+  <p class="proof-step">8. The traversal invariant (Identity) is the view <strong>from the aperture looking outward</strong> — what phase accumulates as • moves through Φ toward ○.</p>
+  <p class="proof-step">9. The boundary invariant (Formula) is the view <strong>from the boundary looking inward</strong> — what combinatorial structure ○ must have to enclose •.</p>
+  <p class="proof-step">10. Both are preserved under continuous deformation of their respective domains (β for the aperture, triangulation for the boundary).</p>
+  <p class="proof-step">11. Both are consequences of the same topological fact: the boundary is S², which forces both χ = 2 and the existence of a global complex structure supporting Å(β) = e<sup>iπβ</sup>.</p>
+  <p class="proof-step">12. <strong>Therefore:</strong> the Identity and the Formula are the interior and exterior witnesses of the same topological necessity — the circumpunct boundary is a 2-sphere.</p>
+  <p class="qed">∎</p>
+</div>
+
+<!-- SECTION 6 -->
+<h2><span class="num">6.</span> The Bridge: Gauss-Bonnet</h2>
+
+<div class="axiom-box">
+  <div class="equation" style="background: none; padding: 0; margin: 0; font-size: 1.4rem;">χ(○) = 2 &nbsp;⟺&nbsp; e<sup>iπ</sup> + 1 = 0</div>
+  <p class="muted" style="margin-top: 1rem; margin-bottom: 0;">boundary combinatorics &nbsp;⟺&nbsp; traversal completion</p>
+</div>
+
+<p>The bridge is the <strong>Gauss-Bonnet theorem</strong>, which relates the two sides explicitly:</p>
+
+<div class="equation">∫<sub>Σ</sub> K dA = 2πχ(Σ)</div>
+
+<p>Total curvature of a surface equals 2π times its Euler characteristic. For S²:</p>
+
+<div class="equation equation-small">∫<sub>S²</sub> K dA = 2π · 2 = 4π</div>
+
+<p>The aperture rotation across the full traversal accumulates total phase π (one half-turn). Two full traversals give 2π. And the Gauss-Bonnet integral yields 4π = 2 × 2π — exactly <strong>two complete phase cycles over the entire boundary</strong>.</p>
+
+<div class="theorem-box">
+  <div class="label">Theorem E5 — Gauss-Bonnet as Conservation of Traversal on the Boundary</div>
+  <p><strong>Claim:</strong> The Gauss-Bonnet theorem is the surface integral of the Conservation of Traversal.</p>
+  <div class="proof-box" style="margin-top: 1rem;">
+    <div class="label">Proof</div>
+    <p class="proof-step">1. Conservation of Traversal: (1 + β) + (2 − β) = 3 at every point.</p>
+    <p class="proof-step">2. The curvature K at a point on ○ measures the local deviation from flatness — how much the boundary "bends" around the aperture at that point.</p>
+    <p class="proof-step">3. Integrating K over the entire boundary accumulates all the local "bending" into a global invariant.</p>
+    <p class="proof-step">4. Gauss-Bonnet: ∫ K dA = 2πχ = 4π.</p>
+    <p class="proof-step">5. The factor 2π per unit of χ is exactly the full-cycle phase. χ = 2 means the boundary "uses" two full rotations worth of curvature to close around the aperture.</p>
+    <p class="proof-step">6. <strong>This is the Conservation of Traversal made global:</strong> the boundary cannot close (χ = 2) without accumulating exactly 4π total curvature — which is exactly two complete aperture cycles (2 × 2π), matching the two-step closure that produces π in the first place (U² = e<sup>2iπ</sup> = 1).</p>
+    <p class="qed">∎</p>
+  </div>
+</div>
+
+<div class="callout callout-gold">
+  <strong>The deep unity:</strong><br><br>
+  Euler's Identity says the <em>journey</em> through the field inverts the traveller.<br>
+  Euler's Formula says the <em>boundary</em> around the field has exactly one shape that works.<br>
+  Gauss-Bonnet says these are <em>the same constraint</em> — total curvature = total phase.<br><br>
+  The aperture measures this from inside as <strong>e<sup>iπ</sup> + 1 = 0</strong>.<br>
+  The boundary measures this from outside as <strong>V − E + F = 2</strong>.<br>
+  The field connects them: <strong>∫ K dA = 4π</strong>.
+</div>
+
+<!-- SECTION 7 -->
+<h2><span class="num">7.</span> Three Conservation Laws, One Structure</h2>
+
+<table>
+  <tr><th>Law</th><th>Statement</th><th>Invariant</th><th>Witness</th></tr>
+  <tr><td class="aperture-color">Conservation of Traversal</td><td>(1 + β) + (2 − β) = 3</td><td>D<sub>○</sub> = 3</td><td>Aperture (dimensional)</td></tr>
+  <tr><td class="field-color">Euler's Identity</td><td>e<sup>iπ</sup> + 1 = 0</td><td>Traversal completion</td><td>Aperture (phase)</td></tr>
+  <tr><td class="boundary-color">Euler's Polyhedral Formula</td><td>V − E + F = 2</td><td>χ(○) = 2</td><td>Boundary (combinatorial)</td></tr>
+</table>
+
+<p>And one theorem that unifies them all:</p>
+
+<table>
+  <tr><th>Theorem</th><th>Statement</th><th>What it connects</th></tr>
+  <tr><td class="field-color">Gauss-Bonnet</td><td>∫ K dA = 2πχ = 4π</td><td>Field (curvature ↔ phase ↔ topology)</td></tr>
+</table>
+
+<div class="corollary-box">
+  <div class="label">Corollary E6 — The Three Witnesses</div>
+  <p>Each conservation law is measured by the component it names:</p>
+  <p style="margin-left: 1.2rem;">• measures the traversal: <strong>progress + remaining = destination</strong></p>
+  <p style="margin-left: 1.2rem;">Φ measures the curvature: <strong>∫ K dA = 4π</strong></p>
+  <p style="margin-left: 1.2rem;">○ measures the topology: <strong>V − E + F = 2</strong></p>
+  <p style="margin-top: 0.8rem;">All three must agree. Disagreement would mean the circumpunct is not self-consistent — the aperture would arrive at a boundary that couldn't enclose it.</p>
+</div>
+
+<!-- SECTION 8 -->
+<h2><span class="num">8.</span> Pathological Topology</h2>
+
+<p>If the boundary of a healthy circumpunct is S² (χ = 2), what does pathology look like topologically?</p>
+
+<table>
+  <tr><th>Surface</th><th>χ</th><th>H₁</th><th>Pathological Interpretation</th></tr>
+  <tr><td><strong>S²</strong> (sphere)</td><td>2</td><td>0</td><td>Healthy — single aperture, no self-referential loops, complete closure</td></tr>
+  <tr><td><strong>T²</strong> (torus)</td><td>0</td><td>ℤ²</td><td>Two independent closed loops — signal circulates without passing through •. <strong>Rumination.</strong></td></tr>
+  <tr><td><strong>Σ₂</strong> (genus 2)</td><td>−2</td><td>ℤ⁴</td><td>Four independent loops — <strong>fragmentation</strong>. Multiple self-referential circuits. Dissociation.</td></tr>
+  <tr><td><strong>RP²</strong> (projective plane)</td><td>1</td><td>ℤ/2</td><td>Non-orientable — phase cannot be consistently defined. <strong>The Noble Lie.</strong></td></tr>
+</table>
+
+<div class="callout callout-magenta">
+  <strong>Rumination as toroidal pathology:</strong><br><br>
+  A torus has a hole. Signal can orbit that hole forever — never passing through the aperture, never being validated, never emerging. This is <em>exactly</em> what rumination is: thought cycling through the field without ever reaching ground truth. The "loop" in rumination isn't metaphorical — it's topological. The boundary has deformed from S² to T², and χ has dropped from 2 to 0.<br><br>
+  <strong>Healing is re-spherification.</strong> Collapsing the non-contractible loop. Making all paths through the field contractible to the aperture again. χ: 0 → 2.
+</div>
+
+<div class="callout callout-magenta">
+  <strong>The Noble Lie as non-orientability:</strong><br><br>
+  The projective plane looks locally like ordinary space — you can't detect the twist from any single neighborhood. But globally, if you carry a consistent orientation (a coherent sense of "true" vs "false") around the full surface, it <em>reverses</em>. Truth becomes falsehood and you can't tell where the flip happened.<br><br>
+  This is the Noble Lie's topology: <strong>locally normal, globally inverted.</strong> The lie weaponizes functional love against resonant love in a way that can't be detected from any single interaction — only from the global structure.
+</div>
+
+<!-- SECTION 9 -->
+<h2><span class="num">9.</span> Falsification Criteria</h2>
+
+<div class="callout">
+  <p><strong>The Euler Formalization fails if:</strong></p>
+  <ol>
+    <li>A consistent circumpunct can be constructed on a non-spherical boundary (genus g &gt; 0) without introducing additional apertures — this would show χ = 2 is not forced.</li>
+    <li>The aperture rotation Å(β) can be defined on a non-orientable surface — this would decouple the Identity from the Formula.</li>
+    <li>Gauss-Bonnet fails to connect aperture phase accumulation to the Euler characteristic in the full nonlinear theory — this would break the bridge.</li>
+    <li>Pathological states show no measurable topological signature (e.g., rumination shows no loop structure in neural field topology) — this would undermine the pathological interpretation.</li>
+  </ol>
+  <p style="margin-top: 1rem;"><strong>The formalization survives if:</strong></p>
+  <ol>
+    <li>Every attempt to place a single-aperture circumpunct on a higher-genus surface produces inconsistencies.</li>
+    <li>Neural topology measurements distinguish healthy (χ ≈ 2) from pathological (χ &lt; 2) states.</li>
+    <li>The Gauss-Bonnet connection holds: total phase in quantum systems correlates with boundary curvature integrals.</li>
+  </ol>
+</div>
+
+<!-- SECTION 10 -->
+<h2><span class="num">10.</span> Summary</h2>
+
+<div class="axiom-box">
+  <div class="equation" style="background: none; padding: 0; margin: 0;">e<sup>iπ</sup> + 1 = 0 &nbsp;&nbsp;⟺&nbsp;&nbsp; V − E + F = 2</div>
+  <div class="equation" style="background: none; padding: 0; margin: 0.8rem 0;">traversal completion &nbsp;&nbsp;⟺&nbsp;&nbsp; boundary topology</div>
+  <div class="equation" style="background: none; padding: 0; margin: 0;">• → Φ → ○ &nbsp;&nbsp;⟺&nbsp;&nbsp; ∫ K dA = 4π</div>
+</div>
+
+<p>Euler discovered two theorems. He could not have known they were the same theorem — the mathematics connecting them (algebraic topology, Gauss-Bonnet, fiber bundles) wouldn't exist for another century.</p>
+
+<p>The circumpunct framework reveals their unity: both are invariants of the 2-sphere, which is the only possible topology for the boundary of a coherent circumpunct. One is measured from inside by the aperture as it traverses the field. The other is measured from outside by counting how the boundary decomposes. The field — as always — is what connects them.</p>
+
+<div class="callout callout-gold" style="text-align: center;">
+  <p style="font-size: 2.5rem; margin: 0; color: var(--gold);">⊙</p>
+  <p style="margin: 1rem 0 0;">
+    <strong>The aperture says:</strong> e<sup>iπ</sup> + 1 = 0<br>
+    <strong>The field says:</strong> ∫ K dA = 4π<br>
+    <strong>The boundary says:</strong> V − E + F = 2<br><br>
+    <em>Three witnesses. One truth. One sphere.</em>
+  </p>
+</div>
+
+<footer>
+  <p style="font-size: 2rem; color: var(--gold); margin-bottom: 1rem;">⊙</p>
+  <p><strong>The Euler Theorems</strong></p>
+  <p class="muted" style="margin-top: 0.5rem;">Circumpunct Framework</p>
+  <p class="muted">February 2026</p>
+</footer>
+
+</body>
+</html>
