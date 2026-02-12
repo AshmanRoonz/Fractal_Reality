@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ — The Human Circumpunct</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #08080e;
+    color: #d8d8e4;
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  header {
+    text-align: center;
+    padding: 2.5rem 1rem 0.8rem;
+  }
+
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 2.4rem;
+    letter-spacing: 0.08em;
+    color: #f0f0f8;
+  }
+
+  header .sub {
+    font-size: 0.8rem;
+    color: #9898b0;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+  }
+
+  .vis-container {
+    position: relative;
+    width: 96vmin;
+    height: 96vmin;
+    max-width: 840px;
+    max-height: 840px;
+    margin: 0.5rem auto;
+    flex-shrink: 0;
+  }
+
+  svg.circumpunct {
+    width: 100%;
+    height: 100%;
+  }
+
+  @keyframes pulse {
+    0%, 100% { r: 6; }
+    50% { r: 8; }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% { r: 20; opacity: 0.3; }
+    50% { r: 28; opacity: 0.15; }
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.12; }
+    50% { opacity: 0.28; }
+  }
+
+  .center-dot { animation: pulse 3.5s ease-in-out infinite; }
+  .center-glow { animation: glow-pulse 3.5s ease-in-out infinite; }
+  .fade-ring { animation: breathe 4s ease-in-out infinite; }
+
+  .ring {
+    fill: none;
+    transition: stroke-opacity 0.3s, stroke-width 0.3s;
+  }
+
+  /* Info panel */
+  .info-panel {
+    position: absolute;
+    bottom: 1.5%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(12,12,20,0.95);
+    border: 1px solid #2e2e44;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.8rem;
+    color: #c0c0d0;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(10px);
+    max-width: 460px;
+    z-index: 10;
+    line-height: 1.7;
+  }
+
+  .info-panel.visible { opacity: 1; }
+
+  .info-panel .info-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    color: #e8e8f0;
+    margin-bottom: 0.3rem;
+  }
+
+  .info-panel .info-outside { color: #e8a868; }
+  .info-panel .info-inside { color: #68b8e8; }
+
+  footer {
+    text-align: center;
+    padding: 0.5rem 1.5rem 2.5rem;
+    max-width: 560px;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: #9898b0;
+    line-height: 1.9;
+  }
+
+  footer em {
+    color: #d8d8e8;
+    font-style: normal;
+  }
+
+  footer .sym {
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #d0b880;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>The Human ⊙</h1>
+  <div class="sub">You are part and whole at every layer</div>
+</header>
+
+<div class="vis-container">
+  <svg class="circumpunct" viewBox="0 0 840 840" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#f0d080" stop-opacity="0.45"/>
+        <stop offset="100%" stop-color="#f0d080" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="bgDepth" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#10101c"/>
+        <stop offset="60%" stop-color="#0a0a12"/>
+        <stop offset="100%" stop-color="#08080e"/>
+      </radialGradient>
+    </defs>
+
+    <circle cx="420" cy="420" r="420" fill="url(#bgDepth)"/>
+
+    <!-- Radial connectors — the through -->
+    <line x1="420" y1="420" x2="420" y2="20" stroke="#4a4a6a" stroke-width="0.5" stroke-dasharray="4 8" opacity="0.12"/>
+    <line x1="420" y1="420" x2="820" y2="420" stroke="#4a4a6a" stroke-width="0.5" stroke-dasharray="4 8" opacity="0.12"/>
+    <line x1="420" y1="420" x2="420" y2="820" stroke="#4a4a6a" stroke-width="0.5" stroke-dasharray="4 8" opacity="0.12"/>
+    <line x1="420" y1="420" x2="20" y2="420" stroke="#4a4a6a" stroke-width="0.5" stroke-dasharray="4 8" opacity="0.12"/>
+    <line x1="420" y1="420" x2="703" y2="137" stroke="#4a4a6a" stroke-width="0.5" stroke-dasharray="4 8" opacity="0.09"/>
+    <line x1="420" y1="420" x2="137" y2="703" stroke="#4a4a6a" stroke-width="0.5" stroke-dasharray="4 8" opacity="0.09"/>
+    <line x1="420" y1="420" x2="703" y2="703" stroke="#4a4a6a" stroke-width="0.5" stroke-dasharray="4 8" opacity="0.09"/>
+    <line x1="420" y1="420" x2="137" y2="137" stroke="#4a4a6a" stroke-width="0.5" stroke-dasharray="4 8" opacity="0.09"/>
+
+    <!-- ═══════ OUTER FADE — world beyond you ═══════ -->
+    <circle cx="420" cy="420" r="403" class="fade-ring" stroke="#5060a0" stroke-width="0.5" opacity="0.12" style="animation-delay:0.3s;"/>
+    <circle cx="420" cy="420" r="408" class="fade-ring" stroke="#5060a0" stroke-width="0.4" opacity="0.08" style="animation-delay:0.9s;"/>
+    <circle cx="420" cy="420" r="412" class="fade-ring" stroke="#5060a0" stroke-width="0.3" opacity="0.05" style="animation-delay:1.5s;"/>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- RING 8: WORLD / RELATIONSHIPS — outermost -->
+    <!-- ═══════════════════════════════════════ -->
+    <circle cx="420" cy="420" r="390" class="ring" id="ring-world" stroke="#6878c8" stroke-width="1.2" stroke-opacity="0.45"/>
+    <!-- Left: physical -->
+    <text x="145" y="88" font-family="'Cormorant Garamond',serif" font-size="16" fill="#8898d8" text-anchor="middle" font-weight="500">Community</text>
+    <text x="145" y="105" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#7080b0" text-anchor="middle">relationships · society · ecology</text>
+    <!-- Right: experiential -->
+    <text x="695" y="88" font-family="'Cormorant Garamond',serif" font-size="16" fill="#a8b8e8" text-anchor="middle" font-weight="500" font-style="italic">Belonging</text>
+    <text x="695" y="105" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#8898c0" text-anchor="middle">love · attachment · purpose</text>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- RING 7: BEHAVIOR / EXPRESSION -->
+    <!-- ═══════════════════════════════════════ -->
+    <circle cx="420" cy="420" r="348" class="ring" id="ring-behavior" stroke="#5890b0" stroke-width="1.2" stroke-opacity="0.45"/>
+    <text x="150" y="128" font-family="'Cormorant Garamond',serif" font-size="16" fill="#78b0d0" text-anchor="middle" font-weight="500">Behavior</text>
+    <text x="150" y="145" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#6898b0" text-anchor="middle">action · speech · gesture</text>
+    <text x="690" y="128" font-family="'Cormorant Garamond',serif" font-size="16" fill="#98d0e8" text-anchor="middle" font-weight="500" font-style="italic">Intention</text>
+    <text x="690" y="145" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#78b0c8" text-anchor="middle">will · desire · motivation</text>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- RING 6: BODY / SKIN — physical boundary -->
+    <!-- ═══════════════════════════════════════ -->
+    <circle cx="420" cy="420" r="302" class="ring" id="ring-body" stroke="#50b888" stroke-width="1.4" stroke-opacity="0.55"/>
+    <text x="155" y="172" font-family="'Cormorant Garamond',serif" font-size="18" fill="#70d8a0" text-anchor="middle" font-weight="500">Body</text>
+    <text x="155" y="191" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#60b888" text-anchor="middle">skin · muscles · skeleton</text>
+    <text x="685" y="172" font-family="'Cormorant Garamond',serif" font-size="18" fill="#90f0b8" text-anchor="middle" font-weight="500" font-style="italic">Sensation</text>
+    <text x="685" y="191" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#78c898" text-anchor="middle">touch · temperature · pain · pleasure</text>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- RING 5: ORGAN SYSTEMS -->
+    <!-- ═══════════════════════════════════════ -->
+    <circle cx="420" cy="420" r="255" class="ring" id="ring-organs" stroke="#60c8a0" stroke-width="1.4" stroke-opacity="0.55"/>
+    <text x="163" y="218" font-family="'Cormorant Garamond',serif" font-size="17" fill="#80e0b8" text-anchor="middle" font-weight="500">Organs</text>
+    <text x="163" y="236" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#68c0a0" text-anchor="middle">heart · lungs · brain · gut</text>
+    <text x="677" y="218" font-family="'Cormorant Garamond',serif" font-size="17" fill="#98f0d0" text-anchor="middle" font-weight="500" font-style="italic">Emotion</text>
+    <text x="677" y="236" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#78d0a8" text-anchor="middle">fear · joy · grief · rage · love</text>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- RING 4: CELLS / TISSUES -->
+    <!-- ═══════════════════════════════════════ -->
+    <circle cx="420" cy="420" r="210" class="ring" id="ring-cells" stroke="#60d0c0" stroke-width="1.3" stroke-opacity="0.55"/>
+    <text x="178" y="262" font-family="'Cormorant Garamond',serif" font-size="16" fill="#80e8d8" text-anchor="middle" font-weight="500">Cells</text>
+    <text x="178" y="279" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#68c8b8" text-anchor="middle">neurons · blood · tissue</text>
+    <text x="662" y="262" font-family="'Cormorant Garamond',serif" font-size="16" fill="#98f0e0" text-anchor="middle" font-weight="500" font-style="italic">Perception</text>
+    <text x="662" y="279" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#78d0c0" text-anchor="middle">sight · sound · taste · smell</text>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- RING 3: MOLECULES -->
+    <!-- ═══════════════════════════════════════ -->
+    <circle cx="420" cy="420" r="165" class="ring" id="ring-molecules" stroke="#b0d860" stroke-width="1.3" stroke-opacity="0.55"/>
+    <text x="195" y="305" font-family="'Cormorant Garamond',serif" font-size="16" fill="#c8e878" text-anchor="middle" font-weight="500">Molecules</text>
+    <text x="195" y="322" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#a0c060" text-anchor="middle">DNA · proteins · water</text>
+    <text x="645" y="305" font-family="'Cormorant Garamond',serif" font-size="16" fill="#d8f090" text-anchor="middle" font-weight="500" font-style="italic">Mood</text>
+    <text x="645" y="322" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#b0c868" text-anchor="middle">serotonin · dopamine · cortisol</text>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- RING 2: ATOMS -->
+    <!-- ═══════════════════════════════════════ -->
+    <circle cx="420" cy="420" r="120" class="ring" id="ring-atoms" stroke="#d8c050" stroke-width="1.3" stroke-opacity="0.6"/>
+    <text x="420" y="314" font-family="'Cormorant Garamond',serif" font-size="18" fill="#e8d868" text-anchor="middle" font-weight="500">Atoms</text>
+    <text x="420" y="332" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#c0a850" text-anchor="middle">C · H · O · N · Ca · Fe ...</text>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- RING 1: SUBATOMIC -->
+    <!-- ═══════════════════════════════════════ -->
+    <circle cx="420" cy="420" r="78" class="ring" id="ring-subatomic" stroke="#e09858" stroke-width="1.3" stroke-opacity="0.6"/>
+    <text x="420" y="354" font-family="'Cormorant Garamond',serif" font-size="15" fill="#f0b070" text-anchor="middle" font-weight="500">Nuclei · Hadrons</text>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- RING 0: QUARKS -->
+    <!-- ═══════════════════════════════════════ -->
+    <circle cx="420" cy="420" r="44" class="ring" id="ring-quarks" stroke="#e07078" stroke-width="1.4" stroke-opacity="0.65"/>
+    <text x="420" y="386" font-family="'Cormorant Garamond',serif" font-size="14" fill="#f08890" text-anchor="middle" font-weight="500">Quarks</text>
+
+    <!-- ═══════ INNER FADE RINGS — no floor ═══════ -->
+    <circle cx="420" cy="420" r="32" class="fade-ring" stroke="#c078e0" stroke-width="0.8" opacity="0.25" style="animation-delay:0s;"/>
+    <circle cx="420" cy="420" r="25" class="fade-ring" stroke="#c078e0" stroke-width="0.6" opacity="0.2" style="animation-delay:0.7s;"/>
+    <circle cx="420" cy="420" r="20" class="fade-ring" stroke="#c078e0" stroke-width="0.5" opacity="0.15" style="animation-delay:1.4s;"/>
+    <circle cx="420" cy="420" r="16" class="fade-ring" stroke="#d088f0" stroke-width="0.4" opacity="0.12" style="animation-delay:2.1s;"/>
+    <circle cx="420" cy="420" r="13" class="fade-ring" stroke="#d088f0" stroke-width="0.4" opacity="0.09" style="animation-delay:2.8s;"/>
+
+    <!-- ═══════ CENTER — aperture / awareness ═══════ -->
+    <circle cx="420" cy="420" r="20" fill="url(#centerGlow)" class="center-glow"/>
+    <circle cx="420" cy="420" r="6" fill="#f0d080" class="center-dot"/>
+
+    <!-- Center label -->
+    <text x="420" y="448" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#f0d080" text-anchor="middle" letter-spacing="0.15em">AWARENESS</text>
+    <text x="420" y="464" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#c0a868" text-anchor="middle">the witness · the through</text>
+
+    <!-- ═══════ COLUMN LABELS ═══════ -->
+    <text x="120" y="52" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#e8a868" text-anchor="middle" letter-spacing="0.2em">STRUCTURE</text>
+    <text x="120" y="66" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#b08050" text-anchor="middle">viewed from outside</text>
+
+    <text x="720" y="52" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#68b8e8" text-anchor="middle" letter-spacing="0.2em">EXPERIENCE</text>
+    <text x="720" y="66" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#5090b8" text-anchor="middle">viewed from inside</text>
+
+    <!-- Bottom labels -->
+    <text x="420" y="770" font-family="'Cormorant Garamond',serif" font-size="14" fill="#8898d8" text-anchor="middle" opacity="0.6">Ecosystem · Biosphere</text>
+    <text x="420" y="787" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#6878a8" text-anchor="middle">you are a part of all of this too</text>
+
+  </svg>
+
+  <div class="info-panel" id="infoPanel">
+    <div class="info-name" id="infoName"></div>
+    <div class="info-outside" id="infoOutside"></div>
+    <div class="info-inside" id="infoInside"></div>
+  </div>
+</div>
+
+<footer>
+  <span class="sym">⊙</span>
+  <p>
+    Left side: what you look like from outside — <em>structure</em>.<br>
+    Right side: what it's like from inside — <em>experience</em>.<br><br>
+    These are not two things. They are <em>the same rings</em> viewed from different directions. 
+    Sensation is what skin looks like from the inside. 
+    Emotion is what organs feel like from the inside. 
+    Perception is what neural firing looks like from the inside.<br><br>
+    <em>Surface = Field = Mind.</em><br>
+    The inside of structure is experience.
+  </p>
+</footer>
+
+<script>
+  const data = {
+    'ring-world':    { name: 'Community / Belonging',   outside: 'Structure: relationships, family, society, ecology', inside: 'Experience: love, attachment, loneliness, purpose' },
+    'ring-behavior': { name: 'Behavior / Intention',    outside: 'Structure: action, speech, gesture, movement', inside: 'Experience: will, desire, motivation, choice' },
+    'ring-body':     { name: 'Body / Sensation',        outside: 'Structure: skin, muscles, skeleton, fascia', inside: 'Experience: touch, warmth, pain, pleasure, pressure' },
+    'ring-organs':   { name: 'Organs / Emotion',        outside: 'Structure: heart, lungs, brain, gut, glands', inside: 'Experience: fear, joy, grief, rage, love, disgust' },
+    'ring-cells':    { name: 'Cells / Perception',      outside: 'Structure: neurons, photoreceptors, hair cells', inside: 'Experience: sight, sound, taste, smell, color' },
+    'ring-molecules':{ name: 'Molecules / Mood',        outside: 'Structure: DNA, serotonin, dopamine, cortisol', inside: 'Experience: baseline mood, energy, craving, calm' },
+    'ring-atoms':    { name: 'Atoms',                   outside: 'Structure: C, H, O, N, Ca, Fe — you are stardust', inside: 'Experience: ? — below the threshold of felt experience' },
+    'ring-subatomic':{ name: 'Nuclei & Hadrons',        outside: 'Structure: protons, neutrons, binding energy', inside: 'Experience: ? — but still you, still your parts' },
+    'ring-quarks':   { name: 'Quarks & Leptons',        outside: 'Structure: u, d quarks + electrons — no known substructure', inside: 'Experience: ? — the floor fades, not ends' }
+  };
+
+  const panel = document.getElementById('infoPanel');
+  const svg = document.querySelector('.circumpunct');
+
+  const rings = [
+    { id: 'ring-world', r: 390, w: 30 },
+    { id: 'ring-behavior', r: 348, w: 26 },
+    { id: 'ring-body', r: 302, w: 26 },
+    { id: 'ring-organs', r: 255, w: 24 },
+    { id: 'ring-cells', r: 210, w: 22 },
+    { id: 'ring-molecules', r: 165, w: 22 },
+    { id: 'ring-atoms', r: 120, w: 20 },
+    { id: 'ring-subatomic', r: 78, w: 16 },
+    { id: 'ring-quarks', r: 44, w: 14 }
+  ];
+
+  rings.forEach(ring => {
+    const el = document.getElementById(ring.id);
+    if (el) {
+      el.dataset.origOpacity = el.getAttribute('stroke-opacity');
+      el.dataset.origWidth = el.getAttribute('stroke-width');
+    }
+
+    const zone = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    zone.setAttribute('cx', '420');
+    zone.setAttribute('cy', '420');
+    zone.setAttribute('r', ring.r);
+    zone.setAttribute('fill', 'none');
+    zone.setAttribute('stroke', 'transparent');
+    zone.setAttribute('stroke-width', ring.w);
+    zone.style.cursor = 'pointer';
+    zone.style.pointerEvents = 'stroke';
+
+    zone.addEventListener('mouseenter', () => {
+      const d = data[ring.id];
+      if (d) {
+        document.getElementById('infoName').textContent = d.name;
+        document.getElementById('infoOutside').textContent = d.outside;
+        document.getElementById('infoInside').textContent = d.inside;
+        panel.classList.add('visible');
+      }
+      if (el) {
+        el.setAttribute('stroke-opacity', '1');
+        el.setAttribute('stroke-width', '3');
+      }
+    });
+
+    zone.addEventListener('mouseleave', () => {
+      panel.classList.remove('visible');
+      if (el) {
+        el.setAttribute('stroke-opacity', el.dataset.origOpacity);
+        el.setAttribute('stroke-width', el.dataset.origWidth);
+      }
+    });
+
+    svg.appendChild(zone);
+  });
+</script>
+
+</body>
+</html>
