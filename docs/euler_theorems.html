@@ -77,6 +77,7 @@
 <header>
   <h1>The Euler Theorems</h1>
   <div class="subtitle">How e<sup>iπ</sup> + 1 = 0 and V − E + F = 2 are the same theorem<br>— seen from inside and outside the circumpunct</div>
+  <p style="margin-top: 1.2rem; color: var(--text); font-size: 1.05rem; max-width: 600px; margin-left: auto; margin-right: auto;">Within the circumpunct, Euler's two most beautiful theorems are not separate discoveries — they are the interior and exterior signatures of the same 2-sphere boundary that any coherent mind must inhabit.</p>
   <div class="meta">Circumpunct Framework — February 2026</div>
 </header>
 
@@ -214,8 +215,9 @@
   <tr><th>k</th><th>H<sub>k</sub>(S²)</th><th>rank</th><th>What it counts</th></tr>
   <tr><td>0</td><td>ℤ</td><td>1</td><td>One connected component (wholeness)</td></tr>
   <tr><td>1</td><td>0</td><td>0</td><td>No loops (simple connectivity)</td></tr>
-  <tr><td>2</td><td>ℤ</td><td>1</td><td>One enclosed volume (closure)</td></tr>
+  <tr><td>2</td><td>ℤ</td><td>1</td><td>One enclosed volume (closure)*</td></tr>
 </table>
+<p class="muted" style="margin-top: 0.3rem; font-size: 0.85rem;">*H₂ counts the fundamental class of the enclosed 2-cycle — the interior that the boundary creates. This is precisely the role of the aperture •: it exists as the "inside" that ○ makes possible.</p>
 
 <div class="equation equation-small">χ(S²) = 1 − 0 + 1 = 2</div>
 
@@ -240,6 +242,91 @@
   Edges are 1-dimensional — <strong>field connections</strong>.<br>
   Faces are 2-dimensional — <strong>boundary surfaces</strong>.<br><br>
   The polyhedral formula counts: how many apertures, minus how many field connections, plus how many boundary faces, always equals <strong>2</strong> — the Euler characteristic of the sphere that closure requires.
+</div>
+
+<!-- SVG DIAGRAM -->
+<div style="text-align: center; margin: 2.5rem 0;">
+<svg viewBox="0 0 500 420" width="500" height="420" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%;">
+  <!-- Background -->
+  <rect width="500" height="420" fill="#0a0a0f"/>
+
+  <!-- Boundary sphere (○) — outer circle with subtle fill -->
+  <circle cx="250" cy="195" r="150" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.6"/>
+  <circle cx="250" cy="195" r="150" fill="url(#sphereGrad)" opacity="0.08"/>
+
+  <!-- Triangulation lines (E — field connections) on the sphere -->
+  <!-- Longitude-like arcs -->
+  <ellipse cx="250" cy="195" rx="150" ry="40" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.35" transform="rotate(0, 250, 195)"/>
+  <ellipse cx="250" cy="195" rx="40" ry="150" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.35"/>
+  <ellipse cx="250" cy="195" rx="106" ry="106" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.25" transform="rotate(45, 250, 195)"/>
+  <ellipse cx="250" cy="195" rx="106" ry="106" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.25" transform="rotate(-45, 250, 195)"/>
+
+  <!-- Face labels (F — boundary surfaces) -->
+  <text x="195" y="165" font-family="JetBrains Mono, monospace" font-size="11" fill="#a855f7" opacity="0.5">F</text>
+  <text x="285" y="215" font-family="JetBrains Mono, monospace" font-size="11" fill="#a855f7" opacity="0.5">F</text>
+  <text x="230" y="260" font-family="JetBrains Mono, monospace" font-size="11" fill="#a855f7" opacity="0.5">F</text>
+  <text x="270" y="140" font-family="JetBrains Mono, monospace" font-size="11" fill="#a855f7" opacity="0.5">F</text>
+
+  <!-- Vertex dots (V — apertures) at intersections -->
+  <circle cx="250" cy="45" r="5" fill="#f0c050"/>
+  <circle cx="250" cy="345" r="5" fill="#f0c050"/>
+  <circle cx="100" cy="195" r="4" fill="#f0c050" opacity="0.8"/>
+  <circle cx="400" cy="195" r="4" fill="#f0c050" opacity="0.8"/>
+  <circle cx="145" cy="90" r="3.5" fill="#f0c050" opacity="0.6"/>
+  <circle cx="355" cy="90" r="3.5" fill="#f0c050" opacity="0.6"/>
+  <circle cx="145" cy="300" r="3.5" fill="#f0c050" opacity="0.6"/>
+  <circle cx="355" cy="300" r="3.5" fill="#f0c050" opacity="0.6"/>
+
+  <!-- Center aperture (•) — the south pole, larger -->
+  <circle cx="250" cy="345" r="7" fill="#f0c050" stroke="#f0c050" stroke-width="2"/>
+  <circle cx="250" cy="345" r="2" fill="#0a0a0f"/>
+
+  <!-- Radial field lines from center -->
+  <line x1="250" y1="335" x2="250" y2="55" stroke="#00d4ff" stroke-width="1" opacity="0.2" stroke-dasharray="4,6"/>
+  <line x1="250" y1="338" x2="145" y2="100" stroke="#00d4ff" stroke-width="1" opacity="0.15" stroke-dasharray="4,6"/>
+  <line x1="250" y1="338" x2="355" y2="100" stroke="#00d4ff" stroke-width="1" opacity="0.15" stroke-dasharray="4,6"/>
+  <line x1="250" y1="340" x2="108" y2="195" stroke="#00d4ff" stroke-width="1" opacity="0.15" stroke-dasharray="4,6"/>
+  <line x1="250" y1="340" x2="392" y2="195" stroke="#00d4ff" stroke-width="1" opacity="0.15" stroke-dasharray="4,6"/>
+
+  <!-- Curvature indicator — K arrows along boundary -->
+  <path d="M 170 80 Q 160 70 155 82" fill="none" stroke="#4ecdc4" stroke-width="1.2" opacity="0.5" marker-end="url(#arrowGreen)"/>
+  <path d="M 330 80 Q 340 70 345 82" fill="none" stroke="#4ecdc4" stroke-width="1.2" opacity="0.5" marker-end="url(#arrowGreen)"/>
+  <path d="M 108 170 Q 95 165 100 178" fill="none" stroke="#4ecdc4" stroke-width="1.2" opacity="0.5" marker-end="url(#arrowGreen)"/>
+  <path d="M 392 170 Q 405 165 400 178" fill="none" stroke="#4ecdc4" stroke-width="1.2" opacity="0.5" marker-end="url(#arrowGreen)"/>
+
+  <!-- Labels -->
+  <!-- Aperture label -->
+  <text x="275" y="360" font-family="JetBrains Mono, monospace" font-size="11" fill="#f0c050">• aperture</text>
+
+  <!-- Field label -->
+  <text x="410" y="145" font-family="JetBrains Mono, monospace" font-size="10" fill="#00d4ff" opacity="0.7">E = Φ</text>
+
+  <!-- Boundary label -->
+  <text x="360" y="65" font-family="JetBrains Mono, monospace" font-size="10" fill="#a855f7" opacity="0.7">○ boundary</text>
+
+  <!-- Curvature label -->
+  <text x="60" y="140" font-family="JetBrains Mono, monospace" font-size="9" fill="#4ecdc4" opacity="0.6">K (curvature)</text>
+
+  <!-- V-E-F labels on right -->
+  <text x="420" y="180" font-family="JetBrains Mono, monospace" font-size="10" fill="#f0c050" opacity="0.6">V = 0D</text>
+  <text x="420" y="195" font-family="JetBrains Mono, monospace" font-size="10" fill="#00d4ff" opacity="0.6">E = 1D</text>
+  <text x="420" y="210" font-family="JetBrains Mono, monospace" font-size="10" fill="#a855f7" opacity="0.6">F = 2D</text>
+
+  <!-- Bottom equation -->
+  <text x="250" y="400" font-family="JetBrains Mono, monospace" font-size="13" fill="#d4a853" text-anchor="middle">V − E + F = 2 &nbsp;&nbsp;⟺&nbsp;&nbsp; ∫ K dA = 4π</text>
+
+  <!-- Gradient definition -->
+  <defs>
+    <radialGradient id="sphereGrad" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#0a0a0f"/>
+    </radialGradient>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4ecdc4" opacity="0.5"/>
+    </marker>
+  </defs>
+</svg>
+<p class="muted" style="margin-top: 0.5rem; font-size: 0.85rem;">The circumpunct boundary as S²: vertices (V, gold) are apertures, edges (E, cyan) are field connections, faces (F, violet) are boundary surfaces. Curvature K (teal) integrates to 4π over the whole sphere. The aperture • at the base is the "inside" that the boundary creates.</p>
 </div>
 
 <!-- SECTION 5 -->
@@ -300,7 +387,7 @@
     <p class="proof-step">3. Integrating K over the entire boundary accumulates all the local "bending" into a global invariant.</p>
     <p class="proof-step">4. Gauss-Bonnet: ∫ K dA = 2πχ = 4π.</p>
     <p class="proof-step">5. The factor 2π per unit of χ is exactly the full-cycle phase. χ = 2 means the boundary "uses" two full rotations worth of curvature to close around the aperture.</p>
-    <p class="proof-step">6. <strong>This is the Conservation of Traversal made global:</strong> the boundary cannot close (χ = 2) without accumulating exactly 4π total curvature — which is exactly two complete aperture cycles (2 × 2π), matching the two-step closure that produces π in the first place (U² = e<sup>2iπ</sup> = 1).</p>
+    <p class="proof-step">6. <strong>This is the Conservation of Traversal made global:</strong> One full traversal (β: 0 → 1) accumulates phase π. The boundary integral demands 4π total curvature — exactly <strong>two full traversals</strong> are required to close the surface consistently. Hence U² = e<sup>2iπ</sup> = 1 is the topological closure condition: the boundary cannot close without the aperture completing two full cycles.</p>
     <p class="qed">∎</p>
   </div>
 </div>
