@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Particle Mereology — Every Thing Is Part and Whole</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+  :root {
+    --bg: #08080d;
+    --surface: #0f0f18;
+    --card: #111119;
+    --border: #1a1a28;
+    --text: #c8c8d8;
+    --dim: #5a5a6a;
+    --accent: #e8e8f0;
+    --up: #5d8be8;
+    --down: #e8a05d;
+    --up-glow: rgba(93,139,232,0.08);
+    --down-glow: rgba(232,160,93,0.08);
+    --mid: #9a7ae8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 2.5rem;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    font-size: 0.68rem;
+    color: var(--dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .principle {
+    text-align: center;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+  }
+
+  .principle p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .principle .note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--dim);
+    margin-top: 0.5rem;
+    font-style: normal;
+    letter-spacing: 0.1em;
+  }
+
+  /* ═══════ ENTITY CARD ═══════ */
+  .entity {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .entity:hover { border-color: #252538; }
+
+  /* The name bar */
+  .entity-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    position: relative;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+  }
+
+  .entity-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-align: center;
+  }
+
+  .entity-scale {
+    position: absolute;
+    right: 1rem;
+    font-size: 0.5rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+  }
+
+  .entity-symbol {
+    position: absolute;
+    left: 1rem;
+    font-size: 1rem;
+    opacity: 0.5;
+  }
+
+  /* Two halves: as-whole (looking down) and as-part (looking up) */
+  .entity-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 60px;
+  }
+
+  .as-whole, .as-part {
+    padding: 0.7rem 1rem;
+    font-size: 0.63rem;
+    line-height: 1.65;
+    color: var(--dim);
+  }
+
+  .as-whole {
+    border-right: 1px solid var(--border);
+    background: var(--down-glow);
+  }
+
+  .as-part {
+    background: var(--up-glow);
+  }
+
+  .half-label {
+    font-size: 0.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .half-label.down { color: var(--down); }
+  .half-label.up { color: var(--up); }
+
+  .half-label svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .part-list {
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  .part-list .dim { 
+    color: var(--dim); 
+    font-weight: 300;
+  }
+
+  /* ═══════ CONNECTOR ═══════ */
+  .connector {
+    display: flex;
+    justify-content: center;
+    padding: 0.15rem 0;
+    opacity: 0.25;
+  }
+
+  .connector svg {
+    width: 14px;
+    height: 16px;
+  }
+
+  /* ═══════ INTERSTITIAL ═══════ */
+  .interstitial-group {
+    margin: 0.5rem 0 0.75rem;
+    padding: 0.6rem 0.8rem;
+    border-left: 2px solid rgba(154,122,232,0.2);
+    margin-left: 1rem;
+  }
+
+  .inter-label {
+    font-size: 0.5rem;
+    color: var(--mid);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .inter-item {
+    display: flex;
+    gap: 0.4rem;
+    align-items: baseline;
+    padding: 0.2rem 0;
+  }
+
+  .inter-name {
+    font-size: 0.7rem;
+    color: var(--mid);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .inter-detail {
+    font-size: 0.55rem;
+    color: var(--dim);
+  }
+
+  /* ═══════ OPEN END ═══════ */
+  .open-end {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.6rem;
+    color: var(--dim);
+    letter-spacing: 0.15em;
+    opacity: 0.5;
+  }
+
+  .open-end .dots {
+    font-size: 1.2rem;
+    letter-spacing: 0.5rem;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  /* ═══════ INSIGHT ═══════ */
+  .insight {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    text-align: center;
+  }
+
+  .insight .symbol { font-size: 2rem; margin-bottom: 0.4rem; }
+
+  .insight p {
+    font-size: 0.68rem;
+    color: var(--dim);
+    line-height: 1.8;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  .insight em { color: var(--text); font-style: normal; }
+
+  /* ═══════ RESPONSIVE ═══════ */
+  @media (max-width: 600px) {
+    .entity-body { grid-template-columns: 1fr; }
+    .as-whole { border-right: none; border-bottom: 1px solid var(--border); }
+    h1 { font-size: 1.8rem; }
+    .entity-scale { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <h1>Particle Mereology</h1>
+    <div class="subtitle">Every thing is part and whole</div>
+  </header>
+
+  <div class="principle">
+    <p>Nothing is only a part. Nothing is only a whole.<br>Every entity faces down toward what it contains and up toward what contains it.</p>
+    <div class="note">Left = what's inside (this is a whole) · Right = what it's inside of (this is a part)</div>
+  </div>
+
+  <!-- ════════════════════════════════════ -->
+
+  <div class="open-end">
+    <span class="dots">···</span>
+    open — no known floor
+  </div>
+
+  <!-- ? -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">?</span>
+      <div class="entity-name">?</div>
+      <span class="entity-scale">&lt; 10⁻¹⁸ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">? <span class="dim">— preons, strings, loops, geometry...</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Quarks, leptons, bosons</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- QUARKS -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">●</span>
+      <div class="entity-name">Quarks</div>
+      <span class="entity-scale">&lt; 10⁻¹⁸ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">? <span class="dim">— no known substructure</span><br>u d c s t b <span class="dim">× 3 colors</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Hadrons <span class="dim">(baryons, mesons, exotics)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- LEPTONS -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">●</span>
+      <div class="entity-name">Leptons</div>
+      <span class="entity-scale">&lt; 10⁻¹⁸ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">? <span class="dim">— no known substructure</span><br>e μ τ νₑ ν<sub>μ</sub> ν<sub>τ</sub></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Atoms <span class="dim">(electrons in shells)</span><br>Weak decays <span class="dim">(neutrinos)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- GAUGE BOSONS -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">≈</span>
+      <div class="entity-name">Gauge Bosons</div>
+      <span class="entity-scale">force carriers</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">? <span class="dim">— no known substructure</span><br>γ · g×8 · W± · Z⁰</div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Hadrons <span class="dim">(gluons: ~50% of proton mass)</span><br>Atoms <span class="dim">(photons: the binding field)</span><br>Every interaction at every scale</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- HIGGS -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">◉</span>
+      <div class="entity-name">Higgs Boson</div>
+      <span class="entity-scale">125.1 GeV</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">? <span class="dim">— no known substructure</span><br>Scalar · Spin-0</div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Every massive particle <span class="dim">(field coupling gives mass)</span><br>The vacuum itself <span class="dim">(VEV ≠ 0)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- HADRONS -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">⊙</span>
+      <div class="entity-name">Hadrons</div>
+      <span class="entity-scale">~10⁻¹⁵ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">Quarks + gluons + sea quarks<br><span class="dim">Baryons (3q): p=uud, n=udd</span><br><span class="dim">Mesons (qq̄): π=ud̄, K=us̄</span><br><span class="dim">Exotics: tetraquarks, pentaquarks</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Nuclei <span class="dim">(protons + neutrons bound)</span><br>Virtual mesons <span class="dim">(part of nuclear binding)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- NUCLEI -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">⊙</span>
+      <div class="entity-name">Nuclei</div>
+      <span class="entity-scale">~10⁻¹⁵ – 10⁻¹⁴ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">Protons + neutrons + virtual mesons<br><span class="dim">¹H=p · ⁴He=2p2n · ²³⁸U=92p146n</span><br><span class="dim">~3,300 known nuclides</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Atoms <span class="dim">(nucleus at center)</span><br>Nuclear matter <span class="dim">(neutron stars)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- ATOMS -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">⊙</span>
+      <div class="entity-name">Atoms</div>
+      <span class="entity-scale">~10⁻¹⁰ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">Nucleus + electrons + photon field<br><span class="dim">118 elements · Shell structure s,p,d,f</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Molecules <span class="dim">(bonded)</span><br>Metals, crystals <span class="dim">(lattice)</span><br>Plasma <span class="dim">(ionized)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTER-SCALE PARTS -->
+  <div class="interstitial-group">
+    <div class="inter-label">Parts found between atomic and bulk — every one both part and whole</div>
+    <div class="inter-item">
+      <span class="inter-name">Phonon</span>
+      <span class="inter-detail">— whole for lattice vibration modes / part of crystals, heat conduction, superconductivity</span>
+    </div>
+    <div class="inter-item">
+      <span class="inter-name">Plasmon</span>
+      <span class="inter-detail">— whole for electron density oscillation / part of metals' optical and electrical behavior</span>
+    </div>
+    <div class="inter-item" style="background:rgba(154,122,232,0.06); padding:0.3rem 0.4rem; border-radius:3px; margin:0.15rem 0;">
+      <span class="inter-name" style="color:#c4e85d;">Pines' Demon</span>
+      <span class="inter-detail">— whole for out-of-phase inter-band oscillation / part of multiband metals, possibly superconductors. Massless, neutral. Found 2023.</span>
+    </div>
+    <div class="inter-item">
+      <span class="inter-name">Magnon</span>
+      <span class="inter-detail">— whole for spin-wave quanta / part of ferromagnets, spintronic devices</span>
+    </div>
+    <div class="inter-item">
+      <span class="inter-name">Exciton</span>
+      <span class="inter-detail">— whole for bound electron-hole pair / part of semiconductors, solar cells, LEDs</span>
+    </div>
+    <div class="inter-item">
+      <span class="inter-name">Polaron</span>
+      <span class="inter-detail">— whole for electron + lattice distortion / part of polar crystals, organic electronics</span>
+    </div>
+    <div class="inter-item">
+      <span class="inter-name">Cooper Pair</span>
+      <span class="inter-detail">— whole for two phonon-coupled electrons / part of superconducting condensate</span>
+    </div>
+    <div class="inter-item">
+      <span class="inter-name">Anyon</span>
+      <span class="inter-detail">— whole for fractional charge/statistics / part of quantum Hall states, topological qubits</span>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- MOLECULES -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">⊙</span>
+      <div class="entity-name">Molecules</div>
+      <span class="entity-scale">~10⁻¹⁰ – 10⁻⁷ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">Atoms + bonds + electron clouds<br><span class="dim">H₂O · DNA · proteins · C₆₀</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Macromolecular assemblies<br>Cells <span class="dim">(biochemistry)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- CELLS -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">⊙</span>
+      <div class="entity-name">Cells</div>
+      <span class="entity-scale">~10⁻⁶ – 10⁻⁴ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">Organelles + membrane + molecules<br><span class="dim">Nucleus, mitochondria, ribosomes...</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Tissues → organs → organisms<br><span class="dim">~37 trillion in a human</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- ORGANISMS -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">⊙</span>
+      <div class="entity-name">Organisms</div>
+      <span class="entity-scale">~10⁻⁶ – 10² m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">Cells → tissues → organs → systems<br><span class="dim">Bacteria to blue whales</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Populations → ecosystems<br><span class="dim">Food webs, symbioses, societies</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- ECOSYSTEMS -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">⊙</span>
+      <div class="entity-name">Ecosystems</div>
+      <span class="entity-scale">~10³ – 10⁷ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">Organisms + terrain + water + atmosphere<br><span class="dim">Forests, oceans, reefs, cities</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Biospheres → planets</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- PLANETS -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">⊙</span>
+      <div class="entity-name">Planets</div>
+      <span class="entity-scale">~10⁷ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">Core + mantle + crust + biosphere + atmosphere<br><span class="dim">Earth: Schumann cavity = ⊙ at planetary scale</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Stellar systems</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- STARS -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">⊙</span>
+      <div class="entity-name">Stars &amp; Stellar Systems</div>
+      <span class="entity-scale">~10¹¹ – 10¹³ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">Plasma + photons + planets + debris<br><span class="dim">Fusion: nuclei are rearranged, not destroyed</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Galaxies</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- GALAXIES -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">⊙</span>
+      <div class="entity-name">Galaxies</div>
+      <span class="entity-scale">~10²⁰ – 10²¹ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">Stars + gas + dust + dark matter + SMBH<br><span class="dim">Milky Way: ~200 billion stars · Black hole = aperture</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">Galaxy clusters → filaments → cosmic web</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><svg viewBox="0 0 14 16"><path d="M7 0 L7 12 M3 9 L7 14 L11 9" stroke="#333" fill="none" stroke-width="1"/></svg></div>
+
+  <!-- COSMIC WEB -->
+  <div class="entity">
+    <div class="entity-header">
+      <span class="entity-symbol">⊙</span>
+      <div class="entity-name">Cosmic Web</div>
+      <span class="entity-scale">~10²³ – 10²⁶ m</span>
+    </div>
+    <div class="entity-body">
+      <div class="as-whole">
+        <div class="half-label down"><svg viewBox="0 0 10 10"><path d="M5 0 L5 7 M2 4 L5 8 L8 4" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A WHOLE FOR</div>
+        <div class="part-list">Galaxy clusters + filaments + voids + dark energy<br><span class="dim">Observable universe: ~2 trillion galaxies</span></div>
+      </div>
+      <div class="as-part">
+        <div class="half-label up"><svg viewBox="0 0 10 10"><path d="M5 10 L5 3 M2 6 L5 2 L8 6" stroke="currentColor" fill="none" stroke-width="1.2"/></svg> IS A PART OF</div>
+        <div class="part-list">? <span class="dim">— multiverse, bulk, the whole...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="open-end">
+    <span class="dots">···</span>
+    open — no known ceiling
+  </div>
+
+  <!-- ═══════ INSIGHT ═══════ -->
+  <div class="insight">
+    <div class="symbol">⊙</div>
+    <p>
+      <em>Every entity faces both directions.</em><br><br>
+      There is no thing that is only a part. There is no thing that is only a whole.
+      The atom is not "between" its electrons and its molecule —
+      it <em>is</em> a whole containing them <em>and</em> a part contained by it. Simultaneously.<br><br>
+      This is ⊙.<br>
+      Aperture faces down toward what's inside.<br>
+      Boundary faces up toward what it's inside of.<br>
+      Field is the relation between them.<br><br>
+      <em>One structure. Every scale. Both directions at once.</em>
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>
