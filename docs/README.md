@@ -60,6 +60,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**circumpunct_physics.html**](https://fractalreality.ca/circumpunct_physics.html) — The Circumpunct Framework: a mathematical formulation for working physicists
 - [**circumpunct_schumann.html**](https://fractalreality.ca/circumpunct_schumann.html) — Schumann-Circumpunct Resonance Theory
 - [**circumpunct_IT.html**](https://fractalreality.ca/circumpunct_IT.html) — Information Theory through the circumpunct
+- [**euler_theorems.html**](https://fractalreality.ca/euler_theorems.html) — The Euler Theorems: Euler's identity and polyhedron formula through the circumpunct framework
 
 ### Wholeness & Structure
 
