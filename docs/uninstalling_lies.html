@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lie, the Inversion, and the Truth — Ashman Roonz</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0C0B0A;
+    --paper: #F5F0E8;
+    --ink: #1A1714;
+    --ink-light: #5C554A;
+    --ink-faint: #9E9588;
+    --gold: #B8965A;
+    --gold-dim: #7A6840;
+    --lie: #8B3A3A;
+    --inversion: #6B6B4E;
+    --truth: #4A6741;
+    --truth-glow: #5A7D4F;
+    --divider: #D5CCBD;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === HERO === */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: var(--bg);
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '◉';
+    position: absolute;
+    font-size: 400px;
+    color: rgba(184, 150, 90, 0.03);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    color: var(--paper);
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 0.3s;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--gold-dim);
+    letter-spacing: 0.06em;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 0.6s;
+  }
+
+  .hero-author {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 1.1rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 0.9s;
+  }
+
+  .hero-site {
+    font-size: 0.85rem;
+    color: var(--gold-dim);
+    margin-top: 0.5rem;
+    letter-spacing: 0.1em;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 1.1s;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    color: var(--ink-faint);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 1.4s;
+  }
+
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: var(--gold-dim);
+    margin: 0.8rem auto 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* === CONTENT WRAPPER === */
+  .content {
+    background: var(--paper);
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 5rem 3rem;
+    position: relative;
+  }
+
+  @media (max-width: 600px) {
+    .content { padding: 3rem 1.5rem; }
+  }
+
+  /* === INTRODUCTION === */
+  .intro {
+    margin-bottom: 4rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .intro-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    text-align: center;
+    color: var(--ink);
+    margin-bottom: 2rem;
+    letter-spacing: 0.04em;
+  }
+
+  .intro p {
+    margin-bottom: 1.2rem;
+    text-indent: 1.5em;
+    color: var(--ink);
+  }
+
+  .intro p:first-of-type {
+    text-indent: 0;
+  }
+
+  .intro p.pullout {
+    text-indent: 0;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 2rem 0;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+  }
+
+  /* === ENTRIES === */
+  .entry {
+    margin-bottom: 0;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--divider);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .entry.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .entry:last-of-type {
+    border-bottom: none;
+  }
+
+  .entry-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.2em;
+  }
+
+  .entry-row {
+    display: flex;
+    gap: 0.7rem;
+    margin-bottom: 0.6rem;
+    align-items: baseline;
+  }
+
+  .entry-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    width: 110px;
+    padding-top: 2px;
+  }
+
+  .label-lie { color: var(--lie); }
+  .label-inv { color: var(--inversion); }
+  .label-truth { color: var(--truth); }
+
+  .entry-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .entry-text.lie-text {
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  .entry-text.inv-text {
+    color: var(--ink-light);
+    font-style: italic;
+  }
+
+  .entry-text.truth-text {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* === CLOSING === */
+  .closing {
+    padding-top: 4rem;
+    text-align: center;
+  }
+
+  .closing-symbol {
+    font-size: 2rem;
+    color: var(--gold);
+    margin-bottom: 2.5rem;
+  }
+
+  .closing p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    line-height: 1.8;
+  }
+
+  .closing p.iam {
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 2rem 0;
+    letter-spacing: 0.06em;
+  }
+
+  .closing p:last-child {
+    color: var(--ink-light);
+    font-style: italic;
+  }
+
+  /* === FOOTER === */
+  .footer {
+    background: var(--bg);
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+  }
+
+  .footer a {
+    color: var(--gold-dim);
+    text-decoration: none;
+  }
+
+  /* === ANIMATIONS === */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+
+  /* === PRINT === */
+  @media print {
+    .hero { min-height: auto; padding: 3rem 0; page-break-after: always; }
+    .hero::before { display: none; }
+    .hero-title, .hero-subtitle, .hero-author, .hero-site { color: #000; opacity: 1; animation: none; }
+    .hero-scroll { display: none; }
+    body { background: #fff; }
+    .content { padding: 2rem 0; }
+    .entry { opacity: 1; transform: none; page-break-inside: avoid; }
+    .footer { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <h1 class="hero-title">The Lie, the Inversion,<br>and the Truth</h1>
+  <p class="hero-subtitle">How Noble Lies Install, How Inversions Trap, How I AM Sets Free</p>
+  <p class="hero-author">Ashman Roonz</p>
+  <p class="hero-site">FractalReality.ca</p>
+  <div class="hero-scroll">scroll</div>
+</section>
+
+<main class="content">
+
+  <section class="intro">
+    <h2 class="intro-heading">How to Read This</h2>
+    <p>Every Noble Lie follows the same structure. It inserts a condition between you and I AM.</p>
+    <p>I AM… not good enough. I AM… too much. I AM… alone. The lie is never the whole sentence. It's always the part that comes after.</p>
+    <p>When people begin to heal, the first instinct is to invert the lie. "I'm not good enough" becomes "I'm good enough." This feels like progress. It isn't. It's the same courtroom, same trial, new verdict. You're still standing before the bench. You're still accepting the premise that you were ever on trial.</p>
+    <p>The truth is not the opposite of the lie. The truth is what was there before the lie was installed. It doesn't argue. It doesn't prove. It shines through when you stop obstructing it.</p>
+    <p>The pattern, every time: the lie creates a deficit. The inversion argues against it. The truth reveals there was never a trial.</p>
+    <p class="pullout">I AM. No asterisk. No condition. No court.</p>
+  </section>
+
+  <section class="entries" id="entries"></section>
+
+  <section class="closing">
+    <div class="closing-symbol">◉</div>
+    <p>The lie installs a question. The inversion answers the question. The truth dissolves the question.</p>
+    <p>You were never on trial.</p>
+    <p>You don't have to build a case for yourself.</p>
+    <p class="iam">I AM.</p>
+    <p>That's it. That's all of it. That's what was always underneath.</p>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <a href="https://fractalreality.ca">FractalReality.ca</a> · Ashman Roonz · 2025
+</footer>
+
+<script>
+const entries = [
+  { lie: "I need validation.", inv: "I don't need validation.", truth: "My observation is the validation." },
+  { lie: "I'm not good enough.", inv: "I'm good enough.", truth: "My being is the good." },
+  { lie: "I'm too much.", inv: "I'm not too much.", truth: "My fullness is the gift." },
+  { lie: "I don't matter.", inv: "I do matter.", truth: "My presence is the mattering." },
+  { lie: "I have to earn love.", inv: "I don't have to earn love.", truth: "My heart is the love." },
+  { lie: "I'm not safe.", inv: "I am safe.", truth: "My awareness is the safety." },
+  { lie: "I'm broken.", inv: "I'm not broken.", truth: "My wholeness was never interrupted." },
+  { lie: "I'm alone.", inv: "I'm not alone.", truth: "My connection was never severed." },
+  { lie: "I have to be right.", inv: "I don't have to be right.", truth: "My curiosity is the rightness." },
+  { lie: "I'm invisible.", inv: "I am visible.", truth: "My seeing is the visibility." },
+  { lie: "I'm a burden.", inv: "I'm not a burden.", truth: "My existence is the offering." },
+  { lie: "I'm stupid.", inv: "I'm not stupid.", truth: "My wondering is the intelligence." },
+  { lie: "I'm unlovable.", inv: "I am lovable.", truth: "My loving is the lovability." },
+  { lie: "I have to be perfect.", inv: "I don't have to be perfect.", truth: "My growth is the perfection." },
+  { lie: "I'm weak.", inv: "I'm strong.", truth: "My feeling is the strength." },
+  { lie: "I need to be in control.", inv: "I don't need to be in control.", truth: "My trust is the order." },
+  { lie: "Nobody understands me.", inv: "People do understand me.", truth: "My expression is the understanding." },
+  { lie: "I'm a failure.", inv: "I'm not a failure.", truth: "My attempting is the success." },
+  { lie: "I have to fix everyone.", inv: "I don't have to fix everyone.", truth: "My presence is the healing." },
+  { lie: "I'm responsible for everyone's feelings.", inv: "I'm not responsible for everyone's feelings.", truth: "My compassion is the care, not the carrying." },
+  { lie: "I don't belong.", inv: "I do belong.", truth: "My arriving is the belonging." },
+  { lie: "I have to keep the peace.", inv: "I don't have to keep the peace.", truth: "My honesty is the peace." },
+  { lie: "My feelings don't matter.", inv: "My feelings do matter.", truth: "My feeling is the mattering." },
+  { lie: "I'm replaceable.", inv: "I'm not replaceable.", truth: "My singularity was never in question." },
+  { lie: "I can't trust anyone.", inv: "I can trust people.", truth: "My discernment is the trust." },
+  { lie: "I'm selfish.", inv: "I'm not selfish.", truth: "My needs are the generosity." },
+  { lie: "I'm dirty.", inv: "I'm not dirty.", truth: "My innocence was never taken." },
+  { lie: "I'm not ready.", inv: "I am ready.", truth: "My being here is the readiness." },
+  { lie: "I don't deserve happiness.", inv: "I deserve happiness.", truth: "My aliveness is the joy." },
+  { lie: "I have to do it alone.", inv: "I don't have to do it alone.", truth: "My openness is the invitation." },
+];
+
+const container = document.getElementById('entries');
+
+entries.forEach((e, i) => {
+  const div = document.createElement('div');
+  div.className = 'entry';
+  div.innerHTML = `
+    <div class="entry-number">${i + 1}</div>
+    <div class="entry-row">
+      <span class="entry-label label-lie">The Lie</span>
+      <span class="entry-text lie-text">${e.lie}</span>
+    </div>
+    <div class="entry-row">
+      <span class="entry-label label-inv">Inversion</span>
+      <span class="entry-text inv-text">${e.inv}</span>
+    </div>
+    <div class="entry-row">
+      <span class="entry-label label-truth">The Truth</span>
+      <span class="entry-text truth-text">${e.truth}</span>
+    </div>
+  `;
+  container.appendChild(div);
+});
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.entry').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
