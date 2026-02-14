@@ -280,10 +280,35 @@
   }
 
   /* === FOOTER === */
+  /* === NAVIGATION === */
+  .nav-links {
+    background: var(--bg);
+    text-align: center;
+    padding: 3rem 2rem 1rem;
+  }
+
+  .nav-links a {
+    display: inline-block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    color: var(--gold);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    margin: 0.5rem 1.2rem;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease, color 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    border-bottom-color: var(--gold);
+    color: var(--paper);
+  }
+
   .footer {
     background: var(--bg);
     text-align: center;
-    padding: 3rem 2rem;
+    padding: 1.5rem 2rem 3rem;
     color: var(--ink-faint);
     font-size: 0.85rem;
     letter-spacing: 0.1em;
@@ -352,6 +377,12 @@
   </section>
 
 </main>
+
+<nav class="nav-links">
+  <a href="https://fractalreality.ca">&#9673; Home</a>
+  <a href="https://fractalreality.ca/circumpunct_narcissism.html">The Circumpunct &amp; Narcissism</a>
+  <a href="https://fractalreality.ca/circumpunct_virtues.html">The Circumpunct &amp; Virtues</a>
+</nav>
 
 <footer class="footer">
   <a href="https://fractalreality.ca">FractalReality.ca</a> · Ashman Roonz · 2025
