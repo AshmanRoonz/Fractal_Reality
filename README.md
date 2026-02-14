@@ -283,6 +283,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**etiology_of_installation.html**](https://fractalreality.ca/etiology_of_installation.html) — The Etiology of Installation: how survival lies become structural corruption
 - [**the_restoration_protocol.html**](https://fractalreality.ca/the_restoration_protocol.html) — Healing and restoration guide
 - [**rephase_meditation.html**](https://fractalreality.ca/rephase_meditation.html) — Cancer Rephase Meditation
+- [**uninstalling_lies.html**](https://fractalreality.ca/uninstalling_lies.html) — The Lie, the Inversion, and the Truth: how Noble Lies install, how inversions trap, how I AM sets free
 
 ---
 
