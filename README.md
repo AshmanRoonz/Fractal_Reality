@@ -228,6 +228,9 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**circumpunct_schumann.html**](https://fractalreality.ca/circumpunct_schumann.html) — Schumann-Circumpunct Resonance Theory
 - [**circumpunct_IT.html**](https://fractalreality.ca/circumpunct_IT.html) — Information Theory through the circumpunct
 - [**euler_theorems.html**](https://fractalreality.ca/euler_theorems.html) — The Euler Theorems: Euler's identity and polyhedron formula through the circumpunct framework
+- [**circumpunct_time_particle_theory.html**](https://fractalreality.ca/circumpunct_time_particle_theory.html) — Circumpunct Time-Particle Theory: time as particle dynamics
+- [**polar_64_state_map.html**](https://fractalreality.ca/polar_64_state_map.html) — Complete Mereological Map: Higgs to Atoms
+- [**mereological_bridge.html**](https://fractalreality.ca/mereological_bridge.html) — Mereological Bridge: Elements to Particles
 
 ### Wholeness & Structure
 
