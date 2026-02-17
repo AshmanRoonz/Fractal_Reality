@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ CIRCUMPUNCT TIME-PARTICLE THEORY</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --green: #0f0;
+            --yellow: #ff0;
+            --amber: #ffaa00;
+            --red: #ff3333;
+            --blue: #5e81ac;
+            --teal: #88c0d0;
+            --bg: #000;
+            --text: #fff;
+            --dim: rgba(255,255,255,0.45);
+            --panel: rgba(255,255,255,0.03);
+            --border-dim: rgba(255,255,255,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .container { display: flex; min-height: 100vh; }
+
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0 !important; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: 170px; height: 100vh;
+            border-right: 1px solid var(--amber);
+            padding: 20px 12px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            z-index: 10;
+            background: var(--bg);
+        }
+
+        nav .logo {
+            font-size: 28px;
+            color: var(--amber);
+            text-align: center;
+            margin-bottom: 6px;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        nav .logo-sub {
+            font-size: 9px;
+            color: var(--amber);
+            text-align: center;
+            opacity: 0.6;
+            margin-bottom: 20px;
+            letter-spacing: 0.1em;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 8px rgba(255,170,0,0.3); }
+            50% { text-shadow: 0 0 20px rgba(255,170,0,0.7); }
+        }
+
+        nav a {
+            display: block;
+            color: var(--amber);
+            text-decoration: none;
+            padding: 4px 0;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+            font-size: 9px;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+            opacity: 0.6;
+        }
+
+        nav a:hover { opacity: 1; border-left-color: var(--amber); }
+
+        nav .nav-section {
+            font-size: 8px;
+            color: var(--dim);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 14px;
+            margin-bottom: 4px;
+        }
+
+        /* Main content */
+        main {
+            margin-left: 170px;
+            padding: 40px 60px;
+            max-width: 880px;
+            flex: 1;
+        }
+
+        @media (max-width: 900px) {
+            main { padding: 20px; }
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--amber);
+            letter-spacing: 0.12em;
+            margin-bottom: 6px;
+        }
+
+        .title-sub {
+            font-size: 11px;
+            color: var(--dim);
+            letter-spacing: 0.08em;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--amber);
+            letter-spacing: 0.1em;
+            margin-top: 40px;
+            margin-bottom: 14px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-dim);
+        }
+
+        h3 {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--cyan);
+            letter-spacing: 0.08em;
+            margin-top: 24px;
+            margin-bottom: 10px;
+        }
+
+        p { margin-bottom: 14px; color: rgba(255,255,255,0.85); }
+
+        /* Formula blocks */
+        .formula {
+            background: var(--panel);
+            border: 1px solid var(--border-dim);
+            padding: 16px 20px;
+            margin: 18px 0;
+            font-size: 13px;
+            color: var(--cyan);
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.7;
+        }
+
+        .formula-note {
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 8px;
+        }
+
+        /* Blockquote */
+        blockquote {
+            border-left: 2px solid var(--amber);
+            padding: 12px 18px;
+            margin: 18px 0;
+            color: var(--amber);
+            font-style: italic;
+            font-size: 14px;
+            background: rgba(255,170,0,0.03);
+        }
+
+        blockquote .attr {
+            font-size: 11px;
+            color: var(--dim);
+            font-style: normal;
+            margin-top: 6px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            font-size: 12px;
+        }
+
+        th {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--amber);
+            color: var(--amber);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-dim);
+            color: rgba(255,255,255,0.8);
+            vertical-align: top;
+        }
+
+        /* Diagram */
+        .diagram {
+            text-align: center;
+            padding: 24px;
+            margin: 24px 0;
+            border: 1px solid var(--border-dim);
+            background: var(--panel);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .diagram .sym { color: var(--amber); }
+        .diagram .center { color: var(--magenta); }
+        .diagram .field { color: var(--cyan); }
+        .diagram .boundary { color: var(--green); }
+        .diagram-label {
+            font-size: 10px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: 8px;
+        }
+
+        /* Comparison grid */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 18px 0;
+        }
+
+        .compare-box {
+            border: 1px solid var(--border-dim);
+            padding: 16px;
+            background: var(--panel);
+        }
+
+        .compare-box.good { border-color: var(--green); }
+        .compare-box.partial { border-color: var(--yellow); }
+        .compare-box.prediction { border-color: var(--cyan); }
+        .compare-box.falsifiable { border-color: var(--red); }
+
+        .compare-title {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .compare-box.good .compare-title { color: var(--green); }
+        .compare-box.partial .compare-title { color: var(--yellow); }
+        .compare-box.prediction .compare-title { color: var(--cyan); }
+        .compare-box.falsifiable .compare-title { color: var(--red); }
+
+        .compare-box p { font-size: 12px; margin-bottom: 8px; }
+
+        /* Checks */
+        .checks {
+            margin: 18px 0;
+            padding: 16px 20px;
+            background: var(--panel);
+            border: 1px solid var(--border-dim);
+        }
+
+        .checks-title {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--amber);
+            margin-bottom: 10px;
+        }
+
+        .check {
+            padding: 4px 0 4px 20px;
+            position: relative;
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .check::before {
+            content: '⊙';
+            position: absolute;
+            left: 0;
+            color: var(--amber);
+            font-size: 10px;
+        }
+
+        /* Tier boxes */
+        .tier {
+            margin: 18px 0;
+            padding: 16px 20px;
+            border-left: 3px solid var(--amber);
+            background: var(--panel);
+        }
+
+        .tier-label {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--amber);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .tier-body { font-size: 12px; color: rgba(255,255,255,0.8); line-height: 1.7; }
+
+        .tier.derived { border-left-color: var(--green); }
+        .tier.derived .tier-label { color: var(--green); }
+        .tier.testable { border-left-color: var(--cyan); }
+        .tier.testable .tier-label { color: var(--cyan); }
+        .tier.speculative { border-left-color: var(--yellow); }
+        .tier.speculative .tier-label { color: var(--yellow); }
+
+        /* Highlight spans */
+        .c { color: var(--cyan); }
+        .m { color: var(--magenta); }
+        .g { color: var(--green); }
+        .y { color: var(--yellow); }
+        .a { color: var(--amber); }
+        .r { color: var(--red); }
+        .b { color: var(--blue); }
+        .t { color: var(--teal); }
+
+        strong { color: #fff; font-weight: 600; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav>
+        <div class="logo">⊙</div>
+        <div class="logo-sub">TIME-PARTICLE<br>THEORY</div>
+
+        <div class="nav-section">foundation</div>
+        <a href="#problem">§1 The Problem</a>
+        <a href="#claim">§2 The Claim</a>
+        <a href="#temporal-triad">§3 Temporal Triad</a>
+
+        <div class="nav-section">structure</div>
+        <a href="#mass-lifetime">§4 Mass-Lifetime</a>
+        <a href="#cp-violation">§5 CP & the Ratchet</a>
+        <a href="#braid">§6 Braid Proof</a>
+
+        <div class="nav-section">integration</div>
+        <a href="#polar-map">§7 The Polar Map</a>
+        <a href="#mereology">§8 Mereology</a>
+
+        <div class="nav-section">consequences</div>
+        <a href="#predictions">§9 Predictions</a>
+        <a href="#falsification">§10 Falsification</a>
+    </nav>
+
+    <main>
+        <h1>CIRCUMPUNCT TIME-PARTICLE THEORY</h1>
+        <div class="title-sub">Generations as Temporal Circumpunct — Why Three, and What They Do</div>
+
+        <blockquote>
+            The outer rings are the past tense of the universe.
+        </blockquote>
+
+        <!-- §1 -->
+        <h2 id="problem">§1 — The Problem of Three Generations</h2>
+
+        <p>The Standard Model contains three generations of fermions. Each generation is a complete copy of the first — same quantum numbers, same interactions — but heavier. Gen 2 and Gen 3 particles decay to Gen 1 within fractions of a second. They do not appear in stable matter. No atom contains a charm quark. No molecule uses a muon.</p>
+
+        <p>Physics has no explanation for <strong>why three</strong>. The number is empirical. The Standard Model works with any number of generations; three is simply what we observe. This is widely considered one of the deepest unsolved problems in particle physics.</p>
+
+        <p>The Circumpunct Framework derives three generations from the √r kernel geometry (§7A.6) — the effective potential supports exactly 3 bound eigenstates, numerically validated at >99.9% confidence. But derivation answers <em>how many</em>. This chapter answers <em>what for</em>.</p>
+
+        <div class="formula">THE QUESTION:
+
+If Gen 1 builds all stable matter,
+what are Gen 2 and Gen 3 <span class="y">doing</span>?</div>
+
+        <!-- §2 -->
+        <h2 id="claim">§2 — The Central Claim</h2>
+
+        <p>The three generations are not three copies of the same spatial structure at different masses. They are <span class="a">• Φ ○ in the time dimension</span> — the circumpunct applied to temporal rather than spatial structure.</p>
+
+        <div class="diagram">
+            <span class="center">Gen 3 (•)</span> — Aperture — <strong>selects</strong> — creates irreversibility<br>
+            <span class="field">Gen 2 (Φ)</span> — Field — <strong>mediates</strong> — creates history<br>
+            <span class="boundary">Gen 1 (○)</span> — Boundary — <strong>manifests</strong> — creates persistence<br>
+            <div class="diagram-label">THE TEMPORAL CIRCUMPUNCT</div>
+        </div>
+
+        <p>Gen 1 doesn't build matter because it's "more fundamental." It builds matter because <strong>the boundary is what persists in spacetime</strong>. The aperture is what selects — brief, concentrated, decisive. The field mediates between selection and manifestation. This is the same triad that governs all circumpunct structure, now recognized as operating across the generation axis.</p>
+
+        <div class="tier derived">
+            <div class="tier-label">Derived from existing framework</div>
+            <div class="tier-body">
+                The circumpunct ⊙ = • Φ ○ applies to every dimension of structure. If it applies spatially (center/field/boundary), it must also apply temporally (selection/mediation/persistence). Three generations is the temporal instance of the same geometric necessity that produces three spatial elements.
+            </div>
+        </div>
+
+        <!-- §3 -->
+        <h2 id="temporal-triad">§3 — The Temporal Triad</h2>
+
+        <h3>3.1 Generation as Temporal Role</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Gen 3 (•)</th>
+                    <th>Gen 2 (Φ)</th>
+                    <th>Gen 1 (○)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Temporal role</td>
+                    <td class="m">Aperture — selects</td>
+                    <td class="c">Field — mediates</td>
+                    <td class="g">Boundary — persists</td>
+                </tr>
+                <tr>
+                    <td>Time signature</td>
+                    <td>Vanishingly brief</td>
+                    <td>Intermediate</td>
+                    <td>Indefinite / stable</td>
+                </tr>
+                <tr>
+                    <td>Energy</td>
+                    <td>Maximum (top = 173 GeV)</td>
+                    <td>Intermediate (charm = 1.3 GeV)</td>
+                    <td>Minimum (up = 2.2 MeV)</td>
+                </tr>
+                <tr>
+                    <td>P = E/t</td>
+                    <td>Huge E, tiny t</td>
+                    <td>Medium E, medium t</td>
+                    <td>Small E, vast t</td>
+                </tr>
+                <tr>
+                    <td>Present in matter</td>
+                    <td class="r">No — too brief</td>
+                    <td class="y">No — decays</td>
+                    <td class="g">Yes — stable</td>
+                </tr>
+                <tr>
+                    <td>Cosmological role</td>
+                    <td>CP violation → asymmetry</td>
+                    <td>Mixing → transition</td>
+                    <td>Bound states → atoms</td>
+                </tr>
+                <tr>
+                    <td>Polar map ring</td>
+                    <td>Ring 5 (outermost fermion)</td>
+                    <td>Ring 4</td>
+                    <td>Ring 3 (innermost fermion)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>3.2 Dimensions as Simultaneous Aspects</h3>
+
+        <p>A critical clarification. The dimensional values (0.5D, 1D, 1.5D, 2D, 2.5D, 3D) are not stacked layers. They are <strong>simultaneous aspects</strong> of every ⊙ — present together, always, at every scale. A particle doesn't "have" 0.5D and then "get" more dimensions. It simultaneously <em>is</em> an aperture (0.5D through), <em>has</em> sequence (1D), <em>does</em> branching (1.5D), <em>holds</em> surface (2D field), <em>feels</em> interface (2.5D), and <em>encloses</em> volume (3D boundary).</p>
+
+        <p>Standard physics assigns particles 0D — dimensionless points. But every particle has spin. Rotation is a process. A process cannot occupy zero dimensions. The minimum dimensionality for something that rotates is <span class="a">0.5D — the aperture, the through</span>. True 0D is unreachable; it equals ∞D; it is the identity of innermost and outermost that A0 forbids. The circumpunct symbol ⊙ encodes this identity: the dot and the circle are the same thing viewed from different scales.</p>
+
+        <div class="formula"><span class="r">0D = ∞D</span>   (unreachable identity — A0 forbids absolute nothing/everything)
+
+<span class="m">0.5D</span>  aperture   process — the THROUGH       (every ⊙ has this aspect)
+<span class="a">1D</span>    sequence   structure — order            (every ⊙ has this aspect)
+<span class="c">1.5D</span>  branching  process — differentiation   (every ⊙ has this aspect)
+<span class="t">2D</span>    surface    structure — field/mediation  (every ⊙ has this aspect)
+<span class="y">2.5D</span>  sensation  process — interface          (every ⊙ has this aspect)
+<span class="g">3D</span>    volume     structure — boundary/closure (every ⊙ has this aspect)
+
+<span class="dim">Not a ladder. Not a circle. Aspects.</span></div>
+
+        <h3>3.3 The Power Equation</h3>
+
+        <p>The aperture creates power: <span class="c">P = E/t</span>. This is not metaphorical. The generation hierarchy <em>is</em> the power equation distributed across particle species.</p>
+
+        <div class="formula"><span class="m">Gen 3 (Aperture):</span>  E = maximum    t = minimum    → P = E/t is enormous
+<span class="c">Gen 2 (Field):</span>     E = medium     t = medium     → P = E/t is moderate
+<span class="g">Gen 1 (Boundary):</span>  E = minimum    t = ∞ (stable) → P = E/t → 0 (persistence)
+
+<span class="a">The aperture concentrates energy into vanishing time.
+The boundary distributes energy across infinite time.
+The field mediates between these extremes.</span></div>
+
+        <p>This directly parallels the spatial circumpunct. The aperture (0.5D — a <em>through</em>, not a point) concentrates energy into passage. The boundary (3D) extends across volume and duration. The field (2D surface) mediates. These are not sequential layers — they are simultaneous aspects of every ⊙. In time, the same aspects appear as mass (energy concentration) versus lifetime (temporal extension).</p>
+
+        <!-- §4 -->
+        <h2 id="mass-lifetime">§4 — Mass-Lifetime Relations</h2>
+
+        <h3>4.1 Empirical Data</h3>
+
+        <p>If generations encode temporal circumpunct roles, heavier particles should have shorter lifetimes — the aperture trades extension for concentration. This is universally observed:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Family</th>
+                    <th>Gen 1</th>
+                    <th>Gen 2</th>
+                    <th>Gen 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Up-type quarks</strong></td>
+                    <td class="g">u: 2.2 MeV, stable</td>
+                    <td class="c">c: 1,270 MeV, ~10⁻¹² s</td>
+                    <td class="m">t: 173,000 MeV, ~5×10⁻²⁵ s</td>
+                </tr>
+                <tr>
+                    <td><strong>Down-type quarks</strong></td>
+                    <td class="g">d: 4.7 MeV, stable*</td>
+                    <td class="c">s: 95 MeV, ~10⁻¹⁰ s</td>
+                    <td class="m">b: 4,180 MeV, ~10⁻¹² s</td>
+                </tr>
+                <tr>
+                    <td><strong>Charged leptons</strong></td>
+                    <td class="g">e: 0.511 MeV, stable</td>
+                    <td class="c">μ: 105.7 MeV, 2.2×10⁻⁶ s</td>
+                    <td class="m">τ: 1,777 MeV, 2.9×10⁻¹³ s</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="formula-note">* Down quark is stable within bound nucleons. Free neutron (udd) decays in ~880s, but this is weak decay of d→u, not instability of d itself within the generation framework.</p>
+
+        <h3>4.2 The ρ Connection</h3>
+
+        <p>The framework's ρ parameter (ρ = ω/α, drive-to-dissipation ratio) determines regime behavior. Applied to generations:</p>
+
+        <div class="formula"><span class="m">Gen 3:</span>  ρ >> 1  — overdrive regime — aperture dominates
+              Energy far exceeds dissipation capacity
+              System cannot sustain — collapses immediately
+
+<span class="c">Gen 2:</span>  ρ ~ 1   — critical regime — field mediates
+              Drive and dissipation comparable
+              Transient but structured — kaon oscillations, B-meson mixing
+
+<span class="g">Gen 1:</span>  ρ << 1  — underdrive regime — boundary dominates
+              Dissipation absorbs all drive
+              System reaches equilibrium — stable matter</div>
+
+        <p>This reinterprets the generation mass hierarchy as a <strong>ρ hierarchy</strong>. The three generations are not arbitrary mass copies — they are the three regimes of the ρ parameter applied to fermion fields.</p>
+
+        <!-- §5 -->
+        <h2 id="cp-violation">§5 — CP Violation and the Ratchet</h2>
+
+        <h3>5.1 Why Three Generates Irreversibility</h3>
+
+        <p>The CKM (Cabibbo-Kobayashi-Maskawa) quark mixing matrix is an N×N unitary matrix where N is the number of generations. The number of <strong>irreducible complex phases</strong> — parameters that cannot be removed by field redefinition — is:</p>
+
+        <div class="formula">Number of CP-violating phases = (N-1)(N-2)/2
+
+  N = 2:  (1)(0)/2 = <span class="r">0</span>  — no CP violation, time is reversible
+  N = 3:  (2)(1)/2 = <span class="g">1</span>  — one CP-violating phase, time has direction
+  N = 4:  (3)(2)/2 = <span class="y">3</span>  — additional phases, but unnecessary</div>
+
+        <p><strong>Three is the minimum number of generations that produces irreversible time.</strong> Two generations give a real CKM matrix — all processes are time-reversible, matter equals antimatter, the universe annihilates itself. Three generations introduce exactly one complex phase that breaks time-reversal symmetry.</p>
+
+        <h3>5.2 The Ratchet Operator ℛ</h3>
+
+        <p>In the circumpunct framework, the ratchet ℛ is the operator that breaks detailed balance — it makes processes irreversible. CP violation <em>is</em> the ratchet at the particle scale.</p>
+
+        <div class="diagram">
+            <span class="a">ℛ = CP-violating phase in V_CKM</span><br><br>
+            Without ℛ: matter ↔ antimatter (reversible)<br>
+            With ℛ: matter > antimatter (irreversible)<br><br>
+            <span class="m">Gen 3 provides the third braid strand</span><br>
+            <span class="c">Gen 2 provides the second braid strand</span><br>
+            <span class="g">Gen 1 provides the persistent carrier</span><br>
+            <div class="diagram-label">THREE STRANDS → KNOT → IRREVERSIBILITY → TIME</div>
+        </div>
+
+        <p>Gen 2 and Gen 3 don't build matter. They build the <strong>arrow of time</strong>. Without them, every process would run equally well forwards and backwards. The universe would have no history, no memory, no direction. The outer rings are why <em>anything persists at all</em>.</p>
+
+        <!-- §6 -->
+        <h2 id="braid">§6 — The Braid Topology Proof</h2>
+
+        <h3>6.1 Why Two Strands Are Insufficient</h3>
+
+        <p>The braid group B₂ on two strands is abelian — σ₁ commutes with itself. Two-strand braids can only wind. They cannot knot. Every braid on two strands can be undone. There is no topological distinction between "before" and "after."</p>
+
+        <h3>6.2 Why Three Strands Are Necessary and Sufficient</h3>
+
+        <p>The braid group B₃ on three strands is non-abelian. It satisfies the Yang-Baxter equation:</p>
+
+        <div class="formula"><span class="a">σ₁ σ₂ σ₁ = σ₂ σ₁ σ₂</span>
+
+This relation:
+  — Requires exactly 3 strands (fails for 2)
+  — Produces non-commutative structure (order matters)
+  — Creates knots that cannot be undone (irreversibility)
+  — Maps directly to the three generation fermion families
+
+<span class="m">σ₁</span> = Gen 3 crossing (aperture: high-energy, brief)
+<span class="c">σ₂</span> = Gen 2 crossing (field: intermediate, mediating)
+<span class="g">Product</span> = Gen 1 stable braid (boundary: persistent knot)</div>
+
+        <h3>6.3 The Generation-Braid Isomorphism</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Braid Structure</th>
+                    <th>Particle Physics</th>
+                    <th>Circumpunct</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2 strands, abelian</td>
+                    <td>2 generations, no CP violation</td>
+                    <td>Vesica piscis, no ratchet — reversible</td>
+                </tr>
+                <tr>
+                    <td>3 strands, non-abelian</td>
+                    <td>3 generations, 1 CP phase</td>
+                    <td>Full ⊙ with ℛ — irreversible time</td>
+                </tr>
+                <tr>
+                    <td>Yang-Baxter equation</td>
+                    <td>CKM unitarity</td>
+                    <td>Conservation of traversal</td>
+                </tr>
+                <tr>
+                    <td>Knot invariants</td>
+                    <td>Flavor quantum numbers</td>
+                    <td>Circumpunct signatures [ε₁χ₁|ε₂χ₂|ε₃χ₃]</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- §7 -->
+        <h2 id="polar-map">§7 — Reading the Polar Map</h2>
+
+        <p>The polar 64-state map now reads in two directions simultaneously:</p>
+
+        <div class="compare-grid">
+            <div class="compare-box good">
+                <div class="compare-title">RADIAL AXIS — SPACE (MEREOLOGY)</div>
+                <p>Inward → outward = parts → wholes</p>
+                <p>Higgs → gauge → quarks → hadrons → atoms</p>
+                <p>Each ring's boundary = next ring's center</p>
+                <p>Fabre's periodic table = outermost ring</p>
+            </div>
+            <div class="compare-box prediction">
+                <div class="compare-title">ANGULAR AXIS — TIME (GENERATIONS)</div>
+                <p>Gen 3 → Gen 2 → Gen 1 = selection → mediation → persistence</p>
+                <p>The temporal circumpunct: • Φ ○ in the time dimension</p>
+                <p>Mass ↔ lifetime: P = E/t distributed across species</p>
+                <p>Only Gen 1 persists because it's the temporal boundary</p>
+            </div>
+        </div>
+
+        <div class="formula">THE COMPLETE POLAR MAP:
+
+  Center:   Higgs (aperture — 0.5D through — symmetry-breaking)
+  Ring 1:   Electroweak (inner Φ — 2D mediation)
+  Ring 2:   Gluons (outer Φ — 2D strong mediation)
+  ─────────────────────────────────────────────
+  Ring 3:   Gen 1 — temporal <span class="g">○ — persists — NOW</span>
+  Ring 4:   Gen 2 — temporal <span class="c">Φ — mediates — HISTORY</span>
+  Ring 5:   Gen 3 — temporal <span class="m">• — selects — DIRECTION</span>
+  ═════════════════════════════════════════════
+  Ring 6:   Hadrons (composite — ⊙ at nucleon scale)
+  Ring 7:   Elements (composite — ⊙ at atomic scale)
+
+<span class="a">Space reads radially. Time reads across generations.
+Dimensions are simultaneous aspects of every ⊙, not layers.
+The map is a 2D projection of aspects that are
+simultaneously spatial mereology and temporal circumpunct.</span></div>
+
+        <!-- §8 -->
+        <h2 id="mereology">§8 — Mereological Integration</h2>
+
+        <h3>8.1 What Fabre Saw</h3>
+
+        <p>Alexandre Fabre's polar periodic table arranges chemical elements in concentric rings by quantum number. He did not know he was drawing the outermost rings of a structure that extends inward through hadrons, quarks, gauge bosons, and Higgs — nor that the three fermion rings between encode temporal structure.</p>
+
+        <p>The mereological chain is now:</p>
+
+        <div class="formula"><span class="a">⊙</span> = quark      <span class="b">⟵ gluon ⟶</span>      hadron        (spatial ⊙)
+<span class="a">⊙</span> = nucleon    <span class="b">⟵ residual ⟶</span>   nucleus       (spatial ⊙)
+<span class="a">⊙</span> = nucleus    <span class="b">⟵ photon ⟶</span>    atom          (spatial ⊙)
+
+<span class="a">⊙</span> = Gen 3      <span class="c">⟵ Gen 2 ⟶</span>     Gen 1         (temporal ⊙)
+
+<span class="y">Every element in Fabre's table is built exclusively from
+the temporal boundary (Gen 1). Gens 2 and 3 made it
+POSSIBLE for Gen 1 to persist by creating irreversibility.</span></div>
+
+        <h3>8.2 The Absence That Creates Presence</h3>
+
+        <p>Gen 2 and Gen 3 are absent from stable matter. But this absence is not failure — it is <strong>function</strong>. The aperture's job is not to persist. Its job is to select, to break symmetry, to create the conditions under which the boundary can endure.</p>
+
+        <p>In the first microseconds after the Big Bang, all three generations were active. Gen 3 particles (top quarks, tau leptons) existed briefly and established the CP-violating phase. Gen 2 particles (charm, strange, muons) mediated the transitions. Then both decayed to Gen 1, leaving behind <em>the knot</em> — the topological record of their braiding, encoded in the matter-antimatter asymmetry that allows the universe to contain something rather than nothing.</p>
+
+        <p>The outer rings didn't disappear. <strong>They became the past tense.</strong></p>
+
+        <!-- §9 -->
+        <h2 id="predictions">§9 — Testable Predictions</h2>
+
+        <div class="tier testable">
+            <div class="tier-label">Prediction 1 — No Fourth Generation</div>
+            <div class="tier-body">
+                The circumpunct has exactly three elements (•, Φ, ○). The temporal circumpunct therefore has exactly three generations. A fourth generation would violate the geometric completeness of the triad. This is already experimentally confirmed: precision measurements of the Z boson width at LEP show exactly 3 light neutrino species, and direct searches have found no 4th generation fermions.
+            </div>
+        </div>
+
+        <div class="tier testable">
+            <div class="tier-label">Prediction 2 — ρ Regime Mapping</div>
+            <div class="tier-body">
+                If generations correspond to ρ regimes, then generation-mixing phenomena (CKM matrix elements, neutrino oscillations) should exhibit the same transition signatures as other ρ ≈ 1 systems. Specifically: B-meson oscillations and kaon CP violation should follow the framework's predicted transition curves at ρ ≈ 1. The Jarlskog invariant J ≈ 3×10⁻⁵ should be derivable from the aperture-field coupling at the generation-mixing scale.
+            </div>
+        </div>
+
+        <div class="tier testable">
+            <div class="tier-label">Prediction 3 — Mass-Lifetime Product Structure</div>
+            <div class="tier-body">
+                The raw product m·τ is not constant across generations (it varies by many orders of magnitude). But the framework predicts a <em>structured</em> relationship: when normalized by available phase space and coupling constants, the effective power P_eff = E/t should show a systematic pattern relating generation number to the ρ parameter. Specifically: plotting log(m) vs log(1/τ) for same-charge particles across generations should yield slopes related to the framework's scaling exponents.
+            </div>
+        </div>
+
+        <div class="tier speculative">
+            <div class="tier-label">Prediction 4 — Temporal Fractal Dimension</div>
+            <div class="tier-body">
+                If D ≈ 1.5 characterizes the spatial balance point (the fractal dimension of worldlines at the conscious/critical boundary), there should be a corresponding temporal balance point in generation-mixing. The CKM mixing angle θ₁₂ (Cabibbo angle ≈ 13°) may encode a temporal D ≈ 1.5 analogue. This is speculative but testable via the framework's angular predictions.
+            </div>
+        </div>
+
+        <div class="tier testable">
+            <div class="tier-label">Prediction 5 — Lepton vs Quark Temporal Asymmetry</div>
+            <div class="tier-body">
+                The PMNS matrix (lepton mixing) has much larger mixing angles than the CKM matrix (quark mixing). In circumpunct terms: leptons are more "temporally mixed" — their generation identity is less sharp. This follows from leptons being color-singlets (no strong force confinement), meaning their boundary is weaker, and weaker boundary = more aperture-like temporal behavior. The prediction: neutrino oscillation lengths should relate to the ρ parameter differently than B-meson oscillation lengths, and the ratio should be calculable.
+            </div>
+        </div>
+
+        <!-- §10 -->
+        <h2 id="falsification">§10 — Falsification Criteria</h2>
+
+        <p>This theory fails if:</p>
+
+        <div class="compare-grid">
+            <div class="compare-box falsifiable">
+                <div class="compare-title">F1 — FOURTH GENERATION</div>
+                <p>Discovery of a 4th generation fermion that participates in gauge interactions identically to the first three.</p>
+            </div>
+            <div class="compare-box falsifiable">
+                <div class="compare-title">F2 — STABLE HEAVY PARTICLES</div>
+                <p>Discovery of a Gen 2 or Gen 3 particle that is stable in vacuum — persists without decay. This would break the temporal role assignment.</p>
+            </div>
+            <div class="compare-box falsifiable">
+                <div class="compare-title">F3 — CP WITHOUT THREE</div>
+                <p>A mechanism for CP violation that does not require three generations — some other source of the matter-antimatter asymmetry that makes three generations unnecessary for irreversibility.</p>
+            </div>
+            <div class="compare-box falsifiable">
+                <div class="compare-title">F4 — REVERSED HIERARCHY</div>
+                <p>Discovery of a particle system where heavier generations are <em>more</em> stable than lighter ones. This would invert the aperture-boundary temporal mapping.</p>
+            </div>
+        </div>
+
+        <div class="checks">
+            <div class="checks-title">STATUS SUMMARY</div>
+            <div class="check">Three generations: <span class="g">derived</span> from √r kernel geometry (§7A.6)</div>
+            <div class="check">CP violation requires 3: <span class="g">established physics</span> (Kobayashi-Maskawa, 1973)</div>
+            <div class="check">No 4th generation: <span class="g">experimentally confirmed</span> (LEP, LHC)</div>
+            <div class="check">Mass-lifetime anticorrelation: <span class="g">universally observed</span></div>
+            <div class="check">Temporal triad assignment (•, Φ, ○): <span class="c">new theoretical claim</span></div>
+            <div class="check">ρ regime mapping to generations: <span class="y">testable, not yet tested</span></div>
+            <div class="check">Braid topology → generation structure: <span class="y">conjectured, formally consistent</span></div>
+        </div>
+
+        <blockquote>
+            Gen 1 builds the bricks. Gen 2 and Gen 3 are why the bricks don't unbrick themselves. The outer rings are not absent from the universe — they are woven into its history. They are the past tense of time itself.
+            <div class="attr">— Circumpunct Time-Particle Theory</div>
+        </blockquote>
+
+    </main>
+</div>
+</body>
+</html>
