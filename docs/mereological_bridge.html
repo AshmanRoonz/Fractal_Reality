@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Mereological Bridge — Elements to Particles</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #07070b;
+    --surface: #0e0e15;
+    --surface2: #13131d;
+    --border: rgba(255,255,255,0.05);
+    --text: #cdd0dc;
+    --dim: #5a5e76;
+    --muted: #3a3e50;
+    --gold: #f0c674;
+    --gold-dim: rgba(240,198,116,0.12);
+    --gold-glow: rgba(240,198,116,0.25);
+    --quark-up: #e8785d;
+    --quark-down: #d05d7a;
+    --electron: #5de8b8;
+    --gluon: #5d8be8;
+    --photon: #e8e05d;
+    --higgs: #c89dff;
+    --proton: #e8a05d;
+    --neutron: #7a8eb8;
+    --nucleus: #5dace8;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    padding: 24px 0 16px;
+}
+
+header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 2rem;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    text-shadow: 0 0 30px rgba(240,198,116,0.15);
+}
+
+header .sub {
+    font-size: 0.65rem;
+    color: var(--dim);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-top: 6px;
+}
+
+/* Layout */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 20px;
+    margin-top: 16px;
+    align-items: start;
+}
+
+@media (max-width: 1100px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .breakdown-panel { max-height: 80vh; overflow-y: auto; }
+}
+
+/* ── PERIODIC TABLE ── */
+.ptable-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.ptable-title {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.ptable {
+    display: grid;
+    grid-template-columns: repeat(18, 1fr);
+    gap: 2px;
+    width: 100%;
+}
+
+.el-cell {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    font-size: 0.6rem;
+    min-height: 36px;
+    background: var(--surface2);
+    border: 1px solid transparent;
+}
+
+.el-cell:hover {
+    border-color: var(--gold);
+    background: rgba(240,198,116,0.06);
+    transform: scale(1.12);
+    z-index: 10;
+}
+
+.el-cell.selected {
+    border-color: var(--gold);
+    background: var(--gold-dim);
+    box-shadow: 0 0 16px var(--gold-glow);
+    transform: scale(1.12);
+    z-index: 11;
+}
+
+.el-cell .el-z { font-size: 0.45rem; color: var(--dim); line-height: 1; }
+.el-cell .el-sym { font-weight: 600; font-size: 0.7rem; line-height: 1.2; color: var(--text); }
+.el-cell.selected .el-sym { color: var(--gold); }
+.el-cell .el-name { display: none; }
+.el-empty { background: transparent; cursor: default; }
+.el-empty:hover { transform: none; border-color: transparent; background: transparent; }
+
+/* Color by category */
+.el-cell[data-cat="noble"] { background: rgba(93,232,232,0.08); }
+.el-cell[data-cat="alkali"] { background: rgba(232,93,117,0.08); }
+.el-cell[data-cat="alkaline"] { background: rgba(232,154,93,0.08); }
+.el-cell[data-cat="transition"] { background: rgba(93,139,232,0.08); }
+.el-cell[data-cat="post-transition"] { background: rgba(122,142,184,0.08); }
+.el-cell[data-cat="metalloid"] { background: rgba(163,190,140,0.08); }
+.el-cell[data-cat="nonmetal"] { background: rgba(93,232,184,0.08); }
+.el-cell[data-cat="halogen"] { background: rgba(200,157,255,0.08); }
+.el-cell[data-cat="lanthanide"] { background: rgba(200,180,140,0.08); }
+.el-cell[data-cat="actinide"] { background: rgba(180,140,160,0.08); }
+
+/* Lanthanide/Actinide rows */
+.ptable-extra {
+    display: grid;
+    grid-template-columns: repeat(18, 1fr);
+    gap: 2px;
+    margin-top: 8px;
+}
+
+.ptable-extra-label {
+    font-size: 0.5rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 6px;
+    margin-bottom: 2px;
+    letter-spacing: 0.1em;
+}
+
+/* ── BREAKDOWN PANEL ── */
+.breakdown-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    position: sticky;
+    top: 16px;
+}
+
+.bp-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(240,198,116,0.1);
+    margin-bottom: 16px;
+}
+
+.bp-empty {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--muted);
+    font-size: 0.7rem;
+    line-height: 1.8;
+}
+
+.bp-content { display: none; }
+.bp-content.active { display: block; }
+
+/* Element header in panel */
+.bp-element-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.bp-symbol {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1;
+}
+
+.bp-name {
+    font-size: 0.8rem;
+    color: var(--dim);
+    margin-top: 2px;
+}
+
+.bp-z {
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+/* Mereology levels */
+.mereology-level {
+    margin: 14px 0;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--muted);
+    background: rgba(255,255,255,0.01);
+    animation: fadeSlide 0.35s ease both;
+}
+
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.mereology-level:nth-child(2) { animation-delay: 0.05s; }
+.mereology-level:nth-child(3) { animation-delay: 0.1s; }
+.mereology-level:nth-child(4) { animation-delay: 0.15s; }
+.mereology-level:nth-child(5) { animation-delay: 0.2s; }
+
+.ml-atom { border-left-color: var(--nucleus); }
+.ml-nucleus { border-left-color: var(--proton); }
+.ml-nucleon { border-left-color: var(--quark-up); }
+.ml-quark { border-left-color: var(--gluon); }
+.ml-field { border-left-color: var(--photon); }
+
+.ml-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.ml-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.55rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.ml-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+}
+
+.ml-body {
+    font-size: 0.72rem;
+    line-height: 1.7;
+    color: var(--text);
+    padding-left: 28px;
+}
+
+.ml-body .count {
+    font-weight: 600;
+    color: var(--gold);
+}
+
+.ml-body .particle-tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 0.6rem;
+    margin: 1px 2px;
+    font-weight: 500;
+}
+
+.tag-up { background: rgba(232,120,93,0.15); color: var(--quark-up); }
+.tag-down { background: rgba(208,93,122,0.15); color: var(--quark-down); }
+.tag-electron { background: rgba(93,232,184,0.15); color: var(--electron); }
+.tag-gluon { background: rgba(93,139,232,0.15); color: var(--gluon); }
+.tag-photon { background: rgba(232,224,93,0.15); color: var(--photon); }
+.tag-proton { background: rgba(232,160,93,0.15); color: var(--proton); }
+.tag-neutron { background: rgba(122,142,184,0.15); color: var(--neutron); }
+.tag-higgs { background: rgba(200,157,255,0.15); color: var(--higgs); }
+
+/* Circumpunct diagram */
+.circ-diagram {
+    margin: 16px 0 8px;
+    padding: 14px;
+    background: rgba(240,198,116,0.03);
+    border: 1px solid rgba(240,198,116,0.08);
+    border-radius: 8px;
+    font-size: 0.65rem;
+    line-height: 1.9;
+    text-align: center;
+    color: var(--dim);
+}
+
+.circ-diagram .circ-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 3px 0;
+}
+
+.circ-diagram .circ-symbol { color: var(--gold); font-size: 0.85rem; }
+.circ-diagram .circ-eq { color: var(--muted); }
+.circ-diagram .circ-center { color: var(--quark-up); }
+.circ-diagram .circ-field { color: var(--gluon); }
+.circ-diagram .circ-boundary { color: var(--proton); }
+
+/* Totals bar */
+.totals-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 16px;
+}
+
+.total-cell {
+    text-align: center;
+    padding: 10px 4px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+}
+
+.total-cell .tv { font-size: 1.2rem; font-weight: 600; color: var(--gold); }
+.total-cell .tl { font-size: 0.5rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+
+/* State IDs reference */
+.state-ids {
+    margin-top: 14px;
+    padding: 10px;
+    background: rgba(255,255,255,0.015);
+    border-radius: 6px;
+    font-size: 0.58rem;
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+.state-ids strong { color: var(--dim); font-weight: 500; }
+
+/* Footer note */
+.footer-note {
+    text-align: center;
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 0.55rem;
+    color: var(--muted);
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>⊙ Mereological Bridge</h1>
+        <div class="sub">From Elements to Fundamental States &mdash; Parts are Fractals of Wholes</div>
+    </header>
+
+    <div class="main-layout">
+        <div class="ptable-wrap">
+            <div class="ptable-title">Select an Element</div>
+            <div class="ptable" id="ptable"></div>
+            <div class="ptable-extra-label">Lanthanides &amp; Actinides</div>
+            <div class="ptable-extra" id="ptableExtra"></div>
+        </div>
+
+        <div class="breakdown-panel">
+            <div class="bp-title">Particle Composition</div>
+            <div class="bp-empty" id="bpEmpty">
+                Click any element to see<br>its mereological breakdown<br><br>
+                <span style="font-size:1.2rem; opacity:0.3;">⊙</span><br><br>
+                <span style="font-size:0.55rem;">Element → Atom → Nucleus →<br>Nucleons → Quarks → 64-State IDs</span>
+            </div>
+            <div class="bp-content" id="bpContent"></div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        Every atom is built from States 0–5 (u,d quarks) + State 13 (electron) + States 48–55 (gluons) + State 59 (photon)<br>
+        Generations II &amp; III do not participate in stable matter &mdash; the universe is built from Ring 3 of the Polar 64-State Map
+    </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────
+// ELEMENT DATA — first 118 elements
+// ─────────────────────────────────────────
+const elements = [
+    {z:1,sym:'H',name:'Hydrogen',mass:1.008,p:1,n:0,cat:'nonmetal'},
+    {z:2,sym:'He',name:'Helium',mass:4.003,p:2,n:2,cat:'noble'},
+    {z:3,sym:'Li',name:'Lithium',mass:6.941,p:3,n:4,cat:'alkali'},
+    {z:4,sym:'Be',name:'Beryllium',mass:9.012,p:4,n:5,cat:'alkaline'},
+    {z:5,sym:'B',name:'Boron',mass:10.81,p:5,n:6,cat:'metalloid'},
+    {z:6,sym:'C',name:'Carbon',mass:12.01,p:6,n:6,cat:'nonmetal'},
+    {z:7,sym:'N',name:'Nitrogen',mass:14.01,p:7,n:7,cat:'nonmetal'},
+    {z:8,sym:'O',name:'Oxygen',mass:16.00,p:8,n:8,cat:'nonmetal'},
+    {z:9,sym:'F',name:'Fluorine',mass:19.00,p:9,n:10,cat:'halogen'},
+    {z:10,sym:'Ne',name:'Neon',mass:20.18,p:10,n:10,cat:'noble'},
+    {z:11,sym:'Na',name:'Sodium',mass:22.99,p:11,n:12,cat:'alkali'},
+    {z:12,sym:'Mg',name:'Magnesium',mass:24.31,p:12,n:12,cat:'alkaline'},
+    {z:13,sym:'Al',name:'Aluminium',mass:26.98,p:13,n:14,cat:'post-transition'},
+    {z:14,sym:'Si',name:'Silicon',mass:28.09,p:14,n:14,cat:'metalloid'},
+    {z:15,sym:'P',name:'Phosphorus',mass:30.97,p:15,n:16,cat:'nonmetal'},
+    {z:16,sym:'S',name:'Sulfur',mass:32.07,p:16,n:16,cat:'nonmetal'},
+    {z:17,sym:'Cl',name:'Chlorine',mass:35.45,p:17,n:18,cat:'halogen'},
+    {z:18,sym:'Ar',name:'Argon',mass:39.95,p:18,n:22,cat:'noble'},
+    {z:19,sym:'K',name:'Potassium',mass:39.10,p:19,n:20,cat:'alkali'},
+    {z:20,sym:'Ca',name:'Calcium',mass:40.08,p:20,n:20,cat:'alkaline'},
+    {z:21,sym:'Sc',name:'Scandium',mass:44.96,p:21,n:24,cat:'transition'},
+    {z:22,sym:'Ti',name:'Titanium',mass:47.87,p:22,n:26,cat:'transition'},
+    {z:23,sym:'V',name:'Vanadium',mass:50.94,p:23,n:28,cat:'transition'},
+    {z:24,sym:'Cr',name:'Chromium',mass:52.00,p:24,n:28,cat:'transition'},
+    {z:25,sym:'Mn',name:'Manganese',mass:54.94,p:25,n:30,cat:'transition'},
+    {z:26,sym:'Fe',name:'Iron',mass:55.85,p:26,n:30,cat:'transition'},
+    {z:27,sym:'Co',name:'Cobalt',mass:58.93,p:27,n:32,cat:'transition'},
+    {z:28,sym:'Ni',name:'Nickel',mass:58.69,p:28,n:30,cat:'transition'},
+    {z:29,sym:'Cu',name:'Copper',mass:63.55,p:29,n:34,cat:'transition'},
+    {z:30,sym:'Zn',name:'Zinc',mass:65.38,p:30,n:35,cat:'transition'},
+    {z:31,sym:'Ga',name:'Gallium',mass:69.72,p:31,n:38,cat:'post-transition'},
+    {z:32,sym:'Ge',name:'Germanium',mass:72.63,p:32,n:41,cat:'metalloid'},
+    {z:33,sym:'As',name:'Arsenic',mass:74.92,p:33,n:42,cat:'metalloid'},
+    {z:34,sym:'Se',name:'Selenium',mass:78.97,p:34,n:45,cat:'nonmetal'},
+    {z:35,sym:'Br',name:'Bromine',mass:79.90,p:35,n:44,cat:'halogen'},
+    {z:36,sym:'Kr',name:'Krypton',mass:83.80,p:36,n:48,cat:'noble'},
+    {z:37,sym:'Rb',name:'Rubidium',mass:85.47,p:37,n:48,cat:'alkali'},
+    {z:38,sym:'Sr',name:'Strontium',mass:87.62,p:38,n:50,cat:'alkaline'},
+    {z:39,sym:'Y',name:'Yttrium',mass:88.91,p:39,n:50,cat:'transition'},
+    {z:40,sym:'Zr',name:'Zirconium',mass:91.22,p:40,n:51,cat:'transition'},
+    {z:41,sym:'Nb',name:'Niobium',mass:92.91,p:41,n:52,cat:'transition'},
+    {z:42,sym:'Mo',name:'Molybdenum',mass:95.95,p:42,n:54,cat:'transition'},
+    {z:43,sym:'Tc',name:'Technetium',mass:98,p:43,n:55,cat:'transition'},
+    {z:44,sym:'Ru',name:'Ruthenium',mass:101.1,p:44,n:57,cat:'transition'},
+    {z:45,sym:'Rh',name:'Rhodium',mass:102.9,p:45,n:58,cat:'transition'},
+    {z:46,sym:'Pd',name:'Palladium',mass:106.4,p:46,n:60,cat:'transition'},
+    {z:47,sym:'Ag',name:'Silver',mass:107.9,p:47,n:60,cat:'transition'},
+    {z:48,sym:'Cd',name:'Cadmium',mass:112.4,p:48,n:64,cat:'transition'},
+    {z:49,sym:'In',name:'Indium',mass:114.8,p:49,n:66,cat:'post-transition'},
+    {z:50,sym:'Sn',name:'Tin',mass:118.7,p:50,n:69,cat:'post-transition'},
+    {z:51,sym:'Sb',name:'Antimony',mass:121.8,p:51,n:71,cat:'metalloid'},
+    {z:52,sym:'Te',name:'Tellurium',mass:127.6,p:52,n:76,cat:'metalloid'},
+    {z:53,sym:'I',name:'Iodine',mass:126.9,p:53,n:74,cat:'halogen'},
+    {z:54,sym:'Xe',name:'Xenon',mass:131.3,p:54,n:77,cat:'noble'},
+    {z:55,sym:'Cs',name:'Caesium',mass:132.9,p:55,n:78,cat:'alkali'},
+    {z:56,sym:'Ba',name:'Barium',mass:137.3,p:56,n:81,cat:'alkaline'},
+    {z:57,sym:'La',name:'Lanthanum',mass:138.9,p:57,n:82,cat:'lanthanide'},
+    {z:58,sym:'Ce',name:'Cerium',mass:140.1,p:58,n:82,cat:'lanthanide'},
+    {z:59,sym:'Pr',name:'Praseodymium',mass:140.9,p:59,n:82,cat:'lanthanide'},
+    {z:60,sym:'Nd',name:'Neodymium',mass:144.2,p:60,n:84,cat:'lanthanide'},
+    {z:61,sym:'Pm',name:'Promethium',mass:145,p:61,n:84,cat:'lanthanide'},
+    {z:62,sym:'Sm',name:'Samarium',mass:150.4,p:62,n:88,cat:'lanthanide'},
+    {z:63,sym:'Eu',name:'Europium',mass:152.0,p:63,n:89,cat:'lanthanide'},
+    {z:64,sym:'Gd',name:'Gadolinium',mass:157.3,p:64,n:93,cat:'lanthanide'},
+    {z:65,sym:'Tb',name:'Terbium',mass:158.9,p:65,n:94,cat:'lanthanide'},
+    {z:66,sym:'Dy',name:'Dysprosium',mass:162.5,p:66,n:97,cat:'lanthanide'},
+    {z:67,sym:'Ho',name:'Holmium',mass:164.9,p:67,n:98,cat:'lanthanide'},
+    {z:68,sym:'Er',name:'Erbium',mass:167.3,p:68,n:99,cat:'lanthanide'},
+    {z:69,sym:'Tm',name:'Thulium',mass:168.9,p:69,n:100,cat:'lanthanide'},
+    {z:70,sym:'Yb',name:'Ytterbium',mass:173.0,p:70,n:103,cat:'lanthanide'},
+    {z:71,sym:'Lu',name:'Lutetium',mass:175.0,p:71,n:104,cat:'lanthanide'},
+    {z:72,sym:'Hf',name:'Hafnium',mass:178.5,p:72,n:106,cat:'transition'},
+    {z:73,sym:'Ta',name:'Tantalum',mass:180.9,p:73,n:108,cat:'transition'},
+    {z:74,sym:'W',name:'Tungsten',mass:183.8,p:74,n:110,cat:'transition'},
+    {z:75,sym:'Re',name:'Rhenium',mass:186.2,p:75,n:111,cat:'transition'},
+    {z:76,sym:'Os',name:'Osmium',mass:190.2,p:76,n:114,cat:'transition'},
+    {z:77,sym:'Ir',name:'Iridium',mass:192.2,p:77,n:115,cat:'transition'},
+    {z:78,sym:'Pt',name:'Platinum',mass:195.1,p:78,n:117,cat:'transition'},
+    {z:79,sym:'Au',name:'Gold',mass:197.0,p:79,n:118,cat:'transition'},
+    {z:80,sym:'Hg',name:'Mercury',mass:200.6,p:80,n:121,cat:'transition'},
+    {z:81,sym:'Tl',name:'Thallium',mass:204.4,p:81,n:123,cat:'post-transition'},
+    {z:82,sym:'Pb',name:'Lead',mass:207.2,p:82,n:125,cat:'post-transition'},
+    {z:83,sym:'Bi',name:'Bismuth',mass:209.0,p:83,n:126,cat:'post-transition'},
+    {z:84,sym:'Po',name:'Polonium',mass:209,p:84,n:125,cat:'post-transition'},
+    {z:85,sym:'At',name:'Astatine',mass:210,p:85,n:125,cat:'halogen'},
+    {z:86,sym:'Rn',name:'Radon',mass:222,p:86,n:136,cat:'noble'},
+    {z:87,sym:'Fr',name:'Francium',mass:223,p:87,n:136,cat:'alkali'},
+    {z:88,sym:'Ra',name:'Radium',mass:226,p:88,n:138,cat:'alkaline'},
+    {z:89,sym:'Ac',name:'Actinium',mass:227,p:89,n:138,cat:'actinide'},
+    {z:90,sym:'Th',name:'Thorium',mass:232,p:90,n:142,cat:'actinide'},
+    {z:91,sym:'Pa',name:'Protactinium',mass:231,p:91,n:140,cat:'actinide'},
+    {z:92,sym:'U',name:'Uranium',mass:238,p:92,n:146,cat:'actinide'},
+    {z:93,sym:'Np',name:'Neptunium',mass:237,p:93,n:144,cat:'actinide'},
+    {z:94,sym:'Pu',name:'Plutonium',mass:244,p:94,n:150,cat:'actinide'},
+    {z:95,sym:'Am',name:'Americium',mass:243,p:95,n:148,cat:'actinide'},
+    {z:96,sym:'Cm',name:'Curium',mass:247,p:96,n:151,cat:'actinide'},
+    {z:97,sym:'Bk',name:'Berkelium',mass:247,p:97,n:150,cat:'actinide'},
+    {z:98,sym:'Cf',name:'Californium',mass:251,p:98,n:153,cat:'actinide'},
+    {z:99,sym:'Es',name:'Einsteinium',mass:252,p:99,n:153,cat:'actinide'},
+    {z:100,sym:'Fm',name:'Fermium',mass:257,p:100,n:157,cat:'actinide'},
+    {z:101,sym:'Md',name:'Mendelevium',mass:258,p:101,n:157,cat:'actinide'},
+    {z:102,sym:'No',name:'Nobelium',mass:259,p:102,n:157,cat:'actinide'},
+    {z:103,sym:'Lr',name:'Lawrencium',mass:266,p:103,n:163,cat:'actinide'},
+    {z:104,sym:'Rf',name:'Rutherfordium',mass:267,p:104,n:163,cat:'transition'},
+    {z:105,sym:'Db',name:'Dubnium',mass:268,p:105,n:163,cat:'transition'},
+    {z:106,sym:'Sg',name:'Seaborgium',mass:269,p:106,n:163,cat:'transition'},
+    {z:107,sym:'Bh',name:'Bohrium',mass:270,p:107,n:163,cat:'transition'},
+    {z:108,sym:'Hs',name:'Hassium',mass:269,p:108,n:161,cat:'transition'},
+    {z:109,sym:'Mt',name:'Meitnerium',mass:278,p:109,n:169,cat:'transition'},
+    {z:110,sym:'Ds',name:'Darmstadtium',mass:281,p:110,n:171,cat:'transition'},
+    {z:111,sym:'Rg',name:'Roentgenium',mass:282,p:111,n:171,cat:'transition'},
+    {z:112,sym:'Cn',name:'Copernicium',mass:285,p:112,n:173,cat:'transition'},
+    {z:113,sym:'Nh',name:'Nihonium',mass:286,p:113,n:173,cat:'post-transition'},
+    {z:114,sym:'Fl',name:'Flerovium',mass:289,p:114,n:175,cat:'post-transition'},
+    {z:115,sym:'Mc',name:'Moscovium',mass:290,p:115,n:175,cat:'post-transition'},
+    {z:116,sym:'Lv',name:'Livermorium',mass:293,p:116,n:177,cat:'post-transition'},
+    {z:117,sym:'Ts',name:'Tennessine',mass:294,p:117,n:177,cat:'halogen'},
+    {z:118,sym:'Og',name:'Oganesson',mass:294,p:118,n:176,cat:'noble'}
+];
+
+// Standard periodic table grid positions [row, col] (1-indexed)
+// Rows 1-7 main, rows 8-9 for lanthanides/actinides
+const ptLayout = {
+    1:[1,1], 2:[1,18],
+    3:[2,1], 4:[2,2], 5:[2,13], 6:[2,14], 7:[2,15], 8:[2,16], 9:[2,17], 10:[2,18],
+    11:[3,1], 12:[3,2], 13:[3,13], 14:[3,14], 15:[3,15], 16:[3,16], 17:[3,17], 18:[3,18],
+    19:[4,1], 20:[4,2], 21:[4,3], 22:[4,4], 23:[4,5], 24:[4,6], 25:[4,7], 26:[4,8], 27:[4,9], 28:[4,10], 29:[4,11], 30:[4,12], 31:[4,13], 32:[4,14], 33:[4,15], 34:[4,16], 35:[4,17], 36:[4,18],
+    37:[5,1], 38:[5,2], 39:[5,3], 40:[5,4], 41:[5,5], 42:[5,6], 43:[5,7], 44:[5,8], 45:[5,9], 46:[5,10], 47:[5,11], 48:[5,12], 49:[5,13], 50:[5,14], 51:[5,15], 52:[5,16], 53:[5,17], 54:[5,18],
+    55:[6,1], 56:[6,2],
+    // La-Lu go to extra row
+    72:[6,4], 73:[6,5], 74:[6,6], 75:[6,7], 76:[6,8], 77:[6,9], 78:[6,10], 79:[6,11], 80:[6,12], 81:[6,13], 82:[6,14], 83:[6,15], 84:[6,16], 85:[6,17], 86:[6,18],
+    87:[7,1], 88:[7,2],
+    // Ac-Lr go to extra row
+    104:[7,4], 105:[7,5], 106:[7,6], 107:[7,7], 108:[7,8], 109:[7,9], 110:[7,10], 111:[7,11], 112:[7,12], 113:[7,13], 114:[7,14], 115:[7,15], 116:[7,16], 117:[7,17], 118:[7,18]
+};
+
+// Lanthanides z=57-71 → extra row positions 4-18
+for (let z = 57; z <= 71; z++) ptLayout[z] = [8, z - 57 + 4];
+// Actinides z=89-103 → extra row positions 4-18
+for (let z = 89; z <= 103; z++) ptLayout[z] = [9, z - 89 + 4];
+
+// ─────────────────────────────────────────
+// BUILD PERIODIC TABLE
+// ─────────────────────────────────────────
+
+function buildTable() {
+    const ptable = document.getElementById('ptable');
+    const ptableExtra = document.getElementById('ptableExtra');
+
+    // Build 7×18 main grid
+    const mainCells = {};
+    elements.forEach(el => {
+        const pos = ptLayout[el.z];
+        if (!pos) return;
+        if (pos[0] <= 7) mainCells[`${pos[0]}-${pos[1]}`] = el;
+    });
+
+    for (let r = 1; r <= 7; r++) {
+        for (let c = 1; c <= 18; c++) {
+            const key = `${r}-${c}`;
+            const el = mainCells[key];
+            const cell = document.createElement('div');
+
+            if (el) {
+                cell.className = 'el-cell';
+                cell.dataset.z = el.z;
+                cell.dataset.cat = el.cat;
+                cell.innerHTML = `<span class="el-z">${el.z}</span><span class="el-sym">${el.sym}</span>`;
+                cell.addEventListener('click', () => selectElement(el.z));
+            } else {
+                cell.className = 'el-cell el-empty';
+                // Placeholder markers for La/Ac series
+                if (r === 6 && c === 3) { cell.innerHTML = '<span style="font-size:0.45rem;color:var(--muted)">La–Lu</span>'; cell.style.background = 'rgba(200,180,140,0.04)'; }
+                else if (r === 7 && c === 3) { cell.innerHTML = '<span style="font-size:0.45rem;color:var(--muted)">Ac–Lr</span>'; cell.style.background = 'rgba(180,140,160,0.04)'; }
+            }
+            ptable.appendChild(cell);
+        }
+    }
+
+    // Extra rows: lanthanides + actinides
+    const extraCells = {};
+    elements.forEach(el => {
+        const pos = ptLayout[el.z];
+        if (!pos) return;
+        if (pos[0] >= 8) extraCells[`${pos[0]}-${pos[1]}`] = el;
+    });
+
+    for (let r = 8; r <= 9; r++) {
+        for (let c = 1; c <= 18; c++) {
+            const key = `${r}-${c}`;
+            const el = extraCells[key];
+            const cell = document.createElement('div');
+
+            if (el) {
+                cell.className = 'el-cell';
+                cell.dataset.z = el.z;
+                cell.dataset.cat = el.cat;
+                cell.innerHTML = `<span class="el-z">${el.z}</span><span class="el-sym">${el.sym}</span>`;
+                cell.addEventListener('click', () => selectElement(el.z));
+            } else {
+                cell.className = 'el-cell el-empty';
+            }
+            ptableExtra.appendChild(cell);
+        }
+    }
+}
+
+// ─────────────────────────────────────────
+// SELECT & BREAKDOWN
+// ─────────────────────────────────────────
+
+let selectedZ = null;
+
+function selectElement(z) {
+    // Deselect previous
+    document.querySelectorAll('.el-cell.selected').forEach(c => c.classList.remove('selected'));
+    // Select new
+    document.querySelectorAll(`.el-cell[data-z="${z}"]`).forEach(c => c.classList.add('selected'));
+    selectedZ = z;
+    showBreakdown(z);
+}
+
+function showBreakdown(z) {
+    const el = elements.find(e => e.z === z);
+    if (!el) return;
+
+    document.getElementById('bpEmpty').style.display = 'none';
+    const panel = document.getElementById('bpContent');
+    panel.classList.add('active');
+
+    const P = el.p;
+    const N = el.n;
+    const nucleons = P + N;
+
+    // Quark counts
+    // Proton = 2u + 1d, Neutron = 1u + 2d
+    const upQuarks = 2 * P + N;
+    const downQuarks = P + 2 * N;
+    const totalQuarks = upQuarks + downQuarks; // = 3 * nucleons
+    const electrons = P; // neutral atom
+
+    // Gluon field: ~8 virtual gluons per nucleon (simplification)
+    // Actually gluons are virtual, but we note 8 types available
+    const totalFundamental = totalQuarks + electrons;
+
+    panel.innerHTML = `
+        <div class="bp-element-header">
+            <div class="bp-symbol">${el.sym}</div>
+            <div class="bp-name">${el.name}</div>
+            <div class="bp-z">Z = ${el.z} &nbsp;·&nbsp; A = ${nucleons} &nbsp;·&nbsp; ${el.mass} u</div>
+        </div>
+
+        <div class="mereology-level ml-atom" style="animation-delay:0s">
+            <div class="ml-header">
+                <div class="ml-icon" style="background:rgba(93,172,232,0.15);color:var(--nucleus);">○</div>
+                <div class="ml-label">Atom</div>
+            </div>
+            <div class="ml-body">
+                <span class="count">${P}</span> proton${P!==1?'s':''} + <span class="count">${N}</span> neutron${N!==1?'s':''} + <span class="count">${electrons}</span> electron${electrons!==1?'s':''}<br>
+                <span class="particle-tag tag-proton">p⁺ × ${P}</span>
+                <span class="particle-tag tag-neutron">n⁰ × ${N}</span>
+                <span class="particle-tag tag-electron">e⁻ × ${electrons}</span>
+            </div>
+        </div>
+
+        <div class="mereology-level ml-nucleus" style="animation-delay:0.05s">
+            <div class="ml-header">
+                <div class="ml-icon" style="background:rgba(232,160,93,0.15);color:var(--proton);">Φ</div>
+                <div class="ml-label">Nucleus → Nucleons</div>
+            </div>
+            <div class="ml-body">
+                Each proton = <span class="particle-tag tag-up">u</span><span class="particle-tag tag-up">u</span><span class="particle-tag tag-down">d</span><br>
+                Each neutron = <span class="particle-tag tag-up">u</span><span class="particle-tag tag-down">d</span><span class="particle-tag tag-down">d</span><br>
+                Total nucleons: <span class="count">${nucleons}</span> (${P}p + ${N}n)
+            </div>
+        </div>
+
+        <div class="mereology-level ml-quark" style="animation-delay:0.1s">
+            <div class="ml-header">
+                <div class="ml-icon" style="background:rgba(232,120,93,0.15);color:var(--quark-up);">•</div>
+                <div class="ml-label">Quark Content</div>
+            </div>
+            <div class="ml-body">
+                <span class="particle-tag tag-up">up × ${upQuarks}</span>
+                <span class="particle-tag tag-down">down × ${downQuarks}</span><br>
+                Total quarks: <span class="count">${totalQuarks}</span><br>
+                + <span class="particle-tag tag-electron">e⁻ × ${electrons}</span>
+            </div>
+        </div>
+
+        <div class="mereology-level ml-field" style="animation-delay:0.15s">
+            <div class="ml-header">
+                <div class="ml-icon" style="background:rgba(93,139,232,0.15);color:var(--gluon);">Φ</div>
+                <div class="ml-label">Force Mediators</div>
+            </div>
+            <div class="ml-body">
+                <span class="particle-tag tag-gluon">gluons (8 types)</span> bind quarks into nucleons<br>
+                <span class="particle-tag tag-photon">photon γ</span> binds electrons to nucleus<br>
+                <span class="particle-tag tag-higgs">Higgs field</span> gives mass to all particles
+            </div>
+        </div>
+
+        <div class="circ-diagram">
+            <div style="font-size:0.55rem;letter-spacing:0.15em;color:var(--dim);margin-bottom:6px;">CIRCUMPUNCT AT EACH SCALE</div>
+            <div class="circ-row">
+                <span class="circ-symbol">⊙</span>
+                <span class="circ-eq">=</span>
+                <span class="circ-center">quark</span>
+                <span class="circ-field">⟵ gluon ⟶</span>
+                <span class="circ-boundary">hadron</span>
+            </div>
+            <div class="circ-row">
+                <span class="circ-symbol">⊙</span>
+                <span class="circ-eq">=</span>
+                <span class="circ-center">nucleon</span>
+                <span class="circ-field">⟵ residual ⟶</span>
+                <span class="circ-boundary">nucleus</span>
+            </div>
+            <div class="circ-row">
+                <span class="circ-symbol">⊙</span>
+                <span class="circ-eq">=</span>
+                <span class="circ-center">nucleus</span>
+                <span class="circ-field">⟵ photon ⟶</span>
+                <span class="circ-boundary">${el.sym} atom</span>
+            </div>
+        </div>
+
+        <div class="totals-bar">
+            <div class="total-cell">
+                <div class="tv">${totalQuarks}</div>
+                <div class="tl">Quarks</div>
+            </div>
+            <div class="total-cell">
+                <div class="tv">${electrons}</div>
+                <div class="tl">Electrons</div>
+            </div>
+            <div class="total-cell">
+                <div class="tv">${totalFundamental}</div>
+                <div class="tl">Total Parts</div>
+            </div>
+        </div>
+
+        <div class="state-ids">
+            <strong>64-State Map IDs Used:</strong><br>
+            States 0–2 <span class="particle-tag tag-up" style="font-size:0.5rem;">u (r,g,b)</span> × ${upQuarks}<br>
+            States 3–5 <span class="particle-tag tag-down" style="font-size:0.5rem;">d (r,g,b)</span> × ${downQuarks}<br>
+            State 13 <span class="particle-tag tag-electron" style="font-size:0.5rem;">e⁻</span> × ${electrons}<br>
+            States 48–55 <span class="particle-tag tag-gluon" style="font-size:0.5rem;">g₁₋₈</span> virtual field<br>
+            State 59 <span class="particle-tag tag-photon" style="font-size:0.5rem;">γ</span> electromagnetic field<br>
+            States 60–63 <span class="particle-tag tag-higgs" style="font-size:0.5rem;">H</span> mass generation
+        </div>
+    `;
+}
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+buildTable();
+
+// Default select Carbon
+selectElement(6);
+</script>
+</body>
+</html>
