@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ Polar 64-State Particle Map</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #08080c;
+            --bg-card: #0f0f16;
+            --bg-hover: #16162a;
+            --gold: #f0c674;
+            --gold-dim: rgba(240, 198, 116, 0.15);
+            --gold-glow: rgba(240, 198, 116, 0.4);
+            --blue: #6fa3d4;
+            --blue-dim: rgba(111, 163, 212, 0.15);
+            --blue-glow: rgba(111, 163, 212, 0.4);
+            --violet: #b48ead;
+            --violet-dim: rgba(180, 142, 173, 0.15);
+            --violet-glow: rgba(180, 142, 173, 0.4);
+            --red: #bf616a;
+            --red-dim: rgba(191, 97, 106, 0.15);
+            --green: #a3be8c;
+            --green-dim: rgba(163, 190, 140, 0.15);
+            --teal: #88c0d0;
+            --teal-dim: rgba(136, 192, 208, 0.15);
+            --text: #d8dee9;
+            --text-dim: #6b7394;
+            --text-muted: #4c5370;
+            --fermion-gen1: #d08770;
+            --fermion-gen2: #bf616a;
+            --fermion-gen3: #a3486a;
+            --gluon: #5e81ac;
+            --electroweak: #8fbcbb;
+            --higgs: #f0c674;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-deep);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Radial background glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -60%);
+            width: 900px;
+            height: 900px;
+            background: radial-gradient(ellipse, rgba(240, 198, 116, 0.04) 0%, rgba(94, 129, 172, 0.02) 40%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0 10px;
+        }
+
+        header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.4rem;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            color: var(--gold);
+            text-shadow: 0 0 40px rgba(240, 198, 116, 0.2);
+        }
+
+        header .subtitle {
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-top: 8px;
+        }
+
+        .master-symbol {
+            font-size: 1.4rem;
+            color: var(--gold);
+            margin-bottom: 4px;
+            text-shadow: 0 0 20px rgba(240, 198, 116, 0.3);
+        }
+
+        /* Main layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+            margin-top: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 1100px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* SVG Map */
+        .map-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .map-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Hex cells */
+        .hex-cell {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .hex-cell polygon {
+            stroke: rgba(255,255,255,0.08);
+            stroke-width: 1;
+            transition: all 0.25s ease;
+        }
+
+        .hex-cell:hover polygon {
+            stroke: rgba(255,255,255,0.5);
+            stroke-width: 2;
+            filter: brightness(1.3);
+        }
+
+        .hex-cell.selected polygon {
+            stroke: var(--gold);
+            stroke-width: 2.5;
+            filter: brightness(1.4) drop-shadow(0 0 8px var(--gold-glow));
+        }
+
+        .hex-cell text {
+            fill: rgba(255,255,255,0.9);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            font-weight: 500;
+            pointer-events: none;
+            text-anchor: middle;
+            dominant-baseline: central;
+        }
+
+        .hex-cell .hex-id {
+            fill: rgba(255,255,255,0.35);
+            font-size: 6px;
+            font-weight: 300;
+        }
+
+        /* Ring labels */
+        .ring-label {
+            fill: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 7px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-anchor: middle;
+        }
+
+        /* Detail Panel */
+        .detail-panel {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 24px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .detail-panel h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(240, 198, 116, 0.15);
+        }
+
+        .detail-empty {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-align: center;
+            padding: 40px 0;
+            line-height: 1.8;
+        }
+
+        .detail-content { display: none; }
+        .detail-content.active { display: block; }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 0.75rem;
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.65rem;
+        }
+
+        .detail-value {
+            color: var(--text);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .detail-particle-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .detail-type-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .badge-higgs { background: var(--gold-dim); color: var(--gold); }
+        .badge-gluon { background: var(--blue-dim); color: var(--blue); }
+        .badge-electroweak { background: var(--teal-dim); color: var(--teal); }
+        .badge-fermion-1 { background: rgba(208, 135, 112, 0.15); color: var(--fermion-gen1); }
+        .badge-fermion-2 { background: var(--red-dim); color: var(--fermion-gen2); }
+        .badge-fermion-3 { background: rgba(163, 72, 106, 0.15); color: var(--fermion-gen3); }
+
+        .detail-hexagram {
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 16px 0;
+            opacity: 0.7;
+        }
+
+        .detail-signature {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--gold);
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .detail-section-title {
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin: 16px 0 8px;
+        }
+
+        .circumpunct-role {
+            text-align: center;
+            padding: 12px;
+            background: rgba(240, 198, 116, 0.04);
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .circumpunct-role .role-symbol {
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            letter-spacing: 0.05em;
+        }
+
+        .legend-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        /* Ring structure info */
+        .ring-info {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(240, 198, 116, 0.03);
+            border: 1px solid rgba(240, 198, 116, 0.08);
+            border-radius: 8px;
+        }
+
+        .ring-info h3 {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .ring-info-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 0;
+            font-size: 0.7rem;
+        }
+
+        .ring-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .ring-info-label { color: var(--text-dim); }
+        .ring-info-value { color: var(--text); margin-left: auto; }
+
+        /* Quantum numbers table */
+        .quantum-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin: 8px 0;
+        }
+
+        .quantum-cell {
+            text-align: center;
+            padding: 6px 4px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 4px;
+            font-size: 0.65rem;
+        }
+
+        .quantum-cell .qval {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .quantum-cell .qlabel {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* Tooltip for mobile */
+        @media (max-width: 1100px) {
+            .detail-panel {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                border-radius: 12px 12px 0 0;
+                max-height: 50vh;
+                overflow-y: auto;
+                z-index: 100;
+                transform: translateY(100%);
+                transition: transform 0.3s ease;
+            }
+            .detail-panel.mobile-open {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="master-symbol">⊙</div>
+            <h1>Polar 64-State Particle Map</h1>
+            <p class="subtitle">Standard Model as Circumpunct &mdash; Center &bull; Field &bull; Boundary</p>
+        </header>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: var(--higgs);"></div>
+                Higgs (4)
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: var(--electroweak);"></div>
+                Electroweak (4)
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: var(--gluon);"></div>
+                Gluons (8)
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: var(--fermion-gen1);"></div>
+                Gen 1 (16)
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: var(--fermion-gen2);"></div>
+                Gen 2 (16)
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch" style="background: var(--fermion-gen3);"></div>
+                Gen 3 (16)
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <div class="map-container">
+                <svg id="hexMap" viewBox="0 0 800 800"></svg>
+            </div>
+
+            <div class="detail-panel" id="detailPanel">
+                <h2>State Details</h2>
+                <div class="detail-empty" id="detailEmpty">
+                    Click any hexagonal cell<br>to explore its state
+                    <br><br>
+                    <span style="font-size: 1.4rem; opacity: 0.3;">⊙</span>
+                </div>
+                <div class="detail-content" id="detailContent"></div>
+
+                <div class="ring-info">
+                    <h3>Circumpunct Structure</h3>
+                    <div class="ring-info-row">
+                        <div class="ring-dot" style="background: var(--higgs);"></div>
+                        <span class="ring-info-label">Center (•)</span>
+                        <span class="ring-info-value">4 Higgs</span>
+                    </div>
+                    <div class="ring-info-row">
+                        <div class="ring-dot" style="background: var(--electroweak);"></div>
+                        <span class="ring-info-label">Inner Field (Φ)</span>
+                        <span class="ring-info-value">4 Electroweak</span>
+                    </div>
+                    <div class="ring-info-row">
+                        <div class="ring-dot" style="background: var(--gluon);"></div>
+                        <span class="ring-info-label">Outer Field (Φ)</span>
+                        <span class="ring-info-value">8 Gluons</span>
+                    </div>
+                    <div class="ring-info-row">
+                        <div class="ring-dot" style="background: var(--fermion-gen1);"></div>
+                        <span class="ring-info-label">Boundary I (○)</span>
+                        <span class="ring-info-value">16 Gen-1</span>
+                    </div>
+                    <div class="ring-info-row">
+                        <div class="ring-dot" style="background: var(--fermion-gen2);"></div>
+                        <span class="ring-info-label">Boundary II (○)</span>
+                        <span class="ring-info-value">16 Gen-2</span>
+                    </div>
+                    <div class="ring-info-row">
+                        <div class="ring-dot" style="background: var(--fermion-gen3);"></div>
+                        <span class="ring-info-label">Boundary III (○)</span>
+                        <span class="ring-info-value">16 Gen-3</span>
+                    </div>
+                    <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.6rem; color: var(--text-muted); line-height: 1.6;">
+                        Inspired by Alexandre Fabre's polar periodic table.<br>
+                        64 = 48 + 12 + 4 &mdash; Fermions + Gauge + Higgs<br>
+                        2⁶ = 2³ × 2³ &mdash; Part ⊗ Whole
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+
+const hexagrams = [
+    '䷀','䷁','䷂','䷃','䷄','䷅','䷆','䷇','䷈','䷉','䷊','䷋','䷌','䷍','䷎','䷏',
+    '䷐','䷑','䷒','䷓','䷔','䷕','䷖','䷗','䷘','䷙','䷚','䷛','䷜','䷝','䷞','䷟',
+    '䷠','䷡','䷢','䷣','䷤','䷥','䷦','䷧','䷨','䷩','䷪','䷫','䷬','䷭','䷮','䷯',
+    '䷰','䷱','䷲','䷳','䷴','䷵','䷶','䷷','䷸','䷹','䷺','䷻','䷼','䷽','䷾','䷿'
+];
+
+const hexNames = [
+    'Qián (Creative)','Kūn (Receptive)','Zhūn (Difficulty)','Méng (Youthful)',
+    'Xū (Waiting)','Sòng (Conflict)','Shī (Army)','Bǐ (Holding)',
+    'Xiǎo Chù (Small Taming)','Lǚ (Treading)','Tài (Peace)','Pǐ (Standstill)',
+    'Tóng Rén (Fellowship)','Dà Yǒu (Possession)','Qiān (Modesty)','Yù (Enthusiasm)',
+    'Suí (Following)','Gǔ (Decay)','Lín (Approach)','Guān (Contemplation)',
+    'Shì Kè (Biting)','Bì (Grace)','Bō (Splitting)','Fù (Return)',
+    'Wú Wàng (Innocence)','Dà Chù (Great Taming)','Yí (Nourishment)','Dà Guò (Excess)',
+    'Kǎn (Abysmal)','Lí (Clinging)','Xián (Influence)','Héng (Duration)',
+    'Dùn (Retreat)','Dà Zhuàng (Power)','Jìn (Progress)','Míng Yí (Darkening)',
+    'Jiā Rén (Family)','Kuí (Opposition)','Jiǎn (Obstruction)','Jiě (Deliverance)',
+    'Sǔn (Decrease)','Yì (Increase)','Guài (Breakthrough)','Gòu (Coming)',
+    'Cuì (Gathering)','Shēng (Pushing)','Kùn (Oppression)','Jǐng (Well)',
+    'Gé (Revolution)','Dǐng (Cauldron)','Zhèn (Arousing)','Gèn (Keeping Still)',
+    'Jiàn (Development)','Guī Mèi (Marrying)','Fēng (Abundance)','Lǚ (Wanderer)',
+    'Xùn (Gentle)','Duì (Joyous)','Huàn (Dispersion)','Jié (Limitation)',
+    'Zhōng Fú (Inner Truth)','Xiǎo Guò (Small Excess)','Jì Jì (Completion)','Wèi Jì (Before Completion)'
+];
+
+// Build all 64 states
+const states = [];
+for (let i = 0; i < 64; i++) {
+    const binary = i.toString(2).padStart(6, '0');
+    const e1 = parseInt(binary[5]);
+    const x1 = parseInt(binary[4]) ? '+' : '-';
+    const e2 = parseInt(binary[3]);
+    const x2 = parseInt(binary[2]) ? '+' : '-';
+    const e3 = parseInt(binary[1]);
+    const x3 = parseInt(binary[0]) ? '+' : '-';
+
+    let type, particle, generation, fullName, quantumNumbers, circRole;
+
+    if (i < 48) {
+        type = 'fermion';
+        if (i < 16) {
+            generation = 1;
+            if (i < 12) {
+                const flavors = ['u','u','u','d','d','d','u','u','u','d','d','d'];
+                const flavorFull = ['Up','Up','Up','Down','Down','Down','Up','Up','Up','Down','Down','Down'];
+                const colors = ['red','green','blue','red','green','blue','red','green','blue','red','green','blue'];
+                const colorSym = ['r','g','b','r','g','b','r','g','b','r','g','b'];
+                const chiral = i < 6 ? 'L' : 'R';
+                particle = `${flavors[i]}_${colorSym[i]}(${chiral})`;
+                fullName = `${flavorFull[i]} quark (${colors[i]}, ${chiral === 'L' ? 'left' : 'right'})`;
+                const isUp = i % 6 < 3;
+                quantumNumbers = {
+                    charge: isUp ? '+2/3' : '-1/3',
+                    color: colors[i % 6],
+                    spin: chiral === 'L' ? '-½' : '+½',
+                    T3: chiral === 'L' ? (isUp ? '+½' : '-½') : '0'
+                };
+            } else {
+                const lepNames = ['ν_e(L)','e(L)','e(R)','ν_e(R)'];
+                const lepFull = ['Electron neutrino (left)','Electron (left)','Electron (right)','Electron neutrino (right)'];
+                const charges = ['0','-1','-1','0'];
+                const j = i - 12;
+                particle = lepNames[j];
+                fullName = lepFull[j];
+                quantumNumbers = {
+                    charge: charges[j],
+                    color: 'none',
+                    spin: j < 2 ? '-½' : '+½',
+                    T3: j === 0 ? '+½' : j === 1 ? '-½' : '0'
+                };
+            }
+            circRole = 'Boundary I — lightest matter, most stable';
+        } else if (i < 32) {
+            generation = 2;
+            const j = i - 16;
+            if (j < 12) {
+                const flavors = ['c','c','c','s','s','s','c','c','c','s','s','s'];
+                const flavorFull = ['Charm','Charm','Charm','Strange','Strange','Strange','Charm','Charm','Charm','Strange','Strange','Strange'];
+                const colors = ['red','green','blue','red','green','blue','red','green','blue','red','green','blue'];
+                const colorSym = ['r','g','b','r','g','b','r','g','b','r','g','b'];
+                const chiral = j < 6 ? 'L' : 'R';
+                particle = `${flavors[j]}_${colorSym[j]}(${chiral})`;
+                fullName = `${flavorFull[j]} quark (${colors[j]}, ${chiral === 'L' ? 'left' : 'right'})`;
+                const isUp = j % 6 < 3;
+                quantumNumbers = {
+                    charge: isUp ? '+2/3' : '-1/3',
+                    color: colors[j % 6],
+                    spin: chiral === 'L' ? '-½' : '+½',
+                    T3: chiral === 'L' ? (isUp ? '+½' : '-½') : '0'
+                };
+            } else {
+                const lepNames = ['ν_μ(L)','μ(L)','μ(R)','ν_μ(R)'];
+                const lepFull = ['Muon neutrino (left)','Muon (left)','Muon (right)','Muon neutrino (right)'];
+                const charges = ['0','-1','-1','0'];
+                const k = j - 12;
+                particle = lepNames[k];
+                fullName = lepFull[k];
+                quantumNumbers = {
+                    charge: charges[k],
+                    color: 'none',
+                    spin: k < 2 ? '-½' : '+½',
+                    T3: k === 0 ? '+½' : k === 1 ? '-½' : '0'
+                };
+            }
+            circRole = 'Boundary II — heavier replicas, less stable';
+        } else {
+            generation = 3;
+            const j = i - 32;
+            if (j < 12) {
+                const flavors = ['t','t','t','b','b','b','t','t','t','b','b','b'];
+                const flavorFull = ['Top','Top','Top','Bottom','Bottom','Bottom','Top','Top','Top','Bottom','Bottom','Bottom'];
+                const colors = ['red','green','blue','red','green','blue','red','green','blue','red','green','blue'];
+                const colorSym = ['r','g','b','r','g','b','r','g','b','r','g','b'];
+                const chiral = j < 6 ? 'L' : 'R';
+                particle = `${flavors[j]}_${colorSym[j]}(${chiral})`;
+                fullName = `${flavorFull[j]} quark (${colors[j]}, ${chiral === 'L' ? 'left' : 'right'})`;
+                const isUp = j % 6 < 3;
+                quantumNumbers = {
+                    charge: isUp ? '+2/3' : '-1/3',
+                    color: colors[j % 6],
+                    spin: chiral === 'L' ? '-½' : '+½',
+                    T3: chiral === 'L' ? (isUp ? '+½' : '-½') : '0'
+                };
+            } else {
+                const lepNames = ['ν_τ(L)','τ(L)','τ(R)','ν_τ(R)'];
+                const lepFull = ['Tau neutrino (left)','Tau (left)','Tau (right)','Tau neutrino (right)'];
+                const charges = ['0','-1','-1','0'];
+                const k = j - 12;
+                particle = lepNames[k];
+                fullName = lepFull[k];
+                quantumNumbers = {
+                    charge: charges[k],
+                    color: 'none',
+                    spin: k < 2 ? '-½' : '+½',
+                    T3: k === 0 ? '+½' : k === 1 ? '-½' : '0'
+                };
+            }
+            circRole = 'Boundary III — heaviest, maximum boundary expression';
+        }
+    } else if (i < 56) {
+        type = 'gluon';
+        generation = 0;
+        const gIdx = i - 48;
+        const gluonNames = ['rḡ','rb̄','gr̄','gb̄','br̄','bḡ','(rr̄-gḡ)/√2','(rr̄+gḡ-2bb̄)/√6'];
+        particle = `g${gIdx + 1}`;
+        fullName = `Gluon ${gIdx + 1}: ${gluonNames[gIdx]}`;
+        quantumNumbers = { charge: '0', color: 'octet', spin: '1', T3: '0' };
+        circRole = 'Field (Φ) — strong force mediator, non-abelian';
+    } else if (i < 60) {
+        type = 'electroweak';
+        generation = 0;
+        const ewNames = ['W⁺','W⁻','Z⁰','γ'];
+        const ewFull = ['W⁺ boson','W⁻ boson','Z⁰ boson','Photon'];
+        const ewCharges = ['+1','-1','0','0'];
+        const j = i - 56;
+        particle = ewNames[j];
+        fullName = ewFull[j];
+        quantumNumbers = { charge: ewCharges[j], color: 'none', spin: '1', T3: j < 2 ? (j === 0 ? '+1' : '-1') : '0' };
+        circRole = 'Inner Field (Φ) — electroweak mediator';
+    } else {
+        type = 'higgs';
+        generation = 0;
+        const hNames = ['Re(H⁺)','Im(H⁺)','Re(H⁰)','Im(H⁰)'];
+        const hFull = ['Goldstone (→W⁺)','Goldstone (→W⁺)','Physical Higgs (125 GeV)','Goldstone (→Z⁰)'];
+        const j = i - 60;
+        particle = hNames[j];
+        fullName = hFull[j];
+        quantumNumbers = { charge: j < 2 ? '+1' : '0', color: 'none', spin: '0', T3: j < 2 ? '+½' : '-½' };
+        circRole = 'Center (•) — symmetry breaking aperture';
+    }
+
+    states.push({
+        id: i, binary, particle, fullName, type, generation,
+        signature: `[${e1}${x1}|${e2}${x2}|${e3}${x3}]`,
+        hexagram: hexagrams[i],
+        hexName: hexNames[i],
+        quantumNumbers, circRole
+    });
+}
+
+// ─────────────────────────────────────────────
+// HEXAGONAL POLAR LAYOUT
+// ─────────────────────────────────────────────
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('hexMap');
+const CX = 400, CY = 400;
+const HEX_SIZE = 28;  // radius of each hexagon
+
+function hexPoints(cx, cy, size) {
+    const pts = [];
+    for (let a = 0; a < 6; a++) {
+        const angle = (Math.PI / 180) * (60 * a - 30);
+        pts.push(`${cx + size * Math.cos(angle)},${cy + size * Math.sin(angle)}`);
+    }
+    return pts.join(' ');
+}
+
+function getColor(state) {
+    if (state.type === 'higgs') return 'var(--higgs)';
+    if (state.type === 'electroweak') return 'var(--electroweak)';
+    if (state.type === 'gluon') return 'var(--gluon)';
+    if (state.generation === 1) return 'var(--fermion-gen1)';
+    if (state.generation === 2) return 'var(--fermion-gen2)';
+    if (state.generation === 3) return 'var(--fermion-gen3)';
+    return '#555';
+}
+
+function getFillOpacity(state) {
+    // Vary opacity slightly by sub-type for visual texture
+    if (state.type === 'fermion') {
+        const j = state.id % 16;
+        if (j < 6) return 0.75;   // quarks L
+        if (j < 12) return 0.6;   // quarks R
+        return 0.9;                // leptons
+    }
+    return 0.8;
+}
+
+// Define ring assignments
+// Ring 0: Higgs (4) — states 60-63
+// Ring 1: Electroweak (4) — states 56-59
+// Ring 2: Gluons (8) — states 48-55
+// Ring 3: Gen 1 fermions (16) — states 0-15
+// Ring 4: Gen 2 fermions (16) — states 16-31
+// Ring 5: Gen 3 fermions (16) — states 32-47
+
+const rings = [
+    { ids: [60,61,62,63], radius: 0, label: 'HIGGS • CENTER' },
+    { ids: [56,57,58,59], radius: 70, label: 'ELECTROWEAK' },
+    { ids: [48,49,50,51,52,53,54,55], radius: 130, label: 'GLUONS' },
+    { ids: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], radius: 200, label: 'GEN I' },
+    { ids: [16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31], radius: 275, label: 'GEN II' },
+    { ids: [32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47], radius: 345, label: 'GEN III' }
+];
+
+// Draw concentric guide circles
+function drawGuideCircles() {
+    // Subtle radial lines
+    for (let a = 0; a < 12; a++) {
+        const angle = (a / 12) * Math.PI * 2 - Math.PI / 2;
+        const line = document.createElementNS(SVG_NS, 'line');
+        line.setAttribute('x1', CX);
+        line.setAttribute('y1', CY);
+        line.setAttribute('x2', CX + 380 * Math.cos(angle));
+        line.setAttribute('y2', CY + 380 * Math.sin(angle));
+        line.setAttribute('stroke', 'rgba(255,255,255,0.02)');
+        line.setAttribute('stroke-width', '1');
+        svg.appendChild(line);
+    }
+
+    // Ring circles
+    rings.forEach((ring, idx) => {
+        if (ring.radius === 0) return;
+        const circle = document.createElementNS(SVG_NS, 'circle');
+        circle.setAttribute('cx', CX);
+        circle.setAttribute('cy', CY);
+        circle.setAttribute('r', ring.radius);
+        circle.setAttribute('fill', 'none');
+        circle.setAttribute('stroke', 'rgba(255,255,255,0.04)');
+        circle.setAttribute('stroke-width', '1');
+        circle.setAttribute('stroke-dasharray', '4 8');
+        svg.appendChild(circle);
+    });
+}
+
+// Draw hex cells
+let selectedEl = null;
+
+function drawHexCells() {
+    rings.forEach((ring, ringIdx) => {
+        const n = ring.ids.length;
+        const r = ring.radius;
+
+        ring.ids.forEach((stateId, posIdx) => {
+            const state = states[stateId];
+
+            let x, y;
+            if (r === 0) {
+                // Center cluster: arrange 4 Higgs in a tight diamond
+                const offsets = [
+                    [-HEX_SIZE * 0.9, 0],
+                    [HEX_SIZE * 0.9, 0],
+                    [0, -HEX_SIZE * 0.85],
+                    [0, HEX_SIZE * 0.85]
+                ];
+                x = CX + offsets[posIdx][0];
+                y = CY + offsets[posIdx][1];
+            } else {
+                // Angular offset to avoid alignment, stagger rings
+                const angleOffset = ringIdx * 0.15;
+                const angle = (posIdx / n) * Math.PI * 2 - Math.PI / 2 + angleOffset;
+                x = CX + r * Math.cos(angle);
+                y = CY + r * Math.sin(angle);
+            }
+
+            const group = document.createElementNS(SVG_NS, 'g');
+            group.classList.add('hex-cell');
+            group.setAttribute('data-id', stateId);
+
+            // Hex polygon
+            const poly = document.createElementNS(SVG_NS, 'polygon');
+            poly.setAttribute('points', hexPoints(x, y, HEX_SIZE));
+            poly.setAttribute('fill', getColor(state));
+            poly.setAttribute('fill-opacity', getFillOpacity(state));
+            group.appendChild(poly);
+
+            // Particle label
+            const label = document.createElementNS(SVG_NS, 'text');
+            label.setAttribute('x', x);
+            label.setAttribute('y', y - 2);
+            // Shorten label for display
+            let shortLabel = state.particle.replace(/\(.*\)/, '').trim();
+            if (shortLabel.length > 6) shortLabel = shortLabel.slice(0, 6);
+            label.textContent = shortLabel;
+            group.appendChild(label);
+
+            // State ID
+            const idText = document.createElementNS(SVG_NS, 'text');
+            idText.classList.add('hex-id');
+            idText.setAttribute('x', x);
+            idText.setAttribute('y', y + 10);
+            idText.textContent = stateId;
+            group.appendChild(idText);
+
+            // Glow filter for Higgs
+            if (state.type === 'higgs') {
+                poly.setAttribute('filter', 'url(#goldGlow)');
+            }
+
+            // Click handler
+            group.addEventListener('click', () => selectState(stateId, group));
+
+            svg.appendChild(group);
+        });
+
+        // Ring label
+        if (ring.radius > 0) {
+            const labelAngle = -Math.PI / 2 - 0.35;
+            const lx = CX + (ring.radius + HEX_SIZE + 8) * Math.cos(labelAngle);
+            const ly = CY + (ring.radius + HEX_SIZE + 8) * Math.sin(labelAngle);
+            const text = document.createElementNS(SVG_NS, 'text');
+            text.classList.add('ring-label');
+            text.setAttribute('x', lx);
+            text.setAttribute('y', ly);
+            text.setAttribute('transform', `rotate(-55, ${lx}, ${ly})`);
+            text.textContent = ring.label;
+            svg.appendChild(text);
+        }
+    });
+}
+
+// Add SVG filters
+function addFilters() {
+    const defs = document.createElementNS(SVG_NS, 'defs');
+
+    // Gold glow for Higgs center
+    const filter = document.createElementNS(SVG_NS, 'filter');
+    filter.setAttribute('id', 'goldGlow');
+    filter.setAttribute('x', '-50%');
+    filter.setAttribute('y', '-50%');
+    filter.setAttribute('width', '200%');
+    filter.setAttribute('height', '200%');
+
+    const blur = document.createElementNS(SVG_NS, 'feGaussianBlur');
+    blur.setAttribute('stdDeviation', '4');
+    blur.setAttribute('result', 'coloredBlur');
+    filter.appendChild(blur);
+
+    const merge = document.createElementNS(SVG_NS, 'feMerge');
+    const n1 = document.createElementNS(SVG_NS, 'feMergeNode');
+    n1.setAttribute('in', 'coloredBlur');
+    merge.appendChild(n1);
+    const n2 = document.createElementNS(SVG_NS, 'feMergeNode');
+    n2.setAttribute('in', 'SourceGraphic');
+    merge.appendChild(n2);
+    filter.appendChild(merge);
+
+    defs.appendChild(filter);
+    svg.appendChild(defs);
+}
+
+// ─────────────────────────────────────────────
+// DETAIL PANEL
+// ─────────────────────────────────────────────
+
+function selectState(id, el) {
+    // Deselect previous
+    if (selectedEl) selectedEl.classList.remove('selected');
+    selectedEl = el;
+    el.classList.add('selected');
+
+    const s = states[id];
+    const panel = document.getElementById('detailContent');
+    const empty = document.getElementById('detailEmpty');
+    empty.style.display = 'none';
+    panel.classList.add('active');
+
+    // Badge class
+    let badgeClass = 'badge-higgs';
+    let typeLabel = 'Higgs';
+    if (s.type === 'gluon') { badgeClass = 'badge-gluon'; typeLabel = 'Gluon'; }
+    else if (s.type === 'electroweak') { badgeClass = 'badge-electroweak'; typeLabel = 'Electroweak'; }
+    else if (s.generation === 1) { badgeClass = 'badge-fermion-1'; typeLabel = 'Fermion — Gen I'; }
+    else if (s.generation === 2) { badgeClass = 'badge-fermion-2'; typeLabel = 'Fermion — Gen II'; }
+    else if (s.generation === 3) { badgeClass = 'badge-fermion-3'; typeLabel = 'Fermion — Gen III'; }
+
+    panel.innerHTML = `
+        <div class="detail-particle-name">${s.particle}</div>
+        <div class="detail-type-badge ${badgeClass}">${typeLabel}</div>
+        <div style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 12px;">${s.fullName}</div>
+
+        <div class="detail-hexagram">${s.hexagram}</div>
+        <div class="detail-signature">${s.signature}</div>
+        <div style="text-align: center; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 16px;">${s.hexName}</div>
+
+        <div class="detail-section-title">Quantum Numbers</div>
+        <div class="quantum-grid">
+            <div class="quantum-cell">
+                <div class="qval">${s.quantumNumbers.charge}</div>
+                <div class="qlabel">Q</div>
+            </div>
+            <div class="quantum-cell">
+                <div class="qval">${s.quantumNumbers.spin}</div>
+                <div class="qlabel">Spin</div>
+            </div>
+            <div class="quantum-cell">
+                <div class="qval">${s.quantumNumbers.T3}</div>
+                <div class="qlabel">T₃</div>
+            </div>
+        </div>
+
+        <div class="detail-section-title">Binary Encoding</div>
+        <div class="detail-row">
+            <span class="detail-label">State ID</span>
+            <span class="detail-value">${s.id}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Binary</span>
+            <span class="detail-value">${s.binary}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Color</span>
+            <span class="detail-value">${s.quantumNumbers.color}</span>
+        </div>
+
+        <div class="circumpunct-role">
+            <div class="role-symbol">⊙</div>
+            ${s.circRole}
+        </div>
+    `;
+
+    // Mobile: open panel
+    document.getElementById('detailPanel').classList.add('mobile-open');
+}
+
+// ─────────────────────────────────────────────
+// DRAW CENTER SYMBOL
+// ─────────────────────────────────────────────
+
+function drawCenterSymbol() {
+    // Subtle circumpunct symbol at dead center behind hexes
+    const circle = document.createElementNS(SVG_NS, 'circle');
+    circle.setAttribute('cx', CX);
+    circle.setAttribute('cy', CY);
+    circle.setAttribute('r', 3);
+    circle.setAttribute('fill', 'rgba(240, 198, 116, 0.3)');
+    svg.insertBefore(circle, svg.firstChild);
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+
+addFilters();
+drawGuideCircles();
+drawCenterSymbol();
+drawHexCells();
+</script>
+</body>
+</html>
