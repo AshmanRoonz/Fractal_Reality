@@ -290,7 +290,7 @@ const HEX = 22;
 // DATA
 // ═══════════════════════════════════════════
 
-// 64 fundamental states (abbreviated)
+// 64 states (abbreviated)
 const particles = [];
 const qLabels = ['u_r','u_g','u_b','d_r','d_g','d_b','u_r','u_g','u_b','d_r','d_g','d_b'];
 const lLabels1 = ['ν_e','e_L','e_R','ν_eR'];
@@ -597,7 +597,7 @@ bLabel.classList.add('ring-label');
 bLabel.setAttribute('x',blx); bLabel.setAttribute('y',bly);
 bLabel.setAttribute('fill','rgba(240,198,116,0.2)');
 bLabel.setAttribute('font-size','5px');
-bLabel.textContent = '— FUNDAMENTAL | COMPOSITE —';
+bLabel.textContent = '';
 svg.appendChild(bLabel);
 
 // ═══════════════════════════════════════════
@@ -664,7 +664,7 @@ function selectParticle(id) {
             </div>
         </div>
         <div style="text-align:center;margin-top:12px;font-size:0.55rem;color:var(--muted);">
-            Fundamental state — not composed of smaller parts
+            ⊙ at this scale — contains nested structure below current resolution
         </div>
     `;
 }
@@ -787,7 +787,7 @@ function selectElement(el) {
         <div class="dp-totals">
             <div class="dp-total"><div class="tv">${totalQ}</div><div class="tl">Quarks</div></div>
             <div class="dp-total"><div class="tv">${P}</div><div class="tl">Electrons</div></div>
-            <div class="dp-total"><div class="tv">${totalQ+P}</div><div class="tl">Fundamental</div></div>
+            <div class="dp-total"><div class="tv">${totalQ+P}</div><div class="tl">Total Parts</div></div>
         </div>
 
         <div style="margin-top:8px;font-size:0.5rem;color:var(--muted);text-align:center;line-height:1.6;">
