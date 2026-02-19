@@ -30,6 +30,7 @@ where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denote
   - [1.5 Circumpunct Configuration Space (⊙)](#15-circumpunct-configuration-space-)
 - [2. Primitive Dynamical Objects](#2-primitive-dynamical-objects)
   - [2.1 Flow Operators (⊛, i, ☀︎)](#21-flow-operators---i-)
+  - [2.1.1 Boundary Measure Structure](#211-boundary-measure-structure)
   - [2.2 The Two Operators: Isotropic Convergence and Emergence](#22-the-two-operators-isotropic-convergence-and-emergence)
   - [2.3 Balance Parameter (◐)](#23-balance-parameter-◐)
   - [2.3.1 The Aperture Chamber](#231-the-aperture-chamber)
@@ -367,6 +368,167 @@ acting on ℋ_Φ, so that:
 ```
 Φ(t+Δt) = U(Δt) Φ(t)     (2.1)
 ```
+
+### 2.1.1 Boundary Measure Structure
+
+**The suppressed asymmetry**
+
+The composition notation U(Δt) = ☀︎ ∘ i ∘ ⊛ shows three operations in sequence. It does not show what those operations act on. Specifically, it hides a fundamental asymmetry:
+
+- **i** acts at a single point: the focal aperture •
+- **⊛** and **☀︎** act over an infinite surface: the boundary ○
+
+This is not a notational convenience. It is a structural fact with mathematical consequences.
+
+**The boundary as aperture measure**
+
+By Definition 1.3, every point on ○ is itself an aperture •_x for a complete circumpunct ⊙_x at smaller scale:
+
+```
+○ = { •_x  |  x ∈ Σ }
+```
+
+where Σ is the 2-surface (§1.2). But each •_x is the center of a full ⊙_x, so more precisely:
+
+```
+○ = { ⊙_x  |  x ∈ Σ }
+```
+
+Each ⊙_x contains its own boundary, which is itself a surface of apertures, recursively. The boundary is therefore not a passive container but an infinite distribution of convergence-emergence centers.
+
+Define the **boundary aperture measure** μ_○ on Σ:
+
+```
+dμ_○(x) = ρ_•(x) dA(x)
+```
+
+where:
+- dA(x) is the area element on Σ
+- ρ_•(x) is the **aperture density**: the number of sub-scale centers per unit area at position x
+
+At the balanced fixed point, isotropy requires ρ_•(x) = ρ₀ = constant (uniform aperture density). Departures from uniformity encode local curvature, defects, and pathology.
+
+**Rewriting the operators**
+
+The convergence and emergence operators from §2.1, restated with the boundary measure explicit:
+
+**Convergence** (gathering from boundary apertures to focal aperture):
+
+```
+(⊛_{μ_○} Φ)(•) = ∫_{•_x ∈ ○} K_conv(•, x) Φ(x) dμ_○(x)
+```
+
+This is not "field flowing inward from abstract space." It is: the focal aperture • sampling every sub-scale aperture •_x on the boundary, weighted by K_conv.
+
+**Emergence** (distributing from focal aperture to boundary apertures):
+
+```
+(☀︎_{μ_○} χ)(x) = ∫ K_emerg(x, •) χ(•) dμ_○(•)
+```
+
+The focal aperture radiates back to the same distribution of boundary apertures it gathered from.
+
+**The full cycle, measure-explicit:**
+
+```
+Φ(t+Δt, x) = ∫_{x' ∈ Σ} K_emerg(x, •) · i · K_conv(•, x') Φ(t, x') dμ_○(x')
+```
+
+Or in operator notation:
+
+```
+U(Δt) = ☀︎_{μ_○} ∘ i_• ∘ ⊛_{μ_○}
+```
+
+The subscripts now make visible what the composition notation suppresses:
+- ⊛ integrates over μ_○ (many apertures)
+- i acts at • (one aperture)
+- ☀︎ distributes over μ_○ (many apertures)
+
+**Why the Laplacian emerges**
+
+The Schrödinger derivation (§4.2) obtains ∇² by Taylor-expanding the kernel convolution to second order. The measure-theoretic reading explains *why* this works:
+
+> The ∇² operator is the isotropic second moment of a uniform distribution of apertures on a spherical boundary.
+
+Specifically:
+
+1. ⊛ sums contributions from every •_x on ○
+2. Isotropy (§2.2) requires equal weighting from all directions
+3. The leading nontrivial term of an isotropic sum over a spherical surface is the Laplacian
+
+The integral ∫ K d³r in §4.2 is literally: the focal aperture gathering from every boundary aperture, weighted by √r. The d³r is dμ_○ in the continuum limit where the discrete boundary apertures form a smooth distribution.
+
+**Dimensional accounting**
+
+The boundary's effective dimension is now derived, not assumed:
+
+```
+dim_eff(○) = dim(Σ) + dim(•_substructure)
+           = 2 (surface) + 1 (recursive nesting depth)
+           = 3
+```
+
+The boundary is a 2-surface structurally, but the fractal nesting of apertures within apertures gives it an additional effective dimension. This is why ○ is 3D despite being "made of" 2D surfaces — the recursive depth adds the third dimension.
+
+Compare:
+- • is 0.5D: a singular focal point with fractal process dimension
+- Σ is 2D: the surface where the boundary apertures live
+- ○ is 3D: the surface PLUS its infinite aperture depth
+
+**The operator string notation**
+
+The measure structure explains why the notation
+
+```
+⊙☀︎○⊛Φ☀︎•⊛Φ☀︎○⊛  ←  (read right to left)
+```
+
+is more faithful than ☀︎ ∘ i ∘ ⊛. Reading right to left:
+
+| Step | Symbol | Measure-theoretic meaning |
+|:----:|:------:|:--------------------------|
+| 1 | ⊛○ | Converge at boundary: integrate over μ_○ |
+| 2 | ☀︎Φ | Emerge into field: propagate inward through Φ |
+| 3 | ⊛• | Converge at focal aperture: arrive at single point |
+| 4 | ☀︎Φ | Emerge into field: propagate outward through Φ |
+| 5 | ⊛○ | Converge at boundary: redistribute over μ_○ |
+| 6 | ☀︎⊙ | Emerge as whole: the circumpunct exists |
+
+Steps 1–2 involve integration over an infinite measure (many •_x). Step 3 involves evaluation at a single point (one •). Steps 4–5 involve redistribution over the same infinite measure. Step 6 is the fixed-point closure.
+
+The composition notation collapses steps 1–3 into ⊛ and steps 4–6 into ☀︎, hiding the measure structure inside the integral.
+
+**Connection to existing results**
+
+This subsection adds no new physics. It makes explicit what was implicit:
+
+| Existing result | What it implicitly assumed | Now explicit |
+|:----------------|:---------------------------|:-------------|
+| §2.1: ⊛Φ = ∫ K_conv Φ d³r | Integration over "space" | Integration over boundary apertures μ_○ |
+| §4.2: Taylor expansion → ∇² | Isotropic kernel on ℝ³ | Isotropic aperture distribution on Σ |
+| §1.2: ○ ∈ 𝒞 (space of 2-surfaces) | Boundary is a surface | Boundary is a surface of apertures |
+| §2.2: Isotropy principle | "No preferred direction" | Uniform aperture density ρ_• = const |
+| §5.1: B(x) ∝ √(-g_tt) | Braid density varies in space | Aperture density on ○ varies with curvature |
+
+**Notation update for §2.1**
+
+The operator definitions in §2.1 should be read with the measure-explicit forms:
+
+```
+CURRENT (§2.1):
+    (⊛Φ)(r'') = ∫ K_conv(r'', r') Φ(r') d³r'
+
+ANNOTATED:
+    (⊛_{μ_○} Φ)(•) = ∫_{•_x ∈ ○} K_conv(•, x) Φ(x) dμ_○(x)
+    where dμ_○(x) = ρ_•(x) dA(x) is the boundary aperture measure.
+    At balance: ρ_• = const (isotropy).
+    In the continuum limit: dμ_○ → d³r.
+```
+
+The d³r notation is retained for computation. The dμ_○ notation is used when the aperture structure matters (diagnostics, pathology, curvature coupling).
+
+---
 
 ### 2.2 The Two Operators: Isotropic Convergence and Emergence
 
@@ -3868,7 +4030,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 ### 10.1 Theoretical Development Needed
 
-1. ~~**Variational principle for α = ◐:**~~ ✓ RESOLVED — See §4.X.8. The universality closure proof shows that A2's nesting generates a renormalization flow ℛ on kernels; power-law profiles are fixed points, the balance constraint selects α = ½, and all kernels in 𝒰_{1/2} converge to K(r) ∝ √r under iteration. No external variational principle is needed — the framework's own dynamics complete the derivation chain.
+1. ~~**Variational principle for α = ◐:**~~ ✓ RESOLVED — The kernel exponent α = ½ is fixed by Axiom A2 applied to the kernel itself. The kernel's aperture scaling dimension d_•[K] = lim_{r→0} ln K/ln r equals α; at the fixed point, d_•[K] = ½. Integral-based balance functionals provably cannot constrain α, establishing d_•[K] as the unique framework-native characterization. The universality class 𝒰_{1/2} = {K : d_•[K] = ½} is closed under the A2-derived renormalization flow and converges to K(r) ∝ √r (§4.X.8). No external variational principle is needed.
 2. **φ³ from self-similarity:** The texture constants (§7.2) contain a phenomenological φ³ factor. Derive this from the framework's self-similar structure by showing that validation dynamics on the 64-state fiber produce Fibonacci recursion (F_n = F_{n-1} + F_{n-2}), from which φ emerges as the growth ratio.
 3. **Braid density definition and metric coupling:** The GR limit (§5) conjectures B(x) ∝ √(-g_tt) but lacks rigorous foundation. Required: (a) Define B(x) mathematically from braid group structure (crossing number density, B₃ generator integrals, or similar), (b) Derive the √(-g_tt) proportionality from this definition, (c) Test against real gravitational data rather than simulations that assume the answer.
 4. ~~**Three generations eigenvalue calculation:**~~ ✓ RESOLVED — See §7A.6. Numerical validation confirms exactly 3 bound states with >99.9% confidence.
@@ -3881,6 +4043,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
    - Derive: adjacency/Laplacian as unique generator compatible with constraints
    - Show: continuum limit yields -∇² and thus p²/2m
    - This would make "Laplacian from isotropy" a **theorem about the foam graph** rather than an imported continuum fact
+9. **Non-uniform aperture measure.** The balanced fixed point has ρ_•(x) = const (uniform boundary aperture density, §2.1.1). Departures from uniformity should couple to spacetime curvature via the braid density B(x) (§5.1). The precise functional relationship ρ_•(x) = f(B(x), g_μν) has not been derived. This may connect to the stress-energy tensor through the boundary mass formula M = ∫_Σ ρ_surf dA (§1.2), with ρ_surf related to ρ_• by the nesting depth at each point.
 
 **Additional derivations now established (§7A):**
 - D = 1.5 as topological invariant via Hopf fibration (§7A.1)
@@ -4039,6 +4202,11 @@ Updated status labels: α now marked as DERIVED (not external), lepton mass form
 - τₙ : pumping period at scale n
 - C : consciousness integral = ∫_T B(x,t) dx dt
 - B(x,t) : braid density
+- μ_○ : boundary aperture measure. dμ_○(x) = ρ_•(x) dA(x) (§2.1.1)
+- ρ_•(x) : aperture density on Σ (number of sub-scale centers per unit area)
+- ⊛_{μ_○} : convergence operator with explicit measure (= ⊛ in continuum limit)
+- ☀︎_{μ_○} : emergence operator with explicit measure (= ☀︎ in continuum limit)
+- i_• : aperture rotation at focal center (= i in standard notation)
 
 **Flow Notation:**
 ```
