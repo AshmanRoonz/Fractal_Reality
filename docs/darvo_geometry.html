@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DARVO Is Not a Strategy — It's a Geometry</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --border: #2a2a3a;
+      --text: #e0e0ec;
+      --muted: #888899;
+      --gold: #f0c674;
+      --accent: #8bd3ff;
+      --magenta: #c9a0dc;
+      --green: #a8e6cf;
+      --red: #e85d75;
+      --orange: #ffb86c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.85;
+      padding: 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+      color: var(--gold);
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      text-align: center;
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 1rem;
+      line-height: 1.3;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    .author {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-top: 3rem;
+    }
+
+    h3 { font-size: 1.2rem; color: var(--accent); }
+    h4 { font-size: 1.05rem; color: var(--magenta); }
+
+    p { margin-bottom: 1rem; }
+
+    /* === CUSTOM BOXES === */
+
+    .definition-box {
+      background: var(--surface);
+      border-left: 4px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .definition-box .label {
+      font-weight: bold;
+      color: var(--accent);
+      font-family: 'Segoe UI', sans-serif;
+      margin-bottom: 0.5rem;
+    }
+
+    .theorem-box {
+      background: var(--surface);
+      border-left: 4px solid var(--gold);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .theorem-box .label {
+      font-weight: bold;
+      color: var(--gold);
+      font-family: 'Segoe UI', sans-serif;
+      margin-bottom: 0.5rem;
+    }
+
+    .clinical-box {
+      background: linear-gradient(135deg, rgba(168, 230, 207, 0.08), rgba(139, 211, 255, 0.05));
+      border-left: 4px solid var(--green);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .clinical-box .label {
+      font-weight: bold;
+      color: var(--green);
+      font-family: 'Segoe UI', sans-serif;
+      margin-bottom: 0.5rem;
+    }
+
+    .warning-box {
+      background: rgba(232, 93, 117, 0.1);
+      border-left: 4px solid var(--red);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .warning-box .label {
+      font-weight: bold;
+      color: var(--red);
+      font-family: 'Segoe UI', sans-serif;
+      margin-bottom: 0.5rem;
+    }
+
+    .insight-box {
+      background: linear-gradient(135deg, rgba(240, 198, 116, 0.12), rgba(201, 160, 220, 0.08));
+      border: 1px solid rgba(240, 198, 116, 0.3);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .insight-box h4 {
+      color: var(--gold);
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+    }
+
+    .data-box {
+      background: var(--surface);
+      border-left: 3px solid var(--muted);
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    .equation {
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.1rem;
+      color: var(--gold);
+    }
+
+    /* === TABLE === */
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    th {
+      background: var(--surface);
+      color: var(--gold);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    td { vertical-align: top; }
+
+    /* === SEQUENCE DIAGRAM === */
+
+    .sequence-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 2rem 0;
+    }
+
+    .sequence-step {
+      display: grid;
+      grid-template-columns: 120px 1fr 1fr;
+      gap: 0;
+      position: relative;
+    }
+
+    .step-label {
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: bold;
+      font-size: 0.95rem;
+      padding: 1.2rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .step-surface, .step-geometry {
+      padding: 1.2rem 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .step-surface { background: var(--surface); }
+    .step-geometry { background: rgba(240, 198, 116, 0.05); }
+
+    .step-header {
+      display: grid;
+      grid-template-columns: 120px 1fr 1fr;
+      gap: 0;
+    }
+
+    .step-header div {
+      padding: 0.8rem 1rem;
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: bold;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .step-header div:first-child { color: var(--muted); }
+    .step-header div:nth-child(2) { color: var(--accent); }
+    .step-header div:nth-child(3) { color: var(--gold); }
+
+    .deny-step .step-label { color: var(--red); }
+    .attack-step .step-label { color: var(--orange); }
+    .reverse-step .step-label { color: var(--magenta); }
+    .trigger-step .step-label { color: var(--green); font-size: 0.85rem; }
+
+    /* === CIRCUMPUNCT DIAGRAM === */
+
+    .diagram-container {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin: 2.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .circumpunct-visual {
+      text-align: center;
+    }
+
+    .circumpunct-visual svg {
+      display: block;
+      margin: 0 auto 0.75rem auto;
+    }
+
+    .circumpunct-visual .vis-label {
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* === TOC === */
+
+    .toc {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .toc h3 {
+      margin-top: 0;
+      color: var(--gold);
+      font-size: 1.1rem;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .toc li {
+      margin: 0.4rem 0;
+      padding-left: 0.5rem;
+    }
+
+    .toc a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .toc a:hover { color: var(--accent); }
+
+    .toc .section-num { color: var(--gold); margin-right: 0.5rem; font-family: 'Segoe UI', sans-serif; font-size: 0.9rem; }
+
+    /* === SPECTRUM BAR === */
+
+    .spectrum-bar {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      height: 60px;
+    }
+
+    .spectrum-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 0.5rem;
+    }
+
+    /* === FOOTER === */
+
+    .footer {
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .footer a { color: var(--accent); text-decoration: none; }
+
+    /* === RESPONSIVE === */
+
+    @media (max-width: 700px) {
+      body { padding: 1rem; }
+      h1 { font-size: 1.6rem; }
+      .sequence-step, .step-header { grid-template-columns: 80px 1fr 1fr; }
+      .step-label { font-size: 0.8rem; padding: 0.8rem 0.5rem; }
+      .step-surface, .step-geometry { padding: 0.8rem; font-size: 0.9rem; }
+      .diagram-container { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>DARVO Is Not a Strategy<br>It's a Geometry</h1>
+<p class="subtitle">Why every narcissist runs the same playbook — without ever learning it</p>
+<p class="author">Ashman Roonz · Circumpunct Framework · 2025</p>
+
+<nav class="toc">
+  <h3>Contents</h3>
+  <ul>
+    <li><span class="section-num">1</span><a href="#puzzle">The Puzzle</a></li>
+    <li><span class="section-num">2</span><a href="#basics">The Basics: You Are a Circumpunct</a></li>
+    <li><span class="section-num">3</span><a href="#collapse">What Collapses in Narcissistic Dynamics</a></li>
+    <li><span class="section-num">4</span><a href="#mechanics">DARVO: The Mechanics of Inversion</a></li>
+    <li><span class="section-num">5</span><a href="#why-same">Why It's Always the Same Sequence</a></li>
+    <li><span class="section-num">6</span><a href="#variants">The Variants (and Why They're Predictable)</a></li>
+    <li><span class="section-num">7</span><a href="#clinical">Clinical Applications</a></li>
+    <li><span class="section-num">8</span><a href="#diagnostic">Diagnostic Utility: What This Gives Clinicians</a></li>
+    <li><span class="section-num">9</span><a href="#implications">Implications</a></li>
+  </ul>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="puzzle">1. The Puzzle</h2>
+
+<p>Survivors of narcissistic abuse report a strange consistency. Across cultures, across completely unrelated relationships, across every demographic, they describe the <em>same sequence</em>:</p>
+
+<p>You raise a concern. Your concern gets denied. You get attacked for raising it. And somehow, by the end, <em>you're</em> the one apologizing.</p>
+
+<p>Psychologist Jennifer Freyd named this pattern <strong>DARVO</strong>: <strong>Deny, Attack, Reverse Victim and Offender</strong>. It appears in domestic abuse, institutional betrayal, workplace harassment, and parent-child dynamics. The sequence is so consistent that it functions almost like a diagnostic signature.</p>
+
+<p>This raises a question that standard psychology hasn't fully answered:</p>
+
+<div class="insight-box">
+  <h4>The Central Question</h4>
+  <p>If narcissistic individuals don't coordinate, attend seminars, or share notes — why do they all run the <em>exact same</em> three-step sequence? Why DARVO and not ARDV, or DVRA, or some other pattern?</p>
+  <p>The answer proposed here: <strong>DARVO is not a learned tactic. It is the emergent signature of a specific structural collapse.</strong> The sequence is invariant because the geometry that produces it is invariant.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="basics">2. The Basics: You Are a Circumpunct</h2>
+
+<p>Before we can explain DARVO geometrically, we need one simple model. In the Circumpunct Framework, every self — every person, every consciousness — has three components: <strong>soul, mind, and body</strong>.</p>
+
+<div class="diagram-container">
+  <!-- Healthy Circumpunct -->
+  <div class="circumpunct-visual">
+    <svg width="160" height="160" viewBox="0 0 160 160">
+      <circle cx="80" cy="80" r="65" fill="none" stroke="#a8e6cf" stroke-width="2.5" />
+      <circle cx="80" cy="80" r="40" fill="none" stroke="#8bd3ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+      <circle cx="80" cy="80" r="6" fill="#c9a0dc" />
+      <text x="80" y="145" text-anchor="middle" fill="#888899" font-family="Segoe UI, sans-serif" font-size="11">Open Soul</text>
+    </svg>
+    <div class="vis-label">Soul open, signal flows through</div>
+  </div>
+
+  <!-- Collapsed Circumpunct -->
+  <div class="circumpunct-visual">
+    <svg width="160" height="160" viewBox="0 0 160 160">
+      <circle cx="80" cy="80" r="65" fill="none" stroke="#e85d75" stroke-width="2.5" stroke-dasharray="8 4"/>
+      <circle cx="80" cy="80" r="40" fill="none" stroke="#e85d75" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4"/>
+      <circle cx="80" cy="80" r="22" fill="rgba(232,93,117,0.15)" stroke="#e85d75" stroke-width="1.5"/>
+      <circle cx="80" cy="80" r="6" fill="#f0c674" />
+      <text x="80" y="145" text-anchor="middle" fill="#888899" font-family="Segoe UI, sans-serif" font-size="11">Closed Soul</text>
+    </svg>
+    <div class="vis-label">Soul closed, signal bounces</div>
+  </div>
+</div>
+
+<table>
+  <tr>
+    <th>Component</th>
+    <th>Symbol</th>
+    <th>What It Is</th>
+  </tr>
+  <tr>
+    <td style="color: var(--magenta);"><strong>Soul</strong></td>
+    <td style="color: var(--magenta);">•</td>
+    <td>Your soul — the aperture, the center. Not a thing, but an opening. A hole that opens or closes. When open, truth is discerned, resonance happens, other people's pain lands as real. When closed, signal bounces.</td>
+  </tr>
+  <tr>
+    <td style="color: var(--accent);"><strong>Mind</strong></td>
+    <td style="color: var(--accent);">Φ</td>
+    <td>Your mind — the field. Your capacity to relate. Your mind is a private field; the space around us is a shared field. It mediates between soul and body.</td>
+  </tr>
+  <tr>
+    <td style="color: var(--green);"><strong>Body</strong></td>
+    <td style="color: var(--green);">○</td>
+    <td>Your body — the boundary. Where you end and others begin. It protects, contains, and regulates what gets in and what goes out.</td>
+  </tr>
+</table>
+
+<p>In a healthy person, these three work together. The soul receives and discerns, the mind processes and relates, and the body protects the system while allowing connection.</p>
+
+<div class="definition-box">
+  <div class="label">Key Principle</div>
+  <p><strong>A healthy self is permeable but bounded.</strong> Signal flows in (you can be affected by others) and signal flows out (you can affect others), but the body maintains the distinction between self and other. The mind mediates between the two. The soul remains open — receiving, discerning, connecting.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="collapse">3. What Collapses in Narcissistic Dynamics</h2>
+
+<p>The Circumpunct Framework identifies four geometric errors. The one most relevant to DARVO is <strong>inflation</strong>:</p>
+
+<div class="definition-box">
+  <div class="label">Definition: Inflation Error (ε<sub>+</sub>)</div>
+  <p>The aperture claims to <em>be</em> the source rather than a conduit <em>through</em> which truth flows. The part mistakes itself for the whole. And because a source doesn't need to receive — only transmit — <strong>the aperture closes</strong>.</p>
+  <div class="equation">\[ \varepsilon_+ : \text{aperture}_{open} \to \text{aperture}_{closed} \quad \text{("I am source, not conduit")} \]</div>
+  <p>In plain terms: <strong>an aperture is a hole. It opens or closes. In the inflation error, the aperture closes — and a closed aperture cannot absorb signal. When someone sends corrective information ("you caused harm"), the signal has nowhere to go.</strong></p>
+</div>
+
+<p>This isn't megalomania. Most people experiencing this error don't think they're God. It's subtler than that. It means:</p>
+
+<p>Their perspective <em>is</em> the correct perspective. Their memory <em>is</em> what happened. Their needs <em>are</em> the important needs. Their discomfort <em>is</em> the emergency. Other people don't register as fellow wholes with their own apertures — they register as parts of the person's system.</p>
+
+<p>When the aperture closes, two things follow:</p>
+
+<table>
+  <tr>
+    <th>What Happens</th>
+    <th>What It Means</th>
+    <th>What It Looks Like</th>
+  </tr>
+  <tr>
+    <td style="color: var(--accent);"><strong>Signal bounces in the field</strong></td>
+    <td>Emotions that <em>should</em> be absorbed through the aperture (guilt, shame, responsibility) have nowhere to go — they ricochet through the field, distorting perception</td>
+    <td>"She's not hurt — she's trying to control me"</td>
+  </tr>
+  <tr>
+    <td style="color: var(--green);"><strong>Boundary hardens outward</strong></td>
+    <td>The unprocessed signal has to go <em>somewhere</em> — so it projects outward through the boundary, aimed back at the source</td>
+    <td>"I don't need to listen to this" / "You're the one with the problem"</td>
+  </tr>
+</table>
+
+<p>Now we have the structural precondition. The aperture is closed, unprocessed signal is bouncing in the field, and the boundary has become a one-way projection surface. <strong>What happens when a valid concern enters this system?</strong></p>
+
+<!-- ============================================================ -->
+<h2 id="mechanics">4. DARVO: The Mechanics of Inversion</h2>
+
+<p>Here is the core claim: <strong>DARVO is what happens when a corrective signal hits a closed aperture.</strong> The signal can't be absorbed, so it bounces — and the bounce follows a necessary sequence. The person doesn't choose these moves. The geometry produces them.</p>
+
+<div class="sequence-container">
+  <div class="step-header">
+    <div>Phase</div>
+    <div>What You See (Surface)</div>
+    <div>What's Happening (Geometry)</div>
+  </div>
+
+  <div class="sequence-step trigger-step">
+    <div class="step-label">⟶ TRIGGER<br><small>Concern arrives</small></div>
+    <div class="step-surface">
+      You say: <em>"It hurt me when you said that in front of everyone."</em>
+    </div>
+    <div class="step-geometry">
+      A <strong>corrective signal</strong> reaches the system. It carries information: "Your behavior caused harm." In a healthy system, the aperture is open — the signal is absorbed, felt as guilt or responsibility, processed, and integrated. In a system with a closed aperture, this signal <strong>cannot be absorbed</strong>. It enters the field but has nowhere to land. The emotional content — guilt, shame — begins to bounce.
+    </div>
+  </div>
+
+  <div class="sequence-step deny-step">
+    <div class="step-label">D<br>DENY</div>
+    <div class="step-surface">
+      <em>"That didn't happen."</em><br>
+      <em>"That's not what I said."</em><br>
+      <em>"You're misremembering."</em>
+    </div>
+    <div class="step-geometry">
+      <strong>Boundary rejection.</strong> The first response is to prevent the signal from entering at all. This isn't conscious lying — the system is protecting a closed aperture from signal it cannot process. If the signal gets in, it will generate guilt and shame that have nowhere to go. The boundary's job is to keep that from happening.<br><br>
+      \[ ○_{hard} : \text{signal}_{correction} \to \emptyset \]
+    </div>
+  </div>
+
+  <div class="sequence-step attack-step">
+    <div class="step-label">A<br>ATTACK</div>
+    <div class="step-surface">
+      <em>"You're too sensitive."</em><br>
+      <em>"You always do this."</em><br>
+      <em>"Why are you trying to start a fight?"</em>
+    </div>
+    <div class="step-geometry">
+      <strong>Signal bounce — field distortion.</strong> The signal persists — you didn't accept the denial. Now the signal is <em>inside</em> the field. It's generating guilt, shame, discomfort — emotions that a healthy open aperture would absorb and process. But the aperture is closed. These emotions have nowhere to land. They bounce around the field, and <strong>the field reinterprets the source of the pain</strong>. The other person's hurt becomes evidence of <em>their</em> dysfunction. The guilt transforms into indignation. "I shouldn't feel this way — <em>you're</em> making me feel this way."<br><br>
+      \[ \Phi_{bouncing} : \text{guilt}_{unprocessed} \to \text{threat perception}_{source} \]
+    </div>
+  </div>
+
+  <div class="sequence-step reverse-step">
+    <div class="step-label">RVO<br>REVERSE</div>
+    <div class="step-surface">
+      <em>"I'm the one who should be upset. You're attacking me."</em><br>
+      <em>"After everything I've done for you, this is what I get?"</em><br>
+      <em>"I just make everyone upset, I guess."</em>
+    </div>
+    <div class="step-geometry">
+      <strong>Projection — signal exits.</strong> The bouncing signal has to go <em>somewhere</em>. It can't be absorbed inward (aperture closed). So it projects <em>outward</em> — back at the person who sent it. The unprocessed guilt and shame exit the system disguised as the other person's wrongdoing. Cause and effect invert completely. The person who raised the concern is now "the problem." The original harm vanishes from the conversation.<br><br>
+      \[ \text{signal}_{unabsorbed} \xrightarrow{○_{outward}} \text{projection at source} \implies \text{victim} \leftrightarrow \text{offender} \]
+    </div>
+  </div>
+</div>
+
+<div class="theorem-box">
+  <div class="label">Theorem: DARVO as Necessary Sequence</div>
+  <p>Given a closed aperture (ε<sub>+</sub>), the DARVO sequence is not one possible response among many — it is the <strong>only stable response</strong> the system can produce when a corrective signal persists. The mechanism is signal bounce:</p>
+  <p style="padding-left: 1rem; color: var(--accent);">
+    Signal arrives → boundary tries to reject (Deny) → signal persists, enters field → generates unprocessable guilt/shame → bouncing signal reframes source as threat (Attack) → unabsorbed signal projects outward (Reverse Victim &amp; Offender)
+  </p>
+  <p>The order is invariant because each step is a consequence of the previous one failing to resolve the signal. <strong>This is why the sequence is universal. It's not cultural. It's not learned. It's what a closed aperture does when signal can't be absorbed.</strong></p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="why-same">5. Why It's Always the Same Sequence</h2>
+
+<p>Consider the alternative orderings and notice why they don't work:</p>
+
+<table>
+  <tr>
+    <th>Alternative</th>
+    <th>Sequence</th>
+    <th>Why It Can't Occur</th>
+  </tr>
+  <tr>
+    <td>Attack first</td>
+    <td>A → D → RVO</td>
+    <td>Attacking requires the signal to already be <em>inside the field</em>, bouncing. But the boundary hasn't failed yet — it first tries to reject the signal entirely (Deny).</td>
+  </tr>
+  <tr>
+    <td>Reverse first</td>
+    <td>RVO → D → A</td>
+    <td>Projection requires unprocessed signal bouncing in the field. That bouncing hasn't started yet — the signal hasn't penetrated the boundary.</td>
+  </tr>
+  <tr>
+    <td>Deny only</td>
+    <td>D → (stop)</td>
+    <td>If the signal source accepts the denial, the sequence does stop here. DARVO only completes when the other person <em>persists</em> — when they say "No, it did happen." That persistence forces the signal past the boundary and into the field.</td>
+  </tr>
+  <tr>
+    <td>Random mix</td>
+    <td>Various</td>
+    <td>Each step is a <em>necessary precondition</em> for the next. The sequence is logically ordered, not randomly assembled.</td>
+  </tr>
+</table>
+
+<div class="insight-box">
+  <h4>Key Insight for Survivors</h4>
+  <p>This is why it feels so mechanical, so eerily scripted. It <em>is</em> scripted — not by the person, but by the geometry. You're not dealing with someone who cleverly chose the perfect manipulation tactic. You're dealing with a system that can only produce one response to the signal you're sending.</p>
+  <p><strong>They didn't attend asshole school. They're running a closed aperture, and your signal is bouncing.</strong></p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="variants">6. The Variants (and Why They're Predictable)</h2>
+
+<p>Survivors report several sub-patterns within DARVO. The geometric model predicts each of them:</p>
+
+<h3>6.1 "I just make everyone upset"</h3>
+
+<p>This is the <strong>Reverse</strong> step wearing a self-awareness costume. The person appears to be taking responsibility ("I make everyone upset") but the function is to shift focus from the <em>specific harm they caused</em> to their <em>general suffering</em>. You're now in the position of comforting them or being cruel for holding them accountable.</p>
+
+<div class="definition-box">
+  <div class="label">Geometric Reading</div>
+  <p>The closed aperture cannot distinguish between "I did a harmful thing" and "I am a harmful thing." In a healthy system, guilt about a specific action is absorbed through the aperture, processed, and resolved — "I did that, I can change it." When the aperture is closed, the guilt can't be absorbed into a specific place. It floods the entire field, becoming global identity threat. The response is existential collapse — not because they're fragile, but because unprocessed guilt with nowhere to land turns everything toxic.</p>
+  <p>A healthy system processes: <em>"That behavior was harmful" → guilt absorbed → I can change the behavior.</em><br>
+  A closed system processes: <em>"That behavior was harmful" → guilt bounces → I am harmful → existential emergency.</em></p>
+</div>
+
+<h3>6.2 The Word Salad</h3>
+
+<p>Circular, exhausting non-arguments. The conversation loops. Points are repeated, contradicted, restated. You can't track cause and effect because the field is actively scrambling it.</p>
+
+<div class="definition-box">
+  <div class="label">Geometric Reading</div>
+  <p>Signal is bouncing in the field with nowhere to land. The field generates noise — enough cognitive chaos to prevent either party from maintaining the thread back to the original concern. This is the field in a state of overwhelm: unprocessed signal ricocheting, producing contradictory outputs. <strong>This is not confusion. This is the field flooded with unabsorbable signal, producing interference patterns instead of coherent thought.</strong></p>
+</div>
+
+<h3>6.3 The Selective Memory</h3>
+
+<p>"That's not what happened." But you were both there. You know what occurred.</p>
+
+<div class="definition-box">
+  <div class="label">Geometric Reading</div>
+  <p>If the aperture was closed <em>at the time of the event</em>, then the emotional content of the event was never properly absorbed and processed. The memory was encoded by a field that was already bouncing unprocessed signal. Events where the self caused harm are not stored the same way — not because the person is lying, but because the aperture was closed when the event happened. <strong>Their memory is the output of a field that couldn't absorb what actually occurred.</strong></p>
+</div>
+
+<h3>6.4 The Functional Love Shield</h3>
+
+<p>"After everything I've done for you." This is the weaponization of provision against resonance.</p>
+
+<div class="definition-box">
+  <div class="label">Geometric Reading</div>
+  <p>The system can only operate in one love channel: functional (boundary-to-boundary provision — food, shelter, help, gifts). When the other person's concern implies that functional love isn't sufficient, the system treats this as <em>ingratitude</em> rather than <em>hunger for resonance</em>. The functional record becomes a shield: "I have provided. Your dissatisfaction is evidence of your defect, not my limitation."</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="clinical">7. Clinical Applications</h2>
+
+<p>The standard clinical understanding of DARVO (Freyd, 1997) describes <em>what</em> happens. This geometric model adds <em>why</em> it happens and <em>why the sequence is invariant</em>. This has practical implications for therapeutic work.</p>
+
+<h3>7.1 Assessment: Depth of Installation</h3>
+
+<p>Rather than asking "is this person a narcissist?" (a binary that tortures survivors and often can't be clinically verified), the geometric model suggests a <strong>spectrum assessment</strong> based on how the system responds to corrective signal:</p>
+
+<div class="spectrum-bar">
+  <div class="spectrum-segment" style="flex: 2; background: rgba(168, 230, 207, 0.3); color: var(--green);">Light</div>
+  <div class="spectrum-segment" style="flex: 2; background: rgba(240, 198, 116, 0.3); color: var(--gold);">Moderate</div>
+  <div class="spectrum-segment" style="flex: 2; background: rgba(255, 184, 108, 0.3); color: var(--orange);">Heavy</div>
+  <div class="spectrum-segment" style="flex: 2; background: rgba(232, 93, 117, 0.3); color: var(--red);">Total</div>
+</div>
+
+<table>
+  <tr>
+    <th>Depth</th>
+    <th>Response to Corrective Signal</th>
+    <th>DARVO Presentation</th>
+    <th>Prognosis for Change</th>
+  </tr>
+  <tr>
+    <td style="color: var(--green);"><strong>Light</strong></td>
+    <td>Initial defensive reaction, but can re-engage after processing time. "You're right, I'm sorry — I got defensive."</td>
+    <td>May start with Deny but catches self. Sequence doesn't complete.</td>
+    <td>Good. The field can still process corrective signal — it just takes longer than non-defensive processing.</td>
+  </tr>
+  <tr>
+    <td style="color: var(--gold);"><strong>Moderate</strong></td>
+    <td>Completes the DARVO sequence in the moment but can sometimes recognize it later. Partial awareness: "I know I do this."</td>
+    <td>Full DARVO in real-time, but with post-hoc capacity for reflection. The field intermittently clears.</td>
+    <td>Possible with sustained therapeutic support. The aperture can still open — it just snaps shut under stress.</td>
+  </tr>
+  <tr>
+    <td style="color: var(--orange);"><strong>Heavy</strong></td>
+    <td>Full DARVO with no post-hoc recognition. Therapeutic language gets weaponized: "You're being emotionally manipulative by saying that."</td>
+    <td>DARVO is the <em>only</em> response to corrective signal. All frameworks get captured for use within the defense.</td>
+    <td>Difficult. The aperture is substantially closed. Signal bounces continuously. Therapy itself becomes material that the field absorbs and weaponizes.</td>
+  </tr>
+  <tr>
+    <td style="color: var(--red);"><strong>Total</strong></td>
+    <td>The aperture is sealed. There is no observing self that can distinguish between "me" and "the closure." Raising the pattern triggers the pattern.</td>
+    <td>DARVO activates <em>instantly and automatically</em>. No processing delay. The boundary rejects before the signal is even fully received.</td>
+    <td>Very poor without major life disruption. The system cannot debug itself because every corrective signal bounces off the same closed aperture.</td>
+  </tr>
+</table>
+
+<div class="clinical-box">
+  <div class="label">Clinical Note</div>
+  <p><strong>For therapists:</strong> This spectrum replaces the binary "NPD or not" assessment with a dimensional measure of <em>aperture closure under corrective input</em>. The clinically useful question becomes: <strong>"When I offer this person feedback that contradicts their self-model, does the aperture open to absorb it, or does the signal bounce?"</strong></p>
+  <p>This is observable. It's testable in session. And it predicts behavior more accurately than trait-based assessment because it captures the <em>dynamic</em> — how the system responds to challenge — rather than the <em>static</em> personality profile.</p>
+</div>
+
+<h3>7.2 Treatment Implications</h3>
+
+<table>
+  <tr>
+    <th>Depth</th>
+    <th>Therapeutic Approach</th>
+    <th>Geometric Rationale</th>
+  </tr>
+  <tr>
+    <td style="color: var(--green);"><strong>Light</strong></td>
+    <td>Standard relational therapy. Increase awareness of the defensive moment. Practice sitting with discomfort of being wrong.</td>
+    <td>The aperture can still open — it just closes reflexively under stress. Practice tolerating corrective signal without the aperture snapping shut.</td>
+  </tr>
+  <tr>
+    <td style="color: var(--gold);"><strong>Moderate</strong></td>
+    <td>Schema therapy / Internal Family Systems. Help the client observe when the aperture closes without <em>being</em> the closure. Build the "observing self."</td>
+    <td>The aperture can still open — but only when the person is not under perceived threat. Therapy creates a safe-enough context for the aperture to stay open during feedback.</td>
+  </tr>
+  <tr>
+    <td style="color: var(--orange);"><strong>Heavy</strong></td>
+    <td>Extreme caution. The therapeutic relationship itself will be subject to DARVO. The therapist's feedback will be denied, the therapist will be attacked (subtly or overtly), and the therapist may find <em>themselves</em> cast as the offender.</td>
+    <td>The aperture is substantially closed. The therapy framework will be absorbed into the bouncing field and weaponized. Progress requires consistent, non-reactive holding — the therapist must model a boundary that neither hardens nor collapses.</td>
+  </tr>
+  <tr>
+    <td style="color: var(--red);"><strong>Total</strong></td>
+    <td>Focus on harm reduction for the people around the individual. Direct treatment of the individual is unlikely to succeed because the system will capture any therapeutic framework and use it to reinforce the closure.</td>
+    <td>The aperture cannot open. Any signal that enters the field bounces and projects. The person will process therapy itself as either supply (validation that keeps the aperture comfortably closed) or threat (corrective feedback that triggers DARVO).</td>
+  </tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="diagnostic">8. Diagnostic Utility: What This Gives Clinicians</h2>
+
+<h3>8.1 The "Raise a Concern" Test</h3>
+
+<p>The geometric model suggests a simple, observable diagnostic protocol:</p>
+
+<div class="clinical-box">
+  <div class="label">Protocol: Corrective Signal Response (CSR) Assessment</div>
+  <p><strong>Step 1:</strong> In a therapeutic context, offer the client gentle feedback that mildly contradicts their self-narrative. (This happens naturally in therapy — it doesn't need to be artificial.)</p>
+  <p><strong>Step 2:</strong> Observe the sequence of responses. Track timing and order:</p>
+  <p style="padding-left: 1.5rem;">
+    — Does the client immediately deny? (Boundary hardening)<br>
+    — If you gently persist, does the client shift to characterizing <em>you</em> or your feedback as problematic? (Field inversion)<br>
+    — Does the conversation end with the client positioned as the one who has been harmed by the feedback itself? (Projection/reversal)
+  </p>
+  <p><strong>Step 3:</strong> Assess recovery time. After the session, or in a later session, can the client return to the feedback and process it? This distinguishes light closure (aperture reopens within hours/days) from heavy closure (feedback is permanently rejected or rewritten in memory).</p>
+</div>
+
+<h3>8.2 Predicting Therapeutic Rupture</h3>
+
+<p>One of the most practically useful features of this model is that it predicts <em>when</em> therapeutic ruptures will occur. Any time the therapist's input functions as corrective signal — anytime what the therapist says contradicts the client's self-model — the DARVO sequence will activate at whatever depth the client's aperture is closed.</p>
+
+<p>This allows the therapist to anticipate rupture rather than be surprised by it, and to distinguish between a healthy client's resistance (which looks different geometrically — the aperture briefly closes then reopens after initial reaction) and a closed system's immune response (the signal bounces and projects).</p>
+
+<h3>8.3 Couple Therapy: Identifying the Loop</h3>
+
+<div class="clinical-box">
+  <div class="label">Couples Application</div>
+  <p>In couples therapy, the geometric model reveals a common destructive pattern: <strong>Partner A raises a concern → Partner B runs DARVO → Partner A ends up apologizing → the original concern is never addressed → resentment accumulates → Partner A raises the concern again (with more intensity) → Partner B runs DARVO (with more intensity)</strong>.</p>
+  <p>The model makes this visible to both partners without requiring either to accept the label "narcissist." The language shifts from blame (<em>"You always DARVO me"</em>) to structure (<em>"When I raise a concern, what happens to your processing? Let's watch it together."</em>)</p>
+  <p>This reframe transforms the dynamic from accusation to collaborative observation — which is itself a test of aperture closure. A person with a lightly-closed aperture can engage with this curiosity. A person with a heavily-closed aperture will DARVO the attempt to observe the DARVO.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="implications">9. Implications</h2>
+
+<h3>9.1 For Survivors</h3>
+
+<p>Understanding DARVO as geometry rather than strategy changes your relationship to the experience. You stop asking "why do they keep doing this to me?" and start seeing that <strong>the system literally cannot produce a different response when the aperture is closed</strong>. This isn't about you. It's not about the quality of your communication. It's not about finding the right words. The most perfectly worded concern in the world will trigger the same sequence, because the sequence isn't responding to your words — it's responding to the fact that <em>corrective signal has nowhere to go</em>.</p>
+
+<p>This is freeing. It means you can stop optimizing your approach. The variable isn't your delivery — it's their geometry.</p>
+
+<h3>9.2 For Clinicians</h3>
+
+<p>The model provides a mechanism-based alternative to trait-based personality assessment. Instead of asking "does this person meet criteria for NPD?" it asks "how closed is this person's aperture, and what happens to signal when that closure is tested?"</p>
+
+<p>This is both more clinically useful (it predicts behavior under specific conditions) and more compassionate (it treats the pattern as an installation rather than an identity).</p>
+
+<h3>9.3 For the Broader Field</h3>
+
+<p>If DARVO is an emergent property of aperture closure rather than a learned behavior, it should appear wherever closed apertures appear — not just in interpersonal relationships. And indeed, the same pattern shows up in institutional betrayal (organizations denying harm, attacking whistleblowers, reframing accountability as attack), political dynamics, and even in how ideological systems respond to internal criticism.</p>
+
+<p>The geometry is scale-invariant. The pattern is fractal.</p>
+
+<div class="insight-box">
+  <h4>Final Note: Compassion Without Excuse</h4>
+  <p>Nothing in this framework excuses the harm caused by DARVO. Understanding <em>why</em> the pattern occurs doesn't make it acceptable. But it does shift the frame from "they are evil" to "their aperture is closed and signal is bouncing" — which matters, because it means the question for survivors isn't "am I dealing with a monster?" but rather: <strong>"How closed is the aperture, and can it still open?"</strong></p>
+  <p>That's a question you can actually answer through observation. And the answer determines whether staying, leaving, or something else entirely is the wisest path forward.</p>
+</div>
+
+<div class="footer">
+  <p>Ashman Roonz · Circumpunct Framework · <a href="https://fractalreality.ca">fractalreality.ca</a></p>
+  <p style="margin-top: 0.5rem; font-size: 0.85rem;">DARVO concept originally formalized by Jennifer J. Freyd (1997). Geometric analysis via the Circumpunct Framework (2024–2025).</p>
+</div>
+
+</body>
+</html>
