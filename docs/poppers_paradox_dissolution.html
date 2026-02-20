@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ DISSOLUTION OF POPPER'S PARADOX // CIRCUMPUNCT</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --green: #0f0;
+            --yellow: #ff0;
+            --red: #f44;
+            --amber: #ffa;
+            --bg: #000;
+            --border: #0ff;
+            --text: #fff;
+            --dim: rgba(255,255,255,0.45);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .container { display: flex; min-height: 100vh; }
+
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0 !important; }
+        }
+
+        nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: 180px;
+            height: 100vh;
+            border-right: 1px solid var(--cyan);
+            padding: 20px 12px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        nav .logo {
+            font-size: 28px;
+            color: var(--cyan);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            display: block;
+            color: var(--cyan);
+            text-decoration: none;
+            padding: 4px 0;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            margin-left: -10px;
+            transition: all 0.15s;
+            font-size: 10px;
+            letter-spacing: 0.03em;
+            opacity: 0.5;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--cyan);
+            border-left-color: var(--cyan);
+            opacity: 1;
+        }
+
+        nav a .num {
+            color: var(--cyan);
+            margin-right: 8px;
+        }
+
+        main {
+            margin-left: 180px;
+            padding: 30px 40px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (max-width: 900px) {
+            main { margin-left: 0; padding: 20px 15px; }
+        }
+
+        section {
+            margin-bottom: 60px;
+            padding-top: 10px;
+            max-width: 700px;
+        }
+
+        .section-id {
+            color: var(--cyan);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            margin-bottom: 4px;
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--cyan);
+        }
+
+        h2 {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #fff;
+            margin: 25px 0 12px;
+        }
+
+        p { margin-bottom: 12px; }
+
+        .highlight { color: #fff; }
+        .cyan { color: var(--cyan); }
+        .magenta { color: var(--magenta); }
+        .green { color: var(--green); }
+        .yellow { color: var(--yellow); }
+        .red { color: var(--red); }
+        .dim { color: var(--dim); }
+
+        .hero {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .hero-symbol {
+            font-size: 80px;
+            color: var(--cyan);
+            line-height: 1;
+        }
+
+        .hero-title {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            color: var(--cyan);
+            margin-top: 15px;
+            opacity: 0.7;
+        }
+
+        .hero-sub {
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 10px;
+            letter-spacing: 0.05em;
+        }
+
+        /* Teaching blocks */
+        .teaching {
+            border-left: 2px solid var(--cyan);
+            padding-left: 15px;
+            margin: 15px 0;
+        }
+        .teaching.cyan { border-color: var(--cyan); }
+        .teaching.magenta { border-color: var(--magenta); }
+        .teaching.green { border-color: var(--green); }
+        .teaching.yellow { border-color: var(--yellow); }
+        .teaching.red { border-color: var(--red); }
+
+        /* Check lists */
+        .checks {
+            margin: 15px 0;
+            padding: 12px 15px;
+            background: #000;
+            border: 1px solid var(--cyan);
+        }
+
+        .checks.red-border { border-color: var(--red); }
+        .checks.green-border { border-color: var(--green); }
+        .checks.yellow-border { border-color: var(--yellow); }
+        .checks.magenta-border { border-color: var(--magenta); }
+
+        .checks-title {
+            font-size: 10px;
+            color: var(--cyan);
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+        }
+
+        .checks.red-border .checks-title { color: var(--red); }
+        .checks.green-border .checks-title { color: var(--green); }
+        .checks.yellow-border .checks-title { color: var(--yellow); }
+        .checks.magenta-border .checks-title { color: var(--magenta); }
+
+        .check {
+            padding: 3px 0;
+            padding-left: 15px;
+            position: relative;
+            font-size: 12px;
+        }
+
+        .check::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+        }
+
+        .checks.red-border .check::before { color: var(--red); }
+        .checks.green-border .check::before { color: var(--green); }
+
+        /* Formal blocks */
+        .formal {
+            margin: 20px 0;
+            padding: 15px 18px;
+            border: 1px solid var(--amber);
+            background: rgba(255, 255, 170, 0.03);
+        }
+
+        .formal-label {
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            color: var(--amber);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .formal-content {
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .formal-content .eq {
+            color: var(--cyan);
+            font-weight: 500;
+        }
+
+        /* Proof blocks */
+        .proof {
+            margin: 20px 0;
+            padding: 15px 18px;
+            border: 1px solid var(--green);
+            background: rgba(0, 255, 0, 0.02);
+        }
+
+        .proof-label {
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            color: var(--green);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .proof-content {
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .proof-content .step {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .proof-content .step-num {
+            position: absolute;
+            left: 0;
+            color: var(--green);
+            font-size: 10px;
+        }
+
+        .qed {
+            text-align: right;
+            color: var(--green);
+            margin-top: 10px;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+        }
+
+        /* Compare grid */
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 600px) {
+            .compare { grid-template-columns: 1fr; }
+        }
+
+        .compare-box {
+            padding: 12px 15px;
+            border: 1px solid var(--cyan);
+        }
+
+        .compare-box.bad { border-color: var(--red); }
+        .compare-box.good { border-color: var(--green); }
+
+        .compare-title {
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .compare-box.bad .compare-title { color: var(--red); }
+        .compare-box.good .compare-title { color: var(--green); }
+
+        .compare-list {
+            list-style: none;
+            font-size: 11px;
+        }
+
+        .compare-list li {
+            padding: 3px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .compare-list li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+        }
+
+        .compare-box.bad .compare-list li::before { color: var(--red); }
+        .compare-box.good .compare-list li::before { color: var(--green); }
+
+        /* Equation blocks */
+        .eq-block {
+            margin: 18px 0;
+            padding: 12px 18px;
+            background: rgba(0, 255, 255, 0.04);
+            border-left: 3px solid var(--cyan);
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.8;
+        }
+
+        .eq-block .label {
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            color: var(--dim);
+            margin-bottom: 6px;
+        }
+
+        /* Pillars grid */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--cyan);
+            margin: 15px 0;
+        }
+
+        @media (max-width: 600px) {
+            .pillars { grid-template-columns: 1fr; }
+        }
+
+        .pillar {
+            background: var(--bg);
+            padding: 15px;
+        }
+
+        .pillar-name {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            margin-bottom: 6px;
+        }
+
+        .pillar-desc {
+            font-size: 11px;
+            color: var(--dim);
+        }
+
+        /* Sequence arrows */
+        .seq-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
+
+        .seq-flow .arrow { color: var(--dim); }
+
+        /* Blockquote */
+        blockquote {
+            border-left: 2px solid var(--yellow);
+            padding-left: 15px;
+            margin: 15px 0;
+            color: var(--yellow);
+            font-style: italic;
+            font-size: 12px;
+        }
+
+        /* Final */
+        .final {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .final-symbol {
+            font-size: 60px;
+            color: var(--cyan);
+            margin-bottom: 20px;
+        }
+
+        .final-lines div {
+            margin: 4px 0;
+            font-size: 12px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+            border: 1px solid rgba(0, 255, 255, 0.15);
+        }
+
+        th {
+            color: var(--cyan);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        /* Separator */
+        .separator {
+            text-align: center;
+            color: var(--cyan);
+            margin: 40px 0;
+            font-size: 18px;
+            letter-spacing: 1em;
+            opacity: 0.3;
+        }
+
+        /* Status badge */
+        .status {
+            display: inline-block;
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            padding: 2px 8px;
+            border: 1px solid;
+            margin-left: 8px;
+        }
+        .status.pass { color: var(--green); border-color: var(--green); }
+        .status.fail { color: var(--red); border-color: var(--red); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">⊙</div>
+            <a href="#hero"><span class="num">00</span>TITLE</a>
+            <a href="#paradox"><span class="num">01</span>THE PARADOX</a>
+            <a href="#error"><span class="num">02</span>CATEGORY ERROR</a>
+            <a href="#decomposition"><span class="num">03</span>DECOMPOSITION</a>
+            <a href="#society"><span class="num">04</span>SOCIETY AS ⊙</a>
+            <a href="#constructor"><span class="num">05</span>CONSTRUCTOR TEST</a>
+            <a href="#proof"><span class="num">06</span>DISSOLUTION</a>
+            <a href="#errors"><span class="num">07</span>GEOMETRIC ERRORS</a>
+            <a href="#falsification"><span class="num">08</span>FALSIFICATION</a>
+            <a href="#end"><span class="num">09</span>END</a>
+        </nav>
+
+        <main>
+            <!-- HERO -->
+            <section id="hero">
+                <div class="hero">
+                    <div class="hero-symbol">⊙</div>
+                    <div class="hero-title">DISSOLUTION OF POPPER'S PARADOX OF TOLERANCE</div>
+                    <div class="hero-sub">A Circumpunct Formalization</div>
+                    <div class="hero-sub" style="margin-top: 20px; font-size: 10px;">
+                        Ashman Roonz &amp; Claude<br>
+                        <span class="dim">fractalreality.ca</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- §01 THE PARADOX -->
+            <section id="paradox">
+                <div class="section-id">§01</div>
+                <h1>THE PARADOX AS STATED</h1>
+
+                <div class="teaching cyan">
+                    <p><strong>Popper (1945):</strong> "Unlimited tolerance must lead to the disappearance of tolerance. If we extend unlimited tolerance even to those who are intolerant, if we are not prepared to defend a tolerant society against the onslaught of the intolerant, then the tolerant will be destroyed, and tolerance with them."</p>
+                </div>
+
+                <h2>THE APPARENT CONTRADICTION</h2>
+
+                <div class="checks red-border">
+                    <div class="checks-title">PARADOX STRUCTURE</div>
+                    <div class="check">Premise 1: A tolerant society must tolerate all views to be tolerant</div>
+                    <div class="check">Premise 2: Some views actively seek to destroy tolerance</div>
+                    <div class="check">Premise 3: Tolerating destruction-of-tolerance destroys the system</div>
+                    <div class="check">Conclusion: Tolerance must be intolerant of intolerance</div>
+                    <div class="check">But: Intolerance of intolerance IS intolerance → contradiction</div>
+                </div>
+
+                <p>The paradox has generated centuries of debate because within a <span class="red">flat, scalar framework</span>, it appears genuinely irresolvable. Every proposed solution — "tolerance as social contract," "tolerance only for the tolerant," "intolerance as self-defense" — merely restates the contradiction with extra steps.</p>
+
+                <div class="teaching magenta">
+                    <p><span class="highlight">Diagnosis:</span> The paradox arises from treating "tolerance" as a <span class="magenta">single scalar quantity</span> — a number between 0 (intolerant) and 1 (tolerant). In this flat model, any restriction on tolerance reduces the scalar, making the system "less tolerant." The framework reveals this as a <span class="magenta">dimensional collapse error</span>.</p>
+                </div>
+            </section>
+
+            <!-- §02 CATEGORY ERROR -->
+            <section id="error">
+                <div class="section-id">§02</div>
+                <h1>THE CATEGORY ERROR</h1>
+
+                <p>Popper's paradox conflates two geometrically distinct operations:</p>
+
+                <div class="compare">
+                    <div class="compare-box good">
+                        <div class="compare-title">BOUNDARY GATING (○)</div>
+                        <ul class="compare-list">
+                            <li>Structural function of the membrane</li>
+                            <li>Determines what crosses in/out</li>
+                            <li>CREATES the conditions for field diversity</li>
+                            <li>Preserves constructor capacity network-wide</li>
+                            <li>Analogous to: cell membrane, immune system</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box bad">
+                        <div class="compare-title">FIELD RESTRICTION (anti-Φ)</div>
+                        <ul class="compare-list">
+                            <li>Collapse of signal diversity within the field</li>
+                            <li>Demands all signals match one pattern</li>
+                            <li>DESTROYS the conditions for pluralism</li>
+                            <li>Degrades constructor capacity of all agents</li>
+                            <li>Analogous to: totalitarianism, monoculture</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="teaching green">
+                    <p>The scalar model cannot distinguish between these because it has only one dimension. In the scalar model, both operations look like "reducing tolerance." But they are <span class="green">geometrically opposite</span>: one preserves the space for diversity, the other eliminates it.</p>
+                </div>
+
+                <div class="formal">
+                    <div class="formal-label">FORMAL CLAIM — THE DIMENSIONAL COLLAPSE</div>
+                    <div class="formal-content">
+                        <p>Let <span class="eq">τ</span> = "tolerance" in Popper's formulation.</p>
+                        <p>Popper models: <span class="eq">τ ∈ [0, 1]</span> — a single scalar.</p>
+                        <p>Any restriction → <span class="eq">τ decreases</span> → "less tolerant."</p>
+                        <p style="margin-top: 10px;">The Circumpunct decomposes <span class="eq">τ</span> into three structurally independent components:</p>
+                        <p><span class="eq">τ = (τ<sub>○</sub>, τ<sub>Φ</sub>, τ<sub>•</sub>)</span></p>
+                        <p>These are not three "kinds of tolerance." They are three <span class="highlight">structurally irreducible operations</span> that Popper's scalar collapses into one.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- §03 DECOMPOSITION -->
+            <section id="decomposition">
+                <div class="section-id">§03</div>
+                <h1><span class="cyan">○</span> <span class="magenta">Φ</span> <span class="green">•</span> TOLERANCE DECOMPOSED</h1>
+
+                <div class="pillars">
+                    <div class="pillar">
+                        <div class="pillar-name"><span class="cyan">○</span> BOUNDARY PERMEABILITY</div>
+                        <div class="pillar-desc">
+                            <strong>τ<sub>○</sub></strong> — What signals and agents are admitted across the boundary.<br><br>
+                            The membrane's gating function. Not "openness" in general — <em>selective exchange</em>. A boundary that admits everything is not tolerant; it is <strong>absent</strong>.<br><br>
+                            <span style="color:var(--cyan)">τ<sub>○</sub> = 0 → sealed (no exchange)</span><br>
+                            <span style="color:var(--cyan)">τ<sub>○</sub> = 1 → absent (no boundary)</span><br>
+                            <span style="color:var(--cyan)">Healthy: τ<sub>○</sub> ∈ (0, 1)</span>
+                        </div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-name"><span class="magenta">Φ</span> FIELD PLURALISM</div>
+                        <div class="pillar-desc">
+                            <strong>τ<sub>Φ</sub></strong> — Coexistence of diverse signals within shared space.<br><br>
+                            The field's capacity to carry multiple, even contradictory, signals without forcing collapse. This is what most people <em>mean</em> by "tolerance."<br><br>
+                            <span style="color:var(--magenta)">τ<sub>Φ</sub> = 0 → monoculture (one signal)</span><br>
+                            <span style="color:var(--magenta)">τ<sub>Φ</sub> = 1 → maximum pluralism</span><br>
+                            <span style="color:var(--magenta)">Healthy: τ<sub>Φ</sub> → max</span>
+                        </div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-name"><span class="green">•</span> APERTURE CURIOSITY</div>
+                        <div class="pillar-desc">
+                            <strong>τ<sub>•</sub></strong> — Willingness to look through another's lens without requiring agreement.<br><br>
+                            The deepest tolerance. The steelman principle: understanding others as you would have them understand you. Not acceptance — <em>genuine inquiry</em>.<br><br>
+                            <span style="color:var(--green)">τ<sub>•</sub> = 0 → closed aperture (no curiosity)</span><br>
+                            <span style="color:var(--green)">τ<sub>•</sub> = 1 → full transparency</span><br>
+                            <span style="color:var(--green)">Healthy: τ<sub>•</sub> → max</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="formal">
+                    <div class="formal-label">KEY STRUCTURAL RELATIONSHIP</div>
+                    <div class="formal-content">
+                        <p><span class="eq">τ<sub>Φ</sub></span> (field pluralism) <em>requires</em> <span class="eq">τ<sub>○</sub> ∈ (0, 1)</span> (selective boundary).</p>
+                        <p>A field with no boundary dissipates. A field with total boundary stagnates.</p>
+                        <p style="margin-top: 8px;"><span class="highlight">Boundary gating is not the opposite of field pluralism. It is the structural precondition for it.</span></p>
+                    </div>
+                </div>
+
+                <p>This is not a philosophical preference. It is the same relationship observed in every circumpunct system: the cell membrane enables intracellular diversity. The skull enables neural pluralism. The skin enables the immune system's capacity to distinguish self from non-self.</p>
+            </section>
+
+            <!-- §04 SOCIETY AS CIRCUMPUNCT -->
+            <section id="society">
+                <div class="section-id">§04</div>
+                <h1>⊙ SOCIETY AS CIRCUMPUNCT</h1>
+
+                <p>A society S is a circumpunct at scale:</p>
+
+                <div class="eq-block">
+                    <div class="label">DEFINITION</div>
+                    <span class="cyan">S = ⊙(•<sub>S</sub>, Φ<sub>S</sub>, ○<sub>S</sub>)</span>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr><th>Component</th><th>Social Realization</th><th>Function</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="green">•<sub>S</sub></span></td>
+                            <td>Shared identity, founding principles, constitutional commitments</td>
+                            <td>What persists through change — the eigenvector</td>
+                        </tr>
+                        <tr>
+                            <td><span class="magenta">Φ<sub>S</sub></span></td>
+                            <td>Public discourse, markets, culture, civil society</td>
+                            <td>Where diverse agents interact, resonate, disagree</td>
+                        </tr>
+                        <tr>
+                            <td><span class="cyan">○<sub>S</sub></span></td>
+                            <td>Laws, institutions, enforcement, borders</td>
+                            <td>What crosses in/out — the consent gate</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Each citizen A<sub>i</sub> within S is itself a circumpunct — parts are fractals of their wholes. The society is a circumpunct <em>made of</em> circumpuncts.</p>
+
+                <h2>TOLERANCE IN CIRCUMPUNCT TERMS</h2>
+
+                <div class="formal">
+                    <div class="formal-label">DEFINITION — TOLERANT SOCIETY</div>
+                    <div class="formal-content">
+                        <p>A society S is <span class="highlight">tolerant</span> iff:</p>
+                        <p style="margin-top: 8px;"><span class="eq">(1) τ<sub>Φ</sub>(S) is maximized</span> — the field carries maximum signal diversity</p>
+                        <p><span class="eq">(2) τ<sub>•</sub>(S) is maximized</span> — agents engage with genuine curiosity</p>
+                        <p><span class="eq">(3) τ<sub>○</sub>(S) ∈ (0, 1)</span> — the boundary gates selectively to preserve (1) and (2)</p>
+                        <p style="margin-top: 8px;">Tolerance is NOT: τ<sub>○</sub>(S) = 1 (absent boundary). That is dissolution, not tolerance.</p>
+                    </div>
+                </div>
+
+                <h2>INTOLERANCE IN CIRCUMPUNCT TERMS</h2>
+
+                <div class="formal">
+                    <div class="formal-label">DEFINITION — INTOLERANT ACTION</div>
+                    <div class="formal-content">
+                        <p>An action I by agent A is <span class="red">intolerant</span> iff it systematically degrades:</p>
+                        <p style="margin-top: 8px;"><span class="eq">τ<sub>Φ</sub>(S) → 0</span> — collapses field pluralism (demands monoculture)</p>
+                        <p><span class="eq">OR τ<sub>•</sub>(A<sub>targets</sub>) → 0</span> — closes the apertures of other agents</p>
+                        <p><span class="eq">OR CC(A<sub>targets</sub>) → 0</span> — degrades constructor capacity of targets</p>
+                        <p style="margin-top: 8px;">Intolerance is not "disagreement in the field." It is <span class="red">action that destroys the field itself</span>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- §05 CONSTRUCTOR TEST -->
+            <section id="constructor">
+                <div class="section-id">§05</div>
+                <h1>THE CONSTRUCTOR TEST</h1>
+
+                <p>Apply the four ethical constraints to the intolerant action I:</p>
+
+                <div class="checks red-border">
+                    <div class="checks-title">INTOLERANCE I — TESTED AGAINST (C○ ∩ CΦ ∩ C• ∩ C⊙)</div>
+                    <div class="check"><span class="cyan">C○ BOUNDARY</span> — Does I keep outcomes within targets' models? <span class="red">NO.</span> Intolerance imposes outcomes on targets without consent. Foreseeable effects ⊄ A<sub>target</sub>.model(I). <span class="status fail">FAIL</span></div>
+                    <div class="check"><span class="magenta">CΦ EVIDENCE</span> — Does a repeatable constructor exist for I? <span class="red">NO.</span> Intolerance requires fresh targets — it consumes the substrate it operates on. P(repeat | same targets) → 0 as targets are depleted. <span class="status fail">FAIL</span></div>
+                    <div class="check"><span class="green">C• INVARIANCE</span> — Does I preserve target identity? <span class="red">NO.</span> Intolerance demands targets abandon their eigenvector. correlation(A<sub>target</sub>.pattern<sub>before</sub>, A<sub>target</sub>.pattern<sub>after</sub>) < τ. <span class="status fail">FAIL</span></div>
+                    <div class="check"><span class="yellow">C⊙ MUTUAL</span> — Do all parties remain constructors after? <span class="red">NO.</span> Systematic pattern: CC(I<sub>agent</sub>) ↑ while CC(A<sub>targets</sub>) ↓. Targets converted to substrate. <span class="status fail">FAIL</span></div>
+                </div>
+
+                <p style="margin-top: 15px;">Now apply the same test to boundary gating G — the act of excluding intolerance:</p>
+
+                <div class="checks green-border">
+                    <div class="checks-title">BOUNDARY GATING G — TESTED AGAINST (C○ ∩ CΦ ∩ C• ∩ C⊙)</div>
+                    <div class="check"><span class="cyan">C○ BOUNDARY</span> — Does G keep outcomes within agents' models? <span class="green">YES.</span> Laws and institutional constraints are published, foreseeable. outcomes_foreseeable(G) ⊆ A.model(G) for all agents in S. <span class="status pass">PASS</span></div>
+                    <div class="check"><span class="magenta">CΦ EVIDENCE</span> — Does a repeatable constructor exist? <span class="green">YES.</span> Boundary enforcement is repeatable indefinitely — it does not consume its substrate. The gate persists through operation. <span class="status pass">PASS</span></div>
+                    <div class="check"><span class="green">C• INVARIANCE</span> — Does G preserve agent identities? <span class="green">YES.</span> Gating restricts action at the boundary, not identity at the center. Agents excluded from action X retain their eigenvector. <span class="status pass">PASS</span></div>
+                    <div class="check"><span class="yellow">C⊙ MUTUAL</span> — Do all parties remain constructors? <span class="green">YES.</span> CC(A<sub>i</sub>) ≥ CC<sub>min</sub> for all agents. No agent is converted to substrate. The intolerant agent retains constructor capacity — their field-destructive <em>actions</em> are gated, not their <em>agency</em>. <span class="status pass">PASS</span></div>
+                </div>
+
+                <div class="teaching yellow">
+                    <p><span class="highlight">Critical distinction:</span> Boundary gating restricts <em>actions at ○</em>, not <em>identity at •</em>. The intolerant agent is not destroyed or silenced as a person — their <span class="yellow">field-destructive behaviors</span> are gated at the boundary. This is structurally identical to a cell membrane blocking a toxin while leaving the molecule intact. The molecule isn't "punished." It simply doesn't cross.</p>
+                </div>
+            </section>
+
+            <!-- §06 DISSOLUTION -->
+            <section id="proof">
+                <div class="section-id">§06</div>
+                <h1>FORMAL DISSOLUTION</h1>
+
+                <div class="proof">
+                    <div class="proof-label">THEOREM — POPPER'S PARADOX IS A DIMENSIONAL COLLAPSE ERROR</div>
+                    <div class="proof-content">
+                        <p style="color:var(--amber);"><strong>Claim:</strong> The Paradox of Tolerance dissolves when tolerance is decomposed into its circumpunct components. The apparent contradiction arises from projecting a triadic structure onto a scalar, and vanishes when dimensionality is restored.</p>
+                    </div>
+                </div>
+
+                <div class="proof">
+                    <div class="proof-label">PROOF</div>
+                    <div class="proof-content">
+                        <div class="step"><span class="step-num">(1)</span> <strong>Popper's formulation</strong> models tolerance as scalar τ ∈ [0, 1]. In this model, any restriction on what is tolerated reduces τ. Therefore: restricting intolerance → τ decreases → the society becomes "less tolerant" → contradiction.</div>
+
+                        <div class="step"><span class="step-num">(2)</span> <strong>Decompose</strong> τ into circumpunct components: <span class="eq">τ = (τ<sub>○</sub>, τ<sub>Φ</sub>, τ<sub>•</sub>)</span>. These are structurally irreducible — boundary permeability, field pluralism, and aperture curiosity cannot be reduced to one another (by the Dimension Theorem: ○ requires 3D, Φ requires 2D, • requires 1D — they occupy different dimensional roles).</div>
+
+                        <div class="step"><span class="step-num">(3)</span> <strong>Identify the operation in question.</strong> "Restricting intolerance" is a boundary operation: ○<sub>S</sub> gates certain actions. This modifies τ<sub>○</sub> only. It does not reduce τ<sub>Φ</sub> (field pluralism) or τ<sub>•</sub> (aperture openness).</div>
+
+                        <div class="step"><span class="step-num">(4)</span> <strong>Show the structural relationship.</strong> τ<sub>Φ</sub> depends on τ<sub>○</sub> ∈ (0, 1). If τ<sub>○</sub> = 1 (no boundary), the field dissipates and τ<sub>Φ</sub> → 0. If τ<sub>○</sub> = 0 (sealed), no signals enter and τ<sub>Φ</sub> → 0. Therefore: selective gating (τ<sub>○</sub> < 1) is a <em>necessary condition</em> for field pluralism (τ<sub>Φ</sub> > 0).</div>
+
+                        <div class="step"><span class="step-num">(5)</span> <strong>Apply the constructor test.</strong> Intolerance (I) fails all four ethical constraints — it is parasitic (requires fresh substrate), non-repeatable, and converts constructors to substrate. Boundary gating (G) passes all four — it is repeatable, preserves agency, and maintains constructor capacity network-wide.</div>
+
+                        <div class="step"><span class="step-num">(6)</span> <strong>Therefore:</strong> I and G are not the same operation viewed at different scales. They are <span class="green">geometrically opposite operations</span>. I destroys Φ<sub>S</sub> (field pluralism). G preserves Φ<sub>S</sub> by enforcing ○<sub>S</sub> (boundary integrity). Calling both "intolerance" is a category error produced by dimensional collapse.</div>
+
+                        <div class="step"><span class="step-num">(7)</span> <strong>The paradox dissolves:</strong> A tolerant society (high τ<sub>Φ</sub>, high τ<sub>•</sub>) that gates intolerant actions at its boundary (selective τ<sub>○</sub>) is not contradicting itself. It is enacting the structural precondition for its own tolerance. No self-reference loop exists because the operations occur at different geometric levels.</div>
+                    </div>
+                    <div class="qed">∎</div>
+                </div>
+
+                <h2>THE ONE-LINE VERSION</h2>
+
+                <div class="eq-block">
+                    <span class="cyan">Boundary gating (○) is not field restriction (anti-Φ).</span><br>
+                    <span class="cyan">One is the condition for pluralism. The other is its destruction.</span><br>
+                    <span class="cyan">Popper conflated them because his model had only one dimension.</span>
+                </div>
+            </section>
+
+            <!-- §07 GEOMETRIC ERRORS -->
+            <section id="errors">
+                <div class="section-id">§07</div>
+                <h1>INTOLERANCE AS GEOMETRIC ERROR</h1>
+
+                <p>The framework's four geometric errors map precisely onto the mechanisms of intolerance. Every form of societal intolerance reduces to one or more of these:</p>
+
+                <table>
+                    <thead>
+                        <tr><th>Error</th><th>Social Expression</th><th>What It Does to the Field</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="red">INFLATION</span></td>
+                            <td>"My signal IS the truth — all others are corruption"</td>
+                            <td>Demands τ<sub>Φ</sub> → 0 (monoculture). Claims aperture status for what is boundary action.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">SEVERANCE</span></td>
+                            <td>"Those people are not part of us — they have no claim on our field"</td>
+                            <td>Denies field connection. Declares certain agents outside the circumpunct entirely.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">INVERSION</span></td>
+                            <td>"Defending tolerance is the REAL intolerance"</td>
+                            <td>Flips the signal. Reframes boundary gating (○) as field restriction (anti-Φ). <em>This is the move that generates Popper's paradox.</em></td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">PROJECTION</span></td>
+                            <td>"We're not being intolerant — they brought this on themselves"</td>
+                            <td>Outputs own distortion (CC degradation of others) as if it originated from the targets.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="teaching red">
+                    <p><span class="highlight">The inversion error is the engine of the paradox.</span> By framing boundary enforcement as intolerance, the intolerant agent performs a signal inversion: the society's self-preserving function (○ gating) is relabeled as the very pathology it gates (anti-Φ collapse). This is not a philosophical insight — it is a <span class="red">tactical deployment of the inversion error</span> to weaponize the paradox against the tolerant.</p>
+                </div>
+
+                <blockquote>"The paradox of tolerance is itself an inversion attack. It reframes the immune response as the disease."</blockquote>
+            </section>
+
+            <!-- §08 FALSIFICATION -->
+            <section id="falsification">
+                <div class="section-id">§08</div>
+                <h1>FALSIFICATION CRITERIA</h1>
+
+                <p>This dissolution makes specific, testable claims. If any of the following are demonstrated, the resolution fails:</p>
+
+                <div class="checks">
+                    <div class="checks-title">WHAT WOULD REFUTE THIS</div>
+                    <div class="check"><strong>F1:</strong> A society is found where τ<sub>○</sub> = 1 (no boundary gating whatsoever) AND τ<sub>Φ</sub> remains high indefinitely. This would refute the claim that boundary gating is a necessary condition for field pluralism.</div>
+                    <div class="check"><strong>F2:</strong> Intolerant action I is found that passes all four constructor constraints (C○ ∩ CΦ ∩ C• ∩ C⊙). This would refute the claim that intolerance is structurally parasitic.</div>
+                    <div class="check"><strong>F3:</strong> Boundary gating G is shown to necessarily reduce τ<sub>Φ</sub> (field pluralism), not just τ<sub>○</sub>. This would collapse the distinction between gating and restriction, re-establishing the paradox.</div>
+                    <div class="check"><strong>F4:</strong> A genuine fifth geometric error is found in the mechanisms of intolerance that is not reducible to inflation, severance, inversion, or projection. This would not refute the dissolution directly, but would indicate the error taxonomy is incomplete.</div>
+                    <div class="check"><strong>F5:</strong> The three tolerance components (τ<sub>○</sub>, τ<sub>Φ</sub>, τ<sub>•</sub>) are shown to be reducible to a single scalar after all — i.e., they are not structurally independent. This would re-validate Popper's flat model and re-establish the paradox.</div>
+                </div>
+
+                <h2>EMPIRICAL PREDICTIONS</h2>
+
+                <table>
+                    <thead>
+                        <tr><th>Prediction</th><th>Test</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Societies with strong boundary gating (law enforcement of anti-discrimination) AND high field pluralism should be the <em>most</em> tolerant, not the least</td>
+                            <td>Cross-national comparison: boundary enforcement × diversity indices</td>
+                        </tr>
+                        <tr>
+                            <td>Societies with absent boundaries (failed states, ungoverned spaces) should show rapid collapse of field pluralism → dominance by the most intolerant faction</td>
+                            <td>Historical analysis of power vacuums and pluralism metrics</td>
+                        </tr>
+                        <tr>
+                            <td>Intolerant movements should preferentially deploy the inversion error ("defending tolerance is the real intolerance") as a rhetorical strategy</td>
+                            <td>Discourse analysis of intolerant movements' framing strategies</td>
+                        </tr>
+                        <tr>
+                            <td>Boundary gating that restricts actions but preserves agent identity should produce less radicalization than gating that targets identity directly</td>
+                            <td>Comparative policy analysis: action-based vs. identity-based restrictions</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- §09 END -->
+            <section id="end">
+                <div class="final">
+                    <div class="final-symbol">⊙</div>
+                    <div class="final-lines">
+                        <div>The paradox of tolerance is a dimensional collapse error.</div>
+                        <div class="highlight" style="margin-top: 12px;">Tolerance is not a scalar. It is a circumpunct.</div>
+                        <br>
+                        <div><span class="cyan">○</span> The boundary gates to preserve.</div>
+                        <div><span class="magenta">Φ</span> The field carries diversity.</div>
+                        <div><span class="green">•</span> The aperture opens with curiosity.</div>
+                        <br>
+                        <div class="dim">These are not three "kinds" of tolerance.</div>
+                        <div class="dim">They are one tolerance seen from three geometric positions.</div>
+                        <br>
+                        <div>A cell membrane that blocks toxins is not anti-chemistry.</div>
+                        <div class="highlight">It is the condition for chemistry to happen inside.</div>
+                        <br><br>
+                        <div class="dim" style="font-size: 10px;">The rest is geometry.</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Active nav highlighting
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    const activeLink = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+                    if (activeLink) activeLink.classList.add('active');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        sections.forEach(section => observer.observe(section));
+    </script>
+</body>
+</html>
