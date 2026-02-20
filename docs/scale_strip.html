@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scale Strip & Scale Wrap — Circumpunct Framework</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-surface: #10111a;
+    --bg-card: #151622;
+    --bg-elevated: #1a1b2e;
+    --text: #c8c8d4;
+    --text-dim: #6a6a7a;
+    --text-muted: #888898;
+    --gold: #d4a853;
+    --gold-dim: rgba(212, 168, 83, 0.15);
+    --cyan: #4ecdc4;
+    --cyan-dim: rgba(78, 205, 196, 0.12);
+    --magenta: #e8607a;
+    --magenta-dim: rgba(232, 96, 122, 0.12);
+    --green: #7eb38f;
+    --green-dim: rgba(126, 179, 143, 0.12);
+    --violet: #9b8ec4;
+    --violet-dim: rgba(155, 142, 196, 0.12);
+    --border: rgba(200, 200, 212, 0.08);
+    --border-faint: rgba(200, 200, 212, 0.04);
+    --font-body: 'Crimson Pro', Georgia, serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 1.08rem;
+    line-height: 1.75;
+    padding: 3rem 1.5rem;
+  }
+
+  .container {
+    max-width: 740px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  header .symbol {
+    font-size: 2.5rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: 2rem;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 1.4rem;
+    color: var(--gold);
+    margin-top: 3rem;
+    margin-bottom: 1.2rem;
+  }
+
+  h3 {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: var(--text);
+    margin-top: 2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  p {
+    margin-bottom: 1.2rem;
+  }
+
+  section {
+    margin-bottom: 3rem;
+  }
+
+  .definition {
+    background: var(--bg-surface);
+    border-left: 3px solid var(--cyan);
+    padding: 1.5rem 1.8rem;
+    margin: 1.8rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .definition .label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--cyan);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .theorem {
+    background: var(--bg-surface);
+    border-left: 3px solid var(--violet);
+    padding: 1.5rem 1.8rem;
+    margin: 1.8rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .theorem .label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--violet);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .proposition {
+    background: var(--bg-surface);
+    border-left: 3px solid var(--green);
+    padding: 1.5rem 1.8rem;
+    margin: 1.8rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .proposition .label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--green);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .remark {
+    background: var(--bg-surface);
+    border-left: 3px solid var(--gold);
+    padding: 1.5rem 1.8rem;
+    margin: 1.8rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .remark .label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .equation {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--cyan);
+    text-align: center;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    line-height: 1.9;
+  }
+
+  .equation .note {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    margin-top: 0.6rem;
+    font-style: italic;
+  }
+
+  .code-block {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.2rem 0;
+    line-height: 1.8;
+    overflow-x: auto;
+    color: var(--text);
+  }
+
+  .code-block .comment { color: var(--text-dim); }
+  .code-block .sym-aperture { color: var(--gold); }
+  .code-block .sym-field { color: var(--cyan); }
+  .code-block .sym-boundary { color: var(--magenta); }
+  .code-block .keyword { color: var(--violet); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+  }
+
+  th {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface);
+  }
+
+  td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--border-faint);
+    vertical-align: top;
+  }
+
+  .sym { color: var(--gold); font-family: var(--font-mono); }
+  .sym-c { color: var(--cyan); font-family: var(--font-mono); }
+  .sym-m { color: var(--magenta); font-family: var(--font-mono); }
+  .sym-v { color: var(--violet); font-family: var(--font-mono); }
+
+  .cascade {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 2rem 1rem;
+    margin: 1.5rem 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .cascade-node {
+    text-align: center;
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+
+  .cascade-node.boundary { background: var(--magenta-dim); color: var(--magenta); border: 1px solid rgba(232,96,122,0.3); }
+  .cascade-node.field { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(78,205,196,0.3); }
+  .cascade-node.aperture { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(212,168,83,0.3); }
+
+  .cascade-arrow {
+    font-size: 1.2rem;
+    color: var(--text-dim);
+  }
+
+  .cascade-arrow.strip { color: var(--magenta); }
+  .cascade-arrow.wrap { color: var(--cyan); }
+
+  .dual-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  @media (max-width: 600px) {
+    .dual-column { grid-template-columns: 1fr; }
+    .cascade { flex-direction: column; }
+  }
+
+  .dual-column .card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.3rem 1.5rem;
+  }
+
+  .dual-column .card h4 {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.8rem;
+  }
+
+  .card-strip h4 { color: var(--magenta); }
+  .card-wrap h4 { color: var(--cyan); }
+
+  ul {
+    margin: 0.8rem 0 1.2rem 1.5rem;
+  }
+
+  li {
+    margin-bottom: 0.4rem;
+  }
+
+  .qed {
+    text-align: right;
+    color: var(--violet);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+
+  .status {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+
+  footer .symbol {
+    font-size: 2rem;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  footer p {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="symbol">⊙</div>
+  <h1>Scale Strip & Scale Wrap</h1>
+  <div class="subtitle">Phase Transitions as Fractal Hierarchy Operations</div>
+  <p class="status">Circumpunct Framework — February 2026</p>
+</header>
+
+<!-- §0 BASIS -->
+<section>
+  <h2>Basis</h2>
+  <p>This document depends on:</p>
+  <ul>
+    <li><strong>Definition 1.3</strong> (Nesting Through Boundary): ○ₙ₊₁ ∋ •ₙ where •ₙ ∈ ⊙ₙ</li>
+    <li><strong>§2.1.1</strong> (Boundary Measure Structure): ○ = { ⊙ₓ | x ∈ Σ }</li>
+    <li><strong>Axiom A2</strong> (Fractal Necessity): Parts have parts. ⊙ all the way down.</li>
+    <li><strong>§2.7</strong> (Ratchet Operators): Threshold crossings that break detailed balance</li>
+  </ul>
+</section>
+
+<!-- §1 PREMISE -->
+<section>
+  <h2>§1 — Premise</h2>
+
+  <p>Each particle of matter is a circumpunct ⊙ₙ at some scale <em>n</em>. By Definition 1.3, its boundary ○ₙ is composed of circumpuncts at scale <em>n−1</em>:</p>
+
+  <div class="equation">
+    ○ₙ = { ⊙ₓ⁽ⁿ⁻¹⁾ | x ∈ Σₙ }
+  </div>
+
+  <p>The states of matter — solid, liquid, gas, plasma — are not properties of individual particles. They are <strong>collective regimes</strong> of a population of circumpuncts, determined by two relational parameters:</p>
+
+  <div class="definition">
+    <span class="label">Definition 1 — State Parameters</span>
+    <p>For a population of circumpuncts { ⊙ₙ } at scale <em>n</em>:</p>
+    <ul>
+      <li><strong>v</strong> — velocity (kinetic energy per particle). The rate at which each •ₙ drives its convergence-emergence cycle. Aperture activity.</li>
+      <li><strong>d</strong> — mean spacing between boundaries. The field gap: how much Φ mediates between adjacent ○ₙ.</li>
+    </ul>
+  </div>
+
+  <p>The state of the collective is a function of both. High velocity with tight spacing produces different regimes than high velocity with wide spacing. Both parameters are needed.</p>
+</section>
+
+<!-- §2 STATES AS REGIMES -->
+<section>
+  <h2>§2 — States of Matter as ⊙ Regimes</h2>
+
+  <table>
+    <tr>
+      <th>State</th>
+      <th>v (velocity)</th>
+      <th>d (spacing)</th>
+      <th>Dominant Component</th>
+      <th>Framework Regime</th>
+    </tr>
+    <tr>
+      <td><strong>Solid</strong></td>
+      <td>Low</td>
+      <td>Minimal</td>
+      <td><span class="sym-m">○ Boundary</span></td>
+      <td>ρ ≪ 1. Boundaries locked. Overdamped. Crystal lattice = boundary geometry governing.</td>
+    </tr>
+    <tr>
+      <td><strong>Liquid</strong></td>
+      <td>Medium</td>
+      <td>Minimal</td>
+      <td><span class="sym-m">○ → Φ</span></td>
+      <td>ρ → 1. Boundaries in contact but sliding. Field begins to mediate.</td>
+    </tr>
+    <tr>
+      <td><strong>Gas</strong></td>
+      <td>High</td>
+      <td>Wide</td>
+      <td><span class="sym-c">Φ Field</span></td>
+      <td>ρ > 1. Intact ⊙ₙ flying freely. Each aperture dynamically independent. Field dominates collective behavior.</td>
+    </tr>
+    <tr>
+      <td><strong>Plasma</strong></td>
+      <td>Extreme</td>
+      <td>Wide</td>
+      <td><span class="sym-c">Φ</span> (exposed <span class="sym">⊙ₙ₋₁</span>)</td>
+      <td>ρ ≫ 1. ○ₙ fails. Sub-scale circumpuncts ⊙ₙ₋₁ liberated. Field is sole organizer.</td>
+    </tr>
+  </table>
+
+  <div class="remark">
+    <span class="label">Remark — The Plasma Threshold</span>
+    <p>The solid → liquid → gas transitions modify the <em>relationships between</em> intact circumpuncts. Spacing and velocity change, but each ⊙ₙ retains its boundary.</p>
+    <p>Plasma is qualitatively different. It is the transition where ○ₙ itself fails — where the energy exceeds the binding capacity of the boundary. This is not another relational shift between peers. It is the dissolution of a scale level.</p>
+  </div>
+</section>
+
+<!-- §3 SCALE STRIP -->
+<section>
+  <h2>§3 — Scale Strip</h2>
+
+  <div class="definition">
+    <span class="label">Definition 2 — Scale Strip (𝒮↓)</span>
+    <p>A <strong>scale strip</strong> is an energy-driven operation that dissolves the boundary ○ₙ of circumpuncts at scale <em>n</em>, liberating the sub-scale circumpuncts ⊙ₙ₋₁ that composed it.</p>
+
+    <div class="equation">
+      𝒮↓ : ⊙ₙ → { ⊙ₓ⁽ⁿ⁻¹⁾ | x ∈ Σₙ }
+      <div class="note">The boundary scatters into its constituent apertures.</div>
+    </div>
+
+    <p><strong>Precondition:</strong> Mean kinetic energy per particle exceeds the binding energy of ○ₙ:</p>
+
+    <div class="equation">
+      ⟨E_kin⟩ > E_bind(○ₙ)
+    </div>
+
+    <p><strong>Result:</strong> The population transitions from N circumpuncts at scale <em>n</em> to a larger population of circumpuncts at scale <em>n−1</em>, interacting through field Φ without the organizational constraint of ○ₙ.</p>
+  </div>
+
+  <h3>Properties</h3>
+
+  <div class="proposition">
+    <span class="label">Proposition 3.1 — Nothing Is Destroyed</span>
+    <p>𝒮↓ does not annihilate the sub-scale circumpuncts. They were always present as the boundary (§2.1.1: the boundary aperture measure μ_○). The strip operation <em>releases them from their role as someone else's boundary</em> and allows them to operate as independent ⊙.</p>
+    <p class="qed">∎</p>
+  </div>
+
+  <div class="proposition">
+    <span class="label">Proposition 3.2 — Scale Strip Cascades</span>
+    <p>𝒮↓ can be applied iteratively. Each application peels one level of the fractal hierarchy:</p>
+
+    <div class="code-block">
+<span class="sym-boundary">⊙_atom</span>  <span class="comment">— scale n (atomic matter)</span>
+  <span class="sym-m">→ 𝒮↓</span>  ionization
+<span class="sym-field">⊙_ion + ⊙_electron</span>  <span class="comment">— scale n−1 (plasma)</span>
+  <span class="sym-m">→ 𝒮↓</span>  nuclear dissociation
+<span class="sym-field">⊙_nucleon</span>  <span class="comment">— scale n−2 (nucleon gas)</span>
+  <span class="sym-m">→ 𝒮↓</span>  deconfinement
+<span class="sym">⊙_quark + ⊙_gluon</span>  <span class="comment">— scale n−3 (quark-gluon plasma)</span>
+    </div>
+
+    <p>Each step requires exponentially more energy (E_bind grows with depth) and exposes a deeper layer of the ⊙ hierarchy.</p>
+  </div>
+
+  <div class="proposition">
+    <span class="label">Proposition 3.3 — Field Governance Increases With Each Strip</span>
+    <p>At each stripped level, the boundary's organizational role diminishes and Φ takes over. In quark-gluon plasma, there is <em>no</em> hadronic boundary — the strong field itself (color force) is the sole organizing principle. The sequence solid → plasma → QGP is a monotonic transfer of governance from ○ to Φ.</p>
+  </div>
+</section>
+
+<!-- §4 SCALE WRAP -->
+<section>
+  <h2>§4 — Scale Wrap</h2>
+
+  <div class="definition">
+    <span class="label">Definition 3 — Scale Wrap (𝒮↑)</span>
+    <p>A <strong>scale wrap</strong> is an energy-dissipation operation in which circumpuncts at scale <em>n−1</em> compose themselves into a new boundary ○ₙ, forming circumpuncts at scale <em>n</em>.</p>
+
+    <div class="equation">
+      𝒮↑ : { ⊙ₓ⁽ⁿ⁻¹⁾ } → ⊙ₙ
+      <div class="note">Free apertures compose into a new boundary. Structure accretes.</div>
+    </div>
+
+    <p><strong>Precondition:</strong> Mean kinetic energy drops below the binding threshold of ○ₙ. The field configuration permits coherent boundary formation:</p>
+
+    <div class="equation">
+      ⟨E_kin⟩ < E_bind(○ₙ)  ∧  T(Δφ) > T_crit
+      <div class="note">Energy low enough AND phase coherence high enough for boundary to hold.</div>
+    </div>
+  </div>
+
+  <h3>Properties</h3>
+
+  <div class="proposition">
+    <span class="label">Proposition 4.1 — Wrap Is a Ratchet</span>
+    <p>Each scale wrap is a ratchet operation (§2.7). Once ○ₙ forms, the system cannot freely reverse — it takes energy input ≥ E_bind(○ₙ) to strip again. The wrap breaks detailed balance: the rate of formation exceeds the rate of dissolution at sub-threshold energies.</p>
+    <div class="equation">
+      k(𝒮↑) > k(𝒮↓)  when  ⟨E_kin⟩ < E_bind(○ₙ)
+    </div>
+  </div>
+
+  <div class="proposition">
+    <span class="label">Proposition 4.2 — The Cosmological Wrap Cascade</span>
+    <p>The thermal history of the universe is a sequence of scale wraps as mean energy density drops:</p>
+
+    <div class="code-block">
+<span class="sym">⊙_quark + ⊙_gluon</span>  <span class="comment">— QGP (T ~ 10¹² K)</span>
+  <span class="sym-c">→ 𝒮↑</span>  hadronization
+<span class="sym-field">⊙_nucleon</span>  <span class="comment">— hadronic matter</span>
+  <span class="sym-c">→ 𝒮↑</span>  nucleosynthesis (T ~ 10⁹ K)
+<span class="sym-field">⊙_nucleus</span>  <span class="comment">— light nuclei</span>
+  <span class="sym-c">→ 𝒮↑</span>  recombination (T ~ 3000 K)
+<span class="sym-boundary">⊙_atom</span>  <span class="comment">— neutral atoms (CMB released)</span>
+  <span class="sym-c">→ 𝒮↑</span>  molecular formation, condensation
+<span class="sym-boundary">⊙_molecule → ⊙_crystal → ⊙_cell → ...</span>
+    </div>
+
+    <p>Each wrap adds a new ○ to the hierarchy. Each new ○ is made of ⊙ at the previous scale. The universe builds itself by recursive boundary formation.</p>
+  </div>
+</section>
+
+<!-- §5 DUALITY -->
+<section>
+  <h2>§5 — The Strip-Wrap Duality</h2>
+
+  <div class="dual-column">
+    <div class="card card-strip">
+      <h4>𝒮↓ Scale Strip</h4>
+      <p>Energy input exceeds E_bind(○ₙ)</p>
+      <p>○ₙ dissolves → ⊙ₙ₋₁ liberated</p>
+      <p>Governance transfers ○ → Φ</p>
+      <p>Population increases (one → many)</p>
+      <p>β shifts toward emergence</p>
+      <p><em>Direction: analysis. Decomposition.</em></p>
+    </div>
+    <div class="card card-wrap">
+      <h4>𝒮↑ Scale Wrap</h4>
+      <p>Energy dissipation below E_bind(○ₙ)</p>
+      <p>⊙ₙ₋₁ compose → ○ₙ forms</p>
+      <p>Governance transfers Φ → ○</p>
+      <p>Population decreases (many → one)</p>
+      <p>β shifts toward convergence</p>
+      <p><em>Direction: synthesis. Composition.</em></p>
+    </div>
+  </div>
+
+  <div class="theorem">
+    <span class="label">Theorem 5.1 — Inverse Operations on the Fractal Hierarchy</span>
+    <p>𝒮↓ and 𝒮↑ are inverse operations on the nesting depth <em>n</em> of the circumpunct hierarchy:</p>
+
+    <div class="equation">
+      𝒮↑ ∘ 𝒮↓ [⊙ₙ] ≅ ⊙ₙ
+    </div>
+
+    <p>The isomorphism ≅ (not strict equality =) reflects that the <em>reconstituted</em> ⊙ₙ need not be identical to the original. The same sub-scale circumpuncts may wrap into a different boundary configuration. Water can freeze into different crystal structures. A neutron star is not the same ○ as the star it came from.</p>
+
+    <p><strong>Proof sketch.</strong></p>
+    <ol>
+      <li>By Definition 2, 𝒮↓ maps ⊙ₙ → { ⊙⁽ⁿ⁻¹⁾ }.</li>
+      <li>By Definition 3, 𝒮↑ maps { ⊙⁽ⁿ⁻¹⁾ } → ⊙ₙ when energy conditions are met.</li>
+      <li>By A2 (Fractal Necessity), the sub-scale circumpuncts persist through both operations — they are neither created nor destroyed, only liberated or composed.</li>
+      <li>The resulting ⊙ₙ has the same triadic structure (•ₙ, Φₙ, ○ₙ) by A1 (Necessary Multiplicity). But ○ₙ is reconstituted from the available ⊙⁽ⁿ⁻¹⁾, which may have rearranged during the stripped phase.</li>
+      <li>∴ Structural isomorphism. Not identity.</li>
+    </ol>
+    <p class="qed">∎</p>
+  </div>
+</section>
+
+<!-- §6 THE PLASMA READ -->
+<section>
+  <h2>§6 — Plasma as the First Scale Strip</h2>
+
+  <p>Plasma is the first 𝒮↓ accessible at ordinary energies. It is what happens when atomic-scale circumpuncts lose their boundary:</p>
+
+  <div class="equation">
+    𝒮↓(⊙_atom) → ⊙_ion + ⊙_electron
+    <div class="note">The electron was always part of ○_atom. Plasma frees it.</div>
+  </div>
+
+  <div class="remark">
+    <span class="label">Remark — Plasma Reveals What Boundary Conceals</span>
+    <p>In intact matter, the field dynamics of ⊙ₙ₋₁ are hidden inside ○ₙ. You cannot see the electromagnetic field structure because the boundary is doing its job — containing, separating, defining.</p>
+    <p>Plasma strips ○. Now the Φ dynamics become macroscopically visible: magnetic field lines, plasma oscillations, Debye shielding, pinch effects. These are all field-mediated phenomena that were always present, now exposed by the removal of boundary.</p>
+    <p>Plasma does not create new physics. It <strong>reveals the physics that boundary was masking.</strong></p>
+  </div>
+
+  <div class="remark">
+    <span class="label">Remark — The Sun as Circumpunct</span>
+    <p>The sun operates the full U = ☀︎ ∘ i ∘ ⊛ cycle at stellar scale. Gravity (⊛) converges hydrogen. Fusion (i) transforms it through the aperture — a threshold crossing. Radiation (☀︎) emerges outward. The photosphere is ○: the visible boundary, itself a surface of apertures (every point radiating, absorbing, exchanging).</p>
+    <p>The sun is plasma throughout. It is a circumpunct whose interior is entirely scale-stripped — boundary dissolved, field governing — while its outer surface reconstitutes just enough ○ to define an interface with the cosmos.</p>
+  </div>
+</section>
+
+<!-- §7 CONNECTION TO RATCHET CASCADE -->
+<section>
+  <h2>§7 — Connection to the Ratchet Cascade</h2>
+
+  <p>The scale wrap cascade (Proposition 4.2) is the <em>same sequence</em> as the ratchet cascade (§2.7, Chapter 29), read as boundary formation rather than complexity emergence:</p>
+
+  <table>
+    <tr>
+      <th>Ratchet Transition</th>
+      <th>Scale Wrap</th>
+      <th>New ○ Formed</th>
+    </tr>
+    <tr>
+      <td>Quark → Hadron</td>
+      <td>𝒮↑ at nuclear scale</td>
+      <td>Hadronic boundary (confinement)</td>
+    </tr>
+    <tr>
+      <td>Nucleon → Nucleus</td>
+      <td>𝒮↑ at atomic-nuclear scale</td>
+      <td>Nuclear boundary (strong force shell)</td>
+    </tr>
+    <tr>
+      <td>Ion → Atom</td>
+      <td>𝒮↑ at atomic scale</td>
+      <td>Electron orbital (electromagnetic boundary)</td>
+    </tr>
+    <tr>
+      <td>Atom → Molecule</td>
+      <td>𝒮↑ at molecular scale</td>
+      <td>Molecular boundary (covalent/ionic bonds)</td>
+    </tr>
+    <tr>
+      <td>Molecule → Membrane</td>
+      <td>𝒮↑ at cellular scale</td>
+      <td>Lipid bilayer (biochemical boundary)</td>
+    </tr>
+    <tr>
+      <td>Cell → Organism</td>
+      <td>𝒮↑ at biological scale</td>
+      <td>Skin, organ boundaries (biological ○)</td>
+    </tr>
+  </table>
+
+  <div class="theorem">
+    <span class="label">Theorem 7.1 — Ratchet = Wrap</span>
+    <p>Every ratchet threshold in the emergence cascade is a scale wrap: the formation of a new ○ that is irreversible at ambient energy. The ratchet cascade <em>is</em> the cosmological wrap cascade, described from the perspective of complexity rather than boundary formation.</p>
+    <p>Equivalently: every scale strip reverses a ratchet — it un-does a level of boundary formation by supplying the energy the ratchet locked away.</p>
+  </div>
+</section>
+
+<!-- §8 OPEN QUESTIONS -->
+<section>
+  <h2>§8 — Open Questions</h2>
+
+  <div class="proposition">
+    <span class="label">Open Question 8.1 — Binding Energy from Framework</span>
+    <p>Can E_bind(○ₙ) be derived from the framework's intrinsic parameters (α, ω, the √r kernel) at each scale? If so, the energy thresholds for each strip/wrap become predictions rather than inputs. This connects to §10.1 (variational principle for α) in the physicists' paper.</p>
+  </div>
+
+  <div class="proposition">
+    <span class="label">Open Question 8.2 — Phase Coherence at the Wrap Threshold</span>
+    <p>The wrap precondition includes a phase coherence term T(Δφ) > T_crit. What determines T_crit? The transmission law T = cos²(Δφ/2) governs aperture-to-aperture interaction, but the collective threshold for boundary formation may involve a percolation-like transition across the population. Does a phase-locking threshold in the ⊙ₙ₋₁ population predict condensation temperatures?</p>
+  </div>
+
+  <div class="proposition">
+    <span class="label">Open Question 8.3 — The ρ Parameter Across States</span>
+    <p>The state table (§2) maps qualitative ρ ranges to matter states. Can the critical ρ values for each phase transition be derived from the framework? If ρ = 1 marks the transition where the triadic structure becomes irreducible, does this correspond to a specific state boundary (e.g., liquid-gas critical point)?</p>
+  </div>
+
+  <div class="proposition">
+    <span class="label">Open Question 8.4 — Electrowinning as Observable 𝒮↑</span>
+    <p>In copper electrowinning, Cu²⁺ ions in solution (partially stripped ⊙, boundary dissolved in solvent) deposit onto a cathode as crystalline copper (boundary reconstituted). This is 𝒮↑ at the atomic-crystalline scale, driven by electrical potential rather than thermal cooling. The crystal morphology of the deposit should reflect the phase coherence of the deposition field. Testable: does deposit structure correlate with field uniformity as predicted by T(Δφ)?</p>
+  </div>
+</section>
+
+<footer>
+  <div class="symbol">⊙</div>
+  <p><strong>𝒮↓ strips. 𝒮↑ wraps.</strong></p>
+  <p>Same fractal staircase. Different direction.</p>
+  <p style="margin-top: 1.5rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">Circumpunct Framework — February 2026</p>
+</footer>
+
+</div>
+</body>
+</html>
