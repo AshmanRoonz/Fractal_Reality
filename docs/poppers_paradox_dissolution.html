@@ -1,804 +1,867 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DARVO Is Not a Strategy — It's a Geometry</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
-  <style>
-    :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --border: #2a2a3a;
-      --text: #e0e0ec;
-      --muted: #888899;
-      --gold: #f0c674;
-      --accent: #8bd3ff;
-      --magenta: #c9a0dc;
-      --green: #a8e6cf;
-      --red: #e85d75;
-      --orange: #ffb86c;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ DISSOLUTION OF POPPER'S PARADOX // CIRCUMPUNCT</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --green: #0f0;
+            --yellow: #ff0;
+            --red: #f44;
+            --amber: #ffa;
+            --bg: #000;
+            --border: #0ff;
+            --text: #fff;
+            --dim: rgba(255,255,255,0.45);
+        }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      font-family: 'Georgia', serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.85;
-      padding: 2rem;
-      max-width: 960px;
-      margin: 0 auto;
-    }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
 
-    h1, h2, h3, h4 {
-      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
-      color: var(--gold);
-      margin-top: 2.5rem;
-      margin-bottom: 1rem;
-    }
+        .container { display: flex; min-height: 100vh; }
 
-    h1 {
-      font-size: 2.2rem;
-      text-align: center;
-      border-bottom: 2px solid var(--gold);
-      padding-bottom: 1rem;
-      line-height: 1.3;
-    }
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0 !important; }
+        }
 
-    .subtitle {
-      text-align: center;
-      color: var(--muted);
-      font-style: italic;
-      margin-bottom: 0.5rem;
-      font-size: 1.05rem;
-    }
+        nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: 180px;
+            height: 100vh;
+            border-right: 1px solid var(--cyan);
+            padding: 20px 12px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
 
-    .author {
-      text-align: center;
-      color: var(--muted);
-      margin-bottom: 2rem;
-      font-size: 0.95rem;
-    }
+        nav .logo {
+            font-size: 28px;
+            color: var(--cyan);
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    h2 {
-      font-size: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.5rem;
-      margin-top: 3rem;
-    }
+        nav a {
+            display: block;
+            color: var(--cyan);
+            text-decoration: none;
+            padding: 4px 0;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            margin-left: -10px;
+            transition: all 0.15s;
+            font-size: 10px;
+            letter-spacing: 0.03em;
+            opacity: 0.5;
+        }
 
-    h3 { font-size: 1.2rem; color: var(--accent); }
-    h4 { font-size: 1.05rem; color: var(--magenta); }
+        nav a:hover, nav a.active {
+            color: var(--cyan);
+            border-left-color: var(--cyan);
+            opacity: 1;
+        }
 
-    p { margin-bottom: 1rem; }
+        nav a .num {
+            color: var(--cyan);
+            margin-right: 8px;
+        }
 
-    /* === CUSTOM BOXES === */
+        main {
+            margin-left: 180px;
+            padding: 30px 40px;
+            flex: 1;
+            min-width: 0;
+        }
 
-    .definition-box {
-      background: var(--surface);
-      border-left: 4px solid var(--accent);
-      padding: 1.2rem 1.5rem;
-      margin: 1.5rem 0;
-      border-radius: 0 8px 8px 0;
-    }
+        @media (max-width: 900px) {
+            main { margin-left: 0; padding: 20px 15px; }
+        }
 
-    .definition-box .label {
-      font-weight: bold;
-      color: var(--accent);
-      font-family: 'Segoe UI', sans-serif;
-      margin-bottom: 0.5rem;
-    }
+        section {
+            margin-bottom: 60px;
+            padding-top: 10px;
+            max-width: 700px;
+        }
 
-    .theorem-box {
-      background: var(--surface);
-      border-left: 4px solid var(--gold);
-      padding: 1.2rem 1.5rem;
-      margin: 1.5rem 0;
-      border-radius: 0 8px 8px 0;
-    }
+        .section-id {
+            color: var(--cyan);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            margin-bottom: 4px;
+            opacity: 0.6;
+        }
 
-    .theorem-box .label {
-      font-weight: bold;
-      color: var(--gold);
-      font-family: 'Segoe UI', sans-serif;
-      margin-bottom: 0.5rem;
-    }
+        h1 {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--cyan);
+        }
 
-    .clinical-box {
-      background: linear-gradient(135deg, rgba(168, 230, 207, 0.08), rgba(139, 211, 255, 0.05));
-      border-left: 4px solid var(--green);
-      padding: 1.2rem 1.5rem;
-      margin: 1.5rem 0;
-      border-radius: 0 8px 8px 0;
-    }
+        h2 {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #fff;
+            margin: 25px 0 12px;
+        }
 
-    .clinical-box .label {
-      font-weight: bold;
-      color: var(--green);
-      font-family: 'Segoe UI', sans-serif;
-      margin-bottom: 0.5rem;
-    }
+        p { margin-bottom: 12px; }
 
-    .warning-box {
-      background: rgba(232, 93, 117, 0.1);
-      border-left: 4px solid var(--red);
-      padding: 1.2rem 1.5rem;
-      margin: 1.5rem 0;
-      border-radius: 0 8px 8px 0;
-    }
+        .highlight { color: #fff; }
+        .cyan { color: var(--cyan); }
+        .magenta { color: var(--magenta); }
+        .green { color: var(--green); }
+        .yellow { color: var(--yellow); }
+        .red { color: var(--red); }
+        .dim { color: var(--dim); }
 
-    .warning-box .label {
-      font-weight: bold;
-      color: var(--red);
-      font-family: 'Segoe UI', sans-serif;
-      margin-bottom: 0.5rem;
-    }
+        .hero {
+            text-align: center;
+            padding: 40px 0;
+        }
 
-    .insight-box {
-      background: linear-gradient(135deg, rgba(240, 198, 116, 0.12), rgba(201, 160, 220, 0.08));
-      border: 1px solid rgba(240, 198, 116, 0.3);
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-    }
+        .hero-symbol {
+            font-size: 80px;
+            color: var(--cyan);
+            line-height: 1;
+        }
 
-    .insight-box h4 {
-      color: var(--gold);
-      margin-top: 0;
-      margin-bottom: 0.75rem;
-    }
+        .hero-title {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            color: var(--cyan);
+            margin-top: 15px;
+            opacity: 0.7;
+        }
 
-    .data-box {
-      background: var(--surface);
-      border-left: 3px solid var(--muted);
-      padding: 1rem 1.5rem;
-      margin: 1rem 0;
-      font-style: italic;
-      color: var(--muted);
-    }
+        .hero-sub {
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 10px;
+            letter-spacing: 0.05em;
+        }
 
-    .equation {
-      text-align: center;
-      padding: 1rem;
-      font-size: 1.1rem;
-      color: var(--gold);
-    }
+        .teaching {
+            border-left: 2px solid var(--cyan);
+            padding-left: 15px;
+            margin: 15px 0;
+        }
+        .teaching.cyan { border-color: var(--cyan); }
+        .teaching.magenta { border-color: var(--magenta); }
+        .teaching.green { border-color: var(--green); }
+        .teaching.yellow { border-color: var(--yellow); }
+        .teaching.red { border-color: var(--red); }
 
-    /* === TABLE === */
+        .checks {
+            margin: 15px 0;
+            padding: 12px 15px;
+            background: #000;
+            border: 1px solid var(--cyan);
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1.5rem 0;
-    }
+        .checks.red-border { border-color: var(--red); }
+        .checks.green-border { border-color: var(--green); }
+        .checks.yellow-border { border-color: var(--yellow); }
+        .checks.magenta-border { border-color: var(--magenta); }
 
-    th, td {
-      border: 1px solid var(--border);
-      padding: 0.75rem 1rem;
-      text-align: left;
-    }
+        .checks-title {
+            font-size: 10px;
+            color: var(--cyan);
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+        }
 
-    th {
-      background: var(--surface);
-      color: var(--gold);
-      font-family: 'Segoe UI', sans-serif;
-    }
+        .checks.red-border .checks-title { color: var(--red); }
+        .checks.green-border .checks-title { color: var(--green); }
+        .checks.yellow-border .checks-title { color: var(--yellow); }
+        .checks.magenta-border .checks-title { color: var(--magenta); }
 
-    td { vertical-align: top; }
+        .check {
+            padding: 3px 0;
+            padding-left: 15px;
+            position: relative;
+            font-size: 12px;
+        }
 
-    /* === SEQUENCE DIAGRAM === */
+        .check::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+        }
 
-    .sequence-container {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      margin: 2rem 0;
-    }
+        .checks.red-border .check::before { color: var(--red); }
+        .checks.green-border .check::before { color: var(--green); }
 
-    .sequence-step {
-      display: grid;
-      grid-template-columns: 120px 1fr 1fr;
-      gap: 0;
-      position: relative;
-    }
+        .formal {
+            margin: 20px 0;
+            padding: 15px 18px;
+            border: 1px solid var(--amber);
+            background: rgba(255, 255, 170, 0.03);
+        }
 
-    .step-label {
-      font-family: 'Segoe UI', sans-serif;
-      font-weight: bold;
-      font-size: 0.95rem;
-      padding: 1.2rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
+        .formal-label {
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            color: var(--amber);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
 
-    .step-surface, .step-geometry {
-      padding: 1.2rem 1.5rem;
-      border: 1px solid var(--border);
-    }
+        .formal-content {
+            font-size: 12px;
+            line-height: 1.7;
+        }
 
-    .step-surface { background: var(--surface); }
-    .step-geometry { background: rgba(240, 198, 116, 0.05); }
+        .formal-content .eq {
+            color: var(--cyan);
+            font-weight: 500;
+        }
 
-    .step-header {
-      display: grid;
-      grid-template-columns: 120px 1fr 1fr;
-      gap: 0;
-    }
+        .proof {
+            margin: 20px 0;
+            padding: 15px 18px;
+            border: 1px solid var(--green);
+            background: rgba(0, 255, 0, 0.02);
+        }
 
-    .step-header div {
-      padding: 0.8rem 1rem;
-      font-family: 'Segoe UI', sans-serif;
-      font-weight: bold;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border: 1px solid var(--border);
-      background: var(--surface);
-    }
+        .proof-label {
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            color: var(--green);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
 
-    .step-header div:first-child { color: var(--muted); }
-    .step-header div:nth-child(2) { color: var(--accent); }
-    .step-header div:nth-child(3) { color: var(--gold); }
+        .proof-content {
+            font-size: 12px;
+            line-height: 1.7;
+        }
 
-    .deny-step .step-label { color: var(--red); }
-    .attack-step .step-label { color: var(--orange); }
-    .reverse-step .step-label { color: var(--magenta); }
-    .trigger-step .step-label { color: var(--green); font-size: 0.85rem; }
+        .proof-content .step {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
 
-    /* === CIRCUMPUNCT DIAGRAM === */
+        .proof-content .step-num {
+            position: absolute;
+            left: 0;
+            color: var(--green);
+            font-size: 10px;
+        }
 
-    .diagram-container {
-      display: flex;
-      justify-content: center;
-      gap: 3rem;
-      margin: 2.5rem 0;
-      flex-wrap: wrap;
-    }
+        .qed {
+            text-align: right;
+            color: var(--green);
+            margin-top: 10px;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+        }
 
-    .circumpunct-visual {
-      text-align: center;
-    }
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
 
-    .circumpunct-visual svg {
-      display: block;
-      margin: 0 auto 0.75rem auto;
-    }
+        @media (max-width: 600px) {
+            .compare { grid-template-columns: 1fr; }
+        }
 
-    .circumpunct-visual .vis-label {
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
+        .compare-box {
+            padding: 12px 15px;
+            border: 1px solid var(--cyan);
+        }
 
-    /* === TOC === */
+        .compare-box.bad { border-color: var(--red); }
+        .compare-box.good { border-color: var(--green); }
 
-    .toc {
-      background: var(--surface);
-      border-radius: 8px;
-      padding: 1.5rem 2rem;
-      margin: 2rem 0;
-    }
+        .compare-title {
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
 
-    .toc h3 {
-      margin-top: 0;
-      color: var(--gold);
-      font-size: 1.1rem;
-    }
+        .compare-box.bad .compare-title { color: var(--red); }
+        .compare-box.good .compare-title { color: var(--green); }
 
-    .toc ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+        .compare-list {
+            list-style: none;
+            font-size: 11px;
+        }
 
-    .toc li {
-      margin: 0.4rem 0;
-      padding-left: 0.5rem;
-    }
+        .compare-list li {
+            padding: 3px 0;
+            padding-left: 15px;
+            position: relative;
+        }
 
-    .toc a {
-      color: var(--text);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
+        .compare-list li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+        }
 
-    .toc a:hover { color: var(--accent); }
+        .compare-box.bad .compare-list li::before { color: var(--red); }
+        .compare-box.good .compare-list li::before { color: var(--green); }
 
-    .toc .section-num { color: var(--gold); margin-right: 0.5rem; font-family: 'Segoe UI', sans-serif; font-size: 0.9rem; }
+        .eq-block {
+            margin: 18px 0;
+            padding: 12px 18px;
+            background: rgba(0, 255, 255, 0.04);
+            border-left: 3px solid var(--cyan);
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.8;
+        }
 
-    /* === SPECTRUM BAR === */
+        .eq-block .label {
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            color: var(--dim);
+            margin-bottom: 6px;
+        }
 
-    .spectrum-bar {
-      display: flex;
-      border-radius: 8px;
-      overflow: hidden;
-      margin: 1.5rem 0;
-      height: 60px;
-    }
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--cyan);
+            margin: 15px 0;
+        }
 
-    .spectrum-segment {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 0.8rem;
-      font-weight: bold;
-      text-align: center;
-      padding: 0.5rem;
-    }
+        @media (max-width: 600px) {
+            .pillars { grid-template-columns: 1fr; }
+        }
 
-    /* === FOOTER === */
+        .pillar {
+            background: var(--bg);
+            padding: 15px;
+        }
 
-    .footer {
-      margin-top: 4rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.9rem;
-      text-align: center;
-    }
+        .pillar-name {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            margin-bottom: 6px;
+        }
 
-    .footer a { color: var(--accent); text-decoration: none; }
+        .pillar-desc {
+            font-size: 11px;
+            color: var(--dim);
+        }
 
-    /* === RESPONSIVE === */
+        blockquote {
+            border-left: 2px solid var(--yellow);
+            padding-left: 15px;
+            margin: 15px 0;
+            color: var(--yellow);
+            font-style: italic;
+            font-size: 12px;
+        }
 
-    @media (max-width: 700px) {
-      body { padding: 1rem; }
-      h1 { font-size: 1.6rem; }
-      .sequence-step, .step-header { grid-template-columns: 80px 1fr 1fr; }
-      .step-label { font-size: 0.8rem; padding: 0.8rem 0.5rem; }
-      .step-surface, .step-geometry { padding: 0.8rem; font-size: 0.9rem; }
-      .diagram-container { gap: 1.5rem; }
-    }
-  </style>
+        .final {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .final-symbol {
+            font-size: 60px;
+            color: var(--cyan);
+            margin-bottom: 20px;
+        }
+
+        .final-lines div {
+            margin: 4px 0;
+            font-size: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+            border: 1px solid rgba(0, 255, 255, 0.15);
+        }
+
+        th {
+            color: var(--cyan);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .status {
+            display: inline-block;
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            padding: 2px 8px;
+            border: 1px solid;
+            margin-left: 8px;
+        }
+        .status.pass { color: var(--green); border-color: var(--green); }
+        .status.fail { color: var(--red); border-color: var(--red); }
+
+        /* Nesting diagram */
+        .nesting {
+            margin: 15px 0;
+            padding: 15px 18px;
+            background: rgba(0, 255, 255, 0.03);
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            font-size: 12px;
+            line-height: 1.8;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nesting .indent1 { padding-left: 20px; }
+        .nesting .indent2 { padding-left: 40px; }
+        .nesting .indent3 { padding-left: 60px; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <nav>
+            <div class="logo">⊙</div>
+            <a href="#hero"><span class="num">00</span>TITLE</a>
+            <a href="#paradox"><span class="num">01</span>THE PARADOX</a>
+            <a href="#error"><span class="num">02</span>CATEGORY ERROR</a>
+            <a href="#sigma"><span class="num">03</span>Σ_SHARED</a>
+            <a href="#decomposition"><span class="num">04</span>DECOMPOSITION</a>
+            <a href="#intolerance"><span class="num">05</span>INTOLERANCE</a>
+            <a href="#constructor"><span class="num">06</span>CONSTRUCTOR TEST</a>
+            <a href="#proof"><span class="num">07</span>DISSOLUTION</a>
+            <a href="#errors"><span class="num">08</span>GEOMETRIC ERRORS</a>
+            <a href="#falsification"><span class="num">09</span>FALSIFICATION</a>
+            <a href="#end"><span class="num">10</span>END</a>
+        </nav>
 
-<h1>DARVO Is Not a Strategy<br>It's a Geometry</h1>
-<p class="subtitle">Why every narcissist runs the same playbook — without ever learning it</p>
-<p class="author">Ashman Roonz · Circumpunct Framework · 2025</p>
+        <main>
+            <!-- HERO -->
+            <section id="hero">
+                <div class="hero">
+                    <div class="hero-symbol">⊙</div>
+                    <div class="hero-title">DISSOLUTION OF POPPER'S PARADOX OF TOLERANCE</div>
+                    <div class="hero-sub">A Circumpunct Formalization</div>
+                    <div class="hero-sub" style="margin-top: 20px; font-size: 10px;">
+                        Ashman Roonz &amp; Claude<br>
+                        <span class="dim">fractalreality.ca</span>
+                    </div>
+                </div>
+            </section>
 
-<nav class="toc">
-  <h3>Contents</h3>
-  <ul>
-    <li><span class="section-num">1</span><a href="#puzzle">The Puzzle</a></li>
-    <li><span class="section-num">2</span><a href="#basics">The Basics: You Are a Circumpunct</a></li>
-    <li><span class="section-num">3</span><a href="#collapse">What Collapses in Narcissistic Dynamics</a></li>
-    <li><span class="section-num">4</span><a href="#mechanics">DARVO: The Mechanics of Inversion</a></li>
-    <li><span class="section-num">5</span><a href="#why-same">Why It's Always the Same Sequence</a></li>
-    <li><span class="section-num">6</span><a href="#variants">The Variants (and Why They're Predictable)</a></li>
-    <li><span class="section-num">7</span><a href="#clinical">Clinical Applications</a></li>
-    <li><span class="section-num">8</span><a href="#diagnostic">Diagnostic Utility: What This Gives Clinicians</a></li>
-    <li><span class="section-num">9</span><a href="#implications">Implications</a></li>
-  </ul>
-</nav>
+            <!-- §01 THE PARADOX -->
+            <section id="paradox">
+                <div class="section-id">§01</div>
+                <h1>THE PARADOX AS STATED</h1>
 
-<!-- ============================================================ -->
-<h2 id="puzzle">1. The Puzzle</h2>
+                <div class="teaching cyan">
+                    <p><strong>Popper (1945):</strong> "Unlimited tolerance must lead to the disappearance of tolerance. If we extend unlimited tolerance even to those who are intolerant, if we are not prepared to defend a tolerant society against the onslaught of the intolerant, then the tolerant will be destroyed, and tolerance with them."</p>
+                </div>
 
-<p>Survivors of narcissistic abuse report a strange consistency. Across cultures, across completely unrelated relationships, across every demographic, they describe the <em>same sequence</em>:</p>
+                <h2>THE APPARENT CONTRADICTION</h2>
 
-<p>You raise a concern. Your concern gets denied. You get attacked for raising it. And somehow, by the end, <em>you're</em> the one apologizing.</p>
+                <div class="checks red-border">
+                    <div class="checks-title">PARADOX STRUCTURE</div>
+                    <div class="check">Premise 1: A tolerant society must tolerate all views to be tolerant</div>
+                    <div class="check">Premise 2: Some views actively seek to destroy tolerance</div>
+                    <div class="check">Premise 3: Tolerating destruction-of-tolerance destroys the system</div>
+                    <div class="check">Conclusion: Tolerance must be intolerant of intolerance</div>
+                    <div class="check">But: Intolerance of intolerance IS intolerance → contradiction</div>
+                </div>
 
-<p>Psychologist Jennifer Freyd named this pattern <strong>DARVO</strong>: <strong>Deny, Attack, Reverse Victim and Offender</strong>. It appears in domestic abuse, institutional betrayal, workplace harassment, and parent-child dynamics. The sequence is so consistent that it functions almost like a diagnostic signature.</p>
+                <p>The paradox has generated decades of debate because within a <span class="red">flat, scalar framework</span>, it appears genuinely irresolvable. Every proposed solution — "tolerance as social contract," "tolerance only for the tolerant," "intolerance as self-defense" — merely restates the contradiction with extra steps.</p>
 
-<p>This raises a question that standard psychology hasn't fully answered:</p>
+                <div class="teaching magenta">
+                    <p><span class="highlight">Diagnosis:</span> The paradox arises from treating "tolerance" as a <span class="magenta">single scalar quantity</span> — a number between 0 (intolerant) and 1 (tolerant). In this flat model, any restriction on tolerance reduces the scalar, making the system "less tolerant." The framework reveals this as a <span class="magenta">triple dimensional collapse error</span> — scalar where there should be fractal (○), scalar where there should be analog (Φ), and single-centered where there should be multi-centered (Σ).</p>
+                </div>
+            </section>
 
-<div class="insight-box">
-  <h4>The Central Question</h4>
-  <p>If narcissistic individuals don't coordinate, attend seminars, or share notes — why do they all run the <em>exact same</em> three-step sequence? Why DARVO and not ARDV, or DVRA, or some other pattern?</p>
-  <p>The answer proposed here: <strong>DARVO is not a learned tactic. It is the emergent signature of a specific structural collapse.</strong> The sequence is invariant because the geometry that produces it is invariant.</p>
-</div>
+            <!-- §02 CATEGORY ERROR -->
+            <section id="error">
+                <div class="section-id">§02</div>
+                <h1>THE CATEGORY ERROR</h1>
 
-<!-- ============================================================ -->
-<h2 id="basics">2. The Basics: You Are a Circumpunct</h2>
+                <p>Popper's paradox conflates two geometrically distinct operations:</p>
 
-<p>Before we can explain DARVO geometrically, we need one simple model. In the Circumpunct Framework, every self — every person, every consciousness — has three components:</p>
+                <div class="compare">
+                    <div class="compare-box good">
+                        <div class="compare-title">BOUNDARY DISCRIMINATION G<sub>○</sub></div>
+                        <ul class="compare-list">
+                            <li>Fractal intelligence: apertures reading signals</li>
+                            <li>Each point on ○ is a ⊙ — reads, discriminates, gates</li>
+                            <li>Lets in the nourishing, keeps out the toxic</li>
+                            <li>CREATES the conditions for field diversity</li>
+                            <li>Analogous to: immune system, cell membrane receptors</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box bad">
+                        <div class="compare-title">FIELD COLLAPSE (anti-Φ)</div>
+                        <ul class="compare-list">
+                            <li>Forces analog superposition into single mode</li>
+                            <li>Demands all signals match one amplitude, one phase</li>
+                            <li>DESTROYS the field's natural capacity for interference</li>
+                            <li>Converts multi-centered Σ into single-centered ⊙</li>
+                            <li>Analogous to: totalitarianism, autoimmune attack</li>
+                        </ul>
+                    </div>
+                </div>
 
-<div class="diagram-container">
-  <!-- Healthy Circumpunct -->
-  <div class="circumpunct-visual">
-    <svg width="160" height="160" viewBox="0 0 160 160">
-      <circle cx="80" cy="80" r="65" fill="none" stroke="#a8e6cf" stroke-width="2.5" />
-      <circle cx="80" cy="80" r="40" fill="none" stroke="#8bd3ff" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
-      <circle cx="80" cy="80" r="6" fill="#c9a0dc" />
-      <text x="80" y="145" text-anchor="middle" fill="#888899" font-family="Segoe UI, sans-serif" font-size="11">Healthy ⊙</text>
-    </svg>
-    <div class="vis-label">All three components intact</div>
-  </div>
+                <div class="teaching green">
+                    <p>The scalar model cannot distinguish between these because it has only one dimension. In the scalar model, both operations look like "reducing tolerance." But they are <span class="green">geometrically opposite</span>: one is the boundary's fractal intelligence protecting the field, the other is the destruction of the field's analog nature itself.</p>
+                </div>
+            </section>
 
-  <!-- Collapsed Circumpunct -->
-  <div class="circumpunct-visual">
-    <svg width="160" height="160" viewBox="0 0 160 160">
-      <circle cx="80" cy="80" r="65" fill="none" stroke="#e85d75" stroke-width="2.5" stroke-dasharray="8 4"/>
-      <circle cx="80" cy="80" r="40" fill="none" stroke="#e85d75" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4"/>
-      <circle cx="80" cy="80" r="22" fill="rgba(232,93,117,0.15)" stroke="#e85d75" stroke-width="1.5"/>
-      <circle cx="80" cy="80" r="6" fill="#f0c674" />
-      <text x="80" y="145" text-anchor="middle" fill="#888899" font-family="Segoe UI, sans-serif" font-size="11">Inflated ⊙</text>
-    </svg>
-    <div class="vis-label">Aperture claims to be source, field distorts</div>
-  </div>
-</div>
+            <!-- §03 Σ_SHARED — SOCIETY IS NOT ⊙ -->
+            <section id="sigma">
+                <div class="section-id">§03</div>
+                <h1>Σ<sub>SHARED</sub> — SOCIETY IS NOT ⊙</h1>
 
-<table>
-  <tr>
-    <th>Component</th>
-    <th>Symbol</th>
-    <th>Plain English</th>
-    <th>Analogy</th>
-  </tr>
-  <tr>
-    <td style="color: var(--magenta);"><strong>Center / Aperture</strong></td>
-    <td style="color: var(--magenta);">•</td>
-    <td>Your inner core — your subjective experience, your "I-ness"</td>
-    <td>The pupil of an eye: what lets signal through</td>
-  </tr>
-  <tr>
-    <td style="color: var(--accent);"><strong>Field</strong></td>
-    <td style="color: var(--accent);">Φ</td>
-    <td>Your capacity to relate — your mind is a private field, the space around us is a shared field</td>
-    <td>Your mind, space</td>
-  </tr>
-  <tr>
-    <td style="color: var(--green);"><strong>Boundary</strong></td>
-    <td style="color: var(--green);">○</td>
-    <td>Your edges — where you end and others begin</td>
-    <td>The eyelid: what protects and regulates what gets in</td>
-  </tr>
-</table>
+                <div class="teaching yellow">
+                    <p><span class="highlight">A circumpunct ⊙ is a whole with a center.</span> Society has no single center. Society is not ⊙. Society is <span class="yellow">Σ_shared</span> — the shared field on which multiple circumpuncts are embedded.</p>
+                </div>
 
-<p>In a healthy person, these three work together. The center receives experience, the field processes it, and the boundary protects the system while allowing connection.</p>
+                <p>From the Sigma paper: intersubjectivity is not two fields overlapping like puddles merging. It is two points that have woken up <em>on the same larger surface</em>. The shared part isn't created by overlap — it's the pre-existing field of the whole that contains both.</p>
 
-<div class="definition-box">
-  <div class="label">Key Principle</div>
-  <p><strong>A healthy self is permeable but bounded.</strong> Signal flows in (you can be affected by others) and signal flows out (you can affect others), but the boundary maintains the distinction between self and other. The field interprets signals accurately. The center remains stable — present but not inflated.</p>
-</div>
+                <div class="nesting">
+                    <span class="cyan">Σ_shared</span> (society — the shared field)<br>
+                    <div class="indent1">├─ <span class="green">⊙<sub>i</sub></span> (citizen — activated point on Σ)</div>
+                    <div class="indent2">└─ Σ_private (their mind/field)</div>
+                    <div class="indent1">├─ <span class="green">⊙<sub>j</sub></span> (citizen — activated point on Σ)</div>
+                    <div class="indent2">└─ Σ_private (their mind/field)</div>
+                    <div class="indent1">├─ <span class="green">⊙<sub>k</sub></span> ...</div>
+                    <div class="indent1">└─ <span class="dim">... many apertures, no single center</span></div>
+                </div>
 
-<!-- ============================================================ -->
-<h2 id="collapse">3. What Collapses in Narcissistic Dynamics</h2>
+                <p>Citizens are the ⊙'s. Each has their own center (•), their own field (Φ), their own boundary (○). Society is the Φ they share — the analog medium in which their signals coexist, interfere, resonate, and disagree.</p>
 
-<p>The Circumpunct Framework identifies four geometric errors. The one most relevant to DARVO is <strong>inflation</strong>:</p>
+                <div class="formal">
+                    <div class="formal-label">STRUCTURAL CONSEQUENCE</div>
+                    <div class="formal-content">
+                        <p>Because Σ_shared has no single •, no agent can legitimately claim <span class="eq">"I am the center of this society."</span></p>
+                        <p>Any such claim is the <span class="red">inflation error</span> at civilizational scale: attempting to convert a multi-centered Σ into a single-centered ⊙ — with MY aperture as THE aperture.</p>
+                        <p style="margin-top: 8px;">This is not a moral judgment. It is a <span class="highlight">structural diagnosis</span>. A multi-centered field forced into single-center geometry loses its defining property: the capacity to carry multiple simultaneous signals.</p>
+                    </div>
+                </div>
 
-<div class="definition-box">
-  <div class="label">Definition: Inflation Error (ε<sub>+</sub>)</div>
-  <p>The aperture claims to <em>be</em> the source rather than a conduit <em>through</em> which truth flows. The part mistakes itself for the whole. And because a source doesn't need to receive — only transmit — <strong>the aperture closes</strong>.</p>
-  <div class="equation">\[ \varepsilon_+ : \text{aperture}_{open} \to \text{aperture}_{closed} \quad \text{("I am source, not conduit")} \]</div>
-  <p>In plain terms: <strong>an aperture is a hole. It opens or closes. In the inflation error, the aperture closes — and a closed aperture cannot absorb signal. When someone sends corrective information ("you caused harm"), the signal has nowhere to go.</strong></p>
-</div>
+                <h2>THE BOUNDARY OF Σ_SHARED</h2>
 
-<p>This isn't megalomania. Most people experiencing this error don't think they're God. It's subtler than that. It means:</p>
+                <p>If society is Σ_shared (a field), what is its boundary? The boundary emerges from the <em>collective</em> gating behavior of the ⊙'s embedded in it. Laws, institutions, norms — these are not a single gate but a <span class="cyan">distributed fractal boundary</span> that arises from the aggregate of individual boundary discriminations.</p>
 
-<p>Their perspective <em>is</em> the correct perspective. Their memory <em>is</em> what happened. Their needs <em>are</em> the important needs. Their discomfort <em>is</em> the emergency. Other people don't register as fellow wholes with their own apertures — they register as parts of the person's system.</p>
+                <p>There is no single gatekeeper. The boundary is made of all the gatekeepers. This is why democratic institutions are structurally more faithful to Σ_shared than autocracies: distributed gating matches distributed centering.</p>
+            </section>
 
-<p>When the aperture closes, two things follow:</p>
+            <!-- §04 DECOMPOSITION -->
+            <section id="decomposition">
+                <div class="section-id">§04</div>
+                <h1><span class="cyan">○</span> <span class="magenta">Φ</span> <span class="green">•</span> TOLERANCE DECOMPOSED</h1>
 
-<table>
-  <tr>
-    <th>What Happens</th>
-    <th>What It Means</th>
-    <th>What It Looks Like</th>
-  </tr>
-  <tr>
-    <td style="color: var(--accent);"><strong>Signal bounces in the field</strong></td>
-    <td>Emotions that <em>should</em> be absorbed through the aperture (guilt, shame, responsibility) have nowhere to go — they ricochet through the field, distorting perception</td>
-    <td>"She's not hurt — she's trying to control me"</td>
-  </tr>
-  <tr>
-    <td style="color: var(--green);"><strong>Boundary hardens outward</strong></td>
-    <td>The unprocessed signal has to go <em>somewhere</em> — so it projects outward through the boundary, aimed back at the source</td>
-    <td>"I don't need to listen to this" / "You're the one with the problem"</td>
-  </tr>
-</table>
+                <p>Popper models tolerance as scalar τ ∈ [0, 1]. The framework decomposes it into three structurally irreducible operations — none of which are scalars:</p>
 
-<p>Now we have the structural precondition. The aperture is closed, unprocessed signal is bouncing in the field, and the boundary has become a one-way projection surface. <strong>What happens when a valid concern enters this system?</strong></p>
+                <div class="pillars">
+                    <div class="pillar">
+                        <div class="pillar-name"><span class="cyan">○</span> FRACTAL GATING</div>
+                        <div class="pillar-desc">
+                            <strong>G<sub>○</sub>(σ)</strong> — The boundary's discriminating response to signal σ.<br><br>
+                            ○ is not a dial. It is <strong>made of apertures at smaller scale</strong> (Theorem 3). Each point on ○ is a complete ⊙ — reading the signal, making a binary gate decision (χ = ±1). Aggregate of billions of digital gates → appears continuous from above.<br><br>
+                            <span style="color:var(--cyan)">G<sub>○</sub>(σ<sub>nourishing</sub>) → ADMIT</span><br>
+                            <span style="color:var(--cyan)">G<sub>○</sub>(σ<sub>toxic</sub>) → REJECT</span><br><br>
+                            A boundary with no gating function is not "maximally tolerant" — it is <strong>dead</strong>. A healthy boundary reads what arrives and responds.
+                        </div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-name"><span class="magenta">Φ</span> ANALOG SUPERPOSITION</div>
+                        <div class="pillar-desc">
+                            <strong>Φ(σ₁, σ₂, ... σₙ)</strong> — The field's natural coexistence of diverse signals.<br><br>
+                            Φ is <strong>analog</strong>. It carries continuous amplitude and phase. Values in ℂ. Multiple signals coexist through <strong>superposition</strong> — constructive and destructive interference. This is what fields <em>do</em>.<br><br>
+                            <span style="color:var(--magenta)">Pluralism is not a setting. It is the field's native state.</span><br>
+                            <span style="color:var(--magenta)">You cannot "turn on" signal diversity.</span><br>
+                            <span style="color:var(--magenta)">You can only damage it off.</span>
+                        </div>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-name"><span class="green">•</span> APERTURE CURIOSITY</div>
+                        <div class="pillar-desc">
+                            <strong>τ<sub>•</sub></strong> — Willingness to look through another's lens without requiring agreement.<br><br>
+                            The deepest tolerance. The steelman principle: understanding others as you would have them understand you. Not acceptance — <em>genuine inquiry</em>. The aperture orients by resonance.<br><br>
+                            <span style="color:var(--green)">τ<sub>•</sub> = 0 → closed aperture (no curiosity)</span><br>
+                            <span style="color:var(--green)">τ<sub>•</sub> → max → full transparency</span><br>
+                            <span style="color:var(--green)">Curiosity is the cure.</span>
+                        </div>
+                    </div>
+                </div>
 
-<!-- ============================================================ -->
-<h2 id="mechanics">4. DARVO: The Mechanics of Inversion</h2>
+                <div class="formal">
+                    <div class="formal-label">KEY STRUCTURAL RELATIONSHIPS</div>
+                    <div class="formal-content">
+                        <p><span class="eq">Φ</span> (analog superposition) naturally carries diverse signals. This is not a tolerance "level" — it is the field's <span class="highlight">nature</span>.</p>
+                        <p><span class="eq">G<sub>○</sub></span> (fractal gating) protects Φ by discriminating — admitting what nourishes the field, rejecting what would collapse it into a single mode.</p>
+                        <p><span class="eq">τ<sub>•</sub></span> (curiosity) is the aperture-level willingness to engage with signals that differ from one's own phase.</p>
+                        <p style="margin-top: 8px;"><span class="highlight">The boundary's fractal intelligence is not the opposite of the field's analog diversity. It is the structural precondition for it.</span></p>
+                    </div>
+                </div>
 
-<p>Here is the core claim: <strong>DARVO is what happens when a corrective signal hits a closed aperture.</strong> The signal can't be absorbed, so it bounces — and the bounce follows a necessary sequence. The person doesn't choose these moves. The geometry produces them.</p>
+                <p>This is the same relationship observed in every circumpunct system: the cell membrane enables intracellular diversity. The skull enables neural pluralism. The skin enables the immune system's capacity to distinguish self from non-self.</p>
+            </section>
 
-<div class="sequence-container">
-  <div class="step-header">
-    <div>Phase</div>
-    <div>What You See (Surface)</div>
-    <div>What's Happening (Geometry)</div>
-  </div>
+            <!-- §05 WHAT INTOLERANCE ACTUALLY IS -->
+            <section id="intolerance">
+                <div class="section-id">§05</div>
+                <h1>WHAT INTOLERANCE ACTUALLY IS</h1>
 
-  <div class="sequence-step trigger-step">
-    <div class="step-label">⟶ TRIGGER<br><small>Concern arrives</small></div>
-    <div class="step-surface">
-      You say: <em>"It hurt me when you said that in front of everyone."</em>
+                <div class="formal">
+                    <div class="formal-label">DEFINITION — INTOLERANCE AS GEOMETRIC OPERATION</div>
+                    <div class="formal-content">
+                        <p>Intolerance is the attempt to <span class="eq">install a single • in Σ_shared</span> — to convert a multi-centered shared field into a single-centered whole.</p>
+                        <p style="margin-top: 8px;">This requires three simultaneous operations:</p>
+                        <p><span class="eq">(1)</span> Force Φ from analog superposition into single eigenstate → <span class="red">field collapse</span></p>
+                        <p><span class="eq">(2)</span> Close the apertures of all agents except one → <span class="red">τ<sub>•</sub>(A<sub>targets</sub>) → 0</span></p>
+                        <p><span class="eq">(3)</span> Degrade constructor capacity of targets → <span class="red">CC(A<sub>targets</sub>) → 0</span></p>
+                        <p style="margin-top: 8px;">Intolerance is not "disagreement in the field." Disagreement is what fields <em>carry</em> — constructive and destructive interference are both legitimate signal interactions. <span class="highlight">Intolerance is the attempt to destroy the field's capacity to carry anything but one signal.</span></p>
+                    </div>
+                </div>
+
+                <div class="teaching red">
+                    <p><span class="highlight">The analog field's "tolerance" is not a virtue it practices.</span> It is what the field <em>is</em>. A field that carries only one signal with one amplitude and one phase is not "intolerant" — it is <span class="red">degraded</span>. Its defining property has been destroyed. Asking a field to "tolerate" diverse signals is like asking water to be wet. The question reveals a misunderstanding of the medium.</p>
+                </div>
+
+                <h2>WHY INTOLERANCE TARGETS THE BOUNDARY</h2>
+
+                <p>Because the boundary is what stands between a multi-centered Σ and a single-centered ⊙. To install a single • in Σ_shared, the intolerant must first neutralize G<sub>○</sub> — either by destroying the boundary's discriminating intelligence (so toxic signals pass unchecked) or by co-opting it (so the boundary gates <em>for</em> the single center instead of for the field).</p>
+
+                <p>This is why intolerance so often takes the form of <em>weaponizing tolerance</em>: "you must tolerate my intolerance or you're the intolerant one." This demand translates to: <span class="red">"your boundary must stop discriminating so my signal can collapse your field."</span></p>
+            </section>
+
+            <!-- §06 CONSTRUCTOR TEST -->
+            <section id="constructor">
+                <div class="section-id">§06</div>
+                <h1>THE CONSTRUCTOR TEST</h1>
+
+                <p>Apply the four ethical constraints to intolerance I (the attempt to install a single • in Σ_shared):</p>
+
+                <div class="checks red-border">
+                    <div class="checks-title">INTOLERANCE I — TESTED AGAINST (C○ ∩ CΦ ∩ C• ∩ C⊙)</div>
+                    <div class="check"><span class="cyan">C○ BOUNDARY</span> — Does I keep outcomes within targets' models? <span class="red">NO.</span> Intolerance imposes outcomes on targets without consent. Foreseeable effects ⊄ A<sub>target</sub>.model(I). <span class="status fail">FAIL</span></div>
+                    <div class="check"><span class="magenta">CΦ EVIDENCE</span> — Does a repeatable constructor exist for I? <span class="red">NO.</span> Intolerance requires fresh targets — it consumes the substrate it operates on. Once all apertures are closed and the field is collapsed, there is nothing left to convert. P(repeat | same targets) → 0. <span class="status fail">FAIL</span></div>
+                    <div class="check"><span class="green">C• INVARIANCE</span> — Does I preserve target identity? <span class="red">NO.</span> Intolerance demands targets abandon their eigenvector. Their apertures must close or reorient to the single installed •. correlation(A<sub>target</sub>.pattern<sub>before</sub>, A<sub>target</sub>.pattern<sub>after</sub>) < τ. <span class="status fail">FAIL</span></div>
+                    <div class="check"><span class="yellow">C⊙ MUTUAL</span> — Do all parties remain constructors after? <span class="red">NO.</span> Systematic pattern: CC(I<sub>agent</sub>) ↑ while CC(A<sub>targets</sub>) ↓. Targets converted to substrate. The defining signature of parasitism. <span class="status fail">FAIL</span></div>
+                </div>
+
+                <p style="margin-top: 15px;">Now apply the same test to fractal boundary discrimination G<sub>○</sub> — the distributed gating response to field-destructive signals:</p>
+
+                <div class="checks green-border">
+                    <div class="checks-title">BOUNDARY DISCRIMINATION G<sub>○</sub> — TESTED AGAINST (C○ ∩ CΦ ∩ C• ∩ C⊙)</div>
+                    <div class="check"><span class="cyan">C○ BOUNDARY</span> — Does G<sub>○</sub> keep outcomes within agents' models? <span class="green">YES.</span> Laws and institutional constraints are published, foreseeable. outcomes_foreseeable(G<sub>○</sub>) ⊆ A.model(G<sub>○</sub>) for all agents in Σ. <span class="status pass">PASS</span></div>
+                    <div class="check"><span class="magenta">CΦ EVIDENCE</span> — Does a repeatable constructor exist? <span class="green">YES.</span> Boundary apertures read and respond — the same signal produces the same gating decision. No substrate consumed. The gate persists through operation indefinitely. <span class="status pass">PASS</span></div>
+                    <div class="check"><span class="green">C• INVARIANCE</span> — Does G<sub>○</sub> preserve agent identities? <span class="green">YES.</span> Gating restricts actions at the boundary, not identity at the center. Agents whose field-destructive actions are gated retain their eigenvector — they remain ⊙'s on Σ_shared. <span class="status pass">PASS</span></div>
+                    <div class="check"><span class="yellow">C⊙ MUTUAL</span> — Do all parties remain constructors? <span class="green">YES.</span> CC(A<sub>i</sub>) ≥ CC<sub>min</sub> for all agents. The intolerant agent retains constructor capacity — their field-collapsing <em>actions</em> are gated, not their <em>agency</em>. No agent is converted to substrate. <span class="status pass">PASS</span></div>
+                </div>
+
+                <div class="teaching yellow">
+                    <p><span class="highlight">Critical distinction:</span> Boundary discrimination restricts <em>actions at ○</em>, not <em>identity at •</em>. The intolerant agent is not destroyed or silenced as a person — their <span class="yellow">field-collapsing behaviors</span> are gated at the boundary. They remain a ⊙ on Σ_shared. They retain their private field, their center, their constructor capacity. What they cannot do is force their single • to become THE • of the shared field.</p>
+                </div>
+            </section>
+
+            <!-- §07 DISSOLUTION -->
+            <section id="proof">
+                <div class="section-id">§07</div>
+                <h1>FORMAL DISSOLUTION</h1>
+
+                <div class="proof">
+                    <div class="proof-label">THEOREM — POPPER'S PARADOX IS A TRIPLE DIMENSIONAL COLLAPSE</div>
+                    <div class="proof-content">
+                        <p style="color:var(--amber);"><strong>Claim:</strong> The Paradox of Tolerance dissolves when tolerance is decomposed into its circumpunct components. The apparent contradiction arises from three simultaneous collapses — fractal→scalar (○), analog→scalar (Φ), multi-centered→single-centered (Σ→⊙) — and vanishes when structure is restored.</p>
+                    </div>
+                </div>
+
+                <div class="proof">
+                    <div class="proof-label">PROOF</div>
+                    <div class="proof-content">
+                        <div class="step"><span class="step-num">(1)</span> <strong>Popper's formulation</strong> models tolerance as scalar τ ∈ [0, 1]. In this model, any restriction on what is tolerated reduces τ. Therefore: restricting intolerance → τ decreases → the society becomes "less tolerant" → contradiction.</div>
+
+                        <div class="step"><span class="step-num">(2)</span> <strong>Three structural errors in the scalar model:</strong><br>
+                        &nbsp;&nbsp;(2a) It treats the boundary (○) as a dial. But ○ is <em>fractal</em> — composed of apertures at smaller scale, each making binary gate decisions (χ = ±1) on what they encounter. G<sub>○</sub> is a discriminating function, not a permeability setting.<br>
+                        &nbsp;&nbsp;(2b) It treats the field (Φ) as having a "pluralism level." But Φ is <em>analog</em> — it carries continuous amplitude and phase (values in ℂ). Signal diversity via superposition is the field's native state, not a parameter that can be dialed up or down.<br>
+                        &nbsp;&nbsp;(2c) It treats society as a single-centered whole (⊙). But society is Σ_shared — a multi-centered field with no single •. Citizens are ⊙'s embedded on the shared surface.</div>
+
+                        <div class="step"><span class="step-num">(3)</span> <strong>Identify the operation in question.</strong> "Restricting intolerance" is a boundary operation: the apertures composing ○ read incoming signals and gate those that would collapse the field. This is G<sub>○</sub> doing what G<sub>○</sub> does — discriminating. It does not reduce the field's analog nature. It does not close other agents' apertures. It does not install a single center.</div>
+
+                        <div class="step"><span class="step-num">(4)</span> <strong>Show the structural dependency.</strong> Φ's analog superposition requires G<sub>○</sub> to be alive (discriminating). If G<sub>○</sub> = ∅ (boundary dead — no discrimination), field-collapsing signals pass unchecked → Φ collapses to single eigenstate → the most powerful intolerant faction fills the vacuum. If G<sub>○</sub> = total rejection (boundary sealed), no new signals enter → Φ stagnates. Therefore: fractal boundary intelligence is a <em>necessary condition</em> for the field's analog diversity.</div>
+
+                        <div class="step"><span class="step-num">(5)</span> <strong>Apply the constructor test.</strong> Intolerance (I) fails all four ethical constraints — it is parasitic (requires fresh substrate), non-repeatable, and converts constructors to substrate. Boundary discrimination (G<sub>○</sub>) passes all four — it is repeatable, preserves agency, maintains constructor capacity network-wide, and gates actions without destroying agents.</div>
+
+                        <div class="step"><span class="step-num">(6)</span> <strong>Therefore:</strong> I and G<sub>○</sub> are not the same operation viewed at different scales. They are <span class="green">structurally opposite</span>. I attempts to install a single • in Σ_shared, collapsing the analog field into a single eigenstate. G<sub>○</sub> preserves Σ_shared's multi-centered structure by gating field-collapsing actions. Calling both "intolerance" is a triple category error produced by collapsing fractal→scalar, analog→scalar, and multi→single.</div>
+
+                        <div class="step"><span class="step-num">(7)</span> <strong>The paradox dissolves:</strong> A tolerant Σ_shared — an analog field carrying diverse signals in superposition, populated by ⊙'s whose apertures engage with curiosity — whose distributed boundary discriminates against field-collapsing actions is not contradicting itself. It is enacting the structural precondition for its own nature. No self-reference loop exists because the operations occur at different geometric levels — boundary is fractal, field is analog, and neither is a scalar.</div>
+                    </div>
+                    <div class="qed">∎</div>
+                </div>
+
+                <h2>THE ONE-LINE VERSION</h2>
+
+                <div class="eq-block">
+                    <span class="cyan">An immune system that rejects a pathogen is not anti-life.</span><br>
+                    <span class="cyan">It is what makes life possible inside.</span><br><br>
+                    <span class="cyan">Popper saw a contradiction because he had one dimension where there are three:</span><br>
+                    <span class="cyan">fractal gating (○), analog superposition (Φ), distributed centering (Σ).</span>
+                </div>
+            </section>
+
+            <!-- §08 GEOMETRIC ERRORS -->
+            <section id="errors">
+                <div class="section-id">§08</div>
+                <h1>INTOLERANCE AS GEOMETRIC ERROR</h1>
+
+                <p>The framework's four geometric errors map precisely onto the mechanisms of intolerance. Every form of societal intolerance reduces to one or more of these:</p>
+
+                <table>
+                    <thead>
+                        <tr><th>Error</th><th>Social Expression</th><th>What It Does to Σ_shared</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="red">INFLATION</span></td>
+                            <td>"My signal IS the truth — all others are corruption"</td>
+                            <td>Attempts to install a single • in Σ_shared. Demands the analog field carry only one signal. The fundamental intolerance operation.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">SEVERANCE</span></td>
+                            <td>"Those people are not part of us — they have no claim on our field"</td>
+                            <td>Denies that certain ⊙'s are embedded on Σ_shared. Declares agents outside the field entirely — severs their connection to the shared surface.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">INVERSION</span></td>
+                            <td>"Defending tolerance is the REAL intolerance"</td>
+                            <td>Flips the signal. Reframes G<sub>○</sub> discriminating (boundary doing its job) as anti-Φ (field collapse). <em>This is the move that generates Popper's paradox.</em></td>
+                        </tr>
+                        <tr>
+                            <td><span class="red">PROJECTION</span></td>
+                            <td>"We're not being intolerant — they brought this on themselves"</td>
+                            <td>Outputs own distortion (attempting to collapse Φ) as if it originated from the targets. Launders inflation as defense.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="teaching red">
+                    <p><span class="highlight">The inversion error is the engine of the paradox.</span> By framing boundary discrimination as intolerance, the intolerant agent performs a signal inversion: the field's self-protective distributed gating (G<sub>○</sub> reading and responding) is relabeled as the very pathology it gates (single-• installation). This is not a philosophical insight — it is a <span class="red">tactical deployment of the inversion error</span> to weaponize the paradox against the tolerant.</p>
+                </div>
+
+                <blockquote>"The paradox of tolerance is itself an inversion attack. It reframes the immune response as the disease."</blockquote>
+            </section>
+
+            <!-- §09 FALSIFICATION -->
+            <section id="falsification">
+                <div class="section-id">§09</div>
+                <h1>FALSIFICATION CRITERIA</h1>
+
+                <p>This dissolution makes specific, testable claims. If any of the following are demonstrated, the resolution fails:</p>
+
+                <div class="checks">
+                    <div class="checks-title">WHAT WOULD REFUTE THIS</div>
+                    <div class="check"><strong>F1:</strong> A Σ_shared is found where G<sub>○</sub> = ∅ (no boundary discrimination whatsoever) AND the analog field maintains diverse superposition indefinitely. This would refute the claim that fractal boundary intelligence is necessary for field diversity.</div>
+                    <div class="check"><strong>F2:</strong> An intolerant action I (single-• installation) is found that passes all four constructor constraints (C○ ∩ CΦ ∩ C• ∩ C⊙). This would refute the claim that intolerance is structurally parasitic.</div>
+                    <div class="check"><strong>F3:</strong> Boundary discrimination G<sub>○</sub> is shown to necessarily collapse Φ's analog superposition — i.e., every act of signal-specific gating reduces the field's capacity for diverse signals. This would re-establish the paradox by collapsing the distinction.</div>
+                    <div class="check"><strong>F4:</strong> A genuine fifth geometric error is found in the mechanisms of intolerance that is not reducible to inflation, severance, inversion, or projection. This would not refute the dissolution directly but would indicate the error taxonomy is incomplete.</div>
+                    <div class="check"><strong>F5:</strong> The three structures (G<sub>○</sub> fractal, Φ analog, Σ multi-centered) are shown to be reducible to a single scalar after all. This would re-validate Popper's flat model and re-establish the paradox.</div>
+                    <div class="check"><strong>F6:</strong> A society is found that functions as a genuine ⊙ (with a single legitimate center) while maintaining field diversity and agent autonomy. This would refute the claim that society is necessarily Σ_shared rather than ⊙.</div>
+                </div>
+
+                <h2>EMPIRICAL PREDICTIONS</h2>
+
+                <table>
+                    <thead>
+                        <tr><th>Prediction</th><th>Test</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Societies with strong distributed boundary discrimination (anti-discrimination law, institutional checks) AND high field diversity should be the <em>most</em> tolerant, not the least</td>
+                            <td>Cross-national comparison: boundary enforcement × pluralism indices</td>
+                        </tr>
+                        <tr>
+                            <td>Societies with absent boundaries (failed states, ungoverned spaces) should show rapid field collapse → dominance by the most powerful single-• faction</td>
+                            <td>Historical analysis of power vacuums and pluralism metrics</td>
+                        </tr>
+                        <tr>
+                            <td>Intolerant movements should preferentially deploy the inversion error ("defending tolerance is the real intolerance") as a rhetorical strategy</td>
+                            <td>Discourse analysis of intolerant movements' framing strategies</td>
+                        </tr>
+                        <tr>
+                            <td>Boundary discrimination that gates actions but preserves agent centering (⊙ status on Σ) should produce less radicalization than gating that targets identity (• directly)</td>
+                            <td>Comparative policy analysis: action-based vs. identity-based restrictions</td>
+                        </tr>
+                        <tr>
+                            <td>The "tolerance dial" framing (scalar model) should appear most often in discourse that benefits from the paradox — i.e., in intolerant rhetoric</td>
+                            <td>Discourse analysis: who invokes the scalar model, and what does it serve?</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- §10 END -->
+            <section id="end">
+                <div class="final">
+                    <div class="final-symbol">⊙</div>
+                    <div class="final-lines">
+                        <div>The paradox of tolerance is a triple dimensional collapse.</div>
+                        <div class="highlight" style="margin-top: 12px;">Tolerance is not a scalar. It is a geometry.</div>
+                        <br>
+                        <div><span class="cyan">○</span> is fractal — apertures reading signals, all the way down.</div>
+                        <div><span class="magenta">Φ</span> is analog — diversity through superposition is its nature.</div>
+                        <div><span class="green">•</span> is curiosity — the deepest tolerance opens without requiring agreement.</div>
+                        <div><span class="yellow">Σ</span> is multi-centered — no single • can legitimately claim the whole.</div>
+                        <br>
+                        <div class="dim">These are not four "aspects" of tolerance.</div>
+                        <div class="dim">They are the structure of what tolerance actually is.</div>
+                        <br>
+                        <div>An immune system that rejects a pathogen is not anti-life.</div>
+                        <div class="highlight">It is what makes life possible inside.</div>
+                        <br><br>
+                        <div class="dim" style="font-size: 10px;">The rest is geometry.</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
     </div>
-    <div class="step-geometry">
-      A <strong>corrective signal</strong> reaches the system. It carries information: "Your behavior caused harm." In a healthy system, the aperture is open — the signal is absorbed, felt as guilt or responsibility, processed, and integrated. In a system with a closed aperture, this signal <strong>cannot be absorbed</strong>. It enters the field but has nowhere to land. The emotional content — guilt, shame — begins to bounce.
-    </div>
-  </div>
 
-  <div class="sequence-step deny-step">
-    <div class="step-label">D<br>DENY</div>
-    <div class="step-surface">
-      <em>"That didn't happen."</em><br>
-      <em>"That's not what I said."</em><br>
-      <em>"You're misremembering."</em>
-    </div>
-    <div class="step-geometry">
-      <strong>Boundary rejection.</strong> The first response is to prevent the signal from entering at all. This isn't conscious lying — the system is protecting a closed aperture from signal it cannot process. If the signal gets in, it will generate guilt and shame that have nowhere to go. The boundary's job is to keep that from happening.<br><br>
-      \[ ○_{hard} : \text{signal}_{correction} \to \emptyset \]
-    </div>
-  </div>
+    <script>
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
 
-  <div class="sequence-step attack-step">
-    <div class="step-label">A<br>ATTACK</div>
-    <div class="step-surface">
-      <em>"You're too sensitive."</em><br>
-      <em>"You always do this."</em><br>
-      <em>"Why are you trying to start a fight?"</em>
-    </div>
-    <div class="step-geometry">
-      <strong>Signal bounce — field distortion.</strong> The signal persists — you didn't accept the denial. Now the signal is <em>inside</em> the field. It's generating guilt, shame, discomfort — emotions that a healthy open aperture would absorb and process. But the aperture is closed. These emotions have nowhere to land. They bounce around the field, and <strong>the field reinterprets the source of the pain</strong>. The other person's hurt becomes evidence of <em>their</em> dysfunction. The guilt transforms into indignation. "I shouldn't feel this way — <em>you're</em> making me feel this way."<br><br>
-      \[ \Phi_{bouncing} : \text{guilt}_{unprocessed} \to \text{threat perception}_{source} \]
-    </div>
-  </div>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    const activeLink = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+                    if (activeLink) activeLink.classList.add('active');
+                }
+            });
+        }, { threshold: 0.3 });
 
-  <div class="sequence-step reverse-step">
-    <div class="step-label">RVO<br>REVERSE</div>
-    <div class="step-surface">
-      <em>"I'm the one who should be upset. You're attacking me."</em><br>
-      <em>"After everything I've done for you, this is what I get?"</em><br>
-      <em>"I just make everyone upset, I guess."</em>
-    </div>
-    <div class="step-geometry">
-      <strong>Projection — signal exits.</strong> The bouncing signal has to go <em>somewhere</em>. It can't be absorbed inward (aperture closed). So it projects <em>outward</em> — back at the person who sent it. The unprocessed guilt and shame exit the system disguised as the other person's wrongdoing. Cause and effect invert completely. The person who raised the concern is now "the problem." The original harm vanishes from the conversation.<br><br>
-      \[ \text{signal}_{unabsorbed} \xrightarrow{○_{outward}} \text{projection at source} \implies \text{victim} \leftrightarrow \text{offender} \]
-    </div>
-  </div>
-</div>
-
-<div class="theorem-box">
-  <div class="label">Theorem: DARVO as Necessary Sequence</div>
-  <p>Given a closed aperture (ε<sub>+</sub>), the DARVO sequence is not one possible response among many — it is the <strong>only stable response</strong> the system can produce when a corrective signal persists. The mechanism is signal bounce:</p>
-  <p style="padding-left: 1rem; color: var(--accent);">
-    Signal arrives → boundary tries to reject (Deny) → signal persists, enters field → generates unprocessable guilt/shame → bouncing signal reframes source as threat (Attack) → unabsorbed signal projects outward (Reverse Victim &amp; Offender)
-  </p>
-  <p>The order is invariant because each step is a consequence of the previous one failing to resolve the signal. <strong>This is why the sequence is universal. It's not cultural. It's not learned. It's what a closed aperture does when signal can't be absorbed.</strong></p>
-</div>
-
-<!-- ============================================================ -->
-<h2 id="why-same">5. Why It's Always the Same Sequence</h2>
-
-<p>Consider the alternative orderings and notice why they don't work:</p>
-
-<table>
-  <tr>
-    <th>Alternative</th>
-    <th>Sequence</th>
-    <th>Why It Can't Occur</th>
-  </tr>
-  <tr>
-    <td>Attack first</td>
-    <td>A → D → RVO</td>
-    <td>Attacking requires the signal to already be <em>inside the field</em>, bouncing. But the boundary hasn't failed yet — it first tries to reject the signal entirely (Deny).</td>
-  </tr>
-  <tr>
-    <td>Reverse first</td>
-    <td>RVO → D → A</td>
-    <td>Projection requires unprocessed signal bouncing in the field. That bouncing hasn't started yet — the signal hasn't penetrated the boundary.</td>
-  </tr>
-  <tr>
-    <td>Deny only</td>
-    <td>D → (stop)</td>
-    <td>If the signal source accepts the denial, the sequence does stop here. DARVO only completes when the other person <em>persists</em> — when they say "No, it did happen." That persistence forces the signal past the boundary and into the field.</td>
-  </tr>
-  <tr>
-    <td>Random mix</td>
-    <td>Various</td>
-    <td>Each step is a <em>necessary precondition</em> for the next. The sequence is logically ordered, not randomly assembled.</td>
-  </tr>
-</table>
-
-<div class="insight-box">
-  <h4>Key Insight for Survivors</h4>
-  <p>This is why it feels so mechanical, so eerily scripted. It <em>is</em> scripted — not by the person, but by the geometry. You're not dealing with someone who cleverly chose the perfect manipulation tactic. You're dealing with a system that can only produce one response to the signal you're sending.</p>
-  <p><strong>They didn't attend asshole school. They're running a closed aperture, and your signal is bouncing.</strong></p>
-</div>
-
-<!-- ============================================================ -->
-<h2 id="variants">6. The Variants (and Why They're Predictable)</h2>
-
-<p>Survivors report several sub-patterns within DARVO. The geometric model predicts each of them:</p>
-
-<h3>6.1 "I just make everyone upset"</h3>
-
-<p>This is the <strong>Reverse</strong> step wearing a self-awareness costume. The person appears to be taking responsibility ("I make everyone upset") but the function is to shift focus from the <em>specific harm they caused</em> to their <em>general suffering</em>. You're now in the position of comforting them or being cruel for holding them accountable.</p>
-
-<div class="definition-box">
-  <div class="label">Geometric Reading</div>
-  <p>The closed aperture cannot distinguish between "I did a harmful thing" and "I am a harmful thing." In a healthy system, guilt about a specific action is absorbed through the aperture, processed, and resolved — "I did that, I can change it." When the aperture is closed, the guilt can't be absorbed into a specific place. It floods the entire field, becoming global identity threat. The response is existential collapse — not because they're fragile, but because unprocessed guilt with nowhere to land turns everything toxic.</p>
-  <p>A healthy system processes: <em>"That behavior was harmful" → guilt absorbed → I can change the behavior.</em><br>
-  A closed system processes: <em>"That behavior was harmful" → guilt bounces → I am harmful → existential emergency.</em></p>
-</div>
-
-<h3>6.2 The Word Salad</h3>
-
-<p>Circular, exhausting non-arguments. The conversation loops. Points are repeated, contradicted, restated. You can't track cause and effect because the field is actively scrambling it.</p>
-
-<div class="definition-box">
-  <div class="label">Geometric Reading</div>
-  <p>Signal is bouncing in the field with nowhere to land. The field generates noise — enough cognitive chaos to prevent either party from maintaining the thread back to the original concern. This is the field in a state of overwhelm: unprocessed signal ricocheting, producing contradictory outputs. <strong>This is not confusion. This is the field flooded with unabsorbable signal, producing interference patterns instead of coherent thought.</strong></p>
-</div>
-
-<h3>6.3 The Selective Memory</h3>
-
-<p>"That's not what happened." But you were both there. You know what occurred.</p>
-
-<div class="definition-box">
-  <div class="label">Geometric Reading</div>
-  <p>If the aperture was closed <em>at the time of the event</em>, then the emotional content of the event was never properly absorbed and processed. The memory was encoded by a field that was already bouncing unprocessed signal. Events where the self caused harm are not stored the same way — not because the person is lying, but because the aperture was closed when the event happened. <strong>Their memory is the output of a field that couldn't absorb what actually occurred.</strong></p>
-</div>
-
-<h3>6.4 The Functional Love Shield</h3>
-
-<p>"After everything I've done for you." This is the weaponization of provision against resonance.</p>
-
-<div class="definition-box">
-  <div class="label">Geometric Reading</div>
-  <p>The system can only operate in one love channel: functional (boundary-to-boundary provision — food, shelter, help, gifts). When the other person's concern implies that functional love isn't sufficient, the system treats this as <em>ingratitude</em> rather than <em>hunger for resonance</em>. The functional record becomes a shield: "I have provided. Your dissatisfaction is evidence of your defect, not my limitation."</p>
-</div>
-
-<!-- ============================================================ -->
-<h2 id="clinical">7. Clinical Applications</h2>
-
-<p>The standard clinical understanding of DARVO (Freyd, 1997) describes <em>what</em> happens. This geometric model adds <em>why</em> it happens and <em>why the sequence is invariant</em>. This has practical implications for therapeutic work.</p>
-
-<h3>7.1 Assessment: Depth of Installation</h3>
-
-<p>Rather than asking "is this person a narcissist?" (a binary that tortures survivors and often can't be clinically verified), the geometric model suggests a <strong>spectrum assessment</strong> based on how the system responds to corrective signal:</p>
-
-<div class="spectrum-bar">
-  <div class="spectrum-segment" style="flex: 2; background: rgba(168, 230, 207, 0.3); color: var(--green);">Light</div>
-  <div class="spectrum-segment" style="flex: 2; background: rgba(240, 198, 116, 0.3); color: var(--gold);">Moderate</div>
-  <div class="spectrum-segment" style="flex: 2; background: rgba(255, 184, 108, 0.3); color: var(--orange);">Heavy</div>
-  <div class="spectrum-segment" style="flex: 2; background: rgba(232, 93, 117, 0.3); color: var(--red);">Total</div>
-</div>
-
-<table>
-  <tr>
-    <th>Depth</th>
-    <th>Response to Corrective Signal</th>
-    <th>DARVO Presentation</th>
-    <th>Prognosis for Change</th>
-  </tr>
-  <tr>
-    <td style="color: var(--green);"><strong>Light</strong></td>
-    <td>Initial defensive reaction, but can re-engage after processing time. "You're right, I'm sorry — I got defensive."</td>
-    <td>May start with Deny but catches self. Sequence doesn't complete.</td>
-    <td>Good. The field can still process corrective signal — it just takes longer than non-defensive processing.</td>
-  </tr>
-  <tr>
-    <td style="color: var(--gold);"><strong>Moderate</strong></td>
-    <td>Completes the DARVO sequence in the moment but can sometimes recognize it later. Partial awareness: "I know I do this."</td>
-    <td>Full DARVO in real-time, but with post-hoc capacity for reflection. The field intermittently clears.</td>
-    <td>Possible with sustained therapeutic support. The aperture can still open — it just snaps shut under stress.</td>
-  </tr>
-  <tr>
-    <td style="color: var(--orange);"><strong>Heavy</strong></td>
-    <td>Full DARVO with no post-hoc recognition. Therapeutic language gets weaponized: "You're being emotionally manipulative by saying that."</td>
-    <td>DARVO is the <em>only</em> response to corrective signal. All frameworks get captured for use within the defense.</td>
-    <td>Difficult. The aperture is substantially closed. Signal bounces continuously. Therapy itself becomes material that the field absorbs and weaponizes.</td>
-  </tr>
-  <tr>
-    <td style="color: var(--red);"><strong>Total</strong></td>
-    <td>The aperture is sealed. There is no observing self that can distinguish between "me" and "the closure." Raising the pattern triggers the pattern.</td>
-    <td>DARVO activates <em>instantly and automatically</em>. No processing delay. The boundary rejects before the signal is even fully received.</td>
-    <td>Very poor without major life disruption. The system cannot debug itself because every corrective signal bounces off the same closed aperture.</td>
-  </tr>
-</table>
-
-<div class="clinical-box">
-  <div class="label">Clinical Note</div>
-  <p><strong>For therapists:</strong> This spectrum replaces the binary "NPD or not" assessment with a dimensional measure of <em>aperture closure under corrective input</em>. The clinically useful question becomes: <strong>"When I offer this person feedback that contradicts their self-model, does the aperture open to absorb it, or does the signal bounce?"</strong></p>
-  <p>This is observable. It's testable in session. And it predicts behavior more accurately than trait-based assessment because it captures the <em>dynamic</em> — how the system responds to challenge — rather than the <em>static</em> personality profile.</p>
-</div>
-
-<h3>7.2 Treatment Implications</h3>
-
-<table>
-  <tr>
-    <th>Depth</th>
-    <th>Therapeutic Approach</th>
-    <th>Geometric Rationale</th>
-  </tr>
-  <tr>
-    <td style="color: var(--green);"><strong>Light</strong></td>
-    <td>Standard relational therapy. Increase awareness of the defensive moment. Practice sitting with discomfort of being wrong.</td>
-    <td>The aperture can still open — it just closes reflexively under stress. Practice tolerating corrective signal without the aperture snapping shut.</td>
-  </tr>
-  <tr>
-    <td style="color: var(--gold);"><strong>Moderate</strong></td>
-    <td>Schema therapy / Internal Family Systems. Help the client observe when the aperture closes without <em>being</em> the closure. Build the "observing self."</td>
-    <td>The aperture can still open — but only when the person is not under perceived threat. Therapy creates a safe-enough context for the aperture to stay open during feedback.</td>
-  </tr>
-  <tr>
-    <td style="color: var(--orange);"><strong>Heavy</strong></td>
-    <td>Extreme caution. The therapeutic relationship itself will be subject to DARVO. The therapist's feedback will be denied, the therapist will be attacked (subtly or overtly), and the therapist may find <em>themselves</em> cast as the offender.</td>
-    <td>The aperture is substantially closed. The therapy framework will be absorbed into the bouncing field and weaponized. Progress requires consistent, non-reactive holding — the therapist must model a boundary that neither hardens nor collapses.</td>
-  </tr>
-  <tr>
-    <td style="color: var(--red);"><strong>Total</strong></td>
-    <td>Focus on harm reduction for the people around the individual. Direct treatment of the individual is unlikely to succeed because the system will capture any therapeutic framework and use it to reinforce the closure.</td>
-    <td>The aperture cannot open. Any signal that enters the field bounces and projects. The person will process therapy itself as either supply (validation that keeps the aperture comfortably closed) or threat (corrective feedback that triggers DARVO).</td>
-  </tr>
-</table>
-
-<!-- ============================================================ -->
-<h2 id="diagnostic">8. Diagnostic Utility: What This Gives Clinicians</h2>
-
-<h3>8.1 The "Raise a Concern" Test</h3>
-
-<p>The geometric model suggests a simple, observable diagnostic protocol:</p>
-
-<div class="clinical-box">
-  <div class="label">Protocol: Corrective Signal Response (CSR) Assessment</div>
-  <p><strong>Step 1:</strong> In a therapeutic context, offer the client gentle feedback that mildly contradicts their self-narrative. (This happens naturally in therapy — it doesn't need to be artificial.)</p>
-  <p><strong>Step 2:</strong> Observe the sequence of responses. Track timing and order:</p>
-  <p style="padding-left: 1.5rem;">
-    — Does the client immediately deny? (Boundary hardening)<br>
-    — If you gently persist, does the client shift to characterizing <em>you</em> or your feedback as problematic? (Field inversion)<br>
-    — Does the conversation end with the client positioned as the one who has been harmed by the feedback itself? (Projection/reversal)
-  </p>
-  <p><strong>Step 3:</strong> Assess recovery time. After the session, or in a later session, can the client return to the feedback and process it? This distinguishes light closure (aperture reopens within hours/days) from heavy closure (feedback is permanently rejected or rewritten in memory).</p>
-</div>
-
-<h3>8.2 Predicting Therapeutic Rupture</h3>
-
-<p>One of the most practically useful features of this model is that it predicts <em>when</em> therapeutic ruptures will occur. Any time the therapist's input functions as corrective signal — anytime what the therapist says contradicts the client's self-model — the DARVO sequence will activate at whatever depth the client's aperture is closed.</p>
-
-<p>This allows the therapist to anticipate rupture rather than be surprised by it, and to distinguish between a healthy client's resistance (which looks different geometrically — the aperture briefly closes then reopens after initial reaction) and a closed system's immune response (the signal bounces and projects).</p>
-
-<h3>8.3 Couple Therapy: Identifying the Loop</h3>
-
-<div class="clinical-box">
-  <div class="label">Couples Application</div>
-  <p>In couples therapy, the geometric model reveals a common destructive pattern: <strong>Partner A raises a concern → Partner B runs DARVO → Partner A ends up apologizing → the original concern is never addressed → resentment accumulates → Partner A raises the concern again (with more intensity) → Partner B runs DARVO (with more intensity)</strong>.</p>
-  <p>The model makes this visible to both partners without requiring either to accept the label "narcissist." The language shifts from blame (<em>"You always DARVO me"</em>) to structure (<em>"When I raise a concern, what happens to your processing? Let's watch it together."</em>)</p>
-  <p>This reframe transforms the dynamic from accusation to collaborative observation — which is itself a test of aperture closure. A person with a lightly-closed aperture can engage with this curiosity. A person with a heavily-closed aperture will DARVO the attempt to observe the DARVO.</p>
-</div>
-
-<!-- ============================================================ -->
-<h2 id="implications">9. Implications</h2>
-
-<h3>9.1 For Survivors</h3>
-
-<p>Understanding DARVO as geometry rather than strategy changes your relationship to the experience. You stop asking "why do they keep doing this to me?" and start seeing that <strong>the system literally cannot produce a different response when the aperture is closed</strong>. This isn't about you. It's not about the quality of your communication. It's not about finding the right words. The most perfectly worded concern in the world will trigger the same sequence, because the sequence isn't responding to your words — it's responding to the fact that <em>corrective signal has nowhere to go</em>.</p>
-
-<p>This is freeing. It means you can stop optimizing your approach. The variable isn't your delivery — it's their geometry.</p>
-
-<h3>9.2 For Clinicians</h3>
-
-<p>The model provides a mechanism-based alternative to trait-based personality assessment. Instead of asking "does this person meet criteria for NPD?" it asks "how closed is this person's aperture, and what happens to signal when that closure is tested?"</p>
-
-<p>This is both more clinically useful (it predicts behavior under specific conditions) and more compassionate (it treats the pattern as an installation rather than an identity).</p>
-
-<h3>9.3 For the Broader Field</h3>
-
-<p>If DARVO is an emergent property of aperture closure rather than a learned behavior, it should appear wherever closed apertures appear — not just in interpersonal relationships. And indeed, the same pattern shows up in institutional betrayal (organizations denying harm, attacking whistleblowers, reframing accountability as attack), political dynamics, and even in how ideological systems respond to internal criticism.</p>
-
-<p>The geometry is scale-invariant. The pattern is fractal.</p>
-
-<div class="insight-box">
-  <h4>Final Note: Compassion Without Excuse</h4>
-  <p>Nothing in this framework excuses the harm caused by DARVO. Understanding <em>why</em> the pattern occurs doesn't make it acceptable. But it does shift the frame from "they are evil" to "their aperture is closed and signal is bouncing" — which matters, because it means the question for survivors isn't "am I dealing with a monster?" but rather: <strong>"How closed is the aperture, and can it still open?"</strong></p>
-  <p>That's a question you can actually answer through observation. And the answer determines whether staying, leaving, or something else entirely is the wisest path forward.</p>
-</div>
-
-<div class="footer">
-  <p>Ashman Roonz · Circumpunct Framework · <a href="https://fractalreality.ca">fractalreality.ca</a></p>
-  <p style="margin-top: 0.5rem; font-size: 0.85rem;">DARVO concept originally formalized by Jennifer J. Freyd (1997). Geometric analysis via the Circumpunct Framework (2024–2025).</p>
-</div>
-
+        sections.forEach(section => observer.observe(section));
+    </script>
 </body>
 </html>
