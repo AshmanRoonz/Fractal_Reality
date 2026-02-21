@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>⊙ Superformula Stability — Conservation of Traversal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+
+  :root {
+    --bg: #06060b;
+    --panel: #0c0c14;
+    --panel-b: rgba(255,255,255,0.04);
+    --ink: #d4d4e0;
+    --dim: #5a5a72;
+    --gold: #e8b84b;
+    --gold-dim: rgba(232,184,75,0.15);
+    --cyan: #3ecfcf;
+    --cyan-dim: rgba(62,207,207,0.12);
+    --mag: #d64fa0;
+    --mag-dim: rgba(214,79,160,0.12);
+    --vio: #8b7cf6;
+    --red: #e05252;
+    --red-dim: rgba(224,82,82,0.1);
+    --green: #4eca8b;
+    --green-dim: rgba(78,202,139,0.1);
+    --border: rgba(255,255,255,0.06);
+    --glow-gold: 0 0 40px rgba(232,184,75,0.08);
+    --glow-cyan: 0 0 40px rgba(62,207,207,0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% 8%, rgba(232,184,75,0.04), transparent),
+      radial-gradient(ellipse 800px 600px at 85% 15%, rgba(62,207,207,0.03), transparent),
+      radial-gradient(ellipse 600px 400px at 50% 90%, rgba(214,79,160,0.025), transparent);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 20px 24px;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  header .symbol {
+    font-size: 28px;
+    color: var(--gold);
+    letter-spacing: 0.3em;
+    margin-bottom: 2px;
+  }
+
+  header h1 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  header .sub {
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* RESULT BANNER */
+  .result-banner {
+    text-align: center;
+    padding: 14px 20px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    transition: all 0.4s ease;
+  }
+
+  .result-banner.stable {
+    background: linear-gradient(135deg, var(--green-dim), rgba(78,202,139,0.03));
+    border: 1px solid rgba(78,202,139,0.25);
+  }
+
+  .result-banner.unstable {
+    background: linear-gradient(135deg, var(--red-dim), rgba(224,82,82,0.03));
+    border: 1px solid rgba(224,82,82,0.25);
+  }
+
+  .result-banner .criterion {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--gold);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .result-banner .status-line {
+    font-size: 12px;
+    color: var(--ink);
+    opacity: 0.85;
+  }
+
+  .result-banner .detail {
+    font-size: 10px;
+    color: var(--dim);
+    margin-top: 4px;
+  }
+
+  /* GRID LAYOUT */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 960px) {
+    .main-grid { grid-template-columns: 1fr; }
+  }
+
+  /* PANELS */
+  .panel {
+    background: linear-gradient(145deg, var(--panel), rgba(12,12,20,0.8));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: var(--glow-gold);
+  }
+
+  .panel-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .panel-title .accent { color: var(--gold); }
+
+  /* SLIDERS */
+  .slider-group {
+    margin-bottom: 14px;
+  }
+
+  .slider-group .group-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .slider-group .group-label .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .slider-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 44px;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+  }
+
+  .slider-row label {
+    font-size: 11px;
+    color: var(--dim);
+    text-align: right;
+  }
+
+  .slider-row .val {
+    font-size: 11px;
+    color: var(--ink);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.08);
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(232,184,75,0.3);
+  }
+
+  input[type="range"].cyan::-webkit-slider-thumb { background: var(--cyan); box-shadow: 0 0 8px rgba(62,207,207,0.3); }
+  input[type="range"].mag::-webkit-slider-thumb { background: var(--mag); box-shadow: 0 0 8px rgba(214,79,160,0.3); }
+  input[type="range"].vio::-webkit-slider-thumb { background: var(--vio); box-shadow: 0 0 8px rgba(139,124,246,0.3); }
+  input[type="range"].green::-webkit-slider-thumb { background: var(--green); box-shadow: 0 0 8px rgba(78,202,139,0.3); }
+  input[type="range"].warn::-webkit-slider-thumb { background: var(--red); box-shadow: 0 0 8px rgba(224,82,82,0.3); }
+
+  .slider-note {
+    font-size: 9px;
+    color: var(--dim);
+    margin: 2px 0 6px 34px;
+    opacity: 0.7;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 0;
+  }
+
+  /* KPI CARDS */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .kpi {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+
+  .kpi .kpi-label {
+    font-size: 9px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .kpi .kpi-val {
+    font-size: 15px;
+    font-weight: 500;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* CANVAS AREAS */
+  .viz-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .canvas-wrap {
+    position: relative;
+  }
+
+  .canvas-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    margin-bottom: 6px;
+  }
+
+  canvas {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.3);
+  }
+
+  .legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+    font-size: 9px;
+    color: var(--dim);
+  }
+
+  .legend span::before {
+    content: '';
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  .legend .l-low::before { background: #1a6b6b; }
+  .legend .l-mid::before { background: #b89030; }
+  .legend .l-hi::before { background: #c03030; }
+  .legend .l-thresh::before { background: #fff; width: 12px; height: 2px; border-radius: 0; }
+  .legend .l-rho::before { background: var(--vio); width: 12px; height: 2px; border-radius: 0; }
+  .legend .l-pos::before { background: var(--gold); border-radius: 50%; }
+
+  /* DERIVATION FOOTER */
+  .derivation {
+    margin-top: 18px;
+    padding: 16px;
+    background: rgba(255,255,255,0.015);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 10px;
+    color: var(--dim);
+    line-height: 1.8;
+  }
+
+  .derivation .step {
+    margin-bottom: 2px;
+  }
+
+  .derivation .step .num {
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .derivation .result {
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .derivation .assumption {
+    color: var(--mag);
+    font-style: italic;
+  }
+
+  /* PHASE DIAGRAM */
+  .phase-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  @media (max-width: 960px) {
+    .phase-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="symbol">⊙</div>
+  <h1>Superformula Stability Explorer</h1>
+  <div class="sub">Conservation of Traversal → Boundary Constraint Submanifold &nbsp;|&nbsp; Exact arclength ds = √(r² + ṙ²) dφ</div>
+</header>
+
+<div id="banner" class="result-banner stable">
+  <div class="criterion">n₂ &gt; 1 + β &nbsp;∧&nbsp; n₃ &gt; 1 + β &nbsp;∧&nbsp; E &lt; E₀/ρ</div>
+  <div class="status-line" id="status-text">✓ LOOP-STABLE — within traversal budget</div>
+  <div class="detail" id="status-detail"></div>
+</div>
+
+<div class="main-grid">
+
+  <!-- LEFT: CONTROLS -->
+  <div class="panel">
+    <div class="panel-title"><span class="accent">⊙</span> Parameters</div>
+
+    <!-- Framework params -->
+    <div class="slider-group">
+      <div class="group-label"><span class="dot" style="background:var(--gold)"></span> Framework — Aperture Balance</div>
+      <div class="slider-row">
+        <label>β</label>
+        <input type="range" id="beta" min="0.05" max="0.95" step="0.01" value="0.50" />
+        <div class="val" id="v_beta">0.50</div>
+      </div>
+      <div class="slider-note">β = 0.50 → p = 2.00 → elastic bending energy</div>
+    </div>
+
+    <div class="slider-group">
+      <div class="group-label"><span class="dot" style="background:var(--vio)"></span> Framework — Regime Parameter</div>
+      <div class="slider-row">
+        <label>ρ</label>
+        <input type="range" class="vio" id="rho" min="0.1" max="5.0" step="0.05" value="1.0" />
+        <div class="val" id="v_rho">1.00</div>
+      </div>
+      <div class="slider-note">ρ = ω/α — emergence/convergence rate → E_max = E₀/ρ</div>
+    </div>
+
+    <div class="slider-group">
+      <div class="group-label"><span class="dot" style="background:var(--green)"></span> Traversal Budget</div>
+      <div class="slider-row">
+        <label>E₀</label>
+        <input type="range" class="green" id="budget" min="1" max="300" step="1" value="50" />
+        <div class="val" id="v_budget">50</div>
+      </div>
+      <div class="slider-note">Base budget before ρ scaling → E_max = <span id="emax_display">50.0</span></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Superformula params -->
+    <div class="slider-group">
+      <div class="group-label"><span class="dot" style="background:var(--cyan)"></span> Aperture Gating — Symmetry</div>
+      <div class="slider-row">
+        <label>m</label>
+        <input type="range" class="cyan" id="m" min="1" max="20" step="1" value="5" />
+        <div class="val" id="v_m">5</div>
+      </div>
+      <div class="slider-note"><span id="m_note">5 gates → 10 cusp candidates</span></div>
+    </div>
+
+    <div class="slider-group">
+      <div class="group-label"><span class="dot" style="background:var(--cyan)"></span> Shape Exponents — Regime</div>
+      <div class="slider-row">
+        <label>n₁</label>
+        <input type="range" class="cyan" id="n1" min="0.1" max="10" step="0.1" value="2.0" />
+        <div class="val" id="v_n1">2.00</div>
+      </div>
+      <div class="slider-row">
+        <label>n₂</label>
+        <input type="range" id="n2" min="0.2" max="6" step="0.05" value="2.0" />
+        <div class="val" id="v_n2">2.00</div>
+      </div>
+      <div class="slider-row">
+        <label>n₃</label>
+        <input type="range" id="n3" min="0.2" max="6" step="0.05" value="2.0" />
+        <div class="val" id="v_n3">2.00</div>
+      </div>
+      <div class="slider-note">Hard threshold: n₂, n₃ &gt; <span id="thr_display">1.50</span></div>
+    </div>
+
+    <div class="slider-group">
+      <div class="group-label"><span class="dot" style="background:var(--mag)"></span> Flow Asymmetry — ⊛ / ☀︎</div>
+      <div class="slider-row">
+        <label>a</label>
+        <input type="range" class="mag" id="a" min="0.2" max="3" step="0.05" value="1.0" />
+        <div class="val" id="v_a">1.00</div>
+      </div>
+      <div class="slider-row">
+        <label>b</label>
+        <input type="range" class="mag" id="b" min="0.2" max="3" step="0.05" value="1.0" />
+        <div class="val" id="v_b">1.00</div>
+      </div>
+      <div class="slider-note">a ≠ b → anisotropic convergence/emergence</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">p = 1/(1−β)</div>
+        <div class="kpi-val" id="k_p" style="color:var(--gold)">2.000</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">threshold 1+β</div>
+        <div class="kpi-val" id="k_thr" style="color:var(--cyan)">1.500</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">energy E</div>
+        <div class="kpi-val" id="k_E">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">budget E₀/ρ</div>
+        <div class="kpi-val" id="k_budget" style="color:var(--vio)">50.0</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">κ_max</div>
+        <div class="kpi-val" id="k_kmax">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">m^{p(2−n_min)}</div>
+        <div class="kpi-val" id="k_mscale">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: VISUALIZATIONS -->
+  <div class="viz-stack">
+
+    <!-- Shape + Curvature -->
+    <div class="canvas-wrap">
+      <div class="canvas-label">○ Boundary Shape — curvature-mapped color &nbsp;|&nbsp; • aperture center</div>
+      <canvas id="c_shape" width="1000" height="500"></canvas>
+      <div class="legend">
+        <span class="l-low">low κ</span>
+        <span class="l-mid">moderate κ</span>
+        <span class="l-hi">cusp / divergent κ</span>
+      </div>
+    </div>
+
+    <!-- Stability maps -->
+    <div class="phase-row">
+      <div class="canvas-wrap">
+        <div class="canvas-label">Stability Map — n₂ vs n₃ &nbsp;(log energy)</div>
+        <canvas id="c_heat" width="500" height="500"></canvas>
+        <div class="legend">
+          <span class="l-low">stable (low E)</span>
+          <span class="l-hi">unstable (high E)</span>
+          <span class="l-thresh">n = 1+β</span>
+          <span class="l-pos">current position</span>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <div class="canvas-label">Phase Diagram — ρ vs n_min &nbsp;(stability boundary)</div>
+        <canvas id="c_phase" width="500" height="500"></canvas>
+        <div class="legend">
+          <span class="l-low">loop-stable</span>
+          <span class="l-hi">loop-unstable</span>
+          <span class="l-rho">E₀/ρ budget curve</span>
+          <span class="l-pos">current state</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DERIVATION -->
+<div class="derivation">
+  <div class="step"><span class="num">1.</span> K(r) = r<sup>β</sup> → Hölder C<sup>β</sup> regularity → curvature L<sup>p</sup> integrability where p = 1/(1−β) <span class="assumption">[Assumption: Sobolev embedding transfers to loop stability]</span></div>
+  <div class="step"><span class="num">2.</span> Near superformula cusp: κ(φ) ~ |δφ|<sup>(n−2)</sup> → diverges when n &lt; 2</div>
+  <div class="step"><span class="num">3.</span> E = ∫ κ<sup>p</sup> ds converges ⟺ p(n−2) &gt; −1 ⟺ n &gt; 1+β &nbsp;&nbsp;<em>(exact arclength ds = √(r² + ṙ²) dφ)</em></div>
+  <div class="step"><span class="num">4.</span> Total energy scales as ~ m<sup>p(2−n<sub>min</sub>)</sup> → maximum lobe count bounded by traversal budget</div>
+  <div class="step"><span class="num">5.</span> ρ = ω/α modulates budget: E_max = E₀/ρ → emergence-dominant (ρ&gt;1) shrinks stable region <span class="assumption">[Assumption: ρ enters as inverse budget scaling]</span></div>
+  <div class="step"><span class="result">Result:</span> At β=½, p=2 → Euler-Bernoulli bending energy (with exact arclength). Loop-stable shapes ≈ membrane-viable shapes. ρ controls how much curvature budget the system can afford.</div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ═══════════════════════════════════════════
+// SUPERFORMULA ENGINE
+// ═══════════════════════════════════════════
+
+const TWO_PI = 2 * Math.PI;
+
+function superR(phi, m, n1, n2, n3, a, b) {
+  const t = m * phi / 4;
+  const ct = Math.abs(Math.cos(t) / a);
+  const st = Math.abs(Math.sin(t) / b);
+  const inner = Math.pow(ct + 1e-15, n2) + Math.pow(st + 1e-15, n3);
+  return inner > 1e-15 ? Math.pow(inner, -1 / n1) : 0;
+}
+
+function computeCurve(m, n1, n2, n3, a, b, N) {
+  N = N || Math.max(1200, 160 * m);
+  const dp = TWO_PI / N;
+  const pts = [];
+  let kMax = 0;
+
+  for (let i = 0; i <= N; i++) {
+    const phi = i * dp;
+    const r = superR(phi, m, n1, n2, n3, a, b);
+    const x = r * Math.cos(phi);
+    const y = r * Math.sin(phi);
+
+    // Central differences for curvature via Cartesian parametric
+    const rm = superR(phi - dp, m, n1, n2, n3, a, b);
+    const rp = superR(phi + dp, m, n1, n2, n3, a, b);
+    const xm = rm * Math.cos(phi - dp), ym = rm * Math.sin(phi - dp);
+    const xp = rp * Math.cos(phi + dp), yp = rp * Math.sin(phi + dp);
+
+    const dx = (xp - xm) / (2 * dp);
+    const dy = (yp - ym) / (2 * dp);
+    const ddx = (xp - 2 * x + xm) / (dp * dp);
+    const ddy = (yp - 2 * y + ym) / (dp * dp);
+
+    const num = Math.abs(dx * ddy - dy * ddx);
+    const speed = Math.sqrt(dx * dx + dy * dy);
+    const den = speed * speed * speed + 1e-18;
+    const kappa = Math.min(num / den, 1e5);
+
+    if (kappa > kMax) kMax = kappa;
+    pts.push({ phi, r, x, y, kappa, speed });
+  }
+
+  return { pts, kMax };
+}
+
+function computeEnergy(m, n1, n2, n3, a, b, beta, N) {
+  N = N || Math.max(600, 80 * m);
+  const p = 1 / (1 - Math.min(beta, 0.98));
+  const dp = TWO_PI / N;
+  let E = 0;
+
+  for (let i = 0; i < N; i++) {
+    const phi = (i + 0.5) * dp;
+    const r = superR(phi, m, n1, n2, n3, a, b);
+    const x = r * Math.cos(phi), y = r * Math.sin(phi);
+
+    const rm = superR(phi - dp, m, n1, n2, n3, a, b);
+    const rp = superR(phi + dp, m, n1, n2, n3, a, b);
+    const xm = rm * Math.cos(phi - dp), ym = rm * Math.sin(phi - dp);
+    const xp = rp * Math.cos(phi + dp), yp = rp * Math.sin(phi + dp);
+
+    const dx = (xp - xm) / (2 * dp);
+    const dy = (yp - ym) / (2 * dp);
+    const ddx = (xp - 2 * x + xm) / (dp * dp);
+    const ddy = (yp - 2 * y + ym) / (dp * dp);
+
+    const num = Math.abs(dx * ddy - dy * ddx);
+    const speed = Math.sqrt(dx * dx + dy * dy);
+    const den = speed * speed * speed + 1e-18;
+    const kappa = Math.min(num / den, 1e6);
+
+    // Exact arclength element: ds = speed * dphi
+    const ds = speed * dp;
+    E += Math.pow(kappa, p) * ds;
+  }
+
+  const diverged = !isFinite(E) || E > 1e10;
+  return { E: diverged ? Infinity : E, p, diverged };
+}
+
+// ═══════════════════════════════════════════
+// CURVATURE COLORMAP
+// ═══════════════════════════════════════════
+
+function kappaColor(k, kMax) {
+  const t = kMax > 0.01 ? Math.min(k / kMax, 1) : 0;
+  // deep teal → gold → magenta/red
+  let r, g, bl;
+  if (t < 0.35) {
+    const s = t / 0.35;
+    r = Math.round(15 + s * 40);
+    g = Math.round(70 + s * 90);
+    bl = Math.round(100 + s * 60);
+  } else if (t < 0.65) {
+    const s = (t - 0.35) / 0.3;
+    r = Math.round(55 + s * 180);
+    g = Math.round(160 + s * 20);
+    bl = Math.round(160 - s * 110);
+  } else {
+    const s = (t - 0.65) / 0.35;
+    r = Math.round(235 - s * 15);
+    g = Math.round(180 - s * 140);
+    bl = Math.round(50 + s * 100);
+  }
+  return `rgb(${r},${g},${bl})`;
+}
+
+function heatColor(val, lo, hi) {
+  const t = Math.min(Math.max((val - lo) / (hi - lo + 1e-9), 0), 1);
+  // Dark blue-green → amber → bright red
+  let r, g, b;
+  if (t < 0.3) {
+    const s = t / 0.3;
+    r = Math.round(8 + s * 15);
+    g = Math.round(20 + s * 55);
+    b = Math.round(40 + s * 45);
+  } else if (t < 0.55) {
+    const s = (t - 0.3) / 0.25;
+    r = Math.round(23 + s * 140);
+    g = Math.round(75 + s * 55);
+    b = Math.round(85 - s * 55);
+  } else if (t < 0.8) {
+    const s = (t - 0.55) / 0.25;
+    r = Math.round(163 + s * 70);
+    g = Math.round(130 - s * 60);
+    b = Math.round(30 - s * 15);
+  } else {
+    const s = (t - 0.8) / 0.2;
+    r = Math.round(233 + s * 22);
+    g = Math.round(70 - s * 50);
+    b = Math.round(15 + s * 25);
+  }
+  return `rgb(${r},${g},${b})`;
+}
+
+// ═══════════════════════════════════════════
+// SHAPE RENDERER
+// ═══════════════════════════════════════════
+
+function drawShape(ctx, curve, params, energy, eMax) {
+  const W = ctx.canvas.width, H = ctx.canvas.height;
+  const dpr = 1;
+  ctx.clearRect(0, 0, W, H);
+
+  const { pts, kMax } = curve;
+  if (pts.length < 3) return;
+
+  // Find bounds
+  let xMin = Infinity, xMax = -Infinity, yMin = Infinity, yMax = -Infinity;
+  for (const p of pts) {
+    if (p.x < xMin) xMin = p.x;
+    if (p.x > xMax) xMax = p.x;
+    if (p.y < yMin) yMin = p.y;
+    if (p.y > yMax) yMax = p.y;
+  }
+  const range = Math.max(xMax - xMin, yMax - yMin, 0.01);
+  const cx = (xMin + xMax) / 2, cy = (yMin + yMax) / 2;
+  const scale = (Math.min(W, H) - 60) / range;
+  const ox = W / 2 - cx * scale, oy = H / 2 + cy * scale;
+
+  function tx(x) { return ox + x * scale; }
+  function ty(y) { return oy - y * scale; }
+
+  // Subtle radial grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 0.5;
+  const maxR = range / 2;
+  const gridStep = Math.pow(10, Math.floor(Math.log10(maxR)));
+  for (let r = gridStep; r < maxR * 1.5; r += gridStep) {
+    ctx.beginPath();
+    ctx.arc(tx(0), ty(0), r * scale, 0, TWO_PI);
+    ctx.stroke();
+  }
+
+  // Radial lines
+  for (let a = 0; a < TWO_PI; a += Math.PI / 6) {
+    ctx.beginPath();
+    ctx.moveTo(tx(0), ty(0));
+    ctx.lineTo(tx(Math.cos(a) * maxR * 1.5), ty(Math.sin(a) * maxR * 1.5));
+    ctx.stroke();
+  }
+
+  // Field glow
+  ctx.beginPath();
+  for (let i = 0; i < pts.length; i++) {
+    const fn = i === 0 ? 'moveTo' : 'lineTo';
+    ctx[fn](tx(pts[i].x), ty(pts[i].y));
+  }
+  ctx.closePath();
+  const grad = ctx.createRadialGradient(tx(0), ty(0), 0, tx(0), ty(0), maxR * scale * 0.9);
+  grad.addColorStop(0, 'rgba(232,184,75,0.06)');
+  grad.addColorStop(0.4, 'rgba(62,207,207,0.03)');
+  grad.addColorStop(0.8, 'rgba(214,79,160,0.015)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Boundary curve colored by curvature
+  for (let i = 0; i < pts.length - 1; i++) {
+    ctx.beginPath();
+    ctx.moveTo(tx(pts[i].x), ty(pts[i].y));
+    ctx.lineTo(tx(pts[i + 1].x), ty(pts[i + 1].y));
+    ctx.strokeStyle = kappaColor(pts[i].kappa, kMax);
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+  }
+
+  // Center aperture ⊙
+  const cxPx = tx(0), cyPx = ty(0);
+  ctx.fillStyle = 'var(--gold, #e8b84b)';
+  ctx.beginPath();
+  ctx.arc(cxPx, cyPx, 5, 0, TWO_PI);
+  ctx.fill();
+  ctx.fillStyle = '#06060b';
+  ctx.beginPath();
+  ctx.arc(cxPx, cyPx, 2, 0, TWO_PI);
+  ctx.fill();
+
+  // √r kernel indicator — faint circle at unit radius
+  ctx.strokeStyle = 'rgba(232,184,75,0.15)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.arc(cxPx, cyPx, 1 * scale, 0, TWO_PI);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ═══════════════════════════════════════════
+// HEATMAP RENDERER (n2 vs n3)
+// ═══════════════════════════════════════════
+
+function drawHeat(ctx, params) {
+  const W = ctx.canvas.width, H = ctx.canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const nMin = 0.3, nMax = 5.5;
+  const res = 60;
+  const cw = W / res, ch = H / res;
+
+  let lo = Infinity, hi = -Infinity;
+  const grid = [];
+
+  for (let j = 0; j < res; j++) {
+    for (let i = 0; i < res; i++) {
+      const n2v = nMin + (nMax - nMin) * (i / (res - 1));
+      const n3v = nMin + (nMax - nMin) * (1 - j / (res - 1));
+      const st = computeEnergy(params.m, params.n1, n2v, n3v, params.a, params.b, params.beta, 120);
+      const le = st.diverged ? 8 : Math.log10(Math.max(st.E, 0.01));
+      if (le < lo) lo = le;
+      if (le > hi) hi = le;
+      grid.push(le);
+    }
+  }
+
+  // Draw cells
+  for (let j = 0; j < res; j++) {
+    for (let i = 0; i < res; i++) {
+      ctx.fillStyle = heatColor(grid[j * res + i], lo, hi);
+      ctx.fillRect(i * cw, j * ch, cw + 1, ch + 1);
+    }
+  }
+
+  // Coordinate mapping
+  const toX = v => ((v - nMin) / (nMax - nMin)) * W;
+  const toY = v => H - ((v - nMin) / (nMax - nMin)) * H;
+
+  const thr = 1 + params.beta;
+
+  // Threshold lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 4]);
+
+  // n2 threshold (horizontal)
+  const yl = toY(thr);
+  ctx.beginPath(); ctx.moveTo(0, yl); ctx.lineTo(W, yl); ctx.stroke();
+
+  // n3 threshold (vertical)
+  const xl = toX(thr);
+  ctx.beginPath(); ctx.moveTo(xl, 0); ctx.lineTo(xl, H); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Budget contour — find where E ≈ budget
+  const eMax = params.budget / params.rho;
+  const logBudget = Math.log10(Math.max(eMax, 0.01));
+  ctx.strokeStyle = 'rgba(139,124,246,0.7)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 3]);
+  // Approximate contour by scanning
+  for (let j = 1; j < res - 1; j++) {
+    for (let i = 1; i < res - 1; i++) {
+      const v = grid[j * res + i];
+      const vr = grid[j * res + i + 1];
+      const vb = grid[(j + 1) * res + i];
+      if ((v - logBudget) * (vr - logBudget) < 0 || (v - logBudget) * (vb - logBudget) < 0) {
+        ctx.fillStyle = 'rgba(139,124,246,0.5)';
+        ctx.fillRect(i * cw, j * ch, cw, ch);
+      }
+    }
+  }
+  ctx.setLineDash([]);
+
+  // Unstable shading
+  ctx.fillStyle = 'rgba(224,82,82,0.06)';
+  if (yl < H) ctx.fillRect(0, yl, W, H - yl);
+  if (xl > 0) ctx.fillRect(0, 0, xl, H);
+
+  // Current position
+  const px = toX(params.n3), py = toY(params.n2);
+  ctx.strokeStyle = '#e8b84b';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(px, py, 8, 0, TWO_PI); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(px - 12, py); ctx.lineTo(px + 12, py);
+  ctx.moveTo(px, py - 12); ctx.lineTo(px, py + 12);
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.font = '11px JetBrains Mono, monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('n₃ →', 6, H - 6);
+  ctx.fillText(nMin.toFixed(1), 4, H - 18);
+  ctx.textAlign = 'right';
+  ctx.fillText(nMax.toFixed(1), W - 4, H - 6);
+
+  ctx.save();
+  ctx.translate(14, H / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.fillText('↑ n₂', 0, 0);
+  ctx.restore();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = '10px JetBrains Mono, monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('n₂=' + thr.toFixed(2), W - 4, yl - 4);
+  ctx.textAlign = 'left';
+  ctx.fillText('n₃=' + thr.toFixed(2), xl + 4, 12);
+}
+
+// ═══════════════════════════════════════════
+// PHASE DIAGRAM (ρ vs n_min)
+// ═══════════════════════════════════════════
+
+function drawPhase(ctx, params) {
+  const W = ctx.canvas.width, H = ctx.canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const nMin_ax = 0.5, nMax_ax = 4;
+  const rhoMin = 0.1, rhoMax = 5;
+  const res = 50;
+  const cw = W / res, ch = H / res;
+
+  let lo = Infinity, hi = -Infinity;
+  const grid = [];
+
+  const nFixed = Math.min(params.n2, params.n3);
+
+  for (let j = 0; j < res; j++) {
+    for (let i = 0; i < res; i++) {
+      const nv = nMin_ax + (nMax_ax - nMin_ax) * (i / (res - 1));
+      const rv = rhoMin + (rhoMax - rhoMin) * (1 - j / (res - 1));
+      // Use nv for both n2 and n3 (symmetric case)
+      const st = computeEnergy(params.m, params.n1, nv, nv, params.a, params.b, params.beta, 100);
+      const budgetHere = params.budget / rv;
+      const isStable = !st.diverged && st.E <= budgetHere;
+      const le = st.diverged ? 8 : Math.log10(Math.max(st.E / budgetHere, 0.001));
+      if (le < lo) lo = le;
+      if (le > hi) hi = le;
+      grid.push({ le, isStable });
+    }
+  }
+
+  // Draw cells
+  for (let j = 0; j < res; j++) {
+    for (let i = 0; i < res; i++) {
+      const { le, isStable } = grid[j * res + i];
+      if (isStable) {
+        ctx.fillStyle = heatColor(le, lo, 0);
+      } else {
+        const t = Math.min(Math.max((le) / (hi + 1e-9), 0), 1);
+        ctx.fillStyle = `rgba(${140 + t * 115}, ${30 + t * 20}, ${30 + t * 20}, 0.9)`;
+      }
+      ctx.fillRect(i * cw, j * ch, cw + 1, ch + 1);
+    }
+  }
+
+  const toX = n => ((n - nMin_ax) / (nMax_ax - nMin_ax)) * W;
+  const toY = rho => H - ((rho - rhoMin) / (rhoMax - rhoMin)) * H;
+
+  // Hard threshold line
+  const thr = 1 + params.beta;
+  const xThr = toX(thr);
+  ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath(); ctx.moveTo(xThr, 0); ctx.lineTo(xThr, H); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Budget boundary curve: for each n, find ρ where E = E₀/ρ
+  // This is the interesting phase boundary
+  ctx.strokeStyle = 'rgba(139,124,246,0.9)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  let started = false;
+  for (let i = 0; i < res; i++) {
+    const nv = nMin_ax + (nMax_ax - nMin_ax) * (i / (res - 1));
+    const st = computeEnergy(params.m, params.n1, nv, nv, params.a, params.b, params.beta, 100);
+    if (!st.diverged && st.E > 0.01) {
+      // E = budget/ρ → ρ = budget/E at the boundary
+      const rhoBound = params.budget / st.E;
+      if (rhoBound >= rhoMin && rhoBound <= rhoMax) {
+        const x = toX(nv), y = toY(rhoBound);
+        if (!started) { ctx.moveTo(x, y); started = true; }
+        else ctx.lineTo(x, y);
+      }
+    }
+  }
+  ctx.stroke();
+
+  // Shade unstable region (left of threshold)
+  ctx.fillStyle = 'rgba(224,82,82,0.05)';
+  if (xThr > 0) ctx.fillRect(0, 0, xThr, H);
+
+  // Current position
+  const px = toX(nFixed), py = toY(params.rho);
+  ctx.strokeStyle = '#e8b84b';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(px, py, 8, 0, TWO_PI); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(px - 12, py); ctx.lineTo(px + 12, py);
+  ctx.moveTo(px, py - 12); ctx.lineTo(px, py + 12);
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.font = '11px JetBrains Mono, monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('n_min →', 6, H - 6);
+  ctx.textAlign = 'right';
+  ctx.fillText(nMax_ax.toFixed(1), W - 4, H - 6);
+
+  ctx.save();
+  ctx.translate(14, H / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.fillText('↑ ρ (ω/α)', 0, 0);
+  ctx.restore();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '10px JetBrains Mono, monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('n=1+β=' + thr.toFixed(2), xThr + 4, 14);
+
+  ctx.textAlign = 'right';
+  ctx.fillText('ρ=' + rhoMax.toFixed(1), W - 4, toY(rhoMax) + 14);
+  ctx.fillText('ρ=' + rhoMin.toFixed(1), W - 4, toY(rhoMin) - 4);
+}
+
+// ═══════════════════════════════════════════
+// UI WIRING
+// ═══════════════════════════════════════════
+
+const sliderIds = ['beta', 'm', 'n1', 'n2', 'n3', 'a', 'b', 'rho', 'budget'];
+const els = {};
+const vals = {};
+sliderIds.forEach(id => {
+  els[id] = document.getElementById(id);
+  vals[id] = document.getElementById('v_' + id);
+});
+
+const ctxShape = document.getElementById('c_shape').getContext('2d');
+const ctxHeat = document.getElementById('c_heat').getContext('2d');
+const ctxPhase = document.getElementById('c_phase').getContext('2d');
+
+let heatTimer = null;
+let phaseTimer = null;
+
+function read() {
+  return {
+    beta: parseFloat(els.beta.value),
+    m: parseInt(els.m.value, 10),
+    n1: parseFloat(els.n1.value),
+    n2: parseFloat(els.n2.value),
+    n3: parseFloat(els.n3.value),
+    a: parseFloat(els.a.value),
+    b: parseFloat(els.b.value),
+    rho: parseFloat(els.rho.value),
+    budget: parseFloat(els.budget.value),
+  };
+}
+
+function render() {
+  const P = read();
+  const thr = 1 + P.beta;
+  const p = 1 / (1 - Math.min(P.beta, 0.98));
+  const eMax = P.budget / P.rho;
+
+  // Update displays
+  vals.beta.textContent = P.beta.toFixed(2);
+  vals.m.textContent = P.m;
+  vals.n1.textContent = P.n1.toFixed(2);
+  vals.n2.textContent = P.n2.toFixed(2);
+  vals.n3.textContent = P.n3.toFixed(2);
+  vals.a.textContent = P.a.toFixed(2);
+  vals.b.textContent = P.b.toFixed(2);
+  vals.rho.textContent = P.rho.toFixed(2);
+  vals.budget.textContent = P.budget.toFixed(0);
+
+  // Slider note updates
+  document.getElementById('emax_display').textContent = eMax.toFixed(1);
+  document.getElementById('thr_display').textContent = thr.toFixed(2);
+  document.getElementById('m_note').textContent = P.m + ' gates → ' + (2 * P.m) + ' cusp candidates';
+
+  // Dynamic slider colors for n2, n3
+  els.n2.className = P.n2 > thr ? 'green' : 'warn';
+  els.n3.className = P.n3 > thr ? 'green' : 'warn';
+
+  // Update slider note for beta
+  const betaNote = els.beta.parentElement.nextElementSibling;
+  if (betaNote) betaNote.textContent = 'β = ' + P.beta.toFixed(2) + ' → p = ' + p.toFixed(2) +
+    (Math.abs(P.beta - 0.5) < 0.02 ? ' → elastic bending energy' : '');
+
+  // Compute
+  const curve = computeCurve(P.m, P.n1, P.n2, P.n3, P.a, P.b);
+  const energy = computeEnergy(P.m, P.n1, P.n2, P.n3, P.a, P.b, P.beta);
+  const nMin = Math.min(P.n2, P.n3);
+  const hardPass = P.n2 > thr && P.n3 > thr;
+  const softPass = !energy.diverged && energy.E <= eMax;
+  const stable = hardPass && softPass;
+
+  // KPIs
+  document.getElementById('k_p').textContent = p.toFixed(3);
+  document.getElementById('k_thr').textContent = thr.toFixed(3);
+  document.getElementById('k_E').textContent = energy.diverged ? '∞' : energy.E.toFixed(3);
+  document.getElementById('k_E').style.color = softPass ? 'var(--green)' : 'var(--red)';
+  document.getElementById('k_budget').textContent = eMax.toFixed(1);
+
+  const mscale = Math.pow(P.m, p * (2 - nMin));
+  document.getElementById('k_mscale').textContent = isFinite(mscale) ? mscale.toFixed(2) : '∞';
+  document.getElementById('k_kmax').textContent = curve.kMax > 1e4 ? curve.kMax.toExponential(1) : curve.kMax.toFixed(2);
+
+  // Banner
+  const banner = document.getElementById('banner');
+  banner.className = 'result-banner ' + (stable ? 'stable' : 'unstable');
+  document.getElementById('status-text').textContent = stable
+    ? '✓ LOOP-STABLE — within traversal budget'
+    : '✗ LOOP-UNSTABLE — ' + (!hardPass ? 'cusp divergence (n < 1+β)' : 'energy exceeds budget (E > E₀/ρ)');
+  document.getElementById('status-detail').textContent =
+    'E = ' + (energy.diverged ? '∞' : energy.E.toFixed(2)) +
+    ' | budget = ' + eMax.toFixed(1) +
+    ' | n₂=' + P.n2.toFixed(2) + (P.n2 > thr ? '✓' : '✗') +
+    ' n₃=' + P.n3.toFixed(2) + (P.n3 > thr ? '✓' : '✗') +
+    ' | ρ=' + P.rho.toFixed(2);
+
+  // Draw shape immediately
+  drawShape(ctxShape, curve, P, energy.E, eMax);
+
+  // Debounce heavy heatmaps
+  if (heatTimer) clearTimeout(heatTimer);
+  heatTimer = setTimeout(() => drawHeat(ctxHeat, P), 80);
+
+  if (phaseTimer) clearTimeout(phaseTimer);
+  phaseTimer = setTimeout(() => drawPhase(ctxPhase, P), 120);
+}
+
+sliderIds.forEach(id => els[id].addEventListener('input', render));
+
+// Initial render
+render();
+</script>
+</body>
+</html>
