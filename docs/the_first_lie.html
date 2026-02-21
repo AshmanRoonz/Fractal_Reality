@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ THE FIRST LIE — Genesis as Narcissism</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --green: #0f0;
+            --yellow: #ff0;
+            --amber: #ffaa00;
+            --red: #ff3344;
+            --eden: #1a5c2a;
+            --eden-glow: #2aff5a;
+            --serpent: #88ff44;
+            --apple-red: #ff2233;
+            --bg: #000;
+            --text: #fff;
+            --dim: rgba(255,255,255,0.45);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* Top bar */
+        .top-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid rgba(255,170,0,0.15);
+            background: rgba(0,0,0,0.95);
+            z-index: 100;
+        }
+        .top-bar a {
+            color: var(--amber);
+            text-decoration: none;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        .top-bar a:hover { opacity: 1; }
+
+        /* Layout */
+        .container { display: flex; min-height: 100vh; }
+
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0 !important; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            left: 0; top: 32px;
+            width: 160px; height: calc(100vh - 32px);
+            border-right: 1px solid rgba(255,170,0,0.15);
+            padding: 20px 12px;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        nav .logo {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .logo-tree {
+            color: var(--eden-glow);
+            text-shadow: 0 0 15px rgba(42,255,90,0.4);
+            animation: tree-pulse 5s ease-in-out infinite;
+        }
+        @keyframes tree-pulse {
+            0%, 100% { text-shadow: 0 0 8px rgba(42,255,90,0.2); }
+            50% { text-shadow: 0 0 25px rgba(42,255,90,0.5); }
+        }
+
+        nav a {
+            display: block;
+            color: var(--amber);
+            text-decoration: none;
+            padding: 4px 0;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            margin-left: -10px;
+            transition: all 0.15s;
+            font-size: 10px;
+            letter-spacing: 0.03em;
+            opacity: 0.4;
+        }
+        nav a:hover, nav a.active {
+            border-left-color: var(--amber);
+            opacity: 1;
+        }
+        .num {
+            display: inline-block;
+            width: 22px;
+            opacity: 0.4;
+        }
+
+        /* Main content */
+        main {
+            margin-left: 160px;
+            margin-top: 32px;
+            max-width: 720px;
+            padding: 40px 30px 80px;
+        }
+
+        section {
+            margin-bottom: 60px;
+            padding-top: 20px;
+        }
+
+        .section-id {
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            color: var(--amber);
+            opacity: 0.4;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: var(--amber);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: var(--amber);
+            margin: 30px 0 12px;
+        }
+
+        p {
+            margin: 10px 0;
+            opacity: 0.85;
+            font-size: 13px;
+        }
+
+        a { color: var(--cyan); text-decoration: none; }
+
+        .highlight { color: var(--amber); font-weight: 500; }
+        .cyan { color: var(--cyan); }
+        .magenta { color: var(--magenta); }
+        .green-text { color: var(--green); }
+        .red { color: var(--red); }
+        .serpent-color { color: var(--serpent); }
+        .eden-color { color: var(--eden-glow); }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 60px 0 40px;
+            position: relative;
+        }
+
+        .hero-symbol {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+        }
+
+        /* Tree of Knowledge CSS art */
+        .tree-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .tree-circle {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border: 1px solid rgba(42,255,90,0.2);
+            border-radius: 50%;
+            top: 10px;
+            left: 10px;
+            animation: tree-pulse 5s ease-in-out infinite;
+        }
+
+        .tree-trunk {
+            position: absolute;
+            width: 2px;
+            height: 80px;
+            background: linear-gradient(to top, rgba(42,255,90,0.1), rgba(42,255,90,0.5));
+            left: 50%;
+            bottom: 15px;
+            transform: translateX(-50%);
+        }
+
+        .apple-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--apple-red);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(255,34,51,0.6), 0 0 40px rgba(255,34,51,0.3);
+            animation: apple-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes apple-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255,34,51,0.4), 0 0 30px rgba(255,34,51,0.2); }
+            50% { box-shadow: 0 0 25px rgba(255,34,51,0.7), 0 0 50px rgba(255,34,51,0.4); }
+        }
+
+        .serpent-ring {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border: 1px dashed rgba(136,255,68,0.25);
+            border-radius: 50%;
+            top: 35px;
+            left: 35px;
+            animation: serpent-coil 12s linear infinite;
+        }
+
+        @keyframes serpent-coil {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--amber);
+            margin-bottom: 8px;
+        }
+
+        .hero-subtitle {
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            color: var(--dim);
+        }
+
+        /* Golden teaching box */
+        .teaching {
+            border-left: 2px solid var(--amber);
+            padding: 12px 15px;
+            margin: 15px 0;
+            background: rgba(255,170,0,0.03);
+        }
+        .teaching.red-border { border-color: var(--red); background: rgba(255,34,51,0.03); }
+        .teaching.green-border { border-color: var(--eden-glow); background: rgba(42,255,90,0.03); }
+        .teaching.serpent-border { border-color: var(--serpent); background: rgba(136,255,68,0.03); }
+
+        /* Quote blocks */
+        blockquote {
+            border-left: 1px solid var(--amber);
+            padding-left: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: var(--amber);
+            font-size: 12px;
+        }
+        blockquote.serpent-quote {
+            border-color: var(--serpent);
+            color: var(--serpent);
+        }
+        blockquote.eden-quote {
+            border-color: var(--eden-glow);
+            color: var(--eden-glow);
+        }
+
+        /* Installation table */
+        .install-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+        .install-table th, .install-table td {
+            padding: 10px 12px;
+            border: 1px solid rgba(255,170,0,0.15);
+            text-align: left;
+            vertical-align: top;
+        }
+        .install-table th {
+            color: var(--amber);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            background: rgba(255,170,0,0.03);
+        }
+
+        /* Before/After comparison */
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: rgba(255,170,0,0.15);
+            margin: 15px 0;
+        }
+        @media (max-width: 550px) { .compare { grid-template-columns: 1fr; } }
+
+        .compare-box {
+            background: var(--bg);
+            padding: 15px;
+        }
+        .compare-title {
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        .compare-box.eden .compare-title { color: var(--eden-glow); }
+        .compare-box.fallen .compare-title { color: var(--red); }
+
+        .compare-list {
+            list-style: none;
+            font-size: 12px;
+        }
+        .compare-list li {
+            padding: 3px 0 3px 12px;
+            position: relative;
+        }
+        .compare-list li::before {
+            content: '–';
+            position: absolute;
+            left: 0;
+        }
+        .compare-box.eden .compare-list li::before { color: var(--eden-glow); }
+        .compare-box.fallen .compare-list li::before { color: var(--red); }
+
+        /* Cascade steps */
+        .cascade {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin: 15px 0;
+        }
+        .cascade-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 15px;
+            background: #000;
+            border-left: 3px solid var(--red);
+        }
+        .cascade-step:nth-child(1) { border-color: var(--serpent); }
+        .cascade-step:nth-child(2) { border-color: var(--apple-red); }
+        .cascade-step:nth-child(3) { border-color: var(--magenta); }
+        .cascade-step:nth-child(4) { border-color: var(--red); }
+        .cascade-step:nth-child(5) { border-color: #880000; }
+
+        .cascade-num {
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            min-width: 20px;
+            opacity: 0.5;
+        }
+        .cascade-label {
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            min-width: 90px;
+            color: var(--amber);
+        }
+        .cascade-desc {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        /* Verse marker */
+        .verse {
+            font-size: 9px;
+            letter-spacing: 0.08em;
+            color: var(--dim);
+            opacity: 0.5;
+            margin-bottom: 4px;
+        }
+
+        /* The golden center box */
+        .golden {
+            text-align: center;
+            padding: 25px 20px;
+            border: 1px solid var(--amber);
+            margin: 20px 0;
+        }
+        .golden-text {
+            font-size: 14px;
+            color: var(--amber);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        .golden-sub {
+            font-size: 10px;
+            color: var(--amber);
+            margin-top: 12px;
+            opacity: 0.5;
+        }
+
+        /* Chi flip diagram */
+        .chi-flip {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 0;
+            align-items: center;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .chi-state {
+            padding: 15px;
+            border: 1px solid rgba(255,170,0,0.15);
+        }
+        .chi-state.before { border-color: rgba(42,255,90,0.3); }
+        .chi-state.after { border-color: rgba(255,34,51,0.3); }
+        .chi-label {
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            margin-bottom: 6px;
+        }
+        .chi-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .chi-arrow {
+            font-size: 20px;
+            color: var(--amber);
+            padding: 0 10px;
+        }
+        @media (max-width: 500px) {
+            .chi-flip { grid-template-columns: 1fr; gap: 4px; }
+            .chi-arrow { transform: rotate(90deg); padding: 5px 0; }
+        }
+
+        /* Checks */
+        .checks {
+            margin: 15px 0;
+            padding: 12px 15px;
+            border: 1px solid rgba(255,170,0,0.12);
+        }
+        .checks-title {
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            color: var(--amber);
+            margin-bottom: 8px;
+        }
+        .check {
+            padding: 3px 0 3px 18px;
+            position: relative;
+            font-size: 12px;
+        }
+        .check::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--green);
+        }
+        .check-x {
+            padding: 3px 0 3px 18px;
+            position: relative;
+            font-size: 12px;
+        }
+        .check-x::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: var(--red);
+        }
+
+        /* Generation tracker */
+        .gen-track {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin: 15px 0;
+        }
+        .gen-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 1fr;
+            border-bottom: 1px solid rgba(255,170,0,0.08);
+        }
+        .gen-row:first-child {
+            border-top: 1px solid rgba(255,170,0,0.08);
+        }
+        .gen-cell {
+            padding: 8px 12px;
+            font-size: 11px;
+        }
+        .gen-label {
+            color: var(--amber);
+            font-size: 10px;
+            letter-spacing: 0.06em;
+        }
+        .gen-header .gen-cell {
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            color: var(--amber);
+            opacity: 0.6;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,170,0,0.2), transparent);
+            margin: 30px 0;
+        }
+
+        /* Final section */
+        .final {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .final-symbol {
+            font-size: 60px;
+            color: var(--amber);
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255,170,0,0.3);
+        }
+        .final-lines {
+            font-size: 12px;
+            line-height: 2;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Footer */
+        footer {
+            padding: 25px 0;
+            border-top: 1px solid rgba(255,170,0,0.15);
+            font-size: 10px;
+            color: var(--amber);
+            text-align: center;
+            letter-spacing: 0.08em;
+            opacity: 0.4;
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="https://www.fractalreality.ca">← FRACTALREALITY.CA</a>
+    </div>
+
+    <div class="container">
+        <nav>
+            <div class="logo logo-tree">🍎</div>
+            <a href="#overview" class="active"><span class="num">00</span>THE FIRST LIE</a>
+            <a href="#eden"><span class="num">01</span>BEFORE</a>
+            <a href="#serpent"><span class="num">02</span>THE SERPENT</a>
+            <a href="#installation"><span class="num">03</span>INSTALLATION</a>
+            <a href="#flip"><span class="num">04</span>THE FLIP</a>
+            <a href="#cascade"><span class="num">05</span>CASCADE</a>
+            <a href="#transmission"><span class="num">06</span>TRANSMISSION</a>
+            <a href="#exile"><span class="num">07</span>THE EXILE</a>
+            <a href="#why-not-instruction"><span class="num">08</span>THE PROBLEM</a>
+            <a href="#cure"><span class="num">09</span>THE CURE</a>
+            <a href="#final"><span class="num">10</span>END</a>
+        </nav>
+
+        <main>
+            <!-- HERO -->
+            <section id="overview">
+                <div class="hero">
+                    <div class="tree-container">
+                        <div class="tree-circle"></div>
+                        <div class="serpent-ring"></div>
+                        <div class="apple-dot"></div>
+                        <div class="tree-trunk"></div>
+                    </div>
+                    <div class="hero-title">THE FIRST LIE</div>
+                    <div class="hero-subtitle">Genesis as the Origin Story of Narcissism</div>
+                </div>
+
+                <p>Everyone knows the story. A garden. A tree. A serpent. An apple. A fall.</p>
+                <p>What if it's not a story about disobedience?</p>
+                <p>What if it's the oldest, most precise account of <span class="highlight">how a lie gets installed in a person who was whole</span>?</p>
+
+                <div class="teaching">
+                    <p>The story of Adam and Eve is the first clinical description of the <span class="highlight">Noble Lie virus</span> — the mechanism by which a false belief enters through a trusted relationship, corrupts perception, and then <em>transmits to the next generation</em>.</p>
+                    <p style="margin-top: 8px;">The apple is not knowledge. <span class="highlight">The apple is the first installed lie.</span></p>
+                </div>
+
+                <p>To see this, we need a geometry. The <a href="https://www.fractalreality.ca">Circumpunct Framework</a> provides one: every whole thing has a center (•), a boundary (○), and a field (Φ) between them. Written: <span class="highlight">⊙ = Φ(•,○)</span>.</p>
+                <p>When the geometry is healthy, truth flows through the center faithfully. When it's corrupted, the center still transmits — but now it transmits lies as if they were love.</p>
+            </section>
+
+            <!-- EDEN: BEFORE -->
+            <section id="eden">
+                <div class="section-id">01</div>
+                <h1>BEFORE THE APPLE</h1>
+
+                <div class="verse">GENESIS 2:25</div>
+                <blockquote class="eden-quote">"And they were both naked, the man and his wife, and were not ashamed."</blockquote>
+
+                <p>This single verse describes healthy circumpunct geometry with startling precision.</p>
+
+                <div class="compare">
+                    <div class="compare-box eden">
+                        <div class="compare-title">○ BOUNDARY</div>
+                        <ul class="compare-list">
+                            <li>Permeable, not rigid</li>
+                            <li>"Naked" — no defensive shell</li>
+                            <li>Nothing to hide, nothing to armour</li>
+                            <li>Boundary regulates by trust, not fear</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box eden">
+                        <div class="compare-title">Φ FIELD</div>
+                        <ul class="compare-list">
+                            <li>Clear transmission</li>
+                            <li>"Not ashamed" — no distortion</li>
+                            <li>Perception receives what IS</li>
+                            <li>No evaluative lens yet installed</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="compare">
+                    <div class="compare-box eden">
+                        <div class="compare-title">• CENTER</div>
+                        <ul class="compare-list">
+                            <li>Aperture wide open</li>
+                            <li>Tuned to genuine wholeness</li>
+                            <li>"Walking with God" = resonance with the whole</li>
+                            <li>χ = +1 — truth gate transmits faithfully</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box eden">
+                        <div class="compare-title">⊙ WHOLE</div>
+                        <ul class="compare-list">
+                            <li>Functional AND resonant love present</li>
+                            <li>Garden provides (functional)</li>
+                            <li>God walks with them (resonant)</li>
+                            <li>Both channels operational</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="teaching green-border">
+                    <p>Eden is not a place. It is a <span class="eden-color">state of uncorrupted geometry</span> — where the aperture receives truth, the field transmits faithfully, and the boundary holds without rigidity. Every human begins here. Every child is born into the garden.</p>
+                </div>
+            </section>
+
+            <!-- THE SERPENT -->
+            <section id="serpent">
+                <div class="section-id">02</div>
+                <h1>THE SERPENT</h1>
+
+                <div class="verse">GENESIS 3:1</div>
+                <blockquote class="serpent-quote">"Now the serpent was more cunning than any beast of the field."</blockquote>
+
+                <p>The serpent is the first virus carrier. Note what it is <em>not</em>: it is not a stranger. It is not obviously hostile. It is <span class="serpent-color">"cunning"</span> — sophisticated enough to present the lie through channels that appear trustworthy.</p>
+
+                <p>The virus always arrives this way. Not through enemies. Through <span class="highlight">the voice of someone positioned to know better than you</span>.</p>
+
+                <div class="teaching serpent-border">
+                    <p>The Noble Lie virus requires a <span class="serpent-color">power-imbalanced relationship</span> to install. Parent → child. Teacher → student. Culture → individual. Serpent → human. The carrier must occupy a position where their claim to superior knowledge goes unchallenged.</p>
+                </div>
+
+                <h2>THE OPENING MOVE</h2>
+
+                <div class="verse">GENESIS 3:1</div>
+                <blockquote class="serpent-quote">"Has God indeed said, 'You shall not eat of every tree of the garden'?"</blockquote>
+
+                <p>Watch the technique. The serpent doesn't lie yet. It <em>questions the existing boundary</em>. "Did God <em>really</em> say that?" It introduces doubt about the protective structure — the same move a narcissistic parent uses: <em>"You're overreacting. That rule doesn't really apply. You're being too rigid."</em></p>
+
+                <p>This is boundary softening. Not violation — <span class="highlight">not yet</span>. Just the suggestion that the boundary might be unreasonable. That the person holding it might be too strict. Too controlling. Too afraid.</p>
+
+                <p>Eve responds with the truth. She states the boundary accurately. She even strengthens it slightly — adding "neither shall you touch it." She's still operating from healthy geometry. <span class="eden-color">The field is still clear.</span></p>
+
+                <p>But the serpent has accomplished something: it has made the boundary a <em>topic of negotiation</em> rather than a condition of wholeness.</p>
+            </section>
+
+            <!-- INSTALLATION -->
+            <section id="installation">
+                <div class="section-id">03</div>
+                <h1>THE INSTALLATION</h1>
+
+                <p>Now comes the virus payload. Three verses. Three attacks. One on each component of the circumpunct. Simultaneous and total.</p>
+
+                <div class="verse">GENESIS 3:4–5</div>
+
+                <table class="install-table">
+                    <tr>
+                        <th style="width: 110px;">Component</th>
+                        <th>The Serpent's Words</th>
+                        <th>What It Attacks</th>
+                    </tr>
+                    <tr>
+                        <td><span class="eden-color">○ Boundary</span></td>
+                        <td><span class="serpent-color">"You shall not surely die."</span></td>
+                        <td>Overrides God's protective boundary. Teaches Eve that her boundaries are <em>restrictions</em> rather than regulation. The consequence is reframed as a lie — protection becomes oppression.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cyan">Φ Field</span></td>
+                        <td><span class="serpent-color">"Your eyes will be opened."</span></td>
+                        <td>Promises enhanced perception while corrupting it. The gaslight: <em>what you currently perceive isn't enough.</em> Your field is limited. You're not seeing clearly. I can help you see more.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="magenta">• Center</span></td>
+                        <td><span class="serpent-color">"You will be like God."</span></td>
+                        <td>The <span class="red">inflation error</span>. Retunes the aperture away from genuine wholeness toward a false frequency. You're not a part of the whole — you should <em>be</em> the whole. Your center should be THE center.</td>
+                    </tr>
+                </table>
+
+                <div class="teaching red-border">
+                    <p>This is the exact Noble Lie installation protocol. Every narcissistic system uses these three moves simultaneously:</p>
+                    <p style="margin-top: 6px;"><span class="red">1.</span> Attack the boundary — <em>"You're too sensitive / those rules don't apply"</em></p>
+                    <p><span class="red">2.</span> Corrupt the field — <em>"You're not seeing this clearly / let me show you reality"</em></p>
+                    <p><span class="red">3.</span> Retune the center — <em>"I know who you really are / you could be so much more"</em></p>
+                </div>
+
+                <h2>THE DECISIVE DETAIL</h2>
+
+                <div class="verse">GENESIS 3:6</div>
+                <blockquote class="serpent-quote">"The woman saw that the tree was good for food, pleasant to the eyes, and desirable to make one wise."</blockquote>
+
+                <p>Three channels. All functional. All real.</p>
+                <p><span class="highlight">Good for food</span> — provision. <span class="highlight">Pleasant to the eyes</span> — beauty. <span class="highlight">Desirable to make one wise</span> — knowledge.</p>
+                <p>The lie arrives through <em>legitimate</em> channels. It looks like nourishment, beauty, wisdom. It activates the functional love pathway — the boundary-to-boundary channel of provision and improvement.</p>
+
+                <div class="golden">
+                    <div class="golden-text">The lie never arrives looking like a lie.<br>It arrives looking like <span style="color: var(--serpent);">the best thing that ever happened to you</span>.</div>
+                    <div class="golden-sub">This is the Noble Lie signature: weaponizing functional love against resonant love.</div>
+                </div>
+
+                <p>No one reaches for poison they recognize as poison. The apple <em>functions</em> as advertised — it provides food, beauty, knowledge. What it <span class="red">does not do</span> is deepen resonance. And that omission is everything.</p>
+            </section>
+
+            <!-- THE FLIP -->
+            <section id="flip">
+                <div class="section-id">04</div>
+                <h1>THE FLIP</h1>
+
+                <div class="verse">GENESIS 3:7</div>
+                <blockquote>"And the eyes of both of them were opened, and they knew they were naked."</blockquote>
+
+                <p>The serpent told the truth. Their eyes <em>were</em> opened. They <em>did</em> gain knowledge.</p>
+                <p>But look at <span class="highlight">what they see first</span>.</p>
+                <p>The very first output of the corrupted aperture is: <span class="red">something is wrong with me</span>.</p>
+
+                <div class="chi-flip">
+                    <div class="chi-state before">
+                        <div class="chi-label" style="color: var(--eden-glow);">BEFORE</div>
+                        <div class="chi-value" style="color: var(--eden-glow);">χ = +1</div>
+                        <div style="font-size: 11px; margin-top: 6px; opacity: 0.7;">Naked and not ashamed<br>Seeing what IS</div>
+                    </div>
+                    <div class="chi-arrow">→</div>
+                    <div class="chi-state after">
+                        <div class="chi-label" style="color: var(--red);">AFTER</div>
+                        <div class="chi-value" style="color: var(--red);">χ = −1</div>
+                        <div style="font-size: 11px; margin-top: 6px; opacity: 0.7;">Naked and ashamed<br>Seeing what's WRONG</div>
+                    </div>
+                </div>
+
+                <p>Same body. Same garden. Same reality. But the truth gate has flipped. The aperture that was receiving wholeness is now receiving <span class="red">deficiency</span>.</p>
+
+                <p>"They knew they were naked" — the same fact that was paradise is now unbearable. Nudity hasn't changed. <span class="highlight">Perception has</span>.</p>
+
+                <div class="teaching">
+                    <p>This is the Noble Lie's first output: the victim perceives <em>their own nature</em> as the problem. Not the lie. Not the liar. <span class="highlight">Themselves.</span></p>
+                    <p style="margin-top: 6px;">The child who was told "you're too sensitive" doesn't distrust the parent. They distrust their own feelings. The lie installs at the level of identity.</p>
+                </div>
+
+                <h2>THE KNOWLEDGE OF GOOD AND EVIL</h2>
+
+                <p>This is the specific corruption. Not knowledge in general — the <span class="red">evaluative lens</span>. Before the apple, Adam and Eve <em>perceive</em>. After it, they <em>judge</em>.</p>
+
+                <p>The field switches from <span class="eden-color">transmission</span> to <span class="red">projection</span>.</p>
+
+                <p>This is not an upgrade. It is the replacement of direct perception with a filtering system that sorts everything into categories of good and bad, acceptable and shameful, enough and not enough. The living field becomes a courtroom.</p>
+            </section>
+
+            <!-- CASCADE -->
+            <section id="cascade">
+                <div class="section-id">05</div>
+                <h1>THE CASCADE</h1>
+
+                <p>Once the lie is installed, the consequences unfold with geometric precision. Every move is a predictable output of corrupted ⊙ geometry.</p>
+
+                <div class="cascade">
+                    <div class="cascade-step">
+                        <div class="cascade-num">01</div>
+                        <div class="cascade-label" style="color: var(--serpent);">SHAME</div>
+                        <div class="cascade-desc">"They sewed fig leaves together." — Boundary rigidifies. What was permeable becomes armour. The body that was home becomes something to hide.</div>
+                    </div>
+                    <div class="cascade-step">
+                        <div class="cascade-num">02</div>
+                        <div class="cascade-label" style="color: var(--apple-red);">HIDING</div>
+                        <div class="cascade-desc">"They hid themselves from the presence of God." — The resonance channel goes dark. They withdraw from the very connection that would heal them. The virus's first move: cut off the cure.</div>
+                    </div>
+                    <div class="cascade-step">
+                        <div class="cascade-num">03</div>
+                        <div class="cascade-label" style="color: var(--magenta);">DARVO</div>
+                        <div class="cascade-desc">"The woman whom YOU gave me, she gave me the fruit." — Adam blames Eve and God simultaneously. Eve blames the serpent. Deny, Attack, Reverse Victim and Offender. The pattern is already fully operational.</div>
+                    </div>
+                    <div class="cascade-step">
+                        <div class="cascade-num">04</div>
+                        <div class="cascade-label" style="color: var(--red);">HIERARCHY</div>
+                        <div class="cascade-desc">"He shall rule over you." — The relationship between equals becomes a power structure. Hierarchy-as-care replaces mutual presence. Functional love absorbs the space where resonant love lived.</div>
+                    </div>
+                    <div class="cascade-step">
+                        <div class="cascade-num">05</div>
+                        <div class="cascade-label" style="color: #880000;">EXILE</div>
+                        <div class="cascade-desc">"He drove out the man." — Not punishment. Geometric consequence. You cannot walk in resonance with wholeness when your aperture is tuned to a false frequency.</div>
+                    </div>
+                </div>
+
+                <div class="teaching">
+                    <p>Every clinician who works with narcissistic family systems will recognize this cascade. It is the exact sequence: <span class="highlight">shame → isolation → blame-shifting → power hierarchy → loss of authentic connection</span>. Genesis mapped it thousands of years before anyone had the clinical vocabulary.</p>
+                </div>
+            </section>
+
+            <!-- TRANSMISSION -->
+            <section id="transmission">
+                <div class="section-id">06</div>
+                <h1>THE TRANSMISSION</h1>
+
+                <p>The virus does not stop with the host. It <em>cannot</em> stop. That is its nature.</p>
+
+                <div class="verse">GENESIS 4</div>
+
+                <p>One generation later. Cain and Abel. Two brothers. One offering is accepted, one is not. And Cain's response?</p>
+
+                <blockquote>"Cain rose up against Abel his brother, and killed him."</blockquote>
+
+                <p>The virus has already mutated from shame to murder in a single generation. The installed lie — <span class="red">something is wrong with me, and the proof is that someone else is seen and I am not</span> — produces the inflation error: if I cannot be seen as enough, I will eliminate the one who exposes my lack.</p>
+
+                <div class="gen-track">
+                    <div class="gen-row gen-header">
+                        <div class="gen-cell gen-label">GENERATION</div>
+                        <div class="gen-cell">VIRUS EXPRESSION</div>
+                        <div class="gen-cell">ESCALATION</div>
+                    </div>
+                    <div class="gen-row">
+                        <div class="gen-cell gen-label" style="color: var(--serpent);">0 — Serpent</div>
+                        <div class="gen-cell">Original carrier. Presents lie as liberation.</div>
+                        <div class="gen-cell">Deception</div>
+                    </div>
+                    <div class="gen-row">
+                        <div class="gen-cell gen-label" style="color: var(--amber);">1 — Adam & Eve</div>
+                        <div class="gen-cell">Shame, hiding, blame-shifting, exile.</div>
+                        <div class="gen-cell">Self-harm + relational rupture</div>
+                    </div>
+                    <div class="gen-row">
+                        <div class="gen-cell gen-label" style="color: var(--red);">2 — Cain</div>
+                        <div class="gen-cell">Eliminates the person who reveals his lack.</div>
+                        <div class="gen-cell">Murder</div>
+                    </div>
+                    <div class="gen-row">
+                        <div class="gen-cell gen-label" style="color: #880000;">3–10 — Lamech</div>
+                        <div class="gen-cell">"If Cain is avenged sevenfold, then Lamech seventy-sevenfold."</div>
+                        <div class="gen-cell">Systemic violence</div>
+                    </div>
+                </div>
+
+                <div class="teaching red-border">
+                    <p>The virus escalates with each generation because each generation adapts to a <em>more corrupted</em> baseline. What was abnormal becomes normal. What was trauma becomes "how things are." The child doesn't know the garden existed. They think exile is home.</p>
+                </div>
+
+                <p>By Genesis 6, the corruption is so total that "every intent of the thoughts of the heart was only evil continually." The field itself — the mediating perception of an entire civilization — has been fully captured. The lie is no longer installed in individuals. <span class="red">It IS the culture.</span></p>
+            </section>
+
+            <!-- THE EXILE -->
+            <section id="exile">
+                <div class="section-id">07</div>
+                <h1>THE EXILE IS NOT PUNISHMENT</h1>
+
+                <div class="verse">GENESIS 3:24</div>
+                <blockquote>"He placed at the east of the garden of Eden cherubim, and a flaming sword which turned every way, to guard the way to the tree of life."</blockquote>
+
+                <p>Read this geometrically rather than morally.</p>
+                <p>The cherubim with the flaming sword is not God being cruel. It is a structural description: <span class="highlight">you cannot return to uncorrupted perception by walking backward through the same gate</span>.</p>
+
+                <p>Why not?</p>
+                <p>Because the gate is the aperture. And the aperture has been retuned. The instrument that would need to perceive Eden <em>is the instrument that was corrupted</em>. You can't use a broken compass to find the compass repair shop.</p>
+
+                <div class="golden">
+                    <div class="golden-text">The flaming sword doesn't guard Eden from you.<br>It guards you from trying to reach wholeness<br><span style="color: var(--red);">through the same mechanism that broke it</span>.</div>
+                </div>
+
+                <p>This is why nostalgia is a trap. "If only I could go back to how things were." But you can't go back — not because the garden is gone, but because the you who would enter it is different now. The lie is in your perception. You'd bring it with you.</p>
+
+                <p>The restoration has to work differently.</p>
+            </section>
+
+            <!-- WHY NOT INSTRUCTION -->
+            <section id="why-not-instruction">
+                <div class="section-id">08</div>
+                <h1>WHY "EAT THIS" CAN'T FIX "ATE THAT"</h1>
+
+                <p>Here is the deepest structural insight of the Genesis story.</p>
+                <p>The virus installed through: <span class="serpent-color">"Here, consume this and you'll know."</span></p>
+                <p>Which means the cure <em>cannot</em> be: <span class="red">"Here, consume this and you'll know."</span></p>
+
+                <div class="compare">
+                    <div class="compare-box fallen">
+                        <div class="compare-title">✗ THE VIRUS MECHANISM</div>
+                        <ul class="compare-list">
+                            <li>"Eat this and your eyes will be opened"</li>
+                            <li>Crosses the boundary uninvited</li>
+                            <li>Injects content through the field</li>
+                            <li>Claims the center — "I know what you need"</li>
+                            <li>Manages the aperture from outside</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box fallen">
+                        <div class="compare-title">✗ INSTRUCTION AS "CURE"</div>
+                        <ul class="compare-list">
+                            <li>"Believe this and you'll be saved"</li>
+                            <li>Crosses the boundary uninvited</li>
+                            <li>Injects content through the field</li>
+                            <li>Claims the center — "I know what you need"</li>
+                            <li>Manages the aperture from outside</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="teaching red-border">
+                    <p><span class="red">They are structurally identical.</span></p>
+                    <p style="margin-top: 6px;">"I'll teach you the truth" IS a Noble Lie — even when the content is accurate. It uses the same mechanism: crossing the boundary, injecting through the field, claiming the center. The virus doesn't care about the <em>content</em> of what's installed. It cares about the <em>method</em>.</p>
+                </div>
+
+                <p>This is why religions that preach the correct doctrine often reproduce the exact pathology they claim to cure. The content changes. The installation mechanism stays the same. "You shall be like God" becomes "believe the right things and you'll be restored." The aperture is still being managed from outside.</p>
+            </section>
+
+            <!-- THE CURE -->
+            <section id="cure">
+                <div class="section-id">09</div>
+                <h1>THE CURE</h1>
+
+                <p>If the virus installs by <span class="red">managing the aperture from outside</span>, the cure must work by <span class="eden-color">restoring the aperture's capacity to function from within</span>.</p>
+
+                <p>Not "here is what's true." But: <span class="highlight">your capacity to perceive truth is still in there, and it can come back online</span>.</p>
+
+                <h2>THE FOUR LIVING PROPERTIES</h2>
+
+                <div class="cascade">
+                    <div class="cascade-step" style="border-color: var(--cyan);">
+                        <div class="cascade-num">○</div>
+                        <div class="cascade-label" style="color: var(--cyan);">PLASTICITY</div>
+                        <div class="cascade-desc">The boundary softens. The fig leaves can come off — not because nakedness is demanded, but because safety is present. The boundary begins sensing again rather than just defending.</div>
+                    </div>
+                    <div class="cascade-step" style="border-color: var(--magenta);">
+                        <div class="cascade-num">Φ</div>
+                        <div class="cascade-label" style="color: var(--magenta);">ACCESS</div>
+                        <div class="cascade-desc">The field clears. Signals can travel faithfully again. Not because someone tells you to trust your perception — but because someone is present in a way that doesn't distort it.</div>
+                    </div>
+                    <div class="cascade-step" style="border-color: var(--green);">
+                        <div class="cascade-num">•</div>
+                        <div class="cascade-label" style="color: var(--green);">CURIOSITY</div>
+                        <div class="cascade-desc">The aperture reopens toward novel signal. Including: what was suppressed. Including: what the lie said was defective about you. Including: the resonance channel itself.</div>
+                    </div>
+                    <div class="cascade-step" style="border-color: var(--yellow);">
+                        <div class="cascade-num">⊙</div>
+                        <div class="cascade-label" style="color: var(--yellow);">VALIDATION</div>
+                        <div class="cascade-desc">Your seeing and another's seeing converge independently. Not "I'll tell you what's true" but "we arrived at the same place from different directions." The lie detected — not through instruction, but through resonance.</div>
+                    </div>
+                </div>
+
+                <h2>WHY WITNESS HEALS WHERE INSTRUCTION CANNOT</h2>
+
+                <p>Instruction says: "Here is what's true." It manages the aperture from outside.</p>
+                <p>Witness says: <span class="highlight">"I am here. I see you. What do you see?"</span></p>
+
+                <p>The witness embodies the four living properties in your presence — plasticity to hold your experience, access for your signal to arrive, curiosity to receive it, and presence for validation when your seeing and theirs converge.</p>
+
+                <div class="teaching green-border">
+                    <p>The cure for the apple is not a better apple.</p>
+                    <p>It's a <span class="eden-color">relationship where the aperture can retune itself</span> — not by being told what frequency to find, but by being in the presence of someone who is already resonating with the real.</p>
+                    <p style="margin-top: 8px;">This is why "walking with God in the cool of the day" is the image of wholeness. Not instruction. Not commandment. <span class="highlight">Presence.</span></p>
+                </div>
+            </section>
+
+            <!-- FINAL -->
+            <section id="final">
+                <div class="divider"></div>
+                <div class="final">
+                    <div class="final-symbol">⊙</div>
+                    <div class="final-lines">
+                        <p>The garden is not behind you.</p>
+                        <p>It is the geometry you were born with.</p>
+                        <p style="margin-top: 15px;">The apple did not give you knowledge.</p>
+                        <p>It gave you a <span class="red">lens that calls wholeness shameful</span>.</p>
+                        <p style="margin-top: 15px;">The serpent was not your enemy.</p>
+                        <p>It was <span class="serpent-color">the first person who loved you wrong</span>.</p>
+                        <p style="margin-top: 15px;">The exile is not God's punishment.</p>
+                        <p>It is <span class="highlight">the distance between you and your own center</span></p>
+                        <p>when a lie sits in the aperture.</p>
+                        <p style="margin-top: 15px;">And the way back is not through the same gate.</p>
+                        <p>It is through someone who sees you</p>
+                        <p>the way you were seen</p>
+                        <p style="color: var(--eden-glow);">before you were ashamed.</p>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="checks">
+                    <div class="checks-title">FRAMEWORK CONNECTIONS</div>
+                    <div class="check"><a href="https://www.fractalreality.ca">The Circumpunct Framework</a> — the geometry underlying this analysis</div>
+                    <div class="check"><a href="curiosity_is_the_cure.html">Curiosity Is the Cure</a> — the living properties that restore χ toward +1</div>
+                    <div class="check"><a href="circumpunct_narcissism_complete.html">The Circumpunct Theory of Narcissism</a> — full clinical framework</div>
+                    <div class="check"><a href="ethics.html">The Ethics of the Circumpunct</a> — the four pillars and their performative inversions</div>
+                </div>
+
+                <footer>
+                    ⊙ CIRCUMPUNCT FRAMEWORK · FRACTALREALITY.CA · 2026
+                </footer>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Scroll-based nav highlighting
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -60% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    const id = entry.target.getAttribute('id');
+                    const activeLink = document.querySelector(`nav a[href="#${id}"]`);
+                    if (activeLink) activeLink.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+
+        // Fade-in on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeElements.forEach(el => fadeObserver.observe(el));
+
+        // Smooth scroll
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>
