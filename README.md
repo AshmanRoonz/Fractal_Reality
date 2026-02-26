@@ -305,6 +305,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**city_of_resonance.html**](https://fractalreality.ca/city_of_resonance.html) — City of Resonance
 - [**varpet_tribute.html**](https://fractalreality.ca/varpet_tribute.html) — Tribute page
 - [**belief_theory.html**](https://fractalreality.ca/belief_theory.html) — Fractal Reality Belief Theory
+- [**poppers_paradox_dissolution.html**](https://fractalreality.ca/poppers_paradox_dissolution.html) — Popper's Paradox Dissolution
 
 ---
 
