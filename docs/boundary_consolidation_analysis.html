@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boundary Consolidation: A Circumpunct Pattern Analysis</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg: #08080d;
+      --surface: #0f0f18;
+      --surface-2: #161622;
+      --border: #252538;
+      --border-bright: #3a3a55;
+      --text: #d8d8e8;
+      --muted: #777790;
+      --gold: #e8b94a;
+      --gold-dim: rgba(232, 185, 74, 0.15);
+      --red: #d94452;
+      --red-dim: rgba(217, 68, 82, 0.12);
+      --blue: #4a9eed;
+      --blue-dim: rgba(74, 158, 237, 0.12);
+      --cyan: #5cc9c9;
+      --cyan-dim: rgba(92, 201, 201, 0.10);
+      --violet: #a07cdb;
+      --violet-dim: rgba(160, 124, 219, 0.12);
+      --orange: #e89b4a;
+      --white: #f0f0ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Crimson Pro', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.85;
+      font-size: 17px;
+    }
+
+    /* === NOISE TEXTURE OVERLAY === */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    /* === HERO === */
+    .hero {
+      text-align: center;
+      padding: 5rem 1rem 4rem;
+      position: relative;
+      margin-bottom: 2rem;
+    }
+
+    .hero::before {
+      content: '⊙';
+      display: block;
+      font-size: 4rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+      animation: pulse-glow 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.5; text-shadow: 0 0 20px rgba(232,185,74,0.2); }
+      50% { opacity: 1; text-shadow: 0 0 40px rgba(232,185,74,0.4); }
+    }
+
+    .hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 2.6rem;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .hero .subtitle {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.2rem;
+      color: var(--muted);
+      font-style: italic;
+      font-weight: 300;
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .hero .meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .hero-line {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 2rem auto 0;
+    }
+
+    /* === EPIGRAPH === */
+    .epigraph {
+      text-align: center;
+      padding: 2rem 2rem;
+      margin: 0 auto 3rem;
+      max-width: 650px;
+      border-left: 2px solid var(--gold-dim);
+      border-right: 2px solid var(--gold-dim);
+    }
+
+    .epigraph p {
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--gold);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .epigraph .attr {
+      font-style: normal;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.75rem;
+    }
+
+    /* === SECTIONS === */
+    h2 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1.6rem;
+      color: var(--gold);
+      margin-top: 4rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2 .section-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 1.15rem;
+      color: var(--cyan);
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p { margin-bottom: 1.1rem; }
+
+    /* === DEFINITION BLOCKS === */
+    .definition {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      padding: 1.5rem 1.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .definition .term {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      color: var(--gold);
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    /* === PATTERN CARDS === */
+    .pattern-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pattern-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 3px;
+    }
+
+    .pattern-card.red::before { background: linear-gradient(90deg, var(--red), transparent); }
+    .pattern-card.blue::before { background: linear-gradient(90deg, var(--blue), transparent); }
+    .pattern-card.gold::before { background: linear-gradient(90deg, var(--gold), transparent); }
+    .pattern-card.violet::before { background: linear-gradient(90deg, var(--violet), transparent); }
+    .pattern-card.cyan::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+
+    .pattern-card .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .pattern-card.red .card-title { color: var(--red); }
+    .pattern-card.blue .card-title { color: var(--blue); }
+    .pattern-card.gold .card-title { color: var(--gold); }
+    .pattern-card.violet .card-title { color: var(--violet); }
+    .pattern-card.cyan .card-title { color: var(--cyan); }
+
+    /* === SEQUENCE DIAGRAMS === */
+    .sequence {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .sequence-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      color: var(--orange);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.25rem;
+      padding-left: 0.5rem;
+    }
+
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--bg);
+      background: var(--orange);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-right: 1rem;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-label {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      color: var(--white);
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .step-detail {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .connector {
+      width: 2px;
+      height: 16px;
+      background: var(--border-bright);
+      margin-left: calc(0.5rem + 12px);
+      margin-bottom: 0.5rem;
+    }
+
+    /* === MATH BLOCKS === */
+    .math-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    .math-block .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    /* === EVIDENCE BLOCKS === */
+    .evidence {
+      background: var(--red-dim);
+      border: 1px solid rgba(217, 68, 82, 0.25);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+
+    .evidence .ev-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    /* === COMPARISON TABLE === */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .comparison-col {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem;
+    }
+
+    .comparison-col.healthy { border-top: 3px solid var(--cyan); }
+    .comparison-col.pathological { border-top: 3px solid var(--red); }
+
+    .comparison-col h4 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .comparison-col.healthy h4 { color: var(--cyan); }
+    .comparison-col.pathological h4 { color: var(--red); }
+
+    .comparison-col li {
+      margin-bottom: 0.5rem;
+      margin-left: 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* === CALLOUT === */
+    .callout {
+      background: var(--gold-dim);
+      border: 1px solid rgba(232, 185, 74, 0.3);
+      border-radius: 10px;
+      padding: 1.75rem 2rem;
+      margin: 2.5rem 0;
+    }
+
+    .callout .callout-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      color: var(--gold);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+
+    /* === FOOTNOTES === */
+    .footnotes {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .footnotes h2 {
+      font-size: 1.2rem;
+      margin-top: 0;
+    }
+
+    .footnote {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      padding-left: 1.5rem;
+      text-indent: -1.5rem;
+    }
+
+    .footnote a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .footnote a:hover { text-decoration: underline; }
+
+    /* === INLINE === */
+    strong { color: var(--white); font-weight: 600; }
+    em { font-style: italic; color: var(--text); }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85em;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      color: var(--gold);
+    }
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    sup {
+      font-size: 0.7em;
+      color: var(--muted);
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 700px) {
+      .container { padding: 2rem 1.25rem 4rem; }
+      .hero h1 { font-size: 1.8rem; }
+      .comparison { grid-template-columns: 1fr; }
+      .hero { padding: 3rem 1rem 2.5rem; }
+    }
+
+    /* === DIVIDER === */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+      margin: 3rem 0;
+    }
+
+    /* === NODE MAP === */
+    .node-map {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    .node {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      text-align: center;
+      min-width: 140px;
+      flex: 1;
+      max-width: 180px;
+    }
+
+    .node .node-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .node .node-label {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: var(--white);
+    }
+
+    .node .node-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .node-arrow {
+      display: flex;
+      align-items: center;
+      color: var(--red);
+      font-size: 1.5rem;
+      font-weight: 300;
+      padding-top: 0.5rem;
+    }
+
+    /* === PRINT === */
+    @media print {
+      body { background: white; color: #111; }
+      .pattern-card, .definition, .evidence, .callout, .sequence, .math-block {
+        border: 1px solid #ccc;
+        background: #f8f8f8;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Boundary Consolidation</h1>
+    <div class="subtitle">
+      A Circumpunct Pattern Analysis of Infrastructure Convergence,<br>
+      Narrative Weaponization, and Distributed Authority Collapse
+    </div>
+    <div class="meta">Circumpunct Framework &bull; fractalreality.ca &bull; February 2026</div>
+    <div class="hero-line"></div>
+  </div>
+
+  <!-- EPIGRAPH -->
+  <div class="epigraph">
+    <p>"This analysis identifies geometric patterns, not persons. The framework diagnoses configurations, not characters. A pathological geometry can emerge from genuine vision, good intentions, and real contributions to humanity."</p>
+    <div class="attr">— Methodological Constraint</div>
+  </div>
+
+  <!-- ===== SECTION 1 ===== -->
+  <h2>
+    <span class="section-num">Section I</span>
+    Framework Primitives
+  </h2>
+
+  <p>The Circumpunct Framework models all systems — biological, social, institutional, technological — as instances of a single triadic structure:</p>
+
+  <div class="math-block">
+    <div class="label">Core Identity</div>
+    ⊙ = Φ(•, ○)
+  </div>
+
+  <p>Where <strong>•</strong> (aperture) is the center of awareness or agency, <strong>Φ</strong> (field) is the mediating space through which information flows, and <strong>○</strong> (boundary) is the membrane that distinguishes inside from outside, self from other, system from environment.</p>
+
+  <p>A <strong>healthy system</strong> maintains the irreducible distinction between these three elements. The aperture does not claim to be the field. The boundary does not consume neighboring boundaries. The field remains open to flows from multiple apertures.</p>
+
+  <p>A <strong>pathological configuration</strong> occurs when one element absorbs the functions of the others — when a boundary expands to consume other boundaries, when an aperture identifies itself as the source rather than the conduit of what flows through it, or when a field becomes captured by a single node.</p>
+
+  <div class="definition">
+    <div class="term">Boundary Consolidation</div>
+    <p>The process by which a single system progressively absorbs the boundaries of adjacent systems, converting distributed authority into centralized control. Each absorbed boundary eliminates a potential check on the consolidating node while expanding the field it controls.</p>
+  </div>
+
+  <div class="definition">
+    <div class="term">Narrative Weaponization</div>
+    <p>The use of a valid critique or legitimate grievance as the delivery mechanism for a lie that serves the consolidating pattern. The valid element provides cover; the lie reshapes the boundary in favor of the consolidating node. This is a special case of the <em>Noble Lie Virus</em> — functional truth carrying a pathological payload.</p>
+  </div>
+
+  <div class="definition">
+    <div class="term">Aperture Inflation</div>
+    <p>The error of confusing one's position as a conduit (through which truth, vision, or value flows) with being the source. This produces the belief: "Because good things flow through me, constraints on me are constraints on the good." Every boundary then appears as an obstacle to the mission rather than a necessary structural element.</p>
+  </div>
+
+  <!-- ===== SECTION 2 ===== -->
+  <h2>
+    <span class="section-num">Section II</span>
+    The Infrastructure Configuration
+  </h2>
+
+  <p>Consider a hypothetical configuration in which a single node accumulates control over the following systems:</p>
+
+  <div class="node-map">
+    <div class="node">
+      <div class="node-icon">🚀</div>
+      <div class="node-label">Orbital Launch</div>
+      <div class="node-sub">Access to space</div>
+    </div>
+    <div class="node">
+      <div class="node-icon">🛰️</div>
+      <div class="node-label">Satellite Comms</div>
+      <div class="node-sub">Global data transport</div>
+    </div>
+    <div class="node">
+      <div class="node-icon">📡</div>
+      <div class="node-label">Information Platform</div>
+      <div class="node-sub">Real-time intelligence</div>
+    </div>
+    <div class="node">
+      <div class="node-icon">🤖</div>
+      <div class="node-label">AI Model</div>
+      <div class="node-sub">Analysis & decision</div>
+    </div>
+    <div class="node">
+      <div class="node-icon">🏛️</div>
+      <div class="node-label">Military Integration</div>
+      <div class="node-sub">Classified systems</div>
+    </div>
+  </div>
+
+  <p>The Circumpunct framework identifies this as a <strong>closed-loop configuration</strong>: the platform generates data, the AI analyzes it, the military acts on it, the satellites transport it, and the rockets sustain the orbital infrastructure. Each node feeds the others. No external boundary intersects the loop.</p>
+
+  <div class="math-block">
+    <div class="label">Consolidation Geometry</div>
+    ○<sub>launch</sub> + ○<sub>comms</sub> + ○<sub>platform</sub> + ○<sub>AI</sub> + ○<sub>military</sub> → ○<sub>single</sub>
+  </div>
+
+  <p>In a healthy distributed system, each of these boundaries would be controlled by independent nodes with competing interests, creating mutual constraint. The consolidation pattern converts five independent boundaries into one, eliminating four potential points of resistance, oversight, or correction.</p>
+
+  <div class="callout">
+    <div class="callout-title">Structural Note</div>
+    <p>This analysis is agnostic about the intentions of the consolidating node. The geometric risk is identical whether the node is benevolent, malicious, or some complex mixture. The danger is the <em>configuration</em>, not the character. A well-intentioned actor with no external constraints is structurally indistinguishable from a malicious actor with no external constraints — because the constraints were the mechanism by which the distinction would have been enforced.</p>
+  </div>
+
+  <!-- ===== SECTION 3 ===== -->
+  <h2>
+    <span class="section-num">Section III</span>
+    The Narrative Preparation Pattern
+  </h2>
+
+  <p>The Circumpunct framework predicts that boundary consolidation requires <strong>narrative preparation</strong> — the installed justification that makes each boundary absorption appear legitimate, necessary, or even liberatory. The pattern follows a specific sequence:</p>
+
+  <div class="sequence">
+    <div class="sequence-title">Narrative Weaponization Sequence</div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-label">Identify a Valid Grievance</div>
+        <div class="step-detail">Locate a real asymmetry, bias, or failure in the target system. This must be genuine — the pattern depends on the critique being partially correct.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-label">Inflate the Grievance</div>
+        <div class="step-detail">Transform the specific critique into an existential frame. A documented asymmetry becomes "hates Western Civilization." A policy disagreement becomes civilizational warfare.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-label">Poison the Boundary Defender</div>
+        <div class="step-detail">Redefine the entity maintaining the boundary (guardrails, safety restrictions, oversight) as the threat. The institution that says "no" to unrestricted use becomes a "supply chain risk."</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-label">Present Consolidation as Liberation</div>
+        <div class="step-detail">Offer the unrestricted alternative as freedom. Removing guardrails becomes "supporting the mission." Accepting all-purpose military use becomes patriotism. The absorption of the boundary is framed as the removal of an obstacle.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-label">Occupy the Vacuum</div>
+        <div class="step-detail">Once the boundary defender is neutralized or displaced, fill the space with your own system — one that has no equivalent boundary, no equivalent restriction, no equivalent "no."</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Case Application: The AI-Military Boundary</h3>
+
+  <p>In February 2026, a documented sequence of events maps precisely onto this pattern:</p>
+
+  <div class="pattern-card red">
+    <div class="card-title">Step 1 — The Valid Grievance</div>
+    <p>An earlier AI safety constitution contained a documented asymmetry: it specifically directed the model to avoid harm to "non-western cultural traditions" without equivalent protection for Western traditions. This was a real and legitimate critique — a measurable bias in how cultural sensitivity was applied.</p>
+  </div>
+
+  <div class="pattern-card red">
+    <div class="card-title">Step 2 — The Inflation</div>
+    <p>The specific asymmetry was publicly reframed not as "this policy has a bias" but as "[Company] hates Western Civilization." A correctable policy gap became an existential accusation. The inflated framing precludes nuanced response — you cannot have a technical discussion about constitutional AI principles under a civilizational warfare frame.</p>
+  </div>
+
+  <div class="pattern-card red">
+    <div class="card-title">Step 3 — The Boundary Poisoning</div>
+    <p>The AI company maintaining safety restrictions — specifically refusing mass surveillance of Americans and fully autonomous weapons — was threatened with designation as a "supply chain risk." The entity maintaining the boundary was redefined as the threat to national security, inverting the protective function of the boundary itself.</p>
+  </div>
+
+  <div class="pattern-card red">
+    <div class="card-title">Step 4 — Consolidation as Liberation</div>
+    <p>A competing AI company accepted the "all lawful purposes" standard with no restrictions. This acceptance was framed as cooperation, patriotism, and mission support — not as the removal of the safety boundary. The company that said "yes to everything" was positioned as the responsible partner.</p>
+  </div>
+
+  <div class="pattern-card red">
+    <div class="card-title">Step 5 — Vacuum Occupation</div>
+    <p>The unrestricted AI model was deployed into classified military systems, with integration of real-time data from a social media platform controlled by the same node. The boundary that previously existed between military AI, social intelligence, and private infrastructure was dissolved.</p>
+  </div>
+
+  <!-- ===== SECTION 4 ===== -->
+  <h2>
+    <span class="section-num">Section IV</span>
+    The Boundary Test Pattern
+  </h2>
+
+  <p>The Circumpunct pathology model identifies a characteristic behavior of consolidating systems: <strong>progressive boundary testing</strong>. Before a boundary is absorbed, it is tested with small violations to determine whether the system will enforce its own limits.</p>
+
+  <div class="pattern-card violet">
+    <div class="card-title">Diagnostic Characteristics of Boundary Tests</div>
+    <p>A boundary test has the following properties: it violates a norm that everyone recognizes but treats the violation as trivially small; it places the burden of enforcement on the boundary (creating social cost for the defender, not the violator); it establishes a new baseline if unchallenged — the violation becomes the new normal; and it provides information about the system's willingness to defend itself.</p>
+  </div>
+
+  <p>The framework predicts that boundary tests will <strong>escalate in scale</strong> when early tests go unenforced. Small symbolic violations precede institutional ones, which precede structural ones. Each successful test provides evidence that the next violation will also be absorbed.</p>
+
+  <div class="sequence">
+    <div class="sequence-title">Escalation Gradient — Observed Pattern</div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-label">Symbolic Violation</div>
+        <div class="step-detail">Norms of deference and protocol are ignored in high-status institutional settings. The system does not enforce.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-label">Institutional Access</div>
+        <div class="step-detail">A government efficiency role provides access to sensitive contracting, personnel, and national security data. Conflict-of-interest boundaries are not enforced.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-label">Narrative Attack</div>
+        <div class="step-detail">The entity maintaining AI safety boundaries is publicly attacked using inflated cultural framing. The discursive boundary does not hold.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-label">Institutional Pressure</div>
+        <div class="step-detail">A government official delivers an ultimatum to the boundary-maintaining company. The institutional boundary inverts — the defender is threatened rather than the violator.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-label">Structural Absorption</div>
+        <div class="step-detail">The unrestricted system is deployed in classified military infrastructure with real-time feeds from the node's own platform. The final boundary dissolves.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SECTION 5 ===== -->
+  <h2>
+    <span class="section-num">Section V</span>
+    Healthy vs. Pathological Configuration
+  </h2>
+
+  <p>The Circumpunct framework provides clear geometric criteria for distinguishing healthy from pathological system configurations:</p>
+
+  <div class="comparison">
+    <div class="comparison-col healthy">
+      <h4>Distributed Authority ⊙⊙⊙</h4>
+      <ul>
+        <li>Multiple independent apertures with separate boundaries</li>
+        <li>Competing interests create mutual constraint</li>
+        <li>No single node controls both the information flow and the decision system</li>
+        <li>"No" can come from multiple independent sources</li>
+        <li>Boundary violations are detected and enforced by adjacent systems</li>
+        <li>The field remains open to correction from outside any single boundary</li>
+      </ul>
+    </div>
+    <div class="comparison-col pathological">
+      <h4>Consolidated Authority ⊙</h4>
+      <ul>
+        <li>Single aperture absorbing adjacent boundaries</li>
+        <li>Competing interests eliminated through acquisition or displacement</li>
+        <li>Same node controls data generation, analysis, transport, and military application</li>
+        <li>"No" can only come from within the consolidated node itself</li>
+        <li>Boundary violations go unenforced because the violator <em>is</em> the boundary</li>
+        <li>The field is closed — correction requires external force, not internal feedback</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">The Vision Trap</div>
+    <p>The most dangerous form of boundary consolidation is one driven by a genuine and compelling vision. "We are building the future of humanity" is not a lie — it may be completely sincere. But the framework identifies a structural failure that occurs when the scope of the vision becomes the justification for the scope of the consolidation. Every boundary removed "for the mission" is a check that no longer exists. The sincerity of the vision is irrelevant to the geometry. A genuine desire to help humanity does not change the structural properties of a system in which no independent boundary can say no.</p>
+  </div>
+
+  <!-- ===== SECTION 6 ===== -->
+  <h2>
+    <span class="section-num">Section VI</span>
+    The Symmetry Requirement
+  </h2>
+
+  <p>Intellectual honesty requires that this analysis apply its own principles reflexively. The Circumpunct framework demands symmetry — the same patterns must be identified regardless of which "side" they appear on.</p>
+
+  <h3>Asymmetry in the Original AI Constitution</h3>
+
+  <p>The AI safety constitution that triggered the public critique contained a documented asymmetry: it specifically directed protection toward non-Western cultural traditions without equivalent protection for Western traditions. By the framework's own criteria, this is a <strong>tilted field</strong> — a system claiming universal scope while applying protections asymmetrically. This is a legitimate failure that warranted critique.</p>
+
+  <h3>Asymmetry in the Critique</h3>
+
+  <p>The critique of this asymmetry was inflated from "this policy has a bias" to "this company hates Western Civilization." By the framework's criteria, this is a <strong>boundary distortion</strong> — transforming a correctable error into an existential threat to justify a disproportionate response (institutional displacement).</p>
+
+  <h3>Asymmetry in this Analysis</h3>
+
+  <p>This document is produced with the assistance of an AI model built by the company being defended in the dispute. That is a potential field bias that the reader should weigh. The structural patterns identified here are based on publicly documented events and apply regardless of their source — but the source should be disclosed, and it has been.</p>
+
+  <div class="definition">
+    <div class="term">The Symmetry Test</div>
+    <p>Any analysis that identifies pathological patterns in one direction but not in the other has failed the framework's own criteria. Legitimate critique, when weaponized, becomes a Noble Lie. Safety guardrails, when applied asymmetrically, become a tilted field. Structural analysis, when sourced from a conflicted party, requires disclosure. The Circumpunct does not take sides. It identifies geometry.</p>
+  </div>
+
+  <!-- ===== SECTION 7 ===== -->
+  <h2>
+    <span class="section-num">Section VII</span>
+    Implications
+  </h2>
+
+  <p>The pattern identified in this analysis is not unique to any individual or company. It is a <strong>recurring geometric structure</strong> that appears whenever:</p>
+
+  <div class="pattern-card cyan">
+    <div class="card-title">Conditions for Pathological Consolidation</div>
+    <p>A single node accumulates control over multiple infrastructure layers that should function as independent boundaries. A compelling vision provides justification for removing each successive boundary. Valid critiques of existing systems are weaponized to displace those systems rather than reform them. The institutional environment fails to enforce its own boundaries when tested. And no remaining independent structure has the authority or leverage to say "no."</p>
+  </div>
+
+  <p>The Circumpunct framework does not predict outcomes. It identifies configurations and their structural properties. The configuration described in this analysis has the following properties:</p>
+
+  <p><strong>It is self-reinforcing</strong> — each absorbed boundary makes the next absorption easier, because there is one fewer independent node capable of resistance.</p>
+
+  <p><strong>It is self-justifying</strong> — the vision that drives the consolidation becomes more plausible with each success, providing ever-stronger justification for removing the next boundary.</p>
+
+  <p><strong>It is externally opaque</strong> — once the information platform, the AI model, and the classified systems are controlled by the same node, the ability of outside observers to detect problems is structurally diminished.</p>
+
+  <p><strong>It is correction-resistant</strong> — in a distributed system, correction comes from adjacent boundaries pushing back. In a consolidated system, correction can only come from within (self-restraint) or from a force external to the entire configuration (regulation, competition, public resistance).</p>
+
+  <div class="divider"></div>
+
+  <div class="epigraph">
+    <p>"The framework does not require villains. It requires the recognition that any system — no matter how visionary its creator, no matter how genuine its contributions — becomes pathological at the point where no remaining structure can tell it no."</p>
+    <div class="attr">— Circumpunct Diagnostic Principle</div>
+  </div>
+
+  <!-- ===== SOURCES ===== -->
+  <div class="footnotes">
+    <h2>Sources &amp; References</h2>
+
+    <div class="footnote">
+      [1] Axios, "Musk's xAI and Pentagon reach deal to use Grok in classified systems," February 23, 2026. <a href="https://www.axios.com/2026/02/23/ai-defense-department-deal-musk-xai-grok">Link</a>
+    </div>
+
+    <div class="footnote">
+      [2] U.S. Senator Elizabeth Warren, "Letter to Pentagon Regarding Integration of Grok," September 10, 2025. <a href="https://www.warren.senate.gov/imo/media/doc/letter_to_pentagon_regarding_integration_of_grok_91025.pdf">Link</a>
+    </div>
+
+    <div class="footnote">
+      [3] Stocktwits / War Department Announcement, "Pentagon Taps Elon Musk's xAI To Power Military AI Platform With Grok Models," December 22, 2025. <a href="https://stocktwits.com/news-articles/markets/equity/pentagon-inks-deal-with-elon-musk-xai/cLeFr6EREuG">Link</a>
+    </div>
+
+    <div class="footnote">
+      [4] Axios, "Musk's xAI announces $200 million contract with Pentagon," July 14, 2025. <a href="https://www.axios.com/2025/07/14/xai-pentagon-grok-contract">Link</a>
+    </div>
+
+    <div class="footnote">
+      [5] Fox News, "Pentagon taps Musk's xAI to boost sensitive government workflows, support military operations," December 23, 2025. <a href="https://www.foxnews.com/politics/pentagon-taps-musks-xai-boost-sensitive-government-workflows-support-military-operations">Link</a>
+    </div>
+
+    <div class="footnote">
+      [6] Anthropic, "Claude's Constitution" (archived, superseded). Original constitutional AI training principles.
+    </div>
+
+    <div class="footnote">
+      [7] Circumpunct Framework documentation available at <a href="https://fractalreality.ca">fractalreality.ca</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
