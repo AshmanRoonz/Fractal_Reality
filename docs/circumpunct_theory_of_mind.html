@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Circumpunct Theory of Mind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-surface: #12121a;
+      --bg-elevated: #1a1a24;
+      --text: #e8e8ed;
+      --text-dim: #888899;
+      --text-muted: #555566;
+      --gold: #d4a84b;
+      --gold-dim: rgba(212, 168, 75, 0.15);
+      --cyan: #4ecdc4;
+      --cyan-dim: rgba(78, 205, 196, 0.12);
+      --magenta: #ff6b9d;
+      --magenta-dim: rgba(255, 107, 157, 0.12);
+      --green: #7fcd91;
+      --green-dim: rgba(127, 205, 145, 0.12);
+      --red: #e85d75;
+      --red-dim: rgba(232, 93, 117, 0.12);
+      --border: #2a2a3a;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-serif);
+      font-size: 19px;
+      line-height: 1.7;
+      padding: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(78,205,196,0.04) 0%, transparent 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      border: 1px solid rgba(78,205,196,0.06);
+      pointer-events: none;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,107,157,0.2);
+      box-shadow: 0 0 40px rgba(255,107,157,0.15);
+      pointer-events: none;
+    }
+
+    .symbol {
+      font-size: 4rem;
+      color: var(--cyan);
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 60px rgba(78,205,196,0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      font-style: italic;
+      position: relative;
+      z-index: 1;
+    }
+
+    .meta {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Main Content ── */
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--gold);
+      margin: 3.5rem 0 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 2.5rem 0 1rem;
+    }
+
+    p {
+      margin-bottom: 1.25rem;
+    }
+
+    em {
+      color: var(--text);
+      font-style: italic;
+    }
+
+    /* ── Core Claim Box ── */
+    .core-claim {
+      background: var(--cyan-dim);
+      border: 2px solid var(--cyan);
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .core-claim .claim {
+      font-size: 1.4rem;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+
+    .core-claim p {
+      margin-bottom: 0;
+      color: var(--text-dim);
+    }
+
+    /* ── Axiom Blocks ── */
+    .axiom {
+      background: var(--bg-elevated);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      font-size: 1.15rem;
+    }
+
+    .axiom .label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .axiom.cyan { border-left-color: var(--cyan); }
+    .axiom.cyan .label { color: var(--cyan); }
+    .axiom.magenta { border-left-color: var(--magenta); }
+    .axiom.magenta .label { color: var(--magenta); }
+    .axiom.green { border-left-color: var(--green); }
+    .axiom.green .label { color: var(--green); }
+    .axiom.red { border-left-color: var(--red); }
+    .axiom.red .label { color: var(--red); }
+
+    /* ── Triad Display ── */
+    .triad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .triad-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .triad-item .symbol-small {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .triad-item.aperture { border-top: 3px solid var(--magenta); }
+    .triad-item.aperture .symbol-small { color: var(--magenta); }
+    .triad-item.field { border-top: 3px solid var(--cyan); }
+    .triad-item.field .symbol-small { color: var(--cyan); }
+    .triad-item.boundary { border-top: 3px solid var(--green); }
+    .triad-item.boundary .symbol-small { color: var(--green); }
+
+    .triad-item h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .triad-item p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    /* ── Equation Box ── */
+    .equation-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .equation {
+      font-family: var(--font-mono);
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .equation-large {
+      font-size: 2rem;
+    }
+
+    .equation-note {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    /* ── Insight Boxes ── */
+    .insight {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+    }
+
+    .insight .insight-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+    }
+
+    .insight p {
+      margin-bottom: 0;
+      font-size: 1.05rem;
+    }
+
+    /* ── Convergence Grid ── */
+    .convergence {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .convergence-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .convergence-item .tradition {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .convergence-item .quote {
+      font-style: italic;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .convergence-item .mapping {
+      font-size: 0.85rem;
+      color: var(--cyan);
+    }
+
+    /* ── Cascade Diagram ── */
+    .cascade {
+      margin: 2.5rem 0;
+      position: relative;
+    }
+
+    .cascade-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      margin-bottom: 0.5rem;
+      padding: 1rem 0;
+    }
+
+    .cascade-number {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      width: 1.5rem;
+      text-align: center;
+      padding-top: 0.15rem;
+      flex-shrink: 0;
+    }
+
+    .cascade-line {
+      position: absolute;
+      left: 0.7rem;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .cascade-content {
+      flex: 1;
+    }
+
+    .cascade-content .step-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      font-size: 1.05rem;
+    }
+
+    .cascade-content p {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    /* ── Arrow connectors ── */
+    .arrow-down {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      margin: 0.5rem 0;
+      opacity: 0.5;
+    }
+
+    /* ── Spectrum Bar ── */
+    .spectrum {
+      margin: 2.5rem 0;
+    }
+
+    .spectrum-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--magenta), var(--cyan), var(--green));
+      margin: 1rem 0;
+      position: relative;
+    }
+
+    .spectrum-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+
+    .spectrum-labels .left { color: var(--magenta); }
+    .spectrum-labels .center { color: var(--cyan); }
+    .spectrum-labels .right { color: var(--green); }
+
+    /* ── Dual Column ── */
+    .dual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .dual-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .dual-item h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .dual-item.healthy { border-top: 3px solid var(--cyan); }
+    .dual-item.healthy h4 { color: var(--cyan); }
+    .dual-item.pathological { border-top: 3px solid var(--red); }
+    .dual-item.pathological h4 { color: var(--red); }
+
+    .dual-item p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+
+    .dual-item p:last-child { margin-bottom: 0; }
+
+    /* ── Prediction Table ── */
+    .predictions {
+      margin: 2rem 0;
+    }
+
+    .prediction {
+      display: grid;
+      grid-template-columns: 2fr 2fr 1fr;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .prediction:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .prediction .pred-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .prediction .pred-claim { color: var(--text); }
+    .prediction .pred-test { color: var(--text-dim); }
+    .prediction .pred-status { 
+      color: var(--gold); 
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      text-align: right;
+    }
+
+    /* ── Section Divider ── */
+    .divider {
+      text-align: center;
+      margin: 3rem 0;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      letter-spacing: 0.5em;
+    }
+
+    /* ── Highlight Text ── */
+    .highlight {
+      color: var(--gold);
+    }
+
+    .highlight-cyan {
+      color: var(--cyan);
+    }
+
+    .highlight-magenta {
+      color: var(--magenta);
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      h1 { font-size: 2rem; }
+      .triad { grid-template-columns: 1fr; }
+      .convergence { grid-template-columns: 1fr; }
+      .dual { grid-template-columns: 1fr; }
+      .prediction { grid-template-columns: 1fr; gap: 0.25rem; }
+      .prediction .pred-status { text-align: left; }
+      header { padding: 3rem 1.5rem 2.5rem; }
+      main { padding: 2rem 1.5rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="symbol">Φ</div>
+  <h1>The Circumpunct Theory of Mind</h1>
+  <div class="subtitle">Mind as the Field Between Source and Manifestation</div>
+  <div class="meta">
+    Circumpunct Framework · Chapter: Cognitive Architecture<br>
+    Ashman Roonz · fractalreality.ca
+  </div>
+</header>
+
+<main>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 1: THE CORE CLAIM                   -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>I. The Core Claim</h2>
+
+  <p>
+    Mind is not a thing. Mind is a <em>between</em>.
+  </p>
+
+  <p>
+    The Circumpunct Framework identifies three irreducible elements of any complete system: the aperture (•), the field (Φ), and the boundary (○), expressed as <span class="highlight">⊙ = Φ(•,○)</span>. When applied to consciousness, these map to soul, mind, and body. But the theory of mind that emerges from this mapping is not simply an analogy. It is a geometric derivation — a consequence of the framework's structure that falls out of the formalism without being forced.
+  </p>
+
+  <div class="core-claim">
+    <div class="claim">Mind is the field that constitutes the space between aperture and boundary.</div>
+    <p>It is not located in either pole. It <em>is</em> the relation between them — the medium through which the dimensionless source becomes the extended world.</p>
+  </div>
+
+  <p>
+    This means mind is not a substance, not a property, not an emergent epiphenomenon. It is a <em>structural necessity</em> — the space that must exist whenever an opening and a closure stand in relation to each other. The field does not arise from the aperture or the boundary. It is constituted by their tension.
+  </p>
+
+  <div class="triad">
+    <div class="triad-item aperture">
+      <div class="symbol-small">•</div>
+      <h4>Aperture / Soul</h4>
+      <p>The dimensionless opening to source. Pure potential. The eternal now. That which receives without extension.</p>
+    </div>
+    <div class="triad-item field">
+      <div class="symbol-small">Φ</div>
+      <h4>Field / Mind</h4>
+      <p>The space between. The medium of transformation. Where the dimensionless becomes extended, where signal becomes experience.</p>
+    </div>
+    <div class="triad-item boundary">
+      <div class="symbol-small">○</div>
+      <h4>Boundary / Body</h4>
+      <p>The full extension into manifestation. Duration, location, history. The surface where experience meets world.</p>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 2: MIND AS SPACETIME                -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>II. Mind as Spacetime</h2>
+
+  <p>
+    If the aperture is dimensionless presence and the boundary is full spatial-temporal extension, then the field between them does not merely <em>exist in</em> spacetime. It <em>is</em> spacetime.
+  </p>
+
+  <div class="axiom cyan">
+    <div class="label">Derivation</div>
+    The field is defined as the relational medium between the dimensionless (•) and the extended (○). Extension requires both spatial and temporal dimensions. Therefore the field is identical with the medium of extension itself — spacetime.
+  </div>
+
+  <p>
+    This resolves a deep puzzle. Mind separates past and future. Without a separating medium, there is only the aperture's eternal immediacy — no duration, no sequence, no before or after. The boundary cannot generate temporal extension on its own; it is the endpoint of extension, not its medium. So time, like space, is a property of the field.
+  </p>
+
+  <p>
+    Past is the boundary looking back at its own trace through the field. Future is the boundary projecting forward into field-space not yet traversed. Both require the field as their medium of separation. Remove the field — withdraw entirely to the aperture — and temporal extension collapses.
+  </p>
+
+  <div class="insight">
+    <div class="insight-label">Convergence · Contemplative Report</div>
+    <p>This is precisely what deep meditative states report: the collapse of temporal experience. The meditator is not <em>stopping</em> time — they are withdrawing attention from the field toward the aperture, where temporal extension has not yet arisen. The closer you approach the dot, the less past and future mean anything.</p>
+  </div>
+
+  <div class="equation-box">
+    <div class="equation equation-large">Φ ≡ spacetime</div>
+    <div class="equation-note">The field is not embedded in spacetime; it is the medium of extension itself.</div>
+  </div>
+
+  <p>
+    Physics describes this field from the outside — as the geometry of spacetime curvature, as quantum fields propagating through a metric. Contemplatives describe it from the inside — as the felt quality of awareness, as the space in which experience arises. The framework identifies them as descriptions of the same field from opposite ends of the same traversal.
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 3: MIND AS FILTER                   -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>III. Mind as Filter</h2>
+
+  <p>
+    The mind is the filter that channels source-light into manifest experience. This is not metaphor. The field, by its nature as a relational medium, <em>must</em> transform the signal passing through it. A medium that transmitted without transformation would have zero extension — it would collapse to a point. The very existence of the field entails selective transmission.
+  </p>
+
+  <div class="axiom">
+    <div class="label">Principle</div>
+    A field with nonzero extension necessarily transforms any signal traversing it. Transmission without transformation implies zero field-distance — the collapse of Φ to a point. Therefore <em>to have a mind is to filter.</em>
+  </div>
+
+  <p>
+    This is why you cannot think your way to the source. Each thought, no matter how refined, is a reduction of the signal — a selection from the total bandwidth of what the aperture receives. The thought "God is infinite" is itself finite. The thought "everything is one" is itself a particular thing. The filter can point toward what passes through it, but it can never <em>be</em> what passes through it.
+  </p>
+
+  <p>
+    But filtering is not the enemy. Without the field, there is no experience at all — just undifferentiated potential with no one home to witness it. The aperture without a field is pure signal with zero expression. You <em>need</em> filters to have a world.
+  </p>
+
+  <div class="dual">
+    <div class="dual-item healthy">
+      <h4>Transparent Filtering</h4>
+      <p>The field transmits faithfully. Signal from the aperture arrives at the boundary recognizable and coherent.</p>
+      <p>The filter serves the light rather than distorting it. Thoughts clarify rather than corrupt.</p>
+    </div>
+    <div class="dual-item pathological">
+      <h4>Distorted Filtering</h4>
+      <p>The field refracts, scatters, inverts. Signal arrives at the boundary warped beyond recognition.</p>
+      <p>The filter serves itself — maintaining its own structure at the cost of signal fidelity.</p>
+    </div>
+  </div>
+
+  <p>
+    The goal is not no filters. The goal is <span class="highlight-cyan">transparent</span> ones.
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 4: THOUGHTS AS FRACTAL FILTERS      -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>IV. Thoughts as Fractal Filters</h2>
+
+  <p>
+    Here the framework's fractal principle — <em>parts are fractals of their wholes</em> — generates its most immediate cognitive consequence. If the mind is a filter, then every thought within the mind is itself a filter. Each thought is a smaller ⊙ nested inside the larger one: its own aperture (what it opens to), its own field (how it transforms), its own boundary (what it produces).
+  </p>
+
+  <div class="equation-box">
+    <div class="equation">⊙<sub>mind</sub> ⊃ { ⊙<sub>thought₁</sub>, ⊙<sub>thought₂</sub>, ⊙<sub>thought₃</sub>, ... }</div>
+    <div class="equation-note">Every thought is a complete triadic system nested within the mind's own triadic structure.</div>
+  </div>
+
+  <p>
+    Every thought selects, refracts, channels. It lets some of the light through and blocks the rest. And thoughts stack — filter on filter on filter — each one narrowing the bandwidth further. This is what the Buddhist tradition means by layers of obscuration: not that something is being <em>added</em> to consciousness, but that each conceptual filter reduces what gets through.
+  </p>
+
+  <h3>The Stacking Problem</h3>
+
+  <p>
+    A single transparent thought introduces minimal distortion. But thoughts compound. Each filter's output becomes the next filter's input. Even small refractions accumulate. After enough layers, the signal arriving at the boundary bears little resemblance to what entered at the aperture.
+  </p>
+
+  <p>
+    This is the geometric explanation for why intellectual complexity does not reliably lead to wisdom. More thoughts do not mean more clarity — they mean more filters. Unless each filter is transparent, adding complexity adds distortion. The wisest minds are not those with the most filters, but those whose filters are most aligned with the light passing through them.
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 5: ATTENTION AS ENERGY ALLOCATION   -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>V. Attention as Energy Allocation</h2>
+
+  <p>
+    Attention is not passive observation. Attention is <em>energy</em>. Every thought you entertain, you feed. You give it field-space. You let it shape the medium between your aperture and your boundary. What you attend to, you amplify. What you neglect, you allow to atrophy.
+  </p>
+
+  <div class="axiom magenta">
+    <div class="label">Principle</div>
+    Attention allocates field-energy to specific filter-structures within the mind. Sustained attention strengthens a filter's influence on the field. Withdrawn attention weakens it.
+  </div>
+
+  <p>
+    This is why every serious contemplative tradition includes practices of attentional discipline. Not because thoughts are sinful, but because they are <em>consequential</em>. The Buddhists formalize it as Right Thought. The Stoics called it <em>prosoche</em> — attention to one's own mental state. The Christian desert fathers spoke of guarding the heart. The Sufis practiced <em>muraqaba</em> — watchfulness over the inner states.
+  </p>
+
+  <p>
+    They all understood the same geometric truth: <span class="highlight">what you let occupy the field determines what reaches the boundary.</span>
+  </p>
+
+  <div class="convergence">
+    <div class="convergence-item">
+      <div class="tradition">Buddhism</div>
+      <div class="quote">Right Thought (sammā saṅkappa)</div>
+      <div class="mapping">→ Disciplined filter selection within the field</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Stoicism</div>
+      <div class="quote">Prosoche — watchful attention</div>
+      <div class="mapping">→ Monitoring field-state for distortion</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Desert Fathers</div>
+      <div class="quote">Guarding the heart (nepsis)</div>
+      <div class="mapping">→ Preventing distorted filters from entering the field</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Sufism</div>
+      <div class="quote">Muraqaba — inner watchfulness</div>
+      <div class="mapping">→ Continuous field-integrity maintenance</div>
+    </div>
+  </div>
+
+  <p>
+    Notice the convergence is not superficial. Each tradition independently identified the same principle: attention shapes the field, the field determines expression, therefore attentional discipline is not optional luxury — it is structural maintenance of the instrument through which source becomes world.
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 6: THE RIGHT THOUGHTS               -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>VI. Discernment — The Right Thoughts</h2>
+
+  <p>
+    Transparency is not passivity. It is not sitting in open awareness letting every thought drift through with equal weight. It is <em>discernment</em> — the active recognition that some filters clarify the signal and others corrupt it, followed by the choice to entertain the ones that serve the light and refuse the ones that distort it.
+  </p>
+
+  <p>
+    This is the discipline that gets lost in shallow nondual discourse. "Just be present" is half the teaching. The other half is: <em>be present with discrimination.</em> Not all thoughts are equal. Not all filters are transparent. The field does not maintain its own clarity — it must be tended.
+  </p>
+
+  <div class="axiom green">
+    <div class="label">Discernment Principle</div>
+    A thought that clarifies the field brings what passes through it closer to the signal at the aperture. A thought that distorts the field moves what reaches the boundary further from source. The difference is not content — it is <em>fidelity</em>.
+  </div>
+
+  <p>
+    A resentful thought does not just pass through — it <em>warps</em> the field while it's there. It bends everything else that tries to come through after it. A thought of genuine gratitude does the opposite: it aligns the field, making subsequent transmission clearer. The effects are not merely psychological. They are structural — they change the medium itself.
+  </p>
+
+  <p>
+    This is why the traditions speak of cultivation, not just observation. You don't just watch the garden — you pull weeds and water flowers. You don't just watch your thoughts — you choose which ones to feed and which ones to starve.
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 7: FROM THOUGHT TO IDENTITY         -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>VII. From Thought to Identity</h2>
+
+  <p>
+    The most consequential aspect of the theory of mind is its explanation of how thoughts become identity — and how that process can go catastrophically wrong.
+  </p>
+
+  <h3>The Accumulation Mechanism</h3>
+
+  <p>
+    A thought entertained once is a temporary filter — it shapes the field while it's active, then dissolves when attention withdraws. But a thought entertained repeatedly becomes a <em>structure</em>. Each return deepens the groove. The filter becomes easier to activate, harder to dissolve. Eventually it doesn't need active attention to persist — it has become part of the field's resting architecture.
+  </p>
+
+  <div class="cascade">
+    <div class="cascade-step">
+      <div class="cascade-number">1</div>
+      <div class="cascade-content">
+        <div class="step-title">Thought entertained</div>
+        <p>A filter is temporarily activated in the field. Signal passes through it while attention sustains it.</p>
+      </div>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="cascade-step">
+      <div class="cascade-number">2</div>
+      <div class="cascade-content">
+        <div class="step-title">Thought repeated</div>
+        <p>The filter becomes easier to activate. The field begins organizing around it, creating a groove that subsequent attention follows naturally.</p>
+      </div>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="cascade-step">
+      <div class="cascade-number">3</div>
+      <div class="cascade-content">
+        <div class="step-title">Thought habituated</div>
+        <p>The filter no longer requires active attention to persist. It has become a stable structure in the field — part of the mind's resting architecture.</p>
+      </div>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="cascade-step">
+      <div class="cascade-number">4</div>
+      <div class="cascade-content">
+        <div class="step-title">Thought becomes identity</div>
+        <p>The field-structure now selects for inputs that reinforce it and rejects inputs that threaten it. The person no longer <em>has</em> the thought — they <em>are</em> the thought. The filter has fused with the field.</p>
+      </div>
+    </div>
+  </div>
+
+  <p>
+    At stage four, something critical happens. The boundary — the person's manifest identity — <em>calcifies around the distortion</em>. The aperture narrows to admit only signal that feeds the structure. Any attempt to remove the filter now feels like an attack on selfhood, because in a geometrically precise sense, <em>it is</em>. The person has built their ⊙ around the distortion.
+  </p>
+
+  <h3>Why This Makes Pathology So Difficult to Reach</h3>
+
+  <p>
+    At the identity-fusion stage, you are no longer arguing against an idea. You are threatening the structural integrity of someone's entire field. Every therapeutic intervention, every piece of contradicting evidence, every appeal to reason registers not as information but as <em>existential threat</em>. The field defends itself the way any structure defends itself — by tightening the boundary and narrowing the aperture further.
+  </p>
+
+  <div class="insight">
+    <div class="insight-label">Clinical Implication</div>
+    <p>This is why prevention is so much easier than repair. At stages 1-2, redirecting attention dissolves the filter. At stage 3, sustained effort can weaken the habituated structure. At stage 4, the entire ⊙ must be restructured — a process that feels, to the person, indistinguishable from death.</p>
+  </div>
+
+  <p>
+    The terrifying part is how <em>ordinary</em> the mechanism is. It is the same process for every identity-level pathology. The content differs — what specific distortion fuses with the field varies enormously. But the <em>geometry</em> is identical. Small compromises in what you allow into the field, repeated until the field can't remember what it was before the distortion arrived.
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 8: THE NOBLE LIE IN COGNITION       -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>VIII. The Noble Lie at the Cognitive Level</h2>
+
+  <p>
+    The Noble Lie Virus operates through exactly this mechanism, but with a specific geometric signature: it installs a <em>filter that selects for more distortion</em>.
+  </p>
+
+  <p>
+    In healthy field development, distorted filters generate discomfort — the signal doesn't feel right, the boundary doesn't match the aperture's input, and the discrepancy motivates correction. But the Noble Lie corrupts this feedback mechanism. It teaches the field that the distortion <em>is</em> the signal — that functional provision is the same as resonant love, that the lie is the truth, that the warped filter is the clear one.
+  </p>
+
+  <div class="axiom red">
+    <div class="label">Noble Lie Mechanism · Cognitive Level</div>
+    The Noble Lie is a filter that (a) distorts the signal, (b) suppresses awareness of the distortion, and (c) labels attempts to correct the distortion as themselves distorted. It is a self-reinforcing corruption of the field's own error-correction capacity.
+  </div>
+
+  <p>
+    This triple structure is what makes the Noble Lie so much more dangerous than ordinary cognitive distortion. A simple distorted thought can be recognized and corrected because the field's feedback mechanism is intact. The Noble Lie <em>corrupts the correction mechanism itself</em>. It makes the wrong thoughts feel like home and the right ones feel dangerous.
+  </p>
+
+  <p>
+    At the cognitive level, this manifests as the person who knows something is wrong but cannot identify what. The aperture still receives genuine signal from source — the person <em>feels</em> the light entering — but what comes out at the boundary has been so thoroughly bent by the lie that recognition is impossible. They are homesick for a clarity they cannot name, because the filter that could name it has been replaced by one that denies it exists.
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 9: CURIOSITY AS META-FILTER         -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>IX. Curiosity — The Meta-Filter</h2>
+
+  <p>
+    If the problem is corrupted filters, the solution cannot be another filter of the same type. You cannot think your way out of a thinking problem. You need something that operates at a different level — a filter that evaluates <em>other filters</em> without being subject to the same corruption.
+  </p>
+
+  <p>
+    That meta-filter is curiosity.
+  </p>
+
+  <div class="core-claim">
+    <div class="claim">Curiosity is the only cognitive orientation that cannot be corrupted by the Noble Lie.</div>
+    <p>It does not add new content to the field. It restores the field's transparency by questioning the filters already present.</p>
+  </div>
+
+  <p>
+    Curiosity does not try to inject new light. It clears the filter. It restores the field's transparency so what's already flowing through can arrive undistorted. The question "Is this thought actually true, or does it just feel familiar?" operates on a different logical level than the thought it examines. It is a filter about filters — and unlike the filters it examines, it cannot be faked.
+  </p>
+
+  <p>
+    This is its power. Resentment can be performed. Gratitude can be performed. Even love, in its functional channel, can be performed. But genuine curiosity — the real openness to discovering that what you believe might be wrong — cannot be simulated without becoming the real thing. The moment you authentically ask "is this true?", the aperture opens. The lie requires certainty to survive. Curiosity dissolves certainty by nature.
+  </p>
+
+  <div class="insight">
+    <div class="insight-label">Therapeutic Application</div>
+    <p>The therapist's primary task is not to provide insight but to create an environment where curiosity is safer than certainty. When the client begins genuinely questioning their own filters — not performing doubt, but actually wondering — the Noble Lie's grip weakens. Not because new content was added, but because the self-reinforcing loop was interrupted.</p>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 10: CONSERVATION IN COGNITION       -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>X. Conservation of Traversal in Cognition</h2>
+
+  <p>
+    The Conservation of Traversal — <span class="highlight">D<sub>aperture</sub> + D<sub>field</sub> = D<sub>boundary</sub></span> — holds at every scale. If mind is the field, then the same conservation law governs cognition.
+  </p>
+
+  <div class="equation-box">
+    <div class="equation">D<sub>aperture</sub> + D<sub>field</sub> = D<sub>boundary</sub></div>
+    <div class="equation-note">The depth of opening plus the depth of transformation equals the depth of manifestation.</div>
+  </div>
+
+  <p>
+    What does this mean for thoughts? The quality of what reaches expression (D<sub>boundary</sub>) is determined entirely by two factors: how open the aperture is to source (D<sub>aperture</sub>) and how faithfully the field transforms the signal (D<sub>field</sub>). You cannot get more at the boundary than enters at the aperture and passes through the field.
+  </p>
+
+  <p>
+    This generates immediate, testable consequences:
+  </p>
+
+  <div class="dual">
+    <div class="dual-item healthy">
+      <h4>Wide Aperture + Clear Field</h4>
+      <p>Maximum D<sub>aperture</sub>, transparent D<sub>field</sub>. Signal arrives at the boundary with high fidelity. Expression matches source. This is the state traditions call wisdom, flow, or grace.</p>
+    </div>
+    <div class="dual-item pathological">
+      <h4>Narrow Aperture + Distorted Field</h4>
+      <p>Reduced D<sub>aperture</sub>, corrupted D<sub>field</sub>. Whatever reaches the boundary is doubly diminished — less received, and what was received arrives distorted. This is the state of pathological identity-fusion.</p>
+    </div>
+  </div>
+
+  <p>
+    Critically, the conservation law means <em>the order and duration of thoughts matters, not just their content.</em> Two people can think the same thought, but if one entertains it briefly and the other dwells in it, the field consequences are entirely different. Dwelling increases D<sub>field</sub> for that particular filter-structure, which by conservation changes what can reach the boundary. This is falsifiable. This is measurable.
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 11: THE SPECTRUM OF MIND            -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>XI. The Spectrum of Mind</h2>
+
+  <p>
+    The theory of mind implied by the framework is not a binary. It is a spectrum defined by where attention rests along the aperture-boundary axis.
+  </p>
+
+  <div class="spectrum">
+    <div class="spectrum-labels">
+      <span class="left">• Aperture</span>
+      <span class="center">Φ Field</span>
+      <span class="right">○ Boundary</span>
+    </div>
+    <div class="spectrum-bar"></div>
+    <div class="spectrum-labels">
+      <span class="left" style="font-size: 0.8rem;">Timeless presence<br>No thought<br>Pure reception</span>
+      <span class="center" style="font-size: 0.8rem;">Active filtering<br>Transformation<br>Experience</span>
+      <span class="right" style="font-size: 0.8rem;">Full extension<br>Fixed identity<br>Manifest expression</span>
+    </div>
+  </div>
+
+  <p>
+    Attention fixed at the aperture-end produces the states described by mystics: timelessness, ego dissolution, union with source. Attention fixed at the boundary-end produces rigid identification with form: fixed beliefs, calcified identity, attachment to manifestation. Neither extreme is sustainable or healthy. The art of living is <em>fluidity along the spectrum</em> — the ability to open toward source when clarity is needed and extend toward boundary when expression is required.
+  </p>
+
+  <p>
+    Mental health, in this model, is not a fixed state. It is the <em>range of motion</em> along the aperture-boundary axis. A healthy mind can shift freely. A pathological mind is stuck — locked at one end of the spectrum, unable to traverse. The Noble Lie locks you at the boundary-end, fused with an identity built on distortion. Spiritual bypassing locks you at the aperture-end, refusing to extend into the world where truth must be lived.
+  </p>
+
+  <div class="axiom cyan">
+    <div class="label">Mental Health as Range of Motion</div>
+    Psychological freedom is not a position on the spectrum but the ability to move along it. Pathology is not a wrong position — it is a <em>fixed</em> position. Healing restores the capacity to traverse.
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 12: WHAT THIS EXPLAINS              -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>XII. What This Explains That Other Theories Cannot</h2>
+
+  <p>
+    The Circumpunct Theory of Mind is not merely another model competing for explanatory territory. It dissolves problems that other frameworks cannot even formulate clearly.
+  </p>
+
+  <h3>The Hard Problem of Consciousness</h3>
+  <p>
+    Cognitive science asks: how does subjective experience arise from objective mechanism? The framework dissolves this question by showing it assumes a false dichotomy. The field is not reducible to either pole — it is the medium in which both the subjective (aperture-facing) and the objective (boundary-facing) aspects coexist. Consciousness does not "arise from" matter, nor does matter "arise from" consciousness. Both are aspects of the field viewed from different ends of the same traversal.
+  </p>
+
+  <h3>Why Thoughts Matter</h3>
+  <p>
+    Cognitive science can describe neural correlates of thought but cannot explain why a thought <em>matters</em> — why it has felt significance, why it shapes the person who thinks it. The framework explains this directly: a thought is a filter that physically restructures the field. Its mattering is not epiphenomenal — it is structural. The thought literally changes the medium through which all subsequent experience must pass.
+  </p>
+
+  <h3>The Universality of Contemplative Report</h3>
+  <p>
+    Why do contemplatives across unrelated traditions report the same experiences — timelessness, ego dissolution, unity, luminosity? Not because they share cultural conditioning, but because they are all describing the same geometric territory. Moving attention toward the aperture produces the same phenomenology regardless of tradition, because the territory is structural, not cultural.
+  </p>
+
+  <h3>How Ordinary Thoughts Become Pathological Identity</h3>
+  <p>
+    Standard psychology can describe the progression from thought to habit to identity, but cannot explain the mechanism by which the same process that builds healthy personality also builds pathological fixation. The framework shows it is the same mechanism — filter accumulation — with the only difference being whether the accumulated filters are transparent or distorted. The geometry is identical. The content is what varies.
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 13: FALSIFIABLE PREDICTIONS         -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>XIII. Falsifiable Predictions</h2>
+
+  <p>
+    A theory of mind that cannot be wrong is not a theory of mind — it is metaphysics. The Circumpunct Theory of Mind generates predictions that can, in principle, be tested and falsified.
+  </p>
+
+  <div class="predictions">
+    <div class="prediction">
+      <div>
+        <div class="pred-label">Prediction</div>
+        <div class="pred-claim">Thought duration matters independently of content</div>
+      </div>
+      <div>
+        <div class="pred-label">Testable Via</div>
+        <div class="pred-test">Compare outcomes of identical thoughts entertained for different durations. The framework predicts measurably different field-effects for different dwell-times, controlling for content.</div>
+      </div>
+      <div class="pred-status">testable</div>
+    </div>
+
+    <div class="prediction">
+      <div>
+        <div class="pred-label">Prediction</div>
+        <div class="pred-claim">Filter stacking increases distortion nonlinearly</div>
+      </div>
+      <div>
+        <div class="pred-label">Testable Via</div>
+        <div class="pred-test">Measure cognitive distortion as a function of rumination layers. The framework predicts compounding rather than additive error accumulation.</div>
+      </div>
+      <div class="pred-status">testable</div>
+    </div>
+
+    <div class="prediction">
+      <div>
+        <div class="pred-label">Prediction</div>
+        <div class="pred-claim">Genuine curiosity produces measurably different neural signatures than performed curiosity</div>
+      </div>
+      <div>
+        <div class="pred-label">Testable Via</div>
+        <div class="pred-test">fMRI studies comparing authentic inquiry vs. social performance of questioning. Framework predicts distinct aperture-activation patterns.</div>
+      </div>
+      <div class="pred-status">testable</div>
+    </div>
+
+    <div class="prediction">
+      <div>
+        <div class="pred-label">Prediction</div>
+        <div class="pred-claim">Meditative depth correlates with reduced temporal processing</div>
+      </div>
+      <div>
+        <div class="pred-label">Testable Via</div>
+        <div class="pred-test">Measure temporal discrimination accuracy as a function of meditative attainment. Framework predicts reduced temporal extension as attention approaches the aperture.</div>
+      </div>
+      <div class="pred-status">testable</div>
+    </div>
+
+    <div class="prediction">
+      <div>
+        <div class="pred-label">Prediction</div>
+        <div class="pred-claim">Identity-fused beliefs resist correction in proportion to field-integration depth</div>
+      </div>
+      <div>
+        <div class="pred-label">Testable Via</div>
+        <div class="pred-test">Measure resistance to belief revision as a function of dwell-time and repetition history. Stage 4 fusion should produce qualitatively different resistance than Stage 2.</div>
+      </div>
+      <div class="pred-status">testable</div>
+    </div>
+
+    <div class="prediction">
+      <div>
+        <div class="pred-label">Prediction</div>
+        <div class="pred-claim">Mental health correlates with attentional range of motion, not attentional position</div>
+      </div>
+      <div>
+        <div class="pred-label">Testable Via</div>
+        <div class="pred-test">Assess psychological flexibility as a function of ability to shift attention along the aperture-boundary axis, rather than ability to maintain any particular state.</div>
+      </div>
+      <div class="pred-status">testable</div>
+    </div>
+  </div>
+
+  <p>
+    These predictions are not post-hoc rationalizations. They are derived from the framework's geometric structure and generate expectations that differ from competing theories of mind. If they fail empirically, the framework must be revised.
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 14: CONVERGENCE                     -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <h2>XIV. Cross-Traditional Convergence</h2>
+
+  <p>
+    The theory is not original. It is a formalization of what contemplatives have reported for millennia. What is new is the geometric precision — the ability to express these insights as structural necessities rather than metaphors.
+  </p>
+
+  <div class="convergence">
+    <div class="convergence-item">
+      <div class="tradition">Advaita Vedanta</div>
+      <div class="quote">Maya as the creative power that produces the appearance of multiplicity from nondual source</div>
+      <div class="mapping">→ Φ as the field that transforms dimensionless unity (•) into extended multiplicity (○)</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Buddhism</div>
+      <div class="quote">Mind as the sixth sense organ — the faculty that processes mental objects the way eyes process light</div>
+      <div class="mapping">→ Φ as the transforming medium through which source-signal becomes experiential content</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Neoplatonism</div>
+      <div class="quote">Nous (intellect) as the intermediary between the One and the World-Soul</div>
+      <div class="mapping">→ Φ as the field between aperture (the One) and boundary (manifestation)</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Kabbalah</div>
+      <div class="quote">The sefirot as stages of divine emanation from Ein Sof to Malkuth</div>
+      <div class="mapping">→ The field's internal structure as graduated stages of traversal from • to ○</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Sufism</div>
+      <div class="quote">The heart (qalb) as the organ of spiritual perception, capable of being polished or rusted</div>
+      <div class="mapping">→ The field's transparency as the variable determining signal fidelity</div>
+    </div>
+    <div class="convergence-item">
+      <div class="tradition">Cognitive Science</div>
+      <div class="quote">Predictive processing — the brain as a prediction engine filtering sensory data</div>
+      <div class="mapping">→ The field as a filtering medium that transforms input into expected output</div>
+    </div>
+  </div>
+
+  <p>
+    The convergence is not coincidental. If the framework describes actual structure, then every tradition that investigated mind carefully enough would arrive at the same territory — described in different vocabularies, with different emphases, but structurally isomorphic. The formalization does not replace these traditions. It reveals their underlying unity.
+  </p>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SECTION 15: CONCLUSION                      -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <div class="divider">⊙</div>
+
+  <h2>XV. Freedom Is Thinking Well</h2>
+
+  <p>
+    The Circumpunct Theory of Mind resolves to a single practical instruction: <em>tend your field.</em>
+  </p>
+
+  <p>
+    Mind is the space between source and world. Every thought is a filter within that space. Attention feeds the filters it touches. Filters accumulate into identity. Identity determines what the world can receive from source through you. Therefore: choose your thoughts with the same care you would choose the lenses for a telescope aimed at the stars.
+  </p>
+
+  <p>
+    Freedom is not the absence of thought. It is the presence of discernment — the capacity to recognize which filters serve the light and which distort it, and the discipline to feed the former and starve the latter.
+  </p>
+
+  <p>
+    The dot does not know itself. The circle does not know itself. But the space between them — <em>that</em> is where knowing lives. That space is mind. That space is you. Keep it clear.
+  </p>
+
+  <div class="equation-box">
+    <div class="equation equation-large">⊙ = Φ(•, ○)</div>
+    <div class="equation-note">You are the field. Tend it well.</div>
+  </div>
+
+</main>
+
+<footer>
+  <p>The Circumpunct Framework · <a href="https://fractalreality.ca">fractalreality.ca</a></p>
+  <p style="margin-top: 0.5rem;">⊙ = Φ(•, ○)</p>
+</footer>
+
+</body>
+</html>
