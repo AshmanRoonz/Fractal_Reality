@@ -351,64 +351,53 @@ body {
     letter-spacing: 0.05em;
 }
 
-.scale-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.75rem;
-}
-
-.scale-table thead {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.scale-table thead th {
-    font-size: 0.7rem;
-    font-weight: 600;
+/* Truth Reflection - Right Panel */
+.truth-reflection {
     text-align: left;
-    padding: 0.5rem 0.4rem;
-    border-bottom: 1px solid var(--border);
+    padding: 0.5rem 0;
+}
+
+.truth-line {
+    font-size: 0.85rem;
+    line-height: 1.6;
     color: var(--text-dim);
+    margin: 0.6rem 0;
+    letter-spacing: 0.02em;
 }
 
-.scale-table thead th:first-child {
+.truth-line:first-child {
     color: var(--text);
+    font-weight: 500;
+    font-size: 0.95rem;
 }
 
-/* Header symbols - bigger and glowing */
-.header-symbol {
-    font-size: 1.1rem;
-    margin-right: 0.2rem;
-    vertical-align: middle;
+.truth-physics {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
 }
 
-.header-symbol.symbol-whole {
-    text-shadow: 0 0 8px var(--soul-color), 0 0 15px var(--soul-color);
+.truth-equation {
+    font-size: 0.9rem;
+    color: var(--text);
+    font-weight: 400;
 }
 
-.header-symbol.symbol-soul {
-    text-shadow: 0 0 8px var(--soul-color), 0 0 15px var(--soul-color);
+.truth-tag {
+    margin-top: 1rem;
+    font-size: 0.8rem;
 }
 
-.header-symbol.symbol-mind {
-    text-shadow: 0 0 8px var(--mind-color), 0 0 15px var(--mind-color);
+.truth-tag a {
+    color: var(--soul-color);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
 }
 
-.header-symbol.symbol-body {
-    text-shadow: 0 0 8px var(--body-color), 0 0 15px var(--body-color);
-}
-
-.scale-table tbody tr {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    transition: background 0.2s ease;
-}
-
-.scale-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.03);
-}
-
-.scale-table tbody td {
-    padding: 0.4rem;
-    vertical-align: middle;
+.truth-tag a:hover {
+    opacity: 1;
+    text-shadow: 0 0 8px var(--soul-color);
 }
 
 .scale-name {
@@ -1166,10 +1155,8 @@ body {
         text-align: center !important;
     }
 
-    /* Keep scale table left-aligned on mobile */
-    .scale-table,
-    .scale-table th,
-    .scale-table td {
+    /* Keep truth reflection left-aligned on mobile */
+    .truth-reflection {
         text-align: left !important;
     }
 
@@ -1280,18 +1267,8 @@ body {
         text-align: left;
     }
 
-    .right-panel .dimension-table {
-        margin: 0;
-    }
-
-    .right-panel .dimension-row td {
-        padding: 0.25rem 0.5rem;
-        white-space: nowrap;
-    }
-
-    .right-panel .dimension-math code {
-        font-size: 0.75rem;
-        white-space: nowrap;
+    .right-panel .truth-reflection {
+        text-align: left;
     }
 
     .center-panel {
