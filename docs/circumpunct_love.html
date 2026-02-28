@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ The Kind of Love That Celebrates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cinzel:wght@400;500;600&family=Noto+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0d0b08;
+            --bg-warm: #141110;
+            --bg-surface: #1a1714;
+            --bg-card: #1f1b17;
+            --gold: #c9a84c;
+            --gold-soft: #d4b872;
+            --gold-glow: rgba(201, 168, 76, 0.25);
+            --gold-faint: rgba(201, 168, 76, 0.08);
+            --rose: #c47a6c;
+            --rose-soft: #d4978b;
+            --text-primary: #ede8df;
+            --text-body: #d5cfc4;
+            --text-dim: #9a9487;
+            --text-faint: #6b665c;
+            --border: rgba(201, 168, 76, 0.12);
+            --border-warm: rgba(196, 122, 108, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            background: var(--bg-deep);
+            color: var(--text-body);
+            font-size: 20px;
+            line-height: 1.85;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Ambient background ── */
+        .ambient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.035;
+        }
+        .ambient-orb.a {
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+            top: -200px; right: -200px;
+            animation: drift-a 30s ease-in-out infinite;
+        }
+        .ambient-orb.b {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, var(--rose) 0%, transparent 70%);
+            bottom: -100px; left: -150px;
+            animation: drift-b 25s ease-in-out infinite;
+        }
+        @keyframes drift-a {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-80px, 60px); }
+        }
+        @keyframes drift-b {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(60px, -40px); }
+        }
+
+        /* ── Navigation ── */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(13, 11, 8, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 0.9rem 2.5rem;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transform: translateY(-100%);
+            transition: transform 0.4s ease;
+        }
+        .nav.visible { transform: translateY(0); }
+        .nav-title {
+            font-family: 'Cinzel', serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            color: var(--gold);
+            opacity: 0.8;
+        }
+        .nav-symbol {
+            font-size: 1.1rem;
+            color: var(--gold);
+            opacity: 0.6;
+        }
+
+        /* ── Content wrapper ── */
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ── Hero section ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero-symbol {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 3rem;
+        }
+        .hero-ring {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 1.5px solid var(--gold);
+            border-radius: 50%;
+            animation: breathe 6s ease-in-out infinite;
+            box-shadow: 0 0 40px var(--gold-glow), inset 0 0 40px var(--gold-faint);
+        }
+        .hero-dot {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 8px; height: 8px;
+            background: var(--gold-soft);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 12px var(--gold-glow);
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.06); opacity: 1; }
+        }
+
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            color: var(--text-primary);
+            letter-spacing: 0.04em;
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+        }
+        .hero-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 300;
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            letter-spacing: 0.02em;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.3;
+            animation: hint-fade 3s ease-in-out infinite;
+        }
+        .scroll-hint span {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+        .scroll-line {
+            width: 1px;
+            height: 30px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+        }
+        @keyframes hint-fade {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ── Opening prose ── */
+        .opening {
+            padding: 4rem 0 3rem;
+        }
+        .opening p {
+            font-size: 1.15rem;
+            color: var(--text-body);
+            margin-bottom: 1.5rem;
+        }
+        .opening p:first-child::first-letter {
+            font-family: 'Cinzel', serif;
+            font-size: 3.2rem;
+            float: left;
+            line-height: 1;
+            margin-right: 0.15rem;
+            margin-top: 0.08rem;
+            color: var(--gold);
+        }
+
+        /* ── Section dividers ── */
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 3rem 0;
+            opacity: 0.4;
+        }
+        .divider-dot {
+            width: 4px; height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        /* ── Tradition sections ── */
+        .tradition {
+            padding: 1rem 0 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .tradition.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tradition-label {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 300;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            margin-bottom: 0.6rem;
+        }
+
+        .tradition h2 {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+            color: var(--text-primary);
+            letter-spacing: 0.03em;
+            margin-bottom: 0.3rem;
+        }
+
+        .tradition-term {
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--gold-soft);
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .tradition p {
+            font-size: 1.08rem;
+            color: var(--text-body);
+            margin-bottom: 1.4rem;
+        }
+
+        /* ── Prayer / mantra block ── */
+        .mantra {
+            padding: 1.5rem 0 1.5rem 1.8rem;
+            border-left: 1.5px solid var(--gold-glow);
+            margin: 1.5rem 0 2rem;
+            font-style: italic;
+            font-size: 1.08rem;
+            color: var(--gold-soft);
+            line-height: 2;
+        }
+
+        /* ── Convergence section ── */
+        .convergence {
+            padding: 2rem 0 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .convergence.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .convergence h2 {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+            color: var(--text-primary);
+            letter-spacing: 0.03em;
+            margin-bottom: 1.8rem;
+        }
+        .convergence p {
+            font-size: 1.08rem;
+            color: var(--text-body);
+            margin-bottom: 1.4rem;
+        }
+
+        /* ── Two kinds panel ── */
+        .two-kinds {
+            padding: 3rem 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .two-kinds.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .two-kinds h2 {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+            color: var(--text-primary);
+            letter-spacing: 0.03em;
+            margin-bottom: 0.4rem;
+            text-align: center;
+        }
+        .two-kinds .formula {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            text-align: center;
+            opacity: 0.6;
+            margin-bottom: 2.5rem;
+        }
+
+        .kinds-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 600px) {
+            .kinds-grid { grid-template-columns: 1fr; }
+        }
+
+        .kind-card {
+            padding: 2rem;
+            border-radius: 2px;
+            position: relative;
+        }
+        .kind-card.boundary {
+            background: linear-gradient(135deg, rgba(196, 122, 108, 0.06) 0%, transparent 100%);
+            border: 1px solid var(--border-warm);
+        }
+        .kind-card.aperture {
+            background: linear-gradient(135deg, rgba(201, 168, 76, 0.06) 0%, transparent 100%);
+            border: 1px solid var(--border);
+        }
+
+        .kind-symbol {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        .kind-card.boundary .kind-symbol { color: var(--rose-soft); }
+        .kind-card.aperture .kind-symbol { color: var(--gold-soft); }
+
+        .kind-card p {
+            font-size: 1rem;
+            line-height: 1.75;
+        }
+        .kind-card .voice {
+            font-style: italic;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .kinds-synthesis {
+            text-align: center;
+            padding: 1.5rem 2rem;
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--text-dim);
+        }
+        .kinds-synthesis .sym {
+            color: var(--gold);
+            font-style: normal;
+        }
+
+        /* ── Closing ── */
+        .closing {
+            padding: 2rem 0 6rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .closing.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .closing h2 {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+            color: var(--text-primary);
+            letter-spacing: 0.03em;
+            margin-bottom: 1.8rem;
+        }
+        .closing p {
+            font-size: 1.08rem;
+            color: var(--text-body);
+            margin-bottom: 1.4rem;
+        }
+        .closing .final {
+            font-size: 1.15rem;
+            color: var(--text-primary);
+            font-style: italic;
+            margin-top: 2rem;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 3rem 0 4rem;
+            border-top: 1px solid var(--border);
+        }
+        .footer-symbol {
+            font-size: 1.8rem;
+            color: var(--gold);
+            opacity: 0.4;
+            margin-bottom: 1rem;
+        }
+        .footer-text {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+        }
+        .footer-link {
+            color: var(--gold);
+            text-decoration: none;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+        .footer-link:hover { opacity: 1; }
+
+        /* ── Emphasis helpers ── */
+        em { color: var(--text-primary); font-style: italic; }
+        strong {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* ── Selection ── */
+        ::selection {
+            background: rgba(201, 168, 76, 0.2);
+            color: var(--text-primary);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            body { font-size: 18px; }
+            .content { padding: 0 1.4rem; }
+            .hero { min-height: 90vh; }
+            .mantra { padding-left: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Ambient background -->
+<div class="ambient">
+    <div class="ambient-orb a"></div>
+    <div class="ambient-orb b"></div>
+</div>
+
+<!-- Fixed nav (appears on scroll) -->
+<nav class="nav" id="nav">
+    <span class="nav-title">The Kind of Love That Celebrates</span>
+    <span class="nav-symbol">⊙</span>
+</nav>
+
+<div class="content">
+
+    <!-- ═══════════ HERO ═══════════ -->
+    <section class="hero">
+        <div class="hero-symbol">
+            <div class="hero-ring"></div>
+            <div class="hero-dot"></div>
+        </div>
+        <h1>The Kind of Love<br>That Celebrates</h1>
+        <span class="hero-subtitle">What the oldest traditions knew about the rarest kind of connection</span>
+        <div class="scroll-hint">
+            <span>Read</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- ═══════════ OPENING ═══════════ -->
+    <section class="opening">
+        <p>There is a kind of love that most people have felt, even if only for a moment. It arrives without effort. It asks for nothing. It is the feeling of genuine delight at the simple fact that another person exists.</p>
+        <p>It might show up when you see your child sleeping. When an old friend walks through the door after years away. When someone you love is laughing and they don't know you're watching. Something in you softens. Something opens. Not because you need anything from them, but because their presence is, all on its own, a kind of gift.</p>
+        <p>This feeling is not rare because it is complicated. It is rare because it requires something most of us find terrifying: being open without knowing what will happen next.</p>
+        <p>For thousands of years, across very different cultures, people have tried to name this experience. They didn't all use the same language, but they were pointing at the same thing.</p>
+    </section>
+
+    <div class="divider"><div class="divider-dot"></div><div class="divider-dot"></div><div class="divider-dot"></div></div>
+
+    <!-- ═══════════ METTĀ ═══════════ -->
+    <section class="tradition" data-reveal>
+        <span class="tradition-label">Buddhism</span>
+        <h2>Mettā</h2>
+        <span class="tradition-term">Loving-Kindness</span>
+
+        <p>In the Buddhist tradition, there is a word for unconditional goodwill toward another being: <em>mettā</em>. It is usually translated as "loving-kindness," but that translation is almost too gentle. Mettā is not soft. It is steady. It is the quiet, unwavering wish that another person be well — not because they've earned it, not because they've given you something, but because they are alive.</p>
+
+        <div class="mantra">
+            May you be well.<br>
+            May you be happy.<br>
+            May you be free from suffering.
+        </div>
+
+        <p>What makes mettā different from ordinary affection is that it does not depend on being returned. It does not collapse when the other person is difficult. It is not a transaction. It is a posture — a way of orienting your heart toward someone and simply wishing them good.</p>
+        <p>The Buddhist teachers were clear that mettā is not a feeling you manufacture. It is what naturally arises when you stop contracting against someone. When you let your guard down. When you stop keeping score.</p>
+    </section>
+
+    <div class="divider"><div class="divider-dot"></div><div class="divider-dot"></div><div class="divider-dot"></div></div>
+
+    <!-- ═══════════ AGAPE ═══════════ -->
+    <section class="tradition" data-reveal>
+        <span class="tradition-label">Christianity</span>
+        <h2>Agape</h2>
+        <span class="tradition-term">Self-Giving Love</span>
+
+        <p>The ancient Greeks had several words for love, and they were careful to distinguish between them. <em>Eros</em> was desire. <em>Philia</em> was the bond between friends. But <em>agape</em> was something else entirely.</p>
+        <p>Agape is love that gives without calculating what it will receive. In the Christian mystical tradition, it became the highest form of love: the love that God was said to have for creation. Not because creation was perfect, but because it existed at all.</p>
+        <p>Thomas Aquinas described love simply as <em>willing the good of the other</em>. Not needing them. Not possessing them. Not fearing their absence. Just wanting, from a place of fullness rather than emptiness, for them to flourish.</p>
+        <p>Agape doesn't say <em>"stay so I can be okay."</em> It says <em>"I am okay, and your being here makes the world more beautiful."</em></p>
+    </section>
+
+    <div class="divider"><div class="divider-dot"></div><div class="divider-dot"></div><div class="divider-dot"></div></div>
+
+    <!-- ═══════════ MUDITĀ ═══════════ -->
+    <section class="tradition" data-reveal>
+        <span class="tradition-label">Buddhism</span>
+        <h2>Muditā</h2>
+        <span class="tradition-term">Sympathetic Joy</span>
+
+        <p>There is an even more precise word in the Buddhist tradition: <em>muditā</em>. It is often translated as "sympathetic joy" — the experience of feeling happiness because someone else is happy.</p>
+        <p>But muditā goes further than that. It is delight in another person's existence. Not delight in what they do for you. Not delight in how they make you feel. Delight that they are here, breathing, being themselves.</p>
+        <p>When someone walks into a room and something in your chest lifts — not because you need them, not because you're relieved, but because their presence genuinely brightens the space — that is muditā.</p>
+        <p>This is among the rarest of emotional capacities, because it requires you to be settled enough in yourself that another person's joy doesn't threaten you. It requires you to not be competing, not be comparing, not be afraid.</p>
+    </section>
+
+    <div class="divider"><div class="divider-dot"></div><div class="divider-dot"></div><div class="divider-dot"></div></div>
+
+    <!-- ═══════════ ISHQ ═══════════ -->
+    <section class="tradition" data-reveal>
+        <span class="tradition-label">Sufism</span>
+        <h2>Ishq</h2>
+        <span class="tradition-term">The Love That Dissolves Walls</span>
+
+        <p>In the Sufi tradition, the mystic poets wrote about a love so total that it dissolved the boundary between self and other — not by destroying the self, but by making it transparent. Rumi called this force <em>ishq</em>, a love beyond reason.</p>
+        <p>But the Sufi insight was not about losing yourself in another person. It was about becoming so clear, so open, so unburdened by fear, that love could flow through you without obstruction. You don't become less of yourself. You become more available.</p>
+        <p>The beloved, in Sufi poetry, is not someone you cling to. The beloved is someone whose existence reveals to you that your heart was always capable of this much feeling — you just hadn't let it.</p>
+    </section>
+
+    <div class="divider"><div class="divider-dot"></div><div class="divider-dot"></div><div class="divider-dot"></div></div>
+
+    <!-- ═══════════ CONVERGENCE ═══════════ -->
+    <section class="convergence" data-reveal>
+        <h2>What Every Tradition Agrees On</h2>
+
+        <p>These traditions developed independently, across thousands of miles and thousands of years. They used different languages, different metaphors, different practices. But they all converged on the same insight: <em>the deepest love is not something you build. It is something you uncover by removing what blocks it.</em></p>
+        <p>Every tradition names the same obstacle: contraction. Fear. The habitual tightening that happens when we feel vulnerable. The walls we build to protect ourselves that end up isolating us from the very connection we're starving for.</p>
+        <p>And every tradition names the same remedy: a willingness to open, even when it's frightening. Even when you don't know if the other person will meet you there. Even when the last time you opened, you got hurt.</p>
+    </section>
+
+    <div class="divider"><div class="divider-dot"></div><div class="divider-dot"></div><div class="divider-dot"></div></div>
+
+    <!-- ═══════════ TWO KINDS ═══════════ -->
+    <section class="two-kinds" data-reveal>
+        <h2>Two Kinds of Love</h2>
+        <div class="formula">⊙ = • + ○</div>
+
+        <div class="kinds-grid">
+            <div class="kind-card boundary">
+                <div class="kind-symbol">○</div>
+                <p>There is love that comes from need. It says: <em>I am incomplete without you. Stay close so I can feel whole. Give me what I'm missing.</em></p>
+                <p>This love is real, but it is heavy. It watches. It keeps accounts. It contracts when it feels threatened.</p>
+                <div class="voice">This love holds on.</div>
+            </div>
+            <div class="kind-card aperture">
+                <div class="kind-symbol">•</div>
+                <p>And there is love that comes from fullness. It says: <em>I am here, I am whole, and your existence increases the beauty of everything around me.</em></p>
+                <p>I don't need you to complete me. I want you because you are good.</p>
+                <div class="voice">This love holds open.</div>
+            </div>
+        </div>
+
+        <div class="kinds-synthesis">
+            Both <span class="sym">⊙</span> are required for a healthy relationship. The traditions all point in the same direction: the love that lasts, the love that heals, the love that actually feels like love — is the one that comes from an open heart, not a desperate one.
+        </div>
+    </section>
+
+    <div class="divider"><div class="divider-dot"></div><div class="divider-dot"></div><div class="divider-dot"></div></div>
+
+    <!-- ═══════════ CLOSING ═══════════ -->
+    <section class="closing" data-reveal>
+        <h2>What It Feels Like</h2>
+
+        <p>When this kind of love is present between two people, you can feel it in the room. There is lightness. There is ease. There is a warmth that doesn't demand anything. It feels like being glad someone is here. Not relieved. Not obligated. <em>Glad.</em></p>
+
+        <p>It feels like the opposite of performance. You are not trying to be enough. You are not managing how you're perceived. You are just present, and so is the other person, and the space between you is alive.</p>
+
+        <p>Every wisdom tradition that has ever studied love says the same thing: this is available to anyone. It is not reserved for saints or mystics. It is the natural state of a heart that has stopped protecting itself long enough to feel what was always there.</p>
+
+        <p class="final">The only question is whether we're willing to open.</p>
+    </section>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer class="footer">
+        <div class="footer-symbol">⊙</div>
+        <div class="footer-text">
+            <a href="https://fractalreality.ca" class="footer-link" target="_blank">fractalreality.ca</a>
+        </div>
+    </footer>
+
+</div>
+
+<script>
+    // Nav visibility on scroll
+    const nav = document.getElementById('nav');
+    let lastY = 0;
+    window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        if (y > 400) {
+            nav.classList.add('visible');
+        } else {
+            nav.classList.remove('visible');
+        }
+        lastY = y;
+    });
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('[data-reveal]');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
