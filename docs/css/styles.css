@@ -1114,6 +1114,31 @@ body {
     background: rgba(255, 255, 255, 0.1);
 }
 
+/* Community Links */
+.community-links {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.community-links a {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.community-links a:hover {
+    color: var(--text);
+    border-color: var(--soul-color);
+    background: rgba(88, 166, 255, 0.1);
+}
+
 /* Backdrop */
 .backdrop {
     position: fixed;
@@ -1252,6 +1277,10 @@ body {
     .left-panel {
         justify-self: end;
         text-align: right;
+    }
+
+    .left-panel .community-links {
+        justify-content: flex-end;
     }
 
     .left-panel .equation-title {
