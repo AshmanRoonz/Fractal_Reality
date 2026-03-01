@@ -232,6 +232,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**polar_64_state_map.html**](https://fractalreality.ca/polar_64_state_map.html) — Complete Mereological Map: Higgs to Atoms
 - [**mereological_bridge.html**](https://fractalreality.ca/mereological_bridge.html) — Mereological Bridge: Elements to Particles
 - [**analytic_continuation_gap.html**](https://fractalreality.ca/analytic_continuation_gap.html) — The Analytic Continuation Gap
+- [**dna_circumpunct_formalization.html**](https://fractalreality.ca/dna_circumpunct_formalization.html) — DNA Circumpunct Formalization
 
 ### Wholeness & Structure
 
@@ -255,6 +256,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**resonance_101.html**](https://fractalreality.ca/resonance_101.html) — Introduction to resonance concepts
 - [**path_narrated.html**](https://fractalreality.ca/path_narrated.html) — Narrated spiritual path guide
 - [**circumpunct_theory_of_mind.html**](https://fractalreality.ca/circumpunct_theory_of_mind.html) — The Circumpunct Theory of Mind
+- [**reclaim_stress_meditation.html**](https://fractalreality.ca/reclaim_stress_meditation.html) — Reclaim Stress Meditation
 
 ---
 
