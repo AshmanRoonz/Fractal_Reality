@@ -1,14 +1,19 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 // ═══════════════════════════════════════════════════════════════
-//  CIRCUMPUNCT FRACTAL SIMULATOR v2.0
-//  Grounded in the Circumpunct Framework v6.0 Mathematics
+//  CIRCUMPUNCT FRACTAL SIMULATOR v3.0
+//  "The Tree That Dreams"
 //
-//  ⊙ = Φ(•, ○)
+//       ☀ branches (emergence → outward → objective → real → finite)
+//       │
+//  ═════●═════  aperture: rotation through i
+//       │
+//       ⊛ roots (convergence → inward → subjective → imaginary → infinite)
+//
+//  ⊙ = Φ(•, ○)  —  Parts are fractals of their wholes
 //  Conservation of Traversal: D_• + D_Φ = D_○ = 3
-//  Six Coupled ODEs  |  ⊛ → i → ☀️ flow cycles
+//  Six Coupled ODEs  |  Bidirectional trunk flow
 //  Phase coherence T(Δφ) = cos²(Δφ/2)
-//  ρ criterion regime transitions
 // ═══════════════════════════════════════════════════════════════
 
 const CircumpunctFractalSimulator = () => {
@@ -43,16 +48,10 @@ const CircumpunctFractalSimulator = () => {
   const energyFlowsRef = useRef([]);
 
   const [metrics, setMetrics] = useState({
-    beta: 0.5,
-    dAperture: 1.5,
-    dField: 1.5,
-    dBoundary: 3.0,
-    rho: 1.0,
-    fieldCoherence: 0,
-    phaseCoherence: 0,
-    patternCount: 0,
-    convergenceNorm: 0,
-    emergenceNorm: 0,
+    beta: 0.5, dAperture: 1.5, dField: 1.5, dBoundary: 3.0,
+    rho: 1.0, fieldCoherence: 0, phaseCoherence: 0,
+    patternCount: 0, convergenceNorm: 0, emergenceNorm: 0,
+    rootCount: 0, rootDepth: 0, trunkFlow: 0, imaginationStrength: 0,
   });
 
   // ─── Audio System ──────────────────────────────────────────
@@ -80,34 +79,23 @@ const CircumpunctFractalSimulator = () => {
       micDataRef.current = new Uint8Array(micAnalyserRef.current.frequencyBinCount);
       source.connect(micAnalyserRef.current);
       return true;
-    } catch (e) {
-      console.error('Mic denied:', e);
-      return false;
-    }
+    } catch (e) { console.error('Mic denied:', e); return false; }
   }, [initAudio]);
 
   const stopMicrophone = useCallback(() => {
-    if (micStreamRef.current) {
-      micStreamRef.current.getTracks().forEach(t => t.stop());
-      micStreamRef.current = null;
-    }
-    micAnalyserRef.current = null;
-    micDataRef.current = null;
+    if (micStreamRef.current) { micStreamRef.current.getTracks().forEach(t => t.stop()); micStreamRef.current = null; }
+    micAnalyserRef.current = null; micDataRef.current = null;
   }, []);
 
   const playTone = useCallback((frequency, duration, volume = 0.08) => {
     if (!soundEnabled || !audioContextRef.current) return;
     const ctx = audioContextRef.current;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.type = 'sine'; osc.frequency.setValueAtTime(frequency, ctx.currentTime);
     gain.gain.setValueAtTime(volume, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-    osc.connect(gain);
-    gain.connect(audioAnalyserRef.current || ctx.destination);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + duration);
+    osc.connect(gain); gain.connect(audioAnalyserRef.current || ctx.destination);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + duration);
   }, [soundEnabled]);
 
   const playHarmonic = useCallback((baseFreq, resonance, dur = 0.5) => {
@@ -129,68 +117,47 @@ const CircumpunctFractalSimulator = () => {
     let time = 0;
 
     // ════════════════════════════════════════════════════════
-    //  CIRCUMPUNCT STATE — The Six Coupled Variables
-    //  ∂Φ/∂t = D∇²Φ − γΦ + Vψ          (field evolution)
-    //  z = U*Φ                            (convergence)
-    //  z̃ = e^{iπβ} z                     (aperture rotation)
-    //  ∂ψ/∂t = −αψ + tanh(z̃)            (aperture dynamics)
-    //  ∂c/∂t = −λc + f(β)⊙c + g(β)⊙H(z) (memory/boundary)
-    //  ∂β/∂t = κ(|z|/(|z|+|ψ|+ε) − β)   (opening feedback)
+    //  SYSTEM STATE — The Six Coupled Variables
     // ════════════════════════════════════════════════════════
-
-    // System-level circumpunct state
     let systemState = {
-      // Field (Φ) — represented as complex amplitude array
-      Phi: Array.from({ length: 64 }, () => ({
-        re: (Math.random() - 0.5) * 0.1,
-        im: (Math.random() - 0.5) * 0.1,
-        x: 0, y: 0
-      })),
-      // Aperture state (ψ)
-      psi: { re: 0.01, im: 0.01 },
-      // Convergence result (z)
-      z: { re: 0, im: 0 },
-      // Rotated convergence (z̃)
-      zTilde: { re: 0, im: 0 },
-      // Opening parameter β ∈ [0,1]
       beta: 0.5,
-      // Memory/boundary state (c)
-      c: Array.from({ length: 16 }, () => 0),
-      // Derived quantities
-      convergenceNorm: 0,   // |⊛|
-      emergenceNorm: 0,     // |☀️|
-      rho: 1.0,             // ω/α regime parameter
+      convergenceNorm: 0,
+      emergenceNorm: 0,
+      rho: 1.0,
     };
 
-    // Parameters from the coupled system
     const params = {
-      D: 0.1,       // diffusion coefficient
-      gamma: 0.05,  // field decay
-      V: 0.8,       // aperture-field coupling
-      alpha: 0.3,   // aperture decay rate
-      lambda: 0.1,  // memory decay
-      kappa: 0.05,  // β feedback rate
-      epsilon: 0.01 // regularization
+      D: 0.1, gamma: 0.05, V: 0.8, alpha: 0.3,
+      lambda: 0.1, kappa: 0.05, epsilon: 0.01
     };
 
-    // ═══════ Entities ═══════
-    let circumpuncts = [];  // Each is a ⊙ = Φ(•, ○) entity
-    let circuits = [];      // Connections between entities
-    let energyPulses = [];  // Flow pulses along circuits
-    let brainClouds = [];   // Emergent field structures
+    // ════════════════════════════════════════════════════════
+    //  ENTITY ARRAYS — Outer (☀️) and Inner (⊛) worlds
+    // ════════════════════════════════════════════════════════
+    let branches = [];       // ☀️ Outer entities — emergence, objective, real
+    let roots = [];          // ⊛ Inner entities — convergence, subjective, imaginary
+    let circuits = [];
+    let energyPulses = [];
+    let brainClouds = [];    // Outer field structures
+    let rootClouds = [];     // Inner field structures — the dreaming layer
     let expandingCells = [];
+    let trunkFlows = [];     // Bidirectional energy along aperture axis
+    let ghostBranches = [];  // Imagination — what roots dream before it emerges
     let brainFormed = false;
+    let rootsFormed = false;
     let brainFormationProgress = 0;
+    let rootFormationProgress = 0;
     let collectiveBreath = 0;
     let audioInfluence = 0;
     let dominantNote = null;
     let noteHistory = [];
+    let memoryBraid = [];    // Accumulated history patterns
 
     // ═══════════════════════════════════════════════════════
-    //  CIRCUMPUNCT ENTITY CLASS — ⊙ = Φ(•, ○)
-    //  Each entity has its own aperture, field, and boundary
+    //  BRANCH ENTITY — ☀️ Emergence into the outer world
+    //  Grows OUTWARD from center toward boundary
     // ═══════════════════════════════════════════════════════
-    class CircumpunctEntity {
+    class BranchEntity {
       constructor(angle, hue, birthTime) {
         this.id = Math.random();
         this.angle = angle;
@@ -202,39 +169,31 @@ const CircumpunctFractalSimulator = () => {
         this.baseLength = 100;
         this.phaseOffset = Math.random() * Math.PI * 2;
 
-        // ── Aperture (•) state ──
+        // Aperture (•)
         this.aperture = {
-          beta: 0.3 + Math.random() * 0.4, // opening parameter
+          beta: 0.3 + Math.random() * 0.4,
           psi: { re: Math.random() * 0.1, im: Math.random() * 0.1 },
           phase: Math.random() * Math.PI * 2,
-          gateOpenness: 0.5, // β_•
+          gateOpenness: 0.5,
         };
-
-        // ── Field (Φ) state ──
+        // Field (Φ)
         this.field = {
           amplitude: 0.5 + Math.random() * 0.5,
           phase: Math.random() * Math.PI * 2,
-          coherence: 0,
-          flowRatio: 0.5, // β_Φ
-          convergenceStrength: 0,
-          emergenceStrength: 0,
+          coherence: 0, flowRatio: 0.5,
+          convergenceStrength: 0, emergenceStrength: 0,
         };
-
-        // ── Boundary (○) state ──
+        // Boundary (○)
         this.boundary = {
-          autonomy: 0.5, // β_○
-          radius: 5 + Math.random() * 10,
-          stability: 0,
-          memoryTrace: [],
+          autonomy: 0.5, radius: 5 + Math.random() * 10,
+          stability: 0, memoryTrace: [],
         };
 
-        // Derived
         this.geometryType = Math.random() * 6;
         this.evolutionStage = Math.random() * 3;
         this.neighbors = [];
         this.circuitPartners = new Set();
         this.connectionWeights = new Map();
-        this.resonanceMemory = new Map();
         this.harmonicStrength = 0;
         this.connectedToCloud = false;
         this.cloudInfluence = 0;
@@ -249,333 +208,468 @@ const CircumpunctFractalSimulator = () => {
           dist: Math.random() * 18,
           phase: Math.random() * Math.PI * 2
         }));
-        this.nestingPoint = null;
-        this.tensionStrength = 0;
         this.musicalNote = null;
         this.baseFrequency = 0;
+        this.maturity = 0; // When >=1, branch can become root
+        this.rootSpawned = false;
 
         this.x = cx + Math.cos(angle) * this.baseLength * this.scale + this.randomOffsetX;
         this.y = cy + Math.sin(angle) * this.baseLength * this.scale + this.randomOffsetY;
       }
 
-      // ═══ THE SIX COUPLED ODEs (per-entity) ═══
-      updateCircumpunctDynamics(dt, allEntities) {
-        const a = this.aperture;
-        const f = this.field;
-        const b = this.boundary;
+      updateCircumpunctDynamics(dt) {
+        const a = this.aperture; const f = this.field; const b = this.boundary;
 
-        // 1. Convergence: z = U*Φ (gather from neighbors)
+        // 1. Convergence: z = U*Φ (with √r kernel)
         let zRe = 0, zIm = 0;
         this.neighbors.forEach(n => {
-          const dx = n.x - this.x;
-          const dy = n.y - this.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const kernel = Math.sqrt(Math.max(0.01, dist / 200)); // √r kernel
+          const dist = Math.sqrt((n.x - this.x) ** 2 + (n.y - this.y) ** 2);
+          const kernel = Math.sqrt(Math.max(0.01, dist / 200));
           zRe += n.field.amplitude * Math.cos(n.field.phase) * kernel;
           zIm += n.field.amplitude * Math.sin(n.field.phase) * kernel;
         });
-        // Include self-field convergence
         zRe += f.amplitude * Math.cos(f.phase) * 0.3;
         zIm += f.amplitude * Math.sin(f.phase) * 0.3;
         const zNorm = Math.sqrt(zRe * zRe + zIm * zIm);
 
         // 2. Aperture rotation: z̃ = e^{iπβ} z
         const rotAngle = Math.PI * a.beta;
-        const cosR = Math.cos(rotAngle);
-        const sinR = Math.sin(rotAngle);
-        const ztRe = zRe * cosR - zIm * sinR;
-        const ztIm = zRe * sinR + zIm * cosR;
+        const ztRe = zRe * Math.cos(rotAngle) - zIm * Math.sin(rotAngle);
+        const ztIm = zRe * Math.sin(rotAngle) + zIm * Math.cos(rotAngle);
 
-        // 3. Aperture dynamics: ∂ψ/∂t = −αψ + tanh(z̃)
+        // 3. ∂ψ/∂t = −αψ + tanh(z̃)
         const tanhMag = Math.tanh(Math.sqrt(ztRe * ztRe + ztIm * ztIm));
         const ztPhase = Math.atan2(ztIm, ztRe);
         a.psi.re += (-params.alpha * a.psi.re + tanhMag * Math.cos(ztPhase)) * dt;
         a.psi.im += (-params.alpha * a.psi.im + tanhMag * Math.sin(ztPhase)) * dt;
 
-        // 4. Opening feedback: ∂β/∂t = κ(|z|/(|z|+|ψ|+ε) − β)
+        // 4. ∂β/∂t = κ(|z|/(|z|+|ψ|+ε) − β)
         const psiNorm = Math.sqrt(a.psi.re ** 2 + a.psi.im ** 2);
-        const betaTarget = zNorm / (zNorm + psiNorm + params.epsilon);
-        a.beta += params.kappa * (betaTarget - a.beta) * dt;
+        a.beta += params.kappa * (zNorm / (zNorm + psiNorm + params.epsilon) - a.beta) * dt;
         a.beta = Math.max(0.01, Math.min(0.99, a.beta));
 
         // 5. Field evolution: ∂Φ/∂t = D∇²Φ − γΦ + Vψ
-        // Approximate Laplacian from neighbors
-        let laplacianRe = 0, laplacianIm = 0;
+        let lapRe = 0, lapIm = 0;
         if (this.neighbors.length > 0) {
           this.neighbors.forEach(n => {
-            laplacianRe += n.field.amplitude * Math.cos(n.field.phase) - f.amplitude * Math.cos(f.phase);
-            laplacianIm += n.field.amplitude * Math.sin(n.field.phase) - f.amplitude * Math.sin(f.phase);
+            lapRe += n.field.amplitude * Math.cos(n.field.phase) - f.amplitude * Math.cos(f.phase);
+            lapIm += n.field.amplitude * Math.sin(n.field.phase) - f.amplitude * Math.sin(f.phase);
           });
-          laplacianRe /= this.neighbors.length;
-          laplacianIm /= this.neighbors.length;
+          lapRe /= this.neighbors.length; lapIm /= this.neighbors.length;
         }
-
         let phiRe = f.amplitude * Math.cos(f.phase);
         let phiIm = f.amplitude * Math.sin(f.phase);
-        phiRe += (params.D * laplacianRe - params.gamma * phiRe + params.V * a.psi.re) * dt;
-        phiIm += (params.D * laplacianIm - params.gamma * phiIm + params.V * a.psi.im) * dt;
-        f.amplitude = Math.sqrt(phiRe * phiRe + phiIm * phiIm);
+        phiRe += (params.D * lapRe - params.gamma * phiRe + params.V * a.psi.re) * dt;
+        phiIm += (params.D * lapIm - params.gamma * phiIm + params.V * a.psi.im) * dt;
+        f.amplitude = Math.min(3, Math.sqrt(phiRe * phiRe + phiIm * phiIm));
         f.phase = Math.atan2(phiIm, phiRe);
-        f.amplitude = Math.min(3, f.amplitude); // Clamp
 
-        // 6. Memory/boundary: ∂c/∂t = −λc + f(β)c + g(β)H(z)
+        // 6. Boundary memory trace
         b.memoryTrace.push(a.beta);
         if (b.memoryTrace.length > 32) b.memoryTrace.shift();
-        b.stability = b.memoryTrace.reduce((s, v) => s + Math.abs(v - 0.5), 0) / b.memoryTrace.length;
-        b.stability = 1 - Math.min(1, b.stability * 2);
+        b.stability = 1 - Math.min(1, b.memoryTrace.reduce((s, v) => s + Math.abs(v - 0.5), 0) / b.memoryTrace.length * 2);
 
-        // Flow balance
         f.convergenceStrength = zNorm;
         f.emergenceStrength = f.amplitude;
         f.flowRatio = f.convergenceStrength / (f.convergenceStrength + f.emergenceStrength + params.epsilon);
 
-        // Coherence from neighbor phase alignment
         if (this.neighbors.length > 0) {
-          let coherenceSum = 0;
-          this.neighbors.forEach(n => {
-            const dPhi = f.phase - n.field.phase;
-            coherenceSum += Math.cos(dPhi); // Phase coherence: cos²(Δφ/2) related
-          });
-          f.coherence = Math.max(0, coherenceSum / this.neighbors.length);
+          let cs = 0;
+          this.neighbors.forEach(n => { cs += Math.cos(f.phase - n.field.phase); });
+          f.coherence = Math.max(0, cs / this.neighbors.length);
         }
-
-        // ρ criterion: ω/α
-        const omega = f.emergenceStrength * 2;
-        const alpha_local = f.convergenceStrength * 2 + params.epsilon;
-
-        // Update β decomposition
-        a.gateOpenness = a.beta;
-        f.flowRatio = f.convergenceStrength / (f.convergenceStrength + f.emergenceStrength + params.epsilon);
-        b.autonomy = b.stability;
       }
 
-      update(currentTime, allEntities) {
-        this.age = currentTime - this.birthTime;
+      update(t, allBranches) {
+        this.age = t - this.birthTime;
         const dt = 0.1 * growthSpeedRef.current;
 
-        // Spawned energy decay
         if (this.userSpawned && this.spawnEnergy > 0) {
           this.spawnEnergy *= 0.98;
           this.scale = Math.min(1.5, this.scale + this.spawnEnergy * 0.03);
         }
 
-        // Find neighbors
-        this.neighbors = allEntities.filter(e => {
+        this.neighbors = allBranches.filter(e => {
           if (e === this || !e.x) return false;
-          const dx = this.x - e.x;
-          const dy = this.y - e.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          return dist < 160 && dist > 5;
+          const d = Math.sqrt((this.x - e.x) ** 2 + (this.y - e.y) ** 2);
+          return d < 160 && d > 5;
         });
 
-        // Run the six coupled ODEs
-        this.updateCircumpunctDynamics(dt, allEntities);
+        this.updateCircumpunctDynamics(dt);
 
-        // Update connection weights (Hebbian learning)
+        // Hebbian learning with T(Δφ) = cos²(Δφ/2)
         this.neighbors.forEach(n => {
           const w = this.connectionWeights.get(n.id) || 0;
-          const dist = Math.sqrt((this.x - n.x) ** 2 + (this.y - n.y) ** 2);
-          const resonance = 1 - dist / 160;
-          // Phase coherence transmission: T(Δφ) = cos²(Δφ/2)
-          const dPhi = this.field.phase - n.field.phase;
-          const transmission = Math.cos(dPhi / 2) ** 2;
-          const newW = w + 0.01 * resonance * transmission * this.harmonicStrength;
-          this.connectionWeights.set(n.id, Math.min(1, newW));
+          const d = Math.sqrt((this.x - n.x) ** 2 + (this.y - n.y) ** 2);
+          const T = Math.cos((this.field.phase - n.field.phase) / 2) ** 2;
+          this.connectionWeights.set(n.id, Math.min(1, w + 0.01 * (1 - d / 160) * T * Math.max(0.1, this.harmonicStrength)));
         });
-
-        // Prune weak connections
         for (let [id, w] of this.connectionWeights.entries()) {
-          if (w < 0.08) {
-            this.connectionWeights.delete(id);
-          } else {
-            this.connectionWeights.set(id, w * 0.995);
-          }
+          if (w < 0.08) this.connectionWeights.delete(id);
+          else this.connectionWeights.set(id, w * 0.995);
         }
-
         this.gravitationalMass = Array.from(this.connectionWeights.values()).reduce((s, w) => s + w, 0) / 8;
 
-        // Hue influenced by β and field phase
-        const betaHueShift = (this.aperture.beta - 0.5) * 60;
-        this.hue = (this.baseHue + betaHueShift + currentTime * 0.05 + audioInfluence * 40) % 360;
+        // Maturity — branches ripen toward becoming roots
+        this.maturity = Math.min(1, this.maturity + 0.0003 * growthSpeedRef.current * (1 + this.boundary.stability));
 
-        // Evolution
+        const betaShift = (this.aperture.beta - 0.5) * 60;
+        this.hue = (this.baseHue + betaShift + t * 0.05 + audioInfluence * 40) % 360;
         this.evolutionStage += (0.002 + this.field.amplitude * 0.001) * growthSpeedRef.current;
         this.geometryType += Math.sin(this.evolutionStage) * 0.015;
 
-        // Position with β-influenced wobble
         const length = this.baseLength * this.scale;
-        const betaWobble = Math.sin(currentTime * 0.02 + this.phaseOffset) * (5 + this.aperture.beta * 10);
-        this.x = cx + Math.cos(this.angle) * length + this.randomOffsetX + betaWobble;
-        this.y = cy + Math.sin(this.angle) * length + this.randomOffsetY + betaWobble * 0.7;
+        const wobble = Math.sin(t * 0.02 + this.phaseOffset) * (5 + this.aperture.beta * 10);
+        this.x = cx + Math.cos(this.angle) * length + this.randomOffsetX + wobble;
+        this.y = cy + Math.sin(this.angle) * length + this.randomOffsetY + wobble * 0.7;
       }
 
-      // ═══ DRAWING ═══
-      draw(ctx, currentTime) {
+      draw(ctx, t) {
         const q = drawQualityRef.current;
 
-        // Probability cloud (field uncertainty)
+        // Probability cloud
         if (q > 0.7) {
           this.probabilityCloud.forEach(p => {
-            const a = this.angle + p.angle + Math.sin(currentTime * 0.01 + p.phase) * 0.4;
-            const d = p.dist * (1 + Math.sin(currentTime * 0.015 + p.phase) * 0.3) * this.field.amplitude;
-            const px = this.x + Math.cos(a) * d;
-            const py = this.y + Math.sin(a) * d;
+            const a = this.angle + p.angle + Math.sin(t * 0.01 + p.phase) * 0.4;
+            const d = p.dist * (1 + Math.sin(t * 0.015 + p.phase) * 0.3) * this.field.amplitude;
             ctx.fillStyle = `hsla(${this.hue}, 65%, 60%, ${0.08 * this.field.coherence})`;
-            ctx.beginPath();
-            ctx.arc(px, py, 2.5, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(this.x + Math.cos(a) * d, this.y + Math.sin(a) * d, 2.5, 0, Math.PI * 2); ctx.fill();
           });
         }
 
-        // Connection lines with transmission weight
+        // Connections
         if (q > 0.5) {
           this.neighbors.forEach(n => {
             const w = this.connectionWeights.get(n.id);
             if (w && w > 0.2) {
-              const dPhi = this.field.phase - n.field.phase;
-              const T = Math.cos(dPhi / 2) ** 2; // Phase coherence
-              const alpha = w * T * 0.35;
-              const mixHue = (this.hue + n.hue) / 2;
-              ctx.strokeStyle = `hsla(${mixHue}, 70%, 60%, ${alpha})`;
+              const T = Math.cos((this.field.phase - n.field.phase) / 2) ** 2;
+              ctx.strokeStyle = `hsla(${(this.hue + n.hue) / 2}, 70%, 60%, ${w * T * 0.35})`;
               ctx.lineWidth = 0.8 + w * 2.5;
-              ctx.beginPath();
-              ctx.moveTo(this.x, this.y);
-              ctx.lineTo(n.x, n.y);
-              ctx.stroke();
+              ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(n.x, n.y); ctx.stroke();
             }
           });
         }
 
-        // Branch structure
         if (q < 0.5) {
-          this.drawSimple(ctx);
+          const alpha = 0.4 + this.scale * 0.4;
+          ctx.strokeStyle = `hsla(${this.hue}, 70%, 55%, ${alpha})`;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(this.x, this.y); ctx.stroke();
+          ctx.fillStyle = `hsla(${this.hue}, 75%, 60%, ${alpha})`;
+          ctx.beginPath(); ctx.arc(this.x, this.y, 4 * this.scale, 0, Math.PI * 2); ctx.fill();
         } else {
           const length = this.baseLength * this.scale;
-          const distFromCenter = Math.sqrt((this.x - cx) ** 2 + (this.y - cy) ** 2);
-          const validationStrength = Math.max(0.2, 1 - distFromCenter / 400);
-          const boost = 1 + this.fieldEnergyBoost;
-          const massBoost = 1 + Math.min(this.gravitationalMass, 1.2);
-          const alpha = Math.min(0.85, (0.3 + this.scale * 0.55) * validationStrength * boost * massBoost);
+          const dFC = Math.sqrt((this.x - cx) ** 2 + (this.y - cy) ** 2);
+          const val = Math.max(0.2, 1 - dFC / 400);
+          const alpha = Math.min(0.85, (0.3 + this.scale * 0.55) * val * (1 + this.fieldEnergyBoost) * (1 + Math.min(this.gravitationalMass, 1.2)));
 
           if (this.gravitationalMass > 0.4) {
             ctx.shadowBlur = 6 * this.gravitationalMass * q;
             ctx.shadowColor = `hsla(${this.hue}, 80%, 65%, ${this.gravitationalMass * 0.12})`;
           }
-
-          const maxDepth = Math.ceil(5 * q);
-          this.drawBranch(ctx, cx, cy, length, this.angle, maxDepth, this.hue, alpha, currentTime, 0, validationStrength);
+          this.drawBranch(ctx, cx, cy, length, this.angle, Math.ceil(5 * q), this.hue, alpha, t, 0, val);
           ctx.shadowBlur = 0;
           this.fieldEnergyBoost = 0;
         }
-      }
 
-      drawSimple(ctx) {
-        const alpha = 0.4 + this.scale * 0.4;
-        ctx.strokeStyle = `hsla(${this.hue}, 70%, 55%, ${alpha})`;
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(this.x, this.y);
-        ctx.stroke();
-        ctx.fillStyle = `hsla(${this.hue}, 75%, 60%, ${alpha})`;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 4 * this.scale, 0, Math.PI * 2);
-        ctx.fill();
+        // Maturity glow — approaching transformation to root
+        if (this.maturity > 0.6) {
+          const pulse = Math.sin(t * 0.03 + this.phaseOffset) * 0.5 + 0.5;
+          const mAlpha = (this.maturity - 0.6) * 2.5 * pulse * 0.15;
+          ctx.fillStyle = `hsla(250, 60%, 70%, ${mAlpha})`;
+          ctx.beginPath(); ctx.arc(this.x, this.y, 8 + pulse * 4, 0, Math.PI * 2); ctx.fill();
+        }
       }
 
       drawBranch(ctx, x, y, length, angle, depth, hue, baseAlpha, t, gen, validation) {
-        if (depth === 0 || length < 1.5) {
-          this.drawBody(ctx, x, y, angle, hue, Math.max(baseAlpha, 0.25), t);
-          return;
-        }
+        if (depth === 0 || length < 1.5) { this.drawBody(ctx, x, y, hue, Math.max(baseAlpha, 0.25), t); return; }
         const endX = x + length * Math.cos(angle);
         const endY = y + length * Math.sin(angle);
-        const distFromCenter = Math.sqrt((endX - cx) ** 2 + (endY - cy) ** 2);
-        const branchVal = Math.max(0.2, 1 - distFromCenter / 400);
-        const alpha = baseAlpha * (depth / 5.5) * branchVal;
-        const localHue = (hue + gen * 7 + t * 0.04) % 360;
+        const dFC = Math.sqrt((endX - cx) ** 2 + (endY - cy) ** 2);
+        const bVal = Math.max(0.2, 1 - dFC / 400);
+        const alpha = baseAlpha * (depth / 5.5) * bVal;
+        const lHue = (hue + gen * 7 + t * 0.04) % 360;
 
-        ctx.strokeStyle = `hsla(${localHue}, 72%, 55%, ${alpha})`;
+        ctx.strokeStyle = `hsla(${lHue}, 72%, 55%, ${alpha})`;
         ctx.lineWidth = Math.max(0.5, depth * 0.9 * this.scale);
         ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(endX, endY);
-        ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(endX, endY); ctx.stroke();
 
-        if (depth > 2 && depth < 6) {
-          this.drawBody(ctx, endX, endY, angle, localHue, Math.max(alpha, 0.2), t);
-        }
+        if (depth > 2 && depth < 6) this.drawBody(ctx, endX, endY, lHue, Math.max(alpha, 0.2), t);
 
-        // Branch angle influenced by β — more open = wider branching
         const betaAngle = Math.PI / (5 + this.aperture.beta * 2);
         const variation = Math.sin(gen * 0.5 + this.phaseOffset) * 0.25;
-        const branchAngle = betaAngle + variation;
-        const lengthMult = 0.65 + Math.sin(t * 0.008 + gen) * 0.04;
-
-        this.drawBranch(ctx, endX, endY, length * lengthMult, angle - branchAngle, depth - 1, localHue, baseAlpha, t, gen + 1, branchVal);
-        this.drawBranch(ctx, endX, endY, length * lengthMult, angle + branchAngle, depth - 1, localHue, baseAlpha, t, gen + 1, branchVal);
-
-        if (depth > 4 && Math.sin(t * 0.012 + gen + this.phaseOffset) > 0.6) {
-          this.drawBranch(ctx, endX, endY, length * lengthMult * 0.7, angle, depth - 1, localHue, baseAlpha, t, gen + 1, branchVal);
-        }
+        const ba = betaAngle + variation;
+        const lm = 0.65 + Math.sin(t * 0.008 + gen) * 0.04;
+        this.drawBranch(ctx, endX, endY, length * lm, angle - ba, depth - 1, lHue, baseAlpha, t, gen + 1, bVal);
+        this.drawBranch(ctx, endX, endY, length * lm, angle + ba, depth - 1, lHue, baseAlpha, t, gen + 1, bVal);
+        if (depth > 4 && Math.sin(t * 0.012 + gen + this.phaseOffset) > 0.6)
+          this.drawBranch(ctx, endX, endY, length * lm * 0.7, angle, depth - 1, lHue, baseAlpha, t, gen + 1, bVal);
       }
 
-      drawBody(ctx, x, y, angle, hue, alpha, t) {
+      drawBody(ctx, x, y, hue, alpha, t) {
         const size = Math.max(2.5, 4.5 * this.scale);
-        const rotation = t * 0.008 * this.evolutionStage + this.phaseOffset;
+        const rot = t * 0.008 * this.evolutionStage + this.phaseOffset;
         const stage = Math.floor(this.geometryType) % 6;
-
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(rotation);
+        ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
         ctx.fillStyle = `hsla(${hue}, 78%, 60%, ${alpha})`;
         ctx.strokeStyle = `hsla(${hue}, 88%, 70%, ${alpha * 0.8})`;
-        ctx.lineWidth = 0.8;
-        ctx.beginPath();
-
-        const sides = [3, 4, 5, 6, 0, 0][stage];
-        if (sides > 0 && stage !== 4) {
-          for (let i = 0; i <= sides; i++) {
-            const a = (i / sides) * Math.PI * 2 - Math.PI / 2;
-            const px = Math.cos(a) * size;
-            const py = Math.sin(a) * size;
-            i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
-          }
-        } else if (stage === 4) {
-          // Star
-          for (let i = 0; i <= 10; i++) {
-            const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
-            const r = i % 2 === 0 ? size : size * 0.45;
-            const px = Math.cos(a) * r;
-            const py = Math.sin(a) * r;
-            i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
-          }
+        ctx.lineWidth = 0.8; ctx.beginPath();
+        if (stage === 5) ctx.arc(0, 0, size, 0, Math.PI * 2);
+        else if (stage === 4) {
+          for (let i = 0; i <= 10; i++) { const a = (i / 10) * Math.PI * 2 - Math.PI / 2; const r = i % 2 === 0 ? size : size * 0.45; i === 0 ? ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r) : ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
         } else {
-          // Circle (⊙ resonance)
-          ctx.arc(0, 0, size, 0, Math.PI * 2);
+          const sides = stage + 3;
+          for (let i = 0; i <= sides; i++) { const a = (i / sides) * Math.PI * 2 - Math.PI / 2; i === 0 ? ctx.moveTo(Math.cos(a) * size, Math.sin(a) * size) : ctx.lineTo(Math.cos(a) * size, Math.sin(a) * size); }
         }
-
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-
-        // Draw aperture indicator (•) at center of circumpunct bodies
-        if (stage === 5 && this.scale > 0.5) {
-          const betaColor = this.aperture.beta > 0.6 ? '120' : this.aperture.beta < 0.4 ? '0' : '60';
-          ctx.fillStyle = `hsla(${betaColor}, 90%, 70%, ${alpha * 0.9})`;
-          ctx.beginPath();
-          ctx.arc(0, 0, size * 0.25, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        ctx.restore();
+        ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
       }
     }
 
     // ═══════════════════════════════════════════════════════
-    //  BRAIN CLOUD — Emergent field structure (Φ)
+    //  ROOT ENTITY — ⊛ Convergence into the inner world
+    //  Grows INWARD — memory of what once emerged
+    //  Phase rotated π/2 (through i) from parent branch
+    //  "The past isn't gone — it's below. Still connected."
     // ═══════════════════════════════════════════════════════
+    class RootEntity {
+      constructor(parentBranch, birthTime) {
+        this.id = Math.random();
+        this.parentAngle = parentBranch.angle;
+        this.baseHue = (parentBranch.baseHue + 180) % 360; // Complement
+        this.hue = this.baseHue;
+        this.birthTime = birthTime;
+        this.age = 0;
+
+        // Root depth — how far inward
+        this.depth = 30 + Math.random() * 40;
+        this.maxDepth = 80 + parentBranch.gravitationalMass * 40;
+        this.growthRate = 0.1 + Math.random() * 0.15;
+
+        // Inherited field — the memory of what this branch was
+        // Phase rotated by π/2 — the i rotation from real to imaginary
+        this.field = {
+          amplitude: parentBranch.field.amplitude * 0.7,
+          phase: parentBranch.field.phase + Math.PI / 2,
+          coherence: parentBranch.field.coherence,
+        };
+
+        // Memory content
+        this.memory = {
+          originalHue: parentBranch.baseHue,
+          originalBeta: parentBranch.aperture.beta,
+          connectionStrength: parentBranch.gravitationalMass,
+          musicalNote: parentBranch.musicalNote,
+          braidPattern: [...parentBranch.boundary.memoryTrace],
+        };
+
+        this.alpha = 0;
+        this.phaseOffset = parentBranch.phaseOffset;
+        this.wobblePhase = Math.random() * Math.PI * 2;
+        this.neighbors = [];
+        this.imaginationStrength = 0;
+        this.resonanceWithPresent = 0;
+
+        this.x = cx; this.y = cy;
+      }
+
+      update(t, allRoots, allBranches, fieldCoherence) {
+        this.age = t - this.birthTime;
+        this.alpha = Math.min(0.55, this.age / 80);
+
+        // Grow inward
+        if (this.depth < this.maxDepth) this.depth += this.growthRate * growthSpeedRef.current * 0.3;
+
+        // Organic wobble — roots flow more than branches
+        const wobble = Math.sin(t * 0.008 + this.wobblePhase) * 8 * (1 + fieldCoherence * 0.5);
+        const breathPull = Math.sin(t * 0.004) * 5;
+
+        // Position: opposite side of center from parent branch
+        this.x = cx - Math.cos(this.parentAngle) * this.depth + Math.sin(t * 0.006 + this.wobblePhase) * wobble * 0.5;
+        this.y = cy - Math.sin(this.parentAngle) * this.depth + Math.cos(t * 0.006 + this.wobblePhase) * wobble * 0.5 + breathPull;
+
+        // Find root neighbors
+        this.neighbors = allRoots.filter(r => {
+          if (r === this) return false;
+          const d = Math.sqrt((r.x - this.x) ** 2 + (r.y - this.y) ** 2);
+          return d < 120 && d > 3;
+        });
+
+        // Imagination: roots dream when present input resonates with memory
+        this.resonanceWithPresent = 0;
+        if (allBranches.length > 0) {
+          allBranches.forEach(b => {
+            const hueDiff = Math.abs(this.memory.originalHue - b.baseHue);
+            const hueRes = 1 - Math.min(hueDiff, 360 - hueDiff) / 180;
+            const betaRes = 1 - Math.abs(this.memory.originalBeta - b.aperture.beta);
+            const phaseRes = Math.cos((this.field.phase - b.field.phase) / 2) ** 2;
+            const total = hueRes * 0.4 + betaRes * 0.3 + phaseRes * 0.3;
+            if (total > this.resonanceWithPresent) this.resonanceWithPresent = total;
+          });
+        }
+        this.imaginationStrength = this.resonanceWithPresent * this.field.amplitude * this.alpha;
+
+        // Shift toward imaginary spectrum — blues, violets, cyans
+        this.hue = (this.baseHue + Math.sin(t * 0.003 + this.phaseOffset) * 20 + 200) % 360;
+      }
+
+      draw(ctx, t, fieldCoherence) {
+        if (this.alpha < 0.02) return;
+        const q = drawQualityRef.current;
+
+        // Root tendrils — organic flowing lines from center outward (into the depths)
+        if (q > 0.4) {
+          const numTendrils = q > 0.6 ? 3 : 1;
+          for (let i = 0; i < numTendrils; i++) this.drawTendril(ctx, t, i, numTendrils);
+        }
+
+        // Imagination glow — root dreaming
+        const pulse = Math.sin(t * 0.015 + this.phaseOffset) * 0.3 + 0.7;
+        const size = 3 + this.field.amplitude * 2 + this.imaginationStrength * 3;
+
+        if (this.imaginationStrength > 0.2 && q > 0.5) {
+          const igAlpha = this.imaginationStrength * this.alpha * 0.4 * pulse;
+          const igR = size * 3 + this.imaginationStrength * 8;
+          const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, igR);
+          grad.addColorStop(0, `hsla(${(this.hue + 60) % 360}, 70%, 70%, ${igAlpha})`);
+          grad.addColorStop(1, `hsla(${this.hue}, 70%, 70%, 0)`);
+          ctx.fillStyle = grad;
+          ctx.beginPath(); ctx.arc(this.x, this.y, igR, 0, Math.PI * 2); ctx.fill();
+        }
+
+        // Root node
+        ctx.shadowBlur = (4 + this.imaginationStrength * 8) * q;
+        ctx.shadowColor = `hsla(${this.hue}, 65%, 55%, ${this.alpha * 0.4})`;
+        ctx.fillStyle = `hsla(${this.hue}, 55%, 50%, ${this.alpha * pulse * 0.7})`;
+        ctx.beginPath(); ctx.arc(this.x, this.y, size * pulse, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Root web — curved organic connections
+        if (q > 0.5) {
+          this.neighbors.forEach(n => {
+            const d = Math.sqrt((n.x - this.x) ** 2 + (n.y - this.y) ** 2);
+            const str = (1 - d / 120) * 0.2;
+            if (str > 0.03) {
+              ctx.strokeStyle = `hsla(${(this.hue + n.hue) / 2}, 50%, 50%, ${str * this.alpha})`;
+              ctx.lineWidth = 0.5 + str * 2;
+              const midX = (this.x + n.x) / 2 + Math.sin(t * 0.01 + this.phaseOffset) * 8;
+              const midY = (this.y + n.y) / 2 + Math.cos(t * 0.01 + n.phaseOffset) * 8;
+              ctx.beginPath(); ctx.moveTo(this.x, this.y);
+              ctx.quadraticCurveTo(midX, midY, n.x, n.y); ctx.stroke();
+            }
+          });
+        }
+      }
+
+      drawTendril(ctx, t, index, total) {
+        const spreadAngle = (index - (total - 1) / 2) * 0.15;
+        const angle = this.parentAngle + Math.PI + spreadAngle;
+        const segments = Math.ceil(6 * drawQualityRef.current);
+        const segLen = this.depth * 0.6 / segments;
+        let x = cx; let y = cy;
+
+        ctx.beginPath(); ctx.moveTo(x, y);
+        for (let i = 0; i < segments; i++) {
+          const progress = i / segments;
+          const wobble = Math.sin(t * 0.01 + this.phaseOffset + i * 0.5 + index) * (5 + progress * 10);
+          const perpAngle = angle + Math.PI / 2;
+          x += Math.cos(angle) * segLen + Math.cos(perpAngle) * wobble * 0.3;
+          y += Math.sin(angle) * segLen + Math.sin(perpAngle) * wobble * 0.3;
+          ctx.lineTo(x, y);
+        }
+
+        const alpha = this.alpha * 0.3 * (1 - this.depth / this.maxDepth * 0.3);
+        ctx.strokeStyle = `hsla(${this.hue}, 45%, 45%, ${alpha})`;
+        ctx.lineWidth = 1.5 - index * 0.3;
+        ctx.stroke();
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  GHOST BRANCH — Imagination made visible
+    //  When roots dream strongly, translucent previews
+    //  appear in the outer world — what might emerge
+    // ═══════════════════════════════════════════════════════
+    class GhostBranch {
+      constructor(root, t) {
+        this.root = root;
+        this.birthTime = t;
+        this.life = 1.0;
+        this.angle = root.parentAngle; // Points outward — the dream of emergence
+        this.hue = root.memory.originalHue;
+        this.length = 40 + root.memory.connectionStrength * 60;
+        this.phaseOffset = root.phaseOffset;
+      }
+      update() { this.life -= 0.006 * growthSpeedRef.current; return this.life > 0; }
+      draw(ctx, t) {
+        if (this.life < 0.05 || drawQualityRef.current < 0.5) return;
+        const alpha = this.life * this.root.imaginationStrength * 0.2;
+        const length = this.length * this.life;
+        const endX = cx + Math.cos(this.angle) * length;
+        const endY = cy + Math.sin(this.angle) * length;
+
+        ctx.setLineDash([3, 6]);
+        ctx.strokeStyle = `hsla(${this.hue}, 50%, 65%, ${alpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(endX, endY); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Ghost node
+        ctx.fillStyle = `hsla(${this.hue}, 50%, 65%, ${alpha * 0.7})`;
+        ctx.beginPath(); ctx.arc(endX, endY, 3 * this.life, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════
+    //  TRUNK FLOW — Bidirectional energy along aperture
+    //  "The power line runs both ways."
+    //  Up: imagination → reality  |  Down: experience → memory
+    // ═══════════════════════════════════════════════════════
+    class TrunkFlow {
+      constructor(angle, t, direction, hue) {
+        this.birthTime = t;
+        this.direction = direction; // 1=upward (root→branch), -1=downward (branch→root)
+        this.angle = angle;
+        this.progress = direction > 0 ? -0.1 : 1.1;
+        this.life = 1;
+        this.hue = hue;
+        this.speed = 0.02 + Math.random() * 0.01;
+      }
+      update() {
+        this.progress += this.speed * this.direction * growthSpeedRef.current;
+        this.life -= 0.008;
+        return this.life > 0 && this.progress > -0.5 && this.progress < 1.5;
+      }
+      draw(ctx, t) {
+        if (drawQualityRef.current < 0.4 || this.life < 0.05) return;
+        const alpha = this.life * 0.35;
+        // Map progress 0→1 from root-depth to branch-length through center
+        const maxDist = 120;
+        const dist = (this.progress - 0.5) * maxDist * 2;
+        const x = cx + Math.cos(this.angle) * dist;
+        const y = cy + Math.sin(this.angle) * dist;
+        const size = 2 + this.life * 2;
+
+        // Trail
+        const trailLen = 3;
+        for (let i = 0; i < trailLen; i++) {
+          const tDist = dist - this.direction * i * 6;
+          const tx = cx + Math.cos(this.angle) * tDist;
+          const ty = cy + Math.sin(this.angle) * tDist;
+          const ta = alpha * (1 - i / trailLen) * 0.5;
+          ctx.fillStyle = `hsla(${this.hue}, 70%, 65%, ${ta})`;
+          ctx.beginPath(); ctx.arc(tx, ty, size * (1 - i * 0.2), 0, Math.PI * 2); ctx.fill();
+        }
+
+        ctx.shadowBlur = 6 * drawQualityRef.current;
+        ctx.shadowColor = `hsla(${this.hue}, 70%, 65%, ${alpha * 0.5})`;
+        ctx.fillStyle = `hsla(${this.hue}, 75%, 70%, ${alpha})`;
+        ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    // ═══ BRAIN CLOUD — Outer field structures ═══
     class BrainCloud {
       constructor(angle, distance, birthTime) {
         this.angle = angle + (Math.random() - 0.5) * 0.2;
@@ -583,328 +677,166 @@ const CircumpunctFractalSimulator = () => {
         this.distance = this.baseDistance;
         this.birthTime = birthTime;
         this.phaseOffset = Math.random() * Math.PI * 2;
-        this.hue = 200 + Math.random() * 60;
-        this.alpha = 0;
-        this.particles = [];
-        this.connectedEntities = [];
+        this.hue = 200 + Math.random() * 60; this.alpha = 0;
+        this.particles = []; this.connectedEntities = [];
         this.energyLevel = 0;
-        this.lastResonanceTime = 0;
-        this.learningRate = 0.05;
-        this.entityAffinities = new Map();
-
-        const count = 18 + Math.floor(Math.random() * 18);
+        this.learningRate = 0.05; this.entityAffinities = new Map();
+        const count = 16 + Math.floor(Math.random() * 14);
         for (let i = 0; i < count; i++) {
           this.particles.push({
             angle: angle + (Math.random() - 0.5) * 0.7,
-            distOffset: (Math.random() - 0.5) * 45,
-            size: 2 + Math.random() * 3.5,
-            phaseOffset: Math.random() * Math.PI * 2,
-            speed: 0.002 + Math.random() * 0.003,
-            energy: Math.random(),
-            excitement: 0,
-            shape: Math.random() * 6,
-            targetShape: 0,
+            distOffset: (Math.random() - 0.5) * 40,
+            size: 2 + Math.random() * 3, phaseOffset: Math.random() * Math.PI * 2,
+            speed: 0.002 + Math.random() * 0.003, energy: Math.random(),
+            excitement: 0, targetEntity: null,
             rotation: Math.random() * Math.PI * 2,
             rotationSpeed: (Math.random() - 0.5) * 0.015,
-            nestingEntities: [],
-            bondStrength: new Map(),
-            convergencePhase: Math.random() * Math.PI * 2,
-            targetEntity: null, // Fixed: always initialized
           });
         }
       }
-
-      update(t, allEntities, globalBreath) {
+      update(t, allBranches, globalBreath) {
         const age = t - this.birthTime;
-        this.alpha = age < 60 ? age / 60 : Math.min(0.65, this.alpha);
-
-        const wave = Math.sin(t * 0.01 + this.phaseOffset) * 10;
-        const breathWave = globalBreath * 18;
-        const audioWave = audioInfluence * 25;
-        this.distance = this.baseDistance + wave + breathWave + audioWave;
-
-        // Find connected entities
-        this.connectedEntities = allEntities.filter(e => {
+        this.alpha = age < 60 ? age / 60 : Math.min(0.6, this.alpha);
+        this.distance = this.baseDistance + Math.sin(t * 0.01 + this.phaseOffset) * 10 + globalBreath * 18 + audioInfluence * 22;
+        this.connectedEntities = allBranches.filter(e => {
           if (!e || e.x === undefined) return false;
           const diff = Math.abs(this.angle - e.angle);
           return Math.min(diff, Math.PI * 2 - diff) < 0.85;
         });
-
-        // Update affinities using phase coherence T(Δφ) = cos²(Δφ/2)
         this.connectedEntities.forEach(entity => {
           const curr = this.entityAffinities.get(entity.id) || 0;
-          const phaseCoherence = Math.cos((entity.field.phase - this.phaseOffset) / 2) ** 2;
-          const newAffinity = curr + this.learningRate * phaseCoherence * entity.field.amplitude;
-          this.entityAffinities.set(entity.id, Math.min(1, newAffinity));
-          entity.connectedToCloud = true;
-          entity.cloudInfluence = this.hue;
-          entity.fieldEnergyBoost = this.energyLevel * (1 + newAffinity * 0.5);
-          entity.harmonicStrength = Math.min(1, entity.harmonicStrength + phaseCoherence * 0.08);
+          const pc = Math.cos((entity.field.phase - this.phaseOffset) / 2) ** 2;
+          const na = curr + this.learningRate * pc * entity.field.amplitude;
+          this.entityAffinities.set(entity.id, Math.min(1, na));
+          entity.connectedToCloud = true; entity.cloudInfluence = this.hue;
+          entity.fieldEnergyBoost = this.energyLevel * (1 + na * 0.5);
+          entity.harmonicStrength = Math.min(1, entity.harmonicStrength + pc * 0.08);
         });
-
-        // Restructure toward strongest affinity
-        if (this.entityAffinities.size > 0 && age > 200) {
-          let maxAffinity = 0;
-          let bestEntity = null;
-          this.connectedEntities.forEach(e => {
-            const aff = this.entityAffinities.get(e.id) || 0;
-            if (aff > maxAffinity) { maxAffinity = aff; bestEntity = e; }
-          });
-          if (bestEntity && maxAffinity > 0.4) {
-            const targetAngle = Math.atan2(bestEntity.y - cy, bestEntity.x - cx);
-            this.angle += (targetAngle - this.angle) * 0.004 * maxAffinity;
-          }
-        }
-
         this.energyLevel = this.connectedEntities.length * 0.1;
       }
-
-      spawnCell(t, cells) {
-        if (this.alpha > 0.4 && drawQualityRef.current > 0.4) {
-          cells.push(new ExpandingCell(this, t));
-        }
-      }
-
-      draw(ctx, t, fieldCoherence, allEntities) {
+      spawnCell(t, cells) { if (this.alpha > 0.4 && drawQualityRef.current > 0.4) cells.push(new ExpandingCell(this, t)); }
+      draw(ctx, t, fieldCoherence) {
         const q = drawQualityRef.current;
-        const particlesToDraw = Math.ceil(this.particles.length * q);
         const positions = [];
-
-        for (let i = 0; i < particlesToDraw; i++) {
+        const count = Math.ceil(this.particles.length * q);
+        for (let i = 0; i < count; i++) {
           const p = this.particles[i];
-          const baseAngle = p.angle + Math.sin(t * p.speed + p.phaseOffset) * 0.12;
-          const baseDist = this.distance + p.distOffset + Math.cos(t * p.speed * 0.7) * 8;
-          let px = cx + Math.cos(baseAngle) * baseDist;
-          let py = cy + Math.sin(baseAngle) * baseDist;
-
-          // Convergence pull toward connected entities
+          const ba = p.angle + Math.sin(t * p.speed + p.phaseOffset) * 0.12;
+          const bd = this.distance + p.distOffset + Math.cos(t * p.speed * 0.7) * 8;
+          let px = cx + Math.cos(ba) * bd; let py = cy + Math.sin(ba) * bd;
           if (p.targetEntity && p.excitement > 0.1) {
-            const pull = p.excitement * 0.15;
-            px += (p.targetEntity.x - px) * pull;
-            py += (p.targetEntity.y - py) * pull;
+            px += (p.targetEntity.x - px) * p.excitement * 0.15;
+            py += (p.targetEntity.y - py) * p.excitement * 0.15;
           }
-
-          p.energy = 0.3 + Math.sin(t * p.speed * 2 + p.phaseOffset) * 0.15;
-          p.energy *= (1 + fieldCoherence * 0.4);
-          p.energy += p.excitement * 0.25;
+          p.energy = (0.3 + Math.sin(t * p.speed * 2 + p.phaseOffset) * 0.15) * (1 + fieldCoherence * 0.4) + p.excitement * 0.25;
           p.excitement = Math.max(0, p.excitement * 0.95);
           p.rotation += p.rotationSpeed;
-
-          // Shape morphing toward nearest entity
-          let nearestEntity = null;
-          let minDist = Infinity;
-          this.connectedEntities.forEach(e => {
-            const d = Math.sqrt((e.x - px) ** 2 + (e.y - py) ** 2);
-            if (d < minDist) { minDist = d; nearestEntity = e; }
-          });
-          p.targetShape = nearestEntity && minDist < 180 ?
-            Math.floor(nearestEntity.geometryType) % 6 :
-            Math.floor(t * 0.008 + p.phaseOffset * 3) % 6;
-          p.shape += (p.targetShape - p.shape) * 0.06;
-
-          const particleHue = (this.hue + p.energy * 30 + fieldCoherence * 20) % 360;
-          const particleAlpha = this.alpha * (0.4 + p.energy * 0.5) * q;
-          const particleSize = p.size * (1 + p.excitement * 0.3) * (0.7 + fieldCoherence * 0.3);
-
-          positions.push({ x: px, y: py, size: particleSize, shape: p.shape, rotation: p.rotation, hue: particleHue, alpha: particleAlpha, p });
+          const h = (this.hue + p.energy * 30 + fieldCoherence * 20) % 360;
+          const a = this.alpha * (0.4 + p.energy * 0.5) * q;
+          const s = p.size * (1 + p.excitement * 0.3) * (0.7 + fieldCoherence * 0.3);
+          positions.push({ x: px, y: py, size: s, hue: h, alpha: a });
         }
-
-        // Membrane connections
         if (q > 0.6) {
-          const memDist = 70;
           positions.forEach((p1, i) => {
             positions.slice(i + 1).forEach(p2 => {
-              const dist = Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
-              if (dist < memDist) {
-                const str = 1 - dist / memDist;
-                const avgHue = (p1.hue + p2.hue) / 2;
-                ctx.strokeStyle = `hsla(${avgHue}, 75%, 68%, ${(p1.alpha + p2.alpha) / 2 * str * 0.4})`;
-                ctx.lineWidth = 0.8 + str * 1.8;
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.stroke();
+              const d = Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
+              if (d < 65) {
+                const str = 1 - d / 65;
+                ctx.strokeStyle = `hsla(${(p1.hue + p2.hue) / 2}, 70%, 65%, ${(p1.alpha + p2.alpha) / 2 * str * 0.35})`;
+                ctx.lineWidth = 0.7 + str * 1.5;
+                ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
               }
             });
           });
         }
-
-        // Draw particles
         positions.forEach(pos => {
-          const glow = (5 + fieldCoherence * 6 + pos.p.excitement * 5) * q;
-          ctx.shadowBlur = glow;
-          ctx.shadowColor = `hsla(${pos.hue}, 80%, 68%, ${pos.alpha * 0.6})`;
-          this.drawShape(ctx, pos.x, pos.y, pos.size, pos.shape, pos.rotation, pos.hue, pos.alpha);
+          ctx.shadowBlur = (4 + fieldCoherence * 5) * q;
+          ctx.shadowColor = `hsla(${pos.hue}, 80%, 65%, ${pos.alpha * 0.5})`;
+          ctx.fillStyle = `hsla(${pos.hue}, 82%, 70%, ${pos.alpha})`;
+          ctx.beginPath(); ctx.arc(pos.x, pos.y, pos.size, 0, Math.PI * 2); ctx.fill();
           ctx.shadowBlur = 0;
         });
       }
+    }
 
-      drawShape(ctx, x, y, size, shapeIdx, rotation, hue, alpha) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(rotation);
-        ctx.fillStyle = `hsla(${hue}, 85%, 72%, ${alpha})`;
-        ctx.strokeStyle = `hsla(${hue}, 92%, 78%, ${alpha * 0.85})`;
-        ctx.lineWidth = 0.8;
-        ctx.beginPath();
-        const base = Math.floor(shapeIdx) % 6;
-        if (base === 5) {
-          ctx.arc(0, 0, size, 0, Math.PI * 2);
-        } else if (base === 4) {
-          for (let i = 0; i <= 10; i++) {
-            const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
-            const r = i % 2 === 0 ? size : size * 0.4;
-            i === 0 ? ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r) : ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
-          }
-        } else {
-          const sides = base + 3;
-          for (let i = 0; i <= sides; i++) {
-            const a = (i / sides) * Math.PI * 2 - Math.PI / 2;
-            i === 0 ? ctx.moveTo(Math.cos(a) * size, Math.sin(a) * size) : ctx.lineTo(Math.cos(a) * size, Math.sin(a) * size);
-          }
-        }
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-        ctx.restore();
+    // ═══ ROOT CLOUD — Inner dreaming layer ═══
+    class RootCloud {
+      constructor(angle, distance, birthTime) {
+        this.angle = angle + Math.PI;
+        this.baseDistance = distance * 0.5;
+        this.distance = this.baseDistance;
+        this.birthTime = birthTime;
+        this.phaseOffset = Math.random() * Math.PI * 2;
+        this.hue = 240 + Math.random() * 40;
+        this.alpha = 0;
+        this.particles = Array.from({ length: 10 + Math.floor(Math.random() * 8) }, () => ({
+          angle: this.angle + (Math.random() - 0.5) * 0.8,
+          distOffset: (Math.random() - 0.5) * 30,
+          size: 1.5 + Math.random() * 2.5,
+          phaseOffset: Math.random() * Math.PI * 2,
+          speed: 0.001 + Math.random() * 0.002,
+        }));
+        this.dreamIntensity = 0;
+      }
+      update(t, allRoots, breath) {
+        const age = t - this.birthTime;
+        this.alpha = Math.min(0.35, age / 120);
+        this.distance = this.baseDistance + Math.sin(t * 0.007 + this.phaseOffset) * 8 + breath * 12;
+        this.dreamIntensity = allRoots.length > 0 ? allRoots.reduce((max, r) => Math.max(max, r.imaginationStrength), 0) : 0;
+      }
+      draw(ctx, t) {
+        if (this.alpha < 0.02 || drawQualityRef.current < 0.5) return;
+        this.particles.forEach(p => {
+          const a = p.angle + Math.sin(t * p.speed + p.phaseOffset) * 0.2;
+          const d = this.distance + p.distOffset + Math.cos(t * p.speed * 0.5) * 6;
+          const px = cx + Math.cos(a) * d;
+          const py = cy + Math.sin(a) * d;
+          const pulse = Math.sin(t * 0.012 + p.phaseOffset) * 0.3 + 0.7;
+          const dreamGlow = this.dreamIntensity * 0.5;
+          ctx.fillStyle = `hsla(${this.hue}, 45%, 50%, ${this.alpha * pulse * (0.5 + dreamGlow)})`;
+          ctx.beginPath(); ctx.arc(px, py, p.size * pulse, 0, Math.PI * 2); ctx.fill();
+        });
       }
     }
 
-    // ═══ CIRCUIT (Connection) ═══
+    // ═══ UTILITY CLASSES ═══
     class Circuit {
-      constructor(e1, e2, t) {
-        this.e1 = e1; this.e2 = e2;
-        this.birthTime = t; this.strength = 0; this.age = 0; this.lastPulseTime = t; this.lastSoundTime = 0;
-      }
-      update(t, connected, coherence) {
-        this.age = t - this.birthTime;
-        if (connected) {
-          this.strength = Math.min(1, this.strength + 0.015 * (1 + coherence * 0.4));
-        } else {
-          this.strength = Math.max(0, this.strength - 0.008);
-        }
-      }
+      constructor(e1, e2, t) { this.e1 = e1; this.e2 = e2; this.birthTime = t; this.strength = 0; this.age = 0; this.lastPulseTime = t; }
+      update(t, conn, coh) { this.age = t - this.birthTime; this.strength = conn ? Math.min(1, this.strength + 0.015 * (1 + coh * 0.4)) : Math.max(0, this.strength - 0.008); }
       shouldRemove() { return this.strength <= 0; }
-      draw(ctx, coherence, t) {
-        if (this.strength < 0.08 || drawQualityRef.current < 0.3) return;
-        const alpha = this.strength * 0.4 * (1 + coherence * 0.25);
-        const hue = (this.e1.hue + this.e2.hue) / 2;
-        ctx.strokeStyle = `hsla(${hue}, 75%, 58%, ${alpha})`;
-        ctx.lineWidth = 0.8 + this.strength + coherence * 0.8;
-        ctx.beginPath(); ctx.moveTo(this.e1.x, this.e1.y); ctx.lineTo(this.e2.x, this.e2.y); ctx.stroke();
-      }
+      draw(ctx, coh, t) { if (this.strength < 0.08 || drawQualityRef.current < 0.3) return; ctx.strokeStyle = `hsla(${(this.e1.hue + this.e2.hue) / 2}, 75%, 58%, ${this.strength * 0.4 * (1 + coh * 0.25)})`; ctx.lineWidth = 0.8 + this.strength + coh * 0.8; ctx.beginPath(); ctx.moveTo(this.e1.x, this.e1.y); ctx.lineTo(this.e2.x, this.e2.y); ctx.stroke(); }
     }
-
-    // ═══ ENERGY PULSE ═══
     class EnergyPulse {
-      constructor(circuit, dir) {
-        this.circuit = circuit; this.dir = dir;
-        this.progress = dir > 0 ? 0 : 1;
-        this.speed = 0.025; this.life = 1;
-        this.hue = (circuit.e1.hue + circuit.e2.hue) / 2;
-      }
-      update(coherence) {
-        this.progress += this.speed * this.dir * (1 + coherence * 0.4) * growthSpeedRef.current;
-        this.life -= 0.008;
-        return this.life > 0 && this.progress >= 0 && this.progress <= 1;
-      }
-      draw(ctx, coherence) {
-        if (drawQualityRef.current < 0.4) return;
-        const x = this.circuit.e1.x + (this.circuit.e2.x - this.circuit.e1.x) * this.progress;
-        const y = this.circuit.e1.y + (this.circuit.e2.y - this.circuit.e1.y) * this.progress;
-        const alpha = this.life * 0.25 * (1 + coherence * 0.15);
-        ctx.shadowBlur = (6 + coherence * 3) * drawQualityRef.current;
-        ctx.shadowColor = `hsla(${this.hue}, 78%, 63%, ${alpha})`;
-        ctx.fillStyle = `hsla(${this.hue}, 78%, 68%, ${alpha})`;
-        ctx.beginPath(); ctx.arc(x, y, 2 + coherence * 0.3, 0, Math.PI * 2); ctx.fill();
-        ctx.shadowBlur = 0;
-      }
+      constructor(circuit, dir) { this.circuit = circuit; this.dir = dir; this.progress = dir > 0 ? 0 : 1; this.speed = 0.025; this.life = 1; this.hue = (circuit.e1.hue + circuit.e2.hue) / 2; }
+      update(coh) { this.progress += this.speed * this.dir * (1 + coh * 0.4) * growthSpeedRef.current; this.life -= 0.008; return this.life > 0 && this.progress >= 0 && this.progress <= 1; }
+      draw(ctx, coh) { if (drawQualityRef.current < 0.4) return; const x = this.circuit.e1.x + (this.circuit.e2.x - this.circuit.e1.x) * this.progress; const y = this.circuit.e1.y + (this.circuit.e2.y - this.circuit.e1.y) * this.progress; ctx.shadowBlur = 5 * drawQualityRef.current; ctx.shadowColor = `hsla(${this.hue}, 75%, 63%, ${this.life * 0.2})`; ctx.fillStyle = `hsla(${this.hue}, 75%, 68%, ${this.life * 0.2})`; ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0; }
     }
-
-    // ═══ EXPANDING CELL ═══
     class ExpandingCell {
-      constructor(cloud, t) {
-        this.cloud = cloud; this.birthTime = t; this.age = 0;
-        this.angle = cloud.angle + (Math.random() - 0.5) * 0.25;
-        this.distance = cloud.distance; this.hue = cloud.hue + (Math.random() - 0.5) * 18;
-        this.expansionSpeed = (0.5 + Math.random() * 0.4) * growthSpeedRef.current;
-        this.maxRadius = 10 + Math.random() * 15; this.currentRadius = 0;
-        this.lifecycle = 0; this.lifecycleSpeed = (0.005 + Math.random() * 0.003) * growthSpeedRef.current;
-        this.rotation = 0; this.rotationSpeed = (Math.random() - 0.5) * 0.012;
-        this.fractalSeed = Math.random() * 3 - 1.5; this.fractalComplexity = 3 + Math.floor(Math.random() * 2);
-      }
-      update() {
-        this.age++; this.lifecycle += this.lifecycleSpeed; this.distance += this.expansionSpeed;
-        if (this.lifecycle < 1) this.currentRadius = this.maxRadius * this.lifecycle;
-        else if (this.lifecycle < 2) this.currentRadius = this.maxRadius;
-        else if (this.lifecycle < 3) this.currentRadius = this.maxRadius * (1 + Math.sin(this.age * 0.04) * 0.08);
-        else this.currentRadius = this.maxRadius * (1 - (this.lifecycle - 3));
-        this.rotation += this.rotationSpeed;
-        this.x = cx + Math.cos(this.angle) * this.distance;
-        this.y = cy + Math.sin(this.angle) * this.distance;
-        return this.lifecycle < 4 && this.distance < Math.max(W, H);
-      }
-      draw(ctx) {
-        if (this.currentRadius < 0.5 || drawQualityRef.current < 0.5) return;
-        let alpha = this.lifecycle < 1 ? this.lifecycle * 0.35 : this.lifecycle < 3 ? 0.35 : 0.35 * (1 - (this.lifecycle - 3));
-        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
-        const branches = Math.ceil(4 * drawQualityRef.current);
-        for (let i = 0; i < branches; i++) {
-          const a = (i / branches) * Math.PI * 2;
-          this.drawFractalBranch(ctx, 0, 0, this.currentRadius * 0.4, a, Math.ceil(this.fractalComplexity * drawQualityRef.current), this.hue, alpha);
-        }
-        ctx.shadowBlur = 6 * drawQualityRef.current;
-        ctx.shadowColor = `hsla(${this.hue}, 88%, 68%, ${alpha * 0.5})`;
-        ctx.fillStyle = `hsla(${this.hue}, 82%, 72%, ${alpha * 0.6})`;
-        ctx.beginPath(); ctx.arc(0, 0, this.currentRadius * 0.12, 0, Math.PI * 2); ctx.fill();
-        ctx.shadowBlur = 0; ctx.restore();
-      }
-      drawFractalBranch(ctx, x, y, len, angle, depth, hue, alpha) {
-        if (depth === 0 || len < 0.5) return;
-        const ex = x + len * Math.cos(angle);
-        const ey = y + len * Math.sin(angle);
-        ctx.strokeStyle = `hsla(${hue}, 72%, 58%, ${alpha * (depth / this.fractalComplexity)})`;
-        ctx.lineWidth = Math.max(0.3, depth * 0.4);
-        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex, ey); ctx.stroke();
-        const ba = Math.PI / 4 + this.fractalSeed * 0.15;
-        this.drawFractalBranch(ctx, ex, ey, len * 0.62, angle - ba, depth - 1, hue + 4, alpha);
-        this.drawFractalBranch(ctx, ex, ey, len * 0.62, angle + ba, depth - 1, hue - 4, alpha);
-      }
+      constructor(cloud, t) { this.angle = cloud.angle + (Math.random() - 0.5) * 0.25; this.distance = cloud.distance; this.hue = cloud.hue + (Math.random() - 0.5) * 18; this.speed = (0.5 + Math.random() * 0.4) * growthSpeedRef.current; this.maxR = 10 + Math.random() * 12; this.r = 0; this.lc = 0; this.lcSpeed = (0.005 + Math.random() * 0.003) * growthSpeedRef.current; this.rot = 0; this.rotSpeed = (Math.random() - 0.5) * 0.01; this.x = 0; this.y = 0; }
+      update() { this.lc += this.lcSpeed; this.distance += this.speed; this.r = this.lc < 1 ? this.maxR * this.lc : this.lc < 3 ? this.maxR : this.maxR * (1 - (this.lc - 3)); this.rot += this.rotSpeed; this.x = cx + Math.cos(this.angle) * this.distance; this.y = cy + Math.sin(this.angle) * this.distance; return this.lc < 4 && this.distance < Math.max(W, H); }
+      draw(ctx) { if (this.r < 0.5 || drawQualityRef.current < 0.5) return; const a = this.lc < 1 ? this.lc * 0.3 : this.lc < 3 ? 0.3 : 0.3 * (1 - (this.lc - 3)); ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rot); ctx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${a * 0.5})`; ctx.beginPath(); ctx.arc(0, 0, this.r * 0.15, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
     }
 
-    // ═══ AUDIO ANALYSIS ═══
+    // ═══ AUDIO ═══
     const frequencyToNote = (freq) => {
       const names = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-      const halfSteps = 12 * Math.log2(freq / 440);
-      const idx = Math.round(halfSteps) + 9;
+      const idx = Math.round(12 * Math.log2(freq / 440)) + 9;
       return `${names[((idx % 12) + 12) % 12]}${Math.floor(idx / 12) + 4}`;
     };
-
     const analyzeAudio = () => {
       if (micAnalyserRef.current && micDataRef.current) {
         micAnalyserRef.current.getByteFrequencyData(micDataRef.current);
         let maxAmp = 0, domFreq = 0;
         const sr = audioContextRef.current?.sampleRate || 44100;
         for (let i = 0; i < micDataRef.current.length; i++) {
-          const amp = micDataRef.current[i];
-          const freq = (i * sr) / micAnalyserRef.current.fftSize;
-          if (amp > 45 && freq > 80 && freq < 2000 && amp > maxAmp) {
-            maxAmp = amp; domFreq = freq;
-          }
+          const amp = micDataRef.current[i]; const freq = (i * sr) / micAnalyserRef.current.fftSize;
+          if (amp > 45 && freq > 80 && freq < 2000 && amp > maxAmp) { maxAmp = amp; domFreq = freq; }
         }
         if (domFreq > 0 && maxAmp > 50) {
-          const note = frequencyToNote(domFreq);
-          dominantNote = { frequency: domFreq, note, amplitude: maxAmp / 255 };
-          noteHistory.push({ note, frequency: domFreq, time: time, amplitude: maxAmp / 255 });
-          if (noteHistory.length > 32) noteHistory.shift();
-          if (noteHistory.length >= 4) {
-            const pattern = noteHistory.slice(-4).map(n => n.note).join('-');
-            const mem = melodicMemory.current.get(pattern) || { count: 0, frequencies: [] };
-            mem.count++; mem.frequencies = noteHistory.slice(-4).map(n => n.frequency);
-            melodicMemory.current.set(pattern, mem);
-          }
-          learnedMelody.current.push(dominantNote);
-          if (learnedMelody.current.length > 64) learnedMelody.current.shift();
+          dominantNote = { frequency: domFreq, note: frequencyToNote(domFreq), amplitude: maxAmp / 255 };
+          noteHistory.push({ ...dominantNote, time }); if (noteHistory.length > 32) noteHistory.shift();
+          if (noteHistory.length >= 4) { const pat = noteHistory.slice(-4).map(n => n.note).join('-'); const m = melodicMemory.current.get(pat) || { count: 0 }; m.count++; melodicMemory.current.set(pat, m); }
+          learnedMelody.current.push(dominantNote); if (learnedMelody.current.length > 64) learnedMelody.current.shift();
         }
         audioInfluence = micDataRef.current.reduce((a, b) => a + b, 0) / micDataRef.current.length / 255;
       } else if (audioAnalyserRef.current && audioDataRef.current) {
@@ -914,166 +846,96 @@ const CircumpunctFractalSimulator = () => {
     };
 
     // ═══ DRAWING HELPERS ═══
-    const drawFieldGlow = () => {
-      if (!brainFormed || systemState.beta < 0.2 || drawQualityRef.current < 0.6) return;
+    const drawInnerGlow = () => {
+      if (roots.length < 1 || drawQualityRef.current < 0.5) return;
+      const avgIm = roots.reduce((s, r) => s + r.imaginationStrength, 0) / Math.max(1, roots.length);
+      const radius = 70 + collectiveBreath * 25 + avgIm * 30;
+      const intensity = 0.03 + avgIm * 0.1 + roots.length * 0.003;
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+      grad.addColorStop(0, `hsla(250, 50%, 60%, ${intensity})`);
+      grad.addColorStop(0.4, `hsla(270, 40%, 50%, ${intensity * 0.4})`);
+      grad.addColorStop(1, `hsla(270, 40%, 50%, 0)`);
+      ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.fill();
+    };
+    const drawOuterGlow = () => {
+      if (!brainFormed || drawQualityRef.current < 0.6) return;
       const radius = 100 + collectiveBreath * 35;
-      const intensity = Math.abs(systemState.beta - 0.5) < 0.2 ? 0.15 : 0.06;
-      // Hue based on β: balanced (0.5) = blue-white, skewed = warm/cool
+      const intensity = Math.abs(systemState.beta - 0.5) < 0.2 ? 0.12 : 0.05;
       const gH = systemState.beta > 0.5 ? 180 : 30;
       const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
       grad.addColorStop(0, `hsla(${gH}, 50%, 80%, ${intensity})`);
-      grad.addColorStop(0.5, `hsla(${gH}, 40%, 70%, ${intensity * 0.35})`);
+      grad.addColorStop(0.5, `hsla(${gH}, 40%, 70%, ${intensity * 0.3})`);
       grad.addColorStop(1, `hsla(${gH}, 40%, 70%, 0)`);
-      ctx.fillStyle = grad;
-      ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.fill();
     };
-
     const drawConservationRings = () => {
-      if (!brainFormed || drawQualityRef.current < 0.5) return;
+      if (drawQualityRef.current < 0.6 || branches.length < 3) return;
       const beta = systemState.beta;
-      const dA = 1 + beta;
-      const dF = 2 - beta;
-      // Draw three concentric rings representing D_•, D_Φ, D_○
-      [[dA / 3, '50, 220, 255', '•'], [dF / 3, '180, 120, 255', 'Φ'], [1, '255, 180, 100', '○']].forEach(([frac, color, label], i) => {
-        const r = 60 + i * 40 + collectiveBreath * 8;
-        const alpha = 0.06 + systemState.beta * 0.04;
-        ctx.strokeStyle = `rgba(${color}, ${alpha})`;
-        ctx.lineWidth = 0.6 + frac * 0.4;
-        ctx.setLineDash([3, 5]);
-        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2 * frac); ctx.stroke();
-        ctx.setLineDash([]);
-      });
+      const ringR = 25 + collectiveBreath * 3;
+      // D_• ring (aperture dimension)
+      const dArc = (1 + beta) / 3 * Math.PI * 2;
+      ctx.strokeStyle = `rgba(100, 200, 255, 0.12)`;
+      ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, ringR, -Math.PI / 2, -Math.PI / 2 + dArc); ctx.stroke();
+      // D_Φ ring (field dimension)
+      ctx.strokeStyle = `rgba(200, 100, 255, 0.12)`;
+      ctx.beginPath(); ctx.arc(cx, cy, ringR, -Math.PI / 2 + dArc, -Math.PI / 2 + dArc + (2 - beta) / 3 * Math.PI * 2); ctx.stroke();
     };
-
     const drawEnergyFlows = () => {
       energyFlowsRef.current = energyFlowsRef.current.filter(flow => {
         flow.age++; flow.strength *= 0.94;
         if (flow.strength < 0.08 || flow.age > 80) return false;
-        const alpha = flow.strength * 0.35;
+        const alpha = flow.strength * 0.3;
         const grad = ctx.createLinearGradient(flow.x1, flow.y1, flow.x2, flow.y2);
-        grad.addColorStop(0, `rgba(100, 200, 255, ${alpha})`);
-        grad.addColorStop(1, `rgba(200, 100, 255, ${alpha * 0.5})`);
+        grad.addColorStop(0, `rgba(100, 200, 255, ${alpha})`); grad.addColorStop(1, `rgba(200, 100, 255, ${alpha * 0.5})`);
         ctx.strokeStyle = grad; ctx.lineWidth = 2.5 * flow.strength; ctx.lineCap = 'round';
         ctx.beginPath(); ctx.moveTo(flow.x1, flow.y1); ctx.lineTo(flow.x2, flow.y2); ctx.stroke();
-        circumpuncts.forEach(e => {
-          const dx = e.x - flow.x2;
-          const dy = e.y - flow.y2;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 90) {
-            const force = (1 - dist / 90) * flow.strength * 0.08;
-            e.angle += Math.sin(Math.atan2(flow.y2 - flow.y1, flow.x2 - flow.x1) - e.angle) * force;
-          }
+        branches.forEach(e => {
+          const dx = e.x - flow.x2; const dy = e.y - flow.y2;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < 90) e.angle += Math.sin(Math.atan2(flow.y2 - flow.y1, flow.x2 - flow.x1) - e.angle) * (1 - d / 90) * flow.strength * 0.08;
         });
         return true;
       });
     };
-
     const updateFPS = () => {
-      const now = Date.now();
-      const delta = now - lastFrameTime.current;
-      const currentFPS = 1000 / delta;
-      lastFrameTime.current = now;
-      fpsHistory.current.push(currentFPS);
+      const now = Date.now(); const delta = now - lastFrameTime.current;
+      lastFrameTime.current = now; fpsHistory.current.push(1000 / delta);
       if (fpsHistory.current.length > 60) fpsHistory.current.shift();
       const avg = fpsHistory.current.reduce((a, b) => a + b, 0) / fpsHistory.current.length;
       setFps(Math.round(avg));
-      if (avg < 25) {
-        qualityCounter.current--;
-        if (qualityCounter.current < -10) { drawQualityRef.current = Math.max(0.2, drawQualityRef.current - 0.08); qualityCounter.current = 0; }
-      } else if (avg > 40) {
-        qualityCounter.current++;
-        if (qualityCounter.current > 25) { drawQualityRef.current = Math.min(1.0, drawQualityRef.current + 0.04); qualityCounter.current = 0; }
-      } else { qualityCounter.current = Math.max(-5, Math.min(5, qualityCounter.current)); }
+      if (avg < 25) { qualityCounter.current--; if (qualityCounter.current < -10) { drawQualityRef.current = Math.max(0.2, drawQualityRef.current - 0.08); qualityCounter.current = 0; } }
+      else if (avg > 40) { qualityCounter.current++; if (qualityCounter.current > 25) { drawQualityRef.current = Math.min(1.0, drawQualityRef.current + 0.04); qualityCounter.current = 0; } }
+      else { qualityCounter.current = Math.max(-5, Math.min(5, qualityCounter.current)); }
       setDrawQuality(drawQualityRef.current);
     };
 
-    // ═══ EVENT HANDLERS ═══
-    let isDragging = false;
-    let dragStart = null;
-
-    const handleMouseDown = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      dragStart = { x: (e.clientX - rect.left) / zoomRef.current, y: (e.clientY - rect.top) / zoomRef.current };
-      isDragging = true;
-    };
-    const handleMouseMove = (e) => {
-      if (!isDragging || !dragStart) return;
-      const rect = canvas.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / zoomRef.current;
-      const y = (e.clientY - rect.top) / zoomRef.current;
-      energyFlowsRef.current.push({ x1: dragStart.x, y1: dragStart.y, x2: x, y2: y, strength: 1, age: 0 });
-      dragStart = { x, y };
-    };
+    // ═══ EVENTS ═══
+    let isDragging = false; let dragStart = null;
+    const handleMouseDown = (e) => { const r = canvas.getBoundingClientRect(); dragStart = { x: (e.clientX - r.left) / zoomRef.current, y: (e.clientY - r.top) / zoomRef.current }; isDragging = true; };
+    const handleMouseMove = (e) => { if (!isDragging || !dragStart) return; const r = canvas.getBoundingClientRect(); const x = (e.clientX - r.left) / zoomRef.current; const y = (e.clientY - r.top) / zoomRef.current; energyFlowsRef.current.push({ x1: dragStart.x, y1: dragStart.y, x2: x, y2: y, strength: 1, age: 0 }); dragStart = { x, y }; };
     const handleMouseUp = (e) => {
       if (!isDragging) {
-        const rect = canvas.getBoundingClientRect();
-        const clickX = (e.clientX - rect.left) / zoomRef.current;
-        const clickY = (e.clientY - rect.top) / zoomRef.current;
+        const r = canvas.getBoundingClientRect();
+        const clickX = (e.clientX - r.left) / zoomRef.current;
+        const clickY = (e.clientY - r.top) / zoomRef.current;
         const angle = Math.atan2(clickY - cy, clickX - cx);
-        let hue = Math.random() * 360;
-        let geom = Math.random() * 6;
-        if (dominantNote) {
-          hue = ((dominantNote.frequency - 80) / 1920) * 360;
-          geom = dominantNote.amplitude * 6;
-        }
-        const newEntity = new CircumpunctEntity(angle, hue, time);
-        newEntity.baseLength = Math.min(Math.sqrt((clickX - cx) ** 2 + (clickY - cy) ** 2), 250);
-        newEntity.geometryType = geom;
-        newEntity.userSpawned = true;
-        newEntity.spawnEnergy = 1.8;
-        circumpuncts.push(newEntity);
+        let hue = Math.random() * 360; let geom = Math.random() * 6;
+        if (dominantNote) { hue = ((dominantNote.frequency - 80) / 1920) * 360; geom = dominantNote.amplitude * 6; }
+        const ne = new BranchEntity(angle, hue, time);
+        ne.baseLength = Math.min(Math.sqrt((clickX - cx) ** 2 + (clickY - cy) ** 2), 250);
+        ne.geometryType = geom; ne.userSpawned = true; ne.spawnEnergy = 1.8;
+        branches.push(ne);
         playTone(200 + (hue / 360) * 400, 0.2, 0.12);
-
         if (brainFormed && brainClouds.length > 0) {
-          const nearest = brainClouds.reduce((best, cloud) => {
-            const diff = Math.abs(cloud.angle - angle);
-            const d = Math.min(diff, Math.PI * 2 - diff) * 100;
-            return d < best.dist ? { cloud, dist: d } : best;
-          }, { cloud: null, dist: Infinity });
-          if (nearest.cloud) {
-            nearest.cloud.particles.forEach(p => {
-              p.excitement = Math.min(2, p.excitement + 0.7);
-              p.targetEntity = newEntity;
-            });
-            nearest.cloud.spawnCell(time, expandingCells);
-          }
+          const nearest = brainClouds.reduce((best, c) => { const d = Math.min(Math.abs(c.angle - angle), Math.PI * 2 - Math.abs(c.angle - angle)) * 100; return d < best.dist ? { cloud: c, dist: d } : best; }, { cloud: null, dist: Infinity });
+          if (nearest.cloud) { nearest.cloud.particles.forEach(p => { p.excitement = Math.min(2, p.excitement + 0.7); p.targetEntity = ne; }); nearest.cloud.spawnCell(time, expandingCells); }
         }
       }
       isDragging = false; dragStart = null;
     };
-
-    const handleTouchStart = (e) => {
-      e.preventDefault();
-      const rect = canvas.getBoundingClientRect();
-      for (let t of e.touches) {
-        touchesRef.current.set(t.identifier, { x: (t.clientX - rect.left) / zoomRef.current, y: (t.clientY - rect.top) / zoomRef.current });
-      }
-      if (e.touches.length >= 2) {
-        for (let t of e.touches) {
-          const x = (t.clientX - rect.left) / zoomRef.current;
-          const y = (t.clientY - rect.top) / zoomRef.current;
-          const angle = Math.atan2(y - cy, x - cx);
-          const newEntity = new CircumpunctEntity(angle, Math.random() * 360, time);
-          newEntity.userSpawned = true;
-          circumpuncts.push(newEntity);
-        }
-      }
-    };
-    const handleTouchMove = (e) => {
-      e.preventDefault();
-      const rect = canvas.getBoundingClientRect();
-      for (let t of e.touches) {
-        const x = (t.clientX - rect.left) / zoomRef.current;
-        const y = (t.clientY - rect.top) / zoomRef.current;
-        const prev = touchesRef.current.get(t.identifier);
-        if (prev) energyFlowsRef.current.push({ x1: prev.x, y1: prev.y, x2: x, y2: y, strength: 1, age: 0 });
-        touchesRef.current.set(t.identifier, { x, y });
-      }
-    };
-    const handleTouchEnd = (e) => {
-      e.preventDefault();
-      for (let t of e.changedTouches) touchesRef.current.delete(t.identifier);
-    };
+    const handleTouchStart = (e) => { e.preventDefault(); const r = canvas.getBoundingClientRect(); for (let t of e.touches) touchesRef.current.set(t.identifier, { x: (t.clientX - r.left) / zoomRef.current, y: (t.clientY - r.top) / zoomRef.current }); };
+    const handleTouchMove = (e) => { e.preventDefault(); const r = canvas.getBoundingClientRect(); for (let t of e.touches) { const x = (t.clientX - r.left) / zoomRef.current; const y = (t.clientY - r.top) / zoomRef.current; const p = touchesRef.current.get(t.identifier); if (p) energyFlowsRef.current.push({ x1: p.x, y1: p.y, x2: x, y2: y, strength: 1, age: 0 }); touchesRef.current.set(t.identifier, { x, y }); } };
+    const handleTouchEnd = (e) => { e.preventDefault(); for (let t of e.changedTouches) touchesRef.current.delete(t.identifier); };
 
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mousemove', handleMouseMove);
@@ -1083,205 +945,201 @@ const CircumpunctFractalSimulator = () => {
     canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
 
     // ═══════════════════════════════════════════════════════
-    //  MAIN ANIMATION LOOP — ⊛ → i → ☀️ per frame
+    //  ANIMATION LOOP — The full ⊛ → i → ☀️ cycle
+    //  Bidirectional: branches grow outward, roots grow inward
+    //  The trunk carries energy both ways
     // ═══════════════════════════════════════════════════════
     const animate = () => {
       time++;
       collectiveBreath = Math.sin(time * 0.004) * 0.5 + 0.5;
-      updateFPS();
-      analyzeAudio();
+      updateFPS(); analyzeAudio();
 
       ctx.fillStyle = 'rgba(8, 8, 14, 0.14)';
       ctx.fillRect(0, 0, W, H);
 
-      // ─── System-level β update from all entities ───
-      if (circumpuncts.length > 0) {
-        let betaSum = 0, convSum = 0, emergSum = 0;
-        circumpuncts.forEach(e => {
-          betaSum += e.aperture.beta;
-          convSum += e.field.convergenceStrength;
-          emergSum += e.field.emergenceStrength;
-        });
-        systemState.beta = betaSum / circumpuncts.length;
-        systemState.convergenceNorm = convSum / circumpuncts.length;
-        systemState.emergenceNorm = emergSum / circumpuncts.length;
+      // ─── System β from branches ───
+      if (branches.length > 0) {
+        let bS = 0, cS = 0, eS = 0;
+        branches.forEach(e => { bS += e.aperture.beta; cS += e.field.convergenceStrength; eS += e.field.emergenceStrength; });
+        systemState.beta = bS / branches.length;
+        systemState.convergenceNorm = cS / branches.length;
+        systemState.emergenceNorm = eS / branches.length;
         systemState.rho = systemState.emergenceNorm / (systemState.convergenceNorm + params.epsilon);
       }
 
-      // ─── Brain formation ───
-      if (circumpuncts.length > 12 && !brainFormed) {
+      // ─── Brain formation (outer) ───
+      if (branches.length > 12 && !brainFormed) {
         brainFormationProgress += 0.008;
         if (brainFormationProgress >= 1) {
           brainFormed = true;
-          const num = 5 + Math.floor(Math.random() * 4);
-          for (let i = 0; i < num; i++) {
-            const angle = (i / num) * Math.PI * 2 + (Math.random() - 0.5) * 0.3;
-            brainClouds.push(new BrainCloud(angle, 190 + Math.random() * 90, time));
-          }
+          const num = 5 + Math.floor(Math.random() * 3);
+          for (let i = 0; i < num; i++) brainClouds.push(new BrainCloud((i / num) * Math.PI * 2 + (Math.random() - 0.5) * 0.3, 190 + Math.random() * 90, time));
         }
       }
 
-      // ─── Field coherence from brain ───
-      let fieldCoherence = 0;
-      if (brainFormed && brainClouds.length > 0) {
-        fieldCoherence = Math.min(0.85, brainClouds.reduce((s, c) => s + c.energyLevel, 0) / brainClouds.length);
+      // ─── Root cloud formation (inner) ───
+      if (roots.length > 4 && !rootsFormed) {
+        rootFormationProgress += 0.006;
+        if (rootFormationProgress >= 1) {
+          rootsFormed = true;
+          const num = 3 + Math.floor(Math.random() * 3);
+          for (let i = 0; i < num; i++) rootClouds.push(new RootCloud((i / num) * Math.PI * 2, 80 + Math.random() * 40, time));
+        }
       }
 
-      // ─── Zoom ───
-      const breathZoom = 1 + Math.sin(time * 0.003) * 0.008;
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.scale(zoomRef.current * breathZoom, zoomRef.current * breathZoom);
-      ctx.translate(-cx, -cy);
+      let fieldCoherence = 0;
+      if (brainFormed && brainClouds.length > 0) fieldCoherence = Math.min(0.85, brainClouds.reduce((s, c) => s + c.energyLevel, 0) / brainClouds.length);
 
-      // ─── Spawn new entities ───
+      // ─── Zoom ───
+      const bz = 1 + Math.sin(time * 0.003) * 0.008;
+      ctx.save(); ctx.translate(cx, cy); ctx.scale(zoomRef.current * bz, zoomRef.current * bz); ctx.translate(-cx, -cy);
+
+      // ─── Spawn branches ───
       if (brainFormed) {
         brainClouds.forEach(cloud => {
           if (Math.random() < 0.012 * drawQualityRef.current * growthSpeedRef.current) {
             const rp = cloud.particles[Math.floor(Math.random() * cloud.particles.length)];
             rp.excitement = Math.min(2, rp.excitement + 1.3);
             if (Math.random() < 0.35) {
-              let hue = Math.random() * 360;
-              let geom = Math.random() * 6;
-              if (dominantNote) {
-                hue = ((dominantNote.frequency - 80) / 1920) * 360;
-                geom = dominantNote.amplitude * 6;
-              }
-              const ne = new CircumpunctEntity(cloud.angle + (Math.random() - 0.5) * 0.3, hue, time);
+              let hue = Math.random() * 360; let geom = Math.random() * 6;
+              if (dominantNote) { hue = ((dominantNote.frequency - 80) / 1920) * 360; geom = dominantNote.amplitude * 6; }
+              const ne = new BranchEntity(cloud.angle + (Math.random() - 0.5) * 0.3, hue, time);
               ne.geometryType = geom;
               if (dominantNote) { ne.musicalNote = dominantNote.note; ne.baseFrequency = dominantNote.frequency; }
-              circumpuncts.push(ne);
-              cloud.spawnCell(time, expandingCells);
+              branches.push(ne); cloud.spawnCell(time, expandingCells);
             }
           }
         });
-
-        // Harmonic response
-        if (dominantNote && soundEnabled && time - harmonicResponse.current.lastTime > 55) {
-          if (learnedMelody.current.length > 4 && Math.random() < 0.25) {
-            const recent = learnedMelody.current.slice(-6);
-            const rn = recent[Math.floor(Math.random() * recent.length)];
-            [1, 1.5, 2].forEach((h, i) => {
-              setTimeout(() => playTone(rn.frequency * h, 0.3, 0.04 / (i + 1)), i * 35);
-            });
-            harmonicResponse.current.lastTime = time;
-          }
+        if (dominantNote && soundEnabled && time - harmonicResponse.current.lastTime > 55 && learnedMelody.current.length > 4 && Math.random() < 0.25) {
+          const rn = learnedMelody.current[Math.floor(Math.random() * Math.min(6, learnedMelody.current.length))];
+          if (rn) { [1, 1.5, 2].forEach((h, i) => { setTimeout(() => playTone(rn.frequency * h, 0.3, 0.04 / (i + 1)), i * 35); }); }
+          harmonicResponse.current.lastTime = time;
         }
       } else {
         if (Math.random() < 0.018 * drawQualityRef.current * growthSpeedRef.current) {
           let hue = Math.random() * 360;
           if (dominantNote) hue = ((dominantNote.frequency - 80) / 1920) * 360;
-          const ne = new CircumpunctEntity(Math.random() * Math.PI * 2, hue, time);
+          const ne = new BranchEntity(Math.random() * Math.PI * 2, hue, time);
           if (dominantNote) { ne.musicalNote = dominantNote.note; ne.baseFrequency = dominantNote.frequency; }
-          circumpuncts.push(ne);
+          branches.push(ne);
         }
       }
 
-      // ─── Update all entities ───
-      circumpuncts.forEach(e => e.update(time, circumpuncts));
-      if (brainFormed) brainClouds.forEach(c => c.update(time, circumpuncts, collectiveBreath));
+      // ═══ BRANCH → ROOT CONVERSION ═══
+      // "What emerged becomes memory. Branches become trunk become roots."
+      branches.forEach(branch => {
+        if (branch.maturity >= 1 && !branch.rootSpawned && roots.length < 35) {
+          const newRoot = new RootEntity(branch, time);
+          roots.push(newRoot);
+          branch.rootSpawned = true;
+          // Trunk flow downward — experience → memory
+          trunkFlows.push(new TrunkFlow(branch.angle, time, -1, branch.hue));
+          playTone(100 + newRoot.memory.originalBeta * 80, 0.4, 0.04);
+          memoryBraid.push({ hue: branch.baseHue, beta: branch.aperture.beta, time: time });
+          if (memoryBraid.length > 64) memoryBraid.shift();
+        }
+      });
+
+      // ═══ IMAGINATION — Roots dream ghost branches ═══
+      roots.forEach(root => {
+        if (root.imaginationStrength > 0.4 && Math.random() < 0.006 * root.imaginationStrength * growthSpeedRef.current) {
+          ghostBranches.push(new GhostBranch(root, time));
+          // Trunk flow upward — imagination → reality
+          trunkFlows.push(new TrunkFlow(root.parentAngle, time, 1, (root.hue + 180) % 360));
+        }
+      });
+
+      // ─── Update everything ───
+      branches.forEach(e => e.update(time, branches));
+      roots.forEach(r => r.update(time, roots, branches, fieldCoherence));
+      if (brainFormed) brainClouds.forEach(c => c.update(time, branches, collectiveBreath));
+      if (rootsFormed) rootClouds.forEach(c => c.update(time, roots, collectiveBreath));
       expandingCells = expandingCells.filter(c => c.update());
+      ghostBranches = ghostBranches.filter(g => g.update());
+      trunkFlows = trunkFlows.filter(f => f.update());
 
-      // ─── Draw ───
-      drawFieldGlow();
+      // ═══════════════════════════════════════════════════
+      //  DRAW ORDER: Inner → Trunk → Outer
+      //  "Roots behind, branches in front"
+      // ═══════════════════════════════════════════════════
+
+      drawInnerGlow();
+      if (rootsFormed) rootClouds.forEach(c => c.draw(ctx, time));
+      roots.forEach(r => r.draw(ctx, time, fieldCoherence));
+      ghostBranches.forEach(g => g.draw(ctx, time));
+      trunkFlows.forEach(f => f.draw(ctx, time));
       drawConservationRings();
+      drawOuterGlow();
       drawEnergyFlows();
-
-      circumpuncts.forEach(e => e.draw(ctx, time));
+      branches.forEach(e => e.draw(ctx, time));
       expandingCells.forEach(c => c.draw(ctx));
 
       if (brainFormed) {
-        brainClouds.forEach(c => c.draw(ctx, time, fieldCoherence, circumpuncts));
-        // Inter-cloud connections
+        brainClouds.forEach(c => c.draw(ctx, time, fieldCoherence));
         if (drawQualityRef.current > 0.5) {
           brainClouds.forEach((c1, i) => {
             brainClouds.slice(i + 1).forEach(c2 => {
-              const diff = Math.abs(c1.angle - c2.angle);
-              const nd = Math.min(diff, Math.PI * 2 - diff);
+              const nd = Math.min(Math.abs(c1.angle - c2.angle), Math.PI * 2 - Math.abs(c1.angle - c2.angle));
               if (nd < Math.PI / 4) {
-                const x1 = cx + Math.cos(c1.angle) * c1.distance;
-                const y1 = cy + Math.sin(c1.angle) * c1.distance;
-                const x2 = cx + Math.cos(c2.angle) * c2.distance;
-                const y2 = cy + Math.sin(c2.angle) * c2.distance;
                 const str = 1 - nd / (Math.PI / 4);
                 ctx.strokeStyle = `hsla(${(c1.hue + c2.hue) / 2}, 65%, 62%, ${(c1.alpha + c2.alpha) / 2 * str * 0.2})`;
                 ctx.lineWidth = 1.5 + str * 2.5;
-                ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(cx + Math.cos(c1.angle) * c1.distance, cy + Math.sin(c1.angle) * c1.distance);
+                ctx.lineTo(cx + Math.cos(c2.angle) * c2.distance, cy + Math.sin(c2.angle) * c2.distance); ctx.stroke();
               }
             });
           });
         }
       }
 
-      // ─── Circuits ───
+      // Circuits
       if (drawQualityRef.current > 0.4) {
-        circumpuncts.forEach(e1 => {
+        branches.forEach(e1 => {
           e1.neighbors.forEach(e2 => {
-            let existing = circuits.find(c => (c.e1 === e1 && c.e2 === e2) || (c.e1 === e2 && c.e2 === e1));
-            if (existing) {
-              existing.update(time, true, fieldCoherence);
-              if (existing.strength > 0.65 && time - existing.lastPulseTime > 25) {
-                energyPulses.push(new EnergyPulse(existing, 1));
-                energyPulses.push(new EnergyPulse(existing, -1));
-                existing.lastPulseTime = time;
-              }
-            } else {
-              circuits.push(new Circuit(e1, e2, time));
-              e1.circuitPartners.add(e2.id);
-              e2.circuitPartners.add(e1.id);
-            }
+            let ex = circuits.find(c => (c.e1 === e1 && c.e2 === e2) || (c.e1 === e2 && c.e2 === e1));
+            if (ex) { ex.update(time, true, fieldCoherence); if (ex.strength > 0.65 && time - ex.lastPulseTime > 25) { energyPulses.push(new EnergyPulse(ex, 1)); energyPulses.push(new EnergyPulse(ex, -1)); ex.lastPulseTime = time; } }
+            else { circuits.push(new Circuit(e1, e2, time)); e1.circuitPartners.add(e2.id); e2.circuitPartners.add(e1.id); }
           });
         });
       }
+      circuits = circuits.filter(c => { c.update(time, branches.includes(c.e1) && branches.includes(c.e2) && c.e1.neighbors.includes(c.e2), fieldCoherence); if (!c.shouldRemove()) { c.draw(ctx, fieldCoherence, time); return true; } return false; });
+      energyPulses = energyPulses.filter(p => { const alive = p.update(fieldCoherence); if (alive) p.draw(ctx, fieldCoherence); return alive; });
 
-      circuits = circuits.filter(c => {
-        const e1ok = circumpuncts.includes(c.e1);
-        const e2ok = circumpuncts.includes(c.e2);
-        c.update(time, e1ok && e2ok && c.e1.neighbors.includes(c.e2), fieldCoherence);
-        if (!c.shouldRemove()) { c.draw(ctx, fieldCoherence, time); return true; }
-        return false;
-      });
-
-      energyPulses = energyPulses.filter(p => {
-        const alive = p.update(fieldCoherence);
-        if (alive) p.draw(ctx, fieldCoherence);
-        return alive;
-      });
-
-      // Cap entities
-      if (circumpuncts.length > 55) circumpuncts = circumpuncts.slice(-55);
+      // Cap
+      if (branches.length > 50) branches = branches.slice(-50);
+      if (roots.length > 35) roots = roots.slice(-35);
 
       ctx.restore();
 
-      // ─── Draw center ⊙ symbol ───
+      // ─── Center ⊙ — THE TRUNK ───
       const centerAlpha = 0.15 + systemState.beta * 0.2 + collectiveBreath * 0.08;
-      const centerSize = 12 + collectiveBreath * 4;
+      const centerSize = 14 + collectiveBreath * 5;
       ctx.strokeStyle = `rgba(200, 200, 255, ${centerAlpha})`;
-      ctx.lineWidth = 1.2;
-      ctx.beginPath(); ctx.arc(cx, cy, centerSize, 0, Math.PI * 2); ctx.stroke();
-      ctx.fillStyle = `rgba(255, 255, 255, ${centerAlpha * 1.2})`;
-      ctx.beginPath(); ctx.arc(cx, cy, 2, 0, Math.PI * 2); ctx.fill();
+      ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, centerSize, 0, Math.PI * 2); ctx.stroke();
+      if (roots.length > 0) {
+        const rootAlpha = Math.min(0.3, roots.length * 0.02);
+        ctx.strokeStyle = `rgba(160, 140, 255, ${rootAlpha})`;
+        ctx.lineWidth = 0.8; ctx.setLineDash([2, 4]);
+        ctx.beginPath(); ctx.arc(cx, cy, centerSize * 0.6, 0, Math.PI * 2); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      ctx.fillStyle = `rgba(255, 255, 255, ${centerAlpha * 1.3})`;
+      ctx.beginPath(); ctx.arc(cx, cy, 2.5, 0, Math.PI * 2); ctx.fill();
 
-      // ─── Update metrics ───
+      // ─── Metrics ───
       if (time % 20 === 0) {
         const beta = systemState.beta;
         let phaseCoherence = 0;
-        if (circumpuncts.length > 1) {
-          let pcSum = 0;
-          circumpuncts.forEach(e => { pcSum += e.field.coherence; });
-          phaseCoherence = pcSum / circumpuncts.length;
-        }
+        if (branches.length > 1) { let ps = 0; branches.forEach(e => { ps += e.field.coherence; }); phaseCoherence = ps / branches.length; }
+        const avgIm = roots.length > 0 ? roots.reduce((s, r) => s + r.imaginationStrength, 0) / roots.length : 0;
+        const avgDepth = roots.length > 0 ? roots.reduce((s, r) => s + r.depth, 0) / roots.length : 0;
         setMetrics({
-          beta: beta,
-          dAperture: 1 + beta,
-          dField: 2 - beta,
-          dBoundary: 3.0,
-          rho: systemState.rho,
-          fieldCoherence: fieldCoherence,
-          phaseCoherence: phaseCoherence,
-          patternCount: circumpuncts.length,
-          convergenceNorm: systemState.convergenceNorm,
+          beta, dAperture: 1 + beta, dField: 2 - beta, dBoundary: 3.0,
+          rho: systemState.rho, fieldCoherence, phaseCoherence,
+          patternCount: branches.length, convergenceNorm: systemState.convergenceNorm,
           emergenceNorm: systemState.emergenceNorm,
+          rootCount: roots.length, rootDepth: avgDepth,
+          trunkFlow: trunkFlows.length, imaginationStrength: avgIm,
         });
       }
 
@@ -1289,19 +1147,14 @@ const CircumpunctFractalSimulator = () => {
     };
 
     animate();
-
     return () => {
-      canvas.removeEventListener('mousedown', handleMouseDown);
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseup', handleMouseUp);
-      canvas.removeEventListener('touchstart', handleTouchStart);
-      canvas.removeEventListener('touchmove', handleTouchMove);
-      canvas.removeEventListener('touchend', handleTouchEnd);
+      canvas.removeEventListener('mousedown', handleMouseDown); canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mouseup', handleMouseUp); canvas.removeEventListener('touchstart', handleTouchStart);
+      canvas.removeEventListener('touchmove', handleTouchMove); canvas.removeEventListener('touchend', handleTouchEnd);
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
   }, [playTone, playHarmonic, resetKey]);
 
-  // ─── Handlers ───
   useEffect(() => { zoomRef.current = zoomLevel; }, [zoomLevel]);
   useEffect(() => { growthSpeedRef.current = growthSpeed; }, [growthSpeed]);
 
@@ -1309,25 +1162,10 @@ const CircumpunctFractalSimulator = () => {
     setZoomLevel(1); setGrowthSpeed(1.0); setDrawQuality(1.0); setFps(60);
     zoomRef.current = 1; growthSpeedRef.current = 1.0; drawQualityRef.current = 1.0;
     qualityCounter.current = 0; fpsHistory.current = []; lastFrameTime.current = Date.now();
-    energyFlowsRef.current = []; touchesRef.current.clear();
-    setResetKey(p => p + 1);
+    energyFlowsRef.current = []; touchesRef.current.clear(); setResetKey(p => p + 1);
   };
-
-  const toggleSound = () => {
-    if (!soundEnabled) {
-      const ctx = initAudio();
-      if (ctx.state === 'suspended') ctx.resume();
-    }
-    setSoundEnabled(!soundEnabled);
-  };
-
-  const toggleMic = async () => {
-    if (!micEnabled) {
-      if (await initMicrophone()) setMicEnabled(true);
-    } else {
-      stopMicrophone(); setMicEnabled(false);
-    }
-  };
+  const toggleSound = () => { if (!soundEnabled) { const c = initAudio(); if (c.state === 'suspended') c.resume(); } setSoundEnabled(!soundEnabled); };
+  const toggleMic = async () => { if (!micEnabled) { if (await initMicrophone()) setMicEnabled(true); } else { stopMicrophone(); setMicEnabled(false); } };
 
   const betaColor = metrics.beta > 0.55 ? 'text-blue-300' : metrics.beta < 0.45 ? 'text-red-300' : 'text-green-300';
   const rhoLabel = metrics.rho < 0.5 ? 'Overdamped' : metrics.rho > 2 ? 'Overdriven' : 'Critical';
@@ -1338,119 +1176,68 @@ const CircumpunctFractalSimulator = () => {
       <canvas ref={canvasRef} className="w-full h-full cursor-crosshair" />
 
       {showMetrics && (
-        <div className="absolute top-6 left-6 bg-slate-950/92 backdrop-blur-md rounded-xl p-4 border border-indigo-500/40 text-white text-xs space-y-1.5" style={{ minWidth: '280px' }}>
-          <div className="text-sm font-bold text-indigo-300 mb-2 pb-2 border-b border-indigo-500/30 flex items-center gap-2">
-            <span style={{ fontSize: '1.1rem' }}>⊙</span> Circumpunct Framework v6.0
+        <div className="absolute top-3 left-3 bg-slate-950 rounded-xl p-3 border border-indigo-500/40 text-white text-xs space-y-1" style={{ minWidth: '260px', backgroundColor: 'rgba(5,5,20,0.92)', backdropFilter: 'blur(12px)' }}>
+          <div className="text-sm font-bold text-indigo-300 mb-1.5 pb-1.5 border-b border-indigo-500/30 flex items-center gap-2">
+            <span style={{ fontSize: '1rem' }}>⊙</span> The Tree That Dreams
+          </div>
+          <div className="text-xs text-gray-600 mb-1">D• + DΦ = D○ = 3 &nbsp;|&nbsp; ☀️↕⊛</div>
+
+          <div className="flex justify-between">
+            <span className="text-gray-400">β (opening):</span>
+            <span className={betaColor}>{metrics.beta.toFixed(3)}</span>
+          </div>
+          <div className="w-full bg-gray-800 h-1 rounded overflow-hidden">
+            <div className="h-full rounded transition-all" style={{ width: `${metrics.beta * 100}%`, background: 'linear-gradient(90deg, hsl(0,70%,55%), hsl(60,70%,55%) 50%, hsl(140,70%,55%))' }}></div>
           </div>
 
-          <div className="text-xs text-gray-500 mb-2">Conservation of Traversal: D• + DΦ = D○</div>
+          <div className="grid grid-cols-3 gap-1.5 pt-0.5">
+            <div className="text-center"><div className="text-gray-600 text-xs">D•</div><div className="text-cyan-300">{metrics.dAperture.toFixed(2)}</div></div>
+            <div className="text-center"><div className="text-gray-600 text-xs">DΦ</div><div className="text-purple-300">{metrics.dField.toFixed(2)}</div></div>
+            <div className="text-center"><div className="text-gray-600 text-xs">D○</div><div className="text-amber-300">{metrics.dBoundary.toFixed(1)}</div></div>
+          </div>
 
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <span className="text-gray-400">β (opening):</span>
-              <span className={betaColor}>{metrics.beta.toFixed(3)}</span>
-            </div>
-            <div className="w-full bg-gray-800 h-1.5 rounded overflow-hidden">
-              <div className="h-full rounded transition-all" style={{
-                width: `${metrics.beta * 100}%`,
-                background: `linear-gradient(90deg, hsl(0,70%,55%), hsl(60,70%,55%) 50%, hsl(140,70%,55%))`
-              }}></div>
-            </div>
+          <div className="flex justify-between"><span className="text-gray-400">ρ:</span><span className={rhoColor}>{metrics.rho.toFixed(2)} — {rhoLabel}</span></div>
 
-            <div className="grid grid-cols-3 gap-2 pt-1">
-              <div className="text-center">
-                <div className="text-gray-500 text-xs">D•</div>
-                <div className="text-cyan-300 text-sm">{metrics.dAperture.toFixed(2)}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-gray-500 text-xs">DΦ</div>
-                <div className="text-purple-300 text-sm">{metrics.dField.toFixed(2)}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-gray-500 text-xs">D○</div>
-                <div className="text-amber-300 text-sm">{metrics.dBoundary.toFixed(1)}</div>
-              </div>
-            </div>
+          <div className="border-t border-gray-800/60 pt-1 mt-1">
+            <div className="text-xs text-gray-500 mb-0.5">☀️ Branches (outer · objective)</div>
+            <div className="flex justify-between"><span className="text-gray-600">count:</span><span className="text-yellow-400">{metrics.patternCount}</span></div>
+            <div className="flex justify-between"><span className="text-gray-600">Φ coherence:</span><span className="text-teal-400">{(metrics.fieldCoherence * 100).toFixed(0)}%</span></div>
+          </div>
 
-            <div className="flex justify-between pt-1">
-              <span className="text-gray-400">ρ (ω/α):</span>
-              <span className={rhoColor}>{metrics.rho.toFixed(2)} — {rhoLabel}</span>
-            </div>
+          <div className="border-t border-gray-800/60 pt-1 mt-1">
+            <div className="text-xs text-gray-500 mb-0.5">⊛ Roots (inner · subjective)</div>
+            <div className="flex justify-between"><span className="text-gray-600">count:</span><span className="text-violet-400">{metrics.rootCount}</span></div>
+            <div className="flex justify-between"><span className="text-gray-600">depth:</span><span className="text-violet-300">{metrics.rootDepth.toFixed(1)}</span></div>
+            <div className="flex justify-between"><span className="text-gray-600">imagination:</span><span className="text-pink-400">{(metrics.imaginationStrength * 100).toFixed(0)}%</span></div>
+            <div className="flex justify-between"><span className="text-gray-600">trunk flows:</span><span className="text-blue-300">{metrics.trunkFlow}</span></div>
+          </div>
 
-            <div className="flex justify-between">
-              <span className="text-gray-400">⊛ convergence:</span>
-              <span className="text-blue-400">{metrics.convergenceNorm.toFixed(3)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">☀️ emergence:</span>
-              <span className="text-orange-400">{metrics.emergenceNorm.toFixed(3)}</span>
-            </div>
-
-            <div className="flex justify-between">
-              <span className="text-gray-400">Φ coherence:</span>
-              <span className="text-teal-400">{(metrics.fieldCoherence * 100).toFixed(1)}%</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">T(Δφ) phase:</span>
-              <span className="text-pink-400">{(metrics.phaseCoherence * 100).toFixed(1)}%</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Entity count:</span>
-              <span className="text-yellow-400">{metrics.patternCount}</span>
-            </div>
-
-            <div className="border-t border-gray-800 pt-1.5 mt-1.5">
-              <div className="flex justify-between">
-                <span className="text-gray-500">FPS:</span>
-                <span className={fps >= 30 ? 'text-green-400' : fps >= 20 ? 'text-yellow-400' : 'text-red-400'}>{fps}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-500">Quality:</span>
-                <span className={drawQuality > 0.7 ? 'text-green-400' : 'text-yellow-400'}>{(drawQuality * 100).toFixed(0)}%</span>
-              </div>
-            </div>
+          <div className="border-t border-gray-800/60 pt-1 mt-1 flex justify-between">
+            <span className="text-gray-600">FPS:</span>
+            <span className={fps >= 30 ? 'text-green-400' : 'text-yellow-400'}>{fps} ({(drawQuality * 100).toFixed(0)}%)</span>
           </div>
         </div>
       )}
 
-      {/* Controls */}
-      <div className="absolute top-6 right-6 bg-slate-950/92 backdrop-blur-md rounded-xl p-4 border border-indigo-500/40 text-white space-y-3" style={{ minWidth: '200px' }}>
+      <div className="absolute top-3 right-3 bg-slate-950 rounded-xl p-3 border border-indigo-500/40 text-white space-y-2" style={{ minWidth: '170px', backgroundColor: 'rgba(5,5,20,0.92)', backdropFilter: 'blur(12px)' }}>
         <div className="text-xs text-gray-400">
           <label className="block mb-1">Growth: {growthSpeed.toFixed(1)}×</label>
-          <input type="range" min="0.1" max="3" step="0.1" value={growthSpeed}
-            onChange={e => setGrowthSpeed(parseFloat(e.target.value))} className="w-full" />
+          <input type="range" min="0.1" max="3" step="0.1" value={growthSpeed} onChange={e => setGrowthSpeed(parseFloat(e.target.value))} className="w-full" />
         </div>
         <div className="flex gap-2 pt-2 border-t border-gray-800">
-          <button onClick={toggleMic}
-            className={`flex-1 py-2 rounded-lg text-lg transition ${micEnabled ? 'bg-red-600/70 hover:bg-red-500' : 'bg-gray-700/70 hover:bg-gray-600'}`}
-            title={micEnabled ? 'Stop Listening' : 'Listen'}>
-            {micEnabled ? '🎤' : '🎙️'}
-          </button>
-          <button onClick={toggleSound}
-            className={`flex-1 py-2 rounded-lg text-lg transition ${soundEnabled ? 'bg-indigo-600/70 hover:bg-indigo-500' : 'bg-gray-700/70 hover:bg-gray-600'}`}
-            title={soundEnabled ? 'Mute' : 'Sound'}>
-            {soundEnabled ? '🔊' : '🔇'}
-          </button>
+          <button onClick={toggleMic} className={`flex-1 py-1.5 rounded-lg text-lg transition ${micEnabled ? 'bg-red-600/70 hover:bg-red-500' : 'bg-gray-700/70 hover:bg-gray-600'}`}>{micEnabled ? '🎤' : '🎙️'}</button>
+          <button onClick={toggleSound} className={`flex-1 py-1.5 rounded-lg text-lg transition ${soundEnabled ? 'bg-indigo-600/70 hover:bg-indigo-500' : 'bg-gray-700/70 hover:bg-gray-600'}`}>{soundEnabled ? '🔊' : '🔇'}</button>
         </div>
       </div>
 
-      {/* Bottom Controls */}
-      <div className="absolute bottom-6 left-6 flex gap-2 flex-wrap max-w-lg">
-        {[
-          ['Zoom +', () => setZoomLevel(z => Math.min(z * 1.4, 8))],
-          ['Zoom −', () => setZoomLevel(z => Math.max(z / 1.4, 0.3))],
-          ['Reset', handleReset],
-          [showMetrics ? 'Hide ⊙' : 'Show ⊙', () => setShowMetrics(!showMetrics)],
-        ].map(([label, fn]) => (
-          <button key={label} onClick={fn}
-            className="px-3.5 py-1.5 bg-indigo-700/70 hover:bg-indigo-500 text-white text-xs rounded-lg backdrop-blur-sm transition border border-indigo-500/30">
-            {label}
-          </button>
+      <div className="absolute bottom-4 left-4 flex gap-2 flex-wrap max-w-lg">
+        {[['Zoom +', () => setZoomLevel(z => Math.min(z * 1.4, 8))], ['Zoom −', () => setZoomLevel(z => Math.max(z / 1.4, 0.3))], ['Reset', handleReset], [showMetrics ? 'Hide ⊙' : 'Show ⊙', () => setShowMetrics(!showMetrics)]].map(([label, fn]) => (
+          <button key={label} onClick={fn} className="px-3 py-1.5 bg-indigo-700/70 hover:bg-indigo-500 text-white text-xs rounded-lg transition border border-indigo-500/30" style={{ backdropFilter: 'blur(8px)' }}>{label}</button>
         ))}
       </div>
 
-      <div className="absolute bottom-6 right-6 text-gray-500 text-xs bg-gray-900/50 px-3 py-1.5 rounded-lg backdrop-blur-sm border border-gray-700/30">
-        Depth: {zoomLevel.toFixed(2)}× • {zoomLevel > 1.1 ? '← Past' : zoomLevel < 0.9 ? '→ Present' : '⊙ Now'}
+      <div className="absolute bottom-4 right-4 text-gray-600 text-xs px-3 py-1.5 rounded-lg border border-gray-700/30" style={{ backgroundColor: 'rgba(10,10,20,0.5)', backdropFilter: 'blur(8px)' }}>
+        {zoomLevel.toFixed(2)}× • {zoomLevel > 1.1 ? '☀️ canopy' : zoomLevel < 0.9 ? '⊛ roots' : '⊙ trunk'}
       </div>
     </div>
   );
