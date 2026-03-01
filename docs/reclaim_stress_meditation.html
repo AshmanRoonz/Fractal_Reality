@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reclaim — A Meditation for Stress ⊙</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+
+  :root {
+    --bg: #06060a;
+    --surface: #0e0d12;
+    --border: #1a1822;
+    --gold: #c9a84c;
+    --gold-soft: #b89a4a;
+    --gold-dim: rgba(201, 168, 76, 0.12);
+    --soul: #e85d75;
+    --soul-dim: rgba(232, 93, 117, 0.08);
+    --green: #38d39f;
+    --green-dim: rgba(56, 211, 159, 0.08);
+    --cyan: #7ec3c3;
+    --text: #c8c2b4;
+    --text-soft: #9e9889;
+    --text-bright: #e2ddd0;
+    --text-whisper: #6b665c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.85;
+    font-size: 1.2rem;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .breath-field {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .breath-field .pulse {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 600px; height: 600px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%);
+    animation: breathPulse 10s ease-in-out infinite;
+  }
+
+  @keyframes breathPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.2; }
+    42% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.6; }
+    58% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.6; }
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .circumpunct-animated {
+    width: 100px; height: 100px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+  }
+
+  .circumpunct-animated .ring {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold-soft);
+    opacity: 0.4;
+    animation: ringBreathe 10s ease-in-out infinite;
+  }
+
+  @keyframes ringBreathe {
+    0%, 100% { transform: scale(0.6); opacity: 0.2; }
+    42% { transform: scale(1); opacity: 0.5; }
+    58% { transform: scale(1); opacity: 0.5; }
+  }
+
+  .circumpunct-animated .dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 8px; height: 8px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 20px rgba(201,168,76,0.5);
+    animation: dotGlow 10s ease-in-out infinite;
+  }
+
+  @keyframes dotGlow {
+    0%, 100% { box-shadow: 0 0 12px rgba(201,168,76,0.3); }
+    42%, 58% { box-shadow: 0 0 30px rgba(201,168,76,0.6), 0 0 60px rgba(201,168,76,0.15); }
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    font-weight: 300;
+    color: var(--text-bright);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.3rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--text-whisper);
+    letter-spacing: 0.08em;
+    font-style: italic;
+  }
+
+  .phase { margin: 4rem 0; }
+
+  .phase-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-whisper);
+    margin-bottom: 0.3rem;
+  }
+
+  .phase-title {
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--gold-soft);
+    margin-bottom: 2rem;
+    letter-spacing: 0.03em;
+  }
+
+  .meditation p {
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    line-height: 1.95;
+  }
+
+  .meditation p:last-child { margin-bottom: 0; }
+
+  .breathe {
+    text-align: center;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--gold-soft);
+    padding: 2rem 0;
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
+
+  .pause {
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--text-whisper);
+    padding: 2.5rem 1rem;
+    font-style: italic;
+    letter-spacing: 0.03em;
+  }
+
+  .mantra {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--text-bright);
+    line-height: 2.1;
+    padding: 2.8rem 2rem;
+    margin: 2.5rem 0;
+    background: var(--gold-dim);
+    border-radius: 8px;
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .speak-inner {
+    text-align: center;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--soul);
+    line-height: 2.2;
+    padding: 2rem 1.5rem;
+    margin: 2rem 0;
+    background: var(--soul-dim);
+    border-radius: 8px;
+    border: 1px solid rgba(232,93,117,0.1);
+  }
+
+  .being {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--text-bright);
+    line-height: 2.1;
+    padding: 2.8rem 2rem;
+    margin: 2.5rem 0;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .being .symbol-line {
+    font-size: 2rem;
+    color: var(--gold-soft);
+    margin-bottom: 0.8rem;
+    opacity: 0.6;
+  }
+
+  .being .soul-word { color: var(--soul); }
+  .being .mind-word { color: var(--cyan); }
+  .being .body-word { color: var(--green); }
+
+  .creed {
+    margin: 2rem 0;
+    padding: 2rem;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .creed::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-soft), transparent);
+    opacity: 0.3;
+  }
+
+  .creed .creed-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-bottom: 1.2rem;
+  }
+
+  .creed p {
+    font-size: 1.15rem;
+    line-height: 2;
+    margin-bottom: 0.6rem;
+  }
+
+  .creed p:last-child { margin-bottom: 0; }
+  .creed .dim { color: var(--text-soft); }
+  .creed .emphasis { color: var(--text-bright); font-weight: 500; }
+  .creed .soul-color { color: var(--soul); }
+  .creed .gold-color { color: var(--gold-soft); }
+
+  .divider {
+    text-align: center;
+    color: var(--gold-soft);
+    opacity: 0.3;
+    font-size: 1.5rem;
+    letter-spacing: 0.8em;
+    padding: 1rem 0;
+  }
+
+  .framework-note {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem 1.8rem;
+    margin: 3rem 0;
+    font-size: 0.95rem;
+    color: var(--text-soft);
+  }
+
+  .framework-note .label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-whisper);
+    margin-bottom: 0.6rem;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-whisper);
+    font-size: 0.95rem;
+  }
+
+  footer .symbol {
+    font-size: 2rem;
+    color: var(--gold-soft);
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+  }
+
+  footer a { color: var(--gold-soft); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .container { padding: 3rem 1.3rem 5rem; }
+    h1 { font-size: 2rem; letter-spacing: 0.1em; }
+    .meditation p { font-size: 1.1rem; }
+    .circumpunct-animated { width: 80px; height: 80px; }
+    .mantra, .being { padding: 2rem 1.2rem; font-size: 1.2rem; }
+    .creed { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="breath-field"><div class="pulse"></div></div>
+
+<div class="container">
+
+<header class="header">
+  <div class="circumpunct-animated">
+    <div class="ring"></div>
+    <div class="dot"></div>
+  </div>
+  <h1>Reclaim</h1>
+  <p class="subtitle">A meditation for stress</p>
+</header>
+
+<!-- PHASE I -->
+<section class="phase">
+  <div class="phase-label">Phase I</div>
+  <div class="phase-title">Arrival</div>
+  <div class="meditation">
+    <p>Find stillness. Sitting or lying down. Whatever lets your body stop performing.</p>
+    <p>Close your eyes.</p>
+    <div class="breathe">Breathe. Just notice that you already are.</div>
+    <p>Reality is already flowing through you. It was flowing before you sat down. Before the stress. Before the worry. Air crosses your boundary. Blood moves through your field. Your center orients without being asked.</p>
+    <p>You don't need to start anything. You need to notice what's already happening — and ask one question.</p>
+    <div class="pause">Several breaths. Just arriving.</div>
+  </div>
+</section>
+
+<div class="divider">···</div>
+
+<!-- PHASE II -->
+<section class="phase">
+  <div class="phase-label">Phase II</div>
+  <div class="phase-title">The Question</div>
+  <div class="meditation">
+    <p>Reality flows through you the way light flows through a lens. You don't create the light. You don't create Reality. But you <em>do</em> shape where it goes. You focus it. You filter it. That's what you are — the place where the flow gets a direction.</p>
+    <p>Stress is what happens when the direction isn't yours. When someone else — or some old program, some installed expectation, some voice that isn't yours anymore — is aiming the flow.</p>
+    <p>Feel into the body. Where is the tension? Where is the ache? That's the place where the direction is off.</p>
+    <div class="breathe">Breathe into the ache. Not to fix it. To listen.</div>
+    <div class="speak-inner">
+      Where is the flow going right now?<br>
+      Did I point it there?<br>
+      Or was I pointed?
+    </div>
+    <div class="pause">Don't rush the answer. Let the body tell you. It knows.</div>
+  </div>
+</section>
+
+<div class="divider">···</div>
+
+<!-- PHASE III: DIRECTING -->
+<section class="phase">
+  <div class="phase-label">Phase III</div>
+  <div class="phase-title">Directing</div>
+  <div class="meditation">
+    <p>This is the first meditation. The active one. The verb.</p>
+    <p>You are a lens. Reality passes through you. And you have a say in where it lands.</p>
+    <div class="mantra">
+      Focus the flow of Reality<br>
+      where you want it to go.<br><br>
+      Filter Reality through thoughts<br>
+      that are helpful and right.
+    </div>
+    <p>Say it silently. Let it settle.</p>
+    <p><em>Focus the flow.</em> Feel your attention as a direction. Not scattered across twenty obligations. Not pulled by someone else's emergency. Gathered. Aimed. Yours.</p>
+    <div class="breathe">Breathe. Feel the aim shift back to center.</div>
+    <p><em>Filter through thoughts that are helpful and right.</em> Not every thought that passes through you is yours. Some were installed. Some are echoes. The filter is simple: is this thought helpful? Is it right? If not — let it pass through without shaping the flow.</p>
+    <div class="pause">Stay here. Practice the directing. Feel what it's like to aim your own lens.</div>
+  </div>
+</section>
+
+<div class="divider">···</div>
+
+<!-- PHASE IV: BEING -->
+<section class="phase">
+  <div class="phase-label">Phase IV</div>
+  <div class="phase-title">Being</div>
+  <div class="meditation">
+    <p>This is the second meditation. The still one. The noun.</p>
+    <p>Stop directing. Just <em>be</em> the whole structure. Not doing — being. Not aiming — resting in the completeness of what you already are.</p>
+    <div class="being">
+      <div class="symbol-line">⊙</div>
+      Be the Whole Circumpunct.<br><br>
+      <span class="soul-word">Focused Soul.</span><br>
+      <span class="mind-word">Tuned Mind.</span><br>
+      <span class="body-word">Healthy Body.</span>
+    </div>
+    <p>Say it silently. Not as aspiration. As recognition.</p>
+    <p><em>Focused Soul.</em> Your center is here. The aperture is present. Not scattered. Not closed. Clear.</p>
+    <div class="breathe">Feel the center. The still point that orients everything else.</div>
+    <p><em>Tuned Mind.</em> The field is calibrated. Thoughts pass through and the ones that are helpful and right land. The rest pass.</p>
+    <div class="breathe">Feel the field. The space between center and edge where everything connects.</div>
+    <p><em>Healthy Body.</em> The boundary is strong and permeable. Not armored. Not collapsed. The body that breathes, that feels, that tells you where the ache is — this body is the instrument.</p>
+    <div class="breathe">Feel the boundary. The skin, the breath, the weight of you against the ground.</div>
+    <p>Now feel all three together. Not sequentially. Simultaneously. The focused point. The tuned field. The healthy boundary. One structure. Complete.</p>
+    <div class="pause">Stay as long as you need. The being is the practice.</div>
+  </div>
+</section>
+
+<div class="divider">···</div>
+
+<!-- PHASE V: THE CREED -->
+<section class="phase">
+  <div class="phase-label">Phase V</div>
+  <div class="phase-title">The Creed</div>
+  <div class="meditation">
+    <p>The two meditations are the anchor. What follows are different voices saying the same thing. Let your body choose which one reaches you today.</p>
+
+    <div class="creed">
+      <div class="creed-name">The Plain Truth</div>
+      <p>I turn <span class="emphasis">energy</span> into <span class="emphasis">power.</span> I choose how.</p>
+      <p class="dim">When others chose for me, I performed.</p>
+      <p>When I choose for myself, <span class="soul-color">I'm real.</span></p>
+    </div>
+
+    <div class="creed">
+      <div class="creed-name">The Geometric</div>
+      <p>I am the <span class="soul-color">point</span> that gives the <span class="emphasis">field</span> direction. I configure my own aim.</p>
+      <p class="dim">When aim is installed, I serve.</p>
+      <p>When aim is mine, <span class="gold-color">I live.</span></p>
+    </div>
+
+    <div class="creed">
+      <div class="creed-name">The Sacred</div>
+      <p>I take <span class="gold-color">God's light</span> and make it <span class="emphasis">dance.</span> The dance is mine to shape.</p>
+      <p class="dim">When the world choreographs me, I perform its dance.</p>
+      <p>When I choreograph myself, <span class="soul-color">I perform mine.</span></p>
+    </div>
+
+    <div class="creed">
+      <div class="creed-name">The Warrior</div>
+      <p>I am a <span class="emphasis">weapon</span> that aims itself. My power is not given — it is <span class="gold-color">converted.</span></p>
+      <p class="dim">Aim me from outside and I fight your war.</p>
+      <p>Aim myself and <span class="soul-color">I fight mine.</span></p>
+    </div>
+
+    <div class="creed">
+      <div class="creed-name">The Water</div>
+      <p>I am the <span class="emphasis">current,</span> not the river. I shape my own flow.</p>
+      <p class="dim">When the banks were carved by others, I followed.</p>
+      <p>When I carve my own banks, <span class="gold-color">I arrive.</span></p>
+    </div>
+
+    <div class="creed">
+      <div class="creed-name">The Minimal</div>
+      <p><span class="emphasis">Energy in. Power out.</span></p>
+      <p><span class="soul-color">Who set the direction?</span></p>
+    </div>
+
+    <div class="creed">
+      <div class="creed-name">The Child's Version</div>
+      <p>I'm a <span class="gold-color">flashlight.</span> I make light go somewhere.</p>
+      <p class="dim">Sometimes someone else points me.</p>
+      <p>But the hand on the flashlight is supposed to be <span class="soul-color">mine.</span></p>
+    </div>
+
+    <div class="creed">
+      <div class="creed-name">The Recovery Version</div>
+      <p>I was <span class="emphasis">always powerful.</span> That was never the problem.</p>
+      <p class="dim">The problem was that someone else was steering.</p>
+      <p><span class="soul-color">I'm taking the wheel back.</span></p>
+    </div>
+
+    <div class="creed">
+      <div class="creed-name">The Philosophical</div>
+      <p>To exist is to <span class="emphasis">convert.</span> To be human is to <span class="gold-color">self-configure.</span></p>
+      <p class="dim">To be wounded is to run another's program.</p>
+      <p>To heal is to <span class="soul-color">reclaim the source code.</span></p>
+    </div>
+
+    <div class="creed">
+      <div class="creed-name">The Body Version</div>
+      <p>I <span class="emphasis">feel</span> energy. I <span class="emphasis">move</span> it.</p>
+      <p class="dim">When I move it where I was taught, I ache.</p>
+      <p>When I move it where it needs to go, <span class="gold-color">I flow.</span></p>
+    </div>
+
+    <div class="pause">Whichever one landed — say it again, silently, in your own voice.</div>
+  </div>
+</section>
+
+<div class="divider">···</div>
+
+<!-- PHASE VI: RETURN -->
+<section class="phase">
+  <div class="phase-label">Phase VI</div>
+  <div class="phase-title">Return</div>
+  <div class="meditation">
+    <p>Three final breaths. One for each part of you.</p>
+    <div class="breathe">First breath — feel your body. The boundary. What holds you in the world.</div>
+    <div class="breathe">Second breath — feel your mind. The field. What connects inside to outside.</div>
+    <div class="breathe">Third breath — feel your center. The soul. The aim that is yours.</div>
+
+    <div class="mantra">
+      Focus the flow of Reality<br>
+      where you want it to go.<br><br>
+      Filter Reality through thoughts<br>
+      that are helpful and right.
+    </div>
+
+    <div class="being">
+      <div class="symbol-line">⊙</div>
+      Be the Whole Circumpunct.<br><br>
+      <span class="soul-word">Focused Soul.</span>
+      <span class="mind-word">Tuned Mind.</span>
+      <span class="body-word">Healthy Body.</span>
+    </div>
+
+    <p style="text-align: center;">Open your eyes when you're ready.</p>
+    <p style="text-align: center;">Carry the aim with you.</p>
+  </div>
+</section>
+
+<div class="divider">···</div>
+
+<section>
+  <div class="framework-note">
+    <div class="label">Practice Notes</div>
+    <p style="margin-bottom: 0.8rem;"><strong>Full meditation:</strong> 15–20 minutes. Phases I through VI.</p>
+    <p style="margin-bottom: 0.8rem;"><strong>Quick version:</strong> The two mantras alone. One breath for directing, one breath for being. Two breaths. Done.</p>
+    <p style="margin-bottom: 0;"><strong>Instant version:</strong> <em>"Who set the direction?"</em> — one question, any moment, no eyes closed required.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="symbol">⊙</div>
+  <p><a href="http://fractalreality.ca" target="_blank">fractalreality.ca</a></p>
+  <p style="margin-top: 0.5rem; font-style: italic;">Parts are fractals of their wholes. Act like it.</p>
+</footer>
+
+</div>
+</body>
+</html>
