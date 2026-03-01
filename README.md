@@ -254,6 +254,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**binaural_beats_51.html**](https://fractalreality.ca/binaural_beats_51.html) — Binaural beats audio tool
 - [**resonance_101.html**](https://fractalreality.ca/resonance_101.html) — Introduction to resonance concepts
 - [**path_narrated.html**](https://fractalreality.ca/path_narrated.html) — Narrated spiritual path guide
+- [**circumpunct_theory_of_mind.html**](https://fractalreality.ca/circumpunct_theory_of_mind.html) — The Circumpunct Theory of Mind
 
 ---
 
@@ -288,6 +289,7 @@ Interactive visualizations and tools for exploring The Circumpunct Theory.
 - [**the_restoration_protocol.html**](https://fractalreality.ca/the_restoration_protocol.html) — Healing and restoration guide
 - [**rephase_meditation.html**](https://fractalreality.ca/rephase_meditation.html) — Cancer Rephase Meditation
 - [**uninstalling_lies.html**](https://fractalreality.ca/uninstalling_lies.html) — The Lie, the Inversion, and the Truth: how Noble Lies install, how inversions trap, how I AM sets free
+- [**circumpunct_love.html**](https://fractalreality.ca/circumpunct_love.html) — The Circumpunct Theory of Love
 
 ---
 
