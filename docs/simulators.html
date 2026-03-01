@@ -194,6 +194,8 @@
                     const isTSX = selectedSim.endsWith('.tsx');
 
                     // Strip TypeScript type annotations for TSX files
+                    // Note: Babel's typescript preset handles most TS stripping,
+                    // but we pre-strip some block-level declarations for safety
                     if (isTSX) {
                         // Remove interface declarations (multi-line, handle nested braces)
                         const lines = processedCode.split('\n');
@@ -204,7 +206,7 @@
                         for (let i = 0; i < lines.length; i++) {
                             const line = lines[i];
                             
-                            if (line.match(/^\s*interface\s+\w+/)) {
+                            if (line.match(/^\s*(interface|type)\s+\w+/)) {
                                 inInterface = true;
                                 braceDepth = 0;
                             }
@@ -215,10 +217,10 @@
                                     if (char === '}') braceDepth--;
                                 }
                                 
-                                if (braceDepth === 0 && line.includes('}')) {
+                                if (braceDepth <= 0 && (line.includes('}') || line.includes(';'))) {
                                     inInterface = false;
                                 }
-                                continue; // Skip all interface lines
+                                continue;
                             }
                             
                             filteredLines.push(line);
@@ -226,65 +228,22 @@
                         
                         processedCode = filteredLines.join('\n');
                         
-                        // Remove type declarations
+                        // Remove standalone type declarations
                         processedCode = processedCode.replace(/^(\s*)type\s+\w+\s*=\s*[^;]+;\s*$/gm, '');
                         
-                        // Remove enum declarations
+                        // Remove enum declarations  
                         processedCode = processedCode.replace(/^(\s*)enum\s+\w+\s*\{[^}]*\}\s*$/gm, '');
-                        
-                        // Remove React.FC and similar type annotations
-                        processedCode = processedCode.replace(/:\s*React\.FC\s*<?[^>]*>?/g, '');
-                        processedCode = processedCode.replace(/:\s*FC\s*<?[^>]*>?/g, '');
-                        processedCode = processedCode.replace(/:\s*React\.ReactNode/g, '');
-                        processedCode = processedCode.replace(/:\s*ReactNode/g, '');
-                        processedCode = processedCode.replace(/:\s*JSX\.Element/g, '');
-                        
-                        // Remove readonly modifiers
-                        processedCode = processedCode.replace(/\breadonly\s+/g, '');
-                        
-                        // Remove public/private/protected modifiers
-                        processedCode = processedCode.replace(/\b(public|private|protected)\s+/g, '');
-                        
-                        // Remove generic type parameters from hooks and other calls
-                        // useRef<Type>(value) -> useRef(value)
-                        processedCode = processedCode.replace(/\b(useRef|useState|useMemo|useCallback|useContext|useEffect|useReducer|useLayoutEffect)<[^>]+>/g, '$1');
-                        
-                        // Remove generic type parameters from Map, Set, Array etc
-                        processedCode = processedCode.replace(/\b(Map|Set|Array|Promise|WeakMap|WeakSet)<[^>]+>/g, '$1');
-                        
-                        // Remove 'as Type[]' and 'as Type' type assertions
-                        processedCode = processedCode.replace(/\s+as\s+\w+(\[\])?(?=\s*[,;\)\}])/g, '');
-                        processedCode = processedCode.replace(/\s+as\s+[A-Z]\w+<[^>]+>/g, '');
-                        
-                        // Remove type annotations from function parameters - but NOT from object literals
-                        // Match function parameter patterns specifically
-                        // Only remove type annotations where : is followed by a type name, not a value
-                        processedCode = processedCode.replace(/(\w+)\s*:\s*([A-Z]\w+|string|number|boolean|void|any|unknown|never|object|Function|Element|null|undefined)(\[\]|<[^>]+>)?(?=\s*[,\)])/g, '$1');
-                        
-                        // Remove return type annotations: ): Type =>
-                        processedCode = processedCode.replace(/\)\s*:\s*[^=>{]+(\s*=>)/g, ')$1');
-                        
-                        // Remove non-null assertions (!)
-                        processedCode = processedCode.replace(/!(?=[\.\[\(;,])/g, '');
-                        
-                        // Remove variable type annotations: const x: Type = but NOT const x = { prop: value }
-                        // Only match if the : is followed by a capital letter (type name) or known type keywords
-                        processedCode = processedCode.replace(/(const|let|var)\s+(\w+)\s*:\s*([A-Z]\w+|string|number|boolean|any|void|unknown|never|null|undefined)(\[\]|<[^>]+>)?\s*=/g, '$1 $2 =');
-                        
-                        // Remove type annotations from uninitialized variable declarations: let x: Type;
-                        processedCode = processedCode.replace(/(const|let|var)\s+(\w+)\s*:\s*([A-Z]\w+|string|number|boolean|any|void|unknown|never|null|undefined)(\[\]|<[^>]+>)?\s*;/g, '$1 $2;');
-                        
-                        // Remove type annotations from destructured variables
-                        processedCode = processedCode.replace(/(const|let|var)\s+(\{[^}]+\})\s*:\s*[^=]+=/g, '$1 $2 =');
                     }
 
                     // Transform code with appropriate presets
-                    const presets = [
-                        ['react', { 
-                            runtime: 'classic',
-                            pragma: 'React.createElement'
-                        }]
-                    ];
+                    const presets = [];
+                    if (isTSX) {
+                        presets.push(['typescript', { allExtensions: true, isTSX: true }]);
+                    }
+                    presets.push(['react', { 
+                        runtime: 'classic',
+                        pragma: 'React.createElement'
+                    }]);
 
                     try {
                         transformed = Babel.transform(processedCode, {
@@ -336,7 +295,7 @@
                     // Additional fallback: if we found nothing, look for common names
                     if (componentMatches.length === 0) {
                         const commonNames = [
-                            'FractalPetCell', 'EnhancedConsciousnessFractal', 'HarmonicPeriodicTable',
+                            'CircumpunctFractalSimulator', 'FractalPetCell', 'EnhancedConsciousnessFractal', 'HarmonicPeriodicTable',
                             'MolecularHarmonyComposer', 'FractalSoulArray', 'FractalRealityLanding',
                             'FractalFountain', 'FractalFountainEnhanced', 'AlwaysConnectedNeverFully',
                             'App', 'Main', 'Index', 'Component', 'Simulator'
@@ -363,6 +322,7 @@
                             const useCallback = arguments[5];
                             const useReducer = arguments[6];
                             const useContext = arguments[7];
+                            const useLayoutEffect = arguments[8];
                             
                             ${transformed}
                             
@@ -385,7 +345,8 @@
                         React.useMemo,
                         React.useCallback,
                         React.useReducer,
-                        React.useContext
+                        React.useContext,
+                        React.useLayoutEffect
                     );
 
                     if (!SimComponent || typeof SimComponent !== 'function') {
