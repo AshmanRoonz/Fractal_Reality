@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ DNA as Fractal Instantiation — Circumpunct Framework</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-proof: #0e0e16;
+    --text: #e8e4df;
+    --text-dim: #8a8690;
+    --text-muted: #5a5660;
+    --gold: #d4a855;
+    --gold-dim: rgba(212, 168, 85, 0.12);
+    --cyan: #5ecdd8;
+    --cyan-dim: rgba(94, 205, 216, 0.10);
+    --magenta: #c47ddf;
+    --magenta-dim: rgba(196, 125, 223, 0.10);
+    --green: #7dd8a0;
+    --green-dim: rgba(125, 216, 160, 0.10);
+    --red: #e06060;
+    --red-dim: rgba(224, 96, 96, 0.10);
+    --aperture: #d4a855;
+    --field: #5ecdd8;
+    --boundary: #c47ddf;
+    --helix: #7dd8a0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(212,168,85,0.15);
+    padding: 0.8rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; font-weight: 600;
+    color: var(--gold); letter-spacing: 0.08em;
+  }
+  .nav-title a { color: inherit; text-decoration: none; }
+  .nav-links { display: flex; gap: 1.5rem; }
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; color: var(--text-dim);
+    text-decoration: none; letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 10rem 2rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 30%, rgba(212,168,85,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 30% 60%, rgba(94,205,216,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 70% 60%, rgba(196,125,223,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-symbol {
+    font-size: 5rem; color: var(--gold);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 60px rgba(212,168,85,0.3);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; text-shadow: 0 0 80px rgba(212,168,85,0.5); }
+  }
+  .hero h1 {
+    font-size: 3.2rem; font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .hero .subtitle {
+    font-size: 1.4rem; color: var(--cyan);
+    font-style: italic; margin-bottom: 0.5rem;
+  }
+  .hero .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; color: var(--text-muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  h2 {
+    font-size: 2rem; font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(212,168,85,0.2);
+  }
+
+  h3 {
+    font-size: 1.35rem; font-weight: 600;
+    color: var(--cyan);
+    margin: 2rem 0 1rem;
+  }
+
+  p { margin-bottom: 1.2rem; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+  }
+  .card-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+    color: var(--gold);
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  @media (max-width: 700px) {
+    .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  @media (max-width: 800px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ── EQUATIONS ── */
+  .equation {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    text-align: center;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+    border-left: 3px solid var(--gold);
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .equation-small {
+    font-size: 1.05rem;
+    padding: 1rem;
+  }
+  .equation .aperture-c { color: var(--aperture); }
+  .equation .field-c { color: var(--field); }
+  .equation .boundary-c { color: var(--boundary); }
+  .equation .helix-c { color: var(--helix); }
+
+  /* ── AXIOM / THEOREM BOXES ── */
+  .axiom-box {
+    background: var(--gold-dim);
+    border: 1px solid rgba(212,168,85,0.25);
+    border-radius: 6px;
+    padding: 2rem;
+    margin: 2rem 0;
+    text-align: center;
+  }
+  .axiom-box .axiom {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+    color: var(--gold);
+  }
+
+  .theorem-box {
+    background: var(--bg-proof);
+    border-left: 3px solid var(--cyan);
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .theorem-box .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 0.5rem;
+  }
+  .theorem-box .title {
+    font-size: 1.2rem; font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .theorem-box.gold { border-left-color: var(--gold); }
+  .theorem-box.gold .label { color: var(--gold); }
+  .theorem-box.magenta { border-left-color: var(--magenta); }
+  .theorem-box.magenta .label { color: var(--magenta); }
+  .theorem-box.green { border-left-color: var(--helix); }
+  .theorem-box.green .label { color: var(--helix); }
+
+  /* ── PROOF ── */
+  .proof-box {
+    background: var(--bg-proof);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+  }
+  .proof-step {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  .proof-step::before {
+    content: attr(data-n);
+    position: absolute; left: 0;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+  }
+  .qed {
+    text-align: right;
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+  }
+
+  /* ── SCALE TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+  }
+  th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 0.8rem 1rem;
+    border-bottom: 2px solid rgba(212,168,85,0.2);
+  }
+  td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.95rem;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--cyan-dim);
+    border-left: 3px solid var(--cyan);
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout.gold {
+    background: var(--gold-dim);
+    border-left-color: var(--gold);
+  }
+  .callout.magenta {
+    background: var(--magenta-dim);
+    border-left-color: var(--magenta);
+  }
+  .callout.red {
+    background: var(--red-dim);
+    border-left-color: var(--red);
+  }
+
+  /* ── HELIX DIAGRAM ── */
+  .helix-diagram {
+    text-align: center;
+    padding: 2.5rem;
+    margin: 2rem 0;
+    background: var(--bg-card);
+    border-radius: 8px;
+    border: 1px solid rgba(125,216,160,0.15);
+  }
+  .helix-diagram svg { max-width: 100%; height: auto; }
+  .diagram-caption {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-top: 1rem;
+    font-style: italic;
+  }
+
+  /* ── UTILITIES ── */
+  .muted { color: var(--text-dim); }
+  .center { text-align: center; }
+  strong { color: var(--text); }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88em;
+    background: rgba(255,255,255,0.05);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-title"><a href="https://fractalreality.ca">⊙ Circumpunct — Molecular Biology</a></div>
+  <div class="nav-links">
+    <a href="#thesis">Thesis</a>
+    <a href="#mapping">Mapping</a>
+    <a href="#recursion">Recursion</a>
+    <a href="#conservation">Conservation</a>
+    <a href="#deep-structure">Structure</a>
+    <a href="#medium-message">Necessity</a>
+    <a href="#predictions">Predictions</a>
+    <a href="#falsification">Falsification</a>
+    <a href="#synthesis">Status</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════ HERO ═══ -->
+<div class="hero">
+  <div class="hero-symbol">⊙</div>
+  <h1>DNA as Fractal Instantiation</h1>
+  <p class="subtitle">The Molecular Code Recapitulates the Ontological Pattern</p>
+  <p class="meta">Circumpunct Framework — Molecular Biology Extension &nbsp;·&nbsp; Ashman Roonz &nbsp;·&nbsp; 2026</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════ §1 THESIS ═══ -->
+<section id="thesis">
+  <h2>1. The Thesis</h2>
+
+  <div class="axiom-box">
+    <div class="axiom">DNA does not merely <em>encode</em> the ⊙ pattern.<br>DNA <em>is</em> the ⊙ pattern at the molecular scale.</div>
+    <p class="muted" style="margin-top: 1rem; margin-bottom: 0;">The encoding scheme exhibits the same triadic geometry it encodes for.</p>
+  </div>
+
+  <p>The Circumpunct Framework's Axiom A2 (Fractal Necessity) states: <em>parts are fractals of their wholes.</em> If this axiom holds, then the information substrate that builds organisms must itself exhibit the aperture–field–boundary structure it is instantiating. The medium must recapitulate the message — not by design choice, but by geometric necessity.</p>
+
+  <p>This document formalizes that claim. We show that DNA exhibits ⊙ = Φ(•, ○) at every level of its organization — from individual codons through genes to the complete genome — with the Conservation of Traversal preserved at each scale.</p>
+
+  <div class="callout gold">
+    <strong>Scope:</strong> This is not metaphor. We are identifying the <em>structural isomorphism</em> between the framework's formal objects and the known molecular biology of DNA. Every mapping must be falsifiable and every prediction testable.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ §2 MAPPING ═══ -->
+<section id="mapping">
+  <h2>2. The Triadic Mapping</h2>
+
+  <h3>2.1 Framework Primitives → Molecular Instantiation</h3>
+
+  <div class="grid-3">
+    <div class="card" style="border-top: 2px solid var(--aperture);">
+      <div class="card-header" style="color: var(--aperture);">• Aperture</div>
+      <p>The <strong>base sequence</strong> — interior information that determines what opens.</p>
+      <p class="muted">Discrete, binary-like (purine/pyrimidine), sequential. The code.</p>
+    </div>
+    <div class="card" style="border-top: 2px solid var(--field);">
+      <div class="card-header" style="color: var(--field);">Φ Field</div>
+      <p>The <strong>transcription/translation machinery</strong> — the continuous process that reads and relays.</p>
+      <p class="muted">RNA polymerase, ribosomes, tRNA. The relational engine.</p>
+    </div>
+    <div class="card" style="border-top: 2px solid var(--boundary);">
+      <div class="card-header" style="color: var(--boundary);">○ Boundary</div>
+      <p>The <strong>protein product / organism</strong> — the expressed form that interfaces with the exterior.</p>
+      <p class="muted">Three-dimensional folded structure. The closure.</p>
+    </div>
+  </div>
+
+  <div class="equation">
+    <span class="aperture-c">•</span><sub>sequence</sub>
+    → <span class="field-c">Φ</span><sub>transcription</sub>
+    → <span class="boundary-c">○</span><sub>protein</sub>
+  </div>
+
+  <p>This is the Central Dogma of molecular biology, stated in framework notation. The information (•) flows through the machinery (Φ) and expresses as structure (○). The aperture opens into the boundary, through the field.</p>
+
+  <h3>2.2 Why This Mapping Is Non-Arbitrary</h3>
+
+  <div class="callout red">
+    <strong>Critical Epistemic Distinction — Two Kinds of "Dimension"</strong>
+    <p style="margin-top: 0.8rem;">This document uses "dimension" in two distinct senses that must not be conflated:</p>
+    <p style="margin-top: 0.5rem;"><strong>D<sub>functional</sub></strong> — the minimum number of independent degrees of freedom required for a component to perform its role. This is a <em>constraint count</em>, not a spatial measurement. When we say "the field requires 2 DOF," we mean the field operation cannot be performed with fewer than 2 independent parameters. This is provable from functional requirements.</p>
+    <p style="margin-top: 0.5rem;"><strong>D<sub>Hausdorff</sub></strong> — the measured fractal dimension of a physical structure via box-counting or similar methods. This is an empirical measurement. When we report D<sub>backbone</sub> ≈ 1.5, this is a measured number with error bars and condition-dependence.</p>
+    <p style="margin-top: 0.5rem;">The framework's <em>claim</em> is that D<sub>functional</sub> and D<sub>Hausdorff</sub> correspond — that functional constraint structure produces measurable geometric signatures. This correspondence is testable. But the functional argument (§2.2) and the geometric measurement (§4.3) are independent claims with independent evidence. Conflating them is the fastest way to make this document unfalsifiable.</p>
+  </div>
+
+  <div class="theorem-box gold">
+    <div class="label">Structural Correspondence Theorem</div>
+    <div class="title">The Central Dogma Satisfies Triadic Functional Constraints</div>
+    <p>The mapping • → Φ → ○ is not one of many possible analogies. It is the <em>unique</em> assignment satisfying all three functional requirements simultaneously:</p>
+    <p style="margin-top: 1rem; margin-bottom: 0.5rem;"><strong>(i)</strong> The aperture (base sequence) is <strong>discrete and sequential</strong> — a 1D ordered chain of binary-class decisions (purine/pyrimidine, coded as χ = ±1). Minimum functional DOF: <strong>1</strong> (an order parameter for sequencing).</p>
+    <p style="margin-bottom: 0.5rem;"><strong>(ii)</strong> The field (transcription machinery) requires <strong>two independent parameters</strong> — processivity (how far the polymerase has traveled along the template = magnitude) and reading frame register (which of three possible frames is active = phase). Neither parameter is reducible to the other; both are required for non-degenerate translation. Minimum functional DOF: <strong>2</strong>.</p>
+    <p><strong>(iii)</strong> The boundary (protein) achieves <strong>3D spatial closure</strong> — folding into a tertiary structure that creates inside/outside distinction (hydrophobic core vs. hydrophilic surface). This is a geometric fact: closing a surface in Euclidean space requires embedding in 3D. Minimum functional DOF: <strong>3</strong>.</p>
+    <p style="margin-top: 1rem; color: var(--text-dim);"><strong>Status:</strong> These are functional DOF (D<sub>functional</sub>), not measured Hausdorff dimensions. The conservation law D<sub>•</sub> + D<sub>Φ</sub> = D<sub>○</sub> at this level is a <em>constraint-counting</em> result: the degrees of freedom required for sequencing (1) plus the degrees of freedom required for relational processing (2) equal the degrees of freedom realized in the output structure (3). Whether this functional constraint produces measurable geometric consequences is a separate, empirically testable claim (§4.3).</p>
+  </div>
+
+  <h3>2.3 The Base-Pair as Minimal Gate</h3>
+
+  <p>Each base pair implements the framework's minimal aperture operation: a binary gate.</p>
+
+  <div class="card">
+    <div class="card-header">Base-Pair Gate Algebra</div>
+    <p>The four DNA bases partition into two complementary pairs:</p>
+    <div class="equation equation-small">
+      A–T &nbsp;(purine–pyrimidine) &nbsp;&nbsp;·&nbsp;&nbsp; G–C &nbsp;(purine–pyrimidine)
+    </div>
+    <p>At the deepest level, each position is a binary decision: <strong>purine or pyrimidine</strong>. This is χ = ±1 — the framework's aperture gate. The second degree of freedom (which purine, which pyrimidine) adds the field channel: a 2-state choice within each binary class.</p>
+    <div class="equation equation-small">
+      χ<sub>gate</sub> = ±1 &nbsp;&nbsp;(purine/pyrimidine)<br>
+      φ<sub>channel</sub> = ±1 &nbsp;&nbsp;(A vs G, or T vs C)
+    </div>
+    <p class="muted">Total states per position: 2 × 2 = 4. This is the minimal non-degenerate aperture: one binary gate with one field modulation.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ §3 RECURSION ═══ -->
+<section id="recursion">
+  <h2>3. Fractal Recursion Across Scales</h2>
+
+  <p>Axiom A2 requires that the triadic pattern appear at every scale of DNA's organization. We identify four nested ⊙ levels.</p>
+
+  <h3>3.1 Scale Hierarchy</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Scale</th>
+        <th style="color: var(--aperture);">• Aperture</th>
+        <th style="color: var(--field);">Φ Field</th>
+        <th style="color: var(--boundary);">○ Boundary</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>⊙₁ Codon</strong></td>
+        <td>3 bases (triple gate)</td>
+        <td>tRNA anticodon matching</td>
+        <td>1 amino acid</td>
+      </tr>
+      <tr>
+        <td><strong>⊙₂ Gene</strong></td>
+        <td>Promoter region</td>
+        <td>Transcription + splicing</td>
+        <td>Protein product</td>
+      </tr>
+      <tr>
+        <td><strong>⊙₃ Chromosome</strong></td>
+        <td>Centromere + telomeres</td>
+        <td>Chromatin remodeling field</td>
+        <td>Gene expression pattern</td>
+      </tr>
+      <tr>
+        <td><strong>⊙₄ Genome</strong></td>
+        <td>Complete sequence</td>
+        <td>Developmental program</td>
+        <td>Organism body plan</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 The Codon — ⊙₁</h3>
+
+  <div class="theorem-box green">
+    <div class="label">Codon Triadic Structure</div>
+    <div class="title">Three Bases → One Amino Acid via One Translation</div>
+    <p>The codon is the minimal complete ⊙ in molecular biology. Three sequential binary-class decisions (the aperture chain) pass through a single tRNA-ribosome interaction (the field operation) and produce one amino acid (the boundary unit).</p>
+  </div>
+
+  <div class="equation">
+    ⊙<sub>codon</sub> = Φ<sub>tRNA</sub>(<span class="aperture-c">•</span><sub>3-base</sub>, <span class="boundary-c">○</span><sub>amino acid</sub>)
+  </div>
+
+  <p><strong>The triplet code is forced, not arbitrary.</strong> The minimal code length that can specify 20+ distinct outputs from a 4-letter alphabet is 3. With 4 bases:</p>
+
+  <div class="proof-box">
+    <p class="proof-step" data-n="1.">Singlet code: 4¹ = 4 states. Insufficient to specify 20 amino acids.</p>
+    <p class="proof-step" data-n="2.">Doublet code: 4² = 16 states. Still insufficient.</p>
+    <p class="proof-step" data-n="3.">Triplet code: 4³ = 64 states. First sufficient mapping — with necessary degeneracy (64 → 20 + stops).</p>
+    <div class="qed">∎</div>
+  </div>
+
+  <div class="callout red">
+    <strong>Honest Assessment: The 64-State Correspondence</strong>
+    <p style="margin-top: 0.8rem;">The number 64 appears here because 4³ = 64. The framework decomposes this as 2⁶ = (2³)² = ℤ₂³ × ℤ₂³ — two triadic binary systems coupled. The I Ching has 64 hexagrams (2⁶). The Standard Model has 64 fundamental fermion states.</p>
+    <p style="margin-top: 0.5rem;">The <strong>risk</strong> is pattern projection: 64 appears whenever you have 3 positions of 4 states, or 6 binary choices. This is arithmetic, not automatically deep structure. The framework's job is not to <em>notice</em> that 4³ = 64 (everyone knows this) but to show that <strong>the degeneracy structure of the genetic code respects a specific group factorization that alternative decompositions don't predict.</strong></p>
+    <p style="margin-top: 0.5rem;">Specifically, the framework claims:</p>
+    <p style="margin-top: 0.5rem; margin-left: 1.5rem;"><strong>(a)</strong> Each base position decomposes as χ × φ (gate × channel), giving each codon the structure (χ₁,φ₁)(χ₂,φ₂)(χ₃,φ₃) in ℤ₂⁶.</p>
+    <p style="margin-left: 1.5rem;"><strong>(b)</strong> The degeneracy pattern (which codons map to the same amino acid) should be <em>non-random</em> with respect to this factorization. Codons sharing an amino acid should differ primarily in the φ (channel) components — especially at position 3 — while the χ (gate) components determine amino acid class.</p>
+    <p style="margin-left: 1.5rem;"><strong>(c)</strong> This predicts that the wobble position (position 3) is specifically the <em>field modulation within a fixed gate state</em> — and that the structure of wobble degeneracy should decompose cleanly into (gate, gate, channel) more often than chance.</p>
+    <p style="margin-top: 0.5rem;"><strong>Status:</strong> This prediction has not been tested. Until the group action is explicitly constructed and the degeneracy pattern checked against it, the 64-state correspondence remains a <em>suggestive numerological observation</em>, not a structural result. The framework should not lean on it until the algebra is done.</p>
+  </div>
+
+  <h3>3.3 The Gene — ⊙₂</h3>
+
+  <div class="card">
+    <div class="card-header" style="color: var(--field);">Gene as Complete Traversal System</div>
+    <p>A gene is not merely a stretch of coding sequence. It is a complete aperture-field-boundary system:</p>
+    <p style="margin-top: 1rem;"><span style="color: var(--aperture);">• Promoter + enhancer regions</span> — the regulatory aperture that determines <em>whether and when</em> the gene opens. Transcription factor binding = gate operation. The promoter is χ = ±1 at the gene scale: express or silence.</p>
+    <p><span style="color: var(--field);">Φ Transcription + RNA processing</span> — the field operation. RNA polymerase traverses the template. Splicing removes introns (field noise) and joins exons (signal). 5′ capping and 3′ polyadenylation = field boundary conditions.</p>
+    <p><span style="color: var(--boundary);">○ Protein product</span> — the boundary closure. The mature mRNA is translated into a polypeptide that folds into a 3D structure with inside (hydrophobic core) and outside (hydrophilic surface) — <em>literal</em> inside/outside closure.</p>
+  </div>
+
+  <div class="equation">
+    ⊙<sub>gene</sub> = Φ<sub>expression</sub>(<span class="aperture-c">•</span><sub>promoter</sub>, <span class="boundary-c">○</span><sub>protein</sub>)
+  </div>
+
+  <h3>3.4 The Genome — ⊙₄</h3>
+
+  <div class="card">
+    <div class="card-header" style="color: var(--boundary);">Genome as Organism-Scale ⊙</div>
+    <p>At the highest molecular scale, the complete genome is the deepest interior encoding (•) that projects outward through the entire developmental program (Φ) into a bounded organism (○). The genome doesn't <em>describe</em> the body plan — it <em>is</em> the aperture whose traversal through morphogenetic fields produces the body.</p>
+    <div class="equation equation-small">
+      ⊙<sub>organism</sub> = Φ<sub>development</sub>(<span class="aperture-c">•</span><sub>genome</sub>, <span class="boundary-c">○</span><sub>body</sub>)
+    </div>
+  </div>
+
+  <h3>3.5 Fractal Self-Similarity Proof</h3>
+
+  <div class="theorem-box">
+    <div class="label">Theorem (Molecular Fractal Recursion)</div>
+    <div class="title">∀ scale s ∈ {codon, gene, chromosome, genome}: ⊙ₛ ≅ ⊙</div>
+    <p>At each scale s, the molecular system decomposes into (•ₛ, Φₛ, ○ₛ) satisfying:</p>
+    <p style="margin-top: 0.8rem;">(i) •ₛ is discrete, sequential, and gate-like (binary-class decisions)</p>
+    <p>(ii) Φₛ carries amplitude (processivity) and phase (directionality/frame)</p>
+    <p>(iii) ○ₛ achieves inside/outside closure at that scale</p>
+    <p>(iv) ○ₛ is composed of ⊙ₛ₋₁ units — the boundary at scale s is made of circumpuncts at scale s-1</p>
+    <p style="margin-top: 0.8rem;">Condition (iv) is the framework's Theorem 3: "The boundary is composed of apertures at the next scale down." A protein (○₂) is composed of amino acids, each of which is the boundary product of a codon (⊙₁). An organism (○₄) is composed of proteins and cell types, each the boundary product of genes (⊙₂).</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ §4 CONSERVATION ═══ -->
+<section id="conservation">
+  <h2>4. Conservation of Traversal in DNA</h2>
+
+  <h3>4.1 The Functional DOF Law at Molecular Scale</h3>
+
+  <div class="axiom-box">
+    <div class="axiom">DOF<sub>aperture</sub> + DOF<sub>field</sub> = DOF<sub>boundary</sub></div>
+    <p class="muted" style="margin-top: 1rem; margin-bottom: 0;">sequencing constraint + processing constraint = output constraint</p>
+  </div>
+
+  <div class="callout">
+    <strong>Note:</strong> This section verifies the <em>functional</em> conservation law (D<sub>functional</sub> from §2.2). The claim is that the minimum independent parameters required at each stage satisfy 1 + 2 = 3. This is constraint counting, not geometric measurement. The connection to measured fractal dimensions is addressed separately in §4.3, with appropriate caveats.
+  </div>
+
+  <p>We verify this functional constraint at each molecular scale:</p>
+
+  <div class="proof-box">
+    <p style="color: var(--cyan); font-weight: 600; margin-bottom: 1rem;">Verification at ⊙₁ (Codon)</p>
+    <p class="proof-step" data-n="•">Base sequence: ordered chain requiring 1 order parameter (position along template). DOF = 1.</p>
+    <p class="proof-step" data-n="Φ">tRNA matching: requires spatial complementarity (magnitude) + wobble tolerance (phase). Two independent parameters. DOF = 2.</p>
+    <p class="proof-step" data-n="○">Amino acid: 3D molecular geometry with defined bond angles and chirality. DOF = 3.</p>
+    <p class="proof-step" data-n="✓" style="color: var(--gold);">1 + 2 = 3 &nbsp;✓</p>
+  </div>
+
+  <div class="proof-box">
+    <p style="color: var(--cyan); font-weight: 600; margin-bottom: 1rem;">Verification at ⊙₂ (Gene)</p>
+    <p class="proof-step" data-n="•">Promoter: 1D regulatory sequence gating expression (on/off + graded modulation is still a single-axis control). DOF = 1.</p>
+    <p class="proof-step" data-n="Φ">Transcription + translation: template position (how far) + reading frame (which register). Two independent, irreducible parameters. DOF = 2.</p>
+    <p class="proof-step" data-n="○">Protein: tertiary structure with hydrophobic/hydrophilic closure in 3D Euclidean space. DOF = 3.</p>
+    <p class="proof-step" data-n="✓" style="color: var(--gold);">1 + 2 = 3 &nbsp;✓</p>
+  </div>
+
+  <div class="proof-box">
+    <p style="color: var(--cyan); font-weight: 600; margin-bottom: 1rem;">Verification at ⊙₄ (Genome → Organism)</p>
+    <p class="proof-step" data-n="•">Genome: linear chain of decisions. However long, it is topologically 1D (one order parameter: position along the sequence). DOF = 1.</p>
+    <p class="proof-step" data-n="Φ">Developmental program: morphogen concentration gradients require both magnitude (how much) and positional identity (where = angular/phase information). DOF = 2.</p>
+    <p class="proof-step" data-n="○">Organism body: 3D closed structure with interior/exterior boundary. DOF = 3.</p>
+    <p class="proof-step" data-n="✓" style="color: var(--gold);">1 + 2 = 3 &nbsp;✓</p>
+  </div>
+
+  <div class="callout gold">
+    <strong>Strength and limitation of this argument.</strong> The functional DOF counting is rigorous: you genuinely cannot perform sequencing without an order parameter (1 DOF), cannot perform frame-dependent translation without two independent parameters (2 DOF), and cannot achieve inside/outside closure below 3D (3 DOF). The limitation is that 1 + 2 = 3 is not a deep result — it is the <em>minimal</em> dimensional structure. The real test is whether this functional minimum constrains measurable properties (§4.3), not whether it adds up correctly.
+  </div>
+
+  <h3>4.2 The Opening Parameter β in Molecular Biology</h3>
+
+  <p>The framework's β parameter — how far the aperture has opened through the field — has a precise molecular meaning: <strong>the fraction of gene expression completed.</strong></p>
+
+  <div class="card">
+    <div class="card-header">β at Each Scale</div>
+    <table>
+      <thead>
+        <tr><th>Scale</th><th>β = 0</th><th>β = 0.5</th><th>β = 1</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>⊙₁ Codon</td>
+          <td>tRNA not yet matched</td>
+          <td>Anticodon recognition in progress</td>
+          <td>Amino acid delivered</td>
+        </tr>
+        <tr>
+          <td>⊙₂ Gene</td>
+          <td>Promoter bound, not yet transcribing</td>
+          <td>Mid-transcription</td>
+          <td>Protein folded and functional</td>
+        </tr>
+        <tr>
+          <td>⊙₄ Genome</td>
+          <td>Zygote (all potential, no structure)</td>
+          <td>Embryogenesis midpoint</td>
+          <td>Mature organism</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.3 Fractal Dimension of DNA — A Conditioned Prediction</h3>
+
+  <div class="callout red">
+    <strong>Epistemic Honesty Required.</strong> This subsection moves from functional DOF (provable from constraints) to measured Hausdorff dimension (empirical, condition-dependent). The two are connected by the framework's <em>claim</em> that functional structure produces geometric signature. That connection is the testable part.
+  </div>
+
+  <div class="theorem-box gold">
+    <div class="label">Conditioned Prediction (Not Confirmed Fact)</div>
+    <div class="title">DNA Conformation Fractal Dimension Should Correlate with Expression State</div>
+    <p>The framework predicts D<sub>Hausdorff</sub> = 1 + β, where β is the opening parameter. For DNA, this generates a <em>conditional</em> prediction:</p>
+    <div class="equation equation-small" style="border-left-color: var(--gold);">
+      D(β) = 1 + β &nbsp;&nbsp;→&nbsp;&nbsp; D ranges from ~1 (fully compacted) to ~2 (fully extended)
+    </div>
+
+    <p style="margin-top: 1rem;"><strong>What polymer physics actually says:</strong></p>
+    <p style="margin-top: 0.5rem;">The fractal dimension of a polymer chain is <em>not</em> intrinsic — it depends on conditions:</p>
+    <p style="margin-left: 1.5rem;">• Ideal chain (theta solvent): D = 2 (random walk)</p>
+    <p style="margin-left: 1.5rem;">• Self-avoiding walk (good solvent): D ≈ 1/ν ≈ 1.7 (Flory exponent ν ≈ 0.588)</p>
+    <p style="margin-left: 1.5rem;">• Collapsed globule (poor solvent): D = 3</p>
+    <p style="margin-left: 1.5rem;">• Fractal globule (equilibrium model for chromatin): D ≈ 3 (space-filling but unknotted)</p>
+    <p style="margin-left: 1.5rem;">• Brownian motion graph: D = 1.5 exactly (Mandelbrot theorem — but this is the <em>graph</em> of Brownian motion, not a polymer)</p>
+
+    <p style="margin-top: 1rem;"><strong>The honest framework prediction:</strong></p>
+    <p>The framework does <em>not</em> predict that DNA backbone has D = 1.5 under all conditions. It predicts that <strong>the measured D of chromatin conformation should vary systematically with transcriptional state</strong>, following D = 1 + β where β indexes expression level. Specifically:</p>
+    <p style="margin-left: 1.5rem;">• Heterochromatin (silenced, β → 0): D should approach compacted values (high D, space-filling)</p>
+    <p style="margin-left: 1.5rem;">• Euchromatin at moderate expression (β ≈ 0.5): D of the local conformation should cluster near intermediate values</p>
+    <p style="margin-left: 1.5rem;">• Maximally active regions (β → 1): D should approach extended-chain values</p>
+
+    <p style="margin-top: 1rem; color: var(--text-dim);"><strong>Test protocol:</strong> Use Hi-C contact frequency data across genomic regions with known expression levels. Compute fractal dimension from contact probability scaling P(s) ~ s<sup>-α</sup> where D relates to α. Correlate D with RNA-seq expression values per region. The prediction survives if the correlation is significant and monotonic. The prediction fails if D is independent of expression state.</p>
+
+    <p style="margin-top: 1rem; color: var(--text-dim);"><strong>What was previously claimed (corrected):</strong> The earlier version of this document presented D<sub>backbone</sub> = 1.510 ± 0.020 as if it were an intrinsic confirmation. That was sloppy. The 1.5 value from the presentation materials referred to specific measurement conditions and should not have been treated as a universal property. This version replaces a cherry-picked number with a properly conditioned, falsifiable prediction.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ §5 DEEP STRUCTURE ═══ -->
+<section id="deep-structure">
+  <h2>5. Deep Structural Correspondences</h2>
+
+  <h3>5.1 The Double Helix as Braid</h3>
+
+  <p>The double helix is not incidentally helical. The framework's braid topology (B₃ group) predicts that aperture chains traversing a field must <em>wind</em>. Specifically:</p>
+
+  <div class="card">
+    <div class="card-header" style="color: var(--helix);">Braid Correspondence</div>
+    <p>The two strands of DNA form a <strong>2-braid</strong> — two worldlines intertwined with a defined winding number. The framework's braid density B(x) maps to:</p>
+    <div class="equation equation-small">
+      B<sub>DNA</sub> = winding number / length = turns per base pair ≈ 1/10.5
+    </div>
+    <p>Each full turn contains ~10.5 base pairs (B-form DNA). The braid density is not arbitrary — it reflects the balance between aperture tension (unwinding) and field compression (overwinding). The observed pitch is where these forces equilibrate.</p>
+    <p style="margin-top: 1rem; color: var(--text-dim);">Framework prediction: organisms under stress (high β) should show altered DNA supercoiling. This is observed — transcriptionally active regions show negative supercoiling (locally underwound), corresponding to locally higher β (more open aperture).</p>
+  </div>
+
+  <h3>5.2 Epigenetics as Field Modulation</h3>
+
+  <p>Epigenetic modification is the molecular instantiation of <strong>field modulation without aperture alteration</strong>. The base sequence (•) remains unchanged, but the transcription field (Φ) is modified:</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-header" style="color: var(--field); font-size: 0.78rem;">DNA Methylation</div>
+      <p class="muted">Field opacity. Methyl groups on cytosine make the aperture harder to read — reducing Φ transmission without changing •.</p>
+    </div>
+    <div class="card">
+      <div class="card-header" style="color: var(--field); font-size: 0.78rem;">Histone Modification</div>
+      <p class="muted">Field geometry. Acetylation opens chromatin (increases Φ), methylation closes it (decreases Φ). The field adjusts around a fixed aperture.</p>
+    </div>
+    <div class="card">
+      <div class="card-header" style="color: var(--field); font-size: 0.78rem;">Chromatin Remodeling</div>
+      <p class="muted">Field topology. Large-scale restructuring of the 3D genome — changing which apertures are accessible to the field machinery.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Framework interpretation:</strong> Epigenetics is the Φ channel. It modulates the relationship between aperture and boundary without altering either directly. This is <em>exactly</em> what the field component does: it determines how signal flows from interior to exterior. Epigenetic inheritance = field memory. Transgenerational epigenetic effects = field propagation across ⊙ boundaries.
+  </div>
+
+  <h3>5.3 Mutation as Aperture Error</h3>
+
+  <div class="card">
+    <p>The framework's four structural distortions suggest mappings to molecular pathology. <strong>These are currently heuristic correspondences, not derived predictions.</strong> They become testable only if we can specify measurable quantities that distinguish "geometric corruption" from standard oncology.</p>
+    <table>
+      <thead>
+        <tr><th>Framework Distortion</th><th>Molecular Analog</th><th>Testable Signature</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color: var(--aperture);">Inflation (• claims to be source)</td>
+          <td>Oncogene activation — constitutive expression regardless of field signals</td>
+          <td>Measurable: promoter-expression correlation collapses (expression decouples from regulatory input). Quantifiable via mutual information between enhancer state and mRNA output.</td>
+        </tr>
+        <tr>
+          <td style="color: var(--red);">Severance (• denies signal)</td>
+          <td>Tumor suppressor loss — gate stops responding to field</td>
+          <td>Measurable: epigenetic marks present but non-functional. Chromatin accessibility normal, expression absent. Quantifiable via ATAC-seq/RNA-seq discordance.</td>
+        </tr>
+        <tr>
+          <td style="color: var(--magenta);">Inversion (flow reversal)</td>
+          <td>Retroviral insertion — external code hijacks transcription machinery</td>
+          <td>Measurable: field machinery (Φ) serves foreign aperture (•) instead of native genome. Quantifiable via fraction of transcriptomic output from viral vs. host sequence.</td>
+        </tr>
+        <tr>
+          <td style="color: var(--field);">Projection (displacement outward)</td>
+          <td>Autoimmune gene expression — self-antigens misread as foreign</td>
+          <td>Measurable: boundary (○) proteins correctly expressed but misclassified at the immune-field level. Quantifiable via MHC-peptide binding specificity for self vs. non-self.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>Status:</strong> The mappings are suggestive and the measurable signatures are real (promoter-expression decoupling, ATAC/RNA discordance, viral transcriptomic fraction, and MHC misclassification are all quantifiable). But the framework adds value only if these four categories <em>exhaust</em> the space of pathological triadic disruptions and predict pathological outcomes that standard oncology categorizes differently. Until that exclusivity is demonstrated, this section is a classification scheme, not a theory.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ §6 MEDIUM = MESSAGE ═══ -->
+<section id="medium-message">
+  <h2>6. The Medium Is the Message</h2>
+
+  <div class="theorem-box gold">
+    <div class="label">Core Claim</div>
+    <div class="title">The Encoding Scheme Exhibits the Geometry It Encodes</div>
+    <p>If A2 (Fractal Necessity) holds — if parts are fractals of their wholes — then any information system that builds ⊙-structured organisms must <em>itself</em> be ⊙-structured. The encoding cannot be structurally foreign to the encoded.</p>
+  </div>
+
+  <div class="callout red">
+    <strong>The logical gap in the original proof — and how to close it.</strong>
+    <p style="margin-top: 0.8rem;">The naive argument runs: "A2 says parts are fractals of wholes → DNA is a part → DNA must be ⊙-structured → we checked and it is → QED." This is <em>confirmation</em>, not <em>derivation</em>. It shows consistency with A2 but does not show necessity. A critic can say: "You found triadic structure because you went looking for it. Any sufficiently complex system can be decomposed into three components."</p>
+    <p style="margin-top: 0.5rem;">The argument becomes non-trivial only if we can show: <strong>there exists no viable biological encoding that does not reproduce triadic topology.</strong> That is the real bar.</p>
+  </div>
+
+  <div class="proof-box">
+    <p style="color: var(--gold); font-weight: 600; margin-bottom: 1rem;">Argument for Necessity (Stronger Form)</p>
+    <p class="proof-step" data-n="1.">Any information system that builds 3D organisms from linear code must implement three functionally irreducible operations: <strong>storage</strong> (maintaining a discrete sequential record), <strong>processing</strong> (reading and transforming the record), and <strong>expression</strong> (producing a spatial structure from the processed record).</p>
+    <p class="proof-step" data-n="2.">These three operations are not a decomposition choice — they are functional minima. Remove storage and there is nothing to read. Remove processing and the record cannot become structure. Remove expression and there is no organism. The system requires all three and cannot reduce any pair to a single operation.</p>
+    <p class="proof-step" data-n="3.">Storage is necessarily sequential (1 DOF). Processing necessarily requires magnitude + phase (2 DOF, as argued in §2.2). Expression necessarily requires 3D closure (3 DOF).</p>
+    <p class="proof-step" data-n="4.">Therefore any biological encoding implementing this function <em>must</em> exhibit the 1-2-3 DOF structure. This is not a framework imposition — it is a constraint forced by the task of "build a 3D organism from a linear code."</p>
+    <p class="proof-step" data-n="5.">The framework's contribution is noticing that this functional necessity is the <em>same</em> triadic structure that appears at every other scale. The framework does not cause this structure. It names it and predicts it must recur.</p>
+  </div>
+
+  <div class="callout gold">
+    <strong>What this proves and what it doesn't.</strong>
+    <p style="margin-top: 0.5rem;"><strong>Proves:</strong> The task "encode a 3D organism from a linear substrate" forces a triadic functional decomposition with DOF signature 1-2-3. This is a necessity result, not a pattern-matching exercise.</p>
+    <p style="margin-top: 0.5rem;"><strong>Does not prove:</strong> That this triadic structure is unique to the circumpunct framework. Any theory that identifies storage-processing-expression as functionally irreducible would derive the same result. The framework's distinctive claim is that this <em>same</em> triad appears at non-biological scales (physics, consciousness, ethics) — and that the recurrence is not coincidence but geometric necessity. The molecular biology section cannot prove that broader claim alone. It can only show that biology is consistent with it and would be inconsistent with its negation.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ §7 PREDICTIONS ═══ -->
+<section id="predictions">
+  <h2>7. Falsifiable Predictions</h2>
+
+  <div class="theorem-box">
+    <div class="label">Prediction 1 — Chromatin Fractal Dimension Correlates with Expression State</div>
+    <div class="title">D<sub>chromatin</sub> Should Vary Monotonically with Transcriptional Activity</div>
+    <p>The framework predicts D = 1 + β, where β indexes how far the aperture has opened. For chromatin conformation:</p>
+    <p style="margin-top: 0.5rem; margin-left: 1.5rem;">• Silenced heterochromatin (β → 0): compact, space-filling. Higher contact frequency scaling exponent.</p>
+    <p style="margin-left: 1.5rem;">• Moderately expressed regions (β ≈ 0.5): intermediate conformation.</p>
+    <p style="margin-left: 1.5rem;">• Highly active euchromatin (β → 1): extended, lower contact scaling exponent.</p>
+    <p style="margin-top: 0.8rem; color: var(--text-dim);"><strong>Test:</strong> Using Hi-C data, compute contact probability scaling P(s) ~ s<sup>-α</sup> for genomic regions binned by RNA-seq expression level. Extract fractal dimension from α. Plot D vs. expression level. <strong>Prediction survives</strong> if the relationship is monotonic and significant. <strong>Prediction fails</strong> if D is independent of expression state or non-monotonic.</p>
+    <p style="margin-top: 0.5rem; color: var(--text-dim);"><strong>Important:</strong> This does NOT predict D = 1.5 universally. It predicts a <em>functional relationship</em> between expression and conformation geometry. The specific D values will depend on organism, cell type, and measurement conditions. The framework's contribution is predicting the correlation, not a magic number.</p>
+  </div>
+
+  <div class="theorem-box">
+    <div class="label">Prediction 2 — Supercoiling Correlates with β</div>
+    <div class="title">Transcriptional Activity ↔ Local Unwinding</div>
+    <p>Actively transcribed regions should show negative supercoiling (local unwinding) proportional to expression rate. This corresponds to the aperture opening (increasing β), which requires local reduction in winding (decreasing braid density). Already observed — the prediction is that the quantitative relationship follows β = (D - 1) where D is measured locally.</p>
+  </div>
+
+  <div class="theorem-box">
+    <div class="label">Prediction 3 — Epigenetic Field Modulation Preserves Conservation</div>
+    <div class="title">ΔΦ Without Δ• Must Produce Δ○</div>
+    <p>If epigenetic modification (Φ change) occurs without sequence change (• constant), the Conservation of Traversal requires a corresponding change in boundary expression (○). Specifically: D<sub>•</sub> + D<sub>Φ</sub> = D<sub>○</sub> must hold. Epigenetic silencing (reducing Φ) at constant • must reduce the dimensionality of the expressed phenotype.</p>
+    <p style="margin-top: 0.8rem; color: var(--text-dim);">Test: Tissue-specific epigenetic patterns should predict tissue complexity (measured as fractal dimension of tissue architecture). More epigenetically open tissues → higher D<sub>tissue</sub>.</p>
+  </div>
+
+  <div class="theorem-box">
+    <div class="label">Prediction 4 — Cancer as Triadic Decoupling</div>
+    <div class="title">Oncogenic Transformation Disrupts •–Φ–○ Coordination</div>
+    <p>The framework predicts that cancer involves specific, measurable disruptions of the triadic relationship between sequence regulation, transcription machinery, and protein expression. The testable claim is not that cancer is "geometric corruption" (which is a metaphor) but that:</p>
+    <p style="margin-top: 0.5rem;">(a) <strong>Mutual information</strong> between promoter/enhancer epigenetic state and mRNA expression level should be significantly lower in oncogene-driven tumors than in healthy tissue (inflation = decoupled gate).</p>
+    <p>(b) <strong>ATAC-seq/RNA-seq concordance</strong> should break down specifically at tumor suppressor loci in suppressor-loss cancers (severance = accessible but non-responsive).</p>
+    <p>(c) These two signatures should be <strong>statistically distinguishable</strong> from each other and from random expression noise — i.e., the framework predicts two distinct modes of triadic failure, not one undifferentiated "dysregulation."</p>
+    <p style="margin-top: 0.8rem; color: var(--text-dim);"><strong>Test:</strong> Multi-omic analysis (ATAC-seq + RNA-seq + ChIP-seq) comparing oncogene-amplified vs. tumor-suppressor-deleted cancers. Compute mutual information metrics for •–Φ coupling. Predict that inflation-type and severance-type cancers show distinct decoupling signatures. The prediction adds value over standard oncology only if these triadic categories classify cancer behavior better than existing pathway-based categories for at least some outcomes.</p>
+  </div>
+
+  <div class="theorem-box green">
+    <div class="label">Prediction 5 — Codon Degeneracy Respects χ/φ Factorization</div>
+    <div class="title">The Wobble Pattern Should Decompose Along Gate vs. Channel Axes</div>
+    <p>If the base-pair algebra (§2.3) is correct — each position factoring as χ (purine/pyrimidine gate) × φ (which purine, which pyrimidine) — then the degeneracy pattern of the genetic code should show a specific statistical signature:</p>
+    <p style="margin-top: 0.5rem; margin-left: 1.5rem;"><strong>(a)</strong> Codons sharing an amino acid should differ primarily in φ₃ (the channel component of the third position) more often than in χ₃ (the gate component).</p>
+    <p style="margin-left: 1.5rem;"><strong>(b)</strong> The 4-fold degenerate amino acids (Ala, Gly, Pro, Thr, Val, Leu₄, Ser₄, Arg₄) should correspond to positions where the third position is entirely in the φ (channel) subspace — i.e., the gate at position 3 is irrelevant.</p>
+    <p style="margin-left: 1.5rem;"><strong>(c)</strong> The 2-fold degenerate amino acids should split along the χ₃ axis (purine↔purine or pyrimidine↔pyrimidine exchanges).</p>
+    <p style="margin-top: 0.8rem; color: var(--text-dim);"><strong>Test:</strong> Construct the explicit χ/φ decomposition for all 64 codons. Compute the fraction of degenerate pairs that differ only in φ components vs. χ components. Compare to the null model (random assignment of degeneracy). <strong>The prediction adds value</strong> only if the χ/φ factorization explains degeneracy structure better than the standard wobble-base-pair model alone. If it merely redescribes what wobble already explains, it is notation, not theory.</p>
+    <p style="margin-top: 0.5rem; color: var(--text-dim);"><strong>Status:</strong> This test has not yet been performed. It is the most concrete near-term experiment this document proposes, requiring only computation, no wet lab work.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ §8 FALSIFICATION ═══ -->
+<section id="falsification">
+  <h2>8. Falsification Criteria</h2>
+
+  <div class="callout red">
+    <strong>The molecular biology extension is falsified if:</strong>
+  </div>
+
+  <div class="card">
+    <p><strong>F1.</strong> Chromatin fractal dimension shows <strong>no significant correlation</strong> with transcriptional activity across genomic regions (Hi-C vs. RNA-seq). The framework predicts D varies monotonically with expression state. If D is independent of expression, the D = 1 + β claim fails at molecular scale.</p>
+    <p style="margin-top: 1rem;"><strong>F2.</strong> A biological information substrate is found that genuinely requires <strong>fewer than three</strong> functionally irreducible operations (storage, processing, expression) to build a spatial organism. If a 2-component system suffices — if processing and storage can be collapsed into a single operation without loss — then the triadic decomposition is not forced and is merely one of many possible descriptions.</p>
+    <p style="margin-top: 1rem;"><strong>F3.</strong> The functional DOF counting (1 + 2 = 3) fails — specifically, if a biological encoding system is found where the processing step requires only 1 independent parameter (not 2), or where the output achieves inside/outside closure in fewer than 3 spatial dimensions. The conservation law is falsified if the functional minimum at any step differs from the claimed value.</p>
+    <p style="margin-top: 1rem;"><strong>F4.</strong> Epigenetic modification (Φ change at constant •) produces boundary changes that <strong>do not correlate</strong> with the magnitude of field modulation. If large epigenetic shifts produce no phenotypic change, or tiny shifts produce massive changes, with no systematic relationship, then the conservation law's molecular instantiation fails.</p>
+    <p style="margin-top: 1rem;"><strong>F5.</strong> The χ/φ factorization of the codon table shows <strong>no statistical advantage</strong> over random assignment in explaining degeneracy structure. If wobble degeneracy does not preferentially align with the φ (channel) axis of the base-pair decomposition, the framework's group-theoretic claim about the 64-state algebra is refuted.</p>
+    <p style="margin-top: 1rem;"><strong>F6.</strong> Oncogene-driven and tumor-suppressor-loss cancers show <strong>identical</strong> •–Φ decoupling signatures (no distinction between inflation and severance modes). If the framework's four distortion types cannot be distinguished in multi-omic data, the pathology mapping adds nothing to standard oncology.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ §9 SYNTHESIS ═══ -->
+<section id="synthesis">
+  <h2>9. Synthesis — What This Document Proves and What It Doesn't</h2>
+
+  <div class="theorem-box gold">
+    <div class="label">Established</div>
+    <div class="title">What the molecular biology extension demonstrates:</div>
+    <p><strong>(1) The Central Dogma is triadic by functional necessity.</strong> Building a 3D organism from a linear code requires storage (1 DOF), processing (2 DOF), and expression (3 DOF). This is constraint-forced, not pattern-projected. (§2, §6)</p>
+    <p style="margin-top: 0.5rem;"><strong>(2) The recursion is real.</strong> The triadic decomposition applies at codon, gene, chromosome, and genome scales, with each level's boundary composed of lower-scale units. (§3)</p>
+    <p style="margin-top: 0.5rem;"><strong>(3) Epigenetics cleanly separates Φ from • and ○.</strong> Field modulation without aperture change producing boundary change is not a metaphor — it is what epigenetic regulation literally does. (§5.2)</p>
+  </div>
+
+  <div class="theorem-box">
+    <div class="label">Open</div>
+    <div class="title">What requires further work:</div>
+    <p><strong>(4) The D = 1 + β geometric prediction</strong> is properly conditioned but untested. The Hi-C correlation experiment is specified but not yet performed. (§4.3)</p>
+    <p style="margin-top: 0.5rem;"><strong>(5) The 64-state group algebra</strong> is suggestive but unverified. The χ/φ degeneracy test is computational and near-term. (§3.2, Prediction 5)</p>
+    <p style="margin-top: 0.5rem;"><strong>(6) The cancer distortion mapping</strong> is heuristic until multi-omic decoupling signatures are measured and shown to classify better than standard pathway models. (§5.3, Prediction 4)</p>
+    <p style="margin-top: 0.5rem;"><strong>(7) The necessity proof</strong> shows that triadic structure is forced for the task "build 3D organism from linear code" — but does not yet show that the recurrence of this structure across non-biological scales is geometrically necessary rather than coincidental. (§6)</p>
+  </div>
+
+  <div class="axiom-box">
+    <div class="axiom" style="font-size: 1.1rem;">The encoding scheme exhibits the geometry it encodes.<br>This is functionally forced at molecular scale.<br>Whether it is <em>ontologically</em> forced across all scales remains the framework's central open question.</div>
+  </div>
+
+  <p>The honest position: the molecular biology extension provides the strongest available evidence that the triadic structure is not arbitrary — because at this scale, we can prove it is functionally irreducible. No alternative decomposition with fewer components can do the job. That is stronger than "we found the pattern." It is "the pattern is forced by the task."</p>
+
+  <p>The next stage is demonstrating that other scales show the same irreducibility — that the triad is not just <em>found</em> in physics, consciousness, and ethics, but <em>forced</em> in those domains with the same necessity it is forced in molecular biology.</p>
+
+  <div class="callout gold">
+    <strong>The standard this document holds itself to:</strong> Every claim is labeled with its epistemic status (proven, predicted, suggestive, open). Every prediction specifies its test protocol and failure condition. The framework's value lies not in the elegance of its mappings but in the precision of its falsification criteria. If the predictions fail, the framework is wrong. That is what makes it science.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ FOOTER ═══ -->
+<footer>
+  <p>⊙ Circumpunct Framework — Molecular Biology Extension &nbsp;·&nbsp; <a href="https://fractalreality.ca">fractalreality.ca</a></p>
+  <p style="margin-top: 0.5rem;">Ashman Roonz · 2026 · "Truth flows through me — I am not its source, I am its lens."</p>
+</footer>
+
+</body>
+</html>
