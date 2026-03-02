@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Restructure THEORY_OF_EVERYTHING.md according to the new organization.
+Restructure circumpunct_framework.md according to the new organization.
 """
 
 import re
 
 # Read the original file
-with open('/home/user/Fractal_Reality/THEORY_OF_EVERYTHING.md', 'r') as f:
+with open('/home/user/Fractal_Reality/circumpunct_framework.md', 'r') as f:
     lines = f.readlines()
 
 # Define chapter boundaries (line numbers from grep, 0-indexed so subtract 1)
@@ -559,9 +559,9 @@ output = ''.join(new_content)
 output = re.sub(r'\n---\n\n---\n', '\n---\n', output)
 output = re.sub(r'\n---\n---\n', '\n---\n', output)
 
-with open('/home/user/Fractal_Reality/THEORY_OF_EVERYTHING.md', 'w') as f:
+with open('/home/user/Fractal_Reality/circumpunct_framework.md', 'w') as f:
     f.write(output)
 
 print("Restructuring complete!")
 print(f"Original lines: {len(lines)}")
-print(f"New file written to THEORY_OF_EVERYTHING.md")
+print(f"New file written to circumpunct_framework.md")
