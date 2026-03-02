@@ -15,6 +15,134 @@
     <canvas id="particles"></canvas>
 
     <main class="container">
+
+        <!-- RESEARCH SECTION — visible to cold readers first -->
+        <section class="research-section" id="research">
+            <style>
+                .research-section {
+                    position: relative;
+                    z-index: 1;
+                    width: 100%;
+                    max-width: 780px;
+                    margin: 0 auto 2rem;
+                    padding: 2rem 1.5rem 1.5rem;
+                    text-align: left;
+                    font-family: 'Space Grotesk', -apple-system, sans-serif;
+                    background: rgba(255,255,255,0.02);
+                    border: 1px solid rgba(255,255,255,0.06);
+                    border-radius: 10px;
+                }
+                .research-section h2 {
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    color: #00ffff;
+                    letter-spacing: 0.04em;
+                    margin: 0 0 1rem;
+                    text-shadow: 0 0 8px rgba(0,255,255,0.35);
+                }
+                .research-section p {
+                    font-size: 0.88rem;
+                    line-height: 1.7;
+                    color: #c9d1d9;
+                    margin: 0 0 0.8rem;
+                }
+                .research-section .research-lead {
+                    font-size: 0.92rem;
+                    color: #e6edf3;
+                    margin-bottom: 1.2rem;
+                }
+                .research-section h3 {
+                    font-size: 0.95rem;
+                    font-weight: 500;
+                    color: #e6edf3;
+                    margin: 1.5rem 0 0.5rem;
+                }
+                .research-section ul {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0 0 1rem;
+                }
+                .research-section ul li {
+                    font-size: 0.86rem;
+                    line-height: 1.65;
+                    color: #c9d1d9;
+                    padding: 0.35rem 0 0.35rem 1.2rem;
+                    position: relative;
+                }
+                .research-section ul li::before {
+                    content: "\2022";
+                    position: absolute;
+                    left: 0;
+                    color: #58a6ff;
+                }
+                .research-section ul li strong {
+                    color: #e6edf3;
+                }
+                .research-section .falsification {
+                    font-size: 0.85rem;
+                    color: #8b949e;
+                    border-left: 2px solid rgba(88,166,255,0.3);
+                    padding-left: 1rem;
+                    margin: 1rem 0;
+                }
+                .research-section .paper-links {
+                    margin-top: 1.2rem;
+                    padding-top: 1rem;
+                    border-top: 1px solid rgba(255,255,255,0.06);
+                }
+                .research-section .paper-links h3 {
+                    margin-top: 0;
+                    color: #8b949e;
+                    font-size: 0.8rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.06em;
+                }
+                .research-section .paper-links ul li::before {
+                    content: "\2192";
+                    color: #4ecdc4;
+                }
+                .research-section .paper-links a {
+                    color: #58a6ff;
+                    text-decoration: none;
+                    transition: color 0.2s ease;
+                }
+                .research-section .paper-links a:hover {
+                    color: #79c0ff;
+                    text-decoration: underline;
+                }
+                @media (max-width: 600px) {
+                    .research-section {
+                        padding: 1.5rem 1rem;
+                        margin-bottom: 1.5rem;
+                    }
+                }
+            </style>
+
+            <h2>Research</h2>
+
+            <p class="research-lead">The Circumpunct Framework is a geometric formalization built on a single structural claim: <strong>parts are fractals of their wholes</strong>. Every system at every scale exhibits the same triadic architecture — an aperture that selects (•), a field that mediates (Φ), and a boundary that interfaces (○). The framework's expression is <strong>⊙ = Φ(•, ○)</strong>.</p>
+
+            <p>This is not metaphor. The framework generates specific, quantitative, falsifiable predictions:</p>
+
+            <ul>
+                <li><strong>Physics:</strong> Zero-parameter derivation of the fine structure constant (α) and particle mass ratios from fractal geometry at D = 1.5. Derivation of the Schr&ouml;dinger equation from kernel convolution. Einstein field equations from coarse-grained braid structure.</li>
+                <li><strong>Consciousness:</strong> Resolution of the binding problem through aperture dynamics — awareness modeled as a fractal lens, not an emergent epiphenomenon. Specific predictions about the relationship between aperture width and perceptual integration.</li>
+                <li><strong>Pathology:</strong> Narcissism formalized as belief-corruption protocol ("Noble Lie virus") that weaponizes functional love against resonant love. Predicts specific recovery trajectories based on aperture restoration.</li>
+                <li><strong>Empirical Test:</strong> Copper electrowinning experiments designed to test the ρ = ω/α parameter's predictions about crystal morphology at different frequency regimes.</li>
+            </ul>
+
+            <p class="falsification"><strong>Falsification criteria:</strong> If the predicted fractal dimension relationships do not hold in empirical crystal growth data, or if the derived constants diverge from measured values beyond specified error bounds, the framework is falsified.</p>
+
+            <div class="paper-links">
+                <h3>Papers &amp; Formalizations</h3>
+                <ul>
+                    <li><a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework_physicists.md">Circumpunct Framework: Mathematical Formulation for Peer Review</a> — Explicit derivations, operator definitions, and testable predictions. No metaphors.</li>
+                    <li><a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md">Complete Theoretical Framework</a> — Full treatment across physics, consciousness, ethics, and pathology.</li>
+                    <li><a href="aperture_falsification_presentation.html">Falsification Protocol &amp; Experimental Design</a></li>
+                </ul>
+            </div>
+        </section>
+
         <!-- Responsive Layout Wrapper -->
         <div class="main-layout">
             <!-- Left Column: Hero Equation -->
@@ -415,182 +543,6 @@
         </div><!-- /main-layout -->
     </main>
 
-    <!-- FOR RESEARCHERS SECTION -->
-    <section class="researchers-section" id="researchers">
-        <style>
-            .researchers-section {
-                position: relative;
-                z-index: 1;
-                max-width: 860px;
-                margin: 0 auto;
-                padding: 3rem 1.5rem 2rem;
-                font-family: 'Space Grotesk', -apple-system, sans-serif;
-                color: #e6edf3;
-            }
-            .researchers-section h2 {
-                font-size: 1.4rem;
-                font-weight: 600;
-                color: #00ffff;
-                letter-spacing: 0.04em;
-                margin-bottom: 0.3rem;
-                text-shadow: 0 0 8px rgba(0,255,255,0.4);
-            }
-            .researchers-section .section-subtitle {
-                font-size: 0.85rem;
-                color: #8b949e;
-                margin-bottom: 2rem;
-            }
-            .researchers-section h3 {
-                font-size: 1.05rem;
-                font-weight: 500;
-                color: #e6edf3;
-                margin: 1.8rem 0 0.6rem;
-                padding-bottom: 0.3rem;
-                border-bottom: 1px solid rgba(255,255,255,0.08);
-            }
-            .researchers-section p, .researchers-section li {
-                font-size: 0.88rem;
-                line-height: 1.65;
-                color: #c9d1d9;
-            }
-            .researchers-section ul {
-                list-style: none;
-                padding: 0;
-            }
-            .researchers-section ul li {
-                padding: 0.25rem 0;
-                padding-left: 1.2rem;
-                position: relative;
-            }
-            .researchers-section ul li::before {
-                content: "—";
-                position: absolute;
-                left: 0;
-                color: #8b949e;
-            }
-            .researchers-section .math-block {
-                font-family: 'Space Grotesk', monospace;
-                background: rgba(255,255,255,0.03);
-                border: 1px solid rgba(255,255,255,0.06);
-                border-radius: 6px;
-                padding: 1rem 1.2rem;
-                margin: 0.8rem 0;
-                font-size: 0.9rem;
-                line-height: 1.7;
-                color: #e6edf3;
-                overflow-x: auto;
-            }
-            .researchers-section .results-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 0.8rem 0;
-                font-size: 0.82rem;
-            }
-            .researchers-section .results-table th {
-                text-align: left;
-                padding: 0.5rem 0.6rem;
-                border-bottom: 1px solid rgba(255,255,255,0.12);
-                color: #8b949e;
-                font-weight: 400;
-                font-size: 0.75rem;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-            }
-            .researchers-section .results-table td {
-                padding: 0.4rem 0.6rem;
-                border-bottom: 1px solid rgba(255,255,255,0.04);
-                color: #c9d1d9;
-            }
-            .researchers-section .results-table td:last-child {
-                color: #4ecdc4;
-            }
-            .researchers-section .doc-links {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-                margin-top: 1.5rem;
-            }
-            .researchers-section .doc-links a {
-                font-size: 0.8rem;
-                color: #58a6ff;
-                text-decoration: none;
-                padding: 0.4rem 0.8rem;
-                border: 1px solid rgba(88,166,255,0.2);
-                border-radius: 6px;
-                transition: all 0.2s ease;
-            }
-            .researchers-section .doc-links a:hover {
-                border-color: rgba(88,166,255,0.5);
-                background: rgba(88,166,255,0.08);
-            }
-            @media (max-width: 600px) {
-                .researchers-section { padding: 2rem 1rem; }
-                .researchers-section .math-block { font-size: 0.8rem; padding: 0.8rem; }
-                .researchers-section .results-table { font-size: 0.75rem; }
-            }
-        </style>
-
-        <h2>For Researchers</h2>
-        <p class="section-subtitle">Formal mathematics, falsification criteria, and empirical predictions</p>
-
-        <h3>The Framework</h3>
-        <p>The circumpunct framework proposes a single triadic structure — boundary (○), field (Φ), aperture (•) — from which physical constants are derived with zero free parameters. The master equation:</p>
-        <div class="math-block">
-            ⊙ = (☀︎ ∘ i ∘ ⊛)(•, Φ, ○)<br><br>
-            where:<br>
-            &nbsp;&nbsp;(☀︎ ∘ i ∘ ⊛) = process triad: emergence ∘ rotation ∘ convergence<br>
-            &nbsp;&nbsp;(•, Φ, ○) &nbsp;&nbsp;&nbsp;= structure triad: aperture, field, boundary<br>
-            &nbsp;&nbsp;⊙ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= self-referential fixed point (dot inside circle)
-        </div>
-
-        <h3>Derived Constants (Zero Free Parameters)</h3>
-        <table class="results-table">
-            <thead>
-                <tr><th>Quantity</th><th>Value</th><th>Derivation</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>Balance parameter β</td><td>0.5</td><td>Symmetry + entropy + virial</td></tr>
-                <tr><td>Fractal dimension D</td><td>1.5</td><td>D = 1 + ½H(0.5) = 1.5</td></tr>
-                <tr><td>Golden ratio φ</td><td>1.618...</td><td>Entropy + ghost-freedom</td></tr>
-                <tr><td>Fine structure 1/α</td><td>137.036</td><td>360°/φ² golden angle resonance</td></tr>
-                <tr><td>State space</td><td>64 states</td><td>2³ × 2³ dual-interface combinatorics</td></tr>
-                <tr><td>Particle generations</td><td>3</td><td>68°/22° cone geometry ≈ 3.09</td></tr>
-            </tbody>
-        </table>
-
-        <h3>Electroweak Predictions vs. Measurement</h3>
-        <table class="results-table">
-            <thead>
-                <tr><th>Boson</th><th>Formula</th><th>Predicted</th><th>Measured</th><th>Error</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>W</td><td>80 + 1/φ² GeV</td><td>80.382 GeV</td><td>80.377 GeV</td><td>0.006%</td></tr>
-                <tr><td>Z</td><td>80 + φ⁵ + 0.1 GeV</td><td>91.190 GeV</td><td>91.188 GeV</td><td>0.003%</td></tr>
-                <tr><td>Higgs</td><td>100 + 8π GeV</td><td>125.133 GeV</td><td>125.25 GeV</td><td>0.09%</td></tr>
-            </tbody>
-        </table>
-
-        <h3>Falsification Criteria</h3>
-        <p>The framework is strictly falsifiable. It is refuted if:</p>
-        <ul>
-            <li><strong>D ≠ 1.5</strong> — Fractal dimension deviates from 1.5 in new dynamic systems at >3σ. Current measurements: LIGO gravitational waves D = 1.503 ± 0.040, DNA backbone D = 1.510 ± 0.020, atmospheric turbulence D = 1.52 ± 0.08.</li>
-            <li><strong>Fourth generation particles</strong> — Discovery of a 4th fermion generation (topologically forbidden by the framework's 68°/22° cone constraint).</li>
-            <li><strong>Consciousness at D ≪ 1.5</strong> — Neural recordings showing conscious states with fractal dimension far below 1.5.</li>
-        </ul>
-
-        <h3>Primary Experimental Program: Copper Electrowinning</h3>
-        <p>The framework's transmission law T(Δφ) = cos²(Δφ/2) predicts that crystal morphology in copper electrodeposition correlates with field coherence. Cu²⁺ ions in solution (partially stripped ⊙) deposit onto a cathode as crystalline copper (boundary reconstituted) — an emergence process (𝒮↑) at the atomic-crystalline scale, driven by electrical potential rather than thermal cooling.</p>
-        <p><strong>Testable prediction:</strong> Deposit grain structure and surface roughness correlate with electrolyte field uniformity as predicted by T(Δφ) = cos²(Δφ/2). Standard electrowinning apparatus; no exotic equipment required.</p>
-
-        <div class="doc-links">
-            <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework_physicists.md">Rigorous Formulation (for physicists)</a>
-            <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md">Complete Framework (18 chapters)</a>
-            <a href="methodological_status.html">Methodological Status &amp; Validation</a>
-            <a href="aperture_falsification_presentation.html">Falsification Presentation</a>
-            <a href="circumpunct_physics.html">Interactive Physics Explorer</a>
-        </div>
-    </section>
-
     <!-- BODY Panel -->
     <div class="panel panel-body" id="panel-body">
         <button class="panel-close" aria-label="Close">&times;</button>
@@ -911,6 +863,50 @@
             </div>
         </div>
     </div>
+
+    <!-- ABOUT THE RESEARCHER -->
+    <footer class="about-researcher" id="about">
+        <style>
+            .about-researcher {
+                position: relative;
+                z-index: 1;
+                max-width: 780px;
+                margin: 3rem auto 0;
+                padding: 2rem 1.5rem;
+                font-family: 'Space Grotesk', -apple-system, sans-serif;
+                border-top: 1px solid rgba(255,255,255,0.06);
+            }
+            .about-researcher h2 {
+                font-size: 1rem;
+                font-weight: 500;
+                color: #8b949e;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                margin: 0 0 1rem;
+            }
+            .about-researcher p {
+                font-size: 0.85rem;
+                line-height: 1.7;
+                color: #8b949e;
+                margin: 0 0 0.8rem;
+            }
+            .about-researcher a {
+                color: #58a6ff;
+                text-decoration: none;
+            }
+            .about-researcher a:hover {
+                text-decoration: underline;
+            }
+            @media (max-width: 600px) {
+                .about-researcher { padding: 1.5rem 1rem; }
+            }
+        </style>
+
+        <h2>About the Researcher</h2>
+        <p>Ashman Roonz is an independent researcher with a Bachelor of Science degree and fifteen years of field experience as an Educational Assistant, where he developed observational models of pathological pattern transmission in children. He is currently pursuing a Master's in Counselling Psychology and maintains active academic connections at the University of Toronto.</p>
+        <p>The Circumpunct Framework has been in continuous development for fifteen years, with formal mathematical treatment and falsification criteria developed in collaboration with AI systems as a proof-of-concept for human-synthetic intelligence cooperation.</p>
+        <p>Contact: <a href="mailto:email@ashmanroonz.ca">email@ashmanroonz.ca</a></p>
+    </footer>
 
     <script src="js/circumpunct.js"></script>
 </body>
