@@ -768,7 +768,7 @@ plt.savefig('three_generations_validated.png', dpi=300)
 ```
 ═══════════════════════════════════════════════════════════════
 This document is ready to replace §20.6 onwards in 
-THEORY_OF_EVERYTHING.md
+circumpunct_framework.md
 
 Key corrections made:
   • W(r;R) sign convention fixed (+W in equation)

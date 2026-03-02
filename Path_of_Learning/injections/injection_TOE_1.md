@@ -1,6 +1,6 @@
 ---
 
-# **INJECTION DOCUMENT FOR THEORY_OF_EVERYTHING.md**
+# **INJECTION DOCUMENT FOR circumpunct_framework.md**
 
 ## **Proposed Location: New Chapter XX (after Chapter XIX: Ethics)**
 
@@ -640,7 +640,7 @@ def test_three_generations():
 
 ---
 
-**This injection document is ready to merge into THEORY_OF_EVERYTHING.md**
+**This injection document is ready to merge into circumpunct_framework.md**
 
 
 2. Create the actual code files for the implementation?

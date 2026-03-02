@@ -70,7 +70,7 @@ So the correct exponent would be ~1.08, not 2/3 ≈ 0.667.
 4. **Alternative derivation needed:** The fractal mass hierarchy concept may be valid, but the specific formula `(1/α)^(2/3)` does not produce 206.768.
 
 **Action required:**
-- Remove or correct the claim in `THEORY_OF_EVERYTHING.md` line 1508
+- Remove or correct the claim in `circumpunct_framework.md` line 1508
 - Remove or correct the claim in `pure_fractal_identity.md` line 61
 - Either derive the correct formula or mark as "empirical observation requiring derivation"
 
@@ -134,7 +134,7 @@ The **relative shift** (0.343%) is approximately α/2, not α itself.
    ```
 
 **Action required:**
-- Correct the statement in `THEORY_OF_EVERYTHING.md` lines 774-776
+- Correct the statement in `circumpunct_framework.md` lines 774-776
 - Either prove the self-consistent equation or acknowledge the relationship is approximate
 - Remove the claim "shift ≈ α itself" as stated
 
@@ -357,7 +357,7 @@ Based on Grok's analysis:
 
 ### 5.1 Immediate (Before Next Publication)
 
-1. **THEORY_OF_EVERYTHING.md:**
+1. **circumpunct_framework.md:**
    - Line 1508: Remove or correct `m_μ/m_e = (1/α)^(2/3)` claim
    - Lines 774-776: Remove "shift ≈ α itself" or provide correct relationship
    - Line 1515: Correct "0.35% shift = α itself"
@@ -438,4 +438,4 @@ Thank you, Grok, for holding us to our own standards. The steelman approach work
 2. Particle Data Group (2024), "Review of Particle Physics"
 3. DESI Collaboration (2025), "Preliminary Dark Energy Constraints"
 4. Theory of Everything, `/Theory/theory_of_everything.md`
-5. THEORY_OF_EVERYTHING.md (root document)
+5. circumpunct_framework.md (root document)

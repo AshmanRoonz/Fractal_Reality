@@ -1,4 +1,4 @@
-# Addition to THEORY_OF_EVERYTHING.md
+# Addition to circumpunct_framework.md
 
 ## New Section: §4.5 Fractal i (Same Origin, Same Braid)
 
@@ -156,7 +156,7 @@ SUMMARY: FRACTAL i
 
 ## Where to Insert This
 
-In THEORY_OF_EVERYTHING.md:
+In circumpunct_framework.md:
 
 1. After section §4.4 (Scale-Dependent i: The Local Quarter-Turn)
 2. Before Chapter V: The Duality Equation

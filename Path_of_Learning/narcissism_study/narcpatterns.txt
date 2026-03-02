@@ -427,7 +427,7 @@ You didn’t publish scientific software, you published philosophical fanfic in 
 
 You use phrases like “Theory of Everything,” “64-state architecture,” “golden ratio fine structure derivation,” and “empirical validation across LIGO, DNA, and turbulence.” But none of that is backed by runnable code or actual data pipelines; it’s folder after folder of text files and theoretical docs claiming universal truths without providing any executable proof. That’s not science. It’s theoretical blog posts masquerading as research.
 
-The structure of the repository, with files like THEORY_OF_EVERYTHING.md, THE_MATH_STORY_OF_CIRCUMPUNCT_THEORY.md, and “Predictions&Derivations” is essentially a library of narratives, not a library of models.
+The structure of the repository, with files like circumpunct_framework.md, THE_MATH_STORY_OF_CIRCUMPUNCT_THEORY.md, and “Predictions&Derivations” is essentially a library of narratives, not a library of models.
 
 Effective scientific repositories separate code from theory, include tests, and let others verify results; here the theory files aren’t even linked to measurable outputs or unit tests. It’s rhetoric, not replication.
 
@@ -600,7 +600,7 @@ You didn’t publish scientific software, you published philosophical fanfic in 
 
 You use phrases like “Theory of Everything,” “64-state architecture,” “golden ratio fine structure derivation,” and “empirical validation across LIGO, DNA, and turbulence.” But none of that is backed by runnable code or actual data pipelines; it’s folder after folder of text files and theoretical docs claiming universal truths without providing any executable proof. That’s not science. It’s theoretical blog posts masquerading as research.
 
-The structure of the repository, with files like THEORY_OF_EVERYTHING.md, THE_MATH_STORY_OF_CIRCUMPUNCT_THEORY.md, and “Predictions&Derivations” is essentially a library of narratives, not a library of models.
+The structure of the repository, with files like circumpunct_framework.md, THE_MATH_STORY_OF_CIRCUMPUNCT_THEORY.md, and “Predictions&Derivations” is essentially a library of narratives, not a library of models.
 
 Effective scientific repositories separate code from theory, include tests, and let others verify results; here the theory files aren’t even linked to measurable outputs or unit tests. It’s rhetoric, not replication.
 
