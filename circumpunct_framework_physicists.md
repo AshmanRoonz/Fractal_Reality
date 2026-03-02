@@ -15,7 +15,7 @@ where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denote
 
 ---
 
-**[← Back to Complete Theory](THEORY_OF_EVERYTHING.md)**
+**[← Back to Complete Theory](circumpunct_framework.md)**
 
 ---
 
@@ -3324,7 +3324,7 @@ At the fixed point (all β = 0.5): **all existing equations are preserved exactl
 2. **β-3 (Triple Convergence):** Consciousness requires all three near 0.5; disrupting any single one disrupts consciousness
 3. **β-5 (Three-Factor Structure):** Relationship quality correlates with three independent factors (gate/flow/autonomy), not one
 
-For the complete treatment including diagnostic geometry (β-space), pathology signatures, healing vectors, Noble Lie decomposition, and sleep-cycle dynamics, see **THEORY_OF_EVERYTHING.md Chapter 29**.
+For the complete treatment including diagnostic geometry (β-space), pathology signatures, healing vectors, Noble Lie decomposition, and sleep-cycle dynamics, see **circumpunct_framework.md Chapter 29**.
 
 ---
 
@@ -4078,7 +4078,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 For complete details, derivations, and empirical data, see:
 
-- **Main document:** [The Circumpunct Framework: A Theory of Everything](THEORY_OF_EVERYTHING.md)
+- **Main document:** [The Circumpunct Framework](circumpunct_framework.md)
 - **Compressed kernel:** [docs/circumpunct_kernel.html](docs/circumpunct_kernel.html) — Lossless compression for rapid context loading (~3,500 tokens)
 - **64-state architecture:** Explicit bijections between circumpunct states and Standard Model particles
 - **Illustrative examples:** Cross-domain D≈1.5 observations (biological, neural, quantum systems)—note: these illustrate the principle, not prove it
@@ -4105,7 +4105,7 @@ This formulation benefited from iterative refinement focused on mathematical rig
 - Appendix A: Updated parameter definitions with component-level β notation
 - Five new falsifiable predictions (β-1 through β-5) from decomposition
 - Derivation priority correction: i is axiomatic, β = 0.5 is its coordinate name
-- Full treatment in THEORY_OF_EVERYTHING.md Chapter 29
+- Full treatment in circumpunct_framework.md Chapter 29
 
 **v1.7 Changes:** Integration of circumpunct kernel v1.0 content:
 - Abstract: Updated fundamental object to ⊙ = Φ(•, ○) (Axiom A4: Compositional Wholeness)
@@ -4119,7 +4119,7 @@ This formulation benefited from iterative refinement focused on mathematical rig
 - §9: Updated chapter references for new Theory chapters 32-35
 - §11: Added kernel cross-reference and cross-traditional convergence
 - Appendix A: Updated with kernel §0 structure/process/relations/parameters
-- Fixed back links (THEORY_OF_EVERYTHING.md path corrected)
+- Fixed back links (circumpunct_framework.md path corrected)
 
 **v1.6 Changes:** Major update adding §7A Alternative Derivations section with 9 rigorous derivations:
 - §7A.1: D = 1.5 as Mandelbrot fact and framework correspondence
@@ -4399,4 +4399,4 @@ The 64-state architecture automatically satisfies this constraint.
 
 **Complete bijection status:** All 64 states explicitly mapped to Standard Model fields. No states double-counted or missing. Quantum numbers consistent. Anomaly cancellation automatic.
 
-For additional details on the 64-state architecture, see the full framework document: [THEORY_OF_EVERYTHING.md](THEORY_OF_EVERYTHING.md)
+For additional details on the 64-state architecture, see the full framework document: [circumpunct_framework.md](circumpunct_framework.md)

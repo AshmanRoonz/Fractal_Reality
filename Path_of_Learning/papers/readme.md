@@ -32,7 +32,7 @@ This branch contains the complete scientific formalization of the Fractal Realit
 
 **Perfect for:** Physicists wanting mathematical rigor, peer reviewers, those who prefer equations over metaphors
 
-**Connection to full theory:** See **[THEORY_OF_EVERYTHING.md](../THEORY_OF_EVERYTHING.md)** for complete framework including consciousness, ethics, and philosophical implications.
+**Connection to full theory:** See **[circumpunct_framework.md](../circumpunct_framework.md)** for complete framework including consciousness, ethics, and philosophical implications.
 
 ---
 

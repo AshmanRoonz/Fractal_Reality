@@ -393,7 +393,7 @@ could be **coincidence**. We document it transparently but do not claim it as ev
 ## 10. References & Resources
 
 ### Internal Documents
-- **[THEORY_OF_EVERYTHING.md](THEORY_OF_EVERYTHING.md)** — Complete framework
+- **[circumpunct_framework.md](circumpunct_framework.md)** — Complete framework
 - **[lepton_mass_fractal_aperture_scaling.md](Energy_Aperture_Power/lepton_mass_fractal_aperture_scaling.md)** — Mass ratio derivation
 - **[Dimensional_Validation_Correspondence.md](Energy_Aperture_Power/Dimensional_Validation_Correspondence.md)** — D = 1.5 proof
 

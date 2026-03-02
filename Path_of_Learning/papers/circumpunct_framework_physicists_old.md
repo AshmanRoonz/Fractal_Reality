@@ -6,7 +6,7 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
 
 ---
 
-**[← Back to Complete Theory](../THEORY_OF_EVERYTHING.md)**
+**[← Back to Complete Theory](../circumpunct_framework.md)**
 
 ---
 
@@ -1681,7 +1681,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 
 For complete details, derivations, and empirical data, see:
 
-- **Main document:** [The Circumpunct Framework: A Theory of Everything](../THEORY_OF_EVERYTHING.md) (latest version v5.4)
+- **Main document:** [The Circumpunct Framework: A Theory of Everything](../circumpunct_framework.md) (latest version v5.4)
 - **64-state architecture:** Explicit bijections between circumpunct states and Standard Model particles
 - **Empirical validation:** Cross-domain D≈1.5 measurements (biological, neural, quantum systems)
 - **Philosophical foundations:** Geometric necessity of trinity structures from braid topology
@@ -1934,4 +1934,4 @@ The 64-state architecture automatically satisfies this constraint.
 
 **Complete bijection status:** All 64 states explicitly mapped to Standard Model fields. No states double-counted or missing. Quantum numbers consistent. Anomaly cancellation automatic.
 
-For additional details on the 64-state architecture, see the full framework document: [THEORY_OF_EVERYTHING.md](../THEORY_OF_EVERYTHING.md)
+For additional details on the 64-state architecture, see the full framework document: [circumpunct_framework.md](../circumpunct_framework.md)

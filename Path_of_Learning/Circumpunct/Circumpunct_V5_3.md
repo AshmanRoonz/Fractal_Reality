@@ -1,4 +1,4 @@
-This document is obsolete. Please see the updated framework. https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md
+This document is obsolete. Please see the updated framework. https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md
 
 # The Circumpunct Framework
 **The Mathematics of Nested Wholeness: Trinity, Braid Topology, and Temporal Dynamics**

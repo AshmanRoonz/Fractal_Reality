@@ -1213,7 +1213,7 @@ a:hover {
             <button class='menu-toggle' onclick='toggleMobileMenu()'>&#9776;</button>
             <div class='nav-links'>
                 <a expr:href='data:blog.homepageUrl'>Home</a>
-                <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md'>Theory</a>
+                <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md'>Theory</a>
                 <a href='https://ashmanroonz.github.io/Fractal_Reality/braid-visualizer.html'>Simulator</a>
                 <a href='#' onclick='openSidebar(); return false;'>Archive</a>
             </div>
@@ -1282,7 +1282,7 @@ a:hover {
 
                     <!-- Navigation Arc Buttons -->
                     <g class='nav-ring'>
-                        <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md' class='nav-arc nav-arc-theory'>
+                        <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md' class='nav-arc nav-arc-theory'>
                             <path d='M 58 58 A 130 130 0 0 1 242 58' fill='none' stroke='rgba(255,255,255,0.12)' stroke-width='24' stroke-linecap='round' class='arc-bg'/>
                             <text class='arc-text'>
                                 <textPath href='#arc-top' startOffset='50%' text-anchor='middle'>Complete Theory</textPath>
@@ -1296,14 +1296,14 @@ a:hover {
                             </text>
                         </a>
 
-                        <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md#chapter-xi-consciousness' class='nav-arc nav-arc-consciousness'>
+                        <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md#chapter-xi-consciousness' class='nav-arc nav-arc-consciousness'>
                             <path d='M 242 242 A 130 130 0 0 1 58 242' fill='none' stroke='rgba(88,166,255,0.15)' stroke-width='24' stroke-linecap='round' class='arc-bg'/>
                             <text class='arc-text'>
                                 <textPath href='#arc-bottom' startOffset='50%' text-anchor='middle'>Consciousness</textPath>
                             </text>
                         </a>
 
-                        <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/THEORY_OF_EVERYTHING.md#chapter-xx-ethics' class='nav-arc nav-arc-ethics'>
+                        <a href='https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md#chapter-xx-ethics' class='nav-arc nav-arc-ethics'>
                             <path d='M 58 242 A 130 130 0 0 1 58 58' fill='none' stroke='rgba(240,180,41,0.15)' stroke-width='24' stroke-linecap='round' class='arc-bg'/>
                             <text class='arc-text'>
                                 <textPath href='#arc-left' startOffset='50%' text-anchor='middle'>Ethics</textPath>
