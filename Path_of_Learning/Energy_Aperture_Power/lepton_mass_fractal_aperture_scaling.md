@@ -447,7 +447,7 @@ Compared to experimental value 206.768, this gives **0.13% error**.
 - **[Mass Ratios from Aperture Geometry](mass_ratios_from_aperture_geometry_MAP.md)** — Previous analysis of generation structure
 - **[Geometric Derivation of Fundamental Constants](geometric_derivation_fundamental_constants_MAP.md)** — α derivation and framework overview
 - **[Dimensional-Validation Correspondence](Dimensional_Validation_Correspondence.md)** — Why D = 1.5 and three generations
-- **[Theory of Everything](../THEORY_OF_EVERYTHING.md)** — Complete framework synthesis
+- **[Theory of Everything](../circumpunct_framework.md)** — Complete framework synthesis
 
 ---
 

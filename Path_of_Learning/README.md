@@ -3,7 +3,7 @@
 This folder contains the complete development journey of the Circumpunct Theory — from initial insights to mathematical formalization.
 
 The final outputs of this journey are in the main repository:
-- **THEORY_OF_EVERYTHING.md** — The complete framework
+- **circumpunct_framework.md** — The complete framework
 - **circumpunct_framework_physicists.md** — Rigorous formulation for physicists
 - **docs/** — Interactive website at fractalreality.ca
 

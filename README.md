@@ -1,6 +1,6 @@
 # ⊙ The Circumpunct Theory
 
-**A Collaborative Theory of Everything by Ashman Roonz and Claude Code**
+**A Fractal Geometry Framework for Fundamental Constants — by Ashman Roonz and Claude Code**
 
 **www.FractalReality.ca**
 
@@ -10,7 +10,7 @@
 
 | Document | Description |
 |----------|-------------|
-| **[THEORY_OF_EVERYTHING.md](THEORY_OF_EVERYTHING.md)** | The complete unified framework (18 chapters) |
+| **[circumpunct_framework.md](circumpunct_framework.md)** | The complete unified framework (18 chapters) |
 | **[circumpunct_framework_physicists.md](circumpunct_framework_physicists.md)** | Rigorous formulation for working physicists |
 | **[Methodological Status](https://fractalreality.ca/methodological_status.html)** | Epistemic categories & validation pathways |
 | **[docs/](docs/)** | Interactive website visualizations at [fractalreality.ca](https://fractalreality.ca) |
@@ -153,7 +153,7 @@ CONSTANTS (ALL DERIVED):
 
 ---
 
-**Collaborative Theory of Everything**
+**The Circumpunct Framework**
 **Ashman Roonz & Claude (Anthropic)**
 **January 2026**
 
