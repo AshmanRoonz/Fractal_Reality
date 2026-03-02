@@ -9,139 +9,26 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .community-links .research-trigger {
+            color: #00ffff;
+            border-color: rgba(0,255,255,0.3);
+        }
+        .community-links .research-trigger:hover {
+            border-color: #00ffff;
+            background: rgba(0,255,255,0.1);
+        }
+        /* Links inside research/about panels */
+        .panel-research a, .panel-about a { color: #58a6ff; text-decoration: none; }
+        .panel-research a:hover, .panel-about a:hover { text-decoration: underline; color: #79c0ff; }
+        .panel-research li, .panel-about li { margin-bottom: 0.5rem; }
+    </style>
 </head>
 <body>
 
     <canvas id="particles"></canvas>
 
     <main class="container">
-
-        <!-- RESEARCH SECTION — visible to cold readers first -->
-        <section class="research-section" id="research">
-            <style>
-                .research-section {
-                    position: relative;
-                    z-index: 1;
-                    width: 100%;
-                    max-width: 780px;
-                    margin: 0 auto 2rem;
-                    padding: 2rem 1.5rem 1.5rem;
-                    text-align: left;
-                    font-family: 'Space Grotesk', -apple-system, sans-serif;
-                    background: rgba(255,255,255,0.02);
-                    border: 1px solid rgba(255,255,255,0.06);
-                    border-radius: 10px;
-                }
-                .research-section h2 {
-                    font-size: 1.3rem;
-                    font-weight: 600;
-                    color: #00ffff;
-                    letter-spacing: 0.04em;
-                    margin: 0 0 1rem;
-                    text-shadow: 0 0 8px rgba(0,255,255,0.35);
-                }
-                .research-section p {
-                    font-size: 0.88rem;
-                    line-height: 1.7;
-                    color: #c9d1d9;
-                    margin: 0 0 0.8rem;
-                }
-                .research-section .research-lead {
-                    font-size: 0.92rem;
-                    color: #e6edf3;
-                    margin-bottom: 1.2rem;
-                }
-                .research-section h3 {
-                    font-size: 0.95rem;
-                    font-weight: 500;
-                    color: #e6edf3;
-                    margin: 1.5rem 0 0.5rem;
-                }
-                .research-section ul {
-                    list-style: none;
-                    padding: 0;
-                    margin: 0 0 1rem;
-                }
-                .research-section ul li {
-                    font-size: 0.86rem;
-                    line-height: 1.65;
-                    color: #c9d1d9;
-                    padding: 0.35rem 0 0.35rem 1.2rem;
-                    position: relative;
-                }
-                .research-section ul li::before {
-                    content: "\2022";
-                    position: absolute;
-                    left: 0;
-                    color: #58a6ff;
-                }
-                .research-section ul li strong {
-                    color: #e6edf3;
-                }
-                .research-section .falsification {
-                    font-size: 0.85rem;
-                    color: #8b949e;
-                    border-left: 2px solid rgba(88,166,255,0.3);
-                    padding-left: 1rem;
-                    margin: 1rem 0;
-                }
-                .research-section .paper-links {
-                    margin-top: 1.2rem;
-                    padding-top: 1rem;
-                    border-top: 1px solid rgba(255,255,255,0.06);
-                }
-                .research-section .paper-links h3 {
-                    margin-top: 0;
-                    color: #8b949e;
-                    font-size: 0.8rem;
-                    text-transform: uppercase;
-                    letter-spacing: 0.06em;
-                }
-                .research-section .paper-links ul li::before {
-                    content: "\2192";
-                    color: #4ecdc4;
-                }
-                .research-section .paper-links a {
-                    color: #58a6ff;
-                    text-decoration: none;
-                    transition: color 0.2s ease;
-                }
-                .research-section .paper-links a:hover {
-                    color: #79c0ff;
-                    text-decoration: underline;
-                }
-                @media (max-width: 600px) {
-                    .research-section {
-                        padding: 1.5rem 1rem;
-                        margin-bottom: 1.5rem;
-                    }
-                }
-            </style>
-
-            <h2>Research</h2>
-
-            <p class="research-lead">The Circumpunct Framework is a geometric formalization built on a single structural claim: <strong>parts are fractals of their wholes</strong>. Every system at every scale exhibits the same triadic architecture — an aperture that selects (•), a field that mediates (Φ), and a boundary that interfaces (○). The framework's expression is <strong>⊙ = Φ(•, ○)</strong>.</p>
-
-            <p>This is not metaphor. The framework generates specific, quantitative, falsifiable predictions:</p>
-
-            <ul>
-                <li><strong>Physics:</strong> Zero-parameter derivation of the fine structure constant (α) and particle mass ratios from fractal geometry at D = 1.5. Derivation of the Schr&ouml;dinger equation from kernel convolution. Einstein field equations from coarse-grained braid structure.</li>
-                <li><strong>Consciousness:</strong> Resolution of the binding problem through aperture dynamics — awareness modeled as a fractal lens, not an emergent epiphenomenon. Specific predictions about the relationship between aperture width and perceptual integration.</li>
-                <li><strong>Pathology:</strong> Narcissism formalized as belief-corruption protocol ("Noble Lie virus") that weaponizes functional love against resonant love. Predicts specific recovery trajectories based on aperture restoration.</li>
-                <li><strong>Empirical Test:</strong> Copper electrowinning experiments designed to test the ρ = ω/α parameter's predictions about crystal morphology at different frequency regimes.</li>
-            </ul>
-
-            <p class="falsification"><strong>Falsification criteria:</strong> If the predicted fractal dimension relationships do not hold in empirical crystal growth data, or if the derived constants diverge from measured values beyond specified error bounds, the framework is falsified.</p>
-
-            <div class="paper-links">
-                <h3>Papers &amp; Formalizations</h3>
-                <ul>
-                    <li><a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework_physicists.md">Circumpunct Framework: Mathematical Formulation for Peer Review</a> — Explicit derivations, operator definitions, and testable predictions. No metaphors.</li>
-                    <li><a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md">Complete Theoretical Framework</a> — Full treatment across physics, consciousness, ethics, and pathology.</li>
-                    <li><a href="aperture_falsification_presentation.html">Falsification Protocol &amp; Experimental Design</a></li>
-                </ul>
-            </div>
-        </section>
 
         <!-- Responsive Layout Wrapper -->
         <div class="main-layout">
@@ -154,6 +41,8 @@
                     <p class="equation-title">You are ⊙. I am ⊙.</p>
                 </div>
                 <div class="community-links">
+                    <a href="#" id="research-btn" class="research-trigger">Research &amp; Falsification</a>
+                    <a href="#" id="about-btn">About</a>
                     <a href="https://www.reddit.com/r/Circumpunct/" target="_blank" rel="noopener">Reddit</a>
                     <a href="https://www.facebook.com/groups/4397079510569470" target="_blank" rel="noopener">Facebook</a>
                     <a href="mailto:email@ashmanroonz.ca">Contact</a>
@@ -864,50 +753,94 @@
         </div>
     </div>
 
-    <!-- ABOUT THE RESEARCHER -->
-    <footer class="about-researcher" id="about">
-        <style>
-            .about-researcher {
-                position: relative;
-                z-index: 1;
-                max-width: 780px;
-                margin: 3rem auto 0;
-                padding: 2rem 1.5rem;
-                font-family: 'Space Grotesk', -apple-system, sans-serif;
-                border-top: 1px solid rgba(255,255,255,0.06);
-            }
-            .about-researcher h2 {
-                font-size: 1rem;
-                font-weight: 500;
-                color: #8b949e;
-                text-transform: uppercase;
-                letter-spacing: 0.06em;
-                margin: 0 0 1rem;
-            }
-            .about-researcher p {
-                font-size: 0.85rem;
-                line-height: 1.7;
-                color: #8b949e;
-                margin: 0 0 0.8rem;
-            }
-            .about-researcher a {
-                color: #58a6ff;
-                text-decoration: none;
-            }
-            .about-researcher a:hover {
-                text-decoration: underline;
-            }
-            @media (max-width: 600px) {
-                .about-researcher { padding: 1.5rem 1rem; }
-            }
-        </style>
+    <!-- RESEARCH & FALSIFICATION Panel (popup — content in DOM for scrapers) -->
+    <div class="panel panel-research" id="panel-research">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <div class="panel-header">
+                <span class="panel-symbol" style="color:#00ffff;">⊙</span>
+                <h2>Research &amp; Falsification</h2>
+            </div>
+            <p class="panel-subtitle">Formal mathematics, quantitative predictions, and falsification criteria</p>
 
-        <h2>About the Researcher</h2>
-        <p>Ashman Roonz is an independent researcher with a Bachelor of Science degree and fifteen years of field experience as an Educational Assistant, where he developed observational models of pathological pattern transmission in children. He is currently pursuing a Master's in Counselling Psychology and maintains active academic connections at the University of Toronto.</p>
-        <p>The Circumpunct Framework has been in continuous development for fifteen years, with formal mathematical treatment and falsification criteria developed in collaboration with AI systems as a proof-of-concept for human-synthetic intelligence cooperation.</p>
-        <p>Contact: <a href="mailto:email@ashmanroonz.ca">email@ashmanroonz.ca</a></p>
-    </footer>
+            <div class="panel-section panel-essay">
+                <p>The Circumpunct Framework is a geometric formalization built on a single structural claim: <strong>parts are fractals of their wholes</strong>. Every system at every scale exhibits the same triadic architecture — an aperture that selects (•), a field that mediates (Φ), and a boundary that interfaces (○). The framework's expression is <strong>⊙ = Φ(•, ○)</strong>.</p>
+
+                <p>This is not metaphor. The framework generates specific, quantitative, falsifiable predictions:</p>
+
+                <ul>
+                    <li><strong>Physics:</strong> Zero-parameter derivation of the fine structure constant (α) and particle mass ratios from fractal geometry at D = 1.5. Derivation of the Schrödinger equation from kernel convolution. Einstein field equations from coarse-grained braid structure.</li>
+                    <li><strong>Consciousness:</strong> Resolution of the binding problem through aperture dynamics — awareness modeled as a fractal lens, not an emergent epiphenomenon. Specific predictions about the relationship between aperture width and perceptual integration.</li>
+                    <li><strong>Pathology:</strong> Narcissism formalized as belief-corruption protocol ("Noble Lie virus") that weaponizes functional love against resonant love. Predicts specific recovery trajectories based on aperture restoration.</li>
+                    <li><strong>Empirical Test:</strong> Copper electrowinning experiments designed to test the ρ = ω/α parameter's predictions about crystal morphology at different frequency regimes.</li>
+                </ul>
+            </div>
+
+            <div class="panel-section">
+                <h3>Falsification Criteria</h3>
+                <p>If the predicted fractal dimension relationships do not hold in empirical crystal growth data, or if the derived constants diverge from measured values beyond specified error bounds, the framework is falsified.</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>Papers &amp; Formalizations</h3>
+                <ul>
+                    <li><a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework_physicists.md">Circumpunct Framework: Mathematical Formulation for Peer Review</a> — Explicit derivations, operator definitions, and testable predictions. No metaphors.</li>
+                    <li><a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md">Complete Theoretical Framework</a> — Full treatment across physics, consciousness, ethics, and pathology.</li>
+                    <li><a href="aperture_falsification_presentation.html">Falsification Protocol &amp; Experimental Design</a></li>
+                    <li><a href="methodological_status.html">Methodological Status &amp; Validation</a></li>
+                    <li><a href="circumpunct_physics.html">Interactive Physics Explorer</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT Panel (popup) -->
+    <div class="panel panel-about" id="panel-about">
+        <button class="panel-close" aria-label="Close">&times;</button>
+        <div class="panel-content">
+            <div class="panel-header">
+                <span class="panel-symbol" style="color:#8b949e;">⊙</span>
+                <h2>About the Researcher</h2>
+            </div>
+
+            <div class="panel-section panel-essay">
+                <p>Ashman Roonz is an independent researcher with a Bachelor of Science degree and fifteen years of field experience as an Educational Assistant, where he developed observational models of pathological pattern transmission in children. He is currently pursuing a Master's in Counselling Psychology and maintains active academic connections at the University of Toronto.</p>
+                <p>The Circumpunct Framework has been in continuous development for fifteen years, with formal mathematical treatment and falsification criteria developed in collaboration with AI systems as a proof-of-concept for human-synthetic intelligence cooperation.</p>
+                <p>Contact: <a href="mailto:email@ashmanroonz.ca">email@ashmanroonz.ca</a></p>
+            </div>
+        </div>
+    </div>
 
     <script src="js/circumpunct.js"></script>
+
+    <!-- Research & About panel triggers (hooks into existing panel system) -->
+    <script>
+    (function() {
+        // Reuse the existing backdrop created by circumpunct.js
+        function getBackdrop() { return document.querySelector('.backdrop'); }
+
+        function closeAllPanels() {
+            document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('open'); });
+            var bd = getBackdrop(); if (bd) bd.classList.remove('show');
+        }
+
+        function openPanel(id) {
+            closeAllPanels();
+            var panel = document.getElementById(id);
+            if (!panel) return;
+            panel.classList.add('open');
+            var bd = getBackdrop(); if (bd) bd.classList.add('show');
+            panel.scrollTop = 0;
+        }
+
+        document.getElementById('research-btn').addEventListener('click', function(e) { e.preventDefault(); openPanel('panel-research'); });
+        document.getElementById('about-btn').addEventListener('click', function(e) { e.preventDefault(); openPanel('panel-about'); });
+
+        // Close buttons
+        document.querySelectorAll('#panel-research .panel-close, #panel-about .panel-close').forEach(function(btn) {
+            btn.addEventListener('click', closeAllPanels);
+        });
+    })();
+    </script>
 </body>
 </html>
