@@ -591,4 +591,4 @@ This document adds three new sections to Chapter XX:
 
 ---
 
-**This injection is ready to merge into THEORY_OF_EVERYTHING.md after Chapter XX §20.5**
+**This injection is ready to merge into circumpunct_framework.md after Chapter XX §20.5**

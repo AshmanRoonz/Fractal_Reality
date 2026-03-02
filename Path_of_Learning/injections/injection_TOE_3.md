@@ -758,7 +758,7 @@ plt.savefig('three_generations_validated.png', dpi=300)
 ```
 ═══════════════════════════════════════════════════════════════
 This document is ready to replace §20.6 onwards in 
-THEORY_OF_EVERYTHING.md
+circumpunct_framework.md
 
 Key sections:
   §20.6 - Analytical derivation of V_eff = -3/4·1/r²
