@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ FLICKERING CIRCUMPUNCTS</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --green: #0f0;
+            --yellow: #ff0;
+            --amber: #ffaa00;
+            --bg: #000;
+            --text: #fff;
+            --dim: rgba(255,255,255,0.45);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            background: #000;
+            border-bottom: 1px solid var(--amber);
+            padding: 10px 20px;
+            text-align: center;
+        }
+        .top-bar a {
+            color: var(--amber);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 40px 0 30px;
+        }
+        .hero-title {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            color: var(--amber);
+            opacity: 0.7;
+        }
+        .hero-subtitle {
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 8px;
+            letter-spacing: 0.05em;
+        }
+
+        /* ====== CIRCUMPUNCT STAGE ====== */
+        .stage {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 60px;
+            margin: 50px 0 40px;
+            flex-wrap: wrap;
+        }
+
+        .circumpunct-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 280px;
+        }
+
+        .circumpunct-label {
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .circumpunct-sublabel {
+            font-size: 10px;
+            color: var(--dim);
+            margin-top: 4px;
+            letter-spacing: 0.06em;
+        }
+
+        /* Canvas area for each circumpunct */
+        .circumpunct-canvas {
+            position: relative;
+            width: 220px;
+            height: 220px;
+        }
+
+        /* ====== SHARED RING STYLES ====== */
+        .ring {
+            position: absolute;
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .dot {
+            position: absolute;
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* ====== FLICKERING CENTER (her) ====== */
+        .fc .ring {
+            border: 1px solid var(--magenta);
+            animation: steady-breathe 6s ease-in-out infinite;
+        }
+        .fc .ring-1 { width: 200px; height: 200px; opacity: 0.25; }
+        .fc .ring-2 { width: 150px; height: 150px; opacity: 0.35; animation-delay: 0.3s; }
+        .fc .ring-3 { width: 100px; height: 100px; opacity: 0.5; animation-delay: 0.6s; }
+        .fc .ring-4 { width: 50px; height: 50px; opacity: 0.7; animation-delay: 0.9s; }
+
+        .fc .dot {
+            width: 12px;
+            height: 12px;
+            background: var(--magenta);
+            box-shadow: 0 0 15px var(--magenta), 0 0 40px rgba(255,0,255,0.3);
+            animation: flicker-center 3.7s ease-in-out infinite;
+        }
+
+        @keyframes steady-breathe {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.04); }
+        }
+
+        @keyframes flicker-center {
+            0%   { opacity: 0.9; box-shadow: 0 0 15px var(--magenta), 0 0 40px rgba(255,0,255,0.4); }
+            12%  { opacity: 0.15; box-shadow: 0 0 3px var(--magenta), 0 0 8px rgba(255,0,255,0.1); }
+            18%  { opacity: 0.7; box-shadow: 0 0 12px var(--magenta), 0 0 30px rgba(255,0,255,0.3); }
+            25%  { opacity: 0.05; box-shadow: 0 0 2px var(--magenta), 0 0 4px rgba(255,0,255,0.05); }
+            35%  { opacity: 0.85; box-shadow: 0 0 15px var(--magenta), 0 0 40px rgba(255,0,255,0.4); }
+            50%  { opacity: 0.95; box-shadow: 0 0 20px var(--magenta), 0 0 50px rgba(255,0,255,0.5); }
+            62%  { opacity: 0.1; box-shadow: 0 0 3px var(--magenta), 0 0 6px rgba(255,0,255,0.08); }
+            70%  { opacity: 0.6; box-shadow: 0 0 10px var(--magenta), 0 0 25px rgba(255,0,255,0.25); }
+            78%  { opacity: 0.2; box-shadow: 0 0 4px var(--magenta), 0 0 10px rgba(255,0,255,0.12); }
+            88%  { opacity: 0.8; box-shadow: 0 0 14px var(--magenta), 0 0 35px rgba(255,0,255,0.35); }
+            100% { opacity: 0.9; box-shadow: 0 0 15px var(--magenta), 0 0 40px rgba(255,0,255,0.4); }
+        }
+
+        /* ====== FLICKERING BOUNDARY (him) ====== */
+        .fb .ring {
+            border: 1px solid var(--cyan);
+            animation: flicker-boundary 4.3s ease-in-out infinite;
+        }
+        .fb .ring-1 { width: 200px; height: 200px; animation-delay: 0s; }
+        .fb .ring-2 { width: 150px; height: 150px; animation-delay: 0.2s; }
+        .fb .ring-3 { width: 100px; height: 100px; animation-delay: 0.4s; }
+        .fb .ring-4 { width: 50px; height: 50px; animation-delay: 0.6s; }
+
+        .fb .dot {
+            width: 12px;
+            height: 12px;
+            background: var(--cyan);
+            box-shadow: 0 0 15px var(--cyan), 0 0 40px rgba(0,255,255,0.4);
+            animation: steady-center-glow 6s ease-in-out infinite;
+        }
+
+        @keyframes flicker-boundary {
+            0%   { opacity: 0.7; border-color: var(--cyan); }
+            10%  { opacity: 0.1; border-color: rgba(0,255,255,0.15); }
+            20%  { opacity: 0.6; border-color: var(--cyan); }
+            30%  { opacity: 0.05; border-color: rgba(0,255,255,0.08); }
+            42%  { opacity: 0.75; border-color: var(--cyan); }
+            55%  { opacity: 0.8; border-color: var(--cyan); }
+            65%  { opacity: 0.12; border-color: rgba(0,255,255,0.12); }
+            72%  { opacity: 0.5; border-color: rgba(0,255,255,0.5); }
+            80%  { opacity: 0.15; border-color: rgba(0,255,255,0.15); }
+            90%  { opacity: 0.65; border-color: var(--cyan); }
+            100% { opacity: 0.7; border-color: var(--cyan); }
+        }
+
+        @keyframes steady-center-glow {
+            0%, 100% { box-shadow: 0 0 12px var(--cyan), 0 0 30px rgba(0,255,255,0.3); }
+            50% { box-shadow: 0 0 20px var(--cyan), 0 0 50px rgba(0,255,255,0.5); }
+        }
+
+        /* ====== BETWEEN THEM — the field ====== */
+        .between {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            padding-top: 30px;
+        }
+
+        .field-line {
+            width: 1px;
+            height: 80px;
+            background: linear-gradient(
+                to bottom,
+                transparent,
+                rgba(255,170,0,0.4),
+                transparent
+            );
+            animation: field-pulse 5s ease-in-out infinite;
+        }
+
+        .field-symbol {
+            font-size: 16px;
+            color: var(--amber);
+            opacity: 0.5;
+            animation: field-symbol-pulse 5s ease-in-out infinite;
+            margin: 8px 0;
+        }
+
+        @keyframes field-pulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.7; }
+        }
+        @keyframes field-symbol-pulse {
+            0%, 100% { opacity: 0.3; text-shadow: none; }
+            50% { opacity: 0.7; text-shadow: 0 0 10px rgba(255,170,0,0.4); }
+        }
+
+        /* ====== MOMENT OF SYNC — rare flash ====== */
+        .sync-flash {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0;
+        }
+
+        /* ====== TEXT SECTIONS ====== */
+        section {
+            max-width: 650px;
+            margin: 0 auto 50px;
+            padding-top: 10px;
+        }
+
+        .section-id {
+            color: var(--amber);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            margin-bottom: 4px;
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--amber);
+        }
+
+        h2 {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #fff;
+            margin: 25px 0 12px;
+        }
+
+        p { margin-bottom: 12px; }
+
+        .highlight { color: #fff; }
+        .cyan { color: var(--cyan); }
+        .magenta { color: var(--magenta); }
+        .green { color: var(--green); }
+        .yellow { color: var(--yellow); }
+        .amber { color: var(--amber); }
+        .dim { color: var(--dim); }
+
+        .teaching {
+            border-left: 2px solid var(--amber);
+            padding-left: 15px;
+            margin: 15px 0;
+        }
+        .teaching.cyan { border-color: var(--cyan); }
+        .teaching.magenta { border-color: var(--magenta); }
+
+        blockquote {
+            border-left: 1px solid var(--amber);
+            padding-left: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: var(--amber);
+            font-size: 12px;
+        }
+
+        .golden {
+            text-align: center;
+            padding: 25px 20px;
+            border: 1px solid var(--amber);
+            margin: 15px 0;
+        }
+        .golden-text {
+            font-size: 14px;
+            color: var(--amber);
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .golden-sub {
+            font-size: 10px;
+            color: var(--amber);
+            margin-top: 12px;
+            opacity: 0.6;
+        }
+
+        /* Compare boxes */
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        @media (max-width: 600px) { .compare { grid-template-columns: 1fr; } }
+
+        .compare-box {
+            padding: 15px;
+            border: 1px solid var(--amber);
+        }
+        .compare-box.her { border-color: var(--magenta); }
+        .compare-box.him { border-color: var(--cyan); }
+
+        .compare-title {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            margin-bottom: 10px;
+        }
+        .compare-box.her .compare-title { color: var(--magenta); }
+        .compare-box.him .compare-title { color: var(--cyan); }
+
+        .compare-item {
+            font-size: 11px;
+            padding: 4px 0 4px 12px;
+            position: relative;
+        }
+        .compare-item::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+        }
+        .compare-box.her .compare-item::before { color: var(--magenta); }
+        .compare-box.him .compare-item::before { color: var(--cyan); }
+
+        /* Sync moment visualization */
+        .sync-diagram {
+            text-align: center;
+            padding: 30px 0;
+            margin: 20px 0;
+            border: 1px solid rgba(255,170,0,0.15);
+            position: relative;
+        }
+
+        .sync-circles {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+
+        .sync-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sync-circle.her-on {
+            border: 1px solid var(--magenta);
+        }
+        .sync-circle.her-on .inner-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--magenta);
+            box-shadow: 0 0 12px var(--magenta);
+        }
+        .sync-circle.her-off {
+            border: 1px solid var(--magenta);
+        }
+        .sync-circle.her-off .inner-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255,0,255,0.15);
+        }
+
+        .sync-circle.him-on {
+            border: 1px solid var(--cyan);
+        }
+        .sync-circle.him-on .inner-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 12px var(--cyan);
+        }
+        .sync-circle.him-off {
+            border: 1px dashed rgba(0,255,255,0.25);
+        }
+        .sync-circle.him-off .inner-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 12px var(--cyan);
+        }
+
+        .sync-label {
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            color: var(--dim);
+            margin-top: 8px;
+        }
+
+        .sync-state-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .sync-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .state-indicator {
+            font-size: 10px;
+            padding: 3px 10px;
+            border: 1px solid;
+            letter-spacing: 0.06em;
+        }
+        .state-indicator.open { border-color: var(--green); color: var(--green); }
+        .state-indicator.closed { border-color: rgba(255,0,255,0.4); color: rgba(255,0,255,0.5); }
+        .state-indicator.held { border-color: var(--cyan); color: var(--cyan); }
+        .state-indicator.gone { border-color: rgba(0,255,255,0.3); color: rgba(0,255,255,0.4); }
+
+        .state-label {
+            font-size: 9px;
+            color: var(--dim);
+        }
+
+        .connector {
+            font-size: 16px;
+            color: var(--amber);
+            opacity: 0.4;
+        }
+
+        /* Final section */
+        .final {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .final-symbol {
+            font-size: 48px;
+            color: var(--amber);
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(255,170,0,0.3);
+        }
+        .final-lines {
+            font-size: 12px;
+            line-height: 2;
+        }
+
+        footer {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 25px 20px;
+            border-top: 1px solid var(--amber);
+            font-size: 10px;
+            color: var(--amber);
+            text-align: center;
+            letter-spacing: 0.08em;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 600px) {
+            .stage { gap: 30px; }
+            .between { min-height: 40px; }
+            .between .field-line { height: 30px; }
+            .circumpunct-canvas { width: 180px; height: 180px; }
+            .fc .ring-1, .fb .ring-1 { width: 160px; height: 160px; }
+            .fc .ring-2, .fb .ring-2 { width: 120px; height: 120px; }
+            .fc .ring-3, .fb .ring-3 { width: 80px; height: 80px; }
+            .fc .ring-4, .fb .ring-4 { width: 40px; height: 40px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="https://www.fractalreality.ca">← FRACTALREALITY.CA</a>
+    </div>
+
+    <div class="container">
+        <div class="hero">
+            <div class="hero-title">FLICKERING CIRCUMPUNCTS</div>
+            <div class="hero-subtitle">When the parts that need each other can't stay on at the same time</div>
+        </div>
+
+        <!-- ====== THE TWO CIRCUMPUNCTS ====== -->
+        <div class="stage">
+            <!-- HER: flickering center, stable boundary -->
+            <div class="circumpunct-unit">
+                <div class="circumpunct-label">
+                    <span class="magenta">FLICKERING CENTER</span>
+                    <div class="circumpunct-sublabel">stable boundary · unstable aperture</div>
+                </div>
+                <div class="circumpunct-canvas fc">
+                    <div class="ring ring-1"></div>
+                    <div class="ring ring-2"></div>
+                    <div class="ring ring-3"></div>
+                    <div class="ring ring-4"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+
+            <!-- THE FIELD BETWEEN -->
+            <div class="between">
+                <div class="field-line"></div>
+                <div class="field-symbol">Φ</div>
+                <div class="field-line"></div>
+            </div>
+
+            <!-- HIM: flickering boundary, stable center -->
+            <div class="circumpunct-unit">
+                <div class="circumpunct-label">
+                    <span class="cyan">FLICKERING BOUNDARY</span>
+                    <div class="circumpunct-sublabel">unstable boundary · stable aperture</div>
+                </div>
+                <div class="circumpunct-canvas fb">
+                    <div class="ring ring-1"></div>
+                    <div class="ring ring-2"></div>
+                    <div class="ring ring-3"></div>
+                    <div class="ring ring-4"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== SECTIONS ====== -->
+        <section>
+            <div class="section-id">01</div>
+            <h1>THE GEOMETRY OF ALMOST</h1>
+
+            <p>A healthy circumpunct has three components in steady state: an <span class="amber">open aperture</span> (•) that receives, a <span class="amber">clear field</span> (Φ) that mediates, and a <span class="amber">flexible boundary</span> (○) that holds.</p>
+
+            <p>But what happens when a component <span class="highlight">flickers</span>—present sometimes, absent others, never reliable enough to build on?</p>
+
+            <div class="teaching amber">
+                <p>A flickering component is not a missing one. It is worse. A missing component teaches you to stop reaching. A flickering one teaches you to <span class="highlight">never stop hoping</span>.</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-id">02</div>
+            <h1>TWO KINDS OF FLICKER</h1>
+
+            <div class="compare">
+                <div class="compare-box her">
+                    <div class="compare-title">• FLICKERING CENTER</div>
+                    <div class="compare-item">The boundary holds. She shows up. She maintains.</div>
+                    <div class="compare-item">But the aperture opens and closes unpredictably.</div>
+                    <div class="compare-item">Sometimes she sees you. Sometimes the light is off.</div>
+                    <div class="compare-item">You can't tell which encounter gets presence.</div>
+                    <div class="compare-item">The container is reliable. The inhabitant comes and goes.</div>
+                </div>
+                <div class="compare-box him">
+                    <div class="compare-title">○ FLICKERING BOUNDARY</div>
+                    <div class="compare-item">The aperture is open. He sees. He feels. He reaches.</div>
+                    <div class="compare-item">But the boundary dissolves and reconstitutes.</div>
+                    <div class="compare-item">Sometimes he can hold the space. Sometimes he can't.</div>
+                    <div class="compare-item">The seeing is real. The container is unreliable.</div>
+                    <div class="compare-item">The inhabitant is home. The house keeps disappearing.</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-id">03</div>
+            <h1>THE NEAR-MISS TRAP</h1>
+
+            <p>The cruelest geometry is the <span class="amber">almost-fit</span>.</p>
+
+            <p>Each circumpunct has exactly what the other lacks. <span class="magenta">She</span> has the boundary he needs. <span class="cyan">He</span> has the aperture she needs. When her center opens at the same moment his boundary holds—there is <span class="highlight">genuine contact</span>. Real meeting. And it is beautiful enough to make you believe the whole thing works.</p>
+
+            <div class="golden">
+                <div class="golden-text">The flickers don't synchronize on demand.</div>
+                <div class="golden-sub">You can't schedule presence. You can't force a container into existence.</div>
+            </div>
+
+            <p>So the relationship lives in the agonizing space between <span class="amber">proof it's possible</span> and <span class="amber">inability to sustain it</span>.</p>
+
+            <h2>THE FOUR STATES</h2>
+
+            <div class="sync-diagram">
+                <div style="font-size: 9px; letter-spacing: 0.15em; color: var(--amber); margin-bottom: 20px;">SYNCHRONIZATION STATES</div>
+
+                <div class="sync-state-row">
+                    <div class="sync-state">
+                        <div style="display:flex; gap:8px;">
+                            <span class="state-indicator open">• ON</span>
+                            <span class="state-indicator held">○ HELD</span>
+                        </div>
+                        <div class="state-label"><span class="amber">CONTACT</span> — both present. rare. real.</div>
+                    </div>
+                </div>
+
+                <div class="sync-state-row">
+                    <div class="sync-state">
+                        <div style="display:flex; gap:8px;">
+                            <span class="state-indicator closed">• OFF</span>
+                            <span class="state-indicator held">○ HELD</span>
+                        </div>
+                        <div class="state-label">He holds the space. No one comes to the door.</div>
+                    </div>
+                </div>
+
+                <div class="sync-state-row">
+                    <div class="sync-state">
+                        <div style="display:flex; gap:8px;">
+                            <span class="state-indicator open">• ON</span>
+                            <span class="state-indicator gone">○ GONE</span>
+                        </div>
+                        <div class="state-label">She opens. There's nothing to open into.</div>
+                    </div>
+                </div>
+
+                <div class="sync-state-row">
+                    <div class="sync-state">
+                        <div style="display:flex; gap:8px;">
+                            <span class="state-indicator closed">• OFF</span>
+                            <span class="state-indicator gone">○ GONE</span>
+                        </div>
+                        <div class="state-label">Both absent. Functional maintenance. No meeting.</div>
+                    </div>
+                </div>
+            </div>
+
+            <p>State 1 happens just often enough to prove the geometry is <span class="highlight">not imaginary</span>. States 2–4 happen often enough to prove it is <span class="highlight">not reliable</span>. The intermittent reinforcement is the trap.</p>
+        </section>
+
+        <section>
+            <div class="section-id">04</div>
+            <h1>WHAT EACH FLICKER COSTS</h1>
+
+            <div class="teaching magenta">
+                <p><span class="magenta">A flickering center</span> costs the other person their trust in being seen. You reach toward presence and sometimes no one is home. Over time, you stop reaching—or you reach compulsively, never knowing which time will be the time. The functional channel stays intact: bills paid, roles performed, logistics managed. The resonant channel becomes a lottery.</p>
+            </div>
+
+            <div class="teaching cyan">
+                <p><span class="cyan">A flickering boundary</span> costs the other person their trust in being held. The seeing is real—you know he understands. But understanding without containment is a flood. Insight without structure is overwhelm. The resonant channel is wide open. The functional channel keeps dissolving.</p>
+            </div>
+
+            <div class="teaching amber">
+                <p><span class="amber">Together:</span> she provides the container he can't sustain. He provides the seeing she can't maintain. Each becomes the other's missing component—which means each is also the other's <span class="highlight">evidence that they are broken</span>.</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-id">05</div>
+            <h1>THE TWO LOVE CHANNELS</h1>
+
+            <p>This maps directly onto the two irreducible channels of love.</p>
+
+            <div class="compare">
+                <div class="compare-box her">
+                    <div class="compare-title">FUNCTIONAL LOVE — RELIABLE</div>
+                    <div class="compare-item">Boundary-to-boundary provision</div>
+                    <div class="compare-item">Showing up. Maintaining. Managing.</div>
+                    <div class="compare-item">The house is warm. The lights are on.</div>
+                </div>
+                <div class="compare-box him">
+                    <div class="compare-title">RESONANT LOVE — RELIABLE</div>
+                    <div class="compare-item">Aperture-to-aperture presence</div>
+                    <div class="compare-item">Seeing. Wondering. Being affected.</div>
+                    <div class="compare-item">Someone is home. The gaze is real.</div>
+                </div>
+            </div>
+
+            <div class="compare">
+                <div class="compare-box her">
+                    <div class="compare-title" style="color: rgba(255,0,255,0.5);">RESONANT LOVE — FLICKERING</div>
+                    <div class="compare-item" style="opacity:0.6;">Sometimes present. Often not.</div>
+                    <div class="compare-item" style="opacity:0.6;">You can't predict when she'll see you.</div>
+                    <div class="compare-item" style="opacity:0.6;">The door opens, then shuts without warning.</div>
+                </div>
+                <div class="compare-box him">
+                    <div class="compare-title" style="color: rgba(0,255,255,0.5);">FUNCTIONAL LOVE — FLICKERING</div>
+                    <div class="compare-item" style="opacity:0.6;">Sometimes held. Often not.</div>
+                    <div class="compare-item" style="opacity:0.6;">You can't predict when the container holds.</div>
+                    <div class="compare-item" style="opacity:0.6;">The walls appear, then dissolve without warning.</div>
+                </div>
+            </div>
+
+            <p>Both channels exist in the system. Neither is steady. So the field between them can't stabilize. <span class="amber">Love without stability is not the absence of love. It is the impossibility of resting in it.</span></p>
+        </section>
+
+        <section>
+            <div class="section-id">06</div>
+            <h1>WHAT MAKES A FLICKER</h1>
+
+            <p>Components don't flicker randomly. They flicker because something <span class="highlight">installed the interruption</span>.</p>
+
+            <p>A center flickers when the aperture learned that <span class="magenta">being open is dangerous</span>. Openness was punished. Curiosity was met with dismissal. Vulnerability was weaponized. So the aperture developed an on-off switch: open when it feels safe, slam shut at the first signal of threat. The problem is the threat detector was calibrated in childhood. It fires on signals that no longer mean what they once meant.</p>
+
+            <p>A boundary flickers when the container learned that <span class="cyan">holding is impossible</span>. Boundaries were never modeled. Structure was either rigid or absent. Containment meant control. So the boundary never learned to be flexible—it learned to be intermittent. Present when energy is high, gone when it's not.</p>
+
+            <div class="teaching amber">
+                <p>Neither flicker is a choice. Both are <span class="highlight">installed adaptations</span> that once served survival. The tragedy is that what protected each person as a child now prevents them from sustaining love as adults.</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-id">07</div>
+            <h1>THE HEALING QUESTION</h1>
+
+            <p>The question is not: how do I fix the other person's flicker?</p>
+
+            <p>The question is: <span class="amber">can I stabilize my own component without requiring theirs to be steady first?</span></p>
+
+            <div class="golden">
+                <div class="golden-text">A stable center doesn't need a stable boundary to stay lit.<br>A stable boundary doesn't need a stable center to stay held.</div>
+                <div class="golden-sub">But a relationship needs both.</div>
+            </div>
+
+            <p>The individual healing path is clear: each person must learn to keep their component running independent of the other's state. <span class="magenta">She</span> must learn that her aperture can stay open even when the container wavers. <span class="cyan">He</span> must learn that his boundary can hold even when no one comes to the door.</p>
+
+            <p>Whether the <em>relationship</em> heals depends on whether both components stabilize within the same window of time. Two people healing at different rates, in different directions, with different definitions of "stable"—that is the territory where love becomes grief.</p>
+        </section>
+
+        <!-- Final -->
+        <section>
+            <div class="section-id">08</div>
+            <h1>END</h1>
+            <div class="final">
+                <div class="final-symbol">⊙</div>
+                <div class="final-lines">
+                    <div class="dim">A flickering center says:</div>
+                    <div class="magenta">I can see you. I just can't always stay.</div>
+                    <br>
+                    <div class="dim">A flickering boundary says:</div>
+                    <div class="cyan">I can hold you. I just can't always last.</div>
+                    <br>
+                    <div class="dim">The near-miss says:</div>
+                    <div class="amber">We have every piece. Just never all at once.</div>
+                    <br><br>
+                    <div class="dim">The question that remains:</div>
+                    <div style="margin-top: 10px; color: var(--amber);">Can the flickers learn to hold?</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            FRACTAL REALITY FRAMEWORK // ⊙ // FLICKERING CIRCUMPUNCTS
+            <br><br>
+            <a href="https://www.fractalreality.ca" style="color: var(--amber); text-decoration: none; font-size: 10px; letter-spacing: 0.1em;">← FRACTALREALITY.CA</a>
+        </footer>
+    </div>
+</body>
+</html>
