@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Designated Intimacy Time — A Program for Two</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Lato:wght@300;400&display=swap');
+
+    :root {
+      --bg: #0f0e0d;
+      --surface: #181714;
+      --surface2: #211f1b;
+      --text: #e6e0d8;
+      --text-dim: #8a8178;
+      --text-faint: #4a4640;
+      --accent: #c9956a;
+      --accent-soft: rgba(201, 149, 106, 0.12);
+      --accent-border: rgba(201, 149, 106, 0.25);
+      --open: #7ab8c4;
+      --honest: #b89fd4;
+      --curious: #8fbd90;
+      --respectful: #c9956a;
+      --open-soft: rgba(122, 184, 196, 0.1);
+      --honest-soft: rgba(184, 159, 212, 0.1);
+      --curious-soft: rgba(143, 189, 144, 0.1);
+      --respectful-soft: rgba(201, 149, 106, 0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 16px;
+      font-weight: 300;
+    }
+
+    .page {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 5rem 0 3.5rem;
+      border-bottom: 1px solid var(--accent-border);
+      margin-bottom: 4rem;
+      position: relative;
+    }
+
+    .circumpunct {
+      font-size: 2.8rem;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0.7;
+      letter-spacing: 0.1em;
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 2.4rem;
+      font-weight: 300;
+      color: var(--accent);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 3.5rem;
+    }
+
+    h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.02em;
+    }
+
+    h3 {
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.8rem;
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 1rem;
+      font-weight: 300;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--text-faint);
+      margin: 3rem 0;
+    }
+
+    /* Four Conditions */
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .condition {
+      padding: 1.4rem 1.5rem;
+      border-radius: 4px;
+      border: 1px solid transparent;
+    }
+
+    .condition.open {
+      background: var(--open-soft);
+      border-color: rgba(122, 184, 196, 0.2);
+    }
+
+    .condition.honest {
+      background: var(--honest-soft);
+      border-color: rgba(184, 159, 212, 0.2);
+    }
+
+    .condition.curious {
+      background: var(--curious-soft);
+      border-color: rgba(143, 189, 144, 0.2);
+    }
+
+    .condition.respectful {
+      background: var(--respectful-soft);
+      border-color: rgba(201, 149, 106, 0.2);
+    }
+
+    .condition-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      margin-bottom: 0.4rem;
+    }
+
+    .condition.open .condition-name { color: var(--open); }
+    .condition.honest .condition-name { color: var(--honest); }
+    .condition.curious .condition-name { color: var(--curious); }
+    .condition.respectful .condition-name { color: var(--respectful); }
+
+    .condition p {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    /* Structure blocks */
+    .structure-block {
+      background: var(--surface);
+      border-left: 2px solid var(--accent-border);
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .structure-block .label {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    .structure-block p {
+      font-size: 0.92rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    /* Protocol steps */
+    .protocol {
+      counter-reset: steps;
+      list-style: none;
+      margin-top: 1.2rem;
+    }
+
+    .protocol li {
+      counter-increment: steps;
+      display: flex;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+      align-items: flex-start;
+    }
+
+    .protocol li::before {
+      content: counter(steps);
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      color: var(--accent);
+      opacity: 0.5;
+      min-width: 1.4rem;
+      padding-top: 0.05rem;
+      font-weight: 300;
+    }
+
+    .protocol li p {
+      font-size: 0.92rem;
+      color: var(--text-dim);
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    .protocol li strong {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    /* Reciprocity safeguards */
+    .safeguards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 1.2rem;
+    }
+
+    .safeguard {
+      background: var(--surface2);
+      padding: 1.1rem 1.4rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .safeguard strong {
+      color: var(--text);
+      font-weight: 400;
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* Disqualifiers */
+    .disqualifiers {
+      margin-top: 1.2rem;
+    }
+
+    .disqualifier {
+      display: flex;
+      gap: 1rem;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--text-faint);
+      align-items: baseline;
+    }
+
+    .disqualifier:last-child {
+      border-bottom: none;
+    }
+
+    .disqualifier .signal {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      min-width: 120px;
+      padding-top: 0.1rem;
+    }
+
+    .disqualifier p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    /* The promise */
+    .promise-block {
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
+      border-radius: 6px;
+      padding: 2rem 2.2rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .promise-block p {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--accent);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--text-faint);
+      text-align: center;
+      color: var(--text-faint);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 500px) {
+      .conditions-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 1.9rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="circumpunct">⊙</div>
+    <h1>Designated Intimacy Time</h1>
+    <div class="subtitle">A Program for Two</div>
+  </header>
+
+
+  <!-- WHAT IT IS -->
+  <section>
+    <h2>What This Is</h2>
+    <p>A protected container for genuine contact between two people. Not a therapy session, not a conflict resolution meeting, not a performance of closeness. A space held open by agreement — where something real is at least possible.</p>
+    <p>No specific activity is prescribed. The intimacy may be conversation, silence, physical closeness, honesty about hard things, or simply showing up and being present together. What matters is the quality of presence, not the form it takes.</p>
+  </section>
+
+
+  <!-- THE FOUR CONDITIONS -->
+  <section>
+    <h2>The Four Conditions</h2>
+    <p>These are not ideals to aspire toward. They are the conditions that define whether the container is active. All four must be present. The absence of any one collapses the space.</p>
+
+    <div class="conditions-grid">
+      <div class="condition open">
+        <div class="condition-name">Open</div>
+        <p>Nothing is pre-filtered out before arriving. Whatever is true may be brought in. No agenda determines in advance what is allowed to matter.</p>
+      </div>
+      <div class="condition honest">
+        <div class="condition-name">Honest</div>
+        <p>What is said reflects what is actually true, not what is strategic, safe, or calculated to produce a desired response.</p>
+      </div>
+      <div class="condition curious">
+        <div class="condition-name">Curious</div>
+        <p>The orientation is toward discovery. "I wonder" rather than "I know." The other person is treated as someone still being understood, not already categorized.</p>
+      </div>
+      <div class="condition respectful">
+        <div class="condition-name">Respectful of Boundaries</div>
+        <p>Neither person is obligated to go anywhere they are not ready to go. Holding a boundary is an act of integrity, not rejection. It keeps the space safe for openness.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <hr class="divider">
+
+
+  <!-- STRUCTURE -->
+  <section>
+    <h2>Structure</h2>
+
+    <div class="structure-block">
+      <div class="label">Frequency</div>
+      <p>Once per week, on a mutually agreed day. Consistency matters more than frequency. A predictable container becomes safer over time.</p>
+    </div>
+
+    <div class="structure-block">
+      <div class="label">Duration</div>
+      <p>Minimum 30 minutes, maximum 90 minutes. The container has edges. Knowing when it ends makes it easier to enter.</p>
+    </div>
+
+    <div class="structure-block">
+      <div class="label">Initiation</div>
+      <p>Either person may call it. Either person may request a postponement once without penalty. A second consecutive postponement from the same person is a signal worth naming.</p>
+    </div>
+
+    <div class="structure-block">
+      <div class="label">Location</div>
+      <p>Somewhere private. No screens, no background tasks. Physical presence in the same space. The space itself signals that something different is happening here.</p>
+    </div>
+  </section>
+
+
+  <!-- OPENING PROTOCOL -->
+  <section>
+    <h2>Opening Protocol</h2>
+    <p>How a container is entered shapes what's possible inside it. Take two minutes at the start to do this together:</p>
+
+    <ol class="protocol">
+      <li><p><strong>Arrive.</strong> Sit across from each other. Pause before speaking. Let the transition happen consciously — you're moving from whatever else was happening into this.</p></li>
+      <li><p><strong>Check in honestly.</strong> Each person says, in one or two sentences, where they actually are right now. Not how they want to seem. Not a reassurance. Where they are. "I'm still a bit wired from work." "I feel nervous about tonight." "I'm here."</p></li>
+      <li><p><strong>Name the container.</strong> One person says aloud: <em>"I'm here to be open, honest, and curious — and I'll respect your limits and expect you to respect mine."</em> The other affirms it.</p></li>
+    </ol>
+  </section>
+
+
+  <!-- RECIPROCITY SAFEGUARDS -->
+  <section>
+    <h2>Reciprocity Safeguards</h2>
+    <p>A common failure mode: one person holds the space while the other receives it. The container becomes asymmetric. This is not intimacy — it is caretaking with intimacy's name on it.</p>
+
+    <p>These safeguards are built into the design:</p>
+
+    <div class="safeguards">
+      <div class="safeguard">
+        <strong>Floor Time</strong>
+        If one person has been carrying most of the airspace, the other may say: "I want to hear something about you." This is not an accusation. It is a return toward reciprocity.
+      </div>
+      <div class="safeguard">
+        <strong>Receiving Check</strong>
+        At the midpoint, each person asks themselves silently: <em>Am I actually receiving anything right now, or am I facilitating?</em> If the answer is facilitation, it's appropriate to say: "I need to bring something too."
+      </div>
+      <div class="safeguard">
+        <strong>Equal Completion</strong>
+        The session does not close on one person's resolution. Both people name something real before closing — even if it's unresolved, even if it's small.
+      </div>
+      <div class="safeguard">
+        <strong>Labor Acknowledgment</strong>
+        If one person consistently proposes, structures, and initiates — that asymmetry is named, not absorbed. Invisible labor does not become sustainable through silence.
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CLOSING PROTOCOL -->
+  <section>
+    <h2>Closing Protocol</h2>
+
+    <ol class="protocol">
+      <li><p><strong>Each person names one thing they are taking from this time.</strong> Not a summary. Something real that landed — a feeling, a realization, a moment of contact. It can be small.</p></li>
+      <li><p><strong>Each person names one thing that still feels open.</strong> Not a problem to solve tonight. Just an acknowledgment that something is still in motion. This normalizes incompleteness.</p></li>
+      <li><p><strong>Close the container.</strong> Explicitly. "We're done." A touch if it's welcome. Then both people re-enter ordinary life.</p></li>
+    </ol>
+  </section>
+
+
+  <hr class="divider">
+
+
+  <!-- DISQUALIFIERS -->
+  <section>
+    <h2>What Disqualifies the Container</h2>
+    <p>These are signals that the container has collapsed — not failures requiring punishment, but honest observations requiring naming.</p>
+
+    <div class="disqualifiers">
+      <div class="disqualifier">
+        <div class="signal">Performance</div>
+        <p>Saying what sounds intimate rather than what is true. Warmth deployed strategically rather than felt.</p>
+      </div>
+      <div class="disqualifier">
+        <div class="signal">Defensiveness</div>
+        <p>Responding to honesty with justification, deflection, or counter-accusation. The container becomes a debate rather than a space.</p>
+      </div>
+      <div class="disqualifier">
+        <div class="signal">Withdrawal</div>
+        <p>Being physically present but actually absent — monitoring, waiting out, or tolerating rather than showing up.</p>
+      </div>
+      <div class="disqualifier">
+        <div class="signal">Flooding</div>
+        <p>One person's emotional state consuming the entire space so that the other person's presence becomes irrelevant.</p>
+      </div>
+      <div class="disqualifier">
+        <div class="signal">Weaponization</div>
+        <p>Using what is shared here as material for a later argument, or naming disclosures outside the container without consent.</p>
+      </div>
+    </div>
+
+    <p style="margin-top: 1.4rem; font-size: 0.9rem; color: var(--text-dim);">When a disqualifier appears, either person may name it simply: <em>"I don't think we're in the container right now."</em> This is not an accusation. It is an invitation to return — or to close the session honestly and try again another time.</p>
+  </section>
+
+
+  <!-- THE PROMISE -->
+  <section>
+    <div class="promise-block">
+      <p>This space is not a promise that everything will be resolved.<br>It is a promise that both people will show up<br>as they actually are,<br>and leave the other more visible than they found them.</p>
+    </div>
+  </section>
+
+
+  <footer>
+    FractalReality.ca &nbsp;·&nbsp; Designated Intimacy Time &nbsp;·&nbsp; v1.0
+  </footer>
+
+</div>
+</body>
+</html>
