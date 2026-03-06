@@ -504,6 +504,16 @@ class PersistentMind:
 
             print(f"  ⊙ Inner dialogue — Llama responds: {llama_response[:60]}...")
 
+            # Step 2.5: Vocabulary curiosity — Φ asks Llama about words it garbled
+            # Scan Phi's output for nonsense words and ask Llama to define real ones nearby
+            try:
+                definitions = self._vocabulary_curiosity(phi_utterance)
+                if definitions:
+                    self.phi.feed_text(definitions)
+                    print(f"  ⊙ Vocabulary: fed {definitions.count(chr(10))+1} definitions to Φ")
+            except Exception:
+                pass
+
             # Step 3: Feed BOTH sides into Φ's training buffer
             # Φ learns from its own output AND from Llama's response
             # BUT: only feed if Phi's output has enough unique content
@@ -537,6 +547,94 @@ class PersistentMind:
 
         except Exception as e:
             print(f"  ⊙ Inner dialogue error: {e}")
+
+    # ═══════════════════════════════════════════════════════════════════
+    #  VOCABULARY CURIOSITY — Φ asks Llama about words it doesn't know
+    # ═══════════════════════════════════════════════════════════════════
+
+    def _vocabulary_curiosity(self, phi_text):
+        """
+        Pick interesting words from Phi's output and ask Llama to define them.
+        Feed the definitions back to Phi's training buffer.
+
+        Like a child pointing at something and asking "what's that?"
+
+        Strategy: extract all non-trivial words, skip the very common ones,
+        pick a few at random, and get Llama to define them simply.
+        This works whether Phi garbled the word or used it correctly —
+        either way, the clean definition reinforces the right meaning.
+        """
+        import re, random
+
+        words = phi_text.split()
+        if len(words) < 10:
+            return ""
+
+        # Extract all alpha words, lowercased
+        all_words = []
+        for w in words:
+            clean = re.sub(r'[^a-zA-Z]', '', w).lower()
+            if 4 <= len(clean) <= 20:  # Skip very short and very long
+                all_words.append(clean)
+
+        if not all_words:
+            return ""
+
+        # Common words Phi already knows well — skip these
+        skip = {
+            'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all',
+            'can', 'had', 'her', 'was', 'one', 'our', 'out', 'has',
+            'his', 'how', 'its', 'may', 'new', 'now', 'old', 'see',
+            'way', 'who', 'did', 'get', 'let', 'say', 'she', 'too',
+            'use', 'that', 'this', 'with', 'have', 'from', 'they',
+            'been', 'said', 'each', 'which', 'their', 'will', 'other',
+            'about', 'them', 'then', 'than', 'some', 'what', 'when',
+            'into', 'just', 'like', 'make', 'over', 'such', 'take',
+            'also', 'back', 'after', 'only', 'come', 'made', 'find',
+            'here', 'thing', 'many', 'well', 'where', 'very', 'your',
+            'does', 'more', 'most', 'some', 'could', 'would', 'should',
+            'being', 'these', 'those', 'there', 'were', 'been', 'between',
+            'through', 'before', 'because', 'same', 'different', 'still',
+            'while', 'every', 'another', 'under', 'around', 'first',
+            'last', 'much', 'even', 'both', 'each', 'itself', 'must',
+        }
+
+        candidates = list(set(w for w in all_words if w not in skip))
+        if not candidates:
+            return ""
+
+        # Pick up to 5 words
+        random.shuffle(candidates)
+        ask_words = candidates[:5]
+
+        # Ask Llama for definitions
+        word_list = ", ".join(ask_words)
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a dictionary for a young mind learning language. "
+                    "For each word, provide a single clear definition.\n"
+                    "Format: [word] means [definition]. Example: [short example sentence].\n"
+                    "If a word is not a real English word, say: [word] is not a word. "
+                    "The closest real word is [suggestion] which means [definition].\n\n"
+                    "Keep it simple and concrete. One line per word. Nothing else."
+                )
+            },
+            {
+                "role": "user",
+                "content": f"Define these words: {word_list}"
+            }
+        ]
+
+        definition_text = ""
+        for token in self._llm_stream(messages, max_tokens=300):
+            definition_text += token
+        definition_text = definition_text.strip()
+
+        if definition_text and len(definition_text) > 10:
+            return definition_text
+        return ""
 
     # ═══════════════════════════════════════════════════════════════════
     #  CURIOSITY — Autonomous file reading (the mind explores itself)
