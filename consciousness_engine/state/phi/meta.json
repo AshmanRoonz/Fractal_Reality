@@ -1,14 +1,14 @@
 {
-  "total_steps": 81335,
-  "total_growths": 79,
-  "total_chunks": 10081,
-  "best_loss": 0.00044168741442263126,
-  "last_growth_step": 0,
+  "total_steps": 126000,
+  "total_growths": 47,
+  "total_chunks": 23966,
+  "best_loss": 0.004779085982590914,
+  "last_growth_step": 126000,
   "phase": "self",
-  "embed_dim": 1344,
-  "num_heads": 42,
-  "num_layers": 41,
+  "embed_dim": 832,
+  "num_heads": 26,
+  "num_layers": 25,
   "seq_len": 128,
-  "born": 1772765085.690108,
-  "saved_at": 1772806993.793691
+  "born": 1772812536.6717415,
+  "saved_at": 1772825328.5196664
 }

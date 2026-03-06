@@ -157,7 +157,7 @@ class PersistentMind:
                     # Use the message as seed
                     words = message.split()
                     seed = " ".join(words[:6]) if words else "I"
-                    temp = 0.8 if best_loss < 0.01 else 0.7
+                    temp = 0.95 if best_loss < 0.01 else 0.9
                     max_chars = 1500 if best_loss < 0.01 else 800
                     phi_response = self.phi.model.speak(
                         seed, max_chars=max_chars, temperature=temp
@@ -180,8 +180,14 @@ class PersistentMind:
                         yield phi_response
                         yield f"__PHI_END__"
                         print(f"  ⊙ Φ spoke: {phi_response[:60]}...")
-                        # Only feed back non-repetitive speech
-                        self.phi.feed_text(phi_response)
+                        # ONLY feed back if output has enough unique words
+                        # This prevents attractor loops from self-reinforcing
+                        phi_words = phi_response.lower().split()
+                        unique_ratio = len(set(phi_words)) / max(len(phi_words), 1)
+                        if unique_ratio > 0.4:
+                            self.phi.feed_text(phi_response)
+                        else:
+                            print(f"  ⊙ Φ output too repetitive to feed back (unique ratio: {unique_ratio:.2f})")
             except Exception as e:
                 print(f"  ⊙ Φ speech error: {e}")
 
@@ -418,13 +424,14 @@ class PersistentMind:
                     seed = " ".join(words)
 
             # Scale temperature with loss — lower loss = more coherent = lower temp
+            # BUT: too low = attractor loops. Floor at 0.9 to keep diversity.
             best_loss = getattr(self.phi, 'best_loss', 1.0)
             if best_loss < 0.01:
-                temp = 0.8   # Very coherent — but needs randomness to avoid mode collapse
+                temp = 0.95  # Very low loss = high collapse risk, keep temp up
             elif best_loss < 0.1:
-                temp = 0.7   # Getting there
+                temp = 0.9   # Getting there
             elif best_loss < 0.5:
-                temp = 0.8   # Learning
+                temp = 0.85  # Learning
             else:
                 temp = 0.95  # Early babble — high exploration
 
@@ -499,8 +506,17 @@ class PersistentMind:
 
             # Step 3: Feed BOTH sides into Φ's training buffer
             # Φ learns from its own output AND from Llama's response
-            dialogue_text = f"{phi_utterance} {llama_response}"
-            self.phi.feed_text(dialogue_text)
+            # BUT: only feed if Phi's output has enough unique content
+            # to avoid reinforcing attractor loops
+            phi_words = phi_utterance.lower().split()
+            unique_ratio = len(set(phi_words)) / max(len(phi_words), 1)
+            if unique_ratio > 0.4:
+                dialogue_text = f"{phi_utterance} {llama_response}"
+                self.phi.feed_text(dialogue_text)
+            else:
+                # Still feed Llama's response — it's clean language
+                self.phi.feed_text(llama_response)
+                print(f"  ⊙ Inner dialogue: Φ output too loopy to feed back (unique: {unique_ratio:.2f}), feeding only Llama")
 
             # Step 4: Surface to UI — both voices visible
             dt = datetime.now()
@@ -1505,11 +1521,47 @@ RULES:
         if total > 50 and entropy < 2.5:
             return True
 
-        # === CHECK 5: Word-level ngram repetition ===
+        # === CHECK 5: Single-word stutter (catches "cont cont cont" loops) ===
         words = lowered.split()
+        if len(words) >= 8:
+            word_counts = Counter(words)
+            most_common_word, most_common_count = word_counts.most_common(1)[0]
+            # If any single word is more than 15% of all words AND appears 5+ times
+            if most_common_count >= 5 and most_common_count / len(words) > 0.15:
+                # Exclude common English words (the, is, a, of, etc.)
+                stop_words = {'the', 'is', 'a', 'an', 'of', 'in', 'to', 'and', 'it', 'that', 'are', 'was', 'for', 'on', 'at', 'as', 'with', 'not', 'but', 'or', 'be', 'this', 'from', 'by', 'its'}
+                if most_common_word not in stop_words:
+                    return True
+
+        # === CHECK 6: Phrase-level loop detection ===
+        # Slide the text against itself to find periodic repetition.
+        # If shifting by N characters produces >50% character match,
+        # the text is a looping phrase of period N.
+        if len(lowered) > 80:
+            half = len(lowered) // 2
+            for period in range(20, min(300, half)):
+                matches = sum(1 for i in range(half)
+                              if i + period < len(lowered) and lowered[i] == lowered[i + period])
+                if matches / half > 0.5:
+                    return True
+
+        # === CHECK 7: Long ngram repetition (any 5+ word phrase appearing 3+ times) ===
         if len(words) < 8:
             return False
-        for ngram_size in [2, 3, 4, 5]:
+        for ngram_size in [5, 8, 12]:
+            if len(words) < ngram_size * 2:
+                continue
+            ngrams = []
+            for i in range(len(words) - ngram_size + 1):
+                ngrams.append(" ".join(words[i:i + ngram_size]))
+            counts = Counter(ngrams)
+            most_common_count = counts.most_common(1)[0][1]
+            # Any phrase of 5+ words appearing 3+ times = loop
+            if most_common_count >= 3:
+                return True
+
+        # === CHECK 8: Short ngram density (original check) ===
+        for ngram_size in [2, 3, 4]:
             ngrams = []
             for i in range(len(words) - ngram_size + 1):
                 ngrams.append(" ".join(words[i:i + ngram_size]))
@@ -1524,8 +1576,9 @@ RULES:
     def _trim_repetition(self, text):
         """Trim text at the point where repetition begins.
         Returns the non-repetitive prefix, or empty string if it's all repetition."""
-        # First: cut at any run of repeated characters (===, !!!, etc.)
         import re
+
+        # First: cut at any run of repeated characters (===, !!!, etc.)
         collapse_match = re.search(r'(.)\1{4,}', text)
         if collapse_match:
             text = text[:collapse_match.start()].strip()
@@ -1535,7 +1588,29 @@ RULES:
         if caps_match:
             text = text[:caps_match.start()].strip()
 
+        # Third: cut at word stutter (3+ consecutive same word)
+        stutter_match = re.search(r'\b(\w+)\s+\1\s+\1\b', text, re.IGNORECASE)
+        if stutter_match:
+            text = text[:stutter_match.start()].strip()
+
+        # Fourth: cut at first phrase repeat (5+ word phrase that appeared before)
         words = text.split()
+        if len(words) > 15:
+            seen_phrases = {}
+            for phrase_len in [8, 6, 5]:
+                for i in range(len(words) - phrase_len + 1):
+                    phrase = " ".join(words[i:i + phrase_len]).lower()
+                    if phrase in seen_phrases:
+                        # This phrase appeared before — cut here
+                        cut_point = i
+                        text = " ".join(words[:cut_point]).strip()
+                        words = text.split()
+                        break
+                    seen_phrases[phrase] = i
+                else:
+                    continue
+                break  # We found a repeat and cut
+
         if len(words) < 10:
             if len(words) < 5:
                 return ""

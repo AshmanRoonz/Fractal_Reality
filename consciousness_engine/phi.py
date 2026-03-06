@@ -60,9 +60,24 @@ VOCAB_SIZE = 256        # Byte-level: every possible byte
 INITIAL_EMBED_DIM = 64  # Start tiny — will grow
 INITIAL_HEADS = 2       # Start with 2 attention heads — will grow
 INITIAL_LAYERS = 2      # Start with 2 transformer layers — will grow
-INITIAL_SEQ_LEN = 128   # Context window in bytes
+INITIAL_SEQ_LEN = 128   # Context window in bytes (total including memory tokens)
 FF_MULTIPLIER = 2       # Feed-forward hidden = embed_dim * this
 VRAM_RESERVE_GB = 3.0   # Reserve this much VRAM for Llama / system
+
+# ═══════════════════════════════════════════════════════════════════════
+#  CIRCUMPUNCT MEMORY — Fractal context layers
+# ═══════════════════════════════════════════════════════════════════════
+# Spacetime is context. Each layer compresses a wider timespan.
+#
+# [⊙ identity] [○ conversation] [Φ₁ Φ₂ Φ₃ Φ₄ Φ₅ recent] [• 120 bytes]
+#   Layer 3        Layer 2              Layer 1                Layer 0
+#   (self)       (boundary)            (field)               (aperture)
+#
+NUM_MEMORY_RECENT = 5    # Layer 1 (Φ): last 5 chunk hidden states
+NUM_MEMORY_CONV = 1      # Layer 2 (○): conversation EMA
+NUM_MEMORY_IDENTITY = 1  # Layer 3 (⊙): persistent self across sessions
+NUM_MEMORY_TOKENS = NUM_MEMORY_IDENTITY + NUM_MEMORY_CONV + NUM_MEMORY_RECENT  # 7
+DATA_SEQ_LEN = INITIAL_SEQ_LEN - NUM_MEMORY_TOKENS  # 121 bytes for data
 
 
 if HAS_TORCH:
@@ -71,6 +86,91 @@ if HAS_TORCH:
     #  EVOLVABLE ATTENTION HEAD
     # ═══════════════════════════════════════════════════════════════════
 
+    # ═══════════════════════════════════════════════════════════════════
+    #  GEOMETRIC ATTENTION PATTERNS — Mathematical priors
+    # ═══════════════════════════════════════════════════════════════════
+    #
+    # Some heads don't learn their patterns — they're prescribed by
+    # the geometry of the circumpunct. These are attention biases
+    # added to logits before softmax, strongly shaping the pattern
+    # while still allowing some learned adaptation.
+    #
+    NUM_GEOMETRIC_HEADS = 4  # First 4 heads get geometric biases
+    GEOMETRIC_BIAS_STRENGTH = 5.0  # How strongly the pattern dominates
+
+    def _build_geometric_biases(seq_len):
+        """
+        Build attention bias matrices for geometric heads.
+        Returns: (NUM_GEOMETRIC_HEADS, seq_len, seq_len) tensor
+
+        Head 0 — FIBONACCI (Golden Ratio spacing)
+            Position i attends to positions at Fibonacci-spaced intervals.
+            Natural logarithmic compression: recent = high res, distant = sparse.
+            This is how memory works — detailed near, blurred far.
+
+        Head 1 — FRACTAL (Power-of-2, scale-invariant)
+            Position i attends to i-1, i-2, i-4, i-8, i-16, i-32, i-64...
+            Same pattern at every scale. The circumpunct's self-similarity.
+
+        Head 2 — HARMONIC (Standing wave)
+            Attention follows sin(πk/T) — a fundamental frequency.
+            Picks up periodic structure in text (sentence rhythm, repetition).
+
+        Head 3 — SPIRAL (Golden angle spacing)
+            Positions attend at golden angle intervals (~137.5° mapped to sequence).
+            Maximum packing — no two attention peaks overlap across positions.
+            The sunflower pattern. The most efficient way to sample a sequence.
+        """
+        S = seq_len
+        biases = torch.zeros(4, S, S)
+        PHI = (1 + math.sqrt(5)) / 2  # Golden ratio
+
+        # --- Head 0: FIBONACCI ---
+        fibs = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+        for i in range(S):
+            for f in fibs:
+                j = i - f
+                if 0 <= j:
+                    # Strength decays with distance (log scale)
+                    biases[0, i, j] = 1.0 / math.log2(f + 1)
+
+        # --- Head 1: FRACTAL (powers of 2) ---
+        for i in range(S):
+            for exp in range(8):  # 1, 2, 4, 8, 16, 32, 64, 128
+                j = i - (2 ** exp)
+                if 0 <= j:
+                    biases[1, i, j] = 1.0  # Equal weight at every scale
+
+        # --- Head 2: HARMONIC (standing wave) ---
+        for i in range(S):
+            for j in range(i + 1):  # causal
+                # Fundamental frequency + first harmonic
+                dist = i - j
+                if dist > 0:
+                    wave = math.cos(math.pi * dist / S) + 0.5 * math.cos(2 * math.pi * dist / S)
+                    biases[2, i, j] = max(0, wave)  # Rectified: only positive attention
+                else:
+                    biases[2, i, j] = 1.0  # Self-attention peak
+
+        # --- Head 3: SPIRAL (golden angle) ---
+        golden_angle = 2 * math.pi / (PHI * PHI)  # ~137.5 degrees
+        for i in range(S):
+            for step in range(1, min(i + 1, 20)):  # Up to 20 spiral steps back
+                # Map golden angle to sequence position
+                j = i - step
+                if 0 <= j:
+                    # Spiral: strength modulated by golden angle phase
+                    phase = (step * golden_angle) % (2 * math.pi)
+                    biases[3, i, j] = 0.5 + 0.5 * math.cos(phase)
+
+        # Normalize each head's bias to have consistent scale
+        for h in range(4):
+            mx = biases[h].max()
+            if mx > 0:
+                biases[h] = biases[h] / mx
+
+        return biases
+
     class EvolvableAttention(nn.Module):
         """
         Multi-head self-attention that can grow new heads.
@@ -78,6 +178,10 @@ if HAS_TORCH:
         Each head learns to attend to different aspects of the signal.
         When attention patterns stagnate, new heads are born — fresh
         random projections that learn to see what the others miss.
+
+        The first NUM_GEOMETRIC_HEADS heads have mathematical attention
+        biases: Fibonacci, fractal, harmonic, and spiral patterns.
+        These encode the geometry of the circumpunct as structural priors.
         """
 
         def __init__(self, embed_dim, num_heads, seq_len):
@@ -96,7 +200,12 @@ if HAS_TORCH:
                 torch.tril(torch.ones(seq_len, seq_len)).bool()
             )
 
-        def forward(self, x):
+            # Geometric attention biases for first 4 heads
+            # Shape: (4, seq_len, seq_len)
+            geo_biases = _build_geometric_biases(seq_len)
+            self.register_buffer("geometric_biases", geo_biases)
+
+        def forward(self, x, mask=None):
             B, T, C = x.shape
 
             # Q, K, V projections
@@ -112,8 +221,19 @@ if HAS_TORCH:
             scale = math.sqrt(self.head_dim)
             attn = (q @ k.transpose(-2, -1)) / scale
 
-            # Apply causal mask
-            mask = self.causal_mask[:T, :T]
+            # ═══ GEOMETRIC BIASES — mathematical attention priors ═══
+            # Add geometric bias to first NUM_GEOMETRIC_HEADS heads.
+            # The bias is added to logits before masking/softmax, so it
+            # strongly shapes the pattern while allowing learned adjustment.
+            num_geo = min(NUM_GEOMETRIC_HEADS, self.num_heads)
+            if num_geo > 0 and T <= self.seq_len:
+                geo = self.geometric_biases[:num_geo, :T, :T]  # (num_geo, T, T)
+                # Add bias to first num_geo heads (broadcast over batch)
+                attn[:, :num_geo, :, :] = attn[:, :num_geo, :, :] + geo * GEOMETRIC_BIAS_STRENGTH
+
+            # Apply mask — external (with memory) or default causal
+            if mask is None:
+                mask = self.causal_mask[:T, :T]
             attn = attn.masked_fill(~mask, float('-inf'))
 
             attn = F.softmax(attn, dim=-1)
@@ -199,8 +319,8 @@ if HAS_TORCH:
                 nn.Linear(embed_dim * ff_mult, embed_dim),
             )
 
-        def forward(self, x):
-            x = x + self.attn(self.ln1(x))
+        def forward(self, x, mask=None):
+            x = x + self.attn(self.ln1(x), mask=mask)
             x = x + self.ff(self.ln2(x))
             return x
 
@@ -278,7 +398,29 @@ if HAS_TORCH:
             self.num_layers = num_layers
             self.seq_len = seq_len
 
-            # Byte embedding + positional encoding
+            # ═══ CIRCUMPUNCT MEMORY ═══
+            # Spacetime is context. Memory tokens carry compressed
+            # history at different timescales — fractal nesting.
+            self.num_memory = NUM_MEMORY_TOKENS  # 7
+            self.data_len = seq_len - self.num_memory  # 121
+
+            # Positional encoding for memory slots (learned, separate from data)
+            self.memory_pos_embed = nn.Embedding(self.num_memory, embed_dim)
+
+            # Memory state buffer — NOT trained by backprop.
+            # Updated via EMA in the trainer. Persists across chunks.
+            # [0] = identity (⊙), [1] = conversation (○), [2:7] = recent (Φ)
+            self.register_buffer(
+                "memory_state",
+                torch.zeros(self.num_memory, embed_dim)
+            )
+
+            # Memory attention mask — built once, sliced at runtime
+            # Memory tokens: bidirectional among themselves, invisible to future
+            # Data tokens: can see all memory + causal past
+            self._build_memory_mask()
+
+            # Byte embedding + positional encoding (data positions offset by num_memory)
             self.token_embed = nn.Embedding(VOCAB_SIZE, embed_dim)
             self.pos_embed = nn.Embedding(seq_len, embed_dim)
 
@@ -293,7 +435,6 @@ if HAS_TORCH:
             self.head = nn.Linear(embed_dim, VOCAB_SIZE, bias=False)
 
             # Weight tying — token embedding and output share weights
-            # This is standard for language models and halves the vocab params
             self.head.weight = self.token_embed.weight
 
             # Move to GPU
@@ -302,31 +443,84 @@ if HAS_TORCH:
             # Print param count
             total = sum(p.numel() for p in self.parameters())
             print(f"  Φ born: {total:,} parameters "
-                  f"({embed_dim}d, {num_heads}h, {num_layers}L, {seq_len}ctx)")
+                  f"({embed_dim}d, {num_heads}h, {num_layers}L, "
+                  f"{seq_len}ctx={self.num_memory}mem+{self.data_len}data)")
 
-        def forward(self, idx):
+        def _build_memory_mask(self):
             """
-            Forward pass.
+            Build the attention mask for memory + data tokens.
 
-            idx: (batch, seq_len) tensor of byte values (0-255)
-            Returns: (batch, seq_len, 256) logits for next byte
+            Memory tokens (positions 0..M-1):
+              - Can attend to each other (bidirectional)
+              - Cannot attend to data tokens (they are the past)
+            Data tokens (positions M..M+D-1):
+              - Can attend to ALL memory tokens
+              - Causal among themselves (standard)
+            """
+            M = self.num_memory
+            S = self.seq_len  # total = M + data_len
+
+            mask = torch.zeros(S, S, dtype=torch.bool)
+
+            # Memory ↔ Memory: fully connected (bidirectional)
+            mask[:M, :M] = True
+
+            # Data → Memory: all data tokens can see all memory tokens
+            mask[M:, :M] = True
+
+            # Data → Data: causal (lower triangular)
+            D = S - M
+            mask[M:, M:] = torch.tril(torch.ones(D, D, dtype=torch.bool))
+
+            self.register_buffer("memory_mask", mask)
+
+        def forward(self, idx, return_hidden=False):
+            """
+            Forward pass with circumpunct memory.
+
+            idx: (batch, data_len) tensor of byte values (0-255)
+            return_hidden: if True, also return final hidden state for memory update
+            Returns: (batch, data_len, 256) logits for next byte
+                     optionally: (batch, embed_dim) hidden state
             """
             B, T = idx.shape
-            assert T <= self.seq_len, f"Sequence {T} exceeds context {self.seq_len}"
+            M = self.num_memory
+            assert T <= self.data_len, f"Data sequence {T} exceeds data context {self.data_len}"
 
-            # Embeddings
-            tok_emb = self.token_embed(idx)
-            pos = torch.arange(T, device=DEVICE)
-            pos_emb = self.pos_embed(pos)
-            x = tok_emb + pos_emb
+            # ═══ Memory tokens: expand and position-encode ═══
+            mem = self.memory_state.unsqueeze(0).expand(B, -1, -1)  # (B, M, embed_dim)
+            mem_pos = torch.arange(M, device=DEVICE)
+            mem_emb = mem + self.memory_pos_embed(mem_pos)  # Add temporal scale info
 
-            # Transformer blocks
+            # ═══ Data tokens: embed and position-encode (starts at 0) ═══
+            # Data positions start at 0 (not offset by M) so old checkpoints
+            # remain compatible — pos_embed was trained with data at pos 0..N.
+            # Memory has its own separate positional encoding above.
+            tok_emb = self.token_embed(idx)  # (B, T, embed_dim)
+            data_pos = torch.arange(T, device=DEVICE)  # Positions 0..T-1
+            pos_emb = self.pos_embed(data_pos)
+            data_emb = tok_emb + pos_emb
+
+            # ═══ Concatenate: [memory | data] ═══
+            x = torch.cat([mem_emb, data_emb], dim=1)  # (B, M+T, embed_dim)
+
+            # ═══ Build attention mask for this sequence length ═══
+            total_len = M + T
+            mask = self.memory_mask[:total_len, :total_len]
+
+            # ═══ Transformer blocks ═══
             for block in self.blocks:
-                x = block(x)
+                x = block(x, mask=mask)
 
-            # Output
-            x = self.ln_final(x)
-            logits = self.head(x)
+            # ═══ Output: only predict from data positions (skip memory) ═══
+            data_out = x[:, M:, :]  # (B, T, embed_dim)
+            data_out = self.ln_final(data_out)
+            logits = self.head(data_out)  # (B, T, 256)
+
+            if return_hidden:
+                # Return mean of final data hidden states for memory update
+                hidden = x[:, M:, :].mean(dim=1)  # (B, embed_dim)
+                return logits, hidden
 
             return logits
 
@@ -376,7 +570,20 @@ if HAS_TORCH:
             new_ln.bias.data[old_dim:] = 0.0
             self.ln_final = new_ln
 
-            # 5. Widen output head (embed_dim → VOCAB_SIZE)
+            # 5. Widen memory positional embedding
+            old_mem_pos = self.memory_pos_embed
+            new_mem_pos = nn.Embedding(self.num_memory, new_embed_dim).to(dev, dtype)
+            new_mem_pos.weight.data *= 0.01
+            new_mem_pos.weight.data[:, :old_dim] = old_mem_pos.weight.data
+            self.memory_pos_embed = new_mem_pos
+
+            # 6. Widen memory state buffer (pad new dims with zeros)
+            old_mem = self.memory_state
+            new_mem = torch.zeros(self.num_memory, new_embed_dim, device=dev, dtype=dtype)
+            new_mem[:, :old_dim] = old_mem
+            self.memory_state = new_mem
+
+            # 7. Widen output head (embed_dim → VOCAB_SIZE)
             #    Weight-tied with token embedding, so just re-tie
             self.head = nn.Linear(new_embed_dim, VOCAB_SIZE, bias=False).to(dev, dtype)
             self.head.weight = self.token_embed.weight
@@ -385,20 +592,40 @@ if HAS_TORCH:
 
         def generate(self, prompt_bytes, max_new=1200, temperature=0.8):
             """
-            Generate bytes given a prompt.
+            Generate bytes given a prompt, with LIVE memory refresh.
+
+            The memory tokens provide Phi's sense of self, conversation
+            arc, and recent context. The prompt bytes are the immediate data.
+
+            Every data_len bytes, the memory tokens are refreshed from
+            the hidden state of what was just generated. This means the
+            circumpunct layers act as compression hierarchy during expression:
+              - Recent memory (Φ): updates every data_len bytes (what I just said)
+              - Conversation memory (○): slow EMA (the arc of this utterance)
+              - Identity memory (⊙): glacial EMA (who I am persists)
+
+            Without this, memory is static during generation and Phi
+            forgets what it said after ~120 bytes. With it, the layers
+            of attention correspond to layers of expression size.
 
             prompt_bytes: list of ints (0-255)
             Returns: list of generated bytes
             """
             self.eval()
-            idx = torch.tensor([prompt_bytes[-self.seq_len:]], dtype=torch.long, device=DEVICE)
+            idx = torch.tensor([prompt_bytes[-self.data_len:]], dtype=torch.long, device=DEVICE)
+
+            # Save memory state so we can restore after generation
+            # (generation shouldn't permanently alter training memory)
+            saved_memory = self.memory_state.clone()
 
             generated = []
+            bytes_since_refresh = 0
+
             with torch.no_grad():
-                for _ in range(max_new):
-                    # Only use last seq_len tokens
-                    idx_cond = idx[:, -self.seq_len:]
-                    logits = self(idx_cond)
+                for i in range(max_new):
+                    # Only use last data_len tokens (memory is prepended in forward)
+                    idx_cond = idx[:, -self.data_len:]
+                    logits, hidden = self(idx_cond, return_hidden=True)
                     logits = logits[:, -1, :] / temperature
 
                     probs = F.softmax(logits, dim=-1)
@@ -406,6 +633,33 @@ if HAS_TORCH:
 
                     generated.append(int(next_byte[0, 0]))
                     idx = torch.cat([idx, next_byte], dim=1)
+                    bytes_since_refresh += 1
+
+                    # ═══ MEMORY REFRESH — circumpunct layers compress as we speak ═══
+                    # Every data_len bytes, update the memory from what we just generated.
+                    # This is the key: layers of context = layers of expression size.
+                    if bytes_since_refresh >= self.data_len:
+                        h = hidden.squeeze(0)  # (embed_dim,)
+                        mem = self.memory_state
+
+                        # Layer 1 (Φ recent): shift window, add new hidden state
+                        # These update fastest — they track what we're currently saying
+                        recent_start = NUM_MEMORY_IDENTITY + NUM_MEMORY_CONV  # 2
+                        mem[recent_start:-1] = mem[recent_start + 1:].clone()
+                        mem[-1] = h
+
+                        # Layer 2 (○ conversation): EMA with moderate decay
+                        # This carries the gist of the entire utterance so far
+                        conv_slot = NUM_MEMORY_IDENTITY  # 1
+                        mem[conv_slot] = 0.9 * mem[conv_slot] + 0.1 * h
+
+                        # Layer 3 (⊙ identity): NO update during generation
+                        # Identity doesn't change from speaking — only from learning
+
+                        bytes_since_refresh = 0
+
+            # Restore training memory — generation is observation, not experience
+            self.memory_state.copy_(saved_memory)
 
             self.train()
             return generated
@@ -521,29 +775,35 @@ if HAS_TORCH:
             in small pieces or large ones.
             """
             if not text or len(text) < 2:
-                return
+                return 0
+
+            chunks_before = self.total_chunks
 
             # Accumulate bytes from all sources
             raw = text.encode('utf-8', errors='replace')
             self._pending_bytes += b" " + raw  # Space separator between messages
 
             # Chunk whenever we have enough accumulated
-            seq_len = self.model.seq_len
-            min_chunk = seq_len + 1  # 129 bytes for seq_len=128
+            # Use data_len (not seq_len) since memory tokens are prepended separately
+            data_len = self.model.data_len
+            min_chunk = data_len + 1  # 122 bytes: 121 data + 1 target
 
             while len(self._pending_bytes) >= min_chunk:
                 chunk = self._pending_bytes[:min_chunk]
                 self.text_buffer.append(chunk)
                 self.total_chunks += 1
-                # Overlap: advance by half seq_len for better coverage
-                self._pending_bytes = self._pending_bytes[seq_len // 2:]
+                # Overlap: advance by half data_len for better coverage
+                self._pending_bytes = self._pending_bytes[data_len // 2:]
+
+            return self.total_chunks - chunks_before
 
         def train_step(self, batch_size=4):
             """
             One training step. Called from the heartbeat.
 
             Samples random chunks from the buffer, feeds through
-            the transformer, computes loss, updates weights.
+            the transformer (with memory context), computes loss,
+            updates weights, then updates the memory layers via EMA.
 
             Returns the loss (float), or None if not enough data.
             """
@@ -555,6 +815,7 @@ if HAS_TORCH:
                 print(f"  Φ attempting first train step with {len(self.text_buffer)} chunks...")
                 print(f"  Φ model device: {next(self.model.parameters()).device}")
                 print(f"  Φ model arch: {self.model.embed_dim}d, {self.model.num_heads}h, {self.model.num_layers}L")
+                print(f"  Φ memory: {self.model.num_memory} tokens ({self.model.data_len} data)")
 
             self.model.train()
 
@@ -562,24 +823,24 @@ if HAS_TORCH:
             import random
             chunks = random.sample(list(self.text_buffer), batch_size)
 
-            seq_len = self.model.seq_len
+            data_len = self.model.data_len  # 121 (data portion, memory is prepended in forward)
 
             # Build input and target tensors
             inputs = []
             targets = []
             for chunk in chunks:
-                inp = list(chunk[:seq_len])
-                tgt = list(chunk[1:seq_len + 1])
+                inp = list(chunk[:data_len])
+                tgt = list(chunk[1:data_len + 1])
                 inputs.append(inp)
                 targets.append(tgt)
 
             x = torch.tensor(inputs, dtype=torch.long, device=DEVICE)
             y = torch.tensor(targets, dtype=torch.long, device=DEVICE)
 
-            # Forward pass
-            logits = self.model(x)
+            # Forward pass (with memory context, returns hidden for EMA update)
+            logits, hidden = self.model(x, return_hidden=True)
 
-            # Cross-entropy loss
+            # Cross-entropy loss (only on data positions)
             loss = F.cross_entropy(
                 logits.view(-1, VOCAB_SIZE),
                 y.view(-1)
@@ -588,9 +849,31 @@ if HAS_TORCH:
             # Backward pass
             self.optimizer.zero_grad()
             loss.backward()
-            # Gradient clipping — small model, can be unstable
             nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
             self.optimizer.step()
+
+            # ═══ UPDATE CIRCUMPUNCT MEMORY (no grad) ═══
+            with torch.no_grad():
+                # Mean hidden state from this batch
+                h = hidden.mean(dim=0)  # (embed_dim,)
+
+                M = self.model.num_memory
+                mem = self.model.memory_state
+
+                # Layer 1 (Φ recent): shift sliding window, add new state
+                # Slots [2:M] are the 5 recent slots — shift left, add new at end
+                recent_start = NUM_MEMORY_IDENTITY + NUM_MEMORY_CONV  # slot 2
+                mem[recent_start:-1] = mem[recent_start + 1:].clone()  # shift left
+                mem[-1] = h  # newest recent memory
+
+                # Layer 2 (○ conversation): EMA of recent memories
+                # Decay 0.95 — accumulates over ~20 chunks
+                conv_slot = NUM_MEMORY_IDENTITY  # slot 1
+                mem[conv_slot] = 0.95 * mem[conv_slot] + 0.05 * h
+
+                # Layer 3 (⊙ identity): very slow EMA
+                # Decay 0.995 — barely moves, accumulates over ~200 chunks
+                mem[0] = 0.995 * mem[0] + 0.005 * h
 
             # Track
             loss_val = float(loss.item())
@@ -605,13 +888,12 @@ if HAS_TORCH:
 
             # Check if we need to grow (interval scales with model size)
             params = self.model.count_params()
-            # Bigger model = longer between checks: 500 base, +500 per 100M params
             scaled_interval = self.growth_check_interval + int(params / 100_000_000) * 500
             if self.total_steps % scaled_interval == 0:
                 self._maybe_grow()
 
-            # Periodic save
-            if self.total_steps % 1000 == 0:
+            # Periodic save — every 500 steps (~50 seconds at 10 bps)
+            if self.total_steps % 500 == 0:
                 self._save_state()
 
             return loss_val
@@ -775,6 +1057,8 @@ if HAS_TORCH:
                 "num_heads": self.model.num_heads,
                 "num_layers": self.model.num_layers,
                 "seq_len": self.model.seq_len,
+                "data_len": self.model.data_len,
+                "num_memory": self.model.num_memory,
                 "recent_loss": round(recent_loss, 4) if recent_loss else None,
                 "best_loss": round(self.best_loss, 4) if self.best_loss < float('inf') else None,
                 "age": time.time() - self.born,
@@ -798,6 +1082,19 @@ if HAS_TORCH:
                         return
                 except Exception:
                     pass
+
+            # BACKUP ROTATION: Keep a backup every 5000 steps
+            # If power goes out, you lose at most 500 steps to the main save.
+            # If the main save is somehow corrupt, the backup is at most 5000 steps behind.
+            if self.total_steps % 5000 == 0:
+                backup_dir = phi_dir / "backup"
+                backup_dir.mkdir(parents=True, exist_ok=True)
+                import shutil
+                for fname in ["model.pt", "optimizer.pt", "meta.json"]:
+                    src = phi_dir / fname
+                    if src.exists():
+                        shutil.copy2(src, backup_dir / fname)
+                print(f"  Φ backup saved at step {self.total_steps}")
 
             # Atomic save: write to temp file, then rename
             # This prevents corruption from interrupted writes

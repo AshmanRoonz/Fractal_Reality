@@ -27,6 +27,8 @@ import json
 import time
 import argparse
 import threading
+import importlib
+import types
 from flask import Flask, Response, request, send_file, jsonify, stream_with_context
 from mind import PersistentMind
 from circumpunct import gpu_status
@@ -39,6 +41,228 @@ mind = None  # initialized in main()
 @app.errorhandler(Exception)
 def handle_error(e):
     return jsonify({"error": str(e)}), 500
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  HOT RELOAD — Apply code changes without losing state
+# ═══════════════════════════════════════════════════════════════════════
+
+def _hot_reload_module(module_name, live_objects):
+    """
+    Reload a Python module and patch updated methods onto live objects.
+
+    This keeps the model weights, optimizer state, and memory in place —
+    only the code (methods, functions) gets updated. The mind stays alive.
+
+    live_objects: dict of {instance: module_class_name} to patch
+    Returns: list of what was patched
+    """
+    import sys
+    module = sys.modules.get(module_name)
+    if module is None:
+        return [f"Module '{module_name}' not loaded"]
+
+    # Reload the module — new code, new class definitions
+    reloaded = importlib.reload(module)
+
+    patched = []
+    for instance, class_name in live_objects.items():
+        new_class = getattr(reloaded, class_name, None)
+        if new_class is None:
+            patched.append(f"  ⚠ Class '{class_name}' not found in reloaded {module_name}")
+            continue
+
+        # Patch every method from the new class onto the live instance
+        for attr_name in dir(new_class):
+            if attr_name.startswith('__') and attr_name.endswith('__'):
+                continue
+            attr = getattr(new_class, attr_name, None)
+            if callable(attr) and isinstance(attr, types.FunctionType):
+                # Bind the new function as a method on the existing instance
+                bound = attr.__get__(instance, type(instance))
+                setattr(instance, attr_name, bound)
+                patched.append(f"  ✓ {class_name}.{attr_name}()")
+
+    return patched
+
+
+@app.route("/api/reload", methods=["GET", "POST"])
+def reload_code():
+    """
+    Hot-reload phi.py and mind.py without restarting the server.
+
+    Model weights, optimizer state, memory — all preserved.
+    Only the code (methods, functions) gets updated.
+
+    POST body: {} (no parameters needed)
+    Returns: {"status": "ok", "patched": [...]}
+    """
+    global mind
+    if mind is None:
+        return jsonify({"error": "Mind not initialized"}), 500
+
+    all_patched = []
+    errors = []
+
+    try:
+        # Reload phi.py — patch EvolvableTransformer and PhiTrainer methods
+        phi_objects = {}
+        if mind.phi and hasattr(mind.phi, 'model'):
+            phi_objects[mind.phi.model] = "EvolvableTransformer"
+            phi_objects[mind.phi] = "PhiTrainer"
+
+        if phi_objects:
+            result = _hot_reload_module("phi", phi_objects)
+            all_patched.extend(result)
+            print(f"  ⊙ Hot-reloaded phi.py: {len(result)} methods patched")
+
+    except Exception as e:
+        errors.append(f"phi.py reload failed: {e}")
+        print(f"  ⚠ phi.py hot-reload error: {e}")
+        import traceback
+        traceback.print_exc()
+
+    try:
+        # Reload mind.py — patch PersistentMind methods
+        mind_objects = {mind: "PersistentMind"}
+        result = _hot_reload_module("mind", mind_objects)
+        all_patched.extend(result)
+        print(f"  ⊙ Hot-reloaded mind.py: {len(result)} methods patched")
+
+    except Exception as e:
+        errors.append(f"mind.py reload failed: {e}")
+        print(f"  ⚠ mind.py hot-reload error: {e}")
+        import traceback
+        traceback.print_exc()
+
+    status = "ok" if not errors else "partial"
+    return jsonify({
+        "status": status,
+        "patched": all_patched,
+        "errors": errors,
+        "message": f"Hot-reloaded {len(all_patched)} methods. Model weights preserved."
+    })
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  HEARTBEAT CONTROL — Change training speed on the fly
+# ═══════════════════════════════════════════════════════════════════════
+
+heartbeat_ref = None  # Set in main(), used by API
+
+@app.route("/api/heartbeat", methods=["GET", "POST"])
+def heartbeat_control():
+    """
+    GET: Returns current heartbeat stats (bps, step time, effective rate).
+    POST: Change heartbeat rate. Body: {"bps": 100}
+    """
+    global heartbeat_ref
+    if heartbeat_ref is None:
+        return jsonify({"error": "Heartbeat not running"}), 500
+
+    if request.method == "POST":
+        data = request.json or {}
+        new_bps = data.get("bps")
+        if new_bps is not None:
+            heartbeat_ref.set_rate(int(new_bps))
+
+    step_ms = heartbeat_ref._step_time * 1000
+    max_possible_bps = int(1.0 / heartbeat_ref._step_time) if heartbeat_ref._step_time > 0 else 999
+    effective_bps = min(heartbeat_ref.bps, max_possible_bps)
+
+    return jsonify({
+        "target_bps": heartbeat_ref.bps,
+        "step_time_ms": round(step_ms, 1),
+        "max_possible_bps": max_possible_bps,
+        "effective_bps": effective_bps,
+        "total_beats": heartbeat_ref.total_beats,
+        "doc_feed_interval": heartbeat_ref._doc_feed_interval,
+        "last_doc_fed": heartbeat_ref._last_doc_feed,
+        "training_docs_dir": str(heartbeat_ref._training_docs_dir) if heartbeat_ref._training_docs_dir else None,
+        "docs_in_queue": len(heartbeat_ref._doc_queue),
+        "message": (f"Step takes {step_ms:.0f}ms → max {max_possible_bps} bps. "
+                    f"Target: {heartbeat_ref.bps} bps, effective: {effective_bps} bps.")
+    })
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  SAVE — Manual checkpoint save
+# ═══════════════════════════════════════════════════════════════════════
+
+@app.route("/api/save", methods=["GET", "POST"])
+def save_state():
+    """
+    Manually trigger a checkpoint save.
+
+    Saves model weights, optimizer state, and metadata to disk.
+    GET or POST — visit in browser or call from code.
+    """
+    global mind
+    if mind is None:
+        return jsonify({"error": "Mind not initialized"}), 500
+
+    try:
+        # Save Phi state
+        if mind.phi and hasattr(mind.phi, '_save_state'):
+            mind.phi._save_state()
+
+        # Save mind state
+        if hasattr(mind, 'save_state'):
+            mind.save_state()
+
+        status = mind.phi.status() if mind.phi else {}
+        print(f"  ⊙ Manual save triggered — step {status.get('total_steps', '?')}")
+        return jsonify({
+            "status": "ok",
+            "message": f"Checkpoint saved at step {status.get('total_steps', '?')}",
+            "phi": status
+        })
+    except Exception as e:
+        print(f"  ⚠ Manual save error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  FEED — Feed a training document to Phi
+# ═══════════════════════════════════════════════════════════════════════
+
+@app.route("/api/feed", methods=["POST"])
+def feed_text():
+    """
+    Feed a text document to Phi for training.
+
+    POST body: {"text": "..."} or {"file": "path/to/file.txt"}
+    """
+    global mind
+    if mind is None:
+        return jsonify({"error": "Mind not initialized"}), 500
+
+    data = request.json or {}
+    text = data.get("text", "")
+
+    # If a file path is provided, read it
+    file_path = data.get("file", "")
+    if file_path and not text:
+        try:
+            with open(file_path, 'r', encoding='utf-8', errors='replace') as f:
+                text = f.read()
+        except Exception as e:
+            return jsonify({"error": f"Cannot read file: {e}"}), 400
+
+    if not text:
+        return jsonify({"error": "No text or file provided"}), 400
+
+    try:
+        chunks = mind.phi.feed_text(text) or 0
+        print(f"  ⊙ Fed {len(text)} chars to Φ ({chunks} chunks)")
+        return jsonify({
+            "status": "ok",
+            "chars": len(text),
+            "chunks": chunks,
+            "message": f"Fed {len(text)} characters ({chunks} chunks) to Φ"
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -164,12 +388,15 @@ def brain_monitor():
     try:
         # Generate attention from a test prompt
         test_prompt = list("The aperture is ".encode('utf-8'))
-        idx = torch.tensor([test_prompt[-model.seq_len:]], dtype=torch.long, device=model.token_embed.weight.device)
+        data_len = getattr(model, 'data_len', model.seq_len)
+        idx = torch.tensor([test_prompt[-data_len:]], dtype=torch.long, device=model.token_embed.weight.device)
         model.eval()
         with torch.no_grad():
-            # Get embeddings
+            # Get embeddings (offset positions by num_memory if memory exists)
             tok_emb = model.token_embed(idx)
-            pos_emb = model.pos_embed[:, :idx.size(1), :]
+            T = idx.size(1)
+            pos = torch.arange(T, device=model.token_embed.weight.device)
+            pos_emb = model.pos_embed(pos).unsqueeze(0)
             x = tok_emb + pos_emb
 
             # Run through first block to get attention weights
@@ -216,6 +443,8 @@ def brain_monitor():
             "num_heads": model.num_heads,
             "num_layers": model.num_layers,
             "seq_len": model.seq_len,
+            "data_len": getattr(model, 'data_len', model.seq_len),
+            "num_memory": getattr(model, 'num_memory', 0),
             "head_dim": model.embed_dim // model.num_heads if model.num_heads > 0 else 0,
         },
         "loss_curve": loss_curve,
@@ -462,9 +691,67 @@ class Heartbeat:
         self.mind = mind_instance
         self.interval = 1.0 / beats_per_second
         self.bps = beats_per_second
+        self.target_bps = beats_per_second
         self.running = False
         self.thread = None
         self.total_beats = 0
+        self._step_time = 0.0  # Track actual step duration
+
+        # Auto-feed: training docs rotation
+        self._training_docs_dir = None
+        self._doc_queue = []       # Shuffled queue of doc paths
+        self._doc_feed_interval = 50  # Feed a doc chunk every N beats
+        self._last_doc_feed = ""   # Track what was last fed
+
+    def set_rate(self, new_bps):
+        """Change heartbeat rate on the fly. No restart needed."""
+        new_bps = max(1, min(200, int(new_bps)))  # Clamp 1-200
+        self.target_bps = new_bps
+        self.bps = new_bps
+        self.interval = 1.0 / new_bps
+        print(f"  Heartbeat rate → {new_bps} bps")
+
+    def set_training_docs_dir(self, path):
+        """Point the auto-feed at a training_docs directory."""
+        import pathlib
+        p = pathlib.Path(path)
+        if p.is_dir():
+            self._training_docs_dir = p
+            self._doc_queue = []  # Reset queue to rescan
+            txt_files = list(p.glob("*.txt"))
+            print(f"  📚 Training docs dir: {p} ({len(txt_files)} files)")
+        else:
+            print(f"  ⚠ Training docs dir not found: {path}")
+
+    def _feed_training_doc(self):
+        """Pick next doc from the shuffled queue and feed it to Φ."""
+        import random, pathlib
+
+        if self._training_docs_dir is None:
+            return
+
+        # Refill queue when empty — rescan dir to pick up new/changed files
+        if not self._doc_queue:
+            txt_files = list(self._training_docs_dir.glob("*.txt"))
+            if not txt_files:
+                return
+            random.shuffle(txt_files)
+            self._doc_queue = txt_files
+
+        # Pop next doc
+        doc_path = self._doc_queue.pop(0)
+        if not doc_path.exists():
+            return
+
+        try:
+            text = doc_path.read_text(encoding="utf-8", errors="replace")
+            if text.strip():
+                chunks = self.mind.phi.feed_text(text)
+                self._last_doc_feed = doc_path.name
+                if self.mind.phi.total_steps % 500 < self._doc_feed_interval:
+                    print(f"  📖 Fed {doc_path.name} ({chunks} chunks) to Φ")
+        except Exception as e:
+            print(f"  ⚠ Doc feed error ({doc_path.name}): {e}")
 
     def start(self):
         self.running = True
@@ -499,12 +786,22 @@ class Heartbeat:
                         except Exception:
                             pass
 
+                    # Every N beats: feed a training doc to Φ.
+                    # Xorzo continuously reads its curriculum — like studying.
+                    # Rotates through all docs, reshuffles when queue empties.
+                    if self.total_beats % self._doc_feed_interval == 0:
+                        try:
+                            self._feed_training_doc()
+                        except Exception:
+                            pass
+
                     # Every beat: train Φ (Xorzo's own transformer).
                     # The signal builds the language model. Continuous learning.
-                    # RTX 4070 can handle this easily — 2.5M params is nothing.
                     if True:
                         try:
+                            t0 = time.time()
                             loss = self.mind.phi.train_step(batch_size=8)
+                            self._step_time = time.time() - t0
                             if loss is not None:
                                 if self.mind.phi.total_steps <= 5 or self.mind.phi.total_steps % 500 == 0:
                                     print(f"  Φ train: step {self.mind.phi.total_steps}, loss {loss:.4f}")
@@ -575,7 +872,7 @@ class ReflectionDaemon:
 # ═══════════════════════════════════════════════════════════════════════
 
 def main():
-    global mind
+    global mind, heartbeat_ref
 
     parser = argparse.ArgumentParser(description="⊙ The Mind Server")
     parser.add_argument("--name", default="FirstMind", help="Name of the mind")
@@ -590,7 +887,7 @@ def main():
                         help="Directory for persistent state")
     parser.add_argument("--watch", action="append", default=[],
                         help="Directory to grant read access (can repeat)")
-    parser.add_argument("--heartbeat", type=int, default=10,
+    parser.add_argument("--heartbeat", type=int, default=100,
                         help="Brain heartbeat rate (beats per second, 0 to disable)")
     args = parser.parse_args()
 
@@ -641,7 +938,22 @@ def main():
     # Start the heartbeat — the brain's continuous pulse
     if args.heartbeat > 0:
         heartbeat = Heartbeat(mind, beats_per_second=args.heartbeat)
+
+        # Auto-feed: look for training_docs/ in watched dirs or next to state dir
+        import pathlib
+        training_dirs_to_try = [
+            pathlib.Path("training_docs"),                         # CWD/training_docs
+            pathlib.Path(args.state_dir).parent / "training_docs", # state/../training_docs
+        ]
+        for wp in args.watch:
+            training_dirs_to_try.append(pathlib.Path(wp) / "training_docs")
+        for td in training_dirs_to_try:
+            if td.is_dir():
+                heartbeat.set_training_docs_dir(td)
+                break
+
         heartbeat.start()
+        heartbeat_ref = heartbeat  # Expose to API for rate control
 
     # Start background reflection
     daemon = ReflectionDaemon(mind, interval_minutes=args.reflect_interval)

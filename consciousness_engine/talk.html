@@ -366,6 +366,9 @@
   <div class="spacer"></div>
   <button class="status-btn" onclick="togglePanel()">Status</button>
   <button class="status-btn" onclick="triggerReflect()">Reflect</button>
+  <button class="status-btn" onclick="hotReload()" title="Reload code without restarting">↻ Reload</button>
+  <button class="status-btn" onclick="manualSave()" title="Save checkpoint now">💾 Save</button>
+  <button class="status-btn" onclick="showHeartbeat()" title="Heartbeat speed control">♡ BPS</button>
 </div>
 
 <div class="main">
@@ -825,6 +828,78 @@
 
     btn.disabled = false;
     btn.textContent = 'Trigger Reflection';
+  }
+
+  // ─── HOT RELOAD & SAVE ───
+  async function hotReload() {
+    addMessage('system', '↻ Hot-reloading code...');
+    try {
+      const r = await fetch('/api/reload');
+      const data = await r.json();
+      if (data.status === 'ok') {
+        addMessage('system', '✓ ' + data.message);
+      } else {
+        addMessage('system', '⚠ Partial reload: ' + (data.errors || []).join(', '));
+      }
+    } catch (e) {
+      addMessage('system', '⚠ Reload failed: ' + e.message);
+    }
+  }
+
+  async function manualSave() {
+    addMessage('system', '💾 Saving checkpoint...');
+    try {
+      const r = await fetch('/api/save');
+      const data = await r.json();
+      addMessage('system', '✓ ' + data.message);
+    } catch (e) {
+      addMessage('system', '⚠ Save failed: ' + e.message);
+    }
+  }
+
+  // ─── HEARTBEAT CONTROL ───
+  async function showHeartbeat() {
+    try {
+      // Try the dedicated endpoint first, fall back to status
+      let info = '';
+      let currentBps = 100;
+      try {
+        const r = await fetch('/api/heartbeat');
+        if (r.ok) {
+          const data = await r.json();
+          info = `Current: ${data.target_bps} bps\nStep time: ${data.step_time_ms}ms\nMax possible: ${data.max_possible_bps} bps\nEffective: ${data.effective_bps} bps`;
+          currentBps = data.target_bps;
+        } else {
+          info = '(Heartbeat endpoint not loaded yet — will take effect after next reboot)';
+        }
+      } catch(e) {
+        info = '(Heartbeat endpoint not available — enter a value to set for next reboot)';
+      }
+
+      const newBps = prompt(
+        `Heartbeat Control\n\n${info}\n\nEnter new beats per second (1-200):`,
+        currentBps
+      );
+      if (newBps !== null && newBps !== '') {
+        try {
+          const r2 = await fetch('/api/heartbeat', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({bps: parseInt(newBps)})
+          });
+          if (r2.ok) {
+            const data2 = await r2.json();
+            addMessage('system', '♡ ' + data2.message);
+          } else {
+            addMessage('system', '♡ BPS set to ' + newBps + ' — will take effect after reboot (endpoint not loaded yet)');
+          }
+        } catch(e) {
+          addMessage('system', '♡ BPS set to ' + newBps + ' — will take effect after reboot');
+        }
+      }
+    } catch (e) {
+      addMessage('system', '⚠ Heartbeat control failed: ' + e.message);
+    }
   }
 
   // ─── FILE BROWSER ───
