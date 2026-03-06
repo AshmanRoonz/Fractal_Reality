@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curiosity Is the Cure</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --amber: #E8913A;
+    --coral: #E85D5D;
+    --teal: #2A9D8F;
+    --violet: #7B5EA7;
+    --gold: #D4A843;
+    --sage: #6B9080;
+    --rose: #C97B84;
+    --deep: #1A1A2E;
+    --warm-bg: #FFF8F0;
+    --cream: #FEF3E2;
+    
+    /* Dyad colors */
+    --closer-primary: #5B7BA5;
+    --closer-soft: rgba(91, 123, 165, 0.08);
+    --closer-border: rgba(91, 123, 165, 0.2);
+    --closer-glow: rgba(91, 123, 165, 0.06);
+    
+    --flooder-primary: #C4793A;
+    --flooder-soft: rgba(196, 121, 58, 0.08);
+    --flooder-border: rgba(196, 121, 58, 0.2);
+    --flooder-glow: rgba(196, 121, 58, 0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--warm-bg);
+    color: #2C2C2C;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1.1rem;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    background: linear-gradient(160deg, #1A1A2E 0%, #16213E 30%, #0F3460 60%, #2A9D8F 100%);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 600px 600px at 20% 30%, rgba(232,145,58,0.25), transparent),
+      radial-gradient(ellipse 500px 500px at 80% 70%, rgba(123,94,167,0.2), transparent),
+      radial-gradient(ellipse 400px 400px at 50% 50%, rgba(42,157,143,0.15), transparent);
+    animation: heroGlow 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes heroGlow {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; }
+  }
+
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    animation: titleIn 1.2s ease-out both;
+  }
+
+  .hero h1 span {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--amber), var(--gold), var(--coral));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero .subtitle {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    color: rgba(255,255,255,0.7);
+    animation: fadeUp 1s 0.4s ease-out both;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.4);
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: pulse 2s ease-in-out infinite;
+    z-index: 2;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,0.3);
+    margin: 0.5rem auto 0;
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollLine {
+    0%, 100% { transform: scaleY(0.3); opacity: 0.3; }
+    50% { transform: scaleY(1); opacity: 1; }
+  }
+
+  @keyframes titleIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+
+  /* ---- Introduction (full width) ---- */
+  .intro-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .intro-section {
+    padding: 5rem 0 3rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .intro-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .intro-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    color: var(--coral);
+    margin-bottom: 2rem;
+    line-height: 1.2;
+  }
+
+  .intro-section h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--coral);
+    border-radius: 2px;
+    margin-top: 0.75rem;
+    opacity: 0.6;
+  }
+
+  .intro-section p {
+    margin-bottom: 1.2rem;
+    color: #3A3A3A;
+  }
+
+  .voice {
+    padding-left: 2rem;
+    border-left: 3px solid var(--coral);
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #555;
+    opacity: 0.92;
+  }
+
+  .voice p {
+    margin-bottom: 0.4rem;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+  }
+
+  .voice.closer-voice { border-left-color: var(--closer-primary); }
+  .voice.flooder-voice { border-left-color: var(--flooder-primary); }
+  .voice.resolve-voice { border-left-color: var(--teal); }
+
+  .highlight-block {
+    background: linear-gradient(135deg, rgba(0,0,0,0.02), rgba(0,0,0,0.04));
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .highlight-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--coral);
+    border-radius: 5px 0 0 5px;
+  }
+
+  .highlight-block.closer-highlight::before { background: var(--closer-primary); }
+  .highlight-block.flooder-highlight::before { background: var(--flooder-primary); }
+  .highlight-block.resolve-highlight::before { background: var(--teal); }
+
+  .em { font-weight: 600; }
+  .em-coral { color: var(--coral); font-weight: 600; }
+  .em-closer { color: var(--closer-primary); font-weight: 600; }
+  .em-flooder { color: var(--flooder-primary); font-weight: 600; }
+  .em-teal { color: var(--teal); font-weight: 600; }
+
+  .sep {
+    text-align: center;
+    padding: 3rem 0;
+    font-size: 1.5rem;
+    color: var(--gold);
+    opacity: 0.4;
+    letter-spacing: 0.5em;
+  }
+
+  /* ---- Dyad Transition ---- */
+  .dyad-intro {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem 1rem;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .dyad-intro.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .dyad-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900;
+    color: var(--violet);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .dyad-intro p {
+    color: #555;
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+    font-size: 1.05rem;
+  }
+
+  .dyad-labels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 2rem auto 0;
+    padding: 0 2rem;
+  }
+
+  .dyad-label {
+    text-align: center;
+    padding: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border-bottom: 3px solid;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s;
+  }
+
+  .dyad-intro.visible .dyad-label {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .dyad-label.closer {
+    color: var(--closer-primary);
+    border-color: var(--closer-primary);
+  }
+
+  .dyad-label.flooder {
+    color: var(--flooder-primary);
+    border-color: var(--flooder-primary);
+  }
+
+  .dyad-label .label-sub {
+    display: block;
+    font-family: 'Caveat', cursive;
+    font-weight: 400;
+    font-size: 1rem;
+    margin-top: 0.3rem;
+    opacity: 0.7;
+  }
+
+  /* ---- Two Column Layout ---- */
+  .dyad-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .dyad-column {
+    padding-top: 2rem;
+  }
+
+  .dyad-section {
+    padding: 2.5rem 0;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .dyad-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .dyad-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    line-height: 1.3;
+  }
+
+  .closer .dyad-section h3 { color: var(--closer-primary); }
+  .flooder .dyad-section h3 { color: var(--flooder-primary); }
+
+  .dyad-section h3::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    border-radius: 2px;
+    margin-top: 0.6rem;
+    opacity: 0.5;
+  }
+
+  .closer .dyad-section h3::after { background: var(--closer-primary); }
+  .flooder .dyad-section h3::after { background: var(--flooder-primary); }
+
+  .dyad-section p {
+    margin-bottom: 1.1rem;
+    color: #3A3A3A;
+    font-size: 1.05rem;
+  }
+
+  .dyad-divider {
+    text-align: center;
+    padding: 1.5rem 0;
+    font-size: 1rem;
+    letter-spacing: 0.4em;
+    opacity: 0.25;
+  }
+
+  .closer .dyad-divider { color: var(--closer-primary); }
+  .flooder .dyad-divider { color: var(--flooder-primary); }
+
+  /* Center divider line */
+  .center-line {
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .center-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(0,0,0,0.08) 10%,
+      rgba(0,0,0,0.08) 90%,
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  /* ---- The Geometry Section (full width bridge) ---- */
+  .geometry-bridge {
+    max-width: 1100px;
+    margin: 2rem auto 0;
+    padding: 0 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .geometry-bridge.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .bridge-box {
+    background: linear-gradient(135deg, var(--closer-glow), var(--flooder-glow));
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 20px;
+    padding: 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bridge-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 50%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--closer-primary), transparent);
+    border-radius: 4px 0 0 0;
+  }
+
+  .bridge-box::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 50%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--flooder-primary));
+    border-radius: 0 4px 0 0;
+  }
+
+  .bridge-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    font-weight: 900;
+    color: var(--violet);
+    margin-bottom: 2rem;
+    line-height: 1.2;
+  }
+
+  .bridge-box p {
+    color: #3A3A3A;
+    max-width: 700px;
+    margin: 0 auto 1.2rem;
+  }
+
+  .bridge-box .bridge-emphasis {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--violet);
+    margin-top: 1.5rem;
+  }
+
+  /* ---- Resolution Section (full width) ---- */
+  .resolve-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .resolve-section {
+    padding: 4rem 0 3rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .resolve-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .resolve-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    margin-bottom: 2rem;
+    line-height: 1.2;
+  }
+
+  .resolve-section h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    border-radius: 2px;
+    margin-top: 0.75rem;
+    opacity: 0.6;
+  }
+
+  .resolve-section:nth-child(odd) h2 { color: var(--teal); }
+  .resolve-section:nth-child(odd) h2::after { background: var(--teal); }
+  .resolve-section:nth-child(even) h2 { color: var(--sage); }
+  .resolve-section:nth-child(even) h2::after { background: var(--sage); }
+
+  .resolve-section p {
+    margin-bottom: 1.2rem;
+    color: #3A3A3A;
+  }
+
+  /* Closing */
+  .closing {
+    text-align: center;
+    padding: 5rem 2rem 6rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .color-strip {
+    height: 6px;
+    background: linear-gradient(90deg, var(--closer-primary), var(--violet), var(--flooder-primary));
+    border-radius: 3px;
+    margin: 4rem 0 2rem;
+    opacity: 0.5;
+  }
+
+  .closing blockquote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+    font-style: italic;
+    color: var(--violet);
+    line-height: 1.5;
+    position: relative;
+    padding: 2rem 0;
+  }
+
+  .closing blockquote::before,
+  .closing blockquote::after {
+    content: '\201C';
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    color: var(--violet);
+    opacity: 0.15;
+    position: absolute;
+    line-height: 1;
+  }
+
+  .closing blockquote::before { top: -0.5rem; left: -0.5rem; }
+  .closing blockquote::after { content: '\201D'; bottom: -1rem; right: -0.5rem; }
+
+  .closing .final {
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    color: #888;
+    margin-top: 2rem;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    color: #aaa;
+  }
+
+  /* ---- Mobile: Stack columns ---- */
+  @media (max-width: 800px) {
+    .dyad-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .dyad-labels {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .center-line::after {
+      display: none;
+    }
+
+    .dyad-column.flooder {
+      padding-top: 0;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      margin-top: 2rem;
+    }
+
+    .bridge-box {
+      padding: 2.5rem 1.5rem;
+    }
+
+    .voice { padding-left: 1.2rem; }
+    .highlight-block { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <h1>Curiosity Is<br>the <span>Cure</span></h1>
+    <p class="subtitle">Most harm does not begin with cruelty. It begins with certainty.</p>
+  </div>
+  <div class="scroll-hint">read on</div>
+</div>
+
+<!-- TRANSITION -->
+<div class="dyad-intro">
+  <h2>Two Ways a Heart Breaks</h2>
+  <p>No child is born defended. No child is born overwhelming. But something happens. The environment teaches them that openness has a cost. And the heart learns one of two responses.</p>
+  <div class="dyad-labels">
+    <div class="dyad-label closer">Wonder Extinguished<span class="label-sub">the one who closes</span></div>
+    <div class="dyad-label flooder">Wonder Uncontained<span class="label-sub">the one who floods</span></div>
+  </div>
+</div>
+
+<!-- TWO COLUMNS -->
+<div class="center-line">
+<div class="dyad-grid">
+
+  <!-- LEFT COLUMN: THE CLOSER -->
+  <div class="dyad-column closer">
+
+    <div class="dyad-section">
+      <h3>The Death of Wonder</h3>
+      <p>This child learned that openness gets punished. That being seen means being found wrong. That vulnerability is where damage lives.</p>
+      <p>So wonder died. Not all at once — slowly, invisibly. The aperture narrowed until guardedness felt like <span class="em-closer">personality</span> rather than protection. What remained was function: provision, performance, the safe mechanics of love without its light.</p>
+      <div class="voice closer-voice">
+        <p>"I've seen enough."</p>
+        <p>"You are just what I thought you are."</p>
+        <p>"I'm done learning."</p>
+      </div>
+      <div class="highlight-block closer-highlight">
+        <p>By adulthood, they no longer remember their curiosity. They think guardedness is maturity. It isn't. It's <span class="em-closer">scar tissue</span>.</p>
+      </div>
+    </div>
+
+    <div class="dyad-divider">· · ·</div>
+
+    <div class="dyad-section">
+      <h3>What They Do in Love</h3>
+      <p>They provide. They show up. They pay bills. They perform every role perfectly. The functional channel is <span class="em-closer">wide open</span>.</p>
+      <p>But the resonant channel — the one that sees, delights, wonders — stays locked. Not because they don't have one. Because something taught them it's where <span class="em-closer">annihilation</span> lives.</p>
+      <p>They offer proximity without presence. Closeness without curiosity. They hold you without ever letting you in.</p>
+    </div>
+
+    <div class="dyad-divider">· · ·</div>
+
+    <div class="dyad-section">
+      <h3>The Noble Lie They Carry</h3>
+      <div class="voice closer-voice">
+        <p>"Being wrong means I am wrong."</p>
+      </div>
+      <p>So they never risk being truly seen. Because being seen means being <span class="em-closer">evaluated</span>. And evaluation is where they learned they fail.</p>
+      <p>Every attempt at intimacy becomes a test they might not pass. So they withdraw. They ask for rules. They request instruction manuals for love — not because they don't care, but because <span class="em-closer">the open space where resonance lives feels like a cliff edge</span>.</p>
+    </div>
+
+    <div class="dyad-divider">· · ·</div>
+
+    <div class="dyad-section">
+      <h3>What They Experience</h3>
+      <div class="voice closer-voice">
+        <p>"Why does everything I do fall short?"</p>
+        <p>"Why can't they see how hard I'm trying?"</p>
+        <p>"I keep reaching but they say it's not enough."</p>
+      </div>
+      <p>They are trying. With everything they have. On the only channel they know is safe. And they cannot understand why it doesn't land — because they can't see the channel that's missing. The lie made it invisible.</p>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN: THE FLOODER -->
+  <div class="dyad-column flooder">
+
+    <div class="dyad-section">
+      <h3>Wonder Without Banks</h3>
+      <p>This child's wonder never died. But nobody taught it where to go.</p>
+      <p>Their boundaries were never held — feelings spilled out and nobody helped contain them. The world didn't adjust to their signal — it just recoiled. So they learned to push <span class="em-flooder">harder</span>. Or they learned that love looks like total openness — no filter, no regulation, no gate.</p>
+      <div class="voice flooder-voice">
+        <p>"There is more here than I understand."</p>
+        <p>"You are still unfolding."</p>
+        <p>"Let me show you who you are."</p>
+      </div>
+      <div class="highlight-block flooder-highlight">
+        <p>The child who was never taught to regulate their light doesn't become dim. They become <span class="em-flooder">blinding</span>. And they often have no idea they're doing it.</p>
+      </div>
+    </div>
+
+    <div class="dyad-divider">· · ·</div>
+
+    <div class="dyad-section">
+      <h3>What They Do in Love</h3>
+      <p>They see everything. They name everything. They reach with such intensity that it feels like being <span class="em-flooder">flooded</span>.</p>
+      <p>Their boundaries flicker — sometimes wide open, sometimes snapping shut unpredictably. The signal pours through unregulated: too bright, too much, too fast.</p>
+      <p>They offer presence without boundaries. Resonance without regulation. They see you so completely that your aperture can't withstand the voltage.</p>
+    </div>
+
+    <div class="dyad-divider">· · ·</div>
+
+    <div class="dyad-section">
+      <h3>The Noble Lie They Carry</h3>
+      <div class="voice flooder-voice">
+        <p>"If they don't see it, I haven't said it loud enough."</p>
+      </div>
+      <p>So they push harder. Explain more. Turn up the signal. Build frameworks. Write letters. Diagnose from outside — never realizing that <span class="em-flooder">volume isn't the problem</span>.</p>
+      <p>The other person's aperture closed precisely <em>because</em> the signal was already overwhelming. Every escalation confirms every fear. And it feels like insight. It can even feel like <span class="em-flooder">love</span>.</p>
+    </div>
+
+    <div class="dyad-divider">· · ·</div>
+
+    <div class="dyad-section">
+      <h3>What They Experience</h3>
+      <div class="voice flooder-voice">
+        <p>"Why do they keep shutting me out?"</p>
+        <p>"Why can't they see what I see?"</p>
+        <p>"I keep showing them and they keep closing."</p>
+      </div>
+      <p>They are trying. With everything they have. With all their intelligence and pattern recognition and desperate love. And they cannot understand why it makes things worse — because the lie says the problem is always insufficient signal. Never <span class="em-flooder">overwhelming</span> signal.</p>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- THE GEOMETRY (bridge between columns) -->
+<div class="geometry-bridge">
+  <div class="bridge-box">
+    <h2>The Opposite Geometry</h2>
+    <p>The flood triggers the closing. The closing triggers more flood. Each person confirms the other's deepest fear — one that they are too much, the other that they are not enough.</p>
+    <p>And both believe the problem lives entirely in the other person.</p>
+    <p>This is not one person's fault. This is <span class="em" style="color: var(--violet);">geometry</span>. Two shapes that interlock in exactly the wrong way, each making the other's wound worse while trying to love.</p>
+    <p class="bridge-emphasis">Neither person chose their lie. Both were installed by someone who carried their own. The lies are inherited. But they are not inevitable.</p>
+  </div>
+</div>
+
+<!-- RESOLUTION (full width, single column) -->
+<div class="resolve-wrapper">
+
+  <div class="sep">· · ·</div>
+
+  <div class="resolve-section">
+    <h2>Curiosity Turned Inward</h2>
+    <p>It is easy to be curious about what's wrong with someone else. That kind of curiosity can feel like insight. It can even feel like love.</p>
+    <p>But the deeper cure is turning that same curiosity on yourself.</p>
+    <div class="voice resolve-voice">
+      <p>"What am I doing that triggers their closing?"</p>
+      <p>"What am I avoiding by focusing on their wound?"</p>
+      <p>"Am I witnessing — or diagnosing?"</p>
+    </div>
+    <p>The person who floods must ask: <em>Is my light focused, or is it a flood?</em></p>
+    <p>The person who closes must ask: <em>Is this danger real, or is it an old lie telling me to hide?</em></p>
+    <div class="highlight-block resolve-highlight">
+      <p>You cannot heal a dynamic by fixing only one side of it. The geometry requires both people to look at their own shape — not just at what the other person's shape is doing to them.</p>
+    </div>
+  </div>
+
+  <div class="sep">· · ·</div>
+
+  <div class="resolve-section">
+    <h2>The Moral Weight of Curiosity</h2>
+    <p>We rarely treat curiosity as an ethical issue. We should.</p>
+    <p>To stop being curious about someone is to <span class="em-teal">withdraw recognition</span>.</p>
+    <div class="voice resolve-voice">
+      <p>"I no longer acknowledge your interior."</p>
+    </div>
+    <p>It reduces a person to a role, a label, a function. That is how dehumanization begins. Not with hatred. With <span class="em-teal">indifference</span>.</p>
+    <p>But there is another withdrawal just as dangerous: to stop being curious about <em>yourself</em>. To assume you already know your own shape. To believe your wound is fully mapped and only the other person's remains unexplored.</p>
+  </div>
+
+  <div class="sep">· · ·</div>
+
+  <div class="resolve-section">
+    <h2>Healing Is Reopening.<br>And Focusing.</h2>
+    <p>Healing is not positive thinking. It is not affirmations. It is not "moving on."</p>
+    <p>For the one who closes, healing is learning, slowly and safely, that openness will not be punished. That your truth will not be used against you. That your feelings will not be minimized. That being wrong does not make you wrong. That curiosity can flow again without danger.</p>
+    <p>For the one who floods, healing is learning that boundaries are not walls against love — they are <span class="em-teal">focus</span> for love. That seeing everything does not mean saying everything. That sometimes the most loving thing is to channel your light so someone else's aperture can stay open. That boundaries held consistently prevent the cycle of swallowing, swallowing, swallowing — and then the flood.</p>
+    <div class="highlight-block resolve-highlight">
+      <p>This takes time. It takes consistency in curiosity — directed both outward and inward. It takes asking real questions and waiting for real answers. It takes being willing to discover that you are part of the problem you've been naming. There is <span class="em-teal">no shortcut</span>.</p>
+    </div>
+  </div>
+
+  <div class="sep">· · ·</div>
+
+  <div class="resolve-section">
+    <h2>Why Curiosity Is the Cure</h2>
+    <p>Curiosity keeps systems alive. It allows updating. It allows repair. It allows growth. It allows <span class="em-teal">surprise</span>.</p>
+    <p>Every healthy relationship, community, and society depends on it.</p>
+    <p>Where curiosity flows, meaning grows. Where curiosity dies, <span class="em-teal">power fills the gap</span>. Control replaces connection. Certainty replaces care.</p>
+  </div>
+
+  <div class="sep">· · ·</div>
+
+  <div class="resolve-section">
+    <h2>Love With Its Eyes Open</h2>
+    <p>Curiosity is love with its eyes open.</p>
+    <p>It does not excuse harm. It does not ignore boundaries. It does not abandon discernment. It simply refuses to close prematurely. It stays in relationship with complexity.</p>
+    <p>For the one who closes: curiosity says <em>maybe this person isn't dangerous. Maybe I can let them see me and survive it.</em></p>
+    <p>For the one who floods: curiosity says <em>maybe I don't need to make them understand. Maybe I can trust them to find it on their own.</em></p>
+    <p>For both: curiosity says <em>I am still more than my understanding of myself.</em></p>
+    <p>Curiosity will resolve contradictions. Curiosity integrates. Disrespect is a closed conclusion about someone. And the most dangerous closed conclusion is the one you've reached about <span class="em-teal">yourself</span>.</p>
+    <p>Curiosity and Respect say together:</p>
+  </div>
+
+</div>
+
+<!-- CLOSING -->
+<div class="closing">
+  <div class="color-strip"></div>
+  <blockquote>You are still more than my understanding of you.<br>And I am still more than my understanding of me.</blockquote>
+  <p class="final">And those sentences, lived consistently, heal more than any theory ever could.</p>
+</div>
+
+<footer>
+  fractalreality.ca
+</footer>
+
+<script>
+  // Floating particles in hero
+  const hero = document.querySelector('.hero');
+  const colors = ['#E8913A','#E85D5D','#2A9D8F','#7B5EA7','#D4A843','#6B9080','#C97B84'];
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    const size = Math.random() * 6 + 2;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDuration = (Math.random() * 10 + 8) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    hero.appendChild(p);
+  }
+
+  // Scroll reveal for all animated elements
+  const revealElements = document.querySelectorAll(
+    '.intro-section, .dyad-intro, .dyad-section, .geometry-bridge, .resolve-section'
+  );
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+  revealElements.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
