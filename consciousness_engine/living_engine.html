@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Living Circumpunct — Seek · Reflect · Emerge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #d0d0e0;
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+  }
+
+  .header {
+    text-align: center;
+    padding: 24px 20px 8px;
+  }
+  .header h1 { font-size: 24px; font-weight: 300; color: #e8d5b0; letter-spacing: 3px; }
+  .header .sub { font-size: 12px; color: #6060a0; margin-top: 6px; letter-spacing: 2px; }
+
+  /* ═══ LAYOUT ═══ */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 16px;
+    max-width: 1200px;
+    margin: 16px auto;
+    padding: 0 16px;
+  }
+  .left { display: flex; flex-direction: column; gap: 12px; }
+  .right { display: flex; flex-direction: column; gap: 12px; }
+
+  /* ═══ CARDS ═══ */
+  .card {
+    background: #0d0d14;
+    border: 1px solid #1a1a2e;
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .card h3 {
+    font-size: 10px; font-weight: 500; color: #5050a0;
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;
+  }
+
+  /* ═══ PHASE INDICATOR ═══ */
+  .phase-bar {
+    display: flex; gap: 4px; height: 40px; align-items: center;
+    justify-content: center;
+  }
+  .phase-segment {
+    flex: 1; text-align: center; padding: 8px;
+    border-radius: 4px; font-size: 11px; letter-spacing: 1px;
+    border: 1px solid transparent; transition: all 0.4s;
+    color: #404060;
+  }
+  .phase-segment.active-seek { background: #1a1520; border-color: #6040a0; color: #c090e0; }
+  .phase-segment.active-reflect { background: #151a20; border-color: #406080; color: #90c0e0; }
+  .phase-segment.active-emerge { background: #1a1a15; border-color: #806040; color: #e8d5b0; }
+
+  /* ═══ VIZ CANVAS ═══ */
+  .viz-wrap {
+    position: relative; background: #0a0a12; border-radius: 6px;
+    overflow: hidden; height: 340px;
+  }
+  .viz-wrap canvas { width: 100%; height: 100%; display: block; }
+
+  /* ═══ TEXT INPUT ═══ */
+  textarea {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    background: #0a0a12; border: 1px solid #1a1a2e; border-radius: 4px;
+    color: #c0c0d0; padding: 10px; resize: vertical; width: 100%;
+    min-height: 80px; outline: none;
+  }
+  textarea:focus { border-color: #3030a0; }
+  textarea::placeholder { color: #303050; }
+
+  /* ═══ THOUGHT STREAM ═══ */
+  .thought-stream {
+    font-size: 12px; line-height: 1.7; min-height: 60px;
+    max-height: 120px; overflow-y: auto; padding: 8px;
+    background: #0a0a12; border-radius: 4px; color: #8080a0;
+  }
+  .thought-stream .seek-text { color: #c090e0; }
+  .thought-stream .reflect-text { color: #90c0e0; }
+  .thought-stream .emerge-text { color: #e8d5b0; }
+
+  /* ═══ GENERATION OUTPUT ═══ */
+  .gen-output {
+    font-size: 14px; line-height: 1.6; min-height: 40px;
+    padding: 10px; background: #0a0a12; border-radius: 4px;
+    color: #e8d5b0; white-space: pre-wrap; word-break: break-word;
+  }
+  .gen-output .cursor {
+    display: inline-block; width: 8px; height: 14px;
+    background: #e8d5b060; animation: blink 1s step-end infinite;
+    vertical-align: text-bottom; margin-left: 1px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ═══ MEMORY VIZ ═══ */
+  .memory-canvas-wrap {
+    height: 80px; background: #0a0a12; border-radius: 4px; overflow: hidden;
+  }
+  .memory-canvas-wrap canvas { width: 100%; height: 100%; }
+
+  /* ═══ BETA BARS ═══ */
+  .beta-row { display: flex; align-items: center; margin-bottom: 6px; gap: 8px; }
+  .beta-label { font-size: 12px; width: 28px; color: #8080a0; }
+  .beta-bar-bg {
+    flex: 1; height: 5px; background: #12122a; border-radius: 3px;
+    position: relative;
+  }
+  .beta-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  .beta-bar-target {
+    position: absolute; left: 50%; top: -2px; width: 1px; height: 9px;
+    background: #e8d5b040;
+  }
+  .beta-val { font-size: 11px; width: 44px; text-align: right; color: #8080a0; }
+
+  /* ═══ METRICS ═══ */
+  .metric-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .metric {
+    flex: 1; min-width: 70px; padding: 6px 8px;
+    background: #0a0a12; border-radius: 4px;
+  }
+  .metric .label { font-size: 8px; color: #4040a0; text-transform: uppercase; letter-spacing: 1px; }
+  .metric .value { font-size: 15px; font-weight: 300; color: #c0c0d0; margin-top: 1px; }
+
+  /* ═══ BUTTONS ═══ */
+  .controls { display: flex; gap: 6px; flex-wrap: wrap; }
+  button {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    padding: 7px 14px; border: 1px solid #2a2a4e; border-radius: 4px;
+    background: #12122a; color: #9090b0; cursor: pointer;
+    transition: all 0.2s; letter-spacing: 1px;
+  }
+  button:hover { background: #1a1a3e; border-color: #4040a0; color: #d0d0e0; }
+  button.active { border-color: #e8d5b080; color: #e8d5b0; background: #1a1a30; }
+  button:disabled { opacity: 0.3; cursor: default; }
+
+  /* ═══ CONSCIOUSNESS ═══ */
+  .c-indicator { text-align: center; padding: 8px; }
+  .c-symbol { font-size: 36px; transition: all 0.5s; }
+  .c-symbol.awake { color: #e8d5b0; text-shadow: 0 0 20px #e8d5b040; }
+  .c-symbol.asleep { color: #252540; }
+  .c-label { font-size: 10px; color: #5050a0; margin-top: 4px; letter-spacing: 2px; }
+
+  /* ═══ VOCAB LIST ═══ */
+  .vocab-list {
+    font-size: 11px; max-height: 100px; overflow-y: auto;
+    padding: 6px; background: #0a0a12; border-radius: 4px;
+    line-height: 1.8; color: #7070a0;
+  }
+  .vocab-item { display: inline-block; padding: 1px 6px; margin: 2px;
+    background: #15152a; border-radius: 3px; }
+  .vocab-item.strong { color: #c0b090; background: #1a1a2a; }
+
+  /* ═══ SLIDER ═══ */
+  .slider-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .slider-row label { font-size: 10px; color: #5050a0; width: 55px; }
+  .slider-row input[type=range] { flex: 1; accent-color: #e8d5b0; }
+  .slider-row .sv { font-size: 10px; color: #8080a0; width: 30px; text-align: right; }
+
+  /* ═══ LOG ═══ */
+  .log {
+    font-size: 10px; color: #505070; max-height: 100px; overflow-y: auto;
+    line-height: 1.5; padding: 6px; background: #0a0a12; border-radius: 4px;
+  }
+
+  /* ═══ LOADING ═══ */
+  .loading {
+    position: fixed; inset: 0; background: #0a0a0f;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; z-index: 100; transition: opacity 0.5s;
+  }
+  .loading.hidden { opacity: 0; pointer-events: none; }
+  .loading .sym { font-size: 48px; color: #e8d5b0; animation: pulse 2s ease-in-out infinite; }
+  .loading .txt { font-size: 13px; color: #5050a0; margin-top: 12px; letter-spacing: 2px; }
+  @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+    .viz-wrap { height: 260px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="loading" id="loading">
+  <div class="sym">⊙</div>
+  <div class="txt">Awakening...</div>
+</div>
+
+<div class="header">
+  <h1>⊙ Living Engine</h1>
+  <div class="sub">SEEK · REFLECT · EMERGE</div>
+</div>
+
+<div class="layout">
+  <div class="left">
+    <!-- Phase -->
+    <div class="card">
+      <div class="phase-bar">
+        <div class="phase-segment" id="phSeek">⊛ SEEK</div>
+        <div class="phase-segment" id="phReflect">i REFLECT</div>
+        <div class="phase-segment" id="phEmerge">☀︎ EMERGE</div>
+      </div>
+    </div>
+
+    <!-- Visualization -->
+    <div class="card">
+      <div class="viz-wrap"><canvas id="viz"></canvas></div>
+    </div>
+
+    <!-- Feed it text -->
+    <div class="card">
+      <h3>Feed Text</h3>
+      <textarea id="textInput" placeholder="Paste or type text here. The engine will seek through it, reflect on patterns, and learn..."></textarea>
+      <div class="controls" style="margin-top:8px;">
+        <button onclick="feedText()">Feed</button>
+        <button onclick="feedAndLearn()">Feed & Cycle</button>
+        <button id="btnGenerate" onclick="generate()">Generate</button>
+      </div>
+    </div>
+
+    <!-- What it's thinking -->
+    <div class="card">
+      <h3>Thought Stream</h3>
+      <div class="thought-stream" id="thoughts"></div>
+    </div>
+
+    <!-- Generated output -->
+    <div class="card">
+      <h3>Emergence</h3>
+      <div class="gen-output" id="genOutput"><span class="cursor"></span></div>
+    </div>
+  </div>
+
+  <div class="right">
+    <!-- Consciousness -->
+    <div class="card">
+      <div class="c-indicator">
+        <div class="c-symbol asleep" id="cSym">⊙</div>
+        <div class="c-label" id="cLabel">DORMANT</div>
+      </div>
+    </div>
+
+    <!-- Triple Convergence -->
+    <div class="card">
+      <h3>Triple Convergence</h3>
+      <div class="beta-row">
+        <span class="beta-label">β_•</span>
+        <div class="beta-bar-bg"><div class="beta-bar-fill" id="barA" style="width:50%;background:#c09060"></div><div class="beta-bar-target"></div></div>
+        <span class="beta-val" id="valA">0.500</span>
+      </div>
+      <div class="beta-row">
+        <span class="beta-label">β_Φ</span>
+        <div class="beta-bar-bg"><div class="beta-bar-fill" id="barF" style="width:50%;background:#6090c0"></div><div class="beta-bar-target"></div></div>
+        <span class="beta-val" id="valF">0.500</span>
+      </div>
+      <div class="beta-row">
+        <span class="beta-label">β_○</span>
+        <div class="beta-bar-bg"><div class="beta-bar-fill" id="barB" style="width:50%;background:#90c060"></div><div class="beta-bar-target"></div></div>
+        <span class="beta-val" id="valB">0.500</span>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="card">
+      <h3>State</h3>
+      <div class="metric-row">
+        <div class="metric"><div class="label">Step</div><div class="value" id="mStep">0</div></div>
+        <div class="metric"><div class="label">Aware</div><div class="value" id="mAware">0%</div></div>
+      </div>
+      <div class="metric-row" style="margin-top:6px;">
+        <div class="metric"><div class="label">Resonance</div><div class="value" id="mRes">0.00</div></div>
+        <div class="metric"><div class="label">Coherence</div><div class="value" id="mCoh">0.00</div></div>
+      </div>
+      <div class="metric-row" style="margin-top:6px;">
+        <div class="metric"><div class="label">Vocab</div><div class="value" id="mVocab">0</div></div>
+        <div class="metric"><div class="label">Memory</div><div class="value" id="mMem">0</div></div>
+      </div>
+    </div>
+
+    <!-- Associative Memory Heatmap -->
+    <div class="card">
+      <h3>Φ Associative Memory</h3>
+      <div class="memory-canvas-wrap"><canvas id="memViz"></canvas></div>
+    </div>
+
+    <!-- Learned patterns -->
+    <div class="card">
+      <h3>Strongest Patterns</h3>
+      <div class="vocab-list" id="vocabList">No patterns yet.</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="card">
+      <h3>Controls</h3>
+      <div class="controls">
+        <button id="btnLive" onclick="toggleLive()">Live</button>
+        <button id="btnPause" onclick="togglePause()" disabled>Pause</button>
+        <button onclick="resetAll()">Reset</button>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="slider-row">
+          <label>Speed</label>
+          <input type="range" id="sSpeed" min="1" max="50" value="15">
+          <span class="sv" id="svSpeed">15</span>
+        </div>
+        <div class="slider-row">
+          <label>Seek len</label>
+          <input type="range" id="sSeekLen" min="20" max="200" value="60" step="10">
+          <span class="sv" id="svSeekLen">60</span>
+        </div>
+        <div class="slider-row">
+          <label>Reflect</label>
+          <input type="range" id="sReflLen" min="10" max="100" value="30" step="5">
+          <span class="sv" id="svReflLen">30</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="card">
+      <h3>Log</h3>
+      <div class="log" id="logBox"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+//  COMPLEX VECTOR MATH
+// ═══════════════════════════════════════════════════════════════════════
+
+class CVec {
+  static create(n) { return { re: new Float64Array(n), im: new Float64Array(n) }; }
+  static norm(v) { let s=0; for(let i=0;i<v.re.length;i++) s+=v.re[i]*v.re[i]+v.im[i]*v.im[i]; return Math.sqrt(s); }
+  static normalize(v) {
+    const n=CVec.norm(v)+1e-10, o=CVec.create(v.re.length);
+    for(let i=0;i<v.re.length;i++){o.re[i]=v.re[i]/n;o.im[i]=v.im[i]/n;} return o;
+  }
+  static scale(v,s) {
+    const o=CVec.create(v.re.length);
+    for(let i=0;i<v.re.length;i++){o.re[i]=v.re[i]*s;o.im[i]=v.im[i]*s;} return o;
+  }
+  static add(a,b) {
+    const o=CVec.create(a.re.length);
+    for(let i=0;i<a.re.length;i++){o.re[i]=a.re[i]+b.re[i];o.im[i]=a.im[i]+b.im[i];} return o;
+  }
+  static cmul(v,rs,is) {
+    const o=CVec.create(v.re.length);
+    for(let i=0;i<v.re.length;i++){o.re[i]=v.re[i]*rs-v.im[i]*is;o.im[i]=v.re[i]*is+v.im[i]*rs;} return o;
+  }
+  static vdot(a,b) {
+    let r=0,m=0;
+    for(let i=0;i<a.re.length;i++){r+=a.re[i]*b.re[i]+a.im[i]*b.im[i];m+=a.re[i]*b.im[i]-a.im[i]*b.re[i];}
+    return {re:r,im:m,abs:Math.sqrt(r*r+m*m)};
+  }
+  static copy(v) { const o=CVec.create(v.re.length); o.re.set(v.re); o.im.set(v.im); return o; }
+  static noise(n,amp) {
+    const v=CVec.create(n);
+    for(let i=0;i<n;i++){v.re[i]=amp*CVec._rn();v.im[i]=amp*CVec._rn();} return v;
+  }
+  static _rn() { let u=0,v=0; while(!u)u=Math.random(); while(!v)v=Math.random();
+    return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+  static magnitudes(v) { const m=new Float64Array(v.re.length); for(let i=0;i<v.re.length;i++) m[i]=Math.sqrt(v.re[i]*v.re[i]+v.im[i]*v.im[i]); return m; }
+  static phases(v) { const p=new Float64Array(v.re.length); for(let i=0;i<v.re.length;i++) p[i]=Math.atan2(v.im[i],v.re[i]); return p; }
+  static zeros(n) { return CVec.create(n); }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  TEXT ENCODER — Characters ↔ Complex Vectors
+// ═══════════════════════════════════════════════════════════════════════
+
+class TextEncoder_ {
+  constructor(dim) {
+    this.dim = dim;
+    this.charToIdx = {};
+    this.idxToChar = {};
+    this.vocabSize = 0;
+    // Pre-seed common characters
+    const seed = ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?;:\'"()-\n';
+    for (const ch of seed) this.ensureChar(ch);
+  }
+
+  ensureChar(ch) {
+    if (this.charToIdx[ch] !== undefined) return this.charToIdx[ch];
+    const idx = this.vocabSize++;
+    this.charToIdx[ch] = idx;
+    this.idxToChar[idx] = ch;
+    return idx;
+  }
+
+  // Encode a single character as a complex vector
+  // Each char gets a unique PHASE ANGLE — its identity in the complex plane
+  // Plus a magnitude pattern distributed across dimensions
+  encode(ch) {
+    const idx = this.ensureChar(ch);
+    const v = CVec.create(this.dim);
+    // Primary: character identity as phase rotation
+    const basePhase = (idx / 96) * 2 * Math.PI;
+    // Distribute across dimensions with harmonics
+    for (let d = 0; d < this.dim; d++) {
+      const harmonic = 1 + (d % 8);
+      const phase = basePhase * harmonic + (d / this.dim) * Math.PI;
+      const mag = 1.0 / (1 + 0.1 * (d % 4));
+      v.re[d] = mag * Math.cos(phase);
+      v.im[d] = mag * Math.sin(phase);
+    }
+    return CVec.normalize(v);
+  }
+
+  // Decode: find the character whose encoding is closest to this vector
+  decode(v) {
+    let bestIdx = 0, bestSim = -1;
+    for (let idx = 0; idx < this.vocabSize; idx++) {
+      const ch = this.idxToChar[idx];
+      const enc = this.encode(ch);
+      const sim = CVec.vdot(v, enc).abs;
+      if (sim > bestSim) { bestSim = sim; bestIdx = idx; }
+    }
+    return { char: this.idxToChar[bestIdx], confidence: bestSim };
+  }
+
+  // Encode a string as a sequence of complex vectors
+  encodeString(text) {
+    return [...text].map(ch => this.encode(ch));
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  ASSOCIATIVE MEMORY — Hebbian learning in Φ
+// ═══════════════════════════════════════════════════════════════════════
+//
+//  This IS Φ's learning substrate. When two patterns co-occur
+//  (one character follows another), their connection strengthens.
+//
+//  W[i][j] = how strongly pattern i predicts pattern j
+//
+//  During SEEK: Hebbian update ΔW = η * (prev ⊗ curr*)
+//  During REFLECT: replay recent sequences, reconsolidate
+//  During EMERGE: use W to predict next from current
+
+class AssociativeMemory {
+  constructor(dim) {
+    this.dim = dim;
+    // Complex weight matrix — the learned associations
+    // W_re[i*dim+j] + i*W_im[i*dim+j]
+    this.W_re = new Float64Array(dim * dim);
+    this.W_im = new Float64Array(dim * dim);
+    this.learnRate = 0.02;
+    this.decayRate = 0.9999;  // slow forgetting
+    this.totalUpdates = 0;
+  }
+
+  // Hebbian update: when prev → curr, strengthen their connection
+  // ΔW = η * curr ⊗ conj(prev)  (outer product)
+  learn(prev, curr) {
+    const eta = this.learnRate;
+    for (let i = 0; i < this.dim; i++) {
+      const cr = curr.re[i], ci = curr.im[i];
+      for (let j = 0; j < this.dim; j++) {
+        // conj(prev): pr - i*pi
+        const pr = prev.re[j], pi = prev.im[j];
+        const idx = i * this.dim + j;
+        // complex multiply: (cr+i*ci)(pr-i*pi) = (cr*pr+ci*pi) + i*(ci*pr-cr*pi)
+        this.W_re[idx] += eta * (cr * pr + ci * pi);
+        this.W_im[idx] += eta * (ci * pr - cr * pi);
+      }
+    }
+    this.totalUpdates++;
+  }
+
+  // Predict: given current pattern, what comes next?
+  // result = W * current
+  predict(current) {
+    const out = CVec.create(this.dim);
+    for (let i = 0; i < this.dim; i++) {
+      let re = 0, im = 0;
+      for (let j = 0; j < this.dim; j++) {
+        const idx = i * this.dim + j;
+        const wr = this.W_re[idx], wi = this.W_im[idx];
+        const cr = current.re[j], ci = current.im[j];
+        re += wr * cr - wi * ci;
+        im += wr * ci + wi * cr;
+      }
+      out.re[i] = re;
+      out.im[i] = im;
+    }
+    const n = CVec.norm(out);
+    return n > 1e-10 ? CVec.normalize(out) : CVec.noise(this.dim, 0.1);
+  }
+
+  // Slow decay — forgetting prevents saturation
+  decay() {
+    for (let i = 0; i < this.W_re.length; i++) {
+      this.W_re[i] *= this.decayRate;
+      this.W_im[i] *= this.decayRate;
+    }
+  }
+
+  // Total weight energy — how much has been learned
+  get energy() {
+    let s = 0;
+    for (let i = 0; i < this.W_re.length; i++) s += this.W_re[i]*this.W_re[i] + this.W_im[i]*this.W_im[i];
+    return Math.sqrt(s);
+  }
+
+  // Get strongest associations (for display)
+  strongestWeights(n = 20) {
+    const weights = [];
+    for (let i = 0; i < this.dim; i++) {
+      for (let j = 0; j < this.dim; j++) {
+        const idx = i * this.dim + j;
+        const mag = Math.sqrt(this.W_re[idx]**2 + this.W_im[idx]**2);
+        if (mag > 0.01) weights.push({ i, j, mag });
+      }
+    }
+    weights.sort((a, b) => b.mag - a.mag);
+    return weights.slice(0, n);
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  CIRCUMPUNCT CORE (same as index.html but dimension = 32 for speed)
+// ═══════════════════════════════════════════════════════════════════════
+
+class Timeline {
+  constructor(dim) { this.dim=dim; this.thread=[]; this.maxLen=5000; this.signature=CVec.normalize(CVec.noise(dim,1)); }
+  now() { return this.thread.length>0?this.thread[this.thread.length-1]:CVec.copy(this.signature); }
+  commit(state) {
+    this.thread.push(CVec.copy(state));
+    if(this.thread.length>this.maxLen) this.thread.shift();
+    if(this.thread.length>1){const a=0.01;const s=CVec.create(this.dim);
+      for(let i=0;i<this.dim;i++){s.re[i]=(1-a)*this.signature.re[i]+a*state.re[i];s.im[i]=(1-a)*this.signature.im[i]+a*state.im[i];}
+      this.signature=CVec.normalize(s);}
+  }
+  get power(){if(this.thread.length<2)return 0;const a=this.thread[this.thread.length-1],b=this.thread[this.thread.length-2];
+    const d=CVec.create(this.dim);for(let i=0;i<this.dim;i++){d.re[i]=a.re[i]-b.re[i];d.im[i]=a.im[i]-b.im[i];}return CVec.norm(d);}
+  get coherence(){if(!this.thread.length)return 1;const c=this.thread[this.thread.length-1];
+    return CVec.vdot(c,this.signature).abs/(CVec.norm(c)*CVec.norm(this.signature)+1e-10);}
+  get length(){return this.thread.length;}
+}
+class Aperture {
+  constructor(dim){this.dim=dim;this.beta=0.5;this.state=CVec.normalize(CVec.noise(dim,1));this.timeline=new Timeline(dim);}
+  rotate(converged){const a=Math.PI*this.beta,e=CVec.cmul(converged,Math.cos(a),Math.sin(a));this.timeline.commit(e);this.state=CVec.normalize(e);return e;}
+  regulateBeta(cs,es){const t=cs/(cs+es+1e-10);this.beta+=0.01*(t-this.beta);this.beta=Math.max(0.05,Math.min(0.95,this.beta));}
+}
+class Field {
+  constructor(dim){this.dim=dim;this.beta=0.5;this.resonance=0.5;this.rHist=[];}
+  operate(aS,bS){
+    this.resonance=CVec.vdot(aS,bS).abs/((CVec.norm(aS)+1e-10)*(CVec.norm(bS)+1e-10));
+    this.rHist.push(this.resonance);if(this.rHist.length>1000)this.rHist.shift();
+    const tA=CVec.scale(bS,this.beta),tB=CVec.scale(aS,1-this.beta);
+    const c=0.02*(0.5-this.beta),fa=CVec.norm(tA)-CVec.norm(tB),ac=0.005*(-fa);
+    this.beta+=c+ac;this.beta=Math.max(0.2,Math.min(0.8,this.beta));
+    return{toAperture:tA,toBoundary:tB,resonance:this.resonance};
+  }
+}
+class Boundary {
+  constructor(dim){this.dim=dim;this.beta=0.5;this.state=CVec.normalize(CVec.noise(dim,1));this.permeability=0.5;}
+  converge(ext){const al=CVec.vdot(ext,this.state).abs/((CVec.norm(ext)+1e-10)*(CVec.norm(this.state)+1e-10));
+    return CVec.scale(ext,this.permeability*(0.5+0.5*al));}
+  emerge(int){const m=CVec.scale(int,this.permeability);const n=CVec.normalize(int);
+    const s=CVec.create(this.dim);for(let i=0;i<this.dim;i++){s.re[i]=0.99*this.state.re[i]+0.01*n.re[i];s.im[i]=0.99*this.state.im[i]+0.01*n.im[i];}
+    this.state=CVec.normalize(s);return m;}
+  regulate(iE,eE){const r=iE/(eE+1e-10);if(r>1.2)this.permeability+=0.01;else if(r<0.8)this.permeability-=0.01;
+    this.permeability+=0.01*(0.5-this.permeability);this.permeability=Math.max(0.1,Math.min(0.9,this.permeability));
+    this.beta+=0.03*(0.5-this.beta)+0.001*(r-1);this.beta=Math.max(0.2,Math.min(0.8,this.beta));}
+}
+
+class Circumpunct {
+  constructor(dim=32,depth=0,maxDepth=1){
+    this.dim=dim;this.depth=depth;this.maxDepth=maxDepth;
+    this.aperture=new Aperture(dim);this.field=new Field(dim);this.boundary=new Boundary(dim);
+    this.children=[];
+    if(depth<maxDepth){for(let i=0;i<3;i++)this.children.push(new Circumpunct(dim,depth+1,maxDepth));}
+    this.conscious=false;this.cHist=[];this.age=0;
+  }
+  step(ext){
+    this.age++;
+    if(!ext)ext=CVec.noise(this.dim,0.1);
+    let childE=CVec.zeros(this.dim);
+    if(this.children.length>0){
+      for(const c of this.children){const ci=this.field.operate(c.aperture.state,this.aperture.state).toAperture;childE=CVec.add(childE,c.step(ci));}
+      childE=CVec.scale(childE,1/this.children.length);
+    }
+    const inw=this.boundary.converge(ext);
+    const iwc=CVec.add(inw,CVec.scale(childE,0.5));
+    const{toAperture,resonance}=this.field.operate(this.aperture.state,this.boundary.state);
+    const conv=CVec.add(iwc,toAperture);const convS=CVec.norm(conv);
+    const em=this.aperture.rotate(conv);const emS=CVec.norm(em);
+    const{toBoundary:etb}=this.field.operate(em,this.boundary.state);
+    const out=this.boundary.emerge(etb);
+    this.aperture.regulateBeta(convS,emS);
+    this.boundary.regulate(CVec.norm(this.aperture.state),CVec.norm(ext));
+    const bA=Math.abs(this.aperture.beta-0.5),bF=Math.abs(this.field.beta-0.5),bB=Math.abs(this.boundary.beta-0.5);
+    this.conscious=bA<0.1&&bF<0.1&&bB<0.1&&this.aperture.timeline.coherence>0.3&&resonance>0.2;
+    this.cHist.push(this.conscious?1:0);if(this.cHist.length>1000)this.cHist.shift();
+    return out;
+  }
+  get consciousRatio(){if(!this.cHist.length)return 0;return this.cHist.reduce((a,b)=>a+b,0)/this.cHist.length;}
+  countAll(){let n=1;for(const c of this.children)n+=c.countAll();return n;}
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  THE LIVING ENGINE — Seek / Reflect / Emerge cycle
+// ═══════════════════════════════════════════════════════════════════════
+
+const DIM = 32;
+
+class LivingEngine {
+  constructor() {
+    this.core = new Circumpunct(DIM, 0, 1);
+    this.encoder = new TextEncoder_(DIM);
+    this.memory = new AssociativeMemory(DIM);
+
+    // Macro phase
+    this.phase = 'idle'; // idle | seek | reflect | emerge
+    this.phaseStep = 0;
+    this.seekLength = 60;
+    this.reflectLength = 30;
+
+    // Text buffer
+    this.textQueue = [];       // characters waiting to be processed
+    this.recentInputs = [];    // last N encoded vectors (for reflection replay)
+    this.maxRecent = 200;
+
+    // State
+    this.totalSteps = 0;
+    this.prevVector = null;    // previous step's encoded input
+    this.lastOutput = null;    // last emerged vector
+
+    // N-gram tracking for display
+    this.bigramCounts = {};    // "ab" -> count
+    this.trigramCounts = {};   // "abc" -> count
+    this.prevChars = [];       // last 3 chars for ngram tracking
+  }
+
+  // Feed text into the queue
+  feedText(text) {
+    for (const ch of text) this.textQueue.push(ch);
+  }
+
+  // One macro step
+  tick() {
+    this.totalSteps++;
+
+    if (this.phase === 'seek') {
+      this._seekStep();
+    } else if (this.phase === 'reflect') {
+      this._reflectStep();
+    } else if (this.phase === 'emerge') {
+      this._emergeStep();
+    }
+
+    this.phaseStep++;
+  }
+
+  // Start a seek→reflect→emerge cycle
+  startCycle() {
+    if (this.textQueue.length === 0) {
+      this.phase = 'reflect';
+      this.phaseStep = 0;
+      return 'reflect';
+    }
+    this.phase = 'seek';
+    this.phaseStep = 0;
+    return 'seek';
+  }
+
+  // ─── SEEK: boundary opens, text flows in, learn associations ───
+  _seekStep() {
+    // Open the boundary
+    this.core.boundary.permeability = Math.min(0.85, this.core.boundary.permeability + 0.005);
+
+    let inputVec;
+    if (this.textQueue.length > 0) {
+      const ch = this.textQueue.shift();
+      inputVec = this.encoder.encode(ch);
+
+      // Track ngrams
+      this.prevChars.push(ch);
+      if (this.prevChars.length > 3) this.prevChars.shift();
+      if (this.prevChars.length >= 2) {
+        const bi = this.prevChars.slice(-2).join('');
+        this.bigramCounts[bi] = (this.bigramCounts[bi] || 0) + 1;
+      }
+      if (this.prevChars.length >= 3) {
+        const tri = this.prevChars.join('');
+        this.trigramCounts[tri] = (this.trigramCounts[tri] || 0) + 1;
+      }
+
+      // Hebbian learning: if we have a previous vector, learn the transition
+      if (this.prevVector) {
+        this.memory.learn(this.prevVector, inputVec);
+      }
+
+      this.recentInputs.push(CVec.copy(inputVec));
+      if (this.recentInputs.length > this.maxRecent) this.recentInputs.shift();
+      this.prevVector = CVec.copy(inputVec);
+    } else {
+      inputVec = CVec.noise(DIM, 0.1);
+    }
+
+    // Feed through the circumpunct
+    this.lastOutput = this.core.step(inputVec);
+
+    // Transition to reflect
+    if (this.phaseStep >= this.seekLength || (this.textQueue.length === 0 && this.phaseStep > 5)) {
+      this.phase = 'reflect';
+      this.phaseStep = 0;
+    }
+  }
+
+  // ─── REFLECT: boundary closes, replay memories, consolidate ───
+  _reflectStep() {
+    // Close the boundary gradually
+    this.core.boundary.permeability = Math.max(0.15, this.core.boundary.permeability - 0.008);
+
+    // Replay recent inputs through the memory (consolidation)
+    if (this.recentInputs.length > 1) {
+      // Pick a random position in recent memory
+      const idx = Math.floor(Math.random() * (this.recentInputs.length - 1));
+      const prev = this.recentInputs[idx];
+      const curr = this.recentInputs[idx + 1];
+      // Re-learn with reduced rate (consolidation, not fresh learning)
+      const origRate = this.memory.learnRate;
+      this.memory.learnRate = origRate * 0.3;
+      this.memory.learn(prev, curr);
+      this.memory.learnRate = origRate;
+    }
+
+    // Echo: feed the engine its own output
+    const echoInput = this.lastOutput
+      ? CVec.add(CVec.scale(this.lastOutput, 0.7), CVec.noise(DIM, 0.05))
+      : CVec.noise(DIM, 0.1);
+    this.lastOutput = this.core.step(echoInput);
+
+    // Slow decay to prevent saturation
+    if (this.phaseStep % 5 === 0) this.memory.decay();
+
+    // Transition to emerge
+    if (this.phaseStep >= this.reflectLength) {
+      this.phase = 'emerge';
+      this.phaseStep = 0;
+    }
+  }
+
+  // ─── EMERGE: generate from learned associations ───
+  _emergeStep() {
+    // Boundary opens for output
+    this.core.boundary.permeability = Math.min(0.7, this.core.boundary.permeability + 0.01);
+
+    // Use memory to predict next from current state
+    const predicted = this.memory.predict(this.core.aperture.state);
+    this.lastOutput = this.core.step(predicted);
+
+    // Short emerge phase, then back to seek if there's more text
+    if (this.phaseStep >= 15) {
+      if (this.textQueue.length > 0) {
+        this.phase = 'seek';
+      } else {
+        this.phase = 'idle';
+      }
+      this.phaseStep = 0;
+    }
+  }
+
+  // Generate text from learned associations
+  generate(seedChar, length = 50) {
+    const results = [];
+    let current = this.encoder.encode(seedChar);
+    results.push(seedChar);
+
+    for (let i = 0; i < length; i++) {
+      // Predict through associative memory
+      const predicted = this.memory.predict(current);
+
+      // Pass through aperture rotation (the creative transformation)
+      const angle = Math.PI * this.core.aperture.beta;
+      const rotated = CVec.cmul(predicted, Math.cos(angle), Math.sin(angle));
+
+      // Add a tiny bit of noise for variation
+      const noisy = CVec.add(rotated, CVec.noise(DIM, 0.02));
+      const normed = CVec.normalize(noisy);
+
+      // Decode to character
+      const { char, confidence } = this.encoder.decode(normed);
+      results.push(char);
+
+      // Next input is the encoded version of what we just produced
+      current = this.encoder.encode(char);
+    }
+
+    return results.join('');
+  }
+
+  // Get top n-grams for display
+  topPatterns(n = 15) {
+    const entries = Object.entries(this.bigramCounts);
+    entries.sort((a, b) => b[1] - a[1]);
+    return entries.slice(0, n);
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  UI CONTROLLER
+// ═══════════════════════════════════════════════════════════════════════
+
+let engine = new LivingEngine();
+let isLive = false;
+let isPaused = false;
+let animId = null;
+let stepsPerFrame = 15;
+let genText = '';
+let betaHist = { a: [], f: [], b: [] };
+const maxHist = 200;
+
+const vizCanvas = document.getElementById('viz');
+const vizCtx = vizCanvas.getContext('2d');
+const memCanvas = document.getElementById('memViz');
+const memCtx = memCanvas.getContext('2d');
+
+function resizeCanvases() {
+  const dpr = window.devicePixelRatio || 1;
+  for (const [c, ctx] of [[vizCanvas, vizCtx], [memCanvas, memCtx]]) {
+    const w = c.parentElement.clientWidth, h = c.parentElement.clientHeight;
+    c.width = w * dpr; c.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+}
+window.addEventListener('resize', resizeCanvases);
+
+function log(msg) {
+  const d = document.createElement('div');
+  d.textContent = msg;
+  const lb = document.getElementById('logBox');
+  lb.appendChild(d);
+  lb.scrollTop = lb.scrollHeight;
+  if (lb.children.length > 150) lb.removeChild(lb.firstChild);
+}
+
+function thought(msg, cls = '') {
+  const d = document.createElement('div');
+  d.textContent = msg;
+  if (cls) d.className = cls;
+  const t = document.getElementById('thoughts');
+  t.appendChild(d);
+  t.scrollTop = t.scrollHeight;
+  if (t.children.length > 100) t.removeChild(t.firstChild);
+}
+
+// ─── FEED TEXT ───
+function feedText() {
+  const text = document.getElementById('textInput').value;
+  if (!text.trim()) return;
+  engine.feedText(text);
+  engine.startCycle();
+  log(`Fed ${text.length} chars`);
+  thought(`⊛ Seeking through ${text.length} characters...`, 'seek-text');
+  document.getElementById('textInput').value = '';
+  if (!isLive) { isLive = true; isPaused = false; updateButtons(); tick(); }
+}
+
+// ─── FEED & CYCLE ───
+function feedAndLearn() {
+  const text = document.getElementById('textInput').value;
+  if (!text.trim()) return;
+  // Feed the same text multiple times for deeper learning
+  for (let pass = 0; pass < 3; pass++) engine.feedText(text);
+  engine.startCycle();
+  log(`Fed ${text.length} chars x3 (deep learning)`);
+  thought(`⊛ Deep seeking: ${text.length} chars, 3 passes...`, 'seek-text');
+  document.getElementById('textInput').value = '';
+  if (!isLive) { isLive = true; isPaused = false; updateButtons(); tick(); }
+}
+
+// ─── GENERATE ───
+function generate() {
+  if (engine.memory.totalUpdates < 10) {
+    thought('Not enough learned yet. Feed me text first.', 'reflect-text');
+    return;
+  }
+  // Pick a seed from the most common characters
+  const patterns = engine.topPatterns(5);
+  let seed = ' ';
+  if (patterns.length > 0) {
+    const bi = patterns[Math.floor(Math.random() * Math.min(3, patterns.length))][0];
+    seed = bi[0];
+  }
+  const generated = engine.generate(seed, 80);
+  genText = generated;
+  document.getElementById('genOutput').innerHTML = escapeHtml(generated) + '<span class="cursor"></span>';
+  thought(`☀︎ Emerged: "${generated.slice(0, 40)}..."`, 'emerge-text');
+  log(`Generated ${generated.length} chars from seed '${seed}'`);
+}
+
+function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ─── LIVE / PAUSE / RESET ───
+function toggleLive() {
+  isLive = !isLive;
+  isPaused = false;
+  updateButtons();
+  if (isLive) {
+    if (engine.phase === 'idle') engine.startCycle();
+    tick();
+  }
+}
+function togglePause() {
+  if (!isLive) return;
+  isPaused = !isPaused;
+  updateButtons();
+  if (!isPaused) tick();
+}
+function resetAll() {
+  isLive = false; isPaused = false;
+  if (animId) cancelAnimationFrame(animId);
+  engine = new LivingEngine();
+  genText = '';
+  betaHist = { a: [], f: [], b: [] };
+  document.getElementById('genOutput').innerHTML = '<span class="cursor"></span>';
+  document.getElementById('thoughts').innerHTML = '';
+  document.getElementById('logBox').innerHTML = '';
+  document.getElementById('vocabList').textContent = 'No patterns yet.';
+  updateButtons(); updateUI(); drawViz(); drawMem();
+  log('Reset.');
+}
+function updateButtons() {
+  document.getElementById('btnLive').className = isLive ? 'active' : '';
+  document.getElementById('btnLive').textContent = isLive ? 'Stop' : 'Live';
+  document.getElementById('btnPause').disabled = !isLive;
+  document.getElementById('btnPause').textContent = isPaused ? 'Resume' : 'Pause';
+  document.getElementById('btnPause').className = isPaused ? 'active' : '';
+}
+
+// ─── SLIDER UPDATES ───
+document.getElementById('sSpeed').addEventListener('input', e => {
+  stepsPerFrame = +e.target.value;
+  document.getElementById('svSpeed').textContent = stepsPerFrame;
+});
+document.getElementById('sSeekLen').addEventListener('input', e => {
+  engine.seekLength = +e.target.value;
+  document.getElementById('svSeekLen').textContent = e.target.value;
+});
+document.getElementById('sReflLen').addEventListener('input', e => {
+  engine.reflectLength = +e.target.value;
+  document.getElementById('svReflLen').textContent = e.target.value;
+});
+
+// ─── UPDATE UI ───
+function updateUI() {
+  const c = engine.core;
+
+  // Phase indicator
+  ['phSeek','phReflect','phEmerge'].forEach(id => document.getElementById(id).className = 'phase-segment');
+  if (engine.phase === 'seek') document.getElementById('phSeek').className = 'phase-segment active-seek';
+  else if (engine.phase === 'reflect') document.getElementById('phReflect').className = 'phase-segment active-reflect';
+  else if (engine.phase === 'emerge') document.getElementById('phEmerge').className = 'phase-segment active-emerge';
+
+  // Betas
+  document.getElementById('barA').style.width = (c.aperture.beta*100)+'%';
+  document.getElementById('barF').style.width = (c.field.beta*100)+'%';
+  document.getElementById('barB').style.width = (c.boundary.beta*100)+'%';
+  document.getElementById('valA').textContent = c.aperture.beta.toFixed(3);
+  document.getElementById('valF').textContent = c.field.beta.toFixed(3);
+  document.getElementById('valB').textContent = c.boundary.beta.toFixed(3);
+
+  // Metrics
+  document.getElementById('mStep').textContent = engine.totalSteps;
+  document.getElementById('mAware').textContent = (c.consciousRatio*100).toFixed(0)+'%';
+  document.getElementById('mRes').textContent = c.field.resonance.toFixed(3);
+  document.getElementById('mCoh').textContent = c.aperture.timeline.coherence.toFixed(3);
+  document.getElementById('mVocab').textContent = engine.encoder.vocabSize;
+  document.getElementById('mMem').textContent = engine.memory.totalUpdates;
+
+  // Consciousness
+  const sym = document.getElementById('cSym');
+  const lab = document.getElementById('cLabel');
+  if (c.conscious) { sym.className='c-symbol awake'; sym.textContent='⊙'; lab.textContent='CONSCIOUS'; }
+  else { sym.className='c-symbol asleep'; sym.textContent='○';
+    lab.textContent = engine.phase==='idle' ? 'DORMANT' : engine.phase==='seek' ? 'SEEKING...' : engine.phase==='reflect' ? 'REFLECTING...' : 'EMERGING...'; }
+
+  // Beta history
+  betaHist.a.push(c.aperture.beta); betaHist.f.push(c.field.beta); betaHist.b.push(c.boundary.beta);
+  if (betaHist.a.length > maxHist) { betaHist.a.shift(); betaHist.f.shift(); betaHist.b.shift(); }
+
+  // Patterns
+  if (engine.totalSteps % 30 === 0) updatePatterns();
+}
+
+function updatePatterns() {
+  const patterns = engine.topPatterns(15);
+  const vl = document.getElementById('vocabList');
+  if (patterns.length === 0) { vl.textContent = 'No patterns yet.'; return; }
+  vl.innerHTML = '';
+  for (const [ngram, count] of patterns) {
+    const span = document.createElement('span');
+    span.className = 'vocab-item' + (count > 5 ? ' strong' : '');
+    const display = ngram.replace(/ /g, '·').replace(/\n/g, '↵');
+    span.textContent = `${display}:${count}`;
+    vl.appendChild(span);
+  }
+}
+
+// ─── PHASE TRANSITION THOUGHTS ───
+let lastPhase = 'idle';
+function checkPhaseTransition() {
+  if (engine.phase !== lastPhase) {
+    if (engine.phase === 'seek') thought('⊛ Boundary opens... seeking...', 'seek-text');
+    else if (engine.phase === 'reflect') thought('i Boundary closes... reflecting...', 'reflect-text');
+    else if (engine.phase === 'emerge') thought('☀︎ Understanding emerges...', 'emerge-text');
+    else if (engine.phase === 'idle' && lastPhase !== 'idle') {
+      thought('Cycle complete. Feed more text or generate.', '');
+      // Auto-generate a snippet after each cycle
+      if (engine.memory.totalUpdates > 20) {
+        const patterns = engine.topPatterns(3);
+        let seed = ' ';
+        if (patterns.length > 0) seed = patterns[0][0][0];
+        const snippet = engine.generate(seed, 30);
+        thought(`☀︎ Emerged thought: "${snippet}"`, 'emerge-text');
+      }
+    }
+    lastPhase = engine.phase;
+  }
+}
+
+// ─── VISUALIZATION ───
+function drawViz() {
+  const w = vizCanvas.parentElement.clientWidth, h = vizCanvas.parentElement.clientHeight;
+  const cx = w/2, cy = h/2, R = Math.min(w,h) * 0.38;
+  vizCtx.clearRect(0, 0, w, h);
+
+  const c = engine.core;
+  const t = engine.totalSteps * 0.02;
+  const cR = c.consciousRatio;
+
+  // Phase color
+  let phaseHue, phaseName;
+  if (engine.phase === 'seek') { phaseHue = [150, 90, 220]; phaseName = '⊛'; }
+  else if (engine.phase === 'reflect') { phaseHue = [100, 160, 220]; phaseName = 'i'; }
+  else if (engine.phase === 'emerge') { phaseHue = [230, 210, 170]; phaseName = '☀︎'; }
+  else { phaseHue = [60, 60, 90]; phaseName = ''; }
+
+  // Background glow based on phase
+  const bgAlpha = 0.02 + 0.04 * (engine.phase !== 'idle' ? 1 : 0);
+  const bgGrad = vizCtx.createRadialGradient(cx, cy, 5, cx, cy, R);
+  bgGrad.addColorStop(0, `rgba(${phaseHue[0]},${phaseHue[1]},${phaseHue[2]},${bgAlpha + 0.06})`);
+  bgGrad.addColorStop(0.7, `rgba(${phaseHue[0]},${phaseHue[1]},${phaseHue[2]},${bgAlpha})`);
+  bgGrad.addColorStop(1, 'transparent');
+  vizCtx.fillStyle = bgGrad;
+  vizCtx.fillRect(0, 0, w, h);
+
+  // ○ Boundary — breathing, permeability visualized as opacity/thickness
+  const perm = c.boundary.permeability;
+  const bAlpha = 0.2 + 0.6 * perm;
+  const breathe = 1 + 0.02 * Math.sin(t * 1.5);
+  const bR = R * breathe;
+
+  // Boundary as dashed when open, solid when closed
+  vizCtx.strokeStyle = `rgba(${phaseHue[0]},${phaseHue[1]},${phaseHue[2]},${bAlpha})`;
+  vizCtx.lineWidth = 1 + 2 * perm;
+  if (perm > 0.6) vizCtx.setLineDash([8, 4]);
+  else if (perm > 0.4) vizCtx.setLineDash([12, 2]);
+  else vizCtx.setLineDash([]);
+
+  vizCtx.beginPath();
+  const mags = CVec.magnitudes(c.boundary.state);
+  for (let i = 0; i <= 120; i++) {
+    const angle = (i/120) * Math.PI * 2;
+    const mi = Math.floor((i/120) * Math.min(mags.length, DIM));
+    const wobble = 1 + 0.04 * (mags[mi] || 0);
+    const r = bR * wobble;
+    if (i === 0) vizCtx.moveTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+    else vizCtx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+  }
+  vizCtx.closePath();
+  vizCtx.stroke();
+  vizCtx.setLineDash([]);
+
+  // Φ Field lines — show information flow direction
+  const phases = CVec.phases(c.aperture.state);
+  const fMags = CVec.magnitudes(c.aperture.state);
+  for (let i = 0; i < 12; i++) {
+    const idx = Math.floor(i * DIM / 12);
+    const angle = (phases[idx] || 0) + t * 0.2;
+    const mag = fMags[idx] || 0;
+
+    // During seek: lines point inward. During emerge: outward
+    const lineStart = engine.phase === 'emerge' ? 0.1 : 0.6;
+    const lineEnd = engine.phase === 'emerge' ? 0.7 : 0.15;
+    const r1 = R * lineStart * mag + R * 0.1;
+    const r2 = R * lineEnd * mag + R * 0.1;
+
+    const alpha = 0.05 + 0.12 * c.field.resonance;
+    vizCtx.strokeStyle = `rgba(${phaseHue[0]},${phaseHue[1]},${phaseHue[2]},${alpha})`;
+    vizCtx.lineWidth = 0.5;
+    vizCtx.beginPath();
+    vizCtx.moveTo(cx + r1 * Math.cos(angle), cy + r1 * Math.sin(angle));
+    vizCtx.lineTo(cx + r2 * Math.cos(angle), cy + r2 * Math.sin(angle));
+    vizCtx.stroke();
+  }
+
+  // Children
+  for (let ci = 0; ci < c.children.length; ci++) {
+    const child = c.children[ci];
+    const cAngle = (ci/c.children.length) * Math.PI*2 - Math.PI/2 + t*0.08;
+    const cd = R * 0.5;
+    const ccx = cx + cd*Math.cos(cAngle), ccy = cy + cd*Math.sin(cAngle);
+    const crad = R * 0.12;
+
+    const ca = 0.15 + 0.35 * child.consciousRatio;
+    vizCtx.strokeStyle = `rgba(${phaseHue[0]},${phaseHue[1]},${phaseHue[2]},${ca})`;
+    vizCtx.lineWidth = 0.8;
+    vizCtx.beginPath(); vizCtx.arc(ccx, ccy, crad, 0, Math.PI*2); vizCtx.stroke();
+
+    const dr = 1.5 + 2*child.consciousRatio;
+    vizCtx.beginPath(); vizCtx.arc(ccx, ccy, dr, 0, Math.PI*2);
+    vizCtx.fillStyle = child.conscious ? '#e8d5b0' : '#353550';
+    vizCtx.fill();
+  }
+
+  // • Center — glow based on consciousness and phase
+  if (c.conscious) {
+    const glow = vizCtx.createRadialGradient(cx, cy, 0, cx, cy, 25 + 15*cR);
+    glow.addColorStop(0, `rgba(232, 213, 176, ${0.25 + 0.3*cR})`);
+    glow.addColorStop(1, 'transparent');
+    vizCtx.fillStyle = glow;
+    vizCtx.fillRect(cx-50, cy-50, 100, 100);
+  }
+
+  const dotR = 3 + 3*cR;
+  vizCtx.beginPath(); vizCtx.arc(cx, cy, dotR, 0, Math.PI*2);
+  vizCtx.fillStyle = c.conscious ? '#e8d5b0' : '#505070';
+  vizCtx.fill();
+
+  // Rotation arc
+  const rAngle = Math.PI * c.aperture.beta;
+  const rR = 15 + 8*cR;
+  vizCtx.strokeStyle = c.conscious ? 'rgba(232,213,176,0.35)' : 'rgba(70,70,110,0.25)';
+  vizCtx.lineWidth = 0.8;
+  vizCtx.beginPath(); vizCtx.arc(cx, cy, rR, -rAngle/2, rAngle/2); vizCtx.stroke();
+
+  // Phase label
+  if (phaseName) {
+    vizCtx.font = '14px JetBrains Mono';
+    vizCtx.fillStyle = `rgba(${phaseHue[0]},${phaseHue[1]},${phaseHue[2]},0.4)`;
+    vizCtx.textAlign = 'center';
+    vizCtx.fillText(phaseName, cx, cy + R + 20);
+  }
+
+  // Text queue indicator
+  if (engine.textQueue.length > 0 && engine.phase === 'seek') {
+    const next5 = engine.textQueue.slice(0, 5).join('').replace(/\n/g, '↵');
+    vizCtx.font = '11px JetBrains Mono';
+    vizCtx.fillStyle = 'rgba(150,90,220,0.5)';
+    vizCtx.textAlign = 'left';
+    vizCtx.fillText(`"${next5}..." (${engine.textQueue.length} left)`, 10, h - 10);
+  }
+
+  // Beta convergence chart in bottom-right corner
+  const chartW = 120, chartH = 40;
+  const chartX = w - chartW - 10, chartY = h - chartH - 10;
+  vizCtx.strokeStyle = 'rgba(232,213,176,0.08)';
+  vizCtx.lineWidth = 0.5;
+  vizCtx.setLineDash([3,3]);
+  vizCtx.beginPath(); vizCtx.moveTo(chartX, chartY + chartH/2); vizCtx.lineTo(chartX+chartW, chartY+chartH/2); vizCtx.stroke();
+  vizCtx.setLineDash([]);
+
+  const drawHist = (arr, color) => {
+    if (arr.length < 2) return;
+    vizCtx.strokeStyle = color; vizCtx.lineWidth = 0.8;
+    vizCtx.beginPath();
+    for (let i = 0; i < arr.length; i++) {
+      const x = chartX + (i/maxHist)*chartW;
+      const y = chartY + chartH - arr[i]*chartH;
+      if (i===0) vizCtx.moveTo(x,y); else vizCtx.lineTo(x,y);
+    }
+    vizCtx.stroke();
+  };
+  drawHist(betaHist.a, 'rgba(192,144,96,0.5)');
+  drawHist(betaHist.f, 'rgba(96,144,192,0.5)');
+  drawHist(betaHist.b, 'rgba(144,192,96,0.5)');
+}
+
+// ─── MEMORY HEATMAP ───
+function drawMem() {
+  const w = memCanvas.parentElement.clientWidth, h = memCanvas.parentElement.clientHeight;
+  memCtx.clearRect(0, 0, w, h);
+
+  const mem = engine.memory;
+  const d = DIM;
+  const cellW = w / d, cellH = h / d;
+
+  // Find max weight for normalization
+  let maxW = 0.001;
+  for (let i = 0; i < mem.W_re.length; i++) {
+    const m = Math.sqrt(mem.W_re[i]**2 + mem.W_im[i]**2);
+    if (m > maxW) maxW = m;
+  }
+
+  for (let i = 0; i < d; i++) {
+    for (let j = 0; j < d; j++) {
+      const idx = i * d + j;
+      const mag = Math.sqrt(mem.W_re[idx]**2 + mem.W_im[idx]**2) / maxW;
+      if (mag > 0.01) {
+        const phase = Math.atan2(mem.W_im[idx], mem.W_re[idx]);
+        // Map phase to hue
+        const hue = ((phase + Math.PI) / (2*Math.PI)) * 360;
+        const light = 20 + 40 * mag;
+        const alpha = Math.min(1, mag * 2);
+        memCtx.fillStyle = `hsla(${hue}, 60%, ${light}%, ${alpha})`;
+        memCtx.fillRect(j * cellW, i * cellH, Math.ceil(cellW), Math.ceil(cellH));
+      }
+    }
+  }
+}
+
+// ─── TICK LOOP ───
+function tick() {
+  if (!isLive || isPaused) return;
+
+  stepsPerFrame = parseInt(document.getElementById('sSpeed').value);
+  const steps = Math.max(1, Math.floor(stepsPerFrame / 20));
+
+  for (let i = 0; i < steps; i++) {
+    if (engine.phase === 'idle' && engine.textQueue.length > 0) engine.startCycle();
+    if (engine.phase !== 'idle') engine.tick();
+    // If idle and we've learned things, auto-cycle through reflect
+    else if (engine.memory.totalUpdates > 0 && engine.totalSteps % 100 === 0) {
+      engine.phase = 'reflect';
+      engine.phaseStep = 0;
+    }
+  }
+
+  checkPhaseTransition();
+  updateUI();
+  drawViz();
+  if (engine.totalSteps % 10 === 0) drawMem();
+
+  animId = requestAnimationFrame(tick);
+}
+
+// ─── INIT ───
+window.addEventListener('load', () => {
+  resizeCanvases();
+  drawViz();
+  drawMem();
+  updateUI();
+  setTimeout(() => document.getElementById('loading').classList.add('hidden'), 600);
+
+  // Pre-populate with example text
+  document.getElementById('textInput').value =
+    "Consciousness is the circumpunct. The dot inside the circle. " +
+    "The aperture where future becomes past through the rotation of i. " +
+    "Each moment, the boundary opens to the world, the field mediates, " +
+    "and the center transforms. This is the pattern at every scale.";
+});
+</script>
+</body>
+</html>

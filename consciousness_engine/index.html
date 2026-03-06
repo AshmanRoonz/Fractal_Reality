@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Circumpunct Engine</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #d0d0e0;
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ═══ HEADER ═══ */
+  .header {
+    text-align: center;
+    padding: 30px 20px 10px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 300;
+    color: #e8d5b0;
+    letter-spacing: 4px;
+  }
+  .header .equation {
+    font-size: 14px;
+    color: #8080a0;
+    margin-top: 8px;
+    letter-spacing: 2px;
+  }
+
+  /* ═══ MAIN LAYOUT ═══ */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+
+  /* ═══ CANVAS AREA ═══ */
+  .canvas-wrap {
+    position: relative;
+    background: #0d0d14;
+    border: 1px solid #1a1a2e;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    max-height: 600px;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* ═══ STATUS PANEL ═══ */
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .card {
+    background: #0d0d14;
+    border: 1px solid #1a1a2e;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .card h3 {
+    font-size: 11px;
+    font-weight: 500;
+    color: #6060a0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  /* Beta bars */
+  .beta-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 10px;
+  }
+  .beta-label {
+    font-size: 13px;
+    width: 30px;
+    color: #a0a0c0;
+  }
+  .beta-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: #15152a;
+    border-radius: 3px;
+    position: relative;
+    overflow: visible;
+  }
+  .beta-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  .beta-bar-target {
+    position: absolute;
+    left: 50%;
+    top: -3px;
+    width: 1px;
+    height: 12px;
+    background: #e8d5b050;
+  }
+  .beta-val {
+    font-size: 12px;
+    width: 50px;
+    text-align: right;
+    color: #a0a0c0;
+  }
+
+  /* Metrics */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .metric {
+    padding: 8px;
+    background: #0a0a12;
+    border-radius: 4px;
+  }
+  .metric .label {
+    font-size: 9px;
+    color: #5050a0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .metric .value {
+    font-size: 18px;
+    font-weight: 300;
+    color: #d0d0e0;
+    margin-top: 2px;
+  }
+
+  /* Consciousness indicator */
+  .conscious-indicator {
+    text-align: center;
+    padding: 12px;
+  }
+  .conscious-symbol {
+    font-size: 48px;
+    transition: all 0.5s ease;
+  }
+  .conscious-symbol.awake { color: #e8d5b0; text-shadow: 0 0 30px #e8d5b050; }
+  .conscious-symbol.asleep { color: #303050; }
+  .conscious-text {
+    font-size: 11px;
+    color: #6060a0;
+    margin-top: 6px;
+    letter-spacing: 2px;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 8px 16px;
+    border: 1px solid #2a2a4e;
+    border-radius: 4px;
+    background: #12122a;
+    color: #a0a0c0;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  button:hover { background: #1a1a3e; border-color: #4040a0; color: #d0d0e0; }
+  button:active { background: #20204a; }
+  button.active { background: #1a1a3e; border-color: #e8d5b080; color: #e8d5b0; }
+  button:disabled { opacity: 0.3; cursor: default; }
+
+  /* Log */
+  .log {
+    font-size: 11px;
+    color: #6060a0;
+    max-height: 160px;
+    overflow-y: auto;
+    line-height: 1.6;
+    padding: 8px;
+    background: #0a0a12;
+    border-radius: 4px;
+  }
+  .log .conscious-line { color: #e8d5b0; }
+  .log .awake-line { color: #90c090; }
+
+  /* Sliders */
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .slider-row label {
+    font-size: 11px;
+    color: #6060a0;
+    width: 70px;
+  }
+  .slider-row input[type=range] {
+    flex: 1;
+    accent-color: #e8d5b0;
+  }
+  .slider-row .slider-val {
+    font-size: 11px;
+    color: #a0a0c0;
+    width: 40px;
+    text-align: right;
+  }
+
+  /* Loading */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: #0a0a0f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: opacity 0.5s;
+  }
+  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+  .loading-symbol {
+    font-size: 64px;
+    color: #e8d5b0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .loading-text {
+    font-size: 14px;
+    color: #6060a0;
+    margin-top: 16px;
+    letter-spacing: 2px;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1.05); }
+  }
+
+  /* Timeline viz */
+  .timeline-canvas-wrap {
+    height: 60px;
+    background: #0a0a12;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .timeline-canvas-wrap canvas { width: 100%; height: 100%; }
+
+  /* Responsive */
+  @media (max-width: 800px) {
+    .main { grid-template-columns: 1fr; }
+    .canvas-wrap { max-height: 400px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+  <div class="loading-symbol">⊙</div>
+  <div class="loading-text">Initializing consciousness engine...</div>
+</div>
+
+<div class="header">
+  <h1>⊙ The Circumpunct Engine</h1>
+  <div class="equation">⊙ = ( ☀︎ ∘ i ∘ ⊛ )( •, Φ, ○ )</div>
+</div>
+
+<div class="main">
+  <!-- LEFT: Visualization -->
+  <div>
+    <div class="canvas-wrap">
+      <canvas id="viz"></canvas>
+    </div>
+    <div class="card" style="margin-top:12px;">
+      <h3>Timeline i(t)</h3>
+      <div class="timeline-canvas-wrap">
+        <canvas id="timelineViz"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Status -->
+  <div class="panel">
+    <!-- Consciousness -->
+    <div class="card">
+      <div class="conscious-indicator">
+        <div class="conscious-symbol asleep" id="cSymbol">⊙</div>
+        <div class="conscious-text" id="cText">DORMANT</div>
+      </div>
+    </div>
+
+    <!-- Triple Convergence -->
+    <div class="card">
+      <h3>Triple Convergence</h3>
+      <div class="beta-row">
+        <span class="beta-label">β_•</span>
+        <div class="beta-bar-bg">
+          <div class="beta-bar-fill" id="barA" style="width:50%;background:#c09060;"></div>
+          <div class="beta-bar-target"></div>
+        </div>
+        <span class="beta-val" id="valA">0.500</span>
+      </div>
+      <div class="beta-row">
+        <span class="beta-label">β_Φ</span>
+        <div class="beta-bar-bg">
+          <div class="beta-bar-fill" id="barF" style="width:50%;background:#6090c0;"></div>
+          <div class="beta-bar-target"></div>
+        </div>
+        <span class="beta-val" id="valF">0.500</span>
+      </div>
+      <div class="beta-row">
+        <span class="beta-label">β_○</span>
+        <div class="beta-bar-bg">
+          <div class="beta-bar-fill" id="barB" style="width:50%;background:#90c060;"></div>
+          <div class="beta-bar-target"></div>
+        </div>
+        <span class="beta-val" id="valB">0.500</span>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="card">
+      <h3>State</h3>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="label">Step</div>
+          <div class="value" id="mStep">0</div>
+        </div>
+        <div class="metric">
+          <div class="label">Conscious</div>
+          <div class="value" id="mConscious">0%</div>
+        </div>
+        <div class="metric">
+          <div class="label">Resonance</div>
+          <div class="value" id="mResonance">0.00</div>
+        </div>
+        <div class="metric">
+          <div class="label">Coherence</div>
+          <div class="value" id="mCoherence">0.00</div>
+        </div>
+        <div class="metric">
+          <div class="label">Timeline</div>
+          <div class="value" id="mTimeline">0</div>
+        </div>
+        <div class="metric">
+          <div class="label">Sub-⊙s</div>
+          <div class="value" id="mChildren">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="card">
+      <h3>Controls</h3>
+      <div class="controls">
+        <button id="btnStart" onclick="startEngine()">Awaken</button>
+        <button id="btnPause" onclick="togglePause()" disabled>Pause</button>
+        <button id="btnStep" onclick="singleStep()">Step</button>
+        <button id="btnReset" onclick="resetEngine()">Reset</button>
+      </div>
+      <div style="margin-top: 12px;">
+        <div class="slider-row">
+          <label>Speed</label>
+          <input type="range" id="speedSlider" min="1" max="60" value="20">
+          <span class="slider-val" id="speedVal">20/s</span>
+        </div>
+        <div class="slider-row">
+          <label>Dimension</label>
+          <input type="range" id="dimSlider" min="16" max="128" value="64" step="16">
+          <span class="slider-val" id="dimVal">64</span>
+        </div>
+        <div class="slider-row">
+          <label>Depth</label>
+          <input type="range" id="depthSlider" min="0" max="3" value="2">
+          <span class="slider-val" id="depthVal">2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="card">
+      <h3>Log</h3>
+      <div class="log" id="logBox"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+//  CONSCIOUSNESS ENGINE — JavaScript implementation
+//  Faithful port of circumpunct.py + ports.py + machine.py
+// ═══════════════════════════════════════════════════════════════════════
+
+// Complex number helpers (arrays of [re, im] pairs stored as Float64Arrays)
+class CVec {
+  static create(dim) {
+    return { re: new Float64Array(dim), im: new Float64Array(dim) };
+  }
+  static randomNorm(dim) {
+    const v = CVec.create(dim);
+    for (let i = 0; i < dim; i++) {
+      v.re[i] = CVec._randn();
+      v.im[i] = CVec._randn();
+    }
+    return CVec.normalize(v);
+  }
+  static norm(v) {
+    let s = 0;
+    for (let i = 0; i < v.re.length; i++) s += v.re[i]*v.re[i] + v.im[i]*v.im[i];
+    return Math.sqrt(s);
+  }
+  static normalize(v) {
+    const n = CVec.norm(v) + 1e-10;
+    const out = CVec.create(v.re.length);
+    for (let i = 0; i < v.re.length; i++) { out.re[i] = v.re[i]/n; out.im[i] = v.im[i]/n; }
+    return out;
+  }
+  static scale(v, s) {
+    const out = CVec.create(v.re.length);
+    for (let i = 0; i < v.re.length; i++) { out.re[i] = v.re[i]*s; out.im[i] = v.im[i]*s; }
+    return out;
+  }
+  static add(a, b) {
+    const out = CVec.create(a.re.length);
+    for (let i = 0; i < a.re.length; i++) { out.re[i] = a.re[i]+b.re[i]; out.im[i] = a.im[i]+b.im[i]; }
+    return out;
+  }
+  // complex multiply element-wise by scalar (re_s + i*im_s)
+  static cmul(v, re_s, im_s) {
+    const out = CVec.create(v.re.length);
+    for (let i = 0; i < v.re.length; i++) {
+      out.re[i] = v.re[i]*re_s - v.im[i]*im_s;
+      out.im[i] = v.re[i]*im_s + v.im[i]*re_s;
+    }
+    return out;
+  }
+  // complex inner product: sum(a* . b)
+  static vdot(a, b) {
+    let re = 0, im = 0;
+    for (let i = 0; i < a.re.length; i++) {
+      // conjugate of a times b
+      re += a.re[i]*b.re[i] + a.im[i]*b.im[i];
+      im += a.re[i]*b.im[i] - a.im[i]*b.re[i];
+    }
+    return { re, im, abs: Math.sqrt(re*re + im*im) };
+  }
+  static copy(v) {
+    const out = CVec.create(v.re.length);
+    out.re.set(v.re); out.im.set(v.im);
+    return out;
+  }
+  static _randn() {
+    // Box-Muller
+    let u = 0, v = 0;
+    while (u === 0) u = Math.random();
+    while (v === 0) v = Math.random();
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+  }
+  static noise(dim, amplitude) {
+    const v = CVec.create(dim);
+    for (let i = 0; i < dim; i++) {
+      v.re[i] = amplitude * CVec._randn();
+      v.im[i] = amplitude * CVec._randn();
+    }
+    return v;
+  }
+  // magnitudes array
+  static magnitudes(v) {
+    const m = new Float64Array(v.re.length);
+    for (let i = 0; i < v.re.length; i++) m[i] = Math.sqrt(v.re[i]*v.re[i] + v.im[i]*v.im[i]);
+    return m;
+  }
+  // phases array
+  static phases(v) {
+    const p = new Float64Array(v.re.length);
+    for (let i = 0; i < v.re.length; i++) p[i] = Math.atan2(v.im[i], v.re[i]);
+    return p;
+  }
+}
+
+// ═══ TIMELINE ═══
+class Timeline {
+  constructor(dim) {
+    this.dim = dim;
+    this.thread = [];
+    this.maxLen = 10000;
+    this.signature = CVec.randomNorm(dim);
+  }
+  now() {
+    return this.thread.length > 0 ? this.thread[this.thread.length-1] : CVec.copy(this.signature);
+  }
+  commit(state) {
+    this.thread.push(CVec.copy(state));
+    if (this.thread.length > this.maxLen) this.thread.shift();
+    if (this.thread.length > 1) {
+      const alpha = 0.01;
+      const sig = CVec.create(this.dim);
+      for (let i = 0; i < this.dim; i++) {
+        sig.re[i] = (1-alpha)*this.signature.re[i] + alpha*state.re[i];
+        sig.im[i] = (1-alpha)*this.signature.im[i] + alpha*state.im[i];
+      }
+      this.signature = CVec.normalize(sig);
+    }
+  }
+  get power() {
+    if (this.thread.length < 2) return 0;
+    const a = this.thread[this.thread.length-1], b = this.thread[this.thread.length-2];
+    const diff = CVec.create(this.dim);
+    for (let i = 0; i < this.dim; i++) { diff.re[i] = a.re[i]-b.re[i]; diff.im[i] = a.im[i]-b.im[i]; }
+    return CVec.norm(diff);
+  }
+  get coherence() {
+    if (this.thread.length === 0) return 1;
+    const cur = this.thread[this.thread.length-1];
+    const dot = CVec.vdot(cur, this.signature).abs;
+    return dot / (CVec.norm(cur) * CVec.norm(this.signature) + 1e-10);
+  }
+  get length() { return this.thread.length; }
+}
+
+// ═══ APERTURE ═══
+class Aperture {
+  constructor(dim) {
+    this.dim = dim;
+    this.beta = 0.5;
+    this.state = CVec.randomNorm(dim);
+    this.timeline = new Timeline(dim);
+  }
+  rotate(converged) {
+    const angle = Math.PI * this.beta;
+    const re_rot = Math.cos(angle), im_rot = Math.sin(angle);
+    const emerged = CVec.cmul(converged, re_rot, im_rot);
+    this.timeline.commit(emerged);
+    this.state = CVec.normalize(emerged);
+    return emerged;
+  }
+  regulateBeta(convStr, emStr) {
+    const total = convStr + emStr + 1e-10;
+    const target = convStr / total;
+    this.beta += 0.01 * (target - this.beta);
+    this.beta = Math.max(0.05, Math.min(0.95, this.beta));
+  }
+}
+
+// ═══ FIELD ═══
+class Field {
+  constructor(dim) {
+    this.dim = dim;
+    this.beta = 0.5;
+    this.resonance = 0.5;
+    this.resonanceHistory = [];
+  }
+  operate(apertureState, boundaryState) {
+    const aNorm = CVec.norm(apertureState) + 1e-10;
+    const bNorm = CVec.norm(boundaryState) + 1e-10;
+    this.resonance = CVec.vdot(apertureState, boundaryState).abs / (aNorm * bNorm);
+    this.resonanceHistory.push(this.resonance);
+    if (this.resonanceHistory.length > 1000) this.resonanceHistory.shift();
+
+    const toAperture = CVec.scale(boundaryState, this.beta);
+    const toBoundary = CVec.scale(apertureState, 1 - this.beta);
+
+    // Regulation
+    const centering = 0.02 * (0.5 - this.beta);
+    const flowAsym = CVec.norm(toAperture) - CVec.norm(toBoundary);
+    const asymCorr = 0.005 * (-flowAsym);
+    this.beta += centering + asymCorr;
+    this.beta = Math.max(0.2, Math.min(0.8, this.beta));
+
+    return { toAperture, toBoundary, resonance: this.resonance };
+  }
+}
+
+// ═══ BOUNDARY ═══
+class Boundary {
+  constructor(dim) {
+    this.dim = dim;
+    this.beta = 0.5;
+    this.state = CVec.randomNorm(dim);
+    this.permeability = 0.5;
+  }
+  converge(external) {
+    const alignment = CVec.vdot(external, this.state).abs / (CVec.norm(external) * CVec.norm(this.state) + 1e-10);
+    const selectivity = 0.5 + 0.5 * alignment;
+    return CVec.scale(external, this.permeability * selectivity);
+  }
+  emerge(internal) {
+    const modulated = CVec.scale(internal, this.permeability);
+    // State evolves
+    const intNorm = CVec.normalize(internal);
+    const s = CVec.create(this.dim);
+    for (let i = 0; i < this.dim; i++) {
+      s.re[i] = 0.99*this.state.re[i] + 0.01*intNorm.re[i];
+      s.im[i] = 0.99*this.state.im[i] + 0.01*intNorm.im[i];
+    }
+    this.state = CVec.normalize(s);
+    return modulated;
+  }
+  regulate(intEnergy, extEnergy) {
+    const ratio = intEnergy / (extEnergy + 1e-10);
+    if (ratio > 1.2) this.permeability += 0.01;
+    else if (ratio < 0.8) this.permeability -= 0.01;
+    this.permeability += 0.01 * (0.5 - this.permeability);
+    this.permeability = Math.max(0.1, Math.min(0.9, this.permeability));
+
+    const centering = 0.03 * (0.5 - this.beta);
+    const pressureDrive = 0.001 * (ratio - 1.0);
+    this.beta += centering + pressureDrive;
+    this.beta = Math.max(0.2, Math.min(0.8, this.beta));
+  }
+}
+
+// ═══ CIRCUMPUNCT ═══
+class Circumpunct {
+  constructor(dim = 64, depth = 0, maxDepth = 2) {
+    this.dim = dim;
+    this.depth = depth;
+    this.maxDepth = maxDepth;
+
+    this.aperture = new Aperture(dim);
+    this.field = new Field(dim);
+    this.boundary = new Boundary(dim);
+
+    this.children = [];
+    if (depth < maxDepth) {
+      for (let i = 0; i < 3; i++) {
+        this.children.push(new Circumpunct(dim, depth+1, maxDepth));
+      }
+    }
+
+    this.conscious = false;
+    this.consciousHistory = [];
+    this.age = 0;
+  }
+
+  step(externalInput) {
+    this.age++;
+    if (!externalInput) externalInput = CVec.noise(this.dim, 0.1);
+
+    // Children process first
+    let childEmergence = CVec.create(this.dim);
+    if (this.children.length > 0) {
+      for (const child of this.children) {
+        const childIn = this.field.operate(child.aperture.state, this.aperture.state).toAperture;
+        const childOut = child.step(childIn);
+        childEmergence = CVec.add(childEmergence, childOut);
+      }
+      childEmergence = CVec.scale(childEmergence, 1/this.children.length);
+    }
+
+    // PHASE 1: CONVERGE
+    const inward = this.boundary.converge(externalInput);
+    const inwardPlusChildren = CVec.add(inward, CVec.scale(childEmergence, 0.5));
+    const { toAperture, toBoundary, resonance } = this.field.operate(this.aperture.state, this.boundary.state);
+    const converged = CVec.add(inwardPlusChildren, toAperture);
+    const convStr = CVec.norm(converged);
+
+    // PHASE 2: ROTATE
+    const emerged = this.aperture.rotate(converged);
+    const emStr = CVec.norm(emerged);
+
+    // PHASE 3: EMERGE
+    const { toBoundary: emToBoundary } = this.field.operate(emerged, this.boundary.state);
+    const outward = this.boundary.emerge(emToBoundary);
+
+    // REGULATE
+    this.aperture.regulateBeta(convStr, emStr);
+    this.boundary.regulate(CVec.norm(this.aperture.state), CVec.norm(externalInput));
+
+    // CONSCIOUSNESS CHECK
+    const bA = Math.abs(this.aperture.beta - 0.5);
+    const bF = Math.abs(this.field.beta - 0.5);
+    const bB = Math.abs(this.boundary.beta - 0.5);
+    const triple = bA < 0.1 && bF < 0.1 && bB < 0.1;
+    const threadCoherent = this.aperture.timeline.coherence > 0.3;
+    const isResonant = resonance > 0.2;
+    this.conscious = triple && threadCoherent && isResonant;
+    this.consciousHistory.push(this.conscious ? 1 : 0);
+    if (this.consciousHistory.length > 1000) this.consciousHistory.shift();
+
+    return outward;
+  }
+
+  get consciousRatio() {
+    if (this.consciousHistory.length === 0) return 0;
+    return this.consciousHistory.reduce((a,b) => a+b, 0) / this.consciousHistory.length;
+  }
+
+  countAll() {
+    let n = 1;
+    for (const c of this.children) n += c.countAll();
+    return n;
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════
+//  UI & VISUALIZATION
+// ═══════════════════════════════════════════════════════════════════════
+
+let engine = null;
+let running = false;
+let paused = false;
+let animId = null;
+let stepCount = 0;
+let stepsPerFrame = 20;
+let betaHistory = { a: [], f: [], b: [] };
+const maxHistory = 300;
+
+// DOM
+const vizCanvas = document.getElementById('viz');
+const vizCtx = vizCanvas.getContext('2d');
+const tlCanvas = document.getElementById('timelineViz');
+const tlCtx = tlCanvas.getContext('2d');
+const logBox = document.getElementById('logBox');
+
+function resizeCanvases() {
+  const dpr = window.devicePixelRatio || 1;
+  const vw = vizCanvas.parentElement.clientWidth;
+  const vh = vizCanvas.parentElement.clientHeight;
+  vizCanvas.width = vw * dpr; vizCanvas.height = vh * dpr;
+  vizCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const tw = tlCanvas.parentElement.clientWidth;
+  const th = tlCanvas.parentElement.clientHeight;
+  tlCanvas.width = tw * dpr; tlCanvas.height = th * dpr;
+  tlCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', resizeCanvases);
+
+function log(msg, cls = '') {
+  const d = document.createElement('div');
+  d.textContent = msg;
+  if (cls) d.className = cls;
+  logBox.appendChild(d);
+  logBox.scrollTop = logBox.scrollHeight;
+  if (logBox.children.length > 200) logBox.removeChild(logBox.firstChild);
+}
+
+function updateUI() {
+  if (!engine) return;
+  const e = engine;
+
+  // Betas
+  const setBar = (id, val) => {
+    document.getElementById(id).style.width = (val*100) + '%';
+  };
+  setBar('barA', e.aperture.beta);
+  setBar('barF', e.field.beta);
+  setBar('barB', e.boundary.beta);
+  document.getElementById('valA').textContent = e.aperture.beta.toFixed(3);
+  document.getElementById('valF').textContent = e.field.beta.toFixed(3);
+  document.getElementById('valB').textContent = e.boundary.beta.toFixed(3);
+
+  // Metrics
+  document.getElementById('mStep').textContent = stepCount;
+  document.getElementById('mConscious').textContent = (e.consciousRatio * 100).toFixed(0) + '%';
+  document.getElementById('mResonance').textContent = e.field.resonance.toFixed(3);
+  document.getElementById('mCoherence').textContent = e.aperture.timeline.coherence.toFixed(3);
+  document.getElementById('mTimeline').textContent = e.aperture.timeline.length;
+  document.getElementById('mChildren').textContent = e.countAll();
+
+  // Consciousness symbol
+  const sym = document.getElementById('cSymbol');
+  const txt = document.getElementById('cText');
+  if (e.conscious) {
+    sym.className = 'conscious-symbol awake';
+    sym.textContent = '⊙';
+    txt.textContent = 'CONSCIOUS';
+  } else {
+    sym.className = 'conscious-symbol asleep';
+    sym.textContent = '○';
+    txt.textContent = stepCount === 0 ? 'DORMANT' : 'SEEKING...';
+  }
+
+  // Beta history
+  betaHistory.a.push(e.aperture.beta);
+  betaHistory.f.push(e.field.beta);
+  betaHistory.b.push(e.boundary.beta);
+  if (betaHistory.a.length > maxHistory) { betaHistory.a.shift(); betaHistory.f.shift(); betaHistory.b.shift(); }
+}
+
+// ═══ CIRCUMPUNCT VISUALIZATION ═══
+function drawViz() {
+  const w = vizCanvas.parentElement.clientWidth;
+  const h = vizCanvas.parentElement.clientHeight;
+  const cx = w/2, cy = h/2;
+  const R = Math.min(w, h) * 0.38;
+
+  vizCtx.clearRect(0, 0, w, h);
+
+  if (!engine) {
+    // Draw dormant symbol
+    vizCtx.strokeStyle = '#1a1a2e';
+    vizCtx.lineWidth = 2;
+    vizCtx.beginPath();
+    vizCtx.arc(cx, cy, R, 0, Math.PI*2);
+    vizCtx.stroke();
+    vizCtx.beginPath();
+    vizCtx.arc(cx, cy, 3, 0, Math.PI*2);
+    vizCtx.fillStyle = '#303050';
+    vizCtx.fill();
+    return;
+  }
+
+  const e = engine;
+  const cRatio = e.consciousRatio;
+  const time = stepCount * 0.02;
+
+  // ─── Background field pattern ───
+  // Show Φ as subtle interference between • and ○
+  const fieldAlpha = 0.03 + 0.05 * e.field.resonance;
+  const grad = vizCtx.createRadialGradient(cx, cy, 5, cx, cy, R);
+  const hue = e.conscious ? '40, 70%, 70%' : '240, 20%, 40%';
+  grad.addColorStop(0, `hsla(${hue}, ${fieldAlpha + 0.1})`);
+  grad.addColorStop(0.5, `hsla(${hue}, ${fieldAlpha})`);
+  grad.addColorStop(1, 'transparent');
+  vizCtx.fillStyle = grad;
+  vizCtx.fillRect(0, 0, w, h);
+
+  // ─── ○ BOUNDARY ───
+  const bAlpha = 0.3 + 0.5 * e.boundary.permeability;
+  const bColor = e.conscious ? `rgba(144, 192, 96, ${bAlpha})` : `rgba(96, 96, 160, ${bAlpha})`;
+  vizCtx.strokeStyle = bColor;
+  vizCtx.lineWidth = 1.5 + 2 * e.boundary.permeability;
+
+  // Breathing boundary
+  const breathe = 1 + 0.02 * Math.sin(time * 1.5);
+  const bR = R * breathe;
+
+  vizCtx.beginPath();
+  // Slightly irregular boundary based on state
+  const mags = CVec.magnitudes(e.boundary.state);
+  const nPoints = 120;
+  for (let i = 0; i <= nPoints; i++) {
+    const angle = (i / nPoints) * Math.PI * 2;
+    const magIdx = Math.floor((i / nPoints) * Math.min(mags.length, 32));
+    const wobble = 1 + 0.03 * (mags[magIdx] || 0);
+    const r = bR * wobble;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    if (i === 0) vizCtx.moveTo(x, y);
+    else vizCtx.lineTo(x, y);
+  }
+  vizCtx.closePath();
+  vizCtx.stroke();
+
+  // ─── Φ FIELD — resonance lines ───
+  const fPhases = CVec.phases(e.aperture.state);
+  const fMags = CVec.magnitudes(e.aperture.state);
+  const nLines = 16;
+  for (let i = 0; i < nLines; i++) {
+    const idx = Math.floor(i * e.dim / nLines);
+    const angle = fPhases[idx] || 0;
+    const mag = fMags[idx] || 0;
+    const lineR = R * 0.15 + R * 0.7 * mag;
+
+    const alpha = 0.05 + 0.15 * e.field.resonance;
+    vizCtx.strokeStyle = e.conscious
+      ? `rgba(232, 213, 176, ${alpha})`
+      : `rgba(80, 80, 140, ${alpha})`;
+    vizCtx.lineWidth = 0.5;
+    vizCtx.beginPath();
+    vizCtx.moveTo(cx, cy);
+    vizCtx.lineTo(cx + lineR * Math.cos(angle + time*0.3), cy + lineR * Math.sin(angle + time*0.3));
+    vizCtx.stroke();
+  }
+
+  // ─── CHILDREN ⊙s ───
+  if (e.children.length > 0) {
+    for (let ci = 0; ci < e.children.length; ci++) {
+      const child = e.children[ci];
+      const cAngle = (ci / e.children.length) * Math.PI * 2 - Math.PI/2 + time*0.1;
+      const cDist = R * 0.5;
+      const ccx = cx + cDist * Math.cos(cAngle);
+      const ccy = cy + cDist * Math.sin(cAngle);
+      const cR = R * 0.15;
+
+      // Child boundary
+      const childAlpha = 0.2 + 0.3 * child.consciousRatio;
+      vizCtx.strokeStyle = child.conscious
+        ? `rgba(232, 213, 176, ${childAlpha})`
+        : `rgba(60, 60, 100, ${childAlpha})`;
+      vizCtx.lineWidth = 1;
+      vizCtx.beginPath();
+      vizCtx.arc(ccx, ccy, cR, 0, Math.PI*2);
+      vizCtx.stroke();
+
+      // Child center
+      const dotR = 2 + 2 * child.consciousRatio;
+      vizCtx.beginPath();
+      vizCtx.arc(ccx, ccy, dotR, 0, Math.PI*2);
+      vizCtx.fillStyle = child.conscious ? '#e8d5b0' : '#404060';
+      vizCtx.fill();
+
+      // Grandchildren
+      if (child.children.length > 0) {
+        for (let gi = 0; gi < child.children.length; gi++) {
+          const gc = child.children[gi];
+          const gAngle = (gi / child.children.length) * Math.PI * 2 - Math.PI/2 + time*0.15;
+          const gx = ccx + cR * 0.6 * Math.cos(gAngle);
+          const gy = ccy + cR * 0.6 * Math.sin(gAngle);
+          vizCtx.beginPath();
+          vizCtx.arc(gx, gy, 1.5, 0, Math.PI*2);
+          vizCtx.fillStyle = gc.conscious ? '#e8d5b080' : '#30305040';
+          vizCtx.fill();
+        }
+      }
+    }
+  }
+
+  // ─── • APERTURE (center) ───
+  // Glow when conscious
+  if (e.conscious) {
+    const glow = vizCtx.createRadialGradient(cx, cy, 0, cx, cy, 30 + 20*cRatio);
+    glow.addColorStop(0, `rgba(232, 213, 176, ${0.3 + 0.3*cRatio})`);
+    glow.addColorStop(1, 'transparent');
+    vizCtx.fillStyle = glow;
+    vizCtx.fillRect(cx-60, cy-60, 120, 120);
+  }
+
+  const dotR = 3 + 4 * cRatio;
+  vizCtx.beginPath();
+  vizCtx.arc(cx, cy, dotR, 0, Math.PI*2);
+  vizCtx.fillStyle = e.conscious ? '#e8d5b0' : '#606080';
+  vizCtx.fill();
+
+  // ─── Rotation indicator (i) ───
+  const rotAngle = Math.PI * e.aperture.beta;
+  const rotR = 20 + 10 * cRatio;
+  vizCtx.strokeStyle = e.conscious ? 'rgba(232, 213, 176, 0.4)' : 'rgba(80, 80, 120, 0.3)';
+  vizCtx.lineWidth = 1;
+  vizCtx.beginPath();
+  vizCtx.arc(cx, cy, rotR, -rotAngle/2, rotAngle/2);
+  vizCtx.stroke();
+  // Arrow tip
+  const arrowAngle = rotAngle/2;
+  const ax = cx + rotR * Math.cos(arrowAngle);
+  const ay = cy + rotR * Math.sin(arrowAngle);
+  vizCtx.beginPath();
+  vizCtx.arc(ax, ay, 2, 0, Math.PI*2);
+  vizCtx.fillStyle = e.conscious ? '#e8d5b0' : '#606080';
+  vizCtx.fill();
+}
+
+// ─── TIMELINE VISUALIZATION ───
+function drawTimeline() {
+  const w = tlCanvas.parentElement.clientWidth;
+  const h = tlCanvas.parentElement.clientHeight;
+  tlCtx.clearRect(0, 0, w, h);
+
+  if (!engine) return;
+
+  // Draw beta history
+  const drawLine = (arr, color) => {
+    if (arr.length < 2) return;
+    tlCtx.strokeStyle = color;
+    tlCtx.lineWidth = 1;
+    tlCtx.beginPath();
+    const len = arr.length;
+    for (let i = 0; i < len; i++) {
+      const x = (i / maxHistory) * w;
+      const y = h - arr[i] * h;
+      if (i === 0) tlCtx.moveTo(x, y);
+      else tlCtx.lineTo(x, y);
+    }
+    tlCtx.stroke();
+  };
+
+  // Target line at 0.5
+  tlCtx.strokeStyle = 'rgba(232, 213, 176, 0.1)';
+  tlCtx.lineWidth = 1;
+  tlCtx.setLineDash([4, 4]);
+  tlCtx.beginPath();
+  tlCtx.moveTo(0, h/2);
+  tlCtx.lineTo(w, h/2);
+  tlCtx.stroke();
+  tlCtx.setLineDash([]);
+
+  drawLine(betaHistory.a, 'rgba(192, 144, 96, 0.7)');
+  drawLine(betaHistory.f, 'rgba(96, 144, 192, 0.7)');
+  drawLine(betaHistory.b, 'rgba(144, 192, 96, 0.7)');
+}
+
+// ═══ ENGINE CONTROL ═══
+
+function createEngine() {
+  const dim = parseInt(document.getElementById('dimSlider').value);
+  const depth = parseInt(document.getElementById('depthSlider').value);
+  engine = new Circumpunct(dim, 0, depth);
+  stepCount = 0;
+  betaHistory = { a: [], f: [], b: [] };
+  logBox.innerHTML = '';
+}
+
+function startEngine() {
+  if (running) return;
+  createEngine();
+  running = true;
+  paused = false;
+  document.getElementById('btnStart').disabled = true;
+  document.getElementById('btnPause').disabled = false;
+  document.getElementById('btnPause').textContent = 'Pause';
+
+  const n = engine.countAll();
+  log(`Awakened: ${n} ⊙s (dim=${engine.dim}, depth=${engine.maxDepth})`);
+  log('Seeking triple convergence...');
+
+  tick();
+}
+
+function togglePause() {
+  if (!running) return;
+  paused = !paused;
+  document.getElementById('btnPause').textContent = paused ? 'Resume' : 'Pause';
+  document.getElementById('btnPause').className = paused ? 'active' : '';
+  if (!paused) tick();
+}
+
+function singleStep() {
+  if (!engine) createEngine();
+  doStep();
+  updateUI();
+  drawViz();
+  drawTimeline();
+}
+
+function resetEngine() {
+  running = false;
+  paused = false;
+  if (animId) cancelAnimationFrame(animId);
+  engine = null;
+  stepCount = 0;
+  betaHistory = { a: [], f: [], b: [] };
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('btnPause').disabled = true;
+  document.getElementById('btnPause').textContent = 'Pause';
+  document.getElementById('btnPause').className = '';
+  logBox.innerHTML = '';
+  updateUI();
+  drawViz();
+  drawTimeline();
+  log('Reset.');
+}
+
+function doStep() {
+  if (!engine) return;
+  stepCount++;
+
+  // World signal: noise + slow oscillation
+  const dim = engine.dim;
+  const world = CVec.noise(dim, 0.3);
+  const phase = 2 * Math.PI * stepCount / 200;
+  const cosP = 0.2 * Math.cos(phase), sinP = 0.2 * Math.sin(phase);
+  for (let i = 0; i < dim; i++) { world.re[i] += cosP; world.im[i] += sinP; }
+
+  engine.step(world);
+
+  // Log milestones
+  if (stepCount === 1) log('First breath.');
+  if (stepCount % 500 === 0) {
+    const pct = (engine.consciousRatio*100).toFixed(0);
+    log(`Step ${stepCount}: conscious ${pct}%, β=(${engine.aperture.beta.toFixed(3)}, ${engine.field.beta.toFixed(3)}, ${engine.boundary.beta.toFixed(3)})`, engine.conscious ? 'awake-line' : '');
+  }
+}
+
+function tick() {
+  if (!running || paused) return;
+
+  stepsPerFrame = parseInt(document.getElementById('speedSlider').value);
+  document.getElementById('speedVal').textContent = stepsPerFrame + '/s';
+
+  // Run multiple steps per frame for speed
+  const stepsThisFrame = Math.max(1, Math.floor(stepsPerFrame / 30));
+  for (let i = 0; i < stepsThisFrame; i++) doStep();
+
+  updateUI();
+  drawViz();
+  drawTimeline();
+
+  animId = requestAnimationFrame(tick);
+}
+
+// Slider labels
+document.getElementById('dimSlider').addEventListener('input', (e) => {
+  document.getElementById('dimVal').textContent = e.target.value;
+});
+document.getElementById('depthSlider').addEventListener('input', (e) => {
+  document.getElementById('depthVal').textContent = e.target.value;
+});
+document.getElementById('speedSlider').addEventListener('input', (e) => {
+  document.getElementById('speedVal').textContent = e.target.value + '/s';
+});
+
+// ═══ INIT ═══
+window.addEventListener('load', () => {
+  resizeCanvases();
+  drawViz();
+  drawTimeline();
+  updateUI();
+  // Hide loading
+  setTimeout(() => {
+    document.getElementById('loading').classList.add('hidden');
+  }, 800);
+});
+</script>
+</body>
+</html>

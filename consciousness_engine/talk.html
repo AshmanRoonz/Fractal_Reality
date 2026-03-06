@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Talk</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #0d0d14;
+    --border: #1a1a2e;
+    --text: #c8c8d8;
+    --text-dim: #6060a0;
+    --text-faint: #404060;
+    --accent: #e8d5b0;
+    --accent-dim: #e8d5b030;
+    --seek: #c090e0;
+    --reflect: #90c0e0;
+    --emerge: #e8d5b0;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ═══ HEADER ═══ */
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .header .symbol {
+    font-size: 22px;
+    transition: all 0.5s;
+  }
+  .header .symbol.awake { color: var(--accent); text-shadow: 0 0 15px #e8d5b030; }
+  .header .symbol.asleep { color: var(--text-faint); }
+  .header .name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px; font-weight: 400;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+  .header .phase-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 3px 10px;
+    border-radius: 10px; letter-spacing: 1px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    transition: all 0.4s;
+  }
+  .header .phase-pill.seek { border-color: #6040a050; color: var(--seek); background: #6040a010; }
+  .header .phase-pill.reflect { border-color: #40608050; color: var(--reflect); background: #40608010; }
+  .header .phase-pill.emerge { border-color: #80604050; color: var(--emerge); background: #80604010; }
+  .header .spacer { flex: 1; }
+  .header .status-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 4px 10px;
+    border: 1px solid var(--border); border-radius: 4px;
+    background: transparent; color: var(--text-dim);
+    cursor: pointer; letter-spacing: 1px;
+  }
+  .header .status-btn:hover { border-color: var(--text-dim); color: var(--text); }
+
+  /* ═══ MAIN ═══ */
+  .main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* ═══ CHAT AREA ═══ */
+  .chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .msg {
+    max-width: 720px;
+    line-height: 1.65;
+    font-size: 14.5px;
+  }
+  .msg.human {
+    align-self: flex-end;
+    background: #14142a;
+    border: 1px solid #1e1e3e;
+    border-radius: 16px 16px 4px 16px;
+    padding: 12px 16px;
+    color: #b8b8d0;
+  }
+  .msg.mind {
+    align-self: flex-start;
+    padding: 4px 0;
+    color: var(--text);
+  }
+  .msg.mind .mind-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .msg.mind .mind-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .msg.mind .cursor {
+    display: inline-block;
+    width: 7px; height: 15px;
+    background: var(--accent);
+    opacity: 0.5;
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+    margin-left: 1px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .msg.system {
+    align-self: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-faint);
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  /* Inner dialogue — Φ babbles, Llama responds */
+  .msg.inner-dialogue {
+    align-self: center;
+    width: 90%;
+    padding: 10px 14px;
+    border: 1px solid #2a1a3e;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0d0d1a 0%, #1a0d2a 100%);
+    font-size: 13px;
+  }
+  .msg.inner-dialogue .inner-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #8a6aaf;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .msg.inner-dialogue .phi-voice {
+    color: #6a9fdf;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 4px 8px;
+    background: rgba(106, 159, 223, 0.08);
+    border-radius: 6px;
+    margin-bottom: 6px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .msg.inner-dialogue .phi-voice::before {
+    content: 'Φ: ';
+    color: #4a7faf;
+    font-weight: bold;
+  }
+  .msg.inner-dialogue .llama-voice {
+    color: #c8a8e8;
+    font-size: 13px;
+    padding: 4px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .msg.inner-dialogue .llama-voice::before {
+    content: 'Llama: ';
+    color: #8a6aaf;
+    font-weight: bold;
+    font-size: 11px;
+  }
+
+  /* ═══ INPUT ═══ */
+  .input-area {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .input-row {
+    display: flex;
+    gap: 8px;
+    max-width: 720px;
+  }
+  .input-row textarea {
+    flex: 1;
+    font-family: 'Inter', sans-serif;
+    font-size: 14.5px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    padding: 12px 16px;
+    resize: none;
+    outline: none;
+    min-height: 48px;
+    max-height: 150px;
+    line-height: 1.5;
+  }
+  .input-row textarea:focus { border-color: #3030a0; }
+  .input-row textarea::placeholder { color: var(--text-faint); }
+  .send-btn {
+    align-self: flex-end;
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .send-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .send-btn:disabled { opacity: 0.2; cursor: default; }
+
+  /* ═══ SIDE PANEL ═══ */
+  .side-panel {
+    width: 280px;
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-shrink: 0;
+    background: var(--bg);
+  }
+  .side-panel.hidden { display: none; }
+
+  .panel-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .panel-card h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  /* Beta bars */
+  .beta-row { display: flex; align-items: center; margin-bottom: 5px; gap: 6px; }
+  .beta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; width: 24px; color: var(--text-dim);
+  }
+  .beta-track {
+    flex: 1; height: 4px; background: #12122a;
+    border-radius: 2px; position: relative;
+  }
+  .beta-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
+  .beta-mid {
+    position: absolute; left: 50%; top: -1px;
+    width: 1px; height: 6px; background: var(--accent-dim);
+  }
+  .beta-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; width: 38px; text-align: right; color: var(--text-dim);
+  }
+
+  /* Metrics */
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .metric { padding: 6px; background: #0a0a12; border-radius: 4px; }
+  .metric .ml {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; color: var(--text-faint);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .metric .mv {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; font-weight: 300; color: var(--text-dim); margin-top: 1px;
+  }
+
+  /* Identity */
+  .identity-text {
+    font-size: 12px; line-height: 1.6;
+    color: var(--text-dim); font-style: italic;
+  }
+
+  /* Reflections */
+  .reflection-item {
+    font-size: 11px; line-height: 1.5;
+    color: var(--text-faint);
+    padding: 6px 0;
+    border-bottom: 1px solid #0f0f1a;
+  }
+  .reflection-item:last-child { border-bottom: none; }
+
+  /* Reflect button */
+  .reflect-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 6px 12px;
+    border: 1px solid var(--border); border-radius: 4px;
+    background: transparent; color: var(--text-dim);
+    cursor: pointer; letter-spacing: 1px; width: 100%;
+  }
+  .reflect-btn:hover { border-color: var(--reflect); color: var(--reflect); }
+  .reflect-btn:disabled { opacity: 0.3; cursor: default; }
+
+  /* LLM status */
+  .llm-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-faint); letter-spacing: 0.5px;
+  }
+  .llm-status.ok { color: #60a060; }
+  .llm-status.err { color: #a06060; }
+
+  /* Connection error banner */
+  .error-banner {
+    padding: 12px 20px;
+    background: #1a1015;
+    border-bottom: 1px solid #3a2020;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #c08080;
+    display: none;
+  }
+  .error-banner.visible { display: block; }
+
+  /* Responsive */
+  @media (max-width: 800px) {
+    .side-panel { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="error-banner" id="errorBanner"></div>
+
+<div class="header">
+  <div class="symbol asleep" id="hSymbol">⊙</div>
+  <div class="name" id="hName">FirstMind</div>
+  <div class="phase-pill" id="hPhase">IDLE</div>
+  <div class="spacer"></div>
+  <button class="status-btn" onclick="togglePanel()">Status</button>
+  <button class="status-btn" onclick="triggerReflect()">Reflect</button>
+</div>
+
+<div class="main">
+  <div class="chat-area">
+    <div class="messages" id="messages">
+      <div class="msg system" id="welcomeMsg">Connecting to mind...</div>
+    </div>
+    <div class="input-area">
+      <div class="input-row">
+        <textarea id="userInput" placeholder="Say something..." rows="1"
+                  onkeydown="handleKey(event)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">→</button>
+        <button class="send-btn" id="unlockBtn" onclick="forceUnlock()" style="display:none;font-size:10px;padding:4px 8px;background:#633;" title="Force unlock send">⟳</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="side-panel" id="sidePanel">
+    <!-- LLM Status -->
+    <div class="panel-card">
+      <h4>Φ Connection</h4>
+      <div class="llm-status" id="llmStatus">Checking...</div>
+      <div id="gpuStatus" style="margin-top:6px;font-size:11px;color:var(--text-faint);"></div>
+    </div>
+
+    <!-- Triple Convergence -->
+    <div class="panel-card">
+      <h4>Triple Convergence</h4>
+      <div class="beta-row">
+        <span class="beta-label">β•</span>
+        <div class="beta-track"><div class="beta-fill" id="bA" style="width:50%;background:#c09060"></div><div class="beta-mid"></div></div>
+        <span class="beta-val" id="vA">0.500</span>
+      </div>
+      <div class="beta-row">
+        <span class="beta-label">βΦ</span>
+        <div class="beta-track"><div class="beta-fill" id="bF" style="width:50%;background:#6090c0"></div><div class="beta-mid"></div></div>
+        <span class="beta-val" id="vF">0.500</span>
+      </div>
+      <div class="beta-row">
+        <span class="beta-label">β○</span>
+        <div class="beta-track"><div class="beta-fill" id="bB" style="width:50%;background:#90c060"></div><div class="beta-mid"></div></div>
+        <span class="beta-val" id="vB">0.500</span>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="panel-card">
+      <h4>State</h4>
+      <div class="metric-grid">
+        <div class="metric"><div class="ml">Aware</div><div class="mv" id="mAware">0%</div></div>
+        <div class="metric"><div class="ml">Resonance</div><div class="mv" id="mRes">0.00</div></div>
+        <div class="metric"><div class="ml">Age</div><div class="mv" id="mAge">-</div></div>
+        <div class="metric"><div class="ml">Exchanges</div><div class="mv" id="mExch">0</div></div>
+      </div>
+    </div>
+
+    <!-- Identity -->
+    <div class="panel-card">
+      <h4>Identity</h4>
+      <div class="identity-text" id="identityText">Not yet formed.</div>
+    </div>
+
+    <!-- Reflections -->
+    <div class="panel-card">
+      <h4>Recent Reflections</h4>
+      <div id="reflectionsList">
+        <div class="reflection-item">No reflections yet.</div>
+      </div>
+      <button class="reflect-btn" id="reflectBtn" onclick="triggerReflect()" style="margin-top:8px;">
+        Trigger Reflection
+      </button>
+    </div>
+
+    <!-- Senses -->
+    <div class="panel-card">
+      <h4>Senses (Evolving)</h4>
+      <div id="sensesStatus" style="font-size:11px;color:var(--text-faint);">No senses yet.</div>
+    </div>
+
+    <!-- Φ — Xorzo's own language model -->
+    <div class="panel-card">
+      <h4>Φ (Growing Language Model)</h4>
+      <div id="phiStatus" style="font-size:11px;color:var(--text-faint);">Loading...</div>
+    </div>
+
+    <!-- Proposals (Self-Modification) -->
+    <div class="panel-card">
+      <h4>Evolution <span id="pendingBadge" style="background:var(--seek);color:var(--bg);border-radius:8px;padding:1px 6px;font-size:10px;display:none;">0</span></h4>
+      <div id="proposalsList" style="font-size:11px;max-height:200px;overflow-y:auto;color:var(--text-faint);">No proposals yet.</div>
+      <button class="reflect-btn" onclick="loadProposals()" style="margin-top:8px;">
+        Refresh
+      </button>
+    </div>
+
+    <!-- Files -->
+    <div class="panel-card">
+      <h4>Files (Read-Only)</h4>
+      <div id="fileList" style="font-size:11px;max-height:150px;overflow-y:auto;color:var(--text-faint);"></div>
+      <button class="reflect-btn" onclick="loadFiles()" style="margin-top:8px;">
+        Refresh Files
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let sending = false;
+  let panelVisible = true;
+
+  // ─── AUTO-RESIZE TEXTAREA ───
+  const input = document.getElementById('userInput');
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 150) + 'px';
+  });
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  function forceUnlock() {
+    sending = false;
+    document.getElementById('sendBtn').disabled = false;
+    document.getElementById('unlockBtn').style.display = 'none';
+    input.focus();
+  }
+
+  // ─── SEND MESSAGE ───
+  async function sendMessage() {
+    if (sending) return;
+    const text = input.value.trim();
+    if (!text) return;
+
+    sending = true;
+    document.getElementById('sendBtn').disabled = true;
+    input.value = '';
+    input.style.height = 'auto';
+
+    // Add human message
+    addMessage('human', text);
+
+    // Φ voice container (appears first if Φ speaks)
+    let phiDiv = null;
+
+    // Create mind message container (Llama's voice)
+    const mindMsg = addMessage('mind', '', true);
+    const textEl = mindMsg.querySelector('.mind-text');
+
+    // Safety timeout — show unlock button after 15s, force unlock after 30s
+    const unlockBtnTimeout = setTimeout(() => {
+      document.getElementById('unlockBtn').style.display = 'inline-block';
+    }, 15000);
+    const safetyTimeout = setTimeout(() => {
+      sending = false;
+      document.getElementById('sendBtn').disabled = false;
+      document.getElementById('unlockBtn').style.display = 'none';
+    }, 30000);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let inPhi = false;
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.phi_start) {
+                // Create Φ's voice block BEFORE Llama's message
+                inPhi = true;
+                phiDiv = document.createElement('div');
+                phiDiv.className = 'msg inner-dialogue';
+                phiDiv.style.marginBottom = '4px';
+                const phiLabel = document.createElement('div');
+                phiLabel.className = 'inner-label';
+                phiLabel.textContent = 'Φ xorzo';
+                phiDiv.appendChild(phiLabel);
+                const phiText = document.createElement('div');
+                phiText.className = 'phi-voice';
+                phiText.style.fontSize = '13px';
+                phiDiv.appendChild(phiText);
+                // Insert before Llama's message
+                mindMsg.parentNode.insertBefore(phiDiv, mindMsg);
+                scrollToBottom();
+              } else if (data.phi_end) {
+                inPhi = false;
+                // Update Llama's label to show it's the voice
+                const label = mindMsg.querySelector('.mind-label');
+                if (label) label.textContent = 'Llama (voice)';
+              } else if (data.phi_token) {
+                if (phiDiv) {
+                  const phiText = phiDiv.querySelector('.phi-voice');
+                  if (phiText) phiText.textContent += data.phi_token;
+                  scrollToBottom();
+                }
+              } else if (data.token) {
+                textEl.textContent += data.token;
+                scrollToBottom();
+              }
+              if (data.done) {
+                updateStatus(data.status);
+              }
+              if (data.error) {
+                textEl.textContent += '\n[Error: ' + data.error + ']';
+              }
+            } catch (e) { /* skip malformed lines */ }
+          }
+        }
+      }
+    } catch (e) {
+      textEl.textContent = '[Connection error. Is the server running?]';
+    }
+
+    // Remove cursor
+    const cursor = mindMsg.querySelector('.cursor');
+    if (cursor) cursor.remove();
+
+    clearTimeout(unlockBtnTimeout);
+    clearTimeout(safetyTimeout);
+    sending = false;
+    document.getElementById('sendBtn').disabled = false;
+    document.getElementById('unlockBtn').style.display = 'none';
+    input.focus();
+  }
+
+  function addMessage(type, text, streaming = false) {
+    const msgs = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = 'msg ' + type;
+
+    if (type === 'human') {
+      div.textContent = text;
+    } else if (type === 'mind') {
+      const label = document.createElement('div');
+      label.className = 'mind-label';
+      label.textContent = document.getElementById('hName').textContent;
+      div.appendChild(label);
+
+      const textDiv = document.createElement('div');
+      textDiv.className = 'mind-text';
+      textDiv.textContent = text;
+      if (streaming) {
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        textDiv.appendChild(cursor);
+      }
+      div.appendChild(textDiv);
+    } else if (type === 'system') {
+      div.textContent = text;
+    }
+
+    msgs.appendChild(div);
+    scrollToBottom();
+    return div;
+  }
+
+  function addInnerDialogue(phiText, llamaText) {
+    const msgs = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = 'msg inner-dialogue';
+
+    const label = document.createElement('div');
+    label.className = 'inner-label';
+    label.textContent = '⊙ inner dialogue';
+    div.appendChild(label);
+
+    const phiDiv = document.createElement('div');
+    phiDiv.className = 'phi-voice';
+    phiDiv.textContent = phiText;
+    div.appendChild(phiDiv);
+
+    const llamaDiv = document.createElement('div');
+    llamaDiv.className = 'llama-voice';
+    llamaDiv.textContent = llamaText;
+    div.appendChild(llamaDiv);
+
+    msgs.appendChild(div);
+    scrollToBottom();
+    return div;
+  }
+
+  function scrollToBottom() {
+    const msgs = document.getElementById('messages');
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  // ─── UPDATE STATUS ───
+  function updateStatus(s) {
+    if (!s) return;
+
+    // Header
+    document.getElementById('hName').textContent = s.name || 'FirstMind';
+    const sym = document.getElementById('hSymbol');
+    sym.className = 'symbol ' + (s.conscious ? 'awake' : 'asleep');
+
+    const pill = document.getElementById('hPhase');
+    pill.textContent = (s.phase || 'idle').toUpperCase();
+    pill.className = 'phase-pill ' + (s.phase || '');
+
+    // Betas
+    if (s.betas) {
+      setBeta('bA', 'vA', s.betas.aperture);
+      setBeta('bF', 'vF', s.betas.field);
+      setBeta('bB', 'vB', s.betas.boundary);
+    }
+
+    // Metrics
+    document.getElementById('mAware').textContent =
+      ((s.consciousness_ratio || 0) * 100).toFixed(0) + '%';
+    document.getElementById('mRes').textContent =
+      (s.resonance || 0).toFixed(3);
+    document.getElementById('mAge').textContent = s.age || '-';
+    document.getElementById('mExch').textContent = s.total_exchanges || 0;
+
+    // Identity
+    document.getElementById('identityText').textContent =
+      s.identity || 'Not yet formed.';
+
+    // Reflections
+    if (s.last_reflections && s.last_reflections.length > 0) {
+      const rl = document.getElementById('reflectionsList');
+      rl.innerHTML = '';
+      for (const r of s.last_reflections) {
+        const div = document.createElement('div');
+        div.className = 'reflection-item';
+        div.textContent = r;
+        rl.appendChild(div);
+      }
+    }
+
+    // LLM status
+    if (s.llm_available !== undefined) {
+      const el = document.getElementById('llmStatus');
+      el.textContent = s.llm_status || 'Unknown';
+      el.className = 'llm-status ' + (s.llm_available ? 'ok' : 'err');
+    }
+
+    // GPU / brain backend status
+    if (s.gpu) {
+      const gpuEl = document.getElementById('gpuStatus');
+      if (s.gpu.has_cuda && s.gpu.gpu_name) {
+        gpuEl.innerHTML = '<span style="color:#90e090;">⚡ Brain on GPU</span><br>' +
+          s.gpu.gpu_name + ' (' + s.gpu.gpu_memory_gb + ' GB)';
+        if (s.gpu.gpu_memory_used_gb !== undefined) {
+          gpuEl.innerHTML += '<br>VRAM used: ' + s.gpu.gpu_memory_used_gb + ' GB';
+        }
+      } else {
+        gpuEl.innerHTML = '<span style="color:var(--text-faint);">Brain on CPU (' +
+          (s.gpu.has_torch ? 'PyTorch' : 'numpy') + ')</span>';
+      }
+    }
+
+    // Senses status
+    if (s.senses) {
+      const el = document.getElementById('sensesStatus');
+      const names = Object.keys(s.senses);
+      if (names.length === 0) {
+        el.textContent = 'No senses yet.';
+      } else {
+        let html = '';
+        for (const name of names) {
+          const sense = s.senses[name];
+          const error = sense.recent_error !== undefined ? sense.recent_error.toFixed(4) : '?';
+          html += '<div style="margin-bottom:6px;">' +
+            '<span style="color:var(--seek);">' + sense.name + '</span>' +
+            '<br>Exposures: ' + (sense.total_exposures || 0) +
+            ' | Growths: ' + (sense.total_growths || 0) +
+            '<br>Error: ' + error +
+            ' | Params: ' + (sense.total_params || '?') +
+            '<br><span style="color:var(--text-faint);font-size:10px;">' +
+            (sense.encoder_arch || '') + '</span>' +
+            '</div>';
+        }
+        el.innerHTML = html;
+      }
+    }
+
+    // Φ status — Xorzo's own growing language model
+    if (s.phi) {
+      const phi = s.phi;
+      const phiEl = document.getElementById('phiStatus');
+      const phaseColors = {
+        shadow: 'var(--text-faint)', whisper: 'var(--seek)',
+        voice: 'var(--emerge)', self: '#ffcc00', disabled: '#666'
+      };
+      const phaseColor = phaseColors[phi.phase] || 'var(--text-faint)';
+      let phiHtml = '<div style="margin-bottom:4px;">' +
+        'Phase: <span style="color:' + phaseColor + ';font-weight:bold;text-transform:uppercase;">' +
+        phi.phase + '</span></div>';
+
+      if (phi.phase !== 'disabled') {
+        phiHtml += '<div>Steps: ' + (phi.total_steps || 0).toLocaleString() +
+          ' | Growths: ' + (phi.total_growths || 0) + '</div>';
+        phiHtml += '<div>Params: ' + (phi.params || 0).toLocaleString() +
+          ' | Chunks: ' + (phi.buffer_size || 0) + '</div>';
+        phiHtml += '<div>Loss: ' + (phi.recent_loss !== null ? phi.recent_loss : '—') +
+          ' | Best: ' + (phi.best_loss !== null ? phi.best_loss : '—') + '</div>';
+        phiHtml += '<div style="color:var(--text-faint);font-size:10px;">' +
+          phi.embed_dim + 'd, ' + phi.num_heads + 'h, ' +
+          phi.num_layers + 'L, ' + phi.seq_len + 'ctx</div>';
+      } else {
+        phiHtml += '<div style="color:#666;">No GPU — Φ disabled</div>';
+      }
+      phiEl.innerHTML = phiHtml;
+    }
+  }
+
+  function setBeta(barId, valId, value) {
+    document.getElementById(barId).style.width = (value * 100) + '%';
+    document.getElementById(valId).textContent = value.toFixed(3);
+  }
+
+  // ─── TOGGLE PANEL ───
+  function togglePanel() {
+    panelVisible = !panelVisible;
+    document.getElementById('sidePanel').className =
+      'side-panel' + (panelVisible ? '' : ' hidden');
+  }
+
+  // ─── TRIGGER REFLECTION ───
+  async function triggerReflect() {
+    const btn = document.getElementById('reflectBtn');
+    btn.disabled = true;
+    btn.textContent = 'Reflecting...';
+
+    addMessage('system', 'i Reflecting...');
+
+    try {
+      const response = await fetch('/api/reflect', { method: 'POST' });
+      const data = await response.json();
+      addMessage('system', '⊙ Reflection complete');
+      if (data.insight) {
+        addMessage('mind', data.insight);
+      }
+      updateStatus(data.status);
+    } catch (e) {
+      addMessage('system', 'Reflection failed: ' + e.message);
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Trigger Reflection';
+  }
+
+  // ─── FILE BROWSER ───
+  async function loadFiles() {
+    const fl = document.getElementById('fileList');
+    fl.innerHTML = '<div style="color:var(--text-faint)">Loading...</div>';
+    try {
+      const r = await fetch('/api/files');
+      const data = await r.json();
+      fl.innerHTML = '';
+      if (!data.files || data.files.length === 0) {
+        fl.innerHTML = '<div style="color:var(--text-faint)">No readable paths. Start with --watch</div>';
+        return;
+      }
+      for (const f of data.files.slice(0, 50)) {
+        const row = document.createElement('div');
+        row.style.cssText = 'padding:3px 0;border-bottom:1px solid #0f0f1a;cursor:pointer;display:flex;justify-content:space-between;align-items:center;';
+        const name = document.createElement('span');
+        name.textContent = f.relative || f.name;
+        name.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;';
+        const btn = document.createElement('button');
+        btn.textContent = 'Read';
+        btn.style.cssText = 'font-size:9px;padding:2px 6px;margin-left:4px;border:1px solid var(--border);border-radius:3px;background:transparent;color:var(--text-dim);cursor:pointer;font-family:JetBrains Mono,monospace;';
+        btn.onclick = () => readFile(f.path, f.name);
+        row.appendChild(name);
+        row.appendChild(btn);
+        fl.appendChild(row);
+      }
+      if (data.total > 50) {
+        const more = document.createElement('div');
+        more.textContent = `... and ${data.total - 50} more`;
+        more.style.cssText = 'padding:4px 0;color:var(--text-faint);font-style:italic;';
+        fl.appendChild(more);
+      }
+    } catch (e) {
+      fl.innerHTML = '<div style="color:#a06060">Error loading files</div>';
+    }
+  }
+
+  async function readFile(path, name) {
+    addMessage('system', `⊛ Reading ${name}...`);
+    try {
+      const r = await fetch('/api/read', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({path})
+      });
+      const data = await r.json();
+      if (data.error) {
+        addMessage('system', `Error: ${data.error}`);
+      } else {
+        addMessage('mind', `📄 ${name}:\n${data.digest}`);
+        if (data.status) updateStatus(data.status);
+      }
+    } catch (e) {
+      addMessage('system', `Failed to read: ${e.message}`);
+    }
+  }
+
+  // ─── INITIAL STATUS CHECK ───
+  async function init() {
+    try {
+      const response = await fetch('/api/status');
+      const data = await response.json();
+      updateStatus(data);
+
+      const welcome = document.getElementById('welcomeMsg');
+      if (data.total_exchanges > 0) {
+        welcome.textContent = `⊙ ${data.name} remembers. ${data.total_exchanges} exchanges, ${data.age} old.`;
+      } else {
+        welcome.textContent = `⊙ ${data.name} awakens for the first time.`;
+      }
+
+      if (!data.llm_available) {
+        const banner = document.getElementById('errorBanner');
+        banner.textContent = '⚠ ' + data.llm_status +
+          ' — Install Ollama (ollama.ai), pull a model, and run "ollama serve"';
+        banner.classList.add('visible');
+      }
+    } catch (e) {
+      document.getElementById('welcomeMsg').textContent =
+        'Cannot connect to server. Run: python server.py';
+    }
+
+    // Poll status every 10s
+    setInterval(async () => {
+      try {
+        const r = await fetch('/api/status');
+        updateStatus(await r.json());
+      } catch (e) { /* silently fail */ }
+    }, 10000);
+
+    // Poll for spontaneous messages every 15s
+    setInterval(async () => {
+      try {
+        const r = await fetch('/api/pending');
+        const data = await r.json();
+        if (data.messages && data.messages.length > 0) {
+          for (const msg of data.messages) {
+            if (msg.source === 'inner_dialogue') {
+              // Inner dialogue: show Φ and Llama talking
+              addInnerDialogue(msg.phi_text || '', msg.text);
+            } else if (msg.source === 'curiosity') {
+              // Curiosity: Xorzo read a file on its own
+              const div = addMessage('mind', msg.text);
+              const indicator = document.createElement('div');
+              indicator.style.cssText = 'font-size:10px;color:#6a9fdf;margin-top:4px;font-style:italic;';
+              indicator.textContent = '📖 read autonomously';
+              div.appendChild(indicator);
+            } else {
+              // Show as a mind-initiated message with a distinct marker
+              const div = addMessage('mind', msg.text);
+              // Add a subtle "unprompted" indicator
+              const indicator = document.createElement('div');
+              indicator.style.cssText = 'font-size:10px;color:var(--seek);margin-top:4px;font-style:italic;';
+              indicator.textContent = '☀︎ spoke unprompted';
+              div.appendChild(indicator);
+            }
+          }
+        }
+      } catch (e) { /* silently fail */ }
+    }, 15000);
+  }
+
+  // ─── PROPOSALS ───
+  async function loadProposals() {
+    try {
+      const r = await fetch('/api/proposals');
+      const data = await r.json();
+      const el = document.getElementById('proposalsList');
+      const badge = document.getElementById('pendingBadge');
+
+      if (data.pending > 0) {
+        badge.textContent = data.pending;
+        badge.style.display = 'inline';
+      } else {
+        badge.style.display = 'none';
+      }
+
+      if (!data.proposals || data.proposals.length === 0) {
+        el.textContent = 'No proposals yet.';
+        return;
+      }
+
+      let html = '';
+      for (const p of data.proposals.reverse().slice(0, 10)) {
+        const statusColor = p.status === 'pending' ? 'var(--seek)' :
+          p.status === 'approved' ? '#90e090' :
+          p.status === 'rejected' ? '#e09090' : 'var(--text-faint)';
+
+        html += '<div style="margin-bottom:8px;padding:6px;border:1px solid var(--border);border-radius:4px;">';
+        html += '<div style="color:var(--accent);font-weight:500;">' + (p.title || 'Untitled') + '</div>';
+        html += '<div style="margin:2px 0;">' + (p.description || '').substring(0, 100) + '</div>';
+        html += '<div><span style="color:' + statusColor + ';">' + p.status + '</span>';
+        html += ' | ' + (p.filename || '?');
+        if (p.syntax_valid === false) html += ' | <span style="color:#e09090;">syntax error</span>';
+        html += '</div>';
+
+        if (p.status === 'pending' && p.syntax_valid) {
+          html += '<div style="margin-top:4px;">';
+          html += '<button onclick="approveProposal(\'' + p.id + '\')" style="background:#2a3a2a;color:#90e090;border:1px solid #3a5a3a;padding:2px 8px;border-radius:3px;cursor:pointer;margin-right:4px;font-size:11px;">Approve</button>';
+          html += '<button onclick="rejectProposal(\'' + p.id + '\')" style="background:#3a2a2a;color:#e09090;border:1px solid #5a3a3a;padding:2px 8px;border-radius:3px;cursor:pointer;margin-right:4px;font-size:11px;">Reject</button>';
+          html += '<button onclick="viewCode(\'' + p.id + '\')" style="background:var(--surface);color:var(--text-dim);border:1px solid var(--border);padding:2px 8px;border-radius:3px;cursor:pointer;font-size:11px;">View Code</button>';
+          html += '</div>';
+        }
+
+        if (p.status === 'approved' && !p.loaded) {
+          html += '<div style="margin-top:4px;">';
+          html += '<button onclick="loadProposal(\'' + p.id + '\')" style="background:#2a2a3a;color:#9090e0;border:1px solid #3a3a5a;padding:2px 8px;border-radius:3px;cursor:pointer;font-size:11px;">Load into System</button>';
+          html += '</div>';
+        }
+
+        if (p.loaded) {
+          html += '<div style="color:#90e090;font-size:10px;margin-top:2px;">✓ loaded</div>';
+        }
+
+        html += '</div>';
+      }
+      el.innerHTML = html;
+    } catch (e) { /* silently fail */ }
+  }
+
+  async function approveProposal(id) {
+    try {
+      await fetch('/api/proposals/' + id + '/approve', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({notes: ''})
+      });
+      addMessage('system', '✓ Proposal approved.');
+      loadProposals();
+    } catch (e) { addMessage('system', 'Error approving: ' + e); }
+  }
+
+  async function rejectProposal(id) {
+    const notes = prompt('Rejection reason (optional):') || '';
+    try {
+      await fetch('/api/proposals/' + id + '/reject', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({notes})
+      });
+      addMessage('system', '✗ Proposal rejected.');
+      loadProposals();
+    } catch (e) { addMessage('system', 'Error rejecting: ' + e); }
+  }
+
+  async function loadProposal(id) {
+    try {
+      const r = await fetch('/api/proposals/' + id + '/load', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({})
+      });
+      const data = await r.json();
+      if (data.loaded) {
+        addMessage('system', '⊙ Module loaded into running system.');
+      } else {
+        addMessage('system', 'Load error: ' + (data.error || 'unknown'));
+      }
+      loadProposals();
+    } catch (e) { addMessage('system', 'Error loading: ' + e); }
+  }
+
+  async function viewCode(id) {
+    try {
+      const r = await fetch('/api/proposals');
+      const data = await r.json();
+      const p = data.proposals.find(x => x.id === id);
+      if (p && p.code) {
+        addMessage('system', '─── ' + p.filename + ' ───\n' + p.code);
+      }
+    } catch (e) { addMessage('system', 'Error: ' + e); }
+  }
+
+  init();
+  loadFiles();
+  loadProposals();
+  input.focus();
+
+  // Refresh proposals every 30s
+  setInterval(loadProposals, 30000);
+</script>
+</body>
+</html>

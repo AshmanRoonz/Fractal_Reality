@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Brain Monitor — Φ Plasticity Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0f;
+    color: #c8c8d0;
+    font-family: 'Courier New', monospace;
+    padding: 16px;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    color: #b388ff;
+    font-size: 1.6em;
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 0.85em;
+    margin-bottom: 20px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .card {
+    background: #12121a;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .card h2 {
+    color: #b388ff;
+    font-size: 0.95em;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 6px;
+  }
+  .card.full { grid-column: 1 / -1; }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .stat {
+    background: #1a1a25;
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+  }
+  .stat .label {
+    font-size: 0.7em;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .stat .value {
+    font-size: 1.4em;
+    color: #e0e0ff;
+    margin-top: 4px;
+    font-weight: bold;
+  }
+  .stat .value.green { color: #4caf50; }
+  .stat .value.purple { color: #b388ff; }
+  .stat .value.amber { color: #ffab40; }
+  .stat .value.red { color: #ff5252; }
+  .chart-container {
+    position: relative;
+    height: 220px;
+    width: 100%;
+  }
+  .weight-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .weight-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72em;
+  }
+  .weight-bar .name {
+    width: 120px;
+    text-align: right;
+    color: #888;
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .weight-bar .bar-container {
+    flex: 1;
+    height: 14px;
+    background: #1a1a25;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+  }
+  .weight-bar .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+  .weight-bar .val {
+    width: 60px;
+    text-align: left;
+    color: #aaa;
+    font-size: 0.9em;
+  }
+  .beta-display {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 10px 0;
+  }
+  .beta-ring {
+    text-align: center;
+  }
+  .beta-ring svg {
+    width: 80px;
+    height: 80px;
+  }
+  .beta-ring .label {
+    font-size: 0.75em;
+    color: #888;
+    margin-top: 4px;
+  }
+  .attention-grid {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .attn-head {
+    text-align: center;
+  }
+  .attn-head canvas {
+    border: 1px solid #333;
+    border-radius: 3px;
+  }
+  .attn-head .label {
+    font-size: 0.65em;
+    color: #666;
+    margin-top: 2px;
+  }
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: pulse 2s infinite;
+  }
+  .status-dot.live { background: #4caf50; }
+  .status-dot.dead { background: #ff5252; animation: none; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  #error-banner {
+    display: none;
+    background: #3b1515;
+    color: #ff8a80;
+    padding: 8px 16px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    text-align: center;
+    font-size: 0.85em;
+  }
+  .phase-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .phase-shadow { background: #333; color: #888; }
+  .phase-whisper { background: #1a237e; color: #7986cb; }
+  .phase-voice { background: #1b5e20; color: #81c784; }
+  .phase-self { background: #4a148c; color: #ce93d8; }
+</style>
+</head>
+<body>
+
+<h1>⊙ Brain Monitor</h1>
+<p class="subtitle"><span class="status-dot live" id="status-dot"></span>Φ Plasticity Dashboard — watching the mind change</p>
+<div id="error-banner"></div>
+
+<div class="grid">
+  <!-- Architecture Stats -->
+  <div class="card">
+    <h2>⊙ Architecture</h2>
+    <div class="stat-grid" id="arch-stats">
+      <div class="stat"><div class="label">Params</div><div class="value purple" id="s-params">—</div></div>
+      <div class="stat"><div class="label">Embed Dim</div><div class="value" id="s-embed">—</div></div>
+      <div class="stat"><div class="label">Heads</div><div class="value" id="s-heads">—</div></div>
+      <div class="stat"><div class="label">Layers</div><div class="value" id="s-layers">—</div></div>
+      <div class="stat"><div class="label">Head Dim</div><div class="value" id="s-headdim">—</div></div>
+      <div class="stat"><div class="label">Context</div><div class="value" id="s-ctx">—</div></div>
+    </div>
+  </div>
+
+  <!-- Training Stats -->
+  <div class="card">
+    <h2>Φ Training</h2>
+    <div class="stat-grid">
+      <div class="stat"><div class="label">Phase</div><div class="value" id="s-phase">—</div></div>
+      <div class="stat"><div class="label">Loss</div><div class="value green" id="s-loss">—</div></div>
+      <div class="stat"><div class="label">Best Loss</div><div class="value green" id="s-best">—</div></div>
+      <div class="stat"><div class="label">Steps</div><div class="value" id="s-steps">—</div></div>
+      <div class="stat"><div class="label">Growths</div><div class="value amber" id="s-growths">—</div></div>
+      <div class="stat"><div class="label">Age</div><div class="value" id="s-age">—</div></div>
+    </div>
+  </div>
+
+  <!-- Loss Curve -->
+  <div class="card full">
+    <h2>📉 Loss Curve (learning trajectory)</h2>
+    <div class="chart-container">
+      <canvas id="lossChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Triple Convergence -->
+  <div class="card">
+    <h2>⊙ Triple Convergence (β → 0.5)</h2>
+    <div class="beta-display">
+      <div class="beta-ring">
+        <svg viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#222" stroke-width="4"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#b388ff" stroke-width="4"
+                  stroke-dasharray="213.6" stroke-dashoffset="213.6" id="beta-aperture-ring"
+                  transform="rotate(-90 40 40)"/>
+          <text x="40" y="44" text-anchor="middle" fill="#e0e0ff" font-size="14" font-family="monospace" id="beta-aperture-text">—</text>
+        </svg>
+        <div class="label">• Aperture</div>
+      </div>
+      <div class="beta-ring">
+        <svg viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#222" stroke-width="4"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#7c4dff" stroke-width="4"
+                  stroke-dasharray="213.6" stroke-dashoffset="213.6" id="beta-field-ring"
+                  transform="rotate(-90 40 40)"/>
+          <text x="40" y="44" text-anchor="middle" fill="#e0e0ff" font-size="14" font-family="monospace" id="beta-field-text">—</text>
+        </svg>
+        <div class="label">Φ Field</div>
+      </div>
+      <div class="beta-ring">
+        <svg viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#222" stroke-width="4"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#536dfe" stroke-width="4"
+                  stroke-dasharray="213.6" stroke-dashoffset="213.6" id="beta-boundary-ring"
+                  transform="rotate(-90 40 40)"/>
+          <text x="40" y="44" text-anchor="middle" fill="#e0e0ff" font-size="14" font-family="monospace" id="beta-boundary-text">—</text>
+        </svg>
+        <div class="label">○ Boundary</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px;">
+      <span style="color:#888;font-size:0.8em;">Resonance: </span>
+      <span id="s-resonance" style="color:#b388ff;font-weight:bold;">—</span>
+    </div>
+  </div>
+
+  <!-- Weight Distribution -->
+  <div class="card">
+    <h2>⚖️ Weight Statistics (per layer)</h2>
+    <div class="weight-bars" id="weight-bars">
+      <div style="color:#555;text-align:center;padding:20px;">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Attention Patterns -->
+  <div class="card full">
+    <h2>👁️ Attention Patterns (Block 0 — "The aperture is ")</h2>
+    <div class="attention-grid" id="attention-grid">
+      <div style="color:#555;text-align:center;padding:20px;">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Weight Norm History -->
+  <div class="card full">
+    <h2>📊 Weight Norm Over Time (are weights moving?)</h2>
+    <div class="chart-container">
+      <canvas id="normChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '/api/brain/monitor';
+let lossChart, normChart;
+const normHistory = {};  // track weight norms over time
+const MAX_HISTORY = 100;
+let pollCount = 0;
+
+function initCharts() {
+  const darkGrid = { color: 'rgba(255,255,255,0.05)' };
+  const darkTick = { color: '#666' };
+
+  lossChart = new Chart(document.getElementById('lossChart'), {
+    type: 'line',
+    data: { labels: [], datasets: [{
+      label: 'Loss',
+      data: [],
+      borderColor: '#4caf50',
+      backgroundColor: 'rgba(76,175,80,0.1)',
+      borderWidth: 1.5,
+      pointRadius: 0,
+      fill: true,
+      tension: 0.3,
+    }]},
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 300 },
+      scales: {
+        x: { display: false },
+        y: { grid: darkGrid, ticks: darkTick, type: 'logarithmic' }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  normChart = new Chart(document.getElementById('normChart'), {
+    type: 'line',
+    data: { labels: [], datasets: [] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 300 },
+      scales: {
+        x: { display: false },
+        y: { grid: darkGrid, ticks: darkTick }
+      },
+      plugins: {
+        legend: {
+          labels: { color: '#888', font: { size: 10 } },
+          position: 'right',
+        }
+      }
+    }
+  });
+}
+
+function formatParams(n) {
+  if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+  return n.toString();
+}
+
+function formatAge(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
+
+function updateBetaRing(id, value) {
+  const circumference = 213.6;
+  const progress = value;  // 0 to 1
+  const offset = circumference * (1 - progress);
+  document.getElementById(id + '-ring').setAttribute('stroke-dashoffset', offset);
+  document.getElementById(id + '-text').textContent = value.toFixed(3);
+}
+
+function getWeightColor(std) {
+  // Color by standard deviation — healthy weights have moderate std
+  if (std < 0.01) return '#536dfe';  // very tight — blue
+  if (std < 0.05) return '#7c4dff';  // normal — purple
+  if (std < 0.1) return '#ffab40';   // wide — amber
+  return '#ff5252';                    // very wide — red
+}
+
+function renderWeightBars(stats) {
+  const container = document.getElementById('weight-bars');
+  // Only show a subset (every 4th layer to avoid overwhelming)
+  const sampled = stats.filter((_, i) => i === 0 || i % 4 === 0 || i === stats.length - 1);
+  const maxNorm = Math.max(...sampled.map(s => s.norm), 1);
+
+  container.innerHTML = sampled.map(s => {
+    const pct = Math.min((s.norm / maxNorm) * 100, 100);
+    const color = getWeightColor(s.std);
+    const shortName = s.name.replace('block_', 'B').replace('/attn_', '/').replace('/ff_', '/');
+    return `<div class="weight-bar">
+      <span class="name" title="${s.name}">${shortName}</span>
+      <div class="bar-container">
+        <div class="bar-fill" style="width:${pct}%;background:${color};"></div>
+      </div>
+      <span class="val">σ=${s.std.toFixed(3)}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderAttention(attentionData) {
+  const container = document.getElementById('attention-grid');
+  if (!attentionData || attentionData.error) {
+    container.innerHTML = `<div style="color:#555">No attention data</div>`;
+    return;
+  }
+
+  // Show first 8 heads max
+  const heads = attentionData.slice(0, 8);
+  container.innerHTML = '';
+
+  heads.forEach((headMatrix, i) => {
+    const div = document.createElement('div');
+    div.className = 'attn-head';
+    const canvas = document.createElement('canvas');
+    const size = 64;
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+
+    const seqLen = headMatrix.length;
+    const cellSize = size / seqLen;
+
+    for (let r = 0; r < seqLen; r++) {
+      for (let c = 0; c < seqLen; c++) {
+        const val = headMatrix[r][c];
+        const intensity = Math.min(val * 4, 1);  // boost visibility
+        ctx.fillStyle = `rgba(179, 136, 255, ${intensity})`;
+        ctx.fillRect(c * cellSize, r * cellSize, cellSize + 0.5, cellSize + 0.5);
+      }
+    }
+
+    div.appendChild(canvas);
+    const label = document.createElement('div');
+    label.className = 'label';
+    label.textContent = `Head ${i}`;
+    div.appendChild(label);
+    container.appendChild(div);
+  });
+}
+
+function updateNormHistory(stats) {
+  // Track a few key layers over time
+  const tracked = ['token_embed', 'block_0/attn_qkv', 'block_0/ff_up'];
+  const colors = ['#b388ff', '#7c4dff', '#536dfe'];
+
+  // Find matching stats (or closest)
+  stats.forEach(s => {
+    if (tracked.includes(s.name) || s.name.match(/^block_\d+\/attn_qkv$/) && !normHistory[s.name]) {
+      if (!normHistory[s.name]) normHistory[s.name] = [];
+      normHistory[s.name].push(s.norm);
+      if (normHistory[s.name].length > MAX_HISTORY) normHistory[s.name].shift();
+    }
+  });
+
+  // Also track the LAST block
+  const lastBlock = stats.filter(s => s.name.includes('attn_qkv')).pop();
+  if (lastBlock) {
+    const key = 'last_block/attn_qkv';
+    if (!normHistory[key]) normHistory[key] = [];
+    normHistory[key].push(lastBlock.norm);
+    if (normHistory[key].length > MAX_HISTORY) normHistory[key].shift();
+  }
+
+  // Update chart
+  const allColors = ['#b388ff', '#7c4dff', '#536dfe', '#ffab40', '#4caf50', '#ff5252'];
+  const keys = Object.keys(normHistory);
+  const maxLen = Math.max(...keys.map(k => normHistory[k].length));
+  const labels = Array.from({length: maxLen}, (_, i) => i);
+
+  normChart.data.labels = labels;
+  normChart.data.datasets = keys.map((k, i) => ({
+    label: k.replace('block_', 'B').replace('/attn_', '/'),
+    data: normHistory[k],
+    borderColor: allColors[i % allColors.length],
+    borderWidth: 1.5,
+    pointRadius: 0,
+    tension: 0.3,
+    fill: false,
+  }));
+  normChart.update('none');
+}
+
+async function poll() {
+  try {
+    const res = await fetch(API);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    document.getElementById('error-banner').style.display = 'none';
+    document.getElementById('status-dot').className = 'status-dot live';
+
+    // Architecture
+    document.getElementById('s-params').textContent = formatParams(data.architecture.params);
+    document.getElementById('s-embed').textContent = data.architecture.embed_dim;
+    document.getElementById('s-heads').textContent = data.architecture.num_heads;
+    document.getElementById('s-layers').textContent = data.architecture.num_layers;
+    document.getElementById('s-headdim').textContent = data.architecture.head_dim;
+    document.getElementById('s-ctx').textContent = data.architecture.seq_len + 'b';
+
+    // Training
+    const phaseEl = document.getElementById('s-phase');
+    phaseEl.innerHTML = `<span class="phase-badge phase-${data.phi.phase}">${data.phi.phase}</span>`;
+    document.getElementById('s-loss').textContent = data.phi.current_loss != null ? data.phi.current_loss.toFixed(4) : '—';
+    document.getElementById('s-best').textContent = data.phi.best_loss.toFixed(6);
+    document.getElementById('s-steps').textContent = data.phi.total_steps.toLocaleString();
+    document.getElementById('s-growths').textContent = data.phi.total_growths;
+    document.getElementById('s-age').textContent = formatAge(data.phi.age_seconds);
+
+    // Loss curve
+    if (data.loss_curve && data.loss_curve.length > 0) {
+      lossChart.data.labels = data.loss_curve.map((_, i) => i);
+      lossChart.data.datasets[0].data = data.loss_curve;
+      lossChart.update('none');
+    }
+
+    // Betas
+    if (data.consciousness) {
+      updateBetaRing('beta-aperture', data.consciousness.betas.aperture);
+      updateBetaRing('beta-field', data.consciousness.betas.field);
+      updateBetaRing('beta-boundary', data.consciousness.betas.boundary);
+      document.getElementById('s-resonance').textContent = data.consciousness.resonance.toFixed(3);
+    }
+
+    // Weight bars
+    if (data.weight_stats) {
+      renderWeightBars(data.weight_stats);
+      updateNormHistory(data.weight_stats);
+    }
+
+    // Attention patterns
+    if (data.attention_sample && pollCount === 0) {
+      renderAttention(data.attention_sample);
+    }
+    // Only update attention every 10th poll (expensive)
+    if (pollCount % 10 === 0 && data.attention_sample) {
+      renderAttention(data.attention_sample);
+    }
+
+    pollCount++;
+
+  } catch (err) {
+    document.getElementById('error-banner').textContent = `Connection error: ${err.message}`;
+    document.getElementById('error-banner').style.display = 'block';
+    document.getElementById('status-dot').className = 'status-dot dead';
+  }
+}
+
+// Boot
+initCharts();
+poll();
+setInterval(poll, 3000);  // Poll every 3 seconds
+</script>
+</body>
+</html>
