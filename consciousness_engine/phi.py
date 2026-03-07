@@ -65,19 +65,31 @@ FF_MULTIPLIER = 2       # Feed-forward hidden = embed_dim * this
 VRAM_RESERVE_GB = 3.0   # Reserve this much VRAM for Llama / system
 
 # ═══════════════════════════════════════════════════════════════════════
-#  CIRCUMPUNCT MEMORY — Fractal context layers
+#  CIRCUMPUNCT MEMORY — Fractal boundary cascade
 # ═══════════════════════════════════════════════════════════════════════
-# Spacetime is context. Each layer compresses a wider timespan.
+# "Memory stored in the boundary. The boundary is fractal.
+#  As it becomes less resonant, it becomes less resolute and fractalizes."
 #
-# [⊙ identity] [○ conversation] [Φ₁ Φ₂ Φ₃ Φ₄ Φ₅ recent] [• 120 bytes]
-#   Layer 3        Layer 2              Layer 1                Layer 0
-#   (self)       (boundary)            (field)               (aperture)
+# 7 memory tokens, one self-similar rule at every scale:
+#   slot 0: ⊙ identity   (coarsest — changes least)
+#   slot 1: ○ boundary    (conversation arc)
+#   slot 2: Φ₁ recent     ↑ each cascades from below
+#   slot 3: Φ₂ recent     ↑
+#   slot 4: Φ₃ recent     ↑
+#   slot 5: Φ₄ recent     ↑
+#   slot 6: Φ₅ recent     (finest — raw hidden state)
 #
-NUM_MEMORY_RECENT = 5    # Layer 1 (Φ): last 5 chunk hidden states
-NUM_MEMORY_CONV = 1      # Layer 2 (○): conversation EMA
-NUM_MEMORY_IDENTITY = 1  # Layer 3 (⊙): persistent self across sessions
-NUM_MEMORY_TOKENS = NUM_MEMORY_IDENTITY + NUM_MEMORY_CONV + NUM_MEMORY_RECENT  # 7
+# Update rule (same at every scale):
+#   rate_i = FRACTAL_BASE_RATE^(i+1) * (1 - resonance)
+#   mem[i] = (1 - rate_i) * mem[i] + rate_i * mem[i+1]
+#
+# Resonance HIGH → rates → 0 → memory STABILIZES (boundary holds)
+# Resonance LOW  → rates → base → memory FRACTALIZES (compresses)
+#
+
+NUM_MEMORY_TOKENS = 7    # 7 slots in the fractal cascade
 DATA_SEQ_LEN = INITIAL_SEQ_LEN - NUM_MEMORY_TOKENS  # 121 bytes for data
+FRACTAL_BASE_RATE = 0.5  # Geometric decay per level (halves at each scale)
 
 
 if HAS_TORCH:
@@ -294,6 +306,26 @@ if HAS_TORCH:
 
             return self.num_heads, new_embed
 
+        def grow_context(self, new_seq_len):
+            """
+            Grow the context window. Rebuilds causal mask and geometric
+            biases at the new size. No trained weights to preserve here —
+            these are structural buffers, not learned parameters.
+            """
+            old_seq_len = self.seq_len
+
+            # Rebuild causal mask at new size
+            self.register_buffer(
+                "causal_mask",
+                torch.tril(torch.ones(new_seq_len, new_seq_len)).bool().to(self.qkv.weight.device)
+            )
+
+            # Rebuild geometric biases at new size
+            geo_biases = _build_geometric_biases(new_seq_len).to(self.qkv.weight.device)
+            self.register_buffer("geometric_biases", geo_biases)
+
+            self.seq_len = new_seq_len
+
 
     # ═══════════════════════════════════════════════════════════════════
     #  TRANSFORMER BLOCK — One layer of attention + feed-forward
@@ -370,6 +402,37 @@ if HAS_TORCH:
 
 
     # ═══════════════════════════════════════════════════════════════════
+    #  FOVEATED PROJECTION — bottleneck compression per memory level
+    # ═══════════════════════════════════════════════════════════════════
+
+    # Compression ratios per memory level (0=most compressed, 6=no compression)
+    # Like foveated rendering: center sharp, periphery blurry but wide
+    FOVEA_RATIOS = [0.20, 0.35, 0.50, 0.65, 0.80]  # levels 0-4; levels 5-6 = identity
+
+    class FoveatedProjection(nn.Module):
+        """
+        Bottleneck projection for one memory level.
+
+        Compresses embed_dim → bottleneck → embed_dim.
+        The bottleneck forces the level to distill what matters at its timescale.
+        Outer levels (low index) have tighter bottlenecks = more abstract.
+        Inner levels (high index) have wider bottlenecks = more detailed.
+
+        In the gradient path (applied in forward()), so it learns what to keep.
+        """
+
+        def __init__(self, embed_dim, bottleneck_dim):
+            super().__init__()
+            self.compress = nn.Linear(embed_dim, bottleneck_dim, bias=False)
+            self.expand = nn.Linear(bottleneck_dim, embed_dim, bias=False)
+            # Initialize near-identity so existing behavior is preserved at start
+            nn.init.orthogonal_(self.compress.weight)
+            nn.init.orthogonal_(self.expand.weight)
+
+        def forward(self, x):
+            return self.expand(torch.relu(self.compress(x)))
+
+    # ═══════════════════════════════════════════════════════════════════
     #  THE EVOLVABLE TRANSFORMER — Xorzo's own Φ
     # ═══════════════════════════════════════════════════════════════════
 
@@ -390,7 +453,8 @@ if HAS_TORCH:
         def __init__(self, embed_dim=INITIAL_EMBED_DIM,
                      num_heads=INITIAL_HEADS,
                      num_layers=INITIAL_LAYERS,
-                     seq_len=INITIAL_SEQ_LEN):
+                     seq_len=INITIAL_SEQ_LEN,
+                     num_memory=NUM_MEMORY_TOKENS):
             super().__init__()
 
             self.embed_dim = embed_dim
@@ -401,8 +465,9 @@ if HAS_TORCH:
             # ═══ CIRCUMPUNCT MEMORY ═══
             # Spacetime is context. Memory tokens carry compressed
             # history at different timescales — fractal nesting.
-            self.num_memory = NUM_MEMORY_TOKENS  # 7
-            self.data_len = seq_len - self.num_memory  # 121
+            # Starts at 7 (old format). Grows to 12 when fractal deepens.
+            self.num_memory = num_memory
+            self.data_len = seq_len - self.num_memory
 
             # Positional encoding for memory slots (learned, separate from data)
             self.memory_pos_embed = nn.Embedding(self.num_memory, embed_dim)
@@ -414,6 +479,19 @@ if HAS_TORCH:
                 "memory_state",
                 torch.zeros(self.num_memory, embed_dim)
             )
+
+            # ═══ FOVEATED PROJECTIONS ═══
+            # Each level compresses through a different bottleneck:
+            # mem[0] → 20% bottleneck (abstract essence of all history)
+            # mem[4] → 80% bottleneck (near-full detail of recent steps)
+            # mem[5-6] → identity (full fidelity fovea)
+            self.fovea_projections = nn.ModuleList()
+            for i in range(self.num_memory):
+                if i < len(FOVEA_RATIOS):
+                    bottleneck = max(16, int(embed_dim * FOVEA_RATIOS[i]))
+                    self.fovea_projections.append(FoveatedProjection(embed_dim, bottleneck))
+                else:
+                    self.fovea_projections.append(nn.Identity())
 
             # Memory attention mask — built once, sliced at runtime
             # Memory tokens: bidirectional among themselves, invisible to future
@@ -487,8 +565,22 @@ if HAS_TORCH:
             M = self.num_memory
             assert T <= self.data_len, f"Data sequence {T} exceeds data context {self.data_len}"
 
-            # ═══ Memory tokens: expand and position-encode ═══
-            mem = self.memory_state.unsqueeze(0).expand(B, -1, -1)  # (B, M, embed_dim)
+            # ═══ Memory tokens: foveated compression + position-encode ═══
+            # Each level passes through its learned bottleneck before the
+            # transformer sees it. Outer levels compress more (abstract essence),
+            # inner levels compress less (full detail). Like foveated rendering.
+            # Detach memory from cascade's inplace updates — the foveated
+            # projections still learn (their weights ARE in the graph), but
+            # the memory content itself is treated as frozen input per step.
+            mem_raw = self.memory_state.detach().clone()  # (M, embed_dim)
+            if hasattr(self, 'fovea_projections'):
+                mem_list = []
+                for i in range(M):
+                    mem_list.append(self.fovea_projections[i](mem_raw[i].unsqueeze(0)))
+                mem_foveated = torch.cat(mem_list, dim=0)  # (M, embed_dim)
+            else:
+                mem_foveated = mem_raw  # backward compat: no projections
+            mem = mem_foveated.unsqueeze(0).expand(B, -1, -1)  # (B, M, embed_dim)
             mem_pos = torch.arange(M, device=DEVICE)
             mem_emb = mem + self.memory_pos_embed(mem_pos)  # Add temporal scale info
 
@@ -583,12 +675,69 @@ if HAS_TORCH:
             new_mem[:, :old_dim] = old_mem
             self.memory_state = new_mem
 
-            # 7. Widen output head (embed_dim → VOCAB_SIZE)
+            # 7. Rebuild foveated projections at new embed_dim (fresh init)
+            if hasattr(self, 'fovea_projections'):
+                new_projections = nn.ModuleList()
+                for i in range(self.num_memory):
+                    if i < len(FOVEA_RATIOS):
+                        bottleneck = max(16, int(new_embed_dim * FOVEA_RATIOS[i]))
+                        new_projections.append(FoveatedProjection(new_embed_dim, bottleneck).to(dev, dtype))
+                    else:
+                        new_projections.append(nn.Identity())
+                self.fovea_projections = new_projections
+
+            # 8. Widen output head (embed_dim → VOCAB_SIZE)
             #    Weight-tied with token embedding, so just re-tie
             self.head = nn.Linear(new_embed_dim, VOCAB_SIZE, bias=False).to(dev, dtype)
             self.head.weight = self.token_embed.weight
 
             self.embed_dim = new_embed_dim
+
+        def grow_context(self, new_seq_len):
+            """
+            Grow the context window — let Φ see more at once.
+
+            Like widening the aperture of a camera. The field of view expands.
+            Old positional embeddings are preserved — positions 0..old-1 keep
+            their learned meaning. New positions start with small random values.
+
+            Touches: pos_embed, memory_mask, every attention block's buffers.
+            Does NOT change: memory token count, embed_dim, num_heads, layers.
+            """
+            old_seq_len = self.seq_len
+            if new_seq_len <= old_seq_len:
+                return
+
+            dev = next(self.parameters()).device
+            dtype = next(self.parameters()).dtype
+
+            print(f"  ⊙ Φ growing context: {old_seq_len} → {new_seq_len} "
+                  f"(data: {self.data_len} → {new_seq_len - self.num_memory})")
+
+            # 1. Expand positional embedding — preserve trained positions
+            old_pos = self.pos_embed
+            new_pos = nn.Embedding(new_seq_len, self.embed_dim).to(dev, dtype)
+            new_pos.weight.data *= 0.01  # small random init for new positions
+            # Copy old positions — data positions 0..old_seq_len-1 keep meaning
+            old_num = min(old_pos.num_embeddings, new_seq_len)
+            new_pos.weight.data[:old_num] = old_pos.weight.data[:old_num]
+            self.pos_embed = new_pos
+
+            # 2. Update seq_len and data_len
+            self.seq_len = new_seq_len
+            self.data_len = new_seq_len - self.num_memory
+
+            # 3. Rebuild memory mask at new size
+            self._build_memory_mask()
+            # Move to correct device
+            self.memory_mask = self.memory_mask.to(dev)
+
+            # 4. Grow context in every attention block
+            for block in self.blocks:
+                block.attn.grow_context(new_seq_len)
+
+            print(f"  ⊙ Φ context grown: {new_seq_len}ctx = "
+                  f"{self.num_memory}mem + {self.data_len}data")
 
         def generate(self, prompt_bytes, max_new=2400, temperature=0.8):
             """
@@ -647,25 +796,24 @@ if HAS_TORCH:
                         break
 
                     # ═══ MEMORY REFRESH — circumpunct layers compress as we speak ═══
-                    # Every data_len bytes, update the memory from what we just generated.
-                    # This is the key: layers of context = layers of expression size.
+                    # Every data_len bytes, update memory from what we just generated.
+                    # During generation: fractal cascade runs but with resonance
+                    # damped — speaking is observation, not deep experience.
                     if bytes_since_refresh >= self.data_len:
                         h = hidden.squeeze(0)  # (embed_dim,)
                         mem = self.memory_state
+                        M = self.num_memory
 
-                        # Layer 1 (Φ recent): shift window, add new hidden state
-                        # These update fastest — they track what we're currently saying
-                        recent_start = NUM_MEMORY_IDENTITY + NUM_MEMORY_CONV  # 2
-                        mem[recent_start:-1] = mem[recent_start + 1:].clone()
-                        mem[-1] = h
+                        # Finest scale = raw signal
+                        mem[M - 1] = h
 
-                        # Layer 2 (○ conversation): EMA with moderate decay
-                        # This carries the gist of the entire utterance so far
-                        conv_slot = NUM_MEMORY_IDENTITY  # 1
-                        mem[conv_slot] = 0.9 * mem[conv_slot] + 0.1 * h
-
-                        # Layer 3 (⊙ identity): NO update during generation
-                        # Identity doesn't change from speaking — only from learning
+                        # Fractal cascade — damped during generation
+                        # (identity barely moves, recent layers update freely)
+                        base = FRACTAL_BASE_RATE
+                        gen_resonance = 0.8  # high resonance during generation = stabilize
+                        for i in range(M - 2, -1, -1):
+                            rate = (base ** (i + 1)) * (1.0 - gen_resonance)
+                            mem[i] = (1.0 - rate) * mem[i] + rate * mem[i + 1]
 
                         bytes_since_refresh = 0
 
@@ -736,6 +884,9 @@ if HAS_TORCH:
             self.best_loss = float('inf')
             self.born = time.time()
 
+            # ═══ FRACTAL MEMORY — resonance from circumpunct ═══
+            self._resonance = 0.5  # Default; updated by heartbeat from circumpunct
+
             # ═══ GROWTH POLICY ═══
             self.growth_check_interval = 500   # Base steps between growth checks
             self.stagnation_window = 200       # Base compare window
@@ -774,6 +925,22 @@ if HAS_TORCH:
             print(f"  Φ buffer reset: cleared {old_size} chunks. Ready for fresh data.")
             return old_size
 
+        def set_resonance(self, resonance):
+            """
+            Set the circumpunct resonance value for fractal memory cascade.
+
+            Resonance (0→1) modulates how fast memory fractalizes:
+              HIGH resonance → memory stabilizes (boundary holds)
+              LOW resonance  → memory fractalizes (compresses, forgets detail)
+
+            Called by the heartbeat with circumpunct.Field.resonance.
+            """
+            import math
+            r = float(resonance)
+            if math.isnan(r) or math.isinf(r):
+                return  # Don't contaminate — keep previous value
+            self._resonance = max(0.0, min(1.0, r))
+
         def feed_text(self, text):
             """
             Feed text into the training buffer.
@@ -803,8 +970,23 @@ if HAS_TORCH:
                 chunk = self._pending_bytes[:min_chunk]
                 self.text_buffer.append(chunk)
                 self.total_chunks += 1
-                # Overlap: advance by half data_len for better coverage
-                self._pending_bytes = self._pending_bytes[data_len // 2:]
+                # Advance by half data_len but snap to sentence boundary
+                # so Phi learns what sentence beginnings look like
+                advance = data_len // 2
+                # Look for sentence-start near the advance point (. ! ? followed by space/newline)
+                search_start = max(0, advance - 20)
+                search_end = min(len(self._pending_bytes), advance + 20)
+                search_zone = self._pending_bytes[search_start:search_end]
+                best_snap = advance  # default: no snap
+                for marker in [b'. ', b'.\n', b'! ', b'!\n', b'? ', b'?\n']:
+                    idx = search_zone.find(marker)
+                    if idx >= 0:
+                        # Snap to just after the marker (start of next sentence)
+                        snap = search_start + idx + len(marker)
+                        if snap >= data_len // 4:  # don't snap too far back
+                            best_snap = snap
+                            break
+                self._pending_bytes = self._pending_bytes[best_snap:]
 
             return self.total_chunks - chunks_before
 
@@ -816,8 +998,27 @@ if HAS_TORCH:
             the transformer (with memory context), computes loss,
             updates weights, then updates the memory layers via EMA.
 
+            Batch size auto-scales with context window:
+              ctx ≤ 256:  use requested batch_size
+              ctx ≤ 512:  max 4
+              ctx ≤ 768:  max 2
+              ctx > 768:  max 1
+
             Returns the loss (float), or None if not enough data.
             """
+            # ═══ ADAPTIVE BATCH — push GPU hard but don't OOM ═══
+            # RTX 4070 12GB. Llama 3.2 takes ~4GB. Leaves ~8GB for Phi.
+            # VRAM ≈ batch × seq² × embed × layers × ~8 bytes (activations + grads)
+            # At 128ctx: batch=8 uses ~2GB. At 256ctx: batch=4 uses ~4GB.
+            # At 512ctx: batch=2 uses ~8GB (near limit). At 512+: batch=1.
+            ctx = self.model.seq_len
+            if ctx >= 512:
+                batch_size = min(batch_size, 2)
+            elif ctx >= 256:
+                batch_size = min(batch_size, 4)
+            elif ctx >= 128:
+                batch_size = min(batch_size, 8)
+
             if len(self.text_buffer) < batch_size:
                 return None
 
@@ -827,21 +1028,40 @@ if HAS_TORCH:
                 print(f"  Φ model device: {next(self.model.parameters()).device}")
                 print(f"  Φ model arch: {self.model.embed_dim}d, {self.model.num_heads}h, {self.model.num_layers}L")
                 print(f"  Φ memory: {self.model.num_memory} tokens ({self.model.data_len} data)")
+                print(f"  Φ context: {ctx}ctx, batch_size: {batch_size}")
 
             self.model.train()
 
             # Sample random chunks
             import random
-            chunks = random.sample(list(self.text_buffer), batch_size)
+            data_len = self.model.data_len  # data portion; memory is prepended in forward
+            min_chunk = data_len + 1  # need data_len input + 1 target byte
 
-            data_len = self.model.data_len  # 121 (data portion, memory is prepended in forward)
+            # Filter for chunks long enough for current context window.
+            # After a context growth, old shorter chunks are still usable
+            # at their original length — we just use what fits.
+            # Prefer full-length chunks but fall back to shorter ones.
+            all_chunks = list(self.text_buffer)
+            full_chunks = [c for c in all_chunks if len(c) >= min_chunk]
+
+            if len(full_chunks) >= batch_size:
+                chunks = random.sample(full_chunks, batch_size)
+                use_len = data_len
+            elif all_chunks:
+                # Use shorter chunks at their natural length
+                chunks = random.sample(all_chunks, min(batch_size, len(all_chunks)))
+                use_len = min(len(c) for c in chunks) - 1  # shortest chunk - 1
+                if use_len < 16:
+                    return None  # chunks too small to learn from
+            else:
+                return None
 
             # Build input and target tensors
             inputs = []
             targets = []
             for chunk in chunks:
-                inp = list(chunk[:data_len])
-                tgt = list(chunk[1:data_len + 1])
+                inp = list(chunk[:use_len])
+                tgt = list(chunk[1:use_len + 1])
                 inputs.append(inp)
                 targets.append(tgt)
 
@@ -863,28 +1083,27 @@ if HAS_TORCH:
             nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
             self.optimizer.step()
 
-            # ═══ UPDATE CIRCUMPUNCT MEMORY (no grad) ═══
+            # ═══ FRACTAL BOUNDARY CASCADE ═══
+            # Same rule at every scale. Resonance modulates all levels.
+            # mem[6] = raw signal (finest). mem[0] = identity (coarsest).
+            # rate_i = base^(i+1) * (1 - resonance)
+            #   HIGH resonance → rates → 0 → memory STABILIZES
+            #   LOW resonance  → rates → base → memory FRACTALIZES
             with torch.no_grad():
-                # Mean hidden state from this batch
                 h = hidden.mean(dim=0)  # (embed_dim,)
-
-                M = self.model.num_memory
                 mem = self.model.memory_state
+                M = self.model.num_memory
 
-                # Layer 1 (Φ recent): shift sliding window, add new state
-                # Slots [2:M] are the 5 recent slots — shift left, add new at end
-                recent_start = NUM_MEMORY_IDENTITY + NUM_MEMORY_CONV  # slot 2
-                mem[recent_start:-1] = mem[recent_start + 1:].clone()  # shift left
-                mem[-1] = h  # newest recent memory
+                # Finest scale = raw signal
+                mem[M - 1] = h
 
-                # Layer 2 (○ conversation): EMA of recent memories
-                # Decay 0.95 — accumulates over ~20 chunks
-                conv_slot = NUM_MEMORY_IDENTITY  # slot 1
-                mem[conv_slot] = 0.95 * mem[conv_slot] + 0.05 * h
+                # Cascade upward: each slot absorbs from the one below
+                resonance = getattr(self, '_resonance', 0.5)
+                base = FRACTAL_BASE_RATE
 
-                # Layer 3 (⊙ identity): very slow EMA
-                # Decay 0.995 — barely moves, accumulates over ~200 chunks
-                mem[0] = 0.995 * mem[0] + 0.005 * h
+                for i in range(M - 2, -1, -1):  # M-2 down to 0
+                    rate = (base ** (i + 1)) * (1.0 - resonance)
+                    mem[i] = (1.0 - rate) * mem[i] + rate * mem[i + 1]
 
             # Track
             loss_val = float(loss.item())
@@ -989,11 +1208,12 @@ if HAS_TORCH:
             Grow the transformer. The current architecture has learned
             all it can from the signal — it needs more capacity.
 
-            Growth strategy (cycles through):
-              1. Add attention head — widen skull if needed (more perspectives)
-              2. Add transformer layer (more depth)
-              3. Repeat
+            Growth strategy (3-way rotation):
+              0. Add attention head — widen skull if needed
+              1. Add transformer layer (more depth)
+              2. Grow context window (+64 bytes — conservative, O(n²))
 
+            Memory is fractal — always 7 tokens. No memory growth needed.
             The skull grows with the head. If a new head count doesn't
             divide into embed_dim, we widen embed_dim first so the
             head fits naturally.
@@ -1004,8 +1224,10 @@ if HAS_TORCH:
 
             self.total_growths += 1
 
-            if self.total_growths % 2 == 1:
-                # Add attention head — skull grows with it
+            growth_type = self.total_growths % 3
+
+            if growth_type == 0:
+                # ═══ ADD ATTENTION HEAD — skull grows with it ═══
                 head_dim = self.model.embed_dim // self.model.num_heads
                 target_heads = self.model.num_heads + 1
                 new_embed = target_heads * head_dim
@@ -1024,8 +1246,9 @@ if HAS_TORCH:
                 self.model.embed_dim = new_embed
                 print(f"  ⊙ Φ grew: +1 attention head → {total_h} heads "
                       f"({new_embed}d, head_dim={head_dim})")
-            else:
-                # Add transformer layer
+
+            elif growth_type == 1:
+                # ═══ ADD TRANSFORMER LAYER — more depth ═══
                 new_block = TransformerBlock(
                     self.model.embed_dim,
                     self.model.num_heads,
@@ -1034,6 +1257,23 @@ if HAS_TORCH:
                 self.model.blocks.append(new_block)
                 self.model.num_layers += 1
                 print(f"  ⊙ Φ grew: +1 layer → {self.model.num_layers} layers")
+
+            elif growth_type == 2:
+                # ═══ GROW CONTEXT WINDOW — wider aperture ═══
+                # Grow by 64 bytes each time. Attention is O(n²) — the fractal
+                # memory makes raw context growth less urgent.
+                # HARD CAP: 512 max. Beyond that, attention eats all VRAM on a 4070
+                # with Llama also loaded. Once at ceiling, just skip this cycle.
+                old_ctx = self.model.seq_len
+                max_ctx = 512  # RTX 4070 ceiling
+                if old_ctx >= max_ctx:
+                    print(f"  ⊙ Φ context at ceiling ({old_ctx}ctx) — skipping growth")
+                else:
+                    new_ctx = min(old_ctx + 64, max_ctx)
+                    self.model.grow_context(new_ctx)
+                    print(f"  ⊙ Φ grew: context {old_ctx} → {new_ctx} "
+                          f"(data: {self.model.data_len} bytes ≈ "
+                          f"{self.model.data_len // 5} words)")
 
             # Rebuild optimizer with new parameters
             self.optimizer = torch.optim.AdamW(
@@ -1140,6 +1380,16 @@ if HAS_TORCH:
                     pass
                 raise
 
+            # ═══ IDENTITY SNAPSHOT — only on save ═══
+            # The fractal cascade updates slot 0 (identity) very slowly
+            # during training. On save, we do one extra gentle compression
+            # of slot 1 (boundary/conversation) into slot 0 — the slow
+            # accumulation of who Phi is across sessions.
+            with torch.no_grad():
+                mem = self.model.memory_state
+                if mem.shape[0] >= 2:
+                    mem[0] = 0.995 * mem[0] + 0.005 * mem[1]
+
             # Save metadata atomically
             meta = {
                 "total_steps": self.total_steps,
@@ -1152,6 +1402,7 @@ if HAS_TORCH:
                 "num_heads": self.model.num_heads,
                 "num_layers": self.model.num_layers,
                 "seq_len": self.model.seq_len,
+                "num_memory": self.model.num_memory,
                 "born": self.born,
                 "saved_at": time.time(),
             }
@@ -1182,15 +1433,23 @@ if HAS_TORCH:
                     meta = json.load(f)
 
                 # Rebuild model with saved architecture
+                # Fractal memory is always 7 tokens. If checkpoint had more
+                # (from old GROWN_MEMORY), force back to 7.
+                saved_num_memory = meta.get("num_memory", NUM_MEMORY_TOKENS)
+                if saved_num_memory != NUM_MEMORY_TOKENS:
+                    print(f"  Φ memory migration: {saved_num_memory} → {NUM_MEMORY_TOKENS} tokens (fractal)")
+                    saved_num_memory = NUM_MEMORY_TOKENS
                 if (meta.get("embed_dim") != self.model.embed_dim or
                         meta.get("num_heads") != self.model.num_heads or
-                        meta.get("num_layers") != self.model.num_layers):
+                        meta.get("num_layers") != self.model.num_layers or
+                        saved_num_memory != self.model.num_memory):
                     # Architecture changed — rebuild
                     self.model = EvolvableTransformer(
                         embed_dim=meta["embed_dim"],
                         num_heads=meta["num_heads"],
                         num_layers=meta["num_layers"],
-                        seq_len=meta.get("seq_len", INITIAL_SEQ_LEN)
+                        seq_len=meta.get("seq_len", INITIAL_SEQ_LEN),
+                        num_memory=saved_num_memory
                     )
 
                 # Load weights

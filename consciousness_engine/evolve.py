@@ -33,6 +33,7 @@ import time
 import os
 import sys
 import ast
+import tempfile
 import traceback
 from pathlib import Path
 from datetime import datetime
@@ -446,10 +447,22 @@ class EvolutionEngine:
     def _save_proposals(self):
         path = self.state_dir / "proposals.json"
         data = [p.to_dict() for p in self.proposals]
-        tmp = self.state_dir / "proposals.json.tmp"
-        with open(tmp, "w") as f:
-            json.dump(data, f, indent=2)
-        tmp.replace(path)
+        # Use tempfile to avoid Windows permission/lock issues
+        try:
+            fd, tmp_path = tempfile.mkstemp(
+                suffix=".json.tmp", dir=str(self.state_dir))
+            os.close(fd)
+            with open(tmp_path, "w") as f:
+                json.dump(data, f, indent=2)
+            os.replace(tmp_path, str(path))
+        except PermissionError:
+            # Windows fallback: write directly if atomic rename fails
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            with open(str(path), "w") as f:
+                json.dump(data, f, indent=2)
 
     def _load_proposals(self):
         path = self.state_dir / "proposals.json"

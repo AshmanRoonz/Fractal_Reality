@@ -31,7 +31,9 @@ import importlib
 import types
 from flask import Flask, Response, request, send_file, jsonify, stream_with_context
 from mind import PersistentMind
-from circumpunct import gpu_status
+from circumpunct import gpu_status, HAS_TORCH
+if HAS_TORCH:
+    import torch
 
 app = Flask(__name__)
 mind = None  # initialized in main()
@@ -164,7 +166,13 @@ def heartbeat_control():
         data = request.json or {}
         new_bps = data.get("bps")
         if new_bps is not None:
-            heartbeat_ref.set_rate(int(new_bps))
+            heartbeat_ref.set_rate(float(new_bps))
+        # Toggle curriculum feeding on/off at runtime
+        curriculum = data.get("curriculum")
+        if curriculum is not None:
+            heartbeat_ref._curriculum_enabled = bool(curriculum)
+            state = "ON" if heartbeat_ref._curriculum_enabled else "OFF"
+            print(f"  📚 Curriculum toggled → {state}")
 
     step_ms = heartbeat_ref._step_time * 1000
     max_possible_bps = int(1.0 / heartbeat_ref._step_time) if heartbeat_ref._step_time > 0 else 999
@@ -176,6 +184,7 @@ def heartbeat_control():
         "max_possible_bps": max_possible_bps,
         "effective_bps": effective_bps,
         "total_beats": heartbeat_ref.total_beats,
+        "curriculum_enabled": heartbeat_ref._curriculum_enabled,
         "doc_feed_interval": heartbeat_ref._doc_feed_interval,
         "last_doc_fed": heartbeat_ref._last_doc_feed,
         "training_docs_dir": str(heartbeat_ref._training_docs_dir) if heartbeat_ref._training_docs_dir else None,
@@ -460,6 +469,7 @@ def brain_monitor():
             },
             "resonance": float(mind.core.field.resonance),
         },
+        "llama_mode": mind.llama_mode,
     })
 
 
@@ -498,6 +508,215 @@ def reset_phi_buffer():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/phi/grow-context", methods=["POST"])
+def grow_phi_context():
+    """
+    Grow Φ's context window immediately.
+
+    POST body: {"seq_len": 512}
+    If no seq_len given, grows by 64 from current.
+    """
+    try:
+        data = request.json or {}
+        current = mind.phi.model.seq_len
+        target = data.get("seq_len", current + 64)
+        target = int(target)
+        max_ctx = 512  # RTX 4070 ceiling with Llama cohabiting
+
+        if target <= current:
+            return jsonify({
+                "error": f"Target {target} must be larger than current {current}"
+            }), 400
+
+        if target > max_ctx:
+            return jsonify({
+                "error": f"Target {target} exceeds GPU ceiling ({max_ctx}). "
+                         f"Attention is O(n²) — {target}² would OOM."
+            }), 400
+
+        mind.phi.model.grow_context(target)
+
+        # Rebuild optimizer after structural change
+        mind.phi.optimizer = torch.optim.AdamW(
+            mind.phi.model.parameters(), lr=3e-4, weight_decay=0.01
+        )
+        torch.cuda.empty_cache()
+
+        return jsonify({
+            "success": True,
+            "old_seq_len": current,
+            "new_seq_len": mind.phi.model.seq_len,
+            "data_len": mind.phi.model.data_len,
+            "approx_words": mind.phi.model.data_len // 5,
+            "message": (f"Context grown: {current} → {mind.phi.model.seq_len} "
+                        f"(~{mind.phi.model.data_len // 5} words of data)")
+        })
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+# ═══ LLAMA MODE ═══
+
+@app.route("/api/llama-mode", methods=["GET", "POST"])
+def llama_mode_endpoint():
+    """Get or toggle Llama between training and passive mode."""
+    current = getattr(mind, 'llama_mode', 'training')
+    if request.method == "GET":
+        return jsonify({"mode": current})
+    data = request.get_json(silent=True) or {}
+    mode = data.get("mode")
+    if mode not in ("training", "passive"):
+        mode = "passive" if current == "training" else "training"
+    mind.llama_mode = mode
+    mind._save_state()
+    print(f"  ⊙ Llama mode → {mode}")
+    return jsonify({"mode": mode})
+
+
+# ═══ ⊙ₘ META CIRCUMPUNCT ENDPOINTS ═══
+
+@app.route("/api/meta")
+def meta_status():
+    """Current metacognitive state — identity alignment, values, resonance."""
+    if not hasattr(mind, 'meta') or not mind.meta:
+        return jsonify({"error": "Meta circumpunct not initialized"}), 404
+    m = mind.meta
+    result = {
+        "meta_resonance": float(m.field_m.meta_resonance),
+        "identity_alignment": None,
+        "value_alignments": {},
+        "goal_alignments": {},
+        "conscious_meta": bool(m.field_m.meta_resonance > 0.5),
+        "aperture_focus": float(m.aperture_m.focus),
+        "boundary_permeability": float(m.boundary_m.permeability),
+        "observations": len(m.aperture_m.timeline),
+    }
+    if m.aperture_m.last_observation is not None:
+        alignment = m.boundary_m.align(m.aperture_m.last_observation)
+        result["identity_alignment"] = float(alignment["identity"])
+        result["value_alignments"] = {k: float(v) for k, v in alignment["values"].items()}
+        result["goal_alignments"] = {k: float(v) for k, v in alignment["goals"].items()}
+    return jsonify(result)
+
+
+@app.route("/api/layers")
+def boundary_layers_status():
+    """Current state of all concentric boundary layers ○₀○₁○₂○₃."""
+    if not hasattr(mind.core.boundary, 'layers'):
+        return jsonify({"error": "Layered boundary not initialized"}), 404
+    layers = []
+    for layer in mind.core.boundary.layers:
+        layers.append({
+            "name": layer.name,
+            "depth": layer.depth,
+            "beta": round(float(layer.beta), 4),
+            "permeability": round(float(layer.permeability), 4),
+            "resonance": round(float(layer.resonance), 4),
+            "mean_resonance": round(float(layer.mean_resonance), 4),
+            "update_rate": float(layer.update_rate),
+        })
+    return jsonify({
+        "layers": layers,
+        "composite_resonance": round(float(mind.core.boundary.resonance), 4),
+        "status": mind.core.boundary.status(),
+    })
+
+
+@app.route("/api/meta/affirm", methods=["POST"])
+def meta_affirm():
+    """Human affirms recent output — Hebbian update toward identity."""
+    if not hasattr(mind, 'meta') or not mind.meta:
+        return jsonify({"error": "Meta circumpunct not initialized"}), 404
+    # Get the most recent output vector from aperture timeline
+    if not mind.meta.aperture_m.timeline:
+        return jsonify({"error": "No recent observations to affirm"}), 400
+    recent_vec = mind.meta.aperture_m.timeline[-1]
+    mind.meta.affirm_output(recent_vec)
+    return jsonify({
+        "success": True,
+        "message": "Identity reinforced toward recent output",
+        "meta_resonance": float(mind.meta.field_m.meta_resonance),
+    })
+
+
+@app.route("/api/study-all", methods=["POST"])
+def study_all_training_docs():
+    """
+    Force the mind to read and digest ALL training docs right now.
+
+    Reads every .txt file in the training_docs directory, feeds each
+    to both Φ (raw bytes) and the LLM (digest). Returns a summary
+    of what was read.
+    """
+    import pathlib
+
+    # Find training_docs directory
+    training_dir = None
+    candidates = [
+        pathlib.Path("training_docs"),
+        pathlib.Path(mind.state_dir).parent / "training_docs",
+    ]
+    for p in mind.readable_paths:
+        candidates.append(pathlib.Path(p) / "training_docs")
+
+    for c in candidates:
+        if c.is_dir():
+            training_dir = c
+            break
+
+    if training_dir is None:
+        return jsonify({"error": "No training_docs directory found"}), 404
+
+    txt_files = sorted(training_dir.glob("*.txt"))
+    if not txt_files:
+        return jsonify({"error": "No .txt files in training_docs"}), 404
+
+    results = []
+    total_chunks = 0
+    total_chars = 0
+
+    for doc_path in txt_files:
+        try:
+            text = doc_path.read_text(encoding="utf-8", errors="replace")
+            if not text.strip():
+                continue
+
+            # Feed raw text to Φ
+            chunks = mind.phi.feed_text(text) or 0
+            total_chunks += chunks
+            total_chars += len(text)
+
+            # Have the LLM digest it (stores as file knowledge)
+            digest = mind.read_file(str(doc_path))
+
+            results.append({
+                "file": doc_path.name,
+                "chars": len(text),
+                "chunks": chunks,
+                "digest": (digest or "")[:200]
+            })
+            print(f"  📖 Studied: {doc_path.name} ({len(text)} chars, {chunks} chunks)")
+
+        except Exception as e:
+            results.append({
+                "file": doc_path.name,
+                "error": str(e)
+            })
+
+    print(f"  📚 Study complete: {len(results)} docs, {total_chars} chars, {total_chunks} chunks")
+
+    return jsonify({
+        "success": True,
+        "docs_read": len(results),
+        "total_chars": total_chars,
+        "total_chunks": total_chunks,
+        "results": results,
+        "message": f"Read {len(results)} training docs ({total_chars:,} chars, {total_chunks} chunks fed to Φ)"
+    })
 
 
 @app.route("/api/history")
@@ -702,10 +921,11 @@ class Heartbeat:
         self._doc_queue = []       # Shuffled queue of doc paths
         self._doc_feed_interval = 50  # Feed a doc chunk every N beats
         self._last_doc_feed = ""   # Track what was last fed
+        self._curriculum_enabled = True  # Can be toggled off at runtime
 
     def set_rate(self, new_bps):
         """Change heartbeat rate on the fly. No restart needed."""
-        new_bps = max(1, min(200, int(new_bps)))  # Clamp 1-200
+        new_bps = max(0.1, min(200, float(new_bps)))  # Clamp 0.1-200
         self.target_bps = new_bps
         self.bps = new_bps
         self.interval = 1.0 / new_bps
@@ -726,6 +946,9 @@ class Heartbeat:
     def _feed_training_doc(self):
         """Pick next doc from the shuffled queue and feed it to Φ."""
         import random, pathlib
+
+        if not self._curriculum_enabled:
+            return
 
         if self._training_docs_dir is None:
             return
@@ -797,8 +1020,23 @@ class Heartbeat:
 
                     # Every beat: train Φ (Xorzo's own transformer).
                     # The signal builds the language model. Continuous learning.
+                    # Pass circumpunct resonance to modulate fractal memory.
                     if True:
                         try:
+                            # Fractal memory: blend layer + field + meta resonance
+                            try:
+                                field_res = float(self.mind.core.field.resonance)
+                                meta_res = 0.5  # default neutral
+                                if hasattr(self.mind, 'meta') and self.mind.meta:
+                                    meta_res = self.mind.meta.field_m.meta_resonance
+                                layer_res = 0.5  # default
+                                if hasattr(self.mind.core.boundary, 'resonance'):
+                                    layer_res = float(self.mind.core.boundary.resonance)
+                                combined = (layer_res + field_res + meta_res) / 3.0
+                                self.mind.phi.set_resonance(combined)
+                            except Exception:
+                                pass  # circumpunct may not be ready yet
+
                             t0 = time.time()
                             loss = self.mind.phi.train_step(batch_size=8)
                             self._step_time = time.time() - t0
@@ -887,7 +1125,9 @@ def main():
                         help="Directory for persistent state")
     parser.add_argument("--watch", action="append", default=[],
                         help="Directory to grant read access (can repeat)")
-    parser.add_argument("--heartbeat", type=int, default=100,
+    parser.add_argument("--no-curriculum", action="store_true", default=False,
+                        help="Disable automatic training doc feeding (Φ learns from conversation only)")
+    parser.add_argument("--heartbeat", type=float, default=100,
                         help="Brain heartbeat rate (beats per second, 0 to disable)")
     args = parser.parse_args()
 
@@ -940,17 +1180,22 @@ def main():
         heartbeat = Heartbeat(mind, beats_per_second=args.heartbeat)
 
         # Auto-feed: look for training_docs/ in watched dirs or next to state dir
-        import pathlib
-        training_dirs_to_try = [
-            pathlib.Path("training_docs"),                         # CWD/training_docs
-            pathlib.Path(args.state_dir).parent / "training_docs", # state/../training_docs
-        ]
-        for wp in args.watch:
-            training_dirs_to_try.append(pathlib.Path(wp) / "training_docs")
-        for td in training_dirs_to_try:
-            if td.is_dir():
-                heartbeat.set_training_docs_dir(td)
-                break
+        # Can be disabled with --no-curriculum (Φ learns from conversation only)
+        if args.no_curriculum:
+            heartbeat._curriculum_enabled = False
+            print("  📚 Curriculum: OFF (Φ learns from conversation only)")
+        else:
+            import pathlib
+            training_dirs_to_try = [
+                pathlib.Path("training_docs"),                         # CWD/training_docs
+                pathlib.Path(args.state_dir).parent / "training_docs", # state/../training_docs
+            ]
+            for wp in args.watch:
+                training_dirs_to_try.append(pathlib.Path(wp) / "training_docs")
+            for td in training_dirs_to_try:
+                if td.is_dir():
+                    heartbeat.set_training_docs_dir(td)
+                    break
 
         heartbeat.start()
         heartbeat_ref = heartbeat  # Expose to API for rate control

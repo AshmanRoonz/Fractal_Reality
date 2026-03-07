@@ -369,6 +369,9 @@
   <button class="status-btn" onclick="hotReload()" title="Reload code without restarting">↻ Reload</button>
   <button class="status-btn" onclick="manualSave()" title="Save checkpoint now">💾 Save</button>
   <button class="status-btn" onclick="showHeartbeat()" title="Heartbeat speed control">♡ BPS</button>
+  <button class="status-btn" onclick="studyAll()" title="Read all training docs now" id="studyBtn">📖 Study</button>
+  <button class="status-btn" onclick="growContext()" title="Grow Φ context window" id="ctxBtn">⊙ Context</button>
+  <button class="status-btn" onclick="toggleLlamaMode()" title="Toggle Llama training/passive" id="llamaBtn">🦙 Training</button>
 </div>
 
 <div class="main">
@@ -573,9 +576,8 @@
                 scrollToBottom();
               } else if (data.phi_end) {
                 inPhi = false;
-                // Update Llama's label to show it's the voice
-                const label = mindMsg.querySelector('.mind-label');
-                if (label) label.textContent = 'Llama (voice)';
+                // Only label as "Llama (voice)" if Llama will actually speak
+                // (in passive mode, Llama stays silent)
               } else if (data.phi_token) {
                 if (phiDiv) {
                   const phiText = phiDiv.querySelector('.phi-voice');
@@ -583,6 +585,12 @@
                   scrollToBottom();
                 }
               } else if (data.token) {
+                // Llama is speaking — mark the label
+                if (!mindMsg._llamaSpoke) {
+                  mindMsg._llamaSpoke = true;
+                  const label = mindMsg.querySelector('.mind-label');
+                  if (label && phiDiv) label.textContent = 'Llama (voice)';
+                }
                 textEl.textContent += data.token;
                 scrollToBottom();
               }
@@ -603,6 +611,11 @@
     // Remove cursor
     const cursor = mindMsg.querySelector('.cursor');
     if (cursor) cursor.remove();
+
+    // Hide empty Llama container if it never spoke (passive mode)
+    if (!mindMsg._llamaSpoke && !textEl.textContent.trim()) {
+      mindMsg.style.display = 'none';
+    }
 
     clearTimeout(unlockBtnTimeout);
     clearTimeout(safetyTimeout);
@@ -658,10 +671,12 @@
     phiDiv.textContent = phiText;
     div.appendChild(phiDiv);
 
-    const llamaDiv = document.createElement('div');
-    llamaDiv.className = 'llama-voice';
-    llamaDiv.textContent = llamaText;
-    div.appendChild(llamaDiv);
+    if (llamaText) {
+      const llamaDiv = document.createElement('div');
+      llamaDiv.className = 'llama-voice';
+      llamaDiv.textContent = llamaText;
+      div.appendChild(llamaDiv);
+    }
 
     msgs.appendChild(div);
     scrollToBottom();
@@ -715,6 +730,11 @@
         div.textContent = r;
         rl.appendChild(div);
       }
+    }
+
+    // Llama mode button sync
+    if (s.llama_mode) {
+      updateLlamaBtn(s.llama_mode);
     }
 
     // LLM status
@@ -899,6 +919,113 @@
       }
     } catch (e) {
       addMessage('system', '⚠ Heartbeat control failed: ' + e.message);
+    }
+  }
+
+  // ─── GROW CONTEXT WINDOW ───
+  async function growContext() {
+    const btn = document.getElementById('ctxBtn');
+    try {
+      // First get current state
+      const sr = await fetch('/api/status');
+      const st = await sr.json();
+      const currentCtx = st.phi ? st.phi.seq_len : 128;
+      const currentData = st.phi ? st.phi.data_len : 121;
+
+      const target = prompt(
+        `Φ Context Window\n\nCurrent: ${currentCtx} total (${currentData} data bytes ≈ ${Math.floor(currentData/5)} words)\n\nEnter new context size (must be larger than ${currentCtx}):`,
+        currentCtx + 128
+      );
+      if (target === null || target === '') return;
+
+      const newCtx = parseInt(target);
+      if (isNaN(newCtx) || newCtx <= currentCtx) {
+        addMessage('system', `⚠ Target must be larger than current (${currentCtx})`);
+        return;
+      }
+
+      btn.textContent = '⊙ Growing...';
+      btn.disabled = true;
+      addMessage('system', `⊙ Growing context: ${currentCtx} → ${newCtx}...`);
+
+      const r = await fetch('/api/phi/grow-context', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({seq_len: newCtx})
+      });
+      const data = await r.json();
+
+      if (data.success) {
+        addMessage('system', `⊙ ${data.message}`);
+      } else {
+        addMessage('system', '⚠ ' + (data.error || 'Context growth failed'));
+      }
+    } catch (e) {
+      addMessage('system', '⚠ Context growth failed: ' + e.message);
+    }
+    btn.textContent = '⊙ Context';
+    btn.disabled = false;
+  }
+
+  // ─── STUDY ALL TRAINING DOCS ───
+  async function studyAll() {
+    const btn = document.getElementById('studyBtn');
+    btn.textContent = '📖 Reading...';
+    btn.disabled = true;
+    addMessage('system', '📖 Reading all training documents...');
+
+    try {
+      const r = await fetch('/api/study-all', { method: 'POST' });
+      const data = await r.json();
+
+      if (data.success) {
+        let summary = `📚 Study complete: ${data.docs_read} docs, ${data.total_chars.toLocaleString()} chars, ${data.total_chunks} chunks fed to Φ`;
+        addMessage('system', summary);
+
+        // Show each doc briefly
+        for (const doc of data.results) {
+          if (doc.error) {
+            addMessage('system', `  ⚠ ${doc.file}: ${doc.error}`);
+          } else {
+            addMessage('system', `  ✓ ${doc.file} (${doc.chars.toLocaleString()} chars)`);
+          }
+        }
+      } else {
+        addMessage('system', '⚠ Study failed: ' + (data.error || 'unknown error'));
+      }
+    } catch (e) {
+      addMessage('system', '⚠ Study failed: ' + e.message);
+    }
+
+    btn.textContent = '📖 Study';
+    btn.disabled = false;
+  }
+
+  // ─── LLAMA MODE TOGGLE ───
+  async function toggleLlamaMode() {
+    const btn = document.getElementById('llamaBtn');
+    try {
+      const r = await fetch('/api/llama-mode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}'
+      });
+      const data = await r.json();
+      updateLlamaBtn(data.mode);
+      addMessage('system', `🦙 Llama mode → ${data.mode}`);
+    } catch (e) {
+      addMessage('system', '⚠ Failed to toggle Llama mode: ' + e.message);
+    }
+  }
+
+  function updateLlamaBtn(mode) {
+    const btn = document.getElementById('llamaBtn');
+    if (mode === 'passive') {
+      btn.textContent = '🦙 Passive';
+      btn.style.opacity = '0.6';
+    } else {
+      btn.textContent = '🦙 Training';
+      btn.style.opacity = '1';
     }
   }
 

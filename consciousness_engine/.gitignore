@@ -1,0 +1,19 @@
+# State - unique to each instance
+consciousness_engine/state/
+consciousness_engine/__pycache__/
+__pycache__/
+*.pyc
+
+# Chat logs
+consciousness_engine/state/chat_logs/
+
+# Model weights (too large for git)
+*.pt
+*.pth
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env
+.env

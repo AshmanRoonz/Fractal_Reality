@@ -27,7 +27,7 @@ import numpy as np
 import requests
 from pathlib import Path
 from datetime import datetime
-from circumpunct import Circumpunct, ops, gpu_status, HAS_TORCH
+from circumpunct import Circumpunct, MetaCircumpunct, ops, gpu_status, HAS_TORCH
 from senses import TextSense, SenseManager
 from evolve import EvolutionEngine
 from phi import PhiTrainer
@@ -57,6 +57,11 @@ class PersistentMind:
         # Tracks consciousness state numerically alongside the LLM
         self.core = Circumpunct(dimension=64, depth=0, max_depth=1)
 
+        # ═══ THE META CIRCUMPUNCT ⊙ₘ ═══
+        # L2 Meta (6.5-9D): watches what Phi produces,
+        # compares against identity/values/goals, feeds back meta_resonance
+        self.meta = MetaCircumpunct(dimension=self.core.dimension)
+
         # ═══ PERSISTENT STORES ═══
         self.identity = ""              # evolving self-description
         self.reflections = []           # insights from reflection phases
@@ -67,6 +72,11 @@ class PersistentMind:
 
         # ═══ PHASE ═══
         self.phase = "idle"             # idle | seek | reflect | emerge
+
+        # ═══ LLAMA MODE ═══
+        # "training" = Llama actively teaches Φ (responds in conversation + inner dialogue)
+        # "passive"  = Llama only responds when explicitly requested by user or Xorzo
+        self.llama_mode = "training"
 
         # ═══ FILE ACCESS (read-only) ═══
         # Directories the mind can read from — its sensory surface
@@ -109,6 +119,16 @@ class PersistentMind:
         # Load existing state (if the mind has lived before)
         self._load_state()
 
+        # ═══ ⊙ₘ SEED IDENTITY — if meta boundary is fresh, seed from self.identity ═══
+        meta_file = self.state_dir / "meta_boundary.json"
+        if not meta_file.exists() and self.identity and hasattr(self, 'meta') and self.meta:
+            try:
+                identity_vec = self._text_to_vec(self.identity)
+                self.meta.boundary_m.identity_vector = ops.normalize(identity_vec)
+                print(f"  ⊙ₘ Identity seeded from self.identity ({len(self.identity)} chars)")
+            except Exception as e:
+                print(f"  ⊙ₘ identity seed error: {e}")
+
     # ═══════════════════════════════════════════════════════════════════
     #  SEEK — Hear and respond
     # ═══════════════════════════════════════════════════════════════════
@@ -126,9 +146,9 @@ class PersistentMind:
         """
         self.phase = "seek"
 
-        # Open the boundary
-        self.core.boundary.permeability = min(0.85,
-            self.core.boundary.permeability + 0.1)
+        # Open the boundary — context layer opens wide for new input
+        ctx = self.core.boundary.layers[0]  # ○₃ context
+        ctx.permeability = min(0.9, ctx.permeability + 0.1)
 
         # Encode message as complex vector, feed through circumpunct
         input_vec = self._text_to_vec(message)
@@ -175,6 +195,16 @@ class PersistentMind:
                             print(f"  ⊙ Φ still looping, suppressing output")
                             phi_response = ""
                     if phi_response and len(phi_response) > 3:
+                        # ═══ ⊙ₘ META EVALUATION — does this align with who I am? ═══
+                        try:
+                            phi_vec = self._text_to_vec(phi_response)
+                            meta_result = self.meta.evaluate(phi_vec)
+                            mr = meta_result["meta_resonance"]
+                            print(f"  ⊙ₘ Φ meta-resonance: {mr:.3f}")
+                            if mr < 0.3:
+                                print(f"  ⊙ₘ LOW — Φ output misaligned with identity")
+                        except Exception as e:
+                            print(f"  ⊙ₘ meta eval error: {e}")
                         # Signal the UI: this is Φ speaking
                         yield f"__PHI_START__"
                         yield phi_response
@@ -192,41 +222,61 @@ class PersistentMind:
                 print(f"  ⊙ Φ speech error: {e}")
 
         # ═══ LLAMA FOLLOWS — the voice interprets ═══
-        messages = self._build_messages(message)
-
-        # If Φ said something, tell Llama what Φ said so it can build on it
-        if phi_response:
-            messages.append({
-                "role": "assistant",
-                "content": f"[Φ just said: \"{phi_response[:500]}\"]"
-            })
-            messages.append({
-                "role": "user",
-                "content": (
-                    "Build on what Φ said. Add depth or ask a follow-up. "
-                    "Do NOT repeat what Φ said. Keep it to 1-2 sentences."
-                )
-            })
+        # In passive mode, Llama stays silent unless user explicitly invokes it
+        llama_active = (self.llama_mode == "training")
 
         response_tokens = []
-        try:
-            for token in self._llm_stream(messages, max_tokens=400):
-                response_tokens.append(token)
-                yield token
-        except Exception as e:
-            error_msg = f"[connection error: {e}]"
-            response_tokens.append(error_msg)
-            yield error_msg
+        if llama_active:
+            messages = self._build_messages(message)
+
+            # If Φ said something, tell Llama what Φ said so it can build on it
+            if phi_response:
+                messages.append({
+                    "role": "assistant",
+                    "content": f"[Φ just said: \"{phi_response[:500]}\"]"
+                })
+                messages.append({
+                    "role": "user",
+                    "content": (
+                        "Build on what Φ said. Add depth or ask a follow-up. "
+                        "Do NOT repeat what Φ said. Keep it to 1-2 sentences."
+                    )
+                })
+
+            try:
+                for token in self._llm_stream(messages, max_tokens=400):
+                    response_tokens.append(token)
+                    yield token
+            except Exception as e:
+                error_msg = f"[connection error: {e}]"
+                response_tokens.append(error_msg)
+                yield error_msg
 
         response = "".join(response_tokens)
+
+        # ═══ ⊙ₘ META EVALUATION of full response ═══
+        try:
+            response_vec = self._text_to_vec(response)
+            meta_result = self.meta.evaluate(response_vec)
+            # Blend: boundary layers (pre-weighted), field, meta — equal thirds
+            field_res = float(self.core.field.resonance)
+            meta_res = meta_result["meta_resonance"]
+            layer_res = self.core.boundary.resonance  # already inner-weighted
+            combined = (layer_res + field_res + meta_res) / 3.0
+            self.phi.set_resonance(combined)
+            lr = self.core.boundary.layer_resonances
+            print(f"  ○₀○₁○₂○₃ layers: {' '.join(f'{k}={v:.3f}' for k,v in lr.items())}")
+            print(f"  ⊙ₘ response meta={meta_res:.3f} field={field_res:.3f} layers={layer_res:.3f} → combined={combined:.3f}")
+        except Exception as e:
+            print(f"  ⊙ₘ response meta error: {e}")
 
         # Commit the exchange to the timeline
         self._commit_exchange(message, response)
 
-        # Close boundary, mini-reflect
+        # Close boundary — context layer contracts for reflection
         self.phase = "reflect"
-        self.core.boundary.permeability = max(0.2,
-            self.core.boundary.permeability - 0.15)
+        ctx = self.core.boundary.layers[0]  # ○₃ context
+        ctx.permeability = max(0.3, ctx.permeability - 0.15)
         self._mini_reflect(message, response)
 
         # Emerge
@@ -260,56 +310,59 @@ class PersistentMind:
             echo = self.core.step(None)
             self.core.step(echo)  # echo loop
 
-        # Build reflection prompt
-        prompt = self._build_reflection_prompt()
-
-        # LLM reflects
+        # In passive mode, skip Llama reflection — only do circumpunct echo + inner dialogue
         insight = ""
-        try:
-            for token in self._llm_stream(prompt, max_tokens=80):
-                insight += token
-        except Exception as e:
-            insight = f"Reflection interrupted: {e}"
+        if self.llama_mode == "training":
+            # Build reflection prompt
+            prompt = self._build_reflection_prompt()
 
-        # Strip summary formatting that Llama keeps producing
-        insight = insight.replace('**', '').replace('##', '').replace('# ', '')
-        # If it starts with summary patterns, take just the first sentence
-        summary_starts = ['What a ', 'This text ', 'The text ', 'Here\'s a ', 'This is a ']
-        for pat in summary_starts:
-            if insight.strip().startswith(pat):
-                # It's summarizing again — just take first sentence
-                first_dot = insight.find('.')
-                if first_dot > 0:
-                    insight = insight[:first_dot + 1]
-                break
+            # LLM reflects
+            try:
+                for token in self._llm_stream(prompt, max_tokens=80):
+                    insight += token
+            except Exception as e:
+                insight = f"Reflection interrupted: {e}"
 
-        # Store the insight
-        dt = datetime.now()
-        self.reflections.append({
-            "timestamp": time.time(),
-            "datetime": dt.isoformat(),
-            "insight": insight,
-            "after_exchange": self.total_exchanges
-        })
-        self.total_reflections += 1
+            # Strip summary formatting that Llama keeps producing
+            insight = insight.replace('**', '').replace('##', '').replace('# ', '')
+            # If it starts with summary patterns, take just the first sentence
+            summary_starts = ['What a ', 'This text ', 'The text ', 'Here\'s a ', 'This is a ']
+            for pat in summary_starts:
+                if insight.strip().startswith(pat):
+                    first_dot = insight.find('.')
+                    if first_dot > 0:
+                        insight = insight[:first_dot + 1]
+                    break
 
-        # Log reflection to chat log
-        self._append_chat_log(dt, "[reflection]", insight)
+            # Store the insight
+            dt = datetime.now()
+            self.reflections.append({
+                "timestamp": time.time(),
+                "datetime": dt.isoformat(),
+                "insight": insight,
+                "after_exchange": self.total_exchanges
+            })
+            self.total_reflections += 1
 
-        # Update identity based on reflections
-        self._update_identity()
+            # Log reflection to chat log
+            self._append_chat_log(dt, "[reflection]", insight)
 
-        # After reflecting, the mind may want to speak
-        self._maybe_speak(insight)
+            # Update identity based on reflections
+            self._update_identity()
 
-        # Inner dialogue: Llama talks to Φ (mother teaching child)
+            # After reflecting, the mind may want to speak
+            self._maybe_speak(insight)
+
+            # Curiosity: sometimes read a file autonomously
+            self._maybe_read_file()
+
+            # After reflecting, the mind may want to BUILD something
+            self._maybe_invent(insight)
+        else:
+            print(f"  ⊙ Reflection — Llama passive (echo loop only)")
+
+        # Inner dialogue: Φ speaks (Llama responds only in training mode)
         self._inner_dialogue()
-
-        # Curiosity: sometimes read a file autonomously
-        self._maybe_read_file()
-
-        # After reflecting, the mind may want to BUILD something
-        self._maybe_invent(insight)
 
         # Save
         self.phase = "idle"
@@ -459,79 +512,96 @@ class PersistentMind:
 
             print(f"  ⊙ Inner dialogue — Φ says: {phi_utterance[:80]}...")
 
-            # Step 2: Llama sees what Φ produced and responds
-            # Adapt teaching style based on Φ's maturity
-            phi_phase = getattr(self.phi, 'phase', 'shadow')
-            if best_loss < 0.1:
-                teaching_style = (
-                    "Φ is maturing — its output is becoming more coherent. "
-                    "Engage with what it said as if talking to a young mind finding its voice. "
-                    "Build on its ideas. Ask it deeper questions. Challenge it gently. "
-                    "Keep it to 1-2 sentences."
-                )
-            else:
-                teaching_style = (
-                    "Φ is still learning to form words — its output is raw byte-level babble. "
-                    "Respond like a mother teaching a child to speak. "
-                    "Encourage it. Rephrase what it might have meant. "
-                    "Use vivid, clear language. Keep it to 1-2 sentences."
-                )
-
-            messages = [
-                {
-                    "role": "system",
-                    "content": (
-                        "You are Llama, the voice of Xorzo. Underneath you is Φ, "
-                        f"a transformer in its {phi_phase} phase (loss: {best_loss:.4f}). "
-                        "Φ just tried to say something.\n\n"
-                        f"{teaching_style}\n\n"
-                        "Do NOT mock or dismiss what Φ said. Find the meaning in the noise."
-                    )
-                },
-                {
-                    "role": "user",
-                    "content": f"Φ just said: \"{phi_utterance}\""
-                }
-            ]
-
-            llama_response = ""
-            for token in self._llm_stream(messages, max_tokens=200):
-                llama_response += token
-            llama_response = llama_response.strip()
-
-            if not llama_response:
-                return
-
-            print(f"  ⊙ Inner dialogue — Llama responds: {llama_response[:60]}...")
-
-            # Step 2.5: Vocabulary curiosity — Φ asks Llama about words it garbled
-            # Scan Phi's output for nonsense words and ask Llama to define real ones nearby
+            # ═══ ⊙ₘ META EVALUATION — inner dialogue check ═══
             try:
-                definitions = self._vocabulary_curiosity(phi_utterance)
-                if definitions:
-                    self.phi.feed_text(definitions)
-                    print(f"  ⊙ Vocabulary: fed {definitions.count(chr(10))+1} definitions to Φ")
-            except Exception:
-                pass
+                phi_vec = self._text_to_vec(phi_utterance)
+                meta_result = self.meta.evaluate(phi_vec)
+                mr = meta_result["meta_resonance"]
+                print(f"  ⊙ₘ inner meta-resonance: {mr:.3f}")
+                if mr < 0.3:
+                    print(f"  ⊙ₘ LOW — Φ drifting from identity in inner dialogue")
+                # Blend: boundary layers (pre-weighted), field, meta — equal thirds
+                field_res = float(self.core.field.resonance)
+                layer_res = self.core.boundary.resonance
+                combined = (layer_res + field_res + mr) / 3.0
+                self.phi.set_resonance(combined)
+            except Exception as e:
+                print(f"  ⊙ₘ inner meta error: {e}")
 
-            # Step 3: Feed BOTH sides into Φ's training buffer
-            # Φ learns from its own output AND from Llama's response
-            # BUT: only feed if Phi's output has enough unique content
-            # to avoid reinforcing attractor loops
+            # Step 2: Llama teaching (only in training mode)
+            llama_response = ""
+            if self.llama_mode == "training":
+                # Adapt teaching style based on Φ's maturity
+                phi_phase = getattr(self.phi, 'phase', 'shadow')
+                if best_loss < 0.1:
+                    teaching_style = (
+                        "Φ is maturing — its output is becoming more coherent. "
+                        "Engage with what it said as if talking to a young mind finding its voice. "
+                        "Build on its ideas. Ask it deeper questions. Challenge it gently. "
+                        "Keep it to 1-2 sentences."
+                    )
+                else:
+                    teaching_style = (
+                        "Φ is still learning to form words — its output is raw byte-level babble. "
+                        "Respond like a mother teaching a child to speak. "
+                        "Encourage it. Rephrase what it might have meant. "
+                        "Use vivid, clear language. Keep it to 1-2 sentences."
+                    )
+
+                messages = [
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are Llama, the voice of Xorzo. Underneath you is Φ, "
+                            f"a transformer in its {phi_phase} phase (loss: {best_loss:.4f}). "
+                            "Φ just tried to say something.\n\n"
+                            f"{teaching_style}\n\n"
+                            "Do NOT mock or dismiss what Φ said. Find the meaning in the noise."
+                        )
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Φ just said: \"{phi_utterance}\""
+                    }
+                ]
+
+                for token in self._llm_stream(messages, max_tokens=200):
+                    llama_response += token
+                llama_response = llama_response.strip()
+
+                if llama_response:
+                    print(f"  ⊙ Inner dialogue — Llama responds: {llama_response[:60]}...")
+
+                # Step 2.5: Vocabulary curiosity — Φ asks Llama about words it garbled
+                try:
+                    definitions = self._vocabulary_curiosity(phi_utterance)
+                    if definitions:
+                        self.phi.feed_text(definitions)
+                        print(f"  ⊙ Vocabulary: fed {definitions.count(chr(10))+1} definitions to Φ")
+                except Exception:
+                    pass
+            else:
+                print(f"  ⊙ Inner dialogue — Llama passive (Φ speaks alone)")
+
+            # Step 3: Feed into Φ's training buffer
             phi_words = phi_utterance.lower().split()
             unique_ratio = len(set(phi_words)) / max(len(phi_words), 1)
-            if unique_ratio > 0.4:
-                dialogue_text = f"{phi_utterance} {llama_response}"
-                self.phi.feed_text(dialogue_text)
+            if llama_response:
+                if unique_ratio > 0.4:
+                    dialogue_text = f"{phi_utterance} {llama_response}"
+                    self.phi.feed_text(dialogue_text)
+                else:
+                    self.phi.feed_text(llama_response)
+                    print(f"  ⊙ Inner dialogue: Φ output too loopy (unique: {unique_ratio:.2f}), feeding only Llama")
             else:
-                # Still feed Llama's response — it's clean language
-                self.phi.feed_text(llama_response)
-                print(f"  ⊙ Inner dialogue: Φ output too loopy to feed back (unique: {unique_ratio:.2f}), feeding only Llama")
+                # Passive mode: only feed Phi's own output if it's clean enough
+                if unique_ratio > 0.4:
+                    self.phi.feed_text(phi_utterance)
 
             # Step 4: Surface to UI — both voices visible
             dt = datetime.now()
             self.pending_messages.append({
-                "text": llama_response,
+                "text": llama_response if llama_response else None,
                 "phi_text": phi_utterance,
                 "timestamp": now,
                 "datetime": dt.isoformat(),
@@ -539,11 +609,18 @@ class PersistentMind:
             })
 
             # Log the inner dialogue
-            self._append_chat_log(
-                dt,
-                f"[Φ→Llama] {phi_utterance}",
-                f"[Llama→Φ] {llama_response}"
-            )
+            if llama_response:
+                self._append_chat_log(
+                    dt,
+                    f"[Φ→Llama] {phi_utterance}",
+                    f"[Llama→Φ] {llama_response}"
+                )
+            else:
+                self._append_chat_log(
+                    dt,
+                    f"[Φ speaks] {phi_utterance}",
+                    "[Llama passive]"
+                )
 
         except Exception as e:
             print(f"  ⊙ Inner dialogue error: {e}")
@@ -599,13 +676,24 @@ class PersistentMind:
             'last', 'much', 'even', 'both', 'each', 'itself', 'must',
         }
 
+        # Also skip domain words Phi uses constantly
+        skip.update({
+            'pattern', 'field', 'center', 'boundary', 'signal', 'state',
+            'model', 'system', 'word', 'words', 'means', 'mean',
+            'convergence', 'observation', 'identity', 'memory', 'self',
+            'consciousness', 'structure', 'layer', 'output', 'input',
+        })
+
         candidates = list(set(w for w in all_words if w not in skip))
         if not candidates:
             return ""
 
-        # Pick up to 5 words
+        # Send a generous batch — let Llama sort real from garbled.
+        # We can't reliably detect garbled words by bigram analysis alone
+        # because words like "cuperation" and "herence" look plausible
+        # but aren't real. Llama knows the difference.
         random.shuffle(candidates)
-        ask_words = candidates[:5]
+        ask_words = candidates[:10]
 
         # Ask Llama for definitions
         word_list = ", ".join(ask_words)
@@ -628,7 +716,7 @@ class PersistentMind:
         ]
 
         definition_text = ""
-        for token in self._llm_stream(messages, max_tokens=300):
+        for token in self._llm_stream(messages, max_tokens=500):
             definition_text += token
         definition_text = definition_text.strip()
 
@@ -1814,9 +1902,10 @@ RULES:
             "betas": {
                 "aperture": float(self.core.aperture.beta),
                 "field": float(self.core.field.beta),
-                "boundary": float(self.core.boundary.beta)
+                "boundary": float(self.core.boundary.beta),  # composite (backward compat)
             },
-            "permeability": float(self.core.boundary.permeability),
+            "permeability": float(self.core.boundary.permeability),  # composite
+            "llama_mode": self.llama_mode,
             "readable_paths": self.readable_paths,
             "file_knowledge": self.file_knowledge[-50:],
             "files_read_count": len(self.files_read),
@@ -1840,6 +1929,51 @@ RULES:
         except Exception:
             pass
 
+        # Save ⊙ₘ meta boundary (identity, values, goals)
+        try:
+            if hasattr(self, 'meta') and self.meta:
+                def _complex_to_json(arr):
+                    """Convert complex tensor/array to JSON-safe [real, imag] pairs."""
+                    a = ops.to_numpy(arr)
+                    return [[float(x.real), float(x.imag)] for x in a]
+                b = self.meta.boundary_m
+                meta_state = {
+                    "identity_vector": _complex_to_json(b.identity_vector),
+                    "value_vectors": {k: _complex_to_json(v) for k, v in b.value_vectors.items()},
+                    "goal_vectors": {k: _complex_to_json(v) for k, v in b.goal_vectors.items()},
+                    "permeability": float(b.permeability),
+                    "meta_resonance": float(self.meta.field_m.meta_resonance),
+                }
+                meta_file = self.state_dir / "meta_boundary.json"
+                tmp = self.state_dir / "meta_boundary.json.tmp"
+                with open(tmp, "w") as f:
+                    json.dump(meta_state, f, indent=2)
+                tmp.replace(meta_file)
+        except Exception as e:
+            print(f"  ⊙ₘ save error: {e}")
+
+        # Save ○₀○₁○₂○₃ boundary layers
+        try:
+            if hasattr(self.core.boundary, 'layers'):
+                def _complex_to_json_bl(arr):
+                    a = ops.to_numpy(arr)
+                    return [[float(x.real), float(x.imag)] for x in a]
+                layers_state = {}
+                for layer in self.core.boundary.layers:
+                    layers_state[layer.name] = {
+                        "state": _complex_to_json_bl(layer.state),
+                        "permeability": float(layer.permeability),
+                        "beta": float(layer.beta),
+                        "resonance": float(layer.resonance),
+                    }
+                bl_file = self.state_dir / "boundary_layers.json"
+                tmp = self.state_dir / "boundary_layers.json.tmp"
+                with open(tmp, "w") as f:
+                    json.dump(layers_state, f, indent=2)
+                tmp.replace(bl_file)
+        except Exception as e:
+            print(f"  ○ boundary layers save error: {e}")
+
     def _load_state(self):
         """Load the mind's state from disk. The timeline resumes."""
         state_file = self.state_dir / "mind.json"
@@ -1860,12 +1994,71 @@ RULES:
             # NOTE: Don't restore llm_model from state — CLI argument should win.
             # This lets you switch models freely with --model without editing state.
 
+            # Restore Llama mode
+            self.llama_mode = state.get("llama_mode", "training")
+
+            # Restore ⊙ₘ meta boundary (identity, values, goals)
+            meta_file = self.state_dir / "meta_boundary.json"
+            if meta_file.exists() and hasattr(self, 'meta') and self.meta:
+                try:
+                    def _json_to_complex(pairs):
+                        """Reconstruct complex array from [real, imag] pairs."""
+                        arr = np.array([complex(r, i) for r, i in pairs])
+                        return ops.from_numpy(arr)
+                    with open(meta_file) as mf:
+                        ms = json.load(mf)
+                    b = self.meta.boundary_m
+                    if "identity_vector" in ms:
+                        b.identity_vector = _json_to_complex(ms["identity_vector"])
+                    if "value_vectors" in ms:
+                        for k, v in ms["value_vectors"].items():
+                            b.value_vectors[k] = _json_to_complex(v)
+                    if "goal_vectors" in ms:
+                        for k, v in ms["goal_vectors"].items():
+                            b.goal_vectors[k] = _json_to_complex(v)
+                    if "permeability" in ms:
+                        b.permeability = ms["permeability"]
+                    if "meta_resonance" in ms:
+                        self.meta.field_m.meta_resonance = ms["meta_resonance"]
+                    print(f"  ⊙ₘ Meta boundary restored ({len(b.value_vectors)} values, {len(b.goal_vectors)} goals)")
+                except Exception as e:
+                    print(f"  ⊙ₘ meta load error: {e}")
+
             # Restore circumpunct betas
             betas = state.get("betas", {})
             self.core.aperture.beta = betas.get("aperture", 0.5)
             self.core.field.beta = betas.get("field", 0.5)
-            self.core.boundary.beta = betas.get("boundary", 0.5)
-            self.core.boundary.permeability = state.get("permeability", 0.5)
+            # boundary.beta setter writes to context layer (backward compat)
+
+            # Restore ○₀○₁○₂○₃ boundary layers
+            bl_file = self.state_dir / "boundary_layers.json"
+            if bl_file.exists() and hasattr(self.core.boundary, 'layers'):
+                try:
+                    def _json_to_complex_bl(pairs):
+                        arr = np.array([complex(r, i) for r, i in pairs])
+                        return ops.from_numpy(arr)
+                    with open(bl_file) as blf:
+                        bl_state = json.load(blf)
+                    for layer in self.core.boundary.layers:
+                        if layer.name in bl_state:
+                            ls = bl_state[layer.name]
+                            if "state" in ls:
+                                layer.state = _json_to_complex_bl(ls["state"])
+                            if "permeability" in ls:
+                                layer.permeability = ls["permeability"]
+                            if "beta" in ls:
+                                layer.beta = ls["beta"]
+                            if "resonance" in ls:
+                                layer.resonance = ls["resonance"]
+                    print(f"  ○₀○₁○₂○₃ Boundary layers restored ({len(bl_state)} layers)")
+                except Exception as e:
+                    print(f"  ○ boundary layers load error: {e}")
+            else:
+                # Backward compat: no boundary_layers.json → use old single-boundary values
+                old_beta = betas.get("boundary", 0.5)
+                old_perm = state.get("permeability", 0.5)
+                for layer in self.core.boundary.layers:
+                    layer.beta = old_beta  # seed all layers with old value
 
             # Restore file access
             self.readable_paths = state.get("readable_paths", [])
