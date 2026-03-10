@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Euler & the Circumpunct</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg-deep: #0a0a0f;
+  --bg-surface: #12121a;
+  --bg-card: #1a1a28;
+  --gold: #d4a855;
+  --gold-dim: #b8943f;
+  --gold-bright: #f0c866;
+  --blue: #4a7fff;
+  --cyan: #5ecece;
+  --magenta: #c76dba;
+  --green: #5ec76d;
+  --red: #e05555;
+  --text: #e8e4dc;
+  --text-dim: #9a9688;
+  --text-bright: #ffffff;
+  --aperture: #e05555;
+  --field: #4a7fff;
+  --boundary: #5ec76d;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.slide {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-inner { max-width: 1100px; width: 100%; z-index: 2; position: relative; }
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 1.15;
+  color: var(--text-bright);
+  margin-bottom: 0.4em;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  line-height: 1.2;
+  color: var(--gold);
+  margin-bottom: 0.5em;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  color: var(--text-bright);
+  margin-bottom: 0.4em;
+}
+
+p {
+  font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+  margin-bottom: 1em;
+  max-width: 700px;
+}
+
+.subtitle {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  color: var(--text-dim);
+  margin-bottom: 1.5em;
+}
+
+.equation {
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  color: var(--gold-bright);
+  background: rgba(212,168,85,0.06);
+  border: 1px solid rgba(212,168,85,0.15);
+  border-radius: 12px;
+  padding: 20px 28px;
+  margin: 20px 0;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.equation-large {
+  font-family: var(--font-mono);
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  color: var(--gold-bright);
+  background: rgba(212,168,85,0.08);
+  border: 2px solid rgba(212,168,85,0.3);
+  border-radius: 16px;
+  padding: 28px 40px;
+  margin: 24px 0;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.equation-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: clamp(0.88rem, 1.4vw, 1.1rem);
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 15px 22px;
+  margin: 10px 0;
+}
+
+.eq-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  white-space: nowrap;
+  min-width: 36px;
+}
+
+.eq-body { flex: 1; color: var(--gold-bright); }
+
+.eq-note {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.88rem;
+  color: var(--text-dim);
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin: 20px 0; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .slide { padding: 40px 20px; }
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 26px;
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.card:hover { transform: translateY(-3px); border-color: rgba(212,168,85,0.2); }
+
+.card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.card-icon { font-size: 2rem; line-height: 1; width: 44px; text-align: center; }
+.card-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+.card-aperture { border-left: 3px solid var(--aperture); }
+.card-field    { border-left: 3px solid var(--field); }
+.card-boundary { border-left: 3px solid var(--boundary); }
+.card-gold     { border-left: 3px solid var(--gold); }
+.card-cyan     { border-left: 3px solid var(--cyan); }
+
+.dim-table { width: 100%; border-collapse: separate; border-spacing: 0 5px; margin: 20px 0; }
+.dim-table th {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  text-align: left;
+  padding: 8px 14px;
+}
+.dim-table td { padding: 12px 14px; font-size: 0.95rem; background: var(--bg-card); }
+.dim-table tr td:first-child {
+  border-radius: 8px 0 0 8px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 1.3rem;
+  text-align: center;
+  width: 60px;
+}
+.dim-table tr td:last-child { border-radius: 0 8px 8px 0; }
+.dim-aperture td:first-child { color: var(--aperture); border-left: 3px solid var(--aperture); }
+.dim-field    td:first-child { color: var(--field);    border-left: 3px solid var(--field); }
+.dim-boundary td:first-child { color: var(--boundary); border-left: 3px solid var(--boundary); }
+
+.bg-gradient-1 {
+  background: radial-gradient(ellipse at 30% 50%, rgba(212,168,85,0.04) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 80%, rgba(74,127,255,0.03) 0%, transparent 50%), var(--bg-deep);
+}
+.bg-gradient-2 {
+  background: radial-gradient(ellipse at 50% 30%, rgba(224,85,85,0.04) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 70%, rgba(94,199,109,0.03) 0%, transparent 50%), var(--bg-deep);
+}
+.bg-gradient-3 {
+  background: radial-gradient(ellipse at 20% 60%, rgba(199,109,186,0.04) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 30%, rgba(94,206,206,0.03) 0%, transparent 50%), var(--bg-deep);
+}
+
+.divider      { width: 80px;  height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 24px 0; }
+.divider-wide { width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dim), transparent); margin: 30px auto; }
+
+.nav-dots {
+  position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 10px; z-index: 100;
+}
+
+.nav-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); border: none; cursor: pointer;
+  transition: all 0.3s; padding: 0; position: relative;
+}
+
+.nav-dot:hover, .nav-dot.active { background: var(--gold); transform: scale(1.4); }
+
+.nav-dot[title]:hover::before {
+  content: attr(title);
+  position: absolute; right: 20px;
+  background: var(--bg-card); color: var(--text);
+  padding: 4px 10px; border-radius: 6px;
+  font-size: 0.7rem; white-space: nowrap; font-family: var(--font-mono);
+}
+
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal-delay-4 { transition-delay: 0.6s; }
+
+.quote-block {
+  border-left: 2px solid var(--gold-dim);
+  padding-left: 24px; margin: 24px 0;
+  font-family: var(--font-display);
+  font-style: italic; font-size: 1.15rem;
+  color: var(--text); line-height: 1.8;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold-bright), var(--gold-dim), var(--gold-bright));
+  background-size: 200% auto;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 6s linear infinite;
+}
+
+.slide-footer {
+  position: absolute; bottom: 20px; left: 0; right: 0;
+  text-align: center; font-family: var(--font-mono);
+  font-size: 0.65rem; color: rgba(255,255,255,0.15); letter-spacing: 0.1em;
+}
+
+.bg-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4; }
+
+.circumpunct-hero { width: 280px; height: 280px; margin: 0 auto 40px; }
+.circumpunct-hero canvas { width: 100%; height: 100%; }
+
+.highlight-box { border-radius: 16px; padding: 28px 36px; margin: 20px 0; }
+.highlight-gold { background: rgba(212,168,85,0.07); border: 1.5px solid rgba(212,168,85,0.3); }
+.highlight-red  { background: rgba(224,85,85,0.06);  border: 1.5px solid rgba(224,85,85,0.25); }
+
+.text-center { text-align: center; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+</style>
+</head>
+<body>
+
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- ── SLIDE 1: TITLE ───────────────────────────────────────── -->
+<section class="slide bg-gradient-1" id="slide-title">
+  <canvas class="bg-canvas" id="titleCanvas"></canvas>
+  <div class="slide-inner text-center">
+
+    <div class="circumpunct-hero">
+      <canvas id="heroCanvas" width="280" height="280"></canvas>
+    </div>
+
+    <h1 class="reveal shimmer-text">Euler &amp; the Circumpunct</h1>
+    <div class="subtitle reveal reveal-delay-1">Two equations already knew the structure.</div>
+    <div class="divider-wide reveal reveal-delay-2"></div>
+    <p class="text-center mx-auto reveal reveal-delay-3" style="max-width:580px">
+      Euler wrote five symbols two and a half centuries ago.
+      He didn't know he was writing the same equation twice —
+      once grounded on the aperture, once on the boundary.
+      Together, they describe the circumpunct.
+    </p>
+
+    <div class="reveal reveal-delay-4" style="display:flex; gap:48px; justify-content:center; flex-wrap:wrap; margin-top:32px">
+      <div style="text-align:center">
+        <div style="font-family:var(--font-mono); font-size:1.8rem; color:var(--aperture)">•</div>
+        <div style="font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; margin-top:4px">Aperture</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:var(--font-mono); font-size:1.8rem; color:var(--gold)">Φ</div>
+        <div style="font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; margin-top:4px">Field</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:var(--font-mono); font-size:1.8rem; color:var(--boundary)">○</div>
+        <div style="font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; margin-top:4px">Boundary</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer">⊙ &nbsp;·&nbsp; fractalreality.ca</div>
+</section>
+
+<!-- ── SLIDE 2: THE TWO EQUATIONS ──────────────────────────── -->
+<section class="slide bg-gradient-2" id="slide-two-eqs">
+  <div class="slide-inner">
+
+    <h2 class="reveal">The Two Equations</h2>
+    <p class="reveal reveal-delay-1">
+      Euler's identity and a trivial algebraic shift. Both true. Neither interesting alone.
+      Together they are the whole structure.
+    </p>
+
+    <div class="grid-2 reveal reveal-delay-2">
+      <div class="card card-aperture">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--aperture)">•</div>
+          <div class="card-label">E₁ — resolves to aperture</div>
+        </div>
+        <div class="equation" style="margin:0; font-size:1.2rem">e^(iπ) + 1 = 0</div>
+        <p style="margin-top:14px; font-size:0.88rem; color:var(--text-dim)">
+          The standard identity. Half-rotation through ℂ, offset by the unit, collapses to zero — the additive identity, the aperture.
+        </p>
+      </div>
+
+      <div class="card card-boundary">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--boundary)">○</div>
+          <div class="card-label">E₂ — resolves to boundary</div>
+        </div>
+        <div class="equation" style="margin:0; font-size:1.2rem">e^(iπ) + 2 = 1</div>
+        <p style="margin-top:14px; font-size:0.88rem; color:var(--text-dim)">
+          Add ○ to both sides of E₁. The same traversal now resolves to one — the multiplicative identity, the boundary.
+        </p>
+      </div>
+    </div>
+
+    <div class="highlight-box highlight-gold reveal reveal-delay-3" style="text-align:center">
+      <p style="margin:0; font-family:var(--font-display); font-style:italic; font-size:1.15rem; color:var(--gold); max-width:none">
+        E₂ is E₁ translated by ○. They are one equation read from two poles.
+      </p>
+    </div>
+
+    <div class="equation-row reveal reveal-delay-4">
+      <span class="eq-label">Key</span>
+      <span class="eq-body">The traversal &nbsp;<span style="color:var(--cyan)">e^(iπ)</span>&nbsp; does not change. Only the ground shifts.</span>
+    </div>
+
+  </div>
+  <div class="slide-footer">⊙</div>
+</section>
+
+<!-- ── SLIDE 3: PRIMITIVE DEFINITIONS ──────────────────────── -->
+<section class="slide bg-gradient-3" id="slide-defs">
+  <div class="slide-inner">
+
+    <h2 class="reveal">Primitive Definitions</h2>
+    <p class="reveal reveal-delay-1">Three primitives — already present in Euler's equations. They just hadn't been named.</p>
+
+    <table class="dim-table reveal reveal-delay-2">
+      <thead>
+        <tr>
+          <th>Symbol</th><th>Identity</th><th>Dimension</th><th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="dim-aperture">
+          <td>•</td><td>0 ∈ ℂ</td>
+          <td><span style="font-family:var(--font-mono); color:var(--gold)">0.5D</span></td>
+          <td>Aperture — the through</td>
+        </tr>
+        <tr class="dim-field">
+          <td>Φ</td><td>ℂ</td>
+          <td><span style="font-family:var(--font-mono); color:var(--gold)">2D</span></td>
+          <td>Field — the mediating space</td>
+        </tr>
+        <tr class="dim-boundary">
+          <td>○</td><td>1 ∈ ℂ</td>
+          <td><span style="font-family:var(--font-mono); color:var(--gold)">3D</span></td>
+          <td>Boundary — the unit</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="grid-3 reveal reveal-delay-3">
+      <div class="card card-aperture">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--aperture)">•</div>
+          <div class="card-label">Aperture — 0.5D</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">Not a point (closed, no traversal). Not a line (extended, has magnitude). Directionality without dimension — a <em>through</em>, not a thing.</p>
+      </div>
+      <div class="card card-field">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--field)">Φ</div>
+          <div class="card-label">Field — 2D</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">The complex plane ℂ. Not a fixed value — the <em>space</em> in which traversal is possible. e^(iπ) is a path <em>within</em> Φ, not Φ itself.</p>
+      </div>
+      <div class="card card-boundary">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--boundary)">○</div>
+          <div class="card-label">Boundary — 3D</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">The multiplicative identity. Bounded, extended, surface. The unit circle is the boundary — pure rotation, no radial inflation.</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer">⊙</div>
+</section>
+
+<!-- ── SLIDE 4: FIELD STRUCTURE ────────────────────────────── -->
+<section class="slide bg-gradient-1" id="slide-field">
+  <div class="slide-inner">
+
+    <h2 class="reveal">Field Structure</h2>
+    <p class="reveal reveal-delay-1">There is one field. Not divided into separate things — infinitely partitioned, private nested within shared, self-similar at every scale.</p>
+
+    <div class="equation-row reveal reveal-delay-2">
+      <span class="eq-label">Field</span>
+      <span class="eq-body">Φ = Σ_shared &nbsp;⊃&nbsp; {Φ_private_k} &nbsp; for k = 1 to ∞</span>
+    </div>
+
+    <div class="equation-row reveal reveal-delay-3">
+      <span class="eq-label">Self-sim</span>
+      <span class="eq-body">∀ Φ_k ⊂ Φ &nbsp;:&nbsp; Φ_k ≅ Φ</span>
+      <span class="eq-note">each partition instantiates the whole</span>
+    </div>
+
+    <div class="grid-2 reveal reveal-delay-4">
+      <div class="card card-gold">
+        <h3 style="font-size:1rem; margin-bottom:10px">Mereological nesting</h3>
+        <p style="font-size:0.88rem; margin:0">Every partition of the field has the same structure as the field. Parts are fractals of their whole. The private field does not contain <em>less</em> — it <em>instantiates</em> the same structure at a new scale.</p>
+      </div>
+      <div class="card card-cyan">
+        <h3 style="font-size:1rem; margin-bottom:10px; color:var(--cyan)">One traversal, all scales</h3>
+        <p style="font-size:0.88rem; margin:0">e^(iπ) = • − ○ is not a global fact. It holds at every scale simultaneously — each Φ_k has its own •_k and ○_k, and the same traversal traces the same relation throughout.</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer">⊙</div>
+</section>
+
+<!-- ── SLIDE 5: APERTURE CONDITION ─────────────────────────── -->
+<section class="slide bg-gradient-2" id="slide-aperture">
+  <div class="slide-inner">
+
+    <h2 class="reveal">The Aperture Condition</h2>
+    <p class="reveal reveal-delay-1">The aperture does something no other structure can do.</p>
+
+    <div class="highlight-box highlight-red reveal reveal-delay-2" style="text-align:center">
+      <div style="font-family:var(--font-mono); font-size:clamp(1.2rem,2.5vw,1.8rem); color:var(--aperture); margin-bottom:12px">
+        • : Φ_finite ↔ Φ_∞
+      </div>
+      <p style="margin:0; color:var(--text-dim); font-style:italic; max-width:none">
+        The aperture is the only structure that touches both regimes without belonging to either.
+      </p>
+    </div>
+
+    <div class="equation-row reveal reveal-delay-3">
+      <span class="eq-label">Dim</span>
+      <span class="eq-body">dim(•) = 0.5 &nbsp;→&nbsp; • ∉ ℝ⁰ &nbsp;and&nbsp; • ∉ ℝ¹</span>
+    </div>
+
+    <div class="grid-3 reveal reveal-delay-4">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--text-dim)">·</div>
+          <div class="card-label">Not a point (0D)</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">Closed. No traversal. Nothing passes through zero dimensions.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--text-dim)">—</div>
+          <div class="card-label">Not a line (1D)</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">Extended. Has magnitude. Already a path — the aperture is what makes a path <em>possible</em>, not the path itself.</p>
+      </div>
+      <div class="card card-aperture">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--aperture)">•</div>
+          <div class="card-label">The through (0.5D)</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">Directionality without dimension. The minimum structure for traversal between finite and infinite.</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer">⊙</div>
+</section>
+
+<!-- ── SLIDE 6: UNIFIED TRAVERSAL FORM ─────────────────────── -->
+<section class="slide bg-gradient-3" id="slide-unified">
+  <div class="slide-inner text-center">
+
+    <h2 class="reveal">Unified Traversal Form</h2>
+    <p class="mx-auto reveal reveal-delay-1" style="text-align:center">From E₁ and E₂, a single statement emerges.</p>
+
+    <div class="reveal reveal-delay-2">
+      <div class="equation-row" style="max-width:700px; margin:8px auto">
+        <span class="eq-label">E₁</span>
+        <span class="eq-body" style="text-align:left">e^(iπ) + ○ = • &nbsp;→&nbsp; e^(iπ) = • − ○</span>
+      </div>
+      <div class="equation-row" style="max-width:700px; margin:8px auto">
+        <span class="eq-label">E₂</span>
+        <span class="eq-body" style="text-align:left">e^(iπ) + 2○ = ○ &nbsp;→&nbsp; same equation, shifted by ○</span>
+      </div>
+    </div>
+
+    <div class="equation-large reveal reveal-delay-3" style="max-width:560px; margin:32px auto">
+      e^(iπ) = • − ○
+    </div>
+
+    <p class="mx-auto reveal reveal-delay-4" style="text-align:center; max-width:560px; color:var(--text-dim); font-style:italic; font-family:var(--font-display); font-size:1.1rem">
+      The field traversal is the directed difference from boundary to aperture —
+      finite to through, unit to zero, surface to gateway.
+    </p>
+
+    <div class="equation-row reveal reveal-delay-4" style="max-width:680px; margin:20px auto 0">
+      <span class="eq-label">Scale</span>
+      <span class="eq-body">∀ Φ_k &nbsp;:&nbsp; e^(iπ) at Φ_k = •_k − ○_k</span>
+      <span class="eq-note">holds at every scale</span>
+    </div>
+
+  </div>
+  <div class="slide-footer">⊙</div>
+</section>
+
+<!-- ── SLIDE 7: CIRCUMPUNCT IDENTITY ───────────────────────── -->
+<section class="slide bg-gradient-1" id="slide-identity">
+  <div class="slide-inner">
+
+    <h2 class="reveal">The Circumpunct Identity</h2>
+    <p class="reveal reveal-delay-1">
+      The two equations are not describing two things. They are describing the same structure from two grounds.
+    </p>
+
+    <div class="highlight-box highlight-gold reveal reveal-delay-2" style="text-align:center">
+      <div style="font-family:var(--font-mono); font-size:clamp(1.3rem,3vw,2rem); color:var(--gold-bright); margin-bottom:10px">
+        ⊙ = Φ(•, ○)
+      </div>
+      <div style="font-family:var(--font-mono); font-size:0.95rem; color:var(--text-dim)">
+        where &nbsp;&nbsp; • : Φ_finite ↔ Φ_∞
+      </div>
+    </div>
+
+    <div class="grid-3 reveal reveal-delay-3">
+      <div class="card card-boundary">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--boundary)">○</div>
+          <div class="card-label">Boundary holds</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">The finite — bounded, extended, surface. Where the field takes definite form.</p>
+      </div>
+      <div class="card card-field">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--field)">Φ</div>
+          <div class="card-label">Field mediates</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">The 2D shared space — infinite, one. The relation between • and ○ is only possible inside Φ.</p>
+      </div>
+      <div class="card card-aperture">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--aperture)">•</div>
+          <div class="card-label">Aperture opens</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">The gateway — where the finite field discovers it is embedded in something without limit.</p>
+      </div>
+    </div>
+
+    <div class="quote-block reveal reveal-delay-4">
+      Each ⊙ is a local instantiation of the one field. Each instantiation contains the aperture condition.
+      Each aperture connects its local finite field to the same infinite shared Φ.
+    </div>
+
+  </div>
+  <div class="slide-footer">⊙</div>
+</section>
+
+<!-- ── SLIDE 8: CLOSING ─────────────────────────────────────── -->
+<section class="slide bg-gradient-2" id="slide-closing">
+  <canvas class="bg-canvas" id="closingCanvas"></canvas>
+  <div class="slide-inner text-center">
+
+    <div style="font-size:5rem; margin-bottom:28px" class="reveal">⊙</div>
+
+    <h2 class="reveal reveal-delay-1 shimmer-text" style="text-align:center">The Summary</h2>
+    <div class="divider-wide reveal reveal-delay-2"></div>
+
+    <div class="quote-block reveal reveal-delay-2 mx-auto" style="text-align:left; max-width:680px; border-left-color:var(--gold)">
+      There is one field, infinitely partitioned into private-within-shared, self-similar at every scale.
+      Each partition is a circumpunct. Each circumpunct contains an aperture.
+      Each aperture is the 0.5D through that connects the finite instantiation to the infinite whole.
+      The traversal e^(iπ) = • − ○ is the formal trace of this connection — holding at every scale simultaneously.
+    </div>
+
+    <div class="equation-large reveal reveal-delay-3" style="max-width:480px; margin:32px auto">
+      e^(iπ) = • − ○
+    </div>
+
+    <p class="mx-auto reveal reveal-delay-4" style="text-align:center; max-width:500px; color:var(--text-dim); font-style:italic; font-family:var(--font-display); font-size:1.05rem">
+      Euler wrote it. He just didn't know he had written it twice.
+    </p>
+
+    <div class="reveal reveal-delay-4" style="margin-top:48px; font-family:var(--font-mono); font-size:0.72rem; color:rgba(255,255,255,0.2); letter-spacing:0.12em">
+      The Circumpunct Framework &nbsp;·&nbsp; fractalreality.ca &nbsp;·&nbsp; Ashman Roonz
+    </div>
+
+  </div>
+  <div class="slide-footer">⊙</div>
+</section>
+
+<script>
+// ─── SCROLL REVEAL
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+revealEls.forEach(el => revealObs.observe(el));
+
+// ─── NAV DOTS
+const slides = document.querySelectorAll('.slide');
+const navContainer = document.getElementById('navDots');
+const slideNames = ['Title','Two Equations','Definitions','Field Structure','Aperture','Unified Form','Identity','Summary'];
+
+slides.forEach((slide, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'nav-dot';
+  dot.title = slideNames[i] || '';
+  dot.addEventListener('click', () => slide.scrollIntoView({ behavior: 'smooth' }));
+  navContainer.appendChild(dot);
+});
+
+const navDots = document.querySelectorAll('.nav-dot');
+const navObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = Array.from(slides).indexOf(e.target);
+      navDots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+  });
+}, { threshold: 0.5 });
+slides.forEach(s => navObs.observe(s));
+
+// ─── HERO CANVAS
+const heroCanvas = document.getElementById('heroCanvas');
+if (heroCanvas) {
+  const ctx = heroCanvas.getContext('2d');
+  const W = 280, H = 280, cx = W/2, cy = H/2;
+  let t = 0;
+
+  function drawHero() {
+    ctx.clearRect(0, 0, W, H);
+    t += 0.008;
+
+    // Boundary
+    const bR = 100 + Math.sin(t * 0.7) * 4;
+    ctx.beginPath(); ctx.arc(cx, cy, bR, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(94,199,109,0.5)'; ctx.lineWidth = 1.5; ctx.stroke();
+
+    // Field rings
+    for (let i = 1; i <= 4; i++) {
+      const r = 26 + i * 15 + Math.sin(t*1.2 + i*0.9) * 4;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(74,127,255,${0.07 + 0.04*Math.sin(t+i)})`; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    // Traversal arc (gold)
+    const ta = t * 0.5;
+    ctx.beginPath(); ctx.arc(cx, cy, bR-6, Math.PI+ta, ta, false);
+    ctx.strokeStyle = 'rgba(212,168,85,0.22)'; ctx.lineWidth = 1; ctx.stroke();
+
+    // Field spokes
+    for (let i = 0; i < 8; i++) {
+      const a = (Math.PI*2*i/8) + t*0.25;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a)*18, cy + Math.sin(a)*18);
+      ctx.lineTo(cx + Math.cos(a)*(bR-4), cy + Math.sin(a)*(bR-4));
+      ctx.strokeStyle = `rgba(212,168,85,${0.05 + 0.025*Math.sin(t*2+i)})`; ctx.lineWidth = 0.5; ctx.stroke();
+    }
+
+    // Moving point on boundary (cyan)
+    const tp = Math.PI + t*0.5;
+    ctx.beginPath(); ctx.arc(cx + Math.cos(tp)*bR, cy + Math.sin(tp)*bR, 4, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(94,206,206,0.85)'; ctx.fill();
+
+    // Aperture (red, pulsing)
+    const beta = 0.5 + 0.15*Math.sin(t*1.5);
+    const pR = 4 + beta*7;
+    const glow = 5 + beta*18;
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, glow);
+    grad.addColorStop(0, `rgba(224,85,85,${0.3+beta*0.4})`);
+    grad.addColorStop(1, 'rgba(224,85,85,0)');
+    ctx.beginPath(); ctx.arc(cx, cy, glow, 0, Math.PI*2); ctx.fillStyle = grad; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, pR, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(224,85,85,${0.7+beta*0.3})`; ctx.fill();
+
+    requestAnimationFrame(drawHero);
+  }
+  drawHero();
+}
+
+// ─── PARTICLE BG
+function initBgCanvas(id) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const parent = canvas.parentElement;
+  function resize() { canvas.width = parent.offsetWidth; canvas.height = parent.offsetHeight; }
+  resize(); window.addEventListener('resize', resize);
+  const N = 60;
+  const particles = Array.from({length:N}, () => ({
+    x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+    vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3,
+    r: Math.random()*1.5+0.5, alpha: Math.random()*0.3+0.05
+  }));
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for (const p of particles) {
+      p.x = (p.x+p.vx+canvas.width) % canvas.width;
+      p.y = (p.y+p.vy+canvas.height) % canvas.height;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(212,168,85,${p.alpha})`; ctx.fill();
+    }
+    for (let i = 0; i < N; i++) for (let j = i+1; j < N; j++) {
+      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if (d<120) {
+        ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(212,168,85,${0.04*(1-d/120)})`; ctx.lineWidth=0.5; ctx.stroke();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+initBgCanvas('titleCanvas');
+initBgCanvas('closingCanvas');
+
+// ─── KEYBOARD NAVIGATION
+document.addEventListener('keydown', e => {
+  const idx = Array.from(slides).findIndex(s => {
+    const r = s.getBoundingClientRect();
+    return r.top >= -100 && r.top < window.innerHeight/2;
+  });
+  if (e.key==='ArrowDown'||e.key==='PageDown'||e.key===' ') {
+    e.preventDefault(); slides[Math.min(idx+1,slides.length-1)].scrollIntoView({behavior:'smooth'});
+  } else if (e.key==='ArrowUp'||e.key==='PageUp') {
+    e.preventDefault(); slides[Math.max(idx-1,0)].scrollIntoView({behavior:'smooth'});
+  }
+});
+</script>
+</body>
+</html>
