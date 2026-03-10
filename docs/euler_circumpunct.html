@@ -625,7 +625,64 @@ p {
   <div class="slide-footer">⊙</div>
 </section>
 
-<!-- ── SLIDE 8: CLOSING ─────────────────────────────────────── -->
+<!-- ── SLIDE 8: DIAMETER THEOREM ───────────────────────────── -->
+<section class="slide bg-gradient-3" id="slide-diameter">
+  <div class="slide-inner">
+
+    <h2 class="reveal">The Diameter Theorem</h2>
+    <p class="reveal reveal-delay-1">
+      The half-rotation is not just an algebraic identity. It is a geometric theorem about what the aperture <em>is</em> and how it is reached.
+    </p>
+
+    <div class="highlight-box highlight-gold reveal reveal-delay-2" style="text-align:center">
+      <div style="font-family:var(--font-mono); font-size:clamp(1rem,2vw,1.4rem); color:var(--gold-bright); margin-bottom:12px">
+        radius &nbsp;=&nbsp; • to ○ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; diameter &nbsp;=&nbsp; ○ to • to ○
+      </div>
+      <p style="margin:0; color:var(--text-dim); font-style:italic; max-width:none">
+        The aperture is the midpoint of the diameter — the necessary through of every full traversal.
+      </p>
+    </div>
+
+    <div class="grid-3 reveal reveal-delay-3">
+      <div class="card card-aperture">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--aperture)">e^(iπ)</div>
+          <div class="card-label">Half rotation — diameter</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">Traverses • and ○ both. Passes through the aperture. This is the only operation that reaches the center.</p>
+      </div>
+      <div class="card card-boundary">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--boundary); font-size:1.1rem">e^(2iπ)</div>
+          <div class="card-label">Full rotation — circumference</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">Returns to ○. Traces the boundary surface. Never enters the aperture. Boundary-only motion.</p>
+      </div>
+      <div class="card card-gold">
+        <div class="card-header">
+          <div class="card-icon" style="color:var(--gold); font-size:1.1rem">e^(0)</div>
+          <div class="card-label">No rotation — rest</div>
+        </div>
+        <p style="font-size:0.88rem; margin:0">Identity. Stays at ○. No traversal, no field engagement, no aperture contact.</p>
+      </div>
+    </div>
+
+    <div class="equation-row reveal reveal-delay-4" style="margin-top:8px">
+      <span class="eq-label">Theorem</span>
+      <span class="eq-body">• is structurally inaccessible to circumference motion. Only diameter traversal reaches the aperture.</span>
+    </div>
+
+    <div class="quote-block reveal reveal-delay-4">
+      You cannot reach the aperture by moving along the surface. No amount of boundary-level activity —
+      behavior, performance, presentation — crosses the center.
+      The through is only accessible via diameter traversal.
+    </div>
+
+  </div>
+  <div class="slide-footer">⊙</div>
+</section>
+
+<!-- ── SLIDE 9: CLOSING ─────────────────────────────────────── -->
 <section class="slide bg-gradient-2" id="slide-closing">
   <canvas class="bg-canvas" id="closingCanvas"></canvas>
   <div class="slide-inner text-center">
@@ -640,6 +697,8 @@ p {
       Each partition is a circumpunct. Each circumpunct contains an aperture.
       Each aperture is the 0.5D through that connects the finite instantiation to the infinite whole.
       The traversal e^(iπ) = • − ○ is the formal trace of this connection — holding at every scale simultaneously.
+      The aperture is the midpoint of the diameter. It is only reachable by traversals that cross the center.
+      Circumference motion — e^(2iπ) — never reaches it. The aperture is structurally inaccessible to boundary-only operations.
     </div>
 
     <div class="equation-large reveal reveal-delay-3" style="max-width:480px; margin:32px auto">
@@ -669,7 +728,7 @@ revealEls.forEach(el => revealObs.observe(el));
 // ─── NAV DOTS
 const slides = document.querySelectorAll('.slide');
 const navContainer = document.getElementById('navDots');
-const slideNames = ['Title','Two Equations','Definitions','Field Structure','Aperture','Unified Form','Identity','Summary'];
+const slideNames = ['Title','Two Equations','Definitions','Field Structure','Aperture','Unified Form','Identity','Diameter Theorem','Summary'];
 
 slides.forEach((slide, i) => {
   const dot = document.createElement('button');
