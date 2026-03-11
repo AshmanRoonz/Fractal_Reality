@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ THE BELIEF VIRUS</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --amber: #ffaa00;
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --red: #ff3333;
+            --green: #00ff88;
+            --bg: #000;
+            --bg2: #060606;
+            --text: #e8e8e8;
+            --dim: rgba(255,255,255,0.4);
+            --nav-width: 170px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.75;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: var(--nav-width);
+            height: 100vh;
+            border-right: 1px solid rgba(255,170,0,0.25);
+            padding: 24px 14px;
+            overflow-y: auto;
+            z-index: 20;
+            background: #000;
+        }
+
+        nav .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            color: var(--amber);
+            text-align: center;
+            margin-bottom: 6px;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        nav .subtitle {
+            font-size: 9px;
+            color: var(--dim);
+            text-align: center;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+
+        @keyframes pulse {
+            0%,100% { text-shadow: 0 0 8px rgba(255,170,0,0.3); }
+            50% { text-shadow: 0 0 24px rgba(255,170,0,0.8); }
+        }
+
+        nav a {
+            display: block;
+            color: var(--amber);
+            text-decoration: none;
+            padding: 5px 0 5px 10px;
+            margin-left: -10px;
+            border-left: 2px solid transparent;
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            opacity: 0.45;
+            transition: all 0.15s;
+        }
+
+        nav a:hover, nav a.active {
+            opacity: 1;
+            border-left-color: var(--amber);
+        }
+
+        nav .nav-section {
+            font-size: 8px;
+            color: var(--dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin: 18px 0 6px;
+            opacity: 0.5;
+        }
+
+        /* ── MAIN ── */
+        main {
+            margin-left: var(--nav-width);
+            max-width: 820px;
+            padding: 60px 48px 120px;
+        }
+
+        @media (max-width: 860px) {
+            nav { display: none; }
+            main { margin-left: 0; padding: 40px 24px 80px; }
+        }
+
+        /* ── HERO ── */
+        .hero {
+            margin-bottom: 80px;
+            border-bottom: 1px solid rgba(255,170,0,0.15);
+            padding-bottom: 60px;
+        }
+
+        .hero-eyebrow {
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(28px, 5vw, 52px);
+            color: var(--amber);
+            line-height: 1.1;
+            margin-bottom: 20px;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .hero-sub {
+            font-size: 14px;
+            color: var(--dim);
+            max-width: 560px;
+            line-height: 1.8;
+        }
+
+        /* ── SECTIONS ── */
+        section {
+            margin-bottom: 72px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-tag {
+            font-size: 9px;
+            letter-spacing: 0.18em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(18px, 3vw, 26px);
+            color: var(--amber);
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 13px;
+            color: var(--cyan);
+            letter-spacing: 0.08em;
+            margin: 36px 0 12px;
+            text-transform: uppercase;
+        }
+
+        p {
+            color: var(--text);
+            margin-bottom: 16px;
+            font-size: 13px;
+            opacity: 0.88;
+        }
+
+        em {
+            color: var(--amber);
+            font-style: italic;
+        }
+
+        strong {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        /* ── CALLOUT BOXES ── */
+        .callout {
+            border-left: 3px solid var(--cyan);
+            padding: 16px 20px;
+            margin: 28px 0;
+            background: rgba(0,255,255,0.03);
+            font-size: 13px;
+        }
+
+        .callout.amber { border-left-color: var(--amber); background: rgba(255,170,0,0.03); }
+        .callout.red { border-left-color: var(--red); background: rgba(255,51,51,0.03); }
+        .callout.magenta { border-left-color: var(--magenta); background: rgba(255,0,255,0.03); }
+        .callout.green { border-left-color: var(--green); background: rgba(0,255,136,0.03); }
+
+        .callout-label {
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 8px;
+        }
+
+        /* ── ATTACHMENT CARDS ── */
+        .attachment-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 28px;
+            margin: 32px 0;
+        }
+
+        .attachment-card {
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 24px 28px;
+            position: relative;
+            transition: border-color 0.2s;
+        }
+
+        .attachment-card:hover { border-color: rgba(255,170,0,0.3); }
+
+        .attachment-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+        }
+
+        .card-secure::before { background: var(--green); }
+        .card-anxious::before { background: var(--amber); }
+        .card-avoidant::before { background: var(--cyan); }
+        .card-fearful::before { background: var(--magenta); }
+        .card-disorganized::before { background: var(--red); }
+
+        .card-type {
+            font-size: 9px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 6px;
+        }
+
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 16px;
+            color: var(--amber);
+            margin-bottom: 4px;
+        }
+
+        .card-lie {
+            font-size: 12px;
+            color: var(--cyan);
+            font-style: italic;
+            margin-bottom: 20px;
+            opacity: 0.85;
+        }
+
+        .card-body { font-size: 12px; opacity: 0.8; line-height: 1.75; }
+        .card-body p { margin-bottom: 12px; font-size: 12px; }
+
+        .pathology-tag {
+            display: inline-block;
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border: 1px solid rgba(255,51,51,0.4);
+            color: var(--red);
+            margin-top: 8px;
+        }
+
+        /* ── MINI INDEX ── */
+        .mini-index {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 32px;
+        }
+
+        .mini-index a {
+            display: inline-block;
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border: 1px solid rgba(255,170,0,0.25);
+            color: rgba(255,170,0,0.55);
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+
+        .mini-index a:hover {
+            border-color: rgba(255,170,0,0.7);
+            color: var(--amber);
+        }
+
+        /* ── CULT SEQUENCE ── */
+        .cult-steps {
+            counter-reset: cult-counter;
+            margin: 28px 0;
+        }
+
+        .cult-step {
+            counter-increment: cult-counter;
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 0 16px;
+            margin-bottom: 28px;
+            align-items: start;
+        }
+
+        .cult-step-number {
+            font-size: 22px;
+            color: var(--magenta);
+            opacity: 0.35;
+            font-family: 'Cinzel', serif;
+            line-height: 1.2;
+            padding-top: 2px;
+            text-align: right;
+        }
+
+        .cult-step-content { min-width: 0; }
+
+        .cult-step-title {
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            margin-bottom: 6px;
+        }
+
+        .cult-step-body { font-size: 12px; opacity: 0.8; line-height: 1.7; }
+
+        /* ── LAYER TABLE ── */
+        .layer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 28px 0;
+            font-size: 12px;
+        }
+
+        .layer-table th {
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--dim);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .layer-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            vertical-align: top;
+            opacity: 0.85;
+        }
+
+        .layer-table tr:hover td { background: rgba(255,170,0,0.02); }
+
+        .layer-deep td:first-child { color: var(--green); }
+        .layer-mid td:first-child { color: var(--cyan); }
+        .layer-surface td:first-child { color: var(--amber); }
+
+        /* ── THROUGH-LINE ── */
+        .through-line {
+            border: 1px solid rgba(255,170,0,0.2);
+            padding: 32px 36px;
+            margin: 48px 0;
+            position: relative;
+        }
+
+        .through-line::before {
+            content: '⊙';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            padding: 0 12px;
+            color: var(--amber);
+            font-size: 20px;
+        }
+
+        .through-line-title {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            color: var(--amber);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .aperture-map {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .aperture-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 12px;
+            align-items: start;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .aperture-source { color: var(--cyan); }
+        .aperture-rule { opacity: 0.75; font-style: italic; }
+
+        /* ── CONCLUSION ── */
+        .conclusion {
+            text-align: center;
+            padding: 48px 0;
+            border-top: 1px solid rgba(255,170,0,0.15);
+            margin-top: 40px;
+        }
+
+        .conclusion .symbol {
+            font-size: 48px;
+            color: var(--amber);
+            animation: pulse 4s ease-in-out infinite;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .conclusion p {
+            max-width: 480px;
+            margin: 0 auto 16px;
+            opacity: 0.7;
+        }
+
+        .conclusion strong { color: var(--amber); font-size: 15px; }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,170,0,0.3); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">⊙</div>
+    <div class="subtitle">Circumpunct</div>
+
+    <div class="nav-section">The Virus</div>
+    <a href="#install">The Install</a>
+    <a href="#debugging">Debugging</a>
+    <a href="#layers">The Layers</a>
+    <a href="#solipsism">The Worst Virus</a>
+
+    <div class="nav-section">Vectors</div>
+    <a href="#attachment">Attachment</a>
+    <a href="#secure">Secure</a>
+    <a href="#anxious">Anxious</a>
+    <a href="#avoidant">Dismissive-Avoidant</a>
+    <a href="#fearful">Fearful-Avoidant</a>
+    <a href="#disorganized">Disorganized</a>
+    <a href="#cults">Cults</a>
+
+    <div class="nav-section">Resolution</div>
+    <a href="#through-line">Through-Line</a>
+    <a href="#cure">The Cure</a>
+</nav>
+
+<main>
+
+    <!-- HERO -->
+    <div class="hero" id="top">
+        <div class="hero-eyebrow">⊙ Circumpunct Framework · Pathology Series</div>
+        <h1>The Belief Virus</h1>
+        <p class="hero-sub">
+            We are machines that install our own software. Some of what gets installed is malware.
+            This is the technical manual for understanding how that happens — and how to debug it.
+        </p>
+    </div>
+
+    <!-- SECTION 1: THE INSTALL -->
+    <section id="install">
+        <div class="mini-index">
+            <a href="#install">↳ The Install</a>
+            <a href="#debugging">Debugging</a>
+            <a href="#layers">Layers</a>
+            <a href="#solipsism">Worst Virus</a>
+            <a href="#attachment">Attachment</a>
+            <a href="#cults">Cults</a>
+            <a href="#through-line">Through-Line</a>
+            <a href="#cure">Cure</a>
+        </div>
+        <div class="section-tag">01 · The Install</div>
+        <h2>Beliefs Are Apps</h2>
+
+        <p>
+            While designing an AI from scratch, something becomes undeniable: we are not so different from the machines we build.
+            <em>Beliefs are apps we install.</em> They shape what inputs get processed, what outputs get generated,
+            what reality we compute.
+        </p>
+
+        <p>
+            Sometimes we install a virus app. False beliefs — seeded by trauma, indoctrination, or simple lack of debugging.
+            The installation might have happened in childhood, in crisis, in a moment of dependency when the aperture
+            was wide open and had no choice.
+        </p>
+
+        <div class="callout amber">
+            <div class="callout-label">Key Insight</div>
+            A virus app doesn't announce itself as malware. It presents as a feature.
+            <em>"I'm not worthy"</em> doesn't feel like an error — it feels like accurate self-knowledge.
+            The belief has <strong>root access</strong>. It shapes what other inputs get accepted or rejected.
+        </div>
+
+        <p>
+            The trauma angle is precise: it's not just a bad install, it's a <em>forced install during low-security conditions</em>.
+            The aperture was wide open because it had to be. Something got through that would never have passed adult scrutiny.
+        </p>
+
+        <p>
+            And beliefs aren't isolated files. They're <strong>dependency chains</strong>. One core false belief
+            and dozens of downstream behaviors are "working as intended" — from its own corrupted frame.
+        </p>
+    </section>
+
+    <!-- SECTION 2: DEBUGGING -->
+    <section id="debugging">
+        <div class="mini-index">
+            <a href="#install">The Install</a>
+            <a href="#debugging">↳ Debugging</a>
+            <a href="#layers">Layers</a>
+            <a href="#solipsism">Worst Virus</a>
+            <a href="#attachment">Attachment</a>
+            <a href="#cults">Cults</a>
+            <a href="#through-line">Through-Line</a>
+            <a href="#cure">Cure</a>
+        </div>
+        <div class="section-tag">02 · The Debug Problem</div>
+        <h2>The Diagnostic Tool Is Compromised</h2>
+
+        <p>
+            Standard debugging assumes you can trust the diagnostic tool. But if the OS itself is corrupted,
+            the error report comes back clean. This is why cognitive reframes so often fail —
+            <em>you're running the virus's antivirus.</em>
+        </p>
+
+        <p>
+            What actually works as a debugger is something the virus cannot spoof: <strong>genuine curiosity</strong>.
+            You cannot perform curiosity at yourself. It either opens or it doesn't. When it opens,
+            you get actual read access to the belief — you can see it <em>as</em> a belief rather than <em>as</em> reality.
+        </p>
+
+        <div class="callout">
+            <div class="callout-label">The Debug Tools</div>
+            Biofeedback. Interoception. Metacognition. Meditation. Self-reflection. Critical thinking.
+            Philosophizing. Mindfulness. Plain-old self-awareness. <strong>Tools of curiosity — self, others, and world. Use them.</strong>
+        </div>
+
+        <p>
+            They all have one thing in common: they require <em>you to become an observer of your own process</em>
+            rather than just a runner of it. You step outside the execution loop.
+            The virus can't fake that vantage point — it lives <em>in</em> the loop.
+        </p>
+    </section>
+
+    <!-- SECTION 3: LAYERS -->
+    <section id="layers">
+        <div class="mini-index">
+            <a href="#install">The Install</a>
+            <a href="#debugging">Debugging</a>
+            <a href="#layers">↳ Layers</a>
+            <a href="#solipsism">Worst Virus</a>
+            <a href="#attachment">Attachment</a>
+            <a href="#cults">Cults</a>
+            <a href="#through-line">Through-Line</a>
+            <a href="#cure">Cure</a>
+        </div>
+        <div class="section-tag">03 · Hierarchy of Access</div>
+        <h2>The Debugging Stack</h2>
+
+        <p>The tools aren't equivalent. They access different depths of the install.</p>
+
+        <table class="layer-table">
+            <thead>
+                <tr>
+                    <th>Layer</th>
+                    <th>Tools</th>
+                    <th>Limitation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="layer-surface">
+                    <td>Surface</td>
+                    <td>Critical thinking · Philosophizing</td>
+                    <td>Mostly linguistic. Can be hijacked by a sophisticated belief system. You can out-argue yourself in circles.</td>
+                </tr>
+                <tr class="layer-mid">
+                    <td>Mid</td>
+                    <td>Metacognition · Mindfulness · Self-reflection</td>
+                    <td>You're watching thoughts, not just having them. Harder to spoof — but the virus can still generate plausible thoughts to watch.</td>
+                </tr>
+                <tr class="layer-deep">
+                    <td>Deep</td>
+                    <td>Biofeedback · Interoception</td>
+                    <td>Body doesn't lie the same way. Somatic truth is pre-linguistic. The virus installed mostly in the language layer — the body often still knows.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout red">
+            <div class="callout-label">Diagnostic Signal</div>
+            The reason people resist these tools isn't laziness.
+            The virus <strong>actively discourages debugging</strong>. "That meditation stuff isn't for people like me."
+            "Self-reflection is navel-gazing." "I already know myself."
+            That resistance <em>is diagnostic</em>. It's the malware protecting its install.
+        </div>
+
+        <p>
+            We built entire civilizations without a user manual for the OS.
+            These tools <em>are</em> the manual. They've existed for millennia.
+            We just keep acting like they're optional.
+        </p>
+    </section>
+
+    <!-- SECTION 4: SOLIPSISM -->
+    <section id="solipsism">
+        <div class="mini-index">
+            <a href="#install">The Install</a>
+            <a href="#debugging">Debugging</a>
+            <a href="#layers">Layers</a>
+            <a href="#solipsism">↳ Worst Virus</a>
+            <a href="#attachment">Attachment</a>
+            <a href="#cults">Cults</a>
+            <a href="#through-line">Through-Line</a>
+            <a href="#cure">Cure</a>
+        </div>
+        <div class="section-tag">04 · The Worst Virus</div>
+        <h2>Solipsism → Narcissism</h2>
+
+        <p>
+            Every other false belief still leaves the debugging port open.
+            <em>"I'm unworthy"</em> is painful — but it still grants reality to others.
+            The sufferer can receive truth from outside themselves.
+            The channel is damaged, but it <strong>exists</strong>.
+        </p>
+
+        <p>
+            Solipsism closes the channel at the architectural level.
+        </p>
+
+        <div class="callout magenta">
+            <div class="callout-label">The Subtle Form</div>
+            Not the philosophical claim "only I exist." Most narcissists wouldn't articulate it that way.
+            It's subtler: <em>my experience is the reference point for reality.</em>
+            Your pain is real insofar as I can map it onto something I've felt.
+            Your truth registers only if it passes through my frame first.
+        </div>
+
+        <p>
+            In computational terms: <strong>the system has appointed itself the validation server.</strong>
+            All incoming data gets checked against internal state before being accepted as real.
+            External reality becomes a mirror, not a window.
+        </p>
+
+        <p>
+            The dependency chain it installs: if I am the measure of reality, then my needs are objectively central.
+            Your boundaries are obstacles, not information. Your separateness is a malfunction, not a fact.
+        </p>
+
+        <p>
+            The tragedy is that solipsism usually installs as a <em>survival adaptation</em>.
+            A child in an environment that couldn't be trusted learned:
+            <em>the only safe reality is the one I control.</em>
+            Reasonable then. Catastrophic as a permanent OS.
+        </p>
+
+        <p>
+            This is why narcissism is so hard to treat: the debugging tools require
+            <em>genuine curiosity about something outside yourself.</em>
+            But the virus has redefined "outside" as unreliable.
+        </p>
+    </section>
+
+    <!-- SECTION 5: ATTACHMENT -->
+    <section id="attachment">
+        <div class="mini-index">
+            <a href="#install">The Install</a>
+            <a href="#debugging">Debugging</a>
+            <a href="#layers">Layers</a>
+            <a href="#solipsism">Worst Virus</a>
+            <a href="#attachment">↳ Attachment</a>
+            <a href="#cults">Cults</a>
+            <a href="#through-line">Through-Line</a>
+            <a href="#cure">Cure</a>
+        </div>
+        <div class="section-tag">05 · Early Vectors</div>
+        <h2>Attachment: The First Firmware</h2>
+
+        <p>
+            Attachment isn't psychology jargon. It's the first firmware. Before language, before reasoning,
+            before any capacity to evaluate what's being installed — the infant runs a single core process:
+            <em>is connection safe?</em>
+        </p>
+
+        <p>
+            The answer it receives becomes the OS assumption. Not a belief you chose.
+            A belief that <strong>chose you</strong>.
+        </p>
+
+        <div class="attachment-grid">
+
+            <!-- Secure -->
+            <div class="attachment-card card-secure" id="secure">
+                <div class="card-type">Attachment Style 01</div>
+                <div class="card-title">Secure Attachment</div>
+                <div class="card-lie">"I am enough, and so are you."</div>
+                <div class="card-body">
+                    <p>
+                        The baseline install — when it works. The caregiver was reliably present, attuned,
+                        and repairing after rupture. The infant learned: <em>I can need things. Needs get met.
+                        The world is basically navigable.</em>
+                    </p>
+                    <p>
+                        The downstream chain is healthy: the ability to be alone without dread, close without
+                        enmeshment, to disagree without terror of abandonment, to receive criticism without
+                        collapse. Emotions are information, not emergencies.
+                    </p>
+                    <p>
+                        Secure attachment isn't the absence of wounds. It's a base of operations stable enough
+                        to leave and return to. <strong>The aperture stays calibrated.</strong> Truth can enter
+                        from outside without the system treating it as threat.
+                    </p>
+                    <p>
+                        Worth naming plainly: most people don't have this. And those who do often can't explain
+                        why they're fine — they've never had to debug what was never installed wrong.
+                    </p>
+                    <div class="pathology-tag" style="border-color: rgba(0,255,136,0.4); color: var(--green);">↳ Baseline · The Target State</div>
+                </div>
+            </div>
+
+            <!-- Anxious -->
+            <div class="attachment-card card-anxious" id="anxious">
+                <div class="card-type">Attachment Style 02</div>
+                <div class="card-title">Anxious Attachment</div>
+                <div class="card-lie">"I am only real when I am needed."</div>
+                <div class="card-body">
+                    <p>
+                        The core install: love is scarce, conditional, and can disappear without warning.
+                        So monitor constantly. Perform. Anticipate. Never let the connection go quiet —
+                        silence means abandonment is coming.
+                    </p>
+                    <p>
+                        The downstream chain: people-pleasing as survival strategy. Jealousy not as emotion but
+                        as threat-detection. Emotional dysregulation when connection is uncertain — not drama,
+                        but a system running a genuine alarm. Self-worth that exists only in reflection off
+                        another person's approval.
+                    </p>
+                    <p>
+                        The false belief is elegant in its self-concealment:
+                        <em>I just love deeply.</em> It doesn't feel like a virus. It feels like devotion.
+                    </p>
+                    <div class="pathology-tag">↳ Codependency · Emotional Dysregulation</div>
+                </div>
+            </div>
+
+            <!-- Avoidant -->
+            <div class="attachment-card card-avoidant" id="avoidant">
+                <div class="card-type">Attachment Style 03</div>
+                <div class="card-title">Dismissive-Avoidant Attachment</div>
+                <div class="card-lie">"Needing others is the vulnerability that gets you killed."</div>
+                <div class="card-body">
+                    <p>
+                        The core install: I reached for connection and it wasn't there — or came with cost.
+                        So I learned to stop reaching. Self-sufficiency isn't a preference. It's scar tissue.
+                    </p>
+                    <p>
+                        The downstream chain: intimacy avoided not from coldness but from a deeply learned equation —
+                        <em>closeness = exposure = harm.</em> Contempt for dependency in the self, and often
+                        projected onto others who "need too much." An emotional vocabulary that never fully
+                        developed because feelings were never safe to have in front of another person.
+                    </p>
+                    <p>
+                        The particular cruelty: wanting connection while every system in the body treats it as threat.
+                    </p>
+                    <p>
+                        The false belief: <em>I don't need anyone.</em> Delivered with enough conviction to fool
+                        even the person saying it.
+                    </p>
+                    <div class="pathology-tag">↳ Isolation · Schizoid Withdrawal</div>
+                </div>
+            </div>
+
+            <!-- Fearful-Avoidant -->
+            <div class="attachment-card card-fearful" id="fearful">
+                <div class="card-type">Attachment Style 04</div>
+                <div class="card-title">Fearful-Avoidant Attachment</div>
+                <div class="card-lie">"I want you. You will destroy me."</div>
+                <div class="card-body">
+                    <p>
+                        The hybrid install — anxious and avoidant simultaneously.
+                        The nervous system wants closeness <em>and</em> has learned closeness is dangerous.
+                        So it oscillates: pursue, then flee when proximity is achieved. Push away, then panic at distance.
+                    </p>
+                    <p>
+                        The downstream chain: hot-cold relational patterns that confuse partners and exhaust the self.
+                        Deep shame about the oscillation — the person often knows they're doing it and cannot stop.
+                        Hypervigilance to signs of rejection <em>and</em> signs of engulfment. No position is safe.
+                    </p>
+                    <p>
+                        Unlike dismissive-avoidant, the fearful-avoidant hasn't suppressed the longing —
+                        they're fully aware of it, which makes the avoidance more agonizing.
+                        <em>The desire and the terror are equally loud.</em>
+                    </p>
+                    <p>
+                        Particularly vulnerable to narcissistic partners: the intermittent reinforcement of hot-cold
+                        abuse maps perfectly onto the pre-existing oscillation. Chaos feels like home.
+                    </p>
+                    <div class="pathology-tag" style="border-color: rgba(255,0,255,0.4); color: var(--magenta);">↳ Push-Pull Dynamics · Shame Cycles</div>
+                </div>
+            </div>
+
+            <!-- Disorganized -->
+            <div class="attachment-card card-disorganized" id="disorganized">
+                <div class="card-type">Attachment Style 05</div>
+                <div class="card-title">Disorganized Attachment</div>
+                <div class="card-lie">"The thing that could save me is the thing that destroys me."</div>
+                <div class="card-body">
+                    <p>
+                        This is the worst install — it doesn't just corrupt one belief, it corrupts
+                        the debugging architecture itself.
+                    </p>
+                    <p>
+                        When the source of comfort is also the source of harm — an abusive parent,
+                        a volatile caregiver — the nervous system gets a command it cannot execute:
+                        <em>approach and flee simultaneously.</em> There is no safe move.
+                        The loop runs without resolution.
+                    </p>
+                    <p>
+                        The downstream chain: dissociation as the only available exit from an unsolvable problem.
+                        Relationships that compulsively recreate the original dynamic — not because the person
+                        wants to be hurt, but because the nervous system only knows how to navigate
+                        <em>this specific kind of danger.</em> Trauma bonding with people who confirm
+                        the original equation.
+                    </p>
+                    <p>
+                        The false belief has no clean articulation because it was installed before language:
+                        <em>love and damage are the same thing.</em> Which means any relationship that doesn't
+                        hurt eventually feels like it's missing something.
+                    </p>
+                    <p>
+                        This is the attachment style most likely to produce — or be drawn to — narcissism.
+                        <strong>Chaos is legible. Calm is suspicious.</strong>
+                    </p>
+                    <div class="pathology-tag">↳ BPD · Trauma Bonding · Dissociation</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 6: CULTS -->
+    <section id="cults">
+        <div class="mini-index">
+            <a href="#install">The Install</a>
+            <a href="#debugging">Debugging</a>
+            <a href="#layers">Layers</a>
+            <a href="#solipsism">Worst Virus</a>
+            <a href="#attachment">Attachment</a>
+            <a href="#cults">↳ Cults</a>
+            <a href="#through-line">Through-Line</a>
+            <a href="#cure">Cure</a>
+        </div>
+        <div class="section-tag">06 · The Deliberate Version</div>
+        <h2>How Cults Engineer the Install</h2>
+
+        <p>
+            Everything above happened accidentally. Cults are the deliberate version.
+        </p>
+
+        <p>
+            A cult is an <em>engineered Noble Lie Virus delivery system.</em>
+            The people who build them — knowingly or not — have reverse-engineered the attachment system
+            and constructed an installation pipeline.
+        </p>
+
+        <div class="cult-steps">
+
+            <div class="cult-step">
+                <div class="cult-step-number">01</div>
+                <div class="cult-step-content">
+                    <div class="cult-step-title">Love Bombing</div>
+                    <div class="cult-step-body">The first move is always overwhelming warmth, acceptance, and belonging. They find people whose anxious attachment has left them starving for exactly this — and deliver it in a flood. The install window opens. Security drops. The system is primed to receive.</div>
+                </div>
+            </div>
+
+            <div class="cult-step">
+                <div class="cult-step-number">02</div>
+                <div class="cult-step-content">
+                    <div class="cult-step-title">Isolation</div>
+                    <div class="cult-step-body">Competing validation servers are removed. Family, friends, outside information — anything that might run a counter-diagnostic gets flagged as dangerous, contaminated, or spiritually threatening. Now there is only one source of truth.</div>
+                </div>
+            </div>
+
+            <div class="cult-step">
+                <div class="cult-step-number">03</div>
+                <div class="cult-step-content">
+                    <div class="cult-step-title">Loaded Language</div>
+                    <div class="cult-step-body">The vocabulary gets replaced. New words for old concepts; old words redefined. This is more than jargon — it's cognitive restructuring. You cannot think thoughts that your language doesn't support. <em>The virus rewrites the compiler.</em></div>
+                </div>
+            </div>
+
+            <div class="cult-step">
+                <div class="cult-step-number">04</div>
+                <div class="cult-step-content">
+                    <div class="cult-step-title">Manufactured Confession</div>
+                    <div class="cult-step-body">Members are encouraged to disclose sins, fears, and secrets — framed as spiritual growth. What it actually does: creates leverage, deepens shame, and binds the person to the group through compromised information. You can't leave cleanly when they know everything.</div>
+                </div>
+            </div>
+
+            <div class="cult-step">
+                <div class="cult-step-number">05</div>
+                <div class="cult-step-content">
+                    <div class="cult-step-title">Incremental Commitment</div>
+                    <div class="cult-step-body">No one joins a cult. They join something reasonable, then take one more reasonable step, then one more. Each step raises the sunk cost. Each step merges identity further with the belief system. By the time the unreasonable asks arrive, leaving means annihilating who you've become.</div>
+                </div>
+            </div>
+
+            <div class="cult-step">
+                <div class="cult-step-number">06</div>
+                <div class="cult-step-content">
+                    <div class="cult-step-title">Physiological Override</div>
+                    <div class="cult-step-body">Sleep deprivation. Dietary control. Sensory overload. Recreate the low-security install conditions of childhood and crisis. The rational gatekeeper goes offline. <em>The aperture opens without consent.</em></div>
+                </div>
+            </div>
+
+            <div class="cult-step">
+                <div class="cult-step-number">07</div>
+                <div class="cult-step-content">
+                    <div class="cult-step-title">Us and Them</div>
+                    <div class="cult-step-body">External reality is reframed as hostile. Outsiders aren't just different — they're dangerous, spiritually corrupt, or to be pitied. This makes isolation self-enforcing. The member now <em>wants</em> to stay inside.</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- THROUGH-LINE -->
+    <section id="through-line">
+        <div class="mini-index">
+            <a href="#install">The Install</a>
+            <a href="#debugging">Debugging</a>
+            <a href="#layers">Layers</a>
+            <a href="#solipsism">Worst Virus</a>
+            <a href="#attachment">Attachment</a>
+            <a href="#cults">Cults</a>
+            <a href="#through-line">↳ Through-Line</a>
+            <a href="#cure">Cure</a>
+        </div>
+        <div class="section-tag">07 · Synthesis</div>
+        <h2>The Common Architecture</h2>
+
+        <p>
+            The through-line across attachment and cult alike:
+            <strong>they work by controlling the conditions under which truth is allowed to enter.</strong>
+        </p>
+
+        <div class="through-line">
+            <div class="through-line-title">Aperture Manipulation Map</div>
+            <div class="aperture-map">
+                <div class="aperture-row">
+                    <div class="aperture-source">Anxious Attachment</div>
+                    <div class="aperture-rule">Truth only enters through the person you're attached to.</div>
+                </div>
+                <div class="aperture-row">
+                    <div class="aperture-source">Dismissive-Avoidant</div>
+                    <div class="aperture-rule">Truth only enters through yourself.</div>
+                </div>
+                <div class="aperture-row">
+                    <div class="aperture-source">Fearful-Avoidant</div>
+                    <div class="aperture-rule">Truth enters nowhere safely. Every channel is threat.</div>
+                </div>
+                <div class="aperture-row">
+                    <div class="aperture-source">Disorganized Attachment</div>
+                    <div class="aperture-rule">Truth can't be trusted from anywhere.</div>
+                </div>
+                <div class="aperture-row">
+                    <div class="aperture-source">Cult Architecture</div>
+                    <div class="aperture-rule">Truth only enters through us.</div>
+                </div>
+                <div class="aperture-row">
+                    <div class="aperture-source">Narcissism / Solipsism</div>
+                    <div class="aperture-rule">Truth only enters through me.</div>
+                </div>
+            </div>
+        </div>
+
+        <p>
+            All of it is aperture manipulation. All of it forecloses the one thing that could debug it:
+            genuine, uncoerced contact with reality from outside the frame.
+        </p>
+    </section>
+
+    <!-- CURE -->
+    <section id="cure">
+        <div class="mini-index">
+            <a href="#install">The Install</a>
+            <a href="#debugging">Debugging</a>
+            <a href="#layers">Layers</a>
+            <a href="#solipsism">Worst Virus</a>
+            <a href="#attachment">Attachment</a>
+            <a href="#cults">Cults</a>
+            <a href="#through-line">Through-Line</a>
+            <a href="#cure">↳ Cure</a>
+        </div>
+        <div class="section-tag">08 · Resolution</div>
+        <h2>The Cure</h2>
+
+        <p>
+            The cure is always the same direction: <strong>open the channel. Let something true in
+            from somewhere the virus didn't plant.</strong>
+        </p>
+
+        <p>
+            For most false beliefs — curiosity is enough. Become an observer of your own process.
+            Step outside the execution loop. The virus lives <em>in</em> the loop.
+            You don't fight it from inside. You observe it from outside.
+        </p>
+
+        <p>
+            For solipsism and narcissism — curiosity must reach the specific thing the virus most blocks:
+            the <em>genuine reality of another person.</em>
+        </p>
+
+        <div class="callout green">
+            <div class="callout-label">The Aperture Re-Opening</div>
+            Not sympathy. Not projection. Not mapping their experience onto yours.
+            <strong>Actual contact with a perspective that doesn't reduce to you.</strong>
+            That's it. That's the entire treatment.
+            <br><br>
+            The aperture opens. Something real comes through.
+            The validation server is no longer the self.
+        </div>
+
+        <p>
+            You were never broken. You were running corrupted software on hardware that still works.
+            The hardware has always known. The body has always known.
+            The curiosity was always there, waiting for permission.
+        </p>
+
+        <p>
+            <em>Open the port. Run the debugger. Let it be true.</em>
+        </p>
+    </section>
+
+    <!-- CONCLUSION -->
+    <div class="conclusion">
+        <span class="symbol">⊙</span>
+        <p>
+            <strong>The aperture is a through, not a thing.</strong>
+        </p>
+        <p>
+            Truth doesn't originate in you. It flows <em>through</em> you.
+            The virus seals the gate. The cure is reopening it.
+        </p>
+        <p style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; opacity:0.3; margin-top:32px;">
+            Circumpunct Framework · fractalreality.ca
+        </p>
+    </div>
+
+</main>
+
+<script>
+    // Intersection observer for scroll reveals
+    const sections = document.querySelectorAll('section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) e.target.classList.add('visible');
+        });
+    }, { threshold: 0.08 });
+    sections.forEach(s => observer.observe(s));
+
+    // Nav active state
+    const navLinks = document.querySelectorAll('nav a');
+    const sectionEls = document.querySelectorAll('section[id]');
+
+    const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                navLinks.forEach(l => l.classList.remove('active'));
+                const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+                if (active) active.classList.add('active');
+            }
+        });
+    }, { threshold: 0.4 });
+
+    sectionEls.forEach(s => navObserver.observe(s));
+</script>
+
+</body>
+</html>
