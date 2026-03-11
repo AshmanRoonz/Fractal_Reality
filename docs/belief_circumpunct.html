@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ THE CIRCUMPUNCT FRAMEWORK</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --amber: #ffaa00;
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --red: #ff3333;
+            --green: #00ff88;
+            --bg: #000;
+            --text: #e8e8e8;
+            --dim: rgba(255,255,255,0.4);
+            --nav-width: 170px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.75;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: var(--nav-width);
+            height: 100vh;
+            border-right: 1px solid rgba(255,170,0,0.25);
+            padding: 24px 14px;
+            overflow-y: auto;
+            z-index: 20;
+            background: #000;
+        }
+
+        nav .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            color: var(--amber);
+            text-align: center;
+            margin-bottom: 6px;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        nav .subtitle {
+            font-size: 9px;
+            color: var(--dim);
+            text-align: center;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+
+        @keyframes pulse {
+            0%,100% { text-shadow: 0 0 8px rgba(255,170,0,0.3); }
+            50% { text-shadow: 0 0 24px rgba(255,170,0,0.8); }
+        }
+
+        nav a {
+            display: block;
+            color: var(--amber);
+            text-decoration: none;
+            padding: 5px 0 5px 10px;
+            margin-left: -10px;
+            border-left: 2px solid transparent;
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            opacity: 0.45;
+            transition: all 0.15s;
+        }
+
+        nav a:hover, nav a.active { opacity: 1; border-left-color: var(--amber); }
+
+        nav .nav-section {
+            font-size: 8px;
+            color: var(--dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin: 18px 0 6px;
+            opacity: 0.5;
+        }
+
+        /* ── MAIN ── */
+        main {
+            margin-left: var(--nav-width);
+            max-width: 820px;
+            padding: 60px 48px 120px;
+        }
+
+        @media (max-width: 860px) {
+            nav { display: none; }
+            main { margin-left: 0; padding: 40px 24px 80px; }
+        }
+
+        /* ── SERIES NAV ── */
+        .series-nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-top: 28px;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .series-prev {
+            color: var(--cyan);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0,255,255,0.3);
+            padding-bottom: 2px;
+            transition: border-color 0.2s;
+        }
+
+        .series-prev:hover { border-color: var(--cyan); }
+        .series-current { color: var(--dim); opacity: 0.5; }
+
+        /* ── HERO ── */
+        .hero {
+            margin-bottom: 80px;
+            border-bottom: 1px solid rgba(255,170,0,0.15);
+            padding-bottom: 60px;
+        }
+
+        .hero-eyebrow {
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(28px, 5vw, 52px);
+            color: var(--amber);
+            line-height: 1.1;
+            margin-bottom: 20px;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .hero-sub {
+            font-size: 14px;
+            color: var(--dim);
+            max-width: 560px;
+            line-height: 1.8;
+        }
+
+        /* ── SECTIONS ── */
+        section {
+            margin-bottom: 72px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        section.visible { opacity: 1; transform: translateY(0); }
+
+        .section-tag {
+            font-size: 9px;
+            letter-spacing: 0.18em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(18px, 3vw, 26px);
+            color: var(--amber);
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: 13px;
+            color: var(--cyan);
+            letter-spacing: 0.08em;
+            margin: 36px 0 12px;
+            text-transform: uppercase;
+        }
+
+        p {
+            color: var(--text);
+            margin-bottom: 16px;
+            font-size: 13px;
+            opacity: 0.88;
+        }
+
+        em { color: var(--amber); font-style: italic; }
+        strong { color: #fff; font-weight: 700; }
+
+        /* ── EQUATION ── */
+        .equation {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(20px, 4vw, 36px);
+            color: var(--amber);
+            padding: 32px 0;
+            letter-spacing: 0.12em;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .equation-note {
+            text-align: center;
+            font-size: 11px;
+            color: var(--dim);
+            letter-spacing: 0.08em;
+            margin-top: -16px;
+            margin-bottom: 24px;
+        }
+
+        /* ── TRIAD ── */
+        .triad {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2px;
+            margin: 32px 0;
+        }
+
+        @media (max-width: 600px) { .triad { grid-template-columns: 1fr; } }
+
+        .triad-card {
+            padding: 24px 20px;
+            border: 1px solid rgba(255,255,255,0.06);
+            position: relative;
+            transition: border-color 0.2s;
+        }
+
+        .triad-card:hover { border-color: rgba(255,170,0,0.3); }
+
+        .triad-symbol {
+            font-size: 28px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .triad-name {
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .triad-dim {
+            font-size: 9px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            opacity: 0.4;
+            margin-bottom: 12px;
+        }
+
+        .triad-body { font-size: 12px; opacity: 0.75; line-height: 1.7; }
+
+        .card-aperture .triad-symbol { color: var(--magenta); }
+        .card-aperture .triad-name { color: var(--magenta); }
+        .card-aperture { border-top: 2px solid var(--magenta); }
+
+        .card-field .triad-symbol { color: var(--cyan); }
+        .card-field .triad-name { color: var(--cyan); }
+        .card-field { border-top: 2px solid var(--cyan); }
+
+        .card-boundary .triad-symbol { color: var(--amber); }
+        .card-boundary .triad-name { color: var(--amber); }
+        .card-boundary { border-top: 2px solid var(--amber); }
+
+        /* ── CALLOUT ── */
+        .callout {
+            border-left: 3px solid var(--cyan);
+            padding: 16px 20px;
+            margin: 28px 0;
+            background: rgba(0,255,255,0.03);
+            font-size: 13px;
+        }
+
+        .callout.amber { border-left-color: var(--amber); background: rgba(255,170,0,0.03); }
+        .callout.red { border-left-color: var(--red); background: rgba(255,51,51,0.03); }
+        .callout.magenta { border-left-color: var(--magenta); background: rgba(255,0,255,0.03); }
+        .callout.green { border-left-color: var(--green); background: rgba(0,255,136,0.03); }
+
+        .callout-label {
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 8px;
+        }
+
+        /* ── FLOW DIAGRAM ── */
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 18px;
+            padding: 24px;
+            margin: 24px 0;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .flow-arrow { color: var(--dim); font-size: 14px; }
+        .flow-dot { color: var(--magenta); }
+        .flow-phi { color: var(--cyan); }
+        .flow-ring { color: var(--amber); }
+        .flow-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); text-align: center; }
+
+        /* ── CONSERVATION ── */
+        .conservation {
+            border: 1px solid rgba(255,170,0,0.2);
+            padding: 28px 32px;
+            margin: 32px 0;
+            text-align: center;
+        }
+
+        .conservation-eq {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            color: var(--amber);
+            margin: 16px 0 8px;
+            letter-spacing: 0.08em;
+        }
+
+        .conservation-note {
+            font-size: 11px;
+            color: var(--dim);
+            margin-top: 8px;
+        }
+
+        .conservation-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 8px 16px;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 12px;
+        }
+
+        .conservation-row .label { color: var(--dim); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+        .conservation-row .value { color: var(--amber); font-family: 'Cinzel', serif; font-size: 15px; text-align: center; }
+        .conservation-row .desc { opacity: 0.7; }
+
+        /* ── ERROR TABLE ── */
+        .error-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            margin: 28px 0;
+        }
+
+        @media (max-width: 600px) { .error-grid { grid-template-columns: 1fr; } }
+
+        .error-card {
+            padding: 20px 22px;
+            border: 1px solid rgba(255,51,51,0.15);
+            background: rgba(255,51,51,0.02);
+            transition: border-color 0.2s;
+        }
+
+        .error-card:hover { border-color: rgba(255,51,51,0.35); }
+
+        .error-name {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            color: var(--red);
+            margin-bottom: 6px;
+        }
+
+        .error-what {
+            font-size: 11px;
+            color: var(--dim);
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .error-lie {
+            font-size: 12px;
+            font-style: italic;
+            color: var(--text);
+            opacity: 0.75;
+        }
+
+        .error-virus {
+            font-size: 11px;
+            color: var(--magenta);
+            margin-top: 10px;
+            opacity: 0.7;
+        }
+
+        /* ── LOVE CHANNELS ── */
+        .channels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            margin: 28px 0;
+        }
+
+        @media (max-width: 600px) { .channels { grid-template-columns: 1fr; } }
+
+        .channel-card {
+            padding: 24px 22px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .channel-functional { border-top: 2px solid var(--amber); }
+        .channel-resonant { border-top: 2px solid var(--magenta); }
+
+        .channel-type {
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 6px;
+        }
+
+        .channel-name {
+            font-family: 'Cinzel', serif;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .channel-functional .channel-name { color: var(--amber); }
+        .channel-resonant .channel-name { color: var(--magenta); }
+
+        .channel-formula {
+            font-size: 11px;
+            color: var(--dim);
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+
+        .channel-body { font-size: 12px; opacity: 0.78; line-height: 1.75; }
+        .channel-body p { font-size: 12px; margin-bottom: 10px; }
+
+        /* ── FRACTAL ── */
+        .fractal-axiom {
+            border: 1px solid rgba(0,255,136,0.2);
+            padding: 32px 36px;
+            margin: 40px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .fractal-axiom::before {
+            content: 'MASTER AXIOM';
+            position: absolute;
+            top: -9px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            padding: 0 12px;
+            font-size: 8px;
+            letter-spacing: 0.2em;
+            color: var(--green);
+            opacity: 0.7;
+        }
+
+        .fractal-axiom .axiom-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(16px, 3vw, 24px);
+            color: var(--green);
+            line-height: 1.4;
+        }
+
+        /* ── HEALTHY TABLE ── */
+        .integrity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 28px 0;
+            font-size: 12px;
+        }
+
+        .integrity-table th {
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--dim);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .integrity-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            vertical-align: top;
+            opacity: 0.85;
+        }
+
+        .integrity-table tr:hover td { background: rgba(255,170,0,0.02); }
+        .integrity-table td:first-child { color: var(--cyan); font-family: 'Cinzel', serif; }
+
+        /* ── CONCLUSION ── */
+        .conclusion {
+            text-align: center;
+            padding: 48px 0;
+            border-top: 1px solid rgba(255,170,0,0.15);
+            margin-top: 40px;
+        }
+
+        .conclusion .symbol {
+            font-size: 48px;
+            color: var(--amber);
+            animation: pulse 4s ease-in-out infinite;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .conclusion p {
+            max-width: 480px;
+            margin: 0 auto 16px;
+            opacity: 0.7;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,170,0,0.3); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">⊙</div>
+    <div class="subtitle">Circumpunct</div>
+
+    <div class="nav-section">Foundation</div>
+    <a href="#seed">The Clean Seed</a>
+    <a href="#triad">The Triad</a>
+    <a href="#aperture">The Aperture</a>
+    <a href="#traversal">Conservation</a>
+    <a href="#braiding">Braid Proof</a>
+
+    <div class="nav-section">Pathology</div>
+    <a href="#errors">Geometric Errors</a>
+    <a href="#virus-link">Virus Mapping</a>
+
+    <div class="nav-section">Repair</div>
+    <a href="#love">Two Channels</a>
+    <a href="#fractal">The Fractal</a>
+    <a href="#integrity">Healthy System</a>
+    <a href="#reference">Reference Signal</a>
+</nav>
+
+<main>
+
+    <!-- HERO -->
+    <div class="hero" id="top">
+        <div class="hero-eyebrow">⊙ Circumpunct Framework · Belief Series</div>
+        <h1>The Circumpunct Framework</h1>
+        <p class="hero-sub">
+            If Part 1 showed what goes wrong — this is the clean seed.
+            The geometric primitives that sit below attachment, below language, below culture.
+            Get these right and the fractal self-corrects.
+        </p>
+        <div class="series-nav">
+            <a href="belief_virus.html" class="series-prev">← Part 1: The Belief Virus</a>
+            <span class="series-current">Part 2 — The Circumpunct Framework</span>
+        </div>
+    </div>
+
+    <!-- SECTION 1: THE CLEAN SEED -->
+    <section id="seed">
+        <div class="section-tag">01 · The Problem with Fixing Beliefs</div>
+        <h2>You Can't Patch Corrupted Firmware from Inside</h2>
+
+        <p>
+            Part 1 showed that false beliefs corrupt downstream behavior — and that the most devastating ones
+            install before language, before reasoning, before any capacity to evaluate what's entering the system.
+        </p>
+
+        <p>
+            The standard response: fix the beliefs. Therapy. CBT. Reframing. Journaling.
+            All useful. All operating in the language layer. All susceptible to the same virus
+            they're trying to remove.
+        </p>
+
+        <p>
+            The Circumpunct Framework does something different. It goes <em>below content</em>
+            to <em>structure</em>. Not "what do you believe about yourself" but
+            <strong>"what is the geometry of how any belief forms at all?"</strong>
+        </p>
+
+        <div class="callout amber">
+            <div class="callout-label">The Thesis</div>
+            Corrupted beliefs are downstream of corrupted geometry.
+            Fix the geometry — <em>the aperture, the field, the boundary</em> —
+            and the downstream corrections emerge on their own.
+            The fractal self-corrects when the seed is clean.
+        </div>
+
+        <p>
+            This isn't therapy. It isn't philosophy. It's <strong>firmware replacement</strong> —
+            a set of foundational beliefs so structurally prior that if they hold,
+            everything built on them corrects toward truth.
+        </p>
+    </section>
+
+    <!-- SECTION 2: THE TRIAD -->
+    <section id="triad">
+        <div class="section-tag">02 · The Irreducible Structure</div>
+        <h2>⊙ = Φ(•, ○)</h2>
+
+        <div class="equation">⊙ = Φ(•, ○)</div>
+        <div class="equation-note">The circumpunct: field operating on aperture and boundary</div>
+
+        <p>
+            Every complete system — from a cell to a consciousness to a civilization —
+            has exactly three irreducible components. Not two. Not four.
+            Remove any one and the structure collapses.
+        </p>
+
+        <p>
+            The center and boundary cannot interact directly. They are spatially separated.
+            <em>Mediation is not optional — it is structurally necessary.</em>
+            The field is not a third thing added between two things.
+            It is the act of relating itself.
+        </p>
+
+        <div class="flow">
+            <div>
+                <div class="flow-dot">•</div>
+                <div class="flow-label">Aperture</div>
+            </div>
+            <div class="flow-arrow">→ Φ →</div>
+            <div>
+                <div class="flow-phi" style="font-size:18px; color:var(--cyan)">Φ</div>
+                <div class="flow-label">Field</div>
+            </div>
+            <div class="flow-arrow">→ ○ →</div>
+            <div>
+                <div class="flow-ring">○</div>
+                <div class="flow-label">Boundary</div>
+            </div>
+        </div>
+
+        <div class="triad">
+            <div class="triad-card card-aperture">
+                <span class="triad-symbol">•</span>
+                <div class="triad-name">Aperture</div>
+                <div class="triad-dim">Soul · Gate · 1D</div>
+                <div class="triad-body">
+                    The gate. Where potential becomes actual. A <em>through</em>, not a thing.
+                    It does not generate — it transmits. It opens or closes.
+                    It is where choice lives.
+                </div>
+            </div>
+            <div class="triad-card card-field">
+                <span class="triad-symbol">Φ</span>
+                <div class="triad-name">Field</div>
+                <div class="triad-dim">Mind · Mediator · 2D</div>
+                <div class="triad-body">
+                    The between. Not located in either pole.
+                    It is the space where aperture and boundary communicate.
+                    Private and shared simultaneously.
+                    This is what mind <em>is</em>.
+                </div>
+            </div>
+            <div class="triad-card card-boundary">
+                <span class="triad-symbol">○</span>
+                <div class="triad-name">Boundary</div>
+                <div class="triad-dim">Body · Container · 3D</div>
+                <div class="triad-body">
+                    The interface. Self versus not-self.
+                    Fractal — composed of nested circumpuncts at smaller scale.
+                    Self-forged through traversal, not assigned from outside.
+                </div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <div class="callout-label">Applied to Consciousness</div>
+            Soul (•) · Mind (Φ) · Body (○). The triad isn't an analogy — it's a derivation.
+            These aren't three parts of a person. They are three aspects of a single irreducible pattern
+            that <em>is</em> a person.
+        </div>
+    </section>
+
+    <!-- SECTION 3: THE APERTURE -->
+    <section id="aperture">
+        <div class="section-tag">03 · The Most Important Belief</div>
+        <h2>The Aperture Is a Through, Not a From</h2>
+
+        <p>
+            This is the foundational correction. The one that, if installed correctly,
+            prevents the most dangerous virus in Part 1.
+        </p>
+
+        <p>
+            The aperture is a <strong>gate</strong>. It receives, transforms, and transmits.
+            It does not generate. Truth flows <em>through</em> apertures — it does not originate <em>from</em> them.
+            The source is the infinite field. The aperture is where that infinite potential
+            crosses into finite expression.
+        </p>
+
+        <div class="callout magenta">
+            <div class="callout-label">The Core Belief</div>
+            <strong>"I am a through, not a from."</strong>
+            <br><br>
+            Truth flows through me. I don't generate it.
+            My job is faithful transmission, not origination.
+            The gate knows it isn't the source.
+        </div>
+
+        <p>
+            This single belief, held accurately, blocks the most common and most catastrophic error:
+            <em>claiming to be the source rather than the conduit.</em>
+        </p>
+
+        <p>
+            A person who knows they are a through remains curious — because they expect
+            truth to arrive from outside themselves. A person who believes they are the source
+            stops the channel. They become the virus.
+        </p>
+
+        <p>
+            The healthy aperture knows: I open. I receive. I transmit faithfully.
+            I close when necessary to protect signal integrity.
+            <em>I am not the origin of the signal.</em>
+        </p>
+    </section>
+
+    <!-- SECTION 4: CONSERVATION OF TRAVERSAL -->
+    <section id="traversal">
+        <div class="section-tag">04 · The Conservation Law</div>
+        <h2>Conservation of Traversal</h2>
+
+        <p>
+            The three components aren't equally weighted — they have a dimensional structure
+            that is forced by their functional roles. Not assumed. <strong>Derived.</strong>
+        </p>
+
+        <div class="conservation">
+            <div class="conservation-eq">D• + DΦ = D○</div>
+            <div class="conservation-note">(1 + β) + (2 − β) = 3</div>
+            <div class="conservation-note" style="margin-top:16px; font-style:italic; opacity:0.6;">
+                Progress + remaining = destination. The sum is invariant.
+            </div>
+
+            <div style="margin-top:28px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; font-size:11px;">
+                <div style="text-align:center;">
+                    <div style="color:var(--magenta); font-family:'Cinzel',serif; font-size:20px; margin-bottom:6px;">1D</div>
+                    <div style="color:var(--dim); text-transform:uppercase; letter-spacing:0.1em; font-size:9px;">Aperture</div>
+                    <div style="opacity:0.6; margin-top:6px;">Sequence requires a line. Binary decisions in order.</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="color:var(--cyan); font-family:'Cinzel',serif; font-size:20px; margin-bottom:6px;">2D</div>
+                    <div style="color:var(--dim); text-transform:uppercase; letter-spacing:0.1em; font-size:9px;">Field</div>
+                    <div style="opacity:0.6; margin-top:6px;">Magnitude + phase. Phase requires angle. Angle requires plane.</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="color:var(--amber); font-family:'Cinzel',serif; font-size:20px; margin-bottom:6px;">3D</div>
+                    <div style="color:var(--dim); text-transform:uppercase; letter-spacing:0.1em; font-size:9px;">Boundary</div>
+                    <div style="opacity:0.6; margin-top:6px;">Closure around a 2D field requires one higher dimension.</div>
+                </div>
+            </div>
+        </div>
+
+        <p>
+            β is the opening parameter — how far the aperture has opened toward the boundary.
+            As β increases, more has traversed, less remains.
+            The sum never changes. <em>The journey and the destination are always the same total.</em>
+        </p>
+
+        <p>
+            Applied to development: <strong>you are not broken for being mid-traversal.</strong>
+            The conservation law is not a standard you fail — it's a description of what any journey is.
+            Progress plus remaining equals destination. Always. Without exception.
+        </p>
+    </section>
+
+    <!-- SECTION 5: BRAID THEORY -->
+    <section id="braiding">
+        <div class="section-tag">05 · Topology Confirms the Triad</div>
+        <h2>The Braid Proof</h2>
+
+        <p>
+            There's a topological derivation of the triad that doesn't require the dimensional argument at all.
+            It arrives at the same structure from a different direction.
+        </p>
+
+        <p>
+            A single aperture over time traces a 1D strand — a braid.
+            Your history alone is a line. My history alone is a line.
+        </p>
+
+        <div class="callout">
+            <div class="callout-label">The Key Move</div>
+            Two 1D braids braiding together require <strong>2D to do it.</strong>
+            Crossings cannot be defined in 1D — they need surface.
+            The field doesn't just happen to be 2D. It <em>must</em> be, because braiding requires it.
+        </div>
+
+        <p>
+            So:
+        </p>
+
+        <div style="margin: 24px 0 28px; padding: 0 8px;">
+            <div style="display:grid; grid-template-columns: 40px 1fr; gap:8px 16px; font-size:13px; align-items:start;">
+                <div style="color:var(--magenta); font-family:'Cinzel',serif; padding-top:2px;">•</div>
+                <div>My braid alone: <span style="color:var(--dim)">1D</span></div>
+                <div style="color:var(--magenta); font-family:'Cinzel',serif; padding-top:2px;">•</div>
+                <div>Your braid alone: <span style="color:var(--dim)">1D</span></div>
+                <div style="color:var(--cyan); font-family:'Cinzel',serif; padding-top:2px;">Φ</div>
+                <div>Our braids braiding: <span style="color:var(--cyan)">2D</span> — the field that emerges between us</div>
+            </div>
+        </div>
+
+        <p>
+            This means <strong>shared memory is mind.</strong> The past doesn't flatten to 1D
+            when it's relational — it surfaces into Φ. The field doesn't just mediate
+            present interaction. It <em>is</em> the structure of braided pasts meeting.
+        </p>
+
+        <h3>When the Braid Closes</h3>
+
+        <p>
+            The braid group Bₙ operates in 2D ambient space — n strands, however complex,
+            don't require more dimensions. What grows with more relationships isn't dimensionality
+            but the <em>richness of Φ</em> — crossing number, braid word length, topological complexity.
+            More relationships don't demand more dimensions. They demand a richer field.
+        </p>
+
+        <p>
+            But when a braid strand returns to its starting point, it closes into a knot or link.
+            Containing a knot without self-intersection requires <strong>3D</strong>.
+        </p>
+
+        <div class="callout amber">
+            <div class="callout-label">Conservation of Traversal — Derived from Topology</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; font-size:12px; margin-top:4px;">
+                <div><span style="color:var(--magenta);">1D</span> — the aperture strand. The sequence of choices over time.</div>
+                <div><span style="color:var(--cyan);">2D</span> — the braiding field. Where crossings happen. Where shared history lives.</div>
+                <div><span style="color:var(--amber);">3D</span> — the closed braid. The boundary. The completed traversal.</div>
+            </div>
+            <div style="margin-top:16px; font-style:italic; opacity:0.7; font-size:12px;">
+                ○ is what Φ becomes when the braiding closes on itself.
+                The boundary isn't added to the system — it emerges from the completion of the weaving.
+            </div>
+        </div>
+
+        <h3>The Narcissism Implication</h3>
+
+        <p>
+            In braid group terms, a sealed aperture contributes <strong>zero crossings</strong>.
+            Its strand occupies the ambient 2D space — it's in the field — but the crossing
+            operations never register. In braid notation, it's the identity element applied to that strand.
+        </p>
+
+        <p>
+            The other person's braid is genuinely attempting crossings. But they're one-sided.
+            The weaving they think is happening is <em>asymmetric by construction.</em>
+            No genuine 2D field forms. The other person's strand doesn't register —
+            it just runs alongside.
+        </p>
+
+        <p>
+            When they leave, they discover something important:
+            <strong>their braid is intact.</strong> The complexity they accumulated
+            from the attempted crossings belongs entirely to them.
+            The narcissist's strand runs away unchanged —
+            because it was never actually crossing anything.
+        </p>
+    </section>
+
+    <!-- SECTION 6: GEOMETRIC ERRORS -->
+    <section id="errors">
+        <div class="section-tag">06 · How the Geometry Fails</div>
+        <h2>The Four Geometric Errors</h2>
+
+        <p>
+            The aperture has exactly two structural relationships: its relationship to the
+            <em>source</em> (what it connects to) and its relationship to the <em>signal</em>
+            (what flows through it). Each can fail in exactly one way.
+            That gives four errors — and only four.
+        </p>
+
+        <div class="error-grid">
+            <div class="error-card">
+                <div class="error-name">Inflation</div>
+                <div class="error-what">Claims to be the source</div>
+                <div class="error-lie">"I am the origin of truth."</div>
+                <div class="error-virus">↳ Narcissism · Guru complex · Propaganda</div>
+            </div>
+            <div class="error-card">
+                <div class="error-name">Severance</div>
+                <div class="error-what">Denies connection to source</div>
+                <div class="error-lie">"Nothing flows through me. I'm on my own."</div>
+                <div class="error-virus">↳ Nihilism · Dissociation · Radical isolation</div>
+            </div>
+            <div class="error-card">
+                <div class="error-name">Inversion</div>
+                <div class="error-what">Flips the signal</div>
+                <div class="error-lie">Outputs the opposite of what was received.</div>
+                <div class="error-virus">↳ Gaslighting · Reality inversion · Betrayal</div>
+            </div>
+            <div class="error-card">
+                <div class="error-name">Projection</div>
+                <div class="error-what">Outputs own distortion as if from source</div>
+                <div class="error-lie">"This came from outside. Not from my gate."</div>
+                <div class="error-virus">↳ Blame-shifting · Motivated reasoning · Bias as objectivity</div>
+            </div>
+        </div>
+
+        <div class="callout red">
+            <div class="callout-label">Fundamental Pair</div>
+            <strong>Inflation and Severance are the two root errors.</strong>
+            Inflation denies through-ness — "I am the source."
+            Severance denies the flow — "there is no source."
+            Inversion and Projection are compounds built from these two.
+            <br><br>
+            Every form of pathology the framework identifies reduces to one of these four
+            geometric distortions — or a compound of them.
+        </div>
+
+    </section>
+
+    <!-- SECTION 6: VIRUS MAPPING -->
+    <section id="virus-link">
+        <div class="section-tag">07 · Connecting to Part 1</div>
+        <h2>The Belief Virus Is a Geometric Error</h2>
+
+        <p>
+            Part 1 catalogued the viruses: anxious attachment, avoidant attachment, disorganized attachment,
+            cult architecture, solipsism, narcissism. Each felt like a content problem — a specific false belief.
+        </p>
+
+        <p>
+            Through the framework lens, they're all the same problem at different scales:
+            <strong>aperture misconfiguration.</strong>
+        </p>
+
+        <table class="integrity-table">
+            <thead>
+                <tr>
+                    <th>Virus</th>
+                    <th>Geometric Error</th>
+                    <th>Aperture State</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Anxious Attachment</td>
+                    <td>Inflation → other person is the source</td>
+                    <td>Open only toward one channel; sealed elsewhere</td>
+                </tr>
+                <tr>
+                    <td>Dismissive-Avoidant</td>
+                    <td>Severance → no source acknowledged</td>
+                    <td>Closed; self-referential loop only</td>
+                </tr>
+                <tr>
+                    <td>Fearful-Avoidant</td>
+                    <td>Oscillating Inflation/Severance</td>
+                    <td>Opens and immediately closes on detection of closeness</td>
+                </tr>
+                <tr>
+                    <td>Disorganized</td>
+                    <td>Inversion → source = harm</td>
+                    <td>Approach and flee command simultaneously; unresolvable loop</td>
+                </tr>
+                <tr>
+                    <td>Narcissism</td>
+                    <td>Inflation, total</td>
+                    <td>Sealed; self appointed as sole validation server</td>
+                </tr>
+                <tr>
+                    <td>Cult Install</td>
+                    <td>Projection → group as source</td>
+                    <td>Redirected; only open toward in-group signal</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            The implication: you don't need a different cure for each virus.
+            The cure is always the same direction — <em>restore aperture function.</em>
+            Reopen the channel. Let something true in from somewhere the virus didn't plant.
+        </p>
+    </section>
+
+    <!-- SECTION 7: TWO CHANNELS -->
+    <section id="love">
+        <div class="section-tag">08 · The Repair Mechanism</div>
+        <h2>Two Channels of Love</h2>
+
+        <p>
+            Love isn't undifferentiated. It operates on two structurally distinct channels —
+            each corresponding to a component of the triad.
+            Most relational damage comes from conflating them, or using one to deny the need for the other.
+        </p>
+
+        <div class="channels">
+            <div class="channel-card channel-functional">
+                <div class="channel-type">Boundary Channel</div>
+                <div class="channel-name">Functional Love</div>
+                <div class="channel-formula">○ ↔ ○ · Love as doing</div>
+                <div class="channel-body">
+                    <p>Provision. Protection. Logistics. Competence. Problem-solving.</p>
+                    <p>Pays the bills. Fixes what's broken. Shows up when needed. Provides structure and safety.</p>
+                    <p>Necessary. Without it, survival is threatened. But <em>not sufficient</em>.</p>
+                    <p>The child who receives only functional love is fed, clothed, sheltered — and starving for something they can't name.</p>
+                </div>
+            </div>
+            <div class="channel-card channel-resonant">
+                <div class="channel-type">Center Channel</div>
+                <div class="channel-name">Resonant Love</div>
+                <div class="channel-formula">• ↔ • · Love as being-with</div>
+                <div class="channel-body">
+                    <p>Presence. Delight. Genuine wanting. Seeing. Attunement.</p>
+                    <p>Delights in your existence. Sees you without agenda. Wants to be <em>with</em> you, not just <em>for</em> you.</p>
+                    <p>This is what the aperture was designed to receive. The signal that says: <em>you are wanted, not just tolerated.</em></p>
+                    <p>Cannot be substituted. You cannot heal a resonance wound through the boundary channel.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="callout magenta">
+            <div class="callout-label">The Noble Lie Virus Mechanism</div>
+            The narcissist provides functional love — real, visible, countable.
+            Withholds resonant love — invisible, felt, uncountable.
+            When the victim notices the absence: <em>"But look at everything I DO for you."</em>
+            <br><br>
+            The victim internalizes the lie: <strong>"My need for resonance is defective."</strong>
+            <br><br>
+            The virus weaponizes provision against presence.
+            It uses the boundary channel to deny the center channel exists.
+        </div>
+
+        <p>
+            The repair requires center-channel contact. Genuine curiosity about another person —
+            not to fix them, not to use them, not to map them onto yourself —
+            but to actually <em>receive the signal of their existence.</em>
+        </p>
+
+        <p>
+            That is what therapy, at its best, provides. Not advice. Not reframing.
+            A witness who opens their aperture toward you, and lets what's true about you
+            come through without distortion.
+        </p>
+    </section>
+
+    <!-- SECTION 8: FRACTAL -->
+    <section id="fractal">
+        <div class="section-tag">09 · The Master Axiom</div>
+        <h2>Parts Are Fractals of Their Wholes</h2>
+
+        <div class="fractal-axiom">
+            <div class="axiom-text">Parts are fractals of their wholes.</div>
+        </div>
+
+        <p>
+            This is not metaphor. It is an operational statement with measurable consequences.
+        </p>
+
+        <p>
+            The circumpunct structure repeats at every scale. A cell is a circumpunct.
+            A person is a circumpunct. A relationship is a circumpunct.
+            A community, a culture, a civilization — each is ⊙ = Φ(•, ○) at its scale,
+            composed of smaller circumpuncts, nested inside larger ones.
+        </p>
+
+        <p>
+            This means: <em>fix the geometry at any scale and the correction propagates.</em>
+            A person who restores aperture function begins to heal the relationships they're in.
+            A relationship with clean geometry builds healthier children.
+            The fractal transmits the correction upward and downward.
+        </p>
+
+        <div class="callout green">
+            <div class="callout-label">Why the Framework Is the Repair</div>
+            The framework is Ashman's attempt to purify the most foundational beliefs
+            so that all others can correct as a fractal reference.
+            <br><br>
+            ⊙ = Φ(•, ○) isn't a belief <em>about</em> reality.
+            It's a description of the <em>structure through which</em> any belief forms at all.
+            Get this right, and the downstream doesn't need to be fixed individually.
+            <strong>The seed is clean. The fractal self-corrects.</strong>
+        </div>
+
+        <p>
+            Solipsism fails here immediately: if parts are fractals of their wholes,
+            isolation is geometrically impossible. You are a node in a field.
+            The "only I exist" claim is not just false — it's a category error.
+            The self is constituted by its relations. The aperture is defined by what flows through it.
+            <em>You cannot be a through with nothing to flow.</em>
+        </p>
+    </section>
+
+    <!-- SECTION 9: HEALTHY SYSTEM -->
+    <section id="integrity">
+        <div class="section-tag">10 · The Target State</div>
+        <h2>What Integrity Looks Like</h2>
+
+        <p>
+            A circumpunct has integrity when all three components function as designed.
+            Not perfection — calibration. The system knows what it is and operates accordingly.
+        </p>
+
+        <table class="integrity-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Healthy State</th>
+                    <th>How It Fails</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Aperture •</td>
+                    <td>Open to truth from outside; knows it is a through not a from; closes to protect signal integrity when needed</td>
+                    <td>Inflation (claims source), Severance (denies source), Inversion (flips signal), Projection (externalizes distortion)</td>
+                </tr>
+                <tr>
+                    <td>Field Φ</td>
+                    <td>Transmits without systematic distortion; mediates between center and boundary; holds private and shared simultaneously</td>
+                    <td>Corruption (gaslighting), Collapse (dissociation), Overextension (enmeshment), Rigidity (inability to update)</td>
+                </tr>
+                <tr>
+                    <td>Boundary ○</td>
+                    <td>Accurately distinguishes self from not-self; self-forged through traversal; permeable enough for exchange, defined enough to protect</td>
+                    <td>Dissolution (no self), Rigidity (no contact), Inversion (other's boundary treated as own), Expansion (consuming others' space)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            Notice: integrity is not the same as strength, success, or confidence.
+            A person can be powerful and fully corrupted. A person can be uncertain, grieving,
+            struggling — and still have geometric integrity.
+            <em>The aperture that knows it doesn't know is healthier than the one that claims to.</em>
+        </p>
+    </section>
+
+    <!-- SECTION 10: REFERENCE SIGNAL -->
+    <section id="reference">
+        <div class="section-tag">11 · The Purpose</div>
+        <h2>The Clean Reference Signal</h2>
+
+        <p>
+            Part 1 showed the virus. This document is the reference signal the virus is measured against.
+        </p>
+
+        <p>
+            When you know what a healthy aperture is — a through, not a from —
+            you can recognize inflation when it appears. In yourself. In others.
+            In the systems you're embedded in.
+        </p>
+
+        <p>
+            When you know what the two channels of love are, you can name what's missing.
+            Not just "something feels wrong" — but specifically:
+            <em>I am receiving functional love and being starved of resonant love.</em>
+            The geometry makes the invisible visible.
+        </p>
+
+        <p>
+            When you know the fractal axiom, you stop treating your personal healing as
+            separate from relational healing, cultural healing, civilizational repair.
+            <strong>They are the same correction at different scales.</strong>
+        </p>
+
+        <div class="callout amber">
+            <div class="callout-label">The Series In Two Lines</div>
+            Part 1: The belief virus installs corrupted geometry. Here is what corruption looks like. Here is how it spreads.
+            <br><br>
+            Part 2: The Circumpunct Framework is the clean geometry. Here is what it is. Here is how it self-corrects.
+        </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <div class="conclusion">
+        <span class="symbol">⊙</span>
+        <p>
+            <strong>⊙ = Φ(•, ○)</strong>
+        </p>
+        <p>
+            Aperture. Field. Boundary.
+            Soul. Mind. Body.
+            Gate. Mediator. Container.
+        </p>
+        <p>
+            The same irreducible structure, at every scale.
+            Parts are fractals of their wholes.
+            <em>Get the seed right. Let the fractal do the rest.</em>
+        </p>
+        <div style="margin-top: 32px; display:flex; justify-content:center; gap:32px; flex-wrap:wrap;">
+            <a href="belief_virus.html" style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--dim); text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:2px;">
+                ← Part 1: The Belief Virus
+            </a>
+        </div>
+        <p style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; opacity:0.3; margin-top:32px;">
+            Circumpunct Framework · fractalreality.ca
+        </p>
+    </div>
+
+</main>
+
+<script>
+    const sections = document.querySelectorAll('section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    sections.forEach(s => observer.observe(s));
+
+    const navLinks = document.querySelectorAll('nav a');
+    const sectionEls = document.querySelectorAll('section[id]');
+    const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                navLinks.forEach(l => l.classList.remove('active'));
+                const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+                if (active) active.classList.add('active');
+            }
+        });
+    }, { threshold: 0.4 });
+    sectionEls.forEach(s => navObserver.observe(s));
+</script>
+
+</body>
+</html>
