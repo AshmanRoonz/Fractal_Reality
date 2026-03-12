@@ -34,7 +34,7 @@
             min-height: 100vh;
         }
 
-        /* Header - compact */
+        /* Header */
         header {
             background: var(--bg-card);
             padding: 1rem 1.5rem;
@@ -45,7 +45,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            max-width: 800px;
+            max-width: 960px;
             margin: 0 auto;
         }
 
@@ -85,106 +85,174 @@
             border-color: var(--gold-dim);
         }
 
-        /* Section navigation */
-        nav {
-            background: var(--bg);
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem 0.75rem;
-            justify-content: center;
-            max-width: 900px;
+        /* Intro */
+        .intro {
+            max-width: 960px;
             margin: 0 auto;
+            padding: 2.5rem 1.5rem 1rem;
         }
 
-        .nav-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.8rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-            transition: all 0.15s;
-            white-space: nowrap;
-        }
-
-        .nav-links a:hover {
-            color: var(--text);
-            background: rgba(255,255,255,0.05);
-        }
-
-        .nav-links a.nav-framework { color: var(--purple); }
-        .nav-links a.nav-states { color: var(--cyan); }
-        .nav-links a.nav-physics { color: var(--green); }
-        .nav-links a.nav-wholeness { color: var(--orange); }
-        .nav-links a.nav-consciousness { color: var(--magenta); }
-        .nav-links a.nav-ethics { color: var(--gold); }
-        .nav-links a.nav-healing { color: var(--red); }
-        .nav-links a.nav-philosophical { color: #b388ff; }
-        .nav-links a.nav-stories { color: #ffab91; }
-        .nav-links a.nav-tools { color: #4dd0e1; }
-
-        /* Main content */
-        main {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem 4rem;
-        }
-
-        /* Section styling */
-        .section {
-            margin-bottom: 3rem;
-            scroll-margin-top: 3.5rem;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .section-icon {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .section h2 {
+        .intro h2 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.35rem;
+            font-size: 1.6rem;
             font-weight: 500;
-            letter-spacing: 0.03em;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.02em;
         }
 
-        /* Color variants */
-        .section.framework .section-header { color: var(--purple); }
-        .section.states .section-header { color: var(--cyan); }
-        .section.physics .section-header { color: var(--green); }
-        .section.wholeness .section-header { color: var(--orange); }
-        .section.consciousness .section-header { color: var(--magenta); }
-        .section.ethics .section-header { color: var(--gold); }
-        .section.healing .section-header { color: var(--red); }
-        .section.philosophical .section-header { color: #b388ff; }
-        .section.tools .section-header { color: #4dd0e1; }
-        .section.stories .section-header { color: #ffab91; }
+        .intro p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            max-width: 600px;
+        }
 
-        /* List styling with circumpunct bullets */
+        /* Card Grid */
+        .card-grid {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1.5rem 1.5rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Individual Card */
+        .doc-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            overflow: hidden;
+        }
+
+        .doc-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .doc-card.expanded {
+            grid-column: 1 / -1;
+            background: var(--bg-card);
+            transform: none;
+            box-shadow: 0 4px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .doc-card.expanded:hover {
+            transform: none;
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .card-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .card-title-area {
+            flex: 1;
+        }
+
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            font-variant: small-caps;
+        }
+
+        .card-subtitle {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .card-toggle {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+            margin-top: 0.2rem;
+        }
+
+        .doc-card.expanded .card-toggle {
+            transform: rotate(180deg);
+        }
+
+        /* Card preview bullets */
+        .card-preview {
+            padding: 0 1.5rem 1.25rem;
+            padding-left: 3.25rem;
+        }
+
+        .preview-item {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            margin-bottom: 0.35rem;
+            font-size: 0.88rem;
+            color: var(--text-dim);
+        }
+
+        .preview-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+            top: -1px;
+        }
+
+        .preview-item:nth-child(1) .preview-dot { background: var(--gold); }
+        .preview-item:nth-child(2) .preview-dot { background: #58a6ff; }
+        .preview-item:nth-child(3) .preview-dot { background: #ff7b72; }
+
+        .preview-label {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .preview-dash {
+            color: var(--text-muted);
+        }
+
+        .doc-card.expanded .card-preview {
+            display: none;
+        }
+
+        /* Expanded page list */
+        .card-pages {
+            display: none;
+            padding: 0 1.5rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .doc-card.expanded .card-pages {
+            display: block;
+        }
+
         .page-list {
             list-style: none;
+            columns: 2;
+            column-gap: 2rem;
+            padding-top: 1rem;
         }
 
         .page-item {
-            margin-bottom: 1rem;
-            padding-left: 1.75rem;
+            margin-bottom: 0.85rem;
+            padding-left: 1.5rem;
             position: relative;
+            break-inside: avoid;
         }
 
         .page-item::before {
@@ -193,14 +261,14 @@
             left: 0;
             top: 0;
             color: var(--gold-dim);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .page-link {
             color: var(--text);
             text-decoration: none;
             font-weight: 500;
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             transition: color 0.15s;
             display: inline-block;
         }
@@ -211,12 +279,50 @@
 
         .page-desc {
             color: var(--text-muted);
-            font-size: 0.88rem;
-            margin-top: 0.2rem;
-            padding-left: 0.5rem;
-            border-left: 2px solid rgba(255,255,255,0.06);
-            margin-left: 0.25rem;
+            font-size: 0.82rem;
+            margin-top: 0.15rem;
         }
+
+        /* Section color variants */
+        .doc-card.framework .card-title { color: var(--purple); }
+        .doc-card.framework { border-color: rgba(163, 113, 247, 0.12); }
+        .doc-card.framework:hover, .doc-card.framework.expanded { border-color: rgba(163, 113, 247, 0.25); }
+
+        .doc-card.states .card-title { color: var(--cyan); }
+        .doc-card.states { border-color: rgba(88, 166, 255, 0.12); }
+        .doc-card.states:hover, .doc-card.states.expanded { border-color: rgba(88, 166, 255, 0.25); }
+
+        .doc-card.physics .card-title { color: var(--green); }
+        .doc-card.physics { border-color: rgba(126, 231, 135, 0.12); }
+        .doc-card.physics:hover, .doc-card.physics.expanded { border-color: rgba(126, 231, 135, 0.25); }
+
+        .doc-card.wholeness .card-title { color: var(--orange); }
+        .doc-card.wholeness { border-color: rgba(255, 166, 87, 0.12); }
+        .doc-card.wholeness:hover, .doc-card.wholeness.expanded { border-color: rgba(255, 166, 87, 0.25); }
+
+        .doc-card.consciousness .card-title { color: var(--magenta); }
+        .doc-card.consciousness { border-color: rgba(247, 120, 186, 0.12); }
+        .doc-card.consciousness:hover, .doc-card.consciousness.expanded { border-color: rgba(247, 120, 186, 0.25); }
+
+        .doc-card.ethics .card-title { color: var(--gold); }
+        .doc-card.ethics { border-color: rgba(212, 175, 55, 0.12); }
+        .doc-card.ethics:hover, .doc-card.ethics.expanded { border-color: rgba(212, 175, 55, 0.25); }
+
+        .doc-card.healing .card-title { color: var(--red); }
+        .doc-card.healing { border-color: rgba(255, 123, 114, 0.12); }
+        .doc-card.healing:hover, .doc-card.healing.expanded { border-color: rgba(255, 123, 114, 0.25); }
+
+        .doc-card.philosophical .card-title { color: #b388ff; }
+        .doc-card.philosophical { border-color: rgba(179, 136, 255, 0.12); }
+        .doc-card.philosophical:hover, .doc-card.philosophical.expanded { border-color: rgba(179, 136, 255, 0.25); }
+
+        .doc-card.stories .card-title { color: #ffab91; }
+        .doc-card.stories { border-color: rgba(255, 171, 145, 0.12); }
+        .doc-card.stories:hover, .doc-card.stories.expanded { border-color: rgba(255, 171, 145, 0.25); }
+
+        .doc-card.tools .card-title { color: #4dd0e1; }
+        .doc-card.tools { border-color: rgba(77, 208, 225, 0.12); }
+        .doc-card.tools:hover, .doc-card.tools.expanded { border-color: rgba(77, 208, 225, 0.25); }
 
         /* Footer */
         footer {
@@ -225,6 +331,8 @@
             color: var(--text-muted);
             font-size: 0.85rem;
             border-top: 1px solid rgba(255,255,255,0.05);
+            max-width: 960px;
+            margin: 0 auto;
         }
 
         footer a {
@@ -236,18 +344,45 @@
             color: var(--gold);
         }
 
-        /* Mobile adjustments */
-        @media (max-width: 600px) {
+        /* Mobile */
+        @media (max-width: 700px) {
             header { padding: 0.75rem 1rem; }
             header h1 { font-size: 1.1rem; }
             .home-link { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
-            nav { padding: 0.5rem 0.75rem; }
-            .nav-links { gap: 0.3rem 0.5rem; }
-            .nav-links a { font-size: 0.75rem; padding: 0.2rem 0.4rem; }
-            main { padding: 1.25rem 1rem 3rem; }
-            .section h2 { font-size: 1.15rem; }
-            .page-link { font-size: 1rem; }
-            .section { scroll-margin-top: 3rem; }
+            .intro { padding: 1.5rem 1rem 0.75rem; }
+            .intro h2 { font-size: 1.3rem; }
+            .card-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            .page-list {
+                columns: 1;
+            }
+            .card-header { padding: 1rem 1.25rem; }
+            .card-preview { padding: 0 1.25rem 1rem; padding-left: 3rem; }
+            .card-pages { padding: 0 1.25rem 1.25rem; }
+        }
+
+        /* Animation */
+        @media (prefers-reduced-motion: no-preference) {
+            .doc-card {
+                animation: fadeIn 0.4s ease both;
+            }
+            .doc-card:nth-child(1) { animation-delay: 0.05s; }
+            .doc-card:nth-child(2) { animation-delay: 0.1s; }
+            .doc-card:nth-child(3) { animation-delay: 0.15s; }
+            .doc-card:nth-child(4) { animation-delay: 0.2s; }
+            .doc-card:nth-child(5) { animation-delay: 0.25s; }
+            .doc-card:nth-child(6) { animation-delay: 0.3s; }
+            .doc-card:nth-child(7) { animation-delay: 0.35s; }
+            .doc-card:nth-child(8) { animation-delay: 0.4s; }
+            .doc-card:nth-child(9) { animation-delay: 0.45s; }
+            .doc-card:nth-child(10) { animation-delay: 0.5s; }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(12px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
         }
     </style>
 </head>
@@ -258,617 +393,841 @@
                 <span class="logo">⊙</span>
                 <h1>All Pages</h1>
             </div>
-            <a href="index.html" class="home-link">← Home</a>
+            <a href="index.html" class="home-link">&larr; Home</a>
         </div>
     </header>
 
-    <nav>
-        <div class="nav-links">
-            <a href="#framework" class="nav-framework">Framework</a>
-            <a href="#states" class="nav-states">64-State</a>
-            <a href="#physics" class="nav-physics">Physics</a>
-            <a href="#wholeness" class="nav-wholeness">Wholeness</a>
-            <a href="#consciousness" class="nav-consciousness">Consciousness</a>
-            <a href="#ethics" class="nav-ethics">Ethics</a>
-            <a href="#healing" class="nav-healing">Healing</a>
-            <a href="#philosophical" class="nav-philosophical">Philosophy</a>
-            <a href="#stories" class="nav-stories">Stories</a>
-            <a href="#tools" class="nav-tools">Tools</a>
-        </div>
-    </nav>
+    <div class="intro">
+        <h2>See It Everywhere</h2>
+        <p>The same pattern. Independent discovery. Choose a domain to explore.</p>
+    </div>
 
-    <main>
+    <div class="card-grid">
+
         <!-- Circumpunct & Framework -->
-        <section class="section framework" id="framework">
-            <div class="section-header">
-                <span class="section-icon">◎</span>
-                <h2>Circumpunct & Framework</h2>
+        <div class="doc-card framework" onclick="toggleCard(this)">
+            <div class="card-header">
+                <span class="card-icon">◎</span>
+                <div class="card-title-area">
+                    <div class="card-title">Circumpunct & Framework</div>
+                    <div class="card-subtitle">14 pages &mdash; the foundational architecture</div>
+                </div>
+                <span class="card-toggle">&#9662;</span>
             </div>
-            <ul class="page-list">
-                <li class="page-item">
-                    <a href="circumpunct_ontology.html" class="page-link">Circumpunct: The Complete Framework</a>
-                    <div class="page-desc">Minimal structural ontology — the foundational architecture</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_encyclopedia.html" class="page-link">The Circumpunct Encyclopedia v2.0</a>
-                    <div class="page-desc">Complete formalized reference for the entire theory</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_isomorphism.html" class="page-link">The Isomorphism of the Circumpunct</a>
-                    <div class="page-desc">Formal axiomatization — structural invariance across all domains</div>
-                </li>
-                <li class="page-item">
-                    <a href="human.html" class="page-link">The Human Circumpunct</a>
-                    <div class="page-desc">You are ⊙ — understanding yourself as boundary, field, and aperture</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct-presentation.html" class="page-link">Dimensional Architecture Slideshow</a>
-                    <div class="page-desc">Visual presentation of the circumpunct's dimensional structure</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_presentation.html" class="page-link">The Bridge Between Science and Spirituality</a>
-                    <div class="page-desc">How the circumpunct unifies material and experiential reality</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_interactive_theory.html" class="page-link">Circumpunct Theory v4.0 — Interactive</a>
-                    <div class="page-desc">Live calculations and predictions you can explore</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct-v5.html" class="page-link">Circumpunct v5</a>
-                    <div class="page-desc">Latest interactive visualization of the core symbol</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct-v3.html" class="page-link">Master Loop v3</a>
-                    <div class="page-desc">Earlier interactive exploration of the feedback loop</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_math.html" class="page-link">The Conservation of Traversal</a>
-                    <div class="page-desc">Mathematical foundations of circumpunct dynamics</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumath.html" class="page-link">Field–Aperture Dynamical System</a>
-                    <div class="page-desc">The core equation: how field and aperture interact</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct-swarm.html" class="page-link">Swarm Protocol Simulation</a>
-                    <div class="page-desc">Multiple circumpuncts interacting as a collective</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_dimensions.html" class="page-link">Dimensional Architecture Explorer</a>
-                    <div class="page-desc">Navigate the layers from 0D to 6D</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_kernel.html" class="page-link">Compressed Kernel v1.0</a>
-                    <div class="page-desc">The minimal seed that regenerates the full framework</div>
-                </li>
-            </ul>
-        </section>
+            <div class="card-preview">
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Ontology</span> <span class="preview-dash">&mdash;</span> the minimal structure</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Isomorphism</span> <span class="preview-dash">&mdash;</span> structural invariance</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Visualization</span> <span class="preview-dash">&mdash;</span> interactive explorations</span>
+                </div>
+            </div>
+            <div class="card-pages">
+                <ul class="page-list">
+                    <li class="page-item">
+                        <a href="circumpunct_ontology.html" class="page-link">Circumpunct: The Complete Framework</a>
+                        <div class="page-desc">Minimal structural ontology — the foundational architecture</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_encyclopedia.html" class="page-link">The Circumpunct Encyclopedia v2.0</a>
+                        <div class="page-desc">Complete formalized reference for the entire theory</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_isomorphism.html" class="page-link">The Isomorphism of the Circumpunct</a>
+                        <div class="page-desc">Formal axiomatization — structural invariance across all domains</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="human.html" class="page-link">The Human Circumpunct</a>
+                        <div class="page-desc">You are ⊙ — understanding yourself as boundary, field, and aperture</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct-presentation.html" class="page-link">Dimensional Architecture Slideshow</a>
+                        <div class="page-desc">Visual presentation of the circumpunct's dimensional structure</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_presentation.html" class="page-link">The Bridge Between Science and Spirituality</a>
+                        <div class="page-desc">How the circumpunct unifies material and experiential reality</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_interactive_theory.html" class="page-link">Circumpunct Theory v4.0 — Interactive</a>
+                        <div class="page-desc">Live calculations and predictions you can explore</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct-v5.html" class="page-link">Circumpunct v5</a>
+                        <div class="page-desc">Latest interactive visualization of the core symbol</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct-v3.html" class="page-link">Master Loop v3</a>
+                        <div class="page-desc">Earlier interactive exploration of the feedback loop</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_math.html" class="page-link">The Conservation of Traversal</a>
+                        <div class="page-desc">Mathematical foundations of circumpunct dynamics</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumath.html" class="page-link">Field–Aperture Dynamical System</a>
+                        <div class="page-desc">The core equation: how field and aperture interact</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct-swarm.html" class="page-link">Swarm Protocol Simulation</a>
+                        <div class="page-desc">Multiple circumpuncts interacting as a collective</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_dimensions.html" class="page-link">Dimensional Architecture Explorer</a>
+                        <div class="page-desc">Navigate the layers from 0D to 6D</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_kernel.html" class="page-link">Compressed Kernel v1.0</a>
+                        <div class="page-desc">The minimal seed that regenerates the full framework</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <!-- 64-State Architecture -->
-        <section class="section states" id="states">
-            <div class="section-header">
-                <span class="section-icon">☰</span>
-                <h2>64-State Architecture</h2>
+        <div class="doc-card states" onclick="toggleCard(this)">
+            <div class="card-header">
+                <span class="card-icon">☰</span>
+                <div class="card-title-area">
+                    <div class="card-title">64-State Architecture</div>
+                    <div class="card-subtitle">5 pages &mdash; the state space</div>
+                </div>
+                <span class="card-toggle">&#9662;</span>
             </div>
-            <ul class="page-list">
-                <li class="page-item">
-                    <a href="64-state_circumpunct_particle_table.html" class="page-link">Topological Quantum Computer (B₃)</a>
-                    <div class="page-desc">Braid group visualization of the 64-state space</div>
-                </li>
-                <li class="page-item">
-                    <a href="iching_64state_visualizer.html" class="page-link">64-State Isomorphism: Circumpunct ↔ I Ching</a>
-                    <div class="page-desc">Ancient wisdom mapped onto the same 64-state structure</div>
-                </li>
-                <li class="page-item">
-                    <a href="master-table.html" class="page-link">The Golden Structure of Physics</a>
-                    <div class="page-desc">Master reference table connecting states to physical constants</div>
-                </li>
-                <li class="page-item">
-                    <a href="vesica_piscis_64_states.html" class="page-link">⊙ ∩ ⊙ = 64 — The Vesica Piscis</a>
-                    <div class="page-desc">Why two circumpuncts overlapping yield exactly 64 states</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_isomorphism_table.html" class="page-link">Isomorphism Table</a>
-                    <div class="page-desc">Cross-domain mappings of the 64-state structure</div>
-                </li>
-            </ul>
-        </section>
+            <div class="card-preview">
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Topology</span> <span class="preview-dash">&mdash;</span> braid group B₃</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">I Ching</span> <span class="preview-dash">&mdash;</span> ancient isomorphism</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Vesica Piscis</span> <span class="preview-dash">&mdash;</span> why exactly 64</span>
+                </div>
+            </div>
+            <div class="card-pages">
+                <ul class="page-list">
+                    <li class="page-item">
+                        <a href="64-state_circumpunct_particle_table.html" class="page-link">Topological Quantum Computer (B₃)</a>
+                        <div class="page-desc">Braid group visualization of the 64-state space</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="iching_64state_visualizer.html" class="page-link">64-State Isomorphism: Circumpunct ↔ I Ching</a>
+                        <div class="page-desc">Ancient wisdom mapped onto the same 64-state structure</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="master-table.html" class="page-link">The Golden Structure of Physics</a>
+                        <div class="page-desc">Master reference table connecting states to physical constants</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="vesica_piscis_64_states.html" class="page-link">⊙ ∩ ⊙ = 64 — The Vesica Piscis</a>
+                        <div class="page-desc">Why two circumpuncts overlapping yield exactly 64 states</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_isomorphism_table.html" class="page-link">Isomorphism Table</a>
+                        <div class="page-desc">Cross-domain mappings of the 64-state structure</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <!-- Physics & Mathematics -->
-        <section class="section physics" id="physics">
-            <div class="section-header">
-                <span class="section-icon">∿</span>
-                <h2>Physics & Mathematics</h2>
+        <div class="doc-card physics" onclick="toggleCard(this)">
+            <div class="card-header">
+                <span class="card-icon">∿</span>
+                <div class="card-title-area">
+                    <div class="card-title">Physics & Mathematics</div>
+                    <div class="card-subtitle">24 pages &mdash; rigorous formulation</div>
+                </div>
+                <span class="card-toggle">&#9662;</span>
             </div>
-            <ul class="page-list">
-                <li class="page-item">
-                    <a href="circumpunct_physics.html" class="page-link">The Circumpunct Framework for Working Physicists</a>
-                    <div class="page-desc">Rigorous mathematical formulation with testable predictions</div>
-                </li>
-                <li class="page-item">
-                    <a href="methodological_status.html" class="page-link">Methodological Status</a>
-                    <div class="page-desc">Epistemic categories and validation pathways</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_IT.html" class="page-link">The Circumpunct Theory of Information</a>
-                    <div class="page-desc">Information theory through the circumpunct lens</div>
-                </li>
-                <li class="page-item">
-                    <a href="entropy-foundation.html" class="page-link">The Entropy Argument</a>
-                    <div class="page-desc">Why reality requires the circumpunct structure</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_operator_formalization.html" class="page-link">⊙ = • Φ ○ Operator Formalization</a>
-                    <div class="page-desc">The core equation as a mathematical operator</div>
-                </li>
-                <li class="page-item">
-                    <a href="surface_field_formalization.html" class="page-link">Surface Theorem — The Geometry of Mind</a>
-                    <div class="page-desc">How consciousness emerges from surface-field interactions</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_schumann.html" class="page-link">Schumann-Circumpunct Resonance Theory</a>
-                    <div class="page-desc">Earth's resonant frequencies and the circumpunct</div>
-                </li>
-                <li class="page-item">
-                    <a href="quantum.html" class="page-link">Living Mandelbrot — Boundary Walker</a>
-                    <div class="page-desc">Fractal boundaries in action</div>
-                </li>
-                <li class="page-item">
-                    <a href="braid-visualizer.html" class="page-link">Topological Quantum Computer</a>
-                    <div class="page-desc">Braid group B₃ visualization</div>
-                </li>
-                <li class="page-item">
-                    <a href="trinity_braid.html" class="page-link">Trinity Braid Simulation</a>
-                    <div class="page-desc">Three-strand braid dynamics</div>
-                </li>
-                <li class="page-item">
-                    <a href="energy_scale_phase_visualization.html" class="page-link">Energy-Scale-Phase Triangle</a>
-                    <div class="page-desc">The three axes of physical reality</div>
-                </li>
-                <li class="page-item">
-                    <a href="geometric_periodic_table.html" class="page-link">Musical Periodic Table</a>
-                    <div class="page-desc">Fibonacci + 7-note scale structure of elements</div>
-                </li>
-                <li class="page-item">
-                    <a href="aperture_falsification_presentation.html" class="page-link">The Aperture: Falsification & The Pisces Model</a>
-                    <div class="page-desc">How to test (and potentially disprove) the theory</div>
-                </li>
-                <li class="page-item">
-                    <a href="phi_resonance.html" class="page-link">φ-Entrainment</a>
-                    <div class="page-desc">Binaural consciousness tool using golden ratio</div>
-                </li>
-                <li class="page-item">
-                    <a href="hypercube.html" class="page-link">Why 64 States Require 6 Dimensions</a>
-                    <div class="page-desc">5D vs 6D hypercube comparison</div>
-                </li>
-                <li class="page-item">
-                    <a href="dimensions.html" class="page-link">The Dimensional Cascade — From God to Us</a>
-                    <div class="page-desc">How infinite potential becomes finite form</div>
-                </li>
-                <li class="page-item">
-                    <a href="particle_mereology.html" class="page-link">Particle Mereology</a>
-                    <div class="page-desc">Every thing is part and whole</div>
-                </li>
-                <li class="page-item">
-                    <a href="fractal-tesla-resonator-simulation.html" class="page-link">Fractal Tesla Resonator</a>
-                    <div class="page-desc">Technical simulation of resonant structures</div>
-                </li>
-                <li class="page-item">
-                    <a href="euler_theorems.html" class="page-link">The Euler Theorems</a>
-                    <div class="page-desc">Euler's identity and polyhedron formula through the circumpunct framework</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_time_particle_theory.html" class="page-link">Circumpunct Time-Particle Theory</a>
-                    <div class="page-desc">Time as particle dynamics through the circumpunct framework</div>
-                </li>
-                <li class="page-item">
-                    <a href="polar_64_state_map.html" class="page-link">Complete Mereological Map — Higgs to Atoms</a>
-                    <div class="page-desc">Full part-whole hierarchy from fundamental particles to atomic structure</div>
-                </li>
-                <li class="page-item">
-                    <a href="mereological_bridge.html" class="page-link">Mereological Bridge — Elements to Particles</a>
-                    <div class="page-desc">Bridging the gap between chemical elements and subatomic particles</div>
-                </li>
-                <li class="page-item">
-                    <a href="analytic_continuation_gap.html" class="page-link">The Analytic Continuation Gap</a>
-                    <div class="page-desc">Where analytic continuation breaks and the circumpunct bridges</div>
-                </li>
-                <li class="page-item">
-                    <a href="dna_circumpunct_formalization.html" class="page-link">DNA Circumpunct Formalization</a>
-                    <div class="page-desc">The circumpunct structure encoded in DNA</div>
-                </li>
-            </ul>
-        </section>
+            <div class="card-preview">
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Particle</span> <span class="preview-dash">&mdash;</span> the quantum event</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Wave function</span> <span class="preview-dash">&mdash;</span> the gauge field</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Measurement</span> <span class="preview-dash">&mdash;</span> the collapse</span>
+                </div>
+            </div>
+            <div class="card-pages">
+                <ul class="page-list">
+                    <li class="page-item">
+                        <a href="circumpunct_physics.html" class="page-link">The Circumpunct Framework for Working Physicists</a>
+                        <div class="page-desc">Rigorous mathematical formulation with testable predictions</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="methodological_status.html" class="page-link">Methodological Status</a>
+                        <div class="page-desc">Epistemic categories and validation pathways</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_IT.html" class="page-link">The Circumpunct Theory of Information</a>
+                        <div class="page-desc">Information theory through the circumpunct lens</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="entropy-foundation.html" class="page-link">The Entropy Argument</a>
+                        <div class="page-desc">Why reality requires the circumpunct structure</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_operator_formalization.html" class="page-link">⊙ = • Φ ○ Operator Formalization</a>
+                        <div class="page-desc">The core equation as a mathematical operator</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="surface_field_formalization.html" class="page-link">Surface Theorem — The Geometry of Mind</a>
+                        <div class="page-desc">How consciousness emerges from surface-field interactions</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_schumann.html" class="page-link">Schumann-Circumpunct Resonance Theory</a>
+                        <div class="page-desc">Earth's resonant frequencies and the circumpunct</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="quantum.html" class="page-link">Living Mandelbrot — Boundary Walker</a>
+                        <div class="page-desc">Fractal boundaries in action</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="braid-visualizer.html" class="page-link">Topological Quantum Computer</a>
+                        <div class="page-desc">Braid group B₃ visualization</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="trinity_braid.html" class="page-link">Trinity Braid Simulation</a>
+                        <div class="page-desc">Three-strand braid dynamics</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="energy_scale_phase_visualization.html" class="page-link">Energy-Scale-Phase Triangle</a>
+                        <div class="page-desc">The three axes of physical reality</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="geometric_periodic_table.html" class="page-link">Musical Periodic Table</a>
+                        <div class="page-desc">Fibonacci + 7-note scale structure of elements</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="aperture_falsification_presentation.html" class="page-link">The Aperture: Falsification & The Pisces Model</a>
+                        <div class="page-desc">How to test (and potentially disprove) the theory</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="phi_resonance.html" class="page-link">φ-Entrainment</a>
+                        <div class="page-desc">Binaural consciousness tool using golden ratio</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="hypercube.html" class="page-link">Why 64 States Require 6 Dimensions</a>
+                        <div class="page-desc">5D vs 6D hypercube comparison</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="dimensions.html" class="page-link">The Dimensional Cascade — From God to Us</a>
+                        <div class="page-desc">How infinite potential becomes finite form</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="particle_mereology.html" class="page-link">Particle Mereology</a>
+                        <div class="page-desc">Every thing is part and whole</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="fractal-tesla-resonator-simulation.html" class="page-link">Fractal Tesla Resonator</a>
+                        <div class="page-desc">Technical simulation of resonant structures</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="euler_theorems.html" class="page-link">The Euler Theorems</a>
+                        <div class="page-desc">Euler's identity and polyhedron formula through the circumpunct framework</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_time_particle_theory.html" class="page-link">Circumpunct Time-Particle Theory</a>
+                        <div class="page-desc">Time as particle dynamics through the circumpunct framework</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="polar_64_state_map.html" class="page-link">Complete Mereological Map — Higgs to Atoms</a>
+                        <div class="page-desc">Full part-whole hierarchy from fundamental particles to atomic structure</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="mereological_bridge.html" class="page-link">Mereological Bridge — Elements to Particles</a>
+                        <div class="page-desc">Bridging the gap between chemical elements and subatomic particles</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="analytic_continuation_gap.html" class="page-link">The Analytic Continuation Gap</a>
+                        <div class="page-desc">Where analytic continuation breaks and the circumpunct bridges</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="dna_circumpunct_formalization.html" class="page-link">DNA Circumpunct Formalization</a>
+                        <div class="page-desc">The circumpunct structure encoded in DNA</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <!-- Wholeness & Structure -->
-        <section class="section wholeness" id="wholeness">
-            <div class="section-header">
-                <span class="section-icon">◯</span>
-                <h2>Wholeness & Structure</h2>
+        <div class="doc-card wholeness" onclick="toggleCard(this)">
+            <div class="card-header">
+                <span class="card-icon">◯</span>
+                <div class="card-title-area">
+                    <div class="card-title">Wholeness & Structure</div>
+                    <div class="card-subtitle">7 pages &mdash; part-whole relationships</div>
+                </div>
+                <span class="card-toggle">&#9662;</span>
             </div>
-            <ul class="page-list">
-                <li class="page-item">
-                    <a href="wholes-parts.html" class="page-link">WHOLES_PARTS.exe</a>
-                    <div class="page-desc">Interactive exploration of part-whole relationships</div>
-                </li>
-                <li class="page-item">
-                    <a href="wholeness_field_evolution.html" class="page-link">Wholeness Field Evolution</a>
-                    <div class="page-desc">How wholeness emerges and evolves over time</div>
-                </li>
-                <li class="page-item">
-                    <a href="soul_array_visualization.html" class="page-link">The Infinite Soul Array</a>
-                    <div class="page-desc">Visualizing consciousness as nested apertures</div>
-                </li>
-                <li class="page-item">
-                    <a href="cross_scale_agency.html" class="page-link">Cross-Scale Agency</a>
-                    <div class="page-desc">Why parts move with their wholes — how you control your body</div>
-                </li>
-                <li class="page-item">
-                    <a href="mind_matter.html" class="page-link">Mind Over Matter: The Two Types of Love</a>
-                    <div class="page-desc">How mind and matter relate through love</div>
-                </li>
-                <li class="page-item">
-                    <a href="you_are_a_donut.html" class="page-link">You Are a Donut</a>
-                    <div class="page-desc">Toroidal self-reference topology</div>
-                </li>
-                <li class="page-item">
-                    <a href="lens.html" class="page-link">You Are the Lens</a>
-                    <div class="page-desc">A guide to truth that doesn't inflate or collapse</div>
-                </li>
-            </ul>
-        </section>
+            <div class="card-preview">
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Parts</span> <span class="preview-dash">&mdash;</span> what composes</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Wholes</span> <span class="preview-dash">&mdash;</span> what emerges</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Agency</span> <span class="preview-dash">&mdash;</span> what moves</span>
+                </div>
+            </div>
+            <div class="card-pages">
+                <ul class="page-list">
+                    <li class="page-item">
+                        <a href="wholes-parts.html" class="page-link">WHOLES_PARTS.exe</a>
+                        <div class="page-desc">Interactive exploration of part-whole relationships</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="wholeness_field_evolution.html" class="page-link">Wholeness Field Evolution</a>
+                        <div class="page-desc">How wholeness emerges and evolves over time</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="soul_array_visualization.html" class="page-link">The Infinite Soul Array</a>
+                        <div class="page-desc">Visualizing consciousness as nested apertures</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="cross_scale_agency.html" class="page-link">Cross-Scale Agency</a>
+                        <div class="page-desc">Why parts move with their wholes — how you control your body</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="mind_matter.html" class="page-link">Mind Over Matter: The Two Types of Love</a>
+                        <div class="page-desc">How mind and matter relate through love</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="you_are_a_donut.html" class="page-link">You Are a Donut</a>
+                        <div class="page-desc">Toroidal self-reference topology</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="lens.html" class="page-link">You Are the Lens</a>
+                        <div class="page-desc">A guide to truth that doesn't inflate or collapse</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <!-- Consciousness & Spirituality -->
-        <section class="section consciousness" id="consciousness">
-            <div class="section-header">
-                <span class="section-icon">✦</span>
-                <h2>Consciousness & Spirituality</h2>
+        <div class="doc-card consciousness" onclick="toggleCard(this)">
+            <div class="card-header">
+                <span class="card-icon">✦</span>
+                <div class="card-title-area">
+                    <div class="card-title">Consciousness & Spirituality</div>
+                    <div class="card-subtitle">12 pages &mdash; awareness and experience</div>
+                </div>
+                <span class="card-toggle">&#9662;</span>
             </div>
-            <ul class="page-list">
-                <li class="page-item">
-                    <a href="circumpunct_consciousness_theory.html" class="page-link">Circumpunct Theory of Consciousness</a>
-                    <div class="page-desc">How awareness arises from boundary-field-aperture structure</div>
-                </li>
-                <li class="page-item">
-                    <a href="chakras.html" class="page-link">Chakras — Frequency Bands of the One Aperture</a>
-                    <div class="page-desc">Ancient energy centers as circumpunct frequencies</div>
-                </li>
-                <li class="page-item">
-                    <a href="consciousness-path-sim.html" class="page-link">A Path Through the Lattice</a>
-                    <div class="page-desc">Simulating consciousness navigating state space</div>
-                </li>
-                <li class="page-item">
-                    <a href="the_bridge_presentation.html" class="page-link">The Bridge — Science and Spirituality Unified</a>
-                    <div class="page-desc">Connecting empirical and experiential truth</div>
-                </li>
-                <li class="page-item">
-                    <a href="truth_and_god.html" class="page-link">God Experiencing Itself</a>
-                    <div class="page-desc">Divinity as self-referential circumpunct</div>
-                </li>
-                <li class="page-item">
-                    <a href="path_narrated.html" class="page-link">The Path of the Circumpunct</a>
-                    <div class="page-desc">Narrated spiritual journey through the framework</div>
-                </li>
-                <li class="page-item">
-                    <a href="resonance_101.html" class="page-link">Resonance 101</a>
-                    <div class="page-desc">Finding your way back to truth</div>
-                </li>
-                <li class="page-item">
-                    <a href="binaural_beats_51.html" class="page-link">Binaural Beats — 5.1 Surround Generator</a>
-                    <div class="page-desc">Audio tool for consciousness exploration</div>
-                </li>
-                <li class="page-item">
-                    <a href="rephase_meditation.html" class="page-link">Rephase — Cellular Coherence Meditation</a>
-                    <div class="page-desc">A meditation for realigning at the cellular level</div>
-                </li>
-                <li class="page-item">
-                    <a href="framework_bridge_visual.html" class="page-link">Framework Bridge Visual</a>
-                    <div class="page-desc">Visual representation of the science-spirituality bridge</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_theory_of_mind.html" class="page-link">The Circumpunct Theory of Mind</a>
-                    <div class="page-desc">How mind arises from circumpunct structure</div>
-                </li>
-                <li class="page-item">
-                    <a href="reclaim_stress_meditation.html" class="page-link">Reclaim Stress Meditation</a>
-                    <div class="page-desc">A meditation for reclaiming stress as signal</div>
-                </li>
-            </ul>
-        </section>
+            <div class="card-preview">
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Awareness</span> <span class="preview-dash">&mdash;</span> what attends</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Resonance</span> <span class="preview-dash">&mdash;</span> what connects</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Meditation</span> <span class="preview-dash">&mdash;</span> what aligns</span>
+                </div>
+            </div>
+            <div class="card-pages">
+                <ul class="page-list">
+                    <li class="page-item">
+                        <a href="circumpunct_consciousness_theory.html" class="page-link">Circumpunct Theory of Consciousness</a>
+                        <div class="page-desc">How awareness arises from boundary-field-aperture structure</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="chakras.html" class="page-link">Chakras — Frequency Bands of the One Aperture</a>
+                        <div class="page-desc">Ancient energy centers as circumpunct frequencies</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="consciousness-path-sim.html" class="page-link">A Path Through the Lattice</a>
+                        <div class="page-desc">Simulating consciousness navigating state space</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="the_bridge_presentation.html" class="page-link">The Bridge — Science and Spirituality Unified</a>
+                        <div class="page-desc">Connecting empirical and experiential truth</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="truth_and_god.html" class="page-link">God Experiencing Itself</a>
+                        <div class="page-desc">Divinity as self-referential circumpunct</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="path_narrated.html" class="page-link">The Path of the Circumpunct</a>
+                        <div class="page-desc">Narrated spiritual journey through the framework</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="resonance_101.html" class="page-link">Resonance 101</a>
+                        <div class="page-desc">Finding your way back to truth</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="binaural_beats_51.html" class="page-link">Binaural Beats — 5.1 Surround Generator</a>
+                        <div class="page-desc">Audio tool for consciousness exploration</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="rephase_meditation.html" class="page-link">Rephase — Cellular Coherence Meditation</a>
+                        <div class="page-desc">A meditation for realigning at the cellular level</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="framework_bridge_visual.html" class="page-link">Framework Bridge Visual</a>
+                        <div class="page-desc">Visual representation of the science-spirituality bridge</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_theory_of_mind.html" class="page-link">The Circumpunct Theory of Mind</a>
+                        <div class="page-desc">How mind arises from circumpunct structure</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="reclaim_stress_meditation.html" class="page-link">Reclaim Stress Meditation</a>
+                        <div class="page-desc">A meditation for reclaiming stress as signal</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <!-- Ethics & Truth -->
-        <section class="section ethics" id="ethics">
-            <div class="section-header">
-                <span class="section-icon">⚖</span>
-                <h2>Ethics & Truth</h2>
+        <div class="doc-card ethics" onclick="toggleCard(this)">
+            <div class="card-header">
+                <span class="card-icon">⚖</span>
+                <div class="card-title-area">
+                    <div class="card-title">Ethics & Truth</div>
+                    <div class="card-subtitle">11 pages &mdash; the geometry of right action</div>
+                </div>
+                <span class="card-toggle">&#9662;</span>
             </div>
-            <ul class="page-list">
-                <li class="page-item">
-                    <a href="circumpunct_virtues.html" class="page-link">Curiosity Is The Cure</a>
-                    <div class="page-desc">The four virtues that keep the circumpunct alive</div>
-                </li>
-                <li class="page-item">
-                    <a href="ethics.html" class="page-link">Circumpunct Ethics</a>
-                    <div class="page-desc">How ethics emerges from the geometry of truth-flow</div>
-                </li>
-                <li class="page-item">
-                    <a href="structural_morality.html" class="page-link">Structural Morality</a>
-                    <div class="page-desc">Why truth-flow is ethics — morality as geometry</div>
-                </li>
-                <li class="page-item">
-                    <a href="truth_and_us.html" class="page-link">Truth and Us</a>
-                    <div class="page-desc">How truth operates in human relationships</div>
-                </li>
-                <li class="page-item">
-                    <a href="truth_and_truths.html" class="page-link">Truth & truths — The Geometry of Knowing</a>
-                    <div class="page-desc">Distinguishing absolute truth from relative truths</div>
-                </li>
-                <li class="page-item">
-                    <a href="the_steelman_way.html" class="page-link">The Steelman Way</a>
-                    <div class="page-desc">Bye strawmen — how to argue with integrity</div>
-                </li>
-                <li class="page-item">
-                    <a href="truth_seekers_cree.html" class="page-link">The Truth Seeker's Cree</a>
-                    <div class="page-desc">A specification for the steelmanning practice</div>
-                </li>
-                <li class="page-item">
-                    <a href="how_to_realize_real_lies.html" class="page-link">How to Realize Real Lies</a>
-                    <div class="page-desc">Curiosity as a diagnostic tool for deception</div>
-                </li>
-                <li class="page-item">
-                    <a href="why_i_hate_lies.html" class="page-link">Why I Hate Lies</a>
-                    <div class="page-desc">Personal reflection on the cost of deception</div>
-                </li>
-                <li class="page-item">
-                    <a href="high_power_influence.html" class="page-link">High-Power Aperture Protocol (HPAP)</a>
-                    <div class="page-desc">Truth-preserving governance for influential individuals</div>
-                </li>
-                <li class="page-item">
-                    <a href="truth_truths_legal_theory.html" class="page-link">Truth and truths: Legal Theory</a>
-                    <div class="page-desc">Letter, spirit, and the natural law debate</div>
-                </li>
-            </ul>
-        </section>
+            <div class="card-preview">
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Conscience</span> <span class="preview-dash">&mdash;</span> what resonates</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Values</span> <span class="preview-dash">&mdash;</span> the relational field</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Action</span> <span class="preview-dash">&mdash;</span> what you do</span>
+                </div>
+            </div>
+            <div class="card-pages">
+                <ul class="page-list">
+                    <li class="page-item">
+                        <a href="circumpunct_virtues.html" class="page-link">Curiosity Is The Cure</a>
+                        <div class="page-desc">The four virtues that keep the circumpunct alive</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="ethics.html" class="page-link">Circumpunct Ethics</a>
+                        <div class="page-desc">How ethics emerges from the geometry of truth-flow</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="structural_morality.html" class="page-link">Structural Morality</a>
+                        <div class="page-desc">Why truth-flow is ethics — morality as geometry</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="truth_and_us.html" class="page-link">Truth and Us</a>
+                        <div class="page-desc">How truth operates in human relationships</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="truth_and_truths.html" class="page-link">Truth & truths — The Geometry of Knowing</a>
+                        <div class="page-desc">Distinguishing absolute truth from relative truths</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="the_steelman_way.html" class="page-link">The Steelman Way</a>
+                        <div class="page-desc">Bye strawmen — how to argue with integrity</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="truth_seekers_cree.html" class="page-link">The Truth Seeker's Cree</a>
+                        <div class="page-desc">A specification for the steelmanning practice</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="how_to_realize_real_lies.html" class="page-link">How to Realize Real Lies</a>
+                        <div class="page-desc">Curiosity as a diagnostic tool for deception</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="why_i_hate_lies.html" class="page-link">Why I Hate Lies</a>
+                        <div class="page-desc">Personal reflection on the cost of deception</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="high_power_influence.html" class="page-link">High-Power Aperture Protocol (HPAP)</a>
+                        <div class="page-desc">Truth-preserving governance for influential individuals</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="truth_truths_legal_theory.html" class="page-link">Truth and truths: Legal Theory</a>
+                        <div class="page-desc">Letter, spirit, and the natural law debate</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-        <!-- Personal Healing -->
-        <section class="section healing" id="healing">
-            <div class="section-header">
-                <span class="section-icon">❤</span>
-                <h2>Personal Healing & Relationships</h2>
+        <!-- Personal Healing & Relationships -->
+        <div class="doc-card healing" onclick="toggleCard(this)">
+            <div class="card-header">
+                <span class="card-icon">❤</span>
+                <div class="card-title-area">
+                    <div class="card-title">Personal Healing & Relationships</div>
+                    <div class="card-subtitle">19 pages &mdash; love, harm, and restoration</div>
+                </div>
+                <span class="card-toggle">&#9662;</span>
             </div>
-            <ul class="page-list">
-                <li class="page-item">
-                    <a href="circumpunct_narcissism.html" class="page-link">The Circumpunct Theory of Narcissism</a>
-                    <div class="page-desc">Complete research framework for understanding narcissism</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_theory_of_pathology.html" class="page-link">The Circumpunct Theory of Relational Pathology</a>
-                    <div class="page-desc">How relationships break down at the structural level</div>
-                </li>
-                <li class="page-item">
-                    <a href="stratigraphy_of_belief.html" class="page-link">The Stratigraphy of Belief</a>
-                    <div class="page-desc">How lies corrupt function at different depths</div>
-                </li>
-                <li class="page-item">
-                    <a href="etiology_of_installation.html" class="page-link">The Etiology of Installation</a>
-                    <div class="page-desc">How survival lies become structural corruption</div>
-                </li>
-                <li class="page-item">
-                    <a href="the_restoration_protocol.html" class="page-link">The Restoration Protocol</a>
-                    <div class="page-desc">Treatment framework for narcissistic distortion</div>
-                </li>
-                <li class="page-item">
-                    <a href="curiosity_is_the_cure.html" class="page-link">Curiosity Is the Cure</a>
-                    <div class="page-desc">The antidote to closed apertures</div>
-                </li>
-                <li class="page-item">
-                    <a href="curiosity_is_the_cure_v2.html" class="page-link">Curiosity Is the Cure v2 — The Dyad</a>
-                    <div class="page-desc">Two ways a heart breaks — the closer and the flooder</div>
-                </li>
-                <li class="page-item">
-                    <a href="receiving_vs_repeating.html" class="page-link">Receiving vs. Repeating</a>
-                    <div class="page-desc">The difference between true listening and echo</div>
-                </li>
-                <li class="page-item">
-                    <a href="UNDERSTANDING_NARCISSISTIC_ABUSE.html" class="page-link">Understanding Narcissistic Abuse</a>
-                    <div class="page-desc">Recognizing the patterns of narcissistic harm</div>
-                </li>
-                <li class="page-item">
-                    <a href="love_harmonics_ebook%20(6).html" class="page-link">Love Harmonics: Resonance Between Souls</a>
-                    <div class="page-desc">An ebook on the physics of love</div>
-                </li>
-                <li class="page-item">
-                    <a href="love_channels.html" class="page-link">The Two Channels of Love</a>
-                    <div class="page-desc">A quick guide to how love flows</div>
-                </li>
-                <li class="page-item">
-                    <a href="closed_channel.html" class="page-link">The Channel You Were Taught to Close</a>
-                    <div class="page-desc">Understanding blocked emotional pathways</div>
-                </li>
-                <li class="page-item">
-                    <a href="love_kungfu.html" class="page-link">Love Kung Fu</a>
-                    <div class="page-desc">The martial art of relationship</div>
-                </li>
-                <li class="page-item">
-                    <a href="workplace_kung_fu.html" class="page-link">Workplace Kung Fu</a>
-                    <div class="page-desc">Two channels of human treatment at work</div>
-                </li>
-                <li class="page-item">
-                    <a href="bottomless_sodapop.html" class="page-link">The Bottomless Soda Pop</a>
-                    <div class="page-desc">Why you stay when love starves you</div>
-                </li>
-                <li class="page-item">
-                    <a href="contempt_for_trying.html" class="page-link">The Contempt for Trying</a>
-                    <div class="page-desc">When effort itself becomes the target</div>
-                </li>
-                <li class="page-item">
-                    <a href="antivirus.html" class="page-link">The Antivirus</a>
-                    <div class="page-desc">Finding the lies you inherited</div>
-                </li>
-                <li class="page-item">
-                    <a href="uninstalling_lies.html" class="page-link">The Lie, the Inversion, and the Truth</a>
-                    <div class="page-desc">How Noble Lies install, how inversions trap, how I AM sets free</div>
-                </li>
-                <li class="page-item">
-                    <a href="circumpunct_love.html" class="page-link">The Circumpunct Theory of Love</a>
-                    <div class="page-desc">Love as resonance through the circumpunct structure</div>
-                </li>
-            </ul>
-        </section>
+            <div class="card-preview">
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Listening</span> <span class="preview-dash">&mdash;</span> receiving</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Understanding</span> <span class="preview-dash">&mdash;</span> meaning-making</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Responding</span> <span class="preview-dash">&mdash;</span> expressing</span>
+                </div>
+            </div>
+            <div class="card-pages">
+                <ul class="page-list">
+                    <li class="page-item">
+                        <a href="circumpunct_narcissism.html" class="page-link">The Circumpunct Theory of Narcissism</a>
+                        <div class="page-desc">Complete research framework for understanding narcissism</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_theory_of_pathology.html" class="page-link">The Circumpunct Theory of Relational Pathology</a>
+                        <div class="page-desc">How relationships break down at the structural level</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="stratigraphy_of_belief.html" class="page-link">The Stratigraphy of Belief</a>
+                        <div class="page-desc">How lies corrupt function at different depths</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="etiology_of_installation.html" class="page-link">The Etiology of Installation</a>
+                        <div class="page-desc">How survival lies become structural corruption</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="the_restoration_protocol.html" class="page-link">The Restoration Protocol</a>
+                        <div class="page-desc">Treatment framework for narcissistic distortion</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="curiosity_is_the_cure.html" class="page-link">Curiosity Is the Cure</a>
+                        <div class="page-desc">The antidote to closed apertures</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="curiosity_is_the_cure_v2.html" class="page-link">Curiosity Is the Cure v2 — The Dyad</a>
+                        <div class="page-desc">Two ways a heart breaks — the closer and the flooder</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="receiving_vs_repeating.html" class="page-link">Receiving vs. Repeating</a>
+                        <div class="page-desc">The difference between true listening and echo</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="UNDERSTANDING_NARCISSISTIC_ABUSE.html" class="page-link">Understanding Narcissistic Abuse</a>
+                        <div class="page-desc">Recognizing the patterns of narcissistic harm</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="love_harmonics_ebook%20(6).html" class="page-link">Love Harmonics: Resonance Between Souls</a>
+                        <div class="page-desc">An ebook on the physics of love</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="love_channels.html" class="page-link">The Two Channels of Love</a>
+                        <div class="page-desc">A quick guide to how love flows</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="closed_channel.html" class="page-link">The Channel You Were Taught to Close</a>
+                        <div class="page-desc">Understanding blocked emotional pathways</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="love_kungfu.html" class="page-link">Love Kung Fu</a>
+                        <div class="page-desc">The martial art of relationship</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="workplace_kung_fu.html" class="page-link">Workplace Kung Fu</a>
+                        <div class="page-desc">Two channels of human treatment at work</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="bottomless_sodapop.html" class="page-link">The Bottomless Soda Pop</a>
+                        <div class="page-desc">Why you stay when love starves you</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="contempt_for_trying.html" class="page-link">The Contempt for Trying</a>
+                        <div class="page-desc">When effort itself becomes the target</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="antivirus.html" class="page-link">The Antivirus</a>
+                        <div class="page-desc">Finding the lies you inherited</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="uninstalling_lies.html" class="page-link">The Lie, the Inversion, and the Truth</a>
+                        <div class="page-desc">How Noble Lies install, how inversions trap, how I AM sets free</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="circumpunct_love.html" class="page-link">The Circumpunct Theory of Love</a>
+                        <div class="page-desc">Love as resonance through the circumpunct structure</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <!-- Philosophical Explorations -->
-        <section class="section philosophical" id="philosophical">
-            <div class="section-header">
-                <span class="section-icon">∞</span>
-                <h2>Philosophical Explorations</h2>
+        <div class="doc-card philosophical" onclick="toggleCard(this)">
+            <div class="card-header">
+                <span class="card-icon">∞</span>
+                <div class="card-title-area">
+                    <div class="card-title">Philosophical Explorations</div>
+                    <div class="card-subtitle">18 pages &mdash; beliefs, lies, and clarity</div>
+                </div>
+                <span class="card-toggle">&#9662;</span>
             </div>
-            <ul class="page-list">
-                <li class="page-item">
-                    <a href="belief_theory.html" class="page-link">Fractal Reality Belief Theory</a>
-                    <div class="page-desc">How beliefs structure reality</div>
-                </li>
-                <li class="page-item">
-                    <a href="noble_lie_virus_outbreak.html" class="page-link">Psychological Infection Alert — Noble Lie Virus</a>
-                    <div class="page-desc">The noble lie as a contagious pattern</div>
-                </li>
-                <li class="page-item">
-                    <a href="noble_lie_article.html" class="page-link">The Lie You Were Told Was Love</a>
-                    <div class="page-desc">The Signal — recognizing love's impostor</div>
-                </li>
-                <li class="page-item">
-                    <a href="the_false_label.html" class="page-link">The False Label</a>
-                    <div class="page-desc">When names don't match reality</div>
-                </li>
-                <li class="page-item">
-                    <a href="Love_Infected.html" class="page-link">How Love Was Infected</a>
-                    <div class="page-desc">The Noble Lie Virus in relationships</div>
-                </li>
-                <li class="page-item">
-                    <a href="demon_hunter.html" class="page-link">What Rumi Taught Us</a>
-                    <div class="page-desc">A demon hunter's guide to seeing clearly</div>
-                </li>
-                <li class="page-item">
-                    <a href="the_demon_hunter_trap.html" class="page-link">The Demon Hunter Trap</a>
-                    <div class="page-desc">The trap of internalizing a lie while hunting lies</div>
-                </li>
-                <li class="page-item">
-                    <a href="jedi.html" class="page-link">The Jedi Master Manual</a>
-                    <div class="page-desc">Aperture training from the Star Wars tradition</div>
-                </li>
-                <li class="page-item">
-                    <a href="the_matrix_has_you.html" class="page-link">The Matrix Has You</a>
-                    <div class="page-desc">What the red pill really means</div>
-                </li>
-                <li class="page-item">
-                    <a href="lie_trap.html" class="page-link">The Trap of Internalizing a Lie</a>
-                    <div class="page-desc">How lies capture consciousness</div>
-                </li>
-                <li class="page-item">
-                    <a href="i_believed_a_lie.html" class="page-link">I Believed a Lie</a>
-                    <div class="page-desc">Personal reflection on deception</div>
-                </li>
-                <li class="page-item">
-                    <a href="I_cant_say.html" class="page-link">Breaking the Curse of Performative Love</a>
-                    <div class="page-desc">A game for two — speaking the unspeakable</div>
-                </li>
-                <li class="page-item">
-                    <a href="everybody_picks_their_nose.html" class="page-link">Everybody Picks Their Nose</a>
-                    <div class="page-desc">Universal human behaviors we hide</div>
-                </li>
-                <li class="page-item">
-                    <a href="city_of_resonance.html" class="page-link">City of Resonance</a>
-                    <div class="page-desc">A vision of aligned community</div>
-                </li>
-                <li class="page-item">
-                    <a href="reality_manipulation_sandbox.html" class="page-link">Reality Manipulation Sandbox</a>
-                    <div class="page-desc">Exploring {116, 138, 144}</div>
-                </li>
-                <li class="page-item">
-                    <a href="varpet_tribute.html" class="page-link">The Balance of Hard and Soft</a>
-                    <div class="page-desc">Tribute to Varpet's Nerkin Ouj</div>
-                </li>
-                <li class="page-item">
-                    <a href="poppers_paradox_dissolution.html" class="page-link">Popper's Paradox Dissolution</a>
-                    <div class="page-desc">Dissolving Popper's paradox through the circumpunct framework</div>
-                </li>
-                <li class="page-item">
-                    <a href="the_fractal_divide.html" class="page-link">The Fractal Divide — Why Left and Right Can't Hear Each Other</a>
-                    <div class="page-desc">The same wound that breaks a marriage breaks a civilization — the closer/flooder dynamic at political scale</div>
-                </li>
-            </ul>
-        </section>
+            <div class="card-preview">
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">The question</span> <span class="preview-dash">&mdash;</span> what opens</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">The journey</span> <span class="preview-dash">&mdash;</span> what transforms</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">The resolution</span> <span class="preview-dash">&mdash;</span> what closes</span>
+                </div>
+            </div>
+            <div class="card-pages">
+                <ul class="page-list">
+                    <li class="page-item">
+                        <a href="belief_theory.html" class="page-link">Fractal Reality Belief Theory</a>
+                        <div class="page-desc">How beliefs structure reality</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="noble_lie_virus_outbreak.html" class="page-link">Psychological Infection Alert — Noble Lie Virus</a>
+                        <div class="page-desc">The noble lie as a contagious pattern</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="noble_lie_article.html" class="page-link">The Lie You Were Told Was Love</a>
+                        <div class="page-desc">The Signal — recognizing love's impostor</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="the_false_label.html" class="page-link">The False Label</a>
+                        <div class="page-desc">When names don't match reality</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="Love_Infected.html" class="page-link">How Love Was Infected</a>
+                        <div class="page-desc">The Noble Lie Virus in relationships</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="demon_hunter.html" class="page-link">What Rumi Taught Us</a>
+                        <div class="page-desc">A demon hunter's guide to seeing clearly</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="the_demon_hunter_trap.html" class="page-link">The Demon Hunter Trap</a>
+                        <div class="page-desc">The trap of internalizing a lie while hunting lies</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="jedi.html" class="page-link">The Jedi Master Manual</a>
+                        <div class="page-desc">Aperture training from the Star Wars tradition</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="the_matrix_has_you.html" class="page-link">The Matrix Has You</a>
+                        <div class="page-desc">What the red pill really means</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="lie_trap.html" class="page-link">The Trap of Internalizing a Lie</a>
+                        <div class="page-desc">How lies capture consciousness</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="i_believed_a_lie.html" class="page-link">I Believed a Lie</a>
+                        <div class="page-desc">Personal reflection on deception</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="I_cant_say.html" class="page-link">Breaking the Curse of Performative Love</a>
+                        <div class="page-desc">A game for two — speaking the unspeakable</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="everybody_picks_their_nose.html" class="page-link">Everybody Picks Their Nose</a>
+                        <div class="page-desc">Universal human behaviors we hide</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="city_of_resonance.html" class="page-link">City of Resonance</a>
+                        <div class="page-desc">A vision of aligned community</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="reality_manipulation_sandbox.html" class="page-link">Reality Manipulation Sandbox</a>
+                        <div class="page-desc">Exploring {116, 138, 144}</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="varpet_tribute.html" class="page-link">The Balance of Hard and Soft</a>
+                        <div class="page-desc">Tribute to Varpet's Nerkin Ouj</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="poppers_paradox_dissolution.html" class="page-link">Popper's Paradox Dissolution</a>
+                        <div class="page-desc">Dissolving Popper's paradox through the circumpunct framework</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="the_fractal_divide.html" class="page-link">The Fractal Divide — Why Left and Right Can't Hear Each Other</a>
+                        <div class="page-desc">The same wound that breaks a marriage breaks a civilization</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <!-- Personal Stories -->
-        <section class="section stories" id="stories">
-            <div class="section-header">
-                <span class="section-icon">📖</span>
-                <h2>Personal Stories</h2>
+        <div class="doc-card stories" onclick="toggleCard(this)">
+            <div class="card-header">
+                <span class="card-icon">📖</span>
+                <div class="card-title-area">
+                    <div class="card-title">Personal Stories</div>
+                    <div class="card-subtitle">3 pages &mdash; letters from the heart</div>
+                </div>
+                <span class="card-toggle">&#9662;</span>
             </div>
-            <ul class="page-list">
-                <li class="page-item">
-                    <a href="Landen_Love.html" class="page-link">The Real You — A Story for Landen</a>
-                    <div class="page-desc">Personal letter about authentic self</div>
-                </li>
-                <li class="page-item">
-                    <a href="Landen_Love2.html" class="page-link">All of You — A Story for Landen (Part 2)</a>
-                    <div class="page-desc">Continuation of the Landen letters</div>
-                </li>
-                <li class="page-item">
-                    <a href="Jenn_Love.html" class="page-link">I See You — A Story for Jenn</a>
-                    <div class="page-desc">Personal letter about being witnessed</div>
-                </li>
-            </ul>
-        </section>
+            <div class="card-preview">
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">The Real You</span> <span class="preview-dash">&mdash;</span> for Landen</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">All of You</span> <span class="preview-dash">&mdash;</span> for Landen pt. 2</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">I See You</span> <span class="preview-dash">&mdash;</span> for Jenn</span>
+                </div>
+            </div>
+            <div class="card-pages">
+                <ul class="page-list">
+                    <li class="page-item">
+                        <a href="Landen_Love.html" class="page-link">The Real You — A Story for Landen</a>
+                        <div class="page-desc">Personal letter about authentic self</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="Landen_Love2.html" class="page-link">All of You — A Story for Landen (Part 2)</a>
+                        <div class="page-desc">Continuation of the Landen letters</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="Jenn_Love.html" class="page-link">I See You — A Story for Jenn</a>
+                        <div class="page-desc">Personal letter about being witnessed</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <!-- Tools & Games -->
-        <section class="section tools" id="tools">
-            <div class="section-header">
-                <span class="section-icon">⚙</span>
-                <h2>Tools & Games</h2>
+        <div class="doc-card tools" onclick="toggleCard(this)">
+            <div class="card-header">
+                <span class="card-icon">⚙</span>
+                <div class="card-title-area">
+                    <div class="card-title">Tools & Games</div>
+                    <div class="card-subtitle">9 pages &mdash; interactive explorations</div>
+                </div>
+                <span class="card-toggle">&#9662;</span>
             </div>
-            <ul class="page-list">
-                <li class="page-item">
-                    <a href="simulators.html" class="page-link">Interactive Demonstrations</a>
-                    <div class="page-desc">Collection of simulations for exploring concepts</div>
-                </li>
-                <li class="page-item">
-                    <a href="chess.html" class="page-link">Pokemon Chess</a>
-                    <div class="page-desc">Chess with a Pokemon twist</div>
-                </li>
-                <li class="page-item">
-                    <a href="checkers.html" class="page-link">Pokemon Checkers</a>
-                    <div class="page-desc">Checkers with Pokemon theme</div>
-                </li>
-                <li class="page-item">
-                    <a href="pokemon-battle-helper.html" class="page-link">Pokemon GO Battle Helper</a>
-                    <div class="page-desc">Type matchup calculator</div>
-                </li>
-                <li class="page-item">
-                    <a href="pokemon-battler.html" class="page-link">Pokemon Card Battler</a>
-                    <div class="page-desc">Card battle simulator</div>
-                </li>
-                <li class="page-item">
-                    <a href="my_randomizer.html" class="page-link">My Randomizer</a>
-                    <div class="page-desc">Random selection tool</div>
-                </li>
-                <li class="page-item">
-                    <a href="number-reader.html" class="page-link">Learn to Read Any Number!</a>
-                    <div class="page-desc">Educational number reading tool</div>
-                </li>
-                <li class="page-item">
-                    <a href="ratebid.html" class="page-link">RateBid</a>
-                    <div class="page-desc">Make lenders compete for you</div>
-                </li>
-                <li class="page-item">
-                    <a href="bluetooth-finder-directional.html" class="page-link">BT Finder — Compass Mode</a>
-                    <div class="page-desc">Bluetooth device locator</div>
-                </li>
-            </ul>
-        </section>
-    </main>
+            <div class="card-preview">
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Simulations</span> <span class="preview-dash">&mdash;</span> interactive demos</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Games</span> <span class="preview-dash">&mdash;</span> Pokemon chess & more</span>
+                </div>
+                <div class="preview-item">
+                    <span class="preview-dot"></span>
+                    <span><span class="preview-label">Utilities</span> <span class="preview-dash">&mdash;</span> practical tools</span>
+                </div>
+            </div>
+            <div class="card-pages">
+                <ul class="page-list">
+                    <li class="page-item">
+                        <a href="simulators.html" class="page-link">Interactive Demonstrations</a>
+                        <div class="page-desc">Collection of simulations for exploring concepts</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="chess.html" class="page-link">Pokemon Chess</a>
+                        <div class="page-desc">Chess with a Pokemon twist</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="checkers.html" class="page-link">Pokemon Checkers</a>
+                        <div class="page-desc">Checkers with Pokemon theme</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="pokemon-battle-helper.html" class="page-link">Pokemon GO Battle Helper</a>
+                        <div class="page-desc">Type matchup calculator</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="pokemon-battler.html" class="page-link">Pokemon Card Battler</a>
+                        <div class="page-desc">Card battle simulator</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="my_randomizer.html" class="page-link">My Randomizer</a>
+                        <div class="page-desc">Random selection tool</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="number-reader.html" class="page-link">Learn to Read Any Number!</a>
+                        <div class="page-desc">Educational number reading tool</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="ratebid.html" class="page-link">RateBid</a>
+                        <div class="page-desc">Make lenders compete for you</div>
+                    </li>
+                    <li class="page-item">
+                        <a href="bluetooth-finder-directional.html" class="page-link">BT Finder — Compass Mode</a>
+                        <div class="page-desc">Bluetooth device locator</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
 
     <footer>
         <p><a href="index.html">fractalreality.ca</a> — The Circumpunct Theory by Ashman Roonz & Claude</p>
     </footer>
+
+    <script>
+        function toggleCard(card) {
+            // Don't toggle if user clicked a page link inside expanded card
+            if (event.target.closest('.page-link')) return;
+
+            const wasExpanded = card.classList.contains('expanded');
+
+            // Close all cards
+            document.querySelectorAll('.doc-card.expanded').forEach(c => {
+                c.classList.remove('expanded');
+            });
+
+            // Toggle clicked card
+            if (!wasExpanded) {
+                card.classList.add('expanded');
+                // Smooth scroll into view
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 50);
+            }
+        }
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.doc-card.expanded').forEach(c => {
+                    c.classList.remove('expanded');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
