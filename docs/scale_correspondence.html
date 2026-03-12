@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Scale Correspondence</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$']],
+    displayMath: [['$$','$$']],
+    macros: {
+      T: ['\\mathcal{T}_{#1}', 1],
+      I: ['\\mathcal{I}_{#1}', 1],
+      Ph: ['\\Phi_{#1}', 1],
+      Om: ['\\Omega_{#1}', 1],
+      PP: '\\mathcal{P}',
+      half: '\\tfrac{1}{2}',
+      thalf: '\\tfrac{3}{2}',
+      fhalf: '\\tfrac{5}{2}',
+      Z: '\\mathbb{Z}',
+      N: '\\mathbb{N}',
+      R: '\\mathbb{R}',
+      C: '\\mathbb{C}',
+      H: '\\mathbb{H}',
+      set: ['\\{\\,#1\\,\\}', 1],
+      ket: ['|\\,#1\\,\\rangle', 1],
+      bra: ['\\langle\\,#1\\,|', 1]
+    }
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --very-faint: #2A2820;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--faint) var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w  { color: var(--gold); }
+.s  { color: var(--pink); }
+.m  { color: var(--green); }
+.b  { color: var(--cyan); }
+.p  { color: var(--purple); }
+.d  { color: var(--dim); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 760px; margin: 0 auto; padding: 80px 30px 140px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 70px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header h1 { font-size: 36px; font-weight: 500; color: var(--gold); letter-spacing: 1px; margin-bottom: 6px; }
+.header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; margin-bottom: 4px; }
+.header .formula { font-size: 28px; color: var(--gold); margin: 20px 0 8px; letter-spacing: 2px; }
+.header .byline { font-size: 14px; color: var(--faint); margin-top: 20px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+.block {
+  margin: 32px 0;
+  padding: 20px 24px;
+  border-radius: 3px;
+  position: relative;
+}
+
+.block-def { border-left: 3px solid var(--gold); background: rgba(184, 160, 96, 0.04); }
+.block-prop { border-left: 3px solid var(--pink); background: rgba(232, 138, 175, 0.04); }
+.block-proof { border-left: 3px solid var(--dim); background: rgba(255, 255, 255, 0.015); }
+.block-cor { border-left: 3px solid var(--cyan); background: rgba(77, 160, 200, 0.04); }
+.block-thm { border-left: 3px solid var(--green); background: rgba(77, 184, 160, 0.04); }
+.block-rem { border-left: 3px solid var(--purple); background: rgba(155, 122, 216, 0.04); }
+.block-ax { border-left: 3px solid var(--gold-dim); background: rgba(136, 120, 80, 0.04); }
+.block-conj { border-left: 3px solid #C87D4D; background: rgba(200, 125, 77, 0.04); }
+
+.block-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.block-def .block-label { color: var(--gold); }
+.block-prop .block-label { color: var(--pink); }
+.block-proof .block-label { color: var(--dim); }
+.block-cor .block-label { color: var(--cyan); }
+.block-thm .block-label { color: var(--green); }
+.block-rem .block-label { color: var(--purple); }
+.block-ax .block-label { color: var(--gold-dim); }
+.block-conj .block-label { color: #C87D4D; }
+
+.block p { margin-bottom: 10px; }
+.block p:last-child { margin-bottom: 0; }
+
+.qed { text-align: right; color: var(--dim); font-size: 15px; margin-top: 6px; }
+
+mjx-container[display="true"] { margin: 18px 0 !important; }
+
+section { margin-bottom: 55px; }
+section > h2 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  padding-top: 16px;
+  color: var(--warm);
+}
+
+p { margin-bottom: 16px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+.dim-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 17px;
+}
+.dim-table th {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--faint);
+}
+.dim-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--very-faint);
+  vertical-align: top;
+}
+.dim-table tr:last-child td { border-bottom: none; }
+
+.cell-struct { color: var(--gold); }
+.cell-proc { color: var(--purple); }
+.cell-i { color: var(--pink); }
+.cell-phi { color: var(--green); }
+.cell-omega { color: var(--cyan); }
+
+.footnote {
+  font-size: 15px;
+  color: var(--dim);
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--very-faint);
+  line-height: 1.7;
+}
+
+.cite {
+  font-size: 15px;
+  color: var(--dim);
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="header">
+  <h1>The Scale Correspondence</h1>
+  <div class="subtitle">Tier recursion as renormalization group flow</div>
+  <div class="formula">$\T{0} \subset \T{1} \subset \T{2} \subset \cdots \;\;\longleftrightarrow\;\; \text{UV} \to \text{IR}$</div>
+  <div class="byline">Ashman Roonz · Circumpunct Theory &ensp; ⊙ = Φ(•, ○)</div>
+</div>
+
+<!-- ═══════════════ §0 THE CLAIM ═══════════════ -->
+<section>
+  <h2>§0 &ensp; The Claim</h2>
+
+  <div class="block block-def">
+    <div class="block-label">The Scale Correspondence Thesis</div>
+    $$\boxed{\;\text{The tier recursion } \sigma: D \mapsto D{+}3 \text{ is a renormalization group step.}\;}$$
+    <p><strong>Each tier is a scale.</strong> The tier-advance operator $\sigma$ coarse-grains the previous tier's degrees of freedom into the next tier's effective description, preserving the 4-2-1 internal structure at every level. The renormalization group — physics' own formalism for moving between scales — exhibits the same recursive architecture that the tier decomposition derives from pure arithmetic.</p>
+  </div>
+
+  <p>This document establishes a formal correspondence between the tier decomposition (<em>The Tier Decomposition Theorem</em>) and the renormalization group (RG) of Wilson, Kadanoff, and their successors. The correspondence is not an analogy. It is a structural identification: the mathematical objects on both sides — the recursion, the fixed-point structure, the monotonicity, the algebraic encoding of subdivergences — match in detail.</p>
+
+  <p>§1 reviews the RG in the language of tiers. §2 identifies the Connes-Kreimer Hopf algebra as the algebraic spine of the correspondence. §3 connects MERA tensor networks to the tier hierarchy. §4 reads the c-theorem as a tier monotonicity principle. §5 locates fixed points in the tier architecture. §6 formulates the correspondence as a conjecture. §7 draws the limits.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §1 THE RG IN TIER LANGUAGE ═══════════════ -->
+<section>
+  <h2>§1 &ensp; The Renormalization Group in Tier Language</h2>
+
+  <p>The renormalization group, introduced by Kenneth Wilson (Nobel Prize, 1982), describes how physical theories change with the energy scale at which they are probed. At high energies (short distances, UV), all degrees of freedom are active. At low energies (long distances, IR), only the effective, coarse-grained degrees survive. The RG flow is the systematic procedure of integrating out the microscopic to reveal the macroscopic.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 1 · Kadanoff Block Spin as Tier Advance</div>
+    <p>Leo Kadanoff's block spin transformation (1966) is the conceptual foundation of the RG. Given a lattice of spins, group them into blocks of size $b^d$ (where $b$ is the blocking factor and $d$ is the spatial dimension). Replace each block with a single effective spin. Rescale the lattice so it looks like the original. Repeat.</p>
+    <p>Each blocking step:</p>
+    <p>(a) &ensp; Reduces the number of degrees of freedom by a factor of $b^d$.</p>
+    <p>(b) &ensp; Preserves the <em>form</em> of the Hamiltonian — the same structure recurs at the next scale.</p>
+    <p>(c) &ensp; Is irreversible — information about microscopic correlations is lost in the coarse-graining.</p>
+    <p>The tier-advance operator $\sigma: D \mapsto D + 3$ does the same thing. It advances every dimension by 3 — moving the entire partition $\I{n}, \Ph{n}, \Om{n}$ to the next level $\I{n+1}, \Ph{n+1}, \Om{n+1}$. The <em>form</em> is preserved: every tier has the same 4-2-1 internal structure. The <em>scale</em> has changed: the new tier describes a coarser level of organization. And the advance is irreversible: $\sigma$ is a semigroup action, not a group action — you can go up in tier, but you cannot undo the coarse-graining.</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · The Semigroup Structure</div>
+    <p>The RG is a semigroup, not a group: coarse-graining loses information and cannot be inverted. Formally, the RG transformation $R_b$ satisfies:</p>
+    $$R_b \circ R_{b'} \;=\; R_{b \cdot b'} \qquad\text{(composition)}$$
+    $$R_1 \;=\; \text{id} \qquad\text{(identity)}$$
+    <p>but there is no $R_b^{-1}$ — you cannot un-coarse-grain.</p>
+    <p>The tier-advance operator $\sigma$ has the same algebraic structure. Composing $\sigma$ with itself advances two tiers: $\sigma^2(D) = D + 6$. The identity is $\sigma^0 = \text{id}$. But there is no $\sigma^{-1}$ — tier $\T{0}$ has no predecessor, and the partition of a lower tier is not recoverable from the higher tier's effective description.</p>
+    <p>Both are discrete semigroups acting on a structured space, preserving form while advancing scale.</p>
+  </div>
+
+  <div class="block block-cor">
+    <div class="block-label">Corollary · The Recursion Period</div>
+    <p>In the tier decomposition, $\sigma$ advances by exactly 3 dimensions — the <em>period</em> of the recursion. After 3 dimensions, the pattern repeats: aperture, field, boundary → next tier's ground.</p>
+    <p>In Wilson's RG, the blocking factor $b$ is continuous. But in the most physically transparent cases — Kadanoff's Ising model ($b = 2$, $d = 1$), the MERA tensor network (fixed blocking factor per layer) — the RG advances by discrete steps with a fixed period. The correspondence suggests: <strong>the natural blocking factor for the circumpunct is $b^d = 7$</strong> — one full tier of 7 dimensions, coarse-grained into the ground state of the next tier.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §2 THE HOPF ALGEBRA ═══════════════ -->
+<section>
+  <h2>§2 &ensp; The Hopf Algebra of Renormalization</h2>
+
+  <p>In 1998, Alain Connes and Dirk Kreimer proved that perturbative renormalization has the structure of a Hopf algebra — an algebraic object that encodes exactly the recursive subtraction of divergences that physicists had been doing by hand for fifty years.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 2 · The Connes-Kreimer Structure</div>
+    <p>The Connes-Kreimer Hopf algebra $\mathcal{H}_{CK}$ is built on <em>rooted trees</em>, where each tree represents a Feynman diagram and its nested subdivergences. The key operations are:</p>
+    <p><strong>Product</strong> ($m$): Juxtaposition of trees — combining independent divergences.</p>
+    <p><strong>Coproduct</strong> ($\Delta$): Identifies all ways a tree can be <em>cut</em> into a subtree (the subdivergence) and a quotient tree (the remaining diagram). For a tree $t$:</p>
+    $$\Delta(t) \;=\; t \otimes \mathbf{1} \;+\; \mathbf{1} \otimes t \;+\; \sum_{c \in \text{admissible cuts}} P^c(t) \otimes R^c(t)$$
+    <p>where $P^c(t)$ is the pruned subtree and $R^c(t)$ is the trunk.</p>
+    <p><strong>Antipode</strong> ($S$): The recursive counterterm map. It satisfies:</p>
+    $$S(t) \;=\; -t \;-\; \sum_{c} S(P^c(t)) \cdot R^c(t)$$
+    <p>This is <em>recursive</em>: the counterterm for a diagram is built from the counterterms of its subdiagrams. The recursion terminates at the trivial tree (the primitive divergence with no subdivergences).</p>
+    <p class="cite">A. Connes & D. Kreimer, "Renormalization in quantum field theory and the Riemann–Hilbert problem I" (1999), arXiv:hep-th/9912092.</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · The Tier Decomposition as a Hopf-Algebraic Recursion</div>
+    <p>The tier recursion $\T{0} \subset \T{1} \subset \T{2} \subset \cdots$ exhibits the same recursive structure:</p>
+    <p><strong>Product:</strong> Tiers at the same level can be combined (direct product of partition structures). Two independent tier-0 systems compose into a product tier.</p>
+    <p><strong>Coproduct:</strong> Each tier $\T{n}$ can be <em>cut</em> at its internal boundaries — decomposed into $\I{n} \sqcup \Ph{n} \sqcup \Om{n}$. The coproduct identifies all ways the tier can be split into sub-tier structure (the "pruned" part, corresponding to the partition) and the residual (the "trunk," corresponding to the next tier's ground).</p>
+    <p><strong>Antipode:</strong> The operator $\delta^{-1}$ (if it existed) would invert the half-step. But $\delta$ is a semigroup action — there is no inverse. The antipode in the Connes-Kreimer algebra is not an inverse either: it is a <em>counterterm</em>, a recursive correction that absorbs the divergence at each level. The tier decomposition's analogue is the closure $\Om{n}$: the element that <em>seals</em> the tier, absorbing the residual into a bounded whole.</p>
+    <p>The structural parallel: in Connes-Kreimer, each level of the tree hierarchy requires a counterterm that references all lower levels. In the tier decomposition, each $\Om{n}$ requires the completion of $\I{n}$ and $\Ph{n}$ from all lower tiers. Both are recursive absorptions of unbounded content into bounded effective descriptions.</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark · The Trees are the Tiers</div>
+    <p>The Connes-Kreimer algebra is generated by rooted trees. A rooted tree is a hierarchy: a root (the overall diagram), branches (the subdivergences), and leaves (the primitive divergences). Each level of branching is a tier of nested structure.</p>
+    <p>The tier decomposition says: every level has the same internal structure (4-2-1). The Connes-Kreimer algebra says: every node of the tree is renormalized by the same procedure (subtract, recurse, seal). The recursion is the same; the internal structure at each node is what the tier decomposition specifies.</p>
+    <p>The open question: does the 4-2-1 partition appear naturally in the Connes-Kreimer algebra for specific quantum field theories? If the branching factor of the dominant tree topologies in, say, QED or $\phi^4$ theory clusters around 7 (or factors into 4 + 2 + 1), the correspondence would tighten from structural to quantitative.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §3 MERA AND THE TIER HIERARCHY ═══════════════ -->
+<section>
+  <h2>§3 &ensp; Entanglement Renormalization</h2>
+
+  <p>The Multi-scale Entanglement Renormalization Ansatz (MERA), introduced by Guifré Vidal (2007), is a tensor network that implements the RG as a <em>literal hierarchy of layers</em>. Each layer coarse-grains the previous layer's degrees of freedom. The result is a discrete, constructive, computable RG — and it looks exactly like a tier stack.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 3 · The MERA Architecture</div>
+    <p>A MERA consists of two alternating operations applied layer by layer:</p>
+    <p><strong>Disentanglers</strong> ($u$): Unitary gates that remove short-range entanglement between neighboring sites. These are <em>processual</em> operations — they act on the correlations (the $i$-bearing off-diagonal terms in the density matrix) and extract them from the effective description.</p>
+    <p><strong>Isometries</strong> ($w$): Maps that coarse-grain groups of sites into single effective sites. These are <em>structural</em> operations — they reduce the number of degrees of freedom, compressing the lattice into a smaller, coarser description.</p>
+    <p>Each layer of the MERA performs one RG step: disentangle (remove processual content), then coarse-grain (compress structural content). The output of one layer is the input of the next.</p>
+    <p class="cite">G. Vidal, "Entanglement Renormalization" (2007), arXiv:cond-mat/0512165. Recent extension: arXiv:2404.11715 (2024).</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · MERA Layers as Tiers</div>
+    <p>The correspondence between MERA layers and tiers is direct:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>MERA</th><th>Tier Decomposition</th><th>Role</th>
+      </tr>
+      <tr>
+        <td class="cell-i">Disentanglers ($u$)</td>
+        <td class="cell-i">Skeleton $\I{n}$ — the 4 structural phase positions</td>
+        <td>Extract the rotational content — the discrete phase structure that the coarse-graining preserves</td>
+      </tr>
+      <tr>
+        <td class="cell-phi">Entanglement removed</td>
+        <td class="cell-phi">Field $\Ph{n}$ — the 2 mediating dimensions</td>
+        <td>The correlations that are <em>integrated out</em> — the reactive, oscillatory content that does not survive to the next scale</td>
+      </tr>
+      <tr>
+        <td class="cell-omega">Isometries ($w$)</td>
+        <td class="cell-omega">Closure $\Om{n}$ — the 1 boundary element</td>
+        <td>The compression that seals the layer — mapping many sites to one, bounding the effective description</td>
+      </tr>
+    </table>
+
+    <p>At each MERA layer: 4 phase-structural elements are preserved (the rotational skeleton of the effective theory), 2 mediating elements are integrated out (the short-range entanglement, the reactive content), and 1 closure operation seals the layer into the next tier's ground state. The 4-2-1 decomposition is the internal structure of each coarse-graining step.</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark · The Causal Cone</div>
+    <p>One of MERA's distinctive features is its <em>causal cone</em>: the set of tensors in higher layers that influence a given site in the lowest layer. The causal cone narrows as you move up the hierarchy — fewer and fewer tensors are causally connected to any given point.</p>
+    <p>This is the aperture. The causal cone is a literal narrowing: from many degrees of freedom at the bottom (UV, fine-grained, unbounded) to few at the top (IR, coarse-grained, bounded). Each layer of the MERA steps the causal cone through a gate — the disentangler-isometry pair — that reduces its width by the blocking factor. The finite gate of the tier decomposition is the MERA's causal cone, seen from above.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §4 THE C-THEOREM ═══════════════ -->
+<section>
+  <h2>§4 &ensp; Monotonicity: The c-Theorem</h2>
+
+  <p>In 1986, Alexander Zamolodchikov proved that in two-dimensional quantum field theory, there exists a function $c(\mu)$ of the energy scale $\mu$ that monotonically decreases along the RG flow from UV to IR. This function equals the central charge of the conformal field theory at fixed points. The result — the c-theorem — establishes that the RG flow has a <em>direction</em>: from more degrees of freedom to fewer, from less constrained to more constrained, from unbounded to bounded.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 4 · The c-Theorem as Tier Monotonicity</div>
+    <p><strong>Zamolodchikov c-theorem</strong> (1986): In 2D QFT, there exists a function $c(g)$ of the coupling constants such that:</p>
+    $$\mu \frac{dc}{d\mu} \;\leq\; 0$$
+    <p>with equality only at RG fixed points (conformal field theories). At these fixed points, $c$ equals the Virasoro central charge — a measure of the number of effective degrees of freedom.</p>
+    <p><strong>Komargodski-Schwimmer a-theorem</strong> (2011): The analogous result in 4D, where the monotone quantity is the anomaly coefficient $a$.</p>
+    <p class="cite">A. B. Zamolodchikov, "Irreversibility of the flux of the renormalization group in a 2D field theory" (1986), JETP Lett. 43, 730.</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · Central Charge as Tier Count</div>
+    <p>The central charge $c$ counts effective degrees of freedom. A free boson contributes $c = 1$; a free fermion contributes $c = \half$. At the UV fixed point, $c_{\text{UV}}$ is large (many active degrees). At the IR fixed point, $c_{\text{IR}}$ is small (few surviving degrees). The c-theorem says $c_{\text{UV}} \geq c_{\text{IR}}$: the flow always <em>reduces</em>.</p>
+    <p>In the tier decomposition, each tier $\T{n}$ has $|\T{n}| = 7$ dimensions. But the <em>effective</em> degrees of freedom decrease as you move up the hierarchy: at tier $n$, the lower tiers $\T{0}, \ldots, \T{n-1}$ have been coarse-grained into the ground state $3n$ of the current tier. Their internal structure is no longer resolved — it is packed into the single dimension that anchors $\I{n}$.</p>
+    <p>The c-theorem's monotone decrease maps to the tier decomposition's progressive coarse-graining: each $\sigma$-step absorbs 7 microscopic dimensions into 1 effective dimension (the next tier's ground). The central charge at tier $n$ counts only the uncoarse-grained degrees: $c \propto 7 \cdot (N - n)$ for an $N$-tier system. As $n$ increases, $c$ decreases. The flow has a direction, and it points from UV (tier 0, all degrees resolved) to IR (tier $N$, maximally coarse-grained).</p>
+  </div>
+
+  <div class="block block-cor">
+    <div class="block-label">Corollary · Half-Integer Dimensions and Fermionic Degrees</div>
+    <p>The central charge contributions are telling: a boson contributes $c = 1$ (integer, structural) and a fermion contributes $c = \half$ (half-integer, processual). The tier decomposition assigns integer dimensions to structural positions and half-integer dimensions to processual positions.</p>
+    <p>In a tier with 4 integer dimensions and 3 half-integer dimensions, the central charge contribution would be:</p>
+    $$c_{\T{n}} \;=\; 4 \times 1 \;+\; 3 \times \half \;=\; \frac{11}{2}$$
+    <p>Whether $\frac{11}{2}$ appears as a natural central charge in any conformal field theory is an open question. If it does, the correspondence tightens from structural to quantitative. (Note: $c = \frac{11}{2}$ appears in the Virasoro algebra at specific levels of the coset construction.)</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §5 FIXED POINTS ═══════════════ -->
+<section>
+  <h2>§5 &ensp; Fixed Points and Universality</h2>
+
+  <p>The RG flow has special points where the flow stops — <em>fixed points</em>, where the theory is scale-invariant. These fixed points organize the entire landscape of physical theories into universality classes.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 5 · UV and IR Fixed Points</div>
+    <p>A <strong>UV fixed point</strong> is a theory that looks the same at arbitrarily high energies. It is the starting point of the RG flow — the most microscopic, most resolved, most "unbounded" description. Examples: the free field theory (Gaussian fixed point), asymptotically free gauge theories (QCD at high energies).</p>
+    <p>An <strong>IR fixed point</strong> is a theory that looks the same at arbitrarily low energies. It is the endpoint of the RG flow — the most macroscopic, most coarse-grained, most "bounded" description. Examples: conformal field theories at critical points, the trivial (gapped) fixed point of massive theories.</p>
+    <p>The RG flow connects UV fixed points to IR fixed points. Every physical theory is a trajectory between two fixed points — a path from unbounded to bounded.</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · Fixed Points in the Tier Architecture</div>
+    <p>The tier decomposition has two natural fixed-point candidates:</p>
+    <p><span class="s wb">The UV fixed point</span> is $n = 0$: tier zero, where $\I{0} = \set{0, \half, 1, \thalf}$, $\Ph{0} = \set{2, \fhalf}$, $\Om{0} = \set{3}$. This is the most resolved tier — no prior tiers have been coarse-grained, all internal structure is exposed, all 7 dimensions are microscopically active. It is the "free theory" of the tier decomposition: the simplest partition with no hidden structure.</p>
+    <p><span class="b wb">The IR fixed point</span> is $n \to \infty$: the limiting tier where all previous tiers have been absorbed into the ground state. In the limit, the effective description has been coarse-grained to a single point — the whole (⊙), undifferentiated, boundaryless, scale-invariant. This is the trivial fixed point: the theory has flowed to its most bounded, most featureless state.</p>
+    <p><strong>Universality</strong> in this language means: different physical systems whose microscopic details differ (different tier-0 contents) but whose macroscopic behavior (high-tier effective description) is the same. The 4-2-1 structure is the universal internal partition — it is the same at every scale, for every system, regardless of the microscopic Hamiltonian. This is the tier decomposition's version of universality: the partition is the universal class.</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark · Relevant, Irrelevant, and Marginal</div>
+    <p>At an RG fixed point, perturbations are classified by their scaling dimensions:</p>
+    <p><strong>Relevant</strong> ($\Delta < d$): Perturbations that grow under RG flow — they drive the system away from the fixed point. In tier language, these are the <em>structural</em> dimensions of $\I{n}$: the integer-dimensional degrees of freedom that build macroscopic structure.</p>
+    <p><strong>Irrelevant</strong> ($\Delta > d$): Perturbations that shrink under RG flow — they die out at long distances. In tier language, these are the <em>processual</em> dimensions (half-integer): they mediate at the microscopic scale but do not survive the coarse-graining to the next tier.</p>
+    <p><strong>Marginal</strong> ($\Delta = d$): Perturbations that neither grow nor shrink — they sit on the boundary. In tier language, these are the $\Ph{n}$ dimensions: the field, the mediating complement, the part that is neither fully structural nor fully processual but oscillates between them.</p>
+    <p>The classification relevant/irrelevant/marginal maps to skeleton/closure/field. The open question is whether the <em>counting</em> matches: in known CFTs, do the numbers of relevant, irrelevant, and marginal operators cluster in a 4-2-1 pattern?</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §6 CATEGORICAL SYMMETRY ═══════════════ -->
+<section>
+  <h2>§6 &ensp; Categorical Symmetry and the Tier Functor</h2>
+
+  <p>Recent work (2023–2026) in mathematical physics has formalized the relationship between symmetry and RG flow using <em>category theory</em>. The key insight: symmetries of quantum field theories are not merely groups but <em>categories</em> — objects with morphisms, composition, and functorial structure. The RG flow is then a <em>functor</em> between the UV symmetry category and the IR symmetry category.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 6 · Symmetry Topological Field Theory (SymTFT)</div>
+    <p>In the SymTFT framework, the symmetry of a $d$-dimensional QFT is encoded in a $(d+1)$-dimensional topological field theory. The RG flow from UV to IR is captured by a <strong>tensor functor</strong> between the UV and IR symmetry categories:</p>
+    $$F: \;\mathcal{C}_{\text{UV}} \;\to\; \mathcal{C}_{\text{IR}}$$
+    <p>This functor preserves the tensor product structure (combining symmetry representations) but may <em>collapse</em> some objects — UV symmetries that are broken or confined in the IR are mapped to the trivial object.</p>
+    <p>The functor $F$ is not invertible in general: information about UV symmetries is lost in the IR, just as the RG semigroup loses information about microscopic degrees of freedom.</p>
+    <p class="cite">Recent: arXiv:2603.09591 (2026), "Non-invertible symmetries and selection rules for RG flows"; SciPost Phys. 20, 043 (2026).</p>
+  </div>
+
+  <div class="block block-conj">
+    <div class="block-label">Conjecture · The Tier Functor</div>
+    <p>Formalize the tier-advance operator $\sigma$ as a functor between categories:</p>
+    $$\sigma: \;\mathcal{C}(\T{n}) \;\to\; \mathcal{C}(\T{n+1})$$
+    <p>where $\mathcal{C}(\T{n})$ is the category whose objects are the dimensions of tier $n$ and whose morphisms are the operators $\tau$ (rotation), $\delta$ (half-step), and $\alpha$ (phase map) acting within that tier.</p>
+    <p>The functor $\sigma$ should satisfy:</p>
+    <p>(a) &ensp; <strong>Structure preservation:</strong> $\sigma$ maps $\I{n} \to \I{n+1}$, $\Ph{n} \to \Ph{n+1}$, $\Om{n} \to \Om{n+1}$ — the internal partition is preserved.</p>
+    <p>(b) &ensp; <strong>Phase preservation:</strong> $\sigma$ commutes with $\alpha$ — the phase map is natural with respect to tier advance. A dimension with phase $+i$ at tier $n$ maps to a dimension with phase $+i$ at tier $n+1$.</p>
+    <p>(c) &ensp; <strong>Non-invertibility:</strong> $\sigma$ has no left adjoint — the functor is a semigroup action, not an equivalence. Tier $n$'s internal structure is not recoverable from tier $n+1$'s effective description.</p>
+    <p>(d) &ensp; <strong>Anomaly matching:</strong> If the tier decomposition has a categorical anomaly (an obstruction to gauging the $C_4$ symmetry of $\I{n}$), this anomaly must be preserved by $\sigma$ — matching the anomaly matching conditions of the SymTFT framework.</p>
+    <p>If this functor can be constructed explicitly and shown to satisfy the SymTFT axioms, the tier decomposition would be a specific instance of the categorical RG framework — and the 4-2-1 partition would be a prediction for the symmetry structure of the corresponding topological field theory.</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark · Non-Invertible Symmetry and the Field Complement</div>
+    <p>The most striking recent development in categorical symmetry is the discovery of <em>non-invertible symmetries</em> — topological defects that cannot be undone. These are not group elements (which always have inverses) but categorical morphisms (which may not).</p>
+    <p>The tier decomposition has a built-in non-invertible structure: the $\tau/\delta$ divergence (Theorem 3, <em>Tier Decomposition</em>). The rotation $\tau$ is invertible ($\tau^4 = \text{id}$ on $\I{n}$), but the half-step $\delta$ is not invertible on $\T{n}$ — it overshoots into $\Ph{n}$, where $\tau$ has no definition. The $\delta$ operator on the full tier is a non-invertible morphism: it has a domain ($\I{n}$) and a codomain ($\Ph{n}$) that are not isomorphic.</p>
+    <p>This is precisely the structure that non-invertible symmetries describe: topological defects that connect different sectors of the theory (different objects in the symmetry category) without being invertible maps. The $\tau/\delta$ divergence may be the tier decomposition's manifestation of a non-invertible categorical symmetry — and the selection rules it imposes (C₄ → C₂ breaking) would then follow from the anomaly matching conditions of the SymTFT.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §7 THE CORRESPONDENCE TABLE ═══════════════ -->
+<section>
+  <h2>§7 &ensp; The Full Correspondence</h2>
+
+  <div class="block block-def">
+    <div class="block-label">The Scale Correspondence — Summary Table</div>
+
+    <table class="dim-table">
+      <tr>
+        <th>Renormalization Group</th><th>Tier Decomposition</th><th>Status</th>
+      </tr>
+      <tr>
+        <td>Blocking step ($R_b$)</td>
+        <td>Tier advance ($\sigma: D \mapsto D+3$)</td>
+        <td class="cell-struct">Structural match</td>
+      </tr>
+      <tr>
+        <td>Semigroup (irreversible)</td>
+        <td>$\sigma$ semigroup (no inverse)</td>
+        <td class="cell-struct">Structural match</td>
+      </tr>
+      <tr>
+        <td>UV fixed point (all modes active)</td>
+        <td>$\T{0}$ (all 7 dimensions resolved)</td>
+        <td class="cell-struct">Structural match</td>
+      </tr>
+      <tr>
+        <td>IR fixed point (maximally coarse-grained)</td>
+        <td>$n \to \infty$ (single effective point)</td>
+        <td class="cell-struct">Structural match</td>
+      </tr>
+      <tr>
+        <td>c-theorem ($c$ decreases along flow)</td>
+        <td>Effective degrees decrease as $n$ increases</td>
+        <td class="cell-struct">Structural match</td>
+      </tr>
+      <tr>
+        <td>Relevant / irrelevant / marginal operators</td>
+        <td>$\I{n}$ / $\Om{n}$ / $\Ph{n}$ role-families</td>
+        <td class="cell-proc">Conjectural</td>
+      </tr>
+      <tr>
+        <td>Connes-Kreimer recursive counterterms</td>
+        <td>$\Om{n}$ as recursive closure absorbing subdivergences</td>
+        <td class="cell-proc">Conjectural</td>
+      </tr>
+      <tr>
+        <td>MERA: disentangle + coarse-grain per layer</td>
+        <td>$\I{n}$ (structural extract) + $\Ph{n}$ (integrated out) + $\Om{n}$ (seal)</td>
+        <td class="cell-proc">Conjectural</td>
+      </tr>
+      <tr>
+        <td>SymTFT tensor functor $F: \mathcal{C}_{UV} \to \mathcal{C}_{IR}$</td>
+        <td>$\sigma: \mathcal{C}(\T{n}) \to \mathcal{C}(\T{n+1})$</td>
+        <td class="cell-proc">Conjectural</td>
+      </tr>
+      <tr>
+        <td>Non-invertible symmetry (topological defects)</td>
+        <td>$\tau/\delta$ divergence (non-invertible on full tier)</td>
+        <td class="cell-phi">Open</td>
+      </tr>
+      <tr>
+        <td>Central charge $c = \frac{11}{2}$?</td>
+        <td>$4 \times 1 + 3 \times \half = \frac{11}{2}$</td>
+        <td class="cell-phi">Open</td>
+      </tr>
+      <tr>
+        <td>Blocking factor $b^d = 7$?</td>
+        <td>$|\T{n}| = 7$</td>
+        <td class="cell-phi">Open</td>
+      </tr>
+    </table>
+
+    <p>The left column is established physics (Nobel-level: Wilson 1982, and Fields-level: Connes' work). The right column is the tier decomposition's prediction. The status column distinguishes structural matches (architecture agrees), conjectural matches (pattern suggests but proof is absent), and open questions (specific numerical predictions that could be checked).</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §8 RESEARCH PROGRAM ═══════════════ -->
+<section>
+  <h2>§8 &ensp; Research Program</h2>
+
+  <div class="block block-rem">
+    <div class="block-label">Five Problems</div>
+    <p><strong>Problem 1 (Hopf algebra):</strong> Construct the Connes-Kreimer Hopf algebra for a QFT whose renormalization tree structure has branching factor compatible with 4-2-1 decomposition. Does any known theory (e.g., $\phi^3$ in 6 dimensions, which has ternary vertices matching the tier period 3) have this property?</p>
+    <p><strong>Problem 2 (MERA):</strong> Implement a MERA tensor network for a critical lattice model (Ising, Potts) and measure the effective dimensions preserved, integrated out, and sealed at each layer. Do these counts cluster around 4, 2, 1?</p>
+    <p><strong>Problem 3 (c-theorem):</strong> Compute the central charge of the conformal field theory (if any) with $c = \frac{11}{2}$. If it exists, determine whether its operator content matches the tier partition — 4 relevant operators (skeleton), 2 marginal operators (field), 1 irrelevant operator (closure).</p>
+    <p><strong>Problem 4 (SymTFT):</strong> Construct the tier functor $\sigma: \mathcal{C}(\T{n}) \to \mathcal{C}(\T{n+1})$ explicitly as a tensor functor between fusion categories. Determine whether the anomaly matching conditions of the SymTFT framework constrain the tier partition to be 4-2-1 (or merely compatible with it).</p>
+    <p><strong>Problem 5 (Non-invertibility):</strong> Formalize the $\tau/\delta$ divergence as a non-invertible symmetry defect in the SymTFT sense. If the defect's quantum dimension can be computed, determine whether it equals the golden ratio $\varphi$ (the simplest non-integer quantum dimension in the Fibonacci category) — which would connect the tier decomposition to topological quantum computation.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §9 LIMITS ═══════════════ -->
+<section>
+  <h2>§9 &ensp; Limits</h2>
+
+  <div class="block block-rem">
+    <div class="block-label">Scope</div>
+    <p><strong>What is claimed:</strong></p>
+    <p>(a) &ensp; The tier-advance operator $\sigma$ has the same algebraic structure (semigroup, form-preserving, scale-advancing) as the RG blocking transformation. This is a structural observation, not a derivation.</p>
+    <p>(b) &ensp; The recursive structure of the Connes-Kreimer Hopf algebra (nested counterterms terminating at primitive divergences) matches the recursive structure of the tier decomposition (nested tiers terminating at $\T{0}$).</p>
+    <p>(c) &ensp; The MERA tensor network implements a literal tier hierarchy where each layer coarse-grains the previous, and its disentangler/isometry pair maps to the processual/structural distinction of the tier partition.</p>
+    <p>(d) &ensp; The c-theorem's monotone decrease of effective degrees of freedom matches the tier decomposition's progressive coarse-graining from UV (tier 0) to IR (high tier).</p>
+    <p><strong>What is not claimed:</strong></p>
+    <p>(a) &ensp; That the tier decomposition is a <em>new</em> RG. The renormalization group is a rigorously established framework with decades of computational verification. The tier decomposition is a structural pattern that matches the RG's architecture. Whether the match is coincidental, indicative, or foundational is an open question.</p>
+    <p>(b) &ensp; That the specific numbers (4-2-1, $c = \frac{11}{2}$, $b^d = 7$) necessarily appear in any known QFT. These are predictions, not established results. They may turn out to be correct, approximate, or category errors.</p>
+    <p>(c) &ensp; That the tier functor (§6 Conjecture) exists as a rigorous mathematical object. The conjecture states the desired properties; the construction is an open problem.</p>
+    <p>(d) &ensp; That this correspondence "explains" universality, critical phenomena, or any specific RG result. Wilson's framework already explains these things. The tier decomposition proposes a structural reason <em>why</em> the RG has the form it does — but this proposal is a conjecture, not a theorem.</p>
+  </div>
+</section>
+
+<div class="divider">⊙</div>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav style="margin: 40px 0; padding: 20px 24px; border: 1px solid var(--faint); border-radius: 3px;">
+  <div style="font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); margin-bottom: 14px;">Related Documents</div>
+  <p><a href="finite_gate.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">The Finite Gate</a> — $i$ as the stepdown from energy to power, from infinity to finite</p>
+  <p><a href="processual_power.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">Processual Power</a> — Energy, time, and the quarter-turn that makes flow coherent</p>
+  <p><a href="tier_decomposition.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">The Tier Decomposition Theorem</a> — Algebraic foundation of the circumpunct's structural tiers</p>
+  <p><a href="spin_ladder.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">The Spin Ladder Correspondence</a> — Structural correspondence between tier decomposition and quantum spin</p>
+  <p><a href="triadic_morphogenesis.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">Triadic Morphogenesis</a> — Interactive geometric visualization of the supershape bridge</p>
+  <p><a href="hidden_order.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">The Hidden Order Prediction</a> — $\tau/\delta$ divergence as the origin of $C_4 \to C_2$ symmetry breaking</p>
+</nav>
+
+<!-- ═══════════════ FOOTNOTE ═══════════════ -->
+<div class="footnote">
+  <p>This document establishes the scale correspondence between the tier recursion and the renormalization group. For the finite gate thesis, see <em><a href="finite_gate.html" style="color: var(--dim); text-decoration: none; border-bottom: 1px solid var(--very-faint);">The Finite Gate</a></em>. For the processual power relation, see <em><a href="processual_power.html" style="color: var(--dim); text-decoration: none; border-bottom: 1px solid var(--very-faint);">Processual Power</a></em>. For the algebraic foundation, see <em><a href="tier_decomposition.html" style="color: var(--dim); text-decoration: none; border-bottom: 1px solid var(--very-faint);">The Tier Decomposition Theorem</a></em>. For the quantum mechanical correspondence, see <em><a href="spin_ladder.html" style="color: var(--dim); text-decoration: none; border-bottom: 1px solid var(--very-faint);">The Spin Ladder Correspondence</a></em>.</p>
+</div>
+
+</div>
+</body>
+</html>

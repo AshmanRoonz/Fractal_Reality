@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Hidden Order Prediction</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$']],
+    displayMath: [['$$','$$']],
+    macros: {
+      T: ['\\mathcal{T}_{#1}', 1],
+      I: ['\\mathcal{I}_{#1}', 1],
+      Ph: ['\\Phi_{#1}', 1],
+      Om: ['\\Omega_{#1}', 1],
+      PP: '\\mathcal{P}',
+      half: '\\tfrac{1}{2}',
+      thalf: '\\tfrac{3}{2}',
+      fhalf: '\\tfrac{5}{2}',
+      Z: '\\mathbb{Z}',
+      N: '\\mathbb{N}',
+      R: '\\mathbb{R}',
+      C: '\\mathbb{C}',
+      H: '\\mathbb{H}',
+      set: ['\\{\\,#1\\,\\}', 1],
+      ket: ['|\\,#1\\,\\rangle', 1],
+      bra: ['\\langle\\,#1\\,|', 1]
+    }
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --very-faint: #2A2820;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--faint) var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w  { color: var(--gold); }
+.s  { color: var(--pink); }
+.m  { color: var(--green); }
+.b  { color: var(--cyan); }
+.p  { color: var(--purple); }
+.d  { color: var(--dim); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 760px; margin: 0 auto; padding: 80px 30px 140px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 70px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header h1 { font-size: 36px; font-weight: 500; color: var(--gold); letter-spacing: 1px; margin-bottom: 6px; }
+.header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; margin-bottom: 4px; }
+.header .formula { font-size: 26px; color: var(--gold); margin: 20px 0 8px; letter-spacing: 2px; }
+.header .byline { font-size: 14px; color: var(--faint); margin-top: 20px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+.block {
+  margin: 32px 0;
+  padding: 20px 24px;
+  border-radius: 3px;
+  position: relative;
+}
+
+.block-def { border-left: 3px solid var(--gold); background: rgba(184, 160, 96, 0.04); }
+.block-prop { border-left: 3px solid var(--pink); background: rgba(232, 138, 175, 0.04); }
+.block-proof { border-left: 3px solid var(--dim); background: rgba(255, 255, 255, 0.015); }
+.block-cor { border-left: 3px solid var(--cyan); background: rgba(77, 160, 200, 0.04); }
+.block-thm { border-left: 3px solid var(--green); background: rgba(77, 184, 160, 0.04); }
+.block-rem { border-left: 3px solid var(--purple); background: rgba(155, 122, 216, 0.04); }
+.block-ax { border-left: 3px solid var(--gold-dim); background: rgba(136, 120, 80, 0.04); }
+.block-conj { border-left: 3px solid #C87D4D; background: rgba(200, 125, 77, 0.04); }
+.block-exp { border-left: 3px solid #7DC87D; background: rgba(125, 200, 125, 0.04); }
+
+.block-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.block-def .block-label { color: var(--gold); }
+.block-prop .block-label { color: var(--pink); }
+.block-proof .block-label { color: var(--dim); }
+.block-cor .block-label { color: var(--cyan); }
+.block-thm .block-label { color: var(--green); }
+.block-rem .block-label { color: var(--purple); }
+.block-ax .block-label { color: var(--gold-dim); }
+.block-conj .block-label { color: #C87D4D; }
+.block-exp .block-label { color: #7DC87D; }
+
+.block p { margin-bottom: 10px; }
+.block p:last-child { margin-bottom: 0; }
+
+.qed { text-align: right; color: var(--dim); font-size: 15px; margin-top: 6px; }
+
+mjx-container[display="true"] { margin: 18px 0 !important; }
+
+section { margin-bottom: 55px; }
+section > h2 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  padding-top: 16px;
+  color: var(--warm);
+}
+
+p { margin-bottom: 16px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+.dim-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 17px;
+}
+.dim-table th {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--faint);
+}
+.dim-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--very-faint);
+  vertical-align: top;
+}
+.dim-table tr:last-child td { border-bottom: none; }
+
+.cell-struct { color: var(--gold); }
+.cell-proc { color: var(--purple); }
+.cell-i { color: var(--pink); }
+.cell-phi { color: var(--green); }
+.cell-omega { color: var(--cyan); }
+.cell-exp { color: #7DC87D; }
+
+.footnote {
+  font-size: 15px;
+  color: var(--dim);
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--very-faint);
+  line-height: 1.7;
+}
+
+.cite {
+  font-size: 15px;
+  color: var(--dim);
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="header">
+  <h1>The Hidden Order Prediction</h1>
+  <div class="subtitle">$\tau/\delta$ divergence as the origin of $C_4 \to C_2$ symmetry breaking in correlated electron systems</div>
+  <div class="formula">$|\I{n}| = 4 \;\;\to\;\; |\Ph{n}| = 2$</div>
+  <div class="byline">Ashman Roonz · Circumpunct Theory &ensp; ⊙ = Φ(•, ○)</div>
+</div>
+
+<!-- ═══════════════ §0 THE PREDICTION ═══════════════ -->
+<section>
+  <h2>§0 &ensp; The Prediction</h2>
+
+  <div class="block block-conj">
+    <div class="block-label">The Central Prediction</div>
+    $$\boxed{\;\tau^4 = \text{id} \;\text{ but }\; \delta^4 \in \Ph{n} \quad\Longrightarrow\quad C_4 \;\text{ breaks to }\; C_2\;\text{, not to } C_3 \text{ or } C_1.\;}$$
+    <p><strong>When a system with fourfold rotational symmetry is driven past its structural closure, the residual symmetry is twofold — because the field complement has exactly two elements.</strong></p>
+    <p>The Rotation–Traversal Divergence (Theorem 3, <em>The Tier Decomposition Theorem</em>) states: the rotation operator $\tau$ completes a 4-cycle on $\I{n}$ and returns to ground, but the half-step operator $\delta$ overshoots into $\Ph{n}$ after four steps. The "excess" — the content that escapes the rotational skeleton — populates the field, whose cardinality is $|\Ph{n}| = 2$. The broken symmetry inherits this cardinality: $C_4 \to C_2$.</p>
+  </div>
+
+  <p>This is a falsifiable prediction. It says: in any physical system where $C_4$ symmetry breaks due to an internal instability (not an external field), the residual symmetry will be $C_2$ — twofold, not threefold or trivial. The prediction does not depend on the microscopic Hamiltonian, the interaction strength, or the material composition. It depends only on the arithmetic of the tier partition: $|\I{n}| = 4$, $|\Ph{n}| = 2$, $|\Om{n}| = 1$.</p>
+
+  <p>This document tests the prediction against four families of correlated electron systems where $C_4$ breaking has been experimentally confirmed: URu₂Si₂ (§1), iron pnictides (§2), cuprate superconductors (§3), and kagome metals (§4). In every case, the observed residual symmetry is $C_2$. §5 provides the group-theoretic reason. §6 formulates the testable consequences. §7 draws the limits.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §1 URu₂Si₂ ═══════════════ -->
+<section>
+  <h2>§1 &ensp; URu₂Si₂: The Forty-Year Problem</h2>
+
+  <p>URu₂Si₂ is a heavy-fermion compound that undergoes a phase transition at $T_0 = 17.5$ K. The transition is sharp, second-order, with a BCS-like specific heat anomaly and an entropy loss of $\sim 0.2R \ln 2$. But the order parameter — the quantity that changes at the transition — has resisted identification for forty years. This is the "hidden order" problem, one of the longest-standing unsolved puzzles in condensed matter physics.</p>
+
+  <div class="block block-exp">
+    <div class="block-label">Experimental Evidence · C₄ → C₂ Confirmed</div>
+    <p>Four independent experiments confirm that the hidden order transition breaks $C_4$ symmetry to $C_2$:</p>
+    <p><strong>(a) Cyclotron resonance</strong> (Okazaki et al., 2012): Anomalous splitting of cyclotron resonance lines under in-plane magnetic field rotation. The splitting reveals domain formation with in-plane mass anisotropy along the [110] direction — a twofold pattern in a nominally fourfold lattice.</p>
+    <p class="cite">T. Okazaki et al., Science 331, 439 (2011); arXiv:1207.3905.</p>
+    <p><strong>(b) Synchrotron X-ray diffraction</strong> (Tonegawa et al., 2014): Direct observation of lattice distortion from tetragonal ($I4/mmm$) to orthorhombic symmetry below $T_0$. The lattice parameters $a$ and $b$ split: the fourfold axis becomes twofold.</p>
+    <p class="cite">S. Tonegawa et al., Nature Communications 5, 4188 (2014).</p>
+    <p><strong>(c) Differential elastoresistance</strong> (Riggs et al., 2015): The $B_{2g}$ elastoresistivity diverges as Curie-Weiss above $T_0$, tracking the specific heat anomaly. This is the nematic susceptibility — it measures the system's tendency to break $C_4$ to $C_2$.</p>
+    <p class="cite">S. C. Riggs et al., Nature Communications 6, 6425 (2015).</p>
+    <p><strong>(d) Torque magnetometry</strong> (Tonegawa et al., 2012): Magnetic torque oscillations reveal Ising quasiparticles with twofold symmetry below $T_0$. The quasiparticle spectrum breaks the fourfold rotation of the paramagnetic phase.</p>
+    <p class="cite">S. Tonegawa et al., Nature 11820 (2012).</p>
+  </div>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 1 · The Paradox</div>
+    <p>The hidden order problem is not that $C_4 \to C_2$ breaking is unconfirmed — it is experimentally established. The problem is that <em>no known order parameter can account for both the symmetry breaking and the entropy</em>.</p>
+    <p>The small antiferromagnetic moment ($\sim 0.03\,\mu_B$/U) is far too weak to explain the specific heat anomaly. Conventional order parameters (charge density wave, spin density wave, orbital order) have been systematically ruled out. Current candidates include:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>Candidate</th><th>What it Explains</th><th>What it Misses</th>
+      </tr>
+      <tr>
+        <td>Rank-5 nematic (dotriacontapole)</td>
+        <td>$C_4 \to C_2$, nematic susceptibility</td>
+        <td>Full entropy accounting, microscopic mechanism</td>
+      </tr>
+      <tr>
+        <td>Hastatic order</td>
+        <td>Magnetic anomaly, half-integer/integer mixing</td>
+        <td>Complete thermodynamics, direct detection</td>
+      </tr>
+      <tr>
+        <td>Chirality density wave</td>
+        <td>STM modulation, 1D stripe pattern</td>
+        <td>3D character, phase boundary topology</td>
+      </tr>
+      <tr>
+        <td>Spin-orbit density wave</td>
+        <td>Topological protection, FS gapping</td>
+        <td>Experimental signatures remain indirect</td>
+      </tr>
+    </table>
+
+    <p class="cite">J. A. Mydosh & P. M. Oppeneer, Reviews of Modern Physics 83, 1301 (2011); Philosophical Magazine 94, 3642 (2014).</p>
+  </div>
+
+  <div class="block block-conj">
+    <div class="block-label">The Tier Decomposition Reading</div>
+    <p>The $\tau/\delta$ divergence offers a structural answer to why $C_4 \to C_2$ — independent of which microscopic order parameter is correct:</p>
+    <p>The tetragonal symmetry of URu₂Si₂ above $T_0$ is $C_4$ — a fourfold rotation. This maps to $\I{n}$, the 4-element rotational skeleton of the tier. Below $T_0$, the system is driven past the structural closure (the fourth step of $\delta$ overshoots), and the excess populates $\Ph{n}$ — the 2-element field complement. The residual symmetry is $C_2$ because $|\Ph{n}| = 2$.</p>
+    <p>The "hidden" order parameter, in this reading, is not a conventional multipole. It is the <strong>reactive field</strong> $\Ph{n}$ itself — the mediating oscillation that emerges when the rotational skeleton cannot close. The order parameter is hidden because it is not a quantity that clicks through discrete phase positions (like a spin or a charge modulation). It is the <em>absence</em> of closure — the gap between $\tau^4$ and $\delta^4$, populated by the two field dimensions that rotation cannot reach.</p>
+    <p>This reading explains two otherwise puzzling features:</p>
+    <p>(a) &ensp; <strong>Why the order is "hidden":</strong> $\Ph{n}$ is the complement of the rotational skeleton. Standard probes (diffraction, magnetometry, spectroscopy) are tuned to detect rotational order — they measure quantities that transform under $\tau$. The field $\Ph{n}$ is precisely what $\tau$ cannot reach. The order is hidden from rotation-sensitive probes because it lives in the non-rotational complement.</p>
+    <p>(b) &ensp; <strong>Why $C_2$ specifically:</strong> The residual symmetry is not $C_3$ (which would require a 3-element field) or $C_1$ (which would require the boundary to break as well). It is $C_2$ because the tier partition is $4 + 2 + 1 = 7$, and the field has exactly 2 elements. The arithmetic is the prediction.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §2 IRON PNICTIDES ═══════════════ -->
+<section>
+  <h2>§2 &ensp; Iron Pnictides: Electronic Nematicity</h2>
+
+  <p>The iron-based superconductors (BaFe₂As₂, FeSe, and related compounds) exhibit electronic nematicity — a spontaneous breaking of the crystal's $C_4$ rotational symmetry to $C_2$, driven by electronic correlations rather than lattice distortion. This is the most studied instance of $C_4 \to C_2$ breaking in modern condensed matter.</p>
+
+  <div class="block block-exp">
+    <div class="block-label">Experimental Evidence · The Nematic Phase</div>
+    <p><strong>BaFe₂As₂ family:</strong> The tetragonal-to-orthorhombic structural transition occurs at $T_s \sim 140$ K, but electronic nematicity — detected via elastoresistance — appears at $T^* \sim 170$ K, <em>above</em> the structural transition. The electronic symmetry breaks before the lattice follows.</p>
+    <p><strong>FeSe:</strong> Nematic order at $T_s = 90$ K with <em>no</em> accompanying magnetic order — the cleanest case of pure nematicity. NMR studies reveal orbital splitting ($d_{xz}/d_{yz}$) as the primary mechanism.</p>
+    <p><strong>The debate:</strong> Fernandes, Chubukov & Schmalian (Nature Physics 10, 97, 2014) formalized the question: is nematicity driven by spin fluctuations (stripe antiferromagnetic ordering at $\mathbf{Q} = (\pi, 0)$ selects one Fe-Fe bond direction) or orbital order ($d_{xz}/d_{yz}$ splitting breaks $C_4$)? The answer appears material-dependent, but the <em>pattern</em> — $C_4 \to C_2$, always — is universal.</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · Mechanism Independence</div>
+    <p>The tier decomposition predicts $C_4 \to C_2$ regardless of whether the driving mechanism is spin, orbital, or structural. This is because the prediction follows from the <em>cardinality</em> of the partition ($|\I{n}| = 4$, $|\Ph{n}| = 2$), not from the microscopic Hamiltonian.</p>
+    <p>Consider the three proposed mechanisms:</p>
+    <p><span class="s wb">Spin-driven</span> (BaFe₂As₂): Stripe AF with $\mathbf{Q} = (\pi, 0)$ or $(0, \pi)$. The two choices form a 2-element set — the system must choose one of $|\Ph{n}| = 2$ field orientations. The excess from the 4-element rotational group $\set{(\pi,0), (0,\pi), (-\pi,0), (0,-\pi)}$ reduces modulo the closure to 2 distinct orientations.</p>
+    <p><span class="m wb">Orbital-driven</span> (FeSe): The $d_{xz}$ and $d_{yz}$ orbitals split. Two orbitals — $|\Ph{n}| = 2$ — become inequivalent. The fourfold rotational equivalence of the $t_{2g}$ manifold breaks to a twofold distinction.</p>
+    <p><span class="b wb">Structural</span> (lattice distortion): The tetragonal lattice ($a = b$) becomes orthorhombic ($a \neq b$). Two lattice parameters — $|\Ph{n}| = 2$ — become distinct. The fourfold rotation axis reduces to a twofold axis.</p>
+    <p>In every case, the number 2 appears as the residual symmetry. The tier decomposition says this is not a coincidence — it is the cardinality of $\Ph{n}$, the field complement that $\tau$ cannot reach.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §3 CUPRATES ═══════════════ -->
+<section>
+  <h2>§3 &ensp; Cuprate Superconductors: The Pseudogap</h2>
+
+  <p>The cuprate high-temperature superconductors (Bi-2212, YBCO, Nd-LSCO) exhibit a mysterious "pseudogap" phase above the superconducting dome. Within this phase, $C_4$ rotational symmetry breaks to $C_2$ — detected by STM, Raman scattering, and X-ray diffraction.</p>
+
+  <div class="block block-exp">
+    <div class="block-label">Experimental Evidence · Pseudogap Nematicity</div>
+    <p><strong>Lawler et al. (2010):</strong> Spectroscopic imaging STM on Bi-2212 revealed intra-unit-cell electronic nematicity — the electronic density of states breaks 90° rotational symmetry to 180°. This is $C_4 \to C_2$ at the atomic scale, observed directly in real space.</p>
+    <p class="cite">M. J. Lawler et al., Nature 466, 347 (2010).</p>
+    <p><strong>Nd-LSCO (Sato et al., 2021):</strong> Resonant X-ray scattering shows nematic order that vanishes at the pseudogap endpoint ($p \sim 0.23$, where $p$ is hole doping). The nematic phase boundary coincides with the pseudogap phase boundary — they are the same transition.</p>
+    <p class="cite">Y. Sato et al., PNAS 118, e2106881118 (2021).</p>
+    <p><strong>YBCO (Sato et al., 2017):</strong> Thermodynamic evidence (torque magnetometry) for a true nematic phase transition at the pseudogap onset temperature $T^*$.</p>
+    <p class="cite">Y. Sato et al., Nature Physics 13, 1074 (2017).</p>
+  </div>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 2 · The Pomeranchuk Connection</div>
+    <p>The theoretical framework for cuprate nematicity is the <strong>Pomeranchuk instability</strong>: a deformation of the Fermi surface that breaks its rotational symmetry. In the $d$-wave channel, the Fermi surface elongates along one diagonal, breaking $C_4$ to $C_2$.</p>
+    <p>The Pomeranchuk instability occurs when a Landau parameter $F_\ell$ becomes sufficiently negative ($F_\ell < -(2\ell + 1)$ in 2D). For the $\ell = 2$ ($d$-wave) channel, this gives a deformation with twofold symmetry — the Fermi surface develops an elliptical distortion.</p>
+    <p>In the tier language: the Fermi surface's fourfold symmetry is the rotational skeleton $\I{n}$. The Pomeranchuk instability is the $\delta$-overshoot — the continuous deformation (half-step) that accumulates past the fourfold closure and enters the field $\Ph{n}$. The resulting $d$-wave deformation has $C_2$ symmetry because $|\Ph{n}| = 2$.</p>
+    <p>The pseudogap, in this reading, is the regime where the gate has partially failed: some of the Fermi surface has been stepped down (gapped), while the rest remains ungapped. It is a <em>half-open gate</em> — the aperture has narrowed but not closed. The $C_2$ nematicity is the signature of the partial overshoot into $\Ph{n}$.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §4 KAGOME METALS ═══════════════ -->
+<section>
+  <h2>§4 &ensp; Kagome Metals: The Newest Evidence</h2>
+
+  <p>The kagome metals CsV₃Sb₅, KV₃Sb₅, and RbV₃Sb₅, discovered in 2020–2021, provide the freshest evidence for the universality of $C_4 \to C_2$ (and $C_6 \to C_2$) symmetry breaking in correlated electron systems.</p>
+
+  <div class="block block-exp">
+    <div class="block-label">Experimental Evidence · Kagome Nematicity</div>
+    <p><strong>Charge density wave</strong> (CsV₃Sb₅): A CDW transition at $T_{\text{CDW}} \sim 94$ K breaks the sixfold/threefold symmetry of the kagome lattice. Below the CDW, nematic order with $C_2$ symmetry emerges.</p>
+    <p><strong>Odd-parity nematic phase</strong> (Tan et al., 2024): Torque magnetometry reveals an odd-parity electronic nematic phase <em>above</em> the CDW transition, with twofold in-plane magnetic anisotropy. This is nematicity without CDW — pure $C_6 \to C_2$ electronic symmetry breaking.</p>
+    <p class="cite">H. Tan et al., Nature Physics (2024), s41567-023-02272-4.</p>
+    <p><strong>Time-reversal symmetry breaking</strong> (2025): Below $\sim 30$ K, additional symmetry breaking is detected via muon spin relaxation and magneto-optic Kerr effect. The system breaks not just rotation but also time reversal — a chiral electronic state.</p>
+    <p><strong>CsTi₃Bi₅:</strong> A titanium-based kagome metal that exhibits nematicity and superconductivity <em>without</em> CDW — demonstrating that nematicity is an independent instability, not a secondary consequence of charge ordering.</p>
+    <p class="cite">CsTi₃Bi₅: Nature Communications 15, 53870 (2024). Pomeranchuk instability: Nature Communications 16, 67037 (2025).</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · The Universal Pattern</div>
+    <p>Across all four material families — URu₂Si₂, iron pnictides, cuprates, kagome metals — the pattern is the same:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>Material</th><th>Parent Symmetry</th><th>Broken To</th><th>$T$ (K)</th><th>Mechanism</th>
+      </tr>
+      <tr>
+        <td>URu₂Si₂</td>
+        <td class="cell-i">$C_4$ (tetragonal)</td>
+        <td class="cell-phi">$C_2$ (orthorhombic)</td>
+        <td>17.5</td>
+        <td>Hidden (rank-5 nematic?)</td>
+      </tr>
+      <tr>
+        <td>BaFe₂As₂</td>
+        <td class="cell-i">$C_4$ (tetragonal)</td>
+        <td class="cell-phi">$C_2$ (orthorhombic)</td>
+        <td>140–170</td>
+        <td>Spin/orbital nematicity</td>
+      </tr>
+      <tr>
+        <td>FeSe</td>
+        <td class="cell-i">$C_4$ (tetragonal)</td>
+        <td class="cell-phi">$C_2$ (orthorhombic)</td>
+        <td>90</td>
+        <td>Orbital-driven</td>
+      </tr>
+      <tr>
+        <td>Bi-2212</td>
+        <td class="cell-i">$C_4$ (tetragonal)</td>
+        <td class="cell-phi">$C_2$ (nematic)</td>
+        <td>$T^*$ (pseudogap)</td>
+        <td>Pomeranchuk instability</td>
+      </tr>
+      <tr>
+        <td>CsV₃Sb₅</td>
+        <td class="cell-i">$C_6$ (hexagonal)</td>
+        <td class="cell-phi">$C_2$ (nematic)</td>
+        <td>35–94</td>
+        <td>CDW + electronic</td>
+      </tr>
+      <tr>
+        <td>CsTi₃Bi₅</td>
+        <td class="cell-i">$C_6$ (hexagonal)</td>
+        <td class="cell-phi">$C_2$ (nematic)</td>
+        <td>—</td>
+        <td>Pomeranchuk instability</td>
+      </tr>
+    </table>
+
+    <p>The parent symmetry varies ($C_4$ or $C_6$). The mechanism varies (spin, orbital, charge, hidden). The temperature varies across two orders of magnitude. The material chemistry varies from uranium to iron to copper to vanadium. But the broken symmetry is always $C_2$.</p>
+    <p>The tier decomposition predicts this universality: the residual is always the field complement $\Ph{n}$, whose cardinality is always 2, regardless of the starting symmetry or the mechanism of breaking.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §5 THE GROUP THEORY ═══════════════ -->
+<section>
+  <h2>§5 &ensp; Why $C_2$ and Not $C_3$ or $C_1$</h2>
+
+  <p>The prediction $C_4 \to C_2$ is not merely observed — it is required by the group theory of the $B_{1g}$ irreducible representation, which the tier decomposition selects.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 3 · Subgroups of $C_4$</div>
+    <p>The group $C_4 = \set{1, i, -1, -i}$ (the fourth roots of unity) has exactly three subgroups:</p>
+    $$C_4 \supset C_2 \supset C_1$$
+    <p>where $C_2 = \set{1, -1}$ and $C_1 = \set{1}$. There is no $C_3$ subgroup of $C_4$ — three does not divide four.</p>
+    <p>A symmetry-breaking order parameter transforming under an irreducible representation of $C_4$ can only break to a <em>subgroup</em>. The possible residual symmetries are $C_2$ (partial breaking) or $C_1$ (complete breaking). There is no option for $C_3$.</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · The $B_{1g}$ Selection</div>
+    <p>The $C_4$ point group has four irreducible representations:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>Irrep</th><th>Character of $C_4$ rotation</th><th>Transforms as</th><th>Residual Symmetry</th>
+      </tr>
+      <tr>
+        <td class="cell-struct">$A$ (trivial)</td>
+        <td>$+1$</td>
+        <td>$s$-wave (isotropic)</td>
+        <td>$C_4$ (no breaking)</td>
+      </tr>
+      <tr>
+        <td class="cell-i">$B$ ($B_{1g}$)</td>
+        <td>$-1$</td>
+        <td>$d$-wave ($x^2 - y^2$)</td>
+        <td class="cell-phi">$C_2$</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">$E_+$</td>
+        <td>$+i$</td>
+        <td>$p$-wave (chiral $+$)</td>
+        <td>$C_1$</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">$E_-$</td>
+        <td>$-i$</td>
+        <td>$p$-wave (chiral $-$)</td>
+        <td>$C_1$</td>
+      </tr>
+    </table>
+
+    <p>The $B_{1g}$ representation — the $d$-wave channel — is the one that breaks $C_4 \to C_2$. Its order parameter transforms as $x^2 - y^2$: positive along one axis, negative along the perpendicular. This is the nematic order parameter observed in all four material families.</p>
+    <p>The tier decomposition selects $B_{1g}$ because of the phase map $\alpha$. The phase $\alpha(3n+1) = -1$ is the $B_{1g}$ character. Dimension $3n+1$ — the first structural extension of $\I{n}$ — is the position whose phase is $-1$ under $C_4$ rotation. When the $\delta$-overshoot carries the system past $3n + \thalf$ (the fourth step), the excess enters $\Ph{n}$ at dimensions $3n+2$ and $3n + \fhalf$. These two dimensions are the kernel of the $B_{1g}$ representation restricted to $\Ph{n}$: they are the "where" of the $d$-wave deformation.</p>
+    <p>The prediction is not just $C_4 \to C_2$. It is $C_4 \to C_2$ <em>via the $B_{1g}$ channel</em> — via nematicity, not via any other symmetry-breaking pattern. And this is exactly what is observed in URu₂Si₂ (elastoresistance: $B_{2g}$ nematic susceptibility), iron pnictides ($B_{1g}$ Raman response), cuprates ($d$-wave Pomeranchuk), and kagome metals (twofold in-plane anisotropy).</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark · Why Not $C_1$?</div>
+    <p>The chiral representations $E_\pm$ would break $C_4 \to C_1$ (complete symmetry breaking). Why does nature prefer $B_{1g}$ ($C_4 \to C_2$) over $E_\pm$ ($C_4 \to C_1$)?</p>
+    <p>In Landau theory, the instability occurs in the channel with the largest susceptibility. For Fermi surface systems with nesting at $\mathbf{Q} = (\pi, 0)$, the $B_{1g}$ ($d$-wave) susceptibility is generically enhanced because $(\pi, 0)$ connects parallel Fermi surface segments. The $E_\pm$ (chiral) channels require more complex nesting geometry and are typically subleading.</p>
+    <p>In tier language: the $\delta$-overshoot is a <em>half-step</em> — a minimal perturbation. It reaches $\Ph{n}$ (the $C_2$ complement) but not beyond. To reach $C_1$ would require breaking the field itself — splitting $\Ph{n}$'s two elements into singletons. This requires a second instability on top of the first, which is energetically disfavored. The single gate failure ($\tau/\delta$ divergence) produces $C_2$; a <em>double</em> gate failure would be needed for $C_1$.</p>
+    <p>Interestingly, the kagome metals may provide the exception: CsV₃Sb₅ below $\sim 30$ K shows time-reversal symmetry breaking in addition to nematic order. This could be the second gate failure — the system first breaks $C_4 \to C_2$ (nematicity, populating $\Ph{n}$), then breaks time reversal (chirality, splitting $\Ph{n}$ itself). If confirmed, this would be a cascade of gate failures: first $\I{n} \to \Ph{n}$, then $\Ph{n} \to \Om{n}$.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §6 TESTABLE CONSEQUENCES ═══════════════ -->
+<section>
+  <h2>§6 &ensp; Testable Consequences</h2>
+
+  <div class="block block-conj">
+    <div class="block-label">Prediction 1 · The Hidden Order Parameter is the Field Complement</div>
+    <p>In URu₂Si₂, the order parameter that drives the 17.5 K transition transforms as the field complement $\Ph{n}$ — the part of the tier that rotation ($\tau$) cannot reach. Experimentally, this means:</p>
+    <p>(a) &ensp; The order parameter should be <strong>invisible to probes that measure rotational order</strong> (neutron diffraction, standard magnetic susceptibility). It should be detectable by probes sensitive to the <em>non-rotational</em> complement: nematic susceptibility (elastoresistance), Fermi surface deformation (ARPES), and symmetry-resolved Raman scattering in the $B_{2g}$ channel.</p>
+    <p>(b) &ensp; The order parameter should have <strong>exactly two degenerate orientations</strong> (domain structure with two domain types, related by 90° rotation). This has been observed: Okazaki et al. (2012) report domain formation with twofold in-plane mass anisotropy.</p>
+    <p>(c) &ensp; Under pressure, the hidden order gives way to large-moment antiferromagnetism — a conventional $\I{n}$-type (rotational, structural) order. The tier prediction: the pressure-induced transition is a <strong>return from $\Ph{n}$ to $\I{n}$</strong> — the field energy is re-absorbed into the skeleton, and the system snaps back to rotational order.</p>
+  </div>
+
+  <div class="block block-conj">
+    <div class="block-label">Prediction 2 · The Nematic Susceptibility Exponent</div>
+    <p>The nematic susceptibility $\chi_{\text{nem}}$ above the transition follows Curie-Weiss: $\chi_{\text{nem}} \sim (T - T_0)^{-\gamma}$ with $\gamma = 1$ in mean-field theory. The tier decomposition predicts a correction:</p>
+    <p>If the $C_4 \to C_2$ transition is driven by the $\tau/\delta$ divergence, the critical fluctuations live in a 2-dimensional order parameter space ($|\Ph{n}| = 2$). The universality class of an Ising-nematic transition in a 2-component field is the <strong>2D Ising universality class</strong> with $\gamma = 7/4$ (in 2D) or mean-field $\gamma = 1$ (in 3D above the upper critical dimension).</p>
+    <p>The specific prediction: in quasi-2D systems (cuprates, kagome metals), the nematic susceptibility exponent should approach $\gamma = 7/4$. In 3D systems (URu₂Si₂), it should be mean-field ($\gamma = 1$). The crossover dimension should be $d_c = 3$ for the $B_{1g}$ nematic universality class.</p>
+  </div>
+
+  <div class="block block-conj">
+    <div class="block-label">Prediction 3 · The Cascade Signature in Kagome Metals</div>
+    <p>If the tier decomposition is correct, the sequential symmetry breaking in CsV₃Sb₅ — nematicity at $\sim 35$ K, then time-reversal breaking at $\sim 30$ K — is a <strong>two-stage gate failure</strong>:</p>
+    <p>Stage 1: $\I{n} \to \Ph{n}$ (rotational skeleton fails, $C_4 \to C_2$, nematic order).</p>
+    <p>Stage 2: $\Ph{n} \to \Om{n}$ (field complement splits, time-reversal breaks, chiral order).</p>
+    <p>The prediction: the ratio of transition temperatures $T_{\text{chiral}}/T_{\text{nematic}}$ should be related to the ratio of cardinalities $|\Om{n}|/|\Ph{n}| = 1/2$. Specifically, if gate failure probability scales with the fraction of the tier being broken, then:</p>
+    $$\frac{T_{\text{chiral}}}{T_{\text{nematic}}} \;\approx\; \frac{|\Om{n}|}{|\Ph{n}|} \;=\; \frac{1}{2}$$
+    <p>Observed: $T_{\text{chiral}}/T_{\text{nematic}} \approx 30/35 \approx 0.86$. This is higher than $1/2$, suggesting the second gate failure is not independent of the first — the first failure facilitates the second. The corrected prediction would involve a conditional probability, which is an open calculation.</p>
+  </div>
+
+  <div class="block block-conj">
+    <div class="block-label">Prediction 4 · No $C_3$ Residual in Tetragonal Systems</div>
+    <p>The tier decomposition predicts: <strong>no tetragonal ($C_4$) crystal will exhibit a $C_3$ residual symmetry from an internal instability.</strong> The $C_4 \to C_3$ transition is forbidden because 3 does not divide 4, and there is no 3-element subgroup of $C_4$.</p>
+    <p>This is already known from group theory. But the tier decomposition adds: even in hexagonal ($C_6$) systems where $C_3$ is a subgroup, the <em>preferred</em> breaking channel is still $C_2$ (not $C_3$), because $|\Ph{n}| = 2$ in every tier. The field complement always has 2 elements, regardless of the parent symmetry.</p>
+    <p>Testable in kagome metals: CsV₃Sb₅ has $C_6$ symmetry, and $C_3$ is a valid subgroup. Yet the observed nematic order is $C_2$, not $C_3$. The tier decomposition predicts this; Landau theory alone does not uniquely select between $C_3$ and $C_2$ for $C_6$ systems without knowing the dominant instability channel.</p>
+  </div>
+
+  <div class="block block-conj">
+    <div class="block-label">Prediction 5 · Entropy Partition</div>
+    <p>The entropy released at a $C_4 \to C_2$ nematic transition should reflect the partition $4 \to 2$: the system goes from 4 degenerate orientations to 2, releasing $\Delta S = k_B \ln(4/2) = k_B \ln 2$ per unit cell of nematic order.</p>
+    <p>In URu₂Si₂, the observed entropy at the hidden order transition is $\sim 0.2 R \ln 2$ per formula unit. The factor $0.2$ indicates that only $\sim 20\%$ of the uranium sites participate in the ordering — consistent with a partial Fermi surface gapping (a half-open gate).</p>
+    <p>The specific prediction: in any $C_4 \to C_2$ transition, the <em>maximum</em> entropy per participating site is $k_B \ln 2$ (the logarithm of the ratio $|\I{n}|/|\Ph{n}| = 4/2 = 2$). This should be a universal upper bound, achievable only when the gate failure is complete (all sites participate). Partial gate failure gives a fraction of this bound.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §7 LIMITS ═══════════════ -->
+<section>
+  <h2>§7 &ensp; Limits</h2>
+
+  <div class="block block-rem">
+    <div class="block-label">Scope</div>
+    <p><strong>What is claimed:</strong></p>
+    <p>(a) &ensp; The $\tau/\delta$ divergence (Theorem 3, <em>Tier Decomposition</em>) predicts $C_4 \to C_2$ symmetry breaking with $|\Ph{n}| = 2$ as the residual cardinality. This is an arithmetic consequence of the partition $|\I{n}| = 4$, $|\Ph{n}| = 2$, $|\Om{n}| = 1$.</p>
+    <p>(b) &ensp; Four families of correlated electron systems — URu₂Si₂, iron pnictides, cuprates, kagome metals — exhibit $C_4 \to C_2$ (or $C_6 \to C_2$) breaking, across different mechanisms, temperatures, and chemistries. The pattern is universal.</p>
+    <p>(c) &ensp; The group theory of $C_4$ restricts breaking to $C_2$ or $C_1$ (not $C_3$). The $B_{1g}$ ($d$-wave nematic) channel selects $C_2$ specifically. The tier decomposition's phase map assigns the $B_{1g}$ character to the structural extension position $3n+1$.</p>
+    <p>(d) &ensp; Five testable predictions are formulated: hidden order as field complement, nematic susceptibility exponents, cascade signature in kagome metals, absence of $C_3$ residual in tetragonal systems, and entropy partition bound.</p>
+    <p><strong>What is not claimed:</strong></p>
+    <p>(a) &ensp; That the tier decomposition "solves" the hidden order problem. The hidden order of URu₂Si₂ requires identifying the specific microscopic order parameter — a task for condensed matter theory, not abstract algebra. The tier decomposition predicts the <em>symmetry channel</em> ($C_2$, $B_{1g}$) and suggests the order lives in the non-rotational complement. It does not derive the microscopic Hamiltonian.</p>
+    <p>(b) &ensp; That the 4-2-1 partition is the <em>cause</em> of nematicity. The partition is an arithmetic structure; nematicity is a physical phenomenon driven by electron-electron interactions, Fermi surface geometry, and spin-orbit coupling. The claim is structural convergence — the same pattern appears in both frameworks — not causal derivation.</p>
+    <p>(c) &ensp; That every $C_4 \to C_2$ transition in nature is an instance of the $\tau/\delta$ divergence. External fields, substrate strain, and other explicit symmetry-breaking mechanisms can produce $C_4 \to C_2$ without any internal instability. The prediction applies only to <em>spontaneous</em> symmetry breaking from internal correlations.</p>
+    <p>(d) &ensp; That Prediction 3 (cascade ratio $T_{\text{chiral}}/T_{\text{nematic}} \approx 1/2$) is quantitatively correct. The observed ratio in CsV₃Sb₅ ($\sim 0.86$) deviates from the naive prediction. This may indicate that gate failures are correlated, or that the simple cardinality ratio is too crude. The prediction is offered as a starting point for refinement, not as a final result.</p>
+  </div>
+</section>
+
+<div class="divider">⊙</div>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav style="margin: 40px 0; padding: 20px 24px; border: 1px solid var(--faint); border-radius: 3px;">
+  <div style="font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); margin-bottom: 14px;">Related Documents</div>
+  <p><a href="scale_correspondence.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">The Scale Correspondence</a> — Tier recursion as renormalization group flow</p>
+  <p><a href="finite_gate.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">The Finite Gate</a> — $i$ as the stepdown from energy to power, from infinity to finite</p>
+  <p><a href="processual_power.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">Processual Power</a> — Energy, time, and the quarter-turn that makes flow coherent</p>
+  <p><a href="tier_decomposition.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">The Tier Decomposition Theorem</a> — Algebraic foundation of the circumpunct's structural tiers</p>
+  <p><a href="spin_ladder.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">The Spin Ladder Correspondence</a> — Structural correspondence between tier decomposition and quantum spin</p>
+  <p><a href="triadic_morphogenesis.html" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--faint);">Triadic Morphogenesis</a> — Interactive geometric visualization of the supershape bridge</p>
+</nav>
+
+<!-- ═══════════════ FOOTNOTE ═══════════════ -->
+<div class="footnote">
+  <p>This document formulates the $C_4 \to C_2$ prediction of the $\tau/\delta$ divergence and tests it against four families of correlated electron systems. For the algebraic foundation, see <em><a href="tier_decomposition.html" style="color: var(--dim); text-decoration: none; border-bottom: 1px solid var(--very-faint);">The Tier Decomposition Theorem</a></em>. For the finite gate thesis, see <em><a href="finite_gate.html" style="color: var(--dim); text-decoration: none; border-bottom: 1px solid var(--very-faint);">The Finite Gate</a></em>. For the scale correspondence, see <em><a href="scale_correspondence.html" style="color: var(--dim); text-decoration: none; border-bottom: 1px solid var(--very-faint);">The Scale Correspondence</a></em>. For the processual power relation, see <em><a href="processual_power.html" style="color: var(--dim); text-decoration: none; border-bottom: 1px solid var(--very-faint);">Processual Power</a></em>.</p>
+</div>
+
+</div>
+</body>
+</html>
