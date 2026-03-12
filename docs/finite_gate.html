@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Finite Gate</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$']],
+    displayMath: [['$$','$$']],
+    macros: {
+      T: ['\\mathcal{T}_{#1}', 1],
+      I: ['\\mathcal{I}_{#1}', 1],
+      Ph: ['\\Phi_{#1}', 1],
+      Om: ['\\Omega_{#1}', 1],
+      PP: '\\mathcal{P}',
+      half: '\\tfrac{1}{2}',
+      thalf: '\\tfrac{3}{2}',
+      fhalf: '\\tfrac{5}{2}',
+      Z: '\\mathbb{Z}',
+      N: '\\mathbb{N}',
+      R: '\\mathbb{R}',
+      C: '\\mathbb{C}',
+      H: '\\mathbb{H}',
+      set: ['\\{\\,#1\\,\\}', 1],
+      ket: ['|\\,#1\\,\\rangle', 1],
+      bra: ['\\langle\\,#1\\,|', 1]
+    }
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --very-faint: #2A2820;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--faint) var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w  { color: var(--gold); }
+.s  { color: var(--pink); }
+.m  { color: var(--green); }
+.b  { color: var(--cyan); }
+.p  { color: var(--purple); }
+.d  { color: var(--dim); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 760px; margin: 0 auto; padding: 80px 30px 140px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 70px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header h1 { font-size: 36px; font-weight: 500; color: var(--gold); letter-spacing: 1px; margin-bottom: 6px; }
+.header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; margin-bottom: 4px; }
+.header .formula { font-size: 28px; color: var(--gold); margin: 20px 0 8px; letter-spacing: 2px; }
+.header .byline { font-size: 14px; color: var(--faint); margin-top: 20px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+.block {
+  margin: 32px 0;
+  padding: 20px 24px;
+  border-radius: 3px;
+  position: relative;
+}
+
+.block-def { border-left: 3px solid var(--gold); background: rgba(184, 160, 96, 0.04); }
+.block-prop { border-left: 3px solid var(--pink); background: rgba(232, 138, 175, 0.04); }
+.block-proof { border-left: 3px solid var(--dim); background: rgba(255, 255, 255, 0.015); }
+.block-cor { border-left: 3px solid var(--cyan); background: rgba(77, 160, 200, 0.04); }
+.block-thm { border-left: 3px solid var(--green); background: rgba(77, 184, 160, 0.04); }
+.block-rem { border-left: 3px solid var(--purple); background: rgba(155, 122, 216, 0.04); }
+.block-ax { border-left: 3px solid var(--gold-dim); background: rgba(136, 120, 80, 0.04); }
+.block-conj { border-left: 3px solid #C87D4D; background: rgba(200, 125, 77, 0.04); }
+
+.block-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.block-def .block-label { color: var(--gold); }
+.block-prop .block-label { color: var(--pink); }
+.block-proof .block-label { color: var(--dim); }
+.block-cor .block-label { color: var(--cyan); }
+.block-thm .block-label { color: var(--green); }
+.block-rem .block-label { color: var(--purple); }
+.block-ax .block-label { color: var(--gold-dim); }
+.block-conj .block-label { color: #C87D4D; }
+
+.block p { margin-bottom: 10px; }
+.block p:last-child { margin-bottom: 0; }
+
+.qed { text-align: right; color: var(--dim); font-size: 15px; margin-top: 6px; }
+
+mjx-container[display="true"] { margin: 18px 0 !important; }
+
+section { margin-bottom: 55px; }
+section > h2 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  padding-top: 16px;
+  color: var(--warm);
+}
+
+p { margin-bottom: 16px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+.dim-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 17px;
+}
+.dim-table th {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--faint);
+}
+.dim-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--very-faint);
+  vertical-align: top;
+}
+.dim-table tr:last-child td { border-bottom: none; }
+
+.cell-struct { color: var(--gold); }
+.cell-proc { color: var(--purple); }
+.cell-i { color: var(--pink); }
+.cell-phi { color: var(--green); }
+.cell-omega { color: var(--cyan); }
+
+.footnote {
+  font-size: 15px;
+  color: var(--dim);
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--very-faint);
+  line-height: 1.7;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="header">
+  <h1>The Finite Gate</h1>
+  <div class="subtitle">$i$ as the stepdown from energy to power, from infinity to finite</div>
+  <div class="formula">$E \;\xrightarrow{\;\;i\;\;}\; P$</div>
+  <div class="byline">Ashman Roonz · Circumpunct Theory &ensp; ⊙ = Φ(•, ○)</div>
+</div>
+
+<!-- ═══════════════ §0 THE CLAIM ═══════════════ -->
+<section>
+  <h2>§0 &ensp; The Claim</h2>
+
+  <div class="block block-def">
+    <div class="block-label">The Finite Gate Thesis</div>
+    $$\boxed{\;i \text{ is the operator that converts unbounded energy into bounded power.}\;}$$
+    <p><strong>Power is energy stepped through the aperture.</strong></p>
+    <p>Energy ($E$) is unbounded — a conserved total with no intrinsic scale. Power ($P = E/t$) is bounded — a rate constrained to the here and now. Between them sits $i$: the quarter-turn that narrows the infinite into the finite without destroying it. In the processual power relation $\PP = E/(i \cdot t)$, the $i$ in the denominator is not a mathematical convenience. It is the <em>gate</em>.</p>
+  </div>
+
+  <p>This document argues a single thesis: the imaginary unit $i$, wherever it appears between energy and time in physics, is performing an act of <strong>stepdown</strong> — compressing an unbounded quantity into a bounded flow. This is what the circumpunct's aperture (•) does: it narrows without destroying, constrains without annihilating, makes the infinite finite while preserving its content.</p>
+
+  <p>§1 establishes that energy is unbounded. §2 establishes that power is bounded. §3 identifies $i$ as the operator that bridges them. §4 connects this to the aperture architecture of the circumpunct. §5 traces the stepdown through renormalization and scale physics. §6 shows how the $\tau/\delta$ divergence predicts where the gate breaks. §7 draws the limits.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §1 WHY ENERGY IS UNBOUNDED ═══════════════ -->
+<section>
+  <h2>§1 &ensp; Why Energy Is Unbounded</h2>
+
+  <p>Energy is the conserved quantity associated with time-translation symmetry (Noether's theorem). It does not expire, deplete, or resolve. It transforms — kinetic to potential, electromagnetic to thermal, mass to radiation — but the total is invariant. This invariance is what makes energy <em>unbounded in scope</em>: it belongs to no particular moment, no particular location, no particular form.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 1 · The Hamiltonian Spectrum</div>
+    <p>The Hamiltonian $H$ of a quantum system has eigenvalues $\set{E_n}$ that extend, in principle, to infinity. Even for a bound system (hydrogen atom, harmonic oscillator), the spectrum accumulates toward a continuum:</p>
+    $$E_n \;=\; -\frac{13.6 \text{ eV}}{n^2} \quad\to\quad 0^- \text{ as } n \to \infty$$
+    <p>The bound states crowd toward the ionization threshold; beyond it lies a continuous spectrum extending to $+\infty$. The Hamiltonian does not bound its own eigenvalues. Energy, as an operator, has no ceiling.</p>
+  </div>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 2 · Energy as the Whole</div>
+    <p>In the tier decomposition, the whole (⊙) precedes differentiation. Before the tier partitions into skeleton ($\I{n}$), field ($\Ph{n}$), and closure ($\Om{n}$), the whole is undivided — it has no internal structure, no finite parts, no bounded components. It is the total from which partition extracts finitude.</p>
+    <p>Energy plays exactly this role in physics. The total energy $E$ of a closed system is a single number — undifferentiated, conserved, belonging to the system as a whole. It becomes structured only when decomposed: kinetic + potential, real + reactive, rest mass + momentum. Before decomposition, $E$ is the undivided whole.</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark · Unbounded Does Not Mean Infinite</div>
+    <p>A specific system has a specific energy, which is a finite number. "Unbounded" here means: (a) the spectrum of possible energies has no intrinsic upper bound, (b) energy is not localized in time — it is a conserved global quantity, and (c) energy does not, by itself, do anything. It is potential, not act. The act requires a gate.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §2 WHY POWER IS BOUNDED ═══════════════ -->
+<section>
+  <h2>§2 &ensp; Why Power Is Bounded</h2>
+
+  <p>Power is energy per unit time: $P = dE/dt$. This simple ratio changes everything. Where energy is a conserved total, power is a <em>rate</em> — it is energy constrained to a particular moment, a particular duration, a particular flow. Power is energy made local.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 3 · The Constraints on Power</div>
+    <p>Physical power is bounded by at least three independent constraints:</p>
+    <p><strong>(a) Thermodynamic:</strong> The Carnot efficiency $\eta = 1 - T_C/T_H$ bounds the fraction of heat that can be converted to work per cycle. No engine can deliver power at $100\%$ efficiency. Every real flow loses something to mediation.</p>
+    <p><strong>(b) Relativistic:</strong> The Schwinger limit $P_S = m^2 c^5 / (4\alpha\hbar) \approx 10^{29}$ W bounds the electromagnetic power density before the vacuum itself breaks down into particle-antiparticle pairs. Even the void has a maximum throughput.</p>
+    <p><strong>(c) Quantum:</strong> The energy-time uncertainty relation $\Delta E \cdot \Delta t \geq \hbar/2$ bounds how quickly a system can transition between energy states. Faster power delivery requires greater energy uncertainty — the gate cannot be forced open without cost.</p>
+    <p>Energy obeys none of these constraints. A photon carries energy $E = h\nu$ with no upper bound on $\nu$. But the <em>rate</em> at which that energy can be extracted, transferred, or converted is always finite, always bounded, always local.</p>
+  </div>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 4 · Power as the Partitioned Tier</div>
+    <p>In the tier decomposition, the partitioned tier $\T{n} = \I{n} \sqcup \Ph{n} \sqcup \Om{n}$ is finite: exactly 7 dimensions, exactly 3 roles, exactly 1 closure. The partition <em>is</em> the act of bounding — taking the undivided whole and distributing it into discrete, countable, exhaustive parts.</p>
+    <p>Power is the partitioned form of energy. Where $E$ is the whole, $P$ (real), $Q$ (reactive), and $|S|$ (apparent) are the tier roles of energy flow. The act of dividing $E$ by $t$ — converting the conserved total into a rate — is the act of partition. Power is energy that has been through the gate.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §3 THE GATE BETWEEN THEM ═══════════════ -->
+<section>
+  <h2>§3 &ensp; $i$ as the Gate</h2>
+
+  <p>If energy is unbounded and power is bounded, something must mediate the transition. In every physical context where energy becomes flow, that mediator is $i$.</p>
+
+  <div class="block block-def">
+    <div class="block-label">Definition · The Stepdown Operator</div>
+    <p>Define the <strong>stepdown</strong> as the operation that converts a conserved, time-independent, unbounded quantity (energy) into a local, time-dependent, bounded quantity (power). In mathematical terms:</p>
+    $$E \;\xrightarrow{\;\;/\,(i \cdot t)\;\;}\; \PP$$
+    <p>The division by $t$ distributes energy across duration. The division by $i$ quarter-turns it from the real (structural, static) axis into the imaginary (processual, dynamic) plane. Both operations are necessary: $E/t$ alone gives classical power (real, dissipative); $E/(i \cdot t)$ gives processual power (complex, coherent).</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · The Stepdown Across Physics</div>
+    <p>The stepdown operates in every context where $i$ mediates between energy and time:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>Context</th><th>Unbounded ($E$)</th><th>Gate ($i$)</th><th>Bounded ($P$)</th>
+      </tr>
+      <tr>
+        <td class="cell-proc">Quantum mechanics</td>
+        <td>Hamiltonian spectrum $\set{E_n}$</td>
+        <td>$i\hbar\,\partial/\partial t$</td>
+        <td>Unitary time evolution $e^{-iHt/\hbar}$</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">AC circuits</td>
+        <td>Apparent power $|S|$</td>
+        <td>Impedance phase $e^{i\phi}$</td>
+        <td>Real power $P = |S|\cos\phi$</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">Wick rotation</td>
+        <td>Euclidean partition $Z = \text{Tr}\,e^{-H\tau}$</td>
+        <td>$t \to -i\tau$</td>
+        <td>Lorentzian dynamics $e^{-iHt}$</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">Fourier analysis</td>
+        <td>Frequency spectrum $\hat{f}(\omega)$</td>
+        <td>$e^{i\omega t}$</td>
+        <td>Time-domain signal $f(t)$</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">Path integrals</td>
+        <td>Sum over all histories</td>
+        <td>$e^{iS/\hbar}$</td>
+        <td>Transition amplitude</td>
+      </tr>
+    </table>
+
+    <p>In every row, the left column is unbounded (a spectrum, a sum, a total), the right column is bounded (a local evolution, a delivered quantity, a measurable amplitude), and the middle column is the $i$-operation that converts one to the other.</p>
+  </div>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 5 · What Happens Without $i$</div>
+    <p>The stepdown's necessity is revealed by what happens when $i$ is removed:</p>
+    <p><strong>Without $i$ in Schrödinger:</strong> $\partial\psi/\partial t = -(H/\hbar)\psi$. Solution: $\psi(t) = e^{-Ht/\hbar}\psi(0)$. This is <em>exponential decay</em> — not flow, but dissolution. Energy doesn't become power; it vanishes. The wavefunction collapses to the ground state and dies. No coherence, no oscillation, no process.</p>
+    <p><strong>Without $i$ in AC power:</strong> $S = P$ (pure resistance). No reactive component, no energy storage, no oscillation. Every joule delivered is immediately consumed. The circuit has no memory, no mediation, no sustained field. Power without $i$ is power without life — a one-way burn.</p>
+    <p><strong>Without $i$ in Wick rotation:</strong> No connection between dynamics and statics. Quantum mechanics and statistical mechanics become unrelated theories. The bridge between process and structure is severed.</p>
+    <p>In each case, removing $i$ doesn't merely change the answer — it destroys the <em>category</em>. Without the gate, the unbounded cannot become bounded. It can only dissipate or remain forever potential.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §4 THE APERTURE ARCHITECTURE ═══════════════ -->
+<section>
+  <h2>§4 &ensp; The Aperture Architecture</h2>
+
+  <p>The circumpunct ⊙ = Φ(•, ○) contains three elements: aperture (•), field (Φ), and boundary (○). The finite gate thesis identifies $i$ with the aperture — and this identification is not metaphorical. It is structural.</p>
+
+  <div class="block block-def">
+    <div class="block-label">Definition · The Aperture as Half-Dimension</div>
+    <p>In the tier decomposition, the aperture occupies dimension $D = 3n + \half$ — the first processual dimension of each tier. Its dimensionality is $\half$: half-integer, half-step, half-way between the structural ground ($3n$, integer, real) and the first structural extension ($3n + 1$, integer, real).</p>
+    <p>The aperture is <em>half a dimension</em>. It is the narrowing — the point where a full structural degree of freedom is compressed into a processual half-step. This is the geometric content of the stepdown: the infinite (full-dimensional, real, structural) passes through a half-dimensional bottleneck (processual, imaginary) to emerge as bounded flow.</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · The Circumpunct as Stepdown Architecture</div>
+    <p>Read ⊙ = Φ(•, ○) as a stepdown diagram:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>Symbol</th><th>Role</th><th>Stepdown Function</th><th>Physical Analogue</th>
+      </tr>
+      <tr>
+        <td class="cell-struct"><strong>⊙</strong></td>
+        <td class="cell-struct">The whole</td>
+        <td>The undifferentiated total — energy before partition</td>
+        <td>Total energy $E$, the Hamiltonian, the conserved quantity</td>
+      </tr>
+      <tr>
+        <td class="cell-i"><strong>•</strong></td>
+        <td class="cell-i">Aperture ($i$)</td>
+        <td>The gate — narrows the unbounded into the processual plane</td>
+        <td>The $i$ in $H = i\hbar\partial_t$, the impedance phase, the Wick angle</td>
+      </tr>
+      <tr>
+        <td class="cell-phi"><strong>Φ</strong></td>
+        <td class="cell-phi">Field</td>
+        <td>The mediation — sustains the flow between structural pulses</td>
+        <td>Reactive power $Q$, the mediating oscillation</td>
+      </tr>
+      <tr>
+        <td class="cell-omega"><strong>○</strong></td>
+        <td class="cell-omega">Boundary</td>
+        <td>The seal — bounds the flow into a finite, measurable whole</td>
+        <td>Apparent power $|S|$, the conservation constraint $|S|^2 = P^2 + Q^2$</td>
+      </tr>
+    </table>
+
+    <p>The whole (⊙) contains unbounded energy. The aperture (•) steps it down through $i$. The field (Φ) mediates the resulting flow. The boundary (○) seals it into a finite quantity. <strong>The circumpunct is a stepdown transformer.</strong></p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark · Why Half a Dimension</div>
+    <p>A full dimension ($D \in \Z$) is a complete structural degree of freedom — a direction in which a system can extend, rotate, or translate. A half-dimension ($D \in \Z + \half$) is a <em>processual</em> degree of freedom — a direction in which a system can <em>become</em> without fully extending.</p>
+    <p>The aperture's half-dimensionality is the geometric reason the gate works. A full-dimensional gate would not narrow — it would extend. A zero-dimensional gate would block — it would not transmit. The half-dimension is the unique intermediate: it narrows without blocking, constrains without destroying, converts without losing. This is why $i$ — whose square is $-1$, whose powers cycle through four states, whose real part is zero — is the natural occupant of the half-dimensional position. It is the operator that <em>turns</em> without <em>extending</em>.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §5 THE STEPDOWN ACROSS SCALES ═══════════════ -->
+<section>
+  <h2>§5 &ensp; The Stepdown Across Scales</h2>
+
+  <p>The finite gate does not operate only at the level of individual equations. It is the architecture of how physics itself organizes the transition from high energy to low energy, from the microscopic to the macroscopic, from the unbounded quantum vacuum to the bounded classical world.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 6 · Renormalization as Stepdown</div>
+    <p>The renormalization group (RG) flow describes how physical theories change as the energy scale $\mu$ decreases — from the ultraviolet (UV, high energy, short distance) to the infrared (IR, low energy, long distance):</p>
+    $$\mu \frac{d\,g}{d\mu} \;=\; \beta(g)$$
+    <p>In the UV, the theory is unbounded: all modes contribute, all fluctuations are active, the effective degrees of freedom are maximal. In the IR, the theory is bounded: only the lowest modes survive, fluctuations are integrated out, the effective description is finite and local.</p>
+    <p>The RG flow is a stepdown from infinite to finite. The UV is the whole (⊙ — all modes, all energies). The IR is the partitioned tier ($\T{n}$ — finitely many effective degrees of freedom). The flow from UV to IR is the aperture: it narrows the unbounded into the bounded.</p>
+    <p>This is not a metaphor. The mathematical operation of integrating out high-energy modes <em>is</em> a coarse-graining — a literal narrowing of the configuration space from infinite-dimensional to finite-dimensional. The aperture is the RG flow itself.</p>
+  </div>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 7 · Decoherence as Gate Closure</div>
+    <p>Quantum decoherence describes the transition from quantum superposition (unbounded possibility) to classical definiteness (bounded actuality). A quantum state interacting with its environment undergoes:</p>
+    $$\rho \;\to\; \sum_k \;\ket{k}\bra{k}\,\rho\,\ket{k}\bra{k}$$
+    <p>The off-diagonal elements — the coherences, the $i$-bearing terms — are suppressed. What remains is a classical probability distribution: real, diagonal, bounded.</p>
+    <p>In the stepdown language: the quantum state is the unbounded whole (superposition of all possibilities). The environment acts as the aperture — it selects which degrees of freedom survive. The decohered state is the bounded tier — a finite number of classical alternatives. Decoherence is the gate <em>closing</em>: the $i$-terms are absorbed into the environment, and what passes through is the real, bounded, structural residue.</p>
+  </div>
+
+  <div class="block block-cor">
+    <div class="block-label">Corollary · The Hierarchy of Gates</div>
+    <p>The stepdown is not a single event. It is a <em>cascade</em> — a recursive narrowing at every scale:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>Scale</th><th>Unbounded (Before Gate)</th><th>Bounded (After Gate)</th>
+      </tr>
+      <tr>
+        <td class="cell-proc">Planck → QFT</td>
+        <td>All possible geometries (quantum gravity)</td>
+        <td>Fixed spacetime + quantum fields</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">QFT → QM</td>
+        <td>Infinite field modes</td>
+        <td>Finite particle states</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">QM → Classical</td>
+        <td>Superposition of all paths</td>
+        <td>Classical trajectory</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">Micro → Macro</td>
+        <td>$10^{23}$ molecular degrees of freedom</td>
+        <td>Thermodynamic state ($T$, $P$, $V$)</td>
+      </tr>
+    </table>
+
+    <p>At each level, the same architecture operates: an unbounded space is narrowed through a gate into a bounded description. The tier decomposition's recursive structure ($\T{0} \subset \T{1} \subset \T{2} \subset \cdots$) mirrors this: each tier is a gate from the previous tier's whole to the next tier's partition. The stepdown is fractal.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §6 WHERE THE GATE BREAKS ═══════════════ -->
+<section>
+  <h2>§6 &ensp; Where the Gate Breaks</h2>
+
+  <p>If $i$ is the gate between unbounded and bounded, the $\tau/\delta$ divergence (Theorem 3, <em>The Tier Decomposition Theorem</em>) predicts exactly where the gate breaks — and the breakage has a specific, testable signature.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Observation 8 · The Divergence as Gate Failure</div>
+    <p>Recall: $\tau^4(3n) = 3n$ but $\delta^4(3n) = 3n + 2 \in \Ph{n}$. The rotation operator $\tau$ completes a full cycle and returns to ground. The traversal operator $\delta$ overshoots into the field.</p>
+    <p>In the stepdown language: $\tau$ is a <em>successful</em> gate — energy passes through four phase positions and returns, bounded, to its origin. $\delta$ is a <em>broken</em> gate — the continuous half-step accumulates past the closure point and enters the mediating field. The energy that was supposed to be bounded has leaked into the reactive regime.</p>
+    <p>The divergence point — the fourth step where $\tau$ and $\delta$ part ways — is the <strong>gate failure threshold</strong>. Beyond it, the stepdown from unbounded to bounded is incomplete, and the excess populates $\Ph{n}$.</p>
+  </div>
+
+  <div class="block block-conj">
+    <div class="block-label">Conjecture · C₄ → C₂ Symmetry Breaking as Gate Failure</div>
+    <p>The $\tau/\delta$ divergence predicts a specific pattern: when a system with fourfold ($C_4$) symmetry is driven past its gate threshold, it breaks to twofold ($C_2$) symmetry — because $|\Ph{n}| = 2$. The excess does not scatter arbitrarily; it populates exactly the 2-element field complement.</p>
+    <p>This prediction is testable. In condensed matter physics, $C_4 \to C_2$ symmetry breaking occurs in:</p>
+    <p><strong>(a) URu₂Si₂:</strong> A heavy-fermion compound that undergoes a mysterious phase transition at 17.5 K. The order parameter has eluded identification for over 30 years — the "hidden order" problem. What is known: the transition breaks $C_4$ body-centred tetragonal symmetry to $C_2$. The gate failure thesis predicts this is a $\tau/\delta$ divergence: the system's fourfold rotational symmetry is driven past the gate threshold, and the excess populates the twofold field.</p>
+    <p><strong>(b) Iron pnictides:</strong> Nematic order in iron-based superconductors breaks $C_4$ to $C_2$ above the magnetic ordering temperature. The nematic phase is a field-mediated state — a reactive regime where the system oscillates between two orientations without committing to either.</p>
+    <p><strong>(c) Cuprate superconductors:</strong> The pseudogap regime shows signatures of $C_4 \to C_2$ breaking (Pomeranchuk instability). The pseudogap is not a conventional order parameter — it is a <em>partial</em> gap, a regime where some but not all of the Fermi surface is gated. A half-open gate.</p>
+    <p>In each case, the prediction is: the broken symmetry is $C_2$ (not $C_3$, not $C_1$) because the field complement has exactly 2 elements. The "hidden" order parameter is the reactive field $\Ph{n}$ — the mediating oscillation that emerges when the structural gate ($\I{n}$, $C_4$) fails to close.</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark · The Gate Does Not Annihilate</div>
+    <p>A crucial feature of the $\tau/\delta$ divergence: the excess energy does not vanish. It enters $\Ph{n}$ — the field, the mediating regime. The gate does not destroy what it cannot bound; it <em>redirects</em> it into oscillation. This is the physical content of reactive power: energy that the gate could not step down into structural work, so it circulates, mediates, sustains. The field is what catches what the gate misses.</p>
+    <p>This is also the circumpunct's answer to entropy. The second law says that usable energy (exergy) decreases in closed systems. The finite gate says: what exits the structural channel ($\I{n}$) doesn't disappear — it enters the mediating channel ($\Ph{n}$). Entropy is not loss; it is redirection from skeleton to field, from real power to reactive power, from the bounded to the circulating.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §7 THE ALGEBRA OF THE GATE ═══════════════ -->
+<section>
+  <h2>§7 &ensp; The Algebra of the Gate</h2>
+
+  <p>The stepdown is not merely descriptive. It has algebraic content that can be stated precisely.</p>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · The Four Powers of $i$</div>
+    <p>The gate cycles through four states before returning to the original:</p>
+    $$i^0 = 1 \quad\to\quad i^1 = i \quad\to\quad i^2 = -1 \quad\to\quad i^3 = -i \quad\to\quad i^4 = 1$$
+    <p>Each power corresponds to a phase of the stepdown:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>Power</th><th>Value</th><th>Stepdown Phase</th><th>Tier Position</th>
+      </tr>
+      <tr>
+        <td class="cell-i">$i^0$</td>
+        <td class="cell-struct">$+1$ (real, positive)</td>
+        <td>Ground — energy at rest, structural, unbounded potential</td>
+        <td>$3n$ — structural ground of $\I{n}$</td>
+      </tr>
+      <tr>
+        <td class="cell-i">$i^1$</td>
+        <td class="cell-proc">$+i$ (imaginary, positive)</td>
+        <td>Gate opens — energy enters the processual plane, stepdown begins</td>
+        <td>$3n + \half$ — aperture of $\I{n}$</td>
+      </tr>
+      <tr>
+        <td class="cell-i">$i^2$</td>
+        <td class="cell-struct">$-1$ (real, negative)</td>
+        <td>Inversion — energy is structurally negated, work is extracted</td>
+        <td>$3n + 1$ — structural extension of $\I{n}$</td>
+      </tr>
+      <tr>
+        <td class="cell-i">$i^3$</td>
+        <td class="cell-proc">$-i$ (imaginary, negative)</td>
+        <td>Gate closes — energy exits the processual plane, stepdown completes</td>
+        <td>$3n + \thalf$ — closing processual position of $\I{n}$</td>
+      </tr>
+    </table>
+
+    <p>The full cycle $i^0 \to i^1 \to i^2 \to i^3 \to i^4 = i^0$ is the complete stepdown: energy → gate opens → work extracted → gate closes → return to ground. This is one period of the power cycle. It is one rotation of $\tau$. It is one tier of the processual flow.</p>
+    <p>And the divergence says: if the flow is continuous ($\delta$) rather than cyclic ($\tau$), the fourth step does not return to ground. The gate does not close. The flow leaks into $\Ph{n}$, and the cycle becomes a spiral.</p>
+  </div>
+
+  <div class="block block-cor">
+    <div class="block-label">Corollary · The Gate as Quarter-Turn</div>
+    <p>The stepdown from energy to power is exactly a quarter-turn:</p>
+    $$\PP \;=\; \frac{E}{i \cdot t} \;=\; \frac{E}{t} \cdot \frac{1}{i} \;=\; \frac{E}{t} \cdot (-i) \;=\; -i \cdot P$$
+    <p>Processual power is classical power rotated by $-\pi/2$ (a quarter-turn clockwise in the complex plane). This is the minimal rotation that converts a real (structural) quantity into an imaginary (processual) one. No smaller rotation suffices — a half-turn ($-1$) stays real; an eighth-turn is not algebraically closed. The quarter-turn is the <em>smallest gate</em> that achieves the stepdown.</p>
+    <p>This is why the aperture is $\half$ a dimension and not $\frac{1}{3}$ or $\frac{1}{4}$: the quarter-turn divides the full cycle ($2\pi$) into four parts, and each part spans half an integer dimension ($\half = 1/2$). The aperture's dimensionality encodes the gate's angular width.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §8 THE COMPLETE PICTURE ═══════════════ -->
+<section>
+  <h2>§8 &ensp; The Complete Picture</h2>
+
+  <div class="block block-def">
+    <div class="block-label">The Finite Gate — Synthesis</div>
+    <p>Gather the threads:</p>
+    <p><span class="w wb">Energy</span> is the undifferentiated whole — conserved, unbounded, belonging to no particular moment. It is ⊙ before partition.</p>
+    <p><span class="s wb">The aperture</span> ($i$, •, $D = n + \half$) is the gate — the half-dimensional narrowing through which the unbounded enters the processual plane. It quarter-turns energy from real to imaginary, from potential to flow, from infinite to finite. It narrows without destroying.</p>
+    <p><span class="m wb">The field</span> (Φ, reactive power $Q$) is the mediating oscillation — the energy that the gate redirects into circulation rather than structural work. It sustains the flow between the structural pulses. It catches what the gate cannot bound.</p>
+    <p><span class="b wb">The boundary</span> (○, apparent power $|S|$) is the seal — the conservation constraint that binds real and reactive into a finite, measurable whole. It is the closure that makes the stepdown complete.</p>
+    <p><span class="p wb">Power</span> is energy that has been through the gate:</p>
+    $$\PP \;=\; \frac{E}{i \cdot t} \;=\; \underbrace{P}_{\text{structural work}} + \underbrace{iQ}_{\text{processual mediation}} \;=\; |S|\,e^{i\phi}$$
+    <p>The formula says: take the unbounded ($E$), pass it through the aperture ($i$), distribute it across time ($t$), and what emerges is a bounded flow decomposed into structure ($P$) and process ($Q$), sealed by the boundary ($|S|$). <strong>This is the circumpunct.</strong></p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §9 LIMITS ═══════════════ -->
+<section>
+  <h2>§9 &ensp; Limits</h2>
+
+  <div class="block block-rem">
+    <div class="block-label">Scope</div>
+    <p><strong>What is claimed:</strong></p>
+    <p>(a) &ensp; Energy is unbounded (spectrum, conservation, scope); power is bounded (rate, constraint, locality). This is standard physics, not a new claim.</p>
+    <p>(b) &ensp; In every major physical context where $i$ appears between energy and time, it performs the same structural role: converting an unbounded quantity into a bounded flow. This is an organizational observation.</p>
+    <p>(c) &ensp; The circumpunct architecture (aperture → field → boundary) maps onto the stepdown architecture (gate → mediation → seal) with consistent role assignments and correct cardinalities.</p>
+    <p>(d) &ensp; The $\tau/\delta$ divergence predicts that gate failure produces $C_4 \to C_2$ symmetry breaking, and this prediction matches observed transitions in URu₂Si₂, iron pnictides, and cuprate superconductors.</p>
+    <p><strong>What is not claimed:</strong></p>
+    <p>(a) &ensp; That $i$ is "literally" the aperture in any ontological sense. The identification is structural: $i$ and the aperture play the same role in their respective frameworks. Whether they are "the same thing" is a question for metaphysics, not mathematics.</p>
+    <p>(b) &ensp; That the renormalization group or decoherence are "explained by" the circumpunct. These are rigorously established physical theories. The stepdown provides a structural lens that reveals their shared architecture — convergence, not derivation.</p>
+    <p>(c) &ensp; That every instance of $i$ in mathematics is a stepdown. The imaginary unit appears in complex analysis, algebraic geometry, and number theory with no necessary connection to the energy-power transition. The claim is scoped to the physics of energy flow.</p>
+    <p>(d) &ensp; That the $C_4 \to C_2$ prediction constitutes a derivation from first principles. The tier decomposition predicts the pattern ($|I| = 4$, $|\Phi| = 2$); the specific materials and mechanisms require condensed matter physics. The contribution is the prediction of the <em>pattern</em>, not the microscopic Hamiltonian.</p>
+  </div>
+</section>
+
+<div class="divider">⊙</div>
+
+<!-- ═══════════════ FOOTNOTE ═══════════════ -->
+<div class="footnote">
+  <p>This document develops the finite gate thesis: $i$ as the stepdown from unbounded energy to bounded power. For the processual power relation, see <em>Processual Power</em>. For the algebraic foundation, see <em>The Tier Decomposition Theorem</em>. For the quantum mechanical correspondence, see <em>The Spin Ladder Correspondence</em>. For the geometric realization, see <em>Triadic Morphogenesis</em>. For the interpretive framework, see <em>How Reality Is Built</em> and <em>The Two Rhythms</em>.</p>
+</div>
+
+</div>
+</body>
+</html>
