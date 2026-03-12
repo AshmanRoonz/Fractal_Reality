@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Processual Power</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$']],
+    displayMath: [['$$','$$']],
+    macros: {
+      T: ['\\mathcal{T}_{#1}', 1],
+      I: ['\\mathcal{I}_{#1}', 1],
+      Ph: ['\\Phi_{#1}', 1],
+      Om: ['\\Omega_{#1}', 1],
+      PP: '\\mathcal{P}',
+      half: '\\tfrac{1}{2}',
+      thalf: '\\tfrac{3}{2}',
+      fhalf: '\\tfrac{5}{2}',
+      Z: '\\mathbb{Z}',
+      N: '\\mathbb{N}',
+      R: '\\mathbb{R}',
+      C: '\\mathbb{C}',
+      set: ['\\{\\,#1\\,\\}', 1],
+      ket: ['|\\,#1\\,\\rangle', 1]
+    }
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --very-faint: #2A2820;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--faint) var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w  { color: var(--gold); }
+.s  { color: var(--pink); }
+.m  { color: var(--green); }
+.b  { color: var(--cyan); }
+.p  { color: var(--purple); }
+.d  { color: var(--dim); }
+.wb { font-weight: 600; }
+
+.page { max-width: 760px; margin: 0 auto; padding: 80px 30px 140px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 70px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header h1 { font-size: 36px; font-weight: 500; color: var(--gold); letter-spacing: 1px; margin-bottom: 6px; }
+.header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; margin-bottom: 4px; }
+.header .formula { font-size: 28px; color: var(--gold); margin: 20px 0 8px; letter-spacing: 2px; }
+.header .byline { font-size: 14px; color: var(--faint); margin-top: 20px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+.block {
+  margin: 32px 0;
+  padding: 20px 24px;
+  border-radius: 3px;
+  position: relative;
+}
+
+.block-def { border-left: 3px solid var(--gold); background: rgba(184, 160, 96, 0.04); }
+.block-prop { border-left: 3px solid var(--pink); background: rgba(232, 138, 175, 0.04); }
+.block-proof { border-left: 3px solid var(--dim); background: rgba(255, 255, 255, 0.015); }
+.block-cor { border-left: 3px solid var(--cyan); background: rgba(77, 160, 200, 0.04); }
+.block-thm { border-left: 3px solid var(--green); background: rgba(77, 184, 160, 0.04); }
+.block-rem { border-left: 3px solid var(--purple); background: rgba(155, 122, 216, 0.04); }
+.block-ax { border-left: 3px solid var(--gold-dim); background: rgba(136, 120, 80, 0.04); }
+
+.block-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.block-def .block-label { color: var(--gold); }
+.block-prop .block-label { color: var(--pink); }
+.block-proof .block-label { color: var(--dim); }
+.block-cor .block-label { color: var(--cyan); }
+.block-thm .block-label { color: var(--green); }
+.block-rem .block-label { color: var(--purple); }
+.block-ax .block-label { color: var(--gold-dim); }
+
+.block p { margin-bottom: 10px; }
+.block p:last-child { margin-bottom: 0; }
+
+.qed { text-align: right; color: var(--dim); font-size: 15px; margin-top: 6px; }
+
+mjx-container[display="true"] { margin: 18px 0 !important; }
+
+section { margin-bottom: 55px; }
+section > h2 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  padding-top: 16px;
+  color: var(--warm);
+}
+
+p { margin-bottom: 16px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+.dim-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 17px;
+}
+.dim-table th {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--faint);
+}
+.dim-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--very-faint);
+  vertical-align: top;
+}
+.dim-table tr:last-child td { border-bottom: none; }
+
+.cell-struct { color: var(--gold); }
+.cell-proc { color: var(--purple); }
+.cell-i { color: var(--pink); }
+.cell-phi { color: var(--green); }
+.cell-omega { color: var(--cyan); }
+
+.footnote {
+  font-size: 15px;
+  color: var(--dim);
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--very-faint);
+  line-height: 1.7;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="header">
+  <h1>Processual Power</h1>
+  <div class="subtitle">Energy, time, and the quarter-turn that makes flow coherent</div>
+  <div class="formula">$\PP \;=\; E \,/\, (i \cdot t)$</div>
+  <div class="byline">Ashman Roonz · Circumpunct Theory &ensp; ⊙ = Φ(•, ○)</div>
+</div>
+
+<!-- ═══════════════ §0 THE CLAIM ═══════════════ -->
+<section>
+  <h2>§0 &ensp; The Claim</h2>
+
+  <p>Classical physics defines power as:</p>
+  $$P \;=\; \frac{E}{t}$$
+  <p>Energy per unit time. A real scalar. Simple, useful, and incomplete.</p>
+
+  <p>This document proposes that power has a deeper structure — that the relationship between energy and time is mediated by the imaginary unit $i$, the processual dimension of the circumpunct framework:</p>
+
+  <div class="block block-def">
+    <div class="block-label">The Processual Power Relation</div>
+    $$\boxed{\;\PP \;=\; \frac{E}{i \cdot t}\;}$$
+    <p>Power is energy divided by <em>processual time</em> — time as experienced through the quarter-turn of becoming. Since $1/i = -i$, this is equivalent to:</p>
+    $$\PP \;=\; -i\,\frac{E}{t} \;=\; -i\,P$$
+    <p>Classical power $P$ is the real projection. Processual power $\PP$ is the full complex quantity, rotated by $-i$ (a quarter-turn into the processual plane). The formula does not change the magnitude of power; it reveals its <strong>phase structure</strong>.</p>
+  </div>
+
+  <p>This is not a correction to classical mechanics. It is a reframing that exposes what classical mechanics already knows but does not say explicitly: <em>the flow of energy through time is a rotation, and $i$ is what makes it coherent.</em></p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §1 THE EVIDENCE ═══════════════ -->
+<section>
+  <h2>§1 &ensp; Where Physics Already Knows This</h2>
+
+  <p>The claim is not as radical as it appears. Three independent areas of physics already place $i$ between energy and time.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">Evidence 1 · The Schrödinger Equation</div>
+    <p>The fundamental equation of quantum mechanics:</p>
+    $$i\hbar \frac{\partial \psi}{\partial t} \;=\; H\psi$$
+    <p>Rearranging for the energy operator:</p>
+    $$H \;=\; i\hbar\,\frac{\partial}{\partial t}$$
+    <p>Energy <em>is</em> $i$ times the time derivative. The Hamiltonian — the operator whose eigenvalues are the measurable energies of a system — is defined as $i$ acting on the rate of temporal change. Remove the $i$ and the equation describes exponential decay instead of coherent oscillation. The $i$ is what makes quantum states <strong>rotate</strong> rather than dissipate:</p>
+    $$\psi(t) \;=\; e^{-iHt/\hbar}\,\psi(0)$$
+    <p>Time evolution is a rotation in Hilbert space. The $i$ in the exponent is the engine of that rotation.</p>
+  </div>
+
+  <div class="block block-thm">
+    <div class="block-label">Evidence 2 · Complex Power in AC Circuits</div>
+    <p>In electrical engineering, the power delivered by an alternating current is not a real number. It is a complex number:</p>
+    $$S \;=\; P + iQ$$
+    <p>where $P$ is <strong>real power</strong> (watts — energy actually transferred per cycle) and $Q$ is <strong>reactive power</strong> (vars — energy that oscillates back and forth without net transfer).</p>
+    <p>The imaginary part of power is not a mathematical artifact. It is physically measurable: reactive power loads transmission lines, sizes transformers, and determines the power factor of industrial facilities. Engineers pay for it. Grid operators compensate for it. It is as real as real power — it is just processual rather than structural.</p>
+    <p>The full power is recovered through impedance $Z = R + iX$:</p>
+    $$S \;=\; \frac{|V|^2}{Z^*} \;=\; \frac{|V|^2}{R - iX}$$
+    <p>The $i$ in the denominator — inside the impedance — shapes how energy flows. This is $\PP = E/(i \cdot t)$ already at work in every AC circuit on Earth.</p>
+  </div>
+
+  <div class="block block-thm">
+    <div class="block-label">Evidence 3 · The Wick Rotation</div>
+    <p>In quantum field theory, the transition from real time to imaginary time is called the <strong>Wick rotation</strong>:</p>
+    $$t \;\to\; -i\tau$$
+    <p>This transforms the Minkowski metric (real time, oscillatory physics) into the Euclidean metric (imaginary time, statistical physics). Under Wick rotation:</p>
+    <p>• The oscillatory propagator $e^{-iHt}$ becomes the statistical weight $e^{-H\tau}$</p>
+    <p>• Quantum mechanics becomes statistical mechanics</p>
+    <p>• Time evolution becomes thermal equilibrium</p>
+    <p>The Wick rotation says: <strong>the difference between dynamics and statics is exactly $i$.</strong> Multiply time by $-i$ and oscillation becomes decay, flow becomes equilibrium, process becomes structure. The processual power relation encodes the same insight: $i$ in the denominator is what distinguishes active power flow from static energy storage.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §2 THE TIER READING ═══════════════ -->
+<section>
+  <h2>§2 &ensp; The Tier Decomposition Reading</h2>
+
+  <p>The processual power relation is not only confirmed by physics — it is <em>predicted</em> by the tier decomposition.</p>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · $i$ as the Aperture Phase</div>
+    <p>In the tier decomposition (<em>The Tier Decomposition Theorem</em>, Definition 2), the phase map assigns:</p>
+    $$\alpha(3n{+}\half) \;=\; +i$$
+    <p>The dimension $3n{+}\half$ is the first processual dimension of each tier — the <strong>aperture</strong>, the point where structure opens into process. Its phase position is $+i$: a quarter-turn from the structural ground $+1$.</p>
+    <p>In the processual power relation, $i$ occupies the denominator alongside $t$. This says: time flows <em>through the aperture</em>. The $i$ is not a generic rotation — it is specifically the first processual phase position, the opening through which energy enters temporal becoming.</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition · The Three Modes of Power</div>
+    <p>The tier decomposition's three role-families correspond to three modes of power:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>Tier Role</th><th>Cardinality</th><th>Power Mode</th><th>Physical Manifestation</th>
+      </tr>
+      <tr>
+        <td class="cell-i">$\I{n}$ — skeleton</td>
+        <td class="cell-i">4</td>
+        <td class="cell-i"><strong>Real power</strong> ($P$)</td>
+        <td>Energy transferred — does work, builds structure, dissipates</td>
+      </tr>
+      <tr>
+        <td class="cell-phi">$\Ph{n}$ — field</td>
+        <td class="cell-phi">2</td>
+        <td class="cell-phi"><strong>Reactive power</strong> ($Q$)</td>
+        <td>Energy oscillating — mediates, stores, returns without net transfer</td>
+      </tr>
+      <tr>
+        <td class="cell-omega">$\Om{n}$ — closure</td>
+        <td class="cell-omega">1</td>
+        <td class="cell-omega"><strong>Apparent power</strong> ($|S|$)</td>
+        <td>The total bounded magnitude — seals $P$ and $Q$ into a single whole</td>
+      </tr>
+    </table>
+
+    <p>Real power is the structural skeleton: discrete, directional, irreversible. Reactive power is the mediating field: continuous, oscillatory, the dimensions that rotation cannot reach. Apparent power is the closure: the single number that bounds the two modes into a measurable whole.</p>
+  </div>
+
+  <div class="block block-cor">
+    <div class="block-label">Corollary · The Power Triangle is a Tier</div>
+    <p>The AC power triangle relates the three modes:</p>
+    $$|S|^2 \;=\; P^2 + Q^2$$
+    <p>This is the Pythagorean constraint on a right triangle with sides $P$ (real), $Q$ (reactive), and hypotenuse $|S|$ (apparent). The phase angle $\phi$ between real and apparent power satisfies $\cos\phi = P/|S|$.</p>
+    <p>In tier language:</p>
+    <p>• The base $P$ is $\I{n}$: the structural skeleton, the part that clicks through phase positions.</p>
+    <p>• The height $Q$ is $\Ph{n}$: the mediating field, the part that oscillates where rotation cannot reach.</p>
+    <p>• The hypotenuse $|S|$ is $\T{n}$: the whole tier, bounded by $\Om{n}$.</p>
+    <p>• The constraint $|S|^2 = P^2 + Q^2$ is the <strong>compositional conservation law</strong> (Proposition 6, <em>Tier Decomposition</em>): the whole is exactly the union of its irreducible parts, with nothing left over and nothing missing.</p>
+    <p>The power triangle is not merely analogous to a tier. It <em>is</em> a tier — the tier decomposition of energy flow.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §3 THE DIVERGENCE IN POWER ═══════════════ -->
+<section>
+  <h2>§3 &ensp; The Divergence in Power</h2>
+
+  <p>The centerpiece of the tier decomposition is the Rotation–Traversal Divergence (Theorem 3): $\tau^4(3n) = 3n$ but $\delta^4(3n) = 3n{+}2 \in \Ph{n}$. In the power domain, this divergence has a direct physical reading.</p>
+
+  <div class="block block-thm">
+    <div class="block-label">The Power Divergence</div>
+    <p>Consider a system receiving energy in discrete increments. If the energy cycles through four phase positions (e.g., the four quadrants of an AC cycle), the <strong>phase-step</strong> $\tau$ returns to ground after four steps: one full cycle, real power delivered.</p>
+    <p>But if the energy is delivered as a continuous half-step $\delta$ — a steady, uniform ramp rather than a discrete phase rotation — the fifth increment does not return to ground. It enters the reactive regime:</p>
+    $$\tau^4: \text{four phase-clicks} \;\to\; \text{back to start (real power cycle complete)}$$
+    $$\delta^4: \text{four half-steps} \;\to\; \text{escaped into } \Ph{n} \text{ (reactive power territory)}$$
+    <p>The divergence says: <strong>if you push energy through a system faster than its natural phase cycle, the excess becomes reactive.</strong> The fifth increment of continuous input doesn't do more work — it begins to oscillate. Where rotation ends is where reactive power begins.</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark · Resonance and the Divergence Point</div>
+    <p>In circuit theory, a system driven at its resonant frequency has $Q = 0$: all power is real, all energy is transferred. The phase-step $\tau$ and the half-step $\delta$ are synchronized — they agree for all four steps.</p>
+    <p>When the driving frequency departs from resonance, reactive power appears. The system stores and returns energy each cycle instead of absorbing it. This is the divergence: $\delta$ (the driving input) and $\tau$ (the system's natural phase cycle) no longer agree after the fourth step.</p>
+    <p>The power factor $\cos\phi$ measures how much the two operators have diverged. At resonance, $\phi = 0$ and $\cos\phi = 1$: perfect alignment, no reactive power. Off resonance, $\phi \neq 0$: the divergence has opened the mediating interval, and $\Ph{n}$ is populated.</p>
+    <p>The tier decomposition predicts this structure from pure arithmetic. The physics confirms it empirically in every AC circuit, every resonant cavity, every driven oscillator.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §4 THE FULL EQUATION ═══════════════ -->
+<section>
+  <h2>§4 &ensp; The Full Equation</h2>
+
+  <p>We can now write the processual power relation in its tier-decomposed form.</p>
+
+  <div class="block block-def">
+    <div class="block-label">The Tier Decomposition of Power</div>
+    <p>The processual power $\PP = E/(i \cdot t) = -iP$ decomposes as:</p>
+    $$\PP \;=\; \underbrace{P}_{\I{n}\text{: structural}} \;+\; \underbrace{iQ}_{\Ph{n}\text{: processual}} \;=\; |S|\,e^{i\phi}$$
+    <p>where the three components play the three tier roles:</p>
+    <p><span class="s wb">$P$ (real power)</span> — the rotational skeleton. Energy that clicks through phase positions and does work. Discrete, directional, consumed. The 4-element backbone.</p>
+    <p><span class="m wb">$Q$ (reactive power)</span> — the mediating field. Energy that oscillates, stores, returns. The 2-element residual complement that rotation cannot reach. The field that sustains the circuit without transferring.</p>
+    <p><span class="b wb">$|S|$ (apparent power)</span> — the closure. The bounded magnitude that seals real and reactive into a single measurable whole. The 1-element seal that completes the tier.</p>
+    <p>The phase angle $\phi$ encodes the <strong>balance between structure and process</strong> — how much of the total power flow is doing work versus mediating. At $\phi = 0$, all power is structural (pure resistance). At $\phi = \pi/2$, all power is processual (pure reactance). Real systems live between these extremes, with $\phi$ measuring the tier's internal proportion of skeleton to field.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §5 WHAT i DOES ═══════════════ -->
+<section>
+  <h2>§5 &ensp; What $i$ Does</h2>
+
+  <p>The imaginary unit appears in four independent physical contexts, always doing the same thing:</p>
+
+  <div class="block block-prop">
+    <div class="block-label">The Fourfold Role of $i$</div>
+
+    <table class="dim-table">
+      <tr>
+        <th>Context</th><th>Where $i$ appears</th><th>What it does</th>
+      </tr>
+      <tr>
+        <td class="cell-proc">Quantum mechanics</td>
+        <td>$H = i\hbar\,\partial/\partial t$</td>
+        <td>Makes time evolution unitary (rotation) instead of dissipative (decay)</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">AC power</td>
+        <td>$S = P + iQ$</td>
+        <td>Separates structural transfer ($P$) from processual mediation ($Q$)</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">Wick rotation</td>
+        <td>$t \to -i\tau$</td>
+        <td>Converts dynamics (process) into statics (structure) and back</td>
+      </tr>
+      <tr>
+        <td class="cell-proc">Tier decomposition</td>
+        <td>$\alpha(3n{+}\half) = +i$</td>
+        <td>Marks the aperture — the first processual dimension, the opening of becoming</td>
+      </tr>
+    </table>
+
+    <p>In every case, $i$ is the operator that <strong>converts between structure and process</strong>. Multiply by $i$: structure becomes process (energy becomes flow, statics become dynamics, real becomes imaginary). Multiply by $-i$: process becomes structure (flow becomes energy, dynamics become statics, imaginary becomes real).</p>
+    <p>The processual power relation $\PP = E/(i \cdot t)$ says this in the most compact form possible: <em>power is energy passed through the processual gate $i$ and distributed across time.</em></p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §6 THE CIRCUMPUNCT READING ═══════════════ -->
+<section>
+  <h2>§6 &ensp; The Circumpunct Reading</h2>
+
+  <div class="block block-rem">
+    <div class="block-label">⊙ = Φ(•, ○) as a Power Relation</div>
+    <p>The circumpunct ⊙ = Φ(•, ○) has three parts: aperture (•), field (Φ), and boundary (○). In the power reading:</p>
+    <p><span class="s wb">• (aperture)</span> is the $i$ in the denominator — the processual gate through which energy enters time. The aperture is what opens the flow. Without it, energy is static ($E$ sitting at rest). With it, energy is in motion ($\PP$ flowing through time).</p>
+    <p><span class="m wb">Φ (field)</span> is the reactive power $Q$ — the mediating oscillation that sustains the flow without consuming it. The field is what keeps the circuit alive between the structural pulses. It stores and returns, breathes in and out, mediates without transferring.</p>
+    <p><span class="b wb">○ (boundary)</span> is the apparent power $|S|$ — the closure that binds real and reactive into a measurable whole. The boundary is what makes power a <em>bounded quantity</em> rather than an unbounded flow. It is the conservation law: $|S|^2 = P^2 + Q^2$, nothing more, nothing less.</p>
+    <p>The circumpunct, read as a power relation, says: <em>every bounded energy flow has an opening (•), a mediation (Φ), and a seal (○), and their relation is the flow itself (⊙).</em></p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §7 LIMITS ═══════════════ -->
+<section>
+  <h2>§7 &ensp; What This Does and Does Not Claim</h2>
+
+  <div class="block block-rem">
+    <div class="block-label">Scope</div>
+    <p><strong>What is claimed:</strong></p>
+    <p>(a) &ensp; Physics already places $i$ between energy and time in multiple independent contexts (Schrödinger equation, complex power, Wick rotation). This is not a new physical discovery; it is a structural observation.</p>
+    <p>(b) &ensp; The processual power relation $\PP = E/(i \cdot t)$ unifies these contexts under a single formula whose structure matches the tier decomposition's three role-families.</p>
+    <p>(c) &ensp; The power triangle ($P$, $Q$, $|S|$) instantiates the tier decomposition ($\I{n}$, $\Ph{n}$, $\Om{n}$) with the correct cardinality ratio and role assignments.</p>
+    <p>(d) &ensp; The $\tau/\delta$ divergence (Theorem 3, <em>Tier Decomposition</em>) has a direct physical reading as the onset of reactive power when a system is driven off resonance.</p>
+    <p><strong>What is not claimed:</strong></p>
+    <p>(a) &ensp; That $\PP = E/(i \cdot t)$ produces different numerical predictions from standard power analysis. The magnitude $|\PP| = |P|$ is unchanged. The content is structural, not computational: power has a phase, and that phase encodes the balance of structure and process.</p>
+    <p>(b) &ensp; That the tier decomposition "explains" complex power. Complex power was discovered empirically and is rigorously derived from circuit theory. The tier decomposition provides a structural framework that matches the same pattern — convergence, not derivation.</p>
+    <p>(c) &ensp; That every instance of $i$ in physics is "the aperture." The imaginary unit appears in many mathematical contexts (complex analysis, signal processing, algebraic geometry) with no necessary connection to the circumpunct. The claim is limited to contexts where $i$ mediates between energy and time.</p>
+  </div>
+</section>
+
+<div class="divider">⊙</div>
+
+<!-- ═══════════════ FOOTNOTE ═══════════════ -->
+<div class="footnote">
+  <p>This document develops the processual power relation $\PP = E/(i \cdot t)$ and its connection to the tier decomposition. For the algebraic foundation, see <em>The Tier Decomposition Theorem</em>. For the quantum mechanical correspondence, see <em>The Spin Ladder Correspondence</em>. For the geometric realization, see <em>Triadic Morphogenesis</em>. For the interpretive framework, see <em>How Reality Is Built</em> and <em>The Two Rhythms</em>.</p>
+</div>
+
+</div>
+</body>
+</html>
