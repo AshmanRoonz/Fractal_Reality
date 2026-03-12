@@ -160,18 +160,16 @@
             font-size: 0.88rem;
         }
 
-        .triad-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
+        .triad-symbol {
             flex-shrink: 0;
-            position: relative;
-            top: -1px;
+            font-size: 0.85rem;
+            width: 1.1em;
+            text-align: center;
         }
 
-        .triad-dot.center { background: var(--dot-center); }
-        .triad-dot.field { background: var(--dot-field); }
-        .triad-dot.boundary { background: var(--dot-boundary); }
+        .triad-symbol.center { color: var(--dot-center); }
+        .triad-symbol.field { color: var(--dot-field); }
+        .triad-symbol.boundary { color: var(--dot-boundary); }
 
         .triad-label {
             font-weight: 500;
@@ -353,81 +351,81 @@
         <!-- YOU -->
         <div class="domain-card" data-domain="you" onclick="openDomain(this)">
             <div class="domain-name">You</div>
-            <div class="triad-row"><span class="triad-dot center"></span><span class="triad-label">Soul</span>&nbsp;<span class="triad-desc">&mdash; the attending</span></div>
-            <div class="triad-row"><span class="triad-dot field"></span><span class="triad-label">Mind</span>&nbsp;<span class="triad-desc">&mdash; the experiencing</span></div>
-            <div class="triad-row"><span class="triad-dot boundary"></span><span class="triad-label">Body</span>&nbsp;<span class="triad-desc">&mdash; the acting</span></div>
+            <div class="triad-row"><span class="triad-symbol center">•</span><span class="triad-label">Soul</span>&nbsp;<span class="triad-desc">&mdash; the attending</span></div>
+            <div class="triad-row"><span class="triad-symbol field">Φ</span><span class="triad-label">Mind</span>&nbsp;<span class="triad-desc">&mdash; the experiencing</span></div>
+            <div class="triad-row"><span class="triad-symbol boundary">○</span><span class="triad-label">Body</span>&nbsp;<span class="triad-desc">&mdash; the acting</span></div>
         </div>
 
         <!-- A CELL -->
         <div class="domain-card" data-domain="cell" onclick="openDomain(this)">
             <div class="domain-name">A Cell</div>
-            <div class="triad-row"><span class="triad-dot center"></span><span class="triad-label">Nucleus</span>&nbsp;<span class="triad-desc">&mdash; the instruction set</span></div>
-            <div class="triad-row"><span class="triad-dot field"></span><span class="triad-label">Cytoplasm</span>&nbsp;<span class="triad-desc">&mdash; the metabolism</span></div>
-            <div class="triad-row"><span class="triad-dot boundary"></span><span class="triad-label">Membrane</span>&nbsp;<span class="triad-desc">&mdash; the interface</span></div>
+            <div class="triad-row"><span class="triad-symbol center">•</span><span class="triad-label">Nucleus</span>&nbsp;<span class="triad-desc">&mdash; the instruction set</span></div>
+            <div class="triad-row"><span class="triad-symbol field">Φ</span><span class="triad-label">Cytoplasm</span>&nbsp;<span class="triad-desc">&mdash; the metabolism</span></div>
+            <div class="triad-row"><span class="triad-symbol boundary">○</span><span class="triad-label">Membrane</span>&nbsp;<span class="triad-desc">&mdash; the interface</span></div>
         </div>
 
         <!-- A RELATIONSHIP -->
         <div class="domain-card" data-domain="relationship" onclick="openDomain(this)">
             <div class="domain-name">A Relationship</div>
-            <div class="triad-row"><span class="triad-dot center"></span><span class="triad-label">Presence</span>&nbsp;<span class="triad-desc">&mdash; being with</span></div>
-            <div class="triad-row"><span class="triad-dot field"></span><span class="triad-label">Resonance</span>&nbsp;<span class="triad-desc">&mdash; the shared field</span></div>
-            <div class="triad-row"><span class="triad-dot boundary"></span><span class="triad-label">Provision</span>&nbsp;<span class="triad-desc">&mdash; doing for</span></div>
+            <div class="triad-row"><span class="triad-symbol center">•</span><span class="triad-label">Presence</span>&nbsp;<span class="triad-desc">&mdash; being with</span></div>
+            <div class="triad-row"><span class="triad-symbol field">Φ</span><span class="triad-label">Resonance</span>&nbsp;<span class="triad-desc">&mdash; the shared field</span></div>
+            <div class="triad-row"><span class="triad-symbol boundary">○</span><span class="triad-label">Provision</span>&nbsp;<span class="triad-desc">&mdash; doing for</span></div>
         </div>
 
         <!-- AN ATOM -->
         <div class="domain-card" data-domain="atom" onclick="openDomain(this)">
             <div class="domain-name">An Atom</div>
-            <div class="triad-row"><span class="triad-dot center"></span><span class="triad-label">Nucleus</span>&nbsp;<span class="triad-desc">&mdash; the dense center</span></div>
-            <div class="triad-row"><span class="triad-dot field"></span><span class="triad-label">Electron cloud</span>&nbsp;<span class="triad-desc">&mdash; the probability field</span></div>
-            <div class="triad-row"><span class="triad-dot boundary"></span><span class="triad-label">Orbital shell</span>&nbsp;<span class="triad-desc">&mdash; the boundary</span></div>
+            <div class="triad-row"><span class="triad-symbol center">•</span><span class="triad-label">Nucleus</span>&nbsp;<span class="triad-desc">&mdash; the dense center</span></div>
+            <div class="triad-row"><span class="triad-symbol field">Φ</span><span class="triad-label">Electron cloud</span>&nbsp;<span class="triad-desc">&mdash; the probability field</span></div>
+            <div class="triad-row"><span class="triad-symbol boundary">○</span><span class="triad-label">Orbital shell</span>&nbsp;<span class="triad-desc">&mdash; the boundary</span></div>
         </div>
 
         <!-- A CONVERSATION -->
         <div class="domain-card" data-domain="conversation" onclick="openDomain(this)">
             <div class="domain-name">A Conversation</div>
-            <div class="triad-row"><span class="triad-dot center"></span><span class="triad-label">Listening</span>&nbsp;<span class="triad-desc">&mdash; receiving</span></div>
-            <div class="triad-row"><span class="triad-dot field"></span><span class="triad-label">Understanding</span>&nbsp;<span class="triad-desc">&mdash; meaning-making</span></div>
-            <div class="triad-row"><span class="triad-dot boundary"></span><span class="triad-label">Responding</span>&nbsp;<span class="triad-desc">&mdash; expressing</span></div>
+            <div class="triad-row"><span class="triad-symbol center">•</span><span class="triad-label">Listening</span>&nbsp;<span class="triad-desc">&mdash; receiving</span></div>
+            <div class="triad-row"><span class="triad-symbol field">Φ</span><span class="triad-label">Understanding</span>&nbsp;<span class="triad-desc">&mdash; meaning-making</span></div>
+            <div class="triad-row"><span class="triad-symbol boundary">○</span><span class="triad-label">Responding</span>&nbsp;<span class="triad-desc">&mdash; expressing</span></div>
         </div>
 
         <!-- A BREATH -->
         <div class="domain-card" data-domain="breath" onclick="openDomain(this)">
             <div class="domain-name">A Breath</div>
-            <div class="triad-row"><span class="triad-dot center"></span><span class="triad-label">The inhale</span>&nbsp;<span class="triad-desc">&mdash; convergence</span></div>
-            <div class="triad-row"><span class="triad-dot field"></span><span class="triad-label">The still point</span>&nbsp;<span class="triad-desc">&mdash; rotation</span></div>
-            <div class="triad-row"><span class="triad-dot boundary"></span><span class="triad-label">The exhale</span>&nbsp;<span class="triad-desc">&mdash; emergence</span></div>
+            <div class="triad-row"><span class="triad-symbol center">•</span><span class="triad-label">The inhale</span>&nbsp;<span class="triad-desc">&mdash; convergence</span></div>
+            <div class="triad-row"><span class="triad-symbol field">Φ</span><span class="triad-label">The still point</span>&nbsp;<span class="triad-desc">&mdash; rotation</span></div>
+            <div class="triad-row"><span class="triad-symbol boundary">○</span><span class="triad-label">The exhale</span>&nbsp;<span class="triad-desc">&mdash; emergence</span></div>
         </div>
 
         <!-- PHYSICS -->
         <div class="domain-card" data-domain="physics" onclick="openDomain(this)">
             <div class="domain-name">Physics</div>
-            <div class="triad-row"><span class="triad-dot center"></span><span class="triad-label">Particle</span>&nbsp;<span class="triad-desc">&mdash; the quantum event</span></div>
-            <div class="triad-row"><span class="triad-dot field"></span><span class="triad-label">Wave function</span>&nbsp;<span class="triad-desc">&mdash; the gauge field</span></div>
-            <div class="triad-row"><span class="triad-dot boundary"></span><span class="triad-label">Measurement</span>&nbsp;<span class="triad-desc">&mdash; the collapse</span></div>
+            <div class="triad-row"><span class="triad-symbol center">•</span><span class="triad-label">Particle</span>&nbsp;<span class="triad-desc">&mdash; the quantum event</span></div>
+            <div class="triad-row"><span class="triad-symbol field">Φ</span><span class="triad-label">Wave function</span>&nbsp;<span class="triad-desc">&mdash; the gauge field</span></div>
+            <div class="triad-row"><span class="triad-symbol boundary">○</span><span class="triad-label">Measurement</span>&nbsp;<span class="triad-desc">&mdash; the collapse</span></div>
         </div>
 
         <!-- A STORY -->
         <div class="domain-card" data-domain="story" onclick="openDomain(this)">
             <div class="domain-name">A Story</div>
-            <div class="triad-row"><span class="triad-dot center"></span><span class="triad-label">The question</span>&nbsp;<span class="triad-desc">&mdash; what opens</span></div>
-            <div class="triad-row"><span class="triad-dot field"></span><span class="triad-label">The journey</span>&nbsp;<span class="triad-desc">&mdash; what transforms</span></div>
-            <div class="triad-row"><span class="triad-dot boundary"></span><span class="triad-label">The resolution</span>&nbsp;<span class="triad-desc">&mdash; what closes</span></div>
+            <div class="triad-row"><span class="triad-symbol center">•</span><span class="triad-label">The question</span>&nbsp;<span class="triad-desc">&mdash; what opens</span></div>
+            <div class="triad-row"><span class="triad-symbol field">Φ</span><span class="triad-label">The journey</span>&nbsp;<span class="triad-desc">&mdash; what transforms</span></div>
+            <div class="triad-row"><span class="triad-symbol boundary">○</span><span class="triad-label">The resolution</span>&nbsp;<span class="triad-desc">&mdash; what closes</span></div>
         </div>
 
         <!-- ETHICS -->
         <div class="domain-card" data-domain="ethics" onclick="openDomain(this)">
             <div class="domain-name">Ethics</div>
-            <div class="triad-row"><span class="triad-dot center"></span><span class="triad-label">Conscience</span>&nbsp;<span class="triad-desc">&mdash; what resonates</span></div>
-            <div class="triad-row"><span class="triad-dot field"></span><span class="triad-label">Values</span>&nbsp;<span class="triad-desc">&mdash; the relational field</span></div>
-            <div class="triad-row"><span class="triad-dot boundary"></span><span class="triad-label">Action</span>&nbsp;<span class="triad-desc">&mdash; what you do</span></div>
+            <div class="triad-row"><span class="triad-symbol center">•</span><span class="triad-label">Conscience</span>&nbsp;<span class="triad-desc">&mdash; what resonates</span></div>
+            <div class="triad-row"><span class="triad-symbol field">Φ</span><span class="triad-label">Values</span>&nbsp;<span class="triad-desc">&mdash; the relational field</span></div>
+            <div class="triad-row"><span class="triad-symbol boundary">○</span><span class="triad-label">Action</span>&nbsp;<span class="triad-desc">&mdash; what you do</span></div>
         </div>
 
         <!-- THE COSMOS -->
         <div class="domain-card" data-domain="cosmos" onclick="openDomain(this)">
             <div class="domain-name">The Cosmos</div>
-            <div class="triad-row"><span class="triad-dot center"></span><span class="triad-label">Singularity</span>&nbsp;<span class="triad-desc">&mdash; the origin point</span></div>
-            <div class="triad-row"><span class="triad-dot field"></span><span class="triad-label">Spacetime</span>&nbsp;<span class="triad-desc">&mdash; the field of fields</span></div>
-            <div class="triad-row"><span class="triad-dot boundary"></span><span class="triad-label">Observable universe</span>&nbsp;<span class="triad-desc">&mdash; the horizon</span></div>
+            <div class="triad-row"><span class="triad-symbol center">•</span><span class="triad-label">Singularity</span>&nbsp;<span class="triad-desc">&mdash; the origin point</span></div>
+            <div class="triad-row"><span class="triad-symbol field">Φ</span><span class="triad-label">Spacetime</span>&nbsp;<span class="triad-desc">&mdash; the field of fields</span></div>
+            <div class="triad-row"><span class="triad-symbol boundary">○</span><span class="triad-label">Observable universe</span>&nbsp;<span class="triad-desc">&mdash; the horizon</span></div>
         </div>
 
     </div>
