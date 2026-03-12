@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Circumpunct Explorer</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+body {
+  background: #0a0a0f;
+  color: #e0d8c8;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+#title-bar {
+  text-align: center;
+  padding: 12px 0 4px;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #b8a060;
+  opacity: 0.7;
+}
+#canvas-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+canvas { display: block; }
+#dim-label {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  font-size: 52px;
+  font-weight: 700;
+  color: #b8a060;
+  opacity: 0.9;
+  pointer-events: none;
+  text-shadow: 0 0 30px rgba(184,160,96,0.3);
+}
+#dim-name {
+  position: absolute;
+  top: 80px;
+  left: 30px;
+  font-size: 18px;
+  font-weight: 300;
+  color: #b8a060;
+  opacity: 0.7;
+  pointer-events: none;
+  max-width: 300px;
+  line-height: 1.4;
+}
+#component-labels {
+  position: absolute;
+  bottom: 130px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  pointer-events: none;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1.8;
+}
+#iso-label {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: right;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+#equation {
+  position: absolute;
+  bottom: 130px;
+  right: 30px;
+  font-size: 24px;
+  font-weight: 300;
+  color: #b8a060;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+#controls {
+  height: 100px;
+  background: linear-gradient(180deg, rgba(10,10,15,0) 0%, rgba(10,10,15,0.95) 30%);
+  padding: 10px 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+#dim-ticks {
+  width: 90%;
+  max-width: 900px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #665;
+  padding: 0 5px;
+}
+#dim-ticks span { cursor: pointer; transition: color 0.2s; }
+#dim-ticks span:hover { color: #b8a060; }
+#dim-ticks span.active { color: #b8a060; font-weight: 600; }
+#slider-wrap {
+  width: 90%;
+  max-width: 900px;
+  position: relative;
+}
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg,
+    #fff 0%, #e88aaf 5%, #b8a060 12%,
+    #9b7ad8 18%, #4a9 25%, #8b6fd8 32%,
+    #4db8a0 38%, #b8a060 45%,
+    #b8a060 55%, #b8a060 70%, #b8a060 85%, #b8a060 100%
+  );
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #e0d8c8;
+  box-shadow: 0 0 15px rgba(184,160,96,0.5);
+  cursor: grab;
+}
+input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; }
+#hint {
+  font-size: 11px;
+  color: #555;
+  letter-spacing: 1px;
+}
+#sound-toggle {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: 1px solid #333;
+  color: #888;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+  z-index: 10;
+}
+#sound-toggle:hover { border-color: #b8a060; color: #b8a060; }
+#sound-toggle.active { border-color: #b8a060; color: #b8a060; background: rgba(184,160,96,0.1); }
+</style>
+</head>
+<body>
+<div id="title-bar">⊙ The Circumpunct Explorer — Dimensional Journey + Harmonic Engine</div>
+<div id="canvas-wrap">
+  <canvas id="c"></canvas>
+  <div id="dim-label">∞D</div>
+  <div id="dim-name">Pure potential. Before distinction.</div>
+  <div id="component-labels"></div>
+  <div id="iso-label"></div>
+  <div id="equation"></div>
+  <button id="sound-toggle" onclick="toggleSound()">♫ SOUND</button>
+</div>
+<div id="controls">
+  <div id="dim-ticks"></div>
+  <div id="slider-wrap">
+    <input type="range" id="dim-slider" min="0" max="100" value="0" step="0.1"
+           oninput="setDimension(this.value/100)">
+  </div>
+  <div id="hint">drag to traverse dimensions · click dimension labels · scroll to explore</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DIMENSIONAL ARCHITECTURE
+// ═══════════════════════════════════════════
+const DIMS = [
+  { d: '∞D', t: 0.00, name: 'Pure potential. Before distinction.', tier: 0 },
+  { d: '0D',  t: 0.06, name: 'The point. Existence localizes.', tier: 1 },
+  { d: '0.5D',t: 0.12, name: 'Aperture. The gate of i-rotations.', tier: 1 },
+  { d: '1D',  t: 0.18, name: 'The line. Power extends.', tier: 1 },
+  { d: '1.5D',t: 0.24, name: 'Fractal branching. The tree of actualization.', tier: 1 },
+  { d: '2D',  t: 0.30, name: 'The field. Mind awakens.', tier: 1 },
+  { d: '2.5D',t: 0.36, name: 'Braiding. Structures interweave.', tier: 1 },
+  { d: '3D',  t: 0.42, name: 'Boundary closes. Body forms. ⊙ complete.', tier: 1 },
+  { d: '3.5D',t: 0.50, name: 'Temporal onset. The circumpunct begins to move.', tier: 2 },
+  { d: '4D',  t: 0.56, name: 'Duration. Memory and anticipation.', tier: 2 },
+  { d: '4.5D',t: 0.62, name: 'Temporal branching. Possible futures.', tier: 2 },
+  { d: '5D',  t: 0.68, name: 'Temporal field. Narrative coherence.', tier: 2 },
+  { d: '5.5D',t: 0.74, name: 'Temporal braiding. Woven lifelines.', tier: 2 },
+  { d: '6D',  t: 0.80, name: 'Temporal closure. A complete story.', tier: 2 },
+  { d: '9D',  t: 0.90, name: 'Meta-closure. Awareness of awareness.', tier: 3 },
+  { d: '12D', t: 1.00, name: 'Cosmic closure. ⊙ = Everything.', tier: 4 },
+];
+
+const ISOMORPHISMS = [
+  { name: 'Atom', ap: 'Nucleus', fi: 'Orbitals', bd: 'Shell', color: [255,180,60] },
+  { name: 'Cell', ap: 'DNA', fi: 'Cytoplasm', bd: 'Membrane', color: [80,220,160] },
+  { name: 'Eye',  ap: 'Pupil', fi: 'Lens', bd: 'Retina', color: [100,200,255] },
+  { name: 'Brain',ap: 'Thalamus', fi: 'Cortex', bd: 'Skull', color: [200,140,255] },
+  { name: 'Star', ap: 'Core', fi: 'Radiative zone', bd: 'Photosphere', color: [255,200,80] },
+  { name: 'Galaxy',ap:'Black hole',fi:'Spiral arms', bd:'Dark matter halo',color:[184,160,96]},
+];
+
+// Colors
+const PINK = [232,138,175];
+const GREEN = [74,170,160];
+const CYAN = [77,184,200];
+const PURPLE = [155,122,216];
+const AMBER = [184,160,96];
+const GOLD = [184,160,96];
+const WARM = [224,216,200];
+
+// ═══════════════════════════════════════════
+// CANVAS SETUP
+// ═══════════════════════════════════════════
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H, cx, cy;
+let dimT = 0; // 0..1 normalized dimension position
+let targetDimT = 0;
+let time = 0;
+let breathPhase = 0;
+let iRotationOpen = false;
+let iRotClickTime = 0;
+
+function resize() {
+  const wrap = document.getElementById('canvas-wrap');
+  W = wrap.clientWidth;
+  H = wrap.clientHeight;
+  canvas.width = W;
+  canvas.height = H;
+  cx = W / 2;
+  cy = H / 2;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ═══════════════════════════════════════════
+// AUDIO ENGINE
+// ═══════════════════════════════════════════
+let audioCtx = null;
+let audioStarted = false;
+let masterGain = null;
+let oscillators = [];
+const NUM_HARMONICS = 12;
+
+function initAudio() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.value = 0;
+  masterGain.connect(audioCtx.destination);
+
+  const fundamental = 136.1; // Om frequency
+  for (let i = 0; i < NUM_HARMONICS; i++) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = i < 4 ? 'sine' : (i < 8 ? 'triangle' : 'sine');
+    osc.frequency.value = fundamental * (i + 1);
+    gain.gain.value = 0;
+    osc.connect(gain);
+    gain.connect(masterGain);
+    osc.start();
+    oscillators.push({ osc, gain });
+  }
+  audioStarted = true;
+}
+
+function toggleSound() {
+  const btn = document.getElementById('sound-toggle');
+  if (!audioStarted) {
+    initAudio();
+    masterGain.gain.setTargetAtTime(0.15, audioCtx.currentTime, 0.3);
+    btn.classList.add('active');
+    btn.textContent = '♫ SOUND ON';
+  } else {
+    if (masterGain.gain.value > 0.01) {
+      masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.3);
+      btn.classList.remove('active');
+      btn.textContent = '♫ SOUND';
+    } else {
+      masterGain.gain.setTargetAtTime(0.15, audioCtx.currentTime, 0.3);
+      btn.classList.add('active');
+      btn.textContent = '♫ SOUND ON';
+    }
+  }
+}
+
+function updateAudio(t) {
+  if (!audioStarted) return;
+  const fundamental = 136.1;
+  const now = audioCtx.currentTime;
+  // How many harmonics are "alive" depends on dimension
+  // ∞D = 1 soft drone, higher dims = more harmonics
+  const numActive = Math.floor(1 + t * (NUM_HARMONICS - 1));
+  const breath = 0.5 + 0.5 * Math.sin(breathPhase * 0.7);
+
+  for (let i = 0; i < NUM_HARMONICS; i++) {
+    const { osc, gain } = oscillators[i];
+    let vol = 0;
+    if (i < numActive) {
+      // Each harmonic fades in as its dimension is reached
+      const dimForHarmonic = i / (NUM_HARMONICS - 1);
+      const dist = Math.max(0, 1 - Math.abs(t - dimForHarmonic) * 4);
+      const baseVol = (1 / (i + 1)) * 0.6;
+      vol = baseVol * (0.3 + 0.7 * dist) * (0.7 + 0.3 * breath);
+    }
+    // Half dimensions: add i-rotation phase shift
+    const isHalf = isHalfDimension(t);
+    if (isHalf && i > 0) {
+      const detune = Math.sin(time * 2 + i) * 15 * isHalf;
+      osc.frequency.setTargetAtTime(fundamental * (i + 1) + detune, now, 0.05);
+    } else {
+      osc.frequency.setTargetAtTime(fundamental * (i + 1), now, 0.1);
+    }
+    gain.gain.setTargetAtTime(Math.min(vol, 0.4), now, 0.08);
+  }
+}
+
+function isHalfDimension(t) {
+  // Returns 0-1 indicating closeness to a half-dimension
+  for (const dim of DIMS) {
+    if (dim.d.includes('.5')) {
+      const dist = Math.abs(t - dim.t);
+      if (dist < 0.03) return 1 - dist / 0.03;
+    }
+  }
+  return 0;
+}
+
+// ═══════════════════════════════════════════
+// DIMENSION TICKS
+// ═══════════════════════════════════════════
+const ticksEl = document.getElementById('dim-ticks');
+DIMS.forEach(dim => {
+  const span = document.createElement('span');
+  span.textContent = dim.d;
+  span.onclick = () => {
+    targetDimT = dim.t;
+    document.getElementById('dim-slider').value = dim.t * 100;
+  };
+  ticksEl.appendChild(span);
+});
+
+function setDimension(v) {
+  targetDimT = v;
+}
+
+// Mouse wheel
+document.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  targetDimT = Math.max(0, Math.min(1, targetDimT + e.deltaY * 0.0003));
+  document.getElementById('dim-slider').value = targetDimT * 100;
+}, { passive: false });
+
+// Click on canvas to toggle i-rotation bloom
+canvas.addEventListener('click', (e) => {
+  const dx = e.offsetX - cx;
+  const dy = e.offsetY - cy;
+  if (Math.sqrt(dx*dx + dy*dy) < 200) {
+    iRotationOpen = !iRotationOpen;
+    iRotClickTime = time;
+  }
+});
+
+// ═══════════════════════════════════════════
+// RENDERING
+// ═══════════════════════════════════════════
+function rgba(c, a) {
+  return `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+}
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+function ease(t) { return t * t * (3 - 2 * t); }
+
+function getCurrentDim() {
+  let best = DIMS[0];
+  let bestDist = Infinity;
+  for (const d of DIMS) {
+    const dist = Math.abs(dimT - d.t);
+    if (dist < bestDist) { bestDist = dist; best = d; }
+  }
+  return best;
+}
+
+function getIsoIndex() {
+  // After 3D (t > 0.42), cycle through isomorphisms
+  if (dimT < 0.42) return -1;
+  const isoT = (dimT - 0.42) / (1 - 0.42);
+  return Math.min(Math.floor(isoT * ISOMORPHISMS.length), ISOMORPHISMS.length - 1);
+}
+
+// ── Drawing primitives ──
+function drawGlow(x, y, r, color, intensity) {
+  const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+  grad.addColorStop(0, rgba(color, intensity * 0.4));
+  grad.addColorStop(0.5, rgba(color, intensity * 0.1));
+  grad.addColorStop(1, rgba(color, 0));
+  ctx.fillStyle = grad;
+  ctx.fillRect(x - r, y - r, r * 2, r * 2);
+}
+
+function drawCircle(x, y, r, color, alpha, width) {
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.strokeStyle = rgba(color, alpha);
+  ctx.lineWidth = width || 2;
+  ctx.stroke();
+}
+
+function drawDot(x, y, r, color, alpha) {
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fillStyle = rgba(color, alpha);
+  ctx.fill();
+}
+
+function drawLine(x1, y1, x2, y2, color, alpha, width) {
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.strokeStyle = rgba(color, alpha);
+  ctx.lineWidth = width || 2;
+  ctx.stroke();
+}
+
+// ── Dimension-specific renderers ──
+
+function renderInfinity(t) {
+  // Shimmering wave field
+  const intensity = 1 - Math.min(1, dimT / 0.06);
+  if (intensity <= 0) return;
+  for (let i = 0; i < 60; i++) {
+    const angle = (i / 60) * Math.PI * 2 + time * 0.2;
+    const r = 80 + Math.sin(time * 0.5 + i * 0.7) * 150;
+    const x = cx + Math.cos(angle) * r;
+    const y = cy + Math.sin(angle) * r;
+    const s = 1 + Math.sin(time + i) * 0.5;
+    drawDot(x, y, s, WARM, intensity * 0.3 * (0.5 + 0.5 * Math.sin(time + i * 0.5)));
+  }
+  drawGlow(cx, cy, 300, WARM, intensity * 0.15);
+}
+
+function renderPoint(amount) {
+  // 0D: The point localizes
+  if (amount <= 0) return;
+  const pulse = 1 + Math.sin(breathPhase) * 0.3;
+  drawGlow(cx, cy, 40 * pulse, PINK, amount * 0.5);
+  drawDot(cx, cy, 6 * pulse * amount, WARM, amount * 0.95);
+}
+
+function renderAperture(amount) {
+  // 0.5D: The four i-rotations
+  if (amount <= 0) return;
+  const spin = time * 0.8;
+  const armLen = 120 * amount;
+  const rotColors = [WARM, PINK, [180,60,60], PURPLE]; // +1, +i, -1, -i
+  const rotLabels = ['+1', '+i', '−1', '−i'];
+
+  // Glow
+  drawGlow(cx, cy, 180 * amount, PINK, amount * 0.15);
+
+  for (let i = 0; i < 4; i++) {
+    const angle = spin + (i * Math.PI / 2);
+    const len = armLen * (iRotationOpen ? 1.5 : 1);
+    const ex = cx + Math.cos(angle) * len;
+    const ey = cy + Math.sin(angle) * len;
+    drawLine(cx, cy, ex, ey, rotColors[i], amount * 0.7, 2);
+    drawDot(ex, ey, 5, rotColors[i], amount * 0.9);
+
+    // Labels when open
+    if (iRotationOpen || amount > 0.8) {
+      const labelDist = len + 25;
+      const lx = cx + Math.cos(angle) * labelDist;
+      const ly = cy + Math.sin(angle) * labelDist;
+      ctx.font = '600 18px Inter';
+      ctx.fillStyle = rgba(rotColors[i], amount * 0.85);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(rotLabels[i], lx, ly);
+    }
+  }
+  drawDot(cx, cy, 5, WARM, amount * 0.9);
+}
+
+function renderLine(amount) {
+  // 1D: extending power line
+  if (amount <= 0) return;
+  const len = 250 * amount;
+  const pulse = 1 + Math.sin(breathPhase * 1.5) * 0.1;
+  drawLine(cx - len * pulse, cy, cx + len * pulse, cy, PINK, amount * 0.7, 3);
+  drawGlow(cx, cy, 60, PINK, amount * 0.2);
+  drawDot(cx, cy, 5, WARM, amount * 0.9);
+}
+
+function renderFractal(amount) {
+  // 1.5D: recursive branching
+  if (amount <= 0) return;
+  const maxDepth = Math.floor(2 + amount * 4);
+
+  function branch(x, y, angle, len, depth) {
+    if (depth > maxDepth || len < 4) return;
+    const ex = x + Math.cos(angle) * len;
+    const ey = y + Math.sin(angle) * len;
+    const a = amount * (0.3 + 0.7 * (1 - depth / maxDepth));
+    drawLine(x, y, ex, ey, PURPLE, a, Math.max(1, 3 - depth * 0.4));
+    const spread = 0.5 + Math.sin(time * 0.3) * 0.1;
+    branch(ex, ey, angle - spread, len * 0.65, depth + 1);
+    branch(ex, ey, angle + spread, len * 0.65, depth + 1);
+  }
+
+  branch(cx, cy, -Math.PI/2, 100, 0);
+  branch(cx, cy, Math.PI/2, 100, 0);
+  branch(cx, cy, 0, 80, 0);
+  branch(cx, cy, Math.PI, 80, 0);
+  drawDot(cx, cy, 4, WARM, amount * 0.9);
+}
+
+function renderField(amount) {
+  // 2D: rippling field
+  if (amount <= 0) return;
+  const gridSize = 30;
+  for (let gx = -10; gx <= 10; gx++) {
+    for (let gy = -7; gy <= 7; gy++) {
+      const px = cx + gx * gridSize;
+      const py = cy + gy * gridSize;
+      const dist = Math.sqrt(gx*gx + gy*gy);
+      const wave = Math.sin(dist * 0.5 - time * 2) * 0.5 + 0.5;
+      const a = amount * wave * 0.4 * Math.max(0, 1 - dist/12);
+      if (a > 0.02) drawDot(px, py, 2 + wave * 2, GREEN, a);
+    }
+  }
+  drawGlow(cx, cy, 200, GREEN, amount * 0.1);
+  drawDot(cx, cy, 5, WARM, amount * 0.9);
+}
+
+function renderBraid(amount) {
+  // 2.5D: interweaving strands
+  if (amount <= 0) return;
+  for (let s = 0; s < 3; s++) {
+    const phase = s * Math.PI * 2 / 3;
+    ctx.beginPath();
+    for (let i = 0; i <= 80; i++) {
+      const t = i / 80;
+      const angle = t * Math.PI * 4 + phase + time * 0.5;
+      const r = 40 + t * 160;
+      const x = cx + Math.cos(angle) * r * 0.5;
+      const y = cy + Math.sin(angle) * r * 0.3 + (t - 0.5) * 200;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = rgba(AMBER, amount * 0.5);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+  drawDot(cx, cy, 5, WARM, amount * 0.9);
+}
+
+function renderBoundary(amount) {
+  // 3D: the circle closes
+  if (amount <= 0) return;
+  const r = 160 * amount;
+  const breath = 1 + Math.sin(breathPhase) * 0.05;
+
+  // Field glow inside
+  drawGlow(cx, cy, r * breath, GREEN, amount * 0.12);
+  // Boundary circle
+  drawCircle(cx, cy, r * breath, CYAN, amount * 0.8, 2.5);
+  // Aperture dot
+  drawDot(cx, cy, 6, WARM, amount * 0.95);
+  // Particles inside
+  for (let i = 0; i < 15; i++) {
+    const angle = time * 0.3 + i * 1.37;
+    const pr = r * 0.7 * (0.3 + 0.7 * ((Math.sin(time + i * 2.1) + 1) / 2));
+    const px = cx + Math.cos(angle) * pr;
+    const py = cy + Math.sin(angle) * pr;
+    drawDot(px, py, 2, WARM, amount * 0.25);
+  }
+}
+
+function renderTemporal(amount) {
+  // 3.5D+: multiple circumpuncts braiding through time
+  if (amount <= 0) return;
+  const count = Math.floor(2 + amount * 5);
+  for (let i = 0; i < count; i++) {
+    const phase = i * Math.PI * 2 / count + time * 0.3;
+    const r = 80 + i * 30;
+    const x = cx + Math.cos(phase) * r * 0.6;
+    const y = cy + Math.sin(phase) * r * 0.35;
+    const miniR = 30 + Math.sin(time + i) * 5;
+    const a = amount * (0.3 + 0.4 * (1 - i/count));
+
+    drawGlow(x, y, miniR * 2, GOLD, a * 0.1);
+    drawCircle(x, y, miniR, GOLD, a * 0.6, 1.5);
+    drawDot(x, y, 3, WARM, a * 0.8);
+  }
+  // Connecting threads
+  for (let i = 0; i < count - 1; i++) {
+    const p1 = i * Math.PI * 2 / count + time * 0.3;
+    const p2 = (i+1) * Math.PI * 2 / count + time * 0.3;
+    const r1 = 80 + i * 30, r2 = 80 + (i+1) * 30;
+    drawLine(
+      cx + Math.cos(p1)*r1*0.6, cy + Math.sin(p1)*r1*0.35,
+      cx + Math.cos(p2)*r2*0.6, cy + Math.sin(p2)*r2*0.35,
+      GOLD, amount * 0.15, 1
+    );
+  }
+}
+
+function renderIsomorphism(amount) {
+  // Show the current isomorphism
+  const idx = getIsoIndex();
+  if (idx < 0 || amount <= 0) return;
+  const iso = ISOMORPHISMS[idx];
+  const r = 160;
+  const breath = 1 + Math.sin(breathPhase) * 0.05;
+
+  // Field glow
+  drawGlow(cx, cy, r * breath, iso.color, amount * 0.12);
+  // Boundary
+  drawCircle(cx, cy, r * breath, iso.color, amount * 0.75, 2.5);
+  // Center dot
+  drawDot(cx, cy, 7, WARM, amount * 0.9);
+  // Particles
+  for (let i = 0; i < 20; i++) {
+    const angle = time * 0.25 + i * 1.57;
+    const pr = r * 0.75 * (0.2 + 0.8 * ((Math.sin(time * 0.8 + i * 1.9) + 1) / 2));
+    drawDot(cx + Math.cos(angle)*pr, cy + Math.sin(angle)*pr, 2.5, WARM, amount * 0.2);
+  }
+
+  // Fractal nested mini-circumpuncts
+  if (iRotationOpen) {
+    for (let i = 0; i < 5; i++) {
+      const angle = time * 0.15 + i * Math.PI * 2 / 5;
+      const nr = r * 0.5;
+      const nx = cx + Math.cos(angle) * nr;
+      const ny = cy + Math.sin(angle) * nr;
+      const mr = 25;
+      drawCircle(nx, ny, mr, iso.color, amount * 0.3, 1);
+      drawDot(nx, ny, 2, WARM, amount * 0.4);
+    }
+  }
+
+  // Update labels
+  const isoEl = document.getElementById('iso-label');
+  isoEl.style.opacity = amount;
+  isoEl.style.color = rgba(iso.color, 1);
+  isoEl.innerHTML = iso.name;
+
+  const compEl = document.getElementById('component-labels');
+  compEl.innerHTML =
+    `<span style="color:${rgba(PINK,amount*0.95)}">• ${iso.ap}</span><br>` +
+    `<span style="color:${rgba(GREEN,amount*0.95)}">Φ ${iso.fi}</span><br>` +
+    `<span style="color:${rgba(CYAN,amount*0.95)}">○ ${iso.bd}</span>`;
+
+  const eqEl = document.getElementById('equation');
+  eqEl.style.opacity = amount * 0.7;
+  eqEl.textContent = '⊙ = Φ(•, ○)';
+}
+
+// ═══════════════════════════════════════════
+// MAIN RENDER LOOP
+// ═══════════════════════════════════════════
+function render(ts) {
+  time = ts / 1000;
+  breathPhase = time * Math.PI * 0.4;
+
+  // Smooth dimension transition
+  dimT += (targetDimT - dimT) * 0.06;
+
+  // Clear
+  ctx.fillStyle = '#0a0a0f';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle background breathing
+  const bgBreath = 0.02 + 0.01 * Math.sin(breathPhase * 0.5);
+  drawGlow(cx, cy, 400, WARM, bgBreath);
+
+  // Compute visibility of each dimension layer
+  function dimVis(dimT_target, spread) {
+    const dist = Math.abs(dimT - dimT_target);
+    return Math.max(0, 1 - dist / (spread || 0.08));
+  }
+
+  // Render layers
+  renderInfinity();
+  renderPoint(dimVis(0.06, 0.07));
+  renderAperture(dimVis(0.12, 0.08));
+  renderLine(dimVis(0.18, 0.07));
+  renderFractal(dimVis(0.24, 0.08));
+  renderField(dimVis(0.30, 0.08));
+  renderBraid(dimVis(0.36, 0.08));
+  renderBoundary(dimVis(0.42, 0.10));
+
+  // Temporal dimensions
+  if (dimT > 0.45) {
+    const tempAmount = ease(Math.min(1, (dimT - 0.45) / 0.15));
+    renderTemporal(tempAmount);
+  }
+
+  // Isomorphisms (shown alongside temporal when past 3D)
+  if (dimT > 0.42) {
+    const isoAmount = ease(Math.min(1, (dimT - 0.42) / 0.1));
+    renderIsomorphism(isoAmount);
+  } else {
+    document.getElementById('iso-label').style.opacity = 0;
+    document.getElementById('component-labels').innerHTML = '';
+    document.getElementById('equation').style.opacity = 0;
+  }
+
+  // Update dimension label
+  const cur = getCurrentDim();
+  document.getElementById('dim-label').textContent = cur.d;
+  document.getElementById('dim-name').textContent = cur.name;
+
+  // Highlight active tick
+  const ticks = ticksEl.querySelectorAll('span');
+  ticks.forEach((tick, i) => {
+    tick.classList.toggle('active', DIMS[i] === cur);
+  });
+
+  // Update audio
+  updateAudio(dimT);
+
+  requestAnimationFrame(render);
+}
+
+requestAnimationFrame(render);
+</script>
+</body>
+</html>
