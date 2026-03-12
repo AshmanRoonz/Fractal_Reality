@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triadic Morphogenesis · ⊙</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --anthropic-dark: #141413;
+            --anthropic-light: #faf9f5;
+            --anthropic-mid-gray: #b0aea5;
+            --anthropic-light-gray: #e8e6dc;
+            --anthropic-orange: #d97757;
+            --anthropic-blue: #6a9bcc;
+            --anthropic-green: #788c5d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--anthropic-light) 0%, #f5f3ee 100%);
+            min-height: 100vh;
+            color: var(--anthropic-dark);
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 320px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(20, 20, 19, 0.1);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar h1 {
+            font-family: 'Lora', serif;
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--anthropic-dark);
+            margin-bottom: 8px;
+        }
+
+        .sidebar .subtitle {
+            color: var(--anthropic-mid-gray);
+            font-size: 13px;
+            margin-bottom: 32px;
+            line-height: 1.4;
+        }
+
+        .control-section { margin-bottom: 28px; }
+
+        .control-section h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--anthropic-dark);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-section h3::before {
+            content: '•';
+            color: var(--anthropic-orange);
+            font-weight: bold;
+        }
+
+        .seed-input {
+            width: 100%;
+            background: var(--anthropic-light);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 12px;
+            border: 1px solid var(--anthropic-light-gray);
+            text-align: center;
+        }
+
+        .seed-input:focus {
+            outline: none;
+            border-color: var(--anthropic-orange);
+            box-shadow: 0 0 0 2px rgba(217, 119, 87, 0.1);
+            background: white;
+        }
+
+        .seed-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .control-group { margin-bottom: 16px; }
+
+        .control-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--anthropic-dark);
+            margin-bottom: 6px;
+        }
+
+        .control-group .hint {
+            font-size: 11px;
+            color: var(--anthropic-mid-gray);
+            margin-top: 2px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            height: 4px;
+            background: var(--anthropic-light-gray);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--anthropic-orange);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            background: #c86641;
+        }
+
+        .slider-container input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: var(--anthropic-orange);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .value-display {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--anthropic-mid-gray);
+            min-width: 48px;
+            text-align: right;
+        }
+
+        .button {
+            background: var(--anthropic-orange);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .button:hover { background: #c86641; transform: translateY(-1px); }
+        .button:active { transform: translateY(0); }
+        .button.secondary { background: var(--anthropic-blue); }
+        .button.secondary:hover { background: #5a8bb8; }
+        .button.tertiary { background: var(--anthropic-green); }
+        .button.tertiary:hover { background: #6b7b52; }
+
+        .button-row { display: flex; gap: 8px; }
+        .button-row .button { flex: 1; }
+
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        #canvas-container {
+            width: 100%;
+            max-width: 1000px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(20, 20, 19, 0.1);
+            background: #0A0A0F;
+        }
+
+        #canvas-container canvas {
+            display: block;
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--anthropic-mid-gray);
+            padding: 200px 0;
+        }
+
+        .legend {
+            font-size: 11px;
+            color: var(--anthropic-mid-gray);
+            margin-top: 20px;
+            padding: 12px;
+            border: 1px solid var(--anthropic-light-gray);
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+        @media (max-width: 600px) {
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h1>Triadic Morphogenesis</h1>
+            <div class="subtitle">Supershape × Circumpunct — where rotation ends, the field begins &ensp; ⊙</div>
+
+            <!-- Seed Section -->
+            <div class="control-section">
+                <h3>Seed</h3>
+                <input type="number" id="seed-input" class="seed-input" value="7" onchange="updateSeed()">
+                <div class="seed-controls">
+                    <button class="button secondary" onclick="previousSeed()">&#8592; Prev</button>
+                    <button class="button secondary" onclick="nextSeed()">Next &#8594;</button>
+                </div>
+                <button class="button tertiary" onclick="randomSeedAndUpdate()">&#8635; Random</button>
+            </div>
+
+            <!-- Tier Architecture Parameters -->
+            <div class="control-section">
+                <h3>Tier Architecture</h3>
+
+                <div class="control-group">
+                    <label>Symmetry Order (m)</label>
+                    <div class="slider-container">
+                        <input type="range" id="symmetry" min="1" max="12" step="1" value="4" oninput="updateParam('symmetry', this.value)">
+                        <span class="value-display" id="symmetry-value">4</span>
+                    </div>
+                    <div class="hint">4 = fourfold phase cycle</div>
+                </div>
+
+                <div class="control-group">
+                    <label>n₁ · Skeleton Tension</label>
+                    <div class="slider-container">
+                        <input type="range" id="n1" min="0.1" max="20" step="0.1" value="1.0" oninput="updateParam('n1', this.value)">
+                        <span class="value-display" id="n1-value">1.0</span>
+                    </div>
+                    <div class="hint">I — rotational skeleton curvature</div>
+                </div>
+
+                <div class="control-group">
+                    <label>n₂ · Field Mediation</label>
+                    <div class="slider-container">
+                        <input type="range" id="n2" min="0.1" max="20" step="0.1" value="1.0" oninput="updateParam('n2', this.value)">
+                        <span class="value-display" id="n2-value">1.0</span>
+                    </div>
+                    <div class="hint">Φ — field deformation (cos term)</div>
+                </div>
+
+                <div class="control-group">
+                    <label>n₃ · Boundary Shaping</label>
+                    <div class="slider-container">
+                        <input type="range" id="n3" min="0.1" max="20" step="0.1" value="1.0" oninput="updateParam('n3', this.value)">
+                        <span class="value-display" id="n3-value">1.0</span>
+                    </div>
+                    <div class="hint">Ω — closure contribution (sin term)</div>
+                </div>
+
+                <div class="control-group">
+                    <label>a / b Ratio</label>
+                    <div class="slider-container">
+                        <input type="range" id="abRatio" min="0.2" max="3.0" step="0.05" value="1.0" oninput="updateParam('abRatio', this.value)">
+                        <span class="value-display" id="abRatio-value">1.0</span>
+                    </div>
+                    <div class="hint">Scale asymmetry between cos/sin</div>
+                </div>
+            </div>
+
+            <!-- Recursion Parameters -->
+            <div class="control-section">
+                <h3>Fractal Nesting</h3>
+
+                <div class="control-group">
+                    <label>Tiers Deep</label>
+                    <div class="slider-container">
+                        <input type="range" id="tiers" min="1" max="5" step="1" value="3" oninput="updateParam('tiers', this.value)">
+                        <span class="value-display" id="tiers-value">3</span>
+                    </div>
+                    <div class="hint">Recursive nesting depth</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Tier Scale Ratio</label>
+                    <div class="slider-container">
+                        <input type="range" id="tierScale" min="0.15" max="0.6" step="0.01" value="0.38" oninput="updateParam('tierScale', this.value)">
+                        <span class="value-display" id="tierScale-value">0.38</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Tier Rotation</label>
+                    <div class="slider-container">
+                        <input type="range" id="tierRotation" min="0" max="90" step="1" value="0" oninput="updateParam('tierRotation', this.value)">
+                        <span class="value-display" id="tierRotation-value">0°</span>
+                    </div>
+                    <div class="hint">Phase offset per nesting level</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Parameter Drift</label>
+                    <div class="slider-container">
+                        <input type="range" id="paramDrift" min="0" max="2.0" step="0.05" value="0.5" oninput="updateParam('paramDrift', this.value)">
+                        <span class="value-display" id="paramDrift-value">0.50</span>
+                    </div>
+                    <div class="hint">How much n₁,n₂,n₃ shift per tier</div>
+                </div>
+            </div>
+
+            <!-- Display -->
+            <div class="control-section">
+                <h3>Display</h3>
+
+                <div class="control-group">
+                    <label>Phase Markers</label>
+                    <div class="slider-container">
+                        <input type="range" id="phaseMarkers" min="0" max="1" step="1" value="1" oninput="updateParam('phaseMarkers', this.value)">
+                        <span class="value-display" id="phaseMarkers-value">ON</span>
+                    </div>
+                    <div class="hint">Show +1, +i, −1, −i positions</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Role Coloring</label>
+                    <div class="slider-container">
+                        <input type="range" id="roleColoring" min="0" max="1" step="1" value="1" oninput="updateParam('roleColoring', this.value)">
+                        <span class="value-display" id="roleColoring-value">ON</span>
+                    </div>
+                    <div class="hint">Color boundary by I / Φ / Ω region</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Line Weight</label>
+                    <div class="slider-container">
+                        <input type="range" id="lineWeight" min="0.5" max="4" step="0.25" value="2.0" oninput="updateParam('lineWeight', this.value)">
+                        <span class="value-display" id="lineWeight-value">2.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="control-section">
+                <h3>Actions</h3>
+                <div class="button-row" style="margin-bottom:8px;">
+                    <button class="button" onclick="regenerate()">Regenerate</button>
+                    <button class="button secondary" onclick="resetParameters()">Reset</button>
+                </div>
+                <button class="button tertiary" onclick="downloadPNG()">Download PNG</button>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#E88AAF;"></div> I — Rotational skeleton (binary)</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#4DB8A0;"></div> Φ — Mediating field (analog)</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#4DA0C8;"></div> Ω — Closure point (fractal seal)</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#B8A060;"></div> ⊙ — Phase markers (+1, +i, −1, −i)</div>
+            </div>
+        </div>
+
+        <div class="canvas-area">
+            <div id="canvas-container">
+                <div class="loading">Generating boundary...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // PARAMETERS
+        // ═══════════════════════════════════════════════════════════════
+
+        let params = {
+            seed: 7,
+            symmetry: 4,
+            n1: 1.0,
+            n2: 1.0,
+            n3: 1.0,
+            abRatio: 1.0,
+            tiers: 3,
+            tierScale: 0.38,
+            tierRotation: 0,
+            paramDrift: 0.5,
+            phaseMarkers: 1,
+            roleColoring: 1,
+            lineWeight: 2.0
+        };
+
+        let defaultParams = JSON.parse(JSON.stringify(params));
+
+        // Circumpunct colors
+        const COL_GOLD  = [184, 160, 96];
+        const COL_PINK  = [232, 138, 175];
+        const COL_GREEN = [77, 184, 160];
+        const COL_CYAN  = [77, 160, 200];
+        const COL_PURPLE = [155, 122, 216];
+        const COL_DIM   = [138, 130, 114];
+        const COL_BG    = [10, 10, 15];
+
+        // ═══════════════════════════════════════════════════════════════
+        // SUPERFORMULA
+        // ═══════════════════════════════════════════════════════════════
+
+        function superformula(angle, m, a, b, n1, n2, n3) {
+            let t1 = Math.abs(Math.cos(m * angle / 4.0) / a);
+            let t2 = Math.abs(Math.sin(m * angle / 4.0) / b);
+            let r = Math.pow(Math.pow(t1, n2) + Math.pow(t2, n3), -1.0 / n1);
+            return isFinite(r) ? r : 0;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // TIER ROLE MAPPING
+        // ═══════════════════════════════════════════════════════════════
+        // Maps angular position to tier role:
+        // Within each symmetry sector (2π/m wide):
+        //   First 4/7 = I (rotational skeleton)
+        //   Next 2/7  = Φ (mediating field)
+        //   Last 1/7  = Ω (closure)
+
+        function getTierRole(angle, m) {
+            // Normalize angle to [0, 2π)
+            let a = ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+            // Position within the current sector
+            let sectorWidth = (2 * Math.PI) / m;
+            let posInSector = (a % sectorWidth) / sectorWidth;
+
+            if (posInSector < 4 / 7) return 'I';
+            if (posInSector < 6 / 7) return 'Phi';
+            return 'Omega';
+        }
+
+        function roleColor(role, alpha) {
+            if (role === 'I')     return [...COL_PINK, alpha];
+            if (role === 'Phi')   return [...COL_GREEN, alpha];
+            if (role === 'Omega') return [...COL_CYAN, alpha];
+            return [...COL_DIM, alpha];
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // P5.JS
+        // ═══════════════════════════════════════════════════════════════
+
+        let pg; // offscreen buffer for high quality
+
+        function setup() {
+            let canvas = createCanvas(1200, 1200);
+            canvas.parent('canvas-container');
+            pg = createGraphics(1200, 1200);
+            pixelDensity(1);
+            noLoop();
+            renderScene();
+            document.querySelector('.loading').style.display = 'none';
+        }
+
+        function draw() {
+            image(pg, 0, 0);
+        }
+
+        function renderScene() {
+            randomSeed(params.seed);
+            noiseSeed(params.seed);
+
+            pg.background(COL_BG[0], COL_BG[1], COL_BG[2]);
+
+            let cx = pg.width / 2;
+            let cy = pg.height / 2;
+            let baseRadius = pg.width * 0.35;
+
+            // Draw nested tiers from outermost to innermost
+            for (let tier = 0; tier < params.tiers; tier++) {
+                let scale = Math.pow(params.tierScale, tier);
+                let radius = baseRadius * scale;
+                let rotation = tier * params.tierRotation * Math.PI / 180;
+
+                // Drift parameters per tier using seeded noise
+                let drift = params.paramDrift * tier;
+                let dn1 = params.n1 + drift * (noise(params.seed * 0.1, tier * 0.7) - 0.5) * 4;
+                let dn2 = params.n2 + drift * (noise(params.seed * 0.2, tier * 0.7 + 10) - 0.5) * 4;
+                let dn3 = params.n3 + drift * (noise(params.seed * 0.3, tier * 0.7 + 20) - 0.5) * 4;
+
+                // Clamp to avoid degenerate shapes
+                dn1 = Math.max(0.05, dn1);
+                dn2 = Math.max(0.05, dn2);
+                dn3 = Math.max(0.05, dn3);
+
+                let m = params.symmetry;
+                let a = 1.0;
+                let b = params.abRatio;
+
+                // Compute boundary points
+                let steps = 720;
+                let points = [];
+                for (let i = 0; i <= steps; i++) {
+                    let angle = (i / steps) * 2 * Math.PI;
+                    let r = superformula(angle, m, a, b, dn1, dn2, dn3);
+                    let x = cx + r * radius * Math.cos(angle + rotation);
+                    let y = cy + r * radius * Math.sin(angle + rotation);
+                    let role = getTierRole(angle, m);
+                    points.push({ x, y, angle, role, r });
+                }
+
+                // Draw glow layer
+                let alpha = Math.max(20, 80 - tier * 20);
+                let weight = Math.max(0.5, params.lineWeight * (1 - tier * 0.25));
+
+                // Glow
+                pg.noFill();
+                pg.strokeWeight(weight + 4);
+                for (let i = 0; i < points.length - 1; i++) {
+                    let p = points[i];
+                    let col = params.roleColoring ? roleColor(p.role, alpha * 0.3) : [...COL_GOLD, alpha * 0.3];
+                    pg.stroke(col[0], col[1], col[2], col[3]);
+                    pg.line(p.x, p.y, points[i + 1].x, points[i + 1].y);
+                }
+
+                // Main boundary stroke
+                pg.strokeWeight(weight);
+                for (let i = 0; i < points.length - 1; i++) {
+                    let p = points[i];
+                    let col = params.roleColoring ? roleColor(p.role, 200 - tier * 40) : [...COL_GOLD, 200 - tier * 40];
+                    pg.stroke(col[0], col[1], col[2], col[3]);
+                    pg.line(p.x, p.y, points[i + 1].x, points[i + 1].y);
+                }
+
+                // Phase markers on outermost tier
+                if (params.phaseMarkers && tier === 0) {
+                    drawPhaseMarkers(cx, cy, radius, rotation, m, a, b, dn1, dn2, dn3);
+                }
+            }
+
+            // Central circumpunct symbol
+            drawCircumpunct(cx, cy);
+
+            redraw();
+        }
+
+        function drawPhaseMarkers(cx, cy, radius, rotation, m, a, b, n1, n2, n3) {
+            // Mark the four phase positions: 0°, 90°, 180°, 270°
+            let phases = [
+                { angle: 0,              label: '+1',  desc: 'identity' },
+                { angle: Math.PI / 2,    label: '+i',  desc: 'quarter' },
+                { angle: Math.PI,        label: '−1',  desc: 'half' },
+                { angle: 3 * Math.PI / 2, label: '−i', desc: '¾' }
+            ];
+
+            for (let phase of phases) {
+                let r = superformula(phase.angle, m, a, b, n1, n2, n3);
+                let x = cx + r * radius * Math.cos(phase.angle + rotation);
+                let y = cy + r * radius * Math.sin(phase.angle + rotation);
+
+                // Marker dot
+                pg.noStroke();
+                pg.fill(COL_GOLD[0], COL_GOLD[1], COL_GOLD[2], 60);
+                pg.ellipse(x, y, 18, 18);
+                pg.fill(COL_GOLD[0], COL_GOLD[1], COL_GOLD[2], 200);
+                pg.ellipse(x, y, 8, 8);
+
+                // Label
+                pg.fill(COL_GOLD[0], COL_GOLD[1], COL_GOLD[2], 180);
+                pg.noStroke();
+                pg.textFont('Courier New');
+                pg.textSize(14);
+                pg.textAlign(CENTER, CENTER);
+
+                // Offset label outward
+                let lx = cx + r * radius * 1.12 * Math.cos(phase.angle + rotation);
+                let ly = cy + r * radius * 1.12 * Math.sin(phase.angle + rotation);
+                pg.text(phase.label, lx, ly);
+            }
+        }
+
+        function drawCircumpunct(cx, cy) {
+            // The ⊙ symbol at the centre
+            pg.noFill();
+            pg.stroke(COL_GOLD[0], COL_GOLD[1], COL_GOLD[2], 80);
+            pg.strokeWeight(1.5);
+            pg.ellipse(cx, cy, 30, 30);
+
+            pg.noStroke();
+            pg.fill(COL_GOLD[0], COL_GOLD[1], COL_GOLD[2], 160);
+            pg.ellipse(cx, cy, 6, 6);
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // UI HANDLERS
+        // ═══════════════════════════════════════════════════════════════
+
+        function updateParam(paramName, value) {
+            let numVal = parseFloat(value);
+            params[paramName] = numVal;
+
+            let display = document.getElementById(paramName + '-value');
+            if (display) {
+                if (paramName === 'phaseMarkers' || paramName === 'roleColoring') {
+                    display.textContent = numVal ? 'ON' : 'OFF';
+                } else if (paramName === 'tierRotation') {
+                    display.textContent = numVal + '°';
+                } else if (Number.isInteger(numVal)) {
+                    display.textContent = numVal;
+                } else {
+                    display.textContent = numVal.toFixed(2);
+                }
+            }
+
+            renderScene();
+        }
+
+        function regenerate() {
+            renderScene();
+        }
+
+        function downloadPNG() {
+            pg.save('triadic-morphogenesis-' + params.seed + '.png');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // SEED CONTROLS
+        // ═══════════════════════════════════════════════════════════════
+
+        function updateSeedDisplay() {
+            document.getElementById('seed-input').value = params.seed;
+        }
+
+        function updateSeed() {
+            let input = document.getElementById('seed-input');
+            let newSeed = parseInt(input.value);
+            if (newSeed && newSeed > 0) {
+                params.seed = newSeed;
+                renderScene();
+            } else {
+                updateSeedDisplay();
+            }
+        }
+
+        function previousSeed() {
+            params.seed = Math.max(1, params.seed - 1);
+            updateSeedDisplay();
+            renderScene();
+        }
+
+        function nextSeed() {
+            params.seed = params.seed + 1;
+            updateSeedDisplay();
+            renderScene();
+        }
+
+        function randomSeedAndUpdate() {
+            params.seed = Math.floor(Math.random() * 999999) + 1;
+            updateSeedDisplay();
+            renderScene();
+        }
+
+        function resetParameters() {
+            params = JSON.parse(JSON.stringify(defaultParams));
+
+            // Update all sliders
+            let sliderParams = ['symmetry', 'n1', 'n2', 'n3', 'abRatio', 'tiers', 'tierScale', 'tierRotation', 'paramDrift', 'phaseMarkers', 'roleColoring', 'lineWeight'];
+            for (let p of sliderParams) {
+                let el = document.getElementById(p);
+                if (el) el.value = params[p];
+                updateParam(p, params[p]);
+            }
+
+            updateSeedDisplay();
+            renderScene();
+        }
+
+        window.addEventListener('load', function() {
+            updateSeedDisplay();
+        });
+    </script>
+</body>
+</html>
