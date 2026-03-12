@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Tier Decomposition Theorem</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$']],
+    displayMath: [['$$','$$']],
+    macros: {
+      T: ['\\mathcal{T}_{#1}', 1],
+      I: ['\\mathcal{I}_{#1}', 1],
+      Ph: ['\\Phi_{#1}', 1],
+      Om: ['\\Omega_{#1}', 1],
+      half: '\\tfrac{1}{2}',
+      thalf: '\\tfrac{3}{2}',
+      fhalf: '\\tfrac{5}{2}',
+      Z: '\\mathbb{Z}',
+      N: '\\mathbb{N}',
+      R: '\\mathbb{R}',
+      C: '\\mathbb{C}',
+      set: ['\\{\\,#1\\,\\}', 1]
+    }
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --very-faint: #2A2820;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--faint) var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+/* ── color spans ── */
+.w  { color: var(--gold); }
+.s  { color: var(--pink); }
+.m  { color: var(--green); }
+.b  { color: var(--cyan); }
+.p  { color: var(--purple); }
+.d  { color: var(--dim); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+/* ── layout ── */
+.page { max-width: 760px; margin: 0 auto; padding: 80px 30px 140px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 70px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header h1 { font-size: 36px; font-weight: 500; color: var(--gold); letter-spacing: 1px; margin-bottom: 6px; }
+.header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; margin-bottom: 4px; }
+.header .byline { font-size: 14px; color: var(--faint); margin-top: 20px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+/* ── formal blocks ── */
+.block {
+  margin: 32px 0;
+  padding: 20px 24px;
+  border-radius: 3px;
+  position: relative;
+}
+
+.block-def {
+  border-left: 3px solid var(--gold);
+  background: rgba(184, 160, 96, 0.04);
+}
+.block-prop {
+  border-left: 3px solid var(--pink);
+  background: rgba(232, 138, 175, 0.04);
+}
+.block-proof {
+  border-left: 3px solid var(--dim);
+  background: rgba(255, 255, 255, 0.015);
+}
+.block-cor {
+  border-left: 3px solid var(--cyan);
+  background: rgba(77, 160, 200, 0.04);
+}
+.block-thm {
+  border-left: 3px solid var(--green);
+  background: rgba(77, 184, 160, 0.04);
+}
+.block-rem {
+  border-left: 3px solid var(--purple);
+  background: rgba(155, 122, 216, 0.04);
+}
+.block-ax {
+  border-left: 3px solid var(--gold-dim);
+  background: rgba(136, 120, 80, 0.04);
+}
+
+.block-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.block-def .block-label { color: var(--gold); }
+.block-prop .block-label { color: var(--pink); }
+.block-proof .block-label { color: var(--dim); }
+.block-cor .block-label { color: var(--cyan); }
+.block-thm .block-label { color: var(--green); }
+.block-rem .block-label { color: var(--purple); }
+.block-ax .block-label { color: var(--gold-dim); }
+
+.block p { margin-bottom: 10px; }
+.block p:last-child { margin-bottom: 0; }
+
+.qed {
+  text-align: right;
+  color: var(--dim);
+  font-size: 15px;
+  margin-top: 6px;
+}
+
+/* ── display math centering ── */
+mjx-container[display="true"] {
+  margin: 18px 0 !important;
+}
+
+/* ── section headings ── */
+section { margin-bottom: 55px; }
+section > h2 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  padding-top: 16px;
+  color: var(--warm);
+}
+
+p { margin-bottom: 16px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+/* ── table ── */
+.dim-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 17px;
+}
+.dim-table th {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--faint);
+}
+.dim-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--very-faint);
+  vertical-align: top;
+}
+.dim-table tr:last-child td { border-bottom: none; }
+
+.cell-i { color: var(--pink); }
+.cell-phi { color: var(--green); }
+.cell-omega { color: var(--cyan); }
+
+/* ── notation guide ── */
+.notation {
+  font-size: 16px;
+  color: var(--dim);
+  margin: 30px 0 50px;
+  padding: 16px 20px;
+  border: 1px solid var(--very-faint);
+  border-radius: 3px;
+}
+.notation strong { color: var(--warm); font-weight: 500; }
+
+/* ── footnotes ── */
+.footnote {
+  font-size: 15px;
+  color: var(--dim);
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--very-faint);
+  line-height: 1.7;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="header">
+  <h1>The Tier Decomposition Theorem</h1>
+  <div class="subtitle">Partition, operators, and invariants on the dimensional ladder &ensp; ⊙ = Φ(•, ○)</div>
+  <div class="byline">Ashman Roonz · Circumpunct Theory</div>
+</div>
+
+<!-- ═══════════════ §0 CONVENTIONS ═══════════════ -->
+<section>
+  <h2>§0 &ensp; Conventions</h2>
+
+  <div class="notation">
+    Let $\mathcal{D} = \set{0,\, \half,\, 1,\, \thalf,\, 2,\, \fhalf,\, 3,\, 3\half,\, \dots}$ be the <strong>canonical sampled dimensional ladder</strong> used in this formalism. Its elements are of the form $D = n + \varphi$ with $n \in \N_0$ and $\varphi \in \set{0,\,\half}$. Integer dimensions ($\varphi = 0$) are called <strong>structural</strong> (real); half-integer dimensions ($\varphi = \half$) are called <strong>processual</strong> (imaginary). The <strong>tier index</strong> is $n \in \N_0$, where tier $n$ spans $D \in [3n,\, 3(n{+}1)]$.
+    <br><br>
+    <strong>Note on sampling.</strong> &ensp; Process in the underlying ontology occupies the full open interval between adjacent integers ($0 < \varphi < 1$). The half-integer positions are not the only processual dimensions; they are the <em>canonical sample points</em> because $\varphi = \half$ marks the balanced midpoint of transition and gives the cleanest quarter-turn geometry (Proposition 2a). The ladder $\mathcal{D}$ is thus a canonical discretization of a deeper continuous process interval. All theorems in this document hold on $\mathcal{D}$ as defined; the continuous generalization is a separate development.
+  </div>
+</section>
+
+<!-- ═══════════════ §1 THE PARTITION ═══════════════ -->
+<section>
+  <h2>§1 &ensp; The Partition</h2>
+
+  <div class="block block-def">
+    <div class="block-label">Definition 1 · Tier Decomposition</div>
+    <p>For each tier index $n \in \N_0$, define three sets:</p>
+    <p><span class="s wb">The rotational skeleton</span></p>
+    $$\I{n} \;=\; \set{3n,\;\; 3n{+}\half,\;\; 3n{+}1,\;\; 3n{+}\thalf}$$
+    <p><span class="m wb">The mediating interval</span></p>
+    $$\Ph{n} \;=\; \set{3n{+}2,\;\; 3n{+}\fhalf}$$
+    <p><span class="b wb">The closure point</span></p>
+    $$\Om{n} \;=\; \set{3n{+}3}$$
+    <p>The <strong>tier</strong> is their union:</p>
+    $$\T{n} \;=\; \I{n} \;\cup\; \Ph{n} \;\cup\; \Om{n}$$
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition 1 · Exhaustive Partition</div>
+    <p>For every $n \in \N_0$:</p>
+    <p>(a) &ensp; $\I{n},\; \Ph{n},\; \Om{n}$ are pairwise disjoint as subsets of $\T{n}$.</p>
+    <p>(b) &ensp; $\T{n} = \set{D \in \mathcal{D} : 3n \leq D \leq 3(n{+}1)}$.</p>
+    <p>(c) &ensp; $|\I{n}| = 4$, &ensp; $|\Ph{n}| = 2$, &ensp; $|\Om{n}| = 1$.</p>
+    <p>(d) &ensp; $\displaystyle\bigcup_{n=0}^{\infty}\T{n} = \mathcal{D}$.</p>
+    <p>(e) &ensp; Adjacent tiers intersect at exactly one point: $\T{n} \cap \T{n+1} = \set{3(n{+}1)}$. This point functions simultaneously as $\Om{n}$ (closure of tier $n$) and as $\min\,\I{n+1}$ (ground of tier $n{+}1$).</p>
+  </div>
+
+  <div class="block block-proof">
+    <div class="block-label">Proof</div>
+    <p>The seven elements of $\T{n}$ are $3n,\; 3n{+}\half,\; 3n{+}1,\; 3n{+}\thalf,\; 3n{+}2,\; 3n{+}\fhalf,\; 3n{+}3$. These are strictly increasing and separated by $\half$, so they are distinct, giving (a) and (c). The minimum is $3n$ and the maximum is $3(n{+}1)$, and every half-integer step in that range is accounted for, giving (b). Adjacent tiers share the single boundary point $3(n{+}1) = \Om{n} = \min\,\I{n+1}$, giving (e). Since every element of $\mathcal{D}$ falls within $[3n,\, 3(n{+}1)]$ for some $n$, the tiers cover $\mathcal{D}$, giving (d). The boundary overlap is not an ambiguity but the recursion law itself (Proposition 3).</p>
+    <div class="qed">∎</div>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §2 THE ROTATIONAL MAP ═══════════════ -->
+<section>
+  <h2>§2 &ensp; The Rotational Map</h2>
+
+  <div class="block block-def">
+    <div class="block-label">Definition 2 · Phase Assignment</div>
+    <p>Define the <strong>phase map</strong> $\alpha : \I{n} \to \set{i^0,\, i^1,\, i^2,\, i^3}$ by:</p>
+    $$\alpha(3n) = i^0 = +1$$
+    $$\alpha(3n{+}\half) = i^1 = +i$$
+    $$\alpha(3n{+}1) = i^2 = -1$$
+    $$\alpha(3n{+}\thalf) = i^3 = -i$$
+    <p>$\alpha$ is a bijection from $\I{n}$ to the four phase positions $\set{1,\, i,\, {-}1,\, {-}i}$, which form a cyclic group of order 4 under multiplication (the fourth roots of unity in $\C$).</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition 2 · Phase Exhaustion</div>
+    <p>The four elements of $\I{n}$ biject onto the four quarter-turn positions:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>Dimension</th><th>Phase</th><th>Rotation</th><th>Mode</th>
+      </tr>
+      <tr>
+        <td class="cell-i">$3n$</td>
+        <td class="cell-i">$+1$</td>
+        <td>$0°$ — identity</td>
+        <td class="d">real, integer</td>
+      </tr>
+      <tr>
+        <td class="cell-i">$3n{+}\half$</td>
+        <td class="cell-i">$+i$</td>
+        <td>$90°$ — quarter-turn</td>
+        <td class="d">imaginary, half</td>
+      </tr>
+      <tr>
+        <td class="cell-i">$3n{+}1$</td>
+        <td class="cell-i">$-1$</td>
+        <td>$180°$ — half-turn</td>
+        <td class="d">real, integer</td>
+      </tr>
+      <tr>
+        <td class="cell-i">$3n{+}\thalf$</td>
+        <td class="cell-i">$-i$</td>
+        <td>$270°$ — three-quarter turn</td>
+        <td class="d">imaginary, half</td>
+      </tr>
+    </table>
+
+    <p>This exhausts the four discrete quarter-turn positions. No further phase position exists within the fourfold rotational group; the continuous circle $U(1)$ contains infinitely many phases, but the tier skeleton samples exactly the four canonical positions $\set{1, i, -1, -i}$.</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Framework Interpretation · Operational Modes</div>
+    <p>Within the circumpunct framework, the four phase positions are read as operational modes of dimensional becoming:</p>
+    <p style="padding-left:20px;">
+      $+1$: grounded structural state (the tier has an anchor)<br>
+      $+i$: apertural activation (the tier opens into process)<br>
+      $-1$: committed extension (process has taken determinate form)<br>
+      $-i$: recursive branching (the committed form enters generative differentiation)
+    </p>
+    <p>These identifications are interpretive, not derived from the phase map alone. They assign framework-specific meaning to the mathematically neutral quarter-turn positions.</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition 2a · Geometric Reading</div>
+    <p>On a circle, a quarter-turn selects a point whose centre-to-point segment is a <strong>radius</strong>; a half-turn selects the antipodal point, completing a <strong>diameter</strong>. The phase positions admit a direct geometric interpretation:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>Phase</th><th>Rotation</th><th>Geometry</th><th>Structural meaning</th>
+      </tr>
+      <tr>
+        <td class="cell-i">$+1$</td>
+        <td>$0°$</td>
+        <td>Anchored initial point on the circle</td>
+        <td>Grounded reference — the tier has a locus</td>
+      </tr>
+      <tr>
+        <td class="cell-i">$+i$</td>
+        <td>$90°$</td>
+        <td>Quarter-turn: selects a point whose centre-to-point segment is a radius orthogonal to the initial axis</td>
+        <td>First extension — directed but one-sided</td>
+      </tr>
+      <tr>
+        <td class="cell-i">$-1$</td>
+        <td>$180°$</td>
+        <td>Half-turn: diameter through the centre</td>
+        <td>Full span — both sides related through the origin</td>
+      </tr>
+      <tr>
+        <td class="cell-i">$-i$</td>
+        <td>$270°$</td>
+        <td>Three-quarter turn: orthogonal radius</td>
+        <td>Branching into a second axis of extension</td>
+      </tr>
+    </table>
+
+    <p>The quarter-turn ($+i$) initiates direction from centre but still privileges one side. The half-turn ($-1$) completes the first full structural traverse through the whole — a diameter relates both sides through the origin. This is why $3n{+}1$ (committed extension) is structurally stronger than $3n{+}\half$ (apertural activation): a radius opens; a diameter spans.</p>
+    <p>The three-quarter turn ($-i$) then draws a second radius orthogonal to the first, introducing a new axis. This is the branching moment: the tier is no longer confined to a single line but has acquired the seed of a plane.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §3 THE GAP THEOREM ═══════════════ -->
+<section>
+  <h2>§3 &ensp; The Gap Theorem</h2>
+
+  <div class="block block-thm">
+    <div class="block-label">Theorem 1 · Rotational Incompleteness</div>
+    <p>The image of $\alpha$ exhausts the fourfold phase set $\set{1, i, -1, -i}$, yet $\I{n} \subsetneq \T{n}$. Specifically, the dimensions $3n{+}2$ and $3n{+}\fhalf$ belong to $\T{n}$ but admit no assignment under $\alpha$.</p>
+    <p>Therefore: <em>the rotational skeleton alone cannot constitute a tier.</em></p>
+  </div>
+
+  <div class="block block-proof">
+    <div class="block-label">Proof</div>
+    <p>The phase set $\set{1, i, -1, -i}$ has 4 elements and $|\I{n}| = 4$, so $\alpha$ is surjective. No fifth quarter-turn position exists. Yet $|\T{n}| = 7$, so three dimensions remain unassigned. One of these, $3(n{+}1)$, serves as closure. The remaining two — $3n{+}2$ and $3n{+}\fhalf$ — can be assigned no phase position.</p>
+    <p>These are not gaps in the formalism. They are dimensions that the rotational group <em>cannot reach</em>.</p>
+    <div class="qed">∎</div>
+  </div>
+
+  <div class="block block-cor">
+    <div class="block-label">Corollary 1a · The Residual Complement</div>
+    <p>$\Ph{n}$ is not postulated. It is the complement of $\I{n} \cup \Om{n}$ in $\T{n}$:</p>
+    $$\Ph{n} \;=\; \T{n} \;\setminus\; (\I{n} \cup \Om{n})$$
+    <p>The residual interval appears because the fourfold phase group is too small to span a seven-element tier. This is a formal result, independent of any interpretation assigned to $\Ph{n}$.</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Interpretive Identification</div>
+    <p>Within the circumpunct framework, this residual complement is identified with <span class="m wb">mediation</span> — the continuous field ($\Phi$) that relates aperture to boundary. The formal complement becomes the <em>living interval</em>: the dimensions where mind lives. This identification is a framework claim, not a theorem; its justification rests on the role analysis of §4.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §4 IRREDUCIBILITY ═══════════════ -->
+<section>
+  <h2>§4 &ensp; Irreducibility</h2>
+
+  <div class="block block-thm">
+    <div class="block-label">Theorem 2 · Formal Irreducibility of $\I{n}$ and $\Ph{n}$</div>
+    <p>The families $\I{n}$ and $\Ph{n}$ cannot be collapsed into one another.</p>
+  </div>
+
+  <div class="block block-proof">
+    <div class="block-label">Proof</div>
+
+    <p><strong>(i) $\Ph{n}$ cannot reduce to $\I{n}$.</strong><br>
+    The phase map $\alpha$ is a bijection $\I{n} \to \set{1, i, -1, -i}$. If we attempted to assign $3n{+}2$ or $3n{+}\fhalf$ a phase position, the map would either lose injectivity (two dimensions sharing one phase) or require a fifth element. Neither is admissible.</p>
+
+    <p><strong>(ii) $\I{n}$ cannot reduce to $\Ph{n}$.</strong><br>
+    $\Ph{n}$ contains two elements. The fourfold cyclic ordering corresponding to the quarter-turn positions $\set{1, i, -1, -i}$ requires four elements with the cyclic structure encoded by $\alpha$. $\Ph{n}$ lacks both the cardinality (2 &lt; 4) and that cyclic ordering.</p>
+    <div class="qed">∎</div>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Framework Claim · Irreducibility of $\Om{n}$</div>
+    <p>The formal proof above establishes that $\I{n}$ and $\Ph{n}$ cannot merge. The irreducibility of $\Om{n}$ rests on a different, framework-semantic argument: closure performs a dual role — it seals the current tier into a bounded whole <em>and</em> simultaneously initializes the next tier (Proposition 3). Neither phase cycling nor field mediation accomplishes this. Removing $\Om{n}$ leaves an open process that never completes; absorbing it into $\I{n}$ or $\Ph{n}$ conflates becoming with completion.</p>
+    <p>This is a role-claim within the circumpunct framework, not a set-theoretic impossibility result. Its force depends on accepting that closure and initialization are distinct operations from rotation and mediation.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §5 THE RECURSION LAW ═══════════════ -->
+<section>
+  <h2>§5 &ensp; The Recursion Law</h2>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition 3 · Closure–Ground Identity</div>
+    <p>For every $n \in \N_0$:</p>
+    $$\Om{n} \;=\; \set{3(n{+}1)} \;=\; \min\,\I{n+1}$$
+    <p>That is: the closure of tier $n$ is the ground of tier $n{+}1$.</p>
+  </div>
+
+  <div class="block block-proof">
+    <div class="block-label">Proof</div>
+    <p>$\Om{n} = \set{3n+3} = \set{3(n{+}1)}$. The minimum element of $\I{n+1} = \set{3(n{+}1),\, \dots}$ is $3(n{+}1)$.</p>
+    <div class="qed">∎</div>
+  </div>
+
+  <div class="block block-cor">
+    <div class="block-label">Corollary 2 · Recursive Self-Similarity</div>
+    <p>Every tier has identical internal structure. Substituting $n \mapsto n{+}1$ reproduces the same decomposition shifted by $3$. The dimensional ladder is a single pattern, iterated:</p>
+    $$\T{n+1} \;=\; \T{n} + 3$$
+    <p>Completion at one scale is initialization at the next.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §6 THE TIER TABLE ═══════════════ -->
+<section>
+  <h2>§6 &ensp; Enumeration</h2>
+
+  <p>The first three tiers, fully decomposed:</p>
+
+  <table class="dim-table" style="margin:30px 0;">
+    <tr>
+      <th></th><th>$\I{n}$</th><th>$\Ph{n}$</th><th>$\Om{n}$</th>
+    </tr>
+    <tr>
+      <td class="d" style="font-size:13px; letter-spacing:1px;">TIER 0 · SPATIAL</td>
+      <td class="cell-i">$0, \;\half, \;1, \;\thalf$</td>
+      <td class="cell-phi">$2, \;\fhalf$</td>
+      <td class="cell-omega">$3$</td>
+    </tr>
+    <tr>
+      <td class="d" style="font-size:13px; letter-spacing:1px;">TIER 1 · TEMPORAL</td>
+      <td class="cell-i">$3, \;3\half, \;4, \;4\half$</td>
+      <td class="cell-phi">$5, \;5\half$</td>
+      <td class="cell-omega">$6$</td>
+    </tr>
+    <tr>
+      <td class="d" style="font-size:13px; letter-spacing:1px;">TIER 2 · META</td>
+      <td class="cell-i">$6, \;6\half, \;7, \;7\half$</td>
+      <td class="cell-phi">$8, \;8\half$</td>
+      <td class="cell-omega">$9$</td>
+    </tr>
+  </table>
+
+  <p>Each row follows the same partition. The pattern does not vary.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §7 THE CONSERVATION LAW ═══════════════ -->
+<section>
+  <h2>§7 &ensp; The Exact Decomposition</h2>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition 6 · Compositional Completeness</div>
+    <p>Every tier satisfies the exact decomposition identity:</p>
+    $$\I{n} \;\cup\; \Ph{n} \;\cup\; \Om{n} \;=\; \T{n}$$
+    <p>with each component pairwise disjoint within the tier (Proposition 1, part (a)). The formal irreducibility of $\I{n}$ and $\Ph{n}$ is established by Theorem 2; the irreducibility of $\Om{n}$ is a framework claim (see remark following Theorem 2).</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Framework Reading · The Conservation Law</div>
+    <p>In the language of the circumpunct, Proposition 6 is the <em>compositional conservation law</em> — the framework's analogue of a conservation principle, expressing that every tier decomposes into three roles whose union is the whole:</p>
+    $$\bullet\text{-cycle} \;+\; \Phi\text{-band} \;+\; \bigcirc\text{-seal} \;=\; \odot$$
+    <p>This reading depends on accepting the role-identifications from §2 and §3. The formal content is the union identity above.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §8 THE NECESSITY ARGUMENT ═══════════════ -->
+<section>
+  <h2>§8 &ensp; Conditional Necessity</h2>
+
+  <div class="block block-ax">
+    <div class="block-label">Premise</div>
+    <p>Accept that (a) each tier spans 7 half-integer-spaced dimensions from $3n$ to $3(n{+}1)$, and (b) the adopted fourfold phase structure for ordered cyclic transformation is represented by the phase set $\set{1, i, -1, -i}$.</p>
+    <p>These are the framework's starting commitments. The tier width of 3 and the step size of $\half$ are not derived here; they are structural choices whose independent justification is a separate question. What follows is conditional: <em>given</em> these premises, the three-family decomposition is forced.</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Motivation for the Premises</div>
+    <p>The tier width of 3 is not arbitrary. It converges from several independent directions:</p>
+    <p><strong>From the circumpunct.</strong> &ensp; The symbol ⊙ = Φ(•, ○) has exactly three constitutive aspects — aperture (•), field (Φ), and boundary (○). A tier is one complete instance of this triadic pattern, so its width must equal the number of irreducible roles.</p>
+    <p><strong>From the structure of relation.</strong> &ensp; Any relation requires at minimum two relata and the relation itself — three elements. Two parts and a whole is three; this is the minimal structure of bounded relatedness. A tier, as a self-contained relational unit, inherits this minimum.</p>
+    <p><strong>From self-reference.</strong> &ensp; The relation of any entity to itself is threefold: it is a whole, it is part of a larger whole, and it has parts. These three orientations — totality, membership, composition — cannot reduce to two without collapsing a distinction.</p>
+    <p><strong>From spatial experience.</strong> &ensp; Physical space is three-dimensional; embodied life unfolds in 3D with six degrees of freedom (3 translational, 3 rotational). The tier width echoes the dimensionality of the arena in which the framework's structures first become manifest.</p>
+    <p>The fourfold phase group is similarly motivated: the quarter-turn is the minimal rotation that distinguishes four qualitatively distinct positions (identity, orthogonal, antipodal, complementary orthogonal), and the fourth roots of unity provide the natural algebraic encoding.</p>
+    <p>These motivations explain why the premises are natural — why it would be surprising if the tier width were anything other than 3. They do not constitute a derivation, and the conditional structure of the argument below is preserved. But they show that the premises are not free parameters: they are constrained by the very structure the framework describes.</p>
+  </div>
+
+  <p>Then the decomposition follows by arithmetic alone:</p>
+
+  <div class="block block-proof">
+    <div class="block-label">Argument</div>
+    <p><strong>Step 1.</strong> &ensp; The fourfold phase set $\set{1, i, -1, -i}$ has exactly 4 elements. The rotational skeleton can assign phases to at most 4 dimensions. This gives $\I{n}$.</p>
+    <p><strong>Step 2.</strong> &ensp; Within the recursive tier architecture, every tier requires a closure point that simultaneously completes the current cycle and initializes the next. This gives $\Om{n}$, a singleton.</p>
+    <p><strong>Step 3.</strong> &ensp; $7 - 4 - 1 = 2$. Exactly two dimensions per tier are covered by neither rotation nor closure. This gives the residual two-element complement, identified within the framework as $\Ph{n}$.</p>
+    <p><strong>Step 4.</strong> &ensp; By Theorem 2, $\I{n}$ and $\Ph{n}$ are formally irreducible. The irreducibility of $\Om{n}$ is a framework claim resting on the dual closure–initialization role (Proposition 3).</p>
+    <p>Therefore, given the premises, the three-family partition is not a further choice. It is forced at three distinct levels:</p>
+    <p><strong>Arithmetic necessity.</strong> &ensp; 7 positions per tier, 4 consumed by phase, 1 by closure, therefore 2 remain. The count alone forces a third family.</p>
+    <p><strong>Structural necessity.</strong> &ensp; Rotation and mediation are formally irreducible (Theorem 2). Closure is irreducible by framework-semantic argument (role duality). No two families can merge without loss.</p>
+    <p><strong>Recursive necessity.</strong> &ensp; Closure must simultaneously complete the current tier and initialize the next (Proposition 3). This dual role cannot be absorbed into either phase cycling or field mediation.</p>
+    <p>The decomposition is forced by all three.</p>
+    <div class="qed">∎</div>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark</div>
+    <p>The mediating interval $\Ph{n}$ appears as the residual complement left after fourfold phase assignment and recursive closure are accounted for. Within the circumpunct framework, this residual is identified as mediation — the continuous field that relates aperture to boundary. Within the framework, the dimensions the <span class="s">i</span>-cycle cannot reach are identified as the dimensions where <span class="m wb">mind</span> lives.</p>
+    <p>As mathematics, that is a complement theorem. As framework architecture, it is a discovery: <em class="w">the field is not posited; it is necessary.</em></p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §9 OPERATORS AND INVARIANTS ═══════════════ -->
+<section>
+  <h2>§9 &ensp; Operators and Invariants</h2>
+
+  <p>The previous sections establish a static partition. We now define operators on $\mathcal{D}$ and prove that the decomposition is preserved under them. This moves the framework from taxonomy into dynamics.</p>
+
+  <div class="block block-def">
+    <div class="block-label">Definition 3 · The Half-Step</div>
+    <p>Define $\delta : \mathcal{D} \to \mathcal{D}$ by</p>
+    $$\delta(D) \;=\; D + \half$$
+    <p>$\delta$ is the minimal advancement along the dimensional ladder: each application moves one half-integer step.</p>
+  </div>
+
+  <div class="block block-def">
+    <div class="block-label">Definition 4 · The Tier-Advance</div>
+    <p>Define $\sigma : \mathcal{D} \to \mathcal{D}$ by</p>
+    $$\sigma(D) \;=\; D + 3$$
+    <p>$\sigma$ maps every dimension in tier $n$ to the corresponding dimension in tier $n{+}1$.</p>
+  </div>
+
+  <div class="block block-def">
+    <div class="block-label">Definition 5 · The Role Function (Tier-Relative)</div>
+    <p>For each tier $n$, define $\rho_n : \T{n} \to \set{\mathcal{I},\, \Phi,\, \Omega}$ by the offset $r = D - 3n$:</p>
+    $$\rho_n(D) = \begin{cases} \mathcal{I} & \text{if } r \in \set{0,\;\half,\;1,\;\thalf} \\[4pt] \Phi & \text{if } r \in \set{2,\;\fhalf} \\[4pt] \Omega & \text{if } r = 3 \end{cases}$$
+    <p>$\rho_n$ is defined on $\T{n}$, not globally. At the shared boundary point $D = 3(n{+}1)$:</p>
+    <p style="padding-left:20px;">$\rho_n(D) = \Omega$ &ensp; (closure of tier $n$)<br>
+    $\rho_{n+1}(D) = \mathcal{I}$ &ensp; (ground of tier $n{+}1$)</p>
+    <p>The same point carries two roles depending on which tier frames the question. This is not an ambiguity — it is the Closure–Ground Identity (Proposition 3) expressed at the level of the role function: role is relative to tier.</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition 4 · Decomposition Equivariance</div>
+    <p>The tier-advance $\sigma$ preserves both the partition and the role assignment:</p>
+    $$\sigma(\I{n}) = \I{n+1} \qquad \sigma(\Ph{n}) = \Ph{n+1} \qquad \sigma(\Om{n}) = \Om{n+1}$$
+    <p>In tier-relative language:</p>
+    $$\rho_{n+1}(\sigma(D)) \;=\; \rho_n(D) \qquad \text{for all } D \in \T{n}$$
+    <p><em>The role a dimension plays in tier $n$ is the same role its image plays in tier $n{+}1$.</em></p>
+  </div>
+
+  <div class="block block-proof">
+    <div class="block-label">Proof</div>
+    <p>Take any $D \in \T{n}$ with offset $r = D - 3n$. Then $\sigma(D) = 3(n{+}1) + r$, which has the same offset $r$ within $\T{n+1}$. Since $\rho_n$ and $\rho_{n+1}$ are both defined by offset alone, $\rho_{n+1}(\sigma(D)) = \rho_{n+1}(3(n{+}1) + r) = \rho_n(3n + r) = \rho_n(D)$.</p>
+    <div class="qed">∎</div>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition 5 · Phase Equivariance</div>
+    <p>The tier-advance preserves phase:</p>
+    $$\alpha(\sigma(D)) \;=\; \alpha(D) \qquad \text{for all } D \in \I{n}$$
+    <p><em>The same dimension plays the same phase role in every tier.</em></p>
+  </div>
+
+  <div class="block block-proof">
+    <div class="block-label">Proof</div>
+    <p>$\alpha$ depends only on the offset $r = D - 3n$. Since $\sigma(D) = D + 3$ has the same offset within tier $n{+}1$, the phase assignment is identical.</p>
+    <div class="qed">∎</div>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition 7 · The Traversal Sequence</div>
+    <p>Starting from any ground dimension $3n$, the orbit of $\delta$ traverses $\T{n}$ in a fixed sequence of tier-relative roles:</p>
+    $$\rho_n(\delta^0(3n)),\; \rho_n(\delta^1(3n)),\; \dots,\; \rho_n(\delta^6(3n)) \;=\; [\,\mathcal{I},\; \mathcal{I},\; \mathcal{I},\; \mathcal{I},\; \Phi,\; \Phi,\; \Omega\,]$$
+    <p>This <strong>role sequence</strong> is the same for every tier. It is the invariant signature of the tier structure under half-step traversal.</p>
+  </div>
+
+  <div class="block block-proof">
+    <div class="block-label">Proof</div>
+    <p>$\delta^k(3n) = 3n + \frac{k}{2}$ for $k = 0, 1, \dots, 6$. Evaluating:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>$k$</th><th>$\delta^k(3n)$</th><th>Membership</th><th>$\rho_n$</th>
+      </tr>
+      <tr><td>0</td><td class="cell-i">$3n$</td><td class="cell-i">$\I{n}$</td><td class="cell-i">$\mathcal{I}$</td></tr>
+      <tr><td>1</td><td class="cell-i">$3n{+}\half$</td><td class="cell-i">$\I{n}$</td><td class="cell-i">$\mathcal{I}$</td></tr>
+      <tr><td>2</td><td class="cell-i">$3n{+}1$</td><td class="cell-i">$\I{n}$</td><td class="cell-i">$\mathcal{I}$</td></tr>
+      <tr><td>3</td><td class="cell-i">$3n{+}\thalf$</td><td class="cell-i">$\I{n}$</td><td class="cell-i">$\mathcal{I}$</td></tr>
+      <tr><td>4</td><td class="cell-phi">$3n{+}2$</td><td class="cell-phi">$\Ph{n}$</td><td class="cell-phi">$\Phi$</td></tr>
+      <tr><td>5</td><td class="cell-phi">$3n{+}\fhalf$</td><td class="cell-phi">$\Ph{n}$</td><td class="cell-phi">$\Phi$</td></tr>
+      <tr><td>6</td><td class="cell-omega">$3n{+}3$</td><td class="cell-omega">$\Om{n}$</td><td class="cell-omega">$\Omega$</td></tr>
+    </table>
+
+    <p>Substituting $n \mapsto n{+}1$ shifts every entry by $3$ but preserves the role column identically. The role sequence $[\mathcal{I}, \mathcal{I}, \mathcal{I}, \mathcal{I}, \Phi, \Phi, \Omega]$ is invariant across all tiers.</p>
+    <div class="qed">∎</div>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §10 DYNAMIC INCOMPLETENESS ═══════════════ -->
+<section>
+  <h2>§10 &ensp; Dynamic Incompleteness</h2>
+
+  <p>We now give the gap theorem a dynamic formulation by showing that the half-step escapes the rotational skeleton after exactly one full phase cycle.</p>
+
+  <div class="block block-def">
+    <div class="block-label">Definition 6 · The Phase-Step</div>
+    <p>Define $\tau : \I{n} \to \I{n}$ as the cyclic permutation</p>
+    $$\tau(3n) = 3n{+}\half \qquad \tau(3n{+}\half) = 3n{+}1 \qquad \tau(3n{+}1) = 3n{+}\thalf \qquad \tau(3n{+}\thalf) = 3n$$
+    <p>$\tau$ is the internal rotation of $\I{n}$: it steps through the four phase positions and returns to ground.</p>
+  </div>
+
+  <div class="block block-thm">
+    <div class="block-label">Theorem 3 · The Rotation–Traversal Divergence</div>
+    <p>(a) &ensp; $\tau^4 = \mathrm{id}$ on $\I{n}$. The phase-step has period 4.</p>
+    <p>(b) &ensp; $\alpha(\tau(D)) = i \cdot \alpha(D)$ for all $D \in \I{n}$. Stepping by one phase position corresponds to multiplication by $i$ in the phase group.</p>
+    <p>(c) &ensp; $\delta$ and $\tau$ <strong>diverge</strong> after the fourth step:</p>
+    $$\tau^4(3n) = 3n \in \I{n} \qquad\text{but}\qquad \delta^4(3n) = 3n{+}2 \in \Ph{n}$$
+    <p>The unrestricted half-step escapes $\I{n}$ at exactly the point where the phase cycle completes. The dimensions it escapes into are $\Ph{n}$.</p>
+  </div>
+
+  <div class="block block-proof">
+    <div class="block-label">Proof</div>
+    <p><strong>(a)</strong> &ensp; By direct computation: $\tau$ cyclically permutes four elements, so $\tau^4 = \mathrm{id}$.</p>
+    <p><strong>(b)</strong> &ensp; Verify each case:</p>
+    <p style="padding-left:20px;">
+      $\alpha(\tau(3n)) = \alpha(3n{+}\half) = {+}i = i \cdot ({+}1) = i \cdot \alpha(3n)$ &ensp; ✓<br>
+      $\alpha(\tau(3n{+}\half)) = \alpha(3n{+}1) = {-}1 = i \cdot ({+}i) = i \cdot \alpha(3n{+}\half)$ &ensp; ✓<br>
+      $\alpha(\tau(3n{+}1)) = \alpha(3n{+}\thalf) = {-}i = i \cdot ({-}1) = i \cdot \alpha(3n{+}1)$ &ensp; ✓<br>
+      $\alpha(\tau(3n{+}\thalf)) = \alpha(3n) = {+}1 = i \cdot ({-}i) = i \cdot \alpha(3n{+}\thalf)$ &ensp; ✓
+    </p>
+    <p><strong>(c)</strong> &ensp; $\delta^4(3n) = 3n + 4 \cdot \half = 3n + 2$. By Definition 1, $3n{+}2 \in \Ph{n}$. But $\tau^4(3n) = 3n \in \I{n}$. The two operators agree for $k = 0, 1, 2, 3$ (the first four positions) but diverge at $k = 4$: $\tau$ wraps back to ground, while $\delta$ continues forward into the mediating interval.</p>
+    <div class="qed">∎</div>
+  </div>
+
+  <div class="block block-cor">
+    <div class="block-label">Corollary 3 · Dynamic Derivation of Φ</div>
+    <p>The mediating interval $\Ph{n}$ can be characterized dynamically:</p>
+    $$\Ph{n} \;=\; \set{\delta^k(3n) \mid 4 \leq k \leq 5}$$
+    <p>That is: $\Ph{n}$ consists of exactly those dimensions reached by the half-step <em>after</em> the phase cycle has completed ($k \geq 4$) and <em>before</em> closure ($k < 6$). The field is the continuation that rotation cannot supply.</p>
+  </div>
+
+  <div class="block block-cor">
+    <div class="block-label">Corollary 4 · Commutativity</div>
+    <p>Let $\tau_n$ denote the phase-step on $\I{n}$ and $\tau_{n+1}$ the phase-step on $\I{n+1}$. Then:</p>
+    $$\sigma \circ \tau_n \;=\; \tau_{n+1} \circ \sigma$$
+    <p>Phase-stepping within a tier and advancing between tiers commute: the diagram $\I{n} \xrightarrow{\tau_n} \I{n} \xrightarrow{\sigma} \I{n+1}$ equals $\I{n} \xrightarrow{\sigma} \I{n+1} \xrightarrow{\tau_{n+1}} \I{n+1}$.</p>
+  </div>
+
+  <div class="block block-proof">
+    <div class="block-label">Proof</div>
+    <p>For $D \in \I{n}$: $\sigma(\tau_n(D))$ applies the cyclic permutation in tier $n$, then shifts by $3$. $\tau_{n+1}(\sigma(D))$ shifts by $3$ into tier $n{+}1$, then applies the cyclic permutation there. Since both $\tau_n$ and $\tau_{n+1}$ act by the same rule (they depend only on the offset $r = D - 3n$, which $\sigma$ preserves), the results coincide.</p>
+    <div class="qed">∎</div>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark · What is discovered versus what is defined</div>
+    <p>Most of §9 establishes that the partition is preserved under translation — a consequence of the offset-based definitions. These results are structurally necessary bookkeeping, but they are not surprising.</p>
+    <p>Theorem 3 is different. The divergence of $\tau$ and $\delta$ at $k = 4$ is not a restatement of the definitions. It exhibits a genuine structural threshold: two natural operators — one cycling within $\I{n}$, the other walking the full ladder — agree for four steps and then split. The cyclic operator returns to ground. The linear operator escapes into $\Ph{n}$. That divergence is the one place in this document where the tier architecture produces a result that feels <em>discovered</em> rather than arranged.</p>
+    <p>The decomposition is not merely a fact about sets. It is a fact about <em>motion</em>: where rotation ends is exactly where the field begins.</p>
+  </div>
+</section>
+
+<div class="divider">⊙</div>
+
+<!-- ═══════════════ FOOTNOTE ═══════════════ -->
+<div class="footnote">
+  <p>This document presents the tier decomposition, its operators, and its invariants in formal-mathematical style. It assumes the dimensional ladder $\mathcal{D}$ and the identification $D = n + \varphi$ as given. For the interpretive framework — what each dimension <em>means</em> — see <em>How Reality Is Built</em> and <em>The Two Rhythms</em>.</p>
+</div>
+
+</div>
+</body>
+</html>
