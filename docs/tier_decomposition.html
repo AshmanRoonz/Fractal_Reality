@@ -719,11 +719,95 @@ p { margin-bottom: 16px; }
   </div>
 </section>
 
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ §11 GEOMETRIC REALIZATION ═══════════════ -->
+<section>
+  <h2>§11 &ensp; Geometric Realization: The Boundary Operator</h2>
+
+  <p>The preceding sections establish the tier decomposition as an algebraic structure on a discrete ladder. We now identify a candidate geometric realization: a parametric boundary operator whose free parameters correspond to the three irreducible role-families.</p>
+
+  <div class="block block-def">
+    <div class="block-label">Definition 7 · The Supershape Boundary</div>
+    <p>The <strong>Gielis superformula</strong> defines a radial function $r : [0, 2\pi) \to \R^+$ by:</p>
+    $$r(\phi) \;=\; \left(\;\left|\frac{\cos\!\bigl(\tfrac{m\phi}{4}\bigr)}{a}\right|^{n_2} +\; \left|\frac{\sin\!\bigl(\tfrac{m\phi}{4}\bigr)}{b}\right|^{n_3}\right)^{-1/n_1}$$
+    <p>where $m \in \N$ is the symmetry order, $a, b > 0$ are scale parameters, and $n_1, n_2, n_3 > 0$ are shaping exponents. The boundary curve is $\gamma(\phi) = r(\phi)\,e^{i\phi}$.</p>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">Proposition 8 · Fourfold Phase Correspondence</div>
+    <p>When $m = 4$, the argument $\tfrac{m\phi}{4} = \phi$ partitions the angular domain into four sectors of width $\tfrac{\pi}{2}$, centered on:</p>
+    $$\phi = 0,\;\; \tfrac{\pi}{2},\;\; \pi,\;\; \tfrac{3\pi}{2}$$
+    <p>These are the angular positions at which $e^{i\phi}$ takes the values $+1,\; +i,\; -1,\; -i$ — the same four phase positions assigned by $\alpha$ to the rotational skeleton $\I{n}$ (Definition 2).</p>
+    <p>The fourfold angular periodicity of the superformula, at $m = 4$, is structurally identical to the fourfold phase cycle of the tier decomposition.</p>
+  </div>
+
+  <div class="block block-proof">
+    <div class="block-label">Proof</div>
+    <p>At $m = 4$: $\cos(\phi)$ and $\sin(\phi)$ complete one full period over $[0, 2\pi)$, producing four zero-crossings and four extrema. These divide the circle into four sectors. The boundary values of $e^{i\phi}$ at the sector boundaries are $\set{1, i, -1, -i}$, which is the image of $\alpha$.</p>
+    <div class="qed">∎</div>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Framework Interpretation · The Triadic Exponent Mapping</div>
+    <p>The superformula has three independent shaping exponents. The tier decomposition has three irreducible role-families. The proposed correspondence is:</p>
+
+    <table class="dim-table">
+      <tr>
+        <th>Exponent</th><th>Role</th><th>Geometric effect</th><th>Tier analogue</th>
+      </tr>
+      <tr>
+        <td class="cell-i">$n_1$</td>
+        <td class="cell-i">$\I{n}$</td>
+        <td>Global curvature — how sharply the boundary responds to the angular skeleton</td>
+        <td>Skeleton tension (binary)</td>
+      </tr>
+      <tr>
+        <td class="cell-phi">$n_2$</td>
+        <td class="cell-phi">$\Ph{n}$</td>
+        <td>Cosine-term deformation — bilateral mediation between phase anchors</td>
+        <td>Field mediation (analog)</td>
+      </tr>
+      <tr>
+        <td class="cell-omega">$n_3$</td>
+        <td class="cell-omega">$\Om{n}$</td>
+        <td>Sine-term deformation — the boundary's own contribution to closure</td>
+        <td>Closure shaping (seal)</td>
+      </tr>
+    </table>
+
+    <p>When $n_1 = n_2 = n_3$, the three roles contribute equally and the boundary is maximally symmetric. When they diverge, the form differentiates — each role asserting its irreducible contribution. This is Theorem 2 made geometric: no exponent can be expressed in terms of the others without changing the shape.</p>
+    <p>This mapping is a framework interpretation, not a theorem. Its force is structural: the superformula's three degrees of freedom align with the decomposition's three irreducible families, and its fourfold periodicity (at $m = 4$) reproduces the phase cycle. The alignment is too precise to be coincidental, but the formal derivation of the superformula <em>from</em> the tier axioms remains an open problem.</p>
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Remark · Binary, Analog, Fractal</div>
+    <p>The three role-families correspond to three modes of form-generation:</p>
+    <p><strong>Binary</strong> — the rotational skeleton $\I{n}$. Four discrete phase positions, hard switching between $+1, +i, -1, -i$. The digital backbone of the form.</p>
+    <p><strong>Analog</strong> — the mediating field $\Ph{n}$. Continuous deformation between the phase anchors. The smooth interval that rotation cannot supply. In the superformula, this is the exponent $n_2$ bending the boundary where the phase skeleton leaves off — the geometric expression of Theorem 3's divergence.</p>
+    <p><strong>Fractal</strong> — the recursive closure $\Om{n}$. Closure at scale $n$ is ground at scale $n{+}1$ (Proposition 3). A supershape nested within a supershape, each carrying the same three-parameter architecture shifted inward. The same pattern iterating at every scale: binary skeleton + analog field + fractal seal = bounded whole.</p>
+    <p>The supershape boundary is thus a candidate realization of the compositional conservation law (Proposition 6):</p>
+    $$\bullet\text{-skeleton} \;+\; \Phi\text{-field} \;+\; \bigcirc\text{-closure} \;=\; \text{boundary}$$
+  </div>
+
+  <div class="block block-rem">
+    <div class="block-label">Open Problem · The Boundary Operator</div>
+    <p>Define a <strong>boundary-generation operator</strong>:</p>
+    $$\bigcirc_n \;=\; \mathcal{B}(\I{n},\, \Ph{n},\, \Om{n};\; \lambda)$$
+    <p>where $\lambda$ collects the continuous parameters $(a, b, n_1, n_2, n_3)$. The superformula is one candidate for $\mathcal{B}$. The open questions are:</p>
+    <p>(i) &ensp; Does the fourfold phase structure of $\I{n}$ uniquely select the $m = 4$ superformula, or are other boundary families equally admissible?</p>
+    <p>(ii) &ensp; Can the exponent triple $(n_1, n_2, n_3)$ be derived from the tier decomposition's role-cardinalities $(4, 2, 1)$, or are they free parameters within the geometric layer?</p>
+    <p>(iii) &ensp; Does nesting supershapes at successive tier scales (with parameter drift governed by $\sigma$) produce the recursive self-similarity of Corollary 2?</p>
+    <p>(iv) &ensp; In the 3D extension $\bigl(x = r(\theta)\cos\theta\,r(\phi)\cos\phi,\;\ldots\bigr)$, do the two angular superformulae correspond to two distinct tier pairs?</p>
+    <p>These questions define the research program for connecting the algebraic tier decomposition to explicit geometric form.</p>
+  </div>
+</section>
+
 <div class="divider">⊙</div>
 
 <!-- ═══════════════ FOOTNOTE ═══════════════ -->
 <div class="footnote">
-  <p>This document presents the tier decomposition, its operators, and its invariants in formal-mathematical style. It assumes the dimensional ladder $\mathcal{D}$ and the identification $D = n + \varphi$ as given. For the interpretive framework — what each dimension <em>means</em> — see <em>How Reality Is Built</em> and <em>The Two Rhythms</em>.</p>
+  <p>This document presents the tier decomposition, its operators, and its invariants in formal-mathematical style, together with a candidate geometric realization via the Gielis superformula. It assumes the dimensional ladder $\mathcal{D}$ and the identification $D = n + \varphi$ as given. For the interpretive framework — what each dimension <em>means</em> — see <em>How Reality Is Built</em> and <em>The Two Rhythms</em>. For the interactive visualization of the boundary operator, see <em>Triadic Morphogenesis</em>.</p>
 </div>
 
 </div>
