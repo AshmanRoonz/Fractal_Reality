@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fitting Reality into an Idea — Circumpunct Infographic v3</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+    :root {
+      --bg: #0f0f14;
+      --surface: #18181f;
+      --card: #1e1e28;
+
+      --cyan: #4de8d0;
+      --cyan-dim: #2a9e8e;
+      --cyan-glow: rgba(77, 232, 208, 0.15);
+      --magenta: #e84d8a;
+      --magenta-dim: #a83665;
+      --magenta-glow: rgba(232, 77, 138, 0.15);
+      --gold: #f0c24d;
+      --gold-dim: #b8932e;
+      --gold-glow: rgba(240, 194, 77, 0.15);
+      --violet: #9b6dff;
+      --violet-glow: rgba(155, 109, 255, 0.12);
+      --coral: #ff7e6b;
+      --coral-glow: rgba(255, 126, 107, 0.12);
+      --green: #6bdb8a;
+      --green-glow: rgba(107, 219, 138, 0.12);
+      --rose: #f2a8c0;
+      --rose-dim: #c07a93;
+      --rose-glow: rgba(242, 168, 192, 0.12);
+      --red: #e8534d;
+      --red-dim: #b33a35;
+      --red-glow: rgba(232, 83, 77, 0.15);
+
+      --text: #eaeaf0;
+      --text-body: #c8c8d4;
+      --text-dim: #8888a0;
+      --text-faint: #55556a;
+      --border: rgba(255,255,255,0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-body);
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 2rem 2.5rem 1.5rem;
+    }
+
+    /* ══════════ HEADER ══════════ */
+    .header {
+      text-align: center;
+      margin-bottom: 1.6rem;
+    }
+    .header::after {
+      content: '';
+      display: block;
+      width: 140px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--gold), var(--magenta));
+      margin: 1rem auto 0;
+      border-radius: 2px;
+    }
+
+    .header-badge {
+      display: inline-block;
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(240, 194, 77, 0.08);
+      border: 1px solid rgba(240, 194, 77, 0.15);
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      margin-bottom: 0.7rem;
+    }
+
+    .header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: 2.1rem;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.3rem;
+    }
+    .header h1 .hl { color: var(--gold); }
+    .header .sub {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      font-weight: 300;
+    }
+
+    /* ══════════ SPINE: Two Directions ══════════ */
+    .spine {
+      display: grid;
+      grid-template-columns: 1fr 50px 1fr;
+      gap: 1rem;
+      align-items: stretch;
+      margin-bottom: 1.4rem;
+    }
+
+    .dir-card {
+      border-radius: 12px;
+      padding: 1.1rem 1.3rem;
+      border: 1px solid;
+      position: relative;
+      overflow: hidden;
+    }
+    .dir-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .dir-card.healthy {
+      background: var(--card);
+      border-color: rgba(107, 219, 138, 0.12);
+    }
+    .dir-card.healthy::before {
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+    }
+    .dir-card.broken {
+      background: var(--card);
+      border-color: rgba(232, 83, 77, 0.15);
+    }
+    .dir-card.broken::before {
+      background: linear-gradient(90deg, var(--red-dim), var(--red));
+    }
+
+    .dir-tag {
+      display: inline-block;
+      font-size: 0.52rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+    .healthy .dir-tag { color: var(--green); background: var(--green-glow); }
+    .broken .dir-tag { color: var(--red); background: var(--red-glow); }
+
+    .dir-card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: 1.1rem;
+      margin-bottom: 0.4rem;
+    }
+    .healthy h3 { color: var(--green); }
+    .broken h3 { color: var(--red); }
+
+    .dir-card p {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+      margin-bottom: 0.35rem;
+    }
+    .dir-card .emphasis {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: var(--text);
+      margin-top: 0.5rem;
+      padding-top: 0.4rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .spine-mid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+    }
+    .spine-mid .arr { font-size: 1.3rem; color: var(--gold); opacity: 0.4; }
+    .spine-mid .vs {
+      font-family: 'DM Serif Display', serif;
+      font-size: 0.65rem;
+      color: var(--text-faint);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ══════════ MAIN: Channels + Circumpunct ══════════ */
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 280px 1fr;
+      gap: 1.4rem;
+      align-items: stretch;
+      margin-bottom: 1.4rem;
+    }
+
+    .channel {
+      border-radius: 12px;
+      padding: 1.1rem 1.3rem 1.1rem 1.6rem;
+      border: 1px solid var(--border);
+      background: var(--card);
+      position: relative;
+    }
+    .channel::before {
+      content: '';
+      position: absolute;
+      top: 10px; bottom: 10px; left: 0;
+      width: 3px;
+      border-radius: 3px;
+    }
+    .channel.func::before { background: linear-gradient(180deg, var(--cyan), var(--cyan-dim)); }
+    .channel.res::before { background: linear-gradient(180deg, var(--rose), var(--rose-dim)); }
+
+    .ch-head {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .ch-sym { font-size: 1.4rem; }
+    .func .ch-sym { color: var(--cyan); }
+    .res .ch-sym { color: var(--rose); }
+
+    .ch-head h3 {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: 1rem;
+    }
+    .func .ch-head h3 { color: var(--cyan); }
+    .res .ch-head h3 { color: var(--rose); }
+
+    .ch-sub {
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .func .ch-sub { color: var(--cyan-dim); }
+    .res .ch-sub { color: var(--rose-dim); }
+
+    .channel p {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+      margin-bottom: 0.35rem;
+    }
+    .channel .question {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--text);
+      margin-top: 0.5rem;
+      padding-top: 0.4rem;
+      border-top: 1px solid var(--border);
+    }
+    .channel .maps {
+      font-size: 0.65rem;
+      font-weight: 500;
+      margin-top: 0.5rem;
+      padding-top: 0.4rem;
+      border-top: 1px solid var(--border);
+    }
+    .func .maps { color: var(--cyan-dim); }
+    .res .maps { color: var(--rose-dim); }
+
+    /* ── Center Circumpunct ── */
+    .circ-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .circ-diagram {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin-bottom: 0.6rem;
+    }
+
+    /* Field — solid fill inside the boundary */
+    .cd-field {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(240, 194, 77, 0.12) 0%, rgba(240, 194, 77, 0.04) 70%, transparent 100%);
+      box-shadow: inset 0 0 30px var(--gold-glow);
+    }
+
+    /* Boundary — cyan circle line on top of the field fill */
+    .cd-boundary {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: 2.5px solid var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 20px var(--cyan-glow);
+    }
+
+    /* Aperture — magenta dot at center */
+    .cd-aperture {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 16px; height: 16px;
+      transform: translate(-50%, -50%);
+      background: var(--magenta);
+      border-radius: 50%;
+      box-shadow: 0 0 20px var(--magenta-glow), 0 0 50px rgba(232, 77, 138, 0.15);
+    }
+
+    .circ-eq {
+      text-align: center;
+      padding: 0.4rem 0.7rem;
+      background: linear-gradient(135deg, rgba(240,194,77,0.06), rgba(155,109,255,0.04));
+      border: 1px solid rgba(240,194,77,0.12);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      width: 100%;
+    }
+    .circ-eq .formula {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+    .circ-eq .desc {
+      font-size: 0.55rem;
+      color: var(--text-faint);
+      letter-spacing: 0.06em;
+    }
+
+    .triad-chips {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      width: 100%;
+    }
+    .tc {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+    }
+    .tc-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .tc-ring {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .tc-circumpunct {
+      position: relative;
+      width: 22px; height: 22px;
+      flex-shrink: 0;
+    }
+    .tc-cp-field {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(240,194,77,0.25), rgba(240,194,77,0.05));
+    }
+    .tc-cp-ring {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      border: 2px solid var(--cyan);
+    }
+    .tc-cp-dot {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 6px; height: 6px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: var(--magenta);
+    }
+    .tc-eq {
+      color: var(--text-faint);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    .tc-n { font-weight: 500; color: var(--text); }
+    .tc-d { color: var(--text-dim); font-size: 0.62rem; }
+
+    /* ══════════ WHAT HAPPENS STRIP ══════════ */
+    .what-happens {
+      text-align: center;
+      padding: 0.9rem 2rem;
+      background: linear-gradient(90deg, transparent, rgba(240,194,77,0.04), transparent);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.4rem;
+    }
+    .what-happens p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+    .what-happens .c { color: var(--cyan); font-weight: 500; }
+    .what-happens .m { color: var(--rose); font-weight: 500; }
+    .what-happens .g { color: var(--gold); font-weight: 500; }
+
+    /* ══════════ REALITY FITTING SECTION ══════════ */
+    .fitting {
+      background: linear-gradient(135deg, rgba(255,126,107,0.04), rgba(155,109,255,0.04), rgba(232,77,138,0.04));
+      border: 1px solid rgba(255,126,107,0.1);
+      border-radius: 12px;
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .fitting h3 {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: 0.95rem;
+      color: var(--coral);
+      margin-bottom: 0.6rem;
+      text-align: center;
+    }
+
+    .fit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .fit-item {
+      text-align: center;
+      padding: 0.5rem 0.4rem;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid var(--border);
+    }
+
+    .fi-icon { font-size: 1.2rem; margin-bottom: 0.2rem; }
+
+    .fi-name {
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+    .fit-item:nth-child(1) .fi-name { color: var(--coral); }
+    .fit-item:nth-child(2) .fi-name { color: var(--violet); }
+    .fit-item:nth-child(3) .fi-name { color: var(--magenta); }
+
+    .fi-target {
+      font-size: 0.65rem;
+      font-weight: 500;
+      margin-bottom: 0.15rem;
+    }
+    .fit-item:nth-child(1) .fi-target { color: var(--coral); }
+    .fit-item:nth-child(2) .fi-target { color: var(--violet); }
+    .fit-item:nth-child(3) .fi-target { color: var(--magenta); }
+
+    .fi-desc {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .fitting-foot {
+      text-align: center;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+    .fitting-foot .hl { color: var(--coral); }
+
+    /* ══════════ BOTTOM: 4 CARDS ══════════ */
+    .bottom {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .bc {
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      border: 1px solid var(--border);
+      background: var(--card);
+    }
+
+    .bc h4 {
+      font-family: 'DM Serif Display', serif;
+      font-weight: 400;
+      font-size: 0.82rem;
+      margin-bottom: 0.4rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .bc:nth-child(1) h4 { color: var(--gold); }
+    .bc:nth-child(2) h4 { color: var(--coral); }
+    .bc:nth-child(3) h4 { color: var(--violet); }
+    .bc:nth-child(4) h4 { color: var(--green); }
+
+    .bc p {
+      font-size: 0.73rem;
+      color: var(--text-dim);
+      line-height: 1.45;
+      margin-bottom: 0.3rem;
+    }
+    .bc p:last-child { margin-bottom: 0; }
+
+    .depth-list {
+      list-style: none;
+      margin-top: 0.3rem;
+    }
+    .depth-list li {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      padding: 0.15rem 0;
+      display: flex;
+      align-items: baseline;
+      gap: 0.3rem;
+    }
+    .depth-list .num {
+      color: var(--violet);
+      font-weight: 600;
+      font-size: 0.6rem;
+      width: 12px;
+      flex-shrink: 0;
+    }
+    .depth-list .lbl { font-weight: 500; color: var(--text); }
+
+    .signal-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+      padding: 0.35rem;
+      border-radius: 6px;
+      margin-bottom: 0.3rem;
+      font-size: 0.7rem;
+    }
+    .signal-row.warn { background: rgba(232,77,138,0.04); border: 1px solid rgba(232,77,138,0.06); }
+    .signal-row.heal { background: rgba(107,219,138,0.04); border: 1px solid rgba(107,219,138,0.06); }
+    .signal-row .si { flex-shrink: 0; font-size: 0.8rem; }
+
+    /* ══════════ KEY INSIGHT ══════════ */
+    .insight {
+      text-align: center;
+      padding: 0.9rem 2rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.8rem;
+    }
+    .insight p {
+      font-family: 'DM Serif Display', serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.65;
+    }
+    .insight .g { color: var(--gold); }
+    .insight .c { color: var(--cyan); }
+    .insight .m { color: var(--magenta); }
+    .insight .v { color: var(--violet); }
+
+    /* ══════════ FOOTER ══════════ */
+    .footer {
+      text-align: center;
+      padding-top: 0.5rem;
+    }
+    .footer-sym {
+      font-size: 1rem;
+      background: linear-gradient(135deg, var(--cyan), var(--gold), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .footer p {
+      font-size: 0.5rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+    .footer a { color: var(--gold-dim); text-decoration: none; }
+
+    /* ══════════ RESPONSIVE ══════════ */
+    @media (max-width: 960px) {
+      .spine, .main { grid-template-columns: 1fr; }
+      .spine-mid { flex-direction: row; }
+      .fit-grid { grid-template-columns: 1fr; }
+      .bottom { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .bottom { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ═══ HEADER ═══ -->
+  <div class="header">
+    <div class="header-badge">Circumpunct Framework</div>
+    <h1>Fitting <span class="hl">Reality</span> into an Idea</h1>
+    <div class="sub">The Two Channels of Love, the Three Aspects, and How It All Breaks Down</div>
+  </div>
+
+  <!-- ═══ SPINE: Two Directions of Curiosity ═══ -->
+  <div class="spine">
+    <div class="dir-card healthy">
+      <div class="dir-tag">Healthy Curiosity</div>
+      <h3>Does my idea match Reality?</h3>
+      <p>The idea is provisional, always updating. Reality talks back and you listen. You stay curious because you're never quite finished.</p>
+      <p>Both channels open. You can provide for someone AND delight in who they actually are.</p>
+      <div class="emphasis">We can't fit Reality into an idea. It won't fit. Instead, we let Reality shape our ideas.</div>
+    </div>
+
+    <div class="spine-mid">
+      <div class="arr">&#8644;</div>
+      <div class="vs">vs</div>
+    </div>
+
+    <div class="dir-card broken">
+      <div class="dir-tag">Leads to Narcissistic Behavior</div>
+      <h3>Does Reality match my idea?</h3>
+      <p>The idea is fixed. Reality is the variable. When Reality doesn't cooperate: Reality is wrong. You are wrong. The evidence is wrong. Anything but the idea.</p>
+      <p>Resonant channel seals. Only functional love remains. The doing continues, but for the idea of you, not you.</p>
+      <div class="emphasis">You keep showing up as yourself. They keep responding to someone else.</div>
+    </div>
+  </div>
+
+  <!-- ═══ TWO CHANNELS + CIRCUMPUNCT ═══ -->
+  <div class="main">
+
+    <!-- Resonant Channel (LEFT — maps to • Aperture, center of diagram) -->
+    <div class="channel res">
+      <div class="ch-head">
+        <span class="ch-sym">&bull;</span>
+        <h3>Resonant Love</h3>
+      </div>
+      <div class="ch-sub">Channel One &middot; Love as Being-With &middot; &bull; &#8596; &bull;</div>
+      <p>Sees you without agenda. Delights in your existence. Asks, listens, attunes. Wants to know who you actually are. Active reception, not passivity.</p>
+      <p>This is the signal the aperture was built to recognize. When this channel seals, you are helped but never wanted. Provided for, but never seen.</p>
+      <p>You can't tune an FM radio by turning up the AM volume. Wrong channel.</p>
+      <div class="question">"Do you want me here?"</div>
+      <div class="maps">Maps to &bull; Aperture: the inner point that sees, receives, opens</div>
+    </div>
+
+    <!-- Circumpunct Center -->
+    <div class="circ-center">
+      <div class="circ-diagram">
+        <div class="cd-field"></div>
+        <div class="cd-boundary"></div>
+        <div class="cd-aperture"></div>
+      </div>
+
+      <div class="circ-eq">
+        <div class="formula">&#x2299; = &Phi;(&bull;, ○)</div>
+        <div class="desc">The whole is the operation of relating</div>
+      </div>
+
+      <div class="triad-chips">
+        <div class="tc">
+          <span class="tc-dot" style="background:var(--magenta);"></span>
+          <span class="tc-eq">=</span>
+          <span class="tc-n">Soul</span>
+          <span class="tc-d">(aperture &middot; the gate that receives)</span>
+        </div>
+        <div class="tc">
+          <span class="tc-ring" style="background:radial-gradient(circle, rgba(240,194,77,0.3), rgba(240,194,77,0.05)); border: 1.5px solid var(--gold);"></span>
+          <span class="tc-eq">=</span>
+          <span class="tc-n">Mind</span>
+          <span class="tc-d">(field &middot; the verb that relates)</span>
+        </div>
+        <div class="tc">
+          <span class="tc-ring" style="background:transparent; border: 2px solid var(--cyan);"></span>
+          <span class="tc-eq">=</span>
+          <span class="tc-n">Body</span>
+          <span class="tc-d">(boundary &middot; the form that holds)</span>
+        </div>
+        <div class="tc">
+          <span class="tc-circumpunct"><span class="tc-cp-field"></span><span class="tc-cp-ring"></span><span class="tc-cp-dot"></span></span>
+          <span class="tc-eq">=</span>
+          <span class="tc-n">Consciousness</span>
+          <span class="tc-d">(the whole &middot; &#x2299;)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Functional Channel (RIGHT — maps to ○ Boundary, outer ring of diagram) -->
+    <div class="channel func">
+      <div class="ch-head">
+        <span class="ch-sym">&#9678;</span>
+        <h3>Functional Love</h3>
+      </div>
+      <div class="ch-sub">Channel Two &middot; Love as Doing &middot; ○ &#8596; ○</div>
+      <p>Pays rent. Makes dinner. Shows up when you're sick. Protects what's vulnerable. Provides, functions, accomplishes.</p>
+      <p>Real. Necessary. But when Reality has to fit the Idea, this is the only channel left open. The doing continues, but for the idea of you.</p>
+      <p>That's why the gifts miss. That's why after seven years, your middle name is still unknown.</p>
+      <div class="question">"What can I do for you?"</div>
+      <div class="maps">Maps to ○ Boundary: the outer circle that holds, protects, contains</div>
+    </div>
+
+  </div>
+
+  <!-- ═══ THE KNOWING STRIP ═══ -->
+  <div class="what-happens">
+    <p>When provision flows both ways, you feel <span class="c">needed</span>. When resonance flows both ways, you feel <span class="m">wanted</span>.<br>
+    These are not the same channel. Neither can substitute for the other. Both are required for wholeness <span class="g">&#x2299;</span></p>
+  </div>
+
+  <!-- ═══ REALITY FITTING: The Three Protocols ═══ -->
+  <div class="fitting">
+    <h3>When Reality Has to Fit the Idea: Three Protocols of Rewriting</h3>
+    <div class="fit-grid">
+      <div class="fit-item">
+        <div class="fi-icon">&#x1F6E1;&#xFE0F;</div>
+        <div class="fi-name">DARVO</div>
+        <div class="fi-target">Rewrites what happened</div>
+        <div class="fi-desc">Deny, Attack, Reverse Victim and Offender. The event gets restructured in real time so it confirms the Idea instead of threatening it.</div>
+      </div>
+      <div class="fit-item">
+        <div class="fi-icon">&#x1F3AD;</div>
+        <div class="fi-name">Projection</div>
+        <div class="fi-target">Rewrites who you are</div>
+        <div class="fi-desc">Your actual feelings, needs, and perceptions get replaced with assigned ones. You aren't being described. You're being fitted into the Idea.</div>
+      </div>
+      <div class="fit-item">
+        <div class="fi-icon">&#x1F32B;&#xFE0F;</div>
+        <div class="fi-name">Gaslighting</div>
+        <div class="fi-target">Rewrites what you experienced</div>
+        <div class="fi-desc">Your perception of Reality itself gets challenged and rewritten. The field (&Phi;) gets corrupted: you stop trusting what you see.</div>
+      </div>
+    </div>
+    <div class="fitting-foot">Different tools, same direction. Reality yields. <span class="hl">The Idea doesn't move.</span></div>
+  </div>
+
+  <!-- ═══ BOTTOM ROW ═══ -->
+  <div class="bottom">
+
+    <div class="bc">
+      <h4>Goals as Load-Bearing Proof</h4>
+      <p>The goal isn't pursued for joy. It's load-bearing. It holds the idea of self in place.</p>
+      <p>Hit the goal: the picture holds. Miss it: the whole self risks collapse.</p>
+      <p>The construction never stops because the thing being built isn't a life, it's a proof.</p>
+    </div>
+
+    <div class="bc">
+      <h4>Three Wounds, One Attack</h4>
+      <div class="signal-row warn">
+        <span class="si">○</span>
+        <p><strong style="color:var(--cyan)">Boundary:</strong> "You're too sensitive." You stop trusting your own protective responses.</p>
+      </div>
+      <div class="signal-row warn">
+        <span class="si">&Phi;</span>
+        <p><strong style="color:var(--gold)">&ensp;Field:</strong> "That's not what happened." You stop trusting your perception.</p>
+      </div>
+      <div class="signal-row warn">
+        <span class="si">&bull;</span>
+        <p><strong style="color:var(--magenta)">Aperture:</strong> "I know who you really are." You stop trusting yourself.</p>
+      </div>
+    </div>
+
+    <div class="bc">
+      <h4>Stratigraphy of Belief</h4>
+      <p>Lies install at different depths. A deep lie corrupts everything above it, and the corruption is self-concealing.</p>
+      <ul class="depth-list">
+        <li><span class="num">1</span> <span class="lbl">Ontological</span> What exists?</li>
+        <li><span class="num">2</span> <span class="lbl">Epistemological</span> How do I know?</li>
+        <li><span class="num">3</span> <span class="lbl">Relational</span> How do I connect?</li>
+        <li><span class="num">4</span> <span class="lbl">Perceptual</span> What am I seeing?</li>
+        <li><span class="num">5</span> <span class="lbl">Self-Model</span> Who am I?</li>
+        <li><span class="num">6</span> <span class="lbl">Behavioral</span> What do I do?</li>
+        <li><span class="num">7</span> <span class="lbl">Content</span> What do I think?</li>
+      </ul>
+    </div>
+
+    <div class="bc">
+      <h4>The Cure: Curiosity</h4>
+      <p>The false idea doesn't get killed. It gets outlived.</p>
+      <p>The cure isn't confrontation. It's curiosity, and it can only come from within: <em style="color:var(--text)">who am I, really?</em></p>
+      <p>Curiosity cannot be performed and cannot be forced.</p>
+      <div class="signal-row heal">
+        <span class="si">&#x21BA;</span>
+        <p>The dizziness is data. Your system is correctly detecting no genuine two-way field. Reboot. Trust the signal.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ KEY INSIGHT ═══ -->
+  <div class="insight">
+    <p>We can't put <span class="g">Reality</span> into an idea. It won't fit.<br>
+    Instead, we shall let <span class="g">Reality</span> shape our ideas.<br><br>
+    The <span class="m">aperture</span> receives. The <span class="c">boundary</span> holds. The <span class="g">field</span> relates.<br>
+    You can't love someone out of that architecture. But you can stop contorting yourself to fit an idea that was never actually you.</p>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <div class="footer">
+    <div class="footer-sym">&#x2299;</div>
+    <p>The Circumpunct Framework &ensp;&middot;&ensp; <a href="https://fractalreality.ca">fractalreality.ca</a></p>
+  </div>
+
+</div>
+
+</body>
+</html>
