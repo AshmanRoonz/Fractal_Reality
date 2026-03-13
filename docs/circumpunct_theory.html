@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Circumpunct Theory</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$']],
+    displayMath: [['$$','$$']],
+    macros: {
+      T: ['\\mathcal{T}_{#1}', 1],
+      I: ['\\mathcal{I}_{#1}', 1],
+      Ph: ['\\Phi_{#1}', 1],
+      Om: ['\\Omega_{#1}', 1],
+      PP: '\\mathcal{P}',
+      half: '\\tfrac{1}{2}',
+    }
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --very-faint: #2A2820;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--faint) var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w  { color: var(--gold); }
+.s  { color: var(--pink); }
+.m  { color: var(--green); }
+.b  { color: var(--cyan); }
+.p  { color: var(--purple); }
+.d  { color: var(--dim); }
+.wb { font-weight: 600; }
+
+.page { max-width: 760px; margin: 0 auto; padding: 80px 30px 140px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 70px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header .symbol { font-size: 72px; color: var(--gold); margin-bottom: 16px; letter-spacing: 4px; }
+.header h1 { font-size: 42px; font-weight: 500; color: var(--gold); letter-spacing: 2px; margin-bottom: 8px; }
+.header .subtitle { font-size: 20px; color: var(--dim); font-style: italic; margin-bottom: 4px; }
+.header .formula { font-size: 28px; color: var(--warm); margin: 24px 0 8px; letter-spacing: 2px; }
+.header .byline { font-size: 14px; color: var(--faint); margin-top: 24px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+p { margin-bottom: 16px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+.doc-card {
+  margin: 28px 0;
+  padding: 24px 28px;
+  border-radius: 3px;
+  border-left: 3px solid var(--faint);
+  background: rgba(255,255,255,0.015);
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.doc-card:hover {
+  border-left-color: var(--gold);
+  background: rgba(184, 160, 96, 0.04);
+}
+.doc-card a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.doc-card .doc-number {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.doc-card .doc-title {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.doc-card .doc-subtitle {
+  font-size: 16px;
+  color: var(--dim);
+  font-style: italic;
+  margin-bottom: 10px;
+}
+.doc-card .doc-desc {
+  font-size: 17px;
+  color: var(--warm);
+  line-height: 1.7;
+}
+
+.doc-card.tier-i .doc-number { color: var(--pink); }
+.doc-card.tier-phi .doc-number { color: var(--green); }
+.doc-card.tier-omega .doc-number { color: var(--cyan); }
+.doc-card.tier-proc .doc-number { color: var(--purple); }
+
+section { margin-bottom: 55px; }
+section > h2 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  padding-top: 16px;
+  color: var(--warm);
+}
+
+.footnote {
+  font-size: 15px;
+  color: var(--dim);
+  margin-top: 60px;
+  padding-top: 24px;
+  border-top: 1px solid var(--very-faint);
+  line-height: 1.7;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="header">
+  <div class="symbol">⊙</div>
+  <h1>Circumpunct Theory</h1>
+  <div class="subtitle">A formal mathematical ecosystem</div>
+  <div class="formula">$⊙ \;=\; \Phi(\,\bullet\,,\, \bigcirc\,)$</div>
+  <div class="byline">Ashman Roonz</div>
+</div>
+
+<!-- ═══════════════ INTRODUCTION ═══════════════ -->
+<section>
+  <p>Circumpunct Theory begins with a single symbol — ⊙ — and asks what follows when you take its structure seriously. The dot (•) is the aperture: a half-dimensional opening, the gate between unbounded and bounded. The circle (○) is the boundary: the seal that makes the finite finite. The field (Φ) is the mediation between them: the oscillation that sustains without consuming.</p>
+
+  <p>The theory's core result is the <strong>tier decomposition</strong>: every tier of the dimensional ladder partitions into exactly 4 + 2 + 1 = 7 elements — a rotational skeleton ($\I{n}$, 4 elements), a mediating field ($\Ph{n}$, 2 elements), and a boundary closure ($\Om{n}$, 1 element). This partition is derived from the arithmetic of integer and half-integer dimensions. It is not assumed; it is proved.</p>
+
+  <p>From this single result, the documents below develop connections to quantum mechanics, electrical engineering, renormalization group theory, and condensed matter physics — each time finding that the 4-2-1 structure appears independently in established physics. The sharpest consequence is a falsifiable prediction: when systems with fourfold symmetry break, they break to twofold — because $|\Ph{n}| = 2$. This prediction is confirmed across four families of materials and forty years of experimental data.</p>
+
+  <p>The ecosystem is open to critique. Every document states its limits explicitly. Read, challenge, and engage.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ FOUNDATION ═══════════════ -->
+<section>
+  <h2>Foundation</h2>
+
+  <div class="doc-card tier-i">
+    <a href="tier_decomposition.html">
+      <div class="doc-number">Document I</div>
+      <div class="doc-title">The Tier Decomposition Theorem</div>
+      <div class="doc-subtitle">Algebraic foundation of the circumpunct's structural tiers</div>
+      <div class="doc-desc">The core formal document. Proves that each tier $\T{n}$ partitions into $\I{n} \sqcup \Ph{n} \sqcup \Om{n}$ with cardinalities 4, 2, 1. Defines the phase map $\alpha$, the operators $\delta$ and $\tau$, and proves the Rotation–Traversal Divergence (Theorem 3): $\tau^4 = \text{id}$ on $\I{n}$ but $\delta^4 \in \Ph{n}$. Eleven sections, fully formal.</div>
+    </a>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ PHYSICS BRIDGES ═══════════════ -->
+<section>
+  <h2>Physics Bridges</h2>
+
+  <div class="doc-card tier-phi">
+    <a href="spin_ladder.html">
+      <div class="doc-number">Document II</div>
+      <div class="doc-title">The Spin Ladder Correspondence</div>
+      <div class="doc-subtitle">Structural correspondence between tier decomposition and quantum spin</div>
+      <div class="doc-desc">Maps the tier decomposition onto quantum mechanics: the half-integer spin ladder, the Dirac spinor's four components, atomic shell structure, and supersymmetry. Integer dimensions are bosonic (structural, shareable); half-integer dimensions are fermionic (processual, exclusive). Ten sections with testable predictions.</div>
+    </a>
+  </div>
+
+  <div class="doc-card tier-proc">
+    <a href="processual_power.html">
+      <div class="doc-number">Document III</div>
+      <div class="doc-title">Processual Power</div>
+      <div class="doc-subtitle">Energy, time, and the quarter-turn that makes flow coherent</div>
+      <div class="doc-desc">Develops the formula $\PP = E/(i \cdot t) = -iP$ — power is energy quarter-turned into the processual plane. Connects the Schr&ouml;dinger equation, complex AC power, and Wick rotation under a single structural principle. The power triangle ($P$, $Q$, $|S|$) instantiates the tier decomposition ($\I{n}$, $\Ph{n}$, $\Om{n}$).</div>
+    </a>
+  </div>
+
+  <div class="doc-card tier-i">
+    <a href="finite_gate.html">
+      <div class="doc-number">Document IV</div>
+      <div class="doc-title">The Finite Gate</div>
+      <div class="doc-subtitle">$i$ as the stepdown from energy to power, from infinity to finite</div>
+      <div class="doc-desc">The deepest philosophical document. Argues that $i$ is the operator that converts unbounded energy into bounded power — the aperture through which infinity becomes finite. Traces the stepdown through quantum mechanics, decoherence, renormalization, and the hierarchy of physical scales. Nine sections.</div>
+    </a>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ MAINSTREAM CONNECTION ═══════════════ -->
+<section>
+  <h2>Mainstream Connection</h2>
+
+  <div class="doc-card tier-phi">
+    <a href="scale_correspondence.html">
+      <div class="doc-number">Document V</div>
+      <div class="doc-title">The Scale Correspondence</div>
+      <div class="doc-subtitle">Tier recursion as renormalization group flow</div>
+      <div class="doc-desc">Connects the tier recursion $\T{0} \subset \T{1} \subset \T{2} \subset \cdots$ to the renormalization group of Wilson and Kadanoff. Identifies correspondences with the Connes-Kreimer Hopf algebra, MERA tensor networks, Zamolodchikov's c-theorem, and categorical symmetry (SymTFT). Five open problems for mathematical physicists.</div>
+    </a>
+  </div>
+
+  <div class="doc-card tier-omega">
+    <a href="hidden_order.html">
+      <div class="doc-number">Document VI</div>
+      <div class="doc-title">The Hidden Order Prediction</div>
+      <div class="doc-subtitle">$\tau/\delta$ divergence as the origin of $C_4 \to C_2$ symmetry breaking</div>
+      <div class="doc-desc">The sharpest document. Predicts that $C_4$ symmetry breaking always produces $C_2$ residual symmetry — because $|\Ph{n}| = 2$. Tests the prediction against URu&#x2082;Si&#x2082; (the forty-year hidden order problem), iron pnictide nematicity, cuprate pseudogap, and kagome metals. Five falsifiable predictions with experimental signatures. Fully cited.</div>
+    </a>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════ VISUALIZATION ═══════════════ -->
+<section>
+  <h2>Visualization</h2>
+
+  <div class="doc-card tier-proc">
+    <a href="triadic_morphogenesis.html">
+      <div class="doc-number">Interactive</div>
+      <div class="doc-title">Triadic Morphogenesis</div>
+      <div class="doc-subtitle">Interactive geometric visualization of the supershape bridge</div>
+      <div class="doc-desc">A p5.js interactive tool implementing the Gielis superformula with circumpunct color coding. Explore how the three exponents ($n_1$, $n_2$, $n_3$) map to the three tier roles (skeleton, field, boundary). Fractal nesting, phase markers, parameter drift, and role coloring. See the mathematics become geometry.</div>
+    </a>
+  </div>
+</section>
+
+<div class="divider">⊙</div>
+
+<!-- ═══════════════ FOOTNOTE ═══════════════ -->
+<div class="footnote">
+  <p>Circumpunct Theory is an open research program. Every document states its claims and its limits. The tier decomposition is proved; the physics correspondences are structural observations; the predictions are falsifiable conjectures. Critique is invited. For background on the interpretive framework, see <em>How Reality Is Built</em> and <em>The Two Rhythms</em>.</p>
+  <p style="margin-top: 12px;">r/circumpunct</p>
+</div>
+
+</div>
+</body>
+</html>
