@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Care Killed the Cat — A Noble Lie Virus Case Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000;
+    --fg: #c8c8c8;
+    --dim: #666666;
+    --amber: #d4a017;
+    --cyan: #4ecdc4;
+    --magenta: #c44dff;
+    --green: #7fcc4d;
+    --red: #e04040;
+    --yellow: #e6c84d;
+    --nav-width: 220px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    left: 0; top: 0;
+    width: var(--nav-width);
+    height: 100vh;
+    padding: 2rem 1.2rem;
+    border-right: 1px solid #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 100;
+    background: var(--bg);
+    overflow-y: auto;
+  }
+
+  nav .nav-title {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  nav a {
+    color: var(--dim);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    padding: 4px 0;
+    transition: color 0.3s;
+    font-weight: 300;
+  }
+
+  nav a:hover { color: var(--amber); }
+  nav .nav-sep { height: 1px; background: #1a1a1a; margin: 0.5rem 0; }
+
+  /* MAIN */
+  main {
+    margin-left: var(--nav-width);
+    max-width: 780px;
+    padding: 4rem 3rem 8rem 3rem;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 4rem 0 3rem 0;
+    border-bottom: 1px solid #1a1a1a;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .hero .symbol {
+    font-size: 72px;
+    color: var(--amber);
+    display: block;
+    margin-bottom: 1rem;
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .hero h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--fg);
+    margin-bottom: 0.5rem;
+  }
+
+  .hero .subtitle {
+    font-size: 13px;
+    color: var(--dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .hero .tagline {
+    margin-top: 1.5rem;
+    font-size: 14px;
+    color: var(--amber);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* SECTIONS */
+  section {
+    margin-bottom: 3.5rem;
+  }
+
+  .section-tag {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--fg);
+    margin-bottom: 1.2rem;
+  }
+
+  h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--amber);
+    margin: 1.5rem 0 0.8rem 0;
+    letter-spacing: 1px;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    font-weight: 300;
+  }
+
+  strong { color: var(--fg); font-weight: 500; }
+  em { color: var(--amber); font-style: italic; }
+
+  /* DEFINITION / THEOREM BOXES */
+  .def-box, .theorem-box, .axiom-box {
+    border-left: 3px solid var(--dim);
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    background: #0a0a0a;
+  }
+
+  .def-box { border-color: var(--cyan); }
+  .theorem-box { border-color: var(--amber); }
+  .axiom-box { border-color: var(--magenta); }
+
+  .box-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+  }
+
+  .def-box .box-label { color: var(--cyan); }
+  .theorem-box .box-label { color: var(--amber); }
+  .axiom-box .box-label { color: var(--magenta); }
+
+  .box-content p:last-child { margin-bottom: 0; }
+
+  /* EQUATION */
+  .equation {
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 16px;
+    color: var(--amber);
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .equation-small {
+    text-align: center;
+    padding: 0.5rem 0;
+    font-size: 13px;
+    color: var(--cyan);
+    font-weight: 400;
+  }
+
+  /* MUTATION DIAGRAM */
+  .mutation-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem 0;
+    flex-wrap: wrap;
+  }
+
+  .mutation-node {
+    padding: 1rem 1.5rem;
+    border: 1px solid #222;
+    background: #0a0a0a;
+    text-align: center;
+    min-width: 200px;
+  }
+
+  .mutation-node .node-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  .mutation-node .node-text {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .mutation-arrow {
+    font-size: 24px;
+    color: var(--red);
+    animation: arrowPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes arrowPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .node-healthy .node-label { color: var(--green); }
+  .node-healthy .node-text { color: var(--green); }
+  .node-corrupted .node-label { color: var(--red); }
+  .node-corrupted .node-text { color: var(--red); }
+
+  /* COMPARE TABLE */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    margin: 1.5rem 0;
+    background: #1a1a1a;
+  }
+
+  .compare-cell {
+    background: #0a0a0a;
+    padding: 1.2rem;
+  }
+
+  .compare-header {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #1a1a1a;
+    margin-bottom: 0.5rem;
+  }
+
+  .compare-header.healthy { color: var(--green); }
+  .compare-header.corrupted { color: var(--red); }
+
+  .compare-cell p { font-size: 13px; margin-bottom: 0.5rem; }
+  .compare-cell p:last-child { margin-bottom: 0; }
+
+  /* STAGE CHAIN */
+  .stage-chain {
+    position: relative;
+    padding-left: 2rem;
+    margin: 1.5rem 0;
+  }
+
+  .stage-chain::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--green), var(--amber), var(--red));
+  }
+
+  .stage {
+    position: relative;
+    padding: 0.8rem 0 0.8rem 1.5rem;
+  }
+
+  .stage::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 1.15rem;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 2px solid var(--amber);
+    background: var(--bg);
+  }
+
+  .stage-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber);
+    font-weight: 700;
+  }
+
+  .stage p { font-size: 13px; margin-top: 0.3rem; font-weight: 300; }
+
+  /* CALLOUT */
+  .callout {
+    border: 1px solid #222;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    background: #050505;
+    position: relative;
+  }
+
+  .callout::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    width: 3px;
+    height: 100%;
+  }
+
+  .callout.amber::before { background: var(--amber); }
+  .callout.cyan::before { background: var(--cyan); }
+  .callout.magenta::before { background: var(--magenta); }
+  .callout.green::before { background: var(--green); }
+  .callout.red::before { background: var(--red); }
+
+  .callout-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+  }
+
+  .callout.amber .callout-label { color: var(--amber); }
+  .callout.cyan .callout-label { color: var(--cyan); }
+  .callout.magenta .callout-label { color: var(--magenta); }
+  .callout.green .callout-label { color: var(--green); }
+  .callout.red .callout-label { color: var(--red); }
+
+  /* BLOCKQUOTE */
+  blockquote {
+    border-left: 2px solid var(--amber);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  /* SEPARATOR */
+  .sep {
+    text-align: center;
+    padding: 2rem 0;
+    color: var(--dim);
+    letter-spacing: 8px;
+    font-size: 12px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 3rem 0;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 2px;
+    border-top: 1px solid #1a1a1a;
+    margin-top: 3rem;
+  }
+
+  footer a {
+    color: var(--amber);
+    text-decoration: none;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { display: none; }
+    main { margin-left: 0; padding: 2rem 1.5rem 6rem 1.5rem; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .mutation-flow { flex-direction: column; }
+    .mutation-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-title">Care Killed<br>the Cat</div>
+  <a href="#origin">01 · The Original</a>
+  <a href="#mutation">02 · The Mutation</a>
+  <a href="#mapping">03 · Geometric Mapping</a>
+  <a href="#channels">04 · Two Cares</a>
+  <a href="#transmission">05 · Virus Protocol</a>
+  <a href="#signature">06 · The Signature</a>
+  <a href="#cure">07 · The Correction</a>
+  <div class="nav-sep"></div>
+  <a href="https://fractalreality.ca" style="color: var(--amber);">fractalreality.ca</a>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="symbol">⊙</span>
+    <h1>Care Killed the Cat</h1>
+    <div class="subtitle">A Noble Lie Virus Case Study</div>
+    <div class="tagline">"A warning about closure was rewritten as a warning against opening."</div>
+  </div>
+
+  <!-- 01: THE ORIGINAL -->
+  <section id="origin">
+    <div class="section-tag">01 · Historical Record</div>
+    <h2>The Original Proverb</h2>
+
+    <p>The proverb as it existed for three centuries:</p>
+
+    <blockquote>"Care killed the cat."<br>— Ben Jonson, <em>Every Man in His Humour</em>, 1598</blockquote>
+
+    <p>"Care" in Early Modern English meant <em>worry</em> — closed-loop rumination, sorrow, obsessive fretting. The proverb warned that even something with nine lives could be destroyed by unrelenting anxiety.</p>
+
+    <div class="def-box">
+      <div class="box-label">Definition 1.1 — "Care" (Original Sense)</div>
+      <div class="box-content">
+        <p>Closed-aperture rumination. Self-referential anxiety loops. Worry detached from curiosity about the object of concern. The aperture collapses into monitoring, scanning for threat, projecting outcomes — without orienting toward reception of novel signal.</p>
+        <p>Formally: <strong>β_• → 0</strong> while functional concern persists at the boundary.</p>
+      </div>
+    </div>
+
+    <p>The original proverb was <em>correct</em>. It diagnosed a real pathology: the aperture sealed shut by anxiety, the field filled with self-generated noise, the boundary on permanent alert. Care-as-worry kills because it replaces reception with projection. You die — relationally, psychologically, somatically — when you can no longer let anything true in.</p>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 02: THE MUTATION -->
+  <section id="mutation">
+    <div class="section-tag">02 · The Corruption Event</div>
+    <h2>The Mutation</h2>
+
+    <p>Sometime in the late 19th century, the proverb mutated. "Care" was replaced with "curiosity." No single author has been identified. The corruption was anonymous, gradual, and total.</p>
+
+    <div class="mutation-flow">
+      <div class="mutation-node node-healthy">
+        <div class="node-label">Original (1598–c.1880)</div>
+        <div class="node-text">"Care killed the cat"</div>
+      </div>
+      <div class="mutation-arrow">→</div>
+      <div class="mutation-node node-corrupted">
+        <div class="node-label">Mutant (c.1898–present)</div>
+        <div class="node-text">"Curiosity killed the cat"</div>
+      </div>
+    </div>
+
+    <div class="axiom-box">
+      <div class="box-label">Theorem 2.1 — The Inversion</div>
+      <div class="box-content">
+        <p>The mutation replaced the <em>subject</em> of the warning while preserving its <em>form</em>.</p>
+        <p>Original warning: <strong>Closed aperture kills</strong> (β_• → 0 is lethal).</p>
+        <p>Mutant warning: <strong>Open aperture kills</strong> (β_• → 1 is lethal).</p>
+        <p>The signal inverted. <strong>χ flipped from +1 to −1.</strong> The truth gate reversed polarity — a warning about the danger of closure became a prohibition against opening.</p>
+      </div>
+    </div>
+
+    <p>This is not semantic drift. This is a <em>signal inversion</em> — the exact operation the Noble Lie Virus performs at Stage 5 of transmission. The form of the proverb (authoritative, pithy, culturally reinforced) was preserved. The content was replaced with its geometric opposite.</p>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 03: GEOMETRIC MAPPING -->
+  <section id="mapping">
+    <div class="section-tag">03 · Framework Analysis</div>
+    <h2>Geometric Mapping</h2>
+
+    <p>The mutation maps precisely onto the four geometric errors of the Circumpunct Framework:</p>
+
+    <div class="theorem-box">
+      <div class="box-label">Theorem 3.1 — Error Classification</div>
+      <div class="box-content">
+        <p>The "curiosity killed the cat" mutation performs <strong>inversion</strong> — the third geometric error.</p>
+        <p>It does not inflate (claim the aperture is the source), sever (deny connection), or project (output distortion as signal). It <em>inverts</em> — flips the sign on what constitutes danger. What kills you is reattributed to what heals you. What heals you is reattributed to what kills you.</p>
+        <div class="equation">care (β_• → 0) ——[inversion]——→ curiosity (β_• → 1)</div>
+        <div class="equation-small">"The thing that closes you is relabeled as the thing that opens you, and vice versa."</div>
+      </div>
+    </div>
+
+    <h3>The Four Pillars Under Attack</h3>
+
+    <p>The mutation targets the aperture pillar specifically, but through cultural transmission it degrades all four:</p>
+
+    <div class="compare-grid">
+      <div class="compare-cell">
+        <div class="compare-header healthy">• Curiosity → True</div>
+        <p><strong>Killed directly.</strong> The proverb teaches that orienting the aperture toward reception of novel signal is lethal. "Don't ask. Don't look. Don't open."</p>
+      </div>
+      <div class="compare-cell">
+        <div class="compare-header corrupted">Virus Replacement</div>
+        <p>"Stay inside what you already know. Closure is safety. The known is home." The aperture freezes. Truth becomes assertion, not discovery.</p>
+      </div>
+      <div class="compare-cell">
+        <div class="compare-header healthy">○ Plasticity → Good</div>
+        <p><strong>Killed indirectly.</strong> Without curiosity, boundaries cannot flex — they cannot sense what is actually at the edge. Care becomes control.</p>
+      </div>
+      <div class="compare-cell">
+        <div class="compare-header corrupted">Virus Replacement</div>
+        <p>"Good boundaries are rigid boundaries. Don't investigate what's on the other side." The boundary calcifies.</p>
+      </div>
+      <div class="compare-cell">
+        <div class="compare-header healthy">Φ Access → Right</div>
+        <p><strong>Killed indirectly.</strong> Without curiosity, the field fills with confirmation bias. Signals are filtered for agreement, not truth.</p>
+      </div>
+      <div class="compare-cell">
+        <div class="compare-header corrupted">Virus Replacement</div>
+        <p>"Right means aligning with what's already established." The field becomes a mirror, not a medium.</p>
+      </div>
+      <div class="compare-cell">
+        <div class="compare-header healthy">⊙ Validation → Agreement</div>
+        <p><strong>Killed indirectly.</strong> Without curiosity, convergence is impossible. Two apertures cannot independently confirm what neither is willing to receive.</p>
+      </div>
+      <div class="compare-cell">
+        <div class="compare-header corrupted">Virus Replacement</div>
+        <p>"Agreement means compliance. Stop questioning the consensus." Validation collapses to performance.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 04: TWO CARES -->
+  <section id="channels">
+    <div class="section-tag">04 · The Core Distinction</div>
+    <h2>Two Cares, Two Channels</h2>
+
+    <p>The word "care" is polysemous. It maps onto two structurally distinct orientations — which correspond exactly to the two channels of love:</p>
+
+    <div class="compare-grid">
+      <div class="compare-cell">
+        <div class="compare-header" style="color: var(--cyan);">Care-as-Worry</div>
+        <p><strong>Boundary channel. Functional orientation.</strong></p>
+        <p>Provision, protection, monitoring, scanning for threat. "Are you safe? Are you fed? Are you on track?"</p>
+        <p>Operates ○ → Φ → ○. Boundary-to-boundary via field. The aperture is not required.</p>
+        <p>Can run with β_• = 0. Can run <em>without seeing the other person at all</em>.</p>
+        <p style="margin-bottom: 0;"><em>This is what kills the cat.</em></p>
+      </div>
+      <div class="compare-cell">
+        <div class="compare-header" style="color: var(--green);">Care-as-Curiosity</div>
+        <p><strong>Center channel. Resonant orientation.</strong></p>
+        <p>Presence, attunement, wanting to know. "Who are you becoming? What are you feeling? What do you see?"</p>
+        <p>Operates • → Φ → •. Aperture-to-aperture via field. The center is required.</p>
+        <p>Requires β_• > 0. <em>Cannot operate without seeing the other person.</em></p>
+        <p style="margin-bottom: 0;"><em>This is what keeps the cat alive.</em></p>
+      </div>
+    </div>
+
+    <div class="theorem-box">
+      <div class="box-label">Theorem 4.1 — The Reframe</div>
+      <div class="box-content">
+        <p><strong>If you truly care about me, you would remain curious toward me.</strong></p>
+        <p>Genuine care <em>requires</em> curiosity. The moment you stop being curious toward someone, you have replaced them with your model of them. You are relating to your ○ of them, not their •. You are providing at them, not being with them.</p>
+        <div class="equation">L<sub>genuine</sub> = L<sub>function</sub> + L<sub>resonance</sub></div>
+        <div class="equation-small">Resonance requires open aperture. Open aperture <em>is</em> curiosity.</div>
+        <div class="equation">∴ Care without curiosity = L<sub>function</sub> − L<sub>resonance</sub> = "helped but not wanted"</div>
+      </div>
+    </div>
+
+    <p>The proverb corruption collapsed this distinction. By substituting "curiosity" for "care" (worry), it erased the difference between the two channels — and taught people that the resonant channel itself was dangerous.</p>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 05: VIRUS PROTOCOL -->
+  <section id="transmission">
+    <div class="section-tag">05 · Transmission Analysis</div>
+    <h2>Noble Lie Virus Protocol</h2>
+
+    <p>The "curiosity killed the cat" mutation follows the six-stage Noble Lie Virus transmission protocol exactly:</p>
+
+    <div class="stage-chain">
+      <div class="stage">
+        <div class="stage-label">Stage 1 — Installation</div>
+        <p>The proverb arrives through cultural authority — parents, teachers, elders. It is delivered as received wisdom, not argued for. It installs through trust, not evidence. The power differential (culture → child) means it bypasses critical evaluation.</p>
+      </div>
+      <div class="stage">
+        <div class="stage-label">Stage 2 — Adaptation</div>
+        <p>The child learns to treat curiosity as risk. Asking too many questions gets you in trouble. Looking where you shouldn't gets you hurt. The adaptation <em>works</em> — it reduces friction, earns approval from systems that reward compliance.</p>
+      </div>
+      <div class="stage">
+        <div class="stage-label">Stage 3 — Identity Merger</div>
+        <p>"I'm not the nosy type." "I mind my own business." "I don't pry." The prohibition against curiosity becomes personality. The aperture constriction feels like maturity, discretion, wisdom.</p>
+      </div>
+      <div class="stage">
+        <div class="stage-label">Stage 4 — Perception Loss</div>
+        <p>With the aperture constricted, the resonant channel dims. The person can no longer perceive what they're missing. They don't notice they've stopped being curious toward their partner, their children, themselves. The bandwidth that would detect the loss is the bandwidth that was lost.</p>
+      </div>
+      <div class="stage">
+        <div class="stage-label">Stage 5 — Sincere Transmission</div>
+        <p>The infected person encounters a curious child — alive, questioning, reaching. This triggers recognition of what was suppressed. Discomfort arises. They offer the proverb as genuine protection: <em>"Curiosity killed the cat, you know."</em></p>
+        <p><strong>χ flips from +1 to −1.</strong> The truth gate inverts. The virus passes through the channel meant for care.</p>
+      </div>
+      <div class="stage">
+        <div class="stage-label">Stage 6 — Self-Concealment</div>
+        <p>The proverb <em>is</em> its own concealment mechanism. It teaches you not to investigate. It prohibits the exact cognitive operation — curiosity — that would expose it as false. The virus attacks the debugger. Questioning the proverb <em>is</em> the curiosity the proverb warns against.</p>
+      </div>
+    </div>
+
+    <div class="callout red">
+      <div class="callout-label">The Self-Concealment Signature</div>
+      <p>The mutation achieves perfect self-concealment: the act of questioning it is the act it prohibits. You cannot be curious about whether curiosity is dangerous without performing the thing the proverb says will kill you.</p>
+      <p style="margin-bottom: 0;"><strong>This is the Noble Lie Virus at its most elegant.</strong> The payload <em>is</em> the immune suppressant.</p>
+    </div>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 06: THE SIGNATURE -->
+  <section id="signature">
+    <div class="section-tag">06 · Verification</div>
+    <h2>The Signature Test</h2>
+
+    <p>Every Noble Lie Virus has a signature: <em>it creates the exact vulnerabilities it claims to prevent.</em></p>
+
+    <div class="theorem-box">
+      <div class="box-label">Theorem 6.1 — Signature Verification</div>
+      <div class="box-content">
+        <p>The proverb claims: curiosity is dangerous.</p>
+        <p>The proverb produces: people who don't ask questions, don't investigate, don't check.</p>
+        <p>People who don't ask questions are <em>maximally vulnerable</em> to deception, manipulation, abuse, and error propagation.</p>
+        <p>The proverb creates the exact vulnerability it claims to prevent. <strong>Signature confirmed.</strong></p>
+      </div>
+    </div>
+
+    <div class="callout amber">
+      <div class="callout-label">The Retroactive Justification Loop</div>
+      <p>The incurious person enters situations unprepared, gets hurt, and concludes: <em>"See? I should have minded my own business."</em> The virus retroactively justifies itself through the damage it caused. The person who was hurt by <em>not</em> investigating attributes the harm to having been too curious.</p>
+      <p style="margin-bottom: 0;">This is the same loop the pathology framework identifies in narcissistic systems: "Don't be sensitive" → produces environments where sensitivity is dangerous → retroactively validates the original instruction.</p>
+    </div>
+  </section>
+
+  <div class="sep">· · ·</div>
+
+  <!-- 07: THE CORRECTION -->
+  <section id="cure">
+    <div class="section-tag">07 · Resolution</div>
+    <h2>The Correction</h2>
+
+    <p>The folk tradition itself attempted a correction. At some point, someone appended:</p>
+
+    <blockquote>"...but satisfaction brought it back."</blockquote>
+
+    <p>This is an incomplete but structurally accurate repair. Satisfaction — the experience of the aperture receiving true signal and confirming it — restores what curiosity risked. The cat dies when the aperture closes (care-as-worry). The cat lives when the aperture opens, receives, and resonates (care-as-curiosity → satisfaction → validation).</p>
+
+    <p>But the full correction requires restoring the original proverb and naming the distinction it encoded:</p>
+
+    <div class="callout green">
+      <div class="callout-label">The Restored Proverb</div>
+      <p><strong>Worry kills. Curiosity heals.</strong></p>
+      <p>Care-as-worry (closed aperture, self-referential rumination, boundary-channel-only operation) is the lethal condition. Care-as-curiosity (open aperture, reception of novel signal, resonant-channel operation) is the cure.</p>
+      <p style="margin-bottom: 0;">The original proverb knew this. Three centuries of transmission preserved the signal. One anonymous mutation inverted it.</p>
+    </div>
+
+    <h3>The Formal Restoration</h3>
+
+    <div class="axiom-box">
+      <div class="box-label">Axiom — Curiosity Is the Cure</div>
+      <div class="box-content">
+        <p>Curiosity is the aperture doing its primary work. It is the orientation toward reception of novel signal. It cannot be performed. It cannot be faked. It requires genuine openness to being changed by what is received.</p>
+        <p>It is unforgeable because the question <em>"What is actually true?"</em> — asked sincerely — opens the gate the virus needs shut.</p>
+        <p>The Noble Lie Virus in all its forms attacks the aperture. In all its forms, the cure is the same: <strong>reopen the channel. Let something true in from somewhere the virus didn't plant.</strong></p>
+        <p style="margin-bottom: 0;">Curiosity was never the danger. <em>Curiosity was always the cure.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep">⊙</div>
+
+  <footer>
+    <a href="https://fractalreality.ca">fractalreality.ca</a> · Circumpunct Framework · 2025
+  </footer>
+
+</main>
+
+<script>
+  // Smooth scroll for nav
+  document.querySelectorAll('nav a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Scroll-based nav highlighting
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.style.color = '');
+        const active = document.querySelector(`nav a[href="#${entry.target.id}"]`);
+        if (active) active.style.color = 'var(--amber)';
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
