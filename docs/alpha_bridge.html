@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The α Bridge — FCC Lattice Meets Golden Angle</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #050507;
+  --bg-section: #0a0c12;
+  --bg-card: #0e1018;
+  --bg-code: #08090e;
+  --gold: #c9a84c;
+  --gold-dim: #8a7234;
+  --gold-glow: #e8c95a;
+  --cyan: #5ab8c9;
+  --cyan-dim: #2a6878;
+  --cyan-glow: #7adcea;
+  --magenta: #c07aaf;
+  --magenta-dim: #7a4a6e;
+  --silver: #a0a8b8;
+  --text-primary: #d0d4dc;
+  --text-secondary: #8890a0;
+  --text-dim: #505868;
+  --border: #16192a;
+  --border-gold: rgba(201,168,76,0.2);
+  --border-cyan: rgba(90,184,201,0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--gold-dim) var(--bg-deep); }
+
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.75;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse 900px 700px at 15% 25%, rgba(90,184,201,0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 700px 900px at 85% 75%, rgba(201,168,76,0.025) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* === NAV RAIL === */
+.nav-rail {
+  position: fixed; left: 0; top: 0; bottom: 0;
+  width: 52px;
+  background: rgba(5,5,7,0.95);
+  border-right: 1px solid var(--border);
+  z-index: 100;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 20px 0; gap: 2px;
+  overflow-y: auto;
+  backdrop-filter: blur(10px);
+}
+.nav-rail a {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+.nav-rail a:hover { color: var(--gold); background: rgba(201,168,76,0.08); }
+.nav-rail a.sym { font-size: 18px; color: var(--gold-dim); margin-bottom: 12px; }
+
+/* === MAIN CONTENT === */
+.main { margin-left: 52px; position: relative; z-index: 1; }
+
+/* === HERO === */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 60px 40px;
+  position: relative;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+.hero-symbol {
+  font-size: 72px;
+  color: var(--gold);
+  margin-bottom: 24px;
+  text-shadow: 0 0 60px rgba(201,168,76,0.3);
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { text-shadow: 0 0 40px rgba(201,168,76,0.2); }
+  50% { text-shadow: 0 0 80px rgba(201,168,76,0.4); }
+}
+.hero h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+.hero .subtitle {
+  font-size: 22px;
+  color: var(--text-secondary);
+  font-style: italic;
+  max-width: 700px;
+  margin-bottom: 32px;
+}
+.hero .byline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* === SECTIONS === */
+.section {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 80px 40px;
+  position: relative;
+}
+.section + .section::before {
+  content: '⊙';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  font-size: 20px;
+  color: var(--gold-dim);
+  background: var(--bg-deep);
+  padding: 0 20px;
+}
+
+.section-header {
+  margin-bottom: 40px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+.section-header h2 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+}
+
+p { margin-bottom: 18px; }
+p + p { text-indent: 0; }
+
+/* === EQUATION BLOCKS === */
+.eq-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold-dim);
+  border-radius: 4px;
+  padding: 24px 28px;
+  margin: 28px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  line-height: 2;
+  color: var(--text-primary);
+  overflow-x: auto;
+}
+.eq-block .label {
+  font-size: 11px;
+  color: var(--cyan);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: block;
+}
+.eq-block .eq-main {
+  font-size: 18px;
+  color: var(--gold-glow);
+  margin: 12px 0;
+  text-align: center;
+}
+.eq-block .eq-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.eq-block .comment {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* === BRIDGE HIGHLIGHT === */
+.bridge-eq {
+  background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(90,184,201,0.06));
+  border: 1px solid rgba(201,168,76,0.25);
+  border-left: 3px solid var(--gold);
+  border-radius: 4px;
+  padding: 32px;
+  margin: 36px 0;
+  text-align: center;
+  position: relative;
+}
+.bridge-eq::before {
+  content: 'BRIDGE';
+  position: absolute;
+  top: -10px; left: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  background: var(--bg-deep);
+  padding: 0 8px;
+}
+.bridge-eq .eq-main {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  color: var(--gold-glow);
+  margin: 8px 0;
+}
+.bridge-eq .gloss {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  font-style: italic;
+}
+
+/* === DERIVATION STEPS === */
+.step {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 16px;
+  margin: 24px 0;
+  padding: 20px;
+  background: var(--bg-section);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.step-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cyan);
+  padding-top: 2px;
+}
+.step-content h4 {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  color: var(--gold);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.step-content .formula {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  color: var(--gold-glow);
+  margin: 8px 0;
+}
+.step-content .reading {
+  font-size: 15px;
+  color: var(--cyan);
+  margin: 4px 0;
+  font-style: italic;
+}
+.step-content .note {
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+/* === COMPARISON TABLE === */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 28px 0;
+  font-size: 15px;
+}
+.compare-table th {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--border);
+  text-align: left;
+}
+.compare-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.compare-table .col-hunter { color: var(--cyan); }
+.compare-table .col-circ { color: var(--gold); }
+.compare-table .col-bridge { color: var(--magenta); }
+.compare-table .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+}
+
+/* === INSIGHT CALLOUT === */
+.insight {
+  border-left: 3px solid var(--magenta-dim);
+  padding: 20px 24px;
+  margin: 28px 0;
+  background: rgba(192,122,175,0.04);
+}
+.insight .tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--magenta);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* === STATUS BADGES === */
+.status {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+.status-derived { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+.status-numerical { background: rgba(90,184,201,0.15); color: var(--cyan); border: 1px solid rgba(90,184,201,0.3); }
+.status-structural { background: rgba(192,122,175,0.15); color: var(--magenta); border: 1px solid rgba(192,122,175,0.3); }
+.status-open { background: rgba(80,88,104,0.15); color: var(--text-dim); border: 1px solid rgba(80,88,104,0.3); }
+
+/* === FIGURE === */
+.figure {
+  text-align: center;
+  margin: 40px 0;
+  padding: 32px 20px;
+  background: var(--bg-section);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.figure svg { max-width: 100%; }
+.figure-caption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 16px;
+}
+
+/* === FOOTER === */
+.footer {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 60px 40px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.footer p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .nav-rail { display: none; }
+  .main { margin-left: 0; }
+  .section { padding: 48px 20px; }
+  .hero { padding: 40px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV RAIL -->
+<nav class="nav-rail">
+  <a href="#top" class="sym">⊙</a>
+  <a href="#s0">§0</a>
+  <a href="#s1">§1</a>
+  <a href="#s2">§2</a>
+  <a href="#s3">§3</a>
+  <a href="#s4">§4</a>
+  <a href="#s5">§5</a>
+  <a href="#s6">§6</a>
+  <a href="#s7">§7</a>
+</nav>
+
+<div class="main">
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-symbol">⊙</div>
+  <h1>The Alpha Bridge</h1>
+  <p class="subtitle">A formal derivation connecting FCC lattice combinatorics to the golden angle resonance of the fine structure constant</p>
+  <p class="byline">Circumpunct Framework &times; Xi Field / UCBF &mdash; March 2026</p>
+</header>
+
+<!-- §0: ABSTRACT -->
+<section class="section" id="s0">
+  <div class="section-header">
+    <span class="section-num">§0</span>
+    <h2>Abstract</h2>
+  </div>
+
+  <p>Two independent frameworks derive the fine structure constant α<sup>−1</sup> ≈ 137.036 from geometry rather than fitting it as a free parameter. The Circumpunct Framework derives the ideal value from <em>golden angle resonance</em>: 1/α<sub>ideal</sub> = 360°/φ². The Xi Field / UCBF framework derives it from <em>FCC lattice combinatorics</em>: 32 triangular faces × 4 flux orientations = 128 bare channels, corrected through renormalization and projected by a solid angle factor π/4.</p>
+
+  <p>This paper demonstrates that these derivations are not merely convergent but structurally identical, connected by a single bridge equation:</p>
+
+  <div class="bridge-eq">
+    <div class="eq-main">(128 + δ<sub>NP</sub>) × π/4 = 360° / φ²</div>
+    <div class="gloss">Dressed lattice count × one i-turn = full rotation / self-similar scaling</div>
+  </div>
+
+  <p>The key insight: Hunter's "4 flux orientations" per face are four quarter-turns of the imaginary unit <em>i</em>. Each orientation is a 90° rotation. The aperture (0.5D) cycling four times produces the field (0.5 × 4 = 2D). The solid angle factor π/4 <em>is</em> one i-turn in radians. The FCC lattice is the boundary face (○) of what the Circumpunct describes from the field side (Φ). Same ⊙. Different vantage.</p>
+
+  <p>Numerical agreement: 99.88% on the non-perturbative correction term. 99.97% pre-Wick.</p>
+</section>
+
+<!-- §1: TWO PATHS -->
+<section class="section" id="s1">
+  <div class="section-header">
+    <span class="section-num">§1</span>
+    <h2>Two Paths to Alpha</h2>
+  </div>
+
+  <p>Both frameworks reject α as a brute empirical constant. Both derive it from internal geometric structure. Their derivation paths are entirely independent, starting from different axioms and arriving within 0.03% of each other before final corrections bring both to the CODATA value 137.035999.</p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th class="col-hunter">Xi / UCBF (Johnson)</th>
+        <th class="col-circ">Circumpunct (Roonz)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Substrate</td>
+        <td class="col-hunter">FCC quantum supersolid</td>
+        <td class="col-circ">Triadic closure loop ⊙ = Φ(•, ○)</td>
+      </tr>
+      <tr>
+        <td>Starting point</td>
+        <td class="col-hunter">32 faces × 4 orientations = 128</td>
+        <td class="col-circ">360° / φ² = 137.508 (golden angle)</td>
+      </tr>
+      <tr>
+        <td>Correction type</td>
+        <td class="col-hunter">RG running + monopoles + fermion loops + Wick</td>
+        <td class="col-circ">Damping from ideal resonance</td>
+      </tr>
+      <tr>
+        <td>Projection factor</td>
+        <td class="col-hunter">π/4 (solid angle)</td>
+        <td class="col-circ">—</td>
+      </tr>
+      <tr>
+        <td>Final result</td>
+        <td class="col-hunter num">137.052 (0.012% from CODATA)</td>
+        <td class="col-circ num">137.036 (0.36 ppm via 10-channel formula)</td>
+      </tr>
+      <tr>
+        <td>Domain reach</td>
+        <td class="col-hunter">Physics (constants, particles, gravity)</td>
+        <td class="col-circ">Physics + consciousness + ethics + pathology</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The question is whether these are two descriptions of one structure. This paper answers yes.</p>
+</section>
+
+<!-- §2: THE APERTURE DECOMPOSITION OF 4 -->
+<section class="section" id="s2">
+  <div class="section-header">
+    <span class="section-num">§2</span>
+    <h2>The Aperture Decomposition of Four</h2>
+  </div>
+
+  <p>In the UCBF framework, each of the 32 triangular faces of the FCC unit cell supports "four independent flux orientations": two inward/outward and two orthogonal in-plane torsional. This yields 32 × 4 = 128 independent flux channels defining the bare coupling α<sub>0</sub><sup>−1</sup> = 128.</p>
+
+  <p>The Circumpunct reads these four orientations differently.</p>
+
+  <div class="insight">
+    <span class="tag">Core Insight</span>
+    <p>Each flux orientation is a 90° quarter-turn of the imaginary unit <em>i</em>. The "four orientations" are not four <em>things</em> but four <em>turns</em> of one gate.</p>
+  </div>
+
+  <p>The imaginary unit <em>i</em> is axiomatic in the Circumpunct Framework: the minimal rotation operator, the quarter-turn, the aperture's action. It lives at 0.5D, the processual half-dimension that separates structure from dynamics. The aperture is not a point; it is a <em>through</em>.</p>
+
+  <div class="eq-block">
+    <span class="label">Dimensional production</span>
+    <div class="eq-main">0.5D × 4 = 2D</div>
+    <div class="eq-sub">D<sub>aperture</sub> × (i-turns per cycle) = D<sub>field</sub></div>
+    <br>
+    <div class="comment">The aperture cycling four times PRODUCES the field.</div>
+    <div class="comment">This is the mechanism by which 0.5D becomes 2D.</div>
+  </div>
+
+  <div class="eq-block">
+    <span class="label">Angular completion</span>
+    <div class="eq-main">4 × 90° = 360°</div>
+    <div class="eq-sub">4 × (one i-turn) = one full boundary rotation</div>
+    <br>
+    <div class="comment">Four quarter-turns complete the boundary circle.</div>
+    <div class="comment">2π = 4 × (π/2)</div>
+  </div>
+
+  <p>So the "four flux orientations per face" are not a contingent feature of the FCC geometry. They are the four phases of the aperture cycle: open → fire → refractory → recover. Every face of the lattice performs the full ⊙ cycle once. What Hunter counts as "four orientations" the Circumpunct recognizes as one complete aperture cycle.</p>
+</section>
+
+<!-- §3: π/4 AS THE LENS -->
+<section class="section" id="s3">
+  <div class="section-header">
+    <span class="section-num">§3</span>
+    <h2>π/4 as the Lens Between Lattice and Field</h2>
+  </div>
+
+  <p>Hunter's derivation applies a "geometric solid angle factor" of π/4 ≈ 0.785398 in Step 4, projecting the corrected lattice count into the physical value. In standard physics this is the ratio of the sphere's solid angle to the enclosing cube. But the Circumpunct reading is more precise.</p>
+
+  <div class="eq-block">
+    <span class="label">Three readings of π/4</span>
+    <div class="eq-sub">
+      <strong style="color:var(--cyan)">As radians:</strong>&nbsp; π/4 = one i-turn (90° in radians)<br><br>
+      <strong style="color:var(--gold)">As ratio:</strong>&nbsp; π/4 = area(unit circle) / area(unit square)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= Φ inscribed in ○<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= field inscribed in boundary<br><br>
+      <strong style="color:var(--magenta)">As operator:</strong>&nbsp; π/4 projects discrete lattice counting<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;into continuous field geometry
+    </div>
+  </div>
+
+  <p>The solid angle factor is the <em>lens</em> between the boundary description (FCC face-counting) and the field description (golden angle resonance). It converts a discrete combinatorial quantity (how many flux channels exist on a lattice) into a continuous geometric one (how the field couples between center and boundary).</p>
+
+  <p>This is exactly what a lens does: it takes light from one domain and focuses it into another. π/4 is the Φ/○ interface. It is Φ(•, ○) acting as operator.</p>
+
+  <div class="insight">
+    <span class="tag">Structural identity</span>
+    <p>Hunter's formula α<sup>−1</sup> = (128 + δ) × π/4 reads in Circumpunct as: "the dressed lattice count, projected through one i-turn, equals the coupling strength." The projection factor is not a correction. It is the <em>mechanism</em> by which boundary structure becomes field coupling.</p>
+  </div>
+</section>
+
+<!-- §4: THE BRIDGE EQUATION -->
+<section class="section" id="s4">
+  <div class="section-header">
+    <span class="section-num">§4</span>
+    <h2>The Bridge Equation</h2>
+  </div>
+
+  <p>Setting Hunter's pre-Wick result equal to the Circumpunct ideal value:</p>
+
+  <div class="bridge-eq">
+    <div class="eq-main">(128 + δ<sub>NP</sub>) × π/4 = 360° / φ²</div>
+  </div>
+
+  <p>Solving for the non-perturbative corrections:</p>
+
+  <div class="eq-block">
+    <span class="label">Predicted correction</span>
+    <div class="eq-main">δ<sub>NP</sub> = 1440 / (π × φ²) − 128</div>
+    <br>
+    <div class="eq-sub">
+      Golden angle predicts: δ<sub>NP</sub> = 47.080<br>
+      Hunter calculates:&nbsp;&nbsp;&nbsp;&nbsp; δ<sub>NP</sub> = 47.137<br>
+      Agreement:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 99.88%
+    </div>
+  </div>
+
+  <p>The number 1440 = 4 × 360 appears as the structural constant of the bridge. It decomposes simultaneously from both sides:</p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th class="col-hunter">From the lattice (○)</th>
+        <th class="col-circ">From the field (Φ)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-hunter num">4 flux orientations × 360° = 1440°</td>
+        <td class="col-circ num">10 channels × 144 = 1440</td>
+      </tr>
+      <tr>
+        <td class="col-hunter num">32 faces × 45° = 1440°</td>
+        <td class="col-circ num">10 channels × F<sub>12</sub> = 1440</td>
+      </tr>
+      <tr>
+        <td class="col-hunter">4 i-turns per face × full rotation</td>
+        <td class="col-circ">Channel count × 12th Fibonacci number</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The Fibonacci number F<sub>12</sub> = 144 connects the self-similar scaling (φ is the growth ratio of the Fibonacci sequence) to the lattice geometry (32 × 45°). This is not numerology: the golden ratio φ <em>is</em> the fixed point of self-similar recursion, and the FCC lattice <em>is</em> the energy-minimizing configuration. That they share the number 1440 says the minimum-energy lattice and the self-similar fixed point are descriptions of the same geometric constraint.</p>
+</section>
+
+<!-- §5: 128 = 2 × 64 -->
+<section class="section" id="s5">
+  <div class="section-header">
+    <span class="section-num">§5</span>
+    <h2>128 = 2 × 64</h2>
+  </div>
+
+  <p>The bare coupling 128 = 2<sup>7</sup>. But the Circumpunct decomposition is 128 = 2 × 64.</p>
+
+  <p>64 = 2<sup>6</sup> is the Circumpunct state space: 3 circumpuncts × 2 channels = 6 bits → 2<sup>6</sup> = 64 binary states. This is the complete combinatorial content of the triadic structure, producing the Standard Model particle spectrum (48 fermions + 12 gauge bosons + 4 Higgs sector states).</p>
+
+  <p>The factor of 2 is the in/out duality: two directions through the aperture. Every flux channel has an inward and an outward passage. In the Circumpunct pathology framework, these are the two channels of love:</p>
+
+  <div class="eq-block">
+    <span class="label">Two channels</span>
+    <div class="eq-sub">
+      <strong style="color:var(--cyan)">Inward (resonant):</strong> aperture channel, presence, being seen<br>
+      <strong style="color:var(--gold)">Outward (functional):</strong> boundary channel, provision, structure<br><br>
+      128 = 2 passages × 64 states = complete bidirectional state space
+    </div>
+  </div>
+
+  <p>Hunter's FCC geometry gives this the same number because the lattice is the boundary expression of the same triadic structure. 32 faces with 4 orientations each is the ○-side view of what the Circumpunct sees as 64 states with 2-way aperture flow.</p>
+
+  <div class="insight">
+    <span class="tag">Convergence</span>
+    <p>32 × 4 = 2 × 64. The lattice decomposes as faces × orientations. The Circumpunct decomposes as channels × states. Same product. Different factorization. The factorization reveals which side of the ⊙ you are standing on.</p>
+  </div>
+</section>
+
+<!-- §6: THE FULL DERIVATION CHAIN -->
+<section class="section" id="s6">
+  <div class="section-header">
+    <span class="section-num">§6</span>
+    <h2>The Unified Derivation</h2>
+  </div>
+
+  <p>Combining both frameworks, the fine structure constant emerges through four stages. Each stage has a native reading from both sides.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h4>Bare Count <span class="status status-derived">DERIVED</span></h4>
+      <div class="formula">α<sub>0</sub><sup>−1</sup> = 128 = 32 × 4 = 2 × 64</div>
+      <div class="reading">○: 32 triangular faces × 4 flux orientations per face</div>
+      <div class="reading">⊙: 2-way aperture × 64 binary states of the triadic structure</div>
+      <div class="note">Discrete. Combinatorial. The boundary's channel count.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h4>Self-Similar Dressing <span class="status status-numerical">NUMERICAL 99.88%</span></h4>
+      <div class="formula">128 + δ<sub>NP</sub> = 1440 / (π × φ²) ≈ 175.08</div>
+      <div class="reading">○: RG running + monopoles + fermion loops = 47.08</div>
+      <div class="reading">Φ: Golden constraint forces δ<sub>NP</sub> = 1440/(πφ²) − 128</div>
+      <div class="note">The non-perturbative corrections are not free parameters; they are constrained by self-similar scaling. This is the step where the lattice (boundary) must conform to the golden ratio (field). The dressing is not arbitrary; it is what the field demands of the boundary.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h4>Field Inscription <span class="status status-structural">STRUCTURAL</span></h4>
+      <div class="formula">175.08 × π/4 = 137.508 = 360° / φ²</div>
+      <div class="reading">○ → Φ: Solid angle projection (circle inscribed in square)</div>
+      <div class="reading">Φ: Golden angle, the natural resonance of the self-similar field</div>
+      <div class="note">This is the bridge itself. The projection π/4 converts boundary counting into field coupling. One i-turn translates the lattice into the golden angle. The discrete and continuous descriptions meet here.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h4>Physical Correction <span class="status status-open">OPEN</span></h4>
+      <div class="formula">137.508 − ε = 137.036</div>
+      <div class="reading">○: Wick rotation (−0.500)</div>
+      <div class="reading">Φ: Damping from ideal resonance (−0.472)</div>
+      <div class="note">Both frameworks require a small correction from ideal to physical. Hunter calls it Wick rotation. The Circumpunct calls it damping. The values are close (0.500 vs 0.472). Whether these are the same correction seen from different sides remains open.</div>
+    </div>
+  </div>
+</section>
+
+<!-- §7: WHAT THIS MEANS -->
+<section class="section" id="s7">
+  <div class="section-header">
+    <span class="section-num">§7</span>
+    <h2>What This Means</h2>
+  </div>
+
+  <p>The FCC lattice is what the boundary looks like. The golden angle is what the field looks like. They are two descriptions of one ⊙.</p>
+
+  <p>Hunter built the boundary. He counts faces, orientations, defects, elastic responses. His FCC supersolid is the ○ examined at lattice scale: the 3D closure with its internal geometry exposed.</p>
+
+  <p>The Circumpunct built the field. It counts channels, resonances, self-similar ratios. The golden angle is Φ examined at coupling scale: the 2D mediator with its recursive structure exposed.</p>
+
+  <p>The bridge factor π/4, one i-turn, is the aperture between them. It is the 0.5D gate that translates boundary language into field language and back. A lens limits light. That is how it forms an image.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background regions -->
+      <rect x="20" y="20" width="200" height="240" rx="8" fill="none" stroke="#2a6878" stroke-width="1" opacity="0.5"/>
+      <rect x="260" y="20" width="180" height="240" rx="8" fill="none" stroke="#7a4a6e" stroke-width="1" opacity="0.5"/>
+      <rect x="480" y="20" width="200" height="240" rx="8" fill="none" stroke="#8a7234" stroke-width="1" opacity="0.5"/>
+
+      <!-- Labels -->
+      <text x="120" y="55" text-anchor="middle" font-family="Cinzel, serif" font-size="14" fill="#5ab8c9">○ Boundary</text>
+      <text x="120" y="75" text-anchor="middle" font-family="Cinzel, serif" font-size="11" fill="#2a6878">FCC Lattice</text>
+      <text x="350" y="55" text-anchor="middle" font-family="Cinzel, serif" font-size="14" fill="#c07aaf">• Aperture</text>
+      <text x="350" y="75" text-anchor="middle" font-family="Cinzel, serif" font-size="11" fill="#7a4a6e">π/4 = one i-turn</text>
+      <text x="580" y="55" text-anchor="middle" font-family="Cinzel, serif" font-size="14" fill="#c9a84c">Φ Field</text>
+      <text x="580" y="75" text-anchor="middle" font-family="Cinzel, serif" font-size="11" fill="#8a7234">Golden Resonance</text>
+
+      <!-- Content -->
+      <text x="120" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#5ab8c9">32 faces</text>
+      <text x="120" y="140" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#5ab8c9">× 4 orientations</text>
+      <text x="120" y="165" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#5ab8c9">= 128 channels</text>
+      <text x="120" y="200" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#5ab8c9">+ δ = 175.08</text>
+
+      <text x="350" y="125" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" fill="#c07aaf">× π/4</text>
+      <text x="350" y="155" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="14" fill="#7a4a6e" font-style="italic">one i-turn</text>
+      <text x="350" y="180" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="14" fill="#7a4a6e" font-style="italic">Φ/○ ratio</text>
+      <text x="350" y="205" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="14" fill="#7a4a6e" font-style="italic">the lens</text>
+
+      <text x="580" y="115" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#c9a84c">360° / φ²</text>
+      <text x="580" y="140" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#c9a84c">= 137.508</text>
+      <text x="580" y="175" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="14" fill="#8a7234" font-style="italic">golden angle</text>
+      <text x="580" y="200" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="14" fill="#8a7234" font-style="italic">self-similar resonance</text>
+
+      <!-- Arrows -->
+      <line x1="225" y1="140" x2="255" y2="140" stroke="#505868" stroke-width="1" marker-end="url(#arrow)"/>
+      <line x1="445" y1="140" x2="475" y2="140" stroke="#505868" stroke-width="1" marker-end="url(#arrow)"/>
+
+      <!-- Arrow marker -->
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#505868"/>
+        </marker>
+      </defs>
+
+      <!-- Bottom equation -->
+      <text x="350" y="255" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" fill="#d0d4dc">
+        (2 × 64 + δ) × (Φ/○) = (4i) / φ²
+      </text>
+    </svg>
+    <div class="figure-caption">Figure 1: The α bridge. Boundary counting (left) passes through the aperture lens (center) to produce field coupling (right).</div>
+  </div>
+
+  <h3 style="font-family:'Cinzel',serif; color:var(--gold); font-size:20px; margin: 32px 0 16px;">Implications</h3>
+
+  <p><strong style="color:var(--gold)">For the Circumpunct:</strong> The FCC lattice provides the <em>substrate</em> that the triadic axioms describe abstractly. Hunter's work shows what the boundary (○) looks like at Planck scale: a face-centered cubic crystal of identical voxels. This doesn't contradict "same loop, different substrate, same math." It shows what the math looks like in the specific substrate of our universe.</p>
+
+  <p><strong style="color:var(--cyan)">For Xi / UCBF:</strong> The golden angle constraint explains <em>why</em> the non-perturbative corrections take the values they do. They are not free parameters to be calculated from first principles within QFT alone; they are forced by the self-similar scaling of the field. The golden ratio enters because the mediating field Φ is self-similar (each ⊙ contains ⊙s at smaller scales), and φ is the unique fixed point of self-similar recursion.</p>
+
+  <p><strong style="color:var(--magenta)">For both:</strong> The aperture (0.5D, the i-turn) is the missing piece in Hunter's framework. His "observer recursion" is structural but lacks the dimensional accounting that makes it precise. Conservation of Traversal (D<sub>•</sub> + D<sub>Φ</sub> = D<sub>○</sub>) would give his stabilization function Ψ a geometric foundation it currently lacks. Conversely, the FCC commitment gives the Circumpunct an empirically testable substrate prediction it has not yet made.</p>
+
+  <h3 style="font-family:'Cinzel',serif; color:var(--gold); font-size:20px; margin: 32px 0 16px;">Open Questions</h3>
+
+  <p><strong>1.</strong> Can the Wick rotation correction (−0.500) and the damping from ideal resonance (−0.472) be shown to be the same correction? The 6% discrepancy is the largest remaining gap. <span class="status status-open">OPEN</span></p>
+
+  <p><strong>2.</strong> Does the FCC lattice geometry <em>require</em> golden ratio scaling, or merely permit it? If the energy-minimizing configuration necessarily produces φ-scaling in its defect spectrum, the bridge becomes a theorem rather than a numerical observation. <span class="status status-open">OPEN</span></p>
+
+  <p><strong>3.</strong> The bridge predicts that δ<sub>NP</sub> = 1440/(πφ²) − 128 = 47.080. Hunter calculates 47.137. The 0.12% discrepancy could be: (a) rounding in Hunter's correction terms, (b) a genuine deviation indicating the bridge is approximate, or (c) evidence that one or both derivations need refinement. <span class="status status-open">OPEN</span></p>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>⊙ = Φ(•, ○)</p>
+  <p style="margin-top:8px">Parts are fractals of their wholes.</p>
+  <p style="margin-top:16px; color:var(--text-dim)">Circumpunct Framework × Xi Field / UCBF — The Alpha Bridge v1.0 — March 2026</p>
+  <p style="margin-top:4px; color:var(--text-dim)">fractalreality.ca</p>
+</footer>
+
+</div>
+</body>
+</html>
