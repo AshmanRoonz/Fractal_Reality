@@ -23,6 +23,30 @@
         .panel-research a:hover, .panel-about a:hover { text-decoration: underline; color: #79c0ff; }
         .panel-research li, .panel-about li { margin-bottom: 0.5rem; }
 
+        /* Top bar */
+        .top-bar {
+            text-align: center;
+            padding: 0.4rem 1rem;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.75rem;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff;
+            animation: cyberpunk-glow 3s ease-in-out infinite alternate;
+            border-bottom: 1px solid rgba(0,255,255,0.15);
+            letter-spacing: 0.03em;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13,17,23,0.85);
+            backdrop-filter: blur(8px);
+        }
+        .top-bar a {
+            color: #00ffff;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .top-bar a:hover { opacity: 0.7; }
+
         /* ===================================
            SIMPLE CSS CIRCUMPUNCT
            =================================== */
@@ -36,15 +60,35 @@
             position: absolute;
             inset: 0;
             border-radius: 50%;
-            border: 8px solid var(--body-color);
+            border: 8px solid transparent;
+            background:
+                linear-gradient(var(--bg, #0d1117), var(--bg, #0d1117)) padding-box,
+                conic-gradient(from var(--fractal-angle, 0deg),
+                    rgba(163,113,247,0.9),
+                    rgba(163,113,247,0.4),
+                    rgba(163,113,247,0.8),
+                    rgba(163,113,247,0.3),
+                    rgba(163,113,247,0.95),
+                    rgba(163,113,247,0.35),
+                    rgba(163,113,247,0.85),
+                    rgba(163,113,247,0.4),
+                    rgba(163,113,247,0.9)
+                ) border-box;
             box-shadow: 0 0 40px rgba(163,113,247,0.35), 0 0 100px rgba(163,113,247,0.1), inset 0 0 40px rgba(163,113,247,0.06);
-            animation: circ-breathe 7s ease-in-out infinite;
+            animation: circ-breathe 7s ease-in-out infinite, fractal-rotate 12s linear infinite;
             cursor: pointer;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            filter: url(#fractal-boundary);
+            transition: box-shadow 0.3s;
+        }
+        @keyframes fractal-rotate {
+            from { --fractal-angle: 0deg; }
+            to { --fractal-angle: 360deg; }
+        }
+        @property --fractal-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
         }
         .circ-boundary:hover {
-            border-color: #c99dff;
             box-shadow: 0 0 60px rgba(163,113,247,0.5), 0 0 120px rgba(163,113,247,0.15);
         }
         .circ-field {
@@ -139,17 +183,14 @@
             font-size: 0.85rem;
             text-shadow: none;
         }
-        .circ-legend .sw {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
+        .circ-legend .sym {
+            font-size: 1rem;
             flex-shrink: 0;
+            text-shadow: none;
+            width: 1em;
+            text-align: center;
         }
-        .circ-legend .sw-s { background: var(--soul-color); box-shadow: 0 0 8px rgba(88,166,255,0.4); }
-        .circ-legend .sw-m { border: 2px solid var(--mind-color); background: rgba(240,180,41,0.15); }
-        .circ-legend .sw-b { border: 3px solid var(--body-color); }
-        .circ-legend .sw-w { width: 22px; height: 22px; border: 2px solid var(--body-color); background: radial-gradient(circle, rgba(240,180,41,0.35) 30%, rgba(240,180,41,0.12) 70%); position: relative; box-shadow: 0 0 8px rgba(240,180,41,0.15); }
-        .circ-legend .sw-w::after { content:''; position:absolute; width:7px; height:7px; background:var(--soul-color); border-radius:50%; inset:0; margin:auto; box-shadow: 0 0 6px rgba(88,166,255,0.4); }
+        .circ-legend .sym-w { color: var(--circumpunct-color, #e6edf3); text-shadow: 0 0 6px var(--soul-color); }
         .circ-legend b { font-weight: 600; font-size: 0.85rem; }
         .leg-link { cursor: pointer; transition: opacity 0.2s; }
         .leg-link:hover { opacity: 0.7; }
@@ -183,6 +224,14 @@
             text-align: center;
             margin: 0 0 0.5rem;
             letter-spacing: 0.03em;
+        }
+        .dim-hint {
+            font-size: 0.65rem;
+            color: var(--text-dim, #c8d1db);
+            text-shadow: none;
+            animation: none;
+            opacity: 0.6;
+            font-weight: 300;
         }
         .drawers {
             overflow-y: auto;
@@ -282,6 +331,8 @@
 
     <canvas id="particles"></canvas>
 
+    <div class="top-bar">Explore Fractal Reality with your host, <a href="#" id="host-link">Ashman Roonz</a></div>
+
     <main class="container">
 
         <!-- Responsive Layout Wrapper -->
@@ -302,10 +353,10 @@
 
                     <!-- Legend -->
                     <div class="circ-legend">
-                        <div class="leg leg-link" data-zone="soul"><div class="sw sw-s"></div><b class="col-soul">Soul</b> <span>· • · aperture</span></div>
-                        <div class="leg leg-link" data-zone="mind"><div class="sw sw-m"></div><b class="col-mind">Mind</b> <span>· Φ · field</span></div>
-                        <div class="leg leg-link" data-zone="body"><div class="sw sw-b"></div><b class="col-body">Body</b> <span>· ○ · boundary</span></div>
-                        <div class="leg leg-link" data-zone="circumpunct"><div class="sw sw-w"></div><b>Consciousness</b></div>
+                        <div class="leg leg-link" data-zone="soul"><span class="sym col-soul">•</span> <b class="col-soul">Soul</b> <span>· aperture</span></div>
+                        <div class="leg leg-link" data-zone="mind"><span class="sym col-mind">Φ</span> <b class="col-mind">Mind</b> <span>· field</span></div>
+                        <div class="leg leg-link" data-zone="body"><span class="sym col-body">○</span> <b class="col-body">Body</b> <span>· boundary</span></div>
+                        <div class="leg leg-link" data-zone="circumpunct"><span class="sym sym-w">⊙</span> <b>Consciousness</b></div>
                     </div>
                 </div>
               </div>
@@ -313,16 +364,6 @@
 
             <!-- Center Column: Circumpunct -->
             <div class="center-panel">
-
-        <!-- SVG fractal noise filter for organic boundary -->
-        <svg width="0" height="0" style="position:absolute">
-            <filter id="fractal-boundary" x="-20%" y="-20%" width="140%" height="140%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="4" seed="42" result="noise">
-                    <animate attributeName="seed" values="42;100;42" dur="8s" repeatCount="indefinite"/>
-                </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
-            </filter>
-        </svg>
 
         <!-- The Simple Circumpunct -->
         <div class="circumpunct-container">
@@ -351,16 +392,14 @@
             <a href="surface_field_formalization.html">Surface</a>
             <a href="pages.html">All Pages</a>
             <a href="#" id="research-btn" class="nb-soul">Research</a>
-            <a href="#" id="about-btn">About</a>
             <a href="https://www.reddit.com/r/Circumpunct/" target="_blank" rel="noopener">Reddit</a>
             <a href="https://www.facebook.com/groups/4397079510569470" target="_blank" rel="noopener">Facebook</a>
-            <a href="mailto:email@ashmanroonz.ca">Contact</a>
         </div>
             </div><!-- /center-panel -->
 
             <!-- Right Column: Dimensional Drawers -->
             <div class="dimension-section side-panel right-panel">
-                <h3 class="dimensions-title">The Dimensions of the Circumpunct</h3>
+                <h3 class="dimensions-title">Dimensions of the Circumpunct <span class="dim-hint">- tap to expand</span></h3>
                 <div class="drawers">
                     <div class="tier">Tier 0 · Spatial · ⊙₁ · ∞D → 3D</div>
                     <div class="dr dg"><div class="dr-h" onclick="tog(this)"><span class="dr-d">∞D</span><span class="dr-n">Infinite Field</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Undifferentiated potential. All possible configurations. No locus, no point: pure future energy. The unmanifest.</p></div></div>
@@ -810,7 +849,7 @@
         }
 
         document.getElementById('research-btn').addEventListener('click', function(e) { e.preventDefault(); openPanel('panel-research'); });
-        document.getElementById('about-btn').addEventListener('click', function(e) { e.preventDefault(); openPanel('panel-about'); });
+        document.getElementById('host-link').addEventListener('click', function(e) { e.preventDefault(); openPanel('panel-about'); });
 
         // Close buttons
         document.querySelectorAll('#panel-research .panel-close, #panel-about .panel-close').forEach(function(btn) {
