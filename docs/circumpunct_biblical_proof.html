@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Real Holy Trinity — Biblical Proof of the Circumpunct</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0a0f;
+            --bg-surface: #12121a;
+            --bg-elevated: #1a1a24;
+            --gold-primary: #d4a853;
+            --gold-light: #f0d78c;
+            --gold-dark: #a67c2e;
+            --text-primary: #f2efe8;
+            --text-secondary: #c9c4b8;
+            --text-dim: #8a857a;
+            --blue-spirit: #4a7c9b;
+            --blue-glow: rgba(74, 124, 155, 0.4);
+            --violet-accent: #8b6bb3;
+            --border-subtle: rgba(212, 168, 83, 0.15);
+            --glow-gold: rgba(212, 168, 83, 0.4);
+            --cyan-flow: #4ecdc4;
+            --cyan-glow: rgba(78, 205, 196, 0.4);
+            --magenta-pulse: #c44d8f;
+            --magenta-glow: rgba(196, 77, 143, 0.4);
+            --red-error: #e74c3c;
+            --green-truth: #27ae60;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            font-size: 19px;
+            line-height: 1.75;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            z-index: 1000;
+        }
+
+        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .star { position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%; }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: 220px;
+            height: 100vh;
+            background: rgba(10, 10, 15, 0.95);
+            border-right: 1px solid var(--border-subtle);
+            padding: 2rem 1rem;
+            z-index: 100;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-symbol {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: var(--gold-primary);
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px var(--glow-gold);
+        }
+
+        nav ul { list-style: none; }
+
+        nav ul li a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.03em;
+            border-left: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--gold-light);
+            border-left-color: var(--gold-primary);
+            background: rgba(212, 168, 83, 0.05);
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 1rem 0.75rem;
+        }
+
+        /* Main content */
+        main {
+            margin-left: 220px;
+            max-width: 900px;
+            padding: 0 3rem 6rem;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 8rem 2rem 6rem;
+            position: relative;
+        }
+
+        .hero-symbol {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 3rem;
+        }
+
+        .hero-symbol .outer {
+            position: absolute;
+            width: 140px; height: 140px;
+            border: 2px solid var(--gold-primary);
+            border-radius: 50%;
+            animation: pulse-outer 4s ease-in-out infinite;
+        }
+
+        .hero-symbol .inner {
+            position: absolute;
+            width: 12px; height: 12px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px var(--glow-gold), 0 0 40px rgba(212, 168, 83, 0.2);
+        }
+
+        @keyframes pulse-outer {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.03); }
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.8rem;
+            font-weight: 400;
+            color: var(--gold-light);
+            letter-spacing: 0.04em;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 30px rgba(212, 168, 83, 0.3);
+        }
+
+        .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .author {
+            font-style: italic;
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        /* Section headers */
+        .section-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--gold-dark);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--gold-light);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.03em;
+        }
+
+        h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--gold-primary);
+            margin: 2rem 0 1rem;
+        }
+
+        section {
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        section:last-of-type { border-bottom: none; }
+
+        p {
+            margin-bottom: 1.25rem;
+            color: var(--text-secondary);
+        }
+
+        /* Scripture blocks */
+        .scripture {
+            background: linear-gradient(135deg, rgba(74, 124, 155, 0.08), rgba(139, 107, 179, 0.06));
+            border-left: 3px solid var(--blue-spirit);
+            padding: 1.5rem 2rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+        }
+
+        .scripture .verse {
+            font-style: italic;
+            color: var(--text-primary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 0.75rem;
+        }
+
+        .scripture .ref {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--blue-spirit);
+            letter-spacing: 0.05em;
+        }
+
+        /* Framework mapping boxes */
+        .mapping {
+            background: rgba(212, 168, 83, 0.06);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .mapping-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--gold-dark);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .mapping .equation {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--gold-light);
+            text-align: center;
+            padding: 0.75rem 0;
+        }
+
+        .mapping p {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Axiom reference boxes */
+        .axiom-ref {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--cyan-flow);
+            background: rgba(78, 205, 196, 0.1);
+            border: 1px solid rgba(78, 205, 196, 0.2);
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+            letter-spacing: 0.05em;
+        }
+
+        /* Component color coding */
+        .aperture { color: var(--magenta-pulse); }
+        .field { color: var(--cyan-flow); }
+        .boundary { color: var(--gold-primary); }
+
+        /* Insight boxes */
+        .insight {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.08), rgba(212, 168, 83, 0.08));
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .insight .key {
+            font-family: 'Cinzel', serif;
+            font-size: 1.15rem;
+            color: var(--gold-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .insight p {
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            text-align: center;
+        }
+
+        /* Tabernacle diagram */
+        .tabernacle-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+            margin: 2.5rem auto;
+            max-width: 600px;
+        }
+
+        .tab-zone {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            border: 1px solid;
+            flex: 1;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tab-outer {
+            border-color: var(--gold-dark);
+            background: rgba(212, 168, 83, 0.04);
+            border-radius: 8px 0 0 8px;
+        }
+
+        .tab-holy {
+            border-color: var(--cyan-flow);
+            background: rgba(78, 205, 196, 0.04);
+            border-left: none;
+            border-right: none;
+        }
+
+        .tab-holiest {
+            border-color: var(--magenta-pulse);
+            background: rgba(196, 77, 143, 0.04);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tab-zone .label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tab-zone .symbol {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.4rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .tab-zone .desc {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Table styling */
+        .proof-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        .proof-table th {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--gold-primary);
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 2px solid var(--border-subtle);
+            letter-spacing: 0.05em;
+        }
+
+        .proof-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(212, 168, 83, 0.08);
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        .proof-table tr:hover td {
+            background: rgba(212, 168, 83, 0.03);
+        }
+
+        /* Epigraph */
+        .epigraph {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin: 2rem 0;
+        }
+
+        .epigraph blockquote {
+            font-style: italic;
+            font-size: 1.15rem;
+            color: var(--text-primary);
+            max-width: 600px;
+            margin: 0 auto 0.75rem;
+            line-height: 1.8;
+        }
+
+        .epigraph cite {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+        }
+
+        /* Pathology section */
+        .pathology-box {
+            border: 1px solid;
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .pathology-box.inflation {
+            border-color: rgba(231, 76, 60, 0.3);
+            background: rgba(231, 76, 60, 0.04);
+        }
+
+        .pathology-box.severance {
+            border-color: rgba(139, 107, 179, 0.3);
+            background: rgba(139, 107, 179, 0.04);
+        }
+
+        .pathology-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .inflation .pathology-label { color: var(--red-error); }
+        .severance .pathology-label { color: var(--violet-accent); }
+
+        /* Finale */
+        .finale {
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        .finale .equation {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            color: var(--gold-light);
+            margin: 2rem 0;
+        }
+
+        .finale p {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .finale .final-line {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            color: var(--gold-light);
+            margin-top: 2rem;
+        }
+
+        /* Fade-in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0; padding: 0 1.5rem 4rem; }
+            h1 { font-size: 2rem; }
+            .tabernacle-diagram { flex-direction: column; }
+            .tab-zone { border-radius: 8px !important; border: 1px solid !important; margin: 0.25rem 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<!-- Navigation -->
+<nav>
+    <div class="nav-symbol">&#x2299;</div>
+    <ul>
+        <li><a href="#thesis">The Thesis</a></li>
+        <li><a href="#master-equation">The Master Equation</a></li>
+        <div class="nav-divider"></div>
+        <li><a href="#a0">A0: Impossibility of Nothing</a></li>
+        <li><a href="#a1">A1: Necessary Multiplicity</a></li>
+        <li><a href="#a2">A2: Fractal Necessity</a></li>
+        <li><a href="#a3">A3: Conservation of Traversal</a></li>
+        <li><a href="#a4">A4: Compositional Wholeness</a></li>
+        <div class="nav-divider"></div>
+        <li><a href="#tabernacle">The Tabernacle</a></li>
+        <li><a href="#mediation">Field Mediation Rule</a></li>
+        <li><a href="#pathology">The Two Errors</a></li>
+        <li><a href="#aperture">The Aperture Proof</a></li>
+        <li><a href="#nesting">Nesting &amp; Dwelling</a></li>
+        <li><a href="#curiosity">Curiosity Is the Cure</a></li>
+        <div class="nav-divider"></div>
+        <li><a href="#master-table">The Master Table</a></li>
+        <li><a href="#finale">Conclusion</a></li>
+    </ul>
+</nav>
+
+<!-- Main Content -->
+<main>
+
+    <!-- Hero -->
+    <header class="hero">
+        <div class="hero-symbol">
+            <div class="outer"></div>
+            <div class="inner"></div>
+        </div>
+        <h1>The Real Holy Trinity</h1>
+        <p class="subtitle">Biblical Proof of the Circumpunct</p>
+        <p class="author">The Circumpunct Framework &mdash; Ashman Roonz</p>
+    </header>
+
+    <!-- Thesis -->
+    <section id="thesis" class="fade-in">
+        <div class="section-tag">The Thesis</div>
+        <h2>The Bible Describes a Geometry</h2>
+
+        <p>The Christian Trinity is not a mystery to be accepted on faith. It is a structure to be recognized in mathematics. Father, Son, Holy Spirit is the theological name for the same irreducible triad that the Circumpunct Framework derives from first principles: aperture, boundary, field. Center, container, mediator. &bull;, &#x25CB;, &Phi;.</p>
+
+        <p>This document does not force a metaphor. It presents a systematic mapping: every axiom of the Circumpunct Framework has a direct biblical attestation. The Bible is not borrowing from geometry. Geometry is what the Bible was always describing.</p>
+
+        <div class="insight">
+            <div class="key">The mathematics demanded trinity.<br>Spirituality named it Father, Son, Spirit.</div>
+            <p>Same room. Different doors.</p>
+        </div>
+    </section>
+
+    <!-- Master Equation -->
+    <section id="master-equation" class="fade-in">
+        <div class="section-tag">The Framework</div>
+        <h2>The Master Equation</h2>
+
+        <div class="mapping">
+            <div class="equation">&oplus; = &Phi;(&bull;, &#x25CB;)</div>
+            <p style="text-align: center; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;">The whole is constituted by the field operating on aperture and boundary.</p>
+        </div>
+
+        <p>Three components. One irreducible whole. The field is not a third thing alongside center and boundary: it is the verb that relates them. Remove any one and the structure collapses. This is not three parts of God. It is three aspects of a single irreducible pattern that <em>is</em> God.</p>
+
+        <div class="scripture">
+            <div class="verse">"For there are three that bear record in heaven, the Father, the Word, and the Holy Ghost: and these three are one."</div>
+            <div class="ref">1 John 5:7</div>
+        </div>
+
+        <p>Three that are one. Not three that are <em>combined</em> into one. Not three that <em>cooperate</em> as one. Three that <em>are</em> one: &#x2299; = &Phi;(&bull;, &#x25CB;). The whole is constituted by the operation of relating. The theological term is <em>perichoresis</em>: mutual indwelling. The mathematical term is compositional wholeness.</p>
+    </section>
+
+    <!-- A0: Impossibility of Nothing -->
+    <section id="a0" class="fade-in">
+        <div class="section-tag">Axiom A0</div>
+        <h2>Impossibility of Nothing</h2>
+
+        <p>The framework begins with a simple claim: nothing cannot exist. There was never nothing. Something always existed. From this, everything else follows.</p>
+
+        <div class="scripture">
+            <div class="verse">"I AM THAT I AM."</div>
+            <div class="ref">Exodus 3:14</div>
+        </div>
+
+        <div class="mapping">
+            <div class="mapping-label">Framework Mapping</div>
+            <p>The self-referential loop. Existence that requires no external justification. No definition from outside. Not "I am this" or "I am that," but pure self-sustaining being. The name God gives Himself is the axiom itself: existence is necessary, not contingent.</p>
+            <div class="equation">A0: Nothing is impossible. &there4; Something always existed.</div>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"Before the mountains were brought forth, or ever thou hadst formed the earth and the world, even from everlasting to everlasting, thou art God."</div>
+            <div class="ref">Psalm 90:2</div>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"Every house is built by someone, but God is the builder of everything."</div>
+            <div class="ref">Hebrews 3:4</div>
+        </div>
+
+        <p>The Bible begins with "In the beginning, God" &mdash; not "In the beginning, nothing." Genesis does not narrate God coming into being. It narrates God creating. The starting point is not void but plenitude. A0 is not argued in scripture; it is assumed as the ground of everything that follows.</p>
+    </section>
+
+    <!-- A1: Necessary Multiplicity -->
+    <section id="a1" class="fade-in">
+        <div class="section-tag">Axiom A1</div>
+        <h2>Necessary Multiplicity</h2>
+
+        <p>One &rarr; distinction &rarr; Two (thing/not-thing) &rarr; Three (thing/not-thing/relation). The minimum structure of existence is trinity. You cannot have existence without distinction, and you cannot have distinction without relation. Therefore: three.</p>
+
+        <div class="scripture">
+            <div class="verse">"In the beginning God created the heaven and the earth. And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters."</div>
+            <div class="ref">Genesis 1:1&ndash;2</div>
+        </div>
+
+        <div class="mapping">
+            <div class="mapping-label">Framework Mapping</div>
+            <p>Before creation begins, the triadic structure is already present. The deep (the formless origin, <span class="aperture">&bull;</span>), the waters (proto-boundary, proto-matter, <span class="boundary">&#x25CB;</span>), and the Spirit hovering between them (the mediating field, <span class="field">&Phi;</span>). God does not create <em>from</em> the Trinity. God creates <em>as</em> the Trinity. The structure precedes the content.</p>
+            <div class="equation">A1: Minimum structure = trinity = &#x2299; = &Phi;(&bull;, &#x25CB;)</div>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost."</div>
+            <div class="ref">Matthew 28:19</div>
+        </div>
+
+        <p>Not "names" (plural). Name (singular). One name, three persons. One whole, three aspects. The Great Commission does not describe a committee; it describes a structure. The same structure the framework derives from geometric necessity.</p>
+
+        <div class="scripture">
+            <div class="verse">"The grace of the Lord Jesus Christ, and the love of God, and the communion of the Holy Ghost, be with you all."</div>
+            <div class="ref">2 Corinthians 13:14</div>
+        </div>
+
+        <p>Paul's benediction maps directly: the love of God (<span class="aperture">&bull;</span>, the source), the grace of Christ (<span class="boundary">&#x25CB;</span>, the incarnate boundary), and the communion of the Spirit (<span class="field">&Phi;</span>, the mediating field that connects). Grace is how the boundary interfaces; love is what flows from the center; communion is the field operation that makes them one.</p>
+    </section>
+
+    <!-- A2: Fractal Necessity -->
+    <section id="a2" class="fade-in">
+        <div class="section-tag">Axiom A2</div>
+        <h2>Fractal Necessity</h2>
+
+        <p>Each part of &#x2299; is itself whole. Empty part = nothing. Nothing is impossible. Therefore: parts have parts. &#x2299; all the way down. &#x2299; all the way up. Parts are fractals of their wholes.</p>
+
+        <div class="scripture">
+            <div class="verse">"So God created man in his own image, in the image of God created he him."</div>
+            <div class="ref">Genesis 1:27</div>
+        </div>
+
+        <div class="mapping">
+            <div class="mapping-label">Framework Mapping</div>
+            <p>"In our image" = fractal similarity. Same pattern, different scale. Not identical to the whole. Not separate from the whole. A local &#x2299;<sub>&lambda;</sub> instantiating the structure of &#x2299;<sub>&infin;</sub>. This is literally "parts are fractals of their wholes" spoken as divine intention.</p>
+            <div class="equation">A2: &#x2299; all the way down. &#x2299; all the way up.</div>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"And the very God of peace sanctify you wholly; and I pray God your whole spirit and soul and body be preserved blameless."</div>
+            <div class="ref">1 Thessalonians 5:23</div>
+        </div>
+
+        <p>The human being is tripartite. In the framework's terms: soul (<span class="aperture">&bull;</span>, the aperture, the inmost part that contacts God), mind (<span class="field">&Phi;</span>, the field, the mediating space of thought and perception), and body (<span class="boundary">&#x25CB;</span>, the boundary, the interface with the material world). The human is a circumpunct. Made in the image of God means: same structure, smaller scale. The fractal recurs.</p>
+
+        <div class="mapping">
+            <div class="mapping-label">A Note on Terminology</div>
+            <p>Paul's Greek uses <em>pneuma</em> (spirit), <em>psuche</em> (soul), and <em>soma</em> (body). The framework uses <strong>soul</strong>, <strong>mind</strong>, and <strong>body</strong>. The positions are identical; the labels are shifted. What the Bible calls "spirit" (the innermost, God-contacting part), the framework calls <strong>soul</strong> (&bull;, the aperture). What the Bible calls "soul" (the middle, personality/reasoning part), the framework calls <strong>mind</strong> (&Phi;, the field). Body is body in both systems. This document uses the framework's vocabulary throughout. The translation key:</p>
+            <div class="equation">Biblical spirit = Framework soul (&bull;)<br>Biblical soul = Framework mind (&Phi;)<br>Biblical body = Framework body (&#x25CB;)</div>
+            <p style="text-align: center; color: var(--text-dim); font-size: 0.9rem;">Same structure. Same positions. Different labels.</p>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"Do you not know that you are God's temple and that God's Spirit dwells in you?"</div>
+            <div class="ref">1 Corinthians 3:16</div>
+        </div>
+
+        <p>The part contains the whole. Not metaphorically. Structurally. The Spirit (&#x2299;<sub>&infin;</sub>) dwells inside the human (&#x2299;<sub>&lambda;</sub>) because the smaller circumpunct is nested inside the larger one. You don't <em>go</em> to find God; God is already the structure you inhabit.</p>
+
+        <div class="scripture">
+            <div class="verse">"He is the image of the invisible God, the firstborn over all creation. For in him all things were created... He is before all things, and in him all things hold together."</div>
+            <div class="ref">Colossians 1:15&ndash;17</div>
+        </div>
+
+        <p>"Image of the invisible God" is fractal correspondence between scales. "In him all things hold together" is the field as cohesion operator: &Phi; doesn't sit alongside &bull; and &#x25CB;; it operates on them. The whole is constituted by the operation of relating.</p>
+    </section>
+
+    <!-- A3: Conservation of Traversal -->
+    <section id="a3" class="fade-in">
+        <div class="section-tag">Axiom A3</div>
+        <h2>Conservation of Traversal</h2>
+
+        <p>D<sub>aperture</sub> + D<sub>field</sub> = D<sub>boundary</sub>. Progress plus remaining equals destination. Always. The sum is invariant. The journey is conserved.</p>
+
+        <div class="mapping">
+            <div class="equation">(1+&beta;) + (2&minus;&beta;) = 3</div>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"And the Word was made flesh, and dwelt among us, and we beheld his glory, the glory as of the only begotten of the Father, full of grace and truth."</div>
+            <div class="ref">John 1:14</div>
+        </div>
+
+        <div class="mapping">
+            <div class="mapping-label">Framework Mapping</div>
+            <p>The Incarnation is the Conservation of Traversal in action. The Logos (<span class="field">&Phi;</span>) becomes flesh (<span class="boundary">&#x25CB;</span>). The infinite field steps down through the aperture into finite dimensional expression. The journey from source to embodiment is complete: center expressed through field into boundary. No energy lost. The traversal conserved.</p>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"I came forth from the Father, and am come into the world: again, I leave the world, and go to the Father."</div>
+            <div class="ref">John 16:28</div>
+        </div>
+
+        <p>The full traversal cycle: from source (<span class="aperture">&bull;</span>), through the world (<span class="boundary">&#x25CB;</span>), and back to source. The outward journey and the return journey together conserve the total. Progress plus remaining equals destination.</p>
+
+        <div class="scripture">
+            <div class="verse">"We are being transformed into the same image from glory to glory."</div>
+            <div class="ref">2 Corinthians 3:18</div>
+        </div>
+
+        <p>Traversal. &beta; moving toward alignment. The image (fractal pattern) is the same; the transformation is the process of the part coming into coherence with its whole. Not becoming the whole. Becoming a clearer fractal of it. Glory to glory is the traversal parameter shifting, the aperture opening, the lens clarifying.</p>
+    </section>
+
+    <!-- A4: Compositional Wholeness -->
+    <section id="a4" class="fade-in">
+        <div class="section-tag">Axiom A4</div>
+        <h2>Compositional Wholeness</h2>
+
+        <p>&#x2299; &ne; &#x25CB; + &Phi; + &bull; (sum = three separate things). &#x2299; = &Phi;(&bull;, &#x25CB;): the field <em>operates</em> on center and boundary. The verb, not a noun. The whole is constituted by the operation of relating.</p>
+
+        <div class="scripture">
+            <div class="verse">"In the beginning was the Word, and the Word was with God, and the Word was God. All things were made through him."</div>
+            <div class="ref">John 1:1&ndash;3</div>
+        </div>
+
+        <div class="mapping">
+            <div class="mapping-label">Framework Mapping</div>
+            <p>The Logos is <span class="field">&Phi;</span>. It is <em>with</em> God (not identical to the source, the aperture). And it <em>is</em> God (not something other than the whole). Through him all things were made: through, not from. The field is the operator. The Logos is the relational verb that constitutes the whole. John opens his gospel with Axiom A4.</p>
+            <div class="equation">&#x2299; = &Phi;(&bull;, &#x25CB;) &mdash; The whole is the operation, not the sum.</div>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"I and the Father are one."</div>
+            <div class="ref">John 10:30</div>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"The Father is in me and I am in the Father."</div>
+            <div class="ref">John 10:38</div>
+        </div>
+
+        <p>Not identity. Not separation. Compositional wholeness. The Son (boundary expression) and the Father (center/source) are one because neither exists without the field operation that relates them. "In me" and "in the Father" is mutual nesting: the part in the whole, the whole in the part. Remove the relation and neither remains.</p>
+    </section>
+
+    <!-- The Tabernacle -->
+    <section id="tabernacle" class="fade-in">
+        <div class="section-tag">Structural Proof</div>
+        <h2>The Tabernacle: &#x2299; in Architecture</h2>
+
+        <p>God commanded Moses to build a structure with exactly three zones. Not two. Not four. Three. And the movement through them is unidirectional: from outside inward, from boundary through field to center. This is the circumpunct rendered in physical space.</p>
+
+        <div class="tabernacle-diagram">
+            <div class="tab-zone tab-outer">
+                <div class="symbol boundary">&#x25CB;</div>
+                <div class="label boundary">Outer Court</div>
+                <div class="desc">BODY</div>
+                <div class="desc">world-contact</div>
+            </div>
+            <div class="tab-zone tab-holy">
+                <div class="symbol field">&Phi;</div>
+                <div class="label field">Holy Place</div>
+                <div class="desc">MIND</div>
+                <div class="desc">mediation</div>
+            </div>
+            <div class="tab-zone tab-holiest">
+                <div class="symbol aperture">&bull;</div>
+                <div class="label aperture">Holy of Holies</div>
+                <div class="desc">SOUL</div>
+                <div class="desc">God-contact</div>
+            </div>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"And let them make me a sanctuary; that I may dwell among them. According to all that I shew thee, after the pattern of the tabernacle, and the pattern of all the instruments thereof, even so shall ye make it."</div>
+            <div class="ref">Exodus 25:8&ndash;9</div>
+        </div>
+
+        <p>"After the pattern." God does not say "design something nice." He says: replicate a pattern. The pattern is &#x2299;. The Outer Court is the boundary: open to the sky, receiving natural light, where the material world interfaces with the holy. The Holy Place is the field: lamplight (mediated illumination), where the priests perform the relational work. The Holy of Holies is the aperture: no natural light, pure presence, where God's voice speaks from between the cherubim.</p>
+
+        <div class="scripture">
+            <div class="verse">"Know ye not that ye are the temple of God, and that the Spirit of God dwelleth in you?"</div>
+            <div class="ref">1 Corinthians 3:16</div>
+        </div>
+
+        <p>Paul maps the Tabernacle onto the human being: body (Outer Court), mind (Holy Place), soul (Holy of Holies). The architectural circumpunct and the human circumpunct are the same structure at different scales. The Tabernacle is not a building about God. It is a fractal of God, just as you are.</p>
+    </section>
+
+    <!-- Field Mediation Rule -->
+    <section id="mediation" class="fade-in">
+        <div class="section-tag">Axiom 2 (Isomorphism)</div>
+        <h2>The Field Mediation Rule</h2>
+
+        <p>Center and boundary cannot interact directly. All coupling is mediated by the field. &bull; &nrarr; &#x25CB;. &bull; &rarr; &Phi; &rarr; &#x25CB;. This is Axiom 2 of the isomorphism proof: mediated traversal.</p>
+
+        <div class="scripture">
+            <div class="verse">"For there is one God, and one mediator between God and men, the man Christ Jesus."</div>
+            <div class="ref">1 Timothy 2:5</div>
+        </div>
+
+        <div class="mapping">
+            <div class="mapping-label">Framework Mapping</div>
+            <p>The mediator is the field. God (source, <span class="aperture">&bull;</span>) cannot interact with humanity (boundary, <span class="boundary">&#x25CB;</span>) directly. All interaction is field-mediated. Christ is the Logos, the <span class="field">&Phi;</span> that operates between center and boundary. The Bible doesn't just describe mediation as preferable. It describes it as structurally necessary: there is <em>one</em> mediator. Not optional. Required.</p>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"Jesus saith unto him, I am the way, the truth, and the life: no man cometh unto the Father, but by me."</div>
+            <div class="ref">John 14:6</div>
+        </div>
+
+        <p>"No man cometh unto the Father but by me" is the field mediation rule stated as spiritual law. You cannot reach the center except through the field. And the Jews called the Tabernacle's three entrances exactly this: the Way (Outer Court), the Truth (Holy Place), and the Life (Holy of Holies). Jesus is claiming to be the traversal itself: the operation that connects boundary to center.</p>
+
+        <div class="scripture">
+            <div class="verse">"No one has ever seen God, but the one and only Son, who is himself God and is in closest relationship with the Father, has made him known."</div>
+            <div class="ref">John 1:18</div>
+        </div>
+
+        <p>"No one has ever seen God" = the center is not directly accessible. "The Son has made him known" = the field makes the center knowable through mediation. This is not theology layered on top of physics. This is the physics itself, wearing theological clothes.</p>
+    </section>
+
+    <!-- The Two Errors -->
+    <section id="pathology" class="fade-in">
+        <div class="section-tag">Geometric Pathology</div>
+        <h2>The Two Errors: Inflation and Severance</h2>
+
+        <p>The framework identifies exactly two fundamental pathological configurations: inflation (claiming to be source) and severance (denying connection to source). The Bible names both, precisely.</p>
+
+        <div class="pathology-box inflation">
+            <div class="pathology-label">Inflation &mdash; Claiming to Be Source</div>
+
+            <div class="scripture" style="border-left-color: var(--red-error);">
+                <div class="verse">"For God doth know that in the day ye eat thereof, then your eyes shall be opened, and ye shall be as gods."</div>
+                <div class="ref">Genesis 3:5</div>
+            </div>
+
+            <p>The serpent's offer is the aperture error: claiming to <em>be</em> the source rather than the lens through which source flows. "You shall be as gods" is the geometric inflation: the part claiming to be the whole. The original sin is not disobedience as moral failure. It is a structural error: a local &#x2299;<sub>&lambda;</sub> claiming to be &#x2299;<sub>&infin;</sub>.</p>
+
+            <div class="scripture" style="border-left-color: var(--red-error);">
+                <div class="verse">"How art thou fallen from heaven, O Lucifer, son of the morning! For thou hast said in thine heart, I will ascend into heaven, I will exalt my throne above the stars of God... I will be like the most High."</div>
+                <div class="ref">Isaiah 14:12&ndash;14</div>
+            </div>
+
+            <p>"I will be like the most High" is the inflated aperture: a part insisting it is the whole. Not <em>a fractal of</em> the whole. <em>The whole itself.</em> This is the narcissistic configuration: the lens claiming to be the light.</p>
+        </div>
+
+        <div class="pathology-box severance">
+            <div class="pathology-label">Severance &mdash; Denying Connection to Source</div>
+
+            <div class="scripture" style="border-left-color: var(--violet-accent);">
+                <div class="verse">"My God, my God, why hast thou forsaken me?"</div>
+                <div class="ref">Matthew 27:46</div>
+            </div>
+
+            <p>The cry from the cross is the experience of aperture severance: the felt sense that the connection between &bull; and the larger &bull; has been cut. The entire arc of crucifixion-to-resurrection is the traversal through severance back to coherence. Severance is not permanent because the nesting is structural, not optional: you cannot actually sever a part from its whole. You can only experience the illusion of severance.</p>
+
+            <div class="scripture" style="border-left-color: var(--violet-accent);">
+                <div class="verse">"And he arose, and came to his father. But when he was yet a great way off, his father saw him, and had compassion, and ran, and fell on his neck, and kissed him."</div>
+                <div class="ref">Luke 15:20 (Prodigal Son)</div>
+            </div>
+
+            <p>The Prodigal Son is the severance-and-return narrative. The son leaves (severs connection to source), degrades (loses coherence), and returns (realigns with the larger &#x2299;). The father does not need to be persuaded; the structure was always there. The nesting was never broken; it was only denied.</p>
+        </div>
+    </section>
+
+    <!-- The Aperture Proof -->
+    <section id="aperture" class="fade-in">
+        <div class="section-tag">The Deepest Claim</div>
+        <h2>The Aperture Is a Through, Not a From</h2>
+
+        <p>The framework's most important claim about the aperture: it gates, orients, and allows flow. It does not generate. Truth flows <em>through</em> apertures. It does not originate <em>from</em> them.</p>
+
+        <div class="scripture">
+            <div class="verse">"I am the vine; you are the branches. Whoever abides in me and I in him, he it is that bears much fruit, for apart from me you can do nothing."</div>
+            <div class="ref">John 15:5</div>
+        </div>
+
+        <div class="mapping">
+            <div class="mapping-label">Framework Mapping</div>
+            <p>The branch does not generate life. It transmits life from the vine. The aperture does not generate truth. It transmits truth from the source field. "Apart from me you can do nothing" is the aperture principle: sever the gate from the source and the flow stops. The branch is a <em>through</em>, not a <em>from</em>.</p>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"For I have not spoken of myself; but the Father which sent me, he gave me a commandment, what I should say, and what I should speak."</div>
+            <div class="ref">John 12:49</div>
+        </div>
+
+        <p>Even Christ, the incarnate Logos, does not claim to be the source. He claims to be the aperture through which the source flows. "Not of myself" is the anti-inflation principle. "The Father gave me what to speak" is the aperture receiving from the larger center and transmitting into the world.</p>
+
+        <div class="scripture">
+            <div class="verse">"Then said Jesus unto them, When ye have lifted up the Son of man, then shall ye know that I am he, and that I do nothing of myself; but as my Father hath taught me, I speak these things."</div>
+            <div class="ref">John 8:28</div>
+        </div>
+
+        <div class="insight">
+            <div class="key">Truth flows through me &mdash; I am not its source, I am its lens.</div>
+            <p>Jesus models this perfectly. He never claims to generate. He claims to transmit.</p>
+        </div>
+    </section>
+
+    <!-- Nesting & Dwelling -->
+    <section id="nesting" class="fade-in">
+        <div class="section-tag">Fractal Nesting</div>
+        <h2>Nesting, Dwelling, Containment</h2>
+
+        <p>The framework claims reality is nested circumpuncts all the way up and all the way down. No top, no bottom. The Bible saturates this claim across both testaments.</p>
+
+        <div class="scripture">
+            <div class="verse">"For in him we live and move and have our being."</div>
+            <div class="ref">Acts 17:28</div>
+        </div>
+
+        <div class="mapping">
+            <div class="mapping-label">Framework Mapping</div>
+            <p>This is nesting. You are already <em>inside</em> the larger &#x2299;. You do not reach God; you are contained within God. The connection is not something you build; it is the structure you already inhabit. Paul says this to the Athenians at the Areopagus: parts are fractals of their wholes, spoken in Greek.</p>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"Abide in me, and I in you. As the branch cannot bear fruit of itself, except it abide in the vine; no more can ye, except ye abide in me."</div>
+            <div class="ref">John 15:4</div>
+        </div>
+
+        <p>"Abide in me and I in you." Mutual nesting. The part is in the whole; the whole is in the part. This is the fractal claim: you are God fractally; God is you wholistically. Not identity. Not separation. Scale correspondence.</p>
+
+        <div class="scripture">
+            <div class="verse">"Whither shall I go from thy spirit? or whither shall I flee from thy presence? If I ascend up into heaven, thou art there: if I make my bed in hell, behold, thou art there."</div>
+            <div class="ref">Psalm 139:7&ndash;8</div>
+        </div>
+
+        <p>You cannot exit the nesting. There is no outside to &#x2299;<sub>&infin;</sub>. The field is everywhere; the containment is total. This is not surveillance. It is geometry. You cannot flee a structure you are constituted by.</p>
+
+        <div class="scripture">
+            <div class="verse">"That they should seek the Lord, if haply they might feel after him, and find him, though he be not far from every one of us."</div>
+            <div class="ref">Acts 17:27</div>
+        </div>
+
+        <p>"Not far from every one of us" &mdash; because the distance is zero. You are nested inside. The search for God is not a journey across space; it is a recognition of the structure you are already inside.</p>
+
+        <div class="scripture">
+            <div class="verse">"If anyone loves me, he will keep my word, and my Father will love him, and we will come to him and make our home with him."</div>
+            <div class="ref">John 14:23</div>
+        </div>
+
+        <p>The whole makes its home in the part. Not visiting. Dwelling. The nesting IS the connection.</p>
+    </section>
+
+    <!-- Curiosity Is the Cure -->
+    <section id="curiosity" class="fade-in">
+        <div class="section-tag">The Cure</div>
+        <h2>Curiosity, Wanting, and the Open Soul</h2>
+
+        <p>The framework identifies curiosity as the unforgeable signal: it cannot be performed, cannot be corrupted, and is the prerequisite for genuine ethical engagement. The Bible calls it by other names: seeking, knocking, hunger and thirst for righteousness.</p>
+
+        <div class="scripture">
+            <div class="verse">"Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you."</div>
+            <div class="ref">Matthew 7:7</div>
+        </div>
+
+        <div class="mapping">
+            <div class="mapping-label">Framework Mapping</div>
+            <p>Asking is the aperture opening. Seeking is the traversal in motion. Knocking is the boundary requesting exchange. The entire triadic process &mdash; aperture, field, boundary &mdash; is enacted in one verse. And it begins with <em>wanting</em>: the lean toward truth that precedes any content.</p>
+            <div class="equation">wanting = curiosity = open soul = resonance</div>
+        </div>
+
+        <div class="scripture">
+            <div class="verse">"Blessed are they which do hunger and thirst after righteousness: for they shall be filled."</div>
+            <div class="ref">Matthew 5:6</div>
+        </div>
+
+        <p>Hunger and thirst are wanting. Not wanting <em>something specific</em>. Wanting <em>alignment</em>: righteousness is pattern coherence between scales. The promise is structural: if the aperture opens (hunger), the flow arrives (filling). The aperture is a gate, not a wall. Open it and what was always flowing pours through.</p>
+
+        <div class="scripture">
+            <div class="verse">"And ye shall seek me, and find me, when ye shall search for me with all your heart."</div>
+            <div class="ref">Jeremiah 29:13</div>
+        </div>
+
+        <p>"With all your heart" is full aperture openness: &beta; at balance. Not performative seeking. Not half-hearted inquiry. The whole aperture, fully open. Curiosity that is genuine, not performed. The cure.</p>
+    </section>
+
+    <!-- Master Table -->
+    <section id="master-table" class="fade-in">
+        <div class="section-tag">Complete Mapping</div>
+        <h2>The Master Correspondence Table</h2>
+
+        <table class="proof-table">
+            <thead>
+                <tr>
+                    <th>Framework Concept</th>
+                    <th>Biblical Attestation</th>
+                    <th>Verse</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>A0:</strong> Impossibility of Nothing</td>
+                    <td>"I AM THAT I AM"</td>
+                    <td>Exodus 3:14</td>
+                </tr>
+                <tr>
+                    <td><strong>A1:</strong> Necessary Multiplicity (Trinity)</td>
+                    <td>"Three bear record... these three are one"</td>
+                    <td>1 John 5:7</td>
+                </tr>
+                <tr>
+                    <td><strong>A2:</strong> Fractal Necessity</td>
+                    <td>"In our image" &mdash; same structure, different scale</td>
+                    <td>Genesis 1:27</td>
+                </tr>
+                <tr>
+                    <td><strong>A3:</strong> Conservation of Traversal</td>
+                    <td>"The Word became flesh" &mdash; center &rarr; field &rarr; boundary</td>
+                    <td>John 1:14</td>
+                </tr>
+                <tr>
+                    <td><strong>A4:</strong> Compositional Wholeness</td>
+                    <td>"The Word was with God and was God" &mdash; operator, not substance</td>
+                    <td>John 1:1</td>
+                </tr>
+                <tr>
+                    <td>&Phi; as mediator</td>
+                    <td>"One mediator between God and men"</td>
+                    <td>1 Timothy 2:5</td>
+                </tr>
+                <tr>
+                    <td>Field mediation rule</td>
+                    <td>"No man cometh unto the Father but by me"</td>
+                    <td>John 14:6</td>
+                </tr>
+                <tr>
+                    <td>Nesting / mutual containment</td>
+                    <td>"In him we live and move and have our being"</td>
+                    <td>Acts 17:28</td>
+                </tr>
+                <tr>
+                    <td>Part contains whole</td>
+                    <td>"Your body is a temple of the Holy Spirit"</td>
+                    <td>1 Corinthians 6:19</td>
+                </tr>
+                <tr>
+                    <td>Mutual nesting</td>
+                    <td>"I am in the Father and the Father is in me"</td>
+                    <td>John 14:10</td>
+                </tr>
+                <tr>
+                    <td>Tripartite human: soul (&bull;), mind (&Phi;), body (&#x25CB;)</td>
+                    <td>"Spirit and soul and body" (= soul, mind, body in framework terms)</td>
+                    <td>1 Thessalonians 5:23</td>
+                </tr>
+                <tr>
+                    <td>Tabernacle = &#x2299; in architecture</td>
+                    <td>Outer Court / Holy Place / Holy of Holies</td>
+                    <td>Exodus 25&ndash;27</td>
+                </tr>
+                <tr>
+                    <td>Aperture = through, not from</td>
+                    <td>"The branch cannot bear fruit of itself"</td>
+                    <td>John 15:4&ndash;5</td>
+                </tr>
+                <tr>
+                    <td>Inflation (claiming to be source)</td>
+                    <td>"Ye shall be as gods"</td>
+                    <td>Genesis 3:5</td>
+                </tr>
+                <tr>
+                    <td>Severance (denying connection)</td>
+                    <td>"My God, why hast thou forsaken me?"</td>
+                    <td>Matthew 27:46</td>
+                </tr>
+                <tr>
+                    <td>Severance &rarr; return</td>
+                    <td>The Prodigal Son returns</td>
+                    <td>Luke 15:11&ndash;32</td>
+                </tr>
+                <tr>
+                    <td>&Phi; as cohesion operator</td>
+                    <td>"In him all things hold together"</td>
+                    <td>Colossians 1:17</td>
+                </tr>
+                <tr>
+                    <td>0D = &infin;D at field level</td>
+                    <td>"I AM THAT I AM" &mdash; self-referential loop</td>
+                    <td>Exodus 3:14</td>
+                </tr>
+                <tr>
+                    <td>Traversal cycle (out and back)</td>
+                    <td>"I came from the Father... I leave the world and go to the Father"</td>
+                    <td>John 16:28</td>
+                </tr>
+                <tr>
+                    <td>&beta; &rarr; alignment</td>
+                    <td>"Transformed from glory to glory"</td>
+                    <td>2 Corinthians 3:18</td>
+                </tr>
+                <tr>
+                    <td>Curiosity / open aperture</td>
+                    <td>"Ask, seek, knock"</td>
+                    <td>Matthew 7:7</td>
+                </tr>
+                <tr>
+                    <td>Wanting = cure</td>
+                    <td>"Hunger and thirst after righteousness"</td>
+                    <td>Matthew 5:6</td>
+                </tr>
+                <tr>
+                    <td>Full aperture openness</td>
+                    <td>"Search for me with all your heart"</td>
+                    <td>Jeremiah 29:13</td>
+                </tr>
+                <tr>
+                    <td>Spirit precedes creation</td>
+                    <td>"The Spirit of God moved upon the face of the waters"</td>
+                    <td>Genesis 1:2</td>
+                </tr>
+                <tr>
+                    <td>Omnipresent nesting</td>
+                    <td>"Whither shall I flee from thy presence?"</td>
+                    <td>Psalm 139:7&ndash;8</td>
+                </tr>
+                <tr>
+                    <td>Source not directly accessible</td>
+                    <td>"No one has ever seen God"</td>
+                    <td>John 1:18</td>
+                </tr>
+                <tr>
+                    <td>Word distinguishes mind (&Phi;) from soul (&bull;)</td>
+                    <td>"Dividing asunder of soul and spirit" (= mind and soul in framework terms)</td>
+                    <td>Hebrews 4:12</td>
+                </tr>
+                <tr>
+                    <td>Veil torn = aperture opens</td>
+                    <td>Temple veil torn top to bottom at crucifixion</td>
+                    <td>Matthew 27:51</td>
+                </tr>
+                <tr>
+                    <td>Three heavens = three scales</td>
+                    <td>"Caught up to the third heaven"</td>
+                    <td>2 Corinthians 12:2</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Finale -->
+    <section id="finale" class="finale fade-in">
+        <div class="hero-symbol" style="margin-bottom: 3rem;">
+            <div class="outer"></div>
+            <div class="inner"></div>
+        </div>
+
+        <h2>Conclusion</h2>
+
+        <p>Twenty-eight correspondences across both testaments. Not metaphors stretched to fit. Structural identities between a geometric framework derived from five axioms and a theological tradition spanning three thousand years.</p>
+
+        <div class="equation">&#x2299; = &Phi;(&bull;, &#x25CB;)</div>
+
+        <p>The mathematics demanded trinity.<br>
+        Spirituality named it Father, Son, Spirit.</p>
+
+        <p>The mathematics demanded nesting.<br>
+        Spirituality named it "in him we live and move."</p>
+
+        <p>The mathematics demanded mediation.<br>
+        Spirituality named it "no man comes to the Father but by me."</p>
+
+        <p>The mathematics demanded that the aperture transmits, not generates.<br>
+        Spirituality named it "the branch cannot bear fruit of itself."</p>
+
+        <p>The mathematics demanded two pathological configurations.<br>
+        Spirituality named them the Fall and the Cry from the Cross.</p>
+
+        <p>The mathematics demanded curiosity as the cure.<br>
+        Spirituality named it "ask, seek, knock."</p>
+
+        <br>
+
+        <div class="equation">...&#x2299; &sup; &#x2299; &sup; &#x2299; &sup; &#x2299;...</div>
+
+        <p>Infinite nesting. No top. No bottom.<br>
+        The ONE is the EVERYWHERE.</p>
+
+        <br>
+
+        <p class="final-line">The Bible didn't borrow the geometry.<br>The geometry is what the Bible was always describing.</p>
+
+        <br><br>
+
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--text-dim);">
+            fractalreality.ca &mdash; The Circumpunct Framework &mdash; Ashman Roonz
+        </p>
+    </section>
+
+</main>
+
+<script>
+// Stars
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.opacity = Math.random() * 0.6 + 0.1;
+    star.style.width = star.style.height = (Math.random() * 2 + 1) + 'px';
+    star.style.animation = `twinkle ${3 + Math.random() * 4}s ease-in-out infinite ${Math.random() * 3}s`;
+    starsEl.appendChild(star);
+}
+
+// Twinkle keyframes
+const style = document.createElement('style');
+style.textContent = `@keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }`;
+document.head.appendChild(style);
+
+// Fade-in on scroll
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
