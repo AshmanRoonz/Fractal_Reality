@@ -60,33 +60,37 @@
             position: absolute;
             inset: 0;
             border-radius: 50%;
-            border: 8px solid transparent;
-            background:
-                linear-gradient(var(--bg, #0d1117), var(--bg, #0d1117)) padding-box,
-                conic-gradient(from var(--fractal-angle, 0deg),
-                    rgba(163,113,247,0.9),
-                    rgba(163,113,247,0.4),
-                    rgba(163,113,247,0.8),
-                    rgba(163,113,247,0.3),
-                    rgba(163,113,247,0.95),
-                    rgba(163,113,247,0.35),
-                    rgba(163,113,247,0.85),
-                    rgba(163,113,247,0.4),
-                    rgba(163,113,247,0.9)
-                ) border-box;
+            border: 8px solid var(--body-color);
             box-shadow: 0 0 40px rgba(163,113,247,0.35), 0 0 100px rgba(163,113,247,0.1), inset 0 0 40px rgba(163,113,247,0.06);
-            animation: circ-breathe 7s ease-in-out infinite, fractal-rotate 12s linear infinite;
+            animation: circ-breathe 7s ease-in-out infinite;
             cursor: pointer;
             transition: box-shadow 0.3s;
+            overflow: hidden;
+        }
+        .circ-boundary::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            background: conic-gradient(
+                rgba(163,113,247,0.9),
+                rgba(163,113,247,0.35),
+                rgba(163,113,247,0.85),
+                rgba(163,113,247,0.3),
+                rgba(163,113,247,0.95),
+                rgba(163,113,247,0.4),
+                rgba(163,113,247,0.8),
+                rgba(163,113,247,0.35),
+                rgba(163,113,247,0.9)
+            );
+            mask: radial-gradient(circle, transparent 62%, #000 63%);
+            -webkit-mask: radial-gradient(circle, transparent 62%, #000 63%);
+            animation: fractal-rotate 10s linear infinite;
+            z-index: 1;
         }
         @keyframes fractal-rotate {
-            from { --fractal-angle: 0deg; }
-            to { --fractal-angle: 360deg; }
-        }
-        @property --fractal-angle {
-            syntax: '<angle>';
-            initial-value: 0deg;
-            inherits: false;
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
         .circ-boundary:hover {
             box-shadow: 0 0 60px rgba(163,113,247,0.5), 0 0 120px rgba(163,113,247,0.15);
