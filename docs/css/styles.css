@@ -181,7 +181,7 @@ body {
 /* Header - Hero Equation Section */
 .header {
     margin-bottom: 0.5rem;
-    text-align: center;
+    text-align: left;
 }
 
 .hero-equation {
@@ -1173,6 +1173,16 @@ body {
         text-align: center !important;
     }
 
+    /* Hero cards side by side on mobile */
+    .hero-cards {
+        flex-direction: row !important;
+        gap: 0.5rem;
+    }
+    .hero-card {
+        flex: 1;
+        text-align: left !important;
+    }
+
     /* Keep truth reflection left-aligned on mobile */
     .truth-reflection {
         text-align: left !important;
@@ -1247,17 +1257,7 @@ body {
 
     .left-panel {
         justify-self: end;
-        text-align: right;
-    }
-
-    .left-panel .hero-equation,
-    .left-panel .circ-eq,
-    .left-panel .circ-legend {
-        text-align: center;
-    }
-
-    .left-panel .circ-legend {
-        align-items: center;
+        text-align: left;
     }
 
     .left-panel .community-links {

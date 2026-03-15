@@ -41,6 +41,7 @@
             animation: circ-breathe 7s ease-in-out infinite;
             cursor: pointer;
             transition: border-color 0.3s, box-shadow 0.3s;
+            filter: url(#fractal-boundary);
         }
         .circ-boundary:hover {
             border-color: #c99dff;
@@ -105,18 +106,31 @@
         /* ===================================
            LEGEND
            =================================== */
+        /* Hero cards container */
+        .hero-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .hero-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 0.9rem 1.1rem;
+            text-align: left;
+        }
         .circ-legend {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.35rem;
-            margin: 0.5rem auto 0;
+            margin: 0.5rem 0 0;
             font-family: 'Space Grotesk', monospace;
             font-size: 0.85rem;
             color: #00ffff;
             text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #0088ff, 0 0 80px #0088ff;
             animation: cyberpunk-glow 3s ease-in-out infinite alternate;
-            text-align: center;
+            text-align: left;
         }
         .circ-legend .leg {
             display: flex;
@@ -137,10 +151,12 @@
         .circ-legend .sw-w { width: 22px; height: 22px; border: 2px solid var(--body-color); background: radial-gradient(circle, rgba(240,180,41,0.35) 30%, rgba(240,180,41,0.12) 70%); position: relative; box-shadow: 0 0 8px rgba(240,180,41,0.15); }
         .circ-legend .sw-w::after { content:''; position:absolute; width:7px; height:7px; background:var(--soul-color); border-radius:50%; inset:0; margin:auto; box-shadow: 0 0 6px rgba(88,166,255,0.4); }
         .circ-legend b { font-weight: 600; font-size: 0.85rem; }
+        .leg-link { cursor: pointer; transition: opacity 0.2s; }
+        .leg-link:hover { opacity: 0.7; }
 
         /* Equation bar above legend */
         .circ-eq {
-            text-align: center;
+            text-align: left;
             margin-bottom: 0.4rem;
             font-family: 'Space Grotesk', monospace;
             font-size: 0.85rem;
@@ -272,27 +288,41 @@
         <div class="main-layout">
             <!-- Left Column: Hero Equation -->
             <header class="header side-panel left-panel">
-                <div class="hero-equation">
+              <div class="hero-cards">
+                <div class="hero-card">
                     <p class="equation-title">Reality is fractal.</p>
                     <p class="equation-title"><a href="#" class="circumpunct-link">⊙ (the circumpunct)</a> is its pattern.</p>
                     <p class="equation-title">Every ⊙ is a part of a greater ⊙.</p>
                     <p class="equation-title">You are ⊙. I am ⊙.</p>
                 </div>
 
-                <!-- Equation -->
-                <div class="circ-eq"><span class="eq-w">⊙</span> = <span class="eq-m">Φ</span>(<span class="eq-s">•</span>, <span class="eq-b">○</span>)</div>
+                <div class="hero-card">
+                    <!-- Equation -->
+                    <div class="circ-eq"><span class="eq-w">⊙</span> = <span class="eq-m">Φ</span>(<span class="eq-s">•</span>, <span class="eq-b">○</span>)</div>
 
-                <!-- Legend -->
-                <div class="circ-legend">
-                    <div class="leg"><div class="sw sw-s"></div><b class="col-soul">Soul</b> <span>· • · aperture</span></div>
-                    <div class="leg"><div class="sw sw-m"></div><b class="col-mind">Mind</b> <span>· Φ · field</span></div>
-                    <div class="leg"><div class="sw sw-b"></div><b class="col-body">Body</b> <span>· ○ · boundary</span></div>
-                    <div class="leg"><div class="sw sw-w"></div><b>Consciousness</b></div>
+                    <!-- Legend -->
+                    <div class="circ-legend">
+                        <div class="leg leg-link" data-zone="soul"><div class="sw sw-s"></div><b class="col-soul">Soul</b> <span>· • · aperture</span></div>
+                        <div class="leg leg-link" data-zone="mind"><div class="sw sw-m"></div><b class="col-mind">Mind</b> <span>· Φ · field</span></div>
+                        <div class="leg leg-link" data-zone="body"><div class="sw sw-b"></div><b class="col-body">Body</b> <span>· ○ · boundary</span></div>
+                        <div class="leg leg-link" data-zone="circumpunct"><div class="sw sw-w"></div><b>Consciousness</b></div>
+                    </div>
                 </div>
+              </div>
             </header>
 
             <!-- Center Column: Circumpunct -->
             <div class="center-panel">
+
+        <!-- SVG fractal noise filter for organic boundary -->
+        <svg width="0" height="0" style="position:absolute">
+            <filter id="fractal-boundary" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="4" seed="42" result="noise">
+                    <animate attributeName="seed" values="42;100;42" dur="8s" repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </svg>
 
         <!-- The Simple Circumpunct -->
         <div class="circumpunct-container">
