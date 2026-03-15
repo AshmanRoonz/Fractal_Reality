@@ -31,7 +31,6 @@
             font-size: 0.75rem;
             color: #00ffff;
             text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff;
-            animation: cyberpunk-glow 3s ease-in-out infinite alternate;
             border-bottom: 1px solid rgba(0,255,255,0.15);
             letter-spacing: 0.03em;
             position: sticky;
@@ -58,28 +57,12 @@
         }
         .circ-boundary {
             position: absolute;
-            inset: 0;
-            border: 8px solid var(--body-color);
-            box-shadow: 0 0 40px rgba(163,113,247,0.35), 0 0 100px rgba(163,113,247,0.1), inset 0 0 40px rgba(163,113,247,0.06);
-            animation: boundary-jitter 4s ease-in-out infinite;
+            inset: -10px;
             cursor: pointer;
-            border-radius: 48% 52% 50% 50% / 50% 48% 52% 50%;
         }
-        @keyframes boundary-jitter {
-            0%   { border-radius: 48% 52% 50% 50% / 50% 48% 52% 50%; }
-            10%  { border-radius: 50% 47% 53% 50% / 48% 52% 49% 51%; }
-            20%  { border-radius: 52% 50% 48% 51% / 53% 49% 50% 48%; }
-            30%  { border-radius: 49% 53% 50% 48% / 50% 47% 53% 50%; }
-            40%  { border-radius: 51% 48% 52% 49% / 47% 53% 48% 52%; }
-            50%  { border-radius: 47% 51% 49% 53% / 52% 50% 47% 51%; }
-            60%  { border-radius: 53% 49% 51% 47% / 49% 51% 52% 48%; }
-            70%  { border-radius: 50% 52% 47% 51% / 51% 48% 50% 53%; }
-            80%  { border-radius: 48% 50% 53% 49% / 52% 50% 48% 50%; }
-            90%  { border-radius: 51% 48% 50% 52% / 48% 53% 51% 49%; }
-            100% { border-radius: 48% 52% 50% 50% / 50% 48% 52% 50%; }
-        }
-        .circ-boundary:hover {
-            box-shadow: 0 0 60px rgba(163,113,247,0.5), 0 0 120px rgba(163,113,247,0.15);
+        .circ-boundary canvas {
+            width: 100%;
+            height: 100%;
         }
         .circ-field {
             position: absolute;
@@ -158,7 +141,6 @@
             font-size: 0.85rem;
             color: #00ffff;
             text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #0088ff, 0 0 80px #0088ff;
-            animation: cyberpunk-glow 3s ease-in-out infinite alternate;
             text-align: left;
         }
         .circ-legend .leg {
@@ -189,7 +171,6 @@
             letter-spacing: 0.08em;
             color: #00ffff;
             text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #0088ff, 0 0 80px #0088ff;
-            animation: cyberpunk-glow 3s ease-in-out infinite alternate;
         }
         .circ-eq .eq-w { color: var(--circumpunct-color); text-shadow: 0 0 6px var(--soul-color); }
         .circ-eq .eq-m { color: var(--mind-color); text-shadow: none; }
@@ -205,7 +186,6 @@
             font-weight: 400;
             color: #00ffff;
             text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #0088ff, 0 0 80px #0088ff;
-            animation: cyberpunk-glow 3s ease-in-out infinite alternate;
             text-align: center;
             margin: 0 0 0.5rem;
             letter-spacing: 0.03em;

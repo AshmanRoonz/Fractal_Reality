@@ -161,4 +161,101 @@
 
     window.addEventListener('resize', resize);
     resize();
+
+    // =========================================
+    // Mandelbrot Fractal Boundary - drawn once
+    // =========================================
+    function drawMandelbrotBoundary() {
+        const el = document.querySelector('.circ-boundary');
+        if (!el) return;
+
+        const size = Math.round(el.offsetWidth + 20) * 2; // 2x for sharpness
+        if (size < 10) return;
+
+        let c = el.querySelector('canvas');
+        if (!c) {
+            c = document.createElement('canvas');
+            el.appendChild(c);
+        }
+        c.width = size;
+        c.height = size;
+
+        const bCtx = c.getContext('2d');
+        const cx = size / 2;
+        const cy = size / 2;
+        const outerR = size * 0.46;
+        const innerR = size * 0.39;
+        const maxIter = 50;
+
+        // Map angle + radius to Mandelbrot coordinates
+        // We sample a ring around the main cardioid boundary
+        const imageData = bCtx.createImageData(size, size);
+        const data = imageData.data;
+
+        for (let py = 0; py < size; py++) {
+            for (let px = 0; px < size; px++) {
+                const dx = px - cx;
+                const dy = py - cy;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                // Only render in the boundary ring zone
+                if (dist < innerR - 5 || dist > outerR + 5) continue;
+
+                // Map pixel to Mandelbrot space
+                // Center on the cardioid edge for maximum detail
+                const scale = 3.2 / size;
+                const cr = (px - cx) * scale - 0.5;
+                const ci = (py - cy) * scale;
+
+                // Mandelbrot iteration
+                let zr = 0, zi = 0;
+                let iter = 0;
+                while (zr * zr + zi * zi < 4 && iter < maxIter) {
+                    const tr = zr * zr - zi * zi + cr;
+                    zi = 2 * zr * zi + ci;
+                    zr = tr;
+                    iter++;
+                }
+
+                // Smooth coloring
+                let alpha = 0;
+                if (iter < maxIter) {
+                    const smooth = iter + 1 - Math.log(Math.log(Math.sqrt(zr * zr + zi * zi))) / Math.log(2);
+                    alpha = (smooth / maxIter);
+                }
+
+                // Fade based on distance from ring center
+                const ringCenter = (outerR + innerR) / 2;
+                const ringWidth = (outerR - innerR) / 2;
+                const ringDist = Math.abs(dist - ringCenter);
+                const ringFade = Math.max(0, 1 - ringDist / (ringWidth + 5));
+
+                const finalAlpha = alpha * ringFade;
+                if (finalAlpha < 0.01) continue;
+
+                const idx = (py * size + px) * 4;
+                // Purple: rgb(163, 113, 247)
+                data[idx]     = 163;
+                data[idx + 1] = 113;
+                data[idx + 2] = 247;
+                data[idx + 3] = Math.round(finalAlpha * 220);
+            }
+        }
+
+        bCtx.putImageData(imageData, 0, 0);
+
+        // Add glow on top
+        bCtx.shadowColor = 'rgba(163, 113, 247, 0.4)';
+        bCtx.shadowBlur = 20;
+        bCtx.globalCompositeOperation = 'lighter';
+        bCtx.drawImage(c, 0, 0);
+        bCtx.globalCompositeOperation = 'source-over';
+        bCtx.shadowBlur = 0;
+    }
+
+    // Draw once after layout settles
+    requestAnimationFrame(() => {
+        requestAnimationFrame(drawMandelbrotBoundary);
+    });
+    window.addEventListener('resize', drawMandelbrotBoundary);
 })();
