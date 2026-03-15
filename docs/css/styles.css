@@ -1250,6 +1250,15 @@ body {
         text-align: right;
     }
 
+    .left-panel .circ-eq,
+    .left-panel .circ-legend {
+        text-align: center;
+    }
+
+    .left-panel .circ-legend {
+        align-items: center;
+    }
+
     .left-panel .community-links {
         justify-content: flex-end;
     }
