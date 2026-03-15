@@ -129,9 +129,77 @@
         .circ-legend .sw-s { background: var(--soul-color); box-shadow: 0 0 8px rgba(88,166,255,0.4); }
         .circ-legend .sw-m { border: 2px solid var(--mind-color); background: rgba(240,180,41,0.15); }
         .circ-legend .sw-b { border: 3px solid var(--body-color); }
-        .circ-legend .sw-w { border: 1.5px solid var(--body-color); background: rgba(240,180,41,0.1); position: relative; }
-        .circ-legend .sw-w::after { content:''; position:absolute; width:5px; height:5px; background:var(--soul-color); border-radius:50%; inset:0; margin:auto; }
+        .circ-legend .sw-w { width: 22px; height: 22px; border: 2px solid var(--body-color); background: radial-gradient(circle, rgba(240,180,41,0.35) 30%, rgba(240,180,41,0.12) 70%); position: relative; box-shadow: 0 0 8px rgba(240,180,41,0.15); }
+        .circ-legend .sw-w::after { content:''; position:absolute; width:7px; height:7px; background:var(--soul-color); border-radius:50%; inset:0; margin:auto; box-shadow: 0 0 6px rgba(88,166,255,0.4); }
         .circ-legend b { font-weight: 600; font-size: 0.82rem; }
+
+        /* Equation bar above legend */
+        .circ-eq {
+            text-align: center;
+            margin-bottom: 0.4rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 0.08em;
+        }
+        .circ-eq .eq-w { color: var(--circumpunct-color); text-shadow: 0 0 6px var(--soul-color); }
+        .circ-eq .eq-m { color: var(--mind-color); }
+        .circ-eq .eq-s { color: var(--soul-color); }
+        .circ-eq .eq-b { color: var(--body-color); }
+
+        /* ===================================
+           DIMENSIONAL DRAWERS (right panel)
+           =================================== */
+        .drawers {
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.1) transparent;
+            max-height: 60vh;
+        }
+        .drawers::-webkit-scrollbar { width: 5px; }
+        .drawers::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        .tier {
+            padding: 8px 16px 5px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--mind-color);
+            opacity: 0.7;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid rgba(240,180,41,0.08);
+            background: rgba(240,180,41,0.02);
+        }
+        .dr { border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .dr-h {
+            display: grid;
+            grid-template-columns: 44px 1fr 18px;
+            align-items: center;
+            padding: 7px 14px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .dr-h:hover { background: rgba(255,255,255,0.025); }
+        .dr-d { font-family: 'Space Grotesk', monospace; font-size: 0.82rem; text-align: center; }
+        .dr-n { font-size: 0.85rem; letter-spacing: 0.02em; }
+        .dr-c { font-size: 0.6rem; color: var(--text-dim); transition: transform 0.3s; text-align: center; }
+        .dr.open .dr-c { transform: rotate(90deg); }
+        .dr-b { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; padding: 0 14px 0 58px; }
+        .dr.open .dr-b { max-height: 500px; padding: 0 14px 10px 58px; }
+        .dr-b p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.65; margin-bottom: 0.3rem; }
+        .dr-b strong { color: var(--text); font-weight: 600; }
+        .dr-b em { font-style: italic; }
+        /* Drawer color classes */
+        .dg .dr-d, .dg .dr-n { color: var(--text-dim); }
+        .da .dr-d, .da .dr-n { color: var(--soul-color); }
+        .da .dr-b em { color: var(--soul-color); }
+        .ds .dr-d, .ds .dr-n { color: var(--mind-color); }
+        .dp .dr-d, .dp .dr-n { color: #f0a830; }
+        .dp .dr-b em { color: #f0a830; }
+        .df .dr-d, .df .dr-n { color: var(--mind-color); }
+        .df .dr-b em { color: var(--mind-color); }
+        .db .dr-d, .db .dr-n { color: var(--body-color); }
+        .db .dr-b em { color: var(--body-color); }
 
         /* ===================================
            NAVIGATION BUTTONS GRID
@@ -191,13 +259,6 @@
                     <p class="equation-title">Every ⊙ is a part of a greater ⊙.</p>
                     <p class="equation-title">You are ⊙. I am ⊙.</p>
                 </div>
-                <div class="community-links">
-                    <a href="#" id="research-btn" class="research-trigger">Research &amp; Falsification</a>
-                    <a href="#" id="about-btn">About</a>
-                    <a href="https://www.reddit.com/r/Circumpunct/" target="_blank" rel="noopener">Reddit</a>
-                    <a href="https://www.facebook.com/groups/4397079510569470" target="_blank" rel="noopener">Facebook</a>
-                    <a href="mailto:email@ashmanroonz.ca">Contact</a>
-                </div>
             </header>
 
             <!-- Center Column: Circumpunct -->
@@ -214,15 +275,18 @@
             </div>
         </div>
 
+        <!-- Equation -->
+        <div class="circ-eq"><span class="eq-w">⊙</span> = <span class="eq-m">Φ</span>(<span class="eq-s">•</span>, <span class="eq-b">○</span>)</div>
+
         <!-- Legend -->
         <div class="circ-legend">
             <div class="leg"><div class="sw sw-s"></div><b class="col-soul">Soul</b> <span>· • · aperture</span></div>
             <div class="leg"><div class="sw sw-m"></div><b class="col-mind">Mind</b> <span>· Φ · field</span></div>
             <div class="leg"><div class="sw sw-b"></div><b class="col-body">Body</b> <span>· ○ · boundary</span></div>
-            <div class="leg"><div class="sw sw-w"></div><b>⊙</b> <span>· consciousness</span></div>
+            <div class="leg"><div class="sw sw-w"></div></div>
         </div>
 
-        <!-- Navigation Buttons -->
+        <!-- All Navigation Buttons -->
         <div class="nav-buttons">
             <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md" class="nb-theory">Complete Theory</a>
             <a href="circumpunct_physics.html" class="nb-physics">Physics</a>
@@ -236,23 +300,51 @@
             <a href="truth_and_god.html">Truth & God</a>
             <a href="circumpunct_theory_of_mind.html">Mind/Matter</a>
             <a href="surface_field_formalization.html">Surface</a>
+            <a href="pages.html">All Pages</a>
+            <a href="#" id="research-btn" class="nb-soul">Research</a>
+            <a href="#" id="about-btn">About</a>
+            <a href="https://www.reddit.com/r/Circumpunct/" target="_blank" rel="noopener">Reddit</a>
+            <a href="https://www.facebook.com/groups/4397079510569470" target="_blank" rel="noopener">Facebook</a>
+            <a href="mailto:email@ashmanroonz.ca">Contact</a>
         </div>
             </div><!-- /center-panel -->
 
-            <!-- Right Column: Truth Reflection -->
+            <!-- Right Column: Dimensional Drawers -->
             <div class="dimension-section side-panel right-panel">
-                <div class="equation-row">
-                    <p class="circumpunct-equation"><span class="symbol-whole">⊙</span> = <span class="symbol-soul">•</span> <span class="symbol-mind">Φ</span> <span class="symbol-body">○</span></p>
-                    <a href="pages.html" class="explore-more-btn">Explore Visualizations and Documents</a>
-                </div>
-                <div class="truth-reflection">
-                    <p class="truth-line">It's just Us and God/Reality/Truth.</p>
-                    <p class="truth-line">May Truth flow through you, authentically, undistorted.</p>
-                    <p class="truth-line">When it does, it will create a boundary around you.</p>
-                    <p class="truth-line truth-physics">From the infinite (God's Light; Energy), through you, to the finite around you (Power, E=P/t).</p>
-                    <p class="truth-line truth-equation">You are whole/conscious <span class="symbol-whole">⊙</span> = <span class="symbol-soul">•</span> <span class="symbol-mind">Φ</span> <span class="symbol-body">○</span> soul, mind, body.</p>
-                    <p class="truth-line">The box/boundary is your conversation with God.</p>
-                    <p class="truth-tag"><a href="http://fractalreality.ca">#circumpunct</a></p>
+                <div class="drawers">
+                    <div class="tier">Tier 0 · Spatial · ⊙₁ · ∞D → 3D</div>
+                    <div class="dr dg"><div class="dr-h" onclick="tog(this)"><span class="dr-d">∞D</span><span class="dr-n">Infinite Field</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Undifferentiated potential. All possible configurations. No locus, no point: pure future energy. The unmanifest.</p></div></div>
+                    <div class="dr dg"><div class="dr-h" onclick="tog(this)"><span class="dr-d">0D</span><span class="dr-n">The Latent Point</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Potential localizes. A point appears: THIS one, rather than all possible ones. <strong>0D = ∞D</strong>: the dimensionless point and the infinite whole are the same thing seen from different sides.</p></div></div>
+                    <div class="dr da"><div class="dr-h" onclick="tog(this)"><span class="dr-d">0.5D</span><span class="dr-n">The Opening · Aperture</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The point opens. Potential begins to flow. The locus becomes a passage: <strong>a through, not a thing.</strong> The soul awakens. Binary: open/closed, χ = ±1.</p></div></div>
+                    <div class="dr ds"><div class="dr-h" onclick="tog(this)"><span class="dr-d">1D</span><span class="dr-n">Line / Timeline / Braid</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Kinetic energy. Flow from future through aperture into the past. Direction appears. The trail the aperture leaves behind: memory, history.</p></div></div>
+                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">1.5D</span><span class="dr-n">Branching · The <em>i</em> Rotation</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Power. Lines split and multiply. <strong>D = 1 + β.</strong> At β = 0.5: D = 1.5, the Hausdorff dimension of Brownian motion. The 90° rotation: Å(0.5) = exp(<em>i</em>π/2) = <em>i</em>.</p></div></div>
+                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">2D</span><span class="dr-n">Surface · Mind · Φ</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The relational surface. Two 1D powerlines braiding together <em>require</em> 2D: crossings need surface. <strong>Shared memory is mind.</strong> Φ is the act of mediating.</p></div></div>
+                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">2.5D</span><span class="dr-n">Fractalization · Sensation</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Power fractalizing toward infinite nested apertures along the boundary. Sensation crosses scales. The crumpling of surface into volume.</p></div></div>
+                    <div class="dr db"><div class="dr-h" onclick="tog(this)"><span class="dr-d">3D</span><span class="dr-n">Body · Membrane · ○</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The present moment. The 3D boundary enclosing Tier 0. Where inside meets the world. <strong>Made of ⊙'s at smaller scale.</strong> Surfaces all the way down.</p></div></div>
+
+                    <div class="tier">Tier 1 · Temporal · ⊙₂ · 3D → 6D</div>
+                    <div class="dr da"><div class="dr-h" onclick="tog(this)"><span class="dr-d">3.5D</span><span class="dr-n">Reiteration · Temporal Aperture</span><span class="dr-c">▸</span></div><div class="dr-b"><p>⊙₁ becomes aperture in a larger structure. <strong>•ₙ₊₁ = ⊙ₙ</strong>: previous whole becomes next center. The autobiographical self.</p></div></div>
+                    <div class="dr ds"><div class="dr-h" onclick="tog(this)"><span class="dr-d">4D</span><span class="dr-n">Time Braid · Worldline</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Spacetime as woven worldlines. G<sub>μν</sub> = (8πG/c⁴)T<sub>μν</sub>. Causal chains, karma: action has consequence across time.</p></div></div>
+                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">4.5D</span><span class="dr-n">Temporal Branching</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Where timelines could diverge. <strong>4.5Dₙ = ∞Dₙ₊₁</strong>: the whole braid becomes seed of next tier. Quantum branching, path integrals.</p></div></div>
+                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">5D</span><span class="dr-n">Time Surface · Configuration Space</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Temporal membrane enclosing 4D braid. The configuration space where all possible worldlines coexist as a surface.</p></div></div>
+                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">5.5D</span><span class="dr-n">Temporal Sensation</span><span class="dr-c">▸</span></div><div class="dr-b"><p>History↔possibility coupling. The crumpling of time-surface into time-volume. Where past and future interpenetrate.</p></div></div>
+                    <div class="dr db"><div class="dr-h" onclick="tog(this)"><span class="dr-d">6D</span><span class="dr-n">Time Volume · Φ<sub>time</sub></span><span class="dr-c">▸</span></div><div class="dr-b"><p>Configuration space of all 4D braids. <strong>3 circumpuncts × 2 channels = 6 bits → 2⁶ = 64 states → Standard Model spectrum.</strong></p></div></div>
+
+                    <div class="tier">Tier 2 · Meta-Temporal · ⊙₃ · 6D → 9D</div>
+                    <div class="dr da"><div class="dr-h" onclick="tog(this)"><span class="dr-d">6.5D</span><span class="dr-n">Meta Aperture</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Aperture operating on fields of histories. The completed temporal circumpunct becomes a point in a yet-larger structure.</p></div></div>
+                    <div class="dr ds"><div class="dr-h" onclick="tog(this)"><span class="dr-d">7D</span><span class="dr-n">Meta-Braid</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Weaving of 6D possibility spaces. Where entire configuration spaces are woven into meta-temporal structure.</p></div></div>
+                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">7.5D</span><span class="dr-n">Meta Branching</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Fractal splitting at the meta scale. Where braids of time-volumes diverge and multiply.</p></div></div>
+                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">8D</span><span class="dr-n">Meta-Surface · Φ<sub>meta</sub></span><span class="dr-c">▸</span></div><div class="dr-b"><p>Membrane enclosing meta-braids. The space of all possible 6D configurations.</p></div></div>
+                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">8.5D</span><span class="dr-n">Meta Sensation</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Interface at the meta scale. The crumpling of meta-surface into meta-volume.</p></div></div>
+                    <div class="dr db"><div class="dr-h" onclick="tog(this)"><span class="dr-d">9D</span><span class="dr-n">Meta Boundary · ○<sub>meta</sub></span><span class="dr-c">▸</span></div><div class="dr-b"><p>Meta-field completion. <strong>Three generations of fermions: why three families in particle physics.</strong></p></div></div>
+
+                    <div class="tier">Tier 3 · Meta² · ⊙₄ · 9D → 12D</div>
+                    <div class="dr da"><div class="dr-h" onclick="tog(this)"><span class="dr-d">9.5D</span><span class="dr-n">Meta² Aperture</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The meta boundary becomes aperture of the final tier. Entire 6D configuration spaces become the "now" of a meta-process.</p></div></div>
+                    <div class="dr ds"><div class="dr-h" onclick="tog(this)"><span class="dr-d">10D</span><span class="dr-n">Meta² Braid · Superstring</span><span class="dr-c">▸</span></div><div class="dr-b"><p><strong>Superstring theory requires 10D = 9 spatial + 1 temporal.</strong> Where the meta-field is braided into the final structure.</p></div></div>
+                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">10.5D</span><span class="dr-n">Meta² Branching</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Cosmic branching. Fractal splitting at the highest scale.</p></div></div>
+                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">11D</span><span class="dr-n">Meta² Surface · M-Theory</span><span class="dr-c">▸</span></div><div class="dr-b"><p><strong>M-theory requires exactly 11D.</strong> The circumpunct predicts this: 11D = the field-boundary of the fourth tier.</p></div></div>
+                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">11.5D</span><span class="dr-n">Meta² Sensation</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The final fractalization. The crumpling of the cosmic surface into the closing volume.</p></div></div>
+                    <div class="dr db"><div class="dr-h" onclick="tog(this)"><span class="dr-d">12D</span><span class="dr-n">Cosmic Closure · Φ<sub>meta²</sub></span><span class="dr-c">▸</span></div><div class="dr-b"><p>The ladder closes. <strong>12D = ∞D of the next cycle.</strong> Four tiers, twelve dimensions, one pattern. The end is the beginning.</p></div></div>
                 </div>
             </div>
         </div><!-- /main-layout -->
@@ -639,8 +731,16 @@
 
     <script src="js/circumpunct.js"></script>
 
-    <!-- Research & About panel triggers (hooks into existing panel system) -->
+    <!-- Drawer toggle + Research/About panel triggers -->
     <script>
+    // Drawer accordion toggle
+    function tog(h) {
+        var d = h.parentElement;
+        var wasOpen = d.classList.contains('open');
+        document.querySelectorAll('.dr.open').forEach(function(o) { o.classList.remove('open'); });
+        if (!wasOpen) d.classList.add('open');
+    }
+
     (function() {
         // Reuse the existing backdrop created by circumpunct.js
         function getBackdrop() { return document.querySelector('.backdrop'); }
@@ -666,6 +766,10 @@
         document.querySelectorAll('#panel-research .panel-close, #panel-about .panel-close').forEach(function(btn) {
             btn.addEventListener('click', closeAllPanels);
         });
+
+        // Open first drawer by default
+        var firstDrawer = document.querySelector('.drawers .dr:nth-child(2)');
+        if (firstDrawer) firstDrawer.classList.add('open');
     })();
     </script>
 </body>
