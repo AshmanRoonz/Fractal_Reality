@@ -87,4 +87,127 @@
         }, { passive: true });
     });
 
+    // =========================================
+    // Floating Circumpuncts - bounce off boundary
+    // =========================================
+    const canvas = document.getElementById('particles');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let centerX, centerY, boundaryRadius;
+    let animId;
+
+    const isMobile = window.innerWidth < 768;
+    const PARTICLE_COUNT = isMobile ? 15 : 30;
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const el = document.querySelector('.circumpunct-container');
+        if (el) {
+            const r = el.getBoundingClientRect();
+            centerX = r.left + r.width / 2;
+            centerY = r.top + r.height / 2 + window.scrollY;
+            boundaryRadius = Math.min(r.width, r.height) * 0.42;
+        } else {
+            centerX = canvas.width / 2;
+            centerY = canvas.height / 2;
+            boundaryRadius = Math.min(canvas.width, canvas.height) * 0.18;
+        }
+
+        if (particles.length === 0) initParticles();
+    }
+
+    function initParticles() {
+        particles = [];
+        const types = ['body', 'mind', 'soul'];
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            let x, y;
+            do {
+                x = Math.random() * canvas.width;
+                y = Math.random() * canvas.height;
+            } while (Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2) < boundaryRadius + 20);
+
+            particles.push({
+                x, y,
+                vx: (Math.random() - 0.5) * 0.6,
+                vy: (Math.random() - 0.5) * 0.6,
+                size: Math.random() * 2 + 1.5,
+                opacity: Math.random() * 0.3 + 0.3,
+                type: types[Math.floor(Math.random() * 3)]
+            });
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const scrollY = window.scrollY;
+
+        for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+
+            // Gentle gravity toward center
+            const dx = centerX - p.x;
+            const dy = (centerY - scrollY) - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > boundaryRadius) {
+                p.vx += (dx / dist) * 0.002;
+                p.vy += (dy / dist) * 0.002;
+            }
+
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // Bounce off boundary
+            const bx = p.x - centerX;
+            const by = p.y - (centerY - scrollY);
+            const bdist = Math.sqrt(bx * bx + by * by);
+            if (bdist < boundaryRadius + 12) {
+                const nx = bx / bdist;
+                const ny = by / bdist;
+                const dot = p.vx * nx + p.vy * ny;
+                p.vx -= 2 * dot * nx;
+                p.vy -= 2 * dot * ny;
+                p.x = centerX + nx * (boundaryRadius + 14);
+                p.y = (centerY - scrollY) + ny * (boundaryRadius + 14);
+            }
+
+            // Wrap edges
+            if (p.x < -10) p.x = canvas.width + 10;
+            if (p.x > canvas.width + 10) p.x = -10;
+            if (p.y < -10) p.y = canvas.height + 10;
+            if (p.y > canvas.height + 10) p.y = -10;
+
+            // Draw as mini circumpunct: ring + dot
+            let r, g, b;
+            if (p.type === 'body') { r = 163; g = 113; b = 247; }
+            else if (p.type === 'mind') { r = 240; g = 180; b = 41; }
+            else { r = 88; g = 166; b = 255; }
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(${r},${g},${b},${p.opacity * 0.5})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${r},${g},${b},${p.opacity})`;
+            ctx.fill();
+        }
+
+        animId = requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    animate();
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) cancelAnimationFrame(animId);
+        else animate();
+    });
+
 })();
