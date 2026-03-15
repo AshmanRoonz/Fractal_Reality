@@ -107,18 +107,22 @@
            =================================== */
         .circ-legend {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.6rem 1.2rem;
-            margin: 0.75rem auto 0;
-            max-width: 420px;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.35rem;
+            margin: 0.5rem auto 0;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.85rem;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #0088ff, 0 0 80px #0088ff;
+            animation: cyberpunk-glow 3s ease-in-out infinite alternate;
+            text-align: center;
         }
         .circ-legend .leg {
             display: flex;
             align-items: center;
             gap: 0.4rem;
-            font-size: 0.8rem;
-            color: var(--text);
+            font-size: 0.85rem;
         }
         .circ-legend .sw {
             width: 14px;
@@ -131,15 +135,18 @@
         .circ-legend .sw-b { border: 3px solid var(--body-color); }
         .circ-legend .sw-w { width: 22px; height: 22px; border: 2px solid var(--body-color); background: radial-gradient(circle, rgba(240,180,41,0.35) 30%, rgba(240,180,41,0.12) 70%); position: relative; box-shadow: 0 0 8px rgba(240,180,41,0.15); }
         .circ-legend .sw-w::after { content:''; position:absolute; width:7px; height:7px; background:var(--soul-color); border-radius:50%; inset:0; margin:auto; box-shadow: 0 0 6px rgba(88,166,255,0.4); }
-        .circ-legend b { font-weight: 600; font-size: 0.82rem; }
+        .circ-legend b { font-weight: 600; font-size: 0.85rem; }
 
         /* Equation bar above legend */
         .circ-eq {
             text-align: center;
             margin-bottom: 0.4rem;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1rem;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.85rem;
             letter-spacing: 0.08em;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #0088ff, 0 0 80px #0088ff;
+            animation: cyberpunk-glow 3s ease-in-out infinite alternate;
         }
         .circ-eq .eq-w { color: var(--circumpunct-color); text-shadow: 0 0 6px var(--soul-color); }
         .circ-eq .eq-m { color: var(--mind-color); }
@@ -149,6 +156,17 @@
         /* ===================================
            DIMENSIONAL DRAWERS (right panel)
            =================================== */
+        .dimensions-title {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #0088ff, 0 0 80px #0088ff;
+            animation: cyberpunk-glow 3s ease-in-out infinite alternate;
+            text-align: center;
+            margin: 0 0 0.5rem;
+            letter-spacing: 0.03em;
+        }
         .drawers {
             overflow-y: auto;
             scrollbar-width: thin;
@@ -311,6 +329,7 @@
 
             <!-- Right Column: Dimensional Drawers -->
             <div class="dimension-section side-panel right-panel">
+                <h3 class="dimensions-title">The Dimensions of the Circumpunct</h3>
                 <div class="drawers">
                     <div class="tier">Tier 0 · Spatial · ⊙₁ · ∞D → 3D</div>
                     <div class="dr dg"><div class="dr-h" onclick="tog(this)"><span class="dr-d">∞D</span><span class="dr-n">Infinite Field</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Undifferentiated potential. All possible configurations. No locus, no point: pure future energy. The unmanifest.</p></div></div>
