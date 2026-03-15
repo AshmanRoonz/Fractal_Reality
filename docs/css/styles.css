@@ -9,7 +9,7 @@
     --soul-color: #58a6ff;
     --circumpunct-color: #ffffff;
     --text: #e6edf3;
-    --text-dim: #8b949e;
+    --text-dim: #c8d1db;
     --panel-bg: #161b22;
     --border: #30363d;
 }
@@ -192,10 +192,10 @@ body {
 .equation-title,
 .equation-summary {
     font-family: 'Space Grotesk', monospace;
-    font-size: 1.1rem;
+    font-size: 0.85rem;
     font-weight: 400;
     color: #00ffff;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.35rem;
     letter-spacing: 0.03em;
     text-shadow:
         0 0 5px #00ffff,
