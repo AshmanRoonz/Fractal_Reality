@@ -22,6 +22,157 @@
         .panel-research a, .panel-about a { color: #58a6ff; text-decoration: none; }
         .panel-research a:hover, .panel-about a:hover { text-decoration: underline; color: #79c0ff; }
         .panel-research li, .panel-about li { margin-bottom: 0.5rem; }
+
+        /* ===================================
+           SIMPLE CSS CIRCUMPUNCT
+           =================================== */
+        .circ {
+            position: relative;
+            width: min(70vw, 70vh, 320px);
+            aspect-ratio: 1/1;
+            margin: 1rem auto;
+        }
+        .circ-boundary {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 8px solid var(--body-color);
+            box-shadow: 0 0 40px rgba(163,113,247,0.35), 0 0 100px rgba(163,113,247,0.1), inset 0 0 40px rgba(163,113,247,0.06);
+            animation: circ-breathe 7s ease-in-out infinite;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .circ-boundary:hover {
+            border-color: #c99dff;
+            box-shadow: 0 0 60px rgba(163,113,247,0.5), 0 0 120px rgba(163,113,247,0.15);
+        }
+        .circ-field {
+            position: absolute;
+            inset: 8px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 48%, rgba(240,180,41,0.28) 0%, rgba(240,180,41,0.18) 35%, rgba(240,180,41,0.08) 65%, rgba(240,180,41,0.02) 100%);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .circ-field:hover {
+            background: radial-gradient(circle at 50% 48%, rgba(240,180,41,0.40) 0%, rgba(240,180,41,0.25) 35%, rgba(240,180,41,0.12) 65%, rgba(240,180,41,0.04) 100%);
+        }
+        .circ-phi {
+            position: absolute;
+            top: 30%;
+            left: 62%;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            color: var(--mind-color);
+            opacity: 0.55;
+            pointer-events: none;
+        }
+        .circ-orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 68px;
+            height: 68px;
+            transform: translate(-50%, -50%);
+            border: 1.5px dashed rgba(88,166,255,0.2);
+            border-radius: 50%;
+            animation: circ-spin 14s linear infinite;
+            pointer-events: none;
+        }
+        .circ-soul {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 32px;
+            height: 32px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: var(--soul-color);
+            box-shadow: 0 0 28px rgba(88,166,255,0.5), 0 0 70px rgba(88,166,255,0.12);
+            cursor: pointer;
+            z-index: 20;
+            animation: circ-pulse 3s ease-in-out infinite;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .circ-soul:hover {
+            transform: translate(-50%, -50%) scale(1.25);
+            box-shadow: 0 0 45px rgba(88,166,255,0.6), 0 0 100px rgba(88,166,255,0.2);
+        }
+        @keyframes circ-breathe { 0%,100%{opacity:1} 50%{opacity:0.82} }
+        @keyframes circ-pulse { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.1)} }
+        @keyframes circ-spin { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+
+        /* ===================================
+           LEGEND
+           =================================== */
+        .circ-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem 1.2rem;
+            margin: 0.75rem auto 0;
+            max-width: 420px;
+        }
+        .circ-legend .leg {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+        .circ-legend .sw {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .circ-legend .sw-s { background: var(--soul-color); box-shadow: 0 0 8px rgba(88,166,255,0.4); }
+        .circ-legend .sw-m { border: 2px solid var(--mind-color); background: rgba(240,180,41,0.15); }
+        .circ-legend .sw-b { border: 3px solid var(--body-color); }
+        .circ-legend .sw-w { border: 1.5px solid var(--body-color); background: rgba(240,180,41,0.1); position: relative; }
+        .circ-legend .sw-w::after { content:''; position:absolute; width:5px; height:5px; background:var(--soul-color); border-radius:50%; inset:0; margin:auto; }
+        .circ-legend b { font-weight: 600; font-size: 0.82rem; }
+
+        /* ===================================
+           NAVIGATION BUTTONS GRID
+           =================================== */
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.4rem;
+            margin-top: 1rem;
+            max-width: 500px;
+        }
+        .nav-buttons a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            text-decoration: none;
+            padding: 0.35rem 0.65rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            background: transparent;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+        .nav-buttons a:hover {
+            color: var(--text);
+            border-color: var(--soul-color);
+            background: rgba(88,166,255,0.08);
+            box-shadow: 0 0 10px rgba(88,166,255,0.15);
+            transform: translateY(-1px);
+        }
+        .nav-buttons a.nb-theory { color: var(--text); border-color: rgba(255,255,255,0.2); }
+        .nav-buttons a.nb-theory:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+        .nav-buttons a.nb-physics { color: var(--body-color); border-color: rgba(163,113,247,0.25); }
+        .nav-buttons a.nb-physics:hover { border-color: var(--body-color); background: rgba(163,113,247,0.08); }
+        .nav-buttons a.nb-mind { color: var(--mind-color); border-color: rgba(240,180,41,0.25); }
+        .nav-buttons a.nb-mind:hover { border-color: var(--mind-color); background: rgba(240,180,41,0.08); }
+        .nav-buttons a.nb-soul { color: var(--soul-color); border-color: rgba(88,166,255,0.25); }
+        .nav-buttons a.nb-soul:hover { border-color: var(--soul-color); background: rgba(88,166,255,0.08); }
     </style>
 </head>
 <body>
@@ -51,365 +202,40 @@
 
             <!-- Center Column: Circumpunct -->
             <div class="center-panel">
-                <!-- Scale indicator - shows current fractal scale -->
-                <div class="scale-indicator" id="scaleIndicator">
-                    <span class="scale-label">Scale: </span>
-                    <span class="scale-name" id="scaleName">Eye</span>
-                    <span class="scale-description" id="scaleDescription">(Organism)</span>
-                </div>
 
-        <!-- The Big Interactive Circumpunct -->
+        <!-- The Simple Circumpunct -->
         <div class="circumpunct-container">
-            <svg class="circumpunct" viewBox="-40 -40 380 380" role="img" aria-label="Interactive Circumpunct" style="overflow: visible;">
-                <defs>
-                    <!-- Organic membrane filter for body ring (displacement + glow) -->
-                    <filter id="organic-membrane" x="-50%" y="-50%" width="200%" height="200%">
-                        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="42" result="noise">
-                            <animate attributeName="seed" values="42;100;42" dur="10s" repeatCount="indefinite"/>
-                        </feTurbulence>
-                        <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
-                        <feGaussianBlur in="displaced" stdDeviation="4" result="blur"/>
-                        <feMerge>
-                            <feMergeNode in="blur"/>
-                            <feMergeNode in="displaced"/>
-                        </feMerge>
-                    </filter>
-                    <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="4" result="blur"/>
-                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                    </filter>
-                    <filter id="glow-gold" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="6" result="blur"/>
-                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                    </filter>
-                    <filter id="glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="8" result="blur"/>
-                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                    </filter>
-                    <!-- Cyan glow filter for outer ring -->
-                    <filter id="glow-cyber" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="3" result="blur"/>
-                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                    </filter>
-
-                    <!-- Soul iris gradient (gray-green like user's eye) -->
-                    <radialGradient id="soul-iris-gradient" cx="50%" cy="50%" r="50%" fx="40%" fy="40%">
-                        <stop offset="0%" stop-color="#8a9a88"/>
-                        <stop offset="40%" stop-color="#7a8b78"/>
-                        <stop offset="70%" stop-color="#6b7d6b"/>
-                        <stop offset="100%" stop-color="#4a5a4a"/>
-                    </radialGradient>
-                    <!-- Soul pupil gradient -->
-                    <radialGradient id="soul-pupil-gradient" cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
-                        <stop offset="0%" stop-color="#1a1a1a"/>
-                        <stop offset="100%" stop-color="#000000"/>
-                    </radialGradient>
-
-                    <!-- Planet gradient (Earth-like) -->
-                    <radialGradient id="planet-gradient" cx="40%" cy="40%" r="60%">
-                        <stop offset="0%" stop-color="#64b5f6"/>
-                        <stop offset="50%" stop-color="#42a5f5"/>
-                        <stop offset="100%" stop-color="#1565c0"/>
-                    </radialGradient>
-
-                    <!-- Sun gradient -->
-                    <radialGradient id="sun-gradient" cx="40%" cy="40%" r="60%">
-                        <stop offset="0%" stop-color="#fff59d"/>
-                        <stop offset="40%" stop-color="#ffee58"/>
-                        <stop offset="70%" stop-color="#ffc107"/>
-                        <stop offset="100%" stop-color="#ff9800"/>
-                    </radialGradient>
-
-                    <!-- Arc paths for inner navigation buttons (radius 130) -->
-                    <path id="arc-top" d="M 58 58 A 130 130 0 0 1 242 58" fill="none"/>
-                    <path id="arc-right" d="M 242 58 A 130 130 0 0 1 242 242" fill="none"/>
-                    <path id="arc-bottom" d="M 242 242 A 130 130 0 0 1 58 242" fill="none"/>
-                    <path id="arc-left" d="M 58 242 A 130 130 0 0 1 58 58" fill="none"/>
-
-                    <!-- Arc paths for outer navigation ring (radius 170) - 8 positions -->
-                    <!-- Top arcs (text readable from outside) -->
-                    <path id="arc-outer-top" d="M 92 -10 A 170 170 0 0 1 208 -10" fill="none"/>
-                    <path id="arc-outer-topright" d="M 222 -4 A 170 170 0 0 1 304 78" fill="none"/>
-                    <path id="arc-outer-topleft" d="M -4 78 A 170 170 0 0 1 78 -4" fill="none"/>
-                    <!-- Side arcs -->
-                    <path id="arc-outer-right" d="M 310 92 A 170 170 0 0 1 310 208" fill="none"/>
-                    <path id="arc-outer-left" d="M -10 92 A 170 170 0 0 0 -10 208" fill="none"/>
-                    <!-- Bottom arcs -->
-                    <path id="arc-outer-bottom" d="M 208 310 A 170 170 0 0 1 92 310" fill="none"/>
-                    <path id="arc-outer-bottomright" d="M 304 222 A 170 170 0 0 1 222 304" fill="none"/>
-                    <path id="arc-outer-bottomleft" d="M 78 304 A 170 170 0 0 1 -4 222" fill="none"/>
-                </defs>
-
-                <!-- ○ BODY - Outer Ring (organic membrane) -->
-                <circle class="zone zone-body" cx="150" cy="150" r="103"
-                    fill="transparent" stroke="rgba(163, 113, 247, 0.6)" stroke-width="14" data-zone="body"/>
-
-                <!-- Φ MIND - Middle Field -->
-                <circle class="zone zone-mind" cx="150" cy="150" r="60"
-                    fill="rgba(240, 180, 41, 0.15)" stroke="rgba(240, 180, 41, 0.4)" stroke-width="2" data-zone="mind"/>
-
-                <!-- The moving soul group (follows cursor) - switches between scales -->
-                <g class="soul-moving" id="eye-moving">
-
-                    <!-- SCALE 1: EYE (Organism) - The watching eye -->
-                    <g class="scale-group scale-eye active" data-scale="eye">
-                        <circle class="zone zone-soul soul-iris" cx="150" cy="150" r="32"
-                            fill="url(#soul-iris-gradient)" data-zone="soul"/>
-                        <circle cx="150" cy="150" r="30" fill="none" stroke="rgba(40,50,40,0.5)" stroke-width="3" class="soul-limbal"/>
-                        <circle cx="150" cy="150" r="12" fill="url(#soul-pupil-gradient)" class="soul-pupil"/>
-                        <circle cx="142" cy="144" r="5" fill="rgba(255,255,255,0.7)" class="soul-highlight"/>
-                    </g>
-
-                    <!-- SCALE 2: ATOM - Nucleus + Electron Cloud -->
-                    <g class="scale-group scale-atom" data-scale="atom">
-                        <!-- Electron cloud glow -->
-                        <circle cx="150" cy="150" r="30" fill="rgba(88,166,255,0.15)" class="electron-cloud"/>
-                        <!-- Electron orbits -->
-                        <ellipse cx="150" cy="150" rx="28" ry="12" fill="none" stroke="rgba(88,166,255,0.5)" stroke-width="1" class="orbit orbit-1">
-                            <animateTransform attributeName="transform" type="rotate" from="0 150 150" to="360 150 150" dur="3s" repeatCount="indefinite"/>
-                        </ellipse>
-                        <ellipse cx="150" cy="150" rx="28" ry="12" fill="none" stroke="rgba(163,113,247,0.5)" stroke-width="1" class="orbit orbit-2" transform="rotate(60 150 150)">
-                            <animateTransform attributeName="transform" type="rotate" from="60 150 150" to="420 150 150" dur="4s" repeatCount="indefinite"/>
-                        </ellipse>
-                        <ellipse cx="150" cy="150" rx="28" ry="12" fill="none" stroke="rgba(240,180,41,0.5)" stroke-width="1" class="orbit orbit-3" transform="rotate(120 150 150)">
-                            <animateTransform attributeName="transform" type="rotate" from="120 150 150" to="480 150 150" dur="5s" repeatCount="indefinite"/>
-                        </ellipse>
-                        <!-- Electrons -->
-                        <circle cx="178" cy="150" r="3" fill="#58a6ff" class="electron electron-1">
-                            <animateMotion dur="3s" repeatCount="indefinite" path="M0,0 A28,12 0 1,1 0,0.1 A28,12 0 1,1 0,0"/>
-                        </circle>
-                        <circle cx="164" cy="138" r="3" fill="#a371f7" class="electron electron-2">
-                            <animateMotion dur="4s" repeatCount="indefinite" path="M14,-12 A28,12 60 1,1 14.1,-12 A28,12 60 1,1 14,-12"/>
-                        </circle>
-                        <circle cx="136" cy="138" r="3" fill="#f0b429" class="electron electron-3">
-                            <animateMotion dur="5s" repeatCount="indefinite" path="M-14,-12 A28,12 120 1,1 -13.9,-12 A28,12 120 1,1 -14,-12"/>
-                        </circle>
-                        <!-- Nucleus (protons & neutrons) -->
-                        <circle cx="150" cy="150" r="8" fill="url(#soul-pupil-gradient)" class="nucleus-base"/>
-                        <circle cx="147" cy="148" r="4" fill="#ff6b6b" class="proton"/>
-                        <circle cx="153" cy="148" r="4" fill="#4ecdc4" class="neutron"/>
-                        <circle cx="150" cy="153" r="4" fill="#ff6b6b" class="proton"/>
-                        <circle cx="146" cy="146" r="2" fill="rgba(255,255,255,0.6)" class="nucleus-highlight"/>
-                    </g>
-
-                    <!-- SCALE 3: CELL - DNA + Cytoplasm + Membrane -->
-                    <g class="scale-group scale-cell" data-scale="cell">
-                        <!-- Cytoplasm -->
-                        <circle cx="150" cy="150" r="30" fill="rgba(163,220,163,0.2)" class="cytoplasm"/>
-                        <!-- Organelles floating -->
-                        <ellipse cx="135" cy="140" rx="5" ry="3" fill="rgba(163,113,247,0.4)" class="organelle mitochondria">
-                            <animate attributeName="cx" values="135;138;135" dur="4s" repeatCount="indefinite"/>
-                            <animate attributeName="cy" values="140;143;140" dur="5s" repeatCount="indefinite"/>
-                        </ellipse>
-                        <ellipse cx="168" cy="155" rx="4" ry="2.5" fill="rgba(163,113,247,0.4)" class="organelle mitochondria">
-                            <animate attributeName="cx" values="168;165;168" dur="5s" repeatCount="indefinite"/>
-                            <animate attributeName="cy" values="155;158;155" dur="4s" repeatCount="indefinite"/>
-                        </ellipse>
-                        <circle cx="140" cy="162" r="2" fill="rgba(88,166,255,0.5)" class="organelle ribosome">
-                            <animate attributeName="cx" values="140;143;140" dur="3s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="162" cy="142" r="2" fill="rgba(88,166,255,0.5)" class="organelle ribosome">
-                            <animate attributeName="cy" values="142;145;142" dur="3.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <!-- Nuclear envelope -->
-                        <circle cx="150" cy="150" r="12" fill="rgba(240,180,41,0.2)" stroke="rgba(240,180,41,0.5)" stroke-width="1.5" class="nuclear-envelope"/>
-                        <!-- DNA double helix (simplified) -->
-                        <path d="M145,142 Q150,146 145,150 Q150,154 145,158" fill="none" stroke="#ff6b6b" stroke-width="2" class="dna-strand-1">
-                            <animate attributeName="d" values="M145,142 Q150,146 145,150 Q150,154 145,158;M145,142 Q140,146 145,150 Q140,154 145,158;M145,142 Q150,146 145,150 Q150,154 145,158" dur="3s" repeatCount="indefinite"/>
-                        </path>
-                        <path d="M155,142 Q150,146 155,150 Q150,154 155,158" fill="none" stroke="#4ecdc4" stroke-width="2" class="dna-strand-2">
-                            <animate attributeName="d" values="M155,142 Q150,146 155,150 Q150,154 155,158;M155,142 Q160,146 155,150 Q160,154 155,158;M155,142 Q150,146 155,150 Q150,154 155,158" dur="3s" repeatCount="indefinite"/>
-                        </path>
-                        <!-- Base pairs -->
-                        <line x1="146" y1="144" x2="154" y2="144" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-                        <line x1="146" y1="150" x2="154" y2="150" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-                        <line x1="146" y1="156" x2="154" y2="156" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-                        <!-- Cell membrane highlight -->
-                        <circle cx="150" cy="150" r="30" fill="none" stroke="rgba(163,220,163,0.3)" stroke-width="2" stroke-dasharray="3,2" class="membrane-hint"/>
-                    </g>
-
-                    <!-- SCALE 4: PLANET - Core + Magnetic Field + Atmosphere -->
-                    <g class="scale-group scale-planet" data-scale="planet">
-                        <!-- Outer atmosphere glow -->
-                        <circle cx="150" cy="150" r="32" fill="rgba(88,166,255,0.1)" class="atmosphere"/>
-                        <!-- Magnetic field lines -->
-                        <path d="M150,118 Q180,135 180,150 Q180,165 150,182" fill="none" stroke="rgba(163,113,247,0.4)" stroke-width="1.5" class="field-line">
-                            <animate attributeName="stroke-opacity" values="0.4;0.7;0.4" dur="2s" repeatCount="indefinite"/>
-                        </path>
-                        <path d="M150,118 Q120,135 120,150 Q120,165 150,182" fill="none" stroke="rgba(163,113,247,0.4)" stroke-width="1.5" class="field-line">
-                            <animate attributeName="stroke-opacity" values="0.4;0.7;0.4" dur="2s" repeatCount="indefinite" begin="0.5s"/>
-                        </path>
-                        <path d="M150,122 Q172,137 172,150 Q172,163 150,178" fill="none" stroke="rgba(88,166,255,0.3)" stroke-width="1" class="field-line-inner"/>
-                        <path d="M150,122 Q128,137 128,150 Q128,163 150,178" fill="none" stroke="rgba(88,166,255,0.3)" stroke-width="1" class="field-line-inner"/>
-                        <!-- Planet surface -->
-                        <circle cx="150" cy="150" r="22" fill="url(#planet-gradient)" class="planet-surface"/>
-                        <!-- Continental hints -->
-                        <ellipse cx="145" cy="145" rx="8" ry="5" fill="rgba(76,175,80,0.6)" transform="rotate(-20 145 145)" class="continent"/>
-                        <ellipse cx="158" cy="155" rx="6" ry="4" fill="rgba(76,175,80,0.5)" transform="rotate(30 158 155)" class="continent"/>
-                        <!-- Mantle layer -->
-                        <circle cx="150" cy="150" r="14" fill="rgba(255,152,0,0.4)" class="mantle"/>
-                        <!-- Outer core -->
-                        <circle cx="150" cy="150" r="9" fill="rgba(255,87,34,0.6)" class="outer-core"/>
-                        <!-- Inner core (soul) -->
-                        <circle cx="150" cy="150" r="5" fill="#ffeb3b" class="inner-core">
-                            <animate attributeName="r" values="5;5.5;5" dur="1.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="148" cy="148" r="2" fill="rgba(255,255,255,0.5)" class="core-highlight"/>
-                    </g>
-
-                    <!-- SCALE 5: SOLAR SYSTEM - Sun + Orbits + Heliosphere -->
-                    <g class="scale-group scale-solar" data-scale="solar">
-                        <!-- Heliosphere boundary hint -->
-                        <circle cx="150" cy="150" r="32" fill="none" stroke="rgba(163,113,247,0.2)" stroke-width="1" stroke-dasharray="4,4" class="heliosphere"/>
-                        <!-- Orbital paths -->
-                        <circle cx="150" cy="150" r="14" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.5" class="orbit-path"/>
-                        <circle cx="150" cy="150" r="20" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.5" class="orbit-path"/>
-                        <circle cx="150" cy="150" r="26" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.5" class="orbit-path"/>
-                        <!-- Planets orbiting -->
-                        <circle cx="164" cy="150" r="2" fill="#b0bec5" class="planet-mercury">
-                            <animateTransform attributeName="transform" type="rotate" from="0 150 150" to="360 150 150" dur="2s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="170" cy="150" r="2.5" fill="#ffcc80" class="planet-venus">
-                            <animateTransform attributeName="transform" type="rotate" from="0 150 150" to="360 150 150" dur="3.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="176" cy="150" r="3" fill="#64b5f6" class="planet-earth">
-                            <animateTransform attributeName="transform" type="rotate" from="0 150 150" to="360 150 150" dur="5s" repeatCount="indefinite"/>
-                        </circle>
-                        <!-- Solar wind particles -->
-                        <circle cx="155" cy="145" r="1" fill="rgba(255,235,59,0.6)" class="solar-wind">
-                            <animate attributeName="cx" values="155;175;155" dur="3s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.8;0;0.8" dur="3s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="145" cy="158" r="1" fill="rgba(255,235,59,0.6)" class="solar-wind">
-                            <animate attributeName="cx" values="145;125;145" dur="3.5s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0.8;0;0.8" dur="3.5s" repeatCount="indefinite"/>
-                        </circle>
-                        <!-- Sun corona -->
-                        <circle cx="150" cy="150" r="10" fill="rgba(255,193,7,0.3)" class="corona">
-                            <animate attributeName="r" values="10;11;10" dur="2s" repeatCount="indefinite"/>
-                        </circle>
-                        <!-- Sun surface -->
-                        <circle cx="150" cy="150" r="7" fill="url(#sun-gradient)" class="sun-surface"/>
-                        <!-- Sun core -->
-                        <circle cx="150" cy="150" r="3" fill="#fff9c4" class="sun-core">
-                            <animate attributeName="opacity" values="1;0.8;1" dur="1s" repeatCount="indefinite"/>
-                        </circle>
-                        <circle cx="148" cy="148" r="1.5" fill="rgba(255,255,255,0.7)" class="sun-highlight"/>
-                    </g>
-
-                </g>
-
-                <!-- Decorative ring -->
-                <circle cx="150" cy="150" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" class="decorative"/>
-
-                <!-- Navigation Arc Buttons (outer ring) -->
-                <g class="nav-ring">
-                    <!-- Top: Complete Theory -->
-                    <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md" class="nav-arc nav-arc-theory">
-                        <path d="M 58 58 A 130 130 0 0 1 242 58" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="24" stroke-linecap="round" class="arc-bg"/>
-                        <text class="arc-text">
-                            <textPath href="#arc-top" startOffset="50%" text-anchor="middle">Complete Theory</textPath>
-                        </text>
-                    </a>
-
-                    <!-- Right: Physics -->
-                    <a href="circumpunct_physics.html" class="nav-arc nav-arc-physics">
-                        <path d="M 242 58 A 130 130 0 0 1 242 242" fill="none" stroke="rgba(163,113,247,0.15)" stroke-width="24" stroke-linecap="round" class="arc-bg"/>
-                        <text class="arc-text">
-                            <textPath href="#arc-right" startOffset="50%" text-anchor="middle">Physics</textPath>
-                        </text>
-                    </a>
-
-                    <!-- Bottom: Consciousness -->
-                    <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md#chapter-xi-consciousness" class="nav-arc nav-arc-consciousness">
-                        <path d="M 242 242 A 130 130 0 0 1 58 242" fill="none" stroke="rgba(88,166,255,0.15)" stroke-width="24" stroke-linecap="round" class="arc-bg"/>
-                        <text class="arc-text">
-                            <textPath href="#arc-bottom" startOffset="50%" text-anchor="middle">Consciousness</textPath>
-                        </text>
-                    </a>
-
-                    <!-- Left: Ethics -->
-                    <a href="https://fractalreality.ca/ethics.html" class="nav-arc nav-arc-ethics">
-                        <path d="M 58 242 A 130 130 0 0 1 58 58" fill="none" stroke="rgba(240,180,41,0.15)" stroke-width="24" stroke-linecap="round" class="arc-bg"/>
-                        <text class="arc-text">
-                            <textPath href="#arc-left" startOffset="50%" text-anchor="middle">Ethics</textPath>
-                        </text>
-                    </a>
-                </g>
-
-                <!-- Outer Navigation Ring - Additional Links (radius 170) -->
-                <g class="outer-nav-ring">
-                    <!-- Top: The Bridge -->
-                    <a href="the_bridge_presentation.html" class="nav-arc-outer">
-                        <path d="M 92 -10 A 170 170 0 0 1 208 -10" fill="none" stroke="rgba(0,255,255,0.15)" stroke-width="20" stroke-linecap="round" class="arc-bg-outer"/>
-                        <text class="arc-text-outer">
-                            <textPath href="#arc-outer-top" startOffset="50%" text-anchor="middle">The Bridge</textPath>
-                        </text>
-                    </a>
-
-                    <!-- Top-right: Dimensions -->
-                    <a href="circumpunct-presentation.html" class="nav-arc-outer">
-                        <path d="M 222 -4 A 170 170 0 0 1 304 78" fill="none" stroke="rgba(0,255,255,0.15)" stroke-width="20" stroke-linecap="round" class="arc-bg-outer"/>
-                        <text class="arc-text-outer">
-                            <textPath href="#arc-outer-topright" startOffset="50%" text-anchor="middle">Dimensions</textPath>
-                        </text>
-                    </a>
-
-                    <!-- Right: Math -->
-                    <a href="circumpunct_math.html" class="nav-arc-outer">
-                        <path d="M 310 92 A 170 170 0 0 1 310 208" fill="none" stroke="rgba(0,255,255,0.15)" stroke-width="20" stroke-linecap="round" class="arc-bg-outer"/>
-                        <text class="arc-text-outer">
-                            <textPath href="#arc-outer-right" startOffset="50%" text-anchor="middle">Math</textPath>
-                        </text>
-                    </a>
-
-                    <!-- Bottom-right: Falsification -->
-                    <a href="aperture_falsification_presentation.html" class="nav-arc-outer">
-                        <path d="M 304 222 A 170 170 0 0 1 222 304" fill="none" stroke="rgba(0,255,255,0.15)" stroke-width="20" stroke-linecap="round" class="arc-bg-outer"/>
-                        <text class="arc-text-outer">
-                            <textPath href="#arc-outer-bottomright" startOffset="50%" text-anchor="middle">Falsification</textPath>
-                        </text>
-                    </a>
-
-                    <!-- Bottom: The Lens -->
-                    <a href="lens.html" class="nav-arc-outer">
-                        <path d="M 208 310 A 170 170 0 0 1 92 310" fill="none" stroke="rgba(0,255,255,0.15)" stroke-width="20" stroke-linecap="round" class="arc-bg-outer"/>
-                        <text class="arc-text-outer">
-                            <textPath href="#arc-outer-bottom" startOffset="50%" text-anchor="middle">The Lens</textPath>
-                        </text>
-                    </a>
-
-                    <!-- Bottom-left: Truth & God -->
-                    <a href="truth_and_god.html" class="nav-arc-outer">
-                        <path d="M 78 304 A 170 170 0 0 1 -4 222" fill="none" stroke="rgba(0,255,255,0.15)" stroke-width="20" stroke-linecap="round" class="arc-bg-outer"/>
-                        <text class="arc-text-outer">
-                            <textPath href="#arc-outer-bottomleft" startOffset="50%" text-anchor="middle">Truth & God</textPath>
-                        </text>
-                    </a>
-
-                    <!-- Left: Mind/Matter -->
-                    <a href="circumpunct_theory_of_mind.html" class="nav-arc-outer">
-                        <path d="M -10 92 A 170 170 0 0 0 -10 208" fill="none" stroke="rgba(0,255,255,0.15)" stroke-width="20" stroke-linecap="round" class="arc-bg-outer"/>
-                        <text class="arc-text-outer">
-                            <textPath href="#arc-outer-left" startOffset="50%" text-anchor="middle">Mind/Matter</textPath>
-                        </text>
-                    </a>
-
-                    <!-- Top-left: Surface Theorem -->
-                    <a href="surface_field_formalization.html" class="nav-arc-outer">
-                        <path d="M -4 78 A 170 170 0 0 1 78 -4" fill="none" stroke="rgba(0,255,255,0.15)" stroke-width="20" stroke-linecap="round" class="arc-bg-outer"/>
-                        <text class="arc-text-outer">
-                            <textPath href="#arc-outer-topleft" startOffset="50%" text-anchor="middle">Surface</textPath>
-                        </text>
-                    </a>
-                </g>
-            </svg>
-
-            <div class="zone-labels">
-                <span class="label label-body">○ BODY</span>
-                <span class="label label-mind">Φ MIND</span>
-                <span class="label label-soul">• SOUL</span>
+            <div class="circ">
+                <div class="circ-boundary" data-zone="body"></div>
+                <div class="circ-field" data-zone="mind"></div>
+                <div class="circ-phi">Φ</div>
+                <div class="circ-orbit"></div>
+                <div class="circ-soul" data-zone="soul"></div>
             </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="circ-legend">
+            <div class="leg"><div class="sw sw-s"></div><b class="col-soul">Soul</b> <span>· • · aperture</span></div>
+            <div class="leg"><div class="sw sw-m"></div><b class="col-mind">Mind</b> <span>· Φ · field</span></div>
+            <div class="leg"><div class="sw sw-b"></div><b class="col-body">Body</b> <span>· ○ · boundary</span></div>
+            <div class="leg"><div class="sw sw-w"></div><b>⊙</b> <span>· consciousness</span></div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+            <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md" class="nb-theory">Complete Theory</a>
+            <a href="circumpunct_physics.html" class="nb-physics">Physics</a>
+            <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md#chapter-xi-consciousness" class="nb-soul">Consciousness</a>
+            <a href="https://fractalreality.ca/ethics.html" class="nb-mind">Ethics</a>
+            <a href="the_bridge_presentation.html">The Bridge</a>
+            <a href="circumpunct-presentation.html">Dimensions</a>
+            <a href="circumpunct_math.html">Math</a>
+            <a href="aperture_falsification_presentation.html">Falsification</a>
+            <a href="lens.html">The Lens</a>
+            <a href="truth_and_god.html">Truth & God</a>
+            <a href="circumpunct_theory_of_mind.html">Mind/Matter</a>
+            <a href="surface_field_formalization.html">Surface</a>
         </div>
             </div><!-- /center-panel -->
 
