@@ -203,7 +203,6 @@ body {
         0 0 20px #00ffff,
         0 0 40px #0088ff,
         0 0 80px #0088ff;
-    animation: cyberpunk-glow 3s ease-in-out infinite alternate;
 }
 
 @keyframes cyberpunk-glow {
@@ -552,12 +551,11 @@ body {
 }
 
 /* Soul eye doesn't pulse - it watches */
-.zone-body { animation: breathe 5s ease-in-out infinite; }
-.zone-mind { animation: shimmer 4s ease-in-out infinite; }
+.zone-body { }
+.zone-mind { }
 
 .decorative {
     transform-origin: 150px 150px;
-    animation: rotate 60s linear infinite;
     stroke-dasharray: 4 8;
 }
 
@@ -725,7 +723,6 @@ body {
 }
 
 .nav-arc .arc-bg {
-    animation: arc-pulse 6s ease-in-out infinite;
 }
 
 .nav-arc-physics .arc-bg { animation-delay: 0s; }
@@ -747,7 +744,6 @@ body {
 
 .nav-arc-outer .arc-bg-outer {
     transition: stroke 0.3s ease, stroke-opacity 0.3s ease;
-    animation: arc-pulse-outer 5s ease-in-out infinite;
 }
 
 .nav-arc-outer .arc-text-outer {
