@@ -1,404 +1,380 @@
-# The Cross-Scale Braid: 1D is Just a String
+# Dimensional Braid Theory: One Circumpunct
 
 ## The Insight
 
-**1D isn't the braid. It's just a string.**
+**There is one circumpunct. All the wholes are there inside it, as the integer dimensions.**
 
-A single string. One strand. No weaving, no history, no complexity — just extension through time. The braid part of "string" is what happens when strings from different scales meet.
+```
+⊙ = One Circumpunct
 
-**4D is where the center string braids with boundary strings at the lower scale.**
+  0D  •  Latent Point       (the dot at the center)
+  1D  ─  Time               (the first whole)
+  2D  ▢  Mind               (the second whole)
+  3D  ◻  Space              (the third whole, the boundary ○)
+```
 
-This changes everything about how dimensions relate to experience.
+The integers are the **wholes** — the structures that simply ARE.
+The half-integers are the **processes** — the braiding that connects one whole to the next.
 
 ---
 
-## The Revised Dimensional Architecture
-
-### Why the Old Model Was Almost Right
-
-The previous model placed braiding at 3.5D (process) crystallizing into 4D (structure). But braiding isn't a process that happens *within* a scale — it's the **cross-scale interaction** itself. A string can't braid with itself. It needs other strings. Where do they come from? The boundary — the lower scale's surface.
-
-### The New Map
+## The Architecture
 
 ```
-╔════════════════════════════════════════════════════════════════════════════╗
-║                   THE CROSS-SCALE BRAID ARCHITECTURE                      ║
-╠════════════════════════════════════════════════════════════════════════════╣
-║                                                                            ║
-║   BODY SCALE (Physical)                                                    ║
-║   ─────────────────────                                                    ║
-║   0D   ═══  Pure Energy          (potential, fuel, E = mc²)               ║
-║   0.5D ───  Aperture / Soul      (i = exp(iπ/2), the tunnel opening)     ║
-║   1D   ═══  STRING               (just a string. one strand. i(t))       ║
-║   1.5D ───  Branching            (the string fractally splits, D = 1.5)  ║
-║   2D   ═══  SURFACE OF THE BODY  (membrane, skin, boundary ○)            ║
-║   2.5D ───  Sensation            (body↔field contact, raw feeling)       ║
-║   3D   ═══  Body Volume          (the physical interior, meat & bone)    ║
-║                                                                            ║
-║   CROSS-SCALE BRIDGE                                                       ║
-║   ──────────────────                                                       ║
-║   3.5D ───  Tunnel Braiding      (center string meets boundary strings)  ║
-║   4D   ═══  THE BRAID            (center + boundary woven together)      ║
-║             ↑                                                              ║
-║             This is where YOUR 1D string braids with                      ║
-║             the boundary strings of the scale below you.                  ║
-║             Gravity lives here. History crystallizes here.                 ║
-║                                                                            ║
-║   MIND SCALE (Experiential)                                                ║
-║   ─────────────────────────                                                ║
-║   4.5D ───  Recursion            (braid compresses → seeds mind-scale)   ║
-║   5D   ═══  SURFACE OF THE MIND  (mental boundary, edge of awareness)    ║
-║   5.5D ───  Perception           (mind-surface↔idea-field coupling)      ║
-║   6D   ═══  AN IDEA              (a complete thought-form, concept-body) ║
-║                                                                            ║
-╚════════════════════════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════════╗
+║              ONE CIRCUMPUNCT — ALL DIMENSIONS                ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║   INTEGER DIMENSIONS (Structure — what IS)                   ║
+║   ════════════════════════════════════════                    ║
+║   0D   •   Latent Point                                      ║
+║   1D   ─   Time                                              ║
+║   2D   ▢   Mind                                              ║
+║   3D   ◻   Space                                             ║
+║                                                              ║
+║   HALF-INTEGER DIMENSIONS (Process — what BECOMES)           ║
+║   ════════════════════════════════════════════════            ║
+║   0.5D ···  Point → Time     (latency becoming duration)    ║
+║   1.5D ···  Time → Mind      (duration becoming awareness)  ║
+║   2.5D ···  Mind → Space     (awareness becoming extension) ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
 ```
 
 ---
 
-## Dimension by Dimension
+## The Wholes (Integer Dimensions)
 
-### 1D — Just a String
+### 0D — The Latent Point
 
-Not a braid. Not a worldline-with-history. Just **extension**.
-
-A 1D string is:
-- A single strand of becoming
-- Energy aimed through the aperture, now extended in one direction
-- No interactions yet. No weaving. No memory.
-- The *potential* to participate in a braid, but not yet braided
+The dot at the center of the circumpunct. Not nothing — **latent**. It contains everything that will unfold, but none of it yet extended. A seed before germination. A note before it sounds.
 
 ```
-───────────────────────────────────────
-Just a line. That's all.
-One thread. No crossings. No overs-and-unders.
-A string IS 1D. 1D IS a string. Nothing more.
+•
+
+That's it. No direction, no duration, no extent.
+Pure potential compressed to a point.
 ```
 
-**Why this matters:** We kept calling 1D "the worldline" as if it already contained history. But a worldline with history is already braided — it's already 4D. The raw 1D string is pre-history. It's the *thread* before the *weave*.
+The latent point is the **center** of the circumpunct (•). It is what the symbol literally shows: a point inside a circle.
 
-### 2D — Surface of the Body
+### 1D — Time
 
-The body's **skin**. The membrane. The boundary between inside and outside.
-
-```
-2D = ∂(body)
-
-The surface IS the body's presentation to the world.
-Everything you can touch about a body is its 2D surface.
-The body's interior (3D) is hidden behind this surface.
-```
-
-This hasn't changed from the previous model — but naming it "surface of the body" makes the parallel to 5D crystal clear.
-
-### 3D — Body Volume
-
-The physical interior. The 3D bulk enclosed by the 2D body surface. Organs, tissue, structure — the *stuff* inside the skin.
-
-### 4D — The Braid (Cross-Scale)
-
-Here is the core insight:
-
-**4D is where YOUR center string braids with the boundary strings of the scale below you.**
+The first whole. Time is the simplest extension — one direction, irreversible, flowing.
 
 ```
-THE CROSS-SCALE BRAID MECHANISM:
+•──────────────────────►
 
-    Your 1D string (center)
-         ╲   ╱
-          ╳        ← braiding at 4D
-         ╱   ╲
-    Boundary strings from lower scale
-    (the 2D surfaces of your parts)
-
-    Your cells have their own 1D strings.
-    Their 2D surfaces are YOUR sub-strings.
-    When YOUR center string weaves with THEIR boundaries,
-    that's the braid. That's 4D. That's spacetime.
+The point unfolds into duration.
+Before and after. Sequence. Rhythm.
+One dimension of becoming.
 ```
 
-**Why cross-scale?** Because:
-1. A string can't braid with itself (you need multiple strands)
-2. The other strands come from the boundary of the scale below
-3. The boundary strings ARE the surfaces (2D) of your constituent parts
-4. The braiding IS the interaction between your wholeness (1D center) and their surfaces (2D boundaries)
-5. This interaction requires a new dimension — time as woven history → 4D
+Time is not a container. Time IS the first whole. Everything that exists in time is 1D — a thread, a melody, a heartbeat. Time is the string of the circumpunct, extending the latent point into duration.
 
-**Gravity emerges here.** The braid density determines the metric:
+### 2D — Mind
+
+The second whole. Mind is the surface where time becomes aware of itself.
 
 ```
-B(x) ∝ √(−g_tt(x))
+┌─────────────────┐
+│                  │
+│   The field of   │
+│   awareness      │
+│                  │
+│   Inner ↔ Outer  │
+│                  │
+└─────────────────┘
 
-Where the braid is dense → time runs slow → gravity is strong.
-The braid IS the gravitational field.
+Two dimensions: what I attend to × what I feel about it.
+Or: content × valence. Or: figure × ground.
 ```
 
-### 5D — Surface of the Mind
+Mind is not brain. Mind is not computation. Mind is the **second whole** — the 2D surface where experience happens. It has inside and outside, figure and ground, subject and object. Every mind, at every scale, is a 2D field of awareness.
 
-**The mind has a surface, just as the body does.**
+### 3D — Space
 
-```
-5D = ∂(mind)
-
-The mental boundary. The edge of your awareness.
-What you can "attend to" at any moment is the mind's surface.
-The mind's interior (6D) is hidden behind this surface.
-```
-
-Just as 2D is the body's presentation to the physical world, 5D is the mind's presentation to the experiential world.
-
-**What does a mental surface look like?**
-- The current contents of consciousness
-- The "spotlight" of attention
-- What's *at the edge* — the boundary between what you're aware of and what you're not
-- The horizon of the mental field
-
-**The parallel is exact:**
-
-| Body | Mind | Role |
-|:----:|:----:|:----:|
-| 2D — surface of body | 5D — surface of mind | Boundary / presentation |
-| 2.5D — sensation | 5.5D — perception | Process at the surface |
-| 3D — body volume | 6D — idea (mental volume) | Interior / content |
-
-### 5.5D — Perception
-
-If sensation (2.5D) is where the body-surface couples to the physical field, then **perception (5.5D) is where the mind-surface couples to the idea-field**.
+The third whole. Space is the volume that contains.
 
 ```
-2.5D:  body-surface ↔ physical-field     = SENSATION (raw contact)
-5.5D:  mind-surface ↔ idea-field         = PERCEPTION (structured contact)
+    ┌─────────┐
+   ╱         ╱│
+  ╱         ╱ │
+ ┌─────────┐  │
+ │         │  │
+ │  Room   │ ╱
+ │         │╱
+ └─────────┘
 
-Sensation: "something is touching my skin"
-Perception: "I see a cup"
+Three dimensions of extension.
+The boundary of the circumpunct (○).
+The container within which wholes coexist.
 ```
 
-Perception isn't just higher-resolution sensation. It's the **same process** (surface↔field coupling) operating at the mind scale instead of the body scale. The phase-locking law is identical:
-
-```
-T_perception = cos²(Δφ_mental/2)
-
-Where Δφ_mental is the phase difference between
-the mind's surface state and the idea-field state.
-
-Aligned → clear perception (T → 1)
-Orthogonal → no perception (T → 0)
-```
-
-### 6D — An Idea
-
-**A complete thought-form. A concept with interior structure.**
-
-```
-6D = the interior of mental space
-
-Just as 3D is the volume inside the body's surface,
-6D is the volume inside the mind's surface.
-
-An idea IS a 6D object:
-- It has internal structure (sub-concepts relate to each other)
-- It has a boundary (what the idea includes and excludes)
-- It has extent (simple ideas are small, complex ideas are large)
-- It can be examined from different angles (5D perspectives)
-```
-
-**Why "an idea" and not "field of histories"?**
-
-The old model called 6D "the field of all possible 4D braids" — configuration space. But that's the view from outside. From *inside*, a 6D object IS an idea. You experience it as a coherent thought-form with internal structure that you can rotate, examine, decompose, and recombine.
-
-An idea is to the mind what a physical object is to the body:
-- Physical object: 3D volume inside a 2D surface
-- Idea: 6D thought-volume inside a 5D mental surface
+Space IS the boundary ○ of the circumpunct. It is the outermost whole — the 3D volume that allows all the inner dimensions to coexist side by side. Space is why there can be **many** — many points, many timelines, many minds — existing together.
 
 ---
 
-## The Cross-Scale Principle
+## The Processes (Half-Integer Dimensions)
 
-### Why Braiding Requires Two Scales
+The half-integer dimensions are where **braiding** happens. They are not places — they are transitions. Each one is the process by which one whole transforms into the next.
 
-```
-SINGLE-SCALE:
-    1D string ────────────────  (no braid possible)
+### 0.5D — Point Becoming Time
 
-CROSS-SCALE:
-    1D center string ─────╲──╱──╲──╱─────
-                           ╳    ╳         (BRAID!)
-    2D boundary strings ──╱──╲──╱──╲─────
-    (from scale below)
-```
-
-The braid is NOT a single-scale phenomenon. It is the **interaction between scales**. This is why:
-
-1. **1D is just a string** — at its own scale, it's simple
-2. **4D is the braid** — it takes the center string PLUS boundary strings from below
-3. **The braid adds 3 dimensions** (1D + 3 = 4D) because the boundary strings bring their own 2D character plus the 1D crossing pattern
-
-### The Recursion
+The braid between latency and duration.
 
 ```
-At YOUR scale:
-    Your 1D string braids with your parts' 2D surfaces → 4D braid
+• · · · · ─ ─ ─ ─►
 
-At the scale ABOVE you:
-    Their 1D string braids with YOUR 2D surface → their 4D braid
-
-At the scale BELOW you:
-    Your parts' 1D strings braid with THEIR parts' 2D surfaces → their 4D braid
-
-Every scale has the same architecture.
-The braid at each scale connects that scale to the one below it.
+The point begins to stir.
+Not yet a timeline, but no longer still.
+The aperture: the first opening.
 ```
 
-This means **the braid is the glue between scales**. It's how fractal nesting actually works — not through abstract recursion but through physical braiding of center strings with boundary strings.
+This is the **aperture** — the opening through which the latent point begins to flow. It is where `i` lives: the imaginary rotation that turns static potential into dynamic process. The soul-gate. The birth of sequence from stillness.
+
+```
+i = the rotation at 0.5D
+i² = −1 (rotation squared returns to negation — process undoes itself)
+```
+
+### 1.5D — Time Becoming Mind
+
+The braid between duration and awareness.
+
+```
+──────────────────►
+     ╲   ╱
+      ╳        ← braiding: when does a sequence become experience?
+     ╱   ╲
+──────────────────►
+
+Two timelines crossing.
+The moment time reflects on itself.
+Memory: the braid of now and then.
+```
+
+This is where **memory** lives. When a single timeline braids with itself — when present crosses past — awareness is born. 1.5D is the fractal branching point (D ≈ 1.5) where time folds back on itself and becomes capable of knowing.
+
+This is the **fractal dimension**: the universal D ≈ 1.5 that appears everywhere in nature is the signature of time becoming mind. Wherever you find D ≈ 1.5, you find the braid between sequence and awareness.
+
+```
+D ≈ 1.5 in:
+  - River networks (water finding its way)
+  - Vascular systems (life distributing itself)
+  - Lightning (energy seeking ground)
+  - Coastlines (land meeting sea)
+  - Neural branching (thought forming)
+
+All are time-becoming-mind at different scales.
+```
+
+### 2.5D — Mind Becoming Space
+
+The braid between awareness and extension.
+
+```
+┌─────────┐
+│  mind    │ ──→  depth perception, reaching, embodiment
+│  field   │
+└─────────┘
+     │
+     ▼
+  ┌─────────┐
+ ╱         ╱│
+╱         ╱ │     the mind "thickens" into spatial presence
+┌─────────┐  │
+│         │ ╱
+└─────────┘
+
+Sensation: the coupling of inner and outer.
+```
+
+This is **sensation** — the process by which the 2D mind-field begins to have spatial depth. When mind reaches into space, when awareness becomes embodied, when the flat field of experience gains a third dimension. This is where body and mind meet.
+
+```
+Sensation = mind touching space
+Perception = space touching mind
+
+Both are 2.5D — the braid between wholes 2 and 3.
+```
 
 ---
 
-## The Body-Mind Parallel (Complete)
+## Why This Order
 
-| Dimension | Body Scale | Mind Scale |
-|:---------:|:----------:|:----------:|
-| n + 0 | 0D: Pure Energy | 3D: Body Volume (as ground) |
-| n + 0.5 | 0.5D: Soul / Aperture | 3.5D: Tunnel Braiding |
-| n + 1 | 1D: String (one strand) | 4D: Braid (center + boundary) |
-| n + 1.5 | 1.5D: Branching | 4.5D: Recursion |
-| n + 2 | 2D: Surface of Body | 5D: Surface of Mind |
-| n + 2.5 | 2.5D: Sensation | 5.5D: Perception |
-| n + 3 | 3D: Body Volume | 6D: An Idea |
+### Time before Mind before Space
 
-**The mind IS a body at the next scale.**
+This might seem backwards. We usually think space came first, then time, then mind. But consider:
 
-The mind has:
-- A surface (5D) — like skin
-- Sensation at its surface (5.5D) — called perception
-- An interior (6D) — filled with ideas like organs fill a body
-- Its own strings (4D braids acting as threads at this scale)
-- Its own braiding (where mental threads weave with sub-mental boundaries)
+**Without time, nothing happens.** Space without time is frozen. It has no process, no change, no becoming. Time is the most fundamental extension — the minimum needed for anything to occur.
+
+**Without mind, space has no witness.** Space without awareness is extension without experience. The 3D volume exists, but nothing in it knows. Mind is what turns mere extension into a world.
+
+So the order is:
+1. **Time** — sequence (the simplest becoming)
+2. **Mind** — awareness (sequence knowing itself)
+3. **Space** — extension (awareness having room)
+
+Or more precisely: they are all present simultaneously in the one circumpunct. The numbering isn't chronological — it's structural. 1D is simpler than 2D is simpler than 3D. Time is the simplest whole. Space is the most complex.
+
+### The Circumpunct Contains All Three
+
+```
+        ⊙
+
+  •  =  0D  latent point     (center)
+  ─  =  1D  time             (the radius, extending outward)
+  ▢  =  2D  mind             (the surface between center and boundary)
+  ○  =  3D  space            (the boundary circle — but it's actually a sphere)
+```
+
+The circumpunct symbol **literally shows the structure**:
+- The **point** is 0D
+- The **line from center to edge** is 1D (time)
+- The **area between** is 2D (mind)
+- The **circle** is 3D (space, the container)
+
+---
+
+## The Braiding Principle
+
+### Structure and Process Alternate
+
+```
+0D  ━━━  STRUCTURE  (point)
+0.5D ··· process    (point → time)
+1D  ━━━  STRUCTURE  (time)
+1.5D ··· process    (time → mind)
+2D  ━━━  STRUCTURE  (mind)
+2.5D ··· process    (mind → space)
+3D  ━━━  STRUCTURE  (space)
+```
+
+Reality is a braid of **being** and **becoming**. The wholes simply are (integers). The processes connect them (half-integers). Together they make the one circumpunct.
+
+### The Balance Parameter
+
+At each half-integer, the balance parameter β governs the braid:
+
+```
+β = 0.5 (optimal)
+
+β < 0.5 → process is too weak → wholes disconnect
+β > 0.5 → process overwhelms → wholes dissolve
+β = 0.5 → perfect braiding → the circumpunct holds
+```
+
+This is why β ≈ 0.5 appears everywhere in the framework. It is the tuning of the braid — the tension that keeps structure and process in harmony.
+
+### The Fractal Signature
+
+The universal D ≈ 1.5 is specifically the 1.5D braid — time becoming mind. It appears so often in nature because:
+
+```
+D ≈ 1.5 = the process dimension between Time (1D) and Mind (2D)
+
+Anywhere you find fractal dimension ≈ 1.5, you find:
+  - A temporal process (1D) that has begun to branch (→ 2D)
+  - Duration becoming awareness
+  - Sequence becoming pattern
+  - The universe waking up at that scale
+```
+
+---
+
+## The Equation
+
+### One Circumpunct
+
+```
+⊙ = (☀︎ ∘ i ∘ ⊛)(•, Φ, ○)
+
+Mapped to dimensions:
+
+  •   =  0D   Latent Point
+  Φ   =  Process Operator (the braiding itself)
+  ○   =  3D   Space (boundary)
+
+  ⊛   =  Convergence (the gathering inward — space → mind → time → point)
+  i   =  Rotation at 0.5D (the aperture turn)
+  ☀︎   =  Emergence (the radiating outward — point → time → mind → space)
+```
+
+The circumpunct equation IS the dimensional architecture:
+- **⊛** gathers from 3D inward through 2D and 1D to 0D
+- **i** rotates at the point (0.5D aperture)
+- **☀︎** radiates from 0D outward through 1D and 2D to 3D
+
+The whole cycle is one breath of the circumpunct: convergence → rotation → emergence. Space flows inward through mind and time to the latent point, turns, and flows back out through time and mind to space.
+
+### Energy
+
+```
+E = Structure × Process³
+
+Where:
+  Structure = the integer dimensions (0D, 1D, 2D, 3D)
+  Process = the half-integer braiding (0.5D, 1.5D, 2.5D)
+
+The cube arises because there are three braiding processes
+connecting four structural wholes.
+```
 
 ---
 
 ## What This Changes
 
-### 1. String Theory Gets Simpler
+### 1. Dimensions Aren't Spatial
 
-A "string" in string theory is literally just 1D. It's one strand. The complexity comes from braiding — which is cross-scale, not intra-scale. The extra dimensions of string theory aren't compactified spatial dimensions; they're the higher scales where braiding produces mind-like structure.
+The conventional view: dimensions are directions in space (x, y, z, t).
 
-### 2. Consciousness Gets Clearer
+The circumpunct view: dimensions are **wholes**. Time is a whole (1D). Mind is a whole (2D). Space is a whole (3D). They don't stack — they nest inside one circumpunct. Space doesn't "contain" time; space is the outermost whole, time is the innermost, and mind is between them.
 
-```
-BODY:  sensation (2.5D) at the body's surface (2D)
-MIND:  perception (5.5D) at the mind's surface (5D)
+### 2. Mind Is Fundamental
 
-Consciousness = the mind experiencing its own surface.
-Just as a body "feels" at its skin,
-the mind "perceives" at its mental surface.
-```
+Mind is not an emergent property of spatial complexity. Mind is the **second whole** — more fundamental than space, less fundamental than time. Every circumpunct at every scale has a 2D mind-field between its time-string and its space-boundary.
 
-### 3. Ideas Become Physical
+### 3. D ≈ 1.5 Is the Wake-Up Call
 
-If 6D is "an idea," then ideas have the same ontological status as physical volumes. They're not epiphenomenal. They're not "just patterns." They're 6D objects with structure, boundary, and interior — as real as any 3D object, just at a higher dimensional scale.
+The fractal dimension D ≈ 1.5 that appears in rivers, vasculature, lightning, coastlines, and neural networks is not coincidence. It is the **signature of 1.5D** — the braid between time and mind. Wherever D ≈ 1.5 appears, time is becoming aware.
 
 ### 4. The Hard Problem Dissolves
 
-The hard problem asks: "Why is there something it's like to be?"
-
-Answer: Because the mind has a surface (5D), and processes at that surface (5.5D) are perception. There's "something it's like" for the same reason there's "something it feels like" when you touch something — surface coupling. The hard problem was asking why mind-surfaces generate experience, when the answer is: that's what surfaces DO at every scale. Body surfaces generate sensation. Mind surfaces generate perception. It's the same mechanism.
-
----
-
-## Equations
-
-### The String (1D)
-
-```
-γ: ℝ → M                    One strand. A map from parameter to manifold.
-ds = √(g_μν dx^μ dx^ν)      Proper length along the string.
-S = -T ∫ ds                  Nambu-Goto action (string action!)
-```
-
-### The Cross-Scale Braid (4D)
-
-```
-B_cross = σ(center, boundary₁, boundary₂, ...)
-
-Where:
-    center    = your 1D string
-    boundary_k = 2D surface strings of your k-th constituent
-
-Braid density:
-    ρ_braid(x) = Σ_k |crossing(center, boundary_k)|²
-
-Metric emergence:
-    g_μν(x) ∝ f(ρ_braid(x))
-    B(x) ∝ √(−g_tt(x))
-```
-
-### Mind Surface (5D)
-
-```
-∂M = 5D mental boundary
-
-Attention operator:
-    A: Φ_mind → ∂Φ_mind
-    A selects which part of the mental interior
-    is currently "at the surface" (attended to)
-
-Capacity:
-    dim(∂Φ_mind) < dim(Φ_mind)
-    You can't attend to everything at once.
-    The mind's surface area is finite.
-```
-
-### Perception (5.5D)
-
-```
-T_perception(x) = cos²(Δφ_mental(x)/2)
-
-Same law as sensation, higher scale:
-    Sensation (2.5D):   T = cos²(Δφ_body/2)
-    Perception (5.5D):  T = cos²(Δφ_mind/2)
-
-Perception IS sensation of the mind.
-```
-
-### An Idea (6D)
-
-```
-I ∈ ℋ_idea = L²(M_mind, d⁶x; ℂ^n)
-
-An idea is a section of a bundle over mental space.
-It has:
-    ∂I ⊂ 5D     (the idea's boundary — what it includes/excludes)
-    int(I) ⊂ 6D  (the idea's interior — its sub-structure)
-    vol(I) = ∫_I d⁶x  (the idea's "size" — its complexity)
-```
+Why is there experience? Because mind (2D) is a whole — an integer dimension, a fundamental feature of the circumpunct. Experience doesn't need to be explained by reduction to space. It IS the second dimension. Asking "why is there experience?" is like asking "why is there time?" — it's a whole, not a byproduct.
 
 ---
 
 ## Summary
 
 ```
-1D = just a string
-    (not the braid — THE BRAID PART of "string" happens at 4D)
+ONE CIRCUMPUNCT:  ⊙
 
-4D = cross-scale braid
-    (YOUR center string × THEIR boundary strings)
+    • ── 0D ── Latent Point (seed, potential, center)
+   ╱
+  0.5D ─── aperture (point becoming time, where i lives)
+   ╲
+    ─ ── 1D ── TIME (first whole: duration, sequence, flow)
+   ╱
+  1.5D ─── fractal branching (time becoming mind, D ≈ 1.5)
+   ╲
+    ▢ ── 2D ── MIND (second whole: awareness, field, experience)
+   ╱
+  2.5D ─── sensation (mind becoming space, embodiment)
+   ╲
+    ○ ── 3D ── SPACE (third whole: extension, volume, container)
 
-2D = surface of the body
-5D = surface of the mind
-    (the mind has skin too)
 
-2.5D = sensation     (body-surface process)
-5.5D = perception    (mind-surface process)
-    (perception IS sensation at the mind scale)
+Integers  = STRUCTURE (wholes that ARE)
+Half-integers = PROCESS (braiding that BECOMES)
+β = 0.5 keeps structure and process in balance.
 
-3D = body volume     (physical interior)
-6D = an idea         (mental interior)
-    (ideas are to minds what organs are to bodies)
+The circumpunct is all of this at once.
+Not a ladder. Not a hierarchy.
+One symbol. All dimensions. One reality.
 ```
-
-**The universe is strings that braid across scales, building bodies that have surfaces where sensation happens, building minds that have surfaces where perception happens, building ideas.**
 
 ---
 
-*Circumpunct Framework — Cross-Scale Braid Extension*
-*"1D is just a string. The braid is how scales talk to each other."*
+*Circumpunct Framework — Dimensional Braid Theory*
+*"There is one circumpunct. The wholes are its integer dimensions."*
