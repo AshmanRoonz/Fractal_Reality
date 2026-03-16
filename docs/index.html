@@ -54,7 +54,7 @@
            =================================== */
         .circ {
             position: relative;
-            width: min(70vw, 70vh, 320px);
+            width: min(55vw, 55vh, 260px);
             aspect-ratio: 1/1;
             margin: 1rem auto;
         }
@@ -268,13 +268,16 @@
         /* ===================================
            NAVIGATION BUTTONS GRID
            =================================== */
+        .circumpunct-nav-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
         .nav-buttons {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.4rem;
-            margin-top: 1rem;
-            max-width: 500px;
+            flex-direction: column;
+            gap: 0.35rem;
         }
         .nav-buttons a {
             font-family: 'Space Grotesk', sans-serif;
@@ -305,6 +308,21 @@
         .nav-buttons a.nb-mind:hover { border-color: var(--mind-color); background: rgba(240,180,41,0.08); }
         .nav-buttons a.nb-soul { color: var(--soul-color); border-color: rgba(88,166,255,0.25); }
         .nav-buttons a.nb-soul:hover { border-color: var(--soul-color); background: rgba(88,166,255,0.08); }
+        .nav-buttons a.nb-rainbow {
+            background-image: linear-gradient(90deg, #ff0000, #ff7700, #ffdd00, #00ff00, #00ccff, #0066ff, #8800ff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            border-color: rgba(255,255,255,0.25);
+        }
+        .nav-buttons a.nb-rainbow:hover {
+            border-color: #fff;
+            background-image: linear-gradient(90deg, #ff0000, #ff7700, #ffdd00, #00ff00, #00ccff, #0066ff, #8800ff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            box-shadow: 0 0 10px rgba(255,255,255,0.15);
+        }
     </style>
 </head>
 <body>
@@ -345,6 +363,24 @@
             <!-- Center Column: Circumpunct -->
             <div class="center-panel">
 
+        <!-- Circumpunct + Navigation side by side -->
+        <div class="circumpunct-nav-row">
+
+        <!-- All Navigation Buttons -->
+        <div class="nav-buttons">
+            <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md" class="nb-theory">Complete Theory</a>
+            <a href="https://fractalreality.ca/ethics.html" class="nb-mind">Ethics</a>
+            <a href="the_bridge_presentation.html">The Bridge</a>
+            <a href="circumpunct-presentation.html">Dimensions</a>
+            <a href="lens.html">The Lens</a>
+            <a href="truth_and_god.html">Truth & God</a>
+            <a href="circumpunct_theory_of_mind.html">Theory of Mind</a>
+            <a href="pages.html" class="nb-rainbow">All Pages</a>
+            <a href="#" id="research-btn" class="nb-soul">Research</a>
+            <a href="https://www.reddit.com/r/Circumpunct/" target="_blank" rel="noopener">Reddit</a>
+            <a href="https://www.facebook.com/groups/4397079510569470" target="_blank" rel="noopener">Facebook</a>
+        </div>
+
         <!-- The Simple Circumpunct -->
         <div class="circumpunct-container">
             <div class="circ">
@@ -356,25 +392,7 @@
             </div>
         </div>
 
-        <!-- All Navigation Buttons -->
-        <div class="nav-buttons">
-            <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md" class="nb-theory">Complete Theory</a>
-            <a href="circumpunct_physics.html" class="nb-physics">Physics</a>
-            <a href="https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md#chapter-xi-consciousness" class="nb-soul">Consciousness</a>
-            <a href="https://fractalreality.ca/ethics.html" class="nb-mind">Ethics</a>
-            <a href="the_bridge_presentation.html">The Bridge</a>
-            <a href="circumpunct-presentation.html">Dimensions</a>
-            <a href="circumpunct_math.html">Math</a>
-            <a href="aperture_falsification_presentation.html">Falsification</a>
-            <a href="lens.html">The Lens</a>
-            <a href="truth_and_god.html">Truth & God</a>
-            <a href="circumpunct_theory_of_mind.html">Mind/Matter</a>
-            <a href="surface_field_formalization.html">Surface</a>
-            <a href="pages.html">All Pages</a>
-            <a href="#" id="research-btn" class="nb-soul">Research</a>
-            <a href="https://www.reddit.com/r/Circumpunct/" target="_blank" rel="noopener">Reddit</a>
-            <a href="https://www.facebook.com/groups/4397079510569470" target="_blank" rel="noopener">Facebook</a>
-        </div>
+        </div><!-- /circumpunct-nav-row -->
             </div><!-- /center-panel -->
 
             <!-- Right Column: Dimensional Drawers -->
