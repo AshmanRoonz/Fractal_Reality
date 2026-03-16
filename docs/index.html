@@ -62,18 +62,18 @@
             border: 8px solid var(--body-color);
             box-shadow: 0 0 40px rgba(163,113,247,0.35), 0 0 100px rgba(163,113,247,0.1), inset 0 0 40px rgba(163,113,247,0.06);
             cursor: pointer;
+            z-index: 1;
         }
         .circ-boundary:hover {
             box-shadow: 0 0 60px rgba(163,113,247,0.5), 0 0 120px rgba(163,113,247,0.15);
-        }
         }
         .circ-field {
             position: absolute;
             inset: 8px;
             border-radius: 50%;
-            background: radial-gradient(circle at 50% 48%, rgba(240,180,41,0.45) 0%, rgba(240,180,41,0.30) 35%, rgba(240,180,41,0.18) 65%, rgba(240,180,41,0.08) 100%);
+            background: radial-gradient(circle at 50% 48%, rgba(240,180,41,0.7) 0%, rgba(200,150,30,0.5) 40%, rgba(160,120,20,0.3) 70%, rgba(120,90,15,0.15) 100%);
             cursor: pointer;
-            transition: background 0.3s;
+            z-index: 2;
         }
         .circ-field:hover {
             background: radial-gradient(circle at 50% 48%, rgba(240,180,41,0.40) 0%, rgba(240,180,41,0.25) 35%, rgba(240,180,41,0.12) 65%, rgba(240,180,41,0.04) 100%);
