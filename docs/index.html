@@ -135,6 +135,36 @@
             height: auto;
             border-radius: 10px;
         }
+        .hero-img-link {
+            display: block;
+            cursor: pointer;
+        }
+        .hero-img-link:hover .hero-img {
+            filter: brightness(1.15);
+            transition: filter 0.2s;
+        }
+        /* Overlay links on circumpunct card image */
+        .hero-card-overlay {
+            position: relative;
+        }
+        .img-overlay-link {
+            position: absolute;
+            left: 15%;
+            width: 70%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0;
+        }
+        .img-overlay-link:hover {
+            background: rgba(88,166,255,0.12);
+            box-shadow: inset 0 0 20px rgba(88,166,255,0.15);
+        }
 
         /* Hero cards container */
         .hero-cards {
@@ -251,7 +281,9 @@
         .nav-buttons {
             position: absolute;
             inset: 0;
+            pointer-events: none;
         }
+        .nav-buttons a { pointer-events: auto; }
         .nav-buttons a {
             position: absolute;
             font-family: 'Space Grotesk', sans-serif;
@@ -311,11 +343,17 @@
             <header class="header side-panel left-panel">
               <div class="hero-cards">
                 <div class="hero-card hero-card-img">
-                    <img src="fractal_reality2.png" alt="The Circumpunct Framework – Reality is fractal" class="hero-img" />
+                    <a href="#" data-zone="circumpunct" class="hero-img-link">
+                        <img src="fractal_reality2.png" alt="The Circumpunct Framework – Reality is fractal" class="hero-img" />
+                    </a>
                 </div>
 
-                <div class="hero-card hero-card-img">
+                <div class="hero-card hero-card-img hero-card-overlay">
                     <img src="circumpunct_card.png" alt="⊙ = Φ(•, ○) – Soul, Mind, Body, Consciousness" class="hero-img" />
+                    <a href="#" data-zone="soul" class="img-overlay-link" style="top:22%;height:18%">Soul · aperture</a>
+                    <a href="#" data-zone="mind" class="img-overlay-link" style="top:40%;height:18%">Mind · field</a>
+                    <a href="#" data-zone="body" class="img-overlay-link" style="top:58%;height:18%">Body · boundary</a>
+                    <a href="#" data-zone="circumpunct" class="img-overlay-link" style="top:76%;height:20%">Consciousness</a>
                 </div>
               </div>
             </header>
@@ -871,7 +909,10 @@
         var btns = document.querySelectorAll('.nav-buttons a');
         var n = btns.length;
         if (!n) return;
-        var radius = 46; // percent from center of container
+        // Place buttons right on the purple boundary ring
+        // Circumpunct is min(55vw,55vh,260px), container is min(90vw,90vh,440px)
+        // Ratio: 260/440 = 0.59, half = 0.295 → ~30% radius in container coords
+        var radius = 30; // percent — sits on the purple ring
         var startAngle = -90; // top
         for (var i = 0; i < n; i++) {
             var angle = startAngle + (360 / n) * i;
@@ -880,7 +921,8 @@
             var y = 50 + Math.sin(rad) * radius;
             btns[i].style.top = y + '%';
             btns[i].style.left = x + '%';
-            btns[i].style.transform = 'translate(-50%, -50%)';
+            // Rotate tangent to circle (angle + 90°) so text curves along the ring
+            btns[i].style.transform = 'translate(-50%, -50%) rotate(' + (angle + 90) + 'deg)';
         }
     })();
     </script>
