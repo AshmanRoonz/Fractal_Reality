@@ -893,7 +893,7 @@
         // Circumpunct = 260px → radius 130, boundary border ~8px → outer edge ~134
         // Container = 440px → half = 220
         var ring1 = { r: 148, sw: 24, count: 6, gap: 7 };   // inner ring (on boundary)
-        var ring2 = { r: 186, sw: 24, count: 5, gap: 8, offset: 36 }; // outer ring
+        var ring2 = { r: 186, sw: 24, count: 5, gap: 8, offset: 0 }; // outer ring
 
         var btnsR1 = [
             { label: 'Complete Theory', href: 'https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md', color: 'url(#rainbow-grad)' },
@@ -904,11 +904,11 @@
             { label: 'Truth & God', href: 'truth_and_god.html', color: 'url(#rainbow-grad)' }
         ];
         var btnsR2 = [
+            { label: 'Research', href: '#', id: 'research-btn', color: '#58a6ff' },
             { label: 'Facebook Group', href: 'https://www.facebook.com/groups/4397079510569470', target: '_blank', color: '#888' },
             { label: 'All Pages', href: 'pages.html', color: 'url(#rainbow-grad)' },
             { label: 'Theory of Mind', href: 'circumpunct_theory_of_mind.html', color: '#f0b429' },
-            { label: 'Reddit r/Circumpunct', href: 'https://www.reddit.com/r/Circumpunct/', target: '_blank', color: '#888' },
-            { label: 'Research', href: '#', id: 'research-btn', color: '#58a6ff' }
+            { label: 'Reddit r/Circumpunct', href: 'https://www.reddit.com/r/Circumpunct/', target: '_blank', color: '#888' }
         ];
 
         function toRad(deg) { return (deg - 90) * Math.PI / 180; }
