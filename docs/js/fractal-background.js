@@ -35,7 +35,7 @@ class FractalBackground {
                 vx: (Math.random() - 0.5) * 0.5,
                 vy: (Math.random() - 0.5) * 0.5,
                 radius: Math.random() * 2 + 1,
-                opacity: Math.random() * 0.5 + 0.2,
+                opacity: Math.random() * 0.3 + 0.6,
                 hue: Math.random() * 360 // Full rainbow
             });
         }
@@ -44,19 +44,19 @@ class FractalBackground {
     drawParticle(particle) {
         this.ctx.beginPath();
         this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        this.ctx.fillStyle = `hsla(${particle.hue}, 90%, 65%, ${particle.opacity})`;
-        this.ctx.shadowColor = `hsla(${particle.hue}, 100%, 70%, ${particle.opacity * 0.6})`;
-        this.ctx.shadowBlur = 8;
+        this.ctx.fillStyle = `hsla(${particle.hue}, 100%, 80%, ${particle.opacity})`;
+        this.ctx.shadowColor = `hsla(${particle.hue}, 100%, 85%, ${particle.opacity})`;
+        this.ctx.shadowBlur = 14;
         this.ctx.fill();
         this.ctx.shadowBlur = 0;
     }
 
     drawConnection(p1, p2, distance, maxDistance) {
-        const opacity = (1 - distance / maxDistance) * 0.4;
+        const opacity = (1 - distance / maxDistance) * 0.5;
         this.ctx.beginPath();
         this.ctx.moveTo(p1.x, p1.y);
         this.ctx.lineTo(p2.x, p2.y);
-        this.ctx.strokeStyle = `hsla(${(p1.hue + p2.hue) / 2}, 90%, 65%, ${opacity})`;
+        this.ctx.strokeStyle = `hsla(${(p1.hue + p2.hue) / 2}, 100%, 75%, ${opacity})`;
         this.ctx.lineWidth = 0.5;
         this.ctx.stroke();
     }
@@ -87,7 +87,7 @@ class FractalBackground {
             if (particle.y > this.canvas.height) particle.y = 0;
 
             // Pulse opacity
-            particle.opacity = 0.4 + Math.abs(Math.sin(this.time + i * 0.5)) * 0.4;
+            particle.opacity = 0.6 + Math.abs(Math.sin(this.time + i * 0.5)) * 0.35;
             // Slowly cycle hue for rainbow drift
             particle.hue = (particle.hue + 0.1) % 360;
         });

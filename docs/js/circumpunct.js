@@ -139,7 +139,7 @@
                 vx: (Math.random() - 0.5) * 0.6,
                 vy: (Math.random() - 0.5) * 0.6,
                 size: Math.random() * 2 + 1.5,
-                opacity: Math.random() * 0.4 + 0.4,
+                opacity: Math.random() * 0.2 + 0.8,
                 type: types[Math.floor(Math.random() * 3)],
                 hue: Math.random() * 360
             });
@@ -250,18 +250,18 @@
             p.hue = (p.hue + 0.15) % 360;
 
             // Draw as mini circumpunct: ring + dot with glow
-            ctx.shadowColor = `hsla(${p.hue}, 100%, 70%, ${p.opacity * 0.6})`;
-            ctx.shadowBlur = 10;
+            ctx.shadowColor = `hsla(${p.hue}, 100%, 80%, ${p.opacity})`;
+            ctx.shadowBlur = 16;
 
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
-            ctx.strokeStyle = `hsla(${p.hue}, 90%, 65%, ${p.opacity * 0.6})`;
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = `hsla(${p.hue}, 100%, 80%, ${p.opacity * 0.8})`;
+            ctx.lineWidth = 1.2;
             ctx.stroke();
 
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
-            ctx.fillStyle = `hsla(${p.hue}, 90%, 65%, ${p.opacity})`;
+            ctx.fillStyle = `hsla(${p.hue}, 100%, 85%, ${p.opacity})`;
             ctx.fill();
 
             ctx.shadowBlur = 0;

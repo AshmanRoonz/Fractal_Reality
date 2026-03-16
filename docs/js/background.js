@@ -26,7 +26,7 @@
                 r: Math.random() * 1.5 + 0.5,
                 dx: (Math.random() - 0.5) * 0.2,
                 dy: (Math.random() - 0.5) * 0.2,
-                opacity: Math.random() * 0.3 + 0.15,
+                opacity: Math.random() * 0.3 + 0.5,
                 hue: Math.random() * 360
             });
         }
@@ -50,9 +50,9 @@
             p.hue = (p.hue + 0.05) % 360;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `hsla(${p.hue}, 90%, 65%, ${p.opacity})`;
-            ctx.shadowColor = `hsla(${p.hue}, 100%, 70%, ${p.opacity * 0.5})`;
-            ctx.shadowBlur = 6;
+            ctx.fillStyle = `hsla(${p.hue}, 100%, 80%, ${p.opacity})`;
+            ctx.shadowColor = `hsla(${p.hue}, 100%, 85%, ${p.opacity})`;
+            ctx.shadowBlur = 12;
             ctx.fill();
             ctx.shadowBlur = 0;
         });
