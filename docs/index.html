@@ -149,52 +149,6 @@
             padding: 0.9rem 1.1rem;
             text-align: left;
         }
-        .circ-legend {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.35rem;
-            margin: 0.5rem 0 0;
-            font-family: 'Space Grotesk', monospace;
-            font-size: 0.85rem;
-            color: #00ffff;
-            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #0088ff, 0 0 80px #0088ff;
-            text-align: left;
-        }
-        .circ-legend .leg {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.85rem;
-            text-shadow: none;
-        }
-        .circ-legend .sym {
-            font-size: 1rem;
-            flex-shrink: 0;
-            text-shadow: none;
-            width: 1em;
-            text-align: center;
-        }
-        .circ-legend .sym-w { color: var(--circumpunct-color, #e6edf3); text-shadow: 0 0 6px var(--soul-color); }
-        .circ-legend b { font-weight: 600; font-size: 0.85rem; }
-        .leg-link { cursor: pointer; transition: opacity 0.2s; }
-        .leg-link:hover { opacity: 0.7; }
-
-        /* Equation bar above legend */
-        .circ-eq {
-            text-align: left;
-            margin-bottom: 0.4rem;
-            font-family: 'Space Grotesk', monospace;
-            font-size: 0.85rem;
-            letter-spacing: 0.08em;
-            color: #00ffff;
-            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #0088ff, 0 0 80px #0088ff;
-        }
-        .circ-eq .eq-w { color: var(--circumpunct-color); text-shadow: 0 0 6px var(--soul-color); }
-        .circ-eq .eq-m { color: var(--mind-color); text-shadow: none; }
-        .circ-eq .eq-s { color: var(--soul-color); text-shadow: none; }
-        .circ-eq .eq-b { color: var(--body-color); text-shadow: none; }
-
         /* ===================================
            DIMENSIONAL DRAWERS (right panel)
            =================================== */
@@ -354,17 +308,8 @@
                     <img src="fractal_reality2.png" alt="The Circumpunct Framework – Reality is fractal" class="hero-img" />
                 </div>
 
-                <div class="hero-card">
-                    <!-- Equation -->
-                    <div class="circ-eq"><span class="eq-w">⊙</span> = <span class="eq-m">Φ</span>(<span class="eq-s">•</span>, <span class="eq-b">○</span>)</div>
-
-                    <!-- Legend -->
-                    <div class="circ-legend">
-                        <div class="leg leg-link" data-zone="soul"><span class="sym col-soul">•</span> <b class="col-soul">Soul</b> <span>· aperture</span></div>
-                        <div class="leg leg-link" data-zone="mind"><span class="sym col-mind">Φ</span> <b class="col-mind">Mind</b> <span>· field</span></div>
-                        <div class="leg leg-link" data-zone="body"><span class="sym col-body">○</span> <b class="col-body">Body</b> <span>· boundary</span></div>
-                        <div class="leg leg-link" data-zone="circumpunct"><span class="sym sym-w">⊙</span> <b>Consciousness</b></div>
-                    </div>
+                <div class="hero-card hero-card-img">
+                    <img src="circumpunct_card.png" alt="⊙ = Φ(•, ○) – Soul, Mind, Body, Consciousness" class="hero-img" />
                 </div>
               </div>
             </header>
