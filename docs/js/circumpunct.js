@@ -139,8 +139,9 @@
                 vx: (Math.random() - 0.5) * 0.6,
                 vy: (Math.random() - 0.5) * 0.6,
                 size: Math.random() * 2 + 1.5,
-                opacity: Math.random() * 0.3 + 0.3,
-                type: types[Math.floor(Math.random() * 3)]
+                opacity: Math.random() * 0.4 + 0.4,
+                type: types[Math.floor(Math.random() * 3)],
+                hue: Math.random() * 360
             });
         }
     }
@@ -175,11 +176,11 @@
             ctx.beginPath();
             ctx.moveTo(bolt.segs[0].x, bolt.segs[0].y);
             for (let s = 1; s < bolt.segs.length; s++) ctx.lineTo(bolt.segs[s].x, bolt.segs[s].y);
-            ctx.strokeStyle = `rgba(${bolt.r},${bolt.g},${bolt.b},${bolt.life * 0.7})`;
+            ctx.strokeStyle = `hsla(${bolt.hue}, 90%, 65%, ${bolt.life * 0.7})`;
             ctx.lineWidth = 2 * bolt.life;
             ctx.stroke();
             // Glow pass
-            ctx.strokeStyle = `rgba(${bolt.r},${bolt.g},${bolt.b},${bolt.life * 0.25})`;
+            ctx.strokeStyle = `hsla(${bolt.hue}, 100%, 70%, ${bolt.life * 0.25})`;
             ctx.lineWidth = 6 * bolt.life;
             ctx.stroke();
         }
@@ -235,11 +236,7 @@
                         const a = hitAngle + jit;
                         segs.push({ x: centerX + Math.cos(a) * rad, y: cyScreen + Math.sin(a) * rad });
                     }
-                    let br, bg, bb;
-                    if (p.type === 'body') { br = 163; bg = 113; bb = 247; }
-                    else if (p.type === 'mind') { br = 240; bg = 180; bb = 41; }
-                    else { br = 88; bg = 166; bb = 255; }
-                    bolts.push({ segs, life: 1, r: br, g: bg, b: bb });
+                    bolts.push({ segs, life: 1, hue: p.hue });
                 }
             }
 
@@ -249,22 +246,25 @@
             if (p.y < -10) p.y = canvas.height + 10;
             if (p.y > canvas.height + 10) p.y = -10;
 
-            // Draw as mini circumpunct: ring + dot
-            let r, g, b;
-            if (p.type === 'body') { r = 163; g = 113; b = 247; }
-            else if (p.type === 'mind') { r = 240; g = 180; b = 41; }
-            else { r = 88; g = 166; b = 255; }
+            // Slowly cycle hue for rainbow drift
+            p.hue = (p.hue + 0.15) % 360;
+
+            // Draw as mini circumpunct: ring + dot with glow
+            ctx.shadowColor = `hsla(${p.hue}, 100%, 70%, ${p.opacity * 0.6})`;
+            ctx.shadowBlur = 10;
 
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(${r},${g},${b},${p.opacity * 0.5})`;
+            ctx.strokeStyle = `hsla(${p.hue}, 90%, 65%, ${p.opacity * 0.6})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
 
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${r},${g},${b},${p.opacity})`;
+            ctx.fillStyle = `hsla(${p.hue}, 90%, 65%, ${p.opacity})`;
             ctx.fill();
+
+            ctx.shadowBlur = 0;
         }
 
         animId = requestAnimationFrame(animate);

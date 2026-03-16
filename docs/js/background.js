@@ -26,7 +26,8 @@
                 r: Math.random() * 1.5 + 0.5,
                 dx: (Math.random() - 0.5) * 0.2,
                 dy: (Math.random() - 0.5) * 0.2,
-                opacity: Math.random() * 0.3 + 0.1
+                opacity: Math.random() * 0.3 + 0.15,
+                hue: Math.random() * 360
             });
         }
     }
@@ -46,10 +47,14 @@
             if (p.y > canvas.height) p.y = 0;
 
             // Draw
+            p.hue = (p.hue + 0.05) % 360;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(88, 166, 255, ${p.opacity})`;
+            ctx.fillStyle = `hsla(${p.hue}, 90%, 65%, ${p.opacity})`;
+            ctx.shadowColor = `hsla(${p.hue}, 100%, 70%, ${p.opacity * 0.5})`;
+            ctx.shadowBlur = 6;
             ctx.fill();
+            ctx.shadowBlur = 0;
         });
 
         requestAnimationFrame(draw);
