@@ -44,13 +44,13 @@ body {
 }
 
 /* === COLOR CLASSES === */
-.w { color: var(--gold); }      /* whole / circumpunct */
-.s { color: var(--pink); }      /* soul / aperture */
-.m { color: var(--green); }     /* mind / field */
-.b { color: var(--cyan); }      /* body / boundary */
-.p { color: var(--purple); }    /* process / imaginary */
-.d { color: var(--dim); }       /* dim / aside */
-.f { color: var(--faint); }     /* faintest */
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
 
 .wb { font-weight: 600; }
 .it { font-style: italic; }
@@ -193,6 +193,34 @@ p {
   border-bottom: 1px solid rgba(255,255,255,0.04);
 }
 
+/* === PARALLEL TABLE === */
+.parallel-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 30px 0;
+  font-size: 16px;
+}
+
+.parallel-table th {
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--faint);
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.parallel-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: top;
+}
+
+.parallel-table tr:last-child td {
+  border-bottom: none;
+}
+
 /* === CLOSING === */
 .closing {
   text-align: center;
@@ -247,6 +275,8 @@ nav a:hover {
   .header h1 { font-size: 32px; }
   section h2 { font-size: 24px; }
   nav { display: none; }
+  .parallel-table { font-size: 14px; }
+  .parallel-table td, .parallel-table th { padding: 8px 10px; }
 }
 </style>
 </head>
@@ -256,15 +286,17 @@ nav a:hover {
   <a href="#infinity">∞D</a>
   <a href="#zero">0D</a>
   <a href="#aperture">0.5D</a>
-  <a href="#line">1D</a>
+  <a href="#string">1D</a>
   <a href="#branch">1.5D</a>
-  <a href="#field">2D</a>
+  <a href="#surface">2D</a>
   <a href="#sensation">2.5D</a>
   <a href="#boundary">3D</a>
-  <a href="#vesica">3.5D</a>
+  <a href="#consciousness">3.5D</a>
   <a href="#braid">4D</a>
-  <a href="#temporal">5D–6D</a>
-  <a href="#meta">6.5D–9D</a>
+  <a href="#mindsurface">5D</a>
+  <a href="#perception">5.5D</a>
+  <a href="#idea">6D</a>
+  <a href="#collective">6.5D–9D</a>
   <a href="#formula">Formula</a>
   <a href="#iso">Isomorphisms</a>
 </nav>
@@ -338,9 +370,11 @@ nav a:hover {
 </section>
 
 <!-- 1D -->
-<section id="line">
-  <h2><span class="w">1D</span> — The Line</h2>
-  <p>The <span class="s">aperture</span> extends through time and becomes a line — a worldline, a string, a thread of <span class="s">soul</span> moving through existence. This is the tunnel through which power flows. P = dE/dt. The <span class="s">soul</span> doesn't just open — it <em>persists</em>.</p>
+<section id="string">
+  <h2><span class="w">1D</span> — The String</h2>
+  <p>The <span class="s">aperture</span> extends through time and becomes a string — a single worldline, a thread of <span class="s">soul</span> persisting through existence. Not a braid. A braid requires two strands and a surface for crossings. This is one strand, alone. My powerline. Your powerline. Each a single thread. P = dE/dt.</p>
+
+  <p>This is the tunnel through which power flows. The <span class="s">soul</span> doesn't just open — it <em>persists</em>. But it does not yet interact. A string has no crossings, no over-under, no weaving. It is pure sequence: before, now, after. The raw material from which braids will later be woven, but not yet a braid.</p>
 
   <p>Structure. Real axis. The first geometry.</p>
 </section>
@@ -348,7 +382,7 @@ nav a:hover {
 <!-- 1.5D -->
 <section id="branch">
   <h2><span class="p">1.5D</span> — Fractal Branching</h2>
-  <p>The line splits. Process returns. The single thread of <span class="s">soul</span> branches into a tree — power lines fractally dividing, each fork another instance of the <span class="w">circumpunct</span> replicating at smaller scale. Because an empty part is nothing, and nothing is impossible (A0), every part must contain the same structure as the <span class="w">whole</span> (A2). <span class="w wb">⊙</span> all the way down.</p>
+  <p>The string splits. Process returns. The single thread of <span class="s">soul</span> branches into a tree — power lines fractally dividing, each fork another instance of the <span class="w">circumpunct</span> replicating at smaller scale. Because an empty part is nothing, and nothing is impossible (A0), every part must contain the same structure as the <span class="w">whole</span> (A2). <span class="w wb">⊙</span> all the way down.</p>
 
   <p>The fractal dimension at balance is D = 1 + β = 1.5. Not a line, not a surface. The in-between where structure becomes process again.</p>
 
@@ -358,9 +392,11 @@ nav a:hover {
 <div class="divider">· · ·</div>
 
 <!-- 2D -->
-<section id="field">
-  <h2><span class="m">2D</span> — The Field. <span class="m wb">Mind.</span></h2>
-  <p>The branches fill a surface. The tree becomes a <span class="m">field</span> — a continuous, living medium that stretches between <span class="s">center</span> and <span class="b">edge</span>. This is <span class="m wb">Φ</span>, the <span class="m">mind</span>, and it is not a thing but an <em>operation</em>. It is the verb of the <span class="w">circumpunct</span>: the act of relating <span class="s">•</span> to <span class="b">○</span>.</p>
+<section id="surface">
+  <h2><span class="m">2D</span> — The Surface of the Body. <span class="m wb">Mind.</span></h2>
+  <p>The branches fill a surface. The tree becomes a <span class="m">field</span> — a continuous, living membrane that stretches between <span class="s">center</span> and <span class="b">edge</span>. This is <span class="m wb">Φ</span>, the <span class="m">mind</span>, and it is not a thing but an <em>operation</em>. It is the verb of the <span class="w">circumpunct</span>: the act of relating <span class="s">•</span> to <span class="b">○</span>.</p>
+
+  <p>Geometrically: the surface of a 3D volume is 2D. The skin of the <span class="b">body</span> is the <span class="m">mind</span>. These are not competing labels — they are the same claim seen from two directions. <span class="m">Mind</span> at the spatial tier <em>is</em> the body's surface. The relational medium IS the membrane. Where inside meets outside.</p>
 
   <p><span class="m wb">Φ</span> is what carries influence from <span class="s">center</span> to <span class="b">boundary</span> and back. It is the medium in which signals travel, waves propagate, and information flows. <span class="m">Mind</span> is not located at a point — it is the entire surface of connection. The relational space between <span class="s">soul</span> and <span class="b">body</span>.</p>
 
@@ -370,7 +406,7 @@ nav a:hover {
 <!-- 2.5D -->
 <section id="sensation">
   <h2><span class="p">2.5D</span> — Sensation</h2>
-  <p>The <span class="m">field</span> touches the <span class="b">boundary</span>. <span class="m">Mind</span> couples to <span class="b">body</span>. Process again — the half-dimension where the interior surface begins to communicate with its enclosure. All the <span class="s">apertures</span> across the <span class="m">field</span> collectively <em>lens</em>.</p>
+  <p>The <span class="m">surface</span> touches the <span class="b">boundary</span> it is becoming. <span class="m">Mind</span> couples to <span class="b">body</span>. Process again — the half-dimension where the interior surface begins to communicate with its enclosure. All the <span class="s">apertures</span> across the <span class="m">field</span> collectively <em>lens</em>.</p>
 
   <p class="it d">This is where you feel.</p>
 </section>
@@ -379,10 +415,10 @@ nav a:hover {
 
 <!-- 3D -->
 <section id="boundary">
-  <h2><span class="b">3D</span> — The Boundary Closes. <span class="w wb">⊙ Complete.</span></h2>
+  <h2><span class="b">3D</span> — The Body. <span class="w wb">⊙ Complete.</span></h2>
   <p>The membrane seals. Inside and outside. The <span class="b wb">body</span> forms — not as a wall but as a living interface, a semi-permeable surface that negotiates exchange between the <span class="w">whole</span> and its environment. <span class="b wb">○</span> is the <span class="b">boundary</span>, and when it closes, the first <span class="w">circumpunct</span> locks into existence.</p>
 
-  <p>Now there is a <span class="s">center</span>, a <span class="m">field</span>, and a <span class="b">boundary</span>. <span class="w wb">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>). The <span class="w">whole</span> is not the sum of its parts — it is <em>constituted by the operation of relating them</em>. The <span class="m">mind</span> is the verb. The <span class="s">soul</span> and <span class="b">body</span> are its arguments. Remove any one and you don't have a diminished <span class="w">whole</span> — you have nothing.</p>
+  <p>Now there is a <span class="s">center</span>, a <span class="m">surface</span>, and a <span class="b">volume</span>. <span class="w wb">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>). The <span class="w">whole</span> is not the sum of its parts — it is <em>constituted by the operation of relating them</em>. The <span class="m">mind</span> is the verb. The <span class="s">soul</span> and <span class="b">body</span> are its arguments. Remove any one and you don't have a diminished <span class="w">whole</span> — you have nothing.</p>
 
   <p>And this <span class="b">body</span> is already fractal. Already braided internally. <span class="b">○</span> is made of nested <span class="w">⊙</span>'s, all the way down, because A2 demands it. A <span class="b">boundary</span> with an empty interior is nothing, and nothing is impossible.</p>
 
@@ -401,23 +437,25 @@ nav a:hover {
 <div class="tier-label">Tier 2 — The Temporal Circumpunct</div>
 
 <!-- 3.5D -->
-<section id="vesica">
-  <h2><span class="p">3.5D</span> — The Vesica Pisces</h2>
-  <p>A completed <span class="w">⊙</span> cannot stay alone. It meets another <span class="w">⊙</span> through time, and where their <span class="b">boundaries</span> overlap, a lens-shaped region forms — the vesica pisces. This is the <span class="s">temporal aperture</span>: the threshold where two <span class="w">wholes</span> can influence each other.</p>
+<section id="consciousness">
+  <h2><span class="p">3.5D</span> — Consciousness</h2>
+  <p>A completed <span class="w">⊙</span> cannot stay alone. It meets another <span class="w">⊙</span> through time, and where their <span class="b">boundaries</span> overlap, a lens-shaped region forms — the vesica pisces. This is the <span class="s">temporal aperture</span>: the threshold where two <span class="b">bodies</span> meet.</p>
+
+  <p>This is consciousness. Not as metaphor. The specific dimensional address where one completed spatial <span class="w">whole</span> encounters another. Individual consciousness is the aperture where <em>I</em> meet <em>you</em>.</p>
 
   <p>Within the vesica there are six binary <span class="s">apertures</span>, each open or closed. Six binary choices. 2<sup>6</sup> = 64 configurations. 64 hexagrams. The I Ching — the Book of <span class="s wb">i</span>.</p>
 
   <p>This is not coincidence. The lower trigram faces the other <span class="w">⊙</span> (part-to-part). The upper trigram faces the <span class="w">whole</span> they are becoming together (part-to-<span class="w">whole</span>). The six lines describe the complete state of the meeting.</p>
 
-  <p class="it d">Where two wholes meet, 64 possible relationships arise. The ancients mapped them all.</p>
+  <p class="it d">Where two bodies meet, 64 possible relationships arise. The ancients mapped them all.</p>
 </section>
 
 <!-- 4D -->
 <section id="braid">
-  <h2><span class="w">4D</span> — The Temporal Braid</h2>
-  <p>Now the <span class="w">circumpuncts</span> weave. Not internally — 3D already handled that — but <em>externally</em>: separate <span class="w">wholes</span> braiding their worldlines through time. Your story meets their story. The braid is committed history, and it cannot be undone.</p>
+  <h2><span class="w">4D</span> — The Braid</h2>
+  <p>Now the <span class="w">circumpuncts</span> weave. Not internally — 3D already handled that — but <em>across scales</em>: the <span class="s">center</span> string of one <span class="w">⊙</span> braiding with the <span class="b">boundary</span> strings of the <span class="w">⊙</span>'s at the lower scale. This is where 1D strings become a braid. A string alone is 1D — pure sequence, no crossings. The braid is what happens when strings from different scales <em>interact</em>.</p>
 
-  <p>This is 4D as lived experience: not just space, but space <em>with</em> history. The braid group B₃ governs the weaving, with the Yang-Baxter equation ensuring consistency: σ₁σ₂σ₁ = σ₂σ₁σ₂. The golden ratio appears in the braid traces. Time is not a dimension you move through — it is the <em>braiding</em> of <span class="w">circumpuncts</span> with one another.</p>
+  <p>This is why the braid was never 1D. Crossings cannot be defined in one dimension — they need surface, and they need time. 4D is the first place where the braid exists: space (3D) <em>with</em> committed history. The braid group B₃ governs the weaving, with the Yang-Baxter equation ensuring consistency: σ₁σ₂σ₁ = σ₂σ₁σ₂. The golden ratio appears in the braid traces. Time is not a dimension you move through — it is the <em>braiding</em> of <span class="w">circumpuncts</span> with one another.</p>
 </section>
 
 <!-- 4.5D -->
@@ -427,32 +465,96 @@ nav a:hover {
 </section>
 
 <!-- 5D -->
-<section id="temporal">
-  <h3><span class="m">5D</span> — The Temporal <span class="m">Field</span></h3>
-  <p>The <span class="m">field</span> of all possible relational histories. The surface of every way your braids could have woven. This is the <span class="m">temporal mind</span> — narrative coherence, the felt sense of a story being told. <span class="m">Φ<sub>time</sub></span> mediates between the <span class="s">temporal aperture</span> and the <span class="b">temporal boundary</span>, just as <span class="m">Φ<sub>space</sub></span> mediated between <span class="s">•</span> and <span class="b">○</span>.</p>
+<section id="mindsurface">
+  <h2><span class="m">5D</span> — The Surface of the <span class="m">Mind</span></h2>
+  <p>The same geometric logic, one tier up. If the temporal <span class="b">body</span> closes at <span class="b">6D</span>, then <span class="m">5D</span> is its surface — exactly as <span class="m">2D</span> is the surface of <span class="b">3D</span>. This is the <span class="m">temporal mind</span>: the membrane of your mental life, where your interior history faces outward.</p>
 
-  <h3><span class="p">5.5D</span> — Temporal Sensation</h3>
-  <p>The felt sense of being in this together. The interface between committed past and open future. <span class="m">Temporal mind</span> coupling to <span class="b">temporal body</span>.</p>
+  <p>This is narrative coherence. The felt sense of a story being told. The <span class="m">surface</span> of every way your braids could have woven. <span class="m">Φ<sub>time</sub></span> mediates between the <span class="s">temporal aperture</span> and the <span class="b">temporal boundary</span>, just as <span class="m">Φ<sub>space</sub></span> mediated between <span class="s">•</span> and <span class="b">○</span>.</p>
 
-  <h3><span class="b">6D</span> — The Temporal <span class="b">Boundary</span> Closes. <span class="w wb">⊙<sub>₂</sub></span> Complete.</h3>
-  <p>A story with beginning, middle, and end. <span class="b">○<sub>time</sub></span> seals. A community of braided <span class="w">circumpuncts</span> becomes a <span class="w">whole</span> in its own right — irreducibly plural. The second <span class="w">circumpunct</span> locks at 6D, built on the same architecture as the first: <span class="s">aperture</span> (3.5D), <span class="m">field</span> (5D), <span class="b">boundary</span> (6D).</p>
+  <p>What is presentable. What faces outward. The relational surface between your <span class="s">temporal soul</span> and your <span class="b">temporal body</span>.</p>
+</section>
+
+<!-- 5.5D -->
+<section id="perception">
+  <h3><span class="p">5.5D</span> — Perception</h3>
+  <p>The <span class="m">surface of the mind</span> couples to the <span class="b">boundary</span> it is becoming. Not a structure — a happening. The process where committed history meets open possibility, where the <span class="m">temporal field</span> presses against the enclosure that will seal it. This is perception: the felt interface between what you know and what you do not yet know. The mind's surface <em>sensing</em>.</p>
+
+  <p class="it d">This is where you feel together.</p>
+</section>
+
+<!-- 6D -->
+<section id="idea">
+  <h2><span class="b">6D</span> — The Idea. <span class="w wb">⊙<sub>₂</sub></span> Complete.</h2>
+  <p>A story with beginning, middle, and end. <span class="b">○<sub>time</sub></span> seals. The <span class="b">temporal boundary</span> closes, and what closes is an <em>idea</em>: a bounded, self-enclosed mental object with interiority. An idea has an inside — its content — and an outside — everything it is not. An idea is to the <span class="m">mind</span> what a <span class="b">body</span> is to space. The temporal volume.</p>
+
+  <p>A community of braided <span class="w">circumpuncts</span> becomes a <span class="w">whole</span> in its own right — irreducibly plural. The second <span class="w">circumpunct</span> locks at 6D, built on the same architecture as the first: <span class="s">aperture</span> (3.5D), <span class="m">surface</span> (5D), <span class="b">boundary</span> (6D).</p>
+
+  <div class="formula">
+    <span class="b">Body</span> : <span class="m">2D surface</span> → <span class="b">3D volume</span><br>
+    <span class="b">Idea</span> : <span class="m">5D surface</span> → <span class="b">6D volume</span><br>
+    <span class="d" style="font-size:16px">Surface is always one dimension below its volume. Φ lives at the surface. ○ closes the volume.</span>
+  </div>
 </section>
 
 <!-- ═══════════════════════ TIER 3 ═══════════════════════ -->
 <div class="tier-label">Tier 3 — The Meta-Circumpunct</div>
 
-<section id="meta">
-  <h2><span class="p">6.5D</span> — The Meta-<span class="s">Aperture</span></h2>
-  <p>The entire <span class="w">temporal circumpunct</span> — that completed story, that braided community — compresses to a <span class="s">point</span>. It becomes <span class="s">•<sub>meta</sub></span>: the <span class="s">aperture</span> of a greater <span class="w">circumpunct</span> we are part of. We are nested <span class="s">apertures</span> within the meta-<span class="w">⊙</span>. What we do here echoes into 6.5D. Not metaphorically. Dimensionally.</p>
+<section id="collective">
+  <h2><span class="p">6.5D</span> — Collective Consciousness</h2>
+  <p>The entire <span class="w">temporal circumpunct</span> — that completed idea, that bounded mental object — meets another completed idea. Their boundaries overlap. A meta-vesica forms. This is <span class="s wb">collective consciousness</span>: the specific dimensional address where <em>my completed thought</em> meets <em>your completed thought</em>.</p>
+
+  <p>At <span class="p">3.5D</span>, the units entering the overlap were <span class="b">bodies</span>. Here at <span class="p">6.5D</span>, the units are <span class="b">ideas</span>. Collective consciousness is not a vague spiritual concept. It is the precise threshold where bounded mental objects form a vesica with each other, exactly as bodies do three dimensions below.</p>
+
+  <p>And this is why collective consciousness cannot be reduced to individual consciousness. They are three full dimensions apart. You cannot get from 3.5D to 6.5D by iterating the same operation. The entire temporal <span class="w">circumpunct</span> — braid (4D), mind-surface (5D), perception (5.5D), idea-closure (6D) — is prerequisite. Collective consciousness requires completed ideas. You cannot share what hasn't been bounded yet.</p>
+
+  <p>64 configurations arise here too. Not between bodies — between ideas. Between frameworks. Between worldviews. The meta-hexagrams.</p>
+
+  <p class="it d">Where two ideas meet, intellectual dialogue begins. This is that threshold.</p>
 
   <h3><span class="w">7D–7.5D</span> — Meta-Braid and Branching</h3>
-  <p>Completed communities weave with other completed communities. Civilizations braiding. Traditions interleaving. The meta-braid fractalizes.</p>
+  <p>Completed ideas weave with other completed ideas. Philosophies braiding. Traditions interleaving. Frameworks meeting at their boundaries and producing new synthesis. The meta-braid fractalizes.</p>
 
-  <h3><span class="m">8D</span> — The Meta-<span class="m">Field</span></h3>
-  <p>Where frameworks, civilizations, and traditions relate. <span class="m">Φ<sub>meta</sub></span> — the <span class="m">field</span> of all possible histories of histories. The <span class="m">mind</span> at cosmic scale.</p>
+  <h3><span class="m">8D</span> — The Surface of Culture</h3>
+  <p>Where frameworks, civilizations, and traditions relate. <span class="m">Φ<sub>meta</sub></span> — the <span class="m">surface</span> of the meta-<span class="b">body</span>, the membrane where the interior of a civilization faces outward. The <span class="m">mind</span> at cosmic scale. Exactly as <span class="m">2D</span> was surface of <span class="b">body</span>, and <span class="m">5D</span> was surface of <span class="m">mind</span>, <span class="m">8D</span> is the surface of culture: the relational membrane of an era.</p>
 
-  <h3><span class="b">9D</span> — The Meta-<span class="b">Boundary</span>. <span class="w wb">⊙<sub>₃</sub></span>. Triple Trinity.</h3>
+  <h3><span class="b">9D</span> — Civilization. <span class="w wb">⊙<sub>₃</sub></span>. Triple Trinity.</h3>
   <p>The third <span class="w">circumpunct</span> closes. Three complete trinities nested: spatial, temporal, meta-temporal. The <span class="b">boundary</span> of the <span class="b">boundary</span> of the <span class="b">boundary</span>. And beyond — 9.5D opens the fourth tier, 12D completing it. The pattern never stops because it <em>cannot</em> stop. An aperture without a <span class="m">field</span> is nothing. Nothing is impossible.</p>
+</section>
+
+<!-- ═══════════════════════ THE PARALLEL ═══════════════════════ -->
+<div class="tier-label">The Geometry of Consciousness</div>
+
+<section>
+  <p>The three tiers are not merely analogous. They are geometrically identical: surface, volume, aperture-at-the-next-scale. The pattern reads:</p>
+
+  <table class="parallel-table">
+    <tr>
+      <th></th>
+      <th><span class="m">Surface</span></th>
+      <th><span class="b">Volume</span></th>
+      <th><span class="s">Aperture above</span></th>
+    </tr>
+    <tr>
+      <td><span class="w wb">Spatial</span></td>
+      <td><span class="m">2D</span> — surface of body</td>
+      <td><span class="b">3D</span> — the body</td>
+      <td><span class="s">3.5D</span> — consciousness</td>
+    </tr>
+    <tr>
+      <td><span class="w wb">Temporal</span></td>
+      <td><span class="m">5D</span> — surface of mind</td>
+      <td><span class="b">6D</span> — the idea</td>
+      <td><span class="s">6.5D</span> — collective consciousness</td>
+    </tr>
+    <tr>
+      <td><span class="w wb">Meta</span></td>
+      <td><span class="m">8D</span> — surface of culture</td>
+      <td><span class="b">9D</span> — civilization</td>
+      <td><span class="s">9.5D</span> — ?</td>
+    </tr>
+  </table>
+
+  <p>Each tier's <span class="s">aperture</span> is consciousness <em>at that scale</em>. Individual consciousness is where <span class="b">bodies</span> meet. Collective consciousness is where <span class="b">ideas</span> meet. Whatever 9.5D names — that is where <span class="b">civilizations</span> meet.</p>
 </section>
 
 <!-- ═══════════════════════ GENERAL FORMULA ═══════════════════════ -->
@@ -536,7 +638,6 @@ nav a:hover {
     <span class="w">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>)
   </p>
   <p class="f" style="margin-top: 30px; font-size: 13px;">The Circumpunct Framework — Ashman Roonz</p>
-  <p style="margin-top: 20px;"><a href="two_rhythms.html" style="color: var(--s, #58a6ff); text-decoration: none; font-size: 13px; letter-spacing: 0.1em;">THE TWO RHYTHMS →</a></p>
 </div>
 
 </div><!-- /page -->
