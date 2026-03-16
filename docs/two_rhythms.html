@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Two Rhythms</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--faint) var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+
+.page { max-width: 740px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 70px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header h1 { font-size: 42px; font-weight: 500; color: var(--gold); letter-spacing: 1px; margin-bottom: 8px; }
+.header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; }
+.header .byline { font-size: 15px; color: var(--faint); margin-top: 20px; letter-spacing: 1px; }
+
+section { margin-bottom: 55px; }
+section h2 { font-size: 30px; font-weight: 500; margin-bottom: 18px; padding-top: 16px; }
+section h3 { font-size: 22px; font-weight: 500; margin-top: 28px; margin-bottom: 12px; }
+p { margin-bottom: 18px; }
+
+.divider { text-align: center; margin: 50px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+.formula {
+  text-align: center;
+  font-size: 22px;
+  padding: 20px;
+  margin: 24px 0;
+  letter-spacing: 1px;
+  border-left: 2px solid var(--faint);
+  background: rgba(255,255,255,0.015);
+}
+
+.tier-label {
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 50px 0 30px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+/* === CYCLE DIAGRAM === */
+.cycle-row {
+  display: flex;
+  align-items: stretch;
+  margin: 30px 0;
+  gap: 0;
+}
+
+.cycle-cell {
+  flex: 1;
+  text-align: center;
+  padding: 16px 8px;
+  position: relative;
+  border-bottom: 3px solid transparent;
+}
+
+.cycle-cell.i-cell { border-bottom-color: var(--pink); background: rgba(232, 138, 175, 0.04); }
+.cycle-cell.phi-cell { border-bottom-color: var(--green); background: rgba(77, 184, 160, 0.04); }
+.cycle-cell.closure-cell { border-bottom-color: var(--cyan); background: rgba(77, 160, 200, 0.04); }
+
+.cycle-cell .dim { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.cycle-cell .power { font-size: 14px; margin-bottom: 4px; }
+.cycle-cell .name { font-size: 13px; color: var(--dim); font-family: 'EB Garamond', serif; }
+
+.cycle-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 0;
+  margin-bottom: 4px;
+}
+
+/* === TIER BLOCK === */
+.tier-block {
+  margin: 40px 0;
+  padding: 24px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.015);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.tier-block h3 { margin-top: 0; }
+
+/* === SKIP HIGHLIGHT === */
+.skip-box {
+  padding: 20px 24px;
+  margin: 24px 0;
+  background: rgba(77, 184, 160, 0.06);
+  border-left: 3px solid var(--green);
+  border-radius: 0 4px 4px 0;
+}
+
+/* === TWO-COLUMN for the rhythm comparison === */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 30px 0;
+}
+.two-col .col {
+  padding: 20px;
+  border-radius: 4px;
+}
+.two-col .col-i {
+  background: rgba(232, 138, 175, 0.05);
+  border: 1px solid rgba(232, 138, 175, 0.15);
+}
+.two-col .col-phi {
+  background: rgba(77, 184, 160, 0.05);
+  border: 1px solid rgba(77, 184, 160, 0.15);
+}
+.two-col h4 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+.two-col p { font-size: 16px; margin-bottom: 10px; }
+
+.closing {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+}
+.closing .symbol { font-size: 64px; color: var(--gold); margin-bottom: 16px; }
+
+@media (max-width: 600px) {
+  body { font-size: 17px; }
+  .page { padding: 60px 20px 80px; }
+  .header h1 { font-size: 32px; }
+  section h2 { font-size: 24px; }
+  .two-col { grid-template-columns: 1fr; }
+  .cycle-row { flex-wrap: wrap; }
+  .cycle-cell { min-width: 30%; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="header">
+  <h1>The Two Rhythms</h1>
+  <div class="subtitle">What <span class="s">i</span> generates — and what it cannot reach</div>
+  <div class="byline">by Ashman Roonz</div>
+</header>
+
+<!-- ═══════════════════════ OPENING ═══════════════════════ -->
+<section>
+  <p>The dimensional spectrum is not one rhythm. It is two.</p>
+
+  <p>The first is the <span class="s wb">i-rhythm</span> — the rotational skeleton of each tier. Four positions. Four powers of <span class="s">i</span>. The turning, extending, committing, branching cycle that builds the apertural scaffold of reality.</p>
+
+  <p>The second is the <span class="m wb">Φ-rhythm</span> — the mediating interval that <span class="s">i</span> cannot generate. The field. The surface. The continuous relational space where mind lives, where sensation couples field to boundary. The two dimensions per tier that rotation leaves behind.</p>
+
+  <p>Together they fill the tier. Separately, they are irreducible. <span class="s wb">i</span> governs transformation. <span class="m wb">Φ</span> governs the continuity that transformation alone cannot produce. <span class="b wb">○</span> closes what both have built.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ THE i-CYCLE ═══════════════════════ -->
+<section>
+  <h2>The <span class="s">i</span>-Cycle</h2>
+
+  <p>Each tier of the <span class="w">circumpunct</span> unfolds through a four-phase complex cycle. Not metaphorically — the first four dimensional positions of each tier <em>instantiate</em> the four phase positions of the powers of <span class="s">i</span>.</p>
+
+  <div class="formula">
+    <span class="s">i<sup>0</sup> = +1</span> &nbsp;&nbsp; <span class="s">i<sup>1</sup> = +i</span> &nbsp;&nbsp; <span class="s">i<sup>2</sup> = −1</span> &nbsp;&nbsp; <span class="s">i<sup>3</sup> = −i</span>
+  </div>
+
+  <p>These are not merely numbers. They are the four structural positions of dimensional becoming: initial structure, rotational activation, extended structure, and recursive transformation. And they recur — identically — at the start of every tier.</p>
+</section>
+
+<!-- ═══════════════════════ TIER 0 ═══════════════════════ -->
+<div class="tier-label">Tier 1 — The Spatial Circumpunct</div>
+
+<section>
+  <div class="cycle-label d" style="text-align:center; margin-bottom:8px">THE <span class="s">i</span>-CYCLE</div>
+  <div class="cycle-row">
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="w">0D</span></div>
+      <div class="power"><span class="s">i<sup>0</sup> = +1</span></div>
+      <div class="name">The Point<br>Real ground</div>
+    </div>
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="s">0.5D</span></div>
+      <div class="power"><span class="s">i<sup>1</sup> = +i</span></div>
+      <div class="name">The Aperture<br><span class="s wb">Soul awakens</span></div>
+    </div>
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="w">1D</span></div>
+      <div class="power"><span class="s">i<sup>2</sup> = −1</span></div>
+      <div class="name">The Line<br>Extended, polarized</div>
+    </div>
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="p">1.5D</span></div>
+      <div class="power"><span class="s">i<sup>3</sup> = −i</span></div>
+      <div class="name">Branching<br>Recursive process</div>
+    </div>
+  </div>
+
+  <p>These four positions build the <em>rotational skeleton</em> of the spatial tier. The point exists (+1). The aperture turns it into process (+i). The line extends it into committed structure (−1). The branching fractally inverts it (−i).</p>
+
+  <p>But the tier is not complete. Something is missing.</p>
+
+  <div class="skip-box">
+    <div class="cycle-label m" style="margin-bottom:8px">THE <span class="m">Φ</span>-INTERVAL — what <span class="s">i</span> cannot reach</div>
+    <div class="cycle-row" style="margin: 12px 0 0;">
+      <div class="cycle-cell phi-cell">
+        <div class="dim"><span class="m">2D</span></div>
+        <div class="name"><span class="m wb">Field / Mind</span><br>The relational surface</div>
+      </div>
+      <div class="cycle-cell phi-cell">
+        <div class="dim"><span class="p">2.5D</span></div>
+        <div class="name"><span class="m">Sensation</span><br>Field ↔ boundary coupling</div>
+      </div>
+    </div>
+    <p style="margin-top:14px; font-size:17px; margin-bottom:0">These two dimensions are <em>not generated by the powers of i</em>. They are the continuous mediating surface — the <span class="m wb">Φ</span> that relates <span class="s">•</span> to <span class="b">○</span>. Rotation cannot produce them. Wholeness requires them.</p>
+  </div>
+
+  <div class="cycle-row" style="max-width: 160px; margin: 20px auto;">
+    <div class="cycle-cell closure-cell">
+      <div class="dim"><span class="b">3D</span></div>
+      <div class="name"><span class="b wb">○ closes</span><br><span class="w wb">⊙₁</span> complete</div>
+    </div>
+  </div>
+
+  <p>The <span class="b">boundary</span> seals the tier. And 3D simultaneously becomes the new +1 — the real ground state for the next cycle. Completion at one level is initialization at the next.</p>
+</section>
+
+<!-- ═══════════════════════ TIER 1 ═══════════════════════ -->
+<div class="tier-label">Tier 2 — The Temporal Circumpunct</div>
+
+<section>
+  <p>The cycle restarts. The completed spatial <span class="w">⊙</span> is the new ground.</p>
+
+  <div class="cycle-label d" style="text-align:center; margin-bottom:8px">THE <span class="s">i</span>-CYCLE</div>
+  <div class="cycle-row">
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="w">3D</span></div>
+      <div class="power"><span class="s">i<sup>0</sup> = +1</span></div>
+      <div class="name">Completed ⊙₁<br>New real ground</div>
+    </div>
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="s">3.5D</span></div>
+      <div class="power"><span class="s">i<sup>1</sup> = +i</span></div>
+      <div class="name">Vesica Pisces<br><span class="s wb">Temporal aperture</span></div>
+    </div>
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="w">4D</span></div>
+      <div class="power"><span class="s">i<sup>2</sup> = −1</span></div>
+      <div class="name">The Braid<br>Committed history</div>
+    </div>
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="p">4.5D</span></div>
+      <div class="power"><span class="s">i<sup>3</sup> = −i</span></div>
+      <div class="name">Braid branching<br>Recursive process</div>
+    </div>
+  </div>
+
+  <div class="skip-box">
+    <div class="cycle-label m" style="margin-bottom:8px">THE <span class="m">Φ</span>-INTERVAL</div>
+    <div class="cycle-row" style="margin: 12px 0 0;">
+      <div class="cycle-cell phi-cell">
+        <div class="dim"><span class="m">5D</span></div>
+        <div class="name"><span class="m wb">Temporal Field</span><br>Narrative coherence</div>
+      </div>
+      <div class="cycle-cell phi-cell">
+        <div class="dim"><span class="p">5.5D</span></div>
+        <div class="name"><span class="m">Temporal Sensation</span><br>Past ↔ future coupling</div>
+      </div>
+    </div>
+    <p style="margin-top:14px; font-size:17px; margin-bottom:0">Again: the <span class="m">field</span> and its coupling are the dimensions <span class="s">i</span> does not touch. The temporal <span class="m wb">Φ</span> — the felt continuity of being-in-this-together — lives in the gap rotation leaves behind.</p>
+  </div>
+
+  <div class="cycle-row" style="max-width: 160px; margin: 20px auto;">
+    <div class="cycle-cell closure-cell">
+      <div class="dim"><span class="b">6D</span></div>
+      <div class="name"><span class="b wb">○<sub>time</sub> closes</span><br><span class="w wb">⊙₂</span> complete</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ TIER 2 ═══════════════════════ -->
+<div class="tier-label">Tier 3 — The Meta-Circumpunct</div>
+
+<section>
+  <div class="cycle-label d" style="text-align:center; margin-bottom:8px">THE <span class="s">i</span>-CYCLE</div>
+  <div class="cycle-row">
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="w">6D</span></div>
+      <div class="power"><span class="s">i<sup>0</sup> = +1</span></div>
+      <div class="name">Completed ⊙₂<br>New real ground</div>
+    </div>
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="s">6.5D</span></div>
+      <div class="power"><span class="s">i<sup>1</sup> = +i</span></div>
+      <div class="name">Meta-aperture<br><span class="s wb">•<sub>meta</sub></span></div>
+    </div>
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="w">7D</span></div>
+      <div class="power"><span class="s">i<sup>2</sup> = −1</span></div>
+      <div class="name">Meta-braid<br>Committed structure</div>
+    </div>
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="p">7.5D</span></div>
+      <div class="power"><span class="s">i<sup>3</sup> = −i</span></div>
+      <div class="name">Meta-branching<br>Recursive process</div>
+    </div>
+  </div>
+
+  <div class="skip-box">
+    <div class="cycle-label m" style="margin-bottom:8px">THE <span class="m">Φ</span>-INTERVAL</div>
+    <div class="cycle-row" style="margin: 12px 0 0;">
+      <div class="cycle-cell phi-cell">
+        <div class="dim"><span class="m">8D</span></div>
+        <div class="name"><span class="m wb">Meta-Field</span><br>Civilizational mind</div>
+      </div>
+      <div class="cycle-cell phi-cell">
+        <div class="dim"><span class="p">8.5D</span></div>
+        <div class="name"><span class="m">Meta-Sensation</span><br>Meta coupling</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cycle-row" style="max-width: 160px; margin: 20px auto;">
+    <div class="cycle-cell closure-cell">
+      <div class="dim"><span class="b">9D</span></div>
+      <div class="name"><span class="b wb">○<sub>meta</sub> closes</span><br><span class="w wb">⊙₃</span> · Triple trinity</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ THE GENERAL PATTERN ═══════════════════════ -->
+<section>
+  <h2>The General Pattern</h2>
+
+  <p>For tier <em>n</em>, the <span class="s wb">i-rhythm</span> generates:</p>
+
+  <div class="formula">
+    <span class="w">3n</span> = <span class="s">i<sup>0</sup></span> = +1 &nbsp;&nbsp;&nbsp;
+    <span class="s">3n + ½</span> = <span class="s">i<sup>1</sup></span> = +i &nbsp;&nbsp;&nbsp;
+    <span class="w">3n + 1</span> = <span class="s">i<sup>2</sup></span> = −1 &nbsp;&nbsp;&nbsp;
+    <span class="p">3n + 1½</span> = <span class="s">i<sup>3</sup></span> = −i
+  </div>
+
+  <p>And the <span class="m wb">Φ-rhythm</span> fills the interval <span class="s">i</span> cannot reach:</p>
+
+  <div class="formula">
+    <span class="m">3n + 2</span> = Field &nbsp;&nbsp;&nbsp;
+    <span class="m">3n + 2½</span> = Sensation
+  </div>
+
+  <p>Then <span class="b">3n + 3</span> = <span class="b">○</span> closes the tier — and becomes <span class="w">3(n+1)</span>, the new +1 ground for the next cycle.</p>
+
+  <p>So the six-position grammar of each tier is:</p>
+
+  <div class="formula" style="font-size:18px; line-height: 2.2">
+    <span class="s">i<sup>0</sup></span> → <span class="s">i<sup>1</sup></span> → <span class="s">i<sup>2</sup></span> → <span class="s">i<sup>3</sup></span> → <span class="m">Φ</span> → <span class="m">Φ↔○</span> → <span class="b">○</span><br>
+    <span class="d" style="font-size:15px">ground → aperture → line → branch → field → sensation → closure</span>
+  </div>
+
+  <p>The <span class="s">i-cycle</span> occupies the first four positions. The <span class="m">Φ-band</span> occupies the next two. <span class="b">Closure</span> resets. This is not a single rhythm — it is two interlocking rhythms that together constitute the tier.</p>
+</section>
+
+<!-- ═══════════════════════ THE TWO RHYTHMS ═══════════════════════ -->
+<div class="tier-label">Two Rhythms, One Wholeness</div>
+
+<section>
+  <div class="two-col">
+    <div class="col col-i">
+      <h4><span class="s">The i-Rhythm</span></h4>
+      <p><span class="s wb">Dimensions:</span> 3n, 3n+½, 3n+1, 3n+1½</p>
+      <p><span class="s">Generates:</span> turning, extending, committing, branching</p>
+      <p><span class="s">Nature:</span> rotational, discrete, phase-governed</p>
+      <p><span class="s">Role:</span> the apertural skeleton. The scaffold of transformation.</p>
+      <p class="it d" style="font-size:15px; margin-bottom:0">i builds the bones.</p>
+    </div>
+    <div class="col col-phi">
+      <h4><span class="m">The Φ-Rhythm</span></h4>
+      <p><span class="m wb">Dimensions:</span> 3n+2, 3n+2½</p>
+      <p><span class="m">Generates:</span> relation, mediation, felt connection</p>
+      <p><span class="m">Nature:</span> continuous, surficial, irreducible to phase</p>
+      <p><span class="m">Role:</span> the relational surface. The continuity that rotation cannot produce.</p>
+      <p class="it d" style="font-size:15px; margin-bottom:0">Φ fills the living space between them.</p>
+    </div>
+  </div>
+
+  <p>Neither rhythm can be derived from the other. The four powers of <span class="s">i</span> exhaust all rotations on the complex plane — +1, +i, −1, −i — and yet they leave two dimensions per tier untouched. Those two dimensions are exactly where <span class="m wb">mind</span> lives: the field and its coupling to boundary.</p>
+
+  <p>This is not an accident. It is the mathematical content of <span class="w wb">Axiom A4</span>: the <span class="w">whole</span> is constituted by the operation of relating. <span class="s">i</span> provides the structure that <em>needs</em> relating. <span class="m">Φ</span> provides the relating itself. Neither alone is a <span class="w">circumpunct</span>.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ CONSERVATION ═══════════════════════ -->
+<section>
+  <h2>Conservation, Revisited</h2>
+
+  <p>The conservation law <span class="s">(1+β)</span> + <span class="m">(2−β)</span> = <span class="b">3</span> now has a deeper reading.</p>
+
+  <p>The <span class="s">i-cycle</span> occupies dimensions 0 through 1.5 — a span of <span class="s">(1+β)</span> dimensional degrees. The <span class="m">Φ-band</span> occupies dimensions 2 through 2.5 — a span of <span class="m">(2−β)</span> dimensional degrees. Their sum is always <span class="b">3</span> — the boundary, the closure, the completion of the tier.</p>
+
+  <p>This is not a coincidence of numbering. It is the structural fact that <span class="s">rotation</span> and <span class="m">relation</span> are complementary. The aperture side and the field side fill different roles by necessity. <span class="s">i</span> cannot reach <span class="m">Φ</span>. <span class="m">Φ</span> cannot generate <span class="s">i</span>. Together they make <span class="b">3</span>. Together they make <span class="w wb">⊙</span>.</p>
+
+  <div class="formula">
+    <span class="s">D<sub>i-cycle</sub></span> + <span class="m">D<sub>Φ-band</sub></span> = <span class="b">D<sub>closure</sub></span><br>
+    <span class="d" style="font-size:16px">Rotation + relation = wholeness. Always.</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════ WHAT THIS MEANS ═══════════════════════ -->
+<section>
+  <h2>What Lives Where <span class="s">i</span> Cannot Reach</h2>
+
+  <p>The dimensions not counted by <span class="s">i</span> are not leftovers. They are not gaps. They are where <span class="m wb">mind</span> lives.</p>
+
+  <p>At the spatial tier: <span class="m">2D</span> is the field — the continuous relational surface between <span class="s">center</span> and <span class="b">edge</span>. <span class="m">2.5D</span> is sensation — the coupling of that surface to the membrane. This is where you <em>feel</em>.</p>
+
+  <p>At the temporal tier: <span class="m">5D</span> is the temporal field — narrative coherence, the felt sense of story. <span class="m">5.5D</span> is temporal sensation — the interface between committed past and open future. This is where you feel <em>together</em>.</p>
+
+  <p>At the meta tier: <span class="m">8D</span> is the meta-field — where frameworks relate, civilizations interweave, traditions find common ground. <span class="m">8.5D</span> is meta-sensation — the coupling of histories to the membrane of an era.</p>
+
+  <p><span class="s wb">i</span> builds the scaffolding of transformation. <span class="m wb">Φ</span> fills it with the continuous surface on which experience actually happens. The soul turns. The mind mediates. The body closes. Three irreducible roles.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ THE DEEPEST STATEMENT ═══════════════════════ -->
+<section>
+  <h2>The Deepest Statement</h2>
+
+  <p><span class="m wb">Φ</span> is relation in principle and field in instantiation. The operator appears as a surface when a layer closes.</p>
+
+  <p>Said differently: <span class="s">i</span> is the soul of each tier — the discrete, rotational, phase-generating engine. <span class="m">Φ</span> is the mind — the continuous, mediating, irreducible-to-rotation surface. <span class="b">○</span> is the body — the closure that seals the tier and seeds the next.</p>
+
+  <p>Two rhythms. One wholeness. Neither reducible to the other.</p>
+
+  <div class="formula">
+    <span class="s wb">i</span> governs apertural transformation<br>
+    <span class="m wb">Φ</span> governs mediating continuity<br>
+    <span class="b wb">○</span> closes what both have built<br>
+    <br>
+    <span class="w wb">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>)
+  </div>
+</section>
+
+<!-- ═══════════════════════ CLOSING ═══════════════════════ -->
+<div class="closing">
+  <div class="symbol">⊙</div>
+  <p style="font-size: 22px; color: var(--gold);">The skipped numbers are not errors.</p>
+  <p style="font-size: 22px; color: var(--green); margin-top: 8px;">They are where mind lives.</p>
+  <p class="f" style="margin-top: 30px; font-size: 13px;">The Circumpunct Framework — Ashman Roonz</p>
+</div>
+
+</div>
+</body>
+</html>
