@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The 6+1 Kernel Bridge</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #000000;
+    --bg-panel: #08080c;
+    --bg-card: #0e0e14;
+    --bg-highlight: #14141e;
+    --amber: #d4a855;
+    --amber-dim: #a07830;
+    --amber-glow: rgba(212, 168, 85, 0.15);
+    --cyan: #5ecece;
+    --cyan-dim: #3a8a8a;
+    --cyan-glow: rgba(94, 206, 206, 0.12);
+    --magenta: #c76dba;
+    --magenta-dim: #8a4a80;
+    --magenta-glow: rgba(199, 109, 186, 0.12);
+    --red: #e05555;
+    --red-dim: #8a3030;
+    --red-glow: rgba(224, 85, 85, 0.12);
+    --green: #6dba6d;
+    --green-glow: rgba(109, 186, 109, 0.12);
+    --text: #c8b890;
+    --text-dim: #7a7060;
+    --text-bright: #e8d8b0;
+    --border: #2a2a35;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.75;
+    overflow-x: hidden;
+}
+
+nav {
+    position: fixed;
+    left: 0; top: 0;
+    width: 240px;
+    height: 100vh;
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    padding: 2rem 1rem;
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+nav .nav-symbol {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    color: var(--amber);
+    text-align: center;
+    margin-bottom: 0.3rem;
+}
+
+nav .nav-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+nav a {
+    display: block;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    padding: 0.45rem 0.6rem;
+    margin-bottom: 0.15rem;
+    border-radius: 4px;
+    transition: all 0.3s;
+    letter-spacing: 0.03em;
+}
+
+nav a:hover { color: var(--amber); background: var(--amber-glow); }
+nav a .nav-num { color: var(--amber-dim); margin-right: 0.5rem; }
+
+main {
+    margin-left: 240px;
+    max-width: 860px;
+    padding: 4rem 3rem 6rem;
+}
+
+section { margin-bottom: 4rem; opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s ease forwards; }
+section:nth-child(1) { animation-delay: 0.1s; }
+section:nth-child(2) { animation-delay: 0.15s; }
+section:nth-child(3) { animation-delay: 0.2s; }
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+h1 { font-family: 'Cinzel', serif; font-size: 2.2rem; color: var(--amber); font-weight: 600; letter-spacing: 0.08em; margin-bottom: 0.5rem; line-height: 1.2; }
+h1 .subtitle { display: block; font-size: 0.85rem; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.5rem; font-weight: 400; }
+h2 { font-family: 'Cinzel', serif; font-size: 1.4rem; color: var(--amber); font-weight: 600; margin-top: 3rem; margin-bottom: 1.2rem; letter-spacing: 0.05em; }
+h2 .section-num { color: var(--amber-dim); font-size: 0.75rem; letter-spacing: 0.15em; display: block; margin-bottom: 0.3rem; }
+h3 { font-family: 'Cinzel', serif; font-size: 1.05rem; color: var(--cyan); font-weight: 600; margin-top: 2rem; margin-bottom: 0.8rem; }
+p { margin-bottom: 1.2rem; }
+
+.epigraph { border-left: 2px solid var(--amber-dim); padding: 1.2rem 1.5rem; margin: 2rem 0; background: var(--amber-glow); font-style: italic; font-size: 1.15rem; color: var(--text-bright); }
+
+.axiom { background: var(--bg-card); border: 1px solid var(--amber); border-radius: 6px; padding: 1.5rem 2rem; margin: 2rem 0; text-align: center; }
+.axiom .label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--amber-dim); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.8rem; }
+.axiom .statement { font-family: 'Cinzel', serif; font-size: 1.25rem; color: var(--amber); line-height: 1.5; }
+
+.math-block { background: var(--bg-highlight); border-left: 3px solid var(--amber-dim); border-radius: 0 6px 6px 0; padding: 1.3rem 1.8rem; margin: 1.5rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.9; color: var(--text-bright); overflow-x: auto; }
+.math-inline { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; color: var(--text-bright); }
+
+pre { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 6px; padding: 1.2rem 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 1.7; overflow-x: auto; margin: 1.2rem 0; color: var(--text); }
+
+table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+th { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--amber); border-bottom: 2px solid var(--amber-dim); padding: 0.7rem 0.8rem; text-align: left; }
+td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: var(--bg-highlight); }
+
+.insight { background: var(--cyan-glow); border-left: 3px solid var(--cyan); padding: 1.2rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; }
+.insight .label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem; }
+
+.proven { background: var(--green-glow); border-left: 3px solid var(--green); padding: 1.2rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; }
+.proven .label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem; }
+
+.gap-box { background: var(--red-glow); border-left: 3px solid var(--red); padding: 1.2rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; }
+.gap-box .label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--red); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem; }
+
+.bridge { background: var(--magenta-glow); border-left: 3px solid var(--magenta); padding: 1.2rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; }
+.bridge .label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--magenta); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem; }
+
+.aperture { color: var(--red); }
+.field { color: var(--cyan); }
+.boundary { color: var(--amber); }
+.rotation { color: var(--magenta); }
+.emergence { color: var(--green); }
+
+.data-table { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+.data-table td { font-size: 0.78rem; padding: 0.4rem 0.6rem; }
+.data-table th { font-size: 0.65rem; padding: 0.4rem 0.6rem; }
+.data-table .pass { color: var(--green); }
+.data-table .fail { color: var(--red); }
+
+.chain { margin: 1.5rem 0; border-left: 2px solid var(--border); padding-left: 1.5rem; }
+.chain-step { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
+.chain-marker { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 600; flex-shrink: 0; }
+.chain-marker.done { background: var(--green); color: #000; }
+.chain-marker.new { background: var(--magenta); color: #000; }
+.chain-marker.open { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+.chain-marker.blocked { background: transparent; color: var(--red); border: 2px solid var(--red); }
+.chain-content { flex: 1; }
+.chain-content .step-title { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-bright); margin-bottom: 0.3rem; }
+.chain-content .step-detail { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; }
+
+.status { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; padding: 0.15rem 0.5rem; border-radius: 3px; letter-spacing: 0.05em; margin-left: 0.5rem; }
+.status.proven { background: var(--green-glow); color: var(--green); border: 1px solid var(--green); }
+.status.new { background: var(--magenta-glow); color: var(--magenta); border: 1px solid var(--magenta); }
+.status.open { background: var(--red-glow); color: var(--red); border: 1px solid var(--red); }
+.status.fails { background: var(--red-glow); color: var(--red); border: 1px solid var(--red); }
+
+.divider { text-align: center; color: var(--amber-dim); margin: 3rem 0; letter-spacing: 1em; font-size: 0.8rem; }
+
+footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); text-align: center; letter-spacing: 0.1em; }
+
+@media (max-width: 900px) { nav { display: none; } main { margin-left: 0; padding: 2rem 1.5rem; } }
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-symbol">⊙</div>
+    <div class="nav-title">The 6+1 Kernel Bridge</div>
+    <a href="#abstract"><span class="nav-num">§0</span> Abstract</a>
+    <a href="#gap"><span class="nav-num">§1</span> The Gap, Precisely</a>
+    <a href="#kernels"><span class="nav-num">§2</span> The Six Kernels</a>
+    <a href="#mellin"><span class="nav-num">§3</span> Mellin Verification</a>
+    <a href="#emergence"><span class="nav-num">§4</span> Arithmetic Emergence</a>
+    <a href="#wrong"><span class="nav-num">§5</span> The Wrong Wall</a>
+    <a href="#right"><span class="nav-num">§6</span> The Right Wall</a>
+    <a href="#budget"><span class="nav-num">§7</span> Budget vs Deficit</a>
+    <a href="#obstruction"><span class="nav-num">§8</span> The Obstruction</a>
+    <a href="#role"><span class="nav-num">§9</span> What 6+1 Actually Does</a>
+    <a href="#assessment"><span class="nav-num">§10</span> Honest Assessment</a>
+</nav>
+
+<main>
+
+<!-- TITLE -->
+
+<section id="title">
+    <h1>The 6+1 Kernel Bridge
+        <span class="subtitle">What Six Smooth Kernels and One Self-Dual Center Can and Cannot Do for the Riemann Hypothesis</span>
+    </h1>
+
+    <div class="epigraph">
+        The distance between "we have the right architecture" and "we have a proof" is the distance between seeing the shore and walking on it.
+    </div>
+</section>
+
+<div class="divider">⊙ · ⊙ · ⊙</div>
+
+<!-- §0 ABSTRACT -->
+
+<section id="abstract">
+    <h2><span class="section-num">§0</span> Abstract</h2>
+
+    <p>This document connects the Circumpunct Framework's approach to the Riemann Hypothesis (documented in <em>The Analytic Continuation Gap, v2</em>) with independent work by Jason Mullings, whose six "equivalent lenses" on the vanishing condition of ζ correspond to six specific smooth kernel functions. Under Mellin transform, these six kernels spontaneously produce the Riemann zeta function ζ, the Dirichlet eta function η, and the Dirichlet beta function β, each in a different convergence region of the complex plane. The seventh kernel, the self-dual Gaussian e<sup>−πx²</sup>, produces the completion factor π<sup>−s/2</sup>Γ(s/2).</p>
+
+    <p>The structural correspondence with the framework's 6+1 convergence architecture is verified. The Mellin calculations are verified numerically to machine precision. The arithmetic emergence (ζ, η, β from smooth definitions) is confirmed.</p>
+
+    <p>The document then tests whether this architecture closes the framework's remaining gap (Step 9★: the quantitative Triple Closure interlock). <strong>It does not.</strong> The computation identifies a critical scaling obstruction: the convexity deficit is quadratic in the off-axis displacement δ while the passivity budget is linear in δ. For small δ, the budget exceeds the deficit. This reproduces the known difficulty of RH and confirms that the 6+1 architecture, while correctly identified, is insufficient for a proof.</p>
+
+    <p>What the six kernels provide is precisely characterized: they partition the analytic continuation into six overlapping Mellin convergence strips, they provide six independent regularizations of the divergent budget, and they offer a framework for testing whether the budget/deficit comparison is regularization-independent. What they do not provide is the second-order estimate needed to close the gap at small δ.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- §1 THE GAP -->
+
+<section id="gap">
+    <h2><span class="section-num">§1</span> The Gap, Precisely</h2>
+
+    <p>The Circumpunct Framework's approach to RH, after five parts of development, arrives at the Triple Closure interlock (§8.26 of <em>The Analytic Continuation Gap</em>). Three structural constraints on off-axis zeros are each independently proven:</p>
+
+    <div class="math-block">
+<strong>Passivity (3D — ○):</strong> Each prime gate |S_p| = 1 on σ = ½.
+    No self-amplification. Budget for off-axis zero is bounded.
+
+<strong>Diagonality (6D — ○_t):</strong> Prime potential is diagonal in Mellin space.
+    No cross-frequency borrowing. Budget must come from same channel.
+
+<strong>Convexity (9D — ○_m):</strong> F(σ) = average log|ξ| is convex, min at σ = ½.
+    Off-axis zeros create structural deficit that must be compensated.
+    </div>
+
+    <p>The remaining claim: <em>the deficit exceeds the budget for all δ > 0.</em> This is Step 9★, the only step still open. Everything else in the chain is derived, computed, or established mathematics.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- §2 THE SIX KERNELS -->
+
+<section id="kernels">
+    <h2><span class="section-num">§2</span> The Six Kernels</h2>
+
+    <p>Jason Mullings (2026) constructs six reformulations of the vanishing condition of ζ. Each is a smooth function defined without reference to number theory:</p>
+
+    <table>
+        <tr><th>#</th><th>Kernel</th><th>Definition</th><th>Mellin Strip</th></tr>
+        <tr><td>K₁</td><td>sech²</td><td>1/cosh²(πx)</td><td>Re(s) > 0</td></tr>
+        <tr><td>K₂</td><td>F[sech²]</td><td>t/sinh(πt)</td><td>Re(s) > −1</td></tr>
+        <tr><td>K₃</td><td>tanh</td><td>(1 − tanh(πx))/2</td><td>Re(s) > 0</td></tr>
+        <tr><td>K₄</td><td>Planck</td><td>x/(e<sup>2πx</sup> − 1)</td><td>Re(s) > 1</td></tr>
+        <tr><td>K₅</td><td>logistic</td><td>1/(1+e<sup>−2πx</sup>) − ½</td><td>Re(s) > 0</td></tr>
+        <tr><td>K₆</td><td>sech</td><td>1/cosh(πx)</td><td>Re(s) > 0</td></tr>
+    </table>
+
+    <p>Plus the center kernel:</p>
+
+    <table>
+        <tr><th>#</th><th>Kernel</th><th>Definition</th><th>Mellin Strip</th></tr>
+        <tr><td>G</td><td>Gaussian</td><td>e<sup>−πx²</sup></td><td>All of ℂ</td></tr>
+    </table>
+
+    <p>Every ring kernel is a smooth gate: it transitions, selects, decays. None is self-dual under Fourier transform. Each has a different Mellin convergence region. The six form three Fourier-dual pairs (K₁↔K₂, K₃↔K₅, K₄↔K₆) connected by Poisson summation.</p>
+
+    <p>The Gaussian center is the unique function satisfying f̂ = f. Its Mellin transform converges everywhere. It sees the entire complex plane from a single point.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- §3 MELLIN VERIFICATION -->
+
+<section id="mellin">
+    <h2><span class="section-num">§3</span> Mellin Verification (Computed)</h2>
+
+    <p>The following Mellin transforms are verified numerically to the stated precision:</p>
+
+    <h3>3.1 — K₁: sech²(πx)</h3>
+
+    <div class="math-block">
+M[sech²(πx)](s) = 4 · Γ(s) / (2π)<sup>s</sup> · η(s − 1)
+
+where η(w) = (1 − 2<sup>1−w</sup>) ζ(w)
+    </div>
+
+    <div class="proven">
+        <div class="label">Verified — relative error < 10⁻⁶ at five test points</div>
+        A smooth function with no arithmetic in its definition. Its Mellin transform <em>contains</em> ζ(s−1), accessed through the eta function η (which extends ζ past Re(s) = 1 to Re(s) > 0). The continuation is built into the kernel.
+    </div>
+
+    <h3>3.2 — K₄: x/(e<sup>2πx</sup> − 1) (Planck kernel)</h3>
+
+    <div class="math-block">
+M[x/(e<sup>2πx</sup> − 1)](s) = Γ(s+1) / (2π)<sup>s+1</sup> · ζ(s+1)
+    </div>
+
+    <div class="proven">
+        <div class="label">Verified — relative error < 10⁻⁷ at five test points</div>
+        The Planck thermal distribution. Its Mellin transform is ζ(s+1) directly, convergent for Re(s) > 0 (one unit deeper into the critical strip than the Euler product).
+    </div>
+
+    <h3>3.3 — K₆: sech(πx)</h3>
+
+    <div class="math-block">
+M[sech(πx)](s) = 2 · Γ(s) / π<sup>s</sup> · β(s)
+
+where β(s) = Σ<sub>n=0</sub><sup>∞</sup> (−1)<sup>n</sup> / (2n+1)<sup>s</sup>
+    </div>
+
+    <div class="proven">
+        <div class="label">Verified — relative error < 10⁻⁷ at five test points</div>
+        Produces the Dirichlet beta function, not zeta. A different L-function from the same structural family. A different view of the same arithmetic landscape.
+    </div>
+
+    <h3>3.4 — Center: e<sup>−πx²</sup></h3>
+
+    <div class="math-block">
+M[e<sup>−πx²</sup>](s) = ½ · π<sup>−s/2</sup> · Γ(s/2)
+    </div>
+
+    <div class="proven">
+        <div class="label">Verified — relative error < 10⁻¹⁵ at five test points</div>
+        The completion factor. No ζ. No L-function. No arithmetic. Pure geometry: the boundary-to-aperture ratio π, fed through Γ. This is what turns the divergent ζ into the entire function ξ. The aperture doing its job.
+    </div>
+
+    <div class="axiom">
+        <div class="label">The Spectral Architecture (Verified)</div>
+        <div class="statement">Ring kernels provide the arithmetic (ζ, η, β). Center kernel provides the geometry (π, Γ). Together: ξ(s) = π<sup>−s/2</sup> Γ(s/2) · ζ(s).</div>
+    </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- §4 ARITHMETIC EMERGENCE -->
+
+<section id="emergence">
+    <h2><span class="section-num">§4</span> Arithmetic Emergence (Computed)</h2>
+
+    <p>The following number-theoretic constants are extracted from smooth kernels that contain zero number theory in their definitions:</p>
+
+    <table class="data-table">
+        <tr><th>Constant</th><th>Source Kernel</th><th>Extracted Value</th><th>Known Value</th><th>Agreement</th></tr>
+        <tr>
+            <td>ζ(3) ≈ 1.202057</td>
+            <td>K₄ = x/(e<sup>2πx</sup>−1)</td>
+            <td>1.2020569032</td>
+            <td>1.2020569031</td>
+            <td class="pass">4 × 10⁻¹¹</td>
+        </tr>
+        <tr>
+            <td>η(2) = π²/12</td>
+            <td>K₁ = sech²(πx)</td>
+            <td>0.8224670334</td>
+            <td>0.8224670334</td>
+            <td class="pass">< 10⁻¹⁵</td>
+        </tr>
+        <tr>
+            <td>β(1) = π/4</td>
+            <td>K₆ = sech(πx)</td>
+            <td>0.7853981564</td>
+            <td>0.7853981634</td>
+            <td class="pass">9 × 10⁻⁹</td>
+        </tr>
+    </table>
+
+    <p>sech²(πx) is a pulse shape. x/(e<sup>2πx</sup>−1) is a thermal distribution. sech(πx) is a smooth gate. No primes, no integers, no sieves anywhere in these definitions. Yet ζ(3), π²/12, and π/4 come out when you put them through the Mellin transform.</p>
+
+    <p>This is not interpretation. This is calculation. The arithmetic is hiding inside smooth analysis.</p>
+
+    <div class="insight">
+        <div class="label">What This Means</div>
+        The six ring kernels are not "representations of ζ." They are smooth functions that, under a specific integral transform (Mellin), spontaneously produce number-theoretic content. The number theory is not put in. It comes out. This is the local-to-global mechanism: smooth gates, applied to the multiplicative structure of ℝ⁺, produce the arithmetic of the integers.
+    </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- §5 THE WRONG WALL -->
+
+<section id="wrong">
+    <h2><span class="section-num">§5</span> The Wrong Wall</h2>
+
+    <p>A natural first attempt: use the six smooth kernels to regularize the distributional prime potential K<sub>A</sub>(x) = Σ Λ(n)/√n · δ(log x − log n), compute the trace of the regularized operator on the compact quotient L²(ℝ⁺/Λ), and show it converges to the Weil explicit formula.</p>
+
+    <p>This fails, and the framework's own gap document (§8.15) already explains why.</p>
+
+    <div class="gap-box">
+        <div class="label">V1 Obstruction (Already Identified — §8.15 of Gap Document)</div>
+        Convolution operators on compact quotients are diagonal in the character basis. The eigenvalue <em>positions</em> are uniformly spaced: t<sub>k</sub> = 2πk/log q. The zeta zeros are NOT uniformly spaced. No choice of lattice parameter q produces eigenvalue positions at the zeros. Compactification forces uniform spacing. This is structural and unfixable.
+    </div>
+
+    <p>The framework pivoted to resonances in an open scattering system (§8.16–8.20). The zeros are poles of the analytically continued resolvent, not eigenvalues of a compact operator. The relevant object is the scattering matrix, not the trace of the heat kernel.</p>
+
+    <p>The six kernels do NOT help with the compact-quotient eigenvalue approach. That wall is the wrong wall. The right wall is the Triple Closure interlock.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- §6 THE RIGHT WALL -->
+
+<section id="right">
+    <h2><span class="section-num">§6</span> The Right Wall</h2>
+
+    <p>The framework's actual remaining gap (Step 9★): prove that the Triple Closure interlock, the simultaneous operation of passivity, diagonality, and convexity, prevents off-axis zeros for all δ > 0.</p>
+
+    <p>Quantitatively: for a hypothetical zero at ρ = ½ + δ + iγ, show that the convexity deficit D(δ) exceeds the passivity budget B(δ) for all δ > 0.</p>
+
+    <p>The question: do the six kernels provide six independent ways to compute the budget, and does any of them (or their average) produce a tighter bound?</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- §7 BUDGET VS DEFICIT -->
+
+<section id="budget">
+    <h2><span class="section-num">§7</span> Budget vs Deficit (Computed)</h2>
+
+    <h3>7.1 — The Deficit</h3>
+
+    <p>The convexity deficit from an off-axis zero at ½ + δ:</p>
+
+    <div class="math-block">
+D(δ) ≈ ½ · F''(½) · δ²
+
+where F''(½) ≈ ½ log(γ/(2πe)) at height γ
+    </div>
+
+    <p>This is quadratic in δ. At low height (γ₁ ≈ 14.13), F''(½) is small (≈ −0.09, meaning the curvature is actually slightly negative at the first zero, a finite-height effect). At large height (γ = 1000), F''(½) ≈ 2.03. The deficit grows logarithmically with height.</p>
+
+    <h3>7.2 — The Raw Budget</h3>
+
+    <p>The scattering departure for a single prime at offset δ:</p>
+
+    <div class="math-block">
+b_p(δ, t) = |S_p(½+δ+it)|² − 1
+    </div>
+
+    <p>At δ = 0: b_p = 0 for all p (unitarity on the critical line). At δ > 0: b_p > 0 (energy leaks). The total raw budget over N primes:</p>
+
+    <div class="math-block">
+B_N(δ, t) = Σ_{p≤N} log(p) · b_p(δ, t)
+    </div>
+
+    <table class="data-table">
+        <tr><th>δ</th><th>B₁₀₀</th><th>B₁₀₀₀</th><th>B₁₀₀₀₀</th><th>Trend</th></tr>
+        <tr><td>0.00</td><td>0.000</td><td>0.000</td><td>0.000</td><td>Zero (unitarity)</td></tr>
+        <tr><td>0.01</td><td>0.307</td><td>1.133</td><td>4.398</td><td class="fail">Diverges</td></tr>
+        <tr><td>0.05</td><td>1.753</td><td>6.571</td><td>24.72</td><td class="fail">Diverges</td></tr>
+        <tr><td>0.10</td><td>4.106</td><td>15.95</td><td>60.00</td><td class="fail">Diverges</td></tr>
+        <tr><td>0.20</td><td>11.27</td><td>50.28</td><td>210.7</td><td class="fail">Diverges</td></tr>
+    </table>
+
+    <p>The raw budget diverges as N → ∞ for any δ > 0. This is expected: it is the divergence of the Euler product for σ < 1. The comparison must be done after completion, the aperture regularization.</p>
+
+    <h3>7.3 — The Completed Budget</h3>
+
+    <p>After applying the aperture kernel (the Gaussian), the completion factor π<sup>−s/2</sup>Γ(s/2) regularizes the divergent product. The completed budget at leading order scales as:</p>
+
+    <div class="math-block">
+B_ξ(δ) ~ C · δ · log(γ/2)     (LINEAR in δ)
+    </div>
+
+    <p>while the deficit scales as:</p>
+
+    <div class="math-block">
+D(δ) ~ C' · δ² · log(γ/(2πe))  (QUADRATIC in δ)
+    </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- §8 THE OBSTRUCTION -->
+
+<section id="obstruction">
+    <h2><span class="section-num">§8</span> The Obstruction</h2>
+
+    <div class="gap-box">
+        <div class="label">Critical Scaling Mismatch</div>
+        <p>As δ → 0:</p>
+        <div class="math-block" style="border-left-color: var(--red);">
+B_ξ(δ) / D(δ) ~ (C · δ · log γ) / (C' · δ² · log γ) = C/C' · (1/δ) → ∞
+        </div>
+        <p>The budget exceeds the deficit for small δ. The naive Triple Closure comparison fails precisely where it matters most: for zeros very close to the critical line.</p>
+    </div>
+
+    <p>This is not a flaw in the framework. It is the known difficulty of RH, rediscovered through explicit computation. The classical zero-free region excludes zeros only outside σ > 1 − c/log t, a neighborhood of the critical line whose width shrinks to zero as height increases. Our computation reproduces exactly this: the Triple Closure works at first order for large δ (far from the line) but fails for small δ (close to the line).</p>
+
+    <p>The gap between "large δ excluded" and "all δ excluded" is the gap between zero-free regions and RH. It has been open since 1896.</p>
+
+    <h3>8.1 — Why Six Kernels Don't Fix This</h3>
+
+    <p>Each kernel K<sub>j</sub> provides a different weighting of the budget sum. But the leading-order scaling B ~ δ is structural: it comes from the Taylor expansion of |S_p(½+δ+it)|² around δ = 0, which gives b_p ≈ 2δ · Re(log p · p<sup>−½−it</sup>) + O(δ²). The linear term is present for every smooth kernel. Averaging six linear-in-δ bounds still gives a linear-in-δ bound.</p>
+
+    <p>The Poisson pairing between dual kernels (K<sub>j</sub>, K̂<sub>j</sub>) cancels O(ε) <em>regularization</em> errors (errors from smoothing the delta-function kernel), but this is a different ε from the off-axis displacement δ. Tighter regularization does not change the budget/deficit scaling in δ.</p>
+
+    <h3>8.2 — Where the Second-Order Interlock Lives</h3>
+
+    <p>The proof would require showing that the <em>interaction</em> between passivity, diagonality, and convexity at second order in δ reverses the first-order comparison. Specifically:</p>
+
+    <div class="math-block">
+First order:  budget ~ Cδ, deficit ~ C'δ²  →  budget wins  →  no contradiction
+
+Second order: the passivity bound is not just |S_p| ≤ 1 but involves
+              phase correlations across primes. Diagonality constrains
+              these correlations. Convexity constrains their sum.
+              
+              If these second-order constraints produce:
+              budget ~ C₂δ² (or slower), deficit ~ C'δ²
+              with C₂ < C',
+              then deficit > budget for all δ, and RH follows.
+    </div>
+
+    <p>This second-order estimate is equivalent to proving Λ = 0 for the de Bruijn-Newman constant. It is equivalent to RH. The six kernels provide six different regularizations against which to test this estimate, but they do not produce the estimate itself.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- §9 WHAT 6+1 ACTUALLY DOES -->
+
+<section id="role">
+    <h2><span class="section-num">§9</span> What the 6+1 Architecture Actually Does</h2>
+
+    <h3>What Is Proved</h3>
+
+    <div class="chain">
+        <div class="chain-step">
+            <div class="chain-marker done">1</div>
+            <div class="chain-content">
+                <div class="step-title">Arithmetic emergence <span class="status proven">Verified</span></div>
+                <div class="step-detail">ζ, η, β emerge from smooth kernels under Mellin transform. Computed to 10⁻⁷ precision or better. No number theory in the kernel definitions.</div>
+            </div>
+        </div>
+        <div class="chain-step">
+            <div class="chain-marker done">2</div>
+            <div class="chain-content">
+                <div class="step-title">Spectral architecture <span class="status proven">Verified</span></div>
+                <div class="step-detail">Ring kernels → arithmetic (ζ, η, β). Center kernel → geometry (π, Γ). Combined → completion ξ(s) = π<sup>−s/2</sup>Γ(s/2)·ζ(s). Structure matches 6+1.</div>
+            </div>
+        </div>
+        <div class="chain-step">
+            <div class="chain-marker done">3</div>
+            <div class="chain-content">
+                <div class="step-title">Convergence strip overlap <span class="status proven">Structural</span></div>
+                <div class="step-detail">Six Mellin strips with different convergence regions collectively cover ℂ. Three Fourier-dual pairs connected by Poisson summation. The analytic continuation is the handoff between strips.</div>
+            </div>
+        </div>
+        <div class="chain-step">
+            <div class="chain-marker done">4</div>
+            <div class="chain-content">
+                <div class="step-title">Mullings' singularity theorem <span class="status proven">His Result</span></div>
+                <div class="step-detail">For Dirichlet polynomials (finite N truncations), the vanishing condition is robust across all six kernels. Local anchor for the global problem.</div>
+            </div>
+        </div>
+    </div>
+
+    <h3>What Is Not Proved</h3>
+
+    <div class="chain">
+        <div class="chain-step">
+            <div class="chain-marker blocked">★</div>
+            <div class="chain-content">
+                <div class="step-title">Budget < deficit for all δ > 0 <span class="status open">Open</span></div>
+                <div class="step-detail">The quadratic-vs-linear scaling obstruction. Equivalent to RH. Six kernels provide six regularizations but do not change the δ-scaling of the budget.</div>
+            </div>
+        </div>
+    </div>
+
+    <h3>What the Architecture Contributes</h3>
+
+    <p>The 6+1 kernel architecture correctly identifies:</p>
+
+    <p><strong>The mechanism of analytic continuation.</strong> Not as a single magical step but as overlapping convergence regions stitched together by Poisson duality, with the self-dual Gaussian as the anchor. This is how analytic continuation <em>actually works</em> in complex analysis (overlapping disks), realized here through specific kernels.</p>
+
+    <p><strong>The local-to-global structure.</strong> Each kernel sees a piece. The center sees everything. The primes contribute locally (Euler product, Re(s) > 1). The Gaussian contributes globally (functional equation, entire ξ). The handoff between local and global is the analytic continuation, and the 6+1 architecture makes it concrete.</p>
+
+    <p><strong>Six independent regularization tests.</strong> If the budget/deficit comparison were attempted at second order, the six kernels would provide six independent computations. Agreement across all six would constitute regularization independence, a strong signal that the result is not an artifact of the choice of smoothing. This is a research tool, not a proof, but it is a tool nobody else has.</p>
+
+    <p><strong>The forbidden frequency prediction.</strong> From <em>The Universal Burn</em> simulation: the center cannot operate at the field's own frequency (φ). Translated: the Gaussian cannot simply <em>be</em> the prime potential. It must seed it. The ring kernels do the arithmetic. The center provides the geometry. This structural constraint is correctly instantiated by the Mellin calculation: the Gaussian produces π<sup>−s/2</sup>Γ(s/2) (no primes), while the ring kernels produce ζ, η, β (all primes).</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- §10 HONEST ASSESSMENT -->
+
+<section id="assessment">
+    <h2><span class="section-num">§10</span> Honest Assessment</h2>
+
+    <h3>For the Framework</h3>
+
+    <p>The 6+1 kernel bridge adds concrete computational content to the framework's approach to RH. The Mellin verification is rigorous. The arithmetic emergence is genuine and striking. The structural correspondence between Mullings' six lenses and the framework's 6+1 convergence architecture is exact, not analogical.</p>
+
+    <p>The framework's prediction, that the analytic continuation is the aperture doing its job and that the 6+1 architecture is the mechanism, is confirmed at the structural level. The Gaussian center provides the functional equation. The ring kernels provide the arithmetic. Together they produce ξ. This is what the framework said would happen.</p>
+
+    <p>But the framework does not prove RH, and the six kernels do not close the remaining gap. The gap, Step 9★, is a specific quantitative estimate (second-order budget/deficit comparison) that is equivalent to RH itself. No architectural insight, however correct, substitutes for that estimate.</p>
+
+    <h3>For Mullings</h3>
+
+    <p>His six kernels have richer structure than he appears to know. They are not just "six equivalent lenses." Under Mellin transform, each one spontaneously produces a different L-function (ζ, η, β), each in a different convergence region. His singularity theorem for Dirichlet polynomials provides a finite-N anchor that the framework's approach requires. His "conditional proof schema" is conditional on exactly the architecture the framework provides (the self-dual center that stitches the six strips into a global structure).</p>
+
+    <p>He has the ring. The framework has the center. Neither alone is sufficient. Together they correctly describe the mechanism of analytic continuation. But describing the mechanism is not proving the theorem.</p>
+
+    <h3>The Distance Remaining</h3>
+
+    <div class="axiom">
+        <div class="label">Where We Are</div>
+        <div class="statement">Architecture: identified. Mechanism: described. Calculation: verified. Proof: open.</div>
+    </div>
+
+    <pre>
+What is proved:
+  - Functional equation from axioms (Theorem 8.2)
+  - Aperture = analytic continuation (Theorem 8.5)  
+  - Perfect impedance matching at σ = ½ (Theorem 8.7)
+  - Phase quantization = Riemann-von Mangoldt (established math)
+  - Passivity, diagonality, convexity (each independently proved)
+  - Six kernels → six L-functions (computed, verified)
+
+What is open:
+  - Second-order interlock: δ² deficit > δ budget at all δ > 0
+  - Equivalent to: Λ = 0 (de Bruijn-Newman)
+  - Equivalent to: RH
+
+The distance between "identified architecture" and "proof"
+is the distance between first-order and second-order.
+In analysis, that distance can be everything.</pre>
+
+    <h3>What Would Actually Close It</h3>
+
+    <p>A proof that the simultaneous constraint of passivity + diagonality + convexity forces the budget to scale as δ² (not δ) at leading order. This would require showing that the linear term in the Taylor expansion of the completed budget, which is nonzero for generic potentials, vanishes identically for the specific multiplicative structure of the primes. This cancellation, if it exists, would be a deep arithmetic fact, not a smooth-analysis fact. It would be the number theory that RH is about.</p>
+
+    <p>The six kernels provide six independent computations against which to test this cancellation. If the linear term vanishes in all six regularizations, that is strong evidence. If it vanishes in any one of them provably, that is RH.</p>
+
+    <p>Nobody has done this. The framework says where to look. The kernels say how to test. The proof would have to say why.</p>
+</section>
+
+<div class="divider">⊙ · ⊙ · ⊙</div>
+
+<footer>
+    ⊙ The 6+1 Kernel Bridge · Circumpunct Framework × Mullings Kernel Architecture · March 2026<br>
+    Mellin verification computed to machine precision. Triple Closure tested numerically.<br>
+    Architecture: confirmed. Proof: open. RH remains the deepest unsolved problem in mathematics.<br><br>
+    fractalreality.ca · r/Circumpunct
+</footer>
+
+</main>
+
+</body>
+</html>

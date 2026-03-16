@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⊙ One Circumpunct — Dimensional Braid Theory</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+    :root {
+      --bg: #060610;
+      --card: #0e0e1a;
+      --border: #1a1a2e;
+      --text: #d0d0e0;
+      --dim: #666;
+      --gold: #ffd700;
+
+      --c0d: #ff4466;
+      --c05d: #ff8844;
+      --c1d: #ffcc00;
+      --c15d: #88dd22;
+      --c2d: #22ddaa;
+      --c25d: #22aadd;
+      --c3d: #6666ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    canvas#bgCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      background: linear-gradient(135deg, var(--c0d), var(--c1d), var(--c2d), var(--c3d));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--dim);
+      font-size: 1rem;
+      margin-bottom: 40px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Main circumpunct visualization */
+    .circumpunct-area {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.4;
+    }
+
+    .panel h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      color: var(--gold);
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+
+    .panel canvas {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* Ladder */
+    .ladder {
+      margin-bottom: 30px;
+    }
+
+    .dim-row {
+      display: grid;
+      grid-template-columns: 70px 1fr 200px;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .dim-row:hover { background: rgba(255, 215, 0, 0.04); }
+    .dim-row.active { background: rgba(255, 215, 0, 0.08); }
+
+    .dim-row.structure { border-left: 3px solid; }
+    .dim-row.process {
+      border-left: 3px dashed;
+      opacity: 0.85;
+      font-size: 0.95em;
+    }
+
+    .dim-label {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .dim-name {
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-bottom: 2px;
+    }
+
+    .dim-desc {
+      color: var(--dim);
+      font-size: 0.88rem;
+    }
+
+    .dim-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      text-align: right;
+    }
+
+    @media (max-width: 700px) {
+      .dim-row { grid-template-columns: 55px 1fr; }
+      .dim-tag { display: none; }
+    }
+
+    /* Detail panel */
+    .detail-panel {
+      margin-bottom: 30px;
+      min-height: 200px;
+    }
+
+    .detail-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 700px) {
+      .detail-content { grid-template-columns: 1fr; }
+    }
+
+    .detail-text p {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .equation-box {
+      background: #0a0a16;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: #aab;
+      white-space: pre-wrap;
+      line-height: 1.7;
+    }
+
+    .highlight { color: var(--gold); font-weight: 600; }
+
+    /* Key insight */
+    .key-insight {
+      text-align: center;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(255,68,102,0.06), rgba(102,102,255,0.06));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-top: 30px;
+    }
+
+    /* Structure/process indicator */
+    .type-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .type-badge.struct { background: rgba(255,215,0,0.15); color: var(--gold); }
+    .type-badge.proc { background: rgba(255,255,255,0.06); color: var(--dim); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    th {
+      color: var(--gold);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="container">
+    <h1>⊙ One Circumpunct</h1>
+    <div class="subtitle">All wholes nested in one symbol &mdash; integers are structure, half-integers are process</div>
+
+    <!-- Main circumpunct visualization -->
+    <div class="circumpunct-area">
+      <div class="panel" style="max-width: 600px; width: 100%;">
+        <h2>THE CIRCUMPUNCT</h2>
+        <canvas id="circumpunctCanvas" width="560" height="560"></canvas>
+      </div>
+    </div>
+
+    <!-- Dimensional ladder -->
+    <div class="panel ladder">
+      <h2>DIMENSIONAL ARCHITECTURE</h2>
+
+      <div class="dim-row structure" style="border-color: var(--c0d);" data-dim="0" onclick="selectDim(this)">
+        <span class="dim-label" style="color: var(--c0d);">0D</span>
+        <div>
+          <div class="dim-name" style="color: var(--c0d);">LATENT POINT <span class="type-badge struct">WHOLE</span></div>
+          <div class="dim-desc">The dot at the center. Pure potential, compressed to a point. Seed before germination.</div>
+        </div>
+        <span class="dim-tag" style="color: var(--c0d);">• (center of ⊙)</span>
+      </div>
+
+      <div class="dim-row process" style="border-color: var(--c05d);" data-dim="0.5" onclick="selectDim(this)">
+        <span class="dim-label" style="color: var(--c05d);">0.5D</span>
+        <div>
+          <div class="dim-name">Aperture <span class="type-badge proc">PROCESS</span></div>
+          <div class="dim-desc">Point becoming time. The first opening. Where <em>i</em> lives.</div>
+        </div>
+        <span class="dim-tag" style="color: var(--c05d);">i = exp(i&pi;/2)</span>
+      </div>
+
+      <div class="dim-row structure" style="border-color: var(--c1d);" data-dim="1" onclick="selectDim(this)">
+        <span class="dim-label" style="color: var(--c1d);">1D</span>
+        <div>
+          <div class="dim-name" style="color: var(--c1d);">TIME <span class="type-badge struct">WHOLE</span></div>
+          <div class="dim-desc">The first whole. Duration, sequence, flow. The simplest extension from the point.</div>
+        </div>
+        <span class="dim-tag" style="color: var(--c1d);">─ (radius of ⊙)</span>
+      </div>
+
+      <div class="dim-row process" style="border-color: var(--c15d);" data-dim="1.5" onclick="selectDim(this)">
+        <span class="dim-label" style="color: var(--c15d);">1.5D</span>
+        <div>
+          <div class="dim-name">Fractal Branching <span class="type-badge proc">PROCESS</span></div>
+          <div class="dim-desc">Time becoming mind. Memory. Where sequence folds back on itself. D &asymp; 1.5 everywhere.</div>
+        </div>
+        <span class="dim-tag" style="color: var(--c15d);">D &asymp; 1.5</span>
+      </div>
+
+      <div class="dim-row structure" style="border-color: var(--c2d);" data-dim="2" onclick="selectDim(this)">
+        <span class="dim-label" style="color: var(--c2d);">2D</span>
+        <div>
+          <div class="dim-name" style="color: var(--c2d);">MIND <span class="type-badge struct">WHOLE</span></div>
+          <div class="dim-desc">The second whole. The field of awareness. Figure and ground. Subject and object.</div>
+        </div>
+        <span class="dim-tag" style="color: var(--c2d);">▢ (area of ⊙)</span>
+      </div>
+
+      <div class="dim-row process" style="border-color: var(--c25d);" data-dim="2.5" onclick="selectDim(this)">
+        <span class="dim-label" style="color: var(--c25d);">2.5D</span>
+        <div>
+          <div class="dim-name">Sensation <span class="type-badge proc">PROCESS</span></div>
+          <div class="dim-desc">Mind becoming space. Embodiment. Where awareness touches extension.</div>
+        </div>
+        <span class="dim-tag" style="color: var(--c25d);">T = cos&sup2;(&Delta;&phi;/2)</span>
+      </div>
+
+      <div class="dim-row structure" style="border-color: var(--c3d);" data-dim="3" onclick="selectDim(this)">
+        <span class="dim-label" style="color: var(--c3d);">3D</span>
+        <div>
+          <div class="dim-name" style="color: var(--c3d);">SPACE <span class="type-badge struct">WHOLE</span></div>
+          <div class="dim-desc">The third whole. Volume, extension, the container. The boundary of the circumpunct (○).</div>
+        </div>
+        <span class="dim-tag" style="color: var(--c3d);">○ (boundary of ⊙)</span>
+      </div>
+    </div>
+
+    <!-- Detail panel -->
+    <div class="panel detail-panel" id="detailPanel">
+      <h2 id="detailTitle">Select a Dimension</h2>
+      <div class="detail-content">
+        <div class="detail-text" id="detailText">
+          <p>Click any dimension in the ladder above to explore its role.</p>
+          <p>Integer dimensions are <strong>wholes</strong> &mdash; structures that simply ARE. Half-integer dimensions are <strong>processes</strong> &mdash; the braiding that transforms one whole into the next.</p>
+        </div>
+        <div class="equation-box" id="detailEquation">
+One Circumpunct:  ⊙
+
+  <span class="highlight">•</span>  =  0D  Latent Point   (center)
+  <span class="highlight">─</span>  =  1D  Time           (radius)
+  <span class="highlight">▢</span>  =  2D  Mind           (area)
+  <span class="highlight">○</span>  =  3D  Space          (boundary)
+
+  The symbol literally shows the structure.
+        </div>
+      </div>
+    </div>
+
+    <!-- Circumpunct mapping table -->
+    <div class="panel" style="margin-bottom: 30px;">
+      <h2>⊙ = THE MAP</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Dim</th>
+            <th>Whole</th>
+            <th>Part of ⊙</th>
+            <th>Character</th>
+            <th>What It Is</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--c0d); font-family:'Orbitron',sans-serif;">0D</td>
+            <td style="color:var(--c0d);">Latent Point</td>
+            <td style="font-size:1.4rem;">•</td>
+            <td>Structure</td>
+            <td style="color:var(--dim);">Seed, potential, center</td>
+          </tr>
+          <tr style="opacity:0.7;">
+            <td style="color:var(--c05d); font-family:'Orbitron',sans-serif;">0.5D</td>
+            <td style="color:var(--c05d);">Aperture</td>
+            <td style="color:var(--dim);">• &rarr; ─</td>
+            <td>Process</td>
+            <td style="color:var(--dim);">Point becoming time, <em>i</em> rotation</td>
+          </tr>
+          <tr>
+            <td style="color:var(--c1d); font-family:'Orbitron',sans-serif;">1D</td>
+            <td style="color:var(--c1d);">Time</td>
+            <td style="font-size:1.2rem;">─</td>
+            <td>Structure</td>
+            <td style="color:var(--dim);">Duration, sequence, the first whole</td>
+          </tr>
+          <tr style="opacity:0.7;">
+            <td style="color:var(--c15d); font-family:'Orbitron',sans-serif;">1.5D</td>
+            <td style="color:var(--c15d);">Fractal Branching</td>
+            <td style="color:var(--dim);">─ &rarr; ▢</td>
+            <td>Process</td>
+            <td style="color:var(--dim);">Time becoming mind, D &asymp; 1.5</td>
+          </tr>
+          <tr>
+            <td style="color:var(--c2d); font-family:'Orbitron',sans-serif;">2D</td>
+            <td style="color:var(--c2d);">Mind</td>
+            <td style="font-size:1.2rem;">▢</td>
+            <td>Structure</td>
+            <td style="color:var(--dim);">Awareness, field, the second whole</td>
+          </tr>
+          <tr style="opacity:0.7;">
+            <td style="color:var(--c25d); font-family:'Orbitron',sans-serif;">2.5D</td>
+            <td style="color:var(--c25d);">Sensation</td>
+            <td style="color:var(--dim);">▢ &rarr; ○</td>
+            <td>Process</td>
+            <td style="color:var(--dim);">Mind becoming space, embodiment</td>
+          </tr>
+          <tr>
+            <td style="color:var(--c3d); font-family:'Orbitron',sans-serif;">3D</td>
+            <td style="color:var(--c3d);">Space</td>
+            <td style="font-size:1.4rem;">○</td>
+            <td>Structure</td>
+            <td style="color:var(--dim);">Volume, extension, the third whole</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Key insight -->
+    <div class="key-insight">
+      <em>There is one circumpunct. The wholes are its integer dimensions.</em><br><br>
+      <span style="color:var(--c0d);">•</span> Latent Point &rarr;
+      <span style="color:var(--c1d);">─</span> Time &rarr;
+      <span style="color:var(--c2d);">▢</span> Mind &rarr;
+      <span style="color:var(--c3d);">○</span> Space<br><br>
+      <span style="color:var(--dim);font-size:0.85rem;">
+        Integers = structure (wholes that ARE). Half-integers = process (braiding that BECOMES).<br>
+        &beta; = 0.5 keeps structure and process in balance.
+      </span>
+    </div>
+
+  </div>
+
+  <script>
+    // ─── Background particles ───
+    const bgCanvas = document.getElementById('bgCanvas');
+    const bgCtx = bgCanvas.getContext('2d');
+    let particles = [];
+
+    function resizeBg() {
+      bgCanvas.width = window.innerWidth;
+      bgCanvas.height = window.innerHeight;
+    }
+    resizeBg();
+    window.addEventListener('resize', resizeBg);
+
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
+        r: Math.random() * 1.5 + 0.5,
+        color: `hsla(${Math.random() * 360}, 60%, 50%, ${Math.random() * 0.2 + 0.05})`
+      });
+    }
+
+    function animateBg() {
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = bgCanvas.width;
+        if (p.x > bgCanvas.width) p.x = 0;
+        if (p.y < 0) p.y = bgCanvas.height;
+        if (p.y > bgCanvas.height) p.y = 0;
+        bgCtx.beginPath();
+        bgCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        bgCtx.fillStyle = p.color;
+        bgCtx.fill();
+      });
+      requestAnimationFrame(animateBg);
+    }
+    animateBg();
+
+    // ─── Circumpunct Canvas ───
+    const cCanvas = document.getElementById('circumpunctCanvas');
+    const cCtx = cCanvas.getContext('2d');
+    const cx = 280, cy = 280;
+    let time = 0;
+    let selectedDimension = -1;
+
+    const dimColors = {
+      0:   '#ff4466',
+      0.5: '#ff8844',
+      1:   '#ffcc00',
+      1.5: '#88dd22',
+      2:   '#22ddaa',
+      2.5: '#22aadd',
+      3:   '#6666ff'
+    };
+
+    function drawCircumpunct() {
+      cCtx.clearRect(0, 0, 560, 560);
+      cCtx.fillStyle = '#080812';
+      cCtx.fillRect(0, 0, 560, 560);
+
+      const pulse = Math.sin(time * 0.02) * 0.05 + 1;
+      const breathe = Math.sin(time * 0.01) * 10;
+
+      // 3D — Space: the outer boundary (○)
+      const spaceR = 220 + breathe;
+      const spaceHighlight = selectedDimension === 3;
+      cCtx.beginPath();
+      cCtx.arc(cx, cy, spaceR, 0, Math.PI * 2);
+      cCtx.strokeStyle = spaceHighlight ? '#6666ff' : 'rgba(102,102,255,0.4)';
+      cCtx.lineWidth = spaceHighlight ? 4 : 2;
+      cCtx.stroke();
+
+      // Glow for space
+      if (spaceHighlight) {
+        cCtx.beginPath();
+        cCtx.arc(cx, cy, spaceR, 0, Math.PI * 2);
+        cCtx.strokeStyle = 'rgba(102,102,255,0.15)';
+        cCtx.lineWidth = 16;
+        cCtx.stroke();
+      }
+
+      // Label 3D
+      cCtx.font = '600 13px Orbitron';
+      cCtx.fillStyle = '#6666ff';
+      cCtx.textAlign = 'center';
+      cCtx.fillText('3D  SPACE  ○', cx, cy - spaceR - 10);
+
+      // 2.5D — Sensation: dashed ring between mind area and space boundary
+      const sensR = 185 + breathe * 0.8;
+      const sensHighlight = selectedDimension === 2.5;
+      cCtx.beginPath();
+      cCtx.setLineDash([6, 8]);
+      cCtx.arc(cx, cy, sensR, 0, Math.PI * 2);
+      cCtx.strokeStyle = sensHighlight ? '#22aadd' : 'rgba(34,170,221,0.2)';
+      cCtx.lineWidth = sensHighlight ? 3 : 1;
+      cCtx.stroke();
+      cCtx.setLineDash([]);
+
+      if (sensHighlight) {
+        cCtx.font = '500 11px Rajdhani';
+        cCtx.fillStyle = '#22aadd';
+        cCtx.fillText('2.5D  Sensation', cx, cy - sensR - 4);
+      }
+
+      // 2D — Mind: filled area (▢)
+      const mindR = 150 + breathe * 0.6;
+      const mindHighlight = selectedDimension === 2;
+      const mindGrad = cCtx.createRadialGradient(cx, cy, 60, cx, cy, mindR);
+      mindGrad.addColorStop(0, mindHighlight ? 'rgba(34,221,170,0.2)' : 'rgba(34,221,170,0.06)');
+      mindGrad.addColorStop(1, 'rgba(34,221,170,0)');
+      cCtx.beginPath();
+      cCtx.arc(cx, cy, mindR, 0, Math.PI * 2);
+      cCtx.fillStyle = mindGrad;
+      cCtx.fill();
+      cCtx.strokeStyle = mindHighlight ? '#22ddaa' : 'rgba(34,221,170,0.3)';
+      cCtx.lineWidth = mindHighlight ? 3 : 1.5;
+      cCtx.stroke();
+
+      // Label 2D
+      cCtx.font = '600 12px Orbitron';
+      cCtx.fillStyle = '#22ddaa';
+      cCtx.fillText('2D  MIND  ▢', cx, cy - mindR - 6);
+
+      // 1.5D — Fractal branching: draw branching pattern between time-line and mind-area
+      const branchHighlight = selectedDimension === 1.5;
+      if (branchHighlight || true) {
+        const branchAlpha = branchHighlight ? 0.6 : 0.15;
+        drawBranch(cCtx, cx, cy, 60, -Math.PI/2, 5, branchAlpha, time);
+      }
+
+      if (selectedDimension === 1.5) {
+        cCtx.font = '500 11px Rajdhani';
+        cCtx.fillStyle = '#88dd22';
+        cCtx.fillText('1.5D  Fractal Branching  D ≈ 1.5', cx + 90, cy - 80);
+      }
+
+      // 1D — Time: a line from center outward (─)
+      const timeHighlight = selectedDimension === 1;
+      const timeLen = 100 + breathe * 0.3;
+
+      // Draw time as a rotating radius
+      const angle = time * 0.008;
+      const tx = cx + Math.cos(angle) * timeLen;
+      const ty = cy + Math.sin(angle) * timeLen;
+
+      cCtx.beginPath();
+      cCtx.moveTo(cx, cy);
+      cCtx.lineTo(tx, ty);
+      cCtx.strokeStyle = timeHighlight ? '#ffcc00' : 'rgba(255,204,0,0.5)';
+      cCtx.lineWidth = timeHighlight ? 3 : 2;
+      cCtx.stroke();
+
+      // Arrow tip
+      const arrowAngle = angle;
+      const aLen = 8;
+      cCtx.beginPath();
+      cCtx.moveTo(tx, ty);
+      cCtx.lineTo(tx - aLen * Math.cos(arrowAngle - 0.4), ty - aLen * Math.sin(arrowAngle - 0.4));
+      cCtx.moveTo(tx, ty);
+      cCtx.lineTo(tx - aLen * Math.cos(arrowAngle + 0.4), ty - aLen * Math.sin(arrowAngle + 0.4));
+      cCtx.strokeStyle = timeHighlight ? '#ffcc00' : 'rgba(255,204,0,0.5)';
+      cCtx.lineWidth = 2;
+      cCtx.stroke();
+
+      // Label 1D
+      cCtx.font = '600 12px Orbitron';
+      cCtx.fillStyle = '#ffcc00';
+      cCtx.save();
+      cCtx.translate(tx + Math.cos(angle) * 16, ty + Math.sin(angle) * 16);
+      cCtx.fillText('1D TIME', 0, 0);
+      cCtx.restore();
+
+      // 0.5D — Aperture: pulsing ring around center
+      const apHighlight = selectedDimension === 0.5;
+      const apR = 20 + Math.sin(time * 0.04) * 4;
+      cCtx.beginPath();
+      cCtx.setLineDash([3, 5]);
+      cCtx.arc(cx, cy, apR, 0, Math.PI * 2);
+      cCtx.strokeStyle = apHighlight ? '#ff8844' : 'rgba(255,136,68,0.35)';
+      cCtx.lineWidth = apHighlight ? 3 : 1.5;
+      cCtx.stroke();
+      cCtx.setLineDash([]);
+
+      if (apHighlight) {
+        cCtx.font = '500 11px Rajdhani';
+        cCtx.fillStyle = '#ff8844';
+        cCtx.fillText('0.5D  Aperture (i)', cx, cy + apR + 16);
+      }
+
+      // 0D — Latent Point: the center dot (•)
+      const pointHighlight = selectedDimension === 0;
+      const pointR = pointHighlight ? 7 : 5;
+      cCtx.beginPath();
+      cCtx.arc(cx, cy, pointR * pulse, 0, Math.PI * 2);
+      cCtx.fillStyle = pointHighlight ? '#ff4466' : '#ff4466';
+      cCtx.fill();
+
+      // Glow
+      cCtx.beginPath();
+      cCtx.arc(cx, cy, pointR * 3, 0, Math.PI * 2);
+      const glow = cCtx.createRadialGradient(cx, cy, 0, cx, cy, pointR * 3);
+      glow.addColorStop(0, pointHighlight ? 'rgba(255,68,102,0.5)' : 'rgba(255,68,102,0.2)');
+      glow.addColorStop(1, 'rgba(255,68,102,0)');
+      cCtx.fillStyle = glow;
+      cCtx.fill();
+
+      // Label 0D
+      cCtx.font = '600 12px Orbitron';
+      cCtx.fillStyle = '#ff4466';
+      cCtx.fillText('0D  •', cx, cy + 40);
+
+      // Process labels along edges when not hovering specific dim
+      if (selectedDimension === -1) {
+        cCtx.font = '400 10px JetBrains Mono';
+        cCtx.fillStyle = 'rgba(255,136,68,0.5)';
+        cCtx.fillText('0.5D aperture', cx + 35, cy - 25);
+        cCtx.fillStyle = 'rgba(136,221,34,0.5)';
+        cCtx.fillText('1.5D branching', cx + 85, cy - 65);
+        cCtx.fillStyle = 'rgba(34,170,221,0.5)';
+        cCtx.fillText('2.5D sensation', cx + 110, cy - 140);
+      }
+
+      time++;
+      requestAnimationFrame(drawCircumpunct);
+    }
+
+    // Recursive fractal branch drawing
+    function drawBranch(ctx, x, y, len, angle, depth, alpha, t) {
+      if (depth <= 0 || len < 3) return;
+
+      const ex = x + Math.cos(angle) * len;
+      const ey = y + Math.sin(angle) * len;
+
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(ex, ey);
+      ctx.strokeStyle = `rgba(136, 221, 34, ${alpha * (depth / 5)})`;
+      ctx.lineWidth = depth * 0.5;
+      ctx.stroke();
+
+      const spread = 0.5 + Math.sin(t * 0.01 + depth) * 0.1;
+      const shrink = 0.65;
+      drawBranch(ctx, ex, ey, len * shrink, angle - spread, depth - 1, alpha, t);
+      drawBranch(ctx, ex, ey, len * shrink, angle + spread, depth - 1, alpha, t);
+    }
+
+    drawCircumpunct();
+
+    // ─── Dimension selection ───
+    const dimData = {
+      0: {
+        title: '0D — Latent Point',
+        text: '<p>The dot at the center of the circumpunct. Not nothing — <strong>latent</strong>. Everything that will unfold is compressed here, but none of it yet extended.</p><p>A seed before germination. A note before it sounds. The center of the symbol <strong>⊙</strong>.</p>',
+        eq: `0D = • (the center)\n\nNo direction. No duration. No extent.\nPure potential compressed to a point.\n\nThe latent point is what the circumpunct\nliterally shows: a point inside a circle.`
+      },
+      0.5: {
+        title: '0.5D — Aperture (Point → Time)',
+        text: '<p>The <strong>aperture</strong> — the opening through which the latent point begins to flow. This is where <em>i</em> lives: the imaginary rotation that turns static potential into dynamic process.</p><p>The soul-gate. The birth of sequence from stillness.</p>',
+        eq: `i = the rotation at 0.5D\ni² = −1\n\nRotation squared returns to negation:\nprocess undoes itself.\n\nThe aperture is the FIRST OPENING —\nstillness becoming flow.`
+      },
+      1: {
+        title: '1D — Time',
+        text: '<p>The <strong>first whole</strong>. Time is the simplest extension — one direction, irreversible, flowing. A single strand of becoming.</p><p>Everything that exists in time is 1D. Time is the string of the circumpunct, extending the latent point into duration.</p>',
+        eq: `• ──────────────────────►\n\nThe point unfolds into duration.\nBefore and after. Sequence. Rhythm.\n\nTime is not a container.\nTime IS the first whole.\nTime is the radius of ⊙.`
+      },
+      1.5: {
+        title: '1.5D — Fractal Branching (Time → Mind)',
+        text: '<p>Where <strong>memory</strong> lives. When a single timeline braids with itself — when present crosses past — awareness is born.</p><p>The universal D ≈ 1.5 (rivers, vasculature, lightning, coastlines, neurons) is the signature of <strong>time becoming mind</strong>.</p>',
+        eq: `D ≈ 1.5 appears in:\n  · River networks\n  · Vascular systems\n  · Lightning\n  · Coastlines\n  · Neural branching\n\nAll are time-becoming-mind\nat different scales.`
+      },
+      2: {
+        title: '2D — Mind',
+        text: '<p>The <strong>second whole</strong>. Mind is the surface where time becomes aware of itself. It has inside and outside, figure and ground, subject and object.</p><p>Mind is not brain. Mind is not computation. Mind is the 2D field of awareness — more fundamental than space, less fundamental than time.</p>',
+        eq: `Mind has two dimensions:\n  content × valence\n  figure × ground\n  subject × object\n\nEvery circumpunct at every scale\nhas a 2D mind-field between\nits time-string and its space-boundary.\n\nMind is the area of ⊙.`
+      },
+      2.5: {
+        title: '2.5D — Sensation (Mind → Space)',
+        text: '<p><strong>Sensation</strong> — the process by which the 2D mind-field begins to have spatial depth. When mind reaches into space, when awareness becomes embodied.</p><p>Sensation = mind touching space. Perception = space touching mind. Both are 2.5D.</p>',
+        eq: `T = cos²(Δφ/2)\n\nAligned → clear sensation (T → 1)\nOrthogonal → no sensation (T → 0)\n\nSensation is the coupling\nof inner and outer —\nthe braid between mind and space.`
+      },
+      3: {
+        title: '3D — Space',
+        text: '<p>The <strong>third whole</strong>. Space is the volume that contains. It IS the boundary ○ of the circumpunct — the outermost whole that allows all inner dimensions to coexist side by side.</p><p>Space is why there can be <strong>many</strong> — many points, many timelines, many minds — existing together.</p>',
+        eq: `Space is the boundary of ⊙.\n\nWithout space, there is only ONE\nof everything — one point, one time,\none mind.\n\nSpace is the third whole:\nthe container within which\nwholes coexist.\n\n○ = 3D`
+      }
+    };
+
+    function selectDim(el) {
+      document.querySelectorAll('.dim-row').forEach(r => r.classList.remove('active'));
+      el.classList.add('active');
+
+      const dim = parseFloat(el.dataset.dim);
+      selectedDimension = dim;
+      const d = dimData[dim];
+      if (!d) return;
+
+      document.getElementById('detailTitle').textContent = d.title;
+      document.getElementById('detailTitle').style.color = dimColors[dim] || '#fff';
+      document.getElementById('detailText').innerHTML = d.text;
+      document.getElementById('detailEquation').innerHTML = d.eq;
+
+      // Scroll detail into view
+      document.getElementById('detailPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Reset selection on click outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.dim-row') && !e.target.closest('.detail-panel')) {
+        document.querySelectorAll('.dim-row').forEach(r => r.classList.remove('active'));
+        selectedDimension = -1;
+      }
+    });
+  </script>
+
+</body>
+</html>
