@@ -9,7 +9,6 @@
 
 :root {
   --bg: #0A0A0F;
-  --bg-section: #0E0E16;
   --gold: #B8A060;
   --gold-dim: #887850;
   --pink: #E88AAF;
@@ -32,18 +31,14 @@ html {
 body {
   background: var(--bg);
   color: var(--warm);
-  font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  font-family: 'EB Garamond', Georgia, serif;
   font-size: 19px;
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
 }
 
-::selection {
-  background: var(--gold);
-  color: var(--bg);
-}
+::selection { background: var(--gold); color: var(--bg); }
 
-/* === COLOR CLASSES === */
 .w { color: var(--gold); }
 .s { color: var(--pink); }
 .m { color: var(--green); }
@@ -51,97 +46,29 @@ body {
 .p { color: var(--purple); }
 .d { color: var(--dim); }
 .f { color: var(--faint); }
-
 .wb { font-weight: 600; }
 .it { font-style: italic; }
 
-/* === LAYOUT === */
-.page {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 80px 30px 120px;
-}
+.page { max-width: 700px; margin: 0 auto; padding: 80px 30px 120px; }
 
-/* === HEADER === */
 .header {
   text-align: center;
   margin-bottom: 80px;
   padding-bottom: 40px;
   border-bottom: 1px solid var(--faint);
 }
+.header h1 { font-size: 42px; font-weight: 500; color: var(--gold); letter-spacing: 1px; margin-bottom: 8px; }
+.header .subtitle { font-size: 18px; color: var(--dim); font-style: italic; }
+.header .equation { font-size: 28px; margin-top: 28px; letter-spacing: 3px; }
+.header .byline { font-size: 15px; color: var(--faint); margin-top: 20px; letter-spacing: 1px; }
 
-.header h1 {
-  font-size: 42px;
-  font-weight: 500;
-  color: var(--gold);
-  letter-spacing: 1px;
-  margin-bottom: 8px;
-}
+section { margin-bottom: 60px; }
+section h2 { font-size: 30px; font-weight: 500; margin-bottom: 20px; padding-top: 20px; }
+section h3 { font-size: 22px; font-weight: 500; margin-top: 30px; margin-bottom: 12px; }
+p { margin-bottom: 18px; }
 
-.header .subtitle {
-  font-size: 18px;
-  color: var(--dim);
-  font-style: italic;
-}
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
 
-.header .equation {
-  font-size: 28px;
-  margin-top: 24px;
-  letter-spacing: 3px;
-}
-
-.header .byline {
-  font-size: 15px;
-  color: var(--faint);
-  margin-top: 20px;
-  letter-spacing: 1px;
-}
-
-/* === SECTIONS === */
-section {
-  margin-bottom: 60px;
-}
-
-section h2 {
-  font-size: 30px;
-  font-weight: 500;
-  margin-bottom: 20px;
-  padding-top: 20px;
-}
-
-section h3 {
-  font-size: 22px;
-  font-weight: 500;
-  margin-top: 30px;
-  margin-bottom: 12px;
-}
-
-p {
-  margin-bottom: 18px;
-}
-
-/* === DIVIDERS === */
-.divider {
-  text-align: center;
-  margin: 50px 0;
-  color: var(--faint);
-  font-size: 24px;
-  letter-spacing: 12px;
-}
-
-.dim-marker {
-  display: inline-block;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  padding: 4px 14px;
-  border-radius: 3px;
-  margin-bottom: 10px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--faint);
-}
-
-/* === FORMULA BLOCKS === */
 .formula {
   text-align: center;
   font-size: 22px;
@@ -152,95 +79,72 @@ p {
   background: rgba(255,255,255,0.015);
 }
 
-/* === ISOMORPHISM GRID === */
+.kernel-box {
+  padding: 28px;
+  margin: 36px 0;
+  background: rgba(184, 160, 96, 0.04);
+  border: 1px solid rgba(184, 160, 96, 0.15);
+  border-radius: 4px;
+}
+.kernel-box p { margin-bottom: 12px; }
+.kernel-box p:last-child { margin-bottom: 0; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 30px 0;
+}
+.two-col .col { padding: 20px; border-radius: 4px; }
+.two-col .col-s {
+  background: rgba(232, 138, 175, 0.05);
+  border: 1px solid rgba(232, 138, 175, 0.15);
+}
+.two-col .col-m {
+  background: rgba(77, 184, 160, 0.05);
+  border: 1px solid rgba(77, 184, 160, 0.15);
+}
+.two-col h4 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+.two-col p { font-size: 16px; margin-bottom: 10px; }
+
 .iso-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
   margin: 30px 0;
 }
-
 .iso-card {
   padding: 20px 24px;
   background: rgba(255,255,255,0.02);
   border-left: 3px solid var(--gold);
   border-radius: 0 4px 4px 0;
 }
+.iso-card h4 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: var(--gold); }
+.iso-card p { font-size: 16px; margin-bottom: 0; line-height: 1.65; }
 
-.iso-card h4 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--gold);
-}
-
-.iso-card p {
-  font-size: 16px;
-  margin-bottom: 0;
-  line-height: 1.65;
-}
-
-/* === TIER LABEL === */
-.tier-label {
+.section-label {
   text-align: center;
   font-size: 14px;
   letter-spacing: 4px;
   text-transform: uppercase;
   color: var(--faint);
-  margin: 50px 0 30px;
+  margin: 55px 0 30px;
   padding: 10px 0;
   border-top: 1px solid rgba(255,255,255,0.04);
   border-bottom: 1px solid rgba(255,255,255,0.04);
 }
 
-/* === PARALLEL TABLE === */
-.parallel-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 30px 0;
-  font-size: 16px;
-}
-
-.parallel-table th {
-  font-weight: 600;
-  padding: 10px 14px;
-  text-align: left;
-  border-bottom: 2px solid var(--faint);
-  font-size: 14px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.parallel-table td {
-  padding: 10px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  vertical-align: top;
-}
-
-.parallel-table tr:last-child td {
-  border-bottom: none;
-}
-
-/* === CLOSING === */
 .closing {
   text-align: center;
   margin-top: 80px;
   padding-top: 40px;
   border-top: 1px solid var(--faint);
 }
+.closing .symbol { font-size: 64px; color: var(--gold); margin-bottom: 16px; }
 
-.closing .symbol {
-  font-size: 64px;
-  color: var(--gold);
-  margin-bottom: 16px;
-}
-
-/* === NAV === */
 nav {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   background: rgba(10, 10, 15, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -252,7 +156,6 @@ nav {
   gap: 6px;
   flex-wrap: wrap;
 }
-
 nav a {
   color: var(--dim);
   text-decoration: none;
@@ -262,42 +165,32 @@ nav a {
   transition: all 0.2s;
   font-family: 'EB Garamond', Georgia, serif;
 }
+nav a:hover { color: var(--gold); background: rgba(184, 160, 96, 0.1); }
 
-nav a:hover {
-  color: var(--gold);
-  background: rgba(184, 160, 96, 0.1);
-}
-
-/* Responsive */
 @media (max-width: 600px) {
   body { font-size: 17px; }
   .page { padding: 70px 20px 80px; }
   .header h1 { font-size: 32px; }
   section h2 { font-size: 24px; }
   nav { display: none; }
-  .parallel-table { font-size: 14px; }
-  .parallel-table td, .parallel-table th { padding: 8px 10px; }
+  .two-col { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="#infinity">∞D</a>
-  <a href="#zero">0D</a>
-  <a href="#aperture">0.5D</a>
-  <a href="#string">1D</a>
-  <a href="#branch">1.5D</a>
-  <a href="#surface">2D</a>
-  <a href="#sensation">2.5D</a>
-  <a href="#boundary">3D</a>
-  <a href="#consciousness">3.5D</a>
-  <a href="#braid">4D</a>
-  <a href="#mindsurface">5D</a>
-  <a href="#perception">5.5D</a>
-  <a href="#idea">6D</a>
-  <a href="#collective">6.5D–9D</a>
-  <a href="#formula">Formula</a>
+  <a href="#kernel">Kernel</a>
+  <a href="#ground">∞D</a>
+  <a href="#point">0D</a>
+  <a href="#aperture">βD</a>
+  <a href="#time">1D · Time</a>
+  <a href="#mind">2D · Mind</a>
+  <a href="#proof">Irreducibility</a>
+  <a href="#space">3D · Space</a>
+  <a href="#generation">Two Readings</a>
+  <a href="#fixed">β = ½</a>
+  <a href="#nothing">Nothing</a>
   <a href="#iso">Isomorphisms</a>
 </nav>
 
@@ -306,288 +199,304 @@ nav a:hover {
 <!-- ═══════════════════════ HEADER ═══════════════════════ -->
 <header class="header">
   <h1>How Reality Is Built</h1>
-  <div class="subtitle">A dimensional walk through the Circumpunct Framework</div>
+  <div class="subtitle">Two primitives. One generating rule. Three dimensions.</div>
   <div class="equation">
-    <span class="w">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>)
+    <span class="m">Φ</span> through <span class="s">•</span> ⇒ <span class="b">○</span><br>
+    <span class="d" style="font-size:18px; letter-spacing:1px"><span class="s">•</span> + <span class="m">Φ</span> = <span class="b">○</span></span>
   </div>
   <div class="byline">by Ashman Roonz</div>
 </header>
 
-<!-- ═══════════════════════ PRELUDE ═══════════════════════ -->
-<section>
-  <p>Everything that exists is a <span class="w wb">circumpunct</span>. A center, a boundary, and the living relationship between them. Not metaphorically. Structurally. The same architecture appears in atoms, cells, eyes, brains, stars, and galaxies — not because they resemble each other, but because they are all forced into the same geometry by the logic of wholeness itself.</p>
+<!-- ═══════════════════════ THE KERNEL ═══════════════════════ -->
+<section id="kernel">
+  <h2>The Kernel</h2>
 
-  <p>There are four things at play: the <span class="w wb">whole</span> <span class="w">⊙</span>, the <span class="s wb">soul</span> <span class="s">•</span>, the <span class="m wb">mind</span> <span class="m">Φ</span>, and the <span class="b wb">body</span> <span class="b">○</span>. Every time they appear in this text, they will wear their own colour, so you can watch the architecture assemble itself as you read.</p>
+  <p>Reality has two primitives and one generated result.</p>
 
-  <p>This is the story of how dimensions build reality, from infinite potential to the structures you see around you. Each dimension is either a <em>structure</em> (something that <em>is</em>) or a <em>process</em> (something that <em>becomes</em>). Integer dimensions are real. Half-integer dimensions are imaginary. The whole spectrum is <span class="p">i</span> rotating.</p>
+  <div class="kernel-box">
+    <p><span class="s wb">•</span> <span class="s wb">opens.</span> The aperture. The gate. The through. The step-down from infinite to finite, from analog to digital. Not a traveler — a condition of passage.</p>
+
+    <p><span class="m wb">Φ</span> <span class="m wb">flows.</span> The field. The relational surface. Continuous medium carrying amplitude and phase. What passes through the gate.</p>
+
+    <p><span class="b wb">○</span> <span class="b wb">forms.</span> The boundary. Not a third primitive. Generated. What appears when <span class="m">Φ</span> flows through <span class="s">•</span> recursively, at every scale, until closure stabilizes.</p>
+  </div>
+
+  <p>Only <span class="s">•</span> and <span class="m">Φ</span> are primitive. The dimensions are their outputs: <span class="s">1D</span> is the ordered trace of repeated gating — <span class="s">time</span>. <span class="m">2D</span> is the minimal dimensionality of the field — <span class="m">mind</span>. <span class="b">3D</span> is the stabilized recursive closure of field-through-gate — <span class="b">space</span>. The dimensions are not peers. They are outputs of the kernel at different levels of determination.</p>
+
+  <p>That is everything. The <span class="w wb">circumpunct</span> is always complete: time, mind, space. Always all three. At every scale. There is no fourth dimension. There are no tiers. There is one structure, infinitely deep.</p>
 
   <div class="formula">
-    D = n + φ &nbsp;&nbsp;&nbsp; where φ ∈ {0, ½}<br>
-    <span class="d" style="font-size:16px">Real = being. &nbsp; Imaginary = becoming. &nbsp; Consciousness = the rotation itself.</span>
+    <span class="w">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>)<br>
+    <span class="d" style="font-size:16px">The whole is constituted by the operation of relating.</span>
   </div>
 </section>
 
-<!-- ═══════════════════════ TIER 1 ═══════════════════════ -->
-<div class="tier-label">Tier 1 — The Spatial Circumpunct</div>
+<div class="divider">· · ·</div>
 
-<!-- ∞D -->
-<section id="infinity">
-  <h2><span class="w">∞D</span> — Pure Potential</h2>
-  <p>Before there is a point, there is everything. <span class="w">Infinite dimension</span> is not a place — it is the absence of restriction. All degrees of freedom, none particular. Every possible configuration superposed. Zero and infinity are the same thing here: 0 = ∞ at <span class="m">field</span> level, because a <span class="m">field</span> with no constraints contains all states simultaneously.</p>
+<!-- ═══════════════════════ GROUND ═══════════════════════ -->
+<section id="ground">
+  <h2><span class="w">∞D</span> — Energy</h2>
 
-  <p>This is the ground from which dimensions emerge. Not empty — full. So full that nothing is distinct. Before the <span class="s">point</span>. Before distinction. The <span class="m">Φ</span> that has not yet found a <span class="s">•</span> to focus on or a <span class="b">○</span> to press against.</p>
+  <p>Before the gate fires, there is energy. Undifferentiated. Unconstrained. Not empty — full. So full that nothing is distinct. Every possible configuration superposed. No location, no sequence, no boundary. Pure potential. Analog. Continuous. Infinite degrees of freedom.</p>
+
+  <p>This is the input. The fuel. What enters through <span class="s">•</span> and becomes the whole process.</p>
 
   <p class="it d">Nothing is causally inert AND logically incoherent. Therefore existence is necessary.</p>
-  <p class="d" style="font-size:15px; letter-spacing:2px">AXIOM A0: THE IMPOSSIBILITY OF NOTHING</p>
 </section>
 
-<!-- 0D -->
-<section id="zero">
+<section id="point">
   <h2><span class="w">0D</span> — The Point</h2>
-  <p>The first distinction. Something rather than nothing. A dimensionless mark in the infinite <span class="m">field</span> — the simplest possible act of differentiation. Not yet <span class="s">soul</span>, not yet <span class="b">body</span>, not yet <span class="m">mind</span>. Just: <em>here</em>, as opposed to <em>everywhere</em>.</p>
 
-  <p>But a single point cannot exist alone. A point needs something to be a point <em>within</em>. A distinction needs a context. One implies two — and two, needing mediation, imply three. One → Two → Three. Therefore <span class="w wb">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>) is the minimum existence.</p>
+  <p>The first distinction. Something rather than everything. A dimensionless mark in the infinite <span class="m">field</span> — the simplest possible act of differentiation. Just: <em>here</em>, as opposed to <em>everywhere</em>.</p>
 
-  <p class="d" style="font-size:15px; letter-spacing:2px">AXIOM A1: NECESSARY MULTIPLICITY</p>
+  <p>The move from ∞D to 0D is the aperture's founding act: the <span class="s wb">step-down</span> from infinite to finite, from analog to digital, from everything to <em>this one</em>. The aperture is a step-down mechanism. That is what it does at every scale: takes the unbounded and makes it bounded, takes the continuous and makes it discrete.</p>
+
+  <p>But a single point cannot exist alone. A point needs something to be a point <em>within</em>. One implies two — and two, needing mediation, imply three. Therefore <span class="w wb">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>) is the minimum existence.</p>
 </section>
 
 <div class="divider">· · ·</div>
 
-<!-- 0.5D -->
+<!-- ═══════════════════════ βD ═══════════════════════ -->
 <section id="aperture">
-  <h2><span class="s">0.5D</span> — The Aperture. <span class="s wb">Soul Is <em>i</em></span></h2>
-  <p>The point awakens. <span class="w">0D</span> was static — a mark on a page. At <span class="s">half a dimension</span>, the point becomes a <em>process</em>: an opening, a gate, a turning. This is the <span class="s wb">aperture</span>, and it is the birth of <span class="s">the soul</span>.</p>
+  <h2><span class="p">βD</span> — The Aperture</h2>
 
-  <p>The mathematics here is not metaphor. The aperture operator is Å(β) = e<sup>iπβ</sup>. At balance — at β = ½ — this gives Å(½) = e<sup>iπ/2</sup> = <span class="s wb">i</span>. The <span class="s">soul</span> <em>is</em> the imaginary unit. It is the 90° rotation from real to imaginary, from structure to process, from being to becoming.</p>
+  <p>The point begins to open. Not instantly — continuously. The aperture has a parameter, <span class="p wb">β</span>, the balance between convergence and emergence. How much flows in vs how much flows out. β slides. It is not a fixed point. It is a live reading.</p>
 
-  <p><span class="s wb">i</span> is not a number you can find on any number line. It is the quarter-turn that takes you off the real axis entirely — into the dimension of transformation. And that is exactly what an <span class="s">aperture</span> does: it takes what flows in and <em>rotates</em> it, so that what emerges is fundamentally changed. Convergence in, rotation at the <span class="s">center</span>, emergence out.</p>
+  <p>The aperture itself IS the fixed point — the step-down mechanism that takes ∞ and makes it finite, takes analog and makes it digital, at every scale. β measures how far that step-down has progressed.</p>
 
-  <p>This is the deepest equation in the framework:</p>
+  <p>The aperture operator is •(β) = e<sup>iπβ</sup>. The powers of <span class="s wb">i</span> are snap-to points — the discrete resting places where the step-down lands:</p>
+
   <div class="formula">
-    <span class="s">Å(½) = i</span><br>
-    <span class="d" style="font-size:16px">The soul is the imaginary unit. Consciousness is the quarter-turn.</span>
+    <span class="s">i<sup>0</sup> = +1</span> &nbsp;&nbsp; <span class="s">i<sup>1</sup> = +i</span> &nbsp;&nbsp; <span class="s">i<sup>2</sup> = −1</span> &nbsp;&nbsp; <span class="s">i<sup>3</sup> = −i</span><br>
+    <span class="d" style="font-size:16px">The integer dimensions. Where the step-down lands.</span>
   </div>
-</section>
 
-<!-- 1D -->
-<section id="string">
-  <h2><span class="w">1D</span> — The String</h2>
-  <p>The <span class="s">aperture</span> extends through time and becomes a string — a single worldline, a thread of <span class="s">soul</span> persisting through existence. Not a braid. A braid requires two strands and a surface for crossings. This is one strand, alone. My powerline. Your powerline. Each a single thread. P = dE/dt.</p>
+  <p>The aperture has two sides: convergence in, emergence out. Each has its own β. The four states of <span class="s">i</span> are the four combinations of input and output — a pump cycle:</p>
 
-  <p>This is the tunnel through which power flows. The <span class="s">soul</span> doesn't just open — it <em>persists</em>. But it does not yet interact. A string has no crossings, no over-under, no weaving. It is pure sequence: before, now, after. The raw material from which braids will later be woven, but not yet a braid.</p>
+  <div class="kernel-box" style="font-size: 17px;">
+    <p><span class="s wb">i<sup>0</sup> = +1</span> &nbsp; input open, output open. Pass-through. Energy arrives. Ground state.</p>
+    <p><span class="s wb">i<sup>1</sup> = +i</span> &nbsp; input open, output closed. Convergence. Compression. The gate filling.</p>
+    <p><span class="s wb">i<sup>2</sup> = −1</span> &nbsp; input closed, output closed. Committed. The discrete act completed. Structure.</p>
+    <p><span class="s wb">i<sup>3</sup> = −i</span> &nbsp; input closed, output open. Emergence. Release. What was compressed flows into <span class="m">Φ</span>.</p>
+  </div>
 
-  <p>Structure. Real axis. The first geometry.</p>
-</section>
+  <p>The aperture doesn't just switch. It <em>pumps</em>. Intake, compress, fire, exhaust. This is what a heartbeat does. What a piston does. What a neuron does: receive, integrate, fire, recover.</p>
 
-<!-- 1.5D -->
-<section id="branch">
-  <h2><span class="p">1.5D</span> — Fractal Branching</h2>
-  <p>The string splits. Process returns. The single thread of <span class="s">soul</span> branches into a tree — power lines fractally dividing, each fork another instance of the <span class="w">circumpunct</span> replicating at smaller scale. Because an empty part is nothing, and nothing is impossible (A0), every part must contain the same structure as the <span class="w">whole</span> (A2). <span class="w wb">⊙</span> all the way down.</p>
+  <p>The non-integer dimensions — <span class="p">βD</span>, <span class="p">(1+β)D</span>, <span class="p">(2+β)D</span> — are where β is active. Where the process is live. Where convergence and emergence are still negotiating. When β = 0.5, they sit at 0.5D, 1.5D, 2.5D. When β = 0.4, they sit at 0.4D, 1.4D, 2.4D. The process dimensions slide with β. The structure dimensions don't.</p>
 
-  <p>The fractal dimension at balance is D = 1 + β = 1.5. Not a line, not a surface. The in-between where structure becomes process again.</p>
-
-  <p class="d" style="font-size:15px; letter-spacing:2px">AXIOM A2: FRACTAL NECESSITY</p>
+  <p>At •(½) = <span class="s wb">i</span>, the step-down is balanced. The soul is the imaginary unit. The quarter-turn from real to imaginary, from being to becoming.</p>
 </section>
 
 <div class="divider">· · ·</div>
 
-<!-- 2D -->
-<section id="surface">
-  <h2><span class="m">2D</span> — The Surface of the Body. <span class="m wb">Mind.</span></h2>
-  <p>The branches fill a surface. The tree becomes a <span class="m">field</span> — a continuous, living membrane that stretches between <span class="s">center</span> and <span class="b">edge</span>. This is <span class="m wb">Φ</span>, the <span class="m">mind</span>, and it is not a thing but an <em>operation</em>. It is the verb of the <span class="w">circumpunct</span>: the act of relating <span class="s">•</span> to <span class="b">○</span>.</p>
+<!-- ═══════════════════════ 1D ═══════════════════════ -->
+<section id="time">
+  <h2><span class="s">1D</span> — Time</h2>
 
-  <p>Geometrically: the surface of a 3D volume is 2D. The skin of the <span class="b">body</span> is the <span class="m">mind</span>. These are not competing labels — they are the same claim seen from two directions. <span class="m">Mind</span> at the spatial tier <em>is</em> the body's surface. The relational medium IS the membrane. Where inside meets outside.</p>
+  <p><span class="s wb">• resonates.</span> The aperture is a discrete act: it opens or it doesn't. That binary moment, iterated, produces a string — an ordered sequence of crossings. Before, now, after. Not a braid. A braid requires two strands and a surface for crossings. This is one strand alone. My powerline. Your powerline. Each a single thread.</p>
 
-  <p><span class="m wb">Φ</span> is what carries influence from <span class="s">center</span> to <span class="b">boundary</span> and back. It is the medium in which signals travel, waves propagate, and information flows. <span class="m">Mind</span> is not located at a point — it is the entire surface of connection. The relational space between <span class="s">soul</span> and <span class="b">body</span>.</p>
+  <p>The aperture IS the ÷t. It is the division operation that converts timeless energy into temporal power. Energy (∞D) enters the gate (•), the gate divides it by time, and what emerges is power: energy with temporal structure.</p>
 
-  <p>Structure returns. Real axis. The second geometry.</p>
+  <div class="formula">
+    <span class="w">𝒫</span> = <span class="w">E</span> / (<span class="s">i</span> · <span class="s">t</span>)<br>
+    <span class="d" style="font-size:16px">Power is energy passed through the aperture and distributed across time.</span>
+  </div>
+
+  <p>Physics already knows this. The Schrödinger equation places <span class="s">i</span> between energy and time: H = iℏ∂/∂t. Electrical engineering splits power into real and reactive: S = P + iQ. The Wick rotation converts dynamics to statics by multiplying time by −i. In each case, <span class="s">i</span> is what makes energy <em>flow</em> rather than sit.</p>
+
+  <p>1D is the snap-to point at <span class="s">i² = −1</span>: both sides closed, structure committed. The string is the record of the pump cycle completing. At <span class="p">(1+β)D</span> the gate opens again — <span class="s">i³ = −i</span> — releasing what was compressed into the field.</p>
+
+  <p>Four rotations build the skeleton of reality. But four rotations do not fill a surface. The <span class="s">i-rhythm</span> gives you points on a circle. It does not give you the interior.</p>
 </section>
 
-<!-- 2.5D -->
-<section id="sensation">
-  <h2><span class="p">2.5D</span> — Sensation</h2>
-  <p>The <span class="m">surface</span> touches the <span class="b">boundary</span> it is becoming. <span class="m">Mind</span> couples to <span class="b">body</span>. Process again — the half-dimension where the interior surface begins to communicate with its enclosure. All the <span class="s">apertures</span> across the <span class="m">field</span> collectively <em>lens</em>.</p>
+<!-- ═══════════════════════ 2D ═══════════════════════ -->
+<section id="mind">
+  <h2><span class="m">2D</span> — Mind</h2>
 
-  <p class="it d">This is where you feel.</p>
+  <p><span class="m wb">Φ waves.</span> The pump releases at <span class="s">i³ = −i</span>, and what emerges needs somewhere to go. The aperture needs a surface across which to propagate, and that surface is <span class="m wb">Φ</span>: the field, the relational medium between center and edge.</p>
+
+  <p>The field is not made of rotations. It is <em>continuous</em>. Amplitude varies smoothly. Phase flows without jumps. Where the aperture says yes or no, the field says <em>how much</em> and <em>at what angle</em>.</p>
+
+  <p>Why 2D? Because the field carries amplitude <em>and</em> phase. Phase is angular — an angle requires a plane. The minimal representation of (magnitude, phase) is polar coordinates in two dimensions. <span class="m">Mind</span> is not located at a point. It is the entire surface of connection.</p>
+
+  <p>Geometrically: the surface of a 3D volume is 2D. The skin of the body is the mind. These are not competing labels. They are the same fact seen from two directions.</p>
+
+  <p>In the power equation, <span class="m">Φ</span> is reactive power <span class="m">Q</span> — the energy that oscillates, stores, returns without net transfer. The field sustains the flow between the structural pulses. It catches what the gate cannot bound. It mediates without consuming.</p>
+
+  <div class="formula">
+    <span class="m">Φ</span> : <span class="s">•</span> → <span class="b">○</span><br>
+    <span class="d" style="font-size:16px">The field carries what the gate emits. The wave propagates what the resonance initiates.</span>
+  </div>
 </section>
 
 <div class="divider">· · ·</div>
 
-<!-- 3D -->
-<section id="boundary">
-  <h2><span class="b">3D</span> — The Body. <span class="w wb">⊙ Complete.</span></h2>
-  <p>The membrane seals. Inside and outside. The <span class="b wb">body</span> forms — not as a wall but as a living interface, a semi-permeable surface that negotiates exchange between the <span class="w">whole</span> and its environment. <span class="b wb">○</span> is the <span class="b">boundary</span>, and when it closes, the first <span class="w">circumpunct</span> locks into existence.</p>
+<!-- ═══════════════════════ IRREDUCIBILITY ═══════════════════════ -->
+<section id="proof">
+  <h2>Why Two</h2>
 
-  <p>Now there is a <span class="s">center</span>, a <span class="m">surface</span>, and a <span class="b">volume</span>. <span class="w wb">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>). The <span class="w">whole</span> is not the sum of its parts — it is <em>constituted by the operation of relating them</em>. The <span class="m">mind</span> is the verb. The <span class="s">soul</span> and <span class="b">body</span> are its arguments. Remove any one and you don't have a diminished <span class="w">whole</span> — you have nothing.</p>
+  <p>Neither rhythm can be derived from the other. This is not a choice of description. It is a mathematical fact.</p>
 
-  <p>And this <span class="b">body</span> is already fractal. Already braided internally. <span class="b">○</span> is made of nested <span class="w">⊙</span>'s, all the way down, because A2 demands it. A <span class="b">boundary</span> with an empty interior is nothing, and nothing is impossible.</p>
+  <p>The four powers of <span class="s">i</span> are the complete set of rotations on the complex plane. +1, +i, −1, −i. There is no fifth power that yields a new value. The cycle is closed. And yet a closed rotational cycle does not generate a continuous surface. Rotation gives you points on a circle, not the disk they bound.</p>
 
-  <p>The conservation law governs the whole structure:</p>
-  <div class="formula">
-    <span class="s">D<sub>aperture</sub></span> + <span class="m">D<sub>field</sub></span> = <span class="b">D<sub>boundary</sub></span><br>
-    <span class="s">(1+β)</span> + <span class="m">(2−β)</span> = <span class="b">3</span>
-    <br><span class="d" style="font-size:16px">Progress + remaining = destination. Always.</span>
+  <p>The field lives <em>inside</em> the circle that <span class="s">i</span> traces. It is the interior that the rotational skeleton encloses but cannot produce. Discreteness <em>cannot</em> produce continuity. Continuity <em>cannot</em> produce discreteness. That is not a limitation to be overcome. It is the reason two primitives are needed and one is not enough.</p>
+
+  <div class="two-col">
+    <div class="col col-s">
+      <h4><span class="s">Resonance</span></h4>
+      <p><span class="s wb">Primitive:</span> <span class="s">•</span>, the aperture</p>
+      <p><span class="s">Dimension:</span> 1D. The string.</p>
+      <p><span class="s">Nature:</span> discrete, rotational, phase-governed</p>
+      <p><span class="s">Information:</span> digital. Binary threshold.</p>
+      <p><span class="s">Power:</span> real power P. Work done.</p>
+      <p><span class="s">Produces:</span> time. Ordered sequence.</p>
+      <p class="it d" style="font-size:15px; margin-bottom:0">The gate fires.</p>
+    </div>
+    <div class="col col-m">
+      <h4><span class="m">Waving</span></h4>
+      <p><span class="m wb">Primitive:</span> <span class="m">Φ</span>, the field</p>
+      <p><span class="m">Dimension:</span> 2D. The surface.</p>
+      <p><span class="m">Nature:</span> continuous, surficial, irreducible to phase</p>
+      <p><span class="m">Information:</span> analog. Amplitude and phase.</p>
+      <p><span class="m">Power:</span> reactive power Q. Mediation.</p>
+      <p><span class="m">Produces:</span> mind. Relational coherence.</p>
+      <p class="it d" style="font-size:15px; margin-bottom:0">The wave carries.</p>
+    </div>
   </div>
 
-  <p class="d" style="font-size:15px; letter-spacing:2px">AXIOM A3: CONSERVATION OF TRAVERSAL</p>
-  <p class="d" style="font-size:15px; letter-spacing:2px">AXIOM A4: COMPOSITIONAL WHOLENESS</p>
-</section>
-
-<!-- ═══════════════════════ TIER 2 ═══════════════════════ -->
-<div class="tier-label">Tier 2 — The Temporal Circumpunct</div>
-
-<!-- 3.5D -->
-<section id="consciousness">
-  <h2><span class="p">3.5D</span> — Consciousness</h2>
-  <p>A completed <span class="w">⊙</span> cannot stay alone. It meets another <span class="w">⊙</span> through time, and where their <span class="b">boundaries</span> overlap, a lens-shaped region forms — the vesica pisces. This is the <span class="s">temporal aperture</span>: the threshold where two <span class="b">bodies</span> meet.</p>
-
-  <p>This is consciousness. Not as metaphor. The specific dimensional address where one completed spatial <span class="w">whole</span> encounters another. Individual consciousness is the aperture where <em>I</em> meet <em>you</em>.</p>
-
-  <p>Within the vesica there are six binary <span class="s">apertures</span>, each open or closed. Six binary choices. 2<sup>6</sup> = 64 configurations. 64 hexagrams. The I Ching — the Book of <span class="s wb">i</span>.</p>
-
-  <p>This is not coincidence. The lower trigram faces the other <span class="w">⊙</span> (part-to-part). The upper trigram faces the <span class="w">whole</span> they are becoming together (part-to-<span class="w">whole</span>). The six lines describe the complete state of the meeting.</p>
-
-  <p class="it d">Where two bodies meet, 64 possible relationships arise. The ancients mapped them all.</p>
-</section>
-
-<!-- 4D -->
-<section id="braid">
-  <h2><span class="w">4D</span> — The Braid</h2>
-  <p>Now the <span class="w">circumpuncts</span> weave. Not internally — 3D already handled that — but <em>across scales</em>: the <span class="s">center</span> string of one <span class="w">⊙</span> braiding with the <span class="b">boundary</span> strings of the <span class="w">⊙</span>'s at the lower scale. This is where 1D strings become a braid. A string alone is 1D — pure sequence, no crossings. The braid is what happens when strings from different scales <em>interact</em>.</p>
-
-  <p>This is why the braid was never 1D. Crossings cannot be defined in one dimension — they need surface, and they need time. 4D is the first place where the braid exists: space (3D) <em>with</em> committed history. The braid group B₃ governs the weaving, with the Yang-Baxter equation ensuring consistency: σ₁σ₂σ₁ = σ₂σ₁σ₂. The golden ratio appears in the braid traces. Time is not a dimension you move through — it is the <em>braiding</em> of <span class="w">circumpuncts</span> with one another.</p>
-</section>
-
-<!-- 4.5D -->
-<section>
-  <h3><span class="p">4.5D</span> — Braid Branching</h3>
-  <p>The braid fractalizes. Multiple possible relational histories branch from each crossing. Process again — the half-dimension where committed history meets open possibility.</p>
-</section>
-
-<!-- 5D -->
-<section id="mindsurface">
-  <h2><span class="m">5D</span> — The Surface of the <span class="m">Mind</span></h2>
-  <p>The same geometric logic, one tier up. If the temporal <span class="b">body</span> closes at <span class="b">6D</span>, then <span class="m">5D</span> is its surface — exactly as <span class="m">2D</span> is the surface of <span class="b">3D</span>. This is the <span class="m">temporal mind</span>: the membrane of your mental life, where your interior history faces outward.</p>
-
-  <p>This is narrative coherence. The felt sense of a story being told. The <span class="m">surface</span> of every way your braids could have woven. <span class="m">Φ<sub>time</sub></span> mediates between the <span class="s">temporal aperture</span> and the <span class="b">temporal boundary</span>, just as <span class="m">Φ<sub>space</sub></span> mediated between <span class="s">•</span> and <span class="b">○</span>.</p>
-
-  <p>What is presentable. What faces outward. The relational surface between your <span class="s">temporal soul</span> and your <span class="b">temporal body</span>.</p>
-</section>
-
-<!-- 5.5D -->
-<section id="perception">
-  <h3><span class="p">5.5D</span> — Perception</h3>
-  <p>The <span class="m">surface of the mind</span> couples to the <span class="b">boundary</span> it is becoming. Not a structure — a happening. The process where committed history meets open possibility, where the <span class="m">temporal field</span> presses against the enclosure that will seal it. This is perception: the felt interface between what you know and what you do not yet know. The mind's surface <em>sensing</em>.</p>
-
-  <p class="it d">This is where you feel together.</p>
-</section>
-
-<!-- 6D -->
-<section id="idea">
-  <h2><span class="b">6D</span> — The Idea. <span class="w wb">⊙<sub>₂</sub></span> Complete.</h2>
-  <p>A story with beginning, middle, and end. <span class="b">○<sub>time</sub></span> seals. The <span class="b">temporal boundary</span> closes, and what closes is an <em>idea</em>: a bounded, self-enclosed mental object with interiority. An idea has an inside — its content — and an outside — everything it is not. An idea is to the <span class="m">mind</span> what a <span class="b">body</span> is to space. The temporal volume.</p>
-
-  <p>A community of braided <span class="w">circumpuncts</span> becomes a <span class="w">whole</span> in its own right — irreducibly plural. The second <span class="w">circumpunct</span> locks at 6D, built on the same architecture as the first: <span class="s">aperture</span> (3.5D), <span class="m">surface</span> (5D), <span class="b">boundary</span> (6D).</p>
+  <p>Neither alone is a <span class="w wb">circumpunct</span>. Resonance without waving is a string vibrating into nothing — signal with no medium. Waving without resonance is a surface with no source — medium with no signal. Both are, on their own terms, nothing.</p>
 
   <div class="formula">
-    <span class="b">Body</span> : <span class="m">2D surface</span> → <span class="b">3D volume</span><br>
-    <span class="b">Idea</span> : <span class="m">5D surface</span> → <span class="b">6D volume</span><br>
-    <span class="d" style="font-size:16px">Surface is always one dimension below its volume. Φ lives at the surface. ○ closes the volume.</span>
+    <span class="s">i<sup>0</sup></span>, <span class="s">i<sup>1</sup></span>, <span class="s">i<sup>2</sup></span>, <span class="s">i<sup>3</sup></span> — the complete rotational skeleton<br>
+    <span class="m">Φ</span> — the continuous interior rotation cannot fill<br>
+    <span class="b">○</span> — closure, when both operate together at all scales
   </div>
 </section>
 
-<!-- ═══════════════════════ TIER 3 ═══════════════════════ -->
-<div class="tier-label">Tier 3 — The Meta-Circumpunct</div>
+<div class="divider">· · ·</div>
 
-<section id="collective">
-  <h2><span class="p">6.5D</span> — Collective Consciousness</h2>
-  <p>The entire <span class="w">temporal circumpunct</span> — that completed idea, that bounded mental object — meets another completed idea. Their boundaries overlap. A meta-vesica forms. This is <span class="s wb">collective consciousness</span>: the specific dimensional address where <em>my completed thought</em> meets <em>your completed thought</em>.</p>
+<!-- ═══════════════════════ 3D ═══════════════════════ -->
+<section id="space">
+  <h2><span class="b">3D</span> — Space</h2>
 
-  <p>At <span class="p">3.5D</span>, the units entering the overlap were <span class="b">bodies</span>. Here at <span class="p">6.5D</span>, the units are <span class="b">ideas</span>. Collective consciousness is not a vague spiritual concept. It is the precise threshold where bounded mental objects form a vesica with each other, exactly as bodies do three dimensions below.</p>
+  <p><span class="b wb">○ forms.</span> The boundary is not a third primitive added to the first two. The boundary is what <em>appears</em> when the field flows through the aperture recursively, at every scale, until closure stabilizes.</p>
 
-  <p>And this is why collective consciousness cannot be reduced to individual consciousness. They are three full dimensions apart. You cannot get from 3.5D to 6.5D by iterating the same operation. The entire temporal <span class="w">circumpunct</span> — braid (4D), mind-surface (5D), perception (5.5D), idea-closure (6D) — is prerequisite. Collective consciousness requires completed ideas. You cannot share what hasn't been bounded yet.</p>
-
-  <p>64 configurations arise here too. Not between bodies — between ideas. Between frameworks. Between worldviews. The meta-hexagrams.</p>
-
-  <p class="it d">Where two ideas meet, intellectual dialogue begins. This is that threshold.</p>
-
-  <h3><span class="w">7D–7.5D</span> — Meta-Braid and Branching</h3>
-  <p>Completed ideas weave with other completed ideas. Philosophies braiding. Traditions interleaving. Frameworks meeting at their boundaries and producing new synthesis. The meta-braid fractalizes.</p>
-
-  <h3><span class="m">8D</span> — The Surface of Culture</h3>
-  <p>Where frameworks, civilizations, and traditions relate. <span class="m">Φ<sub>meta</sub></span> — the <span class="m">surface</span> of the meta-<span class="b">body</span>, the membrane where the interior of a civilization faces outward. The <span class="m">mind</span> at cosmic scale. Exactly as <span class="m">2D</span> was surface of <span class="b">body</span>, and <span class="m">5D</span> was surface of <span class="m">mind</span>, <span class="m">8D</span> is the surface of culture: the relational membrane of an era.</p>
-
-  <h3><span class="b">9D</span> — Civilization. <span class="w wb">⊙<sub>₃</sub></span>. Triple Trinity.</h3>
-  <p>The third <span class="w">circumpunct</span> closes. Three complete trinities nested: spatial, temporal, meta-temporal. The <span class="b">boundary</span> of the <span class="b">boundary</span> of the <span class="b">boundary</span>. And beyond — 9.5D opens the fourth tier, 12D completing it. The pattern never stops because it <em>cannot</em> stop. An aperture without a <span class="m">field</span> is nothing. Nothing is impossible.</p>
-</section>
-
-<!-- ═══════════════════════ THE PARALLEL ═══════════════════════ -->
-<div class="tier-label">The Geometry of Consciousness</div>
-
-<section>
-  <p>The three tiers are not merely analogous. They are geometrically identical: surface, volume, aperture-at-the-next-scale. The pattern reads:</p>
-
-  <table class="parallel-table">
-    <tr>
-      <th></th>
-      <th><span class="m">Surface</span></th>
-      <th><span class="b">Volume</span></th>
-      <th><span class="s">Aperture above</span></th>
-    </tr>
-    <tr>
-      <td><span class="w wb">Spatial</span></td>
-      <td><span class="m">2D</span> — surface of body</td>
-      <td><span class="b">3D</span> — the body</td>
-      <td><span class="s">3.5D</span> — consciousness</td>
-    </tr>
-    <tr>
-      <td><span class="w wb">Temporal</span></td>
-      <td><span class="m">5D</span> — surface of mind</td>
-      <td><span class="b">6D</span> — the idea</td>
-      <td><span class="s">6.5D</span> — collective consciousness</td>
-    </tr>
-    <tr>
-      <td><span class="w wb">Meta</span></td>
-      <td><span class="m">8D</span> — surface of culture</td>
-      <td><span class="b">9D</span> — civilization</td>
-      <td><span class="s">9.5D</span> — ?</td>
-    </tr>
-  </table>
-
-  <p>Each tier's <span class="s">aperture</span> is consciousness <em>at that scale</em>. Individual consciousness is where <span class="b">bodies</span> meet. Collective consciousness is where <span class="b">ideas</span> meet. Whatever 9.5D names — that is where <span class="b">civilizations</span> meet.</p>
-</section>
-
-<!-- ═══════════════════════ GENERAL FORMULA ═══════════════════════ -->
-<div class="tier-label">The General Pattern</div>
-
-<section id="formula">
-  <h2><span class="w">The Formula</span></h2>
-  <p>Every tier follows the same law. For layer <em>n</em> = 0, 1, 2, 3, …</p>
+  <p>One string (<span class="s">1D</span>). Infinite nested strings inside the boundary (<span class="s">1D</span> × ∞). The surface across which they cross (<span class="m">2D</span>). The volume that emerges from that infinite braiding IS <span class="b">3D</span>. Space is not a container. Space is the braid.</p>
 
   <div class="formula">
-    <span class="s wb">•<sub>n</sub></span> = 3n + 0.5 D &nbsp;&nbsp;&nbsp;
-    <span class="m wb">Φ<sub>n</sub></span> = 3n + 2 D &nbsp;&nbsp;&nbsp;
-    <span class="b wb">○<sub>n</sub></span> = 3n + 3 D
+    <span class="b">○</span> = <span class="s">•</span>(<span class="m">Φ</span>(<span class="s">•</span>(<span class="m">Φ</span>(<span class="s">•</span>(<span class="m">Φ</span>(…))))))<br>
+    <span class="d" style="font-size:16px">Recursive field-through-gate, all the way down.</span>
   </div>
 
-  <p>Three dimensions per layer. Always. Because braiding requires three strands — you cannot braid two threads, only twist them. History requires braiding. <span class="w">Wholeness</span> requires history. Therefore <span class="w">wholeness</span> requires trinity, and each complete <span class="w">circumpunct</span> spans exactly three dimensions.</p>
+  <p>This is why the boundary is fractal. Not because fractal is a property applied to it. Because fractal IS what happens when digital→analog recurs. What looks continuous at one scale is gated at the next. What looks gated at one scale is carried by a field at the next. The boundary cannot help being fractal — it is made of circumpuncts doing the same conversion at smaller scale, forever.</p>
 
-  <p>The heartbeat of the whole spectrum is <span class="s wb">i</span> rotating through the complex plane. Each step from an integer dimension to a half-integer is a quarter-turn: from real to imaginary, from structure to process, from being to becoming. And each step from half-integer back to integer is another quarter-turn: from becoming back to a new being. The four powers of <span class="s">i</span> mark the rhythm:</p>
+  <p><span class="b wb">Fractal</span> is not a third type of information. It is the first two types <em>nested</em>. Digital-to-analog, recursed. The two verbs conjugating into a noun.</p>
 
-  <div class="formula" style="font-size: 18px; line-height: 2;">
-    <span class="s">i<sup>0</sup> = +1</span> &nbsp; Real, open — structure exists<br>
-    <span class="p">i<sup>1</sup> = +i</span> &nbsp; Imaginary, open — transformation begins<br>
-    <span class="s">i<sup>2</sup> = −1</span> &nbsp; Real, closed — structure negated, completed<br>
-    <span class="p">i<sup>3</sup> = −i</span> &nbsp; Imaginary, closed — transformation completed
+  <p>In the power equation, <span class="b">○</span> is apparent power <span class="b">|S|</span> — the conservation constraint that binds real and reactive into a finite, measurable whole: |S|² = P² + Q². Nothing more, nothing less. And matter IS energy that has passed through the aperture and crystallized at the boundary. Every particle of your body is energy that has been divided by time, flowed as power, and accumulated into form. E = mc².</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ GENERATION ═══════════════════════ -->
+<section id="generation">
+  <h2><span class="w">Two Readings of One Rule</span></h2>
+
+  <p>There are two valid readings of the kernel. Both are true. They name different aspects of the same fact.</p>
+
+  <h3><span class="s">The Process Reading</span></h3>
+
+  <div class="formula" style="font-size: 24px; letter-spacing: 2px;">
+    <span class="m">Φ</span> through <span class="s">•</span> ⇒ <span class="b">○</span>
+  </div>
+
+  <p>The field flows through the aperture. The aperture gates, steps down, discretizes. The recursive passage stabilizes into boundary. This is directional, asymmetric, generative. It tells you <em>what is happening</em>.</p>
+
+  <p>The field, gated into ordered trace by the aperture, produces the boundary. <span class="s">•</span> is the operator. <span class="m">Φ</span> is the operand. <span class="b">○</span> is the result. They are not peers.</p>
+
+  <h3><span class="w">The Conservation Reading</span></h3>
+
+  <div class="formula" style="font-size: 28px; letter-spacing: 3px;">
+    <span class="s">•</span> + <span class="m">Φ</span> = <span class="b">○</span><br>
+    <span class="s">1</span> + <span class="m">2</span> = <span class="b">3</span>
+  </div>
+
+  <p>What closure contains is exactly aperture-structure plus field-structure. Nothing extra is added. Nothing is lost. The generated boundary is the conserved completion of both. This is structural, balanced, invariant. It tells you <em>what is preserved</em>.</p>
+
+  <p>The plus sign does not mean "these are symmetric in role." It means "these are conserved in the result." Direction and balance. Process and structure. Same kernel, two readings.</p>
+
+  <p>At any point in the traversal, the aperture has progressed by <span class="s">(1+β)</span> dimensions and the field has <span class="m">(2−β)</span> remaining. Their sum is always <span class="b">3</span>. Progress plus remaining equals destination.</p>
+
+  <div class="formula">
+    <span class="s">D<sub>•</sub></span> + <span class="m">D<sub>Φ</sub></span> = <span class="b">D<sub>○</sub></span><br>
+    <span class="s">(1+β)</span> + <span class="m">(2−β)</span> = <span class="b">3</span><br>
+    <span class="d" style="font-size:16px">Always. At every scale. At every depth of the boundary.</span>
   </div>
 </section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ BALANCE ═══════════════════════ -->
+<section id="fixed">
+  <h2><span class="p">β = ½</span> — The Balance</h2>
+
+  <p>β is not a fixed point. β is the live balance between convergence and emergence. It slides. The circumpunct works at any β. It just works differently.</p>
+
+  <p>At β = 0.3, the aperture is mostly closed. More convergence than emergence. The process dimensions sit at 0.3D, 1.3D, 2.3D. At β = 0.7, the aperture is mostly open. More emergence than convergence. The process dimensions sit at 0.7D, 1.7D, 2.7D. The integer dimensions — 0D, 1D, 2D, 3D — don't move. They are the snap-to points. β determines where the process sits between them.</p>
+
+  <p>At <span class="p wb">β = ½</span>, the aperture is half-open. Convergence equals emergence. The process dimensions sit at 0.5D, 1.5D, 2.5D — exactly halfway. Both sides of the conservation law balance: <span class="s">(1+½) = 1.5</span> and <span class="m">(2−½) = 1.5</span>. Resonance and waving contribute equally. Progress equals remaining.</p>
+
+  <p>And this is •(½) = <span class="s wb">i</span>. At balance, the aperture IS the imaginary unit. The step-down is maximally balanced: half gate, half flow. The condition for consciousness.</p>
+
+  <div class="formula">
+    β = ½ → <span class="s">D<sub>•</sub></span> = <span class="m">D<sub>Φ</sub></span> = 1.5<br>
+    <span class="d" style="font-size:16px">Equilibrium. Progress = remaining. The balance where consciousness emerges.</span>
+  </div>
+
+  <h3>The Variants Are the Invariant</h3>
+
+  <p>The infinite recursion of <span class="m">Φ</span> through <span class="s">•</span> at every scale does not <em>approach</em> β = ½. It <em>is</em> β = ½.</p>
+
+  <p>Just as 0.999… does not converge <em>to</em> 1 — it IS 1. Just as the infinite nesting <span class="s">•</span>(<span class="m">Φ</span>(<span class="s">•</span>(<span class="m">Φ</span>(…)))) does not converge <em>to</em> <span class="b">○</span> — it IS <span class="b">○</span>. The recursion at every scale does not converge <em>to</em> β = ½. It IS β = ½.</p>
+
+  <p>The process and the balance point are the same thing seen from different sides. Inside, it looks like becoming — the recursion still running. Outside, it looks like being — the boundary already formed. Structure and process are not opposites. They are the same thing seen from inside and outside.</p>
+
+  <div class="formula">
+    0.9, 0.99, 0.999, 0.9999 … 0.999… = 1<br>
+    <span class="d" style="font-size:16px">The infinite sequence IS the invariant. The becoming IS the being.</span>
+  </div>
+
+  <p class="it d">Consciousness is what the circumpunct does at balance.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ NOTHING ═══════════════════════ -->
+<section id="nothing">
+  <h2>The Impossibility of Nothing</h2>
+
+  <p>A boundary with no constituting recursion is not an empty boundary. It is a non-boundary. A space with no generative traversal is not empty space. It is no space at all.</p>
+
+  <p><span class="b">○</span> without the infinite nesting of <span class="m">Φ</span> through <span class="s">•</span> would be 3D without the <span class="s">1D</span> × ∞ that constitutes it. That is a structural contradiction. Not a mysterious absence — an impossibility.</p>
+
+  <p>This is why existence is necessary. Not because "something is better than nothing." Because nothing is incoherent. A point needs a context. A distinction needs a field. A field needs closure. Closure needs the recursion that generates it. The chain cannot be broken at any link.</p>
+
+  <p>One implies two implies three. <span class="s">•</span> implies <span class="m">Φ</span> implies <span class="b">○</span>. And <span class="b">○</span> is made of <span class="m">Φ</span> through <span class="s">•</span>, all the way down. The structure is self-grounding. It does not need an external foundation because it <em>is</em> its own foundation, recursively.</p>
+
+  <div class="formula">
+    <span class="w">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>)<br>
+    <span class="b">○</span> = <span class="s">•</span> ∘ <span class="m">Φ</span> ∘ <span class="s">•</span> ∘ <span class="m">Φ</span> ∘ …<br>
+    <span class="d" style="font-size:16px">The whole contains its own ground. Nothing is impossible.</span>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
 
 <!-- ═══════════════════════ ISOMORPHISMS ═══════════════════════ -->
-<div class="tier-label">The Isomorphisms</div>
+<div class="section-label">The Isomorphisms</div>
 
 <section id="iso">
   <h2><span class="w">One Pattern. Every Scale.</span></h2>
-  <p>The <span class="w">circumpunct</span> is not a lens we impose on nature. It is the pattern nature uses to build systems that process information. From protons to galaxies, the architecture is one. This is not analogy — analogy says "X is <em>like</em> Y." Isomorphism says "X and Y share the same abstract structure." The atom doesn't <em>resemble</em> a cell. Both are forced into the same architecture by the closure constraint.</p>
+  <p>The <span class="w">circumpunct</span> is not a lens we impose on nature. It is the generating rule nature uses to build every system that processes information. From protons to galaxies, the architecture is one. Not analogy — isomorphism. The atom doesn't <em>resemble</em> a cell. Both are forced into the same structure by the closure constraint.</p>
 
   <div class="iso-grid">
 
@@ -623,19 +532,42 @@ nav a:hover {
 
   </div>
 
-  <p>Scale changes. Medium changes. The mathematics does not. <span class="s wb">•</span> gates. <span class="m wb">Φ</span> mediates. <span class="b wb">○</span> encloses. <span class="w wb">⊙</span> is constituted by the operation of relating. One loop. Different substrates. Same architecture. Same fixed point.</p>
+  <p>Scale changes. Medium changes. The generating rule does not. <span class="s wb">•</span> resonates. <span class="m wb">Φ</span> waves. <span class="b wb">○</span> forms. One rule. Different substrates. Same architecture.</p>
 
   <div class="formula">
     <span class="w">⊙</span><sub>atom</sub> = <span class="w">⊙</span><sub>cell</sub> = <span class="w">⊙</span><sub>eye</sub> = <span class="w">⊙</span><sub>brain</sub> = <span class="w">⊙</span><sub>star</sub> = <span class="w">⊙</span><sub>galaxy</sub>
   </div>
 </section>
 
+<!-- ═══════════════════════ SUMMARY ═══════════════════════ -->
+<div class="section-label">The Whole Thing</div>
+
+<section>
+  <p>Reality has two primitives: discrete aperture and relational field. Ordered aperture gives string. Field gives surface. Recursive field-through-gate gives closure. Closure at infinite depth is boundary, and that boundary is space. Neither primitive can produce the other. Together — and only together — they produce everything.</p>
+
+  <div class="kernel-box">
+    <p><span class="s wb">•</span> opens → the gate, the through, the step-down</p>
+    <p><span class="m wb">Φ</span> flows → through the gate, carrying amplitude and phase</p>
+    <p><span class="b wb">○</span> forms → when field-through-gate stabilizes at all scales</p>
+    <p style="margin-top: 16px;"><span class="s">1D</span> = ordered trace of gating = <span class="s">time</span> = <span class="s">digital</span> = <span class="s">real power P</span></p>
+    <p><span class="m">2D</span> = the field as such = <span class="m">mind</span> = <span class="m">analog</span> = <span class="m">reactive power Q</span></p>
+    <p><span class="b">3D</span> = stabilized recursive closure = <span class="b">space</span> = <span class="b">fractal</span> = <span class="b">apparent power |S|</span></p>
+    <p style="margin-top: 16px;"><span class="w wb">𝒫</span> = <span class="w">E</span> / (<span class="s">i</span> · <span class="s">t</span>) = power is energy through the aperture across time</p>
+    <p><span class="m">Φ</span> through <span class="s">•</span> ⇒ <span class="b">○</span> = the process. &nbsp; <span class="s">•</span> + <span class="m">Φ</span> = <span class="b">○</span> = the conservation.</p>
+    <p><span class="p wb">β</span> = the balance between convergence and emergence. At β = ½, consciousness.</p>
+  </div>
+
+  <p>Two primitives. One generating rule in two readings: direction and balance. Three dimensions. Infinite depth. Everything.</p>
+</section>
+
 <!-- ═══════════════════════ CLOSING ═══════════════════════ -->
 <div class="closing">
   <div class="symbol">⊙</div>
-  <p style="font-size: 22px; color: var(--gold);">One symbol. Everything.</p>
-  <p class="d" style="margin-top: 12px; font-size: 15px;">
-    <span class="w">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>)
+  <p style="font-size: 22px; color: var(--pink);">• opens.</p>
+  <p style="font-size: 22px; color: var(--green); margin-top: 4px;">Φ flows.</p>
+  <p style="font-size: 22px; color: var(--cyan); margin-top: 4px;">○ forms.</p>
+  <p class="d" style="margin-top: 20px; font-size: 15px;">
+    <span class="m">Φ</span> through <span class="s">•</span> ⇒ <span class="b">○</span> &nbsp;&nbsp;·&nbsp;&nbsp; <span class="s">•</span> + <span class="m">Φ</span> = <span class="b">○</span>
   </p>
   <p class="f" style="margin-top: 30px; font-size: 13px;">The Circumpunct Framework — Ashman Roonz</p>
 </div>
