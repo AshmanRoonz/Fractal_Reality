@@ -10,24 +10,24 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #0c1210;
-            --bg-card: #0f1a16;
-            --bg-hover: #142420;
-            --bg-input: #0e1814;
+            --bg: #08080c;
+            --bg-card: #0e0e14;
+            --bg-hover: #14141e;
+            --bg-input: #111118;
             --text: #7dcea0;
-            --text-dim: #5faa80;
-            --text-muted: #3d7a58;
-            --gold: #a0e8b8;
-            --gold-dim: rgba(125, 206, 160, 0.6);
-            --gold-glow: rgba(125, 206, 160, 0.15);
-            --cyan: #58c8a0;
-            --purple: #8bc8a0;
-            --green: #7dcea0;
-            --magenta: #68d4a0;
-            --orange: #90d8a0;
-            --red: #50b878;
-            --border: rgba(125, 206, 160, 0.1);
-            --border-hover: rgba(125, 206, 160, 0.25);
+            --text-dim: #6ab88c;
+            --text-muted: #4a9a6e;
+            --gold: #d4af37;
+            --gold-dim: rgba(212, 175, 55, 0.6);
+            --gold-glow: rgba(212, 175, 55, 0.15);
+            --cyan: #58a6ff;
+            --purple: #a371f7;
+            --green: #7ee787;
+            --magenta: #f778ba;
+            --orange: #ffa657;
+            --red: #ff7b72;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.14);
         }
 
         body {
@@ -40,11 +40,11 @@
 
         /* ===== Header ===== */
         header {
-            background: rgba(12, 18, 16, 0.9);
+            background: rgba(14, 14, 20, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             padding: 0.85rem 1.5rem;
-            border-bottom: 1px solid rgba(125, 206, 160, 0.12);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -65,14 +65,14 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             color: var(--gold);
             text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
         }
 
         header h1 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 500;
             color: var(--text);
             letter-spacing: 0.03em;
@@ -81,15 +81,15 @@
         .home-link {
             color: var(--gold-dim);
             text-decoration: none;
-            font-size: 0.82rem;
+            font-size: 0.95rem;
             padding: 0.35rem 0.75rem;
-            border: 1px solid rgba(125, 206, 160, 0.25);
+            border: 1px solid rgba(212, 175, 55, 0.25);
             border-radius: 4px;
             transition: all 0.2s;
         }
 
         .home-link:hover {
-            background: rgba(125, 206, 160, 0.1);
+            background: rgba(212, 175, 55, 0.1);
             color: var(--gold);
             border-color: var(--gold-dim);
         }
@@ -107,7 +107,7 @@
         .search-wrap {
             position: relative;
             background: var(--bg-input);
-            border: 1px solid rgba(125, 206, 160, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 10px;
             transition: all 0.25s ease;
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
@@ -140,8 +140,8 @@
             outline: none;
             color: var(--text);
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.05rem;
-            padding: 0.95rem 4rem 0.95rem 2.8rem;
+            font-size: 1.15rem;
+            padding: 1.05rem 4rem 1.05rem 2.8rem;
             letter-spacing: 0.01em;
         }
 
@@ -165,7 +165,7 @@
             border-radius: 4px;
             padding: 0.15rem 0.5rem;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             line-height: 1.4;
         }
@@ -174,7 +174,7 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             cursor: pointer;
             padding: 0.2rem 0.4rem;
             border-radius: 4px;
@@ -201,7 +201,7 @@
         }
 
         .stats-text {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
         }
 
@@ -220,8 +220,8 @@
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 0.25rem 0.7rem;
-            font-size: 0.72rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             cursor: pointer;
             transition: all 0.2s;
@@ -236,22 +236,22 @@
         .filter-pill.active {
             border-color: var(--gold-dim);
             color: var(--gold);
-            background: rgba(125, 206, 160, 0.1);
+            background: rgba(212, 175, 55, 0.08);
         }
 
         /* ===== Domain color mapping ===== */
-        .domain-tag { border-radius: 3px; padding: 0.1rem 0.45rem; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
-        .domain-tag[data-domain="you"]          { color: #a0e8b8; background: rgba(160, 232, 184, 0.08); border: 1px solid rgba(160, 232, 184, 0.2); }
-        .domain-tag[data-domain="cell"]         { color: #6dd498; background: rgba(109, 212, 152, 0.08); border: 1px solid rgba(109, 212, 152, 0.2); }
-        .domain-tag[data-domain="relationship"] { color: #88d8a8; background: rgba(136, 216, 168, 0.08); border: 1px solid rgba(136, 216, 168, 0.2); }
-        .domain-tag[data-domain="atom"]         { color: #50c880; background: rgba(80, 200, 128, 0.08);  border: 1px solid rgba(80, 200, 128, 0.2); }
-        .domain-tag[data-domain="conversation"] { color: #78d0a0; background: rgba(120, 208, 160, 0.08); border: 1px solid rgba(120, 208, 160, 0.2); }
-        .domain-tag[data-domain="breath"]       { color: #90e0b8; background: rgba(144, 224, 184, 0.08); border: 1px solid rgba(144, 224, 184, 0.2); }
-        .domain-tag[data-domain="physics"]      { color: #b0eccc; background: rgba(176, 236, 204, 0.08); border: 1px solid rgba(176, 236, 204, 0.2); }
-        .domain-tag[data-domain="story"]        { color: #60c088; background: rgba(96, 192, 136, 0.08);  border: 1px solid rgba(96, 192, 136, 0.2); }
-        .domain-tag[data-domain="ethics"]       { color: #98e4b0; background: rgba(152, 228, 176, 0.08); border: 1px solid rgba(152, 228, 176, 0.2); }
-        .domain-tag[data-domain="cosmos"]       { color: #c0f0d8; background: rgba(192, 240, 216, 0.08); border: 1px solid rgba(192, 240, 216, 0.2); }
-        .domain-tag[data-domain="tools"]        { color: #5faa80; background: rgba(95, 170, 128, 0.08);  border: 1px solid rgba(95, 170, 128, 0.2); }
+        .domain-tag { border-radius: 3px; padding: 0.15rem 0.55rem; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+        .domain-tag[data-domain="you"]          { color: var(--cyan);    background: rgba(88, 166, 255, 0.1);  border: 1px solid rgba(88, 166, 255, 0.2); }
+        .domain-tag[data-domain="cell"]         { color: var(--green);   background: rgba(126, 231, 135, 0.1); border: 1px solid rgba(126, 231, 135, 0.2); }
+        .domain-tag[data-domain="relationship"] { color: var(--magenta); background: rgba(247, 120, 186, 0.1); border: 1px solid rgba(247, 120, 186, 0.2); }
+        .domain-tag[data-domain="atom"]         { color: var(--orange);  background: rgba(255, 166, 87, 0.1);  border: 1px solid rgba(255, 166, 87, 0.2); }
+        .domain-tag[data-domain="conversation"] { color: var(--purple);  background: rgba(163, 113, 247, 0.1); border: 1px solid rgba(163, 113, 247, 0.2); }
+        .domain-tag[data-domain="breath"]       { color: #79c0ff;        background: rgba(121, 192, 255, 0.1); border: 1px solid rgba(121, 192, 255, 0.2); }
+        .domain-tag[data-domain="physics"]      { color: var(--gold);    background: rgba(212, 175, 55, 0.1);  border: 1px solid rgba(212, 175, 55, 0.2); }
+        .domain-tag[data-domain="story"]        { color: #d2a8ff;        background: rgba(210, 168, 255, 0.1); border: 1px solid rgba(210, 168, 255, 0.2); }
+        .domain-tag[data-domain="ethics"]       { color: var(--red);     background: rgba(255, 123, 114, 0.1); border: 1px solid rgba(255, 123, 114, 0.2); }
+        .domain-tag[data-domain="cosmos"]       { color: #ffd700;        background: rgba(255, 215, 0, 0.08);  border: 1px solid rgba(255, 215, 0, 0.2); }
+        .domain-tag[data-domain="tools"]        { color: var(--text-dim); background: rgba(125, 206, 160, 0.06); border: 1px solid rgba(125, 206, 160, 0.15); }
 
         /* ===== Domain Section ===== */
         .results-container {
@@ -281,7 +281,7 @@
 
         .domain-chevron {
             color: var(--text-muted);
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             transition: transform 0.25s ease;
             width: 1rem;
             text-align: center;
@@ -293,14 +293,14 @@
 
         .domain-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.15rem;
+            font-size: 1.35rem;
             font-weight: 600;
             color: var(--text);
             letter-spacing: 0.02em;
         }
 
         .domain-count {
-            font-size: 0.72rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             margin-left: auto;
         }
@@ -333,7 +333,7 @@
 
         .page-icon {
             color: var(--gold-dim);
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             flex-shrink: 0;
         }
 
@@ -345,7 +345,7 @@
         .page-name {
             color: var(--text);
             font-weight: 500;
-            font-size: 0.92rem;
+            font-size: 1.05rem;
             line-height: 1.35;
         }
 
@@ -355,7 +355,7 @@
 
         .page-desc {
             color: var(--text-muted);
-            font-size: 0.78rem;
+            font-size: 0.9rem;
             line-height: 1.4;
             margin-top: 0.1rem;
             white-space: nowrap;
@@ -369,8 +369,8 @@
 
         /* ===== Search highlight ===== */
         mark {
-            background: rgba(125, 206, 160, 0.25);
-            color: #a0e8b8;
+            background: rgba(212, 175, 55, 0.25);
+            color: var(--gold);
             border-radius: 2px;
             padding: 0 1px;
         }
@@ -390,13 +390,13 @@
 
         .no-results h3 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: var(--text-dim);
             margin-bottom: 0.5rem;
         }
 
         .no-results p {
-            font-size: 0.88rem;
+            font-size: 1rem;
         }
 
         /* ===== Footer ===== */
@@ -404,8 +404,8 @@
             text-align: center;
             padding: 2rem 1.5rem;
             color: var(--text-muted);
-            font-size: 0.82rem;
-            border-top: 1px solid rgba(125, 206, 160, 0.08);
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
             max-width: 1200px;
             margin: 0 auto;
         }
