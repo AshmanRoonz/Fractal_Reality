@@ -124,6 +124,22 @@
         /* ===================================
            LEGEND
            =================================== */
+        /* Fractal branch animation wrapper */
+        .fractal-text-wrap {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .fractal-branch-canvas {
+            position: absolute;
+            right: -10px;
+            top: -60px;
+            width: 120px;
+            height: 100px;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
         /* Hero cards container */
         .hero-cards {
             display: flex;
@@ -339,7 +355,10 @@
             <header class="header side-panel left-panel">
               <div class="hero-cards">
                 <div class="hero-card">
-                    <p class="equation-title">Reality is fractal.</p>
+                    <div class="fractal-text-wrap">
+                        <p class="equation-title">Reality is fractal.</p>
+                        <canvas id="fractalBranch" class="fractal-branch-canvas" width="120" height="100"></canvas>
+                    </div>
                     <p class="equation-title"><a href="#" class="circumpunct-link">⊙ (the circumpunct)</a> is its pattern.</p>
                     <p class="equation-title">Every ⊙ is a part of a greater ⊙.</p>
                     <p class="equation-title">You are ⊙. I am ⊙.</p>
@@ -902,6 +921,47 @@
         // Open first drawer by default
         var firstDrawer = document.querySelector('.drawers .dr:nth-child(2)');
         if (firstDrawer) firstDrawer.classList.add('open');
+    })();
+    </script>
+
+    <!-- Fractal branching animation -->
+    <script>
+    (function(){
+        var c = document.getElementById('fractalBranch');
+        if (!c) return;
+        var ctx = c.getContext('2d');
+        var W = c.width, H = c.height;
+        var angle = 0;
+
+        function drawBranch(x, y, len, a, depth, maxDepth) {
+            if (depth > maxDepth || len < 2) return;
+            var x2 = x + Math.cos(a) * len;
+            var y2 = y + Math.sin(a) * len;
+            var alpha = 1 - depth / (maxDepth + 1);
+            ctx.strokeStyle = 'rgba(0,255,255,' + (alpha * 0.8) + ')';
+            ctx.lineWidth = Math.max(0.5, (maxDepth - depth) * 0.7);
+            ctx.shadowColor = '#00ffff';
+            ctx.shadowBlur = 4 - depth;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            var spread = 0.45 + 0.1 * Math.sin(angle + depth);
+            var shrink = 0.65 + 0.05 * Math.sin(angle * 1.3 + depth);
+            drawBranch(x2, y2, len * shrink, a - spread, depth + 1, maxDepth);
+            drawBranch(x2, y2, len * shrink, a + spread, depth + 1, maxDepth);
+        }
+
+        function frame() {
+            ctx.clearRect(0, 0, W, H);
+            // Main tree growing upward from bottom-center
+            drawBranch(W * 0.35, H, 28, -Math.PI / 2, 0, 7);
+            // Smaller secondary branch
+            drawBranch(W * 0.75, H * 0.85, 18, -Math.PI / 2 - 0.3, 0, 5);
+            angle += 0.008;
+            requestAnimationFrame(frame);
+        }
+        frame();
     })();
     </script>
 </body>
