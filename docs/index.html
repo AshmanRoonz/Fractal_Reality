@@ -132,10 +132,10 @@
         }
         .fractal-branch-canvas {
             position: absolute;
-            right: -10px;
-            top: -60px;
-            width: 120px;
-            height: 100px;
+            right: -30px;
+            top: -45px;
+            width: 100px;
+            height: 90px;
             pointer-events: none;
             opacity: 0.7;
         }
@@ -954,10 +954,8 @@
 
         function frame() {
             ctx.clearRect(0, 0, W, H);
-            // Main tree growing upward from bottom-center
-            drawBranch(W * 0.35, H, 28, -Math.PI / 2, 0, 7);
-            // Smaller secondary branch
-            drawBranch(W * 0.75, H * 0.85, 18, -Math.PI / 2 - 0.3, 0, 5);
+            // Single tree growing to the right (rotated 90deg clockwise)
+            drawBranch(0, H * 0.5, 26, 0, 0, 7);
             angle += 0.008;
             requestAnimationFrame(frame);
         }
