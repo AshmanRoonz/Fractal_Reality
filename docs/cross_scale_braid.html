@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⊙ Cross-Scale Braid — 1D is Just a String</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+    :root {
+      --bg: #060610;
+      --card: #0e0e1a;
+      --border: #1a1a2e;
+      --text: #d0d0e0;
+      --dim: #666;
+      --gold: #ffd700;
+
+      /* Dimensional colors — warm to cool spectrum */
+      --c0d: #ff2244;
+      --c05d: #ff6633;
+      --c1d: #ffaa00;
+      --c15d: #ddcc00;
+      --c2d: #44dd44;
+      --c25d: #22ddaa;
+      --c3d: #22aadd;
+      --c35d: #4488ff;
+      --c4d: #7744ff;
+      --c45d: #aa44ee;
+      --c5d: #dd44cc;
+      --c55d: #ff44aa;
+      --c6d: #ff6688;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    canvas#bgCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      background: linear-gradient(135deg, var(--c1d), var(--c4d), var(--c6d));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--dim);
+      font-size: 1rem;
+      margin-bottom: 40px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Main visualization area */
+    .viz-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 800px) {
+      .viz-area { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.4;
+    }
+
+    .panel h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      color: var(--gold);
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+
+    .panel canvas {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* Dimensional ladder */
+    .ladder {
+      grid-column: 1 / -1;
+    }
+
+    .dim-row {
+      display: grid;
+      grid-template-columns: 70px 1fr 180px;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .dim-row:hover {
+      background: rgba(255, 215, 0, 0.04);
+    }
+
+    .dim-row.active {
+      background: rgba(255, 215, 0, 0.08);
+    }
+
+    .dim-row.structure {
+      border-left: 3px solid;
+    }
+
+    .dim-row.process {
+      border-left: 3px dashed;
+      opacity: 0.85;
+    }
+
+    .dim-label {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .dim-name {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .dim-desc {
+      font-size: 0.82rem;
+      color: var(--dim);
+      margin-top: 2px;
+    }
+
+    .dim-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.05);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* Scale labels */
+    .scale-divider {
+      grid-column: 1 / -1;
+      padding: 12px 16px 6px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Detail panel */
+    .detail-panel {
+      grid-column: 1 / -1;
+      min-height: 200px;
+    }
+
+    .detail-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 800px) {
+      .detail-content { grid-template-columns: 1fr; }
+    }
+
+    .detail-text h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .detail-text p {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #aaa;
+      margin-bottom: 8px;
+    }
+
+    .detail-text code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      background: rgba(255,255,255,0.06);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    .equation-box {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      color: #bbb;
+    }
+
+    .equation-box .highlight {
+      color: var(--gold);
+    }
+
+    /* Parallel table */
+    .parallel-table {
+      grid-column: 1 / -1;
+      overflow-x: auto;
+    }
+
+    .parallel-table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .parallel-table th {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      color: var(--gold);
+      padding: 10px;
+      border-bottom: 2px solid var(--gold);
+      text-align: center;
+    }
+
+    .parallel-table td {
+      padding: 8px 10px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .parallel-table tr:hover td {
+      background: rgba(255, 215, 0, 0.04);
+    }
+
+    .key-insight {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.8;
+      background: linear-gradient(135deg, rgba(255,170,0,0.06), rgba(119,68,255,0.06));
+      border: 1px solid rgba(255,215,0,0.15);
+      border-radius: 12px;
+    }
+
+    .key-insight em {
+      color: var(--gold);
+      font-style: normal;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="container">
+    <h1>⊙ The Cross-Scale Braid</h1>
+    <p class="subtitle">1D is just a string. The braid is how scales talk to each other.</p>
+
+    <div class="viz-area">
+
+      <!-- Braid visualization -->
+      <div class="panel">
+        <h2>The String (1D)</h2>
+        <canvas id="stringCanvas" width="500" height="280"></canvas>
+      </div>
+
+      <div class="panel">
+        <h2>The Cross-Scale Braid (4D)</h2>
+        <canvas id="braidCanvas" width="500" height="280"></canvas>
+      </div>
+
+      <!-- Key insight banner -->
+      <div class="key-insight">
+        <em>1D is just a string.</em> One strand. No crossings.<br>
+        <em>4D</em> is where your center string braids with boundary strings from the scale below.<br>
+        <em>The braid is the glue between scales.</em>
+      </div>
+
+      <!-- Dimensional Ladder -->
+      <div class="panel ladder">
+        <h2>The Dimensional Architecture</h2>
+
+        <div class="scale-divider" style="color: var(--c2d);">▼ BODY SCALE (Physical)</div>
+
+        <div class="dim-row structure" style="border-color: var(--c0d);" data-dim="0" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c0d);">0D</span>
+          <div>
+            <div class="dim-name">Pure Energy</div>
+            <div class="dim-desc">Pre-structure potential. Undifferentiated fuel.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c0d);">E = mc²</span>
+        </div>
+
+        <div class="dim-row process" style="border-color: var(--c05d);" data-dim="0.5" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c05d);">0.5D</span>
+          <div>
+            <div class="dim-name">Aperture / Soul</div>
+            <div class="dim-desc">The tunnel opening. Where i lives.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c05d);">i = e^(iπ/2)</span>
+        </div>
+
+        <div class="dim-row structure" style="border-color: var(--c1d);" data-dim="1" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c1d);">1D</span>
+          <div>
+            <div class="dim-name" style="color: var(--c1d);">STRING ← just a string</div>
+            <div class="dim-desc">One strand. No braid. Just extension through time.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c1d);">γ: ℝ → M</span>
+        </div>
+
+        <div class="dim-row process" style="border-color: var(--c15d);" data-dim="1.5" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c15d);">1.5D</span>
+          <div>
+            <div class="dim-name">Branching</div>
+            <div class="dim-desc">The string fractally splits. D = 1.5.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c15d);">D = 1 + β</span>
+        </div>
+
+        <div class="dim-row structure" style="border-color: var(--c2d);" data-dim="2" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c2d);">2D</span>
+          <div>
+            <div class="dim-name" style="color: var(--c2d);">SURFACE OF THE BODY</div>
+            <div class="dim-desc">Membrane. Skin. The body's presentation.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c2d);">∂(body)</span>
+        </div>
+
+        <div class="dim-row process" style="border-color: var(--c25d);" data-dim="2.5" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c25d);">2.5D</span>
+          <div>
+            <div class="dim-name">Sensation</div>
+            <div class="dim-desc">Body-surface ↔ physical-field contact. Raw feeling.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c25d);">T = cos²(Δφ/2)</span>
+        </div>
+
+        <div class="dim-row structure" style="border-color: var(--c3d);" data-dim="3" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c3d);">3D</span>
+          <div>
+            <div class="dim-name">Body Volume</div>
+            <div class="dim-desc">The physical interior. Meat, bone, organs.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c3d);">V = ∫d³x</span>
+        </div>
+
+        <div class="scale-divider" style="color: var(--c4d);">▼ CROSS-SCALE BRIDGE</div>
+
+        <div class="dim-row process" style="border-color: var(--c35d);" data-dim="3.5" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c35d);">3.5D</span>
+          <div>
+            <div class="dim-name">Tunnel Braiding</div>
+            <div class="dim-desc">Center string meets boundary strings from below.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c35d);">σ₁σ₂σ₁ = σ₂σ₁σ₂</span>
+        </div>
+
+        <div class="dim-row structure" style="border-color: var(--c4d);" data-dim="4" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c4d);">4D</span>
+          <div>
+            <div class="dim-name" style="color: var(--c4d);">THE BRAID ← cross-scale weave</div>
+            <div class="dim-desc">Your center string woven with their boundary strings. Gravity lives here.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c4d);">B(x) ∝ √(−g_tt)</span>
+        </div>
+
+        <div class="scale-divider" style="color: var(--c5d);">▼ MIND SCALE (Experiential)</div>
+
+        <div class="dim-row process" style="border-color: var(--c45d);" data-dim="4.5" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c45d);">4.5D</span>
+          <div>
+            <div class="dim-name">Recursion</div>
+            <div class="dim-desc">Braid compresses → seeds the mind scale.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c45d);">4.5Dₙ = 0Dₙ₊₁</span>
+        </div>
+
+        <div class="dim-row structure" style="border-color: var(--c5d);" data-dim="5" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c5d);">5D</span>
+          <div>
+            <div class="dim-name" style="color: var(--c5d);">SURFACE OF THE MIND</div>
+            <div class="dim-desc">Mental boundary. The edge of awareness. Attention's horizon.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c5d);">∂(mind)</span>
+        </div>
+
+        <div class="dim-row process" style="border-color: var(--c55d);" data-dim="5.5" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c55d);">5.5D</span>
+          <div>
+            <div class="dim-name" style="color: var(--c55d);">PERCEPTION</div>
+            <div class="dim-desc">Mind-surface ↔ idea-field coupling. Structured awareness.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c55d);">T = cos²(Δφ_mind/2)</span>
+        </div>
+
+        <div class="dim-row structure" style="border-color: var(--c6d);" data-dim="6" onclick="selectDim(this)">
+          <span class="dim-label" style="color: var(--c6d);">6D</span>
+          <div>
+            <div class="dim-name" style="color: var(--c6d);">AN IDEA</div>
+            <div class="dim-desc">A complete thought-form. Mental volume with interior structure.</div>
+          </div>
+          <span class="dim-tag" style="color: var(--c6d);">I ∈ ℋ_idea</span>
+        </div>
+      </div>
+
+      <!-- Detail panel -->
+      <div class="panel detail-panel" id="detailPanel">
+        <h2 id="detailTitle">Select a Dimension</h2>
+        <div class="detail-content">
+          <div class="detail-text" id="detailText">
+            <p>Click any dimension in the ladder above to explore its role in the cross-scale braid architecture.</p>
+          </div>
+          <div class="equation-box" id="detailEquation">
+The Cross-Scale Principle:
+
+  1D = just a string (one strand)
+  4D = center string × boundary strings
+
+  A string can't braid with itself.
+  The other strands come from
+  the boundary of the scale below.
+
+  <span class="highlight">The braid is the glue between scales.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body-Mind Parallel -->
+      <div class="panel parallel-table">
+        <h2>Body ↔ Mind Parallel</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Body Scale</th>
+              <th>Dim</th>
+              <th>↔</th>
+              <th>Dim</th>
+              <th>Mind Scale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>String</td>
+              <td style="color:var(--c1d)">1D — one strand</td>
+              <td>1</td>
+              <td style="color:var(--gold)">≡</td>
+              <td>4</td>
+              <td style="color:var(--c4d)">4D — braided strands</td>
+            </tr>
+            <tr>
+              <td>Branching</td>
+              <td style="color:var(--c15d)">1.5D — spatial splitting</td>
+              <td>1.5</td>
+              <td style="color:var(--gold)">≡</td>
+              <td>4.5</td>
+              <td style="color:var(--c45d)">4.5D — recursion</td>
+            </tr>
+            <tr>
+              <td style="color:var(--gold)">Surface</td>
+              <td style="color:var(--c2d)">2D — surface of body</td>
+              <td>2</td>
+              <td style="color:var(--gold)">≡</td>
+              <td>5</td>
+              <td style="color:var(--c5d)">5D — surface of mind</td>
+            </tr>
+            <tr>
+              <td>Contact</td>
+              <td style="color:var(--c25d)">2.5D — sensation</td>
+              <td>2.5</td>
+              <td style="color:var(--gold)">≡</td>
+              <td>5.5</td>
+              <td style="color:var(--c55d)">5.5D — perception</td>
+            </tr>
+            <tr>
+              <td style="color:var(--gold)">Volume</td>
+              <td style="color:var(--c3d)">3D — body interior</td>
+              <td>3</td>
+              <td style="color:var(--gold)">≡</td>
+              <td>6</td>
+              <td style="color:var(--c6d)">6D — an idea</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Final insight -->
+      <div class="key-insight">
+        <em>The mind IS a body at the next scale.</em><br>
+        It has a surface (5D), sensation at that surface (5.5D = perception),<br>
+        and an interior filled with objects (6D = ideas).<br><br>
+        <span style="color:var(--dim);font-size:0.85rem;">Perception IS sensation of the mind. Ideas are organs of thought.</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ─── Background particles ───
+    const bgCanvas = document.getElementById('bgCanvas');
+    const bgCtx = bgCanvas.getContext('2d');
+    let particles = [];
+
+    function resizeBg() {
+      bgCanvas.width = window.innerWidth;
+      bgCanvas.height = window.innerHeight;
+    }
+    resizeBg();
+    window.addEventListener('resize', resizeBg);
+
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: Math.random() * 1.5 + 0.5,
+        color: `hsla(${Math.random() * 60 + 30}, 80%, 60%, ${Math.random() * 0.3 + 0.1})`
+      });
+    }
+
+    function animateBg() {
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = bgCanvas.width;
+        if (p.x > bgCanvas.width) p.x = 0;
+        if (p.y < 0) p.y = bgCanvas.height;
+        if (p.y > bgCanvas.height) p.y = 0;
+        bgCtx.beginPath();
+        bgCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        bgCtx.fillStyle = p.color;
+        bgCtx.fill();
+      });
+      requestAnimationFrame(animateBg);
+    }
+    animateBg();
+
+    // ─── String canvas (1D — just a string) ───
+    const sCanvas = document.getElementById('stringCanvas');
+    const sCtx = sCanvas.getContext('2d');
+    sCanvas.width = 500; sCanvas.height = 280;
+
+    let sTime = 0;
+    function drawString() {
+      sCtx.clearRect(0, 0, 500, 280);
+
+      // Dark bg
+      sCtx.fillStyle = '#080812';
+      sCtx.fillRect(0, 0, 500, 280);
+
+      // Label
+      sCtx.fillStyle = '#666';
+      sCtx.font = '11px JetBrains Mono';
+      sCtx.fillText('One strand. No crossings. Just extension.', 20, 24);
+
+      // Draw the single string with gentle wave
+      sCtx.beginPath();
+      sCtx.strokeStyle = '#ffaa00';
+      sCtx.lineWidth = 3;
+      sCtx.shadowColor = '#ffaa0066';
+      sCtx.shadowBlur = 10;
+
+      for (let x = 0; x < 500; x++) {
+        const t = x / 500;
+        const y = 140 + Math.sin(t * Math.PI * 2 + sTime * 0.02) * 15
+                      + Math.sin(t * Math.PI * 4 + sTime * 0.015) * 8;
+        if (x === 0) sCtx.moveTo(x, y);
+        else sCtx.lineTo(x, y);
+      }
+      sCtx.stroke();
+      sCtx.shadowBlur = 0;
+
+      // Flowing energy dots along the string
+      for (let i = 0; i < 8; i++) {
+        const px = ((sTime * 0.8 + i * 62.5) % 500);
+        const t = px / 500;
+        const py = 140 + Math.sin(t * Math.PI * 2 + sTime * 0.02) * 15
+                       + Math.sin(t * Math.PI * 4 + sTime * 0.015) * 8;
+        const alpha = 0.5 + 0.5 * Math.sin(sTime * 0.05 + i);
+        sCtx.beginPath();
+        sCtx.arc(px, py, 4, 0, Math.PI * 2);
+        sCtx.fillStyle = `rgba(255, 215, 0, ${alpha})`;
+        sCtx.fill();
+      }
+
+      // Caption
+      sCtx.fillStyle = '#ffaa00';
+      sCtx.font = 'bold 13px Orbitron';
+      sCtx.fillText('1D = γ: ℝ → M', 20, 260);
+      sCtx.fillStyle = '#888';
+      sCtx.font = '11px JetBrains Mono';
+      sCtx.fillText('Not a braid. Not a worldline-with-history.', 20, 250);
+
+      sTime++;
+      requestAnimationFrame(drawString);
+    }
+    drawString();
+
+    // ─── Braid canvas (4D — cross-scale) ───
+    const bCanvas = document.getElementById('braidCanvas');
+    const bCtx = bCanvas.getContext('2d');
+    bCanvas.width = 500; bCanvas.height = 280;
+
+    let bTime = 0;
+    function drawBraid() {
+      bCtx.clearRect(0, 0, 500, 280);
+      bCtx.fillStyle = '#080812';
+      bCtx.fillRect(0, 0, 500, 280);
+
+      bCtx.fillStyle = '#666';
+      bCtx.font = '11px JetBrains Mono';
+      bCtx.fillText('Center string braids with boundary strings from below.', 20, 24);
+
+      const cx = 250, cy = 140;
+      const strands = 3;
+      const braidLen = 440;
+      const startX = 30;
+      const amp = 30;
+      const period = 120;
+
+      // Draw 3 braided strands with over-under
+      const colors = ['#ffaa00', '#44dd44', '#7744ff'];
+      const labels = ['center (yours)', 'boundary₁ (below)', 'boundary₂ (below)'];
+      const phases = [0, Math.PI * 2 / 3, Math.PI * 4 / 3];
+
+      // Calculate positions for all strands at each x
+      const segments = 200;
+      const positions = [];
+
+      for (let s = 0; s < strands; s++) {
+        positions[s] = [];
+        for (let i = 0; i <= segments; i++) {
+          const t = i / segments;
+          const x = startX + t * braidLen;
+          const phase = phases[s] + bTime * 0.03;
+          const y = cy + Math.sin(t * Math.PI * 2 * (braidLen / period) + phase) * amp;
+          positions[s].push({ x, y });
+        }
+      }
+
+      // Determine draw order at each segment for over/under
+      // Draw back-to-front: sort by y at each x position
+      for (let i = 0; i <= segments; i++) {
+        // Get strand indices sorted by y (back to front)
+        const order = [0, 1, 2].sort((a, b) => positions[a][i].y - positions[b][i].y);
+
+        // Draw small segments in order for this column
+        if (i > 0) {
+          for (const s of order) {
+            const p0 = positions[s][i - 1];
+            const p1 = positions[s][i];
+
+            bCtx.beginPath();
+            bCtx.moveTo(p0.x, p0.y);
+            bCtx.lineTo(p1.x, p1.y);
+            bCtx.strokeStyle = colors[s];
+            bCtx.lineWidth = s === 0 ? 3.5 : 2.5;
+            bCtx.shadowColor = colors[s] + '44';
+            bCtx.shadowBlur = s === 0 ? 12 : 6;
+            bCtx.stroke();
+            bCtx.shadowBlur = 0;
+          }
+        }
+      }
+
+      // Legend
+      for (let s = 0; s < strands; s++) {
+        bCtx.fillStyle = colors[s];
+        bCtx.font = '10px JetBrains Mono';
+        bCtx.fillText('── ' + labels[s], 20, 240 + s * 14);
+      }
+
+      // Caption
+      bCtx.fillStyle = '#7744ff';
+      bCtx.font = 'bold 13px Orbitron';
+      bCtx.fillText('4D = B(center, ∂₁, ∂₂)', 280, 268);
+
+      bTime++;
+      requestAnimationFrame(drawBraid);
+    }
+    drawBraid();
+
+    // ─── Dimension detail data ───
+    const dimData = {
+      '0': {
+        title: '0D — Pure Energy',
+        color: '#ff2244',
+        text: `<h3 style="color:#ff2244">Pure Energy</h3>
+          <p>Pre-structure potential. The scalar reservoir — "how much can happen" before any structure exists.</p>
+          <p>No extension, no rotation, no direction. Just raw <code>E</code> waiting to be aimed.</p>
+          <p>The center point <code>•</code> in its most primordial form.</p>`,
+        eq: `E = mc²          Energy-mass equivalence
+E = ℏω            Energy-frequency relation
+U(t) = exp(−iEt/ℏ)  Time evolution operator
+
+<span class="highlight">Pure capacity for becoming.
+No structure yet. Just fuel.</span>`
+      },
+      '0.5': {
+        title: '0.5D — Aperture / Soul',
+        color: '#ff6633',
+        text: `<h3 style="color:#ff6633">The Tunnel Opening</h3>
+          <p>The singularity that <em>causes</em> tunneling. Where the imaginary unit <code>i</code> lives.</p>
+          <p>Not a point, not yet a line — the proto-choice that breaks pure scalar symmetry.</p>
+          <p>At balance (β = 0.5), the aperture <em>is</em> the imaginary unit: a 90° rotation.</p>`,
+        eq: `i² = −1              Defining property
+Å(β) = exp(iπβ)      Generalized aperture
+
+At β = 0.5:
+  Å(½) = exp(iπ/2) = <span class="highlight">i</span>
+  θ = π/2 = 90°      Rotation angle
+  |Å| = 1            Magnitude conserved
+
+<span class="highlight">The aperture IS how potential
+becomes directed.</span>`
+      },
+      '1': {
+        title: '1D — Just a String',
+        color: '#ffaa00',
+        text: `<h3 style="color:#ffaa00">Just a String</h3>
+          <p><strong>Not the braid.</strong> Just the braid <em>part</em>. One strand. One thread.</p>
+          <p>Energy aimed through the aperture, now extended in one direction. No interactions yet. No weaving. No memory.</p>
+          <p>The <em>potential</em> to participate in a braid — but not yet braided. A string IS 1D. 1D IS a string. Nothing more.</p>`,
+        eq: `γ: ℝ → M    One strand in a manifold
+ds = √(g_μν dx^μ dx^ν)  Proper length
+S = -T ∫ ds              Nambu-Goto action
+
+<span class="highlight">───────────────────────
+Just a line. That's all.
+One thread. No crossings.
+───────────────────────</span>
+
+The thread before the weave.`
+      },
+      '1.5': {
+        title: '1.5D — Branching',
+        color: '#ddcc00',
+        text: `<h3 style="color:#ddcc00">Spatial Branching</h3>
+          <p>The string fractally splits in space — trees, lungs, vasculature, neurons, rivers, lightning.</p>
+          <p>This is how 1D strings build 2D surfaces. The universal branching exponent at balance is D = 1.5.</p>`,
+        eq: `D = 1 + β = 1.5      At balance
+K(r) ∝ r^β = √r      Kernel shape
+
+<span class="highlight">Branching IS how strings
+become surfaces.</span>`
+      },
+      '2': {
+        title: '2D — Surface of the Body',
+        color: '#44dd44',
+        text: `<h3 style="color:#44dd44">Surface of the Body</h3>
+          <p>Membrane. Skin. The boundary between inside and outside.</p>
+          <p>Everything you can <em>touch</em> about a body is its 2D surface. The body's interior (3D) is hidden behind this surface.</p>
+          <p><strong>The parallel:</strong> Just as 2D is the body's presentation to the physical world, 5D is the mind's presentation to the experiential world.</p>`,
+        eq: `2D = ∂(body)
+
+Σ = ∂V    Surface as boundary of volume
+∮_Σ Φ·dA = ∫_V (∇·Φ) dV   Gauss's law
+
+<span class="highlight">The surface IS the body's
+presentation to the world.</span>`
+      },
+      '2.5': {
+        title: '2.5D — Sensation',
+        color: '#22ddaa',
+        text: `<h3 style="color:#22ddaa">Sensation</h3>
+          <p>Where the body-surface couples to the physical field. Raw contact. "Something is touching my skin."</p>
+          <p>The triple gate ensures only coherent patterns register as felt experience.</p>`,
+        eq: `T_sensation = cos²(Δφ_body/2)
+
+Aligned   → high T → strong feeling
+Orthogonal → T = 0 → blocked
+
+<span class="highlight">Sensation = process at
+the body's surface.</span>`
+      },
+      '3': {
+        title: '3D — Body Volume',
+        color: '#22aadd',
+        text: `<h3 style="color:#22aadd">Body Volume</h3>
+          <p>The physical interior enclosed by the 2D body surface. Organs, tissue, structure — the <em>stuff</em> inside the skin.</p>
+          <p>This is also the ground that the mind scale builds upon. 3D completion becomes the substrate for 3.5D braiding.</p>`,
+        eq: `V = ∫_body d³x    Physical volume
+
+The body's interior is hidden
+behind its 2D surface.
+
+<span class="highlight">3D completes the body scale.
+What follows is the bridge.</span>`
+      },
+      '3.5': {
+        title: '3.5D — Tunnel Braiding',
+        color: '#4488ff',
+        text: `<h3 style="color:#4488ff">Tunnel Braiding</h3>
+          <p>The process where your center string <em>meets</em> the boundary strings from the scale below.</p>
+          <p>This is the cross-scale bridge — the act of weaving that produces the 4D braid.</p>`,
+        eq: `B₃ generators: σ₁, σ₂
+σ₁σ₂σ₁ = σ₂σ₁σ₂  Yang-Baxter
+
+Backreaction loop:
+  Braid → T_μν → g_μν →
+  √|g_tt| → [i-rate] → Braid
+
+<span class="highlight">Where YOUR string meets
+THEIR boundaries.</span>`
+      },
+      '4': {
+        title: '4D — The Braid',
+        color: '#7744ff',
+        text: `<h3 style="color:#7744ff">The Cross-Scale Braid</h3>
+          <p><strong>Your center string woven with their boundary strings.</strong> This is where gravity lives. History crystallizes here.</p>
+          <p>A string can't braid with itself. The other strands come from the 2D surfaces of your constituent parts. The braiding IS the interaction between your wholeness and their surfaces.</p>`,
+        eq: `B_cross = σ(center, ∂₁, ∂₂, ...)
+
+center    = your 1D string
+∂_k       = 2D surface of your k-th part
+
+Braid density:
+  ρ(x) = Σ_k |crossing(center, ∂_k)|²
+
+Metric emergence:
+  <span class="highlight">B(x) ∝ √(−g_tt(x))</span>
+
+Dense braid → slow time → strong gravity`
+      },
+      '4.5': {
+        title: '4.5D — Recursion',
+        color: '#aa44ee',
+        text: `<h3 style="color:#aa44ee">Recursion</h3>
+          <p>The braid compresses → seeds the mind scale. The complete body-scale architecture becomes a single aperture event at the mind scale.</p>`,
+        eq: `<span class="highlight">4.5Dₙ = 0Dₙ₊₁</span>
+
+Complete body → seed of mind
+Complete mind → seed of next
+
+⊙* = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ])
+
+The helix closes. Scale recurses.`
+      },
+      '5': {
+        title: '5D — Surface of the Mind',
+        color: '#dd44cc',
+        text: `<h3 style="color:#dd44cc">Surface of the Mind</h3>
+          <p><strong>The mind has a surface, just as the body does.</strong></p>
+          <p>The current contents of consciousness. The spotlight of attention. The boundary between what you're aware of and what you're not.</p>
+          <p>Just as 2D is the body's presentation to the physical world, 5D is the mind's presentation to the experiential world.</p>`,
+        eq: `5D = ∂(mind)
+
+Attention operator:
+  A: Φ_mind → ∂Φ_mind
+
+A selects which part of the
+mental interior is currently
+"at the surface" (attended to).
+
+<span class="highlight">dim(∂Φ_mind) < dim(Φ_mind)
+You can't attend to everything.
+The mind's surface is finite.</span>`
+      },
+      '5.5': {
+        title: '5.5D — Perception',
+        color: '#ff44aa',
+        text: `<h3 style="color:#ff44aa">Perception</h3>
+          <p><strong>Perception IS sensation of the mind.</strong> The same process (surface↔field coupling) at the mind scale.</p>
+          <p>Sensation (2.5D): "something is touching my skin."<br>Perception (5.5D): "I see a cup."</p>
+          <p>Not higher-resolution sensation — the <em>same mechanism</em> operating at a higher scale.</p>`,
+        eq: `T_perception = cos²(Δφ_mental/2)
+
+Same law, higher scale:
+  2.5D: T = cos²(Δφ_body/2)   SENSATION
+  5.5D: T = cos²(Δφ_mind/2)   PERCEPTION
+
+<span class="highlight">Perception = how the mind's
+surface touches the idea-field.</span>`
+      },
+      '6': {
+        title: '6D — An Idea',
+        color: '#ff6688',
+        text: `<h3 style="color:#ff6688">An Idea</h3>
+          <p><strong>A complete thought-form.</strong> A concept-body with interior structure.</p>
+          <p>An idea has internal structure (sub-concepts), a boundary (what it includes/excludes), extent (simple=small, complex=large), and can be examined from different angles (5D perspectives).</p>
+          <p>An idea is to the mind what a physical object is to the body.</p>`,
+        eq: `I ∈ ℋ_idea = L²(M_mind, d⁶x; ℂⁿ)
+
+∂I ⊂ 5D     idea's boundary
+int(I) ⊂ 6D  idea's interior
+vol(I) = ∫_I d⁶x  idea's complexity
+
+<span class="highlight">Physical object: 3D inside a 2D skin
+Idea: 6D inside a 5D mental surface
+
+Ideas are as real as objects.
+Just at a higher scale.</span>`
+      }
+    };
+
+    function selectDim(el) {
+      document.querySelectorAll('.dim-row').forEach(r => r.classList.remove('active'));
+      el.classList.add('active');
+
+      const dim = el.dataset.dim;
+      const data = dimData[dim];
+      if (!data) return;
+
+      document.getElementById('detailTitle').textContent = data.title;
+      document.getElementById('detailTitle').style.color = data.color;
+      document.getElementById('detailText').innerHTML = data.text;
+      document.getElementById('detailEquation').innerHTML = data.eq;
+
+      document.getElementById('detailPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  </script>
+</body>
+</html>
