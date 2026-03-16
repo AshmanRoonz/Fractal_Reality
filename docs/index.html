@@ -242,16 +242,23 @@
         .dr-b strong { color: var(--text); font-weight: 600; }
         .dr-b em { font-style: italic; }
         /* Drawer color classes — matched to how_reality_is_built.html */
-        .dg .dr-d, .dg .dr-n { color: #B8A060; }
-        .da .dr-d, .da .dr-n { color: #E88AAF; }
-        .da .dr-b em { color: #E88AAF; }
-        .ds .dr-d, .ds .dr-n { color: #B8A060; }
-        .dp .dr-d, .dp .dr-n { color: #9B7AD8; }
-        .dp .dr-b em { color: #9B7AD8; }
-        .df .dr-d, .df .dr-n { color: #4DB8A0; }
-        .df .dr-b em { color: #4DB8A0; }
-        .db .dr-d, .db .dr-n { color: #4DA0C8; }
-        .db .dr-b em { color: #4DA0C8; }
+        .dg .dr-d, .dg .dr-n { color: var(--mind-color); }
+        .da .dr-d, .da .dr-n { color: var(--soul-color); }
+        .da .dr-b em { color: var(--soul-color); }
+        .ds .dr-d, .ds .dr-n { color: var(--soul-color); }
+        .dp .dr-d, .dp .dr-n { color: var(--soul-color); }
+        .dp .dr-b em { color: var(--soul-color); }
+        .df .dr-d, .df .dr-n { color: var(--mind-color); }
+        .df .dr-b em { color: var(--mind-color); }
+        .db .dr-n { color: var(--body-color); }
+        .db .dr-b em { color: var(--body-color); }
+        /* Boundary dims (3D,6D,9D,12D) have dual identity: closure of one tier + ground of the next */
+        .db .dr-d {
+            background: linear-gradient(135deg, var(--body-color), var(--mind-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
         /* ===================================
            NAVIGATION BUTTONS GRID
