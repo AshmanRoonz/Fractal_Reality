@@ -250,8 +250,15 @@
         .dp .dr-b em { color: var(--soul-color); }
         .df .dr-d, .df .dr-n { color: var(--mind-color); }
         .df .dr-b em { color: var(--mind-color); }
-        .db .dr-d, .db .dr-n { color: var(--body-color); }
+        .db .dr-n { color: var(--body-color); }
         .db .dr-b em { color: var(--body-color); }
+        /* Boundary dims (3D,6D,9D,12D) have dual identity: closure of one tier + ground of the next */
+        .db .dr-d {
+            background: linear-gradient(135deg, var(--body-color), var(--mind-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
         /* ===================================
            NAVIGATION BUTTONS GRID
