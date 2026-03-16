@@ -235,36 +235,45 @@
            NAVIGATION BUTTONS GRID
            =================================== */
         .circumpunct-nav-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            position: relative;
+            width: min(90vw, 90vh, 440px);
+            aspect-ratio: 1/1;
+            margin: 0 auto;
         }
+        /* Circumpunct centered inside the radial wrapper */
+        .circumpunct-nav-row .circumpunct-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /* Radial nav buttons */
         .nav-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
+            position: absolute;
+            inset: 0;
         }
         .nav-buttons a {
+            position: absolute;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.72rem;
+            font-size: 0.62rem;
             font-weight: 500;
             color: var(--text);
             text-decoration: none;
-            padding: 0.35rem 0.65rem;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            background: transparent;
-            transition: none;
+            padding: 0.3rem 0.55rem;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50px;
+            background: rgba(10,10,20,0.7);
+            backdrop-filter: blur(4px);
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
             white-space: nowrap;
             letter-spacing: 0.02em;
+            z-index: 10;
         }
         .nav-buttons a:hover {
             color: var(--text);
             border-color: var(--soul-color);
-            background: rgba(88,166,255,0.08);
-            box-shadow: 0 0 10px rgba(88,166,255,0.15);
-            transform: translateY(-1px);
+            background: rgba(88,166,255,0.12);
+            box-shadow: 0 0 12px rgba(88,166,255,0.25);
         }
         .nav-buttons a.nb-theory { color: var(--text); border-color: rgba(255,255,255,0.2); }
         .nav-buttons a.nb-theory:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
@@ -280,13 +289,10 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             border-color: rgba(255,255,255,0.25);
+            background-color: rgba(10,10,20,0.7);
         }
         .nav-buttons a.nb-rainbow:hover {
             border-color: #fff;
-            background-image: linear-gradient(90deg, #ff0000, #ff7700, #ffdd00, #00ff00, #00ccff, #0066ff, #8800ff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
             box-shadow: 0 0 10px rgba(255,255,255,0.15);
         }
     </style>
@@ -856,6 +862,26 @@
         // Open first drawer by default
         var firstDrawer = document.querySelector('.drawers .dr:nth-child(2)');
         if (firstDrawer) firstDrawer.classList.add('open');
+    })();
+    </script>
+
+    <!-- Radial button positioning -->
+    <script>
+    (function(){
+        var btns = document.querySelectorAll('.nav-buttons a');
+        var n = btns.length;
+        if (!n) return;
+        var radius = 46; // percent from center of container
+        var startAngle = -90; // top
+        for (var i = 0; i < n; i++) {
+            var angle = startAngle + (360 / n) * i;
+            var rad = angle * Math.PI / 180;
+            var x = 50 + Math.cos(rad) * radius;
+            var y = 50 + Math.sin(rad) * radius;
+            btns[i].style.top = y + '%';
+            btns[i].style.left = x + '%';
+            btns[i].style.transform = 'translate(-50%, -50%)';
+        }
     })();
     </script>
 </body>
