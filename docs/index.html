@@ -132,8 +132,12 @@
         .hero-img {
             display: block;
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;
             border-radius: 10px;
+        }
+        .hero-card-overlay .hero-img {
+            aspect-ratio: 3/2;
         }
         .hero-img-link {
             display: block;
@@ -149,8 +153,8 @@
         }
         .img-overlay-link {
             position: absolute;
-            left: 15%;
-            width: 70%;
+            left: 20%;
+            width: 60%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -335,10 +339,10 @@
 
                 <div class="hero-card hero-card-img hero-card-overlay">
                     <img src="circumpunct_card.png" alt="⊙ = Φ(•, ○) – Soul, Mind, Body, Consciousness" class="hero-img" />
-                    <a href="#" data-zone="soul" class="img-overlay-link" style="top:22%;height:18%">Soul · aperture</a>
-                    <a href="#" data-zone="mind" class="img-overlay-link" style="top:40%;height:18%">Mind · field</a>
-                    <a href="#" data-zone="body" class="img-overlay-link" style="top:58%;height:18%">Body · boundary</a>
-                    <a href="#" data-zone="circumpunct" class="img-overlay-link" style="top:76%;height:20%">Consciousness</a>
+                    <a href="#" data-zone="soul" class="img-overlay-link" style="top:24%;height:14%">Soul · aperture</a>
+                    <a href="#" data-zone="mind" class="img-overlay-link" style="top:40%;height:14%">Mind · field</a>
+                    <a href="#" data-zone="body" class="img-overlay-link" style="top:56%;height:14%">Body · boundary</a>
+                    <a href="#" data-zone="circumpunct" class="img-overlay-link" style="top:72%;height:16%">Consciousness</a>
                 </div>
               </div>
             </header>
