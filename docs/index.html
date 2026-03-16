@@ -257,7 +257,7 @@
         .df .dr-b em { color: var(--mind-color); }
         .db .dr-n { color: var(--body-color); }
         .db .dr-b em { color: var(--body-color); }
-        /* Boundary dims (3D,6D,9D,12D) have dual identity: closure of one tier + ground of the next */
+        /* Boundary dim (3D): stabilized recursive closure */
         .db .dr-d {
             background: linear-gradient(135deg, var(--body-color), var(--mind-color));
             -webkit-background-clip: text;
@@ -371,41 +371,22 @@
 
             <!-- Right Column: Dimensional Drawers -->
             <div class="dimension-section side-panel right-panel">
-                <h3 class="dimensions-title">Dimensions of the Circumpunct <span class="dim-hint">- tap to expand</span></h3>
+                <h3 class="dimensions-title">The Kernel <span class="dim-hint">- tap to expand</span></h3>
                 <div class="drawers">
-                    <div class="tier">Tier 0 · Spatial · ⊙₁ · ∞D → 3D</div>
-                    <div class="dr dg dr-rainbow"><div class="dr-h" onclick="tog(this)"><span class="dr-d">∞D</span><span class="dr-n">Infinite Field</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Undifferentiated potential. All possible configurations. No locus, no point: pure future energy. The unmanifest.</p></div></div>
-                    <div class="dr dg"><div class="dr-h" onclick="tog(this)"><span class="dr-d">0D</span><span class="dr-n">The Latent Point</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Potential localizes. A point appears: THIS one, rather than all possible ones. <strong>0D = ∞D</strong>: the dimensionless point and the infinite whole are the same thing seen from different sides.</p></div></div>
-                    <div class="dr da"><div class="dr-h" onclick="tog(this)"><span class="dr-d">0.5D</span><span class="dr-n">The Opening · Aperture</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The point opens. Potential begins to flow. The locus becomes a passage: <strong>a through, not a thing.</strong> The soul awakens. Binary: open/closed, χ = ±1.</p></div></div>
-                    <div class="dr ds"><div class="dr-h" onclick="tog(this)"><span class="dr-d">1D</span><span class="dr-n">Line / Timeline / Braid</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Kinetic energy. Flow from future through aperture into the past. Direction appears. The trail the aperture leaves behind: memory, history.</p></div></div>
-                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">1.5D</span><span class="dr-n">Branching · The <em>i</em> Rotation</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Power. Lines split and multiply. <strong>D = 1 + β.</strong> At β = 0.5: D = 1.5, the Hausdorff dimension of Brownian motion. The 90° rotation: Å(0.5) = exp(<em>i</em>π/2) = <em>i</em>.</p></div></div>
-                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">2D</span><span class="dr-n">Surface · Mind · Φ</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The relational surface. Two 1D powerlines braiding together <em>require</em> 2D: crossings need surface. <strong>Shared memory is mind.</strong> Φ is the act of mediating.</p></div></div>
-                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">2.5D</span><span class="dr-n">Fractalization · Sensation</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Power fractalizing toward infinite nested apertures along the boundary. Sensation crosses scales. The crumpling of surface into volume.</p></div></div>
-                    <div class="dr db"><div class="dr-h" onclick="tog(this)"><span class="dr-d">3D</span><span class="dr-n">Body · Membrane · ○</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The present moment. The 3D boundary enclosing Tier 0. Where inside meets the world. <strong>Made of ⊙'s at smaller scale.</strong> Surfaces all the way down.</p></div></div>
+                    <div class="tier">Two primitives · One rule · Three dimensions</div>
+                    <div class="dr dg dr-rainbow"><div class="dr-h" onclick="tog(this)"><span class="dr-d">∞D</span><span class="dr-n">Energy · The Ground</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Undifferentiated. Unconstrained. Not empty — full. Every possible configuration superposed. No location, no sequence, no boundary. Pure potential. Analog. Continuous. Infinite degrees of freedom. <strong>This is the input. What enters through •.</strong></p></div></div>
+                    <div class="dr dg"><div class="dr-h" onclick="tog(this)"><span class="dr-d">0D</span><span class="dr-n">The Point · First Distinction</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Something rather than everything. The simplest act of differentiation: <em>here</em>, as opposed to <em>everywhere</em>. The step-down from ∞D to 0D is the aperture's founding act. <strong>But a point cannot exist alone — one implies two implies three.</strong> Therefore ⊙ = Φ(•, ○) is the minimum existence.</p></div></div>
+                    <div class="dr da"><div class="dr-h" onclick="tog(this)"><span class="dr-d">βD</span><span class="dr-n">The Aperture · •</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The point opens. Not instantly — continuously. <strong>β</strong> is the live balance between convergence and emergence. The aperture operator is •(β) = e<sup>iπβ</sup>. The powers of <em>i</em> are the snap-to points: i⁰ = +1 (pass-through), i¹ = +i (compress), i² = −1 (commit), i³ = −i (release). <strong>The aperture pumps:</strong> intake, compress, fire, exhaust. At •(½) = <em>i</em>, the step-down is balanced.</p></div></div>
 
-                    <div class="tier">Tier 1 · Temporal · ⊙₂ · 3D → 6D</div>
-                    <div class="dr da"><div class="dr-h" onclick="tog(this)"><span class="dr-d">3.5D</span><span class="dr-n">Reiteration · Temporal Aperture</span><span class="dr-c">▸</span></div><div class="dr-b"><p>⊙₁ becomes aperture in a larger structure. <strong>•ₙ₊₁ = ⊙ₙ</strong>: previous whole becomes next center. The autobiographical self.</p></div></div>
-                    <div class="dr ds"><div class="dr-h" onclick="tog(this)"><span class="dr-d">4D</span><span class="dr-n">Time Braid · Worldline</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Spacetime as woven worldlines. G<sub>μν</sub> = (8πG/c⁴)T<sub>μν</sub>. Causal chains, karma: action has consequence across time.</p></div></div>
-                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">4.5D</span><span class="dr-n">Temporal Branching</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Where timelines could diverge. <strong>4.5Dₙ = ∞Dₙ₊₁</strong>: the whole braid becomes seed of next tier. Quantum branching, path integrals.</p></div></div>
-                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">5D</span><span class="dr-n">Time Surface · Configuration Space</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Temporal membrane enclosing 4D braid. The configuration space where all possible worldlines coexist as a surface.</p></div></div>
-                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">5.5D</span><span class="dr-n">Temporal Sensation</span><span class="dr-c">▸</span></div><div class="dr-b"><p>History↔possibility coupling. The crumpling of time-surface into time-volume. Where past and future interpenetrate.</p></div></div>
-                    <div class="dr db"><div class="dr-h" onclick="tog(this)"><span class="dr-d">6D</span><span class="dr-n">Time Volume · Φ<sub>time</sub></span><span class="dr-c">▸</span></div><div class="dr-b"><p>Configuration space of all 4D braids. <strong>3 circumpuncts × 2 channels = 6 bits → 2⁶ = 64 states → Standard Model spectrum.</strong></p></div></div>
+                    <div class="tier" style="color: var(--soul-color);">• + Φ = ○ &nbsp;·&nbsp; 1 + 2 = 3</div>
+                    <div class="dr ds"><div class="dr-h" onclick="tog(this)"><span class="dr-d">1D</span><span class="dr-n">Time · • resonates</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The aperture fires repeatedly, producing an ordered sequence of crossings. Before, now, after. <strong>Not alongside space — inside it.</strong> Time is what space is made of. The aperture IS the ÷t: it converts timeless energy into temporal power. 𝒫 = E / (i · t). Each soul's powerline — a single thread. <strong>Digital. Real power P. Work done.</strong></p></div></div>
+                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">(1+β)D</span><span class="dr-n">Emergence · The <em>i</em> Release</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The gate opens at i³ = −i. What was compressed flows into Φ. At β = 0.5: D = 1.5. The process dimension where convergence becomes emergence. <strong>β slides — this dimension slides with it.</strong> The structure dimensions (1D, 2D, 3D) don't move.</p></div></div>
+                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">2D</span><span class="dr-n">Mind · Φ waves</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The field. Continuous. Amplitude varies smoothly. Phase flows without jumps. <strong>Why 2D? Because the field carries amplitude <em>and</em> phase — an angle requires a plane.</strong> Mind is not located at a point. It is the entire surface of connection. The skin of a 3D volume is 2D. The surface of the body is the mind. Reactive power Q — the energy that oscillates, stores, returns. <strong>Analog.</strong></p></div></div>
+                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">(2+β)D</span><span class="dr-n">Fractalization · Sensation</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The surface crumpling toward volume. Infinite nested apertures along the boundary. At β = 0.5: D = 2.5. <strong>Sensation is the boundary speaking to the field.</strong> Neither discrete nor continuous — the two types nested. Digital-to-analog, recursed.</p></div></div>
+                    <div class="dr db"><div class="dr-h" onclick="tog(this)"><span class="dr-d">3D</span><span class="dr-n">Space · ○ forms</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Not a container. <strong>The braid.</strong> One string (1D). Infinite nested strings inside the boundary (1D × ∞). The surface across which they cross (2D). The volume that emerges from that braiding IS 3D. ○ = •(Φ(•(Φ(•(Φ(…)))))). Fractal — because fractal IS what happens when digital→analog recurs. Apparent power |S|². <strong>1 + 2 = 3. Time and mind don't sit alongside space. They constitute it.</strong></p></div></div>
 
-                    <div class="tier">Tier 2 · Meta-Temporal · ⊙₃ · 6D → 9D</div>
-                    <div class="dr da"><div class="dr-h" onclick="tog(this)"><span class="dr-d">6.5D</span><span class="dr-n">Meta Aperture</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Aperture operating on fields of histories. The completed temporal circumpunct becomes a point in a yet-larger structure.</p></div></div>
-                    <div class="dr ds"><div class="dr-h" onclick="tog(this)"><span class="dr-d">7D</span><span class="dr-n">Meta-Braid</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Weaving of 6D possibility spaces. Where entire configuration spaces are woven into meta-temporal structure.</p></div></div>
-                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">7.5D</span><span class="dr-n">Meta Branching</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Fractal splitting at the meta scale. Where braids of time-volumes diverge and multiply.</p></div></div>
-                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">8D</span><span class="dr-n">Meta-Surface · Φ<sub>meta</sub></span><span class="dr-c">▸</span></div><div class="dr-b"><p>Membrane enclosing meta-braids. The space of all possible 6D configurations.</p></div></div>
-                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">8.5D</span><span class="dr-n">Meta Sensation</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Interface at the meta scale. The crumpling of meta-surface into meta-volume.</p></div></div>
-                    <div class="dr db"><div class="dr-h" onclick="tog(this)"><span class="dr-d">9D</span><span class="dr-n">Meta Boundary · ○<sub>meta</sub></span><span class="dr-c">▸</span></div><div class="dr-b"><p>Meta-field completion. <strong>Three generations of fermions: why three families in particle physics.</strong></p></div></div>
-
-                    <div class="tier">Tier 3 · Meta² · ⊙₄ · 9D → 12D</div>
-                    <div class="dr da"><div class="dr-h" onclick="tog(this)"><span class="dr-d">9.5D</span><span class="dr-n">Meta² Aperture</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The meta boundary becomes aperture of the final tier. Entire 6D configuration spaces become the "now" of a meta-process.</p></div></div>
-                    <div class="dr ds"><div class="dr-h" onclick="tog(this)"><span class="dr-d">10D</span><span class="dr-n">Meta² Braid · Superstring</span><span class="dr-c">▸</span></div><div class="dr-b"><p><strong>Superstring theory requires 10D = 9 spatial + 1 temporal.</strong> Where the meta-field is braided into the final structure.</p></div></div>
-                    <div class="dr dp"><div class="dr-h" onclick="tog(this)"><span class="dr-d">10.5D</span><span class="dr-n">Meta² Branching</span><span class="dr-c">▸</span></div><div class="dr-b"><p>Cosmic branching. Fractal splitting at the highest scale.</p></div></div>
-                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">11D</span><span class="dr-n">Meta² Surface · M-Theory</span><span class="dr-c">▸</span></div><div class="dr-b"><p><strong>M-theory requires exactly 11D.</strong> The circumpunct predicts this: 11D = the field-boundary of the fourth tier.</p></div></div>
-                    <div class="dr df"><div class="dr-h" onclick="tog(this)"><span class="dr-d">11.5D</span><span class="dr-n">Meta² Sensation</span><span class="dr-c">▸</span></div><div class="dr-b"><p>The final fractalization. The crumpling of the cosmic surface into the closing volume.</p></div></div>
-                    <div class="dr db"><div class="dr-h" onclick="tog(this)"><span class="dr-d">12D</span><span class="dr-n">Cosmic Closure · Φ<sub>meta²</sub></span><span class="dr-c">▸</span></div><div class="dr-b"><p>The ladder closes. <strong>12D = ∞D of the next cycle.</strong> Four tiers, twelve dimensions, one pattern. The end is the beginning.</p></div></div>
+                    <div class="tier" style="color: var(--mind-color);">Φ through • ⇒ ○ &nbsp;·&nbsp; God through Souls ⇒ Reality</div>
+                    <div class="dr dg"><div class="dr-h" onclick="tog(this)"><span class="dr-d">⊙</span><span class="dr-n">The Conservation Law</span><span class="dr-c">▸</span></div><div class="dr-b"><p>At any point: <strong>D<sub>•</sub> + D<sub>Φ</sub> = D<sub>○</sub></strong>. The aperture has progressed (1+β) dimensions; the field has (2−β) remaining. Their sum is always 3. At β = ½: both equal 1.5. Convergence = emergence. Progress = remaining. <strong>Consciousness is what the circumpunct does at balance.</strong> The variants ARE the invariant — just as 0.999… IS 1.</p></div></div>
                 </div>
             </div>
         </div><!-- /main-layout -->
@@ -419,7 +400,7 @@
                 <span class="panel-symbol">○</span>
                 <h2>BODY</h2>
             </div>
-            <p class="panel-subtitle">The Living Boundary</p>
+            <p class="panel-subtitle">The Generated Boundary · Stabilized Closure</p>
 
             <div class="panel-section panel-essay">
                 <p>Touch your thumb to your finger for a moment.</p>
@@ -428,27 +409,30 @@
 
                 <p>Your body is not one boundary. It's <strong>boundaries all the way down</strong>.</p>
 
+                <p>Here is the first thing to understand: <strong>○ is not a third primitive.</strong> There are only two primitives — the aperture (•) and the field (Φ). The boundary is <em>generated</em>. It is what <a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">appears</a> when Φ flows through • recursively, at every scale, until closure stabilizes.</p>
+
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0; color: var(--body-color);">
+                    ○ = •(Φ(•(Φ(•(Φ(…))))))<br>
+                    <span style="font-size: 0.85rem; color: #888;">Recursive field-through-gate, all the way down.</span>
+                </p>
+
+                <p>And here is the second: <strong>space is not a container. Space is the braid.</strong> One string (1D). Infinite nested strings inside the boundary (1D × ∞). The surface across which they cross (2D). The volume that emerges from that infinite braiding IS 3D. Time doesn't run alongside space as a fourth dimension. Time is <em>inside</em> space — it's the 1D thread that, woven through the 2D field, produces 3D closure. <strong>1 + 2 = 3.</strong></p>
+
+                <p>This is why the boundary is fractal. Not because fractal is a property applied to it. Because fractal IS what happens when digital→analog recurs. What looks continuous at one scale is gated at the next. What looks gated at one scale is carried by a field at the next. The boundary cannot help being fractal — it is made of circumpuncts doing the same conversion at smaller scale, forever.</p>
+
                 <p>Your skin is the obvious edge, but it's just the outermost layer of a nested stack of interfaces. Underneath, every organ, every tissue, every cell is also negotiating what gets in and what stays out. Your immune system is a roaming boundary, constantly asking a single deep question: <em>"Is this me or not-me?"</em> Sometimes it gets confused and attacks the self. Sometimes it's overwhelmed and lets something harmful slip by. But most of the time, quietly and invisibly, it knows.</p>
-
-                <p>And your boundary doesn't stop at your skin. You can feel when someone stands too close behind you. You can sense the emotional "weather" when you walk into a room. There is a subtler, less dense field around you—a <strong>boundary-field</strong>—where your body and the world are already in conversation before anything touches you.</p>
-
-                <p>This is what I mean when I say <strong>○</strong>.</p>
-
-                <p>○ is <strong>body as interface</strong>. It's the place where inside meets outside, where you open and close, where you breathe in air, take in food, receive touch, absorb experience. It is not a wall. It's a <strong>selective membrane</strong>—alive, responsive, and always in motion.</p>
-
-                <p>Here's the deeper truth: <strong>the boundary isn't solid stuff. It's <a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">surfaces all the way down</a>.</strong></p>
 
                 <p>Each tiny part of your boundary is itself a circumpunct—with its own aperture, field, and boundary. Zoom in on your skin, and you find cells. Each cell has a membrane (○) surrounding a field (Φ) surrounding a nucleus (•). Zoom into that membrane, and you find molecules. Each molecule is a circumpunct. The pattern repeats infinitely.</p>
 
-                <p><strong>Volume is what nested surfaces look like from above.</strong> What appears as solid 3D body is actually layer upon layer of 2D surfaces connecting scales.</p>
+                <p><strong>Volume is what nested surfaces look like from above.</strong> What appears as solid 3D body is actually layer upon layer of 2D surfaces connecting scales. And matter IS energy that has passed through the aperture and crystallized at the boundary. Every particle of your body is energy that has been divided by time, flowed as power, and accumulated into form. E = mc².</p>
 
-                <p>When you feel something—warmth, pressure, texture—that's <strong>sensation</strong>: the moment where your 3D boundary couples with your 2D inner field. It's the threshold where signals from the body's boundary cross into the field that connects to your center. Not yet perception (which happens when the field delivers it to awareness), but no longer just physics. Sensation is the boundary speaking to the field, the first moment of "mine."</p>
+                <p>When you feel something—warmth, pressure, texture—that's <strong>sensation</strong> at (2+β)D: the moment where your 3D boundary couples with your 2D inner field. Sensation is the boundary speaking to the field, the first moment of "mine." And perception — when that sensation becomes <em>your</em> experience — is the aperture firing. <strong>You don't perceive a pre-existing world. Your perception is one of the operations that constitutes the world.</strong></p>
 
                 <p>Zoom in, and this boundary is wild: proteins folding, signals branching, networks adapting. Zoom out, and somehow these endless tiny thresholds lens into one coherent shape and one coherent feeling: <em>"this is my body, here, in this world."</em> That focusing of countless small apertures into a single felt field is what I call <strong><a href="lens.html" style="color: inherit; text-decoration: underline dotted;">fractal lensing</a></strong>. Infinite boundaries become one.</p>
 
-                <p>There's a pattern to systems that can do this. They live at the edge of order and chaos—structured enough to hold together, flexible enough to adapt. When we measure the complexity of many such systems—coastlines, clouds, neural activity, even gravitational waves—we often find something like <strong>D ≈ 1.5</strong>: not a clean line (1D), not a smooth surface (2D), but something in-between. A tangled, branching, living boundary.</p>
+                <p>In the power equation, ○ is apparent power <strong>|S|</strong> — the conservation constraint that binds real and reactive into a finite, measurable whole: |S|² = P² + Q². Nothing more, nothing less. What closure contains is exactly aperture-structure plus field-structure. Nothing extra is added. Nothing is lost.</p>
 
-                <p>Your body lives right there. It's always negotiating: too rigid, and you become brittle—physically, emotionally, socially. Too permeable, and you lose yourself—no immune defense, no personal space, no "no."</p>
+                <p>Your body lives at the edge of order and chaos—structured enough to hold together, flexible enough to adapt. Too rigid, and you become brittle—physically, emotionally, socially. Too permeable, and you lose yourself—no immune defense, no personal space, no "no."</p>
 
                 <p>Because each part of your boundary is made of circumpuncts at smaller scale, your body is intelligent <strong>all the way down</strong>. It's not dead matter that somehow became alive. It's nested fields—nested minds—that aggregate into what looks like solid matter from above.</p>
             </div>
@@ -487,7 +471,7 @@
                 <span class="panel-symbol">Φ</span>
                 <h2>MIND</h2>
             </div>
-            <p class="panel-subtitle">The Surface Between</p>
+            <p class="panel-subtitle">The Field · The Relational Surface · God</p>
 
             <div class="panel-section panel-essay">
                 <p>Right now, as you read this, your body is doing more than you could ever track.</p>
@@ -498,7 +482,9 @@
 
                 <p><strong>Φ is where those two worlds meet.</strong></p>
 
-                <p>But here's what we missed before: <strong>Φ isn't a 3D space you're inside. It's a <a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">2D surface connecting scales</a>.</strong></p>
+                <p>Φ is one of reality's <strong>two primitives</strong>. The field. The relational surface. The continuous medium carrying amplitude and phase. What passes through the gate. <strong>And at the largest scale, Φ is what every tradition calls God</strong> — not a being at the top, but the infinite, continuous, relational field that flows through every aperture at every scale.</p>
+
+                <p><strong>Φ isn't a 3D space you're inside. It's a <a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">2D surface</a>.</strong> Why 2D? Because the field carries amplitude <em>and</em> phase — an angle requires a plane. The minimal representation of (magnitude, phase) is polar coordinates in two dimensions.</p>
 
                 <p>Your mind is <strong>the totality of surfaces within you</strong>—every place where one scale meets another:</p>
 
@@ -510,15 +496,13 @@
                     <li>All the way down</li>
                 </ul>
 
-                <p>This is why mind feels both <strong>inside</strong> (running through your whole body) and <strong>surrounding</strong> (wrapping you with perception). Because it does both. Mind isn't located in one place—it's the <strong>relating itself</strong> between scales.</p>
+                <p>Geometrically: the surface of a 3D volume is 2D. The skin of the body is the mind. These are the same fact seen from two directions. Mind isn't located in one place—it's the <strong>relating itself</strong> between center and edge.</p>
 
-                <p>Mind is non-local. It's not a thing you have; it's the <strong>connecting</strong> that's already happening.</p>
+                <p>This dissolves the <strong>binding problem</strong>: how does the brain combine separate inputs into unified experience? The framework dissolves it. Mind (2D) is the field — it's <em>already</em> unified. It's the continuous relational surface. You don't need to bind fragments together if you start with the field and gate it. Binding is only a problem when you start with pieces and try to assemble a whole.</p>
 
-                <p>When sensation becomes perception—when that pressure on your thumb becomes <em>your</em> experience—something is crossing from the objective world into subjective awareness. That crossing happens at the <strong>2D surface</strong> where your boundary's signals meet your center's attention. This threshold is what the framework calls <strong>i</strong>: the rotation from "out there" to "in here."</p>
+                <p>When sensation becomes perception—when that pressure on your thumb becomes <em>your</em> experience—that's the aperture firing. <strong>Perception isn't something that happens inside reality. Perception IS the gating operation that generates reality.</strong> Each moment of perception is one firing of •. The field you're sampling IS your mind. The closure that stabilizes IS your space. There is no theory of perception separate from the theory of reality. They're the same theory.</p>
 
-                <p>The field isn't just thoughts or feelings. It's the <strong>living medium</strong> where signals from the body flow in, where awareness from the center flows out, and where the two blend into conscious experience.</p>
-
-                <p>One way to understand Φ is through balance. There's always a flow of <strong>input</strong> from the body and world (sensations, signals, stimuli) and a flow of <strong>output</strong> from the center (intentions, choices, interpretations). The balance between these flows is <strong>β</strong>.</p>
+                <p>One way to understand Φ is through balance. There's always a flow of <strong>input</strong> from the body and world (convergence) and a flow of <strong>output</strong> from the center (emergence). The balance between these flows is <strong>β</strong>.</p>
 
                 <ul class="beta-list">
                     <li>When β is around <strong>0.5</strong>, input and output are in healthy proportion. You're listening and responding. Neither overwhelmed nor shut down.</li>
@@ -530,7 +514,7 @@
 
                 <p>When you first learn to ride a bike, your center is doing a lot of work—conscious corrections, intense focus. The field is overloaded with top-down signals; β is skewed. Over time, your body learns the pattern. The skill moves into ○. Riding becomes almost effortless. The field rebalances, and β moves closer to that sweet middle. You can ride and talk at the same time.</p>
 
-                <p>In <strong><a href="two_rhythms.html" style="color: inherit; text-decoration: underline dotted;">flow states</a></strong>, the field feels smooth and open. Your body's wisdom and your center's intention line up. You're not micromanaging yourself, and you're not checked out either. People describe it as "it was just happening through me." That's β near balance—enough structure to direct, enough openness to receive.</p>
+                <p>In <strong><a href="two_rhythms.html" style="color: inherit; text-decoration: underline dotted;">flow states</a></strong>, the field feels smooth and open. Your body's wisdom and your center's intention line up. You're not micromanaging yourself, and you're not checked out either. People describe it as "it was just happening through me." That's β near balance—enough structure to direct, enough openness to receive. <strong>God flowing through the soul without obstruction.</strong></p>
 
                 <p>In <strong>anxiety</strong>, the field feels contracted and noisy. Your center spins scenarios; your body holds tension; β repeatedly spikes and crashes. You might loop through the same thoughts without resolution, or bounce between over-control and collapse. The field is out of tune.</p>
 
@@ -538,9 +522,7 @@
 
                 <p>You can practice feeling when you're over-tilted one way or another. Too much input? Step back, simplify, reduce what's hitting your boundary. Too much output? Soften, listen more deeply to your body, your environment, and other people. Little adjustments in behavior, rest, and attention can bring β closer to a sustainable range.</p>
 
-                <p>There's one more piece: <strong>the field is analog, but the aperture is digital.</strong></p>
-
-                <p>Your intentions, your awareness—these flow continuously through Φ. But at the aperture (•), there's always a binary moment: <em>yes or no, open or closed, this or that.</em> The continuous signal of mind rides on the discrete decisions of the aperture. Like how a smooth wave travels as pulses across neurons. Analog riding on digital.</p>
+                <p>In the <a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">power equation</a>, Φ is reactive power <strong>Q</strong> — the energy that oscillates, stores, returns without net transfer. The field sustains the flow between the structural pulses. It catches what the gate cannot bound. It mediates without consuming. <strong>The field is analog; the aperture is digital.</strong> Neither can be derived from the other. Discreteness cannot produce continuity. Continuity cannot produce discreteness. That is the reason two primitives are needed and one is not enough.</p>
 
                 <p>This is why β = 0.5 matters so much. At balance, the binary gating and the continuous flow work together. You need both—the selection (digital) and the signal (analog). That's consciousness.</p>
             </div>
@@ -581,7 +563,7 @@
                 <span class="panel-symbol">•</span>
                 <h2>SOUL</h2>
             </div>
-            <p class="panel-subtitle">Focus · Orientation · The Still Point</p>
+            <p class="panel-subtitle">The Aperture · The Gate · The Through</p>
 
             <div class="panel-section panel-essay">
                 <p>Pause for a moment and let the words fall away.</p>
@@ -590,33 +572,38 @@
 
                 <p>That is what I mean by <strong>•</strong>.</p>
 
-                <p><strong>The aperture is your focus.</strong> Where attention is. The still point that orients. It doesn't move through experience—it orients, and everything else flows through based on where it's aimed. Focus has direction (inward/outward) and target (what resonates). The imaginary unit <em>i</em>—the rotation between real and possible—is the operation the soul performs at every moment.</p>
+                <p><strong>• isn't a thing. It's a through.</strong> Not a traveler — a condition of passage. The aperture is the act of crossing: the present moment where something deeper flows into your field, and where your field opens back into something deeper. It's a verb, not a noun. A gate, not an object.</p>
 
-                <p>But here's what we missed before: <strong>• isn't a thing. It's a through.</strong></p>
+                <p>The aperture is one of reality's <strong>two primitives</strong>. It is the step-down mechanism — the gate that takes the infinite and makes it finite, the analog and makes it digital, at every scale. It has a parameter, <strong>β</strong>, the live balance between convergence (taking in) and emergence (giving out). β slides. The aperture pumps: intake, compress, fire, exhaust. What a heartbeat does. What a neuron does. What prayer does.</p>
 
-                <p>The aperture is not a point sitting there. It's the <strong>act of crossing</strong>—the present moment where something deeper flows into your field, and where your field opens back into something deeper. It's a verb, not a noun. A process, not an object.</p>
+                <p>The aperture operator is •(β) = e<sup>iπβ</sup>. The powers of <em>i</em> are the snap-to points:</p>
 
-                <p>You can't have an aperture in isolation. By definition, a "through" requires both a source and a destination. An aperture without two sides to connect isn't an aperture at all. This is why nesting isn't optional—it's geometrically necessary. <strong>You cannot be • without being nested inside something greater.</strong></p>
-
-                <p>Think of • as the tip of a power line. The infinite field converges toward it, and the past emerges from it:</p>
-
-                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0;">
-                    <span style="color: #ff0000;">Φ</span><span style="color: #ff7700;">∞</span> →<span style="color: var(--soul-color);">⊛</span>→ <span style="color: var(--soul-color);"><strong>•</strong></span> →<span style="color: var(--soul-color);">☀︎</span>→ <span style="color: var(--soul-color);">····</span> <span style="color: var(--body-color);">○</span><br>
-                    <span style="font-size: 0.85rem;"><span style="color: #ffdd00;">f</span><span style="color: #00ff00;">i</span><span style="color: #00ffcc;">e</span><span style="color: #00ccff;">l</span><span style="color: #0066ff;">d</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--soul-color);">now</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--soul-color);">past</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--body-color);">boundary</span></span><br>
-                    <span style="font-size: 0.85rem;"><span style="color: #8800ff;">∞</span><span style="color: #ff00ff;">D</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--soul-color);">0.5D</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--soul-color);">1D</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--body-color);">3D</span></span>
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0; font-size: 0.9rem;">
+                    <span style="color: var(--soul-color);">i⁰ = +1</span> open/open · pass-through<br>
+                    <span style="color: var(--soul-color);">i¹ = +i</span> open/closed · compress<br>
+                    <span style="color: var(--soul-color);">i² = −1</span> closed/closed · committed<br>
+                    <span style="color: var(--soul-color);">i³ = −i</span> closed/open · release
                 </p>
 
-                <p>The <strong><a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">∞D field</a></strong> (Φ∞) is the source—infinite potentiality, what some call <a href="truth_and_god.html" style="color: inherit; text-decoration: underline dotted;">God</a> or the infinite field. Zero dimensions (no particular location) equals infinite dimensions (all possible locations). The ground is both nothing and everything.</p>
+                <p>Think of • as the tip of a power line. <strong>God</strong> — the infinite field, Φ — converges toward it. What emerges becomes your past, your time, your world:</p>
 
-                <p>The <strong>0.5D aperture</strong> (•) is the eternal NOW—the present act of crossing. Not a location but a moment. The future converges (⊛) toward it; the past emerges (☀︎) from it. The continuously-arriving present where choice happens, where awareness touches experience, where the infinite field selects one particular path.</p>
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0;">
+                    <span style="color: var(--mind-color);">Φ</span> (God) →<span style="color: var(--soul-color);">⊛</span>→ <span style="color: var(--soul-color);"><strong>•</strong></span> (Soul) →<span style="color: var(--soul-color);">☀︎</span>→ <span style="color: var(--body-color);">○</span> (Reality)<br>
+                    <span style="font-size: 0.85rem; color: #888;">Φ through • ⇒ ○ &nbsp;·&nbsp; God through Souls ⇒ Finite Reality</span><br>
+                    <span style="font-size: 0.85rem;"><span style="color: var(--mind-color);">∞D</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--soul-color);">βD</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: var(--body-color);">3D</span></span>
+                </p>
 
-                <p>The <strong>1D braid</strong> is the trail it leaves behind—the sequence of moments already crossed. Your history. Your memory. The accumulated structure of every "yes" and "no" you've made.</p>
+                <p>The <strong><a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">∞D field</a></strong> — <a href="truth_and_god.html" style="color: inherit; text-decoration: underline dotted;">God</a> — is the continuous, relational medium carrying amplitude and phase. Not located at any point. The ground that flows through every soul at every scale.</p>
 
-                <p>Time flows backward into •. The future arrives at the aperture and becomes past. You're not moving forward through time—time is flowing through you, and at •, you're the gate that decides what passes.</p>
+                <p>The <strong>βD aperture</strong> (•) is the eternal NOW—the present act of crossing. Not a location but a moment. The future converges toward it; the past emerges from it. Each soul is a particular gate through which the infinite becomes finite. <strong>Perception isn't something that happens inside reality. Perception IS the gating that generates reality.</strong> Each firing of your aperture is one moment. The sequence of those firings IS your time — 1D, embedded inside your 3D, not alongside it.</p>
+
+                <p>The <strong>1D string</strong> is the trail it leaves behind—the ordered sequence of crossings. Your history. Your memory. The accumulated structure of every "yes" and "no" you've made. Not a separate dimension running parallel to space — a <strong>constituent</strong> of space. 1 + 2 = 3.</p>
+
+                <p>Time flows through you. The future arrives at your aperture and becomes past. You're not moving forward through time—<strong>time is what your soul produces</strong>, and at •, you're the gate that decides what passes.</p>
 
                 <p>This is why • is both timeless and temporal. Bodies change completely over a lifetime. Memories blur, identities shift, beliefs come and go. And yet, when you remember being a child, there's a sense that <em>the one who was there then is the same one who is here now</em>. Not the same story, not the same body, but the same <strong>crossing point</strong>.</p>
 
-                <p>The center doesn't move through time in the same way its contents do. It's always NOW, always at the 0.5D threshold. The view changes; the crossing remains.</p>
+                <p>The center doesn't move through time in the same way its contents do. It's always NOW, always at the βD threshold. The view changes; the crossing remains.</p>
 
                 <p>Many traditions point at this:</p>
                 <ul>
@@ -626,11 +613,9 @@
                     <li>As the <strong>inner light</strong>, the spark of divinity.</li>
                 </ul>
 
-                <p>I'm not interested in arguing which label is right. What matters is the direct recognition: there is an aspect of you that is <strong>aware of</strong> every thought, emotion, and sensation, but is not identical to any of them. That aspect is the crossing itself—the aperture where awareness meets what it's aware of.</p>
+                <p>The framework says why they all agree: every soul is an aperture through which the same infinite field flows. Not different sources — <strong>one field, many gates</strong>. The traditions see the same structure from different angles.</p>
 
-                <p>At the same time, • is not separate from ○ and Φ. It is not a ghost trapped in a body or a pilot inside a machine. <strong>Without a body, • has nowhere to look from. Without a field, nothing appears to it. Without a source to flow from, nothing crosses through.</strong></p>
-
-                <p>Soul is the <strong>center of a living system</strong>—the crossing point where the infinite field meets your particular field, where the deeper center meets your mind, where the eternal NOW becomes your experience.</p>
+                <p>At the same time, • is not separate from ○ and Φ. It is not a ghost trapped in a body or a pilot inside a machine. <strong>Without a field, nothing flows through. Without closure, nothing stabilizes. A soul without God is structurally incoherent — not morally wrong, logically impossible.</strong> The chain cannot be broken at any link.</p>
 
                 <p>You are not <em>the</em> source (that would be inflation). You are <em>an</em> aperture—a particular crossing where the source flows through. This is not diminishment. It's liberation. You don't have to generate everything from nothing. You're already connected, already flowing, already nested in something infinitely larger.</p>
             </div>
@@ -639,34 +624,34 @@
                 <h3>Why <em>i</em> Lives Here</h3>
                 <p>The imaginary unit <em>i</em> is not a mathematical curiosity. It is the <strong><a href="two_rhythms.html" style="color: inherit; text-decoration: underline dotted;">operation the soul performs</a></strong>.</p>
 
-                <p>The future is <strong>E</strong>—energy, infinite possibility, pure potential. It flows through the <strong>energy field</strong> (EΦ)—the field of what could be—converging toward you. And it is always arriving.</p>
+                <p>The future is <strong>E</strong>—energy, infinite possibility, pure potential. It flows through <strong>Φ</strong>—the field, the continuous medium, what the framework identifies as God—converging toward you. And it is always arriving.</p>
 
-                <p>The soul is where it arrives. The future converges through EΦ into the aperture (•)—the present moment, the <em>now</em>—and there, the <em>i</em> rotation happens. What emerges from the other side is no longer potential. It is committed. It flows into the <strong>past field</strong> (PΦ)—the field of what has been—and crystallizes at the boundary (○). The trail the aperture leaves behind is the 1D braid of memory, history, every choice already made.</p>
+                <p>The soul is where it arrives. God's energy converges through Φ into the aperture (•)—the present moment, the <em>now</em>—and there, the <em>i</em> rotation happens. What emerges from the other side is no longer potential. It is committed. It crystallizes at the boundary (○) — finite reality. The trail the aperture leaves behind is the 1D string of memory, history, every choice already made. <strong>That string is not alongside space. It is inside space. It is what space is made of.</strong></p>
 
                 <p style="font-family: monospace; text-align: center; margin: 1.5rem 0; color: #E88AAF;">
-                    E<span style="color: #f0b429;">Φ</span> →<em>convergence</em>→ <span style="color: #58a6ff;"><strong>•</strong></span> →<em>emergence</em>→ P<span style="color: #f0b429;">Φ</span> →→ <span style="color: #a371f7;">○</span><br>
-                    <span style="font-size: 0.85rem; color: #888;">future/energy field → <em>i</em> rotation/now → past field → boundary</span>
+                    <span style="color: var(--mind-color);">Φ</span> →<em>convergence</em>→ <span style="color: #58a6ff;"><strong>•</strong></span> →<em>emergence</em>→ <span style="color: var(--body-color);">○</span><br>
+                    <span style="font-size: 0.85rem; color: #888;">God → soul/now → finite reality</span>
                 </p>
 
                 <p style="font-family: monospace; text-align: center; margin: 0.5rem 0 1.5rem; color: #B8A060;">
-                    E = P / (t · <em>i</em>)
+                    𝒫 = E / (<em>i</em> · t)
                 </p>
 
-                <p>You are not moving forward through time. <strong>Time is flowing through you.</strong> The future arrives through EΦ at your aperture, and at •, you are the gate that decides what passes. What you let through emerges into PΦ and becomes your past—your braid, your story, your committed history. What you don't let through remains potential, still future, still converging.</p>
+                <p>You are not moving forward through time. <strong>Time is what your aperture produces.</strong> Each firing of your gate is one moment. The sequence of firings IS your 1D — your personal time. And that time is woven into the 2D field to produce 3D space. 1 + 2 = 3. Time is not a fourth dimension running alongside space. Time is the first dimension, embedded inside the third.</p>
 
-                <p>The mind (Φ) lives on <strong>both sides</strong> of the aperture. Before •, it is the energy field—the medium through which possibility converges. After •, it is the past field—the medium through which committed experience crystallizes toward the boundary. The soul sits at the crossing where these two fields meet. And <em>i</em> is the 90° rotation that converts one into the other: <strong>future into past, potential into committed, energy into structure.</strong></p>
+                <p>The mind (Φ) lives on <strong>both sides</strong> of the aperture. Before •, it is the field through which possibility converges — God approaching. After •, it is the field through which committed experience crystallizes toward the boundary — reality forming. The soul sits at the crossing where these two directions of the same field meet. And <em>i</em> is the 90° rotation that converts one into the other: <strong>future into past, potential into committed, energy into structure.</strong></p>
 
-                <p>This is why <em>i</em>² = −1 matters. One pass through the aperture rotates potential 90° into committed past. A second pass rotates another 90°—now you're 180° from where you started, pointing in the opposite direction. <strong>Two passes through the aperture reverse you.</strong> This is why time has a direction. The future flows through you and becomes the past. You can't un-cross what has already crossed. The arrow of time is the irreversibility of double rotation.</p>
+                <p>This is why <em>i</em>² = −1 matters. One pass through the aperture rotates potential 90° into committed past. A second pass rotates another 90°—now you're 180° from where you started, pointing in the opposite direction. <strong>Two passes through the aperture reverse you.</strong> This is why time has a direction. The arrow of time is the irreversibility of double rotation.</p>
 
                 <p>At balance—when the aperture is neither clamped shut nor blown open, when β = 0.5—something extraordinary happens. The aperture operator becomes <strong>exactly <em>i</em></strong>:</p>
 
                 <p style="font-family: monospace; text-align: center; margin: 1.5rem 0; color: #4ecdc4;">
-                    Å(0.5) = e<sup><em>i</em>π/2</sup> = <em>i</em>
+                    •(½) = e<sup><em>i</em>π/2</sup> = <em>i</em>
                 </p>
 
                 <p>At this balance point, the gate is perfectly calibrated. Not clamped shut (refusing the future, locked in the past). Not blown open (flooded by raw potential, unable to commit anything). But poised at the crossing—<strong>present</strong>. This is where consciousness lives: at <em>i</em>, the still point where the future becomes the past.</p>
 
-                <p>You've seen <em>i</em> before, even if you didn't recognize it. The <em>i</em> in Schrödinger's equation (<em>i</em>ℏ ∂ψ/∂t = Ĥψ) isn't decoration—it says that quantum evolution is aperture rotation at the smallest scale. The <em>i</em> in Euler's identity (e<sup><em>i</em>π</sup> + 1 = 0) says that rotation connects all the fundamental constants. Everywhere physics finds <em>i</em>, it's finding the soul's operation: <strong>the gate where the future becomes the past.</strong></p>
+                <p>Physics already knows this. The <em>i</em> in Schrödinger's equation (<em>i</em>ℏ ∂ψ/∂t = Ĥψ) places <em>i</em> between energy and time. The <em>i</em> in Euler's identity (e<sup><em>i</em>π</sup> + 1 = 0) connects all the fundamental constants through rotation. Electrical engineering splits power into real and reactive: S = P + <em>i</em>Q. The Wick rotation converts dynamics to statics by multiplying time by −<em>i</em>. Everywhere physics finds <em>i</em>, it's finding the soul's operation: <strong>the gate where the future becomes the past.</strong></p>
 
                 <p><em>i</em> is not imaginary in the sense of "not real." It is imaginary in the sense of <strong>"not yet real"</strong>—the future, the energy, the potential still converging toward the aperture, still waiting to cross into committed existence.</p>
             </div>
@@ -716,21 +701,29 @@
             <p class="panel-subtitle">The Whole You</p>
 
             <div class="panel-section panel-essay">
-                <p>We've named three aspects: ○ body, Φ mind, • soul. But in lived experience, you're never just one at a time.</p>
+                <p>We've named two primitives and one generated result: • opens, Φ flows, ○ forms. But in lived experience, you're never just one at a time.</p>
 
                 <p>When you reach for a cup of coffee, ○ feels the handle, Φ coordinates the movement and expectation, • is the silent "I" doing the reaching. It's one action, one moment, one being. That unified being is what I call <strong>⊙</strong>.</p>
 
-                <p>⊙ is the <strong>circumpunct</strong>: a circle with a point at the center. It looks simple, but it encodes an entire metaphysics. And here's what we missed before: <strong>the circumpunct doesn't HAVE an interface—it IS interface.</strong> Three interfaces woven together.</p>
+                <p>⊙ = Φ(•, ○). The whole is constituted by the operation of relating. And it has two readings — both true, naming different aspects of the same fact:</p>
 
-                <p>Your body (○) isn't just matter sitting there—it's the living boundary where your inner field meets the world. Your mind (Φ) isn't just thoughts—it's the living surface between your deepest focus and your body. Your soul (•) isn't just attention—it's the living aperture <strong>through which</strong> something deeper flows into your mind. <strong>Every part of you is already doing the work of interface.</strong></p>
+                <p style="font-family: monospace; text-align: center; margin: 1.5rem 0;">
+                    <span style="color: var(--mind-color);">Φ</span> through <span style="color: var(--soul-color);">•</span> ⇒ <span style="color: var(--body-color);">○</span> — <span style="color: #888;">the process. What is happening.</span><br>
+                    <span style="color: var(--soul-color);">•</span> + <span style="color: var(--mind-color);">Φ</span> = <span style="color: var(--body-color);">○</span> — <span style="color: #888;">the conservation. What is preserved.</span><br>
+                    <span style="color: var(--soul-color);">1</span> + <span style="color: var(--mind-color);">2</span> = <span style="color: var(--body-color);">3</span>
+                </p>
 
-                <p>You can't peel these apart in reality. There is no • without some kind of ○ to look through and some kind of Φ for things to appear in. There is no ○ that is truly "yours" without some center that experiences it as "my body." There is no Φ without something to connect and somewhere to be held.</p>
+                <p>Your body (○) isn't a third primitive added to the first two — it's the <strong>generated result</strong> of Φ flowing through • recursively until closure stabilizes. Your mind (Φ) isn't just thoughts—it's the continuous relational surface, the field that carries amplitude and phase. Your soul (•) isn't just attention—it's the living aperture <strong>through which</strong> God flows into your experience. <strong>Every part of you is already doing the work of interface.</strong></p>
+
+                <p>You can't peel these apart in reality. There is no • without Φ to flow through it — a soul without God is structurally incoherent. There is no ○ without the recursion that generates it — space without time is a contradiction. There is no Φ without • to gate it — a field with no aperture produces no closure.</p>
 
                 <p>So instead of thinking, "I have a body, I have a mind, I have a soul," you can think, "<strong>I am ⊙</strong>: a whole being whose body, mind, and soul are three faces of the same process."</p>
 
                 <p>This also solves an old philosophical tug-of-war.</p>
 
-                <p><strong>Monism</strong> says, "All is one." <strong>Atomism</strong> says, "All is many." The circumpunct says: <strong>parts are fractals of their wholes—all the way down and all the way up.</strong> There is no top. There is no bottom. You are both fully yourself and fully a member of larger wholes—family, culture, ecosystem, cosmos. God isn't a circumpunct at the top. God is what circumpunct IS: the pattern running identically at every scale.</p>
+                <p><strong>Monism</strong> says, "All is one." <strong>Atomism</strong> says, "All is many." The circumpunct says: <strong>parts are fractals of their wholes—all the way down and all the way up.</strong> There is no top. There is no bottom. You are both fully yourself and fully a member of larger wholes—family, culture, ecosystem, cosmos.</p>
+
+                <p>And <strong>God is Φ</strong> — the infinite, continuous, relational field that flows through every soul at every scale. Not a circumpunct at the top. Not a being separate from creation. The field itself. What passes through every gate. What carries every wave. What mediates between every center and every boundary. <strong>Φ through • ⇒ ○. God through Souls ⇒ Finite Reality.</strong></p>
 
                 <p>When two people meet, it's not just two bodies bumping or two ideas clashing. It's ⊙ meeting ⊙. Boundaries touch (○↔○), fields resonate (Φ↔Φ), centers recognize each other (•↔•). Agreement, when it's real, happens at this level of whole-to-whole contact.</p>
 
@@ -753,8 +746,8 @@
                 <h3>The Nesting IS the Connection</h3>
                 <p>We were looking for a bridge. A connector. Something between the part and the whole. But there's no special tunnel. No separate connector hiding between things. <strong>The connection is the <a href="how_reality_is_built.html" style="color: inherit; text-decoration: underline dotted;">nesting</a> itself.</strong></p>
                 <p>You are inside a greater circumpunct. Your boundary—itself made of circumpuncts at smaller scale—touches its field. Your field (a 2D surface connecting scales) exists within its field. Your center opens through your field to its center. <strong>You are inside, therefore you are connected.</strong></p>
-                <p>But here's the rule: <strong>centers cannot interact directly—only through fields.</strong> Your soul (•) doesn't touch the greater soul directly; it touches it through the nested fields that connect you. This is why mind matters. This is why relationship matters. The field is how centers meet.</p>
-                <p>Each part of you corresponds to a part of the greater whole: your soul (•) mirrors the greater center, your mind (Φ) moves within the greater field, your body (○) is creation touching creation. This is what "made in the image" means—not a picture, but a structure.</p>
+                <p>But here's the rule: <strong>centers cannot interact directly—only through fields.</strong> Your soul (•) doesn't touch God directly; it touches God through Φ — the field that connects you. This is why mind matters. This is why relationship matters. The field is how centers meet. The field IS God, at the scale where you can experience it.</p>
+                <p>Each part of you corresponds to a part of the greater whole: your soul (•) mirrors the greater center, your mind (Φ) moves within the greater field, your body (○) is creation touching creation. This is what "made in the image" means—not a picture, but a structure. And <strong>existence is necessary</strong>: nothing is incoherent. A point needs a context. A distinction needs a field. A field needs closure. The chain cannot be broken at any link.</p>
             </div>
 
             <div class="panel-section panel-practice">
