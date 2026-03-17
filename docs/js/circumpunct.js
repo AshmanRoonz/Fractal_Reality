@@ -100,6 +100,7 @@
     let bolts = [];
     let centerX, centerY, boundaryRadius, soulRadius;
     let animId;
+    let circEl;
 
     const isMobile = window.innerWidth < 768;
     const PARTICLE_COUNT = isMobile ? 15 : 30;
@@ -108,11 +109,17 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const el = document.querySelector('.circumpunct-container');
-        if (el) {
-            const r = el.getBoundingClientRect();
+        circEl = document.querySelector('.circumpunct-container');
+        updateCenter();
+
+        if (particles.length === 0) initParticles();
+    }
+
+    function updateCenter() {
+        if (circEl) {
+            const r = circEl.getBoundingClientRect();
             centerX = r.left + r.width / 2;
-            centerY = r.top + r.height / 2 + window.scrollY;
+            centerY = r.top + r.height / 2;
             boundaryRadius = Math.min(r.width, r.height) * 0.42;
         } else {
             centerX = canvas.width / 2;
@@ -120,8 +127,6 @@
             boundaryRadius = Math.min(canvas.width, canvas.height) * 0.18;
         }
         soulRadius = boundaryRadius * 0.22;
-
-        if (particles.length === 0) initParticles();
     }
 
     function initParticles() {
@@ -148,8 +153,8 @@
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const sy = window.scrollY;
-        const cyScreen = centerY - sy;
+        updateCenter();
+        const cyScreen = centerY;
 
         // Draw field ripples
         for (let i = ripples.length - 1; i >= 0; i--) {
