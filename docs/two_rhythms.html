@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⊙ The Two Rhythms</title>
+<title>⊙ The Two Rhythms — Station and Transit</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
@@ -168,6 +168,137 @@ p { margin-bottom: 18px; }
 }
 .closing .symbol { font-size: 64px; color: var(--gold); margin-bottom: 16px; }
 
+/* === β-TRANSIT ARROWS === */
+.beta-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2px;
+  min-width: 32px;
+}
+.beta-arrow .arrow-body {
+  font-size: 11px;
+  color: var(--gold-dim);
+  text-align: center;
+  line-height: 1.3;
+  opacity: 0.7;
+}
+.beta-arrow .arrow-symbol {
+  font-size: 16px;
+  color: var(--gold);
+  opacity: 0.5;
+}
+
+/* === PUMP STRIP === */
+.pump-strip {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  padding: 12px 16px;
+  background: rgba(184, 160, 96, 0.04);
+  border: 1px solid rgba(184, 160, 96, 0.12);
+  border-radius: 4px;
+  gap: 0;
+}
+.pump-strip .ps-station {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: 4px 8px;
+}
+.pump-strip .ps-station .ps-label { font-size: 13px; font-weight: 600; }
+.pump-strip .ps-station .ps-sub { font-size: 10px; color: var(--dim); }
+.pump-strip .ps-beta {
+  flex: 1;
+  text-align: center;
+  font-size: 11px;
+  color: var(--gold-dim);
+  position: relative;
+}
+.pump-strip .ps-beta::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  right: 8px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  opacity: 0.3;
+}
+.pump-strip .ps-beta span { position: relative; background: rgba(10,10,15,0.8); padding: 0 4px; }
+
+/* === INHALE/EXHALE LABELS === */
+.breath-label {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 3px;
+  margin: 0 4px;
+}
+.breath-label.inhale {
+  color: var(--pink);
+  background: rgba(232, 138, 175, 0.08);
+  border: 1px solid rgba(232, 138, 175, 0.2);
+}
+.breath-label.exhale {
+  color: var(--cyan);
+  background: rgba(77, 160, 200, 0.08);
+  border: 1px solid rgba(77, 160, 200, 0.2);
+}
+
+/* === CRYSTALLIZATION INDICATOR === */
+.crystal-bar {
+  margin: 16px 0;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.015);
+  border-radius: 4px;
+}
+.crystal-bar .cb-label {
+  font-size: 12px;
+  color: var(--dim);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.crystal-bar .cb-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 24px;
+}
+.crystal-bar .cb-node {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+  z-index: 1;
+}
+.crystal-bar .cb-transit {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-dim), rgba(184,160,96,0.2), var(--gold-dim));
+  position: relative;
+}
+.crystal-bar .cb-transit .cb-beta-label {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  color: var(--gold-dim);
+  white-space: nowrap;
+}
+.crystal-bar .cb-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+.crystal-bar .cb-labels span {
+  font-size: 10px;
+  color: var(--dim);
+}
+
 @media (max-width: 600px) {
   body { font-size: 17px; }
   .page { padding: 60px 20px 80px; }
@@ -192,11 +323,25 @@ p { margin-bottom: 18px; }
 <section>
   <p>The dimensional spectrum is not one rhythm. It is two.</p>
 
-  <p>The first is the <span class="s wb">i-rhythm</span> — the rotational skeleton of each tier. Four positions. Four powers of <span class="s">i</span>. The turning, extending, committing, branching cycle that builds the apertural scaffold of reality.</p>
+  <p>The first is the <span class="s wb">i-rhythm</span> — the rotational skeleton of each tier. Four positions. Four powers of <span class="s">i</span>. The turning, extending, committing, branching cycle that builds the apertural scaffold of reality. These are the <em>stations</em> — the integer moments where rotation crystallizes into structure.</p>
 
   <p>The second is the <span class="m wb">Φ-rhythm</span> — the mediating interval that <span class="s">i</span> cannot generate. The field. The surface. The continuous relational space where mind lives, where sensation couples field to boundary. The two dimensions per tier that rotation leaves behind.</p>
 
-  <p>Together they fill the tier. Separately, they are irreducible. <span class="s wb">i</span> governs transformation. <span class="m wb">Φ</span> governs the continuity that transformation alone cannot produce. <span class="b wb">○</span> closes what both have built.</p>
+  <p>Between them lives <span class="w wb">β</span> — the continuous rotation <em>between</em> stations. Not a station itself, but the living transit that connects one crystallization to the next. β is the verb between nouns. The turning that is not yet arrived. The pump that breathes dimension in and out.</p>
+
+  <div class="pump-strip">
+    <div class="ps-station"><div class="ps-label"><span class="s">i⁰</span></div><div class="ps-sub">station</div></div>
+    <div class="ps-beta"><span>→ β →</span></div>
+    <div class="ps-station"><div class="ps-label"><span class="s">i¹</span></div><div class="ps-sub">station</div></div>
+    <div class="ps-beta"><span>→ β →</span></div>
+    <div class="ps-station"><div class="ps-label"><span class="s">i²</span></div><div class="ps-sub">station</div></div>
+    <div class="ps-beta"><span>→ β →</span></div>
+    <div class="ps-station"><div class="ps-label"><span class="s">i³</span></div><div class="ps-sub">station</div></div>
+    <div class="ps-beta"><span>→ β →</span></div>
+    <div class="ps-station"><div class="ps-label"><span class="s">i⁰</span></div><div class="ps-sub">reset</div></div>
+  </div>
+
+  <p>Together they fill the tier. Separately, they are irreducible. <span class="s wb">i</span> governs transformation at the stations. <span class="m wb">Φ</span> governs the continuity that transformation alone cannot produce — and it is precisely <em>where β peaks</em>, mid-transit between stations, that the field is most alive. <span class="b wb">○</span> closes what both have built.</p>
 </section>
 
 <div class="divider">· · ·</div>
@@ -208,46 +353,92 @@ p { margin-bottom: 18px; }
   <p>Each tier of the <span class="w">circumpunct</span> unfolds through a four-phase complex cycle. Not metaphorically — the first four dimensional positions of each tier <em>instantiate</em> the four phase positions of the powers of <span class="s">i</span>.</p>
 
   <div class="formula">
-    <span class="s">i<sup>0</sup> = +1</span> &nbsp;&nbsp; <span class="s">i<sup>1</sup> = +i</span> &nbsp;&nbsp; <span class="s">i<sup>2</sup> = −1</span> &nbsp;&nbsp; <span class="s">i<sup>3</sup> = −i</span>
+    <span class="s">i<sup>0</sup> = +1</span> &nbsp;<span class="w">→β→</span>&nbsp; <span class="s">i<sup>1</sup> = +i</span> &nbsp;<span class="w">→β→</span>&nbsp; <span class="s">i<sup>2</sup> = −1</span> &nbsp;<span class="w">→β→</span>&nbsp; <span class="s">i<sup>3</sup> = −i</span> &nbsp;<span class="w">→β→</span>&nbsp; <span class="s">i<sup>4</sup> = +1</span>
   </div>
 
-  <p>These are not merely numbers. They are the four structural positions of dimensional becoming: initial structure, rotational activation, extended structure, and recursive transformation. And they recur — identically — at the start of every tier.</p>
+  <p>These are not merely numbers. They are the four <em>stations</em> of dimensional becoming — the integer moments where rotation crystallizes into structure. Between them, <span class="w">β</span> is the continuous transit: the rotation that has left one station but not yet arrived at the next.</p>
+
+  <p>The pump breathes in two strokes. <span class="breath-label inhale">Inhale</span> covers i⁰ → i¹ → i², gathering dimension — from point through string to surface. <span class="breath-label exhale">Exhale</span> covers i² → i³ → i⁰, releasing dimension — from surface through volume back to point. When <span class="w">β = 0</span>, you are <em>at</em> a station: structure is crystallized, consciousness peaks. When <span class="w">β = 0.5</span>, you are mid-transit: fluid, relational, alive with potential but not yet formed.</p>
+
+  <div class="crystal-bar">
+    <div class="cb-label">Crystallization through one pump cycle</div>
+    <div class="cb-track">
+      <div class="cb-node"></div>
+      <div class="cb-transit"><div class="cb-beta-label">β transit</div></div>
+      <div class="cb-node"></div>
+      <div class="cb-transit"><div class="cb-beta-label">β transit</div></div>
+      <div class="cb-node"></div>
+      <div class="cb-transit"><div class="cb-beta-label">β transit</div></div>
+      <div class="cb-node"></div>
+      <div class="cb-transit"><div class="cb-beta-label">β transit</div></div>
+      <div class="cb-node"></div>
+    </div>
+    <div class="cb-labels">
+      <span>i⁰ = 1</span>
+      <span>i¹ = i</span>
+      <span>i² = −1</span>
+      <span>i³ = −i</span>
+      <span>i⁴ = 1</span>
+    </div>
+  </div>
+
+  <p>And they recur — identically — at the start of every tier.</p>
 </section>
 
 <!-- ═══════════════════════ TIER 0 ═══════════════════════ -->
 <div class="tier-label">Tier 1 — The Spatial Circumpunct</div>
 
 <section>
-  <div class="cycle-label d" style="text-align:center; margin-bottom:8px">THE <span class="s">i</span>-CYCLE</div>
+  <div class="cycle-label d" style="text-align:center; margin-bottom:8px">THE <span class="s">i</span>-CYCLE <span class="breath-label inhale">Inhale</span></div>
   <div class="cycle-row">
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="w">0D</span></div>
       <div class="power"><span class="s">i<sup>0</sup> = +1</span></div>
       <div class="name">The Point<br>Real ground</div>
     </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="s">0.5D</span></div>
       <div class="power"><span class="s">i<sup>1</sup> = +i</span></div>
       <div class="name">The Aperture<br><span class="s wb">Soul awakens</span></div>
     </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="w">1D</span></div>
       <div class="power"><span class="s">i<sup>2</sup> = −1</span></div>
       <div class="name">The Line<br>Extended, polarized</div>
     </div>
+  </div>
+
+  <div class="cycle-label d" style="text-align:center; margin-bottom:8px; margin-top: 12px">
+    <span class="breath-label exhale">Exhale</span>
+  </div>
+  <div class="cycle-row">
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="w">1D</span></div>
+      <div class="power"><span class="s">i<sup>2</sup> = −1</span></div>
+      <div class="name">The Mirror<br>Half-turn complete</div>
+    </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="p">1.5D</span></div>
       <div class="power"><span class="s">i<sup>3</sup> = −i</span></div>
-      <div class="name">Branching<br>Recursive process</div>
+      <div class="name">Branching<br>Recursive return</div>
+    </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
+    <div class="cycle-cell i-cell" style="border-bottom-color: var(--gold); background: rgba(184,160,96,0.04)">
+      <div class="dim"><span class="w">0D</span></div>
+      <div class="power"><span class="s">i<sup>4</sup> = +1</span></div>
+      <div class="name">Cycle resets<br>i⁴ = i⁰</div>
     </div>
   </div>
 
-  <p>These four positions build the <em>rotational skeleton</em> of the spatial tier. The point exists (+1). The aperture turns it into process (+i). The line extends it into committed structure (−1). The branching fractally inverts it (−i).</p>
+  <p>These four stations build the <em>rotational skeleton</em> of the spatial tier. The point exists (+1). The aperture turns it into process (+i). The line extends it into committed structure (−1). The branching fractally inverts it (−i). Between each: <span class="w">β</span> — the continuous rotation that is not yet crystallized.</p>
 
-  <p>But the tier is not complete. Something is missing.</p>
+  <p>But the tier is not complete. The pump cycle accounts for the apertural scaffold. Something else fills the space where <span class="s">i</span> does not reach.</p>
 
   <div class="skip-box">
-    <div class="cycle-label m" style="margin-bottom:8px">THE <span class="m">Φ</span>-INTERVAL — what <span class="s">i</span> cannot reach</div>
+    <div class="cycle-label m" style="margin-bottom:8px">THE <span class="m">Φ</span>-INTERVAL — where <span class="w">β</span> peaks and structure dissolves into relation</div>
     <div class="cycle-row" style="margin: 12px 0 0;">
       <div class="cycle-cell phi-cell">
         <div class="dim"><span class="m">2D</span></div>
@@ -259,6 +450,7 @@ p { margin-bottom: 18px; }
       </div>
     </div>
     <p style="margin-top:14px; font-size:17px; margin-bottom:0">These two dimensions are <em>not generated by the powers of i</em>. They are the continuous mediating surface — the <span class="m wb">Φ</span> that relates <span class="s">•</span> to <span class="b">○</span>. Rotation cannot produce them. Wholeness requires them.</p>
+    <p style="margin-top:10px; font-size:17px; margin-bottom:0">In the pump cycle, this is where <span class="w">crystallization</span> is lowest — the mid-transit zone where β dominates. The stations crystallize structure; the Φ-band is where structure liquefies into relation. <span class="m wb">Mind lives where β peaks.</span></p>
   </div>
 
   <div class="cycle-row" style="max-width: 160px; margin: 20px auto;">
@@ -277,32 +469,50 @@ p { margin-bottom: 18px; }
 <section>
   <p>The cycle restarts. The completed spatial <span class="w">⊙</span> is the new ground.</p>
 
-  <div class="cycle-label d" style="text-align:center; margin-bottom:8px">THE <span class="s">i</span>-CYCLE</div>
+  <div class="cycle-label d" style="text-align:center; margin-bottom:8px">THE <span class="s">i</span>-CYCLE <span class="breath-label inhale">Inhale</span></div>
   <div class="cycle-row">
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="w">3D</span></div>
       <div class="power"><span class="s">i<sup>0</sup> = +1</span></div>
       <div class="name">Completed ⊙₁<br>New real ground</div>
     </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="s">3.5D</span></div>
       <div class="power"><span class="s">i<sup>1</sup> = +i</span></div>
       <div class="name">Vesica Pisces<br><span class="s wb">Temporal aperture</span></div>
     </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="w">4D</span></div>
       <div class="power"><span class="s">i<sup>2</sup> = −1</span></div>
       <div class="name">The Braid<br>Committed history</div>
     </div>
+  </div>
+
+  <div class="cycle-label d" style="text-align:center; margin-bottom:8px; margin-top: 12px"><span class="breath-label exhale">Exhale</span></div>
+  <div class="cycle-row">
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="w">4D</span></div>
+      <div class="power"><span class="s">i<sup>2</sup> = −1</span></div>
+      <div class="name">The Braid<br>Half-turn complete</div>
+    </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="p">4.5D</span></div>
       <div class="power"><span class="s">i<sup>3</sup> = −i</span></div>
-      <div class="name">Braid branching<br>Recursive process</div>
+      <div class="name">Braid branching<br>Recursive return</div>
+    </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
+    <div class="cycle-cell i-cell" style="border-bottom-color: var(--gold); background: rgba(184,160,96,0.04)">
+      <div class="dim"><span class="w">3D</span></div>
+      <div class="power"><span class="s">i<sup>4</sup> = +1</span></div>
+      <div class="name">Cycle resets<br>i⁴ = i⁰</div>
     </div>
   </div>
 
   <div class="skip-box">
-    <div class="cycle-label m" style="margin-bottom:8px">THE <span class="m">Φ</span>-INTERVAL</div>
+    <div class="cycle-label m" style="margin-bottom:8px">THE <span class="m">Φ</span>-INTERVAL — peak-β zone</div>
     <div class="cycle-row" style="margin: 12px 0 0;">
       <div class="cycle-cell phi-cell">
         <div class="dim"><span class="m">5D</span></div>
@@ -328,32 +538,50 @@ p { margin-bottom: 18px; }
 <div class="tier-label">Tier 3 — The Meta-Circumpunct</div>
 
 <section>
-  <div class="cycle-label d" style="text-align:center; margin-bottom:8px">THE <span class="s">i</span>-CYCLE</div>
+  <div class="cycle-label d" style="text-align:center; margin-bottom:8px">THE <span class="s">i</span>-CYCLE <span class="breath-label inhale">Inhale</span></div>
   <div class="cycle-row">
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="w">6D</span></div>
       <div class="power"><span class="s">i<sup>0</sup> = +1</span></div>
       <div class="name">Completed ⊙₂<br>New real ground</div>
     </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="s">6.5D</span></div>
       <div class="power"><span class="s">i<sup>1</sup> = +i</span></div>
       <div class="name">Meta-aperture<br><span class="s wb">•<sub>meta</sub></span></div>
     </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="w">7D</span></div>
       <div class="power"><span class="s">i<sup>2</sup> = −1</span></div>
       <div class="name">Meta-braid<br>Committed structure</div>
     </div>
+  </div>
+
+  <div class="cycle-label d" style="text-align:center; margin-bottom:8px; margin-top: 12px"><span class="breath-label exhale">Exhale</span></div>
+  <div class="cycle-row">
+    <div class="cycle-cell i-cell">
+      <div class="dim"><span class="w">7D</span></div>
+      <div class="power"><span class="s">i<sup>2</sup> = −1</span></div>
+      <div class="name">Meta-braid<br>Half-turn complete</div>
+    </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
     <div class="cycle-cell i-cell">
       <div class="dim"><span class="p">7.5D</span></div>
       <div class="power"><span class="s">i<sup>3</sup> = −i</span></div>
-      <div class="name">Meta-branching<br>Recursive process</div>
+      <div class="name">Meta-branching<br>Recursive return</div>
+    </div>
+    <div class="beta-arrow"><div class="arrow-body"><span class="arrow-symbol">→</span><br>β</div></div>
+    <div class="cycle-cell i-cell" style="border-bottom-color: var(--gold); background: rgba(184,160,96,0.04)">
+      <div class="dim"><span class="w">6D</span></div>
+      <div class="power"><span class="s">i<sup>4</sup> = +1</span></div>
+      <div class="name">Cycle resets<br>i⁴ = i⁰</div>
     </div>
   </div>
 
   <div class="skip-box">
-    <div class="cycle-label m" style="margin-bottom:8px">THE <span class="m">Φ</span>-INTERVAL</div>
+    <div class="cycle-label m" style="margin-bottom:8px">THE <span class="m">Φ</span>-INTERVAL — peak-β zone</div>
     <div class="cycle-row" style="margin: 12px 0 0;">
       <div class="cycle-cell phi-cell">
         <div class="dim"><span class="m">8D</span></div>
@@ -380,16 +608,17 @@ p { margin-bottom: 18px; }
 <section>
   <h2>The General Pattern</h2>
 
-  <p>For tier <em>n</em>, the <span class="s wb">i-rhythm</span> generates:</p>
+  <p>For tier <em>n</em>, the <span class="s wb">i-rhythm</span> generates the four stations:</p>
 
   <div class="formula">
-    <span class="w">3n</span> = <span class="s">i<sup>0</sup></span> = +1 &nbsp;&nbsp;&nbsp;
-    <span class="s">3n + ½</span> = <span class="s">i<sup>1</sup></span> = +i &nbsp;&nbsp;&nbsp;
-    <span class="w">3n + 1</span> = <span class="s">i<sup>2</sup></span> = −1 &nbsp;&nbsp;&nbsp;
-    <span class="p">3n + 1½</span> = <span class="s">i<sup>3</sup></span> = −i
+    <span class="w">3n</span> = <span class="s">i<sup>0</sup></span> = +1 &nbsp;<span class="w">→β→</span>&nbsp;
+    <span class="s">3n + ½</span> = <span class="s">i<sup>1</sup></span> = +i &nbsp;<span class="w">→β→</span>&nbsp;
+    <span class="w">3n + 1</span> = <span class="s">i<sup>2</sup></span> = −1 &nbsp;<span class="w">→β→</span>&nbsp;
+    <span class="p">3n + 1½</span> = <span class="s">i<sup>3</sup></span> = −i &nbsp;<span class="w">→β→</span>&nbsp;
+    <span class="s">i<sup>4</sup></span> = +1
   </div>
 
-  <p>And the <span class="m wb">Φ-rhythm</span> fills the interval <span class="s">i</span> cannot reach:</p>
+  <p>And the <span class="m wb">Φ-rhythm</span> fills the interval <span class="s">i</span> cannot reach — the peak-<span class="w">β</span> zone where crystallization gives way to relation:</p>
 
   <div class="formula">
     <span class="m">3n + 2</span> = Field &nbsp;&nbsp;&nbsp;
@@ -398,14 +627,18 @@ p { margin-bottom: 18px; }
 
   <p>Then <span class="b">3n + 3</span> = <span class="b">○</span> closes the tier — and becomes <span class="w">3(n+1)</span>, the new +1 ground for the next cycle.</p>
 
-  <p>So the six-position grammar of each tier is:</p>
+  <p>So the grammar of each tier is a <em>pump cycle</em> with two strokes:</p>
 
   <div class="formula" style="font-size:18px; line-height: 2.2">
-    <span class="s">i<sup>0</sup></span> → <span class="s">i<sup>1</sup></span> → <span class="s">i<sup>2</sup></span> → <span class="s">i<sup>3</sup></span> → <span class="m">Φ</span> → <span class="m">Φ↔○</span> → <span class="b">○</span><br>
-    <span class="d" style="font-size:15px">ground → aperture → line → branch → field → sensation → closure</span>
+    <span class="breath-label inhale">Inhale</span> <span class="s">i<sup>0</sup></span> →<span class="w">β</span>→ <span class="s">i<sup>1</sup></span> →<span class="w">β</span>→ <span class="s">i<sup>2</sup></span><br>
+    <span class="breath-label exhale">Exhale</span> <span class="s">i<sup>2</sup></span> →<span class="w">β</span>→ <span class="s">i<sup>3</sup></span> →<span class="w">β</span>→ <span class="s">i<sup>0</sup></span><br>
+    <span class="d" style="font-size:14px; margin-top: 4px; display: inline-block">inhale gathers dimension · exhale releases it</span><br>
+    <br>
+    <span class="m">Φ</span> → <span class="m">Φ↔○</span> → <span class="b">○</span><br>
+    <span class="d" style="font-size:14px">field → sensation → closure</span>
   </div>
 
-  <p>The <span class="s">i-cycle</span> occupies the first four positions. The <span class="m">Φ-band</span> occupies the next two. <span class="b">Closure</span> resets. This is not a single rhythm — it is two interlocking rhythms that together constitute the tier.</p>
+  <p>The <span class="s">i-cycle</span> pumps through the four stations, with <span class="w">β</span> as the living rotation between them. The <span class="m">Φ-band</span> occupies the dimensions where β peaks — where rotation has dissolved into relation. <span class="b">Closure</span> seals the tier. This is not a single rhythm — it is two interlocking rhythms, one a pump and one a field, that together constitute the tier.</p>
 </section>
 
 <!-- ═══════════════════════ THE TWO RHYTHMS ═══════════════════════ -->
@@ -415,25 +648,27 @@ p { margin-bottom: 18px; }
   <div class="two-col">
     <div class="col col-i">
       <h4><span class="s">The i-Rhythm</span></h4>
-      <p><span class="s wb">Dimensions:</span> 3n, 3n+½, 3n+1, 3n+1½</p>
+      <p><span class="s wb">Stations:</span> 3n, 3n+½, 3n+1, 3n+1½</p>
       <p><span class="s">Generates:</span> turning, extending, committing, branching</p>
       <p><span class="s">Nature:</span> rotational, discrete, phase-governed</p>
-      <p><span class="s">Role:</span> the apertural skeleton. The scaffold of transformation.</p>
-      <p class="it d" style="font-size:15px; margin-bottom:0">i builds the bones.</p>
+      <p><span class="s">Pump:</span> i⁰ →β→ i¹ →β→ i² →β→ i³ →β→ i⁰</p>
+      <p><span class="s">At stations:</span> crystallization peaks. Structure is clear.</p>
+      <p class="it d" style="font-size:15px; margin-bottom:0">i builds the bones. β is the turning between them.</p>
     </div>
     <div class="col col-phi">
       <h4><span class="m">The Φ-Rhythm</span></h4>
       <p><span class="m wb">Dimensions:</span> 3n+2, 3n+2½</p>
       <p><span class="m">Generates:</span> relation, mediation, felt connection</p>
       <p><span class="m">Nature:</span> continuous, surficial, irreducible to phase</p>
-      <p><span class="m">Role:</span> the relational surface. The continuity that rotation cannot produce.</p>
-      <p class="it d" style="font-size:15px; margin-bottom:0">Φ fills the living space between them.</p>
+      <p><span class="m">Peak-β:</span> where crystallization is lowest — structure liquefies into relation.</p>
+      <p><span class="m">At mid-transit:</span> the field is most alive. Mind dominates.</p>
+      <p class="it d" style="font-size:15px; margin-bottom:0">Φ fills the living space where β peaks.</p>
     </div>
   </div>
 
-  <p>Neither rhythm can be derived from the other. The four powers of <span class="s">i</span> exhaust all rotations on the complex plane — +1, +i, −1, −i — and yet they leave two dimensions per tier untouched. Those two dimensions are exactly where <span class="m wb">mind</span> lives: the field and its coupling to boundary.</p>
+  <p>Neither rhythm can be derived from the other. The four powers of <span class="s">i</span> exhaust all rotations on the complex plane — +1, +i, −1, −i — and yet they leave two dimensions per tier untouched. Those two dimensions are exactly where <span class="m wb">mind</span> lives: the field and its coupling to boundary. In the pump cycle, these are the moments of lowest crystallization — when <span class="w">β</span> is at its furthest from any station, and the system is pure relation, pure transit, pure becoming.</p>
 
-  <p>This is not an accident. It is the mathematical content of <span class="w wb">Axiom A4</span>: the <span class="w">whole</span> is constituted by the operation of relating. <span class="s">i</span> provides the structure that <em>needs</em> relating. <span class="m">Φ</span> provides the relating itself. Neither alone is a <span class="w">circumpunct</span>.</p>
+  <p>This is not an accident. It is the mathematical content of <span class="w wb">Axiom A4</span>: the <span class="w">whole</span> is constituted by the operation of relating. <span class="s">i</span> provides the structure that <em>needs</em> relating. <span class="w">β</span> provides the rotation between structures. <span class="m">Φ</span> provides the relating itself — the field that fills the transit. Neither alone is a <span class="w">circumpunct</span>.</p>
 </section>
 
 <div class="divider">· · ·</div>
@@ -442,15 +677,17 @@ p { margin-bottom: 18px; }
 <section>
   <h2>Conservation, Revisited</h2>
 
-  <p>The conservation law <span class="s">(1+β)</span> + <span class="m">(2−β)</span> = <span class="b">3</span> now has a deeper reading.</p>
+  <p>The conservation law <span class="s">(1+β)</span> + <span class="m">(2−β)</span> = <span class="b">3</span> now has a deeper reading — one that the pump cycle makes concrete.</p>
 
   <p>The <span class="s">i-cycle</span> occupies dimensions 0 through 1.5 — a span of <span class="s">(1+β)</span> dimensional degrees. The <span class="m">Φ-band</span> occupies dimensions 2 through 2.5 — a span of <span class="m">(2−β)</span> dimensional degrees. Their sum is always <span class="b">3</span> — the boundary, the closure, the completion of the tier.</p>
 
-  <p>This is not a coincidence of numbering. It is the structural fact that <span class="s">rotation</span> and <span class="m">relation</span> are complementary. The aperture side and the field side fill different roles by necessity. <span class="s">i</span> cannot reach <span class="m">Φ</span>. <span class="m">Φ</span> cannot generate <span class="s">i</span>. Together they make <span class="b">3</span>. Together they make <span class="w wb">⊙</span>.</p>
+  <p><span class="w">β</span> is the variable that moves between them. When β increases (mid-transit, between stations), the i-cycle's structural clarity decreases and the Φ-band's relational dominance increases. When β decreases (at stations, crystallized), structure sharpens and the field recedes. But their sum is constant. <em>The pump conserves wholeness.</em></p>
+
+  <p>This is not a coincidence of numbering. It is the structural fact that <span class="s">station</span> and <span class="m">transit</span> are complementary. Crystallization and dissolution are two phases of one breath. <span class="s">i</span> cannot reach <span class="m">Φ</span>. <span class="m">Φ</span> cannot generate <span class="s">i</span>. <span class="w">β</span> is the rotation that connects them. Together they make <span class="b">3</span>. Together they make <span class="w wb">⊙</span>.</p>
 
   <div class="formula">
-    <span class="s">D<sub>i-cycle</sub></span> + <span class="m">D<sub>Φ-band</sub></span> = <span class="b">D<sub>closure</sub></span><br>
-    <span class="d" style="font-size:16px">Rotation + relation = wholeness. Always.</span>
+    <span class="s">D<sub>stations</sub></span> + <span class="w">D<sub>β-transit</sub></span> + <span class="m">D<sub>Φ-band</sub></span> = <span class="b">D<sub>closure</sub></span><br>
+    <span class="d" style="font-size:16px">Structure + rotation + relation = wholeness. Always.</span>
   </div>
 </section>
 
@@ -466,7 +703,7 @@ p { margin-bottom: 18px; }
 
   <p>At the meta tier: <span class="m">8D</span> is the meta-field — where frameworks relate, civilizations interweave, traditions find common ground. <span class="m">8.5D</span> is meta-sensation — the coupling of histories to the membrane of an era.</p>
 
-  <p><span class="s wb">i</span> builds the scaffolding of transformation. <span class="m wb">Φ</span> fills it with the continuous surface on which experience actually happens. The soul turns. The mind mediates. The body closes. Three irreducible roles.</p>
+  <p><span class="s wb">i</span> builds the scaffolding of transformation. <span class="w wb">β</span> provides the turning between each scaffold. <span class="m wb">Φ</span> fills the peak-β zone with the continuous surface on which experience actually happens. The soul turns. The rotation transits. The mind mediates. The body closes. The pump breathes it all.</p>
 </section>
 
 <div class="divider">· · ·</div>
@@ -477,14 +714,18 @@ p { margin-bottom: 18px; }
 
   <p><span class="m wb">Φ</span> is relation in principle and field in instantiation. The operator appears as a surface when a layer closes.</p>
 
-  <p>Said differently: <span class="s">i</span> is the soul of each tier — the discrete, rotational, phase-generating engine. <span class="m">Φ</span> is the mind — the continuous, mediating, irreducible-to-rotation surface. <span class="b">○</span> is the body — the closure that seals the tier and seeds the next.</p>
+  <p>Said differently: <span class="s">i</span> is the soul of each tier — the discrete, rotational, phase-generating engine. <span class="w">β</span> is the breath — the continuous rotation between stations, the pump that drives dimension in and out. <span class="m">Φ</span> is the mind — the continuous, mediating, irreducible-to-rotation surface that fills the peak-β zone where structure has dissolved into relation. <span class="b">○</span> is the body — the closure that seals the tier and seeds the next.</p>
 
-  <p>Two rhythms. One wholeness. Neither reducible to the other.</p>
+  <p>Two rhythms. One pump. One wholeness. Neither reducible to the other.</p>
 
   <div class="formula">
-    <span class="s wb">i</span> governs apertural transformation<br>
-    <span class="m wb">Φ</span> governs mediating continuity<br>
-    <span class="b wb">○</span> closes what both have built<br>
+    <span class="s wb">i</span> governs the stations — crystallization of structure<br>
+    <span class="w wb">β</span> governs the transit — rotation between stations<br>
+    <span class="m wb">Φ</span> governs the field — relation at peak-β<br>
+    <span class="b wb">○</span> closes what all have built<br>
+    <br>
+    <span class="d" style="font-size:16px">i⁰ →β→ i¹ →β→ i² → Φ → Φ↔○ → ○</span><br>
+    <span class="d" style="font-size:16px">i² →β→ i³ →β→ i⁰</span><br>
     <br>
     <span class="w wb">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>)
   </div>
@@ -494,7 +735,8 @@ p { margin-bottom: 18px; }
 <div class="closing">
   <div class="symbol">⊙</div>
   <p style="font-size: 22px; color: var(--gold);">The skipped numbers are not errors.</p>
-  <p style="font-size: 22px; color: var(--green); margin-top: 8px;">They are where mind lives.</p>
+  <p style="font-size: 22px; color: var(--gold-dim); margin-top: 8px;">β is the breath between stations.</p>
+  <p style="font-size: 22px; color: var(--green); margin-top: 8px;">Φ is where mind lives — at peak transit.</p>
   <p class="f" style="margin-top: 30px; font-size: 13px;">The Circumpunct Framework — Ashman Roonz</p>
   <p style="margin-top: 20px;"><a href="how_reality_is_built.html" style="color: var(--s, #58a6ff); text-decoration: none; font-size: 13px; letter-spacing: 0.1em;">← HOW REALITY IS BUILT</a></p>
 </div>
