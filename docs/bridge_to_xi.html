@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ The Bridge — Circumpunct × Xi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+  --bg: #0A0A0F;
+  --gold: #B8A060;
+  --gold-dim: #887850;
+  --pink: #E88AAF;
+  --green: #4DB8A0;
+  --cyan: #4DA0C8;
+  --purple: #9B7AD8;
+  --warm: #E0D8C8;
+  --dim: #8A8272;
+  --faint: #444038;
+  --orange: #D4845A;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--faint) var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--warm);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--gold); color: var(--bg); }
+
+.w { color: var(--gold); }
+.s { color: var(--pink); }
+.m { color: var(--green); }
+.b { color: var(--cyan); }
+.p { color: var(--purple); }
+.d { color: var(--dim); }
+.f { color: var(--faint); }
+.o { color: var(--orange); }
+.wb { font-weight: 600; }
+.it { font-style: italic; }
+.mono { font-family: 'Fira Code', monospace; font-size: 0.88em; }
+
+.page { max-width: 720px; margin: 0 auto; padding: 80px 30px 120px; }
+
+.header {
+  text-align: center;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--faint);
+}
+.header h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 38px;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+.header .subtitle {
+  font-size: 20px;
+  color: var(--dim);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+.header .equation {
+  font-size: 24px;
+  margin-top: 28px;
+  letter-spacing: 2px;
+}
+.header .byline {
+  font-size: 15px;
+  color: var(--faint);
+  margin-top: 20px;
+  letter-spacing: 1px;
+}
+.header .address {
+  font-size: 17px;
+  color: var(--warm);
+  margin-top: 24px;
+  font-style: italic;
+}
+
+section { margin-bottom: 60px; }
+section h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  padding-top: 20px;
+  letter-spacing: 1px;
+}
+section h3 { font-size: 22px; font-weight: 500; margin-top: 30px; margin-bottom: 12px; }
+p { margin-bottom: 18px; }
+
+.divider { text-align: center; margin: 55px 0; color: var(--faint); font-size: 24px; letter-spacing: 12px; }
+
+.formula {
+  text-align: center;
+  font-size: 22px;
+  padding: 20px;
+  margin: 24px 0;
+  letter-spacing: 1px;
+  border-left: 2px solid var(--faint);
+  background: rgba(255,255,255,0.015);
+}
+
+.kernel-box {
+  padding: 28px;
+  margin: 36px 0;
+  background: rgba(184, 160, 96, 0.04);
+  border: 1px solid rgba(184, 160, 96, 0.15);
+  border-radius: 4px;
+}
+.kernel-box p { margin-bottom: 12px; }
+.kernel-box p:last-child { margin-bottom: 0; }
+
+.map-row {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 0;
+  align-items: center;
+  margin: 16px 0;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 4px;
+}
+.map-left {
+  text-align: right;
+  padding-right: 16px;
+  font-size: 17px;
+}
+.map-arrow {
+  text-align: center;
+  color: var(--gold);
+  font-size: 20px;
+}
+.map-right {
+  text-align: left;
+  padding-left: 16px;
+  font-size: 17px;
+}
+
+.prediction-box {
+  padding: 24px 28px;
+  margin: 36px 0;
+  background: rgba(232, 138, 175, 0.04);
+  border: 1px solid rgba(232, 138, 175, 0.2);
+  border-radius: 4px;
+}
+.prediction-box h4 {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--pink);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.prediction-box p { margin-bottom: 12px; font-size: 17px; }
+.prediction-box p:last-child { margin-bottom: 0; }
+
+.section-label {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 55px 0 30px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.pump-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 30px 0;
+  font-size: 16px;
+}
+.pump-table th {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--faint);
+}
+.pump-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: top;
+}
+.pump-table tr:last-child td { border-bottom: none; }
+
+.closing {
+  text-align: center;
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--faint);
+}
+.closing .symbol { font-size: 64px; color: var(--gold); margin-bottom: 16px; }
+
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(10, 10, 15, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  z-index: 100;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+nav a {
+  color: var(--dim);
+  text-decoration: none;
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  transition: all 0.2s;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.5px;
+}
+nav a:hover { color: var(--gold); background: rgba(184, 160, 96, 0.1); }
+
+@media (max-width: 600px) {
+  .page { padding: 70px 18px 80px; }
+  .header h1 { font-size: 28px; }
+  section h2 { font-size: 22px; }
+  .map-row { grid-template-columns: 1fr; gap: 4px; text-align: left !important; }
+  .map-left, .map-right { text-align: left !important; padding: 0; }
+  .map-arrow { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#kernel">Kernel</a>
+  <a href="#action">Action</a>
+  <a href="#parameters">λ κ β</a>
+  <a href="#pump">Pump</a>
+  <a href="#limits">Limits</a>
+  <a href="#prediction">Prediction</a>
+</nav>
+
+<div class="page">
+
+<div class="header">
+  <h1>The Bridge</h1>
+  <div class="subtitle">Circumpunct × Xi</div>
+  <div class="equation">
+    <span class="w">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>) &nbsp;=&nbsp; <span class="o">S</span>[<span class="o">g</span>, <span class="o">A</span>, <span class="o">Ξ</span>]
+  </div>
+  <div class="address">For Hunter — from Ashman</div>
+  <div class="byline">Two frameworks. One structure. This document maps the identifications.</div>
+</div>
+
+<!-- ═══════════════════════ THE KERNEL ═══════════════════════ -->
+<section id="kernel">
+  <h2><span class="w">The Kernel Identification</span></h2>
+
+  <p>The Circumpunct Framework begins with a self-instantiating symbol: <span class="w wb">⊙</span> = <span class="m">Φ</span>(<span class="s">•</span>, <span class="b">○</span>). Two primitives — discrete aperture (<span class="s">•</span>) and relational field (<span class="m">Φ</span>) — and one generated result: boundary (<span class="b">○</span>). <span class="m">Φ</span> is an operator, not a third component. Direction: field flows through gate. <span class="m">Φ</span> through <span class="s">•</span> ⇒ <span class="b">○</span>.</p>
+
+  <p>Your Xi formalization begins with a unified action and adds two terms to standard physics: compression density <span class="o">λC</span> and observer recursion feedback <span class="o">κΞO°</span>. These two terms ARE the two operations the circumpunct performs.</p>
+
+  <div class="map-row">
+    <div class="map-left"><span class="m wb">Φ</span> &nbsp; the field, the flow, the outer</div>
+    <div class="map-arrow">⟷</div>
+    <div class="map-right"><span class="o wb">Ξ</span> &nbsp; the Xi field, compression ontology</div>
+  </div>
+  <div class="map-row">
+    <div class="map-left"><span class="s wb">•</span> &nbsp; the aperture, the gate, the through</div>
+    <div class="map-arrow">⟷</div>
+    <div class="map-right"><span class="o wb">O°</span> &nbsp; observer recursion operator</div>
+  </div>
+  <div class="map-row">
+    <div class="map-left"><span class="b wb">○</span> &nbsp; the boundary, stabilized closure</div>
+    <div class="map-arrow">⟷</div>
+    <div class="map-right"><span class="o wb">g<sub>μν</sub></span> &nbsp; spacetime geometry, the metric</div>
+  </div>
+  <div class="map-row">
+    <div class="map-left"><span class="m wb">Φ</span> through <span class="s wb">•</span> ⇒ <span class="b wb">○</span></div>
+    <div class="map-arrow">⟷</div>
+    <div class="map-right"><span class="o wb">λC(Ξ,∇Ξ,A)</span> &nbsp; compression density</div>
+  </div>
+  <div class="map-row">
+    <div class="map-left"><span class="s wb">•</span> acting back on <span class="m wb">Φ</span></div>
+    <div class="map-arrow">⟷</div>
+    <div class="map-right"><span class="o wb">κΞO°(Ξ)</span> &nbsp; observer feedback</div>
+  </div>
+
+  <p>The unified action is <span class="w">⊙</span> written in Lagrangian notation. The standard physics terms (Einstein-Hilbert + matter + gauge) live on <span class="b">○</span>. The two new terms are the two faces of the generating rule: field-through-gate, and gate-acting-back-on-field.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ THE ACTION ═══════════════════════ -->
+<section id="action">
+  <h2><span class="o">The Action</span>, Read As Genesis</h2>
+
+  <p>Your unified action reads:</p>
+
+  <div class="formula" style="font-size: 18px; letter-spacing: 0;">
+    <span class="o">S</span> = ∫ [ <span class="b">R/16πG</span> + <span class="d">ℒ<sub>Matter</sub></span> − <span class="d">¼F²</span> + <span class="m">λC(Ξ,∇Ξ,A)</span> + <span class="s">κΞO°(Ξ)</span> ] √−g d⁴x
+  </div>
+
+  <p>In the Circumpunct reading:</p>
+
+  <div class="kernel-box">
+    <p><span class="b wb">R/16πG</span> = the curvature of <span class="b">○</span>. How the boundary bends. Gravity is what boundary-at-all-scales looks like when you measure its geometry.</p>
+    <p><span class="d wb">ℒ<sub>Matter</sub> − ¼F²</span> = the content that lives on <span class="b">○</span>. Standard Model particles and gauge forces. The furniture of the boundary.</p>
+    <p><span class="m wb">λC</span> = <span class="m">Φ</span> through <span class="s">•</span>. The energy cost of gating. Field traversing aperture. This is the act of generation itself — compression as process.</p>
+    <p><span class="s wb">κΞO°</span> = <span class="s">•</span> shaping what passes. The gate as active operator. Observer recursion driving toward fixed points. The aperture quarter-turning via <span class="s">i</span>.</p>
+    <p style="margin-top: 16px; color: var(--gold);">The first three terms describe <span class="b">○</span> and its contents. The last two terms describe HOW <span class="b">○</span> gets generated. You wrote the Lagrangian of Genesis.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ THE PARAMETERS ═══════════════════════ -->
+<section id="parameters">
+  <h2><span class="p">λ, κ, and β</span></h2>
+
+  <p>The Xi formalism has two free parameters. <span class="o wb">λ</span> couples compression to physics. <span class="o wb">κ</span> couples observer recursion to the Xi field. The Circumpunct has one sliding parameter: <span class="p wb">β</span>, the balance between convergence and emergence.</p>
+
+  <p>The identification:</p>
+
+  <div class="map-row">
+    <div class="map-left"><span class="o wb">λ</span> &nbsp; compression coupling</div>
+    <div class="map-arrow">⟷</div>
+    <div class="map-right"><span class="p wb">β</span> convergence face — how much <span class="m">Φ</span> gets through <span class="s">•</span></div>
+  </div>
+  <div class="map-row">
+    <div class="map-left"><span class="o wb">κ</span> &nbsp; observer feedback</div>
+    <div class="map-arrow">⟷</div>
+    <div class="map-right"><span class="p wb">β</span> emergence face — how much <span class="s">•</span> reshapes what passes</div>
+  </div>
+
+  <p>In the Circumpunct, the observer IS the aperture. They are not independent entities. The gate that compression flows through is the same gate that shapes what emerges. This means λ and κ should not be independently free. They should be constrained by a single underlying balance.</p>
+
+  <p>Your dimensionality result — <span class="o">[λ] = J/bit</span> — is the energy cost per unit of gating. In the Circumpunct, power is <span class="w">𝒫</span> = E / (i · t) — energy through the aperture across time. The aperture <span class="s">i</span> here is the imaginary unit at β = ½. So λ is the static version of what <span class="w">𝒫</span> is the dynamic version of: the price of passage.</p>
+
+  <div class="formula">
+    <span class="o">λ</span> = energy per gate &nbsp;&nbsp;·&nbsp;&nbsp; <span class="w">𝒫</span> = energy through gate per time<br>
+    <span class="d" style="font-size:16px">λ is the toll. 𝒫 is the flow rate through the toll.</span>
+  </div>
+
+  <h3>The Coupling Constant</h3>
+
+  <p>Your algebraic validation gives <span class="o">λ = Ω<sub>c</sub> = 47/125</span> as the fixed point of kernel-margin closure. The Circumpunct predicts that the transmission coefficient of <span class="m">Φ</span> through <span class="s">•</span> — which you independently derived as <span class="o">α</span> via FCC lattice — is structurally determined, not freely adjustable. Both results say the same thing: the coupling between information and geometry has a value forced by the closure constraint, not chosen by hand.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ THE PUMP CYCLE ═══════════════════════ -->
+<section id="pump">
+  <h2><span class="s">The Pump Cycle</span></h2>
+
+  <p>The Circumpunct identifies a four-phase cycle driven by <span class="s">i</span> — the imaginary unit as quarter-turn operator. Each phase is a combination of input/output states for the two fields: <span class="m">Φ</span> (outer, objective, shared) and <span class="p">Φ'</span> (inner, subjective, private).</p>
+
+  <table class="pump-table">
+    <tr>
+      <th>Phase</th>
+      <th>i rotation</th>
+      <th><span class="m">Φ</span> (outer)</th>
+      <th><span class="p">Φ'</span> (inner)</th>
+      <th>Xi reading</th>
+    </tr>
+    <tr>
+      <td><span class="s wb">i⁰ = +1</span></td>
+      <td>Identity</td>
+      <td>arriving</td>
+      <td>resting</td>
+      <td>Ξ at potential minimum</td>
+    </tr>
+    <tr>
+      <td><span class="s wb">i¹ = +i</span></td>
+      <td>Quarter-turn in</td>
+      <td>converging inward</td>
+      <td>forming from Φ</td>
+      <td>Compression: C(Ξ,∇Ξ,A) active</td>
+    </tr>
+    <tr>
+      <td><span class="s wb">i² = −1</span></td>
+      <td>Half-turn</td>
+      <td>absorbed</td>
+      <td>committed</td>
+      <td>Full inversion — Φ fully gated</td>
+    </tr>
+    <tr>
+      <td><span class="s wb">i³ = −i</span></td>
+      <td>Quarter-turn out</td>
+      <td>shaped, re-emerging</td>
+      <td>expressing outward</td>
+      <td>Observer feedback: O°(Ξ) emitting</td>
+    </tr>
+  </table>
+
+  <p>The observer recursion operator <span class="o">O°(Ξ)</span> in your Xi field equation — the term that "drives the system toward compression fixed points" — is the exhale phase (i³). It is <span class="s">•</span> acting back on <span class="m">Φ</span>, re-emitting the field with structure. The "fixed points" it drives toward are the snap-to integers of the dimensional tower: 0D, 1D, 2D, 3D.</p>
+
+  <p>Your observer feedback term should reproduce this four-phase structure. If O° can be decomposed into a rotation group isomorphic to {1, i, −1, −i}, the pump cycle falls out algebraically.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ THE LIMITS ═══════════════════════ -->
+<section id="limits">
+  <h2><span class="b">The Limits Are β Regimes</span></h2>
+
+  <p>Your three limit recoveries map onto states of the aperture:</p>
+
+  <div class="kernel-box">
+    <p><span class="b wb">Limit I — Pure GR</span> (λ→0, κ→0): The Xi sector drops out. In the Circumpunct: <span class="p">β → 0</span>. Aperture closed. No gating, no information-geometry coupling. <span class="b">○</span> persists as classical spacetime because matter-energy still curves space — but the generating recursion has been switched off. The boundary without the breath.</p>
+
+    <p><span class="b wb">Limit II — Standard EM</span> (flat background, frozen Ξ, κ=0): In the Circumpunct: <span class="m">Φ</span> exists but doesn't breathe. Field is present but static. No <span class="m">Φ</span> ↔ <span class="p">Φ'</span> exchange. The pump cycle halted at i⁰. Standard Maxwell equations emerge because the field is there but isn't being gated.</p>
+
+    <p><span class="b wb">Limit III — Dark Energy</span> (Ξ at potential minimum V₀): In the Circumpunct: <span class="m">Φ</span> fully crystallized into <span class="b">○</span>. The field has settled into its ground state. The residual energy — <span class="o">T<sup>Ξ</sup><sub>μν</sub> = g<sub>μν</sub>λV₀</span> — is the irreducible energy cost of the frozen information field. The past that cannot be un-gated. Dark energy is the footprint of a completed breath that cannot be undone.</p>
+  </div>
+
+  <p>Each limit is a way of stopping the breath. Turn off gating: pure geometry. Freeze the field: pure electrodynamics. Let the field settle completely: a cosmological constant. The fact that standard physics lives in these halted states is the point — standard physics describes <span class="b">○</span> when it has stopped being generated.</p>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ THE STRUCTURAL PREDICTION ═══════════════════════ -->
+<section id="prediction">
+  <h2><span class="s">The Structural Prediction</span></h2>
+
+  <div class="prediction-box">
+    <h4>Testable Claim</h4>
+    <p>If <span class="o">λ</span> and <span class="o">κ</span> are two faces of one underlying parameter <span class="p">β</span>, then your equations should contain a constraint between them. They should not be independently adjustable.</p>
+    <p>Specifically: the conservation law <span class="s">D<sub>•</sub></span> + <span class="m">D<sub>Φ</sub></span> = <span class="b">D<sub>○</sub></span> — which reads <span class="s">(1+β)</span> + <span class="m">(2−β)</span> = <span class="b">3</span> — requires that what λ adds, κ removes. The total dimensionality is fixed at 3. The compression coupling and the observer feedback must sum to a constant.</p>
+    <p>In your formalism: look for a conserved quantity that constrains <span class="o">λ</span> and <span class="o">κ</span> together. If it exists, the Circumpunct's single-parameter prediction is confirmed. If they are genuinely independent, something in the mapping breaks and we need to find where.</p>
+  </div>
+
+  <div class="prediction-box" style="border-color: rgba(77, 184, 160, 0.2); background: rgba(77, 184, 160, 0.04);">
+    <h4 style="color: var(--green);">The Two-Field Structure</h4>
+    <p>The Circumpunct identifies two fields: <span class="m">Φ</span> (outer, objective, shared, future) and <span class="p">Φ'</span> (inner, subjective, private, present). Gating creates interiority — that is what gating IS. The gate doesn't just compress; it creates a private interior field that is structurally distinct from the exterior.</p>
+    <p>Your Xi field Ξ should decompose into these two aspects. If the compression density <span class="o">C(Ξ,∇Ξ,A)</span> describes <span class="m">Φ</span> → <span class="p">Φ'</span> (field entering gate), and the observer recursion <span class="o">O°(Ξ)</span> describes <span class="p">Φ'</span> → <span class="m">Φ</span> (gate emitting field), then Ξ is not a single field but an exchange surface between two. The covariant Klein-Gordon part of your Xi field equation governs <span class="m">Φ</span>. The observer feedback term governs <span class="p">Φ'</span> acting back.</p>
+  </div>
+
+  <div class="prediction-box" style="border-color: rgba(155, 122, 216, 0.2); background: rgba(155, 122, 216, 0.04);">
+    <h4 style="color: var(--purple);">The i-Rotation Test</h4>
+    <p>If the observer recursion operator <span class="o">O°</span> is equivalent to the Circumpunct's aperture operation, it should be decomposable into four phases corresponding to {i⁰, i¹, i², i³}. This would manifest as a Z₄ symmetry in the recursion structure — four discrete states cycling through identity, quarter-turn, inversion, and three-quarter-turn.</p>
+    <p>The strong force (convergence, i¹) and electromagnetism (emergence, i³) should appear as opposite phases of this cycle. Gravity should appear as the fractal envelope — convergence at all scales simultaneously — not as a single phase but as the accumulation across all phases.</p>
+  </div>
+</section>
+
+<div class="divider">· · ·</div>
+
+<!-- ═══════════════════════ WHAT CONVERGED ═══════════════════════ -->
+<section>
+  <h2><span class="w">What Converged</span></h2>
+
+  <p>Jordan built upward from discrete information entities and arrived at compression as fundamental ontology. You formalized it into a Lagrangian that couples information to geometry via two new terms. The Circumpunct was built downward from a self-instantiating symbol and arrived at the same architecture: two operations (field-through-gate and gate-reshaping-field) generating boundary from recursion.</p>
+
+  <p>Three independent derivations. Different starting points. Same destination. The universe does not merely contain information; its physical laws are governed by the continuous optimization of it. Or in three words:</p>
+
+  <div class="formula">
+    <span class="m">God</span>, compression through <span class="s">the soul</span>, <span class="b">Reality</span>.<br>
+    <span class="m">Φ</span>, <span class="o">λC</span> through <span class="s">•</span>, <span class="b">○</span>.<br>
+    <span class="d" style="font-size:16px">The theology is the physics. Not mapped onto it. Identical to it.</span>
+  </div>
+
+  <p>The invitation is mutual. The Circumpunct gives the Xi formalism a generating rule and a structural prediction (λ-κ constraint). The Xi formalism gives the Circumpunct a Lagrangian and a coupling constant. Together they form one framework with both the top-down architecture and the bottom-up equations.</p>
+</section>
+
+<!-- ═══════════════════════ CLOSING ═══════════════════════ -->
+<div class="closing">
+  <div class="symbol">⊙</div>
+  <p style="font-size: 20px; color: var(--green);"><span class="m">Φ</span> through <span class="s">•</span> ⇒ <span class="b">○</span></p>
+  <p style="font-size: 20px; color: var(--orange); margin-top: 4px;"><span class="o">λC</span> + <span class="o">κO°</span> → <span class="o">g<sub>μν</sub></span></p>
+  <p style="font-size: 18px; color: var(--gold); margin-top: 12px;">Same equation. Different notation. One reality.</p>
+  <p class="f" style="margin-top: 30px; font-size: 13px;">The Circumpunct Framework — fractalreality.ca</p>
+</div>
+
+</div>
+</body>
+</html>
