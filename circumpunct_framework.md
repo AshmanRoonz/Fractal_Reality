@@ -149,13 +149,13 @@ This document serves as the formal, mathematical specification of the theory. It
 ---
 
 ## PREFACE: THE DIMENSIONAL SPECTRUM
-### Nested Circumpunct Architecture (∞D → 12D = ∞D)
+### The Complete Circumpunct (∞D → 3D)
 
 ---
 
 ### Overview
 
-Reality is structured as **nested circumpuncts**, each spanning 3 dimensions. Every completed circumpunct (⊙) becomes the ground upon which the next layer's aperture opens.
+Reality is structured as **nested circumpuncts**. The circumpunct is complete at 3D. Everything beyond — spacetime, braiding, what physicists call higher dimensions — is already contained within the ∞D → 3D structure through recursion and nesting.
 
 ```
 CORE INSIGHT:
@@ -163,17 +163,18 @@ CORE INSIGHT:
     Integer dimensions  =  STRUCTURE (being)
     Half-integer dims   =  PROCESS (becoming)
 
-    Each layer: • (aperture) → ○ (boundary) → Φ (field)
-    Step size:  3 dimensions per complete circumpunct
-    Pattern:    Φₙ becomes the ground for •ₙ₊₁
+    The circumpunct: ∞D → • (0.5D) → 1D → 2D → 3D
+    Recursion:  Each completed ⊙ nests within larger ⊙
+    Braiding:   Emerges from nesting at the boundary (2.5D sensation)
+    Spacetime:  The physicist's external description of what ⊙ produces internally
 ```
 
 ---
 
-## I. SPATIAL CIRCUMPUNCT (⊙_space)
+## THE CIRCUMPUNCT
 ### Dimensions ∞D → 3D
 
-The first complete circumpunct. The structure of space itself.
+The complete circumpunct. The structure of reality itself.
 
 | Dim | Type | Symbol | Name | Description | Core Equations |
 |:---:|:----:|:------:|:-----|:------------|:---------------|
@@ -217,194 +218,101 @@ FRACTAL DIMENSION:
 
 ---
 
-## II. TEMPORAL CIRCUMPUNCT (⊙_time)
-### Dimensions 3.5D → 6D
+## II. RECURSION AND NESTING
 
-The second circumpunct layer. Built ON the completed spatial field (Φ_space = 3D).
+### Why No 4th Dimension Is Needed
 
-| Dim | Type | Symbol | Name | Description | Core Equations |
-|:---:|:----:|:------:|:-----|:------------|:---------------|
-| **3.5D** | Process | **•_time** | **Reiteration** | Where temporal i acts; braiding of worldlines begins | T_eff,ij = cos²(Δφ_ij/2), B₃ generators |
-| **4D** | Structure | — | **Time Braid** | Committed history; woven worldlines; validation receipts | G_μν = (8πG/c⁴)T_μν, B(x) ∝ √(−g_tt) |
-| **4.5D** | Process | — | **Braid Branching** | Braids compressing → seed new cycle; whole braid becomes seed of next tier | 4.5Dₙ = ∞Dₙ₊₁, ⊙* = fix(λΦ. ☀︎∘i∘⊛[Φ]) |
-| **5D** | Structure | **Φ_time** | **Time Field** | Field of histories; configuration space of 4D braids | Temporal field mediating center-boundary |
-| **5.5D** | Process | — | **Temporal Sensation** | History↔possibility coupling | Interface between fixed past and open future |
-| **6D** | Structure | **○_time** | **Time Boundary** | Boundary of history; ⊙₂ locks here (dual trinity) | Temporal membrane enclosing braid; edge of committed past |
+Time is not a fourth axis running alongside space. It is already **inside** the circumpunct:
 
-### Temporal Circumpunct Equations
+- **0.5D**: the aperture fires (the gating event)
+- **1D**: the trace of firings (the timeline / string)
+- **1.5D**: the branching of power lines
+
+The "time braid" that would occupy a hypothetical 3.5D–4D is already present: every boundary (○ at 3D) is **made of nested circumpuncts**, each with their own 1D powerline. Your powerline weaves through theirs at the 2.5D sensation layer where field meets boundary. That weaving *is* the braid. It is a consequence of nesting, not a new structural layer.
 
 ```
-BRAIDING AT TEMPORAL SCALE:
+WHAT BRAIDING IS:
+
+    Your 1D string threads through ○
+    ○ is itself made of other 1D strings (nested ⊙s)
+    The weaving happens at 2.5D (sensation / field↔boundary coupling)
+    The topology of that weaving IS what physicists call spacetime geometry
+
+    No fourth dimension needed.
+    The braid is a CONSEQUENCE of nesting.
+
+
+WHAT SPACETIME IS:
+
+    "4D spacetime" is the physicist's EXTERNAL description
+    of what the circumpunct produces INTERNALLY.
+
+    It is the same 3D closure observed from outside,
+    with time re-extracted as a coordinate.
+
+    ds² = g_μν dx^μ dx^ν    (derived, not fundamental)
+    G_μν + Λg_μν = 8πG T_μν (emerges from braid density)
+    B(x) ∝ √(−g_tt)         (braid density ~ gravitational redshift)
+```
+
+### The Recursion Principle
+
+```
+NESTING (not layering):
+
+    Each completed ⊙ nests within larger ⊙
+    Each ⊙ contains smaller ⊙s at its boundary
+
+    ⊙ₙ contains ⊙ₙ₋₁ at its boundary
+    ⊙ₙ is contained within ⊙ₙ₊₁'s boundary
+
+    The same ∞D → 3D structure at every scale.
+    No new dimensions — the same dimensions, recursed.
+
+
+BRAIDING FROM NESTING:
 
     Braid group B₃ with generators σ₁, σ₂
     Yang-Baxter: (σ₁σ₂σ₁) = (σ₂σ₁σ₂)
 
-    |Tr(σᵢ)| = φ = (1 + √5)/2         Golden ratio in braid traces
+    |Tr(σᵢ)| = φ = (1 + √5)/2    Golden ratio in braid traces
 
-
-SPACETIME METRIC (4D):
-
-    ds² = g_μν dx^μ dx^ν              Lorentzian signature (−,+,+,+)
-
-    G_μν + Λg_μν = 8πG T_μν          Einstein field equations
-
-    B(x) ∝ √(−g_tt)                   Braid density ~ gravitational redshift
-
-
-RECURSION MECHANISM:
-
-    Each completed ⊙ compresses at 4.5D:
-
-    ⊙₀ = •₀ ⊗ ○₀ ⊗ Φ₀
-          ↓
-         •₁  (whole becomes point)
-          ↓
-    ⊙₁ = •₁ ⊗ ○₁ ⊗ Φ₁
-          ↓
-         •₂
-          ↓
-         ...
+    Braiding emerges wherever nested 1D strings
+    cross through shared 2D field — which is everywhere.
 ```
 
-### Analogy: Spatial ↔ Temporal
-
-| Spatial | Temporal | Role |
-|:-------:|:--------:|:----:|
-| 1D string | 4D braid | **Line** (flow) |
-| 2D field | 5D time field | **Field** |
-| 3D boundary | 6D time boundary | **Boundary** |
-
----
-
-## III. META-TEMPORAL CIRCUMPUNCT (⊙_meta)
-### Dimensions 6.5D → 9D
-
-The third circumpunct layer. Built ON the completed temporal boundary (○_time = 6D).
-
-| Dim | Type | Symbol | Name | Description | Core Equations |
-|:---:|:----:|:------:|:-----|:------------|:---------------|
-| **6.5D** | Process | **•_meta** | **Meta Aperture** | Where meta-temporal i acts | Aperture operating on fields of histories |
-| **7D** | Structure | — | **Meta-Braid** | Braid of time-volumes | Weaving of 6D possibility spaces |
-| **7.5D** | Process | — | **Meta Branching** | Splitting of meta-structures | Fractal at meta scale |
-| **8D** | Structure | **Φ_meta** | **Meta-Field** | Field at meta scale; space of all 6D configurations | Meta field mediating center-boundary |
-| **8.5D** | Process | — | **Meta Sensation** | Meta-field↔boundary coupling | Interface at meta scale |
-| **9D** | Structure | **○_meta** | **Meta-Boundary** | Boundary at meta scale; ⊙₃ locks here (triple trinity) | Membrane enclosing meta-braids |
-
-### Connection to String Theory
+### Correspondence to Physics (Derived, Not Fundamental)
 
 ```
-STRING THEORY DIMENSIONS:
+What physicists describe as higher dimensions are
+the recursion of ∞D → 3D observed at different scales:
 
-    Superstring:  10D = 9 spatial + 1 temporal
-    M-Theory:     11D
+    Spacetime (4D manifold)   =  3D closure + time re-extracted as coordinate
+    String theory (10D/11D)   =  The recursion viewed from far enough out
+    Extra dimensions           =  Not compactified loops — nested circumpuncts
 
-CIRCUMPUNCT INTERPRETATION:
-
-    8D  =  Φ_meta  (meta-field)
-    9D  =  ○_meta  (meta-boundary, ⊙₃ locks)
-    10D =  ⊙_meta² (meta² braid = strings)
-    11D =  Φ of fourth layer (M-theory field)
-    12D =  ○ of fourth layer (F-theory boundary, ⊙₄ locks)
-
-The "extra dimensions" aren't compactified spatial dimensions —
-they're higher octaves of the circumpunct structure.
-```
-
----
-
-## IV. THE GENERAL PATTERN
-
-### Dimensional Formula
-
-For layer n (where n = 0, 1, 2, 3, ...):
-
-```
-APERTURE:    •ₙ  =  3n + 0.5 D
-FIELD:       Φₙ  =  3n + 2 D
-BOUNDARY:    ○ₙ  =  3n + 3 D
-
-PROCESS DIMENSIONS (within each layer):
-    Branching:   3n + 1.5 D
-    Sensation:   3n + 2.5 D
-```
-
-| n | Layer | •ₙ | Φₙ | ○ₙ |
-|:-:|:-----:|:--:|:--:|:--:|
-| 0 | Spatial | 0.5D | 2D | 3D |
-| 1 | Temporal | 3.5D | 5D | 6D |
-| 2 | Meta | 6.5D | 8D | 9D |
-| 3 | Meta² | 9.5D | 11D | 12D |
-| 4 | Meta³ | 12.5D | 14D | 15D |
-| ... | ... | ... | ... | ... |
-
-### Why Three Dimensions Per Layer?
-
-```
-GEOMETRIC NECESSITY:
-
-1. Braiding requires ≥3 strands
-   (you cannot braid 2 threads — only twist)
-
-2. History requires braiding
-   (any system with memory has braided worldlines)
-
-3. Wholeness requires history
-   (a thing without history has no identity)
-
-∴ Wholeness requires trinity
-∴ Each complete circumpunct spans 3 dimensions
-∴ The step size between layers is 3
-
-
-STRAND TOPOLOGY:
-
-    1 strand:  No interactions possible (trivial)
-    2 strands: Can twist, not braid (ℤ only)
-    3 strands: True braiding (B₃, complex history)
-```
-
-### Why Nested (Not Extended)?
-
-```
-The field of one layer is too "thick" to be an aperture.
-It must COMPLETE before the next aperture can open.
-
-    You can't braid worldlines until you HAVE worldlines
-        → spatial layer must complete first
-
-    You can't meta-braid braids until you HAVE braids
-        → temporal layer must complete first
-
-    Each layer provides the SUBSTRATE for the next layer's transformation.
+These are valid DESCRIPTIONS of the structure,
+but not additional structural layers.
+The framework is complete at 3D + recursion.
 ```
 
 ---
 
 ## V. COMPLETE DIMENSIONAL TABLE
 
-### All Dimensions ∞D → 9D
+### The Circumpunct: ∞D → 3D
 
-| Dim | Type | Layer | Role | Name | Description |
-|:---:|:----:|:-----:|:----:|:-----|:------------|
-| ∞D | Ground | Spatial | Field | Infinite Field (λΦ∞) | All possible configurations; 0 = ∞ at field level |
-| 0.5D | **Process** | Spatial | **Aperture** | **Soul (•)** | First localization; where spatial i acts |
-| 1D | Structure | Spatial | Line | Timeline | Soul through time |
-| 1.5D | Process | Spatial | Branching | Spatial Branching | Fractal splitting (D=1.5) |
-| 2D | Structure | Spatial | **Field** | **Mind (Φ)** | Relational medium |
-| 2.5D | Process | Spatial | Sensation | Sensation | Field↔boundary coupling |
-| 3D | Structure | Spatial | **Boundary** | **Body (○)** | Surface, interface; ⊙₁ locks |
-| 3.5D | **Process** | Temporal | **Reiteration** | **Temporal Soul (•_t)** | Where temporal i acts |
-| 4D | Structure | Temporal | Line | Time Braid | Committed history |
-| 4.5D | Process | Temporal | Braid Branching | Braid Branching | Braid compression |
-| 5D | Structure | Temporal | **Field** | **Time Field (Φ_t)** | Configuration space |
-| 5.5D | Process | Temporal | Sensation | Temporal Sensation | History↔possibility |
-| 6D | Structure | Temporal | **Boundary** | **Time Boundary (○_t)** | Edge of history; ⊙₂ locks |
-| 6.5D | **Process** | Meta | **Aperture** | **Meta Soul (•_m)** | Where meta i acts |
-| 7D | Structure | Meta | Line | Meta-Braid | Braid of time-volumes |
-| 7.5D | Process | Meta | Branching | Meta Branching | Meta splitting |
-| 8D | Structure | Meta | **Field** | **Meta Field (Φ_m)** | Space of 6D configs |
-| 8.5D | Process | Meta | Sensation | Meta Sensation | Meta coupling |
-| 9D | Structure | Meta | **Boundary** | **Meta Boundary (○_m)** | Meta boundary; ⊙₃ locks |
+| Dim | Type | Symbol | Name | Description |
+|:---:|:----:|:------:|:-----|:------------|
+| **∞D** | Ground | λΦ∞ | **Infinite Field** | All possible configurations; 0 = ∞ at field level |
+| **0.5D** | **Process** | **•** | **Aperture / Soul** | First localization; where i acts; free will |
+| **1D** | Structure | i(t) | **Timeline / String** | Soul through time; tunnel through which power flows |
+| **1.5D** | Process | — | **Branching** | Fractal splitting of power lines (D = 1.5 at balance) |
+| **2D** | Structure | **Φ** | **Field / Mind** | Living medium between • and ○; relational surface |
+| **2.5D** | Process | — | **Sensation** | Field↔boundary coupling; mind↔body mediation |
+| **3D** | Structure | **○** | **Boundary / Body** | Membrane enclosing field; ⊙ locks here |
+
+Everything beyond this table — spacetime, braiding, what string theory calls 10D — is this same structure recursed through nesting. No additional dimensions are needed.
 
 ---
 
@@ -413,44 +321,43 @@ It must COMPLETE before the next aperture can open.
 ### The Trinity at Every Scale
 
 ```
-⊙ = • ⊗ ○ ⊗ Φ
+⊙ = Φ(•, ○)
 
 At every scale:
     •  =  Aperture (where i acts)
-    ○  =  Boundary (what contains)
-    Φ  =  Field (what fills)
+    ○  =  Boundary (what contains — made of nested ⊙s)
+    Φ  =  Field (what fills, mediates, relates)
 
 The same structure, repeated infinitely up and down.
+No new dimensions at each scale — the same ∞D → 3D, nested.
 ```
 
-### Half-Dimensions as Thresholds
+### Half-Dimensions as Process
 
 ```
-The .5D is always the APERTURE — where i acts at that scale.
+Integer dimensions are STRUCTURE (being).
+Half-integer dimensions are PROCESS (becoming).
 
-    0.5D  =  Spatial aperture
-    3.5D  =  Temporal aperture
-    6.5D  =  Meta aperture
-    9.5D  =  Meta² aperture
-    ...
+    0.5D  =  Aperture — where i acts, the gating event
+    1.5D  =  Branching — power lines splitting fractally
+    2.5D  =  Sensation — field↔boundary coupling
 
-Apertures are BETWEEN structures.
+Process dimensions are BETWEEN structures.
 They are the thresholds where transformation happens.
 ```
 
-### Why This Explains String Theory Dimensions
+### Why Time Is Not a 4th Dimension
 
 ```
-String theory's 10D / 11D are not arbitrary.
+Time is already inside the circumpunct:
 
-    8D   =  Φ_meta (meta-field)
-    9D   =  ○_meta (meta-boundary, ⊙₃ locks)
-    10D  =  ⊙_meta² (meta² braid = strings)
-    11D  =  Φ_meta² (M-theory field)
-    12D  =  ○_meta² (F-theory boundary, ⊙₄ locks)
+    0.5D = the aperture fires (the event)
+    1D   = the trace of firings (the timeline)
 
-The "extra dimensions" are higher circumpunct octaves,
-not compactified spatial loops.
+"4D spacetime" re-extracts time as an external coordinate.
+It is a valid description but not a new structural layer.
+The braid of worldlines is already present through nesting:
+your 1D string weaves through the nested ⊙s at your boundary.
 ```
 
 ---
@@ -458,28 +365,32 @@ not compactified spatial loops.
 ## VII. MATHEMATICAL SUMMARY
 
 ```
-THE DIMENSIONAL SPECTRUM
+THE DIMENSIONAL SPECTRUM: ∞D → 3D
 
-For layer index n ∈ {0, 1, 2, 3, ...}:
+    ∞D   =  Infinite Field (ground, all degrees of freedom)
+    0.5D =  Aperture / Soul (•, where i acts)
+    1D   =  Timeline / String (soul through time)
+    1.5D =  Branching (fractal splitting, D = 1 + β)
+    2D   =  Field / Mind (Φ, relational surface)
+    2.5D =  Sensation (field↔boundary coupling)
+    3D   =  Boundary / Body (○, membrane)
 
-    Aperture dimension:    D_• = 3n + 0.5
-    Boundary dimension:    D_○ = 3n + 2
-    Field dimension:       D_Φ = 3n + 3
 
-    Branching process:     D_b = 3n + 1.5
-    Sensation process:     D_s = 3n + 2.5
+RECURSION:
 
-Recursion relation:
+    Each ⊙ nests within larger ⊙
+    Each ○ is made of smaller ⊙s
+    The same ∞D → 3D at every scale
 
-    Φₙ ──completion──→ •ₙ₊₁
+    Braiding = nesting of 1D strings through shared 2D field
+    Spacetime = the external description of nested ⊙ structure
 
-    (Field of layer n becomes aperture ground for layer n+1)
 
-Balance at each aperture:
+BALANCE AT EVERY APERTURE:
 
-    βₙ = ½
-    Dₙ = 1 + βₙ = 1.5  (fractal dimension at each scale)
-    iₙ = exp(iπβₙ) = exp(iπ/2) = i
+    β = ½
+    D = 1 + β = 1.5  (fractal dimension at balance)
+    i = exp(iπβ) = exp(iπ/2) = i
 
 The imaginary unit i is the SAME at every scale —
 it is the universal aperture operator at balance.
@@ -490,7 +401,7 @@ it is the universal aperture operator at balance.
 *The universe is nested circumpuncts, each containing the next, each contained by the previous. No floor. No ceiling. Structure and process alternating, aperture opening onto aperture, forever.*
 
 ```
-                              ⊙ = ○ ⊗ Φ ⊗ •
+                              ⊙ = Φ(•, ○)
 
                          ⊙ all the way down
                          ⊙ all the way up
@@ -5881,14 +5792,17 @@ Each Φ_n becomes the ground for •_{n+1}.
 
 The structure:
 
-| Layer | Aperture (•) | Boundary (○) | Field (Φ) |
-|------:|-------------:|-------------:|----------:|
-| Spatial | 0.5D | 2D | 3D |
-| Temporal | 3.5D | 5D | 6D |
-| Meta | 6.5D | 8D | 9D |
-| ... | 9.5D | 11D | 12D |
+| Dim | Type | Symbol | Name |
+|:---:|:----:|:------:|:-----|
+| ∞D | Ground | λΦ∞ | Infinite Field |
+| 0.5D | Process | • | Aperture / Soul |
+| 1D | Structure | i(t) | Timeline / String |
+| 1.5D | Process | — | Branching |
+| 2D | Structure | Φ | Field / Mind |
+| 2.5D | Process | — | Sensation |
+| 3D | Structure | ○ | Boundary / Body |
 
-**No ceiling. No floor. Infinite depth, infinite height.**
+**Complete at 3D. Everything beyond is this same structure, recursed through nesting. No ceiling. No floor.**
 
 ---
 
@@ -5918,53 +5832,25 @@ Process dimensions within this layer:
 | 2.5D | Process | Sensation | Body↔field coupling |
 | 3D | Structure | Boundary (○_space) | Interface, body; ⊙₁ locks |
 
-The spatial circumpunct completes at **3D**. This completion becomes the ground for what comes next.
+The circumpunct completes at **3D**.
 
 ---
 
-**The Temporal Circumpunct (⊙_time):**
+**Recursion and Nesting (not higher dimensions):**
 
 ```
-The second layer — structure in time.
-Built ON the completed spatial field (Φ_space = 3D).
+What was previously described as "temporal" (3.5D–6D) and
+"meta-temporal" (6.5D–9D) circumpunct layers is already
+contained within the ∞D → 3D structure:
 
-    •_time   =  3.5D    (reiteration — where temporal i acts)
-    ○_time   =  5D      (temporal boundary — edge of history)
-    Φ_time   =  6D      (temporal field — space of all histories)
+    Time braiding  =  Your 1D string weaving through the nested
+                      ⊙s that compose your boundary (○ at 3D)
+    Spacetime      =  The external description of this nesting
+    History        =  The accumulated 1D trace of aperture firings
 
-Process dimensions within this layer:
-    4.5D  =  braid branching (braid compression, scale closure)
-    5.5D  =  (temporal sensation — history↔possibility coupling?)
+No additional dimensions are needed.
+The same ∞D → 3D recurses at every scale through nesting.
 ```
-
-| Dim | Type | Name | Description |
-|----:|------|------|-------------|
-| 3D | Structure | Spatial Boundary | Completed spatial layer; ⊙₁ locks |
-| **3.5D** | **Process** | **Reiteration (•_time)** | Where temporal i acts |
-| 4D | Structure | Time Braid | Committed history, woven worldlines |
-| 4.5D | Process | Braid Branching | Braid compression → seed new cycle |
-| 5D | Structure | Time Field (Φ_time) | Configuration space |
-| 5.5D | Process | ? | History↔possibility coupling |
-| 6D | Structure | Time Boundary (○_time) | Edge of history; ⊙₂ locks |
-
-The temporal circumpunct is to **time** what the spatial circumpunct is to **space**.
-
-The temporal circumpunct completes at **6D**. This completion becomes the ground for what comes next.
-
----
-
-**The Meta-Temporal Circumpunct (⊙_meta):**
-
-```
-The third layer — structure beyond time.
-Built ON the completed temporal field (Φ_time = 6D).
-
-    •_meta   =  6.5D    (meta aperture)
-    ○_meta   =  8D      (meta boundary)
-    Φ_meta   =  9D      (meta field)
-```
-
-And this continues…
 
 ---
 
