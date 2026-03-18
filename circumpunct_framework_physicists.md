@@ -219,81 +219,47 @@ Dim   │ Type      │ Symbol │ Name              │ Core Equations
 ∞D    │ Ground    │  λΦ∞   │ Infinite Field    │ ℋ (Hilbert space), |ψ⟩ ∈ ℋ, 0 = ∞ at field
 0.5D  │ Process   │   •    │ Aperture/Soul     │ i² = −1, Å(β) = exp(iπβ), Å(½) = i
 1D    │ Structure │  i(t)  │ Timeline/String   │ γ: ℝ → M, P = dE/dt
-1.5D  │ Process   │   —    │ Spatial Branching │ D = 1 + β, K(r) ∝ r^β, H(½) = 1 bit
-2D    │ Structure │   ○    │ Surface/Body      │ ○ ∈ 𝔅, Σ = ∂V, M = ∫_Σ ρ_surf dA
+1.5D  │ Process   │   —    │ Branching         │ D = 1 + β, K(r) ∝ r^β, H(½) = 1 bit
+2D    │ Structure │   Φ    │ Field/Mind        │ Φ ∈ 𝔉 = Γ(E), ℋ_Φ = L²(M, d²x; ℂ⁶⁴)
 2.5D  │ Process   │   —    │ Sensation         │ T_local = cos²(Δφ/2), triple gate
-3D    │ Structure │   Φ    │ Perceptual Field  │ Φ ∈ 𝔉 = Γ(E), ℋ_Φ = L²(M, d³x; ℂ⁶⁴)
+3D    │ Structure │   ○    │ Boundary/Body     │ ○ ∈ 𝔅, Σ = ∂V, M = ∫_Σ ρ_surf dA
 ```
 
-**Layer II — TEMPORAL CIRCUMPUNCT (⊙_time): Dimensions 3.5D → 6D**
+**Recursion and Nesting (not higher dimensions):**
 
-The second circumpunct layer. Built ON the completed spatial field (Φ_space = 3D).
-
-```
-Dim   │ Type      │ Symbol │ Name               │ Core Equations
-──────┼───────────┼────────┼────────────────────┼─────────────────────────────────
-3.5D  │ Process   │  •_t   │ Reiteration        │ T_eff,ij = cos²(Δφ_ij/2), B₃ generators
-4D    │ Structure │   —    │ Time Braid         │ G_μν = (8πG/c⁴)T_μν, B(x) ∝ √(−g_tt)
-4.5D  │ Process   │   —    │ Braid Branching    │ 4.5Dₙ = ∞Dₙ₊₁, ⊙* = fix(λΦ. ☀︎∘i∘⊛[Φ])
-5D    │ Structure │  ○_t   │ Time Surface       │ Temporal membrane enclosing 4D braid
-5.5D  │ Process   │   —    │ Temporal Sensation │ History↔possibility coupling
-6D    │ Structure │  Φ_t   │ Time Volume        │ Configuration space of all 4D braids
-```
-
-**Layer III — META-TEMPORAL CIRCUMPUNCT (⊙_meta): Dimensions 6.5D → 9D**
-
-The third circumpunct layer. Built ON the completed temporal field (Φ_time = 6D).
+The framework is complete at 3D. What was previously described as higher-dimensional layers (temporal 3.5D–6D, meta 6.5D–9D) is already contained within the ∞D → 3D structure through nesting:
 
 ```
-Dim   │ Type      │ Symbol │ Name          │ Description
-──────┼───────────┼────────┼───────────────┼─────────────────────────────────
-6.5D  │ Process   │  •_m   │ Meta Aperture │ Aperture operating on fields of histories
-7D    │ Structure │   —    │ Meta-Braid    │ Weaving of 6D possibility spaces
-7.5D  │ Process   │   —    │ Meta Branching│ Fractal at meta scale
-8D    │ Structure │  ○_m   │ Meta-Surface  │ Membrane enclosing meta-braids
-8.5D  │ Process   │   —    │ Meta Sensation│ Interface at meta scale
-9D    │ Structure │  Φ_m   │ Meta-Field    │ Space of all possible 6D configurations
+TIME IS ALREADY INSIDE THE CIRCUMPUNCT:
+
+    0.5D = the aperture fires (the gating event)
+    1D   = the trace of firings (the timeline / string)
+
+    "4D spacetime" re-extracts time as an external coordinate.
+    It is a valid derived description, not a new structural layer.
+
+
+BRAIDING IS ALREADY INSIDE THE CIRCUMPUNCT:
+
+    Every ○ (3D boundary) is made of nested ⊙s, each with their own 1D string.
+    Your 1D string weaves through theirs at 2.5D (sensation / field↔boundary coupling).
+    That weaving IS the braid. It IS what physicists call spacetime geometry.
+
+    Braid group B₃ with generators σ₁, σ₂
+    Yang-Baxter: (σ₁σ₂σ₁) = (σ₂σ₁σ₂)
+    |Tr(σᵢ)| = φ = (1 + √5)/2         Golden ratio in braid traces
+
+
+DERIVED CORRESPONDENCES:
+
+    Spacetime (4D manifold)  =  3D closure + time re-extracted as coordinate
+    ds² = g_μν dx^μ dx^ν          (Lorentzian signature, derived)
+    G_μν + Λg_μν = 8πG T_μν      (Einstein equations from braid density)
+    B(x) ∝ √(−g_tt)               (braid density ~ gravitational redshift)
+
+    String theory (10D/11D)  =  The recursion viewed from far enough out
+    "Extra dimensions"       =  Not compactified loops — nested circumpuncts
 ```
-
-**General Dimensional Formula:**
-
-For layer index n ∈ {0, 1, 2, 3, ...}:
-
-```
-    Aperture dimension:    D_• = 3n + 0.5
-    Boundary dimension:    D_○ = 3n + 2
-    Field dimension:       D_Φ = 3n + 3
-
-    Branching process:     D_b = 3n + 1.5
-    Sensation process:     D_s = 3n + 2.5
-```
-
-| n | Layer | •ₙ | ○ₙ | Φₙ |
-|:-:|:-----:|:--:|:--:|:--:|
-| 0 | Spatial | 0.5D | 2D | 3D |
-| 1 | Temporal | 3.5D | 5D | 6D |
-| 2 | Meta | 6.5D | 8D | 9D |
-| 3 | Meta² | 9.5D | 11D | 12D |
-
-**Connection to String Theory:**
-
-```
-STRING THEORY DIMENSIONS:
-
-    Superstring:  10D = 9 spatial + 1 temporal
-    M-Theory:     11D
-
-CIRCUMPUNCT INTERPRETATION:
-
-    9D   =  Φ_meta  (meta-field completion)
-    10D  =  Approaching •_meta² (next aperture at 9.5D)
-    11D  =  ○_meta² (M-theory boundary)
-
-The "extra dimensions" are not compactified spatial loops —
-they are higher octaves of the nested circumpunct structure.
-```
-
-This provides a natural explanation for why string theory requires precisely 10D or 11D: these are the completion points of the third and fourth circumpunct layers respectively.
 
 ### 1.3 Field Space (Φ)
 
