@@ -428,6 +428,84 @@
             .page-row .domain-tag { display: none; }
         }
 
+        /* ===== Start Here ===== */
+        .start-here {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 1.5rem 0.5rem;
+        }
+        .start-here-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .start-here-icon {
+            font-size: 1.4rem;
+            color: var(--gold);
+            text-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+        }
+        .start-here-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 0;
+        }
+        .start-here-sub {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+        .start-here-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 0.75rem;
+        }
+        .start-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+            padding: 1rem 1.1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.15s, border-color 0.2s;
+        }
+        .start-card:hover {
+            background: var(--bg-hover);
+            border-color: var(--gold-dim);
+        }
+        .start-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--gold);
+            line-height: 1;
+            flex-shrink: 0;
+            width: 1.6rem;
+            text-align: center;
+        }
+        .start-card-body { flex: 1; min-width: 0; }
+        .start-card-title {
+            font-weight: 500;
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+        .start-card:hover .start-card-title { color: var(--gold); }
+        .start-card-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+        @media (max-width: 700px) {
+            .start-here { padding: 1rem 1rem 0.25rem; }
+            .start-here-sub { margin-left: 0; width: 100%; }
+        }
+
         /* ===== Entrance animation ===== */
         @media (prefers-reduced-motion: no-preference) {
             .domain-section {
@@ -465,6 +543,37 @@
     <div class="stats-bar">
         <span class="stats-text" id="statsText"></span>
         <div class="filter-pills" id="filterPills"></div>
+    </div>
+
+    <div class="start-here" id="startHere">
+        <div class="start-here-header">
+            <span class="start-here-icon">⊙</span>
+            <h2>Start Here</h2>
+            <p class="start-here-sub">New? Read these three in order.</p>
+        </div>
+        <div class="start-here-cards">
+            <a href="how_reality_is_built.html" class="start-card">
+                <span class="start-num">1</span>
+                <div class="start-card-body">
+                    <div class="start-card-title">How Reality Is Built</div>
+                    <div class="start-card-desc">The dimensional walk — from infinite potential to 3D space. The core architecture.</div>
+                </div>
+            </a>
+            <a href="ethics.html" class="start-card">
+                <span class="start-num">2</span>
+                <div class="start-card-body">
+                    <div class="start-card-title">Circumpunct Ethics</div>
+                    <div class="start-card-desc">True, Good, Right, Agreed — how ethics emerges from the geometry of truth-flow.</div>
+                </div>
+            </a>
+            <a href="circumpunct_physics.html" class="start-card">
+                <span class="start-num">3</span>
+                <div class="start-card-body">
+                    <div class="start-card-title">The Physics Formalization</div>
+                    <div class="start-card-desc">Rigorous mathematical formulation with testable, falsifiable predictions.</div>
+                </div>
+            </a>
+        </div>
     </div>
 
     <div class="results-container" id="results"></div>
