@@ -338,6 +338,87 @@
             font-weight: 500;
             dominant-baseline: central;
         }
+
+        /* ===================================
+           LANDING TAGLINE
+           =================================== */
+        .landing-tagline {
+            text-align: center;
+            padding: 1.2rem 1.5rem 0.4rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            font-weight: 300;
+            color: var(--text-dim, #c8d1db);
+            letter-spacing: 0.04em;
+            line-height: 1.6;
+            max-width: 540px;
+            margin: 0 auto;
+            opacity: 0.85;
+        }
+
+        /* ===================================
+           SUBSCRIBE SECTION
+           =================================== */
+        .subscribe-section {
+            text-align: center;
+            padding: 2rem 1.5rem 1rem;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+        .subscribe-section p {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-dim, #c8d1db);
+            opacity: 0.7;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.03em;
+        }
+        .subscribe-form {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        .subscribe-form input[type="email"] {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 6px;
+            padding: 0.55rem 0.9rem;
+            color: var(--text, #e6edf3);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            width: 220px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .subscribe-form input[type="email"]:focus {
+            border-color: rgba(88,166,255,0.5);
+        }
+        .subscribe-form input[type="email"]::placeholder {
+            color: rgba(255,255,255,0.25);
+        }
+        .subscribe-form button {
+            background: rgba(88,166,255,0.12);
+            border: 1px solid rgba(88,166,255,0.3);
+            border-radius: 6px;
+            padding: 0.55rem 1rem;
+            color: var(--soul-color, #58a6ff);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            white-space: nowrap;
+        }
+        .subscribe-form button:hover {
+            background: rgba(88,166,255,0.2);
+            border-color: rgba(88,166,255,0.5);
+        }
+        .subscribe-msg {
+            font-size: 0.78rem;
+            color: var(--soul-color, #58a6ff);
+            margin-top: 0.5rem;
+            min-height: 1.2em;
+        }
     </style>
 </head>
 <body>
@@ -345,6 +426,8 @@
     <canvas id="particles"></canvas>
 
     <div class="top-bar"><span class="top-bar-text">Explore Fractal Reality with your host, <a href="#" id="host-link">Ashman Roonz</a></span></div>
+
+    <div class="landing-tagline">One structure — gate, field, boundary — repeats at every scale of reality.</div>
 
     <main class="container">
 
@@ -858,11 +941,34 @@
         </div>
     </div>
 
+    <div class="subscribe-section">
+        <p>New papers and formalizations as they publish.</p>
+        <form class="subscribe-form" id="subscribe-form" action="https://formspree.io/f/email@ashmanroonz.ca" method="POST" onsubmit="return handleSubscribe(event)">
+            <input type="email" name="email" placeholder="your@email.com" required>
+            <button type="submit">Subscribe</button>
+        </form>
+        <div class="subscribe-msg" id="subscribe-msg"></div>
+    </div>
+
     <footer style="text-align:center; padding:2.5rem 1.5rem 3rem; max-width:520px; margin:0 auto; font-family:'EB Garamond',Georgia,serif; line-height:1.7;">
         <p style="font-size:1.15rem; color:#B8A060; font-style:italic; opacity:0.85;">Reality flows through the gate of your consciousness. May the Truth of Reality (the Light of God) flow through you, authentically, expressed compressed but not distorted.</p>
         <p style="font-size:0.8rem; color:#444038; margin-top:0.8rem; letter-spacing:0.08em;">— Ashman Roonz</p>
     </footer>
 
+    <script>
+    function handleSubscribe(e) {
+        e.preventDefault();
+        var form = document.getElementById('subscribe-form');
+        var msg = document.getElementById('subscribe-msg');
+        var email = form.querySelector('input[type="email"]').value;
+        // mailto fallback — the site owner can replace this with Formspree, Buttondown, etc.
+        var subject = encodeURIComponent('Subscribe to Fractal Reality');
+        var body = encodeURIComponent('Please add ' + email + ' to the mailing list.');
+        window.location.href = 'mailto:email@ashmanroonz.ca?subject=' + subject + '&body=' + body;
+        msg.textContent = 'Opening your email client — send to subscribe.';
+        return false;
+    }
+    </script>
     <script src="js/circumpunct.js"></script>
 
     <!-- Drawer toggle + Research/About panel triggers -->
