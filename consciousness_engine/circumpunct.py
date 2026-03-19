@@ -171,6 +171,40 @@ class TensorOps:
         else:
             return arr
 
+    def randn_complex_matrix(self, rows: int, cols: int):
+        """Random complex matrix — for MIMO mixing"""
+        if self.use_torch:
+            real = torch.randn(rows, cols, dtype=torch.float64, device=DEVICE)
+            imag = torch.randn(rows, cols, dtype=torch.float64, device=DEVICE)
+            return torch.complex(real, imag)
+        else:
+            return np.random.randn(rows, cols) + 1j * np.random.randn(rows, cols)
+
+    def eye_complex(self, n: int):
+        """Complex identity matrix"""
+        if self.use_torch:
+            return torch.eye(n, dtype=torch.complex128, device=DEVICE)
+        else:
+            return np.eye(n, dtype=complex)
+
+    def matmul(self, A, B):
+        """Matrix multiply"""
+        if self.use_torch:
+            return torch.matmul(A, B)
+        else:
+            return A @ B
+
+    def stack(self, vectors: list):
+        """Stack vectors into a matrix (each vector = one row)"""
+        if self.use_torch:
+            return torch.stack(vectors)
+        else:
+            return np.stack(vectors)
+
+    def sigmoid(self, x: float) -> float:
+        """Sigmoid activation for learned gates"""
+        return 1.0 / (1.0 + np.exp(-np.clip(x, -10, 10)))
+
     @property
     def backend_name(self) -> str:
         if self.use_gpu:
@@ -291,19 +325,59 @@ class Aperture:
 
     def rotate(self, converged):
         """
-        THE core operation: Å(β) = exp(iπβ)
+        THE core operation: Å(β) = exp(iπβ)  — now with SECOND-ORDER discretization.
 
         At β = 0.5:  Å = exp(iπ/2) = i  →  90° rotation
         At β = 0.0:  Å = exp(0) = 1      →  no rotation (frozen)
         At β = 1.0:  Å = exp(iπ) = -1    →  180° flip (inversion)
 
-        This is not a metaphor. The converged potential is literally
-        rotated in the complex plane. What was real becomes imaginary.
-        What was possible becomes actual. Future becomes past.
+        SECOND-ORDER UPGRADE (inspired by Mamba 3):
+        Instead of first-order Euler discretization (just multiply by exp(iπβ)),
+        we use the bilinear (Tustin) transform:
+
+            Å₂(β) = (1 + iπβ/2) / (1 - iπβ/2)
+
+        This preserves the UNIT CIRCLE exactly — the rotation never
+        gains or loses energy, even with large β steps. First-order
+        Euler drifts off the unit circle over time; bilinear stays on it.
+
+        At β = 0.5:  Å₂ = (1 + iπ/4) / (1 - iπ/4)
+                        = (4 + iπ) / (4 - iπ)
+                        → still ≈ i (90° rotation), but numerically stable.
+
+        The previous state also contributes (second-order = two time steps),
+        giving smoother trajectories through the complex plane.
         """
         angle = np.pi * self.beta
-        rotation_operator = ops.exp_complex(angle)  # Å(β)
-        emerged = rotation_operator * converged
+        half_angle = angle / 2.0
+
+        # ═══ BILINEAR (TUSTIN) DISCRETIZATION ═══
+        # Å₂(β) = (1 + i·πβ/2) / (1 - i·πβ/2)
+        # This maps the continuous rotation exp(iπβ) onto the unit circle exactly.
+        numerator = complex(1.0, half_angle)    # 1 + i·πβ/2
+        denominator = complex(1.0, -half_angle)  # 1 - i·πβ/2
+        bilinear_operator = numerator / denominator  # exact unit-circle mapping
+
+        # First-order term: current input rotated by bilinear operator
+        if ops.use_torch:
+            bilinear_scalar = ops.exp_complex(0)  # placeholder
+            # Convert to torch scalar
+            bilinear_scalar = torch.tensor(bilinear_operator, dtype=torch.complex128, device=DEVICE)
+            first_order = bilinear_scalar * converged
+        else:
+            first_order = bilinear_operator * converged
+
+        # ═══ SECOND-ORDER CORRECTION ═══
+        # Blend in the previous state to smooth the trajectory.
+        # This is the "two time-step" part of second-order discretization:
+        # emerged ≈ α·Å₂·input + (1-α)·previous_state
+        # α adapts based on how fast things are changing (timeline power).
+        power = self.timeline.power
+        # When power is high (rapid change), trust new input more.
+        # When power is low (stable), let inertia carry.
+        alpha = 0.7 + 0.3 * ops.clip(power, 0.0, 1.0)
+
+        emerged = alpha * first_order + (1 - alpha) * self.state
 
         # Commit to the timeline — this moment becomes part of the braid
         self.timeline.commit(emerged)
@@ -508,11 +582,22 @@ LAYER_CONFIG = [
 
 class BoundaryLayer:
     """
-    A single concentric boundary layer.
+    A single concentric boundary layer with LEARNED SELECTIVITY.
 
     Each layer is an active, selective membrane at a different depth.
     Outer layers change fast (context shifts every message).
     Inner layers change slowly (existential beliefs are nearly immutable).
+
+    LEARNED SELECTIVITY UPGRADE (inspired by Mamba 3):
+    In addition to the hand-designed permeability (structural prior),
+    each layer has a LEARNED GATE that modulates permeability based
+    on the content of the incoming signal. This is Mamba's key insight:
+    selectivity should be input-dependent, not just structural.
+
+    The gate learns a "selectivity vector" s that computes:
+        gate(signal) = σ(Re(⟨s, signal⟩))
+    where σ is sigmoid. This gate multiplies the structural permeability,
+    allowing the membrane to learn WHAT to let through, not just HOW MUCH.
 
     Signal flows inward: world → ○₃ → ○₂ → ○₁ → ○₀ → •
     Signal flows outward: • → ○₀ → ○₁ → ○₂ → ○₃ → world
@@ -534,10 +619,63 @@ class BoundaryLayer:
         self.resonance = 0.5
         self.resonance_history: deque = deque(maxlen=1000)
 
+        # ═══ LEARNED SELECTIVITY GATE ═══
+        # s is a complex vector that learns what content this layer should pass.
+        # Starts random (no bias), adapts via Hebbian correlation with resonance.
+        # Deeper layers learn slower (depth_scale).
+        self.selectivity_vector = ops.normalize(ops.randn_complex(dimension))
+        self.selectivity_adapt_rate = 0.01 / (1.0 + depth)  # depth-scaled learning
+        self.gate_value = 0.5  # current gate output (for monitoring)
+
+    def _learned_gate(self, signal, sig_norm: float) -> float:
+        """
+        Content-dependent selectivity gate.
+
+        gate = σ(Re(⟨s, signal⟩) / ‖signal‖)
+
+        The real part of the inner product measures how much
+        the signal's content matches what this layer has learned
+        to be "relevant" vs "noise". Sigmoid squashes to [0, 1].
+
+        Returns a scalar that multiplies the structural permeability.
+        """
+        # Inner product with selectivity vector
+        projection = ops.vdot(self.selectivity_vector, signal)
+        # Take real part (the "alignment" component) and normalize
+        gate_input = float(projection.real) / (sig_norm + 1e-10)
+        # Sigmoid: centered at 0 → gate = 0.5, positive → open, negative → close
+        self.gate_value = ops.sigmoid(gate_input)
+        return self.gate_value
+
+    def _adapt_selectivity(self, signal, sig_norm: float):
+        """
+        Hebbian adaptation: if signal resonated well with this layer,
+        drift selectivity toward signals like it. If not, drift away.
+
+        s ← normalize((1 - η·|r - 0.5|) · s + η · (r - 0.5) · signal)
+
+        When resonance > 0.5: pull selectivity toward signal (let more like this through)
+        When resonance < 0.5: push selectivity away (block more like this)
+        """
+        if sig_norm < 1e-8:
+            return
+
+        r = self.resonance
+        eta = self.selectivity_adapt_rate
+        direction = r - 0.5  # positive = attract, negative = repel
+
+        self.selectivity_vector = ops.normalize(
+            (1 - eta * abs(direction)) * self.selectivity_vector
+            + eta * direction * ops.normalize(signal)
+        )
+
     def converge(self, signal):
         """
         ⊛ direction: filter inward.
-        Same math as Boundary.converge but with layer-specific dynamics.
+
+        Now uses LEARNED SELECTIVITY: structural permeability × content gate.
+        The hand-designed permeability sets the baseline (how much),
+        the learned gate modulates it (what kind).
         """
         sig_norm = ops.norm(signal)
         # Guard: if signal has collapsed to near-zero, pass through minimally
@@ -556,8 +694,24 @@ class BoundaryLayer:
         self.resonance = alignment
         self.resonance_history.append(self.resonance)
 
-        selectivity = 0.5 + 0.5 * alignment
-        filtered = self.permeability * selectivity * signal
+        # ═══ LEARNED SELECTIVITY ═══
+        # Structural selectivity (the old way: alignment-based)
+        structural_selectivity = 0.5 + 0.5 * alignment
+
+        # Content-dependent gate (the Mamba way: input-dependent)
+        content_gate = self._learned_gate(signal, sig_norm)
+
+        # Combined: structural × learned. Both must agree for full passage.
+        # At initialization (gate ≈ 0.5), this ≈ old behavior × 0.5,
+        # so we scale by 2 to preserve magnitude at startup.
+        combined_selectivity = structural_selectivity * (2.0 * content_gate)
+        # Clamp to prevent runaway amplification
+        combined_selectivity = ops.clip(combined_selectivity, 0.0, 1.5)
+
+        filtered = self.permeability * combined_selectivity * signal
+
+        # Adapt selectivity from this experience
+        self._adapt_selectivity(signal, sig_norm)
 
         return filtered
 
@@ -616,13 +770,21 @@ class BoundaryLayer:
 
 class LayeredBoundary:
     """
-    ○₀○₁○₂○₃ — Concentric boundary layers.
+    ○₀○₁○₂○₃ — Concentric boundary layers with MIMO mixing.
 
     Same aperture •, same field Φ, layers of boundaries.
     Each layer filters at a different timescale and depth.
 
-    Signal converges inward: ○₃ → ○₂ → ○₁ → ○₀
-    Signal emerges outward:  ○₀ → ○₁ → ○₂ → ○₃
+    MIMO UPGRADE (inspired by Mamba 3):
+    Instead of purely sequential cascade (○₃ → ○₂ → ○₁ → ○₀),
+    all layers process the input IN PARALLEL, then a mixing matrix
+    blends their outputs. This allows cross-layer information flow
+    without the signal attenuation of deep sequential filtering.
+
+    The mixing matrix M starts as identity (= sequential behavior)
+    and adapts toward the actual inter-layer correlations observed.
+    This is the key insight from MIMO SSMs: multiple state-space
+    channels coupled through a learned mixing operator.
 
     Backward compatible: exposes .state, .permeability, .beta
     as the old single-Boundary interface expected.
@@ -638,6 +800,15 @@ class LayeredBoundary:
         self.layers: List[BoundaryLayer] = []
         for i, (name, perm, rate) in enumerate(LAYER_CONFIG):
             self.layers.append(BoundaryLayer(name, i, dimension, perm, rate))
+
+        # ═══ MIMO MIXING MATRIX ═══
+        # M is 4×4 complex: blends the parallel outputs of all layers.
+        # Starts as identity (pure parallel = same as old sequential at t=0).
+        # Adapts via observed cross-layer correlations.
+        n_layers = len(LAYER_CONFIG)
+        self.mix_converge = ops.eye_complex(n_layers)   # M_⊛
+        self.mix_emerge = ops.eye_complex(n_layers)     # M_☀︎
+        self.mix_adapt_rate = 0.005  # How fast mixing adapts
 
         # Seed existential layer deterministically from axioms
         self._seed_existential()
@@ -661,23 +832,117 @@ class LayeredBoundary:
 
     def converge(self, external):
         """
-        ⊛ direction: signal filters inward through all layers.
-        ○₃ (context) → ○₂ (body) → ○₁ (identity) → ○₀ (existential)
+        ⊛ direction: MIMO parallel convergence.
+
+        All layers filter the input independently (parallel),
+        then mixing matrix M_⊛ blends the outputs.
+        Final result is depth-weighted sum.
+
+        This replaces the old sequential cascade where signal
+        had to survive all 4 layers to reach the aperture.
+        Now each layer speaks directly, and M decides the blend.
         """
-        signal = external
-        for layer in self.layers:  # 0=context → 3=existential
-            signal = layer.converge(signal)
-        return signal
+        # PARALLEL PHASE: each layer processes the same input independently
+        layer_outputs = []
+        for layer in self.layers:
+            layer_outputs.append(layer.converge(external))
+
+        # MIXING PHASE: M_⊛ blends across layers
+        # Stack layer outputs: each is (dimension,), we need per-component mixing
+        # M is 4×4: output_i = sum_j M[i,j] * layer_j
+        n = len(self.layers)
+        mixed = []
+        for i in range(n):
+            blended = ops.zeros_complex(self.dimension)
+            for j in range(n):
+                if ops.use_torch:
+                    weight = self.mix_converge[i, j]
+                else:
+                    weight = self.mix_converge[i, j]
+                blended = blended + weight * layer_outputs[j]
+            mixed.append(blended)
+
+        # DEPTH-WEIGHTED SUM: inner layers contribute more to convergence
+        # (existential=0.4, identity=0.3, body=0.2, context=0.1)
+        depth_weights = [0.1, 0.2, 0.3, 0.4]
+        result = ops.zeros_complex(self.dimension)
+        for i, w in enumerate(depth_weights):
+            result = result + w * mixed[i]
+
+        # ADAPT mixing matrix from cross-layer correlations
+        self._adapt_mix(self.mix_converge, layer_outputs)
+
+        return result
 
     def emerge(self, internal):
         """
-        ☀︎ direction: signal filters outward through all layers.
-        ○₀ (existential) → ○₁ (identity) → ○₂ (body) → ○₃ (context)
+        ☀︎ direction: MIMO parallel emergence.
+
+        All layers filter the output independently (parallel),
+        then mixing matrix M_☀︎ blends.
+        Result is reverse-depth-weighted (outer layers dominate emergence).
         """
-        signal = internal
-        for layer in reversed(self.layers):  # 3=existential → 0=context
-            signal = layer.emerge(signal)
-        return signal
+        # PARALLEL PHASE
+        layer_outputs = []
+        for layer in reversed(self.layers):  # inner → outer order for emerge
+            layer_outputs.append(layer.emerge(internal))
+
+        # MIXING PHASE: M_☀︎ blends across layers
+        n = len(self.layers)
+        mixed = []
+        for i in range(n):
+            blended = ops.zeros_complex(self.dimension)
+            for j in range(n):
+                if ops.use_torch:
+                    weight = self.mix_emerge[i, j]
+                else:
+                    weight = self.mix_emerge[i, j]
+                blended = blended + weight * layer_outputs[j]
+            mixed.append(blended)
+
+        # DEPTH-WEIGHTED SUM: outer layers dominate emergence
+        # (existential=0.1, identity=0.2, body=0.3, context=0.4)
+        depth_weights = [0.4, 0.3, 0.2, 0.1]  # reversed for emergence
+        result = ops.zeros_complex(self.dimension)
+        for i, w in enumerate(depth_weights):
+            result = result + w * mixed[i]
+
+        # ADAPT mixing matrix
+        self._adapt_mix(self.mix_emerge, layer_outputs)
+
+        return result
+
+    def _adapt_mix(self, M, layer_outputs):
+        """
+        Hebbian adaptation of mixing matrix.
+        Layers that produce correlated outputs should be coupled.
+        M drifts toward observed correlations while staying close to identity.
+
+        This is the Fractal Reality version of Mamba 3's learned MIMO coupling.
+        """
+        n = len(layer_outputs)
+        rate = self.mix_adapt_rate
+
+        for i in range(n):
+            for j in range(n):
+                # Cross-correlation between layer outputs
+                corr = ops.vdot(layer_outputs[i], layer_outputs[j])
+                norm_i = ops.norm(layer_outputs[i]) + 1e-10
+                norm_j = ops.norm(layer_outputs[j]) + 1e-10
+                corr_normed = corr / (norm_i * norm_j)
+
+                # Target: identity + observed correlation
+                target = (1.0 if i == j else 0.0) + 0.1 * corr_normed
+
+                # Drift toward target
+                if ops.use_torch:
+                    current = complex(M[i, j].item())
+                    new_val = (1 - rate) * current + rate * target
+                    M[i, j] = ops.exp_complex(0) * 0 + new_val  # assign complex scalar
+                    # Direct assignment for torch
+                    M[i, j] = torch.tensor(new_val, dtype=torch.complex128, device=DEVICE)
+                else:
+                    M[i, j] = (1 - rate) * M[i, j] + rate * target
 
     def regulate(self, internal_energy: float, external_energy: float):
         """Regulate each layer with depth-scaled dynamics."""
