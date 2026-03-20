@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⊙ HACKING IN MULTIPLAYER VIDEO GAMES</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --green: #0f0;
+            --yellow: #ff0;
+            --amber: #ffaa00;
+            --bg: #000;
+            --text: #fff;
+            --dim: rgba(255,255,255,0.45);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .container { display: flex; min-height: 100vh; }
+
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0 !important; }
+        }
+
+        nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: 160px; height: 100vh;
+            border-right: 1px solid var(--amber);
+            padding: 20px 12px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        nav .logo {
+            font-size: 28px;
+            color: var(--amber);
+            text-align: center;
+            margin-bottom: 20px;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 8px rgba(255,170,0,0.3); }
+            50% { text-shadow: 0 0 20px rgba(255,170,0,0.7); }
+        }
+
+        nav a {
+            display: block;
+            color: var(--amber);
+            text-decoration: none;
+            padding: 4px 0;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            margin-left: -10px;
+            transition: all 0.15s;
+            font-size: 11px;
+            letter-spacing: 0.03em;
+            opacity: 0.5;
+        }
+
+        nav a:hover, nav a.active {
+            border-left-color: var(--amber);
+            opacity: 1;
+        }
+
+        nav a .num {
+            color: var(--amber);
+            margin-right: 8px;
+        }
+
+        main {
+            margin-left: 160px;
+            padding: 30px 40px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (max-width: 900px) {
+            main { margin-left: 0; padding: 20px 15px; }
+        }
+
+        .top-bar {
+            background: #000;
+            border-bottom: 1px solid var(--amber);
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .top-bar a {
+            color: var(--amber);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+        }
+
+        section {
+            margin-bottom: 60px;
+            padding-top: 10px;
+            max-width: 650px;
+        }
+
+        .section-id {
+            color: var(--amber);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            margin-bottom: 4px;
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--amber);
+        }
+
+        h2 {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #fff;
+            margin: 25px 0 12px;
+        }
+
+        p { margin-bottom: 14px; color: rgba(255,255,255,0.85); }
+
+        .highlight { color: #fff; font-weight: 500; }
+        .cyan { color: var(--cyan); }
+        .magenta { color: var(--magenta); }
+        .green { color: var(--green); }
+        .yellow { color: var(--yellow); }
+        .amber { color: var(--amber); }
+        .dim { color: var(--dim); }
+
+        .hero {
+            padding: 50px 0 50px;
+            max-width: 650px;
+            border-bottom: 1px solid rgba(255,170,0,0.2);
+            margin-bottom: 50px;
+        }
+
+        .hero-label {
+            color: var(--amber);
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            margin-bottom: 16px;
+            opacity: 0.7;
+        }
+
+        .hero-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .hero-subtitle {
+            font-size: 13px;
+            color: var(--cyan);
+            letter-spacing: 0.1em;
+            margin-bottom: 24px;
+        }
+
+        .hero-body {
+            font-size: 14px;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.7);
+            max-width: 560px;
+        }
+
+        .core-claim {
+            border-left: 3px solid var(--amber);
+            padding: 16px 20px;
+            background: rgba(255,170,0,0.04);
+            margin: 24px 0;
+        }
+
+        .claim {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            margin-bottom: 8px;
+        }
+
+        .core-claim p {
+            color: var(--dim);
+            margin-bottom: 0;
+            font-size: 12px;
+        }
+
+        .three-types {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        @media (max-width: 700px) {
+            .three-types { grid-template-columns: 1fr; }
+        }
+
+        .type-box {
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 16px;
+        }
+
+        .type-box.win { border-color: var(--magenta); }
+        .type-box.ruin { border-color: var(--yellow); }
+        .type-box.crash { border-color: var(--cyan); }
+
+        .type-label {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .type-box.win .type-label { color: var(--magenta); }
+        .type-box.ruin .type-label { color: var(--yellow); }
+        .type-box.crash .type-label { color: var(--cyan); }
+
+        .type-desc {
+            font-size: 11px;
+            color: var(--dim);
+            line-height: 1.6;
+        }
+
+        .insight {
+            border: 1px solid rgba(0,255,255,0.2);
+            background: rgba(0,255,255,0.03);
+            padding: 16px 20px;
+            margin: 24px 0;
+        }
+
+        .insight-label {
+            color: var(--cyan);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            margin-bottom: 8px;
+        }
+
+        .insight p {
+            margin-bottom: 0;
+            font-size: 12px;
+        }
+
+        .teaching {
+            border: 1px solid rgba(255,170,0,0.2);
+            background: rgba(255,170,0,0.03);
+            padding: 16px 20px;
+            margin: 24px 0;
+        }
+
+        .teaching p {
+            font-size: 12px;
+            margin-bottom: 0;
+        }
+
+        .equation-block {
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            padding: 16px 0;
+            color: var(--amber);
+            border-top: 1px solid rgba(255,170,0,0.2);
+            border-bottom: 1px solid rgba(255,170,0,0.2);
+            margin: 24px 0;
+        }
+
+        .equation-block span {
+            color: var(--dim);
+            font-size: 11px;
+        }
+
+        footer {
+            max-width: 650px;
+            padding: 40px 0 60px;
+            border-top: 1px solid rgba(255,170,0,0.2);
+            color: var(--dim);
+            font-size: 11px;
+        }
+
+        footer a {
+            color: var(--amber);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <a href="https://fractalreality.ca">⊙ FRACTALREALITY.CA — THE CIRCUMPUNCT FRAMEWORK</a>
+</div>
+
+<div class="container">
+    <nav>
+        <div class="logo">⊙</div>
+        <a href="#thesis"><span class="num">01</span>THESIS</a>
+        <a href="#the-game"><span class="num">02</span>THE GAME</a>
+        <a href="#three-types"><span class="num">03</span>THREE TYPES</a>
+        <a href="#shoulding"><span class="num">04</span>SHOULDING</a>
+        <a href="#the-real-question"><span class="num">05</span>THE REAL QUESTION</a>
+        <a href="#conclusion"><span class="num">06</span>CONCLUSION</a>
+    </nav>
+
+    <main>
+        <div class="hero">
+            <div class="hero-label">ASHMAN ROONZ — FRACTALREALITY.CA</div>
+            <div class="hero-title">HACKING IN MULTIPLAYER<br>VIDEO GAMES</div>
+            <div class="hero-subtitle">Because the Other Players Aren't Real.</div>
+            <p class="hero-body">Take a game with thousands of remaining players. A decade old. The casual players left years ago. The ones who stayed know every map, every mechanic, every counter. And some of them are hacking — not because they need to win, but because the people in their lobbies have stopped being people.</p>
+        </div>
+
+        <!-- 01 THESIS -->
+        <section id="thesis">
+            <div class="section-id">01</div>
+            <h1>THE THESIS</h1>
+
+            <p>Most explanations for why people hack multiplayer games reach for boredom, entitlement, or a desire to cheat. These explanations are not wrong. They are just shallow.</p>
+
+            <p>The deeper structure is this: hacking requires that you have already made a decision — not consciously, not formally — that the other players in your lobby are not fully real. Not persons with their own experience of the game. Objects. Pieces on your board.</p>
+
+            <div class="core-claim">
+                <div class="claim">You cannot ruin someone's experience if you can feel their experience.</div>
+                <p>The hack is not the cause of the problem. The hack is the proof that the problem was already there.</p>
+            </div>
+
+            <p>Other players don't get to have an interior life that matters. The game exists to confirm the hacker. Everyone else is furniture.</p>
+        </section>
+
+        <!-- 02 THE GAME -->
+        <section id="the-game">
+            <div class="section-id">02</div>
+            <h1>THE GAME INSIDE THE GAME</h1>
+
+            <p>Consider what it means to be a legitimate player. The rules are the container — the boundary that makes competition meaningful. You operate inside them. You and your opponent share the same constraint set. The contest is genuine because you're playing the same game.</p>
+
+            <p>The hacker has exited that container. But they haven't stopped playing. They're playing a different game — one where the rules themselves are the object. The rules became their ball.</p>
+
+            <p>This is not, by itself, pathological. The speedrunner who finds a geometry skip — who probed the system and found a seam — and then <span class="green">shares it with the community</span>: that is genuine curiosity doing exactly what curiosity does. Refusing to accept the frame as given.</p>
+
+            <p>But the hacker who uses that seam to guarantee dominance over players who don't know it exists — who uses the exit door to lock everyone else inside — that is something else. The curiosity curdled. What replaced it is <span class="magenta">certainty</span>. The question became a weapon.</p>
+
+            <div class="insight">
+                <div class="insight-label">THE DISTINCTION</div>
+                <p>Curiosity opens toward the unknown. Predation exploits the known. The moment a hacker stops asking "what can this system do?" and starts asking "how do I guarantee I win?" — something closed. What remains is a private guarantee wearing the costume of skill.</p>
+            </div>
+        </section>
+
+        <!-- 03 THREE TYPES -->
+        <section id="three-types">
+            <div class="section-id">03</div>
+            <h1>THREE TYPES OF HACKER</h1>
+
+            <p>The category "video game hacker" covers three distinct motivations. They share the same technical act. They do not share the same problem.</p>
+
+            <div class="three-types">
+                <div class="type-box win">
+                    <div class="type-label">WIN</div>
+                    <div class="type-desc">I must be confirmed as dominant. Other players exist to lose to me. The game is a mirror, not a contest.</div>
+                </div>
+                <div class="type-box ruin">
+                    <div class="type-label">RUIN</div>
+                    <div class="type-desc">If I can't have a meaningful game, neither can you. The shared space becomes a target rather than a home.</div>
+                </div>
+                <div class="type-box crash">
+                    <div class="type-label">CRASH</div>
+                    <div class="type-desc">The game itself should not exist. This is not about winning or losing. It is about erasure. A different, darker motivation entirely.</div>
+                </div>
+            </div>
+
+            <p>All three share one thing: <span class="highlight">the other players stopped being real to them.</span> The win-hacker needs objects to dominate. The ruin-hacker needs objects to hurt. The crash-hacker needs nothing — everyone else has gone dark.</p>
+
+            <p>In a game like Titanfall 2 — ten years old, player counts in the thousands — this takes on a particular weight. The hackers in those lobbies are not new players who found a shortcut. They are veteran players who already won every way the game allows. The question is what happened next.</p>
+        </section>
+
+        <!-- 04 SHOULDING -->
+        <section id="shoulding">
+            <div class="section-id">04</div>
+            <h1>THE SHOULDING PROBLEM</h1>
+
+            <p>The most common response to hackers is moral: <span class="yellow">you should play fair. You should respect the rules. You should think about other players.</span></p>
+
+            <p>This is shoulding — the imposition of an external norm onto someone who has already exited the shared context that makes that norm meaningful. The should is aimed at someone who no longer lives in the same game. It cannot land.</p>
+
+            <div class="core-claim">
+                <div class="claim">A should that lands requires a shared reality to land in.</div>
+                <p>The hacker has already decided the other players aren't fully real. Telling them to respect those players is asking them to care about objects. The moral language assumes the very thing that is missing.</p>
+            </div>
+
+            <p>This does not make shoulding wrong. It makes it <span class="highlight">insufficient</span>. The should correctly names the symptom — unfair play — while missing the actual problem: someone who has stopped feeling the people on the other side.</p>
+
+            <p>The new player who joins Titanfall 2 and gets hacked out of their first ten matches doesn't need the hacker to follow a rule. They need the hacker to actually feel — even briefly — what it is to be the person on the other end of the aimbot. That capacity is what's gone. The rules cannot restore it.</p>
+
+            <div class="insight">
+                <div class="insight-label">WHY THE GAME DIES</div>
+                <p>A dying game with a tiny population of veterans is a fragile ecosystem. The social contract that makes competitive fair play meaningful — the shared agreement that we are all here to test ourselves against each other — is already thin. Hackers don't just ruin individual matches. They destroy the context that makes their own skill meaningful. They are eating the host. No new players means no one to beat. No one to beat means the win is empty. Eventually, they are left in a lobby confirming dominance over no one.</p>
+            </div>
+        </section>
+
+        <!-- 05 THE REAL QUESTION -->
+        <section id="the-real-question">
+            <div class="section-id">05</div>
+            <h1>THE REAL QUESTION</h1>
+
+            <p>The real question is not why people hack. It is: <span class="cyan">when did the other players stop being real?</span></p>
+
+            <p>Genuine curiosity — about the game, about the people in it — is an orientation toward the unknown. It asks: what is actually there? Not just in the mechanics, but in the lobby. Who is that person? What are they here for? Are they a new player who came excited?</p>
+
+            <p>Curiosity cannot be performed. Either you are genuinely open to what is actually there, or you are projecting a surface onto which you confirm your own story. The hacker who aimbot-farms new players is not curious about them. They are not even really seeing them. They are seeing a counter that goes up.</p>
+
+            <div class="teaching">
+                <p>This is what separates the speedrunner who shares a skip from the hacker who farms lobbies. The speedrunner's discovery <span class="green">opens outward</span> — it becomes a gift to the community. The hacker's exploit <span class="magenta">collapses inward</span> — it becomes a private guarantee. One kept asking questions. One stopped.</p>
+            </div>
+
+            <p>The capacity to feel other players as real — to register that there is a person behind that character, a person whose night you are about to ruin — is not a rule. It is what makes you a participant in a shared world rather than a consumer of a private experience wearing the costume of community.</p>
+        </section>
+
+        <!-- 06 CONCLUSION -->
+        <section id="conclusion">
+            <div class="section-id">06</div>
+            <h1>CONCLUSION</h1>
+
+            <p>Hacking in multiplayer games is not fundamentally about cheating. It is about what a person does when they have already — implicitly, maybe without noticing — decided that the other people in the game are not fully real.</p>
+
+            <p>The rules only ever worked because everyone agreed the other players mattered. The moment that agreement breaks, no rule can substitute for it. You cannot legislate the other person back into existence. You cannot patch your way to a community that feels each other.</p>
+
+            <div class="core-claim">
+                <div class="claim">The hack is not the disease. It is proof that someone stopped feeling the room.</div>
+                <p>And a game where players stop feeling the room — where new players arrive, get farmed, and leave before they ever find out what the game could have been — is a game that has begun to die from the inside.</p>
+            </div>
+
+            <p>Titanfall 2 deserved better. So did everyone who came looking for it.</p>
+
+            <p class="dim">For the full framework: <a href="https://fractalreality.ca" style="color:var(--amber);text-decoration:none;">fractalreality.ca</a></p>
+        </section>
+
+        <footer>
+            <p>Ashman Roonz, 2026 — fractalreality.ca</p>
+            <p style="margin-top:8px;"><a href="https://fractalreality.ca">fractalreality.ca</a> · <a href="https://reddit.com/r/Circumpunct">r/Circumpunct</a></p>
+        </footer>
+    </main>
+</div>
+
+<script>
+    const sections = document.querySelectorAll('section, .hero');
+    const navLinks = document.querySelectorAll('nav a');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => link.classList.remove('active'));
+                const id = entry.target.id;
+                const active = document.querySelector(`nav a[href="#${id}"]`);
+                if (active) active.classList.add('active');
+            }
+        });
+    }, { threshold: 0.3 });
+
+    sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
