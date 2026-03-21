@@ -435,7 +435,7 @@
 
   <div class="definition">
     <div class="label">Primitive 1 — Center (•)</div>
-    <p style="margin-bottom:0;">A <strong>center</strong> is that which selects, gates, or focuses. It enacts binary distinction: open/closed, yes/no, this/that. It may be a point, a region, a rule, or a functional. Its minimal realization requires an ordered sequence — a line.</p>
+    <p style="margin-bottom:0;">A <strong>center</strong> is that which receives, converges, or grounds. It is where processed signal arrives — the convergence point. It may be a point, a region, a rule, or a functional. Its minimal realization requires an ordered sequence — a line.</p>
   </div>
 
   <div class="definition">
@@ -445,7 +445,7 @@
 
   <div class="definition">
     <div class="label">Primitive 3 — Boundary (○)</div>
-    <p style="margin-bottom:0;">A <strong>boundary</strong> is that which reflects, constrains, and closes. It enacts inside/outside separation around the field and imposes boundary conditions. Its minimal realization requires one dimension beyond the field — a volume.</p>
+    <p style="margin-bottom:0;">A <strong>boundary</strong> is that which selects, gates, and closes. Made of nested circumpuncts, it enacts inside/outside separation, imposes boundary conditions, and processes incoming signal. Its minimal realization requires one dimension beyond the field — a volume.</p>
   </div>
 </div>
 
@@ -504,13 +504,13 @@
     </div>
   </div>
 
-  <p>These three operators formalize the three components. G is what the center <em>does</em>: it selects, gates, filters. U<sub>T</sub> is what the field <em>does</em>: it evolves, propagates, mediates. R is what the boundary <em>does</em>: it reflects, constrains, returns. The parameter T is the traversal scale — not necessarily clock time. It may be interaction length, step depth, relational distance, or any appropriate measure of "how far the signal travels."</p>
+  <p>These three operators formalize the three components. G is what the boundary <em>does</em>: its nested circumpuncts select, gate, filter. U<sub>T</sub> is what the field <em>does</em>: it evolves, propagates, mediates. R is what the center <em>does</em>: it receives, converges, returns. The parameter T is the traversal scale — not necessarily clock time. It may be interaction length, step depth, relational distance, or any appropriate measure of "how far the signal travels."</p>
 
   <div class="definition">
     <div class="label">Definition 3.2 — The Closure Loop 𝓛</div>
     <p>The <strong>closure loop operator</strong> is the composite:</p>
     <div class="eq"><span class="sym-loop">𝓛</span> := <span class="sym-dot">G</span> ∘ <span class="sym-ring">R</span> ∘ <span class="sym-phi">U<sub>T</sub></span></div>
-    <p style="margin-bottom:0;">This is one complete traversal cycle: the center gates a signal into the field (G), the field propagates it to the boundary (U<sub>T</sub>), the boundary reflects it back (R), and it returns to the center for the next gating. 𝓛 encodes the entire circumpunct dynamic in a single operator.</p>
+    <p style="margin-bottom:0;">This is one complete traversal cycle: the boundary gates incoming signal (G), the field propagates it inward (U<sub>T</sub>), the center receives and returns it (R), and it passes back through the boundary for the next gating. 𝓛 encodes the entire circumpunct dynamic in a single operator.</p>
   </div>
 
   <div class="note">
@@ -617,7 +617,7 @@
 
   <div class="proof">
     <div class="label">Proof</div>
-    <p class="proof-step">1. By Axiom 2, the center emits signal into the field. U<sub>T</sub> propagates it with speed v. By Axiom 3, R reflects it at the boundary. The complete loop has effective closure length L<sub>eff</sub> (Definition 3.4).</p>
+    <p class="proof-step">1. By Axiom 2, the boundary gates signal into the field. U<sub>T</sub> propagates it with speed v. By Axiom 3, R returns it at the center. The complete loop has effective closure length L<sub>eff</sub> (Definition 3.4).</p>
     <p class="proof-step">2. For a wave state φ to satisfy 𝓛(φ) = φ, the phase accumulated over the round-trip L<sub>eff</sub> must be an integer multiple of 2π. This selects wavelengths λ<sub>n</sub> = L<sub>eff</sub>/n, giving frequencies f<sub>n</sub> = nv/L<sub>eff</sub>.</p>
     <p class="proof-step">3. States not commensurate with L<sub>eff</sub> undergo destructive interference on return. Under repeated application of 𝓛, they decay. Only the commensurate modes survive — these are the fixed points.</p>
     <p class="proof-step">4. The fundamental mode (n = 1) has f₁ = v/L<sub>eff</sub>. Higher modes are integer harmonics. The spectral structure depends on L<sub>eff</sub> and v, not on the material that carries the wave.</p>
@@ -772,9 +772,9 @@
   <table>
     <tr>
       <th>Domain</th>
-      <th style="color:var(--aperture);">G (center gates)</th>
+      <th style="color:var(--boundary);">G (boundary gates)</th>
       <th style="color:var(--field);">U<sub>T</sub> (field propagates)</th>
-      <th style="color:var(--boundary);">R (boundary reflects)</th>
+      <th style="color:var(--aperture);">R (center receives)</th>
       <th>L<sub>eff</sub> → Fundamental</th>
     </tr>
     <tr>
@@ -872,7 +872,7 @@
     <p style="text-align:center; font-family:'JetBrains Mono',monospace; font-size:0.92rem; color:var(--gold-bright); margin:0.8rem 0;">
       λ<sup>(p)</sup><sub>n</sub> = g<sub>p</sub> · r<sub>p</sub>² · e<sup>i·4πnL<sub>p</sub>/λ<sub>p</sub></sup> &emsp;&emsp; λ<sup>(ℓ)</sup><sub>n</sub> = g<sub>ℓ</sub> · r₁r₂ · e<sup>i·4πnL<sub>ℓ</sub>/λ<sub>ℓ</sub></sup>
     </p>
-    <p style="margin-bottom:0;">Here g is gain (center gating), r is reflection coefficient (boundary), and the exponential is the propagation phase advance (field transport). The steady-state modes satisfy |λ<sub>n</sub>| = 1, giving standing modes at f<sub>n</sub> = n · v / 2L — integer harmonics of the fundamental, in both systems.</p>
+    <p style="margin-bottom:0;">Here g is gain (boundary gating), r is reception coefficient (center), and the exponential is the propagation phase advance (field transport). The steady-state modes satisfy |λ<sub>n</sub>| = 1, giving standing modes at f<sub>n</sub> = n · v / 2L — integer harmonics of the fundamental, in both systems.</p>
   </div>
 
   <div class="proof">
@@ -916,11 +916,11 @@
   <p>The isomorphism holds only when all axioms are satisfied and all three operators function. A circumpunct system always contains all three components — center, field, and boundary — by definition (Axiom 1). Degenerations occur not when components are <em>absent</em> but when their operators <em>degrade</em>: gating fails to select, propagation fails to carry, reflection fails to return, or passage fails to open. Each degradation produces a characteristic failure signature. These are not speculative — they correspond to known phenomena across every domain, and they are <em>derived</em> from the loop structure.</p>
 
   <div class="failure">
-    <div class="label">Degeneration 1 — Non-Selective Center (G ≈ Id; U<sub>T</sub> and R intact)</div>
-    <p>The center exists but its gating operator passes everything indiscriminately — G reduces to the identity. All frequencies propagate and reflect equally. The loop operates, but with no selectivity: every state survives traversal or none does. 𝓛 has eigenvalues uniformly near 1, producing no mode separation. The result is not silence but <em>undifferentiated saturation</em>.</p>
-    <p><strong>Physical:</strong> Thermal equilibrium. A cavity at temperature T excites all modes equally — blackbody radiation. The cavity is intact, the boundaries reflect, but no frequency is selected over any other. All modes at once, no coherence.</p>
-    <p><strong>Psychological:</strong> Dissociation. The center of awareness exists but does not discriminate. Sensation floods the field without focal selection — experience without witness. Everything arrives; nothing is organized. The aperture is <em>wide open</em> rather than tuned.</p>
-    <p style="margin-bottom:0;"><strong>Relational:</strong> Talking past each other. Signal propagates and returns, but nobody is <em>selecting</em> from a center. All content is treated as equal, so nothing registers as meaningful.</p>
+    <div class="label">Degeneration 1 — Non-Selective Boundary (G ≈ Id; U<sub>T</sub> and R intact)</div>
+    <p>The boundary exists but its gating operator passes everything indiscriminately — G reduces to the identity. All frequencies propagate and converge equally. The loop operates, but with no selectivity: every state survives traversal or none does. 𝓛 has eigenvalues uniformly near 1, producing no mode separation. The result is not silence but <em>undifferentiated saturation</em>.</p>
+    <p><strong>Physical:</strong> Thermal equilibrium. A cavity at temperature T excites all modes equally — blackbody radiation. The cavity is intact, the center receives, but no frequency is selected over any other. All modes at once, no coherence.</p>
+    <p><strong>Psychological:</strong> Dissociation. The boundary exists but does not discriminate. Sensation floods the field without selective gating — experience without processing. Everything arrives; nothing is organized. The boundary is <em>wide open</em> rather than tuned.</p>
+    <p style="margin-bottom:0;"><strong>Relational:</strong> Talking past each other. Signal propagates and converges, but the boundary isn't <em>selecting</em>. All content is treated as equal, so nothing registers as meaningful.</p>
   </div>
 
   <div class="failure">
@@ -932,27 +932,27 @@
   </div>
 
   <div class="failure">
-    <div class="label">Degeneration 3 — Non-Reflective Boundary (R ≈ 0, transmissive; G and U<sub>T</sub> intact)</div>
-    <p>The boundary exists but transmits rather than reflects — R ≈ 0, allowing signal to pass through and radiate outward. The center gates, the field propagates, but nothing returns. 𝓛 becomes a one-way operator with no invariant states. Energy leaves the system at every traversal. No fixed point, no standing mode, no coherence.</p>
-    <p><strong>Physical:</strong> Free-space radiation. An antenna with functioning electronics and propagation medium, but its housing is transparent to the signal. Energy radiates outward without return. The boundary is present as structure but absent as reflector.</p>
-    <p><strong>Psychological:</strong> Mania. Unbounded expression. The center selects, the field carries, but no container reflects energy back into form. Experience pours outward with no return. No standing pattern forms — only escalating output.</p>
+    <div class="label">Degeneration 3 — Non-Receiving Center (R ≈ 0; G and U<sub>T</sub> intact)</div>
+    <p>The center exists but does not receive or return — R ≈ 0. The boundary gates, the field propagates, but nothing converges. 𝓛 becomes a one-way operator with no invariant states. Energy leaves the system at every traversal. No fixed point, no standing mode, no coherence.</p>
+    <p><strong>Physical:</strong> Free-space radiation. An antenna with functioning boundary and propagation medium, but no convergence point. Energy radiates outward without return. The center is present as structure but absent as receiver.</p>
+    <p><strong>Psychological:</strong> Mania. Unbounded expression. The boundary gates, the field carries, but nothing converges at the center — no reception, no return. Experience pours outward with no return. No standing pattern forms — only escalating output.</p>
     <p style="margin-bottom:0;"><strong>Relational:</strong> Monologue. One party emits endlessly through a shared medium, but the other's boundary is transparent — signal passes through without return. Not absorbed (that's Degeneration 5) — simply not reflected. The listener is present but offers no surface.</p>
   </div>
 
   <div class="failure">
-    <div class="label">Degeneration 4 — Sealed Center Return (G blocks return; R and U<sub>T</sub> intact)</div>
-    <p>All three operators nominally function — but G blocks on the <em>return</em> pass. The center gates outbound signal normally; the field propagates; the boundary reflects. But when the reflected signal arrives back at •, the gate refuses re-entry. The full loop 𝓛 = G ∘ R ∘ U<sub>T</sub> fails at its final step. However, a <strong>sub-loop</strong> R ∘ U<sub>T</sub> still operates: signal bounces between field and boundary without ever re-binding at the center. This produces <em>reverberation without coherence</em> — echo modes in Φ at approximately doubled frequency, because the sub-loop traversal path (boundary → field → boundary) is roughly half the full closure path (center → field → boundary → field → center).</p>
-    <p>Formally: 𝓛 is blocked, but the partial operator 𝓛<sub>sub</sub> = R ∘ U<sub>T</sub> has its own spectral structure — modes selected by boundary geometry alone, without center-gating. These are <em>echo modes</em>, not coherent modes. They persist (R reflects, so 𝓛<sub>sub</sub><sup>n</sup> ≠ 0) but never stabilize into source-selected standing waves. The system is active but incoherent: busy without purpose.</p>
-    <p><strong>Physical:</strong> A cavity with functioning reflective walls and propagation medium, but the excitation port is blocked on return. Energy enters, bounces between walls, but cannot couple back through the source aperture. The cavity rings with echo modes that persist but never lock to the source frequency.</p>
-    <p><strong>Psychological:</strong> The narcissistic configuration. The center channel (aperture) is sealed — not absent, but <em>blocked on return</em>. Signal enters the field and the boundary returns it, but it cannot arrive at • for coherent reception. Energy reverberates in Φ as rumination: the "busy brain" pattern of high-beta trapped reverberations at ~26 Hz (echo at 2× the suppressed SMR fundamental of ~13 Hz). The center exists but won't re-open. This is geometrically distinct from Degeneration 1 (center open but non-selective) — the structure gates outbound but refuses inbound. The passage is one-way.</p>
-    <p style="margin-bottom:0;"><strong>Relational:</strong> The functional-only relationship. The boundary channel works — provision occurs, logistics function, roles are maintained. But the center channel is blocked on return. Resonant love (aperture-to-aperture presence) cannot complete the loop. The relationship reverberates with activity but never achieves coherence. Signal returns, but not to the right place.</p>
+    <div class="label">Degeneration 4 — Sealed Boundary Return (G blocks return; R and U<sub>T</sub> intact)</div>
+    <p>All three operators nominally function — but G blocks on the <em>return</em> pass. The boundary gates inbound signal normally; the field propagates; the center receives. But when the return signal passes back through ○, the gate refuses re-entry. The full loop 𝓛 = G ∘ R ∘ U<sub>T</sub> fails at its final step. However, a <strong>sub-loop</strong> R ∘ U<sub>T</sub> still operates: signal bounces between field and center without ever completing the boundary's outbound gating. This produces <em>reverberation without coherence</em> — echo modes in Φ at approximately doubled frequency, because the sub-loop traversal path (center → field → center) is roughly half the full closure path (boundary → field → center → field → boundary).</p>
+    <p>Formally: 𝓛 is blocked, but the partial operator 𝓛<sub>sub</sub> = R ∘ U<sub>T</sub> has its own spectral structure — modes selected by center reception alone, without boundary-gating on return. These are <em>echo modes</em>, not coherent modes. They persist (R receives, so 𝓛<sub>sub</sub><sup>n</sup> ≠ 0) but never stabilize into fully-gated standing waves. The system is active but incoherent: busy without purpose.</p>
+    <p><strong>Physical:</strong> A cavity with functioning propagation medium and convergence point, but the boundary is blocked on return. Energy enters, converges at center, but cannot couple back through the boundary. The cavity rings with echo modes that persist but never lock to the gated frequency.</p>
+    <p><strong>Psychological:</strong> The narcissistic configuration. The boundary's gate is sealed on return — not absent, but <em>blocked outbound</em>. Signal enters the field and converges at the center, but the boundary won't pass it back outward. Energy reverberates in Φ as rumination: the "busy brain" pattern of high-beta trapped reverberations at ~26 Hz (echo at 2× the suppressed SMR fundamental of ~13 Hz). The boundary exists but won't re-open outward. This is geometrically distinct from Degeneration 1 (boundary open but non-selective) — the structure gates inbound but refuses outbound. The passage is one-way.</p>
+    <p style="margin-bottom:0;"><strong>Relational:</strong> The functional-only relationship. The field channel works — provision occurs, logistics function, roles are maintained. But the boundary's gate is blocked on return. Resonant love (center-to-center presence) cannot complete the loop. The relationship reverberates with activity but never achieves coherence. Signal converges, but never returns.</p>
   </div>
 
   <div class="failure">
-    <div class="label">Degeneration 5 — Absorptive Boundary (R absorbs; G and U<sub>T</sub> intact)</div>
-    <p>The boundary exists and intercepts signal, but absorbs rather than reflects — R damps rather than returns. The center gates, the field propagates, but the boundary converts signal to heat (or equivalent dissipation) instead of sending it back. The system runs down exponentially: 𝓛<sup>n</sup> → 0 as n → ∞. Unlike Degeneration 3 (transparent boundary, signal radiates outward) and Degeneration 4 (signal reverberates in sub-loop), here the field goes <em>quiet</em>. No echo, no radiation — just extinction.</p>
-    <p><strong>Physical:</strong> An anechoic chamber. Walls exist and intercept all signal, but their material absorbs rather than reflects. No echo, no standing mode, no resonance. Energy enters and disappears.</p>
-    <p><strong>Psychological:</strong> Emotional numbing. Burnout. Flat affect. Awareness exists (center), expression occurs (field propagation), but the boundary absorbs everything and returns nothing — no echo, no feedback, no felt response. Unlike the busy brain of Degeneration 4, there is <em>no rumination</em>. The field goes silent. The person speaks into a void and hears nothing back.</p>
+    <div class="label">Degeneration 5 — Absorptive Center (R absorbs; G and U<sub>T</sub> intact)</div>
+    <p>The center exists and receives signal, but absorbs rather than returns — R damps rather than returns. The boundary gates, the field propagates, but the center converts signal to heat (or equivalent dissipation) instead of sending it back. The system runs down exponentially: 𝓛<sup>n</sup> → 0 as n → ∞. Unlike Degeneration 3 (non-receiving center, signal dissipates) and Degeneration 4 (signal reverberates in sub-loop), here the field goes <em>quiet</em>. No echo, no radiation — just extinction.</p>
+    <p><strong>Physical:</strong> An anechoic chamber. The center absorbs all signal that arrives. No echo, no standing mode, no resonance. Energy enters and disappears at the convergence point.</p>
+    <p><strong>Psychological:</strong> Emotional numbing. Burnout. Flat affect. The boundary gates (signal enters), expression occurs (field propagation), but the center absorbs everything and returns nothing — no echo, no feedback, no felt response. Unlike the busy brain of Degeneration 4, there is <em>no rumination</em>. The field goes silent. The person receives into a void.</p>
     <p style="margin-bottom:0;"><strong>Relational:</strong> The dead relationship. One party sends signal into a space whose boundary absorbs everything and returns nothing. Not the functional reverberation of Degeneration 4, not the transparent pass-through of Degeneration 3 — just silence. The wall is there. It swallows sound.</p>
   </div>
 
