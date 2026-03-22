@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Circumpunct Resonance Device — Design Spec v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=JetBrains+Mono:wght@300;400;500&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #000000;
+    --panel: #06060a;
+    --card: #0a0a10;
+    --card-border: #1a1a24;
+    --amber: #d4a855;
+    --amber-dim: #7a5a28;
+    --amber-glow: rgba(212,168,85,0.1);
+    --cyan: #5ecece;
+    --cyan-dim: #2a5a5a;
+    --cyan-glow: rgba(94,206,206,0.08);
+    --red: #e05555;
+    --red-dim: #6a2828;
+    --magenta: #c76dba;
+    --green: #6dba6d;
+    --text: #c0b080;
+    --text-dim: #605848;
+    --text-bright: #e8d8b0;
+    --wire: #888070;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* NAV */
+nav {
+    position: fixed;
+    left: 0; top: 0;
+    width: 200px;
+    height: 100vh;
+    background: var(--panel);
+    border-right: 1px solid var(--card-border);
+    padding: 1.5rem 0.8rem;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+nav .logo {
+    font-family: 'Cinzel', serif;
+    color: var(--amber);
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 0.2rem;
+}
+
+nav .version {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--card-border);
+}
+
+nav a {
+    display: block;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.65rem;
+    padding: 0.35rem 0.5rem;
+    margin-bottom: 0.15rem;
+    border-radius: 3px;
+    transition: all 0.25s;
+    letter-spacing: 0.02em;
+}
+
+nav a:hover { color: var(--amber); background: var(--amber-glow); }
+nav a .n { color: var(--amber-dim); margin-right: 0.4rem; }
+nav .nav-group { color: var(--amber-dim); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 1rem; margin-bottom: 0.4rem; padding-left: 0.5rem; }
+
+/* MAIN */
+main {
+    margin-left: 200px;
+    padding: 2.5rem 3rem 4rem;
+    max-width: 1000px;
+}
+
+h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    color: var(--amber);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+}
+
+h1 .sub {
+    display: block;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 400;
+}
+
+h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    color: var(--amber);
+    font-weight: 600;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--card-border);
+}
+
+h2 .num { color: var(--amber-dim); font-size: 0.7rem; display: block; margin-bottom: 0.2rem; letter-spacing: 0.15em; }
+
+h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--cyan);
+    margin-top: 1.8rem;
+    margin-bottom: 0.6rem;
+}
+
+p { margin-bottom: 0.8rem; font-family: 'Cormorant Garamond', serif; font-size: 15px; line-height: 1.7; }
+
+/* CARDS */
+.card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 1.2rem 1.5rem;
+    margin: 1rem 0;
+}
+
+.card .card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: var(--amber);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--card-border);
+}
+
+/* TABLES */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    font-size: 0.75rem;
+}
+
+th {
+    text-align: left;
+    color: var(--amber-dim);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.5rem 0.8rem;
+    border-bottom: 2px solid var(--card-border);
+    white-space: nowrap;
+}
+
+td {
+    padding: 0.45rem 0.8rem;
+    border-bottom: 1px solid var(--card-border);
+    vertical-align: top;
+}
+
+tr:hover td { background: rgba(212,168,85,0.03); }
+
+.val { color: var(--text-bright); }
+.unit { color: var(--text-dim); }
+.note { color: var(--cyan-dim); font-size: 0.65rem; }
+
+/* TAGS */
+.t-aper { color: var(--red); }
+.t-field { color: var(--cyan); }
+.t-bound { color: var(--amber); }
+.t-rot { color: var(--magenta); }
+.t-good { color: var(--green); }
+
+/* CODE */
+pre {
+    background: var(--panel);
+    border: 1px solid var(--card-border);
+    border-radius: 5px;
+    padding: 1rem 1.2rem;
+    font-size: 0.72rem;
+    line-height: 1.65;
+    overflow-x: auto;
+    margin: 0.8rem 0;
+}
+
+/* CALLOUTS */
+.callout {
+    border-left: 3px solid var(--amber);
+    background: var(--amber-glow);
+    padding: 0.8rem 1.2rem;
+    margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.callout.warn {
+    border-color: var(--red);
+    background: rgba(224,85,85,0.08);
+}
+
+.callout .label {
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+}
+
+.callout.warn .label { color: var(--red); }
+
+/* SCHEMATIC AREA */
+.schematic-wrap {
+    background: var(--panel);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.schematic-wrap canvas {
+    display: block;
+    margin: 0 auto;
+}
+
+.schematic-label {
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    margin-top: 0.6rem;
+}
+
+/* BOM */
+.bom-total {
+    text-align: right;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+    color: var(--amber);
+    border-top: 2px solid var(--amber-dim);
+}
+
+/* DIVIDER */
+.div { text-align: center; color: var(--amber-dim); margin: 2.5rem 0; letter-spacing: 0.8em; font-size: 0.7rem; }
+
+/* RESPONSIVE */
+@media (max-width: 800px) {
+    nav { display: none; }
+    main { margin-left: 0; padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">⊙</div>
+    <div class="version">RESONANCE DEVICE v1.0</div>
+    
+    <div class="nav-group">Overview</div>
+    <a href="#overview"><span class="n">01</span> Concept</a>
+    <a href="#principle"><span class="n">02</span> Operating Principle</a>
+    
+    <div class="nav-group">Mechanical</div>
+    <a href="#shell"><span class="n">03</span> Teardrop Shell</a>
+    <a href="#resonator"><span class="n">04</span> Resonator Ball</a>
+    <a href="#iris"><span class="n">05</span> Variable Iris</a>
+    
+    <div class="nav-group">Electrical</div>
+    <a href="#coils"><span class="n">06</span> Coil Specs</a>
+    <a href="#schematic"><span class="n">07</span> Circuit Schematic</a>
+    <a href="#esp32"><span class="n">08</span> ESP32 Pinout</a>
+    <a href="#drive"><span class="n">09</span> Drive Modes</a>
+    
+    <div class="nav-group">Build</div>
+    <a href="#bom"><span class="n">10</span> Bill of Materials</a>
+    <a href="#assembly"><span class="n">11</span> Assembly</a>
+    <a href="#measurement"><span class="n">12</span> Measurement Protocol</a>
+    <a href="#predictions"><span class="n">13</span> Predictions</a>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════ -->
+<!-- HEADER -->
+<!-- ═══════════════════════════════ -->
+
+<h1>Circumpunct Resonance Device
+    <span class="sub">Design Specification &amp; Build Document · v1.0 · March 14, 2026</span>
+</h1>
+
+<p>A sealed teardrop container with six external electromagnetic coils suspending and driving a magnetic sphere at the center. One variable aperture at the tip. The device converts ambient and driven electromagnetic field energy into concentrated, modulated output through geometric convergence and mechanical resonance.</p>
+
+<div class="div">⊙</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- 01 CONCEPT -->
+<!-- ═══════════════════════════════ -->
+
+<section id="overview">
+<h2><span class="num">§01</span> Concept</h2>
+
+<p>Easy in. Convert. Hard out. Electromagnetic field passes freely through the non-magnetic shell from all directions (large input area). A magnetic sphere at the center attracts and absorbs this field energy, converting it to mechanical motion (vibration, spin, wobble). The teardrop geometry funnels the converted energy toward a single aperture at the tip (tiny output area). The ratio of input surface to output aperture determines the geometric compression.</p>
+
+<div class="card">
+<div class="card-title">Core Architecture</div>
+<pre>
+SHELL (○ boundary)
+  Teardrop shape, sealed, non-magnetic
+  Transparent to electromagnetic field
+  Opaque to mechanical energy (traps it inside)
+
+INTERIOR (Φ field)
+  Medium: air (v1), other gases or liquids (v2+)
+  Carries mechanical energy from ball to aperture
+  
+BALL (• aperture / attractor)
+  Permanent magnet, levitated at center
+  Attracts field from all directions through walls
+  Converts EM energy → mechanical motion
+  Modulates the medium through vibration and spin
+
+COILS (drive / feed)
+  4 equatorial: spin + horizontal position
+  2 axial: vertical position + axial vibration
+  All on OUTSIDE of shell, no penetrations needed
+
+IRIS (output gate)
+  Variable diameter hole at teardrop tip
+  Only exit for converted energy
+  Size determines resonant coupling + selectivity
+</pre>
+</div>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 02 PRINCIPLE -->
+<!-- ═══════════════════════════════ -->
+
+<section id="principle">
+<h2><span class="num">§02</span> Operating Principle</h2>
+
+<h3>Energy Path</h3>
+<pre>
+Electricity → 6 coils → oscillating magnetic field
+  → passes through non-magnetic shell
+  → drives levitated magnetic ball
+  → ball vibrates / spins / wobbles
+  → mechanical energy in medium (vortex, pressure)
+  → teardrop taper concentrates toward tip
+  → variable iris gates the output
+  → emission (sound, pressure, EM, TBD)
+</pre>
+
+<h3>Two Conversions (Two i Rotations)</h3>
+<div class="card">
+<div class="card-title">Conversion Chain</div>
+<table>
+<tr><th>Stage</th><th>Input</th><th>Process</th><th>Output</th><th>Rotation</th></tr>
+<tr><td>1</td><td>EM field</td><td>Ball absorbs, moves</td><td>Mechanical</td><td class="t-rot">i¹ (field → matter)</td></tr>
+<tr><td>2</td><td>Mechanical</td><td>Vortex at aperture</td><td>Emission</td><td class="t-rot">i² (matter → radiation)</td></tr>
+</table>
+<p class="note" style="margin-top:0.5rem;">i² = −1. Output is structurally opposite to input. What goes in as magnetic field comes out as something else.</p>
+</div>
+
+<h3>Three Controls</h3>
+<table>
+<tr><th>Control</th><th>Hardware</th><th>What It Tunes</th></tr>
+<tr><td>Spin frequency</td><td>4 equatorial coils, phase-shifted</td><td>Vortex speed, output frequency</td></tr>
+<tr><td>Ball position</td><td>2 axial coils, DC bias</td><td>Coupling strength to aperture</td></tr>
+<tr><td>Aperture size</td><td>Mechanical iris at tip</td><td>Resonant mode selection, impedance</td></tr>
+</table>
+</section>
+
+<div class="div">· · ·</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- 03 SHELL -->
+<!-- ═══════════════════════════════ -->
+
+<section id="shell">
+<h2><span class="num">§03</span> Teardrop Shell</h2>
+
+<div class="schematic-wrap">
+<canvas id="shellDiagram" width="680" height="400"></canvas>
+<div class="schematic-label">FIGURE 1 — Shell profile with dimensions (cross-section)</div>
+</div>
+
+<h3>Dimensions</h3>
+<table>
+<tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
+<tr><td>Overall length</td><td class="val">200 mm</td><td>Tip to crown</td></tr>
+<tr><td>Spherical diameter</td><td class="val">120 mm</td><td>Widest point (round end)</td></tr>
+<tr><td>Taper half-angle</td><td class="val">~18°</td><td>From axis to wall at taper section</td></tr>
+<tr><td>Tip opening</td><td class="val">1–15 mm</td><td>Variable (iris)</td></tr>
+<tr><td>Wall thickness</td><td class="val">3–5 mm</td><td>Uniform</td></tr>
+<tr><td>Interior volume</td><td class="val">~600 mL</td><td>Approximately</td></tr>
+</table>
+
+<h3>Material Options</h3>
+<table>
+<tr><th>Material</th><th>Pros</th><th>Cons</th><th>EM Transparent?</th></tr>
+<tr><td class="val">Borosilicate glass</td><td>Visual, precise, chemically inert</td><td>Fragile, needs glassblower</td><td class="t-good">Yes</td></tr>
+<tr><td class="val">Acrylic (PMMA)</td><td>Cheap, machinable, transparent</td><td>Scratches, limited heat</td><td class="t-good">Yes</td></tr>
+<tr><td class="val">3D-printed PLA/PETG</td><td>Fast prototype, any shape</td><td>Porous, rough interior</td><td class="t-good">Yes</td></tr>
+<tr><td class="val">Ceramic (alumina)</td><td>Heat resistant, rigid</td><td>Expensive, hard to shape</td><td class="t-good">Yes</td></tr>
+<tr><td class="val">Stainless steel</td><td>Strong, sealed</td><td class="t-aper">Partially blocks EM field</td><td>Partial</td></tr>
+</table>
+
+<div class="callout">
+<div class="label">V1 Recommendation</div>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">3D-printed PETG for first prototype. Fast, cheap, iterable. Coat interior with smooth epoxy to reduce surface roughness. Upgrade to glass for v2 once dimensions are confirmed.</p>
+</div>
+
+<h3>Shell Geometry Notes</h3>
+<p>The shell is composed of two sections: a hemisphere (round end, where coils mount) and a cone-to-tip taper. The junction between hemisphere and taper should be smooth, no sharp internal edge. Internal filleting at this junction prevents turbulence dead zones.</p>
+<p>The tip is a separate piece that threads or press-fits onto the taper, allowing the iris mechanism to be swapped or adjusted without modifying the main shell.</p>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 04 RESONATOR -->
+<!-- ═══════════════════════════════ -->
+
+<section id="resonator">
+<h2><span class="num">§04</span> Resonator Ball</h2>
+
+<table>
+<tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
+<tr><td>Material</td><td class="val">N52 Neodymium (NdFeB)</td><td>Strongest available permanent magnet</td></tr>
+<tr><td>Shape</td><td class="val">Sphere</td><td>Omnidirectional coupling, no preferred axis</td></tr>
+<tr><td>Diameter</td><td class="val">10 mm</td><td>Start here. Test 6, 8, 12, 15 mm variants.</td></tr>
+<tr><td>Mass</td><td class="val">~4 g (10mm)</td><td>Density ≈ 7.5 g/cm³</td></tr>
+<tr><td>Surface field</td><td class="val">~0.6 T (N52, 10mm)</td><td>Strong enough for levitation</td></tr>
+<tr><td>Coating</td><td class="val">Nickel (standard) or gold</td><td>Prevents oxidation</td></tr>
+<tr><td>Resonant freq (mechanical)</td><td class="val">~2–8 kHz</td><td>Ring frequency when struck; depends on diameter</td></tr>
+</table>
+
+<h3>Alternative Resonators (for later testing)</h3>
+<table>
+<tr><th>Variant</th><th>Material</th><th>Why Test It</th></tr>
+<tr><td>Magnetized steel</td><td class="val">Chrome steel ball bearing</td><td>Different damping, different resonance</td></tr>
+<tr><td>Hollow sphere</td><td class="val">Thin NdFeB shell</td><td>Internal cavity adds Helmholtz mode</td></tr>
+<tr><td>Crystal-coated</td><td class="val">NdFeB + quartz shell</td><td>Lattice modulation at atomic scale</td></tr>
+<tr><td>Composite</td><td class="val">Ferrite core + copper shell</td><td>Separates magnetic and conductive function</td></tr>
+</table>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 05 IRIS -->
+<!-- ═══════════════════════════════ -->
+
+<section id="iris">
+<h2><span class="num">§05</span> Variable Iris</h2>
+
+<p>A mechanical iris diaphragm at the tip of the teardrop, continuously adjustable from fully open (15 mm) to nearly closed (~0.5 mm). Controls the resonant coupling between interior cavity and exterior.</p>
+
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>Type</td><td class="val">Multi-blade iris diaphragm (camera-style) or stepped drill inserts</td></tr>
+<tr><td>Range</td><td class="val">0.5 mm – 15 mm diameter</td></tr>
+<tr><td>Actuation</td><td class="val">Manual ring (v1) or servo-driven (v2)</td></tr>
+<tr><td>Mount</td><td class="val">Threaded tip cap, replaceable</td></tr>
+</table>
+
+<div class="callout">
+<div class="label">V1 Simplification</div>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">For v1, skip the iris. Use a set of 3D-printed tip caps with fixed hole sizes: 1mm, 2mm, 3mm, 5mm, 8mm, 12mm, fully open. Swap caps to change aperture. Cheaper and faster than building a real iris.</p>
+</div>
+</section>
+
+<div class="div">· · ·</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- 06 COILS -->
+<!-- ═══════════════════════════════ -->
+
+<section id="coils">
+<h2><span class="num">§06</span> Coil Specifications</h2>
+
+<div class="schematic-wrap">
+<canvas id="coilLayout" width="680" height="420"></canvas>
+<div class="schematic-label">FIGURE 2 — Coil placement (front view + side view)</div>
+</div>
+
+<h3>Equatorial Coils (×4) — Spin + Horizontal Hold</h3>
+<table>
+<tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
+<tr><td>Designation</td><td class="val">EQ-1 (0°), EQ-2 (90°), EQ-3 (180°), EQ-4 (270°)</td><td>Around equator of sphere section</td></tr>
+<tr><td>Core</td><td class="val">Ferrite rod, 10mm × 30mm</td><td>Focuses field toward center</td></tr>
+<tr><td>Wire</td><td class="val">28 AWG enameled copper</td><td>Good balance of turns vs resistance</td></tr>
+<tr><td>Turns</td><td class="val">200</td><td>~4 layers on 10mm core</td></tr>
+<tr><td>Inductance</td><td class="val">~2–5 mH (with ferrite)</td><td>Measure after winding</td></tr>
+<tr><td>DC resistance</td><td class="val">~3–5 Ω</td><td>Measure after winding</td></tr>
+<tr><td>Drive voltage</td><td class="val">12V peak</td><td>From H-bridge</td></tr>
+<tr><td>Drive current</td><td class="val">~1–2 A peak</td><td>Pulsed, not continuous</td></tr>
+<tr><td>Mounting</td><td class="val">Epoxied to shell exterior</td><td>Core axis aimed at center of shell</td></tr>
+</table>
+
+<h3>Axial Coils (×2) — Vertical Hold + Axial Vibration</h3>
+<table>
+<tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
+<tr><td>Designation</td><td class="val">AX-TOP (crown), AX-BOT (taper side)</td><td>Along teardrop axis</td></tr>
+<tr><td>Core</td><td class="val">Ferrite rod, 10mm × 40mm</td><td>Longer core for reach through taper</td></tr>
+<tr><td>Wire</td><td class="val">28 AWG enameled copper</td><td>Same as equatorial</td></tr>
+<tr><td>Turns</td><td class="val">250</td><td>More turns for stronger axial hold</td></tr>
+<tr><td>Inductance</td><td class="val">~3–7 mH</td><td>Measure after winding</td></tr>
+<tr><td>Drive voltage</td><td class="val">12V peak</td><td>From H-bridge</td></tr>
+<tr><td>AX-TOP position</td><td class="val">Crown of sphere section</td><td>Directly above center</td></tr>
+<tr><td>AX-BOT position</td><td class="val">On taper, ~60mm from tip</td><td>Below center, pulling ball down-axis</td></tr>
+</table>
+
+<h3>Coil Axis Alignment</h3>
+<pre>
+              AX-TOP
+                │
+                │  (vertical axis)
+                │
+    EQ-2 ──────●────── EQ-4    (Y axis)
+              ╱ │ ╲
+           ╱   │   ╲
+    EQ-1 ─     │     ─ EQ-3    (X axis)
+               │
+               │
+             AX-BOT
+               │
+               ▽
+            [iris/tip]
+
+All 6 coil axes pass through the geometric center
+of the spherical section — the levitation point.
+</pre>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 07 SCHEMATIC -->
+<!-- ═══════════════════════════════ -->
+
+<section id="schematic">
+<h2><span class="num">§07</span> Circuit Schematic</h2>
+
+<div class="schematic-wrap">
+<canvas id="circuitSchematic" width="680" height="520"></canvas>
+<div class="schematic-label">FIGURE 3 — Electrical schematic (simplified)</div>
+</div>
+
+<h3>Circuit Architecture</h3>
+<pre>
+┌─────────────────────────────────────────────────┐
+│                   12V POWER SUPPLY               │
+│                   (5A minimum)                   │
+└────────┬──────────────────────────────┬──────────┘
+         │                              │
+    ┌────┴────┐                    ┌────┴────┐
+    │  5V REG │                    │ 12V BUS │
+    │ (ESP32) │                    │ (coils) │
+    └────┬────┘                    └────┬────┘
+         │                              │
+    ┌────┴────┐         ┌───────────────┼───────────────┐
+    │  ESP32  │         │               │               │
+    │         │    ┌────┴────┐    ┌─────┴─────┐   ┌─────┴─────┐
+    │ GPIO12 ─┼───→│ H-BRIDGE│   │ H-BRIDGE  │   │ H-BRIDGE  │
+    │ GPIO13 ─┼───→│   #1    │   │    #2     │   │    #3     │
+    │ GPIO14 ─┼───→│ EQ-1    │   │  EQ-2     │   │  EQ-3     │
+    │ GPIO15 ─┼───→│         │   │           │   │           │
+    │ GPIO16 ─┼───→├─────────┤   ├───────────┤   ├───────────┤
+    │ GPIO17 ─┼───→│ H-BRIDGE│   │ H-BRIDGE  │   │ H-BRIDGE  │
+    │ GPIO18 ─┼───→│   #4    │   │    #5     │   │    #6     │
+    │ GPIO19 ─┼───→│ EQ-4    │   │  AX-TOP   │   │  AX-BOT   │
+    │         │    └─────────┘   └───────────┘   └───────────┘
+    │         │
+    │ GPIO34 ←┼─── PICKUP COIL (at tip, sense output)
+    │ GPIO35 ←┼─── HALL SENSOR  (near shell, sense ball position)
+    │ GPIO32 ←┼─── MICROPHONE   (at tip, acoustic output)
+    │         │
+    │ GPIO25 ─┼──→ SERVO (iris, v2 only)
+    └─────────┘
+</pre>
+
+<h3>H-Bridge Module</h3>
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>Module</td><td class="val">L298N dual H-bridge (3 modules = 6 channels)</td></tr>
+<tr><td>Voltage</td><td class="val">12V supply</td></tr>
+<tr><td>Current</td><td class="val">2A per channel continuous</td></tr>
+<tr><td>Control</td><td class="val">2 direction pins + 1 PWM (enable) per channel</td></tr>
+<tr><td>Alternative</td><td class="val">BTS7960 for higher current (if needed)</td></tr>
+</table>
+
+<div class="callout warn">
+<div class="label">⚠ Important</div>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Flyback diodes are built into L298N modules. If winding your own H-bridge, add flyback diodes across each coil or the back-EMF will destroy your transistors. Coils are inductive loads, they fight current changes.</p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 08 ESP32 -->
+<!-- ═══════════════════════════════ -->
+
+<section id="esp32">
+<h2><span class="num">§08</span> ESP32 Pin Assignment</h2>
+
+<table>
+<tr><th>GPIO</th><th>Function</th><th>Type</th><th>Connected To</th></tr>
+<tr><td class="val">12</td><td>EQ-1 IN1</td><td>Output</td><td>H-Bridge 1A dir</td></tr>
+<tr><td class="val">13</td><td>EQ-1 IN2</td><td>Output</td><td>H-Bridge 1A dir</td></tr>
+<tr><td class="val">14</td><td>EQ-2 IN1</td><td>Output</td><td>H-Bridge 1B dir</td></tr>
+<tr><td class="val">15</td><td>EQ-2 IN2</td><td>Output</td><td>H-Bridge 1B dir</td></tr>
+<tr><td class="val">16</td><td>EQ-3 IN1</td><td>Output</td><td>H-Bridge 2A dir</td></tr>
+<tr><td class="val">17</td><td>EQ-3 IN2</td><td>Output</td><td>H-Bridge 2A dir</td></tr>
+<tr><td class="val">18</td><td>EQ-4 IN1</td><td>Output</td><td>H-Bridge 2B dir</td></tr>
+<tr><td class="val">19</td><td>EQ-4 IN2</td><td>Output</td><td>H-Bridge 2B dir</td></tr>
+<tr><td class="val">21</td><td>AX-TOP IN1</td><td>Output</td><td>H-Bridge 3A dir</td></tr>
+<tr><td class="val">22</td><td>AX-TOP IN2</td><td>Output</td><td>H-Bridge 3A dir</td></tr>
+<tr><td class="val">23</td><td>AX-BOT IN1</td><td>Output</td><td>H-Bridge 3B dir</td></tr>
+<tr><td class="val">27</td><td>AX-BOT IN2</td><td>Output</td><td>H-Bridge 3B dir</td></tr>
+<tr><td class="val">2</td><td>EQ-1 ENABLE (PWM)</td><td>Output</td><td>H-Bridge 1 ENA</td></tr>
+<tr><td class="val">4</td><td>EQ-2 ENABLE (PWM)</td><td>Output</td><td>H-Bridge 1 ENB</td></tr>
+<tr><td class="val">5</td><td>EQ-3 ENABLE (PWM)</td><td>Output</td><td>H-Bridge 2 ENA</td></tr>
+<tr><td class="val">26</td><td>EQ-4 ENABLE (PWM)</td><td>Output</td><td>H-Bridge 2 ENB</td></tr>
+<tr><td class="val">32</td><td>AX-TOP ENABLE (PWM)</td><td>Output</td><td>H-Bridge 3 ENA</td></tr>
+<tr><td class="val">33</td><td>AX-BOT ENABLE (PWM)</td><td>Output</td><td>H-Bridge 3 ENB</td></tr>
+<tr><td class="val">34</td><td>Pickup coil ADC</td><td>Input (ADC)</td><td>Amplified pickup signal</td></tr>
+<tr><td class="val">35</td><td>Hall sensor ADC</td><td>Input (ADC)</td><td>SS49E or equivalent</td></tr>
+<tr><td class="val">36</td><td>Microphone ADC</td><td>Input (ADC)</td><td>Electret + preamp</td></tr>
+<tr><td class="val">25</td><td>Iris servo</td><td>Output (PWM)</td><td>SG90 servo (v2)</td></tr>
+</table>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 09 DRIVE MODES -->
+<!-- ═══════════════════════════════ -->
+
+<section id="drive">
+<h2><span class="num">§09</span> Drive Modes</h2>
+
+<h3>Mode 1: Levitate Only (DC)</h3>
+<p>All coils at fixed DC current. Ball hangs at center. No vibration, no spin. Baseline state. Confirm levitation is stable before proceeding.</p>
+<pre>
+EQ-1 through EQ-4:  equal DC, opposing pairs balanced
+AX-TOP and AX-BOT:  DC tuned to hold ball at center height
+Ball:                stationary, floating
+</pre>
+
+<h3>Mode 2: Spin (Phase-Shifted AC)</h3>
+<p>Four equatorial coils driven with sinusoidal AC, each 90° phase-shifted. Creates a rotating magnetic field. Ball spins about the vertical axis.</p>
+<pre>
+EQ-1:  A·sin(2πft)           →  0°
+EQ-2:  A·sin(2πft + π/2)     →  90°
+EQ-3:  A·sin(2πft + π)       →  180°
+EQ-4:  A·sin(2πft + 3π/2)    →  270°
+
+AX coils: DC hold (constant)
+Ball: spins at frequency f
+
+This is a 4-phase motor. The ball is the rotor.
+</pre>
+
+<h3>Mode 3: Axial Vibrate</h3>
+<p>Axial coils oscillate in push-pull. Ball bounces up and down along the teardrop axis. Drives pressure waves toward the tip.</p>
+<pre>
+AX-TOP:  B·sin(2πf₂t)
+AX-BOT:  B·sin(2πf₂t + π)    → opposite phase
+
+EQ coils: DC hold (constant)
+Ball: oscillates along vertical axis
+</pre>
+
+<h3>Mode 4: Spin + Vibrate (Combined)</h3>
+<p>Modes 2 and 3 simultaneously. Ball spins in the equatorial plane while bouncing axially. Creates a helical vortex in the medium. This is the primary operating mode.</p>
+<pre>
+EQ-1 through EQ-4:  phase-shifted at f₁ (spin)
+AX-TOP and AX-BOT:  push-pull at f₂ (vibrate)
+
+f₁ and f₂ can be:
+  Equal:         synchronized helix
+  Integer ratio: harmonic coupling
+  φ² ratio:      predicted optimal (from simulation)
+  φ ratio:       predicted FORBIDDEN (coupling collapse)
+</pre>
+
+<h3>Mode 5: Wobble (Elliptical)</h3>
+<p>Equatorial pairs driven at different amplitudes or frequencies. Ball traces an ellipse or figure-8 instead of a circle.</p>
+<pre>
+EQ-1/EQ-3 (X-axis):  A₁·sin(2πf₁t)
+EQ-2/EQ-4 (Y-axis):  A₂·sin(2πf₂t)
+
+A₁ ≠ A₂ → elliptical orbit
+f₁ ≠ f₂ → Lissajous pattern
+f₁ = 2f₂ → figure-8
+</pre>
+
+<h3>Mode 6: Frequency Sweep</h3>
+<p>Slowly increase f₁ (or f₂) while monitoring all sensors. Map the resonant response of the cavity + ball + aperture system. This is the discovery mode.</p>
+<pre>
+Sweep f from 1 Hz to 20 kHz (or higher)
+At each frequency, record:
+  - Pickup coil amplitude (EM output at tip)
+  - Microphone amplitude (acoustic output at tip)
+  - Hall sensor signal (ball motion amplitude)
+  - Coil current draw (energy absorption)
+
+Plot all four vs frequency.
+Resonance peaks = the device's natural modes.
+</pre>
+</section>
+
+<div class="div">· · ·</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- 10 BOM -->
+<!-- ═══════════════════════════════ -->
+
+<section id="bom">
+<h2><span class="num">§10</span> Bill of Materials</h2>
+
+<table>
+<tr><th>#</th><th>Component</th><th>Qty</th><th>Spec</th><th>Est. Cost</th></tr>
+<tr><td>1</td><td>ESP32 DevKit</td><td class="val">1</td><td>ESP32-WROOM-32 or S3</td><td>$8</td></tr>
+<tr><td>2</td><td>L298N H-Bridge Module</td><td class="val">3</td><td>Dual channel, 2A per ch</td><td>$12</td></tr>
+<tr><td>3</td><td>12V Power Supply</td><td class="val">1</td><td>12V 5A DC adapter</td><td>$12</td></tr>
+<tr><td>4</td><td>Ferrite Rods</td><td class="val">6</td><td>10mm × 30mm (eq) + 10mm × 40mm (ax)</td><td>$8</td></tr>
+<tr><td>5</td><td>Magnet Wire (28 AWG)</td><td class="val">1 spool</td><td>~50m needed for 6 coils</td><td>$10</td></tr>
+<tr><td>6</td><td>N52 Neodymium Sphere</td><td class="val">3–5</td><td>10mm dia (+ 6mm, 15mm for testing)</td><td>$15</td></tr>
+<tr><td>7</td><td>PETG Filament</td><td class="val">~200g</td><td>For 3D-printed shell + tip caps</td><td>$5</td></tr>
+<tr><td>8</td><td>Hall Effect Sensor</td><td class="val">1</td><td>SS49E linear analog</td><td>$2</td></tr>
+<tr><td>9</td><td>Electret Microphone</td><td class="val">1</td><td>MAX4466 breakout (amplified)</td><td>$5</td></tr>
+<tr><td>10</td><td>Pickup Coil</td><td class="val">1</td><td>Small coil, 50 turns 30 AWG on 5mm form</td><td>$2</td></tr>
+<tr><td>11</td><td>Photodetector</td><td class="val">1</td><td>BPW34 photodiode or LDR</td><td>$3</td></tr>
+<tr><td>12</td><td>Breadboard + Jumpers</td><td class="val">1 set</td><td>Full size breadboard + dupont wires</td><td>$8</td></tr>
+<tr><td>13</td><td>Epoxy</td><td class="val">1</td><td>5-min or 30-min, for coil mounting</td><td>$5</td></tr>
+<tr><td>14</td><td>Misc (standoffs, screws, wire)</td><td class="val">1 set</td><td></td><td>$5</td></tr>
+<tr><td colspan="4" class="bom-total">ESTIMATED TOTAL</td><td class="bom-total">~$100</td></tr>
+</table>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 11 ASSEMBLY -->
+<!-- ═══════════════════════════════ -->
+
+<section id="assembly">
+<h2><span class="num">§11</span> Assembly Sequence</h2>
+
+<h3>Phase 1: Wind Coils (Day 1)</h3>
+<pre>
+1. Wind 4 equatorial coils: 200 turns of 28 AWG on 10mm ferrite rods
+   - Leave 15cm leads on each
+   - Secure windings with tape or varnish
+   - Label: EQ-1, EQ-2, EQ-3, EQ-4
+
+2. Wind 2 axial coils: 250 turns of 28 AWG on 10mm ferrite rods
+   - Same process
+   - Label: AX-TOP, AX-BOT
+
+3. Wind 1 pickup coil: 50 turns of 30 AWG on 5mm form
+   - This is the sensor, not a drive coil
+
+4. Measure and record each coil's DC resistance
+</pre>
+
+<h3>Phase 2: Print Shell (Day 1, parallel with coils)</h3>
+<pre>
+1. 3D print teardrop shell in two halves (split along long axis)
+   - Include mounting bosses for coils on exterior
+   - Include threaded socket at tip for iris caps
+   
+2. 3D print tip caps: set of 6 with holes 1, 2, 3, 5, 8, 12mm
+
+3. Print coil cradles that sit on shell exterior
+
+4. Sand interior smooth, optionally coat with epoxy
+</pre>
+
+<h3>Phase 3: Electronics (Day 2)</h3>
+<pre>
+1. Wire ESP32 to 3× L298N modules per pin table in §08
+2. Connect 12V supply to L298N power inputs
+3. Connect 5V regulated output from L298N to ESP32 VIN
+4. Connect hall sensor, microphone, pickup coil to ADC pins
+5. Upload firmware
+6. Test each coil independently: 
+   - Apply DC to each channel
+   - Verify current flows
+   - Verify field direction with compass or iron filings
+</pre>
+
+<h3>Phase 4: Assemble Device (Day 2–3)</h3>
+<pre>
+1. Mount 4 equatorial coils on shell exterior, 90° apart
+   - All at equatorial plane of the spherical section
+   - All core axes pointing at center
+   - Epoxy in place
+
+2. Mount AX-TOP coil at crown of sphere section
+   - Core axis vertical, pointing down at center
+
+3. Mount AX-BOT coil on taper section
+   - Core axis vertical, pointing up at center
+   - Position: ~60mm from tip
+
+4. Place N52 sphere inside shell (before closing!)
+
+5. Close shell halves (epoxy, screws, or clips)
+
+6. Thread 12mm tip cap onto tip (start wide open)
+
+7. Route all coil wires to electronics assembly
+</pre>
+
+<h3>Phase 5: First Power-On</h3>
+<pre>
+1. Start with Mode 1 (DC levitation only)
+2. Slowly increase DC on all 6 coils
+3. Listen/feel for ball contacting walls
+4. Adjust DC balance until ball floats freely at center
+5. Confirm with hall sensor reading: 
+   - stable reading = ball stationary = levitation achieved
+
+IF BALL WON'T LEVITATE:
+  - Check coil polarities (opposing pairs must attract toward center)
+  - Increase current
+  - Try larger ball (more magnetic force)
+  - Adjust axial coil positions
+  - Ball may need a specific orientation — try rotating before sealing
+</pre>
+
+<div class="callout warn">
+<div class="label">⚠ Neodymium Safety</div>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">N52 magnets are extremely strong. They can pinch skin, shatter if they collide, and erase magnetic media. Keep away from electronics, credit cards, and pacemakers. Handle with care during assembly.</p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 12 MEASUREMENT -->
+<!-- ═══════════════════════════════ -->
+
+<section id="measurement">
+<h2><span class="num">§12</span> Measurement Protocol</h2>
+
+<h3>Experiment 1: Resonance Map</h3>
+<pre>
+Purpose: Find the device's natural resonant modes
+
+Procedure:
+  1. Set Mode 2 (spin only), iris at 5mm
+  2. Sweep spin frequency f₁ from 1 Hz to 10 kHz
+     (logarithmic steps: 1, 2, 5, 10, 20, 50, 100, 200...)
+  3. At each f₁, record:
+     a. Pickup coil RMS voltage (EM output at tip)
+     b. Microphone RMS voltage (acoustic output at tip)  
+     c. Hall sensor variance (ball motion amplitude)
+     d. Total current draw from 12V supply
+  4. Repeat with iris at: 1mm, 2mm, 3mm, 8mm, 12mm, open
+  
+Output: 2D map of [frequency × aperture] vs [output intensity]
+        Resonance peaks will be visible as ridges in this map
+</pre>
+
+<h3>Experiment 2: φ² Frequency Ratio Test</h3>
+<pre>
+Purpose: Test simulation prediction that f₁/f₂ = φ² is optimal
+
+Procedure:
+  1. Set Mode 4 (spin + vibrate)
+  2. Fix f₁ (spin) at strongest resonance found in Exp 1
+  3. Sweep f₂ (axial vibrate) across range
+  4. Record pickup + microphone at each f₂
+  5. Calculate ratio f₁/f₂ at each measurement
+  6. Mark key ratios: 1/φ², 1/φ, 1/2, 1/1, φ, φ²
+  
+Prediction: 
+  Output peaks near f₁/f₂ = φ² (2.618) or 1/φ² (0.382)
+  Output DROPS near f₁/f₂ = φ (1.618) or 1/φ (0.618)
+</pre>
+
+<h3>Experiment 3: Ball Position Sweep</h3>
+<pre>
+Purpose: Find optimal ball position along teardrop axis
+
+Procedure:
+  1. Set Mode 4 at optimal frequencies from Exp 1-2
+  2. Gradually shift DC bias on axial coils to move ball
+     toward tip
+  3. Record output at each position
+  4. Find position of maximum output
+  
+Expected: Output increases as ball approaches tip
+          (stronger coupling to aperture)
+          Until a maximum, then drops 
+          (ball too close, hits wall or saturates)
+</pre>
+
+<h3>Experiment 4: What Comes Out?</h3>
+<pre>
+Purpose: Characterize the actual emission
+
+At the strongest resonance point found in Experiments 1-3:
+
+Measure EVERYTHING at the tip simultaneously:
+  □ Acoustic (microphone)
+  □ Electromagnetic (pickup coil)
+  □ Light (photodiode — even if you don't expect it)
+  □ Temperature (thermocouple)
+  □ Static charge (electroscope or field meter)
+  □ Magnetic field (hall sensor at tip)
+
+Log all channels for 60 seconds.
+Compare to baseline (device off, same sensors, same position).
+Any channel that shows signal above baseline is real output.
+</pre>
+
+<h3>Data Logging</h3>
+<pre>
+ESP32 samples ADC channels at ~1 kHz
+Sends data over Serial (USB) to laptop
+Python script logs to CSV with timestamp
+Post-processing: FFT each channel, plot spectra
+</pre>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 13 PREDICTIONS -->
+<!-- ═══════════════════════════════ -->
+
+<section id="predictions">
+<h2><span class="num">§13</span> Predictions</h2>
+
+<div class="card">
+<div class="card-title">Testable Predictions from Circumpunct Framework</div>
+<table>
+<tr><th>#</th><th>Prediction</th><th>Test</th><th>Confirmed if...</th></tr>
+<tr>
+<td>1</td>
+<td>Resonance map shows discrete peaks (not flat response)</td>
+<td>Experiment 1</td>
+<td>Clear peaks visible in frequency-aperture map</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Optimal iris size exists for each drive frequency</td>
+<td>Experiment 1</td>
+<td>Output is not monotonic with aperture size</td>
+</tr>
+<tr>
+<td>3</td>
+<td>φ ratio (1.618) kills coupling between spin and vibration</td>
+<td>Experiment 2</td>
+<td>Output dip at f₁/f₂ ≈ 1.618 ± 0.05</td>
+</tr>
+<tr>
+<td>4</td>
+<td>φ² ratio (2.618) optimizes coupling</td>
+<td>Experiment 2</td>
+<td>Output peak at f₁/f₂ ≈ 2.618 ± 0.1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Ball position along axis affects output nonlinearly</td>
+<td>Experiment 3</td>
+<td>Output vs position curve has a clear maximum</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Output contains frequencies not present in input</td>
+<td>Experiment 4</td>
+<td>FFT of output shows peaks at f₁±f₂, 2f₁, harmonics</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Output is structurally different from input (i² = −1)</td>
+<td>Experiment 4</td>
+<td>Strongest output channel is NOT EM (since input is EM)</td>
+</tr>
+</table>
+</div>
+
+<div class="callout">
+<div class="label">What Success Looks Like</div>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Prediction 3 is the key test. If the golden ratio frequency relationship produces a measurable coupling dip in a physical device with a levitated resonator, that's a novel result connecting geometric number theory to electromagnetic transducer design. It would be the first experimental evidence for the Circumpunct Framework's forbidden frequency prediction.</p>
+</div>
+
+<p>Even if most predictions fail, the resonance map (Prediction 1) is guaranteed to show structure, because every cavity has resonant modes. The question is whether the structure matches the framework's predictions, or whether it matches only standard Helmholtz and electromagnetic resonance theory with no special role for φ.</p>
+<p>Either result is publishable. Confirmation validates the framework. Refutation identifies where the model breaks and needs revision. The device is a measurement instrument either way.</p>
+</section>
+
+<div class="div">⊙ · ⊙ · ⊙</div>
+
+<footer style="text-align:center; color:var(--text-dim); font-size:0.6rem; letter-spacing:0.1em; padding:2rem 0;">
+⊙ CIRCUMPUNCT RESONANCE DEVICE · DESIGN SPEC v1.0 · MARCH 14, 2026<br>
+fractalreality.ca · r/Circumpunct
+</footer>
+
+</main>
+
+<!-- ═══════════════════════════════ -->
+<!-- CANVAS DRAWINGS -->
+<!-- ═══════════════════════════════ -->
+
+<script>
+const C = {
+    bg: '#000000', panel: '#06060a',
+    amber: '#d4a855', amberDim: '#5a4020', amberFaint: 'rgba(212,168,85,0.06)',
+    cyan: '#5ecece', cyanDim: '#2a5a5a',
+    red: '#e05555', redDim: '#4a2020',
+    magenta: '#c76dba',
+    text: '#c0b080', textDim: '#504838', textBright: '#e0d0a8',
+    wire: '#706050', grid: 'rgba(212,168,85,0.03)',
+};
+
+// ── FIGURE 1: Shell Profile ──
+(function(){
+    const cv = document.getElementById('shellDiagram');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    
+    ctx.fillStyle = C.panel;
+    ctx.fillRect(0, 0, W, H);
+    
+    // Grid
+    ctx.strokeStyle = C.grid;
+    ctx.lineWidth = 0.5;
+    for(let x = 0; x < W; x += 20){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for(let y = 0; y < H; y += 20){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+    
+    const cx = 300, cy = 200;
+    const R = 90; // sphere radius
+    
+    // Draw teardrop profile
+    ctx.beginPath();
+    // Sphere section (top half, from 0 to PI)
+    for(let a = -Math.PI*0.65; a <= Math.PI*0.65; a += 0.02){
+        const x = cx + R * Math.cos(a);
+        const y = cy - R * Math.sin(a);
+        if(a === -Math.PI*0.65) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    // Taper to tip
+    const tipX = cx + R + 160;
+    const taperStartTop = cy - R * Math.sin(Math.PI*0.65);
+    const taperStartBot = cy + R * Math.sin(Math.PI*0.65);
+    ctx.lineTo(tipX, cy + 4);
+    // Back along bottom
+    ctx.moveTo(cx + R * Math.cos(-Math.PI*0.65), cy + R * Math.sin(Math.PI*0.65));
+    ctx.lineTo(tipX, cy - 4);
+    
+    ctx.strokeStyle = C.amber;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    // Iris at tip
+    ctx.beginPath();
+    ctx.arc(tipX, cy, 8, 0, Math.PI*2);
+    ctx.strokeStyle = C.red;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    
+    // Ball at center
+    ctx.beginPath();
+    ctx.arc(cx + 20, cy, 8, 0, Math.PI*2);
+    ctx.fillStyle = C.red;
+    ctx.fill();
+    ctx.strokeStyle = C.redDim;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    
+    // Center axis
+    ctx.setLineDash([4,4]);
+    ctx.beginPath();
+    ctx.moveTo(cx - R - 30, cy);
+    ctx.lineTo(tipX + 30, cy);
+    ctx.strokeStyle = C.textDim;
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Dimension lines
+    ctx.fillStyle = C.textDim;
+    ctx.font = '9px "JetBrains Mono"';
+    ctx.textAlign = 'center';
+    
+    // Length
+    ctx.fillText('200 mm', (cx - R + tipX)/2, cy + R + 40);
+    ctx.strokeStyle = C.textDim;
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - R, cy + R + 30); ctx.lineTo(tipX, cy + R + 30);
+    ctx.stroke();
+    
+    // Diameter
+    ctx.fillText('120 mm', cx - R - 35, cy);
+    ctx.beginPath();
+    ctx.moveTo(cx - R - 15, cy - R); ctx.lineTo(cx - R - 15, cy + R);
+    ctx.stroke();
+    
+    // Labels
+    ctx.fillStyle = C.amber;
+    ctx.font = '10px "JetBrains Mono"';
+    ctx.fillText('○ SHELL', cx, cy - R - 20);
+    
+    ctx.fillStyle = C.red;
+    ctx.fillText('• BALL', cx + 20, cy - 18);
+    
+    ctx.fillStyle = C.red;
+    ctx.fillText('IRIS ○', tipX + 30, cy);
+    
+    ctx.fillStyle = C.cyan;
+    ctx.fillText('Φ medium', cx + 20, cy + 40);
+    
+    // Coil positions
+    ctx.fillStyle = C.magenta;
+    ctx.font = '8px "JetBrains Mono"';
+    const coilPositions = [
+        [cx, cy - R - 8, 'AX-TOP'],
+        [cx, cy + R + 12, 'AX-BOT'],
+        [cx - R - 8, cy, 'EQ'],
+        [cx + R * 0.7, cy - R * 0.75, 'EQ'],
+        [cx + R * 0.7, cy + R * 0.75, 'EQ'],
+    ];
+    coilPositions.forEach(([x,y,label]) => {
+        ctx.fillRect(x-8, y-4, 16, 8);
+        ctx.fillStyle = C.panel;
+        ctx.fillText(label, x, y+3);
+        ctx.fillStyle = C.magenta;
+    });
+})();
+
+// ── FIGURE 2: Coil Layout ──
+(function(){
+    const cv = document.getElementById('coilLayout');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    
+    ctx.fillStyle = C.panel;
+    ctx.fillRect(0, 0, W, H);
+    
+    // Grid
+    ctx.strokeStyle = C.grid;
+    ctx.lineWidth = 0.5;
+    for(let x = 0; x < W; x += 20){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for(let y = 0; y < H; y += 20){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+    
+    // FRONT VIEW (left side)
+    const fx = 180, fy = 210, fr = 80;
+    
+    ctx.fillStyle = C.textDim;
+    ctx.font = '10px "JetBrains Mono"';
+    ctx.textAlign = 'center';
+    ctx.fillText('FRONT VIEW (looking at round end)', fx, 30);
+    
+    // Shell circle
+    ctx.beginPath();
+    ctx.arc(fx, fy, fr, 0, Math.PI*2);
+    ctx.strokeStyle = C.amberDim;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    
+    // Equatorial coils
+    const eqLabels = ['EQ-1\n0°', 'EQ-2\n90°', 'EQ-3\n180°', 'EQ-4\n270°'];
+    const eqColors = [C.cyan, C.magenta, C.cyan, C.magenta];
+    for(let i = 0; i < 4; i++){
+        const a = -Math.PI/2 + i * Math.PI/2;
+        const x = fx + (fr + 25) * Math.cos(a);
+        const y = fy + (fr + 25) * Math.sin(a);
+        
+        // Coil rectangle
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(a + Math.PI/2);
+        ctx.fillStyle = eqColors[i];
+        ctx.globalAlpha = 0.3;
+        ctx.fillRect(-15, -8, 30, 16);
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = eqColors[i];
+        ctx.lineWidth = 1;
+        ctx.strokeRect(-15, -8, 30, 16);
+        ctx.restore();
+        
+        // Label
+        ctx.fillStyle = eqColors[i];
+        ctx.font = '8px "JetBrains Mono"';
+        ctx.textAlign = 'center';
+        const lx = fx + (fr + 55) * Math.cos(a);
+        const ly = fy + (fr + 55) * Math.sin(a);
+        ctx.fillText(`EQ-${i+1}`, lx, ly);
+        ctx.fillText(`${i*90}°`, lx, ly + 10);
+    }
+    
+    // Ball at center
+    ctx.beginPath();
+    ctx.arc(fx, fy, 6, 0, Math.PI*2);
+    ctx.fillStyle = C.red;
+    ctx.fill();
+    ctx.fillStyle = C.red;
+    ctx.font = '8px "JetBrains Mono"';
+    ctx.fillText('●', fx, fy + 20);
+    
+    // Rotation arrow
+    ctx.beginPath();
+    ctx.arc(fx, fy, 25, -0.5, Math.PI * 1.2);
+    ctx.strokeStyle = 'rgba(199,109,186,0.5)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    // Arrowhead
+    const arrowA = Math.PI * 1.2;
+    const ax = fx + 25 * Math.cos(arrowA);
+    const ay = fy + 25 * Math.sin(arrowA);
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(ax + 6, ay - 3);
+    ctx.lineTo(ax + 2, ay + 5);
+    ctx.fillStyle = 'rgba(199,109,186,0.5)';
+    ctx.fill();
+    ctx.fillStyle = C.magenta;
+    ctx.font = '9px "JetBrains Mono"';
+    ctx.fillText('i', fx + 35, fy - 15);
+    
+    // SIDE VIEW (right side)
+    const sx = 500, sy = 210, sr = 80;
+    
+    ctx.fillStyle = C.textDim;
+    ctx.font = '10px "JetBrains Mono"';
+    ctx.textAlign = 'center';
+    ctx.fillText('SIDE VIEW (cross-section)', sx, 30);
+    
+    // Teardrop outline
+    ctx.beginPath();
+    for(let a = -Math.PI*0.7; a <= Math.PI*0.7; a += 0.02){
+        const x = sx + sr * Math.cos(a) - 10;
+        const y = sy - sr * Math.sin(a);
+        if(a === -Math.PI*0.7) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    const tipSX = sx + sr + 80;
+    ctx.lineTo(tipSX, sy + 3);
+    ctx.strokeStyle = C.amberDim;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(sx + sr * Math.cos(-Math.PI*0.7) - 10, sy + sr * Math.sin(Math.PI*0.7));
+    ctx.lineTo(tipSX, sy - 3);
+    ctx.stroke();
+    
+    // AX-TOP
+    ctx.fillStyle = 'rgba(94,206,206,0.3)';
+    ctx.fillRect(sx - 20, sy - sr - 22, 30, 14);
+    ctx.strokeStyle = C.cyan;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(sx - 20, sy - sr - 22, 30, 14);
+    ctx.fillStyle = C.cyan;
+    ctx.font = '7px "JetBrains Mono"';
+    ctx.fillText('AX-TOP', sx - 5, sy - sr - 28);
+    
+    // AX-BOT
+    const botY = sy + sr * 0.3 + 10;
+    ctx.fillStyle = 'rgba(94,206,206,0.3)';
+    ctx.fillRect(sx + 40, botY, 30, 14);
+    ctx.strokeStyle = C.cyan;
+    ctx.strokeRect(sx + 40, botY, 30, 14);
+    ctx.fillStyle = C.cyan;
+    ctx.fillText('AX-BOT', sx + 55, botY - 5);
+    
+    // Equatorial coils (seen from side = rectangles on left/right)
+    ctx.fillStyle = 'rgba(199,109,186,0.3)';
+    ctx.fillRect(sx - sr - 18, sy - 8, 14, 16);
+    ctx.strokeStyle = C.magenta;
+    ctx.strokeRect(sx - sr - 18, sy - 8, 14, 16);
+    
+    ctx.fillStyle = 'rgba(199,109,186,0.3)';
+    ctx.fillRect(sx + sr - 6, sy - 8, 14, 16);
+    ctx.strokeStyle = C.magenta;
+    ctx.strokeRect(sx + sr - 6, sy - 8, 14, 16);
+    
+    ctx.fillStyle = C.magenta;
+    ctx.font = '7px "JetBrains Mono"';
+    ctx.fillText('EQ', sx - sr - 11, sy + 20);
+    ctx.fillText('EQ', sx + sr + 1, sy + 20);
+    
+    // Ball
+    ctx.beginPath();
+    ctx.arc(sx, sy, 6, 0, Math.PI*2);
+    ctx.fillStyle = C.red;
+    ctx.fill();
+    
+    // Axis
+    ctx.setLineDash([3,3]);
+    ctx.beginPath();
+    ctx.moveTo(sx - sr - 30, sy);
+    ctx.lineTo(tipSX + 20, sy);
+    ctx.strokeStyle = C.textDim;
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Iris
+    ctx.beginPath();
+    ctx.arc(tipSX, sy, 6, 0, Math.PI*2);
+    ctx.strokeStyle = C.red;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = C.red;
+    ctx.font = '7px "JetBrains Mono"';
+    ctx.fillText('IRIS', tipSX, sy + 16);
+    
+    // Arrow showing output direction
+    ctx.beginPath();
+    ctx.moveTo(tipSX + 10, sy);
+    ctx.lineTo(tipSX + 35, sy);
+    ctx.strokeStyle = C.amber;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(tipSX + 35, sy);
+    ctx.lineTo(tipSX + 28, sy - 4);
+    ctx.lineTo(tipSX + 28, sy + 4);
+    ctx.fillStyle = C.amber;
+    ctx.fill();
+    ctx.fillStyle = C.amber;
+    ctx.font = '9px "JetBrains Mono"';
+    ctx.fillText('☀', tipSX + 45, sy + 4);
+})();
+
+// ── FIGURE 3: Circuit Schematic ──
+(function(){
+    const cv = document.getElementById('circuitSchematic');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    
+    ctx.fillStyle = C.panel;
+    ctx.fillRect(0, 0, W, H);
+    
+    ctx.strokeStyle = C.grid;
+    ctx.lineWidth = 0.5;
+    for(let x = 0; x < W; x += 20){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for(let y = 0; y < H; y += 20){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+    
+    function drawBox(x, y, w, h, label, sublabel, color) {
+        ctx.fillStyle = color + '20';
+        ctx.fillRect(x, y, w, h);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x, y, w, h);
+        ctx.fillStyle = color;
+        ctx.font = '9px "JetBrains Mono"';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, x + w/2, y + h/2 + 1);
+        if(sublabel){
+            ctx.font = '7px "JetBrains Mono"';
+            ctx.fillStyle = C.textDim;
+            ctx.fillText(sublabel, x + w/2, y + h/2 + 12);
+        }
+    }
+    
+    function drawWire(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = C.wire;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+    
+    // Power supply
+    drawBox(270, 15, 140, 35, '12V 5A PSU', 'DC adapter', C.amber);
+    
+    // 12V bus
+    drawWire(340, 50, 340, 80);
+    ctx.fillStyle = C.amber;
+    ctx.font = '7px "JetBrains Mono"';
+    ctx.textAlign = 'center';
+    ctx.fillText('12V BUS', 340, 75);
+    drawWire(100, 80, 580, 80);
+    
+    // ESP32
+    drawBox(20, 120, 100, 200, 'ESP32', '', C.cyan);
+    ctx.fillStyle = C.cyan;
+    ctx.font = '7px "JetBrains Mono"';
+    ctx.textAlign = 'left';
+    const gpios = [
+        'GPIO 12,13 →',
+        'GPIO 14,15 →',
+        'GPIO 16,17 →',
+        'GPIO 18,19 →',
+        'GPIO 21,22 →',
+        'GPIO 23,27 →',
+    ];
+    gpios.forEach((g, i) => {
+        ctx.fillText(g, 25, 155 + i * 22);
+    });
+    
+    // Sensor inputs
+    ctx.fillStyle = C.textDim;
+    ctx.fillText('← ADC 34', 25, 300);
+    ctx.fillText('← ADC 35', 25, 314);
+    ctx.fillText('← ADC 36', 25, 328);
+    
+    // H-Bridges
+    const hbridges = [
+        { x: 180, y: 110, label: 'H-BRIDGE 1', sub: 'L298N #1' },
+        { x: 340, y: 110, label: 'H-BRIDGE 2', sub: 'L298N #2' },
+        { x: 500, y: 110, label: 'H-BRIDGE 3', sub: 'L298N #3' },
+    ];
+    
+    hbridges.forEach((hb, i) => {
+        // 12V input
+        drawWire(hb.x + 50, 80, hb.x + 50, hb.y);
+        drawBox(hb.x, hb.y, 100, 50, hb.label, hb.sub, C.magenta);
+        
+        // ESP32 connections
+        drawWire(120, 149 + i * 44, hb.x, 130 + i * 2);
+        drawWire(120, 149 + i * 44 + 22, hb.x, 145 + i * 2);
+    });
+    
+    // Coils from H-bridges
+    const coils = [
+        { x: 175, y: 210, label: 'EQ-1', sub: '0°' },
+        { x: 245, y: 210, label: 'EQ-2', sub: '90°' },
+        { x: 335, y: 210, label: 'EQ-3', sub: '180°' },
+        { x: 405, y: 210, label: 'EQ-4', sub: '270°' },
+        { x: 495, y: 210, label: 'AX-TOP', sub: '' },
+        { x: 565, y: 210, label: 'AX-BOT', sub: '' },
+    ];
+    
+    coils.forEach((coil, i) => {
+        const hbIdx = Math.floor(i / 2);
+        const hbX = hbridges[hbIdx].x;
+        drawWire(hbX + (i%2 === 0 ? 25 : 75), 160, coil.x + 25, coil.y);
+        
+        // Coil symbol (inductor squiggles)
+        ctx.beginPath();
+        const cx = coil.x + 25, cy = coil.y + 20;
+        for(let j = 0; j < 4; j++){
+            ctx.arc(cx - 9 + j*6, cy, 5, Math.PI, 0);
+        }
+        ctx.strokeStyle = i < 4 ? C.magenta : C.cyan;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        
+        // Label
+        ctx.fillStyle = i < 4 ? C.magenta : C.cyan;
+        ctx.font = '8px "JetBrains Mono"';
+        ctx.textAlign = 'center';
+        ctx.fillText(coil.label, cx, cy + 18);
+        if(coil.sub) ctx.fillText(coil.sub, cx, cy + 28);
+    });
+    
+    // Device representation
+    ctx.fillStyle = C.amberDim + '30';
+    ctx.beginPath();
+    ctx.arc(340, 340, 55, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = C.amberDim;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    
+    // Taper
+    ctx.beginPath();
+    ctx.moveTo(340 + 45, 340 - 25);
+    ctx.lineTo(450, 340);
+    ctx.lineTo(340 + 45, 340 + 25);
+    ctx.strokeStyle = C.amberDim;
+    ctx.stroke();
+    
+    // Ball
+    ctx.beginPath();
+    ctx.arc(340, 340, 5, 0, Math.PI*2);
+    ctx.fillStyle = C.red;
+    ctx.fill();
+    
+    ctx.fillStyle = C.amber;
+    ctx.font = '9px "JetBrains Mono"';
+    ctx.textAlign = 'center';
+    ctx.fillText('⊙ DEVICE', 340, 410);
+    
+    // Output arrow
+    ctx.beginPath();
+    ctx.moveTo(452, 340);
+    ctx.lineTo(480, 340);
+    ctx.strokeStyle = C.amber;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = C.amber;
+    ctx.font = '11px "JetBrains Mono"';
+    ctx.fillText('☀', 495, 344);
+    
+    // Sensors
+    drawBox(470, 290, 90, 20, 'PICKUP COIL', '', C.textDim);
+    drawBox(470, 315, 90, 20, 'HALL SENSOR', '', C.textDim);
+    drawBox(470, 340, 90, 20, 'MICROPHONE', '', C.textDim);
+    
+    drawWire(470, 300, 130, 300);
+    drawWire(470, 325, 130, 314);
+    drawWire(470, 350, 130, 328);
+    
+    // Title
+    ctx.fillStyle = C.amber;
+    ctx.font = '600 11px "Cinzel"';
+    ctx.textAlign = 'center';
+    ctx.fillText('CIRCUIT SCHEMATIC — SIMPLIFIED', 340, 480);
+    ctx.fillStyle = C.textDim;
+    ctx.font = '8px "JetBrains Mono"';
+    ctx.fillText('3× L298N dual H-bridge modules · ESP32 controller · 6 coils · 3 sensors', 340, 498);
+})();
+</script>
+
+</body>
+</html>
