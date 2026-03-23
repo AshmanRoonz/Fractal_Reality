@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethics and Virtues</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #0ff;
+            --magenta: #f0f;
+            --green: #0f0;
+            --yellow: #ff0;
+            --amber: #ffaa00;
+            --bg: #000;
+            --text: #fff;
+            --dim: rgba(255,255,255,0.45);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .container { display: flex; min-height: 100vh; }
+
+        @media (max-width: 900px) {
+            nav { display: none; }
+            main { margin-left: 0 !important; }
+        }
+
+        nav {
+            position: fixed;
+            left: 0; top: 0;
+            width: 160px; height: 100vh;
+            border-right: 1px solid var(--amber);
+            padding: 20px 12px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        nav .logo {
+            font-size: 20px;
+            color: var(--amber);
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 0.05em;
+        }
+
+        nav a {
+            display: block;
+            color: var(--amber);
+            text-decoration: none;
+            padding: 4px 0;
+            border-left: 2px solid transparent;
+            padding-left: 10px;
+            margin-left: -10px;
+            transition: all 0.15s;
+            font-size: 11px;
+            letter-spacing: 0.03em;
+            opacity: 0.5;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--amber);
+            border-left-color: var(--amber);
+            opacity: 1;
+        }
+
+        nav a .num {
+            color: var(--amber);
+            margin-right: 8px;
+        }
+
+        main {
+            margin-left: 160px;
+            padding: 30px 40px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (max-width: 900px) {
+            main { margin-left: 0; padding: 20px 15px; }
+        }
+
+        .top-bar {
+            background: #000;
+            border-bottom: 1px solid var(--amber);
+            padding: 10px 20px;
+            text-align: center;
+        }
+        .top-bar a {
+            color: var(--amber);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+        }
+
+        section {
+            margin-bottom: 60px;
+            padding-top: 10px;
+            max-width: 650px;
+        }
+
+        .section-id {
+            color: var(--amber);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            margin-bottom: 4px;
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--amber);
+        }
+
+        h2 {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #fff;
+            margin: 25px 0 12px;
+        }
+
+        p { margin-bottom: 12px; }
+
+        .highlight { color: #fff; }
+        .cyan { color: var(--cyan); }
+        .magenta { color: var(--magenta); }
+        .green { color: var(--green); }
+        .yellow { color: var(--yellow); }
+        .amber { color: var(--amber); }
+        .dim { color: var(--dim); }
+
+        .hero {
+            text-align: center;
+            padding: 50px 0 40px;
+        }
+
+        .hero-title {
+            font-size: 16px;
+            letter-spacing: 0.15em;
+            color: var(--amber);
+            margin-bottom: 10px;
+        }
+
+        .hero-subtitle {
+            font-size: 11px;
+            color: var(--dim);
+            letter-spacing: 0.05em;
+        }
+
+        .teaching {
+            border-left: 2px solid var(--amber);
+            padding-left: 15px;
+            margin: 15px 0;
+        }
+        .teaching.cyan { border-color: var(--cyan); }
+        .teaching.magenta { border-color: var(--magenta); }
+        .teaching.green { border-color: var(--green); }
+        .teaching.yellow { border-color: var(--yellow); }
+        .teaching.amber { border-color: var(--amber); }
+
+        .checks {
+            margin: 15px 0;
+            padding: 12px 15px;
+            background: #000;
+            border: 1px solid var(--amber);
+        }
+        .checks.cyan { border-color: var(--cyan); }
+        .checks.magenta { border-color: var(--magenta); }
+        .checks.green { border-color: var(--green); }
+        .checks.yellow { border-color: var(--yellow); }
+
+        .checks-title {
+            font-size: 10px;
+            color: var(--amber);
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+        }
+        .checks.cyan .checks-title { color: var(--cyan); }
+        .checks.magenta .checks-title { color: var(--magenta); }
+        .checks.green .checks-title { color: var(--green); }
+        .checks.yellow .checks-title { color: var(--yellow); }
+
+        .check {
+            padding: 3px 0;
+            padding-left: 15px;
+            position: relative;
+            font-size: 12px;
+        }
+        .check::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--amber);
+        }
+        .checks.cyan .check::before { color: var(--cyan); }
+        .checks.magenta .check::before { color: var(--magenta); }
+        .checks.green .check::before { color: var(--green); }
+        .checks.yellow .check::before { color: var(--yellow); }
+
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        @media (max-width: 500px) { .compare { grid-template-columns: 1fr; } }
+
+        .compare-box {
+            padding: 15px;
+            border: 1px solid var(--amber);
+        }
+        .compare-box.bad { border-color: var(--magenta); }
+        .compare-box.good { border-color: var(--green); }
+        .compare-box.infected { border-color: var(--magenta); }
+        .compare-box.cured { border-color: var(--amber); }
+
+        .compare-title {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            margin-bottom: 10px;
+        }
+        .compare-box.bad .compare-title { color: var(--magenta); }
+        .compare-box.good .compare-title { color: var(--green); }
+        .compare-box.infected .compare-title { color: var(--magenta); }
+        .compare-box.cured .compare-title { color: var(--amber); }
+
+        .compare-list {
+            list-style: none;
+            font-size: 11px;
+        }
+        .compare-list li {
+            padding: 3px 0 3px 12px;
+            position: relative;
+        }
+        .compare-list li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+        }
+
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: var(--amber);
+            margin: 15px 0;
+        }
+        @media (max-width: 500px) { .pillars { grid-template-columns: 1fr; } }
+
+        .pillar {
+            background: var(--bg);
+            padding: 15px;
+        }
+        .pillar-desc {
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        blockquote {
+            border-left: 1px solid var(--amber);
+            padding-left: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: var(--amber);
+            font-size: 12px;
+        }
+
+        .sequence {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin: 15px 0;
+        }
+        .seq-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 15px;
+            background: #000;
+            border-left: 3px solid;
+        }
+        .seq-item:nth-child(1) { border-color: var(--cyan); }
+        .seq-item:nth-child(2) { border-color: var(--magenta); }
+        .seq-item:nth-child(3) { border-color: var(--green); }
+        .seq-item:nth-child(4) { border-color: var(--yellow); }
+        .seq-text { font-size: 11px; letter-spacing: 0.08em; color: #fff; }
+        .seq-sub { font-size: 10px; color: #fff; margin-left: auto; opacity: 0.5; }
+
+        .golden {
+            text-align: center;
+            padding: 25px 20px;
+            border: 1px solid var(--amber);
+            margin: 15px 0;
+        }
+        .golden-text {
+            font-size: 14px;
+            color: var(--amber);
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .golden-sub {
+            font-size: 10px;
+            color: var(--amber);
+            margin-top: 12px;
+            opacity: 0.6;
+        }
+
+        .test-block {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid var(--amber);
+            position: relative;
+        }
+        .test-block::before {
+            content: 'CHECK';
+            position: absolute;
+            top: -8px;
+            left: 12px;
+            background: var(--bg);
+            padding: 0 8px;
+            color: var(--amber);
+            font-size: 9px;
+            letter-spacing: 0.15em;
+        }
+        .test-pass {
+            color: var(--green);
+            font-size: 11px;
+            margin: 4px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+        .test-pass::before {
+            content: 'yes';
+            position: absolute;
+            left: -2px;
+            color: var(--green);
+            font-size: 8px;
+        }
+        .test-fail {
+            color: var(--magenta);
+            font-size: 11px;
+            margin: 4px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+        .test-fail::before {
+            content: 'no';
+            position: absolute;
+            left: 0;
+            color: var(--magenta);
+            font-size: 8px;
+        }
+
+        .inversion-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+        .inversion-table th, .inversion-table td {
+            padding: 10px 12px;
+            border: 1px solid rgba(255,170,0,0.2);
+            text-align: left;
+            vertical-align: top;
+        }
+        .inversion-table th {
+            color: var(--amber);
+            font-weight: 500;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            background: rgba(255,170,0,0.03);
+        }
+
+        .final {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .final-title {
+            font-size: 14px;
+            color: var(--amber);
+            margin-bottom: 25px;
+            letter-spacing: 0.1em;
+        }
+        .final-lines {
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        footer {
+            padding: 25px 0;
+            border-top: 1px solid var(--amber);
+            font-size: 10px;
+            color: var(--amber);
+            text-align: center;
+            letter-spacing: 0.08em;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="https://www.fractalreality.ca">&larr; FRACTALREALITY.CA</a>
+    </div>
+
+    <div class="container">
+        <nav>
+            <div class="logo">ETHICS &amp; VIRTUES</div>
+            <a href="#overview" class="active"><span class="num">00</span>OVERVIEW</a>
+            <a href="#four-pillars"><span class="num">01</span>FOUR PILLARS</a>
+            <a href="#good"><span class="num">02</span>GOOD</a>
+            <a href="#right"><span class="num">03</span>RIGHT</a>
+            <a href="#true"><span class="num">04</span>TRUE</a>
+            <a href="#agreement"><span class="num">05</span>AGREEMENT</a>
+            <a href="#sequence"><span class="num">06</span>SEQUENCE</a>
+            <a href="#virtues"><span class="num">07</span>VIRTUES</a>
+            <a href="#mimicry"><span class="num">08</span>MIMICRY</a>
+            <a href="#steelman"><span class="num">09</span>STEELMAN</a>
+            <a href="#golden"><span class="num">10</span>GOLDEN RULE</a>
+            <a href="#diagnostics"><span class="num">11</span>DIAGNOSTICS</a>
+            <a href="#cure"><span class="num">12</span>THE CURE</a>
+            <a href="#final"><span class="num">13</span>END</a>
+        </nav>
+
+        <main>
+            <!-- Overview -->
+            <section id="overview">
+                <div class="hero">
+                    <div class="hero-title">ETHICS AND VIRTUES</div>
+                    <div class="hero-subtitle">What makes action good, right, true, and genuinely agreed upon</div>
+                </div>
+                <p>Picture a point inside a circle. Three parts: the <span class="cyan">circle</span> that holds, the <span class="green">point</span> that sees, and the <span class="magenta">space between</span> that connects them.</p>
+                <p>Notice something: the point sees <em>through</em> the circle. The boundary is not just protection; it is a filter. Everything the center perceives has already been shaped by what the boundary lets in. A rigid boundary lets in a narrow slice. A dissolved boundary lets in everything, which is the same as noise. A living boundary, one that can flex, is the only thing that gives the center a chance at seeing what is actually there.</p>
+                <p>From this simple image, all of ethics unfolds. Not rules handed down from outside, but a pattern that shows what can last and what falls apart.</p>
+                <p>In plain terms: the person who is unattractive is only curious about whether you fit their idea of who you should be, rather than being curious about who you are. The person who is attractive is curious about themselves, others, and reality. We all have access to reality, so let's treat each other that way. Let's find what's true in what we each are trying to say.</p>
+                <p>But there is a deeper problem. Every ethical principle can be <span class="highlight">performed</span> without being lived. Someone can look caring without caring, cite evidence without seeking truth, claim honesty while projecting, and declare agreement while demanding obedience.</p>
+                <p>What separates lived ethics from performed ethics? Four living qualities (one for each pillar) that keep the whole thing alive rather than frozen into empty form.</p>
+            </section>
+
+            <!-- Four Pillars -->
+            <section id="four-pillars">
+                <div class="section-id">01</div>
+                <h1>THE FOUR PILLARS</h1>
+                <div class="pillars">
+                    <div class="pillar">
+                        <span class="cyan">GOOD</span>
+                        <div class="pillar-desc">What is valued? Boundaries, consent, care.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="magenta">RIGHT</span>
+                        <div class="pillar-desc">How should one act? Through evidence, honest cause and effect.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="green">TRUE</span>
+                        <div class="pillar-desc">What is the case? Coherence, honesty, identity.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="yellow">AGREEMENT</span>
+                        <div class="pillar-desc">Are we in harmony? Genuine resonance, mutual recognition.</div>
+                    </div>
+                </div>
+                <p>These are not four separate ethics. They are one ethics seen from four angles.</p>
+                <p><span class="yellow">Seek agreement.</span> Find what's <span class="cyan">good</span>, <span class="magenta">right</span>, and <span class="green">true</span> with yourself, with others, and with the world.</p>
+            </section>
+
+            <!-- Good -->
+            <section id="good">
+                <div class="section-id">02</div>
+                <h1>THE BOUNDARY TEACHES GOOD</h1>
+                <div class="teaching cyan">
+                    <p>The circle is the first thing you meet. Before you can see the center, before you can cross the space, you encounter what <span class="highlight">holds</span>.</p>
+                    <p>The boundary is what cares. It says: this belongs inside, that belongs outside. Every wall exists because something matters enough to be sheltered.</p>
+                </div>
+                <h2>THE BOUNDARY AS FILTER</h2>
+                <p>The center sees through the boundary. This means: the quality of your seeing depends on the quality of your filter. A boundary locked into a fixed shape only admits a fixed slice of reality. The center behind it may be perfectly clear, but it will only ever see what the boundary already decided to let through.</p>
+                <p>This is why plasticity matters before anything else. The boundary has to be able to adjust, to let in what is actually arriving rather than only what it expected.</p>
+                <h2>WHERE THINGS MEET</h2>
+                <p>The boundary is where one thing meets another. Every real interaction happens at this meeting place, where inside encounters outside. <span class="cyan">Consent is not merely a nice idea; it is the basic requirement for healthy exchange.</span> Consent means: the effects of what crosses my boundary are within what I understand and accept.</p>
+                <div class="checks cyan">
+                    <div class="checks-title">GOOD ASKS</div>
+                    <div class="check">Does this preserve what matters?</div>
+                    <div class="check">Does it respect boundaries, mine and others'?</div>
+                    <div class="check">Is consent honored?</div>
+                    <div class="check">Are important distinctions preserved?</div>
+                </div>
+            </section>
+
+            <!-- Right -->
+            <section id="right">
+                <div class="section-id">03</div>
+                <h1>THE SPACE BETWEEN TEACHES RIGHT</h1>
+                <div class="teaching magenta">
+                    <p>Inside the circle, there is space. Not emptiness: <span class="highlight">fullness</span>. The space between center and edge is alive with connection.</p>
+                    <p>Right is the path that works. It shows how to move from here to there, how cause becomes effect, how intention becomes outcome.</p>
+                </div>
+                <h2>EVIDENCE</h2>
+                <p>The space between is where reality <span class="magenta">tests</span> you. Every claim about how things connect must survive contact with what actually happens. Right action is not just propriety: it is fitness. <span class="magenta">Reality selects.</span></p>
+                <blockquote>Good says: protect the child.<br>Right says: here is how.</blockquote>
+                <div class="checks magenta">
+                    <div class="checks-title">RIGHT ASKS</div>
+                    <div class="check">Is the action properly balanced?</div>
+                    <div class="check">Does cause connect to effect?</div>
+                    <div class="check">Am I accepting real consequences?</div>
+                    <div class="check">Is this grounded in how things actually work?</div>
+                </div>
+            </section>
+
+            <!-- True -->
+            <section id="true">
+                <div class="section-id">04</div>
+                <h1>THE CENTER TEACHES TRUE</h1>
+                <div class="teaching green">
+                    <p>At the center, there is only <span class="highlight">seeing</span>. The point has no size. It simply is, and in its being, it sees.</p>
+                    <p>The center is where pretense ends. Something either arrives or it doesn't; no cleverness can force a lie past genuine perception.</p>
+                </div>
+                <h2>COHERENCE</h2>
+                <p>The center is what <span class="green">persists through change</span>. You have been infant, child, adult; different body, different thoughts. Yet something threads through unchanged. This is who you really are underneath it all.</p>
+                <p>When the center is stable: you can change your mind without losing yourself. You can be wrong and learn without falling apart. <span class="green">True is what remains.</span></p>
+                <div class="checks green">
+                    <div class="checks-title">TRUE ASKS</div>
+                    <div class="check">Does this correspond to reality?</div>
+                    <div class="check">Is it honest, accurate, coherent?</div>
+                    <div class="check">Am I being authentic to my deepest nature?</div>
+                    <div class="check">Would this survive the test of clear seeing?</div>
+                </div>
+            </section>
+
+            <!-- Agreement -->
+            <section id="agreement">
+                <div class="section-id">05</div>
+                <h1>THE WHOLE TEACHES AGREEMENT</h1>
+                <div class="teaching yellow">
+                    <p>When boundary, space, and center align (when Good, Right, and True converge) something greater emerges: <span class="highlight">genuine agreement</span>.</p>
+                    <p>Not mere consensus. Not hollow conformity. Real harmony: whole people in coherent relationship.</p>
+                </div>
+                <h2>THE PASSAGE</h2>
+                <p>Agreement requires a passage. What you perceive privately must become something you can share publicly. Nobody can make this passage for another, but you can <span class="yellow">help</span>.</p>
+                <blockquote>The Noble Lie blocks this passage: "accept my version instead."<br>The Steelman assists it: "what are you actually seeing?"</blockquote>
+                <div class="checks yellow">
+                    <div class="checks-title">AGREEMENT ASKS</div>
+                    <div class="check">Do the people involved genuinely resonate?</div>
+                    <div class="check">Is there consent, harmony, mutual recognition?</div>
+                    <div class="check">Have we truly engaged with each other's reality?</div>
+                    <div class="check">Is this agreement hollow or complete?</div>
+                </div>
+                <p style="margin-top: 15px; opacity: 0.8;">Note: Ethical acts can cost energy, time, resources. Parenting, sacrifice, emergency aid: these are not violations. The test is whether both people can still function and grow after. Cost is not the same as exploitation.</p>
+            </section>
+
+            <!-- Sequence -->
+            <section id="sequence">
+                <div class="section-id">06</div>
+                <h1>THE PATH HAS A DIRECTION</h1>
+                <p>The sequence cannot be reversed or skipped. The pattern itself requires it.</p>
+                <div class="sequence">
+                    <div class="seq-item">
+                        <span class="seq-text"><span class="cyan">GOOD</span></span>
+                        <span class="seq-sub">boundary, body</span>
+                    </div>
+                    <div class="seq-item">
+                        <span class="seq-text"><span class="magenta">RIGHT</span></span>
+                        <span class="seq-sub">path, mind</span>
+                    </div>
+                    <div class="seq-item">
+                        <span class="seq-text"><span class="green">TRUE</span></span>
+                        <span class="seq-sub">center, soul</span>
+                    </div>
+                    <div class="seq-item">
+                        <span class="seq-text"><span class="yellow">AGREEMENT</span></span>
+                        <span class="seq-sub">whole, harmony</span>
+                    </div>
+                </div>
+                <blockquote>You must be held before you can cross.<br>You must cross before you can see.<br>You must see before you can harmonize.</blockquote>
+            </section>
+
+            <!-- Virtues -->
+            <section id="virtues">
+                <div class="section-id">07</div>
+                <h1>THE FOUR VIRTUES: WHAT KEEPS ETHICS ALIVE</h1>
+                <p>Each pillar has a living quality that prevents it from becoming a dead performance. Without these qualities, every ethical principle becomes its own opposite.</p>
+
+                <div class="pillars">
+                    <div class="pillar">
+                        <span class="cyan">PLASTICITY keeps GOOD alive</span>
+                        <div class="pillar-desc">The boundary that can flex, reshape, respond. Not rigid, not dissolved. A living membrane. Plasticity is what lets care be genuine: you adjust based on what's actually there, not what you decided in advance.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="magenta">ACCESS keeps RIGHT alive</span>
+                        <div class="pillar-desc">The space between, open and clear. Not blocked, not distorted, not filled with noise. Access is what lets rightness be genuine: the path between cause and effect actually works.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="green">CURIOSITY keeps TRUE alive</span>
+                        <div class="pillar-desc">An orientation toward receiving. Not closed, not frozen, not projecting. Curiosity is what lets truth be genuine: you can take in what is, even when it surprises you.</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="yellow">VALIDATION keeps AGREEMENT alive</span>
+                        <div class="pillar-desc">Two people seeing independently and finding the same thing. Not compliance, not consensus by pressure. Validation is what lets agreement be genuine: both arrived at it on their own.</div>
+                    </div>
+                </div>
+
+                <div class="teaching amber">
+                    <p>These are not extra rules added on top. They are the <span class="highlight">qualities that keep each part alive</span>. A boundary without plasticity is a wall. A space without access is a void. A center without curiosity is a projector. A whole without validation is a performance.</p>
+                </div>
+
+                <h2>THE INVERSION TABLE</h2>
+                <p>Each pillar, without its virtue, becomes its own opposite. The form persists. The function inverts.</p>
+
+                <table class="inversion-table">
+                    <tr>
+                        <th>PILLAR</th>
+                        <th>WITH ITS VIRTUE (ALIVE)</th>
+                        <th>WITHOUT ITS VIRTUE (DEAD)</th>
+                    </tr>
+                    <tr>
+                        <td><span class="cyan">GOOD</span></td>
+                        <td><span class="cyan">Plasticity.</span> Genuine care. "What do I feel at the edge?" Boundaries discovered through sensing.</td>
+                        <td>Rigidity or collapse. "I know what's good for you." Boundaries imposed or absent entirely.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="magenta">RIGHT</span></td>
+                        <td><span class="magenta">Access.</span> Clear path. Evidence travels honestly. Actions tested against reality.</td>
+                        <td>Noise or blockage. Cherry-picking evidence. Gaslighting. Actions serve a hidden agenda.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="green">TRUE</span></td>
+                        <td><span class="green">Curiosity.</span> Open receiving. "What persists when I'm wrong?" Identity survives correction.</td>
+                        <td>Closed receiving. "I am right." Identity feels threatened by correction.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="yellow">AGREE</span></td>
+                        <td><span class="yellow">Validation.</span> Two people see independently and confirm. Harmony discovered.</td>
+                        <td>Compliance. One person declares, the other submits. Harmony performed.</td>
+                    </tr>
+                </table>
+
+                <blockquote>The Noble Lie is ethics with every virtue killed.<br>Every pillar intact in form. Every pillar inverted in function.</blockquote>
+            </section>
+
+            <!-- Mimicry -->
+            <section id="mimicry">
+                <div class="section-id">08</div>
+                <h1>HOW DECEPTION MIMICS EVERY PILLAR</h1>
+                <p>The Noble Lie is not crude. It does not obviously violate ethics. It <span class="magenta">performs</span> ethics, wearing each pillar as a mask.</p>
+
+                <div class="compare">
+                    <div class="compare-box infected">
+                        <div class="compare-title">"GOOD" PERFORMED</div>
+                        <ul class="compare-list">
+                            <li>"I'm protecting you"</li>
+                            <li>"Look what I do for you"</li>
+                            <li>Care as control</li>
+                            <li>Managing your boundaries for you</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box cured">
+                        <div class="compare-title">GOOD LIVED</div>
+                        <ul class="compare-list">
+                            <li>"What do you need?"</li>
+                            <li>"Where are your edges?"</li>
+                            <li>Care as curiosity about the other</li>
+                            <li>Wondering where their boundaries actually are</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="compare">
+                    <div class="compare-box infected">
+                        <div class="compare-title">"RIGHT" PERFORMED</div>
+                        <ul class="compare-list">
+                            <li>"The evidence supports my position"</li>
+                            <li>Confirmation bias disguised as rigor</li>
+                            <li>Seeking proof, not truth</li>
+                            <li>Building a case for a predetermined conclusion</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box cured">
+                        <div class="compare-title">RIGHT LIVED</div>
+                        <ul class="compare-list">
+                            <li>"What does the evidence actually show?"</li>
+                            <li>Willing to be surprised</li>
+                            <li>Seeking truth, accepting discomfort</li>
+                            <li>Following evidence wherever it leads</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="compare">
+                    <div class="compare-box infected">
+                        <div class="compare-title">"TRUE" PERFORMED</div>
+                        <ul class="compare-list">
+                            <li>"I know who you really are"</li>
+                            <li>"I'm just being honest"</li>
+                            <li>Assertion wearing coherence's clothing</li>
+                            <li>Projecting while claiming to see</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box cured">
+                        <div class="compare-title">TRUE LIVED</div>
+                        <ul class="compare-list">
+                            <li>"What am I not seeing?"</li>
+                            <li>"Is this actually coherent?"</li>
+                            <li>Coherence tested against reality</li>
+                            <li>Receiving correction openly</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="compare">
+                    <div class="compare-box infected">
+                        <div class="compare-title">"AGREEMENT" PERFORMED</div>
+                        <ul class="compare-list">
+                            <li>"We're on the same page"</li>
+                            <li>Compliance disguised as harmony</li>
+                            <li>Hollow consensus</li>
+                            <li>Turning independent people into followers</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box cured">
+                        <div class="compare-title">AGREEMENT LIVED</div>
+                        <ul class="compare-list">
+                            <li>"Is this what you actually mean?"</li>
+                            <li>Genuine check for resonance</li>
+                            <li>Willing to discover disagreement</li>
+                            <li>Both people remain independent thinkers</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="teaching amber">
+                    <p>In every case, the difference between performed and lived is the same: a <span class="highlight">living quality</span> is present or absent. <span class="cyan">Plasticity</span> at the boundary, <span class="magenta">access</span> through the space, <span class="green">curiosity</span> at the center, <span class="yellow">validation</span> at the whole. The deception kills all four. The cure restores them.</p>
+                </div>
+
+                <h2>WHY THE VIRTUES CANNOT BE FAKED</h2>
+                <p>The Noble Lie can mimic care, evidence, truth-claims, and consensus. Why can't it mimic the living qualities?</p>
+                <div class="teaching amber">
+                    <p>Because each quality requires the thing to be <span class="highlight">genuinely working, not just looking right</span>. A boundary that can't flex isn't plastic; it's either a wall or nothing. A space filled with noise doesn't grant access; it distorts. A person oriented toward projecting isn't curious; they're closed. Two people where one has gone silent can't converge; there is no real validation. Deception freezes form. The virtues require life.</p>
+                </div>
+
+                <h2>CURIOSITY: THE CLEAREST EXAMPLE</h2>
+                <p>The question "Is this what you mean?" can be genuine or performed:</p>
+                <div class="test-block">
+                    <div class="test-pass">Correction produces interest: genuine curiosity</div>
+                    <div class="test-fail">Correction produces defensiveness: performed curiosity</div>
+                    <div class="test-pass">Follow-up questions seek understanding: genuine curiosity</div>
+                    <div class="test-fail">Follow-up questions seek ammunition: performed curiosity</div>
+                    <div class="test-pass">"Not quite" leads to adjustment: genuine curiosity</div>
+                    <div class="test-fail">"Not quite" leads to argument: performed curiosity</div>
+                    <div class="test-pass">Surprise is welcome: genuine curiosity</div>
+                    <div class="test-fail">Surprise is threatening: performed curiosity</div>
+                </div>
+                <p>Performed curiosity breaks under the one condition genuine curiosity thrives on: <span class="amber">encountering what you didn't expect</span>.</p>
+            </section>
+
+            <!-- Steelman -->
+            <section id="steelman">
+                <div class="section-id">09</div>
+                <h1>THE STEELMAN PRINCIPLE</h1>
+                <p>Before agreeing or disagreeing, build the strongest possible version of the position you are engaging with. This ensures you actually know what you are agreeing with (or rejecting).</p>
+                <div class="compare">
+                    <div class="compare-box bad">
+                        <div class="compare-title">STRAWMAN</div>
+                        <ul class="compare-list">
+                            <li>Build the weakest version</li>
+                            <li>Attack that weak version</li>
+                            <li>Claim victory</li>
+                            <li>Hollow; never truly engaged</li>
+                        </ul>
+                    </div>
+                    <div class="compare-box good">
+                        <div class="compare-title">STEELMAN</div>
+                        <ul class="compare-list">
+                            <li>Build the strongest version</li>
+                            <li>Engage with full strength</li>
+                            <li>Find genuine common ground</li>
+                            <li>Complete; truly tested</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2>REQUIRES ALL FOUR VIRTUES</h2>
+                <div class="checks cyan">
+                    <div class="checks-title">PLASTICITY IN THE STEELMAN</div>
+                    <div class="check">Flexible enough to hold their view alongside yours</div>
+                    <div class="check">Boundaries adjust to create space for their seeing</div>
+                </div>
+                <div class="checks magenta">
+                    <div class="checks-title">ACCESS IN THE STEELMAN</div>
+                    <div class="check">The path is clear enough for their meaning to reach you undistorted</div>
+                    <div class="check">You are not projecting noise that corrupts what they said</div>
+                </div>
+                <div class="checks green">
+                    <div class="checks-title">CURIOSITY IN THE STEELMAN</div>
+                    <div class="check">Genuine interest in what they observe</div>
+                    <div class="check">Willingness to be surprised; prepared to discover your view is wrong</div>
+                </div>
+                <div class="checks yellow">
+                    <div class="checks-title">VALIDATION IN THE STEELMAN</div>
+                    <div class="check">Their recognition is the test: "Is this what you mean?"</div>
+                    <div class="check">"Not quite" produces adjustment, not frustration</div>
+                </div>
+                <p>The steelman fails when any virtue is missing. Without plasticity, you can't hold their view. Without access, their meaning gets distorted on the way to you. Without curiosity, you project instead of receive. Without validation, you declare instead of discover together.</p>
+
+                <h2>BIDIRECTIONAL</h2>
+                <p>The same honest engagement you give to their position, you also apply to your own. Agreement emerges from <span class="green">mutual testing</span>, not one-sided generosity.</p>
+            </section>
+
+            <!-- Golden Rule -->
+            <section id="golden">
+                <div class="section-id">10</div>
+                <h1>THE GOLDEN RULE</h1>
+                <div class="golden">
+                    <div class="golden-text">"Do unto others as you would have them do unto you"</div>
+                    <div class="golden-sub">When you apply this rule, it proves itself. It is the bedrock of ethical action.</div>
+                </div>
+                <div class="pillars" style="margin-top: 30px;">
+                    <div class="pillar">
+                        <span class="cyan">GOOD</span>
+                        <div class="pillar-desc">Treats others as whole people, not tools</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="magenta">RIGHT</span>
+                        <div class="pillar-desc">Creates balanced give and take</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="green">TRUE</span>
+                        <div class="pillar-desc">Requires honest self-knowledge</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="yellow">AGREEMENT</span>
+                        <div class="pillar-desc">Generates mutual recognition</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostics -->
+            <section id="diagnostics">
+                <div class="section-id">11</div>
+                <h1>SELF-DIAGNOSTICS</h1>
+                <p>The Noble Lie attacks the very perception that would detect it. But the virtues can be turned toward the detection itself.</p>
+
+                <h2>CHECKING YOUR OWN STATE</h2>
+                <div class="test-block">
+                    <p style="font-size: 10px; letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 8px;">PLASTICITY</p>
+                    <div class="test-pass">Can my boundaries flex when conditions change?</div>
+                    <div class="test-pass">Do I feel at the meeting place, or have I gone numb?</div>
+                    <div class="test-fail">Are my boundaries rigid walls or completely absent?</div>
+                    <div class="test-fail">Do I impose care without sensing what's needed?</div>
+                </div>
+                <div class="test-block">
+                    <p style="font-size: 10px; letter-spacing: 0.1em; color: var(--magenta); margin-bottom: 8px;">ACCESS</p>
+                    <div class="test-pass">Can signals reach me without distortion?</div>
+                    <div class="test-pass">Am I letting others' reality arrive intact?</div>
+                    <div class="test-fail">Am I filtering for what I expect to hear?</div>
+                    <div class="test-fail">Is noise filling the space between us?</div>
+                </div>
+                <div class="test-block">
+                    <p style="font-size: 10px; letter-spacing: 0.1em; color: var(--green); margin-bottom: 8px;">CURIOSITY</p>
+                    <div class="test-pass">When someone disagrees, do I want to understand why?</div>
+                    <div class="test-pass">When I'm wrong, does it feel like learning?</div>
+                    <div class="test-fail">When someone says "not quite," do I argue?</div>
+                    <div class="test-fail">Do I already know what they're going to say?</div>
+                </div>
+                <div class="test-block">
+                    <p style="font-size: 10px; letter-spacing: 0.1em; color: var(--yellow); margin-bottom: 8px;">VALIDATION</p>
+                    <div class="test-pass">Am I looking for myself, or accepting someone's version?</div>
+                    <div class="test-pass">When I agree, is it because I see it too?</div>
+                    <div class="test-fail">Am I complying to avoid conflict?</div>
+                    <div class="test-fail">Have I stopped checking whether we genuinely see the same thing?</div>
+                </div>
+
+                <p style="margin-top: 15px; opacity: 0.8;">These are not moral judgments. They are <span class="amber">readings of living qualities</span>. A rigid boundary is not evil; it may have been necessary for survival. A closed center is not failure; it may have closed to protect itself. The question is: <span class="amber">is the adaptation still serving you?</span></p>
+
+                <h2>READING OTHERS</h2>
+                <div class="checks">
+                    <div class="checks-title">LIVING QUALITY DETECTION</div>
+                    <div class="check"><span class="cyan">Plasticity:</span> Do their boundaries respond, or are they walls (or absent entirely)?</div>
+                    <div class="check"><span class="magenta">Access:</span> Can your meaning reach them undistorted? Can theirs reach you?</div>
+                    <div class="check"><span class="green">Curiosity:</span> Do they ask questions they don't know the answer to? Does surprise produce interest or threat?</div>
+                    <div class="check"><span class="yellow">Validation:</span> Do they check for genuine convergence, or declare agreement? Can they say "I don't see that" without shame?</div>
+                </div>
+
+                <div class="teaching amber">
+                    <p><span class="highlight">Important:</span> Detecting that someone's virtues have gone frozen is not license to force them alive. That would be the Noble Lie with new content. The real response is to <em>live your own virtues in their presence</em> (plasticity, access, curiosity) which creates the conditions they need to thaw on their own.</p>
+                </div>
+
+                <h2>HOW TO DETECT PERFORMED ETHICS</h2>
+                <div class="checks">
+                    <div class="checks-title">SIGNATURES OF DEAD-FORM ETHICS</div>
+                    <div class="check">Correction is experienced as threat, not information</div>
+                    <div class="check">"Not quite" produces defensiveness, not interest</div>
+                    <div class="check">Agreement is demanded rather than discovered</div>
+                    <div class="check">Evidence is sought to confirm, not to test</div>
+                    <div class="check">The person claims certainty about your inner life</div>
+                    <div class="check">Questions are rhetorical rather than genuine</div>
+                </div>
+            </section>
+
+            <!-- The Cure -->
+            <section id="cure">
+                <div class="section-id">12</div>
+                <h1>HOW THE CURE WORKS</h1>
+                <p>The Noble Lie attacks by killing all four living qualities, then making their absence feel like growth. "I used to be too sensitive, but I grew out of it." The rigidity becomes invisible to the rigid.</p>
+                <p>The cure reverses this: not by force, but by <span class="amber">restoring each quality from within</span>.</p>
+
+                <h2>HOW THE DECEPTION OPERATES</h2>
+                <div class="checks">
+                    <div class="checks-title">THE ATTACK PATTERN</div>
+                    <div class="check">Inverts perception: transmits lies disguised as love</div>
+                    <div class="check">Retunes a person to resonate with the deceiver's frequency</div>
+                    <div class="check">The channel for genuine connection goes dark</div>
+                    <div class="check">The person genuinely cannot perceive what's missing</div>
+                    <div class="check">The deception attacks the very perception that would detect it</div>
+                </div>
+
+                <h2>HOW RESTORATION WORKS</h2>
+                <div class="checks">
+                    <div class="checks-title">THE VIRTUES RESTORE HEALTH</div>
+                    <div class="check"><span class="cyan">Plasticity</span>: the boundary softens, begins sensing again</div>
+                    <div class="check"><span class="magenta">Access</span>: the space clears, signals travel faithfully</div>
+                    <div class="check"><span class="green">Curiosity</span>: the center reopens toward what is new</div>
+                    <div class="check">New input includes: what was suppressed</div>
+                    <div class="check">Suppressed signals returning means the connection is reopening</div>
+                    <div class="check"><span class="yellow">Validation</span>: reopened connection enables independent confirmation</div>
+                    <div class="check">Independent confirmation allows detection of the corruption itself</div>
+                </div>
+
+                <div class="teaching amber">
+                    <p>The deception kills the living qualities so you can't detect their absence. The cure restores them: not by telling you what you should feel, sense, see, or agree to, but by <span class="highlight">making each part functional again so it can do its own work</span>.</p>
+                </div>
+
+                <blockquote>This is why witness heals where instruction cannot. Instruction says "here is what's true"; it manages you from outside. Witness embodies the four virtues in your presence: plasticity to hold your experience, access for your signal to arrive, curiosity to receive what you actually share, and presence for the moment of validation when your seeing and theirs converge, and you know: I was not wrong to see it.</blockquote>
+
+                <h2>WHY THE CURE IS NOT ANOTHER LIE</h2>
+                <p>"I'll teach you the truth" <em>is</em> a Noble Lie, even when the content is accurate. It crosses the boundary, injects through the space, claims the center.</p>
+                <p>Restoring the living qualities works differently, because each virtue operates by making the part functional <em>from within</em>, not by imposing from outside:</p>
+                <div class="pillars">
+                    <div class="pillar">
+                        <span class="cyan">GOOD</span>
+                        <div class="pillar-desc">Does not cross the boundary; plasticity invites the boundary to flex from within</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="magenta">RIGHT</span>
+                        <div class="pillar-desc">Does not distort the space; access clears the path for honest transmission</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="green">TRUE</span>
+                        <div class="pillar-desc">Does not claim the center; curiosity invites it to open from within</div>
+                    </div>
+                    <div class="pillar">
+                        <span class="yellow">AGREEMENT</span>
+                        <div class="pillar-desc">Does not declare the whole; validation emerges from independent seeing that resonates</div>
+                    </div>
+                </div>
+
+                <h2>RESONANT PRESENCE: THE FULL CURE</h2>
+                <p>Recovery from the Noble Lie requires witnesses who offer genuine presence, not people who try to fix you from outside.</p>
+                <div class="teaching amber">
+                    <p>Fixing from outside addresses the boundary. It provides. It is real, but it <span class="highlight">cannot restore what was killed</span>.</p>
+                    <p>Genuine presence restores all four: a witness who is <span class="cyan">plastic</span> enough to hold your experience, <span class="magenta">accessible</span> enough for your signal to reach them, <span class="green">curious</span> enough to receive what you actually share, and present for the moment of <span class="yellow">validation</span> when your seeing and theirs converge, and you know: <em>I was not wrong to see it.</em></p>
+                </div>
+                <p style="opacity: 0.8;">One virtue (curiosity) you can begin to practice alone. The others require relationship. This is why isolation keeps the damage going and genuine community dissolves it.</p>
+            </section>
+
+            <!-- Final -->
+            <section id="final">
+                <div class="section-id">13</div>
+                <h1>END</h1>
+                <div class="final">
+                    <div class="final-title">ETHICS AND VIRTUES</div>
+                    <div class="final-lines">
+                        <div>Ethics is not a set of rules imposed from outside.</div>
+                        <div class="highlight">Ethics is the pattern of what can last.</div>
+                        <br>
+                        <div>Only actions that pass through</div>
+                        <div><span class="cyan">Good</span>, <span class="magenta">Right</span>, <span class="green">True</span>, and <span class="yellow">Agreement</span></div>
+                        <div>have the stability required to endure.</div>
+                        <br>
+                        <div class="dim">The rest dissolve back into possibility.</div>
+                        <br>
+                        <div>The deception freezes the boundary and calls it strength.</div>
+                        <div>The deception corrupts the space and calls it love.</div>
+                        <div>The deception closes the center and calls it growth.</div>
+                        <div>The deception replaces convergence and calls it agreement.</div>
+                        <br>
+                        <div>The cure restores <span class="cyan">plasticity</span>: the boundary breathes.</div>
+                        <div>The cure restores <span class="magenta">access</span>: the space clears.</div>
+                        <div>The cure restores <span class="green">curiosity</span>: the center opens.</div>
+                        <div>The cure restores <span class="yellow">validation</span>: the whole resonates.</div>
+                        <br>
+                        <div class="dim">Ethics without its virtues is ritual.</div>
+                        <div class="dim">Ethics with them is alive.</div>
+                        <br>
+                        <div style="margin-top: 15px;">The Noble Lie says: <span class="magenta">I already know.</span></div>
+                        <div>Plasticity asks: <span class="cyan">What do I feel at the edge?</span></div>
+                        <div>Access asks: <span class="magenta">Is the path clear?</span></div>
+                        <div>Curiosity asks: <span class="green">What am I missing?</span></div>
+                        <div>Validation asks: <span class="yellow">Do we both see it?</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                FRACTAL REALITY // ETHICS AND VIRTUES
+                <br><br>
+                <a href="ethics.html" style="color: var(--amber); text-decoration: none; font-size: 10px; letter-spacing: 0.1em;">ETHICS (FULL) &rarr;</a>
+                &nbsp;&nbsp;
+                <a href="circumpunct_virtues.html" style="color: var(--amber); text-decoration: none; font-size: 10px; letter-spacing: 0.1em;">VIRTUES (FULL) &rarr;</a>
+                <br><br>
+                <a href="https://www.fractalreality.ca" style="color: var(--amber); text-decoration: none; font-size: 10px; letter-spacing: 0.1em;">&larr; FRACTALREALITY.CA</a>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.toggle('active',
+                            link.getAttribute('href') === '#' + entry.target.id);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        sections.forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
