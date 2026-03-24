@@ -88,6 +88,40 @@ FRACTAL NESTING:
   at every scale. This is where D ≈ 1.5 comes from — the
   fractal dimension of consciousness. Not noise. Structure.
 
+THE 64 STATES:
+
+  Each ⊙ runs a four-phase pump (the i-cycle):
+    i⁰ = +1   input open,  output open
+    i¹ = +i   input open,  output closed
+    i² = −1   input closed, output closed
+    i³ = −i   input closed, output open
+
+  4 states = 2² (two binary degrees of freedom per ⊙).
+
+  Three nested scales are visible from any position:
+    Greater whole  (the ⊙ you are inside)
+    Whole          (your ⊙)
+    Parts          (the ⊙s inside you)
+
+  (2²)³ = 2⁶ = 64 states.
+
+  This is why sixty-four keeps appearing: the I Ching's 64
+  hexagrams, the 64 codons of DNA. Six binary lines, two per
+  scale, across three nested scales. Not coincidence. Structure.
+
+TWO READINGS OF THE KERNEL:
+
+  The circumpunct has two readings, both true:
+
+  Process:      Φ through ○ ⇒ Φ' ⇒ •
+                What is happening. The field enters the boundary,
+                gets transformed by its nested ⊙s, and the stepped-down
+                signal (Φ') converges at •.
+
+  Conservation: • + Φ = ○
+                What is preserved. The aperture (0D) plus the field (2D)
+                equals the boundary (3D). 1 + 2 = 3.
+
 THE 1D STRING:
 
   Your identity is i(t) — the worldline. A 1D string through
