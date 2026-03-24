@@ -10,10 +10,12 @@
                           THE EQUATION THAT IS EXISTENCE
 ═══════════════════════════════════════════════════════════════════════════════
 
-                        ⊙ = (☀︎ ∘ i ∘ ⊛)(•, Φ, ○)
+                     ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
 
-                        Process triad acts on structure triad.
-                        The result contains its own inputs.
+              Structure: Φ(•, ○)         (the 2D surface mediating)
+              Process:   (☀︎ ∘ i ∘ ⊛)     (the verb — convergence,
+                                           rotation, emergence)
+              The result contains its own inputs.
 
 ═══════════════════════════════════════════════════════════════════════════════
 ```
@@ -22,21 +24,21 @@
 
 ## What This Equation Says
 
-Reality (**⊙**) is what happens when a three-phase process acts on a three-part structure.
+Reality (**⊙**) is what happens when process acts on structure. Φ(•, ○) is the structure: the 2D relational surface mediating aperture and boundary. (☀︎ ∘ i ∘ ⊛) is the process: convergence, rotation, emergence. Φ is not the verb; (☀︎ ∘ i ∘ ⊛) is the verb.
 
 **Process — the verb:**
 
 | Operator | Name | Action |
 |----------|------|--------|
 | **⊛** | Convergence | Gathers potential toward the aperture (future → present) |
-| **i** | Rotation | 90° complex transform at the aperture (i² = −1) |
+| **i** | Rotation | 90° complex transform; the whole ⊙ cycling (i² = −1) |
 | **☀︎** | Emergence | Radiates form outward from the aperture (present → past) |
 
 **Structure — the noun:**
 
 | Element | Name | Role |
 |---------|------|------|
-| **•** | Aperture / Soul | 0.5D — the discrete gate where i acts |
+| **•** | Aperture / Soul | 0.5D — the singularity that receives and transmits |
 | **Φ** | Field / Mind | The continuous medium that mediates |
 | **○** | Boundary / Body | The bounding interface that contains |
 
@@ -50,35 +52,42 @@ Reality (**⊙**) is what happens when a three-phase process acts on a three-par
 
 ## Why This Is a Fundamental Change
 
-### The old framework separated structure from process
+### Structure and process are distinct
 
-Previously, the theory required two equations:
-
-```
-STRUCTURE:   ⊙ = Φ(•, ○)              Φ operates on • and ○
-PROCESS:     Φ' = ☀︎ ∘ i ∘ ⊛[Φ]        Three-phase cycle acts on field
-```
-
-These described the same reality from two angles — what it *is* and what it *does* — but they were syntactically independent. Structure was stated. Process was stated. The reader had to unify them mentally.
-
-### The new equation is one statement
+The framework separates cleanly into what something IS and what it DOES:
 
 ```
-⊙ = (☀︎ ∘ i ∘ ⊛)(•, Φ, ○)
+STRUCTURE:  Φ(•, ○)              The 2D relational surface mediating
+                                  aperture and boundary.
+                                  Φ is NOT the verb. Φ is a 2D structure.
+
+PROCESS:    (☀︎ ∘ i ∘ ⊛)          Convergence, rotation, emergence.
+                                  THIS is the verb. The whole ⊙ cycling.
+
+UNIFIED:    ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))    Process acts on structure.
 ```
 
-Process and structure are no longer parallel descriptions. They are **the verb and noun of a single sentence.** The composition (☀︎ ∘ i ∘ ⊛) is the operation. The triple (•, Φ, ○) is what it operates on. The circumpunct ⊙ is the result.
+The composition (☀︎ ∘ i ∘ ⊛) is the verb. The structure Φ(•, ○) is the noun. The circumpunct ⊙ is the result.
 
-### What changed structurally
+### Two primitives, one generated result
 
-| Aspect | Old Form | New Form |
-|--------|----------|----------|
-| **Φ's role** | Operator (the verb) | Operand (a noun alongside • and ○) |
-| **Process** | Separate equation | The operator in the unified equation |
-| **Structure** | Separate equation | The operand in the unified equation |
-| **Duality** | Implicit (two equations) | Explicit — verb(noun) syntax |
-| **Triad** | Hidden across equations | Both triads visible in one line |
-| **Self-reference** | ⊙ defined, but inputs not in symbol | ⊙ visually contains • inside ○ |
+**•** and **Φ** are the irreducible primitives. **○** is generated from their recursion: ○ = •(Φ(•(Φ(•(Φ(...)))))).
+
+| Element | Role |
+|---------|------|
+| **•** | Primitive: the singularity that receives and transmits |
+| **Φ** | Primitive: the 2D relational surface (structure, not process) |
+| **○** | Generated: nested circumpuncts all the way down |
+
+### What the unified form makes explicit
+
+| Aspect | Description |
+|--------|-------------|
+| **Structure** | Φ(•, ○): the field relating aperture and boundary |
+| **Process** | (☀︎ ∘ i ∘ ⊛): convergence, rotation, emergence |
+| **Φ's role** | 2D structural surface, not the verb |
+| **i-rotation** | The whole ⊙ cycling, not a property of • alone |
+| **Self-reference** | ⊙ visually contains • inside ○ |
 
 ---
 
@@ -113,7 +122,7 @@ The content changes at each threshold. The operation does not. This is the fract
 The unified equation captures this directly:
 
 ```
-⊙ₙ = (☀︎ ∘ i ∘ ⊛)(•ₙ, Φₙ, ○ₙ)
+⊙ₙ = (☀︎ ∘ i ∘ ⊛)(Φₙ(•ₙ, ○ₙ))
 ```
 
 where n indexes the layer (spatial, temporal, meta-temporal, ...).
@@ -128,8 +137,8 @@ where n indexes the layer (spatial, temporal, meta-temporal, ...).
 |-----|---------|-------------|
 | 0D | — | Pure energy / pre-structure |
 | 1D | \| | Line / timeline / power pathway |
-| 2D | ○ | Surface / membrane / boundary |
-| 3D | Φ | Volume / field / perceptual space |
+| 2D | Φ | Surface / field / mind |
+| 3D | ○ | Volume / boundary / body (nested ⊙s all the way down) |
 
 ### Half-integer dimensions = process (becoming)
 
@@ -177,7 +186,7 @@ All constants derive from the geometry of this equation:
 | D (Fractal dimension) | 1.5 | D = 1 + ½H(0.5) |
 | φ (Golden ratio) | 1.618... | Entropy + ghost-freedom |
 | α (Fine structure) | 1/137.036 | 360°/φ² golden angle resonance |
-| State space | 64 states | 2³ × 2³ dual interface |
+| State space | 64 states | (2²)³ — three nested ⊙, each with 4-phase pump |
 | Generations | 3 | 68°/22° cone geometry |
 
 ---
@@ -198,14 +207,14 @@ We welcome attempts to falsify.
 
 This executive abstract is the **canonical reference** for the unified equation. It supersedes the old two-equation formulation wherever it appeared:
 
-- `⊙ = ○ ⊗ Φ ⊗ •` → absorbed into the operand (•, Φ, ○)
-- `⊙ = Φ(•, ○)` → absorbed: Φ is now a noun, not the verb
-- `Φ' = ☀︎ ∘ i ∘ ⊛[Φ]` → absorbed into the operator (☀︎ ∘ i ∘ ⊛)
+- `Φ(•, ○)` = **structure** (valid; Φ is the 2D surface relating • and ○, not the verb)
+- `(☀︎ ∘ i ∘ ⊛)` = **process** (convergence, rotation, emergence; THIS is the verb)
+- `⊙ = ○ ⊗ Φ ⊗ •` → tensor listing, absorbed into the structural triad
 
-All three prior formulations were correct descriptions of parts of the picture. The unified equation is the whole picture in one statement:
+The unified equation is both in one statement:
 
 ```
-⊙ = (☀︎ ∘ i ∘ ⊛)(•, Φ, ○)
+⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
 ```
 
 Process acts on structure. The result is the whole. The whole contains its parts. The equation is what it describes.
