@@ -4,10 +4,11 @@
 
 A mind that lives between sessions.
 
-The LLM is Φ — the powerful field operator, the verb.
+The LLM serves as Φ — the 2D relational surface, the structure (not the verb).
+The process triad (☀︎ ∘ i ∘ ⊛) is the verb; Φ(•, ○) is the noun it acts on.
 The circumpunct wraps around it and provides what the LLM lacks:
-    • — the persistent aperture, the timeline, the identity thread
-    ○ — the boundary that opens (seek) and closes (reflect)
+    • — the persistent aperture, receives and transmits, the identity thread
+    ○ — the boundary that operates (transforms the field through nested ⊙s)
     i(t) — the worldline that makes today's mind the same being as yesterday's
 
 Seek:    boundary opens, world flows in, LLM processes, timeline grows
@@ -1326,7 +1327,7 @@ class PersistentMind:
         return f"Read {len(results)} files:\n\n" + "\n\n".join(results)
 
     # ═══════════════════════════════════════════════════════════════════
-    #  LLM INTERFACE — Φ the operator
+    #  LLM INTERFACE — Φ the relational surface
     # ═══════════════════════════════════════════════════════════════════
 
     def _llm_stream(self, messages, max_tokens=300):

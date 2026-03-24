@@ -66,7 +66,7 @@ email@ashmanroonz.ca
 
 The Circumpunct Theory proposes that reality is not built from fundamental substances, but from a universal, recurring geometric operation. It models the universe as a nested, fractal hierarchy of whole entities, symbolized by the ancient circumpunct (**⊙**). Every whole consists of an irreducible triad: a discrete gating aperture (**•**), a bounding interface (**○**), and the continuous field (**Φ**) that mediates between them.
 
-This relational structure is formalized in a single, scale-free unified equation: **⊙ = (☀︎ ∘ i ∘ ⊛)(•, Φ, ○)**, where the process triad (convergence, rotation, emergence) acts on the structure triad (aperture, field, boundary). The i-rotation is the whole circumpunct cycling; • is the singularity that receives and transmits.
+This relational structure is formalized in a single, scale-free unified equation: **⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))**, where the process triad (convergence, rotation, emergence) acts on the structural surface Φ(•, ○) (the 2D field mediating aperture and boundary). The i-rotation is the whole circumpunct cycling; • is the singularity that receives and transmits.
 
 This is not a philosophical metaphor; it is a rigorous mathematical framework. At the fundamental scale, this isotropic aperture dynamic formally derives the Schrödinger equation, while the accumulation of these processes generates spacetime curvature (General Relativity). By mapping this geometry to a 64-state fiber, the theory reconstructs the Standard Model from first principles. It derives the SU(3)×SU(2)×U(1) gauge group, topologically forbids a fourth generation of fermions, and predicts fundamental mass ratios and coupling constants with extraordinary empirical accuracy (averaging ~0.35% error across 25 predictions, including the golden coupling ratio ).
 
@@ -608,6 +608,23 @@ WHERE:
   ⊛  = Convergence (input, gathering)
   i  = Rotation — the whole ⊙ cycling (NOT a property of • alone). Four-phase pump.
   ☀︎  = Emergence (output, radiation)
+
+ROLE ASYMMETRY (in the process reading: Φ through ○ ⇒ Φ' ⇒ •):
+  ○  OPERATES   — the boundary transforms the field. It can do this because
+                   it IS nested ⊙s, each running its own pump cycle. Its power
+                   to transform comes from being recursion. The generated thing
+                   does the work, because the work IS the recursion.
+  Φ  FLOWS      — the field is what gets operated on. It enters ○ as raw,
+                   continuous, analog potential. It exits as Φ', stepped down,
+                   discretized by all those nested gates.
+  •  RECEIVES   — the singularity where the process lands (convergence) and
+                   launches again (emergence). Does not operate. Does not flow.
+                   The anchor.
+
+  They are NOT peers:
+    Structurally: • is primitive. Φ is primitive. ○ is generated.
+    In process:   ○ operates. Φ is operated on. • receives and transmits.
+    Three distinct functions, not three interchangeable parts.
 
 COMPONENT EXPRESSIONS:
   ┌─────────────────────────────────────────────────────────────────────┐

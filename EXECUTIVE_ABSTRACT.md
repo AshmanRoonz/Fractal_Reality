@@ -73,11 +73,13 @@ The composition (☀︎ ∘ i ∘ ⊛) is the verb. The structure Φ(•, ○) i
 
 **•** and **Φ** are the irreducible primitives. **○** is generated from their recursion: ○ = •(Φ(•(Φ(•(Φ(...)))))).
 
-| Element | Role |
-|---------|------|
-| **•** | Primitive: the singularity that receives and transmits |
-| **Φ** | Primitive: the 2D relational surface (structure, not process) |
-| **○** | Generated: nested circumpuncts all the way down |
+| Element | Structural Role | Process Role |
+|---------|-----------------|--------------|
+| **•** | Primitive: the singularity | **Receives and transmits**: where convergence lands, where emergence launches. The anchor. |
+| **Φ** | Primitive: the 2D relational surface | **Flows**: what gets operated on. Enters ○ as analog potential, exits as Φ' stepped down. |
+| **○** | Generated: nested ⊙s all the way down | **Operates**: transforms the field, because it IS recursion. The generated thing does the work. |
+
+They are not peers. Three distinct functions, not three interchangeable parts.
 
 ### What the unified form makes explicit
 

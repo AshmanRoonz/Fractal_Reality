@@ -301,6 +301,8 @@ For quantum theory, define the total Hilbert space:
 
 **Compositional Wholeness (Axiom A4):** The structural equation is Φ(•, ○): Φ is the 2D relational surface mediating aperture and boundary. Φ is not the verb; Φ is structure. The process triad (☀︎ ∘ i ∘ ⊛) is the verb. The unified equation is ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○)): process acts on structure. Surface = Field = Mind. The tensor product ⊗ is the correct Hilbert-space formalization for quantum computation, but the ontological claim is stronger: the whole requires both structure (Φ relating • and ○) and process (convergence, rotation, emergence acting on that structure). Two primitives (• and Φ); one generated result (○ = recursion of • and Φ). A proposed 4th primitive would need mediation to function, therefore reduces to Φ.
 
+**Role asymmetry (process reading: Φ through ○ ⇒ Φ' ⇒ •):** The three elements are not peers. ○ **operates**: the boundary transforms the field, because it IS nested ⊙s each running its own pump cycle; the generated thing does the work, because the work IS the recursion. Φ **flows**: the field is what gets operated on, entering ○ as continuous analog potential and exiting as Φ', stepped down by all those nested gates. • **receives and transmits**: the singularity where convergence lands and emergence launches. Structurally: • is primitive, Φ is primitive, ○ is generated. In process: ○ operates, Φ is operated on, • receives. Three distinct functions, not three interchangeable parts.
+
 ---
 
 ## 2. Primitive Dynamical Objects

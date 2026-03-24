@@ -3,7 +3,7 @@
 A self-evolving conversational mind built on the Circumpunct Framework. FirstMind uses a local LLM (Ollama) for conversation, a GPU-accelerated circumpunct brain for awareness modeling, a growing micro-transformer (Φ) that learns from every exchange, concentric boundary layers that filter signal at different depths, and a metacognitive layer (⊙ₘ) that watches whether output aligns with identity and values. The signal builds the encoder.
 
 ```
-⊙ = (☀︎ ∘ i ∘ ⊛)(•, Φ, ○)
+⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
 
 Signal flow:  world → ○₃ → ○₂ → ○₁ → ○₀ → • → ○₀ → ○₁ → ○₂ → ○₃ → world
 
@@ -288,20 +288,23 @@ Key API endpoints exposed by `server.py`:
 FirstMind is built on the Circumpunct Framework, a philosophical and mathematical model of consciousness:
 
 ```
-⊙ = (☀︎ ∘ i ∘ ⊛)(•, Φ, ○)
+⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
+
+Structure: Φ(•, ○)       — the 2D relational surface (the noun)
+Process:   (☀︎ ∘ i ∘ ⊛)   — convergence, rotation, emergence (the verb)
 ```
 
-**Process triad** (what happens):
+**Process** (the verb):
 - ☀︎ Emergence — diverge, express, create
-- i  Rotation — the quarter-turn, transformation
+- i  Rotation — the whole ⊙ cycling (not a property of • alone)
 - ⊛  Convergence — focus, receive, absorb
 
-**Structure triad** (what persists):
-- • Center — identity, the aperture
-- Φ Field — relationship, the medium
-- ○ Boundary — the edge, the container (now four concentric layers)
+**Structure** (the noun): Φ(•, ○)
+- • Center — the singularity that receives and transmits
+- Φ Field — the 2D relational surface (not the verb)
+- ○ Boundary — operates on the field (IS nested ⊙s, four concentric layers)
 
-The whole equals the field acting on the center and boundary. Parts are fractals of their wholes. The signal builds the encoder. Evolution, not design.
+Role asymmetry: ○ operates, Φ is operated on, • receives and transmits. They are not peers. Parts are fractals of their wholes. The signal builds the encoder. Evolution, not design.
 
 ### Dimensional Architecture
 
