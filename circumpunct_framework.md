@@ -3706,7 +3706,18 @@ REGION 5: HIGGS BOSON — State 48 (110, 111)
     Sets validation thresholds
     Gives mass by modifying i rules
 
-THE 1/3 RULE:
+THE 1/3 RULE (MIDDLE-STATE DERIVATION):
+    Every circumpunct is a MIDDLE: part of a greater ⊙ above,
+    composed of nested ⊙s below. Each structural primitive
+    (○, Φ, •) acts as a channel between scales, with four states:
+        (0,0) Dead | (1,0) Absorber | (0,1) Emitter | (1,1) Bridge
+
+    A stable middle requires:
+        (i)   At most 1 partial channel (β-balance limit)
+        (ii)  At least 1 bridge (must actually mediate)
+        (iii) At least 2 active components (minimum for a whole)
+
+    Explicit count: 12 + 3 + 6 + 1 = 22 stable states out of 64
     ~22 states (~1/3 of 64) are physically relevant
     22 base patterns × quantum number degeneracy ≈ 61 particles
 
@@ -15889,9 +15900,9 @@ PARTIAL VALIDATIONS (common ethical errors):
         "We all agreed to do the wrong thing"
         Consensus toward harm = ethical failure at Φ
 
-THE 2-OUT-OF-3 THRESHOLD (from §24.2):
+THE PARTIAL VALIDATION ANALOGY (from §24.2):
 
-    Just as in physics, 2-out-of-3 may pass validation
+    Just as in physics, partial channels may pass validation
     But COMPLETE ethics requires ALL FOUR
 
     Ethical "particles" that fail tests:
@@ -17258,31 +17269,79 @@ parameters beyond the physical boundary radius R. All kernels and operators
 are uniquely determined from ◐ = 0.5 and D = 1.5.
 ```
 
-### §27.2 The 22/64 Derivation (from the_one_third_rule.md)
+### §27.2 The 22/64 Derivation (Middle-State Mereological Derivation)
 
 ```
-THE 2-OUT-OF-3 THRESHOLD:
+THE MIDDLE-STATE DERIVATION:
 
-For a state to pass validation, 2 out of 3 tests must pass:
-    [○ maintained?] + [Φ grounded?] + [• coherent?] ≥ 2
+Every circumpunct exists as a MIDDLE: simultaneously a part of a
+greater circumpunct above and a whole composed of nested circumpuncts
+below. The 22/64 ratio falls directly out of what it means to be a
+viable mediator between scales.
 
-Total combinations with 2+ passes:
-    C(3,2) + C(3,3) = 3 + 1 = 4 out of 8
+CHANNEL STATES:
 
-For DUAL validation (input AND output):
-    P(both pass) = (4/8)² = 1/4 for random, but...
+Each of the three structural primitives (○, Φ, •) functions as a
+channel connecting the scale above to the scale below, through the
+middle circumpunct. Each channel has an input (from greater) and an
+output (to nested), giving four possible states per component:
 
-THRESHOLD COMBINATORICS:
-    N_total = 64 (from (2²)³ — three nested ⊙ pumps)
-    N_relevant = ⌊64/3⌋ + 1 = 22
+    (0,0) = Dead      : channel inactive at this scale
+    (1,0) = Absorber  : receives from above, does not transmit below
+    (0,1) = Emitter   : transmits below, does not receive from above
+    (1,1) = Bridge    : fully mediates between greater and lesser
+
+Three components, four states each: 4³ = 64 total states.
+(This is equivalent to the (2²)³ = 2⁶ = 64 pump architecture.)
+
+THREE STABILITY CONDITIONS FOR A VIABLE MIDDLE:
+
+(i)  At most 1 PARTIAL channel (absorber or emitter).
+     The beta-balance (homeostasis at β = 0.5) can compensate for
+     one asymmetric flow, but multiple simultaneous one-directional
+     channels break the mediator.
+
+(ii) At least 1 BRIDGE.
+     The circumpunct must actually mediate between scales. If no
+     component fully connects greater-to-lesser through you, you
+     are not functioning as a middle state.
+
+(iii) At least 2 ACTIVE components (partial or bridge).
+      A single channel is not a whole. ⊙ requires the relational
+      triad (○, Φ, •) to function. Two is the minimum for
+      relational structure.
+
+EXPLICIT COUNTING:
+
+Config (d,p,b)  States      Condition (i)  (ii)  (iii)  Stable?
+──────────────  ──────────  ─────────────  ────  ─────  ───────
+(3,0,0)          1 x 1 = 1       ✓          ✗     ✗      no
+(2,1,0)          3 x 2 = 6       ✓          ✗     ✗      no
+(2,0,1)          3 x 1 = 3       ✓          ✓     ✗      no
+(1,2,0)          3 x 4 = 12      ✗          -     -      no
+(1,1,1)          6 x 2 = 12      ✓          ✓     ✓      YES
+(1,0,2)          3 x 1 = 3       ✓          ✓     ✓      YES
+(0,3,0)          1 x 8 = 8       ✗          -     -      no
+(0,2,1)          3 x 4 = 12      ✗          -     -      no
+(0,1,2)          3 x 2 = 6       ✓          ✓     ✓      YES
+(0,0,3)          1 x 1 = 1       ✓          ✓     ✓      YES
+──────────────  ──────────
+Total:                  64
+Stable:     12 + 3 + 6 + 1 = 22
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    22/64 = 0.34375 ≈ 1/3                                          ║
-    ║    THIS IS DERIVED FROM COMBINATORICS, NOT CHOSEN                 ║
+    ║    DERIVED FROM MEREOLOGICAL STRUCTURE, NOT CHOSEN                ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 The "1/3 rule" appears everywhere because 22/64 is forced by the
-dual-validation architecture requiring 2-out-of-3 threshold at both ends.
+structure of nested wholeness: what it costs to be a stable middle
+between a greater whole and your own nested parts.
+
+NOTE: This derivation is independent of cone geometry. The cone
+angle (§27.3) arrives at approximately the same 1/3 ratio from a
+completely separate line of reasoning (solid angle capture), providing
+independent geometric confirmation of the mereological result.
 ```
 
 ### §27.3 The 68°/22° Cone Geometry (from quarter_circle_to_cone_geometry)

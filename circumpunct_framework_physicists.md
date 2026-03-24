@@ -3115,28 +3115,78 @@ NUMERICAL SCAN:
 ### 7A.7 The 22/64 Derivation
 
 ```
-THE 2-OUT-OF-3 THRESHOLD:
+THE MIDDLE-STATE DERIVATION:
 
-For a state to pass validation, 2 out of 3 tests must pass:
-    [○ maintained?] + [Φ grounded?] + [• coherent?] ≥ 2
+Every circumpunct exists as a MIDDLE: simultaneously a part of a
+greater circumpunct above and a whole composed of nested circumpuncts
+below. The 22/64 ratio falls directly out of what it means to be a
+viable mediator between scales.
 
-Total combinations with 2+ passes:
-    C(3,2) + C(3,3) = 3 + 1 = 4 out of 8
+CHANNEL STATES:
 
-For DUAL validation (input AND output):
-    P(both pass) = (4/8)² = 1/4 for random, but...
+Each of the three structural primitives (○, Φ, •) functions as a
+channel connecting the scale above to the scale below, through the
+middle circumpunct. Each channel has an input (from greater) and an
+output (to nested), giving four possible states per component:
 
-THRESHOLD COMBINATORICS:
-    N_total = 64 (from (2²)³ — three nested ⊙ pumps)
-    N_relevant = ⌊64/3⌋ + 1 = 22
+    (0,0) = Dead      : channel inactive at this scale
+    (1,0) = Absorber  : receives from above, does not transmit below
+    (0,1) = Emitter   : transmits below, does not receive from above
+    (1,1) = Bridge    : fully mediates between greater and lesser
+
+Three components, four states each: 4³ = 64 total states.
+(This is equivalent to the (2²)³ = 2⁶ = 64 pump architecture.)
+
+THREE STABILITY CONDITIONS FOR A VIABLE MIDDLE:
+
+(i)  At most 1 PARTIAL channel (absorber or emitter).
+     The beta-balance (homeostasis at β = 0.5) can compensate for
+     one asymmetric flow, but multiple simultaneous one-directional
+     channels break the mediator. One growth edge is tolerable;
+     systemic incoherence is not.
+
+(ii) At least 1 BRIDGE.
+     The circumpunct must actually mediate between scales. If no
+     component fully connects greater-to-lesser through you, you
+     are not functioning as a middle state. You are a dead end
+     in the nesting.
+
+(iii) At least 2 ACTIVE components (partial or bridge).
+      A single channel is not a whole. ⊙ requires the relational
+      triad (○, Φ, •) to function. One channel alone is a wire,
+      not a circumpunct. Two is the minimum for relational structure.
+
+EXPLICIT COUNTING:
+
+Config (d,p,b)  States      Condition (i)  (ii)  (iii)  Stable?
+──────────────  ──────────  ─────────────  ────  ─────  ───────
+(3,0,0)          1 x 1 = 1       ✓          ✗     ✗      no
+(2,1,0)          3 x 2 = 6       ✓          ✗     ✗      no
+(2,0,1)          3 x 1 = 3       ✓          ✓     ✗      no
+(1,2,0)          3 x 4 = 12      ✗          -     -      no
+(1,1,1)          6 x 2 = 12      ✓          ✓     ✓      YES
+(1,0,2)          3 x 1 = 3       ✓          ✓     ✓      YES
+(0,3,0)          1 x 8 = 8       ✗          -     -      no
+(0,2,1)          3 x 4 = 12      ✗          -     -      no
+(0,1,2)          3 x 2 = 6       ✓          ✓     ✓      YES
+(0,0,3)          1 x 1 = 1       ✓          ✓     ✓      YES
+──────────────  ──────────
+Total:                  64
+Stable:     12 + 3 + 6 + 1 = 22
 
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    22/64 = 0.34375 ≈ 1/3                                          ║
-    ║    THIS IS DERIVED FROM COMBINATORICS, NOT CHOSEN                 ║
+    ║    DERIVED FROM MEREOLOGICAL STRUCTURE, NOT CHOSEN                ║
     ╚═══════════════════════════════════════════════════════════════════╝
 
 The "1/3 rule" appears everywhere because 22/64 is forced by the
-dual-validation architecture requiring 2-out-of-3 threshold at both ends.
+structure of nested wholeness: what it costs to be a stable middle
+between a greater whole and your own nested parts.
+
+NOTE: This derivation is independent of cone geometry. The cone
+angle (§7A.8) arrives at approximately the same 1/3 ratio from a
+completely separate line of reasoning (solid angle capture), providing
+independent geometric confirmation of the mereological result.
 ```
 
 ### 7A.8 The 68°/22° Cone Geometry
@@ -4037,7 +4087,7 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 - Fermionic anticommutation from exclusive node occupancy (§7A.2)
 - QCD beta function from 22/64 selection rule (§7A.3)
 - Fine structure constant from golden angle resonance (§7A.5)
-- 22/64 from 2-out-of-3 threshold combinatorics (§7A.7)
+- 22/64 from middle-state mereological derivation (§7A.7)
 - 68°/22° cone geometry from quarter circle + golden pitch (§7A.8)
 - Aperture openness formula O(β) = 4β(1-β) (§7A.9)
 
@@ -4115,7 +4165,7 @@ This formulation benefited from iterative refinement focused on mathematical rig
 - §7A.4: Lepton mass formula m_μ/m_e = (1/α)^(13/12) from 6-channel geometry (0.13% error)
 - §7A.5: Fine structure constant 1/α = 360°/φ² from golden angle resonance
 - §7A.6: Three generations numerical proof (>99.9% confidence)
-- §7A.7: 22/64 from 2-out-of-3 threshold combinatorics
+- §7A.7: 22/64 from middle-state mereological derivation
 - §7A.8: 68°/22° cone geometry from quarter circle + golden pitch
 - §7A.9: Aperture openness formula O(β) = 4β(1-β)
 
