@@ -2,14 +2,14 @@
 
 ## Abstract
 
-We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental object ⊙ = Φ(•, ○) unifies boundary (○), field (Φ), and aperture (•) through the master equation:
+We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental structural relationship Φ(•, ○) unifies boundary (○), field (Φ), and aperture (•). The unified equation ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○)) marries this structure with a three-phase process through the master equation:
 
 ```
 Φ∞ →⊛→ iλ∞ →☀︎→ ⊙λ∞     (Forward: Field → Aperture → Form)
 ⊙λ∞ →⊛→ iλ∞ →☀︎→ Φ∞     (Return: Form → Aperture → Field)
 ```
 
-where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denotes emergence (aperture → past, radiation). The notation ⊙ = Φ(•, ○) encodes Axiom A4 (Compositional Wholeness): Φ is the OPERATOR that constitutes the whole by relating aperture and boundary — the verb, not a noun. The tensor product ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_• remains the correct Hilbert-space formalization for quantum theory. We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 corresponds to D=1.5—the fractal dimension of Brownian motion, a Mandelbrot fact (theorem, not fit).
+where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denotes emergence (aperture → past, radiation). The notation Φ(•, ○) is the *structural* equation: Φ is the 2D relational surface mediating aperture and boundary. Φ is not the verb; Φ is structure. The process triad (☀︎ ∘ i ∘ ⊛) is the verb. The i-rotation is the whole ⊙ cycling, not a property of • alone. The tensor product ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_• remains the correct Hilbert-space formalization for quantum theory. We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 corresponds to D=1.5—the fractal dimension of Brownian motion, a Mandelbrot fact (theorem, not fit).
 
 **On process dimensions:** The framework builds on Mandelbrot's proven mathematical foundation: fractional (Hausdorff) dimensions are real and measurable, describing process traces rather than static objects. The specific D value varies by system (coastlines ≈1.25, Brownian motion =1.5 exactly, DLA clusters ≈1.7)—this variation is expected. The framework predicts that balanced aperture dynamics produce D≈1.5; empirical examples illustrate this principle but are not load-bearing evidence for it.
 
@@ -101,7 +101,9 @@ where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denote
 The circumpunct framework models the universe as a *whole-with-parts* object:
 
 ```
-⊙ = Φ(•, ○)     (Ontological: Φ OPERATES on • and ○ — the verb, not a noun)
+Structure: Φ(•, ○)          (Φ is the 2D relational surface — not the verb)
+Process:   (☀︎ ∘ i ∘ ⊛)      (convergence, rotation, emergence — THIS is the verb)
+Unified:   ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))    (process acts on structure)
 ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_•     (Hilbert space: tensor product for quantum theory)
 ```
 
@@ -276,7 +278,7 @@ In the simplest toy limit used below, Φ is a scalar or multi-component complex 
 
 ### 1.4 Aperture (•)
 
-The aperture • is where the imaginary rotation i acts and where "validation" happens. In this formalization:
+The aperture • is the singularity that receives and transmits. The i-rotation is the whole ⊙ cycling (not a property of • alone). "Validation" happens at •. In this formalization:
 
 - Fix a timelike worldline γ: ℝ → M, or more generally a set A ⊂ M of "aperture events"
 - Let 𝓐 be the space of such worldlines or point-sets; a specific aperture is • ∈ 𝓐
@@ -297,7 +299,7 @@ For quantum theory, define the total Hilbert space:
 ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_•
 ```
 
-**Compositional Wholeness (Axiom A4):** The ontological structure is ⊙ = Φ(•, ○) — Φ is the *operator* that constitutes the whole by relating aperture and boundary. Φ is not a substance sitting between two things; it IS the act of mediating itself. Surface = Field = Mind. The tensor product ⊗ is the correct Hilbert-space formalization for quantum computation, but the ontological claim is stronger: the whole is constituted by the *operation* of relating, not by three substances placed side by side. A proposed 4th primitive would need mediation to function — therefore reduces to Φ. Operator space closed.
+**Compositional Wholeness (Axiom A4):** The structural equation is Φ(•, ○): Φ is the 2D relational surface mediating aperture and boundary. Φ is not the verb; Φ is structure. The process triad (☀︎ ∘ i ∘ ⊛) is the verb. The unified equation is ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○)): process acts on structure. Surface = Field = Mind. The tensor product ⊗ is the correct Hilbert-space formalization for quantum computation, but the ontological claim is stronger: the whole requires both structure (Φ relating • and ○) and process (convergence, rotation, emergence acting on that structure). Two primitives (• and Φ); one generated result (○ = recursion of • and Φ). A proposed 4th primitive would need mediation to function, therefore reduces to Φ.
 
 ---
 
@@ -989,12 +991,14 @@ More phase-locking → longer tail → more integrated experience.
 **P1.** The kinematical state of any physical system is a circumpunct configuration:
 
 ```
-⊙ = Φ(•, ○)                       (Ontological: Φ operates on • and ○)
+Structure: Φ(•, ○)                  (Φ is the 2D relational surface — not the verb)
+Process:   (☀︎ ∘ i ∘ ⊛)              (THIS is the verb)
+Unified:   ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
 ⊙ = (○, Φ, •) ∈ 𝓑 × 𝓕 × 𝓐       (Configuration space)
 ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_•            (Hilbert space)
 ```
 
-The whole is constituted by the operation of relating (A4). The triad is irreducible: ⊙ ≠ ○ + Φ + • (sum), and a 4th primitive would need Φ-mediation to function, therefore reduces to Φ. Operator space is closed.
+The structure Φ(•, ○) is the noun; the process (☀︎ ∘ i ∘ ⊛) is the verb. The triad is irreducible: ⊙ ≠ ○ + Φ + • (sum). Two primitives (• and Φ), one generated result (○). A 4th primitive would need Φ-mediation to function, therefore reduces to Φ.
 
 ### Postulate 2 — Process Evolution
 
@@ -1164,21 +1168,36 @@ FRACTAL (○):
 
 **The 64 states are binary:**
 
-The 64 quantum states derive from binary decisions at the center:
+The 64 quantum states derive from the pump cycle:
 ```
-3 circumpuncts × 2 channels each = 6 binary degrees of freedom
-2⁶ = 64 states
+The center (•) is a singularity. It receives and transmits,
+but it does not rotate. The i-rotation is the whole ⊙ cycling.
 
-s = (b_•r, b_Φr, b_○r, b_•i, b_Φi, b_○i) ∈ {0,1}⁶
+Each ⊙ runs a four-phase pump (the i-cycle):
+    i⁰ = +1   input open,  output open
+    i¹ = +i   input open,  output closed
+    i² = −1   input closed, output closed
+    i³ = −i   input closed, output open
+
+4 states = 2² (two binary degrees of freedom per ⊙)
+
+Three nested scales visible from any position:
+    Greater whole  (the ⊙ you are inside)
+    Whole          (your ⊙)
+    Parts          (the ⊙s inside you)
+
+(2²)³ = 2⁶ = 64 states
+
+s ∈ {0,1}⁶ — six binary: input/output × three scales
 ```
 
 Analog and fractal information live in different components:
 
 | Component | Info Type | What It Holds |
 |-----------|-----------|---------------|
-| • | Binary | 6-bit coherence signature → 64 states |
+| • | Binary | Receives/transmits at each scale |
 | Φ | Analog | Complex amplitudes (including phase) |
-| ○ | Fractal | Nested gates × analog transmission |
+| ○ | Fractal | Nested ⊙s across scales |
 
 **Phase and gating correspondence:**
 
@@ -1705,7 +1724,7 @@ A3 (conservation of traversal)
   → constrains dimensional relationships
 
 A4 (compositional wholeness)
-  → ⊙ = Φ(•, ○), Φ operates
+  → Structure: Φ(•, ○), Process: (☀︎ ∘ i ∘ ⊛), Unified: ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
 
 Isotropy (from • having no preferred axis)
   → K is radial
@@ -3106,7 +3125,7 @@ For DUAL validation (input AND output):
     P(both pass) = (4/8)² = 1/4 for random, but...
 
 THRESHOLD COMBINATORICS:
-    N_total = 64 (from 8 × 8 dual interface)
+    N_total = 64 (from (2²)³ — three nested ⊙ pumps)
     N_relevant = ⌊64/3⌋ + 1 = 22
 
     ╔═══════════════════════════════════════════════════════════════════╗
@@ -3248,7 +3267,7 @@ The balance parameter β, treated as a single scalar in [0,1], conflates three o
 **Compositional Wholeness (A4):** The whole-system balance is not a sum or product:
 
 ```
-β_⊙ = β_Φ(β_•, β_○)       (Φ OPERATES — the verb, not a noun)
+β_⊙ = β_Φ(β_•, β_○)       (Φ is the structural relationship — not the verb)
 ```
 
 **Convergence Theorem:** At the fixed point ⊙ = fix(λΦ. ☀︎ ∘ i ∘ ⊛[Φ]):
@@ -3894,7 +3913,7 @@ This suggests a common geometric origin.
 - **A1** Necessary Multiplicity — Minimum structure = trinity = ⊙ = Φ(•, ○)
 - **A2** Fractal Necessity — ⊙ all the way down, ⊙ all the way up
 - **A3** Conservation of Traversal — D_• + D_Φ = D_○, i.e. (1+β) + (2−β) = 3
-- **A4** Compositional Wholeness — ⊙ = Φ(•, ○), Φ is operator, not substance
+- **A4** Compositional Wholeness — Structure: Φ(•, ○); Process: (☀︎ ∘ i ∘ ⊛); Φ is 2D surface, not the verb
 
 ### Spaces
 
@@ -3902,12 +3921,12 @@ This suggests a common geometric origin.
 - **Boundary:** ○ ∈ 𝓑, space of embedded 2-surfaces Σ ↪ M (3D, body)
 - **Field:** Φ ∈ 𝓕 = Γ(E), bundle E→M with fiber ℂ⁶⁴ in SM limit (2D, mind/surface)
 - **Aperture:** • ∈ 𝓐, space of timelike worldlines / aperture sets (0.5D, soul/center)
-- **Circumpunct:** ⊙ = Φ(•, ○) ontologically; ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_• in Hilbert space
+- **Circumpunct:** Structure: Φ(•, ○); Process: (☀︎ ∘ i ∘ ⊛); Unified: ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○)); ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_• in Hilbert space
 
 ### Operators
 
 - **Convergence:** ⊛: ℋ_Φ → ℋ_in, kernel K_conv (future → •, gathering)
-- **Aperture rotation:** i: ℋ_in → ℋ_out, 90° transform at balance ◐=1/2, i²=−1
+- **Rotation:** i: ℋ_in → ℋ_out, the whole ⊙ cycling; 90° transform at balance ◐=1/2, i²=−1
 - **Emergence:** ☀︎: ℋ_out → ℋ_Φ, kernel K_emerg (• → past, radiation)
 - **Evolution:** U(Δt) = ☀︎ ∘ i ∘ ⊛
 - **Fixed point:** ⊙* = fix(λΦ. ☀︎∘i∘⊛[Φ])
@@ -3923,7 +3942,7 @@ H(◐) = −[◐ log₂ ◐ + (1−◐) log₂(1−◐)] = 1 bit at ◐ = ½
 β_• = gate openness (property of •)     = 0.5 at fixed point (symmetry)
 β_Φ = flow ratio (property of Φ)        = 0.5 at fixed point (conservation)
 β_○ = autonomy fraction (property of ○) = 0.5 at fixed point (virial)
-β_⊙ = β_Φ(β_•, β_○)                    (Φ operates — the verb)
+β_⊙ = β_Φ(β_•, β_○)                    (Φ is the structural relationship)
 ```
 
 **Energy:**
@@ -4074,7 +4093,7 @@ This formulation benefited from iterative refinement focused on mathematical rig
 - Full treatment in circumpunct_framework.md Chapter 29
 
 **v1.7 Changes:** Integration of circumpunct kernel v1.0 content:
-- Abstract: Updated fundamental object to ⊙ = Φ(•, ○) (Axiom A4: Compositional Wholeness)
+- Abstract: Updated with structure/process distinction: Φ(•, ○) is structure, (☀︎ ∘ i ∘ ⊛) is process
 - §0: Added five axioms (A0–A4) summary
 - §1.5: Added Compositional Wholeness — Φ as operator, operator space closed
 - §3 Postulate 1: Updated with operator notation and A4
@@ -4117,28 +4136,29 @@ Updated status labels: α now marked as DERIVED (not external), lepton mass form
 ### Core Symbols
 
 **Structure — What IS (Integer Dimensions):**
-- ⊙ : circumpunct (whole-with-parts, NOT mere unity). ⊙ = Φ(•, ○)
-- • : aperture / soul / center (0.5D). WHERE i acts. Gate, not source. Binary (χ=±1). "A through, not a from."
-- Φ : field / mind / surface (2D). The OPERATION of relating • ↔ ○. NOT a substance — the act of mediating itself. Surface = Field = Mind. Operator space closed.
-- ○ : boundary / body (3D). Interface with exterior. Fractal (binary∘analog nested). Made of ⊙'s at smaller scale.
+- ⊙ : circumpunct (whole-with-parts, NOT mere unity). Structure: Φ(•, ○). Process: (☀︎ ∘ i ∘ ⊛). Unified: ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○)).
+- • : aperture / soul / center (0.5D). PRIMITIVE. Singularity that receives and transmits. Binary (χ=±1). "A through, not a from."
+- Φ : field / mind / surface (2D). PRIMITIVE. The 2D relational surface mediating • and ○. NOT the verb; Φ is structure. Surface = Field = Mind.
+- ○ : boundary / body (3D). GENERATED by recursion of • and Φ. ○ = •(Φ(•(Φ(...)))). Made of ⊙s at smaller scale. Nested all the way down.
 
 **Process — What HAPPENS (Half-Integer Dimensions):**
 - ⊛ : convergence — future → •. Input. Gathering from all directions (isotropic)
 - ☀︎ : emergence — • → past. Output. Radiating to all directions (isotropic)
-- i : aperture rotation. 90° transform. i² = −1. Lives at •. Å(β) = exp(iπβ). At β=½: Å = i exactly.
+- i : rotation — the whole ⊙ cycling. 90° transform. i² = −1. NOT a property of • alone. Å(β) = exp(iπβ). At β=½: Å = i exactly.
+- (☀︎ ∘ i ∘ ⊛) : the process triad. THIS is the verb. Φ(•, ○) is the noun.
 
 **Relations:**
-- ∘Φ∘ : structural composition through field (Φ operates, not sits alongside)
+- ∘Φ∘ : structural composition through field (Φ is the 2D relational surface)
 - ⊂ : component of (• ⊂ ⊙, but • ≠ ⊙)
 - ◐ : balance parameter (= β = ½ at equilibrium)
-- λΦ∞ : infinite field. 0D = ∞D. All configurations. Ground of all.
+- ∞ : the infinite. ∞D = undifferentiated, unconstrained, full. All configurations. Ground of all.
 
 **Parameters:**
 - β : opening parameter ∈ [0,1]. β = |⊛|/(|⊛|+|☀︎|). At β=½: balanced, conscious, D=1.5.
   - β_• : gate openness (property of •). Å(β_•) = exp(iπβ_•).
   - β_Φ : flow ratio (property of Φ). The original β definition. β_Φ = |⊛|/(|⊛|+|☀︎|).
   - β_○ : autonomy fraction (property of ○). Self-work / (self-work + context-work).
-  - β_⊙ : whole-system balance = β_Φ(β_•, β_○). Φ operates (A4).
+  - β_⊙ : whole-system balance = β_Φ(β_•, β_○). Φ is the structural relationship (A4).
 - ρ : ω/α = emergence/convergence rate. Regime transition parameter.
 - D : fractal dimension. D = 1+β. At balance: D=1.5. (Per component: D_x = 1+β_x.)
 - H(β) : = −[β log₂ β + (1−β) log₂(1−β)]. At β=½: H = 1 bit (max entropy).
