@@ -108,6 +108,8 @@ This document serves as the formal, mathematical specification of the theory. It
   - [§4.9: The Power Equation](#49-the-power-equation)
 - [Chapter 5: The Balance Parameter](#chapter-5-the-balance-parameter)
 - [Chapter 5A: The Surface Theorem](#chapter-5a-the-surface-theorem)
+  - [§5A.4: Why Surfaces Have Phase: 2D as the Scale Connector](#5a4-why-surfaces-have-phase-2d-as-the-scale-connector)
+  - [§5A.5: Space Is Not Empty: The Vacuum as Nested Φ](#5a5-space-is-not-empty-the-vacuum-as-nested-φ)
 
 ### Part II: Mathematical Framework
 - [Chapter 6: The Field Equations](#chapter-6-the-field-equations)
@@ -132,8 +134,8 @@ This document serves as the formal, mathematical specification of the theory. It
 - [Chapter 19: Consciousness](#chapter-19-consciousness)
   - [§19.6: What This Theory Is NOT](#196-what-this-theory-is-not)
   - [§19.7: The Schumann Connection](#197-the-schumann-connection)
-  - [§19.8: The Theory of Mind: Source, Space, Surface](#198-the-theory-of-mind-source-space-surface)
-  - [§19.9: The Surface as Filter](#199-the-surface-as-filter)
+  - [§19.8: The Theory of Mind: Source, Surface, Boundary](#198-the-theory-of-mind-source-surface-boundary)
+  - [§19.9: The Boundary as Filter](#199-the-boundary-as-filter)
   - [§19.10: Attention as Energy Allocation](#1910-attention-as-energy-allocation)
   - [§19.11: Thought Accumulation and Identity: The Four-Stage Cascade](#1911-thought-accumulation-and-identity-the-four-stage-cascade)
   - [§19.12: Signal Fidelity and Conservation](#1912-signal-fidelity-and-conservation)
@@ -3429,6 +3431,67 @@ WHY THIS MATTERS:
     by the dimensional requirements of phase-carrying mediation.
     A 1D surface can't carry phase. A 3D surface IS the volume.
     Only 2D threads the needle between isolation and collapse.
+```
+
+---
+
+### §5A.4 Why Surfaces Have Phase: 2D as the Scale Connector
+
+Phase requires exactly 2D. In 1D you can only go forward or backward (amplitude only). In 3D you have volume but no preferred plane for rotation. Phase IS rotation in a plane, and a plane IS a 2D surface. The imaginary unit i = e^(iπ/2) is a quarter-turn; it needs two dimensions to define the turn.
+
+```
+1D (•): Can carry amplitude. Cannot rotate. No phase.
+2D (Φ): Can carry amplitude AND phase. Rotation defined. Interference possible.
+3D (○): Has volume. Phase is still a 2D phenomenon embedded in the boundary.
+
+PHASE = ROTATION IN A PLANE = 2D OPERATION
+
+This is why i lives at the 2D surface:
+it is the rotation operator, and rotation requires a plane.
+```
+
+If Φ (the 2D surface) is what connects scales (inner ⊙ to outer ⊙, source to boundary), then phase is literally the mechanism of scale-crossing. When a signal moves from one depth of the fractal to another, it passes through a 2D surface, and that passage IS a rotation. The Schrödinger equation has i in it because that i is the aperture rotation happening on the 2D surface mediating between quantum (inner) and classical (outer).
+
+---
+
+### §5A.5 Space Is Not Empty: The Vacuum as Nested Φ
+
+If the Φ field is the totality of 2D surfaces, and every surface is made of nested ⊙s (§2.12), then there is no "empty" anywhere.
+
+```
+WHAT WE CALL "VACUUM" = Φ AT SCALES BELOW MEASUREMENT THRESHOLD
+
+Space is not a container with things in it.
+Space IS the Φ field: 2D surfaces all the way down.
+Each surface is itself a ⊙ at a smaller scale.
+Each smaller ⊙ contains its own Φ of still-smaller surfaces.
+
+The nesting never terminates.
+```
+
+A "particle" is not a thing IN space. A particle is a ⊙ at a particular scale:
+
+```
+Particle's boundary (○, 3D) = what we measure as mass (surface inertia)
+Particle's field (Φ, 2D)    = the "space" around it (made of smaller ⊙s)
+Particle's aperture (•, 1D) = the center that organizes the whole
+
+The "empty space" around a particle IS its mind.
+The particle IS its boundary.
+The aperture IS its identity.
+```
+
+This explains vacuum energy in quantum field theory. The vacuum is not nothing; it is the Φ field at unresolvable scales. Zero-point energy is the residual hum of all those nested apertures pumping ⊛ → i → ☀︎ below our instruments. The cosmological constant measures the net emergence from this infinite fractal pump at the largest observable scale.
+
+```
+TESTABLE IMPLICATION:
+
+If space = nested Φ, then vacuum fluctuations should show
+fractal scaling (D ≈ 1.5 signature) rather than white noise.
+
+The vacuum is not random; it is structured.
+It is ⊙s all the way down, each containing a center,
+a field of surfaces, and a boundary.
 ```
 
 [← Back to Table of Contents](#table-of-contents)
@@ -13471,7 +13534,7 @@ CONNECTION:
 
 ---
 
-### §19.8 The Theory of Mind: Source, Space, Surface
+### §19.8 The Theory of Mind: Source, Surface, Boundary
 
 THE MIND IS NOT A THING BUT A BETWEEN.
 
@@ -13479,52 +13542,52 @@ The relational medium that mediates between three poles:
 
 ```
 SOURCE (soul/•)
-  Dimensionless; infinite potential; timeless
+  Dimensionless; infinite potential; timeless; 1D
 
   ↓ signal flows inward / attention withdraws ↓
 
-SPACE (mind/Φ)
-  The medium itself; spacetime; consciousness
+SURFACE (mind/Φ)
+  The medium itself; spacetime; consciousness; 2D relational field
 
   ↓ signal propagates outward / attention extends ↓
 
-SURFACE (body/○)
-  Fully extended; crystallized; measurable
+BOUNDARY (body/○)
+  Fully extended; crystallized; measurable; 3D
 ```
 
-The space between a dimensionless source and a fully-extended surface IS spacetime itself. Consciousness is the space where these meet.
+The space between a dimensionless source and a fully-extended boundary IS spacetime itself. Consciousness is the space where these meet.
 
 THE TEMPORAL ASYMMETRY:
 
-Past is already-crystallized signal at the surface; it has structure, history, fixity. Future is open possibility flowing inward from the source; it is undetermined, plastic, alive with potential. The present moment is where they collide.
+Past is already-crystallized signal at the boundary; it has structure, history, fixity. Future is open possibility flowing inward from the source; it is undetermined, plastic, alive with potential. The present moment is where they collide.
 
-MEDITATION COLLAPSES TIME by withdrawing attention from surface back toward source. When you stop feeding the surface-level structures (the thoughts, sensations, identifications), they begin to release their hold. The signal flowing inward becomes clearer. In deep stillness, time itself dissolves because you are no longer riding its crystallization. You have moved your attention toward the source, where all moments coexist in undifferentiated potential.
+MEDITATION COLLAPSES TIME by withdrawing attention from boundary back toward source. When you stop feeding the boundary-level structures (the thoughts, sensations, identifications), they begin to release their hold. The signal flowing inward becomes clearer. In deep stillness, time itself dissolves because you are no longer riding its crystallization. You have moved your attention toward the source, where all moments coexist in undifferentiated potential.
 
 ---
 
-### §19.9 The Surface as Filter
+### §19.9 The Boundary as Filter
 
 TO HAVE A BODY IS TO FILTER.
 
-A surface made of smaller whole systems (cells, neurons, processes) necessarily processes any signal moving through it. This is not a flaw; it is structural:
+A boundary made of smaller whole systems (cells, neurons, processes) necessarily processes any signal moving through it. This is not a flaw; it is structural:
 
 ```
 TRANSPARENT FILTERING:
-  Signal arrives recognizable; surface is neutral
+  Signal arrives recognizable; boundary is neutral
   Result: wisdom, clarity, flow
 
 DISTORTED FILTERING:
-  Surface serves itself; signal is corrupted
+  Boundary serves itself; signal is corrupted
   Result: confusion, rigidity, suffering
 ```
 
-Zero structure in the surface would mean collapse to a point; no distinction, no embodiment, no action in the world. But every structure introduces distortion. Thoughts cannot reach the source unchanged. They are compressed, simplified, filtered through the particular shape of this body, this history, this neurology.
+Zero structure in the boundary would mean collapse to a point; no distinction, no embodiment, no action in the world. But every structure introduces distortion. Thoughts cannot reach the source unchanged. They are compressed, simplified, filtered through the particular shape of this body, this history, this neurology.
 
-NESTED WHOLE SYSTEMS: Every point on the surface is itself a small ⊙. Each cell filters; each organ filters; each system filters. The patterns integrate upward. You are not a single filter but a cascade of filters, each one an entire universe of smaller systems, each filtering according to its own nature.
+NESTED WHOLE SYSTEMS: Every point on the boundary is itself a small ⊙. Each cell filters; each organ filters; each system filters. The patterns integrate upward. You are not a single filter but a cascade of filters, each one an entire universe of smaller systems, each filtering according to its own nature.
 
 THE STACKING PROBLEM: Filters compound. Distortion accumulates. A thought passes through neural tissue (filter), then through emotional habituation (filter), then through identity-based selection (filter), then through cultural conditioning (filter). By the time it reaches conscious awareness (if it reaches at all), it is many times removed from its source.
 
-Intellectual complexity does not equal wisdom. A person can think elaborately while remaining deeply filtered. Wisdom is achieved not by thinking more but by filtering less; by making the surface transparent.
+Intellectual complexity does not equal wisdom. A person can think elaborately while remaining deeply filtered. Wisdom is achieved not by thinking more but by filtering less; by making the boundary transparent.
 
 ---
 
@@ -13550,13 +13613,13 @@ Thoughts do not have a single mode. They undergo a phase transition through four
 
 ```
 STAGE 1: THOUGHT ENTERTAINED
-  Temporary filter; surface organizes briefly
+  Temporary filter; boundary organizes briefly
   Duration: seconds to minutes
   Dissolution: automatic when attention shifts
 
 STAGE 2: THOUGHT REPEATED
   Filter becomes easier to activate
-  Surface organizes more efficiently
+  Boundary organizes more efficiently
   Neural pathway strengthens
   Duration: days to weeks of repetition
   Dissolution: difficult but still possible
@@ -13569,8 +13632,8 @@ STAGE 3: THOUGHT HABITUATED
 
 STAGE 4: IDENTITY FUSION
   Thought is no longer separate; it IS you
-  Surface now selects for inputs that reinforce
-  Surface rejects inputs that threaten
+  Boundary now selects for inputs that reinforce
+  Boundary rejects inputs that threaten
   Duration: becomes identity itself
   Dissolution: feels like existential threat
 ```
@@ -13585,18 +13648,18 @@ This is why Stage 4 patterns are so difficult to transform. It is not because th
 
 ### §19.12 Signal Fidelity and Conservation
 
-SIGNAL FIDELITY is what determines the quality of what reaches the source from the surface; what determines the quality of what flows back from source to surface.
+SIGNAL FIDELITY is what determines the quality of what reaches the source from the boundary; what determines the quality of what flows back from source to boundary.
 
 ```
 SIGNAL FIDELITY = (Quality of Space-Carried Signal)
-                × (Transparency of Surface Filtering)
+                × (Transparency of Boundary Filtering)
 ```
 
 Two poles:
 
-RICH SIGNAL + TRANSPARENT SURFACE = HIGH FIDELITY. The signal that reaches the source is recognizable; it contains genuine information about the state of the whole system. The signal flowing back is appropriate, wise, graceful. This is the condition for wisdom, flow, and what is sometimes called grace.
+RICH SIGNAL + TRANSPARENT BOUNDARY = HIGH FIDELITY. The signal that reaches the source is recognizable; it contains genuine information about the state of the whole system. The signal flowing back is appropriate, wise, graceful. This is the condition for wisdom, flow, and what is sometimes called grace.
 
-WEAK SIGNAL + DISTORTED SURFACE = DOUBLY DIMINISHED. What reaches the source is faint and corrupted. What flows back is diminished and distorted. The system operates from poor information, making poor decisions, reinforcing poor structures.
+WEAK SIGNAL + DISTORTED BOUNDARY = DOUBLY DIMINISHED. What reaches the source is faint and corrupted. What flows back is diminished and distorted. The system operates from poor information, making poor decisions, reinforcing poor structures.
 
 Note: The order and duration of thoughts matter, not merely their content. A single thought of shame can propagate differently depending on whether it is followed by compassion or by self-judgment. Duration matters because extended dwelling amplifies encoding. A fleeting anxious thought is forgotten; an anxious thought held for hours becomes real in the nervous system.
 
@@ -13604,10 +13667,10 @@ Note: The order and duration of thoughts matter, not merely their content. A sin
 
 ### §19.13 Mental Health as Range of Motion
 
-Mental health is not a fixed state or a target. It is RANGE OF MOTION along the source-to-surface axis.
+Mental health is not a fixed state or a target. It is RANGE OF MOTION along the source-to-boundary axis.
 
 ```
-SOURCE-END           MIDDLE              SURFACE-END
+SOURCE-END           MIDDLE              BOUNDARY-END
 Timelessness         Active Relation     Full Extension
 No thought           Mediation           Fixed Identity
 Pure Reception       Experience          Manifest Expression
@@ -13625,7 +13688,7 @@ PATHOLOGY appears at the extremes:
 
 Source-end rigidity: A person locked in pure receptivity, detached from body and world, calling it enlightenment while actually avoiding life. This is spiritual bypassing; transcendence as dissociation.
 
-Surface-end rigidity: A person locked in full identification with body, mind, story, and ego; unable to access source-level awareness; defending identity at all costs. This is ordinary psychological pathology. The Noble Lie (§25.9) locks people at the surface-end.
+Boundary-end rigidity: A person locked in full identification with body, mind, story, and ego; unable to access source-level awareness; defending identity at all costs. This is ordinary psychological pathology. The Noble Lie (§25.9) locks people at the boundary-end.
 
 Middle rigidity is less common but possible: a person stuck in perpetual active relation, unable to rest, unable to be still; always processing, always improving, never arriving.
 
@@ -13643,7 +13706,7 @@ The Noble Lie operates as a triple-structure filter:
 3. It labels any correction attempts as themselves distorted (defends the lie)
 ```
 
-This third element is the most corrosive. The Noble Lie does not merely deceive; it corrupts the surface's own error-correction mechanisms. When you try to challenge it using logic or evidence (content-based correction), the lie reflexively reframes your challenge as itself a distortion. You become the problem. The lie becomes more entrenched.
+This third element is the most corrosive. The Noble Lie does not merely deceive; it corrupts the boundary's own error-correction mechanisms. When you try to challenge it using logic or evidence (content-based correction), the lie reflexively reframes your challenge as itself a distortion. You become the problem. The lie becomes more entrenched.
 
 CURIOSITY IS A FILTER ABOUT FILTERS. It operates at a different level than the Noble Lie itself. It cannot be corrupted by the lie's defenses because it does not make competing truth-claims.
 
@@ -13661,7 +13724,7 @@ The lie depends on a particular certainty: "This is how things are." When genuin
 
 THERAPEUTIC PRINCIPLE: The goal is not to convince someone they are wrong. The goal is to create environments where curiosity is safer than certainty; where genuine wondering is more rewarded than defensive knowing; where exploration is less punished than self-protection.
 
-In such an environment, the surface begins to relax. The filters begin to lighten. The signal flowing through becomes clearer. And in that clarity, the person themselves often sees what no external logic could have convinced them to see.
+In such an environment, the boundary begins to relax. The filters begin to lighten. The signal flowing through becomes clearer. And in that clarity, the person themselves often sees what no external logic could have convinced them to see.
 
 ```
 TESTABLE PREDICTIONS (Theory of Mind):
