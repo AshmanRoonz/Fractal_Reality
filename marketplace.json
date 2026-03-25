@@ -4,7 +4,7 @@
   "plugins": [
     {
       "name": "circumpunct-ethics",
-      "description": "Ethical reasoning and virtue diagnostics based on the Circumpunct Framework. Four pillars (Good, Right, True, Agreement) and four living virtues (Plasticity, Access, Curiosity, Validation) for evaluating decisions, detecting performed ethics, building steelmen, and restoring healthy ethical function. Created by Ashman Roonz.",
+      "description": "Ethical reasoning, virtue diagnostics, and Noble Lie detection based on the Circumpunct Framework. Four pillars (Good, Right, True, Agreement), four virtues (Plasticity, Access, Curiosity, Validation), Noble Lie cognitive virus model with truth gate analysis, two-channel love theory, installation depth spectrum, multi-scale discourse analysis (interpersonal to public media), commercialized Noble Lie detection, steelman construction, and restoration protocol. Created by Ashman Roonz.",
       "source": {
         "type": "github",
         "repo": "AshmanRoonz/Fractal_Reality",

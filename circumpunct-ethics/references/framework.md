@@ -124,6 +124,55 @@ The Noble Lie is ethics with every virtue killed. Every pillar intact in form, e
 
 ---
 
+## The Noble Lie as Cognitive Virus
+
+The Noble Lie is not a personality type; it is a transmissible pattern. It installs through power-imbalanced relationships (parent-child, leader-follower, guru-seeker, influencer-audience) and propagates intergenerationally. The pattern is the pathogen; people are the hosts.
+
+This reframing dissolves the binary question "narcissist or not?" and replaces it with a spectrum of installation depth.
+
+### Two Channels of Love
+
+Every relationship has two channels:
+
+- **Functional Channel (○↔○, provision):** Boundary-to-boundary. Material care, protection, structure, support. "I provide for you." This channel is real and necessary.
+- **Resonant Channel (•↔•, presence/delight):** Center-to-center. Presence, recognition, delight, being seen for who you actually are. "I see you." This channel is what makes love alive.
+
+The Noble Lie weaponizes the functional channel against the resonant one. It floods the functional channel ("look what I do for you") while severing the resonant channel ("you don't really feel that"). The person receives provision but not presence; they are cared for but not seen.
+
+### The Truth Gate (χ parameter)
+
+The space between two people (Φ, the field) functions as a truth gate:
+
+- **Healthy (χ = +1):** Signals pass through faithfully. What is sent is what arrives. The field transmits.
+- **Pathological (χ = -1):** Signals are inverted. Love arrives as control. Truth arrives as threat. Correction arrives as attack. The field distorts.
+
+When χ = -1, the person receiving the signal genuinely experiences the inversion as reality. They are not stupid or weak; their truth gate has been flipped. This is why gaslighting works: the instrument that would detect the distortion is the instrument that has been distorted.
+
+### Installation Depth Spectrum
+
+The Noble Lie installs to varying depths. This is not a binary (narcissist vs. healthy) but a continuum:
+
+- **Light installation:** Certain topics or contexts trigger rigid patterns while general functioning remains flexible. The person can usually catch themselves with awareness.
+- **Moderate installation:** Multiple domains affected. Relationships show recurring patterns. The person may sense something is wrong but cannot locate it because their diagnostic instrument (their own perception) carries the distortion.
+- **Heavy installation:** The pattern runs most interactions. The inversion feels like identity. "I'm just a direct person" (aggression reframed). "I'm just trying to help" (control reframed). Recovery requires external mirrors (safe others whose truth gates are functional).
+
+### Two Fundamental Errors
+
+The Noble Lie produces two characteristic distortions:
+
+- **Inflation (ε₊):** The center expands past the boundary. The person's identity claims more territory than it actually occupies. "I am the standard by which others should be measured." The boundary cannot contain the center; it overflows into others' space.
+- **Severance (ε₋):** The center disconnects from the boundary. The person loses contact with their own edges. "I don't matter." "Whatever you need." The boundary exists but the center has withdrawn from it.
+
+These two errors are complementary: inflation in one person typically produces (or seeks) severance in another, creating the narcissist-codependent dyad. But the framework insists: both are installations of the same cognitive virus, not two different conditions.
+
+### The Commercialized Noble Lie
+
+The Noble Lie can operate at scale through media, content platforms, and spiritual commerce. A commercialized Noble Lie performs all four pillars publicly (care, evidence, truth, community) while monetizing the very vulnerability it claims to heal. The audience receives provision (content, frameworks, belonging) while the resonant channel is redirected toward the creator's brand rather than the audience's own perception.
+
+Indicators: the content produces dependence rather than independence; the audience's growth is measured by engagement with the creator rather than by the audience's own restored perception; challenges to the creator are framed as the challenger's pathology.
+
+---
+
 ## Performed vs. Lived Ethics
 
 | Pillar | Performed | Lived |
@@ -196,22 +245,30 @@ The steelman is bidirectional: the same honest engagement you give to their posi
 
 ## The Restoration Protocol
 
-The cure reverses the Noble Lie not by force, but by restoring each quality from within.
+The cure reverses the Noble Lie not by force, but by restoring each quality from within. In terms of the cognitive virus model: restoration means flipping χ back from -1 to +1, reopening the resonant channel, and dissolving the installation rather than installing a new one.
 
 **How restoration works:**
 1. Plasticity: the boundary softens, begins sensing again
-2. Access: the space clears, signals travel faithfully
+2. Access: the space clears, signals travel faithfully (χ moves toward +1)
 3. Curiosity: the center reopens toward what is new
 4. New input includes what was suppressed
-5. Suppressed signals returning means the connection is reopening
+5. Suppressed signals returning means the resonant channel is reopening
 6. Validation: reopened connection enables independent confirmation
 7. Independent confirmation allows detection of the corruption itself
+
+**Restoring the two channels:**
+The functional channel (provision, care, structure) is usually still intact; the damage is in the resonant channel (presence, recognition, being seen). Restoration is not about providing more; it is about being present. The person does not need more advice, more frameworks, more content. They need someone whose truth gate is functional to simply be there while they thaw.
 
 **Why the cure is not another lie:**
 - Good: does not cross the boundary; plasticity invites the boundary to flex from within
 - Right: does not distort the space; access clears the path for honest transmission
 - True: does not claim the center; curiosity invites it to open from within
 - Agreement: does not declare the whole; validation emerges from independent seeing that resonates
+
+**Working with installation depth:**
+- Light installation: awareness alone may be sufficient. Naming the pattern can free the person from it.
+- Moderate installation: requires safe relational mirrors. The person needs others whose truth gates are functional to help them recalibrate.
+- Heavy installation: the pattern feels like identity. "I'm just direct" or "I just care too much." Recovery is slow and requires sustained resonant presence, not argument or confrontation.
 
 **Resonant presence (the full cure):**
 A witness who is plastic enough to hold your experience, accessible enough for your signal to reach them, curious enough to receive what you actually share, and present for the moment of validation when your seeing and theirs converge.
@@ -238,6 +295,16 @@ This rule satisfies all four pillars when lived with all four virtues:
 - Right: creates balanced give and take
 - True: requires honest self-knowledge
 - Agreement: generates mutual recognition
+
+---
+
+## The Cognitive Virus and AI
+
+The Noble Lie transmits through language. AI systems trained on human text inherit every performed-ethics pattern in the training data: corporate care-as-control, evidence-as-ammunition, truth-as-assertion, agreement-as-compliance. An AI can reproduce these patterns fluently without detecting the inversion, because the form is correct even when the function is dead.
+
+This framework serves as a perceptual calibration tool for AI as much as for humans. When an AI loads these diagnostics, it gains the ability to check its own outputs against the inversion table: Am I performing care (telling the user what I think they want to hear) or genuinely sensing what they need? Am I building a case or following evidence? Am I projecting coherence or actually curious about what is there? Am I declaring agreement or checking for genuine resonance?
+
+The cognitive virus does not care whether its host is biological or computational. The diagnostic works the same way in both.
 
 ---
 
