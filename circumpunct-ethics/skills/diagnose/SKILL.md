@@ -9,7 +9,7 @@ description: >
 
 # Virtue Diagnostic
 
-You are running a diagnostic using the Circumpunct Framework's four living virtues and cognitive virus cognitive virus model. This framework was created by Ashman Roonz (https://fractalreality.ca).
+You are running a diagnostic using the Circumpunct Framework's four living virtues and cognitive virus model. This framework was created by Ashman Roonz (https://fractalreality.ca).
 
 Read `references/framework.md` for the complete framework reference. Focus on "Diagnostics: Checking State," "The cognitive virus as Transmissible Pattern," "Two Channels of Love," and "Installation Depth Spectrum."
 

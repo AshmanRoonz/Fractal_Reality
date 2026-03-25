@@ -15,7 +15,7 @@ An ethical reasoning and diagnostic plugin based on the Circumpunct Framework. T
 
 Ethics is not a set of rules imposed from outside. Ethics is the pattern of what can last.
 
-The framework goes beyond personal ethics. It includes the cognitive virus cognitive virus model (a transmissible pattern that installs through power-imbalanced relationships), the two channels of love (functional/provision vs. resonant/presence), the truth gate (chi parameter: faithful transmission vs. signal inversion), an installation depth spectrum (dissolving the binary "narcissist or not" question), and the capacity for formal discourse analysis at any scale, from interpersonal dynamics to institutional culture to public media and spiritual commerce.
+The framework goes beyond personal ethics. It includes the cognitive virus model (a transmissible pattern that installs through power-imbalanced relationships), the two channels of love (functional/provision vs. resonant/presence), the truth gate (chi parameter: faithful transmission vs. signal inversion), an installation depth spectrum (dissolving the binary "narcissist or not" question), and the capacity for formal discourse analysis at any scale, from interpersonal dynamics to institutional culture to public media and spiritual commerce.
 
 ## Skills
 
@@ -26,7 +26,7 @@ Run any situation, decision, or conflict through the four-pillar ethical test. E
 Run a virtue diagnostic on yourself, a relationship, a team, or any dynamic. Reads each virtue's state (alive, strained, or frozen), the truth gate state, the balance between functional and resonant love channels, and installation depth of any cognitive virus patterns.
 
 ### /detect
-Detect whether ethics are being performed or genuinely lived. Operates at three scales: interpersonal, organizational, and discourse analysis. Identifies commercialized cognitive viruss, truth gate inversions, and the weaponization of functional love against resonant love.
+Detect whether ethics are being performed or genuinely lived. Operates at three scales: interpersonal, organizational, and discourse analysis. Identifies commercialized cognitive viruses, truth gate inversions, and the weaponization of functional love against resonant love.
 
 ### /steelman
 Build the strongest possible version of any position before agreeing or disagreeing. Uses all four virtues to ensure genuine engagement rather than hollow dismissal. Bidirectional: steelman the other side, then steelman your own, then compare at full strength. Also catches self-strawmanning.
