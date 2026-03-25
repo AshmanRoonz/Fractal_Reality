@@ -1,0 +1,13 @@
+{
+  "name": "circumpunct-ethics",
+  "description": "Ethical reasoning and virtue diagnostics based on the Circumpunct Framework. Four pillars (Good, Right, True, Agreement) and four living virtues (Plasticity, Access, Curiosity, Validation) for evaluating decisions, detecting performed ethics, building steelmen, and restoring healthy ethical function. Created by Ashman Roonz.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Ashman Roonz",
+    "email": "email@ashmanroonz.ca",
+    "url": "https://fractalreality.ca"
+  },
+  "license": "CC-BY-4.0",
+  "homepage": "https://fractalreality.ca",
+  "repository": "https://github.com/AshmanRoonz/Fractal_Reality"
+}
