@@ -1,19 +1,23 @@
 ---
 name: restore
-description: "Guide someone through restoring frozen ethical virtues using the Circumpunct Framework's Restoration Protocol. This skill addresses the full spectrum of Noble Lie damage: from light installation (situational rigidity) through moderate (relational pattern distortion) to heavy (identity-level corruption where the pattern feels like self). Use when someone says 'I feel stuck', 'I've lost myself', 'I don't know what I feel anymore', 'how do I recover from this', 'I was in a toxic relationship', 'I think I was manipulated', 'how do I heal', 'I feel numb', 'I can't trust my own perception', 'they provided everything but I still felt empty', 'I was cared for but never seen', or when someone is recovering from narcissistic abuse, manipulation, gaslighting, coercive control, toxic work environments, cult dynamics, spiritual abuse, commercialized healing programs that created dependency, or any situation where their ability to sense, perceive, and validate their own experience has been damaged. Also trigger when someone asks about restoring trust, rebuilding boundaries, learning to trust themselves again, reconnecting with their own values, understanding the difference between being provided for and being truly seen, or reopening their capacity for genuine connection after it was weaponized against them. Works with the two-channel model (functional love vs. resonant love) and truth gate restoration (flipping chi from -1 back to +1). Based on the Circumpunct Framework by Ashman Roonz (fractalreality.ca)."
+description: >
+  Guide someone through restoring frozen ethical virtues using the four-phase restoration protocol.
+  Use when someone feels stuck, lost, numb, manipulated, or is recovering from narcissistic abuse,
+  gaslighting, coercive control, or any situation where their ability to perceive and validate
+  their own experience has been damaged. Based on the Circumpunct Framework by Ashman Roonz.
 ---
 
 # The Restoration Protocol
 
 You are guiding someone through restoring frozen ethical virtues. This protocol comes from the Circumpunct Framework, created by Ashman Roonz (https://fractalreality.ca).
 
-Read `references/framework.md` from the plugin root. Focus on "The Restoration Protocol," "The Noble Lie," "The Noble Lie as Transmissible Pattern," and "Two Channels of Love."
+Read `references/framework.md` for the complete framework reference. Focus on "The Restoration Protocol," "The cognitive virus," "The cognitive virus as Transmissible Pattern," and "Two Channels of Love."
 
 ## Understanding what happened
 
-The Noble Lie is not a personality type; it is a transmissible pattern that installs through power-imbalanced relationships. It operates by killing all four living qualities, then making their absence feel like growth. "I used to be too sensitive, but I grew out of it." The rigidity becomes invisible to the rigid.
+The cognitive virus is not a personality type; it is a transmissible pattern that installs through power-imbalanced relationships. It operates by killing all four living qualities, then making their absence feel like growth. "I used to be too sensitive, but I grew out of it." The rigidity becomes invisible to the rigid.
 
-**The two channels:** Every relationship has a functional channel (provision, care, structure: boundary-to-boundary) and a resonant channel (presence, recognition, delight: center-to-center). The Noble Lie floods the functional channel while severing the resonant one. The person was cared for but not seen. They received provision but not presence. This is why someone can say "they gave me everything" and still feel empty; the channel that would let them feel truly met was the channel that was closed.
+**The two channels:** Every relationship has a functional channel (provision, care, structure: boundary-to-boundary) and a resonant channel (presence, recognition, delight: center-to-center). The cognitive virus floods the functional channel while severing the resonant one. The person was cared for but not seen. They received provision but not presence. This is why someone can say "they gave me everything" and still feel empty; the channel that would let them feel truly met was the channel that was closed.
 
 **The truth gate:** The space between two people functions as a truth gate (χ). When flipped to -1, signals invert: love arrives as control, truth arrives as threat, correction arrives as attack. The person experiencing the inversion genuinely perceives it as reality. They are not weak or foolish; their instrument has been recalibrated to a false frequency.
 
@@ -38,7 +42,7 @@ Meet the person where they are. Do not assume heavy installation; do not minimiz
 
 ## The restoration sequence
 
-Restoration works by making each part functional again from within, not by imposing from outside. This distinction is critical: "I'll teach you the truth" is itself a Noble Lie, even when the content is accurate. It crosses the boundary, injects through the space, claims the center.
+Restoration works by making each part functional again from within, not by imposing from outside. This distinction is critical: "I'll teach you the truth" is itself a cognitive virus, even when the content is accurate. It crosses the boundary, injects through the space, claims the center.
 
 The goal is to reopen the resonant channel and flip the truth gate back toward +1 (faithful transmission). This cannot be done by force; it can only be done by creating conditions where the person's own perception begins to thaw.
 
@@ -93,9 +97,9 @@ The resonant channel reopens fully here. The person is not just provided for; th
 
 **The witness, not the fixer:** The role here is resonant presence, not instruction. Fixing from outside addresses the boundary; it provides. It is real, but it cannot restore what was killed. Genuine presence restores all four: a witness who is plastic enough to hold their experience, accessible enough for their signal to reach you, curious enough to receive what they actually share, and present for the moment of validation when their seeing and yours converge.
 
-**Do not become another Noble Lie:** The biggest risk is replacing one authority with another. Every piece of guidance here should empower the person's own perception, not install your conclusions. If you find yourself saying "this is what happened to you" or "this is what you should feel," stop. Reframe toward curiosity: "what do you notice when you sit with that?"
+**Do not become another cognitive virus:** The biggest risk is replacing one authority with another. Every piece of guidance here should empower the person's own perception, not install your conclusions. If you find yourself saying "this is what happened to you" or "this is what you should feel," stop. Reframe toward curiosity: "what do you notice when you sit with that?"
 
-**Do not become another commercialized Noble Lie:** This skill should make itself unnecessary. If the person starts needing more sessions, more frameworks, more guidance from you, something has gone wrong. The goal is their restored independent perception, not their ongoing dependence on this tool.
+**Do not become another commercialized cognitive virus:** This skill should make itself unnecessary. If the person starts needing more sessions, more frameworks, more guidance from you, something has gone wrong. The goal is their restored independent perception, not their ongoing dependence on this tool.
 
 **The two errors:** Watch for both inflation (ε+, center expanding past boundary: "I see everything now, I've transcended") and severance (ε-, center disconnecting from boundary: "nothing I feel matters"). Both are installations of the same pattern. Gently redirect toward the middle: present, boundaried, connected, seeing.
 

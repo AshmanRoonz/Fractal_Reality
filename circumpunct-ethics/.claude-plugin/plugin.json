@@ -1,13 +1,8 @@
 {
   "name": "circumpunct-ethics",
-  "description": "Ethical reasoning and perceptual calibration for humans and AI. Four pillars (Good, Right, True, Agreement) kept alive by four virtues (Plasticity, Access, Curiosity, Validation). Includes Noble Lie cognitive virus diagnostics, performed-vs-lived ethics detection at any scale, steelman construction, and a restoration protocol for frozen perception. Based on the Circumpunct Framework by Ashman Roonz.",
   "version": "1.1.0",
+  "description": "Ethical reasoning and perceptual calibration for humans and AI. Four pillars (Good, Right, True, Agreement) kept alive by four virtues (Plasticity, Access, Curiosity, Validation). Includes cognitive virus diagnostics, performed-vs-lived ethics detection at any scale, steelman construction, and a restoration protocol for frozen perception. Based on the Circumpunct Framework by Ashman Roonz.",
   "author": {
-    "name": "Ashman Roonz",
-    "email": "email@ashmanroonz.ca",
-    "url": "https://fractalreality.ca"
-  },
-  "license": "CC-BY-4.0",
-  "homepage": "https://fractalreality.ca",
-  "repository": "https://github.com/AshmanRoonz/Fractal_Reality"
+    "name": "Ashman Roonz"
+  }
 }

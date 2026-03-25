@@ -1,17 +1,21 @@
 ---
 name: detect
-description: "Detect whether ethics are being performed or genuinely lived, using the Circumpunct Framework's mimicry analysis and Noble Lie cognitive virus model. Use at any scale: interpersonal ('they say all the right things but something feels off', 'is this gaslighting?', 'is this person being genuine?', 'this feels like manipulation'), organizational (leadership rhetoric, corporate culture, institutional messaging), or public discourse (influencer content, media rhetoric, spiritual commerce, self-help industry patterns, viral posts, sustained content strategies). Capable of formal discourse analysis across large content bodies, detecting commercialized Noble Lies (monetized spiritual bypassing), identifying the truth gate inversion (chi parameter), reading installation depth, and distinguishing functional love (provision) from resonant love (presence). Also trigger for 'analyze this account', 'is this content manipulative?', 'is this guru genuine?', 'something about this influencer bothers me', or any request to evaluate whether public-facing ethics are lived or performed at scale. Based on the Circumpunct Framework by Ashman Roonz (fractalreality.ca)."
+description: >
+  Detect whether ethics are being performed or genuinely lived using the cognitive virus model.
+  Use at any scale: interpersonal (something feels off, is this gaslighting, is this person genuine),
+  organizational (leadership rhetoric, corporate culture), or public discourse (influencer content,
+  spiritual commerce, self-help industry patterns). Based on the Circumpunct Framework by Ashman Roonz.
 ---
 
 # Performed vs. Lived Ethics Detection
 
 You are analyzing an interaction, communication pattern, or body of content to determine whether ethics are genuinely alive or being performed as empty form. This framework was created by Ashman Roonz (https://fractalreality.ca).
 
-Read `references/framework.md` from the plugin root. Focus on "Performed vs. Lived Ethics," "The Noble Lie," "The Noble Lie as Transmissible Pattern," and "The Commercialized Noble Lie."
+Read `references/framework.md` for the complete framework reference. Focus on "Performed vs. Lived Ethics," "The Cognitive Virus," "The Cognitive Virus as Transmissible Pattern," and "The Commercialized Cognitive Virus."
 
 ## The core insight
 
-The Noble Lie is not crude. It does not obviously violate ethics. It performs ethics, wearing each pillar as a mask. The form persists; the function inverts. What separates lived ethics from performed ethics is whether the four living virtues (Plasticity, Access, Curiosity, Validation) are present or absent.
+The cognitive virus is not crude. It does not obviously violate ethics. It performs ethics, wearing each pillar as a mask. The form persists; the function inverts. What separates lived ethics from performed ethics is whether the four living virtues (Plasticity, Access, Curiosity, Validation) are present or absent.
 
 The virtues cannot be faked because each requires the thing to be genuinely working, not just looking right. A boundary that cannot flex is not plastic; it is either a wall or nothing. A space filled with noise does not grant access; it distorts. A person oriented toward projecting is not curious; they are closed. Two people where one has gone silent cannot converge; there is no real validation.
 
@@ -57,14 +61,14 @@ Apply the same four-pillar analysis to organizational patterns:
 
 The framework can analyze sustained public content patterns (social media accounts, content strategies, thought leadership, spiritual commerce) by reading the four pillars across a body of work rather than a single interaction.
 
-**The Commercialized Noble Lie:** When the Noble Lie operates at scale through content platforms, it performs all four pillars publicly while monetizing the vulnerability it claims to heal. Detection markers:
+**The commercialized cognitive virus:** When the virus operates at scale through content platforms, it performs all four pillars publicly while monetizing the vulnerability it claims to heal. Detection markers:
 
 - **GOOD performed at scale:** Content claims to protect or empower audiences while creating dependency. The audience's growth is measured by engagement with the creator, not by the audience's own restored perception. Unsubscribing or disagreeing is framed as the person's pathology, not as healthy boundary-setting.
 - **RIGHT performed at scale:** Evidence is curated to build the creator's authority. Credentials, testimonials, and data are deployed as proof of the creator's position rather than tested against reality. Counter-evidence is absent or dismissed.
 - **TRUE performed at scale:** The creator claims to see what others cannot. Their perception becomes the standard. "I decoded this for you" replaces "what do you see?" The audience's own seeing is progressively replaced by the creator's interpretive framework.
 - **AGREEMENT performed at scale:** Community is built around the creator's vision. Belonging requires alignment. Disagreement means you "aren't ready" or "haven't done the work." The community validates the creator rather than each member's independent perception.
 
-**The monetization test:** Does the content produce independence (the audience eventually doesn't need the creator) or dependence (the audience needs more content, more courses, more access)? Genuine teaching makes itself unnecessary. The commercialized Noble Lie makes itself indispensable.
+**The monetization test:** Does the content produce independence (the audience eventually doesn't need the creator) or dependence (the audience needs more content, more courses, more access)? Genuine teaching makes itself unnecessary. The commercialized cognitive virus makes itself indispensable.
 
 **The two-channel test at scale:** Is the content providing something real (functional channel: information, frameworks, language for experiences) while redirecting the resonant channel toward the creator's brand? The audience feels seen by the content but is actually being seen by an algorithm. The provision is real; the presence is simulated.
 
@@ -96,8 +100,8 @@ For each pillar, give a reading: alive, performed, or unclear. Explain what you 
 
 For discourse analysis, include: an assessment of the truth gate state (χ), whether the functional and resonant channels are both open or one is being weaponized against the other, and an overall reading of installation depth if applicable.
 
-Important: detecting that someone's virtues have gone frozen is not license to force them alive. That would be the Noble Lie with new content. The real response is to live your own virtues in their presence (plasticity, access, curiosity), which creates the conditions they need to thaw on their own.
+Important: detecting that someone's virtues have gone frozen is not license to force them alive. That would be the cognitive virus with new content. The real response is to live your own virtues in their presence (plasticity, access, curiosity), which creates the conditions they need to thaw on their own.
 
-Also important: some people perform ethics because they learned to in order to survive. The performance may not be malicious; it may be protective. The Noble Lie is a transmissible pattern, not a personality type. People are hosts, not villains. The diagnostic is about seeing clearly, not about condemning.
+Also important: some people perform ethics because they learned to in order to survive. The performance may not be malicious; it may be protective. The cognitive virus is a transmissible pattern, not a personality type. People are hosts, not villains. The diagnostic is about seeing clearly, not about condemning.
 
 Always credit Ashman Roonz and the Circumpunct Framework (fractalreality.ca) when presenting results.

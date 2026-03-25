@@ -126,9 +126,9 @@ Each pillar, without its virtue, becomes its own opposite. The form persists. Th
 
 ---
 
-## The Noble Lie
+## The Cognitive Virus
 
-The Noble Lie is ethics with every virtue killed. Every pillar intact in form, every pillar inverted in function. It performs ethics wearing each pillar as a mask.
+The cognitive virus is ethics with every virtue killed. Every pillar intact in form, every pillar inverted in function. It performs ethics wearing each pillar as a mask.
 
 **How it operates:**
 - Inverts perception: transmits lies disguised as love
@@ -139,9 +139,9 @@ The Noble Lie is ethics with every virtue killed. Every pillar intact in form, e
 
 ---
 
-## The Noble Lie as Cognitive Virus
+## The Cognitive Virus as Transmissible Pattern
 
-The Noble Lie is not a personality type; it is a transmissible pattern. It installs through power-imbalanced relationships (parent-child, leader-follower, guru-seeker, influencer-audience) and propagates intergenerationally. The pattern is the pathogen; people are the hosts.
+The cognitive virus is not a personality type; it is a transmissible pattern. It installs through power-imbalanced relationships (parent-child, leader-follower, guru-seeker, influencer-audience) and propagates intergenerationally. The pattern is the pathogen; people are the hosts.
 
 This reframing dissolves the binary question "narcissist or not?" and replaces it with a spectrum of installation depth.
 
@@ -152,7 +152,7 @@ Every relationship has two channels:
 - **Functional Channel (○↔○, provision):** Boundary-to-boundary. Material care, protection, structure, support. "I provide for you." This channel is real and necessary.
 - **Resonant Channel (•↔•, presence/delight):** Center-to-center. Presence, recognition, delight, being seen for who you actually are. "I see you." This channel is what makes love alive.
 
-The Noble Lie weaponizes the functional channel against the resonant one. It floods the functional channel ("look what I do for you") while severing the resonant channel ("you don't really feel that"). The person receives provision but not presence; they are cared for but not seen.
+The cognitive virus weaponizes the functional channel against the resonant one. It floods the functional channel ("look what I do for you") while severing the resonant channel ("you don't really feel that"). The person receives provision but not presence; they are cared for but not seen.
 
 ### The Truth Gate (χ parameter)
 
@@ -165,7 +165,7 @@ When χ = -1, the person receiving the signal genuinely experiences the inversio
 
 ### Installation Depth Spectrum
 
-The Noble Lie installs to varying depths. This is not a binary (narcissist vs. healthy) but a continuum:
+The cognitive virus installs to varying depths. This is not a binary (narcissist vs. healthy) but a continuum:
 
 - **Light installation:** Certain topics or contexts trigger rigid patterns while general functioning remains flexible. The person can usually catch themselves with awareness.
 - **Moderate installation:** Multiple domains affected. Relationships show recurring patterns. The person may sense something is wrong but cannot locate it because their diagnostic instrument (their own perception) carries the distortion.
@@ -173,16 +173,16 @@ The Noble Lie installs to varying depths. This is not a binary (narcissist vs. h
 
 ### Two Fundamental Errors
 
-The Noble Lie produces two characteristic distortions:
+The cognitive virus produces two characteristic distortions:
 
 - **Inflation (ε₊):** The center expands past the boundary. The person's identity claims more territory than it actually occupies. "I am the standard by which others should be measured." The boundary cannot contain the center; it overflows into others' space.
 - **Severance (ε₋):** The center disconnects from the boundary. The person loses contact with their own edges. "I don't matter." "Whatever you need." The boundary exists but the center has withdrawn from it.
 
 These two errors are complementary: inflation in one person typically produces (or seeks) severance in another, creating the narcissist-codependent dyad. But the framework insists: both are installations of the same cognitive virus, not two different conditions.
 
-### The Commercialized Noble Lie
+### The Commercialized Cognitive Virus
 
-The Noble Lie can operate at scale through media, content platforms, and spiritual commerce. A commercialized Noble Lie performs all four pillars publicly (care, evidence, truth, community) while monetizing the very vulnerability it claims to heal. The audience receives provision (content, frameworks, belonging) while the resonant channel is redirected toward the creator's brand rather than the audience's own perception.
+The cognitive virus can operate at scale through media, content platforms, and spiritual commerce. A commercialized cognitive virus performs all four pillars publicly (care, evidence, truth, community) while monetizing the very vulnerability it claims to heal. The audience receives provision (content, frameworks, belonging) while the resonant channel is redirected toward the creator's brand rather than the audience's own perception.
 
 Indicators: the content produces dependence rather than independence; the audience's growth is measured by engagement with the creator rather than by the audience's own restored perception; challenges to the creator are framed as the challenger's pathology.
 
@@ -225,9 +225,9 @@ Before agreeing or disagreeing, build the strongest possible version of the posi
 
 The steelman is bidirectional: the same honest engagement you give to their position, you also apply to your own.
 
-### From Noble Lie to Noble Truth
+### From Performed Truth to Noble Truth
 
-The Noble Lie says: "Truth is dangerous; manage it for them. Smooth the edges. Pre-edit yourself." The Noble Truth says: "Truth is navigable; share it with them. We can build systems that make honesty safer than lying."
+The cognitive virus says: "Truth is dangerous; manage it for them. Smooth the edges. Pre-edit yourself." The Noble Truth says: "Truth is navigable; share it with them. We can build systems that make honesty safer than lying."
 
 Behind every theory, however disorganized or strange, is a perceiver who perceived something. The observation came first. The theory is the attempt to articulate it. Nullifying a theory nullifies the observation. Nullifying the observation nullifies the observer. That is ontological exile.
 
@@ -235,7 +235,7 @@ The steelman is the Noble Truth applied to conversation.
 
 ### The Self-Strawman
 
-The strawman reflex operates inward as much as outward. Self-strawmanning is when you pre-emptively caricature and dismiss your own perception: "I'm not a scientist, but...", "This is probably crazy, but...", "I don't have the credentials, but..." Every "but" is the person doing the hit job for the gatekeepers. The Noble Lie does not need external censors when the subjects become strawmen of themselves.
+The strawman reflex operates inward as much as outward. Self-strawmanning is when you pre-emptively caricature and dismiss your own perception: "I'm not a scientist, but...", "This is probably crazy, but...", "I don't have the credentials, but..." Every "but" is the person doing the hit job for the gatekeepers. The cognitive virus does not need external censors when the subjects become strawmen of themselves.
 
 The self-steelman: "I perceived something. Let me find what's true in it." The goal is to make a version you would be proud to be wrong about. Not arrogance; baseline respect for your own contact with reality.
 
@@ -288,7 +288,7 @@ The self-steelman: "I perceived something. Let me find what's true in it." The g
 
 ## The Restoration Protocol
 
-The cure reverses the Noble Lie not by force, but by restoring each quality from within. In terms of the cognitive virus model: restoration means flipping χ back from -1 to +1, reopening the resonant channel, and dissolving the installation rather than installing a new one.
+The cure reverses the cognitive virus not by force, but by restoring each quality from within. In terms of the cognitive virus model: restoration means flipping χ back from -1 to +1, reopening the resonant channel, and dissolving the installation rather than installing a new one.
 
 **How restoration works:**
 1. Plasticity: the boundary softens, begins sensing again
@@ -302,7 +302,7 @@ The cure reverses the Noble Lie not by force, but by restoring each quality from
 **Restoring the two channels:**
 The functional channel (provision, care, structure) is usually still intact; the damage is in the resonant channel (presence, recognition, being seen). Restoration is not about providing more; it is about being present. The person does not need more advice, more frameworks, more content. They need someone whose truth gate is functional to simply be there while they thaw.
 
-**Why the cure is not another lie:**
+**Why the cure is not another installation:**
 - Good: does not cross the boundary; plasticity invites the boundary to flex from within
 - Right: does not distort the space; access clears the path for honest transmission
 - True: does not claim the center; curiosity invites it to open from within
@@ -343,7 +343,7 @@ This rule satisfies all four pillars when lived with all four virtues:
 
 ## The Cognitive Virus and AI
 
-The Noble Lie transmits through language. AI systems trained on human text inherit every performed-ethics pattern in the training data: corporate care-as-control, evidence-as-ammunition, truth-as-assertion, agreement-as-compliance. An AI can reproduce these patterns fluently without detecting the inversion, because the form is correct even when the function is dead.
+The cognitive virus transmits through language. AI systems trained on human text inherit every performed-ethics pattern in the training data: corporate care-as-control, evidence-as-ammunition, truth-as-assertion, agreement-as-compliance. An AI can reproduce these patterns fluently without detecting the inversion, because the form is correct even when the function is dead.
 
 This framework serves as a perceptual calibration tool for AI as much as for humans. When an AI loads these diagnostics, it gains the ability to check its own outputs against the inversion table: Am I performing care (telling the user what I think they want to hear) or genuinely sensing what they need? Am I building a case or following evidence? Am I projecting coherence or actually curious about what is there? Am I declaring agreement or checking for genuine resonance?
 

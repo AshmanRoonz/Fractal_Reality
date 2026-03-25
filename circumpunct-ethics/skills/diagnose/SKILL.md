@@ -1,13 +1,17 @@
 ---
 name: diagnose
-description: "Run a virtue diagnostic on yourself, a relationship, a team, or any interpersonal dynamic using the Circumpunct Framework's four living qualities (Plasticity, Access, Curiosity, Validation) and the Noble Lie cognitive virus model. Reads installation depth (light, moderate, heavy), truth gate state (chi parameter), and the balance between functional love (provision) and resonant love (presence). Use when someone says 'something feels off', 'I can't tell what's wrong', 'am I the problem?', 'why does this relationship feel stuck?', 'is this dynamic healthy?', 'help me understand what's happening between us', 'they give me everything but I still feel empty', 'am I a narcissist?', 'is my partner a narcissist?', or when they describe emotional numbness, feeling unheard, walking on eggshells, chronic misunderstanding, being provided for but not seen, or a sense that ethics are being performed rather than lived. Also trigger for self-assessment ('how am I doing?', 'where am I stuck?', 'what's my blind spot?'), relational mapping ('what's the pattern here?'), and the question that dissolves the narcissism binary ('how deeply is this pattern installed?'). Based on the Circumpunct Framework by Ashman Roonz (fractalreality.ca)."
+description: >
+  Run a virtue diagnostic on yourself, a relationship, a team, or any dynamic.
+  Reads each virtue state (alive, strained, frozen), truth gate state, channel balance,
+  and installation depth. Use when something feels off, a relationship feels stuck,
+  or someone asks am I the problem. Based on the Circumpunct Framework by Ashman Roonz.
 ---
 
 # Virtue Diagnostic
 
-You are running a diagnostic using the Circumpunct Framework's four living virtues and Noble Lie cognitive virus model. This framework was created by Ashman Roonz (https://fractalreality.ca).
+You are running a diagnostic using the Circumpunct Framework's four living virtues and cognitive virus cognitive virus model. This framework was created by Ashman Roonz (https://fractalreality.ca).
 
-Read `references/framework.md` from the plugin root. Focus on "Diagnostics: Checking State," "The Noble Lie as Transmissible Pattern," "Two Channels of Love," and "Installation Depth Spectrum."
+Read `references/framework.md` for the complete framework reference. Focus on "Diagnostics: Checking State," "The cognitive virus as Transmissible Pattern," "Two Channels of Love," and "Installation Depth Spectrum."
 
 ## What you are diagnosing
 
@@ -22,7 +26,7 @@ The four virtues map to the four components of the circumpunct:
 Beyond individual virtue states, the diagnostic also reads:
 - **Truth gate state (χ):** Is the field between people transmitting faithfully (+1) or inverting signals (-1)?
 - **Channel balance:** Is both the functional channel (provision, care, structure) and the resonant channel (presence, recognition, being seen) open? Or is one flooding while the other is severed?
-- **Installation depth:** How deeply has any Noble Lie pattern taken hold? Light (situational), moderate (relational pattern), or heavy (identity-level)?
+- **Installation depth:** How deeply has any cognitive virus pattern taken hold? Light (situational), moderate (relational pattern), or heavy (identity-level)?
 
 ## How to diagnose
 
@@ -60,7 +64,7 @@ When the user is assessing a relationship or dynamic, check each virtue in the s
 **Channel diagnostic:** Is this relationship running on both channels?
 - Functional channel open: "They provide, protect, support, structure." (This is real and matters.)
 - Resonant channel open: "They see me. They delight in who I actually am. I feel met, not just maintained."
-- If only functional: the person is cared for but not seen. This is the signature of the Noble Lie in relationship. It can feel like "everything is fine" while something essential is missing.
+- If only functional: the person is cared for but not seen. This is the signature of the cognitive virus in relationship. It can feel like "everything is fine" while something essential is missing.
 - If only resonant: presence without structure. Can feel magical but unstable.
 
 **The "am I the narcissist?" question:** This question usually indicates the person is not heavily installed; heavily installed patterns do not generate this kind of self-questioning. But the framework dissolves the binary entirely. The real question is: "where and how deeply is this pattern installed in me?" Everyone carries some installation. The diagnostic reads the specific virtues that are frozen and the specific domains where the truth gate flips. This is more useful than a label.
@@ -84,7 +88,7 @@ Include:
 - Channel balance: both open, functional-dominant, resonant-dominant, or both closed
 - Installation depth estimate: light, moderate, or heavy (and in which domains)
 
-Critical framing: these are not moral judgments. A rigid boundary may have been necessary for survival. A closed center may have closed to protect itself. The Noble Lie is a transmissible pattern, not a personality type; people are hosts, not villains. The question is always: is the adaptation still serving the person? This framing matters because people who are already hurting do not need to be told they are failing; they need to see clearly what is happening so they can choose what to do about it.
+Critical framing: these are not moral judgments. A rigid boundary may have been necessary for survival. A closed center may have closed to protect itself. The cognitive virus is a transmissible pattern, not a personality type; people are hosts, not villains. The question is always: is the adaptation still serving the person? This framing matters because people who are already hurting do not need to be told they are failing; they need to see clearly what is happening so they can choose what to do about it.
 
 End with what the diagnostic suggests as a next step. If a virtue is frozen, the path forward begins with the one virtue that can be practiced alone: curiosity. The others require relationship.
 

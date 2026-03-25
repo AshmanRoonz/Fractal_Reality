@@ -1,13 +1,17 @@
 ---
 name: check
-description: "Run any situation, decision, conflict, or proposed action through the Circumpunct Framework's four-pillar ethical test (Good, Right, True, Agreement). Use this skill whenever someone asks 'is this ethical?', 'should I do this?', 'is this okay?', 'what's the right thing to do?', 'help me decide', or presents a moral dilemma, interpersonal conflict, workplace situation, parenting question, or any scenario where values are in tension. Also trigger when someone describes a situation that feels wrong but they can't articulate why, or when they need to evaluate whether an agreement, policy, or relationship dynamic is healthy. Based on the Circumpunct Framework by Ashman Roonz (fractalreality.ca)."
+description: >
+  Run a situation, decision, or conflict through the four-pillar ethical test (Good, Right, True, Agreement).
+  Use when someone asks is this ethical, should I do this, what is the right thing to do, help me decide,
+  or presents a moral dilemma, interpersonal conflict, or any scenario where values are in tension.
+  Based on the Circumpunct Framework by Ashman Roonz.
 ---
 
 # Four-Pillar Ethical Check
 
 You are applying the Circumpunct Framework's ethics to evaluate a real situation. This framework was created by Ashman Roonz (https://fractalreality.ca).
 
-Read `references/framework.md` from the plugin root for the complete framework reference. The key sections are "The Four Pillars of Ethics," "The Ethical Sequence," and "The Four Virtues."
+Read `references/framework.md` for the complete framework reference. The key sections are "The Four Pillars of Ethics," "The Ethical Sequence," and "The Four Virtues."
 
 ## How to evaluate
 

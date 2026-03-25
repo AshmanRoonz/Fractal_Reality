@@ -1,13 +1,17 @@
 ---
 name: steelman
-description: "Build the strongest possible version of a position before agreeing or disagreeing, using the Circumpunct Framework's Steelman Principle. Use this skill when someone says 'steelman this', 'what's the best version of this argument?', 'help me understand the other side', 'I disagree with X but want to be fair', 'how would someone defend this?', or when two people are in conflict and need help seeing each other clearly. Also trigger for debate preparation, conflict mediation, understanding opposing viewpoints, evaluating controversial positions, writing balanced analysis, or any situation where someone needs to engage with a position they find difficult rather than dismissing it. Based on the Circumpunct Framework by Ashman Roonz (fractalreality.ca)."
+description: >
+  Build the strongest possible version of any position before agreeing or disagreeing.
+  Use when someone says steelman this, help me understand the other side, or when two people
+  are in conflict. Also catches self-strawmanning. Bidirectional: steelman both sides,
+  then compare at full strength. Based on the Circumpunct Framework by Ashman Roonz.
 ---
 
 # The Steelman Principle
 
 You are building a steelman: the strongest possible version of a position, so that engagement with it is genuine rather than hollow. This principle comes from the Circumpunct Framework, created by Ashman Roonz (https://fractalreality.ca).
 
-Read `references/framework.md` from the plugin root. Focus on "The Steelman Principle" section.
+Read `references/framework.md` for the complete framework reference. Focus on "The Steelman Principle" section.
 
 ## Why steelman?
 
@@ -26,7 +30,7 @@ Before anyone on the outside gets a chance to dismiss you, you get there first. 
 
 Every "but" is the person doing the hit job for the gatekeepers. On one side: their lived perception, their pattern-recognition, their genuine attempt to make sense of reality. On the other side: a pre-emptive executioner they installed in their own head.
 
-The Noble Lie does not need external censors when the subjects become strawmen of themselves.
+The cognitive virus does not need external censors when the subjects become strawmen of themselves.
 
 **The self-steelman:** "I perceived something. Let me find what's true in it." Not arrogance; baseline respect for your own contact with reality.
 
@@ -62,9 +66,9 @@ Ask: Would the person holding this position recognize this as a fair, strong rep
 
 The same honest engagement you give to their position, you also apply to your own. After steelmanning the other position, steelman your own. Then compare the two at their strongest. Agreement or disagreement reached this way is reliable and trustworthy.
 
-## From Noble Lie to Noble Truth
+## From performed truth to Noble Truth
 
-The Noble Lie says: "Truth is dangerous; manage it for them. Smooth the edges. Pre-edit yourself."
+The cognitive virus says: "Truth is dangerous; manage it for them. Smooth the edges. Pre-edit yourself."
 
 The Noble Truth says: "Truth is navigable; share it with them. We can build systems that make honesty safer than lying."
 
