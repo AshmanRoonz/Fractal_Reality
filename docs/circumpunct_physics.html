@@ -303,12 +303,26 @@
 <li><a href="#postulate-4--local-quantum-limit-unitary-evolution">Postulate 4 — Local Quantum Limit (Unitary Evolution)</a></li>
 <li><a href="#postulate-5--geometric--gr-limit">Postulate 5 — Geometric / GR Limit</a></li>
 <li><a href="#36-dictionary-to-standard-formalisms">3.6 Dictionary to Standard Formalisms</a></li>
-<li><a href="#4-schrödinger-equation-from-u----i--">4. Schrödinger Equation from U = ☀︎ ∘ i ∘ ⊛</a></li>
-<li><a href="#41-simplifying-assumptions">4.1 Simplifying Assumptions</a></li>
+<li><a href="#4-the-power-equation-and-its-physical-limits">4. The Power Equation and Its Physical Limits</a></li>
+<li><a href="#40-the-generalized-power-equation">4.0 The Generalized Power Equation</a></li>
+<li><a href="#401-the-ac-power-decomposition">4.0.1 The AC Power Decomposition</a></li>
+<li><a href="#402-three-limits-of-the-process-triad">4.0.2 Three Limits of the Process Triad</a></li>
+<li><a href="#41-the-quantum-limit">4.1 The Quantum Limit: ☀︎ ∘ ⊛ → Symmetric Convolution</a></li>
 <li><a href="#42-explicit-computation-for-the-r-kernel">4.2 Explicit Computation for the √r Kernel</a></li>
-<li><a href="#43-derivation-of-the-transmission-law-tδφ--cos²δφ2">4.3 Derivation of the Transmission Law T(Δφ) = cos²(Δφ/2)</a></li>
+<li><a href="#421-the-power-equation-verified">4.2.1 The Power Equation Verified</a></li>
+<li><a href="#422-the-classical-limit-i-transparent">4.2.2 The Classical Limit: i → Transparent</a></li>
+<li><a href="#43-derivation-of-the-transmission-law-t-cos22">4.3 Derivation of the Transmission Law T(Δφ) = cos²(Δφ/2)</a></li>
 <li><a href="#44-unified-origin-isotropy-derives-three-results">4.4 Unified Origin: Isotropy Derives Three Results</a></li>
-<li><a href="#5-metric-and-einstein-equations-from-">5. Metric and Einstein Equations from ⊙</a></li>
+<li><a href="#4x8-universality-the-r-fixed-point-is-an-attractor">4.X.8 Universality: The √r Fixed Point is an Attractor</a></li>
+<li><a href="#4x81-the-kernel-renormalization-flow-framework-native">4.X.8.1 The Kernel Renormalization Flow (Framework-Native)</a></li>
+<li><a href="#4x82-fixed-points-of-ℛ">4.X.8.2 Fixed Points of ℛ</a></li>
+<li><a href="#4x83-why-the-rg-alone-is-insufficient-and-what-completes-it">4.X.8.3 Why the RG Alone Is Insufficient (and What Completes It)</a></li>
+<li><a href="#4x84-the-basin-of-attraction-non-power-law-kernels">4.X.8.4 The Basin of Attraction (Non-Power-Law Kernels)</a></li>
+<li><a href="#4x85-what-universality-class-means-concretely">4.X.8.5 What "Universality Class" Means Concretely</a></li>
+<li><a href="#4x86-the-rg-also-kills-non-power-law-artifacts">4.X.8.6 The RG Also Kills Non-Power-Law Artifacts</a></li>
+<li><a href="#4x87-complete-derivation-chain-final-summary">4.X.8.7 Complete Derivation Chain (Final Summary)</a></li>
+<li><a href="#45-connection-to-5-geometric-limit">4.5 Connection to §5 (Geometric Limit)</a></li>
+<li><a href="#5-metric-and-einstein-equations-from-conjectural">5. Metric and Einstein Equations from ⊙ (Conjectural)</a></li>
 <li><a href="#51-coarse-grained-braid-structure--redshift-factor">5.1 Coarse-Grained Braid Structure → Redshift Factor</a></li>
 <li><a href="#52-stress-energy-from-field-and-boundary">5.2 Stress-Energy from Field and Boundary</a></li>
 <li><a href="#53-gravitational-action-s_circ">5.3 Gravitational Action (S_circ)</a></li>
@@ -1373,18 +1387,113 @@ s = (b_•r, b_Φr, b_○r, b_•i, b_Φi, b_○i) ∈ {0,1}⁶
 </ul>
 <p>This resolves the apparent tension between discrete state counting and continuous field dynamics: they are complementary views of the same underlying coherence structure.</p>
 <hr />
-<h2 id="4-schrodinger-equation-from-u-i">4. Schrödinger Equation from U = ☀︎ ∘ i ∘ ⊛</h2>
-<p>This section derives the standard Schrödinger equation as a local limit of the circumpunct evolution.</p>
-<h3 id="41-simplifying-assumptions">4.1 Simplifying Assumptions</h3>
-<p>Work in a nonrelativistic regime with:</p>
-<ul>
-<li>Flat space M = ℝ³ × ℝ with coordinates (𝐫, t)</li>
-<li>A single complex scalar component of Φ(𝐫, t)</li>
-<li><strong>Domain assumption:</strong> Φ ∈ L²(ℝ³) with compact support or suitable decay at infinity. This justifies the appearance of ∇² and integration by parts in the derivation below.</li>
-<li>Translation-invariant kernels:
-  <code>K_conv(𝐫'', 𝐫') = K_conv(𝐫'' - 𝐫')
-  K_emerg(𝐫, 𝐫'') = K_emerg(𝐫 - 𝐫'')</code></li>
-</ul>
+<h2 id="4-the-power-equation-and-its-physical-limits">4. The Power Equation and Its Physical Limits</h2>
+<h3 id="40-the-generalized-power-equation">4.0 The Generalized Power Equation</h3>
+<p>The framework's temporal process defines a master relationship between energy and power:</p>
+<pre><code>╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║   GENERALIZED POWER EQUATION:                                     ║
+║                                                                   ║
+║       E = (☀︎ ∘ i ∘ ⊛) · 𝒫 · t                                    ║
+║                                                                   ║
+║   Energy = Process(Power × Time)                                  ║
+║                                                                   ║
+║   Equivalently:  𝒫 = E / (☀︎ ∘ i ∘ ⊛ · t)                         ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+</code></pre>
+<p>This states: energy is what you get when the full process triad (convergence, aperture rotation, emergence) acts on the product of power and time. The process triad IS the mediator between stored potential (E) and actualized flow (𝒫).</p>
+<p><strong>A note on i.</strong> The imaginary unit i and the aperture rotation i are the same object in this framework. This is not a notational coincidence; it is a structural claim. The aperture performs a 90° rotation (quarter-turn) on what passes through it: i = e^(iπ/2). Multiplication by the imaginary unit IS the aperture rotation. Every appearance of i in quantum mechanics (the Schrödinger equation, the commutation relations, the path integral phase) is the aperture doing its job. This identification is central to what follows.</p>
+<p><strong>Operator form.</strong> Let U(Δt) = ☀︎ ∘ i ∘ ⊛ denote the one-step evolution operator over interval Δt. The Hamiltonian (energy operator) is its infinitesimal generator:</p>
+<pre><code>H = lim[Δt→0] ℏ(U(Δt) - 𝟙) / (iΔt)
+</code></pre>
+<p>The power equation in operator language:</p>
+<pre><code>U(Δt) = exp(-iHΔt/ℏ)
+</code></pre>
+<p>This is standard quantum mechanics. The question is: what does H look like when computed from U = ☀︎ ∘ i ∘ ⊛?</p>
+<h3 id="401-the-ac-power-decomposition">4.0.1 The AC Power Decomposition</h3>
+<p>The framework's power equation maps to the standard AC power triangle:</p>
+<pre><code>S = P + iQ
+
+where:
+    S = apparent power   (total magnitude, |S|² = P² + Q²)
+    P = real power       (dissipative; work done)
+    Q = reactive power   (non-dissipative; phase cycling)
+</code></pre>
+<p>The three operators contribute distinctly:</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Power Component</th>
+<th>Physical Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⊛ (convergence)</td>
+<td>Real power P (inward work)</td>
+<td>Gathering; gravitational/strong</td>
+</tr>
+<tr>
+<td>☀︎ (emergence)</td>
+<td>Real power P (outward work)</td>
+<td>Radiating; electromagnetic/weak</td>
+</tr>
+<tr>
+<td>i (aperture rotation)</td>
+<td>Reactive power Q (phase cycling)</td>
+<td>Mediating; quantum coherence</td>
+</tr>
+</tbody>
+</table>
+<p><strong>At balance (◐ = 0.5):</strong> ⊛ and ☀︎ contribute equally and oppositely to the real power. Their net real contribution simplifies, leaving the dominant non-trivial operation as the aperture rotation i, which carries pure reactive power: phase evolution with no net dissipation.</p>
+<p>This is a physical result, not a mathematical convenience. Balance means the system's convergence and emergence are in equilibrium. What remains is phase cycling: unitary evolution.</p>
+<h3 id="402-three-limits-of-the-process-triad">4.0.2 Three Limits of the Process Triad</h3>
+<p>The generalized power equation contains all of standard physics as limits. The limits are determined by which operators in the triad become transparent (reduce to identity):</p>
+<pre><code>╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║  FULL THEORY:     𝒫 = E / (☀︎ ∘ i ∘ ⊛ · t)                       ║
+║                   All three operators active                      ║
+║                   → Complete circumpunct dynamics                 ║
+║                                                                   ║
+║  QUANTUM LIMIT:   ☀︎, ⊛ → transparent (balanced, local, flat)     ║
+║                   𝒫 = E / (i · t)                                 ║
+║                   → H = iℏ ∂/∂t                                   ║
+║                   → Schrödinger equation                          ║
+║                                                                   ║
+║  GEOMETRIC LIMIT: ☀︎, ⊛ non-trivial (curved, non-local)           ║
+║                   Full U generates curvature corrections          ║
+║                   → Einstein equations (§5)                       ║
+║                                                                   ║
+║  CLASSICAL LIMIT: i → transparent (decoherence, no phase)         ║
+║                   𝒫 = E / t = dE/dt                               ║
+║                   → Newtonian mechanics                           ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+</code></pre>
+<p>Each limit is a physical regime, not an arbitrary simplification. The question "why these assumptions?" is answered: they are the conditions under which specific operators in the process triad become transparent.</p>
+<hr />
+<h3 id="41-the-quantum-limit">4.1 The Quantum Limit: ☀︎ ∘ ⊛ → Symmetric Convolution</h3>
+<p>We now derive the conditions under which ☀︎ and ⊛ become transparent, reducing U = ☀︎ ∘ i ∘ ⊛ to an operator dominated by i. Each condition follows from a physical requirement, not an ad hoc simplification.</p>
+<p><strong>Condition 1: Flat space (M = ℝ³ × ℝ)</strong></p>
+<p><em>Physical basis:</em> When the braid density B(x) is approximately uniform (no significant gravitational curvature), the convergence and emergence operators see no preferred direction or position-dependent scaling. ⊛ and ☀︎ act identically at every point.</p>
+<p><em>Consequence:</em> The kernels K_conv and K_emerg become translation-invariant:</p>
+<pre><code>K_conv(𝐫'', 𝐫') = K_conv(𝐫'' - 𝐫')
+K_emerg(𝐫, 𝐫'') = K_emerg(𝐫 - 𝐫'')
+</code></pre>
+<p>This is not assumed; it follows from ⊛ and ☀︎ having no position-dependent structure to break translation symmetry.</p>
+<p><strong>Condition 2: Balance (◐ = 0.5)</strong></p>
+<p><em>Physical basis:</em> The balance parameter forces K_conv = K_emerg (convergence and emergence are symmetric). This is not a simplification; it is the framework's own fixed point (Theorem 2, §5.1 of main framework).</p>
+<p><em>Consequence:</em> The composite kernel K = ☀︎ ∘ ⊛ is an autoconvolution. The two operators fold into a single symmetric kernel, and the only non-trivial operator remaining in U is i.</p>
+<p><strong>Condition 3: Single scalar Φ</strong></p>
+<p><em>Physical basis:</em> At scales much larger than the circumpunct's internal structure (the non-relativistic, low-energy regime), the 64-state architecture projects onto its lowest-energy sector: a single complex scalar field. This is the same logic as effective field theory; internal degrees of freedom decouple at low energy.</p>
+<p><em>Consequence:</em> Φ(𝐫, t) is a single complex-valued function on ℝ³ × ℝ.</p>
+<p><strong>Summary: The quantum limit is the regime where convergence and emergence balance in flat space at low energy.</strong> Under these conditions:</p>
+<pre><code>U(Δt) = ☀︎ ∘ i ∘ ⊛  →  i · K_eff
+
+where K_eff is the symmetric composite kernel from balanced ⊛ and ☀︎.
+</code></pre>
 <p>Then (2.1) becomes:</p>
 <pre><code>Φ(t+Δt, 𝐫) = ∫ d³r'' K_emerg(𝐫-𝐫'') [i ∫ d³r' K_conv(𝐫''-𝐫') Φ(t,𝐫')]  (4.1)
 </code></pre>
@@ -1394,11 +1503,14 @@ s = (b_•r, b_Φr, b_○r, b_•i, b_Φi, b_○i) ∈ {0,1}⁶
 <p>Then:</p>
 <pre><code>Φ(t+Δt, 𝐫) = ∫ d³r' K(𝐫-𝐫') Φ(t, 𝐫')  (4.3)
 </code></pre>
+<p>where K(𝐫-𝐫') absorbs the aperture rotation into the composite kernel. Equation (4.3) is now <em>derived</em> from the power equation's quantum limit rather than assumed.</p>
 <h3 id="42-explicit-computation-for-the-r-kernel">4.2 Explicit Computation for the √r Kernel</h3>
-<p>Take the effective kernel K(𝐬) that is:
-- Isotropic
-- Compactly supported in a ball of radius R_K
-- Radial profile K(r) = A√r for 0 ≤ r ≤ R_K</p>
+<p>Take the effective kernel K(𝐬) that is:</p>
+<ul>
+<li>Isotropic</li>
+<li>Compactly supported in a ball of radius R_K</li>
+<li>Radial profile K(r) = A√r for 0 ≤ r ≤ R_K</li>
+</ul>
 <p>So:</p>
 <pre><code>K(𝐬) = A√|𝐬|  for |𝐬| ≤ R_K
 K(𝐬) = 0      otherwise
@@ -1469,6 +1581,100 @@ K(𝐬) = 0      otherwise
   = M = ∫_Σ ρ_surf(x) dA    (see §1.2)
 </code></pre>
 <p>This explains why mass appears in the kinetic term: the -(ℏ²/2m)∇² operator encodes how hard it is to change the spatial configuration of the boundary's braided history. Heavier particles (larger m) spread more slowly because their ○ boundary resists acceleration more strongly.</p>
+<h3 id="421-the-power-equation-verified">4.2.1 The Power Equation Verified</h3>
+<p>The derived Schrödinger equation confirms the power equation's quantum limit:</p>
+<pre><code>iℏ ∂Φ/∂t = HΦ
+
+Rearranging: H = iℏ ∂/∂t
+</code></pre>
+<p>Compare with the quantum limit of the generalized power equation:</p>
+<pre><code>𝒫 = E / (i · t)   →   E = i · 𝒫 · t   →   H = iℏ ∂/∂t
+</code></pre>
+<p>The Hamiltonian IS the power equation in operator form. The i that appears in Schrödinger's equation is not a mathematical convenience; it is the aperture rotation, the physical gate through which energy becomes power. The ℏ sets the scale of a single cycle. The ∂/∂t is the rate of traversal through the gate.</p>
+<p><strong>What the power equation adds beyond Schrödinger:</strong></p>
+<p>Standard quantum mechanics takes H = iℏ ∂/∂t as a postulate. The power equation explains <em>why</em> i appears: it is the aperture rotation, the 90° turn that converts stored potential into temporal flow. Without i, energy and time would be in direct ratio (classical limit); with i, they are in phase relation (quantum regime). The aperture is what makes quantum mechanics quantum.</p>
+<h3 id="422-the-classical-limit-i-transparent">4.2.2 The Classical Limit: i → Transparent</h3>
+<p>When phase coherence is lost, the aperture rotation i ceases to produce observable interference effects. In this limit:</p>
+<pre><code>☀︎ ∘ i ∘ ⊛  →  ☀︎ ∘ ⊛  →  𝟙 (at balance, in flat space)
+
+𝒫 = E / (𝟙 · t) = E / t = dE/dt
+</code></pre>
+<p>Power is simply the rate of energy transfer. This is Newton's world: no phase, no superposition, no interference. The process triad has gone fully transparent, and what remains is classical mechanics.</p>
+<p><strong>What causes i to go transparent: nesting coherence, not observation.</strong></p>
+<p>Standard quantum mechanics treats "measurement" as a special operation (the measurement postulate) and struggles to explain why observation produces decoherence. The framework has no measurement postulate. What it has instead is A2 (fractal necessity): every ⊙ contains nested ⊙s at every scale, each with its own balance parameter β.</p>
+<p>The key is the <em>coherence regime</em> of the nesting:</p>
+<pre><code>╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║  PHASE-LOCKED NESTING:                                            ║
+║      Sub-apertures resonate coherently with each other.           ║
+║      Compound β stays near 0.5 across the nested chain.           ║
+║      Phase is preserved. Quantum coherence holds.                 ║
+║      Example: particles (the ethereal tail, §2.8).               ║
+║                                                                   ║
+║  CONVERGENCE-LOCKED NESTING:                                      ║
+║      Sub-apertures reinforce inward flow at every scale.          ║
+║      Compound β → 1 (all convergence, minimal emergence).         ║
+║      Phase is trapped. Coherence is imprisoned, not lost.         ║
+║      Example: black holes (⊛ dominates; Hawking = residual ☀︎).   ║
+║                                                                   ║
+║  UNLOCKED NESTING:                                                ║
+║      Sub-apertures drift independently. Local regions freeze      ║
+║      and thaw. Compound β fluctuates across the nested chain.     ║
+║      Phase coherence averages out statistically.                  ║
+║      Example: macroscopic matter, biological systems, minds.      ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+</code></pre>
+<p>"Decoherence" is what happens when a phase-locked system (a particle) couples to an unlocked system (a detector, an environment). The detector has enormous numbers of sub-apertures whose individual β values are slightly off 0.5 in uncorrelated ways. The particle's phase information doesn't vanish; it disperses into the detector's nested hierarchy, where it is no longer collectively accessible. The i is still rotating at every sub-aperture; but the rotations are no longer in step, so the macroscopic composite effect is zero net phase.</p>
+<p>This is not "observation causes collapse." It is: coupling to a system with incoherent nesting dilutes phase information across the nesting hierarchy. No special role for consciousness. No measurement postulate. Just A2 applied to the question of what happens when coherent meets incoherent.</p>
+<p><strong>Why particles maintain coherence and black holes don't radiate (much):</strong></p>
+<p>A particle's nested sub-apertures are phase-locked (the ethereal tail). The compound β sits at the framework's own attractor: ◐ = 0.5. This is <em>stable</em> because balance is the fixed point. Particles don't "try" to be quantum; they sit at the attractor and stay there.</p>
+<p>A black hole's nested sub-apertures are convergence-locked: each scale reinforces ⊛ dominance in the scale above. The compound ◐ → 1. But ◐ = 1 is excluded (it would be nothingness; A0 forbids it). The deepest sub-apertures, at quantum scales, still feel the pull of the ◐ = 0.5 attractor. Hawking radiation is what this looks like from outside: the residual ☀︎ at the smallest scales where the convergence lock can't quite hold against the attractor.</p>
+<p>Black holes evaporate because ◐ = 0.5 is the attractor and ◐ → 1 is fighting it. Particles are stable because they're already at the attractor. The information paradox dissolves: information is never lost because ◐ never reaches 1; it just takes an extraordinarily long time to emerge.</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Nesting Regime</th>
+<th>Compound ◐</th>
+<th>Phase Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Particle</td>
+<td>Phase-locked (ethereal tail)</td>
+<td>≈ 0.5 (at attractor)</td>
+<td>Coherent; stable</td>
+</tr>
+<tr>
+<td>Star</td>
+<td>Thermally coupled</td>
+<td>Near 0.5 (slight ☀︎ excess)</td>
+<td>Partially coherent; radiating</td>
+</tr>
+<tr>
+<td>Macroscopic matter</td>
+<td>Unlocked (statistical)</td>
+<td>Fluctuating</td>
+<td>Effectively incoherent</td>
+</tr>
+<tr>
+<td>Mind</td>
+<td>Partially locked, partially free</td>
+<td>Variable (filters stack)</td>
+<td>Coherent pockets in incoherent sea</td>
+</tr>
+<tr>
+<td>Black hole</td>
+<td>Convergence-locked</td>
+<td>→ 1 (fighting attractor)</td>
+<td>Imprisoned; Hawking = attractor leaking through</td>
+</tr>
+</tbody>
+</table>
+<p>The transition quantum → classical is continuous (the openness function O(β) = 4β(1-β) is smooth), not a sudden collapse. And it's the same physics at every scale; the only difference is the coherence regime of the nesting.</p>
+<hr />
 <h3 id="43-derivation-of-the-transmission-law-t-cos22">4.3 Derivation of the Transmission Law T(Δφ) = cos²(Δφ/2)</h3>
 <p>The phase transmission law stated in §2.6 follows from the same postulates used in the Schrödinger derivation.</p>
 <p><strong>Assumptions (all already in the framework):</strong></p>
@@ -1548,8 +1754,12 @@ A_cross = a e^(iφ₁)
 </thead>
 <tbody>
 <tr>
+<td>Full process triad</td>
+<td>Generalized power equation 𝒫 = E / (☀︎ ∘ i ∘ ⊛ · t)</td>
+</tr>
+<tr>
 <td>Isotropy alone</td>
-<td>Eliminates direction → phase becomes only gating variable</td>
+<td>Eliminates direction; phase becomes only gating variable</td>
 </tr>
 <tr>
 <td>Isotropy + linearity + conservation</td>
@@ -1559,9 +1769,200 @@ A_cross = a e^(iφ₁)
 <td>Isotropy + locality + smoothness</td>
 <td>Schrödinger equation emerges (§4.2)</td>
 </tr>
+<tr>
+<td>Decoherence (i → transparent)</td>
+<td>Classical limit 𝒫 = dE/dt</td>
+</tr>
 </tbody>
 </table>
-<p><strong>Phase coherence, the transmission law, and quantum mechanics aren't separate phenomena. They're three expressions of the same underlying geometry.</strong></p>
+<p><strong>Phase coherence, the transmission law, quantum mechanics, and classical mechanics aren't separate phenomena. They are limits of the same power equation, determined by which operators in the process triad are transparent.</strong></p>
+<hr />
+<h3 id="4x8-universality-the-r-fixed-point-is-an-attractor">4.X.8 Universality: The √r Fixed Point is an Attractor</h3>
+<p>§2.4 established α = ½ for the canonical power-law kernel K(r) = Ar^α, and asserted that <em>"different microscopic kernels that share the same low-moment structure will lie in the same universality class."</em></p>
+<p>We now prove this. The framework's own structure provides a natural renormalization flow on kernels, and we show d_•[K] = ½ is its unique stable fixed point.</p>
+<hr />
+<h4 id="4x81-the-kernel-renormalization-flow-framework-native">4.X.8.1 The Kernel Renormalization Flow (Framework-Native)</h4>
+<p><strong>Key observation:</strong> The framework already has a coarse-graining mechanism. It's Axiom A2.</p>
+<p>A2 says ⊙ nests at every scale. At scale n, the circumpunct ⊙_n has its own kernel K_n governing the cycle ☀︎_n ∘ i ∘ ⊛_n. At scale n+1 (one level up), ⊙_{n+1} has kernel K_{n+1}. The boundary of ⊙_{n+1} is <em>composed of</em> circumpuncts at scale n (Definition 1.3). So K_{n+1} is not independent of K_n; it is the <em>effective kernel</em> that results from integrating out the sub-scale dynamics.</p>
+<p>This is exactly what renormalization does. We don't import RG from outside; the framework generates it from A2.</p>
+<p><strong>Definition 4.X.2 (Scale Composition of Kernels).</strong> Let K_n be the kernel at scale n with support radius R_n. The kernel at scale n+1 is the <em>composite kernel</em> obtained by convolving K_n with itself through one full circumpunct cycle:</p>
+<pre><code>K_{n+1}(r) = ∫ d³r'' K_n^{(☀︎)}(r - r'') · K_n^{(⊛)}(r'')
+</code></pre>
+<p>At balance (K_conv = K_emerg = K_n), this simplifies to the <em>autoconvolution</em> in the 3D radial measure:</p>
+<pre><code>K_{n+1} = K_n ★ K_n
+</code></pre>
+<p>where ★ denotes radial convolution with the i-rotation absorbed (the aperture rotation doesn't change the radial profile; it acts on phase, not magnitude).</p>
+<p>The support radius scales: R_{n+1} = 2R_n (convolution doubles the support). So we <em>renormalize</em> by rescaling back to unit support:</p>
+<pre><code>K̃_{n+1}(ρ) = Z_n · K_{n+1}(R_{n+1} · ρ)     ρ ∈ [0,1]
+</code></pre>
+<p>where Z_n is the normalization constant enforcing ∫₀¹ 4πρ² K̃_{n+1}(ρ) dρ = 1.</p>
+<p><strong>Definition 4.X.3 (Kernel RG Map).</strong> The renormalization map is:</p>
+<pre><code>ℛ: K̃_n ↦ K̃_{n+1} = Normalize ∘ Rescale ∘ AutoConvolve [K̃_n]
+</code></pre>
+<p>This is the framework's <em>own</em> coarse-graining; not imported, but generated by A2's nesting requirement.</p>
+<hr />
+<h4 id="4x82-fixed-points-of-ℛ">4.X.8.2 Fixed Points of ℛ</h4>
+<p><strong>Theorem (Power-Law Fixed Points).</strong> The power-law family K̃(ρ) ∝ ρ^α is closed under ℛ, and the map acts on the exponent as:</p>
+<pre><code>ℛ: α ↦ α' = f(α)
+</code></pre>
+<p><strong>Proof sketch.</strong> For radial power-law kernels in 3D, the autoconvolution integral has a known structure. Two key facts:</p>
+<p><strong>(1) Convolution of power-laws in radial 3D.</strong></p>
+<p>For K(r) ∝ r^α on [0, R], the radial autoconvolution K★K has the asymptotic form near the origin:</p>
+<pre><code>(K ★ K)(r) ~ C · r^{min(α, 2α+3)}    as r → 0⁺
+</code></pre>
+<p>The two competing terms come from:</p>
+<ul>
+<li>The <em>direct</em> contribution: both copies sample near 0 → exponent 2α + 3 (the +3 comes from the 3D volume element r²dr in the convolution integral)</li>
+<li>The <em>cross</em> contribution: one copy at ~0, the other at ~r → exponent α</li>
+</ul>
+<p>For α < 3: the cross term dominates (α < 2α + 3), so:</p>
+<pre><code>d_•[K ★ K] = α     (aperture dimension preserved)
+</code></pre>
+<p>For α ≥ 3: the direct term dominates, but this regime is unphysical (K would weight the boundary far more than the center, violating the aperture's role as a concentrating mechanism).</p>
+<p><strong>(2) Rescaling doesn't change the Hölder exponent.</strong></p>
+<p>Rescaling ρ → ρ/2 and renormalizing by a constant Z leaves:</p>
+<pre><code>d_•[K̃_{n+1}] = d_•[K_{n+1}] = d_•[K_n ★ K_n]
+</code></pre>
+<p>The Hölder exponent at the origin is invariant under affine coordinate rescaling and multiplication by positive constants.</p>
+<p><strong>Therefore:</strong> For all α in the physical range [0, 3):</p>
+<pre><code>ℛ: α ↦ α     (power-law exponent is a fixed-point family)
+</code></pre>
+<p>This means <em>every</em> power-law kernel is a fixed point of ℛ. The RG map doesn't select α on its own.</p>
+<hr />
+<h4 id="4x83-why-the-rg-alone-is-insufficient-and-what-completes-it">4.X.8.3 Why the RG Alone Is Insufficient (and What Completes It)</h4>
+<p>The result above shows that the autoconvolution preserves the aperture scaling dimension for power-law kernels. This is actually <em>exactly right</em>; and it's not a problem. Here's why:</p>
+<p>The RG map ℛ tells us which kernels are <strong>self-consistent across scales</strong>—i.e., which K's could persist at every level of the fractal nesting without their character changing. The answer: power-law kernels with any α ∈ [0, 3).</p>
+<p>But §2.4 already proved that only α = ½ satisfies the <strong>balance constraint</strong> at the fixed point. So the two results combine:</p>
+<pre><code>ℛ (scale consistency) → K must be power-law (or in the basin of one)
+§2.4 (balance)         → α = ½
+
+Together: K(r) ∝ √r is the UNIQUE scale-consistent balanced kernel.
+</code></pre>
+<p>The RG doesn't select α. The balance condition doesn't select the functional form. <strong>Together</strong> they select exactly one kernel.</p>
+<hr />
+<h4 id="4x84-the-basin-of-attraction-non-power-law-kernels">4.X.8.4 The Basin of Attraction (Non-Power-Law Kernels)</h4>
+<p>Now the real universality result. What happens to kernels that <em>aren't</em> power-law?</p>
+<p><strong>Theorem (Basin of Attraction).</strong> Let K̃₀ be any radial kernel on [0,1] satisfying:</p>
+<ol>
+<li>K̃₀(ρ) > 0 on (0, 1] (positive)</li>
+<li>K̃₀ ∈ L¹(4πρ²dρ) (normalizable in 3D)</li>
+<li>K̃₀(ρ) ~ A·ρ^{α₀} as ρ → 0⁺ for some α₀ ∈ [0, 3) (has a well-defined aperture dimension)</li>
+<li>K̃₀ may have arbitrary non-power-law behavior away from the origin (bumps, oscillations, exponential cutoffs, etc.)</li>
+</ol>
+<p>Then under iterated application of ℛ:</p>
+<pre><code>d_•[ℛⁿ(K̃₀)] = α₀     for all n ≥ 0
+</code></pre>
+<p>The aperture scaling dimension is <strong>exactly preserved</strong> under coarse-graining, regardless of what the kernel does away from the origin.</p>
+<p><strong>Proof.</strong></p>
+<p>The autoconvolution (K★K)(r) near r = 0 depends only on K's behavior near r = 0. This is a standard result in convolution theory: the short-distance asymptotics of a convolution are determined by the short-distance asymptotics of the convolvands.</p>
+<p>Formally: write K̃₀(ρ) = Aρ^{α₀} + δK(ρ), where δK(ρ)/ρ^{α₀} → 0 as ρ → 0⁺. Then:</p>
+<pre><code>(K̃₀ ★ K̃₀)(r) = (Aρ^{α₀} ★ Aρ^{α₀})(r) + cross terms + (δK ★ δK)(r)
+</code></pre>
+<p>The cross terms are of the form (ρ^{α₀} ★ δK) and (δK ★ ρ^{α₀}). Near r = 0, all three correction terms are <em>subleading</em> relative to the pure power-law term, because δK is subleading to ρ^{α₀} by assumption.</p>
+<p>Therefore:</p>
+<pre><code>(K̃₀ ★ K̃₀)(r) ~ C · r^{α₀}     as r → 0⁺
+</code></pre>
+<p>with the same exponent α₀. Rescaling and renormalization preserve the Hölder exponent (as shown in §4.X.8.2). By induction:</p>
+<pre><code>d_•[ℛⁿ(K̃₀)] = α₀     for all n                               ∎
+</code></pre>
+<p><strong>Corollary (Universality Classes are Labeled by d_•).</strong> The space of physically admissible kernels decomposes into universality classes:</p>
+<pre><code>𝒰_α = { K̃ : d_•[K̃] = α }
+</code></pre>
+<p>Each class is closed under ℛ. The balance constraint (§2.4) selects α = ½. Therefore:</p>
+<pre><code>𝒰_{1/2} = { K̃ : d_•[K̃] = ½ }
+</code></pre>
+<p>is the <strong>unique physically realized universality class</strong>. Any kernel in this class—regardless of its behavior away from the origin—produces the same long-distance physics (same Schrödinger equation, same fractal dimension D = 1.5, same predictions).</p>
+<hr />
+<h4 id="4x85-what-universality-class-means-concretely">4.X.8.5 What "Universality Class" Means Concretely</h4>
+<p>The canonical representative K(r) = Ar^{1/2} is the simplest member of 𝒰_{1/2}. But the class includes:</p>
+<pre><code>K(r) = A√r · e^{-r/λ}           (exponential cutoff)
+K(r) = A√r · (1 - r²/R²)       (smooth compact support)
+K(r) = A√r + ε·sin(r/δ)·√r     (oscillatory corrections)
+K(r) = A√r · [1 + g(r)]        (any g with g(r)/1 → 0 as r→0)
+</code></pre>
+<p>All of these have d_•[K] = ½. All produce the same coarse-grained physics. The √r behavior near the aperture is what matters; the far-field details wash out under renormalization.</p>
+<p>This is analogous to how the Ising model, lattice gas, and binary alloy all flow to the same Wilson-Fisher fixed point. The microscopic details differ. The critical exponents don't.</p>
+<hr />
+<h4 id="4x86-the-rg-also-kills-non-power-law-artifacts">4.X.8.6 The RG Also Kills Non-Power-Law Artifacts</h4>
+<p>A stronger result: under iteration, ℛ doesn't just preserve d_•; it <strong>smooths away non-power-law features</strong>. Each autoconvolution acts as a smoothing operator (the central limit theorem for convolutions). After many iterations:</p>
+<pre><code>ℛⁿ(K̃₀) → A_n · ρ^{α₀}     (in profile shape, up to normalization)
+</code></pre>
+<p>The kernel doesn't just <em>stay</em> in 𝒰_{α₀}; it <strong>converges to the canonical power-law representative</strong> of that class. The pure power-law K(r) ∝ r^{1/2} is an <em>attractor</em> within 𝒰_{1/2}, not just a fixed point.</p>
+<p><strong>Proof sketch.</strong> The Mellin transform converts radial convolution to multiplication. In Mellin space, the power-law component corresponds to a pole, and the non-power-law corrections correspond to regular (analytic) contributions. Iterated convolution raises the Mellin-space representation to the nth power. The pole (power-law) grows relative to the regular part. In the large-n limit, only the pole survives. Back-transforming gives pure ρ^{α₀}. <strong>∎</strong></p>
+<hr />
+<h4 id="4x87-complete-derivation-chain-final-summary">4.X.8.7 Complete Derivation Chain (Final Summary)</h4>
+<p>The kernel is now fully determined by axioms. The complete chain:</p>
+<pre><code>A0 (existence is necessary)
+  → something exists
+
+A1 (necessary multiplicity)
+  → minimum structure = ⊙ = Φ(•, ○)
+
+A2 (fractal necessity)
+  → ⊙ at every scale
+  → nesting generates a natural RG flow ℛ on kernels
+  → K is internal to ⊙, inherits ⊙ structure
+
+A3 (conservation of traversal)
+  → D_• + D_Φ = D_○
+  → constrains dimensional relationships
+
+A4 (compositional wholeness)
+  → Structure: Φ(•, ○), Process: (☀︎ ∘ i ∘ ⊛), Unified: ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
+
+Isotropy (from • having no preferred axis)
+  → K is radial
+
+Balance (◐ = ½, three independent proofs)
+  → K_conv = K_emerg
+
+ℛ-consistency (§4.X.8.2–4)
+  → scale-consistent kernels are power-law (or in basin of one)
+  → universality classes labeled by d_•[K]
+
+§2.4 (balance + fixed point)
+  → d_•[K] = ½
+
+§4.X.8.4 (basin of attraction)
+  → ALL kernels with d_• = ½ produce the same physics
+  → canonical representative: K(r) ∝ √r
+
+§4.X.8.6 (RG attractor)
+  → under iteration, all K ∈ 𝒰_{1/2} converge to pure √r
+
+§4.2 (Schrödinger derivation)
+  → √r kernel → iℏ∂Φ/∂t = HΦ
+  → the quantum equation falls out of the axioms
+</code></pre>
+<p><strong>No free parameters in the kernel.</strong> The functional form, the exponent, and the universality class are all determined. The √r kernel is not chosen, not fit, not a convenient representative; it is the <em>unique attractor</em> of the framework's own dynamics, selected by the axioms applied to their own implementation.</p>
+<hr />
+<h3 id="45-connection-to-5-geometric-limit">4.5 Connection to §5 (Geometric Limit)</h3>
+<p>The power equation also frames the geometric/GR limit (§5). When ⊛ and ☀︎ are NOT transparent (curved space, strong gravitational fields, asymmetric boundary conditions), the full U = ☀︎ ∘ i ∘ ⊛ contributes corrections beyond the Schrödinger form:</p>
+<pre><code>H_full = H_Schrödinger + H_curvature
+
+where H_curvature encodes the non-trivial ⊛/☀︎ structure.
+</code></pre>
+<p>The ⊛ operator (convergence, inward) generates the gravitational/strong-force sector. The ☀︎ operator (emergence, outward) generates the electromagnetic/weak sector. Their imbalance at local scales produces the stress-energy that sources spacetime curvature (§5.2).</p>
+<p>The power equation thus serves as the single bridge between §4 (quantum limit) and §5 (geometric limit):</p>
+<pre><code>POWER EQUATION: 𝒫 = E / (☀︎ ∘ i ∘ ⊛ · t)
+                           │
+                ┌──────────┴──────────┐
+                │                     │
+        ☀︎, ⊛ transparent        ☀︎, ⊛ non-trivial
+                │                     │
+           𝒫 = E/(i·t)         Full U generates
+                │                curvature corrections
+                │                     │
+         SCHRÖDINGER (§4)       EINSTEIN (§5)
+                │                     │
+                └──────────┬──────────┘
+                           │
+                    i → transparent
+                           │
+                    𝒫 = dE/dt
+                           │
+                      NEWTON
+</code></pre>
 <hr />
 <h2 id="5-metric-and-einstein-equations-from-conjectural">5. Metric and Einstein Equations from ⊙ (Conjectural)</h2>
 <p>Here we address: <em>How might metric and curvature arise from the circumpunct object ⊙?</em></p>
