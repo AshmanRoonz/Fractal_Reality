@@ -7,7 +7,7 @@
 
 - **○** — boundary / body (3D)
 - **Φ** — field / mind / surface (2D) — the OPERATOR that relates • and ○
-- **•** — aperture / soul / center (0.5D)
+- **•** — aperture / soul / center (0D singularity + 1D worldline)
 
 **The whole is constituted by the operation of relating:**
 
