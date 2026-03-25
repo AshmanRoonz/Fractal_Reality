@@ -55,7 +55,7 @@ The master equation describes the temporal process:
 | [docs/index.html](https://fractalreality.ca/index.html) | Website homepage with navigation to all interactive docs |
 | [CLAUDE.md](CLAUDE.md) | Framework memory file for Claude Cowork sessions |
 
-The [Path_of_Learning/](Path_of_Learning/) folder is a read-only archive of the development journey; it is never modified.
+The [Path_of_Learning/](Path_of_Learning/) folder is an archive of the development journey.
 
 ---
 
