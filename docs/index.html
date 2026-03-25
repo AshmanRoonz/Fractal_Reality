@@ -871,6 +871,10 @@
             <button type="submit">Subscribe</button>
         </form>
         <div class="subscribe-msg" id="subscribe-msg"></div>
+        <div class="community-row" style="display:flex; gap:1.2rem; justify-content:center; margin-top:1rem;">
+            <a href="https://www.facebook.com/groups/4397079510569470" target="_blank" style="font-family:'Space Grotesk',sans-serif; font-size:0.8rem; color:#888; text-decoration:none; border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:0.4rem 0.8rem; transition:border-color 0.2s, color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.25)';this.style.color='#aaa'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='#888'">Facebook Group</a>
+            <a href="https://www.reddit.com/r/Circumpunct/" target="_blank" style="font-family:'Space Grotesk',sans-serif; font-size:0.8rem; color:#888; text-decoration:none; border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:0.4rem 0.8rem; transition:border-color 0.2s, color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.25)';this.style.color='#aaa'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.color='#888'">Reddit r/Circumpunct</a>
+        </div>
     </div>
 
     <footer style="text-align:center; padding:2.5rem 1.5rem 3rem; max-width:520px; margin:0 auto; font-family:'EB Garamond',Georgia,serif; line-height:1.7;">
@@ -950,10 +954,10 @@
         // Circumpunct = 260px → radius 130, boundary border ~8px → outer edge ~134
         // Container = 440px → half = 220
         var ring1 = { r: 148, sw: 24, count: 6, gap: 7 };   // inner ring (on boundary)
-        var ring2 = { r: 186, sw: 24, count: 5, gap: 8, offset: 0 }; // outer ring
+        var ring2 = { r: 186, sw: 24, count: 4, gap: 8, offset: 0 }; // outer ring
 
         var btnsR1 = [
-            { label: 'Complete Theory', href: 'https://github.com/AshmanRoonz/Fractal_Reality/blob/main/circumpunct_framework.md', color: 'url(#rainbow-grad)' },
+            { label: 'Complete Theory', href: 'circumpunct_physics.html', color: 'url(#rainbow-grad)' },
             { label: 'Ethics', href: 'https://fractalreality.ca/circumpunct_ethics_and_virtues.html', color: '#f0b429' },
             { label: 'The Bridge', href: 'the_bridge_presentation.html', color: '#a371f7' },
             { label: 'How Reality is Built', href: 'how_reality_is_built.html', color: 'url(#rainbow-grad)' },
@@ -963,8 +967,7 @@
         var btnsR2 = [
             { label: 'Research', href: '#', id: 'research-btn', color: '#58a6ff' },
             { label: 'All Pages', href: 'pages.html', color: 'url(#rainbow-grad)' },
-            { label: 'Facebook Group', href: 'https://www.facebook.com/groups/4397079510569470', target: '_blank', color: '#888' },
-            { label: 'Reddit r/Circumpunct', href: 'https://www.reddit.com/r/Circumpunct/', target: '_blank', color: '#888' },
+            { label: 'GitHub', href: 'https://github.com/AshmanRoonz/Fractal_Reality', target: '_blank', color: '#58a6ff' },
             { label: 'Theory of Mind', href: 'https://fractalreality.ca/circumpunct_theory_of_mind_plain.html', color: '#f0b429' }
         ];
 
