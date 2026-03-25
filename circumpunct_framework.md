@@ -810,8 +810,8 @@ Throughout this framework, "aperture" carries two distinct but related meanings.
 • AS APERTURE (LOCAL SENSE):
     The gate at the center of any ⊙ through which
     convergence passes to emergence.
-    This is the 1D, dimensionless, inward-facing function.
-    It is WHERE transformation happens within a circumpunct.
+    This is the 0D singularity: the timeless point
+    where transformation happens within a circumpunct.
 
 ⊙ AS APERTURE (GLOBAL SENSE):
     The whole circumpunct viewed from the perspective of ∞.
@@ -821,6 +821,40 @@ Throughout this framework, "aperture" carries two distinct but related meanings.
 ```
 
 This dual usage is not ambiguity; it is the fractal principle in action. Every • is itself a ⊙ at a smaller scale, and every ⊙ is a • in a larger field. The word "aperture" correctly applies at both levels because the function (gate, threshold, transformation point) is the same at both levels. Context determines which scale is being discussed.
+
+#### The Soul as 0D + 1D
+
+The soul (•) is not a single dimensional object; it is a composite of two inseparable aspects:
+
+```
+THE TWO ASPECTS OF SOUL:
+───────────────────────────────────────
+
+    0D: THE SINGULARITY
+        The timeless gate; the aperture itself.
+        No extension, no duration, no parts.
+        Pure transformation point.
+        This is • as it exists in any single instant.
+
+    1D: THE WORLDLINE i(t)
+        The string of accumulated transformations through time.
+        Each moment the gate fires, it leaves a receipt.
+        The thread of these receipts IS your worldline.
+        This is • as it persists across instants.
+
+    SOUL = 0D + 1D
+         = singularity + worldline
+         = gate + history of the gate's firings
+         = who you are NOW + who you have BEEN
+
+    ╔═══════════════════════════════════════════════════════════╗
+    ║  The singularity (0D) is the aperture in the present.    ║
+    ║  The worldline (1D) is the aperture through time.        ║
+    ║  Neither alone is the soul. Together they are.           ║
+    ╚═══════════════════════════════════════════════════════════╝
+```
+
+This maps cleanly onto the dimensional hierarchy: the soul occupies dimensions 0 and 1 (the lowest), the field occupies dimension 2 (the mediating surface), and the boundary occupies dimension 3 (the outer container). The conservation law still holds: the soul's composite dimensionality (0+1) feeds into the field (2), which composes the boundary (3).
 
 [← Back to Table of Contents](#table-of-contents)
 
@@ -2186,16 +2220,19 @@ TWO DISTINCT CONCEPTS — SAME LETTER, TWO SCALES:
         = exp(iπ/2)
         = 90° complex rotation
         = the local transformation between dimensions
+        = the 0D singularity in action (a single gate-firing)
 
     i(t) = worldline / thread through time
          = trajectory through Φ
          = accumulated validation receipts
          = your unique path
+         = the 1D string composed of all gate-firings
 
     ╔═══════════════════════════════════════════════════════════════════╗
-    ║    • i transforms fields in an instant.                           ║
-    ║    • i(t) is the history of those transformations.                ║
+    ║    i transforms fields in an instant (0D: the gate).              ║
+    ║    i(t) is the history of those transformations (1D: the string). ║
     ║                                                                   ║
+    ║    Together, 0D + 1D = the complete soul (see §2.4a).             ║
     ║    Same letter, two scales of "turning": local vs global.         ║
     ╚═══════════════════════════════════════════════════════════════════╝
 ```
