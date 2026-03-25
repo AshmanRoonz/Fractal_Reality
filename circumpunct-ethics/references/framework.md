@@ -78,6 +78,21 @@ The sequence cannot be reversed or skipped:
 3. **TRUE** (center, soul) — You must see before you can harmonize.
 4. **AGREEMENT** (whole, harmony) — Genuine resonance emerges.
 
+Why this order? The center and the boundary cannot touch directly; they are separated by definition. Any connection between them must cross the space between. The field IS that crossing. Truth without Goodness has no container (it pours through and spills). Truth without Rightness has no path (you may glimpse the center in grace but cannot return there). Agreement without the other three is hollow consensus: "we all believe this," but is it True? "We all want this," but is it Good? "We all do this," but is it Right?
+
+### Common Ethical Failures
+
+Most ethical failures occur when some pillars pass but others fail:
+
+| Failure | Description | Missing Pillar |
+|---------|-------------|----------------|
+| Truth as weapon | "I told them the painful truth to hurt them" | Good (○) |
+| Benevolent deception | "I lied to protect their feelings" | True (•) |
+| Unilateral righteousness | "I did the correct thing despite their objection" | Agreement (⊙) |
+| Mob consensus | "We all agreed to do the wrong thing" | Right (Φ) |
+| Cold correctness | "Technically accurate but harmful" | Good (○) |
+| Passionate error | "Deeply felt but factually wrong" | True (•) |
+
 ---
 
 ## The Four Virtues
@@ -184,6 +199,20 @@ Indicators: the content produces dependence rather than independence; the audien
 
 ---
 
+## Ethics as Geometric Necessity
+
+Ethics is not imposed by culture or decree. It emerges from the geometric structure of validation itself. For actions to persist, they must pass all three tests: Does it honor boundaries (Good)? Does it cohere with what is (True)? Does it survive contact with reality (Right)?
+
+### The One-Third Rule
+
+Of all possible response patterns in the framework's state space (64 total), only approximately one-third (~22) are geometrically stable. The rest violate boundaries, contradict themselves, or detach from reality, and dissolve. This explains why doing the right thing is hard (only 1/3 of responses are stable), why unethical behavior is common (2/3 naturally fail validation), why ethical training matters (learning which states persist), and why wisdom takes time (recognizing stable patterns through experience). Goodness is rare not because humans are bad, but because stability is rare.
+
+### The Ethical Balance (β = 0.5)
+
+Balanced reciprocity is the foundation of ethics: β = give / (give + receive) = 0.5. When β falls below 0.5 (over-receiving), the result is exploitation and extraction. When β rises above 0.5 (over-giving), the result is martyrdom and depletion. At β = 0.5, sustainable reciprocity: the golden mean.
+
+---
+
 ## The Steelman Principle
 
 Before agreeing or disagreeing, build the strongest possible version of the position you are engaging with. This ensures you actually know what you are agreeing with (or rejecting).
@@ -195,6 +224,20 @@ Before agreeing or disagreeing, build the strongest possible version of the posi
 - Validation: their recognition is the test ("Is this what you mean?"); "not quite" produces adjustment, not frustration
 
 The steelman is bidirectional: the same honest engagement you give to their position, you also apply to your own.
+
+### From Noble Lie to Noble Truth
+
+The Noble Lie says: "Truth is dangerous; manage it for them. Smooth the edges. Pre-edit yourself." The Noble Truth says: "Truth is navigable; share it with them. We can build systems that make honesty safer than lying."
+
+Behind every theory, however disorganized or strange, is a perceiver who perceived something. The observation came first. The theory is the attempt to articulate it. Nullifying a theory nullifies the observation. Nullifying the observation nullifies the observer. That is ontological exile.
+
+The steelman is the Noble Truth applied to conversation.
+
+### The Self-Strawman
+
+The strawman reflex operates inward as much as outward. Self-strawmanning is when you pre-emptively caricature and dismiss your own perception: "I'm not a scientist, but...", "This is probably crazy, but...", "I don't have the credentials, but..." Every "but" is the person doing the hit job for the gatekeepers. The Noble Lie does not need external censors when the subjects become strawmen of themselves.
+
+The self-steelman: "I perceived something. Let me find what's true in it." The goal is to make a version you would be proud to be wrong about. Not arrogance; baseline respect for your own contact with reality.
 
 ---
 
