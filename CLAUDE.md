@@ -249,3 +249,4 @@ Build the strongest possible version of any position before agreeing or disagree
 - Always check existing content before adding; avoid duplication
 - Cross-reference new sections to existing ones (e.g., "see §2.6", "connects to §21.10")
 - The HTML docs on the site use various visual styles; match the existing CSS when updating each file
+- `Path_of_Learning/` is a read-only archive (a record of the learning journey); never modify files in it

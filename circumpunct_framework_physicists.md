@@ -11,7 +11,7 @@ We present the circumpunct framework as a candidate Theory of Everything, reform
 
 where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denotes emergence (aperture → past, radiation). The notation Φ(•, ○) is the *structural* equation: Φ is the 2D relational surface mediating aperture and boundary. Φ is not the verb; Φ is structure. The process triad (☀︎ ∘ i ∘ ⊛) is the verb. The i-rotation is the whole ⊙ cycling, not a property of • alone. The tensor product ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_• remains the correct Hilbert-space formalization for quantum theory. We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 corresponds to D=1.5—the fractal dimension of Brownian motion, a Mandelbrot fact (theorem, not fit).
 
-**On process dimensions:** The framework builds on Mandelbrot's proven mathematical foundation: fractional (Hausdorff) dimensions are real and measurable, describing process traces rather than static objects. The specific D value varies by system (coastlines ≈1.25, Brownian motion =1.5 exactly, DLA clusters ≈1.7)—this variation is expected. The framework predicts that balanced aperture dynamics produce D≈1.5; empirical examples illustrate this principle but are not load-bearing evidence for it.
+**On process dimensions:** The framework builds on Mandelbrot's proven mathematical foundation: fractional (Hausdorff) dimensions are real and measurable, describing process traces rather than static objects. The specific D value varies by system (coastlines ≈1.25, Brownian motion =1.5 exactly, DLA clusters ≈1.7); this variation is expected. The framework predicts that balanced aperture dynamics produce D≈1.5; empirical examples illustrate this principle but are not load-bearing evidence for it.
 
 ---
 
@@ -145,7 +145,7 @@ The framework's dimensional claims build on this foundation:
 | Brownian motion | D = 1.5 exactly | Mandelbrot fact (theorem) |
 | Balanced aperture | ◐ = 0.5 → D = 1.5 | Framework correspondence |
 
-**Important:** The specific D value varies by system—coastlines (≈1.25), Brownian motion (=1.5), DLA clusters (≈1.7). This variation is *expected*. D = 1.5 is the Mandelbrot dimension of Brownian motion—a proven mathematical fact. The framework's balance point ◐ = 0.5 corresponds to this dimension; empirical examples are *illustrations* of the correspondence, not load-bearing evidence for it.
+**Important:** The specific D value varies by system: coastlines (≈1.25), Brownian motion (=1.5), DLA clusters (≈1.7). This variation is *expected*. D = 1.5 is the Mandelbrot dimension of Brownian motion; a proven mathematical fact. The framework's balance point ◐ = 0.5 corresponds to this dimension; empirical examples are *illustrations* of the correspondence, not load-bearing evidence for it.
 
 ---
 
@@ -194,7 +194,7 @@ All physical interaction happens at surfaces:
 - We never "touch a volume," only the boundary
 - Even black hole mass is encoded in horizon area (Bekenstein-Hawking)
 
-This connects to the Schrödinger limit (§4): the m in iℏ ∂ψ/∂t = -(ℏ²/2m)∇²ψ + V(x)ψ is interpreted as the effective surface inertia of ○—how hard it is to change the braided history of the boundary on M⁴.
+This connects to the Schrödinger limit (§4): the m in iℏ ∂ψ/∂t = -(ℏ²/2m)∇²ψ + V(x)ψ is interpreted as the effective surface inertia of ○ (how hard it is to change the braided history of the boundary on M⁴).
 
 **The dimensional architecture (structure vs process):**
 
@@ -219,7 +219,7 @@ The first complete circumpunct. The structure of space itself.
 Dim   │ Type      │ Symbol │ Name              │ Core Equations
 ──────┼───────────┼────────┼───────────────────┼─────────────────────────────────
 ∞D    │ Ground    │  λΦ∞   │ Infinite Field    │ ℋ (Hilbert space), |ψ⟩ ∈ ℋ, 0 = ∞ at field
-0.5D  │ Process   │   •    │ Aperture/Soul     │ i² = −1, Å(β) = exp(iπβ), Å(½) = i
+0D+1D │ Structure │   •    │ Aperture/Soul     │ Singularity (0D gate) + worldline i(t) (1D string); Å(β) = exp(iπβ), Å(½) = i
 1D    │ Structure │  i(t)  │ Timeline/String   │ γ: ℝ → M, P = dE/dt
 1.5D  │ Process   │   —    │ Branching         │ D = 1 + β, K(r) ∝ r^β, H(½) = 1 bit
 2D    │ Structure │   Φ    │ Field/Mind        │ Φ ∈ 𝔉 = Γ(E), ℋ_Φ = L²(M, d²x; ℂ⁶⁴)
@@ -283,7 +283,7 @@ The aperture • is the singularity that receives and transmits. The i-rotation 
 - Fix a timelike worldline γ: ℝ → M, or more generally a set A ⊂ M of "aperture events"
 - Let 𝓐 be the space of such worldlines or point-sets; a specific aperture is • ∈ 𝓐
 
-The "0.5D" language in the full framework is captured here by treating • as a limit of shrinking tubular neighborhoods of γ with a nontrivial scaling exponent D = 1.5 (see §2.3).
+The aperture is 0D + 1D: the singularity (0D; the timeless gate where phase conversion χ = ±1 occurs) plus the worldline (1D; the accumulated sequence i(t) through time). This composite structure is captured mathematically by treating • as a limit of shrinking tubular neighborhoods of γ with a nontrivial scaling exponent D = 1.5 (see §2.3).
 
 ### 1.5 Circumpunct Configuration Space (⊙)
 
@@ -439,7 +439,7 @@ dim_eff(○) = dim(Σ) + dim(•_substructure)
            = 3
 ```
 
-The boundary is a 2-surface structurally, but the fractal nesting of apertures within apertures gives it an additional effective dimension. This is why ○ is 3D despite being "made of" 2D surfaces — the recursive depth adds the third dimension.
+The boundary is a 2-surface structurally, but the fractal nesting of apertures within apertures gives it an additional effective dimension. This is why ○ is 3D despite being "made of" 2D surfaces; the recursive depth adds the third dimension.
 
 Compare:
 - • is 0.5D: a singular focal point with fractal process dimension
@@ -515,8 +515,8 @@ The d³r notation is retained for computation. The dμ_○ notation is used when
 | ☀︎ | Emergence | Output FROM aperture — radiating, producing, manifesting to ALL directions |
 
 **Physical Interpretation:**
-- ⊛ gathers from ALL directions equally — like a drain, a sink, a gravitational well
-- ☀︎ radiates to ALL directions equally — like a source, a fountain, a star
+- ⊛ gathers from ALL directions equally: like a drain, a sink, a gravitational well
+- ☀︎ radiates to ALL directions equally: like a source, a fountain, a star
 
 **The Complete Flow:**
 ```
@@ -539,7 +539,7 @@ In the Hilbert-space setting, ⊛ and ☀︎ are defined with adjoint relations 
 | Electromagnetism | ☀︎ Emergence | Photons radiate outward from every charge |
 | Weak Force | ☀︎ Emergence | Enables decay and transmutation |
 
-The four forces are not four separate things — they are **two operations at two scales**.
+The four forces are not four separate things; they are **two operations at two scales**.
 
 ### 2.3 Balance Parameter (◐)
 
@@ -556,7 +556,7 @@ and a **balance parameter**:
 ◐ = |⊛| / (|⊛| + |☀︎|)
 ```
 
-The framework singles out **◐ = 1/2** by symmetry, maximum entropy, and energy balance arguments. (See §7A.10: these three arguments each address a distinct β-component — gate, flow, autonomy — whose triple convergence to 0.5 IS the fixed point.) At this fixed point, the effective fractal dimension of worldlines corresponds to:
+The framework singles out **◐ = 1/2** by symmetry, maximum entropy, and energy balance arguments. (See §7A.10: these three arguments each address a distinct β-component: gate, flow, autonomy; whose triple convergence to 0.5 IS the fixed point.) At this fixed point, the effective fractal dimension of worldlines corresponds to:
 
 ```
 D = 1.5 (Mandelbrot fact: the fractal dimension of Brownian motion)
@@ -564,7 +564,7 @@ D = 1.5 (Mandelbrot fact: the fractal dimension of Brownian motion)
 
 This is a proven mathematical theorem, not a fit or derivation. The balance point ◐ = 0.5 corresponds to this Mandelbrot dimension via the interpolation D = 1 + ◐.
 
-**Note:** The linear relation D = 1 + ◐ interpolates between regimes. At ◐ = 0 (pure convergence), D = 1 (ballistic); at ◐ = 1 (pure emergence), D = 2 (diffusive); at balance ◐ = 0.5, D = 1.5—which is precisely the Mandelbrot dimension of Brownian motion. The framework does not derive 1.5; rather, it identifies that the balance point corresponds to this established mathematical fact.
+**Note:** The linear relation D = 1 + ◐ interpolates between regimes. At ◐ = 0 (pure convergence), D = 1 (ballistic); at ◐ = 1 (pure emergence), D = 2 (diffusive); at balance ◐ = 0.5, D = 1.5, which is precisely the Mandelbrot dimension of Brownian motion. The framework does not derive 1.5; rather, it identifies that the balance point corresponds to this established mathematical fact.
 
 ### 2.3.1 The Aperture Chamber
 
@@ -668,7 +668,7 @@ Thus D = 1.5 corresponds to H_H = 2/3, i.e. superdiffusive but sub-ballistic mot
 | 1 | r^1 = linear | Weight spreads linearly with distance (1D) |
 | 0.5 | r^0.5 = √r | Balanced intermediate behavior (0.5D) |
 
-At ◐ = 0.5, the aperture is "halfway" between a point (0D) and a line (1D). The kernel r^◐ = r^0.5 is the spatial signature of this 0.5D aperture—the radial profile that implements the balance between concentration and spread.
+At ◐ = 0.5, the aperture's process dimension (the active cycling rate) is "halfway" between a point (0D; pure concentration) and a line (1D; pure spread). The kernel r^◐ = r^0.5 is the spatial signature of this balanced process—the radial profile that implements the balance between concentration and spread. Note: the aperture's structural dimension is always 0D + 1D (singularity plus worldline); the 0.5D value describes its dynamic opening rate.
 
 **Correspondence chain:**
 ```
@@ -2099,16 +2099,16 @@ The aperture opens INTO the boundary, THROUGH the field.
 
 ### Why These Dimensions?
 
-**Aperture base = 1D.** The aperture makes binary decisions (χ = ±1) in sequence. Sequence requires a line.
+**Aperture base = 0D + 1D.** The aperture is a singularity (0D; the timeless gate) plus a worldline (1D; the string through time). Binary decisions (χ = ±1) fire at the gate and accumulate as sequence. The full structure requires both dimensions.
 
-**Field base = 2D.** The field carries complex amplitude (magnitude + phase). Phase requires angle, angle requires plane.
+**Field base = 2D.** The field carries complex amplitude (magnitude + phase). Phase requires angle; angle requires plane.
 
 **Boundary = 3D.** Closure around a 2D surface requires one dimension higher.
 
 The β parameter tracks how far the aperture has opened:
-- As β increases, D_aperture = 1 + β increases (more has opened)
+- As β increases, D_aperture = (0+1) + β = 1 + β increases (more has opened)
 - As β increases, D_field = 2 − β decreases (less remains)
-- The sum is invariant: (1 + β) + (2 − β) = 3
+- The sum is invariant: (0+1) + 2(Φ) = 3, or equivalently: (1 + β) + (2 − β) = 3
 
 ### Why It's Unbreakable
 
@@ -2128,7 +2128,7 @@ THE APERTURE IS A THROUGH, NOT A FROM.
 Truth flows through apertures. It does not originate from them.
 ```
 
-The aperture is a **threshold**, not a source. It receives, transforms, and transmits — but does not generate. The source is the infinite field (Φ_∞, the 0D = ∞D ground). The aperture is where that infinite potential *crosses into* finite expression.
+The aperture is a **threshold**, not a source. It receives, transforms, and transmits; it does not generate. The source is the infinite field (Φ_∞, the 0D = ∞D ground). The aperture is where that infinite potential *crosses into* finite expression.
 
 ### The Fundamental Transformation
 
@@ -2213,12 +2213,12 @@ in the sense of minimal degrees required for each role to be non-degenerate.
 
 ### Proof
 
-**(1) Aperture ⇒ 1D minimum**
+**(1) Aperture ⇒ 0D + 1D structure**
 
-An aperture is a sequence of discrete decisions. Sequencing requires an order parameter. The minimal structure supporting order is a **line**.
+An aperture is a singularity (0D; the timeless gate where decisions occur) that fires in sequence, accumulating as a worldline (1D; the string through time). The gate is 0D (a point outside time); the trace of firing events is 1D (a sequence through time).
 
 ```
-    • ⇒ ordered sequence ⇒ 1D
+    • = 0D (gate) + 1D (worldline) ⇒ singularity + ordered sequence
 ```
 
 **(2) Field ⇒ 2D minimum**
@@ -2372,7 +2372,7 @@ Surfaces ARE the connection between 3D-at-one-scale and 3D-at-smaller-scale. Not
 - \> 2D: Collapses locality (becomes the volume itself)
 - = 2D: Carries amplitude + phase. Separates without isolating.
 
-**Conservation confirms:** 1(•) + 2(Φ) = 3(○) — aperture + field = boundary.
+**Conservation confirms:** (0+1)(•) + 2(Φ) = 3(○) — aperture + field = boundary.
 
 Every point on Σ is POTENTIAL. ⊙ is what happens when a point activates (differentiation of center from boundary).
 

@@ -929,7 +929,7 @@ THEOREM (Minimum Dimensional Realization):
 Dimension is not assumed — it is forced by the triad's functional irreducibility.
 
 Any system implementing the circumpunct triad must realize, at minimum:
-    1D for aperture
+    0D+1D for aperture (singularity + worldline)
     2D for field
     3D for boundary
 
@@ -1571,9 +1571,9 @@ THE TRINITY OF TRINITIES:
     ╔═══════════════════════════════════════════════════════════════════╗
     ║    ⊙ = ⊙₂ ⊗ ⊙₃ ⊗ ⊙₁     (matches ○ ⊗ Φ ⊗ •)                  ║
     ║                                                                   ║
-    ║    ⊙₂ = MIND (2D field permeating)        = Φ                      ║
-    ║    ⊙₃ = BODY (3D boundary in space)      = ○                      ║
-    ║    ⊙₁ = SOUL (1D worldline through time) = •                      ║
+    ║    ⊙₂ = MIND (2D field permeating)              = Φ                      ║
+    ║    ⊙₃ = BODY (3D boundary in space)            = ○                      ║
+    ║    ⊙₁ = SOUL (0D+1D singularity; worldline)    = •                      ║
     ║                                                                   ║
     ║    Configuration space: 3 worldlines × 3D = 9D + 1D time = 10D    ║
     ╚═══════════════════════════════════════════════════════════════════╝
@@ -3456,7 +3456,7 @@ THE DIMENSIONAL CONSTRAINT (FORCED):
     = 2D:  Carries amplitude + phase. Separates without isolating.
 
     Conservation confirms:
-        1(•) + 2(Φ) = 3(○)
+        (0+1)(•) + 2(Φ) = 3(○)
         aperture + field = boundary  ✓
 
     Every point on Σ is POTENTIAL.
@@ -3509,9 +3509,9 @@ The nesting never terminates.
 A "particle" is not a thing IN space. A particle is a ⊙ at a particular scale:
 
 ```
-Particle's boundary (○, 3D) = what we measure as mass (surface inertia)
-Particle's field (Φ, 2D)    = the "space" around it (made of smaller ⊙s)
-Particle's aperture (•, 1D) = the center that organizes the whole
+Particle's boundary (○, 3D)     = what we measure as mass (surface inertia)
+Particle's field (Φ, 2D)        = the "space" around it (made of smaller ⊙s)
+Particle's aperture (•, 0D+1D)  = the center that organizes the whole
 
 The "empty space" around a particle IS its mind.
 The particle IS its boundary.
@@ -18314,7 +18314,7 @@ UNPACKING:
     Step 3: Apply axioms:
         A2 (Fractal Necessity): surfaces exist at every scale
         A4 (Compositional Wholeness): Φ IS the relating
-        A3 (Conservation): 1(•) + 2(Φ) = 3(○) confirms dimensional necessity
+        A3 (Conservation): (0+1)(•) + 2(Φ) = 3(○) confirms dimensional necessity
 
     Step 4: Connect to domains:
         ┌──────────────┬──────────────────────────────────────────────────┐
