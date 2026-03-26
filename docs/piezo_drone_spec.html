@@ -499,7 +499,7 @@ Combine with 90° TEMPORAL offset:
 <tr><td class="val">Ultrasonic</td><td>>20 kHz</td><td>sub-mm</td><td>SAW regime. Acoustic streaming. Silent operation.</td></tr>
 </table>
 
-<p>The disc can be driven at multiple frequencies simultaneously (chord driving), organizing the airflow at multiple scales at once: coarse undulatory thrust at the fundamental, plus fine cymatic drag reduction at higher harmonics. This is the harmonic cascade from the circumpunct device, applied to aerodynamics.</p>
+<p>The disc can be driven at multiple frequencies simultaneously (chord driving; see §07 for the four-voice architecture that the lenticular geometry enables). Low-frequency bending modes handle bulk air movement (long wavelength, deep penetration into the air column). High-frequency membrane modes handle fine boundary layer organization (short wavelength, close to the surface). Together they form a chord: each voice organizes a different scale of the airflow simultaneously, from the centimeter-scale undulation that entrains bulk air down to the sub-millimeter acoustic streaming that smooths the boundary layer. This is the harmonic cascade from the circumpunct device, applied to aerodynamics.</p>
 
 </section>
 
@@ -677,16 +677,66 @@ More zones = finer wave resolution = smoother flight
 <section id="structure">
 <h2><span class="num">§07</span> Disc Structure</h2>
 
+<h3>Why Lenticular (Convex Both Sides)</h3>
+
+<p>The disc is not flat. It is lenticular: convex on top, convex on bottom, like a lens or a lentil. This shape is critical for three reasons.</p>
+
+<p>First, chord driving. A flat plate has one family of vibration modes (bending). A curved shell has two mechanically independent families: bending modes (surface flexes in and out) and membrane modes (surface stretches and compresses in-plane). On a flat plate these couple together. On a curved shell they separate, because curvature links in-plane stress to out-of-plane displacement. This separation gives you two independent frequency channels on the same surface: you can drive bending modes at one frequency and membrane modes at another simultaneously without interference. Two voices from one skin.</p>
+
+<p>With piezo on both the top and bottom convex surfaces, each surface contributes its own pair of mode families. That gives four independent voices:</p>
+
+<div class="card">
+<div class="card-title">Four-Voice Chord Architecture</div>
+<table>
+<tr><th>Voice</th><th>Surface</th><th>Mode Type</th><th>Frequency Range</th><th>Aerodynamic Role</th></tr>
+<tr>
+<td class="val">Bass</td>
+<td>Bottom shell</td>
+<td>Bending (out-of-plane)</td>
+<td>Low (50-500 Hz)</td>
+<td>Bulk air entrainment: large undulations push thick layer of air downward. Primary thrust. Long wavelength = deep penetration into air below disc.</td>
+</tr>
+<tr>
+<td class="val">Tenor</td>
+<td>Bottom shell</td>
+<td>Membrane (in-plane)</td>
+<td>Mid (500 Hz - 10 kHz)</td>
+<td>Boundary layer organization: in-plane vibrations create cymatic channels in the air at the bottom surface. Reduces turbulence. Structures the airflow that the bass voice is pushing.</td>
+</tr>
+<tr>
+<td class="val">Alto</td>
+<td>Top shell</td>
+<td>Bending (out-of-plane)</td>
+<td>Low-mid (100 Hz - 2 kHz)</td>
+<td>Low-pressure generation: undulations on top surface create periodic rarefaction zones above the disc. Pressure differential contributes to lift. Like the top surface of a wing, but active.</td>
+</tr>
+<tr>
+<td class="val">Treble</td>
+<td>Top shell</td>
+<td>Membrane (in-plane)</td>
+<td>High (1 kHz - 100 kHz)</td>
+<td>Fine-scale acoustic streaming: high-frequency in-plane vibrations create SAW-like momentum transfer in the air above. Boundary layer thinning. Drag reduction.</td>
+</tr>
+</table>
+</div>
+
+<p>All four voices play simultaneously. The bass moves bulk air (thrust). The tenor structures that airflow into efficient channels (drag reduction on the thrust side). The alto creates low-pressure suction above (additional lift). The treble smooths the upper boundary layer (drag reduction on the suction side). Each voice operates at a different scale, organizing a different depth of the airflow. Together they are a chord: multiple frequencies, each handling a different layer of the aerodynamic problem.</p>
+
+<p>Second, structural stiffness. A flat disc is floppy for its weight. A convex shell is dramatically stiffer (eggshell principle: curvature converts bending loads into membrane stress, which thin structures resist efficiently). The lenticular shape lets you build the disc thinner and lighter while maintaining enough rigidity at the center to support the electronics. Less mass = less thrust needed.</p>
+
+<p>Third, higher fundamental frequency. Curvature raises the fundamental resonant frequency compared to a flat plate of the same diameter and thickness. A flat 30cm disc might resonate at 50-100 Hz (wavelength comparable to disc size; limited number of useful modes). A lenticular shell of the same diameter could have a fundamental at 200-500 Hz, pushing more of its harmonic series into the aerodynamically useful range. More usable modes = finer control over the wave patterns.</p>
+
 <h3>Form Factor</h3>
 
 <table>
 <tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
-<tr><td>Shape</td><td class="val">Oblate disc (lenticular cross-section)</td><td>Slightly convex top and bottom; thicker at center, thin at edges</td></tr>
+<tr><td>Shape</td><td class="val">Lenticular (biconvex)</td><td>Convex top and bottom; thicker at center, tapering to thin edge</td></tr>
 <tr><td>Diameter</td><td class="val">300 mm (30 cm)</td><td>First prototype. Enough surface for measurable thrust.</td></tr>
+<tr><td>Crown height (each side)</td><td class="val">10-15 mm</td><td>Rise from edge to center on each convex surface</td></tr>
 <tr><td>Thickness at center</td><td class="val">20-30 mm</td><td>Houses battery, MCU, electronics</td></tr>
 <tr><td>Thickness at edge</td><td class="val">2-5 mm</td><td>Thin enough to flex with piezo actuation</td></tr>
 <tr><td>Mass target</td><td class="val">&lt;200 g</td><td>Comparable to small quadcopter</td></tr>
-<tr><td>Active surface</td><td class="val">Both top and bottom</td><td>Top surface contributes to lift via low-pressure; bottom pushes air down</td></tr>
+<tr><td>Active surface</td><td class="val">Both top and bottom</td><td>Each surface has independent bending + membrane modes</td></tr>
 </table>
 
 <h3>Cross-Section</h3>
@@ -694,58 +744,80 @@ More zones = finer wave resolution = smoother flight
 <pre>
                         ◄── 300mm ──►
 
-             ╭───────────────────────────────╮
-  top ────  ╱    ╭───────────────────╮        ╲
- piezo     │    │  CORE (electronics, │        │   ← 20-30mm center
-           │    │  battery, MCU)      │        │
-  bot ──── ╲    ╰───────────────────╯        ╱
- piezo      ╰───────────────────────────────╯
+                  ╭─────────────────────╮
+               ╱                           ╲        ← top convex surface
+            ╱      ╭─────────────────╮      ╲         (piezo skin)
+          ╱       │   CORE            │       ╲
+         │        │   electronics,    │        │   ← 20-30mm at center
+          ╲       │   battery, MCU    │       ╱
+            ╲      ╰─────────────────╯      ╱
+               ╲                           ╱        ← bottom convex surface
+                  ╰─────────────────────╯              (piezo skin)
                                           ↑
                                     2-5mm at edge
                                     (flexible margin)
 
-The rigid center core houses all non-flexing components.
-The flexible margin (outer 30-50% of radius) is the active undulation zone.
-Transition between rigid and flexible must be gradual (no sharp hinge).
+The curvature is gentle: 10-15mm crown height over 150mm radius.
+Enough to separate bending and membrane modes.
+Not so much that the disc becomes a deep bowl.
 </pre>
 
-<h3>Structural Layers (Edge to Edge)</h3>
+<h3>Structural Layers (Edge Section)</h3>
 
 <div class="card">
-<div class="card-title">Layer Stack (from top surface down)</div>
+<div class="card-title">Layer Stack (from top surface down, at the flexible margin)</div>
 <table>
 <tr><th>Layer</th><th>Material</th><th>Thickness</th><th>Function</th></tr>
-<tr><td>1. Top skin</td><td class="val">PVDF piezo film</td><td>28-110 μm</td><td>Active top surface actuator/sensor</td></tr>
-<tr><td>2. Top electrode</td><td class="val">Silver ink or copper trace</td><td>~5 μm</td><td>Zone electrode pattern</td></tr>
-<tr><td>3. Substrate</td><td class="val">Flexible PCB (polyimide) or carbon fiber composite</td><td>0.5-2 mm</td><td>Structural backbone; carries flex</td></tr>
-<tr><td>4. Bottom electrode</td><td class="val">Silver ink or copper trace</td><td>~5 μm</td><td>Zone electrode pattern</td></tr>
-<tr><td>5. Bottom skin</td><td class="val">PVDF piezo film</td><td>28-110 μm</td><td>Active bottom surface actuator/sensor</td></tr>
+<tr><td>1. Top skin</td><td class="val">PVDF piezo film</td><td>28-110 μm</td><td>Top surface actuator/sensor (alto + treble voices)</td></tr>
+<tr><td>2. Top electrode</td><td class="val">Silver ink or copper trace</td><td>~5 μm</td><td>Zone electrode pattern (independent drive per zone)</td></tr>
+<tr><td>3. Substrate</td><td class="val">Curved composite (carbon fiber / glass fiber in epoxy)</td><td>0.5-2 mm</td><td>Structural shell; carries curvature and flex</td></tr>
+<tr><td>4. Bottom electrode</td><td class="val">Silver ink or copper trace</td><td>~5 μm</td><td>Zone electrode pattern (independent drive per zone)</td></tr>
+<tr><td>5. Bottom skin</td><td class="val">PVDF piezo film</td><td>28-110 μm</td><td>Bottom surface actuator/sensor (bass + tenor voices)</td></tr>
 </table>
 </div>
 
-<p>The top and bottom piezo layers can be driven in phase (both push the same direction, bending the disc: bending mode) or out of phase (one pushes while the other pulls, changing thickness: breathing mode). Bending mode produces undulatory thrust. Breathing mode produces acoustic pump thrust. Both are useful; bending is the primary mechanism.</p>
+<p>Top and bottom piezo layers can be driven in three relationships:</p>
+
+<table>
+<tr><th>Drive Mode</th><th>Top / Bottom Phase</th><th>Result</th><th>Voice</th></tr>
+<tr><td class="val">Bending</td><td>Opposite phase (one expands, other contracts)</td><td>Shell curves in and out (out-of-plane)</td><td>Bass (bottom) / Alto (top)</td></tr>
+<tr><td class="val">Membrane</td><td>Same phase (both expand or both contract)</td><td>Shell stretches and compresses in-plane</td><td>Tenor (bottom) / Treble (top)</td></tr>
+<tr><td class="val">Chord</td><td>Both simultaneously (bending at f₁, membrane at f₂)</td><td>Superposition of undulation and in-plane vibration</td><td>All four voices at once</td></tr>
+</table>
 
 <h3>Flexibility Profile</h3>
 
-<p>The disc is not uniformly flexible. The center must be rigid enough to support the electronics and battery. The edges must be flexible enough to undulate with useful amplitude. The transition between rigid core and flexible margin determines the disc's modal structure.</p>
+<p>The disc is not uniformly flexible. The center must be rigid enough to support the electronics and battery. The edges must be flexible enough to undulate with useful amplitude. The transition between rigid core and flexible margin determines the disc's modal structure. The curvature also varies: steeper near the center (stiffer), flattening toward the edge (more flexible).</p>
 
 <pre>
 Rigidity profile (center to edge):
 
   Stiff ─────────┐
-                  │     gradual taper
-                  ╲
+  (deep curve)    │     gradual taper of both
+                  ╲     curvature and thickness
                    ╲
                     ╲
   Flexible ──────────╲───────────
-                     ↑
+  (nearly flat)      ↑
               transition zone
               (30-40% of radius)
 
 The flexible margin is where undulation happens.
-The rigid core is the "body" the margin waves around.
+The rigid curved core is the "body" the margin waves around.
 Like a ray's body vs its fin edges.
+
+The curvature gradient also creates a natural frequency gradient:
+  center (steep curve) → higher local resonance
+  edge (flat) → lower local resonance
+This spreads the resonant modes across the radius,
+which is useful for chord driving: different zones naturally
+respond to different frequency ranges.
 </pre>
+
+<div class="callout">
+<div class="label">The Chord Principle</div>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">A flat plate is a monophonic instrument: one vibration family, one voice. A lenticular shell is polyphonic: curvature separates bending and membrane modes into independent channels, top and bottom surfaces double it, and the curvature gradient spreads resonance across the radius. The disc can play a four-voice chord where each voice organizes a different scale of the airflow: bulk entrainment, channel formation, suction generation, and boundary layer smoothing. All simultaneously. All from one continuous piezo skin driven by a multi-frequency AC signal.</p>
+</div>
 
 </section>
 
