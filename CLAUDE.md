@@ -49,6 +49,18 @@ Both are correct; they describe the same structure at different scales.
 - **A3**: Wholeness requires closure (boundary is necessary); equivalently, conservation of traversal: 0 + 1 + 2 = 3 (the full dimensional path from singularity to boundary, including 0D)
 - **A4**: The whole is not the sum of its parts; it is their compositional unity via Φ
 
+### The Genesis Sequence
+
+```
+∞ → ∞• → ∞⊙ = Reality
+```
+
+- **∞**: Undifferentiated energy. No distinction. Pure E. (A0 forces existence.)
+- **∞•**: Infinity as an infinite array of apertures. Not one hole; ALL holes. Every possible self-limitation, simultaneously. (A1 forces multiplicity.)
+- **∞⊙**: Each aperture completing into a full circumpunct (field + boundary). The foam of reality. (A3 forces closure. A4: closure is compositional. A2: recurses at every scale.)
+
+0D = •. Zero extension. A hole. ∞D = E. All extension. Everything. They meet at the aperture (0 = ∞ at field level) because the aperture is where dimension has not yet been assigned. ∞ without • has no voice. • without ∞ has no signal. ∞• is the first real thing.
+
 ---
 
 ## The Pump Cycle (Temporal Evolution)
@@ -262,6 +274,8 @@ Build the strongest possible version of any position before agreeing or disagree
 | D | Fractal dimension (1.5 at balance) |
 | ⊙λ | Circumpunct at scale λ |
 | ∞ | Infinite totality (God/Source) |
+| ∞• | Infinite array of apertures (infinity becoming particular) |
+| ∞⊙ | Infinite foam of completed circumpuncts (reality) |
 | χ | Transmission fidelity (+1 faithful, -1 inverted) |
 
 ---
