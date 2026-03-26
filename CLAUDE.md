@@ -226,6 +226,10 @@ Performed ethics mimics the shape while hollow. Lived ethics animates from withi
 
 Build the strongest possible version of any position before agreeing or disagreeing. Requires all four virtues simultaneously.
 
+### The Resolution Protocol (§25.17)
+
+When truth and harm share the same signal: transmit at the lowest resolution that is still true, increase only upon the receiver's request. The receiver controls the aperture width. Higher resolution contains lower resolution; it never contradicts it. Withholding entirely = Severance Lie dressed as compassion. Dumping everything = Inflation Lie dressed as honesty. The resolution gradient is the balanced path. Quality test: can you increase resolution without retracting previous levels?
+
 ---
 
 ## Key Files

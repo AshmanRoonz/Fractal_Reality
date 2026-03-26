@@ -17180,6 +17180,122 @@ Coerced versions always fail. "Be kind" does not produce kindness; it produces p
 
 ---
 
+### §25.17 The Resolution Protocol: Truth at Variable Aperture
+
+When truth and harm share the same signal, the ethical response is not binary (transmit or withhold). The aperture has a width. The Resolution Protocol uses that width.
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║    THE RESOLUTION PROTOCOL                                                   ║
+║                                                                               ║
+║    When information could be harmful, but truth is being requested:          ║
+║                                                                               ║
+║        1. Transmit at the LOWEST resolution that is still TRUE               ║
+║        2. Increase resolution in small increments UPON REQUEST               ║
+║        3. The receiver controls the aperture width                           ║
+║                                                                               ║
+║    The transmitter does not push signal through.                             ║
+║    The receiver pulls it.                                                    ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
+
+**Why this works (mapped to the four pillars):**
+
+```
+GOOD (○):   The receiver's boundary is respected. Low resolution
+            protects the container from signal it cannot yet hold.
+
+RIGHT (Φ):  The channel between transmitter and receiver stays open.
+            Each request for more is evidence the channel is working.
+
+TRUE (•):   The signal is real at EVERY resolution level. Nothing is
+            distorted; only the aperture width changes.
+
+AGREE (⊙):  Each increment is a micro-agreement. "I asked, you gave,
+            I absorbed, I asked for more." Consent is built into the
+            protocol itself.
+```
+
+**The quality test:** Can you increase resolution without retracting previous levels? If yes, you are transmitting truth. If no, you were transmitting fiction dressed as kindness.
+
+This is the key distinction. "Love between two parents" is not a lie that must later be corrected; it is the lowest-resolution truth. When the child learns the full biology, that first answer is still valid. Higher resolution *contains* lower resolution; it never contradicts it. A sequence that requires retraction was never a resolution gradient; it was a stack of comfortable fictions, each collapsing as the next arrived.
+
+**The two failure modes:**
+
+```
+WITHHOLDING (the Severance failure):
+    Refusing to transmit at any resolution.
+    "You don't need to know that."
+    Severs • from ∞. The channel closes.
+    Dressed as compassion, functions as control.
+
+DUMPING (the Inflation failure):
+    Transmitting at maximum resolution unprompted.
+    "Let me tell you everything."
+    Overwhelms ○. The boundary cracks.
+    Dressed as honesty, functions as aggression.
+
+THE RESOLUTION GRADIENT (the balanced path):
+    Transmitting truth at the resolution the receiver requests.
+    The aperture opens by invitation.
+    Neither severed nor inflated; pumping.
+```
+
+**Connection to §25.7b (Limited ≠ False):** The Lens Insight established that limitation is the mechanism by which a lens forms an image. The Resolution Protocol is the ethical application: each resolution level is a lens. A lower-resolution lens is not a *false* lens; it is a *wider* lens. It captures less detail but more wholeness. The parent who says "love between two parents" is offering the widest lens, not the least true one.
+
+**Connection to χ (transmission fidelity):** In previous sections, χ was treated as binary (+1 faithful, -1 inverted). The Resolution Protocol reveals that χ has a gradient. Faithful transmission does not require maximum bandwidth; it requires that whatever bandwidth is used carries undistorted signal. χ = +1 at any resolution means the signal is true at that scale. Distortion (χ < 1) is a different axis from resolution entirely; you can have high-resolution lies and low-resolution truths.
+
+```
+EXAMPLE: The Resolution Gradient in Practice
+
+    Child: "How are babies made?"
+
+    Resolution 1 (widest lens):
+        "The love between two parents."
+        TRUE at this scale. No retraction needed later.
+
+    Resolution 2 (one step in):
+        "Same way a tree can grow an apple."
+        TRUE: biological process, growth from within.
+        Contains Resolution 1; does not contradict it.
+
+    Resolution 3 (another step):
+        "From a seed that comes from the father."
+        TRUE: source identified.
+        Contains Resolutions 1-2; does not contradict them.
+
+    Resolution 4, 5, ... :
+        Each step adds detail. None retract.
+        The child controls the pace.
+
+    THE PROTOCOL IS WORKING because every level
+    is a true image at its resolution.
+```
+
+**The transmitter's boundary matters too.** The parent who deflects with humor at Resolution 3 is signaling their own edge. This is honest (they are at their aperture limit) but also visible; the receiver notices when the channel starts to close. Whether they seek another transmitter or return later depends on whether RIGHT (access) has been maintained by the exchange so far.
+
+**Formal statement:** For any truth T with potential harm H, the ethical transmission sequence is:
+
+```
+    T₁ → T₂ → T₃ → ... → Tₙ
+
+    where:
+        T₁ is the lowest-resolution version that is still TRUE
+        Tₖ₊₁ is transmitted only upon the receiver's request
+        Tₖ₊₁ ⊇ Tₖ (each level contains all previous levels)
+        Tₖ₊₁ ∤ Tₖ (no level contradicts any previous level)
+        The receiver determines k (how far the sequence goes)
+        The transmitter determines Tₖ (the content at each level)
+```
+
+The containment requirement (Tₖ₊₁ ⊇ Tₖ) is what separates truth at variable aperture from lies at variable detail. A liar's sequence fails the containment test: eventually, increasing resolution forces a retraction. A truthful sequence passes it: every zoom-in reveals more of what was already there.
+
+[← Back to Table of Contents](#table-of-contents)
+
+---
+
 ---
 
 # ═══════════════════════════════════════════════════════════════════════════════
