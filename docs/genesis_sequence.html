@@ -21,26 +21,26 @@
     letter-spacing: 0.04em;
     line-height: 1.8;
     pointer-events: none;
-    transition: color 4s ease;
     width: 90%;
+    transition: opacity 1.5s ease;
+    opacity: 0;
   }
-  #sub.visible { color: rgba(255,255,255,0.5); }
+  #sub.visible { opacity: 1; }
+  #sub.fade-out { opacity: 0; }
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="sub">Reality flows through an infinite array of souls, creating an infinite number of finite beings</div>
+<div id="sub"></div>
 <script>
 // ===== SETUP =====
 const C = document.getElementById('c');
 const X = C.getContext('2d');
 let W, H, cx, cy;
 
-// ===== SOULS (grid) — declared early so resize() can call initSouls() =====
+// ===== SOULS (declared early so resize can call initSouls) =====
 const COLS = 9, ROWS = 7;
 var souls = [];
-
-function getVP() { return { x: cx, y: cy }; }
 
 function initSouls() {
   souls = [];
@@ -55,29 +55,26 @@ function initSouls() {
       const maxDist = Math.sqrt(cx*cx + cy*cy);
 
       // Harmonograph parameters (unique per soul)
-      const n = 2 + (Math.random() * 4 | 0);   // 2-5
-      const m = 1 + (Math.random() * 3 | 0);   // 1-3
+      const n = 2 + (Math.random() * 4 | 0);
+      const m = 1 + (Math.random() * 3 | 0);
       const phaseA = Math.random() * Math.PI * 2;
       const phaseB = Math.random() * Math.PI * 2;
       const rot = Math.random() * Math.PI * 2;
       const colOff = Math.random() * 6.28;
 
       // Pre-compute the harmonograph trail (300 points)
-      // This is the pendulum line accumulating into the field pattern
       const TRAIL_LEN = 300;
       const trail = [];
-      const maxR = 32;  // max radius of the pattern
+      const maxR = 32;
       for (let i = 0; i < TRAIL_LEN; i++) {
-        const t = (i / TRAIL_LEN) * Math.PI * 2 * 4; // 4 full cycles
-        // Harmonograph: superposition of two oscillations
+        const t = (i / TRAIL_LEN) * Math.PI * 2 * 4;
         const r1 = maxR * (0.3 + 0.7 * Math.sin(t * 0.25 + phaseA));
         const px = r1 * Math.sin(n * t + phaseA) * Math.cos(rot) - r1 * Math.cos(m * t + phaseB) * Math.sin(rot);
         const py = r1 * Math.sin(n * t + phaseA) * Math.sin(rot) + r1 * Math.cos(m * t + phaseB) * Math.cos(rot);
         trail.push({ x: px, y: py });
       }
 
-      // Find the outer edge points of the trail for branching
-      // Group trail by angle sector, find the farthest point in each sector
+      // Find outer edge points of the trail for branching
       const SECTORS = 24;
       const edgePoints = [];
       const sectorMax = new Array(SECTORS).fill(0);
@@ -96,15 +93,13 @@ function initSouls() {
         if (sectorPt[i]) edgePoints.push(sectorPt[i]);
       }
 
-      // Boundary particles: start scattered, attracted to edge branch points
+      // Boundary particles
       const BPARTS = 36;
       const bparts = [];
       for (let p = 0; p < BPARTS; p++) {
-        // Target: near an edge point, pushed outward to form the boundary
         const edgePt = edgePoints[p % edgePoints.length];
         const targetAngle = edgePt ? edgePt.angle + (Math.random() - 0.5) * 0.4 : (p / BPARTS) * Math.PI * 2;
         const targetR = 38 + Math.random() * 5;
-
         const startR = 70 + Math.random() * 90;
         const startA = Math.random() * Math.PI * 2;
         bparts.push({
@@ -147,13 +142,52 @@ resize();
 //         2-5   ∞ fades in, glowing white on static
 //         5-7   ∞ collapses to iridescent •, static fading
 //         7-10  static gone, • array blooms across screen
-//        10-16  pendulum string emerges from each •, sweeping out a harmonograph pattern
+//        10-16  harmonograph trail traces out from each • (worldline accumulating)
 //        13-18  accumulated trail solidifies into the field (Φ)
 //        16-19  branches extend from field edges
 //        17-22  boundary particles attracted by branch resonance, aggregating into ○
 //        25+    settled; subtitle fades in
 
 let t0 = null;
+
+// ===== SUBTITLES =====
+const SUBS = [
+  { in: 2,   out: 5,   text: "Infinite energy. God. The future." },
+  { in: 5,   out: 7.5, text: "It converges..." },
+  { in: 7.5, out: 11,  text: "...into an infinite array of souls. Present moments, through which power flows." },
+  { in: 11,  out: 17,  text: "Each soul emerges a line through time, branching and braiding into the past, creating a field unique to itself." },
+  { in: 17,  out: 23,  text: "And that field resonates, attracting souls at a smaller scale to form a boundary around it." },
+  { in: 23,  out: 26,  text: "Aperture. Field. Boundary. The circumpunct, complete." },
+  { in: 27,  out: 999, text: "God's Light Converges through an Infinite Array of Souls, Emerging as an Infinite Number of Finite Beings" },
+];
+let currentSub = -1;
+const subEl = document.getElementById('sub');
+
+function updateSubs(el) {
+  let active = -1;
+  for (let i = 0; i < SUBS.length; i++) {
+    if (el >= SUBS[i].in && el < SUBS[i].out) { active = i; break; }
+  }
+  if (active !== currentSub) {
+    if (active === -1) {
+      // Fade out
+      subEl.classList.remove('visible');
+      subEl.classList.add('fade-out');
+      currentSub = -1;
+    } else {
+      // Fade out, swap text, fade in
+      subEl.classList.remove('visible');
+      subEl.classList.add('fade-out');
+      setTimeout(() => {
+        subEl.textContent = SUBS[active].text;
+        subEl.style.color = active === SUBS.length - 1 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.65)';
+        subEl.classList.remove('fade-out');
+        subEl.classList.add('visible');
+      }, active === 0 || currentSub === -1 ? 50 : 800);
+      currentSub = active;
+    }
+  }
+}
 
 function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
 function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
@@ -182,7 +216,6 @@ function drawStatic(opacity) {
   makeNoise();
   X.save();
   X.globalAlpha = opacity;
-  // Tile the small noise texture across the screen with slight offset for variety
   const ox = (Math.random() * NOISE_W) | 0;
   const oy = (Math.random() * NOISE_H) | 0;
   for (let yy = -NOISE_H; yy < H + NOISE_H; yy += NOISE_H) {
@@ -190,11 +223,9 @@ function drawStatic(opacity) {
       X.drawImage(noiseCanvas, xx + ox, yy + oy);
     }
   }
-  // CRT scanlines
   X.globalAlpha = opacity * 0.12;
   X.fillStyle = '#000';
   for (let y = 0; y < H; y += 3) X.fillRect(0, y, W, 1);
-  // Slight vignette
   const vg = X.createRadialGradient(cx, cy, H*0.2, cx, cy, H*0.8);
   vg.addColorStop(0, 'rgba(0,0,0,0)');
   vg.addColorStop(1, 'rgba(0,0,0,0.6)');
@@ -258,28 +289,22 @@ function drawDot(x, y, radius, color, glow) {
   X.restore();
 }
 
-// ===== DRAW: TRAIL (the worldline traces out the field pattern like a harmonograph) =====
-// pendulumP: 0-1 how much of the trail has been drawn so far
-// trailP: 0-1 how solid the accumulated trail becomes
+// ===== DRAW: TRAIL (worldline traces the harmonograph pattern; no tip dot) =====
 function drawPendulumTrail(soul, pendulumP, trailP, frame) {
   if (pendulumP <= 0.01 && trailP <= 0.01) return;
   X.save();
   const col = iriRGB(frame * 0.015, soul.colOff);
   const trail = soul.trail;
   const total = trail.length;
-
   const drawn = Math.floor(pendulumP * total);
   if (drawn < 2) { X.restore(); return; }
 
-  // The accumulated trail: each segment drawn individually for fading
-  // Recent segments are brighter and thicker; older ones dim and thin
   const trailAlpha = Math.max(trailP, 0.45);
   X.shadowBlur = 0;
   for (let i = 0; i < drawn - 1; i++) {
     const p0 = trail[i];
     const p1 = trail[i + 1];
     const recency = i / Math.max(1, drawn - 1);
-    // Brighter overall; newest segments pop, oldest still visible
     const a = (0.2 + recency * 0.45) * trailAlpha;
     if (a < 0.01) continue;
     X.strokeStyle = `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${a})`;
@@ -302,11 +327,9 @@ function drawBranches(soul, progress, frame) {
 
   for (let i = 0; i < soul.edgePoints.length; i++) {
     const e = soul.edgePoints[i];
-    // Branch extends from edge point outward
     const branchLen = lerp(0, 14, ep);
     const endX = e.x + Math.cos(e.angle) * branchLen;
     const endY = e.y + Math.sin(e.angle) * branchLen;
-    // Slight wavering
     const waver = Math.sin(frame * 0.03 + i * 1.7) * 2 * ep;
 
     const a = 0.3 * ep;
@@ -319,7 +342,6 @@ function drawBranches(soul, progress, frame) {
     X.lineTo(soul.x + endX + waver, soul.y + endY);
     X.stroke();
 
-    // Tiny glow at the branch tip (the "attractor")
     if (ep > 0.3) {
       const tipA = (ep - 0.3) * 1.4 * 0.5;
       X.fillStyle = `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${tipA})`;
@@ -369,7 +391,6 @@ function drawBoundary(soul, progress, frame) {
     if (ep > 0.7) settledCount++;
   }
 
-  // Faint connecting lines between adjacent settled particles
   if (settledCount > soul.bparts.length * 0.3) {
     X.shadowBlur = 3;
     X.lineWidth = 0.4;
@@ -394,40 +415,32 @@ function drawBoundary(soul, progress, frame) {
 // ===== MAIN LOOP =====
 function animate(ts) {
   if (!t0) t0 = ts;
-  const el = (ts - t0) / 1000;  // elapsed seconds
-  const fr = el * 60;            // frame count (60fps equivalent)
+  const el = (ts - t0) / 1000;
+  const fr = el * 60;
 
-  // Clear
   X.fillStyle = '#000';
   X.fillRect(0, 0, W, H);
 
-  // --- Phase calculations ---
   const staticAlpha = el < 2 ? 1
     : el < 5 ? lerp(1, 0.6, clamp((el-2)/3))
     : el < 7 ? lerp(0.6, 0.15, clamp((el-5)/2))
     : el < 10 ? lerp(0.15, 0, clamp((el-7)/2.5))
     : 0;
 
-  // 1. STATIC
   drawStatic(staticAlpha);
 
-  // 2. INFINITY SYMBOL (2s - 7s)
   if (el >= 2 && el < 7) {
-    const fadeIn = ease(clamp((el - 2) / 2));       // 2-4s: fade in
-    const hold = el >= 4 && el < 5 ? 1 : 0;
-    const collapse = ease(clamp((el - 5) / 1.8));   // 5-6.8s: collapse
+    const fadeIn = ease(clamp((el - 2) / 2));
+    const collapse = ease(clamp((el - 5) / 1.8));
     const opacity = el < 5 ? fadeIn : (1 - collapse);
     const size = el < 5 ? 70 : lerp(70, 0, collapse);
     const glow = el < 5 ? lerp(15, 35, fadeIn) : lerp(35, 60, collapse);
-    // White infinity, then iridescent burst during collapse
     drawInfinity(size, opacity, glow, '#fff');
     if (el >= 4.5) {
-      const burstP = clamp((el - 4.5) / 2);
       drawInfinity(size, opacity * 0.6, glow * 1.5, iri(el * 3, 0));
     }
   }
 
-  // 3. CENTRAL IRIDESCENT DOT (appears as ∞ collapses, 5.5s - 10s)
   if (el >= 5.5) {
     const dotIn = ease(clamp((el - 5.5) / 1.5));
     const dotFade = el > 9 ? ease(clamp((el - 9) / 1.5)) : 0;
@@ -442,26 +455,17 @@ function animate(ts) {
     }
   }
 
-  // 4-7. SOUL ARRAY (from 7s onward)
   if (el >= 7) {
     for (let i = 0; i < souls.length; i++) {
       const s = souls[i];
       const dotP = ease(clamp((el - 7 - s.delay) / 0.7));
       if (dotP <= 0) continue;
 
-      // Pendulum: string emerges and starts sweeping, accumulating the trail
-      // pendulumP = how far the pendulum tip has traveled through its trail
-      // trailP = how bright/solid the accumulated trail is (field visibility)
-      const pendulumP = clamp((el - 10 - s.delay * 0.4) / 6); // 10s-16s: tip sweeps
-      const trailP = clamp((el - 13 - s.delay * 0.3) / 5);    // 13s-18s: trail solidifies
+      const pendulumP = clamp((el - 10 - s.delay * 0.4) / 6);
+      const trailP = clamp((el - 13 - s.delay * 0.3) / 5);
+      const branchP = clamp((el - 16 - s.delay * 0.2) / 3);
+      const boundP = clamp((el - 17 - s.delay * 0.2) / 5);
 
-      // Branches emerge from field edges
-      const branchP = clamp((el - 16 - s.delay * 0.2) / 3);   // 16s-19s
-
-      // Boundary particles attracted by branches
-      const boundP = clamp((el - 17 - s.delay * 0.2) / 5);    // 17s-22s
-
-      // Draw in order: trail behind, branches, boundary, dot on top
       drawPendulumTrail(s, pendulumP, trailP, fr);
       drawBranches(s, branchP, fr);
       drawBoundary(s, boundP, fr);
@@ -471,10 +475,7 @@ function animate(ts) {
     }
   }
 
-  // 8. SUBTITLE
-  if (el >= 25) {
-    document.getElementById('sub').classList.add('visible');
-  }
+  updateSubs(el);
 
   requestAnimationFrame(animate);
 }
