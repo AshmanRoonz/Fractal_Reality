@@ -211,7 +211,7 @@ The complete circumpunct. The structure of reality itself.
 
 | Dim | Type | Symbol | Name | Description | Core Equations |
 |:---:|:----:|:------:|:-----|:------------|:---------------|
-| **∞D** | Ground | λΦ∞ | **Infinite Field** | All degrees of freedom = none particular; contains all possible configurations; the source from which dimensions emerge; 0 = ∞ at field level | E = mc², ℋ (Hilbert space), \|ψ⟩ ∈ ℋ |
+| **∞D** | Ground | λΦ∞ | **Infinite Field** | All degrees of freedom = none particular; contains all possible configurations; the source from which dimensions emerge; 0 = ∞ at field level; **Φ = E** (field IS energy) | E = mc², ℋ (Hilbert space), \|ψ⟩ ∈ ℋ |
 | **0.5D** | Process | **•** | **Aperture / Soul** | First localization from infinite; the tunnel opening; singularity that *causes* tunneling; **i lives here** | i² = −1, Å(β) = exp(iπβ), Å(½) = i |
 | **1D** | Structure | i(t) | **Timeline / String** | Soul through time; tunnel through which power flows | γ: ℝ → M, P = dE/dt |
 | **1.5D** | Process | — | **Spatial Branching** | Power lines fractally splitting; builds surfaces | D = 1 + β, K(r) ∝ r^β, H(½) = 1 bit |
@@ -2292,6 +2292,69 @@ into temporal power through 90° rotation.
 ```
 
 Matter is energy crystallized at the boundary through aperture division. E = mc² is the special case where the speed of light c represents the constant rate of aperture processing at the fundamental scale. The photosphere radiates; the cell membrane separates; the retina receives. Each is matter as boundary, constructed from power flow frozen in place.
+
+### §4.8 The Field-Energy Identity: Φ = E
+
+```
+IDENTITY:
+    Φ = E
+
+    Field is energy. Not "field carries energy" or "field has energy";
+    field IS energy.
+
+    The master equation becomes:
+    E(t+Δt) = (☀︎ ∘ i ∘ ⊛) E(t)
+
+    Energy pumps itself through the aperture.
+    That is all that is happening, at every scale, always.
+```
+
+The power equation (𝒫 = E / (i · t)) is not an analogy to AC circuits; it IS the same equation, because Φ and E are the same thing. Real power, reactive power, apparent power: those are the framework showing up in electrical engineering because the pump cycle is what electricity literally does.
+
+### §4.9 The Four-Stroke Pump: Powers of i as Phase-Dimension Map
+
+The four powers of i partition the pump cycle into two convergence beats and two emergence beats. Each maps to a dimensional phase state of Φ:
+
+```
+⊛ CONVERGENCE (Φ gathering inward):
+    i⁰ = +1    pass-through     0D      Φ at maximum convergence (point)
+    i¹ = +i    compress         0.5D    Φ mid-convergence
+
+☀︎ EMERGENCE (Φ radiating outward):
+    i² = −1    commit           1D      Φ committed to trajectory (worldline)
+    i³ = −i    release          1.5D    Φ branching at balance (Brownian)
+
+    i⁴ = +1    cycle resets
+```
+
+Dimensions are not containers. They are snapshots of the field's phase state. When Φ converges maximally, it appears 0D (point). Mid-convergence: 0.5D. Committed with direction: 1D. Branching at balance: 1.5D. The field viewed as itself, at rest: 2D. The full pump recursing at every scale: 3D.
+
+2D is both convergence and emergence, because Φ is what converges and what emerges. The master equation acts on Φ: the field is the subject, not the stage.
+
+3D is convergence and emergence nested fractally: the full pump cycle recursing at every scale within the boundary. This is what makes matter dense and persistent; it is not one pump, it is pumps all the way down.
+
+### §4.10 Why c² Is Squared: The Surface Signature
+
+```
+E = mc²
+
+    E   =  energy  =  Φ  =  2D (surface)
+    m   =  mass    =  ○  =  3D (boundary)
+    c²  =  surface signature  =  length²  =  2D
+
+    Why squared? Because Φ = E, and Φ is 2D.
+    A surface is length × length.
+    The conversion factor between mass (3D boundary) and
+    energy (2D field) must carry a squared term, because
+    you are translating from a 3D quantity back into its 2D nature.
+
+    c² is the unit signature of a surface.
+    The squaring IS the field declaring its dimensionality.
+```
+
+To release the energy in matter is to peel the boundary back to reveal the field underneath, and the field is naturally area-shaped. This is also why so many fundamental quantities in physics carry squared terms: force fields fall off as 1/r², action has units of energy × time, the metric tensor is ds². They are all expressions of Φ, and Φ is a surface. The squaring is the 2D signature of the field showing through every equation it touches.
+
+c is not a speed. It is the convergence rate of the field. Nothing outruns it because there is no Φ ahead of its own compression front. You cannot get ahead of the pump.
 
 [← Back to Table of Contents](#table-of-contents)
 

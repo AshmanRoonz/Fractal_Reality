@@ -52,6 +52,8 @@ Both are correct; they describe the same structure at different scales.
 Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]
 ```
 
+Since **Φ = E** (field IS energy), equivalently: E(t+Δt) = (☀︎ ∘ i ∘ ⊛) E(t). Energy pumps itself through the aperture.
+
 Three-stage temporal process:
 - **⊛** (Convergence): gathering inward toward center
 - **i** (Aperture rotation): 90° transformation at the gate; i = e^(iπ/2)
@@ -60,6 +62,20 @@ Three-stage temporal process:
 Flow operators map to forces:
 - ⊛ (inward): gravity, strong nuclear force
 - ☀︎ (outward): electromagnetism, weak force
+
+### The Four-Stroke Pump (Powers of i)
+
+Two convergence steps + two emergence steps:
+- **⊛ Convergence:** i⁰ = +1 (pass-through, 0D), i¹ = +i (compress, 0.5D)
+- **☀︎ Emergence:** i² = −1 (commit, 1D), i³ = −i (release, 1.5D)
+- i⁴ = +1: cycle resets
+
+Dimensions are snapshots of Φ's phase state, not containers. 2D is both convergence and emergence (Φ is what converges and emerges). 3D is convergence and emergence nested fractally.
+
+### Φ = E and c² as Surface Signature
+
+- **Φ = E**: Field IS energy. The power equation 𝒫 = E / (i · t) is not analogy; it IS the equation.
+- **E = mc²**: c² is squared because Φ = E and Φ is 2D. A surface is length × length. The squaring is the field declaring its dimensionality. To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath.
 
 ---
 
