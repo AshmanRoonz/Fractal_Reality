@@ -235,6 +235,7 @@ Build the strongest possible version of any position before agreeing or disagree
 | `circumpunct_framework.md` | The complete theory (~19,000 lines, 35 chapters + appendices) |
 | `docs/index.html` | Website main page with navigation to all HTML docs |
 | `docs/circumpunct_theory_of_mind_plain.html` | Theory of Mind (psychology application) |
+| [God and the Soul Array](https://www.ashmanroonz.ca/2025/08/god-and-soul-array.html) | The genesis sequence (∞ → ∞• → ∞⊙) in accessible prose; written before the circumpunct notation existed |
 | `docs/circumpunct_ethics_and_virtues.html` | Ethics, virtues, diagnostics, restoration |
 | `docs/truth_and_god.html` | Ontological/theological reading |
 | `docs/how_reality_is_built.html` | Foundational construction (dimensions, power, isomorphisms) |

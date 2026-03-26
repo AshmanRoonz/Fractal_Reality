@@ -609,6 +609,12 @@ THE GENESIS SEQUENCE:
     aperture because the aperture IS the place where dimension has not
     yet been assigned. ∞ without • has no voice. • without ∞ has no
     signal. ∞• is the first real thing.
+
+NOTE: This sequence was first articulated in accessible prose as
+"God and the Soul Array" (ashmanroonz.ca/2025/08/god-and-soul-array.html),
+written before the circumpunct notation existed. The Soul Array IS ∞•.
+God as Infinite Field IS ∞. Each soul as irreducible center IS •.
+The notation formalized what the insight already contained.
 ```
 
 [← Back to Table of Contents](#table-of-contents)
