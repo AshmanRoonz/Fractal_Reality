@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genesis Sequence: ∞ → ∞• → ∞⊙</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;overflow:hidden;font-family:'Lora',serif}
+#cc{position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center}
+#cc canvas{display:block}
+#ov{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;z-index:10}
+#pl{font-size:28px;color:rgba(255,248,230,0.85);letter-spacing:3px;margin-bottom:6px;text-shadow:0 0 30px rgba(217,119,87,0.4)}
+#pd{font-size:13px;color:rgba(255,248,230,0.45);max-width:600px;line-height:1.6;font-style:italic}
+#pb{position:fixed;bottom:0;left:0;width:100%;height:3px;background:rgba(255,255,255,0.08);z-index:10}
+#pf{height:100%;background:linear-gradient(90deg,#d97757,#e8a060);width:0%;transition:width 0.3s}
+#cb{position:fixed;top:15px;right:15px;z-index:20;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-family:'Lora',serif;backdrop-filter:blur(10px)}
+#cb:hover{background:rgba(255,255,255,0.15)}
+#cp{position:fixed;top:55px;right:15px;z-index:20;background:rgba(10,10,15,0.92);backdrop-filter:blur(12px);padding:18px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);width:260px;display:none;color:rgba(255,248,230,0.7);font-size:12px;font-family:'Lora',serif;max-height:85vh;overflow-y:auto}
+#cp.v{display:block}
+#cp h3{color:#d97757;font-size:13px;margin:14px 0 6px;font-weight:500}
+#cp h3:first-child{margin-top:0}
+#cp label{display:block;margin-bottom:3px;font-size:11px}
+#cp input[type=range]{width:100%;margin-bottom:10px;accent-color:#d97757}
+#cp button{background:#d97757;color:white;border:none;padding:7px;border-radius:5px;cursor:pointer;width:100%;margin-top:3px;font-size:12px;font-family:'Lora',serif}
+#cp button:hover{background:#c86641}
+.br{display:flex;gap:5px;margin-top:3px}
+.br button{flex:1}
+.bs{background:#6a9bcc!important}
+.bs:hover{background:#5a8bb8!important}
+.bt{background:#788c5d!important}
+.bt:hover{background:#6b7b52!important}
+#rec-indicator{position:fixed;top:15px;left:15px;z-index:20;display:none;align-items:center;gap:6px;color:#ff4444;font-size:12px;font-family:'Lora',serif}
+#rec-dot{width:10px;height:10px;border-radius:50%;background:#ff4444;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+</style>
+</head>
+<body>
+<div id="cc"></div>
+<div id="ov"><div id="pl"></div><div id="pd"></div></div>
+<div id="pb"><div id="pf"></div></div>
+<div id="rec-indicator"><div id="rec-dot"></div>Recording...</div>
+<button id="cb" onclick="document.getElementById('cp').classList.toggle('v')">Controls</button>
+<div id="cp">
+<h3>Seed</h3>
+<label>Seed: <span id="sv">42</span></label>
+<input type="range" id="ss" min="1" max="999" value="42">
+<div class="br"><button class="bs" id="bp">Prev</button><button class="bs" id="bn">Next</button></div>
+<button id="brd" style="margin-top:5px">Random Seed</button>
+<h3>Animation</h3>
+<label>Speed: <span id="spv">1.0x</span></label>
+<input type="range" id="sps" min="0.3" max="3.0" step="0.1" value="1.0">
+<label>Glow: <span id="gv">1.0</span></label>
+<input type="range" id="gs" min="0.2" max="2.0" step="0.1" value="1.0">
+<label>Pump: <span id="pv">0.5</span></label>
+<input type="range" id="ps" min="0.1" max="1.0" step="0.05" value="0.5">
+<label>Apertures: <span id="av">7</span></label>
+<input type="range" id="as" min="3" max="14" step="1" value="7">
+<label>Depth: <span id="dv">3</span></label>
+<input type="range" id="ds" min="1" max="4" step="1" value="3">
+<h3>Actions</h3>
+<button id="rp">&#9654; Replay</button>
+<button id="rec" class="bt" style="margin-top:5px">&#9679; Record WebM Video</button>
+<button id="png" class="bs" style="margin-top:5px">&#8681; Save PNG</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// GENESIS SEQUENCE: ∞ → ∞• → ∞⊙ = Reality
+// Circumpunct Framework by Ashman Roonz
+// ═══════════════════════════════════════════════════════════════
+
+var P = {seed:42, spd:1.0, glow:1.0, pump:0.5, apCount:7, depth:3};
+var GF=0, PH=0, PP=0, AP=[], CTA=0;
+var PD = [180, 300, 360, 240]; // phase durations (frames)
+var sk; // p5 instance ref
+var recorder=null, recordedChunks=[];
+
+var PI = [
+  {l:'\u221e', d:'Undifferentiated energy. No distinction. Pure E. No center, no edge, no here.'},
+  {l:'\u221e\u2022', d:'The infinite array of apertures. Every possible gate, every possible "here." Infinity in the act of becoming particular at every scale simultaneously.'},
+  {l:'\u221e\u2299', d:'Each aperture completing into a full circumpunct. Field and boundary closing around every gate. The foam of reality.'},
+  {l:'\u2299\u03bb', d:'You are not in the array. You are one element of \u221e\u2022, completed into \u221e\u2299, looking around at the rest of yourself.'}
+];
+
+function eoc(t){return 1-Math.pow(1-t,3)}
+function eic(t){return t*t*t}
+
+function genApertures(p){
+  AP=[];
+  var cx=p.width/2, cy=p.height/2;
+  for(var i=0;i<P.apCount;i++){
+    var a=p.random(p.TWO_PI), d=p.random(60,p.width*0.35);
+    AP.push({x:cx+p.cos(a)*d, y:cy+p.sin(a)*d, r:p.random(45,95), lv:0,
+      bf:Math.floor(p.random(40,140)), ph:p.random(p.TWO_PI)});
+  }
+  for(var lv=1;lv<P.depth;lv++){
+    var pars=AP.filter(function(a){return a.lv===lv-1});
+    for(var pi=0;pi<pars.length;pi++){
+      var pr=pars[pi], cc=Math.floor(p.random(2,5));
+      for(var ci=0;ci<cc;ci++){
+        var a=p.random(p.TWO_PI), d=pr.r*p.random(0.8,1.8);
+        AP.push({x:pr.x+p.cos(a)*d, y:pr.y+p.sin(a)*d,
+          r:pr.r*p.random(0.25,0.45), lv:lv,
+          bf:pr.bf+Math.floor(p.random(20,70)), ph:p.random(p.TWO_PI)});
+      }
+    }
+  }
+}
+
+function updUI(){
+  var info=PI[PH]||PI[3];
+  document.getElementById('pl').textContent=info.l;
+  document.getElementById('pd').textContent=info.d;
+  var tot=PD.reduce(function(a,b){return a+b},0);
+  document.getElementById('pf').style.width=Math.min(100,(GF/tot)*100)+'%';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DRAWING: Circumpunct
+// ═══════════════════════════════════════════════════════════════
+
+function drawCP(p,cx,cy,rad,prog,lv,ph,glow,pump){
+  var pc=p.sin(GF*0.04+ph);
+  // Boundary (3D, ○)
+  var bp=p.constrain((prog-0.5)*2,0,1);
+  if(bp>0){
+    var be=eoc(bp);
+    var sw=Math.max(0.5, 2.0/(lv+1));
+    // Outer glow
+    p.drawingContext.shadowBlur=12*be*glow;
+    p.drawingContext.shadowColor='rgba(180,160,130,'+0.3*be+')';
+    p.stroke(38,55,65*glow,55*be);
+    p.strokeWeight(sw);
+    p.noFill();
+    p.ellipse(cx,cy,rad*2*be);
+    p.drawingContext.shadowBlur=0;
+  }
+  // Field rings (2D, Φ)
+  var fp=p.constrain((prog-0.2)*1.6,0,1);
+  if(fp>0){
+    var fe=eoc(fp), rc=3+lv;
+    for(var i=1;i<=rc;i++){
+      var ratio=i/(rc+1), r=rad*2*ratio*fe;
+      var wave=p.sin(GF*0.05+ph+i*0.8)*pump*0.3;
+      var alpha=(1-Math.abs(ratio-0.5)*2)*25*fe*glow;
+      var hue=35+p.sin(GF*0.02+i+ph)*20;
+      p.stroke(hue,50,65,alpha*(1+wave));
+      p.strokeWeight(Math.max(0.3,0.8/(lv+1)));
+      p.noFill();
+      p.ellipse(cx,cy,r+wave*5,r-wave*3);
+    }
+  }
+  // Core aperture (0D, •)
+  var cp2=p.constrain(prog*2,0,1);
+  if(cp2>0){
+    var ce=eoc(cp2), cs=Math.max(2,rad*0.15)*ce;
+    var corePulse=1+pc*pump*0.2;
+    // Glow
+    p.drawingContext.shadowBlur=cs*3*glow;
+    p.drawingContext.shadowColor='rgba(220,180,80,'+0.6*ce+')';
+    p.fill(40,80,95,80*ce);
+    p.noStroke();
+    p.ellipse(cx,cy,cs*2.5*corePulse);
+    p.drawingContext.shadowBlur=0;
+    // Hot core
+    p.fill(45,90,100,90*ce);
+    p.ellipse(cx,cy,cs*2*corePulse);
+    p.fill(40,10,100,70*ce);
+    p.ellipse(cx,cy,cs*corePulse);
+  }
+}
+
+function drawSymbol(p,sym,prog){
+  var fi=Math.min(1,prog*4), fo=Math.max(0,1-(prog-0.8)*5);
+  var a=fi*fo;
+  if(a<=0)return;
+  p.push();
+  p.textAlign(p.CENTER,p.CENTER);
+  p.textFont('Lora');
+  p.textSize(60);
+  // Shadow
+  p.drawingContext.shadowBlur=20*a;
+  p.drawingContext.shadowColor='rgba(217,119,87,'+0.4*a+')';
+  p.fill(35,50,95,75*a);
+  p.text(sym,p.width/2,p.height/2);
+  p.drawingContext.shadowBlur=0;
+  p.pop();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 0: ∞ (Undifferentiated Energy)
+// ═══════════════════════════════════════════════════════════════
+
+function drawPhase0(p){
+  var t=GF*0.004, glow=P.glow, pp=PP;
+  var fadeIn=Math.min(1,pp*3);
+  // Flowing noise background using shapes (fast)
+  p.background(0,0,2);
+  p.noStroke();
+  var gridSize=20;
+  for(var y=0;y<p.height;y+=gridSize){
+    for(var x=0;x<p.width;x+=gridSize){
+      var n1=p.noise(x*0.003+t,y*0.003+t*0.7,t*0.5);
+      var n2=p.noise(x*0.006-t*0.3,y*0.006+t*0.4,t*0.3+100);
+      var val=n1*0.6+n2*0.4;
+      var bri=val*50*glow*(0.4+pp*0.6)*fadeIn;
+      var hue=32+val*18;
+      var sat=35-val*15;
+      p.fill(hue,sat,bri);
+      p.rect(x,y,gridSize,gridSize);
+    }
+  }
+  drawSymbol(p,'\u221e',pp);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 1: ∞• (Apertures Appearing)
+// ═══════════════════════════════════════════════════════════════
+
+function drawPhase1(p){
+  var t=GF*0.004, glow=P.glow, pump=P.pump, pp=PP;
+  var dim=Math.max(0.1,1-pp*0.8);
+  // Dimming noise field
+  p.noStroke();
+  var gridSize=20;
+  for(var y=0;y<p.height;y+=gridSize){
+    for(var x=0;x<p.width;x+=gridSize){
+      var n1=p.noise(x*0.003+t,y*0.003+t*0.7,t*0.5);
+      var val=n1;
+      var bri=val*45*glow*dim;
+      // Brighten near apertures
+      for(var ai=0;ai<AP.length;ai++){
+        var a=AP[ai];
+        if(a.lv>0)continue;
+        var ap=p.constrain((GF-a.bf)/60,0,1);
+        if(ap<=0)continue;
+        var d=p.dist(x+gridSize/2,y+gridSize/2,a.x,a.y);
+        var pull=a.r*(2+pump);
+        if(d<pull){
+          var inf=(1-d/pull)*ap;
+          bri+=inf*40*glow;
+        }
+      }
+      p.fill(33,38-val*10,p.constrain(bri,0,100));
+      p.rect(x,y,gridSize,gridSize);
+    }
+  }
+  // Draw aperture points (•)
+  for(var ai=0;ai<AP.length;ai++){
+    var a=AP[ai];
+    var ap=p.constrain((GF-a.bf)/80,0,1);
+    if(ap<=0)continue;
+    var ease=eoc(ap);
+    var pc=p.sin(GF*0.05+a.ph)*pump;
+    var ps=(3+a.r*0.05)*ease;
+    var glowR=ps*(4+pc*2)*glow;
+    // Glow halo
+    p.drawingContext.shadowBlur=glowR*2;
+    p.drawingContext.shadowColor='rgba(220,170,60,'+0.5*ease+')';
+    p.fill(40,80,95,70*ease);
+    p.noStroke();
+    p.ellipse(a.x,a.y,ps*3);
+    p.drawingContext.shadowBlur=0;
+    // Core
+    p.fill(45,90,100,90*ease);
+    p.ellipse(a.x,a.y,ps*2);
+    p.fill(40,15,100,80*ease);
+    p.ellipse(a.x,a.y,ps);
+  }
+  drawSymbol(p,'\u221e\u2022',pp);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 2: ∞⊙ (Completion into Circumpuncts)
+// ═══════════════════════════════════════════════════════════════
+
+function drawPhase2(p){
+  var t=GF*0.004, glow=P.glow, pump=P.pump, pp=PP;
+  // Dark background with subtle field
+  p.background(0,0,3);
+  p.noStroke();
+  var gridSize=30;
+  for(var y=0;y<p.height;y+=gridSize){
+    for(var x=0;x<p.width;x+=gridSize){
+      var n=p.noise(x*0.004+t,y*0.004-t*0.5);
+      p.fill(220,25,n*10*glow*pp);
+      p.rect(x,y,gridSize,gridSize);
+    }
+  }
+  // Draw circumpuncts (largest first)
+  var sorted=AP.slice().sort(function(a,b){return b.r-a.r});
+  for(var i=0;i<sorted.length;i++){
+    var a=sorted[i];
+    var completionStart=PD[0]+PD[1]+a.bf*0.3;
+    var lp=p.constrain((GF-completionStart)/100,0,1);
+    if(lp<=0)continue;
+    var ease=eoc(lp);
+    var pc=p.sin(GF*0.04+a.ph)*pump;
+    drawCP(p,a.x,a.y,a.r*(1+pc*0.08),ease,a.lv,a.ph,glow,pump);
+  }
+  // Field connections
+  if(pp>0.3){
+    var fa=(pp-0.3)/0.7;
+    p.stroke(35,45,55,12*fa*glow);
+    p.strokeWeight(0.5);
+    p.noFill();
+    for(var i=0;i<AP.length;i++){
+      for(var j=i+1;j<AP.length;j++){
+        var a=AP[i],b=AP[j];
+        if(a.lv!==b.lv)continue;
+        var d=p.dist(a.x,a.y,b.x,b.y);
+        if(d<(a.r+b.r)*2.5){
+          var wo=p.sin(GF*0.03+(a.ph+b.ph)*0.5)*5;
+          p.bezier(a.x,a.y,(a.x+b.x)/2-20+wo,(a.y+b.y)/2+20-wo,
+            (a.x+b.x)/2+20+wo,(a.y+b.y)/2-20-wo,b.x,b.y);
+        }
+      }
+    }
+  }
+  drawSymbol(p,'\u221e\u2299',pp);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 3: CODA (⊙λ; You)
+// ═══════════════════════════════════════════════════════════════
+
+function drawPhase3(p){
+  var t=GF*0.004, glow=P.glow, pump=P.pump, pp=PP;
+  // Background field
+  p.background(0,0,2);
+  p.noStroke();
+  var gridSize=30;
+  for(var y=0;y<p.height;y+=gridSize){
+    for(var x=0;x<p.width;x+=gridSize){
+      var n=p.noise(x*0.004+t,y*0.004-t*0.5);
+      p.fill(220,20,n*12*glow);
+      p.rect(x,y,gridSize,gridSize);
+    }
+  }
+  // All circumpuncts
+  var sorted=AP.slice().sort(function(a,b){return b.r-a.r});
+  for(var i=0;i<sorted.length;i++){
+    var a=sorted[i];
+    var pc=p.sin(GF*0.04+a.ph)*pump;
+    drawCP(p,a.x,a.y,a.r*(1+pc*0.06),1.0,a.lv,a.ph,glow*0.7,pump);
+  }
+  // Field connections
+  p.stroke(35,45,50,10*glow);
+  p.strokeWeight(0.5);p.noFill();
+  for(var i=0;i<AP.length;i++){
+    for(var j=i+1;j<AP.length;j++){
+      var a=AP[i],b=AP[j];
+      if(a.lv!==b.lv)continue;
+      var d=p.dist(a.x,a.y,b.x,b.y);
+      if(d<(a.r+b.r)*2.5){
+        var wo=p.sin(GF*0.03+(a.ph+b.ph)*0.5)*5;
+        p.bezier(a.x,a.y,(a.x+b.x)/2-20+wo,(a.y+b.y)/2+20-wo,
+          (a.x+b.x)/2+20+wo,(a.y+b.y)/2-20-wo,b.x,b.y);
+      }
+    }
+  }
+  // Highlight ⊙λ (the soul)
+  var soul=AP.find(function(a){return a.lv===0});
+  if(soul){
+    var pw=(p.sin(GF*0.06)+1)*0.5;
+    p.drawingContext.shadowBlur=soul.r*2*glow*pp;
+    p.drawingContext.shadowColor='rgba(220,160,60,'+0.4*pp+')';
+    p.fill(30,70,70,(15+pw*20)*glow*pp);
+    p.noStroke();
+    p.ellipse(soul.x,soul.y,soul.r*4);
+    p.drawingContext.shadowBlur=0;
+    drawCP(p,soul.x,soul.y,soul.r*(1+pw*0.05),1.0,0,soul.ph,glow*1.5,pump);
+  }
+  // Coda text overlay
+  CTA=Math.min(100,CTA+0.8*P.spd);
+  if(pp>0.15){
+    p.push();
+    p.textAlign(p.CENTER,p.CENTER);
+    p.textFont('Lora');
+    // Main symbol
+    p.textSize(44);
+    p.drawingContext.shadowBlur=20;
+    p.drawingContext.shadowColor='rgba(217,119,87,0.5)';
+    p.fill(35,55,90,CTA*0.85);
+    p.text('\u2299\u03bb',p.width/2,p.height/2-55);
+    p.drawingContext.shadowBlur=0;
+    // Lines
+    if(pp>0.4){
+      var ca=Math.min(CTA,(pp-0.4)*180);
+      p.textSize(15);
+      var lines=[
+        'You are not in the array.',
+        'You are one element of \u221e\u2022,',
+        'completed into \u221e\u2299,',
+        'looking around at the rest of yourself.'
+      ];
+      for(var i=0;i<lines.length;i++){
+        var la=Math.min(ca,Math.max(0,(pp-0.4-i*0.07)*250));
+        p.fill(35,25,85,la*0.65);
+        p.text(lines[i],p.width/2,p.height/2-5+i*26);
+      }
+    }
+    p.pop();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P5.JS SKETCH
+// ═══════════════════════════════════════════════════════════════
+
+new p5(function(p){
+  p.setup = function(){
+    var s = Math.min(window.innerWidth, window.innerHeight, 900);
+    var c = p.createCanvas(s, s);
+    c.parent('cc');
+    p.colorMode(p.HSB,360,100,100,100);
+    p.randomSeed(P.seed);
+    p.noiseSeed(P.seed);
+    genApertures(p);
+    p.background(0);
+    sk = p;
+  };
+
+  p.draw = function(){
+    GF += P.spd;
+    // Determine phase
+    var acc=0; PH=3; PP=1;
+    for(var i=0;i<4;i++){
+      if(GF<acc+PD[i]){PH=i;PP=(GF-acc)/PD[i];break;}
+      acc+=PD[i];
+    }
+    updUI();
+    // Draw
+    if(PH===0) drawPhase0(p);
+    else if(PH===1) drawPhase1(p);
+    else if(PH===2) drawPhase2(p);
+    else drawPhase3(p);
+  };
+
+  p.windowResized = function(){
+    var s = Math.min(window.innerWidth, window.innerHeight, 900);
+    p.resizeCanvas(s,s);
+  };
+});
+
+// ═══════════════════════════════════════════════════════════════
+// UI CONTROLS
+// ═══════════════════════════════════════════════════════════════
+
+function restart(){
+  GF=0;CTA=0;
+  sk.randomSeed(P.seed);sk.noiseSeed(P.seed);
+  genApertures(sk);sk.background(0);
+}
+
+document.getElementById('ss').oninput=function(){
+  P.seed=+this.value;document.getElementById('sv').textContent=this.value;restart();
+};
+document.getElementById('bp').onclick=function(){
+  P.seed=Math.max(1,P.seed-1);document.getElementById('ss').value=P.seed;
+  document.getElementById('sv').textContent=P.seed;restart();
+};
+document.getElementById('bn').onclick=function(){
+  P.seed++;document.getElementById('ss').value=P.seed;
+  document.getElementById('sv').textContent=P.seed;restart();
+};
+document.getElementById('brd').onclick=function(){
+  P.seed=Math.floor(Math.random()*999)+1;document.getElementById('ss').value=P.seed;
+  document.getElementById('sv').textContent=P.seed;restart();
+};
+document.getElementById('sps').oninput=function(){
+  P.spd=+this.value;document.getElementById('spv').textContent=(+this.value).toFixed(1)+'x';
+};
+document.getElementById('gs').oninput=function(){
+  P.glow=+this.value;document.getElementById('gv').textContent=this.value;
+};
+document.getElementById('ps').oninput=function(){
+  P.pump=+this.value;document.getElementById('pv').textContent=this.value;
+};
+document.getElementById('as').oninput=function(){
+  P.apCount=+this.value;document.getElementById('av').textContent=this.value;restart();
+};
+document.getElementById('ds').oninput=function(){
+  P.depth=+this.value;document.getElementById('dv').textContent=this.value;restart();
+};
+document.getElementById('rp').onclick=restart;
+document.getElementById('png').onclick=function(){
+  sk.saveCanvas('genesis-'+P.seed,'png');
+};
+
+// ═══════════════════════════════════════════════════════════════
+// VIDEO RECORDING (WebM via MediaRecorder)
+// ═══════════════════════════════════════════════════════════════
+
+document.getElementById('rec').onclick=function(){
+  if(recorder && recorder.state==='recording'){
+    recorder.stop();
+    return;
+  }
+  // Get canvas element
+  var canvas = document.querySelector('#cc canvas');
+  if(!canvas){alert('Canvas not found');return;}
+
+  recordedChunks=[];
+  var stream = canvas.captureStream(30);
+  recorder = new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9',videoBitsPerSecond:5000000});
+
+  recorder.ondataavailable=function(e){
+    if(e.data.size>0) recordedChunks.push(e.data);
+  };
+
+  recorder.onstop=function(){
+    var blob=new Blob(recordedChunks,{type:'video/webm'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;a.download='genesis-sequence-'+P.seed+'.webm';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},100);
+    document.getElementById('rec').textContent='\u25cf Record WebM Video';
+    document.getElementById('rec-indicator').style.display='none';
+  };
+
+  // Restart and record
+  restart();
+  recorder.start();
+  document.getElementById('rec').textContent='\u25a0 Stop Recording';
+  document.getElementById('rec-indicator').style.display='flex';
+
+  // Auto-stop at end of sequence
+  var totalFrames=PD.reduce(function(a,b){return a+b},0);
+  var durationMs=(totalFrames/P.spd/60)*1000+2000; // add 2s buffer
+  setTimeout(function(){
+    if(recorder && recorder.state==='recording'){
+      recorder.stop();
+    }
+  },durationMs);
+};
+</script>
+</body>
+</html>
