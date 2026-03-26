@@ -485,13 +485,94 @@ EMERGENCE (☀︎): dimensional expansion, 0D → 3D
 
 <p>The Hull cutoff condition provides another parallel. In a magnetron, there is a critical balance between the DC electric field and the magnetic field where electrons just barely fail to reach the anode, and oscillation occurs at this threshold. The device should have an analogous sweet spot: a coil drive amplitude where the ball is levitated but just barely constrained, maximizing its freedom to couple to the cavity's natural modes. Too much drive = forced motion (◐ → 1); too little = no coupling (◐ → 0). The optimum is the balance point (◐ = 0.5).</p>
 
+<h3>Scale Bridging: Phase and Amplitude</h3>
+
+<p>The central engineering problem is this: the coils operate at macroscopic scales (Hz to kHz), but if Φ is nested ⊙s all the way down, the interesting structure lives at scales the coils cannot directly reach. How does a macroscopic driver couple to microscopic structure?</p>
+
+<p>Cymatics provides the answer. When you drive a Chladni plate at a fundamental frequency, you do not only get the fundamental. You get harmonics. The plate's response contains frequencies the driver never put in, because the plate's own structure has resonant modes at multiples of the drive. Energy at the fundamental cascades into higher harmonics automatically. The plate is a scale bridge: push at one scale, and the structure itself carries energy to other scales.</p>
+
+<p>The cavity does the same thing. Drive the ball at f₁, and the cavity's eigenmode structure generates harmonics at 2f₁, 3f₁, and beyond. Each harmonic is a shorter wavelength, which means it interacts with finer structure inside the cavity. The energy climbs the scale ladder by itself, through resonance. You do not have to drive at every scale; you have to drive at a scale that couples to the cascade.</p>
+
+<p>There are exactly two parameters that control this coupling across scales: <strong>phase</strong> and <strong>amplitude</strong>.</p>
+
+<div class="card">
+<div class="card-title">The Two Scale Controls</div>
+<table>
+<tr><th>Parameter</th><th>What It Does</th><th>Scale Effect</th><th>Framework Mapping</th></tr>
+<tr>
+<td class="val">Phase</td>
+<td>Timing alignment between driver and target scale</td>
+<td>Determines <em>which</em> scales receive energy. Phase match = constructive coupling (energy flows into that scale). Phase mismatch = destructive (energy blocked from that scale).</td>
+<td class="t-field">Φ: the relationship between surfaces. Phase is how two ⊙s at different scales synchronize their pump cycles.</td>
+</tr>
+<tr>
+<td class="val">Amplitude</td>
+<td>Strength of the driving signal</td>
+<td>Determines <em>how deep</em> the harmonic cascade reaches. Low amplitude = only the first few harmonics excited (shallow scale penetration). High amplitude = cascade extends to finer and finer harmonics (deep scale penetration).</td>
+<td class="t-bound">○: the boundary condition. Amplitude sets the energy budget available for the cascade.</td>
+</tr>
+</table>
+</div>
+
+<p>Phase selects the channel. Amplitude fills it. Together they determine how energy passes between scales of nested ⊙s.</p>
+
+<p>This is why the coil phase relationships matter so much. The four equatorial coils at 0°, 90°, 180°, 270° create a rotating field. That rotation is a phase structure. Different phase relationships between the equatorial and axial drives create different coupling patterns: some phase ratios open channels between scales (energy cascades freely into higher harmonics), while others close them (the cascade is suppressed). The framework predicts that f₁/f₂ = φ² opens the channel maximally, while f₁/f₂ = φ closes it. These are not arbitrary numbers; they are specific phase alignment conditions between the spin mode and the vibration mode, and they determine whether the two modes constructively couple their harmonic cascades or destructively cancel them.</p>
+
+<h3>The Taper as Scale Filter</h3>
+
+<p>The teardrop taper adds a spatial dimension to the scale selection. As the geometry narrows toward the tip, the wavelengths that can fit inside get shorter. Longer wavelengths (lower harmonics, bigger ⊙s) get cut off as the taper narrows; they simply cannot propagate in a channel smaller than their wavelength. Shorter wavelengths (higher harmonics, smaller ⊙s) survive further into the taper. At the aperture, only the finest-scale energy that the cavity generated can pass through.</p>
+
+<p>The taper is a physical low-pass filter on scale (high-pass on frequency). It automatically selects for progressively deeper levels of the nested ⊙ hierarchy as you approach the tip. The aperture size sets the cutoff: a wider aperture lets bigger-scale (lower-harmonic) energy through; a narrower aperture forces everything through finer scales.</p>
+
+<div class="card">
+<div class="card-title">Scale Flow Through the Device</div>
+<pre>
+COILS (macroscopic driver)
+  │
+  │  Phase alignment selects which scales couple.
+  │  Amplitude determines how deep the cascade goes.
+  │
+  ▼
+CAVITY (harmonic generator)
+  │
+  │  Eigenmode structure creates harmonics: f, 2f, 3f, ...
+  │  Energy cascades from big ⊙ to smaller ⊙s automatically.
+  │
+  ▼
+TAPER (scale filter)
+  │
+  │  Geometry narrows → long wavelengths cut off.
+  │  Only high harmonics (fine-scale ⊙s) survive to the tip.
+  │
+  ▼
+APERTURE (scale gate)
+  │
+  │  0D: maximum compression. Finest scale the geometry permits.
+  │  Phase coherence at this scale determines what gets through.
+  │
+  ▼
+EMISSION (scale expansion)
+
+  Energy that passed through the gate re-expands: 0D → 1D → 2D → 3D.
+  Output contains the spectral signature of every scale it touched.
+</pre>
+</div>
+
+<h3>Testable Consequence: Spectral Cascade</h3>
+
+<p>This gives a concrete prediction: the output spectrum should contain frequencies significantly higher than anything the coils put in. Not just the first few harmonics of the drive frequency, but a cascade extending well above, because the cavity and taper are bridging energy to finer and finer scales.</p>
+
+<p>Furthermore, the harmonic content of the output should increase as the aperture narrows. A wide aperture lets low-harmonic (large-scale) energy through mostly unchanged. A narrow aperture forces the energy through deeper scale compression, producing richer high-frequency content in the output. If you plot the output FFT at each aperture size, you should see the spectral centroid shift upward as the aperture closes.</p>
+
+<p>Phase relationships between the coils should also affect the spectral cascade. At the predicted optimal ratio (f₁/f₂ = φ²), the harmonic cascade should extend deeper (more high-frequency content in the output) because the two modes are constructively coupling their harmonics. At the predicted forbidden ratio (f₁/f₂ = φ), the cascade should be truncated (less high-frequency content) because the modes are destructively interfering at the scale-bridging step.</p>
+
 <h3>What the Device Tests</h3>
 
-<p>The cymatics framing sharpens what the experiments are actually measuring. Experiment 1 (frequency sweep) is literally cymatics: drive at varying frequencies, observe which ones produce clean, strong output at the tip versus noise or competing modes. The resonance map is a map of the cavity's eigenmode structure. Experiment 2 (φ² ratio test) asks whether the framework's predicted frequency relationships correspond to specific cymatic mode couplings. And Experiment 4 (characterize the output) asks the deepest question: does the dimensional gate actually convert energy across scales, or does it merely concentrate it?</p>
+<p>The cymatics framing sharpens what the experiments are actually measuring. Experiment 1 (frequency sweep) is literally cymatics: drive at varying frequencies, observe which ones produce clean, strong output at the tip versus noise or competing modes. The resonance map is a map of the cavity's eigenmode structure. Experiment 2 (φ² ratio test) asks whether the framework's predicted frequency relationships correspond to specific phase alignment conditions that open or close channels between scales. Experiment 4 (characterize the output) now has a specific spectral question: does the output contain harmonic content above the drive frequency, and does the depth of this cascade depend on aperture size and coil phase ratios in the way the framework predicts?</p>
 
 <div class="callout">
 <div class="label">The Core Claim</div>
-<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">The teardrop cavity with a driven resonator and variable aperture is a macroscopic implementation of ⊛ → i → ☀︎. The coils create cymatic patterns in the electromagnetic field (Φ). The teardrop geometry forces those patterns to converge (⊛). The aperture is the gate where dimensional compression reaches its limit (i). What emerges on the other side (☀︎) has passed through a scale transformation. The device does not merely concentrate energy; it changes the dimensional character of the energy by passing it through a physical aperture that implements the framework's convergence-rotation-emergence cycle.</p>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">The teardrop cavity with a driven resonator and variable aperture is a macroscopic implementation of ⊛ → i → ☀︎. The coils create cymatic patterns in the electromagnetic field (Φ). Phase and amplitude are the two controls that determine how energy couples across scales of nested ⊙s. The cavity's eigenmode structure generates a harmonic cascade that bridges macroscopic drive to microscopic field structure. The taper filters this cascade by scale. The aperture is the gate where dimensional compression reaches its limit (i). What emerges on the other side (☀︎) carries the spectral signature of every scale it passed through. The device does not merely concentrate energy; it bridges scales, using phase to select which levels of nested Φ participate and amplitude to determine how deep the coupling reaches.</p>
 </div>
 
 </section>
@@ -1032,6 +1113,42 @@ Compare to baseline (device off, same sensors, same position).
 Any channel that shows signal above baseline is real output.
 </pre>
 
+<h3>Experiment 5: Spectral Cascade (Scale Bridging)</h3>
+<pre>
+Purpose: Test whether the cavity bridges energy across scales
+         via harmonic cascade, and whether phase/amplitude control it
+
+Procedure:
+  1. Set Mode 4 at optimal frequencies from Exp 1-2
+  2. At EACH aperture size (0.5mm, 1mm, 2mm, 3mm, 5mm, 8mm, 12mm, open):
+     a. Record pickup coil + microphone for 60 seconds
+     b. Compute FFT of each channel
+     c. Measure: highest frequency with signal above noise floor
+     d. Measure: spectral centroid (energy-weighted mean frequency)
+     e. Measure: harmonic count (number of distinct peaks above noise)
+  3. Repeat at f₁/f₂ = φ² (predicted optimal) and f₁/f₂ = φ (predicted forbidden)
+  4. Repeat at 3 amplitude levels: low (25%), medium (50%), high (100%)
+
+Predictions:
+  - Output FFT contains frequencies well above drive frequency
+    (harmonics the coils never put in = cavity acting as scale bridge)
+  - Spectral centroid shifts UPWARD as aperture narrows
+    (smaller aperture = deeper scale compression = richer harmonics)
+  - At f₁/f₂ = φ², harmonic cascade extends deeper
+    (more high-frequency content; phase alignment opens scale channel)
+  - At f₁/f₂ = φ, harmonic cascade is truncated
+    (less high-frequency content; phase misalignment closes scale channel)
+  - Higher amplitude = deeper cascade (more harmonics above noise)
+    (amplitude sets how far down the scale ladder energy can reach)
+
+Analysis:
+  Plot spectral centroid vs aperture size at each phase ratio.
+  If the curves separate (φ² above φ at all aperture sizes),
+  phase is controlling scale coupling independently of geometry.
+  That is the novel result: phase selects which scales participate,
+  aperture selects the depth, amplitude powers the cascade.
+</pre>
+
 <h3>Data Logging</h3>
 <pre>
 ESP32 samples ADC channels at ~1 kHz
@@ -1094,12 +1211,36 @@ Post-processing: FFT each channel, plot spectra
 <td>Experiment 4</td>
 <td>Strongest output channel is NOT EM (since input is EM)</td>
 </tr>
+<tr>
+<td>8</td>
+<td>Output spectrum extends well above drive frequency (scale bridging via harmonic cascade)</td>
+<td>Experiment 5</td>
+<td>FFT shows significant energy at frequencies &gt;5× the drive frequency</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Spectral centroid shifts upward as aperture narrows (aperture = scale depth selector)</td>
+<td>Experiment 5</td>
+<td>Monotonic increase in spectral centroid with decreasing aperture diameter</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Phase ratio controls harmonic depth independently of aperture (phase = scale channel selector)</td>
+<td>Experiment 5</td>
+<td>At φ², spectral centroid is higher than at φ for the same aperture size and amplitude</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Amplitude controls cascade depth (amplitude = scale penetration)</td>
+<td>Experiment 5</td>
+<td>Higher drive amplitude → more harmonics above noise floor at all aperture sizes</td>
+</tr>
 </table>
 </div>
 
 <div class="callout">
 <div class="label">What Success Looks Like</div>
-<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Prediction 3 is the key test. If the golden ratio frequency relationship produces a measurable coupling dip in a physical device with a levitated resonator, that's a novel result connecting geometric number theory to electromagnetic transducer design. It would be the first experimental evidence for the Circumpunct Framework's forbidden frequency prediction.</p>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Prediction 3 remains the key binary test: does the golden ratio frequency relationship produce a measurable coupling dip? But Prediction 10 is the deeper result. If the phase ratio between coil drives controls the depth of the harmonic cascade (spectral centroid at φ² > spectral centroid at φ, independently of aperture size and amplitude), that demonstrates phase-controlled scale bridging: the ability to open and close channels between macroscopic and microscopic structure using nothing but timing relationships. That would be a novel result with no precedent in standard electromagnetic cavity theory.</p>
 </div>
 
 <p>Even if most predictions fail, the resonance map (Prediction 1) is guaranteed to show structure, because every cavity has resonant modes. The question is whether the structure matches the framework's predictions, or whether it matches only standard Helmholtz and electromagnetic resonance theory with no special role for φ.</p>
