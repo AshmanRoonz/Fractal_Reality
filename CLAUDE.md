@@ -79,6 +79,7 @@ These are phase states of energy, not fractal/Hausdorff dimensions. They describ
 
 ### Φ = E and i as Phase of Energy
 
+- **∞D = E. Everything else is just E in different forms.** Every dimension, every structure, every particle, every field: energy wearing a different geometric costume. Nothing is added as you descend the dimensional ladder; something is limited. The lens limits light; that is how it forms an image.
 - **Φ = E**: Field IS energy. This is an ontological identity, not a dimensional equation. What we call "field" and what we call "energy" are the same substance encountered at different scales: from the boundary (3D), you measure energy as a quantity; from the surface (2D), you see Φ as configuration. There is no empty space and no smallest particle; the field is structure at scales too small for the boundary to resolve. Dimensional analysis is a boundary-level tool (it presupposes 3D measurement); it cannot reach behind the boundary to critique what exists before measurement.
 - **i is the phase of energy**: the rotation operator that cycles energy between convergent and emergent states.
 - **𝒫 = E / (i · t)**: Power = energy divided by its phase and time. Not analogy; this IS the equation.

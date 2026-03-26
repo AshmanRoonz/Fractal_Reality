@@ -211,7 +211,7 @@ The complete circumpunct. The structure of reality itself.
 
 | Dim | Type | Symbol | Name | Description | Core Equations |
 |:---:|:----:|:------:|:-----|:------------|:---------------|
-| **∞D** | Ground | λΦ∞ | **Infinite Field** | All degrees of freedom = none particular; contains all possible configurations; the source from which dimensions emerge; 0 = ∞ at field level; **Φ = E** (field IS energy) | E = mc², ℋ (Hilbert space), \|ψ⟩ ∈ ℋ |
+| **∞D** | Ground | λΦ∞ | **Infinite Field** | ∞D = E. Everything else is E in different forms. All degrees of freedom = none particular; contains all possible configurations; the source from which dimensions emerge; 0 = ∞ at field level; **Φ = E** (field IS energy, ontological identity; there is no empty space and no smallest particle) | E = mc², ℋ (Hilbert space), \|ψ⟩ ∈ ℋ |
 | **0.5D** | Process | **•** | **Aperture / Soul** | First localization from infinite; the tunnel opening; singularity that *causes* tunneling; **i lives here** | i² = −1, Å(β) = exp(iπβ), Å(½) = i |
 | **1D** | Structure | i(t) | **Timeline / String** | Soul through time; tunnel through which power flows | γ: ℝ → M, P = dE/dt |
 | **1.5D** | Process | ; | **Spatial Branching** | Power lines fractally splitting; builds surfaces | D = 1 + β, K(r) ∝ r^β, H(½) = 1 bit |
