@@ -2,14 +2,14 @@
 
 ## Abstract
 
-We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental structural relationship Φ(•, ○) unifies boundary (○), field (Φ), and aperture (•). The unified equation ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○)) marries this structure with a three-phase process through the master equation:
+We present the circumpunct framework as a candidate Theory of Everything, reformulated for working physicists. The fundamental structural relationship Φ(•, ○) unifies boundary (○), field (Φ), and aperture (•). The unified equation ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○)) marries this structure with a three-phase process through the pump cycle equation:
 
 ```
 Φ∞ →⊛→ iλ∞ →☀︎→ ⊙λ∞     (Forward: Field → Aperture → Form)
 ⊙λ∞ →⊛→ iλ∞ →☀︎→ Φ∞     (Return: Form → Aperture → Field)
 ```
 
-where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denotes emergence (aperture → past, radiation). The notation Φ(•, ○) is the *structural* equation: Φ is the 2D relational surface mediating aperture and boundary. Φ is not the verb; Φ is structure. The process triad (☀︎ ∘ i ∘ ⊛) is the verb. The i-rotation is the whole ⊙ cycling, not a property of • alone. The tensor product ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_• remains the correct Hilbert-space formalization for quantum theory. We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 corresponds to D=1.5—the fractal dimension of Brownian motion, a Mandelbrot fact (theorem, not fit).
+where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denotes emergence (aperture → past, radiation). The notation Φ(•, ○) is the *structural* equation: Φ is the 2D relational surface mediating aperture and boundary. Φ is not the verb; Φ is structure. The process triad (☀︎ ∘ i ∘ ⊛) is the verb. The i-rotation is the whole ⊙ cycling, not a property of • alone. The tensor product ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_• remains the correct Hilbert-space formalization for quantum theory. We show explicitly how: (i) the local quantum limit recovers the Schrödinger equation from kernel convolution, (ii) the geometric limit produces Einstein equations from coarse-grained braid structure, and (iii) the balance condition ◐=1/2 corresponds to D=1.5, the fractal dimension of Brownian motion, a Mandelbrot fact (theorem, not fit).
 
 **On process dimensions:** The framework builds on Mandelbrot's proven mathematical foundation: fractional (Hausdorff) dimensions are real and measurable, describing process traces rather than static objects. The specific D value varies by system (coastlines ≈1.25, Brownian motion =1.5 exactly, DLA clusters ≈1.7); this variation is expected. The framework predicts that balanced aperture dynamics produce D≈1.5; empirical examples illustrate this principle but are not load-bearing evidence for it.
 
@@ -42,11 +42,11 @@ where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denote
   - [2.7 Ratchet Operators](#27-ratchet-operators)
   - [2.8 The Ethereal Tail: Phase-Locked Hierarchies](#28-the-ethereal-tail-phase-locked-hierarchies)
 - [3. Core Postulates (Physics Version)](#3-core-postulates-physics-version)
-  - [Postulate 1 — Circumpunct Kinematics](#postulate-1--circumpunct-kinematics)
-  - [Postulate 2 — Process Evolution](#postulate-2--process-evolution)
-  - [Postulate 3 — Aperture Balance and the Imaginary Unit](#postulate-3--aperture-balance-and-the-imaginary-unit)
-  - [Postulate 4 — Local Quantum Limit (Unitary Evolution)](#postulate-4--local-quantum-limit-unitary-evolution)
-  - [Postulate 5 — Geometric / GR Limit](#postulate-5--geometric--gr-limit)
+  - [Postulate 1: Circumpunct Kinematics](#postulate-1--circumpunct-kinematics)
+  - [Postulate 2: Process Evolution](#postulate-2--process-evolution)
+  - [Postulate 3: Aperture Balance and the Imaginary Unit](#postulate-3--aperture-balance-and-the-imaginary-unit)
+  - [Postulate 4: Local Quantum Limit (Unitary Evolution)](#postulate-4--local-quantum-limit-unitary-evolution)
+  - [Postulate 5: Geometric / GR Limit](#postulate-5--geometric--gr-limit)
   - [3.6 Dictionary to Standard Formalisms](#36-dictionary-to-standard-formalisms)
 - [4. The Power Equation and Its Physical Limits](#4-the-power-equation-and-its-physical-limits)
   - [4.0 The Generalized Power Equation](#40-the-generalized-power-equation)
@@ -107,8 +107,8 @@ where ⊛ denotes convergence (future → aperture, gathering) and ☀︎ denote
 The circumpunct framework models the universe as a *whole-with-parts* object:
 
 ```
-Structure: Φ(•, ○)          (Φ is the 2D relational surface — not the verb)
-Process:   (☀︎ ∘ i ∘ ⊛)      (convergence, rotation, emergence — THIS is the verb)
+Structure: Φ(•, ○)          (Φ is the 2D relational surface; not the verb)
+Process:   (☀︎ ∘ i ∘ ⊛)      (convergence, rotation, emergence; THIS is the verb)
 Unified:   ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))    (process acts on structure)
 ℋ_⊙ = ℋ_○ ⊗ ℋ_Φ ⊗ ℋ_•     (Hilbert space: tensor product for quantum theory)
 ```
@@ -135,9 +135,9 @@ This formulation strips away metaphors and focuses on spaces, operators, and lim
 
 Before proceeding, we establish a key ontological distinction proven by Mandelbrot:
 
-> **Integer dimensions describe static structures—line (1D), surface (2D), and volume (3D). The ground (∞D) is the infinite field from which dimensions emerge (0 = ∞ at field level). Fractional dimensions describe what processes leave behind: coastlines, bronchi, lightning, vascular networks. Mandelbrot proved this intermediate space is real and measurable.**
+> **Integer dimensions describe static structures: line (1D), surface (2D), and volume (3D). The ground (∞D) is the infinite field from which dimensions emerge (0 = ∞ at field level). Fractional dimensions describe what processes leave behind: coastlines, bronchi, lightning, vascular networks. Mandelbrot proved this intermediate space is real and measurable.**
 
-This is not speculation—it is rigorous mathematics:
+This is not speculation; it is rigorous mathematics:
 - **Hausdorff dimension formalism** is standard measure theory
 - **Brownian motion's D=1.5** is a theorem (not a fit)
 - **Non-integer dimensions** are not controversial in mathematics
@@ -180,8 +180,8 @@ In the circumpunct framework, mass is fundamentally a property of the 2D boundar
 THE SURFACE MASS PRINCIPLE:
 
     The body is a surface Σ (the ○ boundary) embedded in ℝ³.
-    What we call "mass" is the resistance of this surface to acceleration—
-    the inertia of the interface where field Φ, soul tunnel P, and external world meet.
+    What we call "mass" is the resistance of this surface to acceleration;
+    this is the inertia of the interface where field Φ, soul tunnel P, and external world meet.
 
 FORMALLY:
 
@@ -217,7 +217,7 @@ CORE PRINCIPLE:
     Pattern:    Φₙ becomes the ground for •ₙ₊₁
 ```
 
-**Layer I — SPATIAL CIRCUMPUNCT (⊙_space): Dimensions ∞D → 3D**
+**Layer I: SPATIAL CIRCUMPUNCT (⊙_space); Dimensions ∞D → 3D**
 
 The first complete circumpunct. The structure of space itself.
 
@@ -266,7 +266,7 @@ DERIVED CORRESPONDENCES:
     B(x) ∝ √(−g_tt)               (braid density ~ gravitational redshift)
 
     String theory (10D/11D)  =  The recursion viewed from far enough out
-    "Extra dimensions"       =  Not compactified loops — nested circumpuncts
+    "Extra dimensions"       =  Not compactified loops; nested circumpuncts
 ```
 
 ### 1.3 Field Space (Φ)
@@ -591,9 +591,9 @@ THREE-STAGE ARCHITECTURE:
                       transform
                         space
 
-    Stage 1: INPUT VALVE (⊛)  — Regulates convergence rate
-    Stage 2: TRANSFORM SPACE (i) — 90° rotation at β = 0.5
-    Stage 3: OUTPUT VALVE (☀︎) — Regulates emergence rate
+    Stage 1: INPUT VALVE (⊛)  - Regulates convergence rate
+    Stage 2: TRANSFORM SPACE (i) - 90° rotation at β = 0.5
+    Stage 3: OUTPUT VALVE (☀︎) - Regulates emergence rate
 ```
 
 **Chamber State Equation:**
@@ -630,9 +630,9 @@ SCALE n−1:   [⊛ₙ₋₁] → [iₙ₋₁ CHAMBER] → [☀︎ₙ₋₁]
 ```
 
 This infinite depth provides:
-1. **Capacitance** — Room for fluctuations
-2. **Cross-scale pressure flow** — Excess drains inward or bubbles outward
-3. **Why β = 0.5 everywhere** — Only balance maintains the infinite stack
+1. **Capacitance**: Room for fluctuations
+2. **Cross-scale pressure flow**: Excess drains inward or bubbles outward
+3. **Why β = 0.5 everywhere**: Only balance maintains the infinite stack
 
 ```
     ╔═══════════════════════════════════════════════════════════════════╗
@@ -650,7 +650,7 @@ This infinite depth provides:
 
 For reference: Brownian motion has D=2; ballistic motion has D=1. The circumpunct fixed point corresponds to D=1.5.
 
-**Note on Hurst exponent:** The Hurst exponent H_H mentioned below is unrelated to the balance parameter—it is a standard measure of fractional Brownian motion.
+**Note on Hurst exponent:** The Hurst exponent H_H mentioned below is unrelated to the balance parameter; it is a standard measure of fractional Brownian motion.
 
 **Connection to fractional Brownian motion:** For fractional Brownian motion with Hurst exponent H_H, the mean squared displacement scales as ⟨r²(t)⟩ ∝ t^(2H_H). Comparing with our definition ⟨r²(t)⟩ ∝ t^(2/D) gives an effective walk dimension:
 
@@ -660,7 +660,7 @@ D = 1 / H_H
 
 Thus D = 1.5 corresponds to H_H = 2/3, i.e. superdiffusive but sub-ballistic motion (faster than Brownian H_H = 1/2, slower than ballistic H_H = 1).
 
-**Kernel derivation from balance:** The kernel exponent is not a free parameter—it follows from the balance condition. For power-law kernels K(r) ∝ r^α, the exponent α equals the balance parameter ◐:
+**Kernel derivation from balance:** The kernel exponent is not a free parameter; it follows from the balance condition. For power-law kernels K(r) ∝ r^α, the exponent α equals the balance parameter ◐:
 
 ```
 α = ◐ = 0.5
@@ -674,7 +674,7 @@ Thus D = 1.5 corresponds to H_H = 2/3, i.e. superdiffusive but sub-ballistic mot
 | 1 | r^1 = linear | Weight spreads linearly with distance (1D) |
 | 0.5 | r^0.5 = √r | Balanced intermediate behavior (0.5D) |
 
-At ◐ = 0.5, the aperture's process dimension (the active cycling rate) is "halfway" between a point (0D; pure concentration) and a line (1D; pure spread). The kernel r^◐ = r^0.5 is the spatial signature of this balanced process—the radial profile that implements the balance between concentration and spread. Note: the aperture's structural dimension is always 0D + 1D (singularity plus worldline); the 0.5D value describes its dynamic opening rate.
+At ◐ = 0.5, the aperture's process dimension (the active cycling rate) is "halfway" between a point (0D; pure concentration) and a line (1D; pure spread). The kernel r^◐ = r^0.5 is the spatial signature of this balanced process; this is the radial profile that implements the balance between concentration and spread. Note: the aperture's structural dimension is always 0D + 1D (singularity plus worldline); the 0.5D value describes its dynamic opening rate.
 
 **Correspondence chain:**
 ```
@@ -741,7 +741,7 @@ The 90° rotation is geometrically optimal because it:
 2. Maximizes Shannon entropy (equal probability of convergence vs emergence)
 3. Enables fractal branching (redirects flow into perpendicular mode)
 
-**Generalized master equation:**
+**Generalized pump cycle equation:**
 
 ```
 Original:    Φ' = ☀︎ ∘ i ∘ ⊛[Φ]
@@ -750,13 +750,13 @@ Generalized: Φ' = ☀︎ ∘ Å(◐) ∘ ⊛[Φ]
 
 At ◐ = 0.5: Å(0.5) = exp(iπ/2) = i
 
-**Therefore:** The canonical "i" in the master equation is literally the 90° aperture rotation at optimal balance. The imaginary unit emerges from aperture geometry, not imposed from outside.
+**Therefore:** The canonical "i" in the pump cycle equation is literally the 90° aperture rotation at optimal balance. The imaginary unit emerges from aperture geometry, not imposed from outside.
 
 **Schrödinger connection:** Time evolution in QM has form U(Δt) = exp(-iEΔt/ℏ). Aperture rotation has form Å(◐) = exp(iπ◐). Identifying θ(t) = π◐(t) = Et/ℏ gives:
 
 - **Energy is the rotation rate of the aperture clock**
 - **ℏ is the conversion factor** (phase to energy)
-- **The "i" in iℏ∂/∂t is Å(0.5)** — the 90° rotation at optimal balance
+- **The "i" in iℏ∂/∂t is Å(0.5)**: the 90° rotation at optimal balance
 
 **Critical Insight: Origin of π**
 
@@ -766,7 +766,7 @@ At ◐ = 0.5: Å(0.5) = exp(iπ/2) = i
 - Two steps: U² has phase i² = -1 = e^{iπ}
 - Therefore: π is the two-level signature, structurally implied by time evolution
 
-This means π is not a gauge field effect or a fitted parameter—it emerges from the requirement that the system evolves through two aperture cycles.
+This means π is not a gauge field effect or a fitted parameter; it emerges from the requirement that the system evolves through two aperture cycles.
 
 ### 2.5 Clarifying i vs i(t)
 
@@ -828,7 +828,7 @@ The phase transmission coefficient between two interacting apertures is:
 └─────────────────────────────┘
 ```
 
-This is **not an assumption**—it follows from the existing circumpunct postulates (see §4.3 for derivation).
+This is **not an assumption**; it follows from the existing circumpunct postulates (see §4.3 for derivation).
 
 Physical meaning:
 - Δφ ≈ 0 → T ≈ 1: maximum transmission, apertures "open together"
@@ -862,7 +862,7 @@ such that for transition rates k:
 The forward rate exceeds the reverse rate.
 ```
 
-**Connection to the aperture operator:** The circumpunct cycle Φ' = ☀︎ ∘ i ∘ ⊛[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse—this asymmetry is the microscopic origin of ratcheting.
+**Connection to the aperture operator:** The circumpunct cycle Φ' = ☀︎ ∘ i ∘ ⊛[Φ] breaks detailed balance through the aperture operator i. The 90° rotation is not its own inverse; this asymmetry is the microscopic origin of ratcheting.
 
 **CP violation as primordial ratchet:**
 
@@ -994,12 +994,12 @@ More phase-locking → longer tail → more integrated experience.
 
 ## 3. Core Postulates (Physics Version)
 
-### Postulate 1 — Circumpunct Kinematics (Compositional Wholeness)
+### Postulate 1: Circumpunct Kinematics (Compositional Wholeness)
 
 **P1.** The kinematical state of any physical system is a circumpunct configuration:
 
 ```
-Structure: Φ(•, ○)                  (Φ is the 2D relational surface — not the verb)
+Structure: Φ(•, ○)                  (Φ is the 2D relational surface; not the verb)
 Process:   (☀︎ ∘ i ∘ ⊛)              (THIS is the verb)
 Unified:   ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
 ⊙ = (○, Φ, •) ∈ 𝓑 × 𝓕 × 𝓐       (Configuration space)
@@ -1008,7 +1008,7 @@ Unified:   ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○))
 
 The structure Φ(•, ○) is the noun; the process (☀︎ ∘ i ∘ ⊛) is the verb. The triad is irreducible: ⊙ ≠ ○ + Φ + • (sum). Two primitives (• and Φ), one generated result (○). A 4th primitive would need Φ-mediation to function, therefore reduces to Φ.
 
-### Postulate 2 — Process Evolution
+### Postulate 2: Process Evolution
 
 **P2.** Time evolution in a given frame is implemented by a three-stage linear operator:
 
@@ -1032,7 +1032,7 @@ where V_in/out are additional validation filters.
 
 **Note on validation operators:** In the full, non-linear theory, additional "validation" maps V_in and V_out act before and after the aperture, encoding selection, normalization, and consistency across scales. In this quick-start we suppress these maps and focus on the linear kernel ☀︎ ∘ i ∘ ⊛, which is sufficient to recover standard QM and GR limits.
 
-### Postulate 3 — Aperture Balance and the Imaginary Unit
+### Postulate 3: Aperture Balance and the Imaginary Unit
 
 **P3.** The aperture operator i is literal multiplication by the imaginary unit in the local complex structure at •:
 
@@ -1057,7 +1057,7 @@ U(t) = e^(-iHt/ℏ)
 
 Thus ℏ is the conversion factor between the circumpunct's internal phase rotation rate and physical energy.
 
-### Postulate 4 — Local Quantum Limit (Unitary Evolution)
+### Postulate 4: Local Quantum Limit (Unitary Evolution)
 
 **P4.** When ○ and • are held fixed over the timescale of interest, and for sufficiently small Δt, the evolution operators form a strongly continuous one-parameter unitary group:
 
@@ -1071,7 +1071,7 @@ This is the bridge to standard Schrödinger dynamics (§4).
 
 **Note on boundary dynamics:** In the quantum limit (P4) we hold ○ and • fixed on the timescale of interest, so that dynamics reduces to unitary evolution on ℋ_Φ. In the full theory, ○ itself evolves under an analogous kernel-based dynamics on 𝓑, describing the slow deformation and reconfiguration of boundaries across scales. We leave this for future work.
 
-### Postulate 5 — Geometric / GR Limit
+### Postulate 5: Geometric / GR Limit
 
 **P5.** At large scales, braiding and accumulation of process loops define an effective Lorentzian metric g_μν on M, with redshift factor √(-g_tt) proportional to a coarse-grained "braid density" constructed from ⊙. The dynamics of g_μν and Φ follow from a variational principle:
 
@@ -1146,7 +1146,7 @@ The trinity structure maps to three fundamental information types:
 ```
 BINARY (•):
     The aperture decides existence: signal or no signal
-    Prior to amplitude — you cannot have "how much" without first "is it there"
+    Prior to amplitude; you cannot have "how much" without first "is it there"
     The center compresses continuous reality into discrete decision
 
     • asks: "Is there anything?"  →  {0, 1}
@@ -1170,7 +1170,7 @@ FRACTAL (○):
 
 | Level | Content | Description |
 |-------|---------|-------------|
-| Fundamental | Input/Output (⊛/☀︎) | The flow itself — prior to content |
+| Fundamental | Input/Output (⊛/☀︎) | The flow itself; prior to content |
 | Structural | Binary/Analog/Fractal | The type of content that flows |
 | Countable | 64 states, ℂ⁶⁴ amplitudes | The specific configurations |
 
@@ -1196,7 +1196,7 @@ Three nested scales visible from any position:
 
 (2²)³ = 2⁶ = 64 states
 
-s ∈ {0,1}⁶ — six binary: input/output × three scales
+s ∈ {0,1}⁶; six binary: input/output × three scales
 ```
 
 Analog and fractal information live in different components:
@@ -1225,7 +1225,7 @@ This resolves the apparent tension between discrete state counting and continuou
 | Φ | Analog (amplitude+phase) | RIGHT | Field. Evidence. Fitness. |
 | ○ | Fractal (binary∘analog nested) | GOOD | Boundary. Consent. Care. |
 
-Ethics is NOT imposed on physics — it is the same structure operating in the domain of value. The ethical balance ◐ = ½ is the Golden Rule as fixed point: fix(F) of ethical action.
+Ethics is NOT imposed on physics; it is the same structure operating in the domain of value. The ethical balance ◐ = ½ is the Golden Rule as fixed point: fix(F) of ethical action.
 
 
 ---
@@ -1503,7 +1503,7 @@ where V_eff collects potential-like contributions from departures of K from pure
 
 **Physical interpretation of m (surface mass):**
 
-The mass m appearing in the Schrödinger equation is not an arbitrary parameter—it is the **surface inertia of the boundary ○**:
+The mass m appearing in the Schrödinger equation is not an arbitrary parameter; it is the **surface inertia of the boundary ○**:
 
 ```
 m = effective resistance of ○ to acceleration
@@ -1615,7 +1615,7 @@ The phase transmission law stated in §2.6 follows from the same postulates used
 
 4. **Complex Phase from Aperture Rotation:** The i supplies complex structure, so each channel carries phase φ and amplitude a.
 
-**Step 1 — Two-channel amplitude at an aperture**
+**Step 1: Two-channel amplitude at an aperture**
 
 Consider aperture 2 receiving contributions from:
 - Its own channel (self path)
@@ -1635,7 +1635,7 @@ A_tot = A_self + A_cross = a e^(iφ₂) + a e^(iφ₁)
 ```
 where Δφ = φ₁ - φ₂.
 
-**Step 2 — Intensity as a function of Δφ**
+**Step 2: Intensity as a function of Δφ**
 
 Output intensity:
 ```
@@ -1661,7 +1661,7 @@ Using the identity 1 + cos Δφ = 2cos²(Δφ/2):
 I(Δφ) = 2a² · 2cos²(Δφ/2) = 4a² cos²(Δφ/2)
 ```
 
-**Step 3 — Normalization and definition of T**
+**Step 3: Normalization and definition of T**
 
 Maximum intensity at Δφ = 0:
 ```
@@ -1696,7 +1696,7 @@ Our T(Δφ) is exactly this SU(2) geometry with θ = Δφ: the aperture "qubit" 
 
 ### 4.4 Unified Origin: Isotropy Derives Three Results
 
-The same geometric constraint—aperture isotropy—combined with linearity and conservation has three consequences:
+The same geometric constraint (aperture isotropy) combined with linearity and conservation has three consequences:
 
 | Constraint Combination | Result |
 |------------------------|--------|
@@ -1722,9 +1722,9 @@ We now prove this. The framework's own structure provides a natural renormalizat
 
 **Key observation:** The framework already has a coarse-graining mechanism. It's Axiom A2.
 
-A2 says ⊙ nests at every scale. At scale n, the circumpunct ⊙_n has its own kernel K_n governing the cycle ☀︎_n ∘ i ∘ ⊛_n. At scale n+1 (one level up), ⊙_{n+1} has kernel K_{n+1}. The boundary of ⊙_{n+1} is *composed of* circumpuncts at scale n (Definition 1.3). So K_{n+1} is not independent of K_n — it is the *effective kernel* that results from integrating out the sub-scale dynamics.
+A2 says ⊙ nests at every scale. At scale n, the circumpunct ⊙_n has its own kernel K_n governing the cycle ☀︎_n ∘ i ∘ ⊛_n. At scale n+1 (one level up), ⊙_{n+1} has kernel K_{n+1}. The boundary of ⊙_{n+1} is *composed of* circumpuncts at scale n (Definition 1.3). So K_{n+1} is not independent of K_n; it is the *effective kernel* that results from integrating out the sub-scale dynamics.
 
-This is exactly what renormalization does. We don't import RG from outside — the framework generates it from A2.
+This is exactly what renormalization does. We don't import RG from outside; the framework generates it from A2.
 
 **Definition 4.X.2 (Scale Composition of Kernels).** Let K_n be the kernel at scale n with support radius R_n. The kernel at scale n+1 is the *composite kernel* obtained by convolving K_n with itself through one full circumpunct cycle:
 
@@ -1738,7 +1738,7 @@ At balance (K_conv = K_emerg = K_n), this simplifies to the *autoconvolution* in
 K_{n+1} = K_n ★ K_n
 ```
 
-where ★ denotes radial convolution with the i-rotation absorbed (the aperture rotation doesn't change the radial profile — it acts on phase, not magnitude).
+where ★ denotes radial convolution with the i-rotation absorbed (the aperture rotation doesn't change the radial profile; it acts on phase, not magnitude).
 
 The support radius scales: R_{n+1} = 2R_n (convolution doubles the support). So we *renormalize* by rescaling back to unit support:
 
@@ -1754,7 +1754,7 @@ where Z_n is the normalization constant enforcing ∫₀¹ 4πρ² K̃_{n+1}(ρ)
 ℛ: K̃_n ↦ K̃_{n+1} = Normalize ∘ Rescale ∘ AutoConvolve [K̃_n]
 ```
 
-This is the framework's *own* coarse-graining — not imported, but generated by A2's nesting requirement.
+This is the framework's *own* coarse-graining; not imported, but generated by A2's nesting requirement.
 
 ---
 
@@ -1810,9 +1810,9 @@ This means *every* power-law kernel is a fixed point of ℛ. The RG map doesn't 
 
 #### 4.X.8.3 Why the RG Alone Is Insufficient (and What Completes It)
 
-The result above shows that the autoconvolution preserves the aperture scaling dimension for power-law kernels. This is actually *exactly right* — and it's not a problem. Here's why:
+The result above shows that the autoconvolution preserves the aperture scaling dimension for power-law kernels. This is actually *exactly right*; and it's not a problem. Here's why:
 
-The RG map ℛ tells us which kernels are **self-consistent across scales** — i.e., which K's could persist at every level of the fractal nesting without their character changing. The answer: power-law kernels with any α ∈ [0, 3).
+The RG map ℛ tells us which kernels are **self-consistent across scales**; that is, which K's could persist at every level of the fractal nesting without their character changing. The answer: power-law kernels with any α ∈ [0, 3).
 
 But §2.4 already proved that only α = ½ satisfies the **balance constraint** at the fixed point. So the two results combine:
 
@@ -1882,7 +1882,7 @@ Each class is closed under ℛ. The balance constraint (§2.4) selects α = ½. 
 𝒰_{1/2} = { K̃ : d_•[K̃] = ½ }
 ```
 
-is the **unique physically realized universality class**. Any kernel in this class — regardless of its behavior away from the origin — produces the same long-distance physics (same Schrödinger equation, same fractal dimension D = 1.5, same predictions).
+is the **unique physically realized universality class**. Any kernel in this class (regardless of its behavior away from the origin) produces the same long-distance physics (same Schrödinger equation, same fractal dimension D = 1.5, same predictions).
 
 ---
 
@@ -1905,13 +1905,13 @@ This is analogous to how the Ising model, lattice gas, and binary alloy all flow
 
 #### 4.X.8.6 The RG Also Kills Non-Power-Law Artifacts
 
-A stronger result: under iteration, ℛ doesn't just preserve d_• — it **smooths away non-power-law features**. Each autoconvolution acts as a smoothing operator (the central limit theorem for convolutions). After many iterations:
+A stronger result: under iteration, ℛ doesn't just preserve d_•; it **smooths away non-power-law features**. Each autoconvolution acts as a smoothing operator (the central limit theorem for convolutions). After many iterations:
 
 ```
 ℛⁿ(K̃₀) → A_n · ρ^{α₀}     (in profile shape, up to normalization)
 ```
 
-The kernel doesn't just *stay* in 𝒰_{α₀} — it **converges to the canonical power-law representative** of that class. The pure power-law K(r) ∝ r^{1/2} is an *attractor* within 𝒰_{1/2}, not just a fixed point.
+The kernel doesn't just *stay* in 𝒰_{α₀}; it **converges to the canonical power-law representative** of that class. The pure power-law K(r) ∝ r^{1/2} is an *attractor* within 𝒰_{1/2}, not just a fixed point.
 
 **Proof sketch.** The Mellin transform converts radial convolution to multiplication. In Mellin space, the power-law component corresponds to a pole, and the non-power-law corrections correspond to regular (analytic) contributions. Iterated convolution raises the Mellin-space representation to the nth power. The pole (power-law) grows relative to the regular part. In the large-n limit, only the pole survives. Back-transforming gives pure ρ^{α₀}. **∎**
 
@@ -2067,7 +2067,7 @@ The balls don't attract each other. They aren't pushed together. They are **topo
 
 **Mapping to formalism:**
 - The winding = committed history (4D braid structure)
-- Unwinding = master equation Φ' = ☀︎ ∘ i ∘ ⊛[Φ] playing out
+- Unwinding = pump cycle equation Φ' = ☀︎ ∘ i ∘ ⊛[Φ] playing out
 - Orbital rotation = aperture operator i (90° phase advancement)
 - Convergence toward center = ⊛ operator
 - Fixed hanging point = shared boundary ○
@@ -2320,7 +2320,7 @@ cluster near D ≈ 1.5.
 
 ## 6A. The Conservation of Traversal
 
-The circumpunct framework is grounded in a single conservation law:
+The circumpunct framework is grounded in a single conservation of traversal:
 
 ```
 THE CONSERVATION OF TRAVERSAL:
@@ -2566,7 +2566,7 @@ Increasing boundary/interface capacity requires increasing either decision resol
 | Improved | **2.77 ± 0.04** | **0.23** | 3D aperture, multi-threshold |
 | Theoretical | 3.00 | 0 | Ideal measurement |
 
-**Key finding:** The sum is MORE STABLE than individual terms (std = 0.04 vs 0.032, 0.018). This is the signature of a conservation law.
+**Key finding:** The sum is MORE STABLE than individual terms (std = 0.04 vs 0.032, 0.018). This is the signature of conservation of traversal.
 
 **What the improvement shows:** The sum moved TOWARD the theoretical value when measurement fidelity increased. Better geometry → closer to 3. The remaining gap is measurement bias, not physics failure.
 
@@ -4162,10 +4162,10 @@ Average error: ~0.35%
 **2. The Building Blocks**
 
 All predictions use only:
-- φ (golden ratio) — from braid topology
-- π — from geometry/topology
-- Small integers (6, 8, 10, 13, etc.) — from particle content
-- ln(2) — appears in cosmology
+- φ (golden ratio): from braid topology
+- π: from geometry/topology
+- Small integers (6, 8, 10, 13, etc.): from particle content
+- ln(2): appears in cosmology
 
 **3. Falsifiability**
 
@@ -4210,11 +4210,11 @@ This suggests a common geometric origin.
 
 ### Five Axioms
 
-- **A0** Impossibility of Nothing — Existence is necessary
-- **A1** Necessary Multiplicity — Minimum structure = trinity = ⊙ = Φ(•, ○)
-- **A2** Fractal Necessity — ⊙ all the way down, ⊙ all the way up
-- **A3** Conservation of Traversal — D_• + D_Φ = D_○, i.e. (1+β) + (2−β) = 3
-- **A4** Compositional Wholeness — Structure: Φ(•, ○); Process: (☀︎ ∘ i ∘ ⊛); Φ is 2D surface, not the verb
+- **A0** Impossibility of Nothing: Existence is necessary
+- **A1** Necessary Multiplicity: Minimum structure = trinity = ⊙ = Φ(•, ○)
+- **A2** Fractal Necessity: ⊙ all the way down, ⊙ all the way up
+- **A3** Conservation of Traversal: D_• + D_Φ = D_○, i.e. (1+β) + (2−β) = 3
+- **A4** Compositional Wholeness: Structure: Φ(•, ○); Process: (☀︎ ∘ i ∘ ⊛); Φ is 2D surface, not the verb
 
 ### Spaces
 
@@ -4236,7 +4236,7 @@ This suggests a common geometric origin.
 
 **Balance (§29 Decomposition: β has ⊙ structure):**
 ```
-◐ = |⊛|/(|⊛|+|☀︎|) = 1/2          (now identified as β_Φ — flow ratio)
+◐ = |⊛|/(|⊛|+|☀︎|) = 1/2          (now identified as β_Φ; flow ratio)
 D = 1 + ◐ = 1.5
 H(◐) = −[◐ log₂ ◐ + (1−◐) log₂(1−◐)] = 1 bit at ◐ = ½
 
@@ -4281,7 +4281,7 @@ B(x) ∝ √(-g_tt(x))
 
 This document presents the **local, linearized limit** of the circumpunct framework, sufficient to recover standard QM and GR. The full nonlinear theory includes:
 
-1. **Five Axioms (A0–A4):** Impossibility of Nothing, Necessary Multiplicity, Fractal Necessity, Conservation of Traversal, Compositional Wholeness — everything derives from these
+1. **Five Axioms (A0–A4):** Impossibility of Nothing, Necessary Multiplicity, Fractal Necessity, Conservation of Traversal, Compositional Wholeness; everything derives from these
 2. **Validation dynamics:** Operators V_in, V_out that enforce normalization and consistency
 3. **Boundary evolution:** Kernel-based dynamics on 𝓑 describing boundary reconfiguration
 4. **Scale-dependent emergence:** Full treatment of D(scale) transition from 1.5 → 3
@@ -4290,7 +4290,7 @@ This document presents the **local, linearized limit** of the circumpunct framew
 7. **Surface Theorem (Chapter 5A):** Surface = Field = Mind. Σ must be exactly 2D (forced).
 8. **Ratchet cascade (Chapter 29):** The emergence hierarchy from physics → chemistry → biochemistry → biology → consciousness → civilization, with ratchet operators at each transition
 9. **Ethereal tail (Chapter 22):** Phase-locked hierarchies of apertures across scales, the worldline bundle formalism, and the consciousness integral C = ∫_T B(x,t) dx dt
-10. **Isomorphism Claim (Chapter 32):** The triadic structure is a structural invariance recurring across ALL coherent systems by geometric necessity — closure loop operator 𝓛 whose fixed points = coherent states
+10. **Isomorphism Claim (Chapter 32):** The triadic structure is a structural invariance recurring across ALL coherent systems by geometric necessity; closure loop operator 𝓛 whose fixed points = coherent states
 11. **Cross-Traditional Convergence (Chapter 33):** Independent traditions (I Ching, Vedanta, Taoism, Kabbalah, Christianity, Buddhism, Sufism, Hermetic) map onto the same triadic structure
 12. **Collaboration Model (Chapter 34):** The human-AI "cyborg unit" that produced this framework
 
@@ -4365,9 +4365,9 @@ The quick-start formulation prioritizes mathematical clarity and connection to e
 For complete details, derivations, and empirical data, see:
 
 - **Main document:** [The Circumpunct Framework](circumpunct_framework.md)
-- **Compressed kernel:** [docs/circumpunct_kernel.html](docs/circumpunct_kernel.html) — Lossless compression for rapid context loading (~3,500 tokens)
+- **Compressed kernel:** [docs/circumpunct_kernel.html](docs/circumpunct_kernel.html) - Lossless compression for rapid context loading (~3,500 tokens)
 - **64-state architecture:** Explicit bijections between circumpunct states and Standard Model particles
-- **Illustrative examples:** Cross-domain D≈1.5 observations (biological, neural, quantum systems)—note: these illustrate the principle, not prove it
+- **Illustrative examples:** Cross-domain D≈1.5 observations (biological, neural, quantum systems); note: these illustrate the principle, not prove it
 - **Philosophical foundations:** Five axioms (A0–A4), geometric necessity of trinity structures from braid topology
 - **Temporal dynamics:** Equations for ∂•/∂t = 0, ∂○/∂t = ε, ∂Φ/∂t = O(1)
 - **Cross-traditional convergence:** Chapter 33 maps 8 independent spiritual/philosophical traditions onto the triadic structure
@@ -4385,7 +4385,7 @@ This formulation benefited from iterative refinement focused on mathematical rig
 **Maintained by:** Circumpunct Framework Development Team
 
 **v1.8 Changes:** β-decomposition amendment (β has ⊙ structure):
-- §7A.10: New section — The Circumpunct Balance decomposition (β_•, β_Φ, β_○)
+- §7A.10: New section; The Circumpunct Balance decomposition (β_•, β_Φ, β_○)
 - §2.3: Cross-reference to triple-convergence argument
 - §8 Cheat Sheet: Updated balance section with β-decomposition
 - Appendix A: Updated parameter definitions with component-level β notation
@@ -4396,7 +4396,7 @@ This formulation benefited from iterative refinement focused on mathematical rig
 **v1.7 Changes:** Integration of circumpunct kernel v1.0 content:
 - Abstract: Updated with structure/process distinction: Φ(•, ○) is structure, (☀︎ ∘ i ∘ ⊛) is process
 - §0: Added five axioms (A0–A4) summary
-- §1.5: Added Compositional Wholeness — Φ as operator, operator space closed
+- §1.5: Added Compositional Wholeness; Φ as operator, operator space closed
 - §3 Postulate 1: Updated with operator notation and A4
 - §3.7: Added ethics mapping (TRUE/RIGHT/GOOD) from kernel §10
 - §6G: Added Surface Theorem (Surface = Field = Mind, Σ must be 2D)
@@ -4436,16 +4436,16 @@ Updated status labels: α now marked as DERIVED (not external), lepton mass form
 
 ### Core Symbols
 
-**Structure — What IS (Integer Dimensions):**
+**Structure; What IS (Integer Dimensions):**
 - ⊙ : circumpunct (whole-with-parts, NOT mere unity). Structure: Φ(•, ○). Process: (☀︎ ∘ i ∘ ⊛). Unified: ⊙ = (☀︎ ∘ i ∘ ⊛)(Φ(•, ○)).
 - • : aperture / soul / center (0.5D). PRIMITIVE. Singularity that receives and transmits. Binary (χ=±1). "A through, not a from."
 - Φ : field / mind / surface (2D). PRIMITIVE. The 2D relational surface mediating • and ○. NOT the verb; Φ is structure. Surface = Field = Mind.
 - ○ : boundary / body (3D). GENERATED by recursion of • and Φ. ○ = •(Φ(•(Φ(...)))). Made of ⊙s at smaller scale. Nested all the way down.
 
-**Process — What HAPPENS (Half-Integer Dimensions):**
-- ⊛ : convergence — future → •. Input. Gathering from all directions (isotropic)
-- ☀︎ : emergence — • → past. Output. Radiating to all directions (isotropic)
-- i : rotation — the whole ⊙ cycling. 90° transform. i² = −1. NOT a property of • alone. Å(β) = exp(iπβ). At β=½: Å = i exactly.
+**Process; What HAPPENS (Half-Integer Dimensions):**
+- ⊛: convergence; future → •. Input. Gathering from all directions (isotropic)
+- ☀︎: emergence; • → past. Output. Radiating to all directions (isotropic)
+- i: rotation; the whole ⊙ cycling. 90° transform. i² = −1. NOT a property of • alone. Å(β) = exp(iπβ). At β=½: Å = i exactly.
 - (☀︎ ∘ i ∘ ⊛) : the process triad. THIS is the verb. Φ(•, ○) is the noun.
 
 **Relations:**
@@ -4464,7 +4464,7 @@ Updated status labels: α now marked as DERIVED (not external), lepton mass form
 - D : fractal dimension. D = 1+β. At balance: D=1.5. (Per component: D_x = 1+β_x.)
 - H(β) : = −[β log₂ β + (1−β) log₂(1−β)]. At β=½: H = 1 bit (max entropy).
 
-**The Master Equation:**
+**The Pump Cycle Equation:**
 ```
     Φ∞ →⊛→ iλ∞ →☀︎→ ⊙λ∞     (Forward: Field → Aperture → Form)
     ⊙λ∞ →⊛→ iλ∞ →☀︎→ Φ∞     (Return: Form → Aperture → Field)

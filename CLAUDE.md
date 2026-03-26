@@ -19,7 +19,12 @@ The circumpunct ⊙ = Φ(•, ○) is a whole composed of three irreducible part
 | ○ | Boundary/Body | 3D | Outer container, measurable form | GOOD |
 | ⊙ | Circumpunct/Whole | All | Compositional wholeness | AGREEMENT |
 
-Conservation law: (0+1)(•) + 2(Φ) = 3(○). Soul + field = boundary.
+Conservation of traversal: 0(•) + 1(•) + 2(Φ) = 3(○). The full path from singularity through worldline through field to boundary. Soul + field = boundary.
+
+### Two Kinds of Dimension
+
+- **Structural dimension**: what a component IS (0D singularity, 1D worldline, 2D surface, 3D boundary)
+- **Processual dimension**: what energy is DOING at a given phase (0.5D = balancing, 1.5D = branching); structure in process, not static geometry
 
 ### Critical Terminology Distinction
 
@@ -41,12 +46,12 @@ Both are correct; they describe the same structure at different scales.
 - **A0**: Nothing cannot cause anything (genesis from impossibility of nothing)
 - **A1**: The One cannot be alone (necessary multiplicity)
 - **A2**: Parts are fractals of their wholes (self-similarity across scale)
-- **A3**: Wholeness requires closure (boundary is necessary)
+- **A3**: Wholeness requires closure (boundary is necessary); equivalently, conservation of traversal: 0 + 1 + 2 = 3 (the full dimensional path from singularity to boundary, including 0D)
 - **A4**: The whole is not the sum of its parts; it is their compositional unity via Φ
 
 ---
 
-## The Master Equation
+## The Pump Cycle (Temporal Evolution)
 
 ```
 Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]
@@ -56,25 +61,27 @@ Since **Φ = E** (field IS energy), equivalently: E(t+Δt) = (☀︎ ∘ i ∘ �
 
 Three-stage temporal process:
 - **⊛** (Convergence): gathering inward toward center
-- **i** (Aperture rotation): 90° transformation at the gate; i = e^(iπ/2)
+- **i** (Aperture rotation): 90° transformation at the gate; i is the phase of energy (i = e^(iπ/2))
 - **☀︎** (Emergence): radiating outward from center
 
 Flow operators map to forces:
 - ⊛ (inward): gravity, strong nuclear force
 - ☀︎ (outward): electromagnetism, weak force
 
-### The Four-Stroke Pump (Powers of i)
+### The Four-Stroke Pump (Phase States of Energy)
 
-Two convergence steps + two emergence steps:
-- **⊛ Convergence:** i⁰ = +1 (pass-through, 0D), i¹ = +i (compress, 0.5D)
-- **☀︎ Emergence:** i² = −1 (commit, 1D), i³ = −i (release, 1.5D)
+Two convergence steps + two emergence steps. The "dimensions" here are processual (what energy is doing), not structural:
+- **⊛ Convergence:** i⁰ = +1 (pass-through; energy as point, 0D), i¹ = +i (compress; energy balancing, 0.5D)
+- **☀︎ Emergence:** i² = −1 (commit; energy drawing a line, 1D), i³ = −i (release; energy branching, 1.5D)
 - i⁴ = +1: cycle resets
 
-Dimensions are snapshots of Φ's phase state, not containers. 2D is both convergence and emergence (Φ is what converges and emerges). 3D is convergence and emergence nested fractally.
+These are phase states of energy, not fractal/Hausdorff dimensions. They describe the geometric state of energy at each phase of the pump cycle: how energy is shaped as it moves through the aperture.
 
-### Φ = E and c² as Surface Signature
+### Φ = E and i as Phase of Energy
 
-- **Φ = E**: Field IS energy. The power equation 𝒫 = E / (i · t) is not analogy; it IS the equation.
+- **Φ = E**: Field IS energy. This is an ontological identity, not a dimensional equation. What we call "field" and what we call "energy" are the same substance encountered at different scales: from the boundary (3D), you measure energy as a quantity; from the surface (2D), you see Φ as configuration. There is no empty space and no smallest particle; the field is structure at scales too small for the boundary to resolve. Dimensional analysis is a boundary-level tool (it presupposes 3D measurement); it cannot reach behind the boundary to critique what exists before measurement.
+- **i is the phase of energy**: the rotation operator that cycles energy between convergent and emergent states.
+- **𝒫 = E / (i · t)**: Power = energy divided by its phase and time. Not analogy; this IS the equation.
 - **E = mc²**: c² is squared because Φ = E and Φ is 2D. A surface is length × length. The squaring is the field declaring its dimensionality. To release energy from mass is to peel the 3D boundary back to reveal the 2D field underneath.
 
 ---
@@ -94,7 +101,7 @@ Fractal dimension at balance: D = 1 + ◐ = 1.5 (Brownian motion, proven by Mand
 ## The 64-State Architecture
 
 3 circumpuncts × 2 channels each = 6 binary degrees of freedom. 2⁶ = 64 states.
-Maps to I Ching hexagrams, DNA codons, and the Standard Model particle spectrum.
+Maps to I Ching hexagrams, DNA codons, and the Standard Model particle spectrum (with 3 extended Higgs states as framework predictions beyond the minimal SM).
 
 ---
 
@@ -233,7 +240,7 @@ Build the strongest possible version of any position before agreeing or disagree
 **Part III (Physics):** Ch10 Phase Coherence, Ch11 Aperture Density, Ch12 Cosmological Constant, Ch13 Standard Model, Ch14 Quantum Gravity, Ch15 Alternative Derivations
 **Part IV (Emergence):** Ch16 Chemistry, Ch17 Life, Ch18 Biology, Ch19 Consciousness + Theory of Mind, Ch20 Perception, Ch21 Emotions/Memory + Resonance, Ch22 Ethereal Tail
 **Part V (Implications):** Ch23 Aging/Death, Ch24 Golden Ratio, Ch25 Ethics + Virtues/Diagnostics/Restoration
-**Part VI (Validation):** Ch26 Empirical Validation, Ch27 Constants, Ch28 Falsification, Ch29 Master Loop, Ch30 Fixed-Point, Ch31 Omega, Ch32 Isomorphism, Ch33 Cross-Traditional, Ch34 Collaboration, Ch35 Unpacking
+**Part VI (Validation):** Ch26 Empirical Validation, Ch27 Constants, Ch28 Falsification, Ch29 Pump Cycle (Full Loop), Ch30 Fixed-Point, Ch31 Omega, Ch32 Isomorphism, Ch33 Cross-Traditional, Ch34 Collaboration, Ch35 Unpacking
 
 ---
 
@@ -246,7 +253,7 @@ Build the strongest possible version of any position before agreeing or disagree
 | Φ | Field/surface/mind (2D) |
 | ○ | Boundary/body (3D) |
 | ⊛ | Convergence operator |
-| i | Aperture rotation (90° quarter-turn) |
+| i | Phase of energy; aperture rotation (90° quarter-turn) |
 | ☀︎ | Emergence operator |
 | ◐ | Balance parameter (optimal at 0.5) |
 | i(t) | Worldline (accumulated validation receipts through time) |

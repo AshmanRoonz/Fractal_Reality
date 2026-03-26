@@ -34,7 +34,7 @@ This repository contains the complete theory, a physicists' formalization, and a
 
 The soul is composite: the 0D singularity (the timeless gate where transformation occurs) plus the 1D worldline i(t) (the string of accumulated transformations through time). Neither alone is the soul; together they are.
 
-The master equation describes the temporal process:
+The pump cycle equation describes the temporal process:
 
 ```
     Φ(t+Δt) = ☀︎ ∘ i ∘ ⊛[Φ(t)]
