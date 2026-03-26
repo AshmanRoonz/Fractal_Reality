@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⊙ Piezo Disc Drone — Concept Spec v0.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=JetBrains+Mono:wght@300;400;500&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #000000;
+    --panel: #06060a;
+    --card: #0a0a10;
+    --card-border: #1a1a24;
+    --amber: #d4a855;
+    --amber-dim: #7a5a28;
+    --amber-glow: rgba(212,168,85,0.1);
+    --cyan: #5ecece;
+    --cyan-dim: #2a5a5a;
+    --cyan-glow: rgba(94,206,206,0.08);
+    --red: #e05555;
+    --red-dim: #6a2828;
+    --magenta: #c76dba;
+    --green: #6dba6d;
+    --text: #c0b080;
+    --text-dim: #605848;
+    --text-bright: #e8d8b0;
+    --wire: #888070;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* NAV */
+nav {
+    position: fixed;
+    left: 0; top: 0;
+    width: 200px;
+    height: 100vh;
+    background: var(--panel);
+    border-right: 1px solid var(--card-border);
+    padding: 1.5rem 0.8rem;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+nav .logo {
+    font-family: 'Cinzel', serif;
+    color: var(--amber);
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 0.2rem;
+}
+
+nav .version {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--card-border);
+}
+
+nav a {
+    display: block;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.65rem;
+    padding: 0.35rem 0.5rem;
+    margin-bottom: 0.15rem;
+    border-radius: 3px;
+    transition: all 0.25s;
+    letter-spacing: 0.02em;
+}
+
+nav a:hover { color: var(--amber); background: var(--amber-glow); }
+nav a .n { color: var(--amber-dim); margin-right: 0.4rem; }
+nav .nav-group { color: var(--amber-dim); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 1rem; margin-bottom: 0.4rem; padding-left: 0.5rem; }
+
+/* MAIN */
+main {
+    margin-left: 200px;
+    padding: 2.5rem 3rem 4rem;
+    max-width: 1000px;
+}
+
+h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    color: var(--amber);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+}
+
+h1 .sub {
+    display: block;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 400;
+}
+
+h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    color: var(--amber);
+    font-weight: 600;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--card-border);
+}
+
+h2 .num { color: var(--amber-dim); font-size: 0.7rem; display: block; margin-bottom: 0.2rem; letter-spacing: 0.15em; }
+
+h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--cyan);
+    margin-top: 1.8rem;
+    margin-bottom: 0.6rem;
+}
+
+p { margin-bottom: 0.8rem; font-family: 'Cormorant Garamond', serif; font-size: 15px; line-height: 1.7; }
+
+/* CARDS */
+.card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 1.2rem 1.5rem;
+    margin: 1rem 0;
+}
+
+.card .card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: var(--amber);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--card-border);
+}
+
+/* TABLES */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    font-size: 0.75rem;
+}
+
+th {
+    text-align: left;
+    color: var(--amber-dim);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.5rem 0.8rem;
+    border-bottom: 2px solid var(--card-border);
+    white-space: nowrap;
+}
+
+td {
+    padding: 0.45rem 0.8rem;
+    border-bottom: 1px solid var(--card-border);
+    vertical-align: top;
+}
+
+tr:hover td { background: rgba(212,168,85,0.03); }
+
+.val { color: var(--text-bright); }
+.unit { color: var(--text-dim); }
+.note { color: var(--cyan-dim); font-size: 0.65rem; }
+
+/* TAGS */
+.t-aper { color: var(--red); }
+.t-field { color: var(--cyan); }
+.t-bound { color: var(--amber); }
+.t-rot { color: var(--magenta); }
+.t-good { color: var(--green); }
+
+/* CODE */
+pre {
+    background: var(--panel);
+    border: 1px solid var(--card-border);
+    border-radius: 5px;
+    padding: 1rem 1.2rem;
+    font-size: 0.72rem;
+    line-height: 1.65;
+    overflow-x: auto;
+    margin: 0.8rem 0;
+}
+
+/* CALLOUTS */
+.callout {
+    border-left: 3px solid var(--amber);
+    background: var(--amber-glow);
+    padding: 0.8rem 1.2rem;
+    margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.callout.warn {
+    border-color: var(--red);
+    background: rgba(224,85,85,0.08);
+}
+
+.callout .label {
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+}
+
+.callout.warn .label { color: var(--red); }
+
+/* SCHEMATIC AREA */
+.schematic-wrap {
+    background: var(--panel);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.schematic-wrap canvas {
+    display: block;
+    margin: 0 auto;
+}
+
+.schematic-label {
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    margin-top: 0.6rem;
+}
+
+/* DIVIDER */
+.div { text-align: center; color: var(--amber-dim); margin: 2.5rem 0; letter-spacing: 0.8em; font-size: 0.7rem; }
+
+/* RESPONSIVE */
+@media (max-width: 800px) {
+    nav { display: none; }
+    main { margin-left: 0; padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">◎</div>
+    <div class="version">PIEZO DISC DRONE v0.1</div>
+
+    <div class="nav-group">Concept</div>
+    <a href="#overview"><span class="n">01</span> Vision</a>
+    <a href="#principle"><span class="n">02</span> How It Flies</a>
+    <a href="#biology"><span class="n">03</span> Biological Precedent</a>
+
+    <div class="nav-group">Theory</div>
+    <a href="#cymatics"><span class="n">04</span> Cymatics of Flight</a>
+    <a href="#modes"><span class="n">05</span> Disc Modes</a>
+    <a href="#control"><span class="n">06</span> Flight Control</a>
+
+    <div class="nav-group">Design</div>
+    <a href="#structure"><span class="n">07</span> Disc Structure</a>
+    <a href="#piezo"><span class="n">08</span> Piezo Skin</a>
+    <a href="#electronics"><span class="n">09</span> Electronics</a>
+    <a href="#power"><span class="n">10</span> Power Budget</a>
+
+    <div class="nav-group">Development</div>
+    <a href="#phases"><span class="n">11</span> Development Path</a>
+    <a href="#experiments"><span class="n">12</span> Experiments</a>
+    <a href="#challenges"><span class="n">13</span> Open Problems</a>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════ -->
+<!-- HEADER -->
+<!-- ═══════════════════════════════ -->
+
+<h1>Piezo Disc Drone
+    <span class="sub">Concept Specification &amp; Development Path · v0.1 · March 26, 2026</span>
+</h1>
+
+<p>A disc-shaped aircraft with no propellers, no motors, and no conventional moving parts. The entire surface is piezoelectric skin that undulates like a ray, creating travelling waves that organize the boundary layer air into cymatic channels. Thrust is generated by the skin itself. Phase controls direction. Amplitude controls magnitude. The disc flies by vibrating.</p>
+
+<div class="div">◎</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- 01 VISION -->
+<!-- ═══════════════════════════════ -->
+
+<section id="overview">
+<h2><span class="num">§01</span> Vision</h2>
+
+<p>Every existing aircraft moves air with a separate mechanism: propellers, jet engines, rotors. The air is passive; the machine does all the work. This is inefficient, noisy, and mechanically complex.</p>
+
+<p>A piezo disc drone inverts this. The entire body surface vibrates at controlled frequencies, creating travelling wave patterns in the air at the boundary layer. The air self-organizes into flow channels (cymatics) that produce net downward momentum. The aircraft does not push the air; it gives the air a pattern to follow, and the pattern does the work.</p>
+
+<div class="card">
+<div class="card-title">Core Concept</div>
+<pre>
+No propellers.         The skin IS the engine.
+No motors.             Piezoelectric film IS the actuator.
+No rotating parts.     Travelling waves ARE the mechanism.
+
+Input:    AC electrical signal (frequency, phase, amplitude)
+Process:  Piezo skin vibrates → travelling waves on surface
+          → cymatic channels form in boundary layer
+          → organized airflow produces net thrust
+Output:   Silent, omnidirectional flight
+</pre>
+</div>
+
+<h3>Why a Disc?</h3>
+
+<p>Radial symmetry. A disc has no preferred direction; every radial axis is equivalent. This means thrust direction is entirely determined by the wave pattern, not the body shape. Propagate waves from center to edge: vertical thrust (hover). Propagate waves from left to right: lateral translation. Tilt the wave propagation angle: pitch and roll. The same surface produces any thrust vector by changing the electrical phase pattern across zones.</p>
+
+<p>Maximum surface area to volume ratio. For a given mass, a thin disc has more skin area than any other compact shape. More skin = more piezo actuator area = more thrust-generating surface.</p>
+
+<p>The disc is also the shape of a vibrating membrane (drum), whose resonant modes are among the most thoroughly studied in physics (Bessel functions, Chladni patterns on circular plates). The eigenmode structure is known exactly.</p>
+
+<div class="callout">
+<div class="label">Biological Analog</div>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">The manta ray. Flat disc-like body. No propeller equivalent. Undulating fin margins create travelling waves that generate both lift and thrust. The ray's body is the engine. The piezo disc drone is a synthetic ray that flies in air instead of swimming in water.</p>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 02 HOW IT FLIES -->
+<!-- ═══════════════════════════════ -->
+
+<section id="principle">
+<h2><span class="num">§02</span> How It Flies</h2>
+
+<h3>The Travelling Wave Mechanism</h3>
+
+<p>When a flexible surface undulates with a travelling wave, it creates an asymmetric pressure distribution in the adjacent fluid. On the side where the surface is moving into the fluid (compression), pressure increases. On the side where the surface is pulling away (rarefaction), pressure decreases. Because the wave travels, these pressure zones move across the surface in sequence, creating a net momentum flux in the fluid.</p>
+
+<p>For a horizontal disc, a radially outward travelling wave (center to edge) pushes air downward and outward beneath the disc. The reaction force is upward: lift. The mechanism is the same one a ray uses: undulatory fin propulsion via added-mass thrust generation.</p>
+
+<div class="card">
+<div class="card-title">Thrust Generation</div>
+<pre>
+SIDE VIEW OF DISC EDGE (travelling wave moving right →)
+
+         ┌─ compression (high P)
+         │              ┌─ rarefaction (low P)
+    ─────/\────────────/\────────────/\───── disc surface
+        /  \          /  \          /  \
+  ═══════════════════════════════════════════ air below
+       ↓↘   ↙↓      ↓↘   ↙↓      ↓↘   ↙↓    net airflow: DOWN + RIGHT
+
+  Wave propagates →
+  Net momentum flux: downward (lift) + rightward (in wave direction)
+
+  For hover: waves propagate radially outward from center
+             → symmetric downward thrust from all edges
+             → net force: straight up
+</pre>
+</div>
+
+<h3>Two Complementary Effects</h3>
+
+<table>
+<tr><th>Effect</th><th>Mechanism</th><th>Scale</th><th>Contribution</th></tr>
+<tr>
+<td class="val">Undulatory thrust</td>
+<td>Travelling wave displaces air via added-mass mechanism (ray/fish locomotion)</td>
+<td>Wavelength scale (mm to cm)</td>
+<td>Primary lift and thrust</td>
+</tr>
+<tr>
+<td class="val">Cymatic drag reduction</td>
+<td>Surface vibration organizes turbulent boundary layer into laminar channels</td>
+<td>Boundary layer scale (sub-mm)</td>
+<td>Reduces energy lost to drag; amplifies efficiency of undulatory thrust</td>
+</tr>
+</table>
+
+<p>The two effects reinforce each other. The travelling wave provides thrust (pushing air), while simultaneously organizing the boundary layer (reducing resistance). The same vibration does both jobs.</p>
+
+<h3>The Three Controls</h3>
+
+<table>
+<tr><th>Control</th><th>Physical Parameter</th><th>Flight Effect</th></tr>
+<tr><td class="val">Frequency</td><td>Vibration rate of piezo skin (Hz)</td><td>Selects which cymatic modes form; determines wavelength of travelling wave</td></tr>
+<tr><td class="val">Phase</td><td>Timing offset between skin zones</td><td>Determines wave propagation direction → thrust vector direction</td></tr>
+<tr><td class="val">Amplitude</td><td>Voltage applied to piezo (V)</td><td>Determines displacement magnitude → thrust magnitude</td></tr>
+</table>
+
+<p>Phase is the steering wheel. Amplitude is the throttle. Frequency is the gear.</p>
+
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 03 BIOLOGICAL PRECEDENT -->
+<!-- ═══════════════════════════════ -->
+
+<section id="biology">
+<h2><span class="num">§03</span> Biological Precedent</h2>
+
+<p>This is not a new propulsion concept. It is the oldest one. Undulatory locomotion predates every other form of animal movement. Before legs, before wings, before jet propulsion, organisms moved by sending waves through their bodies.</p>
+
+<h3>The Ray Model</h3>
+
+<p>Manta rays and eagle rays use rajiform locomotion: travelling waves propagate from anterior to posterior along wide, flat pectoral fins. The fins have no rigid skeletal elements at the margins; instead, a three-dimensional muscular hydrostat (a matrix of muscle fibers oriented in multiple directions) generates the wave through sequential contraction. Thrust is produced by the added-mass mechanism: each wave crest accelerates a volume of water downward and backward, and the reaction pushes the ray forward and up.</p>
+
+<p>Key properties of ray locomotion relevant to the disc drone:</p>
+
+<table>
+<tr><th>Property</th><th>Ray</th><th>Disc Drone</th></tr>
+<tr><td>Body shape</td><td class="val">Flat disc, thin at edges</td><td class="val">Flat disc, thin at edges</td></tr>
+<tr><td>Actuator</td><td class="val">Muscular hydrostat (distributed, no joints)</td><td class="val">Piezo film (distributed, no joints)</td></tr>
+<tr><td>Wave type</td><td class="val">Travelling wave, anterior → posterior</td><td class="val">Travelling wave, center → edge (or any direction)</td></tr>
+<tr><td>Thrust mechanism</td><td class="val">Added-mass (water acceleration by fin surface)</td><td class="val">Added-mass (air acceleration by disc surface)</td></tr>
+<tr><td>Steering</td><td class="val">Asymmetric wave amplitude left vs right</td><td class="val">Asymmetric phase/amplitude across zones</td></tr>
+<tr><td>Hovering</td><td class="val">Yes (cownose rays hover in current)</td><td class="val">Yes (symmetric radial wave pattern)</td></tr>
+<tr><td>Efficiency</td><td class="val">Superior maneuverability and energy efficiency at low speed</td><td class="val">Target: same regime (low speed, high agility)</td></tr>
+</table>
+
+<h3>Other Biological References</h3>
+
+<table>
+<tr><th>Organism</th><th>Mechanism</th><th>Relevance</th></tr>
+<tr><td class="val">Cuttlefish</td><td>Lateral fin undulation for low-speed locomotion; jet for escape</td><td>Dual-mode: gentle undulation + burst thrust. Disc drone could have analogous modes.</td></tr>
+<tr><td class="val">Electric ray</td><td>Undulatory locomotion + bioelectric discharge</td><td>Combined mechanical wave and electrical field; closest biological analog to a piezo disc.</td></tr>
+<tr><td class="val">Snake</td><td>Lateral undulation: travelling wave along body against contact points</td><td>Peristaltic propulsion model; same physics, different geometry.</td></tr>
+<tr><td class="val">Jellyfish</td><td>Bell contraction creates vortex ring below; rides the vortex</td><td>Radially symmetric thrust from flexible membrane; closest to disc hover mode.</td></tr>
+</table>
+
+<div class="callout">
+<div class="label">Design Principle</div>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">Biology solved the "no moving parts propulsion" problem half a billion years ago. The ray has no propeller, no rotor, no jet. Its body is the engine. The disc drone copies the principle, replaces muscle with piezo, and moves from water to air. The physics is identical; only the medium's density changes.</p>
+</div>
+
+</section>
+
+<div class="div">· · ·</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- 04 CYMATICS OF FLIGHT -->
+<!-- ═══════════════════════════════ -->
+
+<section id="cymatics">
+<h2><span class="num">§04</span> Cymatics of Flight</h2>
+
+<p>The disc surface is a Chladni plate. When driven at specific frequencies, it forms standing wave patterns with well-defined nodal lines and antinodes. For a circular disc, these patterns are described by Bessel functions and characterized by two numbers: the number of radial nodes and the number of diametral nodes.</p>
+
+<p>Standing waves alone do not produce net thrust (symmetric pressure above and below cancels). Thrust requires travelling waves, which break the symmetry. A travelling wave on a disc is created by superposing two standing wave modes with a 90° phase offset (the same trick that creates a rotating magnetic field from two coils in quadrature).</p>
+
+<div class="card">
+<div class="card-title">From Standing Wave to Travelling Wave</div>
+<pre>
+Standing wave (no net thrust):
+  Mode A:  cos(nθ) · cos(ωt)         ← symmetric, oscillates in place
+
+Standing wave (orthogonal, 90° spatial offset):
+  Mode B:  sin(nθ) · cos(ωt)         ← also symmetric
+
+Combine with 90° TEMPORAL offset:
+  A + B':  cos(nθ)·cos(ωt) + sin(nθ)·sin(ωt) = cos(nθ - ωt)
+
+  This is a TRAVELLING WAVE rotating around the disc at angular velocity ω/n.
+
+  It has a preferred direction. It breaks symmetry. It produces thrust.
+</pre>
+</div>
+
+<p>By controlling which standing wave modes are excited and what phase offsets they carry, the disc can produce travelling waves in any direction, at any speed, with any spatial pattern. The cymatic channels that form in the boundary layer air follow the travelling wave, organizing the airflow into structured vortex streets that produce net momentum flux.</p>
+
+<h3>Frequency Selection</h3>
+
+<p>Different frequencies excite different cymatic modes on the disc. Lower frequencies produce patterns with few, large features (wide channels, gentle undulations). Higher frequencies produce patterns with many fine features (narrow channels, rapid oscillations). The optimal frequency for thrust generation depends on the relationship between wavelength and boundary layer thickness.</p>
+
+<table>
+<tr><th>Regime</th><th>Frequency Range</th><th>Wavelength</th><th>Effect</th></tr>
+<tr><td class="val">Sub-resonant</td><td>Below disc fundamental</td><td>Larger than disc</td><td>Whole disc flexes as one; like a flapping wing. Low efficiency for a stiff disc.</td></tr>
+<tr><td class="val">Fundamental</td><td>Disc fundamental mode</td><td>~Disc diameter</td><td>Single-node patterns; large-scale undulation. Manta ray regime.</td></tr>
+<tr><td class="val">Low harmonics</td><td>2-10× fundamental</td><td>cm scale</td><td>Multi-node patterns; finer cymatic channels. Primary operating range.</td></tr>
+<tr><td class="val">High harmonics</td><td>10-100× fundamental</td><td>mm scale</td><td>Boundary layer scale. Drag reduction dominant. Fine flow control.</td></tr>
+<tr><td class="val">Ultrasonic</td><td>>20 kHz</td><td>sub-mm</td><td>SAW regime. Acoustic streaming. Silent operation.</td></tr>
+</table>
+
+<p>The disc can be driven at multiple frequencies simultaneously (chord driving), organizing the airflow at multiple scales at once: coarse undulatory thrust at the fundamental, plus fine cymatic drag reduction at higher harmonics. This is the harmonic cascade from the circumpunct device, applied to aerodynamics.</p>
+
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 05 DISC MODES -->
+<!-- ═══════════════════════════════ -->
+
+<section id="modes">
+<h2><span class="num">§05</span> Disc Modes</h2>
+
+<h3>Chladni Modes of a Circular Plate</h3>
+
+<p>A circular plate clamped (or free) at the center has resonant modes characterized by (m, n) where m = number of diametral node lines and n = number of circular (radial) node lines. The fundamental (0,0) is uniform flexure; (1,0) has one diameter splitting the disc into two halves vibrating out of phase; (0,1) has one concentric ring node.</p>
+
+<div class="card">
+<div class="card-title">Key Disc Modes and Their Flight Applications</div>
+<table>
+<tr><th>Mode (m,n)</th><th>Pattern</th><th>Travelling Wave</th><th>Flight Application</th></tr>
+<tr>
+<td class="val">(0,0)</td>
+<td>Whole disc flexes uniformly (breathing)</td>
+<td>Pulsation: disc pumps air down/up like a jellyfish bell</td>
+<td class="t-good">Vertical thrust (hover assist)</td>
+</tr>
+<tr>
+<td class="val">(1,0)</td>
+<td>One diametral line; disc rocks like a seesaw</td>
+<td>Rotating wave: disc tilts continuously around its center</td>
+<td class="t-good">Pitch / roll control</td>
+</tr>
+<tr>
+<td class="val">(2,0)</td>
+<td>Two diametral lines; disc flexes into saddle shape</td>
+<td>Rotating saddle wave (like stirring coffee)</td>
+<td class="t-good">Rotational thrust (yaw)</td>
+</tr>
+<tr>
+<td class="val">(0,1)</td>
+<td>One concentric ring; center and edge vibrate out of phase</td>
+<td>Radial travelling wave: ripple from center to edge</td>
+<td class="t-good">Primary hover mode (radial pump)</td>
+</tr>
+<tr>
+<td class="val">(0,2)</td>
+<td>Two concentric rings</td>
+<td>Radial travelling wave with shorter wavelength</td>
+<td class="t-good">Higher-efficiency hover (finer undulation)</td>
+</tr>
+<tr>
+<td class="val">(m,n) combined</td>
+<td>Complex patterns with both radial and diametral nodes</td>
+<td>Spiral travelling waves</td>
+<td class="t-good">Combined thrust + rotation</td>
+</tr>
+</table>
+</div>
+
+<h3>Superposition for Full Control</h3>
+
+<pre>
+HOVER:   (0,1) radial travelling wave, symmetric
+         All edges pump air downward equally.
+         Thrust: vertical.
+
+TRANSLATE: (0,1) + (1,0) superposition
+           Radial wave biased toward one side.
+           Stronger pump on trailing edge → net lateral thrust.
+
+PITCH:   (1,0) travelling wave
+         Disc rocks; leading edge rises, trailing edge dips.
+         Asymmetric pressure → pitching moment.
+
+YAW:     (2,0) rotating wave
+         Saddle rotates around center.
+         Tangential air momentum → torque around vertical axis.
+
+CLIMB:   (0,1) at higher amplitude
+         Same pattern, more displacement → more thrust.
+
+DESCEND: (0,1) at lower amplitude, or reverse wave direction
+         Reduce pump rate, or pump air upward.
+</pre>
+
+<p>Every flight maneuver maps to a specific combination of disc modes, phases, and amplitudes. The flight controller's job is to decompose the desired thrust vector into the correct superposition of modes and drive the piezo zones accordingly.</p>
+
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 06 FLIGHT CONTROL -->
+<!-- ═══════════════════════════════ -->
+
+<section id="control">
+<h2><span class="num">§06</span> Flight Control</h2>
+
+<h3>Zone Architecture</h3>
+
+<p>The disc surface is divided into independently addressable piezo zones. Each zone receives its own AC signal (frequency, phase, amplitude). The spatial arrangement of zones determines the resolution of wave pattern control.</p>
+
+<div class="card">
+<div class="card-title">Zone Layout</div>
+<pre>
+TOP VIEW (disc divided into zones):
+
+            ╱ R4-A ╲
+         ╱─────────────╲
+       ╱  R3-A  │  R3-B  ╲
+     ╱──────────┼──────────╲
+   ╱  R2-A │ R2-B │ R2-C │R2-D╲
+  ╱────────┼──────┼──────┼────────╲
+ │  R1-A   │ R1-B │ R1-C │  R1-D  │
+ │─────────┼──────┼──────┼─────── │
+ │  R1-E   │ R1-F │ R1-G │  R1-H  │
+  ╲────────┼──────┼──────┼────────╱
+   ╲  R2-E │ R2-F │ R2-G │R2-H╱
+     ╲──────────┼──────────╱
+       ╲  R3-C  │  R3-D  ╱
+         ╲─────────────╱
+            ╲ R4-B ╱
+
+4 concentric rings (R1 center, R4 edge) × angular sectors
+Total: ~24 independently driven zones (minimum for full control)
+More zones = finer wave resolution = smoother flight
+</pre>
+</div>
+
+<h3>Control Architecture</h3>
+
+<pre>
+┌─────────────────────────────────────────────────┐
+│              FLIGHT CONTROLLER (MCU)             │
+│                                                  │
+│  IMU ──→ Attitude     ──→ Mode         ──→ Zone │
+│          Estimation       Decomposition     Mapping
+│                                                  │
+│  Desired    Desired         Required        Per-zone
+│  thrust  →  disc modes  →   standing    →   AC signal
+│  vector     (m,n) set       wave combo      (f, φ, A)
+│                                                  │
+└───────────────────────┬─────────────────────────┘
+                        │
+              ┌─────────┼─────────┐
+              ▼         ▼         ▼
+         ┌────────┐ ┌────────┐ ┌────────┐
+         │ DAC/AMP│ │ DAC/AMP│ │ DAC/AMP│  ... × 24
+         │ Zone 1 │ │ Zone 2 │ │ Zone 3 │
+         └───┬────┘ └───┬────┘ └───┬────┘
+             │          │          │
+             ▼          ▼          ▼
+         ┌────────────────────────────────┐
+         │     PIEZO SKIN (disc surface)   │
+         └────────────────────────────────┘
+</pre>
+
+<h3>Control Loop</h3>
+
+<table>
+<tr><th>Step</th><th>Input</th><th>Output</th><th>Rate</th></tr>
+<tr><td>1. Sense</td><td class="val">IMU (accel + gyro), barometer, GPS</td><td>Current attitude, position, velocity</td><td>1 kHz</td></tr>
+<tr><td>2. Error</td><td class="val">Current state vs desired state</td><td>Thrust vector (direction + magnitude)</td><td>1 kHz</td></tr>
+<tr><td>3. Decompose</td><td class="val">Thrust vector</td><td>Set of (m,n) modes with amplitudes and phases</td><td>1 kHz</td></tr>
+<tr><td>4. Map</td><td class="val">Mode set</td><td>Per-zone AC parameters (f, φ, A)</td><td>1 kHz</td></tr>
+<tr><td>5. Drive</td><td class="val">Per-zone AC parameters</td><td>Electrical signals to piezo zones</td><td>Waveform rate (100 Hz - 100 kHz)</td></tr>
+</table>
+
+<p>The decomposition step (3) is the key algorithm. It is essentially an inverse Chladni problem: given a desired pressure distribution on the disc surface, find the combination of resonant modes that produces it. This is a well-studied problem in structural acoustics (modal decomposition). For a circular plate with known eigenfrequencies, it reduces to computing coefficients of a Bessel function expansion.</p>
+
+</section>
+
+<div class="div">· · ·</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- 07 DISC STRUCTURE -->
+<!-- ═══════════════════════════════ -->
+
+<section id="structure">
+<h2><span class="num">§07</span> Disc Structure</h2>
+
+<h3>Form Factor</h3>
+
+<table>
+<tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
+<tr><td>Shape</td><td class="val">Oblate disc (lenticular cross-section)</td><td>Slightly convex top and bottom; thicker at center, thin at edges</td></tr>
+<tr><td>Diameter</td><td class="val">300 mm (30 cm)</td><td>First prototype. Enough surface for measurable thrust.</td></tr>
+<tr><td>Thickness at center</td><td class="val">20-30 mm</td><td>Houses battery, MCU, electronics</td></tr>
+<tr><td>Thickness at edge</td><td class="val">2-5 mm</td><td>Thin enough to flex with piezo actuation</td></tr>
+<tr><td>Mass target</td><td class="val">&lt;200 g</td><td>Comparable to small quadcopter</td></tr>
+<tr><td>Active surface</td><td class="val">Both top and bottom</td><td>Top surface contributes to lift via low-pressure; bottom pushes air down</td></tr>
+</table>
+
+<h3>Cross-Section</h3>
+
+<pre>
+                        ◄── 300mm ──►
+
+             ╭───────────────────────────────╮
+  top ────  ╱    ╭───────────────────╮        ╲
+ piezo     │    │  CORE (electronics, │        │   ← 20-30mm center
+           │    │  battery, MCU)      │        │
+  bot ──── ╲    ╰───────────────────╯        ╱
+ piezo      ╰───────────────────────────────╯
+                                          ↑
+                                    2-5mm at edge
+                                    (flexible margin)
+
+The rigid center core houses all non-flexing components.
+The flexible margin (outer 30-50% of radius) is the active undulation zone.
+Transition between rigid and flexible must be gradual (no sharp hinge).
+</pre>
+
+<h3>Structural Layers (Edge to Edge)</h3>
+
+<div class="card">
+<div class="card-title">Layer Stack (from top surface down)</div>
+<table>
+<tr><th>Layer</th><th>Material</th><th>Thickness</th><th>Function</th></tr>
+<tr><td>1. Top skin</td><td class="val">PVDF piezo film</td><td>28-110 μm</td><td>Active top surface actuator/sensor</td></tr>
+<tr><td>2. Top electrode</td><td class="val">Silver ink or copper trace</td><td>~5 μm</td><td>Zone electrode pattern</td></tr>
+<tr><td>3. Substrate</td><td class="val">Flexible PCB (polyimide) or carbon fiber composite</td><td>0.5-2 mm</td><td>Structural backbone; carries flex</td></tr>
+<tr><td>4. Bottom electrode</td><td class="val">Silver ink or copper trace</td><td>~5 μm</td><td>Zone electrode pattern</td></tr>
+<tr><td>5. Bottom skin</td><td class="val">PVDF piezo film</td><td>28-110 μm</td><td>Active bottom surface actuator/sensor</td></tr>
+</table>
+</div>
+
+<p>The top and bottom piezo layers can be driven in phase (both push the same direction, bending the disc: bending mode) or out of phase (one pushes while the other pulls, changing thickness: breathing mode). Bending mode produces undulatory thrust. Breathing mode produces acoustic pump thrust. Both are useful; bending is the primary mechanism.</p>
+
+<h3>Flexibility Profile</h3>
+
+<p>The disc is not uniformly flexible. The center must be rigid enough to support the electronics and battery. The edges must be flexible enough to undulate with useful amplitude. The transition between rigid core and flexible margin determines the disc's modal structure.</p>
+
+<pre>
+Rigidity profile (center to edge):
+
+  Stiff ─────────┐
+                  │     gradual taper
+                  ╲
+                   ╲
+                    ╲
+  Flexible ──────────╲───────────
+                     ↑
+              transition zone
+              (30-40% of radius)
+
+The flexible margin is where undulation happens.
+The rigid core is the "body" the margin waves around.
+Like a ray's body vs its fin edges.
+</pre>
+
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 08 PIEZO SKIN -->
+<!-- ═══════════════════════════════ -->
+
+<section id="piezo">
+<h2><span class="num">§08</span> Piezo Skin</h2>
+
+<h3>Material Options</h3>
+
+<table>
+<tr><th>Material</th><th>d31 (pC/N)</th><th>Max Strain</th><th>Pros</th><th>Cons</th></tr>
+<tr>
+<td class="val">PVDF film</td>
+<td>20-30</td>
+<td>0.1-0.2%</td>
+<td>Flexible, lightweight, large area, cheap, proven</td>
+<td>Low strain; needs mechanical amplification</td>
+</tr>
+<tr>
+<td class="val">P(VDF-TrFE) copolymer</td>
+<td>25-35</td>
+<td>~0.2%</td>
+<td>Better piezo coupling than pure PVDF; printable</td>
+<td>Slightly more expensive</td>
+</tr>
+<tr>
+<td class="val">PZT fiber composite (MFC)</td>
+<td>300-400</td>
+<td>0.1-0.2%</td>
+<td>10× higher d31 than PVDF; flexible in composite form</td>
+<td>Heavier, more expensive, brittle fibers</td>
+</tr>
+<tr>
+<td class="val">Electroactive polymer (DEAP)</td>
+<td>N/A (electrostrictive)</td>
+<td>10-100%</td>
+<td>Massive strain; true artificial muscle</td>
+<td>Requires very high voltage (kV); low force density</td>
+</tr>
+</table>
+
+<h3>Amplification Strategies</h3>
+
+<p>PVDF's 0.1-0.2% strain is the core engineering challenge. For a 100mm long strip, 0.1% strain = 0.1mm displacement. This is adequate for ultrasonic acoustic streaming but marginal for macroscopic undulation. Strategies to amplify:</p>
+
+<table>
+<tr><th>Strategy</th><th>Amplification</th><th>Mechanism</th></tr>
+<tr><td class="val">Bimorph bending</td><td>10-50×</td><td>Two piezo layers bonded to a substrate; differential strain curves the structure. Displacement at the tip of a cantilevered bimorph scales with length².</td></tr>
+<tr><td class="val">Resonant amplification</td><td>Q factor (10-100×)</td><td>Drive at the disc's natural resonant frequency. Energy accumulates over cycles. Displacement = static displacement × Q.</td></tr>
+<tr><td class="val">Lever geometry</td><td>2-10×</td><td>Origami-inspired fold patterns convert small in-plane strain to large out-of-plane displacement (Harvard RoboBee method).</td></tr>
+<tr><td class="val">Stacked/laminated</td><td>N layers</td><td>Multiple piezo layers in series increase total strain additively.</td></tr>
+</table>
+
+<p>Combining bimorph bending with resonant amplification is the most promising path. A bimorph strip at resonance can achieve tip displacements of 0.5-5 mm from a 100V drive signal, which is in the useful range for undulatory thrust in air.</p>
+
+<div class="callout">
+<div class="label">Key Insight</div>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">The disc does not need to flex by centimeters. A manta ray's fin undulates with amplitude roughly 10-20% of its chord length. For a 30cm disc with a 5cm flexible margin, that's 5-10mm of edge displacement. Bimorph piezo at resonance can achieve this. The displacement is small but the surface area is large, and thrust scales with area × displacement × frequency².</p>
+</div>
+
+<h3>Dual-Use: Actuator and Sensor</h3>
+
+<p>Piezo film is bidirectional: apply voltage, it moves; move it, it generates voltage. The same skin that drives the undulation can also sense the aerodynamic response. Between drive pulses (or on dedicated sense zones), the piezo film measures the pressure fluctuations at the surface, giving the flight controller real-time feedback on the boundary layer state.</p>
+
+<p>This closes the loop. The controller drives the skin, the skin modifies the airflow, the airflow presses back on the skin, the skin reports the pressure, and the controller adjusts. The disc has proprioception: it can feel the air.</p>
+
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 09 ELECTRONICS -->
+<!-- ═══════════════════════════════ -->
+
+<section id="electronics">
+<h2><span class="num">§09</span> Electronics</h2>
+
+<h3>System Architecture</h3>
+
+<pre>
+┌──────────────────────────────────────────────────────┐
+│                   DISC CORE (center)                  │
+│                                                      │
+│  ┌──────────┐    ┌──────────────┐    ┌────────────┐ │
+│  │ BATTERY  │───→│ POWER MGMT   │───→│ HV BOOST   │ │
+│  │ LiPo     │    │ 3.3V / 5V    │    │ 50-200V    │ │
+│  │ 500mAh+  │    └──────┬───────┘    └─────┬──────┘ │
+│  └──────────┘           │                  │        │
+│                    ┌────┴─────┐      ┌─────┴──────┐ │
+│                    │   MCU    │      │ 24-CH DAC  │ │
+│                    │ ESP32-S3 │─────→│ + CLASS-D  │ │
+│                    │ or STM32 │      │ AMPLIFIERS │ │
+│                    └────┬─────┘      └─────┬──────┘ │
+│                         │                  │        │
+│                    ┌────┴─────┐            │        │
+│                    │   IMU    │            │        │
+│                    │ 6-DOF    │            │        │
+│                    └──────────┘            │        │
+│                                            │        │
+└────────────────────────────────────────────┼────────┘
+                                             │
+                          ┌──────────────────┼──────────────────┐
+                          │                  │                  │
+                     ┌────┴────┐       ┌─────┴─────┐     ┌─────┴─────┐
+                     │ ZONE 1  │       │  ZONE 2   │     │ ZONE 24   │
+                     │ PIEZO   │       │  PIEZO    │ ... │  PIEZO    │
+                     │ TOP+BOT │       │  TOP+BOT  │     │  TOP+BOT  │
+                     └─────────┘       └───────────┘     └───────────┘
+</pre>
+
+<h3>Component Estimates</h3>
+
+<table>
+<tr><th>Component</th><th>Spec</th><th>Mass</th><th>Notes</th></tr>
+<tr><td>MCU</td><td class="val">ESP32-S3 or STM32H7</td><td>~5g (with board)</td><td>Needs enough DAC channels or SPI to drive 24 zones at audio rates</td></tr>
+<tr><td>IMU</td><td class="val">BMI270 or ICM-42688</td><td>&lt;1g</td><td>6-DOF accelerometer + gyroscope</td></tr>
+<tr><td>Battery</td><td class="val">LiPo 1S 3.7V 500-1000mAh</td><td>15-30g</td><td>Flight time depends heavily on power consumption</td></tr>
+<tr><td>HV Boost</td><td class="val">DC-DC boost to 50-200V</td><td>~5g</td><td>Piezo needs high voltage, low current</td></tr>
+<tr><td>DAC/Amp array</td><td class="val">24-channel waveform generation</td><td>~10-20g</td><td>Could use dedicated FPGA + DAC chips or DDS ICs</td></tr>
+<tr><td>Piezo skin</td><td class="val">PVDF or MFC, both surfaces</td><td>~10-30g</td><td>Depends on material and thickness</td></tr>
+<tr><td>Structure</td><td class="val">Carbon fiber / flex PCB disc</td><td>~30-50g</td><td>Primary structural mass</td></tr>
+<tr><td colspan="2" style="text-align:right; color:var(--amber);">ESTIMATED TOTAL</td><td class="val" style="color:var(--amber);">~100-150g</td><td></td></tr>
+</table>
+
+<h3>Signal Generation</h3>
+
+<p>Each zone needs an independent AC waveform at 100 Hz to 100 kHz, with controllable frequency, phase, and amplitude, updated at ~1 kHz control rate. Two architectures:</p>
+
+<table>
+<tr><th>Architecture</th><th>Pros</th><th>Cons</th></tr>
+<tr>
+<td class="val">MCU + DDS array</td>
+<td>Simple, each DDS chip generates one waveform independently; phase-coherent if clock-shared</td>
+<td>Many chips (24 DDS ICs); board space; power</td>
+</tr>
+<tr>
+<td class="val">FPGA + DAC array</td>
+<td>One chip computes all 24 waveforms in parallel; maximum flexibility; can implement mode decomposition in hardware</td>
+<td>More complex firmware; higher power for FPGA</td>
+</tr>
+</table>
+
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 10 POWER BUDGET -->
+<!-- ═══════════════════════════════ -->
+
+<section id="power">
+<h2><span class="num">§10</span> Power Budget</h2>
+
+<p>The critical question: can piezo actuation generate enough thrust to lift the disc, within a practical power budget?</p>
+
+<h3>Thrust Requirement</h3>
+
+<pre>
+Mass:            150g = 0.15 kg
+Hover thrust:    F = mg = 0.15 × 9.81 = 1.47 N
+With margin:     ~2 N (for control authority)
+
+Disc area:       π × (0.15)² = 0.071 m²  (both sides: 0.141 m²)
+Required thrust density:  2 N / 0.141 m² = 14.2 N/m²
+</pre>
+
+<h3>Achievable Thrust Density Comparison</h3>
+
+<table>
+<tr><th>Technology</th><th>Thrust Density</th><th>Medium</th><th>Source</th></tr>
+<tr><td class="val">EHD (ionic wind, multi-stage)</td><td>~18 N/m²</td><td>Air</td><td>MIT research, 2024</td></tr>
+<tr><td class="val">EHD (ionic wind, basic)</td><td>~3.3 N/m²</td><td>Air</td><td>Moreau et al.</td></tr>
+<tr><td class="val">SAW thruster (40 MHz)</td><td>~100 N/m²</td><td>Water</td><td>Bourquin et al.</td></tr>
+<tr><td class="val">Piezo synthetic jet</td><td>~1-5 N/m²</td><td>Air</td><td>Various (single orifice)</td></tr>
+<tr><td class="val">Undulatory fin (biological)</td><td>~5-20 N/m²</td><td>Water</td><td>Ray locomotion studies</td></tr>
+<tr><td class="val">Required for this disc</td><td class="t-aper">~14 N/m²</td><td>Air</td><td>Calculated above</td></tr>
+</table>
+
+<div class="callout warn">
+<div class="label">⚠ The Thrust Gap</div>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">The required 14 N/m² is achievable by multi-stage EHD but above what simple piezo synthetic jets have demonstrated in air. Biological undulatory thrust is in the right range but operates in water (800× denser than air). This is the central engineering challenge. Possible paths to close the gap: resonant amplification (Q factor 10-100×), chord driving (multiple frequencies), optimized disc geometry, or hybrid approach (piezo undulation + EHD ionic boost).</p>
+</div>
+
+<h3>Power Estimate</h3>
+
+<pre>
+Piezo actuation power:
+  Capacitive load: P = π × f × C × V²
+
+  Per zone (~60 cm² of PVDF):
+    C ≈ 10 nF (depends on film thickness and area)
+    V ≈ 100V (typical piezo drive)
+    f ≈ 1 kHz (operating frequency)
+    P = π × 1000 × 10e-9 × 100² ≈ 0.31 W per zone
+
+  24 zones: ~7.5 W total piezo drive
+
+  Electronics overhead: ~2 W (MCU, DAC, boost converter losses)
+
+  Total estimated: ~10 W
+
+  With 500mAh LiPo at 3.7V = 1.85 Wh
+  Flight time (if thrust is sufficient): ~10-12 minutes
+
+  With 1000mAh: ~3.7 Wh → ~20-25 minutes
+
+  Note: Piezo is capacitive (reactive power), so much of the
+  energy can be recovered each cycle with resonant drive circuits
+  (inductor in series with piezo forms LC tank). Recovery could
+  cut real power to 30-50% of the above estimate, extending
+  flight time to 20-40 min on 1000mAh.
+</pre>
+
+<p>The power is surprisingly low because piezo actuators are capacitive, not resistive. They store and release energy each cycle rather than dissipating it. The main power cost is the electronic overhead, not the actuation itself. This is fundamentally different from motors and propellers, where most power goes directly into moving air.</p>
+
+</section>
+
+<div class="div">· · ·</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- 11 DEVELOPMENT PATH -->
+<!-- ═══════════════════════════════ -->
+
+<section id="phases">
+<h2><span class="num">§11</span> Development Path</h2>
+
+<h3>Phase 0: Bench Proof (Can a Piezo Disc Produce Measurable Thrust?)</h3>
+
+<div class="card">
+<div class="card-title">Minimum Viable Experiment</div>
+<pre>
+Build a simple piezo bimorph disc (not full drone):
+  - 10-15cm acrylic or FR4 disc
+  - PVDF film bonded to both sides
+  - 4-8 electrode zones (not 24)
+  - Single-channel waveform generator
+  - Mount on precision scale (0.01g resolution)
+
+Drive at disc resonant frequencies.
+Measure: does the scale reading change?
+ANY measurable thrust (even 0.01g) validates the concept.
+
+Cost: ~$50-100
+Time: 1-2 weekends
+</pre>
+</div>
+
+<h3>Phase 1: Thrust Characterization</h3>
+<pre>
+Expand bench disc to multi-zone drive:
+  - 8-12 zones with independent phase control
+  - Sweep frequency, phase offset, amplitude
+  - Map thrust vs parameters
+  - Identify resonant modes that produce maximum thrust
+  - Measure thrust directionality (can phase steer the force vector?)
+
+Key question: what thrust density (N/m²) can we achieve?
+If > 5 N/m²: proceed to Phase 2
+If 1-5 N/m²: need amplification strategy or hybrid approach
+If < 1 N/m²: fundamental rethink required
+</pre>
+
+<h3>Phase 2: Tethered Flight Disc</h3>
+<pre>
+Full 30cm disc with all electronics onboard:
+  - 24 zones
+  - Full flight controller (IMU + mode decomposition)
+  - Tethered to power supply (no battery weight)
+  - Suspended from low-friction bearing or wire
+
+Test: can it reduce its apparent weight on a scale?
+Test: can it control attitude (tilt when commanded)?
+Test: can it yaw (rotate when commanded)?
+</pre>
+
+<h3>Phase 3: Free Flight</h3>
+<pre>
+Add battery. Remove tether. Fly.
+This is the milestone.
+</pre>
+
+<h3>Phase 4: Optimization and Scaling</h3>
+<pre>
+  - Chord driving (multiple simultaneous frequencies)
+  - Hybrid piezo + EHD (ionic wind assist)
+  - Larger disc diameter (thrust scales with area)
+  - Advanced materials (MFC, DEAP)
+  - Acoustic stealth characterization (how quiet is it?)
+</pre>
+
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 12 EXPERIMENTS -->
+<!-- ═══════════════════════════════ -->
+
+<section id="experiments">
+<h2><span class="num">§12</span> Experiments</h2>
+
+<h3>Experiment 1: Single-Zone Thrust Test</h3>
+<pre>
+Purpose: Measure thrust from a single piezo bimorph zone
+
+Setup:
+  - Piezo bimorph strip (PVDF on both sides of 0.5mm substrate)
+  - Dimensions: 50mm × 20mm
+  - Clamped at one end, free at other
+  - Positioned above precision scale with small platform
+  - Gap between bimorph tip and platform: ~2mm
+
+Procedure:
+  1. Drive bimorph at sweep of frequencies (100 Hz to 50 kHz)
+  2. Record scale reading change at each frequency
+  3. Identify resonant peaks
+  4. At each resonant peak, measure thrust vs voltage (amplitude)
+
+Expected:
+  - Maximum thrust at bimorph resonant frequency
+  - Thrust proportional to V² (piezo force scales with V²)
+  - Measurable airflow below bimorph (synthetic jet effect)
+</pre>
+
+<h3>Experiment 2: Travelling Wave on Disc</h3>
+<pre>
+Purpose: Confirm travelling wave generation on a circular disc
+
+Setup:
+  - 15cm disc (acrylic or FR4, 1-2mm thick)
+  - 4 piezo patches at 0°, 90°, 180°, 270°
+  - Drive adjacent patches with 90° phase offset
+
+Procedure:
+  1. Drive all 4 patches at same frequency, 90° phase sequence
+  2. Scatter fine powder (lycopodium, salt) on disc surface
+  3. Observe: do particles transport in a consistent direction?
+     (If yes: travelling wave confirmed; if they collect at nodes: standing wave only)
+  4. Reverse phase sequence → particles should transport in opposite direction
+  5. Photograph patterns at each frequency
+
+This is a direct cymatic visualization of the disc's wave modes.
+</pre>
+
+<h3>Experiment 3: Disc Thrust Map</h3>
+<pre>
+Purpose: Map thrust vs frequency × phase × amplitude for full disc
+
+Setup:
+  - 15cm disc with 8-12 zones
+  - Mounted on 3-axis force sensor or precision scale
+  - Multi-channel waveform generator
+
+Procedure:
+  1. Radial travelling wave (center → edge):
+     Sweep frequency, measure vertical thrust at each
+  2. Rotating travelling wave (angular):
+     Sweep frequency, measure torque at each
+  3. Directional travelling wave (left → right):
+     Sweep frequency, measure lateral force at each
+  4. At best frequencies, sweep amplitude
+  5. At best frequencies, sweep phase offset between zones
+
+Output: 3D thrust maps. The flight controller will use these as lookup tables.
+</pre>
+
+<h3>Experiment 4: Boundary Layer Visualization</h3>
+<pre>
+Purpose: See the cymatic channels forming in the air
+
+Setup:
+  - Disc operating at best thrust frequency
+  - Smoke wire or fog generator producing thin smoke sheet
+  - Laser sheet illumination (green laser + cylindrical lens)
+  - High-speed camera (even 240fps phone camera helps)
+
+Procedure:
+  1. Position smoke sheet parallel to disc surface, ~2-5mm gap
+  2. Activate disc: observe smoke pattern
+  3. Compare: disc off (random turbulence) vs disc on (organized channels)
+  4. Photograph/video the cymatic flow structure
+
+This is the money shot: visible proof that the disc organizes airflow.
+</pre>
+
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- 13 OPEN PROBLEMS -->
+<!-- ═══════════════════════════════ -->
+
+<section id="challenges">
+<h2><span class="num">§13</span> Open Problems</h2>
+
+<div class="card">
+<div class="card-title">Critical Unknowns</div>
+<table>
+<tr><th>#</th><th>Problem</th><th>Why It Matters</th><th>Path to Answer</th></tr>
+<tr>
+<td>1</td>
+<td class="t-aper">Thrust density in air</td>
+<td>Can undulatory thrust in air (density 1.2 kg/m³) match what works in water (density 1000 kg/m³)? The 800× density difference means 800× less reaction mass per unit volume.</td>
+<td>Experiment 1 and 3. If insufficient: increase frequency (more cycles per second = more air processed), increase disc area, or add EHD assist.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Resonant mode control</td>
+<td>Can 24 zones produce clean travelling waves, or do unwanted modes contaminate the pattern?</td>
+<td>Experiment 2. Modal analysis of disc structure. May need more zones or structural tuning (varying thickness profile).</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Displacement amplification</td>
+<td>PVDF strain is 0.1-0.2%. Is bimorph bending at resonance enough, or do we need MFC or DEAP?</td>
+<td>Experiment 1. Measure actual displacement with laser vibrometer. If insufficient with PVDF, test MFC (10× higher d31).</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Aerodynamic coupling</td>
+<td>Does the air load damp the disc vibration enough to kill thrust? (Radiation impedance mismatch between solid disc and air.)</td>
+<td>Compare disc resonance in vacuum vs air. If Q drops dramatically in air, the air is absorbing the energy (good for thrust; bad for resonant amplification).</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Control bandwidth</td>
+<td>Can the flight controller update the mode decomposition fast enough for stable flight? Disc dynamics may require >1 kHz update rate.</td>
+<td>Simulation first; Phase 2 tethered test.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Scaling laws</td>
+<td>Does thrust per unit area increase or decrease with disc size? Biological undulation suggests larger is better (higher Reynolds number), but structural resonance frequencies drop with size.</td>
+<td>Test at multiple disc diameters: 10cm, 20cm, 30cm, 50cm.</td>
+</tr>
+</table>
+</div>
+
+<h3>The Hybrid Option</h3>
+
+<p>If pure piezo undulatory thrust proves insufficient for hover in air, a hybrid approach combines two no-moving-parts technologies:</p>
+
+<pre>
+PIEZO UNDULATION (primary)
+  + provides lift via travelling wave thrust
+  + provides all attitude control via phase/amplitude
+  + provides boundary layer drag reduction
+
+EHD IONIC WIND (boost)
+  + thin wire emitters along disc edge
+  + creates additional downward ion wind for lift assist
+  + demonstrated 18 N/m² in multi-stage configuration (MIT)
+  + silent, no moving parts, complements piezo
+
+Combined: piezo handles control and flow organization
+          EHD handles raw lift supplement if needed
+</pre>
+
+<p>The MIT ionic wind plane flew with 3.3 N/m² over a 5-meter wingspan. A 30cm disc with optimized multi-stage EHD could contribute significant lift assist while the piezo skin handles all the fine control. The combination is still fully solid-state: no motors, no propellers, no moving parts in the conventional sense.</p>
+
+<div class="callout">
+<div class="label">The Framework Connection</div>
+<p style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">The disc drone is the circumpunct device turned inside out. The device has a boundary (shell) with a vibrating center (ball) and an aperture (tip). The disc drone has a vibrating boundary (skin) with a still center (electronics core) and the aperture is everywhere (the entire edge radiates). Both use phase and amplitude to create cymatic patterns in Φ. Both use resonant mode selection. Both convert electrical energy into organized field structure. The device converges energy inward through a point. The drone radiates organized energy outward through a surface. ⊛ and ☀︎, two sides of the same operation.</p>
+</div>
+
+</section>
+
+<div class="div">◎ · ◎ · ◎</div>
+
+<footer style="text-align:center; color:var(--text-dim); font-size:0.6rem; letter-spacing:0.1em; padding:2rem 0;">
+◎ PIEZO DISC DRONE · CONCEPT SPEC v0.1 · MARCH 26, 2026<br>
+fractalreality.ca · r/Circumpunct
+</footer>
+
+</main>
+
+</body>
+</html>
