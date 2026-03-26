@@ -21,15 +21,17 @@
     letter-spacing: 0.04em;
     line-height: 1.8;
     pointer-events: none;
-    transition: color 4s ease;
     width: 90%;
+    transition: opacity 1.5s ease;
+    opacity: 0;
   }
-  #sub.visible { color: rgba(255,255,255,0.5); }
+  #sub.visible { opacity: 1; }
+  #sub.fade-out { opacity: 0; }
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="sub">God's Light Converges through an Infinite Array of Souls, Emerging as an Infinite Number of Finite Beings</div>
+<div id="sub"></div>
 <script>
 // ===== SETUP =====
 const C = document.getElementById('c');
@@ -147,6 +149,45 @@ resize();
 //        25+    settled; subtitle fades in
 
 let t0 = null;
+
+// ===== SUBTITLES =====
+const SUBS = [
+  { in: 2,   out: 5,   text: "Infinite energy. God. The future." },
+  { in: 5,   out: 7.5, text: "It converges..." },
+  { in: 7.5, out: 11,  text: "...into an infinite array of souls. Present moments, through which power flows." },
+  { in: 11,  out: 17,  text: "Each soul emerges a line through time, branching and braiding into the past, creating a field unique to itself." },
+  { in: 17,  out: 23,  text: "And that field resonates, attracting souls at a smaller scale to form a boundary around it." },
+  { in: 23,  out: 26,  text: "Aperture. Field. Boundary. The circumpunct, complete." },
+  { in: 27,  out: 999, text: "God's Light Converges through an Infinite Array of Souls, Emerging as an Infinite Number of Finite Beings" },
+];
+let currentSub = -1;
+const subEl = document.getElementById('sub');
+
+function updateSubs(el) {
+  let active = -1;
+  for (let i = 0; i < SUBS.length; i++) {
+    if (el >= SUBS[i].in && el < SUBS[i].out) { active = i; break; }
+  }
+  if (active !== currentSub) {
+    if (active === -1) {
+      // Fade out
+      subEl.classList.remove('visible');
+      subEl.classList.add('fade-out');
+      currentSub = -1;
+    } else {
+      // Fade out, swap text, fade in
+      subEl.classList.remove('visible');
+      subEl.classList.add('fade-out');
+      setTimeout(() => {
+        subEl.textContent = SUBS[active].text;
+        subEl.style.color = active === SUBS.length - 1 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.65)';
+        subEl.classList.remove('fade-out');
+        subEl.classList.add('visible');
+      }, active === 0 || currentSub === -1 ? 50 : 800);
+      currentSub = active;
+    }
+  }
+}
 
 function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
 function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
@@ -434,9 +475,7 @@ function animate(ts) {
     }
   }
 
-  if (el >= 25) {
-    document.getElementById('sub').classList.add('visible');
-  }
+  updateSubs(el);
 
   requestAnimationFrame(animate);
 }
